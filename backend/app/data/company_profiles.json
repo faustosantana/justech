@@ -1,0 +1,21 @@
+{
+  "justech": {
+    "razon_social": "Justech SRL",
+    "rnc": "131793916",
+    "direccion": "Av. Winston Churchill, Torre Empresarial, Piso 12, Santo Domingo",
+    "representante_legal": "Fausto Méndez",
+    "telefono": "+1-809-555-0100",
+    "correo": "info@justech.do",
+    "cuenta_bancaria": "Banco Popular — 1234567890",
+    "empresas_relacionadas": ["Justech", "Just Group"]
+  },
+  "just_group": {
+    "razon_social": "Just Group SRL",
+    "rnc": "131000001",
+    "direccion": "Santo Domingo, República Dominicana",
+    "representante_legal": "Representante Legal Just Group",
+    "telefono": "+1-809-555-0200",
+    "correo": "contacto@justgroup.do",
+    "cuenta_bancaria": "Banco BHD — 9876543210"
+  }
+}

@@ -1,0 +1,233 @@
+"""Ingesta de adjuntos y documentos del proceso DGCP (Fase 7.3)."""
+
+from __future__ import annotations
+
+import uuid
+from datetime import datetime, timezone
+from typing import Any
+
+from sqlalchemy import delete, select
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from app.config import settings
+from app.models.dgcp_opportunity import DGCPOpportunity
+from app.models.dgcp_process_document import DGCPProcessDocument
+from app.services.dgcp_process_document_classifier import classify_process_document
+from app.services.dgcp_process_storage_service import DGCPProcessStorageService
+
+# Tipos de fuente del repositorio de proceso (nunca documentos corporativos indexados).
+PROCESS_SOURCE_TYPES = frozenset({"portal", "dgcp_api", "portal_text", "process_file", "reference"})
+
+
+class DGCPAttachmentIngestionService:
+    SUPPORTED_FORMATS = {".pdf", ".docx", ".doc", ".xlsx", ".xls", ".csv", ".txt"}
+
+    def __init__(self, db: AsyncSession, tenant_id: uuid.UUID, user_id: uuid.UUID | None = None):
+        self.db = db
+        self.tenant_id = tenant_id
+        self.user_id = user_id
+        self.storage = DGCPProcessStorageService(tenant_id)
+
+    async def ingest(self, opportunity: DGCPOpportunity) -> list[dict]:
+        if not settings.dgcp_attachment_ingestion_enabled:
+            return []
+
+        await self.db.execute(
+            delete(DGCPProcessDocument).where(
+                DGCPProcessDocument.tenant_id == self.tenant_id,
+                DGCPProcessDocument.opportunity_id == opportunity.id,
+            )
+        )
+        await self.db.commit()
+
+        discovered: list[dict] = []
+        seen_titles: set[str] = set()
+
+        for item in self._discover_from_payload(opportunity):
+            title = item["title"]
+            if title.lower() in seen_titles:
+                continue
+            seen_titles.add(title.lower())
+            doc = await self._register_reference(opportunity, item)
+            discovered.append(self._summary(doc))
+
+        await self.db.commit()
+        return sorted(discovered, key=lambda d: {"alta": 0, "media": 1, "baja": 2}.get(d["priority"], 9))
+
+    def _discover_from_payload(self, opportunity: DGCPOpportunity) -> list[dict[str, Any]]:
+        items: list[dict[str, Any]] = []
+        payload = opportunity.raw_payload or opportunity.full_info or {}
+        if not isinstance(payload, dict):
+            return items
+
+        if opportunity.source_url:
+            role, priority = classify_process_document("Portal DGCP", source_url=opportunity.source_url)
+            items.append({
+                "title": f"Portal DGCP — {opportunity.code}",
+                "source_url": opportunity.source_url,
+                "source_type": "portal",
+                "doc_role": role,
+                "priority": priority,
+                "format": "link",
+            })
+
+        for key in ("documentos", "pliego", "anexos", "adjuntos", "archivos", "requisitos"):
+            val = payload.get(key) or (payload.get("extra") or {}).get(key)
+            if isinstance(val, list):
+                for entry in val:
+                    if isinstance(entry, dict):
+                        title = str(entry.get("nombre") or entry.get("title") or entry.get("descripcion") or "Documento")
+                        url = entry.get("url") or entry.get("link")
+                        role, priority = classify_process_document(title, source_url=str(url) if url else None)
+                        items.append({
+                            "title": title,
+                            "source_url": url,
+                            "source_type": "dgcp_api",
+                            "doc_role": role,
+                            "priority": priority,
+                            "format": "link",
+                        })
+                    elif isinstance(entry, str):
+                        role, priority = classify_process_document(entry)
+                        items.append({
+                            "title": entry,
+                            "source_type": "dgcp_api",
+                            "doc_role": role,
+                            "priority": priority,
+                            "format": "reference",
+                        })
+            elif isinstance(val, str) and val.strip():
+                role, priority = classify_process_document(val)
+                items.append({
+                    "title": val[:200],
+                    "source_type": "dgcp_api",
+                    "doc_role": role,
+                    "priority": priority,
+                    "format": "text",
+                    "extracted_text": val,
+                })
+
+        desc = opportunity.description or ""
+        if desc.strip() and len(desc) > 120:
+            items.append({
+                "title": f"Descripción del proceso — {opportunity.code}",
+                "source_type": "portal_text",
+                "doc_role": "invitacion",
+                "priority": "media",
+                "format": "text",
+                "extracted_text": desc,
+            })
+
+        return items
+
+    async def _register_reference(self, opportunity: DGCPOpportunity, item: dict[str, Any]) -> DGCPProcessDocument:
+        role = item.get("doc_role", "general")
+        priority = item.get("priority", "media")
+        extracted_text = item.get("extracted_text")
+        storage_filename = None
+        source_type = item.get("source_type", "reference")
+
+        if extracted_text:
+            slug = self.storage.slugify(item["title"])
+            storage_filename = self.storage.write_text(
+                opportunity.code,
+                f"{slug}.txt",
+                extracted_text[:500_000],
+            )
+            source_type = "process_file"
+
+        metadata: dict[str, Any] = {"discovery": item.get("source_type")}
+        if storage_filename:
+            metadata["storage_filename"] = storage_filename
+            metadata["storage_uri"] = self.storage.relative_uri(opportunity.code, storage_filename)
+
+        doc = DGCPProcessDocument(
+            tenant_id=self.tenant_id,
+            opportunity_id=opportunity.id,
+            title=item["title"],
+            source_url=item.get("source_url"),
+            source_type=source_type,
+            doc_role=role,
+            priority=priority,
+            format=item.get("format", "reference"),
+            ingestion_status="analyzed" if extracted_text else "registered",
+            extracted_text=extracted_text[:100000] if extracted_text else None,
+            metadata_=metadata,
+            analyzed_at=datetime.now(timezone.utc) if extracted_text else None,
+        )
+        self.db.add(doc)
+        await self.db.flush()
+        return doc
+
+    async def load_process_documents(self, opportunity_id: uuid.UUID) -> list[DGCPProcessDocument]:
+        result = await self.db.execute(
+            select(DGCPProcessDocument).where(
+                DGCPProcessDocument.tenant_id == self.tenant_id,
+                DGCPProcessDocument.opportunity_id == opportunity_id,
+            ).order_by(DGCPProcessDocument.priority, DGCPProcessDocument.created_at)
+        )
+        return list(result.scalars().all())
+
+    async def build_extraction_corpus(self, opportunity_id: uuid.UUID) -> tuple[str, list[DGCPProcessDocument]]:
+        docs = await self.load_process_documents(opportunity_id)
+        priority_order = {"alta": 0, "media": 1, "baja": 2}
+        usable = [
+            d for d in docs
+            if d.extracted_text and d.priority in ("alta", "media") and d.doc_role not in ("imagen",)
+        ]
+        usable.sort(key=lambda d: (priority_order.get(d.priority, 9), d.title))
+        if not usable:
+            usable = [d for d in docs if d.extracted_text]
+        parts = [f"=== {d.title} ({d.doc_role}) ===\n{d.extracted_text}" for d in usable]
+        return "\n\n".join(parts), usable
+
+    async def read_process_file(
+        self,
+        opportunity: DGCPOpportunity,
+        process_document: DGCPProcessDocument,
+    ) -> tuple[bytes, str]:
+        meta = process_document.metadata_ or {}
+        filename = meta.get("storage_filename")
+        if not filename:
+            raise FileNotFoundError("Documento de proceso sin archivo almacenado")
+        content = self.storage.read_bytes(opportunity.code, filename)
+        mime = "text/plain" if str(filename).endswith(".txt") else "application/octet-stream"
+        return content, mime
+
+    @staticmethod
+    def _summary(doc: DGCPProcessDocument) -> dict:
+        display = DGCPAttachmentIngestionService._display_status(doc)
+        meta = doc.metadata_ or {}
+        return {
+            "id": str(doc.id),
+            "title": doc.title,
+            "doc_role": doc.doc_role,
+            "priority": doc.priority,
+            "format": doc.format,
+            "source_type": doc.source_type,
+            "source_url": doc.source_url,
+            "ingestion_status": doc.ingestion_status,
+            "display_status": display,
+            "has_text": bool(doc.extracted_text),
+            "document_id": str(doc.document_id) if doc.document_id else None,
+            "storage_uri": meta.get("storage_uri"),
+        }
+
+    @staticmethod
+    def _display_status(doc: DGCPProcessDocument) -> str:
+        meta = doc.metadata_ or {}
+        if meta.get("read_error"):
+            return "Error de lectura"
+        if doc.ingestion_status == "error":
+            return "Error de lectura"
+        if doc.extracted_text and doc.doc_role in ("pliego", "tdr", "ficha_tecnica", "especificaciones"):
+            return "Requisitos extraídos"
+        if doc.extracted_text and doc.ingestion_status == "analyzed":
+            return "Texto extraído"
+        if doc.source_type == "process_file":
+            return "Archivo del proceso"
+        if doc.ingestion_status == "registered":
+            return "Detectado"
+        if doc.source_type in ("portal", "dgcp_api", "reference") and not doc.extracted_text:
+            return "Detectado"
+        return "Sin contenido relevante"

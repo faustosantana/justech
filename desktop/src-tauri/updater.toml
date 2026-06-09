@@ -1,0 +1,10 @@
+# JAIOS Desktop — auto-update (futuro)
+# Validación parcial: estructura preparada, sin canal de distribución activo.
+#
+# Pasos futuros:
+# 1. Publicar releases firmados en CDN/GitHub Releases
+# 2. Habilitar createUpdaterArtifacts en tauri.conf.json
+# 3. Configurar pubkey y endpoints aquí
+
+version = "0.1.0"
+status = "disabled"

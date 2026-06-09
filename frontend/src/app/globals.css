@@ -1,0 +1,233 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* JAIOS v3 — Enterprise Light */
+    --background: 216 33% 97%;
+    --foreground: 222 47% 11%;
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+    --primary: 217 91% 53%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 216 33% 94%;
+    --secondary-foreground: 222 47% 11%;
+    --muted: 216 25% 95%;
+    --muted-foreground: 220 9% 46%;
+    --accent: 217 91% 96%;
+    --accent-foreground: 217 91% 40%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+    --success: 142 71% 36%;
+    --success-foreground: 0 0% 100%;
+    --warning: 25 95% 47%;
+    --warning-foreground: 0 0% 100%;
+    --border: 220 23% 92%;
+    --input: 220 23% 92%;
+    --ring: 217 91% 53%;
+    --radius: 0.75rem;
+    --brand-glow: 217 91% 53%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    @apply h-full overflow-x-hidden scroll-smooth;
+  }
+
+  body {
+    @apply min-h-full overflow-x-hidden bg-background text-foreground antialiased;
+    font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  }
+
+  a {
+    @apply no-underline;
+  }
+
+  ::selection {
+    background: hsl(var(--primary) / 0.18);
+    color: hsl(var(--foreground));
+  }
+}
+
+@layer components {
+  .auth-brand-panel {
+    background:
+      radial-gradient(ellipse 80% 60% at 20% 10%, hsl(217 91% 55% / 0.45), transparent 55%),
+      radial-gradient(ellipse 60% 50% at 90% 80%, hsl(217 91% 40% / 0.35), transparent 50%),
+      linear-gradient(155deg, hsl(222 47% 8%) 0%, hsl(222 47% 14%) 42%, hsl(217 91% 32%) 100%);
+  }
+
+  .auth-brand-grid {
+    background-image:
+      linear-gradient(hsl(0 0% 100% / 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(0 0% 100% / 0.04) 1px, transparent 1px);
+    background-size: 48px 48px;
+    mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
+  }
+
+  .auth-form-shell {
+    @apply relative overflow-hidden rounded-2xl border border-border/70;
+    background:
+      linear-gradient(165deg, hsl(var(--card)) 0%, hsl(var(--background)) 100%);
+    box-shadow:
+      0 0 0 1px hsl(var(--primary) / 0.04),
+      0 24px 48px -20px hsl(var(--primary) / 0.18),
+      0 8px 16px -8px hsl(222 47% 11% / 0.08);
+  }
+
+  .auth-form-shell::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 3px;
+    background: linear-gradient(90deg, hsl(var(--primary)), hsl(217 91% 60%), hsl(var(--primary)));
+  }
+
+  .auth-field-label {
+    @apply block text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground;
+  }
+
+  .auth-field-icon {
+    @apply pointer-events-none absolute left-3.5 top-1/2 z-10 -translate-y-1/2 text-muted-foreground transition-colors;
+  }
+
+  .auth-field-input {
+    @apply h-12 w-full rounded-xl border border-border/70 bg-muted/40 px-4 text-[15px] text-foreground shadow-[inset_0_1px_2px_hsl(222_47%_11%/0.04)] transition-all duration-200;
+    @apply placeholder:text-muted-foreground/50;
+    @apply hover:border-primary/25 hover:bg-background/80;
+    @apply focus:border-primary/50 focus:bg-background focus:outline-none focus:ring-4 focus:ring-primary/10;
+  }
+
+  .auth-field-input-error {
+    @apply border-destructive/40 focus:border-destructive/50 focus:ring-destructive/10;
+  }
+
+  .auth-submit {
+    @apply relative h-12 w-full overflow-hidden rounded-xl text-base font-semibold shadow-lg transition-all duration-200;
+    @apply bg-primary text-primary-foreground shadow-primary/25;
+    @apply hover:-translate-y-0.5 hover:bg-primary/90 hover:shadow-xl hover:shadow-primary/30;
+    @apply focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20;
+    @apply disabled:pointer-events-none disabled:opacity-60 disabled:hover:translate-y-0;
+  }
+
+  .platform-backdrop {
+    background:
+      radial-gradient(ellipse 70% 45% at 100% 0%, hsl(var(--primary) / 0.07), transparent 55%),
+      radial-gradient(ellipse 50% 35% at 0% 100%, hsl(var(--secondary) / 0.04), transparent 50%),
+      hsl(var(--background));
+  }
+
+  .brand-surface {
+    @apply rounded-2xl border border-border/80 bg-card/95 shadow-sm backdrop-blur-sm;
+    box-shadow: 0 1px 2px hsl(222 47% 11% / 0.04), 0 8px 24px -12px hsl(var(--primary) / 0.08);
+  }
+
+  .brand-surface-accent {
+    @apply brand-surface relative overflow-hidden;
+  }
+
+  .brand-surface-accent::before {
+    content: "";
+    @apply absolute inset-x-0 top-0 h-0.5;
+    background: linear-gradient(90deg, hsl(var(--primary)), hsl(217 91% 62%), hsl(var(--primary)));
+  }
+
+  .brand-panel-header {
+    @apply border-b border-border/60 bg-gradient-to-r from-primary/10 via-background to-background px-4 py-3;
+  }
+
+  .brand-chip {
+    @apply inline-flex items-center rounded-full border border-primary/20 bg-primary/10 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-primary;
+  }
+
+  .brand-input {
+    @apply h-11 w-full rounded-xl border border-border/80 bg-background/90 px-4 text-sm shadow-sm transition-all;
+    @apply placeholder:text-muted-foreground/60;
+    @apply focus:border-primary/40 focus:outline-none focus:ring-4 focus:ring-primary/10;
+  }
+
+  .brand-sidebar {
+    @apply border-r border-border/80 bg-card/95 backdrop-blur-md;
+    background:
+      linear-gradient(180deg, hsl(var(--card)) 0%, hsl(var(--background)) 100%);
+    box-shadow: inset -1px 0 0 hsl(var(--primary) / 0.06);
+  }
+
+  .brand-sidebar-nav-active {
+    @apply bg-primary text-primary-foreground shadow-md shadow-primary/20;
+  }
+
+  .brand-sidebar-nav-item {
+    @apply text-muted-foreground transition-all duration-200 hover:bg-primary/10 hover:text-primary;
+  }
+
+  .platform-header {
+    @apply flex h-14 shrink-0 items-center gap-3 border-b border-border bg-card/95 px-4 backdrop-blur-md md:gap-4 md:px-6;
+    box-shadow: 0 1px 0 hsl(var(--border));
+  }
+
+  .cc-hero {
+    @apply relative overflow-hidden rounded-2xl border border-border bg-card p-6 md:p-8;
+    box-shadow: 0 1px 2px hsl(222 47% 11% / 0.04), 0 12px 32px -16px hsl(var(--primary) / 0.12);
+  }
+
+  .cc-hero::before {
+    content: "";
+    @apply absolute inset-x-0 top-0 h-1;
+    background: linear-gradient(90deg, hsl(var(--primary)), hsl(217 91% 62%), hsl(var(--primary)));
+  }
+
+  .cc-kpi {
+    @apply relative overflow-hidden rounded-xl border border-border bg-card p-5 transition-all duration-200;
+    box-shadow: 0 1px 2px hsl(222 47% 11% / 0.03);
+  }
+
+  .cc-kpi:hover {
+    @apply border-primary/25 shadow-md;
+    box-shadow: 0 8px 24px -12px hsl(var(--primary) / 0.15);
+  }
+
+  .cc-priority-item {
+    @apply flex items-center justify-between gap-3 rounded-xl border border-border bg-card px-4 py-3 transition hover:border-primary/25 hover:shadow-sm;
+  }
+
+  .cc-timeline-item {
+    @apply relative pl-8 before:absolute before:left-[11px] before:top-8 before:h-[calc(100%-8px)] before:w-px before:bg-border last:before:hidden;
+  }
+
+  .company-menu {
+    @apply absolute right-0 top-full z-50 mt-2 min-w-[280px] overflow-hidden rounded-xl border border-border bg-card py-1 shadow-xl;
+  }
+
+  .assistant-fab {
+    @apply border border-primary/25 bg-gradient-to-r from-background via-background to-primary/5 shadow-xl shadow-primary/20;
+  }
+
+  .assistant-panel-header {
+    @apply border-b border-border/70 bg-gradient-to-r from-primary/10 via-background to-background;
+  }
+}
+
+@layer utilities {
+  .text-success {
+    color: hsl(var(--success));
+  }
+
+  .bg-success {
+    background-color: hsl(var(--success));
+  }
+
+  .text-warning {
+    color: hsl(var(--warning));
+  }
+
+  .bg-warning {
+    background-color: hsl(var(--warning));
+  }
+}

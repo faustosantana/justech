@@ -1,0 +1,47 @@
+name: Desktop Mac Build
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main, master]
+    paths:
+      - "desktop/**"
+      - "scripts/desktop_*"
+      - ".github/workflows/desktop-mac-build.yml"
+
+jobs:
+  build-mac:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Install Tauri CLI
+        run: cargo install tauri-cli --version "^2" --locked
+
+      - name: Prepare and build
+        run: |
+          chmod +x scripts/desktop_prepare_build_env.sh scripts/desktop_build_installers.sh
+          ./scripts/desktop_build_installers.sh
+
+      - name: Zip JAIOS.app
+        run: |
+          APP=".qa/desktop-installers/mac/JAIOS.app"
+          if [ -d "$APP" ]; then
+            ditto -c -k --keepParent "$APP" ".qa/desktop-installers/mac/JAIOS.app.zip"
+          fi
+
+      - name: Upload Mac artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: jaios-desktop-mac
+          path: |
+            .qa/desktop-installers/mac/*.dmg
+            .qa/desktop-installers/mac/JAIOS.app.zip
+          if-no-files-found: warn

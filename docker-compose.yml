@@ -1,0 +1,171 @@
+services:
+  # ─── Reverse Proxy / API Gateway ───────────────────────────────────────────
+  gateway:
+    image: nginx:1.27-alpine
+    ports:
+      - "8000:80"
+    volumes:
+      - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./docker/nginx/conf.d:/etc/nginx/conf.d:ro
+    depends_on:
+      backend:
+        condition: service_healthy
+      frontend:
+        condition: service_started
+    networks:
+      - jaios-net
+    restart: unless-stopped
+
+  # ─── Frontend ────────────────────────────────────────────────────────────────
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      target: development
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8000/api/v1
+      - INTERNAL_API_URL=http://backend:8000
+      - NEXT_PUBLIC_APP_NAME=JAIOS
+    volumes:
+      - ./frontend:/app
+      - ./e2e:/e2e
+      - ./.qa:/qa
+      - /app/node_modules
+    ports:
+      - "3000:3000"
+    networks:
+      - jaios-net
+    restart: unless-stopped
+
+  # ─── Backend API ─────────────────────────────────────────────────────────────
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      target: development
+    env_file:
+      - .env
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://${POSTGRES_USER:-jaios}:${POSTGRES_PASSWORD:-jaios_secret}@postgres:5432/${POSTGRES_DB:-jaios}
+      - QDRANT_HOST=qdrant
+      - REDIS_URL=redis://redis:6379/0
+      - N8N_WEBHOOK_URL=http://n8n:5678
+      - DOCUMENTS_STORAGE_PATH=/var/jaios/documents
+      - KNOWLEDGE_SOURCE_PATH=/source/justechai
+      - KNOWLEDGE_SOURCE_ENABLED=true
+      - EXPEDIENTE_STORAGE_PATH=/var/jaios/expedientes
+    volumes:
+      - ./backend:/app
+      - ./agents:/app/agents
+      - ./integrations:/app/integrations
+      - jaios_documents:/var/jaios/documents
+      - jaios_expedientes:/var/jaios/expedientes
+      - ${KNOWLEDGE_SOURCE_HOST_PATH:-/Users/justech/JustechAI}:/source/justechai:ro
+    expose:
+      - "8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      qdrant:
+        condition: service_started
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    networks:
+      - jaios-net
+    restart: unless-stopped
+
+  # ─── PostgreSQL ──────────────────────────────────────────────────────────────
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-jaios}
+      POSTGRES_USER: ${POSTGRES_USER:-jaios}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-jaios_secret}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/init:/docker-entrypoint-initdb.d:ro
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-jaios} -d ${POSTGRES_DB:-jaios}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - jaios-net
+    restart: unless-stopped
+
+  # ─── Qdrant Vector DB ────────────────────────────────────────────────────────
+  qdrant:
+    image: qdrant/qdrant:v1.12.5
+    volumes:
+      - qdrant_data:/qdrant/storage
+      - ./docker/qdrant/config.yaml:/qdrant/config/production.yaml:ro
+    ports:
+      - "6333:6333"
+      - "6334:6334"
+    networks:
+      - jaios-net
+    restart: unless-stopped
+
+  # ─── Redis ───────────────────────────────────────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+      - jaios-net
+    restart: unless-stopped
+
+  # ─── n8n Automation ──────────────────────────────────────────────────────────
+  n8n:
+    image: n8nio/n8n:1.72.1
+    environment:
+      - N8N_HOST=${N8N_HOST:-localhost}
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=http
+      - WEBHOOK_URL=http://localhost:5678/
+      - GENERIC_TIMEZONE=America/Santo_Domingo
+      - DB_TYPE=postgresdb
+      - DB_POSTGRESDB_HOST=postgres
+      - DB_POSTGRESDB_PORT=5432
+      - DB_POSTGRESDB_DATABASE=${POSTGRES_DB:-jaios}_n8n
+      - DB_POSTGRESDB_USER=${POSTGRES_USER:-jaios}
+      - DB_POSTGRESDB_PASSWORD=${POSTGRES_PASSWORD:-jaios_secret}
+    volumes:
+      - n8n_data:/home/node/.n8n
+      - ./docker/n8n/workflows:/home/node/workflows:ro
+    ports:
+      - "5678:5678"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - jaios-net
+    restart: unless-stopped
+
+networks:
+  jaios-net:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  qdrant_data:
+  redis_data:
+  n8n_data:
+  jaios_documents:
+  jaios_expedientes:

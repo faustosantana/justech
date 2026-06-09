@@ -1,0 +1,25 @@
+{
+  "name": "JAIOS — Justech",
+  "short_name": "JAIOS",
+  "description": "Centro de mando empresarial Justech — ventas, licitaciones, documentos e inteligencia asistida.",
+  "start_url": "/dashboard",
+  "display": "standalone",
+  "background_color": "#F6F8FB",
+  "theme_color": "#2563EB",
+  "lang": "es-DO",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "/icons/jaios-192.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/jaios-512.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

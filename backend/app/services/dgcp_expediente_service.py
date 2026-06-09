@@ -1,0 +1,191 @@
+"""Generador de expediente DGCP — copias controladas (Fase 7.3)."""
+
+from __future__ import annotations
+
+import json
+import shutil
+import uuid
+import zipfile
+from datetime import datetime, timezone
+from io import BytesIO
+from pathlib import Path
+
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from app.config import settings
+from app.models.dgcp_opportunity import DGCPOpportunity
+from app.schemas.dgcp_bid import DGCPBidPackageStatusResponse, DGCPExpedientePrepareResponse
+from app.services.dgcp_compliance_engine import DGCPComplianceEngine
+from app.services.dgcp_form_autofill_service import DGCPFormAutofillService
+from app.services.knowledge_source_provider import get_knowledge_source_provider
+
+
+EXPEDIENTE_STATUSES = (
+    "sin_preparar",
+    "expediente_en_preparacion",
+    "expediente_incompleto",
+    "expediente_listo_para_revision",
+    "expediente_listo_para_presentar",
+)
+
+FOLDER_MAP = {
+    "legal": "01_Documentos_Legales",
+    "administrativo": "02_Formularios_SNCC",
+    "tecnico": "03_Oferta_Tecnica",
+    "financiero": "04_Oferta_Economica",
+    "proveedor": "05_Proveedor_Fabricante",
+}
+
+
+class DGCPExpedienteService:
+    def __init__(self, db: AsyncSession, tenant_id: uuid.UUID, user_id: uuid.UUID | None = None):
+        self.db = db
+        self.tenant_id = tenant_id
+        self.user_id = user_id
+        self.forms = DGCPFormAutofillService(db, tenant_id)
+        self.source = get_knowledge_source_provider()
+
+    def expediente_dir(self, opportunity: DGCPOpportunity) -> Path:
+        safe = opportunity.code.replace("/", "_")
+        return Path(settings.expediente_storage_path) / str(self.tenant_id) / safe
+
+    async def prepare(
+        self,
+        opportunity: DGCPOpportunity,
+        *,
+        checklist: list[dict],
+        matches: list[dict],
+        bid_package: dict,
+        user_input: dict | None = None,
+        generated_forms: list | None = None,
+    ) -> DGCPExpedientePrepareResponse:
+        base = self.expediente_dir(opportunity)
+        for folder in (
+            "01_Documentos_Legales",
+            "02_Formularios_SNCC",
+            "03_Oferta_Tecnica",
+            "04_Oferta_Economica",
+            "05_Proveedor_Fabricante",
+            "06_Revision",
+        ):
+            (base / folder).mkdir(parents=True, exist_ok=True)
+
+        copied: list[dict] = []
+        for match in matches:
+            if match.get("status") not in ("encontrado", "requiere_actualizacion", "plantilla_disponible"):
+                continue
+            rel = match.get("relative_path")
+            if rel and self.source.is_available():
+                try:
+                    src_bytes = self.source.read_bytes(rel)
+                    tipo = next((c.get("tipo") for c in checklist if c.get("requirement_key") == match.get("requirement_key")), "legal")
+                    folder = FOLDER_MAP.get(tipo, "01_Documentos_Legales")
+                    dest = base / folder / Path(rel).name
+                    dest.write_bytes(src_bytes)
+                    copied.append({"requirement": match.get("requirement_label"), "path": str(dest.relative_to(base))})
+                except Exception:
+                    continue
+
+        forms_out = list(generated_forms or [])
+        for form_type in ("SNCC.F042", "SNCC.F047", "SNCC.F033"):
+            gen = await self.forms.generate_controlled_copy(
+                opportunity,
+                form_type=form_type,
+                user_input=user_input,
+                expediente_path=base / "02_Formularios_SNCC",
+            )
+            forms_out.append(gen.model_dump(mode="json"))
+
+        prep_pct = float(bid_package.get("preparation_pct", 0))
+        status = DGCPComplianceEngine.compute_expediente_status(checklist, prep_pct)
+        if status == "expediente_listo_para_revision":
+            status = "expediente_incompleto"
+
+        manifest = {
+            "opportunity_code": opportunity.code,
+            "opportunity_title": opportunity.title,
+            "prepared_at": datetime.now(timezone.utc).isoformat(),
+            "preparation_pct": prep_pct,
+            "expediente_status": status,
+            "copied_documents": copied,
+            "generated_forms": forms_out,
+            "checklist_summary": {
+                "total": len(checklist),
+                "found": bid_package.get("found_documents", 0),
+                "missing": bid_package.get("pending_documents", 0),
+                "expired": bid_package.get("expired_documents", 0),
+            },
+            "user_input": user_input or {},
+            "note": "Expediente generado como copia controlada — originales intactos",
+        }
+        manifest_path = base / "manifest.json"
+        manifest_path.write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8")
+
+        report_path = base / "06_Revision" / "reporte_preparacion.json"
+        report_path.write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8")
+
+        return DGCPExpedientePrepareResponse(
+            opportunity_id=opportunity.id,
+            expediente_status=status,
+            expediente_path=str(base),
+            preparation_pct=prep_pct,
+            copied_documents=len(copied),
+            generated_forms=len(forms_out),
+            manifest=manifest,
+        )
+
+    def status(
+        self,
+        opportunity: DGCPOpportunity,
+        *,
+        expediente_status: str,
+        expediente_path: str | None,
+        bid_package: dict,
+        alerts: list,
+        checklist: list | None = None,
+    ) -> DGCPBidPackageStatusResponse:
+        manifest = {}
+        if expediente_path:
+            mp = Path(expediente_path) / "manifest.json"
+            if mp.exists():
+                manifest = json.loads(mp.read_text(encoding="utf-8"))
+        return DGCPBidPackageStatusResponse(
+            opportunity_id=opportunity.id,
+            opportunity_code=opportunity.code,
+            expediente_status=expediente_status,
+            expediente_path=expediente_path,
+            preparation_pct=float(bid_package.get("preparation_pct", 0)),
+            total_requirements=int(bid_package.get("total_requirements", 0)),
+            mandatory_requirements=int(bid_package.get("mandatory_requirements", 0)),
+            compliant_count=int(bid_package.get("compliant_count", 0)),
+            found_documents=int(bid_package.get("found_documents", 0)),
+            pending_documents=int(bid_package.get("pending_documents", 0)),
+            expired_documents=int(bid_package.get("expired_documents", 0)),
+            forms_to_complete=int(bid_package.get("forms_to_complete", 0)),
+            review_count=int(bid_package.get("review_count", 0)),
+            alerts_count=len(alerts),
+            manifest=manifest,
+            can_mark_ready=bool(
+                expediente_path
+                and DGCPComplianceEngine.can_mark_ready_for_review(checklist or [])
+            ),
+            can_download=bool(expediente_path and Path(expediente_path).exists()),
+            present_enabled=False,
+        )
+
+    def mark_ready_for_review(self, current_status: str) -> str:
+        if current_status in ("expediente_en_preparacion", "expediente_incompleto", "sin_preparar"):
+            return "expediente_listo_para_revision"
+        return current_status
+
+    def build_download_archive(self, expediente_path: str) -> tuple[bytes, str]:
+        base = Path(expediente_path)
+        if not base.exists():
+            raise ValueError("Expediente no encontrado")
+        buffer = BytesIO()
+        with zipfile.ZipFile(buffer, "w", zipfile.ZIP_DEFLATED) as zf:
+            for path in base.rglob("*"):
+                if path.is_file():
+                    zf.write(path, arcname=str(path.relative_to(base)))
+        code = base.name
+        return buffer.getvalue(), f"expediente_{code}.zip"

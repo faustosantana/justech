@@ -1,0 +1,64 @@
+name: Desktop Windows Build
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main, master]
+    paths:
+      - "desktop/**"
+      - "scripts/desktop_*"
+      - ".github/workflows/desktop-windows-build.yml"
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Rust cache
+        uses: swatinem/rust-cache@v2
+        with:
+          workspaces: desktop/src-tauri
+
+      - name: Build Windows installers
+        shell: bash
+        run: |
+          chmod +x scripts/desktop_build_windows.sh scripts/generate_jaios_icons.py
+          ./scripts/desktop_build_windows.sh
+
+      - name: Verify artifacts
+        shell: bash
+        run: |
+          ls -lah .qa/desktop-installers/windows/
+          test -f .qa/desktop-installers/windows/JAIOS_0.1.0_x64.msi
+          test -f .qa/desktop-installers/windows/JAIOS_0.1.0_x64-setup.exe
+
+      - name: Upload JAIOS Windows MSI
+        uses: actions/upload-artifact@v4
+        with:
+          name: JAIOS-Windows-MSI
+          path: .qa/desktop-installers/windows/JAIOS_0.1.0_x64.msi
+          if-no-files-found: error
+
+      - name: Upload JAIOS Windows Setup EXE
+        uses: actions/upload-artifact@v4
+        with:
+          name: JAIOS-Windows-Setup-EXE
+          path: .qa/desktop-installers/windows/JAIOS_0.1.0_x64-setup.exe
+          if-no-files-found: error
+
+      - name: Upload bundle folder (debug)
+        uses: actions/upload-artifact@v4
+        with:
+          name: jaios-desktop-windows-bundle
+          path: |
+            .qa/desktop-installers/windows/*
+          if-no-files-found: warn

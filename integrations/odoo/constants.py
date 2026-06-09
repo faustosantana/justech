@@ -1,0 +1,32 @@
+READ_ONLY_METHODS = frozenset({
+    "search",
+    "search_read",
+    "read",
+    "search_count",
+    "name_search",
+    "name_get",
+    "fields_get",
+    "read_group",
+    "default_get",
+    "get_metadata",
+})
+
+BLOCKED_METHOD_PREFIXES = (
+    "create",
+    "write",
+    "unlink",
+    "action_",
+    "button_",
+    "toggle_",
+    "send_",
+    "cancel",
+    "validate",
+    "confirm",
+    "post",
+    "approve",
+    "reject",
+    "reset",
+    "archive",
+    "unarchive",
+    "copy",
+)

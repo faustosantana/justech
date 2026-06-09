@@ -8,7 +8,7 @@ DESKTOP="$ROOT/desktop"
 QA="$ROOT/.qa"
 WIN_OUT="$QA/desktop-installers/windows"
 BUNDLE="$DESKTOP/src-tauri/target/release/bundle"
-VERSION="$(node -p "require('$DESKTOP/package.json').version")"
+VERSION="$(node -p "require('${DESKTOP}/package.json').version")"
 
 echo "=== JAIOS Desktop — build Windows v$VERSION ==="
 

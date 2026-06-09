@@ -28,6 +28,12 @@ jobs:
         with:
           workspaces: desktop/src-tauri
 
+      - name: Verify checkout
+        shell: bash
+        run: |
+          ls -la desktop/
+          test -f desktop/package.json
+
       - name: Build Windows installers
         shell: bash
         run: |

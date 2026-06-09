@@ -8,7 +8,15 @@ DESKTOP="$ROOT/desktop"
 QA="$ROOT/.qa"
 WIN_OUT="$QA/desktop-installers/windows"
 BUNDLE="$DESKTOP/src-tauri/target/release/bundle"
-VERSION="$(node -p "require('${DESKTOP}/package.json').version")"
+
+if [[ ! -f "$DESKTOP/package.json" ]]; then
+  echo "ERROR: no se encuentra $DESKTOP/package.json"
+  ls -la "$ROOT" || true
+  ls -la "$DESKTOP" || true
+  exit 1
+fi
+
+VERSION="$(cd "$DESKTOP" && node -p "require('./package.json').version")"
 
 echo "=== JAIOS Desktop — build Windows v$VERSION ==="
 
@@ -27,18 +35,20 @@ if ! command -v cargo >/dev/null; then
   exit 1
 fi
 
-echo "→ Iconos (multiplataforma)…"
-python3 "$ROOT/scripts/generate_jaios_icons.py"
-
-cd "$DESKTOP"
-export CARGO_TARGET_DIR="$DESKTOP/src-tauri/target"
-
 echo "→ npm install…"
 if ! npm install --no-audit --no-fund; then
   npm config set strict-ssl false
   npm install --no-audit --no-fund
   npm config set strict-ssl true
 fi
+
+echo "→ Iconos (si faltan)…"
+if [[ ! -f "$DESKTOP/src-tauri/icons/icon.ico" ]]; then
+  python3 "$ROOT/scripts/generate_jaios_icons.py"
+fi
+
+cd "$DESKTOP"
+export CARGO_TARGET_DIR="$DESKTOP/src-tauri/target"
 
 echo "→ vite build…"
 npm run build

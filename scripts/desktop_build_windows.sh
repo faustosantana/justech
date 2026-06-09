@@ -35,6 +35,9 @@ if ! command -v cargo >/dev/null; then
   exit 1
 fi
 
+cd "$DESKTOP"
+export CARGO_TARGET_DIR="$DESKTOP/src-tauri/target"
+
 echo "→ npm install…"
 if ! npm install --no-audit --no-fund; then
   npm config set strict-ssl false
@@ -43,12 +46,9 @@ if ! npm install --no-audit --no-fund; then
 fi
 
 echo "→ Iconos (si faltan)…"
-if [[ ! -f "$DESKTOP/src-tauri/icons/icon.ico" ]]; then
+if [[ ! -f "src-tauri/icons/icon.ico" ]]; then
   python3 "$ROOT/scripts/generate_jaios_icons.py"
 fi
-
-cd "$DESKTOP"
-export CARGO_TARGET_DIR="$DESKTOP/src-tauri/target"
 
 echo "→ vite build…"
 npm run build

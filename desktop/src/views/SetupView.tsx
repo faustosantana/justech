@@ -19,7 +19,14 @@ export function SetupView({ onDone }: Props) {
     desktopApi.getAppConfig().then(setConfig);
   }, []);
 
-  if (!config) return <div className="shell">Cargando…</div>;
+  if (!config) {
+    return (
+      <div className="login-page">
+        <div className="login-bg" aria-hidden />
+        <p className="login-loading">Cargando…</p>
+      </div>
+    );
+  }
 
   async function testConnection() {
     setLoading(true);
@@ -42,13 +49,14 @@ export function SetupView({ onDone }: Props) {
     }
   }
 
-  async function continueToLogin() {
+  async function saveAndReturn() {
     if (!connectionOk) {
       await testConnection();
-      return;
+      if (!connectionOk) return;
     }
     setLoading(true);
     try {
+      await desktopApi.saveAppConfig({ ...config, setup_completed: true });
       await desktopApi.completeSetup();
       onDone();
     } catch (e) {
@@ -59,85 +67,88 @@ export function SetupView({ onDone }: Props) {
   }
 
   return (
-    <div className="shell">
-      <div className="brand">
-        <JaiosLogo size={44} showWordmark={false} />
-        <div>
-          <h1>Configuración del servidor</h1>
-          <p>Cambia la conexión al centro JAIOS</p>
-        </div>
-      </div>
-      <div className="card">
-        <h2 style={{ marginTop: 0 }}>Servidor detectado</h2>
-        <div className="server-detected">{config.web_url}</div>
-        <p className="hint">
-          Empresa: <strong>{config.tenant_slug}</strong> — no necesita Docker ni base de datos local.
-        </p>
+    <div className="login-page">
+      <div className="login-bg" aria-hidden />
+      <div className="login-shell">
+        <header className="login-header">
+          <JaiosLogo size={48} />
+          <h1>Cambiar servidor</h1>
+          <p>Conecta JAIOS al centro operativo de tu empresa</p>
+        </header>
 
-        <div className="actions">
-          <button className="secondary" disabled={loading} onClick={testConnection}>
-            Probar conexión
-          </button>
-          <button className="primary" disabled={loading || !connectionOk} onClick={continueToLogin}>
-            Guardar y volver al login
-          </button>
-        </div>
+        <div className="login-card">
+          <p className="setup-server-label">Servidor actual</p>
+          <div className="server-detected">{config.web_url}</div>
+          <p className="setup-hint">
+            Empresa: <strong>{config.tenant_slug}</strong>
+          </p>
 
-        {status && <p className="status ok">{status}</p>}
-        {error && <p className="status error">{error}</p>}
-
-        <button type="button" className="link-btn" onClick={() => setAdvanced((v) => !v)}>
-          {advanced ? "Ocultar configuración avanzada" : "Configuración avanzada"}
-        </button>
-
-        {advanced && (
-          <div className="advanced-panel">
-            <label htmlFor="web_url">URL del servidor JAIOS</label>
-            <input
-              id="web_url"
-              type="url"
-              value={config.web_url}
-              onChange={(e) => {
-                setConnectionOk(false);
-                setConfig({ ...config, web_url: e.target.value });
-              }}
-            />
-            <label htmlFor="tenant">Empresa (tenant)</label>
-            <input
-              id="tenant"
-              type="text"
-              value={config.tenant_slug}
-              onChange={(e) => setConfig({ ...config, tenant_slug: e.target.value })}
-            />
-            <div className="checkbox-row">
-              <input
-                id="https"
-                type="checkbox"
-                checked={config.require_https}
-                onChange={(e) => setConfig({ ...config, require_https: e.target.checked })}
-              />
-              <label htmlFor="https">Exigir HTTPS (producción)</label>
-            </div>
-            <p className="version">Producción futura: https://jaios.justech.do</p>
-            <p className="version">API: {config.api_url}</p>
-            <button
-              type="button"
-              className="ghost danger"
-              disabled={loading}
-              onClick={async () => {
-                if (!confirm("¿Restablecer configuración y cerrar sesión?")) return;
-                await desktopApi.resetAppConfig();
-                const cfg = await desktopApi.getAppConfig();
-                setConfig(cfg);
-                setConnectionOk(false);
-                setStatus(null);
-                setError(null);
-              }}
-            >
-              Restablecer configuración
+          <div className="login-secondary setup-actions">
+            <button type="button" className="btn-link" disabled={loading} onClick={testConnection}>
+              {loading ? "Probando…" : "Probar conexión"}
+            </button>
+            <button type="button" className="btn-link" onClick={() => setAdvanced((v) => !v)}>
+              {advanced ? "Ocultar avanzado" : "Configuración avanzada"}
             </button>
           </div>
-        )}
+
+          {advanced && (
+            <div className="advanced-panel">
+              <label htmlFor="web_url">URL del servidor</label>
+              <input
+                id="web_url"
+                type="url"
+                value={config.web_url}
+                onChange={(e) => {
+                  setConnectionOk(false);
+                  setConfig({ ...config, web_url: e.target.value });
+                }}
+              />
+              <label htmlFor="tenant">Empresa / Tenant</label>
+              <input
+                id="tenant"
+                type="text"
+                value={config.tenant_slug}
+                onChange={(e) => setConfig({ ...config, tenant_slug: e.target.value })}
+              />
+              <label className="checkbox-row login-checkbox">
+                <input
+                  type="checkbox"
+                  checked={config.require_https}
+                  onChange={(e) => setConfig({ ...config, require_https: e.target.checked })}
+                />
+                <span>Exigir HTTPS (solo producción)</span>
+              </label>
+              <button
+                type="button"
+                className="btn-link danger-link"
+                disabled={loading}
+                onClick={async () => {
+                  if (!confirm("¿Restablecer configuración y cerrar sesión?")) return;
+                  await desktopApi.resetAppConfig();
+                  const cfg = await desktopApi.getAppConfig();
+                  setConfig(cfg);
+                  setConnectionOk(false);
+                  setStatus(null);
+                  setError(null);
+                }}
+              >
+                Restablecer configuración
+              </button>
+            </div>
+          )}
+
+          {status && <p className="status ok">{status}</p>}
+          {error && <p className="status error">{error}</p>}
+
+          <button type="button" className="btn-primary btn-full setup-save" disabled={loading} onClick={saveAndReturn}>
+            {loading ? "Guardando…" : "Guardar y volver al login"}
+          </button>
+
+          <button type="button" className="btn-link setup-back" onClick={onDone}>
+            Cancelar
+          </button>
+        </div>
       </div>
     </div>
   );

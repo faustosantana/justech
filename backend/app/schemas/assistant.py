@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Any
 from uuid import UUID
 
@@ -33,6 +34,38 @@ class AssistantAction(BaseModel):
     url: str | None = None
     entity_type: str | None = None
     entity_id: str | None = None
+
+
+class CopilotBriefingItem(BaseModel):
+    label: str
+    detail: str | None = None
+    severity: str = "info"
+    href: str | None = None
+    question: str | None = None
+
+
+class CopilotQuickAction(BaseModel):
+    label: str
+    question: str | None = None
+    href: str | None = None
+
+
+class CopilotBriefingSection(BaseModel):
+    title: str
+    items: list[CopilotBriefingItem] = Field(default_factory=list)
+
+
+class CopilotBriefingResponse(BaseModel):
+    greeting: str
+    mode: str = "managerial"
+    company_name: str | None = None
+    updated_at: datetime | None = None
+    priorities: CopilotBriefingSection
+    alerts: CopilotBriefingSection
+    opportunities: CopilotBriefingSection
+    recommendations: CopilotBriefingSection
+    quick_actions: list[CopilotQuickAction] = Field(default_factory=list)
+    recent_activity: CopilotBriefingSection
 
 
 class AssistantQueryResponse(BaseModel):

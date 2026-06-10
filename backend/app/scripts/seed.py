@@ -14,17 +14,44 @@ ADMIN_PASSWORD = "JaiosAdmin2026!"
 TENANT_SLUG = "justech"
 
 TEAM_USERS = [
-    {"email": "marieli@justech.do", "full_name": "Marieli", "role": "usuario", "password": "JaiosTeam2026!"},
-    {"email": "jennipher@justech.do", "full_name": "Jennipher", "role": "usuario", "password": "JaiosTeam2026!"},
-    {"email": "diana@justech.do", "full_name": "Diana", "role": "usuario", "password": "JaiosTeam2026!"},
-    {"email": "jesus@justech.do", "full_name": "Jesús", "role": "usuario", "password": "JaiosTeam2026!"},
-    {"email": "felipe@justech.do", "full_name": "Felipe Mejía", "role": "usuario", "password": "JaiosTeam2026!"},
+    {
+        "email": "marieli@justech.do",
+        "full_name": "Marieli Rodriguez",
+        "role": "usuario",
+        "password": "JaiosTeam2026!",
+        "department": "Operaciones",
+    },
+    {
+        "email": "administracion@just-offices.com",
+        "full_name": "Abigail Crisostomo",
+        "role": "usuario",
+        "password": "JaiosTeam2026!",
+        "department": "Administración",
+    },
+    {
+        "email": "administracion@justech.do",
+        "full_name": "Diana Ayala",
+        "role": "usuario",
+        "password": "JaiosTeam2026!",
+        "department": "Administración",
+    },
+    {
+        "email": "recepcion@justech.do",
+        "full_name": "Jennipher Martinez",
+        "role": "usuario",
+        "password": "JaiosTeam2026!",
+        "department": "Recepción",
+    },
+    {"email": "jesus@justech.do", "full_name": "Jesús", "role": "usuario", "password": "JaiosTeam2026!", "department": "Operaciones"},
+    {"email": "felipe@justech.do", "full_name": "Felipe Mejía", "role": "usuario", "password": "JaiosTeam2026!", "department": "Operaciones"},
 ]
 
 # Supervisor por responsable (nombre parcial)
 SUPERVISOR_BY_ASSIGNEE = {
     "Marieli": "Fausto",
+    "Marieli Rodriguez": "Fausto",
     "Jennipher": "Fausto",
+    "Jennipher Martinez": "Fausto",
     "Felipe": "Jesús",
     "Felipe Mejía": "Jesús",
 }
@@ -72,6 +99,7 @@ async def _ensure_core_seed(db) -> None:
             tenant=tenant,
             role=member["role"],
             is_default=False,
+            department=member.get("department"),
         )
 
     await db.commit()
@@ -88,6 +116,7 @@ async def _ensure_user(
     tenant: Tenant,
     role: str,
     is_default: bool,
+    department: str | None = None,
 ) -> User:
     result = await db.execute(select(User).where(User.email == email))
     user = result.scalar_one_or_none()
@@ -108,21 +137,25 @@ async def _ensure_user(
             user.password_hash = hash_password(password)
         await db.flush()
 
-    membership = await db.execute(
+    membership_result = await db.execute(
         select(TenantMembership).where(
             TenantMembership.tenant_id == tenant.id,
             TenantMembership.user_id == user.id,
         )
     )
-    if not membership.scalar_one_or_none():
+    membership = membership_result.scalar_one_or_none()
+    if not membership:
         db.add(
             TenantMembership(
                 tenant_id=tenant.id,
                 user_id=user.id,
                 role=role,
                 is_default=is_default,
+                department=department,
             )
         )
+    elif department and membership.department != department:
+        membership.department = department
     return user
 
 

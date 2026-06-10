@@ -66,6 +66,10 @@ export interface M365Account {
   jaios_user_email: string | null;
   email: string | null;
   connection_status: string;
+  connection_mode: string;
+  imap_host: string | null;
+  imap_port: number;
+  mailbox_connected: boolean;
   scopes_granted: string[];
   last_sync_at: string | null;
   is_active: boolean;

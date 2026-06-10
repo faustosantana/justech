@@ -5,6 +5,8 @@ import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 
 import { DocumentPreviewModal } from "@/components/dgcp/document-preview-modal";
+import { DGCPFinalizationPanel } from "@/components/dgcp/dgcp-finalization-panel";
+import { RealExpedientePanel } from "@/components/dgcp/real-expediente-panel";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -27,6 +29,7 @@ import {
   type DGCPProcessDocuments,
   type DGCPRequirements,
   type DGCPOpportunity,
+  type DGCPEconomicOfferStatus,
   isDGCPOperationalInterest,
 } from "@/lib/dgcp";
 import { ApiError } from "@/lib/api";
@@ -36,7 +39,12 @@ const PROCESS_DOC_SOURCES = new Set(["portal", "dgcp_api", "portal_text", "proce
 const PLIEGO_ROLES = new Set(["pliego", "tdr", "terminos_referencia", "ficha_tecnica", "anexo"]);
 
 function hasChecklistEvidence(item: DGCPChecklistItem): boolean {
-  return Boolean(item.document_id || item.knowledge_asset_id || item.status === "no_aplica");
+  return Boolean(
+    item.document_id ||
+      item.knowledge_asset_id ||
+      item.process_document_id ||
+      item.status === "no_aplica",
+  );
 }
 
 function effectiveChecklistStatus(item: DGCPChecklistItem): string {
@@ -125,6 +133,7 @@ export function OpportunityBidSection({
   const [actionSuccess, setActionSuccess] = useState<string | null>(null);
   const [associateItemId, setAssociateItemId] = useState<string | null>(null);
   const [associateBusy, setAssociateBusy] = useState(false);
+  const [economicOfferStatus, setEconomicOfferStatus] = useState<DGCPEconomicOfferStatus | null>(null);
 
   const analyzed = Boolean(requirements?.analyzed_at ?? bidPackage?.analyzed_at);
 
@@ -145,14 +154,16 @@ export function OpportunityBidSection({
       setMatches(mat);
 
       if (req.analyzed_at ?? pkg.analyzed_at) {
-        const [proc, alertRes, exp] = await Promise.all([
+        const [proc, alertRes, exp, eco] = await Promise.all([
           apiClient.getDGCPProcessDocuments(opportunity.id).catch(() => null),
           apiClient.getDGCPAlerts(opportunity.id).catch(() => null),
           apiClient.getDGCPExpedienteStatus(opportunity.id).catch(() => null),
+          apiClient.getDGCPEconomicOfferStatus(opportunity.id).catch(() => null),
         ]);
         if (proc) setProcessDocs(proc);
         if (alertRes) setAlerts(alertRes);
         if (exp) setExpedienteStatus(exp);
+        if (eco) setEconomicOfferStatus(eco);
       }
     } catch (err) {
       const message =
@@ -198,8 +209,12 @@ export function OpportunityBidSection({
       if ("analysis_warnings" in result && Array.isArray(result.analysis_warnings)) {
         setAnalysisWarnings(result.analysis_warnings as string[]);
       }
-      const exp = await apiClient.getDGCPExpedienteStatus(opportunity.id).catch(() => null);
+      const [exp, eco] = await Promise.all([
+        apiClient.getDGCPExpedienteStatus(opportunity.id).catch(() => null),
+        apiClient.getDGCPEconomicOfferStatus(opportunity.id).catch(() => null),
+      ]);
       if (exp) setExpedienteStatus(exp);
+      if (eco) setEconomicOfferStatus(eco);
       onAnalysisUpdate?.(result.bid_package, result.checklist, exp?.expediente_status ?? null);
     } catch (err) {
       setError(apiErrorMessage(err, "Error al analizar requisitos."));
@@ -419,6 +434,31 @@ export function OpportunityBidSection({
         </Button>
       </div>
 
+      {analyzed && economicOfferStatus && (
+        <div className="rounded-lg border border-primary/20 bg-primary/5 px-4 py-3 text-sm flex flex-wrap items-center gap-3 justify-between">
+          <div>
+            <p className="font-medium">Oferta económica — {economicOfferStatus.display_status}</p>
+            <p className="text-xs text-muted-foreground mt-0.5">
+              {economicOfferStatus.document_title
+                ? `Documento: ${economicOfferStatus.document_title}`
+                : economicOfferStatus.draft_status
+                  ? `Borrador: ${economicOfferStatus.draft_status}`
+                  : "Suba la cotización PDF manualmente desde el checklist (Asociar / subir)"}
+              {economicOfferStatus.preparation_pct != null
+                ? ` · Preparación ${economicOfferStatus.preparation_pct.toFixed(0)}%`
+                : ""}
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {economicOfferStatus.task_id && (
+              <Button size="sm" variant="outline" asChild>
+                <Link href={`/tasks/${economicOfferStatus.task_id}`}>Ver tarea</Link>
+              </Button>
+            )}
+          </div>
+        </div>
+      )}
+
       {analysisWarnings.length > 0 && (
         <div className="rounded-lg border border-warning/30 bg-amber-500/10 px-4 py-3 text-sm text-amber-800 dark:text-amber-200">
           {analysisWarnings.map((w) => (
@@ -525,12 +565,15 @@ export function OpportunityBidSection({
           {activeTab === "expediente" && bidPackage && (
             analyzed ? (
               <ExpedienteTab
+                opportunityId={opportunity.id}
+                checklist={checklist}
                 bidPackage={bidPackage}
                 expedienteStatus={expedienteStatus}
                 busy={expedienteBusy}
                 onPrepare={() => void handlePrepareExpediente()}
                 onDownload={() => void handleDownloadExpediente()}
                 onMarkReady={() => void handleMarkReady()}
+                onFinalizationUpdated={() => void load()}
               />
             ) : (
               <EmptyAnalysisHint />
@@ -921,6 +964,7 @@ function RequirementActions({
     item.document_id || item.document_title || item.knowledge_asset_id || item.process_document_id,
   );
   const isFaltante = effectiveChecklistStatus(item) === "faltante" || !hasDoc;
+  const isOferta = item.requirement_key === "oferta_economica";
   return (
     <div className="flex flex-wrap gap-1 justify-end">
       {hasDoc && (
@@ -935,7 +979,7 @@ function RequirementActions({
       )}
       {isFaltante && (
         <Button size="sm" variant="outline" onClick={onAssociate}>
-          Asociar / subir
+          {isOferta ? "Adjuntar" : "Asociar / subir"}
         </Button>
       )}
       <Button size="sm" variant="ghost" onClick={onValidate}>
@@ -1222,19 +1266,25 @@ function ChecklistTab({
 }
 
 function ExpedienteTab({
+  opportunityId,
+  checklist,
   bidPackage,
   expedienteStatus,
   busy,
   onPrepare,
   onDownload,
   onMarkReady,
+  onFinalizationUpdated,
 }: {
+  opportunityId: string;
+  checklist: DGCPChecklist | null;
   bidPackage: DGCPBidPackage;
   expedienteStatus: DGCPExpedienteStatus | null;
   busy: boolean;
   onPrepare: () => void;
   onDownload: () => void;
   onMarkReady: () => void;
+  onFinalizationUpdated: () => void;
 }) {
   const statusLabel =
     EXPEDIENTE_STATUS_LABELS[expedienteStatus?.expediente_status ?? "sin_preparar"] ?? "Sin preparar";
@@ -1297,6 +1347,13 @@ function ExpedienteTab({
             </ul>
           </div>
         )}
+        <DGCPFinalizationPanel
+          opportunityId={opportunityId}
+          checklist={checklist}
+          busy={busy}
+          onUpdated={onFinalizationUpdated}
+        />
+        <RealExpedientePanel opportunityId={opportunityId} busy={busy} onUpdated={onFinalizationUpdated} />
         <div className="grid gap-4 sm:grid-cols-2 text-sm">
           <ListBlock title="Disponibles" items={bidPackage.available} />
           <ListBlock title="Faltantes" items={bidPackage.missing} empty="Ninguno" />
@@ -1458,7 +1515,7 @@ function AutollenadoTab({
               </Button>
             ))}
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-2 flex-wrap">
             <Button onClick={onPreview}>Vista previa autollenado</Button>
             <Button variant="secondary" onClick={onGenerate}>
               Generar copia controlada
@@ -1686,6 +1743,8 @@ function StatusPill({ status, item }: { status: string; item?: DGCPChecklistItem
           "bg-warning/10 text-warning",
         (effective === "requiere_revision" || effective === "encontrado_sin_fecha") &&
           "bg-orange-500/15 text-orange-600",
+        (effective === "adjuntado" || effective === "borrador_pendiente") &&
+          "bg-primary/10 text-primary",
         effective === "no_aplica" && "bg-blue-500/15 text-blue-600",
       )}
     >

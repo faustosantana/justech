@@ -8,6 +8,7 @@ import {
   Search,
   Upload,
 } from "lucide-react";
+import Link from "next/link";
 import { Suspense, useCallback, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
@@ -211,6 +212,14 @@ function DocumentsPageContent() {
             {error}
           </div>
         )}
+
+        <div className="flex flex-wrap gap-2">
+          <Link href="/documents/identity">
+            <Button size="sm" variant="outline">
+              Identidad corporativa (firma / sellos)
+            </Button>
+          </Link>
+        </div>
 
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-7">
           <MetricCard label="Archivos corporativos" value={cats.corporativos ?? total} />

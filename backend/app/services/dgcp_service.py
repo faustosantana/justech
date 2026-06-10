@@ -1,4 +1,5 @@
 import uuid
+from datetime import date
 from decimal import Decimal
 
 from fastapi import Request
@@ -29,9 +30,22 @@ from integrations.dgcp.schemas import DGCPProcesoRecord
 
 
 class DGCPService:
+    CLOSED_STATUSES = frozenset({"won", "lost", "discarded"})
+
     def __init__(self, db: AsyncSession):
         self.db = db
         self.audit = AuditService(db)
+
+    @staticmethod
+    def vigente_filters(*, include_expired: bool = False):
+        """Procesos con plazo vigente (compras/contrataciones activas)."""
+        if include_expired:
+            return ()
+        today = date.today()
+        return (
+            DGCPOpportunity.deadline >= today,
+            DGCPOpportunity.status.notin_(tuple(DGCPService.CLOSED_STATUSES)),
+        )
 
     async def list_opportunities(
         self,
@@ -43,8 +57,11 @@ class DGCPService:
         priority: OpportunityPriority | None = None,
         skip: int = 0,
         limit: int = 100,
+        include_expired: bool = False,
     ) -> DGCPOpportunityListResponse:
         base_filter = DGCPOpportunity.tenant_id == tenant_id
+        for clause in self.vigente_filters(include_expired=include_expired):
+            base_filter = base_filter & clause
         query = (
             select(DGCPOpportunity)
             .where(base_filter)
@@ -78,7 +95,11 @@ class DGCPService:
             count_query = count_query.where(DGCPOpportunity.priority == priority.value)
         total = (await self.db.execute(count_query)).scalar_one()
 
-        summary = await self.compute_dashboard(tenant_id, user_id=user_id)
+        summary = await self.compute_dashboard(
+            tenant_id,
+            user_id=user_id,
+            include_expired=include_expired,
+        )
         return DGCPOpportunityListResponse(
             items=[DGCPOpportunityResponse.model_validate(i) for i in items],
             summary=summary,
@@ -207,9 +228,15 @@ class DGCPService:
         return [DGCPAuditLogResponse.model_validate(row) for row in result.scalars().all()]
 
     async def compute_dashboard(
-        self, tenant_id: uuid.UUID, *, user_id: uuid.UUID | None = None
+        self,
+        tenant_id: uuid.UUID,
+        *,
+        user_id: uuid.UUID | None = None,
+        include_expired: bool = False,
     ) -> DGCPOpportunitySummary:
         base = DGCPOpportunity.tenant_id == tenant_id
+        for clause in self.vigente_filters(include_expired=include_expired):
+            base = base & clause
         if user_id:
             from app.services.company_scope_filter import CompanyScopeFilter
 
@@ -254,6 +281,40 @@ class DGCPService:
         )
         total_amount = Decimal(str(total_amount_row.scalar_one()))
 
+        from app.models.dgcp_bid_package import DGCPBidPackage
+
+        pkg_query = (
+            select(DGCPBidPackage.real_expediente_status, func.count())
+            .join(DGCPOpportunity, DGCPOpportunity.id == DGCPBidPackage.opportunity_id)
+            .where(DGCPOpportunity.tenant_id == tenant_id)
+        )
+        for clause in self.vigente_filters(include_expired=include_expired):
+            pkg_query = pkg_query.where(clause)
+        if user_id:
+            from app.services.company_scope_filter import CompanyScopeFilter
+
+            keys = await CompanyScopeFilter(self.db, tenant_id, user_id).dgcp_company_keys()
+            if keys:
+                pkg_query = pkg_query.where(DGCPOpportunity.company.in_(keys))
+
+        presentation_rows = await self.db.execute(pkg_query.group_by(DGCPBidPackage.real_expediente_status))
+        raw_presentation = {row[0] or "sin_generar": row[1] for row in presentation_rows.all()}
+        presentation = {
+            "sin_generar": raw_presentation.get("sin_generar", 0),
+            "expediente_generado": sum(
+                raw_presentation.get(k, 0)
+                for k in (
+                    "generado_incompleto",
+                    "generado_con_observaciones",
+                    "listo_para_revision",
+                )
+            ),
+            "paquete_preparado": raw_presentation.get("paquete_dgcp_preparado", 0)
+            + raw_presentation.get("descargado", 0),
+            "listo_para_subir": raw_presentation.get("listo_para_subir", 0),
+            "requiere_actualizacion": raw_presentation.get("requiere_actualizacion", 0),
+        }
+
         return DGCPOpportunitySummary(
             total_opportunities=sum(by_status.values()),
             total_potential_amount=total_amount,
@@ -266,6 +327,7 @@ class DGCPService:
             discarded=by_status.get(OpportunityStatus.DISCARDED.value, 0),
             won=by_status.get(OpportunityStatus.WON.value, 0),
             lost=by_status.get(OpportunityStatus.LOST.value, 0),
+            presentation=presentation,
         )
 
     async def reclassify_opportunities(

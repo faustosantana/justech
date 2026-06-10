@@ -69,6 +69,10 @@ class DGCPChecklistItem(BaseModel):
     knowledge_asset_id: UUID | None = None
     relative_path: str | None = None
     match_source: str | None = None
+    process_document_id: UUID | None = None
+    odoo_quotation_id: int | None = None
+    odoo_quotation_name: str | None = None
+    economic_offer_meta: dict[str, Any] | None = None
     validity_analysis: dict[str, Any] | None = None
     manual_validation: dict[str, Any] | None = None
     note_history: list[dict[str, Any]] = Field(default_factory=list)

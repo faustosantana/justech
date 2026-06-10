@@ -129,10 +129,34 @@ export interface OdooInvoice {
 export interface OdooQuotation {
   id: number;
   name: string;
+  partner_id?: number | null;
   partner_name: string;
   date_order?: string | null;
   amount_total: string;
+  currency?: string;
   state: string;
+  user_id?: number | null;
+  salesperson_name?: string | null;
+  company_id?: number | null;
+  company_name?: string | null;
+  validity_date?: string | null;
+}
+
+export interface OdooQuotationLine {
+  product_id?: number | null;
+  product_name: string;
+  description?: string | null;
+  quantity: number;
+  price_unit: string;
+  discount: number;
+  subtotal: string;
+  taxes: string[];
+}
+
+export interface OdooQuotationDetail extends OdooQuotation {
+  lines: OdooQuotationLine[];
+  connected: boolean;
+  message?: string | null;
 }
 
 export interface OdooOpportunity {

@@ -44,6 +44,10 @@ class Settings(BaseSettings):
     search_index_enabled: bool = True
     search_analytics_enabled: bool = True
 
+    assistant_synthesis_enabled: bool = True
+    assistant_synthesis_provider: str = ""
+    assistant_persist_conversations: bool = True
+
     n8n_webhook_url: str = "http://localhost:5678"
     n8n_api_key: str = ""
 
@@ -75,6 +79,15 @@ class Settings(BaseSettings):
     m365_client_id: str = ""
     m365_client_secret: str = ""
     m365_redirect_uri: str = "http://localhost:8000/api/v1/m365/auth/callback"
+    m365_operative_enabled: bool = True
+    m365_operative_demo_mode: bool = True
+    m365_monitored_mailboxes: str = "ventas@justech.do,cotizaciones@justech.do,info@justech.do,crm@justech.do,licitaciones@justech.do"
+    m365_n8n_enabled: bool = True
+    m365_n8n_teams_workflow: str = "m365-teams-notify"
+    m365_sharepoint_site_url: str = ""
+
+    m365_imap_host: str = "outlook.office365.com"
+    m365_imap_port: int = 993
 
     dgcp_api_base_url: str = "https://datosabiertos.dgcp.gob.do/api-dgcp/v1"
     dgcp_api_key: str = ""
@@ -116,6 +129,10 @@ class Settings(BaseSettings):
     @property
     def cors_origins_list(self) -> list[str]:
         return [o.strip() for o in self.cors_origins.split(",") if o.strip()]
+
+    @property
+    def m365_monitored_mailbox_list(self) -> list[str]:
+        return [m.strip().lower() for m in self.m365_monitored_mailboxes.split(",") if m.strip()]
 
     @property
     def database_url_sync(self) -> str:

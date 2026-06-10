@@ -30,6 +30,15 @@ FOLLOW_UP_TOP_BUYER = re.compile(
 FOLLOW_UP_QUANTITY = re.compile(
     r"(?i)^[\s¿]*(?:y\s+)?(?:cu[aá]nt[oa]s?\s+)?(?:hemos\s+)?vendid[oa]s?\??\s*$"
 )
+FOLLOW_UP_FINANCE_DEBT = re.compile(
+    r"(?i)^[\s¿]*(?:y\s+)?(?:cu[aá]nto\s+)?(?:nos\s+)?deben\??\s*$"
+)
+FOLLOW_UP_FINANCE_INVOICES = re.compile(
+    r"(?i)^[\s¿]*(?:y\s+)?(?:las\s+)?facturas\s+vencidas?\??\s*$"
+)
+FOLLOW_UP_FINANCE_CXC = re.compile(
+    r"(?i)^[\s¿]*(?:y\s+)?(?:las\s+)?cxc\??\s*$"
+)
 FOLLOW_UP_YEAR_ONLY = re.compile(
     r"(?i)^[\s¿]*(?:y\s+)?(?:en\s+)?(?:este\s+a[nñ]o|20\d{2})\??\s*$"
 )
@@ -55,6 +64,16 @@ def resolve_follow_up(question: str, ctx: ConversationEntities) -> FollowUpResol
 
     if not product and not ctx.current_customer and not ctx.current_bid_id:
         return FollowUpResolution(q, False, used, original)
+
+    if ctx.current_customer and FOLLOW_UP_FINANCE_DEBT.match(q):
+        resolved = f"¿Cuánto nos debe {ctx.current_customer}?"
+        used["customer"] = ctx.current_customer
+        return FollowUpResolution(resolved, True, used, original)
+
+    if ctx.current_customer and (FOLLOW_UP_FINANCE_INVOICES.match(q) or FOLLOW_UP_FINANCE_CXC.match(q)):
+        resolved = f"¿Qué facturas vencidas tiene {ctx.current_customer}?"
+        used["customer"] = ctx.current_customer
+        return FollowUpResolution(resolved, True, used, original)
 
     if product and FOLLOW_UP_BUYERS.match(q):
         resolved = f"¿Qué clientes han comprado {product}{year_note}?"

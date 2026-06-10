@@ -535,6 +535,7 @@ class DGCPBidPackageService:
         doc_id = data.get("document_id")
         task_id = data.get("task_id")
         knowledge_id = data.get("knowledge_asset_id")
+        process_id = data.get("process_document_id")
         valid = data.get("valid_until")
         return DGCPChecklistItem(
             id=uuid.UUID(str(data["id"])),
@@ -555,8 +556,12 @@ class DGCPBidPackageService:
             display_status=data.get("display_status"),
             notes=data.get("notes"),
             knowledge_asset_id=uuid.UUID(knowledge_id) if knowledge_id else None,
+            process_document_id=uuid.UUID(process_id) if process_id else None,
             relative_path=data.get("relative_path"),
             match_source=data.get("match_source"),
+            odoo_quotation_id=data.get("odoo_quotation_id"),
+            odoo_quotation_name=data.get("odoo_quotation_name"),
+            economic_offer_meta=data.get("economic_offer_meta"),
             validity_analysis=data.get("validity_analysis"),
             manual_validation=data.get("manual_validation"),
             note_history=data.get("note_history") or [],
@@ -1063,6 +1068,9 @@ class DGCPBidPackageService:
             if target.get("requirement_key", "").startswith("sncc_"):
                 new_status = "requiere_completado"
 
+        if target.get("requirement_key") == "oferta_economica" and process_document_id:
+            new_status = "adjuntado"
+
         target["document_id"] = document_id
         target["knowledge_asset_id"] = knowledge_asset_id
         target["process_document_id"] = process_document_id
@@ -1113,6 +1121,12 @@ class DGCPBidPackageService:
         pkg.document_matches = matches
         pkg.bid_package = bid.model_dump(mode="json")
         pkg.expediente_status = expediente_status
+
+        from app.services.real_dgcp_expediente_builder import RealDGCPExpedienteBuilder
+
+        await RealDGCPExpedienteBuilder.mark_stale_if_generated(
+            self.db, self.tenant_id, opportunity_id
+        )
 
         await self.audit.log(
             action="dgcp.checklist.associate_document",

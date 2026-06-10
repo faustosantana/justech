@@ -22,7 +22,18 @@ class M365AccountResponse(BaseModel):
     last_sync_at: datetime | None = None
     is_active: bool
     can_connect: bool = True
+    connection_mode: str = "none"
+    imap_host: str | None = None
+    imap_port: int = 993
+    mailbox_connected: bool = False
     required_scopes: list[str] = Field(default_factory=list)
+
+
+class M365ImapConnectRequest(BaseModel):
+    email: str
+    password: str
+    imap_host: str | None = None
+    imap_port: int = 993
 
 
 class M365AccountListResponse(BaseModel):

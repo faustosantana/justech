@@ -27,7 +27,29 @@ export interface EnterpriseSearchResponse {
   cache_hit?: boolean;
   index_hit?: boolean;
   latency_ms?: number | null;
+  resolved_entities?: ResolvedEntity[];
+  expanded_terms?: string[];
+  knowledge_graph?: KnowledgeGraphPayload;
+  search_mode?: string;
 }
+
+export interface ResolvedEntity {
+  entity_id: string;
+  entity_type: string;
+  canonical_name: string;
+  matched_alias: string;
+  match_kind: string;
+  confidence: number;
+  aliases: string[];
+}
+
+export interface KnowledgeGraphPayload {
+  nodes: Array<{ id: string; label: string; type: string; module?: string; count?: number; url?: string }>;
+  edges: Array<{ from: string; to: string; relation: string }>;
+  summary: Record<string, number>;
+}
+
+export type KnowledgeEngineResponse = EnterpriseSearchResponse;
 
 export interface SearchAnalyticsSummary {
   total_queries: number;

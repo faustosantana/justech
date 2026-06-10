@@ -95,7 +95,7 @@ export function LoginView({ onChangeServer }: Props) {
             required
           />
 
-          <label htmlFor="tenant">Empresa</label>
+          <label htmlFor="tenant">Empresa / Tenant</label>
           <input
             id="tenant"
             type="text"

@@ -32,6 +32,7 @@ from app.services.assistant_context_policy import (
 )
 from app.services.business_intent_router import BusinessIntent, BusinessIntentRouter
 from app.services.business_terms import detect_product_in_text
+from app.services.business_entity_normalizer import normalize_product
 from app.services.corporate_knowledge_question_service import CorporateKnowledgeQuestionService
 from app.services.dgcp_requirements_question_service import DgcpRequirementsQuestionService
 from app.services.document_question_service import DocumentQuestionService
@@ -43,6 +44,11 @@ from app.services.routing_service import RoutingService
 from app.services.sales_question_service import SalesQuestionService
 from app.services.task_service import TaskService
 from app.services.tasks_question_service import TasksQuestionService
+from app.config import settings
+from app.services.persistent_conversation_store import PersistentConversationStore
+from app.services.assistant_synthesis_service import AssistantSynthesisService
+from app.services.semantic_resolver_engine import SemanticResolverEngine, SemanticResolution
+from app.services.hermes_retrieval_service import HermesRetrievalService
 
 READ_ONLY_NOTICE = "No puedo modificar Odoo. Esta integración está en modo solo lectura."
 M365_NOT_CONNECTED = (
@@ -72,15 +78,25 @@ class AssistantService:
         self.routing = RoutingService(db, tenant_id)
 
     async def query(self, payload: AssistantQueryRequest) -> AssistantQueryResponse:
-        conv = ConversationContextStore.get(
-            self.tenant_id, self.user_id, payload.conversation_id
-        )
+        persistent = PersistentConversationStore(self.db, self.tenant_id, self.user_id)
+        if settings.assistant_persist_conversations and payload.conversation_id:
+            conv = await persistent.load_context(payload.conversation_id)
+        else:
+            conv = ConversationContextStore.get(
+                self.tenant_id, self.user_id, payload.conversation_id
+            )
         original_question = payload.question.strip()
         if ConversationContextStore.should_reset(original_question):
             conv.reset()
+            if settings.assistant_persist_conversations and payload.conversation_id:
+                await persistent.reset_conversation(payload.conversation_id)
         resolution = resolve_follow_up(original_question, conv)
-        effective_payload = payload.model_copy(update={"question": resolution.question})
-        result = await self._execute_query(effective_payload, conv, resolution)
+        semantic = await SemanticResolverEngine(self.db, self.tenant_id).resolve(
+            resolution.question if resolution.was_follow_up else original_question
+        )
+        routed_question = semantic.rewritten or resolution.question
+        effective_payload = payload.model_copy(update={"question": routed_question})
+        result = await self._execute_query(effective_payload, conv, resolution, semantic)
         scope_label = None
         if self.user_id:
             from app.services.global_company_context_service import GlobalCompanyContextService
@@ -89,11 +105,17 @@ class AssistantService:
                 self.db, self.tenant_id, self.user_id
             ).get_context()
             scope_label = global_ctx.scope_label
-        return self._finalize_response(
-            effective_payload, result, conv, resolution, original_question, scope_label
+        result = await self._finalize_response(
+            effective_payload, result, conv, resolution, original_question, scope_label, persistent
         )
+        if settings.assistant_persist_conversations:
+            try:
+                await self.db.commit()
+            except Exception:
+                await self.db.rollback()
+        return result
 
-    def _finalize_response(
+    async def _finalize_response(
         self,
         payload: AssistantQueryRequest,
         result: AssistantQueryResponse,
@@ -101,6 +123,7 @@ class AssistantService:
         resolution,
         original_question: str,
         scope_label: str | None = None,
+        persistent: PersistentConversationStore | None = None,
     ) -> AssistantQueryResponse:
         ConversationContextStore.update_from_response(
             conv,
@@ -125,6 +148,33 @@ class AssistantService:
         ConversationContextStore.save(
             self.tenant_id, self.user_id, payload.conversation_id, conv
         )
+        synthesizer = AssistantSynthesisService(self.db, self.tenant_id)
+        facts = dict(result.data or {})
+        if result.structured_data and isinstance(result.structured_data, dict):
+            facts["structured"] = result.structured_data
+        result.answer = await synthesizer.synthesize_answer(
+            question=original_question,
+            template_answer=result.answer,
+            query_type=result.query_type,
+            sources=result.sources,
+            facts=facts,
+            conversation_context=conv.to_debug_dict(),
+        )
+        if persistent and settings.assistant_persist_conversations and payload.conversation_id:
+            try:
+                await persistent.save_context(
+                    payload.conversation_id,
+                    conv,
+                    module_context=payload.current_module,
+                    company_context_id=payload.current_company_context,
+                )
+                await persistent.append_exchange(
+                    payload.conversation_id,
+                    user_question=original_question,
+                    assistant_response=result,
+                )
+            except Exception:
+                pass
         result.was_follow_up = resolution.was_follow_up
         if resolution.was_follow_up:
             result.resolved_question = resolution.question
@@ -157,6 +207,7 @@ class AssistantService:
         payload: AssistantQueryRequest,
         conv,
         resolution,
+        semantic: SemanticResolution | None = None,
     ) -> AssistantQueryResponse:
         q = payload.question.strip()
         if not q:
@@ -201,6 +252,10 @@ class AssistantService:
 
         classified = BusinessIntentRouter.classify(q)
 
+        dgcp_result = await self._try_dgcp_record_answer(q, payload, source_labels)
+        if dgcp_result is not None:
+            return dgcp_result
+
         if SalesQuestionService.has_sales_signal(q) or (
             resolution.was_follow_up and conv.current_product
         ):
@@ -237,6 +292,11 @@ class AssistantService:
         product_label, product_terms = detect_product_in_text(q)
         if product_label and classified.intent == BusinessIntent.NONE:
             sales_svc = SalesQuestionService(self.db, self.tenant_id, self.user_id)
+            disambig = await sales_svc.answer_product_disambiguation(
+                q, source_labels=source_labels, conversation_context=conv
+            )
+            if disambig is not None:
+                return disambig
             sales_result = await sales_svc.answer(
                 q, source_labels=source_labels, conversation_context=conv
             )
@@ -252,19 +312,6 @@ class AssistantService:
 
         if classified.intent == BusinessIntent.ENTERPRISE_SEARCH and classified.search_term:
             return await self._answer_enterprise_search(classified.search_term, source_labels)
-
-        if payload.record_type in ("dgcp", "dgcp_opportunity") and payload.current_record_id:
-            try:
-                opp_id = uuid.UUID(payload.current_record_id)
-            except ValueError:
-                opp_id = None
-            if opp_id:
-                result = await DgcpRequirementsQuestionService(
-                    self.db, self.tenant_id, self.user_id
-                ).answer(q, opp_id)
-                if result is not None:
-                    result.sources = list(dict.fromkeys(["dgcp"] + source_labels + result.sources))
-                    return result
 
         if classified.intent == BusinessIntent.DOCUMENT:
             result = await DocumentQuestionService(
@@ -414,16 +461,24 @@ class AssistantService:
             )
 
         if classified.intent not in (BusinessIntent.NONE, BusinessIntent.M365):
+            fallback = await self._fallback_retrieval_chain(q, source_labels, semantic)
+            if fallback is not None:
+                return fallback
             return AssistantQueryResponse(
                 question=q,
                 answer=(
-                    "No encontré información suficiente en las fuentes disponibles.\n\n"
-                    f"Interpreté la consulta como «{classified.intent.value}», "
-                    "pero no hubo coincidencias confirmadas en Odoo, documentos ni otras fuentes indexadas."
+                    "Busqué en Odoo, documentos e índice empresarial con sinónimos y entidades equivalentes, "
+                    f"pero no confirmé resultados para «{q}».\n\n"
+                    "Prueba: «¿Qué le hemos vendido a Banco Ademi?», «papel 350», "
+                    "«¿Qué licitaciones activas hay?» o «¿Qué tareas vencidas tengo?»"
                 ),
-                sources=source_labels,
+                sources=source_labels + ["hermes_retrieval"],
                 query_type=classified.intent.value,
             )
+
+        fallback = await self._fallback_retrieval_chain(q, source_labels, semantic)
+        if fallback is not None:
+            return fallback
 
         return AssistantQueryResponse(
             question=q,
@@ -708,6 +763,46 @@ class AssistantService:
             cards=cards,
         )
 
+    async def _try_dgcp_record_answer(
+        self,
+        question: str,
+        payload: AssistantQueryRequest,
+        source_labels: list[str],
+    ) -> AssistantQueryResponse | None:
+        if payload.record_type not in ("dgcp", "dgcp_opportunity") or not payload.current_record_id:
+            return None
+        try:
+            opp_id = uuid.UUID(payload.current_record_id)
+        except ValueError:
+            return None
+        from app.services.document_finalization_question_service import DocumentFinalizationQuestionService
+        from app.services.real_expediente_question_service import RealExpedienteQuestionService
+
+        if RealExpedienteQuestionService.matches(question):
+            real = await RealExpedienteQuestionService(
+                self.db, self.tenant_id, user_id=self.user_id
+            ).answer(question, opportunity_id=opp_id)
+            if real is not None:
+                real.question = question
+                real.sources = list(dict.fromkeys(["dgcp_real_expediente"] + source_labels + (real.sources or [])))
+                return real
+
+        if DocumentFinalizationQuestionService.matches(question):
+            fin = await DocumentFinalizationQuestionService(
+                self.db, self.tenant_id, user_id=self.user_id
+            ).answer(question, opportunity_id=opp_id)
+            if fin is not None:
+                fin.question = question
+                fin.sources = list(dict.fromkeys(["dgcp_finalization"] + source_labels + (fin.sources or [])))
+                return fin
+        result = await DgcpRequirementsQuestionService(
+            self.db, self.tenant_id, self.user_id
+        ).answer(question, opp_id)
+        if result is not None:
+            result.sources = list(dict.fromkeys(["dgcp"] + source_labels + result.sources))
+            return result
+        return None
+
     async def _answer_work(
         self, q: str, lowered: str, payload: AssistantQueryRequest
     ) -> AssistantQueryResponse | None:
@@ -813,6 +908,96 @@ class AssistantService:
             )
         return None
 
+    async def _fallback_retrieval_chain(
+        self,
+        q: str,
+        source_labels: list[str],
+        semantic: SemanticResolution | None,
+    ) -> AssistantQueryResponse | None:
+        """Cadena Hermes → Knowledge Engine → sugerencias antes de fallar."""
+        from app.schemas.assistant import AssistantAction
+        from app.services.assistant_actions import build_customer_suggested_actions
+
+        term = q.strip()
+        if semantic and semantic.customer_label and not semantic.product_label:
+            sales_svc = SalesQuestionService(self.db, self.tenant_id, self.user_id)
+            rewritten = f"¿Qué le hemos vendido a {semantic.customer_label}?"
+            sales_result = await sales_svc.answer(rewritten, source_labels=source_labels)
+            if sales_result and "No encontré" not in sales_result.answer:
+                sales_result.question = q
+                return sales_result
+
+        hermes = HermesRetrievalService(self.db, self.tenant_id, self.user_id)
+        try:
+            engine_result = await hermes.search(term, limit=6)
+        except Exception:
+            engine_result = None
+
+        if engine_result and engine_result.total > 0:
+            entity_prefix = ""
+            if engine_result.resolved_entities:
+                ent = engine_result.resolved_entities[0]
+                entity_prefix = f"Entidad **{ent.canonical_name}**. "
+            template = entity_prefix + f"Encontré {engine_result.total} resultado(s) relacionados con «{term}»."
+            hits = []
+            for group in engine_result.groups[:5]:
+                for item in group.items[:3]:
+                    hits.append({
+                        "grupo": group.label,
+                        "titulo": item.title,
+                        "detalle": item.subtitle or item.description,
+                        "fuente": item.source,
+                    })
+            synthesizer = AssistantSynthesisService(self.db, self.tenant_id)
+            summary = await synthesizer.synthesize_retrieval_summary(
+                question=q,
+                template_summary=template,
+                hits=hits,
+                entities=[e.model_dump() for e in (engine_result.resolved_entities or [])],
+            )
+            actions = [
+                AssistantAction(label="Ver búsqueda completa", type="internal_link", url=f"/search?q={term}"),
+            ]
+            if semantic and semantic.customer_label:
+                actions.extend([
+                    AssistantAction(**a) for a in build_customer_suggested_actions(semantic.customer_label)
+                ])
+            return AssistantQueryResponse(
+                question=q,
+                answer=summary,
+                sources=list(dict.fromkeys(source_labels + ["hermes_retrieval", "enterprise_search"])),
+                query_type="enterprise_search_query",
+                actions=actions,
+                links=[AssistantLink(label="Búsqueda empresarial", url=f"/search?q={term}", type="search")],
+                data={"total": engine_result.total, "resolved_entities": [
+                    e.model_dump() for e in (engine_result.resolved_entities or [])
+                ]},
+            )
+
+        if semantic and semantic.product_label:
+            norm = normalize_product(semantic.product_label)
+            variants = (norm.variants_display if norm else semantic.product_terms)[:8]
+            if variants:
+                listed = "\n".join(f"• {v}" for v in variants[:6])
+                return AssistantQueryResponse(
+                    question=q,
+                    answer=(
+                        f"Encontré variantes relacionadas con «{semantic.product_label}»:\n\n{listed}\n\n"
+                        "¿A cuál te refieres? Puedes preguntar, por ejemplo: "
+                        f"«¿Cuántos {variants[0]} hemos vendido?»"
+                    ),
+                    sources=source_labels + ["semantic_resolver"],
+                    query_type="product_disambiguation",
+                    actions=[
+                        AssistantAction(
+                            label=f"Buscar {variants[0]}",
+                            type="internal_link",
+                            url=f"/search?q={variants[0]}",
+                        ),
+                    ],
+                )
+        return None
+
     @staticmethod
     def _extract_enterprise_search_query(question: str) -> str | None:
         patterns = (
@@ -835,8 +1020,10 @@ class AssistantService:
         term: str,
         source_labels: list[str],
     ) -> AssistantQueryResponse:
-        service = EnterpriseSearchService(self.db, self.tenant_id, self.user_id)
-        result = await service.search(term, channel="assistant")
+        from app.services.knowledge_engine_service import KnowledgeEngineService
+
+        service = KnowledgeEngineService(self.db, self.tenant_id, self.user_id)
+        result = await service.search_global(term, channel="assistant")
         search_link = AssistantLink(label="Búsqueda empresarial", url=f"/search?q={term}", type="search")
         if result.total == 0:
             summary = f"No encontré registros relacionados con {term} en las fuentes disponibles."
@@ -855,7 +1042,12 @@ class AssistantService:
                 links=[search_link],
             )
 
-        summary = f"Encontré {result.total} resultado(s) para «{term}»."
+        entity_prefix = ""
+        if result.resolved_entities:
+            ent = result.resolved_entities[0]
+            entity_prefix = f"Entidad **{ent.canonical_name}** ({ent.entity_type}). "
+
+        summary = entity_prefix + f"Encontré {result.total} resultado(s) para «{term}»."
         links: list[AssistantLink] = [search_link]
         from app.services.assistant_actions import table_row
 
@@ -900,7 +1092,7 @@ class AssistantService:
         return AssistantQueryResponse(
             question=f"Busca todo sobre {term}",
             answer=summary,
-            sources=list(dict.fromkeys(["enterprise_search"] + source_labels)),
+            sources=list(dict.fromkeys(["enterprise_search", "knowledge_engine"] + source_labels)),
             query_type="enterprise_search_query",
             structured_data=structured,
             links=links[:12],

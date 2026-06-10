@@ -36,3 +36,7 @@ class DGCPBidPackage(UUIDPrimaryKeyMixin, TimestampMixin, Base):
     requirement_evidence: Mapped[list] = mapped_column(JSONB, nullable=False, default=list)
     process_documents_summary: Mapped[list] = mapped_column(JSONB, nullable=False, default=list)
     manifest: Mapped[dict] = mapped_column(JSONB, nullable=False, default=dict)
+    real_expediente_status: Mapped[str] = mapped_column(String(64), nullable=False, default="sin_generar")
+    real_expediente_path: Mapped[str | None] = mapped_column(Text)
+    real_expediente_generated_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    real_expediente_manifest: Mapped[dict] = mapped_column(JSONB, nullable=False, default=dict)

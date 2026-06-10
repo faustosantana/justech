@@ -14,6 +14,10 @@ import { getAccessToken } from "@/lib/auth";
 import { PRIORITY_LABELS, priorityClass, type WorkHub } from "@/lib/tasks";
 import { cn } from "@/lib/utils";
 
+function isEconomicOfferTask(task: { metadata?: Record<string, unknown> }) {
+  return task.metadata?.task_type === "economic_offer";
+}
+
 const m = t();
 
 function TaskList({ items, empty }: { items: WorkHub["my_tasks"]; empty: string }) {
@@ -122,6 +126,32 @@ export default function WorkHubPage() {
                 </CardContent>
               </Card>
             )}
+
+            {(() => {
+              const economicTasks = [
+                ...hub.my_tasks,
+                ...hub.tasks_created_by_me,
+                ...hub.tasks_supervised_by_me,
+              ].filter(isEconomicOfferTask);
+              const unique = Array.from(new Map(economicTasks.map((t) => [t.id, t])).values());
+              if (unique.length === 0) return null;
+              return (
+                <Card className="border-primary/20">
+                  <CardHeader className="flex flex-row items-center justify-between">
+                    <CardTitle className="text-base flex items-center gap-2">
+                      <ClipboardList className="h-4 w-4 text-primary" />
+                      Ofertas económicas DGCP ({unique.length})
+                    </CardTitle>
+                    <Link href="/dgcp">
+                      <Button size="sm" variant="outline">Ir a DGCP</Button>
+                    </Link>
+                  </CardHeader>
+                  <CardContent>
+                    <TaskList items={unique} empty="Sin tareas de oferta económica." />
+                  </CardContent>
+                </Card>
+              );
+            })()}
 
             <div className="grid gap-6 lg:grid-cols-2">
               <Card>

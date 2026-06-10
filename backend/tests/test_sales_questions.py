@@ -171,7 +171,8 @@ async def test_qa_sales_structured_responses(auth_headers, question):
 
     if body["query_type"] == "sales_query":
         sd = body.get("structured_data")
-        if sd and body["answer"] and "No encontré" not in body["answer"]:
+        not_found = "No encontré" in body["answer"] or "No confirmé" in body["answer"]
+        if sd and body["answer"] and not not_found:
             assert sd["type"] == "business_answer"
             assert sd.get("summary")
             assert isinstance(sd.get("metrics"), list)
@@ -179,7 +180,7 @@ async def test_qa_sales_structured_responses(auth_headers, question):
             assert len(body["answer"]) < 400
 
     if "Banco Ademi" in question and "licencias" in question.lower():
-        if "No encontré" in body["answer"]:
-            assert "Banco Ademi" in body["answer"]
+        if "No encontré" in body["answer"] or "No confirmé" in body["answer"]:
+            assert "ademi" in body["answer"].lower()
         elif body["answer"]:
             assert body["answer"].startswith("Sí.") or "Vendimos" in body["answer"]

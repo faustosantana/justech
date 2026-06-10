@@ -72,7 +72,28 @@ from app.schemas.dgcp_bid import (
     DGCPRequirementsResponse,
     DGCPUserInputRequest,
 )
+from app.schemas.dgcp_economic_offer import (
+    CreateEconomicOfferDraftTaskRequest,
+    CreateEconomicOfferTaskResponse,
+    EconomicOfferStatusResponse,
+)
+from app.schemas.real_expediente import (
+    RealExpedienteGenerateResponse,
+    RealExpedienteStatusResponse,
+    RealExpedienteValidationResponse,
+)
+from app.schemas.document_finalization import (
+    DocumentFinalizationBatchResponse,
+    DocumentFinalizationGenerateRequest,
+    DocumentFinalizationGenerateResponse,
+    DocumentFinalizationPreviewRequest,
+    DocumentFinalizationPreviewResponse,
+    DocumentFinalizationRecordResponse,
+)
 from app.services.dgcp_bid_package_service import DGCPBidPackageService
+from app.services.dgcp_economic_offer_service import DGCPEconomicOfferService
+from app.services.real_dgcp_expediente_builder import RealDGCPExpedienteBuilder
+from app.services.document_finalization_engine import DocumentFinalizationEngine
 from app.services.dgcp_service import DGCPService
 from app.services.dgcp_sync_service import DGCPSyncService
 
@@ -82,12 +103,17 @@ router = APIRouter(prefix="/dgcp", tags=["DGCP Intelligence"])
 @router.get("/dashboard", response_model=DGCPOpportunitySummary)
 async def get_dashboard(
     db: DbSession,
-    _: CurrentUser,
-    __: TenantCtx,
+    user: CurrentUser,
+    _: TenantCtx,
+    include_expired: Annotated[bool, Query()] = False,
 ) -> DGCPOpportunitySummary:
     ctx = require_tenant_context()
     service = DGCPService(db)
-    return await service.compute_dashboard(ctx.tenant_id)
+    return await service.compute_dashboard(
+        ctx.tenant_id,
+        user_id=user.id,
+        include_expired=include_expired,
+    )
 
 
 @router.get("/opportunities", response_model=DGCPOpportunityListResponse)
@@ -100,6 +126,7 @@ async def list_opportunities(
     priority: Annotated[OpportunityPriority | None, Query()] = None,
     skip: Annotated[int, Query(ge=0)] = 0,
     limit: Annotated[int, Query(ge=1, le=200)] = 100,
+    include_expired: Annotated[bool, Query()] = False,
 ) -> DGCPOpportunityListResponse:
     ctx = require_tenant_context()
     service = DGCPService(db)
@@ -111,6 +138,7 @@ async def list_opportunities(
         priority=priority,
         skip=skip,
         limit=limit,
+        include_expired=include_expired,
     )
 
 
@@ -177,6 +205,21 @@ async def apply_opportunity_action(
 def _bid_svc(db, user) -> DGCPBidPackageService:
     ctx = require_tenant_context()
     return DGCPBidPackageService(db, ctx.tenant_id, user_id=user.id)
+
+
+def _economic_offer_svc(db, user) -> DGCPEconomicOfferService:
+    ctx = require_tenant_context()
+    return DGCPEconomicOfferService(db, ctx.tenant_id, user_id=user.id)
+
+
+def _finalization_engine(db, user) -> DocumentFinalizationEngine:
+    ctx = require_tenant_context()
+    return DocumentFinalizationEngine(db, ctx.tenant_id, user_id=user.id)
+
+
+def _real_expediente_builder(db, user) -> RealDGCPExpedienteBuilder:
+    ctx = require_tenant_context()
+    return RealDGCPExpedienteBuilder(db, ctx.tenant_id, user_id=user.id)
 
 
 @router.get("/opportunities/{opportunity_id}/requirements", response_model=DGCPRequirementsResponse)
@@ -555,6 +598,277 @@ async def download_bid_package(
         content=content,
         media_type="application/zip",
         headers={"Content-Disposition": f'attachment; filename="{filename}"'},
+    )
+
+
+@router.post(
+    "/opportunities/{opportunity_id}/real-expediente/generate",
+    response_model=RealExpedienteGenerateResponse,
+)
+async def generate_real_expediente(
+    opportunity_id: uuid.UUID,
+    db: DbSession,
+    user: CurrentUser,
+    _: TenantCtx,
+) -> RealExpedienteGenerateResponse:
+    try:
+        return await _real_expediente_builder(db, user).generate(opportunity_id)
+    except ValueError as exc:
+        raise _http_error_for_dgcp_value_error(exc) from exc
+
+
+@router.get(
+    "/opportunities/{opportunity_id}/real-expediente/validate",
+    response_model=RealExpedienteValidationResponse,
+)
+async def validate_real_expediente(
+    opportunity_id: uuid.UUID,
+    db: DbSession,
+    user: CurrentUser,
+    _: TenantCtx,
+) -> RealExpedienteValidationResponse:
+    try:
+        return await _real_expediente_builder(db, user).validate_package(opportunity_id)
+    except ValueError as exc:
+        raise _http_error_for_dgcp_value_error(exc) from exc
+
+
+@router.post(
+    "/opportunities/{opportunity_id}/real-expediente/prepare-package",
+    response_model=RealExpedienteGenerateResponse,
+)
+async def prepare_dgcp_submission_package(
+    opportunity_id: uuid.UUID,
+    db: DbSession,
+    user: CurrentUser,
+    _: TenantCtx,
+) -> RealExpedienteGenerateResponse:
+    try:
+        return await _real_expediente_builder(db, user).prepare_submission_package(opportunity_id)
+    except ValueError as exc:
+        raise _http_error_for_dgcp_value_error(exc) from exc
+
+
+@router.get(
+    "/opportunities/{opportunity_id}/real-expediente/status",
+    response_model=RealExpedienteStatusResponse,
+)
+async def get_real_expediente_status(
+    opportunity_id: uuid.UUID,
+    db: DbSession,
+    user: CurrentUser,
+    _: TenantCtx,
+) -> RealExpedienteStatusResponse:
+    try:
+        return await _real_expediente_builder(db, user).get_status(opportunity_id)
+    except ValueError as exc:
+        raise _http_error_for_dgcp_value_error(exc) from exc
+
+
+@router.get("/opportunities/{opportunity_id}/real-expediente/manifest")
+async def get_real_expediente_manifest(
+    opportunity_id: uuid.UUID,
+    db: DbSession,
+    user: CurrentUser,
+    _: TenantCtx,
+):
+    try:
+        builder = _real_expediente_builder(db, user)
+        _, pkg = await builder._load_package(opportunity_id)
+        return builder.get_manifest(pkg)
+    except ValueError as exc:
+        raise _http_error_for_dgcp_value_error(exc) from exc
+
+
+@router.get("/opportunities/{opportunity_id}/real-expediente/report")
+async def download_real_expediente_report(
+    opportunity_id: uuid.UUID,
+    db: DbSession,
+    user: CurrentUser,
+    _: TenantCtx,
+) -> Response:
+    try:
+        builder = _real_expediente_builder(db, user)
+        _, pkg = await builder._load_package(opportunity_id)
+        data = builder.get_report_bytes(pkg)
+        await builder.log_download(opportunity_id, kind="report", filename="reporte_preparacion.pdf")
+    except ValueError as exc:
+        raise _http_error_for_dgcp_value_error(exc) from exc
+    return Response(
+        content=data,
+        media_type="application/pdf",
+        headers={"Content-Disposition": build_content_disposition("reporte_preparacion.pdf")},
+    )
+
+
+@router.get("/opportunities/{opportunity_id}/real-expediente/download")
+async def download_real_expediente_zip(
+    opportunity_id: uuid.UUID,
+    db: DbSession,
+    user: CurrentUser,
+    _: TenantCtx,
+) -> Response:
+    try:
+        builder = _real_expediente_builder(db, user)
+        opp, pkg = await builder._load_package(opportunity_id)
+        content, filename = builder.get_download_zip(opp, pkg)
+        await builder.log_download(opportunity_id, kind="zip", filename=filename)
+    except ValueError as exc:
+        raise _http_error_for_dgcp_value_error(exc) from exc
+    return Response(
+        content=content,
+        media_type="application/zip",
+        headers={"Content-Disposition": build_content_disposition(filename)},
+    )
+
+
+@router.post(
+    "/opportunities/{opportunity_id}/real-expediente/mark-ready-review",
+    response_model=RealExpedienteStatusResponse,
+)
+async def mark_real_expediente_ready_review(
+    opportunity_id: uuid.UUID,
+    db: DbSession,
+    user: CurrentUser,
+    _: TenantCtx,
+) -> RealExpedienteStatusResponse:
+    try:
+        return await _real_expediente_builder(db, user).mark_ready_review(opportunity_id)
+    except ValueError as exc:
+        raise _http_error_for_dgcp_value_error(exc) from exc
+
+
+@router.post(
+    "/opportunities/{opportunity_id}/real-expediente/mark-ready-upload",
+    response_model=RealExpedienteStatusResponse,
+)
+async def mark_real_expediente_ready_upload(
+    opportunity_id: uuid.UUID,
+    db: DbSession,
+    user: CurrentUser,
+    _: TenantCtx,
+) -> RealExpedienteStatusResponse:
+    try:
+        return await _real_expediente_builder(db, user).mark_ready_upload(opportunity_id)
+    except ValueError as exc:
+        raise _http_error_for_dgcp_value_error(exc) from exc
+
+
+@router.get(
+    "/opportunities/{opportunity_id}/economic-offer/status",
+    response_model=EconomicOfferStatusResponse,
+)
+async def get_economic_offer_status(
+    opportunity_id: uuid.UUID,
+    db: DbSession,
+    user: CurrentUser,
+    _: TenantCtx,
+) -> EconomicOfferStatusResponse:
+    try:
+        return await _economic_offer_svc(db, user).get_status(opportunity_id)
+    except ValueError as exc:
+        raise _http_error_for_dgcp_value_error(exc) from exc
+
+
+@router.post(
+    "/opportunities/{opportunity_id}/economic-offer/create-draft-task",
+    response_model=CreateEconomicOfferTaskResponse,
+)
+async def create_economic_offer_draft_task(
+    opportunity_id: uuid.UUID,
+    data: CreateEconomicOfferDraftTaskRequest,
+    db: DbSession,
+    user: CurrentUser,
+    _: TenantCtx,
+) -> CreateEconomicOfferTaskResponse:
+    try:
+        return await _economic_offer_svc(db, user).create_draft_task(opportunity_id, data)
+    except ValueError as exc:
+        raise _http_error_for_dgcp_value_error(exc) from exc
+
+
+@router.post(
+    "/opportunities/{opportunity_id}/finalization/preview",
+    response_model=DocumentFinalizationPreviewResponse,
+)
+async def preview_document_finalization(
+    opportunity_id: uuid.UUID,
+    data: DocumentFinalizationPreviewRequest,
+    db: DbSession,
+    user: CurrentUser,
+    _: TenantCtx,
+) -> DocumentFinalizationPreviewResponse:
+    try:
+        return await _finalization_engine(db, user).preview(opportunity_id, data)
+    except ValueError as exc:
+        raise _http_error_for_dgcp_value_error(exc) from exc
+
+
+@router.post(
+    "/opportunities/{opportunity_id}/finalization/generate",
+    response_model=DocumentFinalizationGenerateResponse,
+)
+async def generate_document_finalization(
+    opportunity_id: uuid.UUID,
+    data: DocumentFinalizationGenerateRequest,
+    db: DbSession,
+    user: CurrentUser,
+    _: TenantCtx,
+) -> DocumentFinalizationGenerateResponse:
+    try:
+        return await _finalization_engine(db, user).generate_final(opportunity_id, data)
+    except ValueError as exc:
+        raise _http_error_for_dgcp_value_error(exc) from exc
+
+
+@router.post(
+    "/opportunities/{opportunity_id}/finalization/generate-all",
+    response_model=DocumentFinalizationBatchResponse,
+)
+async def generate_all_document_finalizations(
+    opportunity_id: uuid.UUID,
+    db: DbSession,
+    user: CurrentUser,
+    _: TenantCtx,
+    company_key: str | None = None,
+) -> DocumentFinalizationBatchResponse:
+    try:
+        return await _finalization_engine(db, user).generate_all_ready(
+            opportunity_id, company_key=company_key
+        )
+    except ValueError as exc:
+        raise _http_error_for_dgcp_value_error(exc) from exc
+
+
+@router.get(
+    "/opportunities/{opportunity_id}/finalization/records",
+    response_model=list[DocumentFinalizationRecordResponse],
+)
+async def list_finalization_records(
+    opportunity_id: uuid.UUID,
+    db: DbSession,
+    user: CurrentUser,
+    _: TenantCtx,
+) -> list[DocumentFinalizationRecordResponse]:
+    return await _finalization_engine(db, user).list_records(opportunity_id)
+
+
+@router.get("/opportunities/{opportunity_id}/finalization/{record_id}/file")
+async def download_finalization_pdf(
+    opportunity_id: uuid.UUID,
+    record_id: uuid.UUID,
+    db: DbSession,
+    user: CurrentUser,
+    _: TenantCtx,
+) -> Response:
+    try:
+        data, filename, mime = await _finalization_engine(db, user).get_final_file(record_id)
+    except ValueError as exc:
+        raise _http_error_for_dgcp_value_error(exc) from exc
+    return Response(
+        content=data,
+        media_type=mime,
+        headers={"Content-Disposition": build_content_disposition(filename)},
     )
 
 

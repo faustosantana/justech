@@ -38,6 +38,60 @@ class EnterpriseSearchResponse(BaseModel):
     latency_ms: int | None = None
 
 
+class ResolvedEntitySchema(BaseModel):
+    entity_id: str
+    entity_type: str
+    canonical_name: str
+    matched_alias: str
+    match_kind: str
+    confidence: float
+    aliases: list[str] = Field(default_factory=list)
+
+    @classmethod
+    def from_entity(cls, ent) -> "ResolvedEntitySchema":
+        return cls(
+            entity_id=ent.entity_id,
+            entity_type=ent.entity_type,
+            canonical_name=ent.canonical_name,
+            matched_alias=ent.matched_alias,
+            match_kind=ent.match_kind,
+            confidence=ent.confidence,
+            aliases=ent.aliases[:8],
+        )
+
+
+class KnowledgeGraphPayload(BaseModel):
+    nodes: list[dict[str, Any]] = Field(default_factory=list)
+    edges: list[dict[str, Any]] = Field(default_factory=list)
+    summary: dict[str, int] = Field(default_factory=dict)
+
+
+class KnowledgeEngineResponse(EnterpriseSearchResponse):
+    resolved_entities: list[ResolvedEntitySchema] = Field(default_factory=list)
+    expanded_terms: list[str] = Field(default_factory=list)
+    knowledge_graph: KnowledgeGraphPayload | dict[str, Any] = Field(default_factory=dict)
+    search_mode: str = "hybrid_entity_bm25"
+
+
+class SpeechSearchPlaceholder(BaseModel):
+    """Arquitectura futura — búsqueda por voz (no implementada)."""
+    enabled: bool = False
+    provider: str | None = None
+    message: str = "speech-to-text disponible en futura versión"
+
+
+class AssistantKnowledgeSearchRequest(BaseModel):
+    question: str
+    company_filter: str | None = None
+
+
+class AssistantKnowledgeSearchResponse(BaseModel):
+    question: str
+    answer: str
+    search: KnowledgeEngineResponse
+    entity_focus: ResolvedEntitySchema | None = None
+
+
 class SearchAnalyticsSummary(BaseModel):
     total_queries: int
     avg_latency_ms: float

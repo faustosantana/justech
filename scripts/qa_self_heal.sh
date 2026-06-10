@@ -58,6 +58,7 @@ FRONTEND_ROUTES=(
   "/dashboard"
   "/search"
   "/documents"
+  "/documents/identity"
   "/prices"
   "/prices/drafts"
   "/dgcp"
@@ -94,6 +95,7 @@ API_ENDPOINTS=(
   "/company-context/allowed"
   "/dashboard/executive"
   "/knowledge/health"
+  "/corporate-identity"
 )
 
 log_error() { ERRORS_FOUND+=("$1"); echo "❌ $1"; }
@@ -138,7 +140,7 @@ route_has_real_content() {
   if echo "$body" | grep -qiE "404|This page could not be found|Internal Server Error|ENOENT"; then
     return 1
   fi
-  if echo "$body" | grep -qiE "JAIOS|Verificando sesión|Iniciar|Entrar|Dashboard|Odoo|Microsoft|Work Hub|Tasks|Notificaciones|DGCP"; then
+  if echo "$body" | grep -qiE "JAIOS|Verificando sesión|Iniciar|Entrar|Dashboard|Odoo|Microsoft|Work Hub|Tasks|Notificaciones|DGCP|Borradores|Precios|Licitaciones"; then
     return 0
   fi
   if echo "$body" | grep -qi "<html"; then return 0; fi
@@ -307,8 +309,8 @@ heal_frontend() {
   log_action "[frontend] docker compose up -d frontend (next dev regenera .next)"
   docker compose up -d frontend
 
-  log_action "[frontend] Esperar arranque next dev (15s)"
-  sleep 15
+  log_action "[frontend] Esperar arranque next dev (45s — compilación inicial)"
+  sleep 45
 
   # Limpiar errores frontend previos y re-escanear solo frontend
   local kept=()
@@ -343,6 +345,8 @@ heal_backend() {
 
   log_action "[backend] docker compose restart backend"
   docker compose restart backend >/dev/null 2>&1 || true
+  log_action "[backend] docker compose restart gateway (refrescar upstream tras restart backend)"
+  docker compose restart gateway >/dev/null 2>&1 || true
   sleep 8
 
   # Limpiar errores backend previos y re-escanear solo backend
@@ -366,24 +370,37 @@ validate_routes() {
   echo "=== 5. Validación rutas frontend ==="
   ROUTES_OK=()
   ROUTES_FAIL=()
-  for route in "${FRONTEND_ROUTES[@]}"; do
-    local url="${FRONTEND_URL}${route}"
-    local status body
-    status="$(http_status "$url")"
-    body="$(http_body_snippet "$url")"
-    if [[ "$status" == "200" ]] && route_has_real_content "$body"; then
-      ROUTES_OK+=("$route → HTTP $status")
-      log_ok "$route → HTTP $status"
-    else
-      ROUTES_FAIL+=("$route → HTTP $status (contenido inválido o vacío)")
-      if [[ "$status" == "404" ]]; then
-        log_fe_error "Ruta frontend 404: $route"
-      elif [[ -z "$body" ]] || ! route_has_real_content "$body"; then
-        log_fe_error "Pantalla blanca o contenido inválido: $route"
+  local attempt
+  for attempt in 1 2 3; do
+    ROUTES_OK=()
+    ROUTES_FAIL=()
+    FRONTEND_NEEDS_HEAL=0
+    for route in "${FRONTEND_ROUTES[@]}"; do
+      local url="${FRONTEND_URL}${route}"
+      local status body
+      status="$(http_status "$url")"
+      body="$(http_body_snippet "$url")"
+      if [[ "$status" == "200" ]] && route_has_real_content "$body"; then
+        ROUTES_OK+=("$route → HTTP $status")
+        log_ok "$route → HTTP $status"
       else
-        log_fe_error "$route → HTTP $status — contenido inválido"
+        ROUTES_FAIL+=("$route → HTTP $status (contenido inválido o vacío)")
+        if [[ "$status" == "404" ]]; then
+          log_fe_error "Ruta frontend 404: $route"
+        elif [[ -z "$body" ]] || ! route_has_real_content "$body"; then
+          log_fe_error "Pantalla blanca o contenido inválido: $route"
+        else
+          log_fe_error "$route → HTTP $status — contenido inválido"
+        fi
+        FRONTEND_NEEDS_HEAL=1
       fi
-      FRONTEND_NEEDS_HEAL=1
+    done
+    if (( ${#ROUTES_FAIL[@]} == 0 )); then
+      return 0
+    fi
+    if (( attempt < 3 )); then
+      log_action "[frontend] Reintentar rutas tras compilación next dev (10s)"
+      sleep 10
     fi
   done
 }

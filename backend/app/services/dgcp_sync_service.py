@@ -81,6 +81,8 @@ class DGCPSyncService:
         )
         scoring = score_proceso(record, classification)
         deadline = self._extract_deadline(record)
+        if deadline < date.today() and existing is None:
+            return False
         now = datetime.now(UTC)
 
         payload = record.model_dump(mode="json")

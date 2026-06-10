@@ -6,6 +6,7 @@ from app.api.v1 import (
     auth,
     companies,
     company_context,
+    corporate_identity,
     dashboard,
     dgcp,
     documents,
@@ -14,6 +15,7 @@ from app.api.v1 import (
     knowledge,
     llm,
     m365,
+    m365_operative,
     notifications,
     odoo,
     prices,
@@ -34,10 +36,12 @@ api_router.include_router(llm.router)
 api_router.include_router(integrations.router)
 api_router.include_router(companies.router)
 api_router.include_router(company_context.router)
+api_router.include_router(corporate_identity.router)
 api_router.include_router(dashboard.router)
 api_router.include_router(dgcp.router)
 api_router.include_router(odoo.router)
 api_router.include_router(m365.router)
+api_router.include_router(m365_operative.router, prefix="/m365")
 api_router.include_router(tasks.router)
 api_router.include_router(users.router)
 api_router.include_router(work.router)

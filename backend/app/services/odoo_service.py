@@ -215,7 +215,9 @@ class OdooService:
                 company_id=self._company_id,
                 company_name=self._company_name,
             )
-        except OdooNotConfiguredError:
+        except (OdooNotConfiguredError, OdooConnectionError):
+            return OdooSummaryResponse(connected=False)
+        except Exception:
             return OdooSummaryResponse(connected=False)
 
     async def list_customers(self, *, search: str = "", limit: int = 50) -> OdooListResponse:
@@ -840,7 +842,7 @@ class OdooService:
         rows = await client.search_read(
             "sale.order",
             domain,
-            ["name", "partner_id", "date_order", "amount_total", "state"],
+            ["name", "partner_id", "date_order", "amount_total", "state", "currency_id", "user_id", "company_id", "validity_date"],
             limit=limit,
             order="date_order desc",
         )
@@ -848,10 +850,17 @@ class OdooService:
             OdooQuotationResponse(
                 id=r["id"],
                 name=odoo_str(r.get("name")),
+                partner_id=odoo_m2o_id(r.get("partner_id")),
                 partner_name=odoo_m2o_name(r.get("partner_id")),
                 date_order=odoo_date(r.get("date_order")),
                 amount_total=odoo_dec(r.get("amount_total")),
+                currency=odoo_m2o_name(r.get("currency_id")) or "DOP",
                 state=odoo_str(r.get("state")),
+                user_id=odoo_m2o_id(r.get("user_id")),
+                salesperson_name=odoo_m2o_name_opt(r.get("user_id")),
+                company_id=odoo_m2o_id(r.get("company_id")),
+                company_name=odoo_m2o_name_opt(r.get("company_id")),
+                validity_date=odoo_date(r.get("validity_date")),
             )
             for r in rows
         ]
@@ -1065,7 +1074,7 @@ class OdooService:
         rows = await client.search_read(
             "sale.order",
             domain,
-            ["name", "partner_id", "date_order", "amount_total", "state"],
+            ["name", "partner_id", "date_order", "amount_total", "state", "currency_id", "user_id", "company_id", "validity_date"],
             limit=limit,
             order="date_order desc",
         )
@@ -1073,10 +1082,17 @@ class OdooService:
             OdooQuotationResponse(
                 id=r["id"],
                 name=odoo_str(r.get("name")),
+                partner_id=odoo_m2o_id(r.get("partner_id")),
                 partner_name=odoo_m2o_name(r.get("partner_id")),
                 date_order=odoo_date(r.get("date_order")),
                 amount_total=odoo_dec(r.get("amount_total")),
+                currency=odoo_m2o_name(r.get("currency_id")) or "DOP",
                 state=odoo_str(r.get("state")),
+                user_id=odoo_m2o_id(r.get("user_id")),
+                salesperson_name=odoo_m2o_name_opt(r.get("user_id")),
+                company_id=odoo_m2o_id(r.get("company_id")),
+                company_name=odoo_m2o_name_opt(r.get("company_id")),
+                validity_date=odoo_date(r.get("validity_date")),
             )
             for r in rows
         ]

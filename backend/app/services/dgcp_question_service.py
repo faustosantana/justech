@@ -110,7 +110,11 @@ class DgcpQuestionService:
             return []
         stmt = (
             select(DGCPOpportunity)
-            .where(DGCPOpportunity.tenant_id == self.tenant_id)
+            .where(
+                DGCPOpportunity.tenant_id == self.tenant_id,
+                DGCPOpportunity.deadline >= date.today(),
+                DGCPOpportunity.status.notin_(("won", "lost", "discarded")),
+            )
             .order_by(DGCPOpportunity.deadline.asc())
             .limit(20)
         )

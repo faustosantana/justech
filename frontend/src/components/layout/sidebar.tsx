@@ -78,6 +78,7 @@ const NAV_GROUPS: NavGroup[] = [
     items: [
       { href: "/search", label: messages.nav.search, icon: Search },
       { href: "/m365", label: messages.nav.m365, icon: Target },
+      { href: "/m365/operativo", label: "M365 Operativo", icon: Target },
     ],
   },
   {

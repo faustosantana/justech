@@ -73,6 +73,13 @@ export interface DGCPSummary {
   discarded: number;
   won: number;
   lost: number;
+  presentation?: {
+    sin_generar: number;
+    expediente_generado: number;
+    paquete_preparado: number;
+    listo_para_subir: number;
+    requiere_actualizacion: number;
+  };
 }
 
 export interface DGCPOpportunityListResponse {
@@ -256,6 +263,9 @@ export interface DGCPChecklistItem {
   process_document_id?: string | null;
   relative_path?: string | null;
   match_source?: string | null;
+  odoo_quotation_id?: number | null;
+  odoo_quotation_name?: string | null;
+  economic_offer_meta?: Record<string, unknown> | null;
   validity_analysis?: Record<string, unknown> | null;
   manual_validation?: Record<string, unknown> | null;
   note_history?: Array<{
@@ -264,6 +274,33 @@ export interface DGCPChecklistItem {
     author_id?: string;
     created_at: string;
     action: string;
+  }>;
+}
+
+export interface DGCPEconomicOfferStatus {
+  opportunity_id: string;
+  opportunity_code: string;
+  requirement_key?: string;
+  display_status: string;
+  checklist_status: string;
+  is_compliant: boolean;
+  has_odoo_quotation: boolean;
+  odoo_quotation_id?: number | null;
+  odoo_quotation_name?: string | null;
+  process_document_id?: string | null;
+  document_title?: string | null;
+  draft_status?: string | null;
+  draft_id?: string | null;
+  task_id?: string | null;
+  preparation_pct?: number;
+  suggested_products?: Array<{
+    product_name: string;
+    supplier?: string | null;
+    cost_price?: string | number | null;
+    currency?: string;
+    stock?: number | null;
+    source?: string | null;
+    source_date?: string | null;
   }>;
 }
 
@@ -420,6 +457,70 @@ export const EXPEDIENTE_STATUS_LABELS: Record<string, string> = {
   expediente_listo_para_presentar: "Listo para presentar",
 };
 
+export interface RealExpedienteStatus {
+  opportunity_id: string;
+  opportunity_code: string;
+  status: string;
+  operational_stage: string;
+  expediente_status: string;
+  expediente_path: string | null;
+  zip_filename: string | null;
+  preparation_pct: number;
+  generated_at: string | null;
+  folder_counts: Record<string, number>;
+  missing: Array<Record<string, unknown>>;
+  expired: Array<Record<string, unknown>>;
+  requires_review: Array<Record<string, unknown>>;
+  ready_to_upload: Array<Record<string, unknown>>;
+  warnings: string[];
+  can_download: boolean;
+  can_mark_ready_review: boolean;
+  can_mark_ready_upload: boolean;
+  presentation_enabled: boolean;
+  presentation_expediente: string;
+  presentation_package: string;
+  presentation_zip: string;
+  presentation_upload: string;
+}
+
+export interface RealExpedienteValidation {
+  opportunity_id: string;
+  preparation_pct: number;
+  general_status: string;
+  completed: string[];
+  missing: string[];
+  expired: string[];
+  pending_review: string[];
+  critical_errors: string[];
+  warnings: string[];
+  can_prepare_package: boolean;
+  manifest_generated: boolean;
+}
+
+export interface RealExpedienteGenerateResult {
+  opportunity_id: string;
+  status: string;
+  expediente_path: string;
+  zip_filename: string;
+  preparation_pct: number;
+  files_count: number;
+  missing_count: number;
+  ready_to_upload_count: number;
+  manifest: Record<string, unknown>;
+  message: string;
+}
+
+export const REAL_EXPEDIENTE_STATUS_LABELS: Record<string, string> = {
+  sin_generar: "Sin generar",
+  generado_incompleto: "Generado — incompleto",
+  generado_con_observaciones: "Generado — con observaciones",
+  listo_para_revision: "Listo para revisión",
+  listo_para_subir: "Listo para subir",
+  paquete_dgcp_preparado: "Paquete DGCP preparado",
+  descargado: "Descargado",
+  requiere_actualizacion: "Requiere actualización",
+};
+
 export const COMPLIANCE_STATUS_LABELS: Record<string, string> = {
   encontrado_vigente: "Cumplido",
   encontrado_vencido: "Vencido",
@@ -465,6 +566,11 @@ export const CHECKLIST_STATUS_LABELS: Record<string, string> = {
   validado: "Validado",
   completo: "Completo",
   requiere_revision: "Requiere revisión",
+  adjuntado: "Adjuntado al expediente",
+  borrador_pendiente: "Borrador pendiente de crear en Odoo",
+  validado_manual: "Validado manualmente",
+  encontrado_vigente: "Cumplido",
+  faltante: "Faltante",
 };
 
 export const REQUIREMENT_TYPE_LABELS: Record<string, string> = {

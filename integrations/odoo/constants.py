@@ -9,6 +9,8 @@ READ_ONLY_METHODS = frozenset({
     "read_group",
     "default_get",
     "get_metadata",
+    "_render_qweb_pdf",
+    "_get_report_from_name",
 })
 
 BLOCKED_METHOD_PREFIXES = (

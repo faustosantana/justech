@@ -14,6 +14,7 @@ import { t } from "@/i18n";
 import { ApiError, apiClient } from "@/lib/api";
 import { getAccessToken } from "@/lib/auth";
 import type { PriceQuoteDraft } from "@/lib/prices";
+import type { Task } from "@/lib/tasks";
 import { cn } from "@/lib/utils";
 
 const m = t();
@@ -41,6 +42,7 @@ export default function PriceDraftsPage() {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [bulkStatus, setBulkStatus] = useState<string>("pendiente_revision_vendedor");
   const [bulkAssignUserId, setBulkAssignUserId] = useState<string | null>(null);
+  const [economicTasks, setEconomicTasks] = useState<Task[]>([]);
 
   const downloadCsv = (csv: string, filename: string) => {
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
@@ -60,8 +62,14 @@ export default function PriceDraftsPage() {
     setLoading(true);
     setError(null);
     try {
-      const res = await apiClient.listPriceQuoteDrafts();
+      const [res, taskRes] = await Promise.all([
+        apiClient.listPriceQuoteDrafts(),
+        apiClient.getTasks({ limit: 100 }).catch(() => ({ items: [], total: 0 })),
+      ]);
       setDrafts(res.items);
+      setEconomicTasks(
+        taskRes.items.filter((t) => t.metadata?.task_type === "economic_offer"),
+      );
       setSelectedIds([]);
     } catch (err) {
       setError(err instanceof ApiError ? err.message : m.common.loading);
@@ -88,6 +96,32 @@ export default function PriceDraftsPage() {
         <p className="text-sm text-muted-foreground">{m.common.loading}</p>
       )}
       {error && <p className="text-sm text-destructive">{error}</p>}
+
+      {economicTasks.length > 0 && (
+        <Card className="mb-6 border-primary/20">
+          <CardHeader className="flex flex-row items-center justify-between">
+            <CardTitle className="text-base flex items-center gap-2">
+              <ClipboardList className="h-4 w-4 text-primary" />
+              Borradores DGCP — oferta económica ({economicTasks.length})
+            </CardTitle>
+            <Link href="/dgcp">
+              <Button size="sm" variant="outline">Ver licitaciones</Button>
+            </Link>
+          </CardHeader>
+          <CardContent className="space-y-2">
+            {economicTasks.slice(0, 6).map((t) => (
+              <Link
+                key={t.id}
+                href={`/tasks/${t.id}`}
+                className="flex items-center justify-between rounded-lg border border-border p-3 hover:bg-muted/30 text-sm"
+              >
+                <span>{t.title}</span>
+                <span className="text-xs text-muted-foreground capitalize">{t.status.replace(/_/g, " ")}</span>
+              </Link>
+            ))}
+          </CardContent>
+        </Card>
+      )}
 
       {!loading && drafts.length === 0 && (
         <Card>

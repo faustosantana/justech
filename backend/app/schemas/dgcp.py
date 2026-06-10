@@ -129,6 +129,7 @@ class DGCPOpportunitySummary(BaseModel):
     discarded: int
     won: int
     lost: int
+    presentation: dict[str, int] = Field(default_factory=dict)
 
 
 class DGCPOpportunityListResponse(BaseModel):

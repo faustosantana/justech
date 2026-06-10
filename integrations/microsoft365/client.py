@@ -87,3 +87,20 @@ class M365Client:
             "configured": self.config.is_configured(),
             "required_config": self.required_config(),
         }
+
+    async def list_messages(self, *, mailbox: str = "", limit: int = 50) -> list[dict]:
+        """Lista mensajes Graph — vacío hasta OAuth; usado por M365 Operativo."""
+        _ = mailbox
+        raw = await self.outlook.list_messages(limit=limit)
+        return [
+            {
+                "external_message_id": m.id or "",
+                "mailbox": mailbox,
+                "subject": m.subject,
+                "sender_email": m.sender,
+                "body_text": m.preview,
+                "received_at": m.received_at,
+                "attachments": [],
+            }
+            for m in raw
+        ]

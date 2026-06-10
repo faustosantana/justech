@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
-"""Genera iconos oficiales JAIOS — funciona en Mac, Linux y Windows."""
+"""Genera iconos oficiales JAIOS — J grande azul Justech sobre fondo claro."""
 
 from __future__ import annotations
 
-import math
 import platform
 import shutil
 import struct
@@ -16,57 +15,90 @@ ROOT = Path(__file__).resolve().parents[1]
 ICONS = ROOT / "desktop" / "src-tauri" / "icons"
 DESKTOP = ROOT / "desktop"
 
-BLUE_TOP = (59, 130, 246)
-BLUE_BOTTOM = (29, 78, 216)
+# Justech / JAIOS brand
+J_BLUE = (37, 99, 235)
+J_BLUE_DARK = (29, 78, 216)
+BG_TOP = (255, 255, 255)
+BG_BOTTOM = (239, 246, 255)
+BORDER = (191, 219, 254)
 
 
 def lerp(a: int, b: int, t: float) -> int:
     return int(a + (b - a) * t)
 
 
-def render_icon(size: int) -> bytes:
-    mask_r = size * 0.22
-    j_left = 0.38 * size
-    j_right = 0.62 * size
-    j_top = 0.22 * size
-    j_bottom = 0.78 * size
-    j_thickness = 0.11 * size
-    j_hook_bottom = 0.72 * size
-    j_hook_left = 0.28 * size
-    hook_cx = (j_left + j_right) / 2
-    hook_rx = (j_right - j_hook_left) * 0.55
-    hook_ry = (j_bottom - j_hook_bottom) * 0.9 + j_thickness
+def inside_rounded_rect(x: float, y: float, size: int, radius: float) -> bool:
+    r = radius
+    if x < r and y < r:
+        return (x - r) ** 2 + (y - r) ** 2 <= r * r
+    if x > size - 1 - r and y < r:
+        return (x - (size - 1 - r)) ** 2 + (y - r) ** 2 <= r * r
+    if x < r and y > size - 1 - r:
+        return (x - r) ** 2 + (y - (size - 1 - r)) ** 2 <= r * r
+    if x > size - 1 - r and y > size - 1 - r:
+        return (x - (size - 1 - r)) ** 2 + (y - (size - 1 - r)) ** 2 <= r * r
+    return True
 
+
+def in_bold_j(x: float, y: float, size: int) -> bool:
+    """Letra J grande, bold, centrada — legible en Dock y bandeja Windows."""
+    s = size
+    cx = s * 0.5
+    # Barra superior
+    top_y0, top_y1 = s * 0.18, s * 0.30
+    top_x0, top_x1 = s * 0.28, s * 0.72
+    # Tallo vertical
+    stem_x0, stem_x1 = s * 0.44, s * 0.56
+    stem_y0, stem_y1 = s * 0.18, s * 0.62
+    # Gancho inferior
+    hook_cy = s * 0.68
+    hook_rx, hook_ry = s * 0.20, s * 0.14
+    hook_thick = s * 0.055
+
+    if top_x0 <= x <= top_x1 and top_y0 <= y <= top_y1:
+        return True
+    if stem_x0 <= x <= stem_x1 and stem_y0 <= y <= stem_y1:
+        return True
+
+    # Elipse del gancho (parte inferior de la J)
+    dx = (x - cx) / max(hook_rx, 1)
+    dy = (y - hook_cy) / max(hook_ry, 1)
+    dist = dx * dx + dy * dy
+    if 0.55 <= dist <= 1.35 and y >= hook_cy - hook_thick and x <= stem_x1 + hook_thick:
+        return True
+    # Conector gancho → tallo
+    if stem_x0 - hook_thick <= x <= stem_x1 and hook_cy - hook_ry <= y <= hook_cy + hook_thick:
+        return True
+    return False
+
+
+def render_icon(size: int) -> bytes:
+    radius = size * 0.215
+    pad = size * 0.04
     raw = bytearray()
     for y in range(size):
         raw.append(0)
         t = y / max(size - 1, 1)
-        br, bg, bb = (
-            lerp(BLUE_TOP[0], BLUE_BOTTOM[0], t),
-            lerp(BLUE_TOP[1], BLUE_BOTTOM[1], t),
-            lerp(BLUE_TOP[2], BLUE_BOTTOM[2], t),
-        )
+        br = lerp(BG_TOP[0], BG_BOTTOM[0], t)
+        bg = lerp(BG_TOP[1], BG_BOTTOM[1], t)
+        bb = lerp(BG_TOP[2], BG_BOTTOM[2], t)
         for x in range(size):
-            cx = min(x, size - 1 - x)
-            cy = min(y, size - 1 - y)
-            if cx < mask_r and cy < mask_r:
-                dx = mask_r - cx
-                dy = mask_r - cy
-                if dx * dx + dy * dy > mask_r * mask_r:
-                    raw.extend((0, 0, 0, 0))
-                    continue
-
-            in_stem = j_left <= x <= j_right and j_top <= y <= j_bottom
-            in_top = j_left <= x <= j_right + 0.08 * size and j_top <= y <= j_top + j_thickness
-            dxh = (x - hook_cx) / max(hook_rx, 1)
-            dyh = (y - j_hook_bottom) / max(hook_ry, 1)
-            in_hook = (
-                dxh * dxh + dyh * dyh <= 1.0
-                and y >= j_hook_bottom - j_thickness
-                and x <= j_right + j_thickness * 0.3
-            )
-            if in_stem or in_top or in_hook:
-                raw.extend((255, 255, 255, 255))
+            if not inside_rounded_rect(x, y, size, radius):
+                raw.extend((0, 0, 0, 0))
+                continue
+            # Borde sutil
+            on_edge = (
+                x <= pad or y <= pad or x >= size - 1 - pad or y >= size - 1 - pad
+            ) and inside_rounded_rect(x, y, size, radius)
+            if on_edge:
+                raw.extend((*BORDER, 255))
+                continue
+            if in_bold_j(float(x), float(y), size):
+                jt = (y - size * 0.18) / max(size * 0.62, 1)
+                jr = lerp(J_BLUE[0], J_BLUE_DARK[0], min(1.0, jt))
+                jg = lerp(J_BLUE[1], J_BLUE_DARK[1], min(1.0, jt))
+                jb = lerp(J_BLUE[2], J_BLUE_DARK[2], min(1.0, jt))
+                raw.extend((jr, jg, jb, 255))
             else:
                 raw.extend((br, bg, bb, 255))
     return bytes(raw)
@@ -139,7 +171,7 @@ def run_tauri_icon() -> None:
 def main() -> None:
     ICONS.mkdir(parents=True, exist_ok=True)
     master = ICONS / "icon.png"
-    print("→ Render icon.png 1024px…")
+    print("→ Render icon.png 1024px (J azul, fondo claro)…")
     write_png(master, 1024)
     for name, size in [("32x32.png", 32), ("128x128.png", 128), ("128x128@2x.png", 256)]:
         resize_png(master, ICONS / name, size)

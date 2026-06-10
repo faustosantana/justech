@@ -173,13 +173,52 @@ class OdooInvoiceResponse(BaseModel):
     payment_state: str | None = None
 
 
+class OdooQuotationLineResponse(BaseModel):
+    product_id: int | None = None
+    product_name: str
+    description: str | None = None
+    quantity: float = 0
+    price_unit: Decimal = Decimal("0")
+    discount: float = 0
+    subtotal: Decimal = Decimal("0")
+    taxes: list[str] = Field(default_factory=list)
+
+
 class OdooQuotationResponse(BaseModel):
     id: int
     name: str
+    partner_id: int | None = None
     partner_name: str
     date_order: str | None = None
     amount_total: Decimal
+    currency: str = "DOP"
     state: str
+    user_id: int | None = None
+    salesperson_name: str | None = None
+    company_id: int | None = None
+    company_name: str | None = None
+    validity_date: str | None = None
+
+
+class OdooQuotationDetailResponse(OdooQuotationResponse):
+    lines: list[OdooQuotationLineResponse] = Field(default_factory=list)
+    connected: bool = True
+    message: str | None = None
+
+
+class OdooQuotationSearchParams(BaseModel):
+    q: str | None = None
+    quotation_number: str | None = None
+    customer: str | None = None
+    salesperson: str | None = None
+    product: str | None = None
+    date_from: str | None = None
+    date_to: str | None = None
+    amount_min: Decimal | None = None
+    amount_max: Decimal | None = None
+    state: str | None = None
+    company_id: int | None = None
+    limit: int = 50
 
 
 class OdooOpportunityResponse(BaseModel):

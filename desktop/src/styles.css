@@ -200,6 +200,45 @@ body {
   color: #94a3b8;
 }
 
+.login-loading {
+  position: relative;
+  text-align: center;
+  color: var(--jaios-muted);
+}
+
+.setup-server-label {
+  margin: 0 0 8px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #334155;
+}
+
+.setup-hint {
+  margin: 0 0 12px;
+  font-size: 0.85rem;
+  color: var(--jaios-muted);
+}
+
+.setup-actions {
+  margin-top: 0;
+  margin-bottom: 8px;
+}
+
+.setup-save {
+  margin-top: 16px;
+}
+
+.setup-back {
+  display: block;
+  width: 100%;
+  text-align: center;
+  margin-top: 10px;
+}
+
+.danger-link {
+  color: #b91c1c !important;
+}
+
 .server-badge {
   margin: 16px 0 0;
   text-align: center;

@@ -8,6 +8,28 @@ from app.services.odoo_url_helper import (
 )
 
 
+def build_customer_suggested_actions(customer_name: str, customer_id: int | str | None = None) -> list[dict[str, str]]:
+    """Acciones sugeridas post-respuesta de cliente."""
+    q_name = customer_name.strip()
+    actions: list[dict[str, str]] = [
+        {"label": "Ver facturas", "type": "internal_link", "url": f"/search?q={q_name}&type=invoices"},
+        {"label": "Ver cotizaciones", "type": "internal_link", "url": f"/search?q={q_name}&type=quotations"},
+        {"label": "Ver ventas históricas", "type": "internal_link", "url": f"/search?q={q_name}"},
+        {
+            "label": "Crear tarea de seguimiento",
+            "type": "internal_link",
+            "url": f"/tasks?new=1&title=Seguimiento%20{q_name.replace(' ', '%20')}",
+        },
+    ]
+    if customer_id is not None:
+        actions.insert(0, {
+            "label": "Ver cliente",
+            "type": "internal_link",
+            "url": f"/odoo/customers/{customer_id}",
+        })
+    return actions
+
+
 def build_entity_actions(
     entity_type: str,
     entity_id: int | str,

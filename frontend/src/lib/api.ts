@@ -74,6 +74,8 @@ import {
 } from "./auth";
 
 const REQUEST_TIMEOUT_MS = 30_000;
+/** Búsqueda empresarial y asistente pueden tardar (Odoo + índice). */
+const LONG_REQUEST_TIMEOUT_MS = 90_000;
 
 /** API siempre mismo origen: gateway (:8000) o proxy Next (:3000 → /api rewrite). */
 function getApiUrl(): string {
@@ -138,12 +140,15 @@ interface TenantResponse {
   name: string;
 }
 
+type RequestOptions = RequestInit & { timeoutMs?: number };
+
 async function request<T>(
   path: string,
-  options: RequestInit = {},
+  options: RequestOptions = {},
   authenticated = false,
   retried = false,
 ): Promise<T> {
+  const { timeoutMs = REQUEST_TIMEOUT_MS, ...fetchOptions } = options;
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
     ...(options.headers as Record<string, string>),
@@ -161,11 +166,11 @@ async function request<T>(
   }
 
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+  const timeout = setTimeout(() => controller.abort(), timeoutMs);
 
   try {
     const response = await fetch(`${getApiUrl()}${path}`, {
-      ...options,
+      ...fetchOptions,
       headers,
       signal: controller.signal,
     });
@@ -202,6 +207,15 @@ async function request<T>(
       return undefined as T;
     }
     return response.json() as Promise<T>;
+  } catch (err) {
+    if (err instanceof Error && err.name === "AbortError") {
+      throw new ApiError(
+        408,
+        "TIMEOUT",
+        "La solicitud tardó demasiado. Intenta de nuevo en unos segundos.",
+      );
+    }
+    throw err;
   } finally {
     clearTimeout(timeout);
   }
@@ -562,6 +576,75 @@ export const apiClient = {
     downloadAuthenticatedBlob(blob, resolvedName);
   },
 
+  getRealExpedienteStatus: (id: string) =>
+    request<import("@/lib/dgcp").RealExpedienteStatus>(
+      `/dgcp/opportunities/${id}/real-expediente/status`,
+      {},
+      true,
+    ),
+
+  validateRealExpediente: (id: string) =>
+    request<import("@/lib/dgcp").RealExpedienteValidation>(
+      `/dgcp/opportunities/${id}/real-expediente/validate`,
+      {},
+      true,
+    ),
+
+  generateRealExpediente: (id: string) =>
+    request<import("@/lib/dgcp").RealExpedienteGenerateResult>(
+      `/dgcp/opportunities/${id}/real-expediente/generate`,
+      { method: "POST", body: "{}" },
+      true,
+    ),
+
+  prepareDGCPSubmissionPackage: (id: string) =>
+    request<import("@/lib/dgcp").RealExpedienteGenerateResult>(
+      `/dgcp/opportunities/${id}/real-expediente/prepare-package`,
+      { method: "POST", body: "{}" },
+      true,
+    ),
+
+  markRealExpedienteReadyReview: (id: string) =>
+    request<import("@/lib/dgcp").RealExpedienteStatus>(
+      `/dgcp/opportunities/${id}/real-expediente/mark-ready-review`,
+      { method: "POST", body: "{}" },
+      true,
+    ),
+
+  markRealExpedienteReadyUpload: (id: string) =>
+    request<import("@/lib/dgcp").RealExpedienteStatus>(
+      `/dgcp/opportunities/${id}/real-expediente/mark-ready-upload`,
+      { method: "POST", body: "{}" },
+      true,
+    ),
+
+  getRealExpedienteManifest: (id: string) =>
+    request<Record<string, unknown>>(
+      `/dgcp/opportunities/${id}/real-expediente/manifest`,
+      {},
+      true,
+    ),
+
+  downloadRealExpedienteReport: async (id: string): Promise<void> => {
+    const { fetchAuthenticatedFile, downloadAuthenticatedBlob } = await import(
+      "@/lib/authenticated-file"
+    );
+    const { blob } = await fetchAuthenticatedFile(
+      `/dgcp/opportunities/${id}/real-expediente/report`,
+    );
+    downloadAuthenticatedBlob(blob, "reporte_preparacion.pdf");
+  },
+
+  downloadRealExpedienteZip: async (id: string, filename?: string): Promise<void> => {
+    const { fetchAuthenticatedFile, downloadAuthenticatedBlob } = await import(
+      "@/lib/authenticated-file"
+    );
+    const { blob } = await fetchAuthenticatedFile(
+      `/dgcp/opportunities/${id}/real-expediente/download`,
+    );
+    downloadAuthenticatedBlob(blob, filename ?? `expediente_dgcp_${id}.zip`);
+  },
+
   reclassifyDGCPOpportunities: () =>
     request<{
       total: number;
@@ -661,6 +744,159 @@ export const apiClient = {
       true,
     ),
 
+  searchOdooQuotations: (filters?: Record<string, string | number | undefined>) =>
+    request<OdooListResponse<OdooQuotation>>(
+      `/odoo/quotations/search${buildQuery(filters ?? {})}`,
+      {},
+      true,
+    ),
+
+  getOdooQuotationDetail: (id: number) =>
+    request<import("@/lib/odoo").OdooQuotationDetail>(`/odoo/quotations/${id}`, {}, true),
+
+  downloadOdooQuotationPdf: async (id: number, filename: string) => {
+    const token = getAccessToken();
+    const tenantId = getTenantId();
+    if (!token) throw new Error("UNAUTHORIZED");
+    const response = await fetch(`${getApiUrl()}/odoo/quotations/${id}/pdf`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        ...(tenantId ? { "X-Tenant-ID": tenantId } : {}),
+      },
+    });
+    if (!response.ok) throw new ApiError(response.status, "DOWNLOAD_ERROR", "Error al descargar PDF");
+    const blob = await response.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename.endsWith(".pdf") ? filename : `${filename}.pdf`;
+    a.click();
+    URL.revokeObjectURL(url);
+  },
+
+  getDGCPEconomicOfferStatus: (opportunityId: string) =>
+    request<import("@/lib/dgcp").DGCPEconomicOfferStatus>(
+      `/dgcp/opportunities/${opportunityId}/economic-offer/status`,
+      {},
+      true,
+    ),
+
+  createDGCPEconomicOfferTask: (
+    opportunityId: string,
+    data: {
+      customer_name?: string;
+      suggested_products?: unknown[];
+      notes?: string;
+      assigned_to?: string;
+      requirement_id?: string;
+    },
+  ) =>
+    request<{ task_id: string; title: string; created: boolean; existing: boolean }>(
+      `/dgcp/opportunities/${opportunityId}/economic-offer/create-draft-task`,
+      { method: "POST", body: JSON.stringify(data) },
+      true,
+    ),
+
+  getCorporateIdentity: (companyKey?: string) =>
+    request<import("@/lib/corporate-identity").CorporateIdentityOverview>(
+      `/corporate-identity${companyKey ? `?company_key=${encodeURIComponent(companyKey)}` : ""}`,
+      {},
+      true,
+    ),
+
+  uploadCorporateSignature: async (file: File) => {
+    const token = getAccessToken();
+    const form = new FormData();
+    form.append("file", file);
+    const response = await fetch(`${getApiUrl()}/corporate-identity/upload-signature`, {
+      method: "POST",
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+      body: form,
+    });
+    if (!response.ok) {
+      const body = await response.json().catch(() => ({}));
+      throw new ApiError(response.status, "UPLOAD_ERROR", body.detail ?? "Error al subir firma");
+    }
+    return response.json() as Promise<{ asset: import("@/lib/corporate-identity").CorporateIdentityAsset; message: string }>;
+  },
+
+  uploadCorporateStamp: async (companyKey: string, file: File) => {
+    const token = getAccessToken();
+    const form = new FormData();
+    form.append("file", file);
+    const response = await fetch(
+      `${getApiUrl()}/corporate-identity/upload-stamp?company_key=${encodeURIComponent(companyKey)}`,
+      {
+        method: "POST",
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+        body: form,
+      },
+    );
+    if (!response.ok) {
+      const body = await response.json().catch(() => ({}));
+      throw new ApiError(response.status, "UPLOAD_ERROR", body.detail ?? "Error al subir sello");
+    }
+    return response.json() as Promise<{ asset: import("@/lib/corporate-identity").CorporateIdentityAsset; message: string }>;
+  },
+
+  previewDGCPFinalization: (
+    opportunityId: string,
+    data: { requirement_key: string; checklist_item_id?: string; company_key?: string },
+  ) =>
+    request<import("@/lib/corporate-identity").DocumentFinalizationPreview>(
+      `/dgcp/opportunities/${opportunityId}/finalization/preview`,
+      { method: "POST", body: JSON.stringify(data) },
+      true,
+    ),
+
+  generateDGCPFinalPdf: (
+    opportunityId: string,
+    data: { requirement_key: string; checklist_item_id?: string; company_key?: string; regenerate?: boolean },
+  ) =>
+    request<{
+      record: import("@/lib/corporate-identity").DocumentFinalizationRecord;
+      preparation_pct?: number;
+      expediente_status?: string;
+      message: string;
+    }>(`/dgcp/opportunities/${opportunityId}/finalization/generate`, {
+      method: "POST",
+      body: JSON.stringify(data),
+    }, true),
+
+  generateAllDGCPFinalPdfs: (opportunityId: string, companyKey?: string) =>
+    request<{
+      processed: import("@/lib/corporate-identity").DocumentFinalizationRecord[];
+      skipped: { requirement_key: string; reason: string }[];
+      warnings: string[];
+    }>(
+      `/dgcp/opportunities/${opportunityId}/finalization/generate-all${companyKey ? `?company_key=${encodeURIComponent(companyKey)}` : ""}`,
+      { method: "POST", body: JSON.stringify({}) },
+      true,
+    ),
+
+  listDGCPFinalizationRecords: (opportunityId: string) =>
+    request<import("@/lib/corporate-identity").DocumentFinalizationRecord[]>(
+      `/dgcp/opportunities/${opportunityId}/finalization/records`,
+      {},
+      true,
+    ),
+
+  downloadDGCPFinalPdf: async (opportunityId: string, recordId: string, filename: string) => {
+    const token = getAccessToken();
+    const response = await fetch(
+      `${getApiUrl()}/dgcp/opportunities/${opportunityId}/finalization/${recordId}/file`,
+      { headers: token ? { Authorization: `Bearer ${token}` } : {} },
+    );
+    if (!response.ok) throw new ApiError(response.status, "DOWNLOAD_ERROR", "No se pudo descargar PDF final");
+    const blob = await response.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(url);
+  },
+
   getOdooOpportunities: (filters?: { partner_id?: number; limit?: number }) =>
     request<OdooListResponse<OdooOpportunity>>(
       `/odoo/opportunities${buildQuery(filters ?? {})}`,
@@ -721,6 +957,30 @@ export const apiClient = {
 
   getM365Search: (q: string, limit = 25) =>
     request<M365SearchResponse>(`/m365/search${buildQuery({ q, limit })}`, {}, true),
+
+  getM365OperativeDashboard: () =>
+    request<import("@/lib/m365-operative").M365OperativeDashboard>("/m365/operative/dashboard", {}, true),
+
+  getM365OperativeEmails: (classification?: string, limit = 50) =>
+    request<import("@/lib/m365-operative").M365ProcessedEmailListResponse>(
+      `/m365/operative/emails${buildQuery({ classification, limit })}`,
+      {},
+      true,
+    ),
+
+  syncM365OperativeInbox: () =>
+    request<import("@/lib/m365-operative").M365SyncResponse>(
+      "/m365/operative/sync",
+      { method: "POST" },
+      true,
+    ),
+
+  executeM365OperativeAction: (emailId: string, actionKey: string, params: Record<string, unknown> = {}) =>
+    request<import("@/lib/m365-operative").M365ExecuteActionResponse>(
+      `/m365/operative/emails/${emailId}/actions`,
+      { method: "POST", body: JSON.stringify({ action_key: actionKey, params }) },
+      true,
+    ),
 
   getTasks: (params: Record<string, string | number | undefined> = {}) =>
     request<TaskListResponse>(`/tasks${buildQuery(params)}`, {}, true),
@@ -826,6 +1086,22 @@ export const apiClient = {
       body: JSON.stringify(payload),
     }, true),
 
+  connectM365Imap: (payload: {
+    email: string;
+    password: string;
+    imap_host?: string;
+    imap_port?: number;
+  }) =>
+    request<import("@/lib/admin").M365Account>("/m365/accounts/connect-imap", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    }, true),
+
+  disconnectM365Mailbox: () =>
+    request<import("@/lib/admin").M365Account>("/m365/accounts/disconnect", {
+      method: "POST",
+    }, true),
+
   deleteM365Account: (id: string) =>
     request<void>(`/m365/accounts/${id}`, { method: "DELETE" }, true),
 
@@ -858,10 +1134,36 @@ export const apiClient = {
     }, true),
 
   assistantQuery: (payload: AssistantQueryRequest) =>
-    request<AssistantQueryResponse>("/assistant/query", {
-      method: "POST",
-      body: JSON.stringify(payload),
-    }, true),
+    request<AssistantQueryResponse>(
+      "/assistant/query",
+      {
+        method: "POST",
+        body: JSON.stringify(payload),
+        timeoutMs: LONG_REQUEST_TIMEOUT_MS,
+      },
+      true,
+    ),
+
+  getAssistantBriefing: (mode: "managerial" | "operational" | "bidding" = "managerial") =>
+    request<import("@/lib/assistant").CopilotBriefingResponse>(
+      `/assistant/briefing?mode=${mode}`,
+      {},
+      true,
+    ),
+
+  setAssistantBriefingMode: (conversationId: string, mode: "managerial" | "operational" | "bidding") =>
+    request<{ status: string; mode: string }>(
+      `/assistant/briefing-mode?conversation_id=${encodeURIComponent(conversationId)}&mode=${mode}`,
+      { method: "PUT" },
+      true,
+    ),
+
+  resetAssistantConversation: (conversationId: string) =>
+    request<{ status: string }>(
+      `/assistant/conversations/reset?conversation_id=${encodeURIComponent(conversationId)}`,
+      { method: "POST" },
+      true,
+    ),
 
   enterpriseSearch: (params: {
     q: string;
@@ -878,7 +1180,7 @@ export const apiClient = {
         company: params.company,
         limit: params.limit,
       })}`,
-      {},
+      { timeoutMs: LONG_REQUEST_TIMEOUT_MS },
       true,
     ),
 

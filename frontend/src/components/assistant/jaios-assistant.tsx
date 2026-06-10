@@ -5,11 +5,17 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 
-import { AssistantQuickViewModal } from "@/components/assistant/assistant-quick-view-modal";
+import { CopilotExecutivePanel } from "@/components/assistant/copilot-executive-panel";
+import {
+  loadBriefingMode,
+  saveBriefingMode,
+  type BriefingMode,
+} from "@/components/assistant/copilot-mode-selector";
+import { AssistantActionButtons } from "@/components/assistant/assistant-action-buttons";
 import { AssistantAvatar } from "@/components/assistant/assistant-avatar";
 import { AssistantStructuredResponse } from "@/components/assistant/assistant-structured-response";
 import { Button } from "@/components/ui/button";
-import { apiClient } from "@/lib/api";
+import { ApiError, apiClient } from "@/lib/api";
 import { getAccessToken } from "@/lib/auth";
 import {
   isStructuredAnswer,
@@ -17,8 +23,10 @@ import {
   saveAssistantHistory,
   sourceBadgeColor,
   type AssistantMessage,
+  type CopilotBriefingResponse,
   type QuickViewTarget,
 } from "@/lib/assistant";
+import { AssistantQuickViewModal } from "@/components/assistant/assistant-quick-view-modal";
 import {
   getConversationId,
   getProactivePrompt,
@@ -67,6 +75,9 @@ export function JaiosAssistant({
   const [messages, setMessages] = useState<AssistantMessage[]>([]);
   const [quickView, setQuickView] = useState<QuickViewTarget | null>(null);
   const [showDebug, setShowDebug] = useState(false);
+  const [briefing, setBriefing] = useState<CopilotBriefingResponse | null>(null);
+  const [briefingLoading, setBriefingLoading] = useState(false);
+  const [briefingMode, setBriefingMode] = useState<BriefingMode>("managerial");
   const bottomRef = useRef<HTMLDivElement>(null);
   const proactive = getProactivePrompt(pathname);
 
@@ -92,10 +103,25 @@ export function JaiosAssistant({
   }, [controlledOpen]);
 
   useEffect(() => {
-    if (proactiveBriefing && open && messages.length === 0) {
-      setQuestion("");
-    }
-  }, [proactiveBriefing, open, messages.length]);
+    setBriefingMode(loadBriefingMode());
+  }, []);
+
+  useEffect(() => {
+    if (!open || messages.length > 0 || !getAccessToken()) return;
+    setBriefingLoading(true);
+    void apiClient
+      .getAssistantBriefing(briefingMode)
+      .then(setBriefing)
+      .catch(() => setBriefing(null))
+      .finally(() => setBriefingLoading(false));
+  }, [open, messages.length, briefingMode]);
+
+  const handleBriefingModeChange = useCallback((mode: BriefingMode) => {
+    setBriefingMode(mode);
+    saveBriefingMode(mode);
+    const convId = getConversationId();
+    void apiClient.setAssistantBriefingMode(convId, mode).catch(() => undefined);
+  }, []);
 
   useEffect(() => {
     if (open) bottomRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -107,8 +133,8 @@ export function JaiosAssistant({
     setQuickView(null);
   }, [setOpen]);
 
-  const ask = useCallback(async () => {
-    const q = question.trim();
+  const ask = useCallback(async (overrideQuestion?: string) => {
+    const q = (overrideQuestion ?? question).trim();
     if (!q || loading) return;
     if (!getAccessToken()) {
       window.location.href = "/login?session=expired";
@@ -148,11 +174,14 @@ export function JaiosAssistant({
       if (err instanceof Error && err.message === "UNAUTHORIZED") {
         return;
       }
+      const message =
+        err instanceof ApiError
+          ? err.message
+          : "No pude procesar la consulta. Verifica que el backend esté activo o intenta de nuevo en unos segundos.";
       const errMsg: AssistantMessage = {
         id: crypto.randomUUID(),
         role: "assistant",
-        content:
-          "No pude procesar la consulta. Verifica que el backend esté activo o intenta de nuevo en unos segundos.",
+        content: message,
         timestamp: Date.now(),
       };
       const updated = [...next, errMsg];
@@ -199,9 +228,9 @@ export function JaiosAssistant({
           <div className="flex min-w-0 items-center gap-3">
             <AssistantAvatar size="sm" state={loading ? "thinking" : proactive.state} animated />
             <div className="min-w-0">
-              <p className="truncate text-sm font-semibold">JAIOS Assistant</p>
+              <p className="truncate text-sm font-semibold">JAIOS Copiloto</p>
               <p className="text-[10px] text-muted-foreground">
-                {fullscreen ? "Pantalla completa" : "Analista empresarial · solo lectura"}
+                {fullscreen ? "Pantalla completa" : "Copiloto empresarial · solo lectura"}
               </p>
             </div>
           </div>
@@ -233,6 +262,21 @@ export function JaiosAssistant({
           </div>
         </div>
 
+        <div className="shrink-0 border-b border-border bg-muted/20 px-4 py-1.5 flex justify-end">
+          <button
+            type="button"
+            className="text-[10px] text-muted-foreground hover:text-primary hover:underline"
+            onClick={() => {
+              const id = getConversationId();
+              void apiClient.resetAssistantConversation(id).catch(() => undefined);
+              setMessages([]);
+              saveAssistantHistory([]);
+            }}
+          >
+            Nueva conversación
+          </button>
+        </div>
+
         <div className="shrink-0 border-b border-border bg-muted/30 px-4 py-2">
           <div className="flex items-center justify-between gap-2">
             <p className="truncate text-xs text-muted-foreground">
@@ -258,32 +302,26 @@ export function JaiosAssistant({
 
         <div className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden p-4 space-y-4">
           {messages.length === 0 && (
-            <div className="space-y-3">
-              <div className="brand-surface-accent rounded-xl p-4 text-sm">
-                <p className="font-medium text-foreground">
-                  {proactiveBriefing || proactive.message}
-                </p>
-                <div className="mt-3 flex flex-wrap gap-2">
-                  {proactive.actions.slice(0, 3).map((a) => (
-                    <button
-                      key={a.label}
-                      type="button"
-                      onClick={() => {
-                        if (a.question) {
-                          setQuestion(a.question);
-                          setOpen(true);
-                        } else if (a.href) {
-                          window.location.href = a.href;
-                        }
-                      }}
-                      className="brand-chip cursor-pointer border-border/80 bg-background px-3 py-1 normal-case tracking-normal hover:border-primary/40"
-                    >
-                      {a.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
+            <CopilotExecutivePanel
+              briefing={proactiveBriefing ? {
+                greeting: proactiveBriefing,
+                mode: briefingMode,
+                priorities: { title: "Prioridades", items: [] },
+                alerts: { title: "Alertas", items: [] },
+                opportunities: { title: "Oportunidades", items: [] },
+                recommendations: { title: "Recomendaciones", items: [] },
+                quick_actions: proactive.actions.slice(0, 4).map((a) => ({
+                  label: a.label,
+                  question: a.question,
+                  href: a.href,
+                })),
+                recent_activity: { title: "Últimas actividades", items: [] },
+              } : briefing}
+              loading={briefingLoading && !proactiveBriefing}
+              mode={briefingMode}
+              onModeChange={handleBriefingModeChange}
+              onAsk={(q) => void ask(q)}
+            />
           )}
           {messages.map((m) => (
             <div
@@ -319,6 +357,15 @@ export function JaiosAssistant({
                       data={m.response.structured_data}
                       wide={fullscreen}
                       onQuickView={setQuickView}
+                      onNavigate={closeAssistant}
+                    />
+                  )}
+                  {m.response.actions && m.response.actions.length > 0 && (
+                    <AssistantActionButtons
+                      actions={m.response.actions}
+                      onQuickView={(entityType, entityId) =>
+                        setQuickView({ entity_type: entityType, entity_id: entityId })
+                      }
                       onNavigate={closeAssistant}
                     />
                   )}
@@ -407,10 +454,10 @@ export function JaiosAssistant({
               value={question}
               onChange={(e) => setQuestion(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && ask()}
-              placeholder="Pregunta a JAIOS…"
+              placeholder="Escribe o elige una acción del copiloto…"
               className="brand-input min-w-0 flex-1"
             />
-            <Button size="sm" onClick={ask} disabled={loading || !question.trim()}>
+            <Button size="sm" onClick={() => void ask()} disabled={loading || !question.trim()}>
               <Send className="h-4 w-4" />
             </Button>
           </div>

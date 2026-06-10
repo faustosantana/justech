@@ -15,6 +15,7 @@ import {
   Share2,
   Users,
 } from "lucide-react";
+import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
@@ -210,6 +211,15 @@ function M365PageContent() {
     >
       <div className="space-y-6">
         <ConnectionBanner connected={connected} message={message} readOnly={health?.read_only ?? true} />
+
+        <div className="flex flex-wrap gap-2">
+          <Link
+            href="/m365/operativo"
+            className="inline-flex items-center gap-2 rounded-lg border border-primary/30 bg-primary/5 px-4 py-2 text-sm font-medium text-primary hover:bg-primary/10"
+          >
+            Microsoft 365 Operativo — Email Intelligence
+          </Link>
+        </div>
 
         <div className="flex flex-wrap items-center gap-2 border-b border-border pb-1">
           {M365_TABS.map(({ id, label }) => {

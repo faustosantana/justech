@@ -121,3 +121,6 @@ class SafeOdooClient:
 
     async def test_connection(self) -> dict[str, Any]:
         return await self.client.test_connection()
+
+    async def download_report_pdf(self, report_name: str, doc_id: int) -> bytes:
+        return await self.client.download_report_pdf(report_name, doc_id)

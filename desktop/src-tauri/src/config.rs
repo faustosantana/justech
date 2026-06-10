@@ -65,7 +65,13 @@ pub fn load_config() -> AppConfig {
         return AppConfig::default();
     }
     let raw = fs::read_to_string(&path).unwrap_or_default();
-    serde_json::from_str(&raw).unwrap_or_default()
+    let mut config: AppConfig = serde_json::from_str(&raw).unwrap_or_default();
+    let derived = derive_api_url(&config.web_url);
+    if config.api_url != derived {
+        config.api_url = derived;
+        let _ = save_config(&config);
+    }
+    config
 }
 
 pub fn save_config(config: &AppConfig) -> Result<(), String> {
@@ -80,14 +86,8 @@ pub fn derive_api_url(web_url: &str) -> String {
     if trimmed.ends_with("/api/v1") {
         return trimmed.to_string();
     }
-    if let Ok(mut parsed) = url::Url::parse(trimmed) {
-        if parsed.port() == Some(3000) {
-            let _ = parsed.set_port(Some(8000));
-            let base = parsed.as_str().trim_end_matches('/');
-            return format!("{base}/api/v1");
-        }
-        return format!("{trimmed}/api/v1");
-    }
+    // Misma URL base que el frontend (:3000 proxy Next o gateway :8000).
+    // No forzar puerto 8000 cuando el usuario entra por :3000 en LAN.
     format!("{trimmed}/api/v1")
 }
 
@@ -113,4 +113,25 @@ pub fn is_configured(config: &AppConfig) -> bool {
 
 pub fn reset_to_defaults() -> AppConfig {
     AppConfig::default()
+}
+
+#[cfg(test)]
+mod tests {
+    use super::derive_api_url;
+
+    #[test]
+    fn derive_api_url_keeps_frontend_port() {
+        assert_eq!(
+            derive_api_url("http://192.168.1.10:3000"),
+            "http://192.168.1.10:3000/api/v1"
+        );
+    }
+
+    #[test]
+    fn derive_api_url_gateway_port() {
+        assert_eq!(
+            derive_api_url("http://192.168.1.10:8000"),
+            "http://192.168.1.10:8000/api/v1"
+        );
+    }
 }

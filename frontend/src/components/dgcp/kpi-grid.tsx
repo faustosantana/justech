@@ -62,6 +62,21 @@ export function KPIGrid({ summary }: KPIGridProps) {
 
       <Card>
         <CardHeader className="pb-2">
+          <CardTitle className="text-sm">Estado de Presentación</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-5 text-sm">
+            <PresentationMetric label="Sin generar" value={summary.presentation?.sin_generar ?? 0} />
+            <PresentationMetric label="Expediente generado" value={summary.presentation?.expediente_generado ?? 0} />
+            <PresentationMetric label="Paquete DGCP" value={summary.presentation?.paquete_preparado ?? 0} />
+            <PresentationMetric label="Listo para subir" value={summary.presentation?.listo_para_subir ?? 0} />
+            <PresentationMetric label="Requiere actualización" value={summary.presentation?.requiere_actualizacion ?? 0} />
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader className="pb-2">
           <CardTitle className="text-sm">Monto por empresa</CardTitle>
         </CardHeader>
         <CardContent>
@@ -77,6 +92,15 @@ export function KPIGrid({ summary }: KPIGridProps) {
           </div>
         </CardContent>
       </Card>
+    </div>
+  );
+}
+
+function PresentationMetric({ label, value }: { label: string; value: number }) {
+  return (
+    <div className="rounded-lg border border-border/50 p-3">
+      <p className="text-xs text-muted-foreground">{label}</p>
+      <p className="font-semibold tabular-nums">{value}</p>
     </div>
   );
 }

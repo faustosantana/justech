@@ -153,6 +153,39 @@ class OdooClient:
         result = await self.execute_kw(model, "search_count", [domain or []], context=context)
         return int(result or 0)
 
+    async def download_report_pdf(self, report_name: str, doc_id: int) -> bytes:
+        """Descarga PDF vía endpoint HTTP /report/pdf (métodos RPC de report son privados)."""
+        if not self.is_configured:
+            raise OdooNotConfiguredError()
+        base = self.config.url.rstrip("/")
+        url = f"{base}/report/pdf/{report_name}/{doc_id}"
+        async with httpx.AsyncClient(timeout=60.0, follow_redirects=True) as http:
+            auth = await http.post(
+                f"{base}/web/session/authenticate",
+                json={
+                    "jsonrpc": "2.0",
+                    "method": "call",
+                    "params": {
+                        "db": self.config.database,
+                        "login": self.config.username,
+                        "password": self.config.api_key,
+                    },
+                    "id": 1,
+                },
+            )
+            auth.raise_for_status()
+            auth_body = auth.json()
+            if auth_body.get("error"):
+                err = auth_body["error"]
+                msg = err.get("data", {}).get("message") or err.get("message", str(err))
+                raise OdooConnectionError(msg)
+            pdf_resp = await http.get(url)
+            pdf_resp.raise_for_status()
+        content = pdf_resp.content
+        if not content.startswith(b"%PDF"):
+            raise OdooConnectionError("Odoo no devolvió un PDF válido para la cotización")
+        return content
+
     async def read_group(
         self,
         model: str,

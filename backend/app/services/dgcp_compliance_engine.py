@@ -16,7 +16,14 @@ from app.services.dgcp_requirements_extractor import (
 from app.services.document_validity_analyzer import DocumentValidityAnalyzer
 
 # Cumplidos para cálculo de preparación
-COMPLIANT_STATUSES = frozenset({"encontrado_vigente", "validado_manual", "no_aplica"})
+COMPLIANT_STATUSES = frozenset({
+    "encontrado_vigente",
+    "validado_manual",
+    "no_aplica",
+    "adjuntado",
+    "finalizado",
+    "pdf_final_generado",
+})
 
 OFFICIAL_KNOWLEDGE_FOLDERS = frozenset({
     "00_DATOS_EMPRESAS",
@@ -161,6 +168,17 @@ class DGCPComplianceEngine:
             "requiere_revision",
             "validado_manual",
             "no_aplica",
+            "adjuntado",
+            "borrador_pendiente",
+            "cotizacion_encontrada",
+            "pdf_descargado",
+            "generado",
+            "pendiente_firma",
+            "pendiente_sello",
+            "firmado",
+            "sellado",
+            "pdf_final_generado",
+            "finalizado",
         }
         if raw_status in pre_normalized:
             return raw_status
@@ -206,8 +224,12 @@ class DGCPComplianceEngine:
         return bool(
             match.get("document_id")
             or match.get("knowledge_asset_id")
+            or match.get("process_document_id")
+            or match.get("odoo_quotation_id")
             or item.get("document_id")
             or item.get("knowledge_asset_id")
+            or item.get("process_document_id")
+            or item.get("odoo_quotation_id")
         )
 
     def enforce_evidence_rules(
@@ -228,6 +250,11 @@ class DGCPComplianceEngine:
             if not has_doc and not (manual.get("evidence") or "").strip():
                 return "faltante"
             return status
+
+        if req.key == "oferta_economica" and status == "adjuntado":
+            if has_doc or item.get("odoo_quotation_id") or match.get("odoo_quotation_id"):
+                return status
+            return "faltante"
 
         if status in COMPLIANT_STATUSES and not has_doc:
             return "faltante"
@@ -470,6 +497,18 @@ class DGCPComplianceEngine:
             "no_aplica": "No aplica",
             "encontrado_vencido": "Vencido",
             "validado_manual": "Validado manualmente",
+            "adjuntado": "Adjuntado al expediente",
+            "borrador_pendiente": "Borrador pendiente de crear en Odoo",
+            "cotizacion_encontrada": "Cotización encontrada",
+            "pdf_descargado": "PDF descargado",
+            "generado": "Generado",
+            "pendiente_firma": "Pendiente de firma",
+            "pendiente_sello": "Pendiente de sello",
+            "firmado": "Firmado",
+            "sellado": "Sellado",
+            "pdf_final_generado": "PDF final generado",
+            "finalizado": "Finalizado",
+            "requiere_revision": "Requiere revisión",
         }
         return labels.get(status, status.replace("_", " ").title())
 

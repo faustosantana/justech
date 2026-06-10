@@ -48,7 +48,7 @@ class ExecutiveDashboardService:
         m365 = M365Service(self.db, self.tenant_id, user_id=self.user_id)
 
         odoo_summary = await odoo.summary()
-        dgcp_summary = await dgcp.compute_dashboard(self.tenant_id)
+        dgcp_summary = await dgcp.compute_dashboard(self.tenant_id, user_id=self.user_id)
         doc_health = await docs.health()
         work_hub = await work.get_hub()
         m365_health = await m365.health()
@@ -172,7 +172,7 @@ class ExecutiveDashboardService:
             ),
             ExecutiveKpi(
                 id="dgcp_active",
-                label="Oportunidades DGCP activas",
+                label="Licitaciones vigentes",
                 value=str(dgcp.total_opportunities),
                 source="DGCP",
                 href="/dgcp",

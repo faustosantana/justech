@@ -180,6 +180,7 @@ class SalesQuestionService:
         customer_list_patterns = (
             r"(?i)(?:qué|que)\s+le\s+hemos\s+vendid[oa]\s+a\s+(.+?)\s*$",
             r"(?i)(?:qué|que)\s+(?:le\s+)?(?:se\s+)?vendid[oa]\s+a\s+(.+?)\s*$",
+            r"(?i)(?:ventas|historial)\s+(?:de|del|a|para)\s+(.+?)\s*$",
         )
         customer_amount_patterns = (
             r"(?i)cu[aá]nto\s+le\s+hemos\s+vendid[oa]\s+a\s+(.+?)\s*$",
@@ -509,18 +510,17 @@ class SalesQuestionService:
 
     @staticmethod
     def _not_found_response(question: str, parsed: ParsedSalesQuestion) -> AssistantQueryResponse:
-        product_variants = format_variants_list(parsed.product_variants or parsed.search_terms)
+        product_variants = format_variants_list(parsed.product_variants or parsed.search_terms, limit=5)
         customer_part = ""
         if parsed.customer_label:
-            customer_variants = format_variants_list(parsed.customer_variants or parsed.customer_terms)
+            customer_variants = format_variants_list(parsed.customer_variants or parsed.customer_terms, limit=3)
             customer_part = (
                 f" para el cliente «{parsed.customer_label}» "
                 f"(variantes: {customer_variants})"
             )
         answer = (
-            "No encontré información suficiente en las fuentes disponibles.\n\n"
-            f"Buscé variantes como {product_variants}{customer_part} en Odoo, "
-            "pero no hubo ventas confirmadas."
+            f"No confirmé ventas en Odoo para {product_variants}{customer_part}.\n\n"
+            "Sugerencias: prueba el nombre canónico del cliente o la búsqueda empresarial."
         )
         structured = build_business_answer(
             intent="sales_query",
@@ -548,6 +548,52 @@ class SalesQuestionService:
             },
         )
 
+    async def answer_product_disambiguation(
+        self,
+        question: str,
+        *,
+        source_labels: list[str] | None = None,
+        conversation_context=None,
+    ) -> AssistantQueryResponse | None:
+        """Consultas cortas de producto (ej. «papel 350») — ventas o variantes."""
+        parsed = self.parse_product_lookup(question)
+        if not parsed:
+            detected_label, detected_terms = detect_product_in_text(normalize_question(question))
+            if not detected_label:
+                return None
+            norm = normalize_product(detected_label)
+            parsed = ParsedSalesQuestion(
+                SalesIntent.SALES_QUANTITY,
+                norm.label if norm else detected_label,
+                norm.search_terms if norm else detected_terms,
+                product_filter_terms=norm.filter_terms if norm else detected_terms,
+                product_variants=norm.variants_display if norm else detected_terms[:8],
+            )
+
+        labels = source_labels or ["Odoo"]
+        health = await self.odoo.health()
+        if not health.connected:
+            return None
+
+        lines, _ = await self._fetch_lines(parsed)
+        if lines:
+            return await self.answer(question, source_labels=labels, conversation_context=conversation_context)
+
+        variants = parsed.product_variants or parsed.search_terms
+        if not variants:
+            return None
+        listed = "\n".join(f"• {v}" for v in variants[:6])
+        return AssistantQueryResponse(
+            question=question,
+            answer=(
+                f"Encontré {len(variants)} variante(s) relacionadas con «{parsed.product_label}»:\n\n"
+                f"{listed}\n\n¿A cuál te refieres?"
+            ),
+            sources=labels + ["semantic_resolver"],
+            query_type="product_disambiguation",
+            data={"product_label": parsed.product_label, "variants": variants[:12]},
+        )
+
     async def answer(
         self,
         question: str,
@@ -564,18 +610,6 @@ class SalesQuestionService:
         labels = source_labels or ["Odoo"]
 
         if parsed.intent == SalesIntent.INSUFFICIENT:
-            if SalesQuestionService.has_sales_signal(question):
-                return AssistantQueryResponse(
-                    question=question,
-                    answer=(
-                        "No encontré información suficiente en las fuentes disponibles.\n\n"
-                        "Detecté una consulta de ventas, pero necesito un producto o cliente más específico. "
-                        "Ejemplo: «¿Cuántos rollos de papel 350 hemos vendido?» o "
-                        "«¿Qué le hemos vendido a Farma Trix?»"
-                    ),
-                    sources=labels,
-                    query_type="sales_query",
-                )
             return None
 
         health = await self.odoo.health()
@@ -681,6 +715,13 @@ class SalesQuestionService:
             warnings.insert(0, customer_resolver_msg)
             structured["warnings"] = warnings[:5]
 
+        actions: list = []
+        if customer_display:
+            from app.schemas.assistant import AssistantAction
+            from app.services.assistant_actions import build_customer_suggested_actions
+
+            actions = [AssistantAction(**a) for a in build_customer_suggested_actions(customer_display)]
+
         return AssistantQueryResponse(
             question=question,
             answer=answer,
@@ -688,6 +729,7 @@ class SalesQuestionService:
             query_type="sales_query",
             structured_data=structured,
             links=links,
+            actions=actions if customer_display else [],
             data={
                 "intent": parsed.intent.value,
                 "product_label": parsed.product_label,

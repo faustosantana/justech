@@ -15,6 +15,7 @@ from app.schemas.m365_account import (
     M365AccountListResponse,
     M365AccountPrepareRequest,
     M365AccountResponse,
+    M365ImapConnectRequest,
 )
 from app.services.m365_account_service import M365AccountService
 from app.services.m365_service import M365Service
@@ -142,6 +143,35 @@ async def prepare_m365_account(
         return await _accounts(db, user).prepare_account(payload, actor_id=user.id)
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e)) from e
+
+
+@router.post("/accounts/connect-imap", response_model=M365AccountResponse)
+async def connect_imap_mailbox(
+    db: DbSession,
+    user: CurrentUser,
+    _: TenantCtx,
+    payload: M365ImapConnectRequest,
+) -> M365AccountResponse:
+    try:
+        return await _accounts(db, user).connect_imap(
+            user_id=user.id,
+            email=payload.email,
+            password=payload.password,
+            imap_host=payload.imap_host,
+            imap_port=payload.imap_port,
+        )
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e)) from e
+
+
+@router.post("/accounts/disconnect", response_model=M365AccountResponse)
+async def disconnect_mailbox(
+    db: DbSession, user: CurrentUser, _: TenantCtx
+) -> M365AccountResponse:
+    row = await _accounts(db, user).disconnect_mailbox(user.id)
+    if row is None:
+        raise HTTPException(status_code=404, detail="Sin buzón conectado")
+    return row
 
 
 @router.delete("/accounts/{account_id}", status_code=204)

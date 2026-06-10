@@ -44,6 +44,7 @@ CUSTOMER_ALIASES: dict[str, list[str]] = {
     "farma trix": ["farma trix", "farmatrix", "farma-trix", "farma triz", "farmtrix", "farma trix srl"],
     "banco ademi": ["banco ademi", "ademi", "banco múltiple ademi", "banco multiple ademi", "banco ademi s a"],
     "capital dbg": ["capital dbg", "capital", "dbg", "capital digital business group"],
+    "la sociedad": ["la sociedad", "grupo la sociedad", "sociedad"],
 }
 
 BRAND_TERMS = ("dell", "hp", "lenovo", "fortigate", "fortinet", "microsoft")

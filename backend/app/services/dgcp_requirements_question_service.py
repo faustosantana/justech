@@ -196,6 +196,82 @@ class DgcpRequirementsQuestionService:
                 tables=[{"title": "Checklist", "columns": ["Requisito", "Tipo", "Obligatorio", "Estado"], "rows": rows}],
             )
 
+        if any(
+            k in lowered
+            for k in (
+                "oferta económica",
+                "oferta economica",
+                "cotización odoo",
+                "cotizacion odoo",
+                "ya tenemos oferta",
+                "tenemos oferta económica",
+            )
+        ):
+            oferta = next((i for i in checklist.items if i.requirement_key == "oferta_economica"), None)
+            if not oferta:
+                summary = "No hay requisito de oferta económica en el checklist — ejecute análisis de requisitos."
+            elif oferta.status in ("adjuntado", "validado_manual"):
+                qname = getattr(oferta, "odoo_quotation_name", None) or oferta.document_title or "documento adjunto"
+                summary = (
+                    f"Sí — la oferta económica está {oferta.display_status or oferta.status}. "
+                    f"Cotización/documento: {qname}. Preparación: {pkg.preparation_pct:.0f}%."
+                )
+            elif oferta.odoo_quotation_id:
+                summary = (
+                    f"Cotización Odoo {oferta.odoo_quotation_name or oferta.odoo_quotation_id} vinculada "
+                    f"pero estado: {oferta.display_status or oferta.status}."
+                )
+            elif oferta.task_id:
+                summary = (
+                    f"Aún no hay cotización adjunta. Hay tarea activa para prepararla "
+                    f"(estado checklist: {oferta.display_status or oferta.status})."
+                )
+            else:
+                summary = (
+                    f"No — falta oferta económica. Estado: {oferta.display_status or oferta.status}. "
+                    f"Use «Adjuntar Cotización Odoo» o cree tarea de preparación."
+                )
+            return self._structured(
+                q,
+                summary,
+                metrics=[
+                    {"label": "Estado oferta", "value": (oferta.display_status or oferta.status) if oferta else "—"},
+                    {"label": "Preparación", "value": f"{pkg.preparation_pct:.0f}%"},
+                ],
+            )
+
+        if any(k in lowered for k in ("adjunta la cotización", "adjuntar cotización", "descarga el pdf", "descargar pdf")):
+            so_match = re.search(r"\b(s[0-9/\-]+|so[0-9/\-]+)\b", q, re.I)
+            if so_match:
+                summary = (
+                    f"Para adjuntar la cotización {so_match.group(1).upper()}, abra «Adjuntar Cotización Odoo» "
+                    f"en el detalle de {pkg.opportunity_code}, búsquela por número y confirme adjuntar."
+                )
+            else:
+                summary = (
+                    f"Use el botón «Adjuntar Cotización Odoo» en la licitación {pkg.opportunity_code} "
+                    f"para buscar, descargar PDF y asociar al requisito Oferta económica."
+                )
+            return self._structured(q, summary)
+
+        if any(k in lowered for k in ("crea una tarea", "crear tarea", "preparar cotización", "preparar cotizacion")):
+            oferta = next((i for i in checklist.items if i.requirement_key == "oferta_economica"), None)
+            if oferta and oferta.task_id:
+                summary = f"Ya existe tarea para preparar cotización — ID {oferta.task_id}."
+            else:
+                summary = (
+                    f"Puede crear tarea «Preparar cotización económica» desde el botón en la licitación "
+                    f"{pkg.opportunity_code} o desde la sección Oferta económica."
+                )
+            return self._structured(q, summary)
+
+        if any(k in lowered for k in ("busca cotizaciones", "buscar cotizaciones", "busca la cotización")):
+            summary = (
+                f"Abra «Adjuntar Cotización Odoo» en {pkg.opportunity_code} y filtre por número, cliente, "
+                f"producto o monto. Las cotizaciones respetan el contexto de empresa Odoo activo."
+            )
+            return self._structured(q, summary)
+
         return None
 
     async def _try_apply_live_input(self, question: str, opportunity_id: uuid.UUID) -> AssistantQueryResponse | None:

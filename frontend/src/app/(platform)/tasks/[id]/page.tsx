@@ -310,6 +310,15 @@ export default function TaskDetailPage() {
                     Proceso DGCP
                   </Link>
                 )}
+                {task.metadata?.task_type === "economic_offer" &&
+                  typeof task.metadata.dgcp_opportunity_id === "string" && (
+                    <Link
+                      href={`/dgcp/${task.metadata.dgcp_opportunity_id}`}
+                      className="text-primary hover:underline block"
+                    >
+                      Licitación DGCP — oferta económica
+                    </Link>
+                  )}
               </CardContent>
             </Card>
           </div>

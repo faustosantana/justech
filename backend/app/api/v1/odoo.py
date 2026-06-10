@@ -1,6 +1,8 @@
+from decimal import Decimal
 from typing import Annotated
 
-from fastapi import APIRouter, Query
+from fastapi import APIRouter, HTTPException, Query
+from fastapi.responses import Response
 
 from app.api.deps import CurrentUser, DbSession, TenantCtx
 from app.core.tenant import require_tenant_context
@@ -17,13 +19,17 @@ from app.schemas.odoo import (
     OdooMeResponse,
     OdooProductDetailResponse,
     OdooQueryResponse,
+    OdooQuotationDetailResponse,
+    OdooQuotationSearchParams,
     OdooSummaryResponse,
     OdooUserMappingResponse,
     OdooVendorDetailResponse,
 )
 from app.services.odoo_detail_service import OdooDetailService
 from app.services.odoo_query_service import OdooQueryService
+from app.services.odoo_quotation_service import OdooQuotationService
 from app.services.odoo_service import OdooService
+from integrations.odoo.exceptions import OdooConnectionError, OdooNotConfiguredError
 
 router = APIRouter(prefix="/odoo", tags=["Odoo Intelligence"])
 
@@ -213,6 +219,95 @@ async def odoo_invoice_detail(
 ) -> OdooInvoiceDetailResponse:
     svc = _service(db, user)
     return await OdooDetailService(svc).get_invoice_detail(invoice_id)
+
+
+@router.get("/quotations/search", response_model=OdooListResponse)
+async def odoo_quotations_search(
+    db: DbSession,
+    user: CurrentUser,
+    _: TenantCtx,
+    q: Annotated[str | None, Query()] = None,
+    quotation_number: Annotated[str | None, Query()] = None,
+    customer: Annotated[str | None, Query()] = None,
+    salesperson: Annotated[str | None, Query()] = None,
+    product: Annotated[str | None, Query()] = None,
+    date_from: Annotated[str | None, Query()] = None,
+    date_to: Annotated[str | None, Query()] = None,
+    amount_min: Annotated[Decimal | None, Query()] = None,
+    amount_max: Annotated[Decimal | None, Query()] = None,
+    state: Annotated[str | None, Query()] = None,
+    company_id: Annotated[int | None, Query()] = None,
+    limit: Annotated[int, Query(ge=1, le=200)] = 50,
+) -> OdooListResponse:
+    svc = _service(db, user)
+    params = OdooQuotationSearchParams(
+        q=q,
+        quotation_number=quotation_number,
+        customer=customer,
+        salesperson=salesperson,
+        product=product,
+        date_from=date_from,
+        date_to=date_to,
+        amount_min=amount_min,
+        amount_max=amount_max,
+        state=state,
+        company_id=company_id,
+        limit=limit,
+    )
+    result = await OdooQuotationService(svc).search(params)
+    query_label = q or quotation_number or customer or salesperson or product or ""
+    if query_label:
+        from app.services.audit_service import AuditService
+
+        ctx = require_tenant_context()
+        await AuditService(db).log(
+            action="odoo.quotation.search",
+            tenant_id=ctx.tenant_id,
+            user_id=user.id,
+            resource_type="odoo_quotation",
+            details={"query": query_label, "result_count": result.total},
+        )
+        await db.commit()
+    return result
+
+
+@router.get("/quotations/{quotation_id}", response_model=OdooQuotationDetailResponse)
+async def odoo_quotation_detail(
+    quotation_id: int,
+    db: DbSession,
+    user: CurrentUser,
+    _: TenantCtx,
+) -> OdooQuotationDetailResponse:
+    svc = _service(db, user)
+    try:
+        return await OdooQuotationService(svc).get_detail(quotation_id)
+    except OdooConnectionError as exc:
+        raise HTTPException(status_code=502, detail=str(exc)) from exc
+    except OdooNotConfiguredError as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
+
+
+@router.get("/quotations/{quotation_id}/pdf")
+async def odoo_quotation_pdf(
+    quotation_id: int,
+    db: DbSession,
+    user: CurrentUser,
+    _: TenantCtx,
+) -> Response:
+    svc = _service(db, user)
+    try:
+        pdf_bytes, filename = await OdooQuotationService(svc).download_pdf(quotation_id)
+    except ValueError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+    except OdooConnectionError as exc:
+        raise HTTPException(status_code=502, detail=str(exc)) from exc
+    except OdooNotConfiguredError as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
+    return Response(
+        content=pdf_bytes,
+        media_type="application/pdf",
+        headers={"Content-Disposition": f'attachment; filename="{filename}"'},
+    )
 
 
 @router.get("/quotations", response_model=OdooListResponse)

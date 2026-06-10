@@ -56,6 +56,38 @@ export interface AssistantQueryResponse {
   was_follow_up?: boolean;
 }
 
+export interface CopilotBriefingItem {
+  label: string;
+  detail?: string | null;
+  severity?: string;
+  href?: string | null;
+  question?: string | null;
+}
+
+export interface CopilotBriefingSection {
+  title: string;
+  items: CopilotBriefingItem[];
+}
+
+export interface CopilotQuickAction {
+  label: string;
+  question?: string | null;
+  href?: string | null;
+}
+
+export interface CopilotBriefingResponse {
+  greeting: string;
+  mode: string;
+  company_name?: string | null;
+  updated_at?: string | null;
+  priorities: CopilotBriefingSection;
+  alerts: CopilotBriefingSection;
+  opportunities: CopilotBriefingSection;
+  recommendations: CopilotBriefingSection;
+  quick_actions: CopilotQuickAction[];
+  recent_activity: CopilotBriefingSection;
+}
+
 export interface AssistantMessage {
   id: string;
   role: "user" | "assistant";

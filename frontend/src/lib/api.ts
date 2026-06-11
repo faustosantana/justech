@@ -74,6 +74,8 @@ import {
 } from "./auth";
 
 const REQUEST_TIMEOUT_MS = 30_000;
+/** Búsqueda empresarial y asistente pueden tardar (Odoo + índice). */
+const LONG_REQUEST_TIMEOUT_MS = 90_000;
 
 /** API siempre mismo origen: gateway (:8000) o proxy Next (:3000 → /api rewrite). */
 function getApiUrl(): string {
@@ -118,11 +120,13 @@ export function redirectToLogin(sessionExpired = false): void {
 export class ApiError extends Error {
   status: number;
   code: string;
+  data?: unknown;
 
-  constructor(status: number, code: string, message: string) {
+  constructor(status: number, code: string, message: string, data?: unknown) {
     super(message);
     this.status = status;
     this.code = code;
+    this.data = data;
   }
 }
 
@@ -138,12 +142,15 @@ interface TenantResponse {
   name: string;
 }
 
+type RequestOptions = RequestInit & { timeoutMs?: number };
+
 async function request<T>(
   path: string,
-  options: RequestInit = {},
+  options: RequestOptions = {},
   authenticated = false,
   retried = false,
 ): Promise<T> {
+  const { timeoutMs = REQUEST_TIMEOUT_MS, ...fetchOptions } = options;
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
     ...(options.headers as Record<string, string>),
@@ -161,11 +168,11 @@ async function request<T>(
   }
 
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+  const timeout = setTimeout(() => controller.abort(), timeoutMs);
 
   try {
     const response = await fetch(`${getApiUrl()}${path}`, {
-      ...options,
+      ...fetchOptions,
       headers,
       signal: controller.signal,
     });
@@ -186,22 +193,47 @@ async function request<T>(
         message?: string;
         detail?: string | Array<{ msg?: string }>;
       };
+      const detailRaw = body.detail;
       const detail =
-        typeof body.detail === "string"
-          ? body.detail
-          : Array.isArray(body.detail)
-            ? body.detail.map((d) => d.msg).filter(Boolean).join("; ")
-            : undefined;
+        typeof detailRaw === "string"
+          ? detailRaw
+          : Array.isArray(detailRaw)
+            ? detailRaw.map((d) => d.msg).filter(Boolean).join("; ")
+            : typeof detailRaw === "object" && detailRaw !== null
+              ? (detailRaw as { message?: string }).message ?? "Error de validación"
+              : undefined;
+      const fallbackMessage =
+        response.status === 500
+          ? "El servidor no pudo completar la operación. Intente de nuevo en unos momentos."
+          : response.status === 503
+            ? "El servicio no está disponible temporalmente. Intente más tarde."
+            : response.status === 404
+              ? "No se encontró el recurso solicitado."
+              : response.status === 403
+                ? "No tiene permisos para esta acción."
+                : `No se pudo completar la solicitud (${response.status}).`;
       throw new ApiError(
         response.status,
         body.error ?? "API_ERROR",
-        detail ?? body.message ?? `API error: ${response.status}`,
+        detail ?? body.message ?? fallbackMessage,
+        typeof detailRaw === "object" && detailRaw !== null && !Array.isArray(detailRaw)
+          ? detailRaw
+          : undefined,
       );
     }
     if (response.status === 204) {
       return undefined as T;
     }
     return response.json() as Promise<T>;
+  } catch (err) {
+    if (err instanceof Error && err.name === "AbortError") {
+      throw new ApiError(
+        408,
+        "TIMEOUT",
+        "La solicitud tardó demasiado. Intenta de nuevo en unos segundos.",
+      );
+    }
+    throw err;
   } finally {
     clearTimeout(timeout);
   }
@@ -317,6 +349,115 @@ export const apiClient = {
 
   deactivateCompany: (id: string) =>
     request<BusinessCompany>(`/companies/${id}/deactivate`, { method: "POST", body: "{}" }, true),
+
+  getSupplierDashboard: () =>
+    request<import("@/lib/suppliers").SupplierDashboardStats>("/suppliers/dashboard", {}, true),
+
+  getSuppliers: (params?: {
+    company_type?: string;
+    status?: string;
+    category_id?: string;
+    brand?: string;
+    search?: string;
+    limit?: number;
+    offset?: number;
+  }) =>
+    request<import("@/lib/suppliers").SupplierListResponse>(
+      `/suppliers${buildQuery(params ?? {})}`,
+      {},
+      true,
+    ),
+
+  getSupplier: (id: string) =>
+    request<import("@/lib/suppliers").Supplier>(`/suppliers/${id}`, {}, true),
+
+  createSupplier: (data: Record<string, unknown>) =>
+    request<import("@/lib/suppliers").Supplier>(
+      "/suppliers",
+      { method: "POST", body: JSON.stringify(data) },
+      true,
+    ),
+
+  updateSupplier: (id: string, data: Record<string, unknown>) =>
+    request<import("@/lib/suppliers").Supplier>(
+      `/suppliers/${id}`,
+      { method: "PUT", body: JSON.stringify(data) },
+      true,
+    ),
+
+  deleteSupplier: (id: string) =>
+    request<void>(`/suppliers/${id}`, { method: "DELETE" }, true),
+
+  markSupplierPreferred: (id: string, preferred = true) =>
+    request<import("@/lib/suppliers").Supplier>(
+      `/suppliers/${id}/prefer?preferred=${preferred}`,
+      { method: "POST", body: "{}" },
+      true,
+    ),
+
+  getSupplierCategories: () =>
+    request<{ items: import("@/lib/suppliers").SupplierCategory[]; total: number }>(
+      "/suppliers/categories/list",
+      {},
+      true,
+    ),
+
+  searchSuppliers: (payload: {
+    query: string;
+    company_type?: string;
+    category_id?: string;
+    brand?: string;
+    status?: string;
+    limit?: number;
+  }) =>
+    request<import("@/lib/suppliers").SupplierSearchResponse>(
+      "/suppliers/search",
+      { method: "POST", body: JSON.stringify(payload) },
+      true,
+    ),
+
+  importSuppliers: (payload: { source: string; dry_run?: boolean; rows: Record<string, unknown>[] }) =>
+    request<{ created: number; updated: number; skipped: number; errors: string[] }>(
+      "/suppliers/import",
+      { method: "POST", body: JSON.stringify(payload) },
+      true,
+    ),
+
+  requestSupplierQuote: (
+    id: string,
+    payload: { subject?: string; message?: string; products?: string[]; channel?: string },
+  ) =>
+    request<import("@/lib/suppliers").SupplierQuoteResponse>(
+      `/suppliers/${id}/request-quote`,
+      { method: "POST", body: JSON.stringify(payload) },
+      true,
+    ),
+
+  getSupplierPriceLists: (id: string) =>
+    request<import("@/lib/suppliers").SupplierPriceListSummary[]>(
+      `/suppliers/${id}/price-lists`,
+      {},
+      true,
+    ),
+
+  getSupplierInteractions: (id: string) =>
+    request<import("@/lib/suppliers").SupplierInteraction[]>(
+      `/suppliers/${id}/interactions`,
+      {},
+      true,
+    ),
+
+  suggestTenderSuppliers: (payload: { requirements?: string[]; description?: string; limit?: number }) =>
+    request<{
+      requirements: string[];
+      suggestions: Array<{
+        supplier: import("@/lib/suppliers").Supplier;
+        score: number;
+        matched_requirements: string[];
+        has_price_list: boolean;
+        last_quote_at?: string | null;
+      }>;
+    }>("/suppliers/tender-suggestions", { method: "POST", body: JSON.stringify(payload) }, true),
 
   getDGCPOpportunities: (filters?: {
     status?: OpportunityStatus;
@@ -515,9 +656,16 @@ export const apiClient = {
       true,
     ),
 
-  prepareDGCPExpediente: (id: string) =>
+  getDGCPDocumentValidation: (id: string, companyKey = "justech") =>
+    request<import("@/lib/dgcp").DGCPDocumentValidation>(
+      `/dgcp/opportunities/${id}/bid-package/document-validation${buildQuery({ company_key: companyKey })}`,
+      {},
+      true,
+    ),
+
+  prepareDGCPExpediente: (id: string, companyKey = "justech") =>
     request<import("@/lib/dgcp").DGCPExpedientePrepareResult>(
-      `/dgcp/opportunities/${id}/bid-package/prepare`,
+      `/dgcp/opportunities/${id}/bid-package/prepare${buildQuery({ company_key: companyKey })}`,
       { method: "POST", body: "{}" },
       true,
     ),
@@ -562,6 +710,75 @@ export const apiClient = {
     downloadAuthenticatedBlob(blob, resolvedName);
   },
 
+  getRealExpedienteStatus: (id: string) =>
+    request<import("@/lib/dgcp").RealExpedienteStatus>(
+      `/dgcp/opportunities/${id}/real-expediente/status`,
+      {},
+      true,
+    ),
+
+  validateRealExpediente: (id: string) =>
+    request<import("@/lib/dgcp").RealExpedienteValidation>(
+      `/dgcp/opportunities/${id}/real-expediente/validate`,
+      {},
+      true,
+    ),
+
+  generateRealExpediente: (id: string) =>
+    request<import("@/lib/dgcp").RealExpedienteGenerateResult>(
+      `/dgcp/opportunities/${id}/real-expediente/generate`,
+      { method: "POST", body: "{}" },
+      true,
+    ),
+
+  prepareDGCPSubmissionPackage: (id: string) =>
+    request<import("@/lib/dgcp").RealExpedienteGenerateResult>(
+      `/dgcp/opportunities/${id}/real-expediente/prepare-package`,
+      { method: "POST", body: "{}" },
+      true,
+    ),
+
+  markRealExpedienteReadyReview: (id: string) =>
+    request<import("@/lib/dgcp").RealExpedienteStatus>(
+      `/dgcp/opportunities/${id}/real-expediente/mark-ready-review`,
+      { method: "POST", body: "{}" },
+      true,
+    ),
+
+  markRealExpedienteReadyUpload: (id: string) =>
+    request<import("@/lib/dgcp").RealExpedienteStatus>(
+      `/dgcp/opportunities/${id}/real-expediente/mark-ready-upload`,
+      { method: "POST", body: "{}" },
+      true,
+    ),
+
+  getRealExpedienteManifest: (id: string) =>
+    request<Record<string, unknown>>(
+      `/dgcp/opportunities/${id}/real-expediente/manifest`,
+      {},
+      true,
+    ),
+
+  downloadRealExpedienteReport: async (id: string): Promise<void> => {
+    const { fetchAuthenticatedFile, downloadAuthenticatedBlob } = await import(
+      "@/lib/authenticated-file"
+    );
+    const { blob } = await fetchAuthenticatedFile(
+      `/dgcp/opportunities/${id}/real-expediente/report`,
+    );
+    downloadAuthenticatedBlob(blob, "reporte_preparacion.pdf");
+  },
+
+  downloadRealExpedienteZip: async (id: string, filename?: string): Promise<void> => {
+    const { fetchAuthenticatedFile, downloadAuthenticatedBlob } = await import(
+      "@/lib/authenticated-file"
+    );
+    const { blob } = await fetchAuthenticatedFile(
+      `/dgcp/opportunities/${id}/real-expediente/download`,
+    );
+    downloadAuthenticatedBlob(blob, filename ?? `expediente_dgcp_${id}.zip`);
+  },
+
   reclassifyDGCPOpportunities: () =>
     request<{
       total: number;
@@ -573,7 +790,34 @@ export const apiClient = {
   triggerDGCPSync: (maxPages = 5, pageSize = 50) =>
     request<DGCPSyncJob>(
       "/dgcp/sync",
-      { method: "POST", body: JSON.stringify({ max_pages: maxPages, page_size: pageSize }) },
+      {
+        method: "POST",
+        body: JSON.stringify({ max_pages: maxPages, page_size: pageSize }),
+      },
+      true,
+    ),
+
+  getDGCPHistoricalSimilar: (opportunityId: string) =>
+    request<import("./dgcp").DGCPHistoricalSimilarResponse>(
+      `/dgcp/processes/${opportunityId}/historical-similar`,
+      {},
+      true,
+    ),
+
+  searchDGCPHistoricalSimilar: (
+    opportunityId: string,
+    body?: { refresh?: boolean; limit?: number; extra_query?: string },
+  ) =>
+    request<import("./dgcp").DGCPHistoricalSimilarResponse>(
+      `/dgcp/processes/${opportunityId}/historical-similar/search`,
+      {
+        method: "POST",
+        body: JSON.stringify({
+          refresh: body?.refresh ?? false,
+          limit: body?.limit ?? 3,
+          extra_query: body?.extra_query,
+        }),
+      },
       true,
     ),
 
@@ -592,7 +836,66 @@ export const apiClient = {
   getDGCPAudit: (limit = 30) =>
     request<DGCPAuditLog[]>(`/dgcp/audit${buildQuery({ limit })}`, {}, true),
 
+  getOdooConfig: () => request<import("@/lib/odoo").OdooConfigStatus>("/odoo/config", {}, true),
+
   getOdooHealth: () => request<OdooHealth>("/odoo/health", {}, true),
+
+  getOdooDashboard: () => request<import("@/lib/odoo").OdooDashboard>("/odoo/dashboard", {}, true),
+
+  getOdooPermissions: () =>
+    request<{ permissions: import("@/lib/odoo").OdooPermissionsSummary; message?: string }>(
+      "/odoo/permissions",
+      {},
+      true,
+    ),
+
+  syncOdooPermissions: () =>
+    request<{ permissions: import("@/lib/odoo").OdooPermissionsSummary; message?: string }>(
+      "/odoo/permissions/sync",
+      { method: "POST" },
+      true,
+    ),
+
+  getOdooFinanceSummary: () =>
+    request<import("@/lib/odoo").OdooFinanceSummary>("/odoo/finance/summary", {}, true),
+
+  getOdooPayments: (limit = 50) =>
+    request<OdooListResponse<Record<string, unknown>>>(`/odoo/payments${buildQuery({ limit })}`, {}, true),
+
+  getOdooUsers: (search = "", limit = 50) =>
+    request<OdooListResponse<{ id: number; name: string; login: string; active: boolean }>>(
+      `/odoo/users${buildQuery({ search, limit })}`,
+      {},
+      true,
+    ),
+
+  createOdooQuotation: (payload: import("@/lib/odoo").OdooCreateQuotationPayload) =>
+    request<import("@/lib/odoo").OdooCreateQuotationResult>(
+      "/odoo/quotations",
+      { method: "POST", body: JSON.stringify(payload) },
+      true,
+    ),
+
+  createOdooTask: (payload: import("@/lib/odoo").OdooCreateTaskPayload) =>
+    request<import("@/lib/odoo").OdooCreateTaskResult>(
+      "/odoo/tasks",
+      { method: "POST", body: JSON.stringify(payload) },
+      true,
+    ),
+
+  createOdooCustomer: (payload: { name: string; email?: string; phone?: string; vat?: string; city?: string; source?: string; source_ref?: string }) =>
+    request<{ id: number; name: string; odoo_url?: string }>(
+      "/odoo/customers",
+      { method: "POST", body: JSON.stringify(payload) },
+      true,
+    ),
+
+  odooIntegrationAction: (payload: { action: string; source?: string; source_ref?: string; payload?: Record<string, unknown> }) =>
+    request<{ ok: boolean; action: string; result: Record<string, unknown>; message?: string }>(
+      "/odoo/actions",
+      { method: "POST", body: JSON.stringify(payload) },
+      true,
+    ),
 
   getOdooSummary: () => request<OdooSummary>("/odoo/summary", {}, true),
 
@@ -661,6 +964,159 @@ export const apiClient = {
       true,
     ),
 
+  searchOdooQuotations: (filters?: Record<string, string | number | undefined>) =>
+    request<OdooListResponse<OdooQuotation>>(
+      `/odoo/quotations/search${buildQuery(filters ?? {})}`,
+      {},
+      true,
+    ),
+
+  getOdooQuotationDetail: (id: number) =>
+    request<import("@/lib/odoo").OdooQuotationDetail>(`/odoo/quotations/${id}`, {}, true),
+
+  downloadOdooQuotationPdf: async (id: number, filename: string) => {
+    const token = getAccessToken();
+    const tenantId = getTenantId();
+    if (!token) throw new Error("UNAUTHORIZED");
+    const response = await fetch(`${getApiUrl()}/odoo/quotations/${id}/pdf`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        ...(tenantId ? { "X-Tenant-ID": tenantId } : {}),
+      },
+    });
+    if (!response.ok) throw new ApiError(response.status, "DOWNLOAD_ERROR", "Error al descargar PDF");
+    const blob = await response.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename.endsWith(".pdf") ? filename : `${filename}.pdf`;
+    a.click();
+    URL.revokeObjectURL(url);
+  },
+
+  getDGCPEconomicOfferStatus: (opportunityId: string) =>
+    request<import("@/lib/dgcp").DGCPEconomicOfferStatus>(
+      `/dgcp/opportunities/${opportunityId}/economic-offer/status`,
+      {},
+      true,
+    ),
+
+  createDGCPEconomicOfferTask: (
+    opportunityId: string,
+    data: {
+      customer_name?: string;
+      suggested_products?: unknown[];
+      notes?: string;
+      assigned_to?: string;
+      requirement_id?: string;
+    },
+  ) =>
+    request<{ task_id: string; title: string; created: boolean; existing: boolean }>(
+      `/dgcp/opportunities/${opportunityId}/economic-offer/create-draft-task`,
+      { method: "POST", body: JSON.stringify(data) },
+      true,
+    ),
+
+  getCorporateIdentity: (companyKey?: string) =>
+    request<import("@/lib/corporate-identity").CorporateIdentityOverview>(
+      `/corporate-identity${companyKey ? `?company_key=${encodeURIComponent(companyKey)}` : ""}`,
+      {},
+      true,
+    ),
+
+  uploadCorporateSignature: async (file: File) => {
+    const token = getAccessToken();
+    const form = new FormData();
+    form.append("file", file);
+    const response = await fetch(`${getApiUrl()}/corporate-identity/upload-signature`, {
+      method: "POST",
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+      body: form,
+    });
+    if (!response.ok) {
+      const body = await response.json().catch(() => ({}));
+      throw new ApiError(response.status, "UPLOAD_ERROR", body.detail ?? "Error al subir firma");
+    }
+    return response.json() as Promise<{ asset: import("@/lib/corporate-identity").CorporateIdentityAsset; message: string }>;
+  },
+
+  uploadCorporateStamp: async (companyKey: string, file: File) => {
+    const token = getAccessToken();
+    const form = new FormData();
+    form.append("file", file);
+    const response = await fetch(
+      `${getApiUrl()}/corporate-identity/upload-stamp?company_key=${encodeURIComponent(companyKey)}`,
+      {
+        method: "POST",
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+        body: form,
+      },
+    );
+    if (!response.ok) {
+      const body = await response.json().catch(() => ({}));
+      throw new ApiError(response.status, "UPLOAD_ERROR", body.detail ?? "Error al subir sello");
+    }
+    return response.json() as Promise<{ asset: import("@/lib/corporate-identity").CorporateIdentityAsset; message: string }>;
+  },
+
+  previewDGCPFinalization: (
+    opportunityId: string,
+    data: { requirement_key: string; checklist_item_id?: string; company_key?: string },
+  ) =>
+    request<import("@/lib/corporate-identity").DocumentFinalizationPreview>(
+      `/dgcp/opportunities/${opportunityId}/finalization/preview`,
+      { method: "POST", body: JSON.stringify(data) },
+      true,
+    ),
+
+  generateDGCPFinalPdf: (
+    opportunityId: string,
+    data: { requirement_key: string; checklist_item_id?: string; company_key?: string; regenerate?: boolean },
+  ) =>
+    request<{
+      record: import("@/lib/corporate-identity").DocumentFinalizationRecord;
+      preparation_pct?: number;
+      expediente_status?: string;
+      message: string;
+    }>(`/dgcp/opportunities/${opportunityId}/finalization/generate`, {
+      method: "POST",
+      body: JSON.stringify(data),
+    }, true),
+
+  generateAllDGCPFinalPdfs: (opportunityId: string, companyKey?: string) =>
+    request<{
+      processed: import("@/lib/corporate-identity").DocumentFinalizationRecord[];
+      skipped: { requirement_key: string; reason: string }[];
+      warnings: string[];
+    }>(
+      `/dgcp/opportunities/${opportunityId}/finalization/generate-all${companyKey ? `?company_key=${encodeURIComponent(companyKey)}` : ""}`,
+      { method: "POST", body: JSON.stringify({}) },
+      true,
+    ),
+
+  listDGCPFinalizationRecords: (opportunityId: string) =>
+    request<import("@/lib/corporate-identity").DocumentFinalizationRecord[]>(
+      `/dgcp/opportunities/${opportunityId}/finalization/records`,
+      {},
+      true,
+    ),
+
+  downloadDGCPFinalPdf: async (opportunityId: string, recordId: string, filename: string) => {
+    const token = getAccessToken();
+    const response = await fetch(
+      `${getApiUrl()}/dgcp/opportunities/${opportunityId}/finalization/${recordId}/file`,
+      { headers: token ? { Authorization: `Bearer ${token}` } : {} },
+    );
+    if (!response.ok) throw new ApiError(response.status, "DOWNLOAD_ERROR", "No se pudo descargar PDF final");
+    const blob = await response.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(url);
+  },
+
   getOdooOpportunities: (filters?: { partner_id?: number; limit?: number }) =>
     request<OdooListResponse<OdooOpportunity>>(
       `/odoo/opportunities${buildQuery(filters ?? {})}`,
@@ -699,28 +1155,330 @@ export const apiClient = {
 
   getM365Health: () => request<M365Health>("/m365/health", {}, true),
 
+  getM365OAuthAuthorizeUrl: () =>
+    request<{ authorize_url: string }>("/m365/oauth/authorize-url", {}, true),
+
+  startM365OAuth: async () => {
+    const { authorize_url } = await request<{ authorize_url: string }>(
+      "/m365/oauth/authorize-url",
+      {},
+      true,
+    );
+    window.location.href = authorize_url;
+  },
+
   getM365Status: () => request<M365Status>("/m365/status", {}, true),
 
-  getM365OutlookMessages: (search = "", limit = 50) =>
-    request<M365ListResponse>(`/m365/outlook/messages${buildQuery({ search, limit })}`, {}, true),
+  getM365Connection: () =>
+    request<import("@/lib/m365-mail").M365ConnectionState>("/m365/connection", {}, true),
 
-  getM365SharePointSites: (search = "", limit = 50) =>
-    request<M365ListResponse>(`/m365/sharepoint/sites${buildQuery({ search, limit })}`, {}, true),
+  getM365MailMessages: (params: {
+    folder?: string;
+    search?: string;
+    account_id?: string;
+    limit?: number;
+  } = {}) =>
+    request<import("@/lib/m365-mail").M365MailListResponse>(
+      `/m365/mail/messages${buildQuery(params)}`,
+      {},
+      true,
+    ),
 
-  getM365OneDriveFiles: (search = "", limit = 50) =>
-    request<M365ListResponse>(`/m365/onedrive/files${buildQuery({ search, limit })}`, {}, true),
+  getM365MailMessage: (messageId: string, accountId?: string) =>
+    request<import("@/lib/m365-mail").M365MailDetail>(
+      `/m365/mail/messages/${encodeURIComponent(messageId)}${buildQuery({ account_id: accountId })}`,
+      {},
+      true,
+    ),
 
-  getM365CalendarEvents: (limit = 50) =>
-    request<M365ListResponse>(`/m365/calendar/events${buildQuery({ limit })}`, {}, true),
+  patchM365MailMessage: (
+    messageId: string,
+    payload: { is_read?: boolean; move_to_folder?: string },
+    accountId?: string,
+  ) =>
+    request<{ ok: boolean; message: string }>(
+      `/m365/mail/messages/${encodeURIComponent(messageId)}${buildQuery({ account_id: accountId })}`,
+      { method: "PATCH", body: JSON.stringify(payload) },
+      true,
+    ),
 
-  getM365Teams: (limit = 50) =>
-    request<M365ListResponse>(`/m365/teams${buildQuery({ limit })}`, {}, true),
+  sendM365Mail: (
+    payload: {
+      subject: string;
+      body: string;
+      to: string[];
+      cc?: string[];
+      attachments?: Array<{
+        name: string;
+        content_type?: string;
+        content_base64?: string;
+        source_url?: string;
+        onedrive_item_id?: string;
+      }>;
+      save_draft?: boolean;
+    },
+    accountId?: string,
+  ) =>
+    request<{ ok: boolean; message: string }>(
+      `/m365/mail/send${buildQuery({ account_id: accountId })}`,
+      { method: "POST", body: JSON.stringify(payload) },
+      true,
+    ),
 
-  getM365Documents: (search = "", limit = 50) =>
-    request<M365ListResponse>(`/m365/documents${buildQuery({ search, limit })}`, {}, true),
+  replyM365Mail: (
+    messageId: string,
+    body: string,
+    accountId?: string,
+    replyAll = false,
+  ) =>
+    request<{ ok: boolean; message: string }>(
+      `/m365/mail/messages/${encodeURIComponent(messageId)}/reply${buildQuery({ account_id: accountId })}`,
+      { method: "POST", body: JSON.stringify({ body, reply_all: replyAll }) },
+      true,
+    ),
 
-  getM365Search: (q: string, limit = 25) =>
-    request<M365SearchResponse>(`/m365/search${buildQuery({ q, limit })}`, {}, true),
+  forwardM365Mail: (messageId: string, body: string, to: string[], accountId?: string) =>
+    request<{ ok: boolean; message: string }>(
+      `/m365/mail/messages/${encodeURIComponent(messageId)}/forward${buildQuery({ account_id: accountId })}`,
+      { method: "POST", body: JSON.stringify({ body, to }) },
+      true,
+    ),
+
+  getM365MailIntelligence: (messageId: string, accountId?: string) =>
+    request<import("@/lib/m365-intelligence").M365MailIntelligence>(
+      `/m365/mail/messages/${encodeURIComponent(messageId)}/intelligence${buildQuery({ account_id: accountId })}`,
+      {},
+      true,
+    ),
+
+  createM365CalendarEvent: (
+    payload: {
+      subject: string;
+      start: string;
+      end: string;
+      location?: string;
+      body?: string;
+      attendees?: string[];
+      is_online?: boolean;
+    },
+    accountId?: string,
+  ) =>
+    request<{ ok: boolean; message: string; event_id?: string }>(
+      `/m365/calendar/events${buildQuery({ account_id: accountId })}`,
+      { method: "POST", body: JSON.stringify(payload) },
+      true,
+    ),
+
+  updateM365CalendarEvent: (
+    eventId: string,
+    payload: {
+      subject?: string;
+      start?: string;
+      end?: string;
+      location?: string;
+      body?: string;
+    },
+    accountId?: string,
+  ) =>
+    request<{ ok: boolean; message: string }>(
+      `/m365/calendar/events/${encodeURIComponent(eventId)}${buildQuery({ account_id: accountId })}`,
+      { method: "PATCH", body: JSON.stringify(payload) },
+      true,
+    ),
+
+  deleteM365CalendarEvent: (eventId: string, accountId?: string) =>
+    request<{ ok: boolean; message: string }>(
+      `/m365/calendar/events/${encodeURIComponent(eventId)}${buildQuery({ account_id: accountId })}`,
+      { method: "DELETE" },
+      true,
+    ),
+
+  syncM365Repository: (accountId?: string, source: "all" | "onedrive" | "sharepoint" = "all") =>
+    request<{ ok: boolean; synced: number; classified: number; message: string }>(
+      `/m365/repository/sync${buildQuery({ account_id: accountId, source })}`,
+      { method: "POST" },
+      true,
+    ),
+
+  getM365RepositoryFiles: (params: { category?: string; search?: string; account_id?: string; limit?: number } = {}) =>
+    request<{
+      items: import("@/lib/m365-intelligence").M365RepositoryFile[];
+      total: number;
+      categories: Record<string, number>;
+      message: string;
+    }>(`/m365/repository/files${buildQuery(params)}`, {}, true),
+
+  getM365SemanticSearch: (q: string, limit = 20) =>
+    request<{ query: string; hits: Record<string, unknown>[]; total: number; qdrant_ready: boolean; message: string }>(
+      `/m365/search/semantic${buildQuery({ q, limit })}`,
+      {},
+      true,
+    ),
+
+  getM365Templates: () =>
+    request<{ items: Array<{ id: string; name: string; source: string }>; total: number }>(
+      "/m365/templates",
+      {},
+      true,
+    ),
+
+  previewM365Template: (templateType: string, companyKey = "justech") =>
+    request<import("@/lib/m365-intelligence").M365TemplatePreview>(
+      `/m365/templates/preview${buildQuery({ template_type: templateType, company_key: companyKey })}`,
+      { method: "POST" },
+      true,
+    ),
+
+  generateM365Template: (templateType: string, companyKey = "justech") =>
+    request<{ ok: boolean; filename: string; content_base64: string; message: string }>(
+      `/m365/templates/generate${buildQuery({ template_type: templateType, company_key: companyKey })}`,
+      { method: "POST" },
+      true,
+    ),
+
+  uploadM365OneDrive: async (file: File, folderId?: string, accountId?: string) => {
+    const token = getAccessToken();
+    const tenantId = getTenantId();
+    if (!token) throw new Error("UNAUTHORIZED");
+    const form = new FormData();
+    form.append("file", file);
+    if (folderId) form.append("folder_id", folderId);
+    const headers: Record<string, string> = { Authorization: `Bearer ${token}` };
+    if (tenantId) headers["X-Tenant-ID"] = tenantId;
+    const url = `${getApiUrl()}/m365/onedrive/upload${buildQuery({ account_id: accountId })}`;
+    const res = await fetch(url, { method: "POST", headers, body: form });
+    if (!res.ok) throw new ApiError(res.status, "UPLOAD_FAILED", "Error al subir archivo");
+    return res.json() as Promise<{ ok: boolean; message: string; item_id?: string; web_url?: string }>;
+  },
+
+  uploadM365SharePoint: async (driveId: string, file: File, folderId?: string, accountId?: string) => {
+    const token = getAccessToken();
+    const tenantId = getTenantId();
+    if (!token) throw new Error("UNAUTHORIZED");
+    const form = new FormData();
+    form.append("file", file);
+    if (folderId) form.append("folder_id", folderId);
+    const headers: Record<string, string> = { Authorization: `Bearer ${token}` };
+    if (tenantId) headers["X-Tenant-ID"] = tenantId;
+    const url = `${getApiUrl()}/m365/sharepoint/drives/${encodeURIComponent(driveId)}/upload${buildQuery({ account_id: accountId })}`;
+    const res = await fetch(url, { method: "POST", headers, body: form });
+    if (!res.ok) throw new ApiError(res.status, "UPLOAD_FAILED", "Error al subir archivo");
+    return res.json() as Promise<{ ok: boolean; message: string; item_id?: string; web_url?: string }>;
+  },
+
+  downloadM365MailAttachment: async (messageId: string, attachmentId: string, accountId?: string) => {
+    const token = getAccessToken();
+    const tenantId = getTenantId();
+    if (!token) throw new Error("UNAUTHORIZED");
+    const headers: Record<string, string> = { Authorization: `Bearer ${token}` };
+    if (tenantId) headers["X-Tenant-ID"] = tenantId;
+    const url = `${getApiUrl()}/m365/mail/messages/${encodeURIComponent(messageId)}/attachments/${encodeURIComponent(attachmentId)}/download${buildQuery({ account_id: accountId })}`;
+    const res = await fetch(url, { headers });
+    if (!res.ok) throw new ApiError(res.status, "DOWNLOAD_FAILED", "No se pudo descargar el adjunto");
+    const blob = await res.blob();
+    const disposition = res.headers.get("Content-Disposition") ?? "";
+    const match = disposition.match(/filename="([^"]+)"/);
+    return { blob, filename: match?.[1] ?? "adjunto" };
+  },
+
+  getM365OutlookMessages: (search = "", limit = 50, accountId?: string) =>
+    request<M365ListResponse>(
+      `/m365/outlook/messages${buildQuery({ search, limit, account_id: accountId })}`,
+      {},
+      true,
+    ),
+
+  getM365SharePointSites: (search = "", limit = 50, accountId?: string) =>
+    request<M365ListResponse>(
+      `/m365/sharepoint/sites${buildQuery({ search, limit, account_id: accountId })}`,
+      {},
+      true,
+    ),
+
+  getM365OneDriveFiles: (params: { search?: string; folder_id?: string; limit?: number; account_id?: string } = {}) =>
+    request<M365ListResponse>(`/m365/onedrive/files${buildQuery(params)}`, {}, true),
+
+  getM365SharePointDrives: (siteId: string, accountId?: string) =>
+    request<M365ListResponse>(
+      `/m365/sharepoint/sites/${encodeURIComponent(siteId)}/drives${buildQuery({ account_id: accountId })}`,
+      {},
+      true,
+    ),
+
+  getM365SharePointItems: (
+    driveId: string,
+    params: { folder_id?: string; search?: string; account_id?: string } = {},
+  ) =>
+    request<M365ListResponse>(
+      `/m365/sharepoint/drives/${encodeURIComponent(driveId)}/items${buildQuery(params)}`,
+      {},
+      true,
+    ),
+
+  getM365CalendarEvents: (params: { limit?: number; start?: string; end?: string; account_id?: string } = {}) =>
+    request<M365ListResponse>(`/m365/calendar/events${buildQuery(params)}`, {}, true),
+
+  getM365Teams: (limit = 50, accountId?: string) =>
+    request<M365ListResponse>(`/m365/teams${buildQuery({ limit, account_id: accountId })}`, {}, true),
+
+  getM365TeamChannels: (teamId: string, accountId?: string) =>
+    request<M365ListResponse>(
+      `/m365/teams/${encodeURIComponent(teamId)}/channels${buildQuery({ account_id: accountId })}`,
+      {},
+      true,
+    ),
+
+  getM365TeamMessages: (teamId: string, channelId: string, accountId?: string) =>
+    request<M365ListResponse>(
+      `/m365/teams/${encodeURIComponent(teamId)}/channels/${encodeURIComponent(channelId)}/messages${buildQuery({ account_id: accountId })}`,
+      {},
+      true,
+    ),
+
+  getM365Contacts: (limit = 50, accountId?: string, search = "") =>
+    request<M365ListResponse>(
+      `/m365/contacts${buildQuery({ limit, account_id: accountId, search })}`,
+      {},
+      true,
+    ),
+
+  getM365Documents: (search = "", limit = 50, accountId?: string) =>
+    request<M365ListResponse>(
+      `/m365/documents${buildQuery({ search, limit, account_id: accountId })}`,
+      {},
+      true,
+    ),
+
+  getM365Search: (q: string, limit = 25, accountId?: string) =>
+    request<M365SearchResponse>(
+      `/m365/search${buildQuery({ q, limit, account_id: accountId })}`,
+      {},
+      true,
+    ),
+
+  getM365OperativeDashboard: () =>
+    request<import("@/lib/m365-operative").M365OperativeDashboard>("/m365/operative/dashboard", {}, true),
+
+  getM365OperativeEmails: (classification?: string, limit = 50) =>
+    request<import("@/lib/m365-operative").M365ProcessedEmailListResponse>(
+      `/m365/operative/emails${buildQuery({ classification, limit })}`,
+      {},
+      true,
+    ),
+
+  syncM365OperativeInbox: () =>
+    request<import("@/lib/m365-operative").M365SyncResponse>(
+      "/m365/operative/sync",
+      { method: "POST" },
+      true,
+    ),
+
+  executeM365OperativeAction: (emailId: string, actionKey: string, params: Record<string, unknown> = {}) =>
+    request<import("@/lib/m365-operative").M365ExecuteActionResponse>(
+      `/m365/operative/emails/${emailId}/actions`,
+      { method: "POST", body: JSON.stringify({ action_key: actionKey, params }) },
+      true,
+    ),
 
   getTasks: (params: Record<string, string | number | undefined> = {}) =>
     request<TaskListResponse>(`/tasks${buildQuery(params)}`, {}, true),
@@ -766,6 +1524,366 @@ export const apiClient = {
       true,
     ),
 
+  getPlatformAccess: () =>
+    request<import("@/lib/admin").PlatformAccess>("/users/me/platform-access", {}, true),
+
+  getSupplierIntegrationSettings: (provider: string) =>
+    request<import("@/lib/settings").IntegrationDetail>(
+      `/prices/connectors/suppliers/${provider}/settings`,
+      {},
+      true,
+    ),
+
+  updateSupplierIntegrationSettings: (
+    provider: string,
+    payload: { config?: Record<string, string | boolean>; secrets?: Record<string, string> },
+  ) =>
+    request<import("@/lib/settings").IntegrationDetail>(
+      `/prices/connectors/suppliers/${provider}/settings`,
+      { method: "POST", body: JSON.stringify(payload) },
+      true,
+    ),
+
+  getAdminAssignableModules: () =>
+    request<{ items: import("@/lib/admin").AssignableModule[] }>("/admin/assignable-modules", {}, true),
+
+  getAdminIntegrations: () =>
+    request<{
+      environment: string;
+      items: import("@/lib/connectors").ConnectorSummary[];
+      builtin_items: import("@/lib/connectors").ConnectorSummary[];
+      dynamic_items: import("@/lib/connectors").ConnectorSummary[];
+    }>("/admin/integrations", {}, true),
+
+  getAdminIntegration: (provider: string) =>
+    request<import("@/lib/settings").IntegrationDetail | import("@/lib/connectors").ConnectorDetail>(
+      `/admin/integrations/${provider}`,
+      {},
+      true,
+    ),
+
+  createConnector: (payload: import("@/lib/connectors").ConnectorCreatePayload) =>
+    request<import("@/lib/connectors").ConnectorDetail>("/admin/integrations", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    }, true),
+
+  updateConnector: (id: string, payload: Record<string, unknown>) =>
+    request<import("@/lib/connectors").ConnectorDetail>(`/admin/integrations/${id}`, {
+      method: "PUT",
+      body: JSON.stringify(payload),
+    }, true),
+
+  deleteConnector: (id: string) =>
+    request<{ ok: boolean }>(`/admin/integrations/${id}`, { method: "DELETE" }, true),
+
+  testConnector: (id: string) =>
+    request<{ ok: boolean; message: string; http_status?: number; response_preview?: string; details?: Record<string, unknown> }>(
+      `/admin/integrations/${id}/test`,
+      { method: "POST" },
+      true,
+    ),
+
+  getConnectorUserLinks: (id: string) =>
+    request<import("@/lib/connectors").ConnectorSummary[]>(`/admin/integrations/${id}/user-links`, {}, true),
+
+  createConnectorEndpoint: (id: string, payload: import("@/lib/connectors").ConnectorEndpoint) =>
+    request<import("@/lib/connectors").ConnectorEndpoint>(`/admin/integrations/${id}/endpoints`, {
+      method: "POST",
+      body: JSON.stringify(payload),
+    }, true),
+
+  testConnectorEndpoint: (id: string, endpointId: string) =>
+    request<{ ok: boolean; message: string; response_preview?: string }>(
+      `/admin/integrations/${id}/endpoints/${endpointId}/test`,
+      { method: "POST" },
+      true,
+    ),
+
+  updateAdminIntegration: (
+    provider: string,
+    payload: { config?: Record<string, unknown>; secrets?: Record<string, string>; delete_secrets?: string[] },
+  ) =>
+    request<import("@/lib/settings").IntegrationDetail>(
+      `/admin/integrations/${provider}`,
+      { method: "POST", body: JSON.stringify(payload) },
+      true,
+    ),
+
+  testAdminIntegration: (provider: string) =>
+    request<{ ok: boolean; message: string; details?: Record<string, unknown> }>(
+      `/admin/integrations/${provider}/test`,
+      { method: "POST" },
+      true,
+    ),
+
+  disconnectAdminIntegration: (provider: string) =>
+    request<import("@/lib/settings").IntegrationDetail>(
+      `/admin/integrations/${provider}/disconnect`,
+      { method: "POST" },
+      true,
+    ),
+
+  getAdminIntegrationLogs: (provider: string, limit = 30) =>
+    request<{ items: import("@/lib/settings").SettingsAuditEntry[]; total: number }>(
+      `/admin/integrations/${provider}/logs${buildQuery({ limit })}`,
+      {},
+      true,
+    ),
+
+  /** @deprecated use getAdminIntegrations */
+  getSettingsIntegrations: () =>
+    request<{ environment: string; items: import("@/lib/settings").IntegrationCard[] }>(
+      "/admin/integrations",
+      {},
+      true,
+    ),
+
+  getSettingsIntegration: (provider: string) =>
+    request<import("@/lib/settings").IntegrationDetail>(`/admin/integrations/${provider}`, {}, true),
+
+  updateSettingsIntegration: (
+    provider: string,
+    payload: { config?: Record<string, unknown>; secrets?: Record<string, string>; delete_secrets?: string[] },
+  ) =>
+    request<import("@/lib/settings").IntegrationDetail>(
+      `/admin/integrations/${provider}`,
+      { method: "POST", body: JSON.stringify(payload) },
+      true,
+    ),
+
+  testSettingsIntegration: (provider: string) =>
+    request<{ ok: boolean; message: string; details?: Record<string, unknown> }>(
+      `/admin/integrations/${provider}/test`,
+      { method: "POST" },
+      true,
+    ),
+
+  disconnectSettingsIntegration: (provider: string) =>
+    request<import("@/lib/settings").IntegrationDetail>(
+      `/admin/integrations/${provider}/disconnect`,
+      { method: "POST" },
+      true,
+    ),
+
+  getSettingsSystemStatus: () =>
+    request<{ environment: string; items: import("@/lib/settings").SystemStatusItem[] }>(
+      "/settings/system-status",
+      {},
+      true,
+    ),
+
+  getSettingsAuditLog: (limit = 50) =>
+    request<{ items: import("@/lib/settings").SettingsAuditEntry[]; total: number }>(
+      `/settings/audit-log${buildQuery({ limit })}`,
+      {},
+      true,
+    ),
+
+  getSettingsRepositories: () =>
+    request<import("@/lib/settings").RepositoryBinding[]>("/settings/repositories", {}, true),
+
+  upsertSettingsRepository: (payload: Record<string, unknown>) =>
+    request<import("@/lib/settings").RepositoryBinding>(
+      "/settings/repositories",
+      { method: "POST", body: JSON.stringify(payload) },
+      true,
+    ),
+
+  syncSettingsRepository: (id: string) =>
+    request<{ ok: boolean; indexed: number; records_indexed?: number; job_id?: string; message: string }>(
+      `/settings/repositories/${id}/sync`,
+      { method: "POST" },
+      true,
+    ),
+
+  syncAllSettingsRepositories: () =>
+    request<{ ok: boolean; indexed: number; message: string }[]>(
+      "/settings/repositories/sync-all",
+      { method: "POST" },
+      true,
+    ),
+
+  getRepositorySyncJobs: (limit = 50) =>
+    request<import("@/lib/settings").RepositorySyncJob[]>(
+      `/settings/repositories/sync-jobs${buildQuery({ limit })}`,
+      {},
+      true,
+    ),
+
+  getCompanyProfiles: () =>
+    request<import("@/lib/settings").CompanyProfile[]>("/settings/company-profiles", {}, true),
+
+  draftCompanyMissingEmail: (companyKey: string) =>
+    request<{ subject: string; body: string; missing_fields: string[] }>(
+      `/settings/company-profiles/${companyKey}/missing-email`,
+      { method: "POST" },
+      true,
+    ),
+
+  getPendingPriceFiles: () =>
+    request<{ id: string; name: string; parent_path: string }[]>("/settings/price-inbox/pending", {}, true),
+
+  getDocumentsHubDashboard: () =>
+    request<import("@/lib/documents-hub").DocumentsHubDashboard>("/documents/dashboard", {}, true),
+
+  getDocumentsHubGeneralRepositories: () =>
+    request<import("@/lib/documents-hub").GeneralRepositoryCard[]>(
+      "/documents/repositories/general",
+      {},
+      true,
+    ),
+
+  syncDocumentsHubOneDrive: () =>
+    request<{ synced: unknown[]; errors: string[] }>("/documents/sync/onedrive", { method: "POST" }, true),
+
+  getDocumentsHubTracking: () =>
+    request<import("@/lib/documents-hub").DocumentsTrackingSummary>("/documents/tracking", {}, true),
+
+  getDocumentsHubCompanies: () =>
+    request<import("@/lib/documents-hub").CompanyDocumentProfile[]>("/documents/companies", {}, true),
+
+  getDocumentsHubCompany: (id: string) =>
+    request<import("@/lib/documents-hub").CompanyDocumentProfile>(`/documents/companies/${id}`, {}, true),
+
+  updateDocumentsHubCompany: (id: string, payload: Record<string, unknown>) =>
+    request<import("@/lib/documents-hub").CompanyDocumentProfile>(`/documents/companies/${id}`, {
+      method: "PUT",
+      body: JSON.stringify(payload),
+    }, true),
+
+  getDocumentsHubMissing: (id: string) =>
+    request<import("@/lib/documents-hub").MissingItems>(`/documents/companies/${id}/missing`, {}, true),
+
+  requestDocumentsHubMissing: (id: string, payload: Record<string, unknown>) =>
+    request<import("@/lib/documents-hub").RequestMissingResult>(
+      `/documents/companies/${id}/request-missing`,
+      { method: "POST", body: JSON.stringify(payload) },
+      true,
+    ),
+
+  generateDocumentsProfileForm: (id: string) =>
+    request<import("@/lib/documents-hub").ProfileFormResult>(
+      `/documents/companies/${id}/profile-form`,
+      { method: "POST" },
+      true,
+    ),
+
+  getDocumentsHubCompletion: (id: string) =>
+    request<import("@/lib/documents-hub").CompanyCompletion>(
+      `/documents/companies/${id}/completion`,
+      {},
+      true,
+    ),
+
+  updateDocumentsHubField: (id: string, fieldKey: string, value: string) =>
+    request<import("@/lib/documents-hub").CompanyDocumentProfile>(
+      `/documents/companies/${id}/fields/${encodeURIComponent(fieldKey)}`,
+      { method: "POST", body: JSON.stringify({ value }) },
+      true,
+    ),
+
+  requestDocumentsHubMissingFields: (id: string, payload: Record<string, unknown>) =>
+    request<import("@/lib/documents-hub").RequestMissingResult>(
+      `/documents/companies/${id}/missing/request`,
+      { method: "POST", body: JSON.stringify(payload) },
+      true,
+    ),
+
+  syncDocumentsHubCompanyOneDrive: (id: string) =>
+    request<{ synced: unknown[]; errors: string[]; company_key: string }>(
+      `/documents/companies/${id}/onedrive/sync`,
+      { method: "POST" },
+      true,
+    ),
+
+  uploadDocumentsHubCompanyDocument: async (id: string, fieldKey: string, file: File, validUntil?: string) => {
+    const token = getAccessToken();
+    const tenantId = getTenantId();
+    if (!token) throw new Error("UNAUTHORIZED");
+    const form = new FormData();
+    form.append("file", file);
+    form.append("field_key", fieldKey);
+    if (validUntil) form.append("valid_until", validUntil);
+    const headers: Record<string, string> = { Authorization: `Bearer ${token}` };
+    if (tenantId) headers["X-Tenant-ID"] = tenantId;
+    const res = await fetch(
+      `${getApiUrl()}/documents/companies/${id}/documents/upload`,
+      { method: "POST", headers, body: form },
+    );
+    if (!res.ok) {
+      const body = (await res.json().catch(() => ({}))) as { detail?: string; message?: string };
+      const msg =
+        body.detail ??
+        body.message ??
+        "No se pudo subir a OneDrive. Verifique conexión Microsoft 365 y permisos Files.ReadWrite.All.";
+      throw new ApiError(res.status, "UPLOAD_FAILED", msg);
+    }
+    return res.json() as Promise<import("@/lib/documents-hub").CompanyDocumentUploadResult>;
+  },
+
+  getDocumentsHubRepositories: () =>
+    request<import("@/lib/settings").RepositoryBinding[]>("/documents/repositories", {}, true),
+
+  syncDocumentsHubRepository: (id: string) =>
+    request<{ ok: boolean; message: string; indexed: number }>(
+      `/documents/repositories/${id}/sync`,
+      { method: "POST" },
+      true,
+    ),
+
+  getDocumentsHubPending: (params: Record<string, string | undefined> = {}) =>
+    request<import("@/lib/documents-hub").DocumentPendingItem[]>(
+      `/documents/pending${buildQuery(params)}`,
+      {},
+      true,
+    ),
+
+  scanDocumentsHubPending: () =>
+    request<{ created: number }>("/documents/pending/scan", { method: "POST" }, true),
+
+  markDocumentsPendingReceived: (id: string) =>
+    request<import("@/lib/documents-hub").DocumentPendingItem>(
+      `/documents/pending/${id}/received`,
+      { method: "POST" },
+      true,
+    ),
+
+  getDocumentsHubLegal: () =>
+    request<import("@/lib/licitador").LegalDocumentsDashboard>("/documents/legal", {}, true),
+
+  getDocumentsHubTemplates: () =>
+    request<import("@/lib/licitador").DgcpTemplatesDashboard>("/documents/templates/dgcp", {}, true),
+
+  getDocumentsHubPrices: () =>
+    request<import("@/lib/licitador").PriceIntelligenceDashboard>("/documents/prices/intelligence", {}, true),
+
+  getDocumentsHubCorporateIdentity: (companyKey: string) =>
+    request<Record<string, unknown>>(`/documents/corporate-identity/${companyKey}`, {}, true),
+
+  getLicitadorLegalDashboard: () =>
+    request<import("@/lib/licitador").LegalDocumentsDashboard>("/licitador/documentos-legales", {}, true),
+
+  getLicitadorTemplatesDashboard: () =>
+    request<import("@/lib/licitador").DgcpTemplatesDashboard>("/licitador/plantillas", {}, true),
+
+  getLicitadorPriceDashboard: () =>
+    request<import("@/lib/licitador").PriceIntelligenceDashboard>("/licitador/precios", {}, true),
+
+  requestLegalUpdateEmail: (companyKey: string) =>
+    request<{ subject: string; body: string }>(
+      `/licitador/documentos-legales/${companyKey}/solicitar-actualizacion`,
+      { method: "POST" },
+      true,
+    ),
+
+  previewLicitadorTemplate: (templateType: string, companyKey: string) =>
+    request<import("@/lib/licitador").TemplatePreview>(
+      `/licitador/plantillas/preview${buildQuery({ template_type: templateType, company_key: companyKey })}`,
+      { method: "POST" },
+      true,
+    ),
+
   getAdminAccess: () =>
     request<import("@/lib/admin").AdminAccess>("/admin/access", {}, true),
 
@@ -808,6 +1926,57 @@ export const apiClient = {
   getAdminSettings: () =>
     request<import("@/lib/admin").TenantSettings>("/admin/settings", {}, true),
 
+  getM365AdminConfig: () =>
+    request<{
+      tenant_id: string;
+      client_id: string;
+      client_secret_configured: boolean;
+      client_secret_masked: string;
+      redirect_uri: string;
+      webhook_url: string;
+      webhook_client_state_configured: boolean;
+      read_only: boolean;
+      oauth_ready: boolean;
+      source: string;
+    }>("/admin/m365/config", {}, true),
+
+  updateM365AdminConfig: (payload: { client_secret?: string; webhook_client_state?: string }) =>
+    request<{
+      tenant_id: string;
+      client_id: string;
+      client_secret_configured: boolean;
+      client_secret_masked: string;
+      redirect_uri: string;
+      webhook_url: string;
+      webhook_client_state_configured: boolean;
+      read_only: boolean;
+      oauth_ready: boolean;
+      source: string;
+    }>("/admin/m365/config", { method: "PUT", body: JSON.stringify(payload) }, true),
+
+  testM365Connection: () =>
+    request<{
+      ok: boolean;
+      message: string;
+      token_acquired?: boolean;
+      graph_reachable?: boolean;
+      user_display_name?: string | null;
+    }>("/admin/m365/test-connection", { method: "POST" }, true),
+
+  getM365GraphPermissions: () =>
+    request<{
+      delegated_scopes: { scope: string; required: boolean; description: string }[];
+      application_scopes: { scope: string; required: boolean; description: string }[];
+      admin_consent_required: boolean;
+    }>("/admin/m365/graph-permissions", {}, true),
+
+  renewM365Webhooks: () =>
+    request<{ ok: boolean; message: string; subscription_id?: string | null; expiration?: string | null }>(
+      "/admin/m365/webhooks/renew",
+      { method: "POST" },
+      true,
+    ),
+
   getAdminRoles: () =>
     request<{ items: { key: string; label: string; permissions: string[] }[] }>("/admin/roles", {}, true),
 
@@ -824,6 +1993,22 @@ export const apiClient = {
     request<import("@/lib/admin").M365Account>("/m365/accounts/prepare", {
       method: "POST",
       body: JSON.stringify(payload),
+    }, true),
+
+  connectM365Imap: (payload: {
+    email: string;
+    password: string;
+    imap_host?: string;
+    imap_port?: number;
+  }) =>
+    request<import("@/lib/admin").M365Account>("/m365/accounts/connect-imap", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    }, true),
+
+  disconnectM365Mailbox: () =>
+    request<import("@/lib/admin").M365Account>("/m365/accounts/disconnect", {
+      method: "POST",
     }, true),
 
   deleteM365Account: (id: string) =>
@@ -858,10 +2043,36 @@ export const apiClient = {
     }, true),
 
   assistantQuery: (payload: AssistantQueryRequest) =>
-    request<AssistantQueryResponse>("/assistant/query", {
-      method: "POST",
-      body: JSON.stringify(payload),
-    }, true),
+    request<AssistantQueryResponse>(
+      "/assistant/query",
+      {
+        method: "POST",
+        body: JSON.stringify(payload),
+        timeoutMs: LONG_REQUEST_TIMEOUT_MS,
+      },
+      true,
+    ),
+
+  getAssistantBriefing: (mode: "managerial" | "operational" | "bidding" = "managerial") =>
+    request<import("@/lib/assistant").CopilotBriefingResponse>(
+      `/assistant/briefing?mode=${mode}`,
+      {},
+      true,
+    ),
+
+  setAssistantBriefingMode: (conversationId: string, mode: "managerial" | "operational" | "bidding") =>
+    request<{ status: string; mode: string }>(
+      `/assistant/briefing-mode?conversation_id=${encodeURIComponent(conversationId)}&mode=${mode}`,
+      { method: "PUT" },
+      true,
+    ),
+
+  resetAssistantConversation: (conversationId: string) =>
+    request<{ status: string }>(
+      `/assistant/conversations/reset?conversation_id=${encodeURIComponent(conversationId)}`,
+      { method: "POST" },
+      true,
+    ),
 
   enterpriseSearch: (params: {
     q: string;
@@ -878,7 +2089,7 @@ export const apiClient = {
         company: params.company,
         limit: params.limit,
       })}`,
-      {},
+      { timeoutMs: LONG_REQUEST_TIMEOUT_MS },
       true,
     ),
 
@@ -979,6 +2190,104 @@ export const apiClient = {
       true,
     ),
 
+  comparePricesPro: (params: {
+    q: string;
+    cantidad?: number;
+    margen_objetivo?: number;
+    include_live?: boolean;
+    include_omega_live?: boolean;
+    include_indexed?: boolean;
+    include_historical?: boolean;
+    marca?: string;
+    ram_gb?: number;
+    almacenamiento_gb?: number;
+  }) =>
+    request<import("./prices").PriceCompareProResponse>(
+      `/prices/compare-pro${buildQuery(params as Record<string, string | number | boolean | undefined>)}`,
+      {},
+      true,
+    ),
+
+  ingramConnectorStatus: () =>
+    request<Record<string, unknown>>("/prices/connectors/ingram/status", {}, true),
+
+  ingramMfaStart: () =>
+    request<{
+      ok: boolean;
+      status: string;
+      message?: string;
+      session_active?: boolean;
+    }>("/prices/connectors/ingram/mfa/start", { method: "POST" }, true),
+
+  ingramMfaVerify: (pass_code: string) =>
+    request<{
+      ok: boolean;
+      status: string;
+      message?: string;
+      session_active?: boolean;
+      expires_at?: number;
+    }>("/prices/connectors/ingram/mfa/verify", {
+      method: "POST",
+      body: JSON.stringify({ pass_code }),
+    }, true),
+
+  ingramMfaDisconnect: () =>
+    request<{ ok: boolean; status: string; message?: string }>(
+      "/prices/connectors/ingram/mfa/disconnect",
+      { method: "POST" },
+      true,
+    ),
+
+  ingramLiveSearch: (q: string, limit = 20) =>
+    request<import("./prices").SupplierLiveSearchResponse>(
+      `/prices/connectors/ingram/search${buildQuery({ q, limit })}`,
+      {},
+      true,
+    ),
+
+  omegaConnectorStatus: () =>
+    request<Record<string, unknown>>("/prices/connectors/omega/status", {}, true),
+
+  omegaLogin: () =>
+    request<{
+      ok: boolean;
+      status: string;
+      message?: string;
+      session_active?: boolean;
+      authenticated?: boolean;
+    }>("/prices/connectors/omega/login", { method: "POST" }, true),
+
+  omegaDisconnect: () =>
+    request<{ ok: boolean; status: string; message?: string; session_active?: boolean }>(
+      "/prices/connectors/omega/disconnect",
+      { method: "POST" },
+      true,
+    ),
+
+  omegaLiveSearch: (q: string, limit = 20) =>
+    request<import("./prices").SupplierLiveSearchResponse>(
+      `/prices/connectors/omega/search${buildQuery({ q, limit })}`,
+      {},
+      true,
+    ),
+
+  analyzeDGCPrices: (opportunityId: string) =>
+    request<import("./prices").DGCPPriceAnalysis>(
+      `/prices/dgcp/${opportunityId}/analyze`,
+      {},
+      true,
+    ),
+
+  getPriceProductHistory: (productId: string) =>
+    request<{
+      product_id: string;
+      trend: string;
+      current_price: string | null;
+      price_30d_ago: string | null;
+      price_90d_ago: string | null;
+      points: Array<{ date: string; price: string; supplier: string | null }>;
+    }>(`/prices/products/${productId}/history`, {}, true),
+
   getPriceProduct: (id: string) =>
     request<import("./prices").PriceProductDetail>(`/prices/products/${id}`, {}, true),
 
@@ -993,4 +2302,147 @@ export const apiClient = {
 
   getPriceOdooMatch: (productId: string) =>
     request<import("./prices").PriceOdooMatch>(`/prices/products/${productId}/odoo-match`, {}, true),
+
+  syncPriceLists: () =>
+    request<{
+      files_detected: number;
+      files_new: number;
+      records_created: number;
+      errors: string[];
+    }>("/prices/sync", { method: "POST" }, true),
+
+  getCommunicationsHubStatus: () =>
+    request<import("./communications").CommunicationsHubStatus>("/communications/hub/status", {}, true),
+
+  listWhatsappSessions: () =>
+    request<{ items: import("./communications").WhatsappSession[] }>("/communications/whatsapp/sessions", {}, true),
+
+  createWhatsappSession: (payload: { label?: string; account_type?: string }) =>
+    request<import("./communications").WhatsappSession>("/communications/whatsapp/sessions", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    }, true),
+
+  getWhatsappSession: (sessionId: string) =>
+    request<import("./communications").WhatsappSession>(`/communications/whatsapp/sessions/${sessionId}`, {}, true),
+
+  disconnectWhatsappSession: (sessionId: string) =>
+    request<{ status: string }>(`/communications/whatsapp/sessions/${sessionId}/disconnect`, { method: "POST" }, true),
+
+  listWhatsappChats: (sessionId: string, sync = true) =>
+    request<{ items: import("./communications").WhatsappChat[] }>(
+      `/communications/whatsapp/sessions/${sessionId}/chats?sync=${sync}`,
+      {},
+      true,
+    ),
+
+  listWhatsappMessages: (sessionId: string, remoteJid: string) =>
+    request<{ items: import("./communications").WhatsappMessage[] }>(
+      `/communications/whatsapp/sessions/${sessionId}/chats/${encodeURIComponent(remoteJid)}/messages`,
+      {},
+      true,
+    ),
+
+  sendWhatsappMessage: (sessionId: string, remoteJid: string, text: string, quotedMessageId?: string) =>
+    request<import("./communications").WhatsappMessage>(
+      `/communications/whatsapp/sessions/${sessionId}/chats/${encodeURIComponent(remoteJid)}/messages`,
+      {
+        method: "POST",
+        body: JSON.stringify({ text, quoted_message_id: quotedMessageId }),
+      },
+      true,
+    ),
+
+  whatsappAiAction: (sessionId: string, payload: { action: string; chat_id?: string }) =>
+    request<import("./communications").WhatsappAiActionResponse>(
+      `/communications/whatsapp/sessions/${sessionId}/ai`,
+      { method: "POST", body: JSON.stringify(payload) },
+      true,
+    ),
+
+  getWhatsappChatIntelligence: (sessionId: string, chatId: string) =>
+    request<import("./communications").WhatsappChatIntelligence>(
+      `/communications/whatsapp/sessions/${sessionId}/chats/${chatId}/intelligence`,
+      {},
+      true,
+    ),
+
+  searchCommunications: (q: string, channel?: string, limit = 8) =>
+    request<import("./communications").CommunicationsUnifiedSearchResult>(
+      `/communications/search?q=${encodeURIComponent(q)}${channel ? `&channel=${channel}` : ""}&limit=${limit}`,
+      {},
+      true,
+    ),
+
+  listUnifiedContacts: (q = "", sync = true, limit = 50) =>
+    request<{ items: import("./communications").UnifiedContact[]; total: number }>(
+      `/communications/contacts?q=${encodeURIComponent(q)}&sync=${sync}&limit=${limit}`,
+      {},
+      true,
+    ),
+
+  syncUnifiedContacts: (limit = 80) =>
+    request<{ created: number; updated: number; total: number; sources_synced: string[] }>(
+      `/communications/contacts/sync?limit=${limit}`,
+      { method: "POST" },
+      true,
+    ),
+
+  getUnifiedContactProfile: (contactId: string) =>
+    request<import("./communications").UnifiedContactProfile360>(
+      `/communications/contacts/${contactId}`,
+      {},
+      true,
+    ),
+
+  listCommunicationsRepository: (params?: { q?: string; category?: string; source?: string; limit?: number }) =>
+    request<import("./communications").CommunicationsRepositoryList>(
+      `/communications/documents/repository${buildQuery({
+        q: params?.q,
+        category: params?.category,
+        source: params?.source,
+        limit: params?.limit,
+      })}`,
+      {},
+      true,
+    ),
+
+  whatsappAttachDocument: (
+    sessionId: string,
+    remoteJid: string,
+    payload: { source: string; item_id: string; caption?: string },
+  ) =>
+    request<import("./communications").CommunicationsAttachAction>(
+      `/communications/whatsapp/sessions/${sessionId}/chats/${encodeURIComponent(remoteJid)}/attach`,
+      { method: "POST", body: JSON.stringify(payload) },
+      true,
+    ),
+
+  outlookAttachDocument: (payload: {
+    to: string[];
+    subject: string;
+    body?: string;
+    source: string;
+    item_id: string;
+    account_id?: string;
+  }) =>
+    request<import("./communications").CommunicationsAttachAction>(
+      "/communications/outlook/attach",
+      { method: "POST", body: JSON.stringify(payload) },
+      true,
+    ),
+
+  teamsShareDocument: (payload: {
+    team_id: string;
+    channel_id: string;
+    message?: string;
+    source: string;
+    item_id: string;
+    account_id?: string;
+  }) =>
+    request<import("./communications").CommunicationsAttachAction>(
+      "/communications/teams/share",
+      { method: "POST", body: JSON.stringify(payload) },
+      true,
+    ),
 };

@@ -1,5 +1,15 @@
-export type CompanyType = "proveedor" | "fabricante" | "cliente" | "aliado" | "competidor";
-export type CompanyStatus = "activo" | "inactivo";
+export type CompanyType =
+  | "proveedor"
+  | "fabricante"
+  | "mayorista"
+  | "distribuidor"
+  | "cliente"
+  | "aliado"
+  | "subcontratista"
+  | "transportista"
+  | "tecnico_externo"
+  | "competidor";
+export type CompanyStatus = "activo" | "inactivo" | "preferido" | "bloqueado";
 
 export interface BusinessCompany {
   id: string;
@@ -29,12 +39,19 @@ export interface BusinessCompanyListResponse {
 export const COMPANY_TYPE_LABELS: Record<CompanyType, string> = {
   proveedor: "Proveedor",
   fabricante: "Fabricante",
+  mayorista: "Mayorista",
+  distribuidor: "Distribuidor",
   cliente: "Cliente",
   aliado: "Aliado estratégico",
+  subcontratista: "Subcontratista",
+  transportista: "Transportista",
+  tecnico_externo: "Técnico externo",
   competidor: "Competidor",
 };
 
 export const COMPANY_STATUS_LABELS: Record<CompanyStatus, string> = {
   activo: "Activo",
   inactivo: "Inactivo",
+  preferido: "Preferido",
+  bloqueado: "Bloqueado",
 };

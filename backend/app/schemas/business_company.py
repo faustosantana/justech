@@ -10,7 +10,10 @@ from pydantic import BaseModel, Field
 
 class BusinessCompanyBase(BaseModel):
     name: str = Field(min_length=2, max_length=255)
-    company_type: str = Field(pattern="^(proveedor|fabricante|cliente|aliado|competidor)$")
+    company_type: str = Field(
+        pattern="^(proveedor|fabricante|mayorista|distribuidor|cliente|aliado|"
+        "subcontratista|transportista|tecnico_externo|competidor)$"
+    )
     tax_id: str | None = None
     email: str | None = None
     phone: str | None = None
@@ -20,7 +23,7 @@ class BusinessCompanyBase(BaseModel):
     brands: list[str] = Field(default_factory=list)
     commercial_terms: str | None = None
     notes: str | None = None
-    status: str = Field(default="activo", pattern="^(activo|inactivo)$")
+    status: str = Field(default="activo", pattern="^(activo|inactivo|preferido|bloqueado)$")
     odoo_partner_id: int | None = None
     price_supplier_name: str | None = None
 
@@ -31,7 +34,11 @@ class BusinessCompanyCreate(BusinessCompanyBase):
 
 class BusinessCompanyUpdate(BaseModel):
     name: str | None = Field(default=None, min_length=2, max_length=255)
-    company_type: str | None = Field(default=None, pattern="^(proveedor|fabricante|cliente|aliado|competidor)$")
+    company_type: str | None = Field(
+        default=None,
+        pattern="^(proveedor|fabricante|mayorista|distribuidor|cliente|aliado|"
+        "subcontratista|transportista|tecnico_externo|competidor)$",
+    )
     tax_id: str | None = None
     email: str | None = None
     phone: str | None = None
@@ -41,7 +48,7 @@ class BusinessCompanyUpdate(BaseModel):
     brands: list[str] | None = None
     commercial_terms: str | None = None
     notes: str | None = None
-    status: str | None = Field(default=None, pattern="^(activo|inactivo)$")
+    status: str | None = Field(default=None, pattern="^(activo|inactivo|preferido|bloqueado)$")
     odoo_partner_id: int | None = None
     price_supplier_name: str | None = None
 

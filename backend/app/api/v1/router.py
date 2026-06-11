@@ -2,23 +2,30 @@ from fastapi import APIRouter
 
 from app.api.v1 import (
     admin,
+    admin_integrations,
+    integration_links,
     assistant,
     auth,
     companies,
+    suppliers,
     company_context,
+    corporate_identity,
     dashboard,
     dgcp,
     documents,
     health,
     integrations,
     knowledge,
+    licitador,
     llm,
     m365,
+    m365_operative,
     notifications,
     odoo,
     prices,
     routing,
     search,
+    settings as settings_api,
     tasks,
     tenants,
     users,
@@ -28,16 +35,21 @@ from app.api.v1 import (
 api_router = APIRouter()
 api_router.include_router(health.router)
 api_router.include_router(admin.router)
+api_router.include_router(admin_integrations.router)
+api_router.include_router(integration_links.router)
 api_router.include_router(auth.router)
 api_router.include_router(tenants.router)
 api_router.include_router(llm.router)
 api_router.include_router(integrations.router)
 api_router.include_router(companies.router)
+api_router.include_router(suppliers.router)
 api_router.include_router(company_context.router)
+api_router.include_router(corporate_identity.router)
 api_router.include_router(dashboard.router)
 api_router.include_router(dgcp.router)
 api_router.include_router(odoo.router)
 api_router.include_router(m365.router)
+api_router.include_router(m365_operative.router, prefix="/m365")
 api_router.include_router(tasks.router)
 api_router.include_router(users.router)
 api_router.include_router(work.router)
@@ -46,5 +58,7 @@ api_router.include_router(routing.router)
 api_router.include_router(search.router)
 api_router.include_router(documents.router)
 api_router.include_router(knowledge.router)
+api_router.include_router(licitador.router)
 api_router.include_router(prices.router)
 api_router.include_router(assistant.router)
+api_router.include_router(settings_api.router)

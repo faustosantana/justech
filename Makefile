@@ -44,6 +44,9 @@ migrate:
 seed:
 	docker compose exec backend python -m app.scripts.seed
 
+seed-suppliers:
+	docker compose exec backend python -m app.scripts.seed_suppliers --odoo --limit 300
+
 seed-dgcp:
 	docker compose exec backend python -m app.scripts.seed_dgcp
 

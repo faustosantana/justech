@@ -78,7 +78,7 @@ so = env["sale.order"].create({"partner_id": partner.id})
 env["sale.order.line"].create(
     {"order_id": so.id, "product_id": product.id, "product_uom_qty": 1.0, "price_unit": 10000.0}
 )
-line_tax_amounts = [t.amount for t in so.order_line.tax_id]
+line_tax_amounts = [t.amount for t in so.order_line.tax_ids]
 s2["quotation_draft"] = chk(so.state == "draft", so.state)
 s2["line_has_18_not_15"] = chk(18.0 in line_tax_amounts and 15.0 not in line_tax_amounts, str(line_tax_amounts))
 so.action_confirm()

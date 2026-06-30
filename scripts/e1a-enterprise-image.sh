@@ -19,6 +19,7 @@ STATE_DIR="$PROJECT_ROOT/logs/deploy/e1a-state-$(date +%Y-%m-%d_%H%M%S)"
 LOG_FILE="$PROJECT_ROOT/logs/deploy/e1a-enterprise-image-$(date +%Y-%m-%d_%H%M).log"
 BACKUP_DIR=""
 ROLLBACK_DONE=false
+E1A_PHASE="pre_install"
 
 mkdir -p "$(dirname "$LOG_FILE")" "$STATE_DIR"
 
@@ -48,7 +49,7 @@ rollback() {
   cd "$COMPOSE_DIR"
   docker compose --env-file "$ENV_FILE" up -d --force-recreate odoo 2>&1 | tee -a "$LOG_FILE" || true
 
-  if [[ -n "$BACKUP_DIR" && -d "$BACKUP_DIR" ]]; then
+  if [[ "$E1A_PHASE" == "post_install" && -n "$BACKUP_DIR" && -d "$BACKUP_DIR" ]]; then
     hellenia_log "Restaurando BD desde $BACKUP_DIR" | tee -a "$LOG_FILE"
     "${SCRIPT_DIR}/restore-dev.sh" "$BACKUP_DIR" 2>&1 | tee -a "$LOG_FILE" || true
   fi
@@ -155,6 +156,7 @@ hellenia_log "Esperando arranque Odoo..." | tee -a "$LOG_FILE"
 sleep 60
 
 # --- 9. Instalar web_enterprise ---
+E1A_PHASE="post_install"
 hellenia_log "--- Instalar web_enterprise ---" | tee -a "$LOG_FILE"
 docker compose --env-file "$ENV_FILE" stop odoo
 docker compose --env-file "$ENV_FILE" run --rm odoo odoo \

@@ -1,24 +1,19 @@
 # Aceptación final TEST — Fase 17
 
-**Fecha:** 2026-06-30  
-**Ambiente:** `hellenia_test` únicamente  
+**Fecha:** 2026-06-30T19:37:19Z  
+**Ambiente:** `hellenia_test`  
+**Rama:** `cursor/phase17-ux-hardening-dd85` @ `e646640`  
 **PROD:** NO modificado
 
-## Entregables
+## Resultado
 
-| Documento | Estado |
-|-----------|--------|
-| UX_FULL_AUDIT.md | ✅ |
-| UX_CERTIFICATION.md | ✅ |
-| DOMINICAN_LOCALIZATION_CERTIFICATION.md | ✅ |
-| PAYMENT_FLOW_CERTIFICATION.md | ✅ |
-| REPORTS_CERTIFICATION.md | ✅ |
-| evidence/phase17-full-validation.json | ✅ |
+| Validación | Resultado |
+|------------|-----------|
+| Fase 17 UX | **PASS** 15/15 |
+| Regresión Fase 16 pagos | **PASS** 23/23 |
 
-## Veredicto
-
-Pendiente de ejecución en VPS — ver resultado `TEST PASS / FAIL` en informe de despliegue.
+Evidencia: `evidence/phase17-full-validation.json`
 
 ## Promoción PROD
 
-**BLOQUEADA** hasta aprobación explícita del cliente.
+**BLOQUEADA** — requiere aprobación explícita del cliente.

@@ -164,24 +164,26 @@ if doc_b04:
     credit.action_post()
     report["documents"]["credit_note"] = render_pdf("account.account_invoices", credit.ids)
 
-# Compras
+# Compras — RFQ nueva; OC desde existente si hay secuencia picking desincronizada
 vendor = env["res.partner"].search([("supplier_rank", ">", 0)], limit=1) or env["res.partner"].create(
     {"name": "Report UAT Vendor", "supplier_rank": 1}
 )
-po = env["purchase.order"].create({"partner_id": vendor.id})
+po_draft = env["purchase.order"].create({"partner_id": vendor.id})
 env["purchase.order.line"].create(
-    {"order_id": po.id, "product_id": product.id, "product_qty": 3, "price_unit": 1200.0}
+    {"order_id": po_draft.id, "product_id": product.id, "product_qty": 3, "price_unit": 1200.0}
 )
-report["documents"]["purchase_rfq"] = render_pdf("purchase.report_purchasequotation", po.ids)
-try:
-    po.button_confirm()
-    report["documents"]["purchase_order"] = render_pdf("purchase.report_purchaseorder", po.ids)
-except Exception as exc:
-    existing_po = env["purchase.order"].search([("state", "=", "purchase")], limit=1)
-    if existing_po:
-        report["documents"]["purchase_order"] = render_pdf("purchase.report_purchaseorder", existing_po.ids)
-        warn(f"PO confirm falló ({exc}); usado PO existente {existing_po.name}")
-    else:
+report["documents"]["purchase_rfq"] = render_pdf("purchase.report_purchasequotation", po_draft.ids)
+
+existing_po = env["purchase.order"].search([("state", "=", "purchase")], limit=1)
+if existing_po:
+    report["documents"]["purchase_order"] = render_pdf("purchase.report_purchaseorder", existing_po.ids)
+else:
+    try:
+        with env.cr.savepoint():
+            po_draft.button_confirm()
+        report["documents"]["purchase_order"] = render_pdf("purchase.report_purchaseorder", po_draft.ids)
+    except Exception as exc:
+        warn(f"No se pudo confirmar OC de prueba: {exc}")
         report["documents"]["purchase_order"] = {"ok": False, "error": str(exc)}
 
 # Entrega

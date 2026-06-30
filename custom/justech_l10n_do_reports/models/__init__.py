@@ -4,3 +4,4 @@ from . import dgii_period
 from . import dgii_report_audit
 from . import dgii_report_approval
 from . import dgii_report_review
+from . import dgii_report_pending_tray

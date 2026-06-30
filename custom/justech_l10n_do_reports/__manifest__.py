@@ -1,6 +1,6 @@
 {
     "name": "Justech Dominican Fiscal Reports",
-    "version": "19.0.1.6.0",
+    "version": "19.0.1.7.0",
     "category": "Accounting/Localizations/Reporting",
     "summary": "DGII reports 606, 607, 608 — exportador piloto 606",
     "description": """
@@ -25,6 +25,7 @@ Dominican DGII fiscal reports for Justech.
         "security/justech_l10n_do_reports_rules.xml",
         "views/fiscal_report_views.xml",
         "views/dgii_report_review_views.xml",
+        "views/dgii_report_pending_tray_views.xml",
         "wizard/fiscal_report_wizard_views.xml",
         "views/menu.xml",
     ],

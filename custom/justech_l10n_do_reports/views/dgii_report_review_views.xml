@@ -222,23 +222,6 @@
         </field>
     </record>
 
-    <record id="view_justech_do_dgii_report_reject_wizard" model="ir.ui.view">
-        <field name="name">justech.do.dgii.report.reject.wizard.form</field>
-        <field name="model">justech.do.dgii.report.reject.wizard</field>
-        <field name="arch" type="xml">
-            <form string="Rechazar exclusiones">
-                <group>
-                    <field name="report_id" readonly="1"/>
-                    <field name="comment" placeholder="Indique por qué se rechazan las exclusiones..."/>
-                </group>
-                <footer>
-                    <button name="action_confirm_reject" string="Rechazar" type="object" class="btn-primary"/>
-                    <button string="Cancelar" special="cancel"/>
-                </footer>
-            </form>
-        </field>
-    </record>
-
     <record id="action_justech_do_fiscal_review" model="ir.actions.act_window">
         <field name="name">Revisión fiscal</field>
         <field name="res_model">justech.do.fiscal.report</field>
@@ -247,16 +230,6 @@
             (0, 0, {'view_mode': 'list', 'view_id': ref('justech_l10n_do_reports.view_justech_do_fiscal_report_tree')}),
             (0, 0, {'view_mode': 'form', 'view_id': ref('justech_l10n_do_reports.view_justech_do_fiscal_report_review_form')})]"/>
         <field name="context">{'default_report_type': '606', 'default_state': 'draft'}</field>
-        <field name="domain">[('report_type', 'in', ('606', '607', '608'))]</field>
-    </record>
-
-    <record id="action_justech_do_fiscal_review_pending" model="ir.actions.act_window">
-        <field name="name">Pendientes de aprobación</field>
-        <field name="res_model">justech.do.fiscal.report</field>
-        <field name="view_mode">list,form</field>
-        <field name="view_ids" eval="[(5, 0, 0),
-            (0, 0, {'view_mode': 'list', 'view_id': ref('justech_l10n_do_reports.view_justech_do_fiscal_report_tree')}),
-            (0, 0, {'view_mode': 'form', 'view_id': ref('justech_l10n_do_reports.view_justech_do_fiscal_report_review_form')})]"/>
-        <field name="domain">[('state', '=', 'pending_approval')]</field>
+        <field name="domain">[('report_type', 'in', ('606', '607', '608', '609', '623'))]</field>
     </record>
 </odoo>

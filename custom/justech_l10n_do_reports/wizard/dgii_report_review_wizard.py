@@ -87,7 +87,7 @@ class JustechDoDgiiReportExcludeWizard(models.TransientModel):
                 move=move,
                 line=line,
             )
-        if report.state in ("draft", "validated", "rejected"):
+        if report.state in ("draft", "validated", "rejected", "approved"):
             report.write({"state": "pending_approval"})
             report.action_submit_for_approval()
         elif report.state == "pending_approval":
@@ -104,11 +104,39 @@ class JustechDoDgiiReportRejectWizard(models.TransientModel):
         string="Reporte",
         required=True,
     )
+    line_ids = fields.Many2many(
+        "justech.do.fiscal.report.line",
+        "dgii_reject_wiz_line_rel",
+        "wizard_id",
+        "line_id",
+        string="Documentos",
+    )
+    action_mode = fields.Selection(
+        selection=[
+            ("reject", "Rechazar exclusión"),
+            ("correction", "Solicitar corrección"),
+        ],
+        string="Acción",
+        default="reject",
+        required=True,
+    )
     comment = fields.Text(string="Comentario", required=True)
+
+    @api.model
+    def default_get(self, fields_list):
+        res = super().default_get(fields_list)
+        if self.env.context.get("default_action_mode"):
+            res["action_mode"] = self.env.context["default_action_mode"]
+        return res
 
     def action_confirm_reject(self):
         self.ensure_one()
         if not self.comment.strip():
-            raise UserError(_("Debe indicar el motivo del rechazo."))
-        self.report_id._apply_rejection(self.comment)
+            raise UserError(_("Debe indicar el comentario."))
+        if self.line_ids:
+            self.report_id._apply_line_decision(
+                self.line_ids, comment=self.comment, mode=self.action_mode
+            )
+        else:
+            self.report_id._apply_rejection(self.comment)
         return {"type": "ir.actions.act_window_close"}

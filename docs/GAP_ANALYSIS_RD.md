@@ -136,8 +136,10 @@ La implementación **debe detenerse** para **go-live fiscal PROD** hasta cerrar 
 
 | Documento | Relación |
 |-----------|----------|
+| [DGII_FISCAL_ARCHITECTURE.md](DGII_FISCAL_ARCHITECTURE.md) | **Arquitectura fiscal integral DGII** — diseño multi-fase (sin MVP) |
 | [DOMINICAN_ACCOUNTING_CERTIFICATION.md](DOMINICAN_ACCOUNTING_CERTIFICATION.md) | Bloques contables A,C,D,E,F |
 | [DOMINICAN_FISCAL_CERTIFICATION.md](DOMINICAN_FISCAL_CERTIFICATION.md) | Bloques fiscales B,G,H |
+| [ODOO19_OFFICIAL_MODULE_INVENTORY.md](ODOO19_OFFICIAL_MODULE_INVENTORY.md) | Inventario completo módulos oficiales |
 | [NCF_IMPLEMENTATION.md](NCF_IMPLEMENTATION.md) | Diseño NCF tradicional |
 | [L10N_DO_TEST_PLAN.md](L10N_DO_TEST_PLAN.md) | Plan TC histórico — superseded por DAFC Fase 5 |
 

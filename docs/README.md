@@ -39,6 +39,16 @@ Proyecto Odoo **Enterprise 19** para **Hellenia**. Pipeline permanente: **DEV �
 | [UNREGISTERED_ENTERPRISE_LIMITATIONS.md](UNREGISTERED_ENTERPRISE_LIMITATIONS.md) | **Laboratorio DEV sin registro** |
 | [E0.5-SUBSCRIPTION-VALIDATION.md](E0.5-SUBSCRIPTION-VALIDATION.md) | Suscripción |
 
+## Fiscal República Dominicana (DGII)
+
+| Documento | Contenido |
+|-----------|-----------|
+| [DGII_FISCAL_ARCHITECTURE.md](DGII_FISCAL_ARCHITECTURE.md) | **Arquitectura fiscal integral** — NCF, reportes, compliance, eNCF (diseño) |
+| [GAP_ANALYSIS_RD.md](GAP_ANALYSIS_RD.md) | Brechas P0–P3 con evidencia Fase 5 |
+| [ODOO19_OFFICIAL_MODULE_INVENTORY.md](ODOO19_OFFICIAL_MODULE_INVENTORY.md) | Inventario módulos oficiales Odoo 19 |
+| [NCF_IMPLEMENTATION.md](NCF_IMPLEMENTATION.md) | NCF tradicional — alcance Etapa 1 |
+| [DOMINICAN_FISCAL_CERTIFICATION.md](DOMINICAN_FISCAL_CERTIFICATION.md) | Certificación fiscal DAFC |
+
 ## Referencia
 
 | Documento | Contenido |

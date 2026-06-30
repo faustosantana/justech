@@ -47,7 +47,7 @@ class TestPhase193DgiiReview(TransactionCase):
             {
                 "name": "P19.3 Fiscal User",
                 "login": f"p193_fiscal_{cls.env.cr.dbname}@test.com",
-                "groups_id": [
+                "group_ids": [
                     Command.link(cls.env.ref("base.group_user").id),
                     Command.link(
                         cls.env.ref("justech_l10n_do_base.group_justech_do_fiscal_user").id
@@ -60,7 +60,7 @@ class TestPhase193DgiiReview(TransactionCase):
             {
                 "name": "P19.3 Supervisor",
                 "login": f"p193_super_{cls.env.cr.dbname}@test.com",
-                "groups_id": [
+                "group_ids": [
                     Command.link(cls.env.ref("base.group_user").id),
                     Command.link(
                         cls.env.ref("justech_l10n_do_base.group_justech_do_fiscal_manager").id

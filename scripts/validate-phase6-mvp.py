@@ -179,6 +179,28 @@ try:
 except Exception:
     pass_("duplicate_ncf", "blocked")
 
+# Void + 608 (before range isolation tests cancel B02)
+try:
+    void_move = mk_invoice(env["res.partner"].create({"name": "Void CF"}))
+    void_move.action_post()
+    void_move.action_void_ncf()
+    r608 = env["justech.do.fiscal.report"].create(
+        {
+            "name": "Phase6 608",
+            "report_type": "608",
+            "date_from": today,
+            "date_to": today,
+            "company_id": company.id,
+        }
+    )
+    r608.action_generate()
+    if not r608.line_ids:
+        fail("report_608", "no lines")
+    else:
+        pass_("report_608", str(len(r608.line_ids)))
+except Exception as e:
+    fail("report_608", str(e))
+
 # Depleted range — cancel other B02 ranges, isolate journal
 try:
     Range.search(
@@ -316,28 +338,6 @@ for doc, label in ((doc_b11, "b11"), (doc_b13, "b13")):
             pass_(f"purchase_{label}", bill.justech_do_ncf)
     except Exception as e:
         fail(f"purchase_{label}", str(e))
-
-# Void + 608
-try:
-    void_move = mk_invoice(env["res.partner"].create({"name": "Void CF"}))
-    void_move.action_post()
-    void_move.action_void_ncf()
-    r608 = env["justech.do.fiscal.report"].create(
-        {
-            "name": "Phase6 608",
-            "report_type": "608",
-            "date_from": today,
-            "date_to": today,
-            "company_id": company.id,
-        }
-    )
-    r608.action_generate()
-    if not r608.line_ids:
-        fail("report_608", "no lines")
-    else:
-        pass_("report_608", str(len(r608.line_ids)))
-except Exception as e:
-    fail("report_608", str(e))
 
 # 607
 try:

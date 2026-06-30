@@ -183,7 +183,7 @@ class JustechDoDgii606Exporter(models.AbstractModel):
                         "taxes": ", ".join(unknown.mapped("tax_line_id.name")),
                     }
                 )
-            _, _, _, missing_codes = self._withholding_breakdown(move)
+            _itbis_wh, _isr_wh, _isr_type, missing_codes = self._withholding_breakdown(move)
             for wh_name in missing_codes:
                 errors.append(
                     _("%(doc)s: retención «%(wh)s» sin código DGII configurado.")

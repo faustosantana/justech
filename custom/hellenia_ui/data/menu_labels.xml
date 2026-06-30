@@ -2,4 +2,5 @@
 <odoo>
     <function model="hellenia.ui.menu.customizer" name="apply_menu_labels"/>
     <function model="hellenia.ui.menu.customizer" name="hide_unused_menus"/>
+    <function model="hellenia.ui.menu.customizer" name="repair_accounting_menu_tree"/>
 </odoo>

@@ -54,3 +54,55 @@ class HelleniaUiMenuCustomizer(models.AbstractModel):
             menu = self.env.ref(xmlid, raise_if_not_found=False)
             if menu and menu.active:
                 menu.active = False
+        # POS: xmlid alternativo Odoo 19
+        for pos_xid in ("point_of_sale.menu_point_root", "point_of_sale.menu_point_ofsale"):
+            pos = self.env.ref(pos_xid, raise_if_not_found=False)
+            if pos and pos.active:
+                pos.active = False
+
+    @api.model
+    def repair_accounting_menu_tree(self):
+        """Reparenta submenús contables bajo Contabilidad (account.menu_finance).
+
+        Corrige estructura rota donde hijos quedaron bajo un contenedor
+        'Accounting' huérfano/inactivo (típico tras renombrar Facturación).
+        """
+        finance = self.env.ref("account.menu_finance", raise_if_not_found=False)
+        if not finance:
+            return
+        finance.active = True
+
+        child_xmlids = (
+            "account.menu_board_journal_1",
+            "account.menu_finance_receivables",
+            "account.menu_finance_payables",
+            "account.menu_action_move_journal_line_form",
+            "account.menu_action_account_moves_all",
+            "account.account_account_menu",
+            "account.menu_finance_entries",
+            "account.menu_finance_reports",
+            "account.menu_account_config",
+            "account_accountant.menu_accounting",
+        )
+        for xid in child_xmlids:
+            menu = self.env.ref(xid, raise_if_not_found=False)
+            if menu and menu.parent_id != finance:
+                menu.parent_id = finance.id
+                menu.active = True
+
+        # Contenedores huérfanos con hijos contables
+        orphans = self.env["ir.ui.menu"].search(
+            [
+                ("parent_id", "=", False),
+                ("id", "!=", finance.id),
+                ("name", "in", ["Accounting", "Contabilidad", "Invoicing", "Facturación"]),
+            ]
+        )
+        for orphan in orphans:
+            children = self.env["ir.ui.menu"].search([("parent_id", "=", orphan.id)])
+            if children:
+                children.write({"parent_id": finance.id})
+            orphan.active = False
+
+        # Un solo raíz contable visible: renombrar a Contabilidad
+        finance.name = "Contabilidad"

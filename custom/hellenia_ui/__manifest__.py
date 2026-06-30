@@ -1,6 +1,6 @@
 {
     "name": "Hellenia UI",
-    "version": "19.0.1.0.2",
+    "version": "19.0.1.0.3",
     "category": "Hidden",
     "summary": "Menú principal y etiquetas UI para Hellenia (upgrade-safe)",
     "description": """

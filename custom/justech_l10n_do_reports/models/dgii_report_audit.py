@@ -22,6 +22,7 @@ class JustechDoDgiiReportAudit(models.Model):
             ("submit_approval", "Envío a aprobación"),
             ("approve", "Aprobación"),
             ("reject", "Rechazo"),
+            ("correction", "Corrección solicitada"),
             ("generate", "Generación Excel"),
             ("reopen", "Reapertura"),
         ],

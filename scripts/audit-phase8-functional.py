@@ -69,7 +69,10 @@ params = {
     )
 }
 b1["web_base_url"] = {
-    "ok": params.get("web.base.url") == "https://dev.hellenia.cloud",
+    "ok": params.get("web.base.url") in (
+        "https://dev.hellenia.cloud",
+        "https://test.hellenia.cloud",
+    ),
     "value": params.get("web.base.url"),
 }
 banks = env["res.partner.bank"].search([("partner_id", "=", partner.id)])

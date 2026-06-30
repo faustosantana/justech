@@ -7,8 +7,8 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "${SCRIPT_DIR}/lib/common.sh"
 
 ENV_NAME="${1:-dev}"
-if [[ "$ENV_NAME" != "dev" ]]; then
-  hellenia_log "ERROR: Fase 8 solo opera en DEV"
+if [[ "$ENV_NAME" != "dev" && "$ENV_NAME" != "test" ]]; then
+  hellenia_log "ERROR: auditoría Fase 8 solo dev|test"
   exit 1
 fi
 

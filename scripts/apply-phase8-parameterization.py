@@ -219,10 +219,15 @@ ensure_pilot_partner("UAT-PILOT-VEND-001", "Proveedor Piloto UAT", "supplier_ran
 ensure_pilot_partner("UAT-PILOT-CUST-001", "Cliente Piloto UAT", "customer_rank", 1)
 ensure_pilot_product("UAT-PILOT-PROD-001", "Producto Piloto UAT — Espejo muestra", espejos)
 
-# Parámetro web (solo DEV)
+# Parámetro web según ambiente
+import os
+
 ICP = env["ir.config_parameter"].sudo()
-ICP.set_param("web.base.url", "https://dev.hellenia.cloud")
-log("param_set", "web.base.url")
+web_url = os.environ.get("WEB_BASE_URL") or (
+    "https://test.hellenia.cloud" if env.cr.dbname.endswith("_test") else "https://dev.hellenia.cloud"
+)
+ICP.set_param("web.base.url", web_url)
+log("param_set", f"web.base.url={web_url}")
 
 env.cr.commit()
 

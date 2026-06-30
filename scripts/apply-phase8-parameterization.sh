@@ -7,8 +7,8 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "${SCRIPT_DIR}/lib/common.sh"
 
 ENV_NAME="${1:-dev}"
-if [[ "$ENV_NAME" != "dev" ]]; then
-  hellenia_log "ERROR: Fase 8 solo opera en DEV"
+if [[ "$ENV_NAME" != "dev" && "$ENV_NAME" != "test" ]]; then
+  hellenia_log "ERROR: Fase 8 solo opera en dev|test"
   exit 1
 fi
 
@@ -20,7 +20,10 @@ OUT="${PROJECT_ROOT}/evidence/phase8-apply-${ENV_NAME}.json"
 hellenia_load_env "$ENV_FILE"
 cd "$COMPOSE_DIR"
 
-docker compose --env-file "$ENV_FILE" run --rm -T odoo odoo shell \
+WEB_BASE_URL="https://dev.hellenia.cloud"
+[[ "$ENV_NAME" == "test" ]] && WEB_BASE_URL="https://test.hellenia.cloud"
+
+docker compose --env-file "$ENV_FILE" run --rm -T -e WEB_BASE_URL="$WEB_BASE_URL" odoo odoo shell \
   -d "${ODOO_DB_NAME}" --db_host=db --db_user="${DB_USER}" --db_password="$DB_PASSWORD" --no-http \
   < "${SCRIPT_DIR}/apply-phase8-parameterization.py" 2>/dev/null \
   | tee "${PROJECT_ROOT}/evidence/phase8-apply-${ENV_NAME}.log" \

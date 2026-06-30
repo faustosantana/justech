@@ -1,0 +1,295 @@
+{
+  "schema_version": "1.0",
+  "fase": "17.5",
+  "fecha_mapeo_utc": "2026-06-30T21:16:49Z",
+  "codigo": "ITBIS",
+  "nombre_oficial": "Formato en Excel para Envío de Datos de ITBIS (Adelantos)",
+  "normativa": "NG-07-2018",
+  "archivo_fuente": "FormatoExcelEnvioDatosITBIS.zip",
+  "archivo_excel_interno": "Formato _AdelantosItbis_v1.0.xls",
+  "sha256_plantilla": "942bd8cffb7e0850d9b388d9324ed1f0b2c43adbb17976e4125c9a527cae2f64",
+  "url_oficial": "https://dgii.gov.do/herramientas/formularios/formatoEnvioDatos/Documents/Formato%20remisi%C3%B3n%20de%20archivos/FormatoExcelEnvioDatosITBIS.zip",
+  "hoja_principal": "LOCAL",
+  "fila_encabezado": 6,
+  "fila_inicio_datos": 7,
+  "formato_fecha": "YYYYMMDD",
+  "formato_periodo": "YYYYMM",
+  "formato_rnc": "9 dígitos numéricos (persona jurídica)",
+  "formato_cedula": "11 dígitos numéricos (persona física)",
+  "formato_ncf": "Serie alfanumérica 11-13 caracteres (ej. B0100000001)",
+  "columnas": [
+    {
+      "orden": 1,
+      "columna_excel": "A",
+      "nombre_dgii": "Cédula/ RNC",
+      "tipo_dato": "identifier",
+      "obligatorio": true,
+      "longitud": 11,
+      "campo_odoo_sugerido": "res.partner.vat"
+    },
+    {
+      "orden": 2,
+      "columna_excel": "B",
+      "nombre_dgii": "Nombre/Razón Social",
+      "tipo_dato": "string",
+      "obligatorio": true,
+      "longitud": 80,
+      "campo_odoo_sugerido": "res.partner.name"
+    },
+    {
+      "orden": 3,
+      "columna_excel": "C",
+      "nombre_dgii": "Bien/Servicio",
+      "tipo_dato": "string",
+      "obligatorio": true,
+      "longitud": 100,
+      "notas_mapeo": "Descripción de producto/línea"
+    },
+    {
+      "orden": 4,
+      "columna_excel": "D",
+      "nombre_dgii": "Número Factura",
+      "tipo_dato": "string",
+      "obligatorio": true,
+      "longitud": 20,
+      "campo_odoo_sugerido": "account.move.name",
+      "notas_mapeo": "NCF o número de factura proveedor"
+    },
+    {
+      "orden": 5,
+      "columna_excel": "E",
+      "nombre_dgii": "Fecha Factura (aaaammdd)",
+      "tipo_dato": "date",
+      "obligatorio": true,
+      "longitud": 8,
+      "formato": "YYYYMMDD",
+      "campo_odoo_sugerido": "account.move.invoice_date"
+    },
+    {
+      "orden": 6,
+      "columna_excel": "F",
+      "nombre_dgii": "Total Factura (Sin ITBIS)",
+      "tipo_dato": "decimal",
+      "obligatorio": true,
+      "longitud": 18,
+      "formato": "0.00",
+      "campo_odoo_sugerido": "account.move.amount_untaxed"
+    },
+    {
+      "orden": 7,
+      "columna_excel": "G",
+      "nombre_dgii": "ITBIS Pagado",
+      "tipo_dato": "decimal",
+      "obligatorio": true,
+      "longitud": 18,
+      "formato": "0.00",
+      "campo_odoo_sugerido": "account.move.amount_tax"
+    }
+  ],
+  "macros": false,
+  "formulas_en_plantilla": false,
+  "validaciones": [
+    "Dos hojas: LOCAL (compras locales) e IMPORTACION (DGA/aduanas).",
+    "Período en encabezado formato AñoMes.",
+    "Versión LOCAL: 1.0; IMPORTACION: 1.0."
+  ],
+  "catalogos": {},
+  "totales": [],
+  "reglas_negocio": [
+    "LOCAL: facturas de compra con ITBIS pagado en el período (adelantos).",
+    "IMPORTACION: declaraciones aduaneras — típicamente fuera de Odoo estándar.",
+    "No es el mismo archivo que declaración ITBIS resumen (formulario 606/IT1)."
+  ],
+  "notas_dgii": [
+    "Instructivo y manual incluidos en ZIPs separados del repositorio.",
+    "Encabezado empresa/RNC en filas 1-2 de cada hoja."
+  ],
+  "campos_odoo_referencia": {
+    "partner_vat": "res.partner.vat",
+    "partner_name": "res.partner.name",
+    "move_name": "account.move.name",
+    "move_ref": "account.move.ref",
+    "invoice_date": "account.move.invoice_date",
+    "invoice_date_due": "account.move.invoice_date_due",
+    "amount_untaxed": "account.move.amount_untaxed",
+    "amount_tax": "account.move.amount_tax",
+    "amount_total": "account.move.amount_total",
+    "amount_residual": "account.move.amount_residual",
+    "move_type": "account.move.move_type",
+    "state": "account.move.state",
+    "payment_state": "account.move.payment_state",
+    "company_vat": "res.company.vat",
+    "payment_date": "account.payment.date",
+    "payment_amount": "account.payment.amount",
+    "journal_id": "account.move.journal_id",
+    "currency_id": "account.move.currency_id",
+    "line_tax_ids": "account.move.line.tax_ids",
+    "line_balance": "account.move.line.balance"
+  },
+  "modulos_justech_referencia": {
+    "withholding_catalog": "hellenia.withholding.catalog",
+    "withholding_lines": "account.move / payment withholding lines (hellenia)"
+  },
+  "campos_faltantes": [
+    "justech_do_ncf (para NCF en compras locales)",
+    "justech_do_customs_office",
+    "justech_do_import_declaration_date",
+    "justech_do_import_receipt_number",
+    "justech_do_import_form_number",
+    "justech_do_import_liquidation_number",
+    "justech_do_import_cif_amount",
+    "justech_do_import_fob_amount",
+    "justech_do_import_itbis_amount"
+  ],
+  "estado_exportador": "requiere_campos_faltantes",
+  "hojas_auxiliares": [
+    "IMPORTACION"
+  ],
+  "hojas": {
+    "LOCAL": {
+      "fila_encabezado": 6,
+      "fila_inicio_datos": 7,
+      "columnas": [
+        {
+          "orden": 1,
+          "columna_excel": "A",
+          "nombre_dgii": "Cédula/ RNC",
+          "tipo_dato": "identifier",
+          "obligatorio": true,
+          "longitud": 11,
+          "campo_odoo_sugerido": "res.partner.vat"
+        },
+        {
+          "orden": 2,
+          "columna_excel": "B",
+          "nombre_dgii": "Nombre/Razón Social",
+          "tipo_dato": "string",
+          "obligatorio": true,
+          "longitud": 80,
+          "campo_odoo_sugerido": "res.partner.name"
+        },
+        {
+          "orden": 3,
+          "columna_excel": "C",
+          "nombre_dgii": "Bien/Servicio",
+          "tipo_dato": "string",
+          "obligatorio": true,
+          "longitud": 100,
+          "notas_mapeo": "Descripción de producto/línea"
+        },
+        {
+          "orden": 4,
+          "columna_excel": "D",
+          "nombre_dgii": "Número Factura",
+          "tipo_dato": "string",
+          "obligatorio": true,
+          "longitud": 20,
+          "campo_odoo_sugerido": "account.move.name",
+          "notas_mapeo": "NCF o número de factura proveedor"
+        },
+        {
+          "orden": 5,
+          "columna_excel": "E",
+          "nombre_dgii": "Fecha Factura (aaaammdd)",
+          "tipo_dato": "date",
+          "obligatorio": true,
+          "longitud": 8,
+          "formato": "YYYYMMDD",
+          "campo_odoo_sugerido": "account.move.invoice_date"
+        },
+        {
+          "orden": 6,
+          "columna_excel": "F",
+          "nombre_dgii": "Total Factura (Sin ITBIS)",
+          "tipo_dato": "decimal",
+          "obligatorio": true,
+          "longitud": 18,
+          "formato": "0.00",
+          "campo_odoo_sugerido": "account.move.amount_untaxed"
+        },
+        {
+          "orden": 7,
+          "columna_excel": "G",
+          "nombre_dgii": "ITBIS Pagado",
+          "tipo_dato": "decimal",
+          "obligatorio": true,
+          "longitud": 18,
+          "formato": "0.00",
+          "campo_odoo_sugerido": "account.move.amount_tax"
+        }
+      ]
+    },
+    "IMPORTACION": {
+      "fila_encabezado": 6,
+      "fila_inicio_datos": 7,
+      "columnas": [
+        {
+          "orden": 1,
+          "columna_excel": "A",
+          "nombre_dgii": "Colecturia",
+          "tipo_dato": "string",
+          "obligatorio": true,
+          "campo_faltante": "justech_do_customs_office"
+        },
+        {
+          "orden": 2,
+          "columna_excel": "B",
+          "nombre_dgii": "Fecha Declaración (aaaammdd)",
+          "tipo_dato": "date",
+          "obligatorio": true,
+          "longitud": 8,
+          "formato": "YYYYMMDD",
+          "campo_faltante": "justech_do_import_declaration_date"
+        },
+        {
+          "orden": 3,
+          "columna_excel": "C",
+          "nombre_dgii": "No. Recibo",
+          "tipo_dato": "string",
+          "obligatorio": true,
+          "campo_faltante": "justech_do_import_receipt_number"
+        },
+        {
+          "orden": 4,
+          "columna_excel": "D",
+          "nombre_dgii": "Planilla",
+          "tipo_dato": "string",
+          "obligatorio": true,
+          "campo_faltante": "justech_do_import_form_number"
+        },
+        {
+          "orden": 5,
+          "columna_excel": "E",
+          "nombre_dgii": "Liquidación",
+          "tipo_dato": "string",
+          "obligatorio": true,
+          "campo_faltante": "justech_do_import_liquidation_number"
+        },
+        {
+          "orden": 6,
+          "columna_excel": "F",
+          "nombre_dgii": "Monto CIF RD$",
+          "tipo_dato": "decimal",
+          "obligatorio": true,
+          "campo_faltante": "justech_do_import_cif_amount"
+        },
+        {
+          "orden": 7,
+          "columna_excel": "G",
+          "nombre_dgii": "Monto FOB RD$",
+          "tipo_dato": "decimal",
+          "obligatorio": true,
+          "campo_faltante": "justech_do_import_fob_amount"
+        },
+        {
+          "orden": 8,
+          "columna_excel": "H",
+          "nombre_dgii": "Monto ITBIS RD$",
+          "tipo_dato": "decimal",
+          "obligatorio": true,
+          "campo_faltante": "justech_do_import_itbis_amount"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,163 @@
+{
+  "schema_version": "1.0",
+  "fase": "17.5",
+  "fecha_mapeo_utc": "2026-06-30T21:16:49Z",
+  "codigo": "623",
+  "nombre_oficial": "Formato de Envío de Retenciones del Estado",
+  "normativa": "NG-07-2018",
+  "archivo_fuente": "FormatoenvioRetencionesEstado623.zip",
+  "archivo_excel_interno": "Formato 623.xls",
+  "sha256_plantilla": "d06006b4da4e96d530afb8d7738e6b2e4c75ebd13cb00c9deee0ae5ef22694c0",
+  "url_oficial": "https://dgii.gov.do/herramientas/formularios/formatoEnvioDatos/Documents/Formato%20remisi%C3%B3n%20de%20archivos/FormatoenvioRetencionesEstado623.zip",
+  "hoja_principal": "Formato 623",
+  "fila_encabezado": 12,
+  "fila_inicio_datos": 13,
+  "formato_fecha": "YYYYMMDD",
+  "formato_periodo": "YYYYMM",
+  "formato_rnc": "9 dígitos numéricos (persona jurídica)",
+  "formato_cedula": "11 dígitos numéricos (persona física)",
+  "formato_ncf": "Serie alfanumérica 11-13 caracteres (ej. B0100000001)",
+  "columnas": [
+    {
+      "orden": 1,
+      "columna_excel": "A",
+      "nombre_dgii": "Líneas",
+      "tipo_dato": "integer",
+      "obligatorio": true
+    },
+    {
+      "orden": 2,
+      "columna_excel": "B",
+      "nombre_dgii": "RNC Entidad del Estado",
+      "tipo_dato": "identifier",
+      "obligatorio": true,
+      "longitud": 9,
+      "campo_faltante": "justech_do_state_entity_rnc"
+    },
+    {
+      "orden": 3,
+      "columna_excel": "C",
+      "nombre_dgii": "Período",
+      "tipo_dato": "period",
+      "obligatorio": true,
+      "longitud": 6,
+      "formato": "YYYYMM",
+      "notas_mapeo": "Período del wizard de exportación"
+    },
+    {
+      "orden": 4,
+      "columna_excel": "D",
+      "nombre_dgii": "Fecha de Retención",
+      "tipo_dato": "date",
+      "obligatorio": true,
+      "longitud": 8,
+      "formato": "YYYYMMDD",
+      "campo_faltante": "justech_do_state_withholding_date"
+    },
+    {
+      "orden": 5,
+      "columna_excel": "E",
+      "nombre_dgii": "Valor de Retención",
+      "tipo_dato": "decimal",
+      "obligatorio": true,
+      "longitud": 18,
+      "formato": "0.00",
+      "campo_odoo_sugerido": "account.move / payment withholding lines (hellenia)"
+    },
+    {
+      "orden": 6,
+      "columna_excel": "F",
+      "nombre_dgii": "Número de Referencia",
+      "tipo_dato": "string",
+      "obligatorio": true,
+      "longitud": 30,
+      "campo_faltante": "justech_do_state_reference_number"
+    },
+    {
+      "orden": 7,
+      "columna_excel": "G",
+      "nombre_dgii": "Tipo de Referencia",
+      "tipo_dato": "catalog",
+      "obligatorio": true,
+      "longitud": 2,
+      "catalogo": "tipo_referencia",
+      "campo_faltante": "justech_do_state_reference_type"
+    },
+    {
+      "orden": 8,
+      "columna_excel": "H",
+      "nombre_dgii": "Banco",
+      "tipo_dato": "string",
+      "obligatorio": false,
+      "longitud": 50,
+      "campo_faltante": "justech_do_state_withholding_bank"
+    }
+  ],
+  "macros": false,
+  "formulas_en_plantilla": false,
+  "validaciones": [
+    "Encabezado: RNC declarante, Período, Fecha de Cierre.",
+    "Totales: Cantidad Registros, Monto Total en Retenciones, Total Errores.",
+    "Versión plantilla: 1.5.1."
+  ],
+  "catalogos": {
+    "tipo_referencia": "Catálogo DGII en plantilla (factura, orden de pago, etc.) — extraer de instructivo"
+  },
+  "totales": [
+    {
+      "campo": "Cantidad Registros",
+      "celda": "C7"
+    },
+    {
+      "campo": "Monto Total en Retenciones",
+      "celda": "C8"
+    },
+    {
+      "campo": "Total Errores",
+      "celda": "G7"
+    }
+  ],
+  "reglas_negocio": [
+    "Retenciones aplicadas por entidades gubernamentales al contribuyente.",
+    "Relacionar con retención GOB del catálogo hellenia.withholding.catalog (código RET-GOB-5 en TEST).",
+    "Requiere módulo de pagos/recibos de retención del Estado."
+  ],
+  "notas_dgii": [
+    "Formato específico para retenciones del Estado Dominicano.",
+    "No confundir con Norma 2-05 (retenciones que el contribuyente practica a terceros)."
+  ],
+  "campos_odoo_referencia": {
+    "partner_vat": "res.partner.vat",
+    "partner_name": "res.partner.name",
+    "move_name": "account.move.name",
+    "move_ref": "account.move.ref",
+    "invoice_date": "account.move.invoice_date",
+    "invoice_date_due": "account.move.invoice_date_due",
+    "amount_untaxed": "account.move.amount_untaxed",
+    "amount_tax": "account.move.amount_tax",
+    "amount_total": "account.move.amount_total",
+    "amount_residual": "account.move.amount_residual",
+    "move_type": "account.move.move_type",
+    "state": "account.move.state",
+    "payment_state": "account.move.payment_state",
+    "company_vat": "res.company.vat",
+    "payment_date": "account.payment.date",
+    "payment_amount": "account.payment.amount",
+    "journal_id": "account.move.journal_id",
+    "currency_id": "account.move.currency_id",
+    "line_tax_ids": "account.move.line.tax_ids",
+    "line_balance": "account.move.line.balance"
+  },
+  "modulos_justech_referencia": {
+    "withholding_catalog": "hellenia.withholding.catalog",
+    "withholding_lines": "account.move / payment withholding lines (hellenia)"
+  },
+  "campos_faltantes": [
+    "justech_do_state_entity_rnc",
+    "justech_do_state_withholding_date",
+    "justech_do_state_reference_number",
+    "justech_do_state_reference_type",
+    "justech_do_state_withholding_bank"
+  ],
+  "estado_exportador": "requiere_investigacion_contable"
+}

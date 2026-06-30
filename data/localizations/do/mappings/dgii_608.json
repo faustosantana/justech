@@ -1,0 +1,170 @@
+{
+  "schema_version": "1.0",
+  "fase": "17.5",
+  "fecha_mapeo_utc": "2026-06-30T21:16:49Z",
+  "codigo": "608",
+  "nombre_oficial": "Formato de Envío de Comprobantes Fiscales Anulados",
+  "normativa": "NG-07-2018-05-2019",
+  "archivo_fuente": "Formato-de-Envio-608-(NG-07-2018-y-05-2019).zip",
+  "archivo_excel_interno": "Herramienta de envio Formato 608.xls",
+  "sha256_plantilla": "b21f1b305338bdbdea2624978c07d78ec45a87d0de2b95209368974aabb8a1ca",
+  "url_oficial": "https://dgii.gov.do/herramientas/formularios/formatoEnvioDatos/Documents/Otros%20formatos%20de%20env%C3%ADo%20de%20datos/Formato-de-Envio-608-%28NG-07-2018-y-05-2019%29.zip",
+  "hoja_principal": "Formato 608",
+  "fila_encabezado": 11,
+  "fila_inicio_datos": 12,
+  "formato_fecha": "YYYYMMDD",
+  "formato_periodo": "YYYYMM",
+  "formato_rnc": "9 dígitos numéricos (persona jurídica)",
+  "formato_cedula": "11 dígitos numéricos (persona física)",
+  "formato_ncf": "Serie alfanumérica 11-13 caracteres (ej. B0100000001)",
+  "columnas": [
+    {
+      "orden": 1,
+      "columna_excel": "A",
+      "nombre_dgii": "Líneas",
+      "tipo_dato": "integer",
+      "obligatorio": true
+    },
+    {
+      "orden": 2,
+      "columna_excel": "B",
+      "nombre_dgii": "Número de Comprobante Fiscal",
+      "tipo_dato": "ncf",
+      "obligatorio": true,
+      "longitud": 13,
+      "campo_faltante": "justech_do_ncf"
+    },
+    {
+      "orden": 3,
+      "columna_excel": "D",
+      "nombre_dgii": "Fecha de Comprobante",
+      "tipo_dato": "date",
+      "obligatorio": true,
+      "longitud": 8,
+      "formato": "YYYYMMDD",
+      "campo_odoo_sugerido": "account.move.invoice_date"
+    },
+    {
+      "orden": 4,
+      "columna_excel": "E",
+      "nombre_dgii": "Tipo de Anulación",
+      "tipo_dato": "catalog",
+      "obligatorio": true,
+      "longitud": 2,
+      "catalogo": "tipo_anulacion",
+      "campo_faltante": "justech_do_ncf_cancel_type"
+    },
+    {
+      "orden": 5,
+      "columna_excel": "G",
+      "nombre_dgii": "Estatus",
+      "tipo_dato": "catalog",
+      "obligatorio": true,
+      "longitud": 1,
+      "catalogo": "estatus_linea",
+      "campo_faltante": "justech_do_dgii_line_status"
+    }
+  ],
+  "macros": false,
+  "formulas_en_plantilla": false,
+  "validaciones": [
+    "Columna C reservada/vacía en plantilla oficial.",
+    "Solo NCF anulados en el período, no ventas activas.",
+    "Versión plantilla: 2018.2.1."
+  ],
+  "catalogos": {
+    "tipo_anulacion": [
+      {
+        "codigo": "01",
+        "descripcion": "Anulación por secuencia no utilizada"
+      },
+      {
+        "codigo": "02",
+        "descripcion": "Errores de Impresión (Factura Pre-Impresa)"
+      },
+      {
+        "codigo": "03",
+        "descripcion": "Impresión Defectuosa"
+      },
+      {
+        "codigo": "04",
+        "descripcion": "Corrección de la Información"
+      },
+      {
+        "codigo": "05",
+        "descripcion": "Cambio de Productos"
+      },
+      {
+        "codigo": "06",
+        "descripcion": "Devolución de Productos"
+      },
+      {
+        "codigo": "07",
+        "descripcion": "Omisión de Productos"
+      },
+      {
+        "codigo": "08",
+        "descripcion": "Errores en Secuencias de NCF"
+      },
+      {
+        "codigo": "09",
+        "descripcion": "Por Cese de Operaciones"
+      },
+      {
+        "codigo": "10",
+        "descripcion": "Pérdida O Hurto De Talonario(s)"
+      }
+    ],
+    "estatus_linea": [
+      {
+        "codigo": "1",
+        "descripcion": "Válido"
+      },
+      {
+        "codigo": "2",
+        "descripcion": "Anulado"
+      }
+    ]
+  },
+  "totales": [],
+  "reglas_negocio": [
+    "Fuente: facturas canceladas/anuladas en Odoo (state=cancel) o módulo NCF con motivo de anulación.",
+    "Debe existir trazabilidad del NCF original emitido."
+  ],
+  "notas_dgii": [
+    "Reporte independiente del 607; solo comprobantes anulados.",
+    "Encabezado: RNC (A5), Período (A6)."
+  ],
+  "campos_odoo_referencia": {
+    "partner_vat": "res.partner.vat",
+    "partner_name": "res.partner.name",
+    "move_name": "account.move.name",
+    "move_ref": "account.move.ref",
+    "invoice_date": "account.move.invoice_date",
+    "invoice_date_due": "account.move.invoice_date_due",
+    "amount_untaxed": "account.move.amount_untaxed",
+    "amount_tax": "account.move.amount_tax",
+    "amount_total": "account.move.amount_total",
+    "amount_residual": "account.move.amount_residual",
+    "move_type": "account.move.move_type",
+    "state": "account.move.state",
+    "payment_state": "account.move.payment_state",
+    "company_vat": "res.company.vat",
+    "payment_date": "account.payment.date",
+    "payment_amount": "account.payment.amount",
+    "journal_id": "account.move.journal_id",
+    "currency_id": "account.move.currency_id",
+    "line_tax_ids": "account.move.line.tax_ids",
+    "line_balance": "account.move.line.balance"
+  },
+  "modulos_justech_referencia": {
+    "withholding_catalog": "hellenia.withholding.catalog",
+    "withholding_lines": "account.move / payment withholding lines (hellenia)"
+  },
+  "campos_faltantes": [
+    "justech_do_ncf",
+    "justech_do_ncf_cancel_type",
+    "justech_do_dgii_line_status"
+  ],
+  "estado_exportador": "requiere_campos_faltantes"
+}

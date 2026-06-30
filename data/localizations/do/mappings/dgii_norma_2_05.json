@@ -1,0 +1,163 @@
+{
+  "schema_version": "1.0",
+  "fase": "17.5",
+  "fecha_mapeo_utc": "2026-06-30T21:16:49Z",
+  "codigo": "NORM-2-05",
+  "nombre_oficial": "Formato en Excel NORMA 2-05 (Retenciones a Terceros)",
+  "normativa": "NG-07-2018",
+  "archivo_fuente": "FormatoExcelNORMA2-05RetencionesTerceros.zip",
+  "archivo_excel_interno": "Formato _Norma205_v1.0.xls",
+  "sha256_plantilla": "cebb58de1fce947995550b1571bc895efa23c56d284465ffddb00e31376880ff",
+  "url_oficial": "https://dgii.gov.do/herramientas/formularios/formatoEnvioDatos/Documents/Formato%20remisi%C3%B3n%20de%20archivos/FormatoExcelNORMA2-05RetencionesTerceros.zip",
+  "hoja_principal": "Norma 2-05",
+  "fila_encabezado": 6,
+  "fila_inicio_datos": 7,
+  "formato_fecha": "YYYYMMDD",
+  "formato_periodo": "YYYYMM",
+  "formato_rnc": "9 dígitos numéricos (persona jurídica)",
+  "formato_cedula": "11 dígitos numéricos (persona física)",
+  "formato_ncf": "Serie alfanumérica 11-13 caracteres (ej. B0100000001)",
+  "columnas": [
+    {
+      "orden": 1,
+      "columna_excel": "A",
+      "nombre_dgii": "Cédula/ RNC",
+      "tipo_dato": "identifier",
+      "obligatorio": true,
+      "longitud": 11,
+      "campo_odoo_sugerido": "res.partner.vat"
+    },
+    {
+      "orden": 2,
+      "columna_excel": "B",
+      "nombre_dgii": "Tipo Identificación",
+      "tipo_dato": "catalog",
+      "obligatorio": true,
+      "longitud": 1,
+      "catalogo": "tipo_identificacion",
+      "campo_faltante": "justech_do_partner_id_type"
+    },
+    {
+      "orden": 3,
+      "columna_excel": "C",
+      "nombre_dgii": "Número Factura",
+      "tipo_dato": "string",
+      "obligatorio": true,
+      "longitud": 20,
+      "campo_odoo_sugerido": "account.move.name"
+    },
+    {
+      "orden": 4,
+      "columna_excel": "D",
+      "nombre_dgii": "Fecha Factura (aaaammdd)",
+      "tipo_dato": "date",
+      "obligatorio": true,
+      "longitud": 8,
+      "formato": "YYYYMMDD",
+      "campo_odoo_sugerido": "account.move.invoice_date"
+    },
+    {
+      "orden": 5,
+      "columna_excel": "E",
+      "nombre_dgii": "Total Factura",
+      "tipo_dato": "decimal",
+      "obligatorio": true,
+      "longitud": 18,
+      "formato": "0.00",
+      "campo_odoo_sugerido": "account.move.amount_total"
+    },
+    {
+      "orden": 6,
+      "columna_excel": "F",
+      "nombre_dgii": "Total ITBIS",
+      "tipo_dato": "decimal",
+      "obligatorio": true,
+      "longitud": 18,
+      "formato": "0.00",
+      "campo_odoo_sugerido": "account.move.amount_tax"
+    },
+    {
+      "orden": 7,
+      "columna_excel": "G",
+      "nombre_dgii": "ITBIS Retenido",
+      "tipo_dato": "decimal",
+      "obligatorio": true,
+      "longitud": 18,
+      "formato": "0.00",
+      "campo_odoo_sugerido": "account.move / payment withholding lines (hellenia)"
+    },
+    {
+      "orden": 8,
+      "columna_excel": "H",
+      "nombre_dgii": "Identificacion Retención",
+      "tipo_dato": "catalog",
+      "obligatorio": true,
+      "longitud": 2,
+      "catalogo": "identificacion_retencion",
+      "campo_odoo_sugerido": "hellenia.withholding.catalog",
+      "notas_mapeo": "Mapear código catálogo retención ITBIS"
+    }
+  ],
+  "macros": false,
+  "formulas_en_plantilla": false,
+  "validaciones": [
+    "Encabezado: EMPRESA y RNC en filas 1-2.",
+    "Versión plantilla: 1.0.",
+    "ITBIS Retenido > 0 solo en operaciones con retención practicada."
+  ],
+  "catalogos": {
+    "tipo_identificacion": [
+      {
+        "codigo": "1",
+        "descripcion": "RNC"
+      },
+      {
+        "codigo": "2",
+        "descripcion": "Cédula"
+      }
+    ],
+    "identificacion_retencion": "Códigos DGII de tipo retención ITBIS — mapear desde hellenia.withholding.catalog"
+  },
+  "totales": [],
+  "reglas_negocio": [
+    "Reporta retenciones de ITBIS que el contribuyente practica a proveedores.",
+    "Integrar con motor de retenciones Fase 18 (hellenia.withholding.catalog).",
+    "Códigos RET-ITBIS-30, RET-ITBIS-100, RET-INF-ITBIS-75 en TEST deben mapearse a Identificacion Retención DGII."
+  ],
+  "notas_dgii": [
+    "Norma 2-05 DGII — retenciones a terceros por ITBIS.",
+    "Complementa formato 606 columnas de ITBIS retenido."
+  ],
+  "campos_odoo_referencia": {
+    "partner_vat": "res.partner.vat",
+    "partner_name": "res.partner.name",
+    "move_name": "account.move.name",
+    "move_ref": "account.move.ref",
+    "invoice_date": "account.move.invoice_date",
+    "invoice_date_due": "account.move.invoice_date_due",
+    "amount_untaxed": "account.move.amount_untaxed",
+    "amount_tax": "account.move.amount_tax",
+    "amount_total": "account.move.amount_total",
+    "amount_residual": "account.move.amount_residual",
+    "move_type": "account.move.move_type",
+    "state": "account.move.state",
+    "payment_state": "account.move.payment_state",
+    "company_vat": "res.company.vat",
+    "payment_date": "account.payment.date",
+    "payment_amount": "account.payment.amount",
+    "journal_id": "account.move.journal_id",
+    "currency_id": "account.move.currency_id",
+    "line_tax_ids": "account.move.line.tax_ids",
+    "line_balance": "account.move.line.balance"
+  },
+  "modulos_justech_referencia": {
+    "withholding_catalog": "hellenia.withholding.catalog",
+    "withholding_lines": "account.move / payment withholding lines (hellenia)"
+  },
+  "campos_faltantes": [
+    "justech_do_partner_id_type",
+    "justech_do_ncf",
+    "dgii_withholding_code en hellenia.withholding.catalog"
+  ],
+  "estado_exportador": "requiere_campos_faltantes"
+}

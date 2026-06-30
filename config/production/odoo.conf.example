@@ -1,6 +1,6 @@
 [options]
 ; Plantilla producción — hellenia_prod (NO activa en Fase 10)
-addons_path = /usr/lib/python3/dist-packages/odoo/addons,/mnt/enterprise/addons,/mnt/custom
+addons_path = /mnt/enterprise/addons,/usr/lib/python3/dist-packages/odoo/addons,/mnt/custom
 data_dir = /var/lib/odoo
 admin_passwd = CHANGE_ME_STRONG_MASTER_PASSWORD
 dbfilter = ^hellenia_prod$

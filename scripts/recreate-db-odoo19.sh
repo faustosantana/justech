@@ -11,19 +11,20 @@ TARGET="${1:-}"
 log() { echo "[$(date '+%Y-%m-%d %H:%M:%S')] $*"; }
 
 usage() {
-  echo "Uso: $0 dev|test"
+  echo "Uso: $0 dev|test|prod"
   exit 1
 }
 
-[[ "$TARGET" == "dev" || "$TARGET" == "test" ]] || usage
+[[ "$TARGET" == "dev" || "$TARGET" == "test" || "$TARGET" == "prod" ]] || usage
 
 COMPOSE_DIR="$PROJECT_ROOT/docker/${TARGET}"
 ENV_FILE="$PROJECT_ROOT/config/${TARGET}/.env"
-DB_CONTAINER="hellenia-${TARGET}-db-1"
-DB_NAME="hellenia_${TARGET}"
-
-# shellcheck disable=SC1090
-source "$ENV_FILE"
+# shellcheck source=lib/common.sh
+source "${SCRIPT_DIR}/lib/common.sh"
+hellenia_load_env "$ENV_FILE"
+PROJECT="${COMPOSE_PROJECT_NAME:-hellenia-${TARGET}}"
+DB_CONTAINER="$(hellenia_container "$PROJECT" db)"
+DB_NAME="${ODOO_DB_NAME:-hellenia_${TARGET}}"
 
 log "=== Recrear BD $DB_NAME en Odoo 19 ==="
 

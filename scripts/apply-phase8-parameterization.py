@@ -207,27 +207,35 @@ for spec in PAYMENT_TERM_SPECS:
 ensure_sales_team("Ventas Hellenia", company)
 ensure_pricelist("Lista pública DOP", currency, company)
 
-configure_sale_journal_ncf(company)
-
-espejos = env["product.category"].search(
-    [("name", "=", "Espejos"), ("parent_id", "=", inventario.id)], limit=1
-)
-if not espejos:
-    espejos = inventario
-
-ensure_pilot_partner("UAT-PILOT-VEND-001", "Proveedor Piloto UAT", "supplier_rank", 1)
-ensure_pilot_partner("UAT-PILOT-CUST-001", "Cliente Piloto UAT", "customer_rank", 1)
-ensure_pilot_product("UAT-PILOT-PROD-001", "Producto Piloto UAT — Espejo muestra", espejos)
-
 # Parámetro web según ambiente
 import os
 
 ICP = env["ir.config_parameter"].sudo()
 web_url = os.environ.get("WEB_BASE_URL") or (
-    "https://test.hellenia.cloud" if env.cr.dbname.endswith("_test") else "https://dev.hellenia.cloud"
+    "https://odoo.hellenia.cloud"
+    if env.cr.dbname.endswith("_prod")
+    else (
+        "https://test.hellenia.cloud"
+        if env.cr.dbname.endswith("_test")
+        else "https://dev.hellenia.cloud"
+    )
 )
 ICP.set_param("web.base.url", web_url)
 log("param_set", f"web.base.url={web_url}")
+
+skip_pilot = os.environ.get("HELLENIA_SKIP_PILOT", "").lower() in ("1", "true", "yes")
+if not skip_pilot:
+    espejos = env["product.category"].search(
+        [("name", "=", "Espejos"), ("parent_id", "=", inventario.id)], limit=1
+    )
+    if not espejos:
+        espejos = inventario
+
+    ensure_pilot_partner("UAT-PILOT-VEND-001", "Proveedor Piloto UAT", "supplier_rank", 1)
+    ensure_pilot_partner("UAT-PILOT-CUST-001", "Cliente Piloto UAT", "customer_rank", 1)
+    ensure_pilot_product("UAT-PILOT-PROD-001", "Producto Piloto UAT — Espejo muestra", espejos)
+else:
+    log("pilot_data", "skipped for production")
 
 env.cr.commit()
 

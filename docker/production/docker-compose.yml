@@ -1,6 +1,6 @@
-# Hellenia — Producción Odoo 19 Enterprise (REFERENCIA — NO DESPLEGAR sin Go-Live)
-# URL objetivo: https://odoo.hellenia.cloud
-# Estado Fase 10: Plantilla certificada, servicio NO iniciado
+# Hellenia — Producción Odoo 19 Enterprise
+# URL objetivo (web.base.url): https://odoo.hellenia.cloud
+# Traefik pre-corte: https://prod.hellenia.cloud (NO activar odoo.hellenia.cloud hasta Go-Live)
 
 services:
   odoo:
@@ -8,10 +8,10 @@ services:
     restart: unless-stopped
     labels:
       - traefik.enable=true
-      - traefik.http.routers.hellenia-prod.rule=Host(`odoo.hellenia.cloud`)
-      - traefik.http.routers.hellenia-prod.entrypoints=websecure
-      - traefik.http.routers.hellenia-prod.tls.certresolver=letsencrypt
-      - traefik.http.services.hellenia-prod.loadbalancer.server.port=8069
+      - traefik.http.routers.${COMPOSE_PROJECT_NAME}.rule=Host(`prod.${TRAEFIK_HOST}`)
+      - traefik.http.routers.${COMPOSE_PROJECT_NAME}.entrypoints=websecure
+      - traefik.http.routers.${COMPOSE_PROJECT_NAME}.tls.certresolver=letsencrypt
+      - traefik.http.services.${COMPOSE_PROJECT_NAME}.loadbalancer.server.port=8069
     environment:
       - HOST=db
       - USER=${DB_USER}

@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Fase 11 — Idioma es_DO, módulos oficiales Hellenia y auditoría de traducciones.
 
-Ejecutar vía odoo shell en DEV o TEST únicamente.
-No toca producción (odoo-pecv).
+Ejecutar vía odoo shell en DEV, TEST o PROD (hellenia_prod).
+No toca producción legacy (odoo-pecv).
 """
 from __future__ import annotations
 

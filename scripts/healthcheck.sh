@@ -88,6 +88,17 @@ else
   log "SKIP TEST (no desplegado aún)"
 fi
 
+log "--- PROD (hellenia-prod, pre-Go-Live) ---"
+if docker ps --format '{{.Names}}' | grep -q '^hellenia-prod-odoo-1$'; then
+  check_container "hellenia-prod-odoo-1"
+  check_container "hellenia-prod-db-1"
+  check_url "https://prod.hellenia.cloud/"
+  check_odoo_version "https://prod.hellenia.cloud" "19.0"
+  docker logs hellenia-prod-odoo-1 --tail 5 2>&1 | tee -a "$REPORT"
+else
+  log "SKIP PROD (no desplegado aún)"
+fi
+
 log "--- Traefik ---"
 check_container "traefik-traefik-1"
 

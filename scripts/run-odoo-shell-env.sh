@@ -6,13 +6,13 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # shellcheck source=lib/common.sh
 source "${SCRIPT_DIR}/lib/common.sh"
 
-ENV_NAME="${1:?Uso: run-odoo-shell-env.sh dev|test <script.py> [marker] [out.json]}"
+ENV_NAME="${1:?Uso: run-odoo-shell-env.sh dev|test|prod <script.py> [marker] [out.json]}"
 PY_SCRIPT="${2:?}"
 MARKER="${3:-PHASE12}"
 OUT="${4:-}"
 
-if [[ "$ENV_NAME" != "dev" && "$ENV_NAME" != "test" ]]; then
-  hellenia_log "ERROR: solo dev|test"
+if [[ "$ENV_NAME" != "dev" && "$ENV_NAME" != "test" && "$ENV_NAME" != "prod" ]]; then
+  hellenia_log "ERROR: solo dev|test|prod"
   exit 1
 fi
 

@@ -6,9 +6,9 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # shellcheck source=lib/common.sh
 source "${SCRIPT_DIR}/lib/common.sh"
 
-ENV_NAME="${1:?Uso: run-phase11-spanish-config.sh dev|test}"
-if [[ "$ENV_NAME" != "dev" && "$ENV_NAME" != "test" ]]; then
-  hellenia_log "ERROR: solo dev|test (no producción)"
+ENV_NAME="${1:?Uso: run-phase11-spanish-config.sh dev|test|prod}"
+if [[ "$ENV_NAME" != "dev" && "$ENV_NAME" != "test" && "$ENV_NAME" != "prod" ]]; then
+  hellenia_log "ERROR: solo dev|test|prod"
   exit 1
 fi
 

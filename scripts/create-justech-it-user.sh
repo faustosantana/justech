@@ -6,7 +6,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # shellcheck source=lib/common.sh
 source "${SCRIPT_DIR}/lib/common.sh"
 
-ENV_NAME="${1:?Uso: create-justech-it-user.sh dev|test}"
+ENV_NAME="${1:?Uso: create-justech-it-user.sh dev|test|prod}"
 PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
 ENV_FILE="$PROJECT_ROOT/config/${ENV_NAME}/.env"
 COMPOSE_DIR="$PROJECT_ROOT/docker/${ENV_NAME}"

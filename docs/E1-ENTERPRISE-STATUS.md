@@ -6,7 +6,23 @@
 
 ---
 
-## Resultado E1a (2026-06-30)
+## Auditoría DEV — 2026-06-30 02:43 UTC
+
+Verificación en vivo (sin cambios, sin rebuild).
+
+| # | Check | Resultado |
+|---|-------|-----------|
+| 1 | Imagen `hellenia-dev-odoo-1` | `hellenia-odoo:19-enterprise` — **healthy** |
+| 2 | `web_enterprise` en BD `hellenia_dev` | **installed** (v19.0.1.0) |
+| 3 | Versión Odoo | `19.0+e-20260619` — serie **19.0** |
+| 4 | Logs 30 min | **0** Traceback / ERROR |
+| 5 | `validate-enterprise-dev.sh --no-license` | **RESULTADO: OK** (exit 0) |
+| 6 | TEST | `odoo:19.0-20260619` — `web_enterprise` ausente |
+| 6 | PROD | `odoo:18` — running — HTTPS 303 |
+
+**Conclusión:** DEV Enterprise operativo. **No reconstruir** imagen ni reinstalar `web_enterprise`.
+
+---
 
 | Item | Valor |
 |------|-------|

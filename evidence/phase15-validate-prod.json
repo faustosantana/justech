@@ -1,0 +1,294 @@
+{
+  "phase": "15",
+  "timestamp_utc": "2026-06-30T18:03:43.086269+00:00",
+  "database": "hellenia_prod",
+  "fixes": {
+    "menu_customizer": true
+  },
+  "validations": {
+    "it": {
+      "login": "it@justech.do",
+      "groups": [
+        "Access Rights",
+        "Accounting / Administrator",
+        "Accounting / Dominican Fiscal Manager",
+        "Inventory / Administrator",
+        "Purchase / Administrator",
+        "Role / Administrator",
+        "Sales / Administrator",
+        "Technical Features"
+      ],
+      "root_menus": [
+        "Contactos",
+        "Ventas",
+        "Contabilidad",
+        "Compras",
+        "Inventario",
+        "Apps",
+        "Configuración"
+      ],
+      "sees_contabilidad": true,
+      "contabilidad_children": [
+        "Tablero",
+        "Clientes",
+        "Proveedores",
+        "Asientos contables",
+        "Apuntes contables",
+        "Reportes",
+        "Auditoría",
+        "Configuración"
+      ],
+      "first_contabilidad_child": "Tablero",
+      "finance_opens_settings": false,
+      "finance_opens_dashboard": true,
+      "duplicate_accounting_roots": [],
+      "justech_menus": [
+        "Localización Dominicana",
+        "Reportes DGII",
+        "Auditoría"
+      ],
+      "sees_apps": true
+    },
+    "admin": {
+      "login": "admin",
+      "groups": [
+        "Accounting / Administrator",
+        "Accounting / Bookkeeper",
+        "Dashboard / Admin",
+        "Inventory / Administrator",
+        "Point of Sale / Administrator",
+        "Products / Create",
+        "Purchase / Administrator",
+        "Role / Administrator",
+        "Sales / Administrator"
+      ],
+      "root_menus": [
+        "Contactos",
+        "Ventas",
+        "Contabilidad",
+        "Compras",
+        "Inventario",
+        "Apps",
+        "Configuración"
+      ],
+      "sees_contabilidad": true,
+      "contabilidad_children": [
+        "Tablero",
+        "Clientes",
+        "Proveedores",
+        "Asientos contables",
+        "Apuntes contables",
+        "Reportes",
+        "Auditoría",
+        "Configuración"
+      ],
+      "first_contabilidad_child": "Tablero",
+      "finance_opens_settings": false,
+      "finance_opens_dashboard": true,
+      "duplicate_accounting_roots": [],
+      "justech_menus": [
+        "Localización Dominicana",
+        "Reportes DGII",
+        "Auditoría"
+      ],
+      "sees_apps": true
+    },
+    "accounting": {
+      "login": "usuario.contabilidad.demo15",
+      "groups": [
+        "Accounting / Bookkeeper",
+        "Accounting / Dominican Fiscal User"
+      ],
+      "root_menus": [
+        "Contactos",
+        "Contabilidad"
+      ],
+      "sees_contabilidad": true,
+      "contabilidad_children": [
+        "Tablero",
+        "Clientes",
+        "Proveedores",
+        "Asientos contables",
+        "Apuntes contables",
+        "Reportes",
+        "Auditoría"
+      ],
+      "first_contabilidad_child": "Tablero",
+      "finance_opens_settings": false,
+      "finance_opens_dashboard": true,
+      "duplicate_accounting_roots": [],
+      "justech_menus": [
+        "Localización Dominicana",
+        "Reportes DGII",
+        "Auditoría"
+      ],
+      "sees_apps": false
+    },
+    "sales": {
+      "login": "usuario.ventas.demo15",
+      "groups": [
+        "Sales / User: Own Documents Only"
+      ],
+      "root_menus": [
+        "Contactos",
+        "Ventas"
+      ],
+      "sees_contabilidad": false,
+      "contabilidad_children": [],
+      "first_contabilidad_child": null,
+      "finance_opens_settings": false,
+      "finance_opens_dashboard": false,
+      "duplicate_accounting_roots": [],
+      "justech_menus": [],
+      "sees_apps": false
+    },
+    "purchase": {
+      "login": "usuario.compras.demo15",
+      "groups": [
+        "Purchase / User"
+      ],
+      "root_menus": [
+        "Contactos",
+        "Compras"
+      ],
+      "sees_contabilidad": false,
+      "contabilidad_children": [],
+      "first_contabilidad_child": null,
+      "finance_opens_settings": false,
+      "finance_opens_dashboard": false,
+      "duplicate_accounting_roots": [],
+      "justech_menus": [],
+      "sees_apps": false
+    },
+    "inventory": {
+      "login": "usuario.inventario.demo15",
+      "groups": [
+        "Inventory / User"
+      ],
+      "root_menus": [
+        "Contactos",
+        "Inventario"
+      ],
+      "sees_contabilidad": false,
+      "contabilidad_children": [],
+      "first_contabilidad_child": null,
+      "finance_opens_settings": false,
+      "finance_opens_dashboard": false,
+      "duplicate_accounting_roots": [],
+      "justech_menus": [],
+      "sees_apps": false
+    },
+    "normal": {
+      "login": "usuario.normal.demo14",
+      "groups": [
+        "Sales / User: Own Documents Only"
+      ],
+      "root_menus": [
+        "Contactos",
+        "Ventas"
+      ],
+      "sees_contabilidad": false,
+      "contabilidad_children": [],
+      "first_contabilidad_child": null,
+      "finance_opens_settings": false,
+      "finance_opens_dashboard": false,
+      "duplicate_accounting_roots": [],
+      "justech_menus": [],
+      "sees_apps": false
+    },
+    "checks": {
+      "it_sees_contabilidad": true,
+      "it_dashboard_not_settings": true,
+      "it_dashboard_first": true,
+      "it_justech_menus": true,
+      "it_no_duplicate_roots": true,
+      "admin_sees_contabilidad": true,
+      "normal_no_contabilidad": true,
+      "accounting_sees_justech": true,
+      "sales_no_contabilidad": true,
+      "normal_no_apps": true,
+      "it_sees_apps": true,
+      "it_has_core_modules": true
+    }
+  },
+  "functional": {
+    "sale_quotation": true,
+    "purchase_rfq": true,
+    "inventory_product": true,
+    "accounting_journal": true,
+    "justech_doc_types": true,
+    "justech_ncf_ranges": true,
+    "justech_reports_wizard": true,
+    "modules_ok": true
+  },
+  "ok": true,
+  "errors": [],
+  "final_menus_by_user": {
+    "it": [
+      "Contactos",
+      "Ventas",
+      "Contabilidad",
+      "Compras",
+      "Inventario",
+      "Apps",
+      "Configuración"
+    ],
+    "admin": [
+      "Contactos",
+      "Ventas",
+      "Contabilidad",
+      "Compras",
+      "Inventario",
+      "Apps",
+      "Configuración"
+    ],
+    "accounting": [
+      "Contactos",
+      "Contabilidad"
+    ],
+    "sales": [
+      "Contactos",
+      "Ventas"
+    ],
+    "purchase": [
+      "Contactos",
+      "Compras"
+    ],
+    "inventory": [
+      "Contactos",
+      "Inventario"
+    ],
+    "normal": [
+      "Contactos",
+      "Ventas"
+    ]
+  },
+  "final_groups_it": [
+    "Access Rights",
+    "Accounting / Administrator",
+    "Accounting / Dominican Fiscal Manager",
+    "Inventory / Administrator",
+    "Purchase / Administrator",
+    "Role / Administrator",
+    "Sales / Administrator",
+    "Technical Features"
+  ],
+  "final_contabilidad_it": {
+    "children": [
+      "Tablero",
+      "Clientes",
+      "Proveedores",
+      "Asientos contables",
+      "Apuntes contables",
+      "Reportes",
+      "Auditoría",
+      "Configuración"
+    ],
+    "first_child": "Tablero",
+    "justech": [
+      "Localización Dominicana",
+      "Reportes DGII",
+      "Auditoría"
+    ]
+  }
+}

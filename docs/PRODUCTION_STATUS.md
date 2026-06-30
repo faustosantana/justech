@@ -12,7 +12,7 @@
 | `odoo-pecv` (Odoo 18 legacy) | 🟢 Operativo | Sin cambios — producción actual |
 | `hellenia-dev` | 🟢 Activo | `dev.hellenia.cloud` |
 | `hellenia-test` | 🟢 Activo | `test.hellenia.cloud` |
-| **`hellenia-prod`** | **🟢 Desplegado** | BD `hellenia_prod`, validación `prod.hellenia.cloud` |
+| **`hellenia-prod`** | **🟢 Activo** | `https://odoo.hellenia.cloud` — Odoo 19 EE |
 | DNS `odoo.hellenia.cloud` | 🟢 Router Traefik activo | `hellenia-prod` — Fase 13.1 |
 | DNS `prod.hellenia.cloud` | ⚪ Sin uso | Reemplazado por `odoo.hellenia.cloud` |
 | Licencia EE `hellenia_prod` | 🟢 Registrada | Código `M260616306091776` |

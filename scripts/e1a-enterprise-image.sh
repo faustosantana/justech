@@ -102,9 +102,16 @@ set +e
 "${SCRIPT_DIR}/backup-dev.sh" 2>&1 | tee -a "$LOG_FILE"
 BACKUP_RC=${PIPESTATUS[0]}
 set -e
-[[ "$BACKUP_RC" -eq 0 ]] || { hellenia_log "ERROR: backup-dev falló ($BACKUP_RC)"; exit 1; }
-BACKUP_DIR=$(ls -1dt /opt/odoo-projects/hellenia/backups/dev/20* 2>/dev/null | grep -v weekly | grep -v monthly | head -1)
-hellenia_log "Backup: ${BACKUP_DIR:-desconocido}" | tee -a "$LOG_FILE"
+if [[ "$BACKUP_RC" -ne 0 ]]; then
+  hellenia_log "ERROR: backup-dev falló (código $BACKUP_RC) — DETENIDO. No se extrae ni se instala."
+  exit 1
+fi
+BACKUP_DIR=$(ls -1dt /opt/odoo-projects/hellenia/backups/dev/20* 2>/dev/null | grep -vE '_weekly$|_monthly$' | head -1)
+if ! "${SCRIPT_DIR}/verify-backup-dev.sh" "$BACKUP_DIR"; then
+  hellenia_log "ERROR: verificación backup falló — DETENIDO"
+  exit 1
+fi
+hellenia_log "Backup verificado: $BACKUP_DIR" | tee -a "$LOG_FILE"
 
 # Sincronizar custom desde repo si existe
 if [[ -d "$PROJECT_ROOT/repository/custom" ]]; then

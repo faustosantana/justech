@@ -55,4 +55,23 @@ EOF
 hellenia_mark_backup_tier "${BACKUP_ROOT}" "${DEST}"
 hellenia_apply_retention "${BACKUP_ROOT}" 7 4 6
 
+# Verificación obligatoria antes de declarar éxito
+if ! hellenia_container_running "$DB_CONTAINER"; then
+  hellenia_log "WARN: backup parcial — BD no estaba corriendo"
+elif [[ ! -f "${DEST}/postgres_all.sql.gz" ]]; then
+  hellenia_log "ERROR: falta postgres_all.sql.gz"
+  exit 1
+fi
+
+if docker volume inspect "$ODOO_VOLUME" &>/dev/null && [[ ! -f "${DEST}/filestore.tar.gz" ]]; then
+  hellenia_log "ERROR: falta filestore.tar.gz"
+  exit 1
+fi
+
+for req in custom.tar.gz docker-compose.yml odoo.conf .env; do
+  [[ -f "${DEST}/${req}" ]] || { hellenia_log "ERROR: falta ${req}"; exit 1; }
+done
+
+"${SCRIPT_DIR}/verify-backup-dev.sh" "${DEST}"
+
 hellenia_log "Backup dev completado: ${DEST}" | tee -a "$LOG_FILE"

@@ -64,11 +64,19 @@ hellenia_apply_retention() {
     ! -name '*_weekly' ! -name '*_monthly' -mtime +"${daily_days}" \
     -exec rm -rf {} + 2>/dev/null || true
 
-  ls -1dt "${backup_root}"/20*_weekly 2>/dev/null \
-    | tail -n +$((weekly_weeks + 1)) | xargs -r rm -rf || true
+  # ls sin coincidencias devuelve exit 2 — usar nullglob (no fallar con set -e)
+  local -a weekly_links monthly_links
+  shopt -s nullglob
+  weekly_links=("${backup_root}"/20*_weekly)
+  monthly_links=("${backup_root}"/20*_monthly)
+  shopt -u nullglob
 
-  ls -1dt "${backup_root}"/20*_monthly 2>/dev/null \
-    | tail -n +$((monthly_months + 1)) | xargs -r rm -rf || true
+  if ((${#weekly_links[@]} > weekly_weeks)); then
+    printf '%s\n' "${weekly_links[@]}" | sort -r | tail -n +$((weekly_weeks + 1)) | xargs -r rm -rf
+  fi
+  if ((${#monthly_links[@]} > monthly_months)); then
+    printf '%s\n' "${monthly_links[@]}" | sort -r | tail -n +$((monthly_months + 1)) | xargs -r rm -rf
+  fi
 }
 
 # Sincroniza artefactos versionados desde repository/ hacia PROJECT_ROOT

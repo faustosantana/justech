@@ -45,4 +45,8 @@ Resultado principal: `evidence/phase17-1-full-validation.json`
 
 ## Estado
 
-Ver campo `ok` y `summary` en el JSON de evidencia tras ejecutar en VPS TEST.
+**TEST: PASS 25/25** (2026-06-30) — regresión Fase 16: PASS 23/23
+
+Evidencia: `evidence/phase17-1-full-validation.json`
+
+**PROD: NO promovido** — pendiente aprobación explícita.

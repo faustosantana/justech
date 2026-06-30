@@ -1,7 +1,7 @@
 # Estado de Producción — Hellenia
 
-**Última actualización:** 2026-06-30 (Fase 12)  
-**Go-Live:** NO ejecutado
+**Última actualización:** 2026-06-30 (Despliegue hellenia-prod)  
+**Go-Live / corte DNS:** NO ejecutado
 
 ---
 
@@ -9,89 +9,86 @@
 
 | Componente | Estado | Notas |
 |------------|--------|-------|
-| `odoo-pecv` (Odoo 18 legacy) | 🟢 Operativo | Sin cambios Fase 12 |
-| `hellenia-dev` | 🟢 Activo | Limpieza piloto parcial |
-| `hellenia-test` | 🟢 Activo | Staging; histórico UAT en backup |
-| `hellenia-prod` | ⚪ No desplegado | Plantilla en `docker/production/` |
-| DNS `odoo.hellenia.cloud` | ⚪ Sin router Traefik | Sin cambio |
-| Licencia EE prod | ⚪ No registrada | Política 1 BD/código |
+| `odoo-pecv` (Odoo 18 legacy) | 🟢 Operativo | Sin cambios — producción actual |
+| `hellenia-dev` | 🟢 Activo | `dev.hellenia.cloud` |
+| `hellenia-test` | 🟢 Activo | `test.hellenia.cloud` |
+| **`hellenia-prod`** | **🟢 Desplegado** | BD `hellenia_prod`, validación `prod.hellenia.cloud` |
+| DNS `odoo.hellenia.cloud` | ⚪ Sin router Traefik | **Sin corte** — apunta a VPS pero sin servicio Odoo 19 |
+| DNS `prod.hellenia.cloud` | ⚠️ Pendiente registro A | Requerido para HTTPS Let's Encrypt |
+| Licencia EE `hellenia_prod` | 🟢 Registrada | Código `M260616306091776` |
 
 ---
 
-## 2. Backups Fase 12
+## 2. Stack hellenia-prod
 
-| Ambiente | Timestamp | Ruta |
-|----------|-----------|------|
-| DEV | `2026-06-30_1458` | `/opt/odoo-projects/hellenia/backups/dev/2026-06-30_1458` |
-| TEST | `2026-06-30_1459` | `/opt/odoo-projects/hellenia/backups/test/2026-06-30_1459` |
-| odoo-pecv | `2026-06-30_1459` | `/opt/odoo-projects/hellenia/backups/production/2026-06-30_1459` |
-
-Manifest: `evidence/phase12-backups-manifest.json`
-
----
-
-## 3. Limpieza datos prueba
-
-### TEST (`phase12-cleanup-test.json`)
-
-| Métrica | Valor |
-|---------|-------|
-| Reportes fiscales eliminados | 6 |
-| Partners UAT eliminados | parcial |
-| Rangos UAT con facturas publicadas | conservados en backup |
-| **Estrategia prod** | BD `hellenia_prod` **nueva y vacía** |
-
-### DEV (`phase12-cleanup-dev.json`)
-
-| Métrica | Valor |
-|---------|-------|
-| `clean_state` | ✅ (sin partners UAT; PHASE4 lab residual documentado) |
-| UAT-PILOT eliminados | ✅ |
+| Parámetro | Valor |
+|-----------|-------|
+| Imagen | `odoo:19.0-20260619` + Enterprise mount |
+| BD | `hellenia_prod` (nueva, limpia) |
+| `web.base.url` | `https://odoo.hellenia.cloud` |
+| `proxy_mode` | `True` |
+| `workers` | `2` |
+| `dbfilter` | `^hellenia_prod$` |
+| Traefik (pre-corte) | `Host(\`prod.hellenia.cloud\`)` |
+| Módulos instalados | ~116 |
+| Justech MVP | `justech_l10n_do_base`, `_ncf`, `_reports` ✅ |
 
 ---
 
-## 4. Stack producción (preparado, no activo)
+## 3. Credenciales (DEV = TEST = PROD)
 
-| Artefacto | Ubicación |
-|-----------|-----------|
-| docker-compose | `docker/production/docker-compose.yml` |
-| odoo.conf ejemplo | `config/production/odoo.conf.example` |
-| .env ejemplo | `config/production/.env.example` |
-| Backup script | `scripts/backup-hellenia-prod.sh` |
-| Guía despliegue | `PRODUCTION_DEPLOYMENT_GUIDE.md` |
+| Usuario | Política |
+|---------|----------|
+| `admin` | Hash pbkdf2 idéntico en las 3 BD |
+| `it@justech.do` | Hash pbkdf2 idéntico en las 3 BD (sync desde DEV) |
 
----
-
-## 5. Separación Justech / Hellenia
-
-| Justech (producto) | Hellenia (cliente) |
-|--------------------|-------------------|
-| `justech_l10n_do_base` | Empresa, RNC, dirección |
-| `justech_l10n_do_ncf` | Rangos DGII autorizados |
-| `justech_l10n_do_reports` | Catálogo, precios, existencias |
-| Tests unitarios producto | Usuarios `@helleniadr.com` |
-| Roadmap v1.1+ | SMTP, bancos operativos |
-
-Módulos `hellenia_*` en repo: **esqueletos — no instalar**.
+Evidencia: `evidence/prod-credentials-sync.json`
 
 ---
 
-## 6. Scripts Fase 12
+## 4. Backups y monitoreo
+
+| Ítem | Estado |
+|------|--------|
+| Backup inicial prod | `backups/hellenia-prod/2026-06-30_1522` |
+| Cron backup diario | `02:15` — `backup-hellenia-prod.sh` |
+| Cron healthcheck | Lunes `06:30` — `healthcheck.sh` |
+| Restore | `scripts/restore-hellenia-prod.sh` |
+
+---
+
+## 5. Validaciones post-despliegue
+
+| Prueba | Resultado |
+|--------|-----------|
+| Fase 11 (módulos + es_DO) | ✅ PASS |
+| Fase 8 (Golden Config) | ✅ PASS |
+| Fase 6 MVP Justech | ✅ PASS |
+| Fase 12 configuración | ⚠️ PASS con obs (SMTP, bancos, caja — pendiente cliente) |
+| Fase 3.5 Golden | ⚠️ Obs (bancos, métodos pago — esperado en BD nueva) |
+| HTTPS `prod.hellenia.cloud` | ⚠️ Bloqueado por DNS (añadir A → `2.25.69.179`) |
+| `odoo-pecv` activo | ✅ |
+| Router `odoo.hellenia.cloud` → prod | ✅ No activado |
+
+---
+
+## 6. Pendiente antes del corte
+
+1. **DNS:** Crear `prod.hellenia.cloud` A → `2.25.69.179` (validación LE; no cambia `odoo.hellenia.cloud`)
+2. Cliente: catálogos, NCF DGII, SMTP, usuarios `@helleniadr.com`, bancos
+3. Smoke test login en `https://prod.hellenia.cloud`
+4. Aprobación Go-Live
+5. Cambiar router Traefik a `odoo.hellenia.cloud` y ejecutar corte
+
+---
+
+## 7. Comandos
 
 ```bash
-./scripts/run-phase12-hellenia-prep.sh      # Orquestador completo
-./scripts/phase12-cleanup-hellenia.py       # vía run-odoo-shell-env.sh
-./scripts/phase12-validate-configuration.py
-./scripts/backup-hellenia-prod.sh           # post Go-Live
+./scripts/deploy-hellenia-prod.sh feature/justech-l10n-do-mvp
+./scripts/backup-hellenia-prod.sh
+./scripts/restore-hellenia-prod.sh /opt/odoo-projects/hellenia/backups/hellenia-prod/<timestamp>
+./scripts/healthcheck.sh
 ```
 
----
-
-## 7. Próximo hito
-
-1. Cliente entrega catálogos + NCF + SMTP + usuarios  
-2. Aprobación Go-Live  
-3. Justech ejecuta `PRODUCTION_CHECKLIST.md`  
-4. Corte `odoo-pecv` → `hellenia_prod`
-
-**Estado:** DETENIDO — esperando aprobación y entregables.
+**Estado:** Producción Odoo 19 **instalada y validada internamente** — lista para validación HTTPS y corte programado.

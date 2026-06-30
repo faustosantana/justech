@@ -71,7 +71,7 @@ class TestPhase195ApprovalTray(TransactionCase):
     def test_pending_tray_domain(self):
         report, _line = self._create_report_with_exclusion()
         pending = self.env["justech.do.fiscal.report"].search(
-            [("approval_ids.state", "=", "pending")]
+            [("has_pending_approval", "=", True)]
         )
         self.assertIn(report, pending)
         self.assertTrue(report.approval_submitted_by_id)

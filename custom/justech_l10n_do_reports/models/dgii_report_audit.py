@@ -16,6 +16,7 @@ class JustechDoDgiiReportAudit(models.Model):
     )
     event_type = fields.Selection(
         selection=[
+            ("create", "Creación revisión"),
             ("validate", "Validación"),
             ("exclude", "Exclusión"),
             ("include", "Re-inclusión"),
@@ -25,6 +26,7 @@ class JustechDoDgiiReportAudit(models.Model):
             ("correction", "Corrección solicitada"),
             ("generate", "Generación Excel"),
             ("reopen", "Reapertura"),
+            ("state_change", "Cambio de estado"),
         ],
         string="Evento",
         required=True,

@@ -72,7 +72,7 @@ check("submitted_metadata", bool(report.approval_submitted_by_id), report.approv
 check("pending_count", report.pending_approval_count > 0, report.pending_approval_count)
 
 tray = env["justech.do.fiscal.report"].search(
-    [("approval_ids.state", "=", "pending"), ("id", "=", report.id)]
+    [("has_pending_approval", "=", True), ("id", "=", report.id)]
 )
 check("in_pending_tray", bool(tray), len(tray))
 check("tray_fields", all(hasattr(report, f) for f in (
@@ -89,7 +89,7 @@ line.action_approve_line()
 report.invalidate_recordset()
 
 tray_after = env["justech.do.fiscal.report"].search(
-    [("approval_ids.state", "=", "pending"), ("id", "=", report.id)]
+    [("has_pending_approval", "=", True), ("id", "=", report.id)]
 )
 check("removed_from_tray", not tray_after, report.state)
 check("state_approved", report.state == "approved", report.state)

@@ -77,34 +77,6 @@ class JustechDoFiscalReportReview(models.Model):
                 report.approval_ids.filtered(lambda a: a.state == "pending")
             )
 
-    @api.depends("line_ids", "line_ids.fiscal_state", "line_ids.include_in_report", "line_ids.line_approval_state", "line_ids.manual_exclusion")
-    def _compute_review_counts(self):
-        for report in self:
-            lines = report.line_ids
-            report.review_line_count = len(lines)
-            report.review_valid_count = len(
-                lines.filtered(
-                    lambda l: l.include_in_report and l.fiscal_state == "valid"
-                )
-            )
-            report.review_incomplete_count = len(
-                lines.filtered(lambda l: l.fiscal_state == "incomplete")
-            )
-            report.review_excluded_count = len(
-                lines.filtered(
-                    lambda l: not l.include_in_report or l.fiscal_state == "excluded"
-                )
-            )
-            report.review_cancelled_count = len(
-                lines.filtered(lambda l: l.fiscal_state == "cancelled")
-            )
-            report.review_pending_approval_count = len(
-                lines.filtered(
-                    lambda l: l.manual_exclusion
-                    and l.line_approval_state in ("pending", False)
-                )
-            )
-
     def _is_supervisor(self):
         return self.env.user.has_group(
             "justech_l10n_do_base.group_justech_do_fiscal_manager"
@@ -138,7 +110,13 @@ class JustechDoFiscalReportReview(models.Model):
                 raise UserError(_("La fecha desde no puede ser posterior a la fecha hasta."))
             report.line_ids.unlink()
             lines = report._collect_review_lines()
-            report.write({"line_ids": [(0, 0, vals) for vals in lines], "state": "draft"})
+            report.write({"line_ids": [(0, 0, vals) for vals in lines]})
+            report._transition_state(
+                "draft",
+                _("Período cargado con %(n)s documento(s).") % {"n": len(lines)},
+                audit_type="validate",
+            )
+            report._refresh_summary_counts()
             auto_excluded = report.line_ids.filtered("auto_exclusion")
             if auto_excluded:
                 report._log_audit(
@@ -277,15 +255,13 @@ class JustechDoFiscalReportReview(models.Model):
                 {
                     "validated_by_id": self.env.user.id,
                     "validated_at": fields.Datetime.now(),
-                    "state": "validated",
                 }
             )
-            report.message_post(
-                body=_("Período validado por %(user)s.") % {"user": self.env.user.name}
-            )
-            report._log_audit(
-                "validate",
+            report._refresh_summary_counts()
+            report._transition_state(
+                "validated",
                 report.validation_log or _("Validación completada."),
+                audit_type="validate",
             )
         return True
 
@@ -293,8 +269,9 @@ class JustechDoFiscalReportReview(models.Model):
         for report in self:
             if not report.manual_exclusion_count:
                 raise UserError(_("No hay exclusiones manuales que requieran aprobación."))
-            report.write({"state": "pending_approval"})
             for line in report.line_ids.filtered("manual_exclusion"):
+                if line.line_approval_state in ("none", False):
+                    line.line_approval_state = "pending"
                 existing = report.approval_ids.filtered(
                     lambda a: a.line_id == line and a.state == "pending"
                 )
@@ -307,17 +284,13 @@ class JustechDoFiscalReportReview(models.Model):
                             "requested_by_id": line.excluded_by_id.id or self.env.user.id,
                         }
                     )
+            report._transition_state(
+                "pending_approval",
+                _("%(n)s exclusiones pendientes de aprobación.")
+                % {"n": report.manual_exclusion_count},
+                audit_type="submit_approval",
+            )
             report._notify_supervisors_approval()
-            report.message_post(
-                body=_(
-                    "Reporte enviado a aprobación — %(n)s exclusión(es) manual(es)."
-                )
-                % {"n": report.manual_exclusion_count}
-            )
-            report._log_audit(
-                "submit_approval",
-                _("%(n)s exclusiones pendientes de aprobación.") % {"n": report.manual_exclusion_count},
-            )
         return True
 
     def _notify_supervisors_approval(self):
@@ -363,15 +336,15 @@ class JustechDoFiscalReportReview(models.Model):
             )
             report.write(
                 {
-                    "state": "approved",
                     "approved_by_id": self.env.user.id,
                     "approved_at": now,
                 }
             )
-            report.message_post(
-                body=_("Exclusiones aprobadas por %(user)s.") % {"user": self.env.user.name}
+            report._transition_state(
+                "approved",
+                _("Reporte aprobado para generación."),
+                audit_type="approve",
             )
-            report._log_audit("approve", _("Reporte aprobado para generación."))
         return True
 
     def action_reject_report(self):
@@ -401,17 +374,16 @@ class JustechDoFiscalReportReview(models.Model):
         )
         self.write(
             {
-                "state": "rejected",
                 "rejected_by_id": self.env.user.id,
                 "rejected_at": now,
                 "rejection_comment": comment,
             }
         )
-        self.message_post(
-            body=_("Exclusiones rechazadas por %(user)s: %(comment)s")
-            % {"user": self.env.user.name, "comment": comment}
+        self._transition_state(
+            "validated",
+            _("Exclusiones rechazadas: %(comment)s") % {"comment": comment},
+            audit_type="reject",
         )
-        self._log_audit("reject", comment)
 
     def _check_can_generate(self):
         self.ensure_one()
@@ -419,24 +391,27 @@ class JustechDoFiscalReportReview(models.Model):
             raise AccessError(
                 _("Solo el supervisor fiscal puede generar el Excel DGII final.")
             )
-        if self.manual_exclusion_count and self.state not in ("approved", "generated", "done"):
-            raise UserError(
-                _(
-                    "Hay exclusiones manuales pendientes de aprobación. "
-                    "Un supervisor debe aprobar antes de generar el Excel DGII."
-                )
-            )
+        diagnostics = self._get_export_diagnostics()
+        if (
+            diagnostics["not_loaded"]
+            or diagnostics["needs_approval"]
+            or diagnostics["no_valid"]
+            or (diagnostics["wrong_state"] and self.manual_exclusion_count)
+        ):
+            return self.action_open_export_blocker_wizard(diagnostics)
         exportable = self.line_ids.filtered(
             lambda l: l.include_in_report and l.fiscal_state == "valid"
         )
         if not exportable:
-            raise UserError(_("No hay documentos válidos aprobados para exportar."))
+            return self.action_open_export_blocker_wizard(diagnostics)
         return exportable
 
     def action_generate_dgii_export(self):
         for report in self:
-            exportable_lines = report._check_can_generate()
-            moves = exportable_lines.mapped("move_id")
+            exportable = report._check_can_generate()
+            if isinstance(exportable, dict):
+                return exportable
+            moves = exportable.mapped("move_id")
             if report.report_type == "606":
                 action = report.action_export_dgii_606(moves=moves)
             else:
@@ -446,17 +421,15 @@ class JustechDoFiscalReportReview(models.Model):
             file_hash = hashlib.sha256(raw).hexdigest()
             report.write(
                 {
-                    "state": "generated",
                     "export_file_hash": file_hash,
                     "generated_at": fields.Datetime.now(),
                     "generated_by_id": self.env.user.id,
                 }
             )
-            report.message_post(
-                body=_(
-                    "Excel DGII generado por %(user)s. Hash SHA-256: %(hash)s"
-                )
-                % {"user": self.env.user.name, "hash": file_hash}
+            report._transition_state(
+                "generated",
+                _("Excel DGII generado. Hash SHA-256: %(hash)s") % {"hash": file_hash},
+                audit_type="generate",
             )
             report._log_audit(
                 "generate",
@@ -470,9 +443,11 @@ class JustechDoFiscalReportReview(models.Model):
         if not self._is_supervisor():
             raise AccessError(_("Solo el supervisor fiscal puede reabrir reportes."))
         for report in self:
-            report.write({"state": "validated"})
-            report._log_audit("reopen", _("Reporte reabierto para corrección."))
-            report.message_post(body=_("Reporte reabierto por %(user)s.") % {"user": self.env.user.name})
+            report._transition_state(
+                "validated",
+                _("Reporte reabierto para corrección."),
+                audit_type="reopen",
+            )
         return True
 
     def action_open_exclude_wizard(self):

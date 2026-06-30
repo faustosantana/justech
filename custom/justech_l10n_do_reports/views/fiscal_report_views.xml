@@ -24,6 +24,8 @@
         <field name="arch" type="xml">
             <form>
                 <header>
+                    <button name="action_open_fiscal_review" string="Revisión fiscal" type="object"
+                            invisible="report_type not in ('606', '607', '608', '609', '623')"/>
                     <button name="action_validate" string="Validar 606" type="object"
                             invisible="state != 'done' or report_type != '606'"/>
                     <button name="action_generate" string="Regenerar" type="object"
@@ -47,9 +49,11 @@
                             <field name="company_id" groups="base.group_multi_company"/>
                         </group>
                         <group>
-                            <field name="date_from"/>
-                            <field name="date_to"/>
+                            <field name="date_from" invisible="1"/>
+                            <field name="date_to" invisible="1"/>
                             <field name="period_code" readonly="1"/>
+                            <field name="date_from_display" readonly="1"/>
+                            <field name="date_to_display" readonly="1"/>
                             <field name="generated_at"/>
                             <field name="generated_by_id"/>
                         </group>
@@ -100,6 +104,9 @@
         <field name="name">Historial fiscal</field>
         <field name="res_model">justech.do.fiscal.report</field>
         <field name="view_mode">list,form</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'list', 'view_id': ref('justech_l10n_do_reports.view_justech_do_fiscal_report_tree')}),
+            (0, 0, {'view_mode': 'form', 'view_id': ref('justech_l10n_do_reports.view_justech_do_fiscal_report_review_form')})]"/>
     </record>
     <record id="action_justech_do_fiscal_report_606" model="ir.actions.act_window">
         <field name="name">Historial 606</field>
@@ -107,5 +114,8 @@
         <field name="view_mode">list,form</field>
         <field name="domain">[('report_type', '=', '606')]</field>
         <field name="context">{'default_report_type': '606'}</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'list', 'view_id': ref('justech_l10n_do_reports.view_justech_do_fiscal_report_tree')}),
+            (0, 0, {'view_mode': 'form', 'view_id': ref('justech_l10n_do_reports.view_justech_do_fiscal_report_review_form')})]"/>
     </record>
 </odoo>

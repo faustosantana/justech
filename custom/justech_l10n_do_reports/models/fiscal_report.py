@@ -78,14 +78,8 @@ class JustechDoFiscalReport(models.Model):
     error_report_filename = fields.Char(string="Nombre reporte errores", readonly=True)
     period_code = fields.Char(
         string="Período YYYYMM",
-        compute="_compute_period_code",
-        store=True,
+        index=True,
     )
-
-    @api.depends("date_from")
-    def _compute_period_code(self):
-        for rec in self:
-            rec.period_code = rec.date_from.strftime("%Y%m") if rec.date_from else False
 
     @api.depends("line_ids", "line_ids.amount_untaxed", "line_ids.amount_tax", "line_ids.amount_total")
     def _compute_totals(self):
@@ -163,7 +157,7 @@ class JustechDoFiscalReport(models.Model):
         self.ensure_one()
         if self.report_type != "606":
             raise UserError(_("La exportación DGII oficial solo está disponible para el formato 606."))
-        if self.state != "done":
+        if self.state not in ("done", "generated"):
             self.action_generate(valid_moves=moves)
         exporter = self.env["justech.do.dgii.606.exporter"]
         if moves is None:

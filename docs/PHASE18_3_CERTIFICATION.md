@@ -55,6 +55,42 @@ Auditoría funcional real de los 22 puntos obligatorios. No se asume PASS por ex
 
 ---
 
+## Resultado certificación TEST
+
+| Métrica | Valor |
+|---------|-------|
+| **Veredicto** | **PASS** |
+| Checks | **23 / 23** |
+| Módulo | `hellenia_account` **19.0.1.0.7** |
+| Base de datos | `hellenia_test` |
+| Timestamp UTC | 2026-06-30T20:50:00Z |
+| Producción | **NO promover sin aprobación explícita** |
+
+### Regresión
+
+| Suite | Resultado | Notas |
+|-------|-----------|-------|
+| Fase 18.2 catálogo | PASS 23/23 | `phase18-2-regression.json` |
+| Fase 17.4 wizard | 17/18 | Falla `withholdings_section`: test legado pre-Fase 18 (retenciones ahora por factura, no por pago) |
+
+### Cuentas contables verificadas
+
+| Retención | Cuenta TEST |
+|-----------|-------------|
+| RET-GOB-5 | 11080302 |
+| RET-ITBIS-30 / 100 | 21030201 |
+| RET-INF-ISR-10 | 21030301 |
+| RET-INF-ITBIS-75 | 21030205 |
+| RET-ISR-2 | 21030308 |
+| RET-HON-10 | 21030302 |
+
+### Selector verificado
+
+- **Cobro cliente:** 5 retenciones (GOB, ITBIS 30/100, ISR 2%, Honorarios)
+- **Pago proveedor:** 6 retenciones (informales + ITBIS + ISR 2% + Honorarios)
+
+---
+
 ## Ejecución TEST
 
 ```bash

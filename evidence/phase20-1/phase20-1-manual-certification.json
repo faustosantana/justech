@@ -143,4 +143,8 @@
   ],
   "certification_status": "NO_PASS",
   "certification_note": "18/20 pasos con evidencia UI. Pendiente: paso 14 (asistente bloqueo antes de aprobar) y paso 17 (limpieza reportes legacy en bandeja).",
+  "ok": false,
+  "passed": 18,
+  "total": 20,
+  "pass": false
 }

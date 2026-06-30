@@ -93,9 +93,6 @@
             <span>Importe</span>
         </xpath>
 
-        <!-- Ocultar QR si el template base lo incluye -->
-        <xpath expr="//img[contains(@class, 'qr') or contains(@alt, 'QR')]" position="replace"/>
-
         <xpath expr="//table[@name='invoice_line_table']" position="attributes">
             <attribute name="class" add="hellenia-lines-table" separator=" "/>
         </xpath>

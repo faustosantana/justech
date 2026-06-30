@@ -48,6 +48,31 @@ class AccountMove(models.Model):
         copy=False,
         help="Estatus de la línea en archivos DGII (1=válido, 2=anulado).",
     )
+    justech_do_include_in_dgii = fields.Boolean(
+        string="Incluir en reportes DGII",
+        default=True,
+        copy=False,
+        tracking=True,
+        help="Si está desmarcado, el documento no se exporta en formatos DGII (606, 607, 608).",
+    )
+    justech_do_dgii_exclusion_reason = fields.Text(
+        string="Motivo de exclusión fiscal",
+        copy=False,
+        help="Razón por la cual el documento queda fuera de los reportes DGII.",
+    )
+    justech_do_dgii_fiscal_state = fields.Selection(
+        selection=[
+            ("valid", "Válido"),
+            ("incomplete", "Incompleto"),
+            ("excluded", "Excluido"),
+            ("cancelled", "Anulado"),
+        ],
+        string="Estado fiscal DGII",
+        default="incomplete",
+        index=True,
+        copy=False,
+        help="Clasificación del documento para exportación DGII.",
+    )
     justech_do_ncf_cancel_type = fields.Selection(
         selection=[
             ("01", "Secuencia no utilizada"),
@@ -245,6 +270,8 @@ class AccountMove(models.Model):
                     "justech_do_ncf_voided": True,
                     "justech_do_ncf_void_date": fields.Date.context_today(move),
                     "justech_do_dgii_line_status": "2",
+                    "justech_do_dgii_fiscal_state": "cancelled",
+                    "justech_do_include_in_dgii": False,
                 }
             )
             consumption = Consumption.search(

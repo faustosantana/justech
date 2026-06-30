@@ -12,21 +12,37 @@
                     <field name="date_from"/>
                     <field name="date_to"/>
                 </group>
+                <group string="Resumen del período" invisible="validation_state == 'pending'">
+                    <group>
+                        <field name="validation_state" widget="badge"
+                               decoration-success="validation_state == 'ok'"
+                               decoration-warning="validation_state == 'warning'"
+                               decoration-danger="validation_state == 'error'"/>
+                        <field name="count_all"/>
+                        <field name="count_valid"/>
+                        <field name="count_incomplete"/>
+                    </group>
+                    <group>
+                        <field name="count_excluded"/>
+                        <field name="count_cancelled"/>
+                        <field name="count_partners_errors"/>
+                    </group>
+                </group>
                 <group string="Validación" invisible="validation_state == 'pending'">
-                    <field name="validation_state" widget="badge"
-                           decoration-success="validation_state == 'ok'"
-                           decoration-danger="validation_state == 'error'"/>
                     <field name="validation_log" nolabel="1" readonly="1"/>
                 </group>
                 <footer>
-                    <button name="action_validate" string="Validar" type="object"
+                    <button name="action_validate" string="Validar período" type="object"
                             invisible="report_type != '606'"/>
+                    <button name="action_download_errors" string="Descargar errores (Excel)" type="object"
+                            invisible="report_type != '606' or validation_state == 'pending'"/>
                     <button name="action_generate" string="Generar Excel 606" type="object"
-                            class="btn-primary" invisible="report_type != '606'"/>
+                            class="btn-primary"
+                            invisible="report_type != '606' or validation_state in ('pending', 'error')"/>
                     <button name="action_generate" string="Generar" type="object"
                             class="btn-primary" invisible="report_type == '606'"/>
                     <button name="action_generate_history" string="Guardar historial" type="object"
-                            invisible="report_type != '606'"/>
+                            invisible="report_type != '606' or validation_state in ('pending', 'error')"/>
                     <button string="Cancelar" special="cancel"/>
                 </footer>
             </form>

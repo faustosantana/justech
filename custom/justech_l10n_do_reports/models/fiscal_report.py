@@ -60,11 +60,20 @@ class JustechDoFiscalReport(models.Model):
         selection=[
             ("pending", "Sin validar"),
             ("ok", "Válido"),
-            ("error", "Con errores"),
+            ("warning", "Con advertencias"),
+            ("error", "Sin documentos válidos"),
         ],
         string="Estado validación",
         default="pending",
     )
+    count_all = fields.Integer(string="Documentos en período", readonly=True)
+    count_valid = fields.Integer(string="Válidos exportados", readonly=True)
+    count_incomplete = fields.Integer(string="Incompletos", readonly=True)
+    count_excluded = fields.Integer(string="Excluidos", readonly=True)
+    count_cancelled = fields.Integer(string="Anulados", readonly=True)
+    count_partners_errors = fields.Integer(string="Proveedores con errores", readonly=True)
+    error_report_file = fields.Binary(string="Reporte de errores", attachment=True, readonly=True)
+    error_report_filename = fields.Char(string="Nombre reporte errores", readonly=True)
     period_code = fields.Char(
         string="Período YYYYMM",
         compute="_compute_period_code",
@@ -105,33 +114,74 @@ class JustechDoFiscalReport(models.Model):
                 report.validation_state = "ok"
                 continue
             exporter = self.env["justech.do.dgii.606.exporter"]
-            errors = exporter.validate_moves_606(
+            result = exporter.validate_period_606(
                 report.company_id, report.date_from, report.date_to
             )
-            if errors:
-                report.validation_log = "\n".join(errors)
-                report.validation_state = "error"
-            else:
-                report.validation_log = _("Sin errores. Listo para exportar el formato 606.")
+            counts = result["counts"]
+            report.write(
+                {
+                    "validation_log": exporter.format_validation_summary(result),
+                    "count_all": counts["all"],
+                    "count_valid": counts["valid"],
+                    "count_incomplete": counts["incomplete"],
+                    "count_excluded": counts["excluded"],
+                    "count_cancelled": counts["cancelled"],
+                    "count_partners_errors": counts["partners_affected"],
+                }
+            )
+            error_content, error_filename = exporter.export_errors_xlsx(
+                report.company_id, report.date_from, report.date_to, result=result
+            )
+            report.error_report_file = error_content
+            report.error_report_filename = error_filename
+            if counts["valid"] and counts["incomplete"]:
+                report.validation_state = "warning"
+            elif counts["valid"]:
                 report.validation_state = "ok"
+            else:
+                report.validation_state = "error"
         return True
 
-    def action_export_dgii_606(self):
+    def action_download_errors(self):
+        self.ensure_one()
+        if not self.error_report_file:
+            self.action_validate()
+        if not self.error_report_file:
+            raise UserError(_("No hay reporte de errores para descargar."))
+        return {
+            "type": "ir.actions.act_url",
+            "url": (
+                f"/web/content/?model=justech.do.fiscal.report&id={self.id}"
+                f"&field=error_report_file&filename_field=error_report_filename&download=true"
+            ),
+            "target": "self",
+        }
+
+    def action_export_dgii_606(self, moves=None):
         self.ensure_one()
         if self.report_type != "606":
             raise UserError(_("La exportación DGII oficial solo está disponible para el formato 606."))
         if self.state != "done":
-            self.action_generate()
+            self.action_generate(valid_moves=moves)
         exporter = self.env["justech.do.dgii.606.exporter"]
+        if moves is None:
+            result = exporter.validate_period_606(
+                self.company_id, self.date_from, self.date_to
+            )
+            moves = result["buckets"]["valid"]
         content, filename = exporter.export_xlsx(
-            self.company_id, self.date_from, self.date_to
+            self.company_id, self.date_from, self.date_to, moves=moves
         )
         self.write(
             {
                 "export_file": content,
                 "export_filename": filename,
-                "validation_state": "ok",
-                "validation_log": _("Archivo 606 generado correctamente."),
+                "validation_state": "ok" if moves else "error",
+                "validation_log": _(
+                    "Archivo 606 generado con %(n)s documento(s) fiscalmente válido(s)."
+                )
+                % {"n": len(moves)},
+                "count_valid": len(moves),
             }
         )
         return {
@@ -143,10 +193,10 @@ class JustechDoFiscalReport(models.Model):
             "target": "self",
         }
 
-    def action_generate(self):
+    def action_generate(self, valid_moves=None):
         for report in self:
             report.line_ids.unlink()
-            lines = report._collect_lines()
+            lines = report._collect_lines(valid_moves=valid_moves)
             report.write(
                 {
                     "line_ids": [(0, 0, line) for line in lines],
@@ -157,10 +207,10 @@ class JustechDoFiscalReport(models.Model):
             )
         return True
 
-    def _collect_lines(self):
+    def _collect_lines(self, valid_moves=None):
         self.ensure_one()
         if self.report_type == "606":
-            return self._lines_606()
+            return self._lines_606(valid_moves=valid_moves)
         if self.report_type == "607":
             return self._lines_607()
         if self.report_type == "608":
@@ -175,11 +225,14 @@ class JustechDoFiscalReport(models.Model):
             ("invoice_date", "<=", self.date_to),
         ]
 
-    def _lines_606(self):
-        moves = self.env["account.move"].search(
-            self._base_move_domain()
-            + [("move_type", "in", ("in_invoice", "in_refund"))]
-        )
+    def _lines_606(self, valid_moves=None):
+        if valid_moves is not None:
+            moves = valid_moves
+        else:
+            exporter = self.env["justech.do.dgii.606.exporter"]
+            moves = exporter._moves_for_period(
+                self.company_id, self.date_from, self.date_to, only_valid=True
+            )
         lines = []
         for move in moves:
             itbis = self._move_itbis_amount(move)

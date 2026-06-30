@@ -223,3 +223,98 @@ class TestPhase19Dgii606(TransactionCase):
         )
         refund.action_post()
         self.assertEqual(refund.justech_do_ncf_modified, origin.justech_do_ncf)
+
+    def test_excluded_move_not_exported(self):
+        partner = self._vendor("Excluido DGII", "131000010")
+        move = self._purchase_invoice(
+            partner,
+            "B1199000001",
+            [
+                Command.create(
+                    {
+                        "product_id": self.product_goods.id,
+                        "quantity": 1,
+                        "price_unit": 75.0,
+                    }
+                )
+            ],
+        )
+        move.write(
+            {
+                "justech_do_include_in_dgii": False,
+                "justech_do_dgii_exclusion_reason": "Prueba exclusión",
+                "justech_do_dgii_fiscal_state": "excluded",
+            }
+        )
+        exporter = self.env["justech.do.dgii.606.exporter"]
+        buckets = exporter.classify_moves_606(
+            self.company, date.today(), date.today()
+        )
+        self.assertIn(move, buckets["excluded"])
+        self.assertNotIn(move, buckets["valid"])
+
+    def test_validate_period_summary(self):
+        partner_ok = self._vendor("Resumen OK", "131000011")
+        self._purchase_invoice(
+            partner_ok,
+            "B1199000002",
+            [
+                Command.create(
+                    {
+                        "product_id": self.product_goods.id,
+                        "quantity": 1,
+                        "price_unit": 80.0,
+                    }
+                )
+            ],
+        )
+        partner_bad = self._vendor("Resumen Bad", "131000012")
+        bad = self.env["account.move"].create(
+            {
+                "move_type": "in_invoice",
+                "partner_id": partner_bad.id,
+                "journal_id": self.journal_purchase.id,
+                "invoice_date": date.today(),
+                "invoice_line_ids": [
+                    Command.create(
+                        {
+                            "product_id": self.product_goods.id,
+                            "quantity": 1,
+                            "price_unit": 10.0,
+                        }
+                    )
+                ],
+            }
+        )
+        bad.action_post()
+        exporter = self.env["justech.do.dgii.606.exporter"]
+        result = exporter.validate_period_606(
+            self.company, date.today(), date.today()
+        )
+        summary = exporter.format_validation_summary(result)
+        self.assertIn("Resumen validación 606", summary)
+        self.assertGreaterEqual(result["counts"]["valid"], 1)
+        self.assertGreaterEqual(result["counts"]["incomplete"], 1)
+        self.assertIn(partner_bad.display_name, result["errors_by_partner"])
+
+    def test_export_errors_xlsx(self):
+        partner = self._vendor("Errores XLS", "131000013")
+        self._purchase_invoice(
+            partner,
+            "B1199000003",
+            [
+                Command.create(
+                    {
+                        "product_id": self.product_goods.id,
+                        "quantity": 1,
+                        "price_unit": 90.0,
+                    }
+                )
+            ],
+        )
+        exporter = self.env["justech.do.dgii.606.exporter"]
+        content, filename = exporter.export_errors_xlsx(
+            self.company, date.today(), date.today()
+        )
+        self.assertTrue(content)
+        self.assertIn("errores", filename)

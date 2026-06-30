@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_justech_do_ncf_void_wizard_user,justech.do.ncf.void.wizard user,model_justech_do_ncf_void_wizard,justech_l10n_do_base.group_justech_do_fiscal_manager,1,1,1,1

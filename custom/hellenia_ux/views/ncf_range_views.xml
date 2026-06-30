@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_justech_do_ncf_range_form_ux" model="ir.ui.view">
+        <field name="name">justech.do.ncf.range.form.ux</field>
+        <field name="model">justech.do.ncf.range</field>
+        <field name="inherit_id" ref="justech_l10n_do_ncf.view_justech_do_ncf_range_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_activate']" position="attributes">
+                <attribute name="string">Activar</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_cancel']" position="attributes">
+                <attribute name="string">Cancelar</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_set_draft']" position="attributes">
+                <attribute name="string">Volver a borrador</attribute>
+            </xpath>
+            <xpath expr="//group[@string='Sequence']" position="attributes">
+                <attribute name="string">Secuencia</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

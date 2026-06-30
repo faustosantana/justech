@@ -9,28 +9,28 @@ class AccountMove(models.Model):
 
     justech_do_document_type_id = fields.Many2one(
         "justech.do.fiscal.document.type",
-        string="Fiscal Document Type",
+        string="Tipo de comprobante fiscal",
         copy=False,
     )
     justech_do_ncf = fields.Char(
-        string="NCF",
+        string="Número de Comprobante Fiscal",
         copy=False,
         index=True,
     )
     justech_do_ncf_range_id = fields.Many2one(
         "justech.do.ncf.range",
-        string="NCF Range",
+        string="Rango NCF",
         copy=False,
     )
     justech_do_ncf_voided = fields.Boolean(
-        string="NCF Voided",
+        string="NCF anulado",
         copy=False,
     )
-    justech_do_ncf_void_reason = fields.Text(string="Void Reason", copy=False)
-    justech_do_ncf_void_date = fields.Date(copy=False)
+    justech_do_ncf_void_reason = fields.Text(string="Motivo de anulación", copy=False)
+    justech_do_ncf_void_date = fields.Date(string="Fecha de anulación", copy=False)
     justech_do_origin_ncf = fields.Char(
-        string="Origin NCF",
-        help="Referenced NCF for credit/debit notes.",
+        string="NCF de origen",
+        help="NCF referenciado en notas de crédito o débito.",
         copy=False,
     )
 
@@ -171,19 +171,19 @@ class AccountMove(models.Model):
         if not self.env.user.has_group(
             "justech_l10n_do_base.group_justech_do_fiscal_manager"
         ):
-            raise AccessError(_("Only fiscal managers can void NCF."))
+            raise AccessError(_("Solo los responsables fiscales pueden anular comprobantes."))
         Consumption = self.env["justech.do.ncf.consumption"]
         now = fields.Datetime.now()
         for move in self:
             if move.state != "posted":
-                raise UserError(_("Only posted moves can void NCF."))
+                raise UserError(_("Solo documentos publicados pueden anular el comprobante fiscal."))
             if not move.justech_do_ncf:
-                raise UserError(_("No NCF to void."))
+                raise UserError(_("No hay comprobante fiscal para anular."))
             if move.justech_do_ncf_voided:
-                raise UserError(_("NCF is already voided."))
+                raise UserError(_("El comprobante fiscal ya está anulado."))
             reason = (move.justech_do_ncf_void_reason or "").strip()
             if not reason:
-                raise UserError(_("A void reason is required before voiding NCF."))
+                raise UserError(_("Debe indicar el motivo de anulación antes de anular el comprobante fiscal."))
             move.write(
                 {
                     "justech_do_ncf_voided": True,

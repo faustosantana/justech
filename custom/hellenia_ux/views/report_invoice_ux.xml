@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <!-- Hereda limpieza adicional PDF si queda QR legacy -->
+  <template id="report_invoice_document_hellenia_ux_cleanup"
+            inherit_id="hellenia_reports.report_invoice_document_hellenia">
+    <xpath expr="//img[contains(@class,'hellenia-qr')]" position="replace"/>
+  </template>
+</odoo>

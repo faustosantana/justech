@@ -29,7 +29,7 @@ class ResCompany(models.Model):
     hellenia_social_whatsapp = fields.Char(string="WhatsApp")
     hellenia_show_qr_on_invoice = fields.Boolean(
         string="Mostrar QR en facturas",
-        default=True,
+        default=False,
     )
 
     def hellenia_qr_data_uri(self, value):

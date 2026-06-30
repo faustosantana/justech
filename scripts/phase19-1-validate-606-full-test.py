@@ -80,18 +80,8 @@ def _xlsx_cell_map(path):
     return cells
 
 
-# --- Upgrade módulos Fase 19 ---
-for mod_name in (
-    "justech_l10n_do_base",
-    "justech_l10n_do_ncf",
-    "hellenia_account",
-    "justech_l10n_do_reports",
-):
-    mod = env["ir.module.module"].search([("name", "=", mod_name)], limit=1)
-    if mod and mod.state == "installed":
-        mod.button_immediate_upgrade()
-env.cr.commit()
-check("module_upgrade", True, "justech_l10n_do_* + hellenia_account + reports")
+# Módulos ya actualizados vía update-custom-modules.sh antes de este script
+check("module_upgrade", True, "pre-upgrade via update-custom-modules.sh")
 
 company = env.company
 if company.country_id.code != "DO":
@@ -178,7 +168,12 @@ partner_b13 = partner("P19 Proveedor Informal B13", "00112345678")
 check("partner_b11_type", partner_b11.justech_do_partner_id_type == "1", partner_b11.justech_do_partner_id_type)
 check("partner_b13_type", partner_b13.justech_do_partner_id_type == "2", partner_b13.justech_do_partner_id_type)
 
-ncf_seq = {"n": 100}
+ncf_seq = {"n": 1}
+
+
+def fmt_ncf(prefix, seq):
+  """NCF 11 caracteres: prefijo 3 + secuencia 8."""
+  return f"{prefix}{seq:08d}"
 
 
 def create_bill(partner, ref, ncf, lines, wh_flags=None, doc=doc_b11):
@@ -216,7 +211,7 @@ def create_bill(partner, ref, ncf, lines, wh_flags=None, doc=doc_b11):
 bill_itbis = create_bill(
     partner_b11,
     "P19-B11-ITBIS",
-    f"B11{ncf_seq['n']:07d}",
+    fmt_ncf("B11", ncf_seq["n"]),
     [Command.create({"product_id": product_goods.id, "quantity": 1, "price_unit": 1000.0})],
 )
 ncf_seq["n"] += 1
@@ -224,7 +219,7 @@ ncf_seq["n"] += 1
 bill_exempt = create_bill(
     partner_b11,
     "P19-B11-EXEMPT",
-    f"B11{ncf_seq['n']:07d}",
+    fmt_ncf("B11", ncf_seq["n"]),
     [Command.create({"product_id": product_exempt.id, "quantity": 1, "price_unit": 500.0})],
 )
 ncf_seq["n"] += 1
@@ -232,7 +227,7 @@ ncf_seq["n"] += 1
 bill_wh_itbis = create_bill(
     partner_b11,
     "P19-B11-WH-ITBIS30",
-    f"B11{ncf_seq['n']:07d}",
+    fmt_ncf("B11", ncf_seq["n"]),
     [Command.create({"product_id": product_service.id, "quantity": 1, "price_unit": 2000.0})],
     wh_flags={"hellenia_ret_itbis_30": True},
 )
@@ -241,7 +236,7 @@ ncf_seq["n"] += 1
 bill_wh_isr = create_bill(
     partner_b13,
     "P19-B13-WH-ISR10",
-    f"B13{ncf_seq['n']:07d}",
+    fmt_ncf("B13", ncf_seq["n"]),
     [Command.create({"product_id": product_service.id, "quantity": 1, "price_unit": 1500.0})],
     wh_flags={"hellenia_ret_isr_10": True},
     doc=doc_b13,
@@ -251,7 +246,7 @@ ncf_seq["n"] += 1
 bill_multi_wh = create_bill(
     partner_b13,
     "P19-B13-MULTI-WH",
-    f"B13{ncf_seq['n']:07d}",
+    fmt_ncf("B13", ncf_seq["n"]),
     [Command.create({"product_id": product_service.id, "quantity": 1, "price_unit": 3000.0})],
     wh_flags={"hellenia_ret_itbis_30": True, "hellenia_ret_isr_10": True},
     doc=doc_b13,
@@ -269,7 +264,7 @@ if not credit:
             "journal_id": journal.id,
             "invoice_date": today,
             "ref": credit_ref,
-            "justech_do_ncf": f"B04{ncf_seq['n']:07d}",
+            "justech_do_ncf": fmt_ncf("B04", ncf_seq["n"]),
             "justech_do_document_type_id": doc_b04.id,
             "reversed_entry_id": bill_itbis.id,
             "invoice_line_ids": [
@@ -379,7 +374,7 @@ move_no_type = env["account.move"].create(
         "journal_id": journal.id,
         "invoice_date": today,
         "ref": "P19-ERR-NO-TYPE",
-        "justech_do_ncf": f"B11{ncf_seq['n']:07d}",
+        "justech_do_ncf": fmt_ncf("B11", ncf_seq["n"]),
         "justech_do_document_type_id": doc_b11.id,
         "invoice_line_ids": [
             Command.create({"product_id": product_goods.id, "quantity": 1, "price_unit": 10.0})

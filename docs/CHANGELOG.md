@@ -14,6 +14,9 @@
 - `addons/` migrado a `custom/`
 - DEV recreado con nueva arquitectura de volúmenes
 
+### Added
+- `docs/E1-CHECKLIST.md` — checklist E1a (GitHub PAT, comandos, validación, rollback)
+
 ### Pending (E1)
 - Crear `config/credentials/github.env` en VPS
 - Vincular GitHub en portal Odoo

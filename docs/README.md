@@ -44,6 +44,7 @@ Cursor local → GitHub → DEV → TEST → Producción
 - [Arquitectura](ARCHITECTURE.md) — separación Community / Enterprise / Custom
 - [E0.5 Validación suscripción](E0.5-SUBSCRIPTION-VALIDATION.md)
 - [E0.6 GitHub Enterprise](E0.6-GITHUB-ENTERPRISE.md)
+- [E1 Checklist](E1-CHECKLIST.md) — pendiente aprobación
 - [Estrategia Git](GIT-STRATEGY.md)
 - [Infile — requisitos](INFILE-REQUIREMENTS.md)
 - [Análisis Odoo Enterprise](ENTERPRISE_ANALYSIS.md)

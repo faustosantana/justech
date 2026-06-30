@@ -252,11 +252,19 @@ except Exception as exc:  # noqa: BLE001
     fail("report_607", str(exc))
 
 # --- Lista pagos: create deshabilitado, botón Nuevo ---
-view = env.ref("hellenia_account.view_account_payment_tree_customer_hellenia", raise_if_not_found=False)
-if view and 'create="false"' in (view.arch_db or ""):
-    pass_("list_create_disabled", "create=false")
-else:
-    fail("list_create_disabled", "vista no actualizada")
+try:
+    views = env["account.payment"].get_views([(False, "list")])
+    arch = views["views"]["list"]["arch"]
+    has_create_false = 'create="false"' in arch or "create='false'" in arch or 'create="0"' in arch
+    has_nuevo = "Nuevo" in arch and "hellenia.payment.partner.wizard" in str(
+        env.ref("hellenia_account.action_hellenia_register_customer_payment").read(["res_model"])
+    )
+    if has_create_false and has_nuevo:
+        pass_("list_create_disabled", "create=false + botón Nuevo")
+    else:
+        fail("list_create_disabled", f"create_false={has_create_false} nuevo={has_nuevo}")
+except Exception as exc:  # noqa: BLE001
+    fail("list_create_disabled", str(exc))
 
 report["summary"] = {
     "passed": sum(1 for t in report["tests"].values() if t.get("status") == "PASS"),

@@ -1,26 +1,13 @@
 # Hellenia — Producción Odoo 19 Enterprise
-# URL pública: https://odoo.hellenia.cloud
+# URL pública: https://odoo.hellenia.cloud (ODOO_PUBLIC_HOST)
+include:
+  - path: ../lib/traefik-odoo.yaml
 
 services:
   odoo:
     image: odoo:19.0-20260619
     restart: unless-stopped
-    labels:
-      - traefik.enable=true
-      # HTTP principal
-      - traefik.http.routers.${COMPOSE_PROJECT_NAME}.rule=Host(`${ODOO_PUBLIC_HOST}`)
-      - traefik.http.routers.${COMPOSE_PROJECT_NAME}.entrypoints=websecure
-      - traefik.http.routers.${COMPOSE_PROJECT_NAME}.tls=true
-      - traefik.http.routers.${COMPOSE_PROJECT_NAME}.tls.certresolver=letsencrypt
-      - traefik.http.routers.${COMPOSE_PROJECT_NAME}.service=${COMPOSE_PROJECT_NAME}
-      - traefik.http.services.${COMPOSE_PROJECT_NAME}.loadbalancer.server.port=8069
-      # WebSocket / bus Odoo 19 (gevent en 8072)
-      - traefik.http.routers.${COMPOSE_PROJECT_NAME}-ws.rule=Host(`${ODOO_PUBLIC_HOST}`) && (PathPrefix(`/websocket`) || PathPrefix(`/longpolling`))
-      - traefik.http.routers.${COMPOSE_PROJECT_NAME}-ws.entrypoints=websecure
-      - traefik.http.routers.${COMPOSE_PROJECT_NAME}-ws.tls=true
-      - traefik.http.routers.${COMPOSE_PROJECT_NAME}-ws.tls.certresolver=letsencrypt
-      - traefik.http.routers.${COMPOSE_PROJECT_NAME}-ws.service=${COMPOSE_PROJECT_NAME}-ws
-      - traefik.http.services.${COMPOSE_PROJECT_NAME}-ws.loadbalancer.server.port=8072
+    labels: *odoo-traefik-labels
     environment:
       - HOST=db
       - USER=${DB_USER}

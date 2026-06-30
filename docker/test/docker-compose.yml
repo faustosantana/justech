@@ -1,22 +1,13 @@
 # Hellenia — Ambiente TEST
 # Infraestructura: ver docs/INFRASTRUCTURE_REVIEW.md
+include:
+  - path: ../lib/traefik-odoo.yaml
+
 services:
   odoo:
     image: odoo:19.0-20260619
     restart: unless-stopped
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.${COMPOSE_PROJECT_NAME}.rule=Host(`test.${TRAEFIK_HOST}`)
-      - traefik.http.routers.${COMPOSE_PROJECT_NAME}.entrypoints=websecure
-      - traefik.http.routers.${COMPOSE_PROJECT_NAME}.tls.certresolver=letsencrypt
-      - traefik.http.routers.${COMPOSE_PROJECT_NAME}.service=${COMPOSE_PROJECT_NAME}
-      - traefik.http.services.${COMPOSE_PROJECT_NAME}.loadbalancer.server.port=8069
-      # WebSocket / bus Odoo 19 — misma topología que PROD para validar Traefik
-      - traefik.http.routers.${COMPOSE_PROJECT_NAME}-ws.rule=Host(`test.${TRAEFIK_HOST}`) && (PathPrefix(`/websocket`) || PathPrefix(`/longpolling`))
-      - traefik.http.routers.${COMPOSE_PROJECT_NAME}-ws.entrypoints=websecure
-      - traefik.http.routers.${COMPOSE_PROJECT_NAME}-ws.tls.certresolver=letsencrypt
-      - traefik.http.routers.${COMPOSE_PROJECT_NAME}-ws.service=${COMPOSE_PROJECT_NAME}-ws
-      - traefik.http.services.${COMPOSE_PROJECT_NAME}-ws.loadbalancer.server.port=8072
+    labels: *odoo-traefik-labels
     environment:
       - HOST=db
       - USER=${DB_USER}

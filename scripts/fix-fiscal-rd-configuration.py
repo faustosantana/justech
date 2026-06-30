@@ -39,7 +39,7 @@ company = env.company
 Tax = env["account.tax"]
 Product = env["product.template"]
 
-account_count_before = env["account.account"].search_count([("company_id", "=", company.id)])
+account_count_before = env["account.account"].search_count([])
 taxes_before = Tax.with_context(active_test=False).search([("company_id", "=", company.id)])
 bad15_before = taxes_before.filtered(lambda t: t.amount == 15.0 and t.active)
 report["before"] = {
@@ -73,7 +73,7 @@ if account_count_before < 100:
         except Exception as exc:
             err(f"try_loading('do') failed: {exc}")
 
-account_count_after_load = env["account.account"].search_count([("company_id", "=", company.id)])
+account_count_after_load = env["account.account"].search_count([])
 
 # Find RD taxes
 tax_18_sale = Tax.search(
@@ -172,7 +172,7 @@ products_bad = Product.search([]).filtered(
 )
 
 report["after"] = {
-    "account_count": env["account.account"].search_count([("company_id", "=", company.id)]),
+    "account_count": env["account.account"].search_count([]),
     "tax_count": len(taxes_after),
     "bad_15_count": len(bad15_after),
     "itbis_18_sale": tax_18_sale.name if tax_18_sale else "",

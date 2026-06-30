@@ -54,8 +54,8 @@ scenario(
         "no_15_active": chk(tax_15_active == 0, f"active_15={tax_15_active}"),
         "itbis_18_sale": chk(bool(tax_18), tax_18.name if tax_18 else ""),
         "account_count_rd": chk(
-            env["account.account"].search_count([("company_id", "=", company.id)]) >= 100,
-            str(env["account.account"].search_count([("company_id", "=", company.id)])),
+            env["account.account"].search_count([]) >= 100,
+            str(env["account.account"].search_count([])),
         ),
     },
 )

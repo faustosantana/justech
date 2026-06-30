@@ -34,7 +34,7 @@ report["company"] = {
     "fiscal_enabled": bool(getattr(company, "justech_do_fiscal_enabled", False)),
 }
 
-account_count = env["account.account"].search_count([("company_id", "=", company.id)])
+account_count = env["account.account"].search_count([])
 report["chart"]["account_count"] = account_count
 
 # Detect chart template via company or tax xmlids

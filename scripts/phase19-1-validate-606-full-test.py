@@ -10,6 +10,7 @@ import xml.etree.ElementTree as ET
 from datetime import date, datetime, timezone
 
 from odoo import Command, _
+from odoo.exceptions import UserError
 
 MARKER = "PHASE19_1:"
 DB = env.cr.dbname

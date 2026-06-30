@@ -4,7 +4,7 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
-COMPOSE_DIR="docker/dev"
+COMPOSE_DIR="$PROJECT_ROOT/docker/dev"
 ENV_FILE="$PROJECT_ROOT/config/dev/.env"
 BACKUP_ROOT="/opt/odoo-projects/hellenia/backups/dev"
 TS=$(date +%Y-%m-%d_%H%M)

@@ -1,7 +1,7 @@
 # Hellenia — Ambiente DEV
 services:
   odoo:
-    image: odoo:18
+    image: odoo:19.0-20260619
     restart: unless-stopped
     labels:
       - traefik.enable=true

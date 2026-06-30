@@ -1,6 +1,6 @@
 # Odoo Hellenia — Documentación
 
-Proyecto Odoo 18 multi-ambiente para **Hellenia**.
+Proyecto Odoo **19** (DEV/TEST) / Odoo **18** (PROD) multi-ambiente para **Hellenia**.
 
 ## Arquitectura
 
@@ -8,12 +8,12 @@ Proyecto Odoo 18 multi-ambiente para **Hellenia**.
 Cursor local → GitHub → DEV → TEST → Producción
 ```
 
-| Ambiente | URL | Stack Compose | Estado |
-|----------|-----|---------------|--------|
-| DEV | https://dev.hellenia.cloud | `hellenia-dev` | Pendiente despliegue |
-| TEST | https://test.hellenia.cloud | `hellenia-test` | Pendiente despliegue |
-| PROD (actual) | https://odoo-pecv.srv1784296.hstgr.cloud | `odoo-pecv` | **Activo** — no migrado |
-| PROD (futuro) | https://odoo.hellenia.cloud | TBD | Pendiente |
+| Ambiente | URL | Stack Compose | Odoo | Estado |
+|----------|-----|---------------|------|--------|
+| DEV | https://dev.hellenia.cloud | `hellenia-dev` | 19.0-20260619 | Migrado |
+| TEST | https://test.hellenia.cloud | `hellenia-test` | 19.0-20260619 | Migrado |
+| PROD (actual) | https://odoo-pecv.srv1784296.hstgr.cloud | `odoo-pecv` | 18 | **Activo — no migrado** |
+| PROD (futuro) | https://odoo.hellenia.cloud | TBD | — | Pendiente |
 
 ## Rutas
 
@@ -36,6 +36,11 @@ Cursor local → GitHub → DEV → TEST → Producción
 | `test` | Pruebas / UAT |
 | `feature/*` | Funcionalidades |
 | `hotfix/*` | Correcciones urgentes |
+
+## Documentación Odoo 19
+
+- [Análisis técnico Odoo 19](VERSION-19-ANALYSIS.md)
+- [Runbook migración 18→19](MIGRATION-19.md)
 
 ## Inicio rápido
 

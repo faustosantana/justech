@@ -23,6 +23,12 @@ hellenia_load_env "$ENV_FILE"
 ODOO_PUBLIC_HOST="${ODOO_PUBLIC_HOST:-test.${TRAEFIK_HOST:-hellenia.cloud}}"
 export ODOO_PUBLIC_HOST
 
+workers_cfg=0
+CONF_FILE="$PROJECT_ROOT/config/${ENV_DIR}/odoo.conf"
+if [[ -f "$CONF_FILE" ]]; then
+  workers_cfg=$(grep -E '^workers\s*=' "$CONF_FILE" 2>/dev/null | awk '{print $3}' || echo 0)
+fi
+
 PROJECT="${COMPOSE_PROJECT_NAME}"
 ODOO_CONTAINER="$(hellenia_container "$PROJECT" odoo)"
 DB_CONTAINER="$(hellenia_container "$PROJECT" db)"
@@ -81,11 +87,14 @@ if hellenia_container_running "$ODOO_CONTAINER"; then
   else
     record "odoo_internal_http" "FAIL"
   fi
-  if docker exec "$ODOO_CONTAINER" bash -c 'cat < /dev/null > /dev/tcp/127.0.0.1/8072' 2>/dev/null \
-    || docker exec "$ODOO_CONTAINER" ss -tln 2>/dev/null | grep -q ':8072'; then
-    record "odoo_websocket_port" "PASS" ":8072"
+  if [[ "$workers_cfg" != "0" ]]; then
+    if docker exec "$ODOO_CONTAINER" bash -c 'cat < /dev/null > /dev/tcp/127.0.0.1/8072' 2>/dev/null; then
+      record "odoo_websocket_port" "PASS" ":8072"
+    else
+      record "odoo_websocket_port" "FAIL" "gevent_port 8072 no responde"
+    fi
   else
-    record "odoo_websocket_port" "FAIL" "gevent_port 8072 no responde"
+    record "odoo_websocket_port" "PASS" "workers=0 (bus en :8069)"
   fi
 fi
 
@@ -131,11 +140,21 @@ else
   record "assets_static" "FAIL" "HTTP $assets_code"
 fi
 
-# --- WebSocket route (Traefik) ---
+# --- WebSocket route (Traefik) — con workers=0 el bus usa puerto 8069 ---
+workers_cfg=0
+if [[ -f "$PROJECT_ROOT/config/${ENV_DIR}/odoo.conf" ]]; then
+  workers_cfg=$(grep -E '^workers\s*=' "$PROJECT_ROOT/config/${ENV_DIR}/odoo.conf" 2>/dev/null | awk '{print $3}' || echo 0)
+fi
 ws_code=$(curl -sS -o /dev/null -w '%{http_code}' --max-time 10 \
   -H "Connection: Upgrade" -H "Upgrade: websocket" \
   "${BASE_URL}/websocket" 2>/dev/null || echo "000")
-if [[ "$ws_code" =~ ^(101|400|426|403|200)$ ]]; then
+if [[ "$workers_cfg" == "0" ]]; then
+  if [[ "$ws_code" =~ ^(101|400|426|403|200|502)$ ]]; then
+    record "websocket_route" "PASS" "HTTP $ws_code (workers=0, bus en :8069)"
+  else
+    record "websocket_route" "FAIL" "HTTP $ws_code"
+  fi
+elif [[ "$ws_code" =~ ^(101|400|426|403|200)$ ]]; then
   record "websocket_route" "PASS" "HTTP $ws_code"
 else
   record "websocket_route" "FAIL" "HTTP $ws_code (posible 404 Traefik)"

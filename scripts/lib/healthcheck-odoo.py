@@ -42,16 +42,13 @@ for mod_name in required_modules:
         pass_check(f"module_{mod_name}")
 
 # --- NCF ---
-ncf_seq = env["ir.sequence"].search([("code", "=", "ncf.customer.invoice")], limit=1)
+ncf_seq = env["justech.do.ncf.range"].search(
+    [("company_id", "=", env.company.id), ("state", "=", "active")], limit=1
+)
 if ncf_seq:
-    pass_check("ncf_sequence", ncf_seq.name or "found")
+    pass_check("ncf_sequence", ncf_seq.name or "active range")
 else:
-    # fallback: secuencias fiscales RD
-    fiscal = env["l10n_do.account.fiscal.sequence"].search([], limit=1)
-    if fiscal:
-        pass_check("ncf_sequence", f"fiscal_sequence id={fiscal.id}")
-    else:
-        fail("ncf_sequence", "Sin secuencia NCF configurada")
+    fail("ncf_sequence", "Sin rango NCF activo (justech.do.ncf.range)")
 
 # --- Reportes DGII (acciones existen) ---
 dgii_actions = [

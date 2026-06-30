@@ -1,0 +1,98 @@
+{
+  "phase": "13.5",
+  "timestamp_utc": "2026-06-30T16:28:03.555629+00:00",
+  "database": "hellenia_prod",
+  "pdf_engine": {
+    "wkhtmltopdf_version": "wkhtmltopdf 0.12.6.1 (with patched qt)",
+    "wkhtmltopdf_path": "/usr/local/bin/wkhtmltopdf",
+    "wkhtmltoimage_path": "/usr/local/bin/wkhtmltoimage",
+    "web_base_url": "https://odoo.hellenia.cloud",
+    "report_url": "https://odoo.hellenia.cloud",
+    "utf8_cli": {
+      "ok": true,
+      "bytes": 8870
+    },
+    "barcodes_module": true,
+    "qrcode": true
+  },
+  "documents": {
+    "quotation": {
+      "ok": true,
+      "bytes": 62949,
+      "fmt": "pdf"
+    },
+    "sale_order": {
+      "ok": true,
+      "bytes": 63103,
+      "fmt": "pdf"
+    },
+    "invoice": {
+      "ok": true,
+      "bytes": 60699,
+      "fmt": "pdf"
+    },
+    "invoice_ncf": "B0200009903",
+    "credit_note": {
+      "ok": true,
+      "bytes": 59993,
+      "fmt": "pdf"
+    },
+    "purchase_rfq": {
+      "ok": true,
+      "bytes": 61489,
+      "fmt": "pdf"
+    },
+    "purchase_order": {
+      "ok": true,
+      "bytes": 64779,
+      "fmt": "pdf"
+    }
+  },
+  "paperformats": {
+    "A4": {
+      "format": "A4",
+      "margin_top": 52.0,
+      "margin_bottom": 32.0,
+      "dpi": 90
+    },
+    "US Letter": {
+      "format": "Letter",
+      "margin_top": 52.0,
+      "margin_bottom": 32.0,
+      "dpi": 90
+    },
+    "US Batch Deposit": {
+      "format": "Letter",
+      "margin_top": 15.0,
+      "margin_bottom": 30.0,
+      "dpi": 90
+    },
+    "A4 Label Sheet": {
+      "format": "A4",
+      "margin_top": 0.0,
+      "margin_bottom": 0.0,
+      "dpi": 96
+    },
+    "Dymo Label Sheet": {
+      "format": "custom",
+      "margin_top": 0.0,
+      "margin_bottom": 0.0,
+      "dpi": 96
+    },
+    "A4 - statement": {
+      "format": "A4",
+      "margin_top": 52.0,
+      "margin_bottom": 32.0,
+      "dpi": 90
+    },
+    "Dominican Republic Check Letter": {
+      "format": "Letter",
+      "margin_top": 0.0,
+      "margin_bottom": 0.0,
+      "dpi": 90
+    }
+  },
+  "warnings": [],
+  "ok": true,
+  "errors": []
+}

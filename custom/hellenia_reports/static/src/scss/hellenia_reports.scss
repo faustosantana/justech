@@ -1,0 +1,190 @@
+/* Hellenia corporate report styles — PDF / QWeb */
+
+.hellenia-header {
+    border-bottom: 3px solid #1a365d;
+    padding-bottom: 8px;
+    margin-bottom: 12px;
+}
+
+.hellenia-header-accent {
+    height: 3px;
+    background: linear-gradient(90deg, #1a365d 70%, #c9a227 100%);
+    margin-top: 6px;
+}
+
+.hellenia-logo {
+    max-height: 72px;
+    max-width: 220px;
+}
+
+.hellenia-company-name {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #1a365d;
+    margin-bottom: 4px;
+}
+
+.hellenia-company-contact {
+    font-size: 0.85rem;
+    color: #2d3748;
+    line-height: 1.4;
+}
+
+.hellenia-rnc {
+    font-weight: 600;
+    color: #1a365d;
+}
+
+.hellenia-tagline {
+    font-size: 0.9rem;
+    color: #4a5568;
+}
+
+.hellenia-doc-title {
+    color: #1a365d;
+    font-weight: 700;
+    border-bottom: 2px solid #c9a227;
+    padding-bottom: 6px;
+    margin-bottom: 16px;
+}
+
+.hellenia-footer-accent {
+    height: 2px;
+    background: #c9a227;
+    margin-bottom: 4px;
+}
+
+.hellenia-footer {
+    font-size: 0.8rem;
+    color: #4a5568;
+}
+
+.hellenia-social {
+    font-size: 0.75rem;
+    color: #718096;
+}
+
+/* Tabla de líneas */
+.hellenia-lines-table thead tr {
+    background-color: #1a365d !important;
+    color: #ffffff !important;
+}
+
+.hellenia-lines-table thead th {
+    color: #ffffff !important;
+    font-weight: 600;
+    padding: 8px 6px !important;
+    border: none !important;
+}
+
+.hellenia-lines-table tbody tr:nth-child(even) {
+    background-color: #f7fafc;
+}
+
+.hellenia-lines-table tbody td {
+    padding: 6px !important;
+    vertical-align: top;
+    border-bottom: 1px solid #e2e8f0 !important;
+}
+
+/* NCF destacado */
+.hellenia-ncf-box {
+    border: 2px solid #1a365d;
+    border-radius: 4px;
+    padding: 12px 16px;
+    background-color: #f7fafc;
+}
+
+.hellenia-ncf-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #718096;
+    font-weight: 600;
+}
+
+.hellenia-ncf-value {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #1a365d;
+    font-family: 'DejaVu Sans Mono', monospace;
+    letter-spacing: 0.08em;
+}
+
+.hellenia-ncf-type {
+    font-size: 0.85rem;
+    color: #4a5568;
+    margin-top: 2px;
+}
+
+.hellenia-qr {
+    max-width: 90px;
+    max-height: 90px;
+}
+
+/* Totales */
+.o_total_table {
+    border-top: 2px solid #1a365d !important;
+}
+
+.o_total_table tr:last-child td {
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: #1a365d;
+}
+
+/* Términos y firma */
+.hellenia-section-title {
+    color: #1a365d;
+    font-size: 0.9rem;
+    display: block;
+    margin-bottom: 4px;
+}
+
+.hellenia-terms {
+    font-size: 0.8rem;
+    color: #4a5568;
+    border-top: 1px solid #e2e8f0;
+    padding-top: 12px;
+    page-break-inside: avoid;
+}
+
+.hellenia-signature {
+    page-break-inside: avoid;
+}
+
+.hellenia-signature-img {
+    max-height: 55px;
+}
+
+.hellenia-stamp-img {
+    max-height: 75px;
+}
+
+.hellenia-signature-line {
+    border-top: 1px solid #1a365d;
+    display: inline-block;
+    min-width: 180px;
+    font-size: 0.8rem;
+    color: #4a5568;
+    padding-top: 4px;
+}
+
+/* Evitar cortes feos */
+.hellenia-sale-doc,
+.hellenia-invoice-doc,
+.hellenia-purchase-doc,
+.hellenia-stock-doc {
+    font-family: 'DejaVu Sans', sans-serif;
+    font-size: 0.9rem;
+    color: #2d3748;
+}
+
+.hellenia-lines-table {
+    page-break-inside: auto;
+}
+
+.hellenia-lines-table tr {
+    page-break-inside: avoid;
+    page-break-after: auto;
+}

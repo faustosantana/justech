@@ -1,0 +1,14 @@
+=== HTTP checks Tue Jun 30 03:58:36 AM UTC 2026 ===
+login_http: 200
+web_http: 303
+{"jsonrpc": "2.0", "id": null, "result": {"server_version": "19.0+e-20260619", "server_version_info": [19, 0, 0, "final", 0, "e"], "server_serie": "19.0", "protocol_version": 1}}
+=== Docker ===
+hellenia-dev-odoo-1 Up About a minute (healthy)
+hellenia-dev-db-1 Up 4 hours (healthy)
+
+=== PostgreSQL errors since install ===
+
+=== Odoo tracebacks since restart ===
+none
+
+=== Traefik errors ===

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="report_invoice_document_hellenia" inherit_id="account.report_invoice_document">
+        <xpath expr="//div[hasclass('page')]" position="attributes">
+            <attribute name="class" add="hellenia-invoice-doc" separator=" "/>
+        </xpath>
+
+        <!-- NCF destacado -->
+        <xpath expr="//div[@id='informations']" position="before">
+            <div class="hellenia-ncf-box row mb-3" t-if="o.justech_do_ncf">
+                <div class="col-8">
+                    <div class="hellenia-ncf-label">NCF</div>
+                    <div class="hellenia-ncf-value" t-field="o.justech_do_ncf"/>
+                    <div t-if="o.justech_do_document_type_id" class="hellenia-ncf-type">
+                        <span t-field="o.justech_do_document_type_id"/>
+                    </div>
+                </div>
+                <div class="col-4 text-end" t-if="o.company_id.hellenia_show_qr_on_invoice">
+                    <t t-set="qr_uri" t-value="o.hellenia_invoice_qr_uri()"/>
+                    <img t-if="qr_uri" t-att-src="qr_uri" class="hellenia-qr" alt="QR"/>
+                </div>
+            </div>
+        </xpath>
+
+        <!-- Títulos en español -->
+        <xpath expr="//t[@name='invoice_title']" position="replace">
+            <t name="invoice_title">Factura</t>
+        </xpath>
+        <xpath expr="//t[@name='draft_invoice_title']" position="replace">
+            <t name="draft_invoice_title">Factura borrador</t>
+        </xpath>
+        <xpath expr="//t[@name='cancelled_invoice_title']" position="replace">
+            <t name="cancelled_invoice_title">Factura cancelada</t>
+        </xpath>
+        <xpath expr="//t[@name='credit_note_title']" position="replace">
+            <t name="credit_note_title">Nota de crédito</t>
+        </xpath>
+        <xpath expr="//t[@name='draft_credit_note_title']" position="replace">
+            <t name="draft_credit_note_title">Nota de crédito borrador</t>
+        </xpath>
+        <xpath expr="//t[@name='cancelled_credit_note_title']" position="replace">
+            <t name="cancelled_credit_note_title">Nota de crédito cancelada</t>
+        </xpath>
+
+        <xpath expr="//strong[text()='Invoice Date']" position="replace">
+            <strong>Fecha factura</strong>
+        </xpath>
+        <xpath expr="//strong[text()='Credit Note Date']" position="replace">
+            <strong>Fecha nota de crédito</strong>
+        </xpath>
+        <xpath expr="//strong[text()='Due Date']" position="replace">
+            <strong>Fecha vencimiento</strong>
+        </xpath>
+        <xpath expr="//strong[text()='Delivery Date']" position="replace">
+            <strong>Fecha entrega</strong>
+        </xpath>
+        <xpath expr="//strong[text()='Source']" position="replace">
+            <strong>Origen</strong>
+        </xpath>
+
+        <xpath expr="//th[@name='th_description']/span" position="replace">
+            <span>Descripción</span>
+        </xpath>
+        <xpath expr="//th[@name='th_quantity']/span" position="replace">
+            <span>Cantidad</span>
+        </xpath>
+        <xpath expr="//th[@name='th_priceunit']/span" position="replace">
+            <span>Precio unit.</span>
+        </xpath>
+        <xpath expr="//th[@name='th_taxes']/span" position="replace">
+            <span>Impuestos</span>
+        </xpath>
+        <xpath expr="//th[@name='th_subtotal']/span" position="replace">
+            <span>Importe</span>
+        </xpath>
+
+        <xpath expr="//table[@name='invoice_line_table']" position="attributes">
+            <attribute name="class" add="hellenia-lines-table" separator=" "/>
+        </xpath>
+
+        <xpath expr="//div[hasclass('page')]" position="inside">
+            <t t-call="hellenia_reports.hellenia_document_footer_blocks"/>
+        </xpath>
+    </template>
+
+    <!-- Ocultar bloque NCF duplicado de justech (ya integrado en caja destacada) -->
+    <template id="report_invoice_document_hellenia_ncf_cleanup"
+              inherit_id="justech_l10n_do_ncf.report_invoice_document_justech_ncf">
+        <xpath expr="//div[@name='justech_ncf']" position="replace"/>
+        <xpath expr="//div[@name='justech_doc_type']" position="replace"/>
+    </template>
+
+</odoo>

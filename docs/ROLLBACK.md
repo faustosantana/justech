@@ -1,13 +1,29 @@
 # Rollback — Hellenia Odoo
 
-## DEV / TEST
+## DEV / TEST (automatizado)
 
-1. Identificar backup: `ls -lt /opt/odoo-projects/hellenia/backups/dev/`
-2. Detener Odoo: `docker compose --env-file config/dev/.env stop odoo`
-3. Restaurar PostgreSQL desde `postgres_all.sql.gz`
-4. Restaurar filestore desde `filestore.tar.gz`
-5. Restaurar addons desde `addons.tar.gz`
-6. Reiniciar: `docker compose up -d`
+```bash
+# Listar backups
+ls -lt /opt/odoo-projects/hellenia/backups/dev/
+
+# Restaurar DEV
+/opt/odoo-projects/hellenia/scripts/restore-dev.sh \
+  /opt/odoo-projects/hellenia/backups/dev/<TIMESTAMP>
+
+# Restaurar TEST
+/opt/odoo-projects/hellenia/scripts/restore-test.sh \
+  /opt/odoo-projects/hellenia/backups/test/<TIMESTAMP>
+```
+
+Cada script crea backup de seguridad antes de restaurar.
+
+### Restauración manual (si scripts no disponibles)
+
+1. Detener Odoo: `docker compose --env-file config/dev/.env stop odoo`
+2. Restaurar PostgreSQL desde `postgres_all.sql.gz`
+3. Restaurar filestore desde `filestore.tar.gz`
+4. Restaurar addons desde `custom.tar.gz`
+5. Reiniciar: `docker compose up -d`
 
 ## Producción actual (odoo-pecv)
 
@@ -22,3 +38,7 @@ cd /opt/odoo-projects/hellenia/repository
 git checkout <commit-anterior>
 /opt/odoo-projects/hellenia/scripts/deploy-test.sh <commit-anterior>
 ```
+
+## Rollback E1 (Enterprise)
+
+Ver [E1-CHECKLIST.md](E1-CHECKLIST.md) Parte E.

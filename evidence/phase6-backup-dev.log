@@ -1,0 +1,16 @@
+[2026-06-30 11:22:52] Iniciando backup dev → /opt/odoo-projects/hellenia/backups/dev/2026-06-30_1122
+[2026-06-30 11:22:54] OK  PostgreSQL dump
+[2026-06-30 11:22:54] OK  filestore
+[2026-06-30 11:22:54] === Verificación backup DEV ===
+[2026-06-30 11:22:54] Directorio: /opt/odoo-projects/hellenia/backups/dev/2026-06-30_1122
+[2026-06-30 11:22:54] OK  PostgreSQL dump — postgres_all.sql.gz (2246175 bytes)
+[2026-06-30 11:22:54] OK  Filestore — filestore.tar.gz (1737992 bytes)
+[2026-06-30 11:22:54] OK  docker-compose — docker-compose.yml (1951 bytes)
+[2026-06-30 11:22:54] OK  odoo.conf — odoo.conf (353 bytes)
+[2026-06-30 11:22:54] OK  .env config — .env (374 bytes)
+[2026-06-30 11:22:54] OK  custom — custom.tar.gz (23516 bytes)
+[2026-06-30 11:22:54] OK  postgres_all.sql.gz — integridad gzip
+[2026-06-30 11:22:54] OK  filestore.tar.gz — integridad tar
+[2026-06-30 11:22:54] OK  custom.tar.gz — integridad tar
+[2026-06-30 11:22:54] RESULTADO: backup completo y válido
+[2026-06-30 11:22:54] Backup dev completado: /opt/odoo-projects/hellenia/backups/dev/2026-06-30_1122

@@ -86,11 +86,7 @@ Estos ítems están **fuera del stack** `l10n_do` + `l10n_do_reports` por diseñ
 
 ---
 
-## 3. Brechas probables — desarrollo custom potencial
-
-> **Hipótesis pre-validación.** Prioridad e impacto se recalibrarán tras ejecutar TC vinculados.
-
-| ID | Brecha hipotética | Evidencia preliminar | TC | Prioridad | Impacto | Esfuerzo est. | Módulo custom |
+## 3. Brechas probables — desarrollo custom potencial Evidencia preliminar | TC | Prioridad | Impacto | Esfuerzo est. | Módulo custom |
 |----|-------------------|---------------------|-----|-----------|---------|---------------|---------------|
 | G-01 | **Secuencias NCF no operativas sin terceros** | Advertencia manifest `l10n_do` 19.0 | TC-020 | 🔴 P0 | Bloqueante go-live | 5–15 días | `hellenia_account` |
 | G-02 | Framework documentos LATAM ausente/incompleto en 19.0 | `l10n_do` 19.0 sin dependencia `l10n_latam_invoice_document` (presente en saas-19.3) | TC-014, TC-017 | 🔴 P0 | Alto — UI documentos diferente | 3–10 días | `hellenia_account` |

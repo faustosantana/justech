@@ -6,7 +6,7 @@
 **Stack fiscal Etapa 1:** `l10n_do` + `l10n_do_reports` (sin `l10n_do_edi`)  
 **Fecha:** 2026-06-30  
 **Versión:** 1.0  
-**Estado:** **Pre-ejecución — ningún módulo RD instalado aún**
+**Estado:** **Ejecución iniciada 2026-06-30 — DETENIDA en TC-000** (backup VPS pendiente)
 
 ---
 
@@ -80,7 +80,8 @@ Este plan define **32 casos de prueba** (TC-000 a TC-031) para validar la locali
 | PASS | 0 |
 | FAIL | 0 |
 | BLOCKED | 0 |
-| PENDIENTE | 32 |
+| PENDIENTE | 31 |
+| BLOCKED | 1 (TC-000) |
 
 ---
 
@@ -112,15 +113,11 @@ Este plan define **32 casos de prueba** (TC-000 a TC-031) para validar la locali
 - Módulos RD disponibles sin instalar
 - Sin localización DO previamente aplicada
 
-**Resultado obtenido:** PENDIENTE
+**Resultado obtenido:** Backup `backup-dev.sh` **no ejecutado** — SSH VPS (`2.25.69.179`) denegado desde Cloud Agent. Línea base remota: Odoo `19.0+e-20260619`; `web_enterprise` installed; `account` **uninstalled**; `l10n_do`/`l10n_do_reports` uninstalled; `l10n_do_edi` absent; empresa "My Company" USD sin país DO.
 
-**Evidencia:** PENDIENTE
+**Evidencia:** `evidence/l10n-do-tests/2026-06-30/TC-000/result.json`
 
-**Conclusión:** PENDIENTE
-
----
-
-### TC-001 — Instalación del módulo `l10n_do`
+**Conclusión:** `BLOCKED` — no continuar TC-001 sin backup verificado en VPS.
 
 **Objetivo:** Instalar el paquete base de localización dominicana y verificar estado del módulo.
 

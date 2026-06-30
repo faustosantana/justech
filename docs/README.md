@@ -7,7 +7,8 @@ Proyecto Odoo **Enterprise 19** para **Hellenia**. Pipeline permanente: **DEV �
 | Documento | Contenido |
 |-----------|-----------|
 | [PROJECT_STRATEGY.md](PROJECT_STRATEGY.md) | **Estrategia v3.0** — plataforma, 12 fases, NCF, custom |
-| [PHASE-3-COMPANY-CONFIG-CHECKLIST.md](PHASE-3-COMPANY-CONFIG-CHECKLIST.md) | **Fase 3** — checklist empresa Hellenia (pendiente aprobación) |
+| [PHASE3_IMPLEMENTATION_REPORT.md](PHASE3_IMPLEMENTATION_REPORT.md) | **Fase 3** — Golden Configuration DEV |
+| [IMPLEMENTATION_DECISIONS.md](IMPLEMENTATION_DECISIONS.md) | Registro decisiones implementación |
 | [IMPLEMENTATION_MASTER_PLAN.md](IMPLEMENTATION_MASTER_PLAN.md) | Plan maestro implementación |
 | [ARCHITECTURE.md](ARCHITECTURE.md) | Capas Community / Enterprise / Custom |
 | [DEVOPS_GUIDE.md](DEVOPS_GUIDE.md) | Scripts, backups, despliegues |

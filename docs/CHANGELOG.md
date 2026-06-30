@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+### Added — Fase 3 Golden Configuration aplicada DEV (2026-06-30)
+- `config/company/*.yaml` — configuración maestra versionada
+- `scripts/apply-phase3-golden-config.py`, `validate-phase3-golden-config.py`
+- `docs/PHASE3_IMPLEMENTATION_REPORT.md`, `docs/IMPLEMENTATION_DECISIONS.md`
+- Empresa renombrada Hellenia S.R.L., RNC 133621282, 23 categorías, bancos estructura
+
 ### Added — Fase 3 checklist empresa (2026-06-30)
 - `docs/PHASE-3-COMPANY-CONFIG-CHECKLIST.md` — 15 secciones, datos propuestos vs pendientes, gate aprobación
 

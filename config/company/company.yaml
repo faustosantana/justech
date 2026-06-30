@@ -1,0 +1,39 @@
+# Golden Configuration — Hellenia, S.R.L.
+# Fase 3 — reproducible master data (DEV → TEST → PROD)
+# Version: 1.0.0
+# Applied: 2026-06-30T04:41:50Z (hellenia_dev)
+
+schema_version: "1.0"
+environment_target: dev
+company_id: 1
+partner_id: 1  # res.company.partner_id — verify in Odoo after clone
+
+legal:
+  name: "Hellenia, S.R.L."
+  trade_name: "Hellenia"
+  vat_rnc: "133621282"
+  website: "https://hellenia.cloud"
+
+regional:
+  country_code: DO
+  country_name: "República Dominicana"
+  currency: DOP
+  timezone: "America/Santo_Domingo"
+  language: es_DO
+
+address:
+  street: null  # PENDING — cliente no proporcionó dirección fiscal oficial
+  city: null
+  state_code: null  # e.g. DN, SD — PENDING
+  zip: null
+  phone: null
+  email: null
+
+notes:
+  - "Empresa única — renombrada desde 'Hellenia Pruebas RD' (TC-002)"
+  - "Datos ficticios TC-002 eliminados (calle Winston Churchill, RNC 131793916)"
+  - "Nombre comercial almacenado en res.partner.comment"
+
+odoo_paths:
+  company: "Ajustes → Empresas → Hellenia, S.R.L."
+  partner: "Contactos → Hellenia, S.R.L."

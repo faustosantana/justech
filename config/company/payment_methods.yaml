@@ -1,0 +1,30 @@
+# Golden Configuration — Métodos de pago (estándar Odoo 19 EE)
+# Validado — no se crearon métodos adicionales en Fase 3
+
+schema_version: "1.0"
+count: 3
+
+methods:
+  - code: manual
+    name: Manual Payment
+    payment_type: inbound
+    use: "Cobros manuales — transferencia, efectivo registrado manualmente"
+
+  - code: manual
+    name: Manual Payment
+    payment_type: outbound
+    use: "Pagos manuales a proveedores"
+
+  - code: check_printing
+    name: Checks
+    payment_type: outbound
+    use: "Cheques — compatible l10n_do_check_printing (futuro)"
+
+planned_phase3_5:
+  - Efectivo (POS / caja) — pendiente diario caja
+  - Tarjeta datáfono — pendiente operación retail
+  - Transferencia bancaria — usar manual inbound + BNK1
+
+notes:
+  - "No activar pasarelas de pago (Stripe, etc.) en DEV"
+  - "No modificar métodos vía desarrollo"

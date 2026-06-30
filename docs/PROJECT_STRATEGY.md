@@ -118,11 +118,7 @@ Ver [CUSTOM_MODULE_GUIDE.md](CUSTOM_MODULE_GUIDE.md).
 
 ## Fase actual y próximos pasos
 
-**Fase activa:** 3 (Configuración funcional) — checklist empresa: [PHASE-3-COMPANY-CONFIG-CHECKLIST.md](PHASE-3-COMPANY-CONFIG-CHECKLIST.md) (pendiente aprobación para apply DEV).
-
-1. Aprobar checklist Fase 3 con datos legales Hellenia (§15).
-2. Aplicar parametrización empresa en DEV (sin usuarios, sin TC-003).
-3. Avanzar localización RD en paralelo controlado (Fase 4).
+**Fase activa:** 3 completada en DEV — **detenido** para aprobación Fase 3.5.
 
 ---
 

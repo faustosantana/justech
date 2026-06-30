@@ -1,0 +1,51 @@
+# Golden Configuration — Categorías de producto Hellenia
+# Fase 3 — estructura creada en DEV; sin productos cargados
+
+schema_version: "1.0"
+root_categories:
+  - Inventario
+  - Servicios
+  - Consumibles
+
+tree:
+  Inventario:
+    Mobiliario:
+      - Mesas
+      - Sillas
+      - Consolas
+      - Bufeteras
+      - Sofás
+      - Dormitorios
+    Decoración:
+      - Espejos
+      - Esculturas
+      - Pinturas
+      - Litografías
+      - Relojes
+    Iluminación:
+      - Lámparas
+      - Candelabros
+    Cristalería: []
+    Plata: []
+    Vajillas: []
+    Tapicería: []
+
+  Servicios: {}
+
+  Consumibles: {}
+
+odoo_defaults_remaining:
+  - Goods
+  - Expenses
+  - Services  # categoría Odoo por defecto — distinta de 'Servicios' golden
+
+inconsistencies:
+  - id: CAT-01
+    detail: "Coexisten categorías Odoo por defecto (Goods, Expenses, Services) y árbol golden."
+    action: "No eliminar defaults (upgrade-safe). Usar árbol Inventario/Servicios/Consumibles para catálogo Hellenia."
+
+  - id: CAT-02
+    detail: "Dos entradas 'Servicios': default Odoo 'Services' vs golden 'Servicios'."
+    action: "Capacitar usuarios — usar 'Servicios' (golden) para operación Hellenia."
+
+total_golden_categories: 23

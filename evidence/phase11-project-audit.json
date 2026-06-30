@@ -1,0 +1,42 @@
+{
+  "phase": 11,
+  "timestamp_utc": "2026-06-30T14:34:12Z",
+  "scope": "read-only repository audit",
+  "restrictions": {
+    "go_live_executed": false,
+    "production_touched": false,
+    "dns_changed": false,
+    "real_data_imported": false
+  },
+  "metrics": {
+    "mvp_python_loc_production": 1083,
+    "mvp_python_loc_tests": 532,
+    "skeleton_python_loc": 210,
+    "documentation_files": 116,
+    "shell_scripts": 51,
+    "custom_modules_mvp": 3,
+    "custom_modules_skeleton": 6
+  },
+  "modules": {
+    "mvp_active": ["justech_l10n_do_base", "justech_l10n_do_ncf", "justech_l10n_do_reports"],
+    "skeleton_unused": ["justech_core", "hellenia_base", "hellenia_account", "hellenia_inventory", "hellenia_reports", "hellenia_pos"]
+  },
+  "manifest_versions": {"justech_l10n_do_base":"19.0.1.1.0","justech_l10n_do_ncf":"19.0.1.1.0","justech_l10n_do_reports":"19.0.1.1.0"},
+  "findings": {
+    "todo_fixme_in_custom": 0,
+    "duplicate_doc_filenames": 0,
+    "docs_referencing_legacy_phase5_gaps": 38
+  },
+  "evidence_references": [
+    "evidence/uat-functional.json",
+    "evidence/uat-stress.json",
+    "evidence/uat-audit.json",
+    "evidence/phase10-backups-manifest.json",
+    "evidence/phase10-infra-audit.txt",
+    "evidence/security-audit-dev.json",
+    "evidence/security-audit-test.json"
+  ],
+  "p0_technical_debt_status": "CLOSED_SPRINT0",
+  "uat_status": "APTO_PARA_PILOTO",
+  "phase10_status": "APTO_PARA_GO_LIVE_CON_OBSERVACIONES"
+}

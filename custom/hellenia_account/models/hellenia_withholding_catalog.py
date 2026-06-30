@@ -445,6 +445,7 @@ class HelleniaWithholdingCatalog(models.Model):
                 "company_id": company.id,
                 "tax_id": tax.id if tax else False,
                 "rate": abs(tax.amount) if tax else 0.0,
+                "active": False,
             }
             rec = self._find_catalog_record(spec, company)
             if rec:
@@ -455,7 +456,7 @@ class HelleniaWithholdingCatalog(models.Model):
             can_activate = wants_active and bool(tax) and bool(rec.account_id)
             if rec.code in ("RET-NONE", "wh_none"):
                 can_activate = False
-            rec.active = can_activate
+            rec.write({"active": can_activate})
             result.append(
                 {
                     "code": spec["code"],

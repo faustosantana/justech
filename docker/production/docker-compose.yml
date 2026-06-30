@@ -1,0 +1,62 @@
+# Hellenia — Producción Odoo 19 Enterprise
+# URL objetivo (web.base.url): https://odoo.hellenia.cloud
+# Traefik pre-corte: https://prod.hellenia.cloud (NO activar odoo.hellenia.cloud hasta Go-Live)
+
+services:
+  odoo:
+    image: odoo:19.0-20260619
+    restart: unless-stopped
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.${COMPOSE_PROJECT_NAME}.rule=Host(`prod.${TRAEFIK_HOST}`)
+      - traefik.http.routers.${COMPOSE_PROJECT_NAME}.entrypoints=websecure
+      - traefik.http.routers.${COMPOSE_PROJECT_NAME}.tls.certresolver=letsencrypt
+      - traefik.http.services.${COMPOSE_PROJECT_NAME}.loadbalancer.server.port=8069
+    environment:
+      - HOST=db
+      - USER=${DB_USER}
+      - PASSWORD=${DB_PASSWORD}
+    volumes:
+      - odoo-data:/var/lib/odoo
+      - ${ENTERPRISE_PATH}:/mnt/enterprise:ro
+      - ${CUSTOM_ADDONS_PATH}:/mnt/custom:ro
+      - ${ODOO_CONF_PATH}:/etc/odoo/odoo.conf:ro
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://127.0.0.1:8069/web/login > /dev/null || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 120s
+    networks:
+      - hellenia-prod
+
+  db:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    volumes:
+      - db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - hellenia-prod
+
+volumes:
+  odoo-data:
+    name: ${COMPOSE_PROJECT_NAME}_odoo-data
+  db:
+    name: ${COMPOSE_PROJECT_NAME}_db
+
+networks:
+  hellenia-prod:
+    name: ${COMPOSE_PROJECT_NAME}_default

@@ -1,0 +1,21 @@
+# Imagen Hellenia Odoo 19 Enterprise — Community oficial + addons Enterprise + custom
+# Build: scripts/build-hellenia-odoo-image.sh
+ARG BASE_IMAGE=odoo:19.0-20260619
+FROM ${BASE_IMAGE}
+
+USER root
+
+LABEL org.opencontainers.image.title="hellenia-odoo"
+LABEL org.opencontainers.image.version="19-enterprise"
+LABEL maintainer="Justech / Hellenia"
+
+# Addons Enterprise (extraídos del tarball oficial +e)
+COPY enterprise/addons /opt/odoo/enterprise/addons
+
+# Módulos custom Justech (horneados en imagen — sin volumen)
+COPY custom /opt/odoo/custom
+
+RUN chown -R odoo:odoo /opt/odoo/enterprise /opt/odoo/custom \
+    && test -f /opt/odoo/enterprise/addons/web_enterprise/__manifest__.py
+
+USER odoo

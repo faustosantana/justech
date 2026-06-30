@@ -1,0 +1,3 @@
+[2026-06-30 12:23:46] Worker A NCF: B0200007002
+[2026-06-30 12:23:46] Worker B NCF: MISSING
+[2026-06-30 12:23:46] PASS: concurrency serialized (worker A=B0200007002, worker B blocked)

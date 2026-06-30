@@ -1,0 +1,276 @@
+{
+  "timestamp_utc": "2026-06-30T03:59:30.239347+00:00",
+  "odoo_version": {
+    "server_version": "19.0+e-20260619",
+    "server_version_info": [
+      19,
+      0,
+      0,
+      "final",
+      0,
+      "e"
+    ],
+    "server_serie": "19.0",
+    "protocol_version": 1
+  },
+  "auth_uid": 2,
+  "modules": {
+    "web_enterprise": {
+      "id": 1407,
+      "name": "web_enterprise",
+      "state": "installed",
+      "installed_version": "19.0.1.0",
+      "latest_version": "19.0.1.0"
+    },
+    "account": {
+      "id": 1,
+      "name": "account",
+      "state": "installed",
+      "installed_version": "19.0.1.4",
+      "latest_version": "19.0.1.4"
+    },
+    "base_iban": {
+      "id": 39,
+      "name": "base_iban",
+      "state": "installed",
+      "installed_version": "19.0.1.0",
+      "latest_version": "19.0.1.0"
+    },
+    "l10n_do": {
+      "id": 175,
+      "name": "l10n_do",
+      "state": "installed",
+      "installed_version": "19.0.2.0",
+      "latest_version": "19.0.2.0"
+    },
+    "l10n_do_reports": {
+      "id": 1016,
+      "name": "l10n_do_reports",
+      "state": "installed",
+      "installed_version": "19.0.1.0",
+      "latest_version": "19.0.1.0"
+    },
+    "l10n_do_check_printing": {
+      "id": 1015,
+      "name": "l10n_do_check_printing",
+      "state": "installed",
+      "installed_version": "19.0.1.0",
+      "latest_version": "19.0.1.0"
+    },
+    "l10n_do_edi": {
+      "name": "l10n_do_edi",
+      "state": "absent"
+    },
+    "account_accountant": {
+      "id": 702,
+      "name": "account_accountant",
+      "state": "installed",
+      "installed_version": "19.0.1.1",
+      "latest_version": "19.0.1.1"
+    },
+    "account_reports": {
+      "id": 735,
+      "name": "account_reports",
+      "state": "installed",
+      "installed_version": "19.0.1.0",
+      "latest_version": "19.0.1.0"
+    }
+  },
+  "l10n_do_version": "19.0.2.0",
+  "l10n_do_manifest_version": "2.0",
+  "chart_template_xmlids": [
+    {
+      "id": 35584,
+      "name": "model_account_chart_template",
+      "module": "l10n_do",
+      "res_id": 478,
+      "model": "ir.model"
+    },
+    {
+      "id": 35585,
+      "name": "field_account_chart_template__display_name",
+      "module": "l10n_do",
+      "res_id": 5641,
+      "model": "ir.model.fields"
+    },
+    {
+      "id": 35586,
+      "name": "field_account_chart_template__id",
+      "module": "l10n_do",
+      "res_id": 5640,
+      "model": "ir.model.fields"
+    }
+  ],
+  "taxes_itbis_count": 0,
+  "taxes_itbis_sample": [],
+  "taxes_retencion_count": 0,
+  "taxes_total_count": 4,
+  "document_types": [],
+  "document_types_count": 0,
+  "ncf_sequences": [],
+  "ncf_sequences_count": 0,
+  "sequence_code_counts": {
+    "B01": 0,
+    "B02": 0,
+    "B03": 0,
+    "B04": 0,
+    "B11": 0,
+    "B13": 0
+  },
+  "journals": [
+    {
+      "id": 1,
+      "name": "Sales",
+      "code": "INV",
+      "type": "sale"
+    },
+    {
+      "id": 2,
+      "name": "Purchases",
+      "code": "BILL",
+      "type": "purchase"
+    },
+    {
+      "id": 6,
+      "name": "Bank",
+      "code": "BNK1",
+      "type": "bank"
+    },
+    {
+      "id": 3,
+      "name": "Miscellaneous Operations",
+      "code": "MISC",
+      "type": "general"
+    },
+    {
+      "id": 5,
+      "name": "Cash Basis Taxes",
+      "code": "CABA",
+      "type": "general"
+    },
+    {
+      "id": 4,
+      "name": "Exchange Difference",
+      "code": "EXCH",
+      "type": "general"
+    },
+    {
+      "id": 7,
+      "name": "Tax Returns",
+      "code": "TAX",
+      "type": "general"
+    }
+  ],
+  "journals_count": 7,
+  "companies": [
+    {
+      "id": 1,
+      "name": "My Company",
+      "country_id": [
+        233,
+        "United States"
+      ],
+      "currency_id": [
+        1,
+        "USD"
+      ],
+      "vat": false
+    }
+  ],
+  "installed_module_count": 78,
+  "installed_modules": [
+    "account",
+    "account_accountant",
+    "account_accountant_check_printing",
+    "account_add_gln",
+    "account_bank_statement_import",
+    "account_bank_statement_import_camt",
+    "account_bank_statement_import_csv",
+    "account_bank_statement_import_ofx",
+    "account_check_printing",
+    "account_edi_ubl_cii",
+    "account_extract",
+    "account_fiscal_categories",
+    "account_followup",
+    "account_invoice_extract",
+    "account_online_synchronization",
+    "account_payment",
+    "account_qr_code_sepa",
+    "account_reports",
+    "ai_auto_install",
+    "analytic",
+    "api_doc",
+    "auth_passkey",
+    "auth_passkey_portal",
+    "auth_signup",
+    "auth_totp",
+    "auth_totp_mail",
+    "auth_totp_portal",
+    "base",
+    "base_iban",
+    "base_import",
+    "base_import_module",
+    "base_install_request",
+    "base_setup",
+    "bus",
+    "currency_rate_live",
+    "digest",
+    "digest_enterprise",
+    "google_gmail",
+    "html_editor",
+    "http_routing",
+    "iap",
+    "iap_extract",
+    "iap_mail",
+    "l10n_do",
+    "l10n_do_check_printing",
+    "l10n_do_reports",
+    "mail",
+    "mail_bot",
+    "mail_enterprise",
+    "mail_mobile",
+    "microsoft_outlook",
+    "onboarding",
+    "partner_autocomplete",
+    "payment",
+    "phone_validation",
+    "portal",
+    "privacy_lookup",
+    "product",
+    "product_barcodelookup",
+    "resource",
+    "resource_mail",
+    "rpc",
+    "sms",
+    "snailmail",
+    "snailmail_account",
+    "snailmail_account_followup",
+    "spreadsheet",
+    "spreadsheet_account",
+    "spreadsheet_dashboard",
+    "spreadsheet_dashboard_account",
+    "spreadsheet_dashboard_edition",
+    "spreadsheet_edition",
+    "uom",
+    "web",
+    "web_enterprise",
+    "web_mobile",
+    "web_tour",
+    "web_unsplash"
+  ],
+  "checks": {
+    "l10n_do_installed": true,
+    "account_installed": true,
+    "l10n_do_reports_not_installed": false,
+    "l10n_do_check_printing_not_installed": false,
+    "l10n_do_edi_absent": true,
+    "login_ok": true,
+    "chart_do_available": true,
+    "taxes_available": false,
+    "document_types_available": false,
+    "ncf_sequences_available": false,
+    "journals_available": true,
+    "company_not_changed": false
+  },
+  "all_pass": false
+}

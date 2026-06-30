@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_justech_do_ncf_ranges"
+              name="NCF Ranges"
+              parent="justech_l10n_do_base.menu_justech_do_fiscal_root"
+              action="action_justech_do_ncf_range"
+              sequence="20"/>
+    <menuitem id="menu_justech_do_ncf_consumption"
+              name="NCF Consumption"
+              parent="justech_l10n_do_base.menu_justech_do_fiscal_root"
+              action="action_justech_do_ncf_consumption"
+              sequence="30"/>
+</odoo>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_justech_do_reports_root"
+              name="DGII Reports"
+              parent="account.menu_finance_reports"
+              sequence="95"
+              groups="justech_l10n_do_base.group_justech_do_fiscal_user"/>
+    <menuitem id="menu_justech_do_reports_generate"
+              name="Generate Report"
+              parent="menu_justech_do_reports_root"
+              action="action_justech_do_fiscal_report_wizard"
+              sequence="10"/>
+    <menuitem id="menu_justech_do_reports_history"
+              name="Report History"
+              parent="menu_justech_do_reports_root"
+              action="action_justech_do_fiscal_report"
+              sequence="20"/>
+</odoo>

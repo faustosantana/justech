@@ -1,0 +1,178 @@
+{
+  "steps": [
+    {
+      "step": "configure_company",
+      "ok": true,
+      "detail": {
+        "name": "Hellenia Pruebas RD",
+        "country": "DO",
+        "currency": "DOP",
+        "vat": "131793916",
+        "tz": null,
+        "lang": "es_419"
+      }
+    },
+    {
+      "step": "accounts_before_chart",
+      "ok": true,
+      "detail": 51
+    },
+    {
+      "step": "load_chart_template_do",
+      "ok": true,
+      "detail": "do"
+    }
+  ],
+  "errors": [],
+  "company": {
+    "name": "Hellenia Pruebas RD",
+    "country": "DO",
+    "currency": "DOP",
+    "vat": "131793916",
+    "tz": null,
+    "chart_template": "do"
+  },
+  "validation": {
+    "accounts_count": 288,
+    "taxes_itbis_count": 14,
+    "taxes_itbis_sample": [
+      {
+        "name": "18% ITBIS",
+        "amount": 18.0
+      },
+      {
+        "name": "ITBIS Exempt",
+        "amount": 0.0
+      },
+      {
+        "name": "ITBIS Exempt",
+        "amount": 0.0
+      },
+      {
+        "name": "18% ITBIS",
+        "amount": 18.0
+      },
+      {
+        "name": "16% ITBIS",
+        "amount": 16.0
+      },
+      {
+        "name": "9% ITBIS",
+        "amount": 9.0
+      },
+      {
+        "name": "8% ITBIS",
+        "amount": 8.0
+      },
+      {
+        "name": "18% ITBIS Serv.",
+        "amount": 18.0
+      },
+      {
+        "name": "18% ITBIS Imp.",
+        "amount": 18.0
+      },
+      {
+        "name": "-100% ITBIS (N07-09)",
+        "amount": -18.0
+      },
+      {
+        "name": "-100% ITBIS (N01-11)",
+        "amount": -18.0
+      },
+      {
+        "name": "-100% ITBIS (R293-11)",
+        "amount": -18.0
+      },
+      {
+        "name": "-30% ITBIS Leg. (N02-05)",
+        "amount": -5.4
+      },
+      {
+        "name": "-75% ITBIS (N08-10)",
+        "amount": -13.5
+      }
+    ],
+    "taxes_retencion_count": 0,
+    "taxes_total": 37,
+    "fiscal_positions_count": 11,
+    "fiscal_positions_sample": [
+      "DO Domestic",
+      "P. Physical Services",
+      "P. Legal Services",
+      "P. Legal Surveillance",
+      "Informal Supplier of Goods",
+      "Outside Services",
+      "Governmental",
+      "Non-Profit Services",
+      "Special Regimes",
+      "Restaurants",
+      "To Take Away"
+    ],
+    "document_types_count": 0,
+    "document_types": [],
+    "ncf_sequences_count": 0,
+    "ncf_sequences": [],
+    "sequence_code_counts": {
+      "B01": 0,
+      "B02": 0,
+      "B03": 0,
+      "B04": 0,
+      "B11": 0,
+      "B13": 0
+    },
+    "journals_count": 7,
+    "journals": [
+      {
+        "name": "Sales",
+        "code": "INV",
+        "type": "sale"
+      },
+      {
+        "name": "Purchases",
+        "code": "FACTU",
+        "type": "purchase"
+      },
+      {
+        "name": "Bank",
+        "code": "BNK1",
+        "type": "bank"
+      },
+      {
+        "name": "Miscellaneous Operations",
+        "code": "MISCE",
+        "type": "general"
+      },
+      {
+        "name": "Cash Basis Taxes",
+        "code": "CABA",
+        "type": "general"
+      },
+      {
+        "name": "Exchange Difference",
+        "code": "CAMBI",
+        "type": "general"
+      },
+      {
+        "name": "Tax Returns",
+        "code": "TAX",
+        "type": "general"
+      }
+    ],
+    "latam_models": []
+  },
+  "checks": {
+    "country_do": true,
+    "currency_dop": true,
+    "vat_set": true,
+    "chart_loaded": true,
+    "accounts_loaded": true,
+    "taxes_itbis": true,
+    "journals": true,
+    "document_types": false,
+    "ncf_sequences": false,
+    "latam_models_present": false
+  },
+  "all_pass": false,
+  "g01_status": "CONFIRMADA"
+}

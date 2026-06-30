@@ -7,7 +7,7 @@
         </xpath>
 
         <!-- NCF destacado -->
-        <xpath expr="//div[@name='informations']" position="before">
+        <xpath expr="//div[@id='informations']" position="before">
             <div class="hellenia-ncf-box row mb-3" t-if="o.justech_do_ncf">
                 <div class="col-8">
                     <div class="hellenia-ncf-label">NCF</div>

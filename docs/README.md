@@ -31,6 +31,7 @@ Proyecto Odoo **Enterprise 19** para **Hellenia**. Pipeline permanente: **DEV 鈫
 | [L10N-RD-READINESS.md](L10N-RD-READINESS.md) | Preparaci贸n localizaci贸n RD |
 | [E1-CHECKLIST.md](E1-CHECKLIST.md) | Checklist E1 |
 | [E1-ENTERPRISE-STATUS.md](E1-ENTERPRISE-STATUS.md) | Estado actual |
+| [E1B-LICENSE-CHECKLIST.md](E1B-LICENSE-CHECKLIST.md) | **E1b** registro licencia (preparaci贸n) |
 | [E0.5-SUBSCRIPTION-VALIDATION.md](E0.5-SUBSCRIPTION-VALIDATION.md) | Suscripci贸n |
 
 ## Referencia

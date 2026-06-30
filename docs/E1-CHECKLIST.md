@@ -318,5 +318,5 @@ Usuario elimina SSH key en GitHub → Settings → SSH keys.
 | Revisión procedimiento oficial | ✅ Completada |
 | Documentación actualizada | ✅ |
 | E1a ejecutado | ⛔ Esperando aprobación |
-| E1b licencia | ⛔ Bloqueado |
+| E1b licencia | ⛔ Preparado — [E1B-LICENSE-CHECKLIST.md](E1B-LICENSE-CHECKLIST.md) |
 | E1c l10n_do | ⛔ Bloqueado |

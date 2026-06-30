@@ -42,9 +42,9 @@
 - Scripts: `extract-enterprise-full.sh`, `prepare-enterprise-addons.sh`, `build-hellenia-odoo-image.sh`, `e1a-enterprise-image.sh`
 - DEV: `web_enterprise` instalado; TEST/PROD sin cambios
 
-### Pending
-- E1b: registrar licencia suscripción
-- E1c: l10n_do
+### Added — E1b preparación licencia (2026-06-30)
+- `docs/E1B-LICENSE-CHECKLIST.md` — registro UI, riesgos DEV, política TEST/PROD
+- Sin registro ejecutado; TEST/PROD intactos
 
 ### Added (previo)
 - `docs/ENTERPRISE_ANALYSIS.md` — análisis Enterprise, suscripción M260616306091776, módulos RD, plan DEV propuesto (sin ejecución)

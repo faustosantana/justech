@@ -37,6 +37,7 @@ group_xmlids = [
     "purchase.group_purchase_manager",
     "stock.group_stock_manager",
     "base.group_no_one",
+    "justech_l10n_do_base.group_justech_do_fiscal_manager",
 ]
 if env["ir.module.module"].search([("name", "=", "point_of_sale"), ("state", "=", "installed")]):
     group_xmlids.append("point_of_sale.group_pos_manager")

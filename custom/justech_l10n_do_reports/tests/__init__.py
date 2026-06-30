@@ -4,4 +4,5 @@ from . import test_phase19_3_dgii_review
 from . import test_phase19_4_period_and_review
 from . import test_phase19_5_approval_tray
 from . import test_phase20_fiscal_framework
+from . import test_phase21_dgii_607
 from . import test_justech_l10n_do_hardening

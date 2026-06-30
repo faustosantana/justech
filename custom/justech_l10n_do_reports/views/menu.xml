@@ -60,8 +60,13 @@
               parent="menu_justech_do_reports_root"
               action="action_justech_do_fiscal_report_606"
               sequence="11"/>
+    <menuitem id="menu_justech_do_report_607_list"
+              name="607 — Ventas (historial)"
+              parent="menu_justech_do_reports_root"
+              action="action_justech_do_fiscal_report_607"
+              sequence="21"/>
     <menuitem id="menu_justech_do_report_607"
-              name="607 — Ventas"
+              name="Generar 607"
               parent="menu_justech_do_reports_root"
               action="action_justech_do_report_607"
               sequence="20"/>

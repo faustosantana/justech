@@ -147,23 +147,26 @@ class JustechDoFiscalReportReview(models.Model):
             return self._review_lines_608()
         return []
 
-    def _review_lines_606(self):
+    def _review_lines_dgii(self, exporter_model):
         self.ensure_one()
-        exporter = self.env["justech.do.dgii.606.exporter"]
-        result = exporter.validate_period_606(
+        exporter = self.env[exporter_model]
+        result = exporter.validate_period(
             self.company_id, self.date_from, self.date_to, refresh_states=True
         )
-        lines = []
-        for move in result["buckets"]["all"]:
-            lines.append(self._prepare_line_vals_606(move, result, exporter))
-        return lines
+        return [
+            self._prepare_line_vals_dgii(move, result, exporter)
+            for move in result["buckets"]["all"]
+        ]
 
-    def _prepare_line_vals_606(self, move, result, exporter):
+    def _review_lines_606(self):
+        return self._review_lines_dgii("justech.do.dgii.606.exporter")
+
+    def _prepare_line_vals_dgii(self, move, result, exporter):
         itbis = self._move_itbis_amount(move)
         wh_itbis, wh_isr, _, _ = exporter._withholding_breakdown(move)
         errors = result["move_errors"].get(move.id)
         if errors is None and move in result["buckets"]["incomplete"]:
-            errors = exporter._validate_single_move(
+            errors = exporter._dgii_validate_single_move(
                 move, self.date_from, self.date_to
             )
         errors = errors or []
@@ -207,16 +210,11 @@ class JustechDoFiscalReportReview(models.Model):
             "manual_exclusion": False,
         }
 
+    def _prepare_line_vals_606(self, move, result, exporter):
+        return self._prepare_line_vals_dgii(move, result, exporter)
+
     def _review_lines_607(self):
-        self.ensure_one()
-        moves = self.env["account.move"].search(
-            self._base_move_domain()
-            + [
-                ("move_type", "in", ("out_invoice", "out_refund")),
-                ("justech_do_ncf_voided", "=", False),
-            ]
-        )
-        return [self._prepare_line_vals_generic(move) for move in moves]
+        return self._review_lines_dgii("justech.do.dgii.607.exporter")
 
     def _review_lines_608(self):
         self.ensure_one()
@@ -254,7 +252,7 @@ class JustechDoFiscalReportReview(models.Model):
         for report in self:
             if not report.line_ids:
                 report.action_load_review_lines()
-            if report.report_type == "606":
+            if report.report_type in report.DGII_EXPORTER_MODELS:
                 report.action_validate()
             report.write(
                 {
@@ -390,7 +388,7 @@ class JustechDoFiscalReportReview(models.Model):
             audit_type="reject",
         )
 
-    def action_export_dgii_606(self, moves=None):
+    def action_export_dgii(self, moves=None):
         self.ensure_one()
         if moves is None and self.line_ids:
             diagnostics = self._get_export_diagnostics()
@@ -400,7 +398,10 @@ class JustechDoFiscalReportReview(models.Model):
                 or diagnostics["no_valid"]
             ):
                 return self.action_open_export_blocker_wizard(diagnostics)
-        return super().action_export_dgii_606(moves=moves)
+        return super().action_export_dgii(moves=moves)
+
+    def action_export_dgii_606(self, moves=None):
+        return self.action_export_dgii(moves=moves)
 
     def _check_can_generate(self):
         self.ensure_one()
@@ -429,8 +430,8 @@ class JustechDoFiscalReportReview(models.Model):
             if isinstance(exportable, dict):
                 return exportable
             moves = exportable.mapped("move_id")
-            if report.report_type == "606":
-                action = report.action_export_dgii_606(moves=moves)
+            if report.report_type in report.DGII_EXPORTER_MODELS:
+                action = report.action_export_dgii(moves=moves)
             else:
                 report.action_generate(valid_moves=moves)
                 action = report.action_export_xlsx()
@@ -567,8 +568,8 @@ class JustechDoFiscalReportLineReview(models.Model):
                         "justech_do_dgii_exclusion_reason": False,
                     }
                 )
-                exporter = line.report_id.env["justech.do.dgii.606.exporter"]
-                if line.report_id.report_type == "606":
+                exporter = line.report_id._get_dgii_exporter()
+                if exporter:
                     exporter._refresh_move_fiscal_state(
                         move, line.report_id.date_from, line.report_id.date_to
                     )

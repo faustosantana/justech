@@ -140,7 +140,7 @@
                             <field name="date_from_display" readonly="1"/>
                             <field name="date_to_display" readonly="1"/>
                             <field name="validation_state" string="Estado de validación"
-                                   widget="badge" invisible="report_type != '606'" readonly="1"/>
+                                   widget="badge" invisible="report_type not in ('606', '607')" readonly="1"/>
                         </group>
                     </group>
                     <group string="Resumen revisión (documentos cargados)">

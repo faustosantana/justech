@@ -6,6 +6,12 @@ class JustechDoFiscalReportWizard(models.TransientModel):
     _name = "justech.do.fiscal.report.wizard"
     _description = "Asistente para generar reporte fiscal DGII"
 
+    DGII_EXPORT_TYPES = ("606", "607")
+    DGII_EXPORTER_MODELS = {
+        "606": "justech.do.dgii.606.exporter",
+        "607": "justech.do.dgii.607.exporter",
+    }
+
     report_type = fields.Selection(
         selection=[
             ("606", "606 — Compras"),
@@ -163,8 +169,14 @@ class JustechDoFiscalReportWizard(models.TransientModel):
             self.date_from, self.date_to, self.period_code
         )
 
+    def _get_dgii_exporter(self):
+        self.ensure_one()
+        model = self.DGII_EXPORTER_MODELS.get(self.report_type)
+        return self.env[model] if model else False
+
     def _apply_validation_result(self, result):
         self.ensure_one()
+        exporter = self._get_dgii_exporter()
         counts = result["counts"]
         self.count_all = counts["all"]
         self.count_valid = counts["valid"]
@@ -172,12 +184,8 @@ class JustechDoFiscalReportWizard(models.TransientModel):
         self.count_excluded = counts["excluded"]
         self.count_cancelled = counts["cancelled"]
         self.count_partners_errors = counts["partners_affected"]
-        self.validation_log = self.env["justech.do.dgii.606.exporter"].format_validation_summary(
-            result
-        )
-        error_content, error_filename = self.env[
-            "justech.do.dgii.606.exporter"
-        ].export_errors_xlsx(
+        self.validation_log = exporter.format_validation_summary(result)
+        error_content, error_filename = exporter.export_errors_xlsx(
             self.company_id, self.date_from, self.date_to, result=result
         )
         self.error_report_file = error_content
@@ -235,12 +243,14 @@ class JustechDoFiscalReportWizard(models.TransientModel):
     def action_validate(self):
         self.ensure_one()
         self._check_period()
-        if self.report_type != "606":
-            self.validation_log = _("Validación detallada solo disponible para formato 606.")
+        if self.report_type not in self.DGII_EXPORT_TYPES:
+            self.validation_log = _(
+                "Validación detallada no disponible para formato %(type)s."
+            ) % {"type": self.report_type}
             self.validation_state = "ok"
         else:
-            exporter = self.env["justech.do.dgii.606.exporter"]
-            result = exporter.validate_period_606(
+            exporter = self._get_dgii_exporter()
+            result = exporter.validate_period(
                 self.company_id, self.date_from, self.date_to
             )
             self._apply_validation_result(result)
@@ -256,11 +266,11 @@ class JustechDoFiscalReportWizard(models.TransientModel):
         """Crea un registro persistente de revisión fiscal con todas las líneas."""
         self.ensure_one()
         self._check_period()
-        if self.report_type == "606" and self.validation_state == "pending":
+        if self.report_type in self.DGII_EXPORT_TYPES and self.validation_state == "pending":
             self.action_validate()
         report = self._create_report()
         report.action_load_review_lines()
-        if self.report_type == "606":
+        if self.report_type in self.DGII_EXPORT_TYPES:
             report.action_validate_period()
         else:
             report._transition_state("validated", _("Revisión guardada."))
@@ -277,7 +287,7 @@ class JustechDoFiscalReportWizard(models.TransientModel):
     def action_download_errors(self):
         self.ensure_one()
         if not self.error_report_file:
-            if self.report_type == "606":
+            if self.report_type in self.DGII_EXPORT_TYPES:
                 self.action_validate()
             if not self.error_report_file:
                 raise UserError(_("No hay reporte de errores para descargar."))
@@ -292,7 +302,7 @@ class JustechDoFiscalReportWizard(models.TransientModel):
 
     def action_generate(self):
         self.ensure_one()
-        if self.report_type == "606":
+        if self.report_type in self.DGII_EXPORT_TYPES:
             if self.validation_state == "pending":
                 self.action_validate()
             report = self._create_report()

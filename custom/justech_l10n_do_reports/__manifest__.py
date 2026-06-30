@@ -1,13 +1,13 @@
 {
     "name": "Justech Dominican Fiscal Reports",
-    "version": "19.0.1.8.2",
+    "version": "19.0.1.9.0",
     "category": "Accounting/Localizations/Reporting",
-    "summary": "DGII reports 606, 607, 608 — exportador piloto 606",
+    "summary": "DGII reports 606, 607, 608 — exportadores oficiales 606/607",
     "description": """
 Dominican DGII fiscal reports for Justech.
 
-- Format 606 (purchases) — exportador Excel DGII piloto
-- Format 607 (sales)
+- Format 606 (purchases) — exportador Excel DGII
+- Format 607 (sales) — exportador Excel DGII
 - Format 608 (voided NCF)
 - Validation wizard and export history
     """,

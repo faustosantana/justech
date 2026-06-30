@@ -34,6 +34,7 @@ Mejoras UX upgrade-safe (Fase 17):
         "views/account_move_form_views.xml",
         "views/account_payment_register_views.xml",
         "views/account_payment_views.xml",
+        "views/account_move_withholding_views.xml",
         "views/res_company_views.xml",
         "views/ncf_range_views.xml",
         "views/fiscal_security_labels.xml",

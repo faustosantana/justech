@@ -194,9 +194,8 @@ if last_inv:
             "partner_id": last_inv.partner_id.id,
             "journal_id": last_inv.journal_id.id,
             "invoice_date": today,
-            "justech_do_document_type_id": env.ref("justech_l10n_do_base.doc_type_b04", raise_if_not_found=False).id
-            if env.ref("justech_l10n_do_base.doc_type_b04", raise_if_not_found=False)
-            else False,
+            "reversed_entry_id": last_inv.id,
+            "justech_do_document_type_id": doc_b04.id if doc_b04 else False,
             "invoice_line_ids": [
                 Command.create(
                     {

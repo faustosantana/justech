@@ -96,9 +96,9 @@ case "$ACTION" in
     upgrade_modules
     ;;
   full-test)
-    hellenia_log "Flujo completo TEST: diagnose → validate"
+    hellenia_log "Flujo completo TEST: diagnose → validate-upgrade"
     "$0" test diagnose
-    "$0" test validate
+    "$0" test validate-upgrade
     ;;
   full-prod)
     hellenia_log "Flujo PROD: backup → fix → upgrade → validate"

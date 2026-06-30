@@ -33,13 +33,19 @@ else
 fi
 
 # Estructura arquitectura
-for dir in community enterprise custom config credentials; do
+for dir in community enterprise custom config; do
   if [[ -d "$PROJECT_ROOT/$dir" ]]; then
     pass "directorio $dir/ existe"
   else
     fail "directorio $dir/ no existe"
   fi
 done
+
+if [[ -d "$PROJECT_ROOT/config/credentials" ]]; then
+  pass "directorio config/credentials/ existe"
+else
+  fail "directorio config/credentials/ no existe"
+fi
 
 # Enterprise clone status
 if [[ -f "$PROJECT_ROOT/enterprise/.git/HEAD" ]]; then

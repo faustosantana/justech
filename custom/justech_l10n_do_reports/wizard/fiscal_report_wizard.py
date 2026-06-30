@@ -16,12 +16,13 @@ class JustechDoFiscalReportWizard(models.TransientModel):
         required=True,
         default="606",
     )
-    date_from = fields.Date(string="Desde", required=True, default=fields.Date.context_today)
-    date_to = fields.Date(string="Hasta", required=True, default=fields.Date.context_today)
     period_code = fields.Char(
         string="Período (YYYYMM)",
-        compute="_compute_period_code",
+        required=True,
+        default=lambda self: self.env["justech.do.dgii.period"].default_period_code(),
     )
+    date_from = fields.Date(string="Desde", required=True)
+    date_to = fields.Date(string="Hasta", required=True)
     company_id = fields.Many2one(
         "res.company",
         string="Compañía",
@@ -36,6 +37,7 @@ class JustechDoFiscalReportWizard(models.TransientModel):
             ("warning", "Con advertencias"),
             ("error", "Sin documentos válidos"),
         ],
+        string="Estado de validación",
         default="pending",
         readonly=True,
     )
@@ -47,16 +49,76 @@ class JustechDoFiscalReportWizard(models.TransientModel):
     count_partners_errors = fields.Integer(string="Proveedores con errores", readonly=True)
     error_report_file = fields.Binary(string="Reporte de errores", readonly=True)
     error_report_filename = fields.Char(string="Nombre reporte errores", readonly=True)
+    saved_report_id = fields.Many2one(
+        "justech.do.fiscal.report",
+        string="Revisión guardada",
+        readonly=True,
+    )
 
-    @api.depends("date_from")
-    def _compute_period_code(self):
-        for wiz in self:
-            wiz.period_code = wiz.date_from.strftime("%Y%m") if wiz.date_from else False
+    @api.model
+    def default_get(self, fields_list):
+        res = super().default_get(fields_list)
+        period_util = self.env["justech.do.dgii.period"]
+        period_code = res.get("period_code") or period_util.default_period_code()
+        date_from, date_to = period_util.period_bounds_from_code(period_code)
+        res.update(
+            {
+                "period_code": period_code,
+                "date_from": date_from,
+                "date_to": date_to,
+            }
+        )
+        return res
+
+    @api.onchange("period_code")
+    def _onchange_period_code(self):
+        if not self.period_code:
+            return
+        try:
+            date_from, date_to = self.env[
+                "justech.do.dgii.period"
+            ].period_bounds_from_code(self.period_code)
+            self.date_from = date_from
+            self.date_to = date_to
+            self.validation_state = "pending"
+            self.validation_log = False
+        except UserError as err:
+            return {
+                "warning": {
+                    "title": _("Período inválido"),
+                    "message": str(err),
+                }
+            }
+
+    @api.onchange("date_from", "date_to")
+    def _onchange_dates(self):
+        if self.date_from and self.date_to and self.date_from > self.date_to:
+            return {
+                "warning": {
+                    "title": _("Fechas incoherentes"),
+                    "message": _("La fecha desde no puede ser posterior a la fecha hasta."),
+                }
+            }
+        if self.date_from and self.date_to and self.period_code:
+            try:
+                self.env["justech.do.dgii.period"].validate_period_dates(
+                    self.date_from, self.date_to, self.period_code
+                )
+            except UserError as err:
+                return {
+                    "warning": {
+                        "title": _("Período incoherente"),
+                        "message": str(err),
+                    }
+                }
 
     def _check_period(self):
         self.ensure_one()
-        if self.date_from > self.date_to:
-            raise UserError(_("La fecha desde no puede ser posterior a la fecha hasta."))
+        period_util = self.env["justech.do.dgii.period"]
+        period_util.period_bounds_from_code(self.period_code)
+        period_util.validate_period_dates(
+            self.date_from, self.date_to, self.period_code
+        )
 
     def _apply_validation_result(self, result):
         self.ensure_one()
@@ -91,7 +153,7 @@ class JustechDoFiscalReportWizard(models.TransientModel):
         label = labels.get(self.report_type, self.report_type)
         return self.env["justech.do.fiscal.report"].create(
             {
-                "name": f"{label} {self.period_code or self.date_from} — {self.date_to}",
+                "name": f"{label} {self.period_code} — revisión fiscal",
                 "report_type": self.report_type,
                 "date_from": self.date_from,
                 "date_to": self.date_to,
@@ -106,8 +168,25 @@ class JustechDoFiscalReportWizard(models.TransientModel):
                 "count_partners_errors": self.count_partners_errors,
                 "error_report_file": self.error_report_file,
                 "error_report_filename": self.error_report_filename,
+                "state": "draft",
             }
         )
+
+    def _open_review_form(self, report):
+        review_form = self.env.ref(
+            "justech_l10n_do_reports.view_justech_do_fiscal_report_review_form",
+            raise_if_not_found=False,
+        )
+        views = [(review_form.id, "form")] if review_form else []
+        return {
+            "type": "ir.actions.act_window",
+            "name": _("Revisión fiscal DGII"),
+            "res_model": "justech.do.fiscal.report",
+            "res_id": report.id,
+            "view_mode": "form",
+            "views": views or False,
+            "target": "current",
+        }
 
     def action_validate(self):
         self.ensure_one()
@@ -128,6 +207,34 @@ class JustechDoFiscalReportWizard(models.TransientModel):
             "view_mode": "form",
             "target": "new",
         }
+
+    def action_save_review(self):
+        """Crea un registro persistente de revisión fiscal con todas las líneas."""
+        self.ensure_one()
+        self._check_period()
+        if self.report_type == "606" and self.validation_state == "pending":
+            self.action_validate()
+        report = self._create_report()
+        report.action_load_review_lines()
+        if self.report_type == "606":
+            report.action_validate_period()
+        else:
+            report.write({"state": "validated"})
+        self.saved_report_id = report.id
+        report.message_post(
+            body=_(
+                "Revisión fiscal guardada desde el asistente %(tipo)s — período %(periodo)s."
+            )
+            % {"tipo": self.report_type, "periodo": self.period_code}
+        )
+        return self._open_review_form(report)
+
+    def action_view_documents(self):
+        """Abre la revisión guardada o la crea si aún no existe."""
+        self.ensure_one()
+        if self.saved_report_id:
+            return self._open_review_form(self.saved_report_id)
+        return self.action_save_review()
 
     def action_download_errors(self):
         self.ensure_one()
@@ -161,36 +268,21 @@ class JustechDoFiscalReportWizard(models.TransientModel):
                     or _("No hay documentos fiscalmente válidos para exportar.")
                 )
             report = self._create_report()
-            report.action_generate(valid_moves=valid_moves)
+            report.action_load_review_lines()
+            report.action_validate_period()
+            if report.manual_exclusion_count:
+                raise UserError(
+                    _(
+                        "Hay exclusiones manuales pendientes. Guarde la revisión y "
+                        "solicite aprobación del supervisor antes de generar el Excel."
+                    )
+                )
+            report.with_user(self.env.user).action_generate_dgii_export()
             return report.action_export_dgii_606(moves=valid_moves)
         report = self._create_report()
         report.action_generate()
-        return {
-            "type": "ir.actions.act_window",
-            "res_model": "justech.do.fiscal.report",
-            "res_id": report.id,
-            "view_mode": "form",
-            "target": "current",
-        }
+        return self._open_review_form(report)
 
     def action_generate_history(self):
-        """Genera historial sin descargar — útil para revisar líneas antes de exportar."""
-        self.ensure_one()
-        if self.report_type == "606" and self.validation_state == "pending":
-            self.action_validate()
-        report = self._create_report()
-        if self.report_type == "606":
-            exporter = self.env["justech.do.dgii.606.exporter"]
-            result = exporter.validate_period_606(
-                self.company_id, self.date_from, self.date_to
-            )
-            report.action_generate(valid_moves=result["buckets"]["valid"])
-        else:
-            report.action_generate()
-        return {
-            "type": "ir.actions.act_window",
-            "res_model": "justech.do.fiscal.report",
-            "res_id": report.id,
-            "view_mode": "form",
-            "target": "current",
-        }
+        """Alias retrocompatible — guarda revisión fiscal persistente."""
+        return self.action_save_review()

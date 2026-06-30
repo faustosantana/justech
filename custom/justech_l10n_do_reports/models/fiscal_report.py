@@ -63,7 +63,7 @@ class JustechDoFiscalReport(models.Model):
             ("warning", "Con advertencias"),
             ("error", "Sin documentos válidos"),
         ],
-        string="Estado validación",
+        string="Estado de validación",
         default="pending",
     )
     count_all = fields.Integer(string="Documentos en período", readonly=True)

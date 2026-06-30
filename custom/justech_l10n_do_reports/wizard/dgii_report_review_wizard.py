@@ -48,6 +48,7 @@ class JustechDoDgiiReportExcludeWizard(models.TransientModel):
                 {
                     "include_in_report": False,
                     "manual_exclusion": True,
+                    "auto_exclusion": False,
                     "exclusion_reason": self.reason,
                     "fiscal_state": "excluded",
                     "line_approval_state": "pending",

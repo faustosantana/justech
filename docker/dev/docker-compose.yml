@@ -22,6 +22,8 @@ services:
     volumes:
       - odoo-data:/var/lib/odoo
       - ${ODOO_CONF_PATH}:/etc/odoo/odoo.conf:ro
+      # DEV: montar custom desde host (sobrescribe COPY de imagen para desarrollo)
+      - ${CUSTOM_ADDONS_PATH:-../../custom}:/opt/odoo/custom:ro
     depends_on:
       db:
         condition: service_healthy

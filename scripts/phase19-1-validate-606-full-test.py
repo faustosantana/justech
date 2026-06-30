@@ -17,11 +17,16 @@ DB = env.cr.dbname
 if DB != "hellenia_test":
     raise SystemExit(f"ABORT: solo hellenia_test, actual={DB}")
 
-EVIDENCE_DIR = "/tmp/hellenia-phase19-evidence"
+EVIDENCE_DIR = os.environ.get(
+    "HELLENIA_PHASE19_EVIDENCE", "/tmp/hellenia-phase19-evidence"
+)
 os.makedirs(EVIDENCE_DIR, exist_ok=True)
 EXCEL_PATH = os.path.join(EVIDENCE_DIR, "phase19-606-export.xlsx")
 JSON_PATH = os.path.join(EVIDENCE_DIR, "phase19-606-test.json")
-HOST_EVIDENCE_HINT = "/opt/odoo-projects/hellenia/evidence/phase19-606-test.json"
+HOST_EVIDENCE_HINT = os.environ.get(
+    "HELLENIA_PHASE19_EVIDENCE_HOST",
+    "/opt/odoo-projects/hellenia/evidence/phase19-606-test.json",
+)
 
 report = {
     "phase": "19.1",
@@ -528,6 +533,9 @@ report["validation_errors_es"]["fuera_periodo"] = err_period
 check("error_fuera_periodo", len(err_period) == 0, "período 2020-01 sin facturas demo")
 
 report["pass"] = report["ok"] and report["passed"] == report["total"]
+if os.path.isfile(EXCEL_PATH):
+    with open(EXCEL_PATH, "rb") as fh:
+        report["excel_base64"] = base64.b64encode(fh.read()).decode("ascii")
 with open(JSON_PATH, "w", encoding="utf-8") as fh:
     json.dump(report, fh, ensure_ascii=False, indent=2)
 

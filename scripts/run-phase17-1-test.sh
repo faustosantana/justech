@@ -35,7 +35,8 @@ docker compose --env-file "$ENV_FILE" run --rm -T odoo odoo \
   2>&1 | tail -20 | tee -a "$LOG"
 
 docker compose --env-file "$ENV_FILE" up -d odoo
-sleep 15
+docker compose --env-file "$ENV_FILE" restart odoo
+sleep 20
 
 "$SCRIPT_DIR/run-odoo-shell-env.sh" test phase17-1-validate-payments-test.py PHASE17_1 "$EVIDENCE" 2>&1 | tee -a "$LOG"
 

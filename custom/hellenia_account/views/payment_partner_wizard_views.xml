@@ -101,7 +101,7 @@
     </record>
 
     <record id="action_hellenia_register_customer_payment" model="ir.actions.act_window">
-        <field name="name">Registrar cobro</field>
+        <field name="name">Nuevo</field>
         <field name="res_model">hellenia.payment.partner.wizard</field>
         <field name="view_mode">form</field>
         <field name="target">new</field>
@@ -109,18 +109,19 @@
     </record>
 
     <record id="action_hellenia_register_vendor_payment" model="ir.actions.act_window">
-        <field name="name">Registrar pago</field>
+        <field name="name">Nuevo</field>
         <field name="res_model">hellenia.payment.partner.wizard</field>
         <field name="view_mode">form</field>
         <field name="target">new</field>
         <field name="context">{'default_partner_type': 'supplier'}</field>
     </record>
 
-    <!-- Lista cobros: botón wizard en lugar de crear pago vacío -->
+    <!-- Clientes → Pagos: Nuevo abre wizard (no account.payment vacío) -->
     <record id="view_account_payment_tree_customer_hellenia" model="ir.ui.view">
         <field name="name">account.payment.tree.customer.hellenia</field>
         <field name="model">account.payment</field>
         <field name="inherit_id" ref="account.view_account_payment_tree"/>
+        <field name="priority">20</field>
         <field name="arch" type="xml">
             <xpath expr="//list" position="attributes">
                 <attribute name="create">false</attribute>
@@ -128,7 +129,7 @@
             <xpath expr="//list" position="inside">
                 <header>
                     <button name="%(hellenia_account.action_hellenia_register_customer_payment)d"
-                            type="action" string="Registrar cobro" class="btn-primary" display="always"/>
+                            type="action" string="Nuevo" class="btn-primary" display="always"/>
                 </header>
             </xpath>
         </field>
@@ -138,6 +139,7 @@
         <field name="name">account.payment.tree.vendor.hellenia</field>
         <field name="model">account.payment</field>
         <field name="inherit_id" ref="account.view_account_supplier_payment_tree"/>
+        <field name="priority">20</field>
         <field name="arch" type="xml">
             <xpath expr="//list" position="attributes">
                 <attribute name="create">false</attribute>
@@ -145,13 +147,19 @@
             <xpath expr="//list" position="inside">
                 <header>
                     <button name="%(hellenia_account.action_hellenia_register_vendor_payment)d"
-                            type="action" string="Registrar pago" class="btn-primary" display="always"/>
+                            type="action" string="Nuevo" class="btn-primary" display="always"/>
                 </header>
             </xpath>
         </field>
     </record>
 
-    <!-- Etiquetas menú Pagos en español -->
+    <!-- Etiquetas menú y acciones en español -->
+    <record id="account.action_account_payments" model="ir.actions.act_window">
+        <field name="name">Pagos</field>
+    </record>
+    <record id="account.action_account_payments_payable" model="ir.actions.act_window">
+        <field name="name">Pagos</field>
+    </record>
     <record id="account.menu_action_account_payments_receivable" model="ir.ui.menu">
         <field name="name">Pagos</field>
     </record>

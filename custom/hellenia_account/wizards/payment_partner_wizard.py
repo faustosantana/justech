@@ -199,9 +199,7 @@ class HelleniaPaymentPartnerWizard(models.TransientModel):
         self._load_pending_invoices()
         self._recompute_withholdings()
 
-    @api.onchange(
-        "wh_isr_gov", "wh_itbis_30", "wh_isr_10", "wh_itbis_75", "line_ids", "line_ids.apply", "line_ids.amount_to_pay"
-    )
+    @api.onchange("wh_isr_gov", "wh_itbis_30", "wh_isr_10", "wh_itbis_75", "line_ids")
     def _onchange_withholdings(self):
         self._recompute_withholdings()
 

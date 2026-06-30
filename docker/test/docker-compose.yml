@@ -1,7 +1,25 @@
 # Hellenia — Ambiente TEST
-# Infraestructura: ver docs/INFRASTRUCTURE_REVIEW.md
-include:
-  - path: ../lib/traefik-odoo.yaml
+x-odoo-traefik-labels: &odoo-traefik-labels
+  - traefik.enable=true
+  - traefik.http.routers.${COMPOSE_PROJECT_NAME}.rule=Host(`${ODOO_PUBLIC_HOST}`)
+  - traefik.http.routers.${COMPOSE_PROJECT_NAME}.entrypoints=websecure
+  - traefik.http.routers.${COMPOSE_PROJECT_NAME}.tls=true
+  - traefik.http.routers.${COMPOSE_PROJECT_NAME}.tls.certresolver=letsencrypt
+  - traefik.http.routers.${COMPOSE_PROJECT_NAME}.service=${COMPOSE_PROJECT_NAME}
+  - traefik.http.routers.${COMPOSE_PROJECT_NAME}.middlewares=${COMPOSE_PROJECT_NAME}-secure@docker
+  - traefik.http.services.${COMPOSE_PROJECT_NAME}.loadbalancer.server.port=8069
+  - traefik.http.services.${COMPOSE_PROJECT_NAME}.loadbalancer.passhostheader=true
+  - traefik.http.middlewares.${COMPOSE_PROJECT_NAME}-secure.headers.sslredirect=true
+  - traefik.http.middlewares.${COMPOSE_PROJECT_NAME}-secure.headers.customrequestheaders.X-Forwarded-Proto=https
+  - traefik.http.routers.${COMPOSE_PROJECT_NAME}-ws.rule=Host(`${ODOO_PUBLIC_HOST}`) && (PathPrefix(`/websocket`) || PathPrefix(`/longpolling`))
+  - traefik.http.routers.${COMPOSE_PROJECT_NAME}-ws.entrypoints=websecure
+  - traefik.http.routers.${COMPOSE_PROJECT_NAME}-ws.tls=true
+  - traefik.http.routers.${COMPOSE_PROJECT_NAME}-ws.tls.certresolver=letsencrypt
+  - traefik.http.routers.${COMPOSE_PROJECT_NAME}-ws.service=${COMPOSE_PROJECT_NAME}-ws
+  - traefik.http.routers.${COMPOSE_PROJECT_NAME}-ws.middlewares=${COMPOSE_PROJECT_NAME}-secure@docker
+  - traefik.http.routers.${COMPOSE_PROJECT_NAME}-ws.priority=100
+  - traefik.http.services.${COMPOSE_PROJECT_NAME}-ws.loadbalancer.server.port=8072
+  - traefik.http.services.${COMPOSE_PROJECT_NAME}-ws.loadbalancer.passhostheader=true
 
 services:
   odoo:

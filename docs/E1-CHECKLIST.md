@@ -25,15 +25,18 @@ Este checklist consolida el procedimiento documentado por Odoo para on-premise D
 ### Secuencia E1a — vía portal (recomendada)
 
 ```
-1. Descargar Enterprise Sources Odoo 19 desde portal (login suscripción)
-2. Subir tarball a downloads/enterprise/
-3. scripts/validate-enterprise-archive.sh
-4. scripts/extract-enterprise-portal.sh
-5. addons_path ya configurado — recrear contenedor DEV
-6. backup-dev.sh
-7. odoo -i web_enterprise --stop-after-init
-8. validate-enterprise-dev.sh
+1. Usuario: descargar Sources Odoo 19 (portal) o entregar URL/archivo a Cursor
+2. Cursor: download-enterprise-portal.sh | receive-enterprise-archive.sh
+3. scripts/validate-enterprise-archive.sh --report
+4. [Aprobación E1a] e1a-portal-pipeline.sh --execute
+   → extract-enterprise-portal.sh
+   → recrear contenedor DEV
+   → backup-dev.sh
+   → odoo -i web_enterprise --stop-after-init
+   → validate-enterprise-dev.sh
 ```
+
+Ver [E0.6c-ENTERPRISE-DELIVERY-FLOW.md](E0.6c-ENTERPRISE-DELIVERY-FLOW.md).
 
 ### Secuencia E1a — vía Git (alternativa)
 
@@ -47,9 +50,9 @@ fetch-enterprise.sh --git-only   # cuando GitHub accesible
 
 | Regla | Responsable |
 |-------|-------------|
-| Descargar Sources desde portal Odoo | **Usuario** |
-| Subir tarball al VPS | **Usuario** o Cursor vía SCP |
-| Extract, montar, `web_enterprise`, validar | **Cursor** vía SSH |
+| Descargar Sources / copiar enlace portal | **Usuario** |
+| Transferir al VPS (automático vía Cursor) | **Cursor** — sin SCP del usuario |
+| Validar, extract, `web_enterprise`, validar DEV | **Cursor** tras aprobación E1a |
 | Wizard, usuarios, l10n_do, licencia UI | **Bloqueado** |
 | TEST / PRODUCCIÓN | **No tocar** |
 
@@ -66,17 +69,27 @@ fetch-enterprise.sh --git-only   # cuando GitHub accesible
 | 3 | Odoo **19** → Enterprise → **Sources** → debe decir **Download** (no Buy) |
 | 4 | Descargar archivo `.tar.gz` o `.zip` |
 
-### A.2 Transferir al VPS
+### A.2 Entregar a Cursor (sin SCP al VPS)
 
-```bash
-scp <archivo>.tar.gz root@2.25.69.179:/opt/odoo-projects/hellenia/downloads/enterprise/
-```
+Ver [E0.6c-ENTERPRISE-DELIVERY-FLOW.md](E0.6c-ENTERPRISE-DELIVERY-FLOW.md).
+
+| Opción | Acción usuario |
+|--------|----------------|
+| **A** Enlace temporal | Clic derecho → Copiar enlace en Download → pegar en Cursor |
+| **B** Archivo | Adjuntar `.tar.gz` / `.zip` al chat |
 
 ### A.3 Validar archivo (Cursor — sin instalar)
 
 ```bash
-/opt/odoo-projects/hellenia/scripts/validate-enterprise-archive.sh \
+/opt/odoo-projects/hellenia/scripts/e1a-portal-pipeline.sh --validate-only \
   /opt/odoo-projects/hellenia/downloads/enterprise/<archivo>.tar.gz
+```
+
+O:
+
+```bash
+/opt/odoo-projects/hellenia/scripts/validate-enterprise-archive.sh \
+  /opt/odoo-projects/hellenia/downloads/enterprise/<archivo>.tar.gz --report
 ```
 
 ---

@@ -64,9 +64,17 @@
 
 ### Procedimiento preparado (sin ejecutar E1)
 
-Ver [E0.6b-ENTERPRISE-PORTAL-DOWNLOAD.md](E0.6b-ENTERPRISE-PORTAL-DOWNLOAD.md).
+Ver [E0.6b-ENTERPRISE-PORTAL-DOWNLOAD.md](E0.6b-ENTERPRISE-PORTAL-DOWNLOAD.md) y [E0.6c-ENTERPRISE-DELIVERY-FLOW.md](E0.6c-ENTERPRISE-DELIVERY-FLOW.md).
 
-Script: `scripts/extract-enterprise-portal.sh`
+Scripts:
+
+| Script | Uso |
+|--------|-----|
+| `download-enterprise-portal.sh` | Descarga desde URL temporal (Flujo A) |
+| `receive-enterprise-archive.sh` | Recibe archivo vía Cursor (Flujo B) |
+| `validate-enterprise-archive.sh` | Validación exhaustiva + `--report` |
+| `e1a-portal-pipeline.sh` | `--validate-only` o `--execute` (tras aprobación) |
+| `extract-enterprise-portal.sh` | Extrae a `enterprise/` |
 
 ### Ventajas / desventajas
 
@@ -75,7 +83,7 @@ Script: `scripts/extract-enterprise-portal.sh`
 | No depende de GitHub | Actualización manual (nuevo tarball) |
 | Procedimiento oficial equivalente | Sin `git log` / commit hash nativo |
 | Funciona con Docker + volumen | Descarga requiere login humano en portal |
-| Misma `addons_path` que Git | Archivo grande — transferir al VPS |
+| Misma `addons_path` que Git | Enlace portal expira; usuario entrega URL o archivo a Cursor |
 
 ---
 
@@ -187,11 +195,12 @@ La documentación indica que partners también descargan desde el portal estando
 
 ### Fase inmediata (E1a-revised)
 
-1. **Usuario:** Iniciar sesión en odoo.com con cuenta de la suscripción `M260616306091776`
-2. **Usuario:** Descargar **Odoo 19 → Enterprise → Sources** desde [odoo.com/page/download](https://www.odoo.com/page/download)
-3. **Usuario/Cursor:** Subir tarball a VPS `downloads/enterprise/`
-4. **Cursor (tras aprobación):** `scripts/extract-enterprise-portal.sh` → montar DEV → `web_enterprise`
-5. **Paralelo:** Seguir gestionando acceso GitHub para actualizaciones futuras
+1. **Usuario:** Login odoo.com → descargar **Odoo 19 → Enterprise → Sources** (o copiar enlace temporal)
+2. **Usuario:** Entregar **URL temporal** o **archivo adjunto** a Cursor — **sin SCP al VPS** ([E0.6c](E0.6c-ENTERPRISE-DELIVERY-FLOW.md))
+3. **Cursor:** `e1a-portal-pipeline.sh --validate-only`
+4. **Usuario:** Aprobar explícitamente E1a portal
+5. **Cursor:** `e1a-portal-pipeline.sh --execute` → DEV `web_enterprise`
+6. **Paralelo:** Seguir gestionando acceso GitHub para actualizaciones futuras
 
 ### Fase largo plazo
 
@@ -218,6 +227,7 @@ La documentación indica que partners también descargan desde el portal estando
 ## Referencias internas
 
 - [E0.6b-ENTERPRISE-PORTAL-DOWNLOAD.md](E0.6b-ENTERPRISE-PORTAL-DOWNLOAD.md)
+- [E0.6c-ENTERPRISE-DELIVERY-FLOW.md](E0.6c-ENTERPRISE-DELIVERY-FLOW.md)
 - [E0.6-GITHUB-ENTERPRISE.md](E0.6-GITHUB-ENTERPRISE.md)
 - [E1-CHECKLIST.md](E1-CHECKLIST.md)
 - [UPGRADE-PATH.md](UPGRADE-PATH.md)

@@ -16,7 +16,10 @@
 | Upgrade Enterprise | `upgrade-enterprise.sh` | Global |
 | Actualizar módulos custom | `update-custom-modules.sh` | DEV / TEST |
 | Clone / extract Enterprise | `fetch-enterprise.sh` / `extract-enterprise-portal.sh` / `clone-enterprise.sh` | Global |
-| Validar tarball portal | `validate-enterprise-archive.sh` | Pre-E1 |
+| Descargar portal (URL temporal) | `download-enterprise-portal.sh` | Pre-E1 |
+| Recibir archivo vía Cursor | `receive-enterprise-archive.sh` | Pre-E1 |
+| Validar tarball portal | `validate-enterprise-archive.sh` (+ Python) | Pre-E1 |
+| Pipeline E1a portal | `e1a-portal-pipeline.sh --validate-only` / `--execute` | DEV (E1) |
 | Instalar Enterprise | `install-enterprise-dev.sh` | DEV (E1) |
 | Validar Enterprise | `validate-enterprise-dev.sh` | DEV |
 | Validar suscripción | `validate-subscription-env.sh` | Global |

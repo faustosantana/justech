@@ -82,7 +82,7 @@ Ver [INFRASTRUCTURE_REVIEW.md](INFRASTRUCTURE_REVIEW.md).
 
 | Capa | Ubicación física | Origen | Modificable |
 |------|------------------|--------|-------------|
-| **Enterprise** | `enterprise/` | `git clone odoo/enterprise` | ❌ Nunca |
+| **Enterprise** | `enterprise/` | Portal tarball **o** `git pull` | ❌ Nunca |
 | **Community** | Contenedor Docker | Imagen `odoo:19.0-20260619` | ❌ Nunca |
 | **Custom** | `custom/` | Repo Justech | ✅ Solo aquí |
 
@@ -132,7 +132,7 @@ Estructura preparada (sin desarrollo aún):
 La infraestructura **no se rehace**. Solo se actualizan:
 
 1. Tag imagen Community en `docker-compose.yml`
-2. `git pull` en `enterprise/` (nueva rama mayor)
+2. `git pull` en `enterprise/` (nueva rama mayor) **o** nuevo tarball portal — ver [E0.6c](E0.6c-ENTERPRISE-DELIVERY-FLOW.md)
 3. `git pull` + deploy de `custom/`
 
 Detalle: [UPGRADE-PATH.md](UPGRADE-PATH.md)
@@ -151,7 +151,7 @@ GitHub (justech)
     ├── sync docker/, config/, scripts/
     │
     ▼ (independiente — SSH)
-enterprise/ ◄── git pull odoo/enterprise (rama 19.0)
+enterprise/ ◄── extract-enterprise-portal.sh o git pull odoo/enterprise
     │
     ▼
 docker compose up -d

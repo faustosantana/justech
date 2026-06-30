@@ -28,9 +28,17 @@
 - Scripts: `extract-enterprise-portal.sh`, `fetch-enterprise.sh`, `validate-enterprise-archive.sh`
 - `downloads/enterprise/` staging
 
+### Added — Entrega semi-automática Enterprise (2026-06-30)
+- `docs/E0.6c-ENTERPRISE-DELIVERY-FLOW.md` — flujos A/B/C sin SCP del usuario
+- `scripts/lib/validate_enterprise_archive.py` — validación exhaustiva (19.0, integridad, web_enterprise)
+- `scripts/download-enterprise-portal.sh` — descarga desde URL temporal del portal
+- `scripts/receive-enterprise-archive.sh` — recibe archivo vía Cursor al VPS
+- `scripts/e1a-portal-pipeline.sh` — `--validate-only` / `--execute`
+- Verificación VPS: Enterprise requiere sesión; no hay URL wget permanente
+
 ### Pending (E1a-revised — portal)
-- Usuario: descargar Sources Odoo 19 Enterprise + subir tarball VPS
-- Aprobación: extract + web_enterprise en DEV
+- Usuario: entregar URL temporal o archivo adjunto a Cursor
+- Aprobación explícita: `e1a-portal-pipeline.sh --execute` en DEV
 
 ### Added (previo)
 - `docs/ENTERPRISE_ANALYSIS.md` — análisis Enterprise, suscripción M260616306091776, módulos RD, plan DEV propuesto (sin ejecución)

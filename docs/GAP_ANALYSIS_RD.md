@@ -86,8 +86,14 @@ Estos ítems están **fuera del stack** `l10n_do` + `l10n_do_reports` por diseñ
 
 ---
 
-## 3. Brechas probables — desarrollo custom potencial Evidencia preliminar | TC | Prioridad | Impacto | Esfuerzo est. | Módulo custom |
+## 3. Brechas probables — desarrollo custom potencial
+
+> **Hipótesis pre-validación.** Prioridad e impacto se recalibrarán tras ejecutar TC vinculados.
+
+| ID | Brecha hipotética | Evidencia preliminar | TC | Prioridad | Impacto | Esfuerzo est. | Módulo custom |
 |----|-------------------|---------------------|-----|-----------|---------|---------------|---------------|
+| G-00 | Backup DEV no ejecutable sin SSH VPS | TC-000 SSH denegado desde Cloud Agent | TC-000 | 🔴 P0 | Bloqueante ejecución | — | Infra / credenciales |
+| G-09 | BD DEV sin módulo `account` instalado | TC-000 baseline XML-RPC | TC-000 | 🔴 P0 | Bloqueante `l10n_do` | 0.5 día | Instalar estándar |
 | G-01 | **Secuencias NCF no operativas sin terceros** | Advertencia manifest `l10n_do` 19.0 | TC-020 | 🔴 P0 | Bloqueante go-live | 5–15 días | `hellenia_account` |
 | G-02 | Framework documentos LATAM ausente/incompleto en 19.0 | `l10n_do` 19.0 sin dependencia `l10n_latam_invoice_document` (presente en saas-19.3) | TC-014, TC-017 | 🔴 P0 | Alto — UI documentos diferente | 3–10 días | `hellenia_account` |
 | G-03 | Tipos NCF B14, B15, B16 no precargados | No declarados explícitamente en manifest 19.0 | TC-017 | 🟠 P1 | Medio — depende operación Hellenia | 2–5 días | `hellenia_account` |

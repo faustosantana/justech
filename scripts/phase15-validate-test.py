@@ -179,12 +179,18 @@ def _smoke(label, fn):
         err(f"smoke funcional fallido {label}: {exc}")
 
 def _sale_quotation():
+    if not partner or not product:
+        return False
     so = env["sale.order"].create({"partner_id": partner.id})
     env["sale.order.line"].create({"order_id": so.id, "product_id": product.id, "product_uom_qty": 1})
     return so.state == "draft"
 
 def _purchase_rfq():
     vendor = env["res.partner"].search([("supplier_rank", ">", 0)], limit=1)
+    if not vendor:
+        vendor = env["res.partner"].create({"name": "Proveedor Demo 15", "supplier_rank": 1})
+    if not product:
+        return False
     po = env["purchase.order"].create({"partner_id": vendor.id})
     env["purchase.order.line"].create({"order_id": po.id, "product_id": product.id, "product_qty": 1, "price_unit": 100})
     return po.state == "draft"

@@ -15,23 +15,27 @@
                        decoration-danger="fiscal_state == 'excluded'"
                        decoration-muted="fiscal_state == 'cancelled'"/>
                 <field name="move_name" string="Documento"/>
-                <field name="document_type"/>
-                <field name="ncf"/>
-                <field name="ncf_modified" optional="show"/>
+                <field name="document_type" string="Tipo documento"/>
                 <field name="partner_name" string="Cliente / Proveedor"/>
                 <field name="partner_vat" string="RNC / Cédula"/>
+                <field name="partner_id_type" string="Tipo identificación" optional="show"/>
+                <field name="ncf"/>
+                <field name="ncf_modified" string="NCF modificado" optional="show"/>
                 <field name="document_date" string="Fecha"/>
-                <field name="invoice_date_due" string="Vencimiento" optional="show"/>
-                <field name="currency_id" optional="hide"/>
+                <field name="invoice_date_due" string="Vencimiento" optional="hide"/>
+                <field name="currency_id" string="Moneda" optional="show"/>
                 <field name="amount_total" string="Total"/>
                 <field name="amount_tax" string="ITBIS"/>
                 <field name="amount_withholding" string="Retenciones" optional="show"/>
-                <field name="payment_method_code" string="Forma pago" optional="show"/>
-                <field name="exclusion_reason" optional="show"/>
+                <field name="payment_method_code" string="Forma de pago" optional="hide"/>
+                <field name="exclusion_reason" string="Motivo de exclusión" optional="show"/>
+                <field name="auto_exclusion" string="Excl. automática" optional="hide"/>
+                <field name="excluded_by_id" string="Usuario que excluyó" optional="show"/>
+                <field name="excluded_at" string="Fecha de exclusión" optional="show"/>
+                <field name="line_approval_state" string="Estado aprobación" optional="show"/>
+                <field name="approved_by_id" string="Aprobado por" optional="show"/>
+                <field name="approved_at" string="Fecha aprobación" optional="show"/>
                 <field name="manual_exclusion" column_invisible="1"/>
-                <field name="line_approval_state" optional="show"/>
-                <field name="approved_by_id" optional="hide"/>
-                <field name="approved_at" optional="hide"/>
                 <field name="error_message" optional="hide"/>
                 <field name="move_id" column_invisible="1"/>
                 <button name="action_open_move" type="object" icon="fa-external-link"
@@ -51,7 +55,7 @@
                 <field name="move_name"/>
                 <field name="partner_name"/>
                 <field name="ncf"/>
-                <filter name="filter_valid" string="Válidos"
+                <filter name="filter_valid" string="Válidos para exportar"
                         domain="[('fiscal_state', '=', 'valid'), ('include_in_report', '=', True)]"/>
                 <filter name="filter_incomplete" string="Incompletos"
                         domain="[('fiscal_state', '=', 'incomplete')]"/>
@@ -59,8 +63,12 @@
                         domain="['|', ('fiscal_state', '=', 'excluded'), ('include_in_report', '=', False)]"/>
                 <filter name="filter_cancelled" string="Anulados"
                         domain="[('fiscal_state', '=', 'cancelled')]"/>
+                <filter name="filter_pending_approval" string="Requieren aprobación"
+                        domain="[('manual_exclusion', '=', True), ('line_approval_state', '=', 'pending')]"/>
                 <filter name="filter_manual" string="Exclusión manual"
                         domain="[('manual_exclusion', '=', True)]"/>
+                <filter name="filter_auto" string="Exclusión automática"
+                        domain="[('auto_exclusion', '=', True)]"/>
             </search>
         </field>
     </record>
@@ -76,7 +84,7 @@
                             invisible="state not in ('draft', 'rejected')"/>
                     <button name="action_validate_period" string="Validar período" type="object"
                             invisible="state not in ('draft', 'rejected') or not line_ids"/>
-                    <button name="action_submit_for_approval" string="Enviar a aprobación" type="object"
+                    <button name="action_submit_for_approval" string="Solicitar aprobación" type="object"
                             invisible="state != 'validated' or manual_exclusion_count == 0"/>
                     <button name="action_approve_report" string="Aprobar exclusiones" type="object"
                             invisible="state != 'pending_approval'"
@@ -92,7 +100,7 @@
                             class="btn-primary"
                             invisible="state != 'approved'"
                             groups="justech_l10n_do_base.group_justech_do_fiscal_manager"/>
-                    <button name="action_download_errors" string="Descargar errores" type="object"
+                    <button name="action_download_errors" string="Descargar errores (Excel)" type="object"
                             invisible="not error_report_file"/>
                     <button name="action_reopen_report" string="Reabrir" type="object"
                             invisible="state not in ('generated', 'done')"
@@ -108,32 +116,60 @@
                             <field name="company_id" groups="base.group_multi_company"/>
                         </group>
                         <group>
+                            <field name="period_code" readonly="1"/>
                             <field name="date_from"/>
                             <field name="date_to"/>
-                            <field name="period_code" readonly="1"/>
-                            <field name="validation_state" widget="badge" invisible="report_type != '606'"/>
+                            <field name="validation_state" string="Estado de validación"
+                                   widget="badge" invisible="report_type != '606'"/>
                         </group>
                     </group>
                     <group string="Resumen revisión">
                         <group>
-                            <field name="review_line_count" readonly="1"/>
-                            <field name="review_valid_count" readonly="1"/>
-                            <field name="review_incomplete_count" readonly="1"/>
-                            <field name="review_excluded_count" readonly="1"/>
+                            <field name="review_line_count" string="Total documentos" readonly="1"/>
+                            <field name="review_valid_count" string="Válidos para exportar" readonly="1"/>
+                            <field name="review_incomplete_count" string="Incompletos" readonly="1"/>
+                            <field name="review_excluded_count" string="Excluidos" readonly="1"/>
                         </group>
                         <group>
+                            <field name="review_cancelled_count" string="Anulados" readonly="1"/>
+                            <field name="review_pending_approval_count" string="Requieren aprobación" readonly="1"/>
                             <field name="manual_exclusion_count" readonly="1"/>
-                            <field name="pending_approval_count" readonly="1"/>
                             <field name="validated_by_id" readonly="1"/>
-                            <field name="validated_at" readonly="1"/>
                             <field name="approved_by_id" readonly="1"/>
                             <field name="export_file_hash" readonly="1"/>
                         </group>
                     </group>
-                    <field name="validation_log" readonly="1" invisible="report_type != '606'"/>
+                    <field name="validation_log" string="Resultado de validación" readonly="1"
+                           invisible="report_type != '606'"/>
                     <notebook>
-                        <page string="Revisión en línea">
-                            <field name="line_ids" context="{'list_view_ref': 'justech_l10n_do_reports.view_justech_do_fiscal_report_line_review_tree'}"/>
+                        <page string="Todos los documentos">
+                            <field name="line_ids" nolabel="1"
+                                   context="{'list_view_ref': 'justech_l10n_do_reports.view_justech_do_fiscal_report_line_review_tree'}"/>
+                        </page>
+                        <page string="Válidos para exportar">
+                            <field name="line_ids" nolabel="1"
+                                   domain="[('fiscal_state', '=', 'valid'), ('include_in_report', '=', True)]"
+                                   context="{'list_view_ref': 'justech_l10n_do_reports.view_justech_do_fiscal_report_line_review_tree'}"/>
+                        </page>
+                        <page string="Incompletos">
+                            <field name="line_ids" nolabel="1"
+                                   domain="[('fiscal_state', '=', 'incomplete')]"
+                                   context="{'list_view_ref': 'justech_l10n_do_reports.view_justech_do_fiscal_report_line_review_tree'}"/>
+                        </page>
+                        <page string="Excluidos">
+                            <field name="line_ids" nolabel="1"
+                                   domain="['|', ('fiscal_state', '=', 'excluded'), ('include_in_report', '=', False)]"
+                                   context="{'list_view_ref': 'justech_l10n_do_reports.view_justech_do_fiscal_report_line_review_tree'}"/>
+                        </page>
+                        <page string="Anulados">
+                            <field name="line_ids" nolabel="1"
+                                   domain="[('fiscal_state', '=', 'cancelled')]"
+                                   context="{'list_view_ref': 'justech_l10n_do_reports.view_justech_do_fiscal_report_line_review_tree'}"/>
+                        </page>
+                        <page string="Requieren aprobación">
+                            <field name="line_ids" nolabel="1"
+                                   domain="[('manual_exclusion', '=', True), ('line_approval_state', '=', 'pending')]"
+                                   context="{'list_view_ref': 'justech_l10n_do_reports.view_justech_do_fiscal_report_line_review_tree'}"/>
                         </page>
                         <page string="Aprobaciones" invisible="not approval_ids">
                             <field name="approval_ids" readonly="1">
@@ -204,7 +240,7 @@
     </record>
 
     <record id="action_justech_do_fiscal_review" model="ir.actions.act_window">
-        <field name="name">Revisión fiscal DGII</field>
+        <field name="name">Revisión fiscal</field>
         <field name="res_model">justech.do.fiscal.report</field>
         <field name="view_mode">list,form</field>
         <field name="view_ids" eval="[(5, 0, 0),

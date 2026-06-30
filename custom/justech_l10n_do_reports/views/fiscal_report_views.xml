@@ -56,7 +56,7 @@
                     </group>
                     <group string="Validación DGII" invisible="report_type != '606'">
                         <group>
-                            <field name="validation_state" widget="badge"
+                            <field name="validation_state" string="Estado de validación" widget="badge"
                                    decoration-success="validation_state == 'ok'"
                                    decoration-warning="validation_state == 'warning'"
                                    decoration-danger="validation_state == 'error'"/>

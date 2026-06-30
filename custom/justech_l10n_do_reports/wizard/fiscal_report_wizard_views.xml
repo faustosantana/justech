@@ -8,13 +8,14 @@
                 <group>
                     <field name="report_type"/>
                     <field name="company_id" groups="base.group_multi_company"/>
-                    <field name="period_code" readonly="1"/>
-                    <field name="date_from"/>
-                    <field name="date_to"/>
+                    <field name="period_code" placeholder="202606"/>
+                    <field name="date_from" readonly="1"/>
+                    <field name="date_to" readonly="1"/>
+                    <field name="saved_report_id" invisible="1"/>
                 </group>
                 <group string="Resumen del período" invisible="validation_state == 'pending'">
                     <group>
-                        <field name="validation_state" widget="badge"
+                        <field name="validation_state" string="Estado de validación" widget="badge"
                                decoration-success="validation_state == 'ok'"
                                decoration-warning="validation_state == 'warning'"
                                decoration-danger="validation_state == 'error'"/>
@@ -28,21 +29,24 @@
                         <field name="count_partners_errors"/>
                     </group>
                 </group>
-                <group string="Validación" invisible="validation_state == 'pending'">
+                <group string="Resultado de validación" invisible="validation_state == 'pending'">
                     <field name="validation_log" nolabel="1" readonly="1"/>
                 </group>
                 <footer>
                     <button name="action_validate" string="Validar período" type="object"
                             invisible="report_type != '606'"/>
+                    <button name="action_save_review" string="Guardar revisión" type="object"
+                            class="btn-primary"
+                            invisible="report_type != '606' or validation_state == 'pending'"/>
+                    <button name="action_view_documents" string="Ver documentos" type="object"
+                            invisible="report_type != '606' or validation_state == 'pending'"/>
                     <button name="action_download_errors" string="Descargar errores (Excel)" type="object"
                             invisible="report_type != '606' or validation_state == 'pending'"/>
                     <button name="action_generate" string="Generar Excel 606" type="object"
-                            class="btn-primary"
-                            invisible="report_type != '606' or validation_state in ('pending', 'error')"/>
+                            invisible="report_type != '606' or validation_state in ('pending', 'error')"
+                            groups="justech_l10n_do_base.group_justech_do_fiscal_manager"/>
                     <button name="action_generate" string="Generar" type="object"
                             class="btn-primary" invisible="report_type == '606'"/>
-                    <button name="action_generate_history" string="Guardar historial" type="object"
-                            invisible="report_type != '606' or validation_state in ('pending', 'error')"/>
                     <button string="Cancelar" special="cancel"/>
                 </footer>
             </form>

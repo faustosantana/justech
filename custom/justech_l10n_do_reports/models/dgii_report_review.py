@@ -60,6 +60,12 @@ class JustechDoFiscalReportReview(models.Model):
     review_valid_count = fields.Integer(compute="_compute_review_counts")
     review_incomplete_count = fields.Integer(compute="_compute_review_counts")
     review_excluded_count = fields.Integer(compute="_compute_review_counts")
+    review_cancelled_count = fields.Integer(compute="_compute_review_counts")
+    review_pending_approval_count = fields.Integer(compute="_compute_review_counts")
+
+    AUTO_UAT_EXCLUSION_REASON = (
+        "Documento de prueba/UAT excluido del reporte fiscal."
+    )
 
     @api.depends("line_ids.manual_exclusion", "approval_ids.state")
     def _compute_manual_exclusion_count(self):
@@ -71,7 +77,7 @@ class JustechDoFiscalReportReview(models.Model):
                 report.approval_ids.filtered(lambda a: a.state == "pending")
             )
 
-    @api.depends("line_ids", "line_ids.fiscal_state", "line_ids.include_in_report")
+    @api.depends("line_ids", "line_ids.fiscal_state", "line_ids.include_in_report", "line_ids.line_approval_state", "line_ids.manual_exclusion")
     def _compute_review_counts(self):
         for report in self:
             lines = report.line_ids
@@ -87,6 +93,15 @@ class JustechDoFiscalReportReview(models.Model):
             report.review_excluded_count = len(
                 lines.filtered(
                     lambda l: not l.include_in_report or l.fiscal_state == "excluded"
+                )
+            )
+            report.review_cancelled_count = len(
+                lines.filtered(lambda l: l.fiscal_state == "cancelled")
+            )
+            report.review_pending_approval_count = len(
+                lines.filtered(
+                    lambda l: l.manual_exclusion
+                    and l.line_approval_state in ("pending", False)
                 )
             )
 
@@ -124,6 +139,15 @@ class JustechDoFiscalReportReview(models.Model):
             report.line_ids.unlink()
             lines = report._collect_review_lines()
             report.write({"line_ids": [(0, 0, vals) for vals in lines], "state": "draft"})
+            auto_excluded = report.line_ids.filtered("auto_exclusion")
+            if auto_excluded:
+                report._log_audit(
+                    "exclude",
+                    _(
+                        "%(n)s documento(s) con exclusión automática visibles en revisión."
+                    )
+                    % {"n": len(auto_excluded)},
+                )
             report._log_audit(
                 "validate",
                 _("Carga de %(n)s líneas para revisión.") % {"n": len(lines)},
@@ -161,15 +185,26 @@ class JustechDoFiscalReportReview(models.Model):
             )
         errors = errors or []
         pay_code = exporter._payment_method_code(move)
-        include = bool(move.justech_do_include_in_dgii) and move.justech_do_dgii_fiscal_state != "cancelled"
+        partner = move.partner_id
+        fiscal_state = move.justech_do_dgii_fiscal_state or "incomplete"
+        exclusion_reason = move.justech_do_dgii_exclusion_reason or ""
+        auto_exclusion = False
+        if fiscal_state == "excluded" or not move.justech_do_include_in_dgii:
+            if not exclusion_reason:
+                exclusion_reason = _(self.AUTO_UAT_EXCLUSION_REASON)
+                auto_exclusion = True
+            else:
+                auto_exclusion = True
+        include = bool(move.justech_do_include_in_dgii) and fiscal_state != "cancelled"
         return {
             "move_id": move.id,
             "move_name": move.name or move.ref,
-            "partner_id": move.partner_id.id,
-            "partner_vat": move.partner_id.justech_do_clean_vat()
-            if hasattr(move.partner_id, "justech_do_clean_vat")
-            else (move.partner_id.vat or ""),
-            "partner_name": move.partner_id.display_name,
+            "partner_id": partner.id,
+            "partner_vat": partner.justech_do_clean_vat()
+            if hasattr(partner, "justech_do_clean_vat")
+            else (partner.vat or ""),
+            "partner_name": partner.display_name,
+            "partner_id_type": partner.justech_do_partner_id_type or "",
             "document_type": move.justech_do_document_type_id.prefix or "",
             "ncf": move.justech_do_ncf or "",
             "ncf_modified": move.justech_do_ncf_modified or move.justech_do_origin_ncf or "",
@@ -181,9 +216,10 @@ class JustechDoFiscalReportReview(models.Model):
             "amount_withholding": wh_itbis + wh_isr,
             "amount_total": abs(move.amount_total_signed),
             "payment_method_code": pay_code,
-            "fiscal_state": move.justech_do_dgii_fiscal_state or "incomplete",
+            "fiscal_state": fiscal_state,
             "include_in_report": include,
-            "exclusion_reason": move.justech_do_dgii_exclusion_reason or "",
+            "exclusion_reason": exclusion_reason,
+            "auto_exclusion": auto_exclusion,
             "error_message": "\n".join(errors),
             "manual_exclusion": False,
         }
@@ -470,12 +506,21 @@ class JustechDoFiscalReportLineReview(models.Model):
     )
     move_name = fields.Char(string="Documento")
     partner_id = fields.Many2one("res.partner", string="Contacto")
+    partner_id_type = fields.Selection(
+        selection=[
+            ("1", "RNC"),
+            ("2", "Cédula"),
+            ("3", "Pasaporte"),
+        ],
+        string="Tipo identificación",
+    )
     ncf_modified = fields.Char(string="NCF modificado")
     invoice_date_due = fields.Date(string="Vencimiento")
     currency_id = fields.Many2one("res.currency", string="Moneda")
     amount_withholding = fields.Float(string="Retenciones", digits=(16, 2))
     payment_method_code = fields.Char(string="Forma de pago")
     exclusion_reason = fields.Text(string="Motivo exclusión")
+    auto_exclusion = fields.Boolean(string="Exclusión automática", default=False)
     manual_exclusion = fields.Boolean(string="Exclusión manual", default=False)
     excluded_by_id = fields.Many2one("res.users", string="Excluido por", readonly=True)
     excluded_at = fields.Datetime(string="Fecha exclusión", readonly=True)
@@ -545,6 +590,7 @@ class JustechDoFiscalReportLineReview(models.Model):
                 {
                     "include_in_report": True,
                     "manual_exclusion": False,
+                    "auto_exclusion": False,
                     "exclusion_reason": False,
                     "fiscal_state": move.justech_do_dgii_fiscal_state if move else "incomplete",
                     "line_approval_state": "rejected" if comment else "none",

@@ -14,7 +14,7 @@
             <xpath expr="//field[@name='line_ids']/list/field[@name='amount_currency']" position="attributes">
                 <attribute name="string">Total</attribute>
             </xpath>
-            <xpath expr="//group[@string='Documentos a pagar/cobrar']" position="attributes">
+            <xpath expr="//group[field[@name='line_ids']]" position="attributes">
                 <attribute name="string">Documentos pendientes</attribute>
             </xpath>
             <xpath expr="//field[@name='journal_id']" position="after">

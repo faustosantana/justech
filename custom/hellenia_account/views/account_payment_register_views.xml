@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="account.view_account_payment_register_form"/>
         <field name="arch" type="xml">
             <xpath expr="//group[@name='group1']" position="before">
-                <group string="Documentos a pagar/cobrar" invisible="not line_ids">
+                <group name="hellenia_payment_docs" string="Documentos pendientes" invisible="not line_ids">
                     <field name="line_ids" nolabel="1" readonly="1">
                         <list>
                             <field name="move_id" string="Factura"/>

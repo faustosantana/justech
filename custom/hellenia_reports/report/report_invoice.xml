@@ -6,8 +6,8 @@
             <attribute name="class" add="hellenia-invoice-doc" separator=" "/>
         </xpath>
 
-        <!-- NCF destacado -->
-        <xpath expr="//div[hasclass('hellenia-ncf-box')]" position="replace">
+        <!-- NCF destacado (sin QR — no e-CF) -->
+        <xpath expr="//div[@id='informations']" position="before">
             <div class="hellenia-ncf-box row mb-3" t-if="o.justech_do_ncf">
                 <div class="col-12">
                     <div class="hellenia-ncf-label">Número de Comprobante Fiscal</div>

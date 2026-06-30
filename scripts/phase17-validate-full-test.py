@@ -56,6 +56,7 @@ else:
 
 report["modules"]["hellenia_ux"] = mod.state
 env["hellenia.ui.menu.customizer"].apply_all()
+company.write({"hellenia_show_qr_on_invoice": False})
 env.cr.commit()
 
 # --- UX: métodos de pago español ---

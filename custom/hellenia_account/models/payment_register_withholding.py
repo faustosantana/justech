@@ -117,5 +117,4 @@ class AccountPaymentRegister(models.TransientModel):
                         ),
                     }
                 )
-            vals["payment_difference_handling"] = "reconcile"
         return vals

@@ -55,11 +55,11 @@ class JustechDoFiscalReportWizard(models.TransientModel):
         readonly=True,
     )
     date_from_display = fields.Char(
-        string="Desde",
+        string="Desde (período)",
         compute="_compute_period_display",
     )
     date_to_display = fields.Char(
-        string="Hasta",
+        string="Hasta (período)",
         compute="_compute_period_display",
     )
 

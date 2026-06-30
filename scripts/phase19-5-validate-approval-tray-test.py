@@ -89,7 +89,7 @@ line.action_approve_line()
 report.invalidate_recordset()
 
 tray_after = env["justech.do.fiscal.report"].search(
-    [("approval_ids.state", "=", "pending"), ("id", "=", report.id)]
+    [("has_pending_approval", "=", True), ("id", "=", report.id)]
 )
 check("removed_from_tray", not tray_after, report.state)
 check("state_approved", report.state == "approved", report.state)

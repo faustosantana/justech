@@ -53,10 +53,12 @@ run_shell() {
 
 upgrade_modules() {
   hellenia_log "Actualizando módulos Justech en ${ENV_NAME}..."
-  docker compose --env-file "$ENV_FILE" run --rm -T odoo odoo \
+  docker compose --env-file "$ENV_FILE" stop odoo
+  docker compose --env-file "$ENV_FILE" run --rm odoo odoo \
     -d "${ODOO_DB_NAME}" --db_host=db --db_user="${DB_USER}" --db_password="$DB_PASSWORD" \
     -u justech_l10n_do_base,justech_l10n_do_ncf,justech_l10n_do_reports \
-    --stop-after-init --no-http 2>&1 | tail -20
+    --stop-after-init --no-http 2>&1 | tail -25
+  docker compose --env-file "$ENV_FILE" up -d odoo
 }
 
 case "$ACTION" in

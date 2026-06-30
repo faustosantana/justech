@@ -131,27 +131,77 @@ class TestJustechL10nDoNcf(TransactionCase):
             m2.action_post()
 
     def test_depleted_range_blocked(self):
-        ncf_range = self._create_range(self.doc_b02, start=1, end=1)
+        journal = self.env["account.journal"].create(
+            {
+                "name": "Depleted Test Journal",
+                "code": "XPD",
+                "type": "sale",
+                "company_id": self.company.id,
+                "justech_do_use_ncf": True,
+                "justech_do_document_type_ids": [Command.set([self.doc_b02.id])],
+            }
+        )
+        ncf_range = self.env["justech.do.ncf.range"].create(
+            {
+                "name": "Range B02 Depleted",
+                "document_type_id": self.doc_b02.id,
+                "company_id": self.company.id,
+                "sequence_start": 1,
+                "sequence_end": 1,
+                "next_sequence": 1,
+                "date_from": date.today() - timedelta(days=1),
+                "date_to": date.today() + timedelta(days=30),
+                "journal_ids": [Command.set(journal.ids)],
+            }
+        )
         ncf_range.action_activate()
         partner = self.env["res.partner"].create({"name": "CF"})
-        move = self.env["account.move"].create(self._invoice_vals(partner))
+        move = self.env["account.move"].create(
+            self._invoice_vals(partner, journal=journal)
+        )
         move.action_post()
         self.assertEqual(ncf_range.state, "depleted")
-        move2 = self.env["account.move"].create(self._invoice_vals(partner))
+        move2 = self.env["account.move"].create(
+            self._invoice_vals(partner, journal=journal)
+        )
         with self.assertRaises(Exception):
             move2.action_post()
 
     def test_expired_range_blocked(self):
-        ncf_range = self._create_range(self.doc_b02)
+        journal = self.env["account.journal"].create(
+            {
+                "name": "Expired Test Journal",
+                "code": "XPE",
+                "type": "sale",
+                "company_id": self.company.id,
+                "justech_do_use_ncf": True,
+                "justech_do_document_type_ids": [Command.set([self.doc_b02.id])],
+            }
+        )
+        ncf_range = self.env["justech.do.ncf.range"].create(
+            {
+                "name": "Range B02 Expired",
+                "document_type_id": self.doc_b02.id,
+                "company_id": self.company.id,
+                "sequence_start": 1,
+                "sequence_end": 100,
+                "next_sequence": 1,
+                "date_from": date.today() - timedelta(days=30),
+                "date_to": date.today() + timedelta(days=30),
+                "journal_ids": [Command.set(journal.ids)],
+            }
+        )
+        ncf_range.action_activate()
         ncf_range.write(
             {
                 "date_from": date.today() - timedelta(days=60),
                 "date_to": date.today() - timedelta(days=1),
             }
         )
-        ncf_range.action_activate()
         partner = self.env["res.partner"].create({"name": "CF"})
-        move = self.env["account.move"].create(self._invoice_vals(partner))
+        move = self.env["account.move"].create(
+            self._invoice_vals(partner, journal=journal)
+        )
         with self.assertRaises(Exception):
             move.action_post()
 

@@ -4,11 +4,9 @@
 **Ambiente:** `hellenia_dev` — https://dev.hellenia.cloud  
 **Rama Git:** `feature/justech-l10n-do-mvp`  
 **Fecha:** 2026-06-30  
-**Estado:** **Completado (MVP)** — validado en DEV
+**Estado:** **Completado (MVP)** — validado en DEV real (`hellenia_dev` @ `2.25.69.179`)
 
----
-
-## 1. Objetivo
+**Backup pre-instalación:** `/opt/odoo-projects/hellenia/backups/dev/2026-06-30_1122` — verificado (`verify-backup-dev.sh` PASS)
 
 Construir el **MVP mínimo funcional** para que Hellenia pueda operar con **NCF tradicional** y **reportes fiscales básicos** (606/607/608), sin tocar core, Enterprise ni módulos oficiales.
 
@@ -52,7 +50,7 @@ El NCF actúa como **capa fiscal sobre la contabilidad estándar** (`account.mov
 
 | Paso | Acción | Resultado |
 |------|--------|-----------|
-| 1 | Backup DEV | `/opt/odoo-projects/hellenia/backups/dev/2026-06-30_0535` |
+| 1 | Backup DEV real | `/opt/odoo-projects/hellenia/backups/dev/2026-06-30_1122` — verificado |
 | 2 | Rama `feature/justech-l10n-do-mvp` | Creada y pusheada |
 | 3 | Desarrollo `justech_l10n_do_base` | Manifest, security, models, views, data, tests, README |
 | 4 | Instalación + validación base en DEV | `installed` — 3 tests unitarios PASS |

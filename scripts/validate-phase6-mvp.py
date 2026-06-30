@@ -83,6 +83,7 @@ def ensure_range(doc, name, journals):
             ("document_type_id", "=", doc.id),
             ("company_id", "=", company.id),
             ("state", "=", "active"),
+            ("journal_ids", "in", journals.ids),
         ],
         limit=1,
     )
@@ -137,6 +138,10 @@ def mk_invoice(partner, move_type="out_invoice", journal=None):
     )
 
 
+# ===========================================================================
+# FUNCIONAL — facturación, reportes, contabilidad
+# ===========================================================================
+
 # B02
 try:
     m_b02 = mk_invoice(partner_cf)
@@ -179,125 +184,40 @@ try:
 except Exception:
     pass_("duplicate_ncf", "blocked")
 
-# Void + 608 (before range isolation tests cancel B02)
+# Anulación NCF + reporte 608 (rango B02 activo en journal_sale)
 try:
-    void_move = mk_invoice(env["res.partner"].create({"name": "Void CF"}))
-    void_move.action_post()
-    void_move.action_void_ncf()
-    r608 = env["justech.do.fiscal.report"].create(
-        {
-            "name": "Phase6 608",
-            "report_type": "608",
-            "date_from": today,
-            "date_to": today,
-            "company_id": company.id,
-        }
+    b02_range = Range.search(
+        [
+            ("document_type_id", "=", doc_b02.id),
+            ("company_id", "=", company.id),
+            ("state", "=", "active"),
+            ("journal_ids", "in", journal_sale.id),
+        ],
+        limit=1,
     )
-    r608.action_generate()
-    if not r608.line_ids:
-        fail("report_608", "no lines")
+    if not b02_range:
+        fail("report_608", "no active B02 range on sales journal")
     else:
-        pass_("report_608", str(len(r608.line_ids)))
-except Exception as e:
-    fail("report_608", str(e))
-
-# Depleted range — cancel other B02 ranges, isolate journal
-try:
-    Range.search(
-        [("document_type_id", "=", doc_b02.id), ("state", "=", "active")]
-    ).write({"state": "cancelled"})
-    depleted_journal = env["account.journal"].search(
-        [("code", "=", "PD6"), ("company_id", "=", company.id)], limit=1
-    )
-    if not depleted_journal:
-        depleted_journal = env["account.journal"].create(
+        void_move = mk_invoice(env["res.partner"].create({"name": "Void CF"}))
+        void_move.action_post()
+        void_move.action_void_ncf()
+        r608 = env["justech.do.fiscal.report"].create(
             {
-                "name": "Phase6 Depleted Test",
-                "code": "PD6",
-                "type": "sale",
+                "name": "Phase6 608",
+                "report_type": "608",
+                "date_from": today,
+                "date_to": today,
                 "company_id": company.id,
-                "justech_do_use_ncf": True,
-                "justech_do_document_type_ids": [Command.set([doc_b02.id])],
             }
         )
-    depleted = Range.create(
-        {
-            "name": "Phase6 Depleted",
-            "document_type_id": doc_b02.id,
-            "company_id": company.id,
-            "sequence_start": 1,
-            "sequence_end": 1,
-            "next_sequence": 1,
-            "date_from": today - timedelta(days=1),
-            "date_to": today + timedelta(days=30),
-            "journal_ids": [Command.set(depleted_journal.ids)],
-        }
-    )
-    depleted.action_activate()
-    dep_partner = env["res.partner"].create({"name": "Depleted CF"})
-    m_dep = env["account.move"].create(
-        {
-            "move_type": "out_invoice",
-            "partner_id": dep_partner.id,
-            "journal_id": depleted_journal.id,
-            "invoice_date": today,
-            "invoice_line_ids": [
-                Command.create(
-                    {
-                        "product_id": product.id,
-                        "quantity": 1,
-                        "price_unit": 100.0,
-                        "tax_ids": [Command.set(tax_18.ids)] if tax_18 else [],
-                    }
-                )
-            ],
-        }
-    )
-    m_dep.action_post()
-    dep_partner2 = env["res.partner"].create({"name": "Depleted CF 2"})
-    m_dep2 = env["account.move"].create(
-        {
-            "move_type": "out_invoice",
-            "partner_id": dep_partner2.id,
-            "journal_id": depleted_journal.id,
-            "invoice_date": today,
-            "invoice_line_ids": [
-                Command.create(
-                    {
-                        "product_id": product.id,
-                        "quantity": 1,
-                        "price_unit": 100.0,
-                        "tax_ids": [Command.set(tax_18.ids)] if tax_18 else [],
-                    }
-                )
-            ],
-        }
-    )
-    m_dep2.action_post()
-    fail("depleted_range", "should have raised")
-except Exception:
-    pass_("depleted_range", "blocked")
-
-# Expired range
-try:
-    expired = Range.create(
-        {
-            "name": "Phase6 Expired",
-            "document_type_id": doc_b02.id,
-            "company_id": company.id,
-            "sequence_start": 1,
-            "sequence_end": 100,
-            "next_sequence": 1,
-            "date_from": today - timedelta(days=60),
-            "date_to": today - timedelta(days=1),
-            "journal_ids": [Command.set(journal_sale.ids)],
-        }
-    )
-    expired.action_activate()
-    mk_invoice(env["res.partner"].create({"name": "Expired CF"})).action_post()
-    fail("expired_range", "should have raised")
-except Exception:
-    pass_("expired_range", "blocked")
+        r608.action_generate()
+        void_lines = r608.line_ids.filtered(lambda l: l.ncf == void_move.justech_do_ncf)
+        if not void_lines:
+            fail("report_608", "voided NCF not in report")
+        else:
+            pass_("report_608", f"{len(void_lines)} void line(s), ncf={void_move.justech_do_ncf}")
+except Exception as e:
+    fail("report_608", str(e))
 
 # B11 / B13 purchase
 journal_purchase = env["account.journal"].search(
@@ -339,7 +259,7 @@ for doc, label in ((doc_b11, "b11"), (doc_b13, "b13")):
     except Exception as e:
         fail(f"purchase_{label}", str(e))
 
-# 607
+# 607 / 606
 try:
     r607 = env["justech.do.fiscal.report"].create(
         {
@@ -355,7 +275,6 @@ try:
 except Exception as e:
     fail("report_607", str(e))
 
-# 606
 try:
     r606 = env["justech.do.fiscal.report"].create(
         {
@@ -398,6 +317,147 @@ try:
         pass_("pdf_ncf", f"{len(pdf)} bytes")
 except Exception as e:
     fail("pdf_ncf", str(e))
+
+# ===========================================================================
+# ESTRÉS — rangos agotado / vencido (diarios aislados PD6 / PE6)
+# No modifica journal_sale ni rangos funcionales B02.
+# ===========================================================================
+
+try:
+    depleted_journal = env["account.journal"].search(
+        [("code", "=", "PD6"), ("company_id", "=", company.id)], limit=1
+    )
+    if not depleted_journal:
+        depleted_journal = env["account.journal"].create(
+            {
+                "name": "Phase6 Depleted Test",
+                "code": "PD6",
+                "type": "sale",
+                "company_id": company.id,
+                "justech_do_use_ncf": True,
+                "justech_do_document_type_ids": [Command.set([doc_b02.id])],
+            }
+        )
+    Range.search(
+        [
+            ("document_type_id", "=", doc_b02.id),
+            ("journal_ids", "in", depleted_journal.id),
+            ("state", "=", "active"),
+        ]
+    ).write({"state": "cancelled"})
+    depleted = Range.create(
+        {
+            "name": "Phase6 Depleted",
+            "document_type_id": doc_b02.id,
+            "company_id": company.id,
+            "sequence_start": 1,
+            "sequence_end": 1,
+            "next_sequence": 1,
+            "date_from": today - timedelta(days=1),
+            "date_to": today + timedelta(days=30),
+            "journal_ids": [Command.set(depleted_journal.ids)],
+        }
+    )
+    depleted.action_activate()
+    dep_partner = env["res.partner"].create({"name": "Depleted CF"})
+    env["account.move"].create(
+        {
+            "move_type": "out_invoice",
+            "partner_id": dep_partner.id,
+            "journal_id": depleted_journal.id,
+            "invoice_date": today,
+            "invoice_line_ids": [
+                Command.create(
+                    {
+                        "product_id": product.id,
+                        "quantity": 1,
+                        "price_unit": 100.0,
+                        "tax_ids": [Command.set(tax_18.ids)] if tax_18 else [],
+                    }
+                )
+            ],
+        }
+    ).action_post()
+    dep_partner2 = env["res.partner"].create({"name": "Depleted CF 2"})
+    env["account.move"].create(
+        {
+            "move_type": "out_invoice",
+            "partner_id": dep_partner2.id,
+            "journal_id": depleted_journal.id,
+            "invoice_date": today,
+            "invoice_line_ids": [
+                Command.create(
+                    {
+                        "product_id": product.id,
+                        "quantity": 1,
+                        "price_unit": 100.0,
+                        "tax_ids": [Command.set(tax_18.ids)] if tax_18 else [],
+                    }
+                )
+            ],
+        }
+    ).action_post()
+    fail("depleted_range", "should have raised")
+except Exception:
+    pass_("depleted_range", "blocked")
+
+try:
+    expired_journal = env["account.journal"].search(
+        [("code", "=", "PE6"), ("company_id", "=", company.id)], limit=1
+    )
+    if not expired_journal:
+        expired_journal = env["account.journal"].create(
+            {
+                "name": "Phase6 Expired Test",
+                "code": "PE6",
+                "type": "sale",
+                "company_id": company.id,
+                "justech_do_use_ncf": True,
+                "justech_do_document_type_ids": [Command.set([doc_b02.id])],
+            }
+        )
+    Range.search(
+        [
+            ("document_type_id", "=", doc_b02.id),
+            ("journal_ids", "in", expired_journal.id),
+            ("state", "=", "active"),
+        ]
+    ).write({"state": "cancelled"})
+    expired = Range.create(
+        {
+            "name": "Phase6 Expired",
+            "document_type_id": doc_b02.id,
+            "company_id": company.id,
+            "sequence_start": 1,
+            "sequence_end": 100,
+            "next_sequence": 1,
+            "date_from": today - timedelta(days=60),
+            "date_to": today - timedelta(days=1),
+            "journal_ids": [Command.set(expired_journal.ids)],
+        }
+    )
+    expired.action_activate()
+    env["account.move"].create(
+        {
+            "move_type": "out_invoice",
+            "partner_id": env["res.partner"].create({"name": "Expired CF"}).id,
+            "journal_id": expired_journal.id,
+            "invoice_date": today,
+            "invoice_line_ids": [
+                Command.create(
+                    {
+                        "product_id": product.id,
+                        "quantity": 1,
+                        "price_unit": 100.0,
+                        "tax_ids": [Command.set(tax_18.ids)] if tax_18 else [],
+                    }
+                )
+            ],
+        }
+    ).action_post()
+    fail("expired_range", "should have raised")
+except Exception:
+    pass_("expired_range", "blocked")
 
 print("PHASE6_MVP ok:", json.dumps(result["ok"]))
 print(json.dumps(result, indent=2, default=str))

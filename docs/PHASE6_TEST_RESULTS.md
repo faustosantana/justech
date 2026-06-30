@@ -2,9 +2,10 @@
 
 **Cliente:** Hellenia, S.R.L.  
 **Ambiente:** `hellenia_dev` (Odoo 19.0-20260619 Enterprise On-Premise)  
-**Fecha validación:** 2026-06-30  
+**Fecha validación:** 2026-06-30 (DEV real, post-backup `2026-06-30_1122`)  
+**VPS:** `2.25.69.179` / `srv.hellenia.cloud`  
 **Rama:** `feature/justech-l10n-do-mvp`  
-**Resultado global:** **`PHASE6_MVP ok: true`**
+**Resultado global:** **`PHASE6_MVP ok: true`** (ejecutado en `hellenia_dev`)
 
 ---
 
@@ -15,7 +16,8 @@
 | Módulos MVP instalados (incremental) | ✅ base → ncf → reports |
 | Tests unitarios Odoo (`--test-enable`) | ✅ 13 tests (3 + 8 + 2) |
 | Validación E2E `validate-phase6-mvp.py` | ✅ 14/14 PASS |
-| Backup pre-Fase 6 | ✅ `backups/dev/2026-06-30_0535` |
+| Backup pre-instalación | ✅ `backups/dev/2026-06-30_1122` verificado |
+| Instalación incremental DEV | ✅ base (3 tests) → ncf (8 tests) → reports (2 tests) |
 | TEST / PROD | ✅ No tocados |
 | Core / Enterprise / módulos oficiales | ✅ No modificados |
 
@@ -90,7 +92,7 @@ docker compose --env-file /opt/odoo-projects/hellenia/config/dev/.env run --rm -
 | Gasto menor B13 | PASS | `B1300001000` |
 | Reporte 606 | PASS | 5 líneas |
 | Reporte 607 | PASS | 4 líneas |
-| Reporte 608 | PASS | 1 línea |
+| Reporte 608 | PASS | void `B0200001001` (antes de tests de estrés) |
 | Asiento balanceado | PASS | debit=118.0 credit=118.0 |
 | CxC (receivable) | PASS | balance 118.0 |
 | PDF con NCF | PASS | 31 404 bytes |
@@ -117,8 +119,8 @@ docker compose --env-file /opt/odoo-projects/hellenia/config/dev/.env run --rm -
 | Menu action order | `action_*` definido antes de `menuitem` |
 | Custom no visible en contenedor | Volume mount en `docker-compose.yml` |
 | Validación balance | Comparar `debit` vs `credit` en líneas |
-| Rango agotado en E2E | Prioridad diario en `_find_active_range`; aislamiento journal PD6 |
-| Reporte 608 tras tests de rango | Reordenar void/608 antes de cancelar rangos B02 |
+| Rango agotado / vencido vs 608 | Tests funcionales 608 antes de estrés; diarios aislados PD6/PE6 |
+| `test_expired_range_blocked` unitario | Activar rango válido, luego backdate `date_to` |
 
 ---
 

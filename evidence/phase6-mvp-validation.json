@@ -1,10 +1,17 @@
 {
   "phase": 6,
   "mvp": true,
-  "timestamp_utc": "2026-06-30T05:47:02.203580+00:00",
-  "company": "Hellenia, S.R.L.",
   "environment": "hellenia_dev",
-  "backup_pre_phase6": "/opt/odoo-projects/hellenia/backups/dev/2026-06-30_0535",
+  "vps": "2.25.69.179 / srv.hellenia.cloud",
+  "backup_pre_install": "/opt/odoo-projects/hellenia/backups/dev/2026-06-30_1122",
+  "backup_verified": true,
+  "install_sequence": [
+    {"module": "justech_l10n_do_base", "unit_tests": "3/3 PASS", "post_check": "PHASE6_BASE ok: True"},
+    {"module": "justech_l10n_do_ncf", "unit_tests": "8/8 PASS", "post_check": "PHASE6_NCF ok: True"},
+    {"module": "justech_l10n_do_reports", "unit_tests": "2/2 PASS", "e2e": "PHASE6_MVP ok: true"}
+  ],
+  "timestamp_utc": "2026-06-30T11:26:36.671223+00:00",
+  "company": "Hellenia, S.R.L.",
   "modules": {
     "justech_l10n_do_base": "installed",
     "justech_l10n_do_ncf": "installed",
@@ -15,16 +22,16 @@
     "invoice_b01": {"status": "PASS", "detail": "B0100001000"},
     "credit_note_b04": {"status": "PASS", "detail": "B0400001000"},
     "duplicate_ncf": {"status": "PASS", "detail": "blocked"},
-    "report_608": {"status": "PASS", "detail": "1"},
-    "depleted_range": {"status": "PASS", "detail": "blocked"},
-    "expired_range": {"status": "PASS", "detail": "blocked"},
+    "report_608": {"status": "PASS", "detail": "1 void line(s), ncf=B0200001001"},
     "purchase_b11": {"status": "PASS", "detail": "B1100001000"},
     "purchase_b13": {"status": "PASS", "detail": "B1300001000"},
-    "report_607": {"status": "PASS", "detail": "4"},
+    "report_607": {"status": "PASS", "detail": "3"},
     "report_606": {"status": "PASS", "detail": "5"},
     "balanced_entry": {"status": "PASS", "detail": "debit=118.0 credit=118.0"},
     "receivable_line": {"status": "PASS", "detail": "118.0"},
-    "pdf_ncf": {"status": "PASS", "detail": "31404 bytes"}
+    "pdf_ncf": {"status": "PASS", "detail": "31411 bytes"},
+    "depleted_range": {"status": "PASS", "detail": "blocked"},
+    "expired_range": {"status": "PASS", "detail": "blocked"}
   },
   "ok": true,
   "errors": []

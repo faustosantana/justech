@@ -158,7 +158,7 @@ Sin crear empresa ni ejecutar wizard (según reglas 6–7).
 | Impuestos dominicanos disponibles | ✅ PASS (plantilla) | `account.tax-do.csv` — ITBIS 18%, 16%, 9%, 8%, exento, propina, retenciones. **No en tabla `account.tax`** hasta aplicar plan a empresa DO |
 | Tax report ITBIS | ✅ PASS | `account_tax_report_data.xml` cargado — 56 XML IDs módulo `l10n_do` |
 | Tipos documentos fiscales | ❌ NO DISPONIBLE | Modelo `l10n_latam.document.type` no presente / 0 registros |
-| Secuencias NCF | ❌ NO DISPONIBLE en datos | Manifest declara NCF; **sin archivos de secuencia B01–B13** en `l10n_do` v19.0. Confirmación GAP **G-01** |
+| Secuencias NCF | ❌ NO DISPONIBLE en datos | Manifest declara NCF; **sin registros tras empresa DO** — validar en TC-002 |
 | Configuración diarios | ✅ PASS | 7 diarios estándar `account` (INV, BILL, BNK1, MISC, CABA, EXCH, TAX) |
 
 ---
@@ -204,7 +204,7 @@ Traefik errors: none
 
 | ID | Hallazgo TC-001 |
 |----|-----------------|
-| G-01 | Secuencias NCF declaradas en manifest pero **sin datos en módulo** v19.0 |
+| G-01 | Secuencias NCF / tipos documento — **pendiente validación post-empresa DO (TC-002)** |
 | G-02 | Tipos documento fiscal (`l10n_latam.document.type`) **ausentes** en instalación |
 | G-09 | Resuelto — `account` ahora instalado |
 | **Nuevo** | `l10n_do_reports` y `l10n_do_check_printing` **no evitables** con `-i l10n_do` en EE 19 por `auto_install` |

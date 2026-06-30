@@ -1,150 +1,125 @@
-# Fase E1 — Checklist de activación Enterprise (DEV)
+# Fase E1 — Validación final pre-ejecución
 
 **Estado:** Pendiente de aprobación — **NO ejecutar hasta autorización explícita**  
-**Alcance:** Solo ambiente **DEV** (`hellenia_dev` / `dev.hellenia.cloud`)  
-**Prerrequisito:** Fases E0.5–E0.9 completadas ✅
+**Alcance E1a:** Solo ambiente **DEV** (`hellenia_dev` / `dev.hellenia.cloud`)  
+**Prerrequisito:** Fases E0.5–E0.9 completadas y documentación revisada ✅
 
 ---
 
-## Principios de ejecución (acordados)
+## Revisión del procedimiento oficial Enterprise
+
+Este checklist consolida el procedimiento documentado por Odoo para on-premise Docker + Enterprise Git.
+
+### Fuentes oficiales verificadas
+
+| # | Documento oficial | Contenido aplicado |
+|---|-------------------|-------------------|
+| 1 | [Source install — Git](https://www.odoo.com/documentation/19.0/administration/on_premise/source.html) | Clone `odoo/enterprise` rama `19.0`; Enterprise antes de Community en `addons_path` |
+| 2 | [Community → Enterprise](https://www.odoo.com/documentation/19.0/administration/on_premise/community_to_enterprise.html) | Backup → `addons_path` → `-i web_enterprise` → reiniciar → registrar código |
+| 3 | [On-premise](https://www.odoo.com/documentation/19.0/administration/on_premise.html) | Registro suscripción; duplicación para test/dev |
+| 4 | [Docker Hub odoo](https://hub.docker.com/_/odoo) | Sin imagen Enterprise; montar volumen; múltiples instancias permitidas |
+| 5 | [Neutralized database](https://www.odoo.com/documentation/19.0/administration/neutralized_database.html) | TEST futuro por duplicación neutralizada |
+
+### Secuencia oficial (mejor práctica confirmada)
+
+```
+1. Obtener Enterprise vía Git (rama = versión mayor Community)
+2. Montar enterprise/ como volumen read-only en Docker
+3. addons_path: enterprise PRIMERO, luego Community, luego custom
+4. Backup BD
+5. odoo -i web_enterprise --stop-after-init
+6. Reiniciar y verificar UI Enterprise
+7. Registrar subscription code en banner (E1b — aprobación separada)
+```
+
+> **Mejora respecto a versión anterior:** Autenticación Git por **SSH key dedicada** en lugar de PAT permanente en `github.env`. Ver [E0.6-GITHUB-ENTERPRISE.md](E0.6-GITHUB-ENTERPRISE.md).
+
+---
+
+## Principios de ejecución
 
 | Regla | Responsable |
 |-------|-------------|
-| Vincular usuario GitHub en portal Odoo | **Usuario** (único paso manual inevitable) |
-| Crear PAT en GitHub | **Usuario** (una vez; no se almacena en Git) |
-| Entregar PAT a Cursor en sesión aprobada | **Usuario** (mensaje seguro; no commitear) |
-| Escribir `github.env` en VPS vía SSH | **Cursor** (chmod 600; nunca en repo Git) |
-| Clonar Enterprise, configurar, validar, revertir | **Cursor** vía SSH |
-| Editar archivos manualmente en VPS | **Nadie** — automatizado por scripts |
-| Wizard, usuarios, l10n_do, licencia UI, producción | **Bloqueado** en E1 inicial |
-
-> Cuando E1 sea aprobado, el usuario **no** editará `github.env` manualmente. Cursor lo creará en el VPS con el PAT proporcionado en esa sesión.
+| Vincular usuario GitHub en portal Odoo | **Usuario** (único paso manual en portal) |
+| Agregar SSH public key en GitHub | **Usuario** (copiar `.pub` generada por Cursor) |
+| Generar clave SSH, `ssh_config`, clonar, validar | **Cursor** vía SSH |
+| Editar archivos manualmente en VPS | **Nadie** |
+| Wizard, usuarios, l10n_do, licencia UI | **Bloqueado** en E1a |
+| Producción `odoo-pecv` | **No tocar** |
 
 ---
 
 ## Parte A — Acceso GitHub (antes de E1)
 
-### A.1 Vincular GitHub en portal Odoo (manual — usuario)
+### A.1 Portal Odoo (manual — usuario)
 
-| # | Acción | Dónde |
+| # | Acción |
+|---|--------|
+| 1 | [odoo.com/my/subscriptions](https://www.odoo.com/my/subscriptions) → `M260616306091776` |
+| 2 | **GitHub Users** → agregar username exacto |
+| 3 | Esperar 5–30 min |
+| 4 | Verificar [github.com/odoo/enterprise](https://github.com/odoo/enterprise) visible |
+| 5 | Verificar rama **`19.0`** existe |
+
+### A.2 SSH Key en GitHub (preferido)
+
+| # | Acción | Quién |
 |---|--------|-------|
-| 1 | Iniciar sesión | [https://www.odoo.com/my/subscriptions](https://www.odoo.com/my/subscriptions) |
-| 2 | Abrir suscripción | `M260616306091776` |
-| 3 | Sección **GitHub Users** | Agregar username exacto de GitHub |
-| 4 | Guardar | Esperar 5–30 minutos |
-| 5 | Verificar en navegador | [https://github.com/odoo/enterprise](https://github.com/odoo/enterprise) — debe ser visible (no 404) |
-| 6 | Verificar rama | Selector de ramas → existe **`19.0`** |
+| 1 | Cursor genera `github_ed25519` + `github_ed25519.pub` en VPS | Cursor |
+| 2 | Usuario copia contenido de `.pub` → GitHub → Settings → SSH and GPG keys | Usuario |
+| 3 | Cursor verifica `git ls-remote` con `ssh_config` | Cursor |
 
-**Criterio de éxito A.1:** Repositorio `odoo/enterprise` visible con rama `19.0`.
+**No se almacena PAT** si SSH funciona.
 
----
+### A.3 Fallback PAT (solo si SSH falla)
 
-### A.2 Crear Personal Access Token (manual — usuario, una sola vez)
-
-#### ¿Fine-grained o Classic?
-
-| Tipo | ¿Válido? | Recomendación |
-|------|----------|---------------|
-| **Fine-grained PAT** | ✅ Sí | **Preferido** — mínimo privilegio |
-| **Classic PAT** | ✅ Sí | Alternativa si fine-grained no lista el repo |
-
-#### Permisos requeridos
-
-**Fine-grained PAT:**
-
-| Campo | Valor |
-|-------|-------|
-| Resource owner | Tu cuenta GitHub (la vinculada en Odoo) |
-| Repository access | **Only select repositories** → `odoo/enterprise` |
-| Permissions → Repository contents | **Read-only** |
-| Permissions → Metadata | **Read-only** (incluido por defecto) |
-| Expiration | 90 días o según política Justech (renovable) |
-
-**Classic PAT (si fine-grained no funciona):**
-
-| Scope | Necesario |
-|-------|-----------|
-| `repo` | ✅ Sí (acceso a repos privados) |
-
-> **Read-only es suficiente.** E1 solo clona (`git clone` / `git pull`). No se hace push ni fork.
-
-#### Repositorio exacto
-
-```
-https://github.com/odoo/enterprise.git
-Rama: 19.0
-```
-
-No se requiere acceso a `odoo/odoo` (Community viene de la imagen Docker).
-
-#### Qué NO hacer con el PAT
-
-- ❌ No commitear en repo Justech
-- ❌ No pegar en `github.env.example`
-- ❌ No publicar en chat permanente / tickets públicos
-- ✅ Entregar solo a Cursor en sesión E1 aprobada (mensaje directo)
+Fine-grained PAT, Contents Read-only, repo `odoo/enterprise`. Temporal; migrar a SSH cuando sea posible.
 
 ---
 
-### A.3 Dónde se guardará el PAT (Cursor vía SSH)
-
-| Ubicación | Propósito |
-|-----------|-----------|
-| **VPS:** `/opt/odoo-projects/hellenia/config/credentials/github.env` | Uso operativo `git clone` |
-| Permisos | `chmod 600` (solo root) |
-| Directorio | `chmod 700` en `config/credentials/` |
-| **Git Justech** | ❌ Nunca — listado en `.gitignore` |
-
-**Contenido que Cursor escribirá automáticamente** (sin intervención manual del usuario):
-
-```ini
-GITHUB_USER=<username-github-vinculado-en-odoo>
-GITHUB_TOKEN=<pat-proporcionado-en-sesion-e1>
-```
-
-Plantilla de referencia (solo documentación): `config/credentials/github.env.example`
-
----
-
-## Parte B — Checklist pre-vuelo (Cursor valida vía SSH)
-
-Ejecutar **antes** de clonar Enterprise:
+## Parte B — Checklist pre-vuelo (Cursor vía SSH)
 
 | # | Verificación | Comando / script |
 |---|--------------|------------------|
-| B1 | Arquitectura E0.9 | Directorios `community/`, `enterprise/`, `custom/` |
+| B1 | Arquitectura E0.9 | `community/`, `enterprise/`, `custom/hellenia_*` |
 | B2 | Red saliente Odoo | `scripts/validate-subscription-env.sh` |
-| B3 | Backup DEV reciente | `scripts/backup-dev.sh` |
-| B4 | DEV responde | `curl -sS -o /dev/null -w '%{http_code}' https://dev.hellenia.cloud/web/login` → 200 |
-| B5 | Producción intacta | `docker ps --filter name=odoo-pecv` → Up |
-| B6 | `github.env` creado por Cursor | Existe, chmod 600, no en Git |
-| B7 | Acceso GitHub (dry-run) | `git ls-remote` al repo enterprise rama 19.0 |
+| B3 | Backup DEV | `scripts/backup-dev.sh` |
+| B4 | DEV HTTP 200 | `curl -sS -o /dev/null -w '%{http_code}' https://dev.hellenia.cloud/web/login` |
+| B5 | Producción intacta | `docker ps --filter name=odoo-pecv` |
+| B6 | SSH key + ssh_config | Existen en `config/credentials/`, chmod correcto |
+| B7 | Acceso GitHub dry-run | `git ls-remote git@github.com:odoo/enterprise.git refs/heads/19.0` |
 
-**Comando dry-run B7** (Cursor ejecutará, no clona aún):
+**Comando B7:**
 
 ```bash
-source /opt/odoo-projects/hellenia/config/credentials/github.env
-git ls-remote "https://${GITHUB_USER}:${GITHUB_TOKEN}@github.com/odoo/enterprise.git" refs/heads/19.0
+GIT_SSH_COMMAND="ssh -F /opt/odoo-projects/hellenia/config/credentials/ssh_config" \
+  git ls-remote git@github.com:odoo/enterprise.git refs/heads/19.0
 ```
-
-**Criterio de éxito B7:** Hash de commit visible, sin error 401/404.
 
 ---
 
-## Parte C — Comandos exactos que ejecutará Cursor (E1 aprobado)
+## Parte C — Comandos E1a (Cursor ejecuta tras aprobación)
 
-> Secuencia automatizada. El usuario **no** ejecuta estos comandos.
-
-### C.1 Crear credenciales (Cursor vía SSH)
+### C.1 Configurar SSH (Cursor)
 
 ```bash
 install -d -m 700 /opt/odoo-projects/hellenia/config/credentials
-cat > /opt/odoo-projects/hellenia/config/credentials/github.env << 'EOF'
-GITHUB_USER=<username>
-GITHUB_TOKEN=<pat>
+ssh-keygen -t ed25519 -C "hellenia-vps-enterprise" \
+  -f /opt/odoo-projects/hellenia/config/credentials/github_ed25519 -N ""
+chmod 600 /opt/odoo-projects/hellenia/config/credentials/github_ed25519
+chmod 644 /opt/odoo-projects/hellenia/config/credentials/github_ed25519.pub
+
+cat > /opt/odoo-projects/hellenia/config/credentials/ssh_config << 'EOF'
+Host github.com
+  HostName github.com
+  User git
+  IdentityFile /opt/odoo-projects/hellenia/config/credentials/github_ed25519
+  IdentitiesOnly yes
 EOF
-chmod 600 /opt/odoo-projects/hellenia/config/credentials/github.env
+chmod 600 /opt/odoo-projects/hellenia/config/credentials/ssh_config
 ```
+
+> **Pausa:** Usuario agrega `.pub` en GitHub. Cursor continúa tras confirmación.
 
 ### C.2 Sincronizar infra desde Git
 
@@ -155,6 +130,7 @@ git pull origin cursor/odoo19-migration-dev-test-dd85
 rsync -av repository/scripts/ /opt/odoo-projects/hellenia/scripts/
 rsync -av repository/docker/ /opt/odoo-projects/hellenia/docker/
 rsync -av repository/config/dev/odoo.conf /opt/odoo-projects/hellenia/config/dev/
+rsync -av repository/custom/ /opt/odoo-projects/hellenia/custom/
 chmod +x /opt/odoo-projects/hellenia/scripts/*.sh
 ```
 
@@ -164,20 +140,13 @@ chmod +x /opt/odoo-projects/hellenia/scripts/*.sh
 /opt/odoo-projects/hellenia/scripts/backup-dev.sh
 ```
 
-### C.4 Clonar Enterprise (rama 19.0)
+### C.4 Clonar Enterprise (Git oficial, rama 19.0)
 
 ```bash
 /opt/odoo-projects/hellenia/scripts/clone-enterprise.sh
 ```
 
-Equivalente interno:
-
-```bash
-git clone "https://${GITHUB_USER}:${GITHUB_TOKEN}@github.com/odoo/enterprise.git" \
-  --branch 19.0 --depth 1 /opt/odoo-projects/hellenia/enterprise
-```
-
-### C.5 Recrear contenedor DEV con volúmenes Enterprise
+### C.5 Recrear contenedor DEV
 
 ```bash
 cd /opt/odoo-projects/hellenia/docker/dev
@@ -186,7 +155,7 @@ docker compose --env-file ../../config/dev/.env up -d --force-recreate odoo
 sleep 45
 ```
 
-### C.6 Instalar `web_enterprise` en BD
+### C.6 Instalar `web_enterprise` (procedimiento oficial)
 
 ```bash
 source /opt/odoo-projects/hellenia/config/dev/.env
@@ -199,77 +168,37 @@ docker compose --env-file ../../config/dev/.env up -d odoo
 sleep 40
 ```
 
-### C.7 Validar carga Enterprise (sin registrar licencia aún)
+### C.7 Validar
 
 ```bash
 /opt/odoo-projects/hellenia/scripts/validate-enterprise-dev.sh
 ```
 
-### C.8 Registrar licencia (solo si aprobado en sub-paso E1b)
+### C.8 Registro licencia — E1b (bloqueado en E1a)
 
-> **Fuera del alcance de E1 inicial** salvo aprobación explícita adicional.
+Código `M260616306091776` en banner UI. Requiere aprobación separada.
 
-1. Usuario abre `https://dev.hellenia.cloud`
-2. Login admin existente
-3. Ingresa `M260616306091776` en banner
-4. Cursor verifica:
-
-```bash
-docker exec hellenia-dev-db-1 psql -U odoo -d hellenia_dev -tAc \
-  "SELECT value FROM ir_config_parameter WHERE key='database.enterprise_code';"
-```
-
-### C.9 Localización RD (solo fase E1c — NO en E1 inicial)
-
-> **Bloqueado** hasta aprobación separada:
-
-```bash
-/opt/odoo-projects/hellenia/scripts/validate-enterprise-dev.sh --l10n
-```
+### C.9 l10n_do — E1c (bloqueado)
 
 ---
 
-## Parte D — Cómo validar que Enterprise quedó cargado
+## Parte D — Criterios de éxito E1a
 
-### D.1 Filesystem (VPS)
-
-| Check | Comando | Esperado |
-|-------|---------|----------|
-| Repo clonado | `test -f /opt/odoo-projects/hellenia/enterprise/web_enterprise/__manifest__.py` | exit 0 |
-| Rama correcta | `git -C /opt/odoo-projects/hellenia/enterprise branch --show-current` | `19.0` |
-| Módulos RD presentes | `ls enterprise/l10n_do_edi enterprise/l10n_do_reports` | existen |
-
-### D.2 Contenedor Docker
-
-| Check | Comando | Esperado |
-|-------|---------|----------|
-| Volumen montado | `docker exec hellenia-dev-odoo-1 test -d /mnt/enterprise/web_enterprise` | exit 0 |
-| Custom montado | `docker exec hellenia-dev-odoo-1 test -d /mnt/custom` | exit 0 |
-| addons_path | `docker exec hellenia-dev-odoo-1 grep addons_path /etc/odoo/odoo.conf` | incluye `/mnt/enterprise` primero |
-
-### D.3 Base de datos
-
-| Check | SQL / script | Esperado |
-|-------|--------------|----------|
-| web_enterprise | `SELECT state FROM ir_module_module WHERE name='web_enterprise'` | `installed` |
-| Sin licencia aún | `database.enterprise_code` vacío o ausente | OK en E1a |
-| Con licencia (E1b) | `database.enterprise_code` con valor | presente |
-
-### D.4 HTTP / UI
-
-| Check | Comando | Esperado |
-|-------|---------|----------|
-| Login | `curl -sS -o /dev/null -w '%{http_code}' https://dev.hellenia.cloud/web/login` | `200` |
-| Versión Odoo | POST `/web/webclient/version_info` | `19.0-20260619` |
-| UI Enterprise | Menú Apps muestra módulos Enterprise | visual (post web_enterprise) |
-
-### D.5 Script consolidado
+| Check | Esperado |
+|-------|----------|
+| `enterprise/web_enterprise/__manifest__.py` | Existe |
+| Rama Git | `19.0` |
+| Volumen `/mnt/enterprise` | Montado en contenedor |
+| `web_enterprise` en BD | `state = installed` |
+| HTTP login | 200 |
+| `database.enterprise_code` | Vacío (OK en E1a) |
+| Producción | Intacta |
 
 ```bash
 /opt/odoo-projects/hellenia/scripts/validate-enterprise-dev.sh
 ```
 
-**Criterio E1a exitoso (sin licencia, sin l10n):**
+**Salida esperada:**
 
 ```
 OK  enterprise montado
@@ -277,106 +206,59 @@ OK  custom montado
 OK  addons_path incluye enterprise
 OK  web_enterprise instalado en BD
 OK  login HTTP 200
-WARN database.enterprise_code vacío  ← esperado si E1b no ejecutado
+WARN database.enterprise_code vacío
 OK  producción intacta
 RESULTADO: OK
 ```
 
 ---
 
-## Parte E — Cómo revertir si falla
+## Parte E — Rollback
 
-### E.1 Fallo antes de instalar `web_enterprise` (solo clone / volúmenes)
+### E.1 Antes de `web_enterprise`
 
 ```bash
-# Eliminar clone Enterprise
-rm -rf /opt/odoo-projects/hellenia/enterprise
-mkdir -p /opt/odoo-projects/hellenia/enterprise
-cp /opt/odoo-projects/hellenia/repository/enterprise/README.md /opt/odoo-projects/hellenia/enterprise/
-
-# Restaurar odoo.conf Community-only (temporal)
-# addons_path sin /mnt/enterprise — solo si fallo crítico de arranque
-
-# Recrear contenedor
+rm -rf /opt/odoo-projects/hellenia/enterprise/.git
 cd /opt/odoo-projects/hellenia/docker/dev
 docker compose --env-file ../../config/dev/.env up -d --force-recreate odoo
 ```
 
-DEV vuelve a Odoo 19 **Community** funcional.
+### E.2 Después de `web_enterprise`
 
-### E.2 Fallo después de instalar `web_enterprise`
+Restaurar backup pre-E1 desde `backups/dev/<TIMESTAMP>/`.
 
-```bash
-# 1. Identificar backup pre-E1
-ls -lt /opt/odoo-projects/hellenia/backups/dev/
-
-# 2. Detener Odoo
-cd /opt/odoo-projects/hellenia/docker/dev
-docker compose --env-file ../../config/dev/.env stop odoo
-
-# 3. Restaurar PostgreSQL
-source /opt/odoo-projects/hellenia/config/dev/.env
-gunzip -c /opt/odoo-projects/hellenia/backups/dev/<TIMESTAMP>/postgres_all.sql.gz \
-  | docker exec -i hellenia-dev-db-1 psql -U odoo -d postgres
-
-# 4. Restaurar filestore
-docker run --rm \
-  -v hellenia-dev_odoo-data:/data \
-  -v /opt/odoo-projects/hellenia/backups/dev/<TIMESTAMP>:/backup \
-  alpine sh -c "rm -rf /data/* && tar xzf /backup/filestore.tar.gz -C /data"
-
-# 5. Eliminar enterprise clone (opcional)
-rm -rf /opt/odoo-projects/hellenia/enterprise/*
-
-# 6. Reiniciar
-docker compose --env-file ../../config/dev/.env up -d
-```
-
-### E.3 Fallo en registro de licencia (E1b)
-
-- La BD y Enterprise siguen instalados
-- Reintentar registro en UI con código correcto
-- Si código quedó vinculado a otra BD: contactar soporte Odoo o desvincular en portal
-- **No** modificar `database.enterprise_code` manualmente salvo instrucción soporte Odoo
-
-### E.4 Eliminar credenciales GitHub (revocación)
+### E.3 Revocar acceso GitHub
 
 ```bash
-# En VPS
-rm -f /opt/odoo-projects/hellenia/config/credentials/github.env
-
-# En GitHub → Settings → Developer settings → Revoke PAT
+rm -f /opt/odoo-projects/hellenia/config/credentials/github_ed25519*
+rm -f /opt/odoo-projects/hellenia/config/credentials/ssh_config
 ```
 
-### E.5 Producción
-
-**Nunca afectada** — rollback E1 solo toca `hellenia-dev-*` y `/opt/odoo-projects/hellenia/enterprise/`.
+Usuario elimina SSH key en GitHub → Settings → SSH keys.
 
 ---
 
-## Parte F — Fases E1 desglosadas (para aprobación granular)
+## Parte F — Sub-fases
 
-| Sub-fase | Contenido | Requiere aprobación |
-|----------|-----------|---------------------|
-| **E1a** | PAT vía Cursor SSH → clone → volúmenes → `web_enterprise` → validar | ✅ Esta checklist |
-| **E1b** | Registrar `M260616306091776` en UI DEV | Aprobación separada |
-| **E1c** | Instalar `l10n_do`, `l10n_do_edi`, `l10n_do_reports` | Aprobación separada |
+| Sub-fase | Contenido | Aprobación |
+|----------|-----------|------------|
+| **E1a** | SSH → clone Git → volúmenes → `web_enterprise` → validar | Este documento |
+| **E1b** | Registrar `M260616306091776` en DEV | Separada |
+| **E1c** | `l10n_do`, `l10n_do_edi`, `l10n_do_reports` | Separada |
 | **E1d** | Wizard, usuarios, Infile | Fuera de alcance |
 
-**Al aprobar este documento, se entiende aprobación solo de E1a** salvo que se indique lo contrario.
-
 ---
 
-## Parte G — Lo que necesito de ti para ejecutar E1a (cuando apruebes)
+## Parte G — Requisitos para aprobar E1a
 
-1. ✅ Confirmación explícita: *"Aprobado E1a"*
-2. ✅ GitHub vinculado en portal Odoo (Parte A.1)
-3. ✅ PAT creado con permisos de Parte A.2
-4. ✅ Enviar en sesión segura:
-   - `GITHUB_USER` (username exacto)
-   - `GITHUB_TOKEN` (PAT, una sola vez)
-
-Cursor hará el resto por SSH. **No editarás archivos en el VPS.**
+1. Confirmación explícita: *"Aprobado E1a"*
+2. GitHub vinculado en portal Odoo (A.1)
+3. Usuario disponible para agregar SSH public key cuando Cursor la genere
+4. Documentación revisada:
+   - [ENTERPRISE-LICENSING.md](ENTERPRISE-LICENSING.md)
+   - [ARCHITECTURE.md](ARCHITECTURE.md)
+   - [E0.6-GITHUB-ENTERPRISE.md](E0.6-GITHUB-ENTERPRISE.md)
+   - [UPGRADE-PATH.md](UPGRADE-PATH.md)
 
 ---
 
@@ -384,12 +266,10 @@ Cursor hará el resto por SSH. **No editarás archivos en el VPS.**
 
 | Documento | Contenido |
 |-----------|-----------|
-| [ARCHITECTURE.md](ARCHITECTURE.md) | Capas Community / Enterprise / Custom |
-| [E0.6-GITHUB-ENTERPRISE.md](E0.6-GITHUB-ENTERPRISE.md) | Procedimiento GitHub detallado |
-| [E0.5-SUBSCRIPTION-VALIDATION.md](E0.5-SUBSCRIPTION-VALIDATION.md) | Política suscripción |
-| [E1-ENTERPRISE-STATUS.md](E1-ENTERPRISE-STATUS.md) | Estado actual |
-| [GIT-STRATEGY.md](GIT-STRATEGY.md) | Enterprise fuera de Git |
-| [ROLLBACK.md](ROLLBACK.md) | Rollback general |
+| [ENTERPRISE-LICENSING.md](ENTERPRISE-LICENSING.md) | Política oficial licenciamiento |
+| [ENTERPRISE_ANALYSIS.md](ENTERPRISE_ANALYSIS.md) | Análisis técnico Enterprise |
+| [UPGRADE-PATH.md](UPGRADE-PATH.md) | Odoo 20/21+ sin rehacer infra |
+| [ARCHITECTURE.md](ARCHITECTURE.md) | DEV → TEST → PROD permanente |
 
 ---
 
@@ -397,8 +277,8 @@ Cursor hará el resto por SSH. **No editarás archivos en el VPS.**
 
 | Item | Estado |
 |------|--------|
-| Documento E1-CHECKLIST | ✅ Generado |
+| Revisión procedimiento oficial | ✅ Completada |
+| Documentación actualizada | ✅ |
 | E1a ejecutado | ⛔ Esperando aprobación |
 | E1b licencia | ⛔ Bloqueado |
 | E1c l10n_do | ⛔ Bloqueado |
-| Producción | ⛔ Sin tocar |

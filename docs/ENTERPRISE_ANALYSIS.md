@@ -14,7 +14,9 @@
 | Procedimiento Docker oficial | Imagen Community + addons Enterprise montados; **no existe imagen Enterprise en Docker Hub** |
 | Conversión Community → Enterprise | Instalar `web_enterprise`, actualizar `addons_path`, registrar suscripción |
 | Código de suscripción | `M260616306091776` — ingresar en UI tras tener Enterprise operativo |
-| Repositorio Enterprise | `github.com/odoo/enterprise` (rama `19.0`) o descarga en `odoo.com/page/download` |
+| Repositorio Enterprise | `github.com/odoo/enterprise` (rama `19.0`) vía **Git oficial** — ver [E0.6-GITHUB-ENTERPRISE.md](E0.6-GITHUB-ENTERPRISE.md) |
+| Licenciamiento oficial | [ENTERPRISE-LICENSING.md](ENTERPRISE-LICENSING.md) — sin suposiciones |
+| Actualizaciones futuras | [UPGRADE-PATH.md](UPGRADE-PATH.md) — Odoo 20/21+ sin rehacer infra |
 | Localización RD completa | Requiere Enterprise (`l10n_do_edi`, `l10n_do_reports`) + servicio externo **Infile** |
 | Próximo paso | Aprobar este análisis → ejecutar plan DEV (documento al final) |
 
@@ -142,26 +144,29 @@ El servidor Odoo debe poder abrir conexiones salientes hacia:
 
 Este puerto debe permanecer abierto **incluso después** del registro (verificación semanal).
 
-### Reglas de licenciamiento críticas
+### Reglas de licenciamiento (documentación oficial)
 
-| Regla | Implicación para Hellenia |
-|-------|---------------------------|
-| **1 código = 1 base de datos** | `M260616306091776` solo puede vincularse a **una** BD activa |
-| BD de prueba | Duplicar BD de producción (con neutralización) para dev/test adicionales |
-| Usuarios internos | No exceder usuarios contratados; si no, aviso 30 días antes de expiración |
-| Estado suscripción | Debe mostrar **"In Progress"** en [odoo.com/my/subscriptions](https://www.odoo.com/my/subscriptions) |
+> Documento maestro: [ENTERPRISE-LICENSING.md](ENTERPRISE-LICENSING.md)
 
-### Estrategia recomendada para ambientes
+| Regla oficial (citada) | Implicación para Hellenia |
+|------------------------|---------------------------|
+| *"only one database can be linked per subscription"* | Una BD vinculada a `M260616306091776` a la vez |
+| *"If a test or a development database is needed, you can duplicate a database"* | DEV/TEST adicionales por **duplicación**, no segundo registro |
+| Duplicar con **neutralize** | TEST y DEV no productivos neutralizados |
+| UUID único | Verificar en contrato Odoo tras duplicar |
+| Usuarios internos | No exceder contratados; aviso 30 días |
+| Estado **"In Progress"** | Verificar en portal |
 
-Dado que el código solo vincula **una** BD:
+### Arquitectura permanente DEV → TEST → PROD
 
-| Ambiente | Estrategia suscripción |
-|----------|------------------------|
-| **DEV** (primera activación) | Registrar `M260616306091776` aquí durante fase de implementación |
-| **TEST** | Duplicar BD DEV neutralizada, **o** segunda suscripción si Odoo lo provisiona |
-| **PROD** | Tras go-live, **re-vincular** el mismo código a PROD (desvincular DEV) |
+Pipeline definitivo (no temporal). Ver [ARCHITECTURE.md](ARCHITECTURE.md) y [ENTERPRISE-LICENSING.md §7](ENTERPRISE-LICENSING.md).
 
-> Confirmar con Account Manager de Odoo si el contrato incluye múltiples ambientes o si TEST debe usar BD duplicada neutralizada.
+| Fase | BD registrada | DEV | TEST |
+|------|---------------|-----|------|
+| Implementación | `hellenia_dev` | Construcción | Duplicado neutralizado de DEV |
+| Producción | `hellenia_prod` (futura) | Duplicado neutralizado de PROD | Duplicado neutralizado de PROD |
+
+> La documentación oficial **no especifica** si se requiere segunda suscripción para ambientes paralelos registrados. Consultar Account Manager solo para ese punto no documentado.
 
 ---
 
@@ -195,33 +200,23 @@ Dado que el código solo vincula **una** BD:
 
 ## 4. Obtención oficial de módulos Enterprise
 
-### Método A — GitHub (recomendado para actualizaciones)
+### Método oficial — GitHub Git (único método Hellenia)
 
-**Procedimiento oficial:**
+**Procedimiento oficial:** [Source install — Git](https://www.odoo.com/documentation/19.0/administration/on_premise/source.html)
 
-1. Crear cuenta GitHub (si no existe)
-2. Ir a [odoo.com/my/subscriptions](https://www.odoo.com/my/subscriptions)
-3. Seleccionar suscripción `M260616306091776`
-4. En sección **GitHub Users**, agregar el username de GitHub
-5. Esperar invitación/acceso al repo privado (minutos)
-6. Verificar acceso: `https://github.com/odoo/enterprise` (no debe dar 404)
-7. Clonar en el VPS:
+1. Vincular usuario GitHub en portal Odoo → GitHub Users
+2. Verificar acceso a `https://github.com/odoo/enterprise` rama `19.0`
+3. Clonar en VPS (SSH preferido):
 
 ```bash
-cd /opt/odoo-projects/hellenia
-git clone https://github.com/odoo/enterprise.git --branch 19.0 --depth 1 enterprise
+git clone --branch 19.0 --single-branch git@github.com:odoo/enterprise.git enterprise
 ```
 
-> Usar **Personal Access Token (PAT)** de GitHub para autenticación en servidor sin interacción. No commitear el repo Enterprise a Git público.
+**Autenticación VPS:** SSH key dedicada (preferida). PAT solo como fallback. Ver [E0.6-GITHUB-ENTERPRISE.md](E0.6-GITHUB-ENTERPRISE.md).
 
-### Método B — Descarga directa (sin GitHub)
+> No se usa descarga ZIP manual. El repositorio Git facilita actualizaciones Odoo 20+ según [UPGRADE-PATH.md](UPGRADE-PATH.md).
 
-1. Ir a [odoo.com/page/download](https://www.odoo.com/page/download)
-2. Ingresar código `M260616306091776`
-3. Descargar paquete Enterprise para versión 19
-4. Extraer en `/opt/odoo-projects/hellenia/enterprise/`
-
-### Método C — Actualizaciones periódicas
+### Actualizaciones periódicas
 
 ```bash
 cd /opt/odoo-projects/hellenia/enterprise
@@ -612,7 +607,7 @@ La localización RD con eNCF fue anunciada en foros Odoo para **19.3+** en SaaS.
 
 | Riesgo | Mitigación |
 |--------|------------|
-| 1 código = 1 BD | Registrar en DEV; TEST por duplicado neutralizado |
+| 1 código = 1 BD vinculada | DEV registrada en implementación; TEST/PROD por duplicación neutralizada (oficial) |
 | Enterprise en Git público | `.gitignore`, solo en VPS |
 | `l10n_do_edi` no en rama 19.0 | Verificar tras clone; plan B: Odoo 19.3 pin |
 | Infile no contratado | Usar ambiente Demo para desarrollo; contratar antes de UAT fiscal |
@@ -636,10 +631,8 @@ La localización RD con eNCF fue anunciada en foros Odoo para **19.3+** en SaaS.
 ### Fase E1 — Código Enterprise en VPS
 
 ```bash
-cd /opt/odoo-projects/hellenia
-git clone https://github.com/odoo/enterprise.git --branch 19.0 --depth 1 enterprise
+/opt/odoo-projects/hellenia/scripts/clone-enterprise.sh
 ls enterprise/l10n_do_edi  # verificar módulos RD
-chmod -R a+rX enterprise/
 ```
 
 ### Fase E2 — Configuración Docker DEV

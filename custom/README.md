@@ -2,6 +2,19 @@
 
 **Única carpeta autorizada para código propio.**
 
+## Módulos planificados (esqueleto — sin desarrollo)
+
+| Módulo | Estado | Dependencias base |
+|--------|--------|-------------------|
+| `hellenia_base` | Esqueleto | `base` |
+| `hellenia_inventory` | Esqueleto | `hellenia_base`, `stock` |
+| `hellenia_reports` | Esqueleto | `hellenia_base` |
+| `hellenia_account` | Esqueleto | `hellenia_base`, `account` |
+| `hellenia_pos` | Esqueleto | `hellenia_base`, `point_of_sale` |
+| `justech_core` | Esqueleto | `base` |
+
+> **No instalar** estos módulos hasta aprobación explícita. Son placeholders estructurales.
+
 ## Estructura de módulo
 
 ```
@@ -23,30 +36,14 @@ custom/
 | Prefijo | `hellenia_` o `justech_` |
 | Herencia | Usar `_inherit` — nunca editar Enterprise/Community |
 | Licencia | Declarar en `__manifest__.py` |
-| Dependencias | Solo módulos oficiales Odoo salvo aprobación explícita |
-| Versionado | Git Justech — rama `hellenia-odoo-infra` o `feature/*` |
+| Dependencias | Solo módulos oficiales Odoo salvo aprobación |
 
 ## Montaje Docker
 
 ```
-Host:  /opt/odoo-projects/hellenia/custom/
+Host:      /opt/odoo-projects/hellenia/custom/
 Container: /mnt/custom (read-only)
 ```
-
-## Despliegue
-
-Los módulos se sincronizan desde el repo Git Justech:
-
-```bash
-rsync -av repository/custom/ /opt/odoo-projects/hellenia/custom/
-docker compose restart odoo
-```
-
-## Prohibido
-
-- Copiar módulos de `enterprise/` o Community aquí
-- Parchear archivos de terceros
-- Módulos OCA o externos sin aprobación del cliente
 
 ## Referencia
 

@@ -3,25 +3,24 @@
 ## [Unreleased]
 
 ### Added
-- Arquitectura profesional: `community/`, `enterprise/`, `custom/` separados
-- `docs/ARCHITECTURE.md`, `GIT-STRATEGY.md`, `E0.5`, `E0.6`, `INFILE-REQUIREMENTS.md`
-- Scripts: `validate-subscription-env.sh`, `clone-enterprise.sh`, `install-enterprise-dev.sh`, `validate-enterprise-dev.sh`
-- `config/credentials/github.env.example`
+- `docs/ENTERPRISE-LICENSING.md` — política oficial Odoo (sin suposiciones)
+- `docs/UPGRADE-PATH.md` — actualización Odoo 20/21+ sin rehacer infra
+- `config/credentials/README.md` — SSH key para GitHub Enterprise
+- Esqueletos custom: `hellenia_base`, `hellenia_inventory`, `hellenia_reports`, `hellenia_account`, `hellenia_pos`, `justech_core`
 
 ### Changed
-- `docker-compose`: volúmenes `/mnt/enterprise` y `/mnt/custom`
-- `addons_path`: Enterprise → Community (imagen) → Custom
-- `addons/` migrado a `custom/`
-- DEV recreado con nueva arquitectura de volúmenes
+- Licenciamiento corregido: duplicación + neutralize (documentación oficial)
+- Arquitectura permanente DEV → TEST → PROD documentada
+- GitHub VPS: **SSH key dedicada** preferida sobre PAT permanente
+- Enterprise: solo repo Git oficial (no ZIP manual)
+- `E1-CHECKLIST.md` — validación final pre-ejecución revisada
+- `clone-enterprise.sh` — soporte SSH + PAT fallback
+- `E0.5`, `E0.6`, `ARCHITECTURE.md`, `ENTERPRISE_ANALYSIS.md` actualizados
 
-### Added
-- `docs/E1-CHECKLIST.md` — checklist E1a (GitHub PAT, comandos, validación, rollback)
-
-### Pending (E1)
-- Crear `config/credentials/github.env` en VPS
-- Vincular GitHub en portal Odoo
-- Ejecutar `install-enterprise-dev.sh`
-- Registrar `M260616306091776` en UI DEV
+### Pending (E1a — no ejecutado)
+- Generar SSH key en VPS + usuario agrega `.pub` en GitHub
+- Ejecutar `clone-enterprise.sh` + `web_enterprise`
+- Registrar `M260616306091776` (E1b — aprobación separada)
 
 ### Added (previo)
 - `docs/ENTERPRISE_ANALYSIS.md` — análisis Enterprise, suscripción M260616306091776, módulos RD, plan DEV propuesto (sin ejecución)

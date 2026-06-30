@@ -39,7 +39,9 @@
 | `enterprise/` | Código OPL-1.0 propietario Odoo |
 | `config/dev/.env` | Secretos |
 | `config/test/.env` | Secretos |
-| `config/credentials/github.env` | PAT GitHub |
+| `config/credentials/github.env` | PAT GitHub (fallback) |
+| `config/credentials/github_ed25519` | Clave SSH privada VPS |
+| `config/credentials/ssh_config` | Config SSH GitHub |
 | `backups/` | Datos operativos |
 | `logs/` | Datos operativos |
 | `enterprise/.git/` | Repo Git separado en VPS |
@@ -85,12 +87,12 @@ rsync -av scripts/ ../scripts/
 cd ../enterprise && git pull origin 19.0
 ```
 
-### Actualización Enterprise (independiente)
+### Actualización Enterprise (independiente — SSH)
 
 ```bash
 cd /opt/odoo-projects/hellenia/enterprise
-git fetch origin 19.0
-git pull origin 19.0
+GIT_SSH_COMMAND="ssh -F ../config/credentials/ssh_config" git fetch origin 19.0
+GIT_SSH_COMMAND="ssh -F ../config/credentials/ssh_config" git pull origin 19.0
 cd ../docker/dev && docker compose restart odoo
 ```
 

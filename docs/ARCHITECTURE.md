@@ -1,7 +1,32 @@
 # Arquitectura Odoo Enterprise — Hellenia
 
-**Fase:** E0.7 — E0.9  
-**Principio:** Separación estricta Community / Enterprise / Custom
+**Fase:** E0.7 — E0.9 (aprobada)  
+**Principio:** Separación estricta Community / Enterprise / Custom  
+**Pipeline permanente:** DEV → TEST → PRODUCCIÓN (toda la vida del proyecto)
+
+---
+
+## Pipeline de ambientes (definitivo)
+
+```
+┌──────────┐     promoción      ┌──────────┐     go-live      ┌──────────────┐
+│   DEV    │ ─────────────────► │   TEST   │ ───────────────► │  PRODUCCIÓN  │
+│ hellenia │   duplicar +       │ hellenia │   migración +    │  (futura)    │
+│   _dev   │   neutralize       │  _test   │   registro código│              │
+└──────────┘                    └──────────┘                  └──────────────┘
+     ▲                               ▲                              │
+     │                               │                              │
+     └──────── refrescar desde PROD (duplicar + neutralize) ────────┘
+```
+
+| Ambiente | URL | BD | Rol permanente |
+|----------|-----|-----|----------------|
+| DEV | dev.hellenia.cloud | `hellenia_dev` | Desarrollo custom y configuración |
+| TEST | test.hellenia.cloud | `hellenia_test` | UAT y validación pre-producción |
+| PROD (actual) | odoo-pecv | — | Odoo 18 — **no tocar** |
+| PROD (futuro) | odoo.hellenia.cloud | TBD | Operación Enterprise registrada |
+
+**Licenciamiento:** Ver [ENTERPRISE-LICENSING.md](ENTERPRISE-LICENSING.md). Una BD vinculada al código; ambientes adicionales por duplicación neutralizada (documentación oficial Odoo).
 
 ---
 
@@ -10,13 +35,19 @@
 ```
 /opt/odoo-projects/hellenia/
 ├── community/          # Metadatos Community (código en imagen Docker)
-├── enterprise/         # Git clone independiente odoo/enterprise @ 19.0 (NO en Git Justech)
+├── enterprise/         # Git clone odoo/enterprise @ 19.0 (NO en Git Justech)
 ├── custom/             # Módulos Justech — único lugar para desarrollo propio
+│   ├── hellenia_base/
+│   ├── hellenia_inventory/
+│   ├── hellenia_reports/
+│   ├── hellenia_account/
+│   ├── hellenia_pos/
+│   └── justech_core/
 ├── config/
 │   ├── dev/
 │   ├── test/
 │   ├── production/
-│   └── credentials/    # github.env, etc. — NUNCA en Git
+│   └── credentials/    # SSH keys GitHub — NUNCA en Git
 ├── docker/
 │   ├── dev/
 │   └── test/
@@ -40,17 +71,14 @@
 ### `addons_path` (orden obligatorio)
 
 ```ini
-# config/dev/odoo.conf y config/test/odoo.conf
 addons_path = /mnt/enterprise,/usr/lib/python3/dist-packages/odoo/addons,/mnt/custom
 ```
 
 | Orden | Path contenedor | Contenido |
 |-------|-----------------|-----------|
-| 1º | `/mnt/enterprise` | Módulos Enterprise (override) |
+| 1º | `/mnt/enterprise` | Módulos Enterprise |
 | 2º | `/usr/lib/.../odoo/addons` | Community (imagen oficial) |
 | 3º | `/mnt/custom` | Justech custom |
-
-> **Nunca** incluir rutas adicionales mezcladas. **Nunca** copiar módulos Enterprise o Community dentro de `custom/`.
 
 ---
 
@@ -64,63 +92,39 @@ volumes:
   - ${ODOO_CONF_PATH}:/etc/odoo/odoo.conf:ro
 ```
 
-Variables `.env`:
+---
 
-```ini
-ENTERPRISE_PATH=/opt/odoo-projects/hellenia/enterprise
-CUSTOM_ADDONS_PATH=/opt/odoo-projects/hellenia/custom
-```
+## Carpeta `custom/` — módulos planificados
+
+Estructura preparada (sin desarrollo aún):
+
+| Módulo | Propósito futuro |
+|--------|------------------|
+| `hellenia_base` | Configuración base Hellenia |
+| `hellenia_inventory` | Extensiones inventario |
+| `hellenia_reports` | Reportes propios |
+| `hellenia_account` | Extensiones contabilidad |
+| `hellenia_pos` | Punto de venta |
+| `justech_core` | Utilidades compartidas Justech |
 
 ---
 
-## Carpeta `community/`
+## Actualizaciones futuras (Odoo 20, 21+)
 
-No contiene código fuente duplicado. Incluye:
+La infraestructura **no se rehace**. Solo se actualizan:
 
-- `README.md` — documenta que Community proviene de la imagen Docker pinneada
-- Referencia de versión: `odoo:19.0-20260619`
-- Path interno contenedor: `/usr/lib/python3/dist-packages/odoo/addons`
+1. Tag imagen Community en `docker-compose.yml`
+2. `git pull` en `enterprise/` (nueva rama mayor)
+3. `git pull` + deploy de `custom/`
 
-Duplicar el repo `odoo/odoo` en disco **no es necesario** cuando se usa la imagen oficial Docker.
-
----
-
-## Carpeta `enterprise/`
-
-- Repositorio Git **independiente** (`odoo/enterprise`)
-- Listado en `.gitignore` del repo Justech
-- Clonado por `scripts/clone-enterprise.sh`
-- Actualizado por `git pull` en `enterprise/`
-- Montado **read-only** en contenedor
-
----
-
-## Carpeta `custom/` (E0.8)
-
-Único destino para desarrollo Justech:
-
-```
-custom/
-├── README.md
-└── <modulo_justech>/
-    ├── __manifest__.py
-    ├── models/
-    ├── views/
-    └── security/
-```
-
-**Reglas:**
-- Heredar (`_inherit`) — no modificar archivos Enterprise/Community
-- Prefijo recomendado: `justech_` o `hellenia_`
-- Licencia: definir en `__manifest__.py`
-- Versionado: solo en repo Justech
+Detalle: [UPGRADE-PATH.md](UPGRADE-PATH.md)
 
 ---
 
 ## Flujo de despliegue
 
 ```
-GitHub (justech/hellenia-odoo-infra)
+GitHub (justech)
     │
     ▼ git pull en repository/
 /opt/odoo-projects/hellenia/repository/
@@ -128,22 +132,12 @@ GitHub (justech/hellenia-odoo-infra)
     ├── rsync custom/ ──► /opt/odoo-projects/hellenia/custom/
     ├── sync docker/, config/, scripts/
     │
-    ▼ (independiente)
-enterprise/ ◄── git pull odoo/enterprise
+    ▼ (independiente — SSH)
+enterprise/ ◄── git pull odoo/enterprise (rama 19.0)
     │
     ▼
 docker compose up -d
 ```
-
----
-
-## Ambientes
-
-| Ambiente | URL | BD | Enterprise |
-|----------|-----|-----|------------|
-| DEV | dev.hellenia.cloud | hellenia_dev | E1: primera activación |
-| TEST | test.hellenia.cloud | hellenia_test | Duplicado neutralizado (futuro) |
-| PROD | odoo-pecv (actual) | — | Odoo 18 — sin tocar |
 
 ---
 
@@ -154,14 +148,15 @@ docker compose up -d
 | `custom/` | ✅ | ✅ |
 | `config/*.example` | ✅ | — |
 | `config/*/.env` | ❌ | ✅ chmod 600 |
-| `config/credentials/` | ❌ | ✅ chmod 600 |
-| `enterprise/` | ❌ | ✅ clone local |
+| `config/credentials/` | ❌ | ✅ chmod 700 |
+| `enterprise/` | ❌ | ✅ clone local SSH |
 
 ---
 
 ## Referencias
 
+- [ENTERPRISE-LICENSING.md](ENTERPRISE-LICENSING.md)
+- [UPGRADE-PATH.md](UPGRADE-PATH.md)
 - [ENTERPRISE_ANALYSIS.md](ENTERPRISE_ANALYSIS.md)
 - [GIT-STRATEGY.md](GIT-STRATEGY.md)
-- [E0.5-SUBSCRIPTION-VALIDATION.md](E0.5-SUBSCRIPTION-VALIDATION.md)
 - [E0.6-GITHUB-ENTERPRISE.md](E0.6-GITHUB-ENTERPRISE.md)

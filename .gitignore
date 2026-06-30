@@ -3,9 +3,10 @@
 **/.env
 !**/.env.example
 
-# Credenciales servidor (PAT GitHub, etc.)
-config/credentials/
+# Credenciales servidor (SSH keys, PAT fallback)
+config/credentials/*
 !config/credentials/*.example
+!config/credentials/README.md
 
 # Código Enterprise — repo Git independiente en VPS
 enterprise/*

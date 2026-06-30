@@ -1,44 +1,52 @@
 # Estado Fase E1 — Enterprise DEV
 
 **Fecha:** 2026-06-30  
-**Estado:** Detenido en E0.9 — ver `E1-CHECKLIST.md` para aprobación E1a
+**Estado:** Documentación revisada — **E1 NO ejecutado** — esperando aprobación E1a
 
 ---
 
-## Completado (E0.5 – E0.9)
+## Completado (E0.5 – E0.9 + revisión)
 
 | Fase | Estado | Evidencia |
 |------|--------|-----------|
-| E0.5 Validación suscripción | ✅ Docs + checks técnicos | `validate-subscription-env.sh` OK en VPS |
-| E0.6 GitHub Enterprise | ✅ Documentado | `docs/E0.6-GITHUB-ENTERPRISE.md` |
-| E0.7 Arquitectura | ✅ Desplegada | `community/`, `enterprise/`, `custom/` en VPS |
-| E0.8 Custom addons | ✅ Preparado | `custom/README.md`, `.gitkeep` |
-| E0.9 Git strategy | ✅ Documentado | `docs/GIT-STRATEGY.md`, `.gitignore` |
+| E0.5 Licenciamiento oficial | ✅ Corregido | `ENTERPRISE-LICENSING.md` |
+| E0.6 GitHub SSH | ✅ Actualizado | `E0.6-GITHUB-ENTERPRISE.md` — sin PAT permanente |
+| E0.7 Arquitectura permanente | ✅ | `ARCHITECTURE.md` — DEV→TEST→PROD |
+| E0.8 Custom skeleton | ✅ | `hellenia_*`, `justech_core` |
+| E0.9 Git strategy | ✅ | `GIT-STRATEGY.md` |
+| Upgrade path 20+ | ✅ | `UPGRADE-PATH.md` |
+| E1 validación final | ✅ | `E1-CHECKLIST.md` revisado |
 
-### Checks técnicos VPS (2026-06-30)
+---
 
-```
-✓ DNS services.odoo.com
-✓ HTTP saliente services.odoo.com:80
-✓ Directorios community/, enterprise/, custom/, config/credentials/
-✓ DEV monta /mnt/enterprise y /mnt/custom
-✓ DEV /web/login → 200
-✓ Producción odoo-pecv intacta
-```
+## Cambios respecto a versión anterior
+
+| Tema | Antes | Ahora |
+|------|-------|-------|
+| Licenciamiento | Asumía 1 BD total sin matices | Citas oficiales + duplicación neutralizada |
+| GitHub VPS | PAT en `github.env` | **SSH key dedicada** (PAT solo fallback) |
+| Enterprise | ZIP mencionado como alternativa | **Solo repo Git oficial** |
+| Arquitectura | Parcialmente temporal | **DEV→TEST→PROD permanente** |
+| Custom | Solo README | **6 módulos esqueleto** |
 
 ---
 
 ## Siguiente paso
 
-Revisar y aprobar **`docs/E1-CHECKLIST.md`**.
+Revisar y aprobar **`docs/E1-CHECKLIST.md`** (E1a).
 
-El usuario solo vincula GitHub en portal Odoo. Cursor ejecuta E1a por SSH (sin edición manual de archivos).
+El usuario:
+1. Vincula GitHub en portal Odoo
+2. Agrega SSH public key cuando Cursor la genere
+
+Cursor ejecuta E1a por SSH. **No editar archivos manualmente en VPS.**
 
 ---
 
-## No ejecutado (por diseño)
+## No ejecutado
 
-- ⛔ Wizard
-- ⛔ Creación usuarios
-- ⛔ Configuración Infile
+- ⛔ Clone Enterprise
+- ⛔ `web_enterprise`
+- ⛔ Registro licencia
+- ⛔ Wizard / usuarios / l10n / Infile
 - ⛔ Producción

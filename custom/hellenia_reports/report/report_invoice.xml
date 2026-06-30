@@ -98,10 +98,6 @@
             <span>Importe</span>
         </xpath>
 
-        <!-- Sin QR (no facturación electrónica) -->
-        <xpath expr="//div[@id='qrcode']" position="replace" optional="True"/>
-        <xpath expr="//div[@name='qr_code_placeholder']" position="replace" optional="True"/>
-
         <xpath expr="//table[@name='invoice_line_table']" position="attributes">
             <attribute name="class" add="hellenia-lines-table" separator=" "/>
         </xpath>

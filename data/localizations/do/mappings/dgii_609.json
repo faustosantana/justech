@@ -1,0 +1,250 @@
+{
+  "schema_version": "1.0",
+  "fase": "17.5",
+  "fecha_mapeo_utc": "2026-06-30T21:16:49Z",
+  "codigo": "609",
+  "nombre_oficial": "Formato de Envío de Pagos al Exterior",
+  "normativa": "NG-07-2018",
+  "archivo_fuente": "Formato609-NG-7-18.zip",
+  "archivo_excel_interno": "Herramienta de Envio Formato 609.xlsm",
+  "sha256_plantilla": "1413e10e69386ec6fc358108691b1caf7bfd23e95f81b4e091df2b57f389958e",
+  "url_oficial": "https://dgii.gov.do/herramientas/formularios/formatoEnvioDatos/Documents/Otros%20formatos%20de%20env%C3%ADo%20de%20datos/Formato609-NG-7-18.zip",
+  "hoja_principal": "Formato 609",
+  "fila_encabezado": 11,
+  "fila_inicio_datos": 12,
+  "formato_fecha": "YYYYMMDD",
+  "formato_periodo": "YYYYMM",
+  "formato_rnc": "9 dígitos numéricos (persona jurídica)",
+  "formato_cedula": "11 dígitos numéricos (persona física)",
+  "formato_ncf": "Serie alfanumérica 11-13 caracteres (ej. B0100000001)",
+  "columnas": [
+    {
+      "orden": 1,
+      "columna_excel": "A",
+      "nombre_dgii": "Lineas",
+      "tipo_dato": "integer",
+      "obligatorio": true
+    },
+    {
+      "orden": 2,
+      "columna_excel": "B",
+      "nombre_dgii": "Nombre / Razón Social",
+      "tipo_dato": "string",
+      "obligatorio": true,
+      "longitud": 80,
+      "campo_odoo_sugerido": "res.partner.name"
+    },
+    {
+      "orden": 3,
+      "columna_excel": "D",
+      "nombre_dgii": "Tipo ID Tributaria",
+      "tipo_dato": "catalog",
+      "obligatorio": true,
+      "longitud": 1,
+      "catalogo": "tipo_id_tributaria",
+      "campo_faltante": "justech_do_foreign_id_type"
+    },
+    {
+      "orden": 4,
+      "columna_excel": "E",
+      "nombre_dgii": "ID Tributaria",
+      "tipo_dato": "string",
+      "obligatorio": true,
+      "longitud": 20,
+      "campo_odoo_sugerido": "res.partner.vat"
+    },
+    {
+      "orden": 5,
+      "columna_excel": "F",
+      "nombre_dgii": "País de Destino",
+      "tipo_dato": "catalog",
+      "obligatorio": true,
+      "longitud": 3,
+      "catalogo": "pais_destino",
+      "campo_faltante": "justech_do_country_dgii_code"
+    },
+    {
+      "orden": 6,
+      "columna_excel": "G",
+      "nombre_dgii": "Tipo de Servicio Adquirido",
+      "tipo_dato": "catalog",
+      "obligatorio": true,
+      "longitud": 2,
+      "catalogo": "tipo_servicio",
+      "campo_faltante": "justech_do_foreign_service_type"
+    },
+    {
+      "orden": 7,
+      "columna_excel": "H",
+      "nombre_dgii": "Detalle del Servicio Adquirido",
+      "tipo_dato": "string",
+      "obligatorio": true,
+      "longitud": 100,
+      "notas_mapeo": "Descripción de líneas de factura"
+    },
+    {
+      "orden": 8,
+      "columna_excel": "I",
+      "nombre_dgii": "Parte Relacionada",
+      "tipo_dato": "catalog",
+      "obligatorio": true,
+      "longitud": 1,
+      "catalogo": "parte_relacionada",
+      "campo_faltante": "justech_do_related_party"
+    },
+    {
+      "orden": 9,
+      "columna_excel": "J",
+      "nombre_dgii": "Número de Documento",
+      "tipo_dato": "string",
+      "obligatorio": true,
+      "longitud": 20,
+      "campo_odoo_sugerido": "account.move.name"
+    },
+    {
+      "orden": 10,
+      "columna_excel": "K",
+      "nombre_dgii": "Fecha de Documento",
+      "tipo_dato": "date",
+      "obligatorio": true,
+      "longitud": 8,
+      "formato": "YYYYMMDD",
+      "campo_odoo_sugerido": "account.move.invoice_date"
+    },
+    {
+      "orden": 11,
+      "columna_excel": "L",
+      "nombre_dgii": "Monto Facturado",
+      "tipo_dato": "decimal",
+      "obligatorio": true,
+      "longitud": 18,
+      "formato": "0.00",
+      "campo_odoo_sugerido": "account.move.amount_untaxed"
+    },
+    {
+      "orden": 12,
+      "columna_excel": "M",
+      "nombre_dgii": "Fecha de Retención ISR",
+      "tipo_dato": "date",
+      "obligatorio": false,
+      "longitud": 8,
+      "formato": "YYYYMMDD",
+      "campo_faltante": "justech_do_isr_withholding_date"
+    },
+    {
+      "orden": 13,
+      "columna_excel": "N",
+      "nombre_dgii": "Renta Presunta",
+      "tipo_dato": "decimal",
+      "obligatorio": false,
+      "longitud": 18,
+      "formato": "0.00",
+      "campo_faltante": "justech_do_presumed_income"
+    },
+    {
+      "orden": 14,
+      "columna_excel": "O",
+      "nombre_dgii": "ISR Retenido",
+      "tipo_dato": "decimal",
+      "obligatorio": false,
+      "longitud": 18,
+      "formato": "0.00",
+      "campo_odoo_sugerido": "account.move / payment withholding lines (hellenia)"
+    },
+    {
+      "orden": 15,
+      "columna_excel": "P",
+      "nombre_dgii": "Estatus",
+      "tipo_dato": "catalog",
+      "obligatorio": true,
+      "longitud": 1,
+      "catalogo": "estatus_linea",
+      "campo_faltante": "justech_do_dgii_line_status"
+    }
+  ],
+  "macros": true,
+  "formulas_en_plantilla": false,
+  "validaciones": [
+    "Columna C reservada/vacía en numeración oficial.",
+    "Proveedores extranjeros sin RNC dominicano.",
+    "Archivo .xlsm contiene macros VBA de validación DGII.",
+    "Versión plantilla: 2018.5.0."
+  ],
+  "catalogos": {
+    "tipo_id_tributaria": [
+      {
+        "codigo": "1",
+        "descripcion": "RNC"
+      },
+      {
+        "codigo": "2",
+        "descripcion": "Cédula"
+      },
+      {
+        "codigo": "3",
+        "descripcion": "Pasaporte / ID extranjero"
+      }
+    ],
+    "parte_relacionada": [
+      {
+        "codigo": "1",
+        "descripcion": "Sí"
+      },
+      {
+        "codigo": "2",
+        "descripcion": "No"
+      }
+    ],
+    "pais_destino": "Ver hoja Listas — códigos ISO numéricos DGII (ej. 276=Alemania)",
+    "tipo_servicio": "Ver hoja Listas — catálogo Código Servicio"
+  },
+  "totales": [],
+  "reglas_negocio": [
+    "Aplica a pagos por servicios al exterior con retención ISR.",
+    "Requiere catálogo de países y tipos de servicio de hoja Listas.",
+    "Investigación contable: identificar facturas de proveedores extranjeros vs locales."
+  ],
+  "notas_dgii": [
+    "Norma General 07-2018 — vigente desde mayo 2018.",
+    "Reemplaza versión pre-2018 (PagosalExterior609.zip)."
+  ],
+  "campos_odoo_referencia": {
+    "partner_vat": "res.partner.vat",
+    "partner_name": "res.partner.name",
+    "move_name": "account.move.name",
+    "move_ref": "account.move.ref",
+    "invoice_date": "account.move.invoice_date",
+    "invoice_date_due": "account.move.invoice_date_due",
+    "amount_untaxed": "account.move.amount_untaxed",
+    "amount_tax": "account.move.amount_tax",
+    "amount_total": "account.move.amount_total",
+    "amount_residual": "account.move.amount_residual",
+    "move_type": "account.move.move_type",
+    "state": "account.move.state",
+    "payment_state": "account.move.payment_state",
+    "company_vat": "res.company.vat",
+    "payment_date": "account.payment.date",
+    "payment_amount": "account.payment.amount",
+    "journal_id": "account.move.journal_id",
+    "currency_id": "account.move.currency_id",
+    "line_tax_ids": "account.move.line.tax_ids",
+    "line_balance": "account.move.line.balance"
+  },
+  "modulos_justech_referencia": {
+    "withholding_catalog": "hellenia.withholding.catalog",
+    "withholding_lines": "account.move / payment withholding lines (hellenia)"
+  },
+  "campos_faltantes": [
+    "justech_do_foreign_id_type",
+    "justech_do_country_dgii_code",
+    "justech_do_foreign_service_type",
+    "justech_do_related_party",
+    "justech_do_isr_withholding_date",
+    "justech_do_presumed_income",
+    "justech_do_dgii_line_status"
+  ],
+  "estado_exportador": "requiere_investigacion_contable",
+  "hojas_auxiliares": [
+    "Listas"
+  ]
+}

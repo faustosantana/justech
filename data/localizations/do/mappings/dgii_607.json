@@ -1,0 +1,390 @@
+{
+  "schema_version": "1.0",
+  "fase": "17.5",
+  "fecha_mapeo_utc": "2026-06-30T21:16:49Z",
+  "codigo": "607",
+  "nombre_oficial": "Formato de Envío de Ventas de Bienes y Servicios",
+  "normativa": "NG-07-2018-05-2019",
+  "archivo_fuente": "Formato-de-Envio-607-(NG-07-2018-y-05-2019).zip",
+  "archivo_excel_interno": "Herramienta de Envio Formato 607.xls",
+  "sha256_plantilla": "184d381f1a84f7e4c34806698a9cad7e8f40256845db48f507f0418dfb52bbe7",
+  "url_oficial": "https://dgii.gov.do/herramientas/formularios/formatoEnvioDatos/Documents/Formato%20de%20ventas%20bienes%20y%20servicios/Formato-de-Envio-607-%28NG-07-2018-y-05-2019%29.zip",
+  "hoja_principal": "Herramienta Formato 607",
+  "fila_encabezado": 11,
+  "fila_inicio_datos": 12,
+  "formato_fecha": "YYYYMMDD",
+  "formato_periodo": "YYYYMM",
+  "formato_rnc": "9 dígitos numéricos (persona jurídica)",
+  "formato_cedula": "11 dígitos numéricos (persona física)",
+  "formato_ncf": "Serie alfanumérica 11-13 caracteres (ej. B0100000001)",
+  "columnas": [
+    {
+      "orden": 1,
+      "columna_excel": "A",
+      "nombre_dgii": "No",
+      "tipo_dato": "integer",
+      "obligatorio": true,
+      "notas_mapeo": "Secuencia autogenerada"
+    },
+    {
+      "orden": 2,
+      "columna_excel": "B",
+      "nombre_dgii": "RNC/Cédula o Pasaporte",
+      "tipo_dato": "identifier",
+      "obligatorio": true,
+      "longitud": 11,
+      "campo_odoo_sugerido": "res.partner.vat"
+    },
+    {
+      "orden": 3,
+      "columna_excel": "C",
+      "nombre_dgii": "Tipo Identificación",
+      "tipo_dato": "catalog",
+      "obligatorio": true,
+      "longitud": 1,
+      "catalogo": "tipo_identificacion",
+      "campo_faltante": "justech_do_partner_id_type"
+    },
+    {
+      "orden": 4,
+      "columna_excel": "D",
+      "nombre_dgii": "Número Comprobante Fiscal",
+      "tipo_dato": "ncf",
+      "obligatorio": true,
+      "longitud": 13,
+      "campo_faltante": "justech_do_ncf"
+    },
+    {
+      "orden": 5,
+      "columna_excel": "E",
+      "nombre_dgii": "Número Comprobante Fiscal Modificado",
+      "tipo_dato": "ncf",
+      "obligatorio": false,
+      "longitud": 13,
+      "campo_faltante": "justech_do_ncf_modified"
+    },
+    {
+      "orden": 6,
+      "columna_excel": "F",
+      "nombre_dgii": "Tipo de Ingreso",
+      "tipo_dato": "catalog",
+      "obligatorio": true,
+      "longitud": 2,
+      "catalogo": "tipo_ingreso",
+      "campo_faltante": "justech_do_income_type_607"
+    },
+    {
+      "orden": 7,
+      "columna_excel": "G",
+      "nombre_dgii": "Fecha Comprobante",
+      "tipo_dato": "date",
+      "obligatorio": true,
+      "longitud": 8,
+      "formato": "YYYYMMDD",
+      "campo_odoo_sugerido": "account.move.invoice_date"
+    },
+    {
+      "orden": 8,
+      "columna_excel": "H",
+      "nombre_dgii": "Fecha de Retención",
+      "tipo_dato": "date",
+      "obligatorio": false,
+      "longitud": 8,
+      "formato": "YYYYMMDD",
+      "campo_faltante": "justech_do_withholding_date"
+    },
+    {
+      "orden": 9,
+      "columna_excel": "I",
+      "nombre_dgii": "Monto Facturado",
+      "tipo_dato": "decimal",
+      "obligatorio": true,
+      "longitud": 18,
+      "formato": "0.00",
+      "campo_odoo_sugerido": "account.move.amount_untaxed"
+    },
+    {
+      "orden": 10,
+      "columna_excel": "J",
+      "nombre_dgii": "ITBIS Facturado",
+      "tipo_dato": "decimal",
+      "obligatorio": true,
+      "longitud": 18,
+      "formato": "0.00",
+      "campo_odoo_sugerido": "account.move.amount_tax"
+    },
+    {
+      "orden": 11,
+      "columna_excel": "K",
+      "nombre_dgii": "ITBIS Retenido por Terceros",
+      "tipo_dato": "decimal",
+      "obligatorio": false,
+      "longitud": 18,
+      "formato": "0.00",
+      "campo_faltante": "justech_do_itbis_withheld_by_third"
+    },
+    {
+      "orden": 12,
+      "columna_excel": "L",
+      "nombre_dgii": "ITBIS Percibido",
+      "tipo_dato": "decimal",
+      "obligatorio": false,
+      "longitud": 18,
+      "formato": "0.00",
+      "campo_faltante": "justech_do_itbis_perceived_sale"
+    },
+    {
+      "orden": 13,
+      "columna_excel": "M",
+      "nombre_dgii": "Retención Renta por Terceros",
+      "tipo_dato": "decimal",
+      "obligatorio": false,
+      "longitud": 18,
+      "formato": "0.00",
+      "campo_faltante": "justech_do_isr_withheld_by_third"
+    },
+    {
+      "orden": 14,
+      "columna_excel": "N",
+      "nombre_dgii": "ISR Percibido",
+      "tipo_dato": "decimal",
+      "obligatorio": false,
+      "longitud": 18,
+      "formato": "0.00",
+      "campo_faltante": "justech_do_isr_perceived_sale"
+    },
+    {
+      "orden": 15,
+      "columna_excel": "O",
+      "nombre_dgii": "Impuesto Selectivo al Consumo",
+      "tipo_dato": "decimal",
+      "obligatorio": false,
+      "longitud": 18,
+      "formato": "0.00",
+      "campo_faltante": "justech_do_isc_amount"
+    },
+    {
+      "orden": 16,
+      "columna_excel": "P",
+      "nombre_dgii": "Otros Impuestos/Tasas",
+      "tipo_dato": "decimal",
+      "obligatorio": false,
+      "longitud": 18,
+      "formato": "0.00"
+    },
+    {
+      "orden": 17,
+      "columna_excel": "Q",
+      "nombre_dgii": "Monto Propina Legal",
+      "tipo_dato": "decimal",
+      "obligatorio": false,
+      "longitud": 18,
+      "formato": "0.00",
+      "campo_faltante": "justech_do_legal_tip"
+    },
+    {
+      "orden": 18,
+      "columna_excel": "R",
+      "nombre_dgii": "Efectivo",
+      "tipo_dato": "decimal",
+      "obligatorio": false,
+      "longitud": 18,
+      "formato": "0.00",
+      "campo_faltante": "justech_do_sale_payment_breakdown"
+    },
+    {
+      "orden": 19,
+      "columna_excel": "S",
+      "nombre_dgii": "Cheque/ Transferencia/ Depósito",
+      "tipo_dato": "decimal",
+      "obligatorio": false,
+      "longitud": 18,
+      "formato": "0.00",
+      "campo_faltante": "justech_do_sale_payment_breakdown"
+    },
+    {
+      "orden": 20,
+      "columna_excel": "T",
+      "nombre_dgii": "Tarjeta Débito/Crédito",
+      "tipo_dato": "decimal",
+      "obligatorio": false,
+      "longitud": 18,
+      "formato": "0.00",
+      "campo_faltante": "justech_do_sale_payment_breakdown"
+    },
+    {
+      "orden": 21,
+      "columna_excel": "U",
+      "nombre_dgii": "Venta a Crédito",
+      "tipo_dato": "decimal",
+      "obligatorio": false,
+      "longitud": 18,
+      "formato": "0.00",
+      "campo_faltante": "justech_do_sale_payment_breakdown"
+    },
+    {
+      "orden": 22,
+      "columna_excel": "V",
+      "nombre_dgii": "Bonos o Certificados de Regalo",
+      "tipo_dato": "decimal",
+      "obligatorio": false,
+      "longitud": 18,
+      "formato": "0.00",
+      "campo_faltante": "justech_do_sale_payment_breakdown"
+    },
+    {
+      "orden": 23,
+      "columna_excel": "W",
+      "nombre_dgii": "Permuta",
+      "tipo_dato": "decimal",
+      "obligatorio": false,
+      "longitud": 18,
+      "formato": "0.00",
+      "campo_faltante": "justech_do_sale_payment_breakdown"
+    },
+    {
+      "orden": 24,
+      "columna_excel": "X",
+      "nombre_dgii": "Otras Formas de Ventas",
+      "tipo_dato": "decimal",
+      "obligatorio": false,
+      "longitud": 18,
+      "formato": "0.00",
+      "campo_faltante": "justech_do_sale_payment_breakdown"
+    },
+    {
+      "orden": 25,
+      "columna_excel": "Y",
+      "nombre_dgii": "Estatus",
+      "tipo_dato": "catalog",
+      "obligatorio": true,
+      "longitud": 1,
+      "catalogo": "estatus_linea",
+      "campo_faltante": "justech_do_dgii_line_status"
+    }
+  ],
+  "macros": false,
+  "formulas_en_plantilla": false,
+  "validaciones": [
+    "Suma de columnas R-X (formas de venta) debe igualar Monto Facturado + ITBIS Facturado según reglas DGII.",
+    "Solo facturas de cliente (out_invoice / out_refund) del período.",
+    "Versión plantilla analizada: 2023.1.1."
+  ],
+  "catalogos": {
+    "tipo_identificacion": [
+      {
+        "codigo": "1",
+        "descripcion": "RNC"
+      },
+      {
+        "codigo": "2",
+        "descripcion": "Cédula"
+      },
+      {
+        "codigo": "3",
+        "descripcion": "Pasaporte"
+      }
+    ],
+    "tipo_ingreso": [
+      {
+        "codigo": "01",
+        "descripcion": "Ingresos por Operaciones (No Financieros)"
+      },
+      {
+        "codigo": "02",
+        "descripcion": "Ingresos Financieros"
+      },
+      {
+        "codigo": "03",
+        "descripcion": "Ingresos Extraordinarios"
+      },
+      {
+        "codigo": "04",
+        "descripcion": "Ingresos por Arrendamientos"
+      },
+      {
+        "codigo": "05",
+        "descripcion": "Ingresos por Venta de Activo Depreciable"
+      },
+      {
+        "codigo": "06",
+        "descripcion": "Otros Ingresos"
+      }
+    ],
+    "estatus_linea": [
+      {
+        "codigo": "1",
+        "descripcion": "Válido"
+      },
+      {
+        "codigo": "2",
+        "descripcion": "Anulado"
+      }
+    ]
+  },
+  "totales": [
+    {
+      "campo": "Cantidad Registros",
+      "celda": "C6"
+    },
+    {
+      "campo": "Valor Calculado",
+      "celda": "E6"
+    },
+    {
+      "campo": "Total Errores",
+      "celda": "G6"
+    }
+  ],
+  "reglas_negocio": [
+    "Desglose de formas de pago es obligatorio cuando hay cobros en el período.",
+    "Notas de crédito referencian NCF modificado.",
+    "Tipo de ingreso depende de naturaleza de la cuenta de ingreso — requiere mapeo contable."
+  ],
+  "notas_dgii": [
+    "Norma General 07-2018 y 05-2019.",
+    "Encabezado: RNC (A4), Período YYYYMM (A5)."
+  ],
+  "campos_odoo_referencia": {
+    "partner_vat": "res.partner.vat",
+    "partner_name": "res.partner.name",
+    "move_name": "account.move.name",
+    "move_ref": "account.move.ref",
+    "invoice_date": "account.move.invoice_date",
+    "invoice_date_due": "account.move.invoice_date_due",
+    "amount_untaxed": "account.move.amount_untaxed",
+    "amount_tax": "account.move.amount_tax",
+    "amount_total": "account.move.amount_total",
+    "amount_residual": "account.move.amount_residual",
+    "move_type": "account.move.move_type",
+    "state": "account.move.state",
+    "payment_state": "account.move.payment_state",
+    "company_vat": "res.company.vat",
+    "payment_date": "account.payment.date",
+    "payment_amount": "account.payment.amount",
+    "journal_id": "account.move.journal_id",
+    "currency_id": "account.move.currency_id",
+    "line_tax_ids": "account.move.line.tax_ids",
+    "line_balance": "account.move.line.balance"
+  },
+  "modulos_justech_referencia": {
+    "withholding_catalog": "hellenia.withholding.catalog",
+    "withholding_lines": "account.move / payment withholding lines (hellenia)"
+  },
+  "campos_faltantes": [
+    "justech_do_ncf",
+    "justech_do_partner_id_type",
+    "justech_do_income_type_607",
+    "justech_do_ncf_modified",
+    "justech_do_withholding_date",
+    "justech_do_itbis_withheld_by_third",
+    "justech_do_itbis_perceived_sale",
+    "justech_do_isr_withheld_by_third",
+    "justech_do_isr_perceived_sale",
+    "justech_do_isc_amount",
+    "justech_do_legal_tip",
+    "justech_do_sale_payment_breakdown",
+    "justech_do_dgii_line_status"
+  ],
+  "estado_exportador": "requiere_campos_faltantes"
+}

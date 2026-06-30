@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_justech_do_fiscal_report_tree" model="ir.ui.view">
+        <field name="name">justech.do.fiscal.report.list</field>
+        <field name="model">justech.do.fiscal.report</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="report_type"/>
+                <field name="date_from"/>
+                <field name="date_to"/>
+                <field name="line_count"/>
+                <field name="state"/>
+            </list>
+        </field>
+    </record>
+    <record id="view_justech_do_fiscal_report_form" model="ir.ui.view">
+        <field name="name">justech.do.fiscal.report.form</field>
+        <field name="model">justech.do.fiscal.report</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_generate" string="Regenerate" type="object"
+                            invisible="state != 'done'"/>
+                    <button name="action_export_csv" string="Export CSV" type="object"
+                            invisible="state != 'done'"/>
+                    <button name="action_export_xlsx" string="Export Excel" type="object"
+                            invisible="state != 'done'"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="report_type"/>
+                        <field name="date_from"/>
+                        <field name="date_to"/>
+                        <field name="line_count"/>
+                    </group>
+                    <notebook>
+                        <page string="Lines">
+                            <field name="line_ids">
+                                <list>
+                                    <field name="partner_vat"/>
+                                    <field name="partner_name"/>
+                                    <field name="ncf"/>
+                                    <field name="document_type"/>
+                                    <field name="document_date"/>
+                                    <field name="amount_untaxed"/>
+                                    <field name="amount_tax"/>
+                                    <field name="amount_total"/>
+                                    <field name="notes"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="action_justech_do_fiscal_report" model="ir.actions.act_window">
+        <field name="name">DGII Reports</field>
+        <field name="res_model">justech.do.fiscal.report</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

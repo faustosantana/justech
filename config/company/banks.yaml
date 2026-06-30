@@ -1,0 +1,26 @@
+# Bancos — configuración definitiva Fase 3.5
+
+schema_version: "2.0"
+bank_name: "Banco López de Haro"
+
+accounts:
+  - label: "Cuenta corriente DOP"
+    currency: DOP
+    acc_number: "4040043811"
+    acc_holder: "Hellenia, S.R.L."
+    status: active
+
+  - label: "Cuenta ahorro USD"
+    currency: USD
+    acc_number: "4010461048"
+    acc_holder: "Hellenia, S.R.L."
+    status: active
+
+pending:
+  - Tipo de cuenta adicional (si banco requiere clasificación)
+  - SWIFT / código ABA (solo si transferencias internacionales)
+  - Sucursal bancaria
+
+journal_mapping:
+  DOP: BNK1
+  USD: BNK1

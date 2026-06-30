@@ -1,0 +1,53 @@
+{
+  "database": "hellenia_dev",
+  "timestamp_utc": "2026-06-30T13:01:09.789950+00:00",
+  "user_count": 4,
+  "active_operational_users": 1,
+  "users": [
+    {
+      "id": 2,
+      "login": "admin",
+      "name": "Administrator",
+      "email": "",
+      "active": true,
+      "groups": [
+        "Accounting / Administrator",
+        "Dashboard / Admin",
+        "Inventory / Administrator",
+        "Products / Create",
+        "Purchase / Administrator",
+        "Role / Administrator",
+        "Sales / Administrator"
+      ],
+      "share": false,
+      "role": "emergency_recovery"
+    },
+    {
+      "id": 1,
+      "login": "__system__",
+      "name": "OdooBot",
+      "email": "odoobot@example.com",
+      "active": false,
+      "groups": ["Role / Administrator"],
+      "share": false,
+      "role": "system"
+    },
+    {
+      "id": 4,
+      "login": "portaltemplate",
+      "name": "Portal User Template",
+      "active": false,
+      "share": true,
+      "role": "template"
+    },
+    {
+      "id": 3,
+      "login": "public",
+      "name": "Public user",
+      "active": false,
+      "share": true,
+      "role": "template"
+    }
+  ],
+  "accidental_dev_users": false
+}

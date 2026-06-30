@@ -34,6 +34,24 @@ check_url() {
   fi
 }
 
+check_odoo_version() {
+  local url="$1"
+  local expected_serie="${2:-19.0}"
+  local version serie
+  version=$(curl -sS --max-time 15 -X POST "${url}/web/webclient/version_info" \
+    -H 'Content-Type: application/json' -d '{}' 2>/dev/null \
+    | python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('result',{}).get('server_version',''))" 2>/dev/null || echo "")
+  serie=$(curl -sS --max-time 15 -X POST "${url}/web/webclient/version_info" \
+    -H 'Content-Type: application/json' -d '{}' 2>/dev/null \
+    | python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('result',{}).get('server_serie',''))" 2>/dev/null || echo "")
+  if [[ "$serie" == "$expected_serie" ]]; then
+    log "OK  odoo version: $version (serie $serie)"
+  else
+    log "FAIL odoo version: $version (esperado serie $expected_serie)"
+    FAIL=1
+  fi
+}
+
 check_db_separate() {
   local c1="$1" c2="$2"
   local v1 v2
@@ -53,6 +71,7 @@ if docker ps --format '{{.Names}}' | grep -q '^hellenia-dev-odoo-1$'; then
   check_container "hellenia-dev-odoo-1"
   check_container "hellenia-dev-db-1"
   check_url "https://dev.hellenia.cloud/"
+  check_odoo_version "https://dev.hellenia.cloud" "19.0"
   docker logs hellenia-dev-odoo-1 --tail 5 2>&1 | tee -a "$REPORT"
 else
   log "SKIP DEV (no desplegado aún)"
@@ -63,9 +82,21 @@ if docker ps --format '{{.Names}}' | grep -q '^hellenia-test-odoo-1$'; then
   check_container "hellenia-test-odoo-1"
   check_container "hellenia-test-db-1"
   check_url "https://test.hellenia.cloud/"
+  check_odoo_version "https://test.hellenia.cloud" "19.0"
   docker logs hellenia-test-odoo-1 --tail 5 2>&1 | tee -a "$REPORT"
 else
   log "SKIP TEST (no desplegado aún)"
+fi
+
+log "--- PROD (hellenia-prod, pre-Go-Live) ---"
+if docker ps --format '{{.Names}}' | grep -q '^hellenia-prod-odoo-1$'; then
+  check_container "hellenia-prod-odoo-1"
+  check_container "hellenia-prod-db-1"
+  check_url "https://prod.hellenia.cloud/"
+  check_odoo_version "https://prod.hellenia.cloud" "19.0"
+  docker logs hellenia-prod-odoo-1 --tail 5 2>&1 | tee -a "$REPORT"
+else
+  log "SKIP PROD (no desplegado aún)"
 fi
 
 log "--- Traefik ---"

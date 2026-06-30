@@ -9,8 +9,6 @@ import zipfile
 import xml.etree.ElementTree as ET
 from datetime import date, datetime, timezone
 
-from odoo import Command
-from odoo.exceptions import UserError
 from odoo import Command, _
 
 MARKER = "PHASE19_1:"
@@ -173,14 +171,40 @@ ncf_seq = {"n": 1}
 
 
 def fmt_ncf(prefix, seq):
-  """NCF 11 caracteres: prefijo 3 + secuencia 8."""
-  return f"{prefix}{seq:08d}"
+    """NCF 11 caracteres: prefijo 3 + secuencia 8."""
+    return f"{prefix}{seq:08d}"
+
+
+def find_demo_move(ref, move_types=("in_invoice",)):
+    """Último asiento publicado con NCF (evita duplicados de re-ejecuciones)."""
+    move = env["account.move"].search(
+        [
+            ("ref", "=", ref),
+            ("state", "=", "posted"),
+            ("move_type", "in", move_types),
+            ("justech_do_ncf", "!=", False),
+        ],
+        order="id desc",
+        limit=1,
+    )
+    if move:
+        move.invalidate_recordset()
+    return move
+
+
+DEMO_REFS = [
+    "P19-B11-ITBIS",
+    "P19-B11-EXEMPT",
+    "P19-B11-WH-ITBIS30",
+    "P19-B13-WH-ISR10",
+    "P19-B13-MULTI-WH",
+    "P19-B11-NC",
+]
 
 
 def create_bill(partner, ref, ncf, lines, wh_flags=None, doc=doc_b11):
-    existing = env["account.move"].search([("ref", "=", ref)], limit=1)
+    existing = find_demo_move(ref)
     if existing:
-        existing.invalidate_recordset()
         return existing
     wh_flags = wh_flags or {}
     move = env["account.move"].create(
@@ -257,7 +281,7 @@ ncf_seq["n"] += 1
 
 # Nota de crédito proveedor
 credit_ref = "P19-B11-NC"
-credit = env["account.move"].search([("ref", "=", credit_ref)], limit=1)
+credit = find_demo_move(credit_ref, ("in_refund",))
 if not credit:
     credit = env["account.move"].create(
         {
@@ -321,10 +345,11 @@ demo_moves = env["account.move"].search(
         ("company_id", "=", company.id),
         ("state", "=", "posted"),
         ("move_type", "in", ("in_invoice", "in_refund")),
-        ("ref", "=like", "P19-%"),
+        ("ref", "in", DEMO_REFS),
         ("invoice_date", ">=", period_start),
         ("invoice_date", "<=", period_end),
         ("justech_do_dgii_line_status", "=", "1"),
+        ("justech_do_ncf", "!=", False),
     ],
     order="invoice_date, id",
 )
@@ -453,13 +478,12 @@ err_type = exporter.validate_moves_606(company, period_start, period_end)
 report["validation_errors_es"]["sin_tipo_id"] = [e for e in err_type if "tipo de identificación" in e.lower()]
 check("error_sin_tipo_id_es", any("tipo de identificación" in e.lower() for e in err_type), report["validation_errors_es"]["sin_tipo_id"][:1])
 
-cat_hon = Catalog.search([("code", "=", "RET-HON-10"), ("company_id", "=", company.id)], limit=1)
-saved_code = cat_hon.dgii_withholding_code
-cat_hon.dgii_withholding_code = False
+cat_inf = Catalog.search([("code", "=", "RET-INF-ISR-10"), ("company_id", "=", company.id)], limit=1)
+saved_code = cat_inf.dgii_withholding_code
+cat_inf.dgii_withholding_code = False
 env.cr.commit()
-bill_wh_isr.write({"hellenia_ret_isr_10": True})
-err_wh = exporter.validate_moves_606(company, period_start, period_end)
-cat_hon.dgii_withholding_code = saved_code
+err_wh = exporter.validate_moves_606(company, period_start, period_end, moves=bill_wh_isr)
+cat_inf.dgii_withholding_code = saved_code
 env.cr.commit()
 report["validation_errors_es"]["sin_codigo_dgii"] = [e for e in err_wh if "código DGII" in e]
 check("error_sin_codigo_dgii_es", any("código DGII" in e for e in err_wh), report["validation_errors_es"]["sin_codigo_dgii"][:1])

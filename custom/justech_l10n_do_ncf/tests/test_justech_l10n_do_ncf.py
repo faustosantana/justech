@@ -1,7 +1,7 @@
 from datetime import date, timedelta
 
 from odoo import Command
-from odoo.exceptions import ValidationError
+from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tests import tagged
 
 from odoo.tests.common import TransactionCase
@@ -55,6 +55,8 @@ class TestJustechL10nDoNcf(TransactionCase):
         cls.doc_b04 = cls.env.ref("justech_l10n_do_base.doc_type_b04")
         cls.doc_b11 = cls.env.ref("justech_l10n_do_base.doc_type_b11")
         cls.doc_b13 = cls.env.ref("justech_l10n_do_base.doc_type_b13")
+        manager = cls.env.ref("justech_l10n_do_base.group_justech_do_fiscal_manager")
+        cls.env.user.write({"group_ids": [(4, manager.id)]})
 
     def _create_range(self, doc, start=1, end=100, **kwargs):
         today = date.today()
@@ -239,5 +241,100 @@ class TestJustechL10nDoNcf(TransactionCase):
         partner = self.env["res.partner"].create({"name": "CF"})
         move = self.env["account.move"].create(self._invoice_vals(partner))
         move.action_post()
+        move.justech_do_ncf_void_reason = "Test void fiscal"
         move.action_void_ncf()
         self.assertTrue(move.justech_do_ncf_voided)
+        consumption = self.env["justech.do.ncf.consumption"].search(
+            [("move_id", "=", move.id)], limit=1
+        )
+        self.assertEqual(consumption.state, "voided")
+        self.assertEqual(consumption.void_user_id, self.env.user)
+        self.assertTrue(consumption.void_reason)
+
+    def test_void_ncf_requires_manager(self):
+        self._create_range(self.doc_b02).action_activate()
+        partner = self.env["res.partner"].create({"name": "CF"})
+        move = self.env["account.move"].create(self._invoice_vals(partner))
+        move.action_post()
+        move.justech_do_ncf_void_reason = "Should fail"
+        fiscal_user = self.env["res.users"].create(
+            {
+                "name": "Fiscal User Only",
+                "login": f"fiscal_user_{self.env.cr.dbname}@test.com",
+                "group_ids": [
+                    Command.set(
+                        [
+                            self.env.ref("base.group_user").id,
+                            self.env.ref(
+                                "justech_l10n_do_base.group_justech_do_fiscal_user"
+                            ).id,
+                        ]
+                    )
+                ],
+            }
+        )
+        with self.assertRaises(AccessError):
+            move.with_user(fiscal_user).action_void_ncf()
+
+    def test_void_ncf_requires_reason(self):
+        self._create_range(self.doc_b02).action_activate()
+        partner = self.env["res.partner"].create({"name": "CF"})
+        move = self.env["account.move"].create(self._invoice_vals(partner))
+        move.action_post()
+        with self.assertRaises(UserError):
+            move.action_void_ncf()
+
+    def test_record_rules_exist(self):
+        models = [
+            "justech.do.ncf.range",
+            "justech.do.ncf.consumption",
+        ]
+        for model_name in models:
+            rules = self.env["ir.rule"].search(
+                [("model_id.model", "=", model_name)]
+            )
+            self.assertTrue(
+                rules.filtered(lambda r: "company" in (r.domain_force or "")),
+                f"Missing company rule for {model_name}",
+            )
+
+    def test_consume_next_sequential_unique(self):
+        journal = self.env["account.journal"].create(
+            {
+                "name": "Lock Test Journal",
+                "code": "XLK",
+                "type": "sale",
+                "company_id": self.company.id,
+                "justech_do_use_ncf": True,
+                "justech_do_document_type_ids": [Command.set([self.doc_b02.id])],
+            }
+        )
+        ncf_range = self.env["justech.do.ncf.range"].create(
+            {
+                "name": "Lock Range",
+                "document_type_id": self.doc_b02.id,
+                "company_id": self.company.id,
+                "sequence_start": 8000,
+                "sequence_end": 8010,
+                "next_sequence": 8000,
+                "date_from": date.today() - timedelta(days=1),
+                "date_to": date.today() + timedelta(days=30),
+                "journal_ids": [Command.set(journal.ids)],
+            }
+        )
+        ncf_range.action_activate()
+        partner = self.env["res.partner"].create({"name": "Lock CF"})
+        move1 = self.env["account.move"].create(
+            self._invoice_vals(partner, journal=journal)
+        )
+        move2 = self.env["account.move"].create(
+            self._invoice_vals(
+                self.env["res.partner"].create({"name": "Lock CF 2"}),
+                journal=journal,
+            )
+        )
+        move1.action_post()
+        move2.action_post()
+        self.assertNotEqual(move1.justech_do_ncf, move2.justech_do_ncf)
+        ncf_range.invalidate_recordset()
+        self.assertEqual(ncf_range.next_sequence, 8002)

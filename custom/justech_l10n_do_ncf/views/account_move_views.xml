@@ -10,6 +10,9 @@
                 <field name="justech_do_ncf" readonly="state != 'draft'"/>
                 <field name="justech_do_origin_ncf" readonly="state != 'draft'"/>
                 <field name="justech_do_ncf_voided" readonly="1"/>
+                <field name="justech_do_ncf_void_reason"
+                       readonly="justech_do_ncf_voided"
+                       required="state == 'posted' and justech_do_ncf and not justech_do_ncf_voided"/>
             </xpath>
             <xpath expr="//header" position="inside">
                 <button name="action_void_ncf" string="Void NCF" type="object"

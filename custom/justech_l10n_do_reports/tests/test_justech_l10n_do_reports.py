@@ -38,6 +38,8 @@ class TestJustechL10nDoReports(TransactionCase):
         )
         cls.journal_sale.justech_do_use_ncf = True
         cls.doc_b02 = cls.env.ref("justech_l10n_do_base.doc_type_b02")
+        manager = cls.env.ref("justech_l10n_do_base.group_justech_do_fiscal_manager")
+        cls.env.user.write({"group_ids": [(4, manager.id)]})
         cls.env["justech.do.ncf.range"].create(
             {
                 "name": "B02 Report Range",
@@ -107,6 +109,7 @@ class TestJustechL10nDoReports(TransactionCase):
             }
         )
         move.action_post()
+        move.justech_do_ncf_void_reason = "Report 608 test void"
         move.action_void_ncf()
         report = self.env["justech.do.fiscal.report"].create(
             {

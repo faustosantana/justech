@@ -10,6 +10,9 @@
                 <field name="range_id"/>
                 <field name="move_id"/>
                 <field name="state"/>
+                <field name="void_user_id" optional="hide"/>
+                <field name="void_datetime" optional="hide"/>
+                <field name="void_reason" optional="hide"/>
             </list>
         </field>
     </record>

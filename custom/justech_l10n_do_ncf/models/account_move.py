@@ -1,9 +1,11 @@
 from odoo import _, api, fields, models
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import AccessError, UserError, ValidationError
 
 
 class AccountMove(models.Model):
     _inherit = "account.move"
+
+    _justech_ncf_unique_index = "account_move_justech_do_ncf_company_uniq"
 
     justech_do_document_type_id = fields.Many2one(
         "justech.do.fiscal.document.type",
@@ -31,6 +33,18 @@ class AccountMove(models.Model):
         help="Referenced NCF for credit/debit notes.",
         copy=False,
     )
+
+    def init(self):
+        super().init()
+        self._cr.execute(
+            f"""
+            CREATE UNIQUE INDEX IF NOT EXISTS {self._justech_ncf_unique_index}
+            ON account_move (company_id, justech_do_ncf)
+            WHERE state = 'posted'
+              AND justech_do_ncf IS NOT NULL
+              AND justech_do_ncf != ''
+            """
+        )
 
     @api.model
     def _justech_fiscal_enabled(self):
@@ -126,7 +140,12 @@ class AccountMove(models.Model):
                     raise UserError(_("NCF is required before posting this invoice."))
                 continue
             doc = move.justech_do_document_type_id
-            ncf_range = self.env["justech.do.ncf.range"]._find_active_range(
+            lock_code = int(doc.code) if doc.code.isdigit() else 0
+            self.env.cr.execute(
+                "SELECT pg_advisory_xact_lock(%s, %s)",
+                [move.company_id.id, lock_code],
+            )
+            ncf_range = self.env["justech.do.ncf.range"]._find_active_range_for_update(
                 doc, move.journal_id, move.company_id
             )
             if not ncf_range:
@@ -149,18 +168,29 @@ class AccountMove(models.Model):
         return super().action_post()
 
     def action_void_ncf(self):
+        if not self.env.user.has_group(
+            "justech_l10n_do_base.group_justech_do_fiscal_manager"
+        ):
+            raise AccessError(_("Only fiscal managers can void NCF."))
+        Consumption = self.env["justech.do.ncf.consumption"]
+        now = fields.Datetime.now()
         for move in self:
             if move.state != "posted":
                 raise UserError(_("Only posted moves can void NCF."))
             if not move.justech_do_ncf:
                 raise UserError(_("No NCF to void."))
+            if move.justech_do_ncf_voided:
+                raise UserError(_("NCF is already voided."))
+            reason = (move.justech_do_ncf_void_reason or "").strip()
+            if not reason:
+                raise UserError(_("A void reason is required before voiding NCF."))
             move.write(
                 {
                     "justech_do_ncf_voided": True,
                     "justech_do_ncf_void_date": fields.Date.context_today(move),
                 }
             )
-            consumption = self.env["justech.do.ncf.consumption"].search(
+            consumption = Consumption.search(
                 [
                     ("move_id", "=", move.id),
                     ("ncf", "=", move.justech_do_ncf),
@@ -169,7 +199,14 @@ class AccountMove(models.Model):
                 limit=1,
             )
             if consumption:
-                consumption.state = "voided"
+                consumption.write(
+                    {
+                        "state": "voided",
+                        "void_user_id": self.env.user.id,
+                        "void_datetime": now,
+                        "void_reason": reason,
+                    }
+                )
 
     @api.constrains("justech_do_ncf", "company_id", "state")
     def _check_ncf_unique_constraint(self):

@@ -1,6 +1,6 @@
 {
     "name": "Justech Dominican Fiscal Base",
-    "version": "19.0.1.0.0",
+    "version": "19.0.1.1.0",
     "category": "Accounting/Localizations",
     "summary": "Base fiscal configuration for Dominican Republic (Justech)",
     "description": """
@@ -20,6 +20,7 @@ Dominican fiscal base layer for Justech localization.
     "data": [
         "security/justech_l10n_do_security.xml",
         "security/ir.model.access.csv",
+        "security/justech_l10n_do_rules.xml",
         "data/fiscal_document_type_data.xml",
         "views/fiscal_document_type_views.xml",
         "views/res_company_views.xml",

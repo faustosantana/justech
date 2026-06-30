@@ -30,3 +30,6 @@ class JustechDoNcfConsumption(models.Model):
         related="range_id.company_id",
         store=True,
     )
+    void_user_id = fields.Many2one("res.users", string="Voided By", copy=False)
+    void_datetime = fields.Datetime(string="Void Date/Time", copy=False)
+    void_reason = fields.Text(string="Void Reason", copy=False)

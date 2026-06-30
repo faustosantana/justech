@@ -8,6 +8,9 @@ from datetime import date, datetime, timedelta, timezone
 from odoo import Command
 
 company = env["res.company"].search([], limit=1)
+manager = env.ref("justech_l10n_do_base.group_justech_do_fiscal_manager", raise_if_not_found=False)
+if manager and manager not in env.user.group_ids:
+    env.user.write({"group_ids": [(4, manager.id)]})
 result = {
     "phase": 6,
     "mvp": True,
@@ -200,6 +203,7 @@ try:
     else:
         void_move = mk_invoice(env["res.partner"].create({"name": "Void CF"}))
         void_move.action_post()
+        void_move.justech_do_ncf_void_reason = "Phase6 E2E void test"
         void_move.action_void_ncf()
         r608 = env["justech.do.fiscal.report"].create(
             {

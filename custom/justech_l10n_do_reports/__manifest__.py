@@ -1,6 +1,6 @@
 {
     "name": "Justech Dominican Fiscal Reports",
-    "version": "19.0.1.0.0",
+    "version": "19.0.1.1.0",
     "category": "Accounting/Localizations/Reporting",
     "summary": "DGII reports 606, 607, 608 — basic MVP",
     "description": """
@@ -18,6 +18,7 @@ Basic Dominican DGII fiscal reports for Justech MVP.
     ],
     "data": [
         "security/ir.model.access.csv",
+        "security/justech_l10n_do_reports_rules.xml",
         "views/fiscal_report_views.xml",
         "wizard/fiscal_report_wizard_views.xml",
         "views/menu.xml",

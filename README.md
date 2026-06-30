@@ -1,29 +1,57 @@
-# hellenia-odoo — Repositorio Git
+# justech — Odoo Hellenia Enterprise
 
-Contenido versionado del proyecto Odoo Hellenia.
+Implementación Odoo **Enterprise 19** para Hellenia, S.R.L. (República Dominicana).  
+Administrado por **Justech**. Pipeline permanente: **DEV → TEST → PRODUCCIÓN**.
 
-## Estructura
+## Estructura del repositorio
 
 ```
-repository/
-├── addons/          # Módulos custom Odoo
-├── docker/
-│   ├── dev/
-│   └── test/
-├── config/
-│   ├── dev/
-│   └── test/
-├── scripts/
-└── docs/
+├── custom/           # Módulos propios (único código de negocio)
+├── docker/           # Infraestructura Docker Compose
+├── config/           # Configuración por ambiente
+├── data/             # Datos iniciales transversales
+├── scripts/          # Automatización (deploy, backup, upgrade)
+├── docs/             # Documentación
+├── community/        # Referencia Community (imagen Docker)
+└── enterprise/       # Placeholder — clone Git en VPS (no en Git)
 ```
 
-## Conectar GitHub
+**VPS:** `/opt/odoo-projects/hellenia/` con clone Git en `repository/`.
+
+## Ambientes
+
+| Ambiente | URL | Odoo |
+|----------|-----|------|
+| DEV | https://dev.hellenia.cloud | 19.0 Community → Enterprise (E1) |
+| TEST | https://test.hellenia.cloud | 19.0 |
+| PROD actual | odoo-pecv | 18 — **no tocar** |
+
+## Documentación principal
+
+| Documento | Contenido |
+|-----------|-----------|
+| [docs/INFRASTRUCTURE_REVIEW.md](docs/INFRASTRUCTURE_REVIEW.md) | Revisión infra + deuda técnica |
+| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Arquitectura capas |
+| [docs/E1-CHECKLIST.md](docs/E1-CHECKLIST.md) | Pre-E1 (pendiente aprobación) |
+| [docs/DEVELOPMENT_GUIDE.md](docs/DEVELOPMENT_GUIDE.md) | Guía desarrollo |
+| [docs/DEVOPS_GUIDE.md](docs/DEVOPS_GUIDE.md) | Operaciones y scripts |
+
+## Inicio rápido (VPS)
 
 ```bash
-git remote add origin git@github.com:ORG/hellenia-odoo.git
-git push -u origin main
-git push -u origin develop
-git push -u origin test
+# Desplegar DEV
+/opt/odoo-projects/hellenia/scripts/deploy-dev.sh hellenia-odoo-infra
+
+# Healthcheck
+/opt/odoo-projects/hellenia/scripts/healthcheck.sh
 ```
 
-**Nunca** commitear archivos `.env` con contraseñas reales.
+**Nunca** commitear `.env` ni credenciales.
+
+## Git
+
+```bash
+git remote add origin git@github.com:faustosantana/justech.git
+```
+
+Rama activa infraestructura: `hellenia-odoo-infra` / `cursor/odoo19-migration-dev-test-dd85`

@@ -60,6 +60,23 @@
 
 ---
 
+## Separación de responsabilidades (congelada pre-E1)
+
+| Capa | Directorio | Actualizable en upgrade Odoo |
+|------|------------|------------------------------|
+| Infraestructura | `docker/` | Solo tag imagen |
+| Configuración | `config/` | Mínimo (release notes) |
+| Datos iniciales | `data/`, `custom/*/data/` | Según módulos |
+| Módulos | `custom/` | Sí — código propio |
+| Enterprise | `enterprise/` | `git pull` rama mayor |
+| Community | Imagen Docker | Nuevo tag |
+| Scripts | `scripts/` | Evolución independiente |
+| Documentación | `docs/` | Continua |
+
+Ver [INFRASTRUCTURE_REVIEW.md](INFRASTRUCTURE_REVIEW.md).
+
+---
+
 ## Separación de capas
 
 | Capa | Ubicación física | Origen | Modificable |

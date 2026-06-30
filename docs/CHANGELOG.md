@@ -2,25 +2,29 @@
 
 ## [Unreleased]
 
-### Added
-- `docs/ENTERPRISE-LICENSING.md` — política oficial Odoo (sin suposiciones)
-- `docs/UPGRADE-PATH.md` — actualización Odoo 20/21+ sin rehacer infra
-- `config/credentials/README.md` — SSH key para GitHub Enterprise
-- Esqueletos custom: `hellenia_base`, `hellenia_inventory`, `hellenia_reports`, `hellenia_account`, `hellenia_pos`, `justech_core`
+### Added — Pre-E1 enterprise platform (arquitectura congelada)
+- `docs/INFRASTRUCTURE_REVIEW.md` — revisión 10 años + deuda técnica
+- `docs/DEVELOPMENT_GUIDE.md`, `CODING_STANDARDS.md`, `DEVOPS_GUIDE.md`
+- `docs/CUSTOM_MODULE_GUIDE.md`, `UPGRADE_POLICY.md`
+- `scripts/lib/common.sh` — funciones compartidas
+- `scripts/restore-dev.sh`, `restore-test.sh`
+- `scripts/upgrade-community.sh`, `upgrade-enterprise.sh`, `update-custom-modules.sh`
+- `data/README.md` — datos iniciales transversales
+- `tools/quality/README.md` — estrategia calidad (sin implementar)
+- Módulos custom: estructura completa (tests, i18n, static, README por módulo)
 
-### Changed
-- Licenciamiento corregido: duplicación + neutralize (documentación oficial)
-- Arquitectura permanente DEV → TEST → PROD documentada
-- GitHub VPS: **SSH key dedicada** preferida sobre PAT permanente
-- Enterprise: solo repo Git oficial (no ZIP manual)
-- `E1-CHECKLIST.md` — validación final pre-ejecución revisada
-- `clone-enterprise.sh` — soporte SSH + PAT fallback
-- `E0.5`, `E0.6`, `ARCHITECTURE.md`, `ENTERPRISE_ANALYSIS.md` actualizados
+### Changed — Mejoras estructurales pre-E1
+- Backups: nombres dinámicos contenedor/volumen; dump si DB up
+- Deploy: sincroniza docker, config, scripts, data (no solo custom)
+- Docker compose: healthcheck Odoo
+- ROLLBACK.md: restore automatizado + custom.tar.gz
+- restore-production-to-test.sh: path custom/
 
-### Pending (E1a — no ejecutado)
-- Generar SSH key en VPS + usuario agrega `.pub` en GitHub
-- Ejecutar `clone-enterprise.sh` + `web_enterprise`
-- Registrar `M260616306091776` (E1b — aprobación separada)
+### Previous (E0.5–E0.9)
+- ENTERPRISE-LICENSING.md, UPGRADE-PATH.md, SSH GitHub, arquitectura DEV→TEST→PROD
+
+### Pending (E1a)
+- SSH key + clone Enterprise + web_enterprise
 
 ### Added (previo)
 - `docs/ENTERPRISE_ANALYSIS.md` — análisis Enterprise, suscripción M260616306091776, módulos RD, plan DEV propuesto (sin ejecución)

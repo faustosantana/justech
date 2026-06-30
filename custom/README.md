@@ -2,41 +2,29 @@
 
 **Única carpeta autorizada para código propio.**
 
-## Módulos planificados (esqueleto — sin desarrollo)
+## Módulos (proyectos independientes)
 
-| Módulo | Estado | Dependencias base |
-|--------|--------|-------------------|
-| `hellenia_base` | Esqueleto | `base` |
-| `hellenia_inventory` | Esqueleto | `hellenia_base`, `stock` |
-| `hellenia_reports` | Esqueleto | `hellenia_base` |
-| `hellenia_account` | Esqueleto | `hellenia_base`, `account` |
-| `hellenia_pos` | Esqueleto | `hellenia_base`, `point_of_sale` |
-| `justech_core` | Esqueleto | `base` |
+| Módulo | README | Estado |
+|--------|--------|--------|
+| `justech_core` | [README](justech_core/README.md) | Esqueleto |
+| `hellenia_base` | [README](hellenia_base/README.md) | Esqueleto |
+| `hellenia_inventory` | [README](hellenia_inventory/README.md) | Esqueleto |
+| `hellenia_account` | [README](hellenia_account/README.md) | Esqueleto |
+| `hellenia_reports` | [README](hellenia_reports/README.md) | Esqueleto |
+| `hellenia_pos` | [README](hellenia_pos/README.md) | Esqueleto |
 
-> **No instalar** estos módulos hasta aprobación explícita. Son placeholders estructurales.
+Cada módulo incluye: `models/`, `views/`, `security/`, `data/`, `static/`, `tests/`, `i18n/`.
 
-## Estructura de módulo
-
-```
-custom/
-└── hellenia_<nombre>/
-    ├── __init__.py
-    ├── __manifest__.py
-    ├── models/
-    ├── views/
-    ├── security/
-    │   └── ir.model.access.csv
-    └── data/
-```
+**No instalar** hasta aprobación explícita.
 
 ## Convenciones
 
 | Regla | Detalle |
 |-------|---------|
 | Prefijo | `hellenia_` o `justech_` |
-| Herencia | Usar `_inherit` — nunca editar Enterprise/Community |
-| Licencia | Declarar en `__manifest__.py` |
-| Dependencias | Solo módulos oficiales Odoo salvo aprobación |
+| Herencia | `_inherit` — nunca editar Enterprise/Community |
+| Estándares | [CODING_STANDARDS.md](../docs/CODING_STANDARDS.md) |
+| Guía módulos | [CUSTOM_MODULE_GUIDE.md](../docs/CUSTOM_MODULE_GUIDE.md) |
 
 ## Montaje Docker
 
@@ -45,7 +33,9 @@ Host:      /opt/odoo-projects/hellenia/custom/
 Container: /mnt/custom (read-only)
 ```
 
-## Referencia
+## Despliegue
 
-- [ARCHITECTURE.md](../docs/ARCHITECTURE.md)
-- [GIT-STRATEGY.md](../docs/GIT-STRATEGY.md)
+```bash
+/opt/odoo-projects/hellenia/scripts/deploy-dev.sh
+/opt/odoo-projects/hellenia/scripts/update-custom-modules.sh dev <modulo>
+```

@@ -1,4 +1,5 @@
 # Hellenia — Ambiente TEST
+# Infraestructura: ver docs/INFRASTRUCTURE_REVIEW.md
 services:
   odoo:
     image: odoo:19.0-20260619
@@ -21,6 +22,12 @@ services:
     depends_on:
       db:
         condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://127.0.0.1:8069/web/login > /dev/null || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 90s
     networks:
       - hellenia-test
 

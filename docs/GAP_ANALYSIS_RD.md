@@ -94,7 +94,7 @@ Estos ítems están **fuera del stack** `l10n_do` + `l10n_do_reports` por diseñ
 |----|-------------------|---------------------|-----|-----------|---------|---------------|---------------|
 | G-00 | Backup DEV no ejecutable sin SSH VPS | TC-000 SSH denegado desde Cloud Agent | TC-000 | 🔴 P0 | Bloqueante ejecución | — | Infra / credenciales |
 | G-09 | BD DEV sin módulo `account` instalado | TC-000 baseline XML-RPC | TC-000 | ✅ Resuelto | — | — | TC-001 instaló `account` |
-| G-01 | **Secuencias NCF y tipos documento fiscal no disponibles en estándar** | TC-002 con empresa DO configurada y plan `do` cargado: 0 tipos documento, 0 secuencias NCF, 0 modelos `l10n_latam*` | TC-002, TC-020 | 🔴 P0 | Bloqueante go-live NCF | 5–15 días | `hellenia_account` |
+| G-01 | **Secuencias NCF y tipos documento fiscal no disponibles en estándar** | TC-002 + [L10N_DO_ARCHITECTURE_ANALYSIS.md](L10N_DO_ARCHITECTURE_ANALYSIS.md): `l10n_do` 19.0 sin datos LATAM; docs saas-19.3 solo eNCF E31–E34 | TC-002, TC-020 | 🔴 P0 | Bloqueante go-live NCF | 5–15 días | `hellenia_account` |
 | G-02 | Framework documentos LATAM ausente/incompleto en 19.0 | TC-002: 0 modelos `l10n_latam*` tras empresa DO y plan `do` cargado | TC-002, TC-014, TC-017 | 🔴 P0 | Alto — sin tipos documento ni NCF | 3–10 días | `hellenia_account` |
 | G-03 | Tipos NCF B14, B15, B16 no precargados | No declarados explícitamente en manifest 19.0 | TC-017 | 🟠 P1 | Medio — depende operación Hellenia | 2–5 días | `hellenia_account` |
 | G-04 | Reportes 606/607/608/IT-1 incompletos o ausentes | Doc Odoo no lista explícitamente; foro sin confirmación | TC-031 | 🔴 P0 | Bloqueante declaraciones DGII | 5–20 días | `hellenia_reports` |

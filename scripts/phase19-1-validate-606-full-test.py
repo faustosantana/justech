@@ -17,18 +17,20 @@ DB = env.cr.dbname
 if DB != "hellenia_test":
     raise SystemExit(f"ABORT: solo hellenia_test, actual={DB}")
 
-PROJECT_ROOT = "/opt/odoo-projects/hellenia"
-EVIDENCE_DIR = os.path.join(PROJECT_ROOT, "evidence")
+EVIDENCE_DIR = "/tmp/hellenia-phase19-evidence"
 os.makedirs(EVIDENCE_DIR, exist_ok=True)
 EXCEL_PATH = os.path.join(EVIDENCE_DIR, "phase19-606-export.xlsx")
 JSON_PATH = os.path.join(EVIDENCE_DIR, "phase19-606-test.json")
+HOST_EVIDENCE_HINT = "/opt/odoo-projects/hellenia/evidence/phase19-606-test.json"
 
 report = {
     "phase": "19.1",
     "timestamp_utc": datetime.now(timezone.utc).isoformat(),
     "database": DB,
     "branch": "cursor/phase19-fiscal-fields-606-dd85",
-    "excel_path": EXCEL_PATH,
+    "excel_path_container": EXCEL_PATH,
+    "excel_path_host": "/opt/odoo-projects/hellenia/evidence/phase19-606-export.xlsx",
+    "json_path_container": JSON_PATH,
     "checks": {},
     "demo_moves": [],
     "validation_errors_es": {},

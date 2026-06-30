@@ -12,7 +12,25 @@ LOG="${PROJECT_ROOT}/logs/phase19-1-test.log"
 mkdir -p "$(dirname "$EVIDENCE")" "$(dirname "$LOG")"
 
 hellenia_log "Fase 19.1 — validación completa 606 TEST"
-"$SCRIPT_DIR/run-odoo-shell-env.sh" test phase19-1-validate-606-full-test.py PHASE19_1 "$EVIDENCE" 2>&1 | tee -a "$LOG"
+"$SCRIPT_DIR/run-odoo-shell-env.sh" test phase19-1-validate-606-full-test.py PHASE19_1 /tmp/phase19-606-test-raw.json 2>&1 | tee -a "$LOG" || true
+
+# Copiar evidencia desde contenedor Odoo (rutas /tmp del contenedor)
+ENV_FILE="$PROJECT_ROOT/config/test/.env"
+# shellcheck disable=SC1090
+source "$ENV_FILE"
+CONTAINER="hellenia-test-odoo-1"
+docker cp "${CONTAINER}:/tmp/hellenia-phase19-evidence/phase19-606-test.json" "$EVIDENCE" 2>/dev/null || {
+  hellenia_log "WARN: copiando desde salida shell"
+  python3 -c "
+import json, re, sys
+raw=open('/tmp/phase19-606-test-raw.json').read() if __import__('os').path.isfile('/tmp/phase19-606-test-raw.json') else open('$LOG').read()
+m=re.search(r'PHASE19_1:(\{.*\})', raw, re.S)
+if not m:
+    print('No marker PHASE19_1', file=sys.stderr); sys.exit(1)
+open('$EVIDENCE','w').write(m.group(1))
+"
+}
+docker cp "${CONTAINER}:/tmp/hellenia-phase19-evidence/phase19-606-export.xlsx" "$EXCEL" 2>/dev/null || hellenia_log "WARN: Excel no copiado del contenedor"
 
 python3 -c "
 import json, sys

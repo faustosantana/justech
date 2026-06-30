@@ -17,8 +17,9 @@ if [[ "$ENV_NAME" != "dev" && "$ENV_NAME" != "test" && "$ENV_NAME" != "prod" ]];
 fi
 
 PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
-ENV_FILE="$PROJECT_ROOT/config/${ENV_NAME}/.env"
-COMPOSE_DIR="$PROJECT_ROOT/docker/${ENV_NAME}"
+ENV_DIR="$(hellenia_env_dir "$ENV_NAME")"
+ENV_FILE="$PROJECT_ROOT/config/${ENV_DIR}/.env"
+COMPOSE_DIR="$PROJECT_ROOT/docker/${ENV_DIR}"
 
 if [[ -n "$OUT" && "$OUT" != /* ]]; then
   OUT="$PROJECT_ROOT/$OUT"

@@ -17,8 +17,8 @@ usage() {
 
 [[ "$TARGET" == "dev" || "$TARGET" == "test" || "$TARGET" == "prod" ]] || usage
 
-COMPOSE_DIR="$PROJECT_ROOT/docker/${TARGET}"
-ENV_FILE="$PROJECT_ROOT/config/${TARGET}/.env"
+COMPOSE_DIR="$PROJECT_ROOT/docker/$(hellenia_env_dir "$TARGET")"
+ENV_FILE="$PROJECT_ROOT/config/$(hellenia_env_dir "$TARGET")/.env"
 # shellcheck source=lib/common.sh
 source "${SCRIPT_DIR}/lib/common.sh"
 hellenia_load_env "$ENV_FILE"

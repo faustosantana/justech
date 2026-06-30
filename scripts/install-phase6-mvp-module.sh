@@ -10,8 +10,9 @@ ENV_NAME="${1:-dev}"
 MODULE="${2:?Uso: install-phase6-mvp-module.sh dev <modulo>}"
 
 PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
-ENV_FILE="$PROJECT_ROOT/config/${ENV_NAME}/.env"
-COMPOSE_DIR="$PROJECT_ROOT/docker/${ENV_NAME}"
+ENV_DIR="$(hellenia_env_dir "$ENV_NAME")"
+ENV_FILE="$PROJECT_ROOT/config/${ENV_DIR}/.env"
+COMPOSE_DIR="$PROJECT_ROOT/docker/${ENV_DIR}"
 
 hellenia_load_env "$ENV_FILE"
 hellenia_log "Instalando módulo ${MODULE} en ${ENV_NAME} (con tests)"

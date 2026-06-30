@@ -8,8 +8,9 @@ source "${SCRIPT_DIR}/lib/common.sh"
 
 ENV_NAME="${1:-dev}"
 PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
-ENV_FILE="$PROJECT_ROOT/config/${ENV_NAME}/.env"
-COMPOSE_DIR="$PROJECT_ROOT/docker/${ENV_NAME}"
+ENV_DIR="$(hellenia_env_dir "$ENV_NAME")"
+ENV_FILE="$PROJECT_ROOT/config/${ENV_DIR}/.env"
+COMPOSE_DIR="$PROJECT_ROOT/docker/${ENV_DIR}"
 
 hellenia_load_env "$ENV_FILE"
 cd "$COMPOSE_DIR"

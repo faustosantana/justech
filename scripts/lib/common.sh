@@ -6,6 +6,16 @@ hellenia_log() {
   echo "[$(date '+%Y-%m-%d %H:%M:%S')] $*"
 }
 
+# dev|test|prod → directorio config/docker (prod → production)
+hellenia_env_dir() {
+  local env_name="${1:?}"
+  if [[ "$env_name" == "prod" ]]; then
+    echo "production"
+  else
+    echo "$env_name"
+  fi
+}
+
 hellenia_require_file() {
   local file="$1"
   if [[ ! -f "$file" ]]; then

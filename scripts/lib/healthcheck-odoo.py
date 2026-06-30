@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import json
 import os
-from datetime import datetime, timezone
+import datetime as dt
 
 report = {
     "timestamp_utc": datetime.now(timezone.utc).isoformat(),
@@ -84,7 +84,7 @@ except Exception as exc:
 
 # --- Contabilidad básica ---
 try:
-    env["account.account"].search_count([("company_id", "=", env.company.id)])
+    env["account.account"].search_count([])
     pass_check("accounting", "chart accessible")
 except Exception as exc:
     fail("accounting", str(exc))

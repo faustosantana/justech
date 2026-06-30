@@ -81,12 +81,16 @@ case "$ACTION" in
     ;;
   validate)
     hellenia_log "Validación P13.2 — ${ENV_NAME}"
-    upgrade_modules
     TMP=$(run_shell phase13-2-validate-fiscal.py)
     OUT="$EVIDENCE_DIR/phase13-2-validate-${ENV_NAME}.json"
     extract_marker "$TMP" "PHASE13_2_VALIDATION" "$OUT"
     tail -8 "$TMP"
     rm -f "$TMP"
+    ;;
+  validate-upgrade)
+    hellenia_log "Validación P13.2 con upgrade — ${ENV_NAME}"
+    upgrade_modules || hellenia_log "WARN: upgrade con advertencias; continuando validación"
+    "$0" "$ENV_NAME" validate
     ;;
   upgrade)
     upgrade_modules

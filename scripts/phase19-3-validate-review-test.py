@@ -7,7 +7,6 @@ import os
 from datetime import date, datetime, timezone
 
 from odoo import Command, _
-from odoo.exceptions import AccessError
 
 MARKER = "PHASE19_3:"
 DB = env.cr.dbname

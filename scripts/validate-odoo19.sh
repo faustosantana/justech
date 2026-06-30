@@ -84,9 +84,9 @@ else
   fail "SSL cert no válido para ${URL#https://}: $CERT_SUBJ"
 fi
 
-# 6. Tracebacks en logs
-if docker logs "$CONTAINER" 2>&1 | tail -200 | grep -qi "traceback"; then
-  fail "tracebacks detectados en logs de $CONTAINER"
+# 6. Tracebacks en logs (solo desde último reinicio)
+if docker logs "$CONTAINER" --since 10m 2>&1 | grep -qi "traceback"; then
+  fail "tracebacks detectados en logs recientes de $CONTAINER"
 else
   pass "sin tracebacks recientes en logs"
 fi

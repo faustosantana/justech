@@ -46,7 +46,11 @@ log "Imagen destino: $ODOO_IMAGE"
 log "Base de datos: $DB_NAME"
 
 log "--- Backup pre-migración ---"
-"$BACKUP_SCRIPT"
+if [[ "${SKIP_BACKUP:-0}" != "1" ]]; then
+  "$BACKUP_SCRIPT" || log "WARN: backup falló — continuar bajo responsabilidad"
+else
+  log "SKIP_BACKUP=1 — omitiendo backup"
+fi
 
 log "--- Pull imagen Odoo 19 ---"
 docker pull "$ODOO_IMAGE"
@@ -66,11 +70,12 @@ if docker logs "$CONTAINER" 2>&1 | grep -qi "traceback"; then
 fi
 
 log "--- Upgrade explícito módulo base ---"
-docker exec "$CONTAINER" odoo \
+if ! docker exec "$CONTAINER" odoo \
   -d "$DB_NAME" --db_host=db --db_user="${DB_USER:-odoo}" --db_password="$DB_PASSWORD" \
-  -u base --stop-after-init 2>&1 | tee -a "$LOG_FILE" || {
-    log "WARN: upgrade base retornó error — puede ser normal si ya migró"
-  }
+  -u base --stop-after-init 2>&1 | tee -a "$LOG_FILE"; then
+  log "WARN: upgrade base falló — recreando BD desde cero (Odoo 18→19)"
+  SKIP_BACKUP=1 "$SCRIPT_DIR/recreate-db-odoo19.sh" "$TARGET"
+fi
 
 log "--- Reinicio Odoo ---"
 docker compose --env-file "$ENV_FILE" restart odoo

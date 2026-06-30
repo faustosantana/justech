@@ -69,6 +69,13 @@ rsync -av repository/docs/ docs/
 
 ### Fase B — DEV
 
+> **Nota:** Si la BD proviene de Odoo 18, el upgrade in-place puede fallar
+> (`invalid input syntax for type json`). En ese caso usar recreación limpia:
+
+```bash
+/opt/odoo-projects/hellenia/scripts/recreate-db-odoo19.sh dev
+```
+
 ```bash
 cd /opt/odoo-projects/hellenia/docker/dev
 
@@ -169,13 +176,27 @@ Bloqueado hasta aprobación explícita:
 
 ## Resultados de migración
 
-*(Actualizado automáticamente por el agente de despliegue)*
-
 | Campo | Valor |
 |-------|-------|
-| Commit Git | — |
+| Commit Git | `5ba7daf` / `cursor/odoo19-migration-dev-test-dd85` |
 | Tag Odoo | `19.0-20260619` |
-| DEV migrado | — |
-| TEST migrado | — |
-| PROD | Sin cambios (Odoo 18) |
+| DEV migrado | ✅ 2026-06-30 01:07 UTC |
+| TEST migrado | ✅ 2026-06-30 01:08 UTC |
+| PROD | Sin cambios (`odoo:18`) |
 | Wizard ejecutado | No |
+| Estrategia BD | Recreación limpia (`-i base`) — upgrade in-place 18→19 falló por incompatibilidad JSON |
+
+### Validaciones finales (2026-06-30)
+
+| # | Validación | DEV | TEST | PROD |
+|---|------------|-----|------|------|
+| 1 | Contenedor Odoo running | ✅ | ✅ | ✅ |
+| 2 | Contenedor DB running | ✅ | ✅ | ✅ |
+| 3 | `version_info` = 19.0-20260619 | ✅ | ✅ | 18.x |
+| 4 | `/web/login` HTTP 200 | ✅ | ✅ | 303 |
+| 5 | SSL Let's Encrypt válido | ✅ | ✅ | — |
+| 6 | Traefik routing OK | ✅ | ✅ | ✅ |
+| 7 | Sin tracebacks recientes | ✅ | ✅ | — |
+| 8 | `l10n_do` v2.0 en imagen | ✅ | ✅ | — |
+| 9 | Producción intacta | — | — | ✅ |
+| 10 | healthcheck.sh OK | ✅ | ✅ | ✅ |

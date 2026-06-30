@@ -33,11 +33,20 @@ class JustechDoFiscalReportWizard(models.TransientModel):
         selection=[
             ("pending", "Sin validar"),
             ("ok", "Válido"),
-            ("error", "Con errores"),
+            ("warning", "Con advertencias"),
+            ("error", "Sin documentos válidos"),
         ],
         default="pending",
         readonly=True,
     )
+    count_all = fields.Integer(string="Documentos en período", readonly=True)
+    count_valid = fields.Integer(string="Válidos para exportar", readonly=True)
+    count_incomplete = fields.Integer(string="Incompletos", readonly=True)
+    count_excluded = fields.Integer(string="Excluidos", readonly=True)
+    count_cancelled = fields.Integer(string="Anulados", readonly=True)
+    count_partners_errors = fields.Integer(string="Proveedores con errores", readonly=True)
+    error_report_file = fields.Binary(string="Reporte de errores", readonly=True)
+    error_report_filename = fields.Char(string="Nombre reporte errores", readonly=True)
 
     @api.depends("date_from")
     def _compute_period_code(self):
@@ -48,6 +57,32 @@ class JustechDoFiscalReportWizard(models.TransientModel):
         self.ensure_one()
         if self.date_from > self.date_to:
             raise UserError(_("La fecha desde no puede ser posterior a la fecha hasta."))
+
+    def _apply_validation_result(self, result):
+        self.ensure_one()
+        counts = result["counts"]
+        self.count_all = counts["all"]
+        self.count_valid = counts["valid"]
+        self.count_incomplete = counts["incomplete"]
+        self.count_excluded = counts["excluded"]
+        self.count_cancelled = counts["cancelled"]
+        self.count_partners_errors = counts["partners_affected"]
+        self.validation_log = self.env["justech.do.dgii.606.exporter"].format_validation_summary(
+            result
+        )
+        error_content, error_filename = self.env[
+            "justech.do.dgii.606.exporter"
+        ].export_errors_xlsx(
+            self.company_id, self.date_from, self.date_to, result=result
+        )
+        self.error_report_file = error_content
+        self.error_report_filename = error_filename
+        if counts["valid"] and counts["incomplete"]:
+            self.validation_state = "warning"
+        elif counts["valid"]:
+            self.validation_state = "ok"
+        else:
+            self.validation_state = "error"
 
     def _create_report(self):
         self.ensure_one()
@@ -63,6 +98,14 @@ class JustechDoFiscalReportWizard(models.TransientModel):
                 "company_id": self.company_id.id,
                 "validation_log": self.validation_log,
                 "validation_state": self.validation_state,
+                "count_all": self.count_all,
+                "count_valid": self.count_valid,
+                "count_incomplete": self.count_incomplete,
+                "count_excluded": self.count_excluded,
+                "count_cancelled": self.count_cancelled,
+                "count_partners_errors": self.count_partners_errors,
+                "error_report_file": self.error_report_file,
+                "error_report_filename": self.error_report_filename,
             }
         )
 
@@ -74,15 +117,10 @@ class JustechDoFiscalReportWizard(models.TransientModel):
             self.validation_state = "ok"
         else:
             exporter = self.env["justech.do.dgii.606.exporter"]
-            errors = exporter.validate_moves_606(
+            result = exporter.validate_period_606(
                 self.company_id, self.date_from, self.date_to
             )
-            if errors:
-                self.validation_log = "\n".join(errors)
-                self.validation_state = "error"
-            else:
-                self.validation_log = _("Sin errores. Listo para exportar el formato 606.")
-                self.validation_state = "ok"
+            self._apply_validation_result(result)
         return {
             "type": "ir.actions.act_window",
             "res_model": self._name,
@@ -91,19 +129,42 @@ class JustechDoFiscalReportWizard(models.TransientModel):
             "target": "new",
         }
 
+    def action_download_errors(self):
+        self.ensure_one()
+        if not self.error_report_file:
+            if self.report_type == "606":
+                self.action_validate()
+            if not self.error_report_file:
+                raise UserError(_("No hay reporte de errores para descargar."))
+        return {
+            "type": "ir.actions.act_url",
+            "url": (
+                f"/web/content/?model={self._name}&id={self.id}"
+                f"&field=error_report_file&filename_field=error_report_filename&download=true"
+            ),
+            "target": "self",
+        }
+
     def action_generate(self):
         self.ensure_one()
-        if self.report_type == "606" and self.validation_state != "ok":
-            self.action_validate()
-            if self.validation_state == "error":
+        if self.report_type == "606":
+            exporter = self.env["justech.do.dgii.606.exporter"]
+            if self.validation_state == "pending":
+                self.action_validate()
+            result = exporter.validate_period_606(
+                self.company_id, self.date_from, self.date_to
+            )
+            valid_moves = result["buckets"]["valid"]
+            if not valid_moves:
                 raise UserError(
-                    _("Corrija los errores de validación antes de generar el 606:\n\n%s")
-                    % (self.validation_log or "")
+                    self.validation_log
+                    or _("No hay documentos fiscalmente válidos para exportar.")
                 )
+            report = self._create_report()
+            report.action_generate(valid_moves=valid_moves)
+            return report.action_export_dgii_606(moves=valid_moves)
         report = self._create_report()
         report.action_generate()
-        if self.report_type == "606":
-            return report.action_export_dgii_606()
         return {
             "type": "ir.actions.act_window",
             "res_model": "justech.do.fiscal.report",
@@ -115,8 +176,17 @@ class JustechDoFiscalReportWizard(models.TransientModel):
     def action_generate_history(self):
         """Genera historial sin descargar — útil para revisar líneas antes de exportar."""
         self.ensure_one()
+        if self.report_type == "606" and self.validation_state == "pending":
+            self.action_validate()
         report = self._create_report()
-        report.action_generate()
+        if self.report_type == "606":
+            exporter = self.env["justech.do.dgii.606.exporter"]
+            result = exporter.validate_period_606(
+                self.company_id, self.date_from, self.date_to
+            )
+            report.action_generate(valid_moves=result["buckets"]["valid"])
+        else:
+            report.action_generate()
         return {
             "type": "ir.actions.act_window",
             "res_model": "justech.do.fiscal.report",

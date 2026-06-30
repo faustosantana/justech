@@ -31,6 +31,8 @@
                     <button name="action_export_dgii_606" string="Exportar Excel DGII 606" type="object"
                             class="btn-primary"
                             invisible="state != 'done' or report_type != '606'"/>
+                    <button name="action_download_errors" string="Descargar errores" type="object"
+                            invisible="state != 'done' or report_type != '606'"/>
                     <button name="action_export_csv" string="Exportar CSV" type="object"
                             invisible="state != 'done'"/>
                     <button name="action_export_xlsx" string="Exportar Excel resumen" type="object"
@@ -53,9 +55,18 @@
                         </group>
                     </group>
                     <group string="Validación DGII" invisible="report_type != '606'">
-                        <field name="validation_state" widget="badge"
-                               decoration-success="validation_state == 'ok'"
-                               decoration-danger="validation_state == 'error'"/>
+                        <group>
+                            <field name="validation_state" widget="badge"
+                                   decoration-success="validation_state == 'ok'"
+                                   decoration-warning="validation_state == 'warning'"
+                                   decoration-danger="validation_state == 'error'"/>
+                            <field name="count_all"/>
+                            <field name="count_valid"/>
+                            <field name="count_incomplete"/>
+                            <field name="count_excluded"/>
+                            <field name="count_cancelled"/>
+                            <field name="count_partners_errors"/>
+                        </group>
                         <field name="validation_log" nolabel="1" readonly="1"/>
                     </group>
                     <group string="Totales del período">

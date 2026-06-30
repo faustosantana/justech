@@ -4,7 +4,7 @@
         <field name="name">justech.do.fiscal.report.wizard.form</field>
         <field name="model">justech.do.fiscal.report.wizard</field>
         <field name="arch" type="xml">
-            <form string="DGII Report">
+            <form string="Reporte DGII">
                 <group>
                     <field name="report_type"/>
                     <field name="date_from"/>
@@ -12,14 +12,14 @@
                     <field name="company_id" groups="base.group_multi_company"/>
                 </group>
                 <footer>
-                    <button name="action_generate" string="Generate" type="object" class="btn-primary"/>
-                    <button string="Cancel" special="cancel"/>
+                    <button name="action_generate" string="Generar" type="object" class="btn-primary"/>
+                    <button string="Cancelar" special="cancel"/>
                 </footer>
             </form>
         </field>
     </record>
     <record id="action_justech_do_fiscal_report_wizard" model="ir.actions.act_window">
-        <field name="name">Generate DGII Report</field>
+        <field name="name">Generar reporte DGII</field>
         <field name="res_model">justech.do.fiscal.report.wizard</field>
         <field name="view_mode">form</field>
         <field name="target">new</field>

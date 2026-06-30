@@ -1,6 +1,6 @@
 {
     "name": "Justech Dominican Fiscal Reports",
-    "version": "19.0.1.1.0",
+    "version": "19.0.1.2.0",
     "category": "Accounting/Localizations/Reporting",
     "summary": "DGII reports 606, 607, 608 — basic MVP",
     "description": """

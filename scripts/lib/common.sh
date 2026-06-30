@@ -65,10 +65,10 @@ hellenia_apply_retention() {
     -exec rm -rf {} + 2>/dev/null || true
 
   ls -1dt "${backup_root}"/20*_weekly 2>/dev/null \
-    | tail -n +$((weekly_weeks + 1)) | xargs -r rm -rf
+    | tail -n +$((weekly_weeks + 1)) | xargs -r rm -rf || true
 
   ls -1dt "${backup_root}"/20*_monthly 2>/dev/null \
-    | tail -n +$((monthly_months + 1)) | xargs -r rm -rf
+    | tail -n +$((monthly_months + 1)) | xargs -r rm -rf || true
 }
 
 # Sincroniza artefactos versionados desde repository/ hacia PROJECT_ROOT

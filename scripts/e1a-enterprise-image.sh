@@ -12,6 +12,8 @@ ARCHIVE="${1:-/opt/odoo-projects/hellenia/downloads/enterprise/odoo_19.0+e.20260
 ENV_FILE="$PROJECT_ROOT/config/dev/.env"
 COMPOSE_DIR="$PROJECT_ROOT/docker/dev"
 COMPOSE_FILE="$COMPOSE_DIR/docker-compose.yml"
+COMMUNITY_COMPOSE="$COMPOSE_DIR/docker-compose.community.yml"
+COMMUNITY_CONF="$PROJECT_ROOT/config/dev/odoo.conf.community"
 ODOO_CONF="$PROJECT_ROOT/config/dev/odoo.conf"
 STATE_DIR="$PROJECT_ROOT/logs/deploy/e1a-state-$(date +%Y-%m-%d_%H%M%S)"
 LOG_FILE="$PROJECT_ROOT/logs/deploy/e1a-enterprise-image-$(date +%Y-%m-%d_%H%M).log"
@@ -29,13 +31,17 @@ rollback() {
   ROLLBACK_DONE=true
   hellenia_log "=== ROLLBACK automático (código $rc) ===" | tee -a "$LOG_FILE"
 
-  if [[ -f "$STATE_DIR/docker-compose.yml.bak" ]]; then
-    cp -f "$STATE_DIR/docker-compose.yml.bak" "$COMPOSE_FILE"
-    hellenia_log "Restaurado docker-compose.yml" | tee -a "$LOG_FILE"
-  fi
   if [[ -f "$STATE_DIR/odoo.conf.bak" ]]; then
     cp -f "$STATE_DIR/odoo.conf.bak" "$ODOO_CONF"
     hellenia_log "Restaurado odoo.conf" | tee -a "$LOG_FILE"
+  fi
+
+  if [[ -f "$STATE_DIR/docker-compose.yml.bak" ]]; then
+    cp -f "$STATE_DIR/docker-compose.yml.bak" "$COMPOSE_FILE"
+    hellenia_log "Restaurado docker-compose.yml (pre-E1a)" | tee -a "$LOG_FILE"
+  elif [[ -f "$COMMUNITY_COMPOSE" ]]; then
+    cp -f "$COMMUNITY_COMPOSE" "$COMPOSE_FILE"
+    hellenia_log "Restaurado docker-compose.community.yml" | tee -a "$LOG_FILE"
   fi
 
   hellenia_load_env "$ENV_FILE" 2>/dev/null || true
@@ -75,13 +81,23 @@ hellenia_log "OK  web_enterprise en tarball" | tee -a "$LOG_FILE"
 echo "$ARCHIVE" | grep -qE '19\.0(\+e)?' || { hellenia_log "ERROR: nombre no indica 19.0"; exit 1; }
 hellenia_log "OK  versión 19.x en nombre archivo" | tee -a "$LOG_FILE"
 
-# --- Backup estado previo ---
-cp -f "$COMPOSE_FILE" "$STATE_DIR/docker-compose.yml.bak"
+# --- Backup estado previo (compose Community si aún corre imagen oficial) ---
+RUNNING_IMG=$(docker inspect hellenia-dev-odoo-1 --format '{{.Config.Image}}' 2>/dev/null || echo "")
+if echo "$RUNNING_IMG" | grep -qE 'odoo:19\.0'; then
+  cp -f "$COMMUNITY_COMPOSE" "$STATE_DIR/docker-compose.yml.bak"
+  hellenia_log "Snapshot rollback: docker-compose.community.yml" | tee -a "$LOG_FILE"
+else
+  cp -f "$COMPOSE_FILE" "$STATE_DIR/docker-compose.yml.bak"
+fi
 cp -f "$ODOO_CONF" "$STATE_DIR/odoo.conf.bak"
 
 hellenia_log "--- Backup DEV ---" | tee -a "$LOG_FILE"
-BACKUP_OUT=$("${SCRIPT_DIR}/backup-dev.sh" 2>&1 | tee -a "$LOG_FILE")
-BACKUP_DIR=$(echo "$BACKUP_OUT" | grep -oE '/opt/odoo-projects/hellenia/backups/dev/[0-9]{4}-[0-9]{2}-[0-9]{2}_[0-9]{4}' | tail -1)
+set +e
+"${SCRIPT_DIR}/backup-dev.sh" 2>&1 | tee -a "$LOG_FILE"
+BACKUP_RC=${PIPESTATUS[0]}
+set -e
+[[ "$BACKUP_RC" -eq 0 ]] || { hellenia_log "ERROR: backup-dev falló ($BACKUP_RC)"; exit 1; }
+BACKUP_DIR=$(ls -1dt /opt/odoo-projects/hellenia/backups/dev/20* 2>/dev/null | grep -v weekly | grep -v monthly | head -1)
 hellenia_log "Backup: ${BACKUP_DIR:-desconocido}" | tee -a "$LOG_FILE"
 
 # Sincronizar custom desde repo si existe

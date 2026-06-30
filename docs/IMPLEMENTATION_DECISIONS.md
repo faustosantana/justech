@@ -141,4 +141,59 @@ Registro cronológico de decisiones de consultoría. Toda entrada debe ser **rep
 
 ---
 
+## DEC-2026-06-30-014 — Fase 3.5 datos oficiales empresa
+
+| Campo | Valor |
+|-------|-------|
+| **Decisión** | Aplicar dirección Piantini, teléfono, email oficiales desde documento empresa |
+| **Fuente** | Información de la empresa para Odoo |
+| **Backup** | `2026-06-30_0446` |
+
+---
+
+## DEC-2026-06-30-015 — Bancos definitivos
+
+| Campo | Valor |
+|-------|-------|
+| **Decisión** | Banco López de Haro — DOP `4040043811`, USD `4010461048` |
+| **Pendiente** | SWIFT, sucursal |
+
+---
+
+## DEC-2026-06-30-016 — Categorías inventario oficiales (planas)
+
+| Campo | Valor |
+|-------|-------|
+| **Decisión** | 11 categorías hijas directas de Inventario (sin subárbol Mesas/Sillas Fase 3) |
+| **Legacy** | Categorías Fase 3 no eliminadas — deprecated |
+
+---
+
+## DEC-2026-06-30-017 — Métodos de pago sin pasarelas
+
+| Campo | Valor |
+|-------|-------|
+| **Decisión** | CSH1 Efectivo + líneas BNK1 Transferencia/Tarjetas/Link de pago manual |
+| **Restricción** | Sin integración pasarela en esta fase |
+
+---
+
+## DEC-2026-06-30-018 — Sin instalar sale/stock/POS
+
+| Campo | Valor |
+|-------|-------|
+| **Decisión** | Documentar requisito módulos; NO instalar en Fase 3.5 |
+| **Motivo** | Restricción explícita cliente |
+
+---
+
+## DEC-2026-06-30-019 — Piezas únicas
+
+| Campo | Valor |
+|-------|-------|
+| **Decisión** | Catálogo orientado a piezas únicas; pares como excepción documentada |
+| **YAML** | `inventory_categories.yaml` → product_behavior |
+
+---
+
 **Mantenido por:** Justech — Consultoría Odoo Enterprise

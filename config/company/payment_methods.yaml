@@ -1,30 +1,57 @@
-# Golden Configuration — Métodos de pago (estándar Odoo 19 EE)
-# Validado — no se crearon métodos adicionales en Fase 3
+# Métodos de pago — Fase 3.5 (sin pasarelas integradas)
 
-schema_version: "1.0"
-count: 3
+schema_version: "2.0"
 
-methods:
-  - code: manual
-    name: Manual Payment
-    payment_type: inbound
-    use: "Cobros manuales — transferencia, efectivo registrado manualmente"
+configured:
+  - name: Efectivo
+    journal: CSH1
+    type: cash
+    direction: inbound_outbound
+    gateway: false
 
-  - code: manual
-    name: Manual Payment
-    payment_type: outbound
-    use: "Pagos manuales a proveedores"
+  - name: Transferencia
+    journal: BNK1
+    type: bank
+    direction: inbound_outbound
+    gateway: false
 
-  - code: check_printing
-    name: Checks
-    payment_type: outbound
-    use: "Cheques — compatible l10n_do_check_printing (futuro)"
+  - name: Tarjetas
+    journal: BNK1
+    type: bank
+    direction: inbound
+    gateway: false
+    note: "Registro manual — sin datáfono integrado"
 
-planned_phase3_5:
-  - Efectivo (POS / caja) — pendiente diario caja
-  - Tarjeta datáfono — pendiente operación retail
-  - Transferencia bancaria — usar manual inbound + BNK1
+  - name: Link de pago
+    journal: BNK1
+    type: bank
+    direction: inbound
+    gateway: false
+    status: structure_only
+    note: "Línea manual creada — integración pasarela pendiente fase posterior"
 
-notes:
-  - "No activar pasarelas de pago (Stripe, etc.) en DEV"
-  - "No modificar métodos vía desarrollo"
+  - name: Cheques
+    journal: BNK1
+    type: bank
+    direction: outbound
+    method: check_printing
+
+journals:
+  - code: CSH1
+    name: Efectivo
+    type: cash
+    created_phase35: true
+  - code: BNK1
+    name: Bank
+    type: bank
+
+restrictions:
+  - "No integrar Stripe, PayPal ni pasarelas en DEV"
+  - "No instalar módulos payment provider adicionales en esta fase"
+
+sales_modules_required:
+  note: "Cotizaciones/facturas/POS requieren sale, stock, point_of_sale — NO instalados (decisión explícita)"
+  modules:
+    sale: uninstalled
+    stock: uninstalled
+    point_of_sale: uninstalled

@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+### Added — Fase 3.5 Golden Configuration definitiva (2026-06-30)
+- Datos oficiales empresa, bancos, categorías planas, métodos de pago CSH1/BNK1
+- `docs/PHASE35_GOLDEN_CONFIGURATION_REPORT.md`, plantilla import CSV
+- Validación PHASE35 ok: true
+
 ### Added — Fase 3 Golden Configuration aplicada DEV (2026-06-30)
 - `config/company/*.yaml` — configuración maestra versionada
 - `scripts/apply-phase3-golden-config.py`, `validate-phase3-golden-config.py`

@@ -1,39 +1,39 @@
-# Golden Configuration — Hellenia, S.R.L.
-# Fase 3 — reproducible master data (DEV → TEST → PROD)
-# Version: 1.0.0
-# Applied: 2026-06-30T04:41:50Z (hellenia_dev)
+# Golden Configuration — Hellenia, S.R.L. (definitiva Fase 3.5)
+# Fuente: Información de la empresa para Odoo
 
-schema_version: "1.0"
+schema_version: "2.0"
+phase: "3.5"
 environment_target: dev
 company_id: 1
-partner_id: 1  # res.company.partner_id — verify in Odoo after clone
 
 legal:
   name: "Hellenia, S.R.L."
   trade_name: "Hellenia"
   vat_rnc: "133621282"
-  website: "https://hellenia.cloud"
 
 regional:
   country_code: DO
   country_name: "República Dominicana"
   currency: DOP
+  currency_label: "Peso Dominicano"
   timezone: "America/Santo_Domingo"
   language: es_DO
+  language_label: "Español"
 
 address:
-  street: null  # PENDING — cliente no proporcionó dirección fiscal oficial
-  city: null
-  state_code: null  # e.g. DN, SD — PENDING
+  street: "Calle Federico Geraldino No.164, Esquina David Ben Gurión"
+  street2: "Plaza Stephanie, Local 3-B, Piantini"
+  city: "Santo Domingo"
+  state: "Distrito Nacional"
+  state_id_odoo: 1089
   zip: null
-  phone: null
-  email: null
+  country: "República Dominicana"
+
+contact:
+  phone: "+1 849-434-8694"
+  email: "info@helleniadr.com"
+  website: "https://hellenia.cloud"
 
 notes:
-  - "Empresa única — renombrada desde 'Hellenia Pruebas RD' (TC-002)"
-  - "Datos ficticios TC-002 eliminados (calle Winston Churchill, RNC 131793916)"
-  - "Nombre comercial almacenado en res.partner.comment"
-
-odoo_paths:
-  company: "Ajustes → Empresas → Hellenia, S.R.L."
-  partner: "Contactos → Hellenia, S.R.L."
+  - "Empresa única ID 1 — sin segunda empresa"
+  - "Nombre comercial en res.partner.comment"

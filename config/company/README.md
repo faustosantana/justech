@@ -11,8 +11,11 @@ Archivos versionados para replicar la parametrización DEV → TEST → PROD.
 | [inventory_categories.yaml](inventory_categories.yaml) | Árbol categorías producto |
 | [taxes.yaml](taxes.yaml) | Impuestos y posiciones fiscales RD |
 | [company_metadata.yaml](company_metadata.yaml) | Metadatos fase, backup, scripts |
+| [responsibles.yaml](responsibles.yaml) | Responsables funcionales |
+| [suppliers.yaml](suppliers.yaml) | Proveedores planificados |
+| [product_import.yaml](product_import.yaml) | Especificación importación Excel |
+| [reports_priority.yaml](reports_priority.yaml) | Reportes prioritarios |
 
-**Aplicar en DEV:** `scripts/apply-phase3-golden-config.py` (odoo shell)  
-**Validar:** `scripts/validate-phase3-golden-config.py`
+**Fase 3.5:** [PHASE35_GOLDEN_CONFIGURATION_REPORT.md](../../docs/PHASE35_GOLDEN_CONFIGURATION_REPORT.md)
 
-Ver [docs/PHASE3_IMPLEMENTATION_REPORT.md](../docs/PHASE3_IMPLEMENTATION_REPORT.md).
+**Scripts:** `scripts/apply-phase35-golden-config.py` · `scripts/validate-phase35-golden-config.py`

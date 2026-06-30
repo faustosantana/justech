@@ -118,7 +118,7 @@ Ver [CUSTOM_MODULE_GUIDE.md](CUSTOM_MODULE_GUIDE.md).
 
 ## Fase actual y próximos pasos
 
-**Fase activa:** 3 completada en DEV — **detenido** para aprobación Fase 3.5.
+**Fase activa:** 3.5 completada — **detenido** para Ventas/Compras/Inventario/POS.
 
 ---
 

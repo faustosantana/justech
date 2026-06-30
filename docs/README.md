@@ -7,7 +7,7 @@ Proyecto Odoo **Enterprise 19** para **Hellenia**. Pipeline permanente: **DEV �
 | Documento | Contenido |
 |-----------|-----------|
 | [PROJECT_STRATEGY.md](PROJECT_STRATEGY.md) | **Estrategia v3.0** — plataforma, 12 fases, NCF, custom |
-| [PHASE3_IMPLEMENTATION_REPORT.md](PHASE3_IMPLEMENTATION_REPORT.md) | **Fase 3** — Golden Configuration DEV |
+| [PHASE35_GOLDEN_CONFIGURATION_REPORT.md](PHASE35_GOLDEN_CONFIGURATION_REPORT.md) | **Fase 3.5** — Golden Configuration definitiva |
 | [IMPLEMENTATION_DECISIONS.md](IMPLEMENTATION_DECISIONS.md) | Registro decisiones implementación |
 | [IMPLEMENTATION_MASTER_PLAN.md](IMPLEMENTATION_MASTER_PLAN.md) | Plan maestro implementación |
 | [ARCHITECTURE.md](ARCHITECTURE.md) | Capas Community / Enterprise / Custom |

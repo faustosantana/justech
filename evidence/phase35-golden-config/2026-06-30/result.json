@@ -1,0 +1,17 @@
+{
+  "phase": "3.5",
+  "applied_at_utc": "2026-06-30T04:47:45Z",
+  "backup": "/opt/odoo-projects/hellenia/backups/dev/2026-06-30_0446",
+  "validation_ok": true,
+  "company": {
+    "name": "Hellenia, S.R.L.",
+    "vat": "133621282",
+    "email": "info@helleniadr.com",
+    "phone": "+1 849-434-8694",
+    "city": "Santo Domingo",
+    "state": "Distrito Nacional"
+  },
+  "banks": ["4040043811", "4010461048"],
+  "journals": 8,
+  "official_categories": 12
+}

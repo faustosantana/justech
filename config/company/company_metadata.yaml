@@ -1,59 +1,51 @@
-# Golden Configuration — Metadatos Fase 3
-schema_version: "1.0"
-project: hellenia-odoo
-phase: 3
-phase_name: "Configuración funcional — Golden Configuration"
+# Metadatos Golden Configuration — Fase 3.5 definitiva
+
+schema_version: "2.0"
+phase: "3.5"
+phase_name: "Golden Configuration definitiva"
 status: applied_dev
-applied_at_utc: "2026-06-30T04:41:50Z"
+applied_at_utc: "2026-06-30T04:47:45Z"
+source_document: "Información de la empresa para Odoo"
+
 database: hellenia_dev
 url: "https://dev.hellenia.cloud"
 odoo_build: "19.0+e-20260619"
-image: hellenia-odoo:19-enterprise
 
 backup_pre_apply:
-  path: "/opt/odoo-projects/hellenia/backups/dev/2026-06-30_0440"
+  path: "/opt/odoo-projects/hellenia/backups/dev/2026-06-30_0446"
   verified: true
-  timestamp_local: "2026-06-30 04:40:37"
-
-constraints_respected:
-  no_docker_changes: true
-  no_traefik_changes: true
-  no_postgres_config_changes: true
-  no_enterprise_code_changes: true
-  no_image_changes: true
-  no_module_install: true
-  no_users_created: true
-  no_permissions_changed: true
-  no_test_changes: true
-  no_prod_changes: true
-  no_custom_modules: true
-  no_wizard: true
 
 scripts:
-  apply: scripts/apply-phase3-golden-config.py
-  validate: scripts/validate-phase3-golden-config.py
+  apply: scripts/apply-phase35-golden-config.py
+  validate: scripts/validate-phase35-golden-config.py
 
-replication:
-  target_order:
-    - hellenia_dev
-    - hellenia_test
-    - production
-  method: "Reproducir vía YAML + scripts apply (futuro) o exportación documentada"
+constraints_respected:
+  no_infra_changes: true
+  no_module_install: true
+  no_users_created: true
+  no_test_prod: true
+  no_custom: true
 
 logo:
-  status: pending
-  preferred_formats:
-    - svg
-    - png_transparent
-  actions_when_uploaded:
-    - Convert to SVG or PNG transparent
-    - Load res.company logo
-    - Configure external report layout
-    - Configure favicon / website (if module active)
+  status: pending_upload
+  conversion_priority: [svg, png_transparent]
+  targets: [company, reports, portal, favicon]
+
+photography:
+  storage: "Odoo nativo — product.image / image_1920 en product.template"
+  module_required: product  # installed
+  note: "Al activar Ventas/Inventario, las fotos se almacenan en filestore Odoo"
 
 suppliers:
   status: structure_only
-  records_created: 0
+  file: suppliers.yaml
 
 products:
   status: not_loaded
+  import_template: data/import/product_import_template.csv
+
+reports_priority:
+  file: reports_priority.yaml
+
+functional_responsibles:
+  file: responsibles.yaml

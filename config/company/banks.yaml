@@ -1,31 +1,26 @@
-# Golden Configuration — Bancos Hellenia
-# Fase 3 — estructura preparada; números de cuenta PENDING
+# Bancos — configuración definitiva Fase 3.5
 
-schema_version: "1.0"
-bank_partner: "Banco López de Haro"
+schema_version: "2.0"
+bank_name: "Banco López de Haro"
 
 accounts:
-  - id: dop_current
-    label: "Cuenta corriente DOP"
+  - label: "Cuenta corriente DOP"
     currency: DOP
-    acc_number: null  # PENDING — placeholder Odoo: PENDING-DOP
+    acc_number: "4040043811"
     acc_holder: "Hellenia, S.R.L."
-    journal_link: BNK1  # vincular al confirmar número real
-    status: pending_account_number
+    status: active
 
-  - id: usd_savings
-    label: "Cuenta ahorro USD"
+  - label: "Cuenta ahorro USD"
     currency: USD
-    acc_number: null  # PENDING — placeholder Odoo: PENDING-USD
+    acc_number: "4010461048"
     acc_holder: "Hellenia, S.R.L."
-    journal_link: BNK1
-    status: pending_account_number
+    status: active
 
-pending_client_data:
-  - Número cuenta corriente DOP
-  - Número cuenta ahorro USD
-  - Sucursal (si aplica)
-  - Titular exacto según banco
+pending:
+  - Tipo de cuenta adicional (si banco requiere clasificación)
+  - SWIFT / código ABA (solo si transferencias internacionales)
+  - Sucursal bancaria
 
-odoo_model: res.partner.bank
-company_partner: true
+journal_mapping:
+  DOP: BNK1
+  USD: BNK1

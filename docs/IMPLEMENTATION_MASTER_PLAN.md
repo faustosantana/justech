@@ -5,7 +5,7 @@
 **Ambiente de trabajo:** `hellenia_dev` (DEV laboratorio)  
 **Fecha:** 2026-06-30  
 **Versión:** 3.0  
-**Estado:** **Fase 3 Golden Configuration aplicada en DEV** — Fase 3.5 pendiente aprobación ([PHASE3_IMPLEMENTATION_REPORT.md](PHASE3_IMPLEMENTATION_REPORT.md))
+**Estado:** **Fase 3.5 Golden Configuration definitiva aplicada en DEV** — detenido para Ventas/Compras/Inventario/POS ([PHASE35_GOLDEN_CONFIGURATION_REPORT.md](PHASE35_GOLDEN_CONFIGURATION_REPORT.md))
 
 > **Pivot estratégico (v3.0):** Plataforma oficial = Odoo 19 EE On-Premise + último paquete portal. Sin perseguir saas-19.3. Prioridad = implementación impecable, no investigación de ramas.
 
@@ -17,7 +17,7 @@
 |------|--------|--------|
 | 1 | Infraestructura | ✅ Completa |
 | 2 | Enterprise | ✅ Completa |
-| 3 | Configuración funcional | 🔄 **Golden Config DEV** — [PHASE3_IMPLEMENTATION_REPORT.md](PHASE3_IMPLEMENTATION_REPORT.md) |
+| 3 | Configuración funcional | ✅ **Golden Config definitiva** — [PHASE35_GOLDEN_CONFIGURATION_REPORT.md](PHASE35_GOLDEN_CONFIGURATION_REPORT.md) |
 | 4 | Localización RD | 🔄 En curso |
 | 5 | Ventas | ⏳ Pendiente |
 | 6 | Compras | ⏳ Pendiente |

@@ -207,6 +207,7 @@ docker compose -f /opt/odoo-projects/hellenia/docker/dev/docker-compose.yml \
 
 ---
 
-**Referencias:** [IMPLEMENTATION_DECISIONS.md](IMPLEMENTATION_DECISIONS.md) · [PROJECT_STRATEGY.md](PROJECT_STRATEGY.md) · [config/company/README.md](../config/company/README.md)
+**Fase 3:** [PHASE3_IMPLEMENTATION_REPORT.md](../../docs/PHASE3_IMPLEMENTATION_REPORT.md)  
+**Fase 3.5 (definitiva):** [PHASE35_GOLDEN_CONFIGURATION_REPORT.md](../../docs/PHASE35_GOLDEN_CONFIGURATION_REPORT.md)
 
-**Detenido** — esperando aprobación para Fase 3.5.
+**Scripts:** `apply-phase35-golden-config.py` · `validate-phase35-golden-config.py`

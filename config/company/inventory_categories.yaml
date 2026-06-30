@@ -1,51 +1,35 @@
-# Golden Configuration — Categorías de producto Hellenia
-# Fase 3 — estructura creada en DEV; sin productos cargados
+# Categorías oficiales inventario — Fase 3.5
+# Jerarquía plana: Inventario → (11 categorías hijas)
 
-schema_version: "1.0"
-root_categories:
-  - Inventario
-  - Servicios
-  - Consumibles
+schema_version: "2.0"
 
-tree:
-  Inventario:
-    Mobiliario:
-      - Mesas
-      - Sillas
-      - Consolas
-      - Bufeteras
-      - Sofás
-      - Dormitorios
-    Decoración:
-      - Espejos
-      - Esculturas
-      - Pinturas
-      - Litografías
-      - Relojes
-    Iluminación:
-      - Lámparas
-      - Candelabros
-    Cristalería: []
-    Plata: []
-    Vajillas: []
-    Tapicería: []
+root: Inventario
 
-  Servicios: {}
+official_children:
+  - Mobiliario
+  - Espejos
+  - Lámparas
+  - Esculturas
+  - Relojería
+  - Pinturas
+  - Dibujos y litografías
+  - Tapisería
+  - Cristalería
+  - Plata
+  - Vajillas
 
-  Consumibles: {}
+product_behavior:
+  description: "Mayoría piezas únicas; algunos productos repetidos (ej. pares)"
+  odoo_recommendation:
+    tracking: "none"  # serial/lot solo si pieza única requiere trazabilidad individual
+    variants: "minimize"  # evitar variantes salvo pares/tallas reales
+    duplicate_skus: "per_piece_or_pair"  # un SKU por pieza o por par según catálogo
+    import_key: "Código"  # ver product_import_template.csv
+  notes:
+    - "No cargar productos en Fase 3.5"
+    - "Preparar importación Excel/CSV"
 
-odoo_defaults_remaining:
-  - Goods
-  - Expenses
-  - Services  # categoría Odoo por defecto — distinta de 'Servicios' golden
-
-inconsistencies:
-  - id: CAT-01
-    detail: "Coexisten categorías Odoo por defecto (Goods, Expenses, Services) y árbol golden."
-    action: "No eliminar defaults (upgrade-safe). Usar árbol Inventario/Servicios/Consumibles para catálogo Hellenia."
-
-  - id: CAT-02
-    detail: "Dos entradas 'Servicios': default Odoo 'Services' vs golden 'Servicios'."
-    action: "Capacitar usuarios — usar 'Servicios' (golden) para operación Hellenia."
-
-total_golden_categories: 23
+legacy_phase3_categories:
+  status: deprecated
+  note: "Subárbol Fase 3 (Decoración, Iluminación, Mesas, etc.) permanece en BD — no usar para catálogo nuevo"
+  action: "Usar solo categorías oficiales bajo Inventario"

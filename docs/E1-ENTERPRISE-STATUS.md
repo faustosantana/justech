@@ -61,7 +61,7 @@ Verificación en vivo (sin cambios, sin rebuild).
 
 | Fase | Estado |
 |------|--------|
-| E1b — Registrar licencia `M260616306091776` | ⏳ Preparado — ver [E1B-LICENSE-CHECKLIST.md](E1B-LICENSE-CHECKLIST.md) |
+| E1b — Registrar licencia | ⏸️ **Diferida** — ver [UNREGISTERED_ENTERPRISE_LIMITATIONS.md](UNREGISTERED_ENTERPRISE_LIMITATIONS.md) |
 | E1c — l10n_do | ⏳ Pendiente |
 | Wizard / usuarios | ⛔ Bloqueado |
 

@@ -1,8 +1,8 @@
 # Preparación localización RD — sin instalar módulos
 
 **Alcance:** Análisis y preparación documental  
-**Estado:** E1c bloqueado — requiere Enterprise + licencia registrada  
-**No ejecutar:** wizard, usuarios, Infile prod, instalación módulos
+**Estado:** E1c preparación — **licencia diferida** (ver [UNREGISTERED_ENTERPRISE_LIMITATIONS.md](UNREGISTERED_ENTERPRISE_LIMITATIONS.md))  
+**No ejecutar:** Infile prod, registro licencia en DEV
 
 ---
 
@@ -23,10 +23,10 @@ Documentación: [Dominican Republic — Odoo 19](https://www.odoo.com/documentat
 
 | # | Requisito | Estado |
 |---|-----------|--------|
-| 1 | E1a — `web_enterprise` instalado | ⏳ Pendiente (portal o Git) |
-| 2 | E1b — Licencia `M260616306091776` registrada en DEV | ⏳ Pendiente |
-| 3 | Código Enterprise en `enterprise/` | ⏳ Pendiente |
-| 4 | Verificar `l10n_do_edi` en rama 19.0 / tarball | ⏳ Tras extract/clone |
+| 1 | E1a — `web_enterprise` instalado | ✅ Completado |
+| 2 | E1b — Licencia `M260616306091776` | ⏸️ **Diferida** — registro en go-live PROD |
+| 3 | Código Enterprise en imagen DEV | ✅ `hellenia-odoo:19-enterprise` |
+| 4 | `l10n_do_edi` en paquete 19.0+e.20260629 | ❌ **Ausente** — ver [UNREGISTERED_ENTERPRISE_LIMITATIONS.md](UNREGISTERED_ENTERPRISE_LIMITATIONS.md) |
 | 5 | Contrato Infile (solo TEST/PROD fiscal) | 📋 Ver [INFILE-REQUIREMENTS.md](INFILE-REQUIREMENTS.md) |
 
 ---
@@ -83,7 +83,7 @@ Script preparado: `validate-enterprise-dev.sh --l10n` (instala y valida — **no
 | Riesgo | Mitigación |
 |--------|------------|
 | `l10n_do_edi` ausente en tarball 19.0 | Verificar tras extract; evaluar parche Odoo 19.3 |
-| Instalar l10n antes de licencia | Seguir orden E1a → E1b → E1c |
+| Instalar l10n antes de licencia | ✅ Permitido en DEV lab — licencia diferida |
 | eNCF en DEV sin neutralizar | Neutralizar o ambiente Demo Infile |
 | Módulos terceros (OCA ncf) | No usar — stack oficial only |
 

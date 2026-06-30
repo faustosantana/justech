@@ -263,3 +263,6 @@ Cuando estés listo, confirma explícitamente:
 > **"Aprobado E1b — registrar licencia en DEV"**
 
 Hasta entonces: **no registrar**, **no reconstruir imagen**, **no tocar TEST/PROD**.
+
+> **Actualización 2026-06-30:** Estrategia revisada — registro **diferido** hasta go-live.  
+> Ver [UNREGISTERED_ENTERPRISE_LIMITATIONS.md](UNREGISTERED_ENTERPRISE_LIMITATIONS.md).

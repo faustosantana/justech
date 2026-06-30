@@ -42,9 +42,9 @@
 - Scripts: `extract-enterprise-full.sh`, `prepare-enterprise-addons.sh`, `build-hellenia-odoo-image.sh`, `e1a-enterprise-image.sh`
 - DEV: `web_enterprise` instalado; TEST/PROD sin cambios
 
-### Added — E1b preparación licencia (2026-06-30)
-- `docs/E1B-LICENSE-CHECKLIST.md` — registro UI, riesgos DEV, política TEST/PROD
-- Sin registro ejecutado; TEST/PROD intactos
+### Added — Estrategia licencia diferida (2026-06-30)
+- `docs/UNREGISTERED_ENTERPRISE_LIMITATIONS.md` — alcance DEV sin registrar M260616306091776
+- Registro reservado para go-live BD definitiva; l10n_do_edi ausente en tarball 19.0+e
 
 ### Added (previo)
 - `docs/ENTERPRISE_ANALYSIS.md` — análisis Enterprise, suscripción M260616306091776, módulos RD, plan DEV propuesto (sin ejecución)

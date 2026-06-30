@@ -95,6 +95,10 @@ def ensure_pricelist(name: str, currency, company):
 def update_company(company) -> None:
     country = env["res.country"].search([("code", "=", COMPANY_COUNTRY_CODE)], limit=1)
     currency = env["res.currency"].search([("name", "=", COMPANY_CURRENCY)], limit=1)
+    if not currency:
+        currency = env["res.currency"].with_context(active_test=False).search(
+            [("name", "=", COMPANY_CURRENCY)], limit=1
+        )
     state = env["res.country.state"].search(
         [("country_id", "=", country.id), ("name", "=", COMPANY_STATE_NAME)], limit=1
     )
@@ -105,21 +109,21 @@ def update_company(company) -> None:
         "street2": COMPANY_STREET2,
         "city": COMPANY_CITY,
         "state_id": state.id if state else False,
-        "country_id": country.id,
+        "country_id": country.id if country else False,
         "phone": COMPANY_PHONE,
         "email": COMPANY_EMAIL,
         "website": COMPANY_WEBSITE,
         "lang": COMPANY_LANG,
         "comment": f"Nombre comercial: {COMPANY_TRADE_NAME}",
     }
-    company.write(
-        {
-            "name": COMPANY_LEGAL_NAME,
-            "currency_id": currency.id,
-            "phone": COMPANY_PHONE,
-            "email": COMPANY_EMAIL,
-        }
-    )
+    company_vals = {
+        "name": COMPANY_LEGAL_NAME,
+        "phone": COMPANY_PHONE,
+        "email": COMPANY_EMAIL,
+    }
+    if currency:
+        company_vals["currency_id"] = currency.id
+    company.write(company_vals)
     company.partner_id.write(partner_vals)
     if hasattr(company, "justech_do_fiscal_enabled"):
         company.write({"justech_do_fiscal_enabled": True})

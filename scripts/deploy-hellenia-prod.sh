@@ -117,11 +117,11 @@ fi
 docker compose --env-file "$ENV_FILE" up -d odoo
 wait_healthy "hellenia-prod-odoo-1" 36 || log "WARN: Odoo aún iniciando"
 
-log "Fase 8 — Golden Configuration (sin datos piloto)..."
-"$SCRIPT_DIR/apply-phase8-parameterization.sh" prod 2>&1 | tee -a "$LOG_FILE"
-
 log "Fase 11 — es_DO + módulos oficiales + Justech..."
 "$SCRIPT_DIR/run-phase11-spanish-config.sh" prod 2>&1 | tee -a "$LOG_FILE"
+
+log "Fase 8 — Golden Configuration (sin datos piloto)..."
+"$SCRIPT_DIR/apply-phase8-parameterization.sh" prod 2>&1 | tee -a "$LOG_FILE"
 
 for mod in justech_l10n_do_base justech_l10n_do_ncf justech_l10n_do_reports; do
   state=$(docker exec hellenia-prod-db-1 psql -U odoo -d "${ODOO_DB_NAME}" -tAc \

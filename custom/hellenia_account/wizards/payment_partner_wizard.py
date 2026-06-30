@@ -1,16 +1,8 @@
-"""Wizard cobro/pago desde Clientes/Proveedores → Pagos."""
+"""Wizard cobro/pago desde Clientes/Proveedores — retenciones por factura."""
 from __future__ import annotations
 
 from odoo import Command, api, fields, models
 from odoo.exceptions import UserError
-
-
-WITHHOLDING_SPECS = (
-    ("wh_isr_gov", "-5% ISR Gov.", "sale", "Gobierno 5%"),
-    ("wh_itbis_30", "-30% ITBIS Leg. (N02-05)", "purchase", "ITBIS retenido 30%"),
-    ("wh_isr_10", "-10% ISR Fee", "purchase", "Proveedor informal 10%"),
-    ("wh_itbis_75", "-75% ITBIS (N08-10)", "purchase", "ITBIS informal 75%"),
-)
 
 
 class HelleniaPaymentPartnerWizardLine(models.TransientModel):
@@ -29,6 +21,29 @@ class HelleniaPaymentPartnerWizardLine(models.TransientModel):
     amount_residual = fields.Monetary(compute="_compute_amount_residual", string="Pendiente")
     amount_to_pay = fields.Monetary(string="Monto a aplicar", currency_field="currency_id")
 
+    withholding_catalog_ids = fields.Many2many(
+        "hellenia.withholding.catalog",
+        "hellenia_payment_wizard_line_wh_rel",
+        "line_id",
+        "catalog_id",
+        string="Retenciones",
+        domain="[('active', '=', True), ('code', '!=', 'wh_none')]",
+    )
+    withholding_summary = fields.Char(
+        string="Resumen retenciones",
+        compute="_compute_withholding_display",
+    )
+    withholding_amount = fields.Monetary(
+        string="Total retenido",
+        compute="_compute_withholding_display",
+        currency_field="currency_id",
+    )
+    withholding_detail_ids = fields.One2many(
+        "hellenia.payment.withholding.line",
+        "wizard_line_id",
+        string="Detalle retenciones",
+    )
+
     @api.depends("move_id")
     def _compute_date_maturity(self):
         for line in self:
@@ -42,11 +57,84 @@ class HelleniaPaymentPartnerWizardLine(models.TransientModel):
         for line in self:
             line.amount_residual = abs(line.move_id.amount_residual)
 
+    @api.depends("withholding_catalog_ids", "withholding_detail_ids.amount", "currency_id")
+    def _compute_withholding_display(self):
+        for line in self:
+            if not line.withholding_catalog_ids:
+                line.withholding_summary = "Ninguna"
+                line.withholding_amount = 0.0
+            else:
+                labels = line.withholding_catalog_ids.mapped("name")
+                line.withholding_summary = ", ".join(labels)
+                line.withholding_amount = sum(line.withholding_detail_ids.mapped("amount"))
+
     @api.onchange("apply", "amount_residual")
     def _onchange_apply(self):
         for line in self:
             if line.apply and not line.amount_to_pay:
                 line.amount_to_pay = line.amount_residual
+
+    @api.onchange("withholding_catalog_ids")
+    def _onchange_withholding_catalog_ids(self):
+        for line in self:
+            line._recompute_line_withholdings()
+
+    def _catalog_domain_partner_type(self):
+        self.ensure_one()
+        return self.wizard_id.partner_type if self.wizard_id else "customer"
+
+    def _recompute_line_withholdings(self):
+        Catalog = self.env["hellenia.withholding.catalog"]
+        for line in self:
+            if not line.move_id:
+                line.withholding_detail_ids = [Command.clear()]
+                continue
+            partner_type = line._catalog_domain_partner_type()
+            details = [Command.clear()]
+            for catalog in line.withholding_catalog_ids:
+                if not catalog._applies_to_move(line.move_id, partner_type):
+                    continue
+                amount = catalog.compute_withholding_amount(line.move_id)
+                if not amount:
+                    continue
+                details.append(
+                    Command.create(
+                        {
+                            "catalog_id": catalog.id,
+                            "tax_id": catalog.tax_id.id,
+                            "label": catalog.name,
+                            "base_amount": catalog._base_amount(line.move_id),
+                            "rate": catalog.rate,
+                            "amount": amount,
+                            "account_id": catalog.account_id.id,
+                            "currency_id": line.currency_id.id,
+                        }
+                    )
+                )
+            line.withholding_detail_ids = details
+
+    def _get_withholding_commands_for_register(self):
+        self.ensure_one()
+        self._recompute_line_withholdings()
+        commands = []
+        for wh in self.withholding_detail_ids:
+            if not wh.amount or not wh.account_id:
+                continue
+            commands.append(
+                Command.create(
+                    {
+                        "catalog_id": wh.catalog_id.id,
+                        "tax_id": wh.tax_id.id,
+                        "label": wh.label,
+                        "base_amount": wh.base_amount,
+                        "rate": wh.rate,
+                        "amount": wh.amount,
+                        "account_id": wh.account_id.id,
+                        "currency_id": wh.currency_id.id,
+                    }
+                )
+            )
+        return commands
 
 
 class HelleniaPaymentWithholdingLine(models.TransientModel):
@@ -54,14 +142,17 @@ class HelleniaPaymentWithholdingLine(models.TransientModel):
     _description = "Detalle retención — wizard pago"
 
     wizard_id = fields.Many2one("hellenia.payment.partner.wizard", ondelete="cascade")
+    wizard_line_id = fields.Many2one("hellenia.payment.partner.wizard.line", ondelete="cascade")
     register_wizard_id = fields.Many2one("account.payment.register", ondelete="cascade")
-    tax_id = fields.Many2one("account.tax", string="Retención")
+    catalog_id = fields.Many2one("hellenia.withholding.catalog", string="Retención")
+    tax_id = fields.Many2one("account.tax", string="Impuesto")
     label = fields.Char(string="Descripción")
     base_amount = fields.Monetary(string="Base", currency_field="currency_id")
     rate = fields.Float(string="Porcentaje")
     amount = fields.Monetary(string="Monto retenido", currency_field="currency_id")
     account_id = fields.Many2one("account.account", string="Cuenta contable")
     currency_id = fields.Many2one("res.currency", string="Moneda")
+    invoice_name = fields.Char(related="wizard_line_id.invoice_name", string="Factura")
 
 
 class HelleniaPaymentPartnerWizard(models.TransientModel):
@@ -85,12 +176,12 @@ class HelleniaPaymentPartnerWizard(models.TransientModel):
     payment_date = fields.Date(default=fields.Date.context_today, string="Fecha de pago")
     communication = fields.Char(string="Concepto de pago")
 
-    wh_isr_gov = fields.Boolean(string="Retención 5% Gobierno")
-    wh_itbis_30 = fields.Boolean(string="Retención ITBIS 30%")
-    wh_isr_10 = fields.Boolean(string="Retención proveedor informal 10%")
-    wh_itbis_75 = fields.Boolean(string="Retención ITBIS informal 75%")
-
-    withholding_line_ids = fields.One2many("hellenia.payment.withholding.line", "wizard_id", string="Detalle retenciones")
+    withholding_line_ids = fields.One2many(
+        "hellenia.payment.withholding.line",
+        "wizard_id",
+        string="Detalle retenciones",
+        compute="_compute_withholding_lines",
+    )
     withholding_total = fields.Monetary(compute="_compute_totals", string="Total retenido", currency_field="currency_id")
     payment_total = fields.Monetary(compute="_compute_totals", string="Total a pagar/cobrar", currency_field="currency_id")
     amount_after_withholding = fields.Monetary(
@@ -105,8 +196,6 @@ class HelleniaPaymentPartnerWizard(models.TransientModel):
     hellenia_check_date = fields.Date(string="Fecha del cheque")
     hellenia_show_card_fields = fields.Boolean(compute="_compute_method_flags")
     hellenia_show_check_fields = fields.Boolean(compute="_compute_method_flags")
-    hellenia_show_customer_withholdings = fields.Boolean(compute="_compute_withholding_visibility")
-    hellenia_show_supplier_withholdings = fields.Boolean(compute="_compute_withholding_visibility")
 
     @api.model
     def default_get(self, fields_list):
@@ -134,14 +223,12 @@ class HelleniaPaymentPartnerWizard(models.TransientModel):
         for wiz in wizards:
             if wiz.partner_id:
                 wiz._load_pending_invoices()
-                wiz._recompute_withholdings()
         return wizards
 
-    @api.depends("partner_type")
-    def _compute_withholding_visibility(self):
+    @api.depends("line_ids.withholding_detail_ids")
+    def _compute_withholding_lines(self):
         for wiz in self:
-            wiz.hellenia_show_customer_withholdings = wiz.partner_type == "customer"
-            wiz.hellenia_show_supplier_withholdings = wiz.partner_type == "supplier"
+            wiz.withholding_line_ids = wiz.line_ids.mapped("withholding_detail_ids")
 
     @api.depends("payment_method_line_id.name")
     def _compute_method_flags(self):
@@ -150,12 +237,12 @@ class HelleniaPaymentPartnerWizard(models.TransientModel):
             wiz.hellenia_show_card_fields = "tarjeta" in name
             wiz.hellenia_show_check_fields = "cheque" in name
 
-    @api.depends("line_ids.amount_to_pay", "line_ids.apply", "withholding_line_ids.amount")
+    @api.depends("line_ids.amount_to_pay", "line_ids.apply", "line_ids.withholding_amount")
     def _compute_totals(self):
         for wiz in self:
             selected = wiz.line_ids.filtered("apply")
             wiz.payment_total = sum(selected.mapped("amount_to_pay"))
-            wiz.withholding_total = sum(wiz.withholding_line_ids.mapped("amount"))
+            wiz.withholding_total = sum(selected.mapped("withholding_amount"))
             wiz.amount_after_withholding = wiz.payment_total - wiz.withholding_total
 
     def _move_types(self):
@@ -163,6 +250,16 @@ class HelleniaPaymentPartnerWizard(models.TransientModel):
         if self.partner_type == "customer":
             return ("out_invoice", "out_refund")
         return ("in_invoice", "in_refund")
+
+    def _withholding_domain(self):
+        self.ensure_one()
+        scope = "customer" if self.partner_type == "customer" else "supplier"
+        return [
+            ("active", "=", True),
+            ("code", "!=", "wh_none"),
+            ("partner_scope", "in", [scope, "both"]),
+            ("company_id", "=", self.env.company.id),
+        ]
 
     def _load_pending_invoices(self):
         self.ensure_one()
@@ -197,11 +294,6 @@ class HelleniaPaymentPartnerWizard(models.TransientModel):
     @api.onchange("partner_id", "partner_type", "currency_id")
     def _onchange_partner_load_invoices(self):
         self._load_pending_invoices()
-        self._recompute_withholdings()
-
-    @api.onchange("wh_isr_gov", "wh_itbis_30", "wh_isr_10", "wh_itbis_75", "line_ids")
-    def _onchange_withholdings(self):
-        self._recompute_withholdings()
 
     @api.onchange("payment_method_line_id")
     def _onchange_payment_method_journal(self):
@@ -241,53 +333,6 @@ class HelleniaPaymentPartnerWizard(models.TransientModel):
             transfer = lines.filtered(lambda l: "transferencia" in (l.name or "").lower())[:1]
             self.payment_method_line_id = transfer or lines[:1]
 
-    def _get_tax(self, name, tax_use):
-        return self.env["account.tax"].search(
-            [("name", "=", name), ("type_tax_use", "=", tax_use), ("company_id", "=", self.env.company.id)],
-            limit=1,
-        )
-
-    def _recompute_withholdings(self):
-        for wiz in self:
-            wh_lines = [Command.clear()]
-            selected_moves = wiz.line_ids.filtered("apply").mapped("move_id")
-            flags = {
-                "wh_isr_gov": wiz.wh_isr_gov,
-                "wh_itbis_30": wiz.wh_itbis_30,
-                "wh_isr_10": wiz.wh_isr_10,
-                "wh_itbis_75": wiz.wh_itbis_75,
-            }
-            for field_name, tax_name, tax_use, label in WITHHOLDING_SPECS:
-                if not flags.get(field_name):
-                    continue
-                tax = wiz._get_tax(tax_name, tax_use)
-                if not tax:
-                    continue
-                for move in selected_moves:
-                    if tax_use == "sale" and move.move_type not in ("out_invoice", "out_refund"):
-                        continue
-                    if tax_use == "purchase" and move.move_type not in ("in_invoice", "in_refund"):
-                        continue
-                    base = move.amount_untaxed
-                    amount = abs(tax.amount / 100.0 * base) if tax.amount_type == "percent" else 0.0
-                    account = tax.invoice_repartition_line_ids.filtered(
-                        lambda l: l.repartition_type == "tax"
-                    )[:1].account_id
-                    wh_lines.append(
-                        Command.create(
-                            {
-                                "tax_id": tax.id,
-                                "label": label,
-                                "base_amount": base,
-                                "rate": tax.amount,
-                                "amount": amount,
-                                "account_id": account.id if account else False,
-                                "currency_id": wiz.currency_id.id,
-                            }
-                        )
-                    )
-            wiz.withholding_line_ids = wh_lines
-
     def action_register_payments(self):
         self.ensure_one()
         selected = self.line_ids.filtered(lambda l: l.apply and l.amount_to_pay > 0)
@@ -301,6 +346,13 @@ class HelleniaPaymentPartnerWizard(models.TransientModel):
         payments = self.env["account.payment"]
         for line in selected:
             move = line.move_id
+            wh_commands = line._get_withholding_commands_for_register()
+            line._recompute_line_withholdings()
+            wh_total = sum(line.withholding_detail_ids.mapped("amount"))
+            if wh_total and line.amount_to_pay < wh_total:
+                raise UserError(
+                    f"La factura {move.name}: el monto retenido ({wh_total:.2f}) supera el monto a aplicar."
+                )
             register = (
                 self.env["account.payment.register"]
                 .with_context(active_model="account.move", active_ids=move.ids, dont_redirect_to_payments=True)
@@ -317,10 +369,7 @@ class HelleniaPaymentPartnerWizard(models.TransientModel):
                         "hellenia_check_number": self.hellenia_check_number,
                         "hellenia_check_bank_id": self.hellenia_check_bank_id.id,
                         "hellenia_check_date": self.hellenia_check_date,
-                        "hellenia_wh_isr_gov": self.wh_isr_gov,
-                        "hellenia_wh_itbis_30": self.wh_itbis_30,
-                        "hellenia_wh_isr_10": self.wh_isr_10,
-                        "hellenia_wh_itbis_75": self.wh_itbis_75,
+                        "hellenia_withholding_line_ids": wh_commands,
                     }
                 )
             )

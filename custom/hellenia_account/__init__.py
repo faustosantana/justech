@@ -9,3 +9,4 @@ def post_init_hook(env):
     setup = env["hellenia.account.payment.setup"]
     setup.configure_banks_and_payments()
     setup.configure_withholding_reference()
+    env["hellenia.withholding.catalog"].sync_catalog_from_taxes()

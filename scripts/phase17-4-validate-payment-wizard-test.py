@@ -171,21 +171,37 @@ try:
 except Exception as exc:  # noqa: BLE001
     fail("vendor_pending_bills", str(exc))
 
-# --- Retenciones múltiples ---
+# --- Retenciones por factura ---
 try:
     with env.cr.savepoint():
+        bill = env["account.move"].create({
+            "move_type": "in_invoice",
+            "partner_id": vendor.id,
+            "invoice_date": date.today(),
+            "invoice_line_ids": [Command.create({
+                "product_id": product.id, "quantity": 1, "price_unit": 1000,
+                "tax_ids": [Command.set(tax_purchase.ids)] if tax_purchase else [],
+            })],
+        })
+        bill.action_post()
         wiz = env["hellenia.payment.partner.wizard"].create({
             "partner_type": "supplier",
             "partner_id": vendor.id,
             "journal_id": bnkd.id,
-            "wh_itbis_30": True,
-            "wh_isr_10": True,
         })
-        wiz._recompute_withholdings()
-        if len(wiz.withholding_line_ids) >= 1:
-            pass_("withholdings_section", f"count={len(wiz.withholding_line_ids)}")
+        line = wiz.line_ids.filtered(lambda l: l.move_id == bill)[:1]
+        cats = env["hellenia.withholding.catalog"].search([
+            ("code", "in", ["wh_itbis_30", "wh_isr_10"]), ("active", "=", True)
+        ], limit=2)
+        if line and cats:
+            line.withholding_catalog_ids = [Command.set(cats.ids)]
+            line._recompute_line_withholdings()
+            if line.withholding_detail_ids:
+                pass_("withholdings_section", f"count={len(line.withholding_detail_ids)}")
+            else:
+                fail("withholdings_section", "sin detalle")
         else:
-            fail("withholdings_section", "sin líneas retención")
+            fail("withholdings_section", "sin línea o catálogo")
 except Exception as exc:  # noqa: BLE001
     fail("withholdings_section", str(exc))
 

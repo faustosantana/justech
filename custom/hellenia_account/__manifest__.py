@@ -1,6 +1,6 @@
 {
     "name": "Hellenia Account",
-    "version": "19.0.1.0.4",
+    "version": "19.0.1.0.5",
     "category": "Accounting/Accounting",
     "summary": "Bancos, métodos de pago y cobros/pagos Hellenia",
     "description": """
@@ -23,6 +23,7 @@ Extensiones contables Hellenia (upgrade-safe):
     "data": [
         "security/ir.model.access.csv",
         "data/payment_setup.xml",
+        "views/hellenia_withholding_catalog_views.xml",
         "views/account_payment_register_views.xml",
         "views/payment_partner_wizard_views.xml",
     ],

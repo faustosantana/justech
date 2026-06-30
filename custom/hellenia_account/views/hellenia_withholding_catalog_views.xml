@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_hellenia_withholding_catalog_tree" model="ir.ui.view">
+        <field name="name">hellenia.withholding.catalog.tree</field>
+        <field name="model">hellenia.withholding.catalog</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="rate"/>
+                <field name="base_type"/>
+                <field name="partner_scope"/>
+                <field name="move_scope"/>
+                <field name="tax_id"/>
+                <field name="account_id"/>
+                <field name="affects_606"/>
+                <field name="affects_607"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_hellenia_withholding_catalog_form" model="ir.ui.view">
+        <field name="name">hellenia.withholding.catalog.form</field>
+        <field name="model">hellenia.withholding.catalog</field>
+        <field name="arch" type="xml">
+            <form string="Retención">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="code"/>
+                            <field name="active"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="tax_id"/>
+                            <field name="rate"/>
+                            <field name="base_type"/>
+                        </group>
+                        <group>
+                            <field name="withholding_type"/>
+                            <field name="partner_scope"/>
+                            <field name="move_scope"/>
+                            <field name="account_id"/>
+                            <field name="affects_606"/>
+                            <field name="affects_607"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="notes"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_hellenia_withholding_catalog" model="ir.actions.act_window">
+        <field name="name">Catálogo de retenciones</field>
+        <field name="res_model">hellenia.withholding.catalog</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="menu_hellenia_withholding_catalog"
+              name="Catálogo de retenciones"
+              parent="account.menu_finance_configuration"
+              action="action_hellenia_withholding_catalog"
+              sequence="45"
+              groups="account.group_account_manager"/>
+</odoo>

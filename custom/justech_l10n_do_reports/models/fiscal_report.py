@@ -8,45 +8,74 @@ from odoo import _, api, fields, models
 
 class JustechDoFiscalReport(models.Model):
     _name = "justech.do.fiscal.report"
-    _description = "Dominican DGII Fiscal Report Run"
+    _description = "Ejecución de reporte fiscal DGII"
     _order = "date_from desc, id desc"
 
-    name = fields.Char(required=True)
+    name = fields.Char(string="Nombre", required=True)
     report_type = fields.Selection(
         selection=[
-            ("606", "606 — Purchases"),
-            ("607", "607 — Sales"),
-            ("608", "608 — Voided NCF"),
+            ("606", "606 — Compras"),
+            ("607", "607 — Ventas"),
+            ("608", "608 — NCF anulados"),
         ],
+        string="Tipo de reporte",
         required=True,
     )
     company_id = fields.Many2one(
         "res.company",
+        string="Compañía",
         required=True,
         default=lambda self: self.env.company,
     )
-    date_from = fields.Date(required=True)
-    date_to = fields.Date(required=True)
+    date_from = fields.Date(string="Desde", required=True)
+    date_to = fields.Date(string="Hasta", required=True)
     state = fields.Selection(
         selection=[
-            ("draft", "Draft"),
-            ("done", "Done"),
+            ("draft", "Borrador"),
+            ("done", "Generado"),
         ],
+        string="Estado",
         default="draft",
     )
+    generated_at = fields.Datetime(string="Fecha de generación", readonly=True)
+    generated_by_id = fields.Many2one("res.users", string="Generado por", readonly=True)
     line_ids = fields.One2many(
         "justech.do.fiscal.report.line",
         "report_id",
-        string="Lines",
+        string="Líneas",
     )
-    line_count = fields.Integer(compute="_compute_line_count")
-    export_file = fields.Binary(attachment=True)
-    export_filename = fields.Char()
+    line_count = fields.Integer(string="Cantidad de líneas", compute="_compute_totals")
+    total_untaxed = fields.Float(
+        string="Subtotal gravado",
+        compute="_compute_totals",
+        digits=(16, 2),
+    )
+    total_tax = fields.Float(string="Total ITBIS", compute="_compute_totals", digits=(16, 2))
+    total_amount = fields.Float(string="Total general", compute="_compute_totals", digits=(16, 2))
+    export_file = fields.Binary(string="Archivo exportado", attachment=True)
+    export_filename = fields.Char(string="Nombre de archivo")
 
-    @api.depends("line_ids")
-    def _compute_line_count(self):
+    @api.depends("line_ids", "line_ids.amount_untaxed", "line_ids.amount_tax", "line_ids.amount_total")
+    def _compute_totals(self):
         for rec in self:
             rec.line_count = len(rec.line_ids)
+            rec.total_untaxed = sum(rec.line_ids.mapped("amount_untaxed"))
+            rec.total_tax = sum(rec.line_ids.mapped("amount_tax"))
+            rec.total_amount = sum(rec.line_ids.mapped("amount_total"))
+
+    def _is_itbis_tax_line(self, line):
+        tax = line.tax_line_id
+        if not tax:
+            return False
+        name = (tax.name or "").upper()
+        return "ITBIS" in name or (tax.amount in (18.0, 16.0, 9.0, 8.0) and tax.type_tax_use in ("sale", "purchase"))
+
+    def _move_itbis_amount(self, move):
+        return abs(
+            sum(
+                move.line_ids.filtered(self._is_itbis_tax_line).mapped("balance")
+            )
+        )
 
     def action_generate(self):
         for report in self:
@@ -56,6 +85,8 @@ class JustechDoFiscalReport(models.Model):
                 {
                     "line_ids": [(0, 0, line) for line in lines],
                     "state": "done",
+                    "generated_at": fields.Datetime.now(),
+                    "generated_by_id": self.env.user.id,
                 }
             )
         return True
@@ -85,11 +116,7 @@ class JustechDoFiscalReport(models.Model):
         )
         lines = []
         for move in moves:
-            itbis = sum(
-                move.line_ids.filtered(
-                    lambda l: l.tax_line_id and "ITBIS" in (l.tax_line_id.name or "").upper()
-                ).mapped("balance")
-            )
+            itbis = self._move_itbis_amount(move)
             lines.append(
                 {
                     "partner_vat": move.partner_id.vat or "",
@@ -97,7 +124,7 @@ class JustechDoFiscalReport(models.Model):
                     "ncf": move.justech_do_ncf or move.ref or "",
                     "document_date": move.invoice_date,
                     "amount_untaxed": abs(move.amount_untaxed_signed),
-                    "amount_tax": abs(itbis),
+                    "amount_tax": itbis,
                     "amount_total": abs(move.amount_total_signed),
                     "move_id": move.id,
                 }
@@ -116,11 +143,7 @@ class JustechDoFiscalReport(models.Model):
         for move in moves:
             if not move.justech_do_ncf:
                 continue
-            itbis = sum(
-                move.line_ids.filtered(
-                    lambda l: l.tax_line_id and "ITBIS" in (l.tax_line_id.name or "").upper()
-                ).mapped("balance")
-            )
+            itbis = self._move_itbis_amount(move)
             lines.append(
                 {
                     "partner_vat": move.partner_id.vat or "",
@@ -129,7 +152,7 @@ class JustechDoFiscalReport(models.Model):
                     "document_type": move.justech_do_document_type_id.prefix or "",
                     "document_date": move.invoice_date,
                     "amount_untaxed": abs(move.amount_untaxed_signed),
-                    "amount_tax": abs(itbis),
+                    "amount_tax": itbis,
                     "amount_total": abs(move.amount_total_signed),
                     "move_id": move.id,
                 }
@@ -167,6 +190,15 @@ class JustechDoFiscalReport(models.Model):
                 "amount_tax",
                 "amount_total",
             ]
+            headers = {
+                "partner_vat": "RNC",
+                "partner_name": "Proveedor",
+                "ncf": "NCF",
+                "document_date": "Fecha",
+                "amount_untaxed": "Monto gravado",
+                "amount_tax": "ITBIS",
+                "amount_total": "Total",
+            }
         elif self.report_type == "607":
             fields_list = [
                 "partner_vat",
@@ -178,6 +210,16 @@ class JustechDoFiscalReport(models.Model):
                 "amount_tax",
                 "amount_total",
             ]
+            headers = {
+                "partner_vat": "RNC",
+                "partner_name": "Cliente",
+                "ncf": "NCF",
+                "document_type": "Tipo",
+                "document_date": "Fecha",
+                "amount_untaxed": "Monto gravado",
+                "amount_tax": "ITBIS",
+                "amount_total": "Total",
+            }
         else:
             fields_list = [
                 "ncf",
@@ -186,10 +228,27 @@ class JustechDoFiscalReport(models.Model):
                 "document_date",
                 "notes",
             ]
-        writer = csv.DictWriter(output, fieldnames=fields_list, extrasaction="ignore")
+            headers = {
+                "ncf": "NCF",
+                "partner_vat": "RNC",
+                "partner_name": "Contacto",
+                "document_date": "Fecha anulación",
+                "notes": "Motivo",
+            }
+        writer = csv.DictWriter(
+            output,
+            fieldnames=[headers[f] for f in fields_list],
+            extrasaction="ignore",
+        )
         writer.writeheader()
         for line in self.line_ids:
-            writer.writerow({f: line[f] for f in fields_list if f in line._fields})
+            row = {}
+            for field_name in fields_list:
+                val = line[field_name]
+                if isinstance(val, date):
+                    val = val.isoformat()
+                row[headers[field_name]] = val or ""
+            writer.writerow(row)
         content = output.getvalue().encode("utf-8")
         filename = f"DGII_{self.report_type}_{self.date_from}_{self.date_to}.csv"
         self.write(
@@ -213,14 +272,15 @@ class JustechDoFiscalReport(models.Model):
         output = io.BytesIO()
         workbook = xlsxwriter.Workbook(output, {"in_memory": True})
         sheet = workbook.add_worksheet(self.report_type)
+        title_fmt = workbook.add_format({"bold": True})
         if self.report_type == "607":
             headers = [
                 "RNC",
-                "Customer",
+                "Cliente",
                 "NCF",
-                "Type",
-                "Date",
-                "Untaxed",
+                "Tipo",
+                "Fecha",
+                "Monto gravado",
                 "ITBIS",
                 "Total",
             ]
@@ -235,7 +295,7 @@ class JustechDoFiscalReport(models.Model):
                 "amount_total",
             ]
         elif self.report_type == "606":
-            headers = ["RNC", "Vendor", "NCF", "Date", "Untaxed", "ITBIS", "Total"]
+            headers = ["RNC", "Proveedor", "NCF", "Fecha", "Monto gravado", "ITBIS", "Total"]
             row_fields = [
                 "partner_vat",
                 "partner_name",
@@ -246,7 +306,7 @@ class JustechDoFiscalReport(models.Model):
                 "amount_total",
             ]
         else:
-            headers = ["NCF", "RNC", "Partner", "Void Date", "Reason"]
+            headers = ["NCF", "RNC", "Contacto", "Fecha anulación", "Motivo"]
             row_fields = [
                 "ncf",
                 "partner_vat",
@@ -254,9 +314,25 @@ class JustechDoFiscalReport(models.Model):
                 "document_date",
                 "notes",
             ]
+        meta = [
+            (_("Compañía"), self.company_id.name),
+            (_("Período"), f"{self.date_from} — {self.date_to}"),
+            (_("Generado"), self.generated_at and self.generated_at.strftime("%Y-%m-%d %H:%M") or ""),
+            (_("Usuario"), self.generated_by_id.name or ""),
+            (_("Líneas"), self.line_count),
+            (_("Subtotal gravado"), self.total_untaxed),
+            (_("Total ITBIS"), self.total_tax),
+            (_("Total general"), self.total_amount),
+        ]
+        row = 0
+        for label, value in meta:
+            sheet.write(row, 0, label, title_fmt)
+            sheet.write(row, 1, value)
+            row += 1
+        row += 1
         for col, header in enumerate(headers):
-            sheet.write(0, col, header)
-        for row_idx, line in enumerate(self.line_ids, start=1):
+            sheet.write(row, col, header, title_fmt)
+        for row_idx, line in enumerate(self.line_ids, start=row + 1):
             for col_idx, field_name in enumerate(row_fields):
                 val = line[field_name]
                 if isinstance(val, date):
@@ -280,20 +356,21 @@ class JustechDoFiscalReport(models.Model):
 
 class JustechDoFiscalReportLine(models.Model):
     _name = "justech.do.fiscal.report.line"
-    _description = "Dominican DGII Fiscal Report Line"
+    _description = "Línea de reporte fiscal DGII"
 
     report_id = fields.Many2one(
         "justech.do.fiscal.report",
+        string="Reporte",
         required=True,
         ondelete="cascade",
     )
     partner_vat = fields.Char(string="RNC")
-    partner_name = fields.Char()
-    ncf = fields.Char()
-    document_type = fields.Char()
-    document_date = fields.Date()
-    amount_untaxed = fields.Float(digits=(16, 2))
-    amount_tax = fields.Float(digits=(16, 2))
-    amount_total = fields.Float(digits=(16, 2))
-    notes = fields.Text()
-    move_id = fields.Many2one("account.move")
+    partner_name = fields.Char(string="Nombre")
+    ncf = fields.Char(string="NCF")
+    document_type = fields.Char(string="Tipo documento")
+    document_date = fields.Date(string="Fecha")
+    amount_untaxed = fields.Float(string="Monto gravado", digits=(16, 2))
+    amount_tax = fields.Float(string="ITBIS", digits=(16, 2))
+    amount_total = fields.Float(string="Total", digits=(16, 2))
+    notes = fields.Text(string="Notas")
+    move_id = fields.Many2one("account.move", string="Asiento")

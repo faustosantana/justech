@@ -7,9 +7,13 @@
             <list>
                 <field name="name"/>
                 <field name="report_type"/>
+                <field name="company_id" groups="base.group_multi_company"/>
                 <field name="date_from"/>
                 <field name="date_to"/>
                 <field name="line_count"/>
+                <field name="total_amount"/>
+                <field name="generated_at"/>
+                <field name="generated_by_id"/>
                 <field name="state"/>
             </list>
         </field>
@@ -20,24 +24,36 @@
         <field name="arch" type="xml">
             <form>
                 <header>
-                    <button name="action_generate" string="Regenerate" type="object"
+                    <button name="action_generate" string="Regenerar" type="object"
                             invisible="state != 'done'"/>
-                    <button name="action_export_csv" string="Export CSV" type="object"
+                    <button name="action_export_csv" string="Exportar CSV" type="object"
                             invisible="state != 'done'"/>
-                    <button name="action_export_xlsx" string="Export Excel" type="object"
+                    <button name="action_export_xlsx" string="Exportar Excel" type="object"
                             invisible="state != 'done'"/>
-                    <field name="state" widget="statusbar"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,done"/>
                 </header>
                 <sheet>
                     <group>
-                        <field name="name"/>
-                        <field name="report_type"/>
-                        <field name="date_from"/>
-                        <field name="date_to"/>
+                        <group>
+                            <field name="name"/>
+                            <field name="report_type"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group>
+                            <field name="date_from"/>
+                            <field name="date_to"/>
+                            <field name="generated_at"/>
+                            <field name="generated_by_id"/>
+                        </group>
+                    </group>
+                    <group string="Totales del período">
                         <field name="line_count"/>
+                        <field name="total_untaxed"/>
+                        <field name="total_tax"/>
+                        <field name="total_amount"/>
                     </group>
                     <notebook>
-                        <page string="Lines">
+                        <page string="Líneas">
                             <field name="line_ids">
                                 <list>
                                     <field name="partner_vat"/>
@@ -58,7 +74,7 @@
         </field>
     </record>
     <record id="action_justech_do_fiscal_report" model="ir.actions.act_window">
-        <field name="name">DGII Reports</field>
+        <field name="name">Historial de reportes DGII</field>
         <field name="res_model">justech.do.fiscal.report</field>
         <field name="view_mode">list,form</field>
     </record>

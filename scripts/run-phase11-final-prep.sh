@@ -11,10 +11,20 @@ PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
 hellenia_log "========== FASE 11 — PREPARACIÓN OPERATIVA FINAL =========="
 hellenia_log "Reglas: NO Go-Live, NO PROD, NO DNS, NO datos reales"
 
-hellenia_log "=== 1/2 Auditoría integral repositorio ==="
+hellenia_log "=== 1/4 Configuración es_DO + módulos oficiales DEV ==="
+if [[ -x "${SCRIPT_DIR}/run-phase11-spanish-config.sh" ]]; then
+  "${SCRIPT_DIR}/run-phase11-spanish-config.sh" dev || hellenia_log "WARN: DEV con observaciones"
+fi
+
+hellenia_log "=== 2/4 Configuración es_DO + módulos oficiales TEST ==="
+if [[ -x "${SCRIPT_DIR}/run-phase11-spanish-config.sh" ]]; then
+  "${SCRIPT_DIR}/run-phase11-spanish-config.sh" test || hellenia_log "WARN: TEST con observaciones"
+fi
+
+hellenia_log "=== 3/4 Auditoría integral repositorio ==="
 "${SCRIPT_DIR}/audit-phase11-final-review.sh"
 
-hellenia_log "=== 2/2 Validación documentación Fase 11 ==="
+hellenia_log "=== 4/4 Validación documentación Fase 11 ==="
 REQUIRED_DOCS=(
   FINAL_PROJECT_AUDIT.md
   FINAL_CODE_REVIEW.md

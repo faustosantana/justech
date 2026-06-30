@@ -6,7 +6,64 @@
 **Fase:** 11 — Preparación operativa final (pre Go-Live)  
 **Alcance:** Revisión integral read-only — **sin modificaciones**
 
-**Evidencia:** `evidence/phase11-project-audit.json`
+**Evidencia:** `evidence/phase11-project-audit.json`, `evidence/phase11-spanish-dev.json`, `evidence/phase11-spanish-test.json`
+
+---
+
+## 0. Configuración obligatoria — Español (es_DO) y módulos oficiales
+
+**Ejecutado en DEV y TEST** (`scripts/run-phase11-spanish-config.sh`) — **sin tocar producción**.
+
+### 0.1 Idioma principal
+
+| Verificación | DEV | TEST |
+|--------------|:---:|:----:|
+| `es_DO` activo | ✅ | ✅ |
+| Idioma compañía | `es_DO` | `es_DO` |
+| Usuarios internos `es_DO` | 2/2 | 2/2 |
+| Parámetros idioma por defecto | ✅ | ✅ |
+| Traducciones módulos clave recargadas | 17 módulos | 17 módulos |
+
+### 0.2 Módulos oficiales Hellenia
+
+| Módulo | Estado DEV/TEST | Notas |
+|--------|-----------------|-------|
+| `account` | ✅ installed | Contabilidad |
+| `account_accountant` | ✅ | EE |
+| `account_reports` | ✅ | Informes contables |
+| `spreadsheet_dashboard_account` | ✅ | Tablero contable |
+| `sale` | ✅ | Ventas (cotización → pedido) |
+| `contacts` | ✅ | Contactos |
+| `purchase` | ✅ | Compras |
+| `stock` | ✅ | Inventario |
+| `l10n_do` | ✅ | Localización RD estándar |
+| `crm` | ❌ **no instalado** | **Por diseño** — flujo Hellenia sin pipeline CRM |
+
+**Módulos excluidos (verificados no instalados):** POS, eCommerce, MRP, Rental, Subscription, Helpdesk, Project, Field Service — ✅
+
+**Integridad Justech post-configuración:** `validate-phase6-mvp.sh test` → **ok: true**
+
+### 0.3 Menús Justech traducidos (es_DO)
+
+| Original | Español |
+|----------|---------|
+| Dominican Fiscal | Fiscal Dominicano |
+| Document Types | Tipos de documento |
+| NCF Ranges | Rangos NCF |
+| NCF Consumption | Consumo NCF |
+| DGII Reports | Reportes DGII |
+| Generate Report | Generar reporte |
+| Report History | Historial de reportes |
+
+### 0.4 Elementos que permanecen en inglés (documentados)
+
+| Categoría | Cantidad | Impacto usuario final |
+|-----------|:--------:|----------------------|
+| Menús técnicos Ajustes (`Settings/Technical/*`) | ~32 | **Bajo** — solo administradores |
+| Plazos de pago estándar Odoo (`Immediate Payment`, `15 Days`, etc.) | Varios | **Medio** — coexisten con plazos Fase 8 en español |
+| Código fuente XML menús Justech (base EN) | 7 | **Nulo** — UI muestra español vía traducción |
+
+**Clasificación idioma:** **PASS CON OBSERVACIONES** — operación diaria (ventas, compras, inventario, contabilidad, fiscal) en español; menús técnicos admin en inglés aceptable para `it@justech.do`.
 
 ---
 

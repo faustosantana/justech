@@ -23,7 +23,7 @@
 ║  Escalabilidad:             B-  (72/100)                         ║
 ║  Mantenibilidad:            B+  (80/100)                         ║
 ║  Upgrade-safe:              B   (75/100)                         ║
-║  Experiencia de usuario:    B   (80/100)                         ║
+║  Experiencia de usuario:    B+  (84/100) — es_DO operativo       ║
 ║  Documentación:             A-  (90/100)                         ║
 ║  Preparación Go-Live:       B+  (86/100)                         ║
 ║  Preparación comercial:     C+  (72/100)                         ║
@@ -39,6 +39,7 @@
 
 | Bloque | Descripción | Estado |
 |--------|-------------|--------|
+| 0 | Español es_DO + módulos oficiales | **PASS CON OBSERVACIONES** |
 | 1 | Revisión integral proyecto | PASS CON OBSERVACIONES |
 | 2 | Auditoría calidad código | PASS CON OBSERVACIONES |
 | 3 | Auditoría funcional | PASS CON OBSERVACIONES |
@@ -83,7 +84,8 @@
 | Monitoreo | PASS CON OBS | Estrategia doc; alertas no impl. |
 | Rollback | **PASS** | Plan completo |
 | Migración | PASS CON OBS | Diseñada; no ejecutada |
-| Documental | **PASS** | 10 docs Fase 11 + histórico fases |
+| Preparación idioma es_DO | **PASS CON OBS** | DEV+TEST configurados; menús técnicos admin EN |
+| Módulos oficiales Hellenia | **PASS** | Todos instalados; CRM excluido por diseño |
 | Deuda técnica código | PASS CON OBS | P0=0; P1 no bloquean |
 
 ---
@@ -135,10 +137,22 @@
 
 | # | Pendiente |
 |---|-----------|
-| 15 | i18n es_DO |
+| 15 | Renombrar plazos de pago estándar EN (opcional) |
 | 16 | Export TXT DGII oficial (v1.1) |
 | 17 | Monitoreo alertas automatizado |
 | 18 | Consolidar documentación duplicada |
+| 19 | `es_DO.po` en código fuente custom (menús ya traducidos en BD) |
+
+### Preparación usuario final (post Go-Live inmediato)
+
+| Elemento | Estado |
+|----------|--------|
+| Idioma `es_DO` por defecto | ✅ Configurado (script re-ejecutable en prod) |
+| Módulos operativos | ✅ |
+| Menús fiscal Justech en español | ✅ |
+| Localización Justech intacta | ✅ `PHASE6_MVP ok` |
+| Usuarios funcionales Hellenia | ❌ P0 — crear en Go-Live |
+| Catálogo maestro real | ❌ P0 — importar en Go-Live |
 
 ---
 
@@ -157,10 +171,11 @@
 | [PRODUCT_ROADMAP.md](PRODUCT_ROADMAP.md) | 8 |
 | [GO_LIVE_FINAL_CERTIFICATION.md](GO_LIVE_FINAL_CERTIFICATION.md) | 10 |
 
-**Evidencia:** `evidence/phase11-project-audit.json`
+**Evidencia:** `evidence/phase11-project-audit.json`, `evidence/phase11-spanish-dev.json`, `evidence/phase11-spanish-test.json`
 
 ```bash
 ./scripts/run-phase11-final-prep.sh
+./scripts/run-phase11-spanish-config.sh dev   # o test
 ```
 
 ---
@@ -179,6 +194,7 @@
 | `odoo-pecv` NO tocado | ✅ |
 | Nuevas funcionalidades NO desarrolladas | ✅ |
 | Usuarios funcionales adicionales NO creados | ✅ |
+| Configuración es_DO DEV/TEST | ✅ |
 
 ---
 

@@ -88,6 +88,8 @@ cat > "$OUT" <<EOF
     "docs_referencing_legacy_phase5_gaps": ${LEGACY_DOCS}
   },
   "evidence_references": [
+    "evidence/phase11-spanish-dev.json",
+    "evidence/phase11-spanish-test.json",
     "evidence/uat-functional.json",
     "evidence/uat-stress.json",
     "evidence/uat-audit.json",

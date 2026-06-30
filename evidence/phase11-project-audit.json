@@ -1,6 +1,6 @@
 {
   "phase": 11,
-  "timestamp_utc": "2026-06-30T14:34:12Z",
+  "timestamp_utc": "2026-06-30T14:43:23Z",
   "scope": "read-only repository audit",
   "restrictions": {
     "go_live_executed": false,
@@ -13,7 +13,7 @@
     "mvp_python_loc_tests": 532,
     "skeleton_python_loc": 210,
     "documentation_files": 116,
-    "shell_scripts": 51,
+    "shell_scripts": 52,
     "custom_modules_mvp": 3,
     "custom_modules_skeleton": 6
   },
@@ -28,6 +28,8 @@
     "docs_referencing_legacy_phase5_gaps": 38
   },
   "evidence_references": [
+    "evidence/phase11-spanish-dev.json",
+    "evidence/phase11-spanish-test.json",
     "evidence/uat-functional.json",
     "evidence/uat-stress.json",
     "evidence/uat-audit.json",

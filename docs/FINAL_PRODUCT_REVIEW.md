@@ -22,10 +22,11 @@
 
 | Elemento | Evaluación | Mejora futura |
 |----------|------------|---------------|
-| Menú raíz "Dominican Fiscal" bajo Contabilidad → Configuración | ✅ Lógico | Traducir a español |
-| "DGII Reports" bajo Informes | ✅ | Agrupar con menú fiscal |
+| Menú raíz "Fiscal Dominicano" bajo Contabilidad → Configuración | ✅ Traducido Fase 11 | — |
+| "Reportes DGII" bajo Informes | ✅ Traducido Fase 11 | — |
+| Apps operativas (Ventas, Compras, Inventario, Contabilidad) | ✅ es_DO | — |
+| Menús Ajustes → Técnico (admin) | ⚠️ Rutas EN en `complete_name` | Solo afecta TI |
 | Acceso por grupo Fiscal User | ✅ | Crear rol operativo Hellenia |
-| Profundidad clics (rango → activar) | 3-4 clics | Wizard onboarding |
 
 ### 2.2 Formularios
 
@@ -71,13 +72,13 @@
 |---------|--------|
 | Iconografía Odoo estándar | ✅ |
 | Colores / branding Justech | ❌ Sin personalización Apps |
-| Idioma interfaz | ⚠️ Mix EN/ES |
+| Idioma interfaz | ✅ **es_DO** configurado DEV/TEST (Fase 11) |
 
 ### 2.7 Mejoras UX identificadas (no implementar)
 
 | ID | Mejora | Versión |
 |----|--------|---------|
-| UX-01 | i18n completo `es_DO.po` | v1.1 |
+| UX-01 | i18n completo `es_DO.po` en código fuente custom | v1.1 |
 | UX-02 | Dashboard fiscal (rangos por vencer) | v1.1 |
 | UX-03 | Alerta rango < N días | v1.1 |
 | UX-04 | Tooltip void NCF vs cancelar | v1.0.1 |

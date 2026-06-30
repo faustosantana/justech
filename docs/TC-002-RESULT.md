@@ -122,7 +122,13 @@ Criterio acordado con el cliente:
 | Tipos documento fiscal presentes | ❌ |
 | Secuencias NCF presentes | ❌ |
 
-**G-01 → CONFIRMADA** en [GAP_ANALYSIS_RD.md](GAP_ANALYSIS_RD.md).
+**G-01 → PENDIENTE DECISIÓN FINAL** — evidencia TC-002 en build `19.0-20260619` sugiere brecha, pero **no se confirma para custom ni go-live** hasta:
+
+1. Verificación manual en portal Odoo (¿existe tarball > `20260629`?)
+2. Upgrade DEV al último tarball disponible
+3. Repetir TC-001 y TC-002 desde cero
+
+Ver [ENTERPRISE-UPGRADE-DEV.md](ENTERPRISE-UPGRADE-DEV.md) y [GAP_ANALYSIS_RD.md](GAP_ANALYSIS_RD.md) (G-01 provisional).
 
 **G-02 → Reforzada** — ausencia total de modelos `l10n_latam*` tras TC-002.
 
@@ -144,4 +150,4 @@ TC-002 cumplió el objetivo de configurar la empresa dominicana de pruebas y re-
 
 **Implicación:** Desarrollo custom en `hellenia_account` (o evaluación upgrade 19.3+) requerido para NCF operativo. TC-020 (asignación NCF en factura) sigue siendo prueba crítica de desempate operativo.
 
-**Estado:** TC-002 completado. **Detenido — TC-003 bloqueado** hasta upgrade Enterprise DEV. Ver [ENTERPRISE-UPGRADE-DEV.md](ENTERPRISE-UPGRADE-DEV.md).
+**Estado:** TC-002 completado. **Detenido** — verificación portal pendiente; G-01 sin decisión final. Ver [ENTERPRISE-UPGRADE-DEV.md](ENTERPRISE-UPGRADE-DEV.md).

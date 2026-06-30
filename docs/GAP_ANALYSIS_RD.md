@@ -5,7 +5,7 @@
 **Alcance:** Etapa 1 — NCF tradicional (`l10n_do` + `l10n_do_reports`)  
 **Fecha:** 2026-06-30  
 **Versión:** 1.0  
-**Estado:** **Ejecución 2026-06-30 — G-00 y G-09 confirmados en TC-000; G-01 confirmada en TC-002; G-02 reforzada; resto POR VALIDAR**
+**Estado:** **Ejecución 2026-06-30 — G-00 y G-09 confirmados en TC-000; G-01 pendiente decisión final (upgrade portal pendiente); G-02 reforzada; resto POR VALIDAR**
 
 ---
 
@@ -24,8 +24,8 @@ Este documento consolida **hipótesis de brechas** entre lo que Odoo oficial dec
 | 1 | Revisión documentación oficial Odoo (19.0, saas-19.3) | ✅ Documental |
 | 2 | Revisión manifest/código `l10n_do` en imagen DEV | ✅ Documental |
 | 3 | Ejecución plan de pruebas TC-000–TC-030 | ⏸️ **Pendiente** |
-| 4 | Actualización brechas con evidencia | ⏸️ **Pendiente** |
-| 5 | Decisión custom vs. estándar | ⏸️ **Pendiente** |
+| 4 | Actualización brechas con evidencia | ⏸️ **Pendiente** — tras upgrade DEV a último tarball portal |
+| 5 | Decisión custom vs. estándar | ⏸️ **Pendiente** — **no desarrollar custom** hasta cerrar G-01 post-upgrade |
 
 **Plan de pruebas vinculado:** [L10N_DO_TEST_PLAN.md](L10N_DO_TEST_PLAN.md)
 
@@ -94,7 +94,7 @@ Estos ítems están **fuera del stack** `l10n_do` + `l10n_do_reports` por diseñ
 |----|-------------------|---------------------|-----|-----------|---------|---------------|---------------|
 | G-00 | Backup DEV no ejecutable sin SSH VPS | TC-000 SSH denegado desde Cloud Agent | TC-000 | 🔴 P0 | Bloqueante ejecución | — | Infra / credenciales |
 | G-09 | BD DEV sin módulo `account` instalado | TC-000 baseline XML-RPC | TC-000 | ✅ Resuelto | — | — | TC-001 instaló `account` |
-| G-01 | **Secuencias NCF y tipos documento fiscal no disponibles en estándar** | TC-002 + [L10N_DO_ARCHITECTURE_ANALYSIS.md](L10N_DO_ARCHITECTURE_ANALYSIS.md): `l10n_do` 19.0 sin datos LATAM; docs saas-19.3 solo eNCF E31–E34 | TC-002, TC-020 | 🔴 P0 | Bloqueante go-live NCF | 5–15 días | `hellenia_account` |
+| G-01 | **Secuencias NCF y tipos documento fiscal no disponibles en estándar** | TC-002 en build `20260619` sin documentos fiscales; **pendiente revalidación** tras upgrade a último tarball portal (`20260629` o posterior) — ver [ENTERPRISE-UPGRADE-DEV.md](ENTERPRISE-UPGRADE-DEV.md) | TC-002, TC-020 | 🔴 P0 | Bloqueante go-live NCF | 5–15 días | `hellenia_account` (solo si confirmada post-upgrade) |
 | G-02 | Framework documentos LATAM ausente/incompleto en 19.0 | TC-002: 0 modelos `l10n_latam*` tras empresa DO y plan `do` cargado | TC-002, TC-014, TC-017 | 🔴 P0 | Alto — sin tipos documento ni NCF | 3–10 días | `hellenia_account` |
 | G-03 | Tipos NCF B14, B15, B16 no precargados | No declarados explícitamente en manifest 19.0 | TC-017 | 🟠 P1 | Medio — depende operación Hellenia | 2–5 días | `hellenia_account` |
 | G-04 | Reportes 606/607/608/IT-1 incompletos o ausentes | Doc Odoo no lista explícitamente; foro sin confirmación | TC-031 | 🔴 P0 | Bloqueante declaraciones DGII | 5–20 días | `hellenia_reports` |
@@ -125,12 +125,15 @@ Estimaciones orientativas para desarrollo custom con `_inherit` (sin modificar `
 
 ## 4. Matriz de decisión custom vs. estándar
 
+> **Gate actual (2026-06-30):** No iniciar desarrollo custom. G-01 permanece **pendiente de decisión final** hasta: (1) verificación manual portal Odoo, (2) upgrade DEV al último tarball, (3) repetir TC-001/TC-002.
+
 | Escenario post-pruebas | Decisión |
 |------------------------|----------|
 | TC-020 PASS — NCF asigna sin terceros | G-01 **cerrada** — usar estándar |
 | TC-020 FAIL — NCF no asigna | G-01 **confirmada** — evaluar custom `hellenia_account` |
-| TC-002 sin documentos fiscales tras empresa DO | G-01 **confirmada** — evaluar custom `hellenia_account` |
-| TC-002 con documentos fiscales presentes | G-01 **refutada parcialmente** — continuar TC-017/TC-020 |
+| TC-002 sin documentos fiscales tras empresa DO **en último tarball portal** | G-01 **confirmada** — evaluar custom `hellenia_account` |
+| TC-002 sin documentos fiscales **solo en build antiguo** (`20260619`) | G-01 **provisional** — revalidar tras upgrade antes de custom |
+| TC-002 con documentos fiscales presentes post-upgrade | G-01 **refutada parcialmente** — continuar TC-017/TC-020 |
 | TC-030 PASS — reportes 606/607/608/IT-1 completos | Usar estándar; G-04 **cerrada** |
 | TC-031 FAIL — reportes ausentes/incompletos | G-04 **confirmada** — `hellenia_reports` |
 | TC-014 FAIL — Use Documents no disponible | G-02 **confirmada** — investigar upgrade 19.3 o custom |
@@ -174,7 +177,7 @@ Estimaciones orientativas para desarrollo custom con `_inherit` (sin modificar `
 | Secuencias B01, B02, B03, B04 | Declaradas manifest | POR VALIDAR operativas | TC-017, TC-020 |
 | Rangos con vencimiento DGII | Doc saas-19.3 | POR VALIDAR en 19.0 | TC-018, TC-021 |
 | NC referencia NCF origen | Doc saas-19.3 | POR VALIDAR | TC-025 |
-| Advertencia manifest terceros | Texto en manifest 19.0 | **G-01** — **CONFIRMADA** (TC-002: sin documentos fiscales ni NCF tras empresa DO) | TC-002, TC-020 |
+| Advertencia manifest terceros | Texto en manifest 19.0 | **G-01** — **PENDIENTE DECISIÓN FINAL** (TC-002 en `20260619`; revalidar post-upgrade portal) | TC-002, TC-020 |
 
 ### 5.5 Facturación y compras
 

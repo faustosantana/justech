@@ -50,8 +50,65 @@ Actualizar DEV a la **última versión Enterprise 19.0** disponible desde el por
 | Acción | Estado |
 |--------|--------|
 | TC-003 y posteriores | ⛔ **DETENIDOS** |
-| Upgrade DEV a último tarball | ⏸️ Pendiente aprobación / nuevo paquete |
+| `--execute` upgrade DEV | ⛔ **NO EJECUTAR** — pendiente verificación manual portal |
+| Desarrollo custom (`hellenia_account`, etc.) | ⛔ **NO INICIAR** — pendiente decisión final G-01 |
 | TEST / PROD | 🔒 Sin cambios |
+
+### Secuencia obligatoria (orden actual)
+
+```
+1. Verificación manual portal Odoo     ← ESTAMOS AQUÍ
+2. Si no hay tarball > 20260629:
+     aceptar 20260629 como último on-premise
+3. upgrade-enterprise-dev.sh --execute  (solo tras paso 2)
+4. Repetir TC-001 y TC-002 desde cero
+5. Reevaluar G-01 con evidencia post-upgrade
+6. Solo entonces: TC-003+
+```
+
+---
+
+## Paso 0 — Verificación manual en portal Odoo (pendiente)
+
+**Objetivo:** Confirmar si existe un paquete Enterprise **más reciente** que:
+
+```
+odoo_19.0+e.20260629.tar.gz
+```
+
+### Instrucciones para el usuario
+
+1. Login en [odoo.com](https://www.odoo.com) (suscripción `M260616306091776`)
+2. Ir a [odoo.com/page/download](https://www.odoo.com/page/download)
+3. Seleccionar **Odoo 19** → **Enterprise** → fila **Sources** → **Download**
+4. Anotar el **nombre exacto** del archivo (formato `odoo_19.0+e.YYYYMMDD.tar.gz`)
+5. Comparar `YYYYMMDD` con `20260629`
+
+| Resultado portal | Acción |
+|------------------|--------|
+| **Mismo** `20260629` o nombre idéntico | ✅ `20260629` es el último disponible → aprobar `--execute` con ese tarball |
+| **Fecha mayor** que `20260629` (ej. `20260715`) | Subir nuevo tarball al VPS → `--validate-only` → luego `--execute` |
+| **Duda** sobre el nombre | Adjuntar captura o pegar nombre en chat para validación |
+
+> **No ejecutar `--execute`** hasta completar esta verificación y confirmar explícitamente en chat.
+
+### Si `20260629` es el último
+
+Mensaje de aprobación esperado (ejemplo):
+
+> *Confirmado en portal: no hay paquete más reciente que 20260629. Proceder con upgrade DEV.*
+
+Entonces Cursor ejecutará:
+
+```bash
+export HELLENIA_APPROVE_ENTERPRISE_EXECUTE=yes
+/opt/odoo-projects/hellenia/scripts/upgrade-enterprise-dev.sh --execute \
+  /opt/odoo-projects/hellenia/downloads/enterprise/odoo_19.0+e.20260629.tar.gz
+```
+
+> `--execute` está **bloqueado por defecto** hasta definir `HELLENIA_APPROVE_ENTERPRISE_EXECUTE=yes` tras tu confirmación explícita en chat.
+
+Seguido de `--rerun-tc001-tc002` con backup pre-localización.
 
 ---
 
@@ -178,4 +235,4 @@ Ver [E0.6c-ENTERPRISE-DELIVERY-FLOW.md](E0.6c-ENTERPRISE-DELIVERY-FLOW.md).
 ---
 
 **Mantenido por:** Consultoría implementación Justech  
-**Próximo paso:** Subir tarball más reciente del portal (si existe) o aprobar despliegue de `20260629`
+**Próximo paso:** **Verificación manual en portal Odoo** — comparar con `odoo_19.0+e.20260629.tar.gz`. No ejecutar `--execute` hasta confirmar.

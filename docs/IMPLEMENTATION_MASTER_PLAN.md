@@ -5,7 +5,7 @@
 **Ambiente de trabajo:** `hellenia_dev` (DEV laboratorio)  
 **Fecha:** 2026-06-30  
 **Versión:** 2.0  
-**Estado:** Fase funcional — TC-000/001/002 ejecutados; **TC-003 bloqueado** hasta upgrade Enterprise DEV ([ENTERPRISE-UPGRADE-DEV.md](ENTERPRISE-UPGRADE-DEV.md))
+**Estado:** Fase funcional — TC-000/001/002 en build `20260619`; **TC-003 bloqueado**; **sin `--execute`** hasta verificación portal; G-01 pendiente decisión final ([ENTERPRISE-UPGRADE-DEV.md](ENTERPRISE-UPGRADE-DEV.md))
 
 ---
 

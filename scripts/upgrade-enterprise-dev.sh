@@ -179,6 +179,14 @@ rerun_tc001_tc002() {
 
 execute_upgrade() {
   local archive="$1"
+
+  if [[ "${HELLENIA_APPROVE_ENTERPRISE_EXECUTE:-}" != "yes" ]]; then
+    hellenia_log "ERROR: --execute bloqueado — requiere verificación portal y aprobación explícita"
+    hellenia_log "Definir: export HELLENIA_APPROVE_ENTERPRISE_EXECUTE=yes"
+    hellenia_log "Ver docs/ENTERPRISE-UPGRADE-DEV.md (Paso 0 — verificación manual portal)"
+    exit 1
+  fi
+
   validate_archive_rd "$archive"
 
   hellenia_log "=== EJECUCIÓN UPGRADE DEV (aprobación explícita) ===" | tee -a "$LOG_FILE"

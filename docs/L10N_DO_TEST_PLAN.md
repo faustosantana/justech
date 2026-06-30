@@ -6,8 +6,8 @@
 **Stack fiscal Etapa 1:** `l10n_do` + `l10n_do_reports` (sin `l10n_do_edi`)  
 **Fecha:** 2026-06-30  
 **Versión:** 1.0  
-**Estado:** **DETENIDO** — TC-001/TC-002 ejecutados; **TC-003 bloqueado** hasta upgrade Enterprise DEV  
-**Gate:** Ver [ENTERPRISE-UPGRADE-DEV.md](ENTERPRISE-UPGRADE-DEV.md)
+**Estado:** **DETENIDO** — TC-001/TC-002 ejecutados en build `20260619`; **TC-003 bloqueado**  
+**Gates:** Verificación portal → upgrade DEV → re-TC-001/002 → [ENTERPRISE-UPGRADE-DEV.md](ENTERPRISE-UPGRADE-DEV.md)
 
 ---
 
@@ -1011,4 +1011,4 @@ Si **TC-020 FAIL**, escalar a [GAP_ANALYSIS_RD.md](GAP_ANALYSIS_RD.md) — brech
 
 **Versión:** 1.0  
 **Mantenido por:** Consultoría implementación Justech  
-**Próximo paso:** Upgrade Enterprise DEV — ver [ENTERPRISE-UPGRADE-DEV.md](ENTERPRISE-UPGRADE-DEV.md). TC-003 bloqueado hasta completar upgrade.
+**Próximo paso:** Usuario verifica manualmente portal Odoo vs `odoo_19.0+e.20260629.tar.gz`. Sin `--execute` hasta confirmar. G-01 pendiente decisión final.

@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+### Changed — Gate portal + G-01 provisional (2026-06-30)
+- `--execute` requiere `HELLENIA_APPROVE_ENTERPRISE_EXECUTE=yes` (evita ejecución accidental)
+- G-01: pendiente decisión final hasta verificación portal + upgrade DEV + re-TC-001/002
+- Sin desarrollo custom hasta cerrar G-01 post-upgrade
+
 ### Added — Upgrade Enterprise DEV + gate TC-003 (2026-06-30)
 - `docs/ENTERPRISE-UPGRADE-DEV.md` — pipeline upgrade DEV, estado tarball `20260629` vs imagen `20260619`
 - `scripts/upgrade-enterprise-dev.sh` — orquestador: `--status`, `--validate-only`, `--execute`, `--rerun-tc001-tc002`

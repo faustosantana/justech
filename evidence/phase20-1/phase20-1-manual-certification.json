@@ -1,0 +1,148 @@
+{
+  "phase": "20.1",
+  "type": "manual_ui_certification",
+  "timestamp_utc": "2026-06-30T22:45:07.644767+00:00",
+  "environment": "TEST — https://test.hellenia.cloud",
+  "database": "hellenia_test",
+  "users": {
+    "fiscal": "usuario.contabilidad.demo15",
+    "supervisor": "it@justech.do"
+  },
+  "steps": {
+    "step_01": {
+      "title": "Generar reporte 606 desde interfaz",
+      "ok": true,
+      "detail": "Wizard abierto",
+      "screenshot": "evidence/phase20-1/screenshots/01-generar-606.png"
+    },
+    "step_02": {
+      "title": "Período YYYYMM → 01/06/2026 — 30/06/2026",
+      "ok": true,
+      "detail": "Database neutralized for testing: no emails sent, etc.\nContabilidad\nTablero\nReview\nClientes\nProveedores\nAsientos contables\nApuntes contables\nReportes\nAuditoría\n",
+      "screenshot": "evidence/phase20-1/screenshots/02-periodo-fechas.png"
+    },
+    "step_03": {
+      "title": "Contadores wizard coherentes",
+      "ok": true,
+      "detail": "total=148 valid=37",
+      "screenshot": "evidence/phase20-1/screenshots/03-contadores-wizard.png"
+    },
+    "step_04": {
+      "title": "Acciones línea en revisión fiscal",
+      "ok": false,
+      "detail": "factura: ok; proveedor: no visible; pago: no visible; pdf: no visible",
+      "screenshot": "evidence/phase20-1/screenshots/05-acciones-linea.png"
+    },
+    "step_05": {
+      "title": "Contadores coinciden con documentos",
+      "ok": true,
+      "detail": "review=148",
+      "screenshot": "evidence/phase20-1/screenshots/04-revision-fiscal.png"
+    },
+    "step_06": {
+      "title": "Excluir documento — cambia estado",
+      "ok": false,
+      "detail": "Database neutralized for testing: no emails sent, etc.\nContabilidad\nTablero\nReview\nClientes\nProveedores\nAsientos contables\nApuntes contables\nReportes\nAuditoría\n3\nHellenia, S.R.L.\nNew\n606 — Compras 202",
+      "screenshot": "evidence/phase20-1/screenshots/06-exclusion.png"
+    },
+    "step_07": {
+      "title": "Enviar a aprobación",
+      "ok": false,
+      "detail": "Database neutralized for testing: no emails sent, etc.\nContabilidad\nTablero\nReview\nClientes\nProveedores\nAsientos contables\nApuntes contables\nReportes\nAuditoría\n",
+      "screenshot": "evidence/phase20-1/screenshots/07-envio-aprobacion.png"
+    },
+    "step_08": {
+      "title": "Ingreso supervisor",
+      "ok": true,
+      "detail": "it@justech.do",
+      "screenshot": "evidence/phase20-1/screenshots/08-login-supervisor.png"
+    },
+    "step_09": {
+      "title": "Aparece en Pendientes de aprobación",
+      "ok": false,
+      "detail": "Database neutralized for testing: no emails sent, etc.\nContabilidad\nTablero\nClientes\nProveedores\nReportes\nAuditoría\nConfiguración\n2\nHellenia, S.R.L.\nPendientes de aprobación\n\nNo existen documentos pendientes de aprobació",
+      "screenshot": "evidence/phase20-1/screenshots/09-pendientes-aprobacion.png"
+    },
+    "step_14": {
+      "title": "Asistente bloqueo Excel antes de aprobar",
+      "ok": false,
+      "detail": "Database neutralized for testing: no emails sent, etc.\nContabilidad\nTablero\nClientes\nProveedores\nReportes\nAuditoría\nConfiguración\n2\nHellenia, S.R.L.\nPendientes de aprobación\n\nNo existen documentos pendientes de aprobación.\n\nCuando un usuari",
+      "screenshot": "evidence/phase20-1/screenshots/14-asistente-bloqueo.png"
+    },
+    "step_10": {
+      "title": "Aprobar exclusión",
+      "ok": true,
+      "detail": "Database neutralized for testing: no emails sent, etc.\nContabilidad\nTablero\nClientes\nProveedores\nReportes\nAuditoría\nConfiguración\n2\nHellenia, S.R.L.\nPendientes ",
+      "screenshot": "evidence/phase20-1/screenshots/10-aprobacion-linea.png"
+    },
+    "step_11": {
+      "title": "Rechazar exclusión — control UI",
+      "ok": true,
+      "detail": "Evaluado en bandeja",
+      "screenshot": "evidence/phase20-1/screenshots/09-detalle-bandeja.png"
+    },
+    "step_12": {
+      "title": "Solicitar corrección — control UI",
+      "ok": true,
+      "detail": "Evaluado en bandeja",
+      "screenshot": "evidence/phase20-1/screenshots/09-detalle-bandeja.png"
+    },
+    "step_13": {
+      "title": "Bitácora y chatter registran eventos",
+      "ok": false,
+      "detail": "Database neutralized for testing: no emails sent, etc.\nContabilidad\nTablero\nClientes\nProveedores\nReportes\nAuditoría\nConfiguración\n2\nHellenia, S.R.L.\nPendientes de aprobación\n\nNo existen documentos pendientes de aprobación.\n\nCuando un usuario fiscal envíe exclu",
+      "screenshot": "evidence/phase20-1/screenshots/13-bitacora-chatter.png"
+    },
+    "step_15": {
+      "title": "Aprobar completamente el reporte",
+      "ok": false,
+      "detail": "Database neutralized for testing: no emails sent, etc.\nContabilidad\nTablero\nClientes\nProveedores\nReportes\nAuditoría\nConfiguración\n2\nHellenia, S.R.L.\nPendientes ",
+      "screenshot": "evidence/phase20-1/screenshots/15-aprobacion-completa.png"
+    },
+    "step_16": {
+      "title": "Generar Excel DGII",
+      "ok": false,
+      "detail": "Database neutralized for testing: no emails sent, etc.\nContabilidad\nTablero\nClientes\nProveedores\nReportes\nAuditoría\nConfiguración\n2\nHellenia, S.R.L.\nPendientes de aprobación\n\nNo ex",
+      "screenshot": "evidence/phase20-1/screenshots/16-excel-generado.png"
+    },
+    "step_17": {
+      "title": "Sale de Pendientes de aprobación",
+      "ok": true,
+      "detail": "Database neutralized for testing: no emails sent, etc.\nContabilidad\nTablero\nClientes\nProveedores\nReportes\nAuditoría\nConfiguración\n2\nHellenia, S.R.L.\nPendientes ",
+      "screenshot": "evidence/phase20-1/screenshots/17-pendientes-vacio.png"
+    },
+    "step_18": {
+      "title": "Aparece en Historial fiscal",
+      "ok": true,
+      "detail": "Database neutralized for testing: no emails sent, etc.\nContabilidad\nTablero\nClientes\nProveedores\nReportes\nAuditoría\nConfiguración\n2\nHellenia, S.R.L.\nNuevo\nHisto",
+      "screenshot": "evidence/phase20-1/screenshots/18-historial-fiscal.png"
+    },
+    "step_19": {
+      "title": "Excel generado — hash/archivo registrado",
+      "ok": true,
+      "detail": "Database neutralized for testing: no emails sent, etc.\nContabilidad\nTablero\nClientes\nProveedores\nReportes\nAuditoría\nConfiguración\n2\nHellenia, S.R.L.\nNuevo\nRevisión fiscal\n606 — Com",
+      "screenshot": "evidence/phase20-1/screenshots/19-reporte-generado-hash.png"
+    },
+    "step_20": {
+      "title": "Interfaz en español",
+      "ok": true,
+      "detail": "EN=ninguno",
+      "screenshot": "evidence/phase20-1/screenshots/20-interfaz-espanol.png"
+    }
+  },
+  "errors_found": [
+    "Paso 4: Acciones línea en revisión fiscal — factura: ok; proveedor: no visible; pago: no visible; pdf: no visible",
+    "Paso 6: Excluir documento — cambia estado — Database neutralized for testing: no emails sent, etc.\nContabilidad\nTablero\nReview\nClientes\nProveedores\nAsientos contables\nApuntes contables\nReportes\nAuditoría\n3\nHellenia, S.R.L.\nNew\n606 — Compras 202",
+    "Paso 7: Enviar a aprobación — Database neutralized for testing: no emails sent, etc.\nContabilidad\nTablero\nReview\nClientes\nProveedores\nAsientos contables\nApuntes contables\nReportes\nAuditoría\n",
+    "Paso 9: Aparece en Pendientes de aprobación — Database neutralized for testing: no emails sent, etc.\nContabilidad\nTablero\nClientes\nProveedores\nReportes\nAuditoría\nConfiguración\n2\nHellenia, S.R.L.\nPendientes de aprobación\n\nNo existen documentos pendientes de aprobació",
+    "Paso 14: Asistente bloqueo Excel antes de aprobar — Database neutralized for testing: no emails sent, etc.\nContabilidad\nTablero\nClientes\nProveedores\nReportes\nAuditoría\nConfiguración\n2\nHellenia, S.R.L.\nPendientes de aprobación\n\nNo existen documentos pendientes de aprobación.\n\nCuando un usuari",
+    "Paso 13: Bitácora y chatter registran eventos — Database neutralized for testing: no emails sent, etc.\nContabilidad\nTablero\nClientes\nProveedores\nReportes\nAuditoría\nConfiguración\n2\nHellenia, S.R.L.\nPendientes de aprobación\n\nNo existen documentos pendientes de aprobación.\n\nCuando un usuario fiscal envíe exclu",
+    "Paso 15: Aprobar completamente el reporte — Database neutralized for testing: no emails sent, etc.\nContabilidad\nTablero\nClientes\nProveedores\nReportes\nAuditoría\nConfiguración\n2\nHellenia, S.R.L.\nPendientes ",
+    "Paso 16: Generar Excel DGII — Database neutralized for testing: no emails sent, etc.\nContabilidad\nTablero\nClientes\nProveedores\nReportes\nAuditoría\nConfiguración\n2\nHellenia, S.R.L.\nPendientes de aprobación\n\nNo ex"
+  ],
+  "corrections_applied": [],
+  "ok": false,
+  "passed": 13,
+  "total": 20,
+  "pass": false
+}

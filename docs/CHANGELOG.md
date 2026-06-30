@@ -36,9 +36,15 @@
 - `scripts/e1a-portal-pipeline.sh` — `--validate-only` / `--execute`
 - Verificación VPS: Enterprise requiere sesión; no hay URL wget permanente
 
-### Pending (E1a-revised — portal)
-- Usuario: entregar URL temporal o archivo adjunto a Cursor
-- Aprobación explícita: `e1a-portal-pipeline.sh --execute` en DEV
+### Added — E1a Enterprise image DEV (2026-06-30)
+- Imagen `hellenia-odoo:19-enterprise` (Enterprise + custom horneados, sin volumen)
+- `docker/dev/Dockerfile.enterprise`, `docker-compose.community.yml` (rollback)
+- Scripts: `extract-enterprise-full.sh`, `prepare-enterprise-addons.sh`, `build-hellenia-odoo-image.sh`, `e1a-enterprise-image.sh`
+- DEV: `web_enterprise` instalado; TEST/PROD sin cambios
+
+### Pending
+- E1b: registrar licencia suscripción
+- E1c: l10n_do
 
 ### Added (previo)
 - `docs/ENTERPRISE_ANALYSIS.md` — análisis Enterprise, suscripción M260616306091776, módulos RD, plan DEV propuesto (sin ejecución)

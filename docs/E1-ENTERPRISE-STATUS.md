@@ -1,64 +1,66 @@
 # Estado Fase E1 — Enterprise DEV
 
 **Fecha:** 2026-06-30  
-**Estrategia:** **Portal Odoo (descarga oficial)** como vía principal; GitHub en paralelo  
-**E1a:** ⏳ Pendiente — entrega archivo/URL a Cursor + aprobación explícita
+**E1a:** ✅ **Completado** — imagen `hellenia-odoo:19-enterprise` en DEV  
+**Estrategia:** Enterprise + custom horneados en imagen Docker (sin volumen)
 
 ---
 
-## Cambio de estrategia (2026-06-30)
+## Resultado E1a (2026-06-30)
 
-| Vía | Estado |
-|-----|--------|
-| GitHub `odoo/enterprise` | ❌ `faustosantana` sin acceso repo (SSH OK) |
-| **Portal Odoo Sources** | ✅ **Preparado** — ver [E0.6b](E0.6b-ENTERPRISE-PORTAL-DOWNLOAD.md) |
-| **Entrega semi-automática** | ✅ [E0.6c](E0.6c-ENTERPRISE-DELIVERY-FLOW.md) |
-| Comparativa completa | [ENTERPRISE_ACCESS_OPTIONS.md](ENTERPRISE_ACCESS_OPTIONS.md) |
-
-**No bloquear proyecto** esperando GitHub.
-
----
-
-## Verificación VPS — descarga automática
-
-| Resultado | Detalle |
-|-----------|---------|
-| ❌ URL Enterprise permanente | Requiere sesión odoo.com — no hay wget público |
-| ✅ Semi-automático | URL temporal del navegador → `download-enterprise-portal.sh` |
-| ✅ Sin SCP usuario | Archivo adjunto → `receive-enterprise-archive.sh` |
+| Item | Valor |
+|------|-------|
+| Archivo fuente | `odoo_19.0+e.20260629.tar.gz` |
+| SHA256 | `667ad231f9b9800ed2f06029d9c5c639af53c3255f94cca2e5643ee7502eb924` |
+| Imagen DEV | `hellenia-odoo:19-enterprise` (~5.16 GB) |
+| Base image | `odoo:19.0-20260619` |
+| Extracción | `/opt/odoo-projects/hellenia/enterprise/odoo-19.0+e.20260629/` |
+| Addons Enterprise | `/opt/odoo-projects/hellenia/enterprise/addons/` |
+| `web_enterprise` | ✅ instalado en BD |
+| Backup pre-E1a | `backups/dev/2026-06-30_0222` |
+| URL DEV | https://dev.hellenia.cloud — HTTP 200 |
+| Versión Odoo DEV | `19.0+e-20260619` (serie 19.0) |
 
 ---
 
-## Completado (sin código Enterprise)
+## Validaciones ejecutadas
 
-| Área | Estado |
+| Check | Resultado |
+|-------|-----------|
+| Integridad tarball | ✅ |
+| Docker DEV | ✅ `hellenia-dev-odoo-1` healthy |
+| PostgreSQL DEV | ✅ |
+| HTTPS / Traefik | ✅ |
+| `web_enterprise` en imagen + BD | ✅ |
+| Sin volumen `/mnt/enterprise` | ✅ |
+| l10n_do / l10n_do_edi | ✅ no instalados |
+| Licencia registrada | ⛔ no (por diseño) |
+| Wizard / usuarios | ⛔ no |
+| TEST | ✅ Community `odoo:19.0-20260619` sin cambios |
+| PROD | ✅ Odoo 18 intacta |
+
+---
+
+## Pendiente (fases posteriores)
+
+| Fase | Estado |
 |------|--------|
-| Arquitectura congelada | ✅ |
-| Validación exhaustiva Python + bash | ✅ `validate_enterprise_archive.py` |
-| Scripts: `download-enterprise-portal.sh`, `receive-enterprise-archive.sh`, `e1a-portal-pipeline.sh` | ✅ |
-| Scripts: `extract-enterprise-portal.sh`, `validate-enterprise-archive.sh` | ✅ |
-| `downloads/enterprise/` staging | ✅ |
-| Documentación acceso + entrega | ✅ |
-| l10n RD análisis | ✅ [L10N-RD-READINESS.md](L10N-RD-READINESS.md) |
-| DEV Community | ✅ Operativo |
-| TEST / PROD | ✅ Sin tocar |
+| E1b — Registrar licencia `M260616306091776` | ⏳ Pendiente aprobación |
+| E1c — l10n_do | ⏳ Pendiente |
+| Wizard / usuarios | ⛔ Bloqueado |
 
 ---
 
-## Próximo paso (usuario)
+## Rollback
 
-1. **Usuario:** Verificar Download en [odoo.com/page/download](https://www.odoo.com/page/download) (Enterprise Sources 19)
-2. **Usuario:** Entregar **URL temporal** o **archivo adjunto** a Cursor ([E0.6c](E0.6c-ENTERPRISE-DELIVERY-FLOW.md)) — **sin tocar VPS**
-3. **Cursor:** `e1a-portal-pipeline.sh --validate-only`
-4. **Usuario:** *"Aprobado E1a portal"* cuando quiera instalar en DEV
-5. **Cursor:** `e1a-portal-pipeline.sh --execute`
+Si se requiere revertir E1a en DEV:
 
----
+```bash
+/opt/odoo-projects/hellenia/scripts/restore-dev.sh \
+  /opt/odoo-projects/hellenia/backups/dev/2026-06-30_0222
+cp docker/dev/docker-compose.community.yml docker/dev/docker-compose.yml
+cp config/dev/odoo.conf.community config/dev/odoo.conf
+cd docker/dev && docker compose --env-file ../../config/dev/.env up -d --force-recreate odoo
+```
 
-## No ejecutado
-
-- ⛔ Extract tarball / `web_enterprise`
-- ⛔ E1b licencia
-- ⛔ E1c l10n
-- ⛔ Wizard / usuarios
-- ⛔ Producción
+Ver [ROLLBACK.md](ROLLBACK.md).

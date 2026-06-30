@@ -139,11 +139,11 @@ class JustechDoNcfRange(models.Model):
         ]
         ranges = self.search(domain, order="date_to")
         if journal:
-            journal_ranges = ranges.filtered(
-                lambda r: not r.journal_ids or journal in r.journal_ids
-            )
-            if journal_ranges:
-                ranges = journal_ranges
+            specific = ranges.filtered(lambda r: journal in r.journal_ids)
+            if specific:
+                ranges = specific
+            else:
+                ranges = ranges.filtered(lambda r: not r.journal_ids)
         today = fields.Date.context_today(self)
         ranges = ranges.filtered(lambda r: r.date_to >= today and r.next_sequence <= r.sequence_end)
         return ranges[:1]

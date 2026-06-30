@@ -179,18 +179,25 @@ try:
 except Exception:
     pass_("duplicate_ncf", "blocked")
 
-# Depleted range — isolate journal so only the 1-sequence range applies
+# Depleted range — cancel other B02 ranges, isolate journal
 try:
-    depleted_journal = env["account.journal"].create(
-        {
-            "name": "Phase6 Depleted Test",
-            "code": "PDT",
-            "type": "sale",
-            "company_id": company.id,
-            "justech_do_use_ncf": True,
-            "justech_do_document_type_ids": [Command.set([doc_b02.id])],
-        }
+    Range.search(
+        [("document_type_id", "=", doc_b02.id), ("state", "=", "active")]
+    ).write({"state": "cancelled"})
+    depleted_journal = env["account.journal"].search(
+        [("code", "=", "PD6"), ("company_id", "=", company.id)], limit=1
     )
+    if not depleted_journal:
+        depleted_journal = env["account.journal"].create(
+            {
+                "name": "Phase6 Depleted Test",
+                "code": "PD6",
+                "type": "sale",
+                "company_id": company.id,
+                "justech_do_use_ncf": True,
+                "justech_do_document_type_ids": [Command.set([doc_b02.id])],
+            }
+        )
     depleted = Range.create(
         {
             "name": "Phase6 Depleted",

@@ -60,10 +60,12 @@ except Exception as exc:
     report["fixes"]["assets_regenerated"] = False
 
 # --- FIX 2: Logo oficial (copiar desde empresa si existe) ---
+import base64
+
 logo_path = "/mnt/custom/hellenia_base/static/img/hellenia_logo.jpg"
 if os.path.exists(logo_path):
     with open(logo_path, "rb") as f:
-        company.write({"logo": f.read()})
+        company.write({"logo": base64.b64encode(f.read())})
     report["fixes"]["logo_from_module"] = True
 else:
     report["fixes"]["logo_from_module"] = False

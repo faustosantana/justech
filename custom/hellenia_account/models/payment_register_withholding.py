@@ -4,7 +4,7 @@ from __future__ import annotations
 from odoo import Command, api, fields, models
 
 
-class AccountPaymentRegister(models.Model):
+class AccountPaymentRegister(models.TransientModel):
     _inherit = "account.payment.register"
 
     hellenia_wh_isr_gov = fields.Boolean(string="Retención 5% Gobierno")

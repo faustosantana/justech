@@ -103,7 +103,7 @@ for label, xid in HIDDEN.items():
     if not menu:
         report["hidden_menus"][label] = {"status": "not_found"}
         continue
-    visible = menu.active and (not menu.groups_id or bool(menu.groups_id & user.groups_id))
+    visible = menu.active and (not menu.group_ids or bool(menu.group_ids & user.groups_id))
     report["hidden_menus"][label] = {"active": menu.active, "visible_to_it": visible}
     if visible:
         err(f"Menú debería estar oculto para IT: {label}")

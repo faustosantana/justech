@@ -27,13 +27,13 @@ fetch_hash() {
 fetch_user_field() {
   local field="$1"
   docker exec "$DEV_DB" psql -U odoo -d hellenia_dev -tAc \
-    "SELECT u.${field} FROM res_users u WHERE u.login='it@justech.do' AND u.active=true LIMIT 1" 2>/dev/null | tr -d '\r'
+    "SELECT u.${field} FROM res_users u WHERE u.login='it@justech.do' AND u.active=true LIMIT 1" 2>/dev/null | tr -d '[:space:]' || true
 }
 
 fetch_it_partner_field() {
   local field="$1"
   docker exec "$DEV_DB" psql -U odoo -d hellenia_dev -tAc \
-    "SELECT p.${field} FROM res_users u JOIN res_partner p ON u.partner_id = p.id WHERE u.login='it@justech.do' AND u.active=true LIMIT 1" 2>/dev/null | tr -d '\r'
+    "SELECT p.${field} FROM res_users u JOIN res_partner p ON u.partner_id = p.id WHERE u.login='it@justech.do' AND u.active=true LIMIT 1" 2>/dev/null | tr -d '[:space:]' || true
 }
 
 ADMIN_HASH="$(fetch_hash admin)"
@@ -44,10 +44,14 @@ if [[ -z "$ADMIN_HASH" || -z "$IT_HASH" ]]; then
   exit 1
 fi
 
-SYNC_IT_NAME="$(fetch_user_field name)"
-SYNC_IT_EMAIL="$(fetch_user_field email)"
+SYNC_IT_NAME="$(fetch_it_partner_field name)"
+SYNC_IT_EMAIL="$(fetch_it_partner_field email)"
 SYNC_IT_LANG="$(fetch_user_field lang)"
 SYNC_IT_TZ="$(fetch_user_field tz)"
+[[ -z "$SYNC_IT_NAME" ]] && SYNC_IT_NAME="Justech IT"
+[[ -z "$SYNC_IT_EMAIL" ]] && SYNC_IT_EMAIL="it@justech.do"
+[[ -z "$SYNC_IT_LANG" ]] && SYNC_IT_LANG="es_DO"
+[[ -z "$SYNC_IT_TZ" ]] && SYNC_IT_TZ="America/Santo_Domingo"
 
 hellenia_log "Sincronizando credenciales DEV → PROD (solo hashes, sin contraseñas en claro)"
 

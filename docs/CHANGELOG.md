@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+### Changed — Fase 4 Commercial Core refinada (2026-06-30)
+- Validación reordenada: 10 pasos (compra→recepción→venta→entrega→factura→inventario→contabilidad)
+- Producto almacenable Odoo 19: `consu` + `is_storable`
+- `stock_barcode`: desinstalación opcional solo si no rompe stock
+- `PHASE4_VALIDATION ok: true` con evidencia contable AP/AR
+
 ### Added — Fase 4 Commercial Core (2026-06-30)
 - Instalados `contacts`, `stock`, `purchase`, `sale` en DEV
 - Scripts `install-phase4-commercial-core.py`, `validate-phase4-commercial-core.py`

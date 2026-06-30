@@ -354,7 +354,7 @@ inv = so._create_invoices()
 inv.invoice_date = date.today()
 inv.action_post()
 smoke["invoice_posted"] = inv.state == "posted"
-smoke["invoice_balanced"] = abs(inv.amount_total_signed - sum(inv.line_ids.mapped("balance"))) < 0.02
+smoke["invoice_balanced"] = abs(sum(inv.line_ids.mapped("balance"))) < 0.02
 smoke["itbis_lines"] = bool(
     inv.line_ids.filtered(lambda l: l.tax_line_id and l.tax_line_id.amount == 18)
 )

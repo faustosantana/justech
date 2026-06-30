@@ -67,13 +67,13 @@
         <xpath expr="//strong[text()='Source']" position="replace">
             <strong>Origen</strong>
         </xpath>
-        <xpath expr="//div[@name='customer_code']/strong" position="replace">
+        <xpath expr="//div[@name='customer_code']/strong" position="replace" optional="True">
             <strong>Cliente</strong>
         </xpath>
-        <xpath expr="//div[@name='reference']/strong" position="replace">
+        <xpath expr="//div[@name='reference']/strong" position="replace" optional="True">
             <strong>Referencia</strong>
         </xpath>
-        <xpath expr="//p[@name='payment_communication']" position="replace">
+        <xpath expr="//p[@name='payment_communication']" position="replace" optional="True">
             <p name="payment_communication" t-if="o.move_type in ('out_invoice', 'in_refund') and o.payment_reference">
                 Concepto de pago: <span class="fw-bold" t-field="o.payment_reference"/>
                 <t t-if="o.partner_bank_id">
@@ -99,8 +99,8 @@
         </xpath>
 
         <!-- Sin QR (no facturación electrónica) -->
-        <xpath expr="//div[@id='qrcode']" position="replace"/>
-        <xpath expr="//div[@name='qr_code_placeholder']" position="replace"/>
+        <xpath expr="//div[@id='qrcode']" position="replace" optional="True"/>
+        <xpath expr="//div[@name='qr_code_placeholder']" position="replace" optional="True"/>
 
         <xpath expr="//table[@name='invoice_line_table']" position="attributes">
             <attribute name="class" add="hellenia-lines-table" separator=" "/>

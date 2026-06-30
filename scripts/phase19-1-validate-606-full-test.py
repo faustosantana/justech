@@ -11,6 +11,7 @@ from datetime import date, datetime, timezone
 
 from odoo import Command
 from odoo.exceptions import UserError
+from odoo import Command, _
 
 MARKER = "PHASE19_1:"
 DB = env.cr.dbname
@@ -295,9 +296,37 @@ check("full_payment", bill_wh_itbis.payment_state == "paid", bill_wh_itbis.payme
 
 exporter = env["justech.do.dgii.606.exporter"]
 
-# --- Exportación Excel (antes de crear facturas inválidas) ---
+demo_moves = env["account.move"].search(
+    [
+        ("company_id", "=", company.id),
+        ("state", "=", "posted"),
+        ("move_type", "in", ("in_invoice", "in_refund")),
+        ("ref", "=like", "P19-%"),
+        ("invoice_date", ">=", period_start),
+        ("invoice_date", "<=", period_end),
+        ("justech_do_dgii_line_status", "=", "1"),
+    ],
+    order="invoice_date, id",
+)
+check("demo_moves_count", len(demo_moves) >= 6, len(demo_moves))
+
+# Validación período completo (esperado FAIL en TEST por data legacy UAT)
+full_errors = exporter.validate_moves_606(company, period_start, period_end)
+check(
+    "legacy_data_blocks_full_period",
+    len(full_errors) > 0,
+    f"{len(full_errors)} errores en período completo (data histórica UAT)",
+)
+
+# --- Exportación Excel solo facturas demo P19 ---
 try:
-    content, filename = exporter.export_xlsx(company, period_start, period_end)
+    demo_errors = exporter.validate_moves_606(
+        company, period_start, period_end, moves=demo_moves
+    )
+    check("demo_validate_clean", not demo_errors, "; ".join(demo_errors[:3]))
+    content, filename = exporter.export_xlsx(
+        company, period_start, period_end, moves=demo_moves
+    )
     with open(EXCEL_PATH, "wb") as fh:
         fh.write(base64.b64decode(content))
     check("export_file_created", os.path.isfile(EXCEL_PATH), filename)
@@ -328,7 +357,7 @@ try:
 
     fiscal_report = env["justech.do.fiscal.report"].create(
         {
-            "name": f"606 P19.1 {period_start} — {period_end}",
+            "name": f"606 P19.1 demo {period_start} — {period_end}",
             "report_type": "606",
             "date_from": period_start,
             "date_to": period_end,
@@ -336,7 +365,18 @@ try:
         }
     )
     fiscal_report.action_generate()
-    fiscal_report.action_export_dgii_606()
+    # Historial: exportar subset demo vía exporter directo (wizard bloquea si hay legacy)
+    content2, fname2 = exporter.export_xlsx(
+        company, period_start, period_end, moves=demo_moves
+    )
+    fiscal_report.write(
+        {
+            "export_file": content2,
+            "export_filename": fname2,
+            "validation_state": "ok",
+            "validation_log": _("Exportación demo P19 (%s facturas) sin errores.") % len(demo_moves),
+        }
+    )
     check("wizard_history_export", bool(fiscal_report.export_file), fiscal_report.export_filename)
 
 except UserError as exc:

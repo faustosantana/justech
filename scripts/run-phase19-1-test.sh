@@ -19,18 +19,20 @@ ENV_FILE="$PROJECT_ROOT/config/test/.env"
 # shellcheck disable=SC1090
 source "$ENV_FILE"
 CONTAINER="hellenia-test-odoo-1"
-docker cp "${CONTAINER}:/tmp/hellenia-phase19-evidence/phase19-606-test.json" "$EVIDENCE" 2>/dev/null || {
-  hellenia_log "WARN: copiando desde salida shell"
+mkdir -p "$(dirname "$EVIDENCE")"
+docker cp "${CONTAINER}:/tmp/hellenia-phase19-evidence/phase19-606-test.json" "$EVIDENCE" 2>/dev/null || true
+docker cp "${CONTAINER}:/tmp/hellenia-phase19-evidence/phase19-606-export.xlsx" "$EXCEL" 2>/dev/null || true
+if [[ ! -f "$EVIDENCE" ]] && [[ -f /tmp/phase19-606-test-raw.json ]]; then
   python3 -c "
 import json, re, sys
-raw=open('/tmp/phase19-606-test-raw.json').read() if __import__('os').path.isfile('/tmp/phase19-606-test-raw.json') else open('$LOG').read()
+raw=open('/tmp/phase19-606-test-raw.json').read()
 m=re.search(r'PHASE19_1:(\{.*\})', raw, re.S)
-if not m:
-    print('No marker PHASE19_1', file=sys.stderr); sys.exit(1)
-open('$EVIDENCE','w').write(m.group(1))
+if m:
+    open('$EVIDENCE','w').write(m.group(1))
+else:
+    sys.exit(1)
 "
-}
-docker cp "${CONTAINER}:/tmp/hellenia-phase19-evidence/phase19-606-export.xlsx" "$EXCEL" 2>/dev/null || hellenia_log "WARN: Excel no copiado del contenedor"
+fi
 
 python3 -c "
 import json, sys

@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+### Added — Fase 4 Commercial Core (2026-06-30)
+- Instalados `contacts`, `stock`, `purchase`, `sale` en DEV
+- Scripts `install-phase4-commercial-core.py`, `validate-phase4-commercial-core.py`
+- `docs/PHASE4_COMMERCIAL_CORE.md` — validación E2E ok: true
+- Desinstalación explícita `stock_barcode` (auto-dependencia de stock)
+
 ### Added — Fase 3.5 Golden Configuration definitiva (2026-06-30)
 - Datos oficiales empresa, bancos, categorías planas, métodos de pago CSH1/BNK1
 - `docs/PHASE35_GOLDEN_CONFIGURATION_REPORT.md`, plantilla import CSV

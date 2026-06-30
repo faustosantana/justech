@@ -196,4 +196,19 @@ Registro cronológico de decisiones de consultoría. Toda entrada debe ser **rep
 
 ---
 
+## DEC-2026-06-30-020 — Fase 4 Commercial Core
+
+| Campo | Valor |
+|-------|-------|
+| **Decisión** | Instalar solo `contacts`, `stock`, `purchase`, `sale` en DEV |
+| **Excluido** | POS, Barcode, Studio, Sign, Documents, Helpdesk, CRM |
+| **Motivo** | Aprobación cliente — núcleo comercial antes de POS |
+| **Incidencia** | `stock_barcode` auto-instalado con `stock` → desinstalado en script |
+| **Producto Odoo 19** | Stock con `type: consu` + `is_storable: True` |
+| **Evidencia** | `PHASE4_VALIDATION ok: true` |
+| **Backup** | `2026-06-30_0452` |
+| **Supersede** | DEC-018 (ya no aplica — módulos instalados en Fase 4) |
+
+---
+
 **Mantenido por:** Justech — Consultoría Odoo Enterprise

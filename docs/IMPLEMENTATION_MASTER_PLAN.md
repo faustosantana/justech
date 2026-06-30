@@ -5,7 +5,7 @@
 **Ambiente de trabajo:** `hellenia_dev` (DEV laboratorio)  
 **Fecha:** 2026-06-30  
 **Versión:** 3.0  
-**Estado:** **Fase 3.5 Golden Configuration definitiva aplicada en DEV** — detenido para Ventas/Compras/Inventario/POS ([PHASE35_GOLDEN_CONFIGURATION_REPORT.md](PHASE35_GOLDEN_CONFIGURATION_REPORT.md))
+**Estado:** **Fase 4 Commercial Core completada en DEV** — detenido para Fase 5 POS ([PHASE4_COMMERCIAL_CORE.md](PHASE4_COMMERCIAL_CORE.md))
 
 > **Pivot estratégico (v3.0):** Plataforma oficial = Odoo 19 EE On-Premise + último paquete portal. Sin perseguir saas-19.3. Prioridad = implementación impecable, no investigación de ramas.
 
@@ -18,15 +18,15 @@
 | 1 | Infraestructura | ✅ Completa |
 | 2 | Enterprise | ✅ Completa |
 | 3 | Configuración funcional | ✅ **Golden Config definitiva** — [PHASE35_GOLDEN_CONFIGURATION_REPORT.md](PHASE35_GOLDEN_CONFIGURATION_REPORT.md) |
-| 4 | Localización RD | 🔄 En curso |
-| 5 | Ventas | ⏳ Pendiente |
-| 6 | Compras | ⏳ Pendiente |
-| 7 | Inventario | ⏳ Pendiente |
-| 8 | POS | ⏳ Pendiente |
-| 9 | Contabilidad | ⏳ Pendiente |
-| 10 | Reportes | ⏳ Pendiente |
-| 11 | Pruebas | ⏳ Pendiente |
-| 12 | Go Live | ⏳ Pendiente |
+| 4 | Núcleo comercial (Contacts/Sales/Purchase/Inventory) | ✅ **Completada** — [PHASE4_COMMERCIAL_CORE.md](PHASE4_COMMERCIAL_CORE.md) |
+| 5 | POS | ⏳ Pendiente aprobación |
+| 6 | Localización RD (refinamiento) | 🔄 Parcial (l10n_do en Fase 3) |
+| 7 | Ventas (parametrización operativa) | 🔄 Base instalada Fase 4 |
+| 8 | Compras (parametrización operativa) | 🔄 Base instalada Fase 4 |
+| 9 | Inventario (parametrización operativa) | 🔄 Base instalada Fase 4 |
+| 10 | Contabilidad | ⏳ Pendiente |
+| 11 | Reportes | ⏳ Pendiente |
+| 12 | Pruebas / Go Live | ⏳ Pendiente |
 
 Detalle estratégico: [PROJECT_STRATEGY.md](PROJECT_STRATEGY.md)
 

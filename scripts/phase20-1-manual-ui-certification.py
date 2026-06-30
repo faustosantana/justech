@@ -139,7 +139,7 @@ def run():
             # 4-5 Revisión
             click_btn(page, name="action_save_review")
             page.wait_for_timeout(6000)
-            m = re.search(r"action-\d+/(\d+)", page.url) or re.search(r"/odoo/(\d+)$", page.url)
+            m = re.search(r"justech\.do\.fiscal\.report/(\d+)", page.url) or re.search(r"action-\d+/(\d+)", page.url)
             report_id = m.group(1) if m else ""
             report_url = page.url
             t4 = text(page)
@@ -150,19 +150,23 @@ def run():
 
             # 6 Excluir ANTES de navegar fuera
             click_tab(page, "Válidos")
-            ex = page.locator('button[name="action_exclude_line"]').first
+            ex = page.locator('button[name="action_exclude_line"], button[title*="Excluir"]').first
             excluded = False
             if ex.count():
                 ex.scroll_into_view_if_needed()
-                ex.click()
-                page.wait_for_timeout(1500)
-                page.locator('[name="reason"] textarea, textarea[name="reason"]').first.fill("P20.1 certificación manual — exclusión fiscal")
-                click_btn(page, name="action_confirm_exclude")
-                page.wait_for_timeout(4000)
-                open_review_record(page, report_id)
+                ex.click(force=True)
+                page.wait_for_timeout(2000)
+                modal = page.locator(".modal-dialog, .o_dialog, dialog")
+                modal.wait_for(state="visible", timeout=10000)
+                reason = page.locator('textarea[name="reason"], .o_field_widget[name="reason"] textarea, .modal textarea').first
+                reason.fill("P20.1 certificación manual — exclusión fiscal")
+                page.locator('.modal-footer button.btn-primary, button[name="action_confirm_exclude"]').first.click()
+                page.wait_for_timeout(5000)
+                if report_id:
+                    open_review_record(page, report_id)
                 excluded = True
             t6 = text(page)
-            record(6, "Excluir documento — cambia estado", excluded and ("Requiere aprobación" in t6 or "Pendientes aprobación" in t6), t6[:200], shot(page, "06-exclusion"))
+            record(6, "Excluir documento — cambia estado", excluded and ("Requiere aprobación" in t6 or "Pendientes aprobación" in t6 or "Pendientes de aprobación" in t6), t6[:200], shot(page, "06-exclusion"))
 
             # 7 Enviar aprobación
             if page.locator('button[name="action_submit_for_approval"]').count():
@@ -178,22 +182,16 @@ def run():
                     actions.append(f"{label}: no visible")
                     continue
                 btn.scroll_into_view_if_needed()
-                with page.context.expect_page(timeout=5000) as new_page_info:
-                    btn.click(modifiers=["Control"])
                 try:
-                    np = new_page_info.value
-                    np.wait_for_load_state("domcontentloaded")
-                    np.wait_for_timeout(2000)
-                    shot(np, f"05-{label}")
-                    actions.append(f"{label}: ok")
-                    np.close()
-                except Exception:
-                    btn.click()
-                    page.wait_for_timeout(2500)
+                    btn.click(force=True)
+                    page.wait_for_timeout(3000)
                     shot(page, f"05-{label}")
                     actions.append(f"{label}: ok")
-                    return_to_report(page)
-                    click_tab(page, "Válidos")
+                    if report_id:
+                        open_review_record(page, report_id)
+                        click_tab(page, "Válidos")
+                except Exception as exc:
+                    actions.append(f"{label}: {exc}")
             record(4, "Acciones línea: factura/proveedor/PDF", sum("ok" in a for a in actions) >= 1, "; ".join(actions), shot(page, "05-acciones-linea"))
 
             # 8 Supervisor

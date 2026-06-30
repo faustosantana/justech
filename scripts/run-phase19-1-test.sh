@@ -12,6 +12,7 @@ EXCEL="${EVIDENCE_DIR}/phase19-606-export.xlsx"
 LOG="${PROJECT_ROOT}/logs/phase19-1-test.log"
 RAW="/tmp/phase19-606-test-raw.json"
 mkdir -p "$EVIDENCE_DIR" "$(dirname "$LOG")"
+chmod 777 "$EVIDENCE_DIR"
 
 ENV_FILE="$PROJECT_ROOT/config/test/.env"
 COMPOSE_DIR="$PROJECT_ROOT/docker/test"

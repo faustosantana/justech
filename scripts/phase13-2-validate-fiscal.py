@@ -165,6 +165,27 @@ last_inv = env["account.move"].search(
     order="id desc",
     limit=1,
 )
+doc_b04 = env.ref("justech_l10n_do_base.doc_type_b04", raise_if_not_found=False)
+if last_inv and doc_b04 and journal_sale:
+    rng_b04 = env["justech.do.ncf.range"].search(
+        [("document_type_id", "=", doc_b04.id), ("company_id", "=", company.id), ("state", "=", "active")],
+        limit=1,
+    )
+    if not rng_b04:
+        rng_b04 = env["justech.do.ncf.range"].create(
+            {
+                "name": "P13.2 B04 Range",
+                "document_type_id": doc_b04.id,
+                "company_id": company.id,
+                "sequence_start": 9000,
+                "sequence_end": 9999,
+                "next_sequence": 9000,
+                "date_from": today.replace(month=1, day=1),
+                "date_to": today.replace(month=12, day=31),
+                "journal_ids": [Command.set(journal_sale.ids)],
+            }
+        )
+        rng_b04.action_activate()
 if last_inv:
   try:
     credit = env["account.move"].create(

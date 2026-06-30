@@ -18,7 +18,7 @@ REPO="${REPO_PATH:-$PROJECT_ROOT/repository}"
 ENV_FILE="$PROJECT_ROOT/config/production/.env"
 COMPOSE_DIR="$PROJECT_ROOT/docker/production"
 CERTIFIED_COMMIT="${CERTIFIED_COMMIT:-}"
-EVIDENCE_FILE="${EVIDENCE_FILE:-$PROJECT_ROOT/evidence/phase13-7-test-functional-validation.json}"
+EVIDENCE_FILE="${EVIDENCE_FILE:-$PROJECT_ROOT/evidence/phase14-final-acceptance.json}"
 LOG_FILE="$PROJECT_ROOT/logs/deploy/promote-prod-$(date +%Y-%m-%d_%H%M).log"
 
 mkdir -p "$(dirname "$LOG_FILE")"

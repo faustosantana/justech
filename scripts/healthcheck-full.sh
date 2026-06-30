@@ -20,6 +20,8 @@ CHECKS=()
 
 mkdir -p "$(dirname "$REPORT_JSON")" "$(dirname "$LOG_FILE")"
 hellenia_load_env "$ENV_FILE"
+ODOO_PUBLIC_HOST="${ODOO_PUBLIC_HOST:-test.${TRAEFIK_HOST:-hellenia.cloud}}"
+export ODOO_PUBLIC_HOST
 
 PROJECT="${COMPOSE_PROJECT_NAME}"
 ODOO_CONTAINER="$(hellenia_container "$PROJECT" odoo)"
@@ -79,8 +81,8 @@ if hellenia_container_running "$ODOO_CONTAINER"; then
   else
     record "odoo_internal_http" "FAIL"
   fi
-  if docker exec "$ODOO_CONTAINER" curl -sf http://127.0.0.1:8072/longpolling/poll >/dev/null 2>&1 \
-    || docker exec "$ODOO_CONTAINER" bash -c 'echo > /dev/tcp/127.0.0.1/8072' 2>/dev/null; then
+  if docker exec "$ODOO_CONTAINER" bash -c 'cat < /dev/null > /dev/tcp/127.0.0.1/8072' 2>/dev/null \
+    || docker exec "$ODOO_CONTAINER" ss -tln 2>/dev/null | grep -q ':8072'; then
     record "odoo_websocket_port" "PASS" ":8072"
   else
     record "odoo_websocket_port" "FAIL" "gevent_port 8072 no responde"
@@ -90,7 +92,7 @@ fi
 # --- Traefik ---
 if hellenia_container_running "traefik-traefik-1"; then
   record "traefik_container" "PASS"
-  if docker logs traefik-traefik-1 2>&1 | tail -200 | grep -q "cannot be linked automatically"; then
+  if docker logs traefik-traefik-1 2>&1 | tail -300 | grep -qE "Router ${PROJECT} cannot be linked"; then
     record "traefik_router_link" "FAIL" "router sin service explícito"
   else
     record "traefik_router_link" "PASS"
@@ -143,7 +145,8 @@ fi
 db_exists="${db_exists:-}"
 if hellenia_container_running "$ODOO_CONTAINER" && [[ "${db_exists:-}" == "1" ]]; then
   ODOO_OUT="$PROJECT_ROOT/evidence/healthcheck-${ENV_NAME}-${TS}-odoo.json"
-  if docker exec -i "$ODOO_CONTAINER" odoo shell -d "${ODOO_DB_NAME}" --no-http \
+  if docker compose --env-file "$ENV_FILE" exec -T odoo odoo shell \
+    -d "${ODOO_DB_NAME}" --db_host=db --db_user="${DB_USER}" --db_password="${DB_PASSWORD}" --no-http \
     < "${SCRIPT_DIR}/lib/healthcheck-odoo.py" >"$ODOO_OUT" 2>>"$LOG_FILE"; then
     if python3 -c "import json; d=json.load(open('$ODOO_OUT')); exit(0 if d.get('ok') else 1)" 2>/dev/null; then
       record "odoo_fiscal_modules" "PASS" "$(basename "$ODOO_OUT")"

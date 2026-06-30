@@ -134,21 +134,23 @@ if tax_18_purchase and hasattr(company, "account_purchase_tax_id"):
         company.account_purchase_tax_id = tax_18_purchase.id
         log("company_purchase_tax", tax_18_purchase.name)
 
-# Product categories
+# Product categories (Odoo 19 may not expose taxes on category)
 Cat = env["product.category"]
-for cat in Cat.search([]):
-    needs_sale = not cat.taxes_id or cat.taxes_id.filtered(lambda t: t.amount == 15.0 or not t.active)
-    if needs_sale and tax_18_sale:
-        if DRY_RUN:
-            log("category_tax_dry_run", cat.name)
-        else:
-            cat.taxes_id = [(6, 0, tax_18_sale.ids)]
-            log("category_tax", cat.name)
-    if tax_18_purchase and (not cat.supplier_taxes_id or cat.supplier_taxes_id.filtered(lambda t: t.amount == 15.0)):
-        if DRY_RUN:
-            log("category_supplier_tax_dry_run", cat.name)
-        else:
-            cat.supplier_taxes_id = [(6, 0, tax_18_purchase.ids)]
+if "taxes_id" in Cat._fields:
+    for cat in Cat.search([]):
+        needs_sale = not cat.taxes_id or cat.taxes_id.filtered(lambda t: t.amount == 15.0 or not t.active)
+        if needs_sale and tax_18_sale:
+            if DRY_RUN:
+                log("category_tax_dry_run", cat.name)
+            else:
+                cat.taxes_id = [(6, 0, tax_18_sale.ids)]
+                log("category_tax", cat.name)
+        if tax_18_purchase and "supplier_taxes_id" in cat._fields:
+            if not cat.supplier_taxes_id or cat.supplier_taxes_id.filtered(lambda t: t.amount == 15.0):
+                if DRY_RUN:
+                    log("category_supplier_tax_dry_run", cat.name)
+                else:
+                    cat.supplier_taxes_id = [(6, 0, tax_18_purchase.ids)]
 
 # Products — remap 15% or empty sale taxes
 remapped = 0

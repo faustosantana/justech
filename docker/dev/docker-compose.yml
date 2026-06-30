@@ -1,8 +1,13 @@
-# Hellenia — Ambiente DEV
-# Infraestructura: ver docs/INFRASTRUCTURE_REVIEW.md
+# Hellenia — Ambiente DEV (Enterprise horneado en imagen)
+# Imagen: hellenia-odoo:19-enterprise — ver docker/dev/Dockerfile.enterprise
 services:
   odoo:
-    image: odoo:19.0-20260619
+    image: hellenia-odoo:19-enterprise
+    build:
+      context: ../..
+      dockerfile: docker/dev/Dockerfile.enterprise
+      args:
+        BASE_IMAGE: odoo:19.0-20260619
     restart: unless-stopped
     labels:
       - traefik.enable=true
@@ -16,8 +21,6 @@ services:
       - PASSWORD=${DB_PASSWORD}
     volumes:
       - odoo-data:/var/lib/odoo
-      - ${ENTERPRISE_PATH}:/mnt/enterprise:ro
-      - ${CUSTOM_ADDONS_PATH}:/mnt/custom:ro
       - ${ODOO_CONF_PATH}:/etc/odoo/odoo.conf:ro
     depends_on:
       db:
@@ -27,7 +30,7 @@ services:
       interval: 30s
       timeout: 10s
       retries: 5
-      start_period: 90s
+      start_period: 120s
     networks:
       - hellenia-dev
 

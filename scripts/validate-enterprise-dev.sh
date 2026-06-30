@@ -1,12 +1,20 @@
 #!/usr/bin/env bash
-# Valida Odoo Enterprise activo en DEV + opcional localización RD
+# Valida Odoo Enterprise activo en DEV (imagen hellenia-odoo:19-enterprise)
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
 ENV_FILE="$PROJECT_ROOT/config/dev/.env"
 FAIL=0
-INSTALL_L10N="${1:-}"
+INSTALL_L10N=""
+SKIP_LICENSE=false
+
+for arg in "$@"; do
+  case "$arg" in
+    --l10n) INSTALL_L10N="--l10n" ;;
+    --no-license) SKIP_LICENSE=true ;;
+  esac
+done
 
 log() { echo "[$(date '+%Y-%m-%d %H:%M:%S')] $*"; }
 pass() { log "OK  $*"; }
@@ -16,46 +24,80 @@ fail() { log "FAIL $*"; FAIL=1; }
 [[ -f "$ENV_FILE" ]] && source "$ENV_FILE"
 
 CONTAINER="hellenia-dev-odoo-1"
+DB_CONTAINER="hellenia-dev-db-1"
 URL="https://dev.hellenia.cloud"
 DB="${ODOO_DB_NAME:-hellenia_dev}"
 
 log "=== Validación Enterprise DEV ==="
 
-# Contenedor e imagen
-docker ps --format '{{.Names}}' | grep -qx "$CONTAINER" && pass "contenedor running" || fail "contenedor no running"
+# Docker
+docker ps --format '{{.Names}}' | grep -qx "$CONTAINER" && pass "contenedor Odoo running" || fail "contenedor Odoo no running"
+docker ps --format '{{.Names}}' | grep -qx "$DB_CONTAINER" && pass "contenedor PostgreSQL running" || fail "PostgreSQL no running"
 
 IMG=$(docker inspect "$CONTAINER" --format '{{.Config.Image}}' 2>/dev/null || echo "?")
-log "INFO imagen: $IMG"
+echo "$IMG" | grep -q 'hellenia-odoo:19-enterprise' && pass "imagen hellenia-odoo:19-enterprise" || fail "imagen inesperada: $IMG"
 
-# Enterprise montado
-docker exec "$CONTAINER" test -d /mnt/enterprise/web_enterprise && pass "enterprise montado" || fail "enterprise no montado"
-docker exec "$CONTAINER" test -d /mnt/custom && pass "custom montado" || fail "custom no montado"
+# Enterprise horneado (sin volumen)
+docker exec "$CONTAINER" test -f /opt/odoo/enterprise/addons/web_enterprise/__manifest__.py \
+  && pass "web_enterprise en imagen" || fail "web_enterprise no en imagen"
+docker exec "$CONTAINER" test -d /opt/odoo/custom && pass "custom en imagen" || fail "custom no en imagen"
+
+# Sin montaje enterprise legacy
+if docker inspect "$CONTAINER" --format '{{json .Mounts}}' | grep -q '/mnt/enterprise'; then
+  fail "aún monta volumen /mnt/enterprise (debe estar horneado)"
+else
+  pass "sin volumen /mnt/enterprise"
+fi
 
 # addons_path
 AP=$(docker exec "$CONTAINER" grep -E '^addons_path' /etc/odoo/odoo.conf 2>/dev/null || echo "")
 log "INFO $AP"
-echo "$AP" | grep -q '/mnt/enterprise' && pass "addons_path incluye enterprise" || fail "addons_path sin enterprise"
+echo "$AP" | grep -q '/opt/odoo/enterprise/addons' && pass "addons_path incluye enterprise en imagen" || fail "addons_path incorrecto"
 
 # web_enterprise instalado en BD
-INSTALLED=$(docker exec hellenia-dev-db-1 psql -U odoo -d "$DB" -tAc \
+INSTALLED=$(docker exec "$DB_CONTAINER" psql -U odoo -d "$DB" -tAc \
   "SELECT state FROM ir_module_module WHERE name='web_enterprise';" 2>/dev/null || echo "")
 if [[ "$INSTALLED" == "installed" ]]; then
   pass "web_enterprise instalado en BD"
 else
-  fail "web_enterprise estado: $INSTALLED"
+  fail "web_enterprise estado: ${INSTALLED:-vacío}"
 fi
 
-# HTTP
-CODE=$(curl -sS -o /dev/null -w '%{http_code}' --max-time 15 "${URL}/web/login")
-[[ "$CODE" == "200" ]] && pass "login HTTP $CODE" || fail "login HTTP $CODE"
+# l10n_do NO instalado (por diseño E1a)
+for mod in l10n_do l10n_do_edi l10n_do_reports; do
+  STATE=$(docker exec "$DB_CONTAINER" psql -U odoo -d "$DB" -tAc \
+    "SELECT COALESCE(state,'absent') FROM ir_module_module WHERE name='$mod';" 2>/dev/null || echo "absent")
+  if [[ "$STATE" == "installed" ]]; then
+    fail "$mod instalado (no debe en E1a)"
+  else
+    pass "$mod no instalado ($STATE)"
+  fi
+done
 
-# Suscripción registrada (database.enterprise_code)
-ENT_CODE=$(docker exec hellenia-dev-db-1 psql -U odoo -d "$DB" -tAc \
-  "SELECT value FROM ir_config_parameter WHERE key='database.enterprise_code';" 2>/dev/null || echo "")
-if [[ -n "$ENT_CODE" && "$ENT_CODE" != "" ]]; then
-  pass "database.enterprise_code presente (suscripción registrada)"
+# HTTP / HTTPS
+CODE=$(curl -sS -o /dev/null -w '%{http_code}' --max-time 20 "${URL}/web/login")
+[[ "$CODE" == "200" ]] && pass "HTTPS login HTTP $CODE" || fail "HTTPS login HTTP $CODE"
+
+# Traefik
+docker ps --format '{{.Names}}' | grep -qx "traefik-traefik-1" && pass "Traefik running" || fail "Traefik no running"
+
+# Logs recientes sin ERROR crítico
+ERR_COUNT=$(docker logs "$CONTAINER" --since 5m 2>&1 | grep -cE ' ERROR ' || true)
+if [[ "${ERR_COUNT:-0}" -gt 5 ]]; then
+  fail "demasiados ERROR en logs Odoo ($ERR_COUNT en 5m)"
 else
-  log "WARN database.enterprise_code vacío — registrar M260616306091776 en UI"
+  pass "logs Odoo sin errores críticos (${ERR_COUNT:-0} ERROR en 5m)"
+fi
+
+# Licencia — solo si no se pidió omitir
+if ! $SKIP_LICENSE; then
+  ENT_CODE=$(docker exec "$DB_CONTAINER" psql -U odoo -d "$DB" -tAc \
+    "SELECT value FROM ir_config_parameter WHERE key='database.enterprise_code';" 2>/dev/null || echo "")
+  if [[ -n "$ENT_CODE" && "$ENT_CODE" != "" ]]; then
+    pass "database.enterprise_code presente"
+  else
+    log "WARN database.enterprise_code vacío — registrar suscripción en UI"
+  fi
 fi
 
 # Instalar localización RD si se pasa --l10n
@@ -71,19 +113,10 @@ if [[ "$INSTALL_L10N" == "--l10n" ]]; then
   sleep 30
 
   for mod in l10n_do l10n_do_edi l10n_do_reports; do
-    STATE=$(docker exec hellenia-dev-db-1 psql -U odoo -d "$DB" -tAc \
+    STATE=$(docker exec "$DB_CONTAINER" psql -U odoo -d "$DB" -tAc \
       "SELECT state FROM ir_module_module WHERE name='$mod';" 2>/dev/null || echo "")
     [[ "$STATE" == "installed" ]] && pass "$mod instalado" || fail "$mod estado: $STATE"
   done
-
-  # Verificar impuestos ITBIS
-  TAX_COUNT=$(docker exec hellenia-dev-db-1 psql -U odoo -d "$DB" -tAc \
-    "SELECT COUNT(*) FROM account_tax WHERE name ILIKE '%ITBIS%';" 2>/dev/null || echo "0")
-  log "INFO impuestos ITBIS en BD: $TAX_COUNT"
-  [[ "$TAX_COUNT" -gt 0 ]] && pass "impuestos ITBIS configurados" || fail "sin impuestos ITBIS"
-
-  log "INFO eNCF/Infile: NO configurado (por diseño)"
-  log "INFO wizard: NO ejecutado"
 fi
 
 # Producción

@@ -1,0 +1,44 @@
+{
+  "phase": "13.1",
+  "timestamp_utc": "2026-06-30T15:29:16Z",
+  "objective": "Activar https://odoo.hellenia.cloud",
+  "root_cause_404": "Traefik recibía tráfico para Host(odoo.hellenia.cloud) pero hellenia-prod solo tenía router Host(prod.hellenia.cloud). Sin router coincidente → 404 page not found.",
+  "routers_before": {
+    "dev.hellenia.cloud": "hellenia-dev@docker → hellenia-dev-odoo-1:8069",
+    "test.hellenia.cloud": "hellenia-test@docker → hellenia-test-odoo-1:8069",
+    "odoo.hellenia.cloud": "ninguno (404)",
+    "prod.hellenia.cloud": "hellenia-prod@docker (pre-activación, sin DNS)"
+  },
+  "routers_after": {
+    "dev.hellenia.cloud": "hellenia-dev@docker (sin cambios)",
+    "test.hellenia.cloud": "hellenia-test@docker (sin cambios)",
+    "odoo.hellenia.cloud": "hellenia-prod@docker → hellenia-prod-odoo-1:8069",
+    "odoo-pecv.srv1784296.hstgr.cloud": "odoo-pecv@docker (sin cambios, sigue activo)"
+  },
+  "changes": [
+    "docker/production/docker-compose.yml: router Host(prod.hellenia.cloud) → Host(${ODOO_PUBLIC_HOST})",
+    "config/production/.env: ODOO_PUBLIC_HOST=odoo.hellenia.cloud",
+    "docker compose up -d --force-recreate odoo en hellenia-prod",
+    "scripts/healthcheck.sh: URL prod → odoo.hellenia.cloud"
+  ],
+  "final_labels": {
+    "traefik.enable": "true",
+    "traefik.http.routers.hellenia-prod.rule": "Host(`odoo.hellenia.cloud`)",
+    "traefik.http.routers.hellenia-prod.entrypoints": "websecure",
+    "traefik.http.routers.hellenia-prod.tls": "true",
+    "traefik.http.routers.hellenia-prod.tls.certresolver": "letsencrypt",
+    "traefik.http.services.hellenia-prod.loadbalancer.server.port": "8069"
+  },
+  "middleware": "ninguno adicional (mismo patrón dev/test: redirect HTTP→HTTPS global en Traefik)",
+  "lets_encrypt": {
+    "subject": "CN=odoo.hellenia.cloud",
+    "issuer": "Let's Encrypt YR2",
+    "not_before": "2026-06-30T14:30:14Z",
+    "not_after": "2026-09-28T14:30:13Z"
+  },
+  "curl_I": "HTTP/2 200 — content-type: text/html; server: Werkzeug/3.0.1",
+  "odoo_version": "19.0+e-20260619",
+  "odoo_pecv_status": "Up (no modificado)",
+  "commit": "c9d3fb8",
+  "branch": "cursor/activate-odoo-hellenia-cloud-dd85"
+}

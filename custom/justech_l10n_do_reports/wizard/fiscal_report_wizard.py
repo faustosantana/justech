@@ -54,6 +54,49 @@ class JustechDoFiscalReportWizard(models.TransientModel):
         string="Revisión guardada",
         readonly=True,
     )
+    date_from_display = fields.Char(
+        string="Desde",
+        compute="_compute_period_display",
+    )
+    date_to_display = fields.Char(
+        string="Hasta",
+        compute="_compute_period_display",
+    )
+
+    @api.depends("date_from", "date_to")
+    def _compute_period_display(self):
+        for wiz in self:
+            wiz.date_from_display = (
+                wiz.date_from.strftime("%d/%m/%Y") if wiz.date_from else ""
+            )
+            wiz.date_to_display = (
+                wiz.date_to.strftime("%d/%m/%Y") if wiz.date_to else ""
+            )
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        period_util = self.env["justech.do.dgii.period"]
+        for vals in vals_list:
+            if vals.get("period_code"):
+                date_from, date_to = period_util.period_bounds_from_code(
+                    vals["period_code"]
+                )
+                vals["date_from"] = date_from
+                vals["date_to"] = date_to
+        return super().create(vals_list)
+
+    def write(self, vals):
+        res = super().write(vals)
+        if vals.get("period_code"):
+            period_util = self.env["justech.do.dgii.period"]
+            for wiz in self:
+                date_from, date_to = period_util.period_bounds_from_code(
+                    wiz.period_code
+                )
+                super(JustechDoFiscalReportWizard, wiz).write(
+                    {"date_from": date_from, "date_to": date_to}
+                )
+        return res
 
     @api.model
     def default_get(self, fields_list):
@@ -155,6 +198,7 @@ class JustechDoFiscalReportWizard(models.TransientModel):
             {
                 "name": f"{label} {self.period_code} — revisión fiscal",
                 "report_type": self.report_type,
+                "period_code": self.period_code,
                 "date_from": self.date_from,
                 "date_to": self.date_to,
                 "company_id": self.company_id.id,
@@ -219,14 +263,8 @@ class JustechDoFiscalReportWizard(models.TransientModel):
         if self.report_type == "606":
             report.action_validate_period()
         else:
-            report.write({"state": "validated"})
+            report._transition_state("validated", _("Revisión guardada."))
         self.saved_report_id = report.id
-        report.message_post(
-            body=_(
-                "Revisión fiscal guardada desde el asistente %(tipo)s — período %(periodo)s."
-            )
-            % {"tipo": self.report_type, "periodo": self.period_code}
-        )
         return self._open_review_form(report)
 
     def action_view_documents(self):
@@ -255,30 +293,17 @@ class JustechDoFiscalReportWizard(models.TransientModel):
     def action_generate(self):
         self.ensure_one()
         if self.report_type == "606":
-            exporter = self.env["justech.do.dgii.606.exporter"]
             if self.validation_state == "pending":
                 self.action_validate()
-            result = exporter.validate_period_606(
-                self.company_id, self.date_from, self.date_to
-            )
-            valid_moves = result["buckets"]["valid"]
-            if not valid_moves:
-                raise UserError(
-                    self.validation_log
-                    or _("No hay documentos fiscalmente válidos para exportar.")
-                )
             report = self._create_report()
             report.action_load_review_lines()
             report.action_validate_period()
-            if report.manual_exclusion_count:
-                raise UserError(
-                    _(
-                        "Hay exclusiones manuales pendientes. Guarde la revisión y "
-                        "solicite aprobación del supervisor antes de generar el Excel."
-                    )
-                )
-            report.with_user(self.env.user).action_generate_dgii_export()
-            return report.action_export_dgii_606(moves=valid_moves)
+            if report.manual_exclusion_count and report.state != "approved":
+                return report.action_open_export_blocker_wizard()
+            result = report.action_generate_dgii_export()
+            if isinstance(result, dict):
+                return result
+            return result
         report = self._create_report()
         report.action_generate()
         return self._open_review_form(report)

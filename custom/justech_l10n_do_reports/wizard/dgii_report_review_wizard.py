@@ -75,22 +75,14 @@ class JustechDoDgiiReportExcludeWizard(models.TransientModel):
                         "reason": self.reason,
                     }
                 )
-            report.message_post(
-                body=_(
-                    "Exclusión manual: %(doc)s — %(reason)s"
-                )
-                % {"doc": line.move_name, "reason": self.reason}
-            )
-            report._log_audit(
+            report._post_workflow_event(
                 "exclude",
-                self.reason,
+                _("%(doc)s — %(reason)s") % {"doc": line.move_name, "reason": self.reason},
                 move=move,
                 line=line,
             )
-        if report.state in ("draft", "validated", "rejected", "approved"):
-            report.write({"state": "pending_approval"})
-            report.action_submit_for_approval()
-        elif report.state == "pending_approval":
+        report._refresh_summary_counts()
+        if report.state in ("validated", "pending_approval", "approved"):
             report.action_submit_for_approval()
         return {"type": "ir.actions.act_window_close"}
 

@@ -9,8 +9,10 @@
                     <field name="report_type"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="period_code" placeholder="202606"/>
-                    <field name="date_from" readonly="1"/>
-                    <field name="date_to" readonly="1"/>
+                    <field name="date_from" invisible="1"/>
+                    <field name="date_to" invisible="1"/>
+                    <field name="date_from_display" string="Desde" readonly="1"/>
+                    <field name="date_to_display" string="Hasta" readonly="1"/>
                     <field name="saved_report_id" invisible="1"/>
                 </group>
                 <group string="Resumen del período" invisible="validation_state == 'pending'">

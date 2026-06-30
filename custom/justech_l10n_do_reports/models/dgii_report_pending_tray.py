@@ -2,7 +2,7 @@
 """Bandeja global de aprobación DGII para supervisores."""
 from __future__ import annotations
 
-from odoo import _, api, fields, models
+from odoo import _, fields, models
 from odoo.exceptions import AccessError, UserError
 
 
@@ -40,7 +40,11 @@ class JustechDoFiscalReportPendingTray(models.Model):
             pending_lines = report._pending_approval_lines()
             if pending_approvals or pending_lines:
                 if report.state != "pending_approval":
-                    report.state = "pending_approval"
+                    report._transition_state(
+                        "pending_approval",
+                        _("Quedan documentos pendientes de aprobación."),
+                        audit_type="state_change",
+                    )
                 continue
 
             approved_manual = report.line_ids.filtered(
@@ -49,29 +53,21 @@ class JustechDoFiscalReportPendingTray(models.Model):
             if approved_manual:
                 report.write(
                     {
-                        "state": "approved",
                         "approved_by_id": report.approved_by_id.id
                         or self.env.user.id,
                         "approved_at": report.approved_at or fields.Datetime.now(),
                     }
                 )
-                report.message_post(
-                    body=_(
-                        "Todas las exclusiones pendientes fueron resueltas. "
-                        "Reporte aprobado para generación."
-                    )
-                )
-                report._log_audit(
-                    "approve",
-                    _("Bandeja de aprobación completada — listo para generar Excel."),
+                report._transition_state(
+                    "approved",
+                    _("Todas las exclusiones pendientes fueron resueltas."),
+                    audit_type="approve",
                 )
             elif report.state == "pending_approval":
-                report.write({"state": "validated"})
-                report.message_post(
-                    body=_(
-                        "Exclusiones revisadas. El reporte regresa a revisión fiscal "
-                        "para corrección."
-                    )
+                report._transition_state(
+                    "validated",
+                    _("Exclusiones revisadas — reporte devuelto para corrección."),
+                    audit_type="state_change",
                 )
 
     def action_submit_for_approval(self):
@@ -124,8 +120,7 @@ class JustechDoFiscalReportPendingTray(models.Model):
                 }
             )
             line.write({"line_approval_state": "rejected"})
-            self.message_post(body=msg)
-            self._log_audit(event, comment, move=line.move_id, line=line)
+            self._post_workflow_event(event, msg, move=line.move_id, line=line)
         self._sync_approval_state()
 
     def _apply_rejection(self, comment):
@@ -135,55 +130,9 @@ class JustechDoFiscalReportPendingTray(models.Model):
             return
         super()._apply_rejection(comment)
 
-    def action_open_line_reject_wizard(self):
-        self.ensure_one()
-        self._require_supervisor()
-        line_ids = self.env.context.get("active_ids", [])
-        return {
-            "type": "ir.actions.act_window",
-            "name": _("Rechazar exclusión"),
-            "res_model": "justech.do.dgii.report.reject.wizard",
-            "view_mode": "form",
-            "target": "new",
-            "context": {
-                "default_report_id": self.id,
-                "default_line_ids": [(6, 0, line_ids)],
-                "default_action_mode": "reject",
-            },
-        }
-
-    def action_open_line_correction_wizard(self):
-        self.ensure_one()
-        self._require_supervisor()
-        line_ids = self.env.context.get("active_ids", [])
-        return {
-            "type": "ir.actions.act_window",
-            "name": _("Solicitar corrección"),
-            "res_model": "justech.do.dgii.report.reject.wizard",
-            "view_mode": "form",
-            "target": "new",
-            "context": {
-                "default_report_id": self.id,
-                "default_line_ids": [(6, 0, line_ids)],
-                "default_action_mode": "correction",
-            },
-        }
-
     def action_open_full_review(self):
         self.ensure_one()
-        form = self.env.ref(
-            "justech_l10n_do_reports.view_justech_do_fiscal_report_review_form",
-            raise_if_not_found=False,
-        )
-        return {
-            "type": "ir.actions.act_window",
-            "name": _("Revisión fiscal completa"),
-            "res_model": "justech.do.fiscal.report",
-            "res_id": self.id,
-            "view_mode": "form",
-            "views": [(form.id, "form")] if form else False,
-            "target": "current",
-        }
+        return self.action_open_fiscal_review()
 
 
 class JustechDoFiscalReportLinePendingTray(models.Model):
@@ -221,12 +170,9 @@ class JustechDoFiscalReportLinePendingTray(models.Model):
                     "approved_at": now,
                 }
             )
-            line.report_id.message_post(
-                body=_("Exclusión aprobada: %(doc)s") % {"doc": line.move_name}
-            )
-            line.report_id._log_audit(
+            line.report_id._post_workflow_event(
                 "approve",
-                line.exclusion_reason or _("Exclusión aprobada."),
+                line.exclusion_reason or _("Exclusión aprobada: %(doc)s") % {"doc": line.move_name},
                 move=line.move_id,
                 line=line,
             )
@@ -262,14 +208,3 @@ class JustechDoFiscalReportLinePendingTray(models.Model):
                 "default_action_mode": "correction",
             },
         }
-
-    def action_view_move_pdf(self):
-        self.ensure_one()
-        if not self.move_id:
-            raise UserError(_("No hay documento vinculado."))
-        report_xmlid = "account.account_invoices"
-        try:
-            report = self.env.ref(report_xmlid)
-        except ValueError:
-            raise UserError(_("No se encontró el reporte PDF de facturas.")) from None
-        return report.report_action(self.move_id)

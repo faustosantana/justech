@@ -1,6 +1,6 @@
 {
   "phase": "18.2-withholding-catalog",
-  "timestamp_utc": "2026-06-30T20:56:27.901224+00:00",
+  "timestamp_utc": "2026-06-30T20:55:04.336082+00:00",
   "database": "hellenia_test",
   "tests": {
     "module_upgrade": {

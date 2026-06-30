@@ -1,6 +1,6 @@
 {
   "phase": "17.4-payment-wizard-rpc-fix",
-  "timestamp_utc": "2026-06-30T20:49:34.782816+00:00",
+  "timestamp_utc": "2026-06-30T20:56:42.378805+00:00",
   "database": "hellenia_test",
   "root_cause": "El upgrade de hellenia_account se ejecutó en contenedor efímero (docker compose run) mientras el contenedor odoo en ejecución no reinició su registry Python. Las acciones/vistas en BD apuntaban a hellenia.payment.partner.wizard pero el worker HTTP tenía módulos en estado inconsistente (to upgrade) sin el modelo cargado → KeyError 404.",
   "fix_applied": [

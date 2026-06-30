@@ -1,10 +1,24 @@
 # Fase 18.2 — Validación TEST
 
-**Rama:** `cursor/phase18-2-withholding-catalog-dd85`  
-**Módulo:** `hellenia_account` 19.0.1.0.6  
+**Ejecutado en VPS TEST:** Sí — `srv.hellenia.cloud` / `hellenia_test`  
+**Rama base:** `cursor/phase18-2-withholding-catalog-dd85` (`8d79831`)  
+**Rama ejecutada:** `cursor/phase18-3-withholding-certification-dd85` (`c0838d0`) — requerida por fix upgrade  
+**Módulo:** `hellenia_account` **19.0.1.0.7**  
 **Script:** `scripts/phase18-2-validate-withholding-catalog-test.py`  
 **Deploy:** `scripts/run-phase18-2-test.sh`  
-**Evidencia:** `evidence/phase18-2-withholding-catalog-test.json`
+**Evidencia:** `evidence/phase18-2-withholding-catalog-test.json`  
+**Timestamp UTC:** 2026-06-30T20:55:37Z
+
+---
+
+## Resultado
+
+| Métrica | Valor |
+|---------|-------|
+| **TEST** | **PASS** |
+| Passed | **23 / 23** |
+| Failed | **0** |
+| Backup previo | `backups/test/2026-06-30_2054` |
 
 ---
 
@@ -66,13 +80,12 @@ Pasos internos del script:
 
 ## Resultado
 
-> Completar tras ejecución en VPS TEST con campo `ok: true` en evidencia.
-
 | Métrica | Valor |
 |---------|-------|
-| TEST | PENDIENTE / PASS / FAIL |
-| Passed | — |
-| Failed | — |
+| TEST | **PASS** |
+| Passed | **23 / 23** |
+| Failed | **0** |
+| Fecha ejecución VPS | 2026-06-30T20:55:37Z |
 | Producción | **NO promover sin aprobación explícita** |
 
 ---

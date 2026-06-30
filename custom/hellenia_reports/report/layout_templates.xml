@@ -3,18 +3,19 @@
 
     <!-- Bloques reutilizables -->
     <template id="hellenia_document_footer_blocks">
-        <div class="hellenia-terms mt-4" t-if="company.hellenia_terms_conditions">
+        <t t-set="hellenia_company" t-value="(o and o.company_id) or (doc and doc.company_id) or user.company_id"/>
+        <div class="hellenia-terms mt-4" t-if="hellenia_company.hellenia_terms_conditions">
             <strong class="hellenia-section-title">Términos y condiciones</strong>
-            <div t-field="company.hellenia_terms_conditions"/>
+            <div t-field="hellenia_company.hellenia_terms_conditions"/>
         </div>
-        <div class="hellenia-signature row mt-4 pt-3" t-if="company.hellenia_signature_image or company.hellenia_stamp_image">
-            <div class="col-6 text-center" t-if="company.hellenia_signature_image">
-                <img t-att-src="image_data_uri(company.hellenia_signature_image)"
+        <div class="hellenia-signature row mt-4 pt-3" t-if="hellenia_company.hellenia_signature_image or hellenia_company.hellenia_stamp_image">
+            <div class="col-6 text-center" t-if="hellenia_company.hellenia_signature_image">
+                <img t-att-src="image_data_uri(hellenia_company.hellenia_signature_image)"
                      class="hellenia-signature-img" alt="Firma"/>
                 <div class="hellenia-signature-line mt-2">Firma autorizada</div>
             </div>
-            <div class="col-6 text-center" t-if="company.hellenia_stamp_image">
-                <img t-att-src="image_data_uri(company.hellenia_stamp_image)"
+            <div class="col-6 text-center" t-if="hellenia_company.hellenia_stamp_image">
+                <img t-att-src="image_data_uri(hellenia_company.hellenia_stamp_image)"
                      class="hellenia-stamp-img" alt="Sello"/>
             </div>
         </div>

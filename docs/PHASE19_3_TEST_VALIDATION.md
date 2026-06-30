@@ -53,6 +53,8 @@ docker compose run --rm odoo odoo -d hellenia_test --stop-after-init \
 
 Corregido `groups_id` → `group_ids` (Odoo 19) en `test_phase19_3_dgii_review.py`.
 
+**Resultado unit tests:** **PASS 5/5** (0 errores)
+
 ## Notas
 
 - Solo TEST; no se promovió a producción.

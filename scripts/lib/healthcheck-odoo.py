@@ -7,7 +7,7 @@ import os
 import datetime as dt
 
 report = {
-    "timestamp_utc": datetime.now(timezone.utc).isoformat(),
+    "timestamp_utc": dt.datetime.now(dt.timezone.utc).isoformat(),
     "database": env.cr.dbname,
     "checks": {},
     "ok": True,
@@ -55,7 +55,7 @@ try:
     env.ref("justech_l10n_do_reports.action_justech_do_fiscal_report_wizard")
     for rtype in ("606", "607", "608"):
         wiz = env["justech.do.fiscal.report.wizard"].create(
-            {"report_type": rtype, "date_from": date.today().replace(day=1), "date_to": date.today()}
+            {"report_type": rtype, "date_from": dt.date.today().replace(day=1), "date_to": dt.date.today()}
         )
         wiz.action_generate()
         pass_check(f"report_{rtype}")

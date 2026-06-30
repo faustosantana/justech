@@ -20,8 +20,13 @@ CHECKS=()
 
 mkdir -p "$(dirname "$REPORT_JSON")" "$(dirname "$LOG_FILE")"
 hellenia_load_env "$ENV_FILE"
-ODOO_PUBLIC_HOST="${ODOO_PUBLIC_HOST:-test.${TRAEFIK_HOST:-hellenia.cloud}}"
+case "$ENV_NAME" in
+  prod) ODOO_PUBLIC_HOST="${ODOO_PUBLIC_HOST:-odoo.hellenia.cloud}" ;;
+  dev)  ODOO_PUBLIC_HOST="${ODOO_PUBLIC_HOST:-dev.hellenia.cloud}" ;;
+  *)    ODOO_PUBLIC_HOST="${ODOO_PUBLIC_HOST:-test.hellenia.cloud}" ;;
+esac
 export ODOO_PUBLIC_HOST
+COMPOSE_DIR="$PROJECT_ROOT/docker/${ENV_DIR}"
 
 workers_cfg=0
 CONF_FILE="$PROJECT_ROOT/config/${ENV_DIR}/odoo.conf"
@@ -101,7 +106,10 @@ fi
 # --- Traefik ---
 if hellenia_container_running "traefik-traefik-1"; then
   record "traefik_container" "PASS"
-  if docker logs traefik-traefik-1 2>&1 | tail -300 | grep -qE "Router ${PROJECT} cannot be linked"; then
+  svc_label=$(docker inspect "$ODOO_CONTAINER" --format '{{index .Config.Labels "traefik.http.routers.'"${PROJECT}"'.service"}}' 2>/dev/null || echo "")
+  if [[ -n "$svc_label" ]]; then
+    record "traefik_router_link" "PASS" "service=${svc_label}"
+  elif docker logs traefik-traefik-1 2>&1 | tail -300 | grep -qE "Router ${PROJECT} cannot be linked"; then
     record "traefik_router_link" "FAIL" "router sin service explícito"
   else
     record "traefik_router_link" "PASS"
@@ -140,11 +148,7 @@ else
   record "assets_static" "FAIL" "HTTP $assets_code"
 fi
 
-# --- WebSocket route (Traefik) — con workers=0 el bus usa puerto 8069 ---
-workers_cfg=0
-if [[ -f "$PROJECT_ROOT/config/${ENV_DIR}/odoo.conf" ]]; then
-  workers_cfg=$(grep -E '^workers\s*=' "$PROJECT_ROOT/config/${ENV_DIR}/odoo.conf" 2>/dev/null | awk '{print $3}' || echo 0)
-fi
+# --- WebSocket route (Traefik) ---
 ws_code=$(curl -sS -o /dev/null -w '%{http_code}' --max-time 10 \
   -H "Connection: Upgrade" -H "Upgrade: websocket" \
   "${BASE_URL}/websocket" 2>/dev/null || echo "000")
@@ -164,7 +168,7 @@ fi
 db_exists="${db_exists:-}"
 if hellenia_container_running "$ODOO_CONTAINER" && [[ "${db_exists:-}" == "1" ]]; then
   ODOO_OUT="$PROJECT_ROOT/evidence/healthcheck-${ENV_NAME}-${TS}-odoo.json"
-  if docker compose --env-file "$ENV_FILE" exec -T odoo odoo shell \
+  if docker compose --env-file "$ENV_FILE" -f "$COMPOSE_DIR/docker-compose.yml" exec -T odoo odoo shell \
     -d "${ODOO_DB_NAME}" --db_host=db --db_user="${DB_USER}" --db_password="${DB_PASSWORD}" --no-http \
     < "${SCRIPT_DIR}/lib/healthcheck-odoo.py" >"$ODOO_OUT" 2>>"$LOG_FILE"; then
     if python3 -c "import json; d=json.load(open('$ODOO_OUT')); exit(0 if d.get('ok') else 1)" 2>/dev/null; then

@@ -1,0 +1,75 @@
+Wrote /workspace/evidence/l10n-do-tests/2026-06-30/TC-000/result.json
+{
+  "tc": "TC-000",
+  "baseline": {
+    "timestamp_utc": "2026-06-30T03:49:04.522323+00:00",
+    "odoo_version": {
+      "server_version": "19.0+e-20260619",
+      "server_version_info": [
+        19,
+        0,
+        0,
+        "final",
+        0,
+        "e"
+      ],
+      "server_serie": "19.0",
+      "protocol_version": 1
+    },
+    "uid": 2,
+    "modules": {
+      "web_enterprise": {
+        "id": 1407,
+        "name": "web_enterprise",
+        "state": "installed",
+        "shortdesc": "Web Enterprise"
+      },
+      "account": {
+        "id": 1,
+        "name": "account",
+        "state": "uninstalled",
+        "shortdesc": "Invoicing"
+      },
+      "account_accountant": {
+        "id": 702,
+        "name": "account_accountant",
+        "state": "uninstalled",
+        "shortdesc": "Invoicing"
+      },
+      "account_reports": {
+        "id": 735,
+        "name": "account_reports",
+        "state": "uninstalled",
+        "shortdesc": "Accounting Reports"
+      },
+      "l10n_do": {
+        "id": 175,
+        "name": "l10n_do",
+        "state": "uninstalled",
+        "shortdesc": "Dominican Republic - Accounting"
+      },
+      "l10n_do_reports": {
+        "id": 1016,
+        "name": "l10n_do_reports",
+        "state": "uninstalled",
+        "shortdesc": "Dominican Republic - Accounting Reports"
+      },
+      "l10n_do_edi": {
+        "name": "l10n_do_edi",
+        "state": "absent"
+      }
+    },
+    "companies": [
+      {
+        "id": 1,
+        "name": "My Company",
+        "country_id": false,
+        "currency_id": [
+          1,
+          "USD"
+        ],
+        "vat": false
+      }
+    ]
+  }
+}

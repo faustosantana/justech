@@ -1,0 +1,104 @@
+ Container hellenia-test-db-1 Running 
+ Container hellenia-test-db-1 Waiting 
+ Container hellenia-test-db-1 Healthy 
+ Container hellenia-test-odoo-run-16c041ed3c41 Creating 
+ Container hellenia-test-odoo-run-16c041ed3c41 Created 
+2026-06-30 12:23:01,572 1 WARNING ? odoo.tools.config: option logfile reads 'False' in the config file at /etc/odoo/odoo.conf but isn't a boolean option, skip 
+2026-06-30 12:23:01,572 1 WARNING ? odoo.tools.config: option logfile reads 'False' in the config file at /etc/odoo/odoo.conf but isn't a boolean option, skip 
+2026-06-30 12:23:01,572 1 INFO ? odoo: Odoo version 19.0-20260619 
+2026-06-30 12:23:01,572 1 INFO ? odoo: Using configuration file at /etc/odoo/odoo.conf 
+2026-06-30 12:23:01,572 1 INFO ? odoo: addons paths: _NamespacePath(['/usr/lib/python3/dist-packages/odoo/addons', '/var/lib/odoo/addons/19.0', '/mnt/enterprise/addons', '/mnt/custom', '/usr/lib/python3/dist-packages/addons']) 
+2026-06-30 12:23:01,573 1 INFO ? odoo: database: odoo@db:5432 
+2026-06-30 12:23:01,799 1 INFO ? odoo.service.server: Initiating shutdown 
+2026-06-30 12:23:01,799 1 INFO ? odoo.service.server: Hit CTRL-C again or send a second signal to force the shutdown. 
+2026-06-30 12:23:01,826 1 INFO hellenia_test odoo.modules.loading: loading 1 modules... 
+2026-06-30 12:23:01,829 1 INFO hellenia_test odoo.modules.loading: 1 modules loaded in 0.00s, 0 queries (+0 extra) 
+2026-06-30 12:23:01,859 1 INFO hellenia_test odoo.modules.loading: loading 112 modules... 
+2026-06-30 12:23:02,641 1 WARNING hellenia_test odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define models.Constraint on the model. 
+2026-06-30 12:23:02,665 1 WARNING hellenia_test odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define models.Constraint on the model. 
+2026-06-30 12:23:02,672 1 INFO hellenia_test odoo.modules.loading: 112 modules loaded in 0.81s, 0 queries (+0 extra) 
+2026-06-30 12:23:02,819 1 INFO hellenia_test odoo.modules.loading: Modules loaded. 
+2026-06-30 12:23:02,829 1 WARNING hellenia_test odoo.schema: Missing not-null constraint on res.users.settings.color_scheme 
+2026-06-30 12:23:02,869 1 INFO hellenia_test odoo.registry: Registry loaded in 1.070s 
+2026-06-30 12:23:03,692 1 INFO hellenia_test odoo.models.unlink: User #1 deleted account.move.line records with IDs: [950] 
+2026-06-30 12:23:04,339 1 INFO hellenia_test odoo.addons.base.models.ir_actions_report: Will use the Wkhtmltopdf binary at /usr/local/bin/wkhtmltopdf 
+2026-06-30 12:23:04,346 1 INFO hellenia_test odoo.addons.base.models.ir_actions_report: Will use the Wkhtmltoimage binary at /usr/local/bin/wkhtmltoimage 
+2026-06-30 12:23:04,596 1 INFO hellenia_test odoo.addons.base.models.ir_attachment: _read_file reading /var/lib/odoo/filestore/hellenia_test/48/48f096306c5c9f5506a84a27c6eaf0774b00e5b1 
+Traceback (most recent call last):
+  File "/usr/lib/python3/dist-packages/odoo/addons/base/models/ir_attachment.py", line 151, in _file_read
+    with open(full_path, 'rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/var/lib/odoo/filestore/hellenia_test/48/48f096306c5c9f5506a84a27c6eaf0774b00e5b1'
+2026-06-30 12:23:06,960 1 INFO hellenia_test odoo.addons.base.models.ir_actions_report: The PDF report has been generated for model: account.move, records [308]. 
+PHASE6_MVP ok: true
+{
+  "phase": 6,
+  "mvp": true,
+  "timestamp_utc": "2026-06-30T12:23:02.947818+00:00",
+  "company": "Hellenia, S.R.L.",
+  "modules": {
+    "justech_l10n_do_base": "installed",
+    "justech_l10n_do_ncf": "installed",
+    "justech_l10n_do_reports": "installed"
+  },
+  "tests": {
+    "invoice_b02": {
+      "status": "PASS",
+      "detail": "B0200001000"
+    },
+    "invoice_b01": {
+      "status": "PASS",
+      "detail": "B0100001000"
+    },
+    "credit_note_b04": {
+      "status": "PASS",
+      "detail": "B0400001000"
+    },
+    "duplicate_ncf": {
+      "status": "PASS",
+      "detail": "blocked"
+    },
+    "report_608": {
+      "status": "PASS",
+      "detail": "1 void line(s), ncf=B0200001001"
+    },
+    "purchase_b11": {
+      "status": "PASS",
+      "detail": "B1100001000"
+    },
+    "purchase_b13": {
+      "status": "PASS",
+      "detail": "B1300001000"
+    },
+    "report_607": {
+      "status": "PASS",
+      "detail": "5"
+    },
+    "report_606": {
+      "status": "PASS",
+      "detail": "5"
+    },
+    "balanced_entry": {
+      "status": "PASS",
+      "detail": "debit=118.0 credit=118.0"
+    },
+    "receivable_line": {
+      "status": "PASS",
+      "detail": "118.0"
+    },
+    "pdf_ncf": {
+      "status": "PASS",
+      "detail": "22902 bytes"
+    },
+    "depleted_range": {
+      "status": "PASS",
+      "detail": "blocked"
+    },
+    "expired_range": {
+      "status": "PASS",
+      "detail": "blocked"
+    }
+  },
+  "ok": true,
+  "errors": []
+}

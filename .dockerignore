@@ -1,0 +1,11 @@
+.git
+.github
+repository
+downloads
+backups
+logs
+enterprise/odoo-19.0+e.*
+enterprise/odoo-19.0+e.*
+**/node_modules
+**/__pycache__
+**/*.pyc

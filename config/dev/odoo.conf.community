@@ -1,0 +1,11 @@
+[options]
+; Community DEV — referencia rollback pre-Enterprise image
+addons_path = /mnt/enterprise,/usr/lib/python3/dist-packages/odoo/addons,/mnt/custom
+data_dir = /var/lib/odoo
+dbfilter = ^hellenia_dev$
+list_db = False
+log_level = debug
+logfile = False
+workers = 0
+proxy_mode = True
+admin_passwd = CHANGE_ME_ADMIN_PASSWORD

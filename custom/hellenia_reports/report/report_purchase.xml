@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Orden de compra -->
+    <template id="report_purchaseorder_document_hellenia" inherit_id="purchase.report_purchaseorder_document">
+        <xpath expr="//div[hasclass('page')]" position="attributes">
+            <attribute name="class" add="hellenia-purchase-doc" separator=" "/>
+        </xpath>
+
+        <xpath expr="//t[@t-set='layout_document_title']" position="replace">
+            <t t-set="layout_document_title">
+                <t t-if="o.state in ['draft', 'sent', 'to approve']">Solicitud de cotización Nº <span t-field="o.name"/></t>
+                <t t-if="o.state == 'purchase'">Orden de compra Nº <span t-field="o.name"/></t>
+                <t t-if="o.state == 'cancel'">Orden de compra cancelada Nº <span t-field="o.name"/></t>
+            </t>
+        </xpath>
+
+        <xpath expr="//strong[text()='Buyer']" position="replace">
+            <strong>Comprador</strong>
+        </xpath>
+        <xpath expr="//strong[text()='Your Order Reference']" position="replace">
+            <strong>Referencia proveedor</strong>
+        </xpath>
+        <xpath expr="//strong[text()='Order Date:']" position="replace">
+            <strong>Fecha orden:</strong>
+        </xpath>
+        <xpath expr="//strong[text()='Order Deadline:']" position="replace">
+            <strong>Fecha límite:</strong>
+        </xpath>
+        <xpath expr="//strong[text()='Expected Arrival:']" position="replace">
+            <strong>Llegada estimada:</strong>
+        </xpath>
+        <xpath expr="//strong[text()='Shipping address']" position="replace">
+            <strong>Dirección de envío</strong>
+        </xpath>
+
+        <xpath expr="//th[@name='th_description']/strong" position="replace">
+            <strong>Descripción</strong>
+        </xpath>
+        <xpath expr="//th[@name='th_quantity']/strong" position="replace">
+            <strong>Cant.</strong>
+        </xpath>
+        <xpath expr="//th[@name='th_price_unit']/strong" position="replace">
+            <strong>Precio unit.</strong>
+        </xpath>
+        <xpath expr="//th[@name='th_discount']/strong" position="replace">
+            <strong>Desc.</strong>
+        </xpath>
+
+        <xpath expr="//table[hasclass('o_main_table')]" position="attributes">
+            <attribute name="class" add="hellenia-lines-table" separator=" "/>
+        </xpath>
+
+        <xpath expr="//div[hasclass('page')]" position="inside">
+            <t t-call="hellenia_reports.hellenia_document_footer_blocks"/>
+        </xpath>
+    </template>
+
+    <!-- RFQ -->
+    <template id="report_purchasequotation_document_hellenia" inherit_id="purchase.report_purchasequotation_document">
+        <xpath expr="//div[hasclass('page')]" position="attributes">
+            <attribute name="class" add="hellenia-purchase-doc" separator=" "/>
+        </xpath>
+
+        <xpath expr="//t[@t-set='layout_document_title']" position="replace">
+            <t t-set="layout_document_title">
+                <span>Solicitud de cotización <span t-field="o.name"/></span>
+            </t>
+        </xpath>
+
+        <xpath expr="//strong[text()='Shipping address']" position="replace">
+            <strong>Dirección de envío</strong>
+        </xpath>
+        <xpath expr="//strong[text()='Requested Ship Date:']" position="replace">
+            <strong>Fecha envío solicitada:</strong>
+        </xpath>
+
+        <xpath expr="//th[@name='th_description']/strong" position="replace">
+            <strong>Descripción</strong>
+        </xpath>
+        <xpath expr="//th[@name='th_expected_date']/strong" position="replace">
+            <strong>Fecha esperada</strong>
+        </xpath>
+        <xpath expr="//th[@name='th_quantity']/strong" position="replace">
+            <strong>Cant.</strong>
+        </xpath>
+
+        <xpath expr="//div[hasclass('page')]" position="inside">
+            <t t-call="hellenia_reports.hellenia_document_footer_blocks"/>
+        </xpath>
+    </template>
+
+</odoo>

@@ -1,0 +1,21 @@
+TC-000 backup ejecutado 2026-06-30 03:53:53 UTC (VPS srv.hellenia.cloud)
+Ruta: /opt/odoo-projects/hellenia/backups/dev/2026-06-30_0353
+
+backup-dev.sh: OK
+verify-backup-dev.sh: RESULTADO backup completo y válido
+
+Artefactos:
+- postgres_all.sql.gz (615957 bytes)
+- filestore.tar.gz (635436 bytes)
+- docker-compose.yml
+- odoo.conf
+- .env
+- custom.tar.gz (4390 bytes)
+- MANIFEST.txt
+
+MANIFEST:
+timestamp=2026-06-30_0353
+environment=dev
+project=hellenia-dev
+db_container=hellenia-dev-db-1
+odoo_volume=hellenia-dev_odoo-data

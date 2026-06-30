@@ -97,7 +97,7 @@ class JustechDoFiscalReportReview(models.Model):
 
     def _log_audit(self, event_type, description="", move=None, line=None, file_hash=False, file_name=False):
         self.ensure_one()
-        return self.env["justech.do.dgii.report.audit"].create(
+        return self.env["justech.do.dgii.report.audit"].sudo().create(
             {
                 "report_id": self.id,
                 "event_type": event_type,
@@ -263,7 +263,7 @@ class JustechDoFiscalReportReview(models.Model):
                     lambda a: a.line_id == line and a.state == "pending"
                 )
                 if not existing:
-                    self.env["justech.do.dgii.report.approval"].create(
+                    self.env["justech.do.dgii.report.approval"].sudo().create(
                         {
                             "report_id": report.id,
                             "line_id": line.id,

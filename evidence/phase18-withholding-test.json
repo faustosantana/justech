@@ -1,0 +1,99 @@
+{
+  "phase": "18-withholding-engine",
+  "timestamp_utc": "2026-06-30T20:19:12.164492+00:00",
+  "database": "hellenia_test",
+  "tests": {
+    "module_upgrade": {
+      "status": "PASS",
+      "detail": "19.0.1.0.5"
+    },
+    "catalog_loaded": {
+      "status": "PASS",
+      "detail": [
+        "wh_isr_gov",
+        "wh_itbis_30",
+        "wh_itbis_100",
+        "wh_isr_10",
+        "wh_itbis_75",
+        "wh_isr_2",
+        "wh_isr_fees_10"
+      ]
+    },
+    "01_no_withholding": {
+      "status": "PASS",
+      "detail": "paid"
+    },
+    "02_single_withholding": {
+      "status": "PASS",
+      "detail": "wh=9.72"
+    },
+    "03_dual_same_invoice": {
+      "status": "PASS",
+      "detail": 2
+    },
+    "04_mixed_two_invoices": {
+      "status": "PASS",
+      "detail": "Ninguna|Retención ITBIS 30%"
+    },
+    "05_three_mixed": {
+      "status": "PASS",
+      "detail": [
+        "Ninguna",
+        "Retención 5% Gobierno",
+        "Retención ITBIS 30%, Retención proveedor informal 10%"
+      ]
+    },
+    "06_partial_with_wh": {
+      "status": "PASS",
+      "detail": "partial"
+    },
+    "07_full_with_wh": {
+      "status": "PASS",
+      "detail": "paid"
+    },
+    "08_vendor_withholding": {
+      "status": "PASS",
+      "detail": "Retención ITBIS 30%"
+    },
+    "09_customer_withholding": {
+      "status": "PASS",
+      "detail": "Retención 5% Gobierno"
+    },
+    "10_report_606": {
+      "status": "PASS",
+      "detail": "606"
+    },
+    "11_report_607": {
+      "status": "PASS",
+      "detail": "607"
+    },
+    "12_balanced_entry": {
+      "status": "PASS",
+      "detail": "D=1180.00"
+    },
+    "13_reconciliation_ready": {
+      "status": "PASS",
+      "detail": "BNKD"
+    },
+    "14_pdf_ok": {
+      "status": "PASS",
+      "detail": "INV/2026/00189"
+    },
+    "15_wizard_rpc": {
+      "status": "PASS",
+      "detail": 62
+    },
+    "ux_default_none": {
+      "status": "PASS",
+      "detail": "Ninguna"
+    }
+  },
+  "ok": true,
+  "errors": [],
+  "summary": {
+    "passed": 18,
+    "failed": 0,
+    "total": 18
+  },
+  "production_ready": false
+}

@@ -32,4 +32,8 @@ Evidencia: `evidence/phase18-withholding-test.json`
 
 ## Estado
 
-Ver `ok` y `summary` tras ejecutar en TEST.
+**TEST: PASS 18/18** — regresión Fase 17.4: 18/18, Fase 16: 23/23
+
+Evidencia: `evidence/phase18-withholding-test.json`
+
+**PROD: NO promovido** — pendiente aprobación explícita.

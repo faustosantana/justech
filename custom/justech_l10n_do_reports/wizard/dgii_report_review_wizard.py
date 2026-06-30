@@ -15,6 +15,9 @@ class JustechDoDgiiReportExcludeWizard(models.TransientModel):
     )
     line_ids = fields.Many2many(
         "justech.do.fiscal.report.line",
+        "dgii_excl_wiz_line_rel",
+        "wizard_id",
+        "line_id",
         string="Líneas",
         required=True,
     )

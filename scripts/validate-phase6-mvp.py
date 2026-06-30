@@ -179,8 +179,18 @@ try:
 except Exception:
     pass_("duplicate_ncf", "blocked")
 
-# Depleted range
+# Depleted range — isolate journal so only the 1-sequence range applies
 try:
+    depleted_journal = env["account.journal"].create(
+        {
+            "name": "Phase6 Depleted Test",
+            "code": "PDT",
+            "type": "sale",
+            "company_id": company.id,
+            "justech_do_use_ncf": True,
+            "justech_do_document_type_ids": [Command.set([doc_b02.id])],
+        }
+    )
     depleted = Range.create(
         {
             "name": "Phase6 Depleted",
@@ -191,13 +201,50 @@ try:
             "next_sequence": 1,
             "date_from": today - timedelta(days=1),
             "date_to": today + timedelta(days=30),
-            "journal_ids": [Command.set(journal_sale.ids)],
+            "journal_ids": [Command.set(depleted_journal.ids)],
         }
     )
     depleted.action_activate()
-    m_dep = mk_invoice(env["res.partner"].create({"name": "Depleted CF"}))
+    dep_partner = env["res.partner"].create({"name": "Depleted CF"})
+    m_dep = env["account.move"].create(
+        {
+            "move_type": "out_invoice",
+            "partner_id": dep_partner.id,
+            "journal_id": depleted_journal.id,
+            "invoice_date": today,
+            "invoice_line_ids": [
+                Command.create(
+                    {
+                        "product_id": product.id,
+                        "quantity": 1,
+                        "price_unit": 100.0,
+                        "tax_ids": [Command.set(tax_18.ids)] if tax_18 else [],
+                    }
+                )
+            ],
+        }
+    )
     m_dep.action_post()
-    mk_invoice(env["res.partner"].create({"name": "Depleted CF 2"})).action_post()
+    dep_partner2 = env["res.partner"].create({"name": "Depleted CF 2"})
+    m_dep2 = env["account.move"].create(
+        {
+            "move_type": "out_invoice",
+            "partner_id": dep_partner2.id,
+            "journal_id": depleted_journal.id,
+            "invoice_date": today,
+            "invoice_line_ids": [
+                Command.create(
+                    {
+                        "product_id": product.id,
+                        "quantity": 1,
+                        "price_unit": 100.0,
+                        "tax_ids": [Command.set(tax_18.ids)] if tax_18 else [],
+                    }
+                )
+            ],
+        }
+    )
+    m_dep2.action_post()
     fail("depleted_range", "should have raised")
 except Exception:
     pass_("depleted_range", "blocked")
@@ -319,10 +366,12 @@ except Exception as e:
 
 # Balanced entry + AR
 try:
-    if abs(m_b02.amount_total_signed - sum(m_b02.line_ids.mapped("balance"))) > 0.02:
-        fail("balanced_entry", "move not balanced")
+    debits = sum(m_b02.line_ids.mapped("debit"))
+    credits = sum(m_b02.line_ids.mapped("credit"))
+    if abs(debits - credits) > 0.02:
+        fail("balanced_entry", f"debit={debits} credit={credits}")
     else:
-        pass_("balanced_entry", str(m_b02.amount_total_signed))
+        pass_("balanced_entry", f"debit={debits} credit={credits}")
     receivable = m_b02.line_ids.filtered(lambda l: l.account_id.account_type == "asset_receivable")
     if not receivable:
         fail("receivable_line", "missing")

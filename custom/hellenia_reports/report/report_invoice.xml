@@ -6,7 +6,7 @@
             <attribute name="class" add="hellenia-invoice-doc" separator=" "/>
         </xpath>
 
-        <!-- Título fiscal dinámico (sin Proforma Invoice) -->
+        <!-- Títulos fiscales dinámicos (sin Proforma Invoice) -->
         <xpath expr="//t[@name='invoice_title']" position="replace">
             <t name="invoice_title" t-out="o.hellenia_fiscal_document_title()"/>
         </xpath>
@@ -27,6 +27,12 @@
         </xpath>
         <xpath expr="//t[@name='proforma_invoice_title']" position="replace">
             <t name="proforma_invoice_title" t-out="o.hellenia_fiscal_document_title()"/>
+        </xpath>
+        <xpath expr="//t[@name='draft_proforma_invoice_title']" position="replace">
+            <t name="draft_proforma_invoice_title" t-out="o.hellenia_fiscal_document_title()"/>
+        </xpath>
+        <xpath expr="//t[@name='proforma_credit_note_title']" position="replace">
+            <t name="proforma_credit_note_title">NOTA DE CRÉDITO</t>
         </xpath>
 
         <!-- NCF destacado (sin QR — no e-CF) -->
@@ -61,20 +67,19 @@
         <xpath expr="//strong[text()='Source']" position="replace">
             <strong>Origen</strong>
         </xpath>
-        <xpath expr="//strong[text()='Customer Code']" position="replace">
-            <strong>Código cliente</strong>
+        <xpath expr="//div[@name='customer_code']/strong" position="replace">
+            <strong>Cliente</strong>
         </xpath>
-        <xpath expr="//strong[text()='Reference']" position="replace">
+        <xpath expr="//div[@name='reference']/strong" position="replace">
             <strong>Referencia</strong>
         </xpath>
-        <xpath expr="//span[text()='Untaxed Amount']" position="replace">
-            <span>Subtotal</span>
-        </xpath>
-        <xpath expr="//span[text()='Payment Communication']" position="replace">
-            <span>Concepto de pago</span>
-        </xpath>
-        <xpath expr="//span[text()='Amount Due']" position="replace">
-            <span>Total pendiente</span>
+        <xpath expr="//p[@name='payment_communication']" position="replace">
+            <p name="payment_communication" t-if="o.move_type in ('out_invoice', 'in_refund') and o.payment_reference">
+                Concepto de pago: <span class="fw-bold" t-field="o.payment_reference"/>
+                <t t-if="o.partner_bank_id">
+                    <br/>Cuenta bancaria: <span t-field="o.partner_bank_id" class="fw-bold"/>
+                </t>
+            </p>
         </xpath>
 
         <xpath expr="//th[@name='th_description']/span" position="replace">
@@ -93,6 +98,10 @@
             <span>Importe</span>
         </xpath>
 
+        <!-- Sin QR (no facturación electrónica) -->
+        <xpath expr="//div[@id='qrcode']" position="replace"/>
+        <xpath expr="//div[@name='qr_code_placeholder']" position="replace"/>
+
         <xpath expr="//table[@name='invoice_line_table']" position="attributes">
             <attribute name="class" add="hellenia-lines-table" separator=" "/>
         </xpath>
@@ -102,7 +111,7 @@
         </xpath>
     </template>
 
-    <!-- Ocultar bloque NCF duplicado de justech (ya integrado en caja destacada) -->
+    <!-- Ocultar bloque NCF duplicado de justech -->
     <template id="report_invoice_document_hellenia_ncf_cleanup"
               inherit_id="justech_l10n_do_ncf.report_invoice_document_justech_ncf">
         <xpath expr="//div[@name='justech_ncf']" position="replace"/>

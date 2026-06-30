@@ -15,7 +15,8 @@ services:
       - PASSWORD=${DB_PASSWORD}
     volumes:
       - odoo-data:/var/lib/odoo
-      - ${ADDONS_PATH}:/mnt/extra-addons:ro
+      - ${ENTERPRISE_PATH}:/mnt/enterprise:ro
+      - ${CUSTOM_ADDONS_PATH}:/mnt/custom:ro
       - ${ODOO_CONF_PATH}:/etc/odoo/odoo.conf:ro
     depends_on:
       db:

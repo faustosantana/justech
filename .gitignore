@@ -3,6 +3,14 @@
 **/.env
 !**/.env.example
 
+# Credenciales servidor (PAT GitHub, etc.)
+config/credentials/
+!config/credentials/*.example
+
+# Código Enterprise — repo Git independiente en VPS
+enterprise/*
+!enterprise/README.md
+
 # Backups y logs operativos
 backups/
 logs/
@@ -20,3 +28,6 @@ __pycache__/
 # OS
 .DS_Store
 Thumbs.db
+
+# Legacy
+addons/

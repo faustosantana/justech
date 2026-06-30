@@ -19,7 +19,9 @@ Cursor local → GitHub → DEV → TEST → Producción
 
 | Recurso | Ruta |
 |---------|------|
-| Addons | `/opt/odoo-projects/hellenia/addons/` |
+| Addons custom | `/opt/odoo-projects/hellenia/custom/` |
+| Enterprise (clone) | `/opt/odoo-projects/hellenia/enterprise/` |
+| Community | Imagen Docker `odoo:19.0-20260619` |
 | Compose DEV | `/opt/odoo-projects/hellenia/docker/dev/` |
 | Compose TEST | `/opt/odoo-projects/hellenia/docker/test/` |
 | Config DEV | `/opt/odoo-projects/hellenia/config/dev/` |
@@ -39,7 +41,12 @@ Cursor local → GitHub → DEV → TEST → Producción
 
 ## Documentación
 
-- [Análisis Odoo Enterprise](ENTERPRISE_ANALYSIS.md) — **pendiente aprobación**
+- [Arquitectura](ARCHITECTURE.md) — separación Community / Enterprise / Custom
+- [E0.5 Validación suscripción](E0.5-SUBSCRIPTION-VALIDATION.md)
+- [E0.6 GitHub Enterprise](E0.6-GITHUB-ENTERPRISE.md)
+- [Estrategia Git](GIT-STRATEGY.md)
+- [Infile — requisitos](INFILE-REQUIREMENTS.md)
+- [Análisis Odoo Enterprise](ENTERPRISE_ANALYSIS.md)
 - [Análisis técnico Odoo 19](VERSION-19-ANALYSIS.md)
 - [Runbook migración 18→19](MIGRATION-19.md)
 

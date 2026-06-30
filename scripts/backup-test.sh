@@ -64,7 +64,7 @@ else
   log "WARN: Contenedor hellenia-test-odoo-1 no está corriendo — backup parcial" | tee -a "$LOG_FILE"
 fi
 
-tar czf "${DEST}/addons.tar.gz" -C "$PROJECT_ROOT" addons
+tar czf "${DEST}/custom.tar.gz" -C "$PROJECT_ROOT" custom
 cp "${COMPOSE_DIR}/docker-compose.yml" "${DEST}/"
 cp "$PROJECT_ROOT/config/test/odoo.conf" "${DEST}/"
 cp "${ENV_FILE}" "${DEST}/.env"

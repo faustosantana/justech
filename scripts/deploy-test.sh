@@ -24,7 +24,7 @@ git fetch origin 2>/dev/null || true
 git checkout "$COMMIT"
 git pull origin "$COMMIT" 2>/dev/null || true
 
-rsync -av --delete "$REPO/addons/" "$PROJECT_ROOT/addons/"
+rsync -av --delete "$REPO/custom/" "$PROJECT_ROOT/custom/"
 
 if [[ ! -f "$ENV_FILE" ]]; then
   log "ERROR: Crear $ENV_FILE desde .env.example antes de desplegar"

@@ -53,14 +53,14 @@ user = env["res.users"].search([("login", "=", IT_LOGIN)], limit=1)
 if not user:
     err(f"Usuario {IT_LOGIN} no encontrado")
 else:
-    groups = user.groups_id
+    groups = user.group_ids
     sale_mgr = env.ref("sales_team.group_sale_manager", raise_if_not_found=False)
     grp_system = env.ref("base.group_system", raise_if_not_found=False)
     report["user"] = {
         "login": user.login,
         "groups": sorted(groups.mapped("full_name")),
-        "has_sale_manager": bool(sale_mgr and sale_mgr in user.groups_id),
-        "has_group_system": bool(grp_system and grp_system in user.groups_id),
+        "has_sale_manager": bool(sale_mgr and sale_mgr in user.group_ids),
+        "has_group_system": bool(grp_system and grp_system in user.group_ids),
     }
     if not report["user"]["has_sale_manager"]:
         err("it@justech.do sin grupo Administrador de Ventas")
@@ -82,7 +82,7 @@ for label, xmlids in EXPECTED_ROOTS.items():
     for xid in xmlids:
         menu = env.ref(xid, raise_if_not_found=False)
         if menu and menu.active:
-            visible = not menu.group_ids or bool(menu.group_ids & user.groups_id)
+            visible = not menu.group_ids or bool(menu.group_ids & user.group_ids)
             display = menu.with_context(lang=lang).name or menu.name
             report["expected_roots"][label] = {
                 "xmlid": xid,

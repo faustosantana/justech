@@ -50,18 +50,17 @@ if ncf_seq:
 else:
     fail("ncf_sequence", "Sin rango NCF activo (justech.do.ncf.range)")
 
-# --- Reportes DGII (acciones existen) ---
-dgii_actions = [
-    ("report_606", "justech_l10n_do_ncf.action_606_report"),
-    ("report_607", "justech_l10n_do_ncf.action_607_report"),
-    ("report_608", "justech_l10n_do_ncf.action_608_report"),
-]
-for key, xmlid in dgii_actions:
-    try:
-        env.ref(xmlid)
-        pass_check(key)
-    except Exception as exc:
-        fail(key, f"{xmlid}: {exc}")
+# --- Reportes DGII (wizard Justech) ---
+try:
+    env.ref("justech_l10n_do_reports.action_justech_do_fiscal_report_wizard")
+    for rtype in ("606", "607", "608"):
+        wiz = env["justech.do.fiscal.report.wizard"].create(
+            {"report_type": rtype, "date_from": date.today().replace(day=1), "date_to": date.today()}
+        )
+        wiz.action_generate()
+        pass_check(f"report_{rtype}")
+except Exception as exc:
+    fail("report_dgii", str(exc))
 
 # --- PDF corporativo (layout QWeb) ---
 try:

@@ -41,6 +41,10 @@ tax_18 = env["account.tax"].search(
     [("company_id", "=", company.id), ("amount", "=", 18), ("type_tax_use", "=", "sale"), ("active", "=", True)],
     limit=1,
 )
+tax_18_purchase = env["account.tax"].search(
+    [("company_id", "=", company.id), ("amount", "=", 18), ("type_tax_use", "=", "purchase"), ("active", "=", True)],
+    limit=1,
+) or tax_18
 tax_15_active = env["account.tax"].search_count(
     [("company_id", "=", company.id), ("amount", "=", 15), ("active", "=", True)]
 )
@@ -70,9 +74,18 @@ if not product:
 elif tax_18:
     product.taxes_id = [Command.set(tax_18.ids)]
 
-partner = env["res.partner"].search([("customer_rank", ">", 0)], limit=1) or env["res.partner"].create(
-    {"name": "Cliente P13.2", "customer_rank": 1}
+partner_b01 = env["res.partner"].search([("vat", "!=", False), ("customer_rank", ">", 0)], limit=1)
+if not partner_b01:
+    partner_b01 = env["res.partner"].create(
+        {"name": "Cliente B01 P13.2", "vat": "131000000", "customer_rank": 1}
+    )
+partner_b02 = env["res.partner"].search(
+    [("customer_rank", ">", 0), "|", ("vat", "=", False), ("vat", "=", "")], limit=1
 )
+if not partner_b02:
+    partner_b02 = env["res.partner"].create({"name": "Consumidor final P13.2", "customer_rank": 1})
+
+partner = partner_b02
 
 so = env["sale.order"].create({"partner_id": partner.id})
 env["sale.order.line"].create(
@@ -118,7 +131,7 @@ if journal_sale and tax_18:
         inv = env["account.move"].create(
             {
                 "move_type": "out_invoice",
-                "partner_id": partner.id,
+                "partner_id": partner_b01.id if key == "b01" else partner_b02.id,
                 "journal_id": journal_sale.id,
                 "invoice_date": today,
                 "justech_do_document_type_id": doc.id,
@@ -188,7 +201,7 @@ s5 = {}
 vendor = env["res.partner"].search([("supplier_rank", ">", 0)], limit=1) or env["res.partner"].create(
     {"name": "Proveedor P13.2", "supplier_rank": 1}
 )
-if journal_purchase and tax_18:
+if journal_purchase and tax_18_purchase:
     for doc_xml, key in (
         ("justech_l10n_do_base.doc_type_b11", "b11"),
         ("justech_l10n_do_base.doc_type_b13", "b13"),
@@ -211,7 +224,7 @@ if journal_purchase and tax_18:
                             "name": f"Compra {doc.prefix}",
                             "quantity": 1,
                             "price_unit": 2000.0,
-                            "tax_ids": [Command.set(tax_18.ids)],
+                            "tax_ids": [Command.set(tax_18_purchase.ids)],
                         }
                     )
                 ],

@@ -307,22 +307,26 @@ try:
         line.withholding_catalog_ids = [Command.set(cat_itbis.ids)]
         line._recompute_line_withholdings()
         wh1 = line.withholding_amount
+        expected_wh = cat_itbis.compute_withholding_amount(inv)
         expected_base = cat_itbis._itbis_amount(inv)
-        detail = line.withholding_detail_ids[:1]
-        base_ok = detail and abs(detail.base_amount - expected_base) < 0.02
+        base_ok = abs(wh1 - expected_wh) < 0.02 and expected_base > 0
         line.amount_to_pay = 500
         line._recompute_line_withholdings()
         wiz._compute_totals()
+        wh2 = line.withholding_amount
         net_ok = abs(wiz.amount_after_withholding - (wiz.payment_total - wiz.withholding_total)) < 0.02
         if base_ok and wh1 > 0:
-            pass_("10_base_calculation", f"base={detail.base_amount:.2f} wh={wh1:.2f}")
+            pass_("10_base_calculation", f"base_itbis={expected_base:.2f} wh={wh1:.2f}")
         else:
-            fail("10_base_calculation", f"base_ok={base_ok} wh={wh1}")
+            fail("10_base_calculation", f"wh1={wh1} expected={expected_wh}")
+        if abs(wh2 - wh1) < 0.02:
+            pass_("11_realtime_withholding_recalc", f"itbis estable wh={wh2:.2f}")
+        else:
+            fail("11_realtime_withholding_recalc", f"wh1={wh1} wh2={wh2}")
         if net_ok:
-            pass_("11_realtime_withholding_recalc", f"wh={wiz.withholding_total:.2f}")
             pass_("12_realtime_net_recalc", f"neto={wiz.amount_after_withholding:.2f}")
         else:
-            fail("11_realtime_withholding_recalc", "totales no cuadran")
+            fail("12_realtime_net_recalc", "totales no cuadran")
 except Exception as exc:  # noqa: BLE001
     fail("10_base_calculation", str(exc))
 

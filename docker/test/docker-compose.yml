@@ -1,0 +1,52 @@
+# Hellenia — Ambiente TEST
+services:
+  odoo:
+    image: odoo:18
+    restart: unless-stopped
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.${COMPOSE_PROJECT_NAME}.rule=Host(`test.${TRAEFIK_HOST}`)
+      - traefik.http.routers.${COMPOSE_PROJECT_NAME}.entrypoints=websecure
+      - traefik.http.routers.${COMPOSE_PROJECT_NAME}.tls.certresolver=letsencrypt
+      - traefik.http.services.${COMPOSE_PROJECT_NAME}.loadbalancer.server.port=8069
+    environment:
+      - HOST=db
+      - USER=${DB_USER}
+      - PASSWORD=${DB_PASSWORD}
+    volumes:
+      - odoo-data:/var/lib/odoo
+      - ${ADDONS_PATH}:/mnt/extra-addons:ro
+      - ${ODOO_CONF_PATH}:/etc/odoo/odoo.conf:ro
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - hellenia-test
+
+  db:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    volumes:
+      - db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - hellenia-test
+
+volumes:
+  odoo-data:
+    name: ${COMPOSE_PROJECT_NAME}_odoo-data
+  db:
+    name: ${COMPOSE_PROJECT_NAME}_db
+
+networks:
+  hellenia-test:
+    name: ${COMPOSE_PROJECT_NAME}_default

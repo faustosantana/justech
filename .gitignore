@@ -1,0 +1,22 @@
+# Secretos
+.env
+**/.env
+!**/.env.example
+
+# Backups y logs operativos
+backups/
+logs/
+
+# Python / Odoo
+__pycache__/
+*.pyc
+*.pyo
+
+# Editor
+.idea/
+.vscode/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db

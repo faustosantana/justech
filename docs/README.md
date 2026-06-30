@@ -1,6 +1,6 @@
 # Odoo Hellenia — Documentación
 
-Proyecto Odoo **19** (DEV/TEST) / Odoo **18** (PROD) multi-ambiente para **Hellenia**.
+Proyecto Odoo **Enterprise 19** (objetivo) / Odoo **19 Community** (DEV/TEST actual) / Odoo **18** (PROD) para **Hellenia**.
 
 ## Arquitectura
 
@@ -37,8 +37,9 @@ Cursor local → GitHub → DEV → TEST → Producción
 | `feature/*` | Funcionalidades |
 | `hotfix/*` | Correcciones urgentes |
 
-## Documentación Odoo 19
+## Documentación
 
+- [Análisis Odoo Enterprise](ENTERPRISE_ANALYSIS.md) — **pendiente aprobación**
 - [Análisis técnico Odoo 19](VERSION-19-ANALYSIS.md)
 - [Runbook migración 18→19](MIGRATION-19.md)
 

@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+### Added
+- `docs/ENTERPRISE_ANALYSIS.md` — análisis Enterprise, suscripción M260616306091776, módulos RD, plan DEV propuesto (sin ejecución)
+
 ### Changed
 - DEV y TEST migrados a **Odoo 19.0-20260619** (imagen fija, no `latest`)
 - Análisis técnico completo pre-migración → `docs/VERSION-19-ANALYSIS.md`

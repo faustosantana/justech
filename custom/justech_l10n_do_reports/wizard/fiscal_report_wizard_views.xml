@@ -7,12 +7,26 @@
             <form string="Reporte DGII">
                 <group>
                     <field name="report_type"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="period_code" readonly="1"/>
                     <field name="date_from"/>
                     <field name="date_to"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
+                </group>
+                <group string="Validación" invisible="validation_state == 'pending'">
+                    <field name="validation_state" widget="badge"
+                           decoration-success="validation_state == 'ok'"
+                           decoration-danger="validation_state == 'error'"/>
+                    <field name="validation_log" nolabel="1" readonly="1"/>
                 </group>
                 <footer>
-                    <button name="action_generate" string="Generar" type="object" class="btn-primary"/>
+                    <button name="action_validate" string="Validar" type="object"
+                            invisible="report_type != '606'"/>
+                    <button name="action_generate" string="Generar Excel 606" type="object"
+                            class="btn-primary" invisible="report_type != '606'"/>
+                    <button name="action_generate" string="Generar" type="object"
+                            class="btn-primary" invisible="report_type == '606'"/>
+                    <button name="action_generate_history" string="Guardar historial" type="object"
+                            invisible="report_type != '606'"/>
                     <button string="Cancelar" special="cancel"/>
                 </footer>
             </form>
@@ -23,5 +37,12 @@
         <field name="res_model">justech.do.fiscal.report.wizard</field>
         <field name="view_mode">form</field>
         <field name="target">new</field>
+    </record>
+    <record id="action_justech_do_report_606_generate" model="ir.actions.act_window">
+        <field name="name">Generar 606</field>
+        <field name="res_model">justech.do.fiscal.report.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{'default_report_type': '606'}</field>
     </record>
 </odoo>

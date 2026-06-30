@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <record id="action_justech_do_report_606" model="ir.actions.act_window">
-        <field name="name">606 — Compras</field>
+        <field name="name">Generar 606</field>
         <field name="res_model">justech.do.fiscal.report.wizard</field>
         <field name="view_mode">form</field>
         <field name="target">new</field>
@@ -40,10 +40,15 @@
               sequence="95"
               groups="justech_l10n_do_base.group_justech_do_fiscal_user"/>
     <menuitem id="menu_justech_do_report_606"
-              name="606 — Compras"
+              name="Generar 606"
               parent="menu_justech_do_reports_root"
               action="action_justech_do_report_606"
               sequence="10"/>
+    <menuitem id="menu_justech_do_report_606_list"
+              name="606 — Compras (historial)"
+              parent="menu_justech_do_reports_root"
+              action="action_justech_do_fiscal_report_606"
+              sequence="11"/>
     <menuitem id="menu_justech_do_report_607"
               name="607 — Ventas"
               parent="menu_justech_do_reports_root"

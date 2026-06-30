@@ -33,6 +33,57 @@ class AccountMove(models.Model):
         help="NCF referenciado en notas de crédito o débito.",
         copy=False,
     )
+    justech_do_ncf_modified = fields.Char(
+        string="NCF documento modificado",
+        help="NCF del comprobante original en notas de crédito/débito (DGII 606/607 col. F).",
+        copy=False,
+    )
+    justech_do_dgii_line_status = fields.Selection(
+        selection=[
+            ("1", "Válido"),
+            ("2", "Anulado"),
+        ],
+        string="Estatus DGII",
+        default="1",
+        copy=False,
+        help="Estatus de la línea en archivos DGII (1=válido, 2=anulado).",
+    )
+    justech_do_ncf_cancel_type = fields.Selection(
+        selection=[
+            ("01", "Secuencia no utilizada"),
+            ("02", "Errores de impresión"),
+            ("03", "Impresión defectuosa"),
+            ("04", "Corrección de información"),
+            ("05", "Cambio de productos"),
+            ("06", "Devolución de productos"),
+            ("07", "Omisión de productos"),
+            ("08", "Errores en secuencias NCF"),
+            ("09", "Cese de operaciones"),
+            ("10", "Pérdida o hurto de talonario"),
+        ],
+        string="Tipo de anulación DGII",
+        copy=False,
+        help="Código DGII formato 608 / anulación de comprobante.",
+    )
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if vals.get("reversed_entry_id") and vals.get("move_type") in (
+                "in_refund",
+                "out_refund",
+            ):
+                origin = self.env["account.move"].browse(vals["reversed_entry_id"])
+                if origin.justech_do_ncf:
+                    vals.setdefault("justech_do_origin_ncf", origin.justech_do_ncf)
+                    vals.setdefault("justech_do_ncf_modified", origin.justech_do_ncf)
+        return super().create(vals_list)
+
+    @api.onchange("reversed_entry_id")
+    def _onchange_reversed_entry_ncf_modified(self):
+        if self.reversed_entry_id and self.move_type in ("in_refund", "out_refund"):
+            self.justech_do_origin_ncf = self.reversed_entry_id.justech_do_ncf
+            self.justech_do_ncf_modified = self.reversed_entry_id.justech_do_ncf
 
     def init(self):
         super().init()
@@ -162,6 +213,11 @@ class AccountMove(models.Model):
             )
             if move.move_type == "out_refund" and move.reversed_entry_id:
                 move.justech_do_origin_ncf = move.reversed_entry_id.justech_do_ncf
+            if move.move_type == "in_refund" and move.reversed_entry_id:
+                origin_ncf = move.reversed_entry_id.justech_do_ncf
+                move.justech_do_origin_ncf = origin_ncf
+                if not move.justech_do_ncf_modified:
+                    move.justech_do_ncf_modified = origin_ncf
 
     def action_post(self):
         self._justech_assign_ncf_before_post()
@@ -188,6 +244,7 @@ class AccountMove(models.Model):
                 {
                     "justech_do_ncf_voided": True,
                     "justech_do_ncf_void_date": fields.Date.context_today(move),
+                    "justech_do_dgii_line_status": "2",
                 }
             )
             consumption = Consumption.search(

@@ -4,6 +4,7 @@ import io
 from datetime import date
 
 from odoo import _, api, fields, models
+from odoo.exceptions import UserError
 
 
 class JustechDoFiscalReport(models.Model):
@@ -54,6 +55,26 @@ class JustechDoFiscalReport(models.Model):
     total_amount = fields.Float(string="Total general", compute="_compute_totals", digits=(16, 2))
     export_file = fields.Binary(string="Archivo exportado", attachment=True)
     export_filename = fields.Char(string="Nombre de archivo")
+    validation_log = fields.Text(string="Resultado de validación", readonly=True)
+    validation_state = fields.Selection(
+        selection=[
+            ("pending", "Sin validar"),
+            ("ok", "Válido"),
+            ("error", "Con errores"),
+        ],
+        string="Estado validación",
+        default="pending",
+    )
+    period_code = fields.Char(
+        string="Período YYYYMM",
+        compute="_compute_period_code",
+        store=True,
+    )
+
+    @api.depends("date_from")
+    def _compute_period_code(self):
+        for rec in self:
+            rec.period_code = rec.date_from.strftime("%Y%m") if rec.date_from else False
 
     @api.depends("line_ids", "line_ids.amount_untaxed", "line_ids.amount_tax", "line_ids.amount_total")
     def _compute_totals(self):
@@ -76,6 +97,51 @@ class JustechDoFiscalReport(models.Model):
                 move.line_ids.filtered(self._is_itbis_tax_line).mapped("balance")
             )
         )
+
+    def action_validate(self):
+        for report in self:
+            if report.report_type != "606":
+                report.validation_log = _("Validación detallada solo disponible para formato 606.")
+                report.validation_state = "ok"
+                continue
+            exporter = self.env["justech.do.dgii.606.exporter"]
+            errors = exporter.validate_moves_606(
+                report.company_id, report.date_from, report.date_to
+            )
+            if errors:
+                report.validation_log = "\n".join(errors)
+                report.validation_state = "error"
+            else:
+                report.validation_log = _("Sin errores. Listo para exportar el formato 606.")
+                report.validation_state = "ok"
+        return True
+
+    def action_export_dgii_606(self):
+        self.ensure_one()
+        if self.report_type != "606":
+            raise UserError(_("La exportación DGII oficial solo está disponible para el formato 606."))
+        if self.state != "done":
+            self.action_generate()
+        exporter = self.env["justech.do.dgii.606.exporter"]
+        content, filename = exporter.export_xlsx(
+            self.company_id, self.date_from, self.date_to
+        )
+        self.write(
+            {
+                "export_file": content,
+                "export_filename": filename,
+                "validation_state": "ok",
+                "validation_log": _("Archivo 606 generado correctamente."),
+            }
+        )
+        return {
+            "type": "ir.actions.act_url",
+            "url": (
+                f"/web/content/?model=justech.do.fiscal.report&id={self.id}"
+                f"&field=export_file&filename_field=export_filename&download=true"
+            ),
+            "target": "self",
+        }
 
     def action_generate(self):
         for report in self:

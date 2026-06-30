@@ -86,6 +86,11 @@ class HelleniaWithholdingCatalog(models.Model):
     )
     affects_606 = fields.Boolean(string="Afecta 606")
     affects_607 = fields.Boolean(string="Afecta 607")
+    dgii_withholding_code = fields.Char(
+        string="Código retención DGII",
+        help="Código para reportes DGII (606 col. T, Norma 2-05 col. H).",
+        index=True,
+    )
     tax_use = fields.Selection(
         related="tax_id.type_tax_use",
         string="Uso impuesto",
@@ -214,6 +219,7 @@ class HelleniaWithholdingCatalog(models.Model):
                 "move_scope": "sale",
                 "affects_606": False,
                 "affects_607": True,
+                "dgii_withholding_code": "07",
                 "sequence": 10,
                 "notes": "ISR 5% sobre base imponible — ventas a entidades gubernamentales (607).",
             },
@@ -229,6 +235,7 @@ class HelleniaWithholdingCatalog(models.Model):
                 "move_scope": "both",
                 "affects_606": True,
                 "affects_607": True,
+                "dgii_withholding_code": "02",
                 "sequence": 20,
                 "notes": "30% del ITBIS facturado — servicios legales N02-05.",
             },
@@ -244,6 +251,7 @@ class HelleniaWithholdingCatalog(models.Model):
                 "move_scope": "both",
                 "affects_606": True,
                 "affects_607": True,
+                "dgii_withholding_code": "03",
                 "sequence": 25,
                 "notes": "100% del ITBIS facturado — N07-09.",
             },
@@ -259,6 +267,7 @@ class HelleniaWithholdingCatalog(models.Model):
                 "move_scope": "purchase",
                 "affects_606": True,
                 "affects_607": False,
+                "dgii_withholding_code": "02",
                 "sequence": 30,
                 "notes": "ISR 10% sobre base imponible — proveedor informal (606).",
             },
@@ -274,6 +283,7 @@ class HelleniaWithholdingCatalog(models.Model):
                 "move_scope": "purchase",
                 "affects_606": True,
                 "affects_607": False,
+                "dgii_withholding_code": "04",
                 "sequence": 40,
                 "notes": "75% del ITBIS facturado — proveedor informal N08-10 (606).",
             },
@@ -289,6 +299,7 @@ class HelleniaWithholdingCatalog(models.Model):
                 "move_scope": "both",
                 "affects_606": True,
                 "affects_607": True,
+                "dgii_withholding_code": "03",
                 "sequence": 50,
                 "notes": "ISR 2% sobre base imponible — N07-07.",
             },
@@ -304,6 +315,7 @@ class HelleniaWithholdingCatalog(models.Model):
                 "move_scope": "both",
                 "affects_606": True,
                 "affects_607": True,
+                "dgii_withholding_code": "02",
                 "sequence": 60,
                 "notes": "ISR 10% sobre base imponible — honorarios y alquileres.",
             },
@@ -441,6 +453,7 @@ class HelleniaWithholdingCatalog(models.Model):
                 "move_scope": spec["move_scope"],
                 "affects_606": spec["affects_606"],
                 "affects_607": spec["affects_607"],
+                "dgii_withholding_code": spec.get("dgii_withholding_code"),
                 "notes": spec.get("notes"),
                 "company_id": company.id,
                 "tax_id": tax.id if tax else False,

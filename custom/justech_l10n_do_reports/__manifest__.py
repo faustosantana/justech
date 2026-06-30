@@ -1,21 +1,25 @@
 {
     "name": "Justech Dominican Fiscal Reports",
-    "version": "19.0.1.2.0",
+    "version": "19.0.1.3.0",
     "category": "Accounting/Localizations/Reporting",
-    "summary": "DGII reports 606, 607, 608 — basic MVP",
+    "summary": "DGII reports 606, 607, 608 — exportador piloto 606",
     "description": """
-Basic Dominican DGII fiscal reports for Justech MVP.
+Dominican DGII fiscal reports for Justech.
 
-- Format 606 (purchases)
+- Format 606 (purchases) — exportador Excel DGII piloto
 - Format 607 (sales)
 - Format 608 (voided NCF)
-- CSV and Excel export
+- Validation wizard and export history
     """,
     "author": "Justech",
     "website": "https://hellenia.cloud",
     "depends": [
         "justech_l10n_do_ncf",
+        "hellenia_account",
     ],
+    "external_dependencies": {
+        "python": ["xlsxwriter"],
+    },
     "data": [
         "security/ir.model.access.csv",
         "security/justech_l10n_do_reports_rules.xml",

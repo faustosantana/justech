@@ -74,7 +74,7 @@
         </field>
     </record>
     <record id="action_justech_do_fiscal_report" model="ir.actions.act_window">
-        <field name="name">Historial de reportes DGII</field>
+        <field name="name">Historial fiscal</field>
         <field name="res_model">justech.do.fiscal.report</field>
         <field name="view_mode">list,form</field>
     </record>

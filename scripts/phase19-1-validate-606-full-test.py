@@ -366,7 +366,13 @@ err_ncf = exporter.validate_moves_606(company, period_start, period_end)
 report["validation_errors_es"]["sin_ncf"] = [e for e in err_ncf if "NCF" in e]
 check("error_sin_ncf_es", any("NCF" in e for e in err_ncf), report["validation_errors_es"]["sin_ncf"][:1])
 
-partner_no_type = env["res.partner"].create({"name": "P19 Sin Tipo", "vat": "ABC", "supplier_rank": 1})
+partner_no_type = env["res.partner"].search([("name", "=", "P19 Sin Tipo")], limit=1)
+if not partner_no_type:
+    partner_no_type = env["res.partner"].create(
+        {"name": "P19 Sin Tipo", "vat": "131000099", "supplier_rank": 1}
+    )
+partner_no_type.justech_do_partner_id_type = False
+env.cr.commit()
 move_no_type = env["account.move"].create(
     {
         "move_type": "in_invoice",

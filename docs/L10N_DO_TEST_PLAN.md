@@ -113,11 +113,11 @@ Este plan define **32 casos de prueba** (TC-000 a TC-031) para validar la locali
 - Módulos RD disponibles sin instalar
 - Sin localización DO previamente aplicada
 
-**Resultado obtenido:** Backup `backup-dev.sh` **no ejecutado** — SSH VPS (`2.25.69.179`) denegado desde Cloud Agent. Línea base remota: Odoo `19.0+e-20260619`; `web_enterprise` installed; `account` **uninstalled**; `l10n_do`/`l10n_do_reports` uninstalled; `l10n_do_edi` absent; empresa "My Company" USD sin país DO.
+**Resultado obtenido:** Backup completo verificado en VPS vía SSH. Ruta: `/opt/odoo-projects/hellenia/backups/dev/2026-06-30_0353`. Línea base previa capturada en `evidence/l10n-do-tests/2026-06-30/TC-000/result.json`.
 
-**Evidencia:** `evidence/l10n-do-tests/2026-06-30/TC-000/result.json`
+**Evidencia:** `backups/dev/2026-06-30_0353/` (postgres_all.sql.gz 615957 B, filestore.tar.gz 635436 B, MANIFEST.txt) + verify-backup-dev.sh OK
 
-**Conclusión:** `BLOCKED` — no continuar TC-001 sin backup verificado en VPS.
+**Conclusión:** `PASS` — punto de restauración confirmado. **Esperando aprobación para TC-001.**
 
 **Objetivo:** Instalar el paquete base de localización dominicana y verificar estado del módulo.
 

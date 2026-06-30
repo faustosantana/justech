@@ -360,15 +360,18 @@ smoke["itbis_lines"] = bool(
 )
 smoke["receivable"] = bool(inv.line_ids.filtered(lambda l: l.account_id.account_type == "asset_receivable"))
 smoke["ncf"] = inv.justech_do_ncf or ""
-# Limpiar artefactos smoke (factura publicada queda como evidencia P13.4)
+smoke["invoice_name"] = inv.name
+# Limpiar rango smoke temporal; factura publicada permanece como evidencia P13.4
 if rng and rng.name.startswith("SMOKE"):
     try:
-        rng.action_expire()
-        rng.unlink()
+        if not env["account.move"].search_count([("justech_do_ncf_range_id", "=", rng.id), ("state", "=", "posted")]):
+            rng.action_expire()
+            rng.unlink()
+        else:
+            log("smoke_range_kept", f"posted moves reference {rng.name}")
     except Exception as exc:  # noqa: BLE001
         log("smoke_range_cleanup_skip", str(exc))
-partner.unlink()
-product.unlink()
+log("smoke_invoice_kept", inv.name)
 
 if not smoke.get("quote_ok"):
     err("Smoke: cotización sin ITBIS 18%")

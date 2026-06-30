@@ -38,7 +38,6 @@ Mejoras UX upgrade-safe (Fase 17):
         "views/res_company_views.xml",
         "views/ncf_range_views.xml",
         "views/fiscal_security_labels.xml",
-        "views/report_invoice_ux.xml",
         "data/post_init.xml",
     ],
     "assets": {

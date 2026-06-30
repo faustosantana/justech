@@ -18,7 +18,6 @@ if DB != "hellenia_test":
 
 EVIDENCE_DIR = "/tmp/hellenia-phase18-3-evidence"
 os.makedirs(EVIDENCE_DIR, exist_ok=True)
-report["visual_evidence_html"] = {}
 
 report = {
     "phase": "18.3-withholding-certification",
@@ -30,6 +29,7 @@ report = {
     "errors": [],
     "production_ready": False,
     "visual_evidence": [],
+    "visual_evidence_html": {},
 }
 
 ENGLISH_UI = re.compile(

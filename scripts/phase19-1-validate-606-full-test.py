@@ -180,6 +180,7 @@ def fmt_ncf(prefix, seq):
 def create_bill(partner, ref, ncf, lines, wh_flags=None, doc=doc_b11):
     existing = env["account.move"].search([("ref", "=", ref)], limit=1)
     if existing:
+        existing.invalidate_recordset()
         return existing
     wh_flags = wh_flags or {}
     move = env["account.move"].create(
@@ -277,21 +278,40 @@ if not credit:
     ncf_seq["n"] += 1
 check("credit_ncf_modified", credit.justech_do_ncf_modified == bill_itbis.justech_do_ncf, credit.justech_do_ncf_modified)
 
-# Pagos parcial y total
+# Pagos parcial y total (idempotente si el script se re-ejecuta en TEST)
 def pay_invoice(move, amount):
-    if move.payment_state == "paid":
+    move.invalidate_recordset()
+    if move.payment_state == "paid" or move.amount_residual <= 0:
         return
-    reg = (
-        env["account.payment.register"]
-        .with_context(active_model="account.move", active_ids=move.ids)
-        .create({"amount": amount, "journal_id": bank_journal.id})
-    )
-    reg.action_create_payments()
+    pay_amount = min(amount, move.amount_residual)
+    if pay_amount <= 0:
+        return
+    try:
+        reg = (
+            env["account.payment.register"]
+            .with_context(active_model="account.move", active_ids=move.ids)
+            .create({"amount": pay_amount, "journal_id": bank_journal.id})
+        )
+        reg.action_create_payments()
+    except UserError:
+        move.invalidate_recordset()
+        if move.payment_state not in ("partial", "in_payment", "paid"):
+            raise
 
 
-pay_invoice(bill_itbis, bill_itbis.amount_residual / 2)
-check("partial_payment", bill_itbis.payment_state in ("partial", "in_payment", "paid"), bill_itbis.payment_state)
-pay_invoice(bill_wh_itbis, bill_wh_itbis.amount_residual)
+bill_itbis.invalidate_recordset()
+if bill_itbis.payment_state not in ("partial", "in_payment", "paid"):
+    pay_invoice(bill_itbis, bill_itbis.amount_residual / 2)
+bill_itbis.invalidate_recordset()
+check(
+    "partial_payment",
+    bill_itbis.payment_state in ("partial", "in_payment", "paid"),
+    bill_itbis.payment_state,
+)
+bill_wh_itbis.invalidate_recordset()
+if bill_wh_itbis.payment_state != "paid":
+    pay_invoice(bill_wh_itbis, bill_wh_itbis.amount_residual)
+bill_wh_itbis.invalidate_recordset()
 check("full_payment", bill_wh_itbis.payment_state == "paid", bill_wh_itbis.payment_state)
 
 exporter = env["justech.do.dgii.606.exporter"]

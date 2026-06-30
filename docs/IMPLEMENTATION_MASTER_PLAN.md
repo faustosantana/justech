@@ -245,7 +245,18 @@ Manifest `l10n_do` declara secuencias NCF: B01 valor fiscal, B02 consumo, ND/NC,
 | ¿Módulo equivalente a `l10n_do`? | **No** — nombre técnico estable |
 | ¿eNCF absorbido en `l10n_do`? | **No** — módulo separado en documentación oficial |
 
-## 2.4 Decisión Fase 2 (Hellenia)
+## 2.4 Metodología Fase 2 — validación funcional
+
+> **No asumir** documentación ni código fuente. Cada capacidad se valida con prueba real en DEV.
+
+| Documento | Rol |
+|-----------|-----|
+| [L10N_DO_TEST_PLAN.md](L10N_DO_TEST_PLAN.md) | 32 casos TC-000–TC-031 — ejecución en DEV |
+| [GAP_ANALYSIS_RD.md](GAP_ANALYSIS_RD.md) | Brechas confirmadas solo tras pruebas |
+
+**Estado:** Plan preparado — **sin instalación ni ejecución** hasta aprobación explícita.
+
+## 2.5 Decisión Fase 2 (Hellenia)
 
 | Acción | Decisión |
 |--------|----------|

@@ -65,7 +65,7 @@ Este documento consolida **hipótesis de brechas** entre lo que Odoo oficial dec
 | O-13 | Gastos menores B13 | `l10n_do` | TC-029 (parcial) | POR VALIDAR |
 | O-14 | Tax report ITBIS (estructura declaración) | `l10n_do` | TC-002, TC-030 | POR VALIDAR |
 | O-15 | Diarios con documentos fiscales (Use Documents) | `l10n_do` | TC-014, TC-015 | POR VALIDAR |
-| O-16 | Reportes fiscales RD (606, 607, 608, IT-1) | `l10n_do_reports` | TC-003, TC-030 | POR VALIDAR |
+| O-16 | Reportes fiscales RD (606, 607, 608, IT-1) | `l10n_do_reports` | TC-003, TC-031 | POR VALIDAR |
 | O-17 | Factura PDF con datos fiscales | `l10n_do` / `account` | TC-030 | POR VALIDAR |
 | O-18 | Registro NCF proveedor en compras | `l10n_do` | TC-027 | POR VALIDAR |
 
@@ -95,7 +95,7 @@ Estos ítems están **fuera del stack** `l10n_do` + `l10n_do_reports` por diseñ
 | G-01 | **Secuencias NCF no operativas sin terceros** | Advertencia manifest `l10n_do` 19.0 | TC-020 | 🔴 P0 | Bloqueante go-live | 5–15 días | `hellenia_account` |
 | G-02 | Framework documentos LATAM ausente/incompleto en 19.0 | `l10n_do` 19.0 sin dependencia `l10n_latam_invoice_document` (presente en saas-19.3) | TC-014, TC-017 | 🔴 P0 | Alto — UI documentos diferente | 3–10 días | `hellenia_account` |
 | G-03 | Tipos NCF B14, B15, B16 no precargados | No declarados explícitamente en manifest 19.0 | TC-017 | 🟠 P1 | Medio — depende operación Hellenia | 2–5 días | `hellenia_account` |
-| G-04 | Reportes 606/607/608/IT-1 incompletos o ausentes | Doc Odoo no lista explícitamente; foro sin confirmación | TC-030 | 🔴 P0 | Bloqueante declaraciones DGII | 5–20 días | `hellenia_reports` |
+| G-04 | Reportes 606/607/608/IT-1 incompletos o ausentes | Doc Odoo no lista explícitamente; foro sin confirmación | TC-031 | 🔴 P0 | Bloqueante declaraciones DGII | 5–20 días | `hellenia_reports` |
 | G-05 | Formato PDF factura no cumple requisitos DGII impresos | Estándar Odoo puede diferir de layout RD exigido | TC-030 | 🟠 P1 | Medio — riesgo auditoría | 3–8 días | `hellenia_reports` |
 | G-06 | Selección automática B01 vs B02 por R. RNC cliente | Comportamiento no documentado para 19.0 on-premise | TC-024 | 🟡 P2 | Bajo — workaround manual | 1–3 días | `hellenia_account` |
 | G-07 | Campo RNC / tipo identificación LATAM incompleto en 19.0 | `l10n_latam_identification_type` evolución saas-19.3 | TC-006, TC-023 | 🟠 P1 | Medio — validación B2B | 2–5 días | `hellenia_account` |
@@ -127,8 +127,8 @@ Estimaciones orientativas para desarrollo custom con `_inherit` (sin modificar `
 |------------------------|----------|
 | TC-020 PASS — NCF asigna sin terceros | G-01 **cerrada** — usar estándar |
 | TC-020 FAIL — NCF no asigna | G-01 **confirmada** — evaluar custom `hellenia_account` |
-| TC-030 PASS — reportes 606/607/608/IT-1 completos | Glogía estándar; G-04 **cerrada** |
-| TC-030 FAIL — reportes ausentes/incompletos | G-04 **confirmada** — `hellenia_reports` |
+| TC-030 PASS — reportes 606/607/608/IT-1 completos | Usar estándar; G-04 **cerrada** |
+| TC-031 FAIL — reportes ausentes/incompletos | G-04 **confirmada** — `hellenia_reports` |
 | TC-014 FAIL — Use Documents no disponible | G-02 **confirmada** — investigar upgrade 19.3 o custom |
 | Todos TC PASS | Etapa 1 sin custom fiscal — solo módulos Hellenia operativos |
 
@@ -161,7 +161,7 @@ Estimaciones orientativas para desarrollo custom con `_inherit` (sin modificar `
 | ITBIS 18/16/0/exento ventas | Precargado — manifest | POR VALIDAR | TC-010 |
 | ITBIS compra crédito fiscal | Precargado — manifest | POR VALIDAR | TC-011 |
 | Retenciones ISR/ITBIS | Precargado — manifest | POR VALIDAR | TC-012 |
-| Tax report ITBIS casillas DGII | `account_tax_report_data.xml` | POR VALIDAR | TC-030 |
+| Tax report ITBIS casillas DGII | `account_tax_report_data.xml` | POR VALIDAR | TC-031 |
 
 ### 5.4 NCF y documentos fiscales
 
@@ -186,10 +186,10 @@ Estimaciones orientativas para desarrollo custom con `_inherit` (sin modificar `
 | Aspecto | Odoo oficial (hipótesis) | Brecha potencial | TC |
 |---------|-------------------------|------------------|-----|
 | PDF con NCF/RNC/ITBIS | Estándar localización | POR VALIDAR layout DGII — **G-05** | TC-030 |
-| Libro ventas 607 | `l10n_do_reports` | POR VALIDAR — **G-04** | TC-030 |
-| Libro compras 606 | `l10n_do_reports` | POR VALIDAR — **G-04** | TC-030 |
-| Anulaciones 608 | `l10n_do_reports` | POR VALIDAR — **G-04** | TC-030 |
-| Declaración IT-1 | Tax report + reports | POR VALIDAR — **G-04** | TC-030 |
+| Libro ventas 607 | `l10n_do_reports` | POR VALIDAR — **G-04** | TC-031 |
+| Libro compras 606 | `l10n_do_reports` | POR VALIDAR — **G-04** | TC-031 |
+| Anulaciones 608 | `l10n_do_reports` | POR VALIDAR — **G-04** | TC-031 |
+| Declaración IT-1 | Tax report + reports | POR VALIDAR — **G-04** | TC-031 |
 
 ---
 

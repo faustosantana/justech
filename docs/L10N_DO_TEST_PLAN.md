@@ -12,7 +12,7 @@
 
 ## Declaración de alcance
 
-Este plan define **31 casos de prueba** (TC-000 a TC-030) para validar la localización dominicana en modo **NCF tradicional** (papel/impreso). Ningún resultado está confirmado hasta ejecutar las pruebas en DEV.
+Este plan define **32 casos de prueba** (TC-000 a TC-031) para validar la localización dominicana en modo **NCF tradicional** (papel/impreso). Ningún resultado está confirmado hasta ejecutar las pruebas en DEV.
 
 | En alcance | Fuera de alcance |
 |------------|------------------|
@@ -67,7 +67,7 @@ Este plan define **31 casos de prueba** (TC-000 a TC-030) para validar la locali
 | Facturación cliente | TC-023, TC-024, TC-025, TC-026 |
 | Facturación proveedor | TC-027, TC-028, TC-029 |
 | Impresión | TC-030 |
-| Reportes fiscales | TC-030 (sub-validación reportes) |
+| Reportes fiscales | TC-031 |
 
 ---
 
@@ -75,12 +75,12 @@ Este plan define **31 casos de prueba** (TC-000 a TC-030) para validar la locali
 
 | Métrica | Valor |
 |---------|-------|
-| Total casos | 31 |
+| Total casos | 32 |
 | Ejecutados | 0 |
 | PASS | 0 |
 | FAIL | 0 |
 | BLOCKED | 0 |
-| PENDIENTE | 31 |
+| PENDIENTE | 32 |
 
 ---
 
@@ -88,23 +88,26 @@ Este plan define **31 casos de prueba** (TC-000 a TC-030) para validar la locali
 
 ---
 
-### TC-000 — Línea base del ambiente DEV
+### TC-000 — Línea base del ambiente DEV y backup
 
-**Objetivo:** Confirmar que el ambiente DEV cumple prerrequisitos técnicos antes de instalar localización RD.
+**Objetivo:** Confirmar prerrequisitos técnicos y crear punto de restauración antes de instalar localización RD.
 
 **Prerequisitos:**
 - Acceso a instancia Odoo DEV
-- Credenciales administrador
+- Acceso scripts backup en VPS (`/opt/odoo-projects/hellenia/`)
 
 **Pasos:**
-1. Verificar versión Odoo (`Settings → About` o CLI `-V`).
-2. Confirmar base de datos activa = `hellenia_dev`.
-3. Listar módulos instalados: `web_enterprise`, `account`.
-4. Confirmar que `l10n_do`, `l10n_do_reports` están **disponibles** en Apps pero **no instalados**.
-5. Confirmar que `l10n_do_edi` no está instalado (o ausente en imagen).
-6. Registrar fecha/hora y usuario ejecutor.
+1. Ejecutar `scripts/backup-dev.sh` y verificar integridad (postgres + filestore).
+2. Anotar ruta y timestamp del backup para rollback.
+3. Verificar versión Odoo (`Settings → About` o CLI `-V`).
+4. Confirmar base de datos activa = `hellenia_dev`.
+5. Listar módulos instalados: `web_enterprise`, `account`.
+6. Confirmar que `l10n_do`, `l10n_do_reports` están **disponibles** en Apps pero **no instalados**.
+7. Confirmar que `l10n_do_edi` no está instalado (o ausente en imagen).
+8. Registrar fecha/hora y usuario ejecutor.
 
 **Resultado esperado:**
+- Backup verificado y ruta documentada
 - Odoo 19 Enterprise en DEV operativo
 - Módulos RD disponibles sin instalar
 - Sin localización DO previamente aplicada
@@ -905,33 +908,53 @@ Este plan define **31 casos de prueba** (TC-000 a TC-030) para validar la locali
 
 ---
 
-### TC-030 — Impresión PDF, formato fiscal y reportes `l10n_do_reports`
+### TC-030 — Impresión PDF factura con datos fiscales NCF
 
-**Objetivo:** Validar impresión de factura con datos NCF y disponibilidad de reportes fiscales dominicanos.
+**Objetivo:** Validar que el PDF de factura cliente incluye datos fiscales mínimos para NCF tradicional.
 
 **Prerequisitos:**
-- TC-003 PASS
 - TC-023 o TC-024 PASS (factura confirmada con NCF)
 
 **Pasos:**
-
-*Impresión:*
-1. Abrir factura confirmada con NCF.
+1. Abrir factura confirmada con NCF (B01 o B02).
 2. Imprimir / generar PDF.
-3. Verificar presencia de: RNC emisor, RNC receptor (si B01), NCF, fecha, ITBIS desglosado, totales.
-4. Validar cumplimiento mínimo formato DGII en documento impreso (revisión contador).
-
-*Reportes fiscales:*
-5. Ir a **Contabilidad → Informes** (o menú reportes EE).
-6. Listar reportes `l10n_do_reports` disponibles.
-7. Ejecutar reportes esperados: libro ventas (607), compras (606), anulaciones (608), declaración ITBIS/IT-1 (POR VALIDAR nombres exactos en UI).
-8. Verificar que facturas de prueba aparecen en reportes correspondientes.
-9. Exportar a Excel/PDF si disponible.
+3. Verificar presencia de: RNC emisor, RNC receptor (si B01), NCF completo, fecha, ITBIS desglosado, totales, dirección empresa.
+4. Validar legibilidad y cumplimiento mínimo formato DGII en documento impreso (revisión contador).
 
 **Resultado esperado:**
-- PDF factura muestra NCF, RNC e ITBIS (POR VALIDAR)
+- PDF generado sin error (POR VALIDAR)
+- NCF, RNC e ITBIS visibles en documento (POR VALIDAR)
+
+**Resultado obtenido:** PENDIENTE
+
+**Evidencia:** PENDIENTE
+
+**Conclusión:** PENDIENTE
+
+---
+
+### TC-031 — Reportes fiscales `l10n_do_reports`
+
+**Objetivo:** Validar disponibilidad y operación de reportes fiscales dominicanos tras instalar `l10n_do_reports`.
+
+**Prerequisitos:**
+- TC-003 PASS
+- TC-023/024 y TC-027 PASS (movimientos de prueba en período)
+
+**Pasos:**
+1. Ir a **Contabilidad → Informes** (o menú reportes EE).
+2. Listar todos los reportes `l10n_do_reports` disponibles (sin asumir nombres).
+3. Ejecutar reporte ventas / libro 607 (si existe) — período con facturas TC-023/024.
+4. Ejecutar reporte compras / libro 606 (si existe) — período con TC-027.
+5. Ejecutar reporte anulaciones / 608 (si existe) — tras anular documento de prueba.
+6. Ejecutar declaración ITBIS / tax report / IT-1 (si existe).
+7. Verificar que operaciones de prueba aparecen con NCF e ITBIS correctos.
+8. Exportar a Excel/PDF si disponible.
+
+**Resultado esperado:**
 - Reportes fiscales RD accesibles post `l10n_do_reports` (POR VALIDAR)
-- Datos de prueba reflejados en libros 606/607/608/IT-1 (POR VALIDAR)
+- Libros 606/607/608/IT-1 operativos o brecha documentada en GAP_ANALYSIS (POR VALIDAR)
+- Exportación funcional (POR VALIDAR)
 
 **Resultado obtenido:** PENDIENTE
 
@@ -950,7 +973,7 @@ TC-000 → TC-001 → TC-002 → TC-003 → TC-004
     → TC-017 → TC-014 → TC-015 → TC-016
     → TC-018 → TC-019 → TC-020 → TC-021 → TC-022
     → TC-023 → TC-024 → TC-025 → TC-026
-    → TC-027 → TC-028 → TC-029 → TC-030
+    → TC-027 → TC-028 → TC-029 → TC-030 → TC-031
 ```
 
 ---
@@ -966,7 +989,8 @@ TC-000 → TC-001 → TC-002 → TC-003 → TC-004
 | Facturación | TC-023, TC-024 PASS mínimo |
 | Ajustes | TC-025 PASS |
 | Compras | TC-027 PASS mínimo |
-| Reportes | TC-030 PASS (sub-sección reportes) |
+| Reportes | TC-031 PASS |
+| Impresión | TC-030 PASS |
 
 Si **TC-020 FAIL**, escalar a [GAP_ANALYSIS_RD.md](GAP_ANALYSIS_RD.md) — brecha secuencias NCF manifest legacy.
 

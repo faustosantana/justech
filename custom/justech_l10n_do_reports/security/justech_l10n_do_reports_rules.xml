@@ -15,4 +15,14 @@
         <field name="model_id" ref="model_justech_do_fiscal_report_wizard"/>
         <field name="domain_force">[('company_id', 'in', company_ids)]</field>
     </record>
+    <record id="rule_justech_do_dgii_report_audit_company" model="ir.rule">
+        <field name="name">DGII Report Audit: multi-company</field>
+        <field name="model_id" ref="model_justech_do_dgii_report_audit"/>
+        <field name="domain_force">[('report_id.company_id', 'in', company_ids)]</field>
+    </record>
+    <record id="rule_justech_do_dgii_report_approval_company" model="ir.rule">
+        <field name="name">DGII Report Approval: multi-company</field>
+        <field name="model_id" ref="model_justech_do_dgii_report_approval"/>
+        <field name="domain_force">[('report_id.company_id', 'in', company_ids)]</field>
+    </record>
 </odoo>

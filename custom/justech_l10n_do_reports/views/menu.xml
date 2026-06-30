@@ -44,6 +44,17 @@
               parent="menu_justech_do_reports_root"
               action="action_justech_do_report_606"
               sequence="10"/>
+    <menuitem id="menu_justech_do_fiscal_review"
+              name="Revisión fiscal"
+              parent="menu_justech_do_reports_root"
+              action="action_justech_do_fiscal_review"
+              sequence="5"/>
+    <menuitem id="menu_justech_do_fiscal_review_pending"
+              name="Pendientes de aprobación"
+              parent="menu_justech_do_reports_root"
+              action="action_justech_do_fiscal_review_pending"
+              sequence="6"
+              groups="justech_l10n_do_base.group_justech_do_fiscal_manager"/>
     <menuitem id="menu_justech_do_report_606_list"
               name="606 — Compras (historial)"
               parent="menu_justech_do_reports_root"

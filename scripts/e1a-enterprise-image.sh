@@ -85,11 +85,16 @@ hellenia_log "OK  versión 19.x en nombre archivo" | tee -a "$LOG_FILE"
 RUNNING_IMG=$(docker inspect hellenia-dev-odoo-1 --format '{{.Config.Image}}' 2>/dev/null || echo "")
 if echo "$RUNNING_IMG" | grep -qE 'odoo:19\.0'; then
   cp -f "$COMMUNITY_COMPOSE" "$STATE_DIR/docker-compose.yml.bak"
-  hellenia_log "Snapshot rollback: docker-compose.community.yml" | tee -a "$LOG_FILE"
+  cp -f "$COMMUNITY_CONF" "$STATE_DIR/odoo.conf.bak"
+  if grep -q '^admin_passwd' "$ODOO_CONF" 2>/dev/null; then
+    AP_LINE=$(grep '^admin_passwd' "$ODOO_CONF")
+    sed -i "s|^admin_passwd.*|${AP_LINE}|" "$STATE_DIR/odoo.conf.bak"
+  fi
+  hellenia_log "Snapshot rollback: compose + odoo.conf Community" | tee -a "$LOG_FILE"
 else
   cp -f "$COMPOSE_FILE" "$STATE_DIR/docker-compose.yml.bak"
+  cp -f "$ODOO_CONF" "$STATE_DIR/odoo.conf.bak"
 fi
-cp -f "$ODOO_CONF" "$STATE_DIR/odoo.conf.bak"
 
 hellenia_log "--- Backup DEV ---" | tee -a "$LOG_FILE"
 set +e

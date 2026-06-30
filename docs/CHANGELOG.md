@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+### Added — Fase 3 checklist empresa (2026-06-30)
+- `docs/PHASE-3-COMPANY-CONFIG-CHECKLIST.md` — 15 secciones, datos propuestos vs pendientes, gate aprobación
+
 ### Changed — Pivot estratégico v3.0 (2026-06-30)
 - `docs/PROJECT_STRATEGY.md` — plataforma Odoo 19 EE On-Premise; hoja de ruta 12 fases
 - Sin perseguir saas-19.3; NCF = línea base producto; limitaciones documentadas sin bloquear

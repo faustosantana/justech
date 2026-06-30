@@ -118,13 +118,11 @@ Ver [CUSTOM_MODULE_GUIDE.md](CUSTOM_MODULE_GUIDE.md).
 
 ## Fase actual y próximos pasos
 
-**Fase activa:** 3 (Configuración funcional) + 4 (Localización RD) en paralelo controlado en DEV.
+**Fase activa:** 3 (Configuración funcional) — checklist empresa: [PHASE-3-COMPANY-CONFIG-CHECKLIST.md](PHASE-3-COMPANY-CONFIG-CHECKLIST.md) (pendiente aprobación para apply DEV).
 
-**Continuar sin bloqueos por investigación de versiones.**
-
-1. Completar parametrización empresa y maestros (Fase 3).
-2. Avanzar localización RD con pruebas del [plan funcional](L10N_DO_TEST_PLAN.md) (Fase 4).
-3. Documentar limitaciones encontradas; no detener por G-01 u otras brechas hasta cerrar ciclo de implementación estándar.
+1. Aprobar checklist Fase 3 con datos legales Hellenia (§15).
+2. Aplicar parametrización empresa en DEV (sin usuarios, sin TC-003).
+3. Avanzar localización RD en paralelo controlado (Fase 4).
 
 ---
 

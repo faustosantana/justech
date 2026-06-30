@@ -14,7 +14,7 @@
             <xpath expr="//button[@name='action_set_draft']" position="attributes">
                 <attribute name="string">Volver a borrador</attribute>
             </xpath>
-            <xpath expr="//group[@string='Sequence']" position="attributes">
+            <xpath expr="//group[field[@name='sequence_start']]" position="attributes">
                 <attribute name="string">Secuencia</attribute>
             </xpath>
         </field>

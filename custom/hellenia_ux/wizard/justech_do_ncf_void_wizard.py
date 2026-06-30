@@ -9,6 +9,13 @@ class JustechDoNcfVoidWizard(models.TransientModel):
     move_id = fields.Many2one("account.move", string="Documento", required=True, readonly=True)
     ncf = fields.Char(related="move_id.justech_do_ncf", string="Número de Comprobante Fiscal")
     void_reason = fields.Text(string="Motivo de anulación", required=True)
+    cancel_type = fields.Selection(
+        related="move_id.justech_do_ncf_cancel_type",
+        string="Tipo de anulación DGII",
+        readonly=False,
+        required=True,
+        default="04",
+    )
 
     def action_confirm_void(self):
         self.ensure_one()
@@ -16,5 +23,7 @@ class JustechDoNcfVoidWizard(models.TransientModel):
         if not reason:
             raise UserError(_("Debe indicar el motivo de anulación."))
         self.move_id.write({"justech_do_ncf_void_reason": reason})
+        if self.cancel_type:
+            self.move_id.justech_do_ncf_cancel_type = self.cancel_type
         self.move_id.action_void_ncf()
         return {"type": "ir.actions.act_window_close"}

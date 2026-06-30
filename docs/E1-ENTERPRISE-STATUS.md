@@ -1,43 +1,50 @@
 # Estado Fase E1 — Enterprise DEV
 
 **Fecha:** 2026-06-30  
-**Estado:** Arquitectura **congelada** — lista para E1a tras aprobación
+**Estrategia:** **Portal Odoo (descarga oficial)** como vía principal; GitHub en paralelo  
+**E1a:** ⏳ Pendiente — esperando tarball en VPS + aprobación ejecución
 
 ---
 
-## Completado
+## Cambio de estrategia (2026-06-30)
 
-| Fase | Estado |
+| Vía | Estado |
+|-----|--------|
+| GitHub `odoo/enterprise` | ❌ `faustosantana` sin acceso repo (SSH OK) |
+| **Portal Odoo Sources** | ✅ **Preparado** — ver [E0.6b](E0.6b-ENTERPRISE-PORTAL-DOWNLOAD.md) |
+| Comparativa completa | [ENTERPRISE_ACCESS_OPTIONS.md](ENTERPRISE_ACCESS_OPTIONS.md) |
+
+**No bloquear proyecto** esperando GitHub.
+
+---
+
+## Completado (sin código Enterprise)
+
+| Área | Estado |
 |------|--------|
-| E0.5–E0.9 | ✅ Aprobado |
-| Revisión infra 10 años | ✅ `INFRASTRUCTURE_REVIEW.md` |
-| Guías desarrollo/DevOps/calidad | ✅ 5 documentos nuevos |
-| Módulos custom estructura pro | ✅ 6 módulos independientes |
-| Scripts backup/deploy/upgrade | ✅ Corregidos y ampliados |
-| Deuda técnica bloqueante | ✅ Ninguna |
+| Arquitectura congelada | ✅ |
+| Scripts portal: `extract-enterprise-portal.sh`, `fetch-enterprise.sh`, `validate-enterprise-archive.sh` | ✅ |
+| `downloads/enterprise/` staging | ✅ |
+| Documentación acceso Enterprise | ✅ |
+| l10n RD análisis | ✅ [L10N-RD-READINESS.md](L10N-RD-READINESS.md) |
+| DEV Community | ✅ Operativo |
+| TEST / PROD | ✅ Sin tocar |
 
 ---
 
-## Arquitectura congelada
+## Próximo paso (usuario + aprobación)
 
-Separación definitiva: `docker/` · `config/` · `data/` · `custom/` · `scripts/` · `docs/`
-
-Ver [INFRASTRUCTURE_REVIEW.md](INFRASTRUCTURE_REVIEW.md).
-
----
-
-## Siguiente paso
-
-Aprobar **E1a** en [E1-CHECKLIST.md](E1-CHECKLIST.md):
-
-1. Usuario vincula GitHub en portal Odoo
-2. Cursor genera SSH key → usuario agrega `.pub`
-3. Clone Enterprise + `web_enterprise` + validación
+1. **Usuario:** Verificar Download en [odoo.com/page/download](https://www.odoo.com/page/download) (Enterprise Sources 19)
+2. **Usuario:** Subir `.tar.gz` a `/opt/odoo-projects/hellenia/downloads/enterprise/`
+3. **Usuario:** Aprobar ejecución E1a-revised
+4. **Cursor:** `validate-enterprise-archive.sh` → `extract-enterprise-portal.sh` → `web_enterprise` → validar
 
 ---
 
 ## No ejecutado
 
-- ⛔ E1a (clone, web_enterprise)
-- ⛔ E1b (registro licencia)
+- ⛔ Extract tarball / `web_enterprise`
+- ⛔ E1b licencia
+- ⛔ E1c l10n
+- ⛔ Wizard / usuarios
 - ⛔ Producción

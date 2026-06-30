@@ -35,7 +35,8 @@
 ```
 /opt/odoo-projects/hellenia/
 ├── community/          # Metadatos Community (código en imagen Docker)
-├── enterprise/         # Git clone odoo/enterprise @ 19.0 (NO en Git Justech)
+├── enterprise/         # Addons Enterprise — portal o Git (NO en Git Justech)
+├── downloads/enterprise/ # Staging tarball portal (NO en Git)
 ├── custom/             # Módulos Justech — único lugar para desarrollo propio
 │   ├── hellenia_base/
 │   ├── hellenia_inventory/

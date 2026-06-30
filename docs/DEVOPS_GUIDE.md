@@ -15,7 +15,8 @@
 | Upgrade Community | `upgrade-community.sh` | DEV / TEST |
 | Upgrade Enterprise | `upgrade-enterprise.sh` | Global |
 | Actualizar módulos custom | `update-custom-modules.sh` | DEV / TEST |
-| Clone Enterprise | `clone-enterprise.sh` | Global |
+| Clone / extract Enterprise | `fetch-enterprise.sh` / `extract-enterprise-portal.sh` / `clone-enterprise.sh` | Global |
+| Validar tarball portal | `validate-enterprise-archive.sh` | Pre-E1 |
 | Instalar Enterprise | `install-enterprise-dev.sh` | DEV (E1) |
 | Validar Enterprise | `validate-enterprise-dev.sh` | DEV |
 | Validar suscripción | `validate-subscription-env.sh` | Global |

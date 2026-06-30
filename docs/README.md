@@ -24,10 +24,14 @@ Proyecto Odoo **Enterprise 19** para **Hellenia**. Pipeline permanente: **DEV 鈫
 
 | Documento | Contenido |
 |-----------|-----------|
+| [ENTERPRISE_ACCESS_OPTIONS.md](ENTERPRISE_ACCESS_OPTIONS.md) | **Git vs portal vs soporte** |
+| [E0.6b-ENTERPRISE-PORTAL-DOWNLOAD.md](E0.6b-ENTERPRISE-PORTAL-DOWNLOAD.md) | Descarga oficial Sources |
+| [E0.6-GITHUB-ENTERPRISE.md](E0.6-GITHUB-ENTERPRISE.md) | GitHub (paralelo) |
 | [ENTERPRISE-LICENSING.md](ENTERPRISE-LICENSING.md) | Pol铆tica oficial licenciamiento |
-| [E1-CHECKLIST.md](E1-CHECKLIST.md) | Validaci贸n final pre-E1 |
+| [L10N-RD-READINESS.md](L10N-RD-READINESS.md) | Preparaci贸n localizaci贸n RD |
+| [E1-CHECKLIST.md](E1-CHECKLIST.md) | Checklist E1 |
 | [E1-ENTERPRISE-STATUS.md](E1-ENTERPRISE-STATUS.md) | Estado actual |
-| [E0.5](E0.5-SUBSCRIPTION-VALIDATION.md) / [E0.6](E0.6-GITHUB-ENTERPRISE.md) | Suscripci贸n y GitHub |
+| [E0.5-SUBSCRIPTION-VALIDATION.md](E0.5-SUBSCRIPTION-VALIDATION.md) | Suscripci贸n |
 
 ## Referencia
 

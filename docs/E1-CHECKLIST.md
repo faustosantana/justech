@@ -1,38 +1,45 @@
 # Fase E1 — Validación final pre-ejecución
 
-**Estado:** Pendiente de aprobación — **NO ejecutar hasta autorización explícita**  
+**Estado:** E1a-revised — vía **portal Odoo** (ver [ENTERPRISE_ACCESS_OPTIONS.md](ENTERPRISE_ACCESS_OPTIONS.md))  
 **Alcance E1a:** Solo ambiente **DEV** (`hellenia_dev` / `dev.hellenia.cloud`)  
-**Prerrequisito:** Fases E0.5–E0.9 completadas y documentación revisada ✅
+**Prerrequisito:** Fases E0.5–E0.9 completadas ✅
+
+> **Cambio 2026-06-30:** GitHub bloqueado para `faustosantana`. Método principal: **descarga oficial Sources** desde portal Odoo. Ver [E0.6b-ENTERPRISE-PORTAL-DOWNLOAD.md](E0.6b-ENTERPRISE-PORTAL-DOWNLOAD.md).
 
 ---
 
 ## Revisión del procedimiento oficial Enterprise
 
-Este checklist consolida el procedimiento documentado por Odoo para on-premise Docker + Enterprise Git.
+Este checklist consolida el procedimiento documentado por Odoo para on-premise Docker + Enterprise (**Archive o Git**).
 
 ### Fuentes oficiales verificadas
 
 | # | Documento oficial | Contenido aplicado |
 |---|-------------------|-------------------|
-| 1 | [Source install — Git](https://www.odoo.com/documentation/19.0/administration/on_premise/source.html) | Clone `odoo/enterprise` rama `19.0`; Enterprise antes de Community en `addons_path` |
-| 2 | [Community → Enterprise](https://www.odoo.com/documentation/19.0/administration/on_premise/community_to_enterprise.html) | Backup → `addons_path` → `-i web_enterprise` → reiniciar → registrar código |
-| 3 | [On-premise](https://www.odoo.com/documentation/19.0/administration/on_premise.html) | Registro suscripción; duplicación para test/dev |
-| 4 | [Docker Hub odoo](https://hub.docker.com/_/odoo) | Sin imagen Enterprise; montar volumen; múltiples instancias permitidas |
-| 5 | [Neutralized database](https://www.odoo.com/documentation/19.0/administration/neutralized_database.html) | TEST futuro por duplicación neutralizada |
+| 1 | [Source install — Archive / Git](https://www.odoo.com/documentation/19.0/administration/on_premise/source.html) | ZIP/tarball **o** `odoo/enterprise` rama `19.0` |
+| 2 | [Packaged installers](https://www.odoo.com/documentation/19.0/administration/on_premise/packages.html) | Login on-premise customer para descarga Enterprise |
+| 3 | [Bugfix updates](https://www.odoo.com/documentation/19.0/administration/on_premise/update.html) | odoo.com/page/download; enlace email compra |
+| 4 | [Community → Enterprise](https://www.odoo.com/documentation/19.0/administration/on_premise/community_to_enterprise.html) | `-i web_enterprise` |
+| 5 | [Docker Hub odoo](https://hub.docker.com/_/odoo) | Volumen `/mnt/enterprise` |
 
-### Secuencia oficial (mejor práctica confirmada)
+### Secuencia E1a — vía portal (recomendada)
 
 ```
-1. Obtener Enterprise vía Git (rama = versión mayor Community)
-2. Montar enterprise/ como volumen read-only en Docker
-3. addons_path: enterprise PRIMERO, luego Community, luego custom
-4. Backup BD
-5. odoo -i web_enterprise --stop-after-init
-6. Reiniciar y verificar UI Enterprise
-7. Registrar subscription code en banner (E1b — aprobación separada)
+1. Descargar Enterprise Sources Odoo 19 desde portal (login suscripción)
+2. Subir tarball a downloads/enterprise/
+3. scripts/validate-enterprise-archive.sh
+4. scripts/extract-enterprise-portal.sh
+5. addons_path ya configurado — recrear contenedor DEV
+6. backup-dev.sh
+7. odoo -i web_enterprise --stop-after-init
+8. validate-enterprise-dev.sh
 ```
 
-> **Mejora respecto a versión anterior:** Autenticación Git por **SSH key dedicada** en lugar de PAT permanente en `github.env`. Ver [E0.6-GITHUB-ENTERPRISE.md](E0.6-GITHUB-ENTERPRISE.md).
+### Secuencia E1a — vía Git (alternativa)
+
+```
+fetch-enterprise.sh --git-only   # cuando GitHub accesible
+```
 
 ---
 
@@ -40,40 +47,43 @@ Este checklist consolida el procedimiento documentado por Odoo para on-premise D
 
 | Regla | Responsable |
 |-------|-------------|
-| Vincular usuario GitHub en portal Odoo | **Usuario** (único paso manual en portal) |
-| Agregar SSH public key en GitHub | **Usuario** (copiar `.pub` generada por Cursor) |
-| Generar clave SSH, `ssh_config`, clonar, validar | **Cursor** vía SSH |
-| Editar archivos manualmente en VPS | **Nadie** |
-| Wizard, usuarios, l10n_do, licencia UI | **Bloqueado** en E1a |
-| Producción `odoo-pecv` | **No tocar** |
+| Descargar Sources desde portal Odoo | **Usuario** |
+| Subir tarball al VPS | **Usuario** o Cursor vía SCP |
+| Extract, montar, `web_enterprise`, validar | **Cursor** vía SSH |
+| Wizard, usuarios, l10n_do, licencia UI | **Bloqueado** |
+| TEST / PRODUCCIÓN | **No tocar** |
 
 ---
 
-## Parte A — Acceso GitHub (antes de E1)
+## Parte A — Acceso Enterprise (portal — preferido)
 
-### A.1 Portal Odoo (manual — usuario)
+### A.1 Verificar descarga habilitada (usuario)
 
 | # | Acción |
 |---|--------|
-| 1 | [odoo.com/my/subscriptions](https://www.odoo.com/my/subscriptions) → `M260616306091776` |
-| 2 | **GitHub Users** → agregar username exacto |
-| 3 | Esperar 5–30 min |
-| 4 | Verificar [github.com/odoo/enterprise](https://github.com/odoo/enterprise) visible |
-| 5 | Verificar rama **`19.0`** existe |
+| 1 | Login [odoo.com](https://www.odoo.com) — cuenta de `M260616306091776` |
+| 2 | [odoo.com/page/download](https://www.odoo.com/page/download) |
+| 3 | Odoo **19** → Enterprise → **Sources** → debe decir **Download** (no Buy) |
+| 4 | Descargar archivo `.tar.gz` o `.zip` |
 
-### A.2 SSH Key en GitHub (preferido)
+### A.2 Transferir al VPS
 
-| # | Acción | Quién |
-|---|--------|-------|
-| 1 | Cursor genera `github_ed25519` + `github_ed25519.pub` en VPS | Cursor |
-| 2 | Usuario copia contenido de `.pub` → GitHub → Settings → SSH and GPG keys | Usuario |
-| 3 | Cursor verifica `git ls-remote` con `ssh_config` | Cursor |
+```bash
+scp <archivo>.tar.gz root@2.25.69.179:/opt/odoo-projects/hellenia/downloads/enterprise/
+```
 
-**No se almacena PAT** si SSH funciona.
+### A.3 Validar archivo (Cursor — sin instalar)
 
-### A.3 Fallback PAT (solo si SSH falla)
+```bash
+/opt/odoo-projects/hellenia/scripts/validate-enterprise-archive.sh \
+  /opt/odoo-projects/hellenia/downloads/enterprise/<archivo>.tar.gz
+```
 
-Fine-grained PAT, Contents Read-only, repo `odoo/enterprise`. Temporal; migrar a SSH cuando sea posible.
+---
+
+## Parte A-alt — GitHub (paralelo, no bloqueante)
+
+Ver [E0.6-GITHUB-ENTERPRISE.md](E0.6-GITHUB-ENTERPRISE.md). Estado actual: SSH `faustosantana` sin acceso a `odoo/enterprise`.
 
 ---
 
@@ -140,10 +150,25 @@ chmod +x /opt/odoo-projects/hellenia/scripts/*.sh
 /opt/odoo-projects/hellenia/scripts/backup-dev.sh
 ```
 
-### C.4 Clonar Enterprise (Git oficial, rama 19.0)
+### C.4 Obtener código Enterprise
+
+**Portal (recomendado):**
 
 ```bash
-/opt/odoo-projects/hellenia/scripts/clone-enterprise.sh
+/opt/odoo-projects/hellenia/scripts/extract-enterprise-portal.sh \
+  /opt/odoo-projects/hellenia/downloads/enterprise/<archivo>.tar.gz
+```
+
+**Git (si acceso habilitado):**
+
+```bash
+/opt/odoo-projects/hellenia/scripts/fetch-enterprise.sh --git-only
+```
+
+**Auto (Git → portal):**
+
+```bash
+/opt/odoo-projects/hellenia/scripts/fetch-enterprise.sh
 ```
 
 ### C.5 Recrear contenedor DEV

@@ -1,28 +1,43 @@
-# Enterprise — Repositorio Odoo (independiente)
+# Enterprise — Código Odoo (independiente de Git Justech)
 
 **Este directorio NO forma parte del repositorio Git Justech.**
 
-## Clonación (Fase E1)
+## Dos métodos oficiales de obtención
+
+| Método | Script | Documentación |
+|--------|--------|---------------|
+| **Portal Odoo (recomendado ahora)** | `extract-enterprise-portal.sh` | [E0.6b](../docs/E0.6b-ENTERPRISE-PORTAL-DOWNLOAD.md) |
+| **GitHub Git** | `clone-enterprise.sh` | [E0.6](../docs/E0.6-GITHUB-ENTERPRISE.md) |
+| **Auto (Git → portal)** | `fetch-enterprise.sh` | [ENTERPRISE_ACCESS_OPTIONS](../docs/ENTERPRISE_ACCESS_OPTIONS.md) |
+
+## Portal — procedimiento resumido
+
+1. Descargar **Odoo 19 → Enterprise → Sources** desde [odoo.com/page/download](https://www.odoo.com/page/download)
+2. Subir a `downloads/enterprise/`
+3. `scripts/extract-enterprise-portal.sh`
+4. Montaje Docker: `/mnt/enterprise:ro` (ya configurado)
+
+## Git — cuando el acceso esté habilitado
 
 ```bash
 /opt/odoo-projects/hellenia/scripts/clone-enterprise.sh
 ```
 
-Clona `https://github.com/odoo/enterprise.git` rama `19.0` en este directorio.
+## Contenido esperado tras extract/clone
 
-## Requisitos previos
+```
+enterprise/
+├── web_enterprise/
+├── l10n_do_edi/          # verificar tras obtener código
+├── l10n_do_reports/
+└── MANIFEST.txt          # portal: metadatos archivo | git: usar git log
+```
 
-1. Suscripción Enterprise activa (`M260616306091776`)
-2. Usuario GitHub vinculado en [odoo.com/my/subscriptions](https://www.odoo.com/my/subscriptions)
-3. Credenciales en `config/credentials/github.env` (chmod 600)
+## Montaje Docker
 
-Ver [docs/E0.6-GITHUB-ENTERPRISE.md](../docs/E0.6-GITHUB-ENTERPRISE.md)
-
-## Actualización
-
-```bash
-cd /opt/odoo-projects/hellenia/enterprise
-git pull origin 19.0
+```
+Host:      /opt/odoo-projects/hellenia/enterprise/
+Container: /mnt/enterprise (read-only)
 ```
 
 ## Reglas
@@ -30,8 +45,8 @@ git pull origin 19.0
 - ❌ Nunca commitear a Justech
 - ❌ Nunca modificar archivos aquí
 - ❌ Nunca copiar módulos a `custom/`
-- ✅ Montado read-only en Docker: `/mnt/enterprise`
+- ✅ Solo addons Enterprise oficiales Odoo
 
 ## Licencia
 
-OPL-1.0 — Odoo S.A. Uso permitido con suscripción activa.
+OPL-1.0 — Odoo S.A. Uso permitido con suscripción activa `M260616306091776`.

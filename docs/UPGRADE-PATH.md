@@ -9,7 +9,7 @@
 | Componente | Ubicación | Método de actualización |
 |------------|-----------|-------------------------|
 | **Community** | Imagen Docker | Cambiar tag pinneado en `docker-compose.yml` |
-| **Enterprise** | `/opt/odoo-projects/hellenia/enterprise/` | `git fetch` + `git checkout <rama>` + `git pull` |
+| **Enterprise** | `/opt/odoo-projects/hellenia/enterprise/` | `git pull` **o** nuevo tarball portal + `extract-enterprise-portal.sh` |
 | **Custom** | `/opt/odoo-projects/hellenia/custom/` | `git pull` repo Justech |
 
 ### Lo que NO cambia entre versiones
@@ -49,18 +49,20 @@ Para **cambio de versión mayor** (19 → 20):
 4. Ejecutar migración de BD según documentación oficial
 5. Neutralizar BD de test antes de validar
 
-### Enterprise Git
-
-Fuente: [Source install](https://www.odoo.com/documentation/19.0/administration/on_premise/source.html)
+### Enterprise Git (cuando esté disponible)
 
 ```bash
 cd /opt/odoo-projects/hellenia/enterprise
-git fetch origin
+git fetch origin 19.0
 git checkout 20.0          # ejemplo Odoo 20
 git pull origin 20.0
 ```
 
-> Enterprise y Community deben estar en la **misma versión mayor**.
+### Enterprise portal (parche / actualización)
+
+1. Descargar nuevo Sources desde [odoo.com/page/download](https://www.odoo.com/page/download)
+2. `scripts/extract-enterprise-portal.sh <nuevo.tar.gz>`
+3. Reiniciar Odoo DEV/TEST
 
 ### Custom addons
 

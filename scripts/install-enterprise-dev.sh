@@ -26,8 +26,8 @@ log "=== Fase E1 — Enterprise DEV ==="
 log "--- E0.5 validate ---"
 "$SCRIPT_DIR/validate-subscription-env.sh" || true
 
-log "--- Clone enterprise ---"
-"$SCRIPT_DIR/clone-enterprise.sh"
+log "--- Fetch enterprise (portal o Git) ---"
+"$SCRIPT_DIR/fetch-enterprise.sh"
 
 log "--- Backup DEV ---"
 "$SCRIPT_DIR/backup-dev.sh" || log "WARN backup falló"

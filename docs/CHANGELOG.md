@@ -23,8 +23,14 @@
 ### Previous (E0.5–E0.9)
 - ENTERPRISE-LICENSING.md, UPGRADE-PATH.md, SSH GitHub, arquitectura DEV→TEST→PROD
 
-### Pending (E1a)
-- SSH key + clone Enterprise + web_enterprise
+### Added — Estrategia portal Enterprise (2026-06-30)
+- `ENTERPRISE_ACCESS_OPTIONS.md`, `E0.6b-ENTERPRISE-PORTAL-DOWNLOAD.md`, `L10N-RD-READINESS.md`
+- Scripts: `extract-enterprise-portal.sh`, `fetch-enterprise.sh`, `validate-enterprise-archive.sh`
+- `downloads/enterprise/` staging
+
+### Pending (E1a-revised — portal)
+- Usuario: descargar Sources Odoo 19 Enterprise + subir tarball VPS
+- Aprobación: extract + web_enterprise en DEV
 
 ### Added (previo)
 - `docs/ENTERPRISE_ANALYSIS.md` — análisis Enterprise, suscripción M260616306091776, módulos RD, plan DEV propuesto (sin ejecución)

@@ -55,20 +55,21 @@ def err(msg: str) -> None:
     report["errors"].append(msg)
 
 
-def visible_roots(user):
-    Menu = env["ir.ui.menu"].with_user(user)
-    return Menu.search([("parent_id", "=", False), ("active", "=", True)]).sorted("sequence")
-
-
 def audit_user(label, user):
     if not user:
         return {"found": False}
     finance = env.ref("account.menu_finance", raise_if_not_found=False)
-    roots = visible_roots(user)
+    Menu = env["ir.ui.menu"].with_user(user)
+    visible_ids = set(Menu._visible_menu_ids())
+    roots = Menu.search([("parent_id", "=", False), ("active", "=", True)]).filtered(
+        lambda m: m.id in visible_ids
+    ).sorted("sequence")
     root_names = roots.mapped("name")
     children = []
     if finance:
-        children = env["ir.ui.menu"].with_user(user).search([("parent_id", "=", finance.id)]).mapped("name")
+        children = Menu.search([("parent_id", "=", finance.id)]).filtered(
+            lambda m: m.id in visible_ids
+        ).mapped("name")
     return {
         "found": True,
         "login": user.login,
@@ -76,7 +77,7 @@ def audit_user(label, user):
         "root_menus": root_names,
         "contabilidad_children": children,
         "contabilidad_children_count": len(children),
-        "sees_contabilidad": finance and finance.id in roots.ids if finance else False,
+        "sees_contabilidad": bool(finance and finance.id in visible_ids),
         "duplicate_accounting_roots": [n for n in root_names if n.lower() in ("accounting", "facturación", "invoicing")],
     }
 

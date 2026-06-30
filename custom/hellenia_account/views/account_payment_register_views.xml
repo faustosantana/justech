@@ -20,6 +20,12 @@
                     </field>
                 </group>
             </xpath>
+            <xpath expr="//field[@name='payment_method_line_id']" position="attributes">
+                <attribute name="string">Método de pago</attribute>
+            </xpath>
+            <xpath expr="//field[@name='journal_id']" position="attributes">
+                <attribute name="string">Diario</attribute>
+            </xpath>
         </field>
     </record>
 </odoo>

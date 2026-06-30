@@ -190,12 +190,25 @@ if doc_b11:
 
 env.cr.commit()
 
-def pay_invoice(inv, journal):
-    wiz = env["account.payment.register"].with_context(active_model="account.move", active_ids=inv.ids).create({
-        "journal_id": journal.id,
-    })
-    if not wiz.journal_id:
-        wiz.journal_id = journal
+def _method_line(journal, label, payment_type="inbound"):
+    if not journal:
+        return False
+    lines = journal.inbound_payment_method_line_ids if payment_type == "inbound" else journal.outbound_payment_method_line_ids
+    return lines.filtered(lambda l: l.name == label)[:1]
+
+
+def pay_invoice(inv, journal, method_label=None, amount=None, payment_type=None):
+    ptype = payment_type or ("inbound" if inv.move_type in ("out_invoice", "out_refund") else "outbound")
+    wiz_vals = {"journal_id": journal.id}
+    if method_label:
+        mline = _method_line(journal, method_label, ptype)
+        if mline:
+            wiz_vals["payment_method_line_id"] = mline.id
+    wiz = env["account.payment.register"].with_context(
+        active_model="account.move", active_ids=inv.ids
+    ).create(wiz_vals)
+    if amount is not None:
+        wiz.amount = amount
     payments = wiz._create_payments()
     return payments
 
@@ -214,7 +227,7 @@ try:
         })
         inv.action_post()
         ncf = inv.justech_do_ncf
-        pay = pay_invoice(inv, bnkd or journals.filtered(lambda j: j.type == "bank")[:1])
+        pay = pay_invoice(inv, bnkd or journals.filtered(lambda j: j.type == "bank")[:1], "Transferencia")
         reconciled = inv.payment_state in ("paid", "in_payment", "partial")
         if reconciled and ncf:
             pass_("cobro_transferencia", f"NCF={ncf}, pago={pay[:1].name if pay else 'ok'}")
@@ -232,13 +245,33 @@ try:
             "invoice_line_ids": [Command.create({"product_id": product.id, "quantity": 1, "price_unit": 500, "tax_ids": [Command.set(tax_18.ids)] if tax_18 else []})],
         })
         inv.action_post()
-        pay = pay_invoice(inv, csh)
+        pay = pay_invoice(inv, csh, "Efectivo")
         if inv.payment_state in ("paid", "in_payment", "partial"):
             pass_("cobro_efectivo", inv.payment_state)
         else:
             fail("cobro_efectivo", inv.payment_state)
 except Exception as exc:  # noqa: BLE001
     fail("cobro_efectivo", str(exc))
+
+# --- Test cobro tarjeta ---
+try:
+    with env.cr.savepoint():
+        inv = env["account.move"].create({
+            "move_type": "out_invoice",
+            "partner_id": customer.id,
+            "invoice_line_ids": [Command.create({
+                "product_id": product.id, "quantity": 1, "price_unit": 750,
+                "tax_ids": [Command.set(tax_18.ids)] if tax_18 else [],
+            })],
+        })
+        inv.action_post()
+        pay = pay_invoice(inv, bnkd, "Tarjeta")
+        if inv.payment_state in ("paid", "in_payment", "partial"):
+            pass_("cobro_tarjeta", inv.payment_state)
+        else:
+            fail("cobro_tarjeta", inv.payment_state)
+except Exception as exc:  # noqa: BLE001
+    fail("cobro_tarjeta", str(exc))
 
 # --- Test pago proveedor ---
 try:
@@ -254,13 +287,131 @@ try:
             })],
         })
         bill.action_post()
-        pay = pay_invoice(bill, bnkd or journals.filtered(lambda j: j.type == "bank")[:1])
+        pay = pay_invoice(bill, bnkd or journals.filtered(lambda j: j.type == "bank")[:1], "Transferencia", payment_type="outbound")
         if bill.payment_state in ("paid", "in_payment", "partial"):
             pass_("pago_proveedor", bill.payment_state)
         else:
             fail("pago_proveedor", bill.payment_state)
 except Exception as exc:  # noqa: BLE001
     fail("pago_proveedor", str(exc))
+
+# --- Test pago cheque proveedor ---
+try:
+    with env.cr.savepoint():
+        bill = env["account.move"].create({
+            "move_type": "in_invoice",
+            "partner_id": vendor.id,
+            "invoice_line_ids": [Command.create({
+                "product_id": product.id, "quantity": 1, "price_unit": 600,
+                "tax_ids": [Command.set(tax_purchase.ids)] if tax_purchase else [],
+            })],
+        })
+        bill.action_post()
+        cheque_line = _method_line(bnkd, "Cheque", "outbound")
+        if not cheque_line:
+            fail("pago_cheque", "método Cheque no configurado en BNKD")
+        else:
+            pay = pay_invoice(bill, bnkd, "Cheque", payment_type="outbound")
+            if bill.payment_state in ("paid", "in_payment", "partial"):
+                pass_("pago_cheque", bill.payment_state)
+            else:
+                fail("pago_cheque", bill.payment_state)
+except Exception as exc:  # noqa: BLE001
+    fail("pago_cheque", str(exc))
+
+# --- Test pago parcial ---
+try:
+    with env.cr.savepoint():
+        inv = env["account.move"].create({
+            "move_type": "out_invoice",
+            "partner_id": customer.id,
+            "invoice_line_ids": [Command.create({
+                "product_id": product.id, "quantity": 1, "price_unit": 2000,
+                "tax_ids": [Command.set(tax_18.ids)] if tax_18 else [],
+            })],
+        })
+        inv.action_post()
+        partial = inv.amount_residual / 2
+        pay_invoice(inv, bnkd, "Transferencia", amount=partial)
+        if inv.payment_state == "partial":
+            pass_("pago_parcial", f"residual={inv.amount_residual:.2f}")
+        else:
+            fail("pago_parcial", f"state={inv.payment_state}")
+except Exception as exc:  # noqa: BLE001
+    fail("pago_parcial", str(exc))
+
+# --- Test pago múltiple ---
+try:
+    with env.cr.savepoint():
+        inv1 = env["account.move"].create({
+            "move_type": "out_invoice",
+            "partner_id": customer.id,
+            "invoice_line_ids": [Command.create({"product_id": product.id, "quantity": 1, "price_unit": 300})],
+        })
+        inv2 = env["account.move"].create({
+            "move_type": "out_invoice",
+            "partner_id": customer.id,
+            "invoice_line_ids": [Command.create({"product_id": product.id, "quantity": 1, "price_unit": 400})],
+        })
+        inv1.action_post()
+        inv2.action_post()
+        wiz = env["account.payment.register"].with_context(
+            active_model="account.move", active_ids=(inv1 | inv2).ids
+        ).create({"journal_id": bnkd.id})
+        wiz._create_payments()
+        if inv1.payment_state in ("paid", "in_payment") and inv2.payment_state in ("paid", "in_payment"):
+            pass_("pago_multiple", f"{inv1.name}+{inv2.name}")
+        else:
+            fail("pago_multiple", f"{inv1.payment_state}/{inv2.payment_state}")
+except Exception as exc:  # noqa: BLE001
+    fail("pago_multiple", str(exc))
+
+# --- Test retención 5% gobierno (venta) ---
+try:
+    with env.cr.savepoint():
+        gov_customer = env["res.partner"].search([("name", "ilike", "gobierno")], limit=1)
+        if not gov_customer:
+            gov_customer = env["res.partner"].create({"name": "Cliente Gobierno Test 16", "customer_rank": 1})
+        fp_gov = env["account.fiscal.position"].search([("name", "=", "Governmental")], limit=1)
+        if fp_gov:
+            gov_customer.property_account_position_id = fp_gov
+        inv = env["account.move"].create({
+            "move_type": "out_invoice",
+            "partner_id": gov_customer.id,
+            "invoice_line_ids": [Command.create({
+                "product_id": product.id, "quantity": 1, "price_unit": 1000,
+                "tax_ids": [Command.set(tax_18.ids)] if tax_18 else [],
+            })],
+        })
+        inv.action_post()
+        has_gov = any(l.tax_line_id == gov_ret for l in inv.line_ids) if gov_ret else False
+        if has_gov or (gov_ret and gov_ret in inv.invoice_line_ids.tax_ids):
+            pass_("retencion_5_gobierno", "ISR Gov. en factura")
+        else:
+            fail("retencion_5_gobierno", "sin retención gobierno")
+except Exception as exc:  # noqa: BLE001
+    fail("retencion_5_gobierno", str(exc))
+
+# --- Conciliación bancaria (smoke) ---
+try:
+    bank_j = bnkd
+    ready = bool(
+        bank_j
+        and bank_j.bank_account_id
+        and bank_j.default_account_id
+        and bank_j.inbound_payment_method_line_ids
+        and bank_j.outbound_payment_method_line_ids
+    )
+    mod_reconcile = env["ir.module.module"].search([("name", "=", "account_accountant")], limit=1)
+    if ready:
+        pass_(
+            "conciliacion_bancaria",
+            f"BNKD listo; account_accountant={mod_reconcile.state if mod_reconcile else 'n/a'}",
+        )
+    else:
+        fail("conciliacion_bancaria", "diario BNKD incompleto")
+except Exception as exc:  # noqa: BLE001
+    fail("conciliacion_bancaria", str(exc))
 
 # --- Test retención 10% proveedor ---
 try:

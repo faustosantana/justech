@@ -1,7 +1,11 @@
 """Configuración bancos, diarios y métodos de pago Hellenia."""
 from __future__ import annotations
 
+import logging
+
 from odoo import api, models
+
+_logger = logging.getLogger(__name__)
 
 BANK_NAME = "Banco López de Haro"
 BANK_ACCOUNTS = (
@@ -34,6 +38,8 @@ JOURNAL_SPECS = {
     "BNKD": {"name": "Banco López de Haro DOP", "type": "bank", "currency": "DOP"},
     "BNKU": {"name": "Banco López de Haro USD", "type": "bank", "currency": "USD"},
 }
+
+GENERIC_METHOD_LABELS = frozenset({"Manual Payment", "Checks", "Check", "Manual"})
 
 
 class HelleniaAccountPaymentSetup(models.AbstractModel):
@@ -99,16 +105,17 @@ class HelleniaAccountPaymentSetup(models.AbstractModel):
     def _ensure_payment_method_lines(self, journal, methods):
         Method = self.env["account.payment.method"]
         Line = self.env["account.payment.method.line"]
-        created = []
+        created_labels = []
         for pm_code, pm_type, label in methods:
             method = Method.search([("code", "=", pm_code), ("payment_type", "=", pm_type)], limit=1)
             if not method:
+                _logger.warning("Hellenia payment setup: método %s/%s no encontrado", pm_code, pm_type)
                 continue
             line = Line.search(
                 [
                     ("journal_id", "=", journal.id),
                     ("payment_method_id", "=", method.id),
-                    ("payment_type", "=", pm_type),
+                    ("name", "=", label),
                 ],
                 limit=1,
             )
@@ -121,15 +128,27 @@ class HelleniaAccountPaymentSetup(models.AbstractModel):
                         "journal_id": journal.id,
                         "payment_method_id": method.id,
                         "name": label,
-                        "payment_type": pm_type,
                     }
                 )
-            created.append(label)
-        # Ocultar líneas genéricas "Manual Payment" / "Checks" sin etiqueta español
+            created_labels.append(label)
+
+        # Renombrar líneas genéricas duplicadas (no eliminar — Odoo puede requerirlas)
         for line in Line.search([("journal_id", "=", journal.id)]):
-            if line.name in ("Manual Payment", "Checks") and line.name not in created:
-                line.unlink()
-        return created
+            if line.name in GENERIC_METHOD_LABELS and line.name not in created_labels:
+                replacement = next(
+                    (
+                        lbl
+                        for _code, ptype, lbl in methods
+                        if line.payment_method_id.code == _code and line.payment_method_id.payment_type == ptype
+                    ),
+                    None,
+                )
+                if replacement and not Line.search_count(
+                    [("journal_id", "=", journal.id), ("name", "=", replacement)], limit=1
+                ):
+                    line.name = replacement
+                    created_labels.append(replacement)
+        return created_labels
 
     @api.model
     def configure_banks_and_payments(self):
@@ -147,10 +166,8 @@ class HelleniaAccountPaymentSetup(models.AbstractModel):
                 company, spec["journal_code"], jspec, partner_bank=pb
             )
 
-        # Caja
         journals["CSH1"] = self._ensure_journal(company, "CSH1", JOURNAL_SPECS["CSH1"])
 
-        # Migrar BNK1 legacy → desactivar si existe
         legacy = self.env["account.journal"].search(
             [("code", "=", "BNK1"), ("company_id", "=", company.id)], limit=1
         )
@@ -158,7 +175,7 @@ class HelleniaAccountPaymentSetup(models.AbstractModel):
             if not self.env["account.move"].search_count([("journal_id", "=", legacy.id)], limit=1):
                 legacy.active = False
             else:
-                legacy.name = "Banco (legacy)"
+                legacy.write({"name": "Banco (legacy)"})
 
         payment_lines = {}
         for code, methods in JOURNAL_PAYMENT_METHODS.items():
@@ -191,7 +208,6 @@ class HelleniaAccountPaymentSetup(models.AbstractModel):
             if tax and not tax.active:
                 tax.active = True
             result.append({"name": name, "found": bool(tax), "active": tax.active if tax else False})
-        # Activar retención profesional independiente si existe
         prof = Tax.search(
             [("name", "=", "-30% ITBIS Prof. (N02-05)"), ("company_id", "=", self.env.company.id)], limit=1
         )

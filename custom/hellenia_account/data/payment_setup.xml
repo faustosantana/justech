@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<odoo>
+<odoo noupdate="0">
+    <!-- Configuración idempotente; también se ejecuta vía post_init_hook -->
     <function model="hellenia.account.payment.setup" name="configure_banks_and_payments"/>
     <function model="hellenia.account.payment.setup" name="configure_withholding_reference"/>
 </odoo>

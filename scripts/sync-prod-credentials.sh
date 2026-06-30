@@ -27,7 +27,13 @@ fetch_hash() {
 fetch_user_field() {
   local field="$1"
   docker exec "$DEV_DB" psql -U odoo -d hellenia_dev -tAc \
-    "SELECT ${field} FROM res_users WHERE login='it@justech.do' AND active=true LIMIT 1" | tr -d '\r'
+    "SELECT u.${field} FROM res_users u WHERE u.login='it@justech.do' AND u.active=true LIMIT 1" 2>/dev/null | tr -d '\r'
+}
+
+fetch_it_partner_field() {
+  local field="$1"
+  docker exec "$DEV_DB" psql -U odoo -d hellenia_dev -tAc \
+    "SELECT p.${field} FROM res_users u JOIN res_partner p ON u.partner_id = p.id WHERE u.login='it@justech.do' AND u.active=true LIMIT 1" 2>/dev/null | tr -d '\r'
 }
 
 ADMIN_HASH="$(fetch_hash admin)"

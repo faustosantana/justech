@@ -176,6 +176,20 @@ def fmt_ncf(prefix, seq):
     return f"{prefix}{seq:08d}"
 
 
+def fresh_ncf(prefix):
+    """NCF único evitando colisiones con ejecuciones previas en TEST."""
+    used = set(
+        env["account.move"].search(
+            [("justech_do_ncf", "=like", f"{prefix}%"), ("company_id", "=", company.id)]
+        ).mapped("justech_do_ncf")
+    )
+    for n in range(99_000_000, 99_999_999):
+        candidate = fmt_ncf(prefix, n)
+        if candidate not in used:
+            return candidate
+    raise UserError(_("No hay NCF disponible para pruebas P19."))
+
+
 def find_demo_move(ref, move_types=("in_invoice",)):
     """Último asiento publicado con NCF (evita duplicados de re-ejecuciones)."""
     move = env["account.move"].search(
@@ -431,23 +445,33 @@ except Exception as exc:
     check("export_file_created", False, repr(exc))
 
 # --- Validaciones de error en español (después del export) ---
-partner_no_vat = env["res.partner"].create({"name": "P19 Sin RNC", "supplier_rank": 1})
+partner_no_vat = env["res.partner"].search([("name", "=", "P19 Sin RNC")], limit=1)
+if not partner_no_vat:
+    partner_no_vat = env["res.partner"].create({"name": "P19 Sin RNC", "supplier_rank": 1})
 errs = exporter.validate_moves_606(company, period_start, period_end)
 check("error_catalog_not_empty", bool(errs) or True, f"{len(errs)} avisos globales")
 
-move_no_ncf = env["account.move"].create(
-    {
-        "move_type": "in_invoice",
-        "partner_id": partner_b11.id,
-        "journal_id": journal.id,
-        "invoice_date": today,
-        "ref": "P19-ERR-NO-NCF",
-        "invoice_line_ids": [
-            Command.create({"product_id": product_goods.id, "quantity": 1, "price_unit": 10.0})
-        ],
-    }
+move_no_ncf = env["account.move"].search(
+    [("ref", "=", "P19-ERR-NO-NCF"), ("state", "=", "posted"), ("justech_do_ncf", "=", False)],
+    limit=1,
 )
-move_no_ncf.action_post()
+if not move_no_ncf:
+    move_no_ncf = env["account.move"].create(
+        {
+            "move_type": "in_invoice",
+            "partner_id": partner_b11.id,
+            "journal_id": journal.id,
+            "invoice_date": today,
+            "ref": "P19-ERR-NO-NCF",
+            "invoice_line_ids": [
+                Command.create({"product_id": product_goods.id, "quantity": 1, "price_unit": 10.0})
+            ],
+        }
+    )
+    move_no_ncf.action_post()
+    if move_no_ncf.justech_do_ncf:
+        move_no_ncf.write({"justech_do_ncf": False})
+        env.cr.commit()
 err_ncf = exporter.validate_moves_606(company, period_start, period_end)
 report["validation_errors_es"]["sin_ncf"] = [e for e in err_ncf if "NCF" in e]
 check("error_sin_ncf_es", any("NCF" in e for e in err_ncf), report["validation_errors_es"]["sin_ncf"][:1])
@@ -459,22 +483,31 @@ if not partner_no_type:
     )
 partner_no_type.justech_do_partner_id_type = False
 env.cr.commit()
-move_no_type = env["account.move"].create(
-    {
-        "move_type": "in_invoice",
-        "partner_id": partner_no_type.id,
-        "journal_id": journal.id,
-        "invoice_date": today,
-        "ref": "P19-ERR-NO-TYPE",
-        "justech_do_ncf": fmt_ncf("B11", ncf_seq["n"]),
-        "justech_do_document_type_id": doc_b11.id,
-        "invoice_line_ids": [
-            Command.create({"product_id": product_goods.id, "quantity": 1, "price_unit": 10.0})
-        ],
-    }
+move_no_type = env["account.move"].search(
+    [
+        ("partner_id", "=", partner_no_type.id),
+        ("ref", "=like", "P19-ERR-NO-TYPE%"),
+        ("state", "=", "posted"),
+    ],
+    order="id desc",
+    limit=1,
 )
-ncf_seq["n"] += 1
-move_no_type.action_post()
+if not move_no_type:
+    move_no_type = env["account.move"].create(
+        {
+            "move_type": "in_invoice",
+            "partner_id": partner_no_type.id,
+            "journal_id": journal.id,
+            "invoice_date": today,
+            "ref": "P19-ERR-NO-TYPE",
+            "justech_do_ncf": fresh_ncf("B11"),
+            "justech_do_document_type_id": doc_b11.id,
+            "invoice_line_ids": [
+                Command.create({"product_id": product_goods.id, "quantity": 1, "price_unit": 10.0})
+            ],
+        }
+    )
+    move_no_type.action_post()
 err_type = exporter.validate_moves_606(company, period_start, period_end)
 report["validation_errors_es"]["sin_tipo_id"] = [e for e in err_type if "tipo de identificación" in e.lower()]
 check("error_sin_tipo_id_es", any("tipo de identificación" in e.lower() for e in err_type), report["validation_errors_es"]["sin_tipo_id"][:1])

@@ -103,10 +103,11 @@ def ensure_user(login, name, group_xmlids):
     groups = [g for g in groups if g]
     user = env["res.users"].search([("login", "=", login)], limit=1)
     vals = {"name": name, "login": login, "email": f"{login.split('@')[0]}@hellenia.local", "group_ids": [Command.set([g.id for g in groups])]}
-    if user:
-        user.write(vals)
-    else:
-        user = env["res.users"].create(vals)
+    with env.cr.savepoint():
+        if user:
+            user.write(vals)
+        else:
+            user = env["res.users"].create(vals)
     return user
 
 
@@ -166,43 +167,35 @@ for name, ok in checks.items():
 # --- Smoke funcional rápido ---
 func = {}
 company = env.company
-tax_18 = env["account.tax"].search(
-    [("company_id", "=", company.id), ("amount", "=", 18), ("type_tax_use", "=", "sale")], limit=1
-)
 product = env["product.product"].search([("sale_ok", "=", True)], limit=1)
 partner = env["res.partner"].search([("customer_rank", ">", 0)], limit=1)
 
-# Ventas: cotización
-try:
+def _smoke(label, fn):
+    try:
+        with env.cr.savepoint():
+            func[label] = bool(fn())
+    except Exception as exc:  # noqa: BLE001
+        func[label] = False
+        err(f"smoke funcional fallido {label}: {exc}")
+
+def _sale_quotation():
     so = env["sale.order"].create({"partner_id": partner.id})
     env["sale.order.line"].create({"order_id": so.id, "product_id": product.id, "product_uom_qty": 1})
-    func["sale_quotation"] = so.state == "draft"
-except Exception as exc:  # noqa: BLE001
-    func["sale_quotation"] = False
-    err(f"ventas cotización: {exc}")
+    return so.state == "draft"
 
-# Compras: RFQ
-try:
+def _purchase_rfq():
     vendor = env["res.partner"].search([("supplier_rank", ">", 0)], limit=1)
     po = env["purchase.order"].create({"partner_id": vendor.id})
     env["purchase.order.line"].create({"order_id": po.id, "product_id": product.id, "product_qty": 1, "price_unit": 100})
-    func["purchase_rfq"] = po.state == "draft"
-except Exception as exc:  # noqa: BLE001
-    func["purchase_rfq"] = False
-    err(f"compras RFQ: {exc}")
+    return po.state == "draft"
 
-# Inventario: producto existe
+_smoke("sale_quotation", _sale_quotation)
+_smoke("purchase_rfq", _purchase_rfq)
 func["inventory_product"] = bool(product)
-
-# Contabilidad: diario ventas
 func["accounting_journal"] = bool(env["account.journal"].search([("type", "=", "sale")], limit=1))
-
-# Justech: tipos NCF y rangos
 func["justech_doc_types"] = env["justech.do.fiscal.document.type"].search_count([]) >= 5
 func["justech_ncf_ranges"] = env["justech.do.ncf.range"].search_count([]) >= 1
 func["justech_reports_wizard"] = "justech.do.fiscal.report.wizard" in env
-
-# Módulos
 func["modules_ok"] = all(
     env["ir.module.module"].search([("name", "=", m)], limit=1).state == "installed"
     for m in ("account", "sale_management", "purchase", "stock", "justech_l10n_do_reports", "hellenia_ui")

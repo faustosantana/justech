@@ -211,4 +211,16 @@ Registro cronológico de decisiones de consultoría. Toda entrada debe ser **rep
 
 ---
 
+## DEC-2026-06-30-021 — Fase 5 DAFC certificación
+
+| Campo | Valor |
+|-------|-------|
+| **Decisión** | Certificar contabilidad/fiscal RD sin modificar config ni instalar módulos |
+| **Evidencia** | `PHASE5_DAFC ok: true` — 289 cuentas, 37 impuestos, flujo con pagos |
+| **P0 confirmados** | G-02 (sin l10n_latam.document.type), G-04 (sin 606/607/608) |
+| **Veredicto** | CONTINUAR_CON_RESERVA_FISCAL — DEV sí; go-live fiscal DGII no |
+| **Backup** | `2026-06-30_0502` |
+
+---
+
 **Mantenido por:** Justech — Consultoría Odoo Enterprise

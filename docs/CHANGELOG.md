@@ -2,6 +2,15 @@
 
 ## [Unreleased]
 
+### Added — Fase 5 DAFC certificación contable/fiscal RD (2026-06-30)
+- `scripts/certify-phase5-dafc.py` — auditoría bloques A–J + lab E2E con pagos/cobros
+- `docs/DOMINICAN_ACCOUNTING_CERTIFICATION.md`
+- `docs/DOMINICAN_FISCAL_CERTIFICATION.md`
+- `docs/PHASE5_EXECUTIVE_SUMMARY.md`
+- `docs/GAP_ANALYSIS_RD.md` v3.0 — brechas P0–P3 con evidencia
+- Veredicto: CONTINUAR_CON_RESERVA_FISCAL (go-live fiscal bloqueado P0)
+- Backup: `2026-06-30_0502`
+
 ### Changed — Fase 4 Commercial Core refinada (2026-06-30)
 - Validación reordenada: 10 pasos (compra→recepción→venta→entrega→factura→inventario→contabilidad)
 - Producto almacenable Odoo 19: `consu` + `is_storable`

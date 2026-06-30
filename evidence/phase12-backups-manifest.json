@@ -1,0 +1,10 @@
+{
+  "phase": 12,
+  "timestamp_utc": "2026-06-30T15:02:00Z",
+  "paths": {
+    "dev": "/opt/odoo-projects/hellenia/backups/dev/2026-06-30_1458",
+    "test": "/opt/odoo-projects/hellenia/backups/test/2026-06-30_1459",
+    "production_odoo_pecv": "/opt/odoo-projects/hellenia/backups/production/2026-06-30_1459"
+  },
+  "verified": true
+}

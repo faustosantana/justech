@@ -1,0 +1,4 @@
+ref,name,vat,customer_rank,supplier_rank,street,city,phone,email,comment
+# Clientes — archivo pendiente entrega Hellenia
+# Formato: ref interno, nombre, RNC/cédula (clientes B2B), 1/0 ranks, dirección, ciudad, tel, email
+# Ejemplo: CUST-00001,Cliente Ejemplo SRL,101234567,1,0,Calle 1,Santo Domingo,809-000-0000,cliente@ejemplo.com,

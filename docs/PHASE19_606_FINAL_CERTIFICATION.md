@@ -41,10 +41,21 @@ bash scripts/run-phase19-2-test.sh
 
 | Campo | Valor |
 |-------|-------|
-| TEST PASS/FAIL | _(actualizar tras ejecución VPS)_ |
-| Facturas excluidas UAT/demo | _(excluded_count)_ |
-| Facturas válidas en 606 | _(valid count)_ |
-| Listo revisión contable | _(sí/no + reservas)_ |
-| Iniciar 607/608 | _(sí/no)_ |
+| **TEST PASS/FAIL** | **PASS 13/13** (2026-06-30 VPS) |
+| Facturas excluidas UAT/demo | **111** |
+| Facturas válidas en 606 | **37** |
+| Incompletos bloqueantes | **0** |
+| Excel período completo | `evidence/phase19-606-full-period.xlsx` |
+| Reporte errores | `evidence/phase19-606-errors.xlsx` |
+| Listo revisión contable | **Sí** — exportador usable; contabilidad debe revisar las 37 válidas |
+| Iniciar 607/608 | **Sí, con aprobación contable del 606** — bloqueo UAT resuelto |
 
-Actualizar esta tabla al completar `run-phase19-2-test.sh` en VPS.
+### Detalle período junio 2026 (post-limpieza)
+
+| Clasificación | Cantidad |
+|---------------|----------|
+| Total en período | 148 |
+| Válidas exportadas | 37 |
+| Excluidas fiscalmente | 111 |
+| Incompletas | 0 |
+| Anuladas | 0 |

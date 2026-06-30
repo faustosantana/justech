@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_account_payment_register_form_hellenia" model="ir.ui.view">
+        <field name="name">account.payment.register.form.hellenia</field>
+        <field name="model">account.payment.register</field>
+        <field name="inherit_id" ref="account.view_account_payment_register_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='group1']" position="before">
+                <group string="Documentos a pagar/cobrar" invisible="not line_ids">
+                    <field name="line_ids" nolabel="1" readonly="1">
+                        <list>
+                            <field name="move_id" string="Factura"/>
+                            <field name="justech_do_ncf" string="NCF"/>
+                            <field name="date" string="Fecha"/>
+                            <field name="date_maturity" string="Vencimiento"/>
+                            <field name="currency_id" string="Moneda"/>
+                            <field name="amount_currency" string="Total"/>
+                            <field name="amount_residual" string="Residual"/>
+                        </list>
+                    </field>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

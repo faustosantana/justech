@@ -4,7 +4,29 @@
 **Cliente:** Hellenia, S.R.L. — República Dominicana  
 **Ambiente de trabajo:** `hellenia_dev` (DEV laboratorio)  
 **Fecha:** 2026-06-30  
+**Versión:** 2.0  
 **Estado:** Fase funcional iniciada — **sin ejecución de configuración aún**
+
+---
+
+## Alcance Etapa 1 — NCF tradicional
+
+| En alcance | Fuera de alcance (Fase Futura eNCF) |
+|------------|-------------------------------------|
+| NCF tradicional (papel/impreso) | eNCF / ECF electrónico |
+| Facturación fiscal RD | `l10n_do_edi` |
+| Contabilidad dominicana (DGII/NIIF) | Infile |
+| ITBIS, retenciones, propina | Comunicación electrónica DGII |
+| Libros y reportes `l10n_do_reports` | |
+
+**Stack fiscal Etapa 1:** `l10n_do` + `l10n_do_reports` (+ suite contable Enterprise).  
+**Documento técnico NCF:** [NCF_IMPLEMENTATION.md](NCF_IMPLEMENTATION.md)
+
+### Flujo de implementación Etapa 1
+
+```
+Empresa → Contabilidad RD + NCF tradicional → Inventario → Compras → Ventas → POS → Reportes
+```
 
 ---
 
@@ -29,7 +51,7 @@
 2. **Estándar antes que custom** — Usar módulos oficiales; custom solo para brecha demostrada.
 3. **Localización oficial RD** — Stack `l10n_do*`; no soluciones OCA/terceros para fiscal.
 4. **Una fuente de verdad** — Maestros (productos, partners, cuentas) definidos una vez, reutilizados en Ventas, Compras, Inventario y POS.
-5. **Trazabilidad fiscal** — Cada flujo comercial debe poder cerrar en contabilidad RD (ITBIS, NCF/eNCF cuando aplique).
+5. **Trazabilidad fiscal** — Cada flujo comercial debe cerrar en contabilidad RD (ITBIS, NCF tradicional en Etapa 1).
 6. **Preparación go-live** — DEV es laboratorio; diseño asumiendo promoción DEV → TEST → PROD.
 7. **No asumir documentación** — Especialmente localización RD: citar fuente oficial o evidencia en código desplegado.
 
@@ -72,27 +94,30 @@
 ## Mapa de fases
 
 ```
-FASE 1  Configuración General ──────┐
-FASE 2  Localización RD ────────────┤
-FASE 3  Contabilidad ───────────────┼──► FASE 8 Reportes Gerenciales
-FASE 4  Inventario ─────────────────┤         ▲
-FASE 5  Ventas ─────────────────────┤         │
-FASE 6  Compras ────────────────────┤         │
-FASE 7  POS ────────────────────────┘         │
-FASE 9  Customización (análisis) ─────────────┘
+FASE 1   Empresa ─────────────────────────────────────────────┐
+FASE 2   Localización RD (NCF tradicional) ───────────────────┤
+FASE 3   Contabilidad Dominicana + NCF ───────────────────────┼──► FASE 8 Reportes
+FASE 4   Inventario ──────────────────────────────────────────┤         ▲
+FASE 5   Compras ─────────────────────────────────────────────┤         │
+FASE 6   Ventas ──────────────────────────────────────────────┤         │
+FASE 7   POS ─────────────────────────────────────────────────┘         │
+FASE 9   Customización (análisis) ──────────────────────────────────────┘
+
+FASE FUTURA (independiente) ──► eNCF / l10n_do_edi / Infile / DGII electrónico
 ```
 
 | Fase | Nombre | Dependencias | Entregable principal |
 |------|--------|--------------|----------------------|
-| **1** | Configuración General | — | Empresa y maestros transversales |
-| **2** | Localización Dominicana | Fase 1 | Stack RD validado con evidencia |
-| **3** | Contabilidad | Fases 1–2 | Plan contable, impuestos, diarios |
+| **1** | Configuración General (Empresa) | — | Empresa y maestros transversales |
+| **2** | Localización RD — NCF tradicional | Fase 1 | `l10n_do` + `l10n_do_reports` validados |
+| **3** | Contabilidad Dominicana + NCF | Fases 1–2 | Plan, impuestos, diarios, rangos NCF |
 | **4** | Inventario | Fases 1, 3 | Almacenes, rutas, valorización |
-| **5** | Ventas | Fases 1, 3, 4 | Ciclo comercial completo |
-| **6** | Compras | Fases 1, 3, 4 | Ciclo de abastecimiento |
-| **7** | POS | Fases 1, 3, 4, 5 | Flujo tienda Hellenia |
-| **8** | Reportes Gerenciales | Fases 3–7 | KPIs y tableros |
+| **5** | Compras | Fases 1, 3, 4 | Ciclo de abastecimiento |
+| **6** | Ventas | Fases 1, 3, 4 | Ciclo comercial con NCF B01/B02 |
+| **7** | POS | Fases 1, 3, 4, 6 | Flujo tienda Hellenia (B02) |
+| **8** | Reportes Gerenciales | Fases 3–7 | KPIs, tableros y reportes fiscales |
 | **9** | Customización | Fases 1–8 | Mapa de brechas vs estándar |
+| **Futura** | eNCF (independiente) | Go-live + upgrade | `l10n_do_edi`, Infile, DGII |
 
 ---
 
@@ -115,8 +140,8 @@ Completar `res.company`, localización regional y maestros financieros base sin 
 | **Moneda** | DOP (RD$) principal | Operación local | Moneda compañía en todos los asientos |
 | **Idioma** | Español (DO) | Usuarios y clientes RD | Traducciones `es_DO` / `es` |
 | **Zona horaria** | `America/Santo_Domingo` | Cortes diarios, POS, cierres | Coherencia timestamps y cron |
-| **RNC** | Registro Nacional del Contribuyente | Obligatorio ECF / facturación B2B | Campo requerido en doc. oficial RD (saas-19.3) |
-| **Datos fiscales** | Dirección fiscal completa, actividad económica | Validación DGII, contratos | Contacto empresa = emisor ECF |
+| **RNC** | Registro Nacional del Contribuyente | Obligatorio facturación B2B y maestro fiscal | Campo requerido en doc. oficial RD (saas-19.3) |
+| **Datos fiscales** | Dirección fiscal completa, actividad económica | Validación DGII, contratos | Contacto empresa = emisor fiscal |
 | **Bancos** | Cuentas bancarias empresa (sin sync live inicial) | Pagos, conciliación futura | `res.partner.bank` en compañía |
 | **Diarios** | Banco, efectivo, ventas, compras (borrador) | Separación flujos contables | Base antes de localización RD |
 | **Métodos de pago** | Efectivo, transferencia, tarjeta (maestros) | POS y facturación | `account.payment.method` |
@@ -147,11 +172,22 @@ Completar `res.company`, localización regional y maestros financieros base sin 
 
 ---
 
-# FASE 2 — Localización Dominicana
+# FASE 2 — Localización Dominicana (NCF tradicional)
 
 ## Objetivo
 
-Confirmar con **evidencia** el stack fiscal RD aplicable a Hellenia en Odoo 19 on-premise **sin asumir** nombres de módulos ni disponibilidad de eNCF.
+Confirmar con **evidencia** el stack fiscal RD para **NCF tradicional** en Odoo 19 on-premise. **Sin eNCF, sin Infile, sin `l10n_do_edi`.**
+
+## Decisión de alcance (aprobada)
+
+| Componente | Etapa 1 | Justificación |
+|------------|---------|---------------|
+| `l10n_do` | ✅ Instalar | Doc oficial: *"minimum configuration required... according to DGII guidelines"* |
+| `l10n_do_reports` | ✅ Instalar | Reportes regulatorios RD |
+| `l10n_do_edi` | ❌ **No instalar** | Exclusivo eNCF/Infile — fuera de alcance |
+| Infile / DGII electrónico | ❌ **No configurar** | Fase Futura independiente |
+
+Ver análisis completo: [NCF_IMPLEMENTATION.md](NCF_IMPLEMENTATION.md)
 
 ## 2.1 Evidencia documental oficial
 
@@ -159,147 +195,117 @@ Confirmar con **evidencia** el stack fiscal RD aplicable a Hellenia en Odoo 19 o
 
 | Fuente | Hallazgo |
 |--------|----------|
-| [Fiscal localizations 19.0](https://www.odoo.com/documentation/19.0/applications/finance/fiscal_localizations.html) | **República Dominicana** listada como país con módulos de localización fiscal |
-| URL `.../fiscal_localizations/dominican_republic.html` en rama **19.0** | **404 — página no publicada** en documentación 19.0 al 2026-06-30 |
-| [Electronic invoicing (EDI) 19.0](https://www.odoo.com/documentation/19.0/applications/finance/accounting/customer_invoices/electronic_invoicing.html) | EDI genérico; remite a páginas por país — **sin detalle RD en 19.0** |
+| [Fiscal localizations 19.0](https://www.odoo.com/documentation/19.0/applications/finance/fiscal_localizations.html) | **República Dominicana** listada como país con localización fiscal |
+| URL `.../fiscal_localizations/dominican_republic.html` en rama **19.0** | **404** — detalle RD no publicado en 19.0 |
+| [Electronic invoicing (EDI) 19.0](https://www.odoo.com/documentation/19.0/applications/finance/accounting/customer_invoices/electronic_invoicing.html) | EDI genérico — **no aplica** a Etapa 1 |
 
-### B. Documentación Odoo más reciente (referencia funcional — saas-19.3 / master)
-
-> **Nota metodológica:** Odoo publica el detalle RD en ramas `saas-19.3` y `master`. No asumimos paridad 1:1 con on-premise `19.0+e.20260629` sin verificar en código desplegado.
+### B. Documentación Odoo saas-19.3 / master (referencia funcional)
 
 Fuente: [Dominican Republic — saas-19.3](https://www.odoo.com/documentation/saas-19.3/applications/finance/fiscal_localizations/dominican_republic.html)
 
-| Nombre | Módulo técnico | Edición | Descripción oficial |
-|--------|----------------|---------|---------------------|
-| Dominican Republic - Accounting | `l10n_do` | Paquete base localización | Contabilidad mínima DGII; plan e impuestos |
-| Dominican Republic - Accounting EDI | `l10n_do_edi` | Enterprise | ECF, eNCF, XML, firma, integración **Infile** → DGII |
-| Dominican Republic - Accounting Reports | `l10n_do_reports` | Enterprise | Reportes regulatorios RD |
-| Dominican Republic - Checks Layout | `l10n_do_check_printing` | Enterprise | Formato cheques bancarios RD |
+| Nombre | Módulo | Etapa 1 | Descripción oficial |
+|--------|--------|---------|---------------------|
+| Dominican Republic - Accounting | `l10n_do` | ✅ Core | Plan, impuestos, configuración mínima DGII |
+| Dominican Republic - Accounting Reports | `l10n_do_reports` | ✅ Manual/auto | Reportes regulatorios RD |
+| Dominican Republic - Accounting EDI | `l10n_do_edi` | ❌ Excluido | ECF, eNCF, Infile → DGII |
+| Dominican Republic - Checks Layout | `l10n_do_check_printing` | ⚠️ Opcional | Cheques bancarios RD |
 
-Cita oficial módulos core: *"installed automatically with the localization. The rest can be manually installed."*
+Cita oficial: *"The localization's **core modules** are installed automatically... **The rest can be manually installed.**"*  
+→ `l10n_do_edi` **no es core**; es módulo adicional para facturación electrónica.
 
-### C. Foro oficial Odoo (evidencia versión `l10n_do_edi`)
+### C. Evidencia en código desplegado Hellenia (19.0+e.20260629)
 
-Fuente: [Forum — l10n_do documentos soportados](https://www.odoo.com/forum/help-1/l10n-do-documentos-soportados-nueva-localizacion-republica-dominicana-302531)
+| Módulo | Presente | Versión | Rol Etapa 1 |
+|--------|----------|---------|-------------|
+| `l10n_do` | ✅ | 2.0 | Base NCF tradicional, ITBIS, retenciones |
+| `l10n_do_reports` | ✅ | 1.0 | Reportes fiscales |
+| `l10n_do_check_printing` | ✅ | 1.0 | Opcional |
+| `l10n_do_edi` | ❌ Ausente | — | **No requerido** para NCF tradicional |
 
-| Afirmación oficial (equipo/foro Odoo) | Implicación Hellenia |
-|---------------------------------------|---------------------|
-| Localización RD anunciada para **19.3 (SaaS)** | Roadmap Odoo priorizó SaaS para eNCF completo |
-| *"l10n_do_edi ... estará disponible de versión 19.3 en adelante"* | **No asumir** eNCF en build on-premise `19.0+e.20260629` |
-| Documentos E31–E34 documentados | Objetivo fiscal go-live; planificar upgrade o tarball posterior |
+Manifest `l10n_do` declara secuencias NCF: B01 valor fiscal, B02 consumo, ND/NC, informales, gastos menores, gubernamentales.
 
-### D. Evidencia en código desplegado Hellenia (on-premise 19.0+e.20260629)
+**Advertencia manifest 19.0:** texto legacy indica que secuencias NCF podrían requerir terceros — **validar en DEV** durante Fase 2–3.
 
-| Módulo | Presente en imagen DEV | Manifest (versión) | `depends` |
-|--------|------------------------|-------------------|-----------|
-| `l10n_do` | ✅ Community | 2.0 | `account`, `base_iban` |
-| `l10n_do_reports` | ✅ Enterprise | 1.0 | `l10n_do`, `account_reports` — `auto_install: True` |
-| `l10n_do_check_printing` | ✅ Enterprise | 1.0 | `account_check_printing`, `l10n_do` — `auto_install: ['l10n_do']` |
-| `l10n_do_edi` | ❌ **Ausente** | — | — |
+### D. Módulos adicionales oficiales (no fiscal, requeridos por cadena)
 
-Descripción manifest `l10n_do` (código): catálogo cuentas DGII/NIIF, impuestos, compatibilidad internacionalización.
+| Módulo | Rol | Instalación |
+|--------|-----|-------------|
+| `account` | Contabilidad base | Core |
+| `account_accountant` | Suite EE | Fase 3 |
+| `account_reports` | Motor reportes | Prerrequisito `l10n_do_reports` |
 
-## 2.2 Funcionalidades por módulo (según documentación saas-19.3)
+**No se requiere ningún otro módulo oficial** para NCF tradicional además de `l10n_do` + `l10n_do_reports` (+ suite contable EE).
 
-### `l10n_do` (base — disponible en Hellenia)
+## 2.2 Confirmación: suficiencia para NCF tradicional
 
-| Funcionalidad | Evidencia |
-|---------------|-----------|
-| Plan de cuentas RD | Doc saas-19.3 § Chart of accounts |
-| ITBIS 18%, 16%, 0%, exento | Doc saas-19.3 § Taxes |
-| Retenciones ITBIS / ISR | Doc saas-19.3 § Taxes |
-| Propina 10% | Doc saas-19.3 § Taxes |
-| Multi-moneda (DOP + extranjeras) | Doc saas-19.3 § Multi-currency |
-| NCF / documentos fiscales (no electrónicos) | Manifest + práctica localización |
+| Pregunta | Respuesta con evidencia |
+|----------|------------------------|
+| ¿`l10n_do` + `l10n_do_reports` bastan? | **Sí** — doc oficial separa base DGII (`l10n_do`) de eNCF (`l10n_do_edi`) |
+| ¿Instalar `l10n_do_edi`? | **No** — explícitamente fuera de alcance Etapa 1 |
+| ¿Módulo equivalente a `l10n_do`? | **No** — nombre técnico estable |
+| ¿eNCF absorbido en `l10n_do`? | **No** — módulo separado en documentación oficial |
 
-### `l10n_do_reports` (disponible en Hellenia)
+## 2.4 Decisión Fase 2 (Hellenia)
 
-| Funcionalidad | Evidencia |
-|---------------|-----------|
-| Reportes financieros regulatorios RD | Doc saas-19.3: *"financial reports tailored to the Dominican Republic's regulatory requirements"* |
-| Detalle línea por línea de cada reporte | **No especificado** en documentación pública — validar en UI tras instalar |
-
-### `l10n_do_edi` (NO disponible en build actual)
-
-| Funcionalidad | Estado Hellenia |
-|---------------|-----------------|
-| E31–E34 eNCF | ⏳ Requiere módulo + Infile + DGII |
-| Integración Infile | Documentada solo con `l10n_do_edi` |
-| Ambientes Demo/Test/Prod | Doc saas-19.3 § Configuration |
-
-### `l10n_do_check_printing` (disponible — opcional)
-
-| Funcionalidad | Cuándo usar |
-|---------------|-------------|
-| Impresión cheques formato RD | Si Hellenia paga proveedores con cheques pre-impresos |
-
-## 2.3 Módulos equivalentes / cambios de nombre
-
-| Pregunta | Respuesta basada en evidencia |
-|----------|------------------------------|
-| ¿Otro nombre para `l10n_do`? | **No** — nombre técnico estable en doc y código |
-| ¿`l10n_do_edi` absorbido en `l10n_do`? | **No** — sigue siendo módulo separado en doc saas-19.3 |
-| ¿eNCF dentro de `account_edi` genérico? | RD usa módulo país `l10n_do_edi` + Infile, no Peppol |
-| ¿`account_accountant` reemplaza contabilidad? | En manifest 19.0 se muestra como **"Invoicing"** (EE) — suite contable avanzada, complementa `account` |
-
-## 2.4 Decisión recomendada Fase 2 (Hellenia)
-
-| Acción | Decisión | Justificación |
-|--------|----------|---------------|
-| Instalar `l10n_do` | ✅ Sí | Disponible; base obligatoria RD |
-| Instalar `l10n_do_reports` | ✅ Sí | Disponible; auto_install tras `l10n_do` + `account_reports` |
-| Instalar `l10n_do_check_printing` | ⚠️ Condicional | Solo si Hellenia usa cheques |
-| Instalar `l10n_do_edi` | ❌ No ahora | **Módulo ausente** en 19.0+e.20260629 |
-| Plan eNCF go-live | 📋 Documentar | Upgrade 19.3+ o nuevo tarball Enterprise cuando Odoo publique on-premise |
+| Acción | Decisión |
+|--------|----------|
+| Instalar `l10n_do` | ✅ Sí |
+| Instalar `l10n_do_reports` | ✅ Sí |
+| Instalar `l10n_do_check_printing` | ⚠️ Solo si usan cheques |
+| Instalar `l10n_do_edi` | ❌ **Prohibido en Etapa 1** |
+| Configurar Infile | ❌ **Prohibido en Etapa 1** |
 
 ## Entregables Fase 2
 
-- [ ] Acta de evidencia (este § archivado tras ejecución)
-- [ ] `l10n_do` + `account_reports` / suite contable EE instalados
+- [ ] `l10n_do` + `l10n_do_reports` instalados en DEV
+- [ ] Confirmación `l10n_do_edi` **no** instalado
 - [ ] Validación impuestos ITBIS en UI
-- [ ] Gap analysis formal `l10n_do_edi` para steering committee
+- [ ] Acta evidencia archivada — ver [NCF_IMPLEMENTATION.md](NCF_IMPLEMENTATION.md)
 
 ---
 
-# FASE 3 — Contabilidad
+# FASE 3 — Contabilidad Dominicana + NCF tradicional
 
 ## Objetivo de negocio
 
-Operar contabilidad alineada a DGII/NIIF con trazabilidad de ITBIS, retenciones y documentos fiscales.
+Operar contabilidad alineada a DGII/NIIF con NCF tradicional, ITBIS, retenciones y trazabilidad fiscal completa.
 
 ## Objetivo técnico
 
-Activar suite contable Enterprise y parametrizar plan, impuestos, diarios y cuentas tras `l10n_do`.
+Parametrizar plan contable, impuestos, diarios, rangos NCF y cuentas tras instalar `l10n_do`. Ver detalle en [NCF_IMPLEMENTATION.md](NCF_IMPLEMENTATION.md).
 
 ## Alcance
 
 | Componente | Acciones | Justificación |
 |------------|----------|---------------|
-| **Plan contable** | Revisar/ajustar cuentas post `l10n_do` | Base DGII/NIIF precargada — evitar reinventar |
+| **Plan contable** | Revisar/ajustar cuentas post `l10n_do` | Base DGII/NIIF precargada |
 | **Impuestos ITBIS** | Activar tasas 18%, 16%, 0%, exento | Doc oficial saas-19.3 |
 | **Retenciones** | ISR, ITBIS retenido según operación | Cumplimiento proveedores/servicios |
-| **Propina 10%** | Activar si aplica restaurante/hospitalidad | Solo si Hellenia tiene ese rubro |
-| **Diarios** | Ventas, compras, banco, efectivo, misc | Separación auditoría |
-| **Diarios con documentos** | `Use Documents` en ventas (prep. eNCF) | Requisito doc RD para EDI futuro |
+| **Propina 10%** | Activar si aplica rubro Hellenia | Solo hospitalidad si aplica |
+| **Diarios** | Ventas, compras, banco, efectivo | Separación auditoría |
+| **Diarios con documentos** | `Use Documents` en ventas/compras | Obligatorio NCF tradicional |
+| **Rangos NCF** | Configurar rangos DGII por tipo (B01, B02…) | Autorización gubernamental |
 | **Cuentas bancarias** | Vincular diarios banco | Conciliación |
-| **Configuración fiscal** | Posiciones fiscales, grupos impuestos | Ventas/exportación si aplica |
-| **Suite EE** | `account_accountant`, reportes | Cierre, informes, seguimiento |
+| **Configuración fiscal** | Posiciones fiscales, grupos impuestos | Automatización impuestos |
+| **Suite EE** | `account_accountant`, `account_reports` | Cierre, informes |
 
 ## Dependencias
 
 - Fase 1 completa
-- Fase 2: `l10n_do` instalado
+- Fase 2: `l10n_do` + `l10n_do_reports` instalados
 
 ## Entregables
 
 - [ ] Plan de cuentas validado con contador Hellenia
 - [ ] Matriz impuestos (venta/compra/servicios)
-- [ ] Diarios operativos configurados
+- [ ] Diarios operativos con `Use Documents`
+- [ ] Rangos NCF B01/B02 (mínimo) configurados
+- [ ] Factura prueba B02 con NCF asignado
 - [ ] Asiento de apertura (si aplica migración)
 
 ## Fuera de alcance
 
-- eNCF producción (sin `l10n_do_edi`)
+- eNCF, `l10n_do_edi`, Infile, DGII electrónico
 - Conciliación bancaria automática live
 
 ---
@@ -338,43 +344,11 @@ Controlar stock, costos y disponibilidad para ventas, compras y POS con un solo 
 
 ---
 
-# FASE 5 — Ventas
+# FASE 5 — Compras
 
 ## Objetivo de negocio
 
-Ciclo comercial completo: cotización → pedido → entrega → factura fiscal RD.
-
-## Configuración
-
-| Área | Configuración | Justificación |
-|------|---------------|---------------|
-| **Cotizaciones** | Plantillas, validez, términos | Ventas B2B |
-| **Pedidos** | Confirmación, política entrega | Compromiso stock |
-| **Facturación** | Política facturar en entrega / pedido | Flujo caja vs accrual |
-| **Listas de precios** | Por canal (mayorista, retail, POS) | Márgenes diferenciados |
-| **Descuentos** | Línea vs global; límites por rol | Control comercial |
-| **Vendedores** | Equipos comerciales, comisiones (fase 2) | CRM opcional |
-| **Documentos RD** | Tipos NCF según cliente (B01/B02…) | DGII — con `l10n_do` |
-| **Términos pago** | Contado, crédito 30/60 | Cobranza |
-
-## Dependencias
-
-- Fases 3–4
-- Partners clientes con RNC cuando B2B
-
-## Entregables
-
-- [ ] Flujo cotización → factura probado
-- [ ] ITBIS correcto en líneas
-- [ ] Secuencias NCF en diario ventas (no eNCF hasta EDI)
-
----
-
-# FASE 6 — Compras
-
-## Objetivo de negocio
-
-Abastecimiento controlado: solicitud → orden → recepción → factura proveedor con retenciones.
+Abastecimiento controlado: solicitud → orden → recepción → factura proveedor con retenciones y NCF de entrada.
 
 ## Configuración
 
@@ -385,6 +359,7 @@ Abastecimiento controlado: solicitud → orden → recepción → factura provee
 | **Recepción** | 1-step / 2-step según almacén | Operación real |
 | **Proveedores** | RNC, términos, moneda | Fiscal RD |
 | **Retenciones** | En facturas servicios/bienes | DGII |
+| **NCF compra** | B11 informales, B13 gastos menores si aplica | Tipos entrada |
 | **Políticas** | Cantidad mínima, lead times | Reposición |
 
 ## Dependencias
@@ -397,6 +372,39 @@ Abastecimiento controlado: solicitud → orden → recepción → factura provee
 - [ ] PO → recepción → vendor bill probado
 - [ ] Retención aplicada en caso de prueba
 - [ ] Integración con reglas de reorden (si aplica)
+
+---
+
+# FASE 6 — Ventas
+
+## Objetivo de negocio
+
+Ciclo comercial completo: cotización → pedido → entrega → factura fiscal RD con NCF tradicional.
+
+## Configuración
+
+| Área | Configuración | Justificación |
+|------|---------------|---------------|
+| **Cotizaciones** | Plantillas, validez, términos | Ventas B2B |
+| **Pedidos** | Confirmación, política entrega | Compromiso stock |
+| **Facturación** | Política facturar en entrega / pedido | Flujo caja vs accrual |
+| **Listas de precios** | Por canal (mayorista, retail, POS) | Márgenes diferenciados |
+| **Descuentos** | Línea vs global; límites por rol | Control comercial |
+| **Vendedores** | Equipos comerciales, comisiones (fase 2) | CRM opcional |
+| **Documentos RD** | B01 (RNC cliente) / B02 (consumo) | DGII — `l10n_do` |
+| **Términos pago** | Contado, crédito 30/60 | Cobranza |
+
+## Dependencias
+
+- Fases 3–4
+- Partners clientes con RNC cuando B2B
+
+## Entregables
+
+- [ ] Flujo cotización → factura probado
+- [ ] ITBIS correcto en líneas
+- [ ] NCF B01 y B02 asignados correctamente
+- [ ] Nota crédito B04 con referencia NCF origen
 
 ---
 
@@ -420,7 +428,7 @@ Apertura caja → Venta POS → Pago → Ticket/Factura consumo
 | **Productos** | Categorías POS, disponibles en ubicación tienda | Solo vendible si hay stock |
 | **Impuestos** | ITBIS en precios tax-included o excluded (decisión) | Transparencia cliente |
 | **Pagos** | Efectivo, tarjeta, transferencia | Métodos RD reales |
-| **Factura fiscal** | B02 consumo / E32 cuando exista EDI | DGII |
+| **Factura fiscal** | B02 consumo (POS y retail) | DGII — NCF tradicional |
 | **Propina** | Si aplica rubro | Impuesto 10% doc RD |
 | **Hardware** | Impresora, cajón, escáner (inventario futuro) | Operación tienda |
 | **Contabilidad** | Diarios POS, cuenta transitoria | Cierre automático |
@@ -428,7 +436,7 @@ Apertura caja → Venta POS → Pago → Ticket/Factura consumo
 
 ## Dependencias
 
-- Fases 3, 4, 5
+- Fases 3, 4, 6
 - Productos y listas de precios retail
 
 ## Entregables
@@ -537,7 +545,7 @@ Identificar qué requiere desarrollo propio vs configuración estándar. **No de
 | Reportes dirección no en `l10n_do_reports` | `account_reports`, spreadsheet | ⚠️ Evaluar | `hellenia_reports` |
 | Flujos POS específicos | `point_of_sale` | ⚠️ Evaluar | `hellenia_pos` |
 | Utilidades compartidas Justech | — | ✅ Probable | `justech_core` |
-| eNCF / Infile | `l10n_do_edi` (cuando exista) | ❌ No custom | Estándar Odoo |
+| eNCF / Infile | Fase Futura — estándar Odoo `l10n_do_edi` | ❌ Fuera Etapa 1 | — |
 | Integraciones externas (ERP legado, e-commerce) | Conectores estándar / API | 📋 Por definir | TBD |
 
 ## Criterios para aprobar custom
@@ -555,6 +563,21 @@ Identificar qué requiere desarrollo propio vs configuración estándar. **No de
 
 ---
 
+# FASE FUTURA — eNCF (independiente de Etapa 1)
+
+> **No ejecutar.** Documentación de referencia para cuando dirección active facturación electrónica.
+
+| Componente | Acción futura |
+|------------|---------------|
+| `l10n_do_edi` | Instalar cuando disponible en build on-premise estable |
+| Infile | Contrato + credenciales Test → Prod |
+| DGII | Registro emisor electrónico + rangos E31–E34 |
+| Upgrade Odoo | Posible 19.3+ si `l10n_do_edi` no en 19.0 |
+
+Referencias: [NCF_IMPLEMENTATION.md](NCF_IMPLEMENTATION.md) § Preparación futura, [INFILE-REQUIREMENTS.md](INFILE-REQUIREMENTS.md)
+
+---
+
 ## Gobernanza y aprobaciones
 
 | Gate | Aprobación requerida | Ambiente |
@@ -565,15 +588,16 @@ Identificar qué requiere desarrollo propio vs configuración estándar. **No de
 | Registro licencia | Diferido — go-live PROD | PROD futura |
 | Promoción TEST | Duplicar + neutralize | Post-validación DEV |
 
-## Riesgos transversales
+## Riesgos transversales (Etapa 1)
 
 | Riesgo | Impacto | Mitigación |
 |--------|---------|------------|
-| `l10n_do_edi` ausente en 19.0 | Sin eNCF legal | Plan upgrade; operar NCF papel en lab |
+| Manifest legacy NCF en `l10n_do` 19.0 | Secuencias podrían no operar sin validación | Prueba obligatoria Fase 2–3 en DEV |
 | Trial Enterprise sin registro | Expiración BD | Monitorear `database.expiration_date` |
-| Documentación 19.0 incompleta RD | Decisiones incorrectas | Evidencia saas-19.3 + manifests |
+| Documentación 19.0 incompleta RD | Decisiones incorrectas | Evidencia saas-19.3 + manifests + [NCF_IMPLEMENTATION.md](NCF_IMPLEMENTATION.md) |
 | Configurar sin dueño negocio | Re-trabajo | Checklist aprobación por fase |
-| Mezclar datos test/prod | Legal/fiscal | Sin Infile prod en DEV |
+| Detalle reportes `l10n_do_reports` no publicado | Incertidumbre 606/607/608 | Validar menú tras instalar con contador |
+| Plazos Ley 32-23 e-CF | Migración obligatoria futura | Fase Futura eNCF planificada, no bloquea Etapa 1 |
 
 ---
 
@@ -591,9 +615,10 @@ Hasta entonces: solo planificación (este documento).
 
 | Documento | Uso |
 |-----------|-----|
+| [NCF_IMPLEMENTATION.md](NCF_IMPLEMENTATION.md) | **Guía NCF tradicional Etapa 1** |
 | [UNREGISTERED_ENTERPRISE_LIMITATIONS.md](UNREGISTERED_ENTERPRISE_LIMITATIONS.md) | Alcance sin licencia |
 | [L10N-RD-READINESS.md](L10N-RD-READINESS.md) | Stack RD |
-| [INFILE-REQUIREMENTS.md](INFILE-REQUIREMENTS.md) | eNCF futuro |
+| [INFILE-REQUIREMENTS.md](INFILE-REQUIREMENTS.md) | eNCF — solo Fase Futura |
 | [ENTERPRISE-LICENSING.md](ENTERPRISE-LICENSING.md) | Política licencia go-live |
 | [CUSTOM_MODULE_GUIDE.md](CUSTOM_MODULE_GUIDE.md) | Estándares custom |
 | [Odoo 19 Fiscal localizations](https://www.odoo.com/documentation/19.0/applications/finance/fiscal_localizations.html) | Lista países |
@@ -601,6 +626,7 @@ Hasta entonces: solo planificación (este documento).
 
 ---
 
-**Versión:** 1.0  
+**Versión:** 2.0  
 **Mantenido por:** Consultoría implementación Justech  
-**Infraestructura:** 🔒 Congelada
+**Infraestructura:** 🔒 Congelada  
+**Alcance Etapa 1:** NCF tradicional — sin eNCF

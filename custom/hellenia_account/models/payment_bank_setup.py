@@ -191,11 +191,16 @@ class HelleniaAccountPaymentSetup(models.AbstractModel):
         keys = [
             ("-5% ISR Gov.", "sale"),
             ("-30% ITBIS Leg. (N02-05)", "purchase"),
+            ("-30% ITBIS Prof. (N02-05)", "purchase"),
             ("-10% ISR Fee", "purchase"),
             ("-75% ITBIS (N08-10)", "purchase"),
             ("-100% ITBIS (N07-09)", "purchase"),
+            ("-100% ITBIS (N01-11)", "purchase"),
+            ("-100% ITBIS (R293-11)", "purchase"),
             ("-2% ISR (N07-07)", "purchase"),
+            ("-2% ISR Mat.", "purchase"),
             ("-10% ISR Rent.", "purchase"),
+            ("-10% ISR (L253-12)", "purchase"),
         ]
         result = []
         for name, use in keys:
@@ -206,12 +211,6 @@ class HelleniaAccountPaymentSetup(models.AbstractModel):
             if tax and not tax.active:
                 tax.active = True
             result.append({"name": name, "found": bool(tax), "active": tax.active if tax else False})
-        prof = Tax.search(
-            [("name", "=", "-30% ITBIS Prof. (N02-05)"), ("company_id", "=", self.env.company.id)], limit=1
-        )
-        if prof and not prof.active:
-            prof.active = True
-            result.append({"name": prof.name, "found": True, "active": True})
         catalog = self.env["hellenia.withholding.catalog"].sync_catalog_from_taxes(company=self.env.company)
         result.append({"catalog_sync": catalog})
         return result

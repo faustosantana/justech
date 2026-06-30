@@ -49,11 +49,18 @@ setup.configure_withholding_reference()
 env.cr.commit()
 
 Catalog = env["hellenia.withholding.catalog"]
-catalogs = {c.code: c for c in Catalog.search([("active", "=", True), ("code", "!=", "wh_none")])}
+catalogs = {c.code: c for c in Catalog.search([("active", "=", True), ("code", "not in", ("wh_none", "RET-NONE"))])}
 if catalogs:
     pass_("catalog_loaded", list(catalogs.keys()))
 else:
     fail("catalog_loaded", "sin retenciones activas")
+
+
+def _cat(*codes):
+    for code in codes:
+        if code in catalogs:
+            return catalogs[code]
+    return None
 
 customer = env["res.partner"].search([("customer_rank", ">", 0)], limit=1)
 vendor = env["res.partner"].search([("supplier_rank", ">", 0)], limit=1)
@@ -146,7 +153,7 @@ try:
         inv = _invoice(vendor, 1000, "in_invoice")
         wiz = _wiz(vendor, "supplier")
         line = _line_for(wiz, inv)
-        cat = catalogs.get("wh_itbis_30")
+        cat = _cat("RET-ITBIS-30", "wh_itbis_30")
         if not cat:
             fail("02_single_withholding", "catálogo ITBIS 30 no activo")
         else:
@@ -164,7 +171,7 @@ try:
         inv = _invoice(vendor, 1000, "in_invoice")
         wiz = _wiz(vendor, "supplier")
         line = _line_for(wiz, inv)
-        cats = [catalogs.get("wh_itbis_30"), catalogs.get("wh_isr_10")]
+        cats = [_cat("RET-ITBIS-30", "wh_itbis_30"), _cat("RET-INF-ISR-10", "wh_isr_10")]
         cats = [c for c in cats if c]
         if len(cats) < 2:
             fail("03_dual_same_invoice", "faltan catálogos")
@@ -185,7 +192,7 @@ try:
         wiz = _wiz(vendor, "supplier")
         l1 = _line_for(wiz, inv1)
         l2 = _line_for(wiz, inv2)
-        cat30 = catalogs.get("wh_itbis_30")
+        cat30 = _cat("RET-ITBIS-30", "wh_itbis_30")
         if cat30:
             l2.withholding_catalog_ids = [Command.set(cat30.ids)]
             l2._recompute_line_withholdings()
@@ -206,9 +213,9 @@ try:
         invs = [_invoice(vendor, 700 + i * 100, "in_invoice") for i in range(3)]
         wiz = _wiz(vendor, "supplier")
         lines = [_line_for(wiz, inv) for inv in invs]
-        cat_gov = catalogs.get("wh_isr_gov")
-        cat30 = catalogs.get("wh_itbis_30")
-        cat10 = catalogs.get("wh_isr_10")
+        cat_gov = _cat("RET-GOB-5", "wh_isr_gov")
+        cat30 = _cat("RET-ITBIS-30", "wh_itbis_30")
+        cat10 = _cat("RET-INF-ISR-10", "wh_isr_10")
         if cat_gov:
             lines[1].withholding_catalog_ids = [Command.set(cat_gov.ids)]
         if cat30 and cat10:
@@ -227,7 +234,7 @@ try:
         inv = _invoice(customer, 2000)
         wiz = _wiz(customer, "customer")
         line = _line_for(wiz, inv)
-        cat = catalogs.get("wh_isr_gov")
+        cat = _cat("RET-GOB-5", "wh_isr_gov")
         if cat:
             line.withholding_catalog_ids = [Command.set(cat.ids)]
         line.amount_to_pay = inv.amount_residual / 2
@@ -246,7 +253,7 @@ try:
         inv = _invoice(vendor, 1500, "in_invoice")
         wiz = _wiz(vendor, "supplier")
         line = _line_for(wiz, inv)
-        cat = catalogs.get("wh_isr_10")
+        cat = _cat("RET-INF-ISR-10", "wh_isr_10")
         if cat:
             line.withholding_catalog_ids = [Command.set(cat.ids)]
         line.amount_to_pay = inv.amount_residual
@@ -260,9 +267,9 @@ except Exception as exc:  # noqa: BLE001
     fail("07_full_with_wh", str(exc))
 
 # 8-9 proveedor/cliente
-for key, partner, ptype, cat_code in (
-    ("08_vendor_withholding", vendor, "supplier", "wh_itbis_30"),
-    ("09_customer_withholding", customer, "customer", "wh_isr_gov"),
+for key, partner, ptype, cat_codes in (
+    ("08_vendor_withholding", vendor, "supplier", ("RET-ITBIS-30", "wh_itbis_30")),
+    ("09_customer_withholding", customer, "customer", ("RET-GOB-5", "wh_isr_gov")),
 ):
     try:
         with env.cr.savepoint():
@@ -270,7 +277,7 @@ for key, partner, ptype, cat_code in (
             inv = _invoice(partner, 1000, mt)
             wiz = _wiz(partner, ptype)
             line = _line_for(wiz, inv)
-            cat = catalogs.get(cat_code)
+            cat = _cat(*cat_codes) if isinstance(cat_codes, tuple) else _cat(cat_codes)
             if cat:
                 line.withholding_catalog_ids = [Command.set(cat.ids)]
             line._recompute_line_withholdings()
@@ -301,7 +308,7 @@ try:
         inv = _invoice(customer, 1000)
         wiz = _wiz(customer, "customer")
         line = _line_for(wiz, inv)
-        cat = catalogs.get("wh_isr_gov")
+        cat = _cat("RET-GOB-5", "wh_isr_gov")
         if cat:
             line.withholding_catalog_ids = [Command.set(cat.ids)]
         line._recompute_line_withholdings()

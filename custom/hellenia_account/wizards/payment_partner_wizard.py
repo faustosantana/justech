@@ -21,13 +21,21 @@ class HelleniaPaymentPartnerWizardLine(models.TransientModel):
     amount_residual = fields.Monetary(compute="_compute_amount_residual", string="Pendiente")
     amount_to_pay = fields.Monetary(string="Monto a aplicar", currency_field="currency_id")
 
+    company_id = fields.Many2one(related="move_id.company_id", string="Compañía")
+    move_scope_filter = fields.Selection(
+        [
+            ("sale", "Venta"),
+            ("purchase", "Compra"),
+        ],
+        compute="_compute_move_scope_filter",
+        string="Operación factura",
+    )
     withholding_catalog_ids = fields.Many2many(
         "hellenia.withholding.catalog",
         "hellenia_payment_wizard_line_wh_rel",
         "line_id",
         "catalog_id",
         string="Retenciones",
-        domain="[('active', '=', True), ('code', '!=', 'wh_none')]",
     )
     withholding_summary = fields.Char(
         string="Resumen retenciones",
@@ -43,6 +51,14 @@ class HelleniaPaymentPartnerWizardLine(models.TransientModel):
         "wizard_line_id",
         string="Detalle retenciones",
     )
+
+    @api.depends("move_id", "move_id.move_type")
+    def _compute_move_scope_filter(self):
+        for line in self:
+            if line.move_id.move_type in ("out_invoice", "out_refund"):
+                line.move_scope_filter = "sale"
+            else:
+                line.move_scope_filter = "purchase"
 
     @api.depends("move_id")
     def _compute_date_maturity(self):
@@ -94,7 +110,9 @@ class HelleniaPaymentPartnerWizardLine(models.TransientModel):
             for catalog in line.withholding_catalog_ids:
                 if not catalog._applies_to_move(line.move_id, partner_type):
                     continue
-                amount = catalog.compute_withholding_amount(line.move_id)
+                amount = catalog.compute_withholding_amount(
+                    line.move_id, applied_amount=line.amount_to_pay
+                )
                 if not amount:
                     continue
                 details.append(
@@ -103,7 +121,9 @@ class HelleniaPaymentPartnerWizardLine(models.TransientModel):
                             "catalog_id": catalog.id,
                             "tax_id": catalog.tax_id.id,
                             "label": catalog.name,
-                            "base_amount": catalog._base_amount(line.move_id),
+                            "base_amount": catalog._base_amount(
+                            line.move_id, applied_amount=line.amount_to_pay
+                        ),
                             "rate": catalog.rate,
                             "amount": amount,
                             "account_id": catalog.account_id.id,
@@ -251,15 +271,13 @@ class HelleniaPaymentPartnerWizard(models.TransientModel):
             return ("out_invoice", "out_refund")
         return ("in_invoice", "in_refund")
 
-    def _withholding_domain(self):
+    def _withholding_domain(self, move_type="out_invoice"):
         self.ensure_one()
-        scope = "customer" if self.partner_type == "customer" else "supplier"
-        return [
-            ("active", "=", True),
-            ("code", "!=", "wh_none"),
-            ("partner_scope", "in", [scope, "both"]),
-            ("company_id", "=", self.env.company.id),
-        ]
+        return self.env["hellenia.withholding.catalog"]._domain_for_payment(
+            self.partner_type,
+            move_type,
+            company=self.env.company,
+        )
 
     def _load_pending_invoices(self):
         self.ensure_one()

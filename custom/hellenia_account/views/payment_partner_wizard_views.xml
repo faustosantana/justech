@@ -41,11 +41,13 @@
                             <field name="amount_total" string="Total"/>
                             <field name="amount_residual" string="Pendiente"/>
                             <field name="amount_to_pay" string="Monto a aplicar"/>
+                            <field name="company_id" column_invisible="1"/>
+                            <field name="move_scope_filter" column_invisible="1"/>
                             <field name="withholding_catalog_ids"
                                    string="Retenciones"
                                    widget="many2many_tags"
                                    options="{'no_create': True, 'no_open': True}"
-                                   domain="[('active', '=', True), ('code', '!=', 'wh_none'), ('partner_scope', 'in', [parent.partner_type, 'both'])]"/>
+                                   domain="[('active', '=', True), ('code', 'not in', ['RET-NONE', 'wh_none']), ('partner_scope', 'in', [parent.partner_type, 'both']), ('move_scope', 'in', [move_scope_filter, 'both']), ('company_id', '=', company_id), ('account_id', '!=', False)]"/>
                             <field name="withholding_summary" string="Resumen" readonly="1" optional="show"/>
                             <field name="withholding_amount" string="Monto retenido" readonly="1"/>
                             <field name="move_id" column_invisible="1"/>

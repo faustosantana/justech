@@ -1,6 +1,6 @@
 {
     "name": "Hellenia Account",
-    "version": "19.0.1.0.5",
+    "version": "19.0.1.0.6",
     "category": "Accounting/Accounting",
     "summary": "Bancos, métodos de pago y cobros/pagos Hellenia",
     "description": """
@@ -16,6 +16,7 @@ Extensiones contables Hellenia (upgrade-safe):
     "depends": [
         "hellenia_base",
         "account",
+        "justech_l10n_do_base",
         "justech_l10n_do_ncf",
         "l10n_do_check_printing",
     ],

@@ -17,7 +17,7 @@
 
     <!-- Apps: solo administradores técnicos (Settings / group_system) -->
     <record id="base.menu_management" model="ir.ui.menu">
-        <field name="groups_id" eval="[(6, 0, [ref('base.group_system')])]"/>
+        <field name="group_ids" eval="[(6, 0, [ref('base.group_system')])]"/>
     </record>
 
     <!-- Código de barras: fuera de alcance Hellenia -->

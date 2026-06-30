@@ -82,7 +82,7 @@ for label, xmlids in EXPECTED_ROOTS.items():
     for xid in xmlids:
         menu = env.ref(xid, raise_if_not_found=False)
         if menu and menu.active:
-            visible = not menu.groups_id or bool(menu.groups_id & user.groups_id)
+            visible = not menu.group_ids or bool(menu.group_ids & user.groups_id)
             display = menu.with_context(lang=lang).name or menu.name
             report["expected_roots"][label] = {
                 "xmlid": xid,

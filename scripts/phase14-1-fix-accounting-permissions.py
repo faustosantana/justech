@@ -141,7 +141,7 @@ if not normal and sale_user:
     )
     report["fixes"]["normal_user_created"] = True
 elif normal:
-    normal.write({"group_ids": [Command.set([sale_user.id])] if sale_user else []]})
+    normal.write({"group_ids": [Command.set([sale_user.id])] if sale_user else []})
     report["fixes"]["normal_user_updated"] = True
 
 env.cr.commit()

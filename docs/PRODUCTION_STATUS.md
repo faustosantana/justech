@@ -12,9 +12,9 @@
 | `odoo-pecv` (Odoo 18 legacy) | 🟢 Operativo | Sin cambios — producción actual |
 | `hellenia-dev` | 🟢 Activo | `dev.hellenia.cloud` |
 | `hellenia-test` | 🟢 Activo | `test.hellenia.cloud` |
-| **`hellenia-prod`** | **🟢 Desplegado** | BD `hellenia_prod`, validación `prod.hellenia.cloud` |
-| DNS `odoo.hellenia.cloud` | ⚪ Sin router Traefik | **Sin corte** — apunta a VPS pero sin servicio Odoo 19 |
-| DNS `prod.hellenia.cloud` | ⚠️ Pendiente registro A | Requerido para HTTPS Let's Encrypt |
+| **`hellenia-prod`** | **🟢 Activo** | `https://odoo.hellenia.cloud` — Odoo 19 EE |
+| DNS `odoo.hellenia.cloud` | 🟢 Router Traefik activo | `hellenia-prod` — Fase 13.1 |
+| DNS `prod.hellenia.cloud` | ⚪ Sin uso | Reemplazado por `odoo.hellenia.cloud` |
 | Licencia EE `hellenia_prod` | 🟢 Registrada | Código `M260616306091776` |
 
 ---
@@ -29,7 +29,7 @@
 | `proxy_mode` | `True` |
 | `workers` | `2` |
 | `dbfilter` | `^hellenia_prod$` |
-| Traefik (pre-corte) | `Host(\`prod.hellenia.cloud\`)` |
+| Traefik | `Host(\`odoo.hellenia.cloud\`)` — LE válido hasta 2026-09-28 |
 | Módulos instalados | ~116 |
 | Justech MVP | `justech_l10n_do_base`, `_ncf`, `_reports` ✅ |
 
@@ -66,19 +66,16 @@ Evidencia: `evidence/prod-credentials-sync.json`
 | Fase 6 MVP Justech | ✅ PASS |
 | Fase 12 configuración | ⚠️ PASS con obs (SMTP, bancos, caja — pendiente cliente) |
 | Fase 3.5 Golden | ⚠️ Obs (bancos, métodos pago — esperado en BD nueva) |
-| HTTPS `prod.hellenia.cloud` | ⚠️ Bloqueado por DNS (añadir A → `2.25.69.179`) |
-| `odoo-pecv` activo | ✅ |
-| Router `odoo.hellenia.cloud` → prod | ✅ No activado |
+| HTTPS `odoo.hellenia.cloud` | ✅ HTTP 200 + login Odoo 19 |
 
 ---
 
 ## 6. Pendiente antes del corte
 
-1. **DNS:** Crear `prod.hellenia.cloud` A → `2.25.69.179` (validación LE; no cambia `odoo.hellenia.cloud`)
-2. Cliente: catálogos, NCF DGII, SMTP, usuarios `@helleniadr.com`, bancos
-3. Smoke test login en `https://prod.hellenia.cloud`
-4. Aprobación Go-Live
-5. Cambiar router Traefik a `odoo.hellenia.cloud` y ejecutar corte
+1. Cliente: catálogos, NCF DGII, SMTP, usuarios `@helleniadr.com`, bancos
+2. Smoke test operativo completo en `https://odoo.hellenia.cloud`
+3. Aprobación Go-Live
+4. Apagar `odoo-pecv` solo con aprobación explícita
 
 ---
 

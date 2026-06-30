@@ -1,6 +1,5 @@
 # Hellenia — Producción Odoo 19 Enterprise
-# URL objetivo (web.base.url): https://odoo.hellenia.cloud
-# Traefik pre-corte: https://prod.hellenia.cloud (NO activar odoo.hellenia.cloud hasta Go-Live)
+# URL pública: https://odoo.hellenia.cloud
 
 services:
   odoo:
@@ -8,8 +7,9 @@ services:
     restart: unless-stopped
     labels:
       - traefik.enable=true
-      - traefik.http.routers.${COMPOSE_PROJECT_NAME}.rule=Host(`prod.${TRAEFIK_HOST}`)
+      - traefik.http.routers.${COMPOSE_PROJECT_NAME}.rule=Host(`${ODOO_PUBLIC_HOST}`)
       - traefik.http.routers.${COMPOSE_PROJECT_NAME}.entrypoints=websecure
+      - traefik.http.routers.${COMPOSE_PROJECT_NAME}.tls=true
       - traefik.http.routers.${COMPOSE_PROJECT_NAME}.tls.certresolver=letsencrypt
       - traefik.http.services.${COMPOSE_PROJECT_NAME}.loadbalancer.server.port=8069
     environment:

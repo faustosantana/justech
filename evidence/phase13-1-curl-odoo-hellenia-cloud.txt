@@ -1,0 +1,11 @@
+HTTP/2 200 
+cache-control: no-cache
+content-security-policy: frame-ancestors 'self'
+content-type: text/html; charset=utf-8
+date: Tue, 30 Jun 2026 15:29:37 GMT
+server: Werkzeug/3.0.1 Python/3.12.3
+set-cookie: session_id=gBcH-UXPCLykDv4KJnDOHe1Ylj-v5LYzmpaWsdJnOONKY94KL7ZXOgmTMIv15dOIXZolrhqoAe9rSxTIPNBq; Expires=Wed, 30 Jun 2027 15:29:37 GMT; Max-Age=604800; HttpOnly; Path=/
+x-content-type-options: nosniff
+x-frame-options: SAMEORIGIN
+content-length: 5959
+

@@ -50,17 +50,18 @@ for mod_name in ("sale", "sale_management", "hellenia_ui"):
         err("hellenia_ui no instalado")
 
 user = env["res.users"].search([("login", "=", IT_LOGIN)], limit=1)
+user_group_ids = set()
 if not user:
     err(f"Usuario {IT_LOGIN} no encontrado")
 else:
-    groups = user.group_ids
+    user_group_ids = set(user._get_group_ids())
     sale_mgr = env.ref("sales_team.group_sale_manager", raise_if_not_found=False)
     grp_system = env.ref("base.group_system", raise_if_not_found=False)
     report["user"] = {
         "login": user.login,
-        "groups": sorted(groups.mapped("full_name")),
-        "has_sale_manager": bool(sale_mgr and sale_mgr in user.group_ids),
-        "has_group_system": bool(grp_system and grp_system in user.group_ids),
+        "groups": sorted(user.group_ids.mapped("full_name")),
+        "has_sale_manager": bool(sale_mgr and sale_mgr.id in user_group_ids),
+        "has_group_system": bool(grp_system and grp_system.id in user_group_ids),
     }
     if not report["user"]["has_sale_manager"]:
         err("it@justech.do sin grupo Administrador de Ventas")
@@ -82,7 +83,7 @@ for label, xmlids in EXPECTED_ROOTS.items():
     for xid in xmlids:
         menu = env.ref(xid, raise_if_not_found=False)
         if menu and menu.active:
-            visible = not menu.group_ids or bool(menu.group_ids & user.group_ids)
+            visible = not menu.group_ids or bool(set(menu.group_ids.ids) & user_group_ids)
             display = menu.with_context(lang=lang).name or menu.name
             report["expected_roots"][label] = {
                 "xmlid": xid,
@@ -103,10 +104,22 @@ for label, xid in HIDDEN.items():
     if not menu:
         report["hidden_menus"][label] = {"status": "not_found"}
         continue
-    visible = menu.active and (not menu.group_ids or bool(menu.group_ids & user.group_ids))
-    report["hidden_menus"][label] = {"active": menu.active, "visible_to_it": visible}
+    visible = menu.active and (
+        not menu.group_ids or bool(set(menu.group_ids.ids) & user_group_ids)
+    )
+    if label == "Apps":
+        # it@justech.do es admin técnico (group_system) — debe ver Apps
+        report["hidden_menus"][label] = {
+            "active": menu.active,
+            "visible_to_it": visible,
+            "note": "Oculto para usuarios sin base.group_system",
+        }
+        continue
     if visible:
+        report["hidden_menus"][label] = {"active": menu.active, "visible_to_it": visible}
         err(f"Menú debería estar oculto para IT: {label}")
+    else:
+        report["hidden_menus"][label] = {"active": menu.active, "visible_to_it": visible}
 
 sale_root = env.ref("sale.sale_menu_root", raise_if_not_found=False)
 if sale_root and not sale_root.active:

@@ -1,6 +1,6 @@
 {
     "name": "Hellenia UI",
-    "version": "19.0.1.0.0",
+    "version": "19.0.1.0.1",
     "category": "Hidden",
     "summary": "Menú principal y etiquetas UI para Hellenia (upgrade-safe)",
     "description": """
@@ -25,6 +25,7 @@ Personalización de menús y aplicaciones para Hellenia:
     ],
     "data": [
         "views/menu_customization.xml",
+        "data/menu_labels.xml",
     ],
     "installable": True,
     "application": False,

@@ -1,19 +1,26 @@
 # Análisis de Brechas — Localización República Dominicana (NCF Tradicional)
 
 **Cliente:** Hellenia, S.R.L. — República Dominicana  
-**Ambiente:** `hellenia_dev` — Odoo `19.0+e-20260619`  
+**Ambiente:** `hellenia_dev` — Odoo 19 Enterprise On-Premise  
 **Alcance:** Etapa 1 — NCF tradicional (`l10n_do` + `l10n_do_reports`)  
 **Fecha:** 2026-06-30  
-**Versión:** 1.0  
-**Estado:** **Ejecución 2026-06-30 — G-00 y G-09 confirmados en TC-000; G-01 pendiente decisión final (upgrade portal pendiente); G-02 reforzada; resto POR VALIDAR**
+**Versión:** 2.0  
+**Estado:** **Registro de limitaciones** — no bloqueante del proyecto ([PROJECT_STRATEGY.md](PROJECT_STRATEGY.md))
 
 ---
 
-## Propósito
+## Política v3.0 (registro, no bloqueo)
 
-Este documento consolida **hipótesis de brechas** entre lo que Odoo oficial declara cubrir, lo que Hellenia requiere, y lo que probablemente necesite desarrollo custom. Todas las filas marcadas **POR VALIDAR** deben confirmarse o refutarse mediante el [Plan de Pruebas L10N_DO_TEST_PLAN.md](L10N_DO_TEST_PLAN.md).
+Las brechas documentadas aquí son **limitaciones conocidas o hipótesis** del producto on-premise 19. **No detienen** la implementación.
 
-> **Regla:** Ninguna capacidad se considera disponible hasta que el caso de prueba vinculado concluya en `PASS`.
+| Acción ante una brecha | Sí | No |
+|------------------------|----|----|
+| Documentar con evidencia TC | ✅ | |
+| Continuar implementación estándar | ✅ | |
+| Modificar core / `enterprise/` | | ❌ |
+| Módulos terceros (OCA, etc.) | | ❌ |
+| Custom Justech sin 4 comprobaciones | | ❌ |
+| Detener proyecto por investigación saas-19.3 | | ❌ |
 
 ---
 
@@ -94,7 +101,7 @@ Estos ítems están **fuera del stack** `l10n_do` + `l10n_do_reports` por diseñ
 |----|-------------------|---------------------|-----|-----------|---------|---------------|---------------|
 | G-00 | Backup DEV no ejecutable sin SSH VPS | TC-000 SSH denegado desde Cloud Agent | TC-000 | 🔴 P0 | Bloqueante ejecución | — | Infra / credenciales |
 | G-09 | BD DEV sin módulo `account` instalado | TC-000 baseline XML-RPC | TC-000 | ✅ Resuelto | — | — | TC-001 instaló `account` |
-| G-01 | **Secuencias NCF y tipos documento fiscal no disponibles en estándar** | TC-002 en build `20260619` sin documentos fiscales; **pendiente revalidación** tras upgrade a último tarball portal (`20260629` o posterior) — ver [ENTERPRISE-UPGRADE-DEV.md](ENTERPRISE-UPGRADE-DEV.md) | TC-002, TC-020 | 🔴 P0 | Bloqueante go-live NCF | 5–15 días | `hellenia_account` (solo si confirmada post-upgrade) |
+| G-01 | **Secuencias NCF / tipos documento — línea base plataforma on-premise** | TC-002: sin documentos fiscales tras empresa DO en build actual; **aceptado como estado observado** — registrar para posible Justech post-implementación | TC-017–TC-020 | 🟠 P1 | Impacto NCF — **no bloquea** F3–F8 | TBD | `hellenia_account` (solo tras 4 comprobaciones) |
 | G-02 | Framework documentos LATAM ausente/incompleto en 19.0 | TC-002: 0 modelos `l10n_latam*` tras empresa DO y plan `do` cargado | TC-002, TC-014, TC-017 | 🔴 P0 | Alto — sin tipos documento ni NCF | 3–10 días | `hellenia_account` |
 | G-03 | Tipos NCF B14, B15, B16 no precargados | No declarados explícitamente en manifest 19.0 | TC-017 | 🟠 P1 | Medio — depende operación Hellenia | 2–5 días | `hellenia_account` |
 | G-04 | Reportes 606/607/608/IT-1 incompletos o ausentes | Doc Odoo no lista explícitamente; foro sin confirmación | TC-031 | 🔴 P0 | Bloqueante declaraciones DGII | 5–20 días | `hellenia_reports` |
@@ -125,15 +132,13 @@ Estimaciones orientativas para desarrollo custom con `_inherit` (sin modificar `
 
 ## 4. Matriz de decisión custom vs. estándar
 
-> **Gate actual (2026-06-30):** No iniciar desarrollo custom. G-01 permanece **pendiente de decisión final** hasta: (1) verificación manual portal Odoo, (2) upgrade DEV al último tarball, (3) repetir TC-001/TC-002.
+> **v3.0:** Completar implementación estándar primero. Custom solo tras [cuatro comprobaciones](PROJECT_STRATEGY.md#política-de-módulos-custom-justech).
 
-| Escenario post-pruebas | Decisión |
-|------------------------|----------|
-| TC-020 PASS — NCF asigna sin terceros | G-01 **cerrada** — usar estándar |
-| TC-020 FAIL — NCF no asigna | G-01 **confirmada** — evaluar custom `hellenia_account` |
-| TC-002 sin documentos fiscales tras empresa DO **en último tarball portal** | G-01 **confirmada** — evaluar custom `hellenia_account` |
-| TC-002 sin documentos fiscales **solo en build antiguo** (`20260619`) | G-01 **provisional** — revalidar tras upgrade antes de custom |
-| TC-002 con documentos fiscales presentes post-upgrade | G-01 **refutada parcialmente** — continuar TC-017/TC-020 |
+| Escenario | Decisión |
+|-----------|----------|
+| Limitación documentada en uso real (ej. G-01) | **Continuar** implementación; registrar en este documento |
+| Tras F11 Pruebas, brecha impide go-live | Evaluar custom Justech con 4 comprobaciones |
+| TC PASS con estándar | Sin custom — cerrar brecha |
 | TC-030 PASS — reportes 606/607/608/IT-1 completos | Usar estándar; G-04 **cerrada** |
 | TC-031 FAIL — reportes ausentes/incompletos | G-04 **confirmada** — `hellenia_reports` |
 | TC-014 FAIL — Use Documents no disponible | G-02 **confirmada** — investigar upgrade 19.3 o custom |
@@ -177,7 +182,7 @@ Estimaciones orientativas para desarrollo custom con `_inherit` (sin modificar `
 | Secuencias B01, B02, B03, B04 | Declaradas manifest | POR VALIDAR operativas | TC-017, TC-020 |
 | Rangos con vencimiento DGII | Doc saas-19.3 | POR VALIDAR en 19.0 | TC-018, TC-021 |
 | NC referencia NCF origen | Doc saas-19.3 | POR VALIDAR | TC-025 |
-| Advertencia manifest terceros | Texto en manifest 19.0 | **G-01** — **PENDIENTE DECISIÓN FINAL** (TC-002 en `20260619`; revalidar post-upgrade portal) | TC-002, TC-020 |
+| Advertencia manifest terceros | Texto en manifest 19.0 | **G-01** — limitación conocida plataforma on-premise (TC-002); continuar implementación | TC-017–TC-020 |
 
 ### 5.5 Facturación y compras
 

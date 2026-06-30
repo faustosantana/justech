@@ -1,10 +1,12 @@
 # Análisis de arquitectura — Localización dominicana (`l10n_do`)
 
+> **Documento histórico (pre-v3.0):** Investigación saas-19.3 vs 19.0 on-premise. **No bloquea** el proyecto. Plataforma oficial y política actual: [PROJECT_STRATEGY.md](PROJECT_STRATEGY.md).
+
 **Cliente:** Hellenia, S.R.L.  
 **Fecha:** 2026-06-30  
 **Ambiente analizado:** `hellenia_dev` — Odoo `19.0+e-20260619`  
-**Tipo:** Investigación técnica (sin pruebas funcionales adicionales)  
-**Estado:** Cerrado — evidencia de código y empaquetado
+**Tipo:** Investigación técnica (archivada)  
+**Estado:** Referencia — no actualizar salvo cambio de plataforma
 
 ---
 

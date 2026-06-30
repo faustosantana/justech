@@ -2,28 +2,27 @@
 
 **Cliente:** Hellenia, S.R.L. — República Dominicana  
 **Ambiente objetivo:** `hellenia_dev` (laboratorio)  
-**Build:** Odoo `19.0+e-20260619` on-premise  
+**Plataforma:** Odoo 19 Enterprise On-Premise  
 **Stack fiscal Etapa 1:** `l10n_do` + `l10n_do_reports` (sin `l10n_do_edi`)  
 **Fecha:** 2026-06-30  
-**Versión:** 1.0  
-**Estado:** **DETENIDO** — TC-001/TC-002 ejecutados en build `20260619`; **TC-003 bloqueado**  
-**Gates:** Verificación portal → upgrade DEV → re-TC-001/002 → [ENTERPRISE-UPGRADE-DEV.md](ENTERPRISE-UPGRADE-DEV.md)
+**Versión:** 2.0  
+**Estado:** **En ejecución** — continuar desde TC-003 ([PROJECT_STRATEGY.md](PROJECT_STRATEGY.md))
+
+**Documentos relacionados:** [PROJECT_STRATEGY.md](PROJECT_STRATEGY.md) · [NCF_IMPLEMENTATION.md](NCF_IMPLEMENTATION.md) · [GAP_ANALYSIS_RD.md](GAP_ANALYSIS_RD.md) · [IMPLEMENTATION_MASTER_PLAN.md](IMPLEMENTATION_MASTER_PLAN.md)
+
+> **Regla v3.0:** Validar comportamiento real del producto on-premise. Limitaciones se documentan en GAP y **no detienen** el plan de pruebas.
 
 ---
 
 ## Declaración de alcance
 
-Este plan define **32 casos de prueba** (TC-000 a TC-031) para validar la localización dominicana en modo **NCF tradicional** (papel/impreso). Ningún resultado está confirmado hasta ejecutar las pruebas en DEV.
+32 casos (TC-000 a TC-031) sobre **Odoo 19 Enterprise On-Premise** — NCF tradicional, sin eNCF.
 
 | En alcance | Fuera de alcance |
 |------------|------------------|
-| Instalación `l10n_do`, `l10n_do_reports` | `l10n_do_edi`, eNCF, Infile |
-| Empresa RD, plan contable, impuestos ITBIS | Comunicación electrónica DGII |
-| Diarios, secuencias NCF, tipos B01–B04, B11, B13 | POS (plan separado Fase 7) |
-| Facturas cliente/proveedor, NC, impresión | Módulos OCA/terceros NCF |
-| Reportes fiscales `l10n_do_reports` | Go-live PROD |
-
-**Documentos relacionados:** [NCF_IMPLEMENTATION.md](NCF_IMPLEMENTATION.md) · [GAP_ANALYSIS_RD.md](GAP_ANALYSIS_RD.md) · [IMPLEMENTATION_MASTER_PLAN.md](IMPLEMENTATION_MASTER_PLAN.md)
+| `l10n_do`, `l10n_do_reports` | `l10n_do_edi`, eNCF, Infile |
+| Empresa RD, plan, ITBIS | DGII electrónico |
+| NCF, facturación, reportes fiscales | OCA/terceros, go-live PROD |
 
 ---
 
@@ -80,8 +79,8 @@ Este plan define **32 casos de prueba** (TC-000 a TC-031) para validar la locali
 | Ejecutados | 3 (TC-000, TC-001, TC-002) |
 | PASS | 3 (TC-000, TC-001 condicional, TC-002 parcial) |
 | FAIL | 0 |
-| BLOCKED | 1 (TC-003 — upgrade Enterprise DEV pendiente) |
-| PENDIENTE | 28 |
+| BLOCKED | 0 |
+| PENDIENTE | 29 |
 
 ---
 
@@ -174,11 +173,9 @@ Este plan define **32 casos de prueba** (TC-000 a TC-031) para validar la locali
 
 ### TC-003 — Instalación del módulo `l10n_do_reports`
 
-**Estado:** ⛔ **BLOCKED** — No ejecutar hasta que DEV esté en la última versión Enterprise disponible.
+**Nota v3.0:** Si TC-001 instaló `l10n_do_reports` por auto_install, este TC se reduce a **verificación** del estado instalado y menús de reportes.
 
-**Motivo bloqueo:** TC-001 instaló `l10n_do` con auto_install de `l10n_do_reports` en build `19.0-20260619`. Debe repetirse validación sobre tarball más reciente (`20260629` o posterior) antes de continuar pruebas NCF.
-
-**Objetivo:** Instalar reportes fiscales dominicanos Enterprise y verificar dependencias.
+**Objetivo:** Confirmar reportes fiscales dominicanos Enterprise y dependencias.
 
 **Prerequisitos:**
 - TC-001 PASS
@@ -196,11 +193,11 @@ Este plan define **32 casos de prueba** (TC-000 a TC-031) para validar la locali
 - Menú de reportes fiscales RD accesible (POR VALIDAR)
 - Sin conflicto con módulos existentes
 
-**Resultado obtenido:** BLOCKED — ver [ENTERPRISE-UPGRADE-DEV.md](ENTERPRISE-UPGRADE-DEV.md)
+**Resultado obtenido:** PENDIENTE
 
-**Evidencia:** N/A
+**Evidencia:** PENDIENTE
 
-**Conclusión:** BLOCKED
+**Conclusión:** PENDIENTE
 
 ---
 
@@ -1011,4 +1008,4 @@ Si **TC-020 FAIL**, escalar a [GAP_ANALYSIS_RD.md](GAP_ANALYSIS_RD.md) — brech
 
 **Versión:** 1.0  
 **Mantenido por:** Consultoría implementación Justech  
-**Próximo paso:** Usuario verifica manualmente portal Odoo vs `odoo_19.0+e.20260629.tar.gz`. Sin `--execute` hasta confirmar. G-01 pendiente decisión final.
+**Próximo paso:** Continuar implementación funcional — TC-003 en adelante ([PROJECT_STRATEGY.md](PROJECT_STRATEGY.md)).

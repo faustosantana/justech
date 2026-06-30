@@ -6,7 +6,8 @@ Proyecto Odoo **Enterprise 19** para **Hellenia**. Pipeline permanente: **DEV �
 
 | Documento | Contenido |
 |-----------|-----------|
-| [INFRASTRUCTURE_REVIEW.md](INFRASTRUCTURE_REVIEW.md) | Revisión infra 10 años + deuda técnica |
+| [PROJECT_STRATEGY.md](PROJECT_STRATEGY.md) | **Estrategia v3.0** — plataforma, 12 fases, NCF, custom |
+| [IMPLEMENTATION_MASTER_PLAN.md](IMPLEMENTATION_MASTER_PLAN.md) | Plan maestro implementación |
 | [ARCHITECTURE.md](ARCHITECTURE.md) | Capas Community / Enterprise / Custom |
 | [DEVOPS_GUIDE.md](DEVOPS_GUIDE.md) | Scripts, backups, despliegues |
 | [UPGRADE_POLICY.md](UPGRADE_POLICY.md) | Gobernanza actualizaciones |

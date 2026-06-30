@@ -1,7 +1,9 @@
 # justech — Odoo Hellenia Enterprise
 
-Implementación Odoo **Enterprise 19** para Hellenia, S.R.L. (República Dominicana).  
-Administrado por **Justech**. Pipeline permanente: **DEV → TEST → PRODUCCIÓN**.
+Implementación Odoo **Enterprise 19 On-Premise** para Hellenia, S.R.L. (República Dominicana).  
+Referencia profesional RD — administrado por **Justech**. Pipeline: **DEV → TEST → PRODUCCIÓN**.
+
+**Estrategia v3.0:** [docs/PROJECT_STRATEGY.md](docs/PROJECT_STRATEGY.md)
 
 ## Estructura del repositorio
 
@@ -30,6 +32,8 @@ Administrado por **Justech**. Pipeline permanente: **DEV → TEST → PRODUCCIÓ
 
 | Documento | Contenido |
 |-----------|-----------|
+| [docs/PROJECT_STRATEGY.md](docs/PROJECT_STRATEGY.md) | **Estrategia v3.0** — hoja de ruta 12 fases |
+| [docs/IMPLEMENTATION_MASTER_PLAN.md](docs/IMPLEMENTATION_MASTER_PLAN.md) | Plan maestro por fase |
 | [docs/INFRASTRUCTURE_REVIEW.md](docs/INFRASTRUCTURE_REVIEW.md) | Revisión infra + deuda técnica |
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Arquitectura capas |
 | [docs/E1-CHECKLIST.md](docs/E1-CHECKLIST.md) | Pre-E1 (pendiente aprobación) |

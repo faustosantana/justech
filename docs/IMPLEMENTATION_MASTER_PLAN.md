@@ -4,8 +4,31 @@
 **Cliente:** Hellenia, S.R.L. — República Dominicana  
 **Ambiente de trabajo:** `hellenia_dev` (DEV laboratorio)  
 **Fecha:** 2026-06-30  
-**Versión:** 2.0  
-**Estado:** Fase funcional — TC-000/001/002 en build `20260619`; **TC-003 bloqueado**; **sin `--execute`** hasta verificación portal; G-01 pendiente decisión final ([ENTERPRISE-UPGRADE-DEV.md](ENTERPRISE-UPGRADE-DEV.md))
+**Versión:** 3.0  
+**Estado:** **Implementación funcional en curso** — Fases 1–2 completas; Fases 3–4 activas ([PROJECT_STRATEGY.md](PROJECT_STRATEGY.md))
+
+> **Pivot estratégico (v3.0):** Plataforma oficial = Odoo 19 EE On-Premise + último paquete portal. Sin perseguir saas-19.3. Prioridad = implementación impecable, no investigación de ramas.
+
+---
+
+## Hoja de ruta oficial (12 fases)
+
+| Fase | Nombre | Estado |
+|------|--------|--------|
+| 1 | Infraestructura | ✅ Completa |
+| 2 | Enterprise | ✅ Completa |
+| 3 | Configuración funcional | 🔄 En curso |
+| 4 | Localización RD | 🔄 En curso |
+| 5 | Ventas | ⏳ Pendiente |
+| 6 | Compras | ⏳ Pendiente |
+| 7 | Inventario | ⏳ Pendiente |
+| 8 | POS | ⏳ Pendiente |
+| 9 | Contabilidad | ⏳ Pendiente |
+| 10 | Reportes | ⏳ Pendiente |
+| 11 | Pruebas | ⏳ Pendiente |
+| 12 | Go Live | ⏳ Pendiente |
+
+Detalle estratégico: [PROJECT_STRATEGY.md](PROJECT_STRATEGY.md)
 
 ---
 
@@ -48,12 +71,13 @@ Empresa → Contabilidad RD + NCF tradicional → Inventario → Compras → Ven
 ## Principios de implementación Enterprise (nivel mundial)
 
 1. **Decisión justificada** — Toda configuración lleva razón de negocio + razón técnica Odoo.
-2. **Estándar antes que custom** — Usar módulos oficiales; custom solo para brecha demostrada.
+2. **Estándar antes que custom** — Cuatro comprobaciones antes de cualquier módulo Justech (ver [PROJECT_STRATEGY.md](PROJECT_STRATEGY.md)).
 3. **Localización oficial RD** — Stack `l10n_do*`; no soluciones OCA/terceros para fiscal.
-4. **Una fuente de verdad** — Maestros (productos, partners, cuentas) definidos una vez, reutilizados en Ventas, Compras, Inventario y POS.
-5. **Trazabilidad fiscal** — Cada flujo comercial debe cerrar en contabilidad RD (ITBIS, NCF tradicional en Etapa 1).
-6. **Preparación go-live** — DEV es laboratorio; diseño asumiendo promoción DEV → TEST → PROD.
-7. **No asumir documentación** — Especialmente localización RD: citar fuente oficial o evidencia en código desplegado.
+4. **Plataforma on-premise 19** — Aceptar línea base del producto desplegado; documentar límites sin detener el proyecto.
+5. **Una fuente de verdad** — Maestros definidos una vez, reutilizados en Ventas, Compras, Inventario y POS.
+6. **Trazabilidad fiscal** — Cada flujo comercial cierra en contabilidad RD dentro del estándar disponible.
+7. **Preparación go-live** — DEV laboratorio; promoción DEV → TEST → PROD.
+8. **Cero modificaciones al core** — Solo `_inherit` en `custom/`; nunca parchear `enterprise/`.
 
 ---
 
@@ -91,33 +115,42 @@ Empresa → Contabilidad RD + NCF tradicional → Inventario → Compras → Ven
 
 ---
 
-## Mapa de fases
+## Mapa de fases (detalle funcional — alineado a hoja de ruta v3.0)
 
 ```
-FASE 1   Empresa ─────────────────────────────────────────────┐
-FASE 2   Localización RD (NCF tradicional) ───────────────────┤
-FASE 3   Contabilidad Dominicana + NCF ───────────────────────┼──► FASE 8 Reportes
-FASE 4   Inventario ──────────────────────────────────────────┤         ▲
-FASE 5   Compras ─────────────────────────────────────────────┤         │
-FASE 6   Ventas ──────────────────────────────────────────────┤         │
-FASE 7   POS ─────────────────────────────────────────────────┘         │
-FASE 9   Customización (análisis) ──────────────────────────────────────┘
+F1 Infra ✅ ──► F2 Enterprise ✅ ──► F3 Config funcional 🔄
+                                        │
+                                        ▼
+                              F4 Localización RD 🔄
+                                        │
+          ┌─────────────────────────────┼─────────────────────────────┐
+          ▼                             ▼                             ▼
+    F5 Ventas                    F6 Compras                   F7 Inventario
+          │                             │                             │
+          └─────────────────────────────┼─────────────────────────────┘
+                                        ▼
+                                  F8 POS ──► F9 Contabilidad ──► F10 Reportes
+                                                      │
+                                                      ▼
+                                            F11 Pruebas ──► F12 Go Live
 
-FASE FUTURA (independiente) ──► eNCF / l10n_do_edi / Infile / DGII electrónico
+FUTURA (independiente): eNCF / l10n_do_edi / Infile
 ```
 
-| Fase | Nombre | Dependencias | Entregable principal |
-|------|--------|--------------|----------------------|
-| **1** | Configuración General (Empresa) | — | Empresa y maestros transversales |
-| **2** | Localización RD — NCF tradicional | Fase 1 | `l10n_do` + `l10n_do_reports` validados |
-| **3** | Contabilidad Dominicana + NCF | Fases 1–2 | Plan, impuestos, diarios, rangos NCF |
-| **4** | Inventario | Fases 1, 3 | Almacenes, rutas, valorización |
-| **5** | Compras | Fases 1, 3, 4 | Ciclo de abastecimiento |
-| **6** | Ventas | Fases 1, 3, 4 | Ciclo comercial con NCF B01/B02 |
-| **7** | POS | Fases 1, 3, 4, 6 | Flujo tienda Hellenia (B02) |
-| **8** | Reportes Gerenciales | Fases 3–7 | KPIs, tableros y reportes fiscales |
-| **9** | Customización | Fases 1–8 | Mapa de brechas vs estándar |
-| **Futura** | eNCF (independiente) | Go-live + upgrade | `l10n_do_edi`, Infile, DGII |
+| Fase v3 | Nombre | Dependencias | Entregable principal |
+|---------|--------|--------------|----------------------|
+| **3** | Configuración funcional | F1–F2 | Empresa, usuarios, maestros |
+| **4** | Localización RD | F3 | `l10n_do`, `l10n_do_reports`, fiscal base |
+| **5** | Ventas | F3–F4 | Ciclo comercial |
+| **6** | Compras | F3–F4 | Abastecimiento |
+| **7** | Inventario | F3–F4 | Stock y logística |
+| **8** | POS | F5–F7 | Tienda |
+| **9** | Contabilidad | F4–F8 | Cierres y conciliación |
+| **10** | Reportes | F9 | Fiscales + gerenciales |
+| **11** | Pruebas | F3–F10 | UAT y evidencia |
+| **12** | Go Live | F11 | TEST → PROD |
+
+> Las secciones **FASE 1–9** más abajo en este documento conservan detalle histórico de parametrización; la numeración v3.0 prevalece para planificación.
 
 ---
 

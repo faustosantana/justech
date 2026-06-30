@@ -2,6 +2,13 @@
 
 ## [Unreleased]
 
+### Changed — Pivot estratégico v3.0 (2026-06-30)
+- `docs/PROJECT_STRATEGY.md` — plataforma Odoo 19 EE On-Premise; hoja de ruta 12 fases
+- Sin perseguir saas-19.3; NCF = línea base producto; limitaciones documentadas sin bloquear
+- Política custom: 4 comprobaciones obligatorias
+- TC-003+ desbloqueados para continuar implementación funcional
+- G-01: limitación conocida, no bloqueante
+
 ### Changed — Gate portal + G-01 provisional (2026-06-30)
 - `--execute` requiere `HELLENIA_APPROVE_ENTERPRISE_EXECUTE=yes` (evita ejecución accidental)
 - G-01: pendiente decisión final hasta verificación portal + upgrade DEV + re-TC-001/002

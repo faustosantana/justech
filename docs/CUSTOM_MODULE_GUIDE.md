@@ -1,7 +1,20 @@
 # Guía de módulos custom — Hellenia Odoo
 
 **Ubicación única:** `custom/`  
-**Estado actual:** Esqueletos — no instalar hasta aprobación
+**Estado actual:** Esqueletos — **no instalar ni desarrollar** hasta completar las [cuatro comprobaciones](PROJECT_STRATEGY.md#política-de-módulos-custom-justech)
+
+---
+
+## Política Justech (obligatoria antes de custom)
+
+| # | Comprobación |
+|---|--------------|
+| 1 | La funcionalidad **no existe** en el producto desplegado |
+| 2 | **No existe** configuración oficial |
+| 3 | **No existe** módulo oficial Odoo |
+| 4 | **No existe** workaround oficial documentado |
+
+Documentar evidencia en [GAP_ANALYSIS_RD.md](GAP_ANALYSIS_RD.md). **No modificar core.** **No módulos terceros.**
 
 ---
 

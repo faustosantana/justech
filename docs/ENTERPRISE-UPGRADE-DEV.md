@@ -1,6 +1,6 @@
 # Upgrade Enterprise DEV — Hellenia
 
-**Estado:** Pipeline preparado — **TC-003 y pruebas funcionales BLOQUEADAS**  
+**Estado:** Mantenimiento operativo — **no bloquea** implementación funcional ([PROJECT_STRATEGY.md](PROJECT_STRATEGY.md))  
 **Alcance:** Solo `hellenia_dev` — **NO tocar TEST ni PRODUCCIÓN**  
 **Fecha:** 2026-06-30
 
@@ -8,7 +8,7 @@
 
 ## Objetivo
 
-Actualizar DEV a la **última versión Enterprise 19.0** disponible desde el portal Odoo antes de continuar validación NCF (TC-003+). No validar NCF sobre un build antiguo si existe tarball más reciente con mejoras para República Dominicana.
+Mantener DEV alineado con el **último paquete Enterprise 19.0** del portal Odoo. Tarea de infraestructura (Fase 2), independiente del avance funcional Fases 3–12.
 
 ---
 
@@ -49,10 +49,10 @@ Actualizar DEV a la **última versión Enterprise 19.0** disponible desde el por
 
 | Acción | Estado |
 |--------|--------|
-| TC-003 y posteriores | ⛔ **DETENIDOS** |
-| `--execute` upgrade DEV | ⛔ **NO EJECUTAR** — pendiente verificación manual portal |
-| Desarrollo custom (`hellenia_account`, etc.) | ⛔ **NO INICIAR** — pendiente decisión final G-01 |
+| Implementación funcional F3+ | 🔄 **En curso** — no esperar upgrade |
+| `--execute` upgrade DEV | ⏸️ Opcional — cuando se confirme último tarball portal |
 | TEST / PROD | 🔒 Sin cambios |
+| Custom Justech | ⏸️ Solo tras 4 comprobaciones |
 
 ### Secuencia obligatoria (orden actual)
 

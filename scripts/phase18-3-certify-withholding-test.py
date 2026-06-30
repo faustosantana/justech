@@ -16,8 +16,9 @@ DB = env.cr.dbname
 if DB != "hellenia_test":
     raise SystemExit(f"ABORT: solo hellenia_test, actual={DB}")
 
-EVIDENCE_DIR = "/opt/odoo-projects/hellenia/evidence/phase18-3"
+EVIDENCE_DIR = "/tmp/hellenia-phase18-3-evidence"
 os.makedirs(EVIDENCE_DIR, exist_ok=True)
+report["visual_evidence_html"] = {}
 
 report = {
     "phase": "18.3-withholding-certification",
@@ -78,6 +79,7 @@ th{{background:#714B67;color:#fff;text-align:left}}</style></head>
     with open(path, "w", encoding="utf-8") as fh:
         fh.write(html)
     report["visual_evidence"].append(path)
+    report["visual_evidence_html"][name] = html
     return path
 
 

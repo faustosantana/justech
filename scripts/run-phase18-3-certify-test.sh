@@ -38,6 +38,17 @@ sleep 25
 
 "$SCRIPT_DIR/run-odoo-shell-env.sh" test phase18-3-certify-withholding-test.py PHASE18_3 "$EVIDENCE" 2>&1 | tee -a "$LOG"
 
+python3 -c "
+import json
+from pathlib import Path
+evidence = Path('${EVIDENCE}')
+out_dir = evidence.parent
+data = json.loads(evidence.read_text())
+for name, html in data.get('visual_evidence_html', {}).items():
+    (out_dir / name).write_text(html, encoding='utf-8')
+print(f'HTML extraídos: {len(data.get(\"visual_evidence_html\", {}))} → {out_dir}')
+"
+
 "$SCRIPT_DIR/run-odoo-shell-env.sh" test phase18-2-validate-withholding-catalog-test.py PHASE18_2 \
   "$PROJECT_ROOT/evidence/phase18-3/phase18-2-regression.json" 2>&1 | tee -a "$LOG" || true
 

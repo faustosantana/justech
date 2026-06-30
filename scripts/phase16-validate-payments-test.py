@@ -279,6 +279,7 @@ try:
         bill = env["account.move"].create({
             "move_type": "in_invoice",
             "partner_id": vendor.id,
+            "invoice_date": date.today(),
             "invoice_line_ids": [Command.create({
                 "product_id": product.id,
                 "quantity": 1,
@@ -301,6 +302,7 @@ try:
         bill = env["account.move"].create({
             "move_type": "in_invoice",
             "partner_id": vendor.id,
+            "invoice_date": date.today(),
             "invoice_line_ids": [Command.create({
                 "product_id": product.id, "quantity": 1, "price_unit": 600,
                 "tax_ids": [Command.set(tax_purchase.ids)] if tax_purchase else [],
@@ -378,9 +380,10 @@ try:
         inv = env["account.move"].create({
             "move_type": "out_invoice",
             "partner_id": gov_customer.id,
+            "invoice_date": date.today(),
             "invoice_line_ids": [Command.create({
                 "product_id": product.id, "quantity": 1, "price_unit": 1000,
-                "tax_ids": [Command.set(tax_18.ids)] if tax_18 else [],
+                "tax_ids": [Command.set((tax_18 | gov_ret).ids)] if tax_18 and gov_ret else [],
             })],
         })
         inv.action_post()
@@ -419,6 +422,7 @@ try:
         bill = env["account.move"].create({
             "move_type": "in_invoice",
             "partner_id": vendor.id,
+            "invoice_date": date.today(),
             "invoice_line_ids": [Command.create({
                 "product_id": product.id,
                 "quantity": 1,
@@ -441,6 +445,7 @@ try:
         bill = env["account.move"].create({
             "move_type": "in_invoice",
             "partner_id": vendor.id,
+            "invoice_date": date.today(),
             "invoice_line_ids": [Command.create({
                 "product_id": product.id,
                 "quantity": 1,

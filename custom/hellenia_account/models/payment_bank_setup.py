@@ -132,22 +132,20 @@ class HelleniaAccountPaymentSetup(models.AbstractModel):
                 )
             created_labels.append(label)
 
-        # Renombrar líneas genéricas duplicadas (no eliminar — Odoo puede requerirlas)
+        # Eliminar líneas genéricas duplicadas cuando ya existe etiqueta español
         for line in Line.search([("journal_id", "=", journal.id)]):
-            if line.name in GENERIC_METHOD_LABELS and line.name not in created_labels:
-                replacement = next(
-                    (
-                        lbl
-                        for _code, ptype, lbl in methods
-                        if line.payment_method_id.code == _code and line.payment_method_id.payment_type == ptype
-                    ),
-                    None,
-                )
-                if replacement and not Line.search_count(
-                    [("journal_id", "=", journal.id), ("name", "=", replacement)], limit=1
-                ):
-                    line.name = replacement
-                    created_labels.append(replacement)
+            if line.name not in GENERIC_METHOD_LABELS:
+                continue
+            has_spanish = Line.search_count(
+                [
+                    ("journal_id", "=", journal.id),
+                    ("payment_method_id", "=", line.payment_method_id.id),
+                    ("name", "not in", list(GENERIC_METHOD_LABELS)),
+                ],
+                limit=1,
+            )
+            if has_spanish:
+                line.unlink()
         return created_labels
 
     @api.model
@@ -172,10 +170,7 @@ class HelleniaAccountPaymentSetup(models.AbstractModel):
             [("code", "=", "BNK1"), ("company_id", "=", company.id)], limit=1
         )
         if legacy and legacy.id not in [j.id for j in journals.values()]:
-            if not self.env["account.move"].search_count([("journal_id", "=", legacy.id)], limit=1):
-                legacy.active = False
-            else:
-                legacy.write({"name": "Banco (legacy)"})
+            legacy.write({"active": False, "name": "Banco (legacy)"})
 
         payment_lines = {}
         for code, methods in JOURNAL_PAYMENT_METHODS.items():

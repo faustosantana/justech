@@ -144,4 +144,4 @@ TC-002 cumplió el objetivo de configurar la empresa dominicana de pruebas y re-
 
 **Implicación:** Desarrollo custom en `hellenia_account` (o evaluación upgrade 19.3+) requerido para NCF operativo. TC-020 (asignación NCF en factura) sigue siendo prueba crítica de desempate operativo.
 
-**Estado:** TC-002 completado. **Detenido — esperando aprobación para TC-003.**
+**Estado:** TC-002 completado. **Detenido — TC-003 bloqueado** hasta upgrade Enterprise DEV. Ver [ENTERPRISE-UPGRADE-DEV.md](ENTERPRISE-UPGRADE-DEV.md).

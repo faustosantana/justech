@@ -17,11 +17,13 @@ REPORT_DIR="$PROJECT_ROOT/logs/validate"
 ARCHIVE=""
 REPORT=false
 JSON=false
+RD_STAGE1=false
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --report) REPORT=true; shift ;;
     --json) JSON=true; shift ;;
+    --rd-stage1) RD_STAGE1=true; shift ;;
     -*) hellenia_log "ERROR: opción desconocida: $1"; exit 1 ;;
     *)
       if [[ -z "$ARCHIVE" ]]; then
@@ -48,6 +50,9 @@ ARGS=( "$VALIDATOR" "$ARCHIVE" --version 19.0 )
 if $JSON; then
   ARGS+=( --json )
 fi
+if $RD_STAGE1; then
+  ARGS+=( --rd-stage1 )
+fi
 
 if $JSON; then
   OUT=$(python3 "${ARGS[@]}")
@@ -68,7 +73,11 @@ if $REPORT; then
   STAMP=$(date +%Y-%m-%d_%H%M%S)
   BASENAME=$(basename "$ARCHIVE")
   REPORT_FILE="$REPORT_DIR/enterprise-${STAMP}-$(echo "$BASENAME" | tr -c 'A-Za-z0-9._-' '_').json"
-  python3 "$VALIDATOR" "$ARCHIVE" --version 19.0 --json > "$REPORT_FILE"
+  REPORT_ARGS=( "$VALIDATOR" "$ARCHIVE" --version 19.0 --json )
+  if $RD_STAGE1; then
+    REPORT_ARGS+=( --rd-stage1 )
+  fi
+  python3 "${REPORT_ARGS[@]}" > "$REPORT_FILE"
   hellenia_log "Reporte JSON: $REPORT_FILE"
 fi
 

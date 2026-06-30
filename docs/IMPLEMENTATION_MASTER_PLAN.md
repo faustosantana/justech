@@ -5,7 +5,7 @@
 **Ambiente de trabajo:** `hellenia_dev` (DEV laboratorio)  
 **Fecha:** 2026-06-30  
 **Versión:** 2.0  
-**Estado:** Fase funcional iniciada — **sin ejecución de configuración aún**
+**Estado:** Fase funcional — TC-000/001/002 ejecutados; **TC-003 bloqueado** hasta upgrade Enterprise DEV ([ENTERPRISE-UPGRADE-DEV.md](ENTERPRISE-UPGRADE-DEV.md))
 
 ---
 
@@ -268,10 +268,11 @@ Manifest `l10n_do` declara secuencias NCF: B01 valor fiscal, B02 consumo, ND/NC,
 
 ## Entregables Fase 2
 
-- [ ] `l10n_do` + `l10n_do_reports` instalados en DEV
-- [ ] Confirmación `l10n_do_edi` **no** instalado
-- [ ] Validación impuestos ITBIS en UI
-- [ ] Acta evidencia archivada — ver [NCF_IMPLEMENTATION.md](NCF_IMPLEMENTATION.md)
+- [ ] Plan de pruebas aprobado — [L10N_DO_TEST_PLAN.md](L10N_DO_TEST_PLAN.md)
+- [ ] Ejecución TC-000–TC-031 en DEV con evidencia
+- [ ] [GAP_ANALYSIS_RD.md](GAP_ANALYSIS_RD.md) actualizado con brechas confirmadas
+- [ ] Dictamen go/no-go Etapa 1 NCF tradicional
+- [ ] Confirmación `l10n_do_edi` **no** instalado (TC-004)
 
 ---
 
@@ -626,7 +627,8 @@ Hasta entonces: solo planificación (este documento).
 
 | Documento | Uso |
 |-----------|-----|
-| [NCF_IMPLEMENTATION.md](NCF_IMPLEMENTATION.md) | **Guía NCF tradicional Etapa 1** |
+| [L10N_DO_TEST_PLAN.md](L10N_DO_TEST_PLAN.md) | **Plan pruebas funcionales Fase 2** |
+| [GAP_ANALYSIS_RD.md](GAP_ANALYSIS_RD.md) | Brechas RD (pre-validación) |
 | [UNREGISTERED_ENTERPRISE_LIMITATIONS.md](UNREGISTERED_ENTERPRISE_LIMITATIONS.md) | Alcance sin licencia |
 | [L10N-RD-READINESS.md](L10N-RD-READINESS.md) | Stack RD |
 | [INFILE-REQUIREMENTS.md](INFILE-REQUIREMENTS.md) | eNCF — solo Fase Futura |

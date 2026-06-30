@@ -69,5 +69,5 @@ else
 fi
 
 hellenia_log "Validando $ARCHIVE ..."
-"${SCRIPT_DIR}/validate-enterprise-archive.sh" "$ARCHIVE" --report
-hellenia_log "Archivo recibido y validado. Pendiente aprobación E1a para extract/install."
+"${SCRIPT_DIR}/validate-enterprise-archive.sh" "$ARCHIVE" --rd-stage1 --report
+hellenia_log "Archivo recibido y validado (RD Etapa 1). Pendiente aprobación para upgrade DEV."

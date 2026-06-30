@@ -22,13 +22,15 @@ Ver **[docs/E0.6c-ENTERPRISE-DELIVERY-FLOW.md](../docs/E0.6c-ENTERPRISE-DELIVERY
 ## Validar sin instalar
 
 ```bash
+scripts/upgrade-enterprise-dev.sh --validate-only downloads/enterprise/<archivo>.tar.gz
+# o validación básica:
 scripts/e1a-portal-pipeline.sh --validate-only downloads/enterprise/<archivo>.tar.gz
 ```
 
-## Extraer (tras aprobación E1a)
+## Upgrade DEV (tras aprobación explícita)
 
 ```bash
-scripts/e1a-portal-pipeline.sh --execute downloads/enterprise/<archivo>.tar.gz
+scripts/upgrade-enterprise-dev.sh --execute downloads/enterprise/<archivo>.tar.gz
 ```
 
-Ver [docs/E0.6b-ENTERPRISE-PORTAL-DOWNLOAD.md](../docs/E0.6b-ENTERPRISE-PORTAL-DOWNLOAD.md).
+Ver [docs/ENTERPRISE-UPGRADE-DEV.md](../docs/ENTERPRISE-UPGRADE-DEV.md).

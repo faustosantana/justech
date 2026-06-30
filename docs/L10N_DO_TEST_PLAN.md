@@ -6,7 +6,8 @@
 **Stack fiscal Etapa 1:** `l10n_do` + `l10n_do_reports` (sin `l10n_do_edi`)  
 **Fecha:** 2026-06-30  
 **Versión:** 1.0  
-**Estado:** **Ejecución iniciada 2026-06-30 — DETENIDA en TC-000** (backup VPS pendiente)
+**Estado:** **DETENIDO** — TC-001/TC-002 ejecutados; **TC-003 bloqueado** hasta upgrade Enterprise DEV  
+**Gate:** Ver [ENTERPRISE-UPGRADE-DEV.md](ENTERPRISE-UPGRADE-DEV.md)
 
 ---
 
@@ -76,12 +77,11 @@ Este plan define **32 casos de prueba** (TC-000 a TC-031) para validar la locali
 | Métrica | Valor |
 |---------|-------|
 | Total casos | 32 |
-| Ejecutados | 0 |
-| PASS | 0 |
+| Ejecutados | 3 (TC-000, TC-001, TC-002) |
+| PASS | 3 (TC-000, TC-001 condicional, TC-002 parcial) |
 | FAIL | 0 |
-| BLOCKED | 0 |
-| PENDIENTE | 31 |
-| BLOCKED | 1 (TC-000) |
+| BLOCKED | 1 (TC-003 — upgrade Enterprise DEV pendiente) |
+| PENDIENTE | 28 |
 
 ---
 
@@ -174,6 +174,10 @@ Este plan define **32 casos de prueba** (TC-000 a TC-031) para validar la locali
 
 ### TC-003 — Instalación del módulo `l10n_do_reports`
 
+**Estado:** ⛔ **BLOCKED** — No ejecutar hasta que DEV esté en la última versión Enterprise disponible.
+
+**Motivo bloqueo:** TC-001 instaló `l10n_do` con auto_install de `l10n_do_reports` en build `19.0-20260619`. Debe repetirse validación sobre tarball más reciente (`20260629` o posterior) antes de continuar pruebas NCF.
+
 **Objetivo:** Instalar reportes fiscales dominicanos Enterprise y verificar dependencias.
 
 **Prerequisitos:**
@@ -192,11 +196,11 @@ Este plan define **32 casos de prueba** (TC-000 a TC-031) para validar la locali
 - Menú de reportes fiscales RD accesible (POR VALIDAR)
 - Sin conflicto con módulos existentes
 
-**Resultado obtenido:** PENDIENTE
+**Resultado obtenido:** BLOCKED — ver [ENTERPRISE-UPGRADE-DEV.md](ENTERPRISE-UPGRADE-DEV.md)
 
-**Evidencia:** PENDIENTE
+**Evidencia:** N/A
 
-**Conclusión:** PENDIENTE
+**Conclusión:** BLOCKED
 
 ---
 
@@ -1007,4 +1011,4 @@ Si **TC-020 FAIL**, escalar a [GAP_ANALYSIS_RD.md](GAP_ANALYSIS_RD.md) — brech
 
 **Versión:** 1.0  
 **Mantenido por:** Consultoría implementación Justech  
-**Próximo paso:** Aprobación para ejecutar TC-000 — sin instalación hasta autorización explícita
+**Próximo paso:** Upgrade Enterprise DEV — ver [ENTERPRISE-UPGRADE-DEV.md](ENTERPRISE-UPGRADE-DEV.md). TC-003 bloqueado hasta completar upgrade.

@@ -28,7 +28,8 @@ Proyecto Odoo **Enterprise 19** para **Hellenia**. Pipeline permanente: **DEV �
 | [E0.6b-ENTERPRISE-PORTAL-DOWNLOAD.md](E0.6b-ENTERPRISE-PORTAL-DOWNLOAD.md) | Descarga oficial Sources |
 | [E0.6-GITHUB-ENTERPRISE.md](E0.6-GITHUB-ENTERPRISE.md) | GitHub (paralelo) |
 | [ENTERPRISE-LICENSING.md](ENTERPRISE-LICENSING.md) | Política oficial licenciamiento |
-| [L10N-RD-READINESS.md](L10N-RD-READINESS.md) | Preparación localización RD |
+| [ENTERPRISE-UPGRADE-DEV.md](ENTERPRISE-UPGRADE-DEV.md) | **Upgrade DEV** — tarball portal, validación RD, gate TC-003 |
+| [L10N_DO_TEST_PLAN.md](L10N_DO_TEST_PLAN.md) | Plan pruebas NCF tradicional |
 | [E1-CHECKLIST.md](E1-CHECKLIST.md) | Checklist E1 |
 | [E1-ENTERPRISE-STATUS.md](E1-ENTERPRISE-STATUS.md) | Estado actual |
 | [E1B-LICENSE-CHECKLIST.md](E1B-LICENSE-CHECKLIST.md) | E1b registro licencia (go-live) |

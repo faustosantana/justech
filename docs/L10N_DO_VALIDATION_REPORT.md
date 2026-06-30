@@ -96,7 +96,7 @@ Todos **PENDIENTE** por detención en TC-000.
 | Caso crítico (bloqueante) | Estado |
 |---------------------------|--------|
 | Instalación `l10n_do` (TC-001) | PENDIENTE |
-| Instalación `l10n_do_reports` (TC-003) | PENDIENTE |
+| Instalación `l10n_do_reports` (TC-003) | BLOCKED — upgrade Enterprise DEV pendiente |
 | Plan contable (TC-007) | PENDIENTE |
 | ITBIS (TC-010–011) | PENDIENTE |
 | Diarios (TC-014–015) | PENDIENTE |

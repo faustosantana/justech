@@ -2,6 +2,15 @@
 
 ## [Unreleased]
 
+### Added — Upgrade Enterprise DEV + gate TC-003 (2026-06-30)
+- `docs/ENTERPRISE-UPGRADE-DEV.md` — pipeline upgrade DEV, estado tarball `20260629` vs imagen `20260619`
+- `scripts/upgrade-enterprise-dev.sh` — orquestador: `--status`, `--validate-only`, `--execute`, `--rerun-tc001-tc002`
+- Validación RD Etapa 1 en `validate_enterprise_archive.py` (`--rd-stage1`): l10n_do, l10n_do_reports, l10n_do_edi, l10n_latam*
+
+### Changed
+- TC-003 y pruebas funcionales NCF **bloqueadas** hasta DEV en última versión Enterprise disponible
+- `receive-enterprise-archive.sh` valida con `--rd-stage1`
+
 ### Added — Pre-E1 enterprise platform (arquitectura congelada)
 - `docs/INFRASTRUCTURE_REVIEW.md` — revisión 10 años + deuda técnica
 - `docs/DEVELOPMENT_GUIDE.md`, `CODING_STANDARDS.md`, `DEVOPS_GUIDE.md`

@@ -6,56 +6,75 @@
             <attribute name="class" add="hellenia-invoice-doc" separator=" "/>
         </xpath>
 
+        <!-- Título fiscal dinámico (sin Proforma Invoice) -->
+        <xpath expr="//t[@name='invoice_title']" position="replace">
+            <t name="invoice_title" t-out="o.hellenia_fiscal_document_title()"/>
+        </xpath>
+        <xpath expr="//t[@name='draft_invoice_title']" position="replace">
+            <t name="draft_invoice_title" t-out="o.hellenia_fiscal_document_title()"/>
+        </xpath>
+        <xpath expr="//t[@name='cancelled_invoice_title']" position="replace">
+            <t name="cancelled_invoice_title">FACTURA CANCELADA</t>
+        </xpath>
+        <xpath expr="//t[@name='credit_note_title']" position="replace">
+            <t name="credit_note_title">NOTA DE CRÉDITO</t>
+        </xpath>
+        <xpath expr="//t[@name='draft_credit_note_title']" position="replace">
+            <t name="draft_credit_note_title">NOTA DE CRÉDITO</t>
+        </xpath>
+        <xpath expr="//t[@name='cancelled_credit_note_title']" position="replace">
+            <t name="cancelled_credit_note_title">NOTA DE CRÉDITO CANCELADA</t>
+        </xpath>
+        <xpath expr="//t[@name='proforma_invoice_title']" position="replace">
+            <t name="proforma_invoice_title" t-out="o.hellenia_fiscal_document_title()"/>
+        </xpath>
+
         <!-- NCF destacado (sin QR — no e-CF) -->
         <xpath expr="//div[@id='informations']" position="before">
             <div class="hellenia-ncf-box row mb-3" t-if="o.justech_do_ncf">
                 <div class="col-12">
                     <div class="hellenia-ncf-label">Número de Comprobante Fiscal</div>
                     <div class="hellenia-ncf-value" t-field="o.justech_do_ncf"/>
-                    <div class="hellenia-ncf-legal text-muted small mt-1">
-                        Válido para crédito fiscal conforme a la DGII.
+                    <div class="hellenia-ncf-legal text-muted small mt-1" t-if="o.hellenia_ncf_legal_note()">
+                        <span t-out="o.hellenia_ncf_legal_note()"/>
                     </div>
-                    <div t-if="o.justech_do_document_type_id" class="hellenia-ncf-type">
-                        <span t-field="o.justech_do_document_type_id"/>
+                    <div t-if="o.hellenia_ncf_type_label()" class="hellenia-ncf-type">
+                        <span t-out="o.hellenia_ncf_type_label()"/>
                     </div>
                 </div>
             </div>
         </xpath>
 
-        <!-- Títulos en español -->
-        <xpath expr="//t[@name='invoice_title']" position="replace">
-            <t name="invoice_title">Factura</t>
-        </xpath>
-        <xpath expr="//t[@name='draft_invoice_title']" position="replace">
-            <t name="draft_invoice_title">Factura borrador</t>
-        </xpath>
-        <xpath expr="//t[@name='cancelled_invoice_title']" position="replace">
-            <t name="cancelled_invoice_title">Factura cancelada</t>
-        </xpath>
-        <xpath expr="//t[@name='credit_note_title']" position="replace">
-            <t name="credit_note_title">Nota de crédito</t>
-        </xpath>
-        <xpath expr="//t[@name='draft_credit_note_title']" position="replace">
-            <t name="draft_credit_note_title">Nota de crédito borrador</t>
-        </xpath>
-        <xpath expr="//t[@name='cancelled_credit_note_title']" position="replace">
-            <t name="cancelled_credit_note_title">Nota de crédito cancelada</t>
-        </xpath>
-
+        <!-- Etiquetas en español -->
         <xpath expr="//strong[text()='Invoice Date']" position="replace">
-            <strong>Fecha factura</strong>
+            <strong>Fecha de factura</strong>
         </xpath>
         <xpath expr="//strong[text()='Credit Note Date']" position="replace">
-            <strong>Fecha nota de crédito</strong>
+            <strong>Fecha de nota de crédito</strong>
         </xpath>
         <xpath expr="//strong[text()='Due Date']" position="replace">
-            <strong>Fecha vencimiento</strong>
+            <strong>Fecha de vencimiento</strong>
         </xpath>
         <xpath expr="//strong[text()='Delivery Date']" position="replace">
-            <strong>Fecha entrega</strong>
+            <strong>Fecha de entrega</strong>
         </xpath>
         <xpath expr="//strong[text()='Source']" position="replace">
             <strong>Origen</strong>
+        </xpath>
+        <xpath expr="//strong[text()='Customer Code']" position="replace">
+            <strong>Código cliente</strong>
+        </xpath>
+        <xpath expr="//strong[text()='Reference']" position="replace">
+            <strong>Referencia</strong>
+        </xpath>
+        <xpath expr="//span[text()='Untaxed Amount']" position="replace">
+            <span>Subtotal</span>
+        </xpath>
+        <xpath expr="//span[text()='Payment Communication']" position="replace">
+            <span>Concepto de pago</span>
+        </xpath>
+        <xpath expr="//span[text()='Amount Due']" position="replace">
+            <span>Total pendiente</span>
         </xpath>
 
         <xpath expr="//th[@name='th_description']/span" position="replace">
@@ -73,6 +92,9 @@
         <xpath expr="//th[@name='th_subtotal']/span" position="replace">
             <span>Importe</span>
         </xpath>
+
+        <!-- Ocultar QR si el template base lo incluye -->
+        <xpath expr="//img[contains(@class, 'qr') or contains(@alt, 'QR')]" position="replace"/>
 
         <xpath expr="//table[@name='invoice_line_table']" position="attributes">
             <attribute name="class" add="hellenia-lines-table" separator=" "/>

@@ -77,6 +77,8 @@ MENU_LABELS_ES = {
     "account.menu_finance_reports": "Reportes",
     "account.menu_finance_configuration": "Configuración",
     "account.menu_account_config": "Ajustes",
+    "account.menu_action_account_payments_receivable": "Pagos",
+    "account.menu_action_account_payments_payable": "Pagos",
 }
 
 # Etiquetas español — Localización Justech

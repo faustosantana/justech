@@ -26,6 +26,30 @@
             <xpath expr="//field[@name='journal_id']" position="attributes">
                 <attribute name="string">Diario</attribute>
             </xpath>
+            <xpath expr="//field[@name='amount']" position="after">
+                <field name="hellenia_wh_isr_gov" string="Retención 5% Gobierno"
+                       invisible="payment_type != 'inbound'"/>
+                <field name="hellenia_wh_itbis_30" string="Retención ITBIS 30%"
+                       invisible="payment_type != 'outbound'"/>
+                <field name="hellenia_wh_isr_10" string="Retención proveedor informal 10%"
+                       invisible="payment_type != 'outbound'"/>
+                <field name="hellenia_wh_itbis_75" string="Retención ITBIS informal 75%"
+                       invisible="payment_type != 'outbound'"/>
+                <field name="hellenia_withholding_total" readonly="1" invisible="not hellenia_withholding_line_ids"/>
+            </xpath>
+            <xpath expr="//group[@name='group1']" position="after">
+                <group string="Detalle retenciones" invisible="not hellenia_withholding_line_ids">
+                    <field name="hellenia_withholding_line_ids" nolabel="1" readonly="1">
+                        <list>
+                            <field name="label" string="Retención"/>
+                            <field name="base_amount" string="Base"/>
+                            <field name="rate" string="Porcentaje"/>
+                            <field name="amount" string="Monto retenido"/>
+                            <field name="account_id" string="Cuenta contable"/>
+                        </list>
+                    </field>
+                </group>
+            </xpath>
         </field>
     </record>
 </odoo>

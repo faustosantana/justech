@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_justech_do_fiscal_report_tree" model="ir.ui.view">
+        <field name="name">justech.do.fiscal.report.list</field>
+        <field name="model">justech.do.fiscal.report</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="report_type"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="date_from"/>
+                <field name="date_to"/>
+                <field name="line_count"/>
+                <field name="total_amount"/>
+                <field name="generated_at"/>
+                <field name="generated_by_id"/>
+                <field name="state"/>
+            </list>
+        </field>
+    </record>
+    <record id="view_justech_do_fiscal_report_form" model="ir.ui.view">
+        <field name="name">justech.do.fiscal.report.form</field>
+        <field name="model">justech.do.fiscal.report</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_generate" string="Regenerar" type="object"
+                            invisible="state != 'done'"/>
+                    <button name="action_export_csv" string="Exportar CSV" type="object"
+                            invisible="state != 'done'"/>
+                    <button name="action_export_xlsx" string="Exportar Excel" type="object"
+                            invisible="state != 'done'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,done"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="report_type"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group>
+                            <field name="date_from"/>
+                            <field name="date_to"/>
+                            <field name="generated_at"/>
+                            <field name="generated_by_id"/>
+                        </group>
+                    </group>
+                    <group string="Totales del período">
+                        <field name="line_count"/>
+                        <field name="total_untaxed"/>
+                        <field name="total_tax"/>
+                        <field name="total_amount"/>
+                    </group>
+                    <notebook>
+                        <page string="Líneas">
+                            <field name="line_ids">
+                                <list>
+                                    <field name="partner_vat"/>
+                                    <field name="partner_name"/>
+                                    <field name="ncf"/>
+                                    <field name="document_type"/>
+                                    <field name="document_date"/>
+                                    <field name="amount_untaxed"/>
+                                    <field name="amount_tax"/>
+                                    <field name="amount_total"/>
+                                    <field name="notes"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="action_justech_do_fiscal_report" model="ir.actions.act_window">
+        <field name="name">Historial de reportes DGII</field>
+        <field name="res_model">justech.do.fiscal.report</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

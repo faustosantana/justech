@@ -1,25 +1,31 @@
 # Hellenia — Ambiente TEST
+# Infraestructura: ver docs/INFRASTRUCTURE_REVIEW.md
+include:
+  - path: ../lib/traefik-odoo.yaml
+
 services:
   odoo:
-    image: odoo:18
+    image: odoo:19.0-20260619
     restart: unless-stopped
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.${COMPOSE_PROJECT_NAME}.rule=Host(`test.${TRAEFIK_HOST}`)
-      - traefik.http.routers.${COMPOSE_PROJECT_NAME}.entrypoints=websecure
-      - traefik.http.routers.${COMPOSE_PROJECT_NAME}.tls.certresolver=letsencrypt
-      - traefik.http.services.${COMPOSE_PROJECT_NAME}.loadbalancer.server.port=8069
+    labels: *odoo-traefik-labels
     environment:
       - HOST=db
       - USER=${DB_USER}
       - PASSWORD=${DB_PASSWORD}
     volumes:
       - odoo-data:/var/lib/odoo
-      - ${ADDONS_PATH}:/mnt/extra-addons:ro
+      - ${ENTERPRISE_PATH}:/mnt/enterprise:ro
+      - ${CUSTOM_ADDONS_PATH}:/mnt/custom:ro
       - ${ODOO_CONF_PATH}:/etc/odoo/odoo.conf:ro
     depends_on:
       db:
         condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://127.0.0.1:8069/web/login > /dev/null || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 90s
     networks:
       - hellenia-test
 

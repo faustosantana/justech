@@ -1,0 +1,73 @@
+ Container hellenia-test-db-1 Running 
+ Container hellenia-test-db-1 Waiting 
+ Container hellenia-test-db-1 Healthy 
+ Container hellenia-test-odoo-run-5ce64b505dd7 Creating 
+ Container hellenia-test-odoo-run-5ce64b505dd7 Created 
+2026-06-30 12:23:58,308 1 WARNING ? odoo.tools.config: option logfile reads 'False' in the config file at /etc/odoo/odoo.conf but isn't a boolean option, skip 
+2026-06-30 12:23:58,308 1 WARNING ? odoo.tools.config: option logfile reads 'False' in the config file at /etc/odoo/odoo.conf but isn't a boolean option, skip 
+2026-06-30 12:23:58,308 1 INFO ? odoo: Odoo version 19.0-20260619 
+2026-06-30 12:23:58,308 1 INFO ? odoo: Using configuration file at /etc/odoo/odoo.conf 
+2026-06-30 12:23:58,308 1 INFO ? odoo: addons paths: _NamespacePath(['/usr/lib/python3/dist-packages/odoo/addons', '/var/lib/odoo/addons/19.0', '/mnt/enterprise/addons', '/mnt/custom', '/usr/lib/python3/dist-packages/addons']) 
+2026-06-30 12:23:58,308 1 INFO ? odoo: database: odoo@db:5432 
+2026-06-30 12:23:58,513 1 INFO ? odoo.service.server: Initiating shutdown 
+2026-06-30 12:23:58,513 1 INFO ? odoo.service.server: Hit CTRL-C again or send a second signal to force the shutdown. 
+2026-06-30 12:23:58,539 1 INFO hellenia_test odoo.modules.loading: loading 1 modules... 
+2026-06-30 12:23:58,542 1 INFO hellenia_test odoo.modules.loading: 1 modules loaded in 0.00s, 0 queries (+0 extra) 
+2026-06-30 12:23:58,563 1 INFO hellenia_test odoo.modules.loading: loading 112 modules... 
+2026-06-30 12:23:59,308 1 WARNING hellenia_test odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define models.Constraint on the model. 
+2026-06-30 12:23:59,331 1 WARNING hellenia_test odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define models.Constraint on the model. 
+2026-06-30 12:23:59,338 1 INFO hellenia_test odoo.modules.loading: 112 modules loaded in 0.77s, 0 queries (+0 extra) 
+2026-06-30 12:23:59,468 1 INFO hellenia_test odoo.modules.loading: Modules loaded. 
+2026-06-30 12:23:59,477 1 WARNING hellenia_test odoo.schema: Missing not-null constraint on res.users.settings.color_scheme 
+2026-06-30 12:23:59,518 1 INFO hellenia_test odoo.registry: Registry loaded in 1.004s 
+TEST_HARDENING ok: true
+{
+  "ok": true,
+  "checks": {
+    "module_justech_l10n_do_base": {
+      "status": "PASS",
+      "detail": "installed"
+    },
+    "module_justech_l10n_do_ncf": {
+      "status": "PASS",
+      "detail": "installed"
+    },
+    "module_justech_l10n_do_reports": {
+      "status": "PASS",
+      "detail": "installed"
+    },
+    "rule_justech.do.fiscal.document.type": {
+      "status": "PASS",
+      "detail": "company_ids"
+    },
+    "rule_justech.do.ncf.range": {
+      "status": "PASS",
+      "detail": "company_ids"
+    },
+    "rule_justech.do.ncf.consumption": {
+      "status": "PASS",
+      "detail": "company_ids"
+    },
+    "rule_justech.do.fiscal.report": {
+      "status": "PASS",
+      "detail": "company_ids"
+    },
+    "rule_justech.do.fiscal.report.line": {
+      "status": "PASS",
+      "detail": "company"
+    },
+    "rule_justech.do.fiscal.report.wizard": {
+      "status": "PASS",
+      "detail": "company_ids"
+    },
+    "ncf_unique_index": {
+      "status": "PASS",
+      "detail": "account_move_justech_do_ncf_company_uniq"
+    },
+    "void_permission": {
+      "status": "PASS",
+      "detail": "blocked for fiscal user"
+    }
+  },
+  "errors": []
+}

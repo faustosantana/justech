@@ -1,0 +1,46 @@
+# Reportes prioritarios Hellenia — Fase 3.5
+
+schema_version: "1.0"
+module_account_reports: installed
+
+priority_reports:
+  - id: R-01
+    name: "Inventario disponible"
+    odoo_path: "Inventario → Informes → Existencias"
+    module_required: stock
+    status: pending_module_stock
+
+  - id: R-02
+    name: "Ventas"
+    odoo_path: "Ventas → Informes / Contabilidad → Informes ventas"
+    module_required: sale
+    status: pending_module_sale
+
+  - id: R-03
+    name: "Compras"
+    odoo_path: "Compras → Informes"
+    module_required: purchase
+    status: pending_module_purchase
+
+  - id: R-04
+    name: "Ganancia por producto"
+    odoo_path: "Contabilidad → Informes → Ganancia por producto"
+    module_required: account_reports
+    status: available_ee
+
+  - id: R-05
+    name: "Cuentas por cobrar"
+    odoo_path: "Contabilidad → Informes → Cuentas por cobrar vencidas"
+    module_required: account_reports
+    status: available_ee
+
+  - id: R-06
+    name: "Flujo de caja"
+    odoo_path: "Contabilidad → Informes → Flujo de caja"
+    module_required: account_reports
+    status: available_ee
+
+fiscal_rd:
+  module: l10n_do_reports
+  status: installed
+  note: "Reportes DGII — validar en fase fiscal posterior"

@@ -1,0 +1,9 @@
+{
+  "phase": "13.8",
+  "environment": "test",
+  "mode": "dry_run",
+  "result": "PASS_DRY_RUN",
+  "backup_dir": "",
+  "timings_seconds": {"backup_test": 0,"total": 0},
+  "rto_estimate_minutes": n/a
+}

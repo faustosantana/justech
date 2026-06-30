@@ -80,6 +80,7 @@ class JustechDoFiscalReport(models.Model):
         string="Período YYYYMM",
         index=True,
     )
+    active = fields.Boolean(string="Activo", default=True, index=True)
 
     @api.depends("line_ids", "line_ids.amount_untaxed", "line_ids.amount_tax", "line_ids.amount_total")
     def _compute_totals(self):

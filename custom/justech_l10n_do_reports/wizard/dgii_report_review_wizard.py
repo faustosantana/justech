@@ -125,10 +125,13 @@ class JustechDoDgiiReportRejectWizard(models.TransientModel):
         self.ensure_one()
         if not self.comment.strip():
             raise UserError(_("Debe indicar el comentario."))
+        report = self.report_id
         if self.line_ids:
-            self.report_id._apply_line_decision(
+            report._apply_line_decision(
                 self.line_ids, comment=self.comment, mode=self.action_mode
             )
         else:
-            self.report_id._apply_rejection(self.comment)
+            report._apply_rejection(self.comment)
+        if self.action_mode == "correction":
+            return report.action_open_fiscal_review()
         return {"type": "ir.actions.act_window_close"}

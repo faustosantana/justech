@@ -14,3 +14,5 @@ def post_init_hook(env):
         report._sync_dates_from_period_code()
     if hasattr(Report, "_compute_has_pending_approval"):
         Report.search([])._compute_has_pending_approval()
+    if hasattr(Report, "_archive_legacy_reports"):
+        Report._archive_legacy_reports()

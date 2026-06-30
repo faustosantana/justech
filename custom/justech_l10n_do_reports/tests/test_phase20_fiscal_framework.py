@@ -1,7 +1,7 @@
 """Tests Fase 20 — correcciones framework fiscal DGII."""
 from datetime import date
 
-from odoo import Command
+from odoo import Command, fields
 from odoo.exceptions import UserError
 from odoo.tests import tagged
 from odoo.tests.common import TransactionCase
@@ -133,6 +133,53 @@ class TestPhase20FiscalFramework(TransactionCase):
         self.assertEqual(
             action["res_model"], "justech.do.dgii.export.blocker.wizard"
         )
+        ctx = action.get("context", {})
+        self.assertIn("default_blocking_line_ids", ctx)
+
+    def test_correction_returns_fiscal_review(self):
+        report = self._create_report()
+        report.action_load_review_lines()
+        line = report.line_ids.filtered(
+            lambda l: l.include_in_report and l.fiscal_state == "valid"
+        )[:1]
+        if not line:
+            self.skipTest("Sin línea válida")
+        self.env["justech.do.dgii.report.exclude.wizard"].with_user(
+            self.fiscal_user
+        ).create(
+            {
+                "report_id": report.id,
+                "line_ids": [Command.set(line.ids)],
+                "reason": "P20 corrección",
+            }
+        ).action_confirm_exclude()
+        action = self.env["justech.do.dgii.report.reject.wizard"].with_user(
+            self.supervisor
+        ).create(
+            {
+                "report_id": report.id,
+                "line_ids": [Command.set(line.ids)],
+                "action_mode": "correction",
+                "comment": "Corregir datos",
+            }
+        ).action_confirm_reject()
+        self.assertEqual(action.get("res_model"), "justech.do.fiscal.report")
+        self.assertEqual(report.state, "validated")
+
+    def test_archive_legacy_report(self):
+        legacy = self.env["justech.do.fiscal.report"].create(
+            {
+                "name": "606 — Compras 2026-06-30",
+                "report_type": "606",
+                "date_from": date(2026, 6, 1),
+                "date_to": date(2026, 6, 30),
+                "company_id": self.company.id,
+                "state": "done",
+                "generated_at": fields.Datetime.now(),
+            }
+        )
+        self.env["justech.do.fiscal.report"]._archive_legacy_reports()
+        self.assertFalse(legacy.active)
 
     def test_approve_line_workflow(self):
         report = self._create_report()

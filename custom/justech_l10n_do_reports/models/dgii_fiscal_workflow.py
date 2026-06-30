@@ -273,6 +273,22 @@ class JustechDoFiscalReportWorkflow(models.Model):
                 }
             )
 
+    def _get_blocking_line_ids(self):
+        self.ensure_one()
+        lines = self.line_ids
+        blocking = lines.filtered(
+            lambda l: (
+                (l.manual_exclusion and l.line_approval_state == "pending")
+                or l.fiscal_state == "incomplete"
+            )
+        )
+        if not blocking:
+            blocking = lines.filtered(
+                lambda l: not (l.include_in_report and l.fiscal_state == "valid")
+                and l.fiscal_state != "cancelled"
+            )
+        return blocking
+
     def _get_export_diagnostics(self):
         self.ensure_one()
         lines = self.line_ids
@@ -287,6 +303,7 @@ class JustechDoFiscalReportWorkflow(models.Model):
         needs_approval = bool(pending_lines) or self.state == "pending_approval"
         no_valid = not valid_lines
         wrong_state = self.state not in ("validated", "approved", "generated", "done")
+        blocking_lines = self._get_blocking_line_ids()
         return {
             "valid_count": len(valid_lines),
             "pending_approval_count": len(pending_lines),
@@ -296,6 +313,7 @@ class JustechDoFiscalReportWorkflow(models.Model):
             "no_valid": no_valid,
             "wrong_state": wrong_state and not needs_approval,
             "state": self.state,
+            "blocking_line_ids": blocking_lines.ids,
         }
 
     def action_open_export_blocker_wizard(self, diagnostics=None):
@@ -317,8 +335,36 @@ class JustechDoFiscalReportWorkflow(models.Model):
                 "default_no_valid": diagnostics["no_valid"],
                 "default_wrong_state": diagnostics["wrong_state"],
                 "default_report_state": self.state,
+                "default_blocking_line_ids": [(6, 0, diagnostics["blocking_line_ids"])],
             },
         }
+
+    @api.model
+    def _archive_legacy_reports(self):
+        """Archiva reportes pre-workflow del flujo activo sin borrar datos."""
+        workflow_states = {
+            "validated",
+            "pending_approval",
+            "approved",
+            "rejected",
+            "generated",
+        }
+        for report in self.sudo().search([("active", "=", True)]):
+            legacy = False
+            if report.state == "done" and not report.validated_by_id:
+                legacy = True
+            elif report.has_pending_approval and report.state not in workflow_states:
+                legacy = True
+            elif not report.period_code and report.generated_at:
+                legacy = True
+            if not legacy:
+                continue
+            report.with_context(justech_skip_state_guard=True).write({"active": False})
+            if hasattr(report, "_post_workflow_event"):
+                report._post_workflow_event(
+                    "state_change",
+                    _("Reporte legacy archivado del flujo activo (datos conservados)."),
+                )
 
     def action_open_fiscal_review(self):
         form = self.env.ref(
@@ -336,11 +382,9 @@ class JustechDoFiscalReportWorkflow(models.Model):
         }
 
     def action_open_pending_tray(self):
-        action = self.env.ref(
+        return self.env.ref(
             "justech_l10n_do_reports.action_justech_do_fiscal_review_pending"
         ).read()[0]
-        action["domain"] = [("id", "=", self.id)]
-        return action
 
     def action_generate(self, valid_moves=None):
         """Genera líneas exportables sin cambiar el estado del flujo fiscal."""

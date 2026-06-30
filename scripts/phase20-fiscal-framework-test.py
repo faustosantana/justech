@@ -154,7 +154,7 @@ else:
 
 # 7. Acción bandeja vacía (help configurado)
 action_ref = env.ref("justech_l10n_do_reports.action_justech_do_fiscal_review_pending")
-check("pending_action_domain", "has_pending_approval" in (action_ref.domain or ""), action_ref.domain)
+check("pending_action_domain", "has_pending_approval" in (action_ref.domain or "") and "active" in (action_ref.domain or ""), action_ref.domain)
 check("pending_action_help", bool(action_ref.help), "help set")
 
 # 8. Vista revisión — filtros y campos

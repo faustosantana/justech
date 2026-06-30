@@ -67,15 +67,20 @@ class JustechDoFiscalReportReview(models.Model):
         "Documento de prueba/UAT excluido del reporte fiscal."
     )
 
-    @api.depends("line_ids.manual_exclusion", "approval_ids.state")
+    @api.depends(
+        "line_ids.manual_exclusion",
+        "line_ids.line_approval_state",
+        "approval_ids.state",
+    )
     def _compute_manual_exclusion_count(self):
         for report in self:
             report.manual_exclusion_count = len(
                 report.line_ids.filtered("manual_exclusion")
             )
-            report.pending_approval_count = len(
-                report.approval_ids.filtered(lambda a: a.state == "pending")
+            pending_lines = report.line_ids.filtered(
+                lambda l: l.manual_exclusion and l.line_approval_state == "pending"
             )
+            report.pending_approval_count = len(pending_lines)
 
     def _is_supervisor(self):
         return self.env.user.has_group(
@@ -385,6 +390,18 @@ class JustechDoFiscalReportReview(models.Model):
             audit_type="reject",
         )
 
+    def action_export_dgii_606(self, moves=None):
+        self.ensure_one()
+        if moves is None and self.line_ids:
+            diagnostics = self._get_export_diagnostics()
+            if (
+                diagnostics["not_loaded"]
+                or diagnostics["needs_approval"]
+                or diagnostics["no_valid"]
+            ):
+                return self.action_open_export_blocker_wizard(diagnostics)
+        return super().action_export_dgii_606(moves=moves)
+
     def _check_can_generate(self):
         self.ensure_one()
         if not self._is_supervisor():
@@ -555,12 +572,13 @@ class JustechDoFiscalReportLineReview(models.Model):
                     exporter._refresh_move_fiscal_state(
                         move, line.report_id.date_from, line.report_id.date_to
                     )
-                move.message_post(
-                    body=_(
+                if comment:
+                    reinclusion_body = _(
                         "Documento re-incluido en reportes DGII. %(comment)s"
-                    )
-                    % {"comment": comment or ""}
-                )
+                    ) % {"comment": comment}
+                else:
+                    reinclusion_body = _("Documento re-incluido en reportes DGII.")
+                move.message_post(body=reinclusion_body)
             line.write(
                 {
                     "include_in_report": True,

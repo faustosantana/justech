@@ -115,11 +115,7 @@
                             groups="justech_l10n_do_base.group_justech_do_fiscal_manager"/>
                     <button name="action_generate_dgii_export" string="Generar Excel DGII" type="object"
                             class="btn-primary"
-                            invisible="state != 'validated' or manual_exclusion_count != 0"
-                            groups="justech_l10n_do_base.group_justech_do_fiscal_manager"/>
-                    <button name="action_generate_dgii_export" string="Generar Excel DGII" type="object"
-                            class="btn-primary"
-                            invisible="state != 'approved'"
+                            invisible="state not in ('validated', 'approved') or (state == 'validated' and manual_exclusion_count > 0)"
                             groups="justech_l10n_do_base.group_justech_do_fiscal_manager"/>
                     <button name="action_download_errors" string="Descargar errores (Excel)" type="object"
                             invisible="not error_report_file"/>
@@ -165,8 +161,6 @@
                             <field name="export_file_hash" readonly="1"/>
                         </group>
                     </group>
-                    <field name="summary_text" string="Resumen unificado" readonly="1"
-                           invisible="not line_ids"/>
                     <notebook>
                         <page string="Todos los documentos">
                             <field name="line_ids" nolabel="1"
@@ -261,6 +255,6 @@
             (0, 0, {'view_mode': 'list', 'view_id': ref('justech_l10n_do_reports.view_justech_do_fiscal_report_tree')}),
             (0, 0, {'view_mode': 'form', 'view_id': ref('justech_l10n_do_reports.view_justech_do_fiscal_report_review_form')})]"/>
         <field name="context">{'default_report_type': '606', 'default_state': 'draft'}</field>
-        <field name="domain">[('report_type', 'in', ('606', '607', '608', '609', '623'))]</field>
+        <field name="domain">[('report_type', 'in', ('606', '607', '608', '609', '623')), ('active', '=', True)]</field>
     </record>
 </odoo>

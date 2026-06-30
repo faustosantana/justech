@@ -17,6 +17,7 @@
                         <field name="needs_approval"/>
                         <field name="no_valid"/>
                         <field name="wrong_state"/>
+                        <field name="blocking_line_ids"/>
                     </group>
                 </sheet>
                 <footer>
@@ -27,7 +28,7 @@
                             invisible="not needs_approval and pending_approval_count == 0"/>
                     <button name="action_view_blocked_documents" string="Ver documentos bloqueados"
                             type="object"
-                            invisible="not incomplete_count and not pending_approval_count"/>
+                            invisible="not blocking_line_ids and not incomplete_count and not pending_approval_count and not no_valid"/>
                     <button string="Cerrar" special="cancel"/>
                 </footer>
             </form>

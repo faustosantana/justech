@@ -87,10 +87,26 @@ class JustechDoFiscalReportPendingTray(models.Model):
         self._sync_approval_state()
         return res
 
+    def _notify_fiscal_correction(self, body):
+        self.ensure_one()
+        fiscal_user = self.approval_submitted_by_id or self.created_by_id
+        if not fiscal_user:
+            return
+        self.message_post(body=body, partner_ids=fiscal_user.partner_id.ids)
+        if fiscal_user != self.env.user:
+            self.activity_schedule(
+                "mail.mail_activity_data_todo",
+                user_id=fiscal_user.id,
+                summary=_("Corrección solicitada — %(type)s %(period)s")
+                % {"type": self.report_type, "period": self.period_code or ""},
+                note=body,
+            )
+
     def _apply_line_decision(self, lines, comment="", mode="reject"):
         self.ensure_one()
         self._require_supervisor()
         now = fields.Datetime.now()
+        correction_messages = []
         for line in lines:
             if line.line_approval_state != "pending":
                 continue
@@ -104,6 +120,7 @@ class JustechDoFiscalReportPendingTray(models.Model):
                     "doc": line.move_name,
                     "comment": comment,
                 }
+                correction_messages.append(msg)
             else:
                 line.action_restore_inclusion(comment=comment)
                 event = "reject"
@@ -121,7 +138,10 @@ class JustechDoFiscalReportPendingTray(models.Model):
             )
             line.write({"line_approval_state": "rejected"})
             self._post_workflow_event(event, msg, move=line.move_id, line=line)
+        if mode == "correction" and correction_messages:
+            self._notify_fiscal_correction("<br/>".join(correction_messages))
         self._sync_approval_state()
+        self._refresh_summary_counts()
 
     def _apply_rejection(self, comment):
         lines = self._pending_approval_lines()

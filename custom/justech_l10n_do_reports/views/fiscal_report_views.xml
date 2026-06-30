@@ -104,6 +104,7 @@
         <field name="name">Historial fiscal</field>
         <field name="res_model">justech.do.fiscal.report</field>
         <field name="view_mode">list,form</field>
+        <field name="domain">[('active', '=', True)]</field>
         <field name="view_ids" eval="[(5, 0, 0),
             (0, 0, {'view_mode': 'list', 'view_id': ref('justech_l10n_do_reports.view_justech_do_fiscal_report_tree')}),
             (0, 0, {'view_mode': 'form', 'view_id': ref('justech_l10n_do_reports.view_justech_do_fiscal_report_review_form')})]"/>
@@ -112,7 +113,7 @@
         <field name="name">Historial 606</field>
         <field name="res_model">justech.do.fiscal.report</field>
         <field name="view_mode">list,form</field>
-        <field name="domain">[('report_type', '=', '606')]</field>
+        <field name="domain">[('report_type', '=', '606'), ('active', '=', True)]</field>
         <field name="context">{'default_report_type': '606'}</field>
         <field name="view_ids" eval="[(5, 0, 0),
             (0, 0, {'view_mode': 'list', 'view_id': ref('justech_l10n_do_reports.view_justech_do_fiscal_report_tree')}),

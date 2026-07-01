@@ -109,6 +109,22 @@ class JustechDoDgiiExporterMixin(models.AbstractModel):
                     missing_codes.append(catalog.display_name)
             elif tax and catalog:
                 missing_codes.append(catalog.display_name or tax.name)
+        PaymentWh = self.env.get("hellenia.account.payment.withholding")
+        if PaymentWh is not None:
+            for payment in move._get_reconciled_payments():
+                for wh in payment.hellenia_withholding_line_ids.filtered(lambda w: w.move_id == move):
+                    amount = self._format_amount(wh.amount)
+                    catalog = wh.catalog_id
+                    if not catalog:
+                        continue
+                    if catalog.withholding_type == "itbis":
+                        itbis_wh += amount
+                    elif catalog.withholding_type == "isr":
+                        isr_wh += amount
+                        if catalog.dgii_withholding_code:
+                            isr_type = catalog.dgii_withholding_code
+                        elif self._dgii_withholding_affects(catalog):
+                            missing_codes.append(catalog.display_name)
         return itbis_wh, isr_wh, isr_type, missing_codes
 
     def _is_cancelled_move(self, move):
@@ -194,6 +210,8 @@ class JustechDoDgiiExporterMixin(models.AbstractModel):
 
     def format_validation_summary(self, result):
         counts = result["counts"]
+        if not counts["all"]:
+            return self._dgii_summary_title() + "\n" + _("No hay documentos en el período.")
         role = self._dgii_partner_role_label()
         lines = [
             self._dgii_summary_title(),

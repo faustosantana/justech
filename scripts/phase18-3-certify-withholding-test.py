@@ -321,15 +321,16 @@ try:
         line._recompute_line_withholdings()
         wiz._compute_totals()
         wh2 = line.withholding_amount
+        expected_partial = cat_itbis.compute_withholding_amount(inv, applied_amount=500)
         net_ok = abs(wiz.amount_after_withholding - (wiz.payment_total - wiz.withholding_total)) < 0.02
         if base_ok and wh1 > 0:
             pass_("10_base_calculation", f"base_itbis={expected_base:.2f} wh={wh1:.2f}")
         else:
             fail("10_base_calculation", f"wh1={wh1} expected={expected_wh}")
-        if abs(wh2 - wh1) < 0.02:
-            pass_("11_realtime_withholding_recalc", f"itbis estable wh={wh2:.2f}")
+        if abs(wh2 - expected_partial) < 0.02:
+            pass_("11_realtime_withholding_recalc", f"proporcional wh={wh2:.2f}")
         else:
-            fail("11_realtime_withholding_recalc", f"wh1={wh1} wh2={wh2}")
+            fail("11_realtime_withholding_recalc", f"wh1={wh1} wh2={wh2} expected={expected_partial}")
         if net_ok:
             pass_("12_realtime_net_recalc", f"neto={wiz.amount_after_withholding:.2f}")
         else:
@@ -400,7 +401,7 @@ try:
                 "date_to": date_to,
             }
         )
-        rep606.action_generate()
+        rep606.action_generate(valid_moves=inv_v)
         rep607 = env["justech.do.fiscal.report"].create(
             {
                 "name": f"Cert 607 {period_code}",
@@ -410,7 +411,7 @@ try:
                 "date_to": date_to,
             }
         )
-        rep607.action_generate()
+        rep607.action_generate(valid_moves=inv_c)
         lines606 = rep606.line_ids.filtered(lambda l: l.move_id == inv_v)
         lines607 = rep607.line_ids.filtered(lambda l: l.move_id == inv_c)
         _html(

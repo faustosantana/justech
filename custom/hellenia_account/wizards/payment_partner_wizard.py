@@ -18,6 +18,8 @@ class HelleniaPaymentPartnerWizardLine(models.TransientModel):
     date_maturity = fields.Date(compute="_compute_date_maturity", string="Vencimiento")
     currency_id = fields.Many2one(related="move_id.currency_id", string="Moneda")
     amount_total = fields.Monetary(related="move_id.amount_total", string="Total")
+    amount_untaxed = fields.Monetary(related="move_id.amount_untaxed", string="Base imponible")
+    amount_tax = fields.Monetary(related="move_id.amount_tax", string="ITBIS facturado")
     amount_residual = fields.Monetary(compute="_compute_amount_residual", string="Pendiente")
     amount_to_pay = fields.Monetary(string="Monto a aplicar", currency_field="currency_id")
 
@@ -52,6 +54,12 @@ class HelleniaPaymentPartnerWizardLine(models.TransientModel):
         string="Detalle retenciones",
     )
 
+    net_after_withholding = fields.Monetary(
+        string="Neto a pagar/cobrar",
+        compute="_compute_withholding_display",
+        currency_field="currency_id",
+    )
+
     @api.depends("move_id", "move_id.move_type")
     def _compute_move_scope_filter(self):
         for line in self:
@@ -73,7 +81,12 @@ class HelleniaPaymentPartnerWizardLine(models.TransientModel):
         for line in self:
             line.amount_residual = abs(line.move_id.amount_residual)
 
-    @api.depends("withholding_catalog_ids", "withholding_detail_ids.amount", "currency_id")
+    @api.depends(
+        "withholding_catalog_ids",
+        "withholding_detail_ids.amount",
+        "amount_to_pay",
+        "currency_id",
+    )
     def _compute_withholding_display(self):
         for line in self:
             if not line.withholding_catalog_ids:
@@ -83,6 +96,8 @@ class HelleniaPaymentPartnerWizardLine(models.TransientModel):
                 labels = line.withholding_catalog_ids.mapped("name")
                 line.withholding_summary = ", ".join(labels)
                 line.withholding_amount = sum(line.withholding_detail_ids.mapped("amount"))
+            applied = line.amount_to_pay or line.amount_residual or 0.0
+            line.net_after_withholding = applied - line.withholding_amount
 
     @api.onchange("apply", "amount_residual")
     def _onchange_apply(self):
@@ -94,6 +109,12 @@ class HelleniaPaymentPartnerWizardLine(models.TransientModel):
     def _onchange_withholding_catalog_ids(self):
         for line in self:
             line._recompute_line_withholdings()
+
+    @api.onchange("amount_to_pay")
+    def _onchange_amount_to_pay(self):
+        for line in self:
+            if line.withholding_catalog_ids:
+                line._recompute_line_withholdings()
 
     def _catalog_domain_partner_type(self):
         self.ensure_one()
@@ -121,9 +142,10 @@ class HelleniaPaymentPartnerWizardLine(models.TransientModel):
                             "catalog_id": catalog.id,
                             "tax_id": catalog.tax_id.id,
                             "label": catalog.name,
+                            "base_label": catalog._base_label(),
                             "base_amount": catalog._base_amount(
-                            line.move_id, applied_amount=line.amount_to_pay
-                        ),
+                                line.move_id, applied_amount=line.amount_to_pay
+                            ),
                             "rate": catalog.rate,
                             "amount": amount,
                             "account_id": catalog.account_id.id,
@@ -146,6 +168,7 @@ class HelleniaPaymentPartnerWizardLine(models.TransientModel):
                         "catalog_id": wh.catalog_id.id,
                         "tax_id": wh.tax_id.id,
                         "label": wh.label,
+                        "base_label": wh.base_label,
                         "base_amount": wh.base_amount,
                         "rate": wh.rate,
                         "amount": wh.amount,
@@ -167,6 +190,7 @@ class HelleniaPaymentWithholdingLine(models.TransientModel):
     catalog_id = fields.Many2one("hellenia.withholding.catalog", string="Retención")
     tax_id = fields.Many2one("account.tax", string="Impuesto")
     label = fields.Char(string="Descripción")
+    base_label = fields.Char(string="Tipo de base")
     base_amount = fields.Monetary(string="Base", currency_field="currency_id")
     rate = fields.Float(string="Porcentaje")
     amount = fields.Monetary(string="Monto retenido", currency_field="currency_id")

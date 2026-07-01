@@ -39,6 +39,8 @@
                             <field name="date_maturity" string="Vencimiento"/>
                             <field name="currency_id" string="Moneda"/>
                             <field name="amount_total" string="Total"/>
+                            <field name="amount_untaxed" string="Base imponible" optional="show"/>
+                            <field name="amount_tax" string="ITBIS facturado" optional="show"/>
                             <field name="amount_residual" string="Pendiente"/>
                             <field name="amount_to_pay" string="Monto a aplicar"/>
                             <field name="company_id" column_invisible="1"/>
@@ -49,7 +51,8 @@
                                    options="{'no_create': True, 'no_open': True}"
                                    domain="[('active', '=', True), ('code', 'not in', ['RET-NONE', 'wh_none']), ('partner_scope', 'in', [parent.partner_type, 'both']), ('move_scope', 'in', [move_scope_filter, 'both']), ('company_id', '=', company_id), ('account_id', '!=', False)]"/>
                             <field name="withholding_summary" string="Resumen" readonly="1" optional="show"/>
-                            <field name="withholding_amount" string="Monto retenido" readonly="1"/>
+                            <field name="withholding_amount" string="Total retenido" readonly="1"/>
+                            <field name="net_after_withholding" string="Neto a pagar/cobrar" readonly="1" optional="show"/>
                             <field name="move_id" column_invisible="1"/>
                         </list>
                     </field>
@@ -60,7 +63,8 @@
                         <list>
                             <field name="invoice_name" string="Factura"/>
                             <field name="label" string="Retención"/>
-                            <field name="base_amount" string="Base"/>
+                            <field name="base_label" string="Base"/>
+                            <field name="base_amount" string="Monto base"/>
                             <field name="rate" string="Porcentaje"/>
                             <field name="amount" string="Monto retenido"/>
                             <field name="account_id" string="Cuenta contable"/>

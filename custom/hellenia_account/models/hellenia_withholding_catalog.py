@@ -38,7 +38,7 @@ class HelleniaWithholdingCatalog(models.Model):
     )
     rate = fields.Float(
         string="Porcentaje",
-        help="Porcentaje documentado del impuesto vinculado (referencia).",
+        help="Porcentaje nominal de retención (p. ej. 100 para ITBIS 100%, 30 para ITBIS 30%).",
     )
     base_type = fields.Selection(
         [
@@ -86,6 +86,7 @@ class HelleniaWithholdingCatalog(models.Model):
     )
     affects_606 = fields.Boolean(string="Afecta 606")
     affects_607 = fields.Boolean(string="Afecta 607")
+    affects_623 = fields.Boolean(string="Afecta 623")
     dgii_withholding_code = fields.Char(
         string="Código retención DGII",
         help="Código para reportes DGII (606 col. T, Norma 2-05 col. H).",
@@ -151,14 +152,35 @@ class HelleniaWithholdingCatalog(models.Model):
         return abs(move.amount_untaxed)
 
     def compute_withholding_amount(self, move, applied_amount=None):
-        """Calcula monto retenido para una factura según configuración del catálogo."""
+        """Calcula monto retenido: base configurada × tasa nominal del catálogo."""
         self.ensure_one()
-        if not self.tax_id:
+        rate = self.rate
+        if not rate and self.tax_id:
+            rate = abs(self.tax_id.amount)
+        if not rate:
             return 0.0
         base = self._base_amount(move, applied_amount=applied_amount)
         if not base:
             return 0.0
-        return abs(self.tax_id.amount / 100.0 * base)
+        residual = abs(move.amount_residual)
+        if (
+            applied_amount
+            and residual
+            and self.base_type != "applied_amount"
+            and applied_amount < residual - 0.009
+        ):
+            base = base * (applied_amount / residual)
+        return abs(rate / 100.0 * base)
+
+    def _base_label(self):
+        self.ensure_one()
+        labels = {
+            "untaxed": "Base imponible",
+            "itbis": "ITBIS facturado",
+            "total": "Total factura",
+            "applied_amount": "Monto aplicado",
+        }
+        return labels.get(self.base_type, "Base")
 
     def _applies_to_move(self, move, partner_type):
         """Filtra por alcance configurado en catálogo (cliente/proveedor y operación)."""
@@ -215,10 +237,12 @@ class HelleniaWithholdingCatalog(models.Model):
                 "tax_use": "sale",
                 "withholding_type": "isr",
                 "base_type": "untaxed",
+                "withholding_rate": 5.0,
                 "partner_scope": "customer",
                 "move_scope": "sale",
                 "affects_606": False,
                 "affects_607": True,
+                "affects_623": True,
                 "dgii_withholding_code": "07",
                 "sequence": 10,
                 "notes": "ISR 5% sobre base imponible — ventas a entidades gubernamentales (607).",
@@ -231,6 +255,7 @@ class HelleniaWithholdingCatalog(models.Model):
                 "tax_use": "purchase",
                 "withholding_type": "itbis",
                 "base_type": "itbis",
+                "withholding_rate": 30.0,
                 "partner_scope": "both",
                 "move_scope": "both",
                 "affects_606": True,
@@ -247,6 +272,7 @@ class HelleniaWithholdingCatalog(models.Model):
                 "tax_use": "purchase",
                 "withholding_type": "itbis",
                 "base_type": "itbis",
+                "withholding_rate": 100.0,
                 "partner_scope": "both",
                 "move_scope": "both",
                 "affects_606": True,
@@ -263,6 +289,7 @@ class HelleniaWithholdingCatalog(models.Model):
                 "tax_use": "purchase",
                 "withholding_type": "isr",
                 "base_type": "untaxed",
+                "withholding_rate": 10.0,
                 "partner_scope": "supplier",
                 "move_scope": "purchase",
                 "affects_606": True,
@@ -279,6 +306,7 @@ class HelleniaWithholdingCatalog(models.Model):
                 "tax_use": "purchase",
                 "withholding_type": "itbis",
                 "base_type": "itbis",
+                "withholding_rate": 75.0,
                 "partner_scope": "supplier",
                 "move_scope": "purchase",
                 "affects_606": True,
@@ -295,6 +323,7 @@ class HelleniaWithholdingCatalog(models.Model):
                 "tax_use": "purchase",
                 "withholding_type": "isr",
                 "base_type": "untaxed",
+                "withholding_rate": 2.0,
                 "partner_scope": "both",
                 "move_scope": "both",
                 "affects_606": True,
@@ -311,6 +340,7 @@ class HelleniaWithholdingCatalog(models.Model):
                 "tax_use": "purchase",
                 "withholding_type": "isr",
                 "base_type": "untaxed",
+                "withholding_rate": 10.0,
                 "partner_scope": "both",
                 "move_scope": "both",
                 "affects_606": True,
@@ -327,6 +357,7 @@ class HelleniaWithholdingCatalog(models.Model):
                 "tax_use": "purchase",
                 "withholding_type": "itbis",
                 "base_type": "itbis",
+                "withholding_rate": 30.0,
                 "partner_scope": "supplier",
                 "move_scope": "purchase",
                 "affects_606": True,
@@ -342,6 +373,7 @@ class HelleniaWithholdingCatalog(models.Model):
                 "tax_use": "purchase",
                 "withholding_type": "itbis",
                 "base_type": "itbis",
+                "withholding_rate": 100.0,
                 "partner_scope": "supplier",
                 "move_scope": "purchase",
                 "affects_606": True,
@@ -357,6 +389,7 @@ class HelleniaWithholdingCatalog(models.Model):
                 "tax_use": "purchase",
                 "withholding_type": "itbis",
                 "base_type": "itbis",
+                "withholding_rate": 100.0,
                 "partner_scope": "supplier",
                 "move_scope": "purchase",
                 "affects_606": True,
@@ -372,6 +405,7 @@ class HelleniaWithholdingCatalog(models.Model):
                 "tax_use": "purchase",
                 "withholding_type": "isr",
                 "base_type": "untaxed",
+                "withholding_rate": 10.0,
                 "partner_scope": "supplier",
                 "move_scope": "purchase",
                 "affects_606": True,
@@ -387,6 +421,7 @@ class HelleniaWithholdingCatalog(models.Model):
                 "tax_use": "purchase",
                 "withholding_type": "isr",
                 "base_type": "untaxed",
+                "withholding_rate": 2.0,
                 "partner_scope": "supplier",
                 "move_scope": "purchase",
                 "affects_606": True,
@@ -453,11 +488,12 @@ class HelleniaWithholdingCatalog(models.Model):
                 "move_scope": spec["move_scope"],
                 "affects_606": spec["affects_606"],
                 "affects_607": spec["affects_607"],
+                "affects_623": spec.get("affects_623", False),
                 "dgii_withholding_code": spec.get("dgii_withholding_code"),
                 "notes": spec.get("notes"),
                 "company_id": company.id,
                 "tax_id": tax.id if tax else False,
-                "rate": abs(tax.amount) if tax else 0.0,
+                "rate": spec.get("withholding_rate") or (abs(tax.amount) if tax else 0.0),
                 "active": False,
             }
             rec = self._find_catalog_record(spec, company)

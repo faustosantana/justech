@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_payment_receipt_document_hellenia" inherit_id="account.report_payment_receipt_document">
+        <xpath expr="//div[@class='page']" position="inside">
+            <t t-set="wh_lines" t-value="o.hellenia_withholding_line_ids"/>
+            <t t-if="wh_lines or o.hellenia_applied_amount">
+                <div class="mt-4">
+                    <h4>Detalle de aplicación y retenciones</h4>
+                    <table class="table table-sm table-borderless">
+                        <tr t-if="o.hellenia_applied_amount">
+                            <td><strong>Total aplicado a factura(s)</strong></td>
+                            <td class="text-end">
+                                <span t-field="o.hellenia_applied_amount"
+                                      t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                            </td>
+                        </tr>
+                        <tr t-if="o.hellenia_withholding_total">
+                            <td><strong>Total retenido</strong></td>
+                            <td class="text-end">
+                                <span t-field="o.hellenia_withholding_total"
+                                      t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Neto recibido/pagado</strong></td>
+                            <td class="text-end">
+                                <span t-field="o.hellenia_net_transfer"
+                                      t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </t>
+            <t t-if="wh_lines">
+                <div class="mt-3">
+                    <h5>Retenciones por factura</h5>
+                    <table class="table table-sm o_main_table">
+                        <thead>
+                            <tr>
+                                <th>Factura</th>
+                                <th>NCF</th>
+                                <th>Retención</th>
+                                <th class="text-end">Base</th>
+                                <th class="text-end">%</th>
+                                <th class="text-end">Monto retenido</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="wh_lines" t-as="wh">
+                                <td><span t-esc="wh.invoice_name"/></td>
+                                <td><span t-esc="wh.ncf or ''"/></td>
+                                <td><span t-esc="wh.label"/></td>
+                                <td class="text-end">
+                                    <span t-field="wh.base_amount"
+                                          t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                                </td>
+                                <td class="text-end"><span t-esc="'%.2f' % wh.rate"/>%</td>
+                                <td class="text-end">
+                                    <span t-field="wh.amount"
+                                          t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </t>
+        </xpath>
+    </template>
+</odoo>

@@ -464,13 +464,17 @@ class HelleniaPaymentPartnerWizard(models.TransientModel):
             move = line.move_id
             line._recompute_line_withholdings()
             register_vals, applied, is_partial = self._register_vals_for_line(line, common)
-            register = Register.with_context(
-                active_model="account.move",
-                active_ids=move.ids,
-                dont_redirect_to_payments=True,
-                hellenia_applied_amount=applied,
-                force_payment_move=True,
-            ).create(register_vals)
+            # Enterprise: force_payment_move usa cuenta outstanding → is_matched=False y factura
+            # queda in_payment aunque residual=0. Solo abonos parciales lo necesitan.
+            register_ctx = {
+                "active_model": "account.move",
+                "active_ids": move.ids,
+                "dont_redirect_to_payments": True,
+                "hellenia_applied_amount": applied,
+            }
+            if is_partial:
+                register_ctx["force_payment_move"] = True
+            register = Register.with_context(**register_ctx).create(register_vals)
             # Odoo _compute_amount puede resetear amount al residual si custom_user_amount no quedó fijado.
             if is_partial or register.currency_id.compare_amounts(register.amount, applied) != 0:
                 register.write(
@@ -481,7 +485,8 @@ class HelleniaPaymentPartnerWizard(models.TransientModel):
                         "payment_difference_handling": "open",
                     }
                 )
-            payments |= register.with_context(force_payment_move=True)._create_payments()
+            create_ctx = {"force_payment_move": True} if is_partial else {}
+            payments |= register.with_context(**create_ctx)._create_payments()
 
         return {
             "type": "ir.actions.act_window",

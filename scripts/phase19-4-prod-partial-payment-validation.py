@@ -24,7 +24,7 @@ report = {
     "database": DB,
     "certified_branch": "cursor/phase19-3-partial-payment-fix-dd85",
     "certified_commits": ["322238e", "bd91174"],
-    "module_version_expected": "19.0.1.0.22",
+    "module_version_expected": "19.0.1.0.23",
     "tests": {},
     "evidence": {},
     "ok": True,
@@ -43,7 +43,7 @@ def near(a, b, tol=TOL):
 
 
 mod = env["ir.module.module"].search([("name", "=", "hellenia_account")], limit=1)
-check("00_module_version", mod and mod.latest_version == "19.0.1.0.22", mod.latest_version if mod else "missing")
+check("00_module_version", mod and mod.latest_version == "19.0.1.0.23", mod.latest_version if mod else "missing")
 
 setup = env["hellenia.account.payment.setup"]
 setup.configure_banks_and_payments()

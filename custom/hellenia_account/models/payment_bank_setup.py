@@ -119,15 +119,26 @@ class HelleniaAccountPaymentSetup(models.AbstractModel):
                 ],
                 limit=1,
             )
+            payment_account = journal.default_account_id
             if line:
+                vals = {}
                 if line.name != label:
-                    line.name = label
+                    vals["name"] = label
+                if payment_account and line.payment_account_id != payment_account:
+                    vals["payment_account_id"] = payment_account.id
+                if vals:
+                    line.write(vals)
             else:
                 line = Line.create(
                     {
                         "journal_id": journal.id,
                         "payment_method_id": method.id,
                         "name": label,
+                        **(
+                            {"payment_account_id": payment_account.id}
+                            if payment_account
+                            else {}
+                        ),
                     }
                 )
             created_labels.append(label)

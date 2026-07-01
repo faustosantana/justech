@@ -11,4 +11,17 @@
         <field name="header_spacing">35</field>
         <field name="dpi">96</field>
     </record>
+
+    <!-- Cotización: márgenes compactos — solo vía ir.actions.report (draft/sent) -->
+    <record id="paperformat_hellenia_quotation" model="report.paperformat">
+        <field name="name">Hellenia Quotation Paperformat</field>
+        <field name="format">Letter</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">5</field>
+        <field name="margin_bottom">8</field>
+        <field name="margin_left">8</field>
+        <field name="margin_right">8</field>
+        <field name="header_spacing">0</field>
+        <field name="dpi">90</field>
+    </record>
 </odoo>

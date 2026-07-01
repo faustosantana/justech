@@ -1,25 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <!-- Shell HTML mínimo — sin web.html_container ni web.external_layout -->
-    <template id="hellenia_quote_html_shell">
-        <html>
-            <head>
-                <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-                <meta name="viewport" content="initial-scale=1"/>
-                <title>Cotización</title>
-            </head>
-            <body style="margin:0;padding:0;">
-                <t t-out="0"/>
-            </body>
-        </html>
-    </template>
-
     <!-- Layout mínimo — sin web.external_layout -->
     <template id="hellenia_quote_layout">
         <t t-set="company" t-value="doc.company_id"/>
         <style type="text/css">
-            html, body { margin: 0; padding: 0; }
+                html, body { margin: 0; padding: 0; }
+                main .hq-doc { margin: 0; padding: 0; width: 100%; max-width: none; }
+                .o_body_html .container main .article.hq-doc { padding: 0; margin: 0; border: none; }
             .hq-doc {
                 font-family: 'DejaVu Sans', Helvetica, Arial, sans-serif;
                 font-size: 9pt;
@@ -125,7 +113,7 @@
             }
             .hq-pg { text-align: center; font-size: 6.5pt; color: #888888; margin-top: 4px; }
         </style>
-        <div class="hq-doc page"
+        <div class="hq-doc page article"
              t-att-data-oe-model="doc._name"
              t-att-data-oe-id="doc.id"
              t-att-data-oe-lang="doc.env.context.get('lang')">
@@ -340,9 +328,9 @@
         <div class="hq-pg">Página <span class="page"/> de <span class="topage"/></div>
     </template>
 
-    <!-- Reporte principal — sin web.external_layout -->
+    <!-- Reporte principal — web.html_container (sin web.external_layout) -->
     <template id="report_hellenia_quotation">
-        <t t-call="hellenia_reports.hellenia_quote_html_shell">
+        <t t-call="web.html_container">
             <t t-foreach="docs" t-as="doc">
                 <t t-set="doc" t-value="doc.with_context(lang=doc.partner_id.lang)"/>
                 <t t-call="hellenia_reports.hellenia_quote_layout">

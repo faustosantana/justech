@@ -1,0 +1,71 @@
+{
+  "phase": "21-gov-623-proof",
+  "timestamp_utc": "2026-07-01T14:52:37.869949+00:00",
+  "environment": "https://odoo.hellenia.cloud",
+  "partner_ref": "P21-GOV-623-PROOF",
+  "expected_gov_wh": 500.0,
+  "steps": {
+    "login": {
+      "ok": true,
+      "detail": "admin",
+      "screenshot": "evidence/phase21-gov-623-proof/screenshots/01-login.png"
+    },
+    "partner_exists": {
+      "ok": true,
+      "detail": "P21-GOV-623-PROOF",
+      "screenshot": "evidence/phase21-gov-623-proof/screenshots/02-partner-search.png"
+    },
+    "invoice_exists": {
+      "ok": true,
+      "detail": "P21-GOV-INV-PROOF",
+      "screenshot": "evidence/phase21-gov-623-proof/screenshots/03-invoice-search.png"
+    },
+    "payment_wh_preview": {
+      "ok": true,
+      "detail": "RD$ 500.00",
+      "screenshot": "evidence/phase21-gov-623-proof/screenshots/05-payment-wizard.png"
+    },
+    "register_payment": {
+      "ok": true,
+      "detail": "PBNKD/2026/00003",
+      "screenshot": "evidence/phase21-gov-623-proof/screenshots/04-payment-result.png"
+    },
+    "ui_payment_gov_field": {
+      "ok": true,
+      "detail": "gov=0.0 wh_total=500.0",
+      "screenshot": ""
+    },
+    "ui_invoice_gov_field": {
+      "ok": false,
+      "detail": "{}",
+      "screenshot": ""
+    },
+    "report_623_has_data": {
+      "ok": false,
+      "detail": "{\"body_excerpt\": \"Contabilidad\\nTablero\\nClientes\\nProveedores\\nAsientos contables\\nApuntes contables\\nReportes\\nAuditoría\\nConfiguración\\n3\\nHellenia, S.R.L.\\nNuevo\\n623 — Retenciones Estado 202607 — revisión fiscal\\n1 / 1\\nCargar período\\nGenerado\\nAprobado\\nRequiere aprobación\\nValidado\\nBorrador\\nNombre\\n623 — Retenciones Estado 202607 — revisión fiscal\\nTipo de reporte\\n623 — Retenciones Estado\\nCreado por\\nAdministrator\\nPeríodo YYYYMM\\n202607\\nDesde (período)\\n01/07/2026\\nHasta (período)\\n31/07/2026\\nRESUMEN REVISIÓN (DOCUMENTOS CARGADOS)\\nTotal documentos\\n0\\nVálidos para exportar\\n0\\nIncompletos\\n0\\nExcluidos\\n0\\nAnulados\\n0\\nPendientes aprobación\\n0\\nExclusiones aprobadas\\n0\\nValidado por\\nFecha validación\\nAprobado por\\nFecha aprobación\\nHash Excel DGII\\nTodos los documentos\\nVá",
+      "screenshot": ""
+    }
+  },
+  "ui_readings": {
+    "withholding_amount_row": "RD$ 500.00",
+    "payment": {
+      "hellenia_withholding_total": "RD$ 500.00",
+      "amount": "RD$ 11,800.00",
+      "journal_wh_lines": [
+        "11080302 ITBIS Retenido por Entidades del Estado (5%)\tP21 GOV PROOF UNIQUE\tRetención 5% Gobierno\tRD$ 500.00\tRD$ 0.00\t\n\t"
+      ]
+    },
+    "invoice": {},
+    "report_623": {
+      "body_excerpt": "Contabilidad\nTablero\nClientes\nProveedores\nAsientos contables\nApuntes contables\nReportes\nAuditoría\nConfiguración\n3\nHellenia, S.R.L.\nNuevo\n623 — Retenciones Estado 202607 — revisión fiscal\n1 / 1\nCargar período\nGenerado\nAprobado\nRequiere aprobación\nValidado\nBorrador\nNombre\n623 — Retenciones Estado 202607 — revisión fiscal\nTipo de reporte\n623 — Retenciones Estado\nCreado por\nAdministrator\nPeríodo YYYYMM\n202607\nDesde (período)\n01/07/2026\nHasta (período)\n31/07/2026\nRESUMEN REVISIÓN (DOCUMENTOS CARGADOS)\nTotal documentos\n0\nVálidos para exportar\n0\nIncompletos\n0\nExcluidos\n0\nAnulados\n0\nPendientes aprobación\n0\nExclusiones aprobadas\n0\nValidado por\nFecha validación\nAprobado por\nFecha aprobación\nHash Excel DGII\nTodos los documentos\nVálidos\nIncompletos\nExcluidos\nAnulados\nPendientes aprobación\nAprobados\nBitácora\nIncluir\n\t\nEstado fiscal\n\t\nDocumento\n\t\nTipo documento\n\t\nCliente / Proveedor\n\t\nRNC / Cédula\n\t\nTipo identificación\n\t\nNCF\n\t\nNCF modificado\n\t\nFecha\n\t\nMoneda\n\t\nTotal\n\t\nITBIS\n\t\nRetenciones\n\t\nMotivo de exclusión\n\t\nUsuario que excluyó\n\t\nFecha de exclusión\n\t\nEstado aprobación\n\t\nAprobado por\n\t\nFecha aprobación\n\t\t\n\n​\n​\n​\n​\n\t\nEnviar mensaje\nRegistrar una nota\nActividad\n1\nHoy\nAdministrator\n2:54 p. m.\n\n<b>Creación revisión</b><br/>Administrator — 2026-07-01 14:54:18<br/>Revisión fiscal creada por Administrator — período 202607.\n\nAdministrator\n2:54 p. m.\n\nEjecución de reporte fiscal DGII creado",
+      "has_partner": false,
+      "has_500": false,
+      "has_zero_docs": false,
+      "has_valid_line": false,
+      "line_count": 0
+    }
+  },
+  "conclusion": "FUNCTIONAL_BUG_623_EMPTY_WITH_CLEAN_DATA",
+  "ok": false,
+  "pass": false
+}

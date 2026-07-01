@@ -145,6 +145,8 @@ class JustechDoFiscalReportReview(models.Model):
             return self._review_lines_607()
         if self.report_type == "608":
             return self._review_lines_608()
+        if self.report_type == "623":
+            return self._review_lines_623()
         return []
 
     def _review_lines_dgii(self, exporter_model):
@@ -222,6 +224,9 @@ class JustechDoFiscalReportReview(models.Model):
             self._base_move_domain() + [("justech_do_ncf_voided", "=", True)]
         )
         return [self._prepare_line_vals_generic(move) for move in moves.filtered("justech_do_ncf")]
+
+    def _review_lines_623(self):
+        return self._review_lines_dgii("justech.do.dgii.623.exporter")
 
     def _prepare_line_vals_generic(self, move):
         itbis = self._move_itbis_amount(move)

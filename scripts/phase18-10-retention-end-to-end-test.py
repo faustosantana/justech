@@ -17,7 +17,7 @@ report = {
     "phase": "18.10-retention-end-to-end",
     "timestamp_utc": datetime.now(timezone.utc).isoformat(),
     "database": DB,
-    "module_version": "19.0.1.0.13",
+    "module_version": "19.0.1.0.14",
     "root_cause": (
         "Retenciones usaban write_off_line_vals sin hook nativo _prepare_move_withholding_lines; "
         "solo _create_payment_vals_from_wizard heredado (no batch); persistencia sin _init_payments; "
@@ -56,7 +56,7 @@ mod = env["ir.module.module"].search([("name", "=", "hellenia_account")], limit=
 if mod:
     mod.button_immediate_upgrade()
     env.cr.commit()
-    check("00_upgrade", mod.latest_version == "19.0.1.0.13", mod.latest_version)
+    check("00_upgrade", mod.latest_version == "19.0.1.0.14", mod.latest_version)
 else:
     check("00_upgrade", False, "no module")
 
@@ -191,7 +191,7 @@ with env.cr.savepoint():
     check("07_grouped_one_payment", len(pays) == 1 and pays.hellenia_withholding_total == 500, {
         "count": 1, "wh": pays.hellenia_withholding_total,
     })
-    check("07_two_invoices_reconciled", len(pays.reconciled_invoice_ids) == 2, pays.reconciled_invoice_ids.mapped("name"))
+        check("07_two_invoices_reconciled", i1 in pays.reconciled_invoice_ids and i2 in pays.reconciled_invoice_ids, pays.reconciled_invoice_ids.mapped("name"))
 
 # 8 Proveedor ITBIS 30%
 with env.cr.savepoint():

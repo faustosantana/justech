@@ -76,8 +76,8 @@ class AccountPaymentRegister(models.TransientModel):
         payment_vals["hellenia_withholding_line_ids"] = self._hellenia_persistent_withholding_commands(
             batch_result
         )
-        if payment_vals.get("amount") is not None:
-            payment_vals["amount"] = max(payment_vals["amount"] - wh_total, 0.0)
+        # Con _prepare_move_withholding_lines, Odoo resta la retención de la liquidez.
+        # payment.amount debe ser el bruto aplicado; el banco queda en neto automáticamente.
 
         # Evitar doble contabilización: retención va por _prepare_move_withholding_lines.
         payment_vals["write_off_line_vals"] = []

@@ -13,10 +13,10 @@ if DB != "hellenia_test":
     raise SystemExit(f"ABORT: solo hellenia_test, actual={DB}")
 
 REF = "P23-3-QUOTE"
-OUT_DIR = "/tmp/phase23-3-quotation-template"
-EVIDENCE_REPO = "/opt/odoo-projects/hellenia/evidence/phase23-3-quotation-template"
+OUT_DIR = "/evidence/phase23-3-quotation-template"
+if not os.path.isdir("/evidence"):
+    OUT_DIR = "/tmp/phase23-3-quotation-template"
 os.makedirs(OUT_DIR, exist_ok=True)
-os.makedirs(EVIDENCE_REPO, exist_ok=True)
 
 report = {
     "phase": "23.3-quotation-template",
@@ -173,11 +173,8 @@ def save_pdf(key, so, line_count):
     html = html_bytes.decode("utf-8", errors="replace")
 
     fname = f"quotation_{line_count}_product{'s' if line_count != 1 else ''}.pdf"
-    tmp_path = os.path.join(OUT_DIR, fname)
-    repo_path = os.path.join(EVIDENCE_REPO, fname)
-    with open(tmp_path, "wb") as f:
-        f.write(pdf_bytes)
-    with open(repo_path, "wb") as f:
+    path = os.path.join(OUT_DIR, fname)
+    with open(path, "wb") as f:
         f.write(pdf_bytes)
 
     report["quotations"][key] = {
@@ -189,8 +186,7 @@ def save_pdf(key, so, line_count):
     report["pdfs"][key] = {
         "status": "OK",
         "file": fname,
-        "path_tmp": tmp_path,
-        "path_repo": repo_path,
+        "path": path,
         "size_bytes": len(pdf_bytes),
     }
     validate_html(html, key)
@@ -241,7 +237,7 @@ report["failed_checks"] = failed
 report["pass"] = report["ok"] and len(failed) == 0
 report["ready_for_prod"] = False
 
-validation_path = os.path.join(EVIDENCE_REPO, "validation.json")
+validation_path = os.path.join(OUT_DIR, "validation.json")
 with open(validation_path, "w", encoding="utf-8") as f:
     json.dump(report, f, indent=2, ensure_ascii=False)
 

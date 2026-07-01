@@ -42,7 +42,7 @@
                             <field name="amount_untaxed" string="Base imponible" optional="show"/>
                             <field name="amount_tax" string="ITBIS facturado" optional="show"/>
                             <field name="amount_residual" string="Pendiente"/>
-                            <field name="amount_to_pay" string="Monto a aplicar"/>
+                            <field name="amount_to_pay" string="Monto a aplicar" force_save="1"/>
                             <field name="company_id" column_invisible="1"/>
                             <field name="move_scope_filter" column_invisible="1"/>
                             <field name="withholding_catalog_ids"

@@ -410,8 +410,44 @@ class HelleniaPaymentPartnerWizard(models.TransientModel):
             )
         return commands
 
+    def _effective_amount_to_pay(self, line):
+        """Monto aplicado real — fuente de verdad para account.payment.register."""
+        self.env.flush_all()
+        line = line.exists()
+        if not line:
+            raise UserError("La línea de factura ya no existe; reabra el wizard.")
+        amount = line.amount_to_pay or 0.0
+        residual = abs(line.move_id.amount_residual)
+        if amount <= 0:
+            raise UserError(f"Indique un monto a aplicar mayor que cero en {line.move_id.name}.")
+        if amount > residual + 0.01:
+            amount = residual
+        return amount, residual
+
+    def _register_vals_for_line(self, line, common):
+        """Arma vals para account.payment.register respetando abono parcial nativo Odoo."""
+        move = line.move_id
+        applied, residual = self._effective_amount_to_pay(line)
+        is_partial = applied < residual - 0.01
+        register_vals = {
+            **common,
+            "communication": self.communication or move.name,
+            "amount": applied,
+            "hellenia_withholding_line_ids": self._withholding_commands_for_line(line),
+        }
+        if is_partial:
+            register_vals.update(
+                {
+                    "custom_user_amount": applied,
+                    "custom_user_currency_id": line.currency_id.id,
+                    "payment_difference_handling": "open",
+                }
+            )
+        return register_vals, applied, is_partial
+
     def action_register_payments(self):
         self.ensure_one()
+        self.env.flush_all()
         selected = self.line_ids.filtered(lambda l: l.apply and l.amount_to_pay > 0)
         if not selected:
             raise UserError("Seleccione al menos una factura con monto a aplicar.")
@@ -422,28 +458,26 @@ class HelleniaPaymentPartnerWizard(models.TransientModel):
 
         payments = self.env["account.payment"]
         common = self._register_vals_common()
+        Register = self.env["account.payment.register"]
 
         for line in selected:
             move = line.move_id
             line._recompute_line_withholdings()
-            register_vals = {
-                **common,
-                "communication": self.communication or move.name,
-                "amount": line.amount_to_pay,
-                "hellenia_withholding_line_ids": self._withholding_commands_for_line(line),
-            }
-            if line.amount_to_pay < abs(move.amount_residual) - 0.01:
-                register_vals["custom_user_amount"] = line.amount_to_pay
-            register = (
-                self.env["account.payment.register"]
-                .with_context(active_model="account.move", active_ids=move.ids, dont_redirect_to_payments=True)
-                .create(register_vals)
-            )
-            if abs((register.amount or 0.0) - line.amount_to_pay) > 0.01:
+            register_vals, applied, is_partial = self._register_vals_for_line(line, common)
+            register = Register.with_context(
+                active_model="account.move",
+                active_ids=move.ids,
+                dont_redirect_to_payments=True,
+                hellenia_applied_amount=applied,
+            ).create(register_vals)
+            # Odoo _compute_amount puede resetear amount al residual si custom_user_amount no quedó fijado.
+            if is_partial or register.currency_id.compare_amounts(register.amount, applied) != 0:
                 register.write(
                     {
-                        "amount": line.amount_to_pay,
-                        "custom_user_amount": line.amount_to_pay,
+                        "amount": applied,
+                        "custom_user_amount": applied,
+                        "custom_user_currency_id": line.currency_id.id,
+                        "payment_difference_handling": "open",
                     }
                 )
             payments |= register._create_payments()

@@ -55,7 +55,7 @@ class AccountPaymentRegister(models.TransientModel):
                 wiz.hellenia_withholding_line_ids = [Command.clear()]
                 continue
             partner_type = wiz._hellenia_partner_type()
-            applied = wiz.amount or abs(move.amount_residual)
+            applied = wiz.custom_user_amount or wiz.amount or abs(move.amount_residual)
             details = [Command.clear()]
             for catalog in wiz.hellenia_withholding_catalog_ids:
                 if not catalog._applies_to_move(move, partner_type):
@@ -112,7 +112,7 @@ class AccountPaymentRegister(models.TransientModel):
 
     def _hellenia_apply_withholding_to_payment_vals(self, payment_vals, batch_result):
         """Retenciones vía hook nativo _prepare_move_withholding_lines."""
-        applied = self.amount or payment_vals.get("amount") or 0.0
+        applied = self.custom_user_amount or self.amount or payment_vals.get("amount") or 0.0
         if applied:
             payment_vals["hellenia_applied_amount"] = applied
 
@@ -165,7 +165,7 @@ class AccountPaymentRegister(models.TransientModel):
             if move and not pay.hellenia_application_line_ids:
                 wh_lines = pay.hellenia_withholding_line_ids.filtered(lambda w: w.move_id == move)
                 wh_amount = sum(wh_lines.mapped("amount"))
-                applied = pay.hellenia_applied_amount or self.amount or pay.amount
+                applied = pay.hellenia_applied_amount or self.custom_user_amount or self.amount or pay.amount
                 AppLine.create(
                     {
                         "payment_id": pay.id,

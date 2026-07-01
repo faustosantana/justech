@@ -1,7 +1,8 @@
 # Auditoría reportes fiscales y contables — Fase 21
 
-**Fecha:** 2026-07-01  
+**Fecha:** 2026-07-01 (actualización final pasada)  
 **Ambiente:** PROD `hellenia_prod` @ `https://odoo.hellenia.cloud`  
+**Módulo reportes:** `justech_l10n_do_reports` 19.0.1.12.2  
 **Backup previo:** `backups/hellenia-prod/2026-07-01_1357` (verificado: gzip, tar, custom, compose, .env)
 
 ---
@@ -11,13 +12,14 @@
 | Área | Estado auditoría |
 |------|-------------------|
 | Backup PROD | OK — restaurable |
-| 606 | Abre y valida — 0 compras en período 202607 (esperado) |
-| 607 | Abre, valida, 3 docs válidos jun-2026 — export Excel pendiente rol supervisor |
-| 608 | Abre y genera revisión |
-| 623 | **Corregido** apertura UI; genera revisión; **0 líneas exportables** por datos incompletos |
-| Reportes contables Odoo | Abren por URL nativa — export PDF/XLSX no certificado en esta pasada |
+| 606 | Abre, valida, genera — 0 compras en período (esperado) |
+| 607 | Abre, valida 3 docs jun-2026, genera sin RPC — export programático OK |
+| 608 | Abre y genera revisión fiscal |
+| 623 | Abre y genera tras fix v12.2; **0 líneas exportables** — datos incompletos |
+| Reportes contables Odoo | Abren desde UI; botones PDF/XLSX visibles; totales YTD cuadran |
+| Regresión pagos/retenciones | No ejecutada en esta pasada |
 
-**Resultado global: FAIL** (criterios PASS no cumplidos al 100 %)
+**Resultado global: FAIL** (criterios PASS completos no cumplidos)
 
 ---
 
@@ -35,6 +37,35 @@
 
 ---
 
+## Matriz funcional por reporte
+
+Leyenda: ✅ OK | ⚠️ Parcial | ❌ FAIL | — No aplica
+
+### Reportes DGII
+
+| Reporte | Abre UI | Filtra | Exporta | PDF | XLSX | Datos | Totales | Estado |
+|---------|---------|--------|---------|-----|------|-------|---------|--------|
+| 606 | ✅ | ✅ | ⚠️ | — | ⚠️ | ✅ (0 docs) | ✅ | Parcial |
+| 607 | ✅ | ✅ | ✅ | — | ⚠️ | ✅ (3 docs) | ⚠️ | Parcial |
+| 608 | ✅ | ✅ | ✅ | — | — | ✅ (0 anulados) | ✅ | Parcial |
+| 623 | ✅ | ✅ | ✅ revisión | — | ⚠️ | ❌ | ❌ | **FAIL** |
+
+### Reportes contables
+
+| Reporte | Abre UI | Filtra | Exporta | PDF btn | XLSX btn | Datos | Totales | Estado |
+|---------|---------|--------|---------|---------|----------|-------|---------|--------|
+| Diario general | ✅ | ⚠️ | ⚠️ | ✅ | ✅ | ⚠️ | ⚠️ | Parcial |
+| Mayor general | ✅ | ⚠️ | ⚠️ | ✅ | ✅ | ⚠️ | ⚠️ | Parcial |
+| Balance comprobación | ✅ | ⚠️ | ⚠️ | ✅ | ✅ | ✅ SQL | ✅ | Parcial |
+| Balance general | ✅ | ⚠️ | ⚠️ | ✅ | ✅ | ⚠️ | ⚠️ | Parcial |
+| Estado resultados | ✅ | ⚠️ | ⚠️ | ✅ | ✅ | ⚠️ | ⚠️ | Parcial |
+| Auxiliar clientes | ✅ | ⚠️ | ⚠️ | ✅ | ✅ | ⚠️ | ⚠️ | Parcial |
+| Auxiliar proveedores | — | — | — | — | — | — | — | Pendiente URL |
+| Antigüedad CxC | ✅ | ⚠️ | ⚠️ | ✅ | ✅ | ⚠️ | ⚠️ | Parcial |
+| Libro diario | ✅ | ⚠️ | ⚠️ | ✅ | ✅ | ⚠️ | ⚠️ | Parcial |
+
+---
+
 ## Reportes DGII (UI real — Playwright PROD)
 
 ### 606 — Compras (action-644)
@@ -42,73 +73,82 @@
 | Criterio | Resultado |
 |----------|-----------|
 | Abre desde UI | OK |
-| Filtra período | OK (`202607` / `202606`) |
-| Validar período | OK — "Sin documentos en el período" |
-| Generar Excel DGII | No visible para usuario `admin` (requiere `group_justech_do_fiscal_manager`) |
+| Validar período 202606 | OK — sin documentos |
+| Generar | OK — sin traceback |
 | Datos | 0 compras posted en PROD — coherente |
 
-Evidencia: `evidence/phase21-prod-reports/screenshots/606-*.png`
+Evidencia: `evidence/phase21-prod-reports/screenshots/dgii-606-*.png`
 
 ### 607 — Ventas (action-645)
 
 | Criterio | Resultado |
 |----------|-----------|
 | Abre desde UI | OK |
-| Validar período 202606 | OK — 3 válidos, 0 incompletos |
-| Generar Excel DGII | Botón visible tras validar; generación sin traceback tras fix `_get_exportable_lines` |
-| Datos | 3 facturas `INV/2026/00001–00003` (posted jun-2026) |
+| Validar período 202606 | OK — 3 válidos |
+| Generar Excel DGII | OK — sin RPC tras fix `_get_exportable_lines` |
+| Export programático | OK — `action_export_dgii` en odoo shell |
+| Datos | `INV/2026/00001`, `00002`, `00003` (posted jun-2026) |
 
-Evidencia: `evidence/phase21-prod-reports/screenshots/607-validate.png`, `607-generate.png`
+Evidencia: `evidence/phase21-prod-reports/screenshots/dgii-607-*.png`
 
 ### 608 — Anulados (action-646)
 
 | Criterio | Resultado |
 |----------|-----------|
 | Abre desde UI | OK |
-| Generar | OK — abre revisión fiscal sin error RPC |
-| Datos | Sin NCF anulados en período actual |
+| Generar | OK — revisión fiscal id 41 |
+| Datos | Sin NCF anulados en período |
 
 ### 623 — Retenciones Estado (action-658)
 
 | Criterio | Resultado |
 |----------|-----------|
-| Abre desde UI | **FAIL antes del fix** — `ValueError: Wrong value for report_type: '623'` |
-| Abre tras fix v12.2 | OK — wizard muestra "623 — Retenciones Estado" |
-| Generar | OK — crea `justech.do.fiscal.report` id 34 |
-| Cargar período | OK — ejecuta sin traceback |
-| Líneas exportables | **0** — datos reales incompletos (ver cadena abajo) |
+| Abre desde UI | OK tras fix v12.2 (antes: `ValueError: Wrong value for report_type: '623'`) |
+| Generar | OK — revisión fiscal id 42 |
+| Cargar período 202607 | OK — sin traceback |
+| Líneas exportables | **0** — validación DGII rechaza datos |
 
-#### Cadena de datos 623 (PROD real)
+#### Cadena de datos 623 (PROD real — SQL + odoo shell)
 
 | Eslabón | Valor | Notas |
 |---------|-------|-------|
-| Pago | `PBNKD/2026/00002` | date 2026-07-01 |
-| Retención persistente | `hellenia_payment_withholding_line` id 18 = **540.00** | |
-| Factura | `INV/2026/00003` | `justech_do_gov_withholding_amount` = **500.00** (discrepancia 40) |
-| Partner | `SMOKE P13.4 CF` | **sin RNC/vat** → estado fiscal `incomplete` |
-| Referencia pago | vacía | validación 623 exige cheque/transferencia |
-| Reporte 623 período 202607 | 0 válidos | coherente con validación DGII |
+| Pago | `PBNKD/2026/00002` (id 72) | fecha 2026-07-01, state=paid |
+| Retención persistente | línea id **18** = **540.00** | catálogo **RET-ITBIS-30** (`affects_623=false`) |
+| Línea contable | `account_move_line` id **354** | débito **540.00** — coincide con retención |
+| Factura | `INV/2026/00003` (id 25) | `justech_do_gov_withholding_amount` = **500.00** |
+| Partner | id **23** `SMOKE P13.4 CF` | **sin RNC/vat** → `incomplete` |
+| Referencia pago | vacía | fallback `payment.name` disponible en exportador |
+| Validación jul-2026 | 0 válidos, 2 incompletos | error: falta RNC |
 
-**Conclusión 623:** el motor abre y procesa; los montos no son certificables hasta completar datos maestros del partner y referencia de pago.
+**Discrepancia montos:** retención contable 540 (ITBIS 30%) vs campo gobierno en factura 500. No certificable sin alinear datos de prueba.
+
+**Conclusión 623:** motor operativo; falla certificación por **datos maestros** (RNC) y **inconsistencia** retención ITBIS vs monto gobierno en factura.
 
 ---
 
 ## Reportes contables Odoo Enterprise (UI)
 
-URLs probadas (abren sin 404 ni traceback):
+Auditoría Playwright 2026-07-01T14:12 UTC — todos abren sin RPC:
 
-| Reporte | URL | Abre |
-|---------|-----|------|
-| Diario general | `/odoo/accounting/general-ledger` | OK |
-| Balance de comprobación | `/odoo/accounting/trial-balance` | OK |
-| Balance general | `/odoo/accounting/balance-sheet` | OK |
-| Estado de resultados | `/odoo/accounting/profit-and-loss` | OK |
-| Libro mayor socios | `/odoo/accounting/partner-ledger` | OK |
-| Antigüedad CxC | `/odoo/accounting/aged-receivable` | OK |
+| Reporte | URL | Abre | PDF | XLSX |
+|---------|-----|------|-----|------|
+| Diario general | `/odoo/accounting/general-ledger` | OK | OK | OK |
+| Balance comprobación | `/odoo/accounting/trial-balance` | OK | OK | OK |
+| Balance general | `/odoo/accounting/balance-sheet` | OK | OK | OK |
+| Estado resultados | `/odoo/accounting/profit-and-loss` | OK | OK | OK |
+| Auxiliar socios | `/odoo/accounting/partner-ledger` | OK | OK | OK |
+| Antigüedad CxC | `/odoo/accounting/aged-receivable` | OK | OK | OK |
+| Libro diario | `/odoo/accounting/journal-report` | OK | OK | OK |
 
-Pendiente en esta fase: certificar filtros (mes/año/rango), export PDF/XLSX y totales vs mayor.
+### Validación contable SQL (YTD 2026)
 
-Evidencia: `evidence/phase21-prod-reports/screenshots/acct-*.png`
+| Métrica | Valor | Estado |
+|---------|-------|--------|
+| Asientos posted revisados | 7 | OK balanceados |
+| Suma débitos YTD | 70,800.00 | |
+| Suma créditos YTD | 70,800.00 | OK cuadra |
+
+Pendiente: descarga real PDF/XLSX, filtros mes/año/rango personalizado, auxiliar proveedores.
 
 ---
 
@@ -117,14 +157,18 @@ Evidencia: `evidence/phase21-prod-reports/screenshots/acct-*.png`
 | Filtro | Soportado |
 |--------|-----------|
 | Período YYYYMM | OK (`period_code`) |
-| Desde / Hasta | OK (derivados del período, editables vía onchange) |
+| Desde / Hasta | OK (derivados del período) |
 | Mes / año | OK vía `202606`, `202607` |
-| Fecha personalizada | Parcial — cambio de `period_code` recalcula fechas |
+| Fecha personalizada | Parcial — `period_code` recalcula fechas vía onchange |
 
 ---
 
 ## Evidencia
 
-- `evidence/phase21-prod-reports/ui-audit-v2.json`
-- `evidence/phase21-prod-reports/post-fix-audit.json`
-- `evidence/phase21-prod-reports/screenshots/`
+| Archivo | Descripción |
+|---------|-------------|
+| `evidence/phase21-prod-reports/ui-audit-full.json` | Auditoría UI completa post-fix |
+| `evidence/phase21-prod-reports/prod-data-audit-parsed.json` | Validación odoo shell |
+| `evidence/phase21-prod-reports/screenshots/` | Capturas UI |
+| `scripts/phase21-prod-ui-audit.py` | Script Playwright |
+| `scripts/phase21-prod-data-audit.py` | Script odoo shell |

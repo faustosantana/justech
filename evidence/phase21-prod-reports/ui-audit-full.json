@@ -1,0 +1,222 @@
+{
+  "phase": "21-prod-ui-full",
+  "timestamp_utc": "2026-07-01T14:12:29.053951+00:00",
+  "environment": "https://odoo.hellenia.cloud",
+  "database": "hellenia_prod",
+  "dgii": {
+    "login": {
+      "ok": true,
+      "detail": "admin",
+      "screenshot": "evidence/phase21-prod-reports/screenshots/login-ok.png"
+    },
+    "606_opens": {
+      "ok": true,
+      "detail": "https://odoo.hellenia.cloud/odoo/action-644",
+      "screenshot": "evidence/phase21-prod-reports/screenshots/dgii-606-open.png"
+    },
+    "606_wizard": {
+      "ok": true,
+      "detail": "visible labels",
+      "screenshot": ""
+    },
+    "606_validate": {
+      "ok": true,
+      "detail": "validated",
+      "screenshot": "evidence/phase21-prod-reports/screenshots/dgii-606-validate.png"
+    },
+    "607_opens": {
+      "ok": true,
+      "detail": "https://odoo.hellenia.cloud/odoo/action-645",
+      "screenshot": "evidence/phase21-prod-reports/screenshots/dgii-607-open.png"
+    },
+    "607_wizard": {
+      "ok": true,
+      "detail": "visible labels",
+      "screenshot": ""
+    },
+    "607_validate": {
+      "ok": true,
+      "detail": "validated",
+      "screenshot": "evidence/phase21-prod-reports/screenshots/dgii-607-validate.png"
+    },
+    "607_generate": {
+      "ok": true,
+      "detail": "https://odoo.hellenia.cloud/odoo/action-645",
+      "screenshot": "evidence/phase21-prod-reports/screenshots/dgii-607-generate.png"
+    },
+    "608_opens": {
+      "ok": true,
+      "detail": "https://odoo.hellenia.cloud/odoo/action-646",
+      "screenshot": "evidence/phase21-prod-reports/screenshots/dgii-608-open.png"
+    },
+    "608_wizard": {
+      "ok": true,
+      "detail": "visible labels",
+      "screenshot": ""
+    },
+    "608_generate": {
+      "ok": true,
+      "detail": "https://odoo.hellenia.cloud/odoo/29/justech.do.fiscal.report/41",
+      "screenshot": "evidence/phase21-prod-reports/screenshots/dgii-608-generate.png"
+    },
+    "623_opens": {
+      "ok": true,
+      "detail": "https://odoo.hellenia.cloud/odoo/action-658",
+      "screenshot": "evidence/phase21-prod-reports/screenshots/dgii-623-open.png"
+    },
+    "623_wizard": {
+      "ok": true,
+      "detail": "visible labels",
+      "screenshot": ""
+    },
+    "623_generate": {
+      "ok": true,
+      "detail": "https://odoo.hellenia.cloud/odoo/30/justech.do.fiscal.report/42",
+      "screenshot": "evidence/phase21-prod-reports/screenshots/dgii-623-generate.png"
+    }
+  },
+  "accounting": {
+    "general_ledger_opens": {
+      "ok": true,
+      "detail": "https://odoo.hellenia.cloud/odoo/accounting/general-ledger",
+      "screenshot": "evidence/phase21-prod-reports/screenshots/acct-general_ledger-open.png"
+    },
+    "general_ledger_content": {
+      "ok": true,
+      "detail": "chars=1047",
+      "screenshot": ""
+    },
+    "general_ledger_pdf_btn": {
+      "ok": true,
+      "detail": "count=1",
+      "screenshot": ""
+    },
+    "general_ledger_xlsx_btn": {
+      "ok": true,
+      "detail": "count=1",
+      "screenshot": ""
+    },
+    "trial_balance_opens": {
+      "ok": true,
+      "detail": "https://odoo.hellenia.cloud/odoo/accounting/trial-balance",
+      "screenshot": "evidence/phase21-prod-reports/screenshots/acct-trial_balance-open.png"
+    },
+    "trial_balance_content": {
+      "ok": true,
+      "detail": "chars=618",
+      "screenshot": ""
+    },
+    "trial_balance_pdf_btn": {
+      "ok": true,
+      "detail": "count=1",
+      "screenshot": ""
+    },
+    "trial_balance_xlsx_btn": {
+      "ok": true,
+      "detail": "count=1",
+      "screenshot": ""
+    },
+    "balance_sheet_opens": {
+      "ok": true,
+      "detail": "https://odoo.hellenia.cloud/odoo/accounting/balance-sheet",
+      "screenshot": "evidence/phase21-prod-reports/screenshots/acct-balance_sheet-open.png"
+    },
+    "balance_sheet_content": {
+      "ok": true,
+      "detail": "chars=1448",
+      "screenshot": ""
+    },
+    "balance_sheet_pdf_btn": {
+      "ok": true,
+      "detail": "count=1",
+      "screenshot": ""
+    },
+    "balance_sheet_xlsx_btn": {
+      "ok": true,
+      "detail": "count=1",
+      "screenshot": ""
+    },
+    "profit_loss_opens": {
+      "ok": true,
+      "detail": "https://odoo.hellenia.cloud/odoo/accounting/profit-and-loss",
+      "screenshot": "evidence/phase21-prod-reports/screenshots/acct-profit_loss-open.png"
+    },
+    "profit_loss_content": {
+      "ok": true,
+      "detail": "chars=779",
+      "screenshot": ""
+    },
+    "profit_loss_pdf_btn": {
+      "ok": true,
+      "detail": "count=1",
+      "screenshot": ""
+    },
+    "profit_loss_xlsx_btn": {
+      "ok": true,
+      "detail": "count=1",
+      "screenshot": ""
+    },
+    "partner_ledger_opens": {
+      "ok": true,
+      "detail": "https://odoo.hellenia.cloud/odoo/accounting/partner-ledger",
+      "screenshot": "evidence/phase21-prod-reports/screenshots/acct-partner_ledger-open.png"
+    },
+    "partner_ledger_content": {
+      "ok": true,
+      "detail": "chars=833",
+      "screenshot": ""
+    },
+    "partner_ledger_pdf_btn": {
+      "ok": true,
+      "detail": "count=1",
+      "screenshot": ""
+    },
+    "partner_ledger_xlsx_btn": {
+      "ok": true,
+      "detail": "count=1",
+      "screenshot": ""
+    },
+    "aged_receivable_opens": {
+      "ok": true,
+      "detail": "https://odoo.hellenia.cloud/odoo/accounting/aged-receivable",
+      "screenshot": "evidence/phase21-prod-reports/screenshots/acct-aged_receivable-open.png"
+    },
+    "aged_receivable_content": {
+      "ok": true,
+      "detail": "chars=999",
+      "screenshot": ""
+    },
+    "aged_receivable_pdf_btn": {
+      "ok": true,
+      "detail": "count=1",
+      "screenshot": ""
+    },
+    "aged_receivable_xlsx_btn": {
+      "ok": true,
+      "detail": "count=1",
+      "screenshot": ""
+    },
+    "journal_report_opens": {
+      "ok": true,
+      "detail": "https://odoo.hellenia.cloud/odoo/accounting/journal-report",
+      "screenshot": "evidence/phase21-prod-reports/screenshots/acct-journal_report-open.png"
+    },
+    "journal_report_content": {
+      "ok": true,
+      "detail": "chars=775",
+      "screenshot": ""
+    },
+    "journal_report_pdf_btn": {
+      "ok": true,
+      "detail": "count=1",
+      "screenshot": ""
+    },
+    "journal_report_xlsx_btn": {
+      "ok": true,
+      "detail": "count=1",
+      "screenshot": ""
+    }
+  },
+  "ok": true,
+  "pass": true
+}

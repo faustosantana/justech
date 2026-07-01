@@ -1,7 +1,8 @@
 # Fase 21 — Certificación reportes fiscales y contables
 
 **Versión reportes:** `justech_l10n_do_reports` 19.0.1.12.2  
-**Backup:** `2026-07-01_1357`  
+**Backup:** `backups/hellenia-prod/2026-07-01_1357`  
+**Fecha certificación:** 2026-07-01  
 **Estado:** **FAIL** — certificación parcial
 
 ---
@@ -21,23 +22,24 @@ Validar ciclo contable y fiscal con transacciones reales en PROD, sin modificar 
 ### Reportes DGII (UI PROD)
 | Reporte | Abre | Filtra | Exporta | Datos correctos | PASS |
 |---------|------|--------|---------|-----------------|------|
-| 606 | OK | OK | Pendiente Excel | 0 docs (vacío) | Parcial |
-| 607 | OK | OK | Sin traceback post-fix | 3 válidos jun-2026 | Parcial |
+| 606 | OK | OK | OK revisión | 0 docs (vacío) | Parcial |
+| 607 | OK | OK | OK post-fix | 3 válidos jun-2026 | Parcial |
 | 608 | OK | OK | OK revisión | 0 anulados | Parcial |
 | 623 | OK post-fix | OK | OK revisión | **0 válidos** (datos) | **FAIL** |
 
 ### Reportes contables Odoo
-| Reporte | Abre UI | Filtros | PDF/XLSX | Totales | PASS |
-|---------|---------|---------|----------|---------|------|
-| Diario general | OK | Pendiente | Pendiente | Pendiente | Parcial |
-| Mayor / Libro diario | OK | Pendiente | Pendiente | Pendiente | Parcial |
-| Balance comprobación | OK | Pendiente | Pendiente | Pendiente | Parcial |
-| Balance general | OK | Pendiente | Pendiente | Pendiente | Parcial |
-| Estado resultados | OK | Pendiente | Pendiente | Pendiente | Parcial |
-| Auxiliar clientes/proveedores | OK | Pendiente | Pendiente | Pendiente | Parcial |
-| Antigüedad saldos | OK | Pendiente | Pendiente | Pendiente | Parcial |
+| Reporte | Abre UI | Filtros | PDF/XLSX btn | Totales SQL | PASS |
+|---------|---------|---------|--------------|-------------|------|
+| Diario general | OK | Pendiente | Visible | Pendiente | Parcial |
+| Mayor / Libro diario | OK | Pendiente | Visible | Pendiente | Parcial |
+| Balance comprobación | OK | Pendiente | Visible | OK (70,800) | Parcial |
+| Balance general | OK | Pendiente | Visible | Pendiente | Parcial |
+| Estado resultados | OK | Pendiente | Visible | Pendiente | Parcial |
+| Auxiliar clientes | OK | Pendiente | Visible | Pendiente | Parcial |
+| Auxiliar proveedores | Pendiente | — | — | — | Pendiente |
+| Antigüedad saldos | OK | Pendiente | Visible | Pendiente | Parcial |
 
-### Regresión (no ejecutada completa en esta pasada)
+### Regresión (no ejecutada completa)
 - [ ] Pago parcial UI
 - [ ] Pago completo UI
 - [ ] Retenciones UI
@@ -46,13 +48,17 @@ Validar ciclo contable y fiscal con transacciones reales en PROD, sin modificar 
 
 ---
 
-## Cambios desplegados PROD
+## Correcciones desplegadas PROD
 
-| Módulo | Versión | Archivos |
-|--------|---------|----------|
-| `justech_l10n_do_reports` | 19.0.1.12.2 | `fiscal_report_wizard.py`, `fiscal_report.py`, `dgii_report_review.py` |
+| Módulo | Versión | Archivos | Justificación |
+|--------|---------|----------|---------------|
+| `justech_l10n_do_reports` | 19.0.1.12.2 | `fiscal_report_wizard.py` | Wizard rechazaba `report_type=623` |
+| | | `fiscal_report.py` | Faltaba `_get_exportable_lines()` |
+| | | `dgii_report_review.py` | Override filtro líneas válidas |
 
-**Justificación:** ver `docs/REPORTS_ROOT_CAUSE_ANALYSIS.md`.
+Detalle: `docs/REPORTS_ROOT_CAUSE_ANALYSIS.md`
+
+**No modificados:** wizard pagos, retenciones, conciliación.
 
 ---
 
@@ -62,19 +68,31 @@ Validar ciclo contable y fiscal con transacciones reales en PROD, sin modificar 
 |----------|--------|
 | Reporte abre desde UI | 606/607/608/623 OK tras fix |
 | Información correcta | 607 OK; 623 FAIL (datos) |
-| Montos = contabilidad | No certificado 623 |
-| Exporta PDF/XLSX | Pendiente certificación completa |
-| No rompe otros reportes | 607/608 OK post-fix |
+| Montos = contabilidad | 623 no certificado (540 vs 500; sin RNC) |
+| Exporta PDF/XLSX | Botones visibles; descarga no certificada |
+| No rompe otros reportes | 607/608/623 OK post-fix |
 | No rompe pagos/retenciones | No tocados |
 
 ---
 
-## Próximos pasos (operación / certificación)
+## Hallazgo 623 — decisión
 
-1. Completar datos fiscales partner canónico (RNC, ref pago) para certificar 623 end-to-end.
-2. Certificar export Excel/PDF 606/607 con supervisor fiscal en UI.
-3. Completar matriz contable (filtros + export + totales).
-4. Ejecutar regresión pagos/retenciones tras estabilizar reportes.
+| Aspecto | Conclusión |
+|---------|------------|
+| ¿Bug de código? | **No** — validación DGII opera correctamente |
+| Bloqueo | Partner sin RNC; datos de prueba inconsistentes |
+| Acción código | **Ninguna** (restricción Fase 21) |
+| Acción operativa | Completar RNC partner canónico; transacción gobierno 5% limpia |
+
+---
+
+## Próximos pasos (operación)
+
+1. Fusionar partners duplicados PROD (ids 21, 23 → 22) con autorización.
+2. Crear transacción 623 válida: partner con RNC, `RET-GOB-5`, referencia pago.
+3. Certificar descarga Excel 607/623 con rol supervisor fiscal.
+4. Completar matriz contable: filtros + export real + auxiliar proveedores.
+5. Ejecutar regresión pagos/retenciones tras estabilizar datos.
 
 ---
 

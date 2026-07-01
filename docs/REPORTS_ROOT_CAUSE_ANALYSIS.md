@@ -76,17 +76,31 @@ Factura `INV/2026/00003` con retención persistente:
 
 | Validación 623 | Estado |
 |----------------|--------|
-| `partner.vat` (RNC) | **Vacío** en `SMOKE P13.4 CF` |
+| `partner.vat` (RNC) | **Vacío** en `SMOKE P13.4 CF` (partner id **23**) |
 | `justech_do_dgii_fiscal_state` | `incomplete` |
-| Referencia pago | vacía en `PBNKD/2026/00002` |
-| Monto retención | 540 (línea) vs 500 (`justech_do_gov_withholding_amount`) — **discrepancia** |
+| Referencia pago | vacía en `PBNKD/2026/00002` (fallback `payment.name` sí disponible) |
+| Catálogo retención | **RET-ITBIS-30** (`affects_623=false`) — no es retención Estado |
+| Monto retención contable | **540.00** (`hellenia_payment_withholding_line` id 18 = `account_move_line` id 354) |
+| Monto campo gobierno factura | **500.00** (`justech_do_gov_withholding_amount`) — **discrepancia 40** |
 
 **Archivo validación:** `dgii_623_exporter.py` → `_dgii_validate_single_move` líneas 217–251.
 
+**Validación odoo shell jul-2026:** `valid=0`, `incomplete=2`. Error explícito: *"INV/2026/00003: la entidad SMOKE P13.4 CF no tiene RNC."*
+
+### Cadena verificada (SQL PROD)
+
+```
+Pago PBNKD/2026/00002
+  → Retención línea 18: 540.00 RET-ITBIS-30
+  → Asiento línea 354: débito 540.00 ✓ (cuadra)
+  → Factura INV/2026/00003: gov_withholding 500.00 ✗ (no cuadra con 540)
+  → Reporte 623: 0 exportables (RNC + datos inconsistentes)
+```
+
 ### Acción requerida (datos maestros / operación)
-- Asignar RNC al partner canónico de prueba.
-- Completar referencia de pago en wizard de pagos.
-- Reconciliar montos 500 vs 540 antes de certificar cadena 623.
+- Asignar RNC al partner canónico de prueba (id 22, no duplicado 23).
+- Registrar transacción con catálogo **RET-GOB-5** (5% Gobierno), no ITBIS 30%.
+- Alinear `justech_do_gov_withholding_amount` con línea persistente antes de certificar.
 
 **No se modificó** lógica de retenciones en esta fase (sin causa demostrada en código).
 

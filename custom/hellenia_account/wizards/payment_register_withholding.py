@@ -130,7 +130,8 @@ class AccountPaymentRegister(models.TransientModel):
         return payment_vals
 
     def _create_payment_vals_from_wizard(self, batch_result):
-        self._hellenia_rebuild_register_withholding_lines()
+        if self.hellenia_withholding_catalog_ids:
+            self._hellenia_rebuild_register_withholding_lines()
         vals = super()._create_payment_vals_from_wizard(batch_result)
         return self._hellenia_apply_withholding_to_payment_vals(vals, batch_result)
 

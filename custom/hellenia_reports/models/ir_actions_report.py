@@ -32,7 +32,7 @@ class IrActionsReport(models.Model):
     def _render_qweb_html(self, report_ref, res_ids=None, data=None):
         report = self._get_report(report_ref)
         report = self._hellenia_quotation_redirect_report(report, res_ids)
-        return super()._render_qweb_html(report.report_name, res_ids=res_ids, data=data)
+        return super()._render_qweb_html(report.report_name, res_ids, data=data)
 
     def _build_wkhtmltopdf_args(
         self,

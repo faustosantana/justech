@@ -369,19 +369,19 @@
                         <table class="hq-fld-table" cellpadding="0" cellspacing="0">
                             <tr>
                                 <td class="hq-fld-lbl">Cliente</td>
-                                <td class="hq-fld-val" t-field="doc.partner_id.name"/>
+                                <td class="hq-fld-val"><span t-field="doc.partner_id.name"/></td>
                             </tr>
                             <tr t-if="doc.partner_id.vat">
                                 <td class="hq-fld-lbl">RNC</td>
-                                <td class="hq-fld-val" t-field="doc.partner_id.vat"/>
+                                <td class="hq-fld-val"><span t-field="doc.partner_id.vat"/></td>
                             </tr>
                             <tr t-if="doc.partner_id.phone">
                                 <td class="hq-fld-lbl">Teléfono</td>
-                                <td class="hq-fld-val" t-field="doc.partner_id.phone"/>
+                                <td class="hq-fld-val"><span t-field="doc.partner_id.phone"/></td>
                             </tr>
                             <tr t-if="doc.partner_id.email">
                                 <td class="hq-fld-lbl">Correo</td>
-                                <td class="hq-fld-val" t-field="doc.partner_id.email"/>
+                                <td class="hq-fld-val"><span t-field="doc.partner_id.email"/></td>
                             </tr>
                         </table>
                     </td>
@@ -396,7 +396,7 @@
                         <table class="hq-fld-table" cellpadding="0" cellspacing="0">
                             <tr t-if="doc.user_id">
                                 <td class="hq-fld-lbl">Vendedor</td>
-                                <td class="hq-fld-val" t-field="doc.user_id.name"/>
+                                <td class="hq-fld-val"><span t-field="doc.user_id.name"/></td>
                             </tr>
                         </table>
                         <div class="hq-pay-block">

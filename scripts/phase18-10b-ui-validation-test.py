@@ -223,7 +223,7 @@ with env.cr.savepoint():
     l1.write({"apply": True, "amount_to_pay": abs(i1.amount_residual)})
     l2.write({"apply": True, "amount_to_pay": abs(i2.amount_residual), "withholding_catalog_ids": [Command.set(cat_itbis.ids)]})
     l2._recompute_line_withholdings()
-    w.line_ids.filtered(lambda l: l.move_id not in (i1 | i2)).write({"apply": False})
+    wiz.line_ids.filtered(lambda l: l.move_id not in (i1 | i2)).write({"apply": False})
     selected = wiz.line_ids.filtered("apply")
     wiz.action_register_payments()
     pay = Payment.search([("partner_id", "=", vendor.id)], order="id desc", limit=1)

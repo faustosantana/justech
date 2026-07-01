@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <!-- Template premium exclusivo para cotizaciones (draft / sent) -->
+    <!-- Cotizacion Hellenia — layout table-based compatible wkhtmltopdf -->
     <template id="hellenia_quotation_document">
         <t t-set="doc" t-value="doc.with_context(lang=doc.partner_id.lang)"/>
         <t t-set="company" t-value="doc.company_id"/>
         <t t-set="lines_to_report" t-value="doc._get_order_lines_to_report()"/>
-        <t t-set="salesperson_partner" t-value="doc.user_id.partner_id if doc.user_id else False"/>
+        <t t-set="sp" t-value="doc.user_id.partner_id if doc.user_id else False"/>
         <t t-set="hellenia_default_quotation_terms">(a) Las piezas ofrecidas son únicas y sujetas a disponibilidad.
 (b) Esta cotización tiene una validez de 5 días.
 (c) Se requiere confirmación del pago del 100% para reservar la pieza.
@@ -14,171 +14,318 @@
 (e) Asesoría de colocación, instalación y styling disponible bajo cotización.
 (f) Las piezas pueden presentar marcas propias del tiempo, lo cual forma parte de su carácter y autenticidad.</t>
 
-        <div class="page hellenia-quote-page">
-            <!-- Encabezado -->
-            <div class="hellenia-quote-header row">
-                <div class="col-5 hellenia-quote-logo-col">
-                    <img t-if="company.logo"
-                         class="hellenia-quote-logo"
-                         t-att-src="image_data_uri(company.logo)"
-                         alt="Hellenia"/>
-                </div>
-                <div class="col-7 hellenia-quote-company text-end">
-                    <div class="hellenia-quote-company-name" t-field="company.name"/>
-                    <div class="hellenia-quote-company-line" t-if="company.partner_id.street or company.partner_id.city">
-                        <span t-if="company.partner_id.street" t-field="company.partner_id.street"/>
-                        <t t-if="company.partner_id.street and company.partner_id.city">, </t>
-                        <span t-if="company.partner_id.city" t-field="company.partner_id.city"/>
-                    </div>
-                    <div class="hellenia-quote-company-line" t-if="company.vat">
-                        <strong>RNC:</strong> <span t-field="company.vat"/>
-                    </div>
-                    <div class="hellenia-quote-company-line" t-if="company.phone">
-                        <strong>Tel.:</strong> <span t-field="company.phone"/>
-                    </div>
-                    <div class="hellenia-quote-company-line" t-if="company.email">
-                        <strong>Correo:</strong> <span t-field="company.email"/>
-                    </div>
-                    <div class="hellenia-quote-company-line" t-if="company.website">
-                        <strong>Web:</strong> <span t-field="company.website"/>
-                    </div>
-                </div>
-            </div>
+        <div class="hellenia-quote-page">
+            <style type="text/css">
+                .hellenia-quote-page {
+                    font-family: 'DejaVu Sans', Helvetica, Arial, sans-serif;
+                    font-size: 10pt;
+                    color: #2d2d2d;
+                    line-height: 1.45;
+                }
+                .hellenia-quote-page table { border-collapse: collapse; }
+                .hellenia-quote-logo {
+                    max-height: 90px;
+                    max-width: 260px;
+                    width: auto;
+                    height: auto;
+                    display: block;
+                }
+                .hellenia-quote-hdr-right {
+                    font-size: 9pt;
+                    color: #5c5c5c;
+                    text-align: right;
+                    vertical-align: top;
+                    line-height: 1.5;
+                }
+                .hellenia-quote-company-name {
+                    font-size: 12pt;
+                    font-weight: bold;
+                    color: #3E4827;
+                    margin-bottom: 4px;
+                }
+                .hellenia-quote-band {
+                    background-color: #3E4827;
+                    color: #ffffff;
+                    margin: 16px 0;
+                }
+                .hellenia-quote-band td { padding: 10px 14px; vertical-align: middle; }
+                .hellenia-quote-band-title {
+                    font-size: 13pt;
+                    font-weight: bold;
+                    letter-spacing: 2px;
+                }
+                .hellenia-quote-num-box {
+                    background-color: #ffffff;
+                    color: #3E4827;
+                    font-weight: bold;
+                    font-size: 11pt;
+                    padding: 6px 12px;
+                    text-align: center;
+                    display: inline-block;
+                }
+                .hellenia-quote-label {
+                    font-size: 8pt;
+                    text-transform: uppercase;
+                    color: #8a8a8a;
+                    font-weight: bold;
+                    letter-spacing: 0.5px;
+                }
+                .hellenia-quote-value {
+                    font-size: 10pt;
+                    font-weight: bold;
+                    color: #2d2d2d;
+                    padding-top: 2px;
+                }
+                .hellenia-quote-box {
+                    border: 1px solid #e5e5e5;
+                    padding: 12px 14px;
+                    vertical-align: top;
+                }
+                .hellenia-quote-box-title {
+                    font-size: 8pt;
+                    font-weight: bold;
+                    text-transform: uppercase;
+                    color: #3E4827;
+                    border-bottom: 1px solid #e5e5e5;
+                    padding-bottom: 6px;
+                    margin-bottom: 8px;
+                    letter-spacing: 0.5px;
+                }
+                .hellenia-quote-field-label {
+                    font-size: 8pt;
+                    color: #8a8a8a;
+                    font-weight: bold;
+                    text-transform: uppercase;
+                    padding-top: 4px;
+                }
+                .hellenia-quote-field-value {
+                    font-size: 9pt;
+                    color: #2d2d2d;
+                    padding-bottom: 2px;
+                }
+                .hellenia-quote-items {
+                    width: 100%;
+                    margin: 16px 0;
+                }
+                .hellenia-quote-items th {
+                    background-color: #3E4827;
+                    color: #ffffff;
+                    font-size: 8pt;
+                    font-weight: bold;
+                    text-transform: uppercase;
+                    padding: 8px 8px;
+                    border: 1px solid #3E4827;
+                }
+                .hellenia-quote-items td {
+                    padding: 7px 8px;
+                    border-bottom: 1px solid #e5e5e5;
+                    font-size: 9pt;
+                    vertical-align: top;
+                }
+                .hellenia-quote-items .num { text-align: center; width: 30px; }
+                .hellenia-quote-items .qty,
+                .hellenia-quote-items .price,
+                .hellenia-quote-items .sub { text-align: right; white-space: nowrap; }
+                .hellenia-quote-totals {
+                    width: 280px;
+                    margin-left: auto;
+                    margin-bottom: 18px;
+                }
+                .hellenia-quote-totals td {
+                    padding: 5px 10px;
+                    font-size: 9pt;
+                    border-bottom: 1px solid #e5e5e5;
+                }
+                .hellenia-quote-totals .lbl { color: #5c5c5c; }
+                .hellenia-quote-totals .val { text-align: right; font-weight: bold; }
+                .hellenia-quote-totals .grand td {
+                    background-color: #f8f9f6;
+                    border: 1px solid #c8c8c8;
+                    font-size: 11pt;
+                    font-weight: bold;
+                    color: #3E4827;
+                    padding: 8px 10px;
+                }
+                .hellenia-quote-conditions {
+                    border: 1px solid #e5e5e5;
+                    padding: 12px 14px;
+                    margin-bottom: 20px;
+                }
+                .hellenia-quote-conditions-title {
+                    font-size: 8pt;
+                    font-weight: bold;
+                    text-transform: uppercase;
+                    color: #3E4827;
+                    margin-bottom: 8px;
+                    letter-spacing: 0.5px;
+                }
+                .hellenia-quote-conditions-body {
+                    font-size: 8.5pt;
+                    color: #5c5c5c;
+                    line-height: 1.5;
+                    white-space: pre-line;
+                }
+                .hellenia-quote-footer {
+                    border-top: 2px solid #3E4827;
+                    padding-top: 10px;
+                    font-size: 8pt;
+                    color: #5c5c5c;
+                    text-align: center;
+                }
+            </style>
 
-            <!-- Banda de título -->
-            <div class="hellenia-quote-title-band" style="background-color: #3E4827;">
-                <div class="hellenia-quote-title-band-inner">
-                    <span class="hellenia-quote-title-icon" aria-hidden="true">
-                        <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor">
-                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm-1 2l5 5h-5V4zM8 13h8v2H8v-2zm0 4h8v2H8v-2z"/>
-                        </svg>
-                    </span>
-                    <span class="hellenia-quote-title-text">COTIZACIÓN</span>
-                    <div class="hellenia-quote-number-box">
-                        <span class="hellenia-quote-number-label">No.</span>
-                        <span class="hellenia-quote-number-value" t-field="doc.name"/>
-                    </div>
-                </div>
-            </div>
+            <!-- Encabezado -->
+            <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom: 18px;">
+                <tr>
+                    <td width="42%" valign="top" style="padding-right: 12px;">
+                        <img t-if="company.logo"
+                             class="hellenia-quote-logo"
+                             t-att-src="image_data_uri(company.logo)"
+                             alt="Hellenia"/>
+                    </td>
+                    <td width="58%" valign="top" class="hellenia-quote-hdr-right">
+                        <div class="hellenia-quote-company-name" t-field="company.name"/>
+                        <div t-if="company.partner_id.street">
+                            <span t-field="company.partner_id.street"/>
+                            <t t-if="company.partner_id.city">, <span t-field="company.partner_id.city"/></t>
+                        </div>
+                        <div t-if="company.vat"><strong>RNC:</strong> <span t-field="company.vat"/></div>
+                        <div t-if="company.phone"><strong>Tel.:</strong> <span t-field="company.phone"/></div>
+                        <div t-if="company.email"><strong>Correo:</strong> <span t-field="company.email"/></div>
+                        <div t-if="company.website"><strong>Web:</strong> <span t-field="company.website"/></div>
+                    </td>
+                </tr>
+            </table>
+
+            <!-- Banda titulo -->
+            <table width="100%" cellpadding="0" cellspacing="0" class="hellenia-quote-band">
+                <tr>
+                    <td class="hellenia-quote-band-title">COTIZACI&#211;N</td>
+                    <td align="right">
+                        <span class="hellenia-quote-num-box">No. <span t-field="doc.name"/></span>
+                    </td>
+                </tr>
+            </table>
 
             <!-- Fechas -->
-            <div class="hellenia-quote-dates row">
-                <div class="col-6" t-if="doc.date_order">
-                    <div class="hellenia-quote-date-label">Fecha de Cotización</div>
-                    <div class="hellenia-quote-date-value">
-                        <span t-out="doc.date_order.strftime('%d/%m/%Y') if doc.date_order else ''"/>
-                    </div>
-                </div>
-                <div class="col-6" t-if="doc.validity_date">
-                    <div class="hellenia-quote-date-label">Vencimiento / Validez</div>
-                    <div class="hellenia-quote-date-value">
-                        <span t-out="doc.validity_date.strftime('%d/%m/%Y') if doc.validity_date else ''"/>
-                    </div>
-                </div>
-            </div>
+            <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom: 16px;">
+                <tr>
+                    <td width="50%" valign="top" t-if="doc.date_order">
+                        <div class="hellenia-quote-label">Fecha de Cotizaci&#243;n</div>
+                        <div class="hellenia-quote-value">
+                            <span t-out="doc.date_order.strftime('%d/%m/%Y') if doc.date_order else ''"/>
+                        </div>
+                    </td>
+                    <td width="50%" valign="top" t-if="doc.validity_date">
+                        <div class="hellenia-quote-label">Vencimiento / Validez</div>
+                        <div class="hellenia-quote-value">
+                            <span t-out="doc.validity_date.strftime('%d/%m/%Y') if doc.validity_date else ''"/>
+                        </div>
+                    </td>
+                </tr>
+            </table>
 
-            <!-- Tarjetas cliente / vendedor -->
-            <div class="row hellenia-quote-cards">
-                <div class="col-6">
-                    <div class="hellenia-card">
-                        <div class="hellenia-card-title">INFORMACIÓN DEL CLIENTE</div>
-                        <div class="hellenia-card-row">
-                            <span class="hellenia-card-label">Cliente</span>
-                            <span class="hellenia-card-value" t-field="doc.partner_id.name"/>
-                        </div>
-                        <div class="hellenia-card-row" t-if="doc.partner_id.street or doc.partner_id.city or doc.partner_id.country_id">
-                            <span class="hellenia-card-label">Dirección</span>
-                            <span class="hellenia-card-value">
-                                <span t-field="doc.partner_id"
-                                      t-options='{"widget": "contact", "fields": ["address"], "no_marker": true}'/>
-                            </span>
-                        </div>
-                        <div class="hellenia-card-row" t-if="doc.partner_id.vat">
-                            <span class="hellenia-card-label">RNC</span>
-                            <span class="hellenia-card-value" t-field="doc.partner_id.vat"/>
-                        </div>
-                        <div class="hellenia-card-row" t-if="doc.partner_id.phone">
-                            <span class="hellenia-card-label">Teléfono</span>
-                            <span class="hellenia-card-value" t-field="doc.partner_id.phone"/>
-                        </div>
-                        <div class="hellenia-card-row" t-if="doc.partner_id.email">
-                            <span class="hellenia-card-label">Correo</span>
-                            <span class="hellenia-card-value" t-field="doc.partner_id.email"/>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-6">
-                    <div class="hellenia-card">
-                        <div class="hellenia-card-title">INFORMACIÓN DEL VENDEDOR</div>
-                        <div class="hellenia-card-row" t-if="doc.user_id">
-                            <span class="hellenia-card-label">Vendedor</span>
-                            <span class="hellenia-card-value" t-field="doc.user_id.name"/>
-                        </div>
-                        <div class="hellenia-card-row" t-if="salesperson_partner and salesperson_partner.phone">
-                            <span class="hellenia-card-label">Teléfono</span>
-                            <span class="hellenia-card-value" t-field="salesperson_partner.phone"/>
-                        </div>
-                        <div class="hellenia-card-row" t-if="doc.user_id and doc.user_id.email">
-                            <span class="hellenia-card-label">Correo</span>
-                            <span class="hellenia-card-value" t-field="doc.user_id.email"/>
-                        </div>
-                        <div class="hellenia-quote-payment-terms">
-                            <div class="hellenia-card-title hellenia-card-title-sub">TÉRMINOS DE PAGO</div>
-                            <div class="hellenia-card-row" t-if="doc.payment_term_id">
-                                <span class="hellenia-card-label">Condiciones de Pago</span>
-                                <span class="hellenia-card-value" t-field="doc.payment_term_id.name"/>
+            <!-- Cliente / Vendedor -->
+            <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom: 16px;">
+                <tr>
+                    <td width="49%" valign="top" class="hellenia-quote-box" style="padding-right: 8px;">
+                        <div class="hellenia-quote-box-title">INFORMACI&#211;N DEL CLIENTE</div>
+                        <div class="hellenia-quote-field-label">Cliente</div>
+                        <div class="hellenia-quote-field-value" t-field="doc.partner_id.name"/>
+                        <t t-if="doc.partner_id.street or doc.partner_id.city">
+                            <div class="hellenia-quote-field-label">Direcci&#243;n</div>
+                            <div class="hellenia-quote-field-value">
+                                <span t-if="doc.partner_id.street" t-field="doc.partner_id.street"/>
+                                <t t-if="doc.partner_id.street and doc.partner_id.city">, </t>
+                                <span t-if="doc.partner_id.city" t-field="doc.partner_id.city"/>
+                                <t t-if="doc.partner_id.country_id">, <span t-field="doc.partner_id.country_id.name"/></t>
                             </div>
-                            <div class="hellenia-card-row" t-if="doc.validity_date">
-                                <span class="hellenia-card-label">Vencimiento</span>
-                                <span class="hellenia-card-value">
-                                    <span t-out="doc.validity_date.strftime('%d/%m/%Y') if doc.validity_date else ''"/>
-                                </span>
+                        </t>
+                        <t t-if="doc.partner_id.vat">
+                            <div class="hellenia-quote-field-label">RNC</div>
+                            <div class="hellenia-quote-field-value" t-field="doc.partner_id.vat"/>
+                        </t>
+                        <t t-if="doc.partner_id.phone">
+                            <div class="hellenia-quote-field-label">Tel&#233;fono</div>
+                            <div class="hellenia-quote-field-value" t-field="doc.partner_id.phone"/>
+                        </t>
+                        <t t-if="doc.partner_id.email">
+                            <div class="hellenia-quote-field-label">Correo</div>
+                            <div class="hellenia-quote-field-value" t-field="doc.partner_id.email"/>
+                        </t>
+                    </td>
+                    <td width="2%"></td>
+                    <td width="49%" valign="top" class="hellenia-quote-box">
+                        <div class="hellenia-quote-box-title">INFORMACI&#211;N DEL VENDEDOR</div>
+                        <t t-if="doc.user_id">
+                            <div class="hellenia-quote-field-label">Vendedor</div>
+                            <div class="hellenia-quote-field-value" t-field="doc.user_id.name"/>
+                        </t>
+                        <t t-if="sp and sp.phone">
+                            <div class="hellenia-quote-field-label">Tel&#233;fono</div>
+                            <div class="hellenia-quote-field-value" t-field="sp.phone"/>
+                        </t>
+                        <t t-if="doc.user_id and doc.user_id.email">
+                            <div class="hellenia-quote-field-label">Correo</div>
+                            <div class="hellenia-quote-field-value" t-field="doc.user_id.email"/>
+                        </t>
+                        <div class="hellenia-quote-box-title" style="margin-top: 12px;">T&#201;RMINOS DE PAGO</div>
+                        <t t-if="doc.payment_term_id">
+                            <div class="hellenia-quote-field-label">Condiciones de Pago</div>
+                            <div class="hellenia-quote-field-value" t-field="doc.payment_term_id.name"/>
+                        </t>
+                        <t t-if="doc.validity_date">
+                            <div class="hellenia-quote-field-label">Vencimiento</div>
+                            <div class="hellenia-quote-field-value">
+                                <span t-out="doc.validity_date.strftime('%d/%m/%Y') if doc.validity_date else ''"/>
                             </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                        </t>
+                    </td>
+                </tr>
+            </table>
 
-            <!-- Tabla de productos -->
-            <table class="hellenia-items-table">
+            <!-- Productos -->
+            <table class="hellenia-quote-items" cellpadding="0" cellspacing="0">
                 <thead>
                     <tr>
-                        <th class="hellenia-col-num">#</th>
-                        <th class="hellenia-col-desc">DESCRIPCIÓN</th>
-                        <th class="hellenia-col-qty text-end">CANTIDAD</th>
-                        <th class="hellenia-col-price text-end">PRECIO UNITARIO</th>
-                        <th class="hellenia-col-subtotal text-end">SUBTOTAL</th>
+                        <th class="num">#</th>
+                        <th>DESCRIPCI&#211;N</th>
+                        <th class="qty">CANTIDAD</th>
+                        <th class="price">PRECIO UNITARIO</th>
+                        <th class="sub">SUBTOTAL</th>
                     </tr>
                 </thead>
                 <tbody>
                     <t t-set="product_line_num" t-value="0"/>
                     <t t-foreach="lines_to_report" t-as="line">
                         <t t-if="line.display_type == 'line_section'">
-                            <tr class="hellenia-line-section">
-                                <td colspan="5"><strong t-field="line.name"/></td>
+                            <tr>
+                                <td colspan="5" style="background-color: #f8f9f6; font-weight: bold; color: #3E4827;">
+                                    <span t-field="line.name"/>
+                                </td>
                             </tr>
                         </t>
                         <t t-elif="line.display_type == 'line_note'">
-                            <tr class="hellenia-line-note">
-                                <td colspan="5"><em t-field="line.name"/></td>
+                            <tr>
+                                <td colspan="5" style="font-style: italic; color: #5c5c5c; font-size: 8.5pt;">
+                                    <span t-field="line.name"/>
+                                </td>
                             </tr>
                         </t>
                         <t t-elif="not line.display_type and not line.is_downpayment">
                             <t t-set="product_line_num" t-value="product_line_num + 1"/>
-                            <tr class="hellenia-line-product">
-                                <td class="text-center">
-                                    <span t-out="product_line_num"/>
-                                </td>
+                            <tr>
+                                <td class="num"><span t-out="product_line_num"/></td>
                                 <td><span t-field="line.name"/></td>
-                                <td class="text-end text-nowrap">
+                                <td class="qty">
                                     <span t-field="line.product_uom_qty"/>
-                                    <span t-if="line.product_uom_id" t-field="line.product_uom_id"/>
+                                    <t t-if="line.product_uom_id"> <span t-field="line.product_uom_id"/></t>
                                 </td>
-                                <td class="text-end text-nowrap">
+                                <td class="price">
                                     <span t-field="line.price_unit"
                                           t-options="{'widget': 'monetary', 'display_currency': doc.currency_id}"/>
                                 </td>
-                                <td class="text-end text-nowrap">
+                                <td class="sub">
                                     <span t-field="line.price_subtotal"
                                           t-options="{'widget': 'monetary', 'display_currency': doc.currency_id}"/>
                                 </td>
@@ -189,69 +336,54 @@
             </table>
 
             <!-- Totales -->
-            <div class="hellenia-totals">
-                <table class="hellenia-totals-table">
-                    <tr>
-                        <td class="hellenia-totals-label">Subtotal</td>
-                        <td class="hellenia-totals-value text-end">
-                            <span t-field="doc.amount_untaxed"
-                                  t-options="{'widget': 'monetary', 'display_currency': doc.currency_id}"/>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="hellenia-totals-label">ITBIS</td>
-                        <td class="hellenia-totals-value text-end">
-                            <span t-field="doc.amount_tax"
-                                  t-options="{'widget': 'monetary', 'display_currency': doc.currency_id}"/>
-                        </td>
-                    </tr>
-                    <tr class="hellenia-totals-grand">
-                        <td class="hellenia-totals-label">Total</td>
-                        <td class="hellenia-totals-value text-end">
-                            <span t-field="doc.amount_total"
-                                  t-options="{'widget': 'monetary', 'display_currency': doc.currency_id}"/>
-                        </td>
-                    </tr>
-                </table>
-            </div>
+            <table class="hellenia-quote-totals" cellpadding="0" cellspacing="0" align="right">
+                <tr>
+                    <td class="lbl">Subtotal</td>
+                    <td class="val">
+                        <span t-field="doc.amount_untaxed"
+                              t-options="{'widget': 'monetary', 'display_currency': doc.currency_id}"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="lbl">ITBIS</td>
+                    <td class="val">
+                        <span t-field="doc.amount_tax"
+                              t-options="{'widget': 'monetary', 'display_currency': doc.currency_id}"/>
+                    </td>
+                </tr>
+                <tr class="grand">
+                    <td class="lbl">Total</td>
+                    <td class="val">
+                        <span t-field="doc.amount_total"
+                              t-options="{'widget': 'monetary', 'display_currency': doc.currency_id}"/>
+                    </td>
+                </tr>
+            </table>
+
+            <div style="clear: both; height: 1px; margin-bottom: 16px;"></div>
 
             <!-- Condiciones -->
-            <div class="hellenia-conditions">
-                <div class="hellenia-conditions-title">CONDICIONES</div>
+            <div class="hellenia-quote-conditions">
+                <div class="hellenia-quote-conditions-title">CONDICIONES</div>
                 <t t-if="doc.note">
-                    <div class="hellenia-conditions-body" t-field="doc.note"/>
+                    <div class="hellenia-quote-conditions-body" t-field="doc.note"/>
                 </t>
                 <t t-else="">
-                    <div class="hellenia-conditions-body hellenia-conditions-plain"
+                    <div class="hellenia-quote-conditions-body"
                          t-out="company.hellenia_quotation_terms or hellenia_default_quotation_terms"/>
                 </t>
             </div>
 
-            <!-- Pie de página contacto -->
-            <div class="hellenia-footer-contact" style="border-top-color: #3E4827;">
-                <span t-if="company.phone" class="hellenia-footer-item">
-                    <span class="hellenia-footer-icon" aria-hidden="true">☎</span>
-                    <span t-field="company.phone"/>
-                </span>
-                <span t-if="company.website" class="hellenia-footer-sep">|</span>
-                <span t-if="company.website" class="hellenia-footer-item">
-                    <span class="hellenia-footer-icon" aria-hidden="true">🌐</span>
-                    <span t-field="company.website"/>
-                </span>
-                <span t-if="company.email" class="hellenia-footer-sep">|</span>
-                <span t-if="company.email" class="hellenia-footer-item">
-                    <span class="hellenia-footer-icon" aria-hidden="true">✉</span>
-                    <span t-field="company.email"/>
-                </span>
-                <span class="hellenia-footer-sep">|</span>
-                <span class="hellenia-footer-item hellenia-footer-location">
-                    Santo Domingo, República Dominicana
-                </span>
+            <!-- Pie -->
+            <div class="hellenia-quote-footer">
+                <t t-if="company.phone">Tel: <span t-field="company.phone"/></t>
+                <t t-if="company.website"> | Web: <span t-field="company.website"/></t>
+                <t t-if="company.email"> | Correo: <span t-field="company.email"/></t>
+                | Santo Domingo, Rep&#250;blica Dominicana
             </div>
         </div>
     </template>
 
-    <!-- Cotizaciones usan template premium; pedidos confirmados mantienen el estándar -->
     <template id="report_saleorder_raw_hellenia_quotation" inherit_id="sale.report_saleorder_raw">
         <xpath expr="//t[@t-call='sale.report_saleorder_document']" position="replace">
             <t t-if="doc.state in ['draft', 'sent']"

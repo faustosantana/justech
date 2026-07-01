@@ -12,9 +12,12 @@
 
 | Métrica | Resultado |
 |---------|-----------|
-| **TEST** | **PASS** |
+| **TEST (certificación 18.3)** | **PASS** (2026-06-30) |
+| **TEST (cálculo 18.4)** | **PASS** — ver `docs/PHASE18_4_WITHHOLDING_CALCULATION_FIX.md` |
 | Checks certificación | **23 / 23** |
 | Producción | **NO promover** sin aprobación explícita |
+
+> **Nota 18.4:** Corrección del cálculo ITBIS (100% retenía RD$324 en lugar de RD$1,800). Validado en TEST 2026-07-01. No sustituye certificación 18.3; la complementa.
 
 ---
 

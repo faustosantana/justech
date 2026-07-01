@@ -82,19 +82,29 @@ Los wizards fiscales `justech.do.fiscal.report.wizard` siguen generando correcta
 
 ## Reglas de negocio
 
-1. **No se inventan tasas** — siempre desde impuestos `l10n_do`.
-2. **ITBIS 30/100/75%** se calculan sobre ITBIS facturado.
-3. **ISR 5/10/2%** se calculan sobre base imponible (salvo configuración explícita de otra base).
+1. **No se inventan tasas** — impuestos `l10n_do` vinculados al catálogo; porcentaje nominal documentado en catálogo.
+2. **ITBIS 30/100/75%** — `ITBIS facturado × tasa nominal` (Fase 18.4).
+3. **ISR 5/10/2%** — `base imponible × tasa nominal`.
 4. Retención desactivada **no aparece** en selector ni afecta pagos.
 5. Total retenido no puede superar monto a aplicar.
+
+### Ejemplo corregido (Fase 18.4)
+
+Factura RD$10,000 + ITBIS RD$1,800:
+
+| Retención | Cálculo | Monto |
+|-----------|---------|-------|
+| ITBIS 100% | 1,800 × 100% | RD$1,800 |
+| ITBIS 30% | 1,800 × 30% | RD$540 |
+| ISR 2% | 10,000 × 2% | RD$200 |
 
 ---
 
 ## Listo para producción
 
-**No.** Requiere:
+**No.** Fase 18.4 corrige cálculo ITBIS en TEST. Requiere:
 
-1. PASS completo en `hellenia_test`
+1. PASS completo en `hellenia_test` (cálculo 18.4 validado 2026-07-01)
 2. Aprobación explícita del usuario
 3. Backup PROD antes de promoción
 4. `-u hellenia_account` + `docker compose restart odoo` en TEST/PROD

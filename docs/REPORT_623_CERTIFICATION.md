@@ -1,48 +1,36 @@
-# Certificación reporte 623 — Fase 18.10
+# Certificación — Reporte 623 (Fase 18.13)
 
-## Alcance
+## Menú
 
-Formato DGII 623 — retenciones del Estado (5% Gobierno).
+**Contabilidad → Reportes → Reportes DGII → 623 — Retenciones Estado**
 
-## Fuente de datos (post 18.10)
+Test `19_623_menu`: PASS
 
-1. **Primaria:** `hellenia.payment.withholding.line` con `affects_623=True`
-2. **Secundaria:** `account.payment.justech_do_gov_withholding_amount`
-3. **Legacy:** líneas impuesto `-5% ISR Gov.` en factura
+## Fuente de datos
 
-## Exportador
+1. `hellenia.payment.withholding.line` con `affects_623=True` OR código `RET-GOB-5` / `wh_isr_gov`
+2. Stamp en `account.move` post-conciliación (`justech_do_gov_withholding_amount`)
+3. Exportador `justech.do.dgii.623.exporter`
 
-`justech.do.dgii.623.exporter`:
-- `_persistent_gov_lines()` — busca líneas persistentes
-- `_has_gov_withholding()` — incluye pagos reconciliados
-- `_gov_amount()` — suma líneas persistentes primero
-- `classify_moves()` — incluye facturas con líneas persistentes 623
-
-## Campos requeridos por fila 623
+## Campos validados para Retención 5% Gobierno
 
 | Campo | Fuente |
 |-------|--------|
-| RNC entidad | `partner.vat` |
-| Fecha retención | línea persistente `date` o pago |
-| Monto | `amount` línea persistente |
-| Referencia pago | `hellenia_payment_reference` / cheque |
+| Fecha | `payment.date` / `justech_do_gov_retention_date` |
+| Cliente/RNC | `partner_id.vat` |
+| Factura / NCF | `move_id` / `justech_do_ncf` |
+| Pago | `payment.name` como referencia fallback |
+| Base | Línea persistente `base_amount` |
+| % | `rate` del catálogo |
+| Monto retenido | `amount` línea persistente |
+| Cuenta contable | `account_id` |
+| Asiento origen | `payment_move_id` / `move_line_id` |
 
-## Validación
+## Test PASS
 
-Caso `12_623` en certificación 18.10:
-- Reporte con líneas exportables
-- `_has_gov_withholding` = True
-- `_gov_amount` >= 500
+- `19_623_lines` — líneas generadas, `gov_amt >= 500`
+- `19_623_amount_col` — columna revisión muestra monto retención (no total factura)
 
-## Limitaciones conocidas (P0 si fallan)
+## Evidencia
 
-- Pagos sin pasar por wizard Hellenia: sin líneas persistentes → 623 vacío
-- Referencia bancaria obligatoria DGII: sin `hellenia_payment_reference` → documento incompleto
-- Período mensual YYYYMM: usar `justech.do.dgii.period`, no YTD
-
-## Estado implementación
-
-**Implementado** lectura desde líneas persistentes.  
-**Pendiente validación manual UI** en TEST tras deploy 19.0.1.0.13.
-
-No marcar PASS producción hasta verificación manual del Excel 623 en período actual.
+`evidence/phase18-13-final-payment-retention-test.json` → `evidence.623`

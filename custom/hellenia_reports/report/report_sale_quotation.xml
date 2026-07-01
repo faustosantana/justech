@@ -186,16 +186,16 @@
                     line-height: 1px;
                 }
                 .hellenia-quote-bottom-spacer td {
-                    max-height: 255px !important;
+                    max-height: 180px !important;
                     overflow: hidden;
                 }
                 .hellenia-quote-conditions ~ table.hellenia-quote-bottom-spacer td {
-                    max-height: 40px !important;
+                    max-height: 20px !important;
                 }
                 .hellenia-quote-conditions {
                     border: 1px solid #e5e5e5;
-                    padding: 8px 10px;
-                    margin-bottom: 10px;
+                    padding: 6px 8px;
+                    margin-bottom: 6px;
                 }
                 .hellenia-quote-conditions-title {
                     font-size: 7pt;
@@ -206,9 +206,9 @@
                     letter-spacing: 0.4px;
                 }
                 .hellenia-quote-conditions-body {
-                    font-size: 8pt;
+                    font-size: 7.5pt;
                     color: #5c5c5c;
-                    line-height: 1.4;
+                    line-height: 1.35;
                     white-space: pre-line;
                 }
                 .hellenia-quote-signatures {

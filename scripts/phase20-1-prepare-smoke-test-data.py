@@ -16,6 +16,8 @@ PARTNER_ID = 2361
 PARTNER_REF = "SMOKE-P134-CF-2361"
 BASE, TOTAL = 10000.0, 11800.0
 EVIDENCE = Path("/workspace/evidence/phase20-1")
+if not EVIDENCE.parent.exists():
+    EVIDENCE = Path("/tmp/evidence/phase20-1")
 EVIDENCE.mkdir(parents=True, exist_ok=True)
 
 report = {

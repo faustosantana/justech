@@ -42,17 +42,22 @@ Reescritura controlada del wizard manteniendo vista, menú, acciones y UX. Cambi
 **Impacto:** autocomplete por nombre selecciona id 23 (sin facturas) → wizard vacío.  
 **Acción requerida:** fusionar 21 y 23 en 22, o marcar ref único (`SMOKE-P134-CF-22`). Playwright usa `partner_id` explícito.
 
-## Validación pendiente
+## Validación (2026-07-01 TEST v27)
 
 | Criterio | Estado |
 |----------|--------|
-| Playwright UI 3 facturas / parcial RD$5,000 | Pendiente TEST |
-| Video flujo | Pendiente |
-| Logs servidor | Pendiente |
-| Asiento contable | Pendiente |
-| Conciliación | Pendiente |
+| Playwright: wizard limpio al cargar (apply=False, amount=0) | **OK** |
+| Playwright: parcial RD$5,000 solo factura A | **OK** |
+| Video flujo | `evidence/phase20-1/video/` |
+| Capturas | `evidence/phase20-1/screenshots/01-06` |
+| Logs servidor | `docker logs hellenia-test-odoo-1` 13:24:14 UTC |
+| Conciliación parcial | `account.partial.reconcile` id 2359 = 5000 |
+| Factura A partial / B,C not_paid | **OK** (INV/00212/00213/00214) |
 | Retención 5% Gobierno | Pendiente |
+| Pago completo | Pendiente |
 | Reporte 607 / 623 / PDF | Pendiente |
+
+**Estado global: NO PASS** — faltan retenciones, 607, 623 y PDF.
 
 ## Despliegue
 

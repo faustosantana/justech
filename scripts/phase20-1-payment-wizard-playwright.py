@@ -106,7 +106,7 @@ def select_partner_by_id(page):
 
 def set_row_apply(page, row_index, checked):
     rows = page.locator(".o_field_x2many_list .o_data_row")
-    cell = rows.nth(row_index).locator('[name="apply"]')
+    cell = rows.nth(row_index).locator('td[name="apply"]')
     cell.click(force=True)
     page.wait_for_timeout(600)
     state = count_apply(page)

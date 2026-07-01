@@ -89,24 +89,6 @@ Catalog = env["hellenia.withholding.catalog"]
 Catalog.sync_catalog_from_taxes(company)
 env.cr.commit()
 
-# Smoke directo: create register con referencia (reproduce el RPC_ERROR original)
-if bnkd:
-    ml = bnkd.inbound_payment_method_line_ids[:1]
-    try:
-        Register.with_context(active_model="account.move", active_ids=[]).create(
-            {
-                "journal_id": bnkd.id,
-                "payment_method_line_id": ml.id,
-                "payment_date": date.today(),
-                "hellenia_payment_reference": "SMOKE-REGISTER-REF",
-            }
-        )
-        check("02b_register_create_reference", True, "no ValueError")
-    except ValueError as exc:
-        check("02b_register_create_reference", False, str(exc)[:200])
-else:
-    check("02b_register_create_reference", False, "BNKD missing")
-
 
 def _cat(code):
     return Catalog.search([("code", "=", code), ("company_id", "=", company.id)], limit=1)
@@ -172,8 +154,31 @@ def _pay_via_wizard(partner, inv, partner_type, ref, amount=None, cats=None):
     return pay
 
 
-# --- Flujos solicitados ---
+def _register_vals_common(ref):
+    ml = bnkd.inbound_payment_method_line_ids[:1]
+    return {
+        "journal_id": bnkd.id,
+        "payment_method_line_id": ml.id,
+        "payment_date": date.today(),
+        "hellenia_payment_reference": ref,
+        "hellenia_card_auth": "AUTH-SMOKE",
+        "hellenia_check_number": "CHK-001",
+    }
+
+
+# Smoke: register_vals del wizard sobre factura real (reproduce RPC_ERROR original)
 ref_tag = f"P191-{DB[-4:]}"
+inv_smoke = _inv(customer, journal_sale, tax_sale, "out_invoice", f"{ref_tag}-SMOKE")
+ml = bnkd.inbound_payment_method_line_ids[:1]
+try:
+    Register.with_context(
+        active_model="account.move", active_ids=inv_smoke.ids, dont_redirect_to_payments=True
+    ).create({**_register_vals_common(f"{ref_tag}-SMOKE-REF"), "amount": abs(inv_smoke.amount_residual)})
+    check("02b_register_create_reference", True, "no ValueError")
+except ValueError as exc:
+    check("02b_register_create_reference", False, str(exc)[:200])
+
+# --- Flujos solicitados ---
 inv1 = _inv(customer, journal_sale, tax_sale, "out_invoice", f"{ref_tag}-FULL")
 pay1 = _pay_via_wizard(customer, inv1, "customer", f"{ref_tag}-FULL-NOWH")
 check("03_no_wh_payment", bool(pay1), pay1.name if pay1 else "")

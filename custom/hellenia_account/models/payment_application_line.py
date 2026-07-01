@@ -99,14 +99,36 @@ class AccountPaymentApplication(models.Model):
         }
         return labels.get(move.payment_state, move.payment_state or "")
 
+    def _hellenia_invoices_from_payment(self):
+        """Facturas vinculadas al pago vía campos Odoo o conciliaciones."""
+        self.ensure_one()
+        moves = self.reconciled_invoice_ids | self.reconciled_bill_ids
+        if moves:
+            return moves
+        moves = self.hellenia_withholding_line_ids.mapped("move_id")
+        if moves:
+            return moves
+        if not self.move_id:
+            return self.env["account.move"]
+        valid_types = self._get_valid_payment_account_types()
+        pay_lines = self.move_id.line_ids.filtered(lambda l: l.account_id.account_type in valid_types)
+        found = self.env["account.move"]
+        invoice_types = ("out_invoice", "out_refund", "in_invoice", "in_refund")
+        for pay_line in pay_lines:
+            for partial in pay_line.matched_debit_ids | pay_line.matched_credit_ids:
+                other = (
+                    partial.debit_move_id
+                    if partial.credit_move_id == pay_line
+                    else partial.credit_move_id
+                )
+                if other.move_id.move_type in invoice_types:
+                    found |= other.move_id
+        return found
+
     def _hellenia_sync_application_lines(self):
         AppLine = self.env["hellenia.payment.application.line"]
         for pay in self.filtered(lambda p: p.state == "posted"):
-            moves = pay.reconciled_invoice_ids | pay.reconciled_bill_ids
-            if not moves:
-                moves = pay.hellenia_withholding_line_ids.mapped("move_id")
-            if not moves and pay.hellenia_applied_amount:
-                moves = pay.hellenia_withholding_line_ids.mapped("move_id")
+            moves = pay._hellenia_invoices_from_payment()
             pay.hellenia_application_line_ids.unlink()
             if not moves:
                 continue
@@ -116,6 +138,8 @@ class AccountPaymentApplication(models.Model):
                 applied = pay._hellenia_applied_amount_for_invoice(move)
                 if not applied and pay.hellenia_applied_amount and len(moves) == 1:
                     applied = pay.hellenia_applied_amount
+                if not applied:
+                    applied = pay.amount
                 AppLine.create(
                     {
                         "payment_id": pay.id,

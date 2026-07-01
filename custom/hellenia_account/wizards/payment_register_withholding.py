@@ -91,19 +91,39 @@ class AccountPaymentRegister(models.TransientModel):
         vals = super()._create_payment_vals_from_batch(batch_result)
         return self._hellenia_apply_withholding_to_payment_vals(vals, batch_result)
 
-    def _hellenia_finalize_persistent_lines(self, payments, batch_result):
+    def _hellenia_finalize_persistent_lines(self, payment, batch_result):
         """Garantiza persistencia y vínculos contables post-create."""
         move = self._hellenia_invoice_for_batch(batch_result)
         WhLine = self.env["hellenia.payment.withholding.line"]
-        for payment in payments:
-            if not payment.hellenia_withholding_line_ids:
+        AppLine = self.env["hellenia.payment.application.line"]
+        for pay in payment:
+            if not pay.hellenia_withholding_line_ids:
                 for wh in self.hellenia_withholding_line_ids:
                     if not wh.amount:
                         continue
-                    WhLine.create({"payment_id": payment.id, **self._hellenia_persistent_vals(wh, move)})
-            payment._hellenia_link_withholding_move_lines()
-            payment._hellenia_link_partial_reconciles()
-            payment._hellenia_sync_application_lines()
+                    WhLine.create({"payment_id": pay.id, **self._hellenia_persistent_vals(wh, move)})
+            if move and not pay.hellenia_application_line_ids:
+                wh_lines = pay.hellenia_withholding_line_ids.filtered(lambda w: w.move_id == move)
+                wh_amount = sum(wh_lines.mapped("amount"))
+                applied = pay.hellenia_applied_amount or self.amount or pay.amount
+                AppLine.create(
+                    {
+                        "payment_id": pay.id,
+                        "move_id": move.id,
+                        "invoice_name": move.name,
+                        "ncf": getattr(move, "justech_do_ncf", "") or "",
+                        "invoice_date": move.invoice_date,
+                        "invoice_total": move.amount_total,
+                        "applied_amount": applied,
+                        "withholding_labels": ", ".join(filter(None, wh_lines.mapped("label"))),
+                        "withholding_amount": wh_amount,
+                        "net_amount": applied - wh_amount,
+                        "reconciliation_state": "Pendiente",
+                    }
+                )
+            pay._hellenia_link_withholding_move_lines()
+            pay._hellenia_link_partial_reconciles()
+            pay._hellenia_sync_application_lines()
 
     def _init_payments(self, to_process, edit_mode=False):
         payments = super()._init_payments(to_process, edit_mode=edit_mode)

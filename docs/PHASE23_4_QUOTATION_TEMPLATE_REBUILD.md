@@ -2,7 +2,7 @@
 
 **Fecha:** 2026-07-01  
 **Base de datos:** `hellenia_test`  
-**Módulo:** `hellenia_reports` 19.0.1.5.0
+**Módulo:** `hellenia_reports` 19.0.1.5.1
 
 ## Objetivo
 
@@ -11,7 +11,9 @@ Reconstrucción completa del QWeb de cotización siguiendo la imagen de referenc
 ## Cambios (solo template cotización)
 
 - Header limpio: logo grande izquierda, empresa derecha, sin cajas ni líneas verticales
-- Banda verde `#3E4827` con número en caja oscura
+- Banda verde `#3E4827` con separador vertical blanco y número a la derecha
+- Campos cliente/vendedor en filas label | valor (sin cajas grises)
+- Términos de pago: "Contado" o "Crédito a XX días"
 - Cliente: solo Cliente, RNC, Teléfono, Correo
 - Vendedor: solo Vendedor + Términos de pago (sin email/tel interno)
 - Tabla SAP-style: encabezado verde, filas con aire, líneas suaves

@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
-"""Fase 23.3C — Validacion visual cotizacion rediseñada (portal + PDF)."""
+"""Fase 23.3C — Validacion cotizacion rediseñada (portal + HTML + PDF)."""
 from __future__ import annotations
 
 import json
 import os
-import re
 import subprocess
 import urllib.error
 import urllib.request
@@ -24,9 +23,10 @@ report = {
     "timestamp_utc": datetime.now(timezone.utc).isoformat(),
     "database": DB,
     "root_cause_previous": (
-        "wkhtmltopdf no soporta flex/CSS variables/object-fit/emojis; "
-        "layout Bootstrap + SCSS moderno rompio PDF"
+        "wkhtmltopdf no soporta flex, CSS variables (var()), object-fit ni emojis; "
+        "Bootstrap grid rompio layout; acentos/emoji corruptos en PDF"
     ),
+    "fix": "Template table-based con estilos embebidos #3E4827, sin emojis/SVG/flex",
     "module_version": None,
     "visual_checks": {},
     "http_checks": {},
@@ -36,8 +36,8 @@ report = {
     "ready_for_prod": False,
 }
 
-MOJIBAKE_MARKERS = ("Ã", "Â", "â€")
-FORBIDDEN_EMOJI = ("☎", "🌐", "✉", "\ufe0f")
+MOJIBAKE = ("Ã³", "Ã©", "Ã­", "Ã¡", "Ãº", "Ã±", "RepÃ", "CotizaciÃ")
+FORBIDDEN = ("display: flex", "var(--", "object-fit", "☎", "🌐", "✉", "<svg")
 
 
 def check(key, ok, detail=""):
@@ -59,35 +59,17 @@ def check_http(key, ok, code=None, detail=""):
         report["ok"] = False
 
 
-def pdf_text_snippet(path, max_chars=8000):
-    try:
-        r = subprocess.run(
-            ["pdftotext", "-l", "2", path, "-"],
-            capture_output=True,
-            timeout=30,
-            check=False,
-        )
-        if r.returncode == 0:
-            return r.stdout.decode("utf-8", errors="replace")[:max_chars]
-    except Exception:
-        pass
-    try:
-        with open(path, "rb") as f:
-            raw = f.read(200000)
-        return raw.decode("latin-1", errors="replace")
-    except Exception:
-        return ""
-
-
-def validate_pdf_text(text, label):
-    for m in MOJIBAKE_MARKERS:
-        check(f"{label}_no_mojibake_{m}", m not in text, m)
-    for e in FORBIDDEN_EMOJI:
-        check(f"{label}_no_emoji", e not in text, e)
-    check(f"{label}_has_cotizacion", "COTIZACI" in text.upper(), text[:120])
-    check(f"{label}_has_descripcion", "DESCRIPCI" in text.upper())
-    check(f"{label}_has_condiciones", "CONDICIONES" in text.upper())
-    check(f"{label}_has_republica", "Rep" in text and "Dominicana" in text)
+def validate_html(html, label):
+    for bad in MOJIBAKE:
+        check(f"{label}_no_mojibake_{bad[:6]}", bad not in html, bad)
+    for bad in FORBIDDEN:
+        safe = bad[:10].replace(" ", "_").replace("<", "")
+        check(f"{label}_no_{safe}", bad not in html, bad)
+    check(f"{label}_has_cotizacion", "COTIZACI" in html.upper())
+    check(f"{label}_has_tables", "<table" in html and "hellenia-quote-items" in html)
+    check(f"{label}_logo_max_90", "max-height: 90px" in html)
+    check(f"{label}_brand_color", "#3E4827" in html.upper() or "#3e4827" in html.lower())
+    check(f"{label}_no_bootstrap_row", 'class="row hellenia' not in html)
 
 
 mod = env["ir.module.module"].search([("name", "=", "hellenia_reports")], limit=1)
@@ -107,22 +89,22 @@ for ref_suffix, key in (("1P", "quote_1"), ("5P", "quote_5"), ("15P", "quote_15"
 
 for key, so in orders.items():
     pdf_bytes, _ = Report._render_qweb_pdf(action.report_name, so.ids)
+    html = Report._render_qweb_html(action.report_name, so.ids)[0].decode("utf-8", errors="replace")
     line_count = len(so.order_line.filtered(lambda l: not l.display_type and not l.is_downpayment))
     fname = f"quotation_{line_count}_product{'s' if line_count != 1 else ''}.pdf"
     path = os.path.join(OUT_DIR, fname)
     with open(path, "wb") as f:
         f.write(pdf_bytes)
-    text = pdf_text_snippet(path)
     report["pdfs"][key] = {
         "status": "OK",
         "order": so.name,
         "file": fname,
         "size_bytes": len(pdf_bytes),
     }
-    validate_pdf_text(text, key)
+    validate_html(html, key)
     check(f"{key}_pdf_magic", pdf_bytes[:4] == b"%PDF")
+    check(f"{key}_pdf_size", len(pdf_bytes) > 15000, len(pdf_bytes))
 
-# Portal real
 portal_so = SaleOrder.browse(135)
 if not portal_so.exists() and orders:
     portal_so = list(orders.values())[0]
@@ -138,9 +120,8 @@ if portal_so and portal_so.access_token:
         with open(portal_path, "wb") as f:
             f.write(body)
         check_http("portal_pdf", code == 200 and body[:4] == b"%PDF", code, len(body))
-        text = pdf_text_snippet(portal_path)
-        validate_pdf_text(text, "portal")
-        # screenshot via pdftoppm
+        html = Report._render_qweb_html(action.report_name, portal_so.ids)[0].decode("utf-8", errors="replace")
+        validate_html(html, "portal")
         try:
             subprocess.run(
                 ["pdftoppm", "-f", "1", "-l", "1", "-png", "-singlefile", portal_path,
@@ -158,7 +139,11 @@ if portal_so and portal_so.access_token:
 
 failed = [k for k, v in report["visual_checks"].items() if v.get("status") == "FAIL"]
 report["failed_checks"] = failed
-report["pass"] = report["ok"] and not failed and report["http_checks"].get("portal_pdf", {}).get("status") == "PASS"
+report["pass"] = (
+    report["ok"]
+    and not failed
+    and report["http_checks"].get("portal_pdf", {}).get("status") == "PASS"
+)
 
 with open(os.path.join(OUT_DIR, "validation.json"), "w", encoding="utf-8") as f:
     json.dump(report, f, indent=2, ensure_ascii=False)

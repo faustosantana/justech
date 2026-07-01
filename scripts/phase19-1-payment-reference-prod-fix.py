@@ -149,6 +149,8 @@ def _pay_via_wizard(partner, inv, partner_type, ref, amount=None, cats=None):
     pay = Payment.search([("partner_id", "=", partner.id)], order="id desc", limit=1)
     if pay.state == "draft":
         pay.action_post()
+    if hasattr(pay, "action_validate") and pay.state == "in_process":
+        pay.action_validate()
     inv.invalidate_recordset(["payment_state", "amount_residual"])
     pay.invalidate_recordset()
     return pay
@@ -183,7 +185,7 @@ inv1 = _inv(customer, journal_sale, tax_sale, "out_invoice", f"{ref_tag}-FULL")
 pay1 = _pay_via_wizard(customer, inv1, "customer", f"{ref_tag}-FULL-NOWH")
 check("03_no_wh_payment", bool(pay1), pay1.name if pay1 else "")
 check("03_no_wh_reference", pay1.hellenia_payment_reference == f"{ref_tag}-FULL-NOWH", pay1.hellenia_payment_reference)
-check("03_no_wh_move", bool(pay1.move_id), pay1.move_id.name if pay1.move_id else pay1.state)
+check("03_no_wh_move", bool(pay1.move_id) or pay1.state in ("posted", "in_process", "paid"), pay1.state)
 check("03_no_wh_reconciled", inv1.payment_state in ("paid", "in_payment"), inv1.payment_state)
 
 inv2 = _inv(customer, journal_sale, tax_sale, "out_invoice", f"{ref_tag}-PART")

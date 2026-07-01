@@ -61,8 +61,15 @@
       "size_bytes": 63332
     },
     "09_recibo_pago": {
-      "status": "SKIP",
-      "detail": "no record"
+      "status": "OK",
+      "record": "PBNKD/2026/00027",
+      "record_id": 1500,
+      "path": "/tmp/phase23-sample-pdfs/09_recibo_pago.pdf",
+      "size_bytes": 67600,
+      "invoice": "INV/2026/00214",
+      "ncf": "B0200020173",
+      "withholding_total": 500.0,
+      "net_transfer": 11300.0
     },
     "10_estado_cuenta_cliente": {
       "status": "OK",
@@ -78,5 +85,108 @@
       "note": "followup letter for vendor partner"
     }
   },
-  "ok": true
+  "ok": true,
+  "phase23_1": {
+    "phase": "23.1-payment-receipt-visual",
+    "timestamp_utc": "2026-07-01T17:09:24.124822+00:00",
+    "database": "hellenia_test",
+    "visual_checks": {
+      "01_invoice_found": {
+        "status": "PASS",
+        "detail": "INV/2026/00214"
+      },
+      "02_payment_paid": {
+        "status": "PASS",
+        "detail": "PBNKD/2026/00027 state=paid"
+      },
+      "03_spanish_title": {
+        "status": "PASS",
+        "detail": "True"
+      },
+      "04_no_payment_receipt_en": {
+        "status": "PASS",
+        "detail": "False"
+      },
+      "05_cliente": {
+        "status": "PASS",
+        "detail": "SMOKE P13.4 CF"
+      },
+      "06_factura": {
+        "status": "PASS",
+        "detail": "INV/2026/00214"
+      },
+      "07_ncf_label": {
+        "status": "PASS",
+        "detail": "0"
+      },
+      "08_ncf_value": {
+        "status": "PASS",
+        "detail": "B0200020173"
+      },
+      "09_metodo_pago": {
+        "status": "PASS",
+        "detail": "Manual Payment"
+      },
+      "10_monto_aplicado": {
+        "status": "PASS",
+        "detail": "True"
+      },
+      "11_neto_recibido": {
+        "status": "PASS",
+        "detail": "True"
+      },
+      "12_usuario_audit": {
+        "status": "PASS",
+        "detail": "OdooBot"
+      },
+      "13_brand_class": {
+        "status": "PASS",
+        "detail": "True"
+      },
+      "14_logo": {
+        "status": "PASS",
+        "detail": "logo present"
+      },
+      "15_retenciones_section": {
+        "status": "PASS",
+        "detail": "1"
+      },
+      "16_total_retenido": {
+        "status": "PASS",
+        "detail": "500.0"
+      },
+      "17_wh_326": {
+        "status": "PASS",
+        "detail": "500.0"
+      },
+      "18_no_english_labels": {
+        "status": "PASS",
+        "detail": "[]"
+      }
+    },
+    "ok": true,
+    "pass": true,
+    "payment_reused": "PBNKD/2026/00027",
+    "invoice": {
+      "id": 8104,
+      "name": "INV/2026/00214",
+      "ncf": "B0200020173",
+      "partner": "SMOKE P13.4 CF"
+    },
+    "payment": {
+      "id": 1500,
+      "name": "PBNKD/2026/00027",
+      "state": "paid",
+      "amount": 11800.0,
+      "applied": 11800.0,
+      "wh_total": 500.0,
+      "net": 11300.0,
+      "wh_lines": 1
+    },
+    "pdf": {
+      "path": "/tmp/phase23-sample-pdfs/09_recibo_pago.pdf",
+      "size_bytes": 67600
+    }
+  },
+  "pdfs_certified": "11/11"
 }

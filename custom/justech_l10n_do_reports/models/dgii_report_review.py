@@ -226,7 +226,61 @@ class JustechDoFiscalReportReview(models.Model):
         return [self._prepare_line_vals_generic(move) for move in moves.filtered("justech_do_ncf")]
 
     def _review_lines_623(self):
-        return self._review_lines_dgii("justech.do.dgii.623.exporter")
+        self.ensure_one()
+        exporter = self.env["justech.do.dgii.623.exporter"]
+        result = exporter.validate_period(
+            self.company_id, self.date_from, self.date_to, refresh_states=True
+        )
+        return [
+            self._prepare_line_vals_623(move, result, exporter)
+            for move in result["buckets"]["all"]
+        ]
+
+    def _prepare_line_vals_623(self, move, result, exporter):
+        gov_tax = exporter._gov_tax(self.company_id)
+        gov_amt = exporter._gov_amount(move, gov_tax)
+        errors = result["move_errors"].get(move.id)
+        if errors is None and move in result["buckets"]["incomplete"]:
+            errors = exporter._dgii_validate_single_move(
+                move, self.date_from, self.date_to
+            )
+        errors = errors or []
+        partner = move.partner_id
+        fiscal_state = move.justech_do_dgii_fiscal_state or "incomplete"
+        exclusion_reason = move.justech_do_dgii_exclusion_reason or ""
+        auto_exclusion = False
+        if fiscal_state == "excluded" or not move.justech_do_include_in_dgii:
+            if not exclusion_reason:
+                exclusion_reason = _(self.AUTO_UAT_EXCLUSION_REASON)
+            auto_exclusion = True
+        include = bool(move.justech_do_include_in_dgii) and fiscal_state != "cancelled"
+        ret_date = exporter._retention_date(move) or move.invoice_date
+        return {
+            "move_id": move.id,
+            "move_name": move.name or move.ref,
+            "partner_id": partner.id,
+            "partner_vat": partner.justech_do_clean_vat()
+            if hasattr(partner, "justech_do_clean_vat")
+            else (partner.vat or ""),
+            "partner_name": partner.display_name,
+            "partner_id_type": partner.justech_do_partner_id_type or "",
+            "document_type": move.justech_do_document_type_id.prefix or "",
+            "ncf": move.justech_do_ncf or "",
+            "ncf_modified": move.justech_do_ncf_modified or move.justech_do_origin_ncf or "",
+            "document_date": ret_date,
+            "invoice_date_due": move.invoice_date_due,
+            "currency_id": move.currency_id.id,
+            "amount_untaxed": abs(move.amount_untaxed_signed),
+            "amount_tax": 0.0,
+            "amount_withholding": gov_amt,
+            "amount_total": gov_amt,
+            "payment_method_code": "",
+            "fiscal_state": fiscal_state,
+            "include_in_report": include,
+            "exclusion_reason": exclusion_reason,
+            "auto_exclusion": auto_exclusion,
+            "error_message": "\n".join(errors),
+        }
 
     def _prepare_line_vals_generic(self, move):
         itbis = self._move_itbis_amount(move)

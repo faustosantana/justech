@@ -66,43 +66,45 @@ AttributeError: 'justech.do.fiscal.report' object has no attribute '_get_exporta
 
 ---
 
-## Hallazgo 3 — 623 con 0 líneas exportables (datos, no código)
+## Hallazgo 3 — 623 con 0 líneas exportables
 
-### Síntoma
-Reporte 623 genera revisión pero **Total documentos: 0** tras **Cargar período**.
+### Resultado prueba controlada (P21-GOV-623-PROOF)
 
-### Causa (validación DGII, no bug de exportador)
-Factura `INV/2026/00003` con retención persistente:
+Con partner **nuevo**, RNC **101733934**, factura **INV/2026/00006**, retención **solo RET-GOB-5** (500.00) aplicada desde UI:
+
+| Capa | Resultado |
+|------|-----------|
+| Pago / asiento / campos gov | OK — 500.00 en todos los eslabones |
+| `validate_period_623` (motor) | OK — 1 documento válido |
+| UI revisión fiscal «Cargar período» | **FAIL** — 0 documentos (v12.2) |
+
+**Conclusión:** no era solo datos maestros del SMOKE. Existía bug funcional adicional.
+
+### Causa raíz UI (v12.2–v12.3)
+
+| Campo | Detalle |
+|-------|---------|
+| **Archivo** | `dgii_report_review.py` |
+| **Método** | `_collect_review_lines` |
+| **Línea** | ~148 — sin rama `623` → `return []` |
+| **Síntoma** | Bandeja revisión vacía pese a exporter con 1 válido |
+
+### Corrección v19.0.1.12.4
+
+- `_review_lines_623` + `_prepare_line_vals_623`
+- UI post-fix: **3 documentos cargados, 1 válido** (P21 / 500.00)
+
+### Hallazgo previo SMOKE (datos, no código)
+
+Factura `INV/2026/00003` — partner id 23 sin RNC, catálogo RET-ITBIS-30 vs campo gov 500:
 
 | Validación 623 | Estado |
 |----------------|--------|
-| `partner.vat` (RNC) | **Vacío** en `SMOKE P13.4 CF` (partner id **23**) |
-| `justech_do_dgii_fiscal_state` | `incomplete` |
-| Referencia pago | vacía en `PBNKD/2026/00002` (fallback `payment.name` sí disponible) |
-| Catálogo retención | **RET-ITBIS-30** (`affects_623=false`) — no es retención Estado |
-| Monto retención contable | **540.00** (`hellenia_payment_withholding_line` id 18 = `account_move_line` id 354) |
-| Monto campo gobierno factura | **500.00** (`justech_do_gov_withholding_amount`) — **discrepancia 40** |
+| `partner.vat` | Vacío |
+| Catálogo | RET-ITBIS-30 (`affects_623=false`) |
+| Monto | 540 persistente vs 500 gov |
 
-**Archivo validación:** `dgii_623_exporter.py` → `_dgii_validate_single_move` líneas 217–251.
-
-**Validación odoo shell jul-2026:** `valid=0`, `incomplete=2`. Error explícito: *"INV/2026/00003: la entidad SMOKE P13.4 CF no tiene RNC."*
-
-### Cadena verificada (SQL PROD)
-
-```
-Pago PBNKD/2026/00002
-  → Retención línea 18: 540.00 RET-ITBIS-30
-  → Asiento línea 354: débito 540.00 ✓ (cuadra)
-  → Factura INV/2026/00003: gov_withholding 500.00 ✗ (no cuadra con 540)
-  → Reporte 623: 0 exportables (RNC + datos inconsistentes)
-```
-
-### Acción requerida (datos maestros / operación)
-- Asignar RNC al partner canónico de prueba (id 22, no duplicado 23).
-- Registrar transacción con catálogo **RET-GOB-5** (5% Gobierno), no ITBIS 30%.
-- Alinear `justech_do_gov_withholding_amount` con línea persistente antes de certificar.
-
-**No se modificó** lógica de retenciones en esta fase (sin causa demostrada en código).
+Detalle completo: `docs/PHASE21_623_CONTROLLED_PROOF.md`
 
 ---
 

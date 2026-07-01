@@ -8,6 +8,7 @@
         <t t-set="lines_to_report" t-value="doc._get_order_lines_to_report()"/>
         <t t-set="sp" t-value="doc.user_id.partner_id if doc.user_id else False"/>
         <t t-set="bottom_spacer_px" t-value="doc.get_hellenia_quotation_bottom_spacer_px()"/>
+        <t t-set="signature_spacer_px" t-value="doc.get_hellenia_quotation_signature_spacer_px()"/>
         <t t-set="hellenia_default_quotation_terms">(a) Las piezas ofrecidas son únicas y sujetas a disponibilidad.
 (b) Esta cotización tiene una validez de 5 días.
 (c) Se requiere confirmación del pago del 100% para reservar la pieza.
@@ -25,36 +26,48 @@
                     font-size: 9.5pt;
                     color: #2d2d2d;
                     line-height: 1.35;
-                    margin-top: 0;
-                    padding-top: 0;
+                    margin: 0;
+                    padding: 0;
                 }
                 .hellenia-quote-page table { border-collapse: collapse; }
+                .hellenia-quote-hdr-table,
+                .hellenia-quote-hdr-table td {
+                    border: none !important;
+                    background: transparent;
+                }
+                .hellenia-quote-hdr-logo-cell {
+                    border-right: 1px solid #e5e5e5;
+                    padding: 0 10px 0 0;
+                    vertical-align: top;
+                }
                 .hellenia-quote-logo {
                     max-height: 75px;
                     max-width: 220px;
                     width: auto;
                     height: auto;
                     display: block;
+                    margin: 0;
                 }
                 .hellenia-quote-hdr-right {
                     font-size: 8pt;
                     color: #5c5c5c;
                     text-align: right;
                     vertical-align: top;
-                    line-height: 1.35;
+                    line-height: 1.3;
+                    padding: 0 0 0 10px;
                 }
                 .hellenia-quote-company-name {
                     font-size: 11pt;
                     font-weight: bold;
                     color: #3E4827;
-                    margin-bottom: 2px;
+                    margin-bottom: 1px;
                 }
                 .hellenia-quote-band {
                     background-color: #3E4827;
                     color: #ffffff;
-                    margin: 6px 0 8px 0;
+                    margin: 2px 0 6px 0;
                 }
-                .hellenia-quote-band td { padding: 5px 10px; vertical-align: middle; }
+                .hellenia-quote-band td { padding: 4px 10px; vertical-align: middle; }
                 .hellenia-quote-band-title {
                     font-size: 11pt;
                     font-weight: bold;
@@ -144,12 +157,17 @@
                 .hellenia-quote-totals .lbl { color: #5c5c5c; }
                 .hellenia-quote-totals .val { text-align: right; font-weight: bold; }
                 .hellenia-quote-totals .grand td {
-                    background-color: #f8f9f6;
-                    border: 1px solid #c8c8c8;
-                    font-size: 10pt;
+                    background-color: #f0f2ec;
+                    border-top: 2px solid #3E4827;
+                    border-bottom: 2px solid #3E4827;
+                    font-size: 10.5pt;
                     font-weight: bold;
                     color: #3E4827;
-                    padding: 5px 8px;
+                    padding: 6px 8px;
+                }
+                .hellenia-quote-totals .grand .lbl {
+                    color: #3E4827;
+                    font-weight: bold;
                 }
                 .hellenia-quote-bottom-spacer {
                     width: 100%;
@@ -177,19 +195,30 @@
                 }
                 .hellenia-quote-signatures {
                     width: 100%;
-                    margin: 10px 0 12px 0;
-                    font-size: 8.5pt;
-                    color: #2d2d2d;
+                    margin: 4px 0 14px 0;
+                    padding-top: 4px;
                 }
                 .hellenia-quote-signatures td {
-                    padding: 6px 8px 2px 0;
-                    vertical-align: bottom;
+                    padding: 0 6px 0 0;
+                    vertical-align: top;
+                }
+                .hellenia-quote-sig-label {
+                    font-size: 7pt;
+                    font-weight: bold;
+                    font-style: italic;
+                    text-transform: uppercase;
+                    color: #3E4827;
+                    letter-spacing: 0.6px;
+                    margin-bottom: 3px;
                 }
                 .hellenia-quote-sig-line {
-                    border-bottom: 1px solid #8a8a8a;
-                    display: inline-block;
-                    min-width: 180px;
-                    height: 14px;
+                    border-bottom: 1px solid #5c5c5c;
+                    height: 24px;
+                    width: 100%;
+                    min-width: 220px;
+                }
+                .hellenia-quote-sig-line-date {
+                    max-width: 280px;
                 }
                 .hellenia-quote-footer {
                     border-top: 1px solid #3E4827;
@@ -201,17 +230,17 @@
                 }
             </style>
 
-            <!-- Encabezado compacto -->
-            <table width="100%" cellpadding="0" cellspacing="0" style="margin: 0 0 6px 0;">
+            <!-- Encabezado sin marco -->
+            <table width="100%" cellpadding="0" cellspacing="0" class="hellenia-quote-hdr-table" style="margin: 0 0 2px 0;">
                 <tr>
-                    <td width="40%" valign="top" style="padding: 0 8px 0 0;">
+                    <td width="40%" class="hellenia-quote-hdr-logo-cell">
                         <img t-if="company.logo"
                              class="hellenia-quote-logo"
-                             style="max-height: 75px; max-width: 220px; height: auto; width: auto;"
+                             style="max-height: 75px; max-width: 220px; height: auto; width: auto; margin: 0;"
                              t-att-src="image_data_uri(company.logo)"
                              alt="Hellenia"/>
                     </td>
-                    <td width="60%" valign="top" class="hellenia-quote-hdr-right">
+                    <td width="60%" class="hellenia-quote-hdr-right">
                         <div class="hellenia-quote-company-name" t-field="company.name"/>
                         <div t-if="company.partner_id.street">
                             <span t-field="company.partner_id.street"/>
@@ -400,19 +429,31 @@
                 </t>
             </div>
 
+            <!-- Espaciador antes de firmas -->
+            <table class="hellenia-quote-bottom-spacer" width="100%" cellpadding="0" cellspacing="0"
+                   t-if="signature_spacer_px &gt; 0">
+                <tr>
+                    <td t-attf-style="height: {{ signature_spacer_px }}px; font-size: 1px; line-height: 1px;">&#160;</td>
+                </tr>
+            </table>
+
             <!-- Firmas -->
             <table class="hellenia-quote-signatures" cellpadding="0" cellspacing="0">
                 <tr>
-                    <td width="50%">
-                        Entregado por: <span class="hellenia-quote-sig-line">&#160;</span>
+                    <td width="48%">
+                        <div class="hellenia-quote-sig-label">Entregado por</div>
+                        <div class="hellenia-quote-sig-line">&#160;</div>
                     </td>
-                    <td width="50%">
-                        Recibido por: <span class="hellenia-quote-sig-line">&#160;</span>
+                    <td width="4%"></td>
+                    <td width="48%">
+                        <div class="hellenia-quote-sig-label">Recibido por</div>
+                        <div class="hellenia-quote-sig-line">&#160;</div>
                     </td>
                 </tr>
                 <tr>
-                    <td colspan="2">
-                        Fecha: <span class="hellenia-quote-sig-line" style="min-width: 140px;">&#160;</span>
+                    <td colspan="3" style="padding-top: 10px;">
+                        <div class="hellenia-quote-sig-label">Fecha</div>
+                        <div class="hellenia-quote-sig-line hellenia-quote-sig-line-date">&#160;</div>
                     </td>
                 </tr>
             </table>

@@ -1,8 +1,8 @@
 # Hellenia — Validación Visual Cotización Premium
 
-**Última actualización:** Fase 23.3D — 2026-07-01  
+**Última actualización:** Fase 23.3E — 2026-07-01  
 **Base de datos:** `hellenia_test`  
-**Módulo:** `hellenia_reports` **19.0.1.4.0**  
+**Módulo:** `hellenia_reports` **19.0.1.4.1**  
 **Resultado:** **TEST PASS**
 
 ---
@@ -11,69 +11,61 @@
 
 | Criterio | Estado |
 |----------|--------|
-| Header compacto (logo ≤ 75px) | PASS |
-| Banda COTIZACIÓN #3E4827 | PASS |
-| Fechas en una fila | PASS |
-| Cliente / vendedor compacto | PASS |
+| Header pegado arriba, sin marco exterior | PASS |
+| Logo ≤ 75px, datos empresa sin caja | PASS |
+| Banda COTIZACIÓN compacta #3E4827 | PASS |
 | Términos pago español (Contado / Crédito X días) | PASS |
-| Sin "Immediate Payment" | PASS |
-| Tabla productos compacta | PASS |
-| Paginación 15 productos | PASS (2 páginas) |
-| Condiciones editables | PASS |
-| Firmas Entregado / Recibido / Fecha | PASS |
+| Tabla productos + paginación 15 ítems | PASS |
+| Totales destacados (#3E4827, negrita) | PASS |
+| Condiciones abajo (espaciador flexible) | PASS |
+| Firmas profesionales (mayúsculas, líneas largas) | PASS |
 | Footer Tel \| Web \| Correo | PASS |
-| Sin mojibake UTF-8 | PASS |
+| Sin mojibake / sin inglés | PASS |
 | Portal PDF HTTP 200 | PASS |
-| Backend PDF generación | PASS |
+| Backend PDF OK | PASS |
 | Listo para PROD | **No** — pendiente aprobación explícita |
 
 ---
 
-## Fases previas
+## Fases
 
-| Fase | Resultado | Notas |
-|------|-----------|-------|
-| 23.3 | FAIL | Layout roto, encoding |
-| 23.3B | PASS | Fix 500 portal |
-| 23.3C | PASS | UTF-8 + minimal_layout |
-| **23.3D** | **PASS** | Compactación + firmas + términos pago ES |
-
----
-
-## PDFs generados (Fase 23.3D)
-
-| Archivo | Productos | Tamaño | Cotización |
-|---------|-----------|--------|------------|
-| `quotation_1_product.pdf` | 1 | 68 967 bytes | S00134 |
-| `quotation_5_products.pdf` | 5 | 72 097 bytes | S00135 |
-| `quotation_15_products.pdf` | 15 | 80 655 bytes (2 págs.) | S00136 |
-| `portal_order_135.pdf` | 1 | 68 967 bytes | Portal |
-
-Ruta evidencia: `evidence/phase23-3d-quotation-final-adjustments/`
+| Fase | Resultado |
+|------|-----------|
+| 23.3C | PASS — UTF-8 + layout tablas |
+| 23.3D | PASS — compactación + firmas iniciales |
+| **23.3E** | **PASS** — ajustes finos visuales |
 
 ---
 
-## Cambios Fase 23.3D
+## Cambios Fase 23.3E
 
-1. **Header compacto** — logo max 75px, márgenes reducidos, datos empresa 8pt
-2. **Banda y fechas** — altura reducida, fechas en línea única
-3. **Cliente/vendedor** — padding mínimo, sin campos vacíos, sin duplicar vencimiento
-4. **Términos de pago** — `sale.order.get_hellenia_payment_term_display()` → Contado / Crédito X días
-5. **Tabla productos** — filas compactas, encabezados abreviados (CANT., P. UNIT.)
-6. **Espaciador dinámico** — condiciones y firmas hacia el cierre con pocos productos
-7. **Firmas** — Entregado por / Recibido por / Fecha
-8. **Footer** — línea verde 1px, sin emojis
+1. **Header sin marco** — clase `hellenia-quote-hdr-table`, sin borde exterior; solo línea vertical sutil entre logo y datos
+2. **Menos espacio superior** — márgenes 0, banda COTIZACIÓN a 2px del encabezado
+3. **Espaciador flexible ampliado** — empuja condiciones hacia abajo con pocos productos (hasta 440px)
+4. **Espaciador de firmas** — bloque adicional antes de firmas para anclarlas al cierre
+5. **Firmas rediseñadas** — etiquetas mayúsculas/cursiva, líneas largas (220px+), bloque no tabular
+6. **Total destacado** — borde superior #3E4827, fondo `#f0f2ec`
+
+---
+
+## PDFs generados
+
+| Archivo | Productos | Tamaño |
+|---------|-----------|--------|
+| `quotation_1_product.pdf` | 1 | ~69 KB |
+| `quotation_5_products.pdf` | 5 | ~73 KB |
+| `quotation_15_products.pdf` | 15 | ~81 KB (2 págs.) |
+| `portal_order_135.pdf` | 1 | ~69 KB |
+
+Evidencia: `evidence/phase23-3e-quotation-final-polish/`
 
 ---
 
 ## Screenshots
 
-| Archivo | Descripción |
-|---------|-------------|
-| `screenshot_quote_1_page1.png` | Cotización 1 producto — layout compacto |
-| `screenshot_quote_15_page1.png` | Cotización 15 productos — página 1 |
-| `screenshot_quote_15_page2.png` | Cotización 15 productos — página 2 |
-| `screenshot_portal_page1.png` | Portal orden 135 |
+- `screenshot_quote_1_page1.png`
+- `screenshot_quote_15_page1.png` / `screenshot_quote_15_page2.png`
+- `screenshot_portal_page1.png`
 
 ---
 
@@ -81,18 +73,9 @@ Ruta evidencia: `evidence/phase23-3d-quotation-final-adjustments/`
 
 Ninguno bloqueante en TEST.
 
-**Observación menor:** el vendedor de prueba sigue siendo OdooBot en datos demo; el template muestra `user_id.name` correctamente.
-
----
-
-## Validación automatizada
-
-Script: `scripts/phase23-3d-quotation-final-adjustments-test.py`  
-Runner: `scripts/run-phase23-3d-test.sh`  
-Resultado: `evidence/phase23-3d-quotation-final-adjustments/validation.json` — **0 checks fallidos**
-
 ---
 
 ## Decisión
 
-**TEST PASS** — Template listo para revisión humana final y aprobación de promoción a PROD.
+**TEST PASS** — Recomendado para **aprobación visual humana final**.  
+**Promover a PROD:** solo con aprobación explícita del usuario.

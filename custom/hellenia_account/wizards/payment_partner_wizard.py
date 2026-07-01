@@ -413,8 +413,7 @@ class HelleniaPaymentPartnerWizard(models.TransientModel):
         payments = self.env["account.payment"]
         common = self._register_vals_common()
 
-        if len(selected) == 1:
-            line = selected[0]
+        for line in selected:
             move = line.move_id
             register = (
                 self.env["account.payment.register"]
@@ -428,28 +427,6 @@ class HelleniaPaymentPartnerWizard(models.TransientModel):
                     }
                 )
             )
-            payments |= register._create_payments()
-        else:
-            moves = selected.mapped("move_id")
-            wh_commands = []
-            for line in selected:
-                wh_commands.extend(self._withholding_commands_for_line(line))
-            total_applied = sum(selected.mapped("amount_to_pay"))
-            register = (
-                self.env["account.payment.register"]
-                .with_context(active_model="account.move", active_ids=moves.ids, dont_redirect_to_payments=True)
-                .create(
-                    {
-                        **common,
-                        "communication": self.communication or ", ".join(moves.mapped("name")),
-                        "amount": total_applied,
-                        "hellenia_withholding_line_ids": wh_commands,
-                    }
-                )
-            )
-            register.write({"group_payment": True})
-            pay_lines = register.line_ids.filtered(lambda l: l.move_id in moves)
-            register.write({"line_ids": [Command.set(pay_lines.ids)]})
             payments |= register._create_payments()
 
         return {

@@ -210,8 +210,8 @@ with env.cr.savepoint():
     check(SC, "wh_proportional", near(data["hellenia_withholding_total"], exp_wh, 1.0), data["hellenia_withholding_total"])
     check(SC, "balanced", ev["balanced"], ev["gl_withholding"])
 
-# === ESCENARIO 3: Pago múltiple agrupado ===
-SC = "03_multi_grouped"
+# === ESCENARIO 3: Pago múltiple (un pago por factura) ===
+SC = "03_multi"
 with env.cr.savepoint():
     i1 = _inv(vendor, journal_purchase, tax_purchase, "in_invoice", "P1810B-03A")
     i2 = _inv(vendor, journal_purchase, tax_purchase, "in_invoice", "P1810B-03B")
@@ -224,28 +224,27 @@ with env.cr.savepoint():
     l2.write({"apply": True, "amount_to_pay": abs(i2.amount_residual), "withholding_catalog_ids": [Command.set(cat_itbis.ids)]})
     l2._recompute_line_withholdings()
     wiz.line_ids.filtered(lambda l: l.move_id not in (i1 | i2)).write({"apply": False})
-    selected = wiz.line_ids.filtered("apply")
     wiz.action_register_payments()
-    pay = Payment.search([("partner_id", "=", vendor.id)], order="id desc", limit=1)
-    data, wh_lines, gl_wh, ev = _ui_payment_evidence(pay, i2, SC)
-    check(SC, "one_payment", len(Payment.search([("id", "=", pay.id)])) == 1, pay.name)
-    check(SC, "two_invoices", i1 in pay.reconciled_bill_ids and i2 in pay.reconciled_bill_ids, pay.reconciled_bill_ids.mapped("name"))
-    check(SC, "ncf_both", bool(i1.justech_do_ncf and i2.justech_do_ncf), [i1.justech_do_ncf, i2.justech_do_ncf])
-    check(SC, "wh_only_invoice2", near(sum(wh_lines.mapped("amount")), ITBIS), wh_lines.mapped("amount"))
-    expected_net = sum(selected.mapped("amount_to_pay")) - sum(selected.mapped("withholding_amount"))
-    check(SC, "net_correct", near(data["hellenia_net_transfer"], expected_net, 1.0), {
-        "net": data["hellenia_net_transfer"], "expected": expected_net,
-    })
-    check(SC, "gl_wh", len(gl_wh) >= 1, ev["gl_withholding"])
-    period_code, df, dt = _dgii_period()
-    rep606 = env["justech.do.fiscal.report"].create({
-        "name": "P1810B 606", "report_type": "606",
-        "period_code": period_code, "date_from": df, "date_to": dt, "company_id": company.id,
-    })
-    rep606.action_generate(valid_moves=i2)
-    exp606 = env["justech.do.dgii.606.exporter"]
-    itbis, _, _, _ = exp606._withholding_breakdown(i2)
-    check(SC, "report_606", bool(rep606.line_ids) and itbis > 0, f"itbis={itbis}")
+    pays = Payment.search([("partner_id", "=", vendor.id)], order="id desc", limit=2)
+    pay_wh = pays.filtered(lambda p: p.hellenia_withholding_total > 0)[:1]
+    pay_no = pays.filtered(lambda p: not p.hellenia_withholding_total)[:1]
+    check(SC, "two_payments", len(pays) == 2, pays.mapped("name"))
+    check(SC, "wh_on_one", pay_wh.hellenia_withholding_total == ITBIS, pay_wh.hellenia_withholding_total)
+    check(SC, "no_wh_other", pay_no.hellenia_withholding_total == 0, pay_no.hellenia_withholding_total)
+    check(SC, "i1_paid", i1.payment_state in ("paid", "in_payment"), i1.payment_state)
+    check(SC, "i2_paid", i2.payment_state in ("paid", "in_payment"), i2.payment_state)
+    if pay_wh:
+        data, wh_lines, gl_wh, ev = _ui_payment_evidence(pay_wh, i2, SC)
+        check(SC, "ncf_visible", bool(wh_lines.ncf), wh_lines.mapped("ncf"))
+        period_code, df, dt = _dgii_period()
+        rep606 = env["justech.do.fiscal.report"].create({
+            "name": "P1810B 606", "report_type": "606",
+            "period_code": period_code, "date_from": df, "date_to": dt, "company_id": company.id,
+        })
+        rep606.action_generate(valid_moves=i2)
+        exp606 = env["justech.do.dgii.606.exporter"]
+        itbis, _, _, _ = exp606._withholding_breakdown(i2)
+        check(SC, "report_606", bool(rep606.line_ids) and itbis > 0, f"itbis={itbis}")
 
 report["summary"] = {
     "scenarios": len(report["scenarios"]),

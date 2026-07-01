@@ -103,6 +103,7 @@ def _partner_wiz(partner, ptype, ref):
 
 
 def _ui_payment_evidence(pay, inv, scenario):
+    report["scenarios"].setdefault(scenario, {})
     pay.invalidate_recordset()
     inv.invalidate_recordset()
     data = pay.read([

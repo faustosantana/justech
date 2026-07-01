@@ -39,7 +39,16 @@ def pdf_pages(path):
                 return int(line.split(":", 1)[1].strip())
     except Exception:
         pass
-    return None
+    try:
+        import re
+
+        data = open(path, "rb").read()
+        match = re.search(rb"/Type\s*/Pages[^>]*>>\s*.*?/Count\s+(\d+)", data, re.S)
+        if match:
+            return int(match.group(1))
+        return len(re.findall(rb"(?<!\w)/Type\s*/Page(?!s)\b", data))
+    except Exception:
+        return None
 
 
 def screenshot(pdf, base, first=1, last=1):

@@ -49,17 +49,28 @@ Registro: `hellenia_reports.paperformat_hellenia_quotation`
 
 `evidence/phase23-3h-paperformat-spacing/`
 
-- `screenshot_before_1_product.png` — antes (23.3G)
-- `screenshot_after_1_product.png` — después (23.3H)
-- PDFs 1/5/15/25 productos
-- `validation.json`
+| Archivo | Descripción |
+|---------|-------------|
+| `screenshot_before_1_product.png` | Antes (23.3G) — espacio muerto ~75 mm arriba |
+| `screenshot_after_1_product.png` | Después (23.3H) — logo al borde superior imprimible |
+| `quotation_1_product.pdf` | 1 producto, 1 página |
+| `quotation_5_products.pdf` | 5 productos, 1 página |
+| `quotation_15_products.pdf` | 15 productos, 1 página |
+| `quotation_25_products.pdf` | 25 productos, 2 páginas (paginación correcta) |
+| `portal_quote_1.pdf` | Portal cliente, 1 página |
+| `validation.json` | PASS en `hellenia_test` |
 
-## Criterios PASS
+## Resultado TEST (PASS)
 
-- Sin espacio muerto superior
-- Logo visible arriba
-- 1 producto = 1 página
-- Ancho útil completo
-- Otros reportes sin cambio
+| Criterio | Resultado |
+|----------|-----------|
+| Sin espacio muerto superior | PASS — `margin_top=5`, `header_spacing=0` |
+| Logo visible arriba | PASS |
+| Empresa alineada arriba derecha | PASS |
+| 1 producto = 1 página | PASS |
+| 5 / 15 productos | PASS — 1 página cada uno |
+| 25 productos | PASS — 2 páginas, condiciones en página 2 |
+| Pedido confirmado | PASS — sigue `Hellenia Carta` (40 mm top) |
+| Ancho útil completo | PASS |
 
 **No promovido a PROD.**

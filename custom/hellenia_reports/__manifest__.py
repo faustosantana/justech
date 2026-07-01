@@ -1,6 +1,6 @@
 {
     "name": "Hellenia Reports",
-    "version": "19.0.1.1.0",
+    "version": "19.0.1.2.0",
     "category": "Reporting",
     "summary": "Formatos corporativos PDF Hellenia",
     "description": """
@@ -29,6 +29,8 @@ Formatos visuales corporativos para documentos comerciales Hellenia.
         "data/paperformat_data.xml",
         "report/layout_templates.xml",
         "data/report_layout_data.xml",
+        "data/quotation_terms_default.xml",
+        "report/report_sale_quotation.xml",
         "report/report_sale_order.xml",
         "report/report_invoice.xml",
         "report/report_purchase.xml",

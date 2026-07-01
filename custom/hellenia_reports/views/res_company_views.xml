@@ -19,6 +19,8 @@
                         </group>
                     </group>
                     <group string="Contenido documentos">
+                        <field name="hellenia_quotation_terms" colspan="2" nolabel="1"
+                               placeholder="Condiciones mostradas en cotizaciones PDF cuando el pedido no tiene notas."/>
                         <field name="hellenia_terms_conditions"/>
                         <field name="hellenia_legal_notice"/>
                         <field name="hellenia_show_qr_on_invoice"/>

@@ -4,10 +4,22 @@ from io import BytesIO
 
 from odoo import fields, models
 
+DEFAULT_HELLENIA_QUOTATION_TERMS = """(a) Las piezas ofrecidas son únicas y sujetas a disponibilidad.
+(b) Esta cotización tiene una validez de 5 días.
+(c) Se requiere confirmación del pago del 100% para reservar la pieza.
+(d) Transporte disponible bajo cotización.
+(e) Asesoría de colocación, instalación y styling disponible bajo cotización.
+(f) Las piezas pueden presentar marcas propias del tiempo, lo cual forma parte de su carácter y autenticidad."""
+
 
 class ResCompany(models.Model):
     _inherit = "res.company"
 
+    hellenia_quotation_terms = fields.Text(
+        string="Condiciones de cotización",
+        default=DEFAULT_HELLENIA_QUOTATION_TERMS,
+        help="Texto mostrado en cotizaciones cuando el pedido no tiene notas propias.",
+    )
     hellenia_primary_color = fields.Char(
         string="Color primario",
         default="#3E4827",
@@ -31,6 +43,11 @@ class ResCompany(models.Model):
         string="Mostrar QR en facturas",
         default=False,
     )
+
+    def get_hellenia_quotation_terms_display(self):
+        """Condiciones de cotización con respaldo al texto corporativo por defecto."""
+        self.ensure_one()
+        return self.hellenia_quotation_terms or DEFAULT_HELLENIA_QUOTATION_TERMS
 
     def hellenia_qr_data_uri(self, value):
         """Genera data-URI PNG para código QR embebido en PDF."""

@@ -22,7 +22,9 @@
              t-att-data-oe-lang="doc.env.context.get('lang')">
             <style type="text/css">
                 h2.hellenia-doc-title,
-                .o_report_layout_standard .address {
+                .o_report_layout_standard .address,
+                .header.hellenia-header,
+                .footer.hellenia-footer {
                     display: none !important;
                     height: 0 !important;
                     margin: 0 !important;
@@ -34,7 +36,7 @@
                     font-size: 9.5pt;
                     color: #2d2d2d;
                     line-height: 1.35;
-                    margin: -10mm 0 0 0;
+                    margin: -6mm 0 0 0;
                     padding: 0;
                     width: 100%;
                 }

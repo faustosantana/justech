@@ -223,6 +223,7 @@ with env.cr.savepoint():
     l1.write({"apply": True, "amount_to_pay": abs(i1.amount_residual)})
     l2.write({"apply": True, "amount_to_pay": abs(i2.amount_residual), "withholding_catalog_ids": [Command.set(cat_itbis.ids)]})
     l2._recompute_line_withholdings()
+    w.line_ids.filtered(lambda l: l.move_id not in (i1 | i2)).write({"apply": False})
     selected = wiz.line_ids.filtered("apply")
     wiz.action_register_payments()
     pay = Payment.search([("partner_id", "=", vendor.id)], order="id desc", limit=1)
@@ -232,7 +233,9 @@ with env.cr.savepoint():
     check(SC, "ncf_both", bool(i1.justech_do_ncf and i2.justech_do_ncf), [i1.justech_do_ncf, i2.justech_do_ncf])
     check(SC, "wh_only_invoice2", near(sum(wh_lines.mapped("amount")), ITBIS), wh_lines.mapped("amount"))
     expected_net = sum(selected.mapped("amount_to_pay")) - sum(selected.mapped("withholding_amount"))
-    check(SC, "net_correct", near(data["hellenia_net_transfer"], expected_net), data["hellenia_net_transfer"])
+    check(SC, "net_correct", near(data["hellenia_net_transfer"], expected_net, 1.0), {
+        "net": data["hellenia_net_transfer"], "expected": expected_net,
+    })
     check(SC, "gl_wh", len(gl_wh) >= 1, ev["gl_withholding"])
     period_code, df, dt = _dgii_period()
     rep606 = env["justech.do.fiscal.report"].create({

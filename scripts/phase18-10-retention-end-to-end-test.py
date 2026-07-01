@@ -186,6 +186,7 @@ with env.cr.savepoint():
     l2 = w.line_ids.filtered(lambda l: l.move_id == i2)[:1]
     l1.write({"apply": True, "amount_to_pay": TOTAL})
     l2.write({"apply": True, "amount_to_pay": TOTAL, "withholding_catalog_ids": [Command.set(_cat("RET-GOB-5").ids)]})
+    w.line_ids.filtered(lambda l: l.move_id not in (i1 | i2)).write({"apply": False})
     w.action_register_payments()
     pays = Payment.search([("partner_id", "=", customer.id)], order="id desc", limit=1)
     check("07_grouped_one_payment", len(pays) == 1 and pays.hellenia_withholding_total == 500, {

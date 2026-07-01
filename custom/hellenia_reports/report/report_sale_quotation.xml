@@ -8,18 +8,9 @@
         <t t-set="lines_to_report" t-value="doc._get_order_lines_to_report()"/>
         <t t-set="sp" t-value="doc.user_id.partner_id if doc.user_id else False"/>
         <t t-set="product_count" t-value="len(lines_to_report.filtered(lambda l: not l.display_type and not l.is_downpayment))"/>
-        <t t-set="bottom_spacer_px" t-value="0"/>
-        <t t-if="product_count &lt;= 1">
-            <t t-set="bottom_spacer_px" t-value="148"/>
-        </t>
-        <t t-elif="product_count &lt;= 3">
-            <t t-set="bottom_spacer_px" t-value="105"/>
-        </t>
-        <t t-elif="product_count &lt;= 6">
-            <t t-set="bottom_spacer_px" t-value="65"/>
-        </t>
-        <t t-elif="product_count &lt;= 10">
-            <t t-set="bottom_spacer_px" t-value="30"/>
+        <t t-set="shell_min_height" t-value="'0'"/>
+        <t t-if="product_count &lt;= 8">
+            <t t-set="shell_min_height" t-value="'210mm'"/>
         </t>
         <t t-set="hellenia_default_quotation_terms">(a) Las piezas ofrecidas son únicas y sujetas a disponibilidad.
 (b) Esta cotización tiene una validez de 5 días.
@@ -47,8 +38,8 @@
                 }
                 .hellenia-quote-shell {
                     width: 100%;
-                    min-height: 218mm;
                     border-collapse: collapse;
+                    margin-top: -15mm;
                 }
                 .hellenia-quote-shell td {
                     border: none;
@@ -207,12 +198,6 @@
                     border-top: 2px solid #3E4827;
                 }
                 .hellenia-quote-totals .grand .lbl { color: #3E4827; font-weight: bold; }
-                .hellenia-quote-bottom-spacer td {
-                    border: none;
-                    font-size: 1px;
-                    line-height: 1px;
-                    padding: 0;
-                }
                 .hellenia-quote-conditions {
                     border: none;
                     border-top: 1px solid #e8e8e8;
@@ -270,7 +255,8 @@
                 }
             </style>
 
-            <table class="hellenia-quote-shell" cellpadding="0" cellspacing="0">
+            <table class="hellenia-quote-shell" cellpadding="0" cellspacing="0"
+                   t-attf-style="min-height: {{ shell_min_height }};">
                 <tr>
                     <td>
 
@@ -449,14 +435,6 @@
             </table>
 
             <div style="clear: both; height: 1px; line-height: 1px; font-size: 1px;">&#160;</div>
-
-            <!-- Espaciador dinámico (solo QWeb, empuja pie de página) -->
-            <table class="hellenia-quote-bottom-spacer" width="100%" cellpadding="0" cellspacing="0"
-                   t-if="bottom_spacer_px &gt; 0">
-                <tr>
-                    <td t-attf-style="height: {{ bottom_spacer_px }}px;">&#160;</td>
-                </tr>
-            </table>
 
                     </td>
                 </tr>

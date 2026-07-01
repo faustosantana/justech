@@ -37,8 +37,7 @@ open('$EVIDENCE/validation.json','w').write(d[i+len(m):].strip())
 import json; r=json.load(open('$EVIDENCE/validation.json'))
 print('RESULT:', 'PASS' if r.get('pass') else 'FAIL', 'failed', len(r.get('failed_checks',[])))
 "
-docker cp hellenia-test-odoo-1:/tmp/phase23-3f-quotation-premium-polish/. "$EVIDENCE/" 2>/dev/null || \
-docker cp hellenia-test-odoo-1:/evidence/phase23-3f-quotation-premium-polish/. "$EVIDENCE/" 2>/dev/null || true
+docker cp hellenia-test-odoo-1:/tmp/phase23-3f-quotation-premium-polish/. "$EVIDENCE/" 2>/dev/null || true
 ls -la "$EVIDENCE"
 REMOTE
 

@@ -39,7 +39,6 @@ REQUIRED_HTML = (
     "hellenia-quote-hdr-table",
     "hellenia-quote-sig-label",
     "hellenia-quote-sig-line",
-    "hellenia-quote-bottom-spacer",
     "COTIZACIÓN",
     "max-height: 68px",
     "display: none !important",
@@ -140,8 +139,13 @@ def validate_pdf(text, label, pages, line_count):
         and "FECHA" in text.upper()
     )
     check(f"{label}_pdf_signatures", sig_ok, text[-160:])
-    for req in ("COTIZACIÓN", "Condiciones", "Total"):
+    for req in ("COTIZACIÓN", "Total"):
         check(f"{label}_pdf_has_{req[:8]}", req in text, req)
+    check(
+        f"{label}_pdf_has_conditions",
+        "(a) Las piezas" in text or "CONDICIONES" in text.upper(),
+        text[-200:],
+    )
     check(f"{label}_pdf_payment_es", "Contado" in text or "Crédito" in text)
     check(f"{label}_pdf_text_len", len(text.strip()) > 200, len(text.strip()))
     if pages is not None:

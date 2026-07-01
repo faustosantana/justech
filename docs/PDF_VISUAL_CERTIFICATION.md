@@ -130,7 +130,7 @@ Tras generar los PDFs, verificar:
 |---------|-------|-----------|-------|
 | TEST Fase 23 | 2026-07-01 | PASS (10/11) | Recibo pendiente |
 | TEST Fase 23.1 | 2026-07-01 | **PASS (11/11)** | Recibo `PBNKD/2026/00027` certificado |
-| PROD | No promovido | — | Pendiente aprobación explícita |
+| **PROD Fase 23.2** | **2026-07-01** | **PASS (11/11)** | Backup `2026-07-01_1753` |
 
 **Criterio de promoción:** Todos los PDFs generados sin error + revisión visual PASS — **cumplido en TEST**.
 

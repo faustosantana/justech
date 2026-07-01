@@ -40,7 +40,7 @@
             </div>
 
             <!-- Banda de título -->
-            <div class="hellenia-quote-title-band">
+            <div class="hellenia-quote-title-band" style="background-color: #3E4827;">
                 <div class="hellenia-quote-title-band-inner">
                     <span class="hellenia-quote-title-icon" aria-hidden="true">
                         <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor">

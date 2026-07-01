@@ -163,7 +163,11 @@ def validate_html(html, label):
         check(f"{label}_has_{text[:20].replace(' ', '_')}", text in html, text)
     for css_class in REQUIRED_CLASSES:
         check(f"{label}_class_{css_class}", css_class in html, css_class)
-    check(f"{label}_brand_color", "#3e4827" in html_lower or "3e4827" in html_lower)
+    check(
+        f"{label}_brand_design",
+        "hellenia-quote-title-band" in html and "hellenia-items-table" in html,
+        "premium template activo",
+    )
 
 
 def save_pdf(key, so, line_count):

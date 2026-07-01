@@ -448,7 +448,8 @@ class HelleniaPaymentPartnerWizard(models.TransientModel):
                 )
             )
             register.write({"group_payment": True})
-            register.line_ids = register.line_ids.filtered(lambda l: l.move_id in moves)
+            pay_lines = register.line_ids.filtered(lambda l: l.move_id in moves)
+            register.write({"line_ids": [Command.set(pay_lines.ids)]})
             payments |= register._create_payments()
 
         return {

@@ -143,7 +143,7 @@ def build_quotation(line_count, suffix):
                     "product_id": p.id,
                     "product_uom_qty": 1 + (i % 3),
                     "price_unit": 1000.0 + (i * 250),
-                    "tax_id": [Command.set(tax_sale.ids)] if tax_sale else [],
+                    "tax_ids": [Command.set(tax_sale.ids)] if tax_sale else [],
                 }
             )
         )

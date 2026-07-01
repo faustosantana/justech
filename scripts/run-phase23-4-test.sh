@@ -36,6 +36,16 @@ open('$EVIDENCE/validation.json','w').write(json.dumps(r,indent=2,ensure_ascii=F
 print('PASS', r.get('pass'), 'failed', len(r.get('failed_checks',[])))
 "
 docker cp hellenia-test-odoo-1:/tmp/phase23-4-quote-rebuild/. "$EVIDENCE/" 2>/dev/null || true
+
+# Screenshots on host (pdftoppm not in container)
+for pdf in "$EVIDENCE"/*.pdf; do
+  [ -f "$pdf" ] || continue
+  base=$(basename "$pdf" .pdf)
+  pdftoppm -f 1 -l 1 -png -singlefile "$pdf" "$EVIDENCE/screenshot_${base}" 2>/dev/null || true
+done
+if [ -f "$EVIDENCE/screenshot_quotation_1_product.png" ]; then
+  cp "$EVIDENCE/screenshot_quotation_1_product.png" "$EVIDENCE/screenshot_reference_comparison.png"
+fi
 REMOTE
 
 scp -i "${HOME}/.ssh/hellenia_vps_ed25519" -r \

@@ -1,8 +1,10 @@
 # Fase 19.1 — Fix crítico: `hellenia_payment_reference` en PRODUCCIÓN
 
 **Fecha:** 2026-07-01  
-**Resultado TEST:** PASS  
-**Resultado PROD:** PASS
+**Resultado TEST:** PASS (32/32)  
+**Resultado PROD:** PASS (32/32)  
+**Commit promovido:** `1c86f1a` (rama `cursor/phase19-1-payment-reference-fix-dd85`)  
+**Backup PROD:** `/opt/odoo-projects/hellenia/backups/hellenia-prod/2026-07-01_1110`
 
 ---
 

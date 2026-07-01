@@ -11,7 +11,7 @@ class HelleniaPaymentPartnerWizardLine(models.TransientModel):
 
     wizard_id = fields.Many2one("hellenia.payment.partner.wizard", required=True, ondelete="cascade")
     move_id = fields.Many2one("account.move", required=True, ondelete="cascade")
-    apply = fields.Boolean(string="Aplicar", default=True)
+    apply = fields.Boolean(string="Aplicar", default=False)
     invoice_name = fields.Char(related="move_id.name", string="Factura")
     ncf = fields.Char(related="move_id.justech_do_ncf", string="NCF")
     invoice_date = fields.Date(related="move_id.invoice_date", string="Fecha")
@@ -110,9 +110,14 @@ class HelleniaPaymentPartnerWizardLine(models.TransientModel):
     @api.onchange("apply", "amount_residual")
     def _onchange_apply(self):
         for line in self:
-            if line.apply and not line.amount_to_pay:
+            if not line.apply:
+                line.amount_to_pay = 0.0
+                line.withholding_catalog_ids = [Command.clear()]
+                line.withholding_detail_ids = [Command.clear()]
+                continue
+            if not line.amount_to_pay:
                 line.amount_to_pay = line.amount_residual
-            if line.apply and line.withholding_catalog_ids:
+            if line.withholding_catalog_ids:
                 line._recompute_line_withholdings()
 
     @api.onchange("withholding_catalog_ids")
@@ -317,7 +322,7 @@ class HelleniaPaymentPartnerWizard(models.TransientModel):
                 Command.create(
                     {
                         "move_id": move.id,
-                        "apply": True,
+                        "apply": False,
                         "amount_to_pay": abs(move.amount_residual),
                     }
                 )
@@ -421,7 +426,9 @@ class HelleniaPaymentPartnerWizard(models.TransientModel):
         if amount <= 0:
             raise UserError(f"Indique un monto a aplicar mayor que cero en {line.move_id.name}.")
         if amount > residual + 0.01:
-            amount = residual
+            raise UserError(
+                f"El monto a aplicar ({amount:.2f}) supera el pendiente de {line.move_id.name} ({residual:.2f})."
+            )
         return amount, residual
 
     def _register_vals_for_line(self, line, common):
@@ -445,12 +452,25 @@ class HelleniaPaymentPartnerWizard(models.TransientModel):
             )
         return register_vals, applied, is_partial
 
-    def action_register_payments(self):
+    def _selected_lines(self):
+        """Líneas marcadas con Aplicar — única fuente para registrar pagos."""
         self.ensure_one()
         self.env.flush_all()
-        selected = self.line_ids.filtered(lambda l: l.apply and l.amount_to_pay > 0)
-        if not selected:
-            raise UserError("Seleccione al menos una factura con monto a aplicar.")
+        self.line_ids.flush_recordset(["apply", "amount_to_pay", "withholding_catalog_ids"])
+        return self.line_ids.filtered(lambda l: l.apply)
+
+    def action_register_payments(self):
+        self.ensure_one()
+        marked = self._selected_lines()
+        if not marked:
+            raise UserError("Debe seleccionar al menos una factura.")
+        invalid_zero = marked.filtered(lambda l: (l.amount_to_pay or 0.0) <= 0)
+        if invalid_zero:
+            names = ", ".join(invalid_zero.mapped("move_id.name"))
+            raise UserError(
+                f"Indique un monto a aplicar mayor que cero en: {names}."
+            )
+        selected = marked
         if not self.journal_id or not self.payment_method_line_id:
             raise UserError("Indique diario y método de pago.")
         if self.withholding_total and self.amount_after_withholding < 0:

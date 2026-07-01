@@ -13,8 +13,11 @@ DB = env.cr.dbname
 if DB != "hellenia_test":
     raise SystemExit(f"ABORT: solo hellenia_test, actual={DB}")
 
-OUT_DIR = "/evidence/phase23-3c-quotation-redesign"
-if not os.path.isdir("/evidence"):
+OUT_DIR = os.environ.get(
+    "HELLENIA_EVIDENCE_DIR",
+    "/evidence/phase23-3c-quotation-redesign",
+)
+if not os.path.isdir(os.path.dirname(OUT_DIR)) and not os.path.isdir("/evidence"):
     OUT_DIR = "/tmp/phase23-3c-quotation-redesign"
 os.makedirs(OUT_DIR, exist_ok=True)
 
@@ -23,12 +26,13 @@ report = {
     "timestamp_utc": datetime.now(timezone.utc).isoformat(),
     "database": DB,
     "root_cause": (
-        "wkhtmltopdf 0.12.6 sin --encoding utf-8: acentos y NBSP monetarios "
-        "se renderizan como mojibake (CotizaciÃ³n, $Â) aunque el HTML sea UTF-8 correcto"
+        "Sin clase article el body PDF no pasa por web.minimal_layout: wkhtmltopdf "
+        "recibe HTML fragmentado sin meta charset UTF-8; acentos y NBSP monetarios "
+        "se corrompen (CotizaciÃ³n, $Â)"
     ),
     "fix": (
-        "ir.actions.report._build_wkhtmltopdf_args fuerza --encoding utf-8; "
-        "template table-based #3E4827 con acentos UTF-8 y logo max 90px inline"
+        "Wrapper div.article + data-oe-* para minimal_layout; "
+        "ir.actions.report fuerza --encoding utf-8; template table-based #3E4827"
     ),
     "module_version": None,
     "visual_checks": {},
@@ -66,21 +70,21 @@ def check_http(key, ok, code=None, detail=""):
 def extract_pdf_text(pdf_path):
     """Extract text from PDF for mojibake detection."""
     try:
-        import fitz  # PyMuPDF
-
-        doc = fitz.open(pdf_path)
-        text = "\n".join(page.get_text() for page in doc)
-        doc.close()
-        return text
-    except Exception:
-        pass
-    try:
         out = subprocess.check_output(
             ["pdftotext", "-enc", "UTF-8", pdf_path, "-"],
             stderr=subprocess.DEVNULL,
             timeout=30,
         )
         return out.decode("utf-8", errors="replace")
+    except Exception:
+        pass
+    try:
+        import fitz
+
+        doc = fitz.open(pdf_path)
+        text = "\n".join(page.get_text() for page in doc)
+        doc.close()
+        return text
     except Exception:
         return ""
 
@@ -93,6 +97,7 @@ def validate_html(html, label):
         check(f"{label}_html_no_{safe}", bad not in html, bad)
     check(f"{label}_html_has_cotizacion", "COTIZACI" in html.upper())
     check(f"{label}_html_has_tables", "<table" in html and "hellenia-quote-items" in html)
+    check(f"{label}_html_has_article", "hellenia-quote-page" in html and "article" in html)
     check(f"{label}_html_logo_max_90", "max-height: 90px" in html)
     check(f"{label}_html_brand_color", "#3E4827" in html.upper() or "#3e4827" in html.lower())
     check(f"{label}_html_no_bootstrap_row", 'class="row hellenia' not in html)

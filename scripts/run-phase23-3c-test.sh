@@ -28,10 +28,15 @@ docker compose --env-file "$ENV_FILE" run --rm -T odoo odoo \
 docker compose --env-file "$ENV_FILE" up -d --force-recreate odoo
 sleep 25
 
+# pdftotext required for PDF mojibake checks (ephemeral run containers lack it)
+docker compose --env-file "$ENV_FILE" exec -T -u root odoo \
+  bash -c "command -v pdftotext >/dev/null || (apt-get update -qq && apt-get install -y -qq poppler-utils)" \
+  2>&1 | tee -a "$LOG" || true
+
 TMP=$(mktemp)
 set +e
-docker compose --env-file "$ENV_FILE" run --rm -T \
-  -v "${EVIDENCE_DIR}:/evidence/phase23-3c-quotation-redesign" \
+docker compose --env-file "$ENV_FILE" exec -T \
+  -e EVIDENCE_HOST="${EVIDENCE_DIR}" \
   odoo odoo shell \
   -d "${ODOO_DB_NAME}" --db_host=db --db_user="${DB_USER}" --db_password="$DB_PASSWORD" --no-http \
   < "${SCRIPT_DIR}/phase23-3c-quotation-redesign-test.py" > "$TMP" 2>&1
@@ -60,11 +65,16 @@ print('OK → $EVIDENCE')
 tail -8 "$TMP"
 rm -f "$TMP"
 
-python3 -c "
-import json
-d = json.load(open('$EVIDENCE'))
-print('PASS' if d.get('pass') else 'FAIL', '- failed:', len(d.get('failed_checks', [])))
-exit(0 if d.get('pass') else 1)
-"
+hellenia_log "PASS/FAIL → $EVIDENCE" | tee -a "$LOG"
+
+# Collect PDFs/screenshots written under container /tmp when no bind mount
+docker compose --env-file "$ENV_FILE" cp \
+  "odoo:/tmp/phase23-3c-quotation-redesign/." "${EVIDENCE_DIR}/" 2>/dev/null || true
+
+RESULT=$(python3 -c "import json; d=json.load(open('$EVIDENCE')); print('PASS' if d.get('pass') else 'FAIL')")
+if [[ "$RESULT" != "PASS" ]]; then
+  hellenia_log "FAIL Fase 23.3C TEST — $EVIDENCE" | tee -a "$LOG"
+  exit 1
+fi
 
 hellenia_log "PASS Fase 23.3C TEST — $EVIDENCE" | tee -a "$LOG"

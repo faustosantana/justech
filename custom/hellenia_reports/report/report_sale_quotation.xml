@@ -14,8 +14,10 @@
 (e) Asesoría de colocación, instalación y styling disponible bajo cotización.
 (f) Las piezas pueden presentar marcas propias del tiempo, lo cual forma parte de su carácter y autenticidad.</t>
 
-        <div class="page hellenia-quote-page">
-            <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <div class="page article o_report_layout_standard hellenia-quote-page"
+             t-att-data-oe-model="doc._name"
+             t-att-data-oe-id="doc.id"
+             t-att-data-oe-lang="doc.env.context.get('lang')">
             <style type="text/css">
                 .hellenia-quote-page {
                     font-family: 'DejaVu Sans', Helvetica, Arial, sans-serif;

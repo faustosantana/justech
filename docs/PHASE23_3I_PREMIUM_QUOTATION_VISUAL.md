@@ -31,4 +31,20 @@ Mantener la distribución exacta del wireframe (header, banda, fechas, bloques c
 
 `evidence/phase23-3i-premium-quote-visual/`
 
+| Archivo | Descripción |
+|---------|-------------|
+| `screenshot_before_premium.png` | Antes (23.3H funcional) |
+| `screenshot_after_premium.png` | Después (23.3I premium) |
+| PDFs 1/5/15/25 productos | `hellenia_test` |
+| `validation.json` | PASS |
+
+## Resultado TEST (PASS)
+
+| Caso | Páginas | Estado |
+|------|---------|--------|
+| 1 producto | 1 | PASS |
+| 5 productos | 1 | PASS |
+| 15 productos | 2 | PASS |
+| 25 productos | 2 | PASS |
+
 **No promovido a PROD.**

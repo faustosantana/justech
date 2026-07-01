@@ -160,8 +160,10 @@ report["evidence"]["critical"] = {
     "C_state": inv_c.payment_state,
 }
 
-# Retención
+# Retención — factura nueva (no reutilizar A ya parcial)
 cat_gov = Catalog.search([("code", "=", "RET-GOB-5"), ("company_id", "=", company.id)], limit=1)
+inv_wh = _inv("P199-PROD-WH")
+env.cr.commit()
 wiz2 = Wizard.create(
     {
         "partner_type": "customer",
@@ -172,9 +174,7 @@ wiz2 = Wizard.create(
         "hellenia_payment_reference": "P199-PROD-WH",
     }
 )
-la2 = wiz2.line_ids.filtered(lambda l: l.move_id == inv_a)[:1]
-lb2 = wiz2.line_ids.filtered(lambda l: l.move_id == inv_b)[:1]
-lc2 = wiz2.line_ids.filtered(lambda l: l.move_id == inv_c)[:1]
+la2 = wiz2.line_ids.filtered(lambda l: l.move_id == inv_wh)[:1]
 wiz2.write(
     {
         "line_ids": [
@@ -187,8 +187,6 @@ wiz2.write(
                     "withholding_catalog_ids": [Command.set(cat_gov.ids)],
                 },
             ),
-            (1, lb2.id, {"apply": False, "amount_to_pay": 0}),
-            (1, lc2.id, {"apply": False, "amount_to_pay": 0}),
         ]
     }
 )
@@ -196,7 +194,7 @@ wiz2.action_register_payments()
 pay_wh = Payment.search([("hellenia_payment_reference", "=", "P199-PROD-WH")], limit=1)
 check("04_wh_one", len(Payment.search([("hellenia_payment_reference", "=", "P199-PROD-WH")])) == 1, 1)
 check("04_wh_prop", near(pay_wh.hellenia_withholding_total, GOV_WH, 1.0), pay_wh.hellenia_withholding_total)
-report["evidence"]["withholding"] = {"wh_total": pay_wh.hellenia_withholding_total}
+report["evidence"]["withholding"] = {"wh_total": pay_wh.hellenia_withholding_total, "invoice": inv_wh.name}
 
 report["summary"] = {
     "passed": sum(1 for t in report["tests"].values() if t["status"] == "PASS"),

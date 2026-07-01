@@ -1,12 +1,8 @@
-"""Wizard cobro/pago desde Clientes/Proveedores — retenciones por factura."""
+"""Wizard cobro/pago — arquitectura nativa Odoo 19 Enterprise (Fase 20.1)."""
 from __future__ import annotations
 
-import logging
-
 from odoo import Command, api, fields, models
-from odoo.exceptions import UserError
-
-_logger = logging.getLogger(__name__)
+from odoo.exceptions import UserError, ValidationError
 
 
 class HelleniaPaymentPartnerWizardLine(models.TransientModel):
@@ -25,14 +21,11 @@ class HelleniaPaymentPartnerWizardLine(models.TransientModel):
     amount_untaxed = fields.Monetary(related="move_id.amount_untaxed", string="Base imponible")
     amount_tax = fields.Monetary(related="move_id.amount_tax", string="ITBIS facturado")
     amount_residual = fields.Monetary(compute="_compute_amount_residual", string="Pendiente")
-    amount_to_pay = fields.Monetary(string="Monto a aplicar", currency_field="currency_id")
+    amount_to_pay = fields.Monetary(string="Monto a aplicar", currency_field="currency_id", default=0.0)
 
     company_id = fields.Many2one(related="move_id.company_id", string="Compañía")
     move_scope_filter = fields.Selection(
-        [
-            ("sale", "Venta"),
-            ("purchase", "Compra"),
-        ],
+        [("sale", "Venta"), ("purchase", "Compra")],
         compute="_compute_move_scope_filter",
         string="Operación factura",
     )
@@ -43,25 +36,15 @@ class HelleniaPaymentPartnerWizardLine(models.TransientModel):
         "catalog_id",
         string="Retenciones",
     )
-    withholding_summary = fields.Char(
-        string="Resumen retenciones",
-        compute="_compute_withholding_display",
-    )
+    withholding_summary = fields.Char(compute="_compute_withholding_display", string="Resumen retenciones")
     withholding_amount = fields.Monetary(
-        string="Total retenido",
-        compute="_compute_withholding_display",
-        currency_field="currency_id",
+        compute="_compute_withholding_display", string="Total retenido", currency_field="currency_id"
     )
     withholding_detail_ids = fields.One2many(
-        "hellenia.payment.withholding.wizard.line",
-        "wizard_line_id",
-        string="Detalle retenciones",
+        "hellenia.payment.withholding.wizard.line", "wizard_line_id", string="Detalle retenciones"
     )
-
     net_after_withholding = fields.Monetary(
-        string="Neto a pagar/cobrar",
-        compute="_compute_withholding_display",
-        currency_field="currency_id",
+        compute="_compute_withholding_display", string="Neto a pagar/cobrar", currency_field="currency_id"
     )
 
     @api.depends("move_id", "move_id.move_type")
@@ -85,34 +68,39 @@ class HelleniaPaymentPartnerWizardLine(models.TransientModel):
         for line in self:
             line.amount_residual = abs(line.move_id.amount_residual)
 
-    @api.depends(
-        "withholding_catalog_ids",
-        "withholding_detail_ids.amount",
-        "amount_to_pay",
-        "currency_id",
-    )
+    @api.depends("withholding_catalog_ids", "withholding_detail_ids.amount", "amount_to_pay", "apply", "currency_id")
     def _compute_withholding_display(self):
         for line in self:
-            if not line.withholding_catalog_ids:
+            if not line.apply or not line.withholding_catalog_ids:
                 line.withholding_summary = "Ninguna"
                 line.withholding_amount = 0.0
-            else:
-                labels = line.withholding_catalog_ids.mapped("name")
-                line.withholding_summary = ", ".join(labels)
-                partner_type = line._catalog_domain_partner_type()
-                total = 0.0
-                for catalog in line.withholding_catalog_ids:
-                    if not catalog._applies_to_move(line.move_id, partner_type):
-                        continue
-                    total += catalog.compute_withholding_amount(
-                        line.move_id, applied_amount=line.amount_to_pay
-                    )
-                line.withholding_amount = total
-            applied = line.amount_to_pay or line.amount_residual or 0.0
-            line.net_after_withholding = applied - line.withholding_amount
+                line.net_after_withholding = line.amount_to_pay if line.apply else 0.0
+                continue
+            labels = line.withholding_catalog_ids.mapped("name")
+            line.withholding_summary = ", ".join(labels)
+            partner_type = line._catalog_domain_partner_type()
+            total = 0.0
+            for catalog in line.withholding_catalog_ids:
+                if not catalog._applies_to_move(line.move_id, partner_type):
+                    continue
+                total += catalog.compute_withholding_amount(
+                    line.move_id, applied_amount=line.amount_to_pay
+                )
+            line.withholding_amount = total
+            line.net_after_withholding = (line.amount_to_pay or 0.0) - total
 
-    @api.onchange("apply", "amount_residual")
+    @api.constrains("apply", "amount_to_pay")
+    def _check_apply_amount_to_pay(self):
+        for line in self:
+            if not line.apply and (line.amount_to_pay or 0.0) > 0.01:
+                raise ValidationError(
+                    f"La factura {line.move_id.name} no está seleccionada; "
+                    "el monto a aplicar debe ser cero."
+                )
+
+    @api.onchange("apply")
     def _onchange_apply(self):
+        """Sugerir residual solo cuando el usuario marca apply=True."""
         for line in self:
             if not line.apply:
                 line.amount_to_pay = 0.0
@@ -127,7 +115,8 @@ class HelleniaPaymentPartnerWizardLine(models.TransientModel):
     @api.onchange("withholding_catalog_ids")
     def _onchange_withholding_catalog_ids(self):
         for line in self:
-            line._recompute_line_withholdings()
+            if line.apply:
+                line._recompute_line_withholdings()
 
     @api.onchange("amount_to_pay")
     def _onchange_amount_to_pay(self):
@@ -138,26 +127,13 @@ class HelleniaPaymentPartnerWizardLine(models.TransientModel):
             if line.withholding_catalog_ids:
                 line._recompute_line_withholdings()
 
-    def write(self, vals):
-        res = super().write(vals)
-        to_clear = self.filtered(lambda l: not l.apply)
-        if to_clear:
-            to_clear.filtered(lambda l: l.amount_to_pay or l.withholding_catalog_ids).write(
-                {
-                    "amount_to_pay": 0.0,
-                    "withholding_catalog_ids": [Command.clear()],
-                }
-            )
-        return res
-
     def _catalog_domain_partner_type(self):
         self.ensure_one()
         return self.wizard_id.partner_type if self.wizard_id else "customer"
 
     def _recompute_line_withholdings(self):
-        Catalog = self.env["hellenia.withholding.catalog"]
         for line in self:
-            if not line.move_id:
+            if not line.move_id or not line.apply:
                 line.withholding_detail_ids = [Command.clear()]
                 continue
             partner_type = line._catalog_domain_partner_type()
@@ -189,30 +165,6 @@ class HelleniaPaymentPartnerWizardLine(models.TransientModel):
                 )
             line.withholding_detail_ids = details
 
-    def _get_withholding_commands_for_register(self):
-        self.ensure_one()
-        self._recompute_line_withholdings()
-        commands = []
-        for wh in self.withholding_detail_ids:
-            if not wh.amount or not wh.account_id:
-                continue
-            commands.append(
-                Command.create(
-                    {
-                        "catalog_id": wh.catalog_id.id,
-                        "tax_id": wh.tax_id.id,
-                        "label": wh.label,
-                        "base_label": wh.base_label,
-                        "base_amount": wh.base_amount,
-                        "rate": wh.rate,
-                        "amount": wh.amount,
-                        "account_id": wh.account_id.id,
-                        "currency_id": wh.currency_id.id,
-                    }
-                )
-            )
-        return commands
-
 
 class HelleniaPaymentPartnerWizard(models.TransientModel):
     _name = "hellenia.payment.partner.wizard"
@@ -225,9 +177,7 @@ class HelleniaPaymentPartnerWizard(models.TransientModel):
     )
     partner_id = fields.Many2one("res.partner", string="Contacto", required=True)
     currency_id = fields.Many2one(
-        "res.currency",
-        string="Moneda",
-        default=lambda self: self.env.company.currency_id,
+        "res.currency", string="Moneda", default=lambda self: self.env.company.currency_id
     )
     line_ids = fields.One2many("hellenia.payment.partner.wizard.line", "wizard_id", string="Facturas pendientes")
     journal_id = fields.Many2one("account.journal", domain="[('type', 'in', ('bank', 'cash'))]")
@@ -261,13 +211,9 @@ class HelleniaPaymentPartnerWizard(models.TransientModel):
         res = super().default_get(fields_list)
         partner_type = self.env.context.get("default_partner_type") or res.get("partner_type") or "customer"
         res["partner_type"] = partner_type
-        partner_id = (
-            self.env.context.get("default_partner_id")
-            or res.get("partner_id")
-            or self.env.context.get("active_id")
-            if self.env.context.get("active_model") == "res.partner"
-            else False
-        )
+        partner_id = self.env.context.get("default_partner_id") or res.get("partner_id")
+        if not partner_id and self.env.context.get("active_model") == "res.partner":
+            partner_id = self.env.context.get("active_id")
         if partner_id:
             res["partner_id"] = partner_id
         currency = self.env.company.currency_id
@@ -278,11 +224,8 @@ class HelleniaPaymentPartnerWizard(models.TransientModel):
 
     @api.model_create_multi
     def create(self, vals_list):
-        wizards = super().create(vals_list)
-        for wiz in wizards:
-            if wiz.partner_id:
-                wiz._load_pending_invoices()
-        return wizards
+        """Respeta el estado enviado por la UI — sin recargar facturas."""
+        return super().create(vals_list)
 
     @api.depends("line_ids.withholding_detail_ids")
     def _compute_withholding_lines(self):
@@ -310,15 +253,8 @@ class HelleniaPaymentPartnerWizard(models.TransientModel):
             return ("out_invoice", "out_refund")
         return ("in_invoice", "in_refund")
 
-    def _withholding_domain(self, move_type="out_invoice"):
-        self.ensure_one()
-        return self.env["hellenia.withholding.catalog"]._domain_for_payment(
-            self.partner_type,
-            move_type,
-            company=self.env.company,
-        )
-
     def _load_pending_invoices(self):
+        """Único punto autorizado: onchange de partner. Líneas limpias."""
         self.ensure_one()
         if not self.partner_id:
             self.line_ids = [Command.clear()]
@@ -434,26 +370,32 @@ class HelleniaPaymentPartnerWizard(models.TransientModel):
             )
         return commands
 
-    def _effective_amount_to_pay(self, line):
-        """Monto aplicado real — fuente de verdad para account.payment.register."""
+    def _validate_lines_for_register(self):
+        self.ensure_one()
         self.env.flush_all()
-        line = line.exists()
-        if not line:
-            raise UserError("La línea de factura ya no existe; reabra el wizard.")
-        amount = line.amount_to_pay or 0.0
-        residual = abs(line.move_id.amount_residual)
-        if amount <= 0:
-            raise UserError(f"Indique un monto a aplicar mayor que cero en {line.move_id.name}.")
-        if amount > residual + 0.01:
+        invalid_unselected = self.line_ids.filtered(lambda l: not l.apply and (l.amount_to_pay or 0.0) > 0.01)
+        if invalid_unselected:
+            names = ", ".join(invalid_unselected.mapped("move_id.name"))
             raise UserError(
-                f"El monto a aplicar ({amount:.2f}) supera el pendiente de {line.move_id.name} ({residual:.2f})."
+                f"Facturas no seleccionadas con monto distinto de cero: {names}. "
+                "Desmarque o ponga el monto en cero."
             )
-        return amount, residual
+        selected = self.line_ids.filtered(lambda l: l.apply and (l.amount_to_pay or 0.0) > 0)
+        if not selected:
+            raise UserError("Debe seleccionar al menos una factura con un monto mayor que cero.")
+        for line in selected:
+            residual = abs(line.move_id.amount_residual)
+            if line.amount_to_pay > residual + 0.01:
+                raise UserError(
+                    f"El monto a aplicar ({line.amount_to_pay:.2f}) supera el pendiente "
+                    f"de {line.move_id.name} ({residual:.2f})."
+                )
+        return selected
 
     def _register_vals_for_line(self, line, common):
-        """Arma vals para account.payment.register respetando abono parcial nativo Odoo."""
         move = line.move_id
-        applied, residual = self._effective_amount_to_pay(line)
+        applied = line.amount_to_pay
+        residual = abs(move.amount_residual)
         is_partial = applied < residual - 0.01
         register_vals = {
             **common,
@@ -471,82 +413,14 @@ class HelleniaPaymentPartnerWizard(models.TransientModel):
             )
         return register_vals, applied, is_partial
 
-    def _enforce_server_selection_guard(self):
-        """Blinda selección en servidor — no confiar solo en estado visual del listado."""
-        self.ensure_one()
-        self.env.flush_all()
-        unselected = self.line_ids.filtered(lambda l: not l.apply)
-        if unselected:
-            dirty = unselected.filtered(
-                lambda l: l.amount_to_pay or l.withholding_catalog_ids or l.withholding_detail_ids
-            )
-            if dirty:
-                dirty.write(
-                    {
-                        "amount_to_pay": 0.0,
-                        "withholding_catalog_ids": [Command.clear()],
-                    }
-                )
-        self.env.flush_all()
-
-    def _selected_line_ids_sql(self):
-        """IDs de líneas con apply=TRUE leídos directo de BD (evita caché ORM/UI)."""
-        self.ensure_one()
-        self.env.cr.execute(
-            """
-            SELECT id
-            FROM hellenia_payment_partner_wizard_line
-            WHERE wizard_id = %s AND apply IS TRUE
-            ORDER BY id
-            """,
-            [self.id],
-        )
-        return [row[0] for row in self.env.cr.fetchall()]
-
-    def _selected_lines(self):
-        """Líneas marcadas con Aplicar — única fuente para registrar pagos."""
-        self.ensure_one()
-        self._enforce_server_selection_guard()
-        line_ids = self._selected_line_ids_sql()
-        return self.env["hellenia.payment.partner.wizard.line"].browse(line_ids).exists()
-
-    def _log_selection_debug(self, selected, stage):
-        if not self.env.context.get("hellenia_debug_payment_selection"):
-            return
-        snapshot = []
-        for line in self.line_ids:
-            snapshot.append(
-                {
-                    "invoice": line.move_id.name,
-                    "apply": line.apply,
-                    "amount_to_pay": line.amount_to_pay,
-                    "move_id": line.move_id.id,
-                }
-            )
-        _logger.info(
-            "hellenia.payment.selection [%s] wizard=%s selected=%s lines=%s",
-            stage,
-            self.id,
-            selected.mapped("move_id.name"),
-            snapshot,
-        )
-
     def action_register_payments(self):
         self.ensure_one()
-        self._enforce_server_selection_guard()
-        marked = self._selected_lines()
-        self._log_selection_debug(marked, "before_register")
-        if not marked:
-            raise UserError("Debe seleccionar al menos una factura.")
-        invalid_zero = marked.filtered(lambda l: (l.amount_to_pay or 0.0) <= 0)
-        if invalid_zero:
-            names = ", ".join(invalid_zero.mapped("move_id.name"))
-            raise UserError(
-                f"Indique un monto a aplicar mayor que cero en: {names}."
-            )
-        selected = marked
         if not self.journal_id or not self.payment_method_line_id:
             raise UserError("Indique diario y método de pago.")
+        if not self.partner_id:
+            raise UserError("Indique el contacto.")
+
+        selected = self._validate_lines_for_register()
         if self.withholding_total and self.amount_after_withholding < 0:
             raise UserError("El total retenido supera el monto a aplicar.")
 
@@ -556,14 +430,7 @@ class HelleniaPaymentPartnerWizard(models.TransientModel):
 
         for line in selected:
             move = line.move_id
-            if not line.apply:
-                raise UserError(
-                    f"Factura {move.name} no está marcada para aplicar; reabra el wizard."
-                )
-            line._recompute_line_withholdings()
             register_vals, applied, is_partial = self._register_vals_for_line(line, common)
-            # Enterprise: force_payment_move usa cuenta outstanding → is_matched=False y factura
-            # queda in_payment aunque residual=0. Solo abonos parciales lo necesitan.
             register_ctx = {
                 "active_model": "account.move",
                 "active_ids": [move.id],
@@ -574,7 +441,6 @@ class HelleniaPaymentPartnerWizard(models.TransientModel):
             if is_partial:
                 register_ctx["force_payment_move"] = True
             register = Register.with_context(**register_ctx).create(register_vals)
-            # Odoo _compute_amount puede resetear amount al residual si custom_user_amount no quedó fijado.
             if is_partial or register.currency_id.compare_amounts(register.amount, applied) != 0:
                 register.write(
                     {
@@ -591,10 +457,6 @@ class HelleniaPaymentPartnerWizard(models.TransientModel):
                     f"Se esperaba un pago para {move.name}; se crearon {len(created)}."
                 )
             payments |= created
-            self._log_selection_debug(
-                selected,
-                f"after_payment_{move.name}_active_ids={register_ctx['active_ids']}",
-            )
 
         if len(payments) != len(selected):
             raise UserError(

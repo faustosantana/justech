@@ -70,6 +70,11 @@ for fname in required_payment:
 company = env.company
 customer = env["res.partner"].search([("customer_rank", ">", 0)], limit=1)
 vendor = env["res.partner"].search([("supplier_rank", ">", 0)], limit=1)
+if not vendor:
+    vendor = env["res.partner"].create(
+        {"name": "Proveedor certificación Fase 19.1", "supplier_rank": 1, "company_type": "company"}
+    )
+    env.cr.commit()
 product = env["product.product"].search([("sale_ok", "=", True), ("purchase_ok", "=", True)], limit=1)
 tax_sale = env["account.tax"].search(
     [("amount", "=", 18), ("type_tax_use", "=", "sale"), ("company_id", "=", company.id)], limit=1

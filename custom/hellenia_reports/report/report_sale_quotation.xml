@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <!-- Cotización Hellenia — base 23.3E con logo + ajustes finos CSS -->
+    <!-- Cotización Hellenia — compacto, wkhtmltopdf-safe -->
     <template id="hellenia_quotation_document">
         <t t-set="doc" t-value="doc.with_context(lang=doc.partner_id.lang)"/>
         <t t-set="company" t-value="doc.company_id"/>
@@ -36,7 +36,7 @@
                     font-size: 9.5pt;
                     color: #2d2d2d;
                     line-height: 1.35;
-                    margin: -6mm 0 0 0;
+                    margin: -4mm 0 0 0;
                     padding: 0;
                     width: 100%;
                 }
@@ -184,6 +184,13 @@
                     width: 100%;
                     font-size: 1px;
                     line-height: 1px;
+                }
+                .hellenia-quote-bottom-spacer td {
+                    max-height: 255px !important;
+                    overflow: hidden;
+                }
+                .hellenia-quote-conditions ~ table.hellenia-quote-bottom-spacer td {
+                    max-height: 40px !important;
                 }
                 .hellenia-quote-conditions {
                     border: 1px solid #e5e5e5;

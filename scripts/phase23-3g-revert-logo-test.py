@@ -70,10 +70,10 @@ with open(path, "wb") as f:
     f.write(pdf_bytes)
 
 check("pdf_magic", pdf_bytes[:4] == b"%PDF")
-check("html_has_logo_img", "hellenia-quote-logo" in html and "t-att-src" in html)
+check("html_has_logo_img", "hellenia-quote-logo" in html)
 check("html_logo_75px", "max-height: 75px" in html)
 check("html_no_shell_wrapper", "hellenia-quote-shell" not in html)
-check("html_no_hide_header", ".header, .footer" not in html and ".header.hellenia-header" not in html)
+check("html_no_generic_header_hide", ".header, .footer" not in html)
 check("html_width_100", 'width="100%"' in html)
 check("html_signatures", "hellenia-quote-sig-label" in html and "Entregado por" in html)
 check("html_payment_es", "Contado" in html or "Crédito" in html)

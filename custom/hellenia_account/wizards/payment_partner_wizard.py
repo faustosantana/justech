@@ -1,8 +1,12 @@
 """Wizard cobro/pago desde Clientes/Proveedores — retenciones por factura."""
 from __future__ import annotations
 
+import logging
+
 from odoo import Command, api, fields, models
 from odoo.exceptions import UserError
+
+_logger = logging.getLogger(__name__)
 
 
 class HelleniaPaymentPartnerWizardLine(models.TransientModel):
@@ -128,8 +132,23 @@ class HelleniaPaymentPartnerWizardLine(models.TransientModel):
     @api.onchange("amount_to_pay")
     def _onchange_amount_to_pay(self):
         for line in self:
+            if not line.apply:
+                line.amount_to_pay = 0.0
+                continue
             if line.withholding_catalog_ids:
                 line._recompute_line_withholdings()
+
+    def write(self, vals):
+        res = super().write(vals)
+        to_clear = self.filtered(lambda l: not l.apply)
+        if to_clear:
+            to_clear.filtered(lambda l: l.amount_to_pay or l.withholding_catalog_ids).write(
+                {
+                    "amount_to_pay": 0.0,
+                    "withholding_catalog_ids": [Command.clear()],
+                }
+            )
+        return res
 
     def _catalog_domain_partner_type(self):
         self.ensure_one()
@@ -323,7 +342,7 @@ class HelleniaPaymentPartnerWizard(models.TransientModel):
                     {
                         "move_id": move.id,
                         "apply": False,
-                        "amount_to_pay": abs(move.amount_residual),
+                        "amount_to_pay": 0.0,
                     }
                 )
             )
@@ -452,16 +471,71 @@ class HelleniaPaymentPartnerWizard(models.TransientModel):
             )
         return register_vals, applied, is_partial
 
+    def _enforce_server_selection_guard(self):
+        """Blinda selección en servidor — no confiar solo en estado visual del listado."""
+        self.ensure_one()
+        self.env.flush_all()
+        unselected = self.line_ids.filtered(lambda l: not l.apply)
+        if unselected:
+            dirty = unselected.filtered(
+                lambda l: l.amount_to_pay or l.withholding_catalog_ids or l.withholding_detail_ids
+            )
+            if dirty:
+                dirty.write(
+                    {
+                        "amount_to_pay": 0.0,
+                        "withholding_catalog_ids": [Command.clear()],
+                    }
+                )
+        self.env.flush_all()
+
+    def _selected_line_ids_sql(self):
+        """IDs de líneas con apply=TRUE leídos directo de BD (evita caché ORM/UI)."""
+        self.ensure_one()
+        self.env.cr.execute(
+            """
+            SELECT id
+            FROM hellenia_payment_partner_wizard_line
+            WHERE wizard_id = %s AND apply IS TRUE
+            ORDER BY id
+            """,
+            [self.id],
+        )
+        return [row[0] for row in self.env.cr.fetchall()]
+
     def _selected_lines(self):
         """Líneas marcadas con Aplicar — única fuente para registrar pagos."""
         self.ensure_one()
-        self.env.flush_all()
-        self.line_ids.flush_recordset(["apply", "amount_to_pay", "withholding_catalog_ids"])
-        return self.line_ids.filtered(lambda l: l.apply)
+        self._enforce_server_selection_guard()
+        line_ids = self._selected_line_ids_sql()
+        return self.env["hellenia.payment.partner.wizard.line"].browse(line_ids).exists()
+
+    def _log_selection_debug(self, selected, stage):
+        if not self.env.context.get("hellenia_debug_payment_selection"):
+            return
+        snapshot = []
+        for line in self.line_ids:
+            snapshot.append(
+                {
+                    "invoice": line.move_id.name,
+                    "apply": line.apply,
+                    "amount_to_pay": line.amount_to_pay,
+                    "move_id": line.move_id.id,
+                }
+            )
+        _logger.info(
+            "hellenia.payment.selection [%s] wizard=%s selected=%s lines=%s",
+            stage,
+            self.id,
+            selected.mapped("move_id.name"),
+            snapshot,
+        )
 
     def action_register_payments(self):
         self.ensure_one()
+        self._enforce_server_selection_guard()
         marked = self._selected_lines()
+        self._log_selection_debug(marked, "before_register")
         if not marked:
             raise UserError("Debe seleccionar al menos una factura.")
         invalid_zero = marked.filtered(lambda l: (l.amount_to_pay or 0.0) <= 0)
@@ -482,15 +556,20 @@ class HelleniaPaymentPartnerWizard(models.TransientModel):
 
         for line in selected:
             move = line.move_id
+            if not line.apply:
+                raise UserError(
+                    f"Factura {move.name} no está marcada para aplicar; reabra el wizard."
+                )
             line._recompute_line_withholdings()
             register_vals, applied, is_partial = self._register_vals_for_line(line, common)
             # Enterprise: force_payment_move usa cuenta outstanding → is_matched=False y factura
             # queda in_payment aunque residual=0. Solo abonos parciales lo necesitan.
             register_ctx = {
                 "active_model": "account.move",
-                "active_ids": move.ids,
+                "active_ids": [move.id],
                 "dont_redirect_to_payments": True,
                 "hellenia_applied_amount": applied,
+                "hellenia_single_invoice_id": move.id,
             }
             if is_partial:
                 register_ctx["force_payment_move"] = True
@@ -506,7 +585,21 @@ class HelleniaPaymentPartnerWizard(models.TransientModel):
                     }
                 )
             create_ctx = {"force_payment_move": True} if is_partial else {}
-            payments |= register.with_context(**create_ctx)._create_payments()
+            created = register.with_context(**create_ctx)._create_payments()
+            if len(created) != 1:
+                raise UserError(
+                    f"Se esperaba un pago para {move.name}; se crearon {len(created)}."
+                )
+            payments |= created
+            self._log_selection_debug(
+                selected,
+                f"after_payment_{move.name}_active_ids={register_ctx['active_ids']}",
+            )
+
+        if len(payments) != len(selected):
+            raise UserError(
+                f"Se crearon {len(payments)} pagos para {len(selected)} factura(s) seleccionada(s)."
+            )
 
         return {
             "type": "ir.actions.act_window",

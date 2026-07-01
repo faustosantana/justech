@@ -64,6 +64,13 @@ def fail(key, msg):
     err(f"{key}: {msg}")
 
 
+def _dgii_period():
+    util = env["justech.do.dgii.period"]
+    code = util.default_period_code()
+    date_from, date_to = util.period_bounds_from_code(code)
+    return code, date_from, date_to
+
+
 def _html(name, title, rows):
     path = os.path.join(EVIDENCE_DIR, name)
     body = "".join(
@@ -383,21 +390,24 @@ try:
         lc = _line_for(wiz_c, inv_c)
         lc.withholding_catalog_ids = [Command.set(_cat("RET-GOB-5").ids)]
         _pay(wiz_c, lc)
+        period_code, date_from, date_to = _dgii_period()
         rep606 = env["justech.do.fiscal.report"].create(
             {
-                "name": f"Cert 606 {date.today()}",
+                "name": f"Cert 606 {period_code}",
                 "report_type": "606",
-                "date_from": date.today().replace(month=1, day=1),
-                "date_to": date.today(),
+                "period_code": period_code,
+                "date_from": date_from,
+                "date_to": date_to,
             }
         )
         rep606.action_generate()
         rep607 = env["justech.do.fiscal.report"].create(
             {
-                "name": f"Cert 607 {date.today()}",
+                "name": f"Cert 607 {period_code}",
                 "report_type": "607",
-                "date_from": date.today().replace(month=1, day=1),
-                "date_to": date.today(),
+                "period_code": period_code,
+                "date_from": date_from,
+                "date_to": date_to,
             }
         )
         rep607.action_generate()

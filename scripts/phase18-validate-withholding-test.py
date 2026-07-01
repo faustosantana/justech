@@ -35,6 +35,13 @@ def fail(name, msg):
     err(f"{name}: {msg}")
 
 
+def _dgii_period():
+    util = env["justech.do.dgii.period"]
+    code = util.default_period_code()
+    date_from, date_to = util.period_bounds_from_code(code)
+    return code, date_from, date_to
+
+
 mod = env["ir.module.module"].search([("name", "=", "hellenia_account")], limit=1)
 if mod:
     mod.button_immediate_upgrade()
@@ -286,17 +293,19 @@ for key, partner, ptype, cat_codes in (
     except Exception as exc:  # noqa: BLE001
         fail(key, str(exc))
 
-# 10-11 reportes
+# 10-11 reportes 606/607 (período mensual YYYYMM)
 try:
     with env.cr.savepoint():
+        period_code, date_from, date_to = _dgii_period()
         for rtype, key in (("606", "10_report_606"), ("607", "11_report_607")):
             wiz = env["justech.do.fiscal.report.wizard"].create({
                 "report_type": rtype,
-                "date_from": date.today().replace(month=1, day=1),
-                "date_to": date.today(),
+                "period_code": period_code,
+                "date_from": date_from,
+                "date_to": date_to,
             })
             if wiz.action_generate():
-                pass_(key, rtype)
+                pass_(key, f"{rtype} {period_code}")
             else:
                 fail(key, "sin resultado")
 except Exception as exc:  # noqa: BLE001

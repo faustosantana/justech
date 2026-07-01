@@ -427,6 +427,8 @@ class HelleniaPaymentPartnerWizard(models.TransientModel):
                     }
                 )
             )
+            if abs((register.amount or 0.0) - line.amount_to_pay) > 0.01:
+                register.amount = line.amount_to_pay
             payments |= register._create_payments()
 
         return {

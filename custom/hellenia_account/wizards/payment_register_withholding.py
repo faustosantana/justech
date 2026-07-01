@@ -64,14 +64,14 @@ class AccountPaymentRegister(models.TransientModel):
         account.payment._prepare_move_withholding_lines() leyendo las líneas
         persistentes creadas junto al pago.
         """
+        applied = self.amount or payment_vals.get("amount") or 0.0
+        if applied:
+            payment_vals["hellenia_applied_amount"] = applied
+
         wh_lines = self.hellenia_withholding_line_ids
         wh_total = sum(wh_lines.mapped("amount"))
         if not wh_total:
             return payment_vals
-
-        applied = self.amount or payment_vals.get("amount") or 0.0
-        if applied:
-            payment_vals["hellenia_applied_amount"] = applied
 
         payment_vals["hellenia_withholding_line_ids"] = self._hellenia_persistent_withholding_commands(
             batch_result
@@ -103,6 +103,7 @@ class AccountPaymentRegister(models.TransientModel):
                     WhLine.create({"payment_id": payment.id, **self._hellenia_persistent_vals(wh, move)})
             payment._hellenia_link_withholding_move_lines()
             payment._hellenia_link_partial_reconciles()
+            payment._hellenia_sync_application_lines()
 
     def _init_payments(self, to_process, edit_mode=False):
         payments = super()._init_payments(to_process, edit_mode=edit_mode)
@@ -115,3 +116,4 @@ class AccountPaymentRegister(models.TransientModel):
         payments = self.env["account.payment"].concat(*[p["payment"] for p in to_process])
         payments._hellenia_link_withholding_move_lines()
         payments._hellenia_link_partial_reconciles()
+        payments._hellenia_sync_application_lines()

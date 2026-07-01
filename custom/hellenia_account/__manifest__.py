@@ -1,6 +1,6 @@
 {
     "name": "Hellenia Account",
-    "version": "19.0.1.0.14",
+    "version": "19.0.1.0.15",
     "category": "Accounting/Accounting",
     "summary": "Bancos, métodos de pago y cobros/pagos Hellenia",
     "description": """

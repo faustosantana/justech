@@ -221,7 +221,7 @@
             </div>
 
             <!-- Pie de página contacto -->
-            <div class="hellenia-footer-contact">
+            <div class="hellenia-footer-contact" style="border-top-color: #3E4827;">
                 <span t-if="company.phone" class="hellenia-footer-item">
                     <span class="hellenia-footer-icon" aria-hidden="true">☎</span>
                     <span t-field="company.phone"/>

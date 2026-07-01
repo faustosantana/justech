@@ -469,6 +469,7 @@ class HelleniaPaymentPartnerWizard(models.TransientModel):
                 active_ids=move.ids,
                 dont_redirect_to_payments=True,
                 hellenia_applied_amount=applied,
+                force_payment_move=True,
             ).create(register_vals)
             # Odoo _compute_amount puede resetear amount al residual si custom_user_amount no quedó fijado.
             if is_partial or register.currency_id.compare_amounts(register.amount, applied) != 0:
@@ -480,7 +481,7 @@ class HelleniaPaymentPartnerWizard(models.TransientModel):
                         "payment_difference_handling": "open",
                     }
                 )
-            payments |= register._create_payments()
+            payments |= register.with_context(force_payment_move=True)._create_payments()
 
         return {
             "type": "ir.actions.act_window",

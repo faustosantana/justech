@@ -24,7 +24,7 @@ report = {
     "database": DB,
     "certified_branch": "cursor/phase19-3-partial-payment-fix-dd85",
     "certified_commits": ["322238e", "bd91174"],
-    "module_version_expected": "19.0.1.0.21",
+    "module_version_expected": "19.0.1.0.22",
     "tests": {},
     "evidence": {},
     "ok": True,
@@ -43,7 +43,7 @@ def near(a, b, tol=TOL):
 
 
 mod = env["ir.module.module"].search([("name", "=", "hellenia_account")], limit=1)
-check("00_module_version", mod and mod.latest_version == "19.0.1.0.21", mod.latest_version if mod else "missing")
+check("00_module_version", mod and mod.latest_version == "19.0.1.0.22", mod.latest_version if mod else "missing")
 
 setup = env["hellenia.account.payment.setup"]
 setup.configure_banks_and_payments()
@@ -126,10 +126,6 @@ def _pay_wizard(partner, inv, ptype, amount=None, cats=None, ref="P194"):
     wiz.action_register_payments()
     env.cr.flush()
     pay = Payment.search([("partner_id", "=", partner.id)], order="id desc", limit=1)
-    if pay.state == "draft":
-        pay.action_post()
-    if hasattr(pay, "action_validate") and pay.state == "in_process":
-        pay.action_validate()
     pay.invalidate_recordset()
     inv.invalidate_recordset(["payment_state", "amount_residual"])
     return pay

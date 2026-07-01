@@ -107,7 +107,9 @@ for key, so in orders.items():
     check(f"{key}_no_immediate_payment", "immediate payment" not in html.lower())
     check(f"{key}_no_client_address", "Dirección" not in html)
     check(f"{key}_condiciones", "CONDICIONES" in html)
-    check(f"{key}_totals", "hq-totals" in html and "t-grand" in html)
+    check(f"{key}_totals", "hq-totals" in html and "grand" in html)
+    check(f"{key}_no_excel_borders", "border: 1px solid" not in html and "border:1px solid" not in html)
+    check(f"{key}_band_white_text", "hq-band-title" in html and "color: #ffffff" in html)
     if key == "quote_1":
         check("quote_1_single_page", pages == 1, f"pages={pages}")
     else:

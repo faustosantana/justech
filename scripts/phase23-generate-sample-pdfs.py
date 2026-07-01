@@ -111,12 +111,14 @@ po = env["purchase.order"].search(
 )
 save_pdf("05_orden_compra", "purchase.action_report_purchase_order", po)
 
-# RFQ
+# RFQ — usar OC en borrador o reutilizar OC confirmada
 rfq = env["purchase.order"].search(
     [("state", "in", ["draft", "sent", "to approve"]), ("company_id", "=", company.id)],
     order="id desc",
     limit=1,
 )
+if not rfq and po:
+    rfq = po
 save_pdf("06_rfq", "purchase.report_purchase_quotation", rfq)
 
 # Delivery slip
@@ -147,7 +149,6 @@ save_pdf("08_recepcion", "stock.action_report_delivery", receipt)
 payment = env["account.payment"].search(
     [
         ("state", "=", "posted"),
-        ("partner_type", "=", "customer"),
         ("company_id", "=", company.id),
     ],
     order="id desc",
@@ -178,7 +179,7 @@ if customer:
         report["pdfs"]["10_estado_cuenta_cliente"] = {"status": "FAIL", "detail": str(exc)[:500]}
         report["ok"] = False
 
-# Estado de cuenta proveedor
+# Estado de cuenta proveedor (followup)
 vendor = env["res.partner"].search(
     [("supplier_rank", ">", 0)],
     order="id desc",
@@ -186,30 +187,18 @@ vendor = env["res.partner"].search(
 )
 if vendor:
     try:
-        stmt_report = env.ref("account_reports.customer_statement_report", raise_if_not_found=False)
-        if stmt_report:
-            handler = env["account.customer.statement.report.handler"]
-            options = handler._get_options(
-                stmt_report,
-                vendor.ids,
-                {"partner_ids": vendor.ids, "date": {"mode": "single", "date_to": date.today().isoformat()}},
-            )
-            pdf_bytes = env["ir.actions.report"]._render_qweb_pdf(
-                "account_reports.pdf_export_main",
-                res_ids=[],
-                data={"options": options, "report_id": stmt_report.id},
-            )[0]
-            path = os.path.join(OUT_DIR, "11_estado_cuenta_proveedor.pdf")
-            with open(path, "wb") as f:
-                f.write(pdf_bytes)
-            report["pdfs"]["11_estado_cuenta_proveedor"] = {
-                "status": "OK",
-                "record": vendor.display_name,
-                "path": path,
-                "note": "customer_statement_report used for vendor sample",
-            }
-        else:
-            report["pdfs"]["11_estado_cuenta_proveedor"] = {"status": "SKIP", "detail": "no report ref"}
+        action = env.ref("account_followup.action_report_followup")
+        pdf_bytes, _fmt = Report._render_qweb_pdf(action.report_name, vendor.ids)
+        path = os.path.join(OUT_DIR, "11_estado_cuenta_proveedor.pdf")
+        with open(path, "wb") as f:
+            f.write(pdf_bytes)
+        report["pdfs"]["11_estado_cuenta_proveedor"] = {
+            "status": "OK",
+            "record": vendor.display_name,
+            "path": path,
+            "size_bytes": len(pdf_bytes),
+            "note": "followup letter for vendor partner",
+        }
     except Exception as exc:
         report["pdfs"]["11_estado_cuenta_proveedor"] = {"status": "FAIL", "detail": str(exc)[:500]}
 

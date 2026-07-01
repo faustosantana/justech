@@ -7,13 +7,11 @@
             <attribute name="class" add="hellenia-stock-doc hellenia-delivery-doc" separator=" "/>
         </xpath>
 
-        <xpath expr="//h2" position="replace">
+        <xpath expr="//div[hasclass('page')]/h2" position="replace">
+            <t t-set="hellenia_delivery_label"
+               t-value="'Recepción de mercancía' if o.picking_type_id.code == 'incoming' else ('Guía de entrega' if o.picking_type_id.code == 'outgoing' else 'Movimiento de inventario')"/>
             <div class="hellenia-delivery-banner">
-                <div class="hellenia-delivery-type">
-                    <t t-if="o.picking_type_id.code == 'incoming'">Recepción de mercancía</t>
-                    <t t-elif="o.picking_type_id.code == 'outgoing'">Guía de entrega</t>
-                    <t t-else="">Movimiento de inventario</t>
-                </div>
+                <div class="hellenia-delivery-type"><t t-esc="hellenia_delivery_label"/></div>
                 <div class="hellenia-delivery-ref"><span t-field="o.name"/></div>
             </div>
         </xpath>
@@ -56,18 +54,12 @@
         <xpath expr="//th[@name='th_sm_quantity']/strong" position="replace">
             <strong>Entregado</strong>
         </xpath>
-        <xpath expr="//th[@name='th_sml_product']" position="replace">
-            <th name="th_sml_product"><strong>Producto</strong></th>
-        </xpath>
-        <xpath expr="//th[@name='th_sml_qty_ordered']" position="replace" optional="True">
-            <th name="th_sml_qty_ordered" class="text-end"><strong>Pedido</strong></th>
-        </xpath>
 
         <xpath expr="//table[@name='stock_move_table']" position="attributes">
-            <attribute name="class" add="hellenia-lines-table table table-sm" separator=" "/>
+            <attribute name="class" add="hellenia-lines-table" separator=" "/>
         </xpath>
         <xpath expr="//table[@name='stock_move_line_table']" position="attributes">
-            <attribute name="class" add="hellenia-lines-table table table-sm" separator=" "/>
+            <attribute name="class" add="hellenia-lines-table" separator=" "/>
         </xpath>
 
         <xpath expr="//div[hasclass('page')]" position="inside">
@@ -94,13 +86,7 @@
         <xpath expr="//strong[text()='Customer Address:']" position="replace">
             <strong>Dirección cliente:</strong>
         </xpath>
-        <xpath expr="//h1" position="replace">
-            <div class="hellenia-delivery-banner mb-3">
-                <div class="hellenia-delivery-type">Operación de almacén</div>
-                <div class="hellenia-delivery-ref"><span t-field="o.name"/></div>
-            </div>
-        </xpath>
-        <xpath expr="//table[hasclass('table')]" position="attributes">
+        <xpath expr="//div[hasclass('page')]//table[hasclass('table')]" position="attributes">
             <attribute name="class" add="hellenia-lines-table" separator=" "/>
         </xpath>
         <xpath expr="//div[hasclass('page')]" position="inside">

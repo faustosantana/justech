@@ -91,7 +91,7 @@
             <strong>Cant.</strong>
         </xpath>
 
-        <xpath expr="//table[hasclass('o_main_table')]" position="attributes">
+        <xpath expr="//table[hasclass('table-borderless')]" position="attributes">
             <attribute name="class" add="hellenia-lines-table" separator=" "/>
         </xpath>
 

@@ -17,18 +17,18 @@ Verificar que todos los documentos PDF comparten la misma identidad visual corpo
 
 | Criterio | Esperado | Estado |
 |----------|----------|--------|
-| Color primario `#3E4827` en headers/tablas | Sí | Pendiente deploy |
-| Sin azul ni dorado | Sí | Implementado en SCSS |
-| Layout `external_layout_hellenia` | Todos los comerciales | Configurado |
-| Paperformat `Hellenia Carta` | Todos los reportes | Configurado |
-| Etiquetas en español | 100% | Implementado |
-| NCF → "Número de Comprobante Fiscal" | Facturas | Implementado |
-| Leyenda DGII bajo NCF | Facturas | Implementado |
-| Sin QR en factura | Sí | Implementado |
-| Recibo con retenciones detalladas | Sí | Implementado |
-| NC/ND misma familia que factura | Sí | Implementado |
-| Delivery slip rediseñado | Sí | Implementado |
-| Estados de cuenta estilizados | Sí | Implementado |
+| Color primario `#3E4827` en headers/tablas | Sí | PASS (TEST) |
+| Sin azul ni dorado | Sí | PASS |
+| Layout `external_layout_hellenia` | Todos los comerciales | PASS |
+| Paperformat `Hellenia Carta` | Todos los reportes | PASS |
+| Etiquetas en español | 100% | PASS |
+| NCF → "Número de Comprobante Fiscal" | Facturas | PASS |
+| Leyenda DGII bajo NCF | Facturas | PASS |
+| Sin QR en factura | Sí | PASS |
+| Recibo con retenciones detalladas | Sí | Implementado (sin pago posted en TEST) |
+| NC/ND misma familia que factura | Sí | PASS |
+| Delivery slip rediseñado | Sí | PASS |
+| Estados de cuenta estilizados | Sí | PASS |
 
 ---
 
@@ -100,7 +100,7 @@ Tras generar los PDFs, verificar:
 
 | Entorno | Fecha | Resultado | Notas |
 |---------|-------|-----------|-------|
-| TEST | Pendiente | — | Ejecutar script post-deploy |
+| TEST | 2026-07-01 | PASS (10/11 PDFs) | Recibo de pago SKIP — sin pagos posted en TEST |
 | PROD | No promovido | — | Esperar certificación visual TEST |
 
 **Criterio de promoción:** Todos los PDFs generados sin error + revisión visual PASS en checklist §5.

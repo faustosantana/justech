@@ -53,9 +53,13 @@ else:
 # --- Reportes DGII (wizard Justech) ---
 try:
     env.ref("justech_l10n_do_reports.action_justech_do_fiscal_report_wizard")
+    today = dt.date.today()
+    date_from = today.replace(day=1)
+    _, last_day = __import__("calendar").monthrange(today.year, today.month)
+    date_to = today.replace(day=last_day)
     for rtype in ("606", "607", "608"):
         wiz = env["justech.do.fiscal.report.wizard"].create(
-            {"report_type": rtype, "date_from": dt.date.today().replace(day=1), "date_to": dt.date.today()}
+            {"report_type": rtype, "date_from": date_from, "date_to": date_to}
         )
         wiz.action_generate()
         pass_check(f"report_{rtype}")

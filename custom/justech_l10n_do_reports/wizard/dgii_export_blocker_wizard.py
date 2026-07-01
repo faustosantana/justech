@@ -17,8 +17,6 @@ class JustechDoDgiiExportBlockerWizard(models.TransientModel):
     pending_approval_count = fields.Integer(string="Pendientes aprobación", readonly=True)
     incomplete_count = fields.Integer(string="Incompletos", readonly=True)
     not_loaded = fields.Boolean(string="Sin líneas cargadas", readonly=True)
-    no_movements = fields.Boolean(string="Sin movimientos en período", readonly=True)
-    empty_message = fields.Char(string="Mensaje período vacío", readonly=True)
     needs_approval = fields.Boolean(string="Requiere aprobación", readonly=True)
     no_valid = fields.Boolean(string="Sin válidos", readonly=True)
     wrong_state = fields.Boolean(string="Estado incorrecto", readonly=True)
@@ -47,15 +45,9 @@ class JustechDoDgiiExportBlockerWizard(models.TransientModel):
             reasons = []
             actions = []
 
-            if wiz.no_movements:
-                msg = wiz.empty_message or _(
-                    "No hay movimientos para este reporte en el período seleccionado."
-                )
-                reasons.append(msg)
-                actions.append(_("Puede guardar la revisión vacía. No es necesario generar Excel."))
-            elif wiz.not_loaded:
-                reasons.append(_("Debe cargar y validar el período antes de exportar."))
-                actions.append(_("Use «Cargar período» y «Validar período» en la revisión fiscal."))
+            if wiz.not_loaded:
+                reasons.append(_("No se cargaron líneas de revisión fiscal para este período."))
+                actions.append(_("Valide el período y guarde la revisión fiscal."))
             if wiz.needs_approval:
                 reasons.append(
                     _("%(n)s exclusión(es) manual(es) esperan aprobación del supervisor.")
@@ -67,7 +59,7 @@ class JustechDoDgiiExportBlockerWizard(models.TransientModel):
                     _("%(n)s documento(s) con exclusión pendiente de decisión.")
                     % {"n": wiz.pending_approval_count}
                 )
-            if wiz.no_valid and not wiz.not_loaded and not wiz.no_movements:
+            if wiz.no_valid and not wiz.not_loaded:
                 reasons.append(_("No hay documentos válidos incluidos para exportar."))
                 actions.append(_("Revise los documentos incompletos o excluidos en Revisión fiscal."))
             if wiz.incomplete_count:

@@ -75,8 +75,6 @@
         <field name="arch" type="xml">
             <form string="Bandeja de aprobación DGII" create="0" delete="0">
                 <header>
-                    <button name="action_validate_period" string="Validar período" type="object"
-                            invisible="not line_ids or validated_at"/>
                     <button name="action_approve_report" string="Aprobar todas" type="object"
                             class="btn-primary"
                             invisible="pending_approval_count == 0"
@@ -95,24 +93,26 @@
                             <field name="period_code" readonly="1"/>
                         </h1>
                     </div>
-                    <group col="4">
-                        <field name="name" readonly="1"/>
-                        <field name="company_id" groups="base.group_multi_company" readonly="1"/>
-                        <field name="date_from" invisible="1"/>
-                        <field name="date_to" invisible="1"/>
-                        <field name="validated_at" invisible="1"/>
-                        <label for="date_from_display" string="Período"/>
-                        <div class="o_row">
-                            <field name="date_from_display" readonly="1" nolabel="1" class="oe_inline"/>
-                            <span class="oe_inline"> — </span>
-                            <field name="date_to_display" readonly="1" nolabel="1" class="oe_inline"/>
-                        </div>
-                        <field name="approval_submitted_by_id" readonly="1"/>
-                        <field name="pending_approval_count" readonly="1"/>
+                    <group>
+                        <group>
+                            <field name="name" readonly="1"/>
+                            <field name="company_id" groups="base.group_multi_company" readonly="1"/>
+                            <field name="date_from" invisible="1"/>
+                            <field name="date_to" invisible="1"/>
+                            <field name="date_from_display" readonly="1"/>
+                            <field name="date_to_display" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="approval_submitted_by_id" readonly="1"/>
+                            <field name="approval_submitted_at" readonly="1"/>
+                            <field name="pending_approval_count" readonly="1"/>
+                            <field name="manual_exclusion_count" readonly="1"/>
+                        </group>
                     </group>
                     <notebook>
                         <page string="Documentos pendientes de decisión">
-                            <field name="line_ids_pending_approval" nolabel="1" readonly="1"
+                            <field name="line_ids" nolabel="1" readonly="1"
+                                   domain="[('manual_exclusion', '=', True), ('line_approval_state', '=', 'pending')]"
                                    context="{'list_view_ref': 'justech_l10n_do_reports.view_justech_do_fiscal_report_line_pending_tray_tree'}"/>
                         </page>
                         <page string="Bitácora">
@@ -123,18 +123,6 @@
                                     <field name="user_id" string="Usuario"/>
                                     <field name="move_id" string="Documento"/>
                                     <field name="description" string="Comentario"/>
-                                    <field name="permission_hint" string="Permisos" optional="show"/>
-                                    <field name="can_decide" column_invisible="1"/>
-                                    <field name="line_id" column_invisible="1"/>
-                                    <button name="action_audit_approve" type="object" icon="fa-check"
-                                            title="Aprobar"
-                                            invisible="not can_decide"/>
-                                    <button name="action_audit_reject" type="object" icon="fa-times"
-                                            title="Rechazar"
-                                            invisible="not can_decide"/>
-                                    <button name="action_audit_request_correction" type="object" icon="fa-undo"
-                                            title="Solicitar corrección"
-                                            invisible="not can_decide"/>
                                 </list>
                             </field>
                         </page>
@@ -169,7 +157,6 @@
         <field name="name">Pendientes de aprobación</field>
         <field name="res_model">justech.do.fiscal.report</field>
         <field name="view_mode">list,form</field>
-        <field name="search_view_id" ref="justech_l10n_do_reports.view_justech_do_fiscal_report_search"/>
         <field name="domain">[('has_pending_approval', '=', True), ('active', '=', True)]</field>
         <field name="context">{'create': False}</field>
         <field name="help" type="html">

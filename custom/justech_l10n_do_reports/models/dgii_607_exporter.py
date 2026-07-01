@@ -1,11 +1,7 @@
 """Exportador piloto DGII 607 — layout oficial según dgii_607_mapping.json."""
 from __future__ import annotations
 
-import re
-
 from odoo import _, models
-
-NCF_FULL_RE = re.compile(r"^[BE][0-9]{2}[0-9]{8}$")
 
 
 class JustechDoDgii607Exporter(models.AbstractModel):
@@ -88,43 +84,13 @@ class JustechDoDgii607Exporter(models.AbstractModel):
         return "07"
 
     def _income_type_code(self, move):
-        explicit = getattr(move, "justech_do_income_type_607", False)
-        if explicit:
-            return explicit
+        """P1 pendiente — valor por defecto normativo para piloto."""
         prefix = self._ncf_prefix(move)
         if prefix in ("B14", "E44"):
             return "02"
         if prefix in self.CONSUMER_NCF_PREFIXES:
             return "01"
         return "01"
-
-    def _ncf_is_valid_format(self, ncf):
-        ncf = (ncf or "").strip().upper().replace(" ", "")
-        return bool(NCF_FULL_RE.match(ncf))
-
-    def _sales_metrics(self, buckets):
-        fiscal_report = self.env["justech.do.fiscal.report"]
-        exportable = buckets["valid"]
-        invoices = exportable.filtered(lambda m: m.move_type == "out_invoice")
-        credit_notes = exportable.filtered(lambda m: m.move_type == "out_refund")
-        itbis_total = 0.0
-        taxed_sales = 0.0
-        exempt_sales = 0.0
-        for move in exportable:
-            itbis = fiscal_report._move_itbis_amount(move)
-            untaxed = abs(move.amount_untaxed_signed)
-            itbis_total += itbis
-            if itbis > 0:
-                taxed_sales += untaxed
-            else:
-                exempt_sales += untaxed
-        return {
-            "invoices": len(invoices),
-            "credit_notes": len(credit_notes),
-            "itbis_billed": itbis_total,
-            "taxed_sales": taxed_sales,
-            "exempt_sales": exempt_sales,
-        }
 
     def _payment_amount_columns(self, move, total_with_tax, sign):
         """Asigna el total con ITBIS a la columna de medio de pago inferida."""
@@ -147,26 +113,8 @@ class JustechDoDgii607Exporter(models.AbstractModel):
         label = self._move_label(move)
         partner = move.partner_id
         consumer = self._is_consumer_invoice(move)
-        ncf = move.justech_do_ncf
-        if not ncf:
-            errors.append(_("%(doc)s: falta NCF.") % {"doc": label})
-        elif not self._ncf_is_valid_format(ncf):
-            errors.append(
-                _("%(doc)s: NCF inválido «%(ncf)s» (formato esperado: 11 caracteres, ej. B0100000001).")
-                % {"doc": label, "ncf": ncf}
-            )
-        if move.move_type == "out_refund":
-            ncf_modified = move.justech_do_ncf_modified or move.justech_do_origin_ncf
-            if not ncf_modified:
-                errors.append(
-                    _("%(doc)s: la nota de crédito no tiene NCF modificado.")
-                    % {"doc": label}
-                )
-            elif not self._ncf_is_valid_format(ncf_modified):
-                errors.append(
-                    _("%(doc)s: NCF modificado inválido «%(ncf)s».")
-                    % {"doc": label, "ncf": ncf_modified}
-                )
+        if not move.justech_do_ncf:
+            errors.append(_("%(doc)s: la factura no tiene NCF.") % {"doc": label})
         if not consumer and not partner.vat:
             errors.append(
                 _("%(doc)s: el cliente %(partner)s no tiene RNC/Cédula.")
@@ -177,8 +125,6 @@ class JustechDoDgii607Exporter(models.AbstractModel):
                 _("%(doc)s: el cliente %(partner)s no tiene tipo de identificación DGII.")
                 % {"doc": label, "partner": partner.display_name}
             )
-        if not self._income_type_code(move):
-            errors.append(_("%(doc)s: falta tipo de ingreso DGII.") % {"doc": label})
         if move.invoice_date and (move.invoice_date < date_from or move.invoice_date > date_to):
             errors.append(
                 _("%(doc)s: la fecha %(fecha)s está fuera del período.")
@@ -200,39 +146,13 @@ class JustechDoDgii607Exporter(models.AbstractModel):
                     "taxes": ", ".join(unknown.mapped("tax_line_id.name")),
                 }
             )
-        itbis_wh, isr_wh, _isr_type, missing_codes = self._withholding_breakdown(move)
+        _itbis_wh, _isr_wh, _isr_type, missing_codes = self._withholding_breakdown(move)
         for wh_name in missing_codes:
             errors.append(
                 _("%(doc)s: retención «%(wh)s» sin código DGII configurado.")
                 % {"doc": label, "wh": wh_name}
             )
-        if (itbis_wh or isr_wh) and not self._retention_date(move, date_from, date_to):
-            errors.append(
-                _("%(doc)s: falta fecha de retención en el período reportado.")
-                % {"doc": label}
-            )
         return errors
-
-    def format_validation_summary(self, result):
-        lines = super().format_validation_summary(result).split("\n")
-        metrics = self._sales_metrics(result["buckets"])
-        counts = result["counts"]
-        lines.extend(
-            [
-                "",
-                _("Resumen de ventas (documentos válidos)"),
-                "—" * 24,
-                _("Facturas exportables: %(n)s") % {"n": metrics["invoices"]},
-                _("Notas de crédito: %(n)s") % {"n": metrics["credit_notes"]},
-                _("ITBIS facturado: %(amount).2f") % {"amount": metrics["itbis_billed"]},
-                _("Ventas gravadas: %(amount).2f") % {"amount": metrics["taxed_sales"]},
-                _("Ventas exentas: %(amount).2f") % {"amount": metrics["exempt_sales"]},
-                "",
-                _("Documentos excluidos: %(n)s") % {"n": counts["excluded"]},
-                _("Documentos incompletos: %(n)s") % {"n": counts["incomplete"]},
-            ]
-        )
-        return "\n".join(lines)
 
     def _dgii_build_row_values(self, move, line_number, date_from, date_to):
         partner = move.partner_id

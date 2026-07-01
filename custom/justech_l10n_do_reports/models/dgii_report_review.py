@@ -22,7 +22,6 @@ class JustechDoFiscalReportReview(models.Model):
             ("rejected", "Rechazado"),
             ("generated", "Generado"),
             ("done", "Generado"),
-            ("no_movements", "Sin movimientos"),
         ],
         string="Estado flujo",
         default="draft",
@@ -63,43 +62,6 @@ class JustechDoFiscalReportReview(models.Model):
     review_excluded_count = fields.Integer(compute="_compute_review_counts")
     review_cancelled_count = fields.Integer(compute="_compute_review_counts")
     review_pending_approval_count = fields.Integer(compute="_compute_review_counts")
-
-    line_ids_valid = fields.One2many(
-        "justech.do.fiscal.report.line",
-        "report_id",
-        string="Válidos",
-        domain=[("fiscal_state", "=", "valid"), ("include_in_report", "=", True)],
-    )
-    line_ids_incomplete = fields.One2many(
-        "justech.do.fiscal.report.line",
-        "report_id",
-        string="Incompletos",
-        domain=[("fiscal_state", "=", "incomplete")],
-    )
-    line_ids_excluded = fields.One2many(
-        "justech.do.fiscal.report.line",
-        "report_id",
-        string="Excluidos",
-        domain=[("fiscal_state", "=", "excluded")],
-    )
-    line_ids_cancelled = fields.One2many(
-        "justech.do.fiscal.report.line",
-        "report_id",
-        string="Anulados",
-        domain=[("fiscal_state", "=", "cancelled")],
-    )
-    line_ids_pending_approval = fields.One2many(
-        "justech.do.fiscal.report.line",
-        "report_id",
-        string="Pendientes aprobación",
-        domain=[("line_approval_state", "=", "pending")],
-    )
-    line_ids_approved = fields.One2many(
-        "justech.do.fiscal.report.line",
-        "report_id",
-        string="Aprobados",
-        domain=[("line_approval_state", "=", "approved")],
-    )
 
     AUTO_UAT_EXCLUSION_REASON = (
         "Documento de prueba/UAT excluido del reporte fiscal."
@@ -149,25 +111,14 @@ class JustechDoFiscalReportReview(models.Model):
         """Carga todas las líneas del período para revisión en línea."""
         for report in self:
             report._check_editable()
-            report._sync_dates_from_period_code()
             if report.date_from > report.date_to:
                 raise UserError(_("La fecha desde no puede ser posterior a la fecha hasta."))
             report.line_ids.unlink()
             lines = report._collect_review_lines()
-            report.write(
-                {
-                    "line_ids": [(0, 0, vals) for vals in lines],
-                    "review_loaded": True,
-                }
-            )
-            empty_msg = report._empty_period_message() if not lines else ""
-            if lines:
-                transition_msg = _("Período cargado con %(n)s documento(s).") % {"n": len(lines)}
-            else:
-                transition_msg = empty_msg
+            report.write({"line_ids": [(0, 0, vals) for vals in lines]})
             report._transition_state(
                 "draft",
-                transition_msg,
+                _("Período cargado con %(n)s documento(s).") % {"n": len(lines)},
                 audit_type="validate",
             )
             report._refresh_summary_counts()
@@ -194,10 +145,6 @@ class JustechDoFiscalReportReview(models.Model):
             return self._review_lines_607()
         if self.report_type == "608":
             return self._review_lines_608()
-        if self.report_type == "609":
-            return self._review_lines_609()
-        if self.report_type == "623":
-            return self._review_lines_623()
         return []
 
     def _review_lines_dgii(self, exporter_model):
@@ -216,35 +163,26 @@ class JustechDoFiscalReportReview(models.Model):
 
     def _prepare_line_vals_dgii(self, move, result, exporter):
         itbis = self._move_itbis_amount(move)
-        wh_itbis, wh_isr, _isr_type, _missing = exporter._withholding_breakdown(move)
+        wh_itbis, wh_isr, _, _ = exporter._withholding_breakdown(move)
         errors = result["move_errors"].get(move.id)
         if errors is None and move in result["buckets"]["incomplete"]:
             errors = exporter._dgii_validate_single_move(
                 move, self.date_from, self.date_to
             )
         errors = errors or []
-        pay_code = ""
-        if hasattr(exporter, "_payment_method_code"):
-            pay_code = exporter._payment_method_code(move)
+        pay_code = exporter._payment_method_code(move)
         partner = move.partner_id
         fiscal_state = move.justech_do_dgii_fiscal_state or "incomplete"
         exclusion_reason = move.justech_do_dgii_exclusion_reason or ""
         auto_exclusion = False
-        if fiscal_state == "excluded" or (
-            self.report_type not in ("608", "609") and not move.justech_do_include_in_dgii
-        ):
+        if fiscal_state == "excluded" or not move.justech_do_include_in_dgii:
             if not exclusion_reason:
                 exclusion_reason = _(self.AUTO_UAT_EXCLUSION_REASON)
                 auto_exclusion = True
             else:
                 auto_exclusion = True
-        if self.report_type == "608":
-            include = fiscal_state == "valid"
-        elif self.report_type == "609":
-            include = fiscal_state == "valid"
-        else:
-            include = bool(move.justech_do_include_in_dgii) and fiscal_state != "cancelled"
-        vals = {
+        include = bool(move.justech_do_include_in_dgii) and fiscal_state != "cancelled"
+        return {
             "move_id": move.id,
             "move_name": move.name or move.ref,
             "partner_id": partner.id,
@@ -271,58 +209,6 @@ class JustechDoFiscalReportReview(models.Model):
             "error_message": "\n".join(errors),
             "manual_exclusion": False,
         }
-        if self.report_type == "608":
-            void_user = ""
-            if hasattr(exporter, "_void_user_name"):
-                void_user = exporter._void_user_name(move)
-            notes = move.justech_do_ncf_void_reason or ""
-            if void_user:
-                notes = f"{notes} | {_('Anulado por')}: {void_user}".strip(" |")
-            vals.update(
-                {
-                    "document_date": move.justech_do_ncf_void_date or move.invoice_date,
-                    "document_type": move.justech_do_ncf_cancel_type or self._ncf_prefix_from_move(move),
-                    "notes": notes,
-                }
-            )
-        elif self.report_type == "609":
-            service_labels = dict(
-                self.env["account.move"]._fields["justech_do_foreign_service_type"].selection
-            )
-            vals.update(
-                {
-                    "ncf": move.justech_do_foreign_document_ref or move.ref or move.name or "",
-                    "document_type": service_labels.get(
-                        move.justech_do_foreign_service_type, ""
-                    ),
-                    "document_date": move.invoice_date,
-                    "amount_withholding": move.justech_do_foreign_isr_retained or wh_isr,
-                    "notes": partner.country_id.code or "",
-                }
-            )
-        elif self.report_type == "623":
-            gov_tax = exporter._gov_tax(move.company_id) if hasattr(exporter, "_gov_tax") else False
-            gov_amount = exporter._gov_amount(move, gov_tax) if hasattr(exporter, "_gov_amount") else wh_isr
-            ret_date = exporter._retention_date(move) if hasattr(exporter, "_retention_date") else move.invoice_date
-            ref, ref_type, bank = ("", "", "")
-            if hasattr(exporter, "_reference_data"):
-                ref, ref_type, bank = exporter._reference_data(move)
-            vals.update(
-                {
-                    "document_date": ret_date,
-                    "amount_withholding": gov_amount,
-                    "document_type": _("5% Gobierno"),
-                    "notes": ref or bank or ref_type,
-                }
-            )
-        return vals
-
-    def _ncf_prefix_from_move(self, move):
-        doc = move.justech_do_document_type_id
-        if doc and doc.prefix:
-            return doc.prefix
-        ncf = move.justech_do_ncf or ""
-        return ncf[:3] if len(ncf) >= 3 else ncf
 
     def _prepare_line_vals_606(self, move, result, exporter):
         return self._prepare_line_vals_dgii(move, result, exporter)
@@ -331,38 +217,43 @@ class JustechDoFiscalReportReview(models.Model):
         return self._review_lines_dgii("justech.do.dgii.607.exporter")
 
     def _review_lines_608(self):
-        return self._review_lines_dgii("justech.do.dgii.608.exporter")
+        self.ensure_one()
+        moves = self.env["account.move"].search(
+            self._base_move_domain() + [("justech_do_ncf_voided", "=", True)]
+        )
+        return [self._prepare_line_vals_generic(move) for move in moves.filtered("justech_do_ncf")]
 
-    def _review_lines_609(self):
-        return self._review_lines_dgii("justech.do.dgii.609.exporter")
-
-    def _review_lines_623(self):
-        return self._review_lines_dgii("justech.do.dgii.623.exporter")
+    def _prepare_line_vals_generic(self, move):
+        itbis = self._move_itbis_amount(move)
+        fiscal_state = move.justech_do_dgii_fiscal_state or "incomplete"
+        if move.justech_do_ncf_voided:
+            fiscal_state = "cancelled"
+        return {
+            "move_id": move.id,
+            "move_name": move.name or move.ref,
+            "partner_id": move.partner_id.id,
+            "partner_vat": move.partner_id.vat or "",
+            "partner_name": move.partner_id.display_name,
+            "document_type": move.justech_do_document_type_id.prefix or "",
+            "ncf": move.justech_do_ncf or "",
+            "ncf_modified": move.justech_do_ncf_modified or "",
+            "document_date": move.invoice_date,
+            "invoice_date_due": move.invoice_date_due,
+            "currency_id": move.currency_id.id,
+            "amount_untaxed": abs(move.amount_untaxed_signed),
+            "amount_tax": itbis,
+            "amount_total": abs(move.amount_total_signed),
+            "fiscal_state": fiscal_state,
+            "include_in_report": bool(move.justech_do_include_in_dgii),
+            "exclusion_reason": move.justech_do_dgii_exclusion_reason or "",
+        }
 
     def action_validate_period(self):
         for report in self:
-            if not report.line_ids and not report.review_loaded:
-                report.action_load_review_lines()
             if not report.line_ids:
-                empty_msg = report._empty_period_message()
-                report.write(
-                    {
-                        "validation_log": empty_msg,
-                        "validated_by_id": self.env.user.id,
-                        "validated_at": fields.Datetime.now(),
-                    }
-                )
-                report._refresh_summary_counts()
-                report._transition_state(
-                    "no_movements",
-                    empty_msg,
-                    audit_type="validate",
-                )
-                report.invalidate_recordset(["validation_state"])
-                continue
+                report.action_load_review_lines()
             if report.report_type in report.DGII_EXPORTER_MODELS:
                 report.action_validate()
-                report._sync_line_fiscal_states_from_moves()
             report.write(
                 {
                     "validated_by_id": self.env.user.id,
@@ -375,7 +266,6 @@ class JustechDoFiscalReportReview(models.Model):
                 report.validation_log or _("Validación completada."),
                 audit_type="validate",
             )
-            report.invalidate_recordset(["validation_state"])
         return True
 
     def action_submit_for_approval(self):
@@ -500,17 +390,14 @@ class JustechDoFiscalReportReview(models.Model):
 
     def action_export_dgii(self, moves=None):
         self.ensure_one()
-        diagnostics = self._get_export_diagnostics()
-        if diagnostics["no_movements"]:
-            return self.action_open_export_blocker_wizard(diagnostics)
         if moves is None and self.line_ids:
+            diagnostics = self._get_export_diagnostics()
             if (
                 diagnostics["not_loaded"]
                 or diagnostics["needs_approval"]
                 or diagnostics["no_valid"]
             ):
                 return self.action_open_export_blocker_wizard(diagnostics)
-            moves = self._get_exportable_lines().mapped("move_id")
         return super().action_export_dgii(moves=moves)
 
     def action_export_dgii_606(self, moves=None):
@@ -523,8 +410,6 @@ class JustechDoFiscalReportReview(models.Model):
                 _("Solo el supervisor fiscal puede generar el Excel DGII final.")
             )
         diagnostics = self._get_export_diagnostics()
-        if diagnostics["no_movements"]:
-            return self.action_open_export_blocker_wizard(diagnostics)
         if (
             diagnostics["not_loaded"]
             or diagnostics["needs_approval"]
@@ -532,7 +417,9 @@ class JustechDoFiscalReportReview(models.Model):
             or (diagnostics["wrong_state"] and self.manual_exclusion_count)
         ):
             return self.action_open_export_blocker_wizard(diagnostics)
-        exportable = self._get_exportable_lines()
+        exportable = self.line_ids.filtered(
+            lambda l: l.include_in_report and l.fiscal_state == "valid"
+        )
         if not exportable:
             return self.action_open_export_blocker_wizard(diagnostics)
         return exportable
@@ -682,7 +569,7 @@ class JustechDoFiscalReportLineReview(models.Model):
                     }
                 )
                 exporter = line.report_id._get_dgii_exporter()
-                if line.report_id._get_dgii_exporter_model():
+                if exporter:
                     exporter._refresh_move_fiscal_state(
                         move, line.report_id.date_from, line.report_id.date_to
                     )

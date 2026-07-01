@@ -1,34 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="view_justech_do_fiscal_report_search" model="ir.ui.view">
-        <field name="name">justech.do.fiscal.report.search</field>
-        <field name="model">justech.do.fiscal.report</field>
-        <field name="arch" type="xml">
-            <search string="Historial fiscal">
-                <field name="name"/>
-                <field name="report_type"/>
-                <field name="period_code"/>
-                <field name="company_id" groups="base.group_multi_company"/>
-                <separator/>
-                <filter name="filter_606" string="606 — Compras"
-                        domain="[('report_type', '=', '606')]"/>
-                <filter name="filter_607" string="607 — Ventas"
-                        domain="[('report_type', '=', '607')]"/>
-                <filter name="filter_608" string="608 — Anulados"
-                        domain="[('report_type', '=', '608')]"/>
-                <filter name="filter_609" string="609 — Pagos exterior"
-                        domain="[('report_type', '=', '609')]"/>
-                <filter name="filter_623" string="623 — Retenciones Estado"
-                        domain="[('report_type', '=', '623')]"/>
-                <group>
-                    <filter name="group_report_type" string="Tipo de reporte"
-                            context="{'group_by': 'report_type'}"/>
-                    <filter name="group_period" string="Período"
-                            context="{'group_by': 'period_code'}"/>
-                </group>
-            </search>
-        </field>
-    </record>
     <record id="view_justech_do_fiscal_report_tree" model="ir.ui.view">
         <field name="name">justech.do.fiscal.report.list</field>
         <field name="model">justech.do.fiscal.report</field>
@@ -37,10 +8,10 @@
                 <field name="name"/>
                 <field name="report_type"/>
                 <field name="company_id" groups="base.group_multi_company"/>
-                <field name="period_code"/>
-                <field name="date_from_display" string="Desde"/>
-                <field name="date_to_display" string="Hasta"/>
-                <field name="count_valid" string="Válidos"/>
+                <field name="date_from"/>
+                <field name="date_to"/>
+                <field name="line_count"/>
+                <field name="total_amount"/>
                 <field name="generated_at"/>
                 <field name="generated_by_id"/>
                 <field name="state"/>
@@ -56,14 +27,14 @@
                     <button name="action_open_fiscal_review" string="Revisión fiscal" type="object"
                             invisible="report_type not in ('606', '607', '608', '609', '623')"/>
                     <button name="action_validate" string="Validar DGII" type="object"
-                            invisible="state != 'done' or report_type not in ('606', '607', '608', '609', '623')"/>
+                            invisible="state != 'done' or report_type not in ('606', '607')"/>
                     <button name="action_generate" string="Regenerar" type="object"
                             invisible="state != 'done'"/>
                     <button name="action_export_dgii" string="Exportar Excel DGII" type="object"
                             class="btn-primary"
-                            invisible="state != 'done' or report_type not in ('606', '607', '608', '609', '623')"/>
+                            invisible="state != 'done' or report_type not in ('606', '607')"/>
                     <button name="action_download_errors" string="Descargar errores" type="object"
-                            invisible="state != 'done' or report_type not in ('606', '607', '608', '609', '623')"/>
+                            invisible="state != 'done' or report_type not in ('606', '607')"/>
                     <button name="action_export_csv" string="Exportar CSV" type="object"
                             invisible="state != 'done'"/>
                     <button name="action_export_xlsx" string="Exportar Excel resumen" type="object"
@@ -87,7 +58,7 @@
                             <field name="generated_by_id"/>
                         </group>
                     </group>
-                    <group string="Validación DGII" invisible="report_type not in ('606', '607', '608', '609', '623')">
+                    <group string="Validación DGII" invisible="report_type not in ('606', '607')">
                         <group>
                             <field name="validation_state" string="Estado de validación" widget="badge"
                                    decoration-success="validation_state == 'ok'"
@@ -98,10 +69,7 @@
                             <field name="count_incomplete"/>
                             <field name="count_excluded"/>
                             <field name="count_cancelled"/>
-                            <field name="count_partners_errors" string="Proveedores con errores"
-                                   invisible="report_type != '606'"/>
-                            <field name="count_partners_errors" string="Clientes con errores"
-                                   invisible="report_type != '607'"/>
+                            <field name="count_partners_errors"/>
                         </group>
                         <field name="validation_log" nolabel="1" readonly="1"/>
                     </group>
@@ -136,11 +104,10 @@
         <field name="name">Historial fiscal</field>
         <field name="res_model">justech.do.fiscal.report</field>
         <field name="view_mode">list,form</field>
-        <field name="search_view_id" ref="view_justech_do_fiscal_report_search"/>
         <field name="domain">[('active', '=', True)]</field>
         <field name="view_ids" eval="[(5, 0, 0),
-            (0, 0, {'view_mode': 'list', 'view_id': ref('view_justech_do_fiscal_report_tree')}),
-            (0, 0, {'view_mode': 'form', 'view_id': ref('view_justech_do_fiscal_report_form')})]"/>
+            (0, 0, {'view_mode': 'list', 'view_id': ref('justech_l10n_do_reports.view_justech_do_fiscal_report_tree')}),
+            (0, 0, {'view_mode': 'form', 'view_id': ref('justech_l10n_do_reports.view_justech_do_fiscal_report_review_form')})]"/>
     </record>
     <record id="action_justech_do_fiscal_report_606" model="ir.actions.act_window">
         <field name="name">Historial 606</field>
@@ -149,8 +116,8 @@
         <field name="domain">[('report_type', '=', '606'), ('active', '=', True)]</field>
         <field name="context">{'default_report_type': '606'}</field>
         <field name="view_ids" eval="[(5, 0, 0),
-            (0, 0, {'view_mode': 'list', 'view_id': ref('view_justech_do_fiscal_report_tree')}),
-            (0, 0, {'view_mode': 'form', 'view_id': ref('view_justech_do_fiscal_report_form')})]"/>
+            (0, 0, {'view_mode': 'list', 'view_id': ref('justech_l10n_do_reports.view_justech_do_fiscal_report_tree')}),
+            (0, 0, {'view_mode': 'form', 'view_id': ref('justech_l10n_do_reports.view_justech_do_fiscal_report_review_form')})]"/>
     </record>
     <record id="action_justech_do_fiscal_report_607" model="ir.actions.act_window">
         <field name="name">Historial 607</field>
@@ -159,37 +126,7 @@
         <field name="domain">[('report_type', '=', '607'), ('active', '=', True)]</field>
         <field name="context">{'default_report_type': '607'}</field>
         <field name="view_ids" eval="[(5, 0, 0),
-            (0, 0, {'view_mode': 'list', 'view_id': ref('view_justech_do_fiscal_report_tree')}),
-            (0, 0, {'view_mode': 'form', 'view_id': ref('view_justech_do_fiscal_report_form')})]"/>
-    </record>
-    <record id="action_justech_do_fiscal_report_608" model="ir.actions.act_window">
-        <field name="name">Historial 608</field>
-        <field name="res_model">justech.do.fiscal.report</field>
-        <field name="view_mode">list,form</field>
-        <field name="domain">[('report_type', '=', '608'), ('active', '=', True)]</field>
-        <field name="context">{'default_report_type': '608'}</field>
-        <field name="view_ids" eval="[(5, 0, 0),
-            (0, 0, {'view_mode': 'list', 'view_id': ref('view_justech_do_fiscal_report_tree')}),
-            (0, 0, {'view_mode': 'form', 'view_id': ref('view_justech_do_fiscal_report_form')})]"/>
-    </record>
-    <record id="action_justech_do_fiscal_report_609" model="ir.actions.act_window">
-        <field name="name">Historial 609</field>
-        <field name="res_model">justech.do.fiscal.report</field>
-        <field name="view_mode">list,form</field>
-        <field name="domain">[('report_type', '=', '609'), ('active', '=', True)]</field>
-        <field name="context">{'default_report_type': '609'}</field>
-        <field name="view_ids" eval="[(5, 0, 0),
-            (0, 0, {'view_mode': 'list', 'view_id': ref('view_justech_do_fiscal_report_tree')}),
-            (0, 0, {'view_mode': 'form', 'view_id': ref('view_justech_do_fiscal_report_form')})]"/>
-    </record>
-    <record id="action_justech_do_fiscal_report_623" model="ir.actions.act_window">
-        <field name="name">Historial 623</field>
-        <field name="res_model">justech.do.fiscal.report</field>
-        <field name="view_mode">list,form</field>
-        <field name="domain">[('report_type', '=', '623'), ('active', '=', True)]</field>
-        <field name="context">{'default_report_type': '623'}</field>
-        <field name="view_ids" eval="[(5, 0, 0),
-            (0, 0, {'view_mode': 'list', 'view_id': ref('view_justech_do_fiscal_report_tree')}),
-            (0, 0, {'view_mode': 'form', 'view_id': ref('view_justech_do_fiscal_report_form')})]"/>
+            (0, 0, {'view_mode': 'list', 'view_id': ref('justech_l10n_do_reports.view_justech_do_fiscal_report_tree')}),
+            (0, 0, {'view_mode': 'form', 'view_id': ref('justech_l10n_do_reports.view_justech_do_fiscal_report_review_form')})]"/>
     </record>
 </odoo>

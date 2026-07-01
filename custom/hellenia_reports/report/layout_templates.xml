@@ -45,7 +45,7 @@
                             <strong>Tel.:</strong> <span t-field="company.phone"/>
                         </li>
                         <li t-if="company.email">
-                            <strong>Email:</strong> <span t-field="company.email"/>
+                            <strong>Correo:</strong> <span t-field="company.email"/>
                         </li>
                         <li t-if="company.website">
                             <strong>Web:</strong> <span t-field="company.website"/>

@@ -10,11 +10,11 @@ class ResCompany(models.Model):
 
     hellenia_primary_color = fields.Char(
         string="Color primario",
-        default="#1a365d",
+        default="#3E4827",
     )
     hellenia_secondary_color = fields.Char(
         string="Color secundario",
-        default="#c9a227",
+        default="#5a6640",
     )
     hellenia_terms_conditions = fields.Html(
         string="Términos y condiciones (documentos)",

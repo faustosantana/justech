@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Estados de cuenta — PDF export account_reports -->
+    <template id="pdf_export_main_hellenia" inherit_id="account_reports.pdf_export_main">
+        <xpath expr="//div[hasclass('o_content')]" position="attributes">
+            <attribute name="class" add="hellenia-account-report-pdf hellenia-statement-doc" separator=" "/>
+        </xpath>
+        <xpath expr="//header//div[hasclass('o_title')]" position="attributes">
+            <attribute name="class" add="hellenia-doc-title" separator=" "/>
+        </xpath>
+    </template>
+
+    <template id="pdf_export_main_customer_report_hellenia"
+              inherit_id="account_reports.pdf_export_main_customer_report">
+        <xpath expr="//div[hasclass('o_title')]" position="attributes">
+            <attribute name="class" add="hellenia-doc-title" separator=" "/>
+        </xpath>
+    </template>
+
+    <template id="company_information_customer_report_hellenia"
+              inherit_id="account_reports.company_information_customer_report">
+        <xpath expr="//div[hasclass('row')][1]" position="before">
+            <img t-if="env.company.logo"
+                 class="hellenia-logo mb-2"
+                 t-att-src="image_data_uri(env.company.logo)"
+                 alt="Logo Hellenia"/>
+        </xpath>
+    </template>
+
+    <template id="tax_information_customer_report_hellenia"
+              inherit_id="account_reports.tax_information_customer_report">
+        <xpath expr="//t[text()='Tax ID:']" position="replace">
+            <t>RNC:</t>
+        </xpath>
+    </template>
+
+    <template id="bank_information_customer_report_hellenia"
+              inherit_id="account_reports.bank_information_customer_report">
+        <xpath expr="//t[text()='Bank: ']" position="replace">
+            <t>Banco: </t>
+        </xpath>
+    </template>
+
+    <!-- Carta de seguimiento / estado de cuenta followup -->
+    <template id="report_followup_print_all_hellenia"
+              inherit_id="account_followup.report_followup_print_all">
+        <xpath expr="//h2/strong[text()='Pending Invoices']" position="replace">
+            <strong>Estado de cuenta — Facturas pendientes</strong>
+        </xpath>
+    </template>
+
+    <template id="followup_filter_info_template_hellenia"
+              inherit_id="account_followup.followup_filter_info_template">
+        <xpath expr="//p/span[text()='Date: ']" position="replace">
+            <span>Fecha: </span>
+        </xpath>
+        <xpath expr="//span[text()='Customer ref: ']" position="replace">
+            <span>Ref. cliente: </span>
+        </xpath>
+    </template>
+
+</odoo>

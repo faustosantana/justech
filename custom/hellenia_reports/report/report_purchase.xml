@@ -46,6 +46,12 @@
         <xpath expr="//th[@name='th_discount']/strong" position="replace">
             <strong>Desc.</strong>
         </xpath>
+        <xpath expr="//th[@name='th_taxes']/strong" position="replace" optional="True">
+            <strong>Impuestos</strong>
+        </xpath>
+        <xpath expr="//th[@name='th_subtotal']/strong" position="replace" optional="True">
+            <strong>Importe</strong>
+        </xpath>
 
         <xpath expr="//table[hasclass('o_main_table')]" position="attributes">
             <attribute name="class" add="hellenia-lines-table" separator=" "/>
@@ -83,6 +89,10 @@
         </xpath>
         <xpath expr="//th[@name='th_quantity']/strong" position="replace">
             <strong>Cant.</strong>
+        </xpath>
+
+        <xpath expr="//table[hasclass('o_main_table')]" position="attributes">
+            <attribute name="class" add="hellenia-lines-table" separator=" "/>
         </xpath>
 
         <xpath expr="//div[hasclass('page')]" position="inside">

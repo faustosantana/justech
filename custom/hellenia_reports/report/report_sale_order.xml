@@ -60,6 +60,27 @@
             <attribute name="class" add="hellenia-lines-table" separator=" "/>
         </xpath>
 
+        <!-- Condiciones comerciales — bloque corporativo unificado -->
+        <xpath expr="//span[@name='order_note']/.." position="before">
+            <div class="hellenia-commercial-terms" t-if="doc.state in ['draft', 'sent']">
+                <div class="hellenia-commercial-title">Condiciones comerciales</div>
+                <div class="row hellenia-meta-grid">
+                    <div class="col-4" t-if="doc.validity_date">
+                        <div class="hellenia-meta-label">Validez de la oferta</div>
+                        <div class="hellenia-meta-value"><span t-field="doc.validity_date"/></div>
+                    </div>
+                    <div class="col-4" t-if="doc.payment_term_id">
+                        <div class="hellenia-meta-label">Condiciones de pago</div>
+                        <div class="hellenia-meta-value"><span t-field="doc.payment_term_id.name"/></div>
+                    </div>
+                    <div class="col-4" t-if="doc.user_id">
+                        <div class="hellenia-meta-label">Ejecutivo comercial</div>
+                        <div class="hellenia-meta-value"><span t-field="doc.user_id.name"/></div>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+
         <xpath expr="//div[hasclass('page')]" position="inside">
             <t t-call="hellenia_reports.hellenia_document_footer_blocks"/>
         </xpath>

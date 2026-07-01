@@ -9,6 +9,9 @@
     <record id="account.account_invoices" model="ir.actions.report">
         <field name="paperformat_id" ref="hellenia_reports.paperformat_hellenia_letter"/>
     </record>
+    <record id="account.action_report_payment_receipt" model="ir.actions.report">
+        <field name="paperformat_id" ref="hellenia_reports.paperformat_hellenia_letter"/>
+    </record>
     <record id="purchase.action_report_purchase_order" model="ir.actions.report">
         <field name="paperformat_id" ref="hellenia_reports.paperformat_hellenia_letter"/>
     </record>
@@ -19,6 +22,9 @@
         <field name="paperformat_id" ref="hellenia_reports.paperformat_hellenia_letter"/>
     </record>
     <record id="stock.action_report_picking" model="ir.actions.report">
+        <field name="paperformat_id" ref="hellenia_reports.paperformat_hellenia_letter"/>
+    </record>
+    <record id="account_followup.action_report_followup" model="ir.actions.report">
         <field name="paperformat_id" ref="hellenia_reports.paperformat_hellenia_letter"/>
     </record>
 </odoo>

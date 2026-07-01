@@ -15,6 +15,7 @@
 (f) Las piezas pueden presentar marcas propias del tiempo, lo cual forma parte de su carácter y autenticidad.</t>
 
         <div class="page hellenia-quote-page">
+            <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
             <style type="text/css">
                 .hellenia-quote-page {
                     font-family: 'DejaVu Sans', Helvetica, Arial, sans-serif;
@@ -180,6 +181,7 @@
                     <td width="42%" valign="top" style="padding-right: 12px;">
                         <img t-if="company.logo"
                              class="hellenia-quote-logo"
+                             style="max-height: 90px; max-width: 260px; height: auto; width: auto;"
                              t-att-src="image_data_uri(company.logo)"
                              alt="Hellenia"/>
                     </td>
@@ -200,7 +202,7 @@
             <!-- Banda titulo -->
             <table width="100%" cellpadding="0" cellspacing="0" class="hellenia-quote-band">
                 <tr>
-                    <td class="hellenia-quote-band-title">COTIZACI&#211;N</td>
+                    <td class="hellenia-quote-band-title">COTIZACIÓN</td>
                     <td align="right">
                         <span class="hellenia-quote-num-box">No. <span t-field="doc.name"/></span>
                     </td>
@@ -211,7 +213,7 @@
             <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom: 16px;">
                 <tr>
                     <td width="50%" valign="top" t-if="doc.date_order">
-                        <div class="hellenia-quote-label">Fecha de Cotizaci&#243;n</div>
+                        <div class="hellenia-quote-label">Fecha de Cotización</div>
                         <div class="hellenia-quote-value">
                             <span t-out="doc.date_order.strftime('%d/%m/%Y') if doc.date_order else ''"/>
                         </div>
@@ -229,11 +231,11 @@
             <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom: 16px;">
                 <tr>
                     <td width="49%" valign="top" class="hellenia-quote-box" style="padding-right: 8px;">
-                        <div class="hellenia-quote-box-title">INFORMACI&#211;N DEL CLIENTE</div>
+                        <div class="hellenia-quote-box-title">INFORMACIÓN DEL CLIENTE</div>
                         <div class="hellenia-quote-field-label">Cliente</div>
                         <div class="hellenia-quote-field-value" t-field="doc.partner_id.name"/>
                         <t t-if="doc.partner_id.street or doc.partner_id.city">
-                            <div class="hellenia-quote-field-label">Direcci&#243;n</div>
+                            <div class="hellenia-quote-field-label">Dirección</div>
                             <div class="hellenia-quote-field-value">
                                 <span t-if="doc.partner_id.street" t-field="doc.partner_id.street"/>
                                 <t t-if="doc.partner_id.street and doc.partner_id.city">, </t>
@@ -246,7 +248,7 @@
                             <div class="hellenia-quote-field-value" t-field="doc.partner_id.vat"/>
                         </t>
                         <t t-if="doc.partner_id.phone">
-                            <div class="hellenia-quote-field-label">Tel&#233;fono</div>
+                            <div class="hellenia-quote-field-label">Teléfono</div>
                             <div class="hellenia-quote-field-value" t-field="doc.partner_id.phone"/>
                         </t>
                         <t t-if="doc.partner_id.email">
@@ -256,20 +258,20 @@
                     </td>
                     <td width="2%"></td>
                     <td width="49%" valign="top" class="hellenia-quote-box">
-                        <div class="hellenia-quote-box-title">INFORMACI&#211;N DEL VENDEDOR</div>
+                        <div class="hellenia-quote-box-title">INFORMACIÓN DEL VENDEDOR</div>
                         <t t-if="doc.user_id">
                             <div class="hellenia-quote-field-label">Vendedor</div>
                             <div class="hellenia-quote-field-value" t-field="doc.user_id.name"/>
                         </t>
                         <t t-if="sp and sp.phone">
-                            <div class="hellenia-quote-field-label">Tel&#233;fono</div>
+                            <div class="hellenia-quote-field-label">Teléfono</div>
                             <div class="hellenia-quote-field-value" t-field="sp.phone"/>
                         </t>
                         <t t-if="doc.user_id and doc.user_id.email">
                             <div class="hellenia-quote-field-label">Correo</div>
                             <div class="hellenia-quote-field-value" t-field="doc.user_id.email"/>
                         </t>
-                        <div class="hellenia-quote-box-title" style="margin-top: 12px;">T&#201;RMINOS DE PAGO</div>
+                        <div class="hellenia-quote-box-title" style="margin-top: 12px;">TÉRMINOS DE PAGO</div>
                         <t t-if="doc.payment_term_id">
                             <div class="hellenia-quote-field-label">Condiciones de Pago</div>
                             <div class="hellenia-quote-field-value" t-field="doc.payment_term_id.name"/>
@@ -289,7 +291,7 @@
                 <thead>
                     <tr>
                         <th class="num">#</th>
-                        <th>DESCRIPCI&#211;N</th>
+                        <th>DESCRIPCIÓN</th>
                         <th class="qty">CANTIDAD</th>
                         <th class="price">PRECIO UNITARIO</th>
                         <th class="sub">SUBTOTAL</th>
@@ -379,7 +381,7 @@
                 <t t-if="company.phone">Tel: <span t-field="company.phone"/></t>
                 <t t-if="company.website"> | Web: <span t-field="company.website"/></t>
                 <t t-if="company.email"> | Correo: <span t-field="company.email"/></t>
-                | Santo Domingo, Rep&#250;blica Dominicana
+                | Santo Domingo, República Dominicana
             </div>
         </div>
     </template>

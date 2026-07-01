@@ -28,7 +28,10 @@
                     <group>
                         <field name="count_excluded"/>
                         <field name="count_cancelled"/>
-                        <field name="count_partners_errors"/>
+                        <field name="count_partners_errors" string="Proveedores con errores"
+                               invisible="report_type != '606'"/>
+                        <field name="count_partners_errors" string="Clientes con errores"
+                               invisible="report_type != '607'"/>
                     </group>
                 </group>
                 <group string="Resultado de validación" invisible="validation_state == 'pending'">
@@ -36,19 +39,20 @@
                 </group>
                 <footer>
                     <button name="action_validate" string="Validar período" type="object"
-                            invisible="report_type not in ('606', '607')"/>
+                            invisible="report_type not in ('606', '607', '608', '609', '623')"/>
                     <button name="action_save_review" string="Guardar revisión" type="object"
                             class="btn-primary"
-                            invisible="report_type not in ('606', '607') or validation_state == 'pending'"/>
+                            invisible="report_type not in ('606', '607', '608', '609', '623') or validation_state == 'pending'"/>
                     <button name="action_view_documents" string="Ver documentos" type="object"
-                            invisible="report_type not in ('606', '607') or validation_state == 'pending'"/>
+                            invisible="report_type not in ('606', '607', '608', '609', '623') or validation_state == 'pending'"/>
                     <button name="action_download_errors" string="Descargar errores (Excel)" type="object"
-                            invisible="report_type not in ('606', '607') or validation_state == 'pending'"/>
+                            invisible="report_type not in ('606', '607', '608', '609', '623') or validation_state == 'pending'"/>
                     <button name="action_generate" string="Generar Excel DGII" type="object"
-                            invisible="report_type not in ('606', '607') or validation_state in ('pending', 'error')"
+                            invisible="report_type not in ('606', '607', '608', '609', '623') or validation_state in ('pending', 'error')"
                             groups="justech_l10n_do_base.group_justech_do_fiscal_manager"/>
                     <button name="action_generate" string="Generar" type="object"
-                            class="btn-primary" invisible="report_type in ('606', '607')"/>
+                            class="btn-primary"
+                            invisible="report_type in ('606', '607', '608', '609', '623')"/>
                     <button string="Cancelar" special="cancel"/>
                 </footer>
             </form>

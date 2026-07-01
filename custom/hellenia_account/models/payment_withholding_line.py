@@ -128,11 +128,13 @@ class AccountPaymentWithholding(models.Model):
         compute="_compute_hellenia_withholding_totals",
         string="Total retenido",
         currency_field="currency_id",
+        store=True,
     )
     hellenia_net_transfer = fields.Monetary(
         compute="_compute_hellenia_withholding_totals",
         string="Neto transferido",
         currency_field="currency_id",
+        store=True,
     )
     hellenia_invoice_display = fields.Char(
         compute="_compute_hellenia_invoice_display",
@@ -143,15 +145,19 @@ class AccountPaymentWithholding(models.Model):
         "hellenia_withholding_line_ids.amount",
         "hellenia_applied_amount",
         "amount",
+        "state",
     )
     def _compute_hellenia_withholding_totals(self):
         for pay in self:
             wh_total = sum(pay.hellenia_withholding_line_ids.mapped("amount"))
             pay.hellenia_withholding_total = wh_total
-            if pay.hellenia_applied_amount:
-                pay.hellenia_net_transfer = pay.hellenia_applied_amount - wh_total
-            else:
-                pay.hellenia_net_transfer = pay.amount
+            applied = pay.hellenia_applied_amount or pay.amount
+            pay.hellenia_net_transfer = applied - wh_total
+
+    def _hellenia_refresh_stored_totals(self):
+        """Fuerza recálculo almacenado tras persistir líneas."""
+        self.invalidate_recordset(["hellenia_withholding_line_ids"])
+        self._compute_hellenia_withholding_totals()
 
     @api.depends(
         "hellenia_withholding_line_ids.invoice_name",

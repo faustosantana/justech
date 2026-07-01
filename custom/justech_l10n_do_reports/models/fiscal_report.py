@@ -385,6 +385,7 @@ class JustechDoFiscalReport(models.Model):
         gov_tax = exporter._gov_tax(self.company_id)
         lines = []
         for move in moves:
+            gov_amt = exporter._gov_amount(move, gov_tax)
             lines.append(
                 {
                     "partner_vat": move.partner_id.vat or "",
@@ -393,8 +394,8 @@ class JustechDoFiscalReport(models.Model):
                     "document_type": "5% Gobierno",
                     "document_date": exporter._retention_date(move),
                     "amount_untaxed": abs(move.amount_untaxed_signed),
-                    "amount_tax": 0.0,
-                    "amount_total": abs(move.amount_total_signed),
+                    "amount_tax": gov_amt,
+                    "amount_total": gov_amt,
                     "notes": move.justech_do_gov_retention_ref or "",
                     "move_id": move.id,
                 }

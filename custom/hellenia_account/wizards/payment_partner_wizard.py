@@ -95,7 +95,15 @@ class HelleniaPaymentPartnerWizardLine(models.TransientModel):
             else:
                 labels = line.withholding_catalog_ids.mapped("name")
                 line.withholding_summary = ", ".join(labels)
-                line.withholding_amount = sum(line.withholding_detail_ids.mapped("amount"))
+                partner_type = line._catalog_domain_partner_type()
+                total = 0.0
+                for catalog in line.withholding_catalog_ids:
+                    if not catalog._applies_to_move(line.move_id, partner_type):
+                        continue
+                    total += catalog.compute_withholding_amount(
+                        line.move_id, applied_amount=line.amount_to_pay
+                    )
+                line.withholding_amount = total
             applied = line.amount_to_pay or line.amount_residual or 0.0
             line.net_after_withholding = applied - line.withholding_amount
 
@@ -104,6 +112,8 @@ class HelleniaPaymentPartnerWizardLine(models.TransientModel):
         for line in self:
             if line.apply and not line.amount_to_pay:
                 line.amount_to_pay = line.amount_residual
+            if line.apply and line.withholding_catalog_ids:
+                line._recompute_line_withholdings()
 
     @api.onchange("withholding_catalog_ids")
     def _onchange_withholding_catalog_ids(self):
@@ -415,20 +425,27 @@ class HelleniaPaymentPartnerWizard(models.TransientModel):
 
         for line in selected:
             move = line.move_id
+            line._recompute_line_withholdings()
+            register_vals = {
+                **common,
+                "communication": self.communication or move.name,
+                "amount": line.amount_to_pay,
+                "hellenia_withholding_line_ids": self._withholding_commands_for_line(line),
+            }
+            if line.amount_to_pay < abs(move.amount_residual) - 0.01:
+                register_vals["custom_user_amount"] = line.amount_to_pay
             register = (
                 self.env["account.payment.register"]
                 .with_context(active_model="account.move", active_ids=move.ids, dont_redirect_to_payments=True)
-                .create(
-                    {
-                        **common,
-                        "communication": self.communication or move.name,
-                        "amount": line.amount_to_pay,
-                        "hellenia_withholding_line_ids": self._withholding_commands_for_line(line),
-                    }
-                )
+                .create(register_vals)
             )
             if abs((register.amount or 0.0) - line.amount_to_pay) > 0.01:
-                register.amount = line.amount_to_pay
+                register.write(
+                    {
+                        "amount": line.amount_to_pay,
+                        "custom_user_amount": line.amount_to_pay,
+                    }
+                )
             payments |= register._create_payments()
 
         return {

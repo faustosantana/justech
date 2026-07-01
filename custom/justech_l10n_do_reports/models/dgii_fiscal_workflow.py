@@ -13,6 +13,15 @@ STATE_LABELS = {
     "rejected": "Rechazado",
     "generated": "Generado",
     "done": "Generado",
+    "no_movements": "Sin movimientos",
+}
+
+EMPTY_PERIOD_MESSAGES = {
+    "606": "No hay movimientos para este reporte en el período seleccionado.",
+    "607": "No hay movimientos para este reporte en el período seleccionado.",
+    "608": "No hay movimientos para este reporte en el período seleccionado.",
+    "609": "No hay pagos al exterior en este período.",
+    "623": "No hay movimientos para este reporte en el período seleccionado.",
 }
 
 AUDIT_LABELS = {
@@ -62,16 +71,34 @@ class JustechDoFiscalReportWorkflow(models.Model):
         string="Hasta (período)",
         compute="_compute_period_display",
     )
+    review_loaded = fields.Boolean(
+        string="Período cargado",
+        default=False,
+        copy=False,
+        readonly=True,
+    )
 
-    @api.depends("date_from", "date_to")
+    def _empty_period_message(self):
+        self.ensure_one()
+        return _(EMPTY_PERIOD_MESSAGES.get(
+            self.report_type,
+            "No hay movimientos para este reporte en el período seleccionado.",
+        ))
+
+    @api.depends("period_code", "date_from", "date_to")
     def _compute_period_display(self):
+        period_util = self.env["justech.do.dgii.period"]
         for report in self:
+            if report.period_code:
+                date_from, date_to = period_util.period_bounds_from_code(
+                    report.period_code
+                )
+            else:
+                date_from, date_to = report.date_from, report.date_to
             report.date_from_display = (
-                report.date_from.strftime("%d/%m/%Y") if report.date_from else ""
+                date_from.strftime("%d/%m/%Y") if date_from else ""
             )
-            report.date_to_display = (
-                report.date_to.strftime("%d/%m/%Y") if report.date_to else ""
-            )
+            report.date_to_display = date_to.strftime("%d/%m/%Y") if date_to else ""
 
     @api.depends("approval_ids.state", "line_ids.manual_exclusion", "line_ids.line_approval_state")
     def _compute_has_pending_approval(self):
@@ -84,6 +111,39 @@ class JustechDoFiscalReportWorkflow(models.Model):
             )
             report.has_pending_approval = bool(pending_approvals or pending_lines)
 
+    def _get_exportable_lines(self):
+        """Documentos exportables — única fuente para Excel y contadores."""
+        self.ensure_one()
+        return self.line_ids.filtered(
+            lambda l: l.include_in_report and l.fiscal_state == "valid"
+        )
+
+    def _get_fiscal_counts(self):
+        """Contadores unificados derivados exclusivamente de las líneas cargadas."""
+        self.ensure_one()
+        lines = self.line_ids
+        exportable = self._get_exportable_lines()
+        incomplete = lines.filtered(lambda l: l.fiscal_state == "incomplete")
+        excluded = lines.filtered(lambda l: l.fiscal_state == "excluded")
+        cancelled = lines.filtered(lambda l: l.fiscal_state == "cancelled")
+        pending = lines.filtered(
+            lambda l: l.line_approval_state == "pending"
+        )
+        approved = lines.filtered(
+            lambda l: l.line_approval_state == "approved"
+        )
+        partners = set(incomplete.mapped("partner_id.id"))
+        return {
+            "all": len(lines),
+            "valid": len(exportable),
+            "incomplete": len(incomplete),
+            "excluded": len(excluded),
+            "cancelled": len(cancelled),
+            "pending_approval": len(pending),
+            "approved_exclusions": len(approved),
+            "partners_errors": len(partners),
+        }
+
     @api.depends(
         "line_ids",
         "line_ids.fiscal_state",
@@ -93,34 +153,14 @@ class JustechDoFiscalReportWorkflow(models.Model):
     )
     def _compute_review_counts(self):
         for report in self:
-            lines = report.line_ids
-            report.review_line_count = len(lines)
-            report.review_valid_count = len(
-                lines.filtered(
-                    lambda l: l.include_in_report and l.fiscal_state == "valid"
-                )
-            )
-            report.review_incomplete_count = len(
-                lines.filtered(lambda l: l.fiscal_state == "incomplete")
-            )
-            report.review_excluded_count = len(
-                lines.filtered(
-                    lambda l: not l.include_in_report or l.fiscal_state == "excluded"
-                )
-            )
-            report.review_cancelled_count = len(
-                lines.filtered(lambda l: l.fiscal_state == "cancelled")
-            )
-            report.review_pending_approval_count = len(
-                lines.filtered(
-                    lambda l: l.manual_exclusion and l.line_approval_state == "pending"
-                )
-            )
-            report.review_approved_count = len(
-                lines.filtered(
-                    lambda l: l.manual_exclusion and l.line_approval_state == "approved"
-                )
-            )
+            counts = report._get_fiscal_counts()
+            report.review_line_count = counts["all"]
+            report.review_valid_count = counts["valid"]
+            report.review_incomplete_count = counts["incomplete"]
+            report.review_excluded_count = counts["excluded"]
+            report.review_cancelled_count = counts["cancelled"]
+            report.review_pending_approval_count = counts["pending_approval"]
+            report.review_approved_count = counts["approved_exclusions"]
 
     @api.depends(
         "review_line_count",
@@ -130,10 +170,17 @@ class JustechDoFiscalReportWorkflow(models.Model):
         "review_cancelled_count",
         "review_pending_approval_count",
         "review_approved_count",
+        "report_type",
+        "line_ids",
+        "line_ids.move_id.move_type",
+        "line_ids.amount_untaxed",
+        "line_ids.amount_tax",
+        "line_ids.include_in_report",
+        "line_ids.fiscal_state",
     )
     def _compute_summary_text(self):
         for report in self:
-            report.summary_text = _(
+            base = _(
                 "Documentos en período: %(all)s\n"
                 "Válidos para exportar: %(valid)s\n"
                 "Incompletos: %(incomplete)s\n"
@@ -150,6 +197,40 @@ class JustechDoFiscalReportWorkflow(models.Model):
                 "pending": report.review_pending_approval_count,
                 "approved": report.review_approved_count,
             }
+            if report.report_type != "607":
+                report.summary_text = base
+                continue
+            exportable = report.line_ids.filtered(
+                lambda l: l.include_in_report and l.fiscal_state == "valid"
+            )
+            invoices = exportable.filtered(
+                lambda l: l.move_id.move_type == "out_invoice"
+            )
+            credit_notes = exportable.filtered(
+                lambda l: l.move_id.move_type == "out_refund"
+            )
+            itbis_total = sum(exportable.mapped("amount_tax"))
+            taxed = sum(
+                l.amount_untaxed for l in exportable if l.amount_tax > 0
+            )
+            exempt = sum(
+                l.amount_untaxed for l in exportable if l.amount_tax <= 0
+            )
+            report.summary_text = (
+                base
+                + "\n\n"
+                + _("Resumen de ventas (documentos válidos)")
+                + "\n"
+                + _("Facturas exportables: %(n)s") % {"n": len(invoices)}
+                + "\n"
+                + _("Notas de crédito: %(n)s") % {"n": len(credit_notes)}
+                + "\n"
+                + _("ITBIS facturado: %(amount).2f") % {"amount": itbis_total}
+                + "\n"
+                + _("Ventas gravadas: %(amount).2f") % {"amount": taxed}
+                + "\n"
+                + _("Ventas exentas: %(amount).2f") % {"amount": exempt}
+            )
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -247,31 +328,78 @@ class JustechDoFiscalReportWorkflow(models.Model):
     def _refresh_summary_counts(self):
         """Unifica contadores almacenados con las líneas cargadas."""
         for report in self:
-            lines = report.line_ids
-            incomplete = lines.filtered(lambda l: l.fiscal_state == "incomplete")
-            partners = set(incomplete.mapped("partner_id.id"))
+            counts = report._get_fiscal_counts()
             super(JustechDoFiscalReportWorkflow, report).write(
                 {
-                    "count_all": len(lines),
-                    "count_valid": len(
-                        lines.filtered(
-                            lambda l: l.include_in_report and l.fiscal_state == "valid"
-                        )
-                    ),
-                    "count_incomplete": len(incomplete),
-                    "count_excluded": len(
-                        lines.filtered(
-                            lambda l: not l.include_in_report
-                            or l.fiscal_state == "excluded"
-                        )
-                    ),
-                    "count_cancelled": len(
-                        lines.filtered(lambda l: l.fiscal_state == "cancelled")
-                    ),
-                    "count_partners_errors": len(partners),
-                    "validation_log": report.summary_text,
+                    "count_all": counts["all"],
+                    "count_valid": counts["valid"],
+                    "count_incomplete": counts["incomplete"],
+                    "count_excluded": counts["excluded"],
+                    "count_cancelled": counts["cancelled"],
+                    "count_partners_errors": counts["partners_errors"],
                 }
             )
+
+    @api.depends(
+        "validated_at",
+        "line_ids",
+        "line_ids.fiscal_state",
+        "line_ids.include_in_report",
+        "state",
+    )
+    def _compute_validation_state(self):
+        for report in self:
+            if report.state == "no_movements":
+                report.validation_state = "empty"
+                continue
+            if not report.validated_at:
+                report.validation_state = "pending"
+                continue
+            counts = report._get_fiscal_counts()
+            if not counts["all"]:
+                report.validation_state = "empty"
+            elif counts["valid"] and counts["incomplete"]:
+                report.validation_state = "warning"
+            elif counts["valid"]:
+                report.validation_state = "ok"
+            else:
+                report.validation_state = "error"
+
+    def _needs_period_validation(self):
+        self.ensure_one()
+        return bool(self.line_ids) and not self.validated_at
+
+    def _sync_line_fiscal_states_from_moves(self):
+        """Sincroniza estado fiscal y errores de líneas tras validación de moves."""
+        for report in self:
+            exporter = report._get_dgii_exporter()
+            if not report._get_dgii_exporter_model():
+                continue
+            for line in report.line_ids:
+                move = line.move_id
+                if not move:
+                    continue
+                fiscal_state = move.justech_do_dgii_fiscal_state or "incomplete"
+                errors = []
+                if fiscal_state == "incomplete":
+                    errors = exporter._dgii_validate_single_move(
+                        move, report.date_from, report.date_to
+                    )
+                line.write(
+                    {
+                        "fiscal_state": fiscal_state,
+                        "error_message": "\n".join(errors),
+                        "include_in_report": report._line_include_in_report(
+                            move, fiscal_state
+                        ),
+                    }
+                )
+
+    def _line_include_in_report(self, move, fiscal_state):
+        self.ensure_one()
+        if self.report_type in ("608", "609", "623"):
+            return fiscal_state == "valid"
+        return bool(move.justech_do_include_in_dgii) and fiscal_state != "cancelled"
 
     def _get_blocking_line_ids(self):
         self.ensure_one()
@@ -291,29 +419,32 @@ class JustechDoFiscalReportWorkflow(models.Model):
 
     def _get_export_diagnostics(self):
         self.ensure_one()
-        lines = self.line_ids
-        valid_lines = lines.filtered(
-            lambda l: l.include_in_report and l.fiscal_state == "valid"
+        counts = self._get_fiscal_counts()
+        exportable = self._get_exportable_lines()
+        pending_lines = self.line_ids.filtered(
+            lambda l: l.line_approval_state == "pending"
         )
-        pending_lines = lines.filtered(
-            lambda l: l.manual_exclusion and l.line_approval_state == "pending"
+        incomplete_lines = self.line_ids.filtered(
+            lambda l: l.fiscal_state == "incomplete"
         )
-        incomplete_lines = lines.filtered(lambda l: l.fiscal_state == "incomplete")
-        not_loaded = not lines
+        not_loaded = not self.review_loaded
+        no_movements = self.review_loaded and not self.line_ids
         needs_approval = bool(pending_lines) or self.state == "pending_approval"
-        no_valid = not valid_lines
+        no_valid = not exportable and not no_movements
         wrong_state = self.state not in ("validated", "approved", "generated", "done")
         blocking_lines = self._get_blocking_line_ids()
         return {
-            "valid_count": len(valid_lines),
-            "pending_approval_count": len(pending_lines),
-            "incomplete_count": len(incomplete_lines),
+            "valid_count": counts["valid"],
+            "pending_approval_count": counts["pending_approval"],
+            "incomplete_count": counts["incomplete"],
             "not_loaded": not_loaded,
+            "no_movements": no_movements,
             "needs_approval": needs_approval,
             "no_valid": no_valid,
             "wrong_state": wrong_state and not needs_approval,
             "state": self.state,
             "blocking_line_ids": blocking_lines.ids,
+            "empty_message": self._empty_period_message() if no_movements else "",
         }
 
     def action_open_export_blocker_wizard(self, diagnostics=None):
@@ -331,6 +462,8 @@ class JustechDoFiscalReportWorkflow(models.Model):
                 "default_pending_approval_count": diagnostics["pending_approval_count"],
                 "default_incomplete_count": diagnostics["incomplete_count"],
                 "default_not_loaded": diagnostics["not_loaded"],
+                "default_no_movements": diagnostics.get("no_movements", False),
+                "default_empty_message": diagnostics.get("empty_message", ""),
                 "default_needs_approval": diagnostics["needs_approval"],
                 "default_no_valid": diagnostics["no_valid"],
                 "default_wrong_state": diagnostics["wrong_state"],
@@ -371,15 +504,17 @@ class JustechDoFiscalReportWorkflow(models.Model):
             "justech_l10n_do_reports.view_justech_do_fiscal_report_review_form",
             raise_if_not_found=False,
         )
-        return {
+        action = {
             "type": "ir.actions.act_window",
             "name": _("Revisión fiscal"),
             "res_model": "justech.do.fiscal.report",
             "res_id": self.id,
             "view_mode": "form",
-            "views": [(form.id, "form")] if form else False,
             "target": "current",
         }
+        if form:
+            action["views"] = [(form.id, "form")]
+        return action
 
     def action_open_pending_tray(self):
         return self.env.ref(

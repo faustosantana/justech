@@ -27,11 +27,16 @@
                 <attribute name="string">Diario</attribute>
             </xpath>
             <xpath expr="//field[@name='amount']" position="after">
-                <field name="hellenia_withholding_total" readonly="1" invisible="not hellenia_withholding_line_ids"/>
+                <field name="hellenia_withholding_total" readonly="1" invisible="not hellenia_withholding_total"/>
             </xpath>
             <xpath expr="//group[@name='group1']" position="after">
-                <group string="Retenciones de la factura" invisible="not hellenia_withholding_line_ids">
-                    <field name="hellenia_withholding_line_ids" nolabel="1" readonly="1">
+                <group string="Retenciones de la factura">
+                    <field name="hellenia_withholding_catalog_ids"
+                           widget="many2many_tags"
+                           options="{'no_create': True}"
+                           string="Retenciones a aplicar"/>
+                    <field name="hellenia_withholding_line_ids" nolabel="1" readonly="1"
+                           invisible="not hellenia_withholding_line_ids">
                         <list>
                             <field name="label" string="Retención"/>
                             <field name="base_amount" string="Base"/>

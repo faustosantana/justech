@@ -6,10 +6,13 @@ class JustechDoFiscalReportWizard(models.TransientModel):
     _name = "justech.do.fiscal.report.wizard"
     _description = "Asistente para generar reporte fiscal DGII"
 
-    DGII_EXPORT_TYPES = ("606", "607")
+    DGII_EXPORT_TYPES = ("606", "607", "608", "609", "623")
     DGII_EXPORTER_MODELS = {
         "606": "justech.do.dgii.606.exporter",
         "607": "justech.do.dgii.607.exporter",
+        "608": "justech.do.dgii.608.exporter",
+        "609": "justech.do.dgii.609.exporter",
+        "623": "justech.do.dgii.623.exporter",
     }
 
     report_type = fields.Selection(
@@ -17,6 +20,8 @@ class JustechDoFiscalReportWizard(models.TransientModel):
             ("606", "606 — Compras"),
             ("607", "607 — Ventas"),
             ("608", "608 — NCF anulados"),
+            ("609", "609 — Pagos exterior"),
+            ("623", "623 — Retenciones Estado"),
         ],
         string="Tipo de reporte",
         required=True,
@@ -42,6 +47,7 @@ class JustechDoFiscalReportWizard(models.TransientModel):
             ("ok", "Válido"),
             ("warning", "Con advertencias"),
             ("error", "Sin documentos válidos"),
+            ("empty", "Sin movimientos"),
         ],
         string="Estado de validación",
         default="pending",
@@ -69,15 +75,20 @@ class JustechDoFiscalReportWizard(models.TransientModel):
         compute="_compute_period_display",
     )
 
-    @api.depends("date_from", "date_to")
+    @api.depends("period_code", "date_from", "date_to")
     def _compute_period_display(self):
+        period_util = self.env["justech.do.dgii.period"]
         for wiz in self:
+            if wiz.period_code:
+                date_from, date_to = period_util.period_bounds_from_code(
+                    wiz.period_code
+                )
+            else:
+                date_from, date_to = wiz.date_from, wiz.date_to
             wiz.date_from_display = (
-                wiz.date_from.strftime("%d/%m/%Y") if wiz.date_from else ""
+                date_from.strftime("%d/%m/%Y") if date_from else ""
             )
-            wiz.date_to_display = (
-                wiz.date_to.strftime("%d/%m/%Y") if wiz.date_to else ""
-            )
+            wiz.date_to_display = date_to.strftime("%d/%m/%Y") if date_to else ""
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -169,9 +180,13 @@ class JustechDoFiscalReportWizard(models.TransientModel):
             self.date_from, self.date_to, self.period_code
         )
 
+    def _get_dgii_exporter_model(self):
+        self.ensure_one()
+        return self.DGII_EXPORTER_MODELS.get(self.report_type)
+
     def _get_dgii_exporter(self):
         self.ensure_one()
-        model = self.DGII_EXPORTER_MODELS.get(self.report_type)
+        model = self._get_dgii_exporter_model()
         return self.env[model] if model else False
 
     def _apply_validation_result(self, result):
@@ -194,6 +209,8 @@ class JustechDoFiscalReportWizard(models.TransientModel):
             self.validation_state = "warning"
         elif counts["valid"]:
             self.validation_state = "ok"
+        elif not counts["all"]:
+            self.validation_state = "empty"
         else:
             self.validation_state = "error"
 
@@ -229,16 +246,17 @@ class JustechDoFiscalReportWizard(models.TransientModel):
             "justech_l10n_do_reports.view_justech_do_fiscal_report_review_form",
             raise_if_not_found=False,
         )
-        views = [(review_form.id, "form")] if review_form else []
-        return {
+        action = {
             "type": "ir.actions.act_window",
             "name": _("Revisión fiscal DGII"),
             "res_model": "justech.do.fiscal.report",
             "res_id": report.id,
             "view_mode": "form",
-            "views": views or False,
             "target": "current",
         }
+        if review_form:
+            action["views"] = [(review_form.id, "form")]
+        return action
 
     def action_validate(self):
         self.ensure_one()
@@ -266,14 +284,9 @@ class JustechDoFiscalReportWizard(models.TransientModel):
         """Crea un registro persistente de revisión fiscal con todas las líneas."""
         self.ensure_one()
         self._check_period()
-        if self.report_type in self.DGII_EXPORT_TYPES and self.validation_state == "pending":
-            self.action_validate()
         report = self._create_report()
         report.action_load_review_lines()
-        if self.report_type in self.DGII_EXPORT_TYPES:
-            report.action_validate_period()
-        else:
-            report._transition_state("validated", _("Revisión guardada."))
+        report._refresh_summary_counts()
         self.saved_report_id = report.id
         return self._open_review_form(report)
 
@@ -303,11 +316,16 @@ class JustechDoFiscalReportWizard(models.TransientModel):
     def action_generate(self):
         self.ensure_one()
         if self.report_type in self.DGII_EXPORT_TYPES:
-            if self.validation_state == "pending":
-                self.action_validate()
-            report = self._create_report()
-            report.action_load_review_lines()
-            report.action_validate_period()
+            if self.saved_report_id:
+                report = self.saved_report_id
+            else:
+                if self.validation_state == "pending":
+                    self.action_validate()
+                report = self._create_report()
+                report.action_load_review_lines()
+                self.saved_report_id = report.id
+            if not report.validated_at:
+                report.action_validate_period()
             if report.manual_exclusion_count and report.state != "approved":
                 return report.action_open_export_blocker_wizard()
             result = report.action_generate_dgii_export()

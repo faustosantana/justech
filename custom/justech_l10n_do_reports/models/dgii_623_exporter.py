@@ -55,7 +55,12 @@ class JustechDoDgii623Exporter(models.AbstractModel):
 
     def _persistent_gov_lines(self, move=None, company=None, date_from=None, date_to=None):
         Wh = self.env["hellenia.payment.withholding.line"]
-        domain = [("affects_623", "=", True), ("amount", ">", 0)]
+        domain = [
+            ("amount", ">", 0),
+            "|",
+            ("affects_623", "=", True),
+            ("catalog_id.code", "in", list(GOV_CATALOG_CODES)),
+        ]
         if move:
             domain.append(("move_id", "=", move.id))
         if company:
@@ -234,6 +239,10 @@ class JustechDoDgii623Exporter(models.AbstractModel):
                 % {"doc": label, "fecha": ret_date}
             )
         ref, _ref_type, _bank = self._reference_data(move)
+        if not ref:
+            payment = self._payment_with_gov_data(move)
+            if payment and payment.name:
+                ref = payment.name
         if not ref:
             errors.append(
                 _("%(doc)s: falta número de referencia del pago (cheque o transferencia).")

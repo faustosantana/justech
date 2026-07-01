@@ -75,8 +75,7 @@
                 <group string="Datos del método de pago">
                     <field name="hellenia_show_card_fields" invisible="1"/>
                     <field name="hellenia_show_check_fields" invisible="1"/>
-                    <field name="hellenia_payment_reference" string="Referencia"
-                           invisible="not hellenia_show_card_fields and not hellenia_show_check_fields"/>
+                    <field name="hellenia_payment_reference" string="Referencia de pago"/>
                     <field name="hellenia_card_auth" string="Autorización"
                            invisible="not hellenia_show_card_fields"/>
                     <field name="hellenia_card_batch" string="Lote"

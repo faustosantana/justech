@@ -19,6 +19,37 @@ class AccountPaymentGov623(models.Model):
         copy=False,
     )
 
+    def _justech_stamp_gov_from_withholding(self):
+        """Stamp campos 623 en pago y facturas conciliadas."""
+        for pay in self:
+            gov_lines = pay.hellenia_withholding_line_ids.filtered(
+                lambda w: w.catalog_id.code in GOV_CATALOG_CODES and w.amount
+            )
+            if not gov_lines:
+                continue
+            amount = sum(gov_lines.mapped("amount"))
+            ref = pay.hellenia_check_number or pay.hellenia_payment_reference or pay.name or ""
+            ref_type = "1" if pay.hellenia_check_number else "2"
+            pay.write(
+                {
+                    "justech_do_gov_withholding_amount": amount,
+                    "justech_do_gov_withholding_catalog_id": gov_lines[:1].catalog_id.id,
+                }
+            )
+            move_vals = {
+                "justech_do_gov_withholding_amount": amount,
+                "justech_do_gov_retention_date": pay.date,
+                "justech_do_gov_retention_ref": ref,
+                "justech_do_gov_retention_ref_type": ref_type,
+            }
+            if pay.hellenia_check_bank_id:
+                move_vals["justech_do_gov_retention_bank_id"] = pay.hellenia_check_bank_id.id
+            moves = pay.reconciled_invoice_ids | pay.reconciled_bill_ids
+            if not moves:
+                moves = gov_lines.mapped("move_id")
+            if moves:
+                moves.write(move_vals)
+
 
 class AccountPaymentRegisterGov623(models.TransientModel):
     _inherit = "account.payment.register"
@@ -47,14 +78,6 @@ class AccountPaymentRegisterGov623(models.TransientModel):
         }
         return payment_vals, move_vals
 
-    def _justech_gov_amount_from_payment(self, payment):
-        if payment.justech_do_gov_withholding_amount:
-            return payment.justech_do_gov_withholding_amount
-        gov_lines = payment.hellenia_withholding_line_ids.filtered(
-            lambda w: w.catalog_id.code in GOV_CATALOG_CODES and w.amount
-        )
-        return sum(gov_lines.mapped("amount")) if gov_lines else 0.0
-
     def _create_payment_vals_from_wizard(self, batch_result):
         vals = super()._create_payment_vals_from_wizard(batch_result)
         payment_vals, _move_vals = self._justech_gov_withholding_payload()
@@ -62,11 +85,6 @@ class AccountPaymentRegisterGov623(models.TransientModel):
             vals.update(payment_vals)
         return vals
 
-    def _create_payments(self):
-        _payment_vals, move_vals = self._justech_gov_withholding_payload()
-        payments = super()._create_payments()
-        if move_vals and payments:
-            moves = payments.reconciled_invoice_ids | payments.reconciled_bill_ids
-            if moves:
-                moves.write(move_vals)
-        return payments
+    def _hellenia_stamp_gov_on_invoices(self, payments):
+        payments._justech_stamp_gov_from_withholding()
+        super()._hellenia_stamp_gov_on_invoices(payments)

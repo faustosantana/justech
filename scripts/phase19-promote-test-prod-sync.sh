@@ -60,7 +60,9 @@ if [[ -d "$REPO/.git" ]]; then
   git fetch origin "$CERTIFIED_BRANCH" 2>/dev/null || true
   git checkout "$CERTIFIED_BRANCH" || abort "Branch $CERTIFIED_BRANCH no encontrada"
   git pull origin "$CERTIFIED_BRANCH" || true
-  git checkout "$CERTIFIED_COMMIT" 2>/dev/null || git checkout "$CERTIFIED_BRANCH"
+  if [[ -n "$CERTIFIED_COMMIT" ]]; then
+    git checkout "$CERTIFIED_COMMIT" 2>/dev/null || abort "Commit $CERTIFIED_COMMIT no encontrado"
+  fi
   ACTUAL=$(git rev-parse HEAD)
   log "Commit certificado: $ACTUAL ($(git log -1 --oneline))"
 else

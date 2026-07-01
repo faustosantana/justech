@@ -90,9 +90,13 @@ def backup_state():
     for xmlid, rname in REPORT_ACTIONS:
         try:
             act = env.ref(xmlid)
-            paperformats[xmlid] = act.paperformat_id.id if act.paperformat_id else False
+            pf = act.paperformat_id
+            paperformats[xmlid] = {
+                "id": pf.id if pf else False,
+                "xml_id": pf.get_external_id().get(pf.id, "") if pf else "",
+            }
         except Exception:
-            paperformats[xmlid] = False
+            paperformats[xmlid] = {"id": False, "xml_id": ""}
     custom_views = env["ir.ui.view"].search([
         ("type", "=", "qweb"),
         "|", "|",
@@ -118,6 +122,16 @@ def backup_state():
 def restore_state(backup):
     result = {"ok": True, "steps": []}
     try:
+        for mod_name in ["hellenia_reports", "hellenia_ux"]:
+            mod = env["ir.module.module"].search([("name", "=", mod_name)], limit=1)
+            if mod and backup["modules"].get(mod_name) == "installed" and mod.state != "installed":
+                mod.button_immediate_install()
+                result["steps"].append(f"reinstalled_{mod_name}")
+            elif mod and mod.state == "installed" and mod_name == "hellenia_reports":
+                mod.button_immediate_upgrade()
+                result["steps"].append("upgraded_hellenia_reports")
+        env.cr.commit()
+
         for vid, info in backup.get("view_states", {}).items():
             v = env["ir.ui.view"].browse(int(vid)).exists()
             if v:
@@ -125,23 +139,32 @@ def restore_state(backup):
         result["steps"].append("views_restored")
 
         company = env.company
-        if backup.get("company_layout_view_id"):
-            company.write({"external_report_layout_id": backup["company_layout_view_id"]})
+        layout_xml = backup.get("company_layout_xml_id")
+        if layout_xml:
+            layout = env.ref(layout_xml, raise_if_not_found=False)
+            if layout:
+                company.write({"external_report_layout_id": layout.id})
         result["steps"].append("company_layout_restored")
 
-        for xmlid, pf_id in backup.get("paperformats", {}).items():
+        for xmlid, pf_info in backup.get("paperformats", {}).items():
             try:
                 act = env.ref(xmlid)
+                pf_id = False
+                if isinstance(pf_info, dict):
+                    pf_xml = pf_info.get("xml_id")
+                    if pf_xml:
+                        pf = env.ref(pf_xml, raise_if_not_found=False)
+                        pf_id = pf.id if pf else False
+                    elif pf_info.get("id"):
+                        pf = env["report.paperformat"].browse(pf_info["id"]).exists()
+                        pf_id = pf.id if pf else False
+                elif pf_info:
+                    pf = env["report.paperformat"].browse(pf_info).exists()
+                    pf_id = pf.id if pf else False
                 act.write({"paperformat_id": pf_id or False})
             except Exception:
                 pass
         result["steps"].append("paperformats_restored")
-
-        for mod_name in ["hellenia_reports", "hellenia_ux"]:
-            mod = env["ir.module.module"].search([("name", "=", mod_name)], limit=1)
-            if mod and backup["modules"].get(mod_name) == "installed" and mod.state != "installed":
-                mod.button_immediate_install()
-                result["steps"].append(f"reinstalled_{mod_name}")
 
         env.cr.commit()
     except Exception as e:

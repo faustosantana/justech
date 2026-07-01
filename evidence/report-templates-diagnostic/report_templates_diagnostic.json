@@ -1760,5 +1760,230 @@
       "snailmail_account_followup"
     ],
     "pdfs_generated": 4
-  }
+  },
+  "comparison_ab": {
+    "phase": "report-templates-comparison-ab",
+    "timestamp_utc": "2026-07-01T23:46:03.608011+00:00",
+    "database": "hellenia_test",
+    "ref": "P23-REPORT-CMP",
+    "test_records": {
+      "rfq": {
+        "name": "P00054",
+        "id": 56,
+        "state": "draft"
+      },
+      "payment": {
+        "name": "PBNKD/2026/00028",
+        "id": 1501,
+        "state": "paid"
+      },
+      "source_cotizacion": {
+        "model": "sale.order",
+        "id": 139,
+        "name": "S00138"
+      },
+      "source_factura": {
+        "model": "account.move",
+        "id": 8104,
+        "name": "INV/2026/00214 (P201-132238-2)"
+      },
+      "source_orden_compra": {
+        "model": "purchase.order",
+        "id": 55,
+        "name": "P00053"
+      },
+      "source_rfq": {
+        "model": "purchase.order",
+        "id": 56,
+        "name": "P00054 (P23-REPORT-CMP-RFQ)"
+      },
+      "source_recibo_pago": {
+        "model": "account.payment",
+        "id": 1501,
+        "name": "PBNKD/2026/00028"
+      },
+      "source_albaran": {
+        "model": "stock.picking",
+        "id": 3,
+        "name": "WH/OUT/00002"
+      }
+    },
+    "backup": {
+      "file": "/tmp/report-templates-comparison/backup/restore_backup.json",
+      "modules": {
+        "hellenia_account": "installed",
+        "hellenia_reports": "installed",
+        "hellenia_ux": "installed",
+        "justech_l10n_do_ncf": "installed"
+      },
+      "views_count": 19
+    },
+    "group_a": {
+      "label": "Personalizaciones Hellenia/Justech activas",
+      "modules": {
+        "hellenia_account": "installed",
+        "hellenia_reports": "installed",
+        "hellenia_ux": "installed",
+        "justech_l10n_do_ncf": "installed"
+      },
+      "pdfs": {
+        "cotizacion": {
+          "status": "ok",
+          "report": "sale.report_saleorder",
+          "record": "S00138",
+          "record_id": 139,
+          "file": "A_cotizacion.pdf",
+          "size_bytes": 90274,
+          "pages": null,
+          "is_pdf": true
+        },
+        "factura": {
+          "status": "ok",
+          "report": "account.report_invoice",
+          "record": "INV/2026/00214 (P201-132238-2)",
+          "record_id": 8104,
+          "file": "A_factura.pdf",
+          "size_bytes": 70409,
+          "pages": null,
+          "is_pdf": true
+        },
+        "orden_compra": {
+          "status": "ok",
+          "report": "purchase.report_purchaseorder",
+          "record": "P00053",
+          "record_id": 55,
+          "file": "A_orden_compra.pdf",
+          "size_bytes": 72446,
+          "pages": null,
+          "is_pdf": true
+        },
+        "rfq": {
+          "status": "ok",
+          "report": "purchase.report_purchasequotation",
+          "record": "P00054 (P23-REPORT-CMP-RFQ)",
+          "record_id": 56,
+          "file": "A_rfq.pdf",
+          "size_bytes": 69495,
+          "pages": null,
+          "is_pdf": true
+        },
+        "recibo_pago": {
+          "status": "ok",
+          "report": "account.report_payment_receipt",
+          "record": "PBNKD/2026/00028",
+          "record_id": 1501,
+          "file": "A_recibo_pago.pdf",
+          "size_bytes": 58329,
+          "pages": null,
+          "is_pdf": true
+        },
+        "albaran": {
+          "status": "ok",
+          "report": "stock.report_deliveryslip",
+          "record": "WH/OUT/00002",
+          "record_id": 3,
+          "file": "A_albaran.pdf",
+          "size_bytes": 60020,
+          "pages": null,
+          "is_pdf": true
+        }
+      }
+    },
+    "group_b": {
+      "label": "Odoo puro — hellenia_reports/ux desinstalados, herencias account/ncf desactivadas",
+      "steps": [
+        "uninstalled_hellenia_ux",
+        "uninstalled_hellenia_reports",
+        "deactivated_views_2",
+        "layout_standard",
+        "paperformats_cleared"
+      ],
+      "modules": {
+        "hellenia_account": "installed",
+        "hellenia_reports": "uninstalled",
+        "hellenia_ux": "uninstalled",
+        "justech_l10n_do_ncf": "installed"
+      },
+      "pdfs": {
+        "cotizacion": {
+          "status": "ok",
+          "report": "sale.report_saleorder",
+          "record": "S00138",
+          "record_id": 139,
+          "file": "B_cotizacion.pdf",
+          "size_bytes": 81276,
+          "pages": null,
+          "is_pdf": true
+        },
+        "factura": {
+          "status": "ok",
+          "report": "account.report_invoice",
+          "record": "INV/2026/00214 (P201-132238-2)",
+          "record_id": 8104,
+          "file": "B_factura.pdf",
+          "size_bytes": 58245,
+          "pages": null,
+          "is_pdf": true
+        },
+        "orden_compra": {
+          "status": "ok",
+          "report": "purchase.report_purchaseorder",
+          "record": "P00053",
+          "record_id": 55,
+          "file": "B_orden_compra.pdf",
+          "size_bytes": 64512,
+          "pages": null,
+          "is_pdf": true
+        },
+        "rfq": {
+          "status": "ok",
+          "report": "purchase.report_purchasequotation",
+          "record": "P00054 (P23-REPORT-CMP-RFQ)",
+          "record_id": 56,
+          "file": "B_rfq.pdf",
+          "size_bytes": 61563,
+          "pages": null,
+          "is_pdf": true
+        },
+        "recibo_pago": {
+          "status": "ok",
+          "report": "account.report_payment_receipt",
+          "record": "PBNKD/2026/00028",
+          "record_id": 1501,
+          "file": "B_recibo_pago.pdf",
+          "size_bytes": 55057,
+          "pages": null,
+          "is_pdf": true
+        },
+        "albaran": {
+          "status": "ok",
+          "report": "stock.report_deliveryslip",
+          "record": "WH/OUT/00002",
+          "record_id": 3,
+          "file": "B_albaran.pdf",
+          "size_bytes": 54712,
+          "pages": null,
+          "is_pdf": true
+        }
+      }
+    },
+    "restore": {
+      "ok": false,
+      "steps": [
+        "views_restored"
+      ],
+      "error": "El registro no existe o fue eliminado.\n(Registro: ir.ui.view(1576,), Usuario: 1)"
+    },
+    "pass": false,
+    "errors": [
+      "restore_failed: El registro no existe o fue eliminado.\n(Registro: ir.ui.view(1576,), Usuario: 1)"
+    ],
+    "summary": {
+      "group_a_ok": 6,
+      "group_b_ok": 6,
+      "total_docs": 6,
+      "restore_ok": false
+    }
+  },
+  "updated_utc": "2026-07-01T23:46:45.517493+00:00"
 }

@@ -1,8 +1,8 @@
 # Hellenia — Validación Visual Cotización Premium
 
-**Última actualización:** Fase 23.3E — 2026-07-01  
+**Última actualización:** Fase 23.3F — 2026-07-01  
 **Base de datos:** `hellenia_test`  
-**Módulo:** `hellenia_reports` **19.0.1.4.1**  
+**Módulo:** `hellenia_reports` **19.0.1.4.2**  
 **Resultado:** **TEST PASS**
 
 ---
@@ -11,15 +11,14 @@
 
 | Criterio | Estado |
 |----------|--------|
-| Header pegado arriba, sin marco exterior | PASS |
-| Logo ≤ 75px, datos empresa sin caja | PASS |
-| Banda COTIZACIÓN compacta #3E4827 | PASS |
-| Términos pago español (Contado / Crédito X días) | PASS |
-| Tabla productos + paginación 15 ítems | PASS |
-| Totales destacados (#3E4827, negrita) | PASS |
-| Condiciones abajo (espaciador flexible) | PASS |
-| Firmas profesionales (mayúsculas, líneas largas) | PASS |
-| Footer Tel \| Web \| Correo | PASS |
+| Encabezado al inicio del área imprimible (sin layout Odoo duplicado) | PASS |
+| Sin estilo Excel — bloques corporativos sin cajas | PASS |
+| Tabla productos elegante (#3E4827, líneas finas) | PASS |
+| Totales refinados, total destacado #3E4827 | PASS |
+| Espaciador dinámico (min-height solo ≤8 productos) | PASS |
+| Condiciones / firmas / footer anclados abajo (pocos ítems) | PASS |
+| 1 producto = **1 sola página** | PASS |
+| 5 / 15 / 25 productos sin romper diseño | PASS |
 | Sin mojibake / sin inglés | PASS |
 | Portal PDF HTTP 200 | PASS |
 | Backend PDF OK | PASS |
@@ -33,49 +32,64 @@
 |------|-----------|
 | 23.3C | PASS — UTF-8 + layout tablas |
 | 23.3D | PASS — compactación + firmas iniciales |
-| **23.3E** | **PASS** — ajustes finos visuales |
+| 23.3E | PASS — ajustes finos visuales |
+| **23.3F** | **PASS** — pulido premium corporativo (solo QWeb/CSS) |
 
 ---
 
-## Cambios Fase 23.3E
+## Cambios Fase 23.3F
 
-1. **Header sin marco** — clase `hellenia-quote-hdr-table`, sin borde exterior; solo línea vertical sutil entre logo y datos
-2. **Menos espacio superior** — márgenes 0, banda COTIZACIÓN a 2px del encabezado
-3. **Espaciador flexible ampliado** — empuja condiciones hacia abajo con pocos productos (hasta 440px)
-4. **Espaciador de firmas** — bloque adicional antes de firmas para anclarlas al cierre
-5. **Firmas rediseñadas** — etiquetas mayúsculas/cursiva, líneas largas (220px+), bloque no tabular
-6. **Total destacado** — borde superior #3E4827, fondo `#f0f2ec`
+1. **Ocultar header/footer Odoo duplicados** — CSS en plantilla cotización
+2. **Encabezado ~15 mm más arriba** — `margin-top: -15mm` en shell A4
+3. **Bloques cliente/vendedor** — títulos grises, valores negros, sin bordes
+4. **Tabla productos** — cabecera Hellenia, filas con línea inferior `#ededed`
+5. **Totales** — menos líneas, total con borde superior `#3E4827` y fondo `#f4f6f1`
+6. **Shell A4 condicional** — `min-height: 210mm` solo si ≤8 productos; evita media página vacía con 15+
+7. **Firmas corporativas** — ENTREGADO POR / RECIBIDO POR / FECHA con líneas alineadas
+8. **Footer minimal** — Tel \| Correo \| Web, gris, pegado al borde inferior
+
+**Restricción respetada:** sin cambios en Python, modelos, lógica, pagos ni retenciones.
 
 ---
 
 ## PDFs generados
 
-| Archivo | Productos | Tamaño |
-|---------|-----------|--------|
-| `quotation_1_product.pdf` | 1 | ~69 KB |
-| `quotation_5_products.pdf` | 5 | ~73 KB |
-| `quotation_15_products.pdf` | 15 | ~81 KB (2 págs.) |
-| `portal_order_135.pdf` | 1 | ~69 KB |
+| Archivo | Productos | Páginas | Tamaño |
+|---------|-----------|---------|--------|
+| `quotation_1_product.pdf` | 1 | 1 | ~69 KB |
+| `quotation_5_products.pdf` | 5 | 1 | ~72 KB |
+| `quotation_15_products.pdf` | 15 | 2 | ~80 KB |
+| `quotation_25_products.pdf` | 25 | 2 | ~89 KB |
+| `portal_order_135.pdf` | 1 | 1 | ~69 KB |
 
-Evidencia: `evidence/phase23-3e-quotation-final-polish/`
+Evidencia: `evidence/phase23-3f-quotation-premium-polish/`
 
 ---
 
 ## Screenshots
 
 - `screenshot_quote_1_page1.png`
+- `screenshot_quote_5_page1.png`
 - `screenshot_quote_15_page1.png` / `screenshot_quote_15_page2.png`
+- `screenshot_quote_25_page1.png` / `screenshot_quote_25_page2.png`
 - `screenshot_portal_page1.png`
 
 ---
 
-## Errores visuales pendientes
+## Diferencias visuales vs 23.3E
 
-Ninguno bloqueante en TEST.
+| Aspecto | 23.3E | 23.3F |
+|---------|-------|-------|
+| Header Odoo externo | Visible (doble encabezado) | Oculto — solo branding Hellenia |
+| Margen superior | Franja blanca amplia | ~15 mm más arriba |
+| Cajas cliente/vendedor | Algo de estructura tabular | Bloques abiertos, sin celdas |
+| Espaciador inferior | Python + px fijos grandes | QWeb shell A4 condicional |
+| 15 productos pág. 1 | Media página vacía bajo totales | Totales al pie de tabla, sin hueco |
+| Footer | Línea verde gruesa | Separador fino gris, más discreto |
 
 ---
 
 ## Decisión
 
-**TEST PASS** — Recomendado para **aprobación visual humana final**.  
-**Promover a PROD:** solo con aprobación explícita del usuario.
+**TEST PASS** — Cotización con apariencia corporativa premium en TEST.  
+Pendiente **aprobación visual humana** antes de PROD.

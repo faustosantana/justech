@@ -7,6 +7,12 @@
         <t t-set="company" t-value="doc.company_id"/>
         <t t-set="lines_to_report" t-value="doc._get_order_lines_to_report()"/>
         <t t-set="salesperson_partner" t-value="doc.user_id.partner_id if doc.user_id else False"/>
+        <t t-set="hellenia_default_quotation_terms">(a) Las piezas ofrecidas son únicas y sujetas a disponibilidad.
+(b) Esta cotización tiene una validez de 5 días.
+(c) Se requiere confirmación del pago del 100% para reservar la pieza.
+(d) Transporte disponible bajo cotización.
+(e) Asesoría de colocación, instalación y styling disponible bajo cotización.
+(f) Las piezas pueden presentar marcas propias del tiempo, lo cual forma parte de su carácter y autenticidad.</t>
 
         <div class="page hellenia-quote-page">
             <!-- Encabezado -->
@@ -145,7 +151,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <t t-set="product_lines" t-value="[l for l in lines_to_report if not l.display_type and not l.is_downpayment]"/>
+                    <t t-set="product_line_num" t-value="0"/>
                     <t t-foreach="lines_to_report" t-as="line">
                         <t t-if="line.display_type == 'line_section'">
                             <tr class="hellenia-line-section">
@@ -158,9 +164,10 @@
                             </tr>
                         </t>
                         <t t-elif="not line.display_type and not line.is_downpayment">
+                            <t t-set="product_line_num" t-value="product_line_num + 1"/>
                             <tr class="hellenia-line-product">
                                 <td class="text-center">
-                                    <span t-out="product_lines.index(line) + 1"/>
+                                    <span t-out="product_line_num"/>
                                 </td>
                                 <td><span t-field="line.name"/></td>
                                 <td class="text-end text-nowrap">
@@ -216,7 +223,7 @@
                 </t>
                 <t t-else="">
                     <div class="hellenia-conditions-body hellenia-conditions-plain"
-                         t-out="company.get_hellenia_quotation_terms_display()"/>
+                         t-out="company.hellenia_quotation_terms or hellenia_default_quotation_terms"/>
                 </t>
             </div>
 

@@ -66,7 +66,7 @@ class AccountPaymentRegisterGov623(models.TransientModel):
         _payment_vals, move_vals = self._justech_gov_withholding_payload()
         payments = super()._create_payments()
         if move_vals and payments:
-            moves = payments.reconciled_invoice_ids
+            moves = payments.reconciled_invoice_ids | payments.reconciled_bill_ids
             if moves:
                 moves.write(move_vals)
         return payments

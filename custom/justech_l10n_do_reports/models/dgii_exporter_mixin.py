@@ -109,7 +109,7 @@ class JustechDoDgiiExporterMixin(models.AbstractModel):
                     missing_codes.append(catalog.display_name)
             elif tax and catalog:
                 missing_codes.append(catalog.display_name or tax.name)
-        PaymentWh = self.env.get("hellenia.account.payment.withholding")
+        PaymentWh = self.env.get("hellenia.payment.withholding.line")
         if PaymentWh is not None:
             for payment in move._get_reconciled_payments():
                 for wh in payment.hellenia_withholding_line_ids.filtered(lambda w: w.move_id == move):

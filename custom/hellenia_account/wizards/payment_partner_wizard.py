@@ -49,7 +49,7 @@ class HelleniaPaymentPartnerWizardLine(models.TransientModel):
         currency_field="currency_id",
     )
     withholding_detail_ids = fields.One2many(
-        "hellenia.payment.withholding.line",
+        "hellenia.payment.withholding.wizard.line",
         "wizard_line_id",
         string="Detalle retenciones",
     )
@@ -180,25 +180,6 @@ class HelleniaPaymentPartnerWizardLine(models.TransientModel):
         return commands
 
 
-class HelleniaPaymentWithholdingLine(models.TransientModel):
-    _name = "hellenia.payment.withholding.line"
-    _description = "Detalle retención — wizard pago"
-
-    wizard_id = fields.Many2one("hellenia.payment.partner.wizard", ondelete="cascade")
-    wizard_line_id = fields.Many2one("hellenia.payment.partner.wizard.line", ondelete="cascade")
-    register_wizard_id = fields.Many2one("account.payment.register", ondelete="cascade")
-    catalog_id = fields.Many2one("hellenia.withholding.catalog", string="Retención")
-    tax_id = fields.Many2one("account.tax", string="Impuesto")
-    label = fields.Char(string="Descripción")
-    base_label = fields.Char(string="Tipo de base")
-    base_amount = fields.Monetary(string="Base", currency_field="currency_id")
-    rate = fields.Float(string="Porcentaje")
-    amount = fields.Monetary(string="Monto retenido", currency_field="currency_id")
-    account_id = fields.Many2one("account.account", string="Cuenta contable")
-    currency_id = fields.Many2one("res.currency", string="Moneda")
-    invoice_name = fields.Char(related="wizard_line_id.invoice_name", string="Factura")
-
-
 class HelleniaPaymentPartnerWizard(models.TransientModel):
     _name = "hellenia.payment.partner.wizard"
     _description = "Registrar cobro o pago con facturas pendientes"
@@ -221,7 +202,7 @@ class HelleniaPaymentPartnerWizard(models.TransientModel):
     communication = fields.Char(string="Concepto de pago")
 
     withholding_line_ids = fields.One2many(
-        "hellenia.payment.withholding.line",
+        "hellenia.payment.withholding.wizard.line",
         "wizard_id",
         string="Detalle retenciones",
         compute="_compute_withholding_lines",

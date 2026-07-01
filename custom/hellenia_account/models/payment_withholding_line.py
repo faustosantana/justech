@@ -1,13 +1,13 @@
-"""Retenciones persistentes en pagos — trazabilidad contable y fiscal."""
+"""Retenciones persistentes — ciclo contable/fiscal completo."""
 from __future__ import annotations
 
 from odoo import api, fields, models
 
 
-class HelleniaAccountPaymentWithholding(models.Model):
-    _name = "hellenia.account.payment.withholding"
+class HelleniaPaymentWithholdingLine(models.Model):
+    _name = "hellenia.payment.withholding.line"
     _description = "Retención aplicada en pago"
-    _order = "invoice_name, id"
+    _order = "date desc, invoice_name, id"
 
     payment_id = fields.Many2one(
         "account.payment",
@@ -17,24 +17,76 @@ class HelleniaAccountPaymentWithholding(models.Model):
         index=True,
     )
     move_id = fields.Many2one("account.move", string="Factura", index=True, ondelete="set null")
-    invoice_name = fields.Char(string="Factura")
-    ncf = fields.Char(string="NCF")
-    catalog_id = fields.Many2one("hellenia.withholding.catalog", string="Retención")
+    partner_id = fields.Many2one(
+        "res.partner",
+        string="Cliente/Proveedor",
+        related="payment_id.partner_id",
+        store=True,
+        index=True,
+    )
+    invoice_name = fields.Char(string="Factura", index=True)
+    ncf = fields.Char(string="NCF", index=True)
+    catalog_id = fields.Many2one("hellenia.withholding.catalog", string="Retención", index=True)
     withholding_type = fields.Selection(related="catalog_id.withholding_type", store=True)
     label = fields.Char(string="Descripción", required=True)
     base_label = fields.Char(string="Tipo de base")
     base_amount = fields.Monetary(string="Base", currency_field="currency_id")
     rate = fields.Float(string="Porcentaje", digits=(16, 4))
     amount = fields.Monetary(string="Monto retenido", currency_field="currency_id", required=True)
-    account_id = fields.Many2one("account.account", string="Cuenta contable")
+    account_id = fields.Many2one("account.account", string="Cuenta contable", index=True)
+    currency_id = fields.Many2one(related="payment_id.currency_id", store=True)
+    company_id = fields.Many2one(related="payment_id.company_id", store=True, index=True)
+    date = fields.Date(related="payment_id.date", store=True, index=True)
+    affects_606 = fields.Boolean(related="catalog_id.affects_606", store=True)
+    affects_607 = fields.Boolean(related="catalog_id.affects_607", store=True)
+    affects_623 = fields.Boolean(related="catalog_id.affects_623", store=True)
+    fiscal_report_codes = fields.Char(
+        compute="_compute_fiscal_report_codes",
+        string="Reportes fiscales",
+        store=True,
+    )
     move_line_id = fields.Many2one(
         "account.move.line",
         string="Línea contable",
         ondelete="set null",
-        help="Línea de asiento del pago que registra esta retención.",
+        index=True,
     )
-    company_id = fields.Many2one(related="payment_id.company_id", store=True)
-    currency_id = fields.Many2one(related="payment_id.currency_id", store=True)
+    payment_move_id = fields.Many2one(
+        related="payment_id.move_id",
+        string="Asiento de pago",
+        store=True,
+    )
+    state = fields.Selection(
+        [
+            ("draft", "Borrador"),
+            ("posted", "Contabilizado"),
+        ],
+        compute="_compute_state",
+        store=True,
+        string="Estado",
+    )
+
+    @api.depends("catalog_id.affects_606", "catalog_id.affects_607", "catalog_id.affects_623")
+    def _compute_fiscal_report_codes(self):
+        for line in self:
+            codes = []
+            if line.affects_606:
+                codes.append("606")
+            if line.affects_607:
+                codes.append("607")
+            if line.affects_623:
+                codes.append("623")
+            line.fiscal_report_codes = "/".join(codes)
+
+    @api.depends("payment_id.state", "move_line_id")
+    def _compute_state(self):
+        for line in self:
+            if line.payment_id.state == "posted" and line.move_line_id:
+                line.state = "posted"
+            elif line.payment_id.state == "posted":
+                line.state = "posted"
+            else:
+                line.state = "draft"
 
 
 class AccountPaymentWithholding(models.Model):
@@ -47,7 +99,7 @@ class AccountPaymentWithholding(models.Model):
         help="Importe bruto aplicado a la factura antes de retenciones.",
     )
     hellenia_withholding_line_ids = fields.One2many(
-        "hellenia.account.payment.withholding",
+        "hellenia.payment.withholding.line",
         "payment_id",
         string="Retenciones aplicadas",
         copy=False,
@@ -56,20 +108,22 @@ class AccountPaymentWithholding(models.Model):
         compute="_compute_hellenia_withholding_totals",
         string="Total retenido",
         currency_field="currency_id",
-        store=True,
     )
     hellenia_net_transfer = fields.Monetary(
         compute="_compute_hellenia_withholding_totals",
         string="Neto transferido",
         currency_field="currency_id",
-        store=True,
     )
     hellenia_invoice_display = fields.Char(
         compute="_compute_hellenia_invoice_display",
         string="Facturas afectadas",
     )
 
-    @api.depends("hellenia_withholding_line_ids.amount", "hellenia_applied_amount", "amount")
+    @api.depends(
+        "hellenia_withholding_line_ids.amount",
+        "hellenia_applied_amount",
+        "amount",
+    )
     def _compute_hellenia_withholding_totals(self):
         for pay in self:
             wh_total = sum(pay.hellenia_withholding_line_ids.mapped("amount"))
@@ -94,7 +148,6 @@ class AccountPaymentWithholding(models.Model):
             pay.hellenia_invoice_display = ", ".join(filter(None, dict.fromkeys(names)))
 
     def _hellenia_link_withholding_move_lines(self):
-        """Vincula cada retención persistente con su línea de asiento en el pago."""
         for pay in self:
             if not pay.move_id:
                 continue
@@ -105,3 +158,24 @@ class AccountPaymentWithholding(models.Model):
                 )
                 if candidates:
                     wh.move_line_id = candidates[:1]
+
+
+class AccountMoveWithholding(models.Model):
+    _inherit = "account.move"
+
+    hellenia_withholding_line_ids = fields.One2many(
+        "hellenia.payment.withholding.line",
+        "move_id",
+        string="Retenciones aplicadas",
+        readonly=True,
+    )
+    hellenia_withholding_total = fields.Monetary(
+        compute="_compute_hellenia_withholding_invoice",
+        string="Total retenido",
+        currency_field="currency_id",
+    )
+
+    @api.depends("hellenia_withholding_line_ids.amount")
+    def _compute_hellenia_withholding_invoice(self):
+        for move in self:
+            move.hellenia_withholding_total = sum(move.hellenia_withholding_line_ids.mapped("amount"))

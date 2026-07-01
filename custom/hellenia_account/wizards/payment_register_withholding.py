@@ -8,7 +8,7 @@ class AccountPaymentRegister(models.TransientModel):
     _inherit = "account.payment.register"
 
     hellenia_withholding_line_ids = fields.One2many(
-        "hellenia.payment.withholding.line",
+        "hellenia.payment.withholding.wizard.line",
         "register_wizard_id",
         string="Retenciones de la factura",
     )
@@ -31,28 +31,27 @@ class AccountPaymentRegister(models.TransientModel):
             move = self.line_ids.move_id[:1]
         return move
 
+    def _hellenia_persistent_vals(self, wh, move):
+        return {
+            "move_id": move.id if move else False,
+            "invoice_name": move.name if move else "",
+            "ncf": getattr(move, "justech_do_ncf", "") or "",
+            "catalog_id": wh.catalog_id.id,
+            "label": wh.label or (wh.catalog_id.name if wh.catalog_id else wh.tax_id.name),
+            "base_label": wh.base_label,
+            "base_amount": wh.base_amount,
+            "rate": wh.rate,
+            "amount": wh.amount,
+            "account_id": wh.account_id.id,
+        }
+
     def _hellenia_persistent_withholding_commands(self, batch_result):
         move = self._hellenia_invoice_for_batch(batch_result)
         commands = []
         for wh in self.hellenia_withholding_line_ids:
             if not wh.amount:
                 continue
-            commands.append(
-                Command.create(
-                    {
-                        "move_id": move.id if move else False,
-                        "invoice_name": move.name if move else "",
-                        "ncf": getattr(move, "justech_do_ncf", "") or "",
-                        "catalog_id": wh.catalog_id.id,
-                        "label": wh.label or (wh.catalog_id.name if wh.catalog_id else wh.tax_id.name),
-                        "base_label": wh.base_label,
-                        "base_amount": wh.base_amount,
-                        "rate": wh.rate,
-                        "amount": wh.amount,
-                        "account_id": wh.account_id.id,
-                    }
-                )
-            )
+            commands.append(Command.create(self._hellenia_persistent_vals(wh, move)))
         return commands
 
     def _create_payment_vals_from_wizard(self, batch_result):
@@ -88,7 +87,22 @@ class AccountPaymentRegister(models.TransientModel):
                 )
         return vals
 
+    def _hellenia_finalize_persistent_lines(self, payments, batch_result):
+        """Garantiza persistencia aunque create() no haya copiado las líneas."""
+        move = self._hellenia_invoice_for_batch(batch_result)
+        WhLine = self.env["hellenia.payment.withholding.line"]
+        for payment in payments:
+            if payment.hellenia_withholding_line_ids:
+                payment._hellenia_link_withholding_move_lines()
+                continue
+            for wh in self.hellenia_withholding_line_ids:
+                if not wh.amount:
+                    continue
+                WhLine.create({"payment_id": payment.id, **self._hellenia_persistent_vals(wh, move)})
+            payment._hellenia_link_withholding_move_lines()
+
     def _create_payments(self):
+        batch = getattr(self, "_payment_batch_result", None)
         payments = super()._create_payments()
-        payments._hellenia_link_withholding_move_lines()
+        self._hellenia_finalize_persistent_lines(payments, batch)
         return payments

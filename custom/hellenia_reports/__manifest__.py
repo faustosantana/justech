@@ -1,6 +1,6 @@
 {
     "name": "Hellenia Reports",
-    "version": "19.0.1.4.4",
+    "version": "19.0.1.5.0",
     "category": "Reporting",
     "summary": "Formatos corporativos PDF Hellenia",
     "description": """

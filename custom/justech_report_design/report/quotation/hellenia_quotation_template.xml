@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Cuerpo cotización — estilos en static/src/scss/hellenia_quotation.scss -->
+    <template id="hellenia_quotation_body">
+        <t t-set="company" t-value="doc.company_id"/>
+        <t t-set="lines_to_report" t-value="doc._get_order_lines_to_report()"/>
+        <t t-set="product_count" t-value="len(lines_to_report.filtered(lambda l: not l.display_type and not l.is_downpayment))"/>
+        <t t-set="spacer_cap" t-value="110 if product_count &lt;= 1 else (65 if product_count &lt;= 5 else (30 if product_count &lt;= 15 else 8))"/>
+        <t t-set="sig_cap" t-value="0 if product_count &lt;= 5 else 10"/>
+        <t t-set="bottom_spacer_px" t-value="min(doc.get_jt_quotation_bottom_spacer_px(), spacer_cap)"/>
+        <t t-set="signature_spacer_px" t-value="min(doc.get_jt_quotation_signature_spacer_px(), sig_cap)"/>
+        <t t-set="jt_default_terms">(a) Las piezas ofrecidas son únicas y sujetas a disponibilidad.
+(b) Esta cotización tiene una validez de 5 días.
+(c) Se requiere confirmación del pago del 100% para reservar la pieza.
+(d) Transporte disponible bajo cotización.
+(e) Asesoría de colocación, instalación y styling disponible bajo cotización.
+(f) Las piezas pueden presentar marcas propias del tiempo, lo cual forma parte de su carácter y autenticidad.</t>
+
+        <table width="100%" cellpadding="0" cellspacing="0" class="jt-hq-hdr">
+            <tr>
+                <td width="40%" class="jt-hq-hdr-logo-cell">
+                    <img t-if="company.logo" class="jt-hq-logo"
+                         t-att-src="image_data_uri(company.logo)" alt="Hellenia"/>
+                </td>
+                <td width="60%" class="jt-hq-co">
+                    <div class="jt-hq-co-name"><span t-field="company.name"/></div>
+                    <div t-if="company.street">
+                        <span t-field="company.street"/>
+                        <t t-if="company.city">, <span t-field="company.city"/></t>
+                    </div>
+                    <div t-if="company.vat">
+                        <span class="jt-hq-co-lbl">RNC: </span><span t-field="company.vat"/>
+                    </div>
+                    <div t-if="company.phone">
+                        <span class="jt-hq-co-lbl">Tel.: </span><span t-field="company.phone"/>
+                    </div>
+                    <div t-if="company.email">
+                        <span class="jt-hq-co-lbl">Correo: </span><span t-field="company.email"/>
+                    </div>
+                    <div t-if="company.website">
+                        <span class="jt-hq-co-lbl">Web: </span><span t-field="company.website"/>
+                    </div>
+                </td>
+            </tr>
+        </table>
+
+        <table width="100%" cellpadding="0" cellspacing="0" class="jt-hq-band">
+            <tr>
+                <td width="50%" class="jt-hq-band-title">COTIZACIÓN</td>
+                <td width="50%">
+                    <span class="jt-hq-band-num">No. <span t-field="doc.name"/></span>
+                </td>
+            </tr>
+        </table>
+
+        <table width="100%" cellpadding="0" cellspacing="0" class="jt-hq-dates">
+            <tr>
+                <td width="50%" t-if="doc.date_order">
+                    <span class="jt-hq-lbl">Fecha de Cotización: </span>
+                    <span class="jt-hq-val-bold">
+                        <span t-out="doc.date_order.strftime('%d/%m/%Y') if doc.date_order else ''"/>
+                    </span>
+                </td>
+                <td width="50%" align="right" t-if="doc.validity_date">
+                    <span class="jt-hq-lbl">Vencimiento: </span>
+                    <span class="jt-hq-val-bold">
+                        <span t-out="doc.validity_date.strftime('%d/%m/%Y') if doc.validity_date else ''"/>
+                    </span>
+                </td>
+            </tr>
+        </table>
+        <hr class="jt-hq-line-soft"/>
+
+        <table width="100%" cellpadding="0" cellspacing="0" class="jt-hq-cards">
+            <tr>
+                <td width="49%" class="jt-hq-card">
+                    <div class="jt-hq-title">Información del Cliente</div>
+                    <div class="jt-hq-field">
+                        <div class="jt-hq-lbl">Cliente</div>
+                        <div class="jt-hq-val"><span t-field="doc.partner_id.name"/></div>
+                    </div>
+                    <div class="jt-hq-field" t-if="doc.partner_id.vat">
+                        <div class="jt-hq-lbl">RNC</div>
+                        <div class="jt-hq-val"><span t-field="doc.partner_id.vat"/></div>
+                    </div>
+                    <div class="jt-hq-field" t-if="doc.partner_id.phone">
+                        <div class="jt-hq-lbl">Teléfono</div>
+                        <div class="jt-hq-val"><span t-field="doc.partner_id.phone"/></div>
+                    </div>
+                    <div class="jt-hq-field" t-if="doc.partner_id.email">
+                        <div class="jt-hq-lbl">Correo</div>
+                        <div class="jt-hq-val"><span t-field="doc.partner_id.email"/></div>
+                    </div>
+                </td>
+                <td class="jt-hq-vdiv">&#160;</td>
+                <td width="49%" class="jt-hq-card jt-hq-card-r">
+                    <div class="jt-hq-title">Información del Vendedor</div>
+                    <div class="jt-hq-field" t-if="doc.user_id">
+                        <div class="jt-hq-lbl">Vendedor</div>
+                        <div class="jt-hq-val"><span t-field="doc.user_id.name"/></div>
+                    </div>
+                    <div class="jt-hq-pay">
+                        <div class="jt-hq-title jt-hq-title-tight">Términos de Pago</div>
+                        <div class="jt-hq-pay-val" t-out="doc.get_jt_payment_term_display()"/>
+                    </div>
+                </td>
+            </tr>
+        </table>
+
+        <table class="jt-hq-items" cellpadding="0" cellspacing="0">
+            <thead>
+                <tr>
+                    <th class="c-num">#</th>
+                    <th>DESCRIPCIÓN</th>
+                    <th class="c-qty">CANT.</th>
+                    <th class="c-price">P. UNIT.</th>
+                    <th class="c-sub">SUBTOTAL</th>
+                </tr>
+            </thead>
+            <tbody>
+                <t t-set="n" t-value="0"/>
+                <t t-foreach="lines_to_report" t-as="line">
+                    <t t-if="not line.display_type and not line.is_downpayment">
+                        <t t-set="n" t-value="n + 1"/>
+                        <tr>
+                            <td class="c-num"><span t-out="n"/></td>
+                            <td><span t-field="line.name"/></td>
+                            <td class="c-qty">
+                                <span t-field="line.product_uom_qty"/>
+                                <t t-if="line.product_uom_id"> <span t-field="line.product_uom_id"/></t>
+                            </td>
+                            <td class="c-price">
+                                <span t-field="line.price_unit"
+                                      t-options="{'widget': 'monetary', 'display_currency': doc.currency_id}"/>
+                            </td>
+                            <td class="c-sub">
+                                <span t-field="line.price_subtotal"
+                                      t-options="{'widget': 'monetary', 'display_currency': doc.currency_id}"/>
+                            </td>
+                        </tr>
+                    </t>
+                </t>
+            </tbody>
+        </table>
+
+        <table class="jt-hq-totals" cellpadding="0" cellspacing="0" align="right">
+            <tr>
+                <td class="t-lbl">Subtotal</td>
+                <td class="t-val">
+                    <span t-field="doc.amount_untaxed"
+                          t-options="{'widget': 'monetary', 'display_currency': doc.currency_id}"/>
+                </td>
+            </tr>
+            <tr>
+                <td class="t-lbl">ITBIS (18%)</td>
+                <td class="t-val">
+                    <span t-field="doc.amount_tax"
+                          t-options="{'widget': 'monetary', 'display_currency': doc.currency_id}"/>
+                </td>
+            </tr>
+            <tr class="grand">
+                <td class="t-lbl">TOTAL</td>
+                <td class="t-val">
+                    <span t-field="doc.amount_total"
+                          t-options="{'widget': 'monetary', 'display_currency': doc.currency_id}"/>
+                </td>
+            </tr>
+        </table>
+
+        <div class="jt-hq-clear">&#160;</div>
+
+        <table class="jt-hq-spacer" width="100%" cellpadding="0" cellspacing="0" t-if="bottom_spacer_px &gt; 0">
+            <tr><td t-attf-style="height: {{ bottom_spacer_px }}px;">&#160;</td></tr>
+        </table>
+
+        <div class="jt-hq-cond">
+            <div class="jt-hq-cond-title">CONDICIONES</div>
+            <t t-if="doc.note">
+                <div class="jt-hq-cond-body" t-field="doc.note"/>
+            </t>
+            <t t-else="">
+                <div class="jt-hq-cond-body" t-out="jt_default_terms"/>
+            </t>
+        </div>
+
+        <table class="jt-hq-spacer" width="100%" cellpadding="0" cellspacing="0" t-if="signature_spacer_px &gt; 0">
+            <tr><td t-attf-style="height: {{ signature_spacer_px }}px;">&#160;</td></tr>
+        </table>
+
+        <table width="100%" cellpadding="0" cellspacing="0" class="jt-hq-sigs">
+            <tr>
+                <td width="48%">
+                    <div class="jt-hq-sig-lbl">Entregado por</div>
+                    <div class="jt-hq-sig-line">&#160;</div>
+                    <div class="jt-hq-sig-date">
+                        <div class="jt-hq-sig-lbl">Fecha:</div>
+                        <div class="jt-hq-sig-line">&#160;</div>
+                    </div>
+                </td>
+                <td width="4%"></td>
+                <td width="48%">
+                    <div class="jt-hq-sig-lbl">Recibido por</div>
+                    <div class="jt-hq-sig-line">&#160;</div>
+                </td>
+            </tr>
+        </table>
+
+        <div class="jt-hq-foot">
+            <t t-if="company.phone"><span t-field="company.phone"/></t>
+            <t t-if="company.email"> | <span t-field="company.email"/></t>
+            <t t-if="company.website"> | <span t-field="company.website"/></t>
+        </div>
+        <div class="jt-hq-pg">Página <span class="page"/> de <span class="topage"/></div>
+    </template>
+
+    <!-- Reporte paralelo — web.html_container, sin web.external_layout -->
+    <template id="report_hellenia_quotation_document">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-set="doc" t-value="doc.with_context(lang=doc.partner_id.lang)"/>
+                <div class="article o_report_layout_standard page jt-hq-page"
+                     t-att-data-oe-model="doc._name"
+                     t-att-data-oe-id="doc.id"
+                     t-att-data-oe-lang="doc.env.context.get('lang')">
+                    <t t-call="justech_report_design.hellenia_quotation_body"/>
+                </div>
+            </t>
+        </t>
+    </template>
+
+</odoo>

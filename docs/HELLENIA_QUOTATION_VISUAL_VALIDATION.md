@@ -1,10 +1,9 @@
-# Hellenia — Validación Visual Cotización Premium (Fase 23.3)
+# Hellenia — Validación Visual Cotización Premium
 
-**Fecha:** 2026-07-01  
+**Última actualización:** Fase 23.3D — 2026-07-01  
 **Base de datos:** `hellenia_test`  
-**Módulo:** `hellenia_reports` **19.0.1.2.0**  
-**Resultado Fase 23.3:** FAIL (500 en portal UI)  
-**Resultado Fase 23.3B:** **TEST PASS** (ver `docs/PHASE23_3B_QUOTATION_500_FIX.md`)
+**Módulo:** `hellenia_reports` **19.0.1.4.0**  
+**Resultado:** **TEST PASS**
 
 ---
 
@@ -12,68 +11,88 @@
 
 | Criterio | Estado |
 |----------|--------|
-| Template premium activo en cotizaciones | PASS |
-| Campo `hellenia_quotation_terms` creado | Sí |
-| Condiciones editables (nota / empresa) | PASS |
-| PDF 1 producto | PASS |
-| PDF 5 productos | PASS |
-| PDF 15 productos (salto de página) | PASS |
-| Español completo | PASS |
-| Sin QR / NCF | PASS |
-| Sin inglés prohibido | PASS |
-| Color corporativo #3E4827 | PASS (banda título + SCSS) |
+| Header compacto (logo ≤ 75px) | PASS |
+| Banda COTIZACIÓN #3E4827 | PASS |
+| Fechas en una fila | PASS |
+| Cliente / vendedor compacto | PASS |
+| Términos pago español (Contado / Crédito X días) | PASS |
+| Sin "Immediate Payment" | PASS |
+| Tabla productos compacta | PASS |
+| Paginación 15 productos | PASS (2 páginas) |
+| Condiciones editables | PASS |
+| Firmas Entregado / Recibido / Fecha | PASS |
+| Footer Tel \| Web \| Correo | PASS |
+| Sin mojibake UTF-8 | PASS |
+| Portal PDF HTTP 200 | PASS |
+| Backend PDF generación | PASS |
 | Listo para PROD | **No** — pendiente aprobación explícita |
 
 ---
 
-## PDFs generados
+## Fases previas
 
-| Archivo | Líneas | Tamaño | Cotización |
-|---------|--------|--------|------------|
-| `quotation_1_product.pdf` | 1 | 69 800 bytes | S00134 |
-| `quotation_5_products.pdf` | 5 | 72 620 bytes | S00135 |
-| `quotation_15_products.pdf` | 15 | 79 453 bytes | S00136 |
-
-Ruta evidencia: `evidence/phase23-3-quotation-template/`
-
----
-
-## Checks automatizados
-
-Script: `scripts/phase23-3-quotation-template-test.py`  
-Resultado: `validation.json` — **0 checks fallidos**
-
-### Contenido validado en HTML
-
-- Textos: COTIZACIÓN, INFORMACIÓN DEL CLIENTE, INFORMACIÓN DEL VENDEDOR, TÉRMINOS DE PAGO, DESCRIPCIÓN, CANTIDAD, PRECIO UNITARIO, SUBTOTAL, ITBIS, CONDICIONES, Santo Domingo, República Dominicana  
-- Clases CSS: `hellenia-quote-page`, `hellenia-quote-header`, `hellenia-quote-title-band`, `hellenia-card`, `hellenia-items-table`, `hellenia-totals`, `hellenia-conditions`, `hellenia-footer-contact`  
-- Ausencia: Quotation, Customer, Salesperson, Payment Terms, Expiration, Untaxed Amount, QR, NCF  
-- Ausencia colores legacy: `#1a365d`, `#c9a227`
-
-### Condiciones editables
-
-| Prueba | Resultado |
-|--------|-----------|
-| Prioridad `order.note` | PASS |
-| Respaldo `company.hellenia_quotation_terms` | PASS |
-| Edición desde empresa | PASS |
+| Fase | Resultado | Notas |
+|------|-----------|-------|
+| 23.3 | FAIL | Layout roto, encoding |
+| 23.3B | PASS | Fix 500 portal |
+| 23.3C | PASS | UTF-8 + minimal_layout |
+| **23.3D** | **PASS** | Compactación + firmas + términos pago ES |
 
 ---
 
-## Errores visuales encontrados
+## PDFs generados (Fase 23.3D)
 
-Ninguno bloqueante en TEST.
+| Archivo | Productos | Tamaño | Cotización |
+|---------|-----------|--------|------------|
+| `quotation_1_product.pdf` | 1 | 68 967 bytes | S00134 |
+| `quotation_5_products.pdf` | 5 | 72 097 bytes | S00135 |
+| `quotation_15_products.pdf` | 15 | 80 655 bytes (2 págs.) | S00136 |
+| `portal_order_135.pdf` | 1 | 68 967 bytes | Portal |
 
-**Observación menor:** el nombre del término de pago puede mostrar el texto maestro de Odoo (ej. "Manual Payment") si no está traducido en datos — no es un defecto del template.
+Ruta evidencia: `evidence/phase23-3d-quotation-final-adjustments/`
+
+---
+
+## Cambios Fase 23.3D
+
+1. **Header compacto** — logo max 75px, márgenes reducidos, datos empresa 8pt
+2. **Banda y fechas** — altura reducida, fechas en línea única
+3. **Cliente/vendedor** — padding mínimo, sin campos vacíos, sin duplicar vencimiento
+4. **Términos de pago** — `sale.order.get_hellenia_payment_term_display()` → Contado / Crédito X días
+5. **Tabla productos** — filas compactas, encabezados abreviados (CANT., P. UNIT.)
+6. **Espaciador dinámico** — condiciones y firmas hacia el cierre con pocos productos
+7. **Firmas** — Entregado por / Recibido por / Fecha
+8. **Footer** — línea verde 1px, sin emojis
 
 ---
 
 ## Screenshots
 
-Capturas generadas desde PDF en `evidence/phase23-3-quotation-template/screenshots/` (si disponibles en el entorno de ejecución).
+| Archivo | Descripción |
+|---------|-------------|
+| `screenshot_quote_1_page1.png` | Cotización 1 producto — layout compacto |
+| `screenshot_quote_15_page1.png` | Cotización 15 productos — página 1 |
+| `screenshot_quote_15_page2.png` | Cotización 15 productos — página 2 |
+| `screenshot_portal_page1.png` | Portal orden 135 |
+
+---
+
+## Errores visuales pendientes
+
+Ninguno bloqueante en TEST.
+
+**Observación menor:** el vendedor de prueba sigue siendo OdooBot en datos demo; el template muestra `user_id.name` correctamente.
+
+---
+
+## Validación automatizada
+
+Script: `scripts/phase23-3d-quotation-final-adjustments-test.py`  
+Runner: `scripts/run-phase23-3d-test.sh`  
+Resultado: `evidence/phase23-3d-quotation-final-adjustments/validation.json` — **0 checks fallidos**
 
 ---
 
 ## Decisión
 
-**TEST PASS** — Template listo para revisión humana y aprobación de promoción a PROD.
+**TEST PASS** — Template listo para revisión humana final y aprobación de promoción a PROD.

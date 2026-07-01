@@ -16,7 +16,7 @@ class SaleOrder(models.Model):
         name = (term.name or "").strip().lower()
         if max_days <= 0 or "immediate" in name or "contado" in name or "cash" in name:
             return "Contado"
-        return f"Crédito {max_days} días"
+        return f"Crédito a {max_days} días"
 
     def get_hellenia_quotation_bottom_spacer_px(self):
         """Espacio flexible entre totales y condiciones (más con pocos ítems)."""

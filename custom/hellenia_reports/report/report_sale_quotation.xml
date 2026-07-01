@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <!-- Cotización Hellenia 23.4 — reconstrucción completa (referencia visual premium) -->
+    <!-- Cotización Hellenia 23.4 — réplica exacta diseño aprobado -->
     <template id="hellenia_quotation_document">
         <t t-set="doc" t-value="doc.with_context(lang=doc.partner_id.lang)"/>
         <t t-set="company" t-value="doc.company_id"/>
@@ -45,22 +45,18 @@
                     font-family: 'DejaVu Sans', Helvetica, Arial, sans-serif;
                     font-size: 9pt;
                     color: #1a1a1a;
-                    line-height: 1.45;
+                    line-height: 1.4;
                     margin: 0;
                     padding: 0;
                     width: 100%;
                 }
-                .hellenia-q4-page table {
-                    border-collapse: collapse;
-                    width: 100%;
-                }
-                .hellenia-q4-page td,
-                .hellenia-q4-page th { border: none; }
+                .hellenia-q4-page table { border-collapse: collapse; width: 100%; }
+                .hellenia-q4-page td, .hellenia-q4-page th { border: none; }
 
                 /* Header */
-                .hq-header { margin: 0 0 8px 0; }
+                .hq-header { margin: 0 0 6px 0; }
                 .hq-header td { vertical-align: top; }
-                .hq-logo-cell { width: 42%; padding: 0 16px 0 0; }
+                .hq-logo-cell { width: 42%; padding: 0 14px 0 0; }
                 .hq-logo {
                     max-height: 82px;
                     max-width: 240px;
@@ -74,71 +70,68 @@
                     text-align: right;
                     font-size: 7.5pt;
                     color: #6b7280;
-                    line-height: 1.55;
-                    padding: 0;
+                    line-height: 1.5;
                 }
                 .hq-co-name {
                     font-size: 11pt;
                     font-weight: bold;
                     color: #3E4827;
-                    margin: 0 0 3px 0;
+                    margin: 0 0 2px 0;
                 }
-                .hq-co-line { margin: 0; padding: 0; }
+                .hq-co-line { margin: 0; }
 
-                /* Banda documento */
-                .hq-band {
-                    background-color: #3E4827;
-                    color: #ffffff;
-                    margin: 0;
-                }
-                .hq-band td { padding: 9px 14px; vertical-align: middle; }
+                /* Banda verde */
+                .hq-band { background-color: #3E4827; color: #ffffff; }
+                .hq-band td { padding: 10px 14px; vertical-align: middle; }
                 .hq-band-title {
                     font-size: 11pt;
                     font-weight: bold;
-                    letter-spacing: 3px;
+                    letter-spacing: 2.5px;
                     text-transform: uppercase;
+                    color: #ffffff;
                 }
+                .hq-band-num-wrap { text-align: right; white-space: nowrap; }
                 .hq-band-num {
                     display: inline-block;
-                    background-color: #354020;
-                    border: 1px solid rgba(255, 255, 255, 0.35);
                     color: #ffffff;
                     font-weight: bold;
                     font-size: 10pt;
-                    padding: 5px 14px;
-                    letter-spacing: 0.4px;
-                }
-                .hq-band-rule {
-                    border: none;
-                    border-bottom: 1px solid #d1d5db;
-                    margin: 0 0 10px 0;
-                    height: 0;
+                    padding-left: 14px;
+                    border-left: 1px solid rgba(255, 255, 255, 0.5);
+                    letter-spacing: 0.3px;
                 }
 
                 /* Fechas */
-                .hq-dates { margin: 0 0 14px 0; }
+                .hq-dates { margin: 8px 0 0 0; }
+                .hq-dates td { padding: 6px 0; }
                 .hq-meta-lbl {
                     font-size: 6.5pt;
                     text-transform: uppercase;
                     color: #9ca3af;
                     font-weight: bold;
-                    letter-spacing: 0.7px;
+                    letter-spacing: 0.6px;
                 }
                 .hq-meta-val {
                     font-size: 9pt;
                     font-weight: bold;
                     color: #111827;
                 }
+                .hq-hrule {
+                    border: none;
+                    border-bottom: 1px solid #d1d5db;
+                    margin: 0 0 12px 0;
+                    height: 0;
+                }
 
-                /* Bloques cliente / vendedor */
-                .hq-parties { margin: 0 0 18px 0; }
+                /* Cliente / Vendedor */
+                .hq-parties { margin: 0 0 16px 0; }
                 .hq-party-col {
                     width: 49%;
                     vertical-align: top;
-                    background-color: #fafafa;
-                    padding: 9px 12px;
+                    padding: 0 10px 0 0;
                 }
                 .hq-party-col-right {
+                    padding: 0 0 0 14px;
                     border-left: 1px solid #e5e7eb;
                 }
                 .hq-party-gap { width: 2%; }
@@ -147,29 +140,27 @@
                     font-weight: bold;
                     text-transform: uppercase;
                     color: #6b7280;
-                    letter-spacing: 0.9px;
-                    margin: 0 0 10px 0;
-                    padding: 0;
+                    letter-spacing: 0.8px;
+                    margin: 0 0 8px 0;
                 }
-                .hq-sec-head svg {
-                    vertical-align: middle;
-                    margin-right: 5px;
-                }
+                .hq-sec-head svg { vertical-align: middle; margin-right: 4px; }
                 .hq-sec-head span { vertical-align: middle; }
+                .hq-fld-table { width: 100%; margin: 0; }
+                .hq-fld-table td { padding: 3px 0; vertical-align: top; }
                 .hq-fld-lbl {
                     font-size: 6.5pt;
                     color: #9ca3af;
                     font-weight: bold;
                     text-transform: uppercase;
-                    letter-spacing: 0.6px;
-                    padding: 5px 0 1px 0;
+                    letter-spacing: 0.5px;
+                    width: 38%;
                 }
                 .hq-fld-val {
                     font-size: 9pt;
                     color: #1f2937;
-                    padding: 0 0 1px 0;
+                    text-align: left;
                 }
-                .hq-pay-block { margin-top: 12px; padding-top: 10px; }
+                .hq-pay-block { margin-top: 10px; }
                 .hq-pay-val {
                     font-size: 9.5pt;
                     font-weight: bold;
@@ -178,48 +169,37 @@
                 }
 
                 /* Tabla productos */
-                .hq-items { margin: 0 0 6px 0; }
+                .hq-items { margin: 0 0 4px 0; }
                 .hq-items th {
                     background-color: #3E4827;
                     color: #ffffff;
                     font-size: 6.5pt;
                     font-weight: bold;
                     text-transform: uppercase;
-                    letter-spacing: 0.9px;
-                    padding: 8px 12px;
+                    letter-spacing: 0.8px;
+                    padding: 9px 10px;
                 }
-                .hq-items th:first-child { padding-left: 14px; }
-                .hq-items th:last-child { padding-right: 14px; }
+                .hq-items th:first-child { padding-left: 12px; }
+                .hq-items th:last-child { padding-right: 12px; }
                 .hq-items td {
-                    padding: 7px 12px;
-                    border-bottom: 1px solid #f0f0f0;
+                    padding: 8px 10px;
+                    border-bottom: 1px solid #eeeeee;
                     font-size: 8.5pt;
                     color: #1f2937;
                     vertical-align: middle;
                 }
-                .hq-items tbody tr:last-child td {
-                    border-bottom: 1px solid #d1d5db;
-                }
-                .hq-items .c-num {
-                    text-align: center;
-                    width: 30px;
-                    color: #9ca3af;
-                    font-size: 8pt;
-                }
-                .hq-items .c-qty,
-                .hq-items .c-price,
-                .hq-items .c-sub {
+                .hq-items tbody tr:last-child td { border-bottom: 1px solid #d1d5db; }
+                .hq-items .c-num { text-align: center; width: 28px; color: #9ca3af; }
+                .hq-items .c-qty, .hq-items .c-price, .hq-items .c-sub {
                     text-align: right;
                     white-space: nowrap;
                 }
                 .hq-items .c-sub { font-weight: 600; color: #111827; }
                 .hq-items .row-section td {
-                    background-color: #f5f6f2;
+                    background-color: #f7f8f5;
                     font-weight: bold;
                     color: #3E4827;
                     font-size: 8.5pt;
-                    padding-top: 10px;
-                    padding-bottom: 10px;
                 }
                 .hq-items .row-note td {
                     font-style: italic;
@@ -228,114 +208,91 @@
                 }
 
                 /* Totales */
-                .hq-totals {
-                    width: 300px;
-                    margin: 10px 0 14px auto;
-                }
-                .hq-totals td {
-                    padding: 6px 4px;
-                    font-size: 8.5pt;
-                    border: none;
-                }
-                .hq-totals .t-lbl {
-                    color: #6b7280;
-                    text-align: left;
-                    width: 55%;
-                }
-                .hq-totals .t-val {
-                    color: #1f2937;
-                    font-weight: 600;
-                    text-align: right;
-                    width: 45%;
-                }
-                .hq-totals tr.t-first td {
-                    border-top: 1px solid #e5e7eb;
-                    padding-top: 10px;
-                }
+                .hq-totals { width: 290px; margin: 8px 0 12px auto; }
+                .hq-totals td { padding: 5px 2px; font-size: 8.5pt; }
+                .hq-totals .t-lbl { color: #6b7280; text-align: left; width: 55%; }
+                .hq-totals .t-val { color: #1f2937; font-weight: 600; text-align: right; width: 45%; }
+                .hq-totals tr.t-first td { border-top: 1px solid #e5e7eb; padding-top: 8px; }
                 .hq-totals tr.t-grand td {
-                    border-top: 2px solid #374151;
-                    padding-top: 12px;
-                    padding-bottom: 4px;
+                    border-top: 2px solid #3E4827;
+                    padding-top: 10px;
+                    padding-bottom: 2px;
                 }
                 .hq-totals tr.t-grand .t-lbl {
-                    font-size: 9.5pt;
+                    font-size: 10pt;
                     font-weight: bold;
                     color: #111827;
                     text-transform: uppercase;
-                    letter-spacing: 0.6px;
                 }
                 .hq-totals tr.t-grand .t-val {
-                    font-size: 14pt;
+                    font-size: 13pt;
                     font-weight: bold;
-                    color: #3E4827;
+                    color: #111827;
                 }
 
-                /* Espaciador dinámico */
+                /* Espaciador */
                 .hq-spacer { width: 100%; font-size: 1px; line-height: 1px; }
                 .hq-spacer td { font-size: 1px; line-height: 1px; }
 
                 /* Condiciones */
-                .hq-conditions { margin: 0 0 10px 0; padding: 0; }
+                .hq-conditions { margin: 0 0 8px 0; }
                 .hq-cond-title {
                     font-size: 6.5pt;
                     font-weight: bold;
                     text-transform: uppercase;
                     color: #3E4827;
-                    letter-spacing: 1px;
-                    margin: 0 0 8px 0;
-                    padding: 0 0 4px 0;
-                    border-bottom: 1px solid #d1d5db;
+                    letter-spacing: 0.8px;
+                    margin: 0 0 6px 0;
+                    padding: 0 0 3px 0;
+                    border-bottom: 2px solid #3E4827;
                     display: inline-block;
-                    min-width: 120px;
                 }
                 .hq-cond-body {
                     font-size: 7.5pt;
                     color: #6b7280;
-                    line-height: 1.55;
+                    line-height: 1.5;
                     white-space: pre-line;
                 }
 
                 /* Firmas */
-                .hq-sigs { width: 100%; margin: 0 0 8px 0; }
-                .hq-sigs td { vertical-align: top; padding: 0; }
+                .hq-sigs { width: 100%; margin: 0 0 6px 0; }
+                .hq-sigs td { vertical-align: top; }
                 .hq-sig-head {
                     font-size: 6.5pt;
                     font-weight: bold;
                     text-transform: uppercase;
                     color: #6b7280;
-                    letter-spacing: 0.8px;
-                    margin-bottom: 6px;
+                    letter-spacing: 0.7px;
+                    margin-bottom: 5px;
                 }
-                .hq-sig-head svg { vertical-align: middle; margin-right: 5px; }
+                .hq-sig-head svg { vertical-align: middle; margin-right: 4px; }
                 .hq-sig-head span { vertical-align: middle; }
                 .hq-sig-line {
                     border-bottom: 1px solid #9ca3af;
-                    height: 22px;
+                    height: 24px;
                     width: 100%;
                 }
-                .hq-sig-date-inline { padding-top: 8px; }
+                .hq-sig-date-inline { padding-top: 10px; }
                 .hq-sig-line-date { max-width: 240px; }
 
                 /* Footer */
                 .hq-footer {
                     border-top: 1px solid #e5e7eb;
                     padding-top: 6px;
-                    margin-top: 2px;
+                    margin-top: 0;
                     text-align: center;
                     font-size: 7pt;
                     color: #9ca3af;
-                    letter-spacing: 0.2px;
                 }
                 .hq-pagenum {
                     text-align: center;
                     font-size: 6.5pt;
                     color: #c4c4c4;
-                    margin-top: 2px;
-                    padding-bottom: 0;
+                    margin-top: 3px;
                 }
             </style>
 
-            <!-- ═══ HEADER ═══ -->
+            <!-- HEADER -->
             <table width="100%" cellpadding="0" cellspacing="0" class="hq-header">
                 <tr>
                     <td class="hq-logo-cell">
@@ -370,18 +327,17 @@
                 </tr>
             </table>
 
-            <!-- ═══ BANDA VERDE ═══ -->
+            <!-- BANDA VERDE -->
             <table width="100%" cellpadding="0" cellspacing="0" class="hq-band">
                 <tr>
-                    <td class="hq-band-title">COTIZACIÓN</td>
-                    <td align="right">
+                    <td width="55%" class="hq-band-title">COTIZACIÓN</td>
+                    <td width="45%" class="hq-band-num-wrap">
                         <span class="hq-band-num">No. <span t-field="doc.name"/></span>
                     </td>
                 </tr>
             </table>
-            <hr class="hq-band-rule"/>
 
-            <!-- ═══ FECHAS ═══ -->
+            <!-- FECHAS -->
             <table width="100%" cellpadding="0" cellspacing="0" class="hq-dates">
                 <tr>
                     <td width="50%" t-if="doc.date_order">
@@ -398,47 +354,54 @@
                     </td>
                 </tr>
             </table>
+            <hr class="hq-hrule"/>
 
-            <!-- ═══ CLIENTE / VENDEDOR ═══ -->
+            <!-- CLIENTE / VENDEDOR -->
             <table width="100%" cellpadding="0" cellspacing="0" class="hq-parties">
                 <tr>
                     <td class="hq-party-col">
                         <div class="hq-sec-head">
-                            <svg width="11" height="11" viewBox="0 0 24 24" fill="#9ca3af" xmlns="http://www.w3.org/2000/svg">
+                            <svg width="10" height="10" viewBox="0 0 24 24" fill="#9ca3af" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
                             </svg>
                             <span>Información del Cliente</span>
                         </div>
-                        <div class="hq-fld-lbl">Cliente</div>
-                        <div class="hq-fld-val" t-field="doc.partner_id.name"/>
-                        <t t-if="doc.partner_id.vat">
-                            <div class="hq-fld-lbl">RNC</div>
-                            <div class="hq-fld-val" t-field="doc.partner_id.vat"/>
-                        </t>
-                        <t t-if="doc.partner_id.phone">
-                            <div class="hq-fld-lbl">Teléfono</div>
-                            <div class="hq-fld-val" t-field="doc.partner_id.phone"/>
-                        </t>
-                        <t t-if="doc.partner_id.email">
-                            <div class="hq-fld-lbl">Correo</div>
-                            <div class="hq-fld-val" t-field="doc.partner_id.email"/>
-                        </t>
+                        <table class="hq-fld-table" cellpadding="0" cellspacing="0">
+                            <tr>
+                                <td class="hq-fld-lbl">Cliente</td>
+                                <td class="hq-fld-val" t-field="doc.partner_id.name"/>
+                            </tr>
+                            <tr t-if="doc.partner_id.vat">
+                                <td class="hq-fld-lbl">RNC</td>
+                                <td class="hq-fld-val" t-field="doc.partner_id.vat"/>
+                            </tr>
+                            <tr t-if="doc.partner_id.phone">
+                                <td class="hq-fld-lbl">Teléfono</td>
+                                <td class="hq-fld-val" t-field="doc.partner_id.phone"/>
+                            </tr>
+                            <tr t-if="doc.partner_id.email">
+                                <td class="hq-fld-lbl">Correo</td>
+                                <td class="hq-fld-val" t-field="doc.partner_id.email"/>
+                            </tr>
+                        </table>
                     </td>
                     <td class="hq-party-gap"></td>
                     <td class="hq-party-col hq-party-col-right">
                         <div class="hq-sec-head">
-                            <svg width="11" height="11" viewBox="0 0 24 24" fill="#9ca3af" xmlns="http://www.w3.org/2000/svg">
+                            <svg width="10" height="10" viewBox="0 0 24 24" fill="#9ca3af" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
                             </svg>
                             <span>Información del Vendedor</span>
                         </div>
-                        <t t-if="doc.user_id">
-                            <div class="hq-fld-lbl">Vendedor</div>
-                            <div class="hq-fld-val" t-field="doc.user_id.name"/>
-                        </t>
+                        <table class="hq-fld-table" cellpadding="0" cellspacing="0">
+                            <tr t-if="doc.user_id">
+                                <td class="hq-fld-lbl">Vendedor</td>
+                                <td class="hq-fld-val" t-field="doc.user_id.name"/>
+                            </tr>
+                        </table>
                         <div class="hq-pay-block">
-                            <div class="hq-sec-head" style="margin-bottom: 6px;">
-                                <svg width="11" height="11" viewBox="0 0 24 24" fill="#9ca3af" xmlns="http://www.w3.org/2000/svg">
+                            <div class="hq-sec-head" style="margin-bottom: 4px;">
+                                <svg width="10" height="10" viewBox="0 0 24 24" fill="#9ca3af" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M20 4H4c-1.11 0-2 .89-2 2v12c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/>
                                 </svg>
                                 <span>Términos de Pago</span>
@@ -449,15 +412,15 @@
                 </tr>
             </table>
 
-            <!-- ═══ PRODUCTOS ═══ -->
+            <!-- PRODUCTOS -->
             <table class="hq-items" cellpadding="0" cellspacing="0">
                 <thead>
                     <tr>
                         <th class="c-num">#</th>
-                        <th>Descripción</th>
-                        <th class="c-qty">Cant.</th>
-                        <th class="c-price">P. Unit.</th>
-                        <th class="c-sub">Subtotal</th>
+                        <th>DESCRIPCIÓN</th>
+                        <th class="c-qty">CANT.</th>
+                        <th class="c-price">P. UNIT.</th>
+                        <th class="c-sub">SUBTOTAL</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -496,7 +459,7 @@
                 </tbody>
             </table>
 
-            <!-- ═══ TOTALES ═══ -->
+            <!-- TOTALES -->
             <table class="hq-totals" cellpadding="0" cellspacing="0" align="right">
                 <tr class="t-first">
                     <td class="t-lbl">Subtotal</td>
@@ -513,7 +476,7 @@
                     </td>
                 </tr>
                 <tr class="t-grand">
-                    <td class="t-lbl">Total</td>
+                    <td class="t-lbl">TOTAL</td>
                     <td class="t-val">
                         <span t-field="doc.amount_total"
                               t-options="{'widget': 'monetary', 'display_currency': doc.currency_id}"/>
@@ -523,17 +486,14 @@
 
             <div style="clear: both; height: 1px; font-size: 1px; line-height: 1px;">&#160;</div>
 
-            <!-- ═══ ESPACIADOR DINÁMICO (condiciones al fondo) ═══ -->
             <table class="hq-spacer" width="100%" cellpadding="0" cellspacing="0"
                    t-if="bottom_spacer_px &gt; 0">
-                <tr>
-                    <td t-attf-style="height: {{ bottom_spacer_px }}px;">&#160;</td>
-                </tr>
+                <tr><td t-attf-style="height: {{ bottom_spacer_px }}px;">&#160;</td></tr>
             </table>
 
-            <!-- ═══ CONDICIONES ═══ -->
+            <!-- CONDICIONES -->
             <div class="hq-conditions">
-                <div class="hq-cond-title">Condiciones</div>
+                <div class="hq-cond-title">CONDICIONES</div>
                 <t t-if="doc.note">
                     <div class="hq-cond-body" t-field="doc.note"/>
                 </t>
@@ -542,21 +502,19 @@
                          t-out="company.hellenia_quotation_terms or hellenia_default_quotation_terms"/>
                 </t>
             </div>
+            <hr class="hq-hrule"/>
 
-            <!-- ═══ ESPACIADOR FIRMAS ═══ -->
             <table class="hq-spacer" width="100%" cellpadding="0" cellspacing="0"
                    t-if="signature_spacer_px &gt; 0">
-                <tr>
-                    <td t-attf-style="height: {{ signature_spacer_px }}px;">&#160;</td>
-                </tr>
+                <tr><td t-attf-style="height: {{ signature_spacer_px }}px;">&#160;</td></tr>
             </table>
 
-            <!-- ═══ FIRMAS ═══ -->
+            <!-- FIRMAS -->
             <table class="hq-sigs" cellpadding="0" cellspacing="0">
                 <tr>
                     <td width="48%">
                         <div class="hq-sig-head">
-                            <svg width="11" height="11" viewBox="0 0 24 24" fill="#9ca3af" xmlns="http://www.w3.org/2000/svg">
+                            <svg width="10" height="10" viewBox="0 0 24 24" fill="#9ca3af" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
                             </svg>
                             <span>Entregado por</span>
@@ -564,10 +522,10 @@
                         <div class="hq-sig-line">&#160;</div>
                         <div class="hq-sig-date-inline">
                             <div class="hq-sig-head">
-                                <svg width="11" height="11" viewBox="0 0 24 24" fill="#9ca3af" xmlns="http://www.w3.org/2000/svg">
+                                <svg width="10" height="10" viewBox="0 0 24 24" fill="#9ca3af" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M19 4h-1V2h-2v2H8V2H6v2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 16H5V10h14v10zM5 8V6h14v2H5z"/>
                                 </svg>
-                                <span>Fecha</span>
+                                <span>Fecha:</span>
                             </div>
                             <div class="hq-sig-line hq-sig-line-date">&#160;</div>
                         </div>
@@ -575,7 +533,7 @@
                     <td width="4%"></td>
                     <td width="48%">
                         <div class="hq-sig-head">
-                            <svg width="11" height="11" viewBox="0 0 24 24" fill="#9ca3af" xmlns="http://www.w3.org/2000/svg">
+                            <svg width="10" height="10" viewBox="0 0 24 24" fill="#9ca3af" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
                             </svg>
                             <span>Recibido por</span>
@@ -585,7 +543,7 @@
                 </tr>
             </table>
 
-            <!-- ═══ FOOTER ═══ -->
+            <!-- FOOTER -->
             <div class="hq-footer">
                 <t t-if="company.phone"><span t-field="company.phone"/></t>
                 <t t-if="company.email"> | <span t-field="company.email"/></t>

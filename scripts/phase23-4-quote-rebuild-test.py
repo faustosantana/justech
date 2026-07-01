@@ -72,13 +72,13 @@ Report = env["ir.actions.report"]
 action = env.ref("sale.action_report_saleorder")
 
 cases = [
-    ("1P", "quote_1", 1),
-    ("5P", "quote_5", 1),
-    ("20P", "quote_20", None),
-    ("25P", "quote_25", 2),
+    ("1P", "quote_1"),
+    ("5P", "quote_5"),
+    ("20P", "quote_20"),
+    ("25P", "quote_25"),
 ]
 orders = {}
-for ref_suffix, key, _ in cases:
+for ref_suffix, key in cases:
     so = env["sale.order"].search([("client_order_ref", "=", f"P23-3-QUOTE-{ref_suffix}")], limit=1)
     if so:
         orders[key] = so
@@ -103,9 +103,11 @@ for key, so in orders.items():
     check(f"{key}_pdf", pdf_bytes[:4] == b"%PDF")
     check(f"{key}_logo", "hq-logo" in html)
     check(f"{key}_band", "hq-band-num" in html and "#3E4827" in html)
-    check(f"{key}_no_vendor_email", "hq-pay-val" in html and "odoobot@example.com" not in html.lower())
+    check(f"{key}_no_vendor_email", "odoobot@example.com" not in html.lower())
+    check(f"{key}_no_immediate_payment", "immediate payment" not in html.lower())
     check(f"{key}_no_client_address", "Dirección" not in html)
-    check(f"{key}_premium_totals", "hq-totals" in html and "t-grand" in html)
+    check(f"{key}_condiciones", "CONDICIONES" in html)
+    check(f"{key}_totals", "hq-totals" in html and "t-grand" in html)
     if key == "quote_1":
         check("quote_1_single_page", pages == 1, f"pages={pages}")
     else:

@@ -14,6 +14,7 @@ LOG="$PROJECT_ROOT/logs/deploy/phase23-3-test-$(date +%Y-%m-%d_%H%M).log"
 COMPOSE_DIR="$PROJECT_ROOT/docker/test"
 
 mkdir -p "$EVIDENCE_DIR" "$(dirname "$LOG")"
+chmod 777 "$EVIDENCE_DIR"
 hellenia_load_env "$ENV_FILE"
 
 hellenia_log "=== Fase 23.3 Cotización premium — TEST ===" | tee "$LOG"

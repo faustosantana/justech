@@ -15,7 +15,7 @@
                     <field name="hellenia_withholding_line_ids" nolabel="1" readonly="1">
                         <list>
                             <field name="payment_id" string="Pago"/>
-                            <field name="date" string="Fecha"/>
+                            <field name="withholding_code" string="Código"/>
                             <field name="label" string="Retención"/>
                             <field name="base_amount" string="Base"/>
                             <field name="rate" string="%"/>

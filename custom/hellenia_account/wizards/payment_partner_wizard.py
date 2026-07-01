@@ -356,6 +356,50 @@ class HelleniaPaymentPartnerWizard(models.TransientModel):
             transfer = lines.filtered(lambda l: "transferencia" in (l.name or "").lower())[:1]
             self.payment_method_line_id = transfer or lines[:1]
 
+    def _register_vals_common(self):
+        self.ensure_one()
+        return {
+            "journal_id": self.journal_id.id,
+            "payment_method_line_id": self.payment_method_line_id.id,
+            "payment_date": self.payment_date,
+            "hellenia_payment_reference": self.hellenia_payment_reference,
+            "hellenia_card_auth": self.hellenia_card_auth,
+            "hellenia_card_batch": self.hellenia_card_batch,
+            "hellenia_check_number": self.hellenia_check_number,
+            "hellenia_check_bank_id": self.hellenia_check_bank_id.id,
+            "hellenia_check_date": self.hellenia_check_date,
+        }
+
+    def _withholding_commands_for_line(self, line):
+        line._recompute_line_withholdings()
+        wh_total = sum(line.withholding_detail_ids.mapped("amount"))
+        if wh_total and line.amount_to_pay < wh_total:
+            raise UserError(
+                f"La factura {line.move_id.name}: el monto retenido ({wh_total:.2f}) "
+                f"supera el monto a aplicar ({line.amount_to_pay:.2f})."
+            )
+        commands = []
+        for wh in line.withholding_detail_ids:
+            if not wh.amount or not wh.account_id:
+                continue
+            commands.append(
+                Command.create(
+                    {
+                        "wizard_line_id": line.id,
+                        "catalog_id": wh.catalog_id.id,
+                        "tax_id": wh.tax_id.id,
+                        "label": wh.label,
+                        "base_label": wh.base_label,
+                        "base_amount": wh.base_amount,
+                        "rate": wh.rate,
+                        "amount": wh.amount,
+                        "account_id": wh.account_id.id,
+                        "currency_id": wh.currency_id.id,
+                    }
+                )
+            )
+        return commands
+
     def action_register_payments(self):
         self.ensure_one()
         selected = self.line_ids.filtered(lambda l: l.apply and l.amount_to_pay > 0)
@@ -367,35 +411,43 @@ class HelleniaPaymentPartnerWizard(models.TransientModel):
             raise UserError("El total retenido supera el monto a aplicar.")
 
         payments = self.env["account.payment"]
-        for line in selected:
+        common = self._register_vals_common()
+
+        if len(selected) == 1:
+            line = selected[0]
             move = line.move_id
-            wh_commands = line._get_withholding_commands_for_register()
-            line._recompute_line_withholdings()
-            wh_total = sum(line.withholding_detail_ids.mapped("amount"))
-            if wh_total and line.amount_to_pay < wh_total:
-                raise UserError(
-                    f"La factura {move.name}: el monto retenido ({wh_total:.2f}) supera el monto a aplicar."
-                )
             register = (
                 self.env["account.payment.register"]
                 .with_context(active_model="account.move", active_ids=move.ids, dont_redirect_to_payments=True)
                 .create(
                     {
-                        "journal_id": self.journal_id.id,
-                        "payment_method_line_id": self.payment_method_line_id.id,
-                        "payment_date": self.payment_date,
+                        **common,
                         "communication": self.communication or move.name,
                         "amount": line.amount_to_pay,
-                        "hellenia_payment_reference": self.hellenia_payment_reference,
-                        "hellenia_card_auth": self.hellenia_card_auth,
-                        "hellenia_card_batch": self.hellenia_card_batch,
-                        "hellenia_check_number": self.hellenia_check_number,
-                        "hellenia_check_bank_id": self.hellenia_check_bank_id.id,
-                        "hellenia_check_date": self.hellenia_check_date,
+                        "hellenia_withholding_line_ids": self._withholding_commands_for_line(line),
+                    }
+                )
+            )
+            payments |= register._create_payments()
+        else:
+            moves = selected.mapped("move_id")
+            wh_commands = []
+            for line in selected:
+                wh_commands.extend(self._withholding_commands_for_line(line))
+            total_applied = sum(selected.mapped("amount_to_pay"))
+            register = (
+                self.env["account.payment.register"]
+                .with_context(active_model="account.move", active_ids=moves.ids, dont_redirect_to_payments=True)
+                .create(
+                    {
+                        **common,
+                        "communication": self.communication or ", ".join(moves.mapped("name")),
+                        "amount": total_applied,
                         "hellenia_withholding_line_ids": wh_commands,
                     }
                 )
             )
+            register.write({"group_payment": True})
             payments |= register._create_payments()
 
         return {

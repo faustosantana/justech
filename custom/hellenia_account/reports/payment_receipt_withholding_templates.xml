@@ -14,7 +14,7 @@
                                       t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
                             </td>
                         </tr>
-                        <tr t-if="o.hellenia_withholding_total">
+                        <tr>
                             <td><strong>Total retenido</strong></td>
                             <td class="text-end">
                                 <span t-field="o.hellenia_withholding_total"

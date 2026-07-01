@@ -16,7 +16,19 @@ class HelleniaPaymentWithholdingLine(models.Model):
         ondelete="cascade",
         index=True,
     )
-    move_id = fields.Many2one("account.move", string="Factura", index=True, ondelete="set null")
+    move_id = fields.Many2one(
+        "account.move",
+        string="Factura",
+        index=True,
+        ondelete="set null",
+        help="Factura a la que se aplica la retención.",
+    )
+    invoice_move_id = fields.Many2one(
+        related="move_id",
+        string="Asiento factura",
+        store=True,
+        index=True,
+    )
     partner_id = fields.Many2one(
         "res.partner",
         string="Cliente/Proveedor",
@@ -27,6 +39,7 @@ class HelleniaPaymentWithholdingLine(models.Model):
     invoice_name = fields.Char(string="Factura", index=True)
     ncf = fields.Char(string="NCF", index=True)
     catalog_id = fields.Many2one("hellenia.withholding.catalog", string="Retención", index=True)
+    withholding_code = fields.Char(related="catalog_id.code", string="Código retención", store=True)
     withholding_type = fields.Selection(related="catalog_id.withholding_type", store=True)
     label = fields.Char(string="Descripción", required=True)
     base_label = fields.Char(string="Tipo de base")
@@ -47,7 +60,7 @@ class HelleniaPaymentWithholdingLine(models.Model):
     )
     move_line_id = fields.Many2one(
         "account.move.line",
-        string="Línea contable",
+        string="Línea contable retención",
         ondelete="set null",
         index=True,
     )
@@ -55,6 +68,13 @@ class HelleniaPaymentWithholdingLine(models.Model):
         related="payment_id.move_id",
         string="Asiento de pago",
         store=True,
+    )
+    partial_reconcile_id = fields.Many2one(
+        "account.partial.reconcile",
+        string="Conciliación parcial",
+        ondelete="set null",
+        index=True,
+        help="Conciliación entre la línea CxC/CxP de la factura y el pago.",
     )
     state = fields.Selection(
         [
@@ -96,7 +116,7 @@ class AccountPaymentWithholding(models.Model):
         string="Monto aplicado",
         currency_field="currency_id",
         copy=False,
-        help="Importe bruto aplicado a la factura antes de retenciones.",
+        help="Importe bruto aplicado a la(s) factura(s) antes de retenciones.",
     )
     hellenia_withholding_line_ids = fields.One2many(
         "hellenia.payment.withholding.line",
@@ -147,6 +167,30 @@ class AccountPaymentWithholding(models.Model):
                 names = moves.mapped("name")
             pay.hellenia_invoice_display = ", ".join(filter(None, dict.fromkeys(names)))
 
+    def _prepare_move_withholding_lines(self, default_values):
+        """Líneas de retención en el asiento del pago — hook nativo Odoo 19."""
+        self.ensure_one()
+        lines = []
+        for wh in self.hellenia_withholding_line_ids.filtered(lambda w: w.amount and w.account_id):
+            sign = -1 if self.payment_type == "outbound" else 1
+            amount_currency = sign * wh.amount
+            lines.append(
+                {
+                    "name": wh.label,
+                    "account_id": wh.account_id.id,
+                    "partner_id": self.partner_id.id,
+                    "currency_id": self.currency_id.id,
+                    "amount_currency": amount_currency,
+                    "balance": self.currency_id._convert(
+                        amount_currency,
+                        self.company_id.currency_id,
+                        self.company_id,
+                        self.date,
+                    ),
+                }
+            )
+        return lines
+
     def _hellenia_link_withholding_move_lines(self):
         for pay in self:
             if not pay.move_id:
@@ -158,6 +202,40 @@ class AccountPaymentWithholding(models.Model):
                 )
                 if candidates:
                     wh.move_line_id = candidates[:1]
+
+    def _hellenia_link_partial_reconciles(self):
+        """Vincula cada línea persistente con la conciliación factura↔pago."""
+        Partial = self.env["account.partial.reconcile"]
+        valid_types = self._get_valid_payment_account_types()
+        for pay in self:
+            if not pay.move_id:
+                continue
+            pay_counterparts = pay.move_id.line_ids.filtered(
+                lambda l: l.account_id.account_type in valid_types
+            )
+            for wh in pay.hellenia_withholding_line_ids.filtered(lambda w: w.move_id and not w.partial_reconcile_id):
+                inv_lines = wh.move_id.line_ids.filtered(
+                    lambda l: l.account_id.account_type in valid_types
+                )
+                for inv_line in inv_lines:
+                    partials = Partial.search(
+                        [
+                            "|",
+                            ("debit_move_id", "=", inv_line.id),
+                            ("credit_move_id", "=", inv_line.id),
+                        ]
+                    )
+                    for partial in partials:
+                        other = (
+                            partial.debit_move_id
+                            if partial.credit_move_id == inv_line
+                            else partial.credit_move_id
+                        )
+                        if other in pay_counterparts:
+                            wh.partial_reconcile_id = partial.id
+                            break
+                    if wh.partial_reconcile_id:
+                        break
 
 
 class AccountMoveWithholding(models.Model):

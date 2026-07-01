@@ -38,6 +38,7 @@
                             <field name="fiscal_report_codes" string="Reporte fiscal"/>
                             <field name="payment_move_id" string="Asiento"/>
                             <field name="move_line_id" string="Línea asiento" optional="hide"/>
+                            <field name="partial_reconcile_id" string="Conciliación" optional="hide"/>
                             <field name="state" string="Estado"/>
                         </list>
                     </field>

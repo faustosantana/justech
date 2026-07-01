@@ -1,0 +1,118 @@
+{
+  "phase": "23.4-quote-template-rebuild",
+  "timestamp_utc": "2026-07-01T20:35:31.692466+00:00",
+  "database": "hellenia_test",
+  "pass": true,
+  "failed_checks": [],
+  "checks": {
+    "quote_1_pdf": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_1_logo": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_1_band": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_1_no_vendor_email": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_1_no_client_address": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_1_premium_totals": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_1_single_page": {
+      "status": "PASS",
+      "detail": "pages=1"
+    },
+    "quote_5_pdf": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_logo": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_band": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_no_vendor_email": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_no_client_address": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_premium_totals": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_pages_ok": {
+      "status": "PASS",
+      "detail": "pages=1"
+    },
+    "quote_25_pdf": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_25_logo": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_25_band": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_25_no_vendor_email": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_25_no_client_address": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_25_premium_totals": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_25_pages_ok": {
+      "status": "PASS",
+      "detail": "pages=2"
+    }
+  },
+  "pdfs": {
+    "quote_1": {
+      "order": "S00134",
+      "file": "quotation_1_product.pdf",
+      "pages": 1,
+      "line_count": 1,
+      "size_bytes": 71132
+    },
+    "quote_5": {
+      "order": "S00135",
+      "file": "quotation_5_products.pdf",
+      "pages": 1,
+      "line_count": 5,
+      "size_bytes": 74227
+    },
+    "quote_25": {
+      "order": "S00138",
+      "file": "quotation_25_products.pdf",
+      "pages": 2,
+      "line_count": 25,
+      "size_bytes": 91768
+    }
+  },
+  "screenshots": {},
+  "module_version": "19.0.1.5.0"
+}

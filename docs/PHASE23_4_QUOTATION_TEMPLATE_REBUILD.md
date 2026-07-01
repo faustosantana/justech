@@ -28,4 +28,19 @@ Reconstrucción completa del QWeb de cotización siguiendo la imagen de referenc
 
 `evidence/phase23-4-quote-template-rebuild/`
 
+| Archivo | Descripción |
+|---------|-------------|
+| `screenshot_before_rebuild.png` | Antes (23.3I) |
+| `screenshot_after_rebuild.png` | Después (23.4) |
+| PDFs 1/5/25 productos | `hellenia_test` |
+| `validation.json` | PASS |
+
+## Resultado TEST (PASS)
+
+| Caso | Páginas |
+|------|---------|
+| 1 producto (S00134) | 1 |
+| 5 productos (S00135) | 1 |
+| 25 productos (S00138) | 2 |
+
 **No promovido a PROD.**

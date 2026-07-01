@@ -6,8 +6,11 @@
         <t t-set="doc" t-value="doc.with_context(lang=doc.partner_id.lang)"/>
         <t t-set="company" t-value="doc.company_id"/>
         <t t-set="lines_to_report" t-value="doc._get_order_lines_to_report()"/>
-        <t t-set="bottom_spacer_px" t-value="min(doc.get_hellenia_quotation_bottom_spacer_px(), 300)"/>
-        <t t-set="signature_spacer_px" t-value="min(doc.get_hellenia_quotation_signature_spacer_px(), 60)"/>
+        <t t-set="product_count" t-value="len(lines_to_report.filtered(lambda l: not l.display_type and not l.is_downpayment))"/>
+        <t t-set="spacer_cap" t-value="110 if product_count &lt;= 1 else (65 if product_count &lt;= 5 else (30 if product_count &lt;= 15 else 8))"/>
+        <t t-set="sig_cap" t-value="0 if product_count &lt;= 5 else 10"/>
+        <t t-set="bottom_spacer_px" t-value="min(doc.get_hellenia_quotation_bottom_spacer_px(), spacer_cap)"/>
+        <t t-set="signature_spacer_px" t-value="min(doc.get_hellenia_quotation_signature_spacer_px(), sig_cap)"/>
         <t t-set="hellenia_default_quotation_terms">(a) Las piezas ofrecidas son únicas y sujetas a disponibilidad.
 (b) Esta cotización tiene una validez de 5 días.
 (c) Se requiere confirmación del pago del 100% para reservar la pieza.
@@ -88,7 +91,7 @@
                     color: #ffffff;
                     margin: 0;
                 }
-                .hq-band td { padding: 11px 14px; vertical-align: middle; }
+                .hq-band td { padding: 9px 14px; vertical-align: middle; }
                 .hq-band-title {
                     font-size: 11pt;
                     font-weight: bold;
@@ -133,7 +136,7 @@
                     width: 49%;
                     vertical-align: top;
                     background-color: #fafafa;
-                    padding: 12px 14px;
+                    padding: 9px 12px;
                 }
                 .hq-party-col-right {
                     border-left: 1px solid #e5e7eb;
@@ -183,12 +186,12 @@
                     font-weight: bold;
                     text-transform: uppercase;
                     letter-spacing: 0.9px;
-                    padding: 10px 12px;
+                    padding: 8px 12px;
                 }
                 .hq-items th:first-child { padding-left: 14px; }
                 .hq-items th:last-child { padding-right: 14px; }
                 .hq-items td {
-                    padding: 9px 12px;
+                    padding: 7px 12px;
                     border-bottom: 1px solid #f0f0f0;
                     font-size: 8.5pt;
                     color: #1f2937;
@@ -272,7 +275,7 @@
                 .hq-spacer td { font-size: 1px; line-height: 1px; }
 
                 /* Condiciones */
-                .hq-conditions { margin: 0 0 16px 0; padding: 0; }
+                .hq-conditions { margin: 0 0 10px 0; padding: 0; }
                 .hq-cond-title {
                     font-size: 6.5pt;
                     font-weight: bold;
@@ -293,7 +296,7 @@
                 }
 
                 /* Firmas */
-                .hq-sigs { width: 100%; margin: 0 0 14px 0; }
+                .hq-sigs { width: 100%; margin: 0 0 8px 0; }
                 .hq-sigs td { vertical-align: top; padding: 0; }
                 .hq-sig-head {
                     font-size: 6.5pt;
@@ -307,17 +310,17 @@
                 .hq-sig-head span { vertical-align: middle; }
                 .hq-sig-line {
                     border-bottom: 1px solid #9ca3af;
-                    height: 32px;
+                    height: 22px;
                     width: 100%;
                 }
-                .hq-sig-date { padding-top: 14px; }
-                .hq-sig-date .hq-sig-line { max-width: 280px; }
+                .hq-sig-date-inline { padding-top: 8px; }
+                .hq-sig-line-date { max-width: 240px; }
 
                 /* Footer */
                 .hq-footer {
                     border-top: 1px solid #e5e7eb;
-                    padding-top: 8px;
-                    margin-top: 4px;
+                    padding-top: 6px;
+                    margin-top: 2px;
                     text-align: center;
                     font-size: 7pt;
                     color: #9ca3af;
@@ -327,8 +330,8 @@
                     text-align: center;
                     font-size: 6.5pt;
                     color: #c4c4c4;
-                    margin-top: 4px;
-                    padding-bottom: 2px;
+                    margin-top: 2px;
+                    padding-bottom: 0;
                 }
             </style>
 
@@ -559,6 +562,15 @@
                             <span>Entregado por</span>
                         </div>
                         <div class="hq-sig-line">&#160;</div>
+                        <div class="hq-sig-date-inline">
+                            <div class="hq-sig-head">
+                                <svg width="11" height="11" viewBox="0 0 24 24" fill="#9ca3af" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M19 4h-1V2h-2v2H8V2H6v2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 16H5V10h14v10zM5 8V6h14v2H5z"/>
+                                </svg>
+                                <span>Fecha</span>
+                            </div>
+                            <div class="hq-sig-line hq-sig-line-date">&#160;</div>
+                        </div>
                     </td>
                     <td width="4%"></td>
                     <td width="48%">
@@ -567,17 +579,6 @@
                                 <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
                             </svg>
                             <span>Recibido por</span>
-                        </div>
-                        <div class="hq-sig-line">&#160;</div>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="3" class="hq-sig-date">
-                        <div class="hq-sig-head">
-                            <svg width="11" height="11" viewBox="0 0 24 24" fill="#9ca3af" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M19 4h-1V2h-2v2H8V2H6v2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 16H5V10h14v10zM5 8V6h14v2H5z"/>
-                            </svg>
-                            <span>Fecha</span>
                         </div>
                         <div class="hq-sig-line">&#160;</div>
                     </td>

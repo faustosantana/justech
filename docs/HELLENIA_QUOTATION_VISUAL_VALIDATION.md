@@ -3,7 +3,8 @@
 **Fecha:** 2026-07-01  
 **Base de datos:** `hellenia_test`  
 **Módulo:** `hellenia_reports` **19.0.1.2.0**  
-**Resultado:** **TEST PASS**
+**Resultado Fase 23.3:** FAIL (500 en portal UI)  
+**Resultado Fase 23.3B:** **TEST PASS** (ver `docs/PHASE23_3B_QUOTATION_500_FIX.md`)
 
 ---
 

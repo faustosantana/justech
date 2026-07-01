@@ -60,7 +60,7 @@ for m in models:
 
 mod = env["ir.module.module"].search([("name", "=", "hellenia_account")], limit=1)
 report["module_version"] = mod.latest_version if mod else "missing"
-check("registry", "hellenia_account_19.0.1.0.13", mod and mod.latest_version == "19.0.1.0.13", mod.latest_version if mod else "missing")
+check("registry", "hellenia_account_19.0.1.0.14", mod and mod.latest_version == "19.0.1.0.14", mod.latest_version if mod else "missing")
 
 company = env.company
 customer = env["res.partner"].search([("customer_rank", ">", 0)], limit=1)
@@ -220,17 +220,19 @@ with env.cr.savepoint():
     wiz._load_pending_invoices()
     l1 = wiz.line_ids.filtered(lambda l: l.move_id == i1)[:1]
     l2 = wiz.line_ids.filtered(lambda l: l.move_id == i2)[:1]
-    l1.write({"apply": True, "amount_to_pay": TOTAL})
-    l2.write({"apply": True, "amount_to_pay": TOTAL, "withholding_catalog_ids": [Command.set(cat_itbis.ids)]})
+    l1.write({"apply": True, "amount_to_pay": abs(i1.amount_residual)})
+    l2.write({"apply": True, "amount_to_pay": abs(i2.amount_residual), "withholding_catalog_ids": [Command.set(cat_itbis.ids)]})
     l2._recompute_line_withholdings()
+    selected = wiz.line_ids.filtered("apply")
     wiz.action_register_payments()
     pay = Payment.search([("partner_id", "=", vendor.id)], order="id desc", limit=1)
     data, wh_lines, gl_wh, ev = _ui_payment_evidence(pay, i2, SC)
     check(SC, "one_payment", len(Payment.search([("id", "=", pay.id)])) == 1, pay.name)
-    check(SC, "two_invoices", len(pay.reconciled_bill_ids) == 2, pay.reconciled_bill_ids.mapped("name"))
-    check(SC, "ncf_both", len(set(wh_lines.mapped("ncf"))) >= 1 or bool(i1.justech_do_ncf and i2.justech_do_ncf), [i1.justech_do_ncf, i2.justech_do_ncf])
+    check(SC, "two_invoices", i1 in pay.reconciled_bill_ids and i2 in pay.reconciled_bill_ids, pay.reconciled_bill_ids.mapped("name"))
+    check(SC, "ncf_both", bool(i1.justech_do_ncf and i2.justech_do_ncf), [i1.justech_do_ncf, i2.justech_do_ncf])
     check(SC, "wh_only_invoice2", near(sum(wh_lines.mapped("amount")), ITBIS), wh_lines.mapped("amount"))
-    check(SC, "net_correct", near(data["hellenia_net_transfer"], 2 * TOTAL - ITBIS), data["hellenia_net_transfer"])
+    expected_net = sum(selected.mapped("amount_to_pay")) - sum(selected.mapped("withholding_amount"))
+    check(SC, "net_correct", near(data["hellenia_net_transfer"], expected_net), data["hellenia_net_transfer"])
     check(SC, "gl_wh", len(gl_wh) >= 1, ev["gl_withholding"])
     period_code, df, dt = _dgii_period()
     rep606 = env["justech.do.fiscal.report"].create({

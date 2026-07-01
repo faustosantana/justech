@@ -191,7 +191,7 @@ with env.cr.savepoint():
     check("07_grouped_one_payment", len(pays) == 1 and pays.hellenia_withholding_total == 500, {
         "count": 1, "wh": pays.hellenia_withholding_total,
     })
-        check("07_two_invoices_reconciled", i1 in pays.reconciled_invoice_ids and i2 in pays.reconciled_invoice_ids, pays.reconciled_invoice_ids.mapped("name"))
+    check("07_two_invoices_reconciled", i1 in pays.reconciled_invoice_ids and i2 in pays.reconciled_invoice_ids, pays.reconciled_invoice_ids.mapped("name"))
 
 # 8 Proveedor ITBIS 30%
 with env.cr.savepoint():

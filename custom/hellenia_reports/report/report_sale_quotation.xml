@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <!-- Cotización Hellenia — compacto, wkhtmltopdf-safe -->
+    <!-- Cotización Hellenia — layout fijo, lenguaje visual premium corporativo -->
     <template id="hellenia_quotation_document">
         <t t-set="doc" t-value="doc.with_context(lang=doc.partner_id.lang)"/>
         <t t-set="company" t-value="doc.company_id"/>
@@ -21,6 +21,7 @@
              t-att-data-oe-id="doc.id"
              t-att-data-oe-lang="doc.env.context.get('lang')">
             <style type="text/css">
+                /* Hellenia quotation — premium corporate (wkhtmltopdf-safe) */
                 html, body {
                     margin: 0;
                     padding: 0;
@@ -42,24 +43,36 @@
                     padding: 0 !important;
                 }
                 .hellenia-quote-page {
-                    font-family: 'DejaVu Sans', Helvetica, Arial, sans-serif;
+                    font-family: 'DejaVu Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
                     font-size: 9.5pt;
-                    color: #2d2d2d;
-                    line-height: 1.35;
+                    color: #1f2937;
+                    line-height: 1.45;
                     margin: 0;
                     padding: 0;
                     width: 100%;
+                    -webkit-font-smoothing: antialiased;
                 }
-                .hellenia-quote-page table { border-collapse: collapse; width: 100%; }
-                .hellenia-quote-hdr-table,
+                .hellenia-quote-page table {
+                    border-collapse: collapse;
+                    width: 100%;
+                    border: none;
+                }
+                .hellenia-quote-page td,
+                .hellenia-quote-page th {
+                    border: none;
+                }
+
+                /* ── Header ── */
+                .hellenia-quote-hdr-table {
+                    margin: 0 0 10px 0 !important;
+                }
                 .hellenia-quote-hdr-table td {
-                    border: none !important;
                     background: transparent;
+                    vertical-align: top;
                 }
                 .hellenia-quote-hdr-logo-cell {
-                    border-right: 1px solid #e5e5e5;
-                    padding: 0 10px 0 0;
-                    vertical-align: top;
+                    padding: 0 18px 0 0;
+                    width: 40%;
                 }
                 .hellenia-quote-logo {
                     max-height: 75px;
@@ -71,125 +84,229 @@
                 }
                 .hellenia-quote-hdr-right {
                     font-size: 8pt;
-                    color: #5c5c5c;
+                    color: #6b7280;
                     text-align: right;
-                    vertical-align: top;
-                    line-height: 1.3;
-                    padding: 0 0 0 10px;
+                    line-height: 1.5;
+                    padding: 2px 0 0 0;
                 }
                 .hellenia-quote-company-name {
-                    font-size: 11pt;
+                    font-size: 12pt;
                     font-weight: bold;
                     color: #3E4827;
-                    margin-bottom: 1px;
+                    margin: 0 0 4px 0;
+                    letter-spacing: 0.2px;
                 }
+                .hellenia-quote-hdr-meta {
+                    margin: 0;
+                    padding: 0;
+                }
+                .hellenia-quote-hdr-meta .hellenia-quote-label {
+                    display: inline;
+                    margin-right: 4px;
+                    font-size: 6pt;
+                    letter-spacing: 0.5px;
+                }
+                .hellenia-quote-hdr-sep {
+                    border: none;
+                    border-bottom: 1px solid #e5e7eb;
+                    margin: 0 0 12px 0;
+                    height: 0;
+                }
+
+                /* ── Document band ── */
                 .hellenia-quote-band {
                     background-color: #3E4827;
                     color: #ffffff;
-                    margin: 2px 0 6px 0;
+                    margin: 0 0 10px 0;
                 }
-                .hellenia-quote-band td { padding: 4px 10px; vertical-align: middle; }
+                .hellenia-quote-band td {
+                    padding: 7px 12px;
+                    vertical-align: middle;
+                }
                 .hellenia-quote-band-title {
-                    font-size: 11pt;
+                    font-size: 10.5pt;
                     font-weight: bold;
-                    letter-spacing: 1.5px;
+                    letter-spacing: 2.5px;
+                    text-transform: uppercase;
                 }
                 .hellenia-quote-num-box {
-                    background-color: #ffffff;
-                    color: #3E4827;
+                    color: #ffffff;
                     font-weight: bold;
                     font-size: 10pt;
-                    padding: 4px 10px;
-                    text-align: center;
+                    letter-spacing: 0.3px;
                     display: inline-block;
+                    padding: 0;
+                    background: transparent;
+                }
+
+                /* ── Metadata row ── */
+                .hellenia-quote-dates {
+                    margin: 0 0 14px 0;
                 }
                 .hellenia-quote-label {
-                    font-size: 7pt;
+                    font-size: 6.5pt;
                     text-transform: uppercase;
-                    color: #8a8a8a;
+                    color: #9ca3af;
                     font-weight: bold;
-                    letter-spacing: 0.4px;
+                    letter-spacing: 0.8px;
                 }
                 .hellenia-quote-value {
                     font-size: 9pt;
-                    font-weight: bold;
-                    color: #2d2d2d;
+                    font-weight: 600;
+                    color: #111827;
+                }
+
+                /* ── Party blocks (no boxes) ── */
+                .hellenia-quote-parties {
+                    margin: 0 0 16px 0;
                 }
                 .hellenia-quote-box {
-                    border: 1px solid #e5e5e5;
-                    padding: 6px 8px;
+                    border: none;
+                    padding: 0;
                     vertical-align: top;
+                    background: transparent;
                 }
                 .hellenia-quote-box-title {
-                    font-size: 7pt;
+                    font-size: 6.5pt;
                     font-weight: bold;
                     text-transform: uppercase;
                     color: #3E4827;
-                    border-bottom: 1px solid #e5e5e5;
-                    padding-bottom: 3px;
-                    margin-bottom: 4px;
-                    letter-spacing: 0.4px;
+                    border: none;
+                    border-bottom: 2px solid #3E4827;
+                    padding: 0 0 4px 0;
+                    margin: 0 0 8px 0;
+                    letter-spacing: 1px;
+                    display: inline-block;
+                    min-width: 0;
                 }
                 .hellenia-quote-field-label {
-                    font-size: 7pt;
-                    color: #8a8a8a;
+                    font-size: 6.5pt;
+                    color: #9ca3af;
                     font-weight: bold;
                     text-transform: uppercase;
-                    padding-top: 2px;
+                    letter-spacing: 0.6px;
+                    padding: 6px 0 1px 0;
                 }
                 .hellenia-quote-field-value {
-                    font-size: 8.5pt;
-                    color: #2d2d2d;
-                    padding-bottom: 1px;
+                    font-size: 9pt;
+                    color: #1f2937;
+                    padding: 0 0 2px 0;
+                    font-weight: normal;
                 }
+                .hellenia-quote-field-value.hellenia-quote-field-emphasis {
+                    font-weight: 600;
+                    color: #111827;
+                }
+
+                /* ── Line items ── */
                 .hellenia-quote-items {
                     width: 100%;
-                    margin: 8px 0;
+                    margin: 4px 0 10px 0;
                 }
                 .hellenia-quote-items th {
                     background-color: #3E4827;
                     color: #ffffff;
-                    font-size: 7pt;
+                    font-size: 6.5pt;
                     font-weight: bold;
                     text-transform: uppercase;
-                    padding: 5px 6px;
-                    border: 1px solid #3E4827;
+                    letter-spacing: 0.8px;
+                    padding: 8px 10px;
+                    border: none;
+                }
+                .hellenia-quote-items th:first-child {
+                    padding-left: 12px;
+                }
+                .hellenia-quote-items th:last-child {
+                    padding-right: 12px;
                 }
                 .hellenia-quote-items td {
-                    padding: 4px 6px;
-                    border-bottom: 1px solid #e5e5e5;
+                    padding: 7px 10px;
+                    border: none;
+                    border-bottom: 1px solid #eef0ea;
                     font-size: 8.5pt;
                     vertical-align: top;
+                    color: #1f2937;
                 }
-                .hellenia-quote-items .num { text-align: center; width: 26px; }
+                .hellenia-quote-items tbody tr:nth-child(even) td {
+                    background-color: #fafbf8;
+                }
+                .hellenia-quote-items tbody tr:last-child td {
+                    border-bottom: 1px solid #d1d5db;
+                }
+                .hellenia-quote-items .num {
+                    text-align: center;
+                    width: 28px;
+                    color: #6b7280;
+                    font-size: 8pt;
+                }
                 .hellenia-quote-items .qty,
                 .hellenia-quote-items .price,
-                .hellenia-quote-items .sub { text-align: right; white-space: nowrap; }
-                .hellenia-quote-totals {
-                    width: 250px;
-                    margin-left: auto;
-                    margin-bottom: 8px;
+                .hellenia-quote-items .sub {
+                    text-align: right;
+                    white-space: nowrap;
                 }
-                .hellenia-quote-totals td {
-                    padding: 3px 8px;
-                    font-size: 8.5pt;
-                    border-bottom: 1px solid #e5e5e5;
+                .hellenia-quote-items .sub {
+                    font-weight: 600;
+                    color: #111827;
                 }
-                .hellenia-quote-totals .lbl { color: #5c5c5c; }
-                .hellenia-quote-totals .val { text-align: right; font-weight: bold; }
-                .hellenia-quote-totals .grand td {
-                    background-color: #f0f2ec;
-                    border-top: 2px solid #3E4827;
-                    border-bottom: 2px solid #3E4827;
-                    font-size: 10.5pt;
+                .hellenia-quote-items .section-row td {
+                    background-color: #f3f5ef !important;
                     font-weight: bold;
                     color: #3E4827;
-                    padding: 6px 8px;
+                    font-size: 8.5pt;
+                    border-bottom: 1px solid #e5e7eb;
+                    padding-top: 9px;
+                    padding-bottom: 9px;
+                }
+                .hellenia-quote-items .note-row td {
+                    font-style: italic;
+                    color: #6b7280;
+                    font-size: 8pt;
+                    background: transparent !important;
+                }
+
+                /* ── Totals ── */
+                .hellenia-quote-totals {
+                    width: 280px;
+                    margin-left: auto;
+                    margin-bottom: 12px;
+                }
+                .hellenia-quote-totals td {
+                    padding: 5px 12px;
+                    font-size: 8.5pt;
+                    border: none;
+                }
+                .hellenia-quote-totals .lbl {
+                    color: #6b7280;
+                    font-size: 8pt;
+                }
+                .hellenia-quote-totals .val {
+                    text-align: right;
+                    font-weight: 600;
+                    color: #1f2937;
+                }
+                .hellenia-quote-totals .grand td {
+                    background-color: transparent;
+                    border: none;
+                    border-top: 2px solid #3E4827;
+                    font-size: 11pt;
+                    font-weight: bold;
+                    color: #3E4827;
+                    padding: 10px 12px 4px 12px;
                 }
                 .hellenia-quote-totals .grand .lbl {
                     color: #3E4827;
                     font-weight: bold;
+                    font-size: 10pt;
+                    text-transform: uppercase;
+                    letter-spacing: 0.5px;
                 }
+                .hellenia-quote-totals .grand .val {
+                    color: #3E4827;
+                    font-size: 11pt;
+                }
+
+                /* ── Spacers ── */
                 .hellenia-quote-bottom-spacer {
                     width: 100%;
                     font-size: 1px;
@@ -203,85 +320,106 @@
                 .hellenia-quote-conditions ~ table.hellenia-quote-bottom-spacer td {
                     max-height: 20px !important;
                 }
+
+                /* ── Conditions ── */
                 .hellenia-quote-conditions {
-                    border: 1px solid #e5e5e5;
-                    padding: 6px 8px;
-                    margin-bottom: 6px;
+                    border: none;
+                    padding: 0;
+                    margin: 0 0 14px 0;
                 }
                 .hellenia-quote-conditions-title {
-                    font-size: 7pt;
+                    font-size: 6.5pt;
                     font-weight: bold;
                     text-transform: uppercase;
                     color: #3E4827;
-                    margin-bottom: 5px;
-                    letter-spacing: 0.4px;
+                    margin: 0 0 6px 0;
+                    letter-spacing: 1px;
+                    border-bottom: 1px solid #e5e7eb;
+                    padding-bottom: 4px;
                 }
                 .hellenia-quote-conditions-body {
                     font-size: 7.5pt;
-                    color: #5c5c5c;
-                    line-height: 1.35;
+                    color: #6b7280;
+                    line-height: 1.5;
                     white-space: pre-line;
                 }
+
+                /* ── Signatures ── */
                 .hellenia-quote-signatures {
                     width: 100%;
-                    margin: 2px 0 8px 0;
-                    padding-top: 2px;
+                    margin: 0 0 12px 0;
+                    padding-top: 4px;
                 }
                 .hellenia-quote-signatures td {
-                    border: none;
-                    padding: 0 6px 0 0;
+                    padding: 0 8px 0 0;
                     vertical-align: top;
                 }
                 .hellenia-quote-sig-label {
-                    font-size: 7pt;
+                    font-size: 6.5pt;
                     font-weight: bold;
                     text-transform: uppercase;
-                    color: #3E4827;
-                    letter-spacing: 0.6px;
-                    margin-bottom: 3px;
+                    color: #9ca3af;
+                    letter-spacing: 0.8px;
+                    margin-bottom: 4px;
                 }
                 .hellenia-quote-sig-line {
-                    border-bottom: 1px solid #5c5c5c;
-                    height: 24px;
+                    border-bottom: 1px solid #9ca3af;
+                    height: 28px;
                     width: 100%;
-                    min-width: 220px;
+                    min-width: 200px;
                 }
                 .hellenia-quote-sig-line-date {
-                    max-width: 280px;
+                    max-width: 260px;
                 }
+
+                /* ── Footer ── */
                 .hellenia-quote-footer {
-                    border-top: 1px solid #3E4827;
-                    padding-top: 6px;
-                    font-size: 7.5pt;
-                    color: #5c5c5c;
+                    border-top: 1px solid #e5e7eb;
+                    padding-top: 8px;
+                    font-size: 7pt;
+                    color: #9ca3af;
                     text-align: center;
-                    margin-top: 4px;
+                    margin-top: 6px;
+                    letter-spacing: 0.2px;
                 }
             </style>
 
-            <!-- Encabezado sin marco -->
-            <table width="100%" cellpadding="0" cellspacing="0" class="hellenia-quote-hdr-table" style="margin: 0 0 2px 0;">
+            <!-- Encabezado -->
+            <table width="100%" cellpadding="0" cellspacing="0" class="hellenia-quote-hdr-table">
                 <tr>
-                    <td width="40%" class="hellenia-quote-hdr-logo-cell">
+                    <td class="hellenia-quote-hdr-logo-cell">
                         <img t-if="company.logo"
                              class="hellenia-quote-logo"
                              style="max-height: 75px; max-width: 220px; height: auto; width: auto; margin: 0;"
                              t-att-src="image_data_uri(company.logo)"
                              alt="Hellenia"/>
                     </td>
-                    <td width="60%" class="hellenia-quote-hdr-right">
+                    <td class="hellenia-quote-hdr-right">
                         <div class="hellenia-quote-company-name" t-field="company.name"/>
-                        <div t-if="company.partner_id.street">
+                        <div class="hellenia-quote-hdr-meta" t-if="company.partner_id.street">
                             <span t-field="company.partner_id.street"/>
                             <t t-if="company.partner_id.city">, <span t-field="company.partner_id.city"/></t>
                         </div>
-                        <div t-if="company.vat"><strong>RNC:</strong> <span t-field="company.vat"/></div>
-                        <div t-if="company.phone"><strong>Tel.:</strong> <span t-field="company.phone"/></div>
-                        <div t-if="company.email"><strong>Correo:</strong> <span t-field="company.email"/></div>
-                        <div t-if="company.website"><strong>Web:</strong> <span t-field="company.website"/></div>
+                        <div class="hellenia-quote-hdr-meta" t-if="company.vat">
+                            <span class="hellenia-quote-label">RNC</span>
+                            <span t-field="company.vat"/>
+                        </div>
+                        <div class="hellenia-quote-hdr-meta" t-if="company.phone">
+                            <span class="hellenia-quote-label">Tel.</span>
+                            <span t-field="company.phone"/>
+                        </div>
+                        <div class="hellenia-quote-hdr-meta" t-if="company.email">
+                            <span class="hellenia-quote-label">Correo</span>
+                            <span t-field="company.email"/>
+                        </div>
+                        <div class="hellenia-quote-hdr-meta" t-if="company.website">
+                            <span class="hellenia-quote-label">Web</span>
+                            <span t-field="company.website"/>
+                        </div>
                     </td>
                 </tr>
             </table>
+            <hr class="hellenia-quote-hdr-sep"/>
 
             <!-- Banda título -->
             <table width="100%" cellpadding="0" cellspacing="0" class="hellenia-quote-band">
@@ -293,8 +431,8 @@
                 </tr>
             </table>
 
-            <!-- Fechas en una fila -->
-            <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom: 8px;">
+            <!-- Fechas -->
+            <table width="100%" cellpadding="0" cellspacing="0" class="hellenia-quote-dates">
                 <tr>
                     <td width="50%" valign="top" t-if="doc.date_order">
                         <span class="hellenia-quote-label">Fecha de Cotización: </span>
@@ -312,9 +450,9 @@
             </table>
 
             <!-- Cliente / Vendedor -->
-            <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom: 8px;">
+            <table width="100%" cellpadding="0" cellspacing="0" class="hellenia-quote-parties">
                 <tr>
-                    <td width="49%" valign="top" class="hellenia-quote-box" style="padding-right: 6px;">
+                    <td width="49%" valign="top" class="hellenia-quote-box">
                         <div class="hellenia-quote-box-title">INFORMACIÓN DEL CLIENTE</div>
                         <div class="hellenia-quote-field-label">Cliente</div>
                         <div class="hellenia-quote-field-value" t-field="doc.partner_id.name"/>
@@ -354,8 +492,8 @@
                             <div class="hellenia-quote-field-label">Correo</div>
                             <div class="hellenia-quote-field-value" t-field="doc.user_id.email"/>
                         </t>
-                        <div class="hellenia-quote-box-title" style="margin-top: 6px;">TÉRMINOS DE PAGO</div>
-                        <div class="hellenia-quote-field-value" t-out="doc.get_hellenia_payment_term_display()"/>
+                        <div class="hellenia-quote-box-title" style="margin-top: 10px;">TÉRMINOS DE PAGO</div>
+                        <div class="hellenia-quote-field-value hellenia-quote-field-emphasis" t-out="doc.get_hellenia_payment_term_display()"/>
                     </td>
                 </tr>
             </table>
@@ -375,15 +513,15 @@
                     <t t-set="product_line_num" t-value="0"/>
                     <t t-foreach="lines_to_report" t-as="line">
                         <t t-if="line.display_type == 'line_section'">
-                            <tr>
-                                <td colspan="5" style="background-color: #f8f9f6; font-weight: bold; color: #3E4827; font-size: 8.5pt;">
+                            <tr class="section-row">
+                                <td colspan="5">
                                     <span t-field="line.name"/>
                                 </td>
                             </tr>
                         </t>
                         <t t-elif="line.display_type == 'line_note'">
-                            <tr>
-                                <td colspan="5" style="font-style: italic; color: #5c5c5c; font-size: 8pt;">
+                            <tr class="note-row">
+                                <td colspan="5">
                                     <span t-field="line.name"/>
                                 </td>
                             </tr>

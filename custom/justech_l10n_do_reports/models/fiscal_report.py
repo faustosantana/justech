@@ -192,6 +192,11 @@ class JustechDoFiscalReport(models.Model):
             "target": "self",
         }
 
+    def _get_exportable_lines(self):
+        """Líneas elegibles para exportación; refinado en revisión fiscal."""
+        self.ensure_one()
+        return self.line_ids
+
     def action_export_dgii(self, moves=None):
         self.ensure_one()
         if not self._get_dgii_exporter_model():
@@ -201,12 +206,12 @@ class JustechDoFiscalReport(models.Model):
             )
         exporter = self._get_dgii_exporter()
         if self.state not in ("done", "generated"):
-            exportable = self._get_exportable_lines()
-            moves = exportable.mapped("move_id") if exportable else moves
+            if moves is None:
+                exportable = self._get_exportable_lines()
+                moves = exportable.mapped("move_id") if exportable else None
             self.action_generate(valid_moves=moves)
         if moves is None:
-            exportable = self._get_exportable_lines()
-            moves = exportable.mapped("move_id")
+            moves = self._get_exportable_lines().mapped("move_id")
         content, filename = exporter.export_xlsx(
             self.company_id, self.date_from, self.date_to, moves=moves
         )

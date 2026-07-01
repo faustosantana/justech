@@ -17,6 +17,8 @@ class JustechDoFiscalReportWizard(models.TransientModel):
             ("606", "606 — Compras"),
             ("607", "607 — Ventas"),
             ("608", "608 — NCF anulados"),
+            ("609", "609 — Pagos exterior"),
+            ("623", "623 — Retenciones Estado"),
         ],
         string="Tipo de reporte",
         required=True,

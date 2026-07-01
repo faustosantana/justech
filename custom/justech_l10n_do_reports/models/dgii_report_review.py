@@ -388,6 +388,12 @@ class JustechDoFiscalReportReview(models.Model):
             audit_type="reject",
         )
 
+    def _get_exportable_lines(self):
+        self.ensure_one()
+        return self.line_ids.filtered(
+            lambda l: l.include_in_report and l.fiscal_state == "valid"
+        )
+
     def action_export_dgii(self, moves=None):
         self.ensure_one()
         if moves is None and self.line_ids:

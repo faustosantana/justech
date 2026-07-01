@@ -1,0 +1,22 @@
+{
+  "phase": "23.3g-revert-logo-base",
+  "timestamp_utc": "2026-07-01T19:53:00+00:00",
+  "database": "hellenia_test",
+  "pass": true,
+  "reverted_from": "23.3F/23.3G sin logo (hellenia-quote-shell, header oculto genérico)",
+  "restored_base": "23.3E (68423cc) con logo 75px y ancho completo",
+  "order": "S00134",
+  "pages": 1,
+  "size_bytes": 69015,
+  "checks": {
+    "logo_visible": "PASS",
+    "full_width": "PASS",
+    "no_shell_wrapper": "PASS",
+    "payment_es_contado": "PASS",
+    "signatures_block": "PASS",
+    "footer_tel_email_web": "PASS",
+    "single_page_1_product": "PASS"
+  },
+  "screenshot": "screenshot_quotation_1_product.png",
+  "pdf": "quotation_1_product_S00134.pdf"
+}

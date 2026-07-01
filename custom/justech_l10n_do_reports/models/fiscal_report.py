@@ -101,6 +101,25 @@ class JustechDoFiscalReport(models.Model):
             rec.total_tax = sum(rec.line_ids.mapped("amount_tax"))
             rec.total_amount = sum(rec.line_ids.mapped("amount_total"))
 
+    @api.depends(
+        "count_all",
+        "count_valid",
+        "count_incomplete",
+        "validation_log",
+    )
+    def _compute_validation_state(self):
+        for rec in self:
+            if not rec.validation_log:
+                rec.validation_state = "pending"
+            elif not rec.count_all:
+                rec.validation_state = "empty"
+            elif rec.count_valid and rec.count_incomplete:
+                rec.validation_state = "warning"
+            elif rec.count_valid:
+                rec.validation_state = "ok"
+            else:
+                rec.validation_state = "error"
+
     def _is_itbis_tax_line(self, line):
         tax = line.tax_line_id
         if not tax:

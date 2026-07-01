@@ -10,8 +10,8 @@ PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
 REPO="${REPO_PATH:-$PROJECT_ROOT/repository}"
 ENV_FILE="$PROJECT_ROOT/config/production/.env"
 COMPOSE_DIR="$PROJECT_ROOT/docker/production"
-CERTIFIED_COMMIT="${CERTIFIED_COMMIT:-bbaf113}"
-CERTIFIED_BRANCH="${CERTIFIED_BRANCH:-cursor/phase18-13-native-payment-rebuild-dd85}"
+CERTIFIED_COMMIT="${CERTIFIED_COMMIT:-}"
+CERTIFIED_BRANCH="${CERTIFIED_BRANCH:-cursor/phase19-test-prod-sync-dd85}"
 EVIDENCE_TEST="${EVIDENCE_TEST:-$PROJECT_ROOT/evidence/phase18-13-final-payment-retention-test.json}"
 TS=$(date +%Y-%m-%d_%H%M)
 LOG_FILE="$PROJECT_ROOT/logs/deploy/phase19-promote-${TS}.log"
@@ -86,9 +86,9 @@ log "Backup producción..."
 if ! "$SCRIPT_DIR/backup-hellenia-prod.sh" 2>&1 | tee -a "$LOG_FILE"; then
   abort "Backup PROD falló"
 fi
-BACKUP_DIR=$(ls -1dt "${PROJECT_ROOT}/backups/hellenia-prod"/20* 2>/dev/null | head -1)
+BACKUP_DIR=$(ls -1dt "${PROJECT_ROOT}/backups/hellenia-prod"/20* 2>/dev/null | grep -v '_monthly$' | grep -v '_weekly$' | head -1)
 log "Backup: $BACKUP_DIR"
-echo "backup_dir=$BACKUP_DIR" >> "$PRE_MANIFEST"
+echo "\"backup_dir\": \"$BACKUP_DIR\"" >> "$PRE_MANIFEST"
 
 # Versiones módulos PROD pre-upgrade
 hellenia_load_env "$ENV_FILE"
@@ -96,7 +96,6 @@ PRE_MODS="$BACKUP_DIR/modules_pre_upgrade.txt"
 docker exec hellenia-prod-db-1 psql -U "${DB_USER}" -d "${ODOO_DB_NAME}" -tAc \
   "SELECT name||'|'||state||'|'||latest_version FROM ir_module_module WHERE name IN ('hellenia_account','hellenia_ui','hellenia_reports','justech_l10n_do_base','justech_l10n_do_ncf','justech_l10n_do_reports') ORDER BY name;" \
   > "$PRE_MODS" 2>/dev/null || true
-cp "$PRE_MODS" "$BACKUP_DIR/"
 
 # Sincronizar artefactos
 log "Sincronizando custom/ desde repo certificado..."

@@ -1,6 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+    <!-- Shell HTML mínimo — sin web.html_container ni web.external_layout -->
+    <template id="hellenia_quote_html_shell">
+        <html>
+            <head>
+                <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+                <meta name="viewport" content="initial-scale=1"/>
+                <title>Cotización</title>
+            </head>
+            <body style="margin:0;padding:0;">
+                <t t-out="0"/>
+            </body>
+        </html>
+    </template>
+
     <!-- Layout mínimo — sin web.external_layout -->
     <template id="hellenia_quote_layout">
         <t t-set="company" t-value="doc.company_id"/>
@@ -121,6 +135,7 @@
 
     <!-- Cuerpo del documento -->
     <template id="hellenia_quote_body">
+        <t t-set="company" t-value="doc.company_id"/>
         <t t-set="lines_to_report" t-value="doc._get_order_lines_to_report()"/>
         <t t-set="product_count" t-value="len(lines_to_report.filtered(lambda l: not l.display_type and not l.is_downpayment))"/>
         <t t-set="spacer_cap" t-value="110 if product_count &lt;= 1 else (65 if product_count &lt;= 5 else (30 if product_count &lt;= 15 else 8))"/>
@@ -327,7 +342,7 @@
 
     <!-- Reporte principal — sin web.external_layout -->
     <template id="report_hellenia_quotation">
-        <t t-call="web.html_container">
+        <t t-call="hellenia_reports.hellenia_quote_html_shell">
             <t t-foreach="docs" t-as="doc">
                 <t t-set="doc" t-value="doc.with_context(lang=doc.partner_id.lang)"/>
                 <t t-call="hellenia_reports.hellenia_quote_layout">

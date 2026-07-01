@@ -6,6 +6,12 @@
         <field name="inherit_id" ref="account.view_account_payment_form"/>
         <field name="priority">25</field>
         <field name="arch" type="xml">
+            <!-- Campos auxiliares para modificadores invisible (OWL requiere carga previa) -->
+            <xpath expr="//sheet" position="inside">
+                <field name="hellenia_applied_amount" invisible="1"/>
+                <field name="hellenia_withholding_total" invisible="1"/>
+                <field name="hellenia_withholding_line_ids" invisible="1"/>
+            </xpath>
             <xpath expr="//sheet/group" position="after">
                 <group string="Resumen aplicación" invisible="not hellenia_applied_amount and not hellenia_withholding_total">
                     <group>

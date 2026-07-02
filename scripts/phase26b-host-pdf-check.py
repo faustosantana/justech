@@ -15,12 +15,16 @@ def main() -> int:
         print("validation.json missing", file=sys.stderr)
         return 1
 
-    parts = []
-    for name in (
+    pdf_names = (
         "01_picking_done.pdf",
         "03_from_sale_order.pdf",
         "04_from_invoice.pdf",
-    ):
+        "01_from_picking.pdf",
+        "02_from_sale_order.pdf",
+        "03_from_invoice.pdf",
+    )
+    parts = []
+    for name in pdf_names:
         pdf = evidence / name
         if pdf.is_file():
             parts.append(

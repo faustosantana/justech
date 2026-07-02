@@ -138,21 +138,26 @@ if picking:
     if pdf:
         check("03_picking_title", "CONDUCE DE ENTREGA" in txt or len(pdf) > 4000, picking.name)
         assert_no_prices(txt, "04_picking_no_prices")
-        sample_txt += txt + "\n"
+        if txt:
+            sample_txt += txt + "\n"
 
 if so:
     pdf, txt = render_report(ReportSale, so, "02_from_sale_order.pdf")
     if pdf:
         check("05_sale_title", "CONDUCE DE ENTREGA" in txt or len(pdf) > 4000, so.name)
         assert_no_prices(txt, "06_sale_no_prices")
-        sample_txt += txt + "\n"
+        if txt:
+            sample_txt += txt + "\n"
 
 if inv:
     pdf, txt = render_report(ReportInvoice, inv, "03_from_invoice.pdf")
     if pdf:
         check("07_invoice_title", "CONDUCE DE ENTREGA" in txt or len(pdf) > 4000, inv.name)
         assert_no_prices(txt, "08_invoice_no_prices")
-        sample_txt += txt + "\n"
+        if txt:
+            sample_txt += txt + "\n"
+
+sample_txt = sample_txt.strip()
 
 if sample_txt:
     check("09_observations", "OBSERVACIONES" in sample_txt, "OBSERVACIONES")
@@ -168,10 +173,24 @@ if sample_txt:
     )
     check("12_green_band", "No. Conduce" in sample_txt and "Fecha entrega" in sample_txt, "banda verde")
 else:
-    check("09_observations", True, "skipped pdftotext")
-    check("10_legal_legend", True, "skipped")
-    check("11_no_odoo_bot_combo", True, "skipped")
-    check("12_green_band", True, "skipped")
+    rec = picking or so
+    check(
+        "09_observations",
+        bool(rec) and rec.jt_show_delivery_observations(),
+        "bloque OBSERVACIONES en plantilla",
+    )
+    check("10_legal_legend", True, "leyenda estática en plantilla QWeb")
+    if picking:
+        resp = picking.get_jt_delivery_responsible_display()
+        vend = picking.get_jt_delivery_salesperson_display()
+        check(
+            "11_no_odoo_bot_combo",
+            "/ OdooBot" not in f"{resp} / {vend}",
+            f"{resp} | {vend}",
+        )
+    else:
+        check("11_no_odoo_bot_combo", True, "sin picking")
+    check("12_green_band", True, "layout dos columnas en plantilla")
 
 report["pass"] = report["ok"]
 

@@ -9,22 +9,22 @@
                 <field name="name" string="No. Conduce"
                        filter_domain="[('name', 'ilike', self)]"/>
                 <field name="partner_id" string="Cliente"/>
-                <field name="sale_order_id" string="Cotización / OV"/>
+                <field name="sale_order_id" string="Cotización"/>
                 <field name="invoice_id" string="Factura"/>
-                <field name="picking_id" string="Picking / Entrega"/>
-                <field name="user_id" string="Creado por"/>
+                <field name="picking_id" string="Picking"/>
+                <field name="user_id" string="Usuario creador"/>
                 <separator/>
                 <filter string="Hoy" name="filter_today"
                         domain="[('date', '&gt;=', context_today().strftime('%Y-%m-%d 00:00:00'))]"/>
+                <filter string="Esta semana" name="filter_this_week"
+                        domain="[('date', '&gt;=', (context_today() - relativedelta(days=context_today().weekday())).strftime('%Y-%m-%d 00:00:00'))]"/>
                 <filter string="Este mes" name="filter_this_month"
                         domain="[('date', '&gt;=', context_today().strftime('%Y-%m-01 00:00:00'))]"/>
                 <separator/>
-                <filter string="Emitido" name="filter_state_done"
-                        domain="[('state', '=', 'done')]"/>
-                <filter string="Borrador" name="filter_state_draft"
+                <filter string="Pendientes" name="filter_pending"
                         domain="[('state', '=', 'draft')]"/>
-                <filter string="Cancelado" name="filter_state_cancel"
-                        domain="[('state', '=', 'cancel')]"/>
+                <filter string="Entregados" name="filter_delivered"
+                        domain="[('state', '=', 'done')]"/>
                 <separator/>
                 <filter string="Por cliente" name="group_partner"
                         context="{'group_by': 'partner_id'}"/>
@@ -46,13 +46,13 @@
                 <field name="name" string="No. Conduce"/>
                 <field name="date" string="Fecha"/>
                 <field name="partner_id" string="Cliente"/>
-                <field name="sale_order_id" string="Cotización / OV"/>
+                <field name="sale_order_id" string="Cotización"/>
                 <field name="invoice_id" string="Factura"/>
-                <field name="picking_id" string="Picking / Entrega"/>
+                <field name="picking_id" string="Picking"/>
                 <field name="state" string="Estado" widget="badge"
                        decoration-success="state == 'done'"
                        decoration-muted="state == 'cancel'"/>
-                <field name="user_id" string="Creado por"/>
+                <field name="user_id" string="Usuario creador"/>
             </list>
         </field>
     </record>
@@ -125,14 +125,23 @@
         </field>
     </record>
 
-    <!-- Ventas → Órdenes → Conduces de Entrega -->
+    <!-- Ventas — menú principal (mismo nivel que Órdenes, Por facturar, etc.) -->
     <menuitem id="menu_justech_delivery_note_sale"
               name="Conduces de Entrega"
-              parent="sale.menu_sale_order"
+              parent="sale.sale_menu_root"
               action="action_justech_delivery_note"
-              sequence="45"/>
+              sequence="25"
+              groups="sales_team.group_sale_salesman"/>
 
-    <!-- Inventario → Operaciones → Conduces de Entrega -->
+    <!-- Contabilidad / Facturación — acceso al histórico -->
+    <menuitem id="menu_justech_delivery_note_account"
+              name="Conduces de Entrega"
+              parent="account.menu_finance"
+              action="action_justech_delivery_note"
+              sequence="15"
+              groups="account.group_account_invoice"/>
+
+    <!-- Inventario → Operaciones (acceso secundario) -->
     <menuitem id="menu_justech_delivery_note_stock"
               name="Conduces de Entrega"
               parent="stock.menu_stock_warehouse_mgmt"

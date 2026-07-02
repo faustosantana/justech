@@ -1,6 +1,6 @@
 {
     "name": "Justech Report Design",
-    "version": "19.0.6.1.1",
+    "version": "19.0.6.2.0",
     "category": "Reporting",
     "summary": "Cotización, factura y conduce Hellenia — diseño Justech QWeb+SCSS",
     "description": """
@@ -19,6 +19,11 @@ Conduce de Entrega (Fase 26E):
 Menú histórico (Fase 26F):
 - Ventas → Órdenes → Conduces de Entrega
 - Inventario → Operaciones → Conduces de Entrega
+
+Reorganización UX (Fase 26G):
+- Ventas: menú principal Conduces de Entrega (barra superior)
+- Contabilidad: menú Conduces de Entrega
+- Smart button Conduce en cotización y factura
     """,
     "author": "Justech",
     "website": "https://hellenia.cloud",

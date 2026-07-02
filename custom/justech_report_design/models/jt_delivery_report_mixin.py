@@ -35,10 +35,7 @@ class JtDeliveryReportMixin(models.AbstractModel):
             count = len(notes)
             rec.jt_delivery_note_count = count
             rec.jt_delivery_picking_count = count
-            if count == 1:
-                rec.jt_delivery_stat_label = _("Conduce")
-            else:
-                rec.jt_delivery_stat_label = _("Conduces") if count else _("Conduce")
+            rec.jt_delivery_stat_label = _("Conduce")
 
     def _jt_delivery_outgoing_pickings(self):
         return self.env["stock.picking"]

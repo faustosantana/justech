@@ -48,31 +48,44 @@ class SaleOrder(models.Model):
         return count, last_page_lines
 
     def get_jt_quotation_signature_spacer_px(self):
-        """Spacer flexible condiciones → firmas (solo flujo multipágina densa)."""
+        """Spacer entre condiciones y firmas (flujo multipágina densa)."""
         self.ensure_one()
         count, last_page_lines = self._jt_quotation_page_stats()
         if count > 22 and last_page_lines > 10:
             return 24
         return 0
 
+    def get_jt_quotation_signature_push_px(self):
+        """Fila expansora invisible que empuja firmas al pie en wkhtmltopdf."""
+        self.ensure_one()
+        if not self.get_jt_quotation_anchor_signatures():
+            return self.get_jt_quotation_signature_spacer_px()
+        lower_h = self.get_jt_quotation_lower_min_height_px()
+        cond_h = 135
+        sig_h = 88
+        return max(72, lower_h - cond_h - sig_h)
+
     def get_jt_quotation_lower_min_height_px(self):
-        """Altura mínima zona inferior para anclar firmas al pie."""
+        """Altura zona inferior = espacio restante de página para anclar firmas al pie."""
         self.ensure_one()
         count, last_page_lines = self._jt_quotation_page_stats()
-        page_usable = 960
-        sig_h = 90
-        footer_gap = 40
+        page_usable = 980
+        sig_h = 88
+        footer_gap = 36
+        cond_h = 135
+        min_lower = cond_h + sig_h + 72
+
         if count <= 22:
-            fixed = 420
+            fixed_above = 420
             line_h = 34
-            used = fixed + count * line_h
-            return max(400, page_usable - used - sig_h - footer_gap)
-        if last_page_lines > 10:
-            return 0
-        tail_fixed = 260
-        tail_lines_h = last_page_lines * 34
-        used = tail_fixed + tail_lines_h
-        return max(320, page_usable - used - sig_h - footer_gap)
+            content_above_lower = fixed_above + count * line_h
+        else:
+            if last_page_lines > 10:
+                return 0
+            content_above_lower = last_page_lines * 34 + 100
+
+        remaining = page_usable - content_above_lower - footer_gap
+        return max(min_lower, remaining)
 
     def get_jt_quotation_anchor_signatures(self):
         """Anclar firmas al pie cuando la última página tiene poco contenido."""

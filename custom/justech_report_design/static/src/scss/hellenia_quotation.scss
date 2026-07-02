@@ -385,6 +385,15 @@ div.article.page.jt-hq-page,
     clear: both;
 }
 
+.jt-hq-page table.jt-hq-lower,
+.jt-hq-page table.jt-hq-lower tr,
+.jt-hq-page table.jt-hq-lower td {
+    border: none !important;
+    border-collapse: collapse;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
 .jt-hq-lower {
     border: none !important;
     border-collapse: collapse;
@@ -398,11 +407,6 @@ div.article.page.jt-hq-page,
     padding: 0;
     vertical-align: top;
     background: transparent !important;
-}
-
-.jt-hq-lower-anchor .jt-hq-sig-push-row,
-.jt-hq-lower-anchor .jt-hq-sig-push-row td {
-    height: 100%;
 }
 
 .jt-hq-sigs-wrap {

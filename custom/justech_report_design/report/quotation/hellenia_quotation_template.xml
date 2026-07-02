@@ -8,6 +8,7 @@
         <t t-set="product_count" t-value="len(lines_to_report.filtered(lambda l: not l.display_type and not l.is_downpayment))"/>
         <t t-set="has_discount" t-value="doc.get_jt_quotation_has_discount()"/>
         <t t-set="signature_spacer_px" t-value="doc.get_jt_quotation_signature_spacer_px()"/>
+        <t t-set="signature_push_px" t-value="doc.get_jt_quotation_signature_push_px()"/>
         <t t-set="lower_min_height_px" t-value="doc.get_jt_quotation_lower_min_height_px()"/>
         <t t-set="anchor_signatures" t-value="doc.get_jt_quotation_anchor_signatures()"/>
         <t t-set="jt_default_terms">(a) Las piezas ofrecidas son únicas y sujetas a disponibilidad.
@@ -191,7 +192,7 @@
                 </td>
             </tr>
             <tr t-if="anchor_signatures" class="jt-hq-sig-push-row">
-                <td class="jt-hq-sig-push">&#160;</td>
+                <td class="jt-hq-sig-push" t-attf-style="height: {{ signature_push_px }}px;">&#160;</td>
             </tr>
             <tr t-if="not anchor_signatures">
                 <td class="jt-hq-sig-push" t-attf-style="height: {{ signature_spacer_px }}px;">&#160;</td>

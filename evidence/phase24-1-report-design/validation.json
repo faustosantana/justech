@@ -1,6 +1,6 @@
 {
   "phase": "24.1H-vertical-flow-cond-sigs",
-  "timestamp_utc": "2026-07-02T04:06:00.882553+00:00",
+  "timestamp_utc": "2026-07-02T04:15:13.894600+00:00",
   "database": "hellenia_test",
   "pass": true,
   "failed_checks": [
@@ -91,13 +91,17 @@
       "status": "PASS",
       "detail": ""
     },
+    "quote_1_no_sigs_zone_table": {
+      "status": "PASS",
+      "detail": ""
+    },
     "quote_1_cond_block": {
       "status": "PASS",
       "detail": ""
     },
     "quote_1_vertical_flow": {
       "status": "PASS",
-      "detail": "totals=57569 cond=58529 sigs=58707"
+      "detail": "totals=57569 cond=58529 sigs=59107"
     },
     "quote_1_no_lower_wrapper": {
       "status": "PASS",
@@ -121,7 +125,7 @@
     },
     "quote_1_terms_in_pdf": {
       "status": "PASS",
-      "detail": "Holaaaasasda"
+      "detail": "(a) Las piezas ofrecidas son únicas y sujetas a disponibilid"
     },
     "quote_1_terms_from_note": {
       "status": "PASS",
@@ -199,13 +203,17 @@
       "status": "PASS",
       "detail": ""
     },
+    "quote_5_no_sigs_zone_table": {
+      "status": "PASS",
+      "detail": ""
+    },
     "quote_5_cond_block": {
       "status": "PASS",
       "detail": ""
     },
     "quote_5_vertical_flow": {
       "status": "PASS",
-      "detail": "totals=60569 cond=61533 sigs=62113"
+      "detail": "totals=60569 cond=61533 sigs=62111"
     },
     "quote_5_no_lower_wrapper": {
       "status": "PASS",
@@ -307,13 +315,17 @@
       "status": "PASS",
       "detail": ""
     },
+    "quote_25_no_sigs_zone_table": {
+      "status": "PASS",
+      "detail": ""
+    },
     "quote_25_cond_block": {
       "status": "PASS",
       "detail": ""
     },
     "quote_25_vertical_flow": {
       "status": "PASS",
-      "detail": "totals=75451 cond=76415 sigs=76995"
+      "detail": "totals=75451 cond=76415 sigs=76993"
     },
     "quote_25_no_lower_wrapper": {
       "status": "PASS",
@@ -353,7 +365,7 @@
     },
     "quote_1_single_page": {
       "status": "PASS",
-      "detail": "pages=None size=72113"
+      "detail": "pages=None size=73563"
     },
     "quote_5_disc_pdf": {
       "status": "PASS",
@@ -419,13 +431,17 @@
       "status": "PASS",
       "detail": ""
     },
+    "quote_5_disc_no_sigs_zone_table": {
+      "status": "PASS",
+      "detail": ""
+    },
     "quote_5_disc_cond_block": {
       "status": "PASS",
       "detail": ""
     },
     "quote_5_disc_vertical_flow": {
       "status": "PASS",
-      "detail": "totals=61268 cond=62702 sigs=63282"
+      "detail": "totals=61268 cond=62702 sigs=63280"
     },
     "quote_5_disc_no_lower_wrapper": {
       "status": "PASS",
@@ -494,32 +510,32 @@
       "file": "quotation_1_product.pdf",
       "line_count": 1,
       "pages": null,
-      "size_bytes": 72113
+      "size_bytes": 73563
     },
     "quote_5": {
       "order": "S00135",
       "file": "quotation_5_products.pdf",
       "line_count": 5,
       "pages": null,
-      "size_bytes": 74490
+      "size_bytes": 74524
     },
     "quote_25": {
       "order": "S00138",
       "file": "quotation_25_products.pdf",
       "line_count": 25,
       "pages": null,
-      "size_bytes": 79042
+      "size_bytes": 79050
     },
     "quote_5_disc": {
       "order": "S00139",
       "file": "quotation_5_products_discount.pdf",
       "line_count": 5,
       "pages": null,
-      "size_bytes": 76587
+      "size_bytes": 76792
     }
   },
   "screenshots": {},
-  "module_version": "19.0.1.1.5",
+  "module_version": "19.0.1.1.6",
   "portal": {
     "status": 200,
     "size": 6909,

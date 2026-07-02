@@ -188,30 +188,23 @@
             <div class="jt-hq-cond-body" t-out="terms_text"/>
         </div>
 
-        <table class="jt-hq-sigs-zone" width="100%" cellpadding="0" cellspacing="0"
-               border="0" frame="void" rules="none">
-            <tr class="jt-hq-sig-grow">
-                <td>&#160;</td>
-            </tr>
-            <tr>
-                <td class="jt-hq-sigs-cell">
-                    <div class="jt-hq-sigs">
-                        <div class="jt-hq-sig-col">
-                            <div class="jt-hq-sig-head">ENTREGADO POR</div>
-                            <hr class="jt-hq-sig-line"/>
-                            <div class="jt-hq-sig-date-lbl">Fecha:</div>
-                            <hr class="jt-hq-sig-line jt-hq-sig-line-date"/>
-                        </div>
-                        <div class="jt-hq-sig-col">
-                            <div class="jt-hq-sig-head">RECIBIDO POR</div>
-                            <hr class="jt-hq-sig-line"/>
-                            <div class="jt-hq-sig-date-lbl">Fecha:</div>
-                            <hr class="jt-hq-sig-line jt-hq-sig-line-date"/>
-                        </div>
-                    </div>
-                </td>
-            </tr>
-        </table>
+        <div class="jt-hq-sigs-zone">
+            <div class="jt-hq-sig-grow">&#160;</div>
+            <div class="jt-hq-sigs">
+                <div class="jt-hq-sig-col">
+                    <div class="jt-hq-sig-head">ENTREGADO POR</div>
+                    <hr class="jt-hq-sig-line"/>
+                    <div class="jt-hq-sig-date-lbl">Fecha:</div>
+                    <hr class="jt-hq-sig-line jt-hq-sig-line-date"/>
+                </div>
+                <div class="jt-hq-sig-col">
+                    <div class="jt-hq-sig-head">RECIBIDO POR</div>
+                    <hr class="jt-hq-sig-line"/>
+                    <div class="jt-hq-sig-date-lbl">Fecha:</div>
+                    <hr class="jt-hq-sig-line jt-hq-sig-line-date"/>
+                </div>
+            </div>
+        </div>
     </template>
 
     <!-- Reporte paralelo — web.html_container, sin web.external_layout -->

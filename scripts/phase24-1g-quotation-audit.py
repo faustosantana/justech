@@ -215,7 +215,7 @@ if so1:
     thead1 = html1.split("<thead>")[1].split("</thead>")[0] if "<thead>" in html1 else ""
     audit["scenarios"]["quote_1_no_discount"]["checks"].extend([
         chk("no_disc_col", "c-disc" not in thead1),
-        chk("terms_from_note", "Holaaa" in html1 or so1.get_jt_quotation_terms_from_note()),
+        chk("terms_from_note", "(a) Las piezas ofrecidas" in html1),
     ])
     audit["scenarios"]["quote_1_no_discount"]["status"] = (
         "PASS" if all(c["status"] == "PASS" for c in audit["scenarios"]["quote_1_no_discount"]["checks"]) else "FAIL"
@@ -390,7 +390,8 @@ def _doc_tail_html(html):
 if so_probe:
     html_vis = env["ir.actions.report"]._render_qweb_html(JT_REPORT, so_probe.ids)[0].decode("utf-8", errors="replace")
     tail = _doc_tail_html(html_vis)
-    vis_checks.append(chk("vis001_no_lower_wrapper", "jt-hq-lower" not in html_vis))
+    vis_checks.append(chk("vis_sigs_zone_no_table", '<table class="jt-hq-sigs-zone"' not in html_vis))
+    vis_checks.append(chk("vis_no_lower_wrapper", "jt-hq-lower" not in html_vis))
     vis_checks.append(chk("vis_flow_cond_after_totals", tail.find("jt-hq-totals-wrap") < tail.find('class="jt-hq-cond"')))
     vis_checks.append(chk("vis_flow_sigs_after_cond", tail.find('class="jt-hq-cond"') < tail.find("jt-hq-sigs-zone")))
     vis_checks.append(chk("vis_sigs_zone_present", "jt-hq-sigs-zone" in tail))

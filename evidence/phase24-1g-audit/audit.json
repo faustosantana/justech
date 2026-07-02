@@ -1,8 +1,8 @@
 {
   "phase": "24.1G-quotation-audit",
-  "timestamp_utc": "2026-07-02T04:09:56.966958+00:00",
+  "timestamp_utc": "2026-07-02T04:15:32.230054+00:00",
   "database": "hellenia_test",
-  "module_version": "19.0.1.1.5",
+  "module_version": "19.0.1.1.6",
   "ready_for_official": true,
   "blocking_issues": [],
   "visual_pending": [],
@@ -53,7 +53,7 @@
         {
           "id": "standard_pdf_renders",
           "status": "PASS",
-          "detail": "72928"
+          "detail": "72927"
         }
       ],
       "failed": []
@@ -257,7 +257,12 @@
       "status": "PASS",
       "checks": [
         {
-          "id": "vis001_no_lower_wrapper",
+          "id": "vis_sigs_zone_no_table",
+          "status": "PASS",
+          "detail": ""
+        },
+        {
+          "id": "vis_no_lower_wrapper",
           "status": "PASS",
           "detail": ""
         },
@@ -474,7 +479,7 @@
     },
     "quote_no_note": {
       "status": "PASS",
-      "order": "S00146",
+      "order": "S00147",
       "checks": [
         {
           "id": "default_terms",
@@ -560,27 +565,27 @@
     "quote_1_no_discount": {
       "file": "audit_quote_1_no_discount.pdf",
       "pages": null,
-      "size": 72113
+      "size": 73563
     },
     "quote_5_no_discount": {
       "file": "audit_quote_5_no_discount.pdf",
       "pages": null,
-      "size": 74490
+      "size": 74524
     },
     "quote_25_no_discount": {
       "file": "audit_quote_25_no_discount.pdf",
       "pages": null,
-      "size": 79042
+      "size": 79050
     },
     "quote_5_with_discount": {
       "file": "audit_quote_5_with_discount.pdf",
       "pages": null,
-      "size": 76587
+      "size": 76792
     },
     "quote_confirmed_sale": {
       "file": "audit_quote_confirmed_sale.pdf",
       "pages": null,
-      "size": 73499
+      "size": 73525
     }
   },
   "module_state": "installed",

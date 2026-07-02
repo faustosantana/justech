@@ -96,7 +96,8 @@ def render_case(key, so, fname, Report):
         if 'class="jt-hq-sigs"' in html
         else False,
     )
-    check(f"{key}_sigs_zone", "jt-hq-sigs-zone" in html)
+    check(f"{key}_sigs_zone", 'class="jt-hq-sigs-zone"' in html)
+    check(f"{key}_no_sigs_zone_table", '<table class="jt-hq-sigs-zone"' not in html)
     check(f"{key}_cond_block", 'class="jt-hq-cond"' in html)
     totals_idx = html.find("jt-hq-totals-wrap")
     cond_idx = html.find('class="jt-hq-cond"')
@@ -173,6 +174,18 @@ if pf:
 Report = env["ir.actions.report"]
 SaleOrder = env["sale.order"]
 
+# Condiciones alineadas en cotizaciones de prueba (comparación visual 1 vs 5 vs 25)
+_ALIGN_NOTE = "<p>" + SaleOrder._JT_DEFAULT_TERMS.replace("\n", "<br/>") + "</p>"
+
+def _align_test_notes(refs):
+    for ref in refs:
+        so = SaleOrder.search([("client_order_ref", "=", ref)], limit=1)
+        if so:
+            so.write({"note": _ALIGN_NOTE})
+    env.cr.commit()
+
+_align_test_notes(["P23-3-QUOTE-1P", "P23-3-QUOTE-5P", "P23-3-QUOTE-25P"])
+
 cases = [
     ("1P", "quote_1", "quotation_1_product.pdf"),
     ("5P", "quote_5", "quotation_5_products.pdf"),
@@ -201,6 +214,7 @@ if so_disc:
         if all((l.discount or 0) <= 0 for l in product_lines):
             product_lines[0].discount = 10.0
         env.cr.commit()
+    _align_test_notes([DISC_REF])
     render_case("quote_5_disc", so_disc, "quotation_5_products_discount.pdf", Report)
     html_disc = Report._render_qweb_html(REPORT_NAME, so_disc.ids)[0].decode("utf-8", errors="replace")
     check("quote_5_disc_has_percent", "10%" in html_disc or "10.0%" in html_disc)

@@ -4,7 +4,9 @@ from __future__ import annotations
 
 import base64
 import json
+import os
 import re
+import shutil
 from datetime import datetime, timezone
 
 from odoo import Command
@@ -14,8 +16,6 @@ if DB != "hellenia_test":
     raise SystemExit(f"ABORT: solo hellenia_test, actual={DB}")
 
 OUT = "/tmp/phase26-delivery-slip"
-import os
-
 os.makedirs(OUT, exist_ok=True)
 
 ReportPicking = env.ref("justech_report_design.action_report_justech_delivery")
@@ -256,7 +256,6 @@ for rec, label in [
         check(f"21_methods_{label}", False, str(exc))
 
 # --- Fase 26B: banda, responsable/vendedor, observaciones, leyenda ---
-import shutil
 
 has_pdftotext = bool(shutil.which("pdftotext"))
 sample_txt = ""
@@ -264,7 +263,10 @@ for fname in ("01_picking_done.pdf", "03_from_sale_order.pdf", "04_from_invoice.
     p = f"{OUT}/{fname}"
     if os.path.exists(p):
         with open(p, "rb") as f:
-            sample_txt += pdf_text(f.read()) + "\n"
+            chunk = pdf_text(f.read())
+            if chunk:
+                sample_txt += chunk + "\n"
+sample_txt = sample_txt.strip()
 
 if sample_txt:
     check(

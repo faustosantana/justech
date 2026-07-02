@@ -45,7 +45,11 @@ for xmlid, needle in [
     arch = v.arch_db or "" if v else ""
     check(f"view_{xmlid.split('.')[-1]}", needle in arch and "jt_delivery_note_count" in arch, needle in arch)
 
-so = env["sale.order"].search([("state", "in", ("draft", "sent", "sale"))], limit=1, order="id desc")
+so = env["sale.order"].search(
+    [("state", "in", ("draft", "sent", "sale")), ("order_line", "!=", False)],
+    limit=1,
+    order="id desc",
+)
 inv = env["account.move"].search(
     [("move_type", "=", "out_invoice"), ("state", "=", "posted")], limit=1, order="id desc"
 )
@@ -139,5 +143,6 @@ with open(os.path.join(OUT, "validation.json"), "w") as f:
     json.dump(report, f, indent=2, ensure_ascii=False)
 
 print(json.dumps({"status": report["status"], "errors": report["errors"]}))
+env.cr.commit()
 if report["status"] != "PASS":
     raise SystemExit("VALIDATION FAILED")

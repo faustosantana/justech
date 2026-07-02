@@ -1,7 +1,7 @@
 /* Factura — extensiones mínimas sobre hellenia_quotation.scss */
 
 .jt-inv-band td {
-    padding: 6px 14px !important;
+    padding: 5px 14px !important;
 }
 
 .jt-inv-band .jt-hq-band-title {
@@ -11,64 +11,61 @@
 
 .jt-inv-band-meta-wrap {
     vertical-align: middle !important;
-    text-align: right;
     border-left: 1px solid rgba(255, 255, 255, 0.35);
     padding-left: 14px !important;
-    padding-right: 0 !important;
 }
 
-/* Bloque fiscal — integrado en banda, sin cajas ni tablas visibles */
-.jt-inv-band-meta-cols {
-    display: inline-block;
-    text-align: left;
-    vertical-align: middle;
+.jt-inv-band table,
+.jt-inv-band table tr,
+.jt-inv-band table td,
+.jt-inv-band table th {
     border: none !important;
-    background: transparent !important;
-    white-space: nowrap;
+    outline: none !important;
+    box-shadow: none !important;
 }
 
-.jt-inv-band-meta-col {
-    display: inline-block;
+.jt-inv-band-meta-grid,
+.jt-inv-band-meta-pairs,
+.jt-inv-band-meta-grid td,
+.jt-inv-band-meta-pairs td {
+    background-color: #3E4827 !important;
+}
+
+.jt-inv-band-meta-group {
     vertical-align: top;
-    border: none !important;
-    background: transparent !important;
-    padding: 0 44px 0 0;
-}
-
-.jt-inv-band-meta-col-r {
-    padding-right: 0;
-}
-
-.jt-inv-band-line {
-    margin: 0;
     padding: 0;
-    line-height: 1.18;
+}
+
+.jt-inv-band-meta-group-r {
+    padding-left: 40px !important;
+}
+
+.jt-inv-band-lbl-cell {
+    color: #ffffff !important;
+    font-weight: bold;
     font-size: 8.5pt;
-    border: none !important;
-    background: transparent !important;
+    line-height: 1.15;
+    text-align: left;
+    vertical-align: top;
+    padding: 0 6px 1px 0;
+    white-space: nowrap;
+    width: 1%;
+}
+
+.jt-inv-band-val-cell {
+    color: #ffffff !important;
+    font-weight: normal;
+    font-size: 8.5pt;
+    line-height: 1.15;
+    text-align: left;
+    vertical-align: top;
+    padding: 0 0 1px 0;
     white-space: nowrap;
 }
 
-.jt-inv-band-lbl {
-    display: inline-block;
-    width: 152px;
+.jt-inv-band-val-cell .jt-inv-ncf-strong,
+.jt-inv-band-val-cell span.jt-inv-ncf-strong {
     color: #ffffff !important;
-    font-weight: normal;
-    font-size: 8.5pt;
-    text-align: left;
-    vertical-align: top;
-}
-
-.jt-inv-band-val {
-    display: inline-block;
-    color: #ffffff !important;
-    font-weight: normal;
-    font-size: 8.5pt;
-    text-align: left;
-    vertical-align: top;
-}
-
-.jt-inv-band-val.jt-inv-ncf-strong {
     font-weight: bold;
 }
 

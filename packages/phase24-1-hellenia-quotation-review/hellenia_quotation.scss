@@ -1,0 +1,365 @@
+/* Hellenia Cotización — assets PDF (web.report_assets_common / wkhtmltopdf) */
+
+html, body {
+    margin: 0;
+    padding: 0;
+}
+
+/* Ocultar chrome estándar cuando se usa web.html_container */
+h2.hellenia-doc-title,
+.o_report_layout_standard .address,
+.header.hellenia-header,
+.footer.hellenia-footer {
+    display: none !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+}
+
+.o_body_html .container main .article.jt-hq-page {
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    max-width: none !important;
+}
+
+.jt-hq-page {
+    font-family: 'DejaVu Sans', Helvetica, Arial, sans-serif;
+    font-size: 9pt;
+    color: #000000;
+    line-height: 1.45;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+
+.jt-hq-page table {
+    border-collapse: collapse;
+    width: 100%;
+    border: none !important;
+}
+
+.jt-hq-page td,
+.jt-hq-page th {
+    border: none !important;
+}
+
+.jt-hq-green { color: #3E4827; }
+
+.jt-hq-lbl {
+    color: #888888;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 6.5pt;
+    letter-spacing: 0.4px;
+}
+
+.jt-hq-val {
+    color: #000000;
+    font-size: 9pt;
+}
+
+.jt-hq-val-bold {
+    color: #000000;
+    font-size: 9pt;
+    font-weight: bold;
+}
+
+.jt-hq-title {
+    color: #3E4827;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 6.5pt;
+    letter-spacing: 0.7px;
+    margin: 0 0 10px 0;
+}
+
+.jt-hq-title-tight {
+    margin-bottom: 4px;
+}
+
+.jt-hq-hdr {
+    margin: 0 0 8px 0;
+}
+
+.jt-hq-hdr td {
+    vertical-align: top;
+}
+
+.jt-hq-hdr-logo-cell {
+    padding-right: 14px;
+}
+
+.jt-hq-logo {
+    max-width: 300px;
+    max-height: 95px;
+    width: auto;
+    height: auto;
+    display: block;
+}
+
+.jt-hq-co {
+    text-align: right;
+    font-size: 7.5pt;
+    color: #000000;
+    line-height: 1.55;
+}
+
+.jt-hq-co-name {
+    font-size: 11pt;
+    font-weight: bold;
+    color: #3E4827;
+    margin: 0 0 2px 0;
+}
+
+.jt-hq-co-lbl {
+    font-weight: bold;
+    color: #3E4827;
+}
+
+.jt-hq-band {
+    background-color: #3E4827;
+}
+
+.jt-hq-band td {
+    padding: 11px 14px;
+    background-color: #3E4827;
+    color: #ffffff;
+}
+
+.jt-hq-band-title {
+    font-size: 11pt;
+    font-weight: bold;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: #ffffff;
+}
+
+.jt-hq-band-num {
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 10pt;
+    text-align: right;
+    display: block;
+    border-left: 1px solid rgba(255, 255, 255, 0.35);
+    padding-left: 14px;
+}
+
+.jt-hq-band-num span {
+    color: #ffffff !important;
+}
+
+.jt-hq-line-soft {
+    border: none;
+    border-bottom: 1px solid #e0e0e0;
+    margin: 0;
+    height: 0;
+}
+
+.jt-hq-dates td {
+    padding: 8px 0 10px 0;
+}
+
+.jt-hq-cards {
+    margin: 14px 0 18px 0;
+}
+
+.jt-hq-card {
+    vertical-align: top;
+    padding: 2px 18px 2px 0;
+}
+
+.jt-hq-card-r {
+    padding: 2px 0 2px 18px;
+}
+
+.jt-hq-vdiv {
+    width: 1px;
+    background-color: #e0e0e0;
+    font-size: 1px;
+    padding: 0;
+}
+
+.jt-hq-field {
+    margin: 0 0 9px 0;
+}
+
+.jt-hq-pay {
+    margin-top: 12px;
+}
+
+.jt-hq-pay-val {
+    font-size: 9.5pt;
+    font-weight: bold;
+    color: #000000;
+    margin-top: 3px;
+}
+
+.jt-hq-items {
+    margin: 0 0 6px 0;
+}
+
+.jt-hq-items thead th {
+    background-color: #3E4827;
+    color: #ffffff !important;
+    font-size: 6.5pt;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+    padding: 11px 12px;
+}
+
+.jt-hq-items tbody td {
+    padding: 11px 12px;
+    font-size: 8.5pt;
+    color: #000000;
+    vertical-align: middle;
+    border: none !important;
+    border-bottom: 1px solid #f0f0f0 !important;
+}
+
+.jt-hq-items tbody tr:last-child td {
+    border-bottom: none !important;
+}
+
+.jt-hq-items .c-num {
+    text-align: center;
+    width: 28px;
+}
+
+.jt-hq-items .c-qty,
+.jt-hq-items .c-price,
+.jt-hq-items .c-sub {
+    text-align: right;
+    white-space: nowrap;
+}
+
+.jt-hq-items .c-sub {
+    font-weight: bold;
+}
+
+.jt-hq-totals {
+    width: 300px;
+    margin: 10px 0 14px auto;
+}
+
+.jt-hq-totals td {
+    padding: 5px 2px;
+    font-size: 8.5pt;
+    border: none !important;
+}
+
+.jt-hq-totals .t-lbl {
+    color: #888888;
+    font-weight: bold;
+    text-align: left;
+    width: 50%;
+}
+
+.jt-hq-totals .t-val {
+    color: #000000;
+    font-weight: bold;
+    text-align: right;
+    width: 50%;
+}
+
+.jt-hq-totals tr.grand td {
+    border-top: 2px solid #3E4827 !important;
+    padding-top: 11px;
+}
+
+.jt-hq-totals tr.grand .t-lbl {
+    font-size: 11pt;
+    color: #3E4827;
+    text-transform: uppercase;
+}
+
+.jt-hq-totals tr.grand .t-val {
+    font-size: 15pt;
+    color: #3E4827;
+    font-weight: bold;
+}
+
+.jt-hq-clear {
+    clear: both;
+    height: 1px;
+    font-size: 1px;
+}
+
+.jt-hq-spacer td {
+    font-size: 1px;
+    line-height: 1px;
+}
+
+.jt-hq-cond {
+    margin: 0 0 14px 0;
+}
+
+.jt-hq-cond-title {
+    color: #3E4827;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 6.5pt;
+    letter-spacing: 0.7px;
+    margin: 0 0 6px 0;
+    padding: 0 0 4px 0;
+    border-bottom: 2px solid #3E4827;
+    display: inline-block;
+}
+
+.jt-hq-cond-body {
+    font-size: 7.5pt;
+    color: #000000;
+    line-height: 1.55;
+    white-space: pre-line;
+}
+
+.jt-hq-sigs {
+    margin: 0 0 10px 0;
+}
+
+.jt-hq-sigs td {
+    vertical-align: top;
+    padding: 0;
+}
+
+.jt-hq-sig-lbl {
+    font-size: 6.5pt;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #3E4827;
+    letter-spacing: 0.5px;
+    margin: 0 0 5px 0;
+}
+
+.jt-hq-sig-line {
+    border-bottom: 1px solid #000000;
+    height: 28px;
+    width: 100%;
+    margin: 0 0 6px 0;
+}
+
+.jt-hq-sig-date {
+    margin-top: 12px;
+}
+
+.jt-hq-sig-date .jt-hq-sig-line {
+    max-width: 240px;
+}
+
+.jt-hq-foot {
+    border-top: 2px solid #3E4827;
+    padding-top: 7px;
+    text-align: center;
+    font-size: 7pt;
+    color: #3E4827;
+    margin-top: 4px;
+}
+
+.jt-hq-pg {
+    text-align: center;
+    font-size: 6.5pt;
+    color: #888888;
+    margin-top: 4px;
+}

@@ -1,0 +1,193 @@
+{
+  "phase": "24.1-report-design-integration",
+  "timestamp_utc": "2026-07-01T23:54:46.577400+00:00",
+  "database": "hellenia_test",
+  "pass": true,
+  "failed_checks": [
+    "portal_pdf"
+  ],
+  "checks": {
+    "action_exists": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "report_name": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "paperformat": {
+      "status": "PASS",
+      "detail": "Hellenia Quotation Paperformat"
+    },
+    "pf_margins": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "pf_dpi": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_1_pdf": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_1_jt_template": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_1_scss_class": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_1_no_inline_style_block": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_1_no_external_layout": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_1_band": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_1_no_vendor_email": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_1_no_immediate": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_1_no_excel": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_1_grand": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_1_single_page": {
+      "status": "PASS",
+      "detail": "pages=None size=63985"
+    },
+    "quote_5_pdf": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_jt_template": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_scss_class": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_no_inline_style_block": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_no_external_layout": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_band": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_no_vendor_email": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_no_immediate": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_no_excel": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_grand": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_20_pdf": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_20_jt_template": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_20_scss_class": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_20_no_inline_style_block": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_20_no_external_layout": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_20_band": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_20_no_vendor_email": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_20_no_immediate": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_20_no_excel": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_20_grand": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "portal_pdf": {
+      "status": "FAIL",
+      "detail": "status=200 size=6909"
+    },
+    "no_replace_standard": {
+      "status": "PASS",
+      "detail": "inherits=[]"
+    }
+  },
+  "pdfs": {
+    "quote_1": {
+      "order": "S00134",
+      "file": "quotation_1_product.pdf",
+      "line_count": 1,
+      "pages": null,
+      "size_bytes": 63985
+    },
+    "quote_5": {
+      "order": "S00135",
+      "file": "quotation_5_products.pdf",
+      "line_count": 5,
+      "pages": null,
+      "size_bytes": 66043
+    },
+    "quote_20": {
+      "order": "S00138",
+      "file": "quotation_25_products.pdf",
+      "line_count": 25,
+      "pages": null,
+      "size_bytes": 69648
+    }
+  },
+  "screenshots": {},
+  "module_version": "19.0.1.0.0",
+  "portal": {
+    "status": 200,
+    "size": 6909,
+    "is_pdf": false
+  }
+}

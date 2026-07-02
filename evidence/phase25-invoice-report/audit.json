@@ -1,0 +1,22 @@
+{
+  "account_move_fields": [
+    "name",
+    "invoice_date",
+    "invoice_date_due",
+    "partner_id",
+    "invoice_user_id",
+    "invoice_payment_term_id",
+    "currency_id",
+    "amount_untaxed",
+    "amount_tax",
+    "amount_total",
+    "narration",
+    "justech_do_ncf",
+    "justech_do_document_type_id"
+  ],
+  "modules": {
+    "justech_l10n_do_ncf": "installed",
+    "hellenia_reports": "installed",
+    "justech_l10n_do_base": "installed"
+  }
+}

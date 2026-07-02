@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="seq_justech_delivery_note" model="ir.sequence">
+        <field name="name">Conduce de Entrega</field>
+        <field name="code">justech.delivery.note</field>
+        <field name="prefix">COND/%(year)s/</field>
+        <field name="padding">5</field>
+        <field name="company_id" eval="False"/>
+    </record>
+</odoo>

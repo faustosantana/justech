@@ -1,0 +1,131 @@
+{
+  "phase": "26f-delivery-menu-prod",
+  "timestamp_utc": "2026-07-02T20:04:55.392252+00:00",
+  "database": "hellenia_prod",
+  "status": "PASS",
+  "module_version": "19.0.6.1.1",
+  "checks": {
+    "module_version": {
+      "status": "PASS",
+      "detail": "19.0.6.1.1"
+    },
+    "menu_menu_justech_delivery_note_sale": {
+      "status": "PASS",
+      "detail": "name=Conduces de Entrega, parent=sale.menu_sale_order"
+    },
+    "menu_menu_justech_delivery_note_stock": {
+      "status": "PASS",
+      "detail": "name=Conduces de Entrega, parent=stock.menu_stock_warehouse_mgmt"
+    },
+    "search_filter_today": {
+      "status": "PASS",
+      "detail": "True"
+    },
+    "search_filter_this_month": {
+      "status": "PASS",
+      "detail": "True"
+    },
+    "search_group_partner": {
+      "status": "PASS",
+      "detail": "True"
+    },
+    "search_group_sale_order": {
+      "status": "PASS",
+      "detail": "True"
+    },
+    "search_group_invoice": {
+      "status": "PASS",
+      "detail": "True"
+    },
+    "search_group_state": {
+      "status": "PASS",
+      "detail": "True"
+    },
+    "list_col_name": {
+      "status": "PASS",
+      "detail": "True"
+    },
+    "list_col_date": {
+      "status": "PASS",
+      "detail": "True"
+    },
+    "list_col_partner_id": {
+      "status": "PASS",
+      "detail": "True"
+    },
+    "list_col_sale_order_id": {
+      "status": "PASS",
+      "detail": "True"
+    },
+    "list_col_invoice_id": {
+      "status": "PASS",
+      "detail": "True"
+    },
+    "list_col_picking_id": {
+      "status": "PASS",
+      "detail": "True"
+    },
+    "list_col_state": {
+      "status": "PASS",
+      "detail": "True"
+    },
+    "list_col_user_id": {
+      "status": "PASS",
+      "detail": "True"
+    },
+    "menu_action_model": {
+      "status": "PASS",
+      "detail": "justech.delivery.note"
+    },
+    "menu_total_records": {
+      "status": "PASS",
+      "detail": "7"
+    },
+    "sale_create_from_button": {
+      "status": "PASS",
+      "detail": "COND/2026/00007"
+    },
+    "sale_smart_count": {
+      "status": "PASS",
+      "detail": "1"
+    },
+    "smart_filtered": {
+      "status": "PASS",
+      "detail": "[('id', 'in', [7])]"
+    },
+    "smart_single_form": {
+      "status": "PASS",
+      "detail": "7"
+    },
+    "menu_shows_new_sale": {
+      "status": "PASS",
+      "detail": "7"
+    },
+    "invoice_create_from_button": {
+      "status": "PASS",
+      "detail": "COND/2026/00014"
+    },
+    "invoice_smart_count": {
+      "status": "PASS",
+      "detail": "1"
+    },
+    "invoice_smart_filtered": {
+      "status": "PASS",
+      "detail": "[('id', 'in', [14])]"
+    },
+    "menu_open_form": {
+      "status": "PASS",
+      "detail": "COND/2026/00007"
+    },
+    "reprint_pdf": {
+      "status": "PASS",
+      "detail": "74088"
+    },
+    "search_by_name": {
+      "status": "PASS",
+      "detail": "COND/2026/00007"
+    }
+  },
+  "errors": [],
+  "pass": true
+}

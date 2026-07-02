@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_company_form_hide_qr" model="ir.ui.view">
+        <field name="name">res.company.form.hide.qr</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="hellenia_reports.view_company_form_hellenia_reports"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='hellenia_show_qr_on_invoice']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

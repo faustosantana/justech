@@ -1,0 +1,78 @@
+/* Hellenia Factura Fiscal — complementa hellenia_quotation.scss */
+
+.jt-inv-page {
+    font-family: 'DejaVu Sans', Helvetica, Arial, sans-serif;
+}
+
+/* Banda FACTURA — reutiliza jt-hq-band + meta derecha */
+.jt-inv-band .jt-inv-band-meta-cell {
+    text-align: right;
+    vertical-align: middle;
+    border-left: 1px solid rgba(255, 255, 255, 0.35) !important;
+    padding: 8px 14px !important;
+}
+
+.jt-inv-band-meta-row {
+    color: #ffffff !important;
+    font-size: 8.5pt;
+    font-weight: bold;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.jt-inv-band-lbl {
+    margin-right: 6px;
+    color: #ffffff !important;
+}
+
+/* 5 columnas bajo banda */
+.jt-inv-meta-cols {
+    margin: 0 0 16px 0;
+}
+
+.jt-inv-meta-col {
+    vertical-align: top;
+    padding: 0 8px 0 0;
+}
+
+.jt-inv-meta-col .jt-hq-card-title {
+    font-size: 6.5pt;
+    margin-bottom: 6px;
+}
+
+.jt-inv-meta-col .jt-hq-meta-row {
+    margin-bottom: 3px;
+    font-size: 8pt;
+    line-height: 1.35;
+}
+
+.jt-inv-meta-col .jt-hq-pay-val {
+    font-size: 8.5pt;
+    font-weight: bold;
+}
+
+/* Tabla — columna ITBIS */
+.jt-hq-items .c-tax {
+    text-align: right;
+    white-space: nowrap;
+    width: 72px;
+}
+
+/* Bloque inferior observaciones + totales */
+.jt-inv-bottom {
+    margin: 10px 0 0 0;
+}
+
+.jt-inv-obs {
+    padding-right: 16px;
+    vertical-align: top;
+}
+
+.jt-inv-totals-cell {
+    vertical-align: top;
+}
+
+.jt-inv-obs .jt-hq-cond-body {
+    font-size: 7pt;
+    line-height: 1.55;
+}

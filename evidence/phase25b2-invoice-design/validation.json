@@ -1,0 +1,31 @@
+{
+  "phase": "25B.2-invoice-design",
+  "timestamp_utc": "2026-07-02T12:02:27.735398+00:00",
+  "database": "hellenia_test",
+  "status": "PENDING_USER_VISUAL_APPROVAL",
+  "module_version": "19.0.3.3.0",
+  "files": {
+    "quotation_reference": {
+      "pdf": "00_quotation_reference.pdf",
+      "png": null
+    },
+    "invoice_1_line": {
+      "pdf": "01_invoice_1_line.pdf",
+      "png": null,
+      "invoice_number": "Borrador",
+      "ncf": "—"
+    },
+    "invoice_5_lines": {
+      "pdf": "02_invoice_5_lines.pdf",
+      "png": null,
+      "invoice_number": "Borrador",
+      "ncf": "—"
+    },
+    "invoice_with_discount": {
+      "pdf": "03_invoice_with_discount.pdf",
+      "png": null,
+      "invoice_number": "Borrador",
+      "ncf": "—"
+    }
+  }
+}

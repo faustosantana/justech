@@ -1,0 +1,50 @@
+{
+  "phase": "18.5-full-regression",
+  "timestamp_utc": "2026-07-01T01:02:03.333595+00:00",
+  "database": "hellenia_test",
+  "environment": "TEST — test.hellenia.cloud",
+  "module_version": "hellenia_account 19.0.1.0.9",
+  "phases": {
+    "phase18": {
+      "runner": "PASS",
+      "ok": true,
+      "tests_pass": 18,
+      "tests_fail": 0,
+      "covers": ["pagos_cliente", "pagos_proveedor", "606", "607", "asientos", "conciliacion"]
+    },
+    "phase18_2": {
+      "runner": "PASS",
+      "ok": true,
+      "tests_pass": 23,
+      "tests_fail": 0,
+      "covers": ["catalogo", "pagos", "606", "607", "asientos"]
+    },
+    "phase18_3": {
+      "runner": "PASS",
+      "ok": true,
+      "checks_pass": 23,
+      "checks_fail": 0,
+      "covers": ["certificacion", "606_607", "pagos", "asientos", "conciliacion"]
+    },
+    "phase18_4": {
+      "runner": "PASS",
+      "ok": true,
+      "checks_pass": 19,
+      "checks_fail": 0,
+      "covers": ["itbis_30", "itbis_75", "itbis_100", "pagos_proveedor"]
+    },
+    "phase18_5": {
+      "runner": "PASS",
+      "ok": true,
+      "checks_pass": 13,
+      "checks_fail": 0,
+      "covers": ["periodo_mensual", "ytd_rejected", "wizard_606", "wizard_607", "report_606", "report_607"]
+    }
+  },
+  "all_pass": true,
+  "production_ready_for_approval": true,
+  "production_promoted": false,
+  "cause_606_607": "Scripts de regresión usaban date_from=1-ene y date_to=hoy (rango YTD) sin period_code coherente. El wizard tomaba period_code=mes actual (YYYYMM) y validate_period_dates fallaba; fiscal.report derivaba period_code del 1-ene y _sync_dates_from_period_code reducía el rango a enero, excluyendo facturas con invoice_date=hoy.",
+  "fix_606_607": "Helper _dgii_period(): period_code=default_period_code(), date_from/date_to=period_bounds_from_code(period_code), alineado con invoice_date de facturas de prueba. Sin cambios en lógica de producto.",
+  "validation_command": "bash scripts/run-phase18-5-regression-test.sh"
+}

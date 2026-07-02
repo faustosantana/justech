@@ -1,0 +1,219 @@
+{
+  "phase": "27-purchase-order-test",
+  "timestamp_utc": "2026-07-02T20:24:28.176088+00:00",
+  "database": "hellenia_test",
+  "status": "PASS",
+  "module_version": "19.0.7.0.0",
+  "checks": {
+    "audit_json": {
+      "status": "PASS",
+      "detail": "ok"
+    },
+    "module_version": {
+      "status": "PASS",
+      "detail": "19.0.7.0.0"
+    },
+    "hellenia_report_exists": {
+      "status": "PASS",
+      "detail": "justech_report_design.report_justech_purchase_order_document"
+    },
+    "parallel_not_same_template": {
+      "status": "PASS",
+      "detail": "jt=justech_report_design.report_justech_purchase_order_document std=purchase.report_purchaseorder"
+    },
+    "print_menu_bound": {
+      "status": "PASS",
+      "detail": "Orden de Compra Hellenia"
+    },
+    "header_button": {
+      "status": "PASS",
+      "detail": "True"
+    },
+    "form_has_button": {
+      "status": "PASS",
+      "detail": "True"
+    },
+    "pdf_01_one_line": {
+      "status": "PASS",
+      "detail": "74546"
+    },
+    "pdf_02_five_lines": {
+      "status": "PASS",
+      "detail": "75827"
+    },
+    "pdf_03_twenty_lines": {
+      "status": "PASS",
+      "detail": "81666"
+    },
+    "pdf_04_with_discount": {
+      "status": "PASS",
+      "detail": "76093"
+    },
+    "pdf_05_no_discount": {
+      "status": "PASS",
+      "detail": "75068"
+    },
+    "pdf_06_usd": {
+      "status": "PASS",
+      "detail": "75211"
+    },
+    "pdf_07_dop": {
+      "status": "PASS",
+      "detail": "74580"
+    },
+    "pdf_08_international_vendor": {
+      "status": "PASS",
+      "detail": "74868"
+    },
+    "pdf_09_national_vendor": {
+      "status": "PASS",
+      "detail": "74380"
+    },
+    "html_preview": {
+      "status": "PASS",
+      "detail": "65383"
+    },
+    "standard_report_ok": {
+      "status": "PASS",
+      "detail": "24388"
+    },
+    "button_action": {
+      "status": "PASS",
+      "detail": "justech_report_design.report_justech_purchase_order_document"
+    },
+    "discount_column_hidden_no_disc": {
+      "status": "PASS",
+      "detail": "False"
+    },
+    "discount_column_visible_with_disc": {
+      "status": "PASS",
+      "detail": "True"
+    }
+  },
+  "errors": [],
+  "pdfs": [
+    {
+      "file": "01_one_line.pdf",
+      "bytes": 74546,
+      "po": "P00055",
+      "partner_ref": "PHASE27-EVIDENCE-01_one_line"
+    },
+    {
+      "file": "02_five_lines.pdf",
+      "bytes": 75827,
+      "po": "P00056",
+      "partner_ref": "PHASE27-EVIDENCE-02_five_lines"
+    },
+    {
+      "file": "03_twenty_lines.pdf",
+      "bytes": 81666,
+      "po": "P00057",
+      "partner_ref": "PHASE27-EVIDENCE-03_twenty_lines"
+    },
+    {
+      "file": "04_with_discount.pdf",
+      "bytes": 76093,
+      "po": "P00058",
+      "partner_ref": "PHASE27-EVIDENCE-04_with_discount"
+    },
+    {
+      "file": "05_no_discount.pdf",
+      "bytes": 75068,
+      "po": "P00059",
+      "partner_ref": "PHASE27-EVIDENCE-05_no_discount"
+    },
+    {
+      "file": "06_usd.pdf",
+      "bytes": 75211,
+      "po": "P00060",
+      "partner_ref": "PHASE27-EVIDENCE-06_usd"
+    },
+    {
+      "file": "07_dop.pdf",
+      "bytes": 74580,
+      "po": "P00061",
+      "partner_ref": "PHASE27-EVIDENCE-07_dop"
+    },
+    {
+      "file": "08_international_vendor.pdf",
+      "bytes": 74868,
+      "po": "P00062",
+      "partner_ref": "PHASE27-EVIDENCE-08_international_vendor"
+    },
+    {
+      "file": "09_national_vendor.pdf",
+      "bytes": 74380,
+      "po": "P00063",
+      "partner_ref": "PHASE27-EVIDENCE-09_national_vendor"
+    }
+  ],
+  "fixtures": [
+    {
+      "scenario": "01_one_line",
+      "po_id": 57,
+      "name": "P00055",
+      "lines": 1
+    },
+    {
+      "scenario": "02_five_lines",
+      "po_id": 58,
+      "name": "P00056",
+      "lines": 5
+    },
+    {
+      "scenario": "03_twenty_lines",
+      "po_id": 59,
+      "name": "P00057",
+      "lines": 20
+    },
+    {
+      "scenario": "04_with_discount",
+      "po_id": 60,
+      "name": "P00058",
+      "lines": 3
+    },
+    {
+      "scenario": "05_no_discount",
+      "po_id": 61,
+      "name": "P00059",
+      "lines": 2
+    },
+    {
+      "scenario": "06_usd",
+      "po_id": 62,
+      "name": "P00060",
+      "lines": 2
+    },
+    {
+      "scenario": "07_dop",
+      "po_id": 63,
+      "name": "P00061",
+      "lines": 1
+    },
+    {
+      "scenario": "08_international_vendor",
+      "po_id": 64,
+      "name": "P00062",
+      "lines": 1
+    },
+    {
+      "scenario": "09_national_vendor",
+      "po_id": 65,
+      "name": "P00063",
+      "lines": 1
+    }
+  ],
+  "required_scenarios": [
+    "01_one_line",
+    "02_five_lines",
+    "03_twenty_lines",
+    "04_with_discount",
+    "05_no_discount",
+    "06_usd",
+    "07_dop",
+    "08_international_vendor",
+    "09_national_vendor"
+  ],
+  "pass": true,
+  "visual_approval_pending": true
+}

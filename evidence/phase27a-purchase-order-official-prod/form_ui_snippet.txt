@@ -1,0 +1,19 @@
+=== Botones en formulario purchase.order (header) ===
+- Send RFQ
+- Receive
+- Confirm Order
+- Approve Order
+- Send RFQ
+- Confirm Order
+- Send PO
+- Acknowledge
+- Set to Draft
+- Print
+- Print
+- Cancel
+- Lock
+- Unlock
+- Catalog
+
+Orden de Compra PDF presente: NO
+Menú Imprimir → Orden de Compra usa diseño Hellenia: SÍ

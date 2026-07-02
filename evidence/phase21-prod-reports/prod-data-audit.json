@@ -1,0 +1,108 @@
+ Container hellenia-prod-db-1 Running 
+ Container hellenia-prod-db-1 Waiting 
+ Container hellenia-prod-db-1 Healthy 
+ Container hellenia-prod-odoo-run-fe99be703430 Creating 
+ Container hellenia-prod-odoo-run-fe99be703430 Created 
+2026-07-01 14:11:56,740 1 WARNING ? odoo.tools.config: option logfile reads 'False' in the config file at /etc/odoo/odoo.conf but isn't a boolean option, skip 
+2026-07-01 14:11:56,740 1 WARNING ? odoo.tools.config: option logfile reads 'False' in the config file at /etc/odoo/odoo.conf but isn't a boolean option, skip 
+2026-07-01 14:11:56,740 1 INFO ? odoo: Odoo version 19.0-20260619 
+2026-07-01 14:11:56,740 1 INFO ? odoo: Using configuration file at /etc/odoo/odoo.conf 
+2026-07-01 14:11:56,740 1 INFO ? odoo: addons paths: _NamespacePath(['/usr/lib/python3/dist-packages/odoo/addons', '/var/lib/odoo/addons/19.0', '/mnt/enterprise/addons', '/mnt/custom', '/usr/lib/python3/dist-packages/addons']) 
+2026-07-01 14:11:56,740 1 INFO ? odoo: database: odoo@db:5432 
+2026-07-01 14:11:56,951 1 INFO ? odoo.service.server: Stopping workers gracefully 
+2026-07-01 14:11:56,978 1 INFO hellenia_prod odoo.modules.loading: loading 1 modules... 
+2026-07-01 14:11:56,981 1 INFO hellenia_prod odoo.modules.loading: 1 modules loaded in 0.00s, 0 queries (+0 extra) 
+2026-07-01 14:11:57,009 1 INFO hellenia_prod odoo.modules.loading: loading 138 modules... 
+2026-07-01 14:11:57,821 1 WARNING hellenia_prod odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define models.Constraint on the model. 
+2026-07-01 14:11:57,903 1 WARNING hellenia_prod odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define models.Constraint on the model. 
+2026-07-01 14:11:57,950 1 WARNING hellenia_prod odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define models.Constraint on the model. 
+2026-07-01 14:11:57,980 1 INFO hellenia_prod odoo.modules.loading: 138 modules loaded in 0.97s, 0 queries (+0 extra) 
+2026-07-01 14:11:58,076 1 WARNING hellenia_prod odoo.fields: justech.do.fiscal.report.state: selection=[('draft', 'Borrador'), ('validated', 'Validado'), ('pending_approval', 'Requiere aprobación'), ('approved', 'Aprobado'), ('rejected', 'Rechazado'), ('generated', 'Generado'), ('done', 'Generado')] overrides existing selection; use selection_add instead 
+2026-07-01 14:11:58,147 1 INFO hellenia_prod odoo.modules.loading: Modules loaded. 
+2026-07-01 14:11:58,204 1 INFO hellenia_prod odoo.registry: Registry loaded in 1.253s 
+2026-07-01 14:11:58,379 1 INFO hellenia_prod odoo.models.unlink: User #1 deleted mail.message records with IDs: [771, 770] 
+2026-07-01 14:11:58,388 1 INFO hellenia_prod odoo.models.unlink: User #1 deleted justech.do.fiscal.report records with IDs: [36] 
+2026-07-01 14:11:58,493 1 INFO hellenia_prod odoo.models.unlink: User #1 deleted mail.message records with IDs: [773, 772] 
+2026-07-01 14:11:58,497 1 INFO hellenia_prod odoo.models.unlink: User #1 deleted justech.do.fiscal.report records with IDs: [37] 
+2026-07-01 14:11:58,518 1 INFO hellenia_prod odoo.models.unlink: User #1 deleted mail.message records with IDs: [775, 774] 
+2026-07-01 14:11:58,521 1 INFO hellenia_prod odoo.models.unlink: User #1 deleted justech.do.fiscal.report records with IDs: [38] 
+2026-07-01 14:11:58,590 1 INFO hellenia_prod odoo.models.unlink: User #1 deleted mail.message records with IDs: [777, 776] 
+2026-07-01 14:11:58,592 1 INFO hellenia_prod odoo.models.unlink: User #1 deleted justech.do.fiscal.report records with IDs: [39] 
+{
+  "phase": "21-prod-data-audit",
+  "timestamp_utc": "2026-07-01T14:11:58.225622+00:00",
+  "company": "Hellenia, S.R.L.",
+  "fiscal": {
+    "606": {
+      "ok": true,
+      "detail": "lines=0 exportable=0 state=draft"
+    },
+    "607": {
+      "ok": true,
+      "detail": "lines=3 exportable=3 state=draft"
+    },
+    "607_export": {
+      "ok": true,
+      "detail": "action_export_dgii OK"
+    },
+    "608": {
+      "ok": true,
+      "detail": "lines=0 exportable=0 state=draft"
+    },
+    "623": {
+      "ok": true,
+      "detail": "lines=0 exportable=0 state=draft"
+    }
+  },
+  "chain_623": {
+    "invoice": {
+      "id": 25,
+      "name": "INV/2026/00003",
+      "state": "posted",
+      "gov_withholding": 500.0,
+      "fiscal_state": "incomplete",
+      "include_dgii": true
+    },
+    "payment": {
+      "id": 72,
+      "name": "PBNKD/2026/00002",
+      "date": "2026-07-01",
+      "state": "paid",
+      "ref": ""
+    },
+    "partner": {
+      "id": 23,
+      "name": "SMOKE P13.4 CF",
+      "vat": ""
+    },
+    "withholding_lines": [
+      {
+        "id": 18,
+        "amount": 540.0,
+        "catalog": "RET-ITBIS-30"
+      }
+    ],
+    "validation_623_jul2026": {
+      "valid": 0,
+      "incomplete": 2,
+      "excluded": 0
+    },
+    "validation_errors_inv00003": [
+      "INV/2026/00003: la entidad SMOKE P13.4 CF no tiene RNC."
+    ]
+  },
+  "accounting": {
+    "posted_balanced": {
+      "ok": true,
+      "detail": "checked 7 moves"
+    },
+    "posted_count": 7,
+    "ytd_debit_credit": {
+      "ok": true,
+      "detail": "debit=70800.00 credit=70800.00"
+    }
+  },
+  "ok": true,
+  "pass": false,
+  "module_version": "19.0.1.12.2"
+}

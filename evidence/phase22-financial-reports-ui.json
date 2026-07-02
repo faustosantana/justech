@@ -1,0 +1,187 @@
+{
+  "phase": "22-financial-ui",
+  "timestamp_utc": "2026-07-01T15:22:54.525901+00:00",
+  "reports": {
+    "profit_loss_opens": {
+      "ok": true,
+      "detail": "/odoo/accounting/profit-and-loss",
+      "screenshot": "evidence/phase22-financial-reports/screenshots/profit_loss.png"
+    },
+    "profit_loss_content": {
+      "ok": true,
+      "detail": "chars=779",
+      "screenshot": ""
+    },
+    "profit_loss_pdf": {
+      "ok": true,
+      "detail": "count=1",
+      "screenshot": ""
+    },
+    "profit_loss_xlsx": {
+      "ok": true,
+      "detail": "count=1",
+      "screenshot": ""
+    },
+    "profit_loss_has_income": {
+      "ok": true,
+      "detail": "structure visible",
+      "screenshot": ""
+    },
+    "balance_sheet_opens": {
+      "ok": true,
+      "detail": "/odoo/accounting/balance-sheet",
+      "screenshot": "evidence/phase22-financial-reports/screenshots/balance_sheet.png"
+    },
+    "balance_sheet_content": {
+      "ok": true,
+      "detail": "chars=1453",
+      "screenshot": ""
+    },
+    "balance_sheet_pdf": {
+      "ok": true,
+      "detail": "count=1",
+      "screenshot": ""
+    },
+    "balance_sheet_xlsx": {
+      "ok": true,
+      "detail": "count=1",
+      "screenshot": ""
+    },
+    "balance_sheet_has_assets": {
+      "ok": true,
+      "detail": "structure visible",
+      "screenshot": ""
+    },
+    "trial_balance_opens": {
+      "ok": true,
+      "detail": "/odoo/accounting/trial-balance",
+      "screenshot": "evidence/phase22-financial-reports/screenshots/trial_balance.png"
+    },
+    "trial_balance_content": {
+      "ok": true,
+      "detail": "chars=619",
+      "screenshot": ""
+    },
+    "trial_balance_pdf": {
+      "ok": true,
+      "detail": "count=1",
+      "screenshot": ""
+    },
+    "trial_balance_xlsx": {
+      "ok": true,
+      "detail": "count=1",
+      "screenshot": ""
+    },
+    "trial_balance_has_amounts": {
+      "ok": true,
+      "detail": "amounts visible",
+      "screenshot": ""
+    },
+    "general_ledger_opens": {
+      "ok": true,
+      "detail": "/odoo/accounting/general-ledger",
+      "screenshot": "evidence/phase22-financial-reports/screenshots/general_ledger.png"
+    },
+    "general_ledger_content": {
+      "ok": true,
+      "detail": "chars=1169",
+      "screenshot": ""
+    },
+    "general_ledger_pdf": {
+      "ok": true,
+      "detail": "count=1",
+      "screenshot": ""
+    },
+    "general_ledger_xlsx": {
+      "ok": true,
+      "detail": "count=1",
+      "screenshot": ""
+    },
+    "journal_report_opens": {
+      "ok": true,
+      "detail": "/odoo/accounting/journal-report",
+      "screenshot": "evidence/phase22-financial-reports/screenshots/journal_report.png"
+    },
+    "journal_report_content": {
+      "ok": true,
+      "detail": "chars=779",
+      "screenshot": ""
+    },
+    "journal_report_pdf": {
+      "ok": true,
+      "detail": "count=1",
+      "screenshot": ""
+    },
+    "journal_report_xlsx": {
+      "ok": true,
+      "detail": "count=1",
+      "screenshot": ""
+    },
+    "partner_ledger_opens": {
+      "ok": true,
+      "detail": "/odoo/accounting/partner-ledger",
+      "screenshot": "evidence/phase22-financial-reports/screenshots/partner_ledger.png"
+    },
+    "partner_ledger_content": {
+      "ok": true,
+      "detail": "chars=938",
+      "screenshot": ""
+    },
+    "partner_ledger_pdf": {
+      "ok": true,
+      "detail": "count=1",
+      "screenshot": ""
+    },
+    "partner_ledger_xlsx": {
+      "ok": true,
+      "detail": "count=1",
+      "screenshot": ""
+    },
+    "aged_receivable_opens": {
+      "ok": true,
+      "detail": "/odoo/accounting/aged-receivable",
+      "screenshot": "evidence/phase22-financial-reports/screenshots/aged_receivable.png"
+    },
+    "aged_receivable_content": {
+      "ok": true,
+      "detail": "chars=999",
+      "screenshot": ""
+    },
+    "aged_receivable_pdf": {
+      "ok": true,
+      "detail": "count=1",
+      "screenshot": ""
+    },
+    "aged_receivable_xlsx": {
+      "ok": true,
+      "detail": "count=1",
+      "screenshot": ""
+    },
+    "aged_receivable_has_ar": {
+      "ok": true,
+      "detail": "AR data",
+      "screenshot": ""
+    },
+    "aged_payable_opens": {
+      "ok": true,
+      "detail": "/odoo/accounting/aged-payable",
+      "screenshot": "evidence/phase22-financial-reports/screenshots/aged_payable.png"
+    },
+    "aged_payable_content": {
+      "ok": true,
+      "detail": "chars=584",
+      "screenshot": ""
+    },
+    "aged_payable_pdf": {
+      "ok": true,
+      "detail": "count=1",
+      "screenshot": ""
+    },
+    "aged_payable_xlsx": {
+      "ok": true,
+      "detail": "count=1",
+      "screenshot": ""
+    }
+  },
+  "ok": true
+}

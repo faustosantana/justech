@@ -1,0 +1,49 @@
+{
+  "phase": "27-invoice-preview-print-fix",
+  "timestamp_utc": "2026-07-02T18:20:08.707885+00:00",
+  "database": "hellenia_prod",
+  "status": "PASS",
+  "checks": {
+    "preview_report_invoice_wizard_iframe": {
+      "status": "PASS",
+      "detail": "len=64241 jt_band=False"
+    },
+    "preview_report_invoice_document_preview": {
+      "status": "PASS",
+      "detail": "len=62272 jt_band=False"
+    },
+    "preview_report_justech_invoice_wizard_iframe": {
+      "status": "PASS",
+      "detail": "len=60189 jt_band=True"
+    },
+    "action_action_invoice_download_pdf": {
+      "status": "PASS",
+      "detail": "ir.actions.act_url"
+    },
+    "action_action_print_pdf": {
+      "status": "PASS",
+      "detail": "ir.actions.report"
+    },
+    "action_preview_invoice": {
+      "status": "PASS",
+      "detail": "ir.actions.act_url"
+    },
+    "official_pdf": {
+      "status": "PASS",
+      "detail": "72460"
+    },
+    "official_html": {
+      "status": "PASS",
+      "detail": "60425"
+    },
+    "portal_html_ref": {
+      "status": "PASS",
+      "detail": "account.account_invoices"
+    }
+  },
+  "invoice": {
+    "id": 132,
+    "name": "INV/2026/00006",
+    "state": "posted"
+  }
+}

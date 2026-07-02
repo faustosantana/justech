@@ -1,0 +1,125 @@
+{
+  "phase": "24.1-prod-parallel",
+  "timestamp_utc": "2026-07-02T04:30:17.611095+00:00",
+  "database": "hellenia_prod",
+  "pass": false,
+  "failed_checks": [
+    "disc_quotation_found",
+    "picking_found"
+  ],
+  "checks": {
+    "module_installed": {
+      "status": "PASS",
+      "detail": "installed"
+    },
+    "module_version": {
+      "status": "PASS",
+      "detail": "19.0.1.1.6"
+    },
+    "jt_action_exists": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "std_action_exists": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "jt_action_name": {
+      "status": "PASS",
+      "detail": "Cotización Hellenia (Diseño)"
+    },
+    "jt_report_name": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "std_report_name": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "no_replace_std_action": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "hellenia_reports_installed": {
+      "status": "PASS",
+      "detail": "installed"
+    },
+    "sale.report_saleorder_jt_inherits": {
+      "status": "PASS",
+      "detail": "inherits=[]"
+    },
+    "sale.report_saleorder_document_jt_inherits": {
+      "status": "PASS",
+      "detail": "inherits=[]"
+    },
+    "sale.report_saleorder_raw_jt_inherits": {
+      "status": "PASS",
+      "detail": "inherits=[]"
+    },
+    "jt_real_1p_pdf": {
+      "status": "PASS",
+      "detail": "size=73572"
+    },
+    "std_real_1p_pdf": {
+      "status": "PASS",
+      "detail": "size=60440"
+    },
+    "jt_template": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "vis001_no_sigs_zone_table": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "vis001_no_lower": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "disc_quotation_found": {
+      "status": "FAIL",
+      "detail": "sin cotización con descuento en línea"
+    },
+    "invoice_pdf": {
+      "status": "PASS",
+      "detail": "inv=INV/2026/00006 size=27600"
+    },
+    "purchase_pdf": {
+      "status": "PASS",
+      "detail": "po=P00008 size=24101"
+    },
+    "picking_found": {
+      "status": "FAIL",
+      "detail": "sin albarán done"
+    },
+    "dgii_reports_present": {
+      "status": "PASS",
+      "detail": "[]"
+    }
+  },
+  "pdfs": {
+    "jt_real_1p": {
+      "order": "S00020",
+      "order_id": 21,
+      "file": "prod_quotation_real_1p.pdf",
+      "size_bytes": 73572,
+      "pages": null
+    },
+    "std_real_1p": {
+      "order": "S00020",
+      "order_id": 21,
+      "file": "prod_quotation_standard.pdf",
+      "size_bytes": 60440,
+      "pages": null
+    }
+  },
+  "orders_used": {
+    "real_1p": {
+      "name": "S00020",
+      "id": 21
+    },
+    "invoice": "INV/2026/00006",
+    "purchase": "P00008"
+  },
+  "module_version": "19.0.1.1.6"
+}

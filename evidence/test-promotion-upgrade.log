@@ -1,0 +1,170 @@
+[2026-06-30 12:22:32] Upgrade módulos justech_l10n_do_base,justech_l10n_do_ncf,justech_l10n_do_reports en test (con tests)
+ Container hellenia-test-odoo-1 Stopping 
+ Container hellenia-test-odoo-1 Stopped 
+ Container hellenia-test-db-1 Running 
+ Container hellenia-test-db-1 Waiting 
+ Container hellenia-test-db-1 Healthy 
+ Container hellenia-test-odoo-run-f4301e435e28 Creating 
+ Container hellenia-test-odoo-run-f4301e435e28 Created 
+2026-06-30 12:22:34,134 1 WARNING ? odoo.tools.config: option logfile reads 'False' in the config file at /etc/odoo/odoo.conf but isn't a boolean option, skip 
+2026-06-30 12:22:34,134 1 WARNING ? odoo.tools.config: option logfile reads 'False' in the config file at /etc/odoo/odoo.conf but isn't a boolean option, skip 
+2026-06-30 12:22:34,134 1 WARNING ? odoo.tools.config: missing --http-interface/http_interface, using 0.0.0.0 by default, will change to 127.0.0.1 in 20.0 
+2026-06-30 12:22:34,134 1 INFO ? odoo: Odoo version 19.0-20260619 
+2026-06-30 12:22:34,134 1 INFO ? odoo: Using configuration file at /etc/odoo/odoo.conf 
+2026-06-30 12:22:34,135 1 INFO ? odoo: addons paths: _NamespacePath(['/usr/lib/python3/dist-packages/odoo/addons', '/var/lib/odoo/addons/19.0', '/mnt/enterprise/addons', '/mnt/custom', '/usr/lib/python3/dist-packages/addons']) 
+2026-06-30 12:22:34,135 1 INFO ? odoo: database: odoo@db:5432 
+2026-06-30 12:22:34,353 1 INFO ? odoo.service.server: HTTP service (werkzeug) running on 596f9ee09462:8069 
+2026-06-30 12:22:34,368 1 INFO hellenia_test odoo.tests.common: Importing test framework 
+2026-06-30 12:22:34,407 1 INFO hellenia_test odoo.modules.loading: loading 1 modules... 
+2026-06-30 12:22:34,410 1 INFO hellenia_test odoo.modules.loading: 1 modules loaded in 0.00s, 0 queries (+0 extra) 
+2026-06-30 12:22:34,432 1 INFO hellenia_test odoo.modules.loading: updating modules list 
+2026-06-30 12:22:34,435 1 INFO hellenia_test odoo.addons.base.models.ir_module: ALLOW access to module.update_list on [] to user __system__ #1 via n/a 
+2026-06-30 12:22:36,506 1 INFO hellenia_test odoo.addons.base.models.ir_module: ALLOW access to module.button_upgrade on ['Justech Dominican Fiscal Base', 'Justech Dominican NCF', 'Justech Dominican Fiscal Reports'] to user __system__ #1 via n/a 
+2026-06-30 12:22:36,506 1 INFO hellenia_test odoo.addons.base.models.ir_module: ALLOW access to module.update_list on ['Justech Dominican Fiscal Base', 'Justech Dominican NCF', 'Justech Dominican Fiscal Reports'] to user __system__ #1 via n/a 
+2026-06-30 12:22:38,108 1 INFO hellenia_test odoo.addons.base.models.ir_module: ALLOW access to module.button_install on [] to user __system__ #1 via n/a 
+2026-06-30 12:22:38,153 1 INFO hellenia_test odoo.modules.loading: loading 112 modules... 
+2026-06-30 12:22:38,957 1 INFO hellenia_test odoo.modules.loading: Loading module justech_l10n_do_base (95/112) 
+2026-06-30 12:22:39,098 1 WARNING hellenia_test odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define models.Constraint on the model. 
+2026-06-30 12:22:39,132 1 INFO hellenia_test odoo.registry: module justech_l10n_do_base: creating or updating database tables 
+2026-06-30 12:22:39,283 1 INFO hellenia_test odoo.modules.loading: loading justech_l10n_do_base/security/justech_l10n_do_security.xml 
+2026-06-30 12:22:39,309 1 INFO hellenia_test odoo.modules.loading: loading justech_l10n_do_base/security/ir.model.access.csv 
+2026-06-30 12:22:39,831 1 INFO hellenia_test odoo.modules.loading: loading justech_l10n_do_base/security/justech_l10n_do_rules.xml 
+2026-06-30 12:22:39,833 1 INFO hellenia_test odoo.modules.loading: loading justech_l10n_do_base/data/fiscal_document_type_data.xml 
+2026-06-30 12:22:39,837 1 INFO hellenia_test odoo.modules.loading: loading justech_l10n_do_base/views/fiscal_document_type_views.xml 
+2026-06-30 12:22:39,858 1 INFO hellenia_test odoo.modules.loading: loading justech_l10n_do_base/views/res_company_views.xml 
+2026-06-30 12:22:39,873 1 INFO hellenia_test odoo.modules.loading: loading justech_l10n_do_base/views/res_partner_views.xml 
+2026-06-30 12:22:39,914 1 INFO hellenia_test odoo.modules.loading: loading justech_l10n_do_base/views/account_journal_views.xml 
+2026-06-30 12:22:39,941 1 INFO hellenia_test odoo.modules.loading: loading justech_l10n_do_base/views/menu.xml 
+2026-06-30 12:22:39,957 1 INFO hellenia_test odoo.addons.base.models.ir_module: module justech_l10n_do_base: no translation for language es_DO 
+2026-06-30 12:22:39,966 1 INFO hellenia_test odoo.modules.loading: Module justech_l10n_do_base loaded in 1.01s, 323 queries (+323 other) 
+2026-06-30 12:22:39,988 1 INFO hellenia_test odoo.modules.loading: Loading module justech_l10n_do_ncf (108/112) 
+2026-06-30 12:22:40,044 1 WARNING hellenia_test odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define models.Constraint on the model. 
+2026-06-30 12:22:40,060 1 INFO hellenia_test odoo.registry: module justech_l10n_do_ncf: creating or updating database tables 
+2026-06-30 12:22:40,088 1 WARNING hellenia_test py.warnings: /mnt/custom/justech_l10n_do_ncf/models/account_move.py:39: DeprecationWarning: Deprecated since 19.0, use self.env.cr directly
+  File "/usr/bin/odoo", line 6, in <module>
+    odoo.cli.main()
+  File "/usr/lib/python3/dist-packages/odoo/cli/command.py", line 133, in main
+    command().run(args)
+  File "/usr/lib/python3/dist-packages/odoo/cli/server.py", line 127, in run
+    main(args)
+  File "/usr/lib/python3/dist-packages/odoo/cli/server.py", line 118, in main
+    rc = server.start(preload=config['db_name'], stop=stop)
+  File "/usr/lib/python3/dist-packages/odoo/service/server.py", line 1636, in start
+    rc = server.run(preload, stop)
+  File "/usr/lib/python3/dist-packages/odoo/service/server.py", line 691, in run
+    rc = preload_registries(preload)
+  File "/usr/lib/python3/dist-packages/odoo/service/server.py", line 1550, in preload_registries
+    registry = Registry.new(dbname, update_module=update_module, install_modules=config['init'], upgrade_modules=config['update'], reinit_modules=config['reinit'])
+  File "/usr/lib/python3/dist-packages/odoo/tools/func.py", line 88, in locked
+    return func(inst, *args, **kwargs)
+  File "/usr/lib/python3/dist-packages/odoo/orm/registry.py", line 183, in new
+    load_modules(
+  File "/usr/lib/python3/dist-packages/odoo/modules/loading.py", line 464, in load_modules
+    load_module_graph(
+  File "/usr/lib/python3/dist-packages/odoo/modules/loading.py", line 194, in load_module_graph
+    registry.init_models(env.cr, model_names, {'module': package.name}, update_operation == 'install')
+  File "/usr/lib/python3/dist-packages/odoo/orm/registry.py", line 752, in init_models
+    model.init()
+  File "/mnt/custom/justech_l10n_do_ncf/models/account_move.py", line 39, in init
+    self._cr.execute(
+ 
+2026-06-30 12:22:40,179 1 INFO hellenia_test odoo.modules.loading: loading justech_l10n_do_ncf/security/ir.model.access.csv 
+2026-06-30 12:22:40,186 1 INFO hellenia_test odoo.modules.loading: loading justech_l10n_do_ncf/security/justech_l10n_do_ncf_rules.xml 
+2026-06-30 12:22:40,188 1 INFO hellenia_test odoo.modules.loading: loading justech_l10n_do_ncf/views/ncf_range_views.xml 
+2026-06-30 12:22:40,206 1 INFO hellenia_test odoo.modules.loading: loading justech_l10n_do_ncf/views/ncf_consumption_views.xml 
+2026-06-30 12:22:40,214 1 INFO hellenia_test odoo.modules.loading: loading justech_l10n_do_ncf/views/account_move_views.xml 
+2026-06-30 12:22:40,275 1 INFO hellenia_test odoo.modules.loading: loading justech_l10n_do_ncf/views/menu.xml 
+2026-06-30 12:22:40,281 1 INFO hellenia_test odoo.modules.loading: loading justech_l10n_do_ncf/report/report_invoice.xml 
+2026-06-30 12:22:40,317 1 INFO hellenia_test odoo.addons.base.models.ir_module: module justech_l10n_do_ncf: no translation for language es_DO 
+2026-06-30 12:22:40,326 1 INFO hellenia_test odoo.modules.loading: Module justech_l10n_do_ncf loaded in 0.34s, 260 queries (+260 other) 
+2026-06-30 12:22:40,332 1 INFO hellenia_test odoo.modules.loading: Loading module justech_l10n_do_reports (112/112) 
+2026-06-30 12:22:40,375 1 INFO hellenia_test odoo.registry: module justech_l10n_do_reports: creating or updating database tables 
+2026-06-30 12:22:40,428 1 INFO hellenia_test odoo.modules.loading: loading justech_l10n_do_reports/security/ir.model.access.csv 
+2026-06-30 12:22:40,436 1 INFO hellenia_test odoo.modules.loading: loading justech_l10n_do_reports/security/justech_l10n_do_reports_rules.xml 
+2026-06-30 12:22:40,438 1 INFO hellenia_test odoo.modules.loading: loading justech_l10n_do_reports/views/fiscal_report_views.xml 
+2026-06-30 12:22:40,457 1 INFO hellenia_test odoo.modules.loading: loading justech_l10n_do_reports/wizard/fiscal_report_wizard_views.xml 
+2026-06-30 12:22:40,464 1 INFO hellenia_test odoo.modules.loading: loading justech_l10n_do_reports/views/menu.xml 
+2026-06-30 12:22:40,478 1 INFO hellenia_test odoo.addons.base.models.ir_module: module justech_l10n_do_reports: no translation for language es_DO 
+2026-06-30 12:22:40,486 1 INFO hellenia_test odoo.modules.loading: Module justech_l10n_do_reports loaded in 0.15s, 144 queries (+144 other) 
+2026-06-30 12:22:40,486 1 INFO hellenia_test odoo.modules.loading: 112 modules loaded in 2.33s, 727 queries (+728 extra) 
+2026-06-30 12:22:40,836 1 INFO hellenia_test odoo.registry: verifying fields for every extended model 
+2026-06-30 12:22:40,883 1 WARNING hellenia_test py.warnings: /mnt/custom/justech_l10n_do_ncf/models/account_move.py:39: DeprecationWarning: Deprecated since 19.0, use self.env.cr directly
+  File "/usr/bin/odoo", line 6, in <module>
+    odoo.cli.main()
+  File "/usr/lib/python3/dist-packages/odoo/cli/command.py", line 133, in main
+    command().run(args)
+  File "/usr/lib/python3/dist-packages/odoo/cli/server.py", line 127, in run
+    main(args)
+  File "/usr/lib/python3/dist-packages/odoo/cli/server.py", line 118, in main
+    rc = server.start(preload=config['db_name'], stop=stop)
+  File "/usr/lib/python3/dist-packages/odoo/service/server.py", line 1636, in start
+    rc = server.run(preload, stop)
+  File "/usr/lib/python3/dist-packages/odoo/service/server.py", line 691, in run
+    rc = preload_registries(preload)
+  File "/usr/lib/python3/dist-packages/odoo/service/server.py", line 1550, in preload_registries
+    registry = Registry.new(dbname, update_module=update_module, install_modules=config['init'], upgrade_modules=config['update'], reinit_modules=config['reinit'])
+  File "/usr/lib/python3/dist-packages/odoo/tools/func.py", line 88, in locked
+    return func(inst, *args, **kwargs)
+  File "/usr/lib/python3/dist-packages/odoo/orm/registry.py", line 183, in new
+    load_modules(
+  File "/usr/lib/python3/dist-packages/odoo/modules/loading.py", line 572, in load_modules
+    registry.init_models(cr, models_to_check, {'models_to_check': True, 'update_custom_fields': True})
+  File "/usr/lib/python3/dist-packages/odoo/orm/registry.py", line 752, in init_models
+    model.init()
+  File "/mnt/custom/justech_l10n_do_ncf/models/account_move.py", line 39, in init
+    self._cr.execute(
+ 
+2026-06-30 12:22:41,578 1 INFO hellenia_test odoo.modules.loading: Modules loaded. 
+2026-06-30 12:22:41,586 1 WARNING hellenia_test odoo.schema: Missing not-null constraint on res.users.settings.color_scheme 
+2026-06-30 12:22:41,591 1 INFO hellenia_test odoo.registry: Registry changed, signaling through the database 
+2026-06-30 12:22:41,592 1 INFO hellenia_test odoo.registry: Registry loaded in 7.238s 
+2026-06-30 12:22:41,592 1 INFO hellenia_test odoo.service.server: Starting post tests 
+2026-06-30 12:22:41,593 1 INFO hellenia_test odoo.addons.justech_l10n_do_base.tests.test_justech_l10n_do_base: Starting TestJustechL10nDoBase.test_document_types_loaded ... 
+2026-06-30 12:22:41,595 1 INFO hellenia_test odoo.addons.justech_l10n_do_base.tests.test_justech_l10n_do_base: Starting TestJustechL10nDoBase.test_ncf_format ... 
+2026-06-30 12:22:41,597 1 INFO hellenia_test odoo.addons.justech_l10n_do_base.tests.test_justech_l10n_do_base: Starting TestJustechL10nDoBase.test_rnc_validation ... 
+2026-06-30 12:22:41,622 1 INFO hellenia_test odoo.addons.base.models.ir_attachment: filestore gc 0 checked, 0 removed 
+2026-06-30 12:22:41,623 1 INFO hellenia_test odoo.addons.justech_l10n_do_base.tests.test_justech_l10n_do_hardening: Starting TestJustechL10nDoBaseHardening.test_fiscal_document_type_record_rule ... 
+2026-06-30 12:22:41,625 1 INFO hellenia_test odoo.addons.base.models.ir_attachment: filestore gc 0 checked, 0 removed 
+2026-06-30 12:22:41,704 1 INFO hellenia_test odoo.addons.justech_l10n_do_ncf.tests.test_justech_l10n_do_ncf: Starting TestJustechL10nDoNcf.test_b01_requires_rnc ... 
+2026-06-30 12:22:42,167 1 INFO hellenia_test odoo.addons.justech_l10n_do_ncf.tests.test_justech_l10n_do_ncf: Starting TestJustechL10nDoNcf.test_b02_consumer_invoice ... 
+2026-06-30 12:22:42,317 1 INFO hellenia_test odoo.addons.justech_l10n_do_ncf.tests.test_justech_l10n_do_ncf: Starting TestJustechL10nDoNcf.test_b11_purchase ... 
+2026-06-30 12:22:42,458 1 INFO hellenia_test odoo.addons.justech_l10n_do_ncf.tests.test_justech_l10n_do_ncf: Starting TestJustechL10nDoNcf.test_consume_next_sequential_unique ... 
+2026-06-30 12:22:42,715 1 INFO hellenia_test odoo.addons.justech_l10n_do_ncf.tests.test_justech_l10n_do_ncf: Starting TestJustechL10nDoNcf.test_credit_note_b04 ... 
+2026-06-30 12:22:42,956 1 INFO hellenia_test odoo.models.unlink: User #1 deleted account.move.line records with IDs: [910] 
+2026-06-30 12:22:43,132 1 INFO hellenia_test odoo.addons.justech_l10n_do_ncf.tests.test_justech_l10n_do_ncf: Starting TestJustechL10nDoNcf.test_depleted_range_blocked ... 
+2026-06-30 12:22:43,371 1 INFO hellenia_test odoo.addons.justech_l10n_do_ncf.tests.test_justech_l10n_do_ncf: Starting TestJustechL10nDoNcf.test_duplicate_ncf_blocked ... 
+2026-06-30 12:22:43,602 1 INFO hellenia_test odoo.addons.justech_l10n_do_ncf.tests.test_justech_l10n_do_ncf: Starting TestJustechL10nDoNcf.test_expired_range_blocked ... 
+2026-06-30 12:22:43,741 1 INFO hellenia_test odoo.addons.justech_l10n_do_ncf.tests.test_justech_l10n_do_ncf: Starting TestJustechL10nDoNcf.test_record_rules_exist ... 
+2026-06-30 12:22:43,743 1 INFO hellenia_test odoo.addons.justech_l10n_do_ncf.tests.test_justech_l10n_do_ncf: Starting TestJustechL10nDoNcf.test_void_ncf ... 
+2026-06-30 12:22:43,899 1 INFO hellenia_test odoo.addons.justech_l10n_do_ncf.tests.test_justech_l10n_do_ncf: Starting TestJustechL10nDoNcf.test_void_ncf_requires_manager ... 
+2026-06-30 12:22:44,121 1 INFO hellenia_test odoo.addons.justech_l10n_do_ncf.tests.test_justech_l10n_do_ncf: Starting TestJustechL10nDoNcf.test_void_ncf_requires_reason ... 
+2026-06-30 12:22:44,276 1 INFO hellenia_test odoo.addons.base.models.ir_attachment: filestore gc 1 checked, 1 removed 
+2026-06-30 12:22:44,277 1 INFO hellenia_test odoo.addons.justech_l10n_do_reports.tests.test_justech_l10n_do_hardening: Starting TestJustechL10nDoReportsHardening.test_fiscal_report_record_rules ... 
+2026-06-30 12:22:44,281 1 INFO hellenia_test odoo.addons.base.models.ir_attachment: filestore gc 0 checked, 0 removed 
+2026-06-30 12:22:44,327 1 INFO hellenia_test odoo.addons.justech_l10n_do_reports.tests.test_justech_l10n_do_reports: Starting TestJustechL10nDoReports.test_report_607 ... 
+2026-06-30 12:22:44,481 1 INFO hellenia_test odoo.addons.justech_l10n_do_reports.tests.test_justech_l10n_do_reports: ====================================================================== 
+2026-06-30 12:22:44,481 1 ERROR hellenia_test odoo.addons.justech_l10n_do_reports.tests.test_justech_l10n_do_reports: FAIL: TestJustechL10nDoReports.test_report_607
+Traceback (most recent call last):
+  File "/mnt/custom/justech_l10n_do_reports/tests/test_justech_l10n_do_reports.py", line 89, in test_report_607
+    self.assertEqual(report.line_ids[0].ncf, move.justech_do_ncf)
+AssertionError: 'B0200007001' != 'B0200000001'
+- B0200007001
+?        ^
++ B0200000001
+?        ^
+
+ 
+2026-06-30 12:22:44,482 1 INFO hellenia_test odoo.addons.justech_l10n_do_reports.tests.test_justech_l10n_do_reports: Starting TestJustechL10nDoReports.test_report_608_voided ... 
+2026-06-30 12:22:44,640 1 INFO hellenia_test odoo.addons.base.models.ir_attachment: filestore gc 0 checked, 0 removed 
+2026-06-30 12:22:44,640 1 INFO hellenia_test odoo.service.server: 19 post-tests in 3.05s, 2521 queries 
+2026-06-30 12:22:44,640 1 INFO hellenia_test odoo.tests.stats: justech_l10n_do_base: 8 tests 0.03s 30 queries 
+2026-06-30 12:22:44,640 1 INFO hellenia_test odoo.tests.stats: justech_l10n_do_ncf: 14 tests 2.65s 2120 queries 
+2026-06-30 12:22:44,640 1 INFO hellenia_test odoo.tests.stats: justech_l10n_do_reports: 7 tests 0.36s 371 queries 
+2026-06-30 12:22:44,640 1 ERROR hellenia_test odoo.tests.result: 1 failed, 0 error(s) of 19 tests when loading database 'hellenia_test' 
+2026-06-30 12:22:44,640 1 INFO hellenia_test odoo.service.server: Initiating shutdown 
+2026-06-30 12:22:44,641 1 INFO hellenia_test odoo.service.server: Hit CTRL-C again or send a second signal to force the shutdown. 
+2026-06-30 12:22:44,652 1 INFO hellenia_test odoo.addons.base.models.ir_http: Generating routing map for key None 
+2026-06-30 12:22:44,826 1 INFO hellenia_test werkzeug: 127.0.0.1 - - [30/Jun/2026 12:22:44] "GET /web/login HTTP/1.1" 200 - 59 0.024 5.911
+2026-06-30 12:22:44,913 1 INFO hellenia_test odoo.sql_db: ConnectionPool(read/write;used=0/count=0/max=64): Closed 1 connections  
+2026-06-30 12:22:44,913 1 INFO hellenia_test odoo.sql_db: ConnectionPool(read-only;used=0/count=0/max=64): Closed 1 connections  
+

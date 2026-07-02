@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Estados de cuenta — PDF export account_reports -->
+    <template id="pdf_export_main_hellenia" inherit_id="account_reports.pdf_export_main">
+        <xpath expr="//body/div" position="attributes">
+            <attribute name="t-att-class">'o_content hellenia-account-report-pdf hellenia-statement-doc ' + (options.get('css_custom_class') or '')</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('o_title')]" position="attributes">
+            <attribute name="class" add="hellenia-doc-title" separator=" "/>
+        </xpath>
+    </template>
+
+    <template id="pdf_export_main_customer_report_hellenia"
+              inherit_id="account_reports.pdf_export_main_customer_report">
+        <xpath expr="//div[hasclass('o_title')]" position="attributes">
+            <attribute name="class" add="hellenia-doc-title" separator=" "/>
+        </xpath>
+    </template>
+
+    <template id="company_information_customer_report_hellenia"
+              inherit_id="account_reports.company_information_customer_report">
+        <xpath expr="//div[hasclass('row')][1]" position="before">
+            <img t-if="env.company.logo"
+                 class="hellenia-logo mb-2"
+                 t-att-src="image_data_uri(env.company.logo)"
+                 alt="Logo Hellenia"/>
+        </xpath>
+    </template>
+
+</odoo>

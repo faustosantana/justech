@@ -1,0 +1,4 @@
+[2026-06-30 12:18:46] Iniciando backup test → /opt/odoo-projects/hellenia/backups/test/2026-06-30_1218
+[2026-06-30 12:18:47] OK  PostgreSQL dump
+[2026-06-30 12:18:47] OK  filestore
+[2026-06-30 12:18:47] Backup test completado: /opt/odoo-projects/hellenia/backups/test/2026-06-30_1218

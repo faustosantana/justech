@@ -1,0 +1,88 @@
+{
+  "phase": "16",
+  "timestamp_utc": "2026-06-30T18:11:36.551492+00:00",
+  "database": "hellenia_prod",
+  "import_dir": "/opt/odoo-projects/hellenia/data/hellenia/import",
+  "steps": {
+    "logo": "already_present",
+    "smtp": {
+      "configured": false
+    },
+    "cleanup": {
+      "demo_users_deactivated": [
+        "usuario.contabilidad.demo15",
+        "usuario.inventario.demo15",
+        "usuario.normal.demo14",
+        "usuario.compras.demo15",
+        "usuario.ventas.demo15"
+      ],
+      "smoke_invoice_errors": [
+        "INV/2026/00003: No active NCF range for document type B04.",
+        "INV/2026/00002: No active NCF range for document type B04.",
+        "INV/2026/00001: No active NCF range for document type B04."
+      ],
+      "smoke_invoices_reversed": [],
+      "smoke_partners_skipped": "aún referenciados en asientos",
+      "test_ncf_skipped": [
+        "SMOKE P13.4 B02"
+      ]
+    },
+    "validation": {
+      "skipped": "Faltan clientes/productos reales o rangos NCF DGII"
+    }
+  },
+  "loaded": {
+    "users": [],
+    "ncf_ranges": [],
+    "partners": {
+      "clients": 0,
+      "vendors": 0
+    },
+    "products": 0
+  },
+  "pending_client": [
+    "SMTP corporativo — entregar credenciales (SMTP_HOST, SMTP_USER, SMTP_PASSWORD en .env)",
+    "Usuarios reales — completar data/hellenia/import/users.csv según ROLE_MATRIX.md",
+    "Rangos NCF DGII — completar data/hellenia/import/ncf_rangos_dgii.csv con autorizaciones reales",
+    "Rangos NCF faltantes: ['B01', 'B02', 'B03', 'B04', 'B11', 'B13']",
+    "Clientes — completar data/hellenia/import/clientes.csv",
+    "Proveedores — completar data/hellenia/import/proveedores.csv",
+    "Productos — completar data/hellenia/import/productos.csv",
+    "Validación flujo completo bloqueada — sin rangos NCF DGII reales"
+  ],
+  "ok": false,
+  "errors": [],
+  "summary": {
+    "logo": true,
+    "smtp": false,
+    "users_count": 0,
+    "ncf_count": 0,
+    "clients": 0,
+    "vendors": 0,
+    "products": 0,
+    "customers_total": 3,
+    "vendors_total": 0,
+    "products_total": 8,
+    "active_ncf_ranges": [
+      {
+        "id": 14,
+        "name": "SMOKE P13.4 B02",
+        "prefix": "B02",
+        "authorization_number": false,
+        "remaining_count": 97
+      }
+    ],
+    "active_users": [
+      {
+        "id": 2,
+        "login": "admin",
+        "name": "Administrator"
+      },
+      {
+        "id": 5,
+        "login": "it@justech.do",
+        "name": "IT Justech"
+      }
+    ]
+  }
+}

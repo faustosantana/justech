@@ -1,0 +1,31 @@
+2026-07-02 11:38:29,392 7538 WARNING ? odoo.tools.config: option logfile reads 'False' in the config file at /etc/odoo/odoo.conf but isn't a boolean option, skip 
+2026-07-02 11:38:29,392 7538 WARNING ? odoo.tools.config: option logfile reads 'False' in the config file at /etc/odoo/odoo.conf but isn't a boolean option, skip 
+2026-07-02 11:38:29,392 7538 INFO ? odoo: Odoo version 19.0-20260619 
+2026-07-02 11:38:29,392 7538 INFO ? odoo: Using configuration file at /etc/odoo/odoo.conf 
+2026-07-02 11:38:29,392 7538 INFO ? odoo: addons paths: _NamespacePath(['/usr/lib/python3/dist-packages/odoo/addons', '/var/lib/odoo/addons/19.0', '/mnt/enterprise/addons', '/mnt/custom', '/usr/lib/python3/dist-packages/addons']) 
+2026-07-02 11:38:29,393 7538 INFO ? odoo: database: odoo@db:default 
+2026-07-02 11:38:29,607 7538 INFO ? odoo.service.server: Initiating shutdown 
+2026-07-02 11:38:29,607 7538 INFO ? odoo.service.server: Hit CTRL-C again or send a second signal to force the shutdown. 
+2026-07-02 11:38:29,635 7538 INFO hellenia_test odoo.modules.loading: loading 1 modules... 
+2026-07-02 11:38:29,638 7538 INFO hellenia_test odoo.modules.loading: 1 modules loaded in 0.00s, 0 queries (+0 extra) 
+2026-07-02 11:38:29,661 7538 INFO hellenia_test odoo.modules.loading: loading 123 modules... 
+2026-07-02 11:38:30,423 7538 WARNING hellenia_test odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define models.Constraint on the model. 
+2026-07-02 11:38:30,454 7538 WARNING hellenia_test odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define models.Constraint on the model. 
+2026-07-02 11:38:30,477 7538 WARNING hellenia_test odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define models.Constraint on the model. 
+2026-07-02 11:38:30,512 7538 INFO hellenia_test odoo.modules.loading: 123 modules loaded in 0.85s, 0 queries (+0 extra) 
+2026-07-02 11:38:30,593 7538 WARNING hellenia_test odoo.fields: justech.do.fiscal.report.state: selection=[('draft', 'Borrador'), ('validated', 'Validado'), ('pending_approval', 'Requiere aprobación'), ('approved', 'Aprobado'), ('rejected', 'Rechazado'), ('generated', 'Generado'), ('done', 'Generado')] overrides existing selection; use selection_add instead 
+2026-07-02 11:38:30,654 7538 INFO hellenia_test odoo.modules.loading: Modules loaded. 
+2026-07-02 11:38:30,665 7538 WARNING hellenia_test odoo.schema: Missing not-null constraint on res.users.settings.color_scheme 
+2026-07-02 11:38:30,710 7538 INFO hellenia_test odoo.registry: Registry loaded in 1.103s 
+2026-07-02 11:38:31,557 7538 INFO hellenia_test odoo.addons.base.models.ir_actions_report: Will use the Wkhtmltopdf binary at /usr/local/bin/wkhtmltopdf 
+2026-07-02 11:38:31,571 7538 INFO hellenia_test odoo.addons.base.models.ir_actions_report: Will use the Wkhtmltoimage binary at /usr/local/bin/wkhtmltoimage 
+2026-07-02 11:38:34,256 7538 INFO hellenia_test odoo.addons.base.models.ir_actions_report: The PDF report has been generated for model: account.move, records [8151]. 
+2026-07-02 11:38:36,803 7538 INFO hellenia_test odoo.addons.base.models.ir_actions_report: The PDF report has been generated for model: account.move, records [8152]. 
+2026-07-02 11:38:39,484 7538 INFO hellenia_test odoo.addons.base.models.ir_actions_report: The PDF report has been generated for model: account.move, records [8153]. 
+2026-07-02 11:38:41,957 7538 INFO hellenia_test odoo.addons.base.models.ir_actions_report: The PDF report has been generated for model: account.move, records [8154]. 
+2026-07-02 11:38:44,439 7538 INFO hellenia_test odoo.addons.base.models.ir_actions_report: The PDF report has been generated for model: account.move, records [8155]. 
+2026-07-02 11:38:46,989 7538 INFO hellenia_test odoo.addons.base.models.ir_actions_report: The PDF report has been generated for model: account.move, records [8156]. 
+2026-07-02 11:38:49,515 7538 INFO hellenia_test odoo.addons.base.models.ir_actions_report: The PDF report has been generated for model: account.move, records [8157]. 
+2026-07-02 11:38:52,051 7538 INFO hellenia_test odoo.addons.base.models.ir_actions_report: The PDF report has been generated for model: account.move, records [8158]. 
+2026-07-02 11:38:54,628 7538 INFO hellenia_test odoo.addons.base.models.ir_actions_report: The PDF report has been generated for model: account.move, records [8159]. 
+{"out": "/tmp/phase25-invoice-review", "scenarios": ["invoice_1_line", "invoice_5_lines", "invoice_22_lines", "invoice_with_discount", "invoice_no_discount", "invoice_fiscal_b01", "invoice_consumo_b02", "invoice_government", "credit_note_b04"], "status": "PENDING_USER_VISUAL_APPROVAL"}

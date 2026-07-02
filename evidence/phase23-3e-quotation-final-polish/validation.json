@@ -1,0 +1,447 @@
+{
+  "phase": "23.3e-quotation-final-polish",
+  "timestamp_utc": "2026-07-01T19:18:42.591499+00:00",
+  "database": "hellenia_test",
+  "module_version": "19.0.1.4.1",
+  "visual_checks": {
+    "quote_1_html_no_mojibake": {
+      "status": "PASS",
+      "detail": "$Â"
+    },
+    "quote_1_html_no_Immediate_Payment": {
+      "status": "PASS",
+      "detail": "Immediate Payment"
+    },
+    "quote_1_html_no_Payment_Terms": {
+      "status": "PASS",
+      "detail": "Payment Terms"
+    },
+    "quote_1_html_no_Quotation": {
+      "status": "PASS",
+      "detail": "Quotation"
+    },
+    "quote_1_html_no_Salesperson": {
+      "status": "PASS",
+      "detail": "Salesperson"
+    },
+    "quote_1_html_has_hellenia-quote-hdr-table": {
+      "status": "PASS",
+      "detail": "hellenia-quote-hdr-table"
+    },
+    "quote_1_html_has_hellenia-quote-sig-label": {
+      "status": "PASS",
+      "detail": "hellenia-quote-sig-label"
+    },
+    "quote_1_html_has_hellenia-quote-sig-line": {
+      "status": "PASS",
+      "detail": "hellenia-quote-sig-line"
+    },
+    "quote_1_html_has_COTIZACIÓN": {
+      "status": "PASS",
+      "detail": "COTIZACIÓN"
+    },
+    "quote_1_html_has_CONDICIONES": {
+      "status": "PASS",
+      "detail": "CONDICIONES"
+    },
+    "quote_1_html_has_max-height:_75px": {
+      "status": "PASS",
+      "detail": "max-height: 75px"
+    },
+    "quote_1_html_no_hdr_box_border": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_1_html_payment_es": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_1_pdf_no_mojibake": {
+      "status": "PASS",
+      "detail": "$Â"
+    },
+    "quote_1_pdf_no_Immediate_Payment": {
+      "status": "PASS",
+      "detail": "Immediate Payment"
+    },
+    "quote_1_pdf_no_Payment_Terms": {
+      "status": "PASS",
+      "detail": "Payment Terms"
+    },
+    "quote_1_pdf_no_Quotation": {
+      "status": "PASS",
+      "detail": "Quotation"
+    },
+    "quote_1_pdf_no_Salesperson": {
+      "status": "PASS",
+      "detail": "Salesperson"
+    },
+    "quote_1_pdf_signatures": {
+      "status": "PASS",
+      "detail": "el: +1 849-434-8694 | Web: https://hellenia.cloud | Correo: info@helleniadr.com | Santo Domingo, República Dominicana\n\n\f"
+    },
+    "quote_1_pdf_has_COTIZACIÓN": {
+      "status": "PASS",
+      "detail": "COTIZACIÓN"
+    },
+    "quote_1_pdf_has_República": {
+      "status": "PASS",
+      "detail": "República"
+    },
+    "quote_1_pdf_has_CONDICIONE": {
+      "status": "PASS",
+      "detail": "CONDICIONES"
+    },
+    "quote_1_pdf_payment_es": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_1_pdf_text_len": {
+      "status": "PASS",
+      "detail": "1257"
+    },
+    "quote_1_pdf_magic": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_html_no_mojibake": {
+      "status": "PASS",
+      "detail": "$Â"
+    },
+    "quote_5_html_no_Immediate_Payment": {
+      "status": "PASS",
+      "detail": "Immediate Payment"
+    },
+    "quote_5_html_no_Payment_Terms": {
+      "status": "PASS",
+      "detail": "Payment Terms"
+    },
+    "quote_5_html_no_Quotation": {
+      "status": "PASS",
+      "detail": "Quotation"
+    },
+    "quote_5_html_no_Salesperson": {
+      "status": "PASS",
+      "detail": "Salesperson"
+    },
+    "quote_5_html_has_hellenia-quote-hdr-table": {
+      "status": "PASS",
+      "detail": "hellenia-quote-hdr-table"
+    },
+    "quote_5_html_has_hellenia-quote-sig-label": {
+      "status": "PASS",
+      "detail": "hellenia-quote-sig-label"
+    },
+    "quote_5_html_has_hellenia-quote-sig-line": {
+      "status": "PASS",
+      "detail": "hellenia-quote-sig-line"
+    },
+    "quote_5_html_has_COTIZACIÓN": {
+      "status": "PASS",
+      "detail": "COTIZACIÓN"
+    },
+    "quote_5_html_has_CONDICIONES": {
+      "status": "PASS",
+      "detail": "CONDICIONES"
+    },
+    "quote_5_html_has_max-height:_75px": {
+      "status": "PASS",
+      "detail": "max-height: 75px"
+    },
+    "quote_5_html_no_hdr_box_border": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_html_payment_es": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_pdf_no_mojibake": {
+      "status": "PASS",
+      "detail": "$Â"
+    },
+    "quote_5_pdf_no_Immediate_Payment": {
+      "status": "PASS",
+      "detail": "Immediate Payment"
+    },
+    "quote_5_pdf_no_Payment_Terms": {
+      "status": "PASS",
+      "detail": "Payment Terms"
+    },
+    "quote_5_pdf_no_Quotation": {
+      "status": "PASS",
+      "detail": "Quotation"
+    },
+    "quote_5_pdf_no_Salesperson": {
+      "status": "PASS",
+      "detail": "Salesperson"
+    },
+    "quote_5_pdf_signatures": {
+      "status": "PASS",
+      "detail": "el: +1 849-434-8694 | Web: https://hellenia.cloud | Correo: info@helleniadr.com | Santo Domingo, República Dominicana\n\n\f"
+    },
+    "quote_5_pdf_has_COTIZACIÓN": {
+      "status": "PASS",
+      "detail": "COTIZACIÓN"
+    },
+    "quote_5_pdf_has_República": {
+      "status": "PASS",
+      "detail": "República"
+    },
+    "quote_5_pdf_has_CONDICIONE": {
+      "status": "PASS",
+      "detail": "CONDICIONES"
+    },
+    "quote_5_pdf_payment_es": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_pdf_text_len": {
+      "status": "PASS",
+      "detail": "1574"
+    },
+    "quote_5_pdf_magic": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_15_html_no_mojibake": {
+      "status": "PASS",
+      "detail": "$Â"
+    },
+    "quote_15_html_no_Immediate_Payment": {
+      "status": "PASS",
+      "detail": "Immediate Payment"
+    },
+    "quote_15_html_no_Payment_Terms": {
+      "status": "PASS",
+      "detail": "Payment Terms"
+    },
+    "quote_15_html_no_Quotation": {
+      "status": "PASS",
+      "detail": "Quotation"
+    },
+    "quote_15_html_no_Salesperson": {
+      "status": "PASS",
+      "detail": "Salesperson"
+    },
+    "quote_15_html_has_hellenia-quote-hdr-table": {
+      "status": "PASS",
+      "detail": "hellenia-quote-hdr-table"
+    },
+    "quote_15_html_has_hellenia-quote-sig-label": {
+      "status": "PASS",
+      "detail": "hellenia-quote-sig-label"
+    },
+    "quote_15_html_has_hellenia-quote-sig-line": {
+      "status": "PASS",
+      "detail": "hellenia-quote-sig-line"
+    },
+    "quote_15_html_has_COTIZACIÓN": {
+      "status": "PASS",
+      "detail": "COTIZACIÓN"
+    },
+    "quote_15_html_has_CONDICIONES": {
+      "status": "PASS",
+      "detail": "CONDICIONES"
+    },
+    "quote_15_html_has_max-height:_75px": {
+      "status": "PASS",
+      "detail": "max-height: 75px"
+    },
+    "quote_15_html_no_hdr_box_border": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_15_html_payment_es": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_15_pdf_no_mojibake": {
+      "status": "PASS",
+      "detail": "$Â"
+    },
+    "quote_15_pdf_no_Immediate_Payment": {
+      "status": "PASS",
+      "detail": "Immediate Payment"
+    },
+    "quote_15_pdf_no_Payment_Terms": {
+      "status": "PASS",
+      "detail": "Payment Terms"
+    },
+    "quote_15_pdf_no_Quotation": {
+      "status": "PASS",
+      "detail": "Quotation"
+    },
+    "quote_15_pdf_no_Salesperson": {
+      "status": "PASS",
+      "detail": "Salesperson"
+    },
+    "quote_15_pdf_signatures": {
+      "status": "PASS",
+      "detail": "el: +1 849-434-8694 | Web: https://hellenia.cloud | Correo: info@helleniadr.com | Santo Domingo, República Dominicana\n\n\f"
+    },
+    "quote_15_pdf_has_COTIZACIÓN": {
+      "status": "PASS",
+      "detail": "COTIZACIÓN"
+    },
+    "quote_15_pdf_has_República": {
+      "status": "PASS",
+      "detail": "República"
+    },
+    "quote_15_pdf_has_CONDICIONE": {
+      "status": "PASS",
+      "detail": "CONDICIONES"
+    },
+    "quote_15_pdf_payment_es": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_15_pdf_text_len": {
+      "status": "PASS",
+      "detail": "2365"
+    },
+    "quote_15_pdf_magic": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "portal_html_no_mojibake": {
+      "status": "PASS",
+      "detail": "$Â"
+    },
+    "portal_html_no_Immediate_Payment": {
+      "status": "PASS",
+      "detail": "Immediate Payment"
+    },
+    "portal_html_no_Payment_Terms": {
+      "status": "PASS",
+      "detail": "Payment Terms"
+    },
+    "portal_html_no_Quotation": {
+      "status": "PASS",
+      "detail": "Quotation"
+    },
+    "portal_html_no_Salesperson": {
+      "status": "PASS",
+      "detail": "Salesperson"
+    },
+    "portal_html_has_hellenia-quote-hdr-table": {
+      "status": "PASS",
+      "detail": "hellenia-quote-hdr-table"
+    },
+    "portal_html_has_hellenia-quote-sig-label": {
+      "status": "PASS",
+      "detail": "hellenia-quote-sig-label"
+    },
+    "portal_html_has_hellenia-quote-sig-line": {
+      "status": "PASS",
+      "detail": "hellenia-quote-sig-line"
+    },
+    "portal_html_has_COTIZACIÓN": {
+      "status": "PASS",
+      "detail": "COTIZACIÓN"
+    },
+    "portal_html_has_CONDICIONES": {
+      "status": "PASS",
+      "detail": "CONDICIONES"
+    },
+    "portal_html_has_max-height:_75px": {
+      "status": "PASS",
+      "detail": "max-height: 75px"
+    },
+    "portal_html_no_hdr_box_border": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "portal_html_payment_es": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "portal_pdf_no_mojibake": {
+      "status": "PASS",
+      "detail": "$Â"
+    },
+    "portal_pdf_no_Immediate_Payment": {
+      "status": "PASS",
+      "detail": "Immediate Payment"
+    },
+    "portal_pdf_no_Payment_Terms": {
+      "status": "PASS",
+      "detail": "Payment Terms"
+    },
+    "portal_pdf_no_Quotation": {
+      "status": "PASS",
+      "detail": "Quotation"
+    },
+    "portal_pdf_no_Salesperson": {
+      "status": "PASS",
+      "detail": "Salesperson"
+    },
+    "portal_pdf_signatures": {
+      "status": "PASS",
+      "detail": "el: +1 849-434-8694 | Web: https://hellenia.cloud | Correo: info@helleniadr.com | Santo Domingo, República Dominicana\n\n\f"
+    },
+    "portal_pdf_has_COTIZACIÓN": {
+      "status": "PASS",
+      "detail": "COTIZACIÓN"
+    },
+    "portal_pdf_has_República": {
+      "status": "PASS",
+      "detail": "República"
+    },
+    "portal_pdf_has_CONDICIONE": {
+      "status": "PASS",
+      "detail": "CONDICIONES"
+    },
+    "portal_pdf_payment_es": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "portal_pdf_text_len": {
+      "status": "PASS",
+      "detail": "1257"
+    }
+  },
+  "http_checks": {
+    "portal_pdf": {
+      "status": "PASS",
+      "http_status": 200,
+      "detail": "69831"
+    },
+    "backend_pdf": {
+      "status": "PASS",
+      "http_status": 200,
+      "detail": "69831"
+    }
+  },
+  "pdfs": {
+    "quote_1": {
+      "status": "OK",
+      "order": "S00134",
+      "file": "quotation_1_product.pdf",
+      "size_bytes": 69831,
+      "bottom_spacer_px": 425,
+      "signature_spacer_px": 100
+    },
+    "quote_5": {
+      "status": "OK",
+      "order": "S00135",
+      "file": "quotation_5_products.pdf",
+      "size_bytes": 73110,
+      "bottom_spacer_px": 365,
+      "signature_spacer_px": 95
+    },
+    "quote_15": {
+      "status": "OK",
+      "order": "S00136",
+      "file": "quotation_15_products.pdf",
+      "size_bytes": 80754,
+      "bottom_spacer_px": 215,
+      "signature_spacer_px": 25
+    }
+  },
+  "ok": true,
+  "pass": true,
+  "ready_for_prod": false,
+  "screenshot": "screenshot_portal_page1.png",
+  "failed_checks": []
+}

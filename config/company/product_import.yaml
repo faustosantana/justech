@@ -1,0 +1,56 @@
+# Plantilla importación productos — Excel/CSV
+# No importar hasta fase autorizada
+
+schema_version: "1.0"
+format: csv
+encoding: utf-8
+separator: ","
+file: data/import/product_import_template.csv
+
+columns:
+  - key: codigo
+    header: "Código"
+    odoo_field: default_code
+    required: true
+
+  - key: descripcion
+    header: "Descripción"
+    odoo_field: name
+    required: true
+
+  - key: categoria
+    header: "Categoría"
+    odoo_field: categ_id/name
+    required: true
+    note: "Debe coincidir con categoría oficial bajo Inventario"
+
+  - key: costo
+    header: "Costo"
+    odoo_field: standard_price
+    required: false
+
+  - key: precio
+    header: "Precio"
+    odoo_field: list_price
+    required: false
+
+  - key: existencia
+    header: "Existencia"
+    odoo_field: qty_available
+    required: false
+    note: "Requiere módulo stock instalado"
+
+  - key: fotografia
+    header: "Fotografía"
+    odoo_field: image_1920
+    required: false
+    note: "Ruta archivo o URL — importación en fase Inventario"
+
+  - key: observaciones
+    header: "Observaciones"
+    odoo_field: description_sale
+    required: false
+
+import_method:
+  recommended: "Odoo importación nativa (Inventario → Productos → Importar)"
+  alternative: "base_import con mapeo columnas"

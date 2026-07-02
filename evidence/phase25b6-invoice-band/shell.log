@@ -1,0 +1,88 @@
+2026-07-02 12:56:24,361 9524 WARNING ? odoo.tools.config: option logfile reads 'False' in the config file at /etc/odoo/odoo.conf but isn't a boolean option, skip 
+2026-07-02 12:56:24,361 9524 WARNING ? odoo.tools.config: option logfile reads 'False' in the config file at /etc/odoo/odoo.conf but isn't a boolean option, skip 
+2026-07-02 12:56:24,361 9524 INFO ? odoo: Odoo version 19.0-20260619 
+2026-07-02 12:56:24,362 9524 INFO ? odoo: Using configuration file at /etc/odoo/odoo.conf 
+2026-07-02 12:56:24,362 9524 INFO ? odoo: addons paths: _NamespacePath(['/usr/lib/python3/dist-packages/odoo/addons', '/var/lib/odoo/addons/19.0', '/mnt/enterprise/addons', '/mnt/custom', '/usr/lib/python3/dist-packages/addons']) 
+2026-07-02 12:56:24,362 9524 INFO ? odoo: database: odoo@db:default 
+2026-07-02 12:56:24,573 9524 INFO ? odoo.service.server: Initiating shutdown 
+2026-07-02 12:56:24,573 9524 INFO ? odoo.service.server: Hit CTRL-C again or send a second signal to force the shutdown. 
+2026-07-02 12:56:24,600 9524 INFO hellenia_test odoo.modules.loading: loading 1 modules... 
+2026-07-02 12:56:24,603 9524 INFO hellenia_test odoo.modules.loading: 1 modules loaded in 0.00s, 0 queries (+0 extra) 
+2026-07-02 12:56:24,625 9524 INFO hellenia_test odoo.modules.loading: loading 123 modules... 
+2026-07-02 12:56:25,397 9524 WARNING hellenia_test odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define models.Constraint on the model. 
+2026-07-02 12:56:25,432 9524 WARNING hellenia_test odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define models.Constraint on the model. 
+2026-07-02 12:56:25,455 9524 WARNING hellenia_test odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define models.Constraint on the model. 
+2026-07-02 12:56:25,489 9524 INFO hellenia_test odoo.modules.loading: 123 modules loaded in 0.86s, 0 queries (+0 extra) 
+2026-07-02 12:56:25,569 9524 WARNING hellenia_test odoo.fields: justech.do.fiscal.report.state: selection=[('draft', 'Borrador'), ('validated', 'Validado'), ('pending_approval', 'Requiere aprobación'), ('approved', 'Aprobado'), ('rejected', 'Rechazado'), ('generated', 'Generado'), ('done', 'Generado')] overrides existing selection; use selection_add instead 
+2026-07-02 12:56:25,630 9524 INFO hellenia_test odoo.modules.loading: Modules loaded. 
+2026-07-02 12:56:25,640 9524 WARNING hellenia_test odoo.schema: Missing not-null constraint on res.users.settings.color_scheme 
+2026-07-02 12:56:25,683 9524 INFO hellenia_test odoo.registry: Registry loaded in 1.110s 
+2026-07-02 12:56:25,705 9524 INFO hellenia_test odoo.addons.base.models.ir_module: ALLOW access to module.button_immediate_upgrade on ['Justech Report Design'] to user __system__ #1 via n/a 
+2026-07-02 12:56:25,707 9524 INFO hellenia_test odoo.addons.base.models.ir_module: ALLOW access to module.button_upgrade on ['Justech Report Design'] to user __system__ #1 via n/a 
+2026-07-02 12:56:25,707 9524 INFO hellenia_test odoo.addons.base.models.ir_module: ALLOW access to module.update_list on ['Justech Report Design'] to user __system__ #1 via n/a 
+2026-07-02 12:56:27,627 9524 INFO hellenia_test odoo.addons.base.models.ir_module: ALLOW access to module.button_install on [] to user __system__ #1 via n/a 
+2026-07-02 12:56:28,169 9524 INFO hellenia_test odoo.modules.loading: loading 1 modules... 
+2026-07-02 12:56:28,172 9524 INFO hellenia_test odoo.modules.loading: 1 modules loaded in 0.00s, 0 queries (+0 extra) 
+2026-07-02 12:56:28,193 9524 INFO hellenia_test odoo.modules.loading: updating modules list 
+2026-07-02 12:56:28,196 9524 INFO hellenia_test odoo.addons.base.models.ir_module: ALLOW access to module.update_list on [] to user __system__ #1 via n/a 
+2026-07-02 12:56:29,725 9524 INFO hellenia_test odoo.modules.loading: loading 123 modules... 
+2026-07-02 12:56:29,752 9524 WARNING hellenia_test odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define models.Constraint on the model. 
+2026-07-02 12:56:29,752 9524 INFO hellenia_test odoo.modules.loading: Loading module justech_report_design (98/123) 
+2026-07-02 12:56:29,909 9524 INFO hellenia_test odoo.registry: module justech_report_design: creating or updating database tables 
+2026-07-02 12:56:30,064 9524 INFO hellenia_test odoo.modules.loading: loading justech_report_design/data/paperformat_data.xml 
+2026-07-02 12:56:30,069 9524 INFO hellenia_test odoo.modules.loading: loading justech_report_design/data/quotation_terms_default.xml 
+2026-07-02 12:56:30,070 9524 INFO hellenia_test odoo.modules.loading: loading justech_report_design/views/res_company_views.xml 
+2026-07-02 12:56:30,099 9524 INFO hellenia_test odoo.modules.loading: loading justech_report_design/views/sale_order_views.xml 
+2026-07-02 12:56:30,144 9524 INFO hellenia_test odoo.modules.loading: loading justech_report_design/report/quotation/hellenia_quotation_template.xml 
+2026-07-02 12:56:30,157 9524 INFO hellenia_test odoo.modules.loading: loading justech_report_design/report/invoice/justech_invoice_template.xml 
+2026-07-02 12:56:30,179 9524 INFO hellenia_test odoo.modules.loading: loading justech_report_design/data/report_action_data.xml 
+2026-07-02 12:56:30,182 9524 INFO hellenia_test odoo.modules.loading: loading justech_report_design/data/report_invoice_action_data.xml 
+2026-07-02 12:56:30,185 9524 INFO hellenia_test odoo.modules.loading: loading justech_report_design/data/report_official_data.xml 
+2026-07-02 12:56:30,194 9524 INFO hellenia_test odoo.addons.base.models.ir_module: module justech_report_design: no translation for language es_DO 
+2026-07-02 12:56:30,202 9524 INFO hellenia_test odoo.modules.loading: Module justech_report_design loaded in 0.45s, 281 queries (+281 other) 
+2026-07-02 12:56:30,205 9524 WARNING hellenia_test odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define models.Constraint on the model. 
+2026-07-02 12:56:30,206 9524 WARNING hellenia_test odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define models.Constraint on the model. 
+2026-07-02 12:56:30,207 9524 INFO hellenia_test odoo.modules.loading: 123 modules loaded in 0.48s, 281 queries (+281 extra) 
+2026-07-02 12:56:30,236 9524 WARNING hellenia_test odoo.fields: justech.do.fiscal.report.state: selection=[('draft', 'Borrador'), ('validated', 'Validado'), ('pending_approval', 'Requiere aprobación'), ('approved', 'Aprobado'), ('rejected', 'Rechazado'), ('generated', 'Generado'), ('done', 'Generado')] overrides existing selection; use selection_add instead 
+2026-07-02 12:56:30,322 9524 WARNING hellenia_test odoo.fields: justech.do.fiscal.report.state: selection=[('draft', 'Borrador'), ('validated', 'Validado'), ('pending_approval', 'Requiere aprobación'), ('approved', 'Aprobado'), ('rejected', 'Rechazado'), ('generated', 'Generado'), ('done', 'Generado')] overrides existing selection; use selection_add instead 
+2026-07-02 12:56:30,668 9524 INFO hellenia_test odoo.registry: verifying fields for every extended model 
+2026-07-02 12:56:30,710 9524 WARNING hellenia_test py.warnings: /mnt/custom/justech_l10n_do_ncf/models/account_move.py:115: DeprecationWarning: Deprecated since 19.0, use self.env.cr directly
+  File "/usr/bin/odoo", line 6, in <module>
+    odoo.cli.main()
+  File "/usr/lib/python3/dist-packages/odoo/cli/command.py", line 133, in main
+    command().run(args)
+  File "/usr/lib/python3/dist-packages/odoo/cli/shell.py", line 162, in run
+    self.shell(dbnames[0])
+  File "/usr/lib/python3/dist-packages/odoo/cli/shell.py", line 148, in shell
+    self.console(local_vars)
+  File "/usr/lib/python3/dist-packages/odoo/cli/shell.py", line 82, in console
+    exec(sys.stdin.read(), local_vars)
+  File "<string>", line 42, in <module>
+  File "/usr/lib/python3/dist-packages/odoo/addons/base/models/ir_module.py", line 72, in check_and_log
+    return method(self, *args, **kwargs)
+  File "/usr/lib/python3/dist-packages/odoo/addons/base/models/ir_module.py", line 700, in button_immediate_upgrade
+    return self._button_immediate_function(self.env.registry[self._name].button_upgrade)
+  File "/usr/lib/python3/dist-packages/odoo/addons/base/models/ir_module.py", line 637, in _button_immediate_function
+    registry = modules.registry.Registry.new(self.env.cr.dbname, update_module=True)
+  File "/usr/lib/python3/dist-packages/odoo/tools/func.py", line 88, in locked
+    return func(inst, *args, **kwargs)
+  File "/usr/lib/python3/dist-packages/odoo/orm/registry.py", line 183, in new
+    load_modules(
+  File "/usr/lib/python3/dist-packages/odoo/modules/loading.py", line 572, in load_modules
+    registry.init_models(cr, models_to_check, {'models_to_check': True, 'update_custom_fields': True})
+  File "/usr/lib/python3/dist-packages/odoo/orm/registry.py", line 752, in init_models
+    model.init()
+  File "/mnt/custom/justech_l10n_do_ncf/models/account_move.py", line 115, in init
+    self._cr.execute(
+ 
+2026-07-02 12:56:31,621 9524 INFO hellenia_test odoo.modules.loading: Modules loaded. 
+2026-07-02 12:56:31,630 9524 WARNING hellenia_test odoo.schema: Missing not-null constraint on res.users.settings.color_scheme 
+2026-07-02 12:56:31,637 9524 INFO hellenia_test odoo.registry: Registry changed, signaling through the database 
+2026-07-02 12:56:31,638 9524 INFO hellenia_test odoo.registry: Registry loaded in 3.508s 
+2026-07-02 12:56:31,638 9524 INFO hellenia_test odoo.addons.base.models.ir_module: getting next ir.actions.todo() 
+2026-07-02 12:56:32,355 9524 INFO hellenia_test odoo.addons.base.models.ir_actions_report: Will use the Wkhtmltopdf binary at /usr/local/bin/wkhtmltopdf 
+2026-07-02 12:56:32,363 9524 INFO hellenia_test odoo.addons.base.models.ir_actions_report: Will use the Wkhtmltoimage binary at /usr/local/bin/wkhtmltoimage 
+2026-07-02 12:56:35,178 9524 INFO hellenia_test odoo.addons.base.models.ir_actions_report: The PDF report has been generated for model: account.move, records [8193]. 
+2026-07-02 12:56:37,768 9524 INFO hellenia_test odoo.addons.base.models.ir_actions_report: The PDF report has been generated for model: account.move, records [8194]. 
+2026-07-02 12:56:40,246 9524 INFO hellenia_test odoo.addons.base.models.ir_actions_report: The PDF report has been generated for model: account.move, records [8195]. 
+{"out": "/tmp/phase25b6-invoice-band", "version": "19.0.3.7.2", "files": ["invoice_1_line", "invoice_5_lines", "invoice_with_discount"]}

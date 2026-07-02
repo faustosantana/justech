@@ -1,0 +1,118 @@
+{
+  "phase": "27a-purchase-order-official-prod",
+  "timestamp_utc": "2026-07-02T20:38:25.170982+00:00",
+  "database": "hellenia_prod",
+  "status": "PASS",
+  "module_version": "19.0.7.1.0",
+  "checks": {
+    "module_installed": {
+      "status": "PASS",
+      "detail": "installed"
+    },
+    "module_version": {
+      "status": "PASS",
+      "detail": "19.0.7.1.0"
+    },
+    "main_action_report": {
+      "status": "PASS",
+      "detail": "justech_report_design.report_justech_purchase_order_document"
+    },
+    "parallel_unbound": {
+      "status": "PASS",
+      "detail": "none"
+    },
+    "backup_exists": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "backup_unbound": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "single_po_print_option": {
+      "status": "PASS",
+      "detail": "[{'id': 436, 'name': 'Purchase Order', 'report': 'justech_report_design.report_justech_purchase_order_document'}, {'id': 437, 'name': 'Request for Quotation', 'report': 'purchase.report_purchasequotation'}]"
+    },
+    "official_is_main_action": {
+      "status": "PASS",
+      "detail": "Purchase Order"
+    },
+    "no_header_button": {
+      "status": "PASS",
+      "detail": "True"
+    },
+    "no_duplicate_label": {
+      "status": "PASS",
+      "detail": "True"
+    },
+    "no_print_method": {
+      "status": "PASS",
+      "detail": "True"
+    },
+    "pdf_official": {
+      "status": "PASS",
+      "detail": "73524"
+    },
+    "design_hellenia": {
+      "status": "PASS",
+      "detail": "True"
+    },
+    "not_old_odoo_design": {
+      "status": "PASS",
+      "detail": "True"
+    },
+    "backup_report_ok": {
+      "status": "PASS",
+      "detail": "24101"
+    },
+    "same_report_template": {
+      "status": "PASS",
+      "detail": "justech_report_design.report_justech_purchase_order_document"
+    },
+    "pdf_same_size": {
+      "status": "PASS",
+      "detail": "main=73524 jt=73524"
+    },
+    "po_readable": {
+      "status": "PASS",
+      "detail": "P00008"
+    },
+    "po_lines_ok": {
+      "status": "PASS",
+      "detail": "1"
+    }
+  },
+  "pdfs": {
+    "official_print_menu": {
+      "po_id": 9,
+      "po_name": "P00008",
+      "pdf_bytes": 73524,
+      "html_has_po_band": true,
+      "html_has_title": true,
+      "html_has_old_std": false
+    }
+  },
+  "ui": {
+    "form_arch_has_print_button": false,
+    "form_arch_has_label": false,
+    "header_button_strings": [
+      "Send RFQ",
+      "Receive",
+      "Confirm Order",
+      "Approve Order",
+      "Send RFQ",
+      "Confirm Order",
+      "Send PO",
+      "Acknowledge",
+      "Set to Draft",
+      "Print",
+      "Print",
+      "Cancel",
+      "Lock",
+      "Unlock",
+      "Catalog"
+    ]
+  },
+  "errors": [],
+  "pass": true
+}

@@ -1,6 +1,6 @@
 {
     "name": "Justech Report Design",
-    "version": "19.0.6.2.0",
+    "version": "19.0.7.0.0",
     "category": "Reporting",
     "summary": "Cotización, factura y conduce Hellenia — diseño Justech QWeb+SCSS",
     "description": """
@@ -24,6 +24,10 @@ Reorganización UX (Fase 26G):
 - Ventas: menú principal Conduces de Entrega (barra superior)
 - Contabilidad: menú Conduces de Entrega
 - Smart button Conduce en cotización y factura
+
+Orden de Compra (Fase 27 — solo TEST):
+- Reporte paralelo Orden de Compra Hellenia
+- Botón Orden de Compra PDF + menú Imprimir
     """,
     "author": "Justech",
     "website": "https://hellenia.cloud",
@@ -33,6 +37,7 @@ Reorganización UX (Fase 26G):
         "sale_stock",
         "stock",
         "account",
+        "purchase",
         "hellenia_reports",
     ],
     "data": [
@@ -46,13 +51,16 @@ Reorganización UX (Fase 26G):
         "views/account_move_delivery_views.xml",
         "views/stock_picking_delivery_views.xml",
         "views/justech_delivery_note_views.xml",
+        "views/purchase_order_views.xml",
         "report/quotation/hellenia_quotation_template.xml",
         "report/invoice/justech_invoice_template.xml",
         "report/invoice/justech_invoice_preview.xml",
         "report/delivery/justech_delivery_template.xml",
+        "report/purchase/justech_purchase_order_template.xml",
         "data/report_action_data.xml",
         "data/report_invoice_action_data.xml",
         "data/report_delivery_action_data.xml",
+        "data/report_purchase_action_data.xml",
         "data/report_official_data.xml",
     ],
     "assets": {
@@ -60,6 +68,7 @@ Reorganización UX (Fase 26G):
             "justech_report_design/static/src/scss/hellenia_quotation.scss",
             "justech_report_design/static/src/scss/hellenia_invoice.scss",
             "justech_report_design/static/src/scss/hellenia_delivery.scss",
+            "justech_report_design/static/src/scss/hellenia_purchase_order.scss",
         ],
     },
     "installable": True,

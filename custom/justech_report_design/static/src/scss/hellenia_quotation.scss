@@ -17,9 +17,9 @@ h2.hellenia-doc-title,
     overflow: hidden !important;
 }
 
-.o_body_html .container,
-.o_body_html .container main,
-.o_body_html .container main .page {
+.o_body_html.container,
+#wrapwrap,
+.o_body_html main {
     border: none !important;
     border-top: none !important;
     box-shadow: none !important;

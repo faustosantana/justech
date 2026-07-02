@@ -26,7 +26,7 @@ class SaleOrder(models.Model):
         )
         count = len(lines)
         if count <= 1:
-            return 200
+            return 320
         if count <= 5:
             return 150
         if count <= 15:

@@ -1,0 +1,203 @@
+{
+  "phase": "19.4-prod-partial-payment-validation",
+  "timestamp_utc": "2026-07-01T11:39:34.511875+00:00",
+  "database": "hellenia_prod",
+  "certified_branch": "cursor/phase19-3-partial-payment-fix-dd85",
+  "certified_commits": [
+    "322238e",
+    "bd91174"
+  ],
+  "module_version_expected": "19.0.1.0.23",
+  "tests": {
+    "00_module_version": {
+      "status": "PASS",
+      "detail": "19.0.1.0.23"
+    },
+    "01_partial_no_wh_payment_amount": {
+      "status": "PASS",
+      "detail": "5000.0"
+    },
+    "01_partial_no_wh_applied_amount": {
+      "status": "PASS",
+      "detail": "5000.0"
+    },
+    "01_partial_no_wh_invoice_partial": {
+      "status": "PASS",
+      "detail": "partial"
+    },
+    "01_partial_no_wh_residual": {
+      "status": "PASS",
+      "detail": "6800.0"
+    },
+    "01_partial_no_wh_move_id": {
+      "status": "PASS",
+      "detail": "in_process"
+    },
+    "01_partial_no_wh_detail_applied": {
+      "status": "PASS",
+      "detail": "5000.0"
+    },
+    "01_partial_no_wh_detail_not_full": {
+      "status": "PASS",
+      "detail": "5000.0"
+    },
+    "02_partial_gov_payment_amount": {
+      "status": "PASS",
+      "detail": "5000.0"
+    },
+    "02_partial_gov_applied_amount": {
+      "status": "PASS",
+      "detail": "5000.0"
+    },
+    "02_partial_gov_invoice_partial": {
+      "status": "PASS",
+      "detail": "partial"
+    },
+    "02_partial_gov_residual": {
+      "status": "PASS",
+      "detail": "6800.0"
+    },
+    "02_partial_gov_move_id": {
+      "status": "PASS",
+      "detail": "in_process"
+    },
+    "02_partial_gov_detail_applied": {
+      "status": "PASS",
+      "detail": "5000.0"
+    },
+    "02_partial_gov_detail_not_full": {
+      "status": "PASS",
+      "detail": "5000.0"
+    },
+    "02_partial_gov_wh_total": {
+      "status": "PASS",
+      "detail": "211.86"
+    },
+    "02_partial_gov_bank_net": {
+      "status": "PASS",
+      "detail": "4788.14"
+    },
+    "03_partial_itbis_payment_amount": {
+      "status": "PASS",
+      "detail": "5000.0"
+    },
+    "03_partial_itbis_applied_amount": {
+      "status": "PASS",
+      "detail": "5000.0"
+    },
+    "03_partial_itbis_invoice_partial": {
+      "status": "PASS",
+      "detail": "partial"
+    },
+    "03_partial_itbis_residual": {
+      "status": "PASS",
+      "detail": "6800.0"
+    },
+    "03_partial_itbis_move_id": {
+      "status": "PASS",
+      "detail": "in_process"
+    },
+    "03_partial_itbis_detail_applied": {
+      "status": "PASS",
+      "detail": "5000.0"
+    },
+    "03_partial_itbis_detail_not_full": {
+      "status": "PASS",
+      "detail": "5000.0"
+    },
+    "03_partial_itbis_wh_total": {
+      "status": "PASS",
+      "detail": "762.71"
+    },
+    "03_partial_itbis_bank_net": {
+      "status": "PASS",
+      "detail": "4237.29"
+    },
+    "04_full_amount": {
+      "status": "PASS",
+      "detail": "11800.0"
+    },
+    "04_full_paid": {
+      "status": "PASS",
+      "detail": "paid"
+    },
+    "04_full_residual": {
+      "status": "PASS",
+      "detail": "0.0"
+    },
+    "05_607": {
+      "status": "PASS",
+      "detail": "moves=5"
+    },
+    "06_623": {
+      "status": "PASS",
+      "detail": "moves=0"
+    }
+  },
+  "evidence": {
+    "01_partial_no_wh": {
+      "payment": "PBNKD/2026/00002",
+      "payment_amount": 5000.0,
+      "applied": 5000.0,
+      "wh_total": 0.0,
+      "net_transfer": 5000.0,
+      "invoice_state": "partial",
+      "residual": 6800.0,
+      "detail_applied": 5000.0
+    },
+    "02_partial_gov": {
+      "payment": "PBNKD/2026/00004",
+      "payment_amount": 5000.0,
+      "applied": 5000.0,
+      "wh_total": 211.86,
+      "net_transfer": 4788.14,
+      "invoice_state": "partial",
+      "residual": 6800.0,
+      "detail_applied": 5000.0
+    },
+    "03_partial_itbis": {
+      "payment": "PBNKD/2026/00005",
+      "payment_amount": 5000.0,
+      "applied": 5000.0,
+      "wh_total": 762.71,
+      "net_transfer": 4237.29,
+      "invoice_state": "partial",
+      "residual": 6800.0,
+      "detail_applied": 5000.0
+    },
+    "04_full": {
+      "payment_amount": 11800.0,
+      "invoice_state": "paid",
+      "residual": 0.0
+    },
+    "607": {
+      "moves": 5
+    },
+    "623": {
+      "moves": 0
+    }
+  },
+  "ok": true,
+  "pass": true,
+  "summary": {
+    "passed": 31,
+    "failed": 0,
+    "total": 31
+  },
+  "promotion": {
+    "backup_dir": "/opt/odoo-projects/hellenia/backups/hellenia-prod/2026-07-01_1131",
+    "promoted_commit": "963ff35",
+    "certified_commits_test": [
+      "322238e",
+      "bd91174"
+    ],
+    "module_version_test": "19.0.1.0.21",
+    "module_version_prod": "19.0.1.0.23",
+    "enterprise_fixes": [
+      "8f83abf",
+      "963ff35"
+    ],
+    "rollback_command": "bash /opt/odoo-projects/hellenia/scripts/restore-hellenia-prod.sh /opt/odoo-projects/hellenia/backups/hellenia-prod/2026-07-01_1131",
+    "logs_clean": true
+  }
+}

@@ -1,6 +1,6 @@
 {
     "name": "Justech Dominican NCF",
-    "version": "19.0.1.1.0",
+    "version": "19.0.1.5.0",
     "category": "Accounting/Localizations",
     "summary": "NCF ranges, assignment and validation (Dominican Republic)",
     "description": """
@@ -16,6 +16,7 @@ NCF management for Dominican Republic — Justech MVP.
     "depends": [
         "justech_l10n_do_base",
         "account_debit_note",
+        "sale",
     ],
     "data": [
         "security/ir.model.access.csv",
@@ -23,6 +24,7 @@ NCF management for Dominican Republic — Justech MVP.
         "views/ncf_range_views.xml",
         "views/ncf_consumption_views.xml",
         "views/account_move_views.xml",
+        "views/sale_order_views.xml",
         "views/menu.xml",
         "report/report_invoice.xml",
     ],

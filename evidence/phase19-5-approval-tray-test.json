@@ -1,0 +1,55 @@
+{
+  "phase": "19.5",
+  "timestamp_utc": "2026-06-30T22:21:54.201323+00:00",
+  "database": "hellenia_test",
+  "checks": {
+    "submitted_metadata": {
+      "ok": true,
+      "detail": "OdooBot"
+    },
+    "pending_count": {
+      "ok": true,
+      "detail": 1
+    },
+    "in_pending_tray": {
+      "ok": true,
+      "detail": 1
+    },
+    "tray_fields": {
+      "ok": true,
+      "detail": "ok"
+    },
+    "pending_lines_only": {
+      "ok": true,
+      "detail": 1
+    },
+    "removed_from_tray": {
+      "ok": true,
+      "detail": "approved"
+    },
+    "state_approved": {
+      "ok": true,
+      "detail": "approved"
+    },
+    "audit_trail": {
+      "ok": true,
+      "detail": "ok"
+    },
+    "tray_multi_type": {
+      "ok": true,
+      "detail": "607"
+    },
+    "correction_to_validated": {
+      "ok": true,
+      "detail": "validated"
+    },
+    "607_removed_from_tray": {
+      "ok": true,
+      "detail": "validated"
+    }
+  },
+  "ok": true,
+  "passed": 11,
+  "total": 11,
+  "pass": true
+}

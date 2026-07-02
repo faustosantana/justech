@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_picking_form_jt_delivery_conduce" model="ir.ui.view">
+        <field name="name">stock.picking.form.jt.delivery.conduce</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="priority">30</field>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_jt_view_delivery_notes"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-truck"
+                        invisible="picking_type_code != 'outgoing' or state == 'cancel'">
+                    <div class="o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="jt_delivery_note_count" readonly="1" nolabel="1"/>
+                        </span>
+                        <span class="o_stat_text">
+                            <field name="jt_delivery_stat_label" readonly="1" nolabel="1"/>
+                        </span>
+                    </div>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

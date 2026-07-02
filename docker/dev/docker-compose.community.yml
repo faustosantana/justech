@@ -1,14 +1,12 @@
 # Hellenia — Ambiente DEV (Community — rollback / referencia pre-Enterprise)
+include:
+  - path: ../lib/traefik-odoo.yaml
+
 services:
   odoo:
     image: odoo:19.0-20260619
     restart: unless-stopped
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.${COMPOSE_PROJECT_NAME}.rule=Host(`dev.${TRAEFIK_HOST}`)
-      - traefik.http.routers.${COMPOSE_PROJECT_NAME}.entrypoints=websecure
-      - traefik.http.routers.${COMPOSE_PROJECT_NAME}.tls.certresolver=letsencrypt
-      - traefik.http.services.${COMPOSE_PROJECT_NAME}.loadbalancer.server.port=8069
+    labels: *odoo-traefik-labels
     environment:
       - HOST=db
       - USER=${DB_USER}

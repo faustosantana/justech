@@ -1,0 +1,90 @@
+# -*- coding: utf-8 -*-
+from odoo import http
+from odoo.exceptions import AccessError, MissingError
+from odoo.http import request
+
+from odoo.addons.purchase.controllers.portal import CustomerPortal
+
+
+class JustechPurchasePortal(CustomerPortal):
+    """Vista previa nativa OC Hellenia — portal con iframe + descargar/imprimir."""
+
+    def _jt_po_preview_values(self, order, access_token=None):
+        return {
+            "order": order,
+            "page_name": "purchase",
+            "jt_report_html_url": order.get_portal_url(suffix="/jt_report_html"),
+            "jt_report_pdf_url": order.get_portal_url(suffix="/jt_report_pdf"),
+            "jt_report_pdf_download_url": order.get_portal_url(
+                suffix="/jt_report_pdf", download=True
+            ),
+        }
+
+    def _jt_po_official_report_html(self, order_sudo, download=False):
+        report_ref = "purchase.action_report_purchase_order"
+        return self._show_report(
+            model=order_sudo,
+            report_type="html",
+            report_ref=report_ref,
+            download=download,
+        )
+
+    def _jt_po_official_report_pdf(self, order_sudo, download=False):
+        report_ref = "purchase.action_report_purchase_order"
+        return self._show_report(
+            model=order_sudo,
+            report_type="pdf",
+            report_ref=report_ref,
+            download=download,
+        )
+
+    @http.route(
+        ["/my/purchase/<int:order_id>/preview"],
+        type="http",
+        auth="public",
+        website=True,
+    )
+    def portal_purchase_order_justech_preview(self, order_id, access_token=None, **kw):
+        try:
+            order_sudo = self._document_check_access(
+                "purchase.order", order_id, access_token=access_token
+            )
+        except (AccessError, MissingError):
+            return request.redirect("/my")
+        values = self._jt_po_preview_values(order_sudo, access_token=access_token)
+        return request.render(
+            "justech_report_design.justech_purchase_order_portal_preview_page",
+            values,
+        )
+
+    @http.route(
+        ["/my/purchase/<int:order_id>/jt_report_html"],
+        type="http",
+        auth="public",
+        website=True,
+    )
+    def portal_purchase_order_jt_report_html(self, order_id, access_token=None, **kw):
+        try:
+            order_sudo = self._document_check_access(
+                "purchase.order", order_id, access_token=access_token
+            )
+        except (AccessError, MissingError):
+            return request.redirect("/my")
+        return self._jt_po_official_report_html(order_sudo)
+
+    @http.route(
+        ["/my/purchase/<int:order_id>/jt_report_pdf"],
+        type="http",
+        auth="public",
+        website=True,
+    )
+    def portal_purchase_order_jt_report_pdf(self, order_id, access_token=None, **kw):
+        try:
+            order_sudo = self._document_check_access(
+                "purchase.order", order_id, access_token=access_token
+            )
+        except (AccessError, MissingError):
+            return request.redirect("/my")
+        return self._jt_po_official_report_pdf(
+            order_sudo, download=bool(kw.get("download"))
+        )

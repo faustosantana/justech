@@ -1,0 +1,77 @@
+{
+  "phase": "21-prod-ui-audit-v2",
+  "timestamp_utc": "2026-07-01T13:59:40.444894+00:00",
+  "backup": "2026-07-01_1357",
+  "fiscal": {
+    "606": {
+      "action_id": 644,
+      "opens": true,
+      "generates": false,
+      "validates": true,
+      "error": "",
+      "notifications": "",
+      "report_type_visible": true
+    },
+    "607": {
+      "action_id": 645,
+      "opens": true,
+      "generates": true,
+      "validates": true,
+      "error": "",
+      "notifications": "",
+      "report_type_visible": true
+    },
+    "608": {
+      "action_id": 646,
+      "opens": true,
+      "generates": true,
+      "validates": false,
+      "error": "",
+      "notifications": "",
+      "report_type_visible": true
+    },
+    "623": {
+      "action_id": 658,
+      "opens": true,
+      "generates": false,
+      "validates": false,
+      "error": "generate step failed",
+      "notifications": "",
+      "report_type_visible": false
+    }
+  },
+  "accounting": {
+    "general_ledger": {
+      "url": "/odoo/accounting/general-ledger",
+      "opens": true,
+      "error": ""
+    },
+    "trial_balance": {
+      "url": "/odoo/accounting/trial-balance",
+      "opens": true,
+      "error": ""
+    },
+    "balance_sheet": {
+      "url": "/odoo/accounting/balance-sheet",
+      "opens": true,
+      "error": ""
+    },
+    "profit_loss": {
+      "url": "/odoo/accounting/profit-and-loss",
+      "opens": true,
+      "error": ""
+    },
+    "partner_ledger": {
+      "url": "/odoo/accounting/partner-ledger",
+      "opens": true,
+      "error": ""
+    },
+    "aged_receivable": {
+      "url": "/odoo/accounting/aged-receivable",
+      "opens": true,
+      "error": ""
+    }
+  },
+  "ok": false,
+  "pass": false
+}

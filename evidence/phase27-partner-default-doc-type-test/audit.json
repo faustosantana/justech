@@ -1,0 +1,20 @@
+{
+  "models_touched": [
+    "res.partner",
+    "sale.order",
+    "account.move"
+  ],
+  "fields_added": [
+    "res.partner.justech_do_default_document_type_id",
+    "sale.order.justech_do_document_type_id"
+  ],
+  "resolution_priority": [
+    "manual_invoice_value",
+    "quotation_inherited_value",
+    "partner_default",
+    "system_rnc_heuristic"
+  ],
+  "dgii_logic_modified": false,
+  "ncf_sequences_modified": false,
+  "posted_documents_modified": false
+}

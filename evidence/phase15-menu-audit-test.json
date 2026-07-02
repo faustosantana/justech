@@ -1,0 +1,179 @@
+{
+  "phase": "15",
+  "block": "audit",
+  "timestamp_utc": "2026-06-30T17:59:45.744154+00:00",
+  "database": "hellenia_test",
+  "menu_tree": {
+    "finance_root": {
+      "id": 125,
+      "name": "Contabilidad",
+      "action": "Dashboard",
+      "children": [
+        [
+          "Tablero",
+          1,
+          "account.menu_board_journal_1"
+        ],
+        [
+          "Review",
+          7,
+          "account.account_audit_menu"
+        ],
+        [
+          "Clientes",
+          10,
+          "account.menu_finance_receivables"
+        ],
+        [
+          "Proveedores",
+          20,
+          "account.menu_finance_payables"
+        ],
+        [
+          "Asientos contables",
+          30,
+          "account.menu_action_move_journal_line_form"
+        ],
+        [
+          "Apuntes contables",
+          40,
+          "account.menu_action_account_moves_all"
+        ],
+        [
+          "Reportes",
+          50,
+          "account.menu_finance_reports"
+        ],
+        [
+          "Auditoría",
+          55,
+          "justech_l10n_do_reports.menu_justech_do_audit_root"
+        ],
+        [
+          "Configuración",
+          90,
+          "account.menu_finance_configuration"
+        ]
+      ]
+    }
+  },
+  "issues": [],
+  "users": {
+    "it": {
+      "found": true,
+      "login": "it@justech.do",
+      "groups": [
+        "Access Rights",
+        "Accounting / Administrator",
+        "Accounting / Dominican Fiscal Manager",
+        "Compras / Administrador",
+        "Inventario / Administrador",
+        "Role / Administrator",
+        "Technical Features",
+        "Ventas / Administrador"
+      ],
+      "root_menus": [
+        "Discuss",
+        "Contactos",
+        "Ventas",
+        "Contabilidad",
+        "Compras",
+        "Inventario",
+        "Apps",
+        "Configuración"
+      ],
+      "sees_contabilidad": true,
+      "contabilidad_children": [
+        "Tablero",
+        "Clientes",
+        "Proveedores",
+        "Reportes",
+        "Auditoría",
+        "Configuración"
+      ],
+      "first_contabilidad_child": "Tablero",
+      "justech_menus_visible": [
+        "Localización Dominicana",
+        "Tipos de NCF",
+        "Rangos NCF",
+        "Reportes DGII",
+        "606 — Compras",
+        "Auditoría"
+      ],
+      "sees_apps": true
+    },
+    "admin": {
+      "found": true,
+      "login": "admin",
+      "groups": [
+        "Accounting / Administrator",
+        "Compras / Administrador",
+        "Dashboard / Admin",
+        "Inventario / Administrador",
+        "Products / Create",
+        "Role / Administrator",
+        "Ventas / Administrador"
+      ],
+      "root_menus": [
+        "Discuss",
+        "Contactos",
+        "Ventas",
+        "Contabilidad",
+        "Compras",
+        "Inventario",
+        "Apps",
+        "Configuración"
+      ],
+      "sees_contabilidad": true,
+      "contabilidad_children": [
+        "Tablero",
+        "Clientes",
+        "Proveedores",
+        "Reportes",
+        "Auditoría",
+        "Configuración"
+      ],
+      "first_contabilidad_child": "Tablero",
+      "justech_menus_visible": [
+        "Localización Dominicana",
+        "Tipos de NCF",
+        "Rangos NCF",
+        "Reportes DGII",
+        "606 — Compras",
+        "Auditoría"
+      ],
+      "sees_apps": true
+    },
+    "normal": {
+      "found": true,
+      "login": "usuario.normal.demo14",
+      "groups": [
+        "Ventas / Usuario: solo mostrar documentos propios"
+      ],
+      "root_menus": [
+        "Discuss",
+        "Contactos",
+        "Ventas"
+      ],
+      "sees_contabilidad": false,
+      "contabilidad_children": [],
+      "first_contabilidad_child": null,
+      "justech_menus_visible": [],
+      "sees_apps": false
+    }
+  },
+  "modules": {
+    "account": "installed",
+    "account_accountant": "installed",
+    "account_reports": "installed",
+    "sale_management": "installed",
+    "purchase": "installed",
+    "stock": "installed",
+    "contacts": "installed",
+    "hellenia_ui": "installed",
+    "justech_l10n_do_base": "installed",
+    "justech_l10n_do_ncf": "installed",
+    "justech_l10n_do_reports": "installed"
+  },
+  "ok": true
+}

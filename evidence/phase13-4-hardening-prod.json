@@ -1,0 +1,149 @@
+{
+  "phase": "13.4",
+  "timestamp_utc": "2026-06-30T16:20:31.277802+00:00",
+  "database": "hellenia_prod",
+  "actions": [
+    {
+      "action": "skip_ncf_range",
+      "detail": "SMOKE P13.4 B02: 2 posted moves"
+    },
+    {
+      "action": "delete_uat_partners_skip",
+      "detail": "The partner cannot be deleted because it is used in Accounting"
+    },
+    {
+      "action": "menu_label",
+      "detail": "sale.sale_menu_root=Ventas"
+    },
+    {
+      "action": "menu_label",
+      "detail": "purchase.menu_purchase_root=Compras"
+    },
+    {
+      "action": "menu_label",
+      "detail": "stock.menu_stock_root=Inventario"
+    },
+    {
+      "action": "menu_label",
+      "detail": "contacts.menu_contacts=Contactos"
+    },
+    {
+      "action": "menu_label",
+      "detail": "account.menu_finance=Contabilidad"
+    },
+    {
+      "action": "menu_label",
+      "detail": "base.menu_administration=Configuración"
+    },
+    {
+      "action": "menu_unexpected",
+      "detail": "['Aplicaciones']"
+    },
+    {
+      "action": "smoke_range_kept",
+      "detail": "posted moves reference SMOKE P13.4 B02"
+    },
+    {
+      "action": "smoke_invoice_kept",
+      "detail": "INV/2026/00003"
+    }
+  ],
+  "cleanup": {
+    "fiscal_reports": 0,
+    "uat_partners": 0,
+    "draft_sales": 0,
+    "draft_purchases": 0,
+    "draft_moves": 0,
+    "draft_pickings": 0,
+    "remaining": {
+      "uat_partners": 0,
+      "p13_partners": 2,
+      "uat_products": 0,
+      "product_prueba": 0,
+      "test_ncf_ranges": 1
+    }
+  },
+  "menus": {
+    "label_sale.sale_menu_root": "Ventas",
+    "label_purchase.menu_purchase_root": "Compras",
+    "label_stock.menu_stock_root": "Inventario",
+    "label_contacts.menu_contacts": "Contactos",
+    "label_account.menu_finance": "Contabilidad",
+    "label_base.menu_administration": "Configuración",
+    "root_es_do": [
+      "Contactos",
+      "Ventas",
+      "Contabilidad",
+      "Compras",
+      "Inventario",
+      "Aplicaciones",
+      "Configuración"
+    ],
+    "settings_ok": true,
+    "expected_present": {
+      "Ventas": true,
+      "Inventario": true,
+      "Contabilidad": true,
+      "Compras": true,
+      "Contactos": true,
+      "Configuración": true
+    },
+    "unexpected_roots": [
+      "Aplicaciones"
+    ]
+  },
+  "translations": {
+    "justech_menus_updated": 14,
+    "english_remainders": []
+  },
+  "security": {
+    "internal_users": [
+      {
+        "login": "admin",
+        "groups": 8
+      },
+      {
+        "login": "it@justech.do",
+        "groups": 8
+      }
+    ],
+    "non_admin_count": 0,
+    "rules_justech.do.fiscal.report": 1,
+    "rules_justech.do.ncf.range": 1,
+    "rules_justech.do.fiscal.document.type": 1
+  },
+  "justech": {
+    "modules": {
+      "justech_l10n_do_base": "installed",
+      "justech_l10n_do_ncf": "installed",
+      "justech_l10n_do_reports": "installed",
+      "l10n_do": "installed"
+    },
+    "document_types": 6,
+    "ncf_ranges_active": 1,
+    "fiscal_enabled": true,
+    "ncf_prefixes": [
+      "B01",
+      "B02",
+      "B03",
+      "B04",
+      "B11",
+      "B13"
+    ]
+  },
+  "accounting_smoke": {
+    "quote_tax": [
+      18.0
+    ],
+    "quote_ok": true,
+    "invoice_posted": true,
+    "invoice_balanced": true,
+    "itbis_lines": true,
+    "receivable": true,
+    "ncf": "B0200009902",
+    "invoice_name": "INV/2026/00003"
+  },
+  "english_remainders": [],
+  "ok": true,
+  "errors": []
+}

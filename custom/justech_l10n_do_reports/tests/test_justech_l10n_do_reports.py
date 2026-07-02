@@ -87,6 +87,9 @@ class TestJustechL10nDoReports(TransactionCase):
         report.action_generate()
         self.assertGreaterEqual(len(report.line_ids), 1)
         self.assertEqual(report.line_ids[0].ncf, move.justech_do_ncf)
+        self.assertEqual(report.state, "done")
+        self.assertTrue(report.generated_by_id)
+        self.assertTrue(report.generated_at)
 
     def test_report_608_voided(self):
         partner = self.env["res.partner"].create({"name": "Void Report"})

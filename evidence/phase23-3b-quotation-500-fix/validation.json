@@ -1,0 +1,47 @@
+{
+  "phase": "23.3b-quotation-500-fix",
+  "timestamp_utc": "2026-07-01T18:35:47.162088+00:00",
+  "database": "hellenia_test",
+  "root_cause": "AttributeError: res.company sin get_hellenia_quotation_terms_display en worker HTTP (llamada Python en QWeb + registry no recargado tras upgrade)",
+  "fix": "QWeb usa company.hellenia_quotation_terms con default inline; restart odoo tras upgrade",
+  "module_version": "19.0.1.2.1",
+  "http_checks": {
+    "portal_pdf": {
+      "status": "PASS",
+      "http_status": 200,
+      "detail": "PDF magic ok, 8+ bytes"
+    },
+    "backend_pdf_render": {
+      "status": "PASS",
+      "http_status": 200,
+      "detail": "69800 bytes"
+    }
+  },
+  "pdfs": {
+    "quote_1": {
+      "status": "OK",
+      "order": "S00134",
+      "order_id": 135,
+      "file": "quotation_1_product.pdf",
+      "size_bytes": 69800
+    },
+    "quote_5": {
+      "status": "OK",
+      "order": "S00135",
+      "order_id": 136,
+      "file": "quotation_5_products.pdf",
+      "size_bytes": 72620
+    },
+    "quote_15": {
+      "status": "OK",
+      "order": "S00136",
+      "order_id": 137,
+      "file": "quotation_15_products.pdf",
+      "size_bytes": 79453
+    }
+  },
+  "ok": true,
+  "pass": true,
+  "ready_for_prod": false,
+  "portal_url_tested": "https://test.hellenia.cloud/es/my/orders/135?access_token=***&report_type=pdf"
+}

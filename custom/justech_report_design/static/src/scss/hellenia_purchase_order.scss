@@ -1,0 +1,71 @@
+/* Orden de Compra — extiende lenguaje visual Cotización / Factura / Conduce */
+
+.jt-po-page {
+    font-family: 'DejaVu Sans', Helvetica, Arial, sans-serif;
+}
+
+.jt-po-band {
+    background-color: #3E4827;
+    margin: 0 0 12px 0;
+}
+
+.jt-po-band-layout td {
+    background-color: #3E4827;
+    color: #ffffff;
+    padding: 10px 14px;
+    border: none !important;
+}
+
+.jt-po-band-title {
+    font-size: 11pt;
+    font-weight: bold;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #ffffff;
+}
+
+.jt-po-band-meta-cell {
+    border-left: 1px solid rgba(255, 255, 255, 0.35) !important;
+}
+
+.jt-po-band-cols td {
+    background-color: #3E4827 !important;
+    border: none !important;
+    vertical-align: top;
+    padding: 0 8px 0 0;
+}
+
+.jt-po-band-col-r {
+    border-left: 1px solid rgba(255, 255, 255, 0.25) !important;
+    padding-left: 14px !important;
+}
+
+.jt-po-meta-row {
+    margin: 0 0 4px 0;
+    line-height: 1.45;
+    font-size: 7.5pt;
+}
+
+.jt-po-label {
+    font-weight: bold;
+    color: rgba(255, 255, 255, 0.85);
+    margin-right: 4px;
+}
+
+.jt-po-val {
+    color: #ffffff;
+    font-weight: bold;
+}
+
+.jt-po-items .c-code {
+    width: 9%;
+}
+
+.jt-po-items .c-tax {
+    width: 11%;
+    text-align: right;
+}
+
+.jt-po-sigs .jt-hq-sig-col {
+    width: 32%;
+}

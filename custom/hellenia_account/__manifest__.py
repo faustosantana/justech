@@ -1,19 +1,35 @@
 {
     "name": "Hellenia Account",
-    "version": "19.0.1.0.0",
+    "version": "19.0.1.0.27",
     "category": "Accounting/Accounting",
-    "summary": "Accounting extensions for Hellenia",
+    "summary": "Bancos, métodos de pago y cobros/pagos Hellenia",
     "description": """
-Accounting extensions for Hellenia
+Extensiones contables Hellenia (upgrade-safe):
 
-Skeleton module — no business logic yet.
-See README.md for development guidelines.
+- Diarios bancarios DOP/USD vinculados a cuentas López de Haro
+- Métodos de pago en español (Transferencia, Efectivo, Tarjeta, Cheque)
+- Wizard de pago con NCF y facturas pendientes visibles
+- Referencia retenciones RD (l10n_do)
     """,
     "author": "Justech",
     "website": "https://hellenia.cloud",
-    "depends": ["hellenia_base", "account"],
+    "depends": [
+        "hellenia_base",
+        "account",
+        "justech_l10n_do_base",
+        "justech_l10n_do_ncf",
+        "l10n_do_check_printing",
+    ],
+    "post_init_hook": "post_init_hook",
     "data": [
         "security/ir.model.access.csv",
+        "data/payment_setup.xml",
+        "views/hellenia_withholding_catalog_views.xml",
+        "views/account_payment_register_views.xml",
+        "views/payment_partner_wizard_views.xml",
+        "views/account_payment_withholding_views.xml",
+        "views/account_move_withholding_views.xml",
+        "reports/payment_receipt_withholding_templates.xml",
     ],
     "installable": True,
     "application": False,

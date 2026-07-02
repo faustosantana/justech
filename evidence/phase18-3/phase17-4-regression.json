@@ -1,0 +1,100 @@
+{
+  "phase": "17.4-payment-wizard-rpc-fix",
+  "timestamp_utc": "2026-06-30T20:56:42.378805+00:00",
+  "database": "hellenia_test",
+  "root_cause": "El upgrade de hellenia_account se ejecutó en contenedor efímero (docker compose run) mientras el contenedor odoo en ejecución no reinició su registry Python. Las acciones/vistas en BD apuntaban a hellenia.payment.partner.wizard pero el worker HTTP tenía módulos en estado inconsistente (to upgrade) sin el modelo cargado → KeyError 404.",
+  "fix_applied": [
+    "Wizard movido a custom/hellenia_account/wizards/ con imports explícitos",
+    "hellenia_account 19.0.1.0.4 — reinicio obligatorio del contenedor odoo tras -u",
+    "Botón Nuevo en listas Clientes/Proveedores → Pagos abre el wizard"
+  ],
+  "tests": {
+    "module_installed": {
+      "status": "PASS",
+      "detail": "19.0.1.0.7"
+    },
+    "model_in_registry": {
+      "status": "PASS",
+      "detail": "hellenia.payment.partner.wizard"
+    },
+    "ir_model_record": {
+      "status": "PASS",
+      "detail": "Registrar cobro o pago con facturas pendientes"
+    },
+    "action_customer": {
+      "status": "PASS",
+      "detail": "Nuevo"
+    },
+    "action_vendor": {
+      "status": "PASS",
+      "detail": "Nuevo"
+    },
+    "wizard_get_views": {
+      "status": "PASS",
+      "detail": "form OK"
+    },
+    "customer_pending_invoices": {
+      "status": "PASS",
+      "detail": "lines=2 ncf=B0100020035"
+    },
+    "vendor_pending_bills": {
+      "status": "PASS",
+      "detail": "lines=1"
+    },
+    "withholdings_section": {
+      "status": "FAIL",
+      "message": "sin línea o catálogo"
+    },
+    "payment_methods_es": {
+      "status": "PASS",
+      "detail": [
+        "Cheque",
+        "Efectivo",
+        "Tarjeta",
+        "Transferencia"
+      ]
+    },
+    "method_transferencia": {
+      "status": "PASS",
+      "detail": "Transferencia"
+    },
+    "method_efectivo": {
+      "status": "PASS",
+      "detail": "Efectivo"
+    },
+    "method_tarjeta": {
+      "status": "PASS",
+      "detail": "Tarjeta"
+    },
+    "method_cheque": {
+      "status": "PASS",
+      "detail": "Cheque"
+    },
+    "balanced_entry": {
+      "status": "PASS",
+      "detail": "D=590.00 C=590.00"
+    },
+    "report_607": {
+      "status": "PASS",
+      "detail": "607"
+    },
+    "report_606": {
+      "status": "PASS",
+      "detail": "606"
+    },
+    "list_create_disabled": {
+      "status": "PASS",
+      "detail": "create=false + botón Nuevo"
+    }
+  },
+  "ok": false,
+  "errors": [
+    "withholdings_section: sin línea o catálogo"
+  ],
+  "summary": {
+    "passed": 17,
+    "failed": 1,
+    "total": 18
+  },
+  "production_ready": false
+}

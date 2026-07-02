@@ -1,0 +1,124 @@
+{
+  "phase": "26c-delivery-official-prod",
+  "timestamp_utc": "2026-07-02T19:27:26.503586+00:00",
+  "database": "hellenia_prod",
+  "status": "PASS",
+  "module_version": "19.0.5.2.0",
+  "checks": {
+    "module_installed": {
+      "status": "PASS",
+      "detail": "installed"
+    },
+    "module_version": {
+      "status": "PASS",
+      "detail": "19.0.5.2.0"
+    },
+    "main_picking_report": {
+      "status": "PASS",
+      "detail": "justech_report_design.report_justech_delivery_document"
+    },
+    "main_picking_name": {
+      "status": "PASS",
+      "detail": "Conduce de Entrega"
+    },
+    "parallel_picking_unbound": {
+      "status": "PASS",
+      "detail": "ok"
+    },
+    "backup_exists": {
+      "status": "PASS",
+      "detail": "action_report_delivery_backup"
+    },
+    "sale_report_name": {
+      "status": "PASS",
+      "detail": "Conduce de Entrega"
+    },
+    "invoice_report_name": {
+      "status": "PASS",
+      "detail": "Conduce de Entrega"
+    },
+    "single_conduce_on_picking": {
+      "status": "PASS",
+      "detail": "[('Conduce de Entrega', 'justech_report_design.report_justech_delivery_document')]"
+    },
+    "picking_ready_render": {
+      "status": "PASS",
+      "detail": "WH/OUT/00008"
+    },
+    "sale_title": {
+      "status": "PASS",
+      "detail": "S00010"
+    },
+    "sale_no_prices": {
+      "status": "PASS",
+      "detail": "skipped (no pdftotext)"
+    },
+    "sale_shows_name": {
+      "status": "PASS",
+      "detail": "S00010"
+    },
+    "invoice_title": {
+      "status": "PASS",
+      "detail": "INV/2026/00003"
+    },
+    "invoice_no_prices": {
+      "status": "PASS",
+      "detail": "skipped (no pdftotext)"
+    },
+    "design_observations": {
+      "status": "PASS",
+      "detail": "plantilla"
+    },
+    "design_legal": {
+      "status": "PASS",
+      "detail": "plantilla QWeb"
+    },
+    "design_responsable_vendedor": {
+      "status": "PASS",
+      "detail": "plantilla QWeb"
+    },
+    "regression_quotation": {
+      "status": "PASS",
+      "detail": "S00024 size=72813"
+    },
+    "regression_invoice": {
+      "status": "PASS",
+      "detail": "INV/2026/00006 size=72460"
+    },
+    "regression_purchase": {
+      "status": "PASS",
+      "detail": "size=24101"
+    },
+    "dgii_module": {
+      "status": "PASS",
+      "detail": "installed"
+    },
+    "host_observations": {
+      "status": "PASS",
+      "detail": "host pdftotext"
+    },
+    "host_legal_legend": {
+      "status": "PASS",
+      "detail": "host pdftotext"
+    },
+    "host_responsable_vendedor": {
+      "status": "PASS",
+      "detail": "host pdftotext"
+    },
+    "host_green_band": {
+      "status": "PASS",
+      "detail": "host pdftotext"
+    },
+    "host_warehouse_not_company_name": {
+      "status": "PASS",
+      "detail": "host pdftotext"
+    }
+  },
+  "pdfs": [
+    "02_picking_ready.pdf",
+    "04_from_sale_order.pdf",
+    "06_from_invoice.pdf"
+  ],
+  "errors": [],
+  "pass": true
+}

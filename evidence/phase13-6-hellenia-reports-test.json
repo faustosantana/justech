@@ -1,0 +1,71 @@
+{
+  "phase": "13.6",
+  "timestamp_utc": "2026-06-30T16:40:56.794537+00:00",
+  "database": "hellenia_test",
+  "module": {
+    "state": "installed"
+  },
+  "layout": {
+    "key": "hellenia_reports.external_layout_hellenia",
+    "expected": "hellenia_reports.external_layout_hellenia"
+  },
+  "company": {
+    "name": "Hellenia, S.R.L.",
+    "vat": "133621282",
+    "has_logo": true,
+    "phone": "+1 849-434-8694",
+    "email": "info@helleniadr.com",
+    "website": "https://hellenia.cloud"
+  },
+  "documents": {
+    "quotation": {
+      "ok": true,
+      "bytes": 51483,
+      "fmt": "pdf"
+    },
+    "sale_order": {
+      "ok": true,
+      "bytes": 51295,
+      "fmt": "pdf"
+    },
+    "invoice": {
+      "ok": true,
+      "bytes": 57913,
+      "fmt": "pdf"
+    },
+    "invoice_ncf": "B0200020113",
+    "credit_note": {
+      "ok": true,
+      "bytes": 56373,
+      "fmt": "pdf"
+    },
+    "purchase_rfq": {
+      "ok": true,
+      "bytes": 52134,
+      "fmt": "pdf"
+    },
+    "purchase_order": {
+      "ok": true,
+      "bytes": 55064,
+      "fmt": "pdf"
+    },
+    "delivery": {
+      "ok": true,
+      "bytes": 44907,
+      "fmt": "pdf"
+    },
+    "reception": {
+      "ok": true,
+      "bytes": 47366,
+      "fmt": "pdf"
+    }
+  },
+  "checks": {
+    "invoice_has_ncf": true,
+    "invoice_tax_18": true,
+    "paperformat": "Hellenia Carta"
+  },
+  "ok": true,
+  "errors": [],
+  "warnings": []
+}

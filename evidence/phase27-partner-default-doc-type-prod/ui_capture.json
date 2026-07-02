@@ -1,0 +1,8 @@
+{
+  "env": "prod",
+  "status": "FAIL",
+  "checks": {
+    "partner_field_visible": false,
+    "quotation_field_visible": false
+  }
+}

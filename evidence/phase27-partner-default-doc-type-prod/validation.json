@@ -1,0 +1,140 @@
+{
+  "phase": "27-partner-default-doc-type-prod",
+  "timestamp_utc": "2026-07-02T22:01:35.202666+00:00",
+  "database": "hellenia_prod",
+  "environment": "prod",
+  "status": "PASS",
+  "module_versions": {
+    "justech_l10n_do_base": "19.0.1.4.0",
+    "justech_l10n_do_ncf": "19.0.1.5.0"
+  },
+  "checks": {
+    "module_base_version": {
+      "status": "PASS",
+      "detail": "19.0.1.4.0"
+    },
+    "module_ncf_version": {
+      "status": "PASS",
+      "detail": "19.0.1.5.0"
+    },
+    "doc_type_b01_exists": {
+      "status": "PASS",
+      "detail": "B01"
+    },
+    "doc_type_b02_exists": {
+      "status": "PASS",
+      "detail": "B02"
+    },
+    "display_name_format": {
+      "status": "PASS",
+      "detail": "B01 - Factura de Crédito Fiscal"
+    },
+    "partner_field_in_form": {
+      "status": "PASS",
+      "detail": "True"
+    },
+    "partner_field_label": {
+      "status": "PASS",
+      "detail": "True"
+    },
+    "sale_order_field_in_form": {
+      "status": "PASS",
+      "detail": "True"
+    },
+    "partner_b01_configured": {
+      "status": "PASS",
+      "detail": "P27 B01 220135"
+    },
+    "quotation_b01_inherited": {
+      "status": "PASS",
+      "detail": "S00025"
+    },
+    "invoice_from_so_b01": {
+      "status": "PASS",
+      "detail": "False"
+    },
+    "ncf_b01_generated": {
+      "status": "PASS",
+      "detail": "B0100090001"
+    },
+    "partner_b02_configured": {
+      "status": "PASS",
+      "detail": "P27 B02 220135"
+    },
+    "quotation_b02_inherited": {
+      "status": "PASS",
+      "detail": "S00026"
+    },
+    "quotation_no_default_empty": {
+      "status": "PASS",
+      "detail": "S00027"
+    },
+    "invoice_no_default_system_b02": {
+      "status": "PASS",
+      "detail": "B0200009906"
+    },
+    "direct_invoice_inherited": {
+      "status": "PASS",
+      "detail": "False"
+    },
+    "direct_invoice_ncf_b02": {
+      "status": "PASS",
+      "detail": "B0200009907"
+    },
+    "manual_override_set": {
+      "status": "PASS",
+      "detail": "False"
+    },
+    "manual_override_ncf_b02": {
+      "status": "PASS",
+      "detail": "B0200009908"
+    },
+    "dgii_fields_present": {
+      "status": "PASS",
+      "detail": "True"
+    },
+    "dgii_document_type_prefix": {
+      "status": "PASS",
+      "detail": "B01"
+    }
+  },
+  "scenarios": {
+    "partner_b01": {
+      "partner": "P27 B01 220135",
+      "quotation": "S00025",
+      "invoice": "INV/2026/00007",
+      "ncf": "B0100090001"
+    },
+    "partner_b02": {
+      "partner": "P27 B02 220135",
+      "quotation": "S00026"
+    },
+    "partner_no_default": {
+      "partner": "P27 SinDefault 220135",
+      "invoice": "INV/2026/00008",
+      "ncf": "B0200009906"
+    }
+  },
+  "errors": [],
+  "audit": {
+    "models_touched": [
+      "res.partner",
+      "sale.order",
+      "account.move"
+    ],
+    "fields_added": [
+      "res.partner.justech_do_default_document_type_id",
+      "sale.order.justech_do_document_type_id"
+    ],
+    "resolution_priority": [
+      "manual_invoice_value",
+      "quotation_inherited_value",
+      "partner_default",
+      "system_rnc_heuristic"
+    ],
+    "dgii_logic_modified": false,
+    "ncf_sequences_modified": false,
+    "posted_documents_modified": false
+  },
+  "pass": true
+}

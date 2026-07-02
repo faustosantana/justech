@@ -27,3 +27,17 @@ class TestJustechL10nDoBase(TransactionCase):
             {"name": "Test RNC", "vat": "131-793-916"}
         )
         self.assertTrue(partner.justech_do_rnc_valid)
+
+    def test_document_type_display_name(self):
+        doc = self.env.ref("justech_l10n_do_base.doc_type_b01")
+        self.assertEqual(doc.display_name, "B01 - Factura de Crédito Fiscal")
+
+    def test_partner_default_document_type_field(self):
+        doc_b02 = self.env.ref("justech_l10n_do_base.doc_type_b02")
+        partner = self.env["res.partner"].create(
+            {
+                "name": "Cliente default",
+                "justech_do_default_document_type_id": doc_b02.id,
+            }
+        )
+        self.assertEqual(partner.justech_do_get_default_sale_document_type(), doc_b02)

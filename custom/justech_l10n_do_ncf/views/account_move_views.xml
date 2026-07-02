@@ -9,6 +9,16 @@
                 <field name="justech_do_document_type_id" readonly="state != 'draft'"/>
                 <field name="justech_do_ncf" readonly="state != 'draft'"/>
                 <field name="justech_do_origin_ncf" readonly="state != 'draft'"/>
+                <field name="justech_do_ncf_modified" readonly="state != 'draft'"/>
+                <field name="justech_do_dgii_line_status" readonly="1"/>
+                <field name="justech_do_include_in_dgii" readonly="state != 'draft'"/>
+                <field name="justech_do_dgii_fiscal_state" readonly="1"/>
+                <field name="justech_do_dgii_exclusion_reason"
+                       invisible="justech_do_include_in_dgii"
+                       readonly="state != 'draft'"/>
+                <field name="justech_do_ncf_cancel_type"
+                       invisible="not justech_do_ncf_voided"
+                       readonly="justech_do_ncf_voided"/>
                 <field name="justech_do_ncf_voided" readonly="1"/>
                 <field name="justech_do_ncf_void_reason"
                        readonly="justech_do_ncf_voided"

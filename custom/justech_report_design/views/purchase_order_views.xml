@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_purchase_order_form_jt_po_preview" model="ir.ui.view">
+        <field name="name">purchase.order.form.jt.po.preview</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="priority">25</field>
+        <field name="arch" type="xml">
+            <xpath expr="//header/button[@name='print_quotation']" position="before">
+                <button name="action_preview_purchase_order"
+                        type="object"
+                        string="Vista previa"
+                        class="btn-secondary"
+                        invisible="state == 'cancel'"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html dir="ltr">
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <title>Odoo</title>
+        <link type="image/x-icon" rel="shortcut icon" href="/web/static/img/favicon.ico"/>
+        <link rel="preload" href="/web/static/src/libs/fontawesome/fonts/fontawesome-webfont.woff2?v=4.7.0" as="font" crossorigin=""/>
+        <link type="text/css" rel="stylesheet" href="/web/assets/ebbfb26/web.assets_frontend.min.css"/>
+        <script id="web.layout.odooscript" type="text/javascript">
+            var odoo = {
+                csrf_token: "3f5b544b756407740cc89d9103200586aa06fdebo1814563465",
+                debug: "",
+            };
+        </script>
+        <script type="text/javascript">
+            odoo.__session_info__ = {"is_admin": true, "is_system": true, "is_public": false, "is_internal_user": true, "is_website_user": false, "uid": 2, "registry_hash": "12b8e4ccb3a1deb08bc99d53ec56fa9ae12d4544e084014d6ca5de8cd38ba93b", "is_frontend": true, "profile_session": null, "profile_collectors": null, "profile_params": null, "show_effect": true, "currencies": {"74": {"name": "DOP", "symbol": "RD$", "position": "before", "digits": [69, 2]}, "1": {"name": "USD", "symbol": "$", "position": "before", "digits": [69, 2]}}, "quick_login": true, "bundle_params": {"lang": "en_US"}, "test_mode": false, "server_version": "19.0+e-20260619", "server_version_info": [19, 0, 0, "final", 0, "e"], "websocket_worker_version": "19.0-2", "translationURL": "/website/translations", "tour_enabled": true, "current_tour": {"url": "/odoo", "custom": false, "name": "sale_tour", "steps": [], "rainbowManMessage": "\u003cspan\u003e\u003cb\u003eCongratulations\u003c/b\u003e, your first quotation is sent!\u003cbr\u003eCheck your email to validate the quote.\n        \u003c/span\u003e"}};
+            if (!/(^|;\s)tz=/.test(document.cookie)) {
+                const userTZ = Intl.DateTimeFormat().resolvedOptions().timeZone;
+                document.cookie = `tz=${userTZ}; path=/`;
+            }
+        </script>
+        <script type="text/javascript" defer="defer" src="/web/assets/97f7589/web.assets_frontend_minimal.min.js" onerror="__odooAssetError=1"></script>
+        <script type="text/javascript" data-src="/web/assets/3624f21/web.assets_frontend_lazy.min.js" onerror="__odooAssetError=1"></script>
+        
+    </head>
+    <body>
+        <div id="wrapwrap" class="  o_portal">
+                <header id="top" data-anchor="true">
+                    <nav class="navbar navbar-expand navbar-light bg-light">
+                <div class="container">
+                    <a href="/" class="navbar-brand logo">
+                        <img src="/logo.png?company=1" alt="Logo of Hellenia, S.R.L." title="Hellenia, S.R.L."/>
+                    </a>
+                    <ul id="top_menu" class="nav navbar-nav ms-auto">
+        <li class="nav-item dropdown o_no_autohide_item">
+            <a href="#" role="button" data-bs-toggle="dropdown" class="dropdown-toggle nav-link">
+                <span class="">Administrator</span>
+            </a>
+            <div role="menu" class="dropdown-menu js_usermenu dropdown-menu-end">
+                <a href="/odoo" role="menuitem" class="dropdown-item ps-3" id="o_backend_user_dropdown_link">
+                    <i class="fa fa-fw fa-th me-1 small text-primary-emphasis"></i> Apps
+                </a>
+            <a href="/my/home" role="menuitem" class="dropdown-item ps-3">
+                <i class="fa fa-fw fa-id-card-o me-1 small text-primary-emphasis"></i> My Account
+            </a>
+                <div id="o_logout_divider" class="dropdown-divider"></div>
+                <a role="menuitem" id="o_logout" class="dropdown-item ps-3" href="/web/session/logout?redirect=/">
+                    <i class="fa fa-fw fa-sign-out me-1 small text-primary-emphasis"></i> Logout
+                </a>
+            </div>
+        </li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+                <main>
+            <div class="container mt-3">
+                <div class="alert alert-info alert-dismissible fade show d-print-none css_editable_mode_hidden">
+                    
+        <div class="text-center">
+            This is a preview of the customer portal.
+            <a class="alert-link" href="/odoo/action-purchase.purchase_rfq/9"><i class="oi oi-arrow-right me-1"></i>Back to edit mode</a>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            
+                </div>
+            </div>
+                    
+
+            <div class="o_portal container mt-3">
+                <div class="d-flex justify-content-between align-items-center flex-wrap">
+        <ol class="o_portal_submenu breadcrumb mb-0 flex-grow-1 px-0">
+            <li class="breadcrumb-item ms-1"><a href="/my/home" aria-label="Home" title="Home"><i class="fa fa-home"></i></a></li>
+      <li class="breadcrumb-item ">
+        <a href="/my/purchase?access_token=0f836748-0205-4e65-91a0-41ffef779342">Purchase Orders</a>
+      </li>
+      <li class="breadcrumb-item active">
+        P00008
+      </li>
+        </ol>
+                </div>
+            </div>
+            <div id="wrap" class="o_portal_wrap">
+                <div class="container pt-3 pb-5">
+                        
+
+            <div class="row o_portal_purchase_sidebar o_portal_purchase_preview">
+        <div class="d-flex col-lg-4 col-xxl-3 d-print-none">
+            <div class="o_portal_sidebar_content flex-grow-1 mb-4 mb-lg-0 pe-lg-4" id="sidebar_content">
+                <div class="position-relative d-flex align-items-center justify-content-md-center justify-content-lg-between flex-wrap gap-2">
+                    
+                        <h2 class="mb-0 text-break">RD$ <span class="oe_currency_value">118.00</span></h2>
+                    
+                </div>
+                
+                        <div class="d-flex flex-column gap-4 mt-3">
+                            <div class="d-flex flex-column gap-2">
+                                <a class="btn btn-light o_download_btn flex-grow-1" title="Descargar" role="button" href="/my/purchase/9/jt_report_pdf?access_token=0f836748-0205-4e65-91a0-41ffef779342&amp;download=true">
+                                    <i class="fa fa-download"></i> Descargar
+                                </a>
+                                <a class="btn btn-secondary o_portal_po_print flex-grow-1" title="Imprimir" role="button" href="/my/purchase/9/jt_report_pdf?access_token=0f836748-0205-4e65-91a0-41ffef779342">
+                                    <i class="fa fa-print"></i> Imprimir
+                                </a>
+                            </div>
+                        </div>
+                    
+                <div class="d-none d-lg-block mt-5 small text-center text-muted">
+                    Powered by <a target="_blank" href="http://www.odoo.com?utm_source=db&amp;utm_medium=portal" title="odoo"><img src="/web/static/img/logo.png" alt="Odoo Logo" height="15"/></a>
+                </div>
+            </div>
+            <div class="vr d-none d-lg-block bg-300"></div>
+        </div>
+
+                <div id="purchase_order_content" class="o_portal_content col-12 col-lg-8 col-xxl-9">
+                    <div class="o_portal_html_view position-relative bg-white shadow overflow-hidden">
+                        <div class="o_portal_html_loader text-center">
+                            <i class="fa fa-circle-o-notch fa-spin fa-2x fa-fw text-black-50"></i>
+                        </div>
+                        <iframe id="purchase_order_html" class="position-relative d-block" width="100%" height="100%" frameborder="0" scrolling="no" src="/my/purchase/9/jt_report_html?access_token=0f836748-0205-4e65-91a0-41ffef779342"></iframe>
+                    </div>
+                </div>
+            </div>
+        
+                </div>
+            </div>
+        
+                </main>
+                <footer id="bottom" data-anchor="true" class="bg-light o_footer">
+                    <div id="footer"></div>
+                    <div class="o_footer_copyright">
+                        <div class="container py-3">
+                            <div class="row row-gap-2">
+                                <div class="col-sm text-center text-sm-start text-muted">
+                                    <span class="o_footer_copyright_name me-2">Copyright &copy; <span itemprop="name">Hellenia, S.R.L.</span></span>
+        <div class="js_language_selector  dropup d-print-none">
+            <button type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true" class="border-0 dropdown-toggle btn btn-sm btn-outline-secondary">
+                <span class="">English (US)</span>
+            </button>
+            <div role="menu" class="dropdown-menu ">
+                    <a class="dropdown-item js_change_lang active" role="menuitem" href="/en/my/purchase/9/preview?access_token=0f836748-0205-4e65-91a0-41ffef779342" data-url_code="en" title="English (US)">
+                        <span class="">English (US)</span>
+                    </a>
+                    <a class="dropdown-item js_change_lang " role="menuitem" href="/es/my/purchase/9/preview?access_token=0f836748-0205-4e65-91a0-41ffef779342" data-url_code="es" title=" Español (DO)">
+                        <span class=""> Español (DO)</span>
+                    </a>
+                    <a class="dropdown-item js_change_lang " role="menuitem" href="/es_419/my/purchase/9/preview?access_token=0f836748-0205-4e65-91a0-41ffef779342" data-url_code="es_419" title=" Español (América Latina)">
+                        <span class=""> Español (América Latina)</span>
+                    </a>
+            </div>
+        </div>
+                                </div>
+                                <div class="col-sm text-center text-sm-end">
+        <div class="o_brand_promotion">
+        Powered by 
+            <a target="_blank" class="badge text-bg-light" href="http://www.odoo.com?utm_source=db&amp;utm_medium=portal">
+                <img alt="Odoo" src="/web/static/img/odoo_logo_tiny.png" width="62" height="20" style="width: auto; height: 1em; vertical-align: baseline;"/>
+            </a>
+        
+        </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </footer>
+            </div>
+        </body>
+</html>

@@ -1,0 +1,20 @@
+Botones header:
+- Send RFQ
+- Receive
+- Confirm Order
+- Approve Order
+- Send RFQ
+- Confirm Order
+- Send PO
+- Acknowledge
+- Set to Draft
+- Vista previa
+- Print
+- Print
+- Cancel
+- Lock
+- Unlock
+- Catalog
+
+Preview URL: /my/purchase/9/preview?access_token=0f836748-0205-4e65-91a0-41ffef779342
+Iframe URL: /my/purchase/9/jt_report_html?access_token=0f836748-0205-4e65-91a0-41ffef779342

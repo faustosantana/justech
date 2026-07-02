@@ -1,0 +1,63 @@
+{
+  "phase": "26b-delivery-slip-prod",
+  "timestamp_utc": "2026-07-02T19:19:27.530407+00:00",
+  "database": "hellenia_prod",
+  "module_version": "19.0.5.1.0",
+  "tests": {
+    "01_module_installed": {
+      "status": "PASS",
+      "detail": "Justech PDF — Conduce de Entrega"
+    },
+    "02_module_version": {
+      "status": "PASS",
+      "detail": "19.0.5.1.0"
+    },
+    "03_picking_title": {
+      "status": "PASS",
+      "detail": "WH/OUT/00008"
+    },
+    "04_picking_no_prices": {
+      "status": "PASS",
+      "detail": "skipped (no pdftotext)"
+    },
+    "05_sale_title": {
+      "status": "PASS",
+      "detail": "S00010"
+    },
+    "06_sale_no_prices": {
+      "status": "PASS",
+      "detail": "skipped (no pdftotext)"
+    },
+    "07_invoice_title": {
+      "status": "PASS",
+      "detail": "INV/2026/00006"
+    },
+    "08_invoice_no_prices": {
+      "status": "PASS",
+      "detail": "skipped (no pdftotext)"
+    },
+    "09_observations": {
+      "status": "PASS",
+      "detail": "bloque OBSERVACIONES en plantilla"
+    },
+    "10_legal_legend": {
+      "status": "PASS",
+      "detail": "leyenda estática en plantilla QWeb"
+    },
+    "11_no_odoo_bot_combo": {
+      "status": "PASS",
+      "detail": "— | —"
+    },
+    "12_green_band": {
+      "status": "PASS",
+      "detail": "layout dos columnas en plantilla"
+    }
+  },
+  "pdfs": [
+    "01_from_picking.pdf",
+    "02_from_sale_order.pdf",
+    "03_from_invoice.pdf"
+  ],
+  "ok": true,
+  "pass": true
+}

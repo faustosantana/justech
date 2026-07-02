@@ -1,0 +1,16 @@
+{
+  "env": "prod",
+  "po_url": "https://odoo.hellenia.cloud/odoo/action-purchase.purchase_rfq/9",
+  "checks": {
+    "button_visible": true,
+    "portal_preview_url": true,
+    "not_bare_html": true,
+    "has_iframe": true,
+    "has_download": true,
+    "has_print": true,
+    "has_back_edit": true,
+    "hellenia_design": true
+  },
+  "preview_url": "https://odoo.hellenia.cloud/es/my/purchase/9/preview?access_token=0f836748-0205-4e65-91a0-41ffef779342",
+  "status": "PASS"
+}

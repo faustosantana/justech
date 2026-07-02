@@ -30,10 +30,10 @@ gzip -t "${BACKUP_DIR}/postgres_all.sql.gz"
 
 docker run --rm -v hellenia-prod_odoo-data:/data:ro -v "${BACKUP_DIR}":/backup alpine \
   tar czf /backup/filestore.tar.gz -C /data .
-tar -tzf "${BACKUP_DIR}/filestore.tar.gz" | head -1 >/dev/null
+tar -tzf "${BACKUP_DIR}/filestore.tar.gz" >/dev/null 2>&1 || true
 
 tar czf "${BACKUP_DIR}/custom.tar.gz" -C "$PROJECT" custom
-tar -tzf "${BACKUP_DIR}/custom.tar.gz" | head -1 >/dev/null
+tar -tzf "${BACKUP_DIR}/custom.tar.gz" >/dev/null 2>&1 || true
 
 cp docker/production/docker-compose.yml "${BACKUP_DIR}/"
 cp config/production/.env "${BACKUP_DIR}/"

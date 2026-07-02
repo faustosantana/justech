@@ -72,10 +72,10 @@ class JtDeliveryReportMixin(models.AbstractModel):
         if wh:
             name = (wh.name or "").strip()
             code = (wh.code or "").strip()
-            if name and name != company:
-                return name
             if code:
                 return code
+            if name and name != company:
+                return name
         if picking.location_id:
             complete = (
                 picking.location_id.complete_name

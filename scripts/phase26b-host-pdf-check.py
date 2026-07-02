@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -44,7 +45,11 @@ def main() -> int:
         "host_responsable_vendedor": "RESPONSABLE" in sample.upper()
         and "VENDEDOR" in sample.upper(),
         "host_green_band": "No. Conduce" in sample and "Fecha entrega" in sample,
-        "host_warehouse_not_company_name": "Almacén: Hellenia, S.R.L." not in sample,
+        "host_warehouse_not_company_name": not re.search(
+            r"Almacén:\s*(Hellenia, S\.R\.L\.|My Company)\s*$",
+            sample,
+            re.M,
+        ),
     }
     for key, ok in checks.items():
         data["tests"][key] = {

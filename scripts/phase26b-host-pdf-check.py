@@ -40,6 +40,10 @@ def main() -> int:
     with val_path.open() as f:
         data = json.load(f)
 
+    tests_key = "tests" if "tests" in data else "checks"
+    if tests_key not in data:
+        data[tests_key] = {}
+
     checks = {
         "host_observations": "OBSERVACIONES" in sample,
         "host_legal_legend": "certifica" in sample.lower()
@@ -54,19 +58,23 @@ def main() -> int:
         ),
     }
     for key, ok in checks.items():
-        data["tests"][key] = {
+        data[tests_key][key] = {
             "status": "PASS" if ok else "FAIL",
             "detail": "host pdftotext",
         }
         if not ok:
             data["ok"] = False
             data["pass"] = False
+            data["status"] = "FAIL"
+
+    if data.get("pass") is None and data.get("status"):
+        data["pass"] = data["status"] == "PASS"
 
     with val_path.open("w") as f:
         json.dump(data, f, indent=2, ensure_ascii=False)
 
-    print(json.dumps({"host_checks": checks, "pass": data.get("pass")}))
-    return 0 if data.get("pass") else 2
+    print(json.dumps({"host_checks": checks, "pass": data.get("pass", data.get("status") == "PASS")}))
+    return 0 if data.get("pass") or data.get("status") == "PASS" else 2
 
 
 if __name__ == "__main__":

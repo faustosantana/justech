@@ -1,0 +1,167 @@
+{
+  "phase": "21.1-dgii-reports-final-regression",
+  "timestamp_utc": "2026-07-01T15:10:18.533952+00:00",
+  "environment": "https://odoo.hellenia.cloud",
+  "database": "hellenia_prod",
+  "module_version": "19.0.1.12.4",
+  "period": "202607",
+  "reports": {
+    "login": {
+      "auth": {
+        "ok": true,
+        "detail": "admin",
+        "screenshot": ""
+      }
+    },
+    "623": {
+      "opens_and_generates": {
+        "ok": true,
+        "detail": "https://odoo.hellenia.cloud/odoo/38/justech.do.fiscal.report/51",
+        "screenshot": "evidence/phase21-1-dgii-reports/screenshots/623-01-review.png"
+      },
+      "load_period": {
+        "ok": true,
+        "detail": "loaded",
+        "screenshot": "evidence/phase21-1-dgii-reports/screenshots/623-02-loaded.png"
+      },
+      "total_docs": {
+        "ok": true,
+        "detail": "total=3",
+        "screenshot": ""
+      },
+      "valid_count": {
+        "ok": true,
+        "detail": "valid=1 expected=1",
+        "screenshot": ""
+      },
+      "p21_partner_visible": {
+        "ok": true,
+        "detail": "Contabilidad\nTablero\nClientes\nProveedores\nAsientos contables\nApuntes contables\nReportes\nAuditoría\nConfiguración\n3\nHellenia, S.R.L.\nNuevo\n623 — Retenciones Estado 202607 — revisión fiscal\n1 / 1\nCargar ",
+        "screenshot": ""
+      },
+      "p21_vat": {
+        "ok": true,
+        "detail": "101733934",
+        "screenshot": ""
+      },
+      "p21_invoice": {
+        "ok": true,
+        "detail": "INV/2026/00006",
+        "screenshot": ""
+      },
+      "p21_amount_500": {
+        "ok": true,
+        "detail": "500 in review",
+        "screenshot": ""
+      },
+      "p21_row_found": {
+        "ok": true,
+        "detail": " \t\nVálido\n\tINV/2026/00006\tB02\tP21 GOV PROOF UNIQUE\t101733934\tRNC\tB0200009905\t\t1 jul\tDOP\t500.00\t0.00\t500.00\t\t\t\tN/A\t\t\t\n\t",
+        "screenshot": ""
+      },
+      "validate_review": {
+        "ok": true,
+        "detail": "validated",
+        "screenshot": "evidence/phase21-1-dgii-reports/screenshots/623-03-validated.png"
+      },
+      "export_excel": {
+        "ok": true,
+        "detail": "DGII_623_202607.xlsx",
+        "screenshot": "evidence/phase21-1-dgii-reports/screenshots/623-04-export-ok.png"
+      }
+    },
+    "607": {
+      "opens": {
+        "ok": true,
+        "detail": "https://odoo.hellenia.cloud/odoo/action-645",
+        "screenshot": "evidence/phase21-1-dgii-reports/screenshots/607-01-wizard.png"
+      },
+      "validate": {
+        "ok": true,
+        "detail": "validated",
+        "screenshot": "evidence/phase21-1-dgii-reports/screenshots/607-02-validate.png"
+      },
+      "wizard_loads": {
+        "ok": true,
+        "detail": "all=3 valid=3",
+        "screenshot": ""
+      },
+      "has_valid_sales": {
+        "ok": true,
+        "detail": "valid=3",
+        "screenshot": ""
+      },
+      "shows_invoices": {
+        "ok": true,
+        "detail": "sales present",
+        "screenshot": ""
+      },
+      "export_excel": {
+        "ok": true,
+        "detail": "clicked",
+        "screenshot": "evidence/phase21-1-dgii-reports/screenshots/607-03-export.png"
+      }
+    },
+    "606": {
+      "opens": {
+        "ok": true,
+        "detail": "https://odoo.hellenia.cloud/odoo/action-644",
+        "screenshot": "evidence/phase21-1-dgii-reports/screenshots/606-01-wizard.png"
+      },
+      "validate": {
+        "ok": true,
+        "detail": "validated",
+        "screenshot": "evidence/phase21-1-dgii-reports/screenshots/606-02-validate.png"
+      },
+      "wizard_loads": {
+        "ok": true,
+        "detail": "all=0 valid=0",
+        "screenshot": ""
+      },
+      "loads_without_error": {
+        "ok": true,
+        "detail": "valid=0 (zero purchases acceptable)",
+        "screenshot": ""
+      },
+      "export_excel": {
+        "ok": true,
+        "detail": "skipped — no purchases / button hidden OK for 606",
+        "screenshot": ""
+      }
+    },
+    "608": {
+      "opens_and_generates": {
+        "ok": true,
+        "detail": "https://odoo.hellenia.cloud/odoo/41/justech.do.fiscal.report/53",
+        "screenshot": "evidence/phase21-1-dgii-reports/screenshots/608-01-review.png"
+      },
+      "load_period": {
+        "ok": true,
+        "detail": "loaded",
+        "screenshot": "evidence/phase21-1-dgii-reports/screenshots/608-02-loaded.png"
+      },
+      "loads_without_error": {
+        "ok": true,
+        "detail": "total=0 (zero acceptable)",
+        "screenshot": ""
+      }
+    }
+  },
+  "logs": {
+    "ok": true,
+    "detail": "0 suspicious lines",
+    "lines": []
+  },
+  "summary": {
+    "623_validated": true,
+    "623_export_ok": true,
+    "607_ok": true,
+    "606_ok": true,
+    "608_ok": true
+  },
+  "ok": true,
+  "prod_pass": true,
+  "test_start_utc": "2026-07-01T15:10:18.533968+00:00",
+  "test_end_utc": "2026-07-01T15:12:09.828017+00:00",
+  "dgii_certified_real_use": true
+}

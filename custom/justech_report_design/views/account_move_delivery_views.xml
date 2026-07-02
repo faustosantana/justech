@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_move_form_jt_delivery_conduce" model="ir.ui.view">
+        <field name="name">account.move.form.jt.delivery.conduce</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="priority">120</field>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_jt_create_delivery_conduce"
+                        type="object"
+                        string="Crear Conduce de Entrega"
+                        class="btn-secondary"
+                        invisible="move_type not in ('out_invoice', 'out_refund') or state == 'cancel'"/>
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_jt_view_delivery_notes"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-truck"
+                        invisible="move_type not in ('out_invoice', 'out_refund') or state == 'cancel'">
+                    <div class="o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="jt_delivery_note_count" readonly="1" nolabel="1"/>
+                        </span>
+                        <span class="o_stat_text">
+                            <field name="jt_delivery_stat_label" readonly="1" nolabel="1"/>
+                        </span>
+                    </div>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

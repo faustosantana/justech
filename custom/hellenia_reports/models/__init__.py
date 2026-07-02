@@ -1,2 +1,5 @@
-# License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl-3.0.html)
-# from . import <model_file>
+from . import res_company
+from . import base_document_layout
+from . import account_move
+from . import ir_actions_report
+from . import sale_order

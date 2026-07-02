@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_company_form_hellenia_reports" model="ir.ui.view">
+        <field name="name">res.company.form.hellenia.reports</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_company_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='general_info']" position="after">
+                <page string="Documentos Hellenia" name="hellenia_reports">
+                    <group>
+                        <group string="Colores corporativos">
+                            <field name="hellenia_primary_color" widget="color"/>
+                            <field name="hellenia_secondary_color" widget="color"/>
+                        </group>
+                        <group string="Redes sociales">
+                            <field name="hellenia_social_instagram"/>
+                            <field name="hellenia_social_whatsapp"/>
+                            <field name="hellenia_social_facebook"/>
+                        </group>
+                    </group>
+                    <group string="Contenido documentos">
+                        <field name="hellenia_quotation_terms" colspan="2" nolabel="1"
+                               placeholder="Condiciones mostradas en cotizaciones PDF cuando el pedido no tiene notas."/>
+                        <field name="hellenia_terms_conditions"/>
+                        <field name="hellenia_legal_notice"/>
+                        <field name="hellenia_show_qr_on_invoice"/>
+                    </group>
+                    <group string="Firma y sello">
+                        <field name="hellenia_signature_image" widget="image"/>
+                        <field name="hellenia_stamp_image" widget="image"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

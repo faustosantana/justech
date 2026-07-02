@@ -1,0 +1,1989 @@
+{
+  "phase": "report-templates-diagnostic",
+  "timestamp_utc": "2026-07-01T23:41:25.246592+00:00",
+  "database": "hellenia_test",
+  "environment": "TEST ONLY — no producción",
+  "module_installed": true,
+  "reports": {
+    "sale.report_saleorder": {
+      "label": "Cotización / Orden venta (wrapper)",
+      "report_name": "sale.report_saleorder",
+      "model": "sale.order",
+      "xml_id_action": "sale.action_report_saleorder",
+      "action_name": "Cotización en PDF",
+      "paperformat": "Hellenia Carta",
+      "view": {
+        "id": 1428,
+        "xml_id": "sale.report_saleorder",
+        "key": "sale.report_saleorder",
+        "name": "report_saleorder",
+        "module": "sale",
+        "inherit_id": null,
+        "inherit_key": null,
+        "priority": 16,
+        "customized": false
+      },
+      "classification": "original_standard",
+      "inherit_chain_ancestors": [
+        {
+          "id": 1428,
+          "xml_id": "sale.report_saleorder",
+          "key": "sale.report_saleorder",
+          "name": "report_saleorder",
+          "module": "sale",
+          "inherit_id": null,
+          "inherit_key": null,
+          "priority": 16,
+          "customized": false
+        }
+      ],
+      "inherit_children": [],
+      "custom_modifiers": [],
+      "is_customized": false
+    },
+    "sale.report_saleorder_raw": {
+      "label": "Cotización / Orden venta (raw)",
+      "report_name": "sale.report_saleorder_raw",
+      "model": "sale.order",
+      "xml_id_action": "sale_pdf_quote_builder.action_report_saleorder_raw",
+      "action_name": "Cotización/orden",
+      "paperformat": "",
+      "view": {
+        "id": 1427,
+        "xml_id": "sale.report_saleorder_raw",
+        "key": "sale.report_saleorder_raw",
+        "name": "report_saleorder_raw",
+        "module": "sale",
+        "inherit_id": null,
+        "inherit_key": null,
+        "priority": 16,
+        "customized": false
+      },
+      "classification": "original_standard",
+      "inherit_chain_ancestors": [
+        {
+          "id": 1427,
+          "xml_id": "sale.report_saleorder_raw",
+          "key": "sale.report_saleorder_raw",
+          "name": "report_saleorder_raw",
+          "module": "sale",
+          "inherit_id": null,
+          "inherit_key": null,
+          "priority": 16,
+          "customized": false
+        }
+      ],
+      "inherit_children": [
+        {
+          "id": 2146,
+          "xml_id": "hellenia_reports.report_saleorder_raw_hellenia_quotation",
+          "key": "hellenia_reports.report_saleorder_raw_hellenia_quotation",
+          "name": "report_saleorder_raw_hellenia_quotation",
+          "module": "hellenia_reports",
+          "inherit_id": 1427,
+          "inherit_key": "sale.report_saleorder_raw",
+          "priority": 16,
+          "customized": true,
+          "children": []
+        }
+      ],
+      "custom_modifiers": [
+        {
+          "id": 2146,
+          "xml_id": "hellenia_reports.report_saleorder_raw_hellenia_quotation",
+          "key": "hellenia_reports.report_saleorder_raw_hellenia_quotation",
+          "name": "report_saleorder_raw_hellenia_quotation",
+          "module": "hellenia_reports",
+          "inherit_id": 1427,
+          "inherit_key": "sale.report_saleorder_raw",
+          "priority": 16,
+          "customized": true,
+          "children": []
+        }
+      ],
+      "is_customized": true
+    },
+    "sale.report_saleorder_document": {
+      "label": "Cotización / Orden venta (documento)",
+      "report_name": "sale.report_saleorder_document",
+      "model": "sale.order",
+      "xml_id_action": "",
+      "action_name": "",
+      "paperformat": "",
+      "view": {
+        "id": 1426,
+        "xml_id": "sale.report_saleorder_document",
+        "key": "sale.report_saleorder_document",
+        "name": "report_saleorder_document",
+        "module": "sale",
+        "inherit_id": null,
+        "inherit_key": null,
+        "priority": 16,
+        "customized": false
+      },
+      "classification": "original_standard",
+      "inherit_chain_ancestors": [
+        {
+          "id": 1426,
+          "xml_id": "sale.report_saleorder_document",
+          "key": "sale.report_saleorder_document",
+          "name": "report_saleorder_document",
+          "module": "sale",
+          "inherit_id": null,
+          "inherit_key": null,
+          "priority": 16,
+          "customized": false
+        }
+      ],
+      "inherit_children": [
+        {
+          "id": 1522,
+          "xml_id": "sale_stock.report_saleorder_document_inherit_sale_stock",
+          "key": "sale_stock.report_saleorder_document_inherit_sale_stock",
+          "name": "report_saleorder_document_inherit_sale_stock",
+          "module": "sale_stock",
+          "inherit_id": 1426,
+          "inherit_key": "sale.report_saleorder_document",
+          "priority": 16,
+          "customized": true,
+          "children": []
+        },
+        {
+          "id": 1577,
+          "xml_id": "hellenia_reports.report_saleorder_document_hellenia",
+          "key": "hellenia_reports.report_saleorder_document_hellenia",
+          "name": "report_saleorder_document_hellenia",
+          "module": "hellenia_reports",
+          "inherit_id": 1426,
+          "inherit_key": "sale.report_saleorder_document",
+          "priority": 16,
+          "customized": true,
+          "children": []
+        }
+      ],
+      "custom_modifiers": [
+        {
+          "id": 1522,
+          "xml_id": "sale_stock.report_saleorder_document_inherit_sale_stock",
+          "key": "sale_stock.report_saleorder_document_inherit_sale_stock",
+          "name": "report_saleorder_document_inherit_sale_stock",
+          "module": "sale_stock",
+          "inherit_id": 1426,
+          "inherit_key": "sale.report_saleorder_document",
+          "priority": 16,
+          "customized": true,
+          "children": []
+        },
+        {
+          "id": 1577,
+          "xml_id": "hellenia_reports.report_saleorder_document_hellenia",
+          "key": "hellenia_reports.report_saleorder_document_hellenia",
+          "name": "report_saleorder_document_hellenia",
+          "module": "hellenia_reports",
+          "inherit_id": 1426,
+          "inherit_key": "sale.report_saleorder_document",
+          "priority": 16,
+          "customized": true,
+          "children": []
+        }
+      ],
+      "is_customized": true
+    },
+    "account.report_invoice": {
+      "label": "Factura (wrapper)",
+      "report_name": "account.report_invoice",
+      "model": "account.move",
+      "xml_id_action": "account.account_invoices_without_payment",
+      "action_name": "PDF without Payment",
+      "paperformat": "",
+      "view": {
+        "id": 799,
+        "xml_id": "account.report_invoice",
+        "key": "account.report_invoice",
+        "name": "report_invoice",
+        "module": "account",
+        "inherit_id": null,
+        "inherit_key": null,
+        "priority": 16,
+        "customized": false
+      },
+      "classification": "original_standard",
+      "inherit_chain_ancestors": [
+        {
+          "id": 799,
+          "xml_id": "account.report_invoice",
+          "key": "account.report_invoice",
+          "name": "report_invoice",
+          "module": "account",
+          "inherit_id": null,
+          "inherit_key": null,
+          "priority": 16,
+          "customized": false
+        }
+      ],
+      "inherit_children": [],
+      "custom_modifiers": [],
+      "is_customized": false
+    },
+    "account.report_invoice_with_payments": {
+      "label": "Factura con pagos",
+      "report_name": "account.report_invoice_with_payments",
+      "model": "account.move",
+      "xml_id_action": "account.account_invoices",
+      "action_name": "Invoice PDF",
+      "paperformat": "Hellenia Carta",
+      "view": {
+        "id": 800,
+        "xml_id": "account.report_invoice_with_payments",
+        "key": "account.report_invoice_with_payments",
+        "name": "report_invoice_with_payments",
+        "module": "account",
+        "inherit_id": null,
+        "inherit_key": null,
+        "priority": 16,
+        "customized": false
+      },
+      "classification": "original_standard",
+      "inherit_chain_ancestors": [
+        {
+          "id": 800,
+          "xml_id": "account.report_invoice_with_payments",
+          "key": "account.report_invoice_with_payments",
+          "name": "report_invoice_with_payments",
+          "module": "account",
+          "inherit_id": null,
+          "inherit_key": null,
+          "priority": 16,
+          "customized": false
+        }
+      ],
+      "inherit_children": [],
+      "custom_modifiers": [],
+      "is_customized": false
+    },
+    "account.report_invoice_document": {
+      "label": "Factura (documento)",
+      "report_name": "account.report_invoice_document",
+      "model": "account.move",
+      "xml_id_action": "",
+      "action_name": "",
+      "paperformat": "",
+      "view": {
+        "id": 795,
+        "xml_id": "account.report_invoice_document",
+        "key": "account.report_invoice_document",
+        "name": "report_invoice_document",
+        "module": "account",
+        "inherit_id": null,
+        "inherit_key": null,
+        "priority": 16,
+        "customized": false
+      },
+      "classification": "original_standard",
+      "inherit_chain_ancestors": [
+        {
+          "id": 795,
+          "xml_id": "account.report_invoice_document",
+          "key": "account.report_invoice_document",
+          "name": "report_invoice_document",
+          "module": "account",
+          "inherit_id": null,
+          "inherit_key": null,
+          "priority": 16,
+          "customized": false
+        }
+      ],
+      "inherit_children": [
+        {
+          "id": 854,
+          "xml_id": "account.report_invoice_document_preview",
+          "key": "account.report_invoice_document_preview",
+          "name": "report_invoice_document_preview",
+          "module": "account",
+          "inherit_id": 795,
+          "inherit_key": "account.report_invoice_document",
+          "priority": 16,
+          "customized": false,
+          "children": []
+        },
+        {
+          "id": 897,
+          "xml_id": "account_accountant.report_invoice_document",
+          "key": "account_accountant.report_invoice_document",
+          "name": "report_invoice_document",
+          "module": "account_accountant",
+          "inherit_id": 795,
+          "inherit_key": "account.report_invoice_document",
+          "priority": 16,
+          "customized": true,
+          "children": []
+        },
+        {
+          "id": 916,
+          "xml_id": "account_edi_ubl_cii.report_invoice_document",
+          "key": "account_edi_ubl_cii.report_invoice_document",
+          "name": "report_invoice_document",
+          "module": "account_edi_ubl_cii",
+          "inherit_id": 795,
+          "inherit_key": "account.report_invoice_document",
+          "priority": 16,
+          "customized": true,
+          "children": []
+        },
+        {
+          "id": 1260,
+          "xml_id": "stock_account.stock_account_report_invoice_document",
+          "key": "stock_account.stock_account_report_invoice_document",
+          "name": "stock_account_report_invoice_document",
+          "module": "stock_account",
+          "inherit_id": 795,
+          "inherit_key": "account.report_invoice_document",
+          "priority": 16,
+          "customized": true,
+          "children": []
+        },
+        {
+          "id": 1544,
+          "xml_id": "account_debit_note.report_invoice_document_inherit_debit_note",
+          "key": "account_debit_note.report_invoice_document_inherit_debit_note",
+          "name": "report_invoice_document_inherit_debit_note",
+          "module": "account_debit_note",
+          "inherit_id": 795,
+          "inherit_key": "account.report_invoice_document",
+          "priority": 16,
+          "customized": true,
+          "children": []
+        },
+        {
+          "id": 1567,
+          "xml_id": "justech_l10n_do_ncf.report_invoice_document_justech_ncf",
+          "key": "justech_l10n_do_ncf.report_invoice_document_justech_ncf",
+          "name": "report_invoice_document_justech_ncf",
+          "module": "justech_l10n_do_ncf",
+          "inherit_id": 795,
+          "inherit_key": "account.report_invoice_document",
+          "priority": 16,
+          "customized": true,
+          "children": [
+            {
+              "id": 1579,
+              "xml_id": "hellenia_reports.report_invoice_document_hellenia_ncf_cleanup",
+              "key": "hellenia_reports.report_invoice_document_hellenia_ncf_cleanup",
+              "name": "report_invoice_document_hellenia_ncf_cleanup",
+              "module": "hellenia_reports",
+              "inherit_id": 1567,
+              "inherit_key": "justech_l10n_do_ncf.report_invoice_document_justech_ncf",
+              "priority": 16,
+              "customized": true,
+              "children": []
+            }
+          ]
+        },
+        {
+          "id": 1578,
+          "xml_id": "hellenia_reports.report_invoice_document_hellenia",
+          "key": "hellenia_reports.report_invoice_document_hellenia",
+          "name": "report_invoice_document_hellenia",
+          "module": "hellenia_reports",
+          "inherit_id": 795,
+          "inherit_key": "account.report_invoice_document",
+          "priority": 16,
+          "customized": true,
+          "children": []
+        },
+        {
+          "id": 2133,
+          "xml_id": "hellenia_reports.report_debit_note_document_hellenia",
+          "key": "hellenia_reports.report_debit_note_document_hellenia",
+          "name": "report_debit_note_document_hellenia",
+          "module": "hellenia_reports",
+          "inherit_id": 795,
+          "inherit_key": "account.report_invoice_document",
+          "priority": 20,
+          "customized": true,
+          "children": []
+        }
+      ],
+      "custom_modifiers": [
+        {
+          "id": 897,
+          "xml_id": "account_accountant.report_invoice_document",
+          "key": "account_accountant.report_invoice_document",
+          "name": "report_invoice_document",
+          "module": "account_accountant",
+          "inherit_id": 795,
+          "inherit_key": "account.report_invoice_document",
+          "priority": 16,
+          "customized": true,
+          "children": []
+        },
+        {
+          "id": 916,
+          "xml_id": "account_edi_ubl_cii.report_invoice_document",
+          "key": "account_edi_ubl_cii.report_invoice_document",
+          "name": "report_invoice_document",
+          "module": "account_edi_ubl_cii",
+          "inherit_id": 795,
+          "inherit_key": "account.report_invoice_document",
+          "priority": 16,
+          "customized": true,
+          "children": []
+        },
+        {
+          "id": 1260,
+          "xml_id": "stock_account.stock_account_report_invoice_document",
+          "key": "stock_account.stock_account_report_invoice_document",
+          "name": "stock_account_report_invoice_document",
+          "module": "stock_account",
+          "inherit_id": 795,
+          "inherit_key": "account.report_invoice_document",
+          "priority": 16,
+          "customized": true,
+          "children": []
+        },
+        {
+          "id": 1544,
+          "xml_id": "account_debit_note.report_invoice_document_inherit_debit_note",
+          "key": "account_debit_note.report_invoice_document_inherit_debit_note",
+          "name": "report_invoice_document_inherit_debit_note",
+          "module": "account_debit_note",
+          "inherit_id": 795,
+          "inherit_key": "account.report_invoice_document",
+          "priority": 16,
+          "customized": true,
+          "children": []
+        },
+        {
+          "id": 1567,
+          "xml_id": "justech_l10n_do_ncf.report_invoice_document_justech_ncf",
+          "key": "justech_l10n_do_ncf.report_invoice_document_justech_ncf",
+          "name": "report_invoice_document_justech_ncf",
+          "module": "justech_l10n_do_ncf",
+          "inherit_id": 795,
+          "inherit_key": "account.report_invoice_document",
+          "priority": 16,
+          "customized": true,
+          "children": [
+            {
+              "id": 1579,
+              "xml_id": "hellenia_reports.report_invoice_document_hellenia_ncf_cleanup",
+              "key": "hellenia_reports.report_invoice_document_hellenia_ncf_cleanup",
+              "name": "report_invoice_document_hellenia_ncf_cleanup",
+              "module": "hellenia_reports",
+              "inherit_id": 1567,
+              "inherit_key": "justech_l10n_do_ncf.report_invoice_document_justech_ncf",
+              "priority": 16,
+              "customized": true,
+              "children": []
+            }
+          ]
+        },
+        {
+          "id": 1579,
+          "xml_id": "hellenia_reports.report_invoice_document_hellenia_ncf_cleanup",
+          "key": "hellenia_reports.report_invoice_document_hellenia_ncf_cleanup",
+          "name": "report_invoice_document_hellenia_ncf_cleanup",
+          "module": "hellenia_reports",
+          "inherit_id": 1567,
+          "inherit_key": "justech_l10n_do_ncf.report_invoice_document_justech_ncf",
+          "priority": 16,
+          "customized": true,
+          "children": []
+        },
+        {
+          "id": 1578,
+          "xml_id": "hellenia_reports.report_invoice_document_hellenia",
+          "key": "hellenia_reports.report_invoice_document_hellenia",
+          "name": "report_invoice_document_hellenia",
+          "module": "hellenia_reports",
+          "inherit_id": 795,
+          "inherit_key": "account.report_invoice_document",
+          "priority": 16,
+          "customized": true,
+          "children": []
+        },
+        {
+          "id": 2133,
+          "xml_id": "hellenia_reports.report_debit_note_document_hellenia",
+          "key": "hellenia_reports.report_debit_note_document_hellenia",
+          "name": "report_debit_note_document_hellenia",
+          "module": "hellenia_reports",
+          "inherit_id": 795,
+          "inherit_key": "account.report_invoice_document",
+          "priority": 20,
+          "customized": true,
+          "children": []
+        }
+      ],
+      "is_customized": true
+    },
+    "purchase.report_purchaseorder": {
+      "label": "Orden compra (wrapper)",
+      "report_name": "purchase.report_purchaseorder",
+      "model": "purchase.order",
+      "xml_id_action": "purchase.action_report_purchase_order",
+      "action_name": "Orden de compra",
+      "paperformat": "Hellenia Carta",
+      "view": {
+        "id": 1361,
+        "xml_id": "purchase.report_purchaseorder",
+        "key": "purchase.report_purchaseorder",
+        "name": "report_purchaseorder",
+        "module": "purchase",
+        "inherit_id": null,
+        "inherit_key": null,
+        "priority": 16,
+        "customized": false
+      },
+      "classification": "original_standard",
+      "inherit_chain_ancestors": [
+        {
+          "id": 1361,
+          "xml_id": "purchase.report_purchaseorder",
+          "key": "purchase.report_purchaseorder",
+          "name": "report_purchaseorder",
+          "module": "purchase",
+          "inherit_id": null,
+          "inherit_key": null,
+          "priority": 16,
+          "customized": false
+        }
+      ],
+      "inherit_children": [],
+      "custom_modifiers": [],
+      "is_customized": false
+    },
+    "purchase.report_purchaseorder_document": {
+      "label": "Orden compra (documento)",
+      "report_name": "purchase.report_purchaseorder_document",
+      "model": "purchase.order",
+      "xml_id_action": "",
+      "action_name": "",
+      "paperformat": "",
+      "view": {
+        "id": 1360,
+        "xml_id": "purchase.report_purchaseorder_document",
+        "key": "purchase.report_purchaseorder_document",
+        "name": "report_purchaseorder_document",
+        "module": "purchase",
+        "inherit_id": null,
+        "inherit_key": null,
+        "priority": 16,
+        "customized": false
+      },
+      "classification": "original_standard",
+      "inherit_chain_ancestors": [
+        {
+          "id": 1360,
+          "xml_id": "purchase.report_purchaseorder_document",
+          "key": "purchase.report_purchaseorder_document",
+          "name": "report_purchaseorder_document",
+          "module": "purchase",
+          "inherit_id": null,
+          "inherit_key": null,
+          "priority": 16,
+          "customized": false
+        }
+      ],
+      "inherit_children": [
+        {
+          "id": 1390,
+          "xml_id": "purchase_stock.report_purchaseorder_document",
+          "key": "purchase_stock.report_purchaseorder_document",
+          "name": "report_purchaseorder_document",
+          "module": "purchase_stock",
+          "inherit_id": 1360,
+          "inherit_key": "purchase.report_purchaseorder_document",
+          "priority": 16,
+          "customized": false,
+          "children": []
+        },
+        {
+          "id": 1580,
+          "xml_id": "hellenia_reports.report_purchaseorder_document_hellenia",
+          "key": "hellenia_reports.report_purchaseorder_document_hellenia",
+          "name": "report_purchaseorder_document_hellenia",
+          "module": "hellenia_reports",
+          "inherit_id": 1360,
+          "inherit_key": "purchase.report_purchaseorder_document",
+          "priority": 16,
+          "customized": true,
+          "children": []
+        }
+      ],
+      "custom_modifiers": [
+        {
+          "id": 1580,
+          "xml_id": "hellenia_reports.report_purchaseorder_document_hellenia",
+          "key": "hellenia_reports.report_purchaseorder_document_hellenia",
+          "name": "report_purchaseorder_document_hellenia",
+          "module": "hellenia_reports",
+          "inherit_id": 1360,
+          "inherit_key": "purchase.report_purchaseorder_document",
+          "priority": 16,
+          "customized": true,
+          "children": []
+        }
+      ],
+      "is_customized": true
+    },
+    "purchase.report_purchasequotation": {
+      "label": "RFQ (wrapper)",
+      "report_name": "purchase.report_purchasequotation",
+      "model": "purchase.order",
+      "xml_id_action": "purchase.report_purchase_quotation",
+      "action_name": "Solicitud de cotización",
+      "paperformat": "Hellenia Carta",
+      "view": {
+        "id": 1364,
+        "xml_id": "purchase.report_purchasequotation",
+        "key": "purchase.report_purchasequotation",
+        "name": "report_purchasequotation",
+        "module": "purchase",
+        "inherit_id": null,
+        "inherit_key": null,
+        "priority": 16,
+        "customized": false
+      },
+      "classification": "original_standard",
+      "inherit_chain_ancestors": [
+        {
+          "id": 1364,
+          "xml_id": "purchase.report_purchasequotation",
+          "key": "purchase.report_purchasequotation",
+          "name": "report_purchasequotation",
+          "module": "purchase",
+          "inherit_id": null,
+          "inherit_key": null,
+          "priority": 16,
+          "customized": false
+        }
+      ],
+      "inherit_children": [],
+      "custom_modifiers": [],
+      "is_customized": false
+    },
+    "purchase.report_purchasequotation_document": {
+      "label": "RFQ (documento)",
+      "report_name": "purchase.report_purchasequotation_document",
+      "model": "purchase.order",
+      "xml_id_action": "",
+      "action_name": "",
+      "paperformat": "",
+      "view": {
+        "id": 1363,
+        "xml_id": "purchase.report_purchasequotation_document",
+        "key": "purchase.report_purchasequotation_document",
+        "name": "report_purchasequotation_document",
+        "module": "purchase",
+        "inherit_id": null,
+        "inherit_key": null,
+        "priority": 16,
+        "customized": false
+      },
+      "classification": "original_standard",
+      "inherit_chain_ancestors": [
+        {
+          "id": 1363,
+          "xml_id": "purchase.report_purchasequotation_document",
+          "key": "purchase.report_purchasequotation_document",
+          "name": "report_purchasequotation_document",
+          "module": "purchase",
+          "inherit_id": null,
+          "inherit_key": null,
+          "priority": 16,
+          "customized": false
+        }
+      ],
+      "inherit_children": [
+        {
+          "id": 1391,
+          "xml_id": "purchase_stock.report_purchasequotation_document",
+          "key": "purchase_stock.report_purchasequotation_document",
+          "name": "report_purchasequotation_document",
+          "module": "purchase_stock",
+          "inherit_id": 1363,
+          "inherit_key": "purchase.report_purchasequotation_document",
+          "priority": 16,
+          "customized": false,
+          "children": []
+        },
+        {
+          "id": 1581,
+          "xml_id": "hellenia_reports.report_purchasequotation_document_hellenia",
+          "key": "hellenia_reports.report_purchasequotation_document_hellenia",
+          "name": "report_purchasequotation_document_hellenia",
+          "module": "hellenia_reports",
+          "inherit_id": 1363,
+          "inherit_key": "purchase.report_purchasequotation_document",
+          "priority": 16,
+          "customized": true,
+          "children": []
+        }
+      ],
+      "custom_modifiers": [
+        {
+          "id": 1581,
+          "xml_id": "hellenia_reports.report_purchasequotation_document_hellenia",
+          "key": "hellenia_reports.report_purchasequotation_document_hellenia",
+          "name": "report_purchasequotation_document_hellenia",
+          "module": "hellenia_reports",
+          "inherit_id": 1363,
+          "inherit_key": "purchase.report_purchasequotation_document",
+          "priority": 16,
+          "customized": true,
+          "children": []
+        }
+      ],
+      "is_customized": true
+    },
+    "account.report_payment_receipt": {
+      "label": "Recibo de pago (wrapper)",
+      "report_name": "account.report_payment_receipt",
+      "model": "account.payment",
+      "xml_id_action": "account.action_report_payment_receipt",
+      "action_name": "Payment Receipt",
+      "paperformat": "Hellenia Carta",
+      "view": {
+        "id": 833,
+        "xml_id": "account.report_payment_receipt",
+        "key": "account.report_payment_receipt",
+        "name": "report_payment_receipt",
+        "module": "account",
+        "inherit_id": null,
+        "inherit_key": null,
+        "priority": 16,
+        "customized": false
+      },
+      "classification": "original_standard",
+      "inherit_chain_ancestors": [
+        {
+          "id": 833,
+          "xml_id": "account.report_payment_receipt",
+          "key": "account.report_payment_receipt",
+          "name": "report_payment_receipt",
+          "module": "account",
+          "inherit_id": null,
+          "inherit_key": null,
+          "priority": 16,
+          "customized": false
+        }
+      ],
+      "inherit_children": [],
+      "custom_modifiers": [],
+      "is_customized": false
+    },
+    "account.report_payment_receipt_document": {
+      "label": "Recibo de pago (documento)",
+      "report_name": "account.report_payment_receipt_document",
+      "model": "account.payment",
+      "xml_id_action": "",
+      "action_name": "",
+      "paperformat": "",
+      "view": {
+        "id": 832,
+        "xml_id": "account.report_payment_receipt_document",
+        "key": "account.report_payment_receipt_document",
+        "name": "report_payment_receipt_document",
+        "module": "account",
+        "inherit_id": null,
+        "inherit_key": null,
+        "priority": 16,
+        "customized": false
+      },
+      "classification": "original_standard",
+      "inherit_chain_ancestors": [
+        {
+          "id": 832,
+          "xml_id": "account.report_payment_receipt_document",
+          "key": "account.report_payment_receipt_document",
+          "name": "report_payment_receipt_document",
+          "module": "account",
+          "inherit_id": null,
+          "inherit_key": null,
+          "priority": 16,
+          "customized": false
+        }
+      ],
+      "inherit_children": [
+        {
+          "id": 2118,
+          "xml_id": "hellenia_account.report_payment_receipt_document_hellenia",
+          "key": "hellenia_account.report_payment_receipt_document_hellenia",
+          "name": "report_payment_receipt_document_hellenia",
+          "module": "hellenia_account",
+          "inherit_id": 832,
+          "inherit_key": "account.report_payment_receipt_document",
+          "priority": 16,
+          "customized": true,
+          "children": [
+            {
+              "id": 2135,
+              "xml_id": "hellenia_reports.report_payment_receipt_document_hellenia_cleanup",
+              "key": "hellenia_reports.report_payment_receipt_document_hellenia_cleanup",
+              "name": "report_payment_receipt_document_hellenia_cleanup",
+              "module": "hellenia_reports",
+              "inherit_id": 2118,
+              "inherit_key": "hellenia_account.report_payment_receipt_document_hellenia",
+              "priority": 60,
+              "customized": true,
+              "children": []
+            }
+          ]
+        },
+        {
+          "id": 2134,
+          "xml_id": "hellenia_reports.report_payment_receipt_document_hellenia_visual",
+          "key": "hellenia_reports.report_payment_receipt_document_hellenia_visual",
+          "name": "report_payment_receipt_document_hellenia_visual",
+          "module": "hellenia_reports",
+          "inherit_id": 832,
+          "inherit_key": "account.report_payment_receipt_document",
+          "priority": 50,
+          "customized": true,
+          "children": []
+        }
+      ],
+      "custom_modifiers": [
+        {
+          "id": 2118,
+          "xml_id": "hellenia_account.report_payment_receipt_document_hellenia",
+          "key": "hellenia_account.report_payment_receipt_document_hellenia",
+          "name": "report_payment_receipt_document_hellenia",
+          "module": "hellenia_account",
+          "inherit_id": 832,
+          "inherit_key": "account.report_payment_receipt_document",
+          "priority": 16,
+          "customized": true,
+          "children": [
+            {
+              "id": 2135,
+              "xml_id": "hellenia_reports.report_payment_receipt_document_hellenia_cleanup",
+              "key": "hellenia_reports.report_payment_receipt_document_hellenia_cleanup",
+              "name": "report_payment_receipt_document_hellenia_cleanup",
+              "module": "hellenia_reports",
+              "inherit_id": 2118,
+              "inherit_key": "hellenia_account.report_payment_receipt_document_hellenia",
+              "priority": 60,
+              "customized": true,
+              "children": []
+            }
+          ]
+        },
+        {
+          "id": 2135,
+          "xml_id": "hellenia_reports.report_payment_receipt_document_hellenia_cleanup",
+          "key": "hellenia_reports.report_payment_receipt_document_hellenia_cleanup",
+          "name": "report_payment_receipt_document_hellenia_cleanup",
+          "module": "hellenia_reports",
+          "inherit_id": 2118,
+          "inherit_key": "hellenia_account.report_payment_receipt_document_hellenia",
+          "priority": 60,
+          "customized": true,
+          "children": []
+        },
+        {
+          "id": 2134,
+          "xml_id": "hellenia_reports.report_payment_receipt_document_hellenia_visual",
+          "key": "hellenia_reports.report_payment_receipt_document_hellenia_visual",
+          "name": "report_payment_receipt_document_hellenia_visual",
+          "module": "hellenia_reports",
+          "inherit_id": 832,
+          "inherit_key": "account.report_payment_receipt_document",
+          "priority": 50,
+          "customized": true,
+          "children": []
+        }
+      ],
+      "is_customized": true
+    },
+    "stock.report_deliveryslip": {
+      "label": "Albarán entrega (wrapper)",
+      "report_name": "stock.report_deliveryslip",
+      "model": "stock.picking",
+      "xml_id_action": "stock.action_report_delivery",
+      "action_name": "Recibo de entrega",
+      "paperformat": "Hellenia Carta",
+      "view": {
+        "id": 1102,
+        "xml_id": "stock.report_deliveryslip",
+        "key": "stock.report_deliveryslip",
+        "name": "report_deliveryslip",
+        "module": "stock",
+        "inherit_id": null,
+        "inherit_key": null,
+        "priority": 16,
+        "customized": false
+      },
+      "classification": "original_standard",
+      "inherit_chain_ancestors": [
+        {
+          "id": 1102,
+          "xml_id": "stock.report_deliveryslip",
+          "key": "stock.report_deliveryslip",
+          "name": "report_deliveryslip",
+          "module": "stock",
+          "inherit_id": null,
+          "inherit_key": null,
+          "priority": 16,
+          "customized": false
+        }
+      ],
+      "inherit_children": [],
+      "custom_modifiers": [],
+      "is_customized": false
+    },
+    "stock.report_delivery_document": {
+      "label": "Albarán entrega (documento)",
+      "report_name": "stock.report_delivery_document",
+      "model": "stock.picking",
+      "xml_id_action": "",
+      "action_name": "",
+      "paperformat": "",
+      "view": {
+        "id": 1097,
+        "xml_id": "stock.report_delivery_document",
+        "key": "stock.report_delivery_document",
+        "name": "report_delivery_document",
+        "module": "stock",
+        "inherit_id": null,
+        "inherit_key": null,
+        "priority": 16,
+        "customized": false
+      },
+      "classification": "original_standard",
+      "inherit_chain_ancestors": [
+        {
+          "id": 1097,
+          "xml_id": "stock.report_delivery_document",
+          "key": "stock.report_delivery_document",
+          "name": "report_delivery_document",
+          "module": "stock",
+          "inherit_id": null,
+          "inherit_key": null,
+          "priority": 16,
+          "customized": false
+        }
+      ],
+      "inherit_children": [
+        {
+          "id": 1523,
+          "xml_id": "sale_stock.report_delivery_document_inherit_sale_stock",
+          "key": "sale_stock.report_delivery_document_inherit_sale_stock",
+          "name": "report_delivery_document_inherit_sale_stock",
+          "module": "sale_stock",
+          "inherit_id": 1097,
+          "inherit_key": "stock.report_delivery_document",
+          "priority": 16,
+          "customized": true,
+          "children": []
+        },
+        {
+          "id": 1582,
+          "xml_id": "hellenia_reports.report_delivery_document_hellenia",
+          "key": "hellenia_reports.report_delivery_document_hellenia",
+          "name": "report_delivery_document_hellenia",
+          "module": "hellenia_reports",
+          "inherit_id": 1097,
+          "inherit_key": "stock.report_delivery_document",
+          "priority": 16,
+          "customized": true,
+          "children": []
+        }
+      ],
+      "custom_modifiers": [
+        {
+          "id": 1523,
+          "xml_id": "sale_stock.report_delivery_document_inherit_sale_stock",
+          "key": "sale_stock.report_delivery_document_inherit_sale_stock",
+          "name": "report_delivery_document_inherit_sale_stock",
+          "module": "sale_stock",
+          "inherit_id": 1097,
+          "inherit_key": "stock.report_delivery_document",
+          "priority": 16,
+          "customized": true,
+          "children": []
+        },
+        {
+          "id": 1582,
+          "xml_id": "hellenia_reports.report_delivery_document_hellenia",
+          "key": "hellenia_reports.report_delivery_document_hellenia",
+          "name": "report_delivery_document_hellenia",
+          "module": "hellenia_reports",
+          "inherit_id": 1097,
+          "inherit_key": "stock.report_delivery_document",
+          "priority": 16,
+          "customized": true,
+          "children": []
+        }
+      ],
+      "is_customized": true
+    },
+    "stock.report_picking": {
+      "label": "Operación stock / picking",
+      "report_name": "stock.report_picking",
+      "model": "stock.picking",
+      "xml_id_action": "stock.action_report_picking",
+      "action_name": "Operaciones de recolección",
+      "paperformat": "Hellenia Carta",
+      "view": {
+        "id": 1095,
+        "xml_id": "stock.report_picking",
+        "key": "stock.report_picking",
+        "name": "report_picking",
+        "module": "stock",
+        "inherit_id": null,
+        "inherit_key": null,
+        "priority": 16,
+        "customized": false
+      },
+      "classification": "original_standard",
+      "inherit_chain_ancestors": [
+        {
+          "id": 1095,
+          "xml_id": "stock.report_picking",
+          "key": "stock.report_picking",
+          "name": "report_picking",
+          "module": "stock",
+          "inherit_id": null,
+          "inherit_key": null,
+          "priority": 16,
+          "customized": false
+        }
+      ],
+      "inherit_children": [
+        {
+          "id": 1583,
+          "xml_id": "hellenia_reports.report_picking_hellenia",
+          "key": "hellenia_reports.report_picking_hellenia",
+          "name": "report_picking_hellenia",
+          "module": "hellenia_reports",
+          "inherit_id": 1095,
+          "inherit_key": "stock.report_picking",
+          "priority": 16,
+          "customized": true,
+          "children": []
+        }
+      ],
+      "custom_modifiers": [
+        {
+          "id": 1583,
+          "xml_id": "hellenia_reports.report_picking_hellenia",
+          "key": "hellenia_reports.report_picking_hellenia",
+          "name": "report_picking_hellenia",
+          "module": "hellenia_reports",
+          "inherit_id": 1095,
+          "inherit_key": "stock.report_picking",
+          "priority": 16,
+          "customized": true,
+          "children": []
+        }
+      ],
+      "is_customized": true
+    }
+  },
+  "layouts": {
+    "web.external_layout": {
+      "view": {
+        "id": 212,
+        "xml_id": "web.external_layout",
+        "key": "web.external_layout",
+        "name": "external_layout",
+        "module": "web",
+        "inherit_id": null,
+        "inherit_key": null,
+        "priority": 16,
+        "customized": false
+      },
+      "classification": "original_standard",
+      "inherit_children": []
+    },
+    "web.external_layout_standard": {
+      "view": {
+        "id": 208,
+        "xml_id": "web.external_layout_standard",
+        "key": "web.external_layout_standard",
+        "name": "external_layout_standard",
+        "module": "web",
+        "inherit_id": null,
+        "inherit_key": null,
+        "priority": 16,
+        "customized": false
+      },
+      "classification": "original_standard",
+      "inherit_children": [
+        {
+          "id": 917,
+          "xml_id": "account_edi_ubl_cii.layout_invoices_generated_by_odoo",
+          "key": "account_edi_ubl_cii.layout_invoices_generated_by_odoo",
+          "name": "layout_invoices_generated_by_odoo",
+          "module": "account_edi_ubl_cii",
+          "inherit_id": 208,
+          "inherit_key": "web.external_layout_standard",
+          "priority": 16,
+          "customized": true,
+          "children": []
+        }
+      ]
+    },
+    "web.external_layout_boxed": {
+      "view": {
+        "id": 206,
+        "xml_id": "web.external_layout_boxed",
+        "key": "web.external_layout_boxed",
+        "name": "external_layout_boxed",
+        "module": "web",
+        "inherit_id": null,
+        "inherit_key": null,
+        "priority": 16,
+        "customized": false
+      },
+      "classification": "original_standard",
+      "inherit_children": []
+    },
+    "web.external_layout_bold": {
+      "view": {
+        "id": 207,
+        "xml_id": "web.external_layout_bold",
+        "key": "web.external_layout_bold",
+        "name": "external_layout_bold",
+        "module": "web",
+        "inherit_id": null,
+        "inherit_key": null,
+        "priority": 16,
+        "customized": false
+      },
+      "classification": "original_standard",
+      "inherit_children": []
+    },
+    "web.external_layout_striped": {
+      "view": {
+        "id": 205,
+        "xml_id": "web.external_layout_striped",
+        "key": "web.external_layout_striped",
+        "name": "external_layout_striped",
+        "module": "web",
+        "inherit_id": null,
+        "inherit_key": null,
+        "priority": 16,
+        "customized": false
+      },
+      "classification": "original_standard",
+      "inherit_children": []
+    },
+    "web.html_container": {
+      "view": {
+        "id": 200,
+        "xml_id": "web.html_container",
+        "key": "web.html_container",
+        "name": "html_container",
+        "module": "web",
+        "inherit_id": null,
+        "inherit_key": null,
+        "priority": 16,
+        "customized": false
+      },
+      "classification": "original_standard",
+      "inherit_children": []
+    },
+    "web.report_layout": {
+      "view": {
+        "id": 198,
+        "xml_id": "web.report_layout",
+        "key": "web.report_layout",
+        "name": "Report layout",
+        "module": "web",
+        "inherit_id": null,
+        "inherit_key": null,
+        "priority": 16,
+        "customized": false
+      },
+      "classification": "original_standard",
+      "inherit_children": [
+        {
+          "id": 621,
+          "xml_id": "snailmail.report_layout",
+          "key": "snailmail.report_layout",
+          "name": "report_layout",
+          "module": "snailmail",
+          "inherit_id": 198,
+          "inherit_key": "web.report_layout",
+          "priority": 16,
+          "customized": false,
+          "children": []
+        },
+        {
+          "id": 1067,
+          "xml_id": "snailmail_account_followup.report_layout",
+          "key": "snailmail_account_followup.report_layout",
+          "name": "report_layout",
+          "module": "snailmail_account_followup",
+          "inherit_id": 198,
+          "inherit_key": "web.report_layout",
+          "priority": 16,
+          "customized": true,
+          "children": []
+        }
+      ]
+    },
+    "web.basic_layout": {
+      "view": {
+        "id": 214,
+        "xml_id": "web.basic_layout",
+        "key": "web.basic_layout",
+        "name": "basic_layout",
+        "module": "web",
+        "inherit_id": null,
+        "inherit_key": null,
+        "priority": 16,
+        "customized": false
+      },
+      "classification": "original_standard",
+      "inherit_children": []
+    },
+    "web.minimal_layout": {
+      "view": {
+        "id": 203,
+        "xml_id": "web.minimal_layout",
+        "key": "web.minimal_layout",
+        "name": "minimal_layout",
+        "module": "web",
+        "inherit_id": null,
+        "inherit_key": null,
+        "priority": 16,
+        "customized": false
+      },
+      "classification": "original_standard",
+      "inherit_children": [
+        {
+          "id": 622,
+          "xml_id": "snailmail.minimal_layout",
+          "key": "snailmail.minimal_layout",
+          "name": "minimal_layout",
+          "module": "snailmail",
+          "inherit_id": 203,
+          "inherit_key": "web.minimal_layout",
+          "priority": 16,
+          "customized": false,
+          "children": []
+        },
+        {
+          "id": 1068,
+          "xml_id": "snailmail_account_followup.minimal_layout",
+          "key": "snailmail_account_followup.minimal_layout",
+          "name": "minimal_layout",
+          "module": "snailmail_account_followup",
+          "inherit_id": 203,
+          "inherit_key": "web.minimal_layout",
+          "priority": 16,
+          "customized": true,
+          "children": []
+        }
+      ]
+    }
+  },
+  "custom_inherits_summary": [
+    {
+      "target_report": "sale.report_saleorder_raw",
+      "custom_view_key": "hellenia_reports.report_saleorder_raw_hellenia_quotation",
+      "custom_xml_id": "hellenia_reports.report_saleorder_raw_hellenia_quotation",
+      "module": "hellenia_reports"
+    },
+    {
+      "target_report": "sale.report_saleorder_document",
+      "custom_view_key": "sale_stock.report_saleorder_document_inherit_sale_stock",
+      "custom_xml_id": "sale_stock.report_saleorder_document_inherit_sale_stock",
+      "module": "sale_stock"
+    },
+    {
+      "target_report": "sale.report_saleorder_document",
+      "custom_view_key": "hellenia_reports.report_saleorder_document_hellenia",
+      "custom_xml_id": "hellenia_reports.report_saleorder_document_hellenia",
+      "module": "hellenia_reports"
+    },
+    {
+      "target_report": "account.report_invoice_document",
+      "custom_view_key": "account_accountant.report_invoice_document",
+      "custom_xml_id": "account_accountant.report_invoice_document",
+      "module": "account_accountant"
+    },
+    {
+      "target_report": "account.report_invoice_document",
+      "custom_view_key": "account_edi_ubl_cii.report_invoice_document",
+      "custom_xml_id": "account_edi_ubl_cii.report_invoice_document",
+      "module": "account_edi_ubl_cii"
+    },
+    {
+      "target_report": "account.report_invoice_document",
+      "custom_view_key": "stock_account.stock_account_report_invoice_document",
+      "custom_xml_id": "stock_account.stock_account_report_invoice_document",
+      "module": "stock_account"
+    },
+    {
+      "target_report": "account.report_invoice_document",
+      "custom_view_key": "account_debit_note.report_invoice_document_inherit_debit_note",
+      "custom_xml_id": "account_debit_note.report_invoice_document_inherit_debit_note",
+      "module": "account_debit_note"
+    },
+    {
+      "target_report": "account.report_invoice_document",
+      "custom_view_key": "justech_l10n_do_ncf.report_invoice_document_justech_ncf",
+      "custom_xml_id": "justech_l10n_do_ncf.report_invoice_document_justech_ncf",
+      "module": "justech_l10n_do_ncf"
+    },
+    {
+      "target_report": "account.report_invoice_document",
+      "custom_view_key": "hellenia_reports.report_invoice_document_hellenia_ncf_cleanup",
+      "custom_xml_id": "hellenia_reports.report_invoice_document_hellenia_ncf_cleanup",
+      "module": "hellenia_reports"
+    },
+    {
+      "target_report": "account.report_invoice_document",
+      "custom_view_key": "hellenia_reports.report_invoice_document_hellenia",
+      "custom_xml_id": "hellenia_reports.report_invoice_document_hellenia",
+      "module": "hellenia_reports"
+    },
+    {
+      "target_report": "account.report_invoice_document",
+      "custom_view_key": "hellenia_reports.report_debit_note_document_hellenia",
+      "custom_xml_id": "hellenia_reports.report_debit_note_document_hellenia",
+      "module": "hellenia_reports"
+    },
+    {
+      "target_report": "purchase.report_purchaseorder_document",
+      "custom_view_key": "hellenia_reports.report_purchaseorder_document_hellenia",
+      "custom_xml_id": "hellenia_reports.report_purchaseorder_document_hellenia",
+      "module": "hellenia_reports"
+    },
+    {
+      "target_report": "purchase.report_purchasequotation_document",
+      "custom_view_key": "hellenia_reports.report_purchasequotation_document_hellenia",
+      "custom_xml_id": "hellenia_reports.report_purchasequotation_document_hellenia",
+      "module": "hellenia_reports"
+    },
+    {
+      "target_report": "account.report_payment_receipt_document",
+      "custom_view_key": "hellenia_account.report_payment_receipt_document_hellenia",
+      "custom_xml_id": "hellenia_account.report_payment_receipt_document_hellenia",
+      "module": "hellenia_account"
+    },
+    {
+      "target_report": "account.report_payment_receipt_document",
+      "custom_view_key": "hellenia_reports.report_payment_receipt_document_hellenia_cleanup",
+      "custom_xml_id": "hellenia_reports.report_payment_receipt_document_hellenia_cleanup",
+      "module": "hellenia_reports"
+    },
+    {
+      "target_report": "account.report_payment_receipt_document",
+      "custom_view_key": "hellenia_reports.report_payment_receipt_document_hellenia_visual",
+      "custom_xml_id": "hellenia_reports.report_payment_receipt_document_hellenia_visual",
+      "module": "hellenia_reports"
+    },
+    {
+      "target_report": "stock.report_delivery_document",
+      "custom_view_key": "sale_stock.report_delivery_document_inherit_sale_stock",
+      "custom_xml_id": "sale_stock.report_delivery_document_inherit_sale_stock",
+      "module": "sale_stock"
+    },
+    {
+      "target_report": "stock.report_delivery_document",
+      "custom_view_key": "hellenia_reports.report_delivery_document_hellenia",
+      "custom_xml_id": "hellenia_reports.report_delivery_document_hellenia",
+      "module": "hellenia_reports"
+    },
+    {
+      "target_report": "stock.report_picking",
+      "custom_view_key": "hellenia_reports.report_picking_hellenia",
+      "custom_xml_id": "hellenia_reports.report_picking_hellenia",
+      "module": "hellenia_reports"
+    }
+  ],
+  "all_custom_report_views": [
+    {
+      "key": "hellenia_reports.report_delivery_document_hellenia",
+      "xml_id": "hellenia_reports.report_delivery_document_hellenia",
+      "inherits": "stock.report_delivery_document",
+      "root_standard_key": "stock.report_delivery_document",
+      "module": "hellenia_reports",
+      "name": "report_delivery_document_hellenia"
+    },
+    {
+      "key": "sale_stock.report_delivery_document_inherit_sale_stock",
+      "xml_id": "sale_stock.report_delivery_document_inherit_sale_stock",
+      "inherits": "stock.report_delivery_document",
+      "root_standard_key": "stock.report_delivery_document",
+      "module": "sale_stock",
+      "name": "report_delivery_document_inherit_sale_stock"
+    },
+    {
+      "key": "account_accountant.report_invoice_document",
+      "xml_id": "account_accountant.report_invoice_document",
+      "inherits": "account.report_invoice_document",
+      "root_standard_key": "account.report_invoice_document",
+      "module": "account_accountant",
+      "name": "report_invoice_document"
+    },
+    {
+      "key": "account_edi_ubl_cii.report_invoice_document",
+      "xml_id": "account_edi_ubl_cii.report_invoice_document",
+      "inherits": "account.report_invoice_document",
+      "root_standard_key": "account.report_invoice_document",
+      "module": "account_edi_ubl_cii",
+      "name": "report_invoice_document"
+    },
+    {
+      "key": "hellenia_reports.report_invoice_document_hellenia",
+      "xml_id": "hellenia_reports.report_invoice_document_hellenia",
+      "inherits": "account.report_invoice_document",
+      "root_standard_key": "account.report_invoice_document",
+      "module": "hellenia_reports",
+      "name": "report_invoice_document_hellenia"
+    },
+    {
+      "key": "hellenia_reports.report_invoice_document_hellenia_ncf_cleanup",
+      "xml_id": "hellenia_reports.report_invoice_document_hellenia_ncf_cleanup",
+      "inherits": "justech_l10n_do_ncf.report_invoice_document_justech_ncf",
+      "root_standard_key": "account.report_invoice_document",
+      "module": "hellenia_reports",
+      "name": "report_invoice_document_hellenia_ncf_cleanup"
+    },
+    {
+      "key": "account_debit_note.report_invoice_document_inherit_debit_note",
+      "xml_id": "account_debit_note.report_invoice_document_inherit_debit_note",
+      "inherits": "account.report_invoice_document",
+      "root_standard_key": "account.report_invoice_document",
+      "module": "account_debit_note",
+      "name": "report_invoice_document_inherit_debit_note"
+    },
+    {
+      "key": "justech_l10n_do_ncf.report_invoice_document_justech_ncf",
+      "xml_id": "justech_l10n_do_ncf.report_invoice_document_justech_ncf",
+      "inherits": "account.report_invoice_document",
+      "root_standard_key": "account.report_invoice_document",
+      "module": "justech_l10n_do_ncf",
+      "name": "report_invoice_document_justech_ncf"
+    },
+    {
+      "key": "base.report_irmodeloverview",
+      "xml_id": "base.report_irmodeloverview",
+      "inherits": null,
+      "root_standard_key": "base.report_irmodeloverview",
+      "module": "base",
+      "name": "report_irmodeloverview"
+    },
+    {
+      "key": "base.report_irmodulereference",
+      "xml_id": "base.report_irmodulereference",
+      "inherits": null,
+      "root_standard_key": "base.report_irmodulereference",
+      "module": "base",
+      "name": "report_irmodulereference"
+    },
+    {
+      "key": "snailmail_account_followup.report_layout",
+      "xml_id": "snailmail_account_followup.report_layout",
+      "inherits": "web.report_layout",
+      "root_standard_key": "web.report_layout",
+      "module": "snailmail_account_followup",
+      "name": "report_layout"
+    },
+    {
+      "key": "product.report_packagingbarcode",
+      "xml_id": "product.report_packagingbarcode",
+      "inherits": null,
+      "root_standard_key": "product.report_packagingbarcode",
+      "module": "product",
+      "name": "report_packagingbarcode"
+    },
+    {
+      "key": "hellenia_account.report_payment_receipt_document_hellenia",
+      "xml_id": "hellenia_account.report_payment_receipt_document_hellenia",
+      "inherits": "account.report_payment_receipt_document",
+      "root_standard_key": "account.report_payment_receipt_document",
+      "module": "hellenia_account",
+      "name": "report_payment_receipt_document_hellenia"
+    },
+    {
+      "key": "hellenia_reports.report_picking_hellenia",
+      "xml_id": "hellenia_reports.report_picking_hellenia",
+      "inherits": "stock.report_picking",
+      "root_standard_key": "stock.report_picking",
+      "module": "hellenia_reports",
+      "name": "report_picking_hellenia"
+    },
+    {
+      "key": "product.report_pricelist",
+      "xml_id": "product.report_pricelist",
+      "inherits": null,
+      "root_standard_key": "product.report_pricelist",
+      "module": "product",
+      "name": "report_pricelist"
+    },
+    {
+      "key": "product.report_pricelist_page",
+      "xml_id": "product.report_pricelist_page",
+      "inherits": null,
+      "root_standard_key": "product.report_pricelist_page",
+      "module": "product",
+      "name": "report_pricelist_page"
+    },
+    {
+      "key": "product.report_productlabel",
+      "xml_id": "product.report_productlabel",
+      "inherits": null,
+      "root_standard_key": "product.report_productlabel",
+      "module": "product",
+      "name": "report_productlabel"
+    },
+    {
+      "key": "product.report_productlabel_dymo",
+      "xml_id": "product.report_productlabel_dymo",
+      "inherits": null,
+      "root_standard_key": "product.report_productlabel_dymo",
+      "module": "product",
+      "name": "report_productlabel_dymo"
+    },
+    {
+      "key": "product.report_producttemplatelabel2x7",
+      "xml_id": "product.report_producttemplatelabel2x7",
+      "inherits": null,
+      "root_standard_key": "product.report_producttemplatelabel2x7",
+      "module": "product",
+      "name": "report_producttemplatelabel2x7"
+    },
+    {
+      "key": "product.report_producttemplatelabel4x12",
+      "xml_id": "product.report_producttemplatelabel4x12",
+      "inherits": null,
+      "root_standard_key": "product.report_producttemplatelabel4x12",
+      "module": "product",
+      "name": "report_producttemplatelabel4x12"
+    },
+    {
+      "key": "product.report_producttemplatelabel4x12noprice",
+      "xml_id": "product.report_producttemplatelabel4x12noprice",
+      "inherits": null,
+      "root_standard_key": "product.report_producttemplatelabel4x12noprice",
+      "module": "product",
+      "name": "report_producttemplatelabel4x12noprice"
+    },
+    {
+      "key": "product.report_producttemplatelabel4x7",
+      "xml_id": "product.report_producttemplatelabel4x7",
+      "inherits": null,
+      "root_standard_key": "product.report_producttemplatelabel4x7",
+      "module": "product",
+      "name": "report_producttemplatelabel4x7"
+    },
+    {
+      "key": "product.report_producttemplatelabel_dymo",
+      "xml_id": "product.report_producttemplatelabel_dymo",
+      "inherits": null,
+      "root_standard_key": "product.report_producttemplatelabel_dymo",
+      "module": "product",
+      "name": "report_producttemplatelabel_dymo"
+    },
+    {
+      "key": "hellenia_reports.report_purchaseorder_document_hellenia",
+      "xml_id": "hellenia_reports.report_purchaseorder_document_hellenia",
+      "inherits": "purchase.report_purchaseorder_document",
+      "root_standard_key": "purchase.report_purchaseorder_document",
+      "module": "hellenia_reports",
+      "name": "report_purchaseorder_document_hellenia"
+    },
+    {
+      "key": "hellenia_reports.report_purchasequotation_document_hellenia",
+      "xml_id": "hellenia_reports.report_purchasequotation_document_hellenia",
+      "inherits": "purchase.report_purchasequotation_document",
+      "root_standard_key": "purchase.report_purchasequotation_document",
+      "module": "hellenia_reports",
+      "name": "report_purchasequotation_document_hellenia"
+    },
+    {
+      "key": "hellenia_reports.report_saleorder_document_hellenia",
+      "xml_id": "hellenia_reports.report_saleorder_document_hellenia",
+      "inherits": "sale.report_saleorder_document",
+      "root_standard_key": "sale.report_saleorder_document",
+      "module": "hellenia_reports",
+      "name": "report_saleorder_document_hellenia"
+    },
+    {
+      "key": "sale_stock.report_saleorder_document_inherit_sale_stock",
+      "xml_id": "sale_stock.report_saleorder_document_inherit_sale_stock",
+      "inherits": "sale.report_saleorder_document",
+      "root_standard_key": "sale.report_saleorder_document",
+      "module": "sale_stock",
+      "name": "report_saleorder_document_inherit_sale_stock"
+    },
+    {
+      "key": "hellenia_reports.report_saleorder_raw_hellenia_quotation",
+      "xml_id": "hellenia_reports.report_saleorder_raw_hellenia_quotation",
+      "inherits": "sale.report_saleorder_raw",
+      "root_standard_key": "sale.report_saleorder_raw",
+      "module": "hellenia_reports",
+      "name": "report_saleorder_raw_hellenia_quotation"
+    },
+    {
+      "key": "product.report_simple_label2x7",
+      "xml_id": "product.report_simple_label2x7",
+      "inherits": null,
+      "root_standard_key": "product.report_simple_label2x7",
+      "module": "product",
+      "name": "report_simple_label2x7"
+    },
+    {
+      "key": "product.report_simple_label4x12",
+      "xml_id": "product.report_simple_label4x12",
+      "inherits": null,
+      "root_standard_key": "product.report_simple_label4x12",
+      "module": "product",
+      "name": "report_simple_label4x12"
+    },
+    {
+      "key": "product.report_simple_label4x12_no_price",
+      "xml_id": "product.report_simple_label4x12_no_price",
+      "inherits": null,
+      "root_standard_key": "product.report_simple_label4x12_no_price",
+      "module": "product",
+      "name": "report_simple_label4x12_no_price"
+    },
+    {
+      "key": "product.report_simple_label4x7",
+      "xml_id": "product.report_simple_label4x7",
+      "inherits": null,
+      "root_standard_key": "product.report_simple_label4x7",
+      "module": "product",
+      "name": "report_simple_label4x7"
+    },
+    {
+      "key": "product.report_simple_label_dymo",
+      "xml_id": "product.report_simple_label_dymo",
+      "inherits": null,
+      "root_standard_key": "product.report_simple_label_dymo",
+      "module": "product",
+      "name": "report_simple_label_dymo"
+    },
+    {
+      "key": "hellenia_reports.report_debit_note_document_hellenia",
+      "xml_id": "hellenia_reports.report_debit_note_document_hellenia",
+      "inherits": "account.report_invoice_document",
+      "root_standard_key": "account.report_invoice_document",
+      "module": "hellenia_reports",
+      "name": "report_debit_note_document_hellenia"
+    },
+    {
+      "key": "hellenia_reports.report_payment_receipt_document_hellenia_visual",
+      "xml_id": "hellenia_reports.report_payment_receipt_document_hellenia_visual",
+      "inherits": "account.report_payment_receipt_document",
+      "root_standard_key": "account.report_payment_receipt_document",
+      "module": "hellenia_reports",
+      "name": "report_payment_receipt_document_hellenia_visual"
+    },
+    {
+      "key": "hellenia_reports.report_payment_receipt_document_hellenia_cleanup",
+      "xml_id": "hellenia_reports.report_payment_receipt_document_hellenia_cleanup",
+      "inherits": "hellenia_account.report_payment_receipt_document_hellenia",
+      "root_standard_key": "account.report_payment_receipt_document",
+      "module": "hellenia_reports",
+      "name": "report_payment_receipt_document_hellenia_cleanup"
+    }
+  ],
+  "sample_pdfs": {
+    "sale.report_saleorder__state_in": {
+      "status": "ok",
+      "record": "S00128",
+      "record_id": 129,
+      "file": "sample_sale_report_saleorder.pdf",
+      "size_bytes": 68671,
+      "pages": null
+    },
+    "account.report_invoice__move_type_=": {
+      "status": "ok",
+      "record": "RINV/2026/00034",
+      "record_id": 924,
+      "file": "sample_account_report_invoice.pdf",
+      "size_bytes": 69633,
+      "pages": null
+    },
+    "purchase.report_purchaseorder__state_in": {
+      "status": "ok",
+      "record": "P00053",
+      "record_id": 55,
+      "file": "sample_purchase_report_purchaseorder.pdf",
+      "size_bytes": 72446,
+      "pages": null
+    },
+    "purchase.report_purchasequotation__state_in": {
+      "status": "no_record",
+      "model": "purchase.order",
+      "domain": "[('state', 'in', ['draft', 'sent'])]"
+    },
+    "account.report_payment_receipt__state_=": {
+      "status": "no_record",
+      "model": "account.payment",
+      "domain": "[('state', '=', 'posted')]"
+    },
+    "stock.report_deliveryslip__picking_type_code_=": {
+      "status": "ok",
+      "record": "WH/OUT/00002",
+      "record_id": 3,
+      "file": "sample_stock_report_deliveryslip.pdf",
+      "size_bytes": 60020,
+      "pages": null
+    }
+  },
+  "redesign_notes": {
+    "approach": "Usar reporte independiente (web.html_container + article) o herencia primary=True",
+    "avoid": [
+      "xpath frágiles sobre texto",
+      "web.external_layout para diseños custom completos"
+    ],
+    "keep": [
+      "ir.actions.report propio por documento",
+      "paperformat dedicado"
+    ]
+  },
+  "summary": {
+    "total_targets": 15,
+    "customized_count": 8,
+    "original_standard_count": 15,
+    "custom_modules_touching_reports": [
+      "account_accountant",
+      "account_debit_note",
+      "account_edi_ubl_cii",
+      "base",
+      "hellenia_account",
+      "hellenia_reports",
+      "justech_l10n_do_ncf",
+      "product",
+      "sale_stock",
+      "snailmail_account_followup"
+    ],
+    "pdfs_generated": 4
+  },
+  "comparison_ab": {
+    "phase": "report-templates-comparison-ab",
+    "timestamp_utc": "2026-07-01T23:46:03.608011+00:00",
+    "database": "hellenia_test",
+    "ref": "P23-REPORT-CMP",
+    "test_records": {
+      "rfq": {
+        "name": "P00054",
+        "id": 56,
+        "state": "draft"
+      },
+      "payment": {
+        "name": "PBNKD/2026/00028",
+        "id": 1501,
+        "state": "paid"
+      },
+      "source_cotizacion": {
+        "model": "sale.order",
+        "id": 139,
+        "name": "S00138"
+      },
+      "source_factura": {
+        "model": "account.move",
+        "id": 8104,
+        "name": "INV/2026/00214 (P201-132238-2)"
+      },
+      "source_orden_compra": {
+        "model": "purchase.order",
+        "id": 55,
+        "name": "P00053"
+      },
+      "source_rfq": {
+        "model": "purchase.order",
+        "id": 56,
+        "name": "P00054 (P23-REPORT-CMP-RFQ)"
+      },
+      "source_recibo_pago": {
+        "model": "account.payment",
+        "id": 1501,
+        "name": "PBNKD/2026/00028"
+      },
+      "source_albaran": {
+        "model": "stock.picking",
+        "id": 3,
+        "name": "WH/OUT/00002"
+      }
+    },
+    "backup": {
+      "file": "/tmp/report-templates-comparison/backup/restore_backup.json",
+      "modules": {
+        "hellenia_account": "installed",
+        "hellenia_reports": "installed",
+        "hellenia_ux": "installed",
+        "justech_l10n_do_ncf": "installed"
+      },
+      "views_count": 19
+    },
+    "group_a": {
+      "label": "Personalizaciones Hellenia/Justech activas",
+      "modules": {
+        "hellenia_account": "installed",
+        "hellenia_reports": "installed",
+        "hellenia_ux": "installed",
+        "justech_l10n_do_ncf": "installed"
+      },
+      "pdfs": {
+        "cotizacion": {
+          "status": "ok",
+          "report": "sale.report_saleorder",
+          "record": "S00138",
+          "record_id": 139,
+          "file": "A_cotizacion.pdf",
+          "size_bytes": 90274,
+          "pages": null,
+          "is_pdf": true
+        },
+        "factura": {
+          "status": "ok",
+          "report": "account.report_invoice",
+          "record": "INV/2026/00214 (P201-132238-2)",
+          "record_id": 8104,
+          "file": "A_factura.pdf",
+          "size_bytes": 70409,
+          "pages": null,
+          "is_pdf": true
+        },
+        "orden_compra": {
+          "status": "ok",
+          "report": "purchase.report_purchaseorder",
+          "record": "P00053",
+          "record_id": 55,
+          "file": "A_orden_compra.pdf",
+          "size_bytes": 72446,
+          "pages": null,
+          "is_pdf": true
+        },
+        "rfq": {
+          "status": "ok",
+          "report": "purchase.report_purchasequotation",
+          "record": "P00054 (P23-REPORT-CMP-RFQ)",
+          "record_id": 56,
+          "file": "A_rfq.pdf",
+          "size_bytes": 69495,
+          "pages": null,
+          "is_pdf": true
+        },
+        "recibo_pago": {
+          "status": "ok",
+          "report": "account.report_payment_receipt",
+          "record": "PBNKD/2026/00028",
+          "record_id": 1501,
+          "file": "A_recibo_pago.pdf",
+          "size_bytes": 58329,
+          "pages": null,
+          "is_pdf": true
+        },
+        "albaran": {
+          "status": "ok",
+          "report": "stock.report_deliveryslip",
+          "record": "WH/OUT/00002",
+          "record_id": 3,
+          "file": "A_albaran.pdf",
+          "size_bytes": 60020,
+          "pages": null,
+          "is_pdf": true
+        }
+      }
+    },
+    "group_b": {
+      "label": "Odoo puro — hellenia_reports/ux desinstalados, herencias account/ncf desactivadas",
+      "steps": [
+        "uninstalled_hellenia_ux",
+        "uninstalled_hellenia_reports",
+        "deactivated_views_2",
+        "layout_standard",
+        "paperformats_cleared"
+      ],
+      "modules": {
+        "hellenia_account": "installed",
+        "hellenia_reports": "uninstalled",
+        "hellenia_ux": "uninstalled",
+        "justech_l10n_do_ncf": "installed"
+      },
+      "pdfs": {
+        "cotizacion": {
+          "status": "ok",
+          "report": "sale.report_saleorder",
+          "record": "S00138",
+          "record_id": 139,
+          "file": "B_cotizacion.pdf",
+          "size_bytes": 81276,
+          "pages": null,
+          "is_pdf": true
+        },
+        "factura": {
+          "status": "ok",
+          "report": "account.report_invoice",
+          "record": "INV/2026/00214 (P201-132238-2)",
+          "record_id": 8104,
+          "file": "B_factura.pdf",
+          "size_bytes": 58245,
+          "pages": null,
+          "is_pdf": true
+        },
+        "orden_compra": {
+          "status": "ok",
+          "report": "purchase.report_purchaseorder",
+          "record": "P00053",
+          "record_id": 55,
+          "file": "B_orden_compra.pdf",
+          "size_bytes": 64512,
+          "pages": null,
+          "is_pdf": true
+        },
+        "rfq": {
+          "status": "ok",
+          "report": "purchase.report_purchasequotation",
+          "record": "P00054 (P23-REPORT-CMP-RFQ)",
+          "record_id": 56,
+          "file": "B_rfq.pdf",
+          "size_bytes": 61563,
+          "pages": null,
+          "is_pdf": true
+        },
+        "recibo_pago": {
+          "status": "ok",
+          "report": "account.report_payment_receipt",
+          "record": "PBNKD/2026/00028",
+          "record_id": 1501,
+          "file": "B_recibo_pago.pdf",
+          "size_bytes": 55057,
+          "pages": null,
+          "is_pdf": true
+        },
+        "albaran": {
+          "status": "ok",
+          "report": "stock.report_deliveryslip",
+          "record": "WH/OUT/00002",
+          "record_id": 3,
+          "file": "B_albaran.pdf",
+          "size_bytes": 54712,
+          "pages": null,
+          "is_pdf": true
+        }
+      }
+    },
+    "restore": {
+      "ok": false,
+      "steps": [
+        "views_restored"
+      ],
+      "error": "El registro no existe o fue eliminado.\n(Registro: ir.ui.view(1576,), Usuario: 1)"
+    },
+    "pass": false,
+    "errors": [
+      "restore_failed: El registro no existe o fue eliminado.\n(Registro: ir.ui.view(1576,), Usuario: 1)"
+    ],
+    "summary": {
+      "group_a_ok": 6,
+      "group_b_ok": 6,
+      "total_docs": 6,
+      "restore_ok": false
+    }
+  },
+  "updated_utc": "2026-07-01T23:46:45.517493+00:00"
+}

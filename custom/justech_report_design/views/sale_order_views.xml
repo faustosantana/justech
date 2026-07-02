@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_order_form_jt_quotation_terms" model="ir.ui.view">
+        <field name="name">sale.order.form.jt.quotation.terms</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='note_group']" position="attributes">
+                <attribute name="string">Términos y Condiciones</attribute>
+            </xpath>
+            <xpath expr="//group[@name='note_group']//field[@name='note']" position="attributes">
+                <attribute name="string">Términos y Condiciones</attribute>
+                <attribute name="nolabel">0</attribute>
+                <attribute name="placeholder">Condiciones del PDF. Se copian desde la empresa al crear; puede editarlas o borrarlas.</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

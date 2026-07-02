@@ -1,0 +1,71 @@
+{
+  "phase": "25B.7-invoice-band",
+  "timestamp_utc": "2026-07-02T13:03:10.231284+00:00",
+  "database": "hellenia_test",
+  "status": "PENDING_USER_VISUAL_APPROVAL",
+  "diagnosis": {
+    "action_xml_id": "justech_report_design.action_report_justech_invoice",
+    "action_name": "Justech PDF — Factura",
+    "action_report_name": "justech_report_design.report_justech_invoice_document",
+    "template_body_xml_id": "justech_report_design.justech_invoice_body",
+    "template_body_view_id": 2177,
+    "template_body_file": "custom/justech_report_design/report/invoice/justech_invoice_template.xml",
+    "template_document_xml_id": "justech_report_design.report_justech_invoice_document",
+    "band_classes_in_db_arch_after_upgrade": {
+      "jt-hq-band": true,
+      "jt-inv-band": true,
+      "jt-inv-band-meta-wrap": true,
+      "jt-inv-fiscal-grid": false,
+      "jt-inv-fiscal-layout": false
+    },
+    "disk_files": {
+      "/mnt/custom/justech_report_design/report/invoice/justech_invoice_template.xml": {
+        "exists": true,
+        "jt_inv_fiscal_grid": true,
+        "jt_inv_band_meta_wrap": false,
+        "jt_hq_band": false
+      },
+      "/opt/odoo-projects/hellenia/custom/justech_report_design/report/invoice/justech_invoice_template.xml": {
+        "exists": false,
+        "error": "[Errno 2] No such file or directory: '/opt/odoo-projects/hellenia/custom/justech_report_design/report/invoice/justech_invoice_template.xml'"
+      }
+    },
+    "scss_files": {
+      "/mnt/custom/justech_report_design/static/src/scss/hellenia_invoice.scss": {
+        "exists": true,
+        "has_fiscal_grid_css": true,
+        "has_old_meta_wrap_css": false,
+        "background_35421f": true
+      }
+    },
+    "band_classes_after_upgrade_reload": {
+      "jt-hq-band": false,
+      "jt-inv-band": true,
+      "jt-inv-band-meta-wrap": false,
+      "jt-inv-fiscal-grid": true
+    },
+    "band_arch_snippet_after_upgrade": "iv>\n        </div>\n\n        <div class=\"jt-inv-band\">\n            <div class=\"jt-inv-band-title\">\n                <span t-out=\"doc.get_jt_invoice_band_title()\"/>\n            </div>\n\n            <div class=\"jt-inv-fiscal-grid\">\n                <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" class=\"jt-inv-fiscal-layout\">\n                    <tr>\n                        <td width=\"50%\" valign=\"top\" class=\"jt-inv-fiscal-col\">\n                            <div>\n                                <span class=\"jt-inv-label\">No. Fa",
+    "html_uses_new_structure": true
+  },
+  "files": {
+    "invoice_1_line": {
+      "pdf": "01_invoice_1_line.pdf",
+      "png": null,
+      "html_has_fiscal_grid": true,
+      "html_has_old_meta_wrap": false
+    },
+    "invoice_5_lines": {
+      "pdf": "02_invoice_5_lines.pdf",
+      "png": null,
+      "html_has_fiscal_grid": true,
+      "html_has_old_meta_wrap": false
+    },
+    "invoice_with_discount": {
+      "pdf": "03_invoice_with_discount.pdf",
+      "png": null,
+      "html_has_fiscal_grid": true,
+      "html_has_old_meta_wrap": false
+    }
+  },
+  "module_version": "19.0.3.8.0"
+}

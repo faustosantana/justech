@@ -1,0 +1,763 @@
+{
+  "phase": "23.3f-quotation-premium-polish",
+  "timestamp_utc": "2026-07-01T19:28:28.690107+00:00",
+  "database": "hellenia_test",
+  "module_version": "19.0.1.4.2",
+  "visual_checks": {
+    "quote_1_html_no_mojibake_Ã³": {
+      "status": "PASS",
+      "detail": "Ã³"
+    },
+    "quote_1_html_no_mojibake_Ã©": {
+      "status": "PASS",
+      "detail": "Ã©"
+    },
+    "quote_1_html_no_mojibake_RepÃ": {
+      "status": "PASS",
+      "detail": "RepÃ"
+    },
+    "quote_1_html_no_mojibake_Coti": {
+      "status": "PASS",
+      "detail": "CotizaciÃ"
+    },
+    "quote_1_html_no_mojibake_$Â": {
+      "status": "PASS",
+      "detail": "$Â"
+    },
+    "quote_1_html_no_Immediate_Payment": {
+      "status": "PASS",
+      "detail": "Immediate Payment"
+    },
+    "quote_1_html_no_Payment_Terms": {
+      "status": "PASS",
+      "detail": "Payment Terms"
+    },
+    "quote_1_html_no_Quotation": {
+      "status": "PASS",
+      "detail": "Quotation"
+    },
+    "quote_1_html_no_Salesperson": {
+      "status": "PASS",
+      "detail": "Salesperson"
+    },
+    "quote_1_html_has_hellenia-quote-shell": {
+      "status": "PASS",
+      "detail": "hellenia-quote-shell"
+    },
+    "quote_1_html_has_hellenia-quote-hdr-table": {
+      "status": "PASS",
+      "detail": "hellenia-quote-hdr-table"
+    },
+    "quote_1_html_has_hellenia-quote-sig-label": {
+      "status": "PASS",
+      "detail": "hellenia-quote-sig-label"
+    },
+    "quote_1_html_has_hellenia-quote-sig-line": {
+      "status": "PASS",
+      "detail": "hellenia-quote-sig-line"
+    },
+    "quote_1_html_has_COTIZACIÓN": {
+      "status": "PASS",
+      "detail": "COTIZACIÓN"
+    },
+    "quote_1_html_has_max-height:_68px": {
+      "status": "PASS",
+      "detail": "max-height: 68px"
+    },
+    "quote_1_html_has_display:_none_important": {
+      "status": "PASS",
+      "detail": "display: none !important"
+    },
+    "quote_1_html_no_excel_borders": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_1_html_payment_es": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_1_pdf_no_mojibake_Ã³": {
+      "status": "PASS",
+      "detail": "Ã³"
+    },
+    "quote_1_pdf_no_mojibake_Ã©": {
+      "status": "PASS",
+      "detail": "Ã©"
+    },
+    "quote_1_pdf_no_mojibake_RepÃ": {
+      "status": "PASS",
+      "detail": "RepÃ"
+    },
+    "quote_1_pdf_no_mojibake_Coti": {
+      "status": "PASS",
+      "detail": "CotizaciÃ"
+    },
+    "quote_1_pdf_no_mojibake_$Â": {
+      "status": "PASS",
+      "detail": "$Â"
+    },
+    "quote_1_pdf_no_Immediate_Payment": {
+      "status": "PASS",
+      "detail": "Immediate Payment"
+    },
+    "quote_1_pdf_no_Payment_Terms": {
+      "status": "PASS",
+      "detail": "Payment Terms"
+    },
+    "quote_1_pdf_no_Quotation": {
+      "status": "PASS",
+      "detail": "Quotation"
+    },
+    "quote_1_pdf_no_Salesperson": {
+      "status": "PASS",
+      "detail": "Salesperson"
+    },
+    "quote_1_pdf_signatures": {
+      "status": "PASS",
+      "detail": " carácter y autenticidad.\nENTREGADO POR\n\nRECIBIDO POR\n\nFECHA\n\n+1 849-434-8694 | info@helleniadr.com | https://hellenia.cloud\n\n$ 1,000.00\n$ 180.00\n\n$ 1,180.00\n\n\f"
+    },
+    "quote_1_pdf_has_COTIZACI": {
+      "status": "PASS",
+      "detail": "COTIZACIÓN"
+    },
+    "quote_1_pdf_has_Total": {
+      "status": "PASS",
+      "detail": "Total"
+    },
+    "quote_1_pdf_has_conditions": {
+      "status": "PASS",
+      "detail": "as del tiempo, lo cual forma parte de su carácter y autenticidad.\nENTREGADO POR\n\nRECIBIDO POR\n\nFECHA\n\n+1 849-434-8694 | info@helleniadr.com | https://hellenia.cloud\n\n$ 1,000.00\n$ 180.00\n\n$ 1,180.00\n\n\f"
+    },
+    "quote_1_pdf_payment_es": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_1_pdf_text_len": {
+      "status": "PASS",
+      "detail": "1052"
+    },
+    "quote_1_pdf_single_page": {
+      "status": "PASS",
+      "detail": "pages=1"
+    },
+    "quote_1_pdf_magic": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_html_no_mojibake_Ã³": {
+      "status": "PASS",
+      "detail": "Ã³"
+    },
+    "quote_5_html_no_mojibake_Ã©": {
+      "status": "PASS",
+      "detail": "Ã©"
+    },
+    "quote_5_html_no_mojibake_RepÃ": {
+      "status": "PASS",
+      "detail": "RepÃ"
+    },
+    "quote_5_html_no_mojibake_Coti": {
+      "status": "PASS",
+      "detail": "CotizaciÃ"
+    },
+    "quote_5_html_no_mojibake_$Â": {
+      "status": "PASS",
+      "detail": "$Â"
+    },
+    "quote_5_html_no_Immediate_Payment": {
+      "status": "PASS",
+      "detail": "Immediate Payment"
+    },
+    "quote_5_html_no_Payment_Terms": {
+      "status": "PASS",
+      "detail": "Payment Terms"
+    },
+    "quote_5_html_no_Quotation": {
+      "status": "PASS",
+      "detail": "Quotation"
+    },
+    "quote_5_html_no_Salesperson": {
+      "status": "PASS",
+      "detail": "Salesperson"
+    },
+    "quote_5_html_has_hellenia-quote-shell": {
+      "status": "PASS",
+      "detail": "hellenia-quote-shell"
+    },
+    "quote_5_html_has_hellenia-quote-hdr-table": {
+      "status": "PASS",
+      "detail": "hellenia-quote-hdr-table"
+    },
+    "quote_5_html_has_hellenia-quote-sig-label": {
+      "status": "PASS",
+      "detail": "hellenia-quote-sig-label"
+    },
+    "quote_5_html_has_hellenia-quote-sig-line": {
+      "status": "PASS",
+      "detail": "hellenia-quote-sig-line"
+    },
+    "quote_5_html_has_COTIZACIÓN": {
+      "status": "PASS",
+      "detail": "COTIZACIÓN"
+    },
+    "quote_5_html_has_max-height:_68px": {
+      "status": "PASS",
+      "detail": "max-height: 68px"
+    },
+    "quote_5_html_has_display:_none_important": {
+      "status": "PASS",
+      "detail": "display: none !important"
+    },
+    "quote_5_html_no_excel_borders": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_html_payment_es": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_pdf_no_mojibake_Ã³": {
+      "status": "PASS",
+      "detail": "Ã³"
+    },
+    "quote_5_pdf_no_mojibake_Ã©": {
+      "status": "PASS",
+      "detail": "Ã©"
+    },
+    "quote_5_pdf_no_mojibake_RepÃ": {
+      "status": "PASS",
+      "detail": "RepÃ"
+    },
+    "quote_5_pdf_no_mojibake_Coti": {
+      "status": "PASS",
+      "detail": "CotizaciÃ"
+    },
+    "quote_5_pdf_no_mojibake_$Â": {
+      "status": "PASS",
+      "detail": "$Â"
+    },
+    "quote_5_pdf_no_Immediate_Payment": {
+      "status": "PASS",
+      "detail": "Immediate Payment"
+    },
+    "quote_5_pdf_no_Payment_Terms": {
+      "status": "PASS",
+      "detail": "Payment Terms"
+    },
+    "quote_5_pdf_no_Quotation": {
+      "status": "PASS",
+      "detail": "Quotation"
+    },
+    "quote_5_pdf_no_Salesperson": {
+      "status": "PASS",
+      "detail": "Salesperson"
+    },
+    "quote_5_pdf_signatures": {
+      "status": "PASS",
+      "detail": "ácter y autenticidad.\nENTREGADO POR\n\nRECIBIDO POR\n\nFECHA\n\n+1 849-434-8694 | info@helleniadr.com | https://hellenia.cloud\n\n$ 13,750.00\n$ 2,475.00\n\n$ 16,225.00\n\n\f"
+    },
+    "quote_5_pdf_has_COTIZACI": {
+      "status": "PASS",
+      "detail": "COTIZACIÓN"
+    },
+    "quote_5_pdf_has_Total": {
+      "status": "PASS",
+      "detail": "Total"
+    },
+    "quote_5_pdf_has_conditions": {
+      "status": "PASS",
+      "detail": "el tiempo, lo cual forma parte de su carácter y autenticidad.\nENTREGADO POR\n\nRECIBIDO POR\n\nFECHA\n\n+1 849-434-8694 | info@helleniadr.com | https://hellenia.cloud\n\n$ 13,750.00\n$ 2,475.00\n\n$ 16,225.00\n\n\f"
+    },
+    "quote_5_pdf_payment_es": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_pdf_text_len": {
+      "status": "PASS",
+      "detail": "1368"
+    },
+    "quote_5_pdf_pages_ok": {
+      "status": "PASS",
+      "detail": "pages=1"
+    },
+    "quote_5_pdf_magic": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_15_html_no_mojibake_Ã³": {
+      "status": "PASS",
+      "detail": "Ã³"
+    },
+    "quote_15_html_no_mojibake_Ã©": {
+      "status": "PASS",
+      "detail": "Ã©"
+    },
+    "quote_15_html_no_mojibake_RepÃ": {
+      "status": "PASS",
+      "detail": "RepÃ"
+    },
+    "quote_15_html_no_mojibake_Coti": {
+      "status": "PASS",
+      "detail": "CotizaciÃ"
+    },
+    "quote_15_html_no_mojibake_$Â": {
+      "status": "PASS",
+      "detail": "$Â"
+    },
+    "quote_15_html_no_Immediate_Payment": {
+      "status": "PASS",
+      "detail": "Immediate Payment"
+    },
+    "quote_15_html_no_Payment_Terms": {
+      "status": "PASS",
+      "detail": "Payment Terms"
+    },
+    "quote_15_html_no_Quotation": {
+      "status": "PASS",
+      "detail": "Quotation"
+    },
+    "quote_15_html_no_Salesperson": {
+      "status": "PASS",
+      "detail": "Salesperson"
+    },
+    "quote_15_html_has_hellenia-quote-shell": {
+      "status": "PASS",
+      "detail": "hellenia-quote-shell"
+    },
+    "quote_15_html_has_hellenia-quote-hdr-table": {
+      "status": "PASS",
+      "detail": "hellenia-quote-hdr-table"
+    },
+    "quote_15_html_has_hellenia-quote-sig-label": {
+      "status": "PASS",
+      "detail": "hellenia-quote-sig-label"
+    },
+    "quote_15_html_has_hellenia-quote-sig-line": {
+      "status": "PASS",
+      "detail": "hellenia-quote-sig-line"
+    },
+    "quote_15_html_has_COTIZACIÓN": {
+      "status": "PASS",
+      "detail": "COTIZACIÓN"
+    },
+    "quote_15_html_has_max-height:_68px": {
+      "status": "PASS",
+      "detail": "max-height: 68px"
+    },
+    "quote_15_html_has_display:_none_important": {
+      "status": "PASS",
+      "detail": "display: none !important"
+    },
+    "quote_15_html_no_excel_borders": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_15_html_payment_es": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_15_pdf_no_mojibake_Ã³": {
+      "status": "PASS",
+      "detail": "Ã³"
+    },
+    "quote_15_pdf_no_mojibake_Ã©": {
+      "status": "PASS",
+      "detail": "Ã©"
+    },
+    "quote_15_pdf_no_mojibake_RepÃ": {
+      "status": "PASS",
+      "detail": "RepÃ"
+    },
+    "quote_15_pdf_no_mojibake_Coti": {
+      "status": "PASS",
+      "detail": "CotizaciÃ"
+    },
+    "quote_15_pdf_no_mojibake_$Â": {
+      "status": "PASS",
+      "detail": "$Â"
+    },
+    "quote_15_pdf_no_Immediate_Payment": {
+      "status": "PASS",
+      "detail": "Immediate Payment"
+    },
+    "quote_15_pdf_no_Payment_Terms": {
+      "status": "PASS",
+      "detail": "Payment Terms"
+    },
+    "quote_15_pdf_no_Quotation": {
+      "status": "PASS",
+      "detail": "Quotation"
+    },
+    "quote_15_pdf_no_Salesperson": {
+      "status": "PASS",
+      "detail": "Salesperson"
+    },
+    "quote_15_pdf_signatures": {
+      "status": "PASS",
+      "detail": "tiempo, lo cual forma parte de su carácter y autenticidad.\nENTREGADO POR\n\nRECIBIDO POR\n\nFECHA\n\n+1 849-434-8694 | info@helleniadr.com | https://hellenia.cloud\n\n\f"
+    },
+    "quote_15_pdf_has_COTIZACI": {
+      "status": "PASS",
+      "detail": "COTIZACIÓN"
+    },
+    "quote_15_pdf_has_Total": {
+      "status": "PASS",
+      "detail": "Total"
+    },
+    "quote_15_pdf_has_conditions": {
+      "status": "PASS",
+      "detail": "zas pueden presentar marcas propias del tiempo, lo cual forma parte de su carácter y autenticidad.\nENTREGADO POR\n\nRECIBIDO POR\n\nFECHA\n\n+1 849-434-8694 | info@helleniadr.com | https://hellenia.cloud\n\n\f"
+    },
+    "quote_15_pdf_payment_es": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_15_pdf_text_len": {
+      "status": "PASS",
+      "detail": "2162"
+    },
+    "quote_15_pdf_pages_ok": {
+      "status": "PASS",
+      "detail": "pages=2"
+    },
+    "quote_15_pdf_magic": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_25_html_no_mojibake_Ã³": {
+      "status": "PASS",
+      "detail": "Ã³"
+    },
+    "quote_25_html_no_mojibake_Ã©": {
+      "status": "PASS",
+      "detail": "Ã©"
+    },
+    "quote_25_html_no_mojibake_RepÃ": {
+      "status": "PASS",
+      "detail": "RepÃ"
+    },
+    "quote_25_html_no_mojibake_Coti": {
+      "status": "PASS",
+      "detail": "CotizaciÃ"
+    },
+    "quote_25_html_no_mojibake_$Â": {
+      "status": "PASS",
+      "detail": "$Â"
+    },
+    "quote_25_html_no_Immediate_Payment": {
+      "status": "PASS",
+      "detail": "Immediate Payment"
+    },
+    "quote_25_html_no_Payment_Terms": {
+      "status": "PASS",
+      "detail": "Payment Terms"
+    },
+    "quote_25_html_no_Quotation": {
+      "status": "PASS",
+      "detail": "Quotation"
+    },
+    "quote_25_html_no_Salesperson": {
+      "status": "PASS",
+      "detail": "Salesperson"
+    },
+    "quote_25_html_has_hellenia-quote-shell": {
+      "status": "PASS",
+      "detail": "hellenia-quote-shell"
+    },
+    "quote_25_html_has_hellenia-quote-hdr-table": {
+      "status": "PASS",
+      "detail": "hellenia-quote-hdr-table"
+    },
+    "quote_25_html_has_hellenia-quote-sig-label": {
+      "status": "PASS",
+      "detail": "hellenia-quote-sig-label"
+    },
+    "quote_25_html_has_hellenia-quote-sig-line": {
+      "status": "PASS",
+      "detail": "hellenia-quote-sig-line"
+    },
+    "quote_25_html_has_COTIZACIÓN": {
+      "status": "PASS",
+      "detail": "COTIZACIÓN"
+    },
+    "quote_25_html_has_max-height:_68px": {
+      "status": "PASS",
+      "detail": "max-height: 68px"
+    },
+    "quote_25_html_has_display:_none_important": {
+      "status": "PASS",
+      "detail": "display: none !important"
+    },
+    "quote_25_html_no_excel_borders": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_25_html_payment_es": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_25_pdf_no_mojibake_Ã³": {
+      "status": "PASS",
+      "detail": "Ã³"
+    },
+    "quote_25_pdf_no_mojibake_Ã©": {
+      "status": "PASS",
+      "detail": "Ã©"
+    },
+    "quote_25_pdf_no_mojibake_RepÃ": {
+      "status": "PASS",
+      "detail": "RepÃ"
+    },
+    "quote_25_pdf_no_mojibake_Coti": {
+      "status": "PASS",
+      "detail": "CotizaciÃ"
+    },
+    "quote_25_pdf_no_mojibake_$Â": {
+      "status": "PASS",
+      "detail": "$Â"
+    },
+    "quote_25_pdf_no_Immediate_Payment": {
+      "status": "PASS",
+      "detail": "Immediate Payment"
+    },
+    "quote_25_pdf_no_Payment_Terms": {
+      "status": "PASS",
+      "detail": "Payment Terms"
+    },
+    "quote_25_pdf_no_Quotation": {
+      "status": "PASS",
+      "detail": "Quotation"
+    },
+    "quote_25_pdf_no_Salesperson": {
+      "status": "PASS",
+      "detail": "Salesperson"
+    },
+    "quote_25_pdf_signatures": {
+      "status": "PASS",
+      "detail": "al forma parte de su carácter y autenticidad.\nENTREGADO POR\n\nRECIBIDO POR\n\nFECHA\n\n+1 849-434-8694 | info@helleniadr.com | https://hellenia.cloud\n\n$ 61,950.00\n\n\f"
+    },
+    "quote_25_pdf_has_COTIZACI": {
+      "status": "PASS",
+      "detail": "COTIZACIÓN"
+    },
+    "quote_25_pdf_has_Total": {
+      "status": "PASS",
+      "detail": "Total"
+    },
+    "quote_25_pdf_has_conditions": {
+      "status": "PASS",
+      "detail": "esentar marcas propias del tiempo, lo cual forma parte de su carácter y autenticidad.\nENTREGADO POR\n\nRECIBIDO POR\n\nFECHA\n\n+1 849-434-8694 | info@helleniadr.com | https://hellenia.cloud\n\n$ 61,950.00\n\n\f"
+    },
+    "quote_25_pdf_payment_es": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_25_pdf_text_len": {
+      "status": "PASS",
+      "detail": "2811"
+    },
+    "quote_25_pdf_pages_ok": {
+      "status": "PASS",
+      "detail": "pages=2"
+    },
+    "quote_25_pdf_magic": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "portal_html_no_mojibake_Ã³": {
+      "status": "PASS",
+      "detail": "Ã³"
+    },
+    "portal_html_no_mojibake_Ã©": {
+      "status": "PASS",
+      "detail": "Ã©"
+    },
+    "portal_html_no_mojibake_RepÃ": {
+      "status": "PASS",
+      "detail": "RepÃ"
+    },
+    "portal_html_no_mojibake_Coti": {
+      "status": "PASS",
+      "detail": "CotizaciÃ"
+    },
+    "portal_html_no_mojibake_$Â": {
+      "status": "PASS",
+      "detail": "$Â"
+    },
+    "portal_html_no_Immediate_Payment": {
+      "status": "PASS",
+      "detail": "Immediate Payment"
+    },
+    "portal_html_no_Payment_Terms": {
+      "status": "PASS",
+      "detail": "Payment Terms"
+    },
+    "portal_html_no_Quotation": {
+      "status": "PASS",
+      "detail": "Quotation"
+    },
+    "portal_html_no_Salesperson": {
+      "status": "PASS",
+      "detail": "Salesperson"
+    },
+    "portal_html_has_hellenia-quote-shell": {
+      "status": "PASS",
+      "detail": "hellenia-quote-shell"
+    },
+    "portal_html_has_hellenia-quote-hdr-table": {
+      "status": "PASS",
+      "detail": "hellenia-quote-hdr-table"
+    },
+    "portal_html_has_hellenia-quote-sig-label": {
+      "status": "PASS",
+      "detail": "hellenia-quote-sig-label"
+    },
+    "portal_html_has_hellenia-quote-sig-line": {
+      "status": "PASS",
+      "detail": "hellenia-quote-sig-line"
+    },
+    "portal_html_has_COTIZACIÓN": {
+      "status": "PASS",
+      "detail": "COTIZACIÓN"
+    },
+    "portal_html_has_max-height:_68px": {
+      "status": "PASS",
+      "detail": "max-height: 68px"
+    },
+    "portal_html_has_display:_none_important": {
+      "status": "PASS",
+      "detail": "display: none !important"
+    },
+    "portal_html_no_excel_borders": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "portal_html_payment_es": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "portal_pdf_no_mojibake_Ã³": {
+      "status": "PASS",
+      "detail": "Ã³"
+    },
+    "portal_pdf_no_mojibake_Ã©": {
+      "status": "PASS",
+      "detail": "Ã©"
+    },
+    "portal_pdf_no_mojibake_RepÃ": {
+      "status": "PASS",
+      "detail": "RepÃ"
+    },
+    "portal_pdf_no_mojibake_Coti": {
+      "status": "PASS",
+      "detail": "CotizaciÃ"
+    },
+    "portal_pdf_no_mojibake_$Â": {
+      "status": "PASS",
+      "detail": "$Â"
+    },
+    "portal_pdf_no_Immediate_Payment": {
+      "status": "PASS",
+      "detail": "Immediate Payment"
+    },
+    "portal_pdf_no_Payment_Terms": {
+      "status": "PASS",
+      "detail": "Payment Terms"
+    },
+    "portal_pdf_no_Quotation": {
+      "status": "PASS",
+      "detail": "Quotation"
+    },
+    "portal_pdf_no_Salesperson": {
+      "status": "PASS",
+      "detail": "Salesperson"
+    },
+    "portal_pdf_signatures": {
+      "status": "PASS",
+      "detail": " carácter y autenticidad.\nENTREGADO POR\n\nRECIBIDO POR\n\nFECHA\n\n+1 849-434-8694 | info@helleniadr.com | https://hellenia.cloud\n\n$ 1,000.00\n$ 180.00\n\n$ 1,180.00\n\n\f"
+    },
+    "portal_pdf_has_COTIZACI": {
+      "status": "PASS",
+      "detail": "COTIZACIÓN"
+    },
+    "portal_pdf_has_Total": {
+      "status": "PASS",
+      "detail": "Total"
+    },
+    "portal_pdf_has_conditions": {
+      "status": "PASS",
+      "detail": "as del tiempo, lo cual forma parte de su carácter y autenticidad.\nENTREGADO POR\n\nRECIBIDO POR\n\nFECHA\n\n+1 849-434-8694 | info@helleniadr.com | https://hellenia.cloud\n\n$ 1,000.00\n$ 180.00\n\n$ 1,180.00\n\n\f"
+    },
+    "portal_pdf_payment_es": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "portal_pdf_text_len": {
+      "status": "PASS",
+      "detail": "1052"
+    },
+    "portal_pdf_single_page": {
+      "status": "PASS",
+      "detail": "pages=1"
+    }
+  },
+  "http_checks": {
+    "portal_pdf": {
+      "status": "PASS",
+      "http_status": 200,
+      "detail": "30082"
+    },
+    "backend_pdf": {
+      "status": "PASS",
+      "http_status": 200,
+      "detail": "30082"
+    }
+  },
+  "pdfs": {
+    "quote_1": {
+      "status": "OK",
+      "order": "S00134",
+      "file": "quotation_1_product.pdf",
+      "size_bytes": 30082,
+      "line_count": 1,
+      "pages": 1
+    },
+    "quote_5": {
+      "status": "OK",
+      "order": "S00135",
+      "file": "quotation_5_products.pdf",
+      "size_bytes": 33231,
+      "line_count": 5,
+      "pages": 1
+    },
+    "quote_15": {
+      "status": "OK",
+      "order": "S00136",
+      "file": "quotation_15_products.pdf",
+      "size_bytes": 41549,
+      "line_count": 15,
+      "pages": 2
+    },
+    "quote_25": {
+      "status": "OK",
+      "order": "S00138",
+      "file": "quotation_25_products.pdf",
+      "size_bytes": 50463,
+      "line_count": 25,
+      "pages": 2
+    }
+  },
+  "screenshots": {
+    "quote_1": "screenshot_quote_1_page1.png",
+    "quote_5": "screenshot_quote_5_page1.png",
+    "quote_15": "screenshot_quote_15_page1.png",
+    "quote_15_p2": "screenshot_quote_15_page2.png",
+    "quote_25": "screenshot_quote_25_page1.png",
+    "quote_25_p2": "screenshot_quote_25_page2.png",
+    "portal": "screenshot_portal_page1.png"
+  },
+  "ok": true,
+  "pass": true,
+  "ready_for_prod": false,
+  "failed_checks": []
+}

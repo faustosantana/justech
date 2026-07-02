@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_move_form_hellenia_fiscal_ux" model="ir.ui.view">
+        <field name="name">account.move.form.hellenia.fiscal.ux</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="justech_l10n_do_ncf.view_move_form_justech_do_ncf"/>
+        <field name="priority">30</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='justech_do_ncf']" position="replace">
+                <field name="justech_do_ncf" invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='justech_do_ncf_voided']" position="replace">
+                <field name="justech_do_ncf_voided" invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='justech_do_origin_ncf']" position="attributes">
+                <attribute name="invisible">not hellenia_show_origin_ncf</attribute>
+                <attribute name="string">NCF de origen</attribute>
+            </xpath>
+            <xpath expr="//field[@name='justech_do_document_type_id']" position="attributes">
+                <attribute name="string">Tipo de comprobante fiscal</attribute>
+            </xpath>
+            <xpath expr="//field[@name='justech_do_ncf_void_reason']" position="attributes">
+                <attribute name="string">Motivo de anulación</attribute>
+                <attribute name="invisible">not justech_do_ncf_voided</attribute>
+                <attribute name="required">0</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_void_ncf']" position="replace">
+                <button name="action_open_void_ncf_wizard" string="Anular comprobante fiscal" type="object"
+                        class="btn-danger"
+                        invisible="state != 'posted' or not justech_do_ncf or justech_do_ncf_voided"
+                        groups="justech_l10n_do_base.group_justech_do_fiscal_manager"/>
+            </xpath>
+            <xpath expr="//sheet" position="before">
+                <field name="hellenia_show_origin_ncf" invisible="1"/>
+                <div class="alert alert-danger hellenia-void-banner text-center fw-bold"
+                     invisible="not justech_do_ncf_voided" role="alert">
+                    DOCUMENTO ANULADO
+                </div>
+                <div class="hellenia-ncf-form-block mb-3 p-3" invisible="not justech_do_ncf">
+                    <div class="hellenia-ncf-form-title">Número de Comprobante Fiscal</div>
+                    <div class="hellenia-ncf-form-value">
+                        <field name="justech_do_ncf" readonly="1" nolabel="1" class="oe_inline"/>
+                    </div>
+                    <div class="hellenia-ncf-form-legal text-muted">
+                        Válido para crédito fiscal conforme a la DGII.
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

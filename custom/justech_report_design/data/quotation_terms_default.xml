@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="base.main_company" model="res.company">
+        <field name="jt_quotation_terms">(a) Las piezas ofrecidas son únicas y sujetas a disponibilidad.
+(b) Esta cotización tiene una validez de 5 días.
+(c) Se requiere confirmación del pago del 100% para reservar la pieza.
+(d) Transporte disponible bajo cotización.
+(e) Asesoría de colocación, instalación y styling disponible bajo cotización.
+(f) Las piezas pueden presentar marcas propias del tiempo, lo cual forma parte de su carácter y autenticidad.</field>
+    </record>
+</odoo>

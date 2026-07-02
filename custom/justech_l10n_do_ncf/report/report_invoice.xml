@@ -7,7 +7,7 @@
                 <div t-field="o.justech_do_ncf"/>
             </div>
             <div class="col" t-if="o.justech_do_document_type_id" name="justech_doc_type">
-                <strong>Document Type</strong>
+                <strong>Tipo de documento</strong>
                 <div t-field="o.justech_do_document_type_id"/>
             </div>
         </xpath>

@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
-# Despliegue completo hellenia-prod (Odoo 19 EE) — sin corte DNS odoo.hellenia.cloud
+# Despliegue inicial hellenia-prod (Odoo 19 EE) — bootstrap pre-Go-Live
+#
+# ⚠️  ACTUALIZACIONES POST-GO-LIVE: usar promote-to-production.sh
+#     Flujo obligatorio: TEST certificado → APPROVE_PROMOTION=1 → backup → promoción
+#
+# Este script NO debe usarse para cambios incrementales en producción.
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"

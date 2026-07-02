@@ -1,0 +1,20 @@
+Botones header:
+- Enviar solicitud de cotización
+- Recibir
+- Confirmar orden
+- Aprobar orden
+- Enviar solicitud de cotización
+- Confirmar orden
+- Enviar orden de compra
+- Confirmar
+- Establecer como borrador
+- Vista previa
+- Imprimir
+- Imprimir
+- Cancelar
+- Bloquear
+- Desbloquear
+- Catálogo
+
+Preview URL: /my/purchase/56/preview?access_token=b30e6072-ef74-4d73-8073-ade1938f7150
+Iframe URL: /my/purchase/56/jt_report_html?access_token=b30e6072-ef74-4d73-8073-ade1938f7150

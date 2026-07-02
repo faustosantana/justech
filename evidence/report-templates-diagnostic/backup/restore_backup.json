@@ -1,0 +1,115 @@
+{
+  "modules": {
+    "hellenia_account": "installed",
+    "hellenia_reports": "installed",
+    "hellenia_ux": "installed",
+    "justech_l10n_do_ncf": "installed"
+  },
+  "company_layout_xml_id": "hellenia_reports.external_layout_hellenia",
+  "company_layout_view_id": 1576,
+  "paperformats": {
+    "sale.action_report_saleorder": 9,
+    "account.account_invoices": 9,
+    "purchase.action_report_purchase_order": 9,
+    "purchase.report_purchase_quotation": 9,
+    "account.action_report_payment_receipt": 9,
+    "stock.action_report_delivery": 9
+  },
+  "view_states": {
+    "2138": {
+      "key": "hellenia_reports.company_information_customer_report_hellenia",
+      "active": true,
+      "xml_id": "hellenia_reports.company_information_customer_report_hellenia"
+    },
+    "1576": {
+      "key": "hellenia_reports.external_layout_hellenia",
+      "active": true,
+      "xml_id": "hellenia_reports.external_layout_hellenia"
+    },
+    "1575": {
+      "key": "hellenia_reports.hellenia_document_footer_blocks",
+      "active": true,
+      "xml_id": "hellenia_reports.hellenia_document_footer_blocks"
+    },
+    "2145": {
+      "key": "hellenia_reports.hellenia_quotation_document",
+      "active": true,
+      "xml_id": "hellenia_reports.hellenia_quotation_document"
+    },
+    "2137": {
+      "key": "hellenia_reports.pdf_export_main_customer_report_hellenia",
+      "active": true,
+      "xml_id": "hellenia_reports.pdf_export_main_customer_report_hellenia"
+    },
+    "2136": {
+      "key": "hellenia_reports.pdf_export_main_hellenia",
+      "active": true,
+      "xml_id": "hellenia_reports.pdf_export_main_hellenia"
+    },
+    "1582": {
+      "key": "hellenia_reports.report_delivery_document_hellenia",
+      "active": true,
+      "xml_id": "hellenia_reports.report_delivery_document_hellenia"
+    },
+    "1578": {
+      "key": "hellenia_reports.report_invoice_document_hellenia",
+      "active": true,
+      "xml_id": "hellenia_reports.report_invoice_document_hellenia"
+    },
+    "1579": {
+      "key": "hellenia_reports.report_invoice_document_hellenia_ncf_cleanup",
+      "active": true,
+      "xml_id": "hellenia_reports.report_invoice_document_hellenia_ncf_cleanup"
+    },
+    "1567": {
+      "key": "justech_l10n_do_ncf.report_invoice_document_justech_ncf",
+      "active": true,
+      "xml_id": "justech_l10n_do_ncf.report_invoice_document_justech_ncf"
+    },
+    "2118": {
+      "key": "hellenia_account.report_payment_receipt_document_hellenia",
+      "active": true,
+      "xml_id": "hellenia_account.report_payment_receipt_document_hellenia"
+    },
+    "1583": {
+      "key": "hellenia_reports.report_picking_hellenia",
+      "active": true,
+      "xml_id": "hellenia_reports.report_picking_hellenia"
+    },
+    "1580": {
+      "key": "hellenia_reports.report_purchaseorder_document_hellenia",
+      "active": true,
+      "xml_id": "hellenia_reports.report_purchaseorder_document_hellenia"
+    },
+    "1581": {
+      "key": "hellenia_reports.report_purchasequotation_document_hellenia",
+      "active": true,
+      "xml_id": "hellenia_reports.report_purchasequotation_document_hellenia"
+    },
+    "1577": {
+      "key": "hellenia_reports.report_saleorder_document_hellenia",
+      "active": true,
+      "xml_id": "hellenia_reports.report_saleorder_document_hellenia"
+    },
+    "2146": {
+      "key": "hellenia_reports.report_saleorder_raw_hellenia_quotation",
+      "active": true,
+      "xml_id": "hellenia_reports.report_saleorder_raw_hellenia_quotation"
+    },
+    "2133": {
+      "key": "hellenia_reports.report_debit_note_document_hellenia",
+      "active": true,
+      "xml_id": "hellenia_reports.report_debit_note_document_hellenia"
+    },
+    "2134": {
+      "key": "hellenia_reports.report_payment_receipt_document_hellenia_visual",
+      "active": true,
+      "xml_id": "hellenia_reports.report_payment_receipt_document_hellenia_visual"
+    },
+    "2135": {
+      "key": "hellenia_reports.report_payment_receipt_document_hellenia_cleanup",
+      "active": true,
+      "xml_id": "hellenia_reports.report_payment_receipt_document_hellenia_cleanup"
+    }
+  }
+}

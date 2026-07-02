@@ -1,0 +1,21 @@
+{
+  "form_arch_has_print_button": false,
+  "form_arch_has_label": false,
+  "header_button_strings": [
+    "Send RFQ",
+    "Receive",
+    "Confirm Order",
+    "Approve Order",
+    "Send RFQ",
+    "Confirm Order",
+    "Send PO",
+    "Acknowledge",
+    "Set to Draft",
+    "Print",
+    "Print",
+    "Cancel",
+    "Lock",
+    "Unlock",
+    "Catalog"
+  ]
+}

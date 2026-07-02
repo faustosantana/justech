@@ -1,0 +1,78 @@
+{
+  "phase": 14,
+  "timestamp_utc": "2026-06-30T17:22:48.638984+00:00",
+  "database": "hellenia_test",
+  "fixes": {
+    "orphan_attachments_removed": 0,
+    "assets_regenerated": true,
+    "hellenia_ui_applied": true,
+    "partner_create_search": {
+      "ok": true,
+      "id": 336,
+      "hits": 1
+    }
+  },
+  "counts": {
+    "customers": 100,
+    "vendors": 40,
+    "products": 300,
+    "categories": 20,
+    "brands": 10,
+    "warehouses": 5,
+    "pricelists": 5,
+    "sellers": 20,
+    "quotations": 10,
+    "orders": 104,
+    "invoices_b01": 30,
+    "invoices_b02": 30,
+    "credit_notes": 15,
+    "debit_notes": 15,
+    "purchases": 40,
+    "receptions": 30,
+    "payments_in": 30,
+    "payments_out": 30
+  },
+  "validations": {
+    "count_customers": true,
+    "count_vendors": true,
+    "count_products": true,
+    "count_categories": true,
+    "count_brands": true,
+    "count_warehouses": true,
+    "count_pricelists": true,
+    "count_sellers": true,
+    "count_invoices_b01": true,
+    "count_invoices_b02": true,
+    "count_credit_notes": true,
+    "count_debit_notes": true,
+    "count_purchases": true,
+    "count_receptions": true,
+    "count_payments_in": true,
+    "count_payments_out": true,
+    "accounting_balance": true,
+    "stock_quants": true,
+    "ncf_on_invoice": true,
+    "report_606": true,
+    "report_607": true,
+    "report_608": true,
+    "pdf_all": true
+  },
+  "pdf": {
+    "layout": "hellenia_reports.external_layout_hellenia",
+    "quotation": true,
+    "order": true,
+    "invoice_b01": true,
+    "credit_note": true,
+    "purchase": true,
+    "delivery": true
+  },
+  "ux": {
+    "company_lang": "es_DO",
+    "user_lang": "es_DO",
+    "crm_hidden": true,
+    "account_menu": "Contabilidad"
+  },
+  "ok": true,
+  "errors": [],
+  "warnings": []
+}

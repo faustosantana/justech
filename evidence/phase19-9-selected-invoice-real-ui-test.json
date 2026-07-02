@@ -1,0 +1,119 @@
+{
+  "phase": "19.9-selected-invoice-real-ui",
+  "timestamp_utc": "2026-07-01T12:09:49.807345+00:00",
+  "database": "hellenia_test",
+  "root_cause": "_load_pending_invoices precargaba amount_to_pay=residual en todas las líneas aunque apply=False; la UI editable no siempre persiste apply antes del botón; líneas no seleccionadas conservaban monto > 0 y podían procesarse si apply quedaba True en caché.",
+  "fix": "amount_to_pay=0 al cargar; write() y guard servidor anulan montos/retenciones si apply=False; _selected_line_ids_sql() lee apply desde BD; validación de conteo de pagos; amount_to_pay readonly si not apply.",
+  "hypotheses": {
+    "h1_apply_true_server": {
+      "confirmed": false,
+      "detail": "apply en carga"
+    },
+    "h2_partial_save_sql": {
+      "confirmed": true,
+      "detail": "[('INV/2026/00200', False, 0.0), ('INV/2026/00201', False, 0.0), ('INV/2026/00202', False, 0.0)]"
+    },
+    "h3_amount_without_apply": {
+      "confirmed": false,
+      "detail": "1"
+    }
+  },
+  "tests": {
+    "00_upgrade": {
+      "status": "PASS",
+      "detail": "19.0.1.0.25"
+    },
+    "01_three_lines": {
+      "status": "PASS",
+      "detail": "3"
+    },
+    "01_default_apply_false": {
+      "status": "PASS",
+      "detail": "[False, False, False]"
+    },
+    "01_default_amount_zero": {
+      "status": "PASS",
+      "detail": "[0.0, 0.0, 0.0]"
+    },
+    "02_ui_partial_one_payment": {
+      "status": "PASS",
+      "detail": "1"
+    },
+    "02_ui_partial_amount": {
+      "status": "PASS",
+      "detail": "5000.0"
+    },
+    "02_ui_a_partial": {
+      "status": "PASS",
+      "detail": "partial"
+    },
+    "02_ui_b_open": {
+      "status": "PASS",
+      "detail": "not_paid"
+    },
+    "02_ui_c_open": {
+      "status": "PASS",
+      "detail": "not_paid"
+    },
+    "03_guard_zeros_unselected": {
+      "status": "PASS",
+      "detail": "0.0,0.0"
+    },
+    "03_one_payment_despite_old_amounts": {
+      "status": "PASS",
+      "detail": "1"
+    },
+    "04_web_save_one_payment": {
+      "status": "PASS",
+      "detail": "1"
+    },
+    "05_wh_one_payment": {
+      "status": "PASS",
+      "detail": "1"
+    },
+    "05_wh_amount": {
+      "status": "PASS",
+      "detail": "211.86"
+    }
+  },
+  "evidence": {
+    "smoke_partner": "SMOKE P13.4 CF"
+  },
+  "ui_evidence": {
+    "partial_form_save": {
+      "sql_before_action": [
+        [
+          "INV/2026/00200",
+          false,
+          0.0
+        ],
+        [
+          "INV/2026/00201",
+          false,
+          0.0
+        ],
+        [
+          "INV/2026/00202",
+          false,
+          0.0
+        ]
+      ],
+      "payments": 1,
+      "payment_amount": 5000.0,
+      "A": "partial",
+      "B": "not_paid",
+      "C": "not_paid"
+    },
+    "web_save": {
+      "payments": 1,
+      "amount": 5000.0
+    }
+  },
+  "ok": true,
+  "pass": true,
+  "summary": {
+    "passed": 14,
+    "failed": 0,
+    "total": 14
+  }
+}

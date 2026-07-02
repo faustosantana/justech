@@ -34,76 +34,52 @@
             </div>
         </div>
 
-        <table width="100%" cellpadding="0" cellspacing="0" border="0" class="jt-hq-band jt-inv-band">
-            <tr>
-                <td width="40%" valign="middle" class="jt-hq-band-title jt-inv-band-title">
-                    <span t-out="doc.get_jt_invoice_band_title()"/>
-                </td>
-                <td width="60%" valign="middle" class="jt-inv-band-meta-wrap">
-                    <table width="100%" cellpadding="0" cellspacing="0" border="0" class="jt-inv-band-meta-grid">
-                        <tr>
-                            <td width="50%" valign="top" class="jt-inv-band-meta-group">
-                                <table width="100%" cellpadding="0" cellspacing="0" border="0" class="jt-inv-band-meta-pairs">
-                                    <tr>
-                                        <td class="jt-inv-band-lbl-cell">No. FACTURA:</td>
-                                        <td class="jt-inv-band-val-cell">
-                                            <span t-if="doc.name and doc.name not in ('/', 'False')" t-field="doc.name"/>
-                                            <span t-else="" t-out="doc.get_jt_invoice_number_display()"/>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="jt-inv-band-lbl-cell">NCF:</td>
-                                        <td class="jt-inv-band-val-cell">
-                                            <t t-if="doc._fields.get('l10n_latam_document_number') and doc.l10n_latam_document_number">
-                                                <span class="jt-inv-ncf-strong" t-field="doc.l10n_latam_document_number"/>
-                                            </t>
-                                            <t t-elif="doc._fields.get('justech_do_ncf') and doc.justech_do_ncf">
-                                                <span class="jt-inv-ncf-strong" t-field="doc.justech_do_ncf"/>
-                                            </t>
-                                            <t t-else="">—</t>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="jt-inv-band-lbl-cell">TIPO DE COMPROBANTE:</td>
-                                        <td class="jt-inv-band-val-cell">
-                                            <span t-if="doc._fields.get('l10n_latam_document_type_id') and doc.l10n_latam_document_type_id"
-                                                  t-field="doc.l10n_latam_document_type_id.name"/>
-                                            <span t-elif="doc._fields.get('justech_do_document_type_id') and doc.justech_do_document_type_id"
-                                                  t-field="doc.justech_do_document_type_id.name"/>
-                                            <span t-else="" t-out="doc.get_jt_document_type_label()"/>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </td>
-                            <td width="50%" valign="top" class="jt-inv-band-meta-group jt-inv-band-meta-group-r">
-                                <table width="100%" cellpadding="0" cellspacing="0" border="0" class="jt-inv-band-meta-pairs">
-                                    <tr>
-                                        <td class="jt-inv-band-lbl-cell">MONEDA:</td>
-                                        <td class="jt-inv-band-val-cell">
-                                            <span t-field="doc.currency_id.name"/>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="jt-inv-band-lbl-cell">FECHA DE EMISIÓN:</td>
-                                        <td class="jt-inv-band-val-cell">
-                                            <span t-if="doc.invoice_date" t-field="doc.invoice_date"/>
-                                            <span t-else="">—</span>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="jt-inv-band-lbl-cell">FECHA DE VENCIMIENTO:</td>
-                                        <td class="jt-inv-band-val-cell">
-                                            <span t-if="doc.invoice_date_due" t-field="doc.invoice_date_due"/>
-                                            <span t-else="">—</span>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </td>
-                        </tr>
-                    </table>
-                </td>
-            </tr>
-        </table>
+        <div class="jt-inv-band">
+            <div class="jt-inv-band-title">
+                <span t-out="doc.get_jt_invoice_band_title()"/>
+            </div>
+
+            <div class="jt-inv-fiscal-grid">
+                <table width="100%" cellpadding="0" cellspacing="0" border="0" class="jt-inv-fiscal-layout">
+                    <tr>
+                        <td width="50%" valign="top" class="jt-inv-fiscal-col">
+                            <div>
+                                <span class="jt-inv-label">No. Factura:</span>
+                                <span t-if="doc.name and doc.name not in ('/', 'False')" t-field="doc.name"/>
+                                <span t-else="" t-out="doc.get_jt_invoice_number_display()"/>
+                            </div>
+                            <div>
+                                <span class="jt-inv-label">NCF:</span>
+                                <strong t-if="doc._fields.get('justech_do_ncf') and doc.justech_do_ncf" t-field="doc.justech_do_ncf"/>
+                                <strong t-else="" t-out="doc.get_jt_ncf_display()"/>
+                            </div>
+                            <div>
+                                <span class="jt-inv-label">Tipo comprobante:</span>
+                                <span t-if="doc._fields.get('justech_do_document_type_id') and doc.justech_do_document_type_id"
+                                      t-field="doc.justech_do_document_type_id.name"/>
+                                <span t-else="" t-out="doc.get_jt_document_type_label()"/>
+                            </div>
+                        </td>
+                        <td width="50%" valign="top" class="jt-inv-fiscal-col">
+                            <div>
+                                <span class="jt-inv-label">Moneda:</span>
+                                <span t-out="doc.get_jt_currency_display()"/>
+                            </div>
+                            <div>
+                                <span class="jt-inv-label">Fecha emisión:</span>
+                                <span t-if="doc.invoice_date" t-field="doc.invoice_date"/>
+                                <span t-else="">—</span>
+                            </div>
+                            <div>
+                                <span class="jt-inv-label">Fecha vencimiento:</span>
+                                <span t-if="doc.invoice_date_due" t-field="doc.invoice_date_due"/>
+                                <span t-else="">—</span>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
 
         <hr class="jt-hq-line-soft"/>
 

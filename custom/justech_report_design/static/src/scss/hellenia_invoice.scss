@@ -1,72 +1,65 @@
-/* Factura — extensiones mínimas sobre hellenia_quotation.scss */
+/* Factura — banda fiscal compacta (Fase 25B.7) */
 
-.jt-inv-band td {
-    padding: 5px 14px !important;
+.jt-inv-band {
+    background-color: #35421f;
+    color: #ffffff;
+    padding: 12px 18px;
+    margin: 14px 0 14px 0;
+    min-height: auto;
+    height: auto;
 }
 
-.jt-inv-band .jt-hq-band-title {
-    letter-spacing: 0.5px !important;
-    vertical-align: middle !important;
+.jt-inv-band-title {
+    float: left;
+    width: 32%;
+    font-size: 18pt;
+    font-weight: 700;
+    letter-spacing: 4px;
+    line-height: 1.2;
+    padding-top: 8px;
+    color: #ffffff;
+    text-transform: uppercase;
 }
 
-.jt-inv-band-meta-wrap {
-    vertical-align: middle !important;
-    border-left: 1px solid rgba(255, 255, 255, 0.35);
-    padding-left: 14px !important;
+.jt-inv-fiscal-grid {
+    float: right;
+    width: 62%;
+    font-size: 9pt;
+    line-height: 1.45;
 }
 
-.jt-inv-band table,
-.jt-inv-band table tr,
-.jt-inv-band table td,
-.jt-inv-band table th {
+.jt-inv-fiscal-layout,
+.jt-inv-fiscal-layout tr,
+.jt-inv-fiscal-layout td {
     border: none !important;
-    outline: none !important;
-    box-shadow: none !important;
-}
-
-.jt-inv-band-meta-grid,
-.jt-inv-band-meta-pairs,
-.jt-inv-band-meta-grid td,
-.jt-inv-band-meta-pairs td {
-    background-color: #3E4827 !important;
-}
-
-.jt-inv-band-meta-group {
-    vertical-align: top;
+    border-collapse: collapse;
+    background: transparent !important;
+    background-color: transparent !important;
     padding: 0;
+    margin: 0;
 }
 
-.jt-inv-band-meta-group-r {
-    padding-left: 40px !important;
-}
-
-.jt-inv-band-lbl-cell {
-    color: #ffffff !important;
-    font-weight: bold;
-    font-size: 8.5pt;
-    line-height: 1.15;
-    text-align: left;
+.jt-inv-fiscal-col {
     vertical-align: top;
-    padding: 0 6px 1px 0;
-    white-space: nowrap;
-    width: 1%;
+    color: #ffffff;
 }
 
-.jt-inv-band-val-cell {
-    color: #ffffff !important;
-    font-weight: normal;
-    font-size: 8.5pt;
-    line-height: 1.15;
-    text-align: left;
-    vertical-align: top;
-    padding: 0 0 1px 0;
-    white-space: nowrap;
+.jt-inv-fiscal-col div {
+    margin: 0 0 2px 0;
+    color: #ffffff;
 }
 
-.jt-inv-band-val-cell .jt-inv-ncf-strong,
-.jt-inv-band-val-cell span.jt-inv-ncf-strong {
-    color: #ffffff !important;
-    font-weight: bold;
+.jt-inv-label {
+    display: inline-block;
+    min-width: 100px;
+    font-weight: 600;
+    color: #ffffff;
+}
+
+.jt-inv-band:after {
+    content: "";
+    display: table;
+    clear: both;
 }
 
 /* 3 columnas meta — cliente / pago / vendedor */

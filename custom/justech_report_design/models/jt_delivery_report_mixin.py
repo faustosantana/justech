@@ -1,12 +1,111 @@
 # -*- coding: utf-8 -*-
 """Mixin compartido — datos del Conduce de Entrega Justech."""
-from odoo import _, models
-from odoo.tools import is_html_empty
+from markupsafe import Markup
+
+from odoo import _, api, fields, models
+from odoo.tools import format_datetime, is_html_empty
 
 
 class JtDeliveryReportMixin(models.AbstractModel):
     _name = "jt.delivery.report.mixin"
     _description = "Justech Conduce de Entrega — datos para QWeb"
+
+    jt_delivery_picking_count = fields.Integer(
+        string="Entregas relacionadas",
+        compute="_compute_jt_delivery_ui",
+    )
+    jt_delivery_stat_label = fields.Char(
+        string="Etiqueta Conduce",
+        compute="_compute_jt_delivery_ui",
+    )
+
+    @api.depends()
+    def _compute_jt_delivery_ui(self):
+        for rec in self:
+            pickings = rec._jt_delivery_outgoing_pickings()
+            count = len(pickings)
+            rec.jt_delivery_picking_count = count
+            if count == 1:
+                rec.jt_delivery_stat_label = _("Conduce")
+            else:
+                rec.jt_delivery_stat_label = _("Conduces") if count else _("Conduce")
+
+    def _jt_delivery_outgoing_pickings(self):
+        return self.env["stock.picking"]
+
+    def _jt_delivery_document_kind_label(self):
+        self.ensure_one()
+        return _("documento")
+
+    def _jt_delivery_document_reference(self):
+        self.ensure_one()
+        return self.display_name
+
+    def _jt_delivery_sale_report_xmlid(self):
+        return "justech_report_design.action_report_justech_delivery_sale"
+
+    def _jt_delivery_invoice_report_xmlid(self):
+        return "justech_report_design.action_report_justech_delivery_invoice"
+
+    def _jt_delivery_picking_report_xmlid(self):
+        return "stock.action_report_delivery"
+
+    def _jt_delivery_post_print_message(self, pickings, used_picking_report=False):
+        self.ensure_one()
+        now = fields.Datetime.context_timestamp(self, fields.Datetime.now())
+        kind = self._jt_delivery_document_kind_label()
+        lines = [
+            Markup("<p><strong>%s</strong></p>")
+            % (_("Conduce de Entrega generado/imprimido desde esta %s.") % kind),
+            Markup("<ul>"),
+            Markup("<li>%s: %s</li>") % (_("Usuario"), self.env.user.display_name),
+            Markup("<li>%s: %s</li>")
+            % (_("Fecha"), format_datetime(self.env, now)),
+            Markup("<li>%s: %s</li>")
+            % (_("Documento origen"), self._jt_delivery_document_reference()),
+        ]
+        if pickings:
+            lines.append(
+                Markup("<li>%s: %s</li>")
+                % (_("Entrega(s) relacionada(s)"), ", ".join(pickings.mapped("name")))
+            )
+            if used_picking_report:
+                lines.append(
+                    Markup("<li>%s</li>")
+                    % _("Se utilizó la entrega real para el conduce.")
+                )
+            elif len(pickings) > 1:
+                lines.append(
+                    Markup("<li>%s</li>")
+                    % _(
+                        "Existen varias entregas relacionadas; "
+                        "el conduce se generó desde el documento actual."
+                    )
+                )
+        else:
+            lines.append(
+                Markup("<li>%s</li>")
+                % _(
+                    "No existe entrega relacionada; "
+                    "se generó el conduce usando las líneas del documento actual."
+                )
+            )
+        lines.append(Markup("</ul>"))
+        self.message_post(body=Markup("").join(lines), subtype_xmlid="mail.mt_note")
+
+    def action_jt_view_delivery_pickings(self):
+        self.ensure_one()
+        pickings = self._jt_delivery_outgoing_pickings()
+        action = self.env.ref("stock.action_picking_tree_all").read()[0]
+        action["domain"] = [("id", "in", pickings.ids)]
+        action["context"] = dict(self.env.context, default_partner_id=self.partner_id.id)
+        if len(pickings) == 1:
+            action["views"] = [(False, "form")]
+            action["res_id"] = pickings.id
+        return action
+
+    def action_jt_print_delivery_conduce(self):
+        raise NotImplementedError
 
     # --- helpers comunes ---
 

@@ -22,16 +22,20 @@ h2.hellenia-doc-title,
     padding: 0 !important;
     border: none !important;
     max-width: none !important;
+    box-shadow: none !important;
 }
 
 .jt-hq-page {
     font-family: 'DejaVu Sans', Helvetica, Arial, sans-serif;
     font-size: 9pt;
-    color: #000000;
-    line-height: 1.45;
+    color: #2d2d2d;
+    line-height: 1.5;
     margin: 0;
     padding: 0;
     width: 100%;
+    border: none !important;
+    box-shadow: none !important;
+    background: #ffffff !important;
 }
 
 .jt-hq-page table {
@@ -43,6 +47,13 @@ h2.hellenia-doc-title,
 .jt-hq-page td,
 .jt-hq-page th {
     border: none !important;
+    box-shadow: none !important;
+}
+
+.jt-hq-page div,
+.jt-hq-page p {
+    border: none !important;
+    box-shadow: none !important;
 }
 
 .jt-hq-green { color: #3E4827; }
@@ -56,12 +67,12 @@ h2.hellenia-doc-title,
 }
 
 .jt-hq-val {
-    color: #000000;
+    color: #2d2d2d;
     font-size: 9pt;
 }
 
 .jt-hq-val-bold {
-    color: #000000;
+    color: #2d2d2d;
     font-size: 9pt;
     font-weight: bold;
 }
@@ -72,7 +83,9 @@ h2.hellenia-doc-title,
     text-transform: uppercase;
     font-size: 6.5pt;
     letter-spacing: 0.7px;
-    margin: 0 0 10px 0;
+    margin: 0 0 8px 0;
+    padding: 0;
+    border: none !important;
 }
 
 .jt-hq-title-tight {
@@ -80,7 +93,7 @@ h2.hellenia-doc-title,
 }
 
 .jt-hq-hdr {
-    margin: 0 0 8px 0;
+    margin: 0 0 10px 0;
 }
 
 .jt-hq-hdr td {
@@ -102,7 +115,7 @@ h2.hellenia-doc-title,
 .jt-hq-co {
     text-align: right;
     font-size: 7.5pt;
-    color: #000000;
+    color: #2d2d2d;
     line-height: 1.55;
 }
 
@@ -152,52 +165,66 @@ h2.hellenia-doc-title,
 
 .jt-hq-line-soft {
     border: none;
-    border-bottom: 1px solid #e0e0e0;
-    margin: 0;
+    border-bottom: 1px solid #e8e8e8;
+    margin: 0 0 12px 0;
     height: 0;
 }
 
 .jt-hq-dates td {
-    padding: 8px 0 10px 0;
+    padding: 6px 0 4px 0;
 }
 
+/* Bloque cliente / vendedor — limpio, sin cajas */
 .jt-hq-cards {
-    margin: 14px 0 18px 0;
+    margin: 0 0 16px 0;
 }
 
 .jt-hq-card {
     vertical-align: top;
-    padding: 2px 18px 2px 0;
+    padding: 0 20px 0 0;
 }
 
 .jt-hq-card-r {
-    padding: 2px 0 2px 18px;
+    padding: 0 0 0 20px;
 }
 
 .jt-hq-vdiv {
     width: 1px;
-    background-color: #e0e0e0;
+    background-color: #ececec;
     font-size: 1px;
     padding: 0;
 }
 
-.jt-hq-field {
-    margin: 0 0 9px 0;
+.jt-hq-meta-row {
+    margin: 0 0 5px 0;
+    padding: 0;
+    line-height: 1.45;
+}
+
+.jt-hq-meta-row .jt-hq-lbl {
+    display: inline;
+    margin-right: 8px;
+}
+
+.jt-hq-meta-row .jt-hq-val {
+    display: inline;
 }
 
 .jt-hq-pay {
-    margin-top: 12px;
+    margin-top: 10px;
+    padding-top: 8px;
+    border-top: 1px solid #f0f0f0;
 }
 
 .jt-hq-pay-val {
     font-size: 9.5pt;
     font-weight: bold;
-    color: #000000;
-    margin-top: 3px;
+    color: #2d2d2d;
+    margin-top: 2px;
 }
 
 .jt-hq-items {
-    margin: 0 0 6px 0;
+    margin: 4px 0 8px 0;
 }
 
 .jt-hq-items thead th {
@@ -207,16 +234,16 @@ h2.hellenia-doc-title,
     font-weight: bold;
     text-transform: uppercase;
     letter-spacing: 0.7px;
-    padding: 11px 12px;
+    padding: 9px 10px;
 }
 
 .jt-hq-items tbody td {
-    padding: 11px 12px;
+    padding: 8px 10px;
     font-size: 8.5pt;
-    color: #000000;
-    vertical-align: middle;
+    color: #2d2d2d;
+    vertical-align: top;
     border: none !important;
-    border-bottom: 1px solid #f0f0f0 !important;
+    border-bottom: 1px solid #f3f3f3 !important;
 }
 
 .jt-hq-items tbody tr:last-child td {
@@ -226,6 +253,7 @@ h2.hellenia-doc-title,
 .jt-hq-items .c-num {
     text-align: center;
     width: 28px;
+    color: #888888;
 }
 
 .jt-hq-items .c-qty,
@@ -240,12 +268,12 @@ h2.hellenia-doc-title,
 }
 
 .jt-hq-totals {
-    width: 300px;
-    margin: 10px 0 14px auto;
+    width: 280px;
+    margin: 6px 0 12px auto;
 }
 
 .jt-hq-totals td {
-    padding: 5px 2px;
+    padding: 4px 2px;
     font-size: 8.5pt;
     border: none !important;
 }
@@ -258,7 +286,7 @@ h2.hellenia-doc-title,
 }
 
 .jt-hq-totals .t-val {
-    color: #000000;
+    color: #2d2d2d;
     font-weight: bold;
     text-align: right;
     width: 50%;
@@ -266,7 +294,7 @@ h2.hellenia-doc-title,
 
 .jt-hq-totals tr.grand td {
     border-top: 2px solid #3E4827 !important;
-    padding-top: 11px;
+    padding-top: 10px;
 }
 
 .jt-hq-totals tr.grand .t-lbl {
@@ -283,8 +311,8 @@ h2.hellenia-doc-title,
 
 .jt-hq-clear {
     clear: both;
-    height: 1px;
-    font-size: 1px;
+    height: 0;
+    font-size: 0;
 }
 
 .jt-hq-spacer td {
@@ -293,7 +321,10 @@ h2.hellenia-doc-title,
 }
 
 .jt-hq-cond {
-    margin: 0 0 14px 0;
+    margin: 10px 0 14px 0;
+    padding: 0;
+    border: none !important;
+    background: transparent !important;
 }
 
 .jt-hq-cond-title {
@@ -304,19 +335,33 @@ h2.hellenia-doc-title,
     letter-spacing: 0.7px;
     margin: 0 0 6px 0;
     padding: 0 0 4px 0;
-    border-bottom: 2px solid #3E4827;
+    border: none !important;
+    border-bottom: 1px solid #3E4827 !important;
     display: inline-block;
 }
 
 .jt-hq-cond-body {
     font-size: 7.5pt;
-    color: #000000;
-    line-height: 1.55;
+    color: #2d2d2d;
+    line-height: 1.6;
     white-space: pre-line;
+    margin: 6px 0 0 0;
+    padding: 0;
+    border: none !important;
+    background: transparent !important;
 }
 
+.jt-hq-cond-body * {
+    border: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
+    margin: 0;
+    padding: 0;
+}
+
+/* Firmas — líneas suaves, sin caja */
 .jt-hq-sigs {
-    margin: 0 0 10px 0;
+    margin: 18px 0 8px 0;
 }
 
 .jt-hq-sigs td {
@@ -328,38 +373,54 @@ h2.hellenia-doc-title,
     font-size: 6.5pt;
     font-weight: bold;
     text-transform: uppercase;
-    color: #3E4827;
-    letter-spacing: 0.5px;
-    margin: 0 0 5px 0;
+    color: #888888;
+    letter-spacing: 0.6px;
+    margin: 4px 0 0 0;
 }
 
 .jt-hq-sig-line {
-    border-bottom: 1px solid #000000;
-    height: 28px;
-    width: 100%;
-    margin: 0 0 6px 0;
+    border: none !important;
+    border-bottom: 1px solid #c8c8c8 !important;
+    height: 0;
+    width: 88%;
+    margin: 0 0 0 0;
+    padding: 0;
+    background: transparent !important;
 }
 
 .jt-hq-sig-date {
-    margin-top: 12px;
+    margin-top: 16px;
 }
 
 .jt-hq-sig-date .jt-hq-sig-line {
-    max-width: 240px;
+    max-width: 200px;
 }
 
 .jt-hq-foot {
-    border-top: 2px solid #3E4827;
-    padding-top: 7px;
+    border-top: 1px solid #3E4827;
+    padding-top: 6px;
     text-align: center;
     font-size: 7pt;
     color: #3E4827;
-    margin-top: 4px;
+    margin-top: 8px;
+}
+
+/* Footer PDF — paginación wkhtmltopdf */
+.jt-hq-footer-pdf {
+    border-top: 1px solid #e8e8e8;
+    padding: 4px 0 0 0;
+    font-size: 7pt;
+    color: #888888;
+    text-align: center;
+}
+
+.jt-hq-footer-pdf .jt-hq-foot-inline {
+    color: #3E4827;
+    margin-bottom: 2px;
 }
 
 .jt-hq-pg {
     text-align: center;
     font-size: 6.5pt;
     color: #888888;
-    margin-top: 4px;
 }

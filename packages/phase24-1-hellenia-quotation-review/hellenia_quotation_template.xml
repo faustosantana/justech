@@ -6,10 +6,7 @@
         <t t-set="company" t-value="doc.company_id"/>
         <t t-set="lines_to_report" t-value="doc._get_order_lines_to_report()"/>
         <t t-set="product_count" t-value="len(lines_to_report.filtered(lambda l: not l.display_type and not l.is_downpayment))"/>
-        <t t-set="spacer_cap" t-value="110 if product_count &lt;= 1 else (65 if product_count &lt;= 5 else (30 if product_count &lt;= 15 else 8))"/>
-        <t t-set="sig_cap" t-value="0 if product_count &lt;= 5 else 10"/>
-        <t t-set="bottom_spacer_px" t-value="min(doc.get_jt_quotation_bottom_spacer_px(), spacer_cap)"/>
-        <t t-set="signature_spacer_px" t-value="min(doc.get_jt_quotation_signature_spacer_px(), sig_cap)"/>
+        <t t-set="bottom_spacer_px" t-value="doc.get_jt_quotation_bottom_spacer_px()"/>
         <t t-set="jt_default_terms">(a) Las piezas ofrecidas son únicas y sujetas a disponibilidad.
 (b) Esta cotización tiene una validez de 5 días.
 (c) Se requiere confirmación del pago del 100% para reservar la pieza.
@@ -76,29 +73,29 @@
             <tr>
                 <td width="49%" class="jt-hq-card">
                     <div class="jt-hq-title">Información del Cliente</div>
-                    <div class="jt-hq-field">
-                        <div class="jt-hq-lbl">Cliente</div>
-                        <div class="jt-hq-val"><span t-field="doc.partner_id.name"/></div>
+                    <div class="jt-hq-meta-row">
+                        <span class="jt-hq-lbl">Cliente</span>
+                        <span class="jt-hq-val"><span t-field="doc.partner_id.name"/></span>
                     </div>
-                    <div class="jt-hq-field" t-if="doc.partner_id.vat">
-                        <div class="jt-hq-lbl">RNC</div>
-                        <div class="jt-hq-val"><span t-field="doc.partner_id.vat"/></div>
+                    <div class="jt-hq-meta-row" t-if="doc.partner_id.vat">
+                        <span class="jt-hq-lbl">RNC</span>
+                        <span class="jt-hq-val"><span t-field="doc.partner_id.vat"/></span>
                     </div>
-                    <div class="jt-hq-field" t-if="doc.partner_id.phone">
-                        <div class="jt-hq-lbl">Teléfono</div>
-                        <div class="jt-hq-val"><span t-field="doc.partner_id.phone"/></div>
+                    <div class="jt-hq-meta-row" t-if="doc.partner_id.phone">
+                        <span class="jt-hq-lbl">Teléfono</span>
+                        <span class="jt-hq-val"><span t-field="doc.partner_id.phone"/></span>
                     </div>
-                    <div class="jt-hq-field" t-if="doc.partner_id.email">
-                        <div class="jt-hq-lbl">Correo</div>
-                        <div class="jt-hq-val"><span t-field="doc.partner_id.email"/></div>
+                    <div class="jt-hq-meta-row" t-if="doc.partner_id.email">
+                        <span class="jt-hq-lbl">Correo</span>
+                        <span class="jt-hq-val"><span t-field="doc.partner_id.email"/></span>
                     </div>
                 </td>
                 <td class="jt-hq-vdiv">&#160;</td>
                 <td width="49%" class="jt-hq-card jt-hq-card-r">
                     <div class="jt-hq-title">Información del Vendedor</div>
-                    <div class="jt-hq-field" t-if="doc.user_id">
-                        <div class="jt-hq-lbl">Vendedor</div>
-                        <div class="jt-hq-val"><span t-field="doc.user_id.name"/></div>
+                    <div class="jt-hq-meta-row" t-if="doc.user_id">
+                        <span class="jt-hq-lbl">Vendedor</span>
+                        <span class="jt-hq-val"><span t-field="doc.user_id.name"/></span>
                     </div>
                     <div class="jt-hq-pay">
                         <div class="jt-hq-title jt-hq-title-tight">Términos de Pago</div>
@@ -177,41 +174,30 @@
         <div class="jt-hq-cond">
             <div class="jt-hq-cond-title">CONDICIONES</div>
             <t t-if="doc.note">
-                <div class="jt-hq-cond-body" t-field="doc.note"/>
+                <div class="jt-hq-cond-body" t-out="doc.note"/>
             </t>
             <t t-else="">
                 <div class="jt-hq-cond-body" t-out="jt_default_terms"/>
             </t>
         </div>
 
-        <table class="jt-hq-spacer" width="100%" cellpadding="0" cellspacing="0" t-if="signature_spacer_px &gt; 0">
-            <tr><td t-attf-style="height: {{ signature_spacer_px }}px;">&#160;</td></tr>
-        </table>
-
         <table width="100%" cellpadding="0" cellspacing="0" class="jt-hq-sigs">
             <tr>
                 <td width="48%">
-                    <div class="jt-hq-sig-lbl">Entregado por</div>
                     <div class="jt-hq-sig-line">&#160;</div>
+                    <div class="jt-hq-sig-lbl">Entregado por</div>
                     <div class="jt-hq-sig-date">
-                        <div class="jt-hq-sig-lbl">Fecha:</div>
                         <div class="jt-hq-sig-line">&#160;</div>
+                        <div class="jt-hq-sig-lbl">Fecha</div>
                     </div>
                 </td>
                 <td width="4%"></td>
                 <td width="48%">
-                    <div class="jt-hq-sig-lbl">Recibido por</div>
                     <div class="jt-hq-sig-line">&#160;</div>
+                    <div class="jt-hq-sig-lbl">Recibido por</div>
                 </td>
             </tr>
         </table>
-
-        <div class="jt-hq-foot">
-            <t t-if="company.phone"><span t-field="company.phone"/></t>
-            <t t-if="company.email"> | <span t-field="company.email"/></t>
-            <t t-if="company.website"> | <span t-field="company.website"/></t>
-        </div>
-        <div class="jt-hq-pg">Página <span class="page"/> de <span class="topage"/></div>
     </template>
 
     <!-- Reporte paralelo — web.html_container, sin web.external_layout -->
@@ -219,11 +205,20 @@
         <t t-call="web.html_container">
             <t t-foreach="docs" t-as="doc">
                 <t t-set="doc" t-value="doc.with_context(lang=doc.partner_id.lang)"/>
-                <div class="article o_report_layout_standard page jt-hq-page"
+                <t t-set="company" t-value="doc.company_id"/>
+                <div class="article page jt-hq-page"
                      t-att-data-oe-model="doc._name"
                      t-att-data-oe-id="doc.id"
                      t-att-data-oe-lang="doc.env.context.get('lang')">
                     <t t-call="justech_report_design.hellenia_quotation_body"/>
+                </div>
+                <div class="footer jt-hq-footer-pdf">
+                    <div class="jt-hq-foot-inline">
+                        <t t-if="company.phone"><span t-field="company.phone"/></t>
+                        <t t-if="company.email"> | <span t-field="company.email"/></t>
+                        <t t-if="company.website"> | <span t-field="company.website"/></t>
+                    </div>
+                    <div class="jt-hq-pg">Página <span class="page"></span> de <span class="topage"></span></div>
                 </div>
             </t>
         </t>

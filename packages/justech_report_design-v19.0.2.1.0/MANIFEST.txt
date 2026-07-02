@@ -1,8 +1,9 @@
 package=justech_report_design
 version=19.0.2.1.0
 odoo_version=19.0
-build_date=2026-07-02T05:16:56Z
-git_commit=08b7f85
+build_date=2026-07-02T05:17:30Z
+git_commit=136266c
+includes=README_INSTALL.md
 design_phase=24.2B-approved
 depends=sale
 optional_compat=hellenia_reports

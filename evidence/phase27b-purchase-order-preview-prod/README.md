@@ -9,7 +9,8 @@
 | `validation.json` | Resultado validación |
 | `form_ui_snippet.txt` | Botones header (incl. Vista previa) |
 | `00_preview_html.html` | Vista previa HTML (shell) |
-| `00_preview_http.html` | Vista previa vía HTTP autenticado |
+| `ui_form_with_button.png` | Captura formulario con botón Vista previa |
+| `ui_preview_hellenia.png` | Captura vista previa HTML Hellenia |
 | `01_official_print_menu.pdf` / `.png` | PDF menú Imprimir |
 | `backup_path.txt` | Ruta backup pre-despliegue |
 

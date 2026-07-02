@@ -184,7 +184,7 @@ report["pass"] = report["status"] == "PASS"
 report["visual_approval_pending"] = True
 
 with open(os.path.join(OUT_DIR, "validation.json"), "w", encoding="utf-8") as fh:
-    json.dump(report, f, indent=2, ensure_ascii=False)
+    json.dump(report, fh, indent=2, ensure_ascii=False)
 
 print(json.dumps({"status": report["status"], "errors": report["errors"], "po": po.name}))
 if report["status"] != "PASS":

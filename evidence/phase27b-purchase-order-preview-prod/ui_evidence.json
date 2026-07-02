@@ -1,0 +1,22 @@
+{
+  "header_button_strings": [
+    "Send RFQ",
+    "Receive",
+    "Confirm Order",
+    "Approve Order",
+    "Send RFQ",
+    "Confirm Order",
+    "Send PO",
+    "Acknowledge",
+    "Set to Draft",
+    "Vista previa",
+    "Print",
+    "Print",
+    "Cancel",
+    "Lock",
+    "Unlock",
+    "Catalog"
+  ],
+  "has_vista_previa": true,
+  "preview_url": "/report/html/justech_report_design.report_justech_purchase_order_document/9"
+}

@@ -152,11 +152,14 @@ class PurchaseOrder(models.Model):
 
     @api.readonly
     def action_preview_purchase_order(self):
-        """Vista previa HTML del reporte oficial (Imprimir → Orden de Compra)."""
+        """Vista previa nativa — portal con iframe, volver/imprimir/descargar."""
         self.ensure_one()
-        report = self.env.ref("purchase.action_report_purchase_order")
         return {
             "type": "ir.actions.act_url",
-            "target": "new",
-            "url": "/report/html/%s/%s" % (report.report_name, self.id),
+            "target": "self",
+            "url": self.get_portal_url(query_string="&jt_preview=1"),
         }
+
+    def get_jt_po_preview_portal_url(self):
+        self.ensure_one()
+        return self.get_portal_url(query_string="&jt_preview=1")

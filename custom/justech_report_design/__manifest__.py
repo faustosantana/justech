@@ -1,6 +1,6 @@
 {
     "name": "Justech Report Design",
-    "version": "19.0.7.2.0",
+    "version": "19.0.7.3.0",
     "category": "Reporting",
     "summary": "Cotización, factura y conduce Hellenia — diseño Justech QWeb+SCSS",
     "description": """
@@ -30,7 +30,7 @@ Orden de Compra (Fase 27A — oficial):
 - Sin botón duplicado; único menú Imprimir → Orden de Compra
 
 Vista previa OC (Fase 27B):
-- Botón Vista previa → HTML del reporte oficial Hellenia
+- Botón Vista previa → portal nativo (iframe Hellenia + volver/imprimir/descargar)
     """,
     "author": "Justech",
     "website": "https://hellenia.cloud",
@@ -41,6 +41,7 @@ Vista previa OC (Fase 27B):
         "stock",
         "account",
         "purchase",
+        "portal",
         "hellenia_reports",
     ],
     "data": [
@@ -60,6 +61,7 @@ Vista previa OC (Fase 27B):
         "report/invoice/justech_invoice_preview.xml",
         "report/delivery/justech_delivery_template.xml",
         "report/purchase/justech_purchase_order_template.xml",
+        "report/purchase/justech_purchase_order_portal.xml",
         "data/report_action_data.xml",
         "data/report_invoice_action_data.xml",
         "data/report_delivery_action_data.xml",
@@ -72,6 +74,9 @@ Vista previa OC (Fase 27B):
             "justech_report_design/static/src/scss/hellenia_invoice.scss",
             "justech_report_design/static/src/scss/hellenia_delivery.scss",
             "justech_report_design/static/src/scss/hellenia_purchase_order.scss",
+        ],
+        "web.assets_frontend": [
+            "justech_report_design/static/src/interactions/purchase_sidebar.js",
         ],
     },
     "installable": True,

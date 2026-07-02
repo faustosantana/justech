@@ -18,18 +18,17 @@ class SaleOrder(models.Model):
             return "Contado"
         return f"Crédito a {max_days} días"
 
-    def get_jt_quotation_bottom_spacer_px(self):
-        """Espaciador mínimo post-totales (sin hueco grande en página)."""
+    def get_jt_quotation_signature_margin_px(self):
+        """Espacio amplio condiciones → firmas; más líneas = menos margen."""
         self.ensure_one()
         lines = self._get_order_lines_to_report().filtered(
             lambda l: not l.display_type and not l.is_downpayment
         )
         count = len(lines)
+        if count <= 1:
+            return 200
         if count <= 5:
-            return 0
+            return 150
         if count <= 15:
-            return 8
-        return 4
-
-    def get_jt_quotation_signature_spacer_px(self):
-        return 0
+            return 70
+        return 35

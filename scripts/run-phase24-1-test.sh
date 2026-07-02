@@ -19,7 +19,7 @@ source config/test/.env
 cd docker/test
 docker compose --env-file ../../config/test/.env run --rm -T odoo odoo \
   -d "$ODOO_DB_NAME" --db_host=db --db_user="$DB_USER" --db_password="$DB_PASSWORD" \
-  -i justech_report_design --stop-after-init --no-http 2>&1 | tail -5
+  -u justech_report_design --stop-after-init --no-http 2>&1 | tail -5
 docker compose --env-file ../../config/test/.env up -d --force-recreate odoo
 sleep 30
 EVIDENCE=/opt/odoo-projects/hellenia/evidence/phase24-1-report-design

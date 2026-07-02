@@ -125,6 +125,11 @@ for key, so in orders.items():
     check(f"{key}_no_immediate", "immediate payment" not in html.lower())
     check(f"{key}_no_excel", "border: 1px solid" not in html)
     check(f"{key}_grand", "grand" in html)
+    check(f"{key}_no_totals_outer", "jt-hq-totals-outer" not in html)
+    check(f"{key}_no_totals_gap", "jt-hq-totals-gap" not in html)
+    check(f"{key}_totals_wrap", "jt-hq-totals-wrap" in html)
+    check(f"{key}_totals_width_280", 'class="jt-hq-totals"' in html and 'width="280"' in html)
+    check(f"{key}_no_sigs_table", 'class="jt-hq-sigs"' in html and "<table" not in html.split("jt-hq-sigs")[1].split("jt-hq-footer")[0] if "jt-hq-sigs" in html else False)
     if key == "quote_1":
         page_ok = pages == 1 if pages else len(pdf_bytes) < 120000
         check("quote_1_single_page", page_ok, f"pages={pages} size={len(pdf_bytes)}")

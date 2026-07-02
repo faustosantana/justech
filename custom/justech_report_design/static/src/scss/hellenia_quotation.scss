@@ -17,10 +17,20 @@ h2.hellenia-doc-title,
     overflow: hidden !important;
 }
 
-.o_body_html .container main .article.jt-hq-page {
+.o_body_html .container,
+.o_body_html .container main,
+.o_body_html .container main .page {
+    border: none !important;
+    border-top: none !important;
+    box-shadow: none !important;
+}
+
+.o_body_html .container main .article.jt-hq-page,
+.article.page.jt-hq-page {
     margin: 0 !important;
     padding: 0 !important;
     border: none !important;
+    border-top: none !important;
     max-width: none !important;
     box-shadow: none !important;
 }
@@ -34,6 +44,7 @@ h2.hellenia-doc-title,
     padding: 0;
     width: 100%;
     border: none !important;
+    border-top: none !important;
     box-shadow: none !important;
     background: #ffffff !important;
 }
@@ -44,8 +55,7 @@ h2.hellenia-doc-title,
     border: none !important;
 }
 
-.jt-hq-page table.jt-hq-totals,
-.jt-hq-page table.jt-hq-totals-outer .jt-hq-totals {
+.jt-hq-page table.jt-hq-totals {
     width: 280px !important;
     max-width: 280px !important;
 }
@@ -105,10 +115,14 @@ h2.hellenia-doc-title,
 
 .jt-hq-hdr {
     margin: 0 0 10px 0;
+    border: none !important;
+    border-top: none !important;
 }
 
 .jt-hq-hdr td {
     vertical-align: top;
+    border: none !important;
+    border-top: none !important;
 }
 
 .jt-hq-hdr-logo-cell {
@@ -283,32 +297,17 @@ h2.hellenia-doc-title,
 }
 
 /* Totales — bloque compacto derecha (wkhtmltopdf) */
-.jt-hq-totals-outer {
-    width: 100% !important;
-    margin: 10px 0 18px 0;
+.jt-hq-totals-wrap {
+    overflow: hidden;
+    margin: 10px 0 12px 0;
     border: none !important;
-}
-
-.jt-hq-totals-outer td {
-    border: none !important;
-    padding: 0;
-    vertical-align: top;
-}
-
-.jt-hq-totals-gap {
-    width: auto !important;
-}
-
-.jt-hq-totals-cell {
-    width: 280px !important;
-    text-align: right;
-    vertical-align: top;
-    border: none !important;
+    background: transparent !important;
 }
 
 .jt-hq-totals {
     width: 280px !important;
     max-width: 280px !important;
+    float: right;
     margin: 0;
     border: none !important;
     border-collapse: collapse;
@@ -370,10 +369,11 @@ h2.hellenia-doc-title,
 }
 
 .jt-hq-cond {
-    margin: 16px 0 20px 0;
+    margin: 8px 0 0 0;
     padding: 0;
     border: none !important;
     background: transparent !important;
+    clear: both;
 }
 
 .jt-hq-cond-title {
@@ -411,11 +411,12 @@ h2.hellenia-doc-title,
 
 /* Firmas — solo divs + hr, sin tabla ni caja */
 .jt-hq-sigs {
-    margin: 24px 0 0 0;
+    margin: 0 0 12px 0;
     width: 100%;
     overflow: hidden;
     border: none !important;
     background: transparent !important;
+    clear: both;
 }
 
 .jt-hq-sig-col {

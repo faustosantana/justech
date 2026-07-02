@@ -12,7 +12,8 @@
 | Aprobación visual | ✅ **Aprobado** (VIS-001 cerrado) |
 | Flujo vertical 24.1H | ✅ CONDICIONES / FIRMAS separados |
 | Plan migración PROD paralelo | ✅ `docs/PHASE24_1_PROD_PARALLEL_MIGRATION_PLAN.md` |
-| Ejecución PROD | ⛔ **Bloqueada** — pendiente autorización final |
+| Ejecución PROD paralelo | ✅ **Completada** 2026-07-02 — v`19.0.1.1.6` en `hellenia_prod` |
+| Evidencia PROD | `evidence/phase24-1-prod-parallel/` |
 | Formato oficial (reemplazo estándar) | ⛔ **No autorizado** — fase futura |
 
 ---
@@ -56,15 +57,11 @@
 
 ## Siguiente acción
 
-**Responsable:** autorizar ejecución del plan PROD paralelo (`docs/PHASE24_1_PROD_PARALLEL_MIGRATION_PLAN.md`).
-
-**Agente / desarrollo:** en espera de `APPROVE_PROMOTION=1` o autorización escrita equivalente.
-
-Tras instalación PROD paralela:
-
-1. Validar cotización real + reporte estándar
-2. Monitoreo 48h
+1. Monitoreo PROD 48h (impresión cotización Diseño vs estándar)
+2. Informar usuarios: cuándo usar **Cotización Hellenia (Diseño)** vs **Cotización en PDF**
 3. Decisión futura: formato oficial (Fase 24.1I — no planificada aún)
+
+**Backup pre-instalación PROD:** `backups/hellenia-prod/2026-07-02_0425`
 
 ---
 

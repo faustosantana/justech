@@ -98,7 +98,8 @@ for pdf in "$EVIDENCE_DIR"/*.pdf; do
 done
 
 # PNG de evidencia UI (render HTML estático del bloque de botones)
-python3 <<'PY' "$EVIDENCE_DIR"
+EVIDENCE_DIR_ARG="$EVIDENCE_DIR"
+python3 - "$EVIDENCE_DIR_ARG" <<'PY'
 import sys
 from pathlib import Path
 ev = Path(sys.argv[1])

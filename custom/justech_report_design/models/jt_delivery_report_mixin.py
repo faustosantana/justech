@@ -52,7 +52,7 @@ class JtDeliveryReportMixin(models.AbstractModel):
 
     def _jt_delivery_post_print_message(self, pickings, used_picking_report=False):
         self.ensure_one()
-        now = fields.Datetime.context_timestamp(self, fields.Datetime.now())
+        now_utc = fields.Datetime.now()
         kind = self._jt_delivery_document_kind_label()
         lines = [
             Markup("<p><strong>%s</strong></p>")
@@ -60,7 +60,7 @@ class JtDeliveryReportMixin(models.AbstractModel):
             Markup("<ul>"),
             Markup("<li>%s: %s</li>") % (_("Usuario"), self.env.user.display_name),
             Markup("<li>%s: %s</li>")
-            % (_("Fecha"), format_datetime(self.env, now)),
+            % (_("Fecha"), format_datetime(self.env, now_utc)),
             Markup("<li>%s: %s</li>")
             % (_("Documento origen"), self._jt_delivery_document_reference()),
         ]

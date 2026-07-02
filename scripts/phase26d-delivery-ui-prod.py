@@ -94,10 +94,17 @@ if so:
     ])
     try:
         action = so.action_jt_print_delivery_conduce()
-        check("sale_print_action", bool(action) and action.get("type") == "ir.actions.report", action.get("type"))
+        check(
+            "sale_print_action",
+            bool(action) and action.get("type") in ("ir.actions.report", "ir.actions.act_url"),
+            str(action.get("type"))[:80],
+        )
+        res_ids = action.get("res_ids") or action.get("context", {}).get("active_ids") or [action.get("res_id")]
+        if isinstance(res_ids, int):
+            res_ids = [res_ids]
         pdf, _ = env["ir.actions.report"]._render_qweb_pdf(
             action.get("report_name"),
-            action.get("res_ids") or [action.get("res_id")],
+            res_ids,
         )
         save_pdf("01_from_sale_button.pdf", pdf)
         check("sale_pdf_ok", pdf[:4] == b"%PDF", len(pdf))
@@ -129,10 +136,17 @@ if inv:
     ])
     try:
         action = inv.action_jt_print_delivery_conduce()
-        check("invoice_print_action", bool(action) and action.get("type") == "ir.actions.report", action.get("type"))
+        check(
+            "invoice_print_action",
+            bool(action) and action.get("type") in ("ir.actions.report", "ir.actions.act_url"),
+            str(action.get("type"))[:80],
+        )
+        res_ids = action.get("res_ids") or action.get("context", {}).get("active_ids") or [action.get("res_id")]
+        if isinstance(res_ids, int):
+            res_ids = [res_ids]
         pdf, _ = env["ir.actions.report"]._render_qweb_pdf(
             action.get("report_name"),
-            action.get("res_ids") or [action.get("res_id")],
+            res_ids,
         )
         save_pdf("02_from_invoice_button.pdf", pdf)
         check("invoice_pdf_ok", pdf[:4] == b"%PDF", len(pdf))

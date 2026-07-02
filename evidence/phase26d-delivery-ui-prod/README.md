@@ -1,6 +1,8 @@
 # Fase 26D — Botón y contador Conduce en cotización y factura
 
-**Módulo:** `justech_report_design` **19.0.5.3.0**
+**Estado:** PASS  
+**Módulo:** `justech_report_design` **19.0.5.3.0**  
+**Backup:** `/opt/odoo-projects/hellenia/backups/hellenia-prod/2026-07-02_193903` (8 609 483 bytes)
 
 ## UI
 

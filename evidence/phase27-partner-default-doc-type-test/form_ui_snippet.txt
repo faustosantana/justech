@@ -1,0 +1,13 @@
+=== res.partner form (extract) ===
+="field_partner_autocomplete" on_change="1"/>
+                <field name="justech_do_partner_id_type"/>
+                <field name="justech_do_rnc_valid" readonly="1"/>
+                <field name="justech_do_default_document_type_id" options="{'no_create': True, 'no_open': True}" can_create="True" can_write="True"/>
+                            <field name="website" string="Website" widget="url"
+
+=== sale.order form (extract) ===
+ow_vat': True}" placeholder="Comience a escribir para encontrar a un cliente..." readonly="state in ['cancel', 'sale']" on_change="1" can_create="True" can_write="True"/>
+                <field name="justech_do_document_type_id" options="{'no_create': True}" readonly="state in ('sale', 'done', 'cancel')" can_create="True" can_write="True"/>
+                        
+                        
+       

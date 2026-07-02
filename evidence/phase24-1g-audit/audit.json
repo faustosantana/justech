@@ -1,8 +1,8 @@
 {
   "phase": "24.1G-quotation-audit",
-  "timestamp_utc": "2026-07-02T03:49:17.510897+00:00",
+  "timestamp_utc": "2026-07-02T04:09:56.966958+00:00",
   "database": "hellenia_test",
-  "module_version": "19.0.1.1.4",
+  "module_version": "19.0.1.1.5",
   "ready_for_official": true,
   "blocking_issues": [],
   "visual_pending": [],
@@ -53,7 +53,7 @@
         {
           "id": "standard_pdf_renders",
           "status": "PASS",
-          "detail": "72925"
+          "detail": "72928"
         }
       ],
       "failed": []
@@ -257,22 +257,27 @@
       "status": "PASS",
       "checks": [
         {
-          "id": "vis001_lower_is_div",
+          "id": "vis001_no_lower_wrapper",
           "status": "PASS",
           "detail": ""
         },
         {
-          "id": "vis001_no_border_style",
+          "id": "vis_flow_cond_after_totals",
           "status": "PASS",
           "detail": ""
         },
         {
-          "id": "vis001_cond_present",
+          "id": "vis_flow_sigs_after_cond",
           "status": "PASS",
           "detail": ""
         },
         {
-          "id": "vis001_sigs_present",
+          "id": "vis_sigs_zone_present",
+          "status": "PASS",
+          "detail": ""
+        },
+        {
+          "id": "vis_no_dynamic_push",
           "status": "PASS",
           "detail": ""
         }
@@ -469,7 +474,7 @@
     },
     "quote_no_note": {
       "status": "PASS",
-      "order": "S00145",
+      "order": "S00146",
       "checks": [
         {
           "id": "default_terms",
@@ -555,27 +560,27 @@
     "quote_1_no_discount": {
       "file": "audit_quote_1_no_discount.pdf",
       "pages": null,
-      "size": 72103
+      "size": 72113
     },
     "quote_5_no_discount": {
       "file": "audit_quote_5_no_discount.pdf",
       "pages": null,
-      "size": 74522
+      "size": 74490
     },
     "quote_25_no_discount": {
       "file": "audit_quote_25_no_discount.pdf",
       "pages": null,
-      "size": 79052
+      "size": 79042
     },
     "quote_5_with_discount": {
       "file": "audit_quote_5_with_discount.pdf",
       "pages": null,
-      "size": 75206
+      "size": 76587
     },
     "quote_confirmed_sale": {
       "file": "audit_quote_confirmed_sale.pdf",
       "pages": null,
-      "size": 73543
+      "size": 73499
     }
   },
   "module_state": "installed",

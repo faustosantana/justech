@@ -1,8 +1,8 @@
 # Fase 24.1 — Paquete de revisión: Cotización Hellenia (Diseño)
 
-**Módulo:** `justech_report_design` v19.0.1.1.4  
+**Módulo:** `justech_report_design` v19.0.1.1.5  
 **Entorno validado:** TEST (`hellenia_test` / `test.hellenia.cloud`)  
-**Estado:** ⏳ **Aprobación visual** — VIS-001 corregido, ZIP regenerado — **NO promover a PROD**  
+**Estado:** ⏳ **Aprobación visual final** — 24.1H flujo vertical + VIS-001 — **NO promover a PROD**  
 **Enfoque Fase 24.2:** ✅ Aprobado (localización visual Justech) — implementación bloqueada hasta tu OK de este ZIP
 
 ---

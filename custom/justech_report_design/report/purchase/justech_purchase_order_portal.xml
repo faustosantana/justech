@@ -6,6 +6,16 @@
               inherit_id="purchase.portal_my_purchase_order"
               name="Purchase Order Portal — Justech preview">
 
+        <t t-call="portal.portal_layout" position="inside">
+            <t t-if="jt_report_preview">
+                <t t-set="o_portal_fullwidth_alert" groups="purchase.group_purchase_manager">
+                    <t t-call="portal.portal_back_in_edit_mode">
+                        <t t-set="backend_url" t-value="'/odoo/action-purchase.purchase_rfq/%s' % (order.id)"/>
+                    </t>
+                </t>
+            </t>
+        </t>
+
         <xpath expr="//div[@id='portal_purchase_content']" position="replace">
             <t t-if="jt_report_preview">
                 <div class="o_portal_html_view position-relative bg-white shadow overflow-hidden">

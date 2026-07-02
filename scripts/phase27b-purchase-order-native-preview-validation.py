@@ -109,7 +109,11 @@ try:
     has_iframe = "purchase_order_html" in portal_body
     has_download = "o_download_btn" in portal_body and "jt_report_pdf" in portal_body
     has_print = "o_portal_po_print" in portal_body
-    has_back = "portal_back_in_edit_mode" in portal_body or "Volver" in portal_body
+    has_back = (
+        "Back to edit mode" in portal_body
+        or "portal_back_in_edit_mode" in portal_body
+        or "action-purchase.purchase_rfq" in portal_body
+    )
     check("portal_page_ok", portal_ok, portal_resp.status_code)
     check("portal_has_iframe", has_iframe, has_iframe)
     check("portal_has_download", has_download, has_download)

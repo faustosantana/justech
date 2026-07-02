@@ -65,7 +65,7 @@ docker compose --env-file ../../${ENV_FILE} run --rm -T odoo odoo \
   -u justech_report_design --stop-after-init --no-http > /tmp/phase27b-upgrade.log 2>&1
 tail -10 /tmp/phase27b-upgrade.log
 docker compose --env-file ../../${ENV_FILE} up -d odoo
-sleep 14
+sleep 18
 
 docker compose --env-file ../../${ENV_FILE} exec -T odoo odoo shell \
   -d "\$ODOO_DB_NAME" --db_host=db --db_user="\$DB_USER" --db_password="\$DB_PASSWORD" --no-http \

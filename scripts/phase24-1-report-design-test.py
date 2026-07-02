@@ -122,7 +122,9 @@ def render_case(key, so, fname, Report):
     )
 
     push_px = so.get_jt_quotation_signature_push_px()
-    check(f"{key}_sig_push_min", push_px >= 140 if so.get_jt_quotation_anchor_signatures() else push_px >= 0, push_px)
+    check(f"{key}_sig_push_min", push_px >= 60 if so.get_jt_quotation_anchor_signatures() else push_px >= 0, push_px)
+    if pages == 1 or pages is None:
+        check(f"{key}_sigs_on_first_page", 'class="jt-hq-sigs"' in html)
 
     shot = screenshot(path, os.path.join(OUT_DIR, f"screenshot_{key}"))
     if shot:

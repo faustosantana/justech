@@ -1,10 +1,16 @@
 # -*- coding: utf-8 -*-
-from odoo import models
+from odoo import api, fields, models
 
 
 class StockPicking(models.Model):
     _name = "stock.picking"
     _inherit = ["stock.picking", "jt.delivery.report.mixin"]
+
+    delivery_note_ids = fields.One2many(
+        "justech.delivery.note",
+        "picking_id",
+        string="Conduces de entrega",
+    )
 
     def _jt_delivery_related_sale_order(self):
         self.ensure_one()
@@ -139,3 +145,28 @@ class StockPicking(models.Model):
                     )
                 )
         return lines
+
+    def _jt_delivery_note_records(self):
+        return self.delivery_note_ids
+
+    def _jt_get_or_create_delivery_note(self):
+        self.ensure_one()
+        Note = self.env["justech.delivery.note"]
+        existing = Note.search(
+            [("picking_id", "=", self.id), ("state", "!=", "cancel")],
+            limit=1,
+        )
+        if existing:
+            return existing, False
+        svc = self.env["justech.delivery.note.service"]
+        vals = svc._jt_delivery_note_vals_from_picking(self)
+        note = Note.create(vals)
+        self._jt_post_delivery_note_origin_chatter(note, True)
+        return note, True
+
+    @api.depends("delivery_note_ids", "delivery_note_ids.state")
+    def _compute_jt_delivery_ui(self):
+        return super()._compute_jt_delivery_ui()
+
+    def action_jt_view_delivery_notes(self):
+        return super().action_jt_view_delivery_notes()

@@ -10,8 +10,8 @@ class JtDeliveryReportMixin(models.AbstractModel):
     _name = "jt.delivery.report.mixin"
     _description = "Justech Conduce de Entrega — datos para QWeb"
 
-    jt_delivery_picking_count = fields.Integer(
-        string="Entregas relacionadas",
+    jt_delivery_note_count = fields.Integer(
+        string="Conduces",
         compute="_compute_jt_delivery_ui",
     )
     jt_delivery_stat_label = fields.Char(
@@ -19,12 +19,16 @@ class JtDeliveryReportMixin(models.AbstractModel):
         compute="_compute_jt_delivery_ui",
     )
 
+    def _jt_delivery_note_records(self):
+        """Conduces vinculados — sobreescribir en sale.order / account.move / stock.picking."""
+        return self.env["justech.delivery.note"]
+
     @api.depends()
     def _compute_jt_delivery_ui(self):
         for rec in self:
-            pickings = rec._jt_delivery_outgoing_pickings()
-            count = len(pickings)
-            rec.jt_delivery_picking_count = count
+            notes = rec._jt_delivery_note_records().filtered(lambda n: n.state != "cancel")
+            count = len(notes)
+            rec.jt_delivery_note_count = count
             if count == 1:
                 rec.jt_delivery_stat_label = _("Conduce")
             else:
@@ -33,78 +37,36 @@ class JtDeliveryReportMixin(models.AbstractModel):
     def _jt_delivery_outgoing_pickings(self):
         return self.env["stock.picking"]
 
-    def _jt_delivery_document_kind_label(self):
-        self.ensure_one()
-        return _("documento")
-
-    def _jt_delivery_document_reference(self):
-        self.ensure_one()
-        return self.display_name
-
-    def _jt_delivery_sale_report_xmlid(self):
-        return "justech_report_design.action_report_justech_delivery_sale"
-
-    def _jt_delivery_invoice_report_xmlid(self):
-        return "justech_report_design.action_report_justech_delivery_invoice"
-
-    def _jt_delivery_picking_report_xmlid(self):
-        return "stock.action_report_delivery"
-
-    def _jt_delivery_post_print_message(self, pickings, used_picking_report=False):
+    def _jt_post_delivery_note_origin_chatter(self, note, created):
         self.ensure_one()
         now_utc = fields.Datetime.now()
-        kind = self._jt_delivery_document_kind_label()
-        lines = [
-            Markup("<p><strong>%s</strong></p>")
-            % (_("Conduce de Entrega generado/imprimido desde esta %s.") % kind),
-            Markup("<ul>"),
-            Markup("<li>%s: %s</li>") % (_("Usuario"), self.env.user.display_name),
-            Markup("<li>%s: %s</li>")
-            % (_("Fecha"), format_datetime(self.env, now_utc)),
-            Markup("<li>%s: %s</li>")
-            % (_("Documento origen"), self._jt_delivery_document_reference()),
-        ]
-        if pickings:
-            lines.append(
-                Markup("<li>%s: %s</li>")
-                % (_("Entrega(s) relacionada(s)"), ", ".join(pickings.mapped("name")))
+        if created:
+            body = _(
+                "Conduce de Entrega %(name)s creado por %(user)s el %(date)s.",
+                name=note.name,
+                user=self.env.user.display_name,
+                date=format_datetime(self.env, now_utc),
             )
-            if used_picking_report:
-                lines.append(
-                    Markup("<li>%s</li>")
-                    % _("Se utilizó la entrega real para el conduce.")
-                )
-            elif len(pickings) > 1:
-                lines.append(
-                    Markup("<li>%s</li>")
-                    % _(
-                        "Existen varias entregas relacionadas; "
-                        "el conduce se generó desde el documento actual."
-                    )
-                )
         else:
-            lines.append(
-                Markup("<li>%s</li>")
-                % _(
-                    "No existe entrega relacionada; "
-                    "se generó el conduce usando las líneas del documento actual."
-                )
+            body = _(
+                "Conduce de Entrega %(name)s reimpreso por %(user)s el %(date)s.",
+                name=note.name,
+                user=self.env.user.display_name,
+                date=format_datetime(self.env, now_utc),
             )
-        lines.append(Markup("</ul>"))
-        self.message_post(body=Markup("").join(lines), subtype_xmlid="mail.mt_note")
+        self.message_post(body=body, subtype_xmlid="mail.mt_note")
 
-    def action_jt_view_delivery_pickings(self):
+    def action_jt_view_delivery_notes(self):
         self.ensure_one()
-        pickings = self._jt_delivery_outgoing_pickings()
-        action = self.env.ref("stock.action_picking_tree_all").read()[0]
-        action["domain"] = [("id", "in", pickings.ids)]
-        action["context"] = dict(self.env.context, default_partner_id=self.partner_id.id)
-        if len(pickings) == 1:
+        notes = self._jt_delivery_note_records().filtered(lambda n: n.state != "cancel")
+        action = self.env.ref("justech_report_design.action_justech_delivery_note").read()[0]
+        action["domain"] = [("id", "in", notes.ids)]
+        if len(notes) == 1:
             action["views"] = [(False, "form")]
-            action["res_id"] = pickings.id
+            action["res_id"] = notes.id
         return action
 
-    def action_jt_print_delivery_conduce(self):
+    def action_jt_create_delivery_conduce(self):
         raise NotImplementedError
 
     # --- helpers comunes ---

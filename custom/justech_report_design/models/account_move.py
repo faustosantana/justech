@@ -1,11 +1,17 @@
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl-3.0.html)
-from odoo import _, api, models
+from odoo import _, api, fields, models
 from odoo.tools import formatLang, is_html_empty
 
 
 class AccountMove(models.Model):
     _name = "account.move"
     _inherit = ["account.move", "jt.delivery.report.mixin"]
+
+    delivery_note_ids = fields.One2many(
+        "justech.delivery.note",
+        "invoice_id",
+        string="Conduces de entrega",
+    )
 
     def _jt_invoice_product_lines(self):
         self.ensure_one()
@@ -358,33 +364,37 @@ class AccountMove(models.Model):
             lambda p: p.picking_type_code == "outgoing" and p.state != "cancel"
         )
 
-    @api.depends(
-        "invoice_origin",
-        "invoice_line_ids.sale_line_ids.order_id.picking_ids",
-        "invoice_line_ids.sale_line_ids.order_id.picking_ids.state",
-        "invoice_line_ids.sale_line_ids.order_id.picking_ids.picking_type_code",
-    )
+    def _jt_delivery_note_records(self):
+        return self.delivery_note_ids
+
+    @api.depends("delivery_note_ids", "delivery_note_ids.state")
     def _compute_jt_delivery_ui(self):
         return super()._compute_jt_delivery_ui()
 
-    def _jt_delivery_document_kind_label(self):
-        return _("factura")
+    def _jt_get_or_create_delivery_note(self):
+        self.ensure_one()
+        Note = self.env["justech.delivery.note"]
+        existing = Note.search(
+            [("invoice_id", "=", self.id), ("state", "!=", "cancel")],
+            limit=1,
+        )
+        if existing:
+            return existing, False
+        svc = self.env["justech.delivery.note.service"]
+        vals = svc._jt_delivery_note_vals_from_invoice(self)
+        note = Note.create(vals)
+        self._jt_post_delivery_note_origin_chatter(note, True)
+        return note, True
 
-    def _jt_delivery_document_reference(self):
-        return self.name or self.display_name
-
-    def action_jt_print_delivery_conduce(self):
+    def action_jt_create_delivery_conduce(self):
         self.ensure_one()
         if self.move_type not in ("out_invoice", "out_refund"):
             return False
-        pickings = self._jt_delivery_outgoing_pickings()
-        used_picking = False
-        if len(pickings) == 1:
-            report = self.env.ref(self._jt_delivery_picking_report_xmlid())
-            target = pickings
-            used_picking = True
-        else:
-            report = self.env.ref(self._jt_delivery_invoice_report_xmlid())
-            target = self
-        self._jt_delivery_post_print_message(pickings, used_picking_report=used_picking)
-        return report.report_action(target)
+        note, created = self._jt_get_or_create_delivery_note()
+        self._jt_post_delivery_note_origin_chatter(note, created)
+        return self.env.ref(
+            "justech_report_design.action_report_justech_delivery_note"
+        ).report_action(note)
+
+    def action_jt_print_delivery_conduce(self):
+        return self.action_jt_create_delivery_conduce()

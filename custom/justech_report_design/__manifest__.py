@@ -1,6 +1,6 @@
 {
     "name": "Justech Report Design",
-    "version": "19.0.5.3.0",
+    "version": "19.0.6.0.0",
     "category": "Reporting",
     "summary": "Cotización, factura y conduce Hellenia — diseño Justech QWeb+SCSS",
     "description": """
@@ -12,9 +12,9 @@ Cotización (Fase 24.2):
 Factura fiscal (Fase 26):
 - account.account_invoices → reporte Justech oficial
 
-Conduce de Entrega (Fase 26C/26D):
-- stock.action_report_delivery → reporte Justech oficial (salidas)
-- Botón y contador visible en cotización/OV y factura
+Conduce de Entrega (Fase 26E):
+- Modelo justech.delivery.note con secuencia COND/AÑO/#####
+- Botón Crear Conduce + smart button con contador real
     """,
     "author": "Justech",
     "website": "https://hellenia.cloud",
@@ -28,11 +28,15 @@ Conduce de Entrega (Fase 26C/26D):
     ],
     "data": [
         "data/paperformat_data.xml",
+        "data/justech_delivery_note_sequence.xml",
+        "security/ir.model.access.csv",
         "data/quotation_terms_default.xml",
         "views/res_company_views.xml",
         "views/sale_order_views.xml",
         "views/sale_order_delivery_views.xml",
         "views/account_move_delivery_views.xml",
+        "views/stock_picking_delivery_views.xml",
+        "views/justech_delivery_note_views.xml",
         "report/quotation/hellenia_quotation_template.xml",
         "report/invoice/justech_invoice_template.xml",
         "report/invoice/justech_invoice_preview.xml",

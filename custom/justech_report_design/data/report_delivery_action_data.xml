@@ -14,7 +14,18 @@
         <field name="dpi">96</field>
     </record>
 
-    <!-- Principal: stock.picking (binding retirado en Fase 26C — usa stock.action_report_delivery) -->
+    <!-- Registro oficial justech.delivery.note -->
+    <record id="action_report_justech_delivery_note" model="ir.actions.report">
+        <field name="name">Conduce de Entrega</field>
+        <field name="model">justech.delivery.note</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">justech_report_design.report_justech_delivery_document</field>
+        <field name="report_file">justech_report_design.report_justech_delivery_document</field>
+        <field name="print_report_name">'Conduce - %s' % (object.name)</field>
+        <field name="paperformat_id" ref="justech_report_design.paperformat_hellenia_delivery"/>
+    </record>
+
+    <!-- Legacy wrappers (interceptados → justech.delivery.note) -->
     <record id="action_report_justech_delivery" model="ir.actions.report">
         <field name="name">Conduce de Entrega</field>
         <field name="model">stock.picking</field>

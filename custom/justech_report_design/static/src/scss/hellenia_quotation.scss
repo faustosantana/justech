@@ -117,34 +117,45 @@ div.article.page.jt-hq-page,
 }
 
 .jt-hq-hdr {
+    display: table;
+    width: 100%;
     margin: 0 0 10px 0;
     border: none !important;
-    border-top: none !important;
     border-collapse: collapse !important;
-}
-
-.jt-hq-hdr tr {
-    border: none !important;
-}
-
-.jt-hq-hdr td {
-    vertical-align: top;
-    border: none !important;
-    border-top: none !important;
-    border-right: none !important;
-    border-left: none !important;
-    border-bottom: none !important;
     outline: none !important;
     box-shadow: none !important;
+    background: transparent !important;
 }
 
-.jt-hq-hdr-logo-cell {
+.jt-hq-hdr-logo,
+.jt-hq-hdr .jt-hq-co {
+    display: table-cell;
+    vertical-align: top;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
+}
+
+.jt-hq-hdr-logo {
+    width: 40%;
     padding-right: 14px;
-    border-right: none !important;
 }
 
-.jt-hq-hdr td.jt-hq-co {
-    border-left: none !important;
+.jt-hq-hdr .jt-hq-co {
+    width: 60%;
+}
+
+/* Títulos bloque cliente / vendedor — solo estos, no Términos de Pago */
+.jt-hq-card-title {
+    color: #3E4827;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 7.5pt;
+    letter-spacing: 0.8px;
+    margin: 0 0 8px 0;
+    padding: 0;
+    border: none !important;
 }
 
 /* Aislar cotización Justech de estilos hellenia_reports en el mismo bundle PDF */

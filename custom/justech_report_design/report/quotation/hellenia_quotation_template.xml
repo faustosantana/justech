@@ -9,33 +9,31 @@
         <t t-set="has_discount" t-value="doc.get_jt_quotation_has_discount()"/>
         <t t-set="show_discount_totals" t-value="doc.get_jt_quotation_show_discount_totals()"/>
 
-        <table width="100%" cellpadding="0" cellspacing="0" border="0" class="jt-hq-hdr">
-            <tr>
-                <td width="40%" class="jt-hq-hdr-logo-cell">
-                    <img t-if="company.logo" class="jt-hq-logo"
-                         t-att-src="image_data_uri(company.logo)" alt="Hellenia"/>
-                </td>
-                <td width="60%" class="jt-hq-co">
-                    <div class="jt-hq-co-name"><span t-field="company.name"/></div>
-                    <div t-if="company.street">
-                        <span t-field="company.street"/>
-                        <t t-if="company.city">, <span t-field="company.city"/></t>
-                    </div>
-                    <div t-if="company.vat">
-                        <span class="jt-hq-co-lbl">RNC: </span><span t-field="company.vat"/>
-                    </div>
-                    <div t-if="company.phone">
-                        <span class="jt-hq-co-lbl">Tel.: </span><span t-field="company.phone"/>
-                    </div>
-                    <div t-if="company.email">
-                        <span class="jt-hq-co-lbl">Correo: </span><span t-field="company.email"/>
-                    </div>
-                    <div t-if="company.website">
-                        <span class="jt-hq-co-lbl">Web: </span><span t-field="company.website"/>
-                    </div>
-                </td>
-            </tr>
-        </table>
+        <div class="jt-hq-hdr">
+            <div class="jt-hq-hdr-logo">
+                <img t-if="company.logo" class="jt-hq-logo"
+                     t-att-src="image_data_uri(company.logo)" alt="Hellenia"/>
+            </div>
+            <div class="jt-hq-co">
+                <div class="jt-hq-co-name"><span t-field="company.name"/></div>
+                <div t-if="company.street">
+                    <span t-field="company.street"/>
+                    <t t-if="company.city">, <span t-field="company.city"/></t>
+                </div>
+                <div t-if="company.vat">
+                    <span class="jt-hq-co-lbl">RNC: </span><span t-field="company.vat"/>
+                </div>
+                <div t-if="company.phone">
+                    <span class="jt-hq-co-lbl">Tel.: </span><span t-field="company.phone"/>
+                </div>
+                <div t-if="company.email">
+                    <span class="jt-hq-co-lbl">Correo: </span><span t-field="company.email"/>
+                </div>
+                <div t-if="company.website">
+                    <span class="jt-hq-co-lbl">Web: </span><span t-field="company.website"/>
+                </div>
+            </div>
+        </div>
 
         <table width="100%" cellpadding="0" cellspacing="0" class="jt-hq-band">
             <tr>
@@ -67,7 +65,7 @@
         <table width="100%" cellpadding="0" cellspacing="0" class="jt-hq-cards">
             <tr>
                 <td width="49%" class="jt-hq-card">
-                    <div class="jt-hq-title">Información del Cliente</div>
+                    <div class="jt-hq-card-title">Información del Cliente</div>
                     <div class="jt-hq-meta-row">
                         <span class="jt-hq-lbl">Cliente</span>
                         <span class="jt-hq-val"><span t-field="doc.partner_id.name"/></span>
@@ -87,7 +85,7 @@
                 </td>
                 <td class="jt-hq-vdiv">&#160;</td>
                 <td width="49%" class="jt-hq-card jt-hq-card-r">
-                    <div class="jt-hq-title">Información del Vendedor</div>
+                    <div class="jt-hq-card-title">Información del Vendedor</div>
                     <div class="jt-hq-meta-row" t-if="doc.user_id">
                         <span class="jt-hq-lbl">Vendedor</span>
                         <span class="jt-hq-val"><span t-field="doc.user_id.name"/></span>

@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='note']" position="attributes">
                 <attribute name="string">Condiciones (PDF Cotización)</attribute>
-                <attribute name="placeholder">Términos y condiciones que aparecerán en el PDF de cotización Hellenia. Si se deja vacío, se usan las condiciones por defecto.</attribute>
+                <attribute name="placeholder">Condiciones del PDF. Al crear una cotización se copian desde la empresa; puede editarlas libremente.</attribute>
             </xpath>
         </field>
     </record>

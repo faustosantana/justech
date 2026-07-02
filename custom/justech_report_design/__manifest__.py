@@ -1,25 +1,29 @@
 {
     "name": "Justech Report Design",
-    "version": "19.0.1.1.6",
+    "version": "19.0.2.0.0",
     "category": "Reporting",
-    "summary": "Diseño HTML/QWeb cotización Hellenia — módulo limpio TEST",
+    "summary": "Cotización oficial Hellenia — diseño Justech QWeb+SCSS",
     "description": """
-Reporte paralelo de cotización Hellenia con QWeb + SCSS en assets PDF.
+Cotización oficial Hellenia (Fase 24.2).
 
-- No modifica sale.report_saleorder_document
+- sale.action_report_saleorder apunta al diseño Justech
+- Condiciones desde res.company → sale.order.note al crear
+- PDF imprime exactamente doc.note (sin texto quemado en XML)
+- Respaldo: action_report_saleorder_backup (reporte estándar)
 - Estilos en web.report_assets_common (wkhtmltopdf)
-- Paperformat dedicado carta compacto
     """,
     "author": "Justech",
     "website": "https://hellenia.cloud",
     "depends": [
         "sale",
+        "hellenia_reports",
     ],
     "data": [
         "data/paperformat_data.xml",
         "views/sale_order_views.xml",
         "report/quotation/hellenia_quotation_template.xml",
         "data/report_action_data.xml",
+        "data/report_official_data.xml",
     ],
     "assets": {
         "web.report_assets_common": [

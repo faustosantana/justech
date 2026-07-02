@@ -8,7 +8,6 @@
         <t t-set="product_count" t-value="len(lines_to_report.filtered(lambda l: not l.display_type and not l.is_downpayment))"/>
         <t t-set="has_discount" t-value="doc.get_jt_quotation_has_discount()"/>
         <t t-set="show_discount_totals" t-value="doc.get_jt_quotation_show_discount_totals()"/>
-        <t t-set="terms_text" t-value="doc.get_jt_quotation_terms_display()"/>
 
         <table width="100%" cellpadding="0" cellspacing="0" class="jt-hq-hdr">
             <tr>
@@ -183,9 +182,9 @@
 
         <div class="jt-hq-clear"/>
 
-        <div class="jt-hq-cond">
+        <div class="jt-hq-cond" t-if="doc.jt_show_quotation_conditions()">
             <div class="jt-hq-cond-title">CONDICIONES</div>
-            <div class="jt-hq-cond-body" t-out="terms_text"/>
+            <div class="jt-hq-cond-body" t-field="doc.note"/>
         </div>
 
         <div class="jt-hq-sigs-zone">

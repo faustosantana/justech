@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <record id="action_report_hellenia_quotation" model="ir.actions.report">
-        <field name="name">Cotización Hellenia (Diseño)</field>
+        <field name="name">Cotización Hellenia (Justech)</field>
         <field name="model">sale.order</field>
         <field name="report_type">qweb-pdf</field>
         <field name="report_name">justech_report_design.report_hellenia_quotation_document</field>

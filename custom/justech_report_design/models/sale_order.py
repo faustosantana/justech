@@ -1,17 +1,51 @@
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl-3.0.html)
-from odoo import models
-from odoo.tools import formatLang, html2plaintext, is_html_empty
+from markupsafe import Markup
+
+from odoo import api, models
+from odoo.tools import formatLang, html_escape, is_html_empty
 
 
 class SaleOrder(models.Model):
     _inherit = "sale.order"
 
-    _JT_DEFAULT_TERMS = """(a) Las piezas ofrecidas son únicas y sujetas a disponibilidad.
-(b) Esta cotización tiene una validez de 5 días.
-(c) Se requiere confirmación del pago del 100% para reservar la pieza.
-(d) Transporte disponible bajo cotización.
-(e) Asesoría de colocación, instalación y styling disponible bajo cotización.
-(f) Las piezas pueden presentar marcas propias del tiempo, lo cual forma parte de su carácter y autenticidad."""
+    @api.model
+    def _jt_company_terms_as_note_html(self, company):
+        """Texto plano de empresa → HTML para sale.order.note (sin fallback en PDF)."""
+        if not company:
+            return False
+        terms = (company.hellenia_quotation_terms or "").strip()
+        if not terms:
+            return False
+        return Markup("<p>") + Markup(html_escape(terms).replace("\n", "<br/>")) + Markup("</p>")
+
+    @api.model
+    def default_get(self, fields_list):
+        res = super().default_get(fields_list)
+        if "note" in fields_list and is_html_empty(res.get("note")):
+            company = self.env.company
+            if res.get("company_id"):
+                company = self.env["res.company"].browse(res["company_id"])
+            note_html = self._jt_company_terms_as_note_html(company)
+            if note_html:
+                res["note"] = note_html
+        return res
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if is_html_empty(vals.get("note")):
+                company = self.env["res.company"].browse(
+                    vals.get("company_id") or self.env.company.id
+                )
+                note_html = self._jt_company_terms_as_note_html(company)
+                if note_html:
+                    vals["note"] = note_html
+        return super().create(vals_list)
+
+    def jt_show_quotation_conditions(self):
+        """True si la cotización tiene condiciones en note (bloque PDF)."""
+        self.ensure_one()
+        return not is_html_empty(self.note)
 
     def get_jt_payment_term_display(self):
         """Etiqueta española: Contado o Crédito a X días."""
@@ -44,18 +78,6 @@ class SaleOrder(models.Model):
         self.ensure_one()
         lines = self._jt_quotation_reportable_lines()
         return any((l.discount or 0) > 0 for l in lines)
-
-    def get_jt_quotation_terms_display(self):
-        """Condiciones editables desde doc.note; fallback a texto por defecto."""
-        self.ensure_one()
-        if not is_html_empty(self.note):
-            return html2plaintext(self.note).strip()
-        return self._JT_DEFAULT_TERMS
-
-    def get_jt_quotation_terms_from_note(self):
-        """True si las condiciones provienen de la nota editable de la cotización."""
-        self.ensure_one()
-        return not is_html_empty(self.note)
 
     def get_jt_quotation_gross_subtotal(self):
         """Suma qty × precio unitario antes de descuentos de línea."""

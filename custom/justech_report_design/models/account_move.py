@@ -158,6 +158,22 @@ class AccountMove(models.Model):
             return doc_type.name or "—"
         return "—"
 
+    def get_jt_document_type_short_display(self):
+        """Nombre comercial corto para banda fiscal (solo presentación PDF)."""
+        self.ensure_one()
+        full = (self.get_jt_document_type_label() or "").strip()
+        if not full or full == "—":
+            return "—"
+        if full == "Factura de Consumo":
+            return "Consumidor Final"
+        if full.startswith("Factura de "):
+            return full[len("Factura de "):]
+        if full.startswith("Factura "):
+            return full[len("Factura "):]
+        if full.startswith("Comprobante de "):
+            return full[len("Comprobante de "):]
+        return full
+
     def get_jt_ncf_display(self):
         self.ensure_one()
         ncf = getattr(self, "justech_do_ncf", "") or ""

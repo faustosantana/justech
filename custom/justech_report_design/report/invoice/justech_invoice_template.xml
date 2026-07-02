@@ -54,10 +54,8 @@
                                 <strong t-else="" t-out="doc.get_jt_ncf_display()"/>
                             </div>
                             <div>
-                                <span class="jt-inv-label">Tipo comprobante:</span>
-                                <span t-if="doc._fields.get('justech_do_document_type_id') and doc.justech_do_document_type_id"
-                                      t-field="doc.justech_do_document_type_id.name"/>
-                                <span t-else="" t-out="doc.get_jt_document_type_label()"/>
+                                <span class="jt-inv-label">Tipo:</span>
+                                <span t-out="doc.get_jt_document_type_short_display()"/>
                             </div>
                         </td>
                         <td width="50%" valign="top" class="jt-inv-fiscal-col">

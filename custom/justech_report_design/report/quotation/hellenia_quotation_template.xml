@@ -7,16 +7,11 @@
         <t t-set="lines_to_report" t-value="doc._get_order_lines_to_report()"/>
         <t t-set="product_count" t-value="len(lines_to_report.filtered(lambda l: not l.display_type and not l.is_downpayment))"/>
         <t t-set="has_discount" t-value="doc.get_jt_quotation_has_discount()"/>
+        <t t-set="show_discount_totals" t-value="doc.get_jt_quotation_show_discount_totals()"/>
+        <t t-set="terms_text" t-value="doc.get_jt_quotation_terms_display()"/>
         <t t-set="signature_spacer_px" t-value="doc.get_jt_quotation_signature_spacer_px()"/>
         <t t-set="signature_push_px" t-value="doc.get_jt_quotation_signature_push_px()"/>
-        <t t-set="lower_min_height_px" t-value="doc.get_jt_quotation_lower_min_height_px()"/>
         <t t-set="anchor_signatures" t-value="doc.get_jt_quotation_anchor_signatures()"/>
-        <t t-set="jt_default_terms">(a) Las piezas ofrecidas son únicas y sujetas a disponibilidad.
-(b) Esta cotización tiene una validez de 5 días.
-(c) Se requiere confirmación del pago del 100% para reservar la pieza.
-(d) Transporte disponible bajo cotización.
-(e) Asesoría de colocación, instalación y styling disponible bajo cotización.
-(f) Las piezas pueden presentar marcas propias del tiempo, lo cual forma parte de su carácter y autenticidad.</t>
 
         <table width="100%" cellpadding="0" cellspacing="0" class="jt-hq-hdr">
             <tr>
@@ -151,6 +146,20 @@
 
         <div class="jt-hq-totals-wrap">
             <table width="280" cellpadding="0" cellspacing="0" border="0" class="jt-hq-totals">
+                <t t-if="show_discount_totals">
+                    <tr>
+                        <td class="t-lbl">Subtotal bruto</td>
+                        <td class="t-val">
+                            <span t-out="doc.format_jt_monetary(doc.get_jt_quotation_gross_subtotal())"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="t-lbl">Descuento</td>
+                        <td class="t-val">
+                            <span t-out="doc.format_jt_monetary(doc.get_jt_quotation_discount_total())"/>
+                        </td>
+                    </tr>
+                </t>
                 <tr>
                     <td class="t-lbl">Subtotal</td>
                     <td class="t-val">
@@ -182,12 +191,7 @@
                 <td class="jt-hq-cond-wrap">
                     <div class="jt-hq-cond">
                         <div class="jt-hq-cond-title">CONDICIONES</div>
-                        <t t-if="doc.note">
-                            <div class="jt-hq-cond-body" t-out="doc.note"/>
-                        </t>
-                        <t t-else="">
-                            <div class="jt-hq-cond-body" t-out="jt_default_terms"/>
-                        </t>
+                        <div class="jt-hq-cond-body" t-out="terms_text"/>
                     </div>
                 </td>
             </tr>

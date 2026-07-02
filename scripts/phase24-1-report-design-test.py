@@ -18,7 +18,7 @@ REPORT_NAME = "justech_report_design.report_hellenia_quotation_document"
 DISC_REF = "P24-1E-QUOTE-5P-DISC"
 
 report = {
-    "phase": "24.1E-signatures-discount-regression",
+    "phase": "24.1F-signatures-discount-totals-terms",
     "timestamp_utc": datetime.now(timezone.utc).isoformat(),
     "database": DB,
     "pass": False,
@@ -104,6 +104,26 @@ def render_case(key, so, fname, Report):
     thead = html.split("<thead>")[1].split("</thead>")[0] if "<thead>" in html else ""
     check(f"{key}_discount_col", ("c-disc" in thead) == has_disc, f"has_disc={has_disc}")
 
+    totals = html.split("jt-hq-totals")[1].split("</table>")[0] if "jt-hq-totals" in html else ""
+    show_disc_totals = so.get_jt_quotation_show_discount_totals()
+    check(
+        f"{key}_discount_totals",
+        ("Subtotal bruto" in totals) == show_disc_totals,
+        f"show={show_disc_totals}",
+    )
+    if not show_disc_totals:
+        check(f"{key}_no_discount_totals", "Descuento" not in totals)
+
+    terms = so.get_jt_quotation_terms_display() or ""
+    check(f"{key}_terms_in_pdf", terms[:40] in html if terms else False, terms[:60])
+    check(
+        f"{key}_terms_from_note",
+        so.get_jt_quotation_terms_from_note() == bool((so.note or "").strip()),
+    )
+
+    push_px = so.get_jt_quotation_signature_push_px()
+    check(f"{key}_sig_push_min", push_px >= 140 if so.get_jt_quotation_anchor_signatures() else push_px >= 0, push_px)
+
     shot = screenshot(path, os.path.join(OUT_DIR, f"screenshot_{key}"))
     if shot:
         report["screenshots"][key] = shot
@@ -173,6 +193,7 @@ if so_disc:
     render_case("quote_5_disc", so_disc, "quotation_5_products_discount.pdf", Report)
     html_disc = Report._render_qweb_html(REPORT_NAME, so_disc.ids)[0].decode("utf-8", errors="replace")
     check("quote_5_disc_has_percent", "10%" in html_disc or "10.0%" in html_disc)
+    check("quote_5_disc_totals_breakdown", "Subtotal bruto" in html_disc and "Descuento" in html_disc)
 else:
     check("quote_5_disc_order", False, "no base quote_5 to clone")
 

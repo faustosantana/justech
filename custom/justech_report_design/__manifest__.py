@@ -1,6 +1,6 @@
 {
     "name": "Justech Report Design",
-    "version": "19.0.1.1.0",
+    "version": "19.0.1.1.1",
     "category": "Reporting",
     "summary": "Diseño HTML/QWeb cotización Hellenia — módulo limpio TEST",
     "description": """
@@ -17,6 +17,7 @@ Reporte paralelo de cotización Hellenia con QWeb + SCSS en assets PDF.
     ],
     "data": [
         "data/paperformat_data.xml",
+        "views/sale_order_views.xml",
         "report/quotation/hellenia_quotation_template.xml",
         "data/report_action_data.xml",
     ],

@@ -21,7 +21,8 @@ class SaleOrder(models.Model):
     @api.model
     def default_get(self, fields_list):
         res = super().default_get(fields_list)
-        if "note" in fields_list and is_html_empty(res.get("note")):
+        # Siempre precargar note si está vacío (Odoo a veces no incluye note en fields_list).
+        if is_html_empty(res.get("note")):
             company = self.env.company
             if res.get("company_id"):
                 company = self.env["res.company"].browse(res["company_id"])
@@ -104,3 +105,16 @@ class SaleOrder(models.Model):
         """Formato moneda para totales calculados en QWeb."""
         self.ensure_one()
         return formatLang(self.env, amount, currency_obj=self.currency_id)
+
+    @api.model
+    def jt_backfill_empty_quotation_notes(self):
+        """Rellena note en borradores/enviadas vacías desde condiciones de empresa."""
+        orders = self.search([("state", "in", ("draft", "sent"))])
+        updated = self.browse()
+        for order in orders:
+            if is_html_empty(order.note):
+                note_html = self._jt_company_terms_as_note_html(order.company_id)
+                if note_html:
+                    order.note = note_html
+                    updated |= order
+        return updated

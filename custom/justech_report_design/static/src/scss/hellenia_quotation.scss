@@ -120,16 +120,48 @@ div.article.page.jt-hq-page,
     margin: 0 0 10px 0;
     border: none !important;
     border-top: none !important;
+    border-collapse: collapse !important;
+}
+
+.jt-hq-hdr tr {
+    border: none !important;
 }
 
 .jt-hq-hdr td {
     vertical-align: top;
     border: none !important;
     border-top: none !important;
+    border-right: none !important;
+    border-left: none !important;
+    border-bottom: none !important;
+    outline: none !important;
+    box-shadow: none !important;
 }
 
 .jt-hq-hdr-logo-cell {
     padding-right: 14px;
+    border-right: none !important;
+}
+
+.jt-hq-hdr td.jt-hq-co {
+    border-left: none !important;
+}
+
+/* Aislar cotización Justech de estilos hellenia_reports en el mismo bundle PDF */
+.jt-hq-page .hellenia-header,
+.jt-hq-page .hellenia-partner-block,
+.jt-hq-page .hellenia-ncf-box {
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.jt-hq-page table:not(.jt-hq-items):not(.jt-hq-totals) {
+    border: none !important;
+}
+
+.jt-hq-page table:not(.jt-hq-items):not(.jt-hq-totals) td,
+.jt-hq-page table:not(.jt-hq-items):not(.jt-hq-totals) th {
+    border: none !important;
 }
 
 .jt-hq-logo {

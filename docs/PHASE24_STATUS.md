@@ -28,7 +28,7 @@
 | Respaldo estándar en menú | ✅ `action_report_saleorder_backup` |
 | Rollback documentado | ✅ `docs/PHASE24_2_OFFICIAL_QUOTATION_ROLLBACK.md` |
 | Validación automatizada | ✅ `scripts/phase24-2-official-quotation-test.py` |
-| Despliegue TEST/PROD | ✅ TEST + **PROD** validados — v`19.0.2.0.0` en `hellenia_prod` (2026-07-02) |
+| Despliegue TEST/PROD | ✅ v`19.0.2.0.1` — corrección 24.2A PROD (2026-07-02) |
 
 ### Marco acordado (24.2 cotización oficial)
 

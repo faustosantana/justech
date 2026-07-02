@@ -1,0 +1,7 @@
+phase=24.2A-prod-fix
+backup_timestamp=2026-07-02_0500
+module_version=19.0.2.0.1
+database=hellenia_prod
+overall_result=PASS
+order_existing=S00020
+note_backfilled=true

@@ -1,8 +1,8 @@
 {
     "name": "Justech Report Design",
-    "version": "19.0.4.0.1",
+    "version": "19.0.5.0.0",
     "category": "Reporting",
-    "summary": "Cotización y factura fiscal Hellenia — diseño Justech QWeb+SCSS",
+    "summary": "Cotización, factura y conduce Hellenia — diseño Justech QWeb+SCSS",
     "description": """
 Diseño PDF Hellenia / Justech — Odoo 19.
 
@@ -11,12 +11,17 @@ Cotización (Fase 24.2):
 
 Factura fiscal (Fase 26):
 - account.account_invoices → reporte Justech oficial
-- Respaldo estándar sin menú Imprimir (rollback técnico)
+
+Conduce de Entrega (Fase 26):
+- action_report_justech_delivery → stock.picking (paralelo, TEST)
+- Impresión paralela desde sale.order y account.move
     """,
     "author": "Justech",
     "website": "https://hellenia.cloud",
     "depends": [
         "sale",
+        "sale_stock",
+        "stock",
         "account",
         "hellenia_reports",
     ],
@@ -28,14 +33,17 @@ Factura fiscal (Fase 26):
         "report/quotation/hellenia_quotation_template.xml",
         "report/invoice/justech_invoice_template.xml",
         "report/invoice/justech_invoice_preview.xml",
+        "report/delivery/justech_delivery_template.xml",
         "data/report_action_data.xml",
         "data/report_invoice_action_data.xml",
+        "data/report_delivery_action_data.xml",
         "data/report_official_data.xml",
     ],
     "assets": {
         "web.report_assets_common": [
             "justech_report_design/static/src/scss/hellenia_quotation.scss",
             "justech_report_design/static/src/scss/hellenia_invoice.scss",
+            "justech_report_design/static/src/scss/hellenia_delivery.scss",
         ],
     },
     "installable": True,

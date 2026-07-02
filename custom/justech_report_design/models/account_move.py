@@ -4,7 +4,8 @@ from odoo.tools import formatLang, is_html_empty
 
 
 class AccountMove(models.Model):
-    _inherit = "account.move"
+    _name = "account.move"
+    _inherit = ["account.move", "jt.delivery.report.mixin"]
 
     def _jt_invoice_product_lines(self):
         self.ensure_one()
@@ -228,3 +229,103 @@ class AccountMove(models.Model):
         if city_parts:
             parts.append(", ".join(city_parts))
         return ", ".join(parts)
+
+    def _jt_delivery_related_sale_order(self):
+        self.ensure_one()
+        if self.invoice_origin:
+            so = self.env["sale.order"].search(
+                [
+                    ("name", "=", self.invoice_origin),
+                    ("company_id", "=", self.company_id.id),
+                ],
+                limit=1,
+            )
+            if so:
+                return so
+        orders = self.invoice_line_ids.mapped("sale_line_ids.order_id")
+        return orders[:1]
+
+    def get_jt_delivery_conduce_number(self):
+        so = self._jt_delivery_related_sale_order()
+        if so:
+            return so.get_jt_delivery_conduce_number()
+        return self._jt_delivery_dash(self.name)
+
+    def get_jt_delivery_picking_number(self):
+        so = self._jt_delivery_related_sale_order()
+        if so:
+            return so.get_jt_delivery_picking_number()
+        return "—"
+
+    def get_jt_delivery_sale_order_name(self):
+        so = self._jt_delivery_related_sale_order()
+        return self._jt_delivery_dash(so.name if so else False)
+
+    def get_jt_delivery_invoice_name(self):
+        if self.move_type == "out_invoice" and self.name:
+            return self._jt_delivery_dash(self.name)
+        return "—"
+
+    def get_jt_delivery_state_display(self):
+        return self._jt_delivery_state_label_invoice(self.state)
+
+    def get_jt_delivery_date_display(self):
+        so = self._jt_delivery_related_sale_order()
+        if so:
+            return so.get_jt_delivery_date_display()
+        if self.invoice_date:
+            return self.invoice_date.strftime("%d/%m/%Y")
+        return "—"
+
+    def get_jt_delivery_customer_name(self):
+        return self.partner_id.name if self.partner_id else "—"
+
+    def get_jt_delivery_shipping_address(self):
+        partner = self.partner_shipping_id or self.partner_id
+        return self._jt_delivery_format_address(partner)
+
+    def get_jt_delivery_responsible_display(self):
+        return self.invoice_user_id.name if self.invoice_user_id else "—"
+
+    def get_jt_delivery_salesperson_display(self):
+        return self.invoice_user_id.name if self.invoice_user_id else "—"
+
+    def get_jt_delivery_carrier_display(self):
+        so = self._jt_delivery_related_sale_order()
+        if so:
+            return so.get_jt_delivery_carrier_display()
+        return "—"
+
+    def get_jt_delivery_warehouse_origin(self):
+        so = self._jt_delivery_related_sale_order()
+        if so:
+            return so.get_jt_delivery_warehouse_origin()
+        return "—"
+
+    def get_jt_delivery_destination_location(self):
+        so = self._jt_delivery_related_sale_order()
+        if so:
+            return so.get_jt_delivery_destination_location()
+        return "—"
+
+    def get_jt_delivery_observations_html(self):
+        return self.narration or False
+
+    def get_jt_delivery_lines(self):
+        self.ensure_one()
+        lines = []
+        for line in self._jt_invoice_product_lines().sorted(key=lambda l: l.sequence):
+            product = line.product_id
+            code = product.default_code if product else ""
+            qty = line.quantity
+            lines.append(
+                self._jt_delivery_line_dict(
+                    code,
+                    line.name,
+                    qty,
+                    qty,
+                    line.product_uom_id.name if line.product_uom_id else "",
+                    "",
+                )
+            )
+        return lines

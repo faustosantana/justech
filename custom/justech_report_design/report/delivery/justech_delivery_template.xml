@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="justech_delivery_body">
+        <t t-set="company" t-value="doc.get_jt_delivery_company()"/>
+        <t t-set="delivery_lines" t-value="doc.get_jt_delivery_lines()"/>
+        <t t-set="show_lot" t-value="doc.get_jt_delivery_show_lot_column()"/>
+
+        <div class="jt-hq-hdr">
+            <div class="jt-hq-hdr-logo">
+                <img t-if="company.logo" class="jt-hq-logo"
+                     t-att-src="image_data_uri(company.logo)" alt="Hellenia"/>
+            </div>
+            <div class="jt-hq-co">
+                <div class="jt-hq-co-name"><span t-field="company.name"/></div>
+                <div t-if="company.street">
+                    <span t-field="company.street"/>
+                    <t t-if="company.city">, <span t-field="company.city"/></t>
+                </div>
+                <div t-if="company.vat">
+                    <span class="jt-hq-co-lbl">RNC: </span><span t-field="company.vat"/>
+                </div>
+                <div t-if="company.phone">
+                    <span class="jt-hq-co-lbl">Tel.: </span><span t-field="company.phone"/>
+                </div>
+                <div t-if="company.email">
+                    <span class="jt-hq-co-lbl">Correo: </span><span t-field="company.email"/>
+                </div>
+                <div t-if="company.website">
+                    <span class="jt-hq-co-lbl">Web: </span><span t-field="company.website"/>
+                </div>
+            </div>
+        </div>
+
+        <div class="jt-del-band">
+            <table width="100%" cellpadding="0" cellspacing="0" border="0" class="jt-del-band-layout">
+                <tr>
+                    <td width="38%" valign="middle" class="jt-del-band-title-cell">
+                        <span class="jt-del-band-title">CONDUCE DE ENTREGA</span>
+                    </td>
+                    <td width="62%" valign="top" class="jt-del-band-meta-cell">
+                        <div class="jt-del-meta-row">
+                            <span class="jt-del-label">No. Conduce:</span>
+                            <span class="jt-del-val" t-out="doc.get_jt_delivery_conduce_number()"/>
+                        </div>
+                        <div class="jt-del-meta-row">
+                            <span class="jt-del-label">Cotización / O.V.:</span>
+                            <span class="jt-del-val" t-out="doc.get_jt_delivery_sale_order_name()"/>
+                        </div>
+                        <div class="jt-del-meta-row">
+                            <span class="jt-del-label">Factura:</span>
+                            <span class="jt-del-val" t-out="doc.get_jt_delivery_invoice_name()"/>
+                        </div>
+                        <div class="jt-del-meta-row">
+                            <span class="jt-del-label">Fecha entrega:</span>
+                            <span class="jt-del-val" t-out="doc.get_jt_delivery_date_display()"/>
+                        </div>
+                        <div class="jt-del-meta-row">
+                            <span class="jt-del-label">Estado:</span>
+                            <span class="jt-del-val" t-out="doc.get_jt_delivery_state_display()"/>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <hr class="jt-hq-line-soft"/>
+
+        <div class="jt-del-info-block">
+            <div class="jt-del-info-row">
+                <span class="jt-hq-lbl">Cliente</span>
+                <span class="jt-hq-val" t-out="doc.get_jt_delivery_customer_name()"/>
+            </div>
+            <div class="jt-del-info-row">
+                <span class="jt-hq-lbl">Dirección de entrega</span>
+                <span class="jt-hq-val" t-out="doc.get_jt_delivery_shipping_address()"/>
+            </div>
+            <div class="jt-del-info-row">
+                <span class="jt-hq-lbl">Responsable / Vendedor</span>
+                <span class="jt-hq-val">
+                    <t t-out="doc.get_jt_delivery_responsible_display()"/>
+                    <t t-if="doc.get_jt_delivery_salesperson_display() != doc.get_jt_delivery_responsible_display()">
+                        / <t t-out="doc.get_jt_delivery_salesperson_display()"/>
+                    </t>
+                </span>
+            </div>
+            <div class="jt-del-info-row">
+                <span class="jt-hq-lbl">Almacén origen</span>
+                <span class="jt-hq-val" t-out="doc.get_jt_delivery_warehouse_origin()"/>
+            </div>
+        </div>
+
+        <table class="jt-hq-items jt-del-items" cellpadding="0" cellspacing="0">
+            <thead>
+                <tr>
+                    <th class="c-num">#</th>
+                    <th class="c-code">CÓDIGO</th>
+                    <th>DESCRIPCIÓN</th>
+                    <th class="c-qty">CANT. SOL.</th>
+                    <th class="c-qty">CANT. ENT.</th>
+                    <th class="c-uom">UNIDAD</th>
+                    <th t-if="show_lot" class="c-lot">LOTE / SERIE</th>
+                </tr>
+            </thead>
+            <tbody>
+                <t t-set="n" t-value="0"/>
+                <t t-foreach="delivery_lines" t-as="line">
+                    <t t-set="n" t-value="n + 1"/>
+                    <tr>
+                        <td class="c-num"><span t-out="n"/></td>
+                        <td class="c-code"><span t-out="line['code']"/></td>
+                        <td><span t-out="line['description']"/></td>
+                        <td class="c-qty"><span t-out="line['qty_requested']"/></td>
+                        <td class="c-qty"><span t-out="line['qty_delivered']"/></td>
+                        <td class="c-uom"><span t-out="line['uom']"/></td>
+                        <td t-if="show_lot" class="c-lot">
+                            <span t-if="line.get('lot_serial')" t-out="line['lot_serial']"/>
+                            <span t-else="">—</span>
+                        </td>
+                    </tr>
+                </t>
+            </tbody>
+        </table>
+
+        <div class="jt-hq-cond" t-if="doc.jt_show_delivery_observations()">
+            <div class="jt-hq-cond-title">OBSERVACIONES</div>
+            <div class="jt-hq-cond-body" t-out="doc.get_jt_delivery_observations_html()"/>
+        </div>
+
+        <div class="jt-hq-sigs-zone jt-del-sigs">
+            <div class="jt-hq-sig-grow">&#160;</div>
+            <div class="jt-hq-sigs">
+                <div class="jt-hq-sig-col">
+                    <div class="jt-hq-sig-head">ENTREGADO POR</div>
+                    <hr class="jt-hq-sig-line"/>
+                    <div class="jt-del-sig-sub">Cédula / RNC</div>
+                    <hr class="jt-hq-sig-line jt-hq-sig-line-date"/>
+                    <div class="jt-hq-sig-date-lbl">Fecha:</div>
+                    <hr class="jt-hq-sig-line jt-hq-sig-line-date"/>
+                </div>
+                <div class="jt-hq-sig-col">
+                    <div class="jt-hq-sig-head">RECIBIDO POR</div>
+                    <hr class="jt-hq-sig-line"/>
+                    <div class="jt-del-sig-sub">Cédula / RNC</div>
+                    <hr class="jt-hq-sig-line jt-hq-sig-line-date"/>
+                    <div class="jt-hq-sig-date-lbl">Fecha:</div>
+                    <hr class="jt-hq-sig-line jt-hq-sig-line-date"/>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="report_justech_delivery_document">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-set="company" t-value="doc.get_jt_delivery_company()"/>
+                <t t-set="lang_partner" t-value="doc.partner_id if doc._name != 'stock.picking' else doc.partner_id"/>
+                <t t-set="doc" t-value="doc.with_context(lang=(lang_partner.lang if lang_partner else doc.env.lang))"/>
+                <div class="article page jt-hq-page jt-del-page"
+                     style="border: none !important; border-top: none !important;"
+                     t-att-data-oe-model="doc._name"
+                     t-att-data-oe-id="doc.id">
+                    <t t-call="justech_report_design.justech_delivery_body"/>
+                </div>
+                <div class="footer jt-hq-footer-pdf">
+                    <div class="jt-hq-foot-row">
+                        <t t-if="company.phone"><span class="jt-hq-foot-item" t-field="company.phone"/></t>
+                        <t t-if="company.email">
+                            <span class="jt-hq-foot-sep">|</span>
+                            <span class="jt-hq-foot-item" t-field="company.email"/>
+                        </t>
+                        <t t-if="company.website">
+                            <span class="jt-hq-foot-sep">|</span>
+                            <span class="jt-hq-foot-item" t-field="company.website"/>
+                        </t>
+                        <span class="jt-hq-foot-sep">|</span>
+                        <span class="jt-hq-foot-item jt-hq-foot-page">
+                            Página <span class="page"></span> de <span class="topage"></span>
+                        </span>
+                    </div>
+                </div>
+            </t>
+        </t>
+    </template>
+
+    <!-- Mismo cuerpo desde sale.order y account.move (reportes paralelos) -->
+    <template id="report_justech_delivery_document_sale">
+        <t t-call="justech_report_design.report_justech_delivery_document"/>
+    </template>
+
+    <template id="report_justech_delivery_document_invoice">
+        <t t-call="justech_report_design.report_justech_delivery_document"/>
+    </template>
+
+</odoo>

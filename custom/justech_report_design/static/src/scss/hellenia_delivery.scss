@@ -1,0 +1,85 @@
+/* Conduce de Entrega — extiende lenguaje visual Cotización / Factura Justech */
+
+.jt-del-page {
+    font-family: 'DejaVu Sans', Helvetica, Arial, sans-serif;
+}
+
+.jt-del-band {
+    background-color: #3E4827;
+    margin: 0 0 12px 0;
+}
+
+.jt-del-band-layout td {
+    background-color: #3E4827;
+    color: #ffffff;
+    padding: 10px 14px;
+    border: none !important;
+}
+
+.jt-del-band-title {
+    font-size: 11pt;
+    font-weight: bold;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #ffffff;
+}
+
+.jt-del-band-meta-cell {
+    border-left: 1px solid rgba(255, 255, 255, 0.35) !important;
+}
+
+.jt-del-meta-row {
+    margin: 0 0 3px 0;
+    line-height: 1.45;
+    font-size: 8pt;
+}
+
+.jt-del-label {
+    font-weight: bold;
+    color: rgba(255, 255, 255, 0.85);
+    margin-right: 6px;
+}
+
+.jt-del-val {
+    color: #ffffff;
+    font-weight: bold;
+}
+
+.jt-del-info-block {
+    margin: 0 0 16px 0;
+    padding: 0;
+}
+
+.jt-del-info-row {
+    margin: 0 0 6px 0;
+    line-height: 1.5;
+}
+
+.jt-del-info-row .jt-hq-lbl {
+    display: inline-block;
+    min-width: 140px;
+    margin-right: 8px;
+}
+
+.jt-del-items th.c-code {
+    width: 12%;
+}
+
+.jt-del-items th.c-uom {
+    width: 10%;
+}
+
+.jt-del-items th.c-lot {
+    width: 14%;
+}
+
+.jt-del-sig-sub {
+    font-size: 7pt;
+    color: #888888;
+    text-transform: uppercase;
+    margin: 4px 0 2px 0;
+}
+
+.jt-del-sigs .jt-hq-sig-line-date {
+    margin-bottom: 6px;
+}

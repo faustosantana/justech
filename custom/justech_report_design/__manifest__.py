@@ -1,6 +1,6 @@
 {
     "name": "Justech Report Design",
-    "version": "19.0.6.0.3",
+    "version": "19.0.6.1.0",
     "category": "Reporting",
     "summary": "Cotización, factura y conduce Hellenia — diseño Justech QWeb+SCSS",
     "description": """
@@ -15,6 +15,10 @@ Factura fiscal (Fase 26):
 Conduce de Entrega (Fase 26E):
 - Modelo justech.delivery.note con secuencia COND/AÑO/#####
 - Botón Crear Conduce + smart button con contador real
+
+Menú histórico (Fase 26F):
+- Ventas → Órdenes → Conduces de Entrega
+- Inventario → Operaciones → Conduces de Entrega
     """,
     "author": "Justech",
     "website": "https://hellenia.cloud",

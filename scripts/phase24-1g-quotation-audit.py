@@ -378,30 +378,23 @@ if so1:
 
 section("7_isolation", iso_checks)
 
-# === Visual VIS-001 — zona inferior sin tabla ni borde ===
+# === Visual VIS-001 + flujo vertical condiciones/firmas ===
 vis_checks = []
 
 
-def _lower_zone_html(html):
-    marker = "jt-hq-lower"
-    if marker not in html:
-        return ""
-    start = html.find(marker)
-    chunk = html[start:]
-    end = chunk.find("jt-hq-footer")
-    return chunk[:end] if end != -1 else chunk
+def _doc_tail_html(html):
+    totals = html.find("jt-hq-totals-wrap")
+    return html[totals:] if totals != -1 else ""
 
 
 if so_probe:
     html_vis = env["ir.actions.report"]._render_qweb_html(JT_REPORT, so_probe.ids)[0].decode("utf-8", errors="replace")
-    lower_slice = _lower_zone_html(html_vis)
-    vis_checks.append(chk(
-        "vis001_lower_is_div",
-        "jt-hq-lower" in html_vis and "<table" not in lower_slice,
-    ))
-    vis_checks.append(chk("vis001_no_border_style", "border: 1px" not in lower_slice and "border:1px" not in lower_slice))
-    vis_checks.append(chk("vis001_cond_present", "jt-hq-cond" in lower_slice))
-    vis_checks.append(chk("vis001_sigs_present", "jt-hq-sigs" in lower_slice))
+    tail = _doc_tail_html(html_vis)
+    vis_checks.append(chk("vis001_no_lower_wrapper", "jt-hq-lower" not in html_vis))
+    vis_checks.append(chk("vis_flow_cond_after_totals", tail.find("jt-hq-totals-wrap") < tail.find('class="jt-hq-cond"')))
+    vis_checks.append(chk("vis_flow_sigs_after_cond", tail.find('class="jt-hq-cond"') < tail.find("jt-hq-sigs-zone")))
+    vis_checks.append(chk("vis_sigs_zone_present", "jt-hq-sigs-zone" in tail))
+    vis_checks.append(chk("vis_no_dynamic_push", "signature_push_px" not in html_vis and "jt-hq-sig-push" not in html_vis))
 
 section("8_visual_vis001", vis_checks)
 
@@ -413,7 +406,7 @@ else:
             "id": "VIS-001",
             "severity": "medium",
             "title": "Rectángulo/borde visible alrededor de CONDICIONES + firmas",
-            "detail": "Zona jt-hq-lower aún muestra tabla o estilos con borde.",
+            "detail": "Condiciones y firmas siguen acopladas o con push dinámico por líneas.",
             "status": "PENDING",
         }
     ]

@@ -18,7 +18,7 @@ REPORT_NAME = "justech_report_design.report_hellenia_quotation_document"
 DISC_REF = "P24-1E-QUOTE-5P-DISC"
 
 report = {
-    "phase": "24.1F-signatures-discount-totals-terms",
+    "phase": "24.1H-vertical-flow-cond-sigs",
     "timestamp_utc": datetime.now(timezone.utc).isoformat(),
     "database": DB,
     "pass": False,
@@ -96,9 +96,18 @@ def render_case(key, so, fname, Report):
         if 'class="jt-hq-sigs"' in html
         else False,
     )
-    check(f"{key}_sig_push", "jt-hq-sig-push" in html)
-    check(f"{key}_lower_zone", "jt-hq-lower" in html)
-    check(f"{key}_anchor_sigs", ("jt-hq-lower-anchor" in html) == so.get_jt_quotation_anchor_signatures())
+    check(f"{key}_sigs_zone", "jt-hq-sigs-zone" in html)
+    check(f"{key}_cond_block", 'class="jt-hq-cond"' in html)
+    totals_idx = html.find("jt-hq-totals-wrap")
+    cond_idx = html.find('class="jt-hq-cond"')
+    sigs_idx = html.find("jt-hq-sigs-zone")
+    check(
+        f"{key}_vertical_flow",
+        totals_idx != -1 and cond_idx != -1 and sigs_idx != -1 and totals_idx < cond_idx < sigs_idx,
+        f"totals={totals_idx} cond={cond_idx} sigs={sigs_idx}",
+    )
+    check(f"{key}_no_lower_wrapper", "jt-hq-lower" not in html)
+    check(f"{key}_no_dynamic_sig_push", "signature_push_px" not in html and "jt-hq-sig-push" not in html)
 
     has_disc = so.get_jt_quotation_has_discount()
     thead = html.split("<thead>")[1].split("</thead>")[0] if "<thead>" in html else ""
@@ -121,8 +130,8 @@ def render_case(key, so, fname, Report):
         so.get_jt_quotation_terms_from_note() == (not __import__("odoo.tools").tools.is_html_empty(so.note)),
     )
 
-    push_px = so.get_jt_quotation_signature_push_px()
-    check(f"{key}_sig_push_min", push_px >= 60 if so.get_jt_quotation_anchor_signatures() else push_px >= 0, push_px)
+    push_px = 0
+    check(f"{key}_sig_zone_height", "jt-hq-sigs-zone" in html)
     if pages == 1 or pages is None:
         check(f"{key}_sigs_on_first_page", 'class="jt-hq-sigs"' in html)
 

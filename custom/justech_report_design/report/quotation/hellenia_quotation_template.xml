@@ -9,9 +9,6 @@
         <t t-set="has_discount" t-value="doc.get_jt_quotation_has_discount()"/>
         <t t-set="show_discount_totals" t-value="doc.get_jt_quotation_show_discount_totals()"/>
         <t t-set="terms_text" t-value="doc.get_jt_quotation_terms_display()"/>
-        <t t-set="signature_spacer_px" t-value="doc.get_jt_quotation_signature_spacer_px()"/>
-        <t t-set="signature_push_px" t-value="doc.get_jt_quotation_signature_push_px()"/>
-        <t t-set="anchor_signatures" t-value="doc.get_jt_quotation_anchor_signatures()"/>
 
         <table width="100%" cellpadding="0" cellspacing="0" class="jt-hq-hdr">
             <tr>
@@ -184,37 +181,37 @@
             </table>
         </div>
 
-        <div t-attf-class="jt-hq-lower {{ 'jt-hq-lower-anchor' if anchor_signatures else '' }}"
-             style="border: none !important; background: transparent !important;">
-            <div class="jt-hq-cond-wrap">
-                <div class="jt-hq-cond">
-                    <div class="jt-hq-cond-title">CONDICIONES</div>
-                    <div class="jt-hq-cond-body" t-out="terms_text"/>
-                </div>
-            </div>
-            <div t-if="anchor_signatures"
-                 class="jt-hq-sig-push"
-                 t-attf-style="height: {{ signature_push_px }}px;">&#160;</div>
-            <div t-if="not anchor_signatures"
-                 class="jt-hq-sig-push"
-                 t-attf-style="height: {{ signature_spacer_px }}px;">&#160;</div>
-            <div class="jt-hq-sigs-wrap">
-                <div class="jt-hq-sigs">
-                    <div class="jt-hq-sig-col">
-                        <div class="jt-hq-sig-head">ENTREGADO POR</div>
-                        <hr class="jt-hq-sig-line"/>
-                        <div class="jt-hq-sig-date-lbl">Fecha:</div>
-                        <hr class="jt-hq-sig-line jt-hq-sig-line-date"/>
-                    </div>
-                    <div class="jt-hq-sig-col">
-                        <div class="jt-hq-sig-head">RECIBIDO POR</div>
-                        <hr class="jt-hq-sig-line"/>
-                        <div class="jt-hq-sig-date-lbl">Fecha:</div>
-                        <hr class="jt-hq-sig-line jt-hq-sig-line-date"/>
-                    </div>
-                </div>
-            </div>
+        <div class="jt-hq-clear"/>
+
+        <div class="jt-hq-cond">
+            <div class="jt-hq-cond-title">CONDICIONES</div>
+            <div class="jt-hq-cond-body" t-out="terms_text"/>
         </div>
+
+        <table class="jt-hq-sigs-zone" width="100%" cellpadding="0" cellspacing="0"
+               border="0" frame="void" rules="none">
+            <tr class="jt-hq-sig-grow">
+                <td>&#160;</td>
+            </tr>
+            <tr>
+                <td class="jt-hq-sigs-cell">
+                    <div class="jt-hq-sigs">
+                        <div class="jt-hq-sig-col">
+                            <div class="jt-hq-sig-head">ENTREGADO POR</div>
+                            <hr class="jt-hq-sig-line"/>
+                            <div class="jt-hq-sig-date-lbl">Fecha:</div>
+                            <hr class="jt-hq-sig-line jt-hq-sig-line-date"/>
+                        </div>
+                        <div class="jt-hq-sig-col">
+                            <div class="jt-hq-sig-head">RECIBIDO POR</div>
+                            <hr class="jt-hq-sig-line"/>
+                            <div class="jt-hq-sig-date-lbl">Fecha:</div>
+                            <hr class="jt-hq-sig-line jt-hq-sig-line-date"/>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </table>
     </template>
 
     <!-- Reporte paralelo — web.html_container, sin web.external_layout -->

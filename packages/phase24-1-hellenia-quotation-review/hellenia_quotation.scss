@@ -290,9 +290,15 @@ div.article.page.jt-hq-page,
 
 .jt-hq-items .c-qty,
 .jt-hq-items .c-price,
+.jt-hq-items .c-disc,
 .jt-hq-items .c-sub {
     text-align: right;
     white-space: nowrap;
+}
+
+.jt-hq-items .c-disc {
+    width: 44px;
+    color: #888888;
 }
 
 .jt-hq-items .c-sub {
@@ -379,6 +385,48 @@ div.article.page.jt-hq-page,
     clear: both;
 }
 
+.jt-hq-page table.jt-hq-lower,
+.jt-hq-page table.jt-hq-lower tr,
+.jt-hq-page table.jt-hq-lower td {
+    border: none !important;
+    border-collapse: collapse;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+.jt-hq-lower {
+    border: none !important;
+    border-collapse: collapse;
+    background: transparent !important;
+    clear: both;
+    width: 100% !important;
+}
+
+.jt-hq-lower td {
+    border: none !important;
+    padding: 0;
+    vertical-align: top;
+    background: transparent !important;
+}
+
+.jt-hq-sigs-wrap {
+    vertical-align: bottom !important;
+}
+
+.jt-hq-cond-wrap {
+    vertical-align: top !important;
+}
+
+.jt-hq-sig-push {
+    border: none !important;
+    background: transparent !important;
+    margin: 0;
+    padding: 0;
+    font-size: 0;
+    line-height: 0;
+    overflow: hidden;
+}
+
 .jt-hq-cond-title {
     color: #3E4827;
     font-weight: bold;
@@ -412,9 +460,9 @@ div.article.page.jt-hq-page,
     padding: 0;
 }
 
-/* Firmas — solo divs + hr, sin tabla ni caja */
+/* Firmas — solo divs + hr, sin tabla ni caja; spacer empuja hacia footer */
 .jt-hq-sigs {
-    margin: 0 0 12px 0;
+    margin: 0 0 8px 0;
     width: 100%;
     overflow: hidden;
     border: none !important;

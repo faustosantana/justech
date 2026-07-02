@@ -69,9 +69,9 @@ class SaleOrder(models.Model):
         """Altura zona inferior = espacio restante de página para anclar firmas al pie."""
         self.ensure_one()
         count, last_page_lines = self._jt_quotation_page_stats()
-        page_usable = 980
+        page_usable = 1020
         sig_h = 88
-        footer_gap = 36
+        footer_gap = 18
         cond_h = 135
         min_lower = cond_h + sig_h + 72
 

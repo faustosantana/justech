@@ -1,6 +1,6 @@
 {
-  "phase": "24.1-report-design-integration",
-  "timestamp_utc": "2026-07-02T02:39:58.152744+00:00",
+  "phase": "24.1E-signatures-discount-regression",
+  "timestamp_utc": "2026-07-02T03:03:30.642527+00:00",
   "database": "hellenia_test",
   "pass": true,
   "failed_checks": [
@@ -87,9 +87,21 @@
       "status": "PASS",
       "detail": ""
     },
-    "quote_1_single_page": {
+    "quote_1_sig_push": {
       "status": "PASS",
-      "detail": "pages=None size=72062"
+      "detail": ""
+    },
+    "quote_1_lower_zone": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_1_anchor_sigs": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_1_discount_col": {
+      "status": "PASS",
+      "detail": "has_disc=False"
     },
     "quote_5_pdf": {
       "status": "PASS",
@@ -151,63 +163,191 @@
       "status": "PASS",
       "detail": ""
     },
-    "quote_20_pdf": {
+    "quote_5_sig_push": {
       "status": "PASS",
       "detail": ""
     },
-    "quote_20_jt_template": {
+    "quote_5_lower_zone": {
       "status": "PASS",
       "detail": ""
     },
-    "quote_20_scss_class": {
+    "quote_5_anchor_sigs": {
       "status": "PASS",
       "detail": ""
     },
-    "quote_20_no_inline_style_block": {
+    "quote_5_discount_col": {
+      "status": "PASS",
+      "detail": "has_disc=False"
+    },
+    "quote_25_pdf": {
       "status": "PASS",
       "detail": ""
     },
-    "quote_20_no_external_layout": {
+    "quote_25_jt_template": {
       "status": "PASS",
       "detail": ""
     },
-    "quote_20_band": {
+    "quote_25_scss_class": {
       "status": "PASS",
       "detail": ""
     },
-    "quote_20_no_vendor_email": {
+    "quote_25_no_inline_style_block": {
       "status": "PASS",
       "detail": ""
     },
-    "quote_20_no_immediate": {
+    "quote_25_no_external_layout": {
       "status": "PASS",
       "detail": ""
     },
-    "quote_20_no_excel": {
+    "quote_25_band": {
       "status": "PASS",
       "detail": ""
     },
-    "quote_20_grand": {
+    "quote_25_no_vendor_email": {
       "status": "PASS",
       "detail": ""
     },
-    "quote_20_no_totals_outer": {
+    "quote_25_no_immediate": {
       "status": "PASS",
       "detail": ""
     },
-    "quote_20_no_totals_gap": {
+    "quote_25_no_excel": {
       "status": "PASS",
       "detail": ""
     },
-    "quote_20_totals_wrap": {
+    "quote_25_grand": {
       "status": "PASS",
       "detail": ""
     },
-    "quote_20_totals_width_280": {
+    "quote_25_no_totals_outer": {
       "status": "PASS",
       "detail": ""
     },
-    "quote_20_no_sigs_table": {
+    "quote_25_no_totals_gap": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_25_totals_wrap": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_25_totals_width_280": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_25_no_sigs_table": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_25_sig_push": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_25_lower_zone": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_25_anchor_sigs": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_25_discount_col": {
+      "status": "PASS",
+      "detail": "has_disc=False"
+    },
+    "quote_1_single_page": {
+      "status": "PASS",
+      "detail": "pages=None size=72187"
+    },
+    "quote_5_disc_pdf": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_disc_jt_template": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_disc_scss_class": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_disc_no_inline_style_block": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_disc_no_external_layout": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_disc_band": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_disc_no_vendor_email": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_disc_no_immediate": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_disc_no_excel": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_disc_grand": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_disc_no_totals_outer": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_disc_no_totals_gap": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_disc_totals_wrap": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_disc_totals_width_280": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_disc_no_sigs_table": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_disc_sig_push": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_disc_lower_zone": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_disc_anchor_sigs": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_disc_discount_col": {
+      "status": "PASS",
+      "detail": "has_disc=True"
+    },
+    "quote_5_disc_has_percent": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_1_no_discount_col": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_no_discount_col": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_25_no_discount_col": {
       "status": "PASS",
       "detail": ""
     },
@@ -226,25 +366,32 @@
       "file": "quotation_1_product.pdf",
       "line_count": 1,
       "pages": null,
-      "size_bytes": 72062
+      "size_bytes": 72187
     },
     "quote_5": {
       "order": "S00135",
       "file": "quotation_5_products.pdf",
       "line_count": 5,
       "pages": null,
-      "size_bytes": 74454
+      "size_bytes": 74588
     },
-    "quote_20": {
+    "quote_25": {
       "order": "S00138",
       "file": "quotation_25_products.pdf",
       "line_count": 25,
       "pages": null,
-      "size_bytes": 79008
+      "size_bytes": 79117
+    },
+    "quote_5_disc": {
+      "order": "S00139",
+      "file": "quotation_5_products_discount.pdf",
+      "line_count": 5,
+      "pages": null,
+      "size_bytes": 74885
     }
   },
   "screenshots": {},
-  "module_version": "19.0.1.0.5",
+  "module_version": "19.0.1.1.0",
   "portal": {
     "status": 200,
     "size": 6909,

@@ -11,25 +11,56 @@ class JtDeliveryReportMixin(models.AbstractModel):
     # --- helpers comunes ---
 
     def _jt_delivery_format_address(self, partner):
-        if not partner:
+        """Dirección en una línea (legacy)."""
+        lines = self._jt_delivery_format_address_lines(partner)
+        if not lines:
             return "—"
-        parts = []
-        if partner.street:
-            parts.append(partner.street)
-        if partner.street2:
-            parts.append(partner.street2)
+        return ", ".join(lines)
+
+    def _jt_delivery_format_address_lines(self, partner):
+        """Dirección multilínea: calle, ciudad/provincia, país."""
+        if not partner:
+            return []
+        lines = []
+        street_parts = [p for p in (partner.street, partner.street2) if p]
+        if street_parts:
+            lines.append(", ".join(street_parts))
         city_parts = [
             p
             for p in (
                 partner.city,
                 partner.state_id.name if partner.state_id else "",
-                partner.country_id.name if partner.country_id else "",
             )
             if p
         ]
         if city_parts:
-            parts.append(", ".join(city_parts))
-        return ", ".join(parts) if parts else "—"
+            lines.append(" / ".join(city_parts))
+        if partner.country_id and partner.country_id.name:
+            # Evitar duplicar país si es la única info y ya hay ciudad
+            if not lines or partner.country_id.name not in " / ".join(lines):
+                lines.append(partner.country_id.name)
+        return lines
+
+    def _jt_delivery_partner_has_address(self, partner):
+        if not partner:
+            return False
+        return bool(
+            partner.street
+            or partner.street2
+            or partner.city
+            or partner.state_id
+        )
+
+    def _jt_delivery_user_label(self, user):
+        if not user:
+            return "—"
+        name = (user.name or "").strip()
+        login = (user.login or "").lower()
+        if not name:
+            return "—"
+        if login in ("__system__", "odoobot") or name.lower() in ("odoo bot", "odobot"):
+            return "—"
+        return name
 
     def _jt_delivery_dash(self, value):
         if not value or value in ("/", "False"):
@@ -85,8 +116,24 @@ class JtDeliveryReportMixin(models.AbstractModel):
         return self.company_id
 
     def jt_show_delivery_observations(self):
+        """Siempre mostrar bloque OBSERVACIONES."""
+        self.ensure_one()
+        return True
+
+    def jt_delivery_has_observations_content(self):
         self.ensure_one()
         return not is_html_empty(self.get_jt_delivery_observations_html())
+
+    def get_jt_delivery_shipping_address_lines(self):
+        self.ensure_one()
+        return self._jt_delivery_format_address_lines(
+            self._jt_delivery_resolve_shipping_partner()
+        )
+
+    def _jt_delivery_resolve_shipping_partner(self):
+        """Sobreescribir en cada modelo."""
+        self.ensure_one()
+        return False
 
     def get_jt_delivery_observations_html(self):
         self.ensure_one()

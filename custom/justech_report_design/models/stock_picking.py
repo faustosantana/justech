@@ -58,21 +58,36 @@ class StockPicking(models.Model):
         return self.partner_id.name if self.partner_id else "—"
 
     def get_jt_delivery_shipping_address(self):
+        lines = self.get_jt_delivery_shipping_address_lines()
+        return ", ".join(lines) if lines else "—"
+
+    def _jt_delivery_resolve_shipping_partner(self):
+        self.ensure_one()
         so = self._jt_delivery_related_sale_order()
-        partner = (
-            so.partner_shipping_id
-            if so and so.partner_shipping_id
-            else self.partner_id
-        )
-        return self._jt_delivery_format_address(partner)
+        candidates = []
+        # 1. Dirección en picking (partner_id con calle)
+        if self.partner_id and self._jt_delivery_partner_has_address(self.partner_id):
+            candidates.append(self.partner_id)
+        # 2. Dirección de envío OV
+        if so and so.partner_shipping_id:
+            candidates.append(so.partner_shipping_id)
+        # 3. Cliente comercial
+        if so and so.partner_id:
+            candidates.append(so.partner_id)
+        elif self.partner_id:
+            candidates.append(self.partner_id)
+        for partner in candidates:
+            if self._jt_delivery_partner_has_address(partner):
+                return partner
+        return candidates[0] if candidates else self.env["res.partner"]
 
     def get_jt_delivery_responsible_display(self):
-        return self.user_id.name if self.user_id else "—"
+        return self._jt_delivery_user_label(self.user_id)
 
     def get_jt_delivery_salesperson_display(self):
         so = self._jt_delivery_related_sale_order()
-        user = so.user_id if so and so.user_id else self.user_id
-        return user.name if user else "—"
+        salesperson = so.user_id if so else False
+        return self._jt_delivery_user_label(salesperson)
 
     def get_jt_delivery_carrier_display(self):
         if self._fields.get("carrier_id") and self.carrier_id:
@@ -81,9 +96,14 @@ class StockPicking(models.Model):
 
     def get_jt_delivery_warehouse_origin(self):
         wh = self.picking_type_id.warehouse_id if self.picking_type_id else False
-        if wh:
-            return wh.name
-        return self.location_id.display_name if self.location_id else "—"
+        if wh and wh.name:
+            name = (wh.name or "").strip()
+            company = self.company_id.name if self.company_id else ""
+            if name and name != company:
+                return name
+            if name:
+                return name
+        return "—"
 
     def get_jt_delivery_destination_location(self):
         return self.location_dest_id.display_name if self.location_dest_id else "—"

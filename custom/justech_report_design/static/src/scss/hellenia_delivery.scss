@@ -28,16 +28,28 @@
     border-left: 1px solid rgba(255, 255, 255, 0.35) !important;
 }
 
+.jt-del-band-cols td {
+    background-color: #3E4827 !important;
+    border: none !important;
+    vertical-align: top;
+    padding: 0 8px 0 0;
+}
+
+.jt-del-band-col-r {
+    border-left: 1px solid rgba(255, 255, 255, 0.25) !important;
+    padding-left: 14px !important;
+}
+
 .jt-del-meta-row {
-    margin: 0 0 3px 0;
+    margin: 0 0 4px 0;
     line-height: 1.45;
-    font-size: 8pt;
+    font-size: 7.5pt;
 }
 
 .jt-del-label {
     font-weight: bold;
     color: rgba(255, 255, 255, 0.85);
-    margin-right: 6px;
+    margin-right: 4px;
 }
 
 .jt-del-val {
@@ -46,7 +58,7 @@
 }
 
 .jt-del-info-block {
-    margin: 0 0 16px 0;
+    margin: 0 0 28px 0;
     padding: 0;
 }
 
@@ -59,6 +71,11 @@
     display: inline-block;
     min-width: 140px;
     margin-right: 8px;
+    vertical-align: top;
+}
+
+.jt-del-info-address .jt-hq-val div {
+    margin: 0 0 2px 0;
 }
 
 .jt-del-items th.c-code {
@@ -73,6 +90,19 @@
     width: 14%;
 }
 
+.jt-del-items td.jt-del-qty-del,
+.jt-del-items td.jt-del-qty-del strong {
+    font-weight: bold !important;
+}
+
+.jt-del-obs {
+    margin-top: 12px;
+}
+
+.jt-del-obs-blank {
+    min-height: 28px;
+}
+
 .jt-del-sig-sub {
     font-size: 7pt;
     color: #888888;
@@ -82,4 +112,23 @@
 
 .jt-del-sigs .jt-hq-sig-line-date {
     margin-bottom: 6px;
+}
+
+/* Firmas: líneas ~20% más largas */
+.jt-del-sigs .jt-del-sig-line {
+    width: 106% !important;
+}
+
+.jt-del-sigs .jt-del-sig-line-date {
+    width: 78% !important;
+}
+
+.jt-del-legal {
+    margin: 16px 0 8px 0;
+    padding: 0;
+    font-size: 6.5pt;
+    color: #888888;
+    line-height: 1.45;
+    text-align: center;
+    font-style: italic;
 }

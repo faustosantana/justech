@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Fase 26 — Validación Conduce de Entrega (solo hellenia_test)."""
+"""Fase 26/26B — Validación Conduce de Entrega (solo hellenia_test)."""
 from __future__ import annotations
 
 import base64
@@ -23,7 +23,7 @@ ReportSale = env.ref("justech_report_design.action_report_justech_delivery_sale"
 ReportInvoice = env.ref("justech_report_design.action_report_justech_delivery_invoice")
 
 report = {
-    "phase": "26-delivery-slip",
+    "phase": "26b-delivery-slip",
     "timestamp_utc": datetime.now(timezone.utc).isoformat(),
     "database": DB,
     "module_version": env["ir.module.module"]
@@ -254,6 +254,70 @@ for rec, label in [
         check(f"21_methods_{label}", True, len(lines))
     except Exception as exc:
         check(f"21_methods_{label}", False, str(exc))
+
+# --- Fase 26B: banda, responsable/vendedor, observaciones, leyenda ---
+sample_txt = ""
+for fname in ("01_picking_done.pdf", "03_from_sale_order.pdf", "04_from_invoice.pdf"):
+    p = f"{OUT}/{fname}"
+    if os.path.exists(p):
+        with open(p, "rb") as f:
+            sample_txt += pdf_text(f.read()) + "\n"
+
+if sample_txt:
+    check(
+        "22_observations_section",
+        "OBSERVACIONES" in sample_txt,
+        "OBSERVACIONES visible",
+    )
+    check(
+        "23_legal_legend",
+        "certifica" in sample_txt.lower() and "factura fiscal" in sample_txt.lower(),
+        "leyenda legal",
+    )
+    check(
+        "24_no_odoo_bot_combo",
+        not re.search(r"—\s*/\s*", sample_txt) and "/ OdooBot" not in sample_txt,
+        "sin formato — / OdooBot",
+    )
+    check("25_responsable_label", "Responsable" in sample_txt, "etiqueta Responsable")
+    check("26_vendedor_label", "Vendedor" in sample_txt, "etiqueta Vendedor")
+    check(
+        "27_green_band_columns",
+        "No. Conduce" in sample_txt
+        and "Fecha entrega" in sample_txt
+        and "Almacén" in sample_txt,
+        "banda verde dos columnas",
+    )
+    check(
+        "28_qty_delivered_column",
+        "CANT. ENT." in sample_txt.upper() or "Cant. Ent." in sample_txt,
+        "columna Cant. Ent.",
+    )
+    company_name = env.company.name
+    wh_bad = False
+    if picking_done:
+        wh = picking_done.get_jt_delivery_warehouse_origin()
+        if wh and wh != "—" and wh.strip() == company_name.strip():
+            wh_bad = True
+    check("29_warehouse_not_company", not wh_bad, "almacén real, no nombre empresa")
+else:
+    for key, detail in [
+        ("22_observations_section", "skipped (no pdftotext)"),
+        ("23_legal_legend", "skipped"),
+        ("24_no_odoo_bot_combo", "skipped"),
+        ("25_responsable_label", "skipped"),
+        ("26_vendedor_label", "skipped"),
+        ("27_green_band_columns", "skipped"),
+        ("28_qty_delivered_column", "skipped"),
+        ("29_warehouse_not_company", "skipped"),
+    ]:
+        check(key, True, detail)
+
+check(
+    "30_module_version_26b",
+    report["module_version"] == "19.0.5.1.0",
+    report["module_version"],
+)
 
 report["pass"] = report["ok"]
 

@@ -281,14 +281,34 @@ class AccountMove(models.Model):
         return self.partner_id.name if self.partner_id else "—"
 
     def get_jt_delivery_shipping_address(self):
-        partner = self.partner_shipping_id or self.partner_id
-        return self._jt_delivery_format_address(partner)
+        lines = self.get_jt_delivery_shipping_address_lines()
+        return ", ".join(lines) if lines else "—"
+
+    def _jt_delivery_resolve_shipping_partner(self):
+        self.ensure_one()
+        candidates = []
+        if self.partner_shipping_id:
+            candidates.append(self.partner_shipping_id)
+        if self.partner_id:
+            candidates.append(self.partner_id)
+        for partner in candidates:
+            if self._jt_delivery_partner_has_address(partner):
+                return partner
+        return candidates[0] if candidates else self.env["res.partner"]
 
     def get_jt_delivery_responsible_display(self):
-        return self.invoice_user_id.name if self.invoice_user_id else "—"
+        so = self._jt_delivery_related_sale_order()
+        pickings = so.picking_ids.filtered(
+            lambda p: p.picking_type_code == "outgoing" and p.state != "cancel"
+        ) if so else self.env["stock.picking"]
+        if pickings and pickings[0].user_id:
+            return self._jt_delivery_user_label(pickings[0].user_id)
+        return "—"
 
     def get_jt_delivery_salesperson_display(self):
-        return self.invoice_user_id.name if self.invoice_user_id else "—"
+        so = self._jt_delivery_related_sale_order()
+        user = so.user_id if so else self.invoice_user_id
+        return self._jt_delivery_user_label(user)
 
     def get_jt_delivery_carrier_display(self):
         so = self._jt_delivery_related_sale_order()

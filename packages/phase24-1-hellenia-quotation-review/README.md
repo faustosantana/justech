@@ -1,8 +1,8 @@
 # Fase 24.1 — Paquete de revisión: Cotización Hellenia (Diseño)
 
-**Módulo:** `justech_report_design` v19.0.1.0.0  
+**Módulo:** `justech_report_design` v19.0.1.1.4  
 **Entorno validado:** TEST (`hellenia_test` / `test.hellenia.cloud`)  
-**Estado:** ⏳ Revisión visual en curso — **NO promover a PROD**  
+**Estado:** ⏳ **Aprobación visual** — VIS-001 corregido, ZIP regenerado — **NO promover a PROD**  
 **Enfoque Fase 24.2:** ✅ Aprobado (localización visual Justech) — implementación bloqueada hasta tu OK de este ZIP
 
 ---
@@ -19,7 +19,9 @@
 | `quotation_25_products.png` | Vista previa pág. 1 — 25 productos |
 | `hellenia_quotation_template.xml` | QWeb completo (body + document) |
 | `hellenia_quotation.scss` | Estilos PDF (`web.report_assets_common`) |
-| `validation.json` | Resultado validación automática TEST |
+| `quotation_5_products_discount.pdf` | PDF backend — 5 productos con descuento (S00139) |
+| `quotation_5_products_discount.png` | Vista previa pág. 1 — con descuento |
+| `audit.json` | Auditoría 24.1G — `ready_for_official: true` (técnico) |
 | `PROD_PROMOTION_CHECKLIST.md` | Checklist promoción PROD (no ejecutar aún) |
 
 Descarga comprimida: `phase24-1-hellenia-quotation-review.zip` (mismo directorio padre).

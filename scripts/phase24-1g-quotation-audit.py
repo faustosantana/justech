@@ -378,16 +378,45 @@ if so1:
 
 section("7_isolation", iso_checks)
 
-# === Visual pending ===
-audit["visual_pending"] = [
-    {
-        "id": "VIS-001",
-        "severity": "medium",
-        "title": "Rectángulo/borde visible alrededor de CONDICIONES + firmas",
-        "detail": "En PDF 1 producto persiste contorno gris claro que envuelve zona inferior (jt-hq-lower). No es caja de firmas pero compite visualmente antes de aprobación oficial.",
-        "status": "PENDING",
-    }
-]
+# === Visual VIS-001 — zona inferior sin tabla ni borde ===
+vis_checks = []
+
+
+def _lower_zone_html(html):
+    marker = "jt-hq-lower"
+    if marker not in html:
+        return ""
+    start = html.find(marker)
+    chunk = html[start:]
+    end = chunk.find("jt-hq-footer")
+    return chunk[:end] if end != -1 else chunk
+
+
+if so_probe:
+    html_vis = env["ir.actions.report"]._render_qweb_html(JT_REPORT, so_probe.ids)[0].decode("utf-8", errors="replace")
+    lower_slice = _lower_zone_html(html_vis)
+    vis_checks.append(chk(
+        "vis001_lower_is_div",
+        "jt-hq-lower" in html_vis and "<table" not in lower_slice,
+    ))
+    vis_checks.append(chk("vis001_no_border_style", "border: 1px" not in lower_slice and "border:1px" not in lower_slice))
+    vis_checks.append(chk("vis001_cond_present", "jt-hq-cond" in lower_slice))
+    vis_checks.append(chk("vis001_sigs_present", "jt-hq-sigs" in lower_slice))
+
+section("8_visual_vis001", vis_checks)
+
+if all(c["status"] == "PASS" for c in vis_checks):
+    audit["visual_pending"] = []
+else:
+    audit["visual_pending"] = [
+        {
+            "id": "VIS-001",
+            "severity": "medium",
+            "title": "Rectángulo/borde visible alrededor de CONDICIONES + firmas",
+            "detail": "Zona jt-hq-lower aún muestra tabla o estilos con borde.",
+            "status": "PENDING",
+        }
+    ]
 
 # === Ready decision ===
 section_fails = [k for k, v in audit["sections"].items() if v["status"] != "PASS"]

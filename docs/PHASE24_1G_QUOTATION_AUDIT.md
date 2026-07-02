@@ -1,10 +1,25 @@
 # FASE 24.1G — Auditoría final antes de promover cotización a formato oficial
 
-**Fecha:** 2026-07-02  
+**Fecha inicial:** 2026-07-02  
+**Actualización VIS-001:** 2026-07-02 (v`19.0.1.1.4`)  
 **Entorno auditado:** TEST (`hellenia_test` / `test.hellenia.cloud`)  
-**Módulo:** `justech_report_design` v`19.0.1.1.3`  
-**Rama:** `cursor/phase24-1g-quotation-audit-dd85`  
+**Módulo:** `justech_report_design` v`19.0.1.1.4`  
+**Rama:** `cursor/phase24-1g-vis001-fix-dd85`  
 **PROD:** ⛔ **NO tocado** — **NO promovido**
+
+---
+
+## Actualización — corrección VIS-001 (autorizada)
+
+| Ítem | Estado |
+|------|--------|
+| VIS-001 rectángulo condiciones/firmas | ✅ **CERRADO** |
+| Fix aplicado | Zona `jt-hq-lower` migrada de `<table>` a `<div>` (wkhtmltopdf ya no dibuja borde) |
+| Regresión 1/5/25/discount PDF | ✅ PASS (`validation.json`) |
+| Re-auditoría 24.1G | ✅ `ready_for_official: true` (técnico) |
+| Paquete revisión visual | ✅ `packages/phase24-1-hellenia-quotation-review.zip` |
+
+**Pendiente único bloqueante:** aprobación visual humana (Fausto) sobre el ZIP regenerado.
 
 ---
 
@@ -12,16 +27,16 @@
 
 | Pregunta | Respuesta |
 |----------|-----------|
-| ¿Listo para migrarse como **formato oficial** de cotización? | **NO** |
-| ¿Listo para promoción a PROD como reporte **paralelo**? | **Casi** — pendiente aprobación visual y resolución VIS-001 |
+| ¿Listo para migrarse como **formato oficial** de cotización? | **NO** — requiere OK visual + decisión de reemplazo estándar |
+| ¿Listo para promoción a PROD como reporte **paralelo**? | **SÍ (técnico)** — pendiente solo aprobación visual del ZIP |
 | ¿Rompe reportes estándar de venta? | **NO** |
 | ¿Funciona técnicamente en TEST? | **SÍ** — todos los checks automáticos PASS |
 
-**Bloqueantes para formato oficial:**
+**Bloqueantes restantes:**
 
-1. **VIS-001** — rectángulo/borde gris visible alrededor de CONDICIONES + firmas (`jt-hq-lower`).
-2. **Aprobación visual** del responsable (Fausto) pendiente sobre paquete de revisión.
-3. **Decisión de negocio** explícita para reemplazar el reporte estándar (no solo instalar en paralelo).
+1. **Aprobación visual** del responsable (Fausto) sobre `phase24-1-hellenia-quotation-review.zip`.
+2. **Decisión de negocio** explícita para reemplazar el reporte estándar (fase oficial, no ejecutada).
+3. **Autorización escrita** para promover a PROD (checklist §15).
 
 ---
 
@@ -34,15 +49,15 @@
 | 3 | Dependencias (assets, paperformat, QWeb, action, binding) | **PASS** | `audit.json` → `3_dependencies` |
 | 4 | Campos usados (note, discount, impuestos, sin mobile) | **PASS** | `audit.json` → `4_fields` |
 | 5 | Escenarios funcionales (1/5/25/discount/note/confirmada) | **PASS** | `audit.json` → `scenarios` |
-| 6 | Validación PDF (backend, totales, logo, footer, etc.) | **PASS** | `validation.json` 24.1F + escenarios 24.1G |
+| 6 | Validación PDF (backend, totales, logo, footer, etc.) | **PASS** | `validation.json` + escenarios 24.1G |
 | 7 | Aislamiento (facturas, pagos, compras, inventario, DGII, portal) | **PASS** | `audit.json` → `7_isolation` |
-| 8 | Issue visual VIS-001 | **PENDIENTE** | Bloqueante para oficial |
-| 9 | Aprobación visual responsable | **PENDIENTE** | `docs/PHASE24_STATUS.md` |
+| 8 | Issue visual VIS-001 | **PASS** ✅ | `audit.json` → `8_visual_vis001` |
+| 9 | Aprobación visual responsable | **PENDIENTE** | Revisar ZIP regenerado |
 | 10 | Portal PDF público | **INFO** (no bloqueante backend) | URL devuelve HTML ~7 KB, no PDF |
 
 **Script automático:** `scripts/phase24-1g-quotation-audit.py`  
 **Evidencia JSON:** `evidence/phase24-1g-audit/audit.json`  
-**Última ejecución TEST:** `2026-07-02T03:38 UTC` — `ready_for_official: false` (solo por `visual_pending`)
+**Última ejecución TEST:** `2026-07-02T03:50 UTC` — `ready_for_official: true` (técnico; falta OK visual humano)
 
 ---
 
@@ -197,20 +212,24 @@ custom/justech_report_design/
 
 ---
 
-## 10. Issue visual pendiente — VIS-001
+## 10. Issue visual VIS-001 — CERRADO (2026-07-02)
 
-**Descripción:** En cotización de 1 producto persiste un rectángulo o contorno gris claro que envuelve la zona inferior (tabla `jt-hq-lower`: CONDICIONES + spacer + firmas).
+**Problema original:** Rectángulo/borde gris alrededor de CONDICIONES + firmas causado por `<table class="jt-hq-lower">` en wkhtmltopdf.
 
-**Estado:** PENDIENTE — **bloqueante para aprobación como formato oficial**.
+**Corrección (v19.0.1.1.4):** Reemplazo de tabla por estructura `<div class="jt-hq-lower">` con mismos bloques (condiciones → spacer → firmas). Sin cambio en lógica de `signature_push_px` ni totales.
 
-**Ubicación técnica:**
+**Validación automática:**
 
-- Template: `report/quotation/hellenia_quotation_template.xml` — `<table class="jt-hq-lower">`
-- SCSS: `static/src/scss/hellenia_quotation.scss` — reglas `.jt-hq-lower`, `.jt-hq-cond`, `.jt-hq-sigs`
+| Check | Resultado |
+|-------|-----------|
+| `vis001_lower_is_div` | PASS — sin `<table` en zona inferior |
+| `vis001_no_border_style` | PASS |
+| `vis001_cond_present` | PASS |
+| `vis001_sigs_present` | PASS |
 
-**Evidencia visual:** `evidence/phase24-1-report-design/quotation_1_product.png` (paquete revisión ZIP).
+**Evidencia visual:** PNGs regenerados en `packages/phase24-1-hellenia-quotation-review.zip` (`quotation_1_product.png`, etc.).
 
-**Acción requerida antes de oficial:** Eliminar contorno visible en wkhtmltopdf sin reintroducir cajas en firmas. **No modificar sin autorización explícita** (instrucción fase 24.1G).
+**Estado:** ✅ CERRADO — pendiente confirmación humana en ZIP.
 
 ---
 
@@ -399,20 +418,15 @@ PY
 
 ## 18. Conclusión
 
-El módulo `justech_report_design` en TEST cumple los requisitos **técnicos y funcionales** de la auditoría 24.1G:
+El módulo `justech_report_design` en TEST cumple los requisitos **técnicos y funcionales** de la auditoría 24.1G, incluida la corrección **VIS-001** (v19.0.1.1.4).
 
-- No rompe `sale.report_saleorder`, `sale.report_saleorder_document` ni `sale.report_saleorder_raw`.
-- Opera en **paralelo** sin reemplazar el formato estándar.
-- Dependencias, campos, escenarios y PDF backend validados con **PASS**.
-- No impacta facturas, pagos, compras, inventario ni DGII.
+**Listo para aprobación visual** sobre `packages/phase24-1-hellenia-quotation-review.zip`.
 
-**No está listo para migrarse como formato oficial** debido a:
+**No listo para formato oficial** hasta OK visual humano + fase de reemplazo del action estándar.
 
-1. **VIS-001** (issue visual bloqueante).
-2. **Aprobación visual** pendiente del responsable.
-3. Falta de **decisión y fase de reemplazo** del action estándar (pasos documentados en §13, no ejecutados).
+**No promover PROD** sin autorización escrita explícita (checklist §15).
 
-**Recomendación:** Resolver VIS-001 y obtener OK visual → promover a PROD como reporte **paralelo** → tras periodo de uso estable, ejecutar fase de **oficialización** (§13) con rollback plan listo (§14).
+**Recomendación:** Fausto revisa ZIP → OK visual → promover a PROD como reporte **paralelo** → tras estabilización, fase de oficialización (§13).
 
 ---
 

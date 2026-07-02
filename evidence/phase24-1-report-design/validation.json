@@ -1,6 +1,6 @@
 {
   "phase": "24.1F-signatures-discount-totals-terms",
-  "timestamp_utc": "2026-07-02T03:20:06.646662+00:00",
+  "timestamp_utc": "2026-07-02T03:47:50.140260+00:00",
   "database": "hellenia_test",
   "pass": true,
   "failed_checks": [
@@ -121,7 +121,7 @@
     },
     "quote_1_sig_push_min": {
       "status": "PASS",
-      "detail": "300"
+      "detail": "340"
     },
     "quote_1_sigs_on_first_page": {
       "status": "PASS",
@@ -221,7 +221,7 @@
     },
     "quote_5_sig_push_min": {
       "status": "PASS",
-      "detail": "222"
+      "detail": "278"
     },
     "quote_5_sigs_on_first_page": {
       "status": "PASS",
@@ -321,7 +321,7 @@
     },
     "quote_25_sig_push_min": {
       "status": "PASS",
-      "detail": "300"
+      "detail": "310"
     },
     "quote_25_sigs_on_first_page": {
       "status": "PASS",
@@ -329,7 +329,7 @@
     },
     "quote_1_single_page": {
       "status": "PASS",
-      "detail": "pages=None size=72178"
+      "detail": "pages=None size=72103"
     },
     "quote_5_disc_pdf": {
       "status": "PASS",
@@ -421,7 +421,7 @@
     },
     "quote_5_disc_sig_push_min": {
       "status": "PASS",
-      "detail": "202"
+      "detail": "258"
     },
     "quote_5_disc_sigs_on_first_page": {
       "status": "PASS",
@@ -462,32 +462,32 @@
       "file": "quotation_1_product.pdf",
       "line_count": 1,
       "pages": null,
-      "size_bytes": 72178
+      "size_bytes": 72103
     },
     "quote_5": {
       "order": "S00135",
       "file": "quotation_5_products.pdf",
       "line_count": 5,
       "pages": null,
-      "size_bytes": 74566
+      "size_bytes": 74522
     },
     "quote_25": {
       "order": "S00138",
       "file": "quotation_25_products.pdf",
       "line_count": 25,
       "pages": null,
-      "size_bytes": 79104
+      "size_bytes": 79052
     },
     "quote_5_disc": {
       "order": "S00139",
       "file": "quotation_5_products_discount.pdf",
       "line_count": 5,
       "pages": null,
-      "size_bytes": 75250
+      "size_bytes": 75206
     }
   },
   "screenshots": {},
-  "module_version": "19.0.1.1.2",
+  "module_version": "19.0.1.1.4",
   "portal": {
     "status": 200,
     "size": 6909,

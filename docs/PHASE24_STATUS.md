@@ -9,10 +9,10 @@
 | Ítem | Estado |
 |------|--------|
 | Módulo `justech_report_design` | ✅ Desplegado en TEST |
-| Validación automática | ✅ `pass: true` |
-| Auditoría 24.1G | ✅ `docs/PHASE24_1G_QUOTATION_AUDIT.md` — **NO listo para oficial** (VIS-001) |
-| Paquete revisión | ✅ `packages/phase24-1-hellenia-quotation-review.zip` |
-| Aprobación visual | ⏳ **Pendiente — responsable revisando ZIP** |
+| Validación automática | ✅ `pass: true` (v19.0.1.1.4) |
+| Auditoría 24.1G | ✅ VIS-001 cerrado — `ready_for_official: true` (técnico) |
+| Paquete revisión | ✅ `packages/phase24-1-hellenia-quotation-review.zip` (regenerado) |
+| Aprobación visual | ⏳ **Pendiente — revisar ZIP regenerado** |
 | PROD | ⛔ Bloqueado |
 
 **Bloqueante para código nuevo:** revisión visual final del ZIP 24.1.

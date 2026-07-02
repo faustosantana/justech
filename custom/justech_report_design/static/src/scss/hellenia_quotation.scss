@@ -400,6 +400,10 @@ div.article.page.jt-hq-page,
     background: transparent !important;
     clear: both;
     width: 100% !important;
+    box-shadow: none !important;
+    outline: none !important;
+    margin: 0;
+    padding: 0;
 }
 
 .jt-hq-lower td {
@@ -411,10 +415,18 @@ div.article.page.jt-hq-page,
 
 .jt-hq-sigs-wrap {
     vertical-align: bottom !important;
+    border: none !important;
+    background: transparent !important;
+    margin: 0;
+    padding: 0;
 }
 
 .jt-hq-cond-wrap {
     vertical-align: top !important;
+    border: none !important;
+    background: transparent !important;
+    margin: 0;
+    padding: 0;
 }
 
 .jt-hq-sig-push {

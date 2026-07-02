@@ -1,0 +1,668 @@
+{
+  "phase": "23.3c-quotation-redesign",
+  "timestamp_utc": "2026-07-01T18:56:57.362750+00:00",
+  "database": "hellenia_test",
+  "root_cause": "Sin clase article el body PDF no pasa por web.minimal_layout: wkhtmltopdf recibe HTML fragmentado sin meta charset UTF-8; acentos y NBSP monetarios se corrompen (CotizaciÃ³n, $Â)",
+  "fix": "Wrapper div.article + data-oe-* para minimal_layout; ir.actions.report fuerza --encoding utf-8; template table-based #3E4827",
+  "module_version": "19.0.1.3.2",
+  "visual_checks": {
+    "quote_1_html_no_mojibake_Ã³": {
+      "status": "PASS",
+      "detail": "Ã³"
+    },
+    "quote_1_html_no_mojibake_Ã©": {
+      "status": "PASS",
+      "detail": "Ã©"
+    },
+    "quote_1_html_no_mojibake_Ã­": {
+      "status": "PASS",
+      "detail": "Ã­"
+    },
+    "quote_1_html_no_mojibake_Ã¡": {
+      "status": "PASS",
+      "detail": "Ã¡"
+    },
+    "quote_1_html_no_mojibake_Ãº": {
+      "status": "PASS",
+      "detail": "Ãº"
+    },
+    "quote_1_html_no_mojibake_Ã±": {
+      "status": "PASS",
+      "detail": "Ã±"
+    },
+    "quote_1_html_no_mojibake_RepÃ": {
+      "status": "PASS",
+      "detail": "RepÃ"
+    },
+    "quote_1_html_no_mojibake_Cotiza": {
+      "status": "PASS",
+      "detail": "CotizaciÃ"
+    },
+    "quote_1_html_no_mojibake_$Â": {
+      "status": "PASS",
+      "detail": "$Â"
+    },
+    "quote_1_html_no_mojibake_Â ": {
+      "status": "PASS",
+      "detail": "Â "
+    },
+    "quote_1_html_no_display:_f": {
+      "status": "PASS",
+      "detail": "display: flex"
+    },
+    "quote_1_html_no_var(--": {
+      "status": "PASS",
+      "detail": "var(--"
+    },
+    "quote_1_html_no_object-fit": {
+      "status": "PASS",
+      "detail": "object-fit"
+    },
+    "quote_1_html_no_☎": {
+      "status": "PASS",
+      "detail": "☎"
+    },
+    "quote_1_html_no_🌐": {
+      "status": "PASS",
+      "detail": "🌐"
+    },
+    "quote_1_html_no_✉": {
+      "status": "PASS",
+      "detail": "✉"
+    },
+    "quote_1_html_no_svg": {
+      "status": "PASS",
+      "detail": "<svg"
+    },
+    "quote_1_html_has_cotizacion": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_1_html_has_tables": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_1_html_has_article": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_1_html_logo_max_90": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_1_html_brand_color": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_1_html_no_bootstrap_row": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_1_pdf_no_mojibake_Ã³": {
+      "status": "PASS",
+      "detail": "Ã³"
+    },
+    "quote_1_pdf_no_mojibake_Ã©": {
+      "status": "PASS",
+      "detail": "Ã©"
+    },
+    "quote_1_pdf_no_mojibake_Ã­": {
+      "status": "PASS",
+      "detail": "Ã­"
+    },
+    "quote_1_pdf_no_mojibake_Ã¡": {
+      "status": "PASS",
+      "detail": "Ã¡"
+    },
+    "quote_1_pdf_no_mojibake_Ãº": {
+      "status": "PASS",
+      "detail": "Ãº"
+    },
+    "quote_1_pdf_no_mojibake_Ã±": {
+      "status": "PASS",
+      "detail": "Ã±"
+    },
+    "quote_1_pdf_no_mojibake_RepÃ": {
+      "status": "PASS",
+      "detail": "RepÃ"
+    },
+    "quote_1_pdf_no_mojibake_Cotiza": {
+      "status": "PASS",
+      "detail": "CotizaciÃ"
+    },
+    "quote_1_pdf_no_mojibake_$Â": {
+      "status": "PASS",
+      "detail": "$Â"
+    },
+    "quote_1_pdf_no_mojibake_Â ": {
+      "status": "PASS",
+      "detail": "Â "
+    },
+    "quote_1_pdf_has_COTIZACIÓN": {
+      "status": "PASS",
+      "detail": "missing COTIZACIÓN"
+    },
+    "quote_1_pdf_has_República": {
+      "status": "PASS",
+      "detail": "missing República"
+    },
+    "quote_1_pdf_has_CONDICIONES": {
+      "status": "PASS",
+      "detail": "missing CONDICIONES"
+    },
+    "quote_1_pdf_text_len": {
+      "status": "PASS",
+      "detail": "1295"
+    },
+    "quote_1_pdf_magic": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_1_pdf_size": {
+      "status": "PASS",
+      "detail": "68947"
+    },
+    "quote_5_html_no_mojibake_Ã³": {
+      "status": "PASS",
+      "detail": "Ã³"
+    },
+    "quote_5_html_no_mojibake_Ã©": {
+      "status": "PASS",
+      "detail": "Ã©"
+    },
+    "quote_5_html_no_mojibake_Ã­": {
+      "status": "PASS",
+      "detail": "Ã­"
+    },
+    "quote_5_html_no_mojibake_Ã¡": {
+      "status": "PASS",
+      "detail": "Ã¡"
+    },
+    "quote_5_html_no_mojibake_Ãº": {
+      "status": "PASS",
+      "detail": "Ãº"
+    },
+    "quote_5_html_no_mojibake_Ã±": {
+      "status": "PASS",
+      "detail": "Ã±"
+    },
+    "quote_5_html_no_mojibake_RepÃ": {
+      "status": "PASS",
+      "detail": "RepÃ"
+    },
+    "quote_5_html_no_mojibake_Cotiza": {
+      "status": "PASS",
+      "detail": "CotizaciÃ"
+    },
+    "quote_5_html_no_mojibake_$Â": {
+      "status": "PASS",
+      "detail": "$Â"
+    },
+    "quote_5_html_no_mojibake_Â ": {
+      "status": "PASS",
+      "detail": "Â "
+    },
+    "quote_5_html_no_display:_f": {
+      "status": "PASS",
+      "detail": "display: flex"
+    },
+    "quote_5_html_no_var(--": {
+      "status": "PASS",
+      "detail": "var(--"
+    },
+    "quote_5_html_no_object-fit": {
+      "status": "PASS",
+      "detail": "object-fit"
+    },
+    "quote_5_html_no_☎": {
+      "status": "PASS",
+      "detail": "☎"
+    },
+    "quote_5_html_no_🌐": {
+      "status": "PASS",
+      "detail": "🌐"
+    },
+    "quote_5_html_no_✉": {
+      "status": "PASS",
+      "detail": "✉"
+    },
+    "quote_5_html_no_svg": {
+      "status": "PASS",
+      "detail": "<svg"
+    },
+    "quote_5_html_has_cotizacion": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_html_has_tables": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_html_has_article": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_html_logo_max_90": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_html_brand_color": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_html_no_bootstrap_row": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_pdf_no_mojibake_Ã³": {
+      "status": "PASS",
+      "detail": "Ã³"
+    },
+    "quote_5_pdf_no_mojibake_Ã©": {
+      "status": "PASS",
+      "detail": "Ã©"
+    },
+    "quote_5_pdf_no_mojibake_Ã­": {
+      "status": "PASS",
+      "detail": "Ã­"
+    },
+    "quote_5_pdf_no_mojibake_Ã¡": {
+      "status": "PASS",
+      "detail": "Ã¡"
+    },
+    "quote_5_pdf_no_mojibake_Ãº": {
+      "status": "PASS",
+      "detail": "Ãº"
+    },
+    "quote_5_pdf_no_mojibake_Ã±": {
+      "status": "PASS",
+      "detail": "Ã±"
+    },
+    "quote_5_pdf_no_mojibake_RepÃ": {
+      "status": "PASS",
+      "detail": "RepÃ"
+    },
+    "quote_5_pdf_no_mojibake_Cotiza": {
+      "status": "PASS",
+      "detail": "CotizaciÃ"
+    },
+    "quote_5_pdf_no_mojibake_$Â": {
+      "status": "PASS",
+      "detail": "$Â"
+    },
+    "quote_5_pdf_no_mojibake_Â ": {
+      "status": "PASS",
+      "detail": "Â "
+    },
+    "quote_5_pdf_has_COTIZACIÓN": {
+      "status": "PASS",
+      "detail": "missing COTIZACIÓN"
+    },
+    "quote_5_pdf_has_República": {
+      "status": "PASS",
+      "detail": "missing República"
+    },
+    "quote_5_pdf_has_CONDICIONES": {
+      "status": "PASS",
+      "detail": "missing CONDICIONES"
+    },
+    "quote_5_pdf_text_len": {
+      "status": "PASS",
+      "detail": "1612"
+    },
+    "quote_5_pdf_magic": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_pdf_size": {
+      "status": "PASS",
+      "detail": "72765"
+    },
+    "quote_15_html_no_mojibake_Ã³": {
+      "status": "PASS",
+      "detail": "Ã³"
+    },
+    "quote_15_html_no_mojibake_Ã©": {
+      "status": "PASS",
+      "detail": "Ã©"
+    },
+    "quote_15_html_no_mojibake_Ã­": {
+      "status": "PASS",
+      "detail": "Ã­"
+    },
+    "quote_15_html_no_mojibake_Ã¡": {
+      "status": "PASS",
+      "detail": "Ã¡"
+    },
+    "quote_15_html_no_mojibake_Ãº": {
+      "status": "PASS",
+      "detail": "Ãº"
+    },
+    "quote_15_html_no_mojibake_Ã±": {
+      "status": "PASS",
+      "detail": "Ã±"
+    },
+    "quote_15_html_no_mojibake_RepÃ": {
+      "status": "PASS",
+      "detail": "RepÃ"
+    },
+    "quote_15_html_no_mojibake_Cotiza": {
+      "status": "PASS",
+      "detail": "CotizaciÃ"
+    },
+    "quote_15_html_no_mojibake_$Â": {
+      "status": "PASS",
+      "detail": "$Â"
+    },
+    "quote_15_html_no_mojibake_Â ": {
+      "status": "PASS",
+      "detail": "Â "
+    },
+    "quote_15_html_no_display:_f": {
+      "status": "PASS",
+      "detail": "display: flex"
+    },
+    "quote_15_html_no_var(--": {
+      "status": "PASS",
+      "detail": "var(--"
+    },
+    "quote_15_html_no_object-fit": {
+      "status": "PASS",
+      "detail": "object-fit"
+    },
+    "quote_15_html_no_☎": {
+      "status": "PASS",
+      "detail": "☎"
+    },
+    "quote_15_html_no_🌐": {
+      "status": "PASS",
+      "detail": "🌐"
+    },
+    "quote_15_html_no_✉": {
+      "status": "PASS",
+      "detail": "✉"
+    },
+    "quote_15_html_no_svg": {
+      "status": "PASS",
+      "detail": "<svg"
+    },
+    "quote_15_html_has_cotizacion": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_15_html_has_tables": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_15_html_has_article": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_15_html_logo_max_90": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_15_html_brand_color": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_15_html_no_bootstrap_row": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_15_pdf_no_mojibake_Ã³": {
+      "status": "PASS",
+      "detail": "Ã³"
+    },
+    "quote_15_pdf_no_mojibake_Ã©": {
+      "status": "PASS",
+      "detail": "Ã©"
+    },
+    "quote_15_pdf_no_mojibake_Ã­": {
+      "status": "PASS",
+      "detail": "Ã­"
+    },
+    "quote_15_pdf_no_mojibake_Ã¡": {
+      "status": "PASS",
+      "detail": "Ã¡"
+    },
+    "quote_15_pdf_no_mojibake_Ãº": {
+      "status": "PASS",
+      "detail": "Ãº"
+    },
+    "quote_15_pdf_no_mojibake_Ã±": {
+      "status": "PASS",
+      "detail": "Ã±"
+    },
+    "quote_15_pdf_no_mojibake_RepÃ": {
+      "status": "PASS",
+      "detail": "RepÃ"
+    },
+    "quote_15_pdf_no_mojibake_Cotiza": {
+      "status": "PASS",
+      "detail": "CotizaciÃ"
+    },
+    "quote_15_pdf_no_mojibake_$Â": {
+      "status": "PASS",
+      "detail": "$Â"
+    },
+    "quote_15_pdf_no_mojibake_Â ": {
+      "status": "PASS",
+      "detail": "Â "
+    },
+    "quote_15_pdf_has_COTIZACIÓN": {
+      "status": "PASS",
+      "detail": "missing COTIZACIÓN"
+    },
+    "quote_15_pdf_has_República": {
+      "status": "PASS",
+      "detail": "missing República"
+    },
+    "quote_15_pdf_has_CONDICIONES": {
+      "status": "PASS",
+      "detail": "missing CONDICIONES"
+    },
+    "quote_15_pdf_text_len": {
+      "status": "PASS",
+      "detail": "2457"
+    },
+    "quote_15_pdf_magic": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_15_pdf_size": {
+      "status": "PASS",
+      "detail": "80923"
+    },
+    "portal_html_no_mojibake_Ã³": {
+      "status": "PASS",
+      "detail": "Ã³"
+    },
+    "portal_html_no_mojibake_Ã©": {
+      "status": "PASS",
+      "detail": "Ã©"
+    },
+    "portal_html_no_mojibake_Ã­": {
+      "status": "PASS",
+      "detail": "Ã­"
+    },
+    "portal_html_no_mojibake_Ã¡": {
+      "status": "PASS",
+      "detail": "Ã¡"
+    },
+    "portal_html_no_mojibake_Ãº": {
+      "status": "PASS",
+      "detail": "Ãº"
+    },
+    "portal_html_no_mojibake_Ã±": {
+      "status": "PASS",
+      "detail": "Ã±"
+    },
+    "portal_html_no_mojibake_RepÃ": {
+      "status": "PASS",
+      "detail": "RepÃ"
+    },
+    "portal_html_no_mojibake_Cotiza": {
+      "status": "PASS",
+      "detail": "CotizaciÃ"
+    },
+    "portal_html_no_mojibake_$Â": {
+      "status": "PASS",
+      "detail": "$Â"
+    },
+    "portal_html_no_mojibake_Â ": {
+      "status": "PASS",
+      "detail": "Â "
+    },
+    "portal_html_no_display:_f": {
+      "status": "PASS",
+      "detail": "display: flex"
+    },
+    "portal_html_no_var(--": {
+      "status": "PASS",
+      "detail": "var(--"
+    },
+    "portal_html_no_object-fit": {
+      "status": "PASS",
+      "detail": "object-fit"
+    },
+    "portal_html_no_☎": {
+      "status": "PASS",
+      "detail": "☎"
+    },
+    "portal_html_no_🌐": {
+      "status": "PASS",
+      "detail": "🌐"
+    },
+    "portal_html_no_✉": {
+      "status": "PASS",
+      "detail": "✉"
+    },
+    "portal_html_no_svg": {
+      "status": "PASS",
+      "detail": "<svg"
+    },
+    "portal_html_has_cotizacion": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "portal_html_has_tables": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "portal_html_has_article": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "portal_html_logo_max_90": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "portal_html_brand_color": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "portal_html_no_bootstrap_row": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "portal_pdf_no_mojibake_Ã³": {
+      "status": "PASS",
+      "detail": "Ã³"
+    },
+    "portal_pdf_no_mojibake_Ã©": {
+      "status": "PASS",
+      "detail": "Ã©"
+    },
+    "portal_pdf_no_mojibake_Ã­": {
+      "status": "PASS",
+      "detail": "Ã­"
+    },
+    "portal_pdf_no_mojibake_Ã¡": {
+      "status": "PASS",
+      "detail": "Ã¡"
+    },
+    "portal_pdf_no_mojibake_Ãº": {
+      "status": "PASS",
+      "detail": "Ãº"
+    },
+    "portal_pdf_no_mojibake_Ã±": {
+      "status": "PASS",
+      "detail": "Ã±"
+    },
+    "portal_pdf_no_mojibake_RepÃ": {
+      "status": "PASS",
+      "detail": "RepÃ"
+    },
+    "portal_pdf_no_mojibake_Cotiza": {
+      "status": "PASS",
+      "detail": "CotizaciÃ"
+    },
+    "portal_pdf_no_mojibake_$Â": {
+      "status": "PASS",
+      "detail": "$Â"
+    },
+    "portal_pdf_no_mojibake_Â ": {
+      "status": "PASS",
+      "detail": "Â "
+    },
+    "portal_pdf_has_COTIZACIÓN": {
+      "status": "PASS",
+      "detail": "missing COTIZACIÓN"
+    },
+    "portal_pdf_has_República": {
+      "status": "PASS",
+      "detail": "missing República"
+    },
+    "portal_pdf_has_CONDICIONES": {
+      "status": "PASS",
+      "detail": "missing CONDICIONES"
+    },
+    "portal_pdf_text_len": {
+      "status": "PASS",
+      "detail": "1295"
+    }
+  },
+  "http_checks": {
+    "portal_pdf": {
+      "status": "PASS",
+      "http_status": 200,
+      "detail": "68947"
+    }
+  },
+  "pdfs": {
+    "quote_1": {
+      "status": "OK",
+      "order": "S00134",
+      "file": "quotation_1_product.pdf",
+      "size_bytes": 68947,
+      "text_sample": "Hellenia, S.R.L.\nCalle Federico Geraldino No.164, Esquina David Ben Gurión , Santo Domingo\nRNC: 133621282\nTel.: +1 849-434-8694\nCorreo: info@helleniadr.com\nWeb: https://hellenia.cloud\n\nCOTIZACIÓN\n\nNo. S00134\n\nFECHA DE COTIZACIÓN\n\nVENCIMIENTO / VALIDEZ\n\n01/07/2026\n\n06/07/2026\n\nINFORMACIÓN DEL CLIENTE"
+    },
+    "quote_5": {
+      "status": "OK",
+      "order": "S00135",
+      "file": "quotation_5_products.pdf",
+      "size_bytes": 72765,
+      "text_sample": "Hellenia, S.R.L.\nCalle Federico Geraldino No.164, Esquina David Ben Gurión , Santo Domingo\nRNC: 133621282\nTel.: +1 849-434-8694\nCorreo: info@helleniadr.com\nWeb: https://hellenia.cloud\n\nCOTIZACIÓN\n\nNo. S00135\n\nFECHA DE COTIZACIÓN\n\nVENCIMIENTO / VALIDEZ\n\n01/07/2026\n\n06/07/2026\n\nINFORMACIÓN DEL CLIENTE"
+    },
+    "quote_15": {
+      "status": "OK",
+      "order": "S00136",
+      "file": "quotation_15_products.pdf",
+      "size_bytes": 80923,
+      "text_sample": "Hellenia, S.R.L.\nCalle Federico Geraldino No.164, Esquina David Ben Gurión , Santo Domingo\nRNC: 133621282\nTel.: +1 849-434-8694\nCorreo: info@helleniadr.com\nWeb: https://hellenia.cloud\n\nCOTIZACIÓN\n\nNo. S00136\n\nFECHA DE COTIZACIÓN\n\nVENCIMIENTO / VALIDEZ\n\n01/07/2026\n\n06/07/2026\n\nINFORMACIÓN DEL CLIENTE"
+    },
+    "portal": {
+      "status": "OK",
+      "order": "S00134",
+      "file": "portal_order_135.pdf",
+      "size_bytes": 68947,
+      "text_sample": "Hellenia, S.R.L.\nCalle Federico Geraldino No.164, Esquina David Ben Gurión , Santo Domingo\nRNC: 133621282\nTel.: +1 849-434-8694\nCorreo: info@helleniadr.com\nWeb: https://hellenia.cloud\n\nCOTIZACIÓN\n\nNo. S00134\n\nFECHA DE COTIZACIÓN\n\nVENCIMIENTO / VALIDEZ\n\n01/07/2026\n\n06/07/2026\n\nINFORMACIÓN DEL CLIENTE"
+    }
+  },
+  "ok": true,
+  "pass": true,
+  "ready_for_prod": false,
+  "screenshot": "screenshot_portal_page1.png",
+  "failed_checks": []
+}

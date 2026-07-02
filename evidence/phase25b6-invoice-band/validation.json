@@ -1,0 +1,21 @@
+{
+  "phase": "25B.6-invoice-band",
+  "timestamp_utc": "2026-07-02T12:56:25.702206+00:00",
+  "database": "hellenia_test",
+  "status": "PENDING_USER_VISUAL_APPROVAL",
+  "module_version": "19.0.3.7.2",
+  "files": {
+    "invoice_1_line": {
+      "pdf": "01_invoice_1_line.pdf",
+      "png": null
+    },
+    "invoice_5_lines": {
+      "pdf": "02_invoice_5_lines.pdf",
+      "png": null
+    },
+    "invoice_with_discount": {
+      "pdf": "03_invoice_with_discount.pdf",
+      "png": null
+    }
+  }
+}

@@ -1,0 +1,311 @@
+Note: switching to 'b700010'.
+
+You are in 'detached HEAD' state. You can look around, make experimental
+changes and commit them, and you can discard any commits you make in this
+state without impacting any branches by switching back to a branch.
+
+If you want to create a new branch to retain commits you create, you may
+do so (now or later) by using -c with the switch command. Example:
+
+  git switch -c <new-branch-name>
+
+Or undo this operation with:
+
+  git switch -
+
+Turn off this advice by setting config variable advice.detachedHead to false
+
+HEAD is now at b700010 Sprint 0 hardening: cerrar P0 Fase 6.5 (rules, lock NCF, void, índice único)
+sending incremental file list
+./
+.gitkeep
+README.md
+hellenia_account/
+hellenia_account/README.md
+hellenia_account/__init__.py
+hellenia_account/__manifest__.py
+hellenia_account/data/
+hellenia_account/data/.gitkeep
+hellenia_account/i18n/
+hellenia_account/i18n/es.po
+hellenia_account/models/
+hellenia_account/models/__init__.py
+hellenia_account/security/
+hellenia_account/security/ir.model.access.csv
+hellenia_account/static/
+hellenia_account/static/description/
+hellenia_account/static/description/.gitkeep
+hellenia_account/tests/
+hellenia_account/tests/__init__.py
+hellenia_account/tests/test_hellenia_account.py
+hellenia_account/views/
+hellenia_account/views/.gitkeep
+hellenia_base/
+hellenia_base/README.md
+hellenia_base/__init__.py
+hellenia_base/__manifest__.py
+hellenia_base/data/
+hellenia_base/data/.gitkeep
+hellenia_base/i18n/
+hellenia_base/i18n/es.po
+hellenia_base/models/
+hellenia_base/models/__init__.py
+hellenia_base/security/
+hellenia_base/security/ir.model.access.csv
+hellenia_base/static/
+hellenia_base/static/description/
+hellenia_base/static/description/.gitkeep
+hellenia_base/tests/
+hellenia_base/tests/__init__.py
+hellenia_base/tests/test_hellenia_base.py
+hellenia_base/views/
+hellenia_base/views/.gitkeep
+hellenia_inventory/
+hellenia_inventory/README.md
+hellenia_inventory/__init__.py
+hellenia_inventory/__manifest__.py
+hellenia_inventory/data/
+hellenia_inventory/data/.gitkeep
+hellenia_inventory/i18n/
+hellenia_inventory/i18n/es.po
+hellenia_inventory/models/
+hellenia_inventory/models/__init__.py
+hellenia_inventory/security/
+hellenia_inventory/security/ir.model.access.csv
+hellenia_inventory/static/
+hellenia_inventory/static/description/
+hellenia_inventory/static/description/.gitkeep
+hellenia_inventory/tests/
+hellenia_inventory/tests/__init__.py
+hellenia_inventory/tests/test_hellenia_inventory.py
+hellenia_inventory/views/
+hellenia_inventory/views/.gitkeep
+hellenia_pos/
+hellenia_pos/README.md
+hellenia_pos/__init__.py
+hellenia_pos/__manifest__.py
+hellenia_pos/data/
+hellenia_pos/data/.gitkeep
+hellenia_pos/i18n/
+hellenia_pos/i18n/es.po
+hellenia_pos/models/
+hellenia_pos/models/__init__.py
+hellenia_pos/security/
+hellenia_pos/security/ir.model.access.csv
+hellenia_pos/static/
+hellenia_pos/static/description/
+hellenia_pos/static/description/.gitkeep
+hellenia_pos/tests/
+hellenia_pos/tests/__init__.py
+hellenia_pos/tests/test_hellenia_pos.py
+hellenia_pos/views/
+hellenia_pos/views/.gitkeep
+hellenia_reports/
+hellenia_reports/README.md
+hellenia_reports/__init__.py
+hellenia_reports/__manifest__.py
+hellenia_reports/data/
+hellenia_reports/data/.gitkeep
+hellenia_reports/i18n/
+hellenia_reports/i18n/es.po
+hellenia_reports/models/
+hellenia_reports/models/__init__.py
+hellenia_reports/security/
+hellenia_reports/security/ir.model.access.csv
+hellenia_reports/static/
+hellenia_reports/static/description/
+hellenia_reports/static/description/.gitkeep
+hellenia_reports/tests/
+hellenia_reports/tests/__init__.py
+hellenia_reports/tests/test_hellenia_reports.py
+hellenia_reports/views/
+hellenia_reports/views/.gitkeep
+justech_core/
+justech_core/README.md
+justech_core/__init__.py
+justech_core/__manifest__.py
+justech_core/data/
+justech_core/data/.gitkeep
+justech_core/i18n/
+justech_core/i18n/es.po
+justech_core/models/
+justech_core/models/__init__.py
+justech_core/security/
+justech_core/security/ir.model.access.csv
+justech_core/static/
+justech_core/static/description/
+justech_core/static/description/.gitkeep
+justech_core/tests/
+justech_core/tests/__init__.py
+justech_core/tests/test_justech_core.py
+justech_core/views/
+justech_core/views/.gitkeep
+justech_l10n_do_base/
+justech_l10n_do_base/README.md
+justech_l10n_do_base/__init__.py
+justech_l10n_do_base/__manifest__.py
+justech_l10n_do_base/data/
+justech_l10n_do_base/data/fiscal_document_type_data.xml
+justech_l10n_do_base/models/
+justech_l10n_do_base/models/__init__.py
+justech_l10n_do_base/models/account_journal.py
+justech_l10n_do_base/models/fiscal_document_type.py
+justech_l10n_do_base/models/res_company.py
+justech_l10n_do_base/models/res_partner.py
+justech_l10n_do_base/security/
+justech_l10n_do_base/security/ir.model.access.csv
+justech_l10n_do_base/security/justech_l10n_do_rules.xml
+justech_l10n_do_base/security/justech_l10n_do_security.xml
+justech_l10n_do_base/tests/
+justech_l10n_do_base/tests/__init__.py
+justech_l10n_do_base/tests/test_justech_l10n_do_base.py
+justech_l10n_do_base/tests/test_justech_l10n_do_hardening.py
+justech_l10n_do_base/views/
+justech_l10n_do_base/views/account_journal_views.xml
+justech_l10n_do_base/views/fiscal_document_type_views.xml
+justech_l10n_do_base/views/menu.xml
+justech_l10n_do_base/views/res_company_views.xml
+justech_l10n_do_base/views/res_partner_views.xml
+justech_l10n_do_ncf/
+justech_l10n_do_ncf/README.md
+justech_l10n_do_ncf/__init__.py
+justech_l10n_do_ncf/__manifest__.py
+justech_l10n_do_ncf/models/
+justech_l10n_do_ncf/models/__init__.py
+justech_l10n_do_ncf/models/account_move.py
+justech_l10n_do_ncf/models/ncf_consumption.py
+justech_l10n_do_ncf/models/ncf_range.py
+justech_l10n_do_ncf/report/
+justech_l10n_do_ncf/report/report_invoice.xml
+justech_l10n_do_ncf/security/
+justech_l10n_do_ncf/security/ir.model.access.csv
+justech_l10n_do_ncf/security/justech_l10n_do_ncf_rules.xml
+justech_l10n_do_ncf/tests/
+justech_l10n_do_ncf/tests/__init__.py
+justech_l10n_do_ncf/tests/test_justech_l10n_do_ncf.py
+justech_l10n_do_ncf/views/
+justech_l10n_do_ncf/views/account_move_views.xml
+justech_l10n_do_ncf/views/menu.xml
+justech_l10n_do_ncf/views/ncf_consumption_views.xml
+justech_l10n_do_ncf/views/ncf_range_views.xml
+justech_l10n_do_reports/
+justech_l10n_do_reports/README.md
+justech_l10n_do_reports/__init__.py
+justech_l10n_do_reports/__manifest__.py
+justech_l10n_do_reports/models/
+justech_l10n_do_reports/models/__init__.py
+justech_l10n_do_reports/models/fiscal_report.py
+justech_l10n_do_reports/security/
+justech_l10n_do_reports/security/ir.model.access.csv
+justech_l10n_do_reports/security/justech_l10n_do_reports_rules.xml
+justech_l10n_do_reports/tests/
+justech_l10n_do_reports/tests/__init__.py
+justech_l10n_do_reports/tests/test_justech_l10n_do_hardening.py
+justech_l10n_do_reports/tests/test_justech_l10n_do_reports.py
+justech_l10n_do_reports/views/
+justech_l10n_do_reports/views/fiscal_report_views.xml
+justech_l10n_do_reports/views/menu.xml
+justech_l10n_do_reports/wizard/
+justech_l10n_do_reports/wizard/__init__.py
+justech_l10n_do_reports/wizard/fiscal_report_wizard.py
+justech_l10n_do_reports/wizard/fiscal_report_wizard_views.xml
+
+sent 108,278 bytes  received 2,595 bytes  221,746.00 bytes/sec
+total size is 97,375  speedup is 0.88
+sending incremental file list
+dev/
+dev/docker-compose.yml
+
+sent 2,252 bytes  received 40 bytes  4,584.00 bytes/sec
+total size is 6,038  speedup is 2.63
+sending incremental file list
+./
+company/
+company/README.md
+company/banks.yaml
+company/company.yaml
+company/company_metadata.yaml
+company/inventory_categories.yaml
+company/journals.yaml
+company/payment_methods.yaml
+company/product_import.yaml
+company/reports_priority.yaml
+company/responsibles.yaml
+company/suppliers.yaml
+company/taxes.yaml
+dev/odoo.conf
+
+sent 14,049 bytes  received 277 bytes  28,652.00 bytes/sec
+total size is 15,018  speedup is 1.05
+sending incremental file list
+./
+apply-phase3-golden-config.py
+apply-phase35-golden-config.py
+backup-dev.sh
+backup-production-current.sh
+backup-test.sh
+build-hellenia-odoo-image.sh
+certify-phase5-dafc.py
+clone-enterprise.sh
+deploy-dev.sh
+deploy-test.sh
+download-enterprise-portal.sh
+e1a-enterprise-image.sh
+e1a-portal-pipeline.sh
+extract-enterprise-full.sh
+extract-enterprise-portal.sh
+fetch-enterprise.sh
+generate-odoo19-module-inventory.py
+healthcheck.sh
+install-enterprise-dev.sh
+install-phase4-commercial-core.py
+install-phase6-mvp-module.sh
+prepare-enterprise-addons.sh
+receive-enterprise-archive.sh
+recreate-db-odoo19.sh
+report-enterprise-tarball.sh
+restore-dev.sh
+restore-production-to-test.sh
+restore-test.sh
+run-l10n-do-functional-tests.py
+test-ncf-concurrency-setup.py
+test-ncf-concurrency.py
+test-ncf-concurrency.sh
+update-custom-modules.sh
+upgrade-community.sh
+upgrade-enterprise-dev.sh
+upgrade-enterprise.sh
+upgrade-odoo19.sh
+upgrade-phase6-mvp-module.sh
+validate-enterprise-archive.sh
+validate-enterprise-dev.sh
+validate-odoo19.sh
+validate-phase3-golden-config.py
+validate-phase35-golden-config.py
+validate-phase4-commercial-core.py
+validate-phase6-mvp.py
+validate-phase6-mvp.sh
+validate-subscription-env.sh
+verify-backup-dev.sh
+lib/
+lib/common.sh
+lib/validate_enterprise_archive.py
+
+sent 200,523 bytes  received 981 bytes  403,008.00 bytes/sec
+total size is 196,310  speedup is 0.97
+sending incremental file list
+./
+import/
+import/product_import_template.csv
+
+sent 508 bytes  received 46 bytes  1,108.00 bytes/sec
+total size is 1,375  speedup is 2.48
+ Container hellenia-test-db-1 Running 
+ Container hellenia-test-odoo-1 Recreate 
+ Container hellenia-test-odoo-1 Recreated 
+ Container hellenia-test-db-1 Waiting 
+ Container hellenia-test-db-1 Healthy 
+ Container hellenia-test-odoo-1 Starting 
+ Container hellenia-test-odoo-1 Started 
+[2026-06-30 12:19:03] TEST desplegado — commit: b700010
+[2026-06-30 12:19:03] URL: https://test.hellenia.cloud

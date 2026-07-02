@@ -1,0 +1,59 @@
+{
+  "phase": "19.3",
+  "timestamp_utc": "2026-06-30T21:59:04.237065+00:00",
+  "database": "hellenia_test",
+  "checks": {
+    "lines_loaded": {
+      "ok": true,
+      "detail": 148
+    },
+    "review_columns": {
+      "ok": true,
+      "detail": "ok"
+    },
+    "state_validated": {
+      "ok": true,
+      "detail": "validated"
+    },
+    "pending_approval": {
+      "ok": true,
+      "detail": "pending_approval"
+    },
+    "audit_exclude": {
+      "ok": true,
+      "detail": "ok"
+    },
+    "move_chatter": {
+      "ok": true,
+      "detail": 2
+    },
+    "report_chatter": {
+      "ok": true,
+      "detail": 5
+    },
+    "block_export_without_approval": {
+      "ok": true,
+      "detail": "pending_approval"
+    },
+    "approved": {
+      "ok": true,
+      "detail": "approved"
+    },
+    "generated": {
+      "ok": true,
+      "detail": "generated"
+    },
+    "export_hash": {
+      "ok": true,
+      "detail": "5410041c08f550927541ecec2094515f637a59686dcfdbf4dde2bdfa2fbd600e"
+    },
+    "audit_generate": {
+      "ok": true,
+      "detail": "ok"
+    }
+  },
+  "ok": true,
+  "passed": 12,
+  "total": 12,
+  "pass": true
+}

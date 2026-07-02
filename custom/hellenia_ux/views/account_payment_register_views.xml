@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_account_payment_register_form_hellenia_ux" model="ir.ui.view">
+        <field name="name">account.payment.register.form.hellenia.ux</field>
+        <field name="model">account.payment.register</field>
+        <field name="inherit_id" ref="hellenia_account.view_account_payment_register_form_hellenia"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='line_ids']/list/field[@name='justech_do_ncf']" position="attributes">
+                <attribute name="string">NCF</attribute>
+            </xpath>
+            <xpath expr="//field[@name='line_ids']/list/field[@name='amount_residual']" position="attributes">
+                <attribute name="string">Pendiente</attribute>
+            </xpath>
+            <xpath expr="//field[@name='line_ids']/list/field[@name='amount_currency']" position="attributes">
+                <attribute name="string">Total</attribute>
+            </xpath>
+            <xpath expr="//group[field[@name='line_ids']]" position="attributes">
+                <attribute name="string">Documentos pendientes</attribute>
+            </xpath>
+            <xpath expr="//field[@name='journal_id']" position="after">
+                <field name="hellenia_show_card_fields" invisible="1"/>
+                <field name="hellenia_show_check_fields" invisible="1"/>
+                <field name="hellenia_payment_reference" string="Referencia"
+                       invisible="not hellenia_show_card_fields and not hellenia_show_check_fields"/>
+                <field name="hellenia_card_auth" string="Autorización"
+                       invisible="not hellenia_show_card_fields"/>
+                <field name="hellenia_card_batch" string="Lote"
+                       invisible="not hellenia_show_card_fields"/>
+                <field name="hellenia_check_bank_id" string="Banco"
+                       invisible="not hellenia_show_check_fields"/>
+                <field name="hellenia_check_number" string="Número de cheque"
+                       invisible="not hellenia_show_check_fields"/>
+                <field name="hellenia_check_date" string="Fecha del cheque"
+                       invisible="not hellenia_show_check_fields"/>
+            </xpath>
+            <xpath expr="//field[@name='partner_bank_id']" position="attributes">
+                <attribute name="string">Cuenta bancaria de la empresa</attribute>
+            </xpath>
+            <xpath expr="//field[@name='amount']" position="attributes">
+                <attribute name="string">Monto a aplicar</attribute>
+            </xpath>
+            <xpath expr="//form" position="attributes">
+                <attribute name="string">Registrar pago</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

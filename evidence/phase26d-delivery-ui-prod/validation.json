@@ -1,0 +1,108 @@
+{
+  "phase": "26d-delivery-ui-prod",
+  "timestamp_utc": "2026-07-02T19:40:39.470874+00:00",
+  "database": "hellenia_prod",
+  "status": "PASS",
+  "module_version": "19.0.5.3.0",
+  "checks": {
+    "module_version": {
+      "status": "PASS",
+      "detail": "19.0.5.3.0"
+    },
+    "view_sale_order": {
+      "status": "PASS",
+      "detail": "justech_report_design.view_order_form_jt_delivery_conduce"
+    },
+    "view_account_move": {
+      "status": "PASS",
+      "detail": "justech_report_design.view_move_form_jt_delivery_conduce"
+    },
+    "sale_has_count_field": {
+      "status": "PASS",
+      "detail": "0"
+    },
+    "sale_stat_label": {
+      "status": "PASS",
+      "detail": "Conduce"
+    },
+    "sale_print_action": {
+      "status": "PASS",
+      "detail": "ir.actions.report"
+    },
+    "sale_pdf_ok": {
+      "status": "PASS",
+      "detail": "73738"
+    },
+    "sale_chatter_logged": {
+      "status": "PASS",
+      "detail": "1"
+    },
+    "sale_chatter_text": {
+      "status": "PASS",
+      "detail": "<p><strong>Conduce de Entrega generado/imprimido desde esta orden de venta.</strong></p><ul><li>Usuario: OdooBot</li><li>Fecha: 07/02/2026 07:40:39 PM</li><li>Documento origen: S00024</li><li>No exist"
+    },
+    "invoice_has_count_field": {
+      "status": "PASS",
+      "detail": "0"
+    },
+    "invoice_print_action": {
+      "status": "PASS",
+      "detail": "ir.actions.report"
+    },
+    "invoice_pdf_ok": {
+      "status": "PASS",
+      "detail": "72728"
+    },
+    "invoice_chatter_logged": {
+      "status": "PASS",
+      "detail": "1"
+    },
+    "invoice_chatter_text": {
+      "status": "PASS",
+      "detail": "<p><strong>Conduce de Entrega generado/imprimido desde esta factura.</strong></p><ul><li>Usuario: OdooBot</li><li>Fecha: 07/02/2026 07:40:43 PM</li><li>Documento origen: INV/2026/00006</li><li>No exis"
+    },
+    "picking_menu_print": {
+      "status": "PASS",
+      "detail": "WH/OUT/00008"
+    },
+    "regression_quotation": {
+      "status": "PASS",
+      "detail": "72813"
+    },
+    "regression_invoice": {
+      "status": "PASS",
+      "detail": "72460"
+    }
+  },
+  "pdfs": [
+    "01_from_sale_button.pdf",
+    "02_from_invoice_button.pdf",
+    "03_from_picking_menu.pdf"
+  ],
+  "chatter": {
+    "sale": {
+      "id": 25,
+      "name": "S00024",
+      "body_snippet": "<p><strong>Conduce de Entrega generado/imprimido desde esta orden de venta.</strong></p><ul><li>Usuario: OdooBot</li><li>Fecha: 07/02/2026 07:40:39 PM</li><li>Documento origen: S00024</li><li>No existe entrega relacionada; se generó el conduce usando las líneas del documento actual.</li></ul>"
+    },
+    "invoice": {
+      "id": 132,
+      "name": "INV/2026/00006",
+      "body_snippet": "<p><strong>Conduce de Entrega generado/imprimido desde esta factura.</strong></p><ul><li>Usuario: OdooBot</li><li>Fecha: 07/02/2026 07:40:43 PM</li><li>Documento origen: INV/2026/00006</li><li>No existe entrega relacionada; se generó el conduce usando las líneas del documento actual.</li></ul>"
+    }
+  },
+  "views": {
+    "justech_report_design.view_order_form_jt_delivery_conduce": {
+      "model": "sale.order",
+      "has_print_button": true,
+      "has_stat_button": true
+    },
+    "justech_report_design.view_move_form_jt_delivery_conduce": {
+      "model": "account.move",
+      "has_print_button": true,
+      "has_stat_button": true
+    }
+  },
+  "errors": [],
+  "pass": true
+}

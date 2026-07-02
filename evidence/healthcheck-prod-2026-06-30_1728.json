@@ -1,0 +1,8 @@
+{
+  "phase": "13.8",
+  "environment": "prod",
+  "url": "https://odoo.hellenia.cloud",
+  "timestamp": "2026-06-30_1728",
+  "result": "FAIL",
+  "checks": [{"name":"docker_odoo","status":"PASS","detail":"hellenia-prod-odoo-1"},{"name":"docker_postgres","status":"PASS","detail":"hellenia-prod-db-1"},{"name":"postgresql_ready","status":"PASS","detail":""},{"name":"postgresql_database","status":"PASS","detail":"hellenia_prod"},{"name":"odoo_healthcheck","status":"PASS","detail":"healthy"},{"name":"odoo_internal_http","status":"PASS","detail":":8069/web/login"},{"name":"odoo_websocket_port","status":"PASS","detail":":8072"},{"name":"traefik_container","status":"PASS","detail":""},{"name":"traefik_router_link","status":"FAIL","detail":"router sin service explícito"},{"name":"traefik_router_registered","status":"PASS","detail":"hellenia-prod"},{"name":"https_login","status":"PASS","detail":"HTTP 200"},{"name":"https_tls","status":"PASS","detail":""},{"name":"assets_static","status":"PASS","detail":"HTTP 200"},{"name":"websocket_route","status":"PASS","detail":"HTTP 400"},{"name":"odoo_fiscal_modules","status":"FAIL","detail":"healthcheck-odoo.py"}]
+}

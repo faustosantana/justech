@@ -1,0 +1,124 @@
+{
+  "phase": "17.1-payments-pdf",
+  "timestamp_utc": "2026-06-30T19:56:56.140394+00:00",
+  "database": "hellenia_test",
+  "root_cause": "El menú Contabilidad → Clientes/Proveedores → Pagos abría account.payment sin wizard de registro; al crear un pago vacío no se cargaban facturas pendientes. Solo el flujo factura → Pagar usaba account.payment.register.",
+  "tests": {
+    "module_hellenia_account": {
+      "status": "PASS",
+      "detail": "installed"
+    },
+    "module_hellenia_reports": {
+      "status": "PASS",
+      "detail": "installed"
+    },
+    "module_hellenia_ux": {
+      "status": "PASS",
+      "detail": "installed"
+    },
+    "01_customer_3_pending": {
+      "status": "PASS",
+      "detail": "lines=3"
+    },
+    "02_vendor_3_pending": {
+      "status": "PASS",
+      "detail": "lines=3"
+    },
+    "03_partial_payment": {
+      "status": "PASS",
+      "detail": "residual=1180.00"
+    },
+    "04_full_payment": {
+      "status": "PASS",
+      "detail": "paid"
+    },
+    "05_multi_payment": {
+      "status": "PASS",
+      "detail": [
+        "INV/2026/00190",
+        "INV/2026/00191"
+      ]
+    },
+    "06_transfer": {
+      "status": "PASS",
+      "detail": "paid"
+    },
+    "07_cash": {
+      "status": "PASS",
+      "detail": "paid"
+    },
+    "08_card": {
+      "status": "PASS",
+      "detail": "paid"
+    },
+    "09_check": {
+      "status": "PASS",
+      "detail": "paid"
+    },
+    "10_wh_5_gov": {
+      "status": "PASS",
+      "detail": "wh=50.00"
+    },
+    "11_wh_30_itbis": {
+      "status": "PASS",
+      "detail": "wh=54.00"
+    },
+    "12_wh_10_informal": {
+      "status": "PASS",
+      "detail": "wh=100.00"
+    },
+    "13_dual_withholding": {
+      "status": "PASS",
+      "detail": "count=2"
+    },
+    "14_balanced_entry": {
+      "status": "PASS",
+      "detail": "D=590.00 C=590.00"
+    },
+    "15_reconciliation_ready": {
+      "status": "PASS",
+      "detail": "BNKD"
+    },
+    "16_report_607": {
+      "status": "PASS",
+      "detail": "607"
+    },
+    "17_report_606": {
+      "status": "PASS",
+      "detail": "606"
+    },
+    "18_pdf_invoice": {
+      "status": "PASS",
+      "detail": "B0100020047"
+    },
+    "19_pdf_credit_note": {
+      "status": "PASS",
+      "detail": "RINV/2026/00035"
+    },
+    "20_pdf_b02_consumption": {
+      "status": "PASS",
+      "detail": "title=FACTURA DE CONSUMO"
+    },
+    "wizard_action_customer": {
+      "status": "PASS",
+      "detail": "Registrar cobro"
+    },
+    "payment_methods_spanish": {
+      "status": "PASS",
+      "detail": [
+        "Cheque",
+        "Efectivo",
+        "Tarjeta",
+        "Transferencia"
+      ]
+    }
+  },
+  "ok": true,
+  "errors": [],
+  "summary": {
+    "passed": 25,
+    "failed": 0,
+    "total": 25
+  },
+  "production_ready": false
+}

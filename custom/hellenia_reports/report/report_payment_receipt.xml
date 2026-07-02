@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="report_payment_receipt_document_hellenia_visual"
+              inherit_id="account.report_payment_receipt_document"
+              priority="50">
+        <xpath expr="//div[hasclass('page')]" position="attributes">
+            <attribute name="class" add="hellenia-payment-doc" separator=" "/>
+        </xpath>
+
+        <xpath expr="//div[hasclass('page')]/h3" position="replace">
+            <div class="hellenia-payment-header">
+                <div class="hellenia-payment-title">
+                    Recibo de pago Nº <span t-field="o.name"/>
+                </div>
+            </div>
+        </xpath>
+
+        <xpath expr="//div[hasclass('page')]/div[hasclass('mb-4')]" position="replace">
+            <t t-set="wh_lines" t-value="o.hellenia_withholding_line_ids if o._fields.get('hellenia_withholding_line_ids') else o.env['hellenia.payment.withholding.line']"/>
+            <t t-set="invoices" t-value="o.reconciled_invoice_ids or o.reconciled_bill_ids"/>
+            <t t-set="invoice_ncf" t-value="', '.join(filter(None, invoices.mapped('justech_do_ncf'))) if invoices and invoices._fields.get('justech_do_ncf') else ''"/>
+            <t t-set="bank_name" t-value="o.journal_id.bank_account_id.bank_id.name if o.journal_id.bank_account_id else (o.journal_id.name or '')"/>
+
+            <div class="hellenia-partner-block mb-3">
+                <div class="hellenia-partner-label">
+                    <t t-if="o.partner_type == 'customer'">Cliente</t>
+                    <t t-else="">Proveedor</t>
+                </div>
+                <span t-field="o.partner_id"
+                      t-options='{"widget": "contact", "fields": ["name", "address", "vat"], "no_marker": True}'/>
+            </div>
+
+            <div class="row hellenia-meta-grid">
+                <div class="col-4">
+                    <div class="hellenia-meta-label">Fecha de pago</div>
+                    <div class="hellenia-meta-value"><span t-field="o.date"/></div>
+                </div>
+                <div class="col-4" t-if="o.payment_method_id">
+                    <div class="hellenia-meta-label">Método de pago</div>
+                    <div class="hellenia-meta-value"><span t-field="o.payment_method_id.name"/></div>
+                </div>
+                <div class="col-4" t-if="bank_name">
+                    <div class="hellenia-meta-label">Banco</div>
+                    <div class="hellenia-meta-value"><t t-esc="bank_name"/></div>
+                </div>
+                <div class="col-4" t-if="o.hellenia_payment_reference or o.memo">
+                    <div class="hellenia-meta-label">Referencia</div>
+                    <div class="hellenia-meta-value">
+                        <span t-if="o.hellenia_payment_reference" t-field="o.hellenia_payment_reference"/>
+                        <span t-else="" t-field="o.memo"/>
+                    </div>
+                </div>
+                <div class="col-4" t-if="invoices">
+                    <div class="hellenia-meta-label">Factura afectada</div>
+                    <div class="hellenia-meta-value">
+                        <span t-esc="', '.join(invoices.mapped('name'))"/>
+                    </div>
+                </div>
+                <div class="col-4" t-if="invoice_ncf">
+                    <div class="hellenia-meta-label">Número de Comprobante Fiscal</div>
+                    <div class="hellenia-meta-value"><t t-esc="invoice_ncf"/></div>
+                </div>
+            </div>
+        </xpath>
+
+        <!-- Tabla de facturas en español -->
+        <xpath expr="//table[@name='invoices']" position="attributes">
+            <attribute name="class" add="hellenia-lines-table" separator=" "/>
+        </xpath>
+        <xpath expr="//table[@name='invoices']//th/span[text()='Invoice Date']" position="replace">
+            <span>Fecha factura</span>
+        </xpath>
+        <xpath expr="//table[@name='invoices']//th/span[text()='Invoice Number']" position="replace">
+            <span>Número factura</span>
+        </xpath>
+        <xpath expr="//table[@name='invoices']//th/span[text()='Reference']" position="replace">
+            <span>Referencia</span>
+        </xpath>
+        <xpath expr="//table[@name='invoices']//th/span[text()='Amount In Currency']" position="replace">
+            <span>Importe en moneda</span>
+        </xpath>
+        <xpath expr="//table[@name='invoices']//th/span[text()='Amount']" position="replace">
+            <span>Importe</span>
+        </xpath>
+        <xpath expr="//table[@name='invoices']//strong[contains(., 'Due Amount for')]" position="replace">
+            <strong>Saldo pendiente de <span t-field="inv.name"/></strong>
+        </xpath>
+
+        <!-- Resumen de aplicación y retenciones -->
+        <xpath expr="//div[hasclass('page')]" position="inside">
+            <t t-set="wh_lines" t-value="o.hellenia_withholding_line_ids if o._fields.get('hellenia_withholding_line_ids') else o.env['hellenia.payment.withholding.line']"/>
+            <div class="hellenia-payment-section" t-if="wh_lines or (o._fields.get('hellenia_applied_amount') and o.hellenia_applied_amount)">
+                <div class="hellenia-section-title">Resumen de aplicación</div>
+                <table class="hellenia-summary-table">
+                    <tr t-if="o._fields.get('hellenia_applied_amount') and o.hellenia_applied_amount">
+                        <td>Monto aplicado a factura(s)</td>
+                        <td class="text-end">
+                            <span t-field="o.hellenia_applied_amount"
+                                  t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                        </td>
+                    </tr>
+                    <tr t-if="o._fields.get('hellenia_withholding_total')">
+                        <td>Total retenido</td>
+                        <td class="text-end">
+                            <span t-field="o.hellenia_withholding_total"
+                                  t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                        </td>
+                    </tr>
+                    <tr class="hellenia-summary-total" t-if="o._fields.get('hellenia_net_transfer')">
+                        <td>Neto recibido</td>
+                        <td class="text-end">
+                            <span t-field="o.hellenia_net_transfer"
+                                  t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="hellenia-payment-section" t-if="wh_lines">
+                <div class="hellenia-section-title">Detalle de retenciones</div>
+                <table class="hellenia-lines-table table table-sm">
+                    <thead>
+                        <tr>
+                            <th>Factura</th>
+                            <th>Núm. Comprobante Fiscal</th>
+                            <th>Retención</th>
+                            <th class="text-end">Base</th>
+                            <th class="text-end">%</th>
+                            <th class="text-end">Monto retenido</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr t-foreach="wh_lines" t-as="wh">
+                            <td><span t-esc="wh.invoice_name"/></td>
+                            <td><span t-esc="wh.ncf or ''"/></td>
+                            <td><span t-esc="wh.label"/></td>
+                            <td class="text-end">
+                                <span t-field="wh.base_amount"
+                                      t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                            </td>
+                            <td class="text-end"><span t-esc="'%.2f' % wh.rate"/>%</td>
+                            <td class="text-end">
+                                <span t-field="wh.amount"
+                                      t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="hellenia-payment-audit">
+                <span>Registrado por: <t t-esc="o.create_uid.name"/></span>
+                <span class="ms-3">Fecha y hora: <span t-field="o.create_date" t-options="{'widget': 'datetime'}"/></span>
+            </div>
+
+            <t t-call="hellenia_reports.hellenia_document_footer_blocks"/>
+        </xpath>
+    </template>
+
+    <!-- Ocultar bloque duplicado de hellenia_account (contenido movido aquí) -->
+    <template id="report_payment_receipt_document_hellenia_cleanup"
+              inherit_id="hellenia_account.report_payment_receipt_document_hellenia"
+              priority="60">
+        <xpath expr="//h4[text()='Detalle de aplicación y retenciones']/.." position="replace"/>
+        <xpath expr="//h5[text()='Retenciones por factura']/.." position="replace"/>
+    </template>
+
+</odoo>

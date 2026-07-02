@@ -1,0 +1,48 @@
+{
+  "phase": "25A-visual-review",
+  "timestamp_utc": "2026-07-02T11:38:30.730520+00:00",
+  "database": "hellenia_test",
+  "module": "justech_report_design",
+  "module_version": "19.0.3.0.0",
+  "report": "justech_report_design.report_justech_invoice_document",
+  "action": "justech_report_design.action_report_justech_invoice",
+  "constraints": {
+    "prod_touched": false,
+    "std_invoice_replaced": false,
+    "dgii_modified": false,
+    "accounting_modified": false,
+    "quotation_modified": false,
+    "purchases_modified": false,
+    "inventory_modified": false
+  },
+  "modules": {
+    "justech_l10n_do_ncf": "installed",
+    "hellenia_reports": "installed",
+    "account": "installed",
+    "sale": "installed"
+  },
+  "regression": {
+    "std_invoice_report": "account.report_invoice_with_payments",
+    "quotation_report": "justech_report_design.report_hellenia_quotation_document",
+    "jt_invoice_action": "Justech PDF — Factura"
+  },
+  "scenarios": {
+    "invoice_1_line": { "pdf": "01_invoice_1_line.pdf", "png": "01_invoice_1_line.png", "state": "draft", "lines": 1 },
+    "invoice_5_lines": { "pdf": "02_invoice_5_lines.pdf", "png": "02_invoice_5_lines.png", "state": "draft", "lines": 5 },
+    "invoice_22_lines": { "pdf": "03_invoice_22_lines.pdf", "png": "03_invoice_22_lines.png", "pages": 2, "lines": 22 },
+    "invoice_with_discount": { "pdf": "04_invoice_with_discount.pdf", "png": "04_invoice_with_discount.png", "has_discount": true },
+    "invoice_no_discount": { "pdf": "05_invoice_no_discount.pdf", "png": "05_invoice_no_discount.png", "has_discount": false },
+    "invoice_fiscal_b01": { "pdf": "06_invoice_fiscal_b01.pdf", "png": "06_invoice_fiscal_b01.png", "ncf": "B0100020036", "prefix": "B01" },
+    "invoice_consumo_b02": { "pdf": "07_invoice_consumo_b02.pdf", "png": "07_invoice_consumo_b02.png", "ncf": "B0200020174", "prefix": "B02" },
+    "invoice_government": { "pdf": "08_invoice_government.pdf", "png": "08_invoice_government.png", "gov_toggle": true, "retentions_shown": false },
+    "credit_note_b04": { "pdf": "09_credit_note_b04.pdf", "png": "09_credit_note_b04.png", "ncf": "B0400020034", "move_type": "out_refund" }
+  },
+  "source_files": {
+    "xml": "xml/justech_invoice_template.xml",
+    "scss_invoice": "scss/hellenia_invoice.scss",
+    "scss_quotation": "scss/hellenia_quotation.scss"
+  },
+  "visual_failures_documented": 9,
+  "visual_review": "docs/PHASE25_VISUAL_REVIEW.md",
+  "visual_audit": "docs/PHASE25_VISUAL_AUDIT.md"
+}

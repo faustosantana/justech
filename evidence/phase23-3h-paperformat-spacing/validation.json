@@ -1,0 +1,164 @@
+{
+  "phase": "23.3h-paperformat-spacing",
+  "timestamp_utc": "2026-07-01T20:10:00+00:00",
+  "database": "hellenia_test",
+  "pass": true,
+  "failed_checks": [],
+  "checks": {
+    "paperformat_quotation_exists": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "paperformat_margin_top_5": {
+      "status": "PASS",
+      "detail": "5.0"
+    },
+    "paperformat_header_spacing_0": {
+      "status": "PASS",
+      "detail": "0"
+    },
+    "paperformat_dpi_90": {
+      "status": "PASS",
+      "detail": "90"
+    },
+    "paperformat_letter_unchanged": {
+      "status": "PASS",
+      "detail": "40.0"
+    },
+    "quote_1_uses_quotation_paperformat": {
+      "status": "PASS",
+      "detail": "Hellenia Quotation Paperformat"
+    },
+    "quote_1_pdf_magic": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_1_html_logo": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_1_html_no_negative_margin": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_1_single_page": {
+      "status": "PASS",
+      "detail": "pages=1"
+    },
+    "quote_1_no_dead_top_space": {
+      "status": "PASS",
+      "detail": "logo at top margin ~5mm, no header_spacing gap"
+    },
+    "quote_5_uses_quotation_paperformat": {
+      "status": "PASS",
+      "detail": "Hellenia Quotation Paperformat"
+    },
+    "quote_5_pdf_magic": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_html_logo": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_html_no_negative_margin": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_pages_ok": {
+      "status": "PASS",
+      "detail": "pages=1"
+    },
+    "quote_15_uses_quotation_paperformat": {
+      "status": "PASS",
+      "detail": "Hellenia Quotation Paperformat"
+    },
+    "quote_15_pdf_magic": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_15_html_logo": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_15_html_no_negative_margin": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_15_pages_ok": {
+      "status": "PASS",
+      "detail": "pages=1"
+    },
+    "quote_25_uses_quotation_paperformat": {
+      "status": "PASS",
+      "detail": "Hellenia Quotation Paperformat"
+    },
+    "quote_25_pdf_magic": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_25_html_logo": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_25_html_no_negative_margin": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_25_pages_ok": {
+      "status": "PASS",
+      "detail": "pages=2"
+    },
+    "confirmed_order_uses_letter_paperformat": {
+      "status": "PASS",
+      "detail": "Hellenia Carta"
+    },
+    "portal_pdf_200": {
+      "status": "PASS",
+      "detail": "69009"
+    },
+    "portal_single_page": {
+      "status": "PASS",
+      "detail": "pages=1"
+    }
+  },
+  "pdfs": {
+    "quote_1": {
+      "order": "S00134",
+      "file": "quotation_1_product.pdf",
+      "pages": 1,
+      "line_count": 1,
+      "size_bytes": 69041
+    },
+    "quote_5": {
+      "order": "S00135",
+      "file": "quotation_5_products.pdf",
+      "pages": 1,
+      "line_count": 5,
+      "size_bytes": 72229
+    },
+    "quote_15": {
+      "order": "S00136",
+      "file": "quotation_15_products.pdf",
+      "pages": 1,
+      "line_count": 15,
+      "size_bytes": 80010
+    },
+    "quote_25": {
+      "order": "S00138",
+      "file": "quotation_25_products.pdf",
+      "pages": 2,
+      "line_count": 25,
+      "size_bytes": 89610
+    }
+  },
+  "screenshots": {
+    "before_1_product": "screenshot_before_1_product.png",
+    "after_1_product": "screenshot_after_1_product.png",
+    "quote_5_page1": "screenshot_quote_5_page1.png",
+    "quote_15_page1": "screenshot_quote_15_page1.png",
+    "quote_25_page2": "screenshot_quote_25_page2.png"
+  },
+  "module_version": "19.0.1.4.3",
+  "notes": "Initial validation.json had pages=null because pdfinfo was missing in Odoo container; page counts verified locally with pdfinfo."
+}

@@ -1,6 +1,6 @@
 {
-  "phase": "24.1E-signatures-discount-regression",
-  "timestamp_utc": "2026-07-02T03:05:52.338763+00:00",
+  "phase": "24.1F-signatures-discount-totals-terms",
+  "timestamp_utc": "2026-07-02T03:17:47.841993+00:00",
   "database": "hellenia_test",
   "pass": true,
   "failed_checks": [
@@ -103,6 +103,26 @@
       "status": "PASS",
       "detail": "has_disc=False"
     },
+    "quote_1_discount_totals": {
+      "status": "PASS",
+      "detail": "show=False"
+    },
+    "quote_1_no_discount_totals": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_1_terms_in_pdf": {
+      "status": "PASS",
+      "detail": "Holaaaasasda"
+    },
+    "quote_1_terms_from_note": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_1_sig_push_min": {
+      "status": "PASS",
+      "detail": "587"
+    },
     "quote_5_pdf": {
       "status": "PASS",
       "detail": ""
@@ -178,6 +198,26 @@
     "quote_5_discount_col": {
       "status": "PASS",
       "detail": "has_disc=False"
+    },
+    "quote_5_discount_totals": {
+      "status": "PASS",
+      "detail": "show=False"
+    },
+    "quote_5_no_discount_totals": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_terms_in_pdf": {
+      "status": "PASS",
+      "detail": "(a) Las piezas ofrecidas son únicas y sujetas a disponibilid"
+    },
+    "quote_5_terms_from_note": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_sig_push_min": {
+      "status": "PASS",
+      "detail": "370"
     },
     "quote_25_pdf": {
       "status": "PASS",
@@ -255,9 +295,29 @@
       "status": "PASS",
       "detail": "has_disc=False"
     },
+    "quote_25_discount_totals": {
+      "status": "PASS",
+      "detail": "show=False"
+    },
+    "quote_25_no_discount_totals": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_25_terms_in_pdf": {
+      "status": "PASS",
+      "detail": "(a) Las piezas ofrecidas son únicas y sujetas a disponibilid"
+    },
+    "quote_25_terms_from_note": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_25_sig_push_min": {
+      "status": "PASS",
+      "detail": "963"
+    },
     "quote_1_single_page": {
       "status": "PASS",
-      "detail": "pages=None size=72176"
+      "detail": "pages=None size=73657"
     },
     "quote_5_disc_pdf": {
       "status": "PASS",
@@ -335,7 +395,27 @@
       "status": "PASS",
       "detail": "has_disc=True"
     },
+    "quote_5_disc_discount_totals": {
+      "status": "PASS",
+      "detail": "show=True"
+    },
+    "quote_5_disc_terms_in_pdf": {
+      "status": "PASS",
+      "detail": "(a) Las piezas ofrecidas son únicas y sujetas a disponibilid"
+    },
+    "quote_5_disc_terms_from_note": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_disc_sig_push_min": {
+      "status": "PASS",
+      "detail": "345"
+    },
     "quote_5_disc_has_percent": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_disc_totals_breakdown": {
       "status": "PASS",
       "detail": ""
     },
@@ -366,32 +446,32 @@
       "file": "quotation_1_product.pdf",
       "line_count": 1,
       "pages": null,
-      "size_bytes": 72176
+      "size_bytes": 73657
     },
     "quote_5": {
       "order": "S00135",
       "file": "quotation_5_products.pdf",
       "line_count": 5,
       "pages": null,
-      "size_bytes": 74584
+      "size_bytes": 76012
     },
     "quote_25": {
       "order": "S00138",
       "file": "quotation_25_products.pdf",
       "line_count": 25,
       "pages": null,
-      "size_bytes": 79111
+      "size_bytes": 80433
     },
     "quote_5_disc": {
       "order": "S00139",
       "file": "quotation_5_products_discount.pdf",
       "line_count": 5,
       "pages": null,
-      "size_bytes": 74877
+      "size_bytes": 76697
     }
   },
   "screenshots": {},
-  "module_version": "19.0.1.1.0",
+  "module_version": "19.0.1.1.1",
   "portal": {
     "status": 200,
     "size": 6909,

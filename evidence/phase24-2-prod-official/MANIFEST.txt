@@ -1,0 +1,18 @@
+phase=24.2-prod-official-quotation
+execution_timestamp_utc=2026-07-02T04:47:47Z
+backup_timestamp=2026-07-02_0447
+backup_path=/opt/odoo-projects/hellenia/backups/hellenia-prod/2026-07-02_0447
+database=hellenia_prod
+module=justech_report_design
+module_version=19.0.2.0.0
+rollback_required=false
+overall_result=PASS
+
+post_deploy_data_fix=hellenia_quotation_terms populated on res.company (was empty)
+
+artifacts:
+- prod_official_main.pdf
+- prod_official_backup.pdf
+- validation.json
+- upgrade.log
+- validation-run.log

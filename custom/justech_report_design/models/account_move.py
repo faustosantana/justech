@@ -1,5 +1,5 @@
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl-3.0.html)
-from odoo import models
+from odoo import _, models
 from odoo.tools import formatLang, is_html_empty
 
 
@@ -129,16 +129,57 @@ class AccountMove(models.Model):
         self.ensure_one()
         return bool(self.get_jt_invoice_retention_lines())
 
-    def get_jt_ncf_display(self):
+    def get_jt_invoice_number_display(self):
+        """Número visible en banda verde (sin inventar NCF)."""
         self.ensure_one()
-        return getattr(self, "justech_do_ncf", "") or ""
+        name = (self.name or "").strip()
+        if name and name not in ("/", "False"):
+            return name
+        if self.state == "draft":
+            return _("Borrador")
+        return "—"
+
+    def get_jt_invoice_band_title(self):
+        """Título banda verde según tipo de documento."""
+        self.ensure_one()
+        if self.move_type == "out_refund":
+            return "NOTA DE CRÉDITO"
+        doc_type = getattr(self, "justech_do_document_type_id", False)
+        if doc_type and getattr(doc_type, "is_debit_note", False):
+            return "NOTA DE DÉBITO"
+        return "FACTURA"
 
     def get_jt_document_type_label(self):
         self.ensure_one()
         doc_type = getattr(self, "justech_do_document_type_id", False)
+        if not doc_type and hasattr(self, "_justech_resolve_document_type"):
+            doc_type = self._justech_resolve_document_type()
         if doc_type:
-            return doc_type.name or ""
-        return ""
+            return doc_type.name or "—"
+        return "—"
+
+    def get_jt_ncf_display(self):
+        self.ensure_one()
+        ncf = getattr(self, "justech_do_ncf", "") or ""
+        return ncf if ncf else "—"
+
+    def get_jt_currency_display(self):
+        self.ensure_one()
+        if self.currency_id:
+            return self.currency_id.name or "—"
+        return "—"
+
+    def get_jt_invoice_date_display(self):
+        self.ensure_one()
+        if self.invoice_date:
+            return self.invoice_date.strftime("%d/%m/%Y")
+        return "—"
+
+    def get_jt_invoice_due_date_display(self):
+        self.ensure_one()
+        if self.invoice_date_due:
+            return self.invoice_date_due.strftime("%d/%m/%Y")
+        return "—"
 
     def jt_show_invoice_observations(self):
         self.ensure_one()

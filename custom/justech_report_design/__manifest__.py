@@ -1,6 +1,6 @@
 {
     "name": "Justech Report Design",
-    "version": "19.0.3.0.0",
+    "version": "19.0.3.2.1",
     "category": "Reporting",
     "summary": "Cotización y factura fiscal Hellenia — diseño Justech QWeb+SCSS",
     "description": """

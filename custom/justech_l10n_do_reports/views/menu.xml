@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_justech_do_report_606" model="ir.actions.act_window">
+        <field name="name">606 — Compras</field>
+        <field name="res_model">justech.do.fiscal.report.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_justech_do_fiscal_report_wizard"/>
+        <field name="target">new</field>
+        <field name="context">{'default_report_type': '606'}</field>
+    </record>
+    <record id="action_justech_do_report_607" model="ir.actions.act_window">
+        <field name="name">607 — Ventas</field>
+        <field name="res_model">justech.do.fiscal.report.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_justech_do_fiscal_report_wizard"/>
+        <field name="target">new</field>
+        <field name="context">{'default_report_type': '607'}</field>
+    </record>
+    <record id="action_justech_do_report_608" model="ir.actions.act_window">
+        <field name="name">608 — Anulados</field>
+        <field name="res_model">justech.do.fiscal.report.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_justech_do_fiscal_report_wizard"/>
+        <field name="target">new</field>
+        <field name="context">{'default_report_type': '608'}</field>
+    </record>
+    <record id="action_justech_do_report_609" model="ir.actions.act_window">
+        <field name="name">609 — Pagos exterior</field>
+        <field name="res_model">justech.do.fiscal.report.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_justech_do_fiscal_report_wizard"/>
+        <field name="target">new</field>
+        <field name="context">{'default_report_type': '609'}</field>
+    </record>
+    <record id="action_justech_do_report_623" model="ir.actions.act_window">
+        <field name="name">623 — Retenciones Estado</field>
+        <field name="res_model">justech.do.fiscal.report.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_justech_do_fiscal_report_wizard"/>
+        <field name="target">new</field>
+        <field name="context">{'default_report_type': '623'}</field>
+    </record>
+    <record id="action_justech_do_ncf_voided" model="ir.actions.act_window">
+        <field name="name">NCF anulados</field>
+        <field name="res_model">justech.do.ncf.consumption</field>
+        <field name="view_mode">list</field>
+        <field name="domain">[('state', '=', 'voided')]</field>
+    </record>
+    <record id="action_justech_do_audit_consumption" model="ir.actions.act_window">
+        <field name="name">Consumo NCF</field>
+        <field name="res_model">justech.do.ncf.consumption</field>
+        <field name="view_mode">list</field>
+        <field name="domain">[('state', '=', 'consumed')]</field>
+    </record>
+
+    <menuitem id="menu_justech_do_reports_root"
+              name="Reportes DGII"
+              parent="account.menu_finance_reports"
+              sequence="95"
+              groups="justech_l10n_do_base.group_justech_do_fiscal_user"/>
+    <menuitem id="menu_justech_do_fiscal_review"
+              name="Revisión fiscal"
+              parent="menu_justech_do_reports_root"
+              action="action_justech_do_fiscal_review"
+              sequence="5"/>
+    <menuitem id="menu_justech_do_fiscal_review_pending"
+              name="Pendientes de aprobación"
+              parent="menu_justech_do_reports_root"
+              action="action_justech_do_fiscal_review_pending"
+              sequence="6"
+              groups="justech_l10n_do_base.group_justech_do_fiscal_manager"/>
+    <menuitem id="menu_justech_do_report_606"
+              name="606 — Compras"
+              parent="menu_justech_do_reports_root"
+              action="action_justech_do_report_606"
+              sequence="10"/>
+    <menuitem id="menu_justech_do_report_607"
+              name="607 — Ventas"
+              parent="menu_justech_do_reports_root"
+              action="action_justech_do_report_607"
+              sequence="20"/>
+    <menuitem id="menu_justech_do_report_608"
+              name="608 — Anulados"
+              parent="menu_justech_do_reports_root"
+              action="action_justech_do_report_608"
+              sequence="30"/>
+    <menuitem id="menu_justech_do_report_609"
+              name="609 — Pagos exterior"
+              parent="menu_justech_do_reports_root"
+              action="action_justech_do_report_609"
+              sequence="35"/>
+    <menuitem id="menu_justech_do_report_623"
+              name="623 — Retenciones Estado"
+              parent="menu_justech_do_reports_root"
+              action="action_justech_do_report_623"
+              sequence="38"/>
+    <menuitem id="menu_justech_do_reports_history"
+              name="Historial fiscal"
+              parent="menu_justech_do_reports_root"
+              action="action_justech_do_fiscal_report"
+              sequence="50"/>
+
+    <menuitem id="menu_justech_do_audit_root"
+              name="Auditoría"
+              parent="account.menu_finance"
+              sequence="55"
+              groups="justech_l10n_do_base.group_justech_do_fiscal_user"/>
+    <menuitem id="menu_justech_do_audit_consumption"
+              name="Consumo NCF"
+              parent="menu_justech_do_audit_root"
+              action="action_justech_do_audit_consumption"
+              sequence="10"/>
+    <menuitem id="menu_justech_do_audit_voided"
+              name="NCF anulados"
+              parent="menu_justech_do_audit_root"
+              action="action_justech_do_ncf_voided"
+              sequence="20"/>
+    <menuitem id="menu_justech_do_audit_history"
+              name="Historial fiscal"
+              parent="menu_justech_do_audit_root"
+              action="action_justech_do_fiscal_report"
+              sequence="30"/>
+</odoo>

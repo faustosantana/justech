@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+    Fix cliente Odoo: justech_l10n_do_ncf marca void_reason como obligatorio en
+    facturas publicadas con NCF (required cuando NOT voided). El formulario bloquea
+    Vista previa / Imprimir con "Faltan algunos campos obligatorios" sin RPC.
+    La validación del motivo queda en action_void_ncf (servidor).
+    -->
+    <record id="view_move_form_hellenia_ncf_void_reason_fix" model="ir.ui.view">
+        <field name="name">account.move.form.hellenia.ncf.void.reason.fix</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="justech_l10n_do_ncf.view_move_form_justech_do_ncf"/>
+        <field name="priority">50</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='justech_do_ncf_void_reason']" position="attributes">
+                <attribute name="invisible">not justech_do_ncf_voided</attribute>
+                <attribute name="required">0</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

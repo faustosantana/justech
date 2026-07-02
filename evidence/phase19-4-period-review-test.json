@@ -1,0 +1,75 @@
+{
+  "phase": "19.4",
+  "timestamp_utc": "2026-06-30T22:12:16.575878+00:00",
+  "database": "hellenia_test",
+  "checks": {
+    "period_202606": {
+      "ok": true,
+      "detail": "2026-06-01 — 2026-06-30"
+    },
+    "period_202602": {
+      "ok": true,
+      "detail": "2026-02-01 — 2026-02-28"
+    },
+    "period_202402_leap": {
+      "ok": true,
+      "detail": "2024-02-01 — 2024-02-29"
+    },
+    "period_invalid_error": {
+      "ok": true,
+      "detail": "UserError esperado"
+    },
+    "wizard_dates": {
+      "ok": true,
+      "detail": "2026-06-01 — 2026-06-30"
+    },
+    "validate_period": {
+      "ok": true,
+      "detail": "ok"
+    },
+    "save_review_persistent": {
+      "ok": true,
+      "detail": 169
+    },
+    "review_lines_loaded": {
+      "ok": true,
+      "detail": 148
+    },
+    "visible_valid": {
+      "ok": true,
+      "detail": 37
+    },
+    "visible_incomplete": {
+      "ok": true,
+      "detail": 0
+    },
+    "visible_excluded": {
+      "ok": true,
+      "detail": 111
+    },
+    "visible_cancelled": {
+      "ok": true,
+      "detail": 0
+    },
+    "excluded_have_reason": {
+      "ok": true,
+      "detail": 111
+    },
+    "audit_entries": {
+      "ok": true,
+      "detail": 3
+    },
+    "error_report_file": {
+      "ok": true,
+      "detail": "ok"
+    },
+    "open_from_menu_domain": {
+      "ok": true,
+      "detail": "606 — Compras 202606 — revisión fiscal"
+    }
+  },
+  "ok": true,
+  "passed": 16,
+  "total": 16,
+  "pass": true
+}

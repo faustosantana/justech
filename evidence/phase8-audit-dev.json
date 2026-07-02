@@ -1,0 +1,350 @@
+{
+  "phase": "8",
+  "database": "hellenia_dev",
+  "timestamp_utc": "2026-06-30T14:01:13.753053+00:00",
+  "blocks": {
+    "block1_general": {
+      "status": "PASS CON OBSERVACIONES",
+      "checks": {
+        "company_name": {
+          "ok": true,
+          "value": "Hellenia, S.R.L."
+        },
+        "vat": {
+          "ok": true,
+          "value": "133621282"
+        },
+        "currency": {
+          "ok": true,
+          "value": "DOP"
+        },
+        "country": {
+          "ok": true,
+          "value": "DO"
+        },
+        "lang_es_do": {
+          "ok": true,
+          "value": [
+            "en_US",
+            "es_DO"
+          ]
+        },
+        "timezone": {
+          "ok": true,
+          "value": [
+            "America/Santo_Domingo"
+          ]
+        },
+        "logo": {
+          "ok": true,
+          "value": true
+        },
+        "web_base_url": {
+          "ok": true,
+          "value": "https://dev.hellenia.cloud"
+        },
+        "banks": {
+          "ok": true,
+          "value": [
+            {
+              "acc": "4040043811",
+              "cur": "DOP"
+            },
+            {
+              "acc": "4010461048",
+              "cur": "USD"
+            }
+          ]
+        }
+      },
+      "observations": [
+        "Favicon: pendiente upload",
+        "Pie documentos: pendiente texto oficial",
+        "Firmas digitales: pendiente",
+        "SMTP/alias: pendiente"
+      ]
+    },
+    "block2_commercial": {
+      "status": "PASS CON OBSERVACIONES",
+      "checks": {
+        "sale_module": {
+          "ok": true,
+          "value": true
+        },
+        "sales_teams": {
+          "ok": true,
+          "value": [
+            "Sales",
+            "Ventas Hellenia"
+          ]
+        },
+        "payment_terms": {
+          "ok": true,
+          "value": [
+            "Immediate Payment",
+            "15 Days",
+            "21 Days",
+            "30 Days",
+            "45 Days",
+            "End of Following Month",
+            "10 Days after End of Next Month",
+            "30% Now, Balance 60 Days",
+            "2/7 Net 30",
+            "90 days, on the 10th",
+            "Pago inmediato",
+            "15 días",
+            "30 días",
+            "45 días",
+            "60 días"
+          ]
+        },
+        "pricelists": {
+          "ok": true,
+          "value": [
+            "Default",
+            "Lista pública DOP"
+          ]
+        },
+        "customers_count": {
+          "ok": true,
+          "value": 5
+        }
+      },
+      "observations": [
+        "Políticas descuento/devolución/garantía: pendiente decisión Hellenia",
+        "Canales venta: pendiente",
+        "Vendedores funcionales: pendiente usuarios UAT"
+      ]
+    },
+    "block3_purchase": {
+      "status": "PASS CON OBSERVACIONES",
+      "checks": {
+        "purchase_module": {
+          "ok": true,
+          "value": true
+        },
+        "vendors_count": {
+          "ok": true,
+          "value": 3
+        },
+        "po_states": {
+          "ok": true,
+          "value": [
+            "draft",
+            "sent",
+            "to approve",
+            "purchase",
+            "cancel"
+          ]
+        }
+      },
+      "observations": [
+        "Aprobaciones compra: pendiente umbral monetario Hellenia",
+        "Compras internacionales: pendiente validar si aplica",
+        "Proveedores reales: pendiente carga post-UAT"
+      ]
+    },
+    "block4_inventory": {
+      "status": "PASS CON OBSERVACIONES",
+      "checks": {
+        "stock_module": {
+          "ok": true,
+          "value": true
+        },
+        "warehouses": {
+          "ok": true,
+          "value": [
+            "Hellenia, S.R.L."
+          ]
+        },
+        "warehouse_code": {
+          "ok": true,
+          "value": "WH"
+        },
+        "locations_stock": {
+          "ok": true,
+          "value": "WH/Stock"
+        },
+        "routes_count": {
+          "ok": true,
+          "value": 3
+        },
+        "valuation": {
+          "ok": true,
+          "value": true
+        }
+      },
+      "observations": [
+        "Lotes/series: pendiente política por pieza única",
+        "Inventario físico: pendiente procedimiento UAT",
+        "Reabastecimiento MTO/MTS: pendiente decisión"
+      ]
+    },
+    "block5_products": {
+      "status": "PASS CON OBSERVACIONES",
+      "checks": {
+        "official_categories": {
+          "ok": true,
+          "value": 14
+        },
+        "products_count": {
+          "ok": true,
+          "value": 3
+        },
+        "attributes": {
+          "ok": true,
+          "value": 8
+        },
+        "uom_count": {
+          "ok": true,
+          "value": 14
+        }
+      },
+      "observations": [
+        "Catálogo completo: NO cargado (por diseño)",
+        "Marcas/fabricantes: pendiente estructura",
+        "Códigos barras: pendiente catálogo"
+      ]
+    },
+    "block6_accounting": {
+      "status": "PASS CON OBSERVACIONES",
+      "checks": {
+        "journals": {
+          "ok": true,
+          "value": [
+            "INV:sale",
+            "FACTU:purchase",
+            "BNK1:bank",
+            "MISCE:general",
+            "CSH1:cash",
+            "CABA:general",
+            "CAMBI:general",
+            "STJ:general",
+            "TAX:general",
+            "PCC:sale"
+          ]
+        },
+        "taxes": {
+          "ok": true,
+          "value": 37
+        },
+        "accounts": {
+          "ok": true,
+          "value": 289
+        },
+        "fiscal_positions": {
+          "ok": true,
+          "value": 11
+        },
+        "payment_methods": {
+          "ok": true,
+          "value": [
+            "Manual Payment",
+            "Manual Payment",
+            "Checks",
+            "Manual Payment",
+            "Manual Payment",
+            "Efectivo",
+            "Efectivo",
+            "Transferencia",
+            "Tarjetas",
+            "Transferencia",
+            "Cheques",
+            "Link de pago"
+          ]
+        }
+      },
+      "observations": [
+        "Validación contador oficial pendiente para cuentas automáticas producto"
+      ]
+    },
+    "block7_dominican": {
+      "status": "PASS",
+      "checks": {
+        "fiscal_enabled": {
+          "ok": true,
+          "value": true
+        },
+        "fiscal_doc_types": {
+          "ok": true,
+          "value": 6
+        },
+        "ncf_ranges": {
+          "ok": true,
+          "value": 1
+        },
+        "sale_journal_ncf": {
+          "ok": true,
+          "value": true
+        }
+      },
+      "observations": []
+    },
+    "block8_reports": {
+      "status": "PASS CON OBSERVACIONES",
+      "checks": {
+        "report_modules": {
+          "ok": true,
+          "value": {
+            "account_reports": "installed",
+            "justech_l10n_do_reports": "installed",
+            "l10n_do_reports": "installed"
+          }
+        }
+      },
+      "observations": [
+        "Catálogo completo documentado en REPORT_CATALOG.md"
+      ]
+    },
+    "block9_system": {
+      "status": "PASS CON OBSERVACIONES",
+      "checks": {
+        "smtp_servers": {
+          "ok": true,
+          "value": 0
+        },
+        "crons_active": {
+          "ok": true,
+          "value": 29
+        },
+        "users_active": {
+          "ok": true,
+          "value": [
+            "admin",
+            "it@justech.do"
+          ]
+        }
+      },
+      "observations": [
+        "SMTP: pendiente",
+        "Producción odoo.hellenia.cloud: documentado, no desplegado"
+      ]
+    },
+    "block10_pilot_data": {
+      "status": "PASS CON OBSERVACIONES",
+      "checks": {
+        "pilot_customers": {
+          "ok": true,
+          "value": 1
+        },
+        "pilot_vendors": {
+          "ok": true,
+          "value": 1
+        },
+        "pilot_products": {
+          "ok": true,
+          "value": 1
+        }
+      },
+      "observations": [
+        "Catálogo definitivo NO cargado"
+      ]
+    }
+  },
+  "summary": {
+    "pass": 1,
+    "pass_obs": 9,
+    "fail": 0,
+    "overall": "PASS CON OBSERVACIONES"
+  }
+}

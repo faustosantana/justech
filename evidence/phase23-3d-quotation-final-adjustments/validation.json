@@ -1,0 +1,495 @@
+{
+  "phase": "23.3d-quotation-final-adjustments",
+  "timestamp_utc": "2026-07-01T19:08:14.773854+00:00",
+  "database": "hellenia_test",
+  "module_version": "19.0.1.4.0",
+  "visual_checks": {
+    "quote_1_html_no_mojibake": {
+      "status": "PASS",
+      "detail": "$Â"
+    },
+    "quote_1_html_no_Immediate_Payment": {
+      "status": "PASS",
+      "detail": "Immediate Payment"
+    },
+    "quote_1_html_no_Payment_Terms": {
+      "status": "PASS",
+      "detail": "Payment Terms"
+    },
+    "quote_1_html_no_Quotation": {
+      "status": "PASS",
+      "detail": "Quotation"
+    },
+    "quote_1_html_no_Salesperson": {
+      "status": "PASS",
+      "detail": "Salesperson"
+    },
+    "quote_1_html_has_COTIZACIÓN": {
+      "status": "PASS",
+      "detail": "COTIZACIÓN"
+    },
+    "quote_1_html_has_República": {
+      "status": "PASS",
+      "detail": "República"
+    },
+    "quote_1_html_has_CONDICIONES": {
+      "status": "PASS",
+      "detail": "CONDICIONES"
+    },
+    "quote_1_html_has_Entregado_por": {
+      "status": "PASS",
+      "detail": "Entregado por"
+    },
+    "quote_1_html_has_Recibido_por": {
+      "status": "PASS",
+      "detail": "Recibido por"
+    },
+    "quote_1_html_has_3E4827": {
+      "status": "PASS",
+      "detail": "#3E4827"
+    },
+    "quote_1_html_has_hellenia-quote-signa": {
+      "status": "PASS",
+      "detail": "hellenia-quote-signatures"
+    },
+    "quote_1_html_has_max-height:_75px": {
+      "status": "PASS",
+      "detail": "max-height: 75px"
+    },
+    "quote_1_html_payment_contado_or_credito": {
+      "status": "PASS",
+      "detail": "payment label"
+    },
+    "quote_1_pdf_no_mojibake": {
+      "status": "PASS",
+      "detail": "$Â"
+    },
+    "quote_1_pdf_no_Immediate_Payment": {
+      "status": "PASS",
+      "detail": "Immediate Payment"
+    },
+    "quote_1_pdf_no_Payment_Terms": {
+      "status": "PASS",
+      "detail": "Payment Terms"
+    },
+    "quote_1_pdf_no_Quotation": {
+      "status": "PASS",
+      "detail": "Quotation"
+    },
+    "quote_1_pdf_no_Salesperson": {
+      "status": "PASS",
+      "detail": "Salesperson"
+    },
+    "quote_1_pdf_has_COTIZACIÓN": {
+      "status": "PASS",
+      "detail": "COTIZACIÓN"
+    },
+    "quote_1_pdf_has_República": {
+      "status": "PASS",
+      "detail": "República"
+    },
+    "quote_1_pdf_has_CONDICIONES": {
+      "status": "PASS",
+      "detail": "CONDICIONES"
+    },
+    "quote_1_pdf_has_Entregado po": {
+      "status": "PASS",
+      "detail": "Entregado por"
+    },
+    "quote_1_pdf_has_Recibido por": {
+      "status": "PASS",
+      "detail": "Recibido por"
+    },
+    "quote_1_pdf_payment_spanish": {
+      "status": "PASS",
+      "detail": "Hellenia, S.R.L.\nCalle Federico Geraldino No.164, Esquina David Ben Gurión, Santo Domingo\nRNC: 133621282\nTel.: +1 849-434-8694\nCorreo: info@helleniadr.com\nWeb: https://hellenia.cloud\n\nCOTIZACIÓN\n\nNo. "
+    },
+    "quote_1_pdf_text_len": {
+      "status": "PASS",
+      "detail": "1257"
+    },
+    "quote_1_pdf_magic": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_1_pdf_size": {
+      "status": "PASS",
+      "detail": "68967"
+    },
+    "quote_5_html_no_mojibake": {
+      "status": "PASS",
+      "detail": "$Â"
+    },
+    "quote_5_html_no_Immediate_Payment": {
+      "status": "PASS",
+      "detail": "Immediate Payment"
+    },
+    "quote_5_html_no_Payment_Terms": {
+      "status": "PASS",
+      "detail": "Payment Terms"
+    },
+    "quote_5_html_no_Quotation": {
+      "status": "PASS",
+      "detail": "Quotation"
+    },
+    "quote_5_html_no_Salesperson": {
+      "status": "PASS",
+      "detail": "Salesperson"
+    },
+    "quote_5_html_has_COTIZACIÓN": {
+      "status": "PASS",
+      "detail": "COTIZACIÓN"
+    },
+    "quote_5_html_has_República": {
+      "status": "PASS",
+      "detail": "República"
+    },
+    "quote_5_html_has_CONDICIONES": {
+      "status": "PASS",
+      "detail": "CONDICIONES"
+    },
+    "quote_5_html_has_Entregado_por": {
+      "status": "PASS",
+      "detail": "Entregado por"
+    },
+    "quote_5_html_has_Recibido_por": {
+      "status": "PASS",
+      "detail": "Recibido por"
+    },
+    "quote_5_html_has_3E4827": {
+      "status": "PASS",
+      "detail": "#3E4827"
+    },
+    "quote_5_html_has_hellenia-quote-signa": {
+      "status": "PASS",
+      "detail": "hellenia-quote-signatures"
+    },
+    "quote_5_html_has_max-height:_75px": {
+      "status": "PASS",
+      "detail": "max-height: 75px"
+    },
+    "quote_5_html_payment_contado_or_credito": {
+      "status": "PASS",
+      "detail": "payment label"
+    },
+    "quote_5_pdf_no_mojibake": {
+      "status": "PASS",
+      "detail": "$Â"
+    },
+    "quote_5_pdf_no_Immediate_Payment": {
+      "status": "PASS",
+      "detail": "Immediate Payment"
+    },
+    "quote_5_pdf_no_Payment_Terms": {
+      "status": "PASS",
+      "detail": "Payment Terms"
+    },
+    "quote_5_pdf_no_Quotation": {
+      "status": "PASS",
+      "detail": "Quotation"
+    },
+    "quote_5_pdf_no_Salesperson": {
+      "status": "PASS",
+      "detail": "Salesperson"
+    },
+    "quote_5_pdf_has_COTIZACIÓN": {
+      "status": "PASS",
+      "detail": "COTIZACIÓN"
+    },
+    "quote_5_pdf_has_República": {
+      "status": "PASS",
+      "detail": "República"
+    },
+    "quote_5_pdf_has_CONDICIONES": {
+      "status": "PASS",
+      "detail": "CONDICIONES"
+    },
+    "quote_5_pdf_has_Entregado po": {
+      "status": "PASS",
+      "detail": "Entregado por"
+    },
+    "quote_5_pdf_has_Recibido por": {
+      "status": "PASS",
+      "detail": "Recibido por"
+    },
+    "quote_5_pdf_payment_spanish": {
+      "status": "PASS",
+      "detail": "Hellenia, S.R.L.\nCalle Federico Geraldino No.164, Esquina David Ben Gurión, Santo Domingo\nRNC: 133621282\nTel.: +1 849-434-8694\nCorreo: info@helleniadr.com\nWeb: https://hellenia.cloud\n\nCOTIZACIÓN\n\nNo. "
+    },
+    "quote_5_pdf_text_len": {
+      "status": "PASS",
+      "detail": "1573"
+    },
+    "quote_5_pdf_magic": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_pdf_size": {
+      "status": "PASS",
+      "detail": "72097"
+    },
+    "quote_15_html_no_mojibake": {
+      "status": "PASS",
+      "detail": "$Â"
+    },
+    "quote_15_html_no_Immediate_Payment": {
+      "status": "PASS",
+      "detail": "Immediate Payment"
+    },
+    "quote_15_html_no_Payment_Terms": {
+      "status": "PASS",
+      "detail": "Payment Terms"
+    },
+    "quote_15_html_no_Quotation": {
+      "status": "PASS",
+      "detail": "Quotation"
+    },
+    "quote_15_html_no_Salesperson": {
+      "status": "PASS",
+      "detail": "Salesperson"
+    },
+    "quote_15_html_has_COTIZACIÓN": {
+      "status": "PASS",
+      "detail": "COTIZACIÓN"
+    },
+    "quote_15_html_has_República": {
+      "status": "PASS",
+      "detail": "República"
+    },
+    "quote_15_html_has_CONDICIONES": {
+      "status": "PASS",
+      "detail": "CONDICIONES"
+    },
+    "quote_15_html_has_Entregado_por": {
+      "status": "PASS",
+      "detail": "Entregado por"
+    },
+    "quote_15_html_has_Recibido_por": {
+      "status": "PASS",
+      "detail": "Recibido por"
+    },
+    "quote_15_html_has_3E4827": {
+      "status": "PASS",
+      "detail": "#3E4827"
+    },
+    "quote_15_html_has_hellenia-quote-signa": {
+      "status": "PASS",
+      "detail": "hellenia-quote-signatures"
+    },
+    "quote_15_html_has_max-height:_75px": {
+      "status": "PASS",
+      "detail": "max-height: 75px"
+    },
+    "quote_15_html_payment_contado_or_credito": {
+      "status": "PASS",
+      "detail": "payment label"
+    },
+    "quote_15_pdf_no_mojibake": {
+      "status": "PASS",
+      "detail": "$Â"
+    },
+    "quote_15_pdf_no_Immediate_Payment": {
+      "status": "PASS",
+      "detail": "Immediate Payment"
+    },
+    "quote_15_pdf_no_Payment_Terms": {
+      "status": "PASS",
+      "detail": "Payment Terms"
+    },
+    "quote_15_pdf_no_Quotation": {
+      "status": "PASS",
+      "detail": "Quotation"
+    },
+    "quote_15_pdf_no_Salesperson": {
+      "status": "PASS",
+      "detail": "Salesperson"
+    },
+    "quote_15_pdf_has_COTIZACIÓN": {
+      "status": "PASS",
+      "detail": "COTIZACIÓN"
+    },
+    "quote_15_pdf_has_República": {
+      "status": "PASS",
+      "detail": "República"
+    },
+    "quote_15_pdf_has_CONDICIONES": {
+      "status": "PASS",
+      "detail": "CONDICIONES"
+    },
+    "quote_15_pdf_has_Entregado po": {
+      "status": "PASS",
+      "detail": "Entregado por"
+    },
+    "quote_15_pdf_has_Recibido por": {
+      "status": "PASS",
+      "detail": "Recibido por"
+    },
+    "quote_15_pdf_payment_spanish": {
+      "status": "PASS",
+      "detail": "Hellenia, S.R.L.\nCalle Federico Geraldino No.164, Esquina David Ben Gurión, Santo Domingo\nRNC: 133621282\nTel.: +1 849-434-8694\nCorreo: info@helleniadr.com\nWeb: https://hellenia.cloud\n\nCOTIZACIÓN\n\nNo. "
+    },
+    "quote_15_pdf_text_len": {
+      "status": "PASS",
+      "detail": "2366"
+    },
+    "quote_15_pdf_magic": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_15_pdf_size": {
+      "status": "PASS",
+      "detail": "80655"
+    },
+    "quote_15_pagination": {
+      "status": "PASS",
+      "detail": "80655"
+    },
+    "portal_html_no_mojibake": {
+      "status": "PASS",
+      "detail": "$Â"
+    },
+    "portal_html_no_Immediate_Payment": {
+      "status": "PASS",
+      "detail": "Immediate Payment"
+    },
+    "portal_html_no_Payment_Terms": {
+      "status": "PASS",
+      "detail": "Payment Terms"
+    },
+    "portal_html_no_Quotation": {
+      "status": "PASS",
+      "detail": "Quotation"
+    },
+    "portal_html_no_Salesperson": {
+      "status": "PASS",
+      "detail": "Salesperson"
+    },
+    "portal_html_has_COTIZACIÓN": {
+      "status": "PASS",
+      "detail": "COTIZACIÓN"
+    },
+    "portal_html_has_República": {
+      "status": "PASS",
+      "detail": "República"
+    },
+    "portal_html_has_CONDICIONES": {
+      "status": "PASS",
+      "detail": "CONDICIONES"
+    },
+    "portal_html_has_Entregado_por": {
+      "status": "PASS",
+      "detail": "Entregado por"
+    },
+    "portal_html_has_Recibido_por": {
+      "status": "PASS",
+      "detail": "Recibido por"
+    },
+    "portal_html_has_3E4827": {
+      "status": "PASS",
+      "detail": "#3E4827"
+    },
+    "portal_html_has_hellenia-quote-signa": {
+      "status": "PASS",
+      "detail": "hellenia-quote-signatures"
+    },
+    "portal_html_has_max-height:_75px": {
+      "status": "PASS",
+      "detail": "max-height: 75px"
+    },
+    "portal_html_payment_contado_or_credito": {
+      "status": "PASS",
+      "detail": "payment label"
+    },
+    "portal_pdf_no_mojibake": {
+      "status": "PASS",
+      "detail": "$Â"
+    },
+    "portal_pdf_no_Immediate_Payment": {
+      "status": "PASS",
+      "detail": "Immediate Payment"
+    },
+    "portal_pdf_no_Payment_Terms": {
+      "status": "PASS",
+      "detail": "Payment Terms"
+    },
+    "portal_pdf_no_Quotation": {
+      "status": "PASS",
+      "detail": "Quotation"
+    },
+    "portal_pdf_no_Salesperson": {
+      "status": "PASS",
+      "detail": "Salesperson"
+    },
+    "portal_pdf_has_COTIZACIÓN": {
+      "status": "PASS",
+      "detail": "COTIZACIÓN"
+    },
+    "portal_pdf_has_República": {
+      "status": "PASS",
+      "detail": "República"
+    },
+    "portal_pdf_has_CONDICIONES": {
+      "status": "PASS",
+      "detail": "CONDICIONES"
+    },
+    "portal_pdf_has_Entregado po": {
+      "status": "PASS",
+      "detail": "Entregado por"
+    },
+    "portal_pdf_has_Recibido por": {
+      "status": "PASS",
+      "detail": "Recibido por"
+    },
+    "portal_pdf_payment_spanish": {
+      "status": "PASS",
+      "detail": "Hellenia, S.R.L.\nCalle Federico Geraldino No.164, Esquina David Ben Gurión, Santo Domingo\nRNC: 133621282\nTel.: +1 849-434-8694\nCorreo: info@helleniadr.com\nWeb: https://hellenia.cloud\n\nCOTIZACIÓN\n\nNo. "
+    },
+    "portal_pdf_text_len": {
+      "status": "PASS",
+      "detail": "1257"
+    }
+  },
+  "http_checks": {
+    "portal_pdf": {
+      "status": "PASS",
+      "http_status": 200,
+      "detail": "68967"
+    },
+    "backend_pdf": {
+      "status": "PASS",
+      "http_status": 200,
+      "detail": "68967"
+    }
+  },
+  "pdfs": {
+    "quote_1": {
+      "status": "OK",
+      "order": "S00134",
+      "file": "quotation_1_product.pdf",
+      "size_bytes": 68967,
+      "payment_term": "Contado",
+      "bottom_spacer_px": 284
+    },
+    "quote_5": {
+      "status": "OK",
+      "order": "S00135",
+      "file": "quotation_5_products.pdf",
+      "size_bytes": 72097,
+      "payment_term": "Contado",
+      "bottom_spacer_px": 220
+    },
+    "quote_15": {
+      "status": "OK",
+      "order": "S00136",
+      "file": "quotation_15_products.pdf",
+      "size_bytes": 80655,
+      "payment_term": "Contado",
+      "bottom_spacer_px": 60
+    }
+  },
+  "ok": true,
+  "pass": true,
+  "ready_for_prod": false,
+  "screenshot": "screenshot_portal_page1.png",
+  "failed_checks": []
+}

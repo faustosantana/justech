@@ -1,0 +1,596 @@
+{
+  "phase": "24.1G-quotation-audit",
+  "timestamp_utc": "2026-07-02T04:15:32.230054+00:00",
+  "database": "hellenia_test",
+  "module_version": "19.0.1.1.6",
+  "ready_for_official": true,
+  "blocking_issues": [],
+  "visual_pending": [],
+  "sections": {
+    "1_standard_reports": {
+      "status": "PASS",
+      "checks": [
+        {
+          "id": "view_exists_report_saleorder",
+          "status": "PASS",
+          "detail": "sale.report_saleorder"
+        },
+        {
+          "id": "no_jt_inherit_report_saleorder",
+          "status": "PASS",
+          "detail": "[]"
+        },
+        {
+          "id": "view_exists_report_saleorder_document",
+          "status": "PASS",
+          "detail": "sale.report_saleorder_document"
+        },
+        {
+          "id": "no_jt_inherit_report_saleorder_document",
+          "status": "PASS",
+          "detail": "[]"
+        },
+        {
+          "id": "view_exists_report_saleorder_raw",
+          "status": "PASS",
+          "detail": "sale.report_saleorder_raw"
+        },
+        {
+          "id": "no_jt_inherit_report_saleorder_raw",
+          "status": "PASS",
+          "detail": "[]"
+        },
+        {
+          "id": "standard_action_exists",
+          "status": "PASS",
+          "detail": ""
+        },
+        {
+          "id": "standard_action_report_name",
+          "status": "PASS",
+          "detail": "sale.report_saleorder"
+        },
+        {
+          "id": "standard_pdf_renders",
+          "status": "PASS",
+          "detail": "72927"
+        }
+      ],
+      "failed": []
+    },
+    "2_parallel_report": {
+      "status": "PASS",
+      "checks": [
+        {
+          "id": "jt_action_exists",
+          "status": "PASS",
+          "detail": ""
+        },
+        {
+          "id": "jt_report_name",
+          "status": "PASS",
+          "detail": ""
+        },
+        {
+          "id": "jt_not_standard_name",
+          "status": "PASS",
+          "detail": ""
+        },
+        {
+          "id": "jt_binding_sale_order",
+          "status": "PASS",
+          "detail": ""
+        },
+        {
+          "id": "jt_binding_type_report",
+          "status": "PASS",
+          "detail": ""
+        },
+        {
+          "id": "multiple_sale_reports_ok",
+          "status": "PASS",
+          "detail": "['Cotización Hellenia (Diseño)', 'Cotización en PDF', 'Cotización/orden', 'Factura PROFORMA']"
+        },
+        {
+          "id": "jt_in_bindings",
+          "status": "PASS",
+          "detail": ""
+        }
+      ],
+      "failed": []
+    },
+    "3_dependencies": {
+      "status": "PASS",
+      "checks": [
+        {
+          "id": "module_installed",
+          "status": "PASS",
+          "detail": "installed"
+        },
+        {
+          "id": "depends_sale_only",
+          "status": "PASS",
+          "detail": ""
+        },
+        {
+          "id": "pdf_scss_in_html",
+          "status": "PASS",
+          "detail": ""
+        },
+        {
+          "id": "pdf_scss_in_bundle",
+          "status": "PASS",
+          "detail": "'AssetsBundle' object has no attribute 'get_css'"
+        },
+        {
+          "id": "paperformat_exists",
+          "status": "PASS",
+          "detail": "Hellenia Quotation Paperformat"
+        },
+        {
+          "id": "paperformat_letter",
+          "status": "PASS",
+          "detail": ""
+        },
+        {
+          "id": "paperformat_dpi_90",
+          "status": "PASS",
+          "detail": ""
+        },
+        {
+          "id": "qweb_body_template",
+          "status": "PASS",
+          "detail": ""
+        },
+        {
+          "id": "qweb_document_template",
+          "status": "PASS",
+          "detail": ""
+        }
+      ],
+      "failed": []
+    },
+    "4_fields": {
+      "status": "PASS",
+      "checks": [
+        {
+          "id": "field_note_exists",
+          "status": "PASS",
+          "detail": ""
+        },
+        {
+          "id": "field_discount_exists",
+          "status": "PASS",
+          "detail": ""
+        },
+        {
+          "id": "field_amount_untaxed",
+          "status": "PASS",
+          "detail": ""
+        },
+        {
+          "id": "field_amount_tax",
+          "status": "PASS",
+          "detail": ""
+        },
+        {
+          "id": "field_amount_total",
+          "status": "PASS",
+          "detail": ""
+        },
+        {
+          "id": "no_partner_mobile_in_template",
+          "status": "PASS",
+          "detail": ""
+        },
+        {
+          "id": "no_mobile_in_html",
+          "status": "PASS",
+          "detail": ""
+        },
+        {
+          "id": "uses_partner_phone",
+          "status": "PASS",
+          "detail": ""
+        }
+      ],
+      "failed": []
+    },
+    "7_isolation": {
+      "status": "PASS",
+      "checks": [
+        {
+          "id": "no_jt_report_account_move",
+          "status": "PASS",
+          "detail": ""
+        },
+        {
+          "id": "account.move_std_pdf",
+          "status": "PASS",
+          "detail": "28779"
+        },
+        {
+          "id": "no_jt_report_account_payment",
+          "status": "PASS",
+          "detail": ""
+        },
+        {
+          "id": "no_jt_report_purchase_order",
+          "status": "PASS",
+          "detail": ""
+        },
+        {
+          "id": "purchase.order_std_pdf",
+          "status": "PASS",
+          "detail": "24388"
+        },
+        {
+          "id": "no_jt_report_stock_picking",
+          "status": "PASS",
+          "detail": ""
+        },
+        {
+          "id": "stock.picking_std_pdf",
+          "status": "PASS",
+          "detail": "15192"
+        },
+        {
+          "id": "jt_report_design_installed",
+          "status": "PASS",
+          "detail": ""
+        },
+        {
+          "id": "no_jt_inherit_account_report",
+          "status": "PASS",
+          "detail": ""
+        },
+        {
+          "id": "portal_jt_pdf",
+          "status": "INFO",
+          "detail": "size=6909 — informativo, portal no en alcance 24.1",
+          "blocking": false
+        }
+      ],
+      "failed": []
+    },
+    "8_visual_vis001": {
+      "status": "PASS",
+      "checks": [
+        {
+          "id": "vis_sigs_zone_no_table",
+          "status": "PASS",
+          "detail": ""
+        },
+        {
+          "id": "vis_no_lower_wrapper",
+          "status": "PASS",
+          "detail": ""
+        },
+        {
+          "id": "vis_flow_cond_after_totals",
+          "status": "PASS",
+          "detail": ""
+        },
+        {
+          "id": "vis_flow_sigs_after_cond",
+          "status": "PASS",
+          "detail": ""
+        },
+        {
+          "id": "vis_sigs_zone_present",
+          "status": "PASS",
+          "detail": ""
+        },
+        {
+          "id": "vis_no_dynamic_push",
+          "status": "PASS",
+          "detail": ""
+        }
+      ],
+      "failed": []
+    }
+  },
+  "scenarios": {
+    "quote_1_no_discount": {
+      "status": "PASS",
+      "order": "S00134",
+      "state": "draft",
+      "pages": null,
+      "file": "audit_quote_1_no_discount.pdf",
+      "checks": [
+        {
+          "id": "pdf_valid",
+          "status": "PASS",
+          "detail": ""
+        },
+        {
+          "id": "has_jt_page",
+          "status": "PASS",
+          "detail": ""
+        },
+        {
+          "id": "has_footer",
+          "status": "PASS",
+          "detail": ""
+        },
+        {
+          "id": "has_pagination",
+          "status": "PASS",
+          "detail": ""
+        },
+        {
+          "id": "totals_compact",
+          "status": "PASS",
+          "detail": ""
+        },
+        {
+          "id": "no_external_layout",
+          "status": "PASS",
+          "detail": ""
+        },
+        {
+          "id": "no_disc_col",
+          "status": "PASS",
+          "detail": ""
+        },
+        {
+          "id": "terms_from_note",
+          "status": "PASS",
+          "detail": ""
+        }
+      ]
+    },
+    "quote_5_no_discount": {
+      "status": "PASS",
+      "order": "S00135",
+      "state": "draft",
+      "pages": null,
+      "file": "audit_quote_5_no_discount.pdf",
+      "checks": [
+        {
+          "id": "pdf_valid",
+          "status": "PASS",
+          "detail": ""
+        },
+        {
+          "id": "has_jt_page",
+          "status": "PASS",
+          "detail": ""
+        },
+        {
+          "id": "has_footer",
+          "status": "PASS",
+          "detail": ""
+        },
+        {
+          "id": "has_pagination",
+          "status": "PASS",
+          "detail": ""
+        },
+        {
+          "id": "totals_compact",
+          "status": "PASS",
+          "detail": ""
+        },
+        {
+          "id": "no_external_layout",
+          "status": "PASS",
+          "detail": ""
+        },
+        {
+          "id": "no_disc_col",
+          "status": "PASS",
+          "detail": ""
+        }
+      ]
+    },
+    "quote_25_no_discount": {
+      "status": "PASS",
+      "order": "S00138",
+      "state": "draft",
+      "pages": null,
+      "file": "audit_quote_25_no_discount.pdf",
+      "checks": [
+        {
+          "id": "pdf_valid",
+          "status": "PASS",
+          "detail": ""
+        },
+        {
+          "id": "has_jt_page",
+          "status": "PASS",
+          "detail": ""
+        },
+        {
+          "id": "has_footer",
+          "status": "PASS",
+          "detail": ""
+        },
+        {
+          "id": "has_pagination",
+          "status": "PASS",
+          "detail": ""
+        },
+        {
+          "id": "totals_compact",
+          "status": "PASS",
+          "detail": ""
+        },
+        {
+          "id": "no_external_layout",
+          "status": "PASS",
+          "detail": ""
+        }
+      ]
+    },
+    "quote_5_with_discount": {
+      "status": "PASS",
+      "order": "S00139",
+      "state": "draft",
+      "pages": null,
+      "file": "audit_quote_5_with_discount.pdf",
+      "checks": [
+        {
+          "id": "pdf_valid",
+          "status": "PASS",
+          "detail": ""
+        },
+        {
+          "id": "has_jt_page",
+          "status": "PASS",
+          "detail": ""
+        },
+        {
+          "id": "has_footer",
+          "status": "PASS",
+          "detail": ""
+        },
+        {
+          "id": "has_pagination",
+          "status": "PASS",
+          "detail": ""
+        },
+        {
+          "id": "totals_compact",
+          "status": "PASS",
+          "detail": ""
+        },
+        {
+          "id": "no_external_layout",
+          "status": "PASS",
+          "detail": ""
+        },
+        {
+          "id": "has_disc_col",
+          "status": "PASS",
+          "detail": ""
+        },
+        {
+          "id": "has_disc_totals",
+          "status": "PASS",
+          "detail": ""
+        },
+        {
+          "id": "total_matches",
+          "status": "PASS",
+          "detail": ""
+        }
+      ]
+    },
+    "quote_no_note": {
+      "status": "PASS",
+      "order": "S00147",
+      "checks": [
+        {
+          "id": "default_terms",
+          "status": "PASS",
+          "detail": ""
+        }
+      ]
+    },
+    "quote_note_edited": {
+      "status": "PASS",
+      "order": "S00135",
+      "checks": [
+        {
+          "id": "custom_note_in_pdf",
+          "status": "PASS",
+          "detail": ""
+        }
+      ]
+    },
+    "quote_confirmed_sale": {
+      "status": "PASS",
+      "order": "S00128",
+      "state": "sale",
+      "pages": null,
+      "file": "audit_quote_confirmed_sale.pdf",
+      "checks": [
+        {
+          "id": "pdf_valid",
+          "status": "PASS",
+          "detail": ""
+        },
+        {
+          "id": "has_jt_page",
+          "status": "PASS",
+          "detail": ""
+        },
+        {
+          "id": "has_footer",
+          "status": "PASS",
+          "detail": ""
+        },
+        {
+          "id": "has_pagination",
+          "status": "PASS",
+          "detail": ""
+        },
+        {
+          "id": "totals_compact",
+          "status": "PASS",
+          "detail": ""
+        },
+        {
+          "id": "no_external_layout",
+          "status": "PASS",
+          "detail": ""
+        }
+      ]
+    },
+    "client_language": {
+      "status": "PASS",
+      "lang": "en_US",
+      "checks": [
+        {
+          "id": "renders_with_lang",
+          "status": "PASS",
+          "detail": ""
+        }
+      ]
+    },
+    "currency": {
+      "status": "PASS",
+      "currency": "USD",
+      "checks": [
+        {
+          "id": "currency_in_pdf",
+          "status": "PASS",
+          "detail": ""
+        }
+      ]
+    }
+  },
+  "pdfs": {
+    "quote_1_no_discount": {
+      "file": "audit_quote_1_no_discount.pdf",
+      "pages": null,
+      "size": 73563
+    },
+    "quote_5_no_discount": {
+      "file": "audit_quote_5_no_discount.pdf",
+      "pages": null,
+      "size": 74524
+    },
+    "quote_25_no_discount": {
+      "file": "audit_quote_25_no_discount.pdf",
+      "pages": null,
+      "size": 79050
+    },
+    "quote_5_with_discount": {
+      "file": "audit_quote_5_with_discount.pdf",
+      "pages": null,
+      "size": 76792
+    },
+    "quote_confirmed_sale": {
+      "file": "audit_quote_confirmed_sale.pdf",
+      "pages": null,
+      "size": 73525
+    }
+  },
+  "module_state": "installed",
+  "non_blocking_notes": [
+    "portal_jt_pdf: URL pública devuelve HTML (~7KB), no PDF — fuera de alcance 24.1 oficial backend",
+    "hellenia_reports sigue activo en paralelo con diseño distinto en reporte estándar"
+  ]
+}

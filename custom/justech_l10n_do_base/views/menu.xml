@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_justech_do_fiscal_document_type" model="ir.actions.act_window">
+        <field name="name">Tipos de NCF</field>
+        <field name="res_model">justech.do.fiscal.document.type</field>
+        <field name="view_mode">list,form</field>
+    </record>
+    <record id="action_justech_do_fiscal_config" model="ir.actions.act_window">
+        <field name="name">Configuración fiscal</field>
+        <field name="res_model">res.company</field>
+        <field name="view_mode">form</field>
+        <field name="res_id" eval="ref('base.main_company')"/>
+        <field name="target">current</field>
+        <field name="context">{'form_view_initial_mode': 'edit'}</field>
+    </record>
+    <menuitem id="menu_justech_do_fiscal_root"
+              name="Localización Dominicana"
+              parent="account.menu_finance_configuration"
+              sequence="90"
+              groups="justech_l10n_do_base.group_justech_do_fiscal_user"/>
+    <menuitem id="menu_justech_do_document_types"
+              name="Tipos de NCF"
+              parent="menu_justech_do_fiscal_root"
+              action="action_justech_do_fiscal_document_type"
+              sequence="10"/>
+    <menuitem id="menu_justech_do_fiscal_config"
+              name="Configuración fiscal"
+              parent="menu_justech_do_fiscal_root"
+              action="action_justech_do_fiscal_config"
+              sequence="40"/>
+</odoo>

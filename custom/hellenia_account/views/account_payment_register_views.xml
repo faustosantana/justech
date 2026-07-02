@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_account_payment_register_form_hellenia" model="ir.ui.view">
+        <field name="name">account.payment.register.form.hellenia</field>
+        <field name="model">account.payment.register</field>
+        <field name="inherit_id" ref="account.view_account_payment_register_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='group1']" position="before">
+                <group name="hellenia_payment_docs" string="Documentos pendientes" invisible="not line_ids">
+                    <field name="line_ids" nolabel="1" readonly="1">
+                        <list>
+                            <field name="move_id" string="Factura"/>
+                            <field name="justech_do_ncf" string="NCF"/>
+                            <field name="date" string="Fecha"/>
+                            <field name="date_maturity" string="Vencimiento"/>
+                            <field name="currency_id" string="Moneda"/>
+                            <field name="amount_currency" string="Total"/>
+                            <field name="amount_residual" string="Residual"/>
+                        </list>
+                    </field>
+                </group>
+            </xpath>
+            <xpath expr="//field[@name='payment_method_line_id']" position="attributes">
+                <attribute name="string">Método de pago</attribute>
+            </xpath>
+            <xpath expr="//field[@name='journal_id']" position="attributes">
+                <attribute name="string">Diario</attribute>
+            </xpath>
+            <xpath expr="//field[@name='amount']" position="after">
+                <field name="hellenia_withholding_total" readonly="1" invisible="not hellenia_withholding_total"/>
+            </xpath>
+            <xpath expr="//group[@name='group1']" position="after">
+                <group string="Retenciones de la factura">
+                    <field name="hellenia_withholding_catalog_ids"
+                           widget="many2many_tags"
+                           options="{'no_create': True}"
+                           string="Retenciones a aplicar"/>
+                    <field name="hellenia_withholding_line_ids" nolabel="1" readonly="1"
+                           invisible="not hellenia_withholding_line_ids">
+                        <list>
+                            <field name="label" string="Retención"/>
+                            <field name="base_amount" string="Base"/>
+                            <field name="rate" string="Porcentaje"/>
+                            <field name="amount" string="Monto retenido"/>
+                            <field name="account_id" string="Cuenta contable"/>
+                        </list>
+                    </field>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

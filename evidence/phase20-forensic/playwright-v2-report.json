@@ -1,0 +1,22 @@
+{
+  "phase": "20-forensic-prod-playwright-v2",
+  "timestamp_utc": "2026-07-01T12:54:58.366603+00:00",
+  "environment": "https://odoo.hellenia.cloud",
+  "partner_id": 22,
+  "backup": "/opt/odoo-projects/hellenia/backups/hellenia-prod/2026-07-01_1248",
+  "steps": {
+    "login": {
+      "ok": true,
+      "detail": "admin",
+      "screenshot": "evidence/phase20-forensic/screenshots/v2-01-login.png"
+    },
+    "exception": {
+      "ok": false,
+      "detail": "Locator.click: Timeout 30000ms exceeded.\nCall log:\n  - waiting for locator(\"button:has-text(\\\"Confirmar\\\")\").first\n    - locator resolved to <button type=\"object\" data-hotkey=\"q\" name=\"action_post\" class=\"btn btn-primary\" invisible=\"hide_post_button or move_type == 'entry' or display_inactive_currency_warning\">…</button>\n  - attempting click action\n    2 × waiting for element to be visible, enabled and stable\n      - element is visible, enabled and stable\n      - scrolling into view if needed\n  ",
+      "screenshot": "evidence/phase20-forensic/screenshots/v2-99-error.png"
+    }
+  },
+  "checkbox_counts": {},
+  "ok": false,
+  "pass": false
+}

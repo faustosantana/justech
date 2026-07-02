@@ -1,0 +1,53 @@
+{
+  "timestamp_utc": "2026-07-02T04:30:29.694872+00:00",
+  "checks": {
+    "menu_jt_name": {
+      "status": "PASS",
+      "detail": "Cotización Hellenia (Diseño)"
+    },
+    "menu_std_exists": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "menu_std_binding": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "menu_jt_binding": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "order_5p_found": {
+      "status": "FAIL",
+      "detail": "sin cotización draft/sent con 5+ líneas"
+    },
+    "disc_pdf": {
+      "status": "PASS",
+      "detail": "size=74036"
+    },
+    "disc_col": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "disc_totals": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "stock_pdf": {
+      "status": "PASS",
+      "detail": "WH/OUT/00006 state=assigned size=17689"
+    },
+    "dgii_modules": {
+      "status": "PASS",
+      "detail": "['justech_l10n_do_ncf:installed']"
+    },
+    "dgii_data_present": {
+      "status": "PASS",
+      "detail": "records=20"
+    }
+  },
+  "orders": {
+    "disc": "S00020"
+  },
+  "pass": false
+}

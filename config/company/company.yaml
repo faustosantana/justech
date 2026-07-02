@@ -1,0 +1,39 @@
+# Golden Configuration — Hellenia, S.R.L. (definitiva Fase 3.5)
+# Fuente: Información de la empresa para Odoo
+
+schema_version: "2.0"
+phase: "3.5"
+environment_target: dev
+company_id: 1
+
+legal:
+  name: "Hellenia, S.R.L."
+  trade_name: "Hellenia"
+  vat_rnc: "133621282"
+
+regional:
+  country_code: DO
+  country_name: "República Dominicana"
+  currency: DOP
+  currency_label: "Peso Dominicano"
+  timezone: "America/Santo_Domingo"
+  language: es_DO
+  language_label: "Español"
+
+address:
+  street: "Calle Federico Geraldino No.164, Esquina David Ben Gurión"
+  street2: "Plaza Stephanie, Local 3-B, Piantini"
+  city: "Santo Domingo"
+  state: "Distrito Nacional"
+  state_id_odoo: 1089
+  zip: null
+  country: "República Dominicana"
+
+contact:
+  phone: "+1 849-434-8694"
+  email: "info@helleniadr.com"
+  website: "https://hellenia.cloud"
+
+notes:
+  - "Empresa única ID 1 — sin segunda empresa"
+  - "Nombre comercial en res.partner.comment"

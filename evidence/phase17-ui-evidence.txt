@@ -1,0 +1,42 @@
+Fase 17 — Evidencia pantallas modificadas TEST
+Timestamp: 2026-06-30T19:37:19Z
+URL: https://test.hellenia.cloud
+
+Módulo: hellenia_ux installed v19.0.1.0.0
+QR: desactivado (hellenia_show_qr_on_invoice=False)
+
+PANTALLA: Factura cliente/proveedor
+- Bloque: "Número de Comprobante Fiscal" + valor + leyenda DGII
+- Banda roja "DOCUMENTO ANULADO" si NCF anulado
+- Botón: "Anular comprobante fiscal" (wizard motivo)
+- Oculto: NCF Voided, Origin NCF (excepto NC/ND)
+
+PANTALLA: Wizard anulación NCF
+- Título: Anular comprobante fiscal
+- Campo: Motivo de anulación
+- Botón: Confirmar anulación
+
+PANTALLA: Registrar pago
+- Sección: Documentos pendientes (Factura, NCF, Fecha, Vencimiento, Moneda, Total, Pendiente)
+- Etiquetas: Diario, Método de pago, Cuenta bancaria de la empresa, Monto a aplicar
+- Tarjeta: Referencia, Autorización, Lote
+- Cheque: Banco, Número de cheque, Fecha del cheque
+
+PANTALLA: Factura compra — Retenciones
+- Gobierno 5% (ventas)
+- ITBIS retenido 30%, Proveedor informal 10%, ITBIS informal 75% (compras)
+
+PANTALLA: PDF Factura
+- Sin QR
+- "Número de Comprobante Fiscal" destacado
+- Textos en español
+
+MENÚS (integración nativa):
+- Contabilidad → Configuración → Localización Dominicana
+- Contabilidad → Reportes → Reportes DGII
+- Contabilidad → Auditoría → Consumo NCF / NCF anulados
+
+MÉTODOS PAGO: Transferencia, Efectivo, Tarjeta, Cheque (sin Manual Payment/Checks)
+
+VALIDACIÓN: phase17-full-validation.json — ok=true, 15/15 PASS
+REGRESIÓN: phase17-payments-regression.json — 23/23 PASS

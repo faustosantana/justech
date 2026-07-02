@@ -32,8 +32,11 @@ if [[ -f "${BACKUP_DIR}/filestore.tar.gz" ]]; then
 fi
 
 if [[ -f "${BACKUP_DIR}/addons_volume.tar.gz" ]]; then
-  log "Restaurando addons desde volumen producción..."
-  tar xzf "${BACKUP_DIR}/addons_volume.tar.gz" -C "$PROJECT_ROOT/addons"
+  log "Restaurando custom desde volumen producción (legacy addons_volume)..."
+  tar xzf "${BACKUP_DIR}/addons_volume.tar.gz" -C "$PROJECT_ROOT/custom"
+elif [[ -f "${BACKUP_DIR}/custom.tar.gz" ]]; then
+  log "Restaurando custom addons..."
+  tar xzf "${BACKUP_DIR}/custom.tar.gz" -C "$PROJECT_ROOT"
 fi
 
 docker compose --env-file "$ENV_FILE" start odoo

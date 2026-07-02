@@ -39,10 +39,10 @@ echo "BACKUP_OK: ${BACKUP_DIR} (${BACKUP_BYTES} bytes)"
 rm -rf custom/justech_report_design
 tar xzf /tmp/phase26e_justech_report_design.tgz -C custom
 chmod -R a+rX custom/justech_report_design
-grep -q "19.0.6.0.1" custom/justech_report_design/__manifest__.py
+grep -q "19.0.6.0.2" custom/justech_report_design/__manifest__.py
 
 cd docker/production
-docker compose --env-file ../../config/production/.env stop odoo
+docker compose --env-file ../../config/production/.env stop odoo || true
 docker compose --env-file ../../config/production/.env run --rm -T odoo odoo \
   -d "$ODOO_DB_NAME" --db_host=db --db_user="$DB_USER" --db_password="$DB_PASSWORD" \
   -u justech_report_design --stop-after-init --no-http 2>&1 | tee /tmp/phase26e-upgrade.log | tail -18

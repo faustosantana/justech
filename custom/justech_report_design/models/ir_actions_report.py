@@ -23,13 +23,16 @@ class IrActionsReport(models.Model):
         note_ids = []
         if report.model == "sale.order":
             for order in records:
-                note_ids.append(order._jt_get_or_create_delivery_note().id)
+                note, _created = order._jt_get_or_create_delivery_note()
+                note_ids.append(note.id)
         elif report.model == "account.move":
             for move in records:
-                note_ids.append(move._jt_get_or_create_delivery_note().id)
+                note, _created = move._jt_get_or_create_delivery_note()
+                note_ids.append(note.id)
         elif report.model == "stock.picking":
             for picking in records:
-                note_ids.append(picking._jt_get_or_create_delivery_note().id)
+                note, _created = picking._jt_get_or_create_delivery_note()
+                note_ids.append(note.id)
         else:
             return list(res_ids)
         return note_ids

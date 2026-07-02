@@ -33,12 +33,15 @@ cp config/production/.env "${BACKUP_DIR}/"
 echo "timestamp=${TS}" > "${BACKUP_DIR}/MANIFEST.txt"
 echo "BACKUP_OK: ${BACKUP_DIR}"
 
+EVIDENCE="${PROJECT}/evidence/phase27-invoice-preview-print-fix"
+mkdir -p "$EVIDENCE" && chmod 777 "$EVIDENCE"
+
 # Diagnóstico ANTES (si módulos viejos)
 cd docker/production
 docker compose --env-file ../../config/production/.env exec -T odoo odoo shell \
   -d "$ODOO_DB_NAME" --db_host=db --db_user="$DB_USER" --db_password="$DB_PASSWORD" --no-http \
   < /tmp/phase27-invoice-preview-print-diagnosis.py > /tmp/out-phase27-before.txt 2>&1 || true
-cp /tmp/out-phase27-before.txt "${PROJECT}/evidence/phase27-invoice-preview-print-fix/diagnosis-before.log"
+cp /tmp/out-phase27-before.txt "${EVIDENCE}/diagnosis-before.log"
 
 # Desplegar
 cd "$PROJECT"
@@ -62,7 +65,6 @@ tail -20 /tmp/out-phase27-after.txt
 EVIDENCE="${PROJECT}/evidence/phase27-invoice-preview-print-fix"
 mkdir -p "$EVIDENCE" && chmod 777 "$EVIDENCE"
 docker cp hellenia-prod-odoo-1:/tmp/phase27-invoice-preview-print-fix/. "$EVIDENCE/" 2>/dev/null || true
-docker cp hellenia-prod-odoo-1:/tmp/phase27-invoice-preview-print/diagnosis.json "$EVIDENCE/diagnosis-before.json" 2>/dev/null || true
 cp /tmp/out-phase27-after.txt "$EVIDENCE/validation-shell.log"
 echo "${BACKUP_DIR}" > "$EVIDENCE/backup_path.txt"
 REMOTE

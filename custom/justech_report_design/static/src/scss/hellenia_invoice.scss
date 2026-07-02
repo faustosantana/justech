@@ -1,6 +1,9 @@
 /* Factura — extensiones mínimas sobre hellenia_quotation.scss */
 
-/* Banda — misma altura base que cotización */
+.jt-inv-band td {
+    padding: 6px 14px !important;
+}
+
 .jt-inv-band .jt-hq-band-title {
     letter-spacing: 0.5px !important;
     vertical-align: middle !important;
@@ -8,50 +11,47 @@
 
 .jt-inv-band-meta-wrap {
     vertical-align: middle !important;
+    text-align: right;
     border-left: 1px solid rgba(255, 255, 255, 0.35);
     padding-left: 14px !important;
+    padding-right: 0 !important;
 }
 
-/* Bloque fiscal — divs, sin tablas internas visibles */
+/* Bloque fiscal — integrado en banda, sin cajas ni tablas visibles */
 .jt-inv-band-meta-cols {
-    width: 100%;
-    overflow: hidden;
+    display: inline-block;
+    text-align: left;
+    vertical-align: middle;
     border: none !important;
     background: transparent !important;
+    white-space: nowrap;
 }
 
 .jt-inv-band-meta-col {
-    float: left;
-    width: 46%;
+    display: inline-block;
+    vertical-align: top;
     border: none !important;
     background: transparent !important;
-    padding: 0 4% 0 0;
-    box-sizing: border-box;
+    padding: 0 44px 0 0;
 }
 
 .jt-inv-band-meta-col-r {
-    float: right;
-    width: 46%;
-    padding: 0 0 0 4%;
+    padding-right: 0;
 }
 
 .jt-inv-band-line {
-    margin: 0 0 1px 0;
+    margin: 0;
     padding: 0;
-    line-height: 1.22;
+    line-height: 1.18;
     font-size: 8.5pt;
     border: none !important;
     background: transparent !important;
     white-space: nowrap;
 }
 
-.jt-inv-band-line:last-child {
-    margin-bottom: 0;
-}
-
 .jt-inv-band-lbl {
     display: inline-block;
-    width: 148px;
+    width: 152px;
     color: #ffffff !important;
     font-weight: normal;
     font-size: 8.5pt;
@@ -62,7 +62,7 @@
 .jt-inv-band-val {
     display: inline-block;
     color: #ffffff !important;
-    font-weight: bold;
+    font-weight: normal;
     font-size: 8.5pt;
     text-align: left;
     vertical-align: top;

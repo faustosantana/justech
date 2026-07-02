@@ -1,7 +1,7 @@
 # Fase 25B.6 — Informe header fiscal definitivo
 
 **Estado:** `PENDING_USER_VISUAL_APPROVAL`  
-**Módulo:** `justech_report_design` v`19.0.3.7.0`  
+**Módulo:** `justech_report_design` v`19.0.3.7.1`  
 **Rama:** `cursor/phase25b6-invoice-band-dd85`
 
 ---
@@ -12,10 +12,10 @@
 |--------|---------|
 | Estructura | Eliminadas tablas anidadas; bloque fiscal con `div` + `float` (sin celdas visibles) |
 | Altura banda | Restaurado padding cotización (`11px 14px`); `line-height: 1.22` |
-| Distribución | 2 columnas 46% + 46% con 8% de aire entre ellas |
-| Alineación | Etiquetas `inline-block` 148px; valores en columna común |
-| NCF | Etiqueta normal; valor con `jt-inv-ncf-strong` solo si NCF real |
-| Separador | Solo línea FACTURA \| meta (igual `jt-hq-band-num` cotización) |
+| Distribución | 2 columnas inline-block; 44px entre columnas |
+| Alineación | Bloque empujado al extremo derecho (`text-align: right`) |
+| NCF | Único valor en negrita cuando existe; resto peso normal |
+| Altura | Padding banda `6px 14px`; `line-height: 1.18` |
 
 **Archivos:** `justech_invoice_template.xml`, `hellenia_invoice.scss`, `__manifest__.py`
 

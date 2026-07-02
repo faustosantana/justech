@@ -1,36 +1,23 @@
-/* Hellenia Factura — mismo lenguaje visual que cotización (jt-hq-*) */
+/* Factura — extensiones mínimas sobre hellenia_quotation.scss */
 
-.jt-inv-page {
-    font-family: 'DejaVu Sans', Helvetica, Arial, sans-serif;
-    font-size: 9pt;
-    color: #2d2d2d;
-    line-height: 1.55;
+.jt-inv-band .jt-hq-band-title {
+    letter-spacing: 0.5px !important;
 }
 
-/* Header — más aire */
-.jt-inv-page .jt-inv-hdr {
-    margin-bottom: 16px;
-}
-
-/* Banda verde — igual cotización, sin letter-spacing exagerado */
-.jt-inv-page .jt-inv-band-title {
-    letter-spacing: 1px !important;
-}
-
-.jt-inv-band .jt-inv-band-meta-cell {
+.jt-inv-band-meta {
+    color: #ffffff !important;
+    font-weight: bold;
+    font-size: 10pt;
     text-align: right;
-    vertical-align: middle;
-    border-left: 1px solid rgba(255, 255, 255, 0.35) !important;
-    padding: 14px 20px !important;
-    background-color: #3E4827 !important;
+    display: block;
+    border-left: 1px solid rgba(255, 255, 255, 0.35);
+    padding-left: 14px;
 }
 
 .jt-inv-band-meta-row {
     color: #ffffff !important;
-    font-size: 8.5pt;
-    font-weight: bold;
-    line-height: 1.7;
-    margin: 0 0 5px 0;
+    line-height: 1.55;
+    margin: 0 0 4px 0;
 }
 
 .jt-inv-band-meta-row:last-child {
@@ -38,136 +25,29 @@
 }
 
 .jt-inv-band-lbl {
-    margin-right: 8px;
+    margin-right: 6px;
     color: #ffffff !important;
 }
 
-/* Bloque 5 columnas — tabla wkhtmltopdf, fondo blanco puro */
-.jt-inv-meta-table {
-    width: 100%;
-    margin: 22px 0 28px 0;
-    border-collapse: collapse !important;
-    border-spacing: 0 !important;
-    background: #ffffff !important;
-    table-layout: fixed;
-}
-
-.jt-inv-meta-table tr,
-.jt-inv-meta-table td {
-    background-color: #ffffff !important;
-    border: none !important;
-    box-shadow: none !important;
-}
-
-.jt-inv-meta-table td.jt-inv-meta-col {
+/* 5 columnas meta — mismo aire que jt-hq-cards, sin vdiv */
+.jt-inv-meta-cards .jt-hq-card {
+    width: 20%;
     vertical-align: top;
-    padding: 4px 18px 8px 18px;
+    padding: 0 14px 0 0;
+    background: #ffffff !important;
+    border: none !important;
 }
 
-.jt-inv-meta-col-first {
-    padding-left: 0 !important;
+.jt-inv-meta-cards .jt-hq-card.jt-inv-meta-last {
+    padding-right: 0;
 }
 
-.jt-inv-meta-col-last {
-    padding-right: 0 !important;
-}
-
-.jt-inv-meta-col .jt-hq-card-title {
-    font-size: 7.5pt;
-    margin-bottom: 12px;
-    letter-spacing: 0.8px;
-}
-
-.jt-inv-meta-col .jt-hq-meta-row {
-    margin-bottom: 7px;
-    font-size: 8.5pt;
-    line-height: 1.55;
-}
-
-.jt-inv-meta-col .jt-hq-pay-val {
-    font-size: 9pt;
-    font-weight: bold;
-    margin-top: 4px;
-}
-
-.jt-inv-meta-col .jt-hq-val-bold {
-    font-size: 9pt;
-    margin-top: 4px;
-}
-
-/* Anular franjas grises heredadas de cotización */
-.jt-inv-page .jt-hq-vdiv {
+.jt-hq-page .jt-inv-meta-cards .jt-hq-vdiv {
     display: none !important;
     width: 0 !important;
-    background: transparent !important;
 }
 
-.jt-inv-page table.jt-inv-meta-table,
-.jt-inv-page table.jt-inv-meta-table td {
-    background: #ffffff !important;
-    border: none !important;
-}
-
-/* Tabla — más aire vertical */
-.jt-inv-page .jt-inv-items {
-    margin: 12px 0 20px 0;
-}
-
-.jt-inv-page .jt-inv-items thead th {
-    padding: 12px 14px !important;
-}
-
-.jt-inv-page .jt-inv-items tbody td {
-    padding: 16px 14px !important;
-    font-size: 8.5pt;
-    line-height: 1.55;
-}
-
-.jt-inv-page .jt-hq-items .c-tax {
+.jt-hq-items .c-tax {
     text-align: right;
     white-space: nowrap;
-    width: 76px;
-}
-
-/* Totales — mismo bloque cotización */
-.jt-inv-bottom {
-    display: table;
-    width: 100%;
-    margin: 20px 0 0 0;
-    border: none !important;
-}
-
-.jt-inv-obs,
-.jt-inv-totals-wrap {
-    display: table-cell;
-    vertical-align: top;
-    border: none !important;
-    background: transparent !important;
-}
-
-.jt-inv-obs {
-    width: 58%;
-    padding-right: 28px;
-}
-
-.jt-inv-obs-empty {
-    width: 58%;
-}
-
-.jt-inv-totals-wrap {
-    width: 42%;
-}
-
-.jt-inv-totals-wrap .jt-hq-totals {
-    float: right;
-}
-
-.jt-inv-obs .jt-hq-cond-body {
-    font-size: 7.5pt;
-    line-height: 1.65;
-}
-
-/* Firmas — menos espacio vacío en multi-página */
-.jt-inv-page .jt-inv-sig-grow {
-    height: 200px !important;
 }

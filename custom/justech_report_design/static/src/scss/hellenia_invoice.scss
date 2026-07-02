@@ -1,5 +1,9 @@
 /* Factura — extensiones mínimas sobre hellenia_quotation.scss */
 
+.jt-inv-band td {
+    padding: 8px 12px !important;
+}
+
 .jt-inv-band .jt-hq-band-title {
     letter-spacing: 0.5px !important;
 }
@@ -7,17 +11,17 @@
 .jt-inv-band-meta {
     color: #ffffff !important;
     font-weight: bold;
-    font-size: 10pt;
+    font-size: 8.5pt;
     text-align: right;
     display: block;
     border-left: 1px solid rgba(255, 255, 255, 0.35);
-    padding-left: 14px;
+    padding-left: 12px;
 }
 
 .jt-inv-band-meta-row {
     color: #ffffff !important;
-    line-height: 1.55;
-    margin: 0 0 4px 0;
+    line-height: 1.3;
+    margin: 0 0 2px 0;
 }
 
 .jt-inv-band-meta-row:last-child {
@@ -29,11 +33,11 @@
     color: #ffffff !important;
 }
 
-/* 5 columnas meta — mismo aire que jt-hq-cards, sin vdiv */
+/* 3 columnas meta — cliente / pago / vendedor */
 .jt-inv-meta-cards .jt-hq-card {
-    width: 20%;
+    width: 33.33%;
     vertical-align: top;
-    padding: 0 14px 0 0;
+    padding: 0 18px 0 0;
     background: #ffffff !important;
     border: none !important;
 }

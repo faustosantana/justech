@@ -57,6 +57,14 @@
                             <span class="jt-inv-band-lbl">MONEDA:</span>
                             <span t-out="doc.get_jt_currency_display()"/>
                         </div>
+                        <div class="jt-inv-band-meta-row">
+                            <span class="jt-inv-band-lbl">FECHA DE EMISIÓN:</span>
+                            <span t-out="doc.get_jt_invoice_date_display()"/>
+                        </div>
+                        <div class="jt-inv-band-meta-row">
+                            <span class="jt-inv-band-lbl">FECHA DE VENCIMIENTO:</span>
+                            <span t-out="doc.get_jt_invoice_due_date_display()"/>
+                        </div>
                     </div>
                 </td>
             </tr>
@@ -89,20 +97,12 @@
                     <div class="jt-hq-card-title">Condiciones de Pago</div>
                     <div class="jt-hq-pay-val" t-out="doc.get_jt_payment_term_display()"/>
                 </td>
-                <td class="jt-hq-card">
+                <td class="jt-hq-card jt-inv-meta-last">
                     <div class="jt-hq-card-title">Vendedor</div>
                     <div class="jt-hq-meta-row" t-if="doc.invoice_user_id">
                         <span class="jt-hq-lbl">Vendedor</span>
                         <span class="jt-hq-val"><span t-field="doc.invoice_user_id.name"/></span>
                     </div>
-                </td>
-                <td class="jt-hq-card">
-                    <div class="jt-hq-card-title">Fecha de Emisión</div>
-                    <div class="jt-hq-val-bold" t-out="doc.get_jt_invoice_date_display()"/>
-                </td>
-                <td class="jt-hq-card jt-inv-meta-last">
-                    <div class="jt-hq-card-title">Fecha de Vencimiento</div>
-                    <div class="jt-hq-val-bold" t-out="doc.get_jt_invoice_due_date_display()"/>
                 </td>
             </tr>
         </table>

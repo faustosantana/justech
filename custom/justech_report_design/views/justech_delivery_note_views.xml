@@ -1,23 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record id="action_justech_delivery_note" model="ir.actions.act_window">
-        <field name="name">Conduces de Entrega</field>
-        <field name="res_model">justech.delivery.note</field>
-        <field name="view_mode">list,form</field>
-        <field name="search_view_id" ref="view_justech_delivery_note_search"/>
-        <field name="context">{'create': False}</field>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
-                No hay conduces de entrega registrados.
-            </p>
-            <p>
-                Los conduces se crean desde una cotización, factura o entrega de inventario
-                con el botón <strong>Crear Conduce de Entrega</strong>.
-            </p>
-        </field>
-    </record>
-
     <record id="view_justech_delivery_note_search" model="ir.ui.view">
         <field name="name">justech.delivery.note.search</field>
         <field name="model">justech.delivery.note</field>
@@ -122,6 +105,23 @@
                 </sheet>
                 <chatter/>
             </form>
+        </field>
+    </record>
+
+    <record id="action_justech_delivery_note" model="ir.actions.act_window">
+        <field name="name">Conduces de Entrega</field>
+        <field name="res_model">justech.delivery.note</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_justech_delivery_note_search"/>
+        <field name="context">{'create': False}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No hay conduces de entrega registrados.
+            </p>
+            <p>
+                Los conduces se crean desde una cotización, factura o entrega de inventario
+                con el botón <strong>Crear Conduce de Entrega</strong>.
+            </p>
         </field>
     </record>
 

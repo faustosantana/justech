@@ -39,7 +39,7 @@ echo "BACKUP_OK: ${BACKUP_DIR} (${BACKUP_BYTES} bytes)"
 rm -rf custom/justech_report_design
 tar xzf /tmp/phase26f_justech_report_design.tgz -C custom
 chmod -R a+rX custom/justech_report_design
-grep -q "19.0.6.1.0" custom/justech_report_design/__manifest__.py
+grep -q "19.0.6.1.1" custom/justech_report_design/__manifest__.py
 
 cd docker/production
 docker compose --env-file ../../config/production/.env stop odoo || true

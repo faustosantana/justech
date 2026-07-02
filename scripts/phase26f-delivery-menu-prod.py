@@ -34,7 +34,7 @@ def check(key, ok, detail=""):
 
 mod = env["ir.module.module"].search([("name", "=", "justech_report_design")], limit=1)
 report["module_version"] = mod.latest_version
-check("module_version", mod.latest_version == "19.0.6.1.0", mod.latest_version)
+check("module_version", mod.latest_version == "19.0.6.1.1", mod.latest_version)
 
 # Menús
 for xmlid, parent_needle in [

@@ -219,4 +219,8 @@
         <t t-call="justech_report_design.report_justech_delivery_document"/>
     </template>
 
+    <template id="report_justech_delivery_note_document">
+        <t t-call="justech_report_design.report_justech_delivery_document"/>
+    </template>
+
 </odoo>

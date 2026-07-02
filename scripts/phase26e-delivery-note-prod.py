@@ -34,7 +34,7 @@ def check(key, ok, detail=""):
 
 mod = env["ir.module.module"].search([("name", "=", "justech_report_design")], limit=1)
 report["module_version"] = mod.latest_version
-check("module_version", mod.latest_version == "19.0.6.0.2", mod.latest_version)
+check("module_version", mod.latest_version == "19.0.6.0.3", mod.latest_version)
 
 # Vistas botón
 for xmlid, needle in [
@@ -69,9 +69,8 @@ if so:
     check("sale_note_record", bool(note), note.name if note else "missing")
     check("sale_note_sequence", bool(note and note.name.startswith("COND/")), note.name if note else "")
     check("sale_note_lines", bool(note and note.line_ids), len(note.line_ids) if note else 0)
-    pdf, _ = env["ir.actions.report"]._render_qweb_pdf(
-        "justech_report_design.report_justech_delivery_document", note.ids
-    )
+    report_dn = env.ref("justech_report_design.action_report_justech_delivery_note")
+    pdf, _ = env["ir.actions.report"]._render_qweb_pdf(report_dn.report_name, note.ids)
     path = os.path.join(OUT, "01_from_sale_button.pdf")
     open(path, "wb").write(pdf)
     check("sale_pdf", pdf[:4] == b"%PDF", len(pdf))
@@ -92,9 +91,8 @@ if inv:
     check("invoice_count_after", inv.jt_delivery_note_count >= 1, inv.jt_delivery_note_count)
     note_i = Note.search([("invoice_id", "=", inv.id), ("state", "!=", "cancel")], limit=1)
     check("invoice_note_record", bool(note_i), note_i.name if note_i else "")
-    pdf, _ = env["ir.actions.report"]._render_qweb_pdf(
-        "justech_report_design.report_justech_delivery_document", note_i.ids
-    )
+    report_dn = env.ref("justech_report_design.action_report_justech_delivery_note")
+    pdf, _ = env["ir.actions.report"]._render_qweb_pdf(report_dn.report_name, note_i.ids)
     open(os.path.join(OUT, "02_from_invoice_button.pdf"), "wb").write(pdf)
     check("invoice_pdf", pdf[:4] == b"%PDF", len(pdf))
 

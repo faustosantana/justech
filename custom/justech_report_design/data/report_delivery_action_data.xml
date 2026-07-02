@@ -19,8 +19,8 @@
         <field name="name">Conduce de Entrega</field>
         <field name="model">justech.delivery.note</field>
         <field name="report_type">qweb-pdf</field>
-        <field name="report_name">justech_report_design.report_justech_delivery_document</field>
-        <field name="report_file">justech_report_design.report_justech_delivery_document</field>
+        <field name="report_name">justech_report_design.report_justech_delivery_note_document</field>
+        <field name="report_file">justech_report_design.report_justech_delivery_note_document</field>
         <field name="print_report_name">'Conduce - %s' % (object.name)</field>
         <field name="paperformat_id" ref="justech_report_design.paperformat_hellenia_delivery"/>
     </record>

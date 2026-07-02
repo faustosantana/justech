@@ -40,6 +40,13 @@ class IrActionsReport(models.Model):
     @api.model
     def _render_qweb_pdf(self, report_ref, res_ids=None, data=None):
         report = self._get_report(report_ref)
+        if res_ids and report.report_name in _DELIVERY_REPORTS:
+            notes = self.env["justech.delivery.note"].browse(res_ids).exists()
+            if notes and len(notes) == len(res_ids):
+                note_report = self.env.ref(
+                    "justech_report_design.action_report_justech_delivery_note"
+                )
+                return super()._render_qweb_pdf(note_report.report_name, res_ids, data)
         if report.report_name in _DELIVERY_REPORTS and report.model != "justech.delivery.note":
             note_ids = self._jt_delivery_note_ids_for_report(report, res_ids)
             note_report = self.env.ref(
@@ -51,6 +58,13 @@ class IrActionsReport(models.Model):
     @api.model
     def _render_qweb_html(self, report_ref, res_ids=None, data=None):
         report = self._get_report(report_ref)
+        if res_ids and report.report_name in _DELIVERY_REPORTS:
+            notes = self.env["justech.delivery.note"].browse(res_ids).exists()
+            if notes and len(notes) == len(res_ids):
+                note_report = self.env.ref(
+                    "justech_report_design.action_report_justech_delivery_note"
+                )
+                return super()._render_qweb_html(note_report.report_name, res_ids, data)
         if report.report_name in _DELIVERY_REPORTS and report.model != "justech.delivery.note":
             note_ids = self._jt_delivery_note_ids_for_report(report, res_ids)
             note_report = self.env.ref(

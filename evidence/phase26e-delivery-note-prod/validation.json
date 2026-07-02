@@ -1,0 +1,87 @@
+{
+  "phase": "26e-delivery-note-prod",
+  "timestamp_utc": "2026-07-02T19:58:02.655608+00:00",
+  "database": "hellenia_prod",
+  "status": "PASS",
+  "module_version": "19.0.6.0.3",
+  "checks": {
+    "module_version": {
+      "status": "PASS",
+      "detail": "19.0.6.0.3"
+    },
+    "view_view_order_form_jt_delivery_conduce": {
+      "status": "PASS",
+      "detail": "True"
+    },
+    "view_view_move_form_jt_delivery_conduce": {
+      "status": "PASS",
+      "detail": "True"
+    },
+    "sale_count_after_create": {
+      "status": "PASS",
+      "detail": "1"
+    },
+    "sale_note_record": {
+      "status": "PASS",
+      "detail": "COND/2026/00007"
+    },
+    "sale_note_sequence": {
+      "status": "PASS",
+      "detail": "COND/2026/00007"
+    },
+    "sale_note_lines": {
+      "status": "PASS",
+      "detail": "1"
+    },
+    "sale_pdf": {
+      "status": "PASS",
+      "detail": "74088"
+    },
+    "sale_chatter": {
+      "status": "PASS",
+      "detail": "1"
+    },
+    "sale_no_duplicate": {
+      "status": "PASS",
+      "detail": "False"
+    },
+    "sale_count_stable": {
+      "status": "PASS",
+      "detail": "1"
+    },
+    "sale_smart_action": {
+      "status": "PASS",
+      "detail": "justech.delivery.note"
+    },
+    "invoice_count_after": {
+      "status": "PASS",
+      "detail": "1"
+    },
+    "invoice_note_record": {
+      "status": "PASS",
+      "detail": "COND/2026/00010"
+    },
+    "invoice_pdf": {
+      "status": "PASS",
+      "detail": "72740"
+    },
+    "picking_pdf": {
+      "status": "PASS",
+      "detail": "WH/OUT/00008"
+    },
+    "picking_note_linked": {
+      "status": "PASS",
+      "detail": "COND/2026/00011"
+    },
+    "regression_quotation": {
+      "status": "PASS",
+      "detail": "73688"
+    },
+    "regression_invoice": {
+      "status": "PASS",
+      "detail": "72460"
+    }
+  },
+  "errors": [],
+  "pass": true
+}

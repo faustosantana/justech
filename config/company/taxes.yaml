@@ -1,0 +1,60 @@
+# Golden Configuration — Impuestos RD (l10n_do / plan do)
+# Validado en DEV — documentación; NO modificar impuestos vía custom
+
+schema_version: "1.0"
+company_id: 1
+total_taxes: 37
+itbis_count: 14
+fiscal_positions: 11
+
+itbis_sale:
+  - name: "18% ITBIS"
+    rate: 18.0
+    type: sale
+  - name: "ITBIS Exempt"
+    rate: 0.0
+    type: sale
+
+itbis_purchase_sample:
+  - name: "18% ITBIS"
+    rate: 18.0
+  - name: "16% ITBIS"
+    rate: 16.0
+  - name: "9% ITBIS"
+    rate: 9.0
+  - name: "8% ITBIS"
+    rate: 8.0
+  - name: "ITBIS Exempt"
+    rate: 0.0
+  - name: "-30% ITBIS Leg. (N02-05)"
+    rate: -5.4
+  - name: "-30% ITBIS Prof. (N02-05)"
+    rate: -5.4
+  - name: "-75% ITBIS (N08-10)"
+    rate: -13.5
+  - name: "-100% ITBIS (N01-11)"
+    rate: -18.0
+
+fiscal_positions:
+  - DO Domestic
+  - Governmental
+  - Informal Supplier of Goods
+  - Non-Profit Services
+  - Outside Services
+  - P. Legal Services
+  - P. Physical Services
+  - Restaurants
+  - Special Regimes
+  - To Take Away
+  - P. Legal Surveillance
+
+chart:
+  template: do
+  account_count: 288
+  source: "account.chart.template.try_loading — TC-002"
+
+inconsistencies: []
+
+notes:
+  - "Impuestos cargados por localización — no reinstalar módulos en Fase 3"
+  - "Validación contador pendiente para cuentas por categoría producto"

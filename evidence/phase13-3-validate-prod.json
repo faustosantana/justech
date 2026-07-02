@@ -1,0 +1,161 @@
+{
+  "phase": "13.2",
+  "block": 6,
+  "timestamp_utc": "2026-06-30T16:06:15.339298+00:00",
+  "database": "hellenia_prod",
+  "scenarios": {
+    "tax_configuration": {
+      "status": "PASS",
+      "checks": {
+        "no_15_active": {
+          "ok": true,
+          "detail": "active_15=0"
+        },
+        "itbis_18_sale": {
+          "ok": true,
+          "detail": "18% ITBIS"
+        },
+        "account_count_rd": {
+          "ok": true,
+          "detail": "288"
+        }
+      },
+      "observations": []
+    },
+    "new_sale_quotation": {
+      "status": "PASS",
+      "checks": {
+        "quotation_draft": {
+          "ok": true,
+          "detail": "draft"
+        },
+        "line_has_18_not_15": {
+          "ok": true,
+          "detail": "[18.0]"
+        },
+        "order_confirmed": {
+          "ok": true,
+          "detail": "sale"
+        }
+      },
+      "observations": []
+    },
+    "invoices_b01_b02": {
+      "status": "PASS",
+      "checks": {
+        "b01_posted": {
+          "ok": true,
+          "detail": "INV/2026/00001"
+        },
+        "b01_ncf": {
+          "ok": true,
+          "detail": "B0100009000"
+        },
+        "b01_prefix": {
+          "ok": true,
+          "detail": "B0100009000"
+        },
+        "b01_itbis_18": {
+          "ok": true,
+          "detail": "[-900.0]"
+        },
+        "b02_posted": {
+          "ok": true,
+          "detail": "INV/2026/00002"
+        },
+        "b02_ncf": {
+          "ok": true,
+          "detail": "B0200009000"
+        },
+        "b02_prefix": {
+          "ok": true,
+          "detail": "B0200009000"
+        },
+        "b02_itbis_18": {
+          "ok": true,
+          "detail": "[-900.0]"
+        }
+      },
+      "observations": []
+    },
+    "credit_debit_notes": {
+      "status": "PASS",
+      "checks": {
+        "credit_b04": {
+          "ok": true,
+          "detail": "B0400009000"
+        }
+      },
+      "observations": []
+    },
+    "purchases_b11_b13": {
+      "status": "PASS",
+      "checks": {
+        "b11": {
+          "ok": true,
+          "detail": "FACTU/2026/06/0001"
+        },
+        "b13": {
+          "ok": true,
+          "detail": "FACTU/2026/06/0002"
+        }
+      },
+      "observations": []
+    },
+    "reports_606_607_608": {
+      "status": "PASS",
+      "checks": {
+        "voided": {
+          "ok": true,
+          "detail": "B0200009000"
+        },
+        "report_606_lines": {
+          "ok": true,
+          "detail": "2"
+        },
+        "report_606_totals": {
+          "ok": true,
+          "detail": 4720.0
+        },
+        "report_607_lines": {
+          "ok": true,
+          "detail": "2"
+        },
+        "report_607_totals": {
+          "ok": true,
+          "detail": 6018.0
+        },
+        "report_608_lines": {
+          "ok": true,
+          "detail": "1"
+        },
+        "report_608_totals": {
+          "ok": true,
+          "detail": 0.0
+        }
+      },
+      "observations": []
+    },
+    "invoice_pdf": {
+      "status": "PASS",
+      "checks": {
+        "pdf_bytes": {
+          "ok": true,
+          "detail": "56966"
+        }
+      },
+      "observations": []
+    },
+    "spanish_ux_sample": {
+      "status": "PASS",
+      "checks": {
+        "dgii_menu_es": {
+          "ok": true,
+          "detail": "['Reportes DGII']"
+        }
+      },
+      "observations": []
+    }
+  },
+  "ok": true
+}

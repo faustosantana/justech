@@ -1,0 +1,128 @@
+{
+  "phase": "26-official-invoice-prod",
+  "timestamp_utc": "2026-07-02T13:28:09.905230+00:00",
+  "database": "hellenia_prod",
+  "status": "PASS",
+  "module_version": "19.0.4.0.0",
+  "checks": {
+    "module_installed": {
+      "status": "PASS",
+      "detail": "installed"
+    },
+    "main_action_report": {
+      "status": "PASS",
+      "detail": "justech_report_design.report_justech_invoice_document"
+    },
+    "parallel_unbound": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "backup_unbound": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "backup_exists": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "single_print_option": {
+      "status": "PASS",
+      "detail": "[{'id': 234, 'name': 'Invoice PDF', 'report': 'justech_report_design.report_justech_invoice_document', 'domain': '[]'}]"
+    },
+    "method_short_display": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "pdf_invoice_normal": {
+      "status": "PASS",
+      "detail": "size=72460"
+    },
+    "design_invoice_normal": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "pdf_invoice_with_ncf": {
+      "status": "PASS",
+      "detail": "size=72460"
+    },
+    "design_invoice_with_ncf": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "pdf_invoice_with_discount": {
+      "status": "SKIP",
+      "detail": "sin factura con descuento en prod"
+    },
+    "pdf_invoice_b02_consumo": {
+      "status": "PASS",
+      "detail": "size=72460"
+    },
+    "design_invoice_b02_consumo": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "pdf_invoice_gubernamental": {
+      "status": "SKIP",
+      "detail": "tipo gubernamental no existe"
+    },
+    "pdf_credit_note": {
+      "status": "PASS",
+      "detail": "size=72214"
+    },
+    "design_credit_note": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "regression_quotation": {
+      "status": "PASS",
+      "detail": "S00024 size=72813"
+    },
+    "regression_purchase": {
+      "status": "PASS",
+      "detail": "size=24101"
+    },
+    "dgii_module_installed": {
+      "status": "PASS",
+      "detail": "installed"
+    }
+  },
+  "pdfs": {
+    "invoice_normal": {
+      "move_id": 132,
+      "move_name": "INV/2026/00006",
+      "pdf_bytes": 72460,
+      "qweb_error": false,
+      "html_has_jt_inv_band": true,
+      "html_has_tipo_label": true,
+      "html_has_old_std": false
+    },
+    "invoice_with_ncf": {
+      "move_id": 132,
+      "move_name": "INV/2026/00006",
+      "pdf_bytes": 72460,
+      "qweb_error": false,
+      "html_has_jt_inv_band": true,
+      "html_has_tipo_label": true,
+      "html_has_old_std": false
+    },
+    "invoice_b02_consumo": {
+      "move_id": 132,
+      "move_name": "INV/2026/00006",
+      "pdf_bytes": 72460,
+      "qweb_error": false,
+      "html_has_jt_inv_band": true,
+      "html_has_tipo_label": true,
+      "html_has_old_std": false
+    },
+    "credit_note": {
+      "move_id": 135,
+      "move_name": false,
+      "pdf_bytes": 72214,
+      "qweb_error": false,
+      "html_has_jt_inv_band": true,
+      "html_has_tipo_label": true,
+      "html_has_old_std": false
+    }
+  },
+  "errors": []
+}

@@ -1,0 +1,57 @@
+{
+  "phase": "13.7",
+  "timestamp_utc": "2026-06-30T16:54:44.213262+00:00",
+  "database": "hellenia_test",
+  "fixes": {
+    "orphan_attachments_removed": 0,
+    "assets_regenerated": true,
+    "logo_from_module": true,
+    "company_has_logo": true,
+    "partner_create_search": {
+      "ok": true,
+      "id": 335,
+      "search_hits": 1
+    }
+  },
+  "test_data": {
+    "customers": 10,
+    "vendors": 5,
+    "products": 20
+  },
+  "flow": {
+    "quotation": "S00016",
+    "sale_order": "sale",
+    "delivery": "assigned",
+    "invoice": {
+      "name": "INV/2026/00119",
+      "ncf": "B0100020001",
+      "state": "posted"
+    },
+    "payment_in": "PBNK1/2026/00104",
+    "credit_note": "B0400020018",
+    "debit_note": "B0300020018",
+    "purchase_order": "P00010",
+    "reception": "done",
+    "vendor_bill": "FACTU/2026/06/0105",
+    "payment_out": "PBNK1/2026/00105",
+    "report_606": "ok",
+    "report_607": "ok",
+    "report_608": "ok"
+  },
+  "validations": {
+    "tax_18_sale": true,
+    "invoice_ncf": true,
+    "accounting_balance": true,
+    "stock_quants": 16,
+    "hellenia_reports": true,
+    "layout": "hellenia_reports.external_layout_hellenia"
+  },
+  "documents": {
+    "quotation": 81083,
+    "invoice": 87347,
+    "credit_note": 86028
+  },
+  "ok": true,
+  "errors": [],
+  "warnings": []
+}

@@ -49,11 +49,15 @@ docker exec hellenia-test-odoo-1 odoo \
   -i base --stop-after-init --without-demo=all
 ```
 
-## 6. Validar
+## 6. Validar Odoo 19
 
 ```bash
+/opt/odoo-projects/hellenia/scripts/validate-odoo19.sh dev
+/opt/odoo-projects/hellenia/scripts/validate-odoo19.sh test
 /opt/odoo-projects/hellenia/scripts/healthcheck.sh
 ```
+
+Documentación: [VERSION-19-ANALYSIS.md](VERSION-19-ANALYSIS.md) | [MIGRATION-19.md](MIGRATION-19.md)
 
 ## Flujo Git → ambientes
 

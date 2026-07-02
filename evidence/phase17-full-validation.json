@@ -1,0 +1,84 @@
+{
+  "phase": "17-ux-hardening",
+  "timestamp_utc": "2026-06-30T19:36:58.359359+00:00",
+  "database": "hellenia_test",
+  "modules": {
+    "hellenia_ux": "installed"
+  },
+  "ux": {},
+  "regression": {},
+  "tests": {
+    "payment_methods_spanish": {
+      "status": "PASS",
+      "detail": [
+        "Transferencia",
+        "Efectivo",
+        "Cheque",
+        "Tarjeta"
+      ]
+    },
+    "bank_account_linked": {
+      "status": "PASS",
+      "detail": "4040043811"
+    },
+    "ncf_label_spanish": {
+      "status": "PASS",
+      "detail": "Número de Comprobante Fiscal"
+    },
+    "void_wizard_exists": {
+      "status": "PASS",
+      "detail": "Anular comprobante fiscal"
+    },
+    "qr_disabled": {
+      "status": "PASS",
+      "detail": "hellenia_show_qr_on_invoice=False"
+    },
+    "menu_menu_justech_do_fiscal_root": {
+      "status": "PASS",
+      "detail": "Localización Dominicana"
+    },
+    "menu_menu_justech_do_reports_root": {
+      "status": "PASS",
+      "detail": "Reportes DGII"
+    },
+    "menu_menu_justech_do_audit_root": {
+      "status": "PASS",
+      "detail": "Auditoría"
+    },
+    "ret_gov": {
+      "status": "PASS",
+      "detail": "-5% ISR Gov."
+    },
+    "ret_30": {
+      "status": "PASS",
+      "detail": "-30% ITBIS Leg. (N02-05)"
+    },
+    "ret_10": {
+      "status": "PASS",
+      "detail": "-10% ISR Fee"
+    },
+    "ret_75": {
+      "status": "PASS",
+      "detail": "-75% ITBIS (N08-10)"
+    },
+    "payment_wizard_documents": {
+      "status": "PASS",
+      "detail": "lines=1"
+    },
+    "reports_606_607_608": {
+      "status": "PASS",
+      "detail": "generados"
+    },
+    "no_english_in_custom_views": {
+      "status": "PASS",
+      "detail": "sin coincidencias críticas"
+    }
+  },
+  "ok": true,
+  "errors": [],
+  "summary": {
+    "passed": 15,
+    "failed": 0,
+    "total": 15
+  }
+}

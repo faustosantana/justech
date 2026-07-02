@@ -1,0 +1,7 @@
+login,name,email,role_hellenia,groups_odoo,lang,tz,notes
+# Plantilla — completar con datos reales Hellenia antes del Go-Live
+# NO inventar logins. Responsable: Hellenia RRHH + Justech TI
+# Ejemplo formato (eliminar # al importar):
+# gerencia@helleniadr.com,Gerencia General,gerencia@helleniadr.com,Gerencia General,"sales_team.group_sale_manager;purchase.group_purchase_manager;stock.group_stock_manager;account.group_account_readonly",es_DO,America/Santo_Domingo,
+# contabilidad@helleniadr.com,Contabilidad Principal,contabilidad@helleniadr.com,Contabilidad,"account.group_account_manager;justech_l10n_do_base.group_justech_do_fiscal_manager",es_DO,America/Santo_Domingo,
+# caja@helleniadr.com,Caja,caja@helleniadr.com,Caja,"account.group_account_invoice;justech_l10n_do_base.group_justech_do_fiscal_user",es_DO,America/Santo_Domingo,

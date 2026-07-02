@@ -1,0 +1,42 @@
+{
+  "phase": "25B.8-hotfix-doc-type",
+  "timestamp_utc": "2026-07-02T13:18:49.333033+00:00",
+  "database": "hellenia_test",
+  "status": "PASS",
+  "module_version": "19.0.3.8.2",
+  "method_exists": true,
+  "method_samples": {
+    "Factura de Crédito Fiscal": "Crédito Fiscal",
+    "Factura de Consumo": "Consumidor Final"
+  },
+  "files": {
+    "invoice_1_line": {
+      "pdf": "01_invoice_1_line.pdf",
+      "png": "[Errno 2] No such file or directory: 'pdftoppm'",
+      "qweb_error": false,
+      "html_has_tipo_label": true,
+      "html_has_old_label": false,
+      "html_has_credito_fiscal": true,
+      "html_has_full_name": false
+    },
+    "invoice_5_lines": {
+      "pdf": "02_invoice_5_lines.pdf",
+      "png": "[Errno 2] No such file or directory: 'pdftoppm'",
+      "qweb_error": false,
+      "html_has_tipo_label": true,
+      "html_has_old_label": false,
+      "html_has_credito_fiscal": true,
+      "html_has_full_name": false
+    },
+    "invoice_with_discount": {
+      "pdf": "03_invoice_with_discount.pdf",
+      "png": "[Errno 2] No such file or directory: 'pdftoppm'",
+      "qweb_error": false,
+      "html_has_tipo_label": true,
+      "html_has_old_label": false,
+      "html_has_credito_fiscal": true,
+      "html_has_full_name": false
+    }
+  },
+  "errors": []
+}

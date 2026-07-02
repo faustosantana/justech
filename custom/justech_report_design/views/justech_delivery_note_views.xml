@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_justech_delivery_note_search" model="ir.ui.view">
+        <field name="name">justech.delivery.note.search</field>
+        <field name="model">justech.delivery.note</field>
+        <field name="arch" type="xml">
+            <search string="Buscar conduces">
+                <field name="name" string="No. Conduce"
+                       filter_domain="[('name', 'ilike', self)]"/>
+                <field name="partner_id" string="Cliente"/>
+                <field name="sale_order_id" string="Cotización / OV"/>
+                <field name="invoice_id" string="Factura"/>
+                <field name="picking_id" string="Picking / Entrega"/>
+                <field name="user_id" string="Creado por"/>
+                <separator/>
+                <filter string="Hoy" name="filter_today"
+                        domain="[('date', '&gt;=', context_today().strftime('%Y-%m-%d 00:00:00'))]"/>
+                <filter string="Este mes" name="filter_this_month"
+                        domain="[('date', '&gt;=', context_today().strftime('%Y-%m-01 00:00:00'))]"/>
+                <separator/>
+                <filter string="Emitido" name="filter_state_done"
+                        domain="[('state', '=', 'done')]"/>
+                <filter string="Borrador" name="filter_state_draft"
+                        domain="[('state', '=', 'draft')]"/>
+                <filter string="Cancelado" name="filter_state_cancel"
+                        domain="[('state', '=', 'cancel')]"/>
+                <separator/>
+                <filter string="Por cliente" name="group_partner"
+                        context="{'group_by': 'partner_id'}"/>
+                <filter string="Por cotización" name="group_sale_order"
+                        context="{'group_by': 'sale_order_id'}"/>
+                <filter string="Por factura" name="group_invoice"
+                        context="{'group_by': 'invoice_id'}"/>
+                <filter string="Por estado" name="group_state"
+                        context="{'group_by': 'state'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_justech_delivery_note_tree" model="ir.ui.view">
+        <field name="name">justech.delivery.note.list</field>
+        <field name="model">justech.delivery.note</field>
+        <field name="arch" type="xml">
+            <list string="Conduces de Entrega" create="false" edit="false">
+                <field name="name" string="No. Conduce"/>
+                <field name="date" string="Fecha"/>
+                <field name="partner_id" string="Cliente"/>
+                <field name="sale_order_id" string="Cotización / OV"/>
+                <field name="invoice_id" string="Factura"/>
+                <field name="picking_id" string="Picking / Entrega"/>
+                <field name="state" string="Estado" widget="badge"
+                       decoration-success="state == 'done'"
+                       decoration-muted="state == 'cancel'"/>
+                <field name="user_id" string="Creado por"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_justech_delivery_note_form" model="ir.ui.view">
+        <field name="name">justech.delivery.note.form</field>
+        <field name="model">justech.delivery.note</field>
+        <field name="arch" type="xml">
+            <form string="Conduce de Entrega" create="false" edit="false">
+                <header>
+                    <button name="action_print_delivery_note" type="object"
+                            string="Imprimir Conduce" class="btn-primary"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,done"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="partner_id" readonly="1"/>
+                            <field name="date" readonly="1"/>
+                            <field name="user_id" readonly="1" string="Creado por"/>
+                            <field name="origin_type" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="sale_order_id" readonly="1" string="Cotización / OV"/>
+                            <field name="invoice_id" readonly="1"/>
+                            <field name="picking_id" readonly="1" string="Picking / Entrega"/>
+                            <field name="company_id" groups="base.group_multi_company" readonly="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Líneas" name="lines">
+                            <field name="line_ids" readonly="1">
+                                <list>
+                                    <field name="default_code" string="Código"/>
+                                    <field name="name" string="Descripción"/>
+                                    <field name="product_uom_qty" string="Cant. solicitada"/>
+                                    <field name="qty_delivered" string="Cant. entregada"/>
+                                    <field name="product_uom_id" string="Unidad"/>
+                                    <field name="lot_id" string="Lote / serie" optional="show"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Observaciones" name="notes">
+                            <field name="note" readonly="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_justech_delivery_note" model="ir.actions.act_window">
+        <field name="name">Conduces de Entrega</field>
+        <field name="res_model">justech.delivery.note</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_justech_delivery_note_search"/>
+        <field name="context">{'create': False}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No hay conduces de entrega registrados.
+            </p>
+            <p>
+                Los conduces se crean desde una cotización, factura o entrega de inventario
+                con el botón <strong>Crear Conduce de Entrega</strong>.
+            </p>
+        </field>
+    </record>
+
+    <!-- Ventas → Órdenes → Conduces de Entrega -->
+    <menuitem id="menu_justech_delivery_note_sale"
+              name="Conduces de Entrega"
+              parent="sale.menu_sale_order"
+              action="action_justech_delivery_note"
+              sequence="45"/>
+
+    <!-- Inventario → Operaciones → Conduces de Entrega -->
+    <menuitem id="menu_justech_delivery_note_stock"
+              name="Conduces de Entrega"
+              parent="stock.menu_stock_warehouse_mgmt"
+              action="action_justech_delivery_note"
+              sequence="45"/>
+
+</odoo>

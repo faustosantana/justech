@@ -1,0 +1,49 @@
+{
+  "phase": "25B-invoice-design",
+  "timestamp_utc": "2026-07-02T11:55:53.209606+00:00",
+  "database": "hellenia_test",
+  "status": "PENDING_USER_VISUAL_APPROVAL",
+  "module_version": "19.0.3.2.1",
+  "files": {
+    "invoice_1_line": {
+      "pdf": "01_invoice_1_line.pdf",
+      "png": null,
+      "invoice_number": "Borrador",
+      "ncf": "—",
+      "document_type": "Factura de Crédito Fiscal",
+      "currency": "DOP",
+      "emission": "02/07/2026",
+      "due": "02/07/2026"
+    },
+    "invoice_5_lines": {
+      "pdf": "02_invoice_5_lines.pdf",
+      "png": null,
+      "invoice_number": "Borrador",
+      "ncf": "—",
+      "document_type": "Factura de Crédito Fiscal",
+      "currency": "DOP",
+      "emission": "02/07/2026",
+      "due": "02/07/2026"
+    },
+    "invoice_with_discount": {
+      "pdf": "03_invoice_with_discount.pdf",
+      "png": null,
+      "invoice_number": "Borrador",
+      "ncf": "—",
+      "document_type": "Factura de Crédito Fiscal",
+      "currency": "DOP",
+      "emission": "02/07/2026",
+      "due": "02/07/2026"
+    },
+    "invoice_fiscal_posted": {
+      "pdf": "04_invoice_fiscal_b01.pdf",
+      "png": null,
+      "invoice_number": "INV/2026/00215",
+      "ncf": "B0100020036",
+      "document_type": "Factura de Crédito Fiscal",
+      "currency": "DOP",
+      "emission": "02/07/2026",
+      "due": "02/07/2026"
+    }
+  }
+}

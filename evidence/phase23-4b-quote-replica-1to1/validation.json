@@ -1,0 +1,16 @@
+{
+  "phase": "23.4b-quote-replica-1to1",
+  "timestamp_utc": "2026-07-01T20:55:00+00:00",
+  "database": "hellenia_test",
+  "pass": true,
+  "module_version": "19.0.1.5.3",
+  "checks": {
+    "quote_1_page": 1,
+    "quote_5_page": 1,
+    "quote_25_page": 2,
+    "portal_http": 200,
+    "no_vendor_email": true,
+    "no_excel_inner_tables": true,
+    "corporate_colors_only": true
+  }
+}

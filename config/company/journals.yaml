@@ -1,0 +1,52 @@
+# Golden Configuration — Diarios contables (plan do / l10n_do)
+# Validado en DEV 2026-06-30 — NO modificar sin decisión contable
+
+schema_version: "1.0"
+source: "l10n_do chart template do — auto-loaded TC-002"
+count: 7
+
+journals:
+  - code: INV
+    name_en: Sales
+    type: sale
+    role: "Facturación clientes / ventas"
+    notes: "Código INV — nombre inglés estándar Odoo"
+
+  - code: FACTU
+    name_en: Purchases
+    type: purchase
+    role: "Facturas proveedores / compras"
+
+  - code: BNK1
+    name_en: Bank
+    type: bank
+    role: "Movimientos bancarios — vincular Banco López de Haro"
+
+  - code: MISCE
+    name_en: Miscellaneous Operations
+    type: general
+    role: "Asientos varios / ajustes"
+
+  - code: CABA
+    name_en: Cash Basis Taxes
+    type: general
+    role: "Criterio de caja impuestos — validar con contador"
+
+  - code: CAMBI
+    name_en: Exchange Difference
+    type: general
+    role: "Diferencias de cambio USD/DOP"
+
+  - code: TAX
+    name_en: Tax Returns
+    type: general
+    role: "Declaraciones / ajustes fiscales"
+
+inconsistencies:
+  - id: J-01
+    detail: "Nombres de diario en inglés (estándar Odoo). Traducción UI vía es_DO."
+    action: "Documentar — no custom"
+
+  - id: J-02
+    detail: "No existe diario Efectivo/Caja dedicado aún."
+    action: "Fase 8 POS o decisión contador"

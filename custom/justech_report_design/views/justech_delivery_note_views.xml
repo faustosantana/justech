@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="action_justech_delivery_note" model="ir.actions.act_window">
+        <field name="name">Conduces de Entrega</field>
+        <field name="res_model">justech.delivery.note</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{}</field>
+    </record>
+
+    <record id="view_justech_delivery_note_tree" model="ir.ui.view">
+        <field name="name">justech.delivery.note.list</field>
+        <field name="model">justech.delivery.note</field>
+        <field name="arch" type="xml">
+            <list string="Conduces de Entrega">
+                <field name="name"/>
+                <field name="date"/>
+                <field name="partner_id"/>
+                <field name="sale_order_id" optional="show"/>
+                <field name="invoice_id" optional="show"/>
+                <field name="picking_id" optional="show"/>
+                <field name="user_id" optional="hide"/>
+                <field name="state" widget="badge"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_justech_delivery_note_form" model="ir.ui.view">
+        <field name="name">justech.delivery.note.form</field>
+        <field name="model">justech.delivery.note</field>
+        <field name="arch" type="xml">
+            <form string="Conduce de Entrega">
+                <header>
+                    <button name="action_print_delivery_note" type="object"
+                            string="Imprimir" class="btn-primary"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,done"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="partner_id" readonly="1"/>
+                            <field name="date" readonly="1"/>
+                            <field name="user_id" readonly="1"/>
+                            <field name="origin_type" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="sale_order_id" readonly="1"/>
+                            <field name="invoice_id" readonly="1"/>
+                            <field name="picking_id" readonly="1"/>
+                            <field name="company_id" groups="base.group_multi_company" readonly="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Líneas" name="lines">
+                            <field name="line_ids" readonly="1">
+                                <list>
+                                    <field name="default_code"/>
+                                    <field name="name"/>
+                                    <field name="product_uom_qty"/>
+                                    <field name="qty_delivered"/>
+                                    <field name="product_uom_id"/>
+                                    <field name="lot_id" optional="show"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Observaciones" name="notes">
+                            <field name="note" readonly="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+</odoo>

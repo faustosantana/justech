@@ -1,0 +1,72 @@
+{
+  "phase": "21-prod-reports-ui-audit",
+  "timestamp_utc": "2026-07-01T13:58:07.154749+00:00",
+  "backup": "2026-07-01_1357",
+  "environment": "https://odoo.hellenia.cloud",
+  "fiscal": {
+    "606": {
+      "opens": false,
+      "generates": false,
+      "export_pdf": false,
+      "export_xlsx": false,
+      "error": "menu not found: 606 — Compras",
+      "detail": ""
+    },
+    "607": {
+      "opens": false,
+      "generates": false,
+      "export_pdf": false,
+      "export_xlsx": false,
+      "error": "menu not found: 607 — Ventas",
+      "detail": ""
+    },
+    "608": {
+      "opens": false,
+      "generates": false,
+      "export_pdf": false,
+      "export_xlsx": false,
+      "error": "menu not found: 608 — Anulados",
+      "detail": ""
+    },
+    "623": {
+      "opens": false,
+      "generates": false,
+      "export_pdf": false,
+      "export_xlsx": false,
+      "error": "menu not found: 623 — Retenciones Estado",
+      "detail": ""
+    }
+  },
+  "accounting": {
+    "general_ledger": {
+      "opens": false,
+      "error": ""
+    },
+    "trial_balance": {
+      "opens": false,
+      "error": ""
+    },
+    "balance_sheet": {
+      "opens": false,
+      "error": ""
+    },
+    "profit_loss": {
+      "opens": false,
+      "error": ""
+    },
+    "partner_ledger": {
+      "opens": false,
+      "error": ""
+    },
+    "aged_receivable": {
+      "opens": false,
+      "error": ""
+    },
+    "journal_audit": {
+      "opens": false,
+      "error": ""
+    }
+  },
+  "ok": false,
+  "pass": false
+}

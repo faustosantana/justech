@@ -1,0 +1,216 @@
+{
+  "phase": "16-payments",
+  "timestamp_utc": "2026-06-30T19:37:08.431029+00:00",
+  "database": "hellenia_test",
+  "audit": {
+    "config": {
+      "banks": [
+        "4040043811",
+        "4010461048"
+      ],
+      "journals": {
+        "BNKD": "BNKD",
+        "BNKU": "BNKU",
+        "CSH1": "CSH1"
+      },
+      "payment_lines": {
+        "CSH1": [
+          "Efectivo",
+          "Efectivo"
+        ],
+        "BNKD": [
+          "Transferencia",
+          "Tarjeta",
+          "Transferencia",
+          "Cheque"
+        ],
+        "BNKU": [
+          "Transferencia",
+          "Tarjeta",
+          "Transferencia",
+          "Cheque"
+        ]
+      }
+    },
+    "withholdings": [
+      {
+        "name": "-5% ISR Gov.",
+        "found": true,
+        "active": true
+      },
+      {
+        "name": "-30% ITBIS Leg. (N02-05)",
+        "found": true,
+        "active": true
+      },
+      {
+        "name": "-10% ISR Fee",
+        "found": true,
+        "active": true
+      },
+      {
+        "name": "-75% ITBIS (N08-10)",
+        "found": true,
+        "active": true
+      }
+    ],
+    "banks": [
+      {
+        "id": 1,
+        "acc_number": "4040043811",
+        "currency_id": [
+          74,
+          "DOP"
+        ]
+      },
+      {
+        "id": 2,
+        "acc_number": "4010461048",
+        "currency_id": [
+          1,
+          "USD"
+        ]
+      }
+    ],
+    "journals": [
+      {
+        "code": "BNKD",
+        "name": "Banco López de Haro DOP",
+        "type": "bank",
+        "bank_account": "4040043811",
+        "currency": "DOP",
+        "methods": [
+          "Transferencia",
+          "Tarjeta",
+          "Transferencia",
+          "Cheque"
+        ]
+      },
+      {
+        "code": "BNKU",
+        "name": "Banco López de Haro USD",
+        "type": "bank",
+        "bank_account": "4010461048",
+        "currency": "USD",
+        "methods": [
+          "Transferencia",
+          "Tarjeta",
+          "Transferencia",
+          "Cheque"
+        ]
+      },
+      {
+        "code": "CSH1",
+        "name": "Caja / Efectivo",
+        "type": "cash",
+        "bank_account": null,
+        "currency": "DOP",
+        "methods": [
+          "Efectivo",
+          "Efectivo"
+        ]
+      }
+    ]
+  },
+  "tests": {
+    "bank_dop_linked": {
+      "status": "PASS",
+      "detail": "4040043811"
+    },
+    "bank_usd_linked": {
+      "status": "PASS",
+      "detail": "4010461048"
+    },
+    "method_transferencia": {
+      "status": "PASS",
+      "detail": "Transferencia"
+    },
+    "method_efectivo": {
+      "status": "PASS",
+      "detail": "Efectivo"
+    },
+    "method_tarjeta": {
+      "status": "PASS",
+      "detail": "Tarjeta"
+    },
+    "method_cheque": {
+      "status": "PASS",
+      "detail": "Cheque"
+    },
+    "ret_5_gov": {
+      "status": "PASS",
+      "detail": "-5.0%"
+    },
+    "ret_30_itbis": {
+      "status": "PASS",
+      "detail": "-5.4%"
+    },
+    "ret_10_isr": {
+      "status": "PASS",
+      "detail": "-10.0%"
+    },
+    "ret_75_informal": {
+      "status": "PASS",
+      "detail": "-13.5%"
+    },
+    "cobro_transferencia": {
+      "status": "PASS",
+      "detail": "NCF=B0100020035, pago=PBNKD/2026/00001"
+    },
+    "cobro_efectivo": {
+      "status": "PASS",
+      "detail": "paid"
+    },
+    "cobro_tarjeta": {
+      "status": "PASS",
+      "detail": "paid"
+    },
+    "pago_proveedor": {
+      "status": "PASS",
+      "detail": "paid"
+    },
+    "pago_cheque": {
+      "status": "PASS",
+      "detail": "paid"
+    },
+    "pago_parcial": {
+      "status": "PASS",
+      "detail": "residual=1180.00"
+    },
+    "pago_multiple": {
+      "status": "PASS",
+      "detail": "INV/2026/00189+INV/2026/00190"
+    },
+    "retencion_5_gobierno": {
+      "status": "PASS",
+      "detail": "ISR Gov. en factura"
+    },
+    "conciliacion_bancaria": {
+      "status": "PASS",
+      "detail": "BNKD listo; account_accountant=installed"
+    },
+    "retencion_10_proveedor": {
+      "status": "PASS",
+      "detail": "ISR Fee aplicado"
+    },
+    "retencion_30_itbis": {
+      "status": "PASS",
+      "detail": "-5.4% aplicado"
+    },
+    "wizard_ncf_visible": {
+      "status": "PASS",
+      "detail": "lines=1, ncf=['B0100020041']"
+    },
+    "reportes_606_607": {
+      "status": "PASS",
+      "detail": "generados"
+    }
+  },
+  "ok": true,
+  "errors": [],
+  "summary": {
+    "passed": 23,
+    "failed": 0,
+    "total": 23
+  }
+}

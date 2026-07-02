@@ -1,0 +1,390 @@
+{
+  "database": "hellenia_test",
+  "timestamp_utc": "2026-06-30T13:08:04.989221+00:00",
+  "users": {
+    "active_internal": [
+      {
+        "id": 2,
+        "login": "admin",
+        "name": "Administrator",
+        "email": "",
+        "active": true,
+        "groups_count": 7,
+        "tz": "America/Santo_Domingo",
+        "lang": "es_DO"
+      },
+      {
+        "id": 14,
+        "login": "it@justech.do",
+        "name": "Justech IT",
+        "email": "it@justech.do",
+        "active": true,
+        "groups_count": 7,
+        "tz": "America/Santo_Domingo",
+        "lang": "es_DO"
+      },
+      {
+        "id": 1,
+        "login": "__system__",
+        "name": "OdooBot",
+        "email": "odoobot@example.com",
+        "active": false,
+        "groups_count": 11,
+        "tz": false,
+        "lang": "en_US"
+      }
+    ],
+    "inactive_internal": 1,
+    "duplicate_logins": [],
+    "admin": {
+      "login": "admin",
+      "active": true
+    },
+    "justech_it_exists": true,
+    "justech_it_detail": {
+      "login": "it@justech.do",
+      "active": true,
+      "groups": [
+        "Access Rights",
+        "Accounting / Administrator",
+        "Inventory / Administrator",
+        "Purchase / Administrator",
+        "Role / Administrator",
+        "Sales / Administrator",
+        "Technical Features"
+      ],
+      "lang": "es_DO",
+      "tz": "America/Santo_Domingo"
+    }
+  },
+  "groups": {
+    "total": 60,
+    "standard_count": 16,
+    "enterprise_count": 1,
+    "justech_count": 2,
+    "standard_sample": [
+      {
+        "id": 27,
+        "name": "Accounting / Administrator",
+        "xml_id": "account.group_account_manager",
+        "users": 2,
+        "category": "Accounting"
+      },
+      {
+        "id": 24,
+        "name": "Accounting / Invoicing",
+        "xml_id": "account.group_account_invoice",
+        "users": 0,
+        "category": "Accounting"
+      },
+      {
+        "id": 25,
+        "name": "Accounting / Invoicing & Banks",
+        "xml_id": "account.group_account_basic",
+        "users": 0,
+        "category": "Accounting"
+      },
+      {
+        "id": 31,
+        "name": "Bank / Validate bank account",
+        "xml_id": "account.group_validate_bank_account",
+        "users": 0,
+        "category": "Bank"
+      },
+      {
+        "id": 15,
+        "name": "Canned Responses / Canned Response Administrator",
+        "xml_id": "mail.group_mail_canned_response_admin",
+        "users": 0,
+        "category": "Canned Responses"
+      },
+      {
+        "id": 9,
+        "name": "Contact / Creation",
+        "xml_id": "base.group_partner_manager",
+        "users": 0,
+        "category": "Contact"
+      },
+      {
+        "id": 32,
+        "name": "Dashboard / Admin",
+        "xml_id": "spreadsheet_dashboard.group_dashboard_manager",
+        "users": 1,
+        "category": "Dashboard"
+      },
+      {
+        "id": 8,
+        "name": "Export / Allowed",
+        "xml_id": "base.group_allow_export",
+        "users": 0,
+        "category": "Export"
+      },
+      {
+        "id": 35,
+        "name": "Inventory / Administrator",
+        "xml_id": "stock.group_stock_manager",
+        "users": 2,
+        "category": "Inventory"
+      },
+      {
+        "id": 34,
+        "name": "Inventory / User",
+        "xml_id": "stock.group_stock_user",
+        "users": 0,
+        "category": "Inventory"
+      },
+      {
+        "id": 21,
+        "name": "Products / Create",
+        "xml_id": "product.group_product_manager",
+        "users": 1,
+        "category": "Products"
+      },
+      {
+        "id": 49,
+        "name": "Purchase / Administrator",
+        "xml_id": "purchase.group_purchase_manager",
+        "users": 2,
+        "category": "Purchase"
+      },
+      {
+        "id": 48,
+        "name": "Purchase / User",
+        "xml_id": "purchase.group_purchase_user",
+        "users": 0,
+        "category": "Purchase"
+      },
+      {
+        "id": 54,
+        "name": "Sales / Administrator",
+        "xml_id": "sales_team.group_sale_manager",
+        "users": 2,
+        "category": "Sales"
+      },
+      {
+        "id": 53,
+        "name": "Sales / User: All Documents",
+        "xml_id": "sales_team.group_sale_salesman_all_leads",
+        "users": 0,
+        "category": "Sales"
+      },
+      {
+        "id": 52,
+        "name": "Sales / User: Own Documents Only",
+        "xml_id": "sales_team.group_sale_salesman",
+        "users": 0,
+        "category": "Sales"
+      }
+    ],
+    "enterprise": [
+      {
+        "id": 33,
+        "name": "Allow to define fiscal years of more or less than a year",
+        "xml_id": "account_accountant.group_fiscal_year",
+        "users": 0,
+        "category": ""
+      }
+    ],
+    "justech": [
+      {
+        "id": 64,
+        "name": "Accounting / Dominican Fiscal Manager",
+        "xml_id": "justech_l10n_do_base.group_justech_do_fiscal_manager",
+        "users": 0,
+        "category": "Accounting"
+      },
+      {
+        "id": 63,
+        "name": "Accounting / Dominican Fiscal User",
+        "xml_id": "justech_l10n_do_base.group_justech_do_fiscal_user",
+        "users": 0,
+        "category": "Accounting"
+      }
+    ]
+  },
+  "justech": {
+    "models": [
+      "justech.do.fiscal.report.line",
+      "justech.do.fiscal.report",
+      "justech.do.fiscal.document.type",
+      "justech.do.ncf.range",
+      "justech.do.fiscal.report.wizard",
+      "justech.do.ncf.consumption"
+    ],
+    "acl": [
+      {
+        "name": "justech.do.fiscal.report.line manager",
+        "model": "justech.do.fiscal.report.line",
+        "group": "Accounting / Dominican Fiscal Manager",
+        "perm_read": true,
+        "perm_write": true,
+        "perm_create": true,
+        "perm_unlink": true
+      },
+      {
+        "name": "justech.do.fiscal.report.line user",
+        "model": "justech.do.fiscal.report.line",
+        "group": "Accounting / Dominican Fiscal User",
+        "perm_read": true,
+        "perm_write": false,
+        "perm_create": false,
+        "perm_unlink": false
+      },
+      {
+        "name": "justech.do.fiscal.report manager",
+        "model": "justech.do.fiscal.report",
+        "group": "Accounting / Dominican Fiscal Manager",
+        "perm_read": true,
+        "perm_write": true,
+        "perm_create": true,
+        "perm_unlink": true
+      },
+      {
+        "name": "justech.do.fiscal.report user",
+        "model": "justech.do.fiscal.report",
+        "group": "Accounting / Dominican Fiscal User",
+        "perm_read": true,
+        "perm_write": true,
+        "perm_create": true,
+        "perm_unlink": false
+      },
+      {
+        "name": "justech.do.fiscal.document.type manager",
+        "model": "justech.do.fiscal.document.type",
+        "group": "Accounting / Dominican Fiscal Manager",
+        "perm_read": true,
+        "perm_write": true,
+        "perm_create": true,
+        "perm_unlink": true
+      },
+      {
+        "name": "justech.do.fiscal.document.type user",
+        "model": "justech.do.fiscal.document.type",
+        "group": "Accounting / Dominican Fiscal User",
+        "perm_read": true,
+        "perm_write": false,
+        "perm_create": false,
+        "perm_unlink": false
+      },
+      {
+        "name": "justech.do.ncf.range manager",
+        "model": "justech.do.ncf.range",
+        "group": "Accounting / Dominican Fiscal Manager",
+        "perm_read": true,
+        "perm_write": true,
+        "perm_create": true,
+        "perm_unlink": true
+      },
+      {
+        "name": "justech.do.ncf.range user",
+        "model": "justech.do.ncf.range",
+        "group": "Accounting / Dominican Fiscal User",
+        "perm_read": true,
+        "perm_write": false,
+        "perm_create": false,
+        "perm_unlink": false
+      },
+      {
+        "name": "justech.do.fiscal.report.wizard",
+        "model": "justech.do.fiscal.report.wizard",
+        "group": "Accounting / Dominican Fiscal User",
+        "perm_read": true,
+        "perm_write": true,
+        "perm_create": true,
+        "perm_unlink": true
+      },
+      {
+        "name": "justech.do.ncf.consumption manager",
+        "model": "justech.do.ncf.consumption",
+        "group": "Accounting / Dominican Fiscal Manager",
+        "perm_read": true,
+        "perm_write": true,
+        "perm_create": true,
+        "perm_unlink": false
+      },
+      {
+        "name": "justech.do.ncf.consumption user",
+        "model": "justech.do.ncf.consumption",
+        "group": "Accounting / Dominican Fiscal User",
+        "perm_read": true,
+        "perm_write": false,
+        "perm_create": false,
+        "perm_unlink": false
+      }
+    ],
+    "rules": [
+      {
+        "name": "NCF Consumption: multi-company",
+        "model": "justech.do.ncf.consumption",
+        "domain": "[('company_id', 'in', company_ids)]",
+        "global_rule": true
+      },
+      {
+        "name": "DGII Fiscal Report Wizard: multi-company",
+        "model": "justech.do.fiscal.report.wizard",
+        "domain": "[('company_id', 'in', company_ids)]",
+        "global_rule": true
+      },
+      {
+        "name": "NCF Range: multi-company",
+        "model": "justech.do.ncf.range",
+        "domain": "[('company_id', 'in', company_ids)]",
+        "global_rule": true
+      },
+      {
+        "name": "Fiscal Document Type: multi-company",
+        "model": "justech.do.fiscal.document.type",
+        "domain": "['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]",
+        "global_rule": true
+      },
+      {
+        "name": "DGII Fiscal Report: multi-company",
+        "model": "justech.do.fiscal.report",
+        "domain": "[('company_id', 'in', company_ids)]",
+        "global_rule": true
+      },
+      {
+        "name": "DGII Fiscal Report Line: multi-company",
+        "model": "justech.do.fiscal.report.line",
+        "domain": "[('report_id.company_id', 'in', company_ids)]",
+        "global_rule": true
+      }
+    ],
+    "multi_company_rules_total": 54
+  },
+  "system": {
+    "parameters": {
+      "web.base.url": "https://test.hellenia.cloud",
+      "database.is_neutralized": "true",
+      "database.enterprise_code": false,
+      "mail.catchall.domain": false,
+      "mail.default.from": false,
+      "mail.bounce.alias": false,
+      "mail.catchall.alias": false
+    },
+    "company": {
+      "name": "Hellenia, S.R.L.",
+      "vat": "133621282",
+      "country": "DO",
+      "currency": "DOP",
+      "email": "info@helleniadr.com",
+      "phone": "+1 849-434-8694",
+      "logo_set": false
+    },
+    "neutralized": false,
+    "mail_servers": [
+      {
+        "name": "neutralization - disable emails",
+        "smtp_host": "invalid",
+        "active": true
+      }
+    ],
+    "default_lang": "res.lang(74,)",
+    "es_do_active": true
+  },
+  "cron": {
+    "active_count": 1,
+    "critical": []
+  },
+  "risks": []
+}

@@ -1,0 +1,243 @@
+2026-07-02 04:30:16,133 11 WARNING ? odoo.tools.config: option logfile reads 'False' in the config file at /etc/odoo/odoo.conf but isn't a boolean option, skip 
+2026-07-02 04:30:16,133 11 WARNING ? odoo.tools.config: option logfile reads 'False' in the config file at /etc/odoo/odoo.conf but isn't a boolean option, skip 
+2026-07-02 04:30:16,133 11 INFO ? odoo: Odoo version 19.0-20260619 
+2026-07-02 04:30:16,134 11 INFO ? odoo: Using configuration file at /etc/odoo/odoo.conf 
+2026-07-02 04:30:16,134 11 INFO ? odoo: addons paths: _NamespacePath(['/usr/lib/python3/dist-packages/odoo/addons', '/var/lib/odoo/addons/19.0', '/mnt/enterprise/addons', '/mnt/custom', '/usr/lib/python3/dist-packages/addons']) 
+2026-07-02 04:30:16,134 11 INFO ? odoo: database: odoo@db:default 
+2026-07-02 04:30:16,344 11 INFO ? odoo.service.server: Stopping workers gracefully 
+2026-07-02 04:30:16,372 11 INFO hellenia_prod odoo.modules.loading: loading 1 modules... 
+2026-07-02 04:30:16,374 11 INFO hellenia_prod odoo.modules.loading: 1 modules loaded in 0.00s, 0 queries (+0 extra) 
+2026-07-02 04:30:16,402 11 INFO hellenia_prod odoo.modules.loading: loading 139 modules... 
+2026-07-02 04:30:17,205 11 WARNING hellenia_prod odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define models.Constraint on the model. 
+2026-07-02 04:30:17,285 11 WARNING hellenia_prod odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define models.Constraint on the model. 
+2026-07-02 04:30:17,338 11 WARNING hellenia_prod odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define models.Constraint on the model. 
+2026-07-02 04:30:17,375 11 INFO hellenia_prod odoo.modules.loading: 139 modules loaded in 0.97s, 0 queries (+0 extra) 
+2026-07-02 04:30:17,469 11 WARNING hellenia_prod odoo.fields: justech.do.fiscal.report.state: selection=[('draft', 'Borrador'), ('validated', 'Validado'), ('pending_approval', 'Requiere aprobación'), ('approved', 'Aprobado'), ('rejected', 'Rechazado'), ('generated', 'Generado'), ('done', 'Generado')] overrides existing selection; use selection_add instead 
+2026-07-02 04:30:17,535 11 INFO hellenia_prod odoo.modules.loading: Modules loaded. 
+2026-07-02 04:30:17,591 11 INFO hellenia_prod odoo.registry: Registry loaded in 1.247s 
+2026-07-02 04:30:17,631 11 INFO hellenia_prod odoo.addons.base.models.ir_actions_report: Will use the Wkhtmltopdf binary at /usr/local/bin/wkhtmltopdf 
+2026-07-02 04:30:17,639 11 INFO hellenia_prod odoo.addons.base.models.ir_actions_report: Will use the Wkhtmltoimage binary at /usr/local/bin/wkhtmltoimage 
+2026-07-02 04:30:20,128 11 INFO hellenia_prod odoo.addons.base.models.ir_actions_report: The PDF report has been generated for model: sale.order, records [21]. 
+2026-07-02 04:30:22,573 11 INFO hellenia_prod odoo.addons.base.models.ir_actions_report: The PDF report has been generated for model: sale.order, records [21]. 
+2026-07-02 04:30:25,324 11 INFO hellenia_prod odoo.addons.base.models.ir_actions_report: The PDF report has been generated for model: account.move, records [132]. 
+2026-07-02 04:30:27,684 11 INFO hellenia_prod odoo.addons.base.models.ir_actions_report: The PDF report has been generated for model: purchase.order, records [9]. 
+PHASE24_1_PROD:{
+  "phase": "24.1-prod-parallel",
+  "timestamp_utc": "2026-07-02T04:30:17.611095+00:00",
+  "database": "hellenia_prod",
+  "pass": false,
+  "failed_checks": [
+    "disc_quotation_found",
+    "picking_found"
+  ],
+  "checks": {
+    "module_installed": {
+      "status": "PASS",
+      "detail": "installed"
+    },
+    "module_version": {
+      "status": "PASS",
+      "detail": "19.0.1.1.6"
+    },
+    "jt_action_exists": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "std_action_exists": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "jt_action_name": {
+      "status": "PASS",
+      "detail": "Cotización Hellenia (Diseño)"
+    },
+    "jt_report_name": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "std_report_name": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "no_replace_std_action": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "hellenia_reports_installed": {
+      "status": "PASS",
+      "detail": "installed"
+    },
+    "sale.report_saleorder_jt_inherits": {
+      "status": "PASS",
+      "detail": "inherits=[]"
+    },
+    "sale.report_saleorder_document_jt_inherits": {
+      "status": "PASS",
+      "detail": "inherits=[]"
+    },
+    "sale.report_saleorder_raw_jt_inherits": {
+      "status": "PASS",
+      "detail": "inherits=[]"
+    },
+    "jt_real_1p_pdf": {
+      "status": "PASS",
+      "detail": "size=73572"
+    },
+    "std_real_1p_pdf": {
+      "status": "PASS",
+      "detail": "size=60440"
+    },
+    "jt_template": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "vis001_no_sigs_zone_table": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "vis001_no_lower": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "disc_quotation_found": {
+      "status": "FAIL",
+      "detail": "sin cotización con descuento en línea"
+    },
+    "invoice_pdf": {
+      "status": "PASS",
+      "detail": "inv=INV/2026/00006 size=27600"
+    },
+    "purchase_pdf": {
+      "status": "PASS",
+      "detail": "po=P00008 size=24101"
+    },
+    "picking_found": {
+      "status": "FAIL",
+      "detail": "sin albarán done"
+    },
+    "dgii_reports_present": {
+      "status": "PASS",
+      "detail": "[]"
+    }
+  },
+  "pdfs": {
+    "jt_real_1p": {
+      "order": "S00020",
+      "order_id": 21,
+      "file": "prod_quotation_real_1p.pdf",
+      "size_bytes": 73572,
+      "pages": null
+    },
+    "std_real_1p": {
+      "order": "S00020",
+      "order_id": 21,
+      "file": "prod_quotation_standard.pdf",
+      "size_bytes": 60440,
+      "pages": null
+    }
+  },
+  "orders_used": {
+    "real_1p": {
+      "name": "S00020",
+      "id": 21
+    },
+    "invoice": "INV/2026/00006",
+    "purchase": "P00008"
+  },
+  "module_version": "19.0.1.1.6"
+}
+2026-07-02 04:30:28,205 39 WARNING ? odoo.tools.config: option logfile reads 'False' in the config file at /etc/odoo/odoo.conf but isn't a boolean option, skip 
+2026-07-02 04:30:28,205 39 WARNING ? odoo.tools.config: option logfile reads 'False' in the config file at /etc/odoo/odoo.conf but isn't a boolean option, skip 
+2026-07-02 04:30:28,205 39 INFO ? odoo: Odoo version 19.0-20260619 
+2026-07-02 04:30:28,205 39 INFO ? odoo: Using configuration file at /etc/odoo/odoo.conf 
+2026-07-02 04:30:28,205 39 INFO ? odoo: addons paths: _NamespacePath(['/usr/lib/python3/dist-packages/odoo/addons', '/var/lib/odoo/addons/19.0', '/mnt/enterprise/addons', '/mnt/custom', '/usr/lib/python3/dist-packages/addons']) 
+2026-07-02 04:30:28,206 39 INFO ? odoo: database: odoo@db:default 
+2026-07-02 04:30:28,416 39 INFO ? odoo.service.server: Stopping workers gracefully 
+2026-07-02 04:30:28,444 39 INFO hellenia_prod odoo.modules.loading: loading 1 modules... 
+2026-07-02 04:30:28,447 39 INFO hellenia_prod odoo.modules.loading: 1 modules loaded in 0.00s, 0 queries (+0 extra) 
+2026-07-02 04:30:28,473 39 INFO hellenia_prod odoo.modules.loading: loading 139 modules... 
+2026-07-02 04:30:29,269 39 WARNING hellenia_prod odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define models.Constraint on the model. 
+2026-07-02 04:30:29,355 39 WARNING hellenia_prod odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define models.Constraint on the model. 
+2026-07-02 04:30:29,402 39 WARNING hellenia_prod odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define models.Constraint on the model. 
+2026-07-02 04:30:29,434 39 INFO hellenia_prod odoo.modules.loading: 139 modules loaded in 0.96s, 0 queries (+0 extra) 
+2026-07-02 04:30:29,531 39 WARNING hellenia_prod odoo.fields: justech.do.fiscal.report.state: selection=[('draft', 'Borrador'), ('validated', 'Validado'), ('pending_approval', 'Requiere aprobación'), ('approved', 'Aprobado'), ('rejected', 'Rechazado'), ('generated', 'Generado'), ('done', 'Generado')] overrides existing selection; use selection_add instead 
+2026-07-02 04:30:29,603 39 INFO hellenia_prod odoo.modules.loading: Modules loaded. 
+2026-07-02 04:30:29,674 39 INFO hellenia_prod odoo.registry: Registry loaded in 1.258s 
+2026-07-02 04:30:29,784 39 INFO hellenia_prod odoo.addons.base.models.ir_actions_report: Will use the Wkhtmltopdf binary at /usr/local/bin/wkhtmltopdf 
+2026-07-02 04:30:29,792 39 INFO hellenia_prod odoo.addons.base.models.ir_actions_report: Will use the Wkhtmltoimage binary at /usr/local/bin/wkhtmltoimage 
+2026-07-02 04:30:32,309 39 INFO hellenia_prod odoo.addons.base.models.ir_actions_report: The PDF report has been generated for model: sale.order, records [21]. 
+2026-07-02 04:30:34,774 39 INFO hellenia_prod odoo.addons.base.models.ir_actions_report: The PDF report has been generated for model: stock.picking, records [7]. 
+EXTRA:{
+  "timestamp_utc": "2026-07-02T04:30:29.694872+00:00",
+  "checks": {
+    "menu_jt_name": {
+      "status": "PASS",
+      "detail": "Cotización Hellenia (Diseño)"
+    },
+    "menu_std_exists": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "menu_std_binding": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "menu_jt_binding": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "order_5p_found": {
+      "status": "FAIL",
+      "detail": "sin cotización draft/sent con 5+ líneas"
+    },
+    "disc_pdf": {
+      "status": "PASS",
+      "detail": "size=74036"
+    },
+    "disc_col": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "disc_totals": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "stock_pdf": {
+      "status": "PASS",
+      "detail": "WH/OUT/00006 state=assigned size=17689"
+    },
+    "dgii_modules": {
+      "status": "PASS",
+      "detail": "['justech_l10n_do_ncf:installed']"
+    },
+    "dgii_data_present": {
+      "status": "PASS",
+      "detail": "records=20"
+    }
+  },
+  "orders": {
+    "disc": "S00020"
+  },
+  "pass": false
+}
+2026-07-02 04:30:35,294 55 WARNING ? odoo.tools.config: option logfile reads 'False' in the config file at /etc/odoo/odoo.conf but isn't a boolean option, skip 
+2026-07-02 04:30:35,294 55 WARNING ? odoo.tools.config: option logfile reads 'False' in the config file at /etc/odoo/odoo.conf but isn't a boolean option, skip 
+2026-07-02 04:30:35,294 55 INFO ? odoo: Odoo version 19.0-20260619 
+2026-07-02 04:30:35,294 55 INFO ? odoo: Using configuration file at /etc/odoo/odoo.conf 
+2026-07-02 04:30:35,294 55 INFO ? odoo: addons paths: _NamespacePath(['/usr/lib/python3/dist-packages/odoo/addons', '/var/lib/odoo/addons/19.0', '/mnt/enterprise/addons', '/mnt/custom', '/usr/lib/python3/dist-packages/addons']) 
+2026-07-02 04:30:35,294 55 INFO ? odoo: database: odoo@db:default 
+2026-07-02 04:30:35,496 55 INFO ? odoo.service.server: Stopping workers gracefully 
+2026-07-02 04:30:35,524 55 INFO hellenia_prod odoo.modules.loading: loading 1 modules... 
+2026-07-02 04:30:35,527 55 INFO hellenia_prod odoo.modules.loading: 1 modules loaded in 0.00s, 0 queries (+0 extra) 
+2026-07-02 04:30:35,554 55 INFO hellenia_prod odoo.modules.loading: loading 139 modules... 
+2026-07-02 04:30:36,344 55 WARNING hellenia_prod odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define models.Constraint on the model. 
+2026-07-02 04:30:36,424 55 WARNING hellenia_prod odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define models.Constraint on the model. 
+2026-07-02 04:30:36,472 55 WARNING hellenia_prod odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define models.Constraint on the model. 
+2026-07-02 04:30:36,504 55 INFO hellenia_prod odoo.modules.loading: 139 modules loaded in 0.95s, 0 queries (+0 extra) 
+2026-07-02 04:30:36,601 55 WARNING hellenia_prod odoo.fields: justech.do.fiscal.report.state: selection=[('draft', 'Borrador'), ('validated', 'Validado'), ('pending_approval', 'Requiere aprobación'), ('approved', 'Aprobado'), ('rejected', 'Rechazado'), ('generated', 'Generado'), ('done', 'Generado')] overrides existing selection; use selection_add instead 
+2026-07-02 04:30:36,671 55 INFO hellenia_prod odoo.modules.loading: Modules loaded. 
+2026-07-02 04:30:36,749 55 INFO hellenia_prod odoo.registry: Registry loaded in 1.252s 
+2026-07-02 04:30:36,779 55 INFO hellenia_prod odoo.addons.base.models.ir_actions_report: Will use the Wkhtmltopdf binary at /usr/local/bin/wkhtmltopdf 
+2026-07-02 04:30:36,787 55 INFO hellenia_prod odoo.addons.base.models.ir_actions_report: Will use the Wkhtmltoimage binary at /usr/local/bin/wkhtmltoimage 
+2026-07-02 04:30:39,276 55 INFO hellenia_prod odoo.addons.base.models.ir_actions_report: The PDF report has been generated for model: sale.order, records [21]. 
+MAX S00020 state=draft lines=1 size=73572

@@ -1,0 +1,77 @@
+{
+  "phase": "28-prod-ui-validation",
+  "timestamp_utc": "2026-07-02T18:47:05.971930+00:00",
+  "invoice": "INV/2026/00006",
+  "url": "https://odoo.hellenia.cloud/odoo/accounting/9/invoicing/132",
+  "tests": {
+    "01_invoice_loaded": {
+      "status": "PASS",
+      "detail": "https://odoo.hellenia.cloud/odoo/accounting/9/invoicing/132"
+    },
+    "02_preview_rpc_sent": {
+      "status": "PASS",
+      "detail": "[{'url': 'https://odoo.hellenia.cloud/web/dataset/call_button/account.move/preview_invoice', 'status': 200, 'method': 'POST'}]"
+    },
+    "02_preview_no_required_toast": {
+      "status": "PASS",
+      "detail": "OK"
+    },
+    "02_preview_ui_opened": {
+      "status": "PASS",
+      "detail": "iframe/portal"
+    },
+    "03_print_rpc_sent": {
+      "status": "PASS",
+      "detail": "[{'url': 'https://odoo.hellenia.cloud/web/dataset/call_button/account.move/action_print_pdf', 'status': 200, 'method': 'POST'}]"
+    },
+    "03_print_no_required_toast": {
+      "status": "PASS",
+      "detail": "OK"
+    },
+    "03_print_download": {
+      "status": "PASS",
+      "detail": "[{'url': 'https://odoo.hellenia.cloud/report/download', 'status': 200, 'method': 'POST'}]"
+    },
+    "04_menu_invoice_pdf": {
+      "status": "PASS",
+      "detail": "[{'url': 'https://odoo.hellenia.cloud/report/download', 'status': 200, 'method': 'POST'}]"
+    },
+    "05_send_wizard_or_rpc": {
+      "status": "PASS",
+      "detail": "{'wizard': True, 'rpc': [{'url': 'https://odoo.hellenia.cloud/web/dataset/call_button/account.move/action_invoice_sent', 'status': 200, 'method': 'POST'}]}"
+    },
+    "05_send_no_required_toast": {
+      "status": "PASS",
+      "detail": "OK"
+    }
+  },
+  "network": [
+    {
+      "url": "https://odoo.hellenia.cloud/web/dataset/call_button/account.move/preview_invoice",
+      "status": 200,
+      "method": "POST"
+    },
+    {
+      "url": "https://odoo.hellenia.cloud/web/dataset/call_button/account.move/action_print_pdf",
+      "status": 200,
+      "method": "POST"
+    },
+    {
+      "url": "https://odoo.hellenia.cloud/report/download",
+      "status": 200,
+      "method": "POST"
+    },
+    {
+      "url": "https://odoo.hellenia.cloud/report/download",
+      "status": 200,
+      "method": "POST"
+    },
+    {
+      "url": "https://odoo.hellenia.cloud/web/dataset/call_button/account.move/action_invoice_sent",
+      "status": 200,
+      "method": "POST"
+    }
+  ],
+  "ok": true,
+  "pass": true
+}

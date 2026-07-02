@@ -1,0 +1,16 @@
+=== sale_order ===
+Crear Conduce de Entrega: True
+jt_delivery_note_count: True
+action_jt_create_delivery_conduce: True
+=== invoice ===
+Crear Conduce de Entrega: True
+jt_delivery_note_count: True
+action_jt_create_delivery_conduce: True
+=== smart button sample SO S00020 ===
+jt_delivery_note_count: 1
+=== delivery notes total: 5 ===
+COND/2026/00011 SO S00010 INV INV/2026/00003 lines 1
+COND/2026/00010 SO - INV INV/2026/00006 lines 1
+COND/2026/00009 SO S00009 INV INV/2026/00002 lines 1
+COND/2026/00008 SO S00008 INV INV/2026/00001 lines 1
+COND/2026/00007 SO S00020 INV - lines 1

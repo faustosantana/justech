@@ -1,0 +1,8 @@
+document_type_prefix,name,authorization_number,sequence_start,sequence_end,date_from,date_to,journal_codes,notes
+# Rangos NCF autorizados DGII — PENDIENTE entrega Hellenia / Contador
+# Obtener de autorización DGII. NO usar rangos UAT.
+# B01,Factura Crédito Fiscal,AUTH-DGII-XXXX,1,10000,2026-01-01,2026-12-31,FACTU,
+# B02,Factura Consumo,AUTH-DGII-XXXX,1,10000,2026-01-01,2026-12-31,FACTU,
+# B04,Nota Crédito,AUTH-DGII-XXXX,1,5000,2026-01-01,2026-12-31,FACTU,
+# B11,Comprobante Compras,AUTH-DGII-XXXX,1,10000,2026-01-01,2026-12-31,FACTU,
+# B13,Gastos Menores,AUTH-DGII-XXXX,1,5000,2026-01-01,2026-12-31,FACTU,

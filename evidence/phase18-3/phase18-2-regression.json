@@ -1,0 +1,241 @@
+{
+  "phase": "18.2-withholding-catalog",
+  "timestamp_utc": "2026-06-30T20:56:27.901224+00:00",
+  "database": "hellenia_test",
+  "tests": {
+    "module_upgrade": {
+      "status": "PASS",
+      "detail": "19.0.1.0.7"
+    },
+    "01_catalog_complete": {
+      "status": "PASS",
+      "detail": [
+        "RET-GOB-5",
+        "RET-HON-10",
+        "RET-INF-ISR-10",
+        "RET-INF-ITBIS-75",
+        "RET-ISR-2",
+        "RET-ITBIS-100",
+        "RET-ITBIS-30"
+      ]
+    },
+    "02_create_from_admin": {
+      "status": "PASS",
+      "detail": "RET-TEST-TMP"
+    },
+    "03_edit_account": {
+      "status": "PASS",
+      "detail": "11010100"
+    },
+    "04_deactivate_hidden": {
+      "status": "PASS",
+      "detail": "oculta al desactivar"
+    },
+    "05_reactivate_visible": {
+      "status": "PASS",
+      "detail": "visible al reactivar"
+    },
+    "06_customer_no_wh": {
+      "status": "PASS",
+      "detail": "paid"
+    },
+    "07_customer_itbis_30": {
+      "status": "PASS",
+      "detail": "9.72"
+    },
+    "08_customer_gov_5": {
+      "status": "PASS",
+      "detail": "50.00"
+    },
+    "09_customer_dual_wh": {
+      "status": "PASS",
+      "detail": 2
+    },
+    "10_vendor_informal_10": {
+      "status": "PASS",
+      "detail": "100.00"
+    },
+    "11_vendor_itbis_75": {
+      "status": "PASS",
+      "detail": "24.30"
+    },
+    "12_vendor_dual_wh": {
+      "status": "PASS",
+      "detail": 2
+    },
+    "13_balanced_entry": {
+      "status": "PASS",
+      "detail": "D=1180.00"
+    },
+    "14_withholding_accounts": {
+      "status": "PASS",
+      "detail": "todas con cuenta"
+    },
+    "15_receivable_impact": {
+      "status": "PASS",
+      "detail": "lines=1"
+    },
+    "16_payable_impact": {
+      "status": "PASS",
+      "detail": "lines=1"
+    },
+    "17_report_606": {
+      "status": "PASS",
+      "detail": "606"
+    },
+    "18_report_607": {
+      "status": "PASS",
+      "detail": "607"
+    },
+    "19_spanish_labels": {
+      "status": "PASS",
+      "detail": [
+        "Administrar retenciones",
+        "Administrar retenciones",
+        "Localización Dominicana"
+      ]
+    },
+    "20_no_technical_codes": {
+      "status": "PASS",
+      "detail": "nombres limpios"
+    },
+    "ux_customer_selector": {
+      "status": "PASS",
+      "detail": [
+        "RET-GOB-5",
+        "RET-HON-10",
+        "RET-ISR-2",
+        "RET-ITBIS-100",
+        "RET-ITBIS-30"
+      ]
+    },
+    "ux_supplier_selector": {
+      "status": "PASS",
+      "detail": [
+        "RET-HON-10",
+        "RET-INF-ISR-10",
+        "RET-INF-ITBIS-75",
+        "RET-ISR-2",
+        "RET-ITBIS-100",
+        "RET-ITBIS-30"
+      ]
+    }
+  },
+  "catalog": {
+    "total": 7,
+    "active": 7,
+    "active_codes": [
+      "RET-GOB-5",
+      "RET-HON-10",
+      "RET-INF-ISR-10",
+      "RET-INF-ITBIS-75",
+      "RET-ISR-2",
+      "RET-ITBIS-100",
+      "RET-ITBIS-30"
+    ],
+    "entries": [
+      {
+        "code": "RET-GOB-5",
+        "name": "Retención 5% Gobierno",
+        "active": true,
+        "account": "11080302",
+        "partner_scope": "customer",
+        "move_scope": "sale",
+        "base_type": "untaxed",
+        "affects_606": false,
+        "affects_607": true
+      },
+      {
+        "code": "RET-ITBIS-30",
+        "name": "Retención ITBIS 30%",
+        "active": true,
+        "account": "21030201",
+        "partner_scope": "both",
+        "move_scope": "both",
+        "base_type": "itbis",
+        "affects_606": true,
+        "affects_607": true
+      },
+      {
+        "code": "RET-ITBIS-100",
+        "name": "Retención ITBIS 100%",
+        "active": true,
+        "account": "21030201",
+        "partner_scope": "both",
+        "move_scope": "both",
+        "base_type": "itbis",
+        "affects_606": true,
+        "affects_607": true
+      },
+      {
+        "code": "RET-INF-ISR-10",
+        "name": "Retención ISR 10% Proveedor Informal",
+        "active": true,
+        "account": "21030301",
+        "partner_scope": "supplier",
+        "move_scope": "purchase",
+        "base_type": "untaxed",
+        "affects_606": true,
+        "affects_607": false
+      },
+      {
+        "code": "RET-INF-ITBIS-75",
+        "name": "Retención ITBIS 75% Proveedor Informal",
+        "active": true,
+        "account": "21030205",
+        "partner_scope": "supplier",
+        "move_scope": "purchase",
+        "base_type": "itbis",
+        "affects_606": true,
+        "affects_607": false
+      },
+      {
+        "code": "RET-ISR-2",
+        "name": "Retención ISR 2%",
+        "active": true,
+        "account": "21030308",
+        "partner_scope": "both",
+        "move_scope": "both",
+        "base_type": "untaxed",
+        "affects_606": true,
+        "affects_607": true
+      },
+      {
+        "code": "RET-HON-10",
+        "name": "Retención ISR 10% Honorarios",
+        "active": true,
+        "account": "21030302",
+        "partner_scope": "both",
+        "move_scope": "both",
+        "base_type": "untaxed",
+        "affects_606": true,
+        "affects_607": true
+      }
+    ]
+  },
+  "ok": true,
+  "errors": [],
+  "production_ready": false,
+  "selector": {
+    "customer": [
+      "RET-GOB-5",
+      "RET-HON-10",
+      "RET-ISR-2",
+      "RET-ITBIS-100",
+      "RET-ITBIS-30"
+    ],
+    "supplier": [
+      "RET-HON-10",
+      "RET-INF-ISR-10",
+      "RET-INF-ITBIS-75",
+      "RET-ISR-2",
+      "RET-ITBIS-100",
+      "RET-ITBIS-30"
+    ]
+  },
+  "summary": {
+    "passed": 23,
+    "failed": 0,
+    "total": 23
+  }
+}

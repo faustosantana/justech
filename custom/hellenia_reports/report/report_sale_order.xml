@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="report_saleorder_document_hellenia" inherit_id="sale.report_saleorder_document">
+        <xpath expr="//div[hasclass('page')]" position="attributes">
+            <attribute name="class" add="hellenia-sale-doc" separator=" "/>
+        </xpath>
+
+        <xpath expr="//t[@t-set='layout_document_title']" position="replace">
+            <t t-set="layout_document_title">
+                <span t-if="is_proforma">Factura proforma Nº </span>
+                <span t-elif="doc.state in ['draft','sent']">Cotización Nº </span>
+                <span t-else="">Pedido de venta Nº </span>
+                <span t-field="doc.name"/>
+            </t>
+        </xpath>
+
+        <xpath expr="//strong[text()='Your Reference']" position="replace">
+            <strong>Su referencia</strong>
+        </xpath>
+        <xpath expr="//strong[text()='Quotation Date']" position="replace">
+            <strong>Fecha cotización</strong>
+        </xpath>
+        <xpath expr="//strong[text()='Order Date']" position="replace">
+            <strong>Fecha pedido</strong>
+        </xpath>
+        <xpath expr="//strong[text()='Issued Date']" position="replace">
+            <strong>Fecha emisión</strong>
+        </xpath>
+        <xpath expr="//strong[text()='Expiration']" position="replace">
+            <strong>Válida hasta</strong>
+        </xpath>
+        <xpath expr="//strong[text()='Delivery Date']" position="replace">
+            <strong>Fecha entrega</strong>
+        </xpath>
+        <xpath expr="//strong[text()='Salesperson']" position="replace">
+            <strong>Vendedor</strong>
+        </xpath>
+
+        <xpath expr="//th[@name='th_description']" position="replace">
+            <th name="th_description" class="text-start">Descripción</th>
+        </xpath>
+        <xpath expr="//th[@name='th_quantity']" position="replace">
+            <th name="th_quantity" class="text-end text-nowrap">Cantidad</th>
+        </xpath>
+        <xpath expr="//th[@name='th_priceunit']" position="replace">
+            <th name="th_priceunit" class="text-end text-nowrap">Precio unit.</th>
+        </xpath>
+        <xpath expr="//th[@name='th_discount']" position="replace">
+            <th name="th_discount" class="text-end"><span>Desc.%</span></th>
+        </xpath>
+        <xpath expr="//th[@name='th_taxes']" position="replace">
+            <th name="th_taxes" class="text-end"><span>Impuestos</span></th>
+        </xpath>
+        <xpath expr="//th[@name='th_subtotal']" position="replace">
+            <th name="th_subtotal" class="text-end"><span>Importe</span></th>
+        </xpath>
+
+        <xpath expr="//table[hasclass('o_main_table')]" position="attributes">
+            <attribute name="class" add="hellenia-lines-table" separator=" "/>
+        </xpath>
+
+        <xpath expr="//div[hasclass('page')]" position="inside">
+            <t t-call="hellenia_reports.hellenia_document_footer_blocks"/>
+        </xpath>
+    </template>
+
+</odoo>

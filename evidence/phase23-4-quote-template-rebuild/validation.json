@@ -1,0 +1,69 @@
+{
+  "phase": "23.4-quote-template-rebuild",
+  "timestamp_utc": "2026-07-01T21:07:43.021757+00:00",
+  "database": "hellenia_test",
+  "pass": true,
+  "failed_checks": [],
+  "checks": {
+    "quote_1_pdf": { "status": "PASS", "detail": "" },
+    "quote_1_no_icons": { "status": "PASS", "detail": "" },
+    "quote_1_no_vendor_email": { "status": "PASS", "detail": "" },
+    "quote_1_no_immediate": { "status": "PASS", "detail": "" },
+    "quote_1_band_white": { "status": "PASS", "detail": "" },
+    "quote_1_no_excel": { "status": "PASS", "detail": "" },
+    "quote_1_grand": { "status": "PASS", "detail": "" },
+    "quote_1_lines": { "status": "PASS", "detail": "lines=1" },
+    "quote_1_single_page": { "status": "PASS", "detail": "pages=1" },
+    "quote_5_pdf": { "status": "PASS", "detail": "" },
+    "quote_5_no_icons": { "status": "PASS", "detail": "" },
+    "quote_5_no_vendor_email": { "status": "PASS", "detail": "" },
+    "quote_5_no_immediate": { "status": "PASS", "detail": "" },
+    "quote_5_band_white": { "status": "PASS", "detail": "" },
+    "quote_5_no_excel": { "status": "PASS", "detail": "" },
+    "quote_5_grand": { "status": "PASS", "detail": "" },
+    "quote_5_pages_ok": { "status": "PASS", "detail": "pages=1" },
+    "quote_20_pdf": { "status": "PASS", "detail": "25 lines (P23-3-QUOTE-20P no existe)" },
+    "quote_20_no_icons": { "status": "PASS", "detail": "" },
+    "quote_20_no_vendor_email": { "status": "PASS", "detail": "" },
+    "quote_20_no_immediate": { "status": "PASS", "detail": "" },
+    "quote_20_band_white": { "status": "PASS", "detail": "" },
+    "quote_20_no_excel": { "status": "PASS", "detail": "" },
+    "quote_20_grand": { "status": "PASS", "detail": "" },
+    "quote_20_pages_ok": { "status": "PASS", "detail": "pages=2" }
+  },
+  "pdfs": {
+    "quote_1": {
+      "order": "S00134",
+      "ref": "P23-3-QUOTE-1P",
+      "file": "quotation_1_product.pdf",
+      "line_count": 1,
+      "pages": 1,
+      "size_bytes": 68446
+    },
+    "quote_5": {
+      "order": "S00135",
+      "ref": "P23-3-QUOTE-5P",
+      "file": "quotation_5_products.pdf",
+      "line_count": 5,
+      "pages": 1,
+      "size_bytes": 72923
+    },
+    "quote_20": {
+      "order": "S00138",
+      "ref": "P23-3-QUOTE-25P",
+      "file": "quotation_25_products.pdf",
+      "line_count": 25,
+      "pages": 2,
+      "size_bytes": 90274,
+      "note": "P23-3-QUOTE-20P no existe; se usó 25P"
+    }
+  },
+  "screenshots": {
+    "quote_1": "screenshot_quotation_1_product.png",
+    "quote_5": "screenshot_quotation_5_products.png",
+    "quote_20": "screenshot_quotation_25_products.png"
+  },
+  "module_version": "19.0.1.5.4",
+  "environment": "hellenia_test (test.hellenia.cloud)",
+  "promoted_to_prod": false
+}

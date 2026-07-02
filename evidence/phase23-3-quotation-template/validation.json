@@ -1,0 +1,885 @@
+{
+  "phase": "23.3-quotation-template",
+  "timestamp_utc": "2026-07-01T18:28:14.580457+00:00",
+  "database": "hellenia_test",
+  "module_version": "19.0.1.2.0",
+  "quotations": {
+    "quote_1": {
+      "name": "S00134",
+      "id": 135,
+      "lines": 1,
+      "client_order_ref": "P23-3-QUOTE-1P"
+    },
+    "quote_5": {
+      "name": "S00135",
+      "id": 136,
+      "lines": 5,
+      "client_order_ref": "P23-3-QUOTE-5P"
+    },
+    "quote_15": {
+      "name": "S00136",
+      "id": 137,
+      "lines": 15,
+      "client_order_ref": "P23-3-QUOTE-15P"
+    },
+    "quote_custom_note": {
+      "name": "S00137",
+      "id": 138,
+      "lines": 1,
+      "client_order_ref": "P23-3-QUOTE-TERMS"
+    },
+    "quote_company_terms": {
+      "name": "S00137",
+      "id": 138,
+      "lines": 1,
+      "client_order_ref": "P23-3-QUOTE-TERMS"
+    },
+    "quote_edited_company_terms": {
+      "name": "S00137",
+      "id": 138,
+      "lines": 1,
+      "client_order_ref": "P23-3-QUOTE-TERMS"
+    }
+  },
+  "pdfs": {
+    "quote_1": {
+      "status": "OK",
+      "file": "quotation_1_product.pdf",
+      "path": "/evidence/phase23-3-quotation-template/quotation_1_product.pdf",
+      "size_bytes": 69800
+    },
+    "quote_5": {
+      "status": "OK",
+      "file": "quotation_5_products.pdf",
+      "path": "/evidence/phase23-3-quotation-template/quotation_5_products.pdf",
+      "size_bytes": 72620
+    },
+    "quote_15": {
+      "status": "OK",
+      "file": "quotation_15_products.pdf",
+      "path": "/evidence/phase23-3-quotation-template/quotation_15_products.pdf",
+      "size_bytes": 79453
+    },
+    "quote_custom_note": {
+      "status": "OK",
+      "file": "quotation_1_product.pdf",
+      "path": "/evidence/phase23-3-quotation-template/quotation_1_product.pdf",
+      "size_bytes": 69025
+    },
+    "quote_company_terms": {
+      "status": "OK",
+      "file": "quotation_1_product.pdf",
+      "path": "/evidence/phase23-3-quotation-template/quotation_1_product.pdf",
+      "size_bytes": 69805
+    },
+    "quote_edited_company_terms": {
+      "status": "OK",
+      "file": "quotation_1_product.pdf",
+      "path": "/evidence/phase23-3-quotation-template/quotation_1_product.pdf",
+      "size_bytes": 68949
+    }
+  },
+  "visual_checks": {
+    "01_field_hellenia_quotation_terms": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "02_default_terms_populated": {
+      "status": "PASS",
+      "detail": "(a) Las piezas ofrecidas son únicas y sujetas a disponibilidad.\n(b) Esta cotizac"
+    },
+    "03_products_available": {
+      "status": "PASS",
+      "detail": "20"
+    },
+    "quote_1_no_quotation": {
+      "status": "PASS",
+      "detail": "Quotation"
+    },
+    "quote_1_no_customer": {
+      "status": "PASS",
+      "detail": "Customer"
+    },
+    "quote_1_no_salesperson": {
+      "status": "PASS",
+      "detail": "Salesperson"
+    },
+    "quote_1_no_payment_terms": {
+      "status": "PASS",
+      "detail": "Payment Terms"
+    },
+    "quote_1_no_expiration": {
+      "status": "PASS",
+      "detail": "Expiration"
+    },
+    "quote_1_no_untaxed_amount": {
+      "status": "PASS",
+      "detail": "Untaxed Amount"
+    },
+    "quote_1_no_color_1a365d": {
+      "status": "PASS",
+      "detail": "1a365d"
+    },
+    "quote_1_no_color_c9a227": {
+      "status": "PASS",
+      "detail": "c9a227"
+    },
+    "quote_1_no_qr": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_1_no_ncf": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_1_has_COTIZACIÓN": {
+      "status": "PASS",
+      "detail": "COTIZACIÓN"
+    },
+    "quote_1_has_INFORMACIÓN_DEL_CLIE": {
+      "status": "PASS",
+      "detail": "INFORMACIÓN DEL CLIENTE"
+    },
+    "quote_1_has_INFORMACIÓN_DEL_VEND": {
+      "status": "PASS",
+      "detail": "INFORMACIÓN DEL VENDEDOR"
+    },
+    "quote_1_has_TÉRMINOS_DE_PAGO": {
+      "status": "PASS",
+      "detail": "TÉRMINOS DE PAGO"
+    },
+    "quote_1_has_DESCRIPCIÓN": {
+      "status": "PASS",
+      "detail": "DESCRIPCIÓN"
+    },
+    "quote_1_has_CANTIDAD": {
+      "status": "PASS",
+      "detail": "CANTIDAD"
+    },
+    "quote_1_has_PRECIO_UNITARIO": {
+      "status": "PASS",
+      "detail": "PRECIO UNITARIO"
+    },
+    "quote_1_has_SUBTOTAL": {
+      "status": "PASS",
+      "detail": "SUBTOTAL"
+    },
+    "quote_1_has_ITBIS": {
+      "status": "PASS",
+      "detail": "ITBIS"
+    },
+    "quote_1_has_CONDICIONES": {
+      "status": "PASS",
+      "detail": "CONDICIONES"
+    },
+    "quote_1_has_Santo_Domingo,_Repúb": {
+      "status": "PASS",
+      "detail": "Santo Domingo, República Dominicana"
+    },
+    "quote_1_class_hellenia-quote-page": {
+      "status": "PASS",
+      "detail": "hellenia-quote-page"
+    },
+    "quote_1_class_hellenia-quote-header": {
+      "status": "PASS",
+      "detail": "hellenia-quote-header"
+    },
+    "quote_1_class_hellenia-quote-company": {
+      "status": "PASS",
+      "detail": "hellenia-quote-company"
+    },
+    "quote_1_class_hellenia-quote-title-band": {
+      "status": "PASS",
+      "detail": "hellenia-quote-title-band"
+    },
+    "quote_1_class_hellenia-card": {
+      "status": "PASS",
+      "detail": "hellenia-card"
+    },
+    "quote_1_class_hellenia-card-title": {
+      "status": "PASS",
+      "detail": "hellenia-card-title"
+    },
+    "quote_1_class_hellenia-items-table": {
+      "status": "PASS",
+      "detail": "hellenia-items-table"
+    },
+    "quote_1_class_hellenia-totals": {
+      "status": "PASS",
+      "detail": "hellenia-totals"
+    },
+    "quote_1_class_hellenia-conditions": {
+      "status": "PASS",
+      "detail": "hellenia-conditions"
+    },
+    "quote_1_class_hellenia-footer-contact": {
+      "status": "PASS",
+      "detail": "hellenia-footer-contact"
+    },
+    "quote_1_brand_design": {
+      "status": "PASS",
+      "detail": "premium template activo"
+    },
+    "quote_5_no_quotation": {
+      "status": "PASS",
+      "detail": "Quotation"
+    },
+    "quote_5_no_customer": {
+      "status": "PASS",
+      "detail": "Customer"
+    },
+    "quote_5_no_salesperson": {
+      "status": "PASS",
+      "detail": "Salesperson"
+    },
+    "quote_5_no_payment_terms": {
+      "status": "PASS",
+      "detail": "Payment Terms"
+    },
+    "quote_5_no_expiration": {
+      "status": "PASS",
+      "detail": "Expiration"
+    },
+    "quote_5_no_untaxed_amount": {
+      "status": "PASS",
+      "detail": "Untaxed Amount"
+    },
+    "quote_5_no_color_1a365d": {
+      "status": "PASS",
+      "detail": "1a365d"
+    },
+    "quote_5_no_color_c9a227": {
+      "status": "PASS",
+      "detail": "c9a227"
+    },
+    "quote_5_no_qr": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_no_ncf": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_has_COTIZACIÓN": {
+      "status": "PASS",
+      "detail": "COTIZACIÓN"
+    },
+    "quote_5_has_INFORMACIÓN_DEL_CLIE": {
+      "status": "PASS",
+      "detail": "INFORMACIÓN DEL CLIENTE"
+    },
+    "quote_5_has_INFORMACIÓN_DEL_VEND": {
+      "status": "PASS",
+      "detail": "INFORMACIÓN DEL VENDEDOR"
+    },
+    "quote_5_has_TÉRMINOS_DE_PAGO": {
+      "status": "PASS",
+      "detail": "TÉRMINOS DE PAGO"
+    },
+    "quote_5_has_DESCRIPCIÓN": {
+      "status": "PASS",
+      "detail": "DESCRIPCIÓN"
+    },
+    "quote_5_has_CANTIDAD": {
+      "status": "PASS",
+      "detail": "CANTIDAD"
+    },
+    "quote_5_has_PRECIO_UNITARIO": {
+      "status": "PASS",
+      "detail": "PRECIO UNITARIO"
+    },
+    "quote_5_has_SUBTOTAL": {
+      "status": "PASS",
+      "detail": "SUBTOTAL"
+    },
+    "quote_5_has_ITBIS": {
+      "status": "PASS",
+      "detail": "ITBIS"
+    },
+    "quote_5_has_CONDICIONES": {
+      "status": "PASS",
+      "detail": "CONDICIONES"
+    },
+    "quote_5_has_Santo_Domingo,_Repúb": {
+      "status": "PASS",
+      "detail": "Santo Domingo, República Dominicana"
+    },
+    "quote_5_class_hellenia-quote-page": {
+      "status": "PASS",
+      "detail": "hellenia-quote-page"
+    },
+    "quote_5_class_hellenia-quote-header": {
+      "status": "PASS",
+      "detail": "hellenia-quote-header"
+    },
+    "quote_5_class_hellenia-quote-company": {
+      "status": "PASS",
+      "detail": "hellenia-quote-company"
+    },
+    "quote_5_class_hellenia-quote-title-band": {
+      "status": "PASS",
+      "detail": "hellenia-quote-title-band"
+    },
+    "quote_5_class_hellenia-card": {
+      "status": "PASS",
+      "detail": "hellenia-card"
+    },
+    "quote_5_class_hellenia-card-title": {
+      "status": "PASS",
+      "detail": "hellenia-card-title"
+    },
+    "quote_5_class_hellenia-items-table": {
+      "status": "PASS",
+      "detail": "hellenia-items-table"
+    },
+    "quote_5_class_hellenia-totals": {
+      "status": "PASS",
+      "detail": "hellenia-totals"
+    },
+    "quote_5_class_hellenia-conditions": {
+      "status": "PASS",
+      "detail": "hellenia-conditions"
+    },
+    "quote_5_class_hellenia-footer-contact": {
+      "status": "PASS",
+      "detail": "hellenia-footer-contact"
+    },
+    "quote_5_brand_design": {
+      "status": "PASS",
+      "detail": "premium template activo"
+    },
+    "quote_15_no_quotation": {
+      "status": "PASS",
+      "detail": "Quotation"
+    },
+    "quote_15_no_customer": {
+      "status": "PASS",
+      "detail": "Customer"
+    },
+    "quote_15_no_salesperson": {
+      "status": "PASS",
+      "detail": "Salesperson"
+    },
+    "quote_15_no_payment_terms": {
+      "status": "PASS",
+      "detail": "Payment Terms"
+    },
+    "quote_15_no_expiration": {
+      "status": "PASS",
+      "detail": "Expiration"
+    },
+    "quote_15_no_untaxed_amount": {
+      "status": "PASS",
+      "detail": "Untaxed Amount"
+    },
+    "quote_15_no_color_1a365d": {
+      "status": "PASS",
+      "detail": "1a365d"
+    },
+    "quote_15_no_color_c9a227": {
+      "status": "PASS",
+      "detail": "c9a227"
+    },
+    "quote_15_no_qr": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_15_no_ncf": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_15_has_COTIZACIÓN": {
+      "status": "PASS",
+      "detail": "COTIZACIÓN"
+    },
+    "quote_15_has_INFORMACIÓN_DEL_CLIE": {
+      "status": "PASS",
+      "detail": "INFORMACIÓN DEL CLIENTE"
+    },
+    "quote_15_has_INFORMACIÓN_DEL_VEND": {
+      "status": "PASS",
+      "detail": "INFORMACIÓN DEL VENDEDOR"
+    },
+    "quote_15_has_TÉRMINOS_DE_PAGO": {
+      "status": "PASS",
+      "detail": "TÉRMINOS DE PAGO"
+    },
+    "quote_15_has_DESCRIPCIÓN": {
+      "status": "PASS",
+      "detail": "DESCRIPCIÓN"
+    },
+    "quote_15_has_CANTIDAD": {
+      "status": "PASS",
+      "detail": "CANTIDAD"
+    },
+    "quote_15_has_PRECIO_UNITARIO": {
+      "status": "PASS",
+      "detail": "PRECIO UNITARIO"
+    },
+    "quote_15_has_SUBTOTAL": {
+      "status": "PASS",
+      "detail": "SUBTOTAL"
+    },
+    "quote_15_has_ITBIS": {
+      "status": "PASS",
+      "detail": "ITBIS"
+    },
+    "quote_15_has_CONDICIONES": {
+      "status": "PASS",
+      "detail": "CONDICIONES"
+    },
+    "quote_15_has_Santo_Domingo,_Repúb": {
+      "status": "PASS",
+      "detail": "Santo Domingo, República Dominicana"
+    },
+    "quote_15_class_hellenia-quote-page": {
+      "status": "PASS",
+      "detail": "hellenia-quote-page"
+    },
+    "quote_15_class_hellenia-quote-header": {
+      "status": "PASS",
+      "detail": "hellenia-quote-header"
+    },
+    "quote_15_class_hellenia-quote-company": {
+      "status": "PASS",
+      "detail": "hellenia-quote-company"
+    },
+    "quote_15_class_hellenia-quote-title-band": {
+      "status": "PASS",
+      "detail": "hellenia-quote-title-band"
+    },
+    "quote_15_class_hellenia-card": {
+      "status": "PASS",
+      "detail": "hellenia-card"
+    },
+    "quote_15_class_hellenia-card-title": {
+      "status": "PASS",
+      "detail": "hellenia-card-title"
+    },
+    "quote_15_class_hellenia-items-table": {
+      "status": "PASS",
+      "detail": "hellenia-items-table"
+    },
+    "quote_15_class_hellenia-totals": {
+      "status": "PASS",
+      "detail": "hellenia-totals"
+    },
+    "quote_15_class_hellenia-conditions": {
+      "status": "PASS",
+      "detail": "hellenia-conditions"
+    },
+    "quote_15_class_hellenia-footer-contact": {
+      "status": "PASS",
+      "detail": "hellenia-footer-contact"
+    },
+    "quote_15_brand_design": {
+      "status": "PASS",
+      "detail": "premium template activo"
+    },
+    "quote_custom_note_no_quotation": {
+      "status": "PASS",
+      "detail": "Quotation"
+    },
+    "quote_custom_note_no_customer": {
+      "status": "PASS",
+      "detail": "Customer"
+    },
+    "quote_custom_note_no_salesperson": {
+      "status": "PASS",
+      "detail": "Salesperson"
+    },
+    "quote_custom_note_no_payment_terms": {
+      "status": "PASS",
+      "detail": "Payment Terms"
+    },
+    "quote_custom_note_no_expiration": {
+      "status": "PASS",
+      "detail": "Expiration"
+    },
+    "quote_custom_note_no_untaxed_amount": {
+      "status": "PASS",
+      "detail": "Untaxed Amount"
+    },
+    "quote_custom_note_no_color_1a365d": {
+      "status": "PASS",
+      "detail": "1a365d"
+    },
+    "quote_custom_note_no_color_c9a227": {
+      "status": "PASS",
+      "detail": "c9a227"
+    },
+    "quote_custom_note_no_qr": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_custom_note_no_ncf": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_custom_note_has_COTIZACIÓN": {
+      "status": "PASS",
+      "detail": "COTIZACIÓN"
+    },
+    "quote_custom_note_has_INFORMACIÓN_DEL_CLIE": {
+      "status": "PASS",
+      "detail": "INFORMACIÓN DEL CLIENTE"
+    },
+    "quote_custom_note_has_INFORMACIÓN_DEL_VEND": {
+      "status": "PASS",
+      "detail": "INFORMACIÓN DEL VENDEDOR"
+    },
+    "quote_custom_note_has_TÉRMINOS_DE_PAGO": {
+      "status": "PASS",
+      "detail": "TÉRMINOS DE PAGO"
+    },
+    "quote_custom_note_has_DESCRIPCIÓN": {
+      "status": "PASS",
+      "detail": "DESCRIPCIÓN"
+    },
+    "quote_custom_note_has_CANTIDAD": {
+      "status": "PASS",
+      "detail": "CANTIDAD"
+    },
+    "quote_custom_note_has_PRECIO_UNITARIO": {
+      "status": "PASS",
+      "detail": "PRECIO UNITARIO"
+    },
+    "quote_custom_note_has_SUBTOTAL": {
+      "status": "PASS",
+      "detail": "SUBTOTAL"
+    },
+    "quote_custom_note_has_ITBIS": {
+      "status": "PASS",
+      "detail": "ITBIS"
+    },
+    "quote_custom_note_has_CONDICIONES": {
+      "status": "PASS",
+      "detail": "CONDICIONES"
+    },
+    "quote_custom_note_has_Santo_Domingo,_Repúb": {
+      "status": "PASS",
+      "detail": "Santo Domingo, República Dominicana"
+    },
+    "quote_custom_note_class_hellenia-quote-page": {
+      "status": "PASS",
+      "detail": "hellenia-quote-page"
+    },
+    "quote_custom_note_class_hellenia-quote-header": {
+      "status": "PASS",
+      "detail": "hellenia-quote-header"
+    },
+    "quote_custom_note_class_hellenia-quote-company": {
+      "status": "PASS",
+      "detail": "hellenia-quote-company"
+    },
+    "quote_custom_note_class_hellenia-quote-title-band": {
+      "status": "PASS",
+      "detail": "hellenia-quote-title-band"
+    },
+    "quote_custom_note_class_hellenia-card": {
+      "status": "PASS",
+      "detail": "hellenia-card"
+    },
+    "quote_custom_note_class_hellenia-card-title": {
+      "status": "PASS",
+      "detail": "hellenia-card-title"
+    },
+    "quote_custom_note_class_hellenia-items-table": {
+      "status": "PASS",
+      "detail": "hellenia-items-table"
+    },
+    "quote_custom_note_class_hellenia-totals": {
+      "status": "PASS",
+      "detail": "hellenia-totals"
+    },
+    "quote_custom_note_class_hellenia-conditions": {
+      "status": "PASS",
+      "detail": "hellenia-conditions"
+    },
+    "quote_custom_note_class_hellenia-footer-contact": {
+      "status": "PASS",
+      "detail": "hellenia-footer-contact"
+    },
+    "quote_custom_note_brand_design": {
+      "status": "PASS",
+      "detail": "premium template activo"
+    },
+    "terms_order_note_used": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_company_terms_no_quotation": {
+      "status": "PASS",
+      "detail": "Quotation"
+    },
+    "quote_company_terms_no_customer": {
+      "status": "PASS",
+      "detail": "Customer"
+    },
+    "quote_company_terms_no_salesperson": {
+      "status": "PASS",
+      "detail": "Salesperson"
+    },
+    "quote_company_terms_no_payment_terms": {
+      "status": "PASS",
+      "detail": "Payment Terms"
+    },
+    "quote_company_terms_no_expiration": {
+      "status": "PASS",
+      "detail": "Expiration"
+    },
+    "quote_company_terms_no_untaxed_amount": {
+      "status": "PASS",
+      "detail": "Untaxed Amount"
+    },
+    "quote_company_terms_no_color_1a365d": {
+      "status": "PASS",
+      "detail": "1a365d"
+    },
+    "quote_company_terms_no_color_c9a227": {
+      "status": "PASS",
+      "detail": "c9a227"
+    },
+    "quote_company_terms_no_qr": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_company_terms_no_ncf": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_company_terms_has_COTIZACIÓN": {
+      "status": "PASS",
+      "detail": "COTIZACIÓN"
+    },
+    "quote_company_terms_has_INFORMACIÓN_DEL_CLIE": {
+      "status": "PASS",
+      "detail": "INFORMACIÓN DEL CLIENTE"
+    },
+    "quote_company_terms_has_INFORMACIÓN_DEL_VEND": {
+      "status": "PASS",
+      "detail": "INFORMACIÓN DEL VENDEDOR"
+    },
+    "quote_company_terms_has_TÉRMINOS_DE_PAGO": {
+      "status": "PASS",
+      "detail": "TÉRMINOS DE PAGO"
+    },
+    "quote_company_terms_has_DESCRIPCIÓN": {
+      "status": "PASS",
+      "detail": "DESCRIPCIÓN"
+    },
+    "quote_company_terms_has_CANTIDAD": {
+      "status": "PASS",
+      "detail": "CANTIDAD"
+    },
+    "quote_company_terms_has_PRECIO_UNITARIO": {
+      "status": "PASS",
+      "detail": "PRECIO UNITARIO"
+    },
+    "quote_company_terms_has_SUBTOTAL": {
+      "status": "PASS",
+      "detail": "SUBTOTAL"
+    },
+    "quote_company_terms_has_ITBIS": {
+      "status": "PASS",
+      "detail": "ITBIS"
+    },
+    "quote_company_terms_has_CONDICIONES": {
+      "status": "PASS",
+      "detail": "CONDICIONES"
+    },
+    "quote_company_terms_has_Santo_Domingo,_Repúb": {
+      "status": "PASS",
+      "detail": "Santo Domingo, República Dominicana"
+    },
+    "quote_company_terms_class_hellenia-quote-page": {
+      "status": "PASS",
+      "detail": "hellenia-quote-page"
+    },
+    "quote_company_terms_class_hellenia-quote-header": {
+      "status": "PASS",
+      "detail": "hellenia-quote-header"
+    },
+    "quote_company_terms_class_hellenia-quote-company": {
+      "status": "PASS",
+      "detail": "hellenia-quote-company"
+    },
+    "quote_company_terms_class_hellenia-quote-title-band": {
+      "status": "PASS",
+      "detail": "hellenia-quote-title-band"
+    },
+    "quote_company_terms_class_hellenia-card": {
+      "status": "PASS",
+      "detail": "hellenia-card"
+    },
+    "quote_company_terms_class_hellenia-card-title": {
+      "status": "PASS",
+      "detail": "hellenia-card-title"
+    },
+    "quote_company_terms_class_hellenia-items-table": {
+      "status": "PASS",
+      "detail": "hellenia-items-table"
+    },
+    "quote_company_terms_class_hellenia-totals": {
+      "status": "PASS",
+      "detail": "hellenia-totals"
+    },
+    "quote_company_terms_class_hellenia-conditions": {
+      "status": "PASS",
+      "detail": "hellenia-conditions"
+    },
+    "quote_company_terms_class_hellenia-footer-contact": {
+      "status": "PASS",
+      "detail": "hellenia-footer-contact"
+    },
+    "quote_company_terms_brand_design": {
+      "status": "PASS",
+      "detail": "premium template activo"
+    },
+    "terms_company_fallback": {
+      "status": "PASS",
+      "detail": "(a) Las piezas ofrecidas son únicas y sujetas a disponibilid"
+    },
+    "quote_edited_company_terms_no_quotation": {
+      "status": "PASS",
+      "detail": "Quotation"
+    },
+    "quote_edited_company_terms_no_customer": {
+      "status": "PASS",
+      "detail": "Customer"
+    },
+    "quote_edited_company_terms_no_salesperson": {
+      "status": "PASS",
+      "detail": "Salesperson"
+    },
+    "quote_edited_company_terms_no_payment_terms": {
+      "status": "PASS",
+      "detail": "Payment Terms"
+    },
+    "quote_edited_company_terms_no_expiration": {
+      "status": "PASS",
+      "detail": "Expiration"
+    },
+    "quote_edited_company_terms_no_untaxed_amount": {
+      "status": "PASS",
+      "detail": "Untaxed Amount"
+    },
+    "quote_edited_company_terms_no_color_1a365d": {
+      "status": "PASS",
+      "detail": "1a365d"
+    },
+    "quote_edited_company_terms_no_color_c9a227": {
+      "status": "PASS",
+      "detail": "c9a227"
+    },
+    "quote_edited_company_terms_no_qr": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_edited_company_terms_no_ncf": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_edited_company_terms_has_COTIZACIÓN": {
+      "status": "PASS",
+      "detail": "COTIZACIÓN"
+    },
+    "quote_edited_company_terms_has_INFORMACIÓN_DEL_CLIE": {
+      "status": "PASS",
+      "detail": "INFORMACIÓN DEL CLIENTE"
+    },
+    "quote_edited_company_terms_has_INFORMACIÓN_DEL_VEND": {
+      "status": "PASS",
+      "detail": "INFORMACIÓN DEL VENDEDOR"
+    },
+    "quote_edited_company_terms_has_TÉRMINOS_DE_PAGO": {
+      "status": "PASS",
+      "detail": "TÉRMINOS DE PAGO"
+    },
+    "quote_edited_company_terms_has_DESCRIPCIÓN": {
+      "status": "PASS",
+      "detail": "DESCRIPCIÓN"
+    },
+    "quote_edited_company_terms_has_CANTIDAD": {
+      "status": "PASS",
+      "detail": "CANTIDAD"
+    },
+    "quote_edited_company_terms_has_PRECIO_UNITARIO": {
+      "status": "PASS",
+      "detail": "PRECIO UNITARIO"
+    },
+    "quote_edited_company_terms_has_SUBTOTAL": {
+      "status": "PASS",
+      "detail": "SUBTOTAL"
+    },
+    "quote_edited_company_terms_has_ITBIS": {
+      "status": "PASS",
+      "detail": "ITBIS"
+    },
+    "quote_edited_company_terms_has_CONDICIONES": {
+      "status": "PASS",
+      "detail": "CONDICIONES"
+    },
+    "quote_edited_company_terms_has_Santo_Domingo,_Repúb": {
+      "status": "PASS",
+      "detail": "Santo Domingo, República Dominicana"
+    },
+    "quote_edited_company_terms_class_hellenia-quote-page": {
+      "status": "PASS",
+      "detail": "hellenia-quote-page"
+    },
+    "quote_edited_company_terms_class_hellenia-quote-header": {
+      "status": "PASS",
+      "detail": "hellenia-quote-header"
+    },
+    "quote_edited_company_terms_class_hellenia-quote-company": {
+      "status": "PASS",
+      "detail": "hellenia-quote-company"
+    },
+    "quote_edited_company_terms_class_hellenia-quote-title-band": {
+      "status": "PASS",
+      "detail": "hellenia-quote-title-band"
+    },
+    "quote_edited_company_terms_class_hellenia-card": {
+      "status": "PASS",
+      "detail": "hellenia-card"
+    },
+    "quote_edited_company_terms_class_hellenia-card-title": {
+      "status": "PASS",
+      "detail": "hellenia-card-title"
+    },
+    "quote_edited_company_terms_class_hellenia-items-table": {
+      "status": "PASS",
+      "detail": "hellenia-items-table"
+    },
+    "quote_edited_company_terms_class_hellenia-totals": {
+      "status": "PASS",
+      "detail": "hellenia-totals"
+    },
+    "quote_edited_company_terms_class_hellenia-conditions": {
+      "status": "PASS",
+      "detail": "hellenia-conditions"
+    },
+    "quote_edited_company_terms_class_hellenia-footer-contact": {
+      "status": "PASS",
+      "detail": "hellenia-footer-contact"
+    },
+    "quote_edited_company_terms_brand_design": {
+      "status": "PASS",
+      "detail": "premium template activo"
+    },
+    "terms_company_editable": {
+      "status": "PASS",
+      "detail": ""
+    }
+  },
+  "editable_terms_test": {
+    "order_note_priority": "PASS",
+    "company_terms_fallback": "PASS",
+    "company_terms_editable": "PASS"
+  },
+  "ok": true,
+  "pass": true,
+  "failed_checks": [],
+  "ready_for_prod": false
+}

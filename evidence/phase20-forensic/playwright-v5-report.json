@@ -1,0 +1,30 @@
+{
+  "phase": "20-forensic-prod-v5",
+  "timestamp_utc": "2026-07-01T12:59:53.622220+00:00",
+  "backup": "/opt/odoo-projects/hellenia/backups/hellenia-prod/2026-07-01_1248",
+  "steps": {
+    "capture1": {
+      "ok": true,
+      "detail": "wizard loaded",
+      "screenshot": "evidence/phase20-forensic/screenshots/v5-04-load.png"
+    },
+    "capture2": {
+      "ok": true,
+      "detail": "apply clicked",
+      "screenshot": "evidence/phase20-forensic/screenshots/v5-05-apply.png"
+    },
+    "capture3": {
+      "ok": true,
+      "detail": "5000",
+      "screenshot": "evidence/phase20-forensic/screenshots/v5-06-5000.png"
+    },
+    "exception": {
+      "ok": false,
+      "detail": "Locator.fill: Timeout 30000ms exceeded.\nCall log:\n  - waiting for locator(\"input[name=\\\"hellenia_payment_reference\\\"]\")\n",
+      "screenshot": "evidence/phase20-forensic/screenshots/v5-99-error.png"
+    }
+  },
+  "checkbox": {},
+  "ok": false,
+  "pass": false
+}

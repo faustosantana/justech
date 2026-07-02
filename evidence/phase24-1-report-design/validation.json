@@ -1,0 +1,544 @@
+{
+  "phase": "24.1H-vertical-flow-cond-sigs",
+  "timestamp_utc": "2026-07-02T04:15:13.894600+00:00",
+  "database": "hellenia_test",
+  "pass": true,
+  "failed_checks": [
+    "portal_pdf"
+  ],
+  "checks": {
+    "action_exists": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "report_name": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "paperformat": {
+      "status": "PASS",
+      "detail": "Hellenia Quotation Paperformat"
+    },
+    "pf_margins": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "pf_dpi": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_1_pdf": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_1_jt_template": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_1_scss_class": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_1_no_inline_style_block": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_1_no_external_layout": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_1_band": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_1_no_vendor_email": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_1_no_immediate": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_1_no_excel": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_1_grand": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_1_no_totals_outer": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_1_no_totals_gap": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_1_totals_wrap": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_1_totals_width_280": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_1_no_sigs_table": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_1_sigs_zone": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_1_no_sigs_zone_table": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_1_cond_block": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_1_vertical_flow": {
+      "status": "PASS",
+      "detail": "totals=57569 cond=58529 sigs=59107"
+    },
+    "quote_1_no_lower_wrapper": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_1_no_dynamic_sig_push": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_1_discount_col": {
+      "status": "PASS",
+      "detail": "has_disc=False"
+    },
+    "quote_1_discount_totals": {
+      "status": "PASS",
+      "detail": "show=False"
+    },
+    "quote_1_no_discount_totals": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_1_terms_in_pdf": {
+      "status": "PASS",
+      "detail": "(a) Las piezas ofrecidas son únicas y sujetas a disponibilid"
+    },
+    "quote_1_terms_from_note": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_1_sig_zone_height": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_1_sigs_on_first_page": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_pdf": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_jt_template": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_scss_class": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_no_inline_style_block": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_no_external_layout": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_band": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_no_vendor_email": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_no_immediate": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_no_excel": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_grand": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_no_totals_outer": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_no_totals_gap": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_totals_wrap": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_totals_width_280": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_no_sigs_table": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_sigs_zone": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_no_sigs_zone_table": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_cond_block": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_vertical_flow": {
+      "status": "PASS",
+      "detail": "totals=60569 cond=61533 sigs=62111"
+    },
+    "quote_5_no_lower_wrapper": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_no_dynamic_sig_push": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_discount_col": {
+      "status": "PASS",
+      "detail": "has_disc=False"
+    },
+    "quote_5_discount_totals": {
+      "status": "PASS",
+      "detail": "show=False"
+    },
+    "quote_5_no_discount_totals": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_terms_in_pdf": {
+      "status": "PASS",
+      "detail": "(a) Las piezas ofrecidas son únicas y sujetas a disponibilid"
+    },
+    "quote_5_terms_from_note": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_sig_zone_height": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_sigs_on_first_page": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_25_pdf": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_25_jt_template": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_25_scss_class": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_25_no_inline_style_block": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_25_no_external_layout": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_25_band": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_25_no_vendor_email": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_25_no_immediate": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_25_no_excel": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_25_grand": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_25_no_totals_outer": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_25_no_totals_gap": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_25_totals_wrap": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_25_totals_width_280": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_25_no_sigs_table": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_25_sigs_zone": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_25_no_sigs_zone_table": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_25_cond_block": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_25_vertical_flow": {
+      "status": "PASS",
+      "detail": "totals=75451 cond=76415 sigs=76993"
+    },
+    "quote_25_no_lower_wrapper": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_25_no_dynamic_sig_push": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_25_discount_col": {
+      "status": "PASS",
+      "detail": "has_disc=False"
+    },
+    "quote_25_discount_totals": {
+      "status": "PASS",
+      "detail": "show=False"
+    },
+    "quote_25_no_discount_totals": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_25_terms_in_pdf": {
+      "status": "PASS",
+      "detail": "(a) Las piezas ofrecidas son únicas y sujetas a disponibilid"
+    },
+    "quote_25_terms_from_note": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_25_sig_zone_height": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_25_sigs_on_first_page": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_1_single_page": {
+      "status": "PASS",
+      "detail": "pages=None size=73563"
+    },
+    "quote_5_disc_pdf": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_disc_jt_template": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_disc_scss_class": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_disc_no_inline_style_block": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_disc_no_external_layout": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_disc_band": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_disc_no_vendor_email": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_disc_no_immediate": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_disc_no_excel": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_disc_grand": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_disc_no_totals_outer": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_disc_no_totals_gap": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_disc_totals_wrap": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_disc_totals_width_280": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_disc_no_sigs_table": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_disc_sigs_zone": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_disc_no_sigs_zone_table": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_disc_cond_block": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_disc_vertical_flow": {
+      "status": "PASS",
+      "detail": "totals=61268 cond=62702 sigs=63280"
+    },
+    "quote_5_disc_no_lower_wrapper": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_disc_no_dynamic_sig_push": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_disc_discount_col": {
+      "status": "PASS",
+      "detail": "has_disc=True"
+    },
+    "quote_5_disc_discount_totals": {
+      "status": "PASS",
+      "detail": "show=True"
+    },
+    "quote_5_disc_terms_in_pdf": {
+      "status": "PASS",
+      "detail": "(a) Las piezas ofrecidas son únicas y sujetas a disponibilid"
+    },
+    "quote_5_disc_terms_from_note": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_disc_sig_zone_height": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_disc_sigs_on_first_page": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_disc_has_percent": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_disc_totals_breakdown": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_1_no_discount_col": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_no_discount_col": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_25_no_discount_col": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "portal_pdf": {
+      "status": "FAIL",
+      "detail": "status=200 size=6909"
+    },
+    "no_replace_standard": {
+      "status": "PASS",
+      "detail": "inherits=[]"
+    }
+  },
+  "pdfs": {
+    "quote_1": {
+      "order": "S00134",
+      "file": "quotation_1_product.pdf",
+      "line_count": 1,
+      "pages": null,
+      "size_bytes": 73563
+    },
+    "quote_5": {
+      "order": "S00135",
+      "file": "quotation_5_products.pdf",
+      "line_count": 5,
+      "pages": null,
+      "size_bytes": 74524
+    },
+    "quote_25": {
+      "order": "S00138",
+      "file": "quotation_25_products.pdf",
+      "line_count": 25,
+      "pages": null,
+      "size_bytes": 79050
+    },
+    "quote_5_disc": {
+      "order": "S00139",
+      "file": "quotation_5_products_discount.pdf",
+      "line_count": 5,
+      "pages": null,
+      "size_bytes": 76792
+    }
+  },
+  "screenshots": {},
+  "module_version": "19.0.1.1.6",
+  "portal": {
+    "status": 200,
+    "size": 6909,
+    "is_pdf": false
+  }
+}

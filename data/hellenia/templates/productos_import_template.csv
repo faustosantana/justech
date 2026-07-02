@@ -1,0 +1,4 @@
+default_code,name,categ_name,list_price,standard_price,type,barcode,description
+# Productos — archivo pendiente entrega Hellenia
+# type: consu (almacenable con is_storable) | service
+# categ_name debe existir en Odoo (ver Fase 8 categorías Espejos, Lámparas, etc.)

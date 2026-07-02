@@ -1,0 +1,27 @@
+# Bancos — configuración definitiva Fase 16
+
+schema_version: "2.1"
+bank_name: "Banco López de Haro"
+
+accounts:
+  - label: "Cuenta corriente DOP"
+    currency: DOP
+    acc_number: "4040043811"
+    acc_holder: "Hellenia, S.R.L."
+    status: active
+    journal_code: BNKD
+
+  - label: "Cuenta ahorro USD"
+    currency: USD
+    acc_number: "4010461048"
+    acc_holder: "Hellenia, S.R.L."
+    status: active
+    journal_code: BNKU
+
+journal_mapping:
+  DOP: BNKD
+  USD: BNKU
+  legacy: BNK1  # desactivado por hellenia_account si sin movimientos
+
+module: hellenia_account
+setup_method: configure_banks_and_payments

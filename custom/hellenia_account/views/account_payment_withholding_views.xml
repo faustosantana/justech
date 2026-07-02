@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_account_payment_form_hellenia_withholding" model="ir.ui.view">
+        <field name="name">account.payment.form.hellenia.withholding</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="account.view_account_payment_form"/>
+        <field name="priority">25</field>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="inside">
+                <field name="hellenia_applied_amount" invisible="1"/>
+                <field name="hellenia_withholding_total" invisible="1"/>
+                <field name="hellenia_withholding_line_ids" invisible="1"/>
+                <field name="hellenia_application_line_ids" invisible="1"/>
+                <field name="hellenia_show_application_detail" invisible="1"/>
+            </xpath>
+            <xpath expr="//sheet/group" position="after">
+                <group string="Resumen aplicación" invisible="not hellenia_show_application_detail">
+                    <group>
+                        <field name="hellenia_invoice_display" readonly="1" string="Facturas afectadas"/>
+                        <field name="hellenia_applied_amount" readonly="1" string="Monto aplicado"/>
+                        <field name="hellenia_withholding_total" readonly="1" string="Total retenido"/>
+                        <field name="hellenia_net_transfer" readonly="1" string="Neto transferido"/>
+                    </group>
+                </group>
+                <group string="Detalle por factura" invisible="not hellenia_application_line_ids">
+                    <field name="hellenia_application_line_ids" nolabel="1" readonly="1">
+                        <list>
+                            <field name="invoice_name" string="Factura"/>
+                            <field name="ncf" string="NCF"/>
+                            <field name="invoice_date" string="Fecha"/>
+                            <field name="invoice_total" string="Total factura"/>
+                            <field name="applied_amount" string="Monto aplicado"/>
+                            <field name="withholding_labels" string="Retenciones"/>
+                            <field name="withholding_amount" string="Monto retenido"/>
+                            <field name="net_amount" string="Neto"/>
+                            <field name="reconciliation_state" string="Estado conciliación"/>
+                        </list>
+                    </field>
+                </group>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="Retenciones aplicadas" name="hellenia_withholdings"
+                      invisible="not hellenia_withholding_line_ids">
+                    <field name="hellenia_withholding_line_ids" nolabel="1" readonly="1">
+                        <list>
+                            <field name="invoice_name" string="Factura"/>
+                            <field name="ncf" string="NCF"/>
+                            <field name="label" string="Retención"/>
+                            <field name="withholding_type" string="Tipo"/>
+                            <field name="base_label" string="Base"/>
+                            <field name="base_amount" string="Monto base"/>
+                            <field name="rate" string="%"/>
+                            <field name="amount" string="Monto retenido"/>
+                            <field name="account_id" string="Cuenta contable"/>
+                            <field name="payment_move_id" string="Asiento contable"/>
+                            <field name="fiscal_report_codes" string="Reporte fiscal"/>
+                            <field name="move_line_id" string="Línea asiento" optional="hide"/>
+                            <field name="partial_reconcile_id" string="Conciliación" optional="hide"/>
+                            <field name="state" string="Estado"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

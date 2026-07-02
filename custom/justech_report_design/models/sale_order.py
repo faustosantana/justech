@@ -115,19 +115,21 @@ class SaleOrder(models.Model):
             return max(28, self.get_jt_quotation_signature_spacer_px())
 
         count, last_page_lines = self._jt_quotation_page_stats()
-        page_usable = 1080
-        sig_h = 90
-        footer_gap = 8
+        page_usable = 1090
+        sig_h = 82
+        footer_gap = 4
         cond_h = self._jt_quotation_conditions_height_px()
         totals_h = 78 if self.get_jt_quotation_show_discount_totals() else 58
 
         if count <= 22:
-            content_above_lower = 418 + count * 34 + totals_h
+            content_above_lower = 412 + count * 34 + totals_h
         else:
             content_above_lower = last_page_lines * 34 + totals_h
 
         max_push = page_usable - content_above_lower - cond_h - sig_h - footer_gap
-        return max(64, min(int(max_push), 300))
+        boost = 28 if count <= 5 else (14 if count <= 15 else 0)
+        cap = 340 if count <= 5 else 310
+        return max(64, min(int(max_push) + boost, cap))
 
     def get_jt_quotation_lower_min_height_px(self):
         """Compatibilidad — altura mínima zona inferior."""

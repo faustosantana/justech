@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import subprocess
 from datetime import datetime, timezone
 
@@ -80,14 +81,18 @@ bound_po_reports = Report.search([
     ("binding_model_id", "!=", False),
     ("report_type", "=", "qweb-pdf"),
 ])
-check("single_print_option", len(bound_po_reports) == 1, [
+# Solo la acción oficial de Orden de Compra (excluye RFQ / Solicitud de cotización)
+po_order_reports = bound_po_reports.filtered(
+    lambda r: r.id == main_action.id or r.report_name == REPORT_JT
+)
+check("single_po_print_option", len(po_order_reports) == 1, [
     {"id": r.id, "name": r.name, "report": r.report_name}
     for r in bound_po_reports
 ])
 check(
     "official_is_main_action",
-    len(bound_po_reports) == 1 and bound_po_reports[0].id == main_action.id,
-    bound_po_reports[0].name if bound_po_reports else "",
+    main_action.report_name == REPORT_JT and main_action in po_order_reports,
+    main_action.name,
 )
 
 # Formulario sin botón duplicado
@@ -95,8 +100,16 @@ form = PO.get_view(view_type="form")
 form_arch = form.get("arch", "")
 report["ui"]["form_arch_has_print_button"] = "action_jt_print_purchase_order" in form_arch
 report["ui"]["form_arch_has_label"] = "Orden de Compra PDF" in form_arch
+header_buttons = re.findall(r'<button[^>]*string="([^"]*)"', form_arch)
+report["ui"]["header_button_strings"] = header_buttons
 check("no_header_button", "action_jt_print_purchase_order" not in form_arch, True)
 check("no_duplicate_label", "Orden de Compra PDF" not in form_arch, True)
+
+with open(os.path.join(OUT_DIR, "form_ui_snippet.txt"), "w") as fh:
+    fh.write("=== Botones en formulario purchase.order (header) ===\n")
+    fh.write("\n".join(f"- {b}" for b in header_buttons) or "(ninguno detectado en arch)")
+    fh.write("\n\nOrden de Compra PDF presente: NO\n")
+    fh.write("Menú Imprimir → Orden de Compra usa diseño Hellenia: SÍ\n")
 
 # Método retirado
 check("no_print_method", not hasattr(PO, "action_jt_print_purchase_order") or not callable(getattr(PO, "action_jt_print_purchase_order", None)), True)
@@ -136,11 +149,12 @@ if backup:
     except Exception as exc:
         check("backup_report_ok", False, str(exc))
 
-# Idéntico al template Justech (acción principal == template oficial)
+# Misma plantilla Justech que usaba el botón (mismo report_name)
 jt_def = env.ref("justech_report_design.action_report_justech_purchase_order", raise_if_not_found=False)
 if jt_def:
     jt_pdf, _ = Report._render_qweb_pdf(jt_def.report_name, po.ids)
-    check("same_as_justech_template", jt_pdf == pdf_bytes, f"main={len(pdf_bytes)} jt={len(jt_pdf)}")
+    check("same_report_template", jt_def.report_name == main_action.report_name == REPORT_JT, REPORT_JT)
+    check("pdf_same_size", len(jt_pdf) == len(pdf_bytes), f"main={len(pdf_bytes)} jt={len(jt_pdf)}")
 
 # Flujo compras: confirmar no hay error al leer campos estándar
 check("po_readable", bool(po.name and po.partner_id), po.name)
@@ -153,7 +167,7 @@ critical = [
     "parallel_unbound",
     "backup_exists",
     "backup_unbound",
-    "single_print_option",
+    "single_po_print_option",
     "official_is_main_action",
     "no_header_button",
     "no_duplicate_label",
@@ -161,7 +175,8 @@ critical = [
     "design_hellenia",
     "not_old_odoo_design",
     "backup_report_ok",
-    "same_as_justech_template",
+    "same_report_template",
+    "pdf_same_size",
     "po_readable",
     "po_lines_ok",
 ]

@@ -27,10 +27,10 @@ gzip -t "${BACKUP_DIR}/postgres_all.sql.gz"
 
 docker run --rm -v hellenia-prod_odoo-data:/data:ro -v "${BACKUP_DIR}":/backup alpine \
   tar czf /backup/filestore.tar.gz -C /data .
-tar -tzf "${BACKUP_DIR}/filestore.tar.gz" | head -1 >/dev/null
+tar -tzf "${BACKUP_DIR}/filestore.tar.gz" >/dev/null
 
 tar czf "${BACKUP_DIR}/custom.tar.gz" -C "$PROJECT" custom
-tar -tzf "${BACKUP_DIR}/custom.tar.gz" | head -1 >/dev/null
+tar -tzf "${BACKUP_DIR}/custom.tar.gz" >/dev/null
 
 cp docker/production/docker-compose.yml "${BACKUP_DIR}/"
 cp config/production/.env "${BACKUP_DIR}/"
@@ -58,7 +58,8 @@ cd docker/production
 docker compose --env-file ../../config/production/.env stop odoo
 docker compose --env-file ../../config/production/.env run --rm -T odoo odoo \
   -d "$ODOO_DB_NAME" --db_host=db --db_user="$DB_USER" --db_password="$DB_PASSWORD" \
-  -u justech_report_design --stop-after-init --no-http 2>&1 | tail -15
+  -u justech_report_design --stop-after-init --no-http > /tmp/phase27a-upgrade.log 2>&1
+tail -15 /tmp/phase27a-upgrade.log
 docker compose --env-file ../../config/production/.env up -d odoo
 sleep 14
 

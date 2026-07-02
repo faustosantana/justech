@@ -238,16 +238,20 @@ h2.hellenia-doc-title,
 }
 
 .jt-hq-items tbody td {
-    padding: 8px 10px;
+    padding: 9px 12px;
     font-size: 8.5pt;
     color: #2d2d2d;
-    vertical-align: top;
+    vertical-align: middle;
     border: none !important;
-    border-bottom: 1px solid #f3f3f3 !important;
+    border-bottom: none !important;
 }
 
-.jt-hq-items tbody tr:last-child td {
-    border-bottom: none !important;
+.jt-hq-items tbody tr:nth-child(even) td {
+    background-color: #f8f9f6;
+}
+
+.jt-hq-items tbody tr:nth-child(odd) td {
+    background-color: #ffffff;
 }
 
 .jt-hq-items .c-num {
@@ -267,44 +271,62 @@ h2.hellenia-doc-title,
     font-weight: bold;
 }
 
+/* Totales — bloque compacto alineado derecha */
+.jt-hq-totals-wrap {
+    width: 100%;
+    margin: 10px 0 18px 0;
+    text-align: right;
+}
+
 .jt-hq-totals {
-    width: 280px;
-    margin: 6px 0 12px auto;
+    width: 252px;
+    margin: 0 0 0 auto;
+    border: none !important;
 }
 
 .jt-hq-totals td {
-    padding: 4px 2px;
+    padding: 5px 0;
     font-size: 8.5pt;
     border: none !important;
+    vertical-align: middle;
 }
 
 .jt-hq-totals .t-lbl {
     color: #888888;
     font-weight: bold;
     text-align: left;
-    width: 50%;
+    padding-right: 16px;
+    white-space: nowrap;
 }
 
 .jt-hq-totals .t-val {
     color: #2d2d2d;
     font-weight: bold;
     text-align: right;
-    width: 50%;
+    white-space: nowrap;
+    width: 120px;
+}
+
+.jt-hq-totals tr:not(.grand) td {
+    border-bottom: 1px solid #f0f0f0 !important;
 }
 
 .jt-hq-totals tr.grand td {
+    border: none !important;
     border-top: 2px solid #3E4827 !important;
-    padding-top: 10px;
+    padding-top: 12px;
+    padding-bottom: 2px;
 }
 
 .jt-hq-totals tr.grand .t-lbl {
-    font-size: 11pt;
+    font-size: 12pt;
     color: #3E4827;
     text-transform: uppercase;
+    font-weight: bold;
 }
 
 .jt-hq-totals tr.grand .t-val {
-    font-size: 15pt;
+    font-size: 16pt;
     color: #3E4827;
     font-weight: bold;
 }
@@ -321,7 +343,7 @@ h2.hellenia-doc-title,
 }
 
 .jt-hq-cond {
-    margin: 10px 0 14px 0;
+    margin: 16px 0 20px 0;
     padding: 0;
     border: none !important;
     background: transparent !important;
@@ -333,19 +355,20 @@ h2.hellenia-doc-title,
     text-transform: uppercase;
     font-size: 6.5pt;
     letter-spacing: 0.7px;
-    margin: 0 0 6px 0;
-    padding: 0 0 4px 0;
+    margin: 0 0 0 0;
+    padding: 0 0 5px 0;
     border: none !important;
-    border-bottom: 1px solid #3E4827 !important;
+    border-bottom: 2px solid #3E4827 !important;
     display: inline-block;
+    min-width: 90px;
 }
 
 .jt-hq-cond-body {
     font-size: 7.5pt;
     color: #2d2d2d;
-    line-height: 1.6;
+    line-height: 1.65;
     white-space: pre-line;
-    margin: 6px 0 0 0;
+    margin: 10px 0 0 0;
     padding: 0;
     border: none !important;
     background: transparent !important;
@@ -359,68 +382,96 @@ h2.hellenia-doc-title,
     padding: 0;
 }
 
-/* Firmas — líneas suaves, sin caja */
+/* Firmas — texto plano + raya, sin caja */
 .jt-hq-sigs {
-    margin: 18px 0 8px 0;
+    margin: 22px 0 0 0;
 }
 
 .jt-hq-sigs td {
     vertical-align: top;
     padding: 0;
+    border: none !important;
+    background: transparent !important;
 }
 
-.jt-hq-sig-lbl {
+.jt-hq-sig-head {
     font-size: 6.5pt;
     font-weight: bold;
     text-transform: uppercase;
     color: #888888;
     letter-spacing: 0.6px;
-    margin: 4px 0 0 0;
+    margin: 0 0 6px 0;
 }
 
 .jt-hq-sig-line {
     border: none !important;
-    border-bottom: 1px solid #c8c8c8 !important;
+    border-bottom: 1px solid #bdbdbd !important;
     height: 0;
-    width: 88%;
-    margin: 0 0 0 0;
+    width: 90%;
+    margin: 0 0 14px 0;
     padding: 0;
     background: transparent !important;
 }
 
-.jt-hq-sig-date {
-    margin-top: 16px;
-}
-
-.jt-hq-sig-date .jt-hq-sig-line {
-    max-width: 200px;
-}
-
-.jt-hq-foot {
-    border-top: 1px solid #3E4827;
-    padding-top: 6px;
-    text-align: center;
-    font-size: 7pt;
-    color: #3E4827;
-    margin-top: 8px;
-}
-
-/* Footer PDF — paginación wkhtmltopdf */
-.jt-hq-footer-pdf {
-    border-top: 1px solid #e8e8e8;
-    padding: 4px 0 0 0;
-    font-size: 7pt;
-    color: #888888;
-    text-align: center;
-}
-
-.jt-hq-footer-pdf .jt-hq-foot-inline {
-    color: #3E4827;
-    margin-bottom: 2px;
-}
-
-.jt-hq-pg {
-    text-align: center;
+.jt-hq-sig-date-lbl {
     font-size: 6.5pt;
+    font-weight: bold;
+    text-transform: uppercase;
     color: #888888;
+    letter-spacing: 0.4px;
+    margin: 0 0 6px 0;
+}
+
+.jt-hq-sig-line-date {
+    width: 70%;
+    margin-bottom: 0;
+}
+
+/* Footer PDF — barra verde Hellenia */
+.jt-hq-footer-pdf {
+    background-color: #3E4827 !important;
+    color: #ffffff !important;
+    padding: 9px 16px;
+    font-size: 7pt;
+    margin: 0;
+    border: none !important;
+}
+
+.jt-hq-foot-bar {
+    width: 100%;
+    border: none !important;
+}
+
+.jt-hq-foot-bar td {
+    border: none !important;
+    vertical-align: middle;
+    color: #ffffff !important;
+    background: transparent !important;
+}
+
+.jt-hq-foot-contact {
+    text-align: left;
+    color: #ffffff !important;
+}
+
+.jt-hq-foot-contact span {
+    color: #ffffff !important;
+}
+
+.jt-hq-foot-sep {
+    color: rgba(255, 255, 255, 0.45) !important;
+    margin: 0 10px;
+}
+
+.jt-hq-foot-page {
+    text-align: right;
+    white-space: nowrap;
+    color: #ffffff !important;
+    font-size: 7pt;
+    width: 120px;
+}
+
+.jt-hq-foot-page .page,
+.jt-hq-foot-page .topage {
+    color: #ffffff !important;
 }

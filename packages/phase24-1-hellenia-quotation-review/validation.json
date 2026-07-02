@@ -1,6 +1,6 @@
 {
   "phase": "24.1-report-design-integration",
-  "timestamp_utc": "2026-07-02T02:03:55.098096+00:00",
+  "timestamp_utc": "2026-07-02T02:14:12.961371+00:00",
   "database": "hellenia_test",
   "pass": true,
   "failed_checks": [
@@ -69,7 +69,7 @@
     },
     "quote_1_single_page": {
       "status": "PASS",
-      "detail": "pages=None size=70204"
+      "detail": "pages=None size=70330"
     },
     "quote_5_pdf": {
       "status": "PASS",
@@ -166,25 +166,25 @@
       "file": "quotation_1_product.pdf",
       "line_count": 1,
       "pages": null,
-      "size_bytes": 70204
+      "size_bytes": 70330
     },
     "quote_5": {
       "order": "S00135",
       "file": "quotation_5_products.pdf",
       "line_count": 5,
       "pages": null,
-      "size_bytes": 72394
+      "size_bytes": 72636
     },
     "quote_20": {
       "order": "S00138",
       "file": "quotation_25_products.pdf",
       "line_count": 25,
       "pages": null,
-      "size_bytes": 76772
+      "size_bytes": 77244
     }
   },
   "screenshots": {},
-  "module_version": "19.0.1.0.1",
+  "module_version": "19.0.1.0.2",
   "portal": {
     "status": 200,
     "size": 6909,

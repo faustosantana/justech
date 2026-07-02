@@ -1,21 +1,19 @@
 # Estado Fase 24 — Reportes Justech
 
-**Última actualización:** 2026-07-02
+**Última actualización:** 2026-07-02 (aprobación visual v19.0.1.1.6)
 
 ---
 
-## Fase 24.1 — Cotización (TEST)
+## Fase 24.1 — Cotización (TEST → PROD paralelo)
 
 | Ítem | Estado |
 |------|--------|
-| Módulo `justech_report_design` | ✅ Desplegado en TEST |
-| Validación automática | ✅ `pass: true` (v19.0.1.1.4) |
-| Auditoría 24.1G | ✅ VIS-001 cerrado — `ready_for_official: true` (técnico) |
-| Paquete revisión | ✅ `packages/phase24-1-hellenia-quotation-review.zip` (regenerado) |
-| Aprobación visual | ⏳ **Pendiente — revisar ZIP regenerado** |
-| PROD | ⛔ Bloqueado |
-
-**Bloqueante para código nuevo:** revisión visual final del ZIP 24.1.
+| Módulo `justech_report_design` | ✅ v`19.0.1.1.6` en TEST |
+| Aprobación visual | ✅ **Aprobado** (VIS-001 cerrado) |
+| Flujo vertical 24.1H | ✅ CONDICIONES / FIRMAS separados |
+| Plan migración PROD paralelo | ✅ `docs/PHASE24_1_PROD_PARALLEL_MIGRATION_PLAN.md` |
+| Ejecución PROD | ⛔ **Bloqueada** — pendiente autorización final |
+| Formato oficial (reemplazo estándar) | ⛔ **No autorizado** — fase futura |
 
 ---
 
@@ -58,14 +56,15 @@
 
 ## Siguiente acción
 
-**Responsable:** revisar visualmente `packages/phase24-1-hellenia-quotation-review.zip`
+**Responsable:** autorizar ejecución del plan PROD paralelo (`docs/PHASE24_1_PROD_PARALLEL_MIGRATION_PLAN.md`).
 
-**Agente / desarrollo:** en espera — sin commits de implementación 24.2.
+**Agente / desarrollo:** en espera de `APPROVE_PROMOTION=1` o autorización escrita equivalente.
 
-Tras OK visual:
+Tras instalación PROD paralela:
 
-1. Desbloquear Oleada 1 (fundación + cotización)
-2. Mantener factura/compra/pago/inventario en planificación únicamente
+1. Validar cotización real + reporte estándar
+2. Monitoreo 48h
+3. Decisión futura: formato oficial (Fase 24.1I — no planificada aún)
 
 ---
 
@@ -75,5 +74,7 @@ Tras OK visual:
 |---------|------|
 | ZIP cotización | `packages/phase24-1-hellenia-quotation-review.zip` |
 | Propuesta 24.2 | `docs/PHASE24_2_JUSTECH_REPORT_DESIGN_PROPOSAL.md` |
-| Checklist PROD | `packages/phase24-1-hellenia-quotation-review/PROD_PROMOTION_CHECKLIST.md` |
-| Rama Git | `cursor/phase24-1-report-design-dd85` |
+| Plan PROD paralelo | `docs/PHASE24_1_PROD_PARALLEL_MIGRATION_PLAN.md` |
+| Checklist ejecución PROD | `packages/phase24-1-hellenia-quotation-review/PROD_PARALLEL_MIGRATION_CHECKLIST.md` |
+| Checklist PROD (legado) | `packages/phase24-1-hellenia-quotation-review/PROD_PROMOTION_CHECKLIST.md` |
+| Rama Git | `cursor/phase24-1h-vis001-border-fix-dd85` |

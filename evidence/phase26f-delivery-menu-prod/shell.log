@@ -1,0 +1,21 @@
+2026-07-02 20:04:53,910 56 WARNING ? odoo.tools.config: option logfile reads 'False' in the config file at /etc/odoo/odoo.conf but isn't a boolean option, skip 
+2026-07-02 20:04:53,910 56 WARNING ? odoo.tools.config: option logfile reads 'False' in the config file at /etc/odoo/odoo.conf but isn't a boolean option, skip 
+2026-07-02 20:04:53,910 56 INFO ? odoo: Odoo version 19.0-20260619 
+2026-07-02 20:04:53,910 56 INFO ? odoo: Using configuration file at /etc/odoo/odoo.conf 
+2026-07-02 20:04:53,910 56 INFO ? odoo: addons paths: _NamespacePath(['/usr/lib/python3/dist-packages/odoo/addons', '/var/lib/odoo/addons/19.0', '/mnt/enterprise/addons', '/mnt/custom', '/usr/lib/python3/dist-packages/addons']) 
+2026-07-02 20:04:53,910 56 INFO ? odoo: database: odoo@db:default 
+2026-07-02 20:04:54,120 56 INFO ? odoo.service.server: Stopping workers gracefully 
+2026-07-02 20:04:54,150 56 INFO hellenia_prod odoo.modules.loading: loading 1 modules... 
+2026-07-02 20:04:54,153 56 INFO hellenia_prod odoo.modules.loading: 1 modules loaded in 0.00s, 0 queries (+0 extra) 
+2026-07-02 20:04:54,180 56 INFO hellenia_prod odoo.modules.loading: loading 139 modules... 
+2026-07-02 20:04:54,965 56 WARNING hellenia_prod odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define models.Constraint on the model. 
+2026-07-02 20:04:55,045 56 WARNING hellenia_prod odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define models.Constraint on the model. 
+2026-07-02 20:04:55,092 56 WARNING hellenia_prod odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define models.Constraint on the model. 
+2026-07-02 20:04:55,136 56 INFO hellenia_prod odoo.modules.loading: 139 modules loaded in 0.96s, 0 queries (+0 extra) 
+2026-07-02 20:04:55,234 56 WARNING hellenia_prod odoo.fields: justech.do.fiscal.report.state: selection=[('draft', 'Borrador'), ('validated', 'Validado'), ('pending_approval', 'Requiere aprobación'), ('approved', 'Aprobado'), ('rejected', 'Rechazado'), ('generated', 'Generado'), ('done', 'Generado')] overrides existing selection; use selection_add instead 
+2026-07-02 20:04:55,305 56 INFO hellenia_prod odoo.modules.loading: Modules loaded. 
+2026-07-02 20:04:55,372 56 INFO hellenia_prod odoo.registry: Registry loaded in 1.252s 
+2026-07-02 20:04:55,546 56 INFO hellenia_prod odoo.addons.base.models.ir_actions_report: Will use the Wkhtmltopdf binary at /usr/local/bin/wkhtmltopdf 
+2026-07-02 20:04:55,555 56 INFO hellenia_prod odoo.addons.base.models.ir_actions_report: Will use the Wkhtmltoimage binary at /usr/local/bin/wkhtmltoimage 
+2026-07-02 20:04:58,034 56 INFO hellenia_prod odoo.addons.base.models.ir_actions_report: The PDF report has been generated for model: justech.delivery.note, records [7]. 
+{"status": "PASS", "errors": []}

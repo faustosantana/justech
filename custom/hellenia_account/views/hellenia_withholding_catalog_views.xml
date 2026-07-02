@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_hellenia_withholding_catalog_search" model="ir.ui.view">
+        <field name="name">hellenia.withholding.catalog.search</field>
+        <field name="model">hellenia.withholding.catalog</field>
+        <field name="arch" type="xml">
+            <search string="Buscar retenciones">
+                <field name="name" string="Nombre"/>
+                <field name="code" string="Código"/>
+                <filter name="filter_active" string="Activas" domain="[('active', '=', True)]"/>
+                <filter name="filter_inactive" string="Inactivas" domain="[('active', '=', False)]"/>
+                <separator/>
+                <filter name="filter_isr" string="ISR" domain="[('withholding_type', '=', 'isr')]"/>
+                <filter name="filter_itbis" string="ITBIS" domain="[('withholding_type', '=', 'itbis')]"/>
+                <separator/>
+                <filter name="filter_customer" string="Cliente" domain="[('partner_scope', 'in', ['customer', 'both'])]"/>
+                <filter name="filter_supplier" string="Proveedor" domain="[('partner_scope', 'in', ['supplier', 'both'])]"/>
+                <separator/>
+                <filter name="filter_606" string="Afecta 606" domain="[('affects_606', '=', True)]"/>
+                <filter name="filter_607" string="Afecta 607" domain="[('affects_607', '=', True)]"/>
+                <group>
+                    <filter name="group_type" string="Tipo" context="{'group_by': 'withholding_type'}"/>
+                    <filter name="group_scope" string="Aplica a" context="{'group_by': 'partner_scope'}"/>
+                    <filter name="group_operation" string="Operación" context="{'group_by': 'move_scope'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_hellenia_withholding_catalog_tree" model="ir.ui.view">
+        <field name="name">hellenia.withholding.catalog.tree</field>
+        <field name="model">hellenia.withholding.catalog</field>
+        <field name="arch" type="xml">
+            <list string="Retenciones" decoration-muted="not active">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="code" groups="account.group_account_manager"/>
+                <field name="rate" string="Porcentaje"/>
+                <field name="withholding_type" string="Tipo"/>
+                <field name="base_type" string="Base"/>
+                <field name="partner_scope" string="Aplica a"/>
+                <field name="move_scope" string="Operación"/>
+                <field name="account_id"/>
+                <field name="affects_606"/>
+                <field name="affects_607"/>
+                <field name="dgii_withholding_code" optional="hide"/>
+                <field name="active" widget="boolean_toggle"/>
+                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_hellenia_withholding_catalog_form" model="ir.ui.view">
+        <field name="name">hellenia.withholding.catalog.form</field>
+        <field name="model">hellenia.withholding.catalog</field>
+        <field name="arch" type="xml">
+            <form string="Retención">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <widget name="web_ribbon" title="Inactiva" bg_color="text-bg-danger" invisible="active"/>
+                    </div>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="Nombre de la retención"/></h1>
+                    </div>
+                    <group>
+                        <group string="Identificación">
+                            <field name="code"/>
+                            <field name="active"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="sequence"/>
+                        </group>
+                        <group string="Cálculo">
+                            <field name="withholding_type"/>
+                            <field name="rate"/>
+                            <field name="base_type"/>
+                            <field name="tax_id" groups="account.group_account_manager"
+                                   options="{'no_create': True}"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Alcance">
+                            <field name="partner_scope"/>
+                            <field name="move_scope"/>
+                        </group>
+                        <group string="Contabilidad y reportes">
+                            <field name="account_id"/>
+                            <field name="affects_606"/>
+                            <field name="affects_607"/>
+                            <field name="dgii_withholding_code"/>
+                        </group>
+                    </group>
+                    <group string="Descripción / ayuda">
+                        <field name="notes" nolabel="1" placeholder="Notas para el equipo contable…"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_hellenia_withholding_catalog" model="ir.actions.act_window">
+        <field name="name">Administrar retenciones</field>
+        <field name="res_model">hellenia.withholding.catalog</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_hellenia_withholding_catalog_search"/>
+        <field name="context">{'search_default_filter_active': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Configure las retenciones dominicanas aplicables en cobros y pagos.
+            </p>
+            <p>
+                Cada retención debe vincularse a un impuesto de <strong>l10n_do</strong>,
+                definir su base de cálculo y la cuenta contable correspondiente.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_hellenia_withholding_catalog"
+              name="Administrar retenciones"
+              parent="justech_l10n_do_base.menu_justech_do_fiscal_root"
+              action="action_hellenia_withholding_catalog"
+              sequence="50"
+              groups="account.group_account_manager"/>
+</odoo>

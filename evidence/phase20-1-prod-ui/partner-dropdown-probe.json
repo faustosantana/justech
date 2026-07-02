@@ -1,0 +1,28 @@
+[
+  {
+    "dropdown_index": 0,
+    "partner_display": "SMOKE P13.4 CF",
+    "lines": {
+      "total": 0,
+      "invoices": []
+    }
+  },
+  {
+    "dropdown_index": 1,
+    "partner_display": "SMOKE P13.4 CF",
+    "lines": {
+      "total": 1,
+      "invoices": [
+        "INV/2026/00002"
+      ]
+    }
+  },
+  {
+    "dropdown_index": 2,
+    "partner_display": "SMOKE P13.4 CF",
+    "lines": {
+      "total": 0,
+      "invoices": []
+    }
+  }
+]

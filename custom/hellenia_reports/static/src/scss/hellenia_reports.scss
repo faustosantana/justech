@@ -1,0 +1,517 @@
+/* ==========================================================================
+   Hellenia Corporate Document Design System — PDF / QWeb
+   Primary brand: #3E4827 | Backgrounds: white | No blue, no gold
+   ========================================================================== */
+
+:root {
+    --hellenia-primary: #3E4827;
+    --hellenia-primary-dark: #2d361c;
+    --hellenia-primary-light: #5a6640;
+    --hellenia-text: #2d2d2d;
+    --hellenia-text-muted: #5c5c5c;
+    --hellenia-text-light: #8a8a8a;
+    --hellenia-border: #e5e5e5;
+    --hellenia-border-strong: #c8c8c8;
+    --hellenia-row-alt: #f8f9f6;
+    --hellenia-surface: #ffffff;
+    --hellenia-font: 'DejaVu Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    --hellenia-font-mono: 'DejaVu Sans Mono', 'Courier New', monospace;
+    --hellenia-radius: 2px;
+}
+
+/* --------------------------------------------------------------------------
+   Shared document shell
+   -------------------------------------------------------------------------- */
+
+.hellenia-sale-doc,
+.hellenia-invoice-doc,
+.hellenia-purchase-doc,
+.hellenia-stock-doc,
+.hellenia-payment-doc,
+.hellenia-statement-doc {
+    font-family: var(--hellenia-font);
+    font-size: 9.5pt;
+    line-height: 1.45;
+    color: var(--hellenia-text);
+}
+
+/* --------------------------------------------------------------------------
+   Header (external_layout_hellenia)
+   -------------------------------------------------------------------------- */
+
+.hellenia-header {
+    border-bottom: 2px solid var(--hellenia-primary);
+    padding-bottom: 10px;
+    margin-bottom: 14px;
+}
+
+.hellenia-header-accent {
+    height: 2px;
+    background: var(--hellenia-primary);
+    margin-top: 8px;
+}
+
+.hellenia-logo {
+    max-height: 68px;
+    max-width: 200px;
+    object-fit: contain;
+}
+
+.hellenia-company-name {
+    font-size: 13pt;
+    font-weight: 700;
+    color: var(--hellenia-primary);
+    margin-bottom: 4px;
+    letter-spacing: 0.02em;
+}
+
+.hellenia-company-contact {
+    font-size: 8.5pt;
+    color: var(--hellenia-text-muted);
+    line-height: 1.5;
+
+    li {
+        margin-bottom: 1px;
+    }
+
+    strong {
+        color: var(--hellenia-text);
+        font-weight: 600;
+    }
+}
+
+.hellenia-rnc {
+    font-weight: 600;
+    color: var(--hellenia-primary);
+}
+
+.hellenia-tagline {
+    font-size: 8.5pt;
+    color: var(--hellenia-text-muted);
+    font-style: italic;
+}
+
+/* --------------------------------------------------------------------------
+   Document title & meta blocks
+   -------------------------------------------------------------------------- */
+
+.hellenia-doc-title {
+    color: var(--hellenia-primary);
+    font-weight: 700;
+    font-size: 14pt;
+    border-bottom: 1px solid var(--hellenia-border-strong);
+    padding-bottom: 8px;
+    margin: 0 0 16px 0;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+}
+
+.hellenia-meta-grid {
+    margin-bottom: 18px;
+    page-break-inside: avoid;
+
+    .hellenia-meta-label {
+        font-size: 7.5pt;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--hellenia-text-light);
+        font-weight: 600;
+        margin-bottom: 2px;
+    }
+
+    .hellenia-meta-value {
+        font-size: 9.5pt;
+        color: var(--hellenia-text);
+        font-weight: 500;
+    }
+}
+
+.hellenia-partner-block {
+    border: 1px solid var(--hellenia-border);
+    border-left: 3px solid var(--hellenia-primary);
+    padding: 10px 14px;
+    margin-bottom: 16px;
+    background: var(--hellenia-surface);
+    page-break-inside: avoid;
+
+    .hellenia-partner-label {
+        font-size: 7.5pt;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--hellenia-primary);
+        font-weight: 700;
+        margin-bottom: 6px;
+    }
+}
+
+/* --------------------------------------------------------------------------
+   Fiscal NCF box
+   -------------------------------------------------------------------------- */
+
+.hellenia-ncf-box {
+    border: 1px solid var(--hellenia-border-strong);
+    border-left: 4px solid var(--hellenia-primary);
+    border-radius: var(--hellenia-radius);
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    background: var(--hellenia-row-alt);
+    page-break-inside: avoid;
+}
+
+.hellenia-ncf-label {
+    font-size: 7.5pt;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--hellenia-text-light);
+    font-weight: 600;
+}
+
+.hellenia-ncf-value {
+    font-size: 13pt;
+    font-weight: 700;
+    color: var(--hellenia-primary);
+    font-family: var(--hellenia-font-mono);
+    letter-spacing: 0.06em;
+    margin-top: 2px;
+}
+
+.hellenia-ncf-legal {
+    font-size: 7.5pt;
+    color: var(--hellenia-text-light);
+    margin-top: 6px;
+    font-style: italic;
+}
+
+.hellenia-ncf-type {
+    font-size: 8pt;
+    color: var(--hellenia-text-muted);
+    margin-top: 4px;
+}
+
+/* --------------------------------------------------------------------------
+   Tables
+   -------------------------------------------------------------------------- */
+
+.hellenia-lines-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 16px;
+    page-break-inside: auto;
+
+    thead tr {
+        background-color: var(--hellenia-primary) !important;
+        color: #ffffff !important;
+    }
+
+    thead th {
+        color: #ffffff !important;
+        font-weight: 600;
+        font-size: 8.5pt;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        padding: 8px 8px !important;
+        border: none !important;
+        vertical-align: middle;
+    }
+
+    tbody tr {
+        page-break-inside: avoid;
+        page-break-after: auto;
+    }
+
+    tbody tr:nth-child(even) {
+        background-color: var(--hellenia-row-alt);
+    }
+
+    tbody td {
+        padding: 7px 8px !important;
+        vertical-align: top;
+        border-bottom: 1px solid var(--hellenia-border) !important;
+        font-size: 9pt;
+    }
+}
+
+.hellenia-summary-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 8px;
+
+    td {
+        padding: 5px 10px;
+        font-size: 9pt;
+        border-bottom: 1px solid var(--hellenia-border);
+    }
+
+    tr.hellenia-summary-total td {
+        font-weight: 700;
+        font-size: 10pt;
+        color: var(--hellenia-primary);
+        border-top: 2px solid var(--hellenia-primary);
+        border-bottom: none;
+        padding-top: 8px;
+    }
+}
+
+/* Odoo invoice totals */
+.o_total_table {
+    border-top: 2px solid var(--hellenia-primary) !important;
+    margin-top: 8px;
+
+    tr:last-child td,
+    tr.o_total td {
+        font-weight: 700;
+        font-size: 10pt;
+        color: var(--hellenia-primary);
+    }
+}
+
+/* --------------------------------------------------------------------------
+   Payment receipt
+   -------------------------------------------------------------------------- */
+
+.hellenia-payment-header {
+    margin-bottom: 20px;
+    page-break-inside: avoid;
+}
+
+.hellenia-payment-title {
+    font-size: 14pt;
+    font-weight: 700;
+    color: var(--hellenia-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 14px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--hellenia-border-strong);
+}
+
+.hellenia-payment-section {
+    margin-top: 18px;
+    page-break-inside: avoid;
+
+    .hellenia-section-title {
+        font-size: 9pt;
+        font-weight: 700;
+        color: var(--hellenia-primary);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 10px;
+        padding-bottom: 4px;
+        border-bottom: 1px solid var(--hellenia-border);
+    }
+}
+
+.hellenia-payment-audit {
+    margin-top: 20px;
+    padding-top: 10px;
+    border-top: 1px dashed var(--hellenia-border);
+    font-size: 7.5pt;
+    color: var(--hellenia-text-light);
+    page-break-inside: avoid;
+}
+
+/* --------------------------------------------------------------------------
+   Delivery slip — logistics
+   -------------------------------------------------------------------------- */
+
+.hellenia-delivery-banner {
+    background: var(--hellenia-primary);
+    color: #ffffff;
+    padding: 10px 16px;
+    margin: 0 0 16px 0;
+    page-break-inside: avoid;
+
+    .hellenia-delivery-type {
+        font-size: 8pt;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        opacity: 0.85;
+    }
+
+    .hellenia-delivery-ref {
+        font-size: 14pt;
+        font-weight: 700;
+        letter-spacing: 0.03em;
+    }
+}
+
+.hellenia-delivery-info {
+    border: 1px solid var(--hellenia-border);
+    padding: 12px 14px;
+    margin-bottom: 16px;
+    page-break-inside: avoid;
+
+    .row > div {
+        margin-bottom: 6px;
+    }
+}
+
+.hellenia-signature-zone {
+    margin-top: 32px;
+    page-break-inside: avoid;
+
+    .hellenia-sig-box {
+        border-top: 1px solid var(--hellenia-text);
+        padding-top: 6px;
+        margin-top: 48px;
+        text-align: center;
+        font-size: 8pt;
+        color: var(--hellenia-text-muted);
+        min-width: 180px;
+        display: inline-block;
+    }
+}
+
+/* --------------------------------------------------------------------------
+   Quotation commercial terms
+   -------------------------------------------------------------------------- */
+
+.hellenia-commercial-terms {
+    margin-top: 20px;
+    padding: 14px 16px;
+    border: 1px solid var(--hellenia-border);
+    border-top: 3px solid var(--hellenia-primary);
+    page-break-inside: avoid;
+
+    .hellenia-commercial-title {
+        font-size: 9pt;
+        font-weight: 700;
+        color: var(--hellenia-primary);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 8px;
+    }
+
+    p, li {
+        font-size: 8.5pt;
+        color: var(--hellenia-text-muted);
+        margin-bottom: 4px;
+    }
+}
+
+/* --------------------------------------------------------------------------
+   Footer
+   -------------------------------------------------------------------------- */
+
+.hellenia-footer-accent {
+    height: 2px;
+    background: var(--hellenia-primary);
+    margin-bottom: 6px;
+}
+
+.hellenia-footer {
+    font-size: 7.5pt;
+    color: var(--hellenia-text-muted);
+    line-height: 1.4;
+}
+
+.hellenia-social {
+    font-size: 7pt;
+    color: var(--hellenia-text-light);
+}
+
+/* --------------------------------------------------------------------------
+   Terms, signature, sections
+   -------------------------------------------------------------------------- */
+
+.hellenia-section-title {
+    color: var(--hellenia-primary);
+    font-size: 9pt;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    display: block;
+    margin-bottom: 6px;
+}
+
+.hellenia-terms {
+    font-size: 8pt;
+    color: var(--hellenia-text-muted);
+    border-top: 1px solid var(--hellenia-border);
+    padding-top: 14px;
+    margin-top: 20px;
+    page-break-inside: avoid;
+}
+
+.hellenia-signature {
+    page-break-inside: avoid;
+}
+
+.hellenia-signature-img {
+    max-height: 50px;
+}
+
+.hellenia-stamp-img {
+    max-height: 70px;
+}
+
+.hellenia-signature-line {
+    border-top: 1px solid var(--hellenia-primary);
+    display: inline-block;
+    min-width: 180px;
+    font-size: 8pt;
+    color: var(--hellenia-text-muted);
+    padding-top: 4px;
+}
+
+/* --------------------------------------------------------------------------
+   Account reports PDF export overrides (estados de cuenta)
+   -------------------------------------------------------------------------- */
+
+.hellenia-account-report-pdf {
+    .o_title {
+        color: var(--hellenia-primary) !important;
+        font-weight: 700 !important;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+    }
+
+    .o_table > thead > tr:not(:last-child) th:not(:first-child) {
+        background-color: var(--hellenia-primary) !important;
+        color: #ffffff !important;
+    }
+
+    .o_table > tbody .o_line_level_0 {
+        background-color: var(--hellenia-row-alt) !important;
+        color: var(--hellenia-primary) !important;
+    }
+
+    .o_company_logo {
+        max-height: 60px;
+    }
+}
+
+/* Hide QR (no e-CF) */
+.hellenia-qr,
+img.hellenia-qr {
+    display: none !important;
+}
+
+/* Suppress bootstrap info/primary blues in documents */
+.hellenia-invoice-doc,
+.hellenia-sale-doc,
+.hellenia-purchase-doc,
+.hellenia-stock-doc,
+.hellenia-payment-doc {
+    .text-info,
+    .border-info,
+    .bg-info {
+        color: var(--hellenia-text) !important;
+        border-color: var(--hellenia-border) !important;
+        background-color: transparent !important;
+    }
+
+    .text-primary {
+        color: var(--hellenia-primary) !important;
+    }
+}
+
+/* ==========================================================================
+   Quotation template (Fase 23.3C) — estilos minimos; layout en QWeb inline
+   ========================================================================== */
+
+.hellenia-quote-page {
+    font-family: 'DejaVu Sans', Helvetica, Arial, sans-serif;
+    font-size: 10pt;
+    color: #2d2d2d;
+}

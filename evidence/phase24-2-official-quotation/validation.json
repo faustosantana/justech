@@ -1,0 +1,98 @@
+{
+  "phase": "24.2-official-quotation",
+  "timestamp_utc": "2026-07-02T04:45:16.915214+00:00",
+  "database": "hellenia_test",
+  "pass": true,
+  "failed_checks": [],
+  "checks": {
+    "module_version": {
+      "status": "PASS",
+      "detail": "19.0.2.0.0"
+    },
+    "main_action_report": {
+      "status": "PASS",
+      "detail": "justech_report_design.report_hellenia_quotation_document"
+    },
+    "backup_action_exists": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "backup_uses_standard": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "parallel_unbound": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "sale.report_saleorder_no_jt_inherit": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "sale.report_saleorder_document_no_jt_inherit": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "sale.report_saleorder_raw_no_jt_inherit": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "company_has_default_terms": {
+      "status": "PASS",
+      "detail": "(a) Las piezas ofrecidas son únicas y sujetas a disponibilid"
+    },
+    "new_order_has_note": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "new_order_note_from_company": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "modified_note_in_pdf": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "empty_note_hides_cond": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "no_hardcoded_terms_in_pdf": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "main_action_pdf": {
+      "status": "PASS",
+      "detail": "71005"
+    },
+    "backup_pdf": {
+      "status": "PASS",
+      "detail": "65625"
+    },
+    "confirmed_order_pdf": {
+      "status": "PASS",
+      "detail": "S00128 size=72147"
+    },
+    "portal_pdf": {
+      "status": "PASS",
+      "detail": "status=200 size=6909"
+    },
+    "email_uses_official_report": {
+      "status": "PASS",
+      "detail": "justech_report_design.report_hellenia_quotation_document"
+    },
+    "email_attachment_pdf": {
+      "status": "PASS",
+      "detail": "72978"
+    },
+    "invoice_unchanged": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "purchase_unchanged": {
+      "status": "PASS",
+      "detail": ""
+    }
+  },
+  "pdfs": {}
+}

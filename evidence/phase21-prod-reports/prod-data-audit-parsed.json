@@ -1,0 +1,78 @@
+{
+  "phase": "21-prod-data-audit",
+  "timestamp_utc": "2026-07-01T14:11:58.225622+00:00",
+  "company": "Hellenia, S.R.L.",
+  "fiscal": {
+    "606": {
+      "ok": true,
+      "detail": "lines=0 exportable=0 state=draft"
+    },
+    "607": {
+      "ok": true,
+      "detail": "lines=3 exportable=3 state=draft"
+    },
+    "607_export": {
+      "ok": true,
+      "detail": "action_export_dgii OK"
+    },
+    "608": {
+      "ok": true,
+      "detail": "lines=0 exportable=0 state=draft"
+    },
+    "623": {
+      "ok": true,
+      "detail": "lines=0 exportable=0 state=draft"
+    }
+  },
+  "chain_623": {
+    "invoice": {
+      "id": 25,
+      "name": "INV/2026/00003",
+      "state": "posted",
+      "gov_withholding": 500.0,
+      "fiscal_state": "incomplete",
+      "include_dgii": true
+    },
+    "payment": {
+      "id": 72,
+      "name": "PBNKD/2026/00002",
+      "date": "2026-07-01",
+      "state": "paid",
+      "ref": ""
+    },
+    "partner": {
+      "id": 23,
+      "name": "SMOKE P13.4 CF",
+      "vat": ""
+    },
+    "withholding_lines": [
+      {
+        "id": 18,
+        "amount": 540.0,
+        "catalog": "RET-ITBIS-30"
+      }
+    ],
+    "validation_623_jul2026": {
+      "valid": 0,
+      "incomplete": 2,
+      "excluded": 0
+    },
+    "validation_errors_inv00003": [
+      "INV/2026/00003: la entidad SMOKE P13.4 CF no tiene RNC."
+    ]
+  },
+  "accounting": {
+    "posted_balanced": {
+      "ok": true,
+      "detail": "checked 7 moves"
+    },
+    "posted_count": 7,
+    "ytd_debit_credit": {
+      "ok": true,
+      "detail": "debit=70800.00 credit=70800.00"
+    }
+  },
+  "ok": true,
+  "pass": false,
+  "module_version": "19.0.1.12.2"
+}

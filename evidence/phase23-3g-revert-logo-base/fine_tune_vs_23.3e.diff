@@ -1,0 +1,99 @@
+diff --git a/custom/hellenia_reports/report/report_sale_quotation.xml b/custom/hellenia_reports/report/report_sale_quotation.xml
+index 3a1af0e..04f43b1 100644
+--- a/custom/hellenia_reports/report/report_sale_quotation.xml
++++ b/custom/hellenia_reports/report/report_sale_quotation.xml
+@@ -21,15 +21,26 @@
+              t-att-data-oe-id="doc.id"
+              t-att-data-oe-lang="doc.env.context.get('lang')">
+             <style type="text/css">
++                h2.hellenia-doc-title,
++                .o_report_layout_standard .address,
++                .header.hellenia-header,
++                .footer.hellenia-footer {
++                    display: none !important;
++                    height: 0 !important;
++                    margin: 0 !important;
++                    padding: 0 !important;
++                    overflow: hidden !important;
++                }
+                 .hellenia-quote-page {
+                     font-family: 'DejaVu Sans', Helvetica, Arial, sans-serif;
+                     font-size: 9.5pt;
+                     color: #2d2d2d;
+                     line-height: 1.35;
+-                    margin: 0;
++                    margin: -4mm 0 0 0;
+                     padding: 0;
++                    width: 100%;
+                 }
+-                .hellenia-quote-page table { border-collapse: collapse; }
++                .hellenia-quote-page table { border-collapse: collapse; width: 100%; }
+                 .hellenia-quote-hdr-table,
+                 .hellenia-quote-hdr-table td {
+                     border: none !important;
+@@ -174,10 +185,19 @@
+                     font-size: 1px;
+                     line-height: 1px;
+                 }
++                .hellenia-quote-bottom-spacer td {
++                    height: 140px !important;
++                    max-height: 140px !important;
++                    overflow: hidden;
++                }
++                .hellenia-quote-conditions ~ table.hellenia-quote-bottom-spacer td {
++                    height: 15px !important;
++                    max-height: 15px !important;
++                }
+                 .hellenia-quote-conditions {
+                     border: 1px solid #e5e5e5;
+-                    padding: 8px 10px;
+-                    margin-bottom: 10px;
++                    padding: 6px 8px;
++                    margin-bottom: 6px;
+                 }
+                 .hellenia-quote-conditions-title {
+                     font-size: 7pt;
+@@ -188,24 +208,24 @@
+                     letter-spacing: 0.4px;
+                 }
+                 .hellenia-quote-conditions-body {
+-                    font-size: 8pt;
++                    font-size: 7.5pt;
+                     color: #5c5c5c;
+-                    line-height: 1.4;
++                    line-height: 1.35;
+                     white-space: pre-line;
+                 }
+                 .hellenia-quote-signatures {
+                     width: 100%;
+-                    margin: 4px 0 14px 0;
+-                    padding-top: 4px;
++                    margin: 2px 0 8px 0;
++                    padding-top: 2px;
+                 }
+                 .hellenia-quote-signatures td {
++                    border: none;
+                     padding: 0 6px 0 0;
+                     vertical-align: top;
+                 }
+                 .hellenia-quote-sig-label {
+                     font-size: 7pt;
+                     font-weight: bold;
+-                    font-style: italic;
+                     text-transform: uppercase;
+                     color: #3E4827;
+                     letter-spacing: 0.6px;
+@@ -460,10 +480,9 @@
+ 
+             <!-- Pie -->
+             <div class="hellenia-quote-footer">
+-                <t t-if="company.phone">Tel: <span t-field="company.phone"/></t>
+-                <t t-if="company.website"> | Web: <span t-field="company.website"/></t>
+-                <t t-if="company.email"> | Correo: <span t-field="company.email"/></t>
+-                | Santo Domingo, República Dominicana
++                <t t-if="company.phone"><span t-field="company.phone"/></t>
++                <t t-if="company.email"> | <span t-field="company.email"/></t>
++                <t t-if="company.website"> | <span t-field="company.website"/></t>
+             </div>
+         </div>
+     </template>

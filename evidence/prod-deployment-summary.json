@@ -1,0 +1,28 @@
+{
+  "phase": "prod-deployment",
+  "timestamp_utc": "2026-06-30T15:22:30Z",
+  "stack": "hellenia-prod",
+  "database": "hellenia_prod",
+  "commit": "08b808f",
+  "traefik_host": "prod.hellenia.cloud",
+  "web_base_url": "https://odoo.hellenia.cloud",
+  "odoo_pecv_unchanged": true,
+  "dns_odoo_hellenia_cutover": false,
+  "modules_installed": 116,
+  "enterprise_registered": true,
+  "credentials_aligned": {
+    "admin": true,
+    "it@justech.do": true,
+    "source": "hellenia_dev"
+  },
+  "backup_initial": "backups/hellenia-prod/2026-06-30_1522",
+  "cron_configured": true,
+  "validations": {
+    "phase11": "pass",
+    "phase8": "pass",
+    "phase6_mvp": "pass",
+    "phase12": "pass_with_observations",
+    "https_prod_subdomain": "blocked_dns_missing"
+  },
+  "pending_client": ["prod.hellenia.cloud DNS A record", "SMTP", "banks", "NCF ranges", "catalogs"]
+}

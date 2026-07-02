@@ -3,6 +3,19 @@
 **/.env
 !**/.env.example
 
+# Descargas operativas (tarballs Enterprise — NO en Git)
+downloads/enterprise/*
+!downloads/enterprise/README.md
+
+# Credenciales servidor (SSH keys, PAT fallback)
+config/credentials/*
+!config/credentials/*.example
+!config/credentials/README.md
+
+# Código Enterprise — repo Git independiente en VPS
+enterprise/*
+!enterprise/README.md
+
 # Backups y logs operativos
 backups/
 logs/
@@ -20,3 +33,6 @@ __pycache__/
 # OS
 .DS_Store
 Thumbs.db
+
+# Legacy
+addons/

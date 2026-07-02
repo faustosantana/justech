@@ -1,0 +1,137 @@
+{
+  "phase": "23.2-prod-visual-deployment",
+  "timestamp_utc": "2026-07-01T17:59:16.387743+00:00",
+  "database": "hellenia_prod",
+  "module": {
+    "name": "hellenia_reports",
+    "version": "19.0.1.1.0"
+  },
+  "pdfs": {
+    "01_cotizacion": {
+      "status": "OK",
+      "record": "S00020",
+      "record_id": 21,
+      "path": "/tmp/phase23-2-prod-pdfs/01_cotizacion.pdf",
+      "size_bytes": 67739
+    },
+    "02_factura": {
+      "status": "OK",
+      "record": "INV/2026/00006 (P21-GOV-INV-PROOF)",
+      "record_id": 132,
+      "path": "/tmp/phase23-2-prod-pdfs/02_factura.pdf",
+      "size_bytes": 70264
+    },
+    "03_nota_credito": {
+      "status": "OK",
+      "record": "Draft Credit Note (P23-VISUAL-PDF-NC)",
+      "record_id": 135,
+      "path": "/tmp/phase23-2-prod-pdfs/03_nota_credito.pdf",
+      "size_bytes": 62602
+    },
+    "04_nota_debito": {
+      "status": "OK",
+      "record": "Draft Invoice (P23-VISUAL-PDF-ND)",
+      "record_id": 136,
+      "path": "/tmp/phase23-2-prod-pdfs/04_nota_debito.pdf",
+      "size_bytes": 62824
+    },
+    "05_orden_compra": {
+      "status": "OK",
+      "record": "P00008 (P23-VISUAL-PDF-OC)",
+      "record_id": 9,
+      "path": "/tmp/phase23-2-prod-pdfs/05_orden_compra.pdf",
+      "size_bytes": 71319
+    },
+    "06_rfq": {
+      "status": "OK",
+      "record": "P00007 (P23-VISUAL-PDF-RFQ)",
+      "record_id": 8,
+      "path": "/tmp/phase23-2-prod-pdfs/06_rfq.pdf",
+      "size_bytes": 68145
+    },
+    "07_delivery_slip": {
+      "status": "OK",
+      "record": "WH/OUT/00008",
+      "record_id": 9,
+      "path": "/tmp/phase23-2-prod-pdfs/07_delivery_slip.pdf",
+      "size_bytes": 61738
+    },
+    "08_recepcion": {
+      "status": "OK",
+      "record": "WH/IN/00003",
+      "record_id": 17,
+      "path": "/tmp/phase23-2-prod-pdfs/08_recepcion.pdf",
+      "size_bytes": 64775
+    },
+    "09_recibo_pago": {
+      "status": "OK",
+      "record": "PBNKD/2026/00003",
+      "record_id": 73,
+      "path": "/tmp/phase23-2-prod-pdfs/09_recibo_pago.pdf",
+      "size_bytes": 66820,
+      "withholding_total": 500.0,
+      "net_transfer": 11300.0
+    },
+    "10_estado_cuenta_cliente": {
+      "status": "OK",
+      "record": "P21 GOV PROOF UNIQUE",
+      "path": "/tmp/phase23-2-prod-pdfs/10_estado_cuenta_cliente.pdf",
+      "size_bytes": 60229
+    },
+    "11_estado_cuenta_proveedor": {
+      "status": "OK",
+      "record": "P23-VISUAL-PDF Proveedor",
+      "path": "/tmp/phase23-2-prod-pdfs/11_estado_cuenta_proveedor.pdf",
+      "size_bytes": 60095
+    }
+  },
+  "visual_validation": {
+    "pdf_count_11": {
+      "status": "PASS",
+      "detail": "11"
+    },
+    "invoice_ncf_label": {
+      "status": "PASS",
+      "detail": "NCF label"
+    },
+    "invoice_no_ncf_word": {
+      "status": "PASS",
+      "detail": "standalone NCF"
+    },
+    "invoice_no_qr": {
+      "status": "PASS",
+      "detail": "qr"
+    },
+    "invoice_spanish": {
+      "status": "PASS",
+      "detail": "english"
+    },
+    "invoice_brand": {
+      "status": "PASS",
+      "detail": "brand class"
+    },
+    "payment_spanish_title": {
+      "status": "PASS",
+      "detail": "title"
+    },
+    "payment_withholding": {
+      "status": "PASS",
+      "detail": "wh"
+    },
+    "payment_net": {
+      "status": "PASS",
+      "detail": "net"
+    },
+    "payment_brand": {
+      "status": "PASS",
+      "detail": "brand"
+    },
+    "payment_ncf_label": {
+      "status": "PASS",
+      "detail": "ncf label"
+    }
+  },
+  "ok": true,
+  "pass": true,
+  "pdfs_certified": "11/11"
+}

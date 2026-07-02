@@ -1,0 +1,373 @@
+{
+  "phase": "22-full-accounting-audit",
+  "timestamp_utc": "2026-07-01T15:24:10.848295+00:00",
+  "database": "hellenia_prod",
+  "company": "Hellenia, S.R.L.",
+  "modules": {
+    "hellenia_account": "19.0.1.0.27",
+    "justech_l10n_do_reports": "19.0.1.12.4",
+    "justech_l10n_do_ncf": "19.0.1.4.0",
+    "account": "19.0.1.4",
+    "account_reports": "19.0.1.0"
+  },
+  "integrity": {
+    "posted_balanced": {
+      "ok": true,
+      "detail": "checked 9, unbalanced=0"
+    },
+    "ytd_debit_credit": {
+      "ok": true,
+      "detail": "debit=94400.00 credit=94400.00"
+    }
+  },
+  "receivables": {
+    "paid_zero_residual": {
+      "ok": true,
+      "detail": "issues=0"
+    },
+    "open_has_residual": {
+      "ok": false,
+      "detail": "issues=1",
+      "issue": "INV/2026/00003 in_payment with residual 0.00 — state label inconsistency"
+    },
+    "ar_lines_match": {
+      "ok": true,
+      "detail": "mismatch=0"
+    }
+  },
+  "payables": {
+    "paid_zero_residual": {
+      "ok": true,
+      "detail": "posted=0 issues=0"
+    }
+  },
+  "payments": {
+    "all_have_move": {
+      "ok": true,
+      "detail": "posted=3 sin move=0"
+    },
+    "no_draft_moves": {
+      "ok": true,
+      "detail": "count=0"
+    }
+  },
+  "withholdings": {
+    "all_have_account": {
+      "ok": true,
+      "detail": "lines=2 no_account=0"
+    },
+    "posted_have_gl": {
+      "ok": true,
+      "detail": "no_gl=0"
+    },
+    "linked_invoice": {
+      "ok": true,
+      "detail": "no_invoice=0"
+    },
+    "gov_623_trace": {
+      "ok": true,
+      "detail": "gov_lines=1 issues=0"
+    }
+  },
+  "taxes": {
+    "sale_itbis_18_exists": {
+      "ok": true,
+      "detail": "18% ITBIS"
+    },
+    "purchase_itbis_18_exists": {
+      "ok": true,
+      "detail": "18% Cost Good"
+    }
+  },
+  "ncf": {
+    "no_duplicates": {
+      "ok": true,
+      "detail": "dups=0"
+    },
+    "posted_have_ncf": {
+      "ok": true,
+      "detail": "missing_ncf=0 names=[]"
+    }
+  },
+  "reconciliation": {
+    "no_orphan_partials": {
+      "ok": true,
+      "detail": "orphans=0"
+    },
+    "wh_partial_valid": {
+      "ok": true,
+      "detail": "checked=2"
+    }
+  },
+  "dgii": {
+    "606_validates": {
+      "ok": true,
+      "detail": "{'all': 0, 'valid': 0, 'incomplete': 0, 'excluded': 0, 'cancelled': 0, 'partners_affected': 0, 'error_lines': 0}"
+    },
+    "606_review_lines": {
+      "ok": true,
+      "detail": "lines=0"
+    },
+    "607_validates": {
+      "ok": true,
+      "detail": "{'all': 3, 'valid': 3, 'incomplete': 0, 'excluded': 0, 'cancelled': 0, 'partners_affected': 0, 'error_lines': 0}"
+    },
+    "607_review_lines": {
+      "ok": true,
+      "detail": "lines=3"
+    },
+    "608_validates": {
+      "ok": true,
+      "detail": "{'all': 0, 'valid': 0, 'incomplete': 0, 'excluded': 0, 'cancelled': 0, 'partners_affected': 0, 'error_lines': 0}"
+    },
+    "608_review_lines": {
+      "ok": true,
+      "detail": "lines=0"
+    },
+    "623_validates": {
+      "ok": true,
+      "detail": "{'all': 3, 'valid': 1, 'incomplete': 2, 'excluded': 0, 'cancelled': 0, 'partners_affected': 1, 'error_lines': 2}"
+    },
+    "623_review_lines": {
+      "ok": true,
+      "detail": "lines=3"
+    },
+    "623_has_loader": {
+      "ok": true,
+      "detail": "lines=3"
+    }
+  },
+  "financial": {
+    "balance_sheet_equation": {
+      "ok": true,
+      "detail": "A=70260.00 L+E=-10260.00",
+      "note": "Open period: Assets 70260 = Liabilities 10260 + Unclosed income 60000 (algebraic sum=0)"
+    },
+    "pl_accounts_accessible": {
+      "ok": true,
+      "detail": "income_lines=6 expense_lines=0"
+    }
+  },
+  "scenarios": {
+    "p21_gov_623_chain": {
+      "ok": true,
+      "detail": "inv=INV/2026/00006"
+    },
+    "credit_notes_posted": {
+      "ok": true,
+      "detail": "count=0"
+    },
+    "debit_notes_tracked": {
+      "ok": true,
+      "detail": "ncf_modified=0"
+    }
+  },
+  "critical": [],
+  "minor": [
+    "INV/2026/00003: payment_state=in_payment pero amount_residual=0",
+    "5 facturas SMOKE P13.4 CF sin RNC del partner",
+    "2 líneas 623 incompletas (SMOKE legacy RET-ITBIS-30 / sin RNC)",
+    "Sin facturas proveedor posted — 606/CxP no ejercitados con datos reales",
+    "Sin notas crédito/débito posted — escenarios B03/B04/608 no ejercitados"
+  ],
+  "ok": true,
+  "pass": true,
+  "summary": {
+    "posted_moves": 9,
+    "posted_payments": 3,
+    "withholding_lines": 2,
+    "unbalanced_moves": 0,
+    "critical_count": 0,
+    "minor_count": 0
+  },
+  "minor_count": 5,
+  "ui_financial": {
+    "phase": "22-financial-ui",
+    "timestamp_utc": "2026-07-01T15:22:54.525901+00:00",
+    "reports": {
+      "profit_loss_opens": {
+        "ok": true,
+        "detail": "/odoo/accounting/profit-and-loss",
+        "screenshot": "evidence/phase22-financial-reports/screenshots/profit_loss.png"
+      },
+      "profit_loss_content": {
+        "ok": true,
+        "detail": "chars=779",
+        "screenshot": ""
+      },
+      "profit_loss_pdf": {
+        "ok": true,
+        "detail": "count=1",
+        "screenshot": ""
+      },
+      "profit_loss_xlsx": {
+        "ok": true,
+        "detail": "count=1",
+        "screenshot": ""
+      },
+      "profit_loss_has_income": {
+        "ok": true,
+        "detail": "structure visible",
+        "screenshot": ""
+      },
+      "balance_sheet_opens": {
+        "ok": true,
+        "detail": "/odoo/accounting/balance-sheet",
+        "screenshot": "evidence/phase22-financial-reports/screenshots/balance_sheet.png"
+      },
+      "balance_sheet_content": {
+        "ok": true,
+        "detail": "chars=1453",
+        "screenshot": ""
+      },
+      "balance_sheet_pdf": {
+        "ok": true,
+        "detail": "count=1",
+        "screenshot": ""
+      },
+      "balance_sheet_xlsx": {
+        "ok": true,
+        "detail": "count=1",
+        "screenshot": ""
+      },
+      "balance_sheet_has_assets": {
+        "ok": true,
+        "detail": "structure visible",
+        "screenshot": ""
+      },
+      "trial_balance_opens": {
+        "ok": true,
+        "detail": "/odoo/accounting/trial-balance",
+        "screenshot": "evidence/phase22-financial-reports/screenshots/trial_balance.png"
+      },
+      "trial_balance_content": {
+        "ok": true,
+        "detail": "chars=619",
+        "screenshot": ""
+      },
+      "trial_balance_pdf": {
+        "ok": true,
+        "detail": "count=1",
+        "screenshot": ""
+      },
+      "trial_balance_xlsx": {
+        "ok": true,
+        "detail": "count=1",
+        "screenshot": ""
+      },
+      "trial_balance_has_amounts": {
+        "ok": true,
+        "detail": "amounts visible",
+        "screenshot": ""
+      },
+      "general_ledger_opens": {
+        "ok": true,
+        "detail": "/odoo/accounting/general-ledger",
+        "screenshot": "evidence/phase22-financial-reports/screenshots/general_ledger.png"
+      },
+      "general_ledger_content": {
+        "ok": true,
+        "detail": "chars=1169",
+        "screenshot": ""
+      },
+      "general_ledger_pdf": {
+        "ok": true,
+        "detail": "count=1",
+        "screenshot": ""
+      },
+      "general_ledger_xlsx": {
+        "ok": true,
+        "detail": "count=1",
+        "screenshot": ""
+      },
+      "journal_report_opens": {
+        "ok": true,
+        "detail": "/odoo/accounting/journal-report",
+        "screenshot": "evidence/phase22-financial-reports/screenshots/journal_report.png"
+      },
+      "journal_report_content": {
+        "ok": true,
+        "detail": "chars=779",
+        "screenshot": ""
+      },
+      "journal_report_pdf": {
+        "ok": true,
+        "detail": "count=1",
+        "screenshot": ""
+      },
+      "journal_report_xlsx": {
+        "ok": true,
+        "detail": "count=1",
+        "screenshot": ""
+      },
+      "partner_ledger_opens": {
+        "ok": true,
+        "detail": "/odoo/accounting/partner-ledger",
+        "screenshot": "evidence/phase22-financial-reports/screenshots/partner_ledger.png"
+      },
+      "partner_ledger_content": {
+        "ok": true,
+        "detail": "chars=938",
+        "screenshot": ""
+      },
+      "partner_ledger_pdf": {
+        "ok": true,
+        "detail": "count=1",
+        "screenshot": ""
+      },
+      "partner_ledger_xlsx": {
+        "ok": true,
+        "detail": "count=1",
+        "screenshot": ""
+      },
+      "aged_receivable_opens": {
+        "ok": true,
+        "detail": "/odoo/accounting/aged-receivable",
+        "screenshot": "evidence/phase22-financial-reports/screenshots/aged_receivable.png"
+      },
+      "aged_receivable_content": {
+        "ok": true,
+        "detail": "chars=999",
+        "screenshot": ""
+      },
+      "aged_receivable_pdf": {
+        "ok": true,
+        "detail": "count=1",
+        "screenshot": ""
+      },
+      "aged_receivable_xlsx": {
+        "ok": true,
+        "detail": "count=1",
+        "screenshot": ""
+      },
+      "aged_receivable_has_ar": {
+        "ok": true,
+        "detail": "AR data",
+        "screenshot": ""
+      },
+      "aged_payable_opens": {
+        "ok": true,
+        "detail": "/odoo/accounting/aged-payable",
+        "screenshot": "evidence/phase22-financial-reports/screenshots/aged_payable.png"
+      },
+      "aged_payable_content": {
+        "ok": true,
+        "detail": "chars=584",
+        "screenshot": ""
+      },
+      "aged_payable_pdf": {
+        "ok": true,
+        "detail": "count=1",
+        "screenshot": ""
+      },
+      "aged_payable_xlsx": {
+        "ok": true,
+        "detail": "count=1",
+        "screenshot": ""
+      }
+    },
+    "ok": true
+  },
+  "ui_financial_ok": true,
+  "go_live_commercial_formats": false
+}

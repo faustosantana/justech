@@ -200,6 +200,7 @@
                 <t t-set="doc" t-value="doc.with_context(lang=doc.partner_id.lang)"/>
                 <t t-set="company" t-value="doc.company_id"/>
                 <div class="article page jt-hq-page"
+                     style="border: none !important; border-top: none !important;"
                      t-att-data-oe-model="doc._name"
                      t-att-data-oe-id="doc.id"
                      t-att-data-oe-lang="doc.env.context.get('lang')">

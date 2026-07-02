@@ -25,12 +25,15 @@ h2.hellenia-doc-title,
     box-shadow: none !important;
 }
 
-.o_body_html .container main .article.jt-hq-page,
-.article.page.jt-hq-page {
+main .article.page.jt-hq-page,
+body .article.page.jt-hq-page,
+div.article.page.jt-hq-page,
+.o_body_html .container main .article.jt-hq-page {
     margin: 0 !important;
     padding: 0 !important;
     border: none !important;
     border-top: none !important;
+    outline: none !important;
     max-width: none !important;
     box-shadow: none !important;
 }

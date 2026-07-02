@@ -59,9 +59,13 @@ chmod -R a+rX custom/justech_report_design
 grep -q "get_jt_document_type_short_display" custom/justech_report_design/models/account_move.py
 grep -q "account.account_invoices" custom/justech_report_design/data/report_official_data.xml
 
-# Reiniciar Odoo PROD
+# Reiniciar Odoo PROD y actualizar módulo (odoo -u requiere detener el servicio)
 cd docker/production
-docker compose --env-file ../../config/production/.env restart odoo
+docker compose --env-file ../../config/production/.env stop odoo
+docker compose --env-file ../../config/production/.env run --rm -T odoo odoo \
+  -d "$ODOO_DB_NAME" --db_host=db --db_user="$DB_USER" --db_password="$DB_PASSWORD" \
+  -u justech_report_design --stop-after-init --no-http
+docker compose --env-file ../../config/production/.env up -d odoo
 sleep 12
 
 # Validación

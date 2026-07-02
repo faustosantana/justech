@@ -1,6 +1,6 @@
 {
   "phase": "24.1E-signatures-discount-regression",
-  "timestamp_utc": "2026-07-02T03:03:30.642527+00:00",
+  "timestamp_utc": "2026-07-02T03:05:52.338763+00:00",
   "database": "hellenia_test",
   "pass": true,
   "failed_checks": [
@@ -257,7 +257,7 @@
     },
     "quote_1_single_page": {
       "status": "PASS",
-      "detail": "pages=None size=72187"
+      "detail": "pages=None size=72176"
     },
     "quote_5_disc_pdf": {
       "status": "PASS",
@@ -366,28 +366,28 @@
       "file": "quotation_1_product.pdf",
       "line_count": 1,
       "pages": null,
-      "size_bytes": 72187
+      "size_bytes": 72176
     },
     "quote_5": {
       "order": "S00135",
       "file": "quotation_5_products.pdf",
       "line_count": 5,
       "pages": null,
-      "size_bytes": 74588
+      "size_bytes": 74584
     },
     "quote_25": {
       "order": "S00138",
       "file": "quotation_25_products.pdf",
       "line_count": 25,
       "pages": null,
-      "size_bytes": 79117
+      "size_bytes": 79111
     },
     "quote_5_disc": {
       "order": "S00139",
       "file": "quotation_5_products_discount.pdf",
       "line_count": 5,
       "pages": null,
-      "size_bytes": 74885
+      "size_bytes": 74877
     }
   },
   "screenshots": {},

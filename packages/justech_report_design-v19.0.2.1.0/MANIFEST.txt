@@ -1,0 +1,10 @@
+package=justech_report_design
+version=19.0.2.1.0
+odoo_version=19.0
+build_date=2026-07-02T05:16:56Z
+git_commit=08b7f85
+design_phase=24.2B-approved
+depends=sale
+optional_compat=hellenia_reports
+install_command=odoo -d DB -i justech_report_design --stop-after-init
+upgrade_command=odoo -d DB -u justech_report_design --stop-after-init

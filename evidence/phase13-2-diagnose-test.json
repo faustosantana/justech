@@ -1,0 +1,771 @@
+{
+  "phase": "13.2",
+  "block": 1,
+  "timestamp_utc": "2026-06-30T15:54:40.299183+00:00",
+  "database": "hellenia_test",
+  "company": {
+    "id": 1,
+    "name": "Hellenia, S.R.L.",
+    "vat": "133621282",
+    "country": "DO",
+    "currency": "DOP",
+    "fiscal_enabled": true,
+    "account_sale_tax_id": "18% ITBIS",
+    "account_purchase_tax_id": "18% ITBIS"
+  },
+  "chart": {
+    "account_count": 289,
+    "template_hint": "do"
+  },
+  "taxes": {
+    "all": [
+      {
+        "id": 25,
+        "name": "-30% ITBIS Prof. (N02-05)",
+        "amount": -5.4,
+        "type_tax_use": "none",
+        "active": false,
+        "xmlid": "account.1_ret_30_tax_freelance"
+      },
+      {
+        "id": 17,
+        "name": "0.15% Trans.",
+        "amount": 0.0015,
+        "type_tax_use": "none",
+        "active": true,
+        "xmlid": "account.1_tax_0015_bank"
+      },
+      {
+        "id": 32,
+        "name": "-27% ISR (L253-12)",
+        "amount": -27.0,
+        "type_tax_use": "purchase",
+        "active": true,
+        "xmlid": "account.1_ret_27_income_remittance"
+      },
+      {
+        "id": 22,
+        "name": "-100% ITBIS (N01-11)",
+        "amount": -18.0,
+        "type_tax_use": "purchase",
+        "active": true,
+        "xmlid": "account.1_ret_100_tax_nonprofit"
+      },
+      {
+        "id": 21,
+        "name": "-100% ITBIS (N07-09)",
+        "amount": -18.0,
+        "type_tax_use": "purchase",
+        "active": true,
+        "xmlid": "account.1_ret_100_tax_security"
+      },
+      {
+        "id": 23,
+        "name": "-100% ITBIS (R293-11)",
+        "amount": -18.0,
+        "type_tax_use": "purchase",
+        "active": true,
+        "xmlid": "account.1_ret_100_tax_person"
+      },
+      {
+        "id": 26,
+        "name": "-75% ITBIS (N08-10)",
+        "amount": -13.5,
+        "type_tax_use": "purchase",
+        "active": true,
+        "xmlid": "account.1_ret_75_tax_nonformal"
+      },
+      {
+        "id": 29,
+        "name": "-10% ISR (L253-12)",
+        "amount": -10.0,
+        "type_tax_use": "purchase",
+        "active": true,
+        "xmlid": "account.1_ret_10_income_dividend"
+      },
+      {
+        "id": 27,
+        "name": "-10% ISR Fee",
+        "amount": -10.0,
+        "type_tax_use": "purchase",
+        "active": true,
+        "xmlid": "account.1_ret_10_income_person"
+      },
+      {
+        "id": 28,
+        "name": "-10% ISR Rent.",
+        "amount": -10.0,
+        "type_tax_use": "purchase",
+        "active": true,
+        "xmlid": "account.1_ret_10_income_rent"
+      },
+      {
+        "id": 24,
+        "name": "-30% ITBIS Leg. (N02-05)",
+        "amount": -5.4,
+        "type_tax_use": "purchase",
+        "active": true,
+        "xmlid": "account.1_ret_30_tax_moral"
+      },
+      {
+        "id": 30,
+        "name": "-2% ISR (N07-07)",
+        "amount": -2.0,
+        "type_tax_use": "purchase",
+        "active": true,
+        "xmlid": "account.1_ret_2_income_person"
+      },
+      {
+        "id": 31,
+        "name": "-2% ISR Mat.",
+        "amount": -2.0,
+        "type_tax_use": "purchase",
+        "active": true,
+        "xmlid": "account.1_ret_2_income_transfer"
+      },
+      {
+        "id": 6,
+        "name": "ITBIS Exempt",
+        "amount": 0.0,
+        "type_tax_use": "purchase",
+        "active": true,
+        "xmlid": "account.1_tax_0_purch"
+      },
+      {
+        "id": 40,
+        "name": "18% of 10%",
+        "amount": 1.8,
+        "type_tax_use": "purchase",
+        "active": true,
+        "xmlid": "account.1_tax_18_10_total_mount"
+      },
+      {
+        "id": 19,
+        "name": "2% CDT",
+        "amount": 2.0,
+        "type_tax_use": "purchase",
+        "active": true,
+        "xmlid": "account.1_tax_2_telco"
+      },
+      {
+        "id": 12,
+        "name": "8% ITBIS",
+        "amount": 8.0,
+        "type_tax_use": "purchase",
+        "active": true,
+        "xmlid": "account.1_tax_8_purch"
+      },
+      {
+        "id": 11,
+        "name": "9% ITBIS",
+        "amount": 9.0,
+        "type_tax_use": "purchase",
+        "active": true,
+        "xmlid": "account.1_tax_9_purch"
+      },
+      {
+        "id": 18,
+        "name": "10% ISC",
+        "amount": 10.0,
+        "type_tax_use": "purchase",
+        "active": true,
+        "xmlid": "account.1_tax_10_telco"
+      },
+      {
+        "id": 13,
+        "name": "10% Propina",
+        "amount": 10.0,
+        "type_tax_use": "purchase",
+        "active": true,
+        "xmlid": "account.1_tax_tip_purch"
+      },
+      {
+        "id": 10,
+        "name": "16% ITBIS",
+        "amount": 16.0,
+        "type_tax_use": "purchase",
+        "active": true,
+        "xmlid": "account.1_tax_16_purch"
+      },
+      {
+        "id": 36,
+        "name": "10% Serv.",
+        "amount": 18.0,
+        "type_tax_use": "purchase",
+        "active": true,
+        "xmlid": "account.1_tax_group_person_services"
+      },
+      {
+        "id": 41,
+        "name": "18% Cost Good",
+        "amount": 18.0,
+        "type_tax_use": "purchase",
+        "active": true,
+        "xmlid": "account.1_tax_18_property_cost"
+      },
+      {
+        "id": 42,
+        "name": "18% Cost Serv.",
+        "amount": 18.0,
+        "type_tax_use": "purchase",
+        "active": true,
+        "xmlid": "account.1_tax_18_serv_cost"
+      },
+      {
+        "id": 9,
+        "name": "18% ITBIS",
+        "amount": 18.0,
+        "type_tax_use": "purchase",
+        "active": true,
+        "xmlid": "account.1_tax_18_purch"
+      },
+      {
+        "id": 15,
+        "name": "18% ITBIS Imp.",
+        "amount": 18.0,
+        "type_tax_use": "purchase",
+        "active": true,
+        "xmlid": "account.1_tax_18_importation"
+      },
+      {
+        "id": 14,
+        "name": "18% ITBIS Serv.",
+        "amount": 18.0,
+        "type_tax_use": "purchase",
+        "active": true,
+        "xmlid": "account.1_tax_18_purch_serv"
+      },
+      {
+        "id": 35,
+        "name": "2% Mat.",
+        "amount": 18.0,
+        "type_tax_use": "purchase",
+        "active": true,
+        "xmlid": "account.1_tax_group_person_construction"
+      },
+      {
+        "id": 37,
+        "name": "2% Serv P.",
+        "amount": 18.0,
+        "type_tax_use": "purchase",
+        "active": true,
+        "xmlid": "account.1_tax_group_moral_services"
+      },
+      {
+        "id": 34,
+        "name": "75%",
+        "amount": 18.0,
+        "type_tax_use": "purchase",
+        "active": true,
+        "xmlid": "account.1_tax_group_nonformal"
+      },
+      {
+        "id": 39,
+        "name": "Restaurant",
+        "amount": 18.0,
+        "type_tax_use": "purchase",
+        "active": true,
+        "xmlid": "account.1_tax_group_restaurant_purch"
+      },
+      {
+        "id": 20,
+        "name": "Telecom",
+        "amount": 18.0,
+        "type_tax_use": "purchase",
+        "active": true,
+        "xmlid": "account.1_tax_group_telco"
+      },
+      {
+        "id": 33,
+        "name": "-5% ISR Gov.",
+        "amount": -5.0,
+        "type_tax_use": "sale",
+        "active": true,
+        "xmlid": "account.1_ret_5_income_gov"
+      },
+      {
+        "id": 5,
+        "name": "ITBIS Exempt",
+        "amount": 0.0,
+        "type_tax_use": "sale",
+        "active": true,
+        "xmlid": "account.1_tax_0_sale"
+      },
+      {
+        "id": 16,
+        "name": "18% of 10%",
+        "amount": 1.8,
+        "type_tax_use": "sale",
+        "active": true,
+        "xmlid": "account.1_tax_18_of_10"
+      },
+      {
+        "id": 8,
+        "name": "10% Propina",
+        "amount": 10.0,
+        "type_tax_use": "sale",
+        "active": true,
+        "xmlid": "account.1_tax_tip_sale"
+      },
+      {
+        "id": 7,
+        "name": "18% ITBIS",
+        "amount": 18.0,
+        "type_tax_use": "sale",
+        "active": true,
+        "xmlid": "account.1_tax_18_sale"
+      },
+      {
+        "id": 38,
+        "name": "Restaurant",
+        "amount": 18.0,
+        "type_tax_use": "sale",
+        "active": true,
+        "xmlid": "account.1_tax_group_restaurant_sale"
+      }
+    ],
+    "sale": [
+      {
+        "id": 33,
+        "name": "-5% ISR Gov.",
+        "amount": -5.0,
+        "type_tax_use": "sale",
+        "active": true,
+        "xmlid": "account.1_ret_5_income_gov"
+      },
+      {
+        "id": 5,
+        "name": "ITBIS Exempt",
+        "amount": 0.0,
+        "type_tax_use": "sale",
+        "active": true,
+        "xmlid": "account.1_tax_0_sale"
+      },
+      {
+        "id": 16,
+        "name": "18% of 10%",
+        "amount": 1.8,
+        "type_tax_use": "sale",
+        "active": true,
+        "xmlid": "account.1_tax_18_of_10"
+      },
+      {
+        "id": 8,
+        "name": "10% Propina",
+        "amount": 10.0,
+        "type_tax_use": "sale",
+        "active": true,
+        "xmlid": "account.1_tax_tip_sale"
+      },
+      {
+        "id": 7,
+        "name": "18% ITBIS",
+        "amount": 18.0,
+        "type_tax_use": "sale",
+        "active": true,
+        "xmlid": "account.1_tax_18_sale"
+      },
+      {
+        "id": 38,
+        "name": "Restaurant",
+        "amount": 18.0,
+        "type_tax_use": "sale",
+        "active": true,
+        "xmlid": "account.1_tax_group_restaurant_sale"
+      }
+    ],
+    "purchase": [
+      {
+        "id": 32,
+        "name": "-27% ISR (L253-12)",
+        "amount": -27.0,
+        "type_tax_use": "purchase",
+        "active": true,
+        "xmlid": "account.1_ret_27_income_remittance"
+      },
+      {
+        "id": 22,
+        "name": "-100% ITBIS (N01-11)",
+        "amount": -18.0,
+        "type_tax_use": "purchase",
+        "active": true,
+        "xmlid": "account.1_ret_100_tax_nonprofit"
+      },
+      {
+        "id": 21,
+        "name": "-100% ITBIS (N07-09)",
+        "amount": -18.0,
+        "type_tax_use": "purchase",
+        "active": true,
+        "xmlid": "account.1_ret_100_tax_security"
+      },
+      {
+        "id": 23,
+        "name": "-100% ITBIS (R293-11)",
+        "amount": -18.0,
+        "type_tax_use": "purchase",
+        "active": true,
+        "xmlid": "account.1_ret_100_tax_person"
+      },
+      {
+        "id": 26,
+        "name": "-75% ITBIS (N08-10)",
+        "amount": -13.5,
+        "type_tax_use": "purchase",
+        "active": true,
+        "xmlid": "account.1_ret_75_tax_nonformal"
+      },
+      {
+        "id": 29,
+        "name": "-10% ISR (L253-12)",
+        "amount": -10.0,
+        "type_tax_use": "purchase",
+        "active": true,
+        "xmlid": "account.1_ret_10_income_dividend"
+      },
+      {
+        "id": 27,
+        "name": "-10% ISR Fee",
+        "amount": -10.0,
+        "type_tax_use": "purchase",
+        "active": true,
+        "xmlid": "account.1_ret_10_income_person"
+      },
+      {
+        "id": 28,
+        "name": "-10% ISR Rent.",
+        "amount": -10.0,
+        "type_tax_use": "purchase",
+        "active": true,
+        "xmlid": "account.1_ret_10_income_rent"
+      },
+      {
+        "id": 24,
+        "name": "-30% ITBIS Leg. (N02-05)",
+        "amount": -5.4,
+        "type_tax_use": "purchase",
+        "active": true,
+        "xmlid": "account.1_ret_30_tax_moral"
+      },
+      {
+        "id": 30,
+        "name": "-2% ISR (N07-07)",
+        "amount": -2.0,
+        "type_tax_use": "purchase",
+        "active": true,
+        "xmlid": "account.1_ret_2_income_person"
+      },
+      {
+        "id": 31,
+        "name": "-2% ISR Mat.",
+        "amount": -2.0,
+        "type_tax_use": "purchase",
+        "active": true,
+        "xmlid": "account.1_ret_2_income_transfer"
+      },
+      {
+        "id": 6,
+        "name": "ITBIS Exempt",
+        "amount": 0.0,
+        "type_tax_use": "purchase",
+        "active": true,
+        "xmlid": "account.1_tax_0_purch"
+      },
+      {
+        "id": 40,
+        "name": "18% of 10%",
+        "amount": 1.8,
+        "type_tax_use": "purchase",
+        "active": true,
+        "xmlid": "account.1_tax_18_10_total_mount"
+      },
+      {
+        "id": 19,
+        "name": "2% CDT",
+        "amount": 2.0,
+        "type_tax_use": "purchase",
+        "active": true,
+        "xmlid": "account.1_tax_2_telco"
+      },
+      {
+        "id": 12,
+        "name": "8% ITBIS",
+        "amount": 8.0,
+        "type_tax_use": "purchase",
+        "active": true,
+        "xmlid": "account.1_tax_8_purch"
+      },
+      {
+        "id": 11,
+        "name": "9% ITBIS",
+        "amount": 9.0,
+        "type_tax_use": "purchase",
+        "active": true,
+        "xmlid": "account.1_tax_9_purch"
+      },
+      {
+        "id": 18,
+        "name": "10% ISC",
+        "amount": 10.0,
+        "type_tax_use": "purchase",
+        "active": true,
+        "xmlid": "account.1_tax_10_telco"
+      },
+      {
+        "id": 13,
+        "name": "10% Propina",
+        "amount": 10.0,
+        "type_tax_use": "purchase",
+        "active": true,
+        "xmlid": "account.1_tax_tip_purch"
+      },
+      {
+        "id": 10,
+        "name": "16% ITBIS",
+        "amount": 16.0,
+        "type_tax_use": "purchase",
+        "active": true,
+        "xmlid": "account.1_tax_16_purch"
+      },
+      {
+        "id": 36,
+        "name": "10% Serv.",
+        "amount": 18.0,
+        "type_tax_use": "purchase",
+        "active": true,
+        "xmlid": "account.1_tax_group_person_services"
+      },
+      {
+        "id": 41,
+        "name": "18% Cost Good",
+        "amount": 18.0,
+        "type_tax_use": "purchase",
+        "active": true,
+        "xmlid": "account.1_tax_18_property_cost"
+      },
+      {
+        "id": 42,
+        "name": "18% Cost Serv.",
+        "amount": 18.0,
+        "type_tax_use": "purchase",
+        "active": true,
+        "xmlid": "account.1_tax_18_serv_cost"
+      },
+      {
+        "id": 9,
+        "name": "18% ITBIS",
+        "amount": 18.0,
+        "type_tax_use": "purchase",
+        "active": true,
+        "xmlid": "account.1_tax_18_purch"
+      },
+      {
+        "id": 15,
+        "name": "18% ITBIS Imp.",
+        "amount": 18.0,
+        "type_tax_use": "purchase",
+        "active": true,
+        "xmlid": "account.1_tax_18_importation"
+      },
+      {
+        "id": 14,
+        "name": "18% ITBIS Serv.",
+        "amount": 18.0,
+        "type_tax_use": "purchase",
+        "active": true,
+        "xmlid": "account.1_tax_18_purch_serv"
+      },
+      {
+        "id": 35,
+        "name": "2% Mat.",
+        "amount": 18.0,
+        "type_tax_use": "purchase",
+        "active": true,
+        "xmlid": "account.1_tax_group_person_construction"
+      },
+      {
+        "id": 37,
+        "name": "2% Serv P.",
+        "amount": 18.0,
+        "type_tax_use": "purchase",
+        "active": true,
+        "xmlid": "account.1_tax_group_moral_services"
+      },
+      {
+        "id": 34,
+        "name": "75%",
+        "amount": 18.0,
+        "type_tax_use": "purchase",
+        "active": true,
+        "xmlid": "account.1_tax_group_nonformal"
+      },
+      {
+        "id": 39,
+        "name": "Restaurant",
+        "amount": 18.0,
+        "type_tax_use": "purchase",
+        "active": true,
+        "xmlid": "account.1_tax_group_restaurant_purch"
+      },
+      {
+        "id": 20,
+        "name": "Telecom",
+        "amount": 18.0,
+        "type_tax_use": "purchase",
+        "active": true,
+        "xmlid": "account.1_tax_group_telco"
+      }
+    ],
+    "bad_15_percent": [],
+    "total_count": 38,
+    "active_count": 37,
+    "itbis_18_sale": {
+      "found": true,
+      "id": 7,
+      "name": "18% ITBIS"
+    },
+    "itbis_exempt_sale": {
+      "found": true,
+      "name": "ITBIS Exempt"
+    }
+  },
+  "products_with_15": [],
+  "journals": [
+    {
+      "id": 8,
+      "name": "Sales",
+      "code": "INV",
+      "type": "sale",
+      "ncf": true
+    },
+    {
+      "id": 9,
+      "name": "Purchases",
+      "code": "FACTU",
+      "type": "purchase",
+      "ncf": true
+    },
+    {
+      "id": 13,
+      "name": "Bank",
+      "code": "BNK1",
+      "type": "bank",
+      "ncf": false
+    },
+    {
+      "id": 10,
+      "name": "Miscellaneous Operations",
+      "code": "MISCE",
+      "type": "general",
+      "ncf": false
+    },
+    {
+      "id": 15,
+      "name": "Efectivo",
+      "code": "CSH1",
+      "type": "cash",
+      "ncf": false
+    },
+    {
+      "id": 12,
+      "name": "Cash Basis Taxes",
+      "code": "CABA",
+      "type": "general",
+      "ncf": false
+    },
+    {
+      "id": 11,
+      "name": "Exchange Difference",
+      "code": "CAMBI",
+      "type": "general",
+      "ncf": false
+    },
+    {
+      "id": 16,
+      "name": "Inventory Valuation",
+      "code": "STJ",
+      "type": "general",
+      "ncf": false
+    },
+    {
+      "id": 14,
+      "name": "Tax Returns",
+      "code": "TAX",
+      "type": "general",
+      "ncf": false
+    },
+    {
+      "id": 54,
+      "name": "Phase6 Concurrent",
+      "code": "PCC",
+      "type": "sale",
+      "ncf": true
+    }
+  ],
+  "fiscal_positions": [
+    {
+      "id": 3,
+      "name": "DO Domestic",
+      "active": true
+    },
+    {
+      "id": 4,
+      "name": "P. Physical Services",
+      "active": true
+    },
+    {
+      "id": 5,
+      "name": "P. Legal Services",
+      "active": true
+    },
+    {
+      "id": 6,
+      "name": "P. Legal Surveillance",
+      "active": true
+    },
+    {
+      "id": 7,
+      "name": "Informal Supplier of Goods",
+      "active": true
+    },
+    {
+      "id": 8,
+      "name": "Outside Services",
+      "active": true
+    },
+    {
+      "id": 9,
+      "name": "Governmental",
+      "active": true
+    },
+    {
+      "id": 10,
+      "name": "Non-Profit Services",
+      "active": true
+    },
+    {
+      "id": 11,
+      "name": "Special Regimes",
+      "active": true
+    },
+    {
+      "id": 12,
+      "name": "Restaurants",
+      "active": true
+    },
+    {
+      "id": 13,
+      "name": "To Take Away",
+      "active": true
+    }
+  ],
+  "modules": {
+    "l10n_do": "installed",
+    "justech_l10n_do_base": "installed",
+    "justech_l10n_do_ncf": "installed",
+    "justech_l10n_do_reports": "installed"
+  },
+  "root_cause": "Configuración fiscal RD correcta; sin impuesto 15% detectado.",
+  "ok": true,
+  "recommendations": []
+}

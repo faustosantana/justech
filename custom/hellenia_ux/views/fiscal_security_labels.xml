@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="justech_l10n_do_base.group_justech_do_fiscal_user" model="res.groups">
+        <field name="name">Usuario fiscal dominicano</field>
+    </record>
+    <record id="justech_l10n_do_base.group_justech_do_fiscal_manager" model="res.groups">
+        <field name="name">Responsable fiscal dominicano</field>
+    </record>
+</odoo>

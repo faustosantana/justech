@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_hellenia_payment_partner_wizard_form" model="ir.ui.view">
+        <field name="name">hellenia.payment.partner.wizard.form</field>
+        <field name="model">hellenia.payment.partner.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Registrar pago">
+                <group>
+                    <group>
+                        <field name="partner_type" invisible="1"/>
+                        <field name="partner_id"
+                               string="Cliente"
+                               invisible="partner_type != 'customer'"
+                               options="{'no_create': True}"/>
+                        <field name="partner_id"
+                               string="Proveedor"
+                               invisible="partner_type != 'supplier'"
+                               options="{'no_create': True}"/>
+                        <field name="currency_id"/>
+                        <field name="payment_date"/>
+                        <field name="communication" string="Concepto de pago"/>
+                    </group>
+                    <group>
+                        <field name="journal_id" string="Diario"/>
+                        <field name="payment_method_line_id" string="Método de pago"/>
+                        <field name="payment_total" readonly="1"/>
+                        <field name="withholding_total" readonly="1" string="Total retenido"/>
+                        <field name="amount_after_withholding" readonly="1" string="Neto a transferir"/>
+                    </group>
+                </group>
+
+                <group string="Facturas pendientes">
+                    <field name="line_ids" nolabel="1">
+                        <list editable="bottom" create="0" delete="0">
+                            <field name="apply" string="Aplicar" force_save="1"
+                                   widget="boolean"
+                                   options="{'autosave': false}"/>
+                            <field name="invoice_name" string="Factura"/>
+                            <field name="ncf" string="Número de Comprobante Fiscal"/>
+                            <field name="invoice_date" string="Fecha"/>
+                            <field name="date_maturity" string="Vencimiento"/>
+                            <field name="currency_id" string="Moneda"/>
+                            <field name="amount_total" string="Total"/>
+                            <field name="amount_untaxed" string="Base imponible" optional="show"/>
+                            <field name="amount_tax" string="ITBIS facturado" optional="show"/>
+                            <field name="amount_residual" string="Pendiente"/>
+                            <field name="amount_to_pay" string="Monto a aplicar" force_save="1"
+                                   readonly="not apply"/>
+                            <field name="company_id" column_invisible="1"/>
+                            <field name="move_scope_filter" column_invisible="1"/>
+                            <field name="withholding_catalog_ids"
+                                   string="Retenciones"
+                                   widget="many2many_tags"
+                                   readonly="not apply"
+                                   options="{'no_create': True, 'no_open': True}"
+                                   domain="[('active', '=', True), ('code', 'not in', ['RET-NONE', 'wh_none']), ('partner_scope', 'in', [parent.partner_type, 'both']), ('move_scope', 'in', [move_scope_filter, 'both']), ('company_id', '=', company_id), ('account_id', '!=', False)]"/>
+                            <field name="withholding_summary" string="Resumen" readonly="1" optional="show"/>
+                            <field name="withholding_amount" string="Total retenido" readonly="1"/>
+                            <field name="net_after_withholding" string="Neto a pagar/cobrar" readonly="1" optional="show"/>
+                            <field name="move_id" column_invisible="1"/>
+                        </list>
+                    </field>
+                </group>
+
+                <group string="Detalle retenciones por factura" invisible="not withholding_line_ids">
+                    <field name="withholding_line_ids" nolabel="1" readonly="1">
+                        <list>
+                            <field name="invoice_name" string="Factura"/>
+                            <field name="label" string="Retención"/>
+                            <field name="base_label" string="Base"/>
+                            <field name="base_amount" string="Monto base"/>
+                            <field name="rate" string="Porcentaje"/>
+                            <field name="amount" string="Monto retenido"/>
+                            <field name="account_id" string="Cuenta contable"/>
+                        </list>
+                    </field>
+                </group>
+
+                <group string="Datos del método de pago">
+                    <field name="hellenia_show_card_fields" invisible="1"/>
+                    <field name="hellenia_show_check_fields" invisible="1"/>
+                    <field name="hellenia_payment_reference" string="Referencia de pago"/>
+                    <field name="hellenia_card_auth" string="Autorización"
+                           invisible="not hellenia_show_card_fields"/>
+                    <field name="hellenia_card_batch" string="Lote"
+                           invisible="not hellenia_show_card_fields"/>
+                    <field name="hellenia_check_bank_id" string="Banco"
+                           invisible="not hellenia_show_check_fields"/>
+                    <field name="hellenia_check_number" string="Número de cheque"
+                           invisible="not hellenia_show_check_fields"/>
+                    <field name="hellenia_check_date" string="Fecha del cheque"
+                           invisible="not hellenia_show_check_fields"/>
+                </group>
+
+                <footer>
+                    <button name="action_register_payments" type="object" string="Registrar pago" class="btn-primary"/>
+                    <button string="Cancelar" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_hellenia_register_customer_payment" model="ir.actions.act_window">
+        <field name="name">Nuevo</field>
+        <field name="res_model">hellenia.payment.partner.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{'default_partner_type': 'customer'}</field>
+    </record>
+
+    <record id="action_hellenia_register_vendor_payment" model="ir.actions.act_window">
+        <field name="name">Nuevo</field>
+        <field name="res_model">hellenia.payment.partner.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{'default_partner_type': 'supplier'}</field>
+    </record>
+
+    <record id="view_account_payment_tree_customer_hellenia" model="ir.ui.view">
+        <field name="name">account.payment.tree.customer.hellenia</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="account.view_account_payment_tree"/>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <xpath expr="//list" position="attributes">
+                <attribute name="create">false</attribute>
+            </xpath>
+            <xpath expr="//list" position="inside">
+                <header>
+                    <button name="%(hellenia_account.action_hellenia_register_customer_payment)d"
+                            type="action" string="Nuevo" class="btn-primary" display="always"/>
+                </header>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_account_payment_tree_vendor_hellenia" model="ir.ui.view">
+        <field name="name">account.payment.tree.vendor.hellenia</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="account.view_account_supplier_payment_tree"/>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <xpath expr="//list" position="attributes">
+                <attribute name="create">false</attribute>
+            </xpath>
+            <xpath expr="//list" position="inside">
+                <header>
+                    <button name="%(hellenia_account.action_hellenia_register_vendor_payment)d"
+                            type="action" string="Nuevo" class="btn-primary" display="always"/>
+                </header>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="account.action_account_payments" model="ir.actions.act_window">
+        <field name="name">Pagos</field>
+    </record>
+    <record id="account.action_account_payments_payable" model="ir.actions.act_window">
+        <field name="name">Pagos</field>
+    </record>
+    <record id="account.menu_action_account_payments_receivable" model="ir.ui.menu">
+        <field name="name">Pagos</field>
+    </record>
+    <record id="account.menu_action_account_payments_payable" model="ir.ui.menu">
+        <field name="name">Pagos</field>
+    </record>
+</odoo>

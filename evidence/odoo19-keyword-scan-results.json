@@ -1,0 +1,72 @@
+{
+  "scan_date": "2026-06-30",
+  "build": "Odoo 19.0-20260619",
+  "container": "hellenia-dev-odoo-1",
+  "addon_roots": [
+    "/opt/odoo/enterprise/addons",
+    "/usr/lib/python3/dist-packages/odoo/addons"
+  ],
+  "global_keyword_scan": {
+    "DGII": 71,
+    "document.type": 1075,
+    "l10n_latam.document": 223,
+    "fiscal_localization": 109,
+    "Fiscal Localization": 205,
+    "Invoice Document": 21,
+    "document_type": 672,
+    "ncf_sequence": 0,
+    "comprobante": 341,
+    "NCF": 182,
+    "B01": 136,
+    "B02": 108,
+    "B11": 204,
+    "E31": 98,
+    "E32": 113,
+    "E33": 103,
+    "E34": 85,
+    "606": 546,
+    "607": 491,
+    "608": 524,
+    "l10n_do_edi": 0
+  },
+  "l10n_do_scoped_scan": {
+    "NCF": 1,
+    "ncf": 1,
+    "B01": 0,
+    "B02": 0,
+    "B03": 0,
+    "B04": 0,
+    "B11": 1,
+    "B13": 1,
+    "E31": 0,
+    "E32": 0,
+    "E33": 0,
+    "E34": 0,
+    "DGII": 2,
+    "606": 1,
+    "607": 1,
+    "608": 0,
+    "l10n_latam": 0,
+    "document_type": 1
+  },
+  "l10n_do_scoped_context": {
+    "NCF": "__manifest__.py (description only)",
+    "B11": "data/account_tax_report_data.xml (ITBIS form line 2B11)",
+    "B13": "data/account_tax_report_data.xml (ITBIS form line 2B13)",
+    "606": "data/template/account.account-do.csv account 61060600 Promotions (false positive)",
+    "607": "data/template/account.account-do.csv account 61060700 Restaurant Expenses (false positive)",
+    "DGII": "__manifest__.py + account.account-do.csv",
+    "document_type": "data/template/account.tax-do.csv (generic tax field)"
+  },
+  "db_module_states_hellenia_dev": {
+    "total_modules": 1457,
+    "installed": 108,
+    "l10n_do": "installed",
+    "l10n_do_reports": "installed",
+    "l10n_do_check_printing": "installed",
+    "l10n_latam_base": "uninstalled",
+    "l10n_latam_invoice_document": "uninstalled",
+    "l10n_latam_check": "uninstalled",
+    "l10n_do_edi": "NOT_IN_DB"
+  }
+}

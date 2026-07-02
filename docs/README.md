@@ -1,42 +1,67 @@
 # Odoo Hellenia — Documentación
 
-Proyecto Odoo 18 multi-ambiente para **Hellenia**.
+Proyecto Odoo **Enterprise 19** para **Hellenia**. Pipeline permanente: **DEV → TEST → PRODUCCIÓN**.
 
-## Arquitectura
+## Arquitectura y operaciones
 
-```
-Cursor local → GitHub → DEV → TEST → Producción
-```
+| Documento | Contenido |
+|-----------|-----------|
+| [PROJECT_STRATEGY.md](PROJECT_STRATEGY.md) | **Estrategia v3.0** — plataforma, 12 fases, NCF, custom |
+| [PHASE35_GOLDEN_CONFIGURATION_REPORT.md](PHASE35_GOLDEN_CONFIGURATION_REPORT.md) | **Fase 3.5** — Golden Configuration definitiva |
+| [IMPLEMENTATION_DECISIONS.md](IMPLEMENTATION_DECISIONS.md) | Registro decisiones implementación |
+| [IMPLEMENTATION_MASTER_PLAN.md](IMPLEMENTATION_MASTER_PLAN.md) | Plan maestro implementación |
+| [ARCHITECTURE.md](ARCHITECTURE.md) | Capas Community / Enterprise / Custom |
+| [DEVOPS_GUIDE.md](DEVOPS_GUIDE.md) | Scripts, backups, despliegues |
+| [UPGRADE_POLICY.md](UPGRADE_POLICY.md) | Gobernanza actualizaciones |
+| [UPGRADE-PATH.md](UPGRADE-PATH.md) | Procedimiento técnico Odoo 20+ |
 
-| Ambiente | URL | Stack Compose | Estado |
-|----------|-----|---------------|--------|
-| DEV | https://dev.hellenia.cloud | `hellenia-dev` | Pendiente despliegue |
-| TEST | https://test.hellenia.cloud | `hellenia-test` | Pendiente despliegue |
-| PROD (actual) | https://odoo-pecv.srv1784296.hstgr.cloud | `odoo-pecv` | **Activo** — no migrado |
-| PROD (futuro) | https://odoo.hellenia.cloud | TBD | Pendiente |
+## Desarrollo
 
-## Rutas
+| Documento | Contenido |
+|-----------|-----------|
+| [DEVELOPMENT_GUIDE.md](DEVELOPMENT_GUIDE.md) | Flujo de trabajo + calidad (estrategia) |
+| [CODING_STANDARDS.md](CODING_STANDARDS.md) | PEP8, Odoo, herencia |
+| [CUSTOM_MODULE_GUIDE.md](CUSTOM_MODULE_GUIDE.md) | Estructura módulos custom |
 
-| Recurso | Ruta |
-|---------|------|
-| Addons | `/opt/odoo-projects/hellenia/addons/` |
-| Compose DEV | `/opt/odoo-projects/hellenia/docker/dev/` |
-| Compose TEST | `/opt/odoo-projects/hellenia/docker/test/` |
-| Config DEV | `/opt/odoo-projects/hellenia/config/dev/` |
-| Config TEST | `/opt/odoo-projects/hellenia/config/test/` |
-| Scripts | `/opt/odoo-projects/hellenia/scripts/` |
-| Git repo | `/opt/odoo-projects/hellenia/repository/` |
+## Enterprise y E1
 
-## Ramas Git
+| Documento | Contenido |
+|-----------|-----------|
+| [ENTERPRISE_ACCESS_OPTIONS.md](ENTERPRISE_ACCESS_OPTIONS.md) | **Git vs portal vs soporte** |
+| [E0.6b-ENTERPRISE-PORTAL-DOWNLOAD.md](E0.6b-ENTERPRISE-PORTAL-DOWNLOAD.md) | Descarga oficial Sources |
+| [E0.6-GITHUB-ENTERPRISE.md](E0.6-GITHUB-ENTERPRISE.md) | GitHub (paralelo) |
+| [ENTERPRISE-LICENSING.md](ENTERPRISE-LICENSING.md) | Política oficial licenciamiento |
+| [ENTERPRISE-UPGRADE-DEV.md](ENTERPRISE-UPGRADE-DEV.md) | **Upgrade DEV** — tarball portal, validación RD, gate TC-003 |
+| [L10N_DO_TEST_PLAN.md](L10N_DO_TEST_PLAN.md) | Plan pruebas NCF tradicional |
+| [E1-CHECKLIST.md](E1-CHECKLIST.md) | Checklist E1 |
+| [E1-ENTERPRISE-STATUS.md](E1-ENTERPRISE-STATUS.md) | Estado actual |
+| [E1B-LICENSE-CHECKLIST.md](E1B-LICENSE-CHECKLIST.md) | E1b registro licencia (go-live) |
+| [UNREGISTERED_ENTERPRISE_LIMITATIONS.md](UNREGISTERED_ENTERPRISE_LIMITATIONS.md) | **Laboratorio DEV sin registro** |
+| [E0.5-SUBSCRIPTION-VALIDATION.md](E0.5-SUBSCRIPTION-VALIDATION.md) | Suscripción |
 
-| Rama | Uso |
-|------|-----|
-| `main` | Producción aprobada |
-| `develop` | Desarrollo |
-| `test` | Pruebas / UAT |
-| `feature/*` | Funcionalidades |
-| `hotfix/*` | Correcciones urgentes |
+## Fiscal República Dominicana (DGII)
 
-## Inicio rápido
+| Documento | Contenido |
+|-----------|-----------|
+| [DGII_FISCAL_ARCHITECTURE.md](DGII_FISCAL_ARCHITECTURE.md) | **Arquitectura fiscal integral** — NCF, reportes, compliance, eNCF (diseño) |
+| [GAP_ANALYSIS_RD.md](GAP_ANALYSIS_RD.md) | Brechas P0–P3 con evidencia Fase 5 |
+| [ODOO19_OFFICIAL_MODULE_INVENTORY.md](ODOO19_OFFICIAL_MODULE_INVENTORY.md) | Inventario módulos oficiales Odoo 19 |
+| [NCF_IMPLEMENTATION.md](NCF_IMPLEMENTATION.md) | NCF tradicional — alcance Etapa 1 |
+| [DOMINICAN_FISCAL_CERTIFICATION.md](DOMINICAN_FISCAL_CERTIFICATION.md) | Certificación fiscal DAFC |
 
-Ver [DEPLOYMENT.md](DEPLOYMENT.md)
+## Referencia
+
+| Documento | Contenido |
+|-----------|-----------|
+| [GIT-STRATEGY.md](GIT-STRATEGY.md) | Qué va en Git |
+| [ENTERPRISE_ANALYSIS.md](ENTERPRISE_ANALYSIS.md) | Análisis técnico Enterprise |
+| [DEPLOYMENT.md](DEPLOYMENT.md) | Runbook despliegue VPS |
+| [ROLLBACK.md](ROLLBACK.md) | Procedimientos rollback |
+
+## Ambientes
+
+| Ambiente | URL | Estado |
+|----------|-----|--------|
+| DEV | https://dev.hellenia.cloud | Odoo 19 — E1 pendiente |
+| TEST | https://test.hellenia.cloud | Odoo 19 |
+| PROD | odoo-pecv | Odoo 18 — no tocar |

@@ -1,0 +1,32 @@
+{
+  "phase": 3,
+  "applied_at_utc": "2026-06-30T04:41:50Z",
+  "backup": "/opt/odoo-projects/hellenia/backups/dev/2026-06-30_0440",
+  "company": {
+    "name": "Hellenia, S.R.L.",
+    "vat": "133621282",
+    "currency": "DOP",
+    "country": "DO",
+    "website": "https://hellenia.cloud"
+  },
+  "categories_created": 23,
+  "banks": "Banco López de Haro (PENDING-DOP, PENDING-USD)",
+  "validation": {
+    "timestamp_utc": "2026-06-30T04:43:09Z",
+    "checks_passed": [
+      "company_name",
+      "vat",
+      "currency",
+      "country",
+      "tax_count",
+      "fiscal_position_count",
+      "journal_count",
+      "account_count",
+      "categories",
+      "bank_lines",
+      "internal_users",
+      "payment_method_count"
+    ],
+    "note": "timezone validated on admin user after apply"
+  }
+}

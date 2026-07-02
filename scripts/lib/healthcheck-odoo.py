@@ -1,0 +1,104 @@
+#!/usr/bin/env python3
+"""Healthcheck Odoo interno — módulos, NCF, DGII, PDF (sin modificar datos)."""
+from __future__ import annotations
+
+import json
+import os
+import datetime as dt
+
+report = {
+    "timestamp_utc": dt.datetime.now(dt.timezone.utc).isoformat(),
+    "database": env.cr.dbname,
+    "checks": {},
+    "ok": True,
+    "errors": [],
+}
+
+
+def fail(key: str, msg: str) -> None:
+    report["ok"] = False
+    report["errors"].append(msg)
+    report["checks"][key] = {"ok": False, "detail": msg}
+
+
+def pass_check(key: str, detail: str = "ok") -> None:
+    report["checks"][key] = {"ok": True, "detail": detail}
+
+
+# --- Módulos Justech / Hellenia ---
+required_modules = [
+    "justech_l10n_do_base",
+    "justech_l10n_do_ncf",
+    "justech_l10n_do_reports",
+    "hellenia_base",
+    "hellenia_reports",
+]
+Module = env["ir.module.module"]
+for mod_name in required_modules:
+    mod = Module.search([("name", "=", mod_name)], limit=1)
+    if not mod or mod.state != "installed":
+        fail(f"module_{mod_name}", f"{mod_name} no instalado (state={mod.state if mod else 'missing'})")
+    else:
+        pass_check(f"module_{mod_name}")
+
+# --- NCF ---
+ncf_seq = env["justech.do.ncf.range"].search(
+    [("company_id", "=", env.company.id), ("state", "=", "active")], limit=1
+)
+if ncf_seq:
+    pass_check("ncf_sequence", ncf_seq.name or "active range")
+else:
+    fail("ncf_sequence", "Sin rango NCF activo (justech.do.ncf.range)")
+
+# --- Reportes DGII (wizard Justech) ---
+try:
+    env.ref("justech_l10n_do_reports.action_justech_do_fiscal_report_wizard")
+    today = dt.date.today()
+    date_from = today.replace(day=1)
+    _, last_day = __import__("calendar").monthrange(today.year, today.month)
+    date_to = today.replace(day=last_day)
+    for rtype in ("606", "607", "608"):
+        wiz = env["justech.do.fiscal.report.wizard"].create(
+            {"report_type": rtype, "date_from": date_from, "date_to": date_to}
+        )
+        wiz.action_generate()
+        pass_check(f"report_{rtype}")
+except Exception as exc:
+    fail("report_dgii", str(exc))
+
+# --- PDF corporativo (layout QWeb) ---
+try:
+    layout = env.ref("hellenia_reports.external_layout_hellenia", raise_if_not_found=False)
+    if layout:
+        pass_check("pdf_layout", layout.name)
+    else:
+        fail("pdf_layout", "hellenia_reports.external_layout_hellenia no encontrado")
+except Exception as exc:
+    fail("pdf_layout", str(exc))
+
+# --- Assets (bundle report) ---
+try:
+    bundle = env["ir.qweb"]._get_asset_bundle("web.report_assets_common", assets_params={})
+    if bundle:
+        pass_check("assets_report", "bundle loadable")
+    else:
+        fail("assets_report", "bundle vacío")
+except Exception as exc:
+    fail("assets_report", str(exc))
+
+# --- Contabilidad básica ---
+try:
+    env["account.account"].search_count([])
+    pass_check("accounting", "chart accessible")
+except Exception as exc:
+    fail("accounting", str(exc))
+
+out = os.environ.get("HEALTHCHECK_JSON_OUT", "")
+if out:
+    with open(out, "w", encoding="utf-8") as f:
+        json.dump(report, f, indent=2, ensure_ascii=False)
+else:
+    print(json.dumps(report, indent=2, ensure_ascii=False))
+
+if not report["ok"]:
+    raise SystemExit(1)

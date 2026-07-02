@@ -1,0 +1,23 @@
+Fase 16.1 — Evidencia UI métodos de pago TEST
+Timestamp: 2026-06-30T19:10:09Z
+Database: hellenia_test
+URL: https://test.hellenia.cloud
+
+Módulo: hellenia_account installed 19.0.1.0.2
+
+Diarios activos y métodos:
+BNKD | Banco López de Haro DOP | cuenta=4040043811 | DOP
+  Entrada: Transferencia, Tarjeta
+  Salida: Transferencia, Cheque
+
+BNKU | Banco López de Haro USD | cuenta=4010461048 | USD
+  Entrada: Transferencia, Tarjeta
+  Salida: Transferencia, Cheque
+
+CSH1 | Caja / Efectivo
+  Entrada: Efectivo
+  Salida: Efectivo
+
+NO presentes: Manual Payment, Checks, BNK1 (desactivado)
+
+Validación automatizada: evidence/phase16-payments-test.json — ok=true, 23/23 PASS

@@ -1,0 +1,49 @@
+# Métodos de pago — Fase 16 (hellenia_account)
+
+schema_version: "2.1"
+
+configured:
+  - name: Efectivo
+    journal: CSH1
+    type: cash
+    direction: inbound_outbound
+    odoo_code: manual
+
+  - name: Transferencia
+    journals: [BNKD, BNKU]
+    type: bank
+    direction: inbound_outbound
+    odoo_code: manual
+
+  - name: Tarjeta
+    journals: [BNKD, BNKU]
+    type: bank
+    direction: inbound
+    odoo_code: manual
+    note: "Registro manual — sin datáfono integrado"
+
+  - name: Cheque
+    journals: [BNKD, BNKU]
+    type: bank
+    direction: outbound
+    odoo_code: check_printing
+    depends: l10n_do_check_printing
+
+journals:
+  - code: CSH1
+    name: Caja / Efectivo
+    type: cash
+  - code: BNKD
+    name: Banco López de Haro DOP
+    type: bank
+    currency: DOP
+  - code: BNKU
+    name: Banco López de Haro USD
+    type: bank
+    currency: USD
+  - code: BNK1
+    name: Banco (legacy)
+    type: bank
+    status: deprecated
+
+module: hellenia_account

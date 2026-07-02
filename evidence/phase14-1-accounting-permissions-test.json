@@ -1,0 +1,246 @@
+{
+  "phase": "14.1",
+  "timestamp_utc": "2026-06-30T17:43:28.302139+00:00",
+  "database": "hellenia_test",
+  "audit_before": {
+    "it": {
+      "found": true,
+      "login": "it@justech.do",
+      "groups": [
+        "Access Rights",
+        "Accounting / Administrator",
+        "Accounting / Dominican Fiscal Manager",
+        "Compras / Administrador",
+        "Inventario / Administrador",
+        "Role / Administrator",
+        "Technical Features",
+        "Ventas / Administrador"
+      ],
+      "root_menus": [
+        "Discuss",
+        "Contactos",
+        "Ventas",
+        "Dashboards",
+        "Contabilidad",
+        "Compras",
+        "Inventario",
+        "Apps",
+        "Configuración"
+      ],
+      "contabilidad_children": [
+        "Settings",
+        "Dashboard",
+        "Customers",
+        "Vendors",
+        "Accounting",
+        "Reporting",
+        "Configuration"
+      ],
+      "contabilidad_children_count": 7,
+      "sees_contabilidad": true,
+      "duplicate_accounting_roots": []
+    },
+    "admin": {
+      "found": true,
+      "login": "admin",
+      "groups": [
+        "Accounting / Administrator",
+        "Compras / Administrador",
+        "Dashboard / Admin",
+        "Inventario / Administrador",
+        "Products / Create",
+        "Role / Administrator",
+        "Ventas / Administrador"
+      ],
+      "root_menus": [
+        "Discuss",
+        "Contactos",
+        "Ventas",
+        "Dashboards",
+        "Contabilidad",
+        "Compras",
+        "Inventario",
+        "Apps",
+        "Configuración"
+      ],
+      "contabilidad_children": [
+        "Settings",
+        "Dashboard",
+        "Customers",
+        "Vendors",
+        "Accounting",
+        "Reporting",
+        "Configuration"
+      ],
+      "contabilidad_children_count": 7,
+      "sees_contabilidad": true,
+      "duplicate_accounting_roots": []
+    },
+    "modules": {
+      "account": "installed",
+      "account_accountant": "installed",
+      "account_reports": "installed",
+      "sale_management": "installed",
+      "purchase": "installed",
+      "stock": "installed",
+      "contacts": "installed",
+      "hellenia_ui": "installed"
+    },
+    "finance_menu": {
+      "id": 125,
+      "name": "Contabilidad",
+      "db_children_count": 11,
+      "db_children": [
+        "Settings",
+        "Dashboard",
+        "Journal Entries",
+        "Customers",
+        "Vendors",
+        "Accounting",
+        "Journal Items",
+        "Review",
+        "Accounting",
+        "Reporting",
+        "Configuration"
+      ]
+    }
+  },
+  "fixes": {
+    "hellenia_ui_applied": true,
+    "it_groups_updated": 8,
+    "normal_user_updated": true
+  },
+  "validations": {
+    "it": {
+      "found": true,
+      "login": "it@justech.do",
+      "groups": [
+        "Access Rights",
+        "Accounting / Administrator",
+        "Accounting / Dominican Fiscal Manager",
+        "Compras / Administrador",
+        "Inventario / Administrador",
+        "Role / Administrator",
+        "Technical Features",
+        "Ventas / Administrador"
+      ],
+      "root_menus": [
+        "Discuss",
+        "Contactos",
+        "Ventas",
+        "Dashboards",
+        "Contabilidad",
+        "Compras",
+        "Inventario",
+        "Apps",
+        "Configuración"
+      ],
+      "contabilidad_children": [
+        "Settings",
+        "Dashboard",
+        "Customers",
+        "Vendors",
+        "Accounting",
+        "Reporting",
+        "Configuration"
+      ],
+      "contabilidad_children_count": 7,
+      "sees_contabilidad": true,
+      "duplicate_accounting_roots": []
+    },
+    "admin": {
+      "found": true,
+      "login": "admin",
+      "groups": [
+        "Accounting / Administrator",
+        "Compras / Administrador",
+        "Dashboard / Admin",
+        "Inventario / Administrador",
+        "Products / Create",
+        "Role / Administrator",
+        "Ventas / Administrador"
+      ],
+      "root_menus": [
+        "Discuss",
+        "Contactos",
+        "Ventas",
+        "Dashboards",
+        "Contabilidad",
+        "Compras",
+        "Inventario",
+        "Apps",
+        "Configuración"
+      ],
+      "contabilidad_children": [
+        "Settings",
+        "Dashboard",
+        "Customers",
+        "Vendors",
+        "Accounting",
+        "Reporting",
+        "Configuration"
+      ],
+      "contabilidad_children_count": 7,
+      "sees_contabilidad": true,
+      "duplicate_accounting_roots": []
+    },
+    "normal": {
+      "found": true,
+      "login": "usuario.normal.demo14",
+      "groups": [
+        "Ventas / Usuario: solo mostrar documentos propios"
+      ],
+      "root_menus": [
+        "Discuss",
+        "Contactos",
+        "Ventas",
+        "Dashboards"
+      ],
+      "contabilidad_children": [
+        "Customers",
+        "Vendors"
+      ],
+      "contabilidad_children_count": 2,
+      "sees_contabilidad": false,
+      "duplicate_accounting_roots": []
+    },
+    "it_sees_contabilidad": true,
+    "admin_sees_contabilidad": true,
+    "normal_no_contabilidad": true,
+    "no_duplicate_accounting": true,
+    "pos_hidden": true,
+    "modules_installed": true
+  },
+  "ok": true,
+  "errors": [],
+  "final_groups_it": [
+    "Access Rights",
+    "Accounting / Administrator",
+    "Accounting / Dominican Fiscal Manager",
+    "Compras / Administrador",
+    "Inventario / Administrador",
+    "Role / Administrator",
+    "Technical Features",
+    "Ventas / Administrador"
+  ],
+  "final_menus_it": [
+    "Discuss",
+    "Contactos",
+    "Ventas",
+    "Dashboards",
+    "Contabilidad",
+    "Compras",
+    "Inventario",
+    "Apps",
+    "Configuración"
+  ],
+  "final_contabilidad_children_it": [
+    "Settings",
+    "Dashboard",
+    "Customers",
+    "Vendors",
+    "Accounting",
+    "Reporting",
+    "Configuration"
+  ]
+}

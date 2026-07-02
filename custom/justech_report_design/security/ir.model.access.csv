@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_justech_delivery_note_user,justech.delivery.note.user,model_justech_delivery_note,base.group_user,1,1,1,0
+access_justech_delivery_note_line_user,justech.delivery.note.line.user,model_justech_delivery_note_line,base.group_user,1,1,1,0
+access_justech_delivery_note_manager,justech.delivery.note.manager,model_justech_delivery_note,stock.group_stock_manager,1,1,1,1
+access_justech_delivery_note_line_manager,justech.delivery.note.line.manager,model_justech_delivery_note_line,stock.group_stock_manager,1,1,1,1

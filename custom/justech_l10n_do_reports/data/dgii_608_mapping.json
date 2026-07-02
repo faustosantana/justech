@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0",
+  "fase": "21.3",
+  "fecha_mapeo_utc": "2026-06-30T00:00:00Z",
+  "codigo": "608",
+  "nombre_oficial": "Formato de Envío de Comprobantes Anulados",
+  "normativa": "NG-07-2018-05-2019",
+  "hoja_principal": "Herramienta Formato 608",
+  "fila_encabezado": 11,
+  "fila_inicio_datos": 12,
+  "formato_fecha": "YYYYMMDD",
+  "formato_periodo": "YYYYMM",
+  "columnas": [
+    {"orden": 1, "columna_excel": "A", "nombre_dgii": "NCF", "tipo_dato": "ncf"},
+    {"orden": 2, "columna_excel": "B", "nombre_dgii": "Fecha Comprobante", "tipo_dato": "date"},
+    {"orden": 3, "columna_excel": "C", "nombre_dgii": "Tipo de Anulación", "tipo_dato": "catalog", "campo_faltante": "justech_do_ncf_cancel_type"}
+  ],
+  "validaciones": [
+    "Solo comprobantes anulados con fecha de anulación en el período reportado.",
+    "Tipo de anulación obligatorio (códigos 1 a 10).",
+    "Fechas en formato AAAAMMDD sin separadores."
+  ]
+}

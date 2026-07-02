@@ -1,0 +1,3 @@
+Ventas/Orders/Orders/Conduces de Entrega -> justech.delivery.note
+Inventario/Operations/Conduces de Entrega -> justech.delivery.note
+TOTAL: 7

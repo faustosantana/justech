@@ -1,0 +1,86 @@
+/* Factura — banda fiscal compacta (Fase 25B.7) */
+
+.jt-inv-band {
+    background-color: #35421f;
+    color: #ffffff;
+    padding: 12px 18px;
+    margin: 14px 0 14px 0;
+    min-height: auto;
+    height: auto;
+}
+
+.jt-inv-band-title {
+    float: left;
+    width: 32%;
+    font-size: 18pt;
+    font-weight: 700;
+    letter-spacing: 4px;
+    line-height: 1.2;
+    padding-top: 8px;
+    color: #ffffff;
+    text-transform: uppercase;
+}
+
+.jt-inv-fiscal-grid {
+    float: right;
+    width: 62%;
+    font-size: 9pt;
+    line-height: 1.45;
+}
+
+.jt-inv-fiscal-layout,
+.jt-inv-fiscal-layout tr,
+.jt-inv-fiscal-layout td {
+    border: none !important;
+    border-collapse: collapse;
+    background: transparent !important;
+    background-color: transparent !important;
+    padding: 0;
+    margin: 0;
+}
+
+.jt-inv-fiscal-col {
+    vertical-align: top;
+    color: #ffffff;
+}
+
+.jt-inv-fiscal-col div {
+    margin: 0 0 2px 0;
+    color: #ffffff;
+}
+
+.jt-inv-label {
+    display: inline-block;
+    min-width: 100px;
+    font-weight: 600;
+    color: #ffffff;
+}
+
+.jt-inv-band:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+/* 3 columnas meta — cliente / pago / vendedor */
+.jt-inv-meta-cards .jt-hq-card {
+    width: 33.33%;
+    vertical-align: top;
+    padding: 0 18px 0 0;
+    background: #ffffff !important;
+    border: none !important;
+}
+
+.jt-inv-meta-cards .jt-hq-card.jt-inv-meta-last {
+    padding-right: 0;
+}
+
+.jt-hq-page .jt-inv-meta-cards .jt-hq-vdiv {
+    display: none !important;
+    width: 0 !important;
+}
+
+.jt-hq-items .c-tax {
+    text-align: right;
+    white-space: nowrap;
+}

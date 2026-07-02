@@ -1,0 +1,80 @@
+{
+  "phase": "20.1-prod-ui-certification",
+  "timestamp_utc": "2026-07-01T13:41:20.391872+00:00",
+  "environment": "https://odoo.hellenia.cloud",
+  "partner_id": 22,
+  "result": "FAIL",
+  "pass": false,
+  "steps": {
+    "01_login": {
+      "ok": true,
+      "detail": "admin",
+      "screenshot": "evidence/phase20-1-prod-ui/screenshots/01-login.png"
+    },
+    "02_partner_ambiguity": {
+      "ok": true,
+      "detail": "4 partners mismo nombre — FAIL selección por nombre",
+      "screenshot": "evidence/phase20-1-prod-ui/screenshots/02-partner-ambig.png"
+    },
+    "03_clean_load": {
+      "ok": true,
+      "detail": "{\"total\": 1, \"checked\": 0, \"details\": [{\"invoice\": \"INV/2026/00002\", \"checked\": false, \"amount_to_pay\": \"RD$ 0.00\", \"pending\": \"RD$ 11,800.00\"}], \"payment_total\": \"RD$ 0.00\"}",
+      "screenshot": "evidence/phase20-1-prod-ui/screenshots/03-on-load.png"
+    },
+    "04_three_invoices_required": {
+      "ok": false,
+      "detail": "solo 1 factura(s) pendiente(s) en PROD partner 22",
+      "screenshot": ""
+    },
+    "05_one_marked": {
+      "ok": true,
+      "detail": "{\"total\": 1, \"checked\": 1, \"details\": [{\"invoice\": \"INV/2026/00002\", \"checked\": true, \"amount_to_pay\": \"11,800.00\", \"pending\": \"RD$ 11,800.00\"}], \"payment_total\": \"RD$ 11,800.00\"}",
+      "screenshot": "evidence/phase20-1-prod-ui/screenshots/04-one-marked.png"
+    },
+    "06_partial_5000": {
+      "ok": true,
+      "detail": "{\"total\": 1, \"checked\": 1, \"details\": [{\"invoice\": \"INV/2026/00002\", \"checked\": true, \"amount_to_pay\": \"5,000.00\", \"pending\": \"RD$ 11,800.00\"}], \"payment_total\": \"RD$ 5,000.00\"}",
+      "screenshot": "evidence/phase20-1-prod-ui/screenshots/05-partial.png"
+    },
+    "07_register": {
+      "ok": true,
+      "detail": "https://odoo.hellenia.cloud/odoo/customer-payments/49/account.payment",
+      "screenshot": "evidence/phase20-1-prod-ui/screenshots/06-register.png"
+    },
+    "08_target_partial": {
+      "ok": false,
+      "detail": "INV/2026/00002",
+      "screenshot": "evidence/phase20-1-prod-ui/screenshots/07-invoices-partial.png"
+    },
+    "09_others_not_paid": {
+      "ok": false,
+      "detail": "pendientes_al_inicio=1 otras_not_paid_visibles=0",
+      "screenshot": ""
+    },
+    "10_payment_5000_visible": {
+      "ok": true,
+      "detail": "payments",
+      "screenshot": "evidence/phase20-1-prod-ui/screenshots/08-payments.png"
+    }
+  },
+  "ok": false,
+  "on_load": {
+    "total": 1,
+    "checked": 0,
+    "details": [
+      {
+        "invoice": "INV/2026/00002",
+        "checked": false,
+        "amount_to_pay": "RD$ 0.00",
+        "pending": "RD$ 11,800.00"
+      }
+    ],
+    "payment_total": "RD$ 0.00"
+  },
+  "fail_steps": [
+    "04_three_invoices_required",
+    "08_target_partial",
+    "09_others_not_paid"
+  ],
+  "video": "evidence/phase20-1-prod-ui/video/page@0d66ebf4d055edcdc2ec1cefcd2f0143.webm"
+}

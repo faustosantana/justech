@@ -1,0 +1,268 @@
+{
+  "phase": "19.1",
+  "timestamp_utc": "2026-06-30T21:35:59.113891+00:00",
+  "database": "hellenia_test",
+  "branch": "cursor/phase19-fiscal-fields-606-dd85",
+  "excel_path_container": "/evidence/phase19-606-export.xlsx",
+  "excel_path_host": "/opt/odoo-projects/hellenia/evidence/phase19-606-export.xlsx",
+  "json_path_container": "/evidence/phase19-606-test.json",
+  "checks": {
+    "module_upgrade": {
+      "ok": true,
+      "detail": "pre-upgrade via update-custom-modules.sh"
+    },
+    "partner_b11_type": {
+      "ok": true,
+      "detail": "1"
+    },
+    "partner_b13_type": {
+      "ok": true,
+      "detail": "2"
+    },
+    "credit_ncf_modified": {
+      "ok": true,
+      "detail": "B1100000001"
+    },
+    "partial_payment": {
+      "ok": true,
+      "detail": "partial"
+    },
+    "full_payment": {
+      "ok": true,
+      "detail": "paid"
+    },
+    "demo_moves_count": {
+      "ok": true,
+      "detail": 6
+    },
+    "legacy_data_blocks_full_period": {
+      "ok": true,
+      "detail": "216 errores en período completo (data histórica UAT)"
+    },
+    "demo_validate_clean": {
+      "ok": true,
+      "detail": ""
+    },
+    "export_file_created": {
+      "ok": true,
+      "detail": "DGII_606_202606.xlsx"
+    },
+    "export_filename_606": {
+      "ok": true,
+      "detail": "DGII_606_202606.xlsx"
+    },
+    "header_B11": {
+      "ok": true,
+      "detail": "RNC o Cédula"
+    },
+    "header_E11": {
+      "ok": true,
+      "detail": "NCF"
+    },
+    "header_G11": {
+      "ok": true,
+      "detail": "Fecha Comprobante"
+    },
+    "header_M11": {
+      "ok": true,
+      "detail": "Total Monto Facturado"
+    },
+    "header_N11": {
+      "ok": true,
+      "detail": "ITBIS Facturado"
+    },
+    "header_O11": {
+      "ok": true,
+      "detail": "ITBIS Retenido"
+    },
+    "header_U11": {
+      "ok": true,
+      "detail": "Monto Retención Renta"
+    },
+    "header_Z11": {
+      "ok": true,
+      "detail": "Forma de Pago"
+    },
+    "header_AA11": {
+      "ok": true,
+      "detail": "Estatus"
+    },
+    "data_from_row_12": {
+      "ok": true,
+      "detail": "137 celdas datos"
+    },
+    "data_rnc_present": {
+      "ok": true,
+      "detail": "131793916"
+    },
+    "data_ncf_present": {
+      "ok": true,
+      "detail": "B1100000001"
+    },
+    "data_fecha_present": {
+      "ok": true,
+      "detail": "20260630"
+    },
+    "data_monto_present": {
+      "ok": true,
+      "detail": "1000"
+    },
+    "wizard_history_export": {
+      "ok": true,
+      "detail": "DGII_606_202606.xlsx"
+    },
+    "error_catalog_not_empty": {
+      "ok": true,
+      "detail": "216 avisos globales"
+    },
+    "error_sin_ncf_es": {
+      "ok": true,
+      "detail": [
+        "FACTU/2026/06/0001: la factura no tiene NCF."
+      ]
+    },
+    "error_sin_tipo_id_es": {
+      "ok": true,
+      "detail": [
+        "FACTU/2026/06/0001: el proveedor Proveedor prueba Fase 4 no tiene tipo de identificación DGII."
+      ]
+    },
+    "error_sin_codigo_dgii_es": {
+      "ok": true,
+      "detail": [
+        "FACTU/2026/06/0140: retención «Retención ISR 10% Proveedor Informal» sin código DGII configurado."
+      ]
+    },
+    "error_fuera_periodo": {
+      "ok": true,
+      "detail": "período 2020-01 sin facturas demo"
+    }
+  },
+  "demo_moves": [],
+  "validation_errors_es": {
+    "sin_ncf": [
+      "FACTU/2026/06/0001: la factura no tiene NCF.",
+      "FACTU/2026/06/0002: la factura no tiene NCF.",
+      "FACTU/2026/06/0003: la factura no tiene NCF.",
+      "FACTU/2026/06/0147: la factura no tiene NCF."
+    ],
+    "sin_tipo_id": [
+      "FACTU/2026/06/0001: el proveedor Proveedor prueba Fase 4 no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0002: el proveedor Proveedor prueba Fase 4 no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0003: el proveedor PHASE5 Proveedor Lab no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0004: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0005: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0006: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0007: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0008: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0009: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0010: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0011: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0012: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0013: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0014: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0015: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0016: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0017: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0018: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0019: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0020: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0021: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0022: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0023: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0024: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0025: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0026: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0027: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0028: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0029: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0030: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0031: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0032: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0033: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0034: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0035: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0036: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0037: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0038: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0039: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0040: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0041: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0042: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0043: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0044: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0045: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0046: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0047: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0048: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0049: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0050: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0051: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0052: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0053: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0054: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0055: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0056: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0057: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0058: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0059: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0060: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0061: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0062: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0063: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0064: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0065: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0066: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0067: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0068: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0069: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0070: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0071: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0072: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0073: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0074: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0075: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0076: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0077: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0078: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0079: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0080: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0081: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0082: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0083: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0084: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0085: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0086: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0087: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0088: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0089: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0090: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0091: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0092: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0093: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0094: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0095: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0096: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0097: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0098: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0099: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0100: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0101: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0102: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0103: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0104: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0136: el proveedor UAT Proveedor Mobiliario RD no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0143: el proveedor P19 Sin Tipo no tiene tipo de identificación DGII.",
+      "FACTU/2026/06/0145: el proveedor P19 Sin Tipo no tiene tipo de identificación DGII."
+    ],
+    "sin_codigo_dgii": [
+      "FACTU/2026/06/0140: retención «Retención ISR 10% Proveedor Informal» sin código DGII configurado."
+    ],
+    "fuera_periodo": []
+  },
+  "ok": true,
+  "passed": 31,
+  "total": 31,
+  "pass": true,
+  "excel_base64": "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"
+}

@@ -1,0 +1,39 @@
+{
+  "phase": "20.1-prod-ui-final",
+  "timestamp_utc": "2026-07-01T13:39:09.543570+00:00",
+  "environment": "https://odoo.hellenia.cloud",
+  "partner_id": 22,
+  "steps": {
+    "01_login": {
+      "ok": true,
+      "detail": "https://odoo.hellenia.cloud/odoo",
+      "screenshot": "evidence/phase20-1-prod-ui/screenshots/01-login.png"
+    },
+    "02_wizard_open": {
+      "ok": true,
+      "detail": "https://odoo.hellenia.cloud/odoo/action-650/new?context=%7B%22default_partner_id%22%3A%2022%2C%20%22default_partner_type%22%3A%20%22customer%22%7D",
+      "screenshot": "evidence/phase20-1-prod-ui/screenshots/02-wizard-context.png"
+    },
+    "03_clean_on_load": {
+      "ok": true,
+      "detail": "{\"total\": 0, \"checked\": 0, \"details\": [], \"payment_total\": \"RD$ 0.00\", \"partner_display\": \"\"}",
+      "screenshot": "evidence/phase20-1-prod-ui/screenshots/03-on-load.png"
+    },
+    "03_invoices_loaded": {
+      "ok": false,
+      "detail": "0 facturas pendientes cargadas para partner_id=22",
+      "screenshot": ""
+    }
+  },
+  "ok": false,
+  "pass": false,
+  "result": "FAIL",
+  "on_load": {
+    "total": 0,
+    "checked": 0,
+    "details": [],
+    "payment_total": "RD$ 0.00",
+    "partner_display": ""
+  },
+  "fail_reason": "Wizard sin facturas para partner_id=22"
+}

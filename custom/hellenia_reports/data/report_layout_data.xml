@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="report_layout_hellenia" model="report.layout">
+        <field name="name">Hellenia Corporativo</field>
+        <field name="sequence">1</field>
+        <field name="view_id" ref="hellenia_reports.external_layout_hellenia"/>
+    </record>
+</odoo>

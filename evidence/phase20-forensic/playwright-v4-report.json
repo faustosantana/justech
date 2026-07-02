@@ -1,0 +1,40 @@
+{
+  "phase": "20-forensic-prod-v4",
+  "timestamp_utc": "2026-07-01T12:58:02.141437+00:00",
+  "backup": "/opt/odoo-projects/hellenia/backups/hellenia-prod/2026-07-01_1248",
+  "target_partner_id": 22,
+  "steps": {
+    "open_wizard": {
+      "ok": true,
+      "detail": "",
+      "screenshot": "evidence/phase20-forensic/screenshots/v4-03-wizard.png"
+    },
+    "capture1_on_load": {
+      "ok": true,
+      "detail": "{\"total\": 1, \"checked\": 0, \"details\": [{\"invoice\": \"INV/2026/00002\", \"checked\": false, \"amount\": \"RD$ 11,800.00\", \"residual\": \"RD$ 11,800.00\"}], \"payment_total\": \"RD$ 0.00\"}",
+      "screenshot": "evidence/phase20-forensic/screenshots/v4-04-on-load.png"
+    },
+    "exception": {
+      "ok": false,
+      "detail": "Locator.click: Timeout 30000ms exceeded.\nCall log:\n  - waiting for locator(\".o_field_x2many_list .o_data_row\").first.locator(\"[name=\\\"apply\\\"] input[type=\\\"checkbox\\\"]\")\n    - locator resolved to <input disabled type=\"checkbox\" id=\"boolean_checkbox\" class=\"form-check-input\"/>\n  - attempting click action\n    2 × waiting for element to be visible, enabled and stable\n      - element is not enabled\n    - retrying click action\n    - waiting 20ms\n    2 × waiting for element to be visible, enabled and ",
+      "screenshot": "evidence/phase20-forensic/screenshots/v4-99-error.png"
+    }
+  },
+  "checkbox": {
+    "capture1": {
+      "total": 1,
+      "checked": 0,
+      "details": [
+        {
+          "invoice": "INV/2026/00002",
+          "checked": false,
+          "amount": "RD$ 11,800.00",
+          "residual": "RD$ 11,800.00"
+        }
+      ],
+      "payment_total": "RD$ 0.00"
+    }
+  },
+  "ok": false,
+  "pass": false
+}

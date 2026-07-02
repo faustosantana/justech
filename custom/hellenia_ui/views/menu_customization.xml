@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Ventas: sale_management activa sale.sale_menu_root; reforzamos por idempotencia -->
+    <record id="sale.sale_menu_root" model="ir.ui.menu">
+        <field name="active" eval="True"/>
+    </record>
+
+    <!-- Facturación / Invoicing → Contabilidad -->
+    <record id="account.menu_finance" model="ir.ui.menu">
+        <field name="name">Contabilidad</field>
+    </record>
+
+    <!-- Settings → Configuración -->
+    <record id="base.menu_administration" model="ir.ui.menu">
+        <field name="name">Configuración</field>
+    </record>
+
+    <!-- Apps: solo administradores técnicos (Settings / group_system) -->
+    <record id="base.menu_management" model="ir.ui.menu">
+        <field name="group_ids" eval="[(6, 0, [ref('base.group_system')])]"/>
+    </record>
+
+    <!-- Código de barras: fuera de alcance Hellenia -->
+    <record id="stock_barcode.stock_barcode_menu" model="ir.ui.menu">
+        <field name="active" eval="False"/>
+    </record>
+</odoo>

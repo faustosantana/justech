@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_invoice_document_justech_ncf" inherit_id="account.report_invoice_document">
+        <xpath expr="//div[@name='reference']" position="after">
+            <div class="col" t-if="o.justech_do_ncf" name="justech_ncf">
+                <strong>NCF</strong>
+                <div t-field="o.justech_do_ncf"/>
+            </div>
+            <div class="col" t-if="o.justech_do_document_type_id" name="justech_doc_type">
+                <strong>Tipo de documento</strong>
+                <div t-field="o.justech_do_document_type_id"/>
+            </div>
+        </xpath>
+    </template>
+</odoo>

@@ -1,0 +1,16 @@
+# Responsables funcionales — sin usuarios Odoo en esta fase
+
+schema_version: "1.0"
+
+accounting:
+  - name: "Milagros Martínez"
+    role: "Supervisora"
+    odoo_user: false
+
+  - name: "Glys Nuñez"
+    role: "Contadora oficial"
+    odoo_user: false
+
+notes:
+  - "Documentación interna — crear usuarios en fase posterior autorizada"
+  - "Glys Nuñez también listada como proveedor potencial — validar conflicto interés"

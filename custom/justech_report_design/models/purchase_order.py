@@ -149,9 +149,3 @@ class PurchaseOrder(models.Model):
     def jt_show_po_observations(self):
         self.ensure_one()
         return not is_html_empty(self.note)
-
-    def action_jt_print_purchase_order(self):
-        self.ensure_one()
-        return self.env.ref(
-            "justech_report_design.action_report_justech_purchase_order"
-        ).report_action(self)

@@ -1,6 +1,6 @@
 {
     "name": "Justech Report Design",
-    "version": "19.0.7.0.0",
+    "version": "19.0.7.1.0",
     "category": "Reporting",
     "summary": "Cotización, factura y conduce Hellenia — diseño Justech QWeb+SCSS",
     "description": """
@@ -25,9 +25,9 @@ Reorganización UX (Fase 26G):
 - Contabilidad: menú Conduces de Entrega
 - Smart button Conduce en cotización y factura
 
-Orden de Compra (Fase 27 — solo TEST):
-- Reporte paralelo Orden de Compra Hellenia
-- Botón Orden de Compra PDF + menú Imprimir
+Orden de Compra (Fase 27A — oficial):
+- purchase.action_report_purchase_order → reporte Justech oficial
+- Sin botón duplicado; único menú Imprimir → Orden de Compra
     """,
     "author": "Justech",
     "website": "https://hellenia.cloud",
@@ -51,7 +51,6 @@ Orden de Compra (Fase 27 — solo TEST):
         "views/account_move_delivery_views.xml",
         "views/stock_picking_delivery_views.xml",
         "views/justech_delivery_note_views.xml",
-        "views/purchase_order_views.xml",
         "report/quotation/hellenia_quotation_template.xml",
         "report/invoice/justech_invoice_template.xml",
         "report/invoice/justech_invoice_preview.xml",

@@ -1,0 +1,437 @@
+{
+  "phase": "25-invoice-fiscal",
+  "timestamp_utc": "2026-07-02T05:45:39.386377+00:00",
+  "database": "hellenia_test",
+  "pass": true,
+  "failed_checks": [],
+  "checks": {
+    "module_version": {
+      "status": "PASS",
+      "detail": "19.0.3.0.0"
+    },
+    "ncf_module_installed": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "jt_action_exists": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "jt_action_name": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "jt_report_template": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "std_invoice_unchanged": {
+      "status": "PASS",
+      "detail": "account.report_invoice_with_payments"
+    },
+    "quotation_unchanged": {
+      "status": "PASS",
+      "detail": "justech_report_design.report_hellenia_quotation_document"
+    },
+    "no_jt_inherit_std_invoice": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "invoice_1_line_pdf": {
+      "status": "PASS",
+      "detail": "71727"
+    },
+    "invoice_1_line_template": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "invoice_1_line_factura_band": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "invoice_1_line_no_dup_company": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "invoice_1_line_five_cols": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "invoice_1_line_footer": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "invoice_1_line_green_band": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "1line_totals": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "invoice_multi_line_pdf": {
+      "status": "PASS",
+      "detail": "72219"
+    },
+    "invoice_multi_line_template": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "invoice_multi_line_factura_band": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "invoice_multi_line_no_dup_company": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "invoice_multi_line_five_cols": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "invoice_multi_line_footer": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "invoice_multi_line_green_band": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "invoice_discount_pdf": {
+      "status": "PASS",
+      "detail": "72382"
+    },
+    "invoice_discount_template": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "invoice_discount_factura_band": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "invoice_discount_no_dup_company": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "invoice_discount_five_cols": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "invoice_discount_footer": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "invoice_discount_green_band": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "discount_column": {
+      "status": "PASS",
+      "detail": "[10.0]"
+    },
+    "discount_in_pdf": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "invoice_no_discount_pdf": {
+      "status": "PASS",
+      "detail": "72079"
+    },
+    "invoice_no_discount_template": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "invoice_no_discount_factura_band": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "invoice_no_discount_no_dup_company": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "invoice_no_discount_five_cols": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "invoice_no_discount_footer": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "invoice_no_discount_green_band": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "no_discount_flag": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "invoice_ncf_b01_pdf": {
+      "status": "PASS",
+      "detail": "72105"
+    },
+    "invoice_ncf_b01_template": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "invoice_ncf_b01_factura_band": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "invoice_ncf_b01_no_dup_company": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "invoice_ncf_b01_five_cols": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "invoice_ncf_b01_footer": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "invoice_ncf_b01_green_band": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "ncf_assigned": {
+      "status": "PASS",
+      "detail": "B0100020036"
+    },
+    "ncf_in_pdf": {
+      "status": "PASS",
+      "detail": "B0100020036"
+    },
+    "doc_type_in_pdf": {
+      "status": "PASS",
+      "detail": "Factura de Crédito Fiscal"
+    },
+    "invoice_b02_pdf": {
+      "status": "PASS",
+      "detail": "72291"
+    },
+    "invoice_b02_template": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "invoice_b02_factura_band": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "invoice_b02_no_dup_company": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "invoice_b02_five_cols": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "invoice_b02_footer": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "invoice_b02_green_band": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "b02_prefix": {
+      "status": "PASS",
+      "detail": "B02"
+    },
+    "dop_currency": {
+      "status": "PASS",
+      "detail": "DOP"
+    },
+    "invoice_usd_pdf": {
+      "status": "PASS",
+      "detail": "71696"
+    },
+    "invoice_usd_template": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "invoice_usd_factura_band": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "invoice_usd_no_dup_company": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "invoice_usd_five_cols": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "invoice_usd_footer": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "invoice_usd_green_band": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "usd_currency": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "std_invoice_pdf": {
+      "status": "PASS",
+      "detail": "18752"
+    },
+    "dgii_module_intact": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "hellenia_reports_intact": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "invoice_observations_pdf": {
+      "status": "PASS",
+      "detail": "72321"
+    },
+    "invoice_observations_template": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "invoice_observations_factura_band": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "invoice_observations_no_dup_company": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "invoice_observations_five_cols": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "invoice_observations_footer": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "invoice_observations_green_band": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "observations_in_pdf": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "itbis_matches": {
+      "status": "PASS",
+      "detail": "0.0"
+    }
+  },
+  "pdfs": {
+    "invoice_1_line": {
+      "invoice": false,
+      "ncf": "",
+      "file": "invoice_1_line.pdf",
+      "png": null,
+      "pages": null,
+      "size_bytes": 71727,
+      "amount_total": 118.0,
+      "amount_untaxed": 100.0,
+      "itbis_helper": 18.0
+    },
+    "invoice_multi_line": {
+      "invoice": false,
+      "ncf": "",
+      "file": "invoice_multi_line.pdf",
+      "png": null,
+      "pages": null,
+      "size_bytes": 72219,
+      "amount_total": 1062.0,
+      "amount_untaxed": 900.0,
+      "itbis_helper": 162.0
+    },
+    "invoice_discount": {
+      "invoice": false,
+      "ncf": "",
+      "file": "invoice_discount.pdf",
+      "png": null,
+      "pages": null,
+      "size_bytes": 72382,
+      "amount_total": 2655.0,
+      "amount_untaxed": 2250.0,
+      "itbis_helper": 405.0
+    },
+    "invoice_no_discount": {
+      "invoice": false,
+      "ncf": "",
+      "file": "invoice_no_discount.pdf",
+      "png": null,
+      "pages": null,
+      "size_bytes": 72079,
+      "amount_total": 413.0,
+      "amount_untaxed": 350.0,
+      "itbis_helper": 63.0
+    },
+    "invoice_ncf_b01": {
+      "invoice": "INV/2026/00215",
+      "ncf": "B0100020036",
+      "file": "invoice_ncf_b01.pdf",
+      "png": null,
+      "pages": null,
+      "size_bytes": 72105,
+      "amount_total": 1180.0,
+      "amount_untaxed": 1000.0,
+      "itbis_helper": 180.0
+    },
+    "invoice_b02": {
+      "invoice": "INV/2026/00216",
+      "ncf": "B0200020174",
+      "file": "invoice_b02_consumo.pdf",
+      "png": null,
+      "pages": null,
+      "size_bytes": 72291,
+      "amount_total": 590.0,
+      "amount_untaxed": 500.0,
+      "itbis_helper": 90.0
+    },
+    "invoice_usd": {
+      "invoice": false,
+      "ncf": "",
+      "file": "invoice_usd.pdf",
+      "png": null,
+      "pages": null,
+      "size_bytes": 71696,
+      "amount_total": 118.0,
+      "amount_untaxed": 100.0,
+      "itbis_helper": 18.0
+    },
+    "invoice_observations": {
+      "invoice": false,
+      "ncf": "",
+      "file": "invoice_observations.pdf",
+      "png": null,
+      "pages": null,
+      "size_bytes": 72321,
+      "amount_total": 118.0,
+      "amount_untaxed": 100.0,
+      "itbis_helper": 18.0
+    }
+  },
+  "audit": {
+    "account_move_fields": [
+      "name",
+      "invoice_date",
+      "invoice_date_due",
+      "partner_id",
+      "invoice_user_id",
+      "invoice_payment_term_id",
+      "currency_id",
+      "amount_untaxed",
+      "amount_tax",
+      "amount_total",
+      "narration",
+      "justech_do_ncf",
+      "justech_do_document_type_id"
+    ],
+    "modules": {
+      "justech_l10n_do_ncf": "installed",
+      "hellenia_reports": "installed",
+      "justech_l10n_do_base": "installed"
+    }
+  }
+}

@@ -1,0 +1,5 @@
+Ventas: Ventas/Conduces de Entrega (parent=sale.sale_menu_root)
+Contabilidad: Contabilidad/Conduces de Entrega (parent=account.menu_finance)
+Total conduces: 8
+SO S00020: smart=1 label=Conduce
+INV INV/2026/00006: smart=1 label=Conduce

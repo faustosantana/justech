@@ -1,0 +1,99 @@
+{
+  "phase": "26g-delivery-menu-ux-prod",
+  "timestamp_utc": "2026-07-02T20:11:27.770700+00:00",
+  "database": "hellenia_prod",
+  "status": "PASS",
+  "module_version": "19.0.6.2.0",
+  "checks": {
+    "module_version": {
+      "status": "PASS",
+      "detail": "19.0.6.2.0"
+    },
+    "sale_menu_top_level": {
+      "status": "PASS",
+      "detail": "parent=sale.sale_menu_root, path=Ventas/Conduces de Entrega"
+    },
+    "sale_menu_not_under_orders": {
+      "status": "PASS",
+      "detail": "sale.sale_menu_root"
+    },
+    "account_menu_exists": {
+      "status": "PASS",
+      "detail": "parent=account.menu_finance, path=Contabilidad/Conduces de Entrega"
+    },
+    "search_filter_today": {
+      "status": "PASS",
+      "detail": "True"
+    },
+    "search_filter_this_week": {
+      "status": "PASS",
+      "detail": "True"
+    },
+    "search_filter_this_month": {
+      "status": "PASS",
+      "detail": "True"
+    },
+    "search_filter_pending": {
+      "status": "PASS",
+      "detail": "True"
+    },
+    "search_filter_delivered": {
+      "status": "PASS",
+      "detail": "True"
+    },
+    "sale_form_smart_button": {
+      "status": "PASS",
+      "detail": "True"
+    },
+    "sale_form_create_button": {
+      "status": "PASS",
+      "detail": "True"
+    },
+    "sale_stat_label": {
+      "status": "PASS",
+      "detail": "Conduce"
+    },
+    "sale_smart_count": {
+      "status": "PASS",
+      "detail": "1"
+    },
+    "sale_smart_filtered": {
+      "status": "PASS",
+      "detail": "[('id', 'in', [7])]"
+    },
+    "invoice_form_smart_button": {
+      "status": "PASS",
+      "detail": "True"
+    },
+    "invoice_form_create_button": {
+      "status": "PASS",
+      "detail": "True"
+    },
+    "invoice_stat_label": {
+      "status": "PASS",
+      "detail": "Conduce"
+    },
+    "invoice_smart_count": {
+      "status": "PASS",
+      "detail": "1"
+    },
+    "invoice_smart_filtered": {
+      "status": "PASS",
+      "detail": "[('id', 'in', [10])]"
+    },
+    "history_action_model": {
+      "status": "PASS",
+      "detail": "justech.delivery.note"
+    },
+    "history_no_domain": {
+      "status": "PASS",
+      "detail": "False"
+    },
+    "history_total": {
+      "status": "PASS",
+      "detail": "8"
+    }
+  },
+  "errors": [],
+  "pass": true
+}

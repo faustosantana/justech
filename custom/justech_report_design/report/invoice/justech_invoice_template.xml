@@ -40,32 +40,38 @@
                     <span t-out="doc.get_jt_invoice_band_title()"/>
                 </td>
                 <td width="50%">
-                    <div class="jt-inv-band-meta">
-                        <div class="jt-inv-band-meta-row">
-                            <span class="jt-inv-band-lbl">No. FACTURA:</span>
-                            <span t-out="doc.get_jt_invoice_number_display()"/>
-                        </div>
-                        <div class="jt-inv-band-meta-row">
-                            <span class="jt-inv-band-lbl">NCF:</span>
-                            <span t-out="doc.get_jt_ncf_display()"/>
-                        </div>
-                        <div class="jt-inv-band-meta-row">
-                            <span class="jt-inv-band-lbl">TIPO DE COMPROBANTE:</span>
-                            <span t-out="doc.get_jt_document_type_label()"/>
-                        </div>
-                        <div class="jt-inv-band-meta-row">
-                            <span class="jt-inv-band-lbl">MONEDA:</span>
-                            <span t-out="doc.get_jt_currency_display()"/>
-                        </div>
-                        <div class="jt-inv-band-meta-row">
-                            <span class="jt-inv-band-lbl">FECHA DE EMISIÓN:</span>
-                            <span t-out="doc.get_jt_invoice_date_display()"/>
-                        </div>
-                        <div class="jt-inv-band-meta-row">
-                            <span class="jt-inv-band-lbl">FECHA DE VENCIMIENTO:</span>
-                            <span t-out="doc.get_jt_invoice_due_date_display()"/>
-                        </div>
-                    </div>
+                    <table width="100%" cellpadding="0" cellspacing="0" border="0" class="jt-inv-band-meta-grid">
+                        <tr>
+                            <td width="50%" valign="top" class="jt-inv-band-meta-col">
+                                <div class="jt-inv-band-meta-row">
+                                    <span class="jt-inv-band-lbl">No. FACTURA:</span>
+                                    <span t-out="doc.get_jt_invoice_number_display()"/>
+                                </div>
+                                <div class="jt-inv-band-meta-row">
+                                    <span class="jt-inv-band-lbl">NCF:</span>
+                                    <span t-out="doc.get_jt_ncf_display()"/>
+                                </div>
+                                <div class="jt-inv-band-meta-row">
+                                    <span class="jt-inv-band-lbl">TIPO DE COMPROBANTE:</span>
+                                    <span t-out="doc.get_jt_document_type_label()"/>
+                                </div>
+                            </td>
+                            <td width="50%" valign="top" class="jt-inv-band-meta-col jt-inv-band-meta-col-r">
+                                <div class="jt-inv-band-meta-row">
+                                    <span class="jt-inv-band-lbl">MONEDA:</span>
+                                    <span t-out="doc.get_jt_currency_display()"/>
+                                </div>
+                                <div class="jt-inv-band-meta-row">
+                                    <span class="jt-inv-band-lbl">FECHA DE EMISIÓN:</span>
+                                    <span t-out="doc.get_jt_invoice_date_display()"/>
+                                </div>
+                                <div class="jt-inv-band-meta-row">
+                                    <span class="jt-inv-band-lbl">FECHA DE VENCIMIENTO:</span>
+                                    <span t-out="doc.get_jt_invoice_due_date_display()"/>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
                 </td>
             </tr>
         </table>

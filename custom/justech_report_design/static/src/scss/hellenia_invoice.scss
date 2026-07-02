@@ -8,20 +8,38 @@
     letter-spacing: 0.5px !important;
 }
 
-.jt-inv-band-meta {
-    color: #ffffff !important;
-    font-weight: bold;
-    font-size: 8.5pt;
-    text-align: right;
-    display: block;
+.jt-inv-band-meta-grid {
+    width: 100%;
+    border-collapse: collapse;
     border-left: 1px solid rgba(255, 255, 255, 0.35);
     padding-left: 12px;
 }
 
+.jt-inv-band-meta-grid td {
+    background-color: #3E4827 !important;
+    border: none !important;
+    vertical-align: top;
+}
+
+.jt-inv-band-meta-col {
+    width: 50%;
+    padding: 0 10px 0 0;
+    text-align: left;
+}
+
+.jt-inv-band-meta-col-r {
+    padding: 0 0 0 10px;
+    text-align: right;
+    border-left: 1px solid rgba(255, 255, 255, 0.35) !important;
+}
+
 .jt-inv-band-meta-row {
     color: #ffffff !important;
+    font-weight: bold;
+    font-size: 8.5pt;
     line-height: 1.3;
     margin: 0 0 2px 0;
+    white-space: nowrap;
 }
 
 .jt-inv-band-meta-row:last-child {

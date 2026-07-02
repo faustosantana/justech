@@ -2,7 +2,8 @@
 
 **Módulo:** `justech_report_design` v19.0.1.0.0  
 **Entorno validado:** TEST (`hellenia_test` / `test.hellenia.cloud`)  
-**Estado:** Aprobación visual pendiente — **NO promover a PROD**
+**Estado:** ⏳ Revisión visual en curso — **NO promover a PROD**  
+**Enfoque Fase 24.2:** ✅ Aprobado (localización visual Justech) — implementación bloqueada hasta tu OK de este ZIP
 
 ---
 

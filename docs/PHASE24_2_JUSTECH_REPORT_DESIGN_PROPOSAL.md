@@ -1,9 +1,26 @@
-# Fase 24.2 — Propuesta técnica: Paquete central `justech_report_design`
+# Fase 24.2 — Localización visual de reportes Justech (`justech_report_design`)
 
-**Estado:** 📋 **AUDITORÍA + PROPUESTA — NO IMPLEMENTAR** hasta aprobación visual cotización 24.1  
+**Estado enfoque:** ✅ **APROBADO** (paquete central, reportes paralelos, diseño/SCSS/paperformat comunes)  
+**Estado implementación:** ⛔ **BLOQUEADA** hasta revisión visual final cotización 24.1  
 **Entorno:** TEST (`hellenia_test`) exclusivamente  
 **PROD:** Bloqueado  
 **Fecha:** 2026-07-02
+
+> Ver estado global: `docs/PHASE24_STATUS.md`
+
+### Marco acordado
+
+| Principio | Detalle |
+|-----------|---------|
+| Naturaleza | Localización visual de reportes impresos Justech |
+| Estrategia | Reportes paralelos primero; estándar Odoo intacto |
+| Diseño | Base común compartida (header, banda, tablas, footer) |
+| SCSS | Un bundle común en `web.report_assets_common` |
+| Paperformat | Registro común Justech (+ variante compacta cotización si aplica) |
+| Técnica | Templates propios; **sin xpath frágiles** |
+| PROD | No tocar |
+| Default | No reemplazar reportes estándar hasta aprobación explícita |
+| Alcance inmediato | **Solo cotización** — factura, compra, pago e inventario permanecen en planificación |
 
 ---
 
@@ -576,4 +593,4 @@ Oleada 8 — Default reports (24.3)
 | Design system | `docs/HELLENIA_DESIGN_SYSTEM.md` |
 | Checklist PROD (bloqueado) | `packages/phase24-1-hellenia-quotation-review/PROD_PROMOTION_CHECKLIST.md` |
 
-**Estado:** ⛔ Implementación bloqueada — propuesta lista para revisión.
+**Estado:** ✅ Enfoque aprobado — ⛔ implementación bloqueada hasta OK visual ZIP 24.1.

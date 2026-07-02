@@ -53,3 +53,16 @@ El menú **Imprimir → Invoice PDF** usa otro flujo (`get_extra_print_items` + 
 - Módulo: `hellenia_reports` 19.0.1.5.7
 - Archivo: `views/account_move_ncf_void_reason_fix.xml`
 - Acción: `invisible` cuando no anulado + `required=0` (validación de motivo solo al anular vía `action_void_ncf`)
+- Backup PROD: `/opt/odoo-projects/hellenia/backups/hellenia-prod/2026-07-02_183538`
+
+## Validación UI real post-fix (18:47 UTC)
+Usuario sesión `it@justech.do` (uid 5), factura INV/2026/00006, Playwright contra https://odoo.hellenia.cloud
+
+| Acción | RPC | Resultado |
+|--------|-----|-----------|
+| Vista previa | `call_button/.../preview_invoice` 200 | PASS |
+| Imprimir | `action_print_pdf` 200 + `/report/download` 200 | PASS |
+| Menú → PDF de la factura | `/report/download` 200 | PASS |
+| Enviar | `action_invoice_sent` 200 + wizard | PASS |
+
+Evidencia: `evidence/phase28-invoice-preview-client-validation/ui-validation.json`

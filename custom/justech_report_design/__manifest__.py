@@ -1,6 +1,6 @@
 {
     "name": "Justech Report Design",
-    "version": "19.0.7.1.0",
+    "version": "19.0.7.2.0",
     "category": "Reporting",
     "summary": "Cotización, factura y conduce Hellenia — diseño Justech QWeb+SCSS",
     "description": """
@@ -28,6 +28,9 @@ Reorganización UX (Fase 26G):
 Orden de Compra (Fase 27A — oficial):
 - purchase.action_report_purchase_order → reporte Justech oficial
 - Sin botón duplicado; único menú Imprimir → Orden de Compra
+
+Vista previa OC (Fase 27B):
+- Botón Vista previa → HTML del reporte oficial Hellenia
     """,
     "author": "Justech",
     "website": "https://hellenia.cloud",
@@ -51,6 +54,7 @@ Orden de Compra (Fase 27A — oficial):
         "views/account_move_delivery_views.xml",
         "views/stock_picking_delivery_views.xml",
         "views/justech_delivery_note_views.xml",
+        "views/purchase_order_views.xml",
         "report/quotation/hellenia_quotation_template.xml",
         "report/invoice/justech_invoice_template.xml",
         "report/invoice/justech_invoice_preview.xml",

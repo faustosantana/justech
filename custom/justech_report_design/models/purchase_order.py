@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from odoo import _, fields, models
+from odoo import _, api, fields, models
 from odoo.tools import formatLang, is_html_empty
 
 
@@ -149,3 +149,14 @@ class PurchaseOrder(models.Model):
     def jt_show_po_observations(self):
         self.ensure_one()
         return not is_html_empty(self.note)
+
+    @api.readonly
+    def action_preview_purchase_order(self):
+        """Vista previa HTML del reporte oficial (Imprimir → Orden de Compra)."""
+        self.ensure_one()
+        report = self.env.ref("purchase.action_report_purchase_order")
+        return {
+            "type": "ir.actions.act_url",
+            "target": "new",
+            "url": "/report/html/%s/%s" % (report.report_name, self.id),
+        }

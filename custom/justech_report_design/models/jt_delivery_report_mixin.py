@@ -14,6 +14,11 @@ class JtDeliveryReportMixin(models.AbstractModel):
         string="Conduces",
         compute="_compute_jt_delivery_ui",
     )
+    # Alias Fase 26D — vistas en BD pueden referenciarlo hasta actualizar el módulo.
+    jt_delivery_picking_count = fields.Integer(
+        string="Conduces (legacy)",
+        compute="_compute_jt_delivery_ui",
+    )
     jt_delivery_stat_label = fields.Char(
         string="Etiqueta Conduce",
         compute="_compute_jt_delivery_ui",
@@ -29,6 +34,7 @@ class JtDeliveryReportMixin(models.AbstractModel):
             notes = rec._jt_delivery_note_records().filtered(lambda n: n.state != "cancel")
             count = len(notes)
             rec.jt_delivery_note_count = count
+            rec.jt_delivery_picking_count = count
             if count == 1:
                 rec.jt_delivery_stat_label = _("Conduce")
             else:
@@ -65,6 +71,10 @@ class JtDeliveryReportMixin(models.AbstractModel):
             action["views"] = [(False, "form")]
             action["res_id"] = notes.id
         return action
+
+    def action_jt_view_delivery_pickings(self):
+        """Compatibilidad Fase 26D — redirige al listado de conduces."""
+        return self.action_jt_view_delivery_notes()
 
     def action_jt_create_delivery_conduce(self):
         raise NotImplementedError

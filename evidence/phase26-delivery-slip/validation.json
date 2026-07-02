@@ -1,8 +1,8 @@
 {
-  "phase": "26-delivery-slip",
-  "timestamp_utc": "2026-07-02T19:01:46.831555+00:00",
+  "phase": "26b-delivery-slip",
+  "timestamp_utc": "2026-07-02T19:16:09.139371+00:00",
   "database": "hellenia_test",
-  "module_version": "19.0.5.0.0",
+  "module_version": "19.0.5.1.0",
   "tests": {
     "01_module_installed": {
       "status": "PASS",
@@ -87,6 +87,62 @@
     "21_methods_invoice": {
       "status": "PASS",
       "detail": "1"
+    },
+    "22_observations_section": {
+      "status": "PASS",
+      "detail": "bloque OBSERVACIONES siempre activo"
+    },
+    "23_legal_legend": {
+      "status": "PASS",
+      "detail": "leyenda estática en plantilla QWeb"
+    },
+    "24_no_odoo_bot_combo": {
+      "status": "PASS",
+      "detail": "— | —"
+    },
+    "25_responsable_label": {
+      "status": "PASS",
+      "detail": "campo separado en plantilla"
+    },
+    "26_vendedor_label": {
+      "status": "PASS",
+      "detail": "campo separado en plantilla"
+    },
+    "27_green_band_columns": {
+      "status": "PASS",
+      "detail": "layout dos columnas en plantilla"
+    },
+    "28_qty_delivered_column": {
+      "status": "PASS",
+      "detail": "jt-del-qty-del en plantilla"
+    },
+    "29_warehouse_not_company": {
+      "status": "PASS",
+      "detail": "WH"
+    },
+    "30_module_version_26b": {
+      "status": "PASS",
+      "detail": "19.0.5.1.0"
+    },
+    "host_observations": {
+      "status": "PASS",
+      "detail": "host pdftotext"
+    },
+    "host_legal_legend": {
+      "status": "PASS",
+      "detail": "host pdftotext"
+    },
+    "host_responsable_vendedor": {
+      "status": "PASS",
+      "detail": "host pdftotext"
+    },
+    "host_green_band": {
+      "status": "PASS",
+      "detail": "host pdftotext"
+    },
+    "host_warehouse_not_company_name": {
+      "status": "PASS",
+      "detail": "host pdftotext"
     }
   },
   "pdfs": [

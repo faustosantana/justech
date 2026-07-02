@@ -383,7 +383,6 @@ class AccountMove(models.Model):
         svc = self.env["justech.delivery.note.service"]
         vals = svc._jt_delivery_note_vals_from_invoice(self)
         note = Note.create(vals)
-        self._jt_post_delivery_note_origin_chatter(note, True)
         return note, True
 
     def action_jt_create_delivery_conduce(self):

@@ -1,5 +1,8 @@
 # Fase 24.2 — Roadmap diseño QWeb+SCSS (planificación)
 
+> **⚠️ Actualizado:** El enfoque evolucionó a **paquete central `justech_report_design`**.  
+> Ver documento principal: **`docs/PHASE24_2_JUSTECH_REPORT_DESIGN_PROPOSAL.md`**
+
 **Estado:** ⏸️ **PENDIENTE — NO EJECUTAR**  
 **Bloqueado por:** Aprobación visual explícita de cotización Fase 24.1  
 **Entorno objetivo inicial:** TEST (`hellenia_test`)  

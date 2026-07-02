@@ -27,6 +27,12 @@ class ResPartner(models.Model):
         compute="_compute_justech_do_rnc_valid",
         store=True,
     )
+    justech_do_default_document_type_id = fields.Many2one(
+        "justech.do.fiscal.document.type",
+        string="Tipo de comprobante fiscal predeterminado",
+        domain="[('is_sale_document', '=', True), ('move_type', '=', 'out_invoice')]",
+        help="Tipo de comprobante sugerido al crear cotizaciones y facturas para este contacto.",
+    )
 
     @api.depends("vat")
     def _compute_justech_do_partner_id_type(self):
@@ -73,3 +79,11 @@ class ResPartner(models.Model):
         """RNC/Cédula sin separadores para exportación DGII."""
         self.ensure_one()
         return re.sub(r"[\s\-]", "", self.vat or "")
+
+    def justech_do_get_default_sale_document_type(self):
+        """Tipo de comprobante de venta configurado en el contacto (out_invoice)."""
+        self.ensure_one()
+        doc = self.justech_do_default_document_type_id
+        if doc and doc.is_sale_document and doc.move_type == "out_invoice":
+            return doc
+        return self.env["justech.do.fiscal.document.type"]

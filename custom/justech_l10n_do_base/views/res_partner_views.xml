@@ -8,6 +8,8 @@
             <field name="vat" position="after">
                 <field name="justech_do_partner_id_type"/>
                 <field name="justech_do_rnc_valid" readonly="1"/>
+                <field name="justech_do_default_document_type_id"
+                       options="{'no_create': True, 'no_open': True}"/>
             </field>
         </field>
     </record>

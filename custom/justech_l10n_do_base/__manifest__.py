@@ -1,6 +1,6 @@
 {
     "name": "Justech Dominican Fiscal Base",
-    "version": "19.0.1.3.0",
+    "version": "19.0.1.4.0",
     "category": "Accounting/Localizations",
     "summary": "Base fiscal configuration for Dominican Republic (Justech)",
     "description": """

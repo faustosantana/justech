@@ -102,7 +102,25 @@ class AccountMove(models.Model):
                 if origin.justech_do_ncf:
                     vals.setdefault("justech_do_origin_ncf", origin.justech_do_ncf)
                     vals.setdefault("justech_do_ncf_modified", origin.justech_do_ncf)
+            if (
+                not vals.get("justech_do_document_type_id")
+                and vals.get("move_type") == "out_invoice"
+                and vals.get("partner_id")
+                and not vals.get("debit_origin_id")
+            ):
+                partner = self.env["res.partner"].browse(vals["partner_id"])
+                doc = partner.justech_do_get_default_sale_document_type()
+                if doc:
+                    vals["justech_do_document_type_id"] = doc.id
         return super().create(vals_list)
+
+    @api.onchange("partner_id")
+    def _onchange_partner_justech_do_document_type(self):
+        if self.move_type != "out_invoice" or self.debit_origin_id:
+            return
+        if self.justech_do_document_type_id:
+            return
+        self.justech_do_document_type_id = self.partner_id.justech_do_get_default_sale_document_type()
 
     @api.onchange("reversed_entry_id")
     def _onchange_reversed_entry_ncf_modified(self):
@@ -137,6 +155,9 @@ class AccountMove(models.Model):
         if self.move_type == "out_invoice" and self.debit_origin_id:
             return self.env.ref("justech_l10n_do_base.doc_type_b03", raise_if_not_found=False)
         if self.move_type == "out_invoice":
+            partner_default = self.partner_id.justech_do_get_default_sale_document_type()
+            if partner_default:
+                return partner_default
             if self.partner_id.justech_do_has_rnc():
                 return self.env.ref("justech_l10n_do_base.doc_type_b01", raise_if_not_found=False)
             return self.env.ref("justech_l10n_do_base.doc_type_b02", raise_if_not_found=False)

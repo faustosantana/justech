@@ -92,8 +92,8 @@ def render_case(key, so, fname, Report):
     check(
         f"{key}_no_sigs_table",
         'class="jt-hq-sigs"' in html
-        and "<table" not in html.split("jt-hq-sigs")[1].split("jt-hq-footer")[0]
-        if "jt-hq-sigs" in html
+        and "<table" not in html.split('class="jt-hq-sigs"')[1].split("jt-hq-footer")[0]
+        if 'class="jt-hq-sigs"' in html
         else False,
     )
     check(f"{key}_sig_push", "jt-hq-sig-push" in html)

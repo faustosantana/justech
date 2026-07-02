@@ -1,6 +1,6 @@
 {
     "name": "Justech Report Design",
-    "version": "19.0.1.0.8",
+    "version": "19.0.1.0.9",
     "category": "Reporting",
     "summary": "Diseño HTML/QWeb cotización Hellenia — módulo limpio TEST",
     "description": """

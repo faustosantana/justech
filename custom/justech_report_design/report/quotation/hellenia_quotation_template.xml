@@ -174,35 +174,47 @@
             </table>
         </div>
 
-        <div t-attf-class="jt-hq-lower {{ 'jt-hq-lower-anchor' if anchor_signatures else '' }}"
-             t-attf-style="{{ 'min-height: %spx;' % lower_min_height_px if anchor_signatures else '' }}">
-            <div class="jt-hq-cond">
-                <div class="jt-hq-cond-title">CONDICIONES</div>
-                <t t-if="doc.note">
-                    <div class="jt-hq-cond-body" t-out="doc.note"/>
-                </t>
-                <t t-else="">
-                    <div class="jt-hq-cond-body" t-out="jt_default_terms"/>
-                </t>
-            </div>
-
-            <div class="jt-hq-sig-push" t-attf-style="height: {{ signature_spacer_px }}px;"/>
-
-            <div class="jt-hq-sigs">
-                <div class="jt-hq-sig-col">
-                    <div class="jt-hq-sig-head">ENTREGADO POR</div>
-                    <hr class="jt-hq-sig-line"/>
-                    <div class="jt-hq-sig-date-lbl">Fecha:</div>
-                    <hr class="jt-hq-sig-line jt-hq-sig-line-date"/>
-                </div>
-                <div class="jt-hq-sig-col">
-                    <div class="jt-hq-sig-head">RECIBIDO POR</div>
-                    <hr class="jt-hq-sig-line"/>
-                    <div class="jt-hq-sig-date-lbl">Fecha:</div>
-                    <hr class="jt-hq-sig-line jt-hq-sig-line-date"/>
-                </div>
-            </div>
-        </div>
+        <table t-attf-class="jt-hq-lower {{ 'jt-hq-lower-anchor' if anchor_signatures else '' }}"
+               width="100%" cellpadding="0" cellspacing="0" border="0"
+               t-attf-style="{{ 'height: %spx;' % lower_min_height_px if anchor_signatures else '' }}">
+            <tr>
+                <td class="jt-hq-cond-wrap">
+                    <div class="jt-hq-cond">
+                        <div class="jt-hq-cond-title">CONDICIONES</div>
+                        <t t-if="doc.note">
+                            <div class="jt-hq-cond-body" t-out="doc.note"/>
+                        </t>
+                        <t t-else="">
+                            <div class="jt-hq-cond-body" t-out="jt_default_terms"/>
+                        </t>
+                    </div>
+                </td>
+            </tr>
+            <tr t-if="anchor_signatures" class="jt-hq-sig-push-row">
+                <td class="jt-hq-sig-push">&#160;</td>
+            </tr>
+            <tr t-if="not anchor_signatures">
+                <td class="jt-hq-sig-push" t-attf-style="height: {{ signature_spacer_px }}px;">&#160;</td>
+            </tr>
+            <tr>
+                <td class="jt-hq-sigs-wrap">
+                    <div class="jt-hq-sigs">
+                        <div class="jt-hq-sig-col">
+                            <div class="jt-hq-sig-head">ENTREGADO POR</div>
+                            <hr class="jt-hq-sig-line"/>
+                            <div class="jt-hq-sig-date-lbl">Fecha:</div>
+                            <hr class="jt-hq-sig-line jt-hq-sig-line-date"/>
+                        </div>
+                        <div class="jt-hq-sig-col">
+                            <div class="jt-hq-sig-head">RECIBIDO POR</div>
+                            <hr class="jt-hq-sig-line"/>
+                            <div class="jt-hq-sig-date-lbl">Fecha:</div>
+                            <hr class="jt-hq-sig-line jt-hq-sig-line-date"/>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </table>
     </template>
 
     <!-- Reporte paralelo — web.html_container, sin web.external_layout -->

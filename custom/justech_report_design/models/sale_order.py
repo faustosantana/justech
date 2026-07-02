@@ -59,20 +59,20 @@ class SaleOrder(models.Model):
         """Altura mínima zona inferior para anclar firmas al pie."""
         self.ensure_one()
         count, last_page_lines = self._jt_quotation_page_stats()
-        page_usable = 900
+        page_usable = 960
         sig_h = 90
-        footer_gap = 48
+        footer_gap = 40
         if count <= 22:
             fixed = 420
             line_h = 34
             used = fixed + count * line_h
-            return max(220, page_usable - used - sig_h - footer_gap)
+            return max(400, page_usable - used - sig_h - footer_gap)
         if last_page_lines > 10:
             return 0
         tail_fixed = 260
         tail_lines_h = last_page_lines * 34
         used = tail_fixed + tail_lines_h
-        return max(180, page_usable - used - sig_h - footer_gap)
+        return max(320, page_usable - used - sig_h - footer_gap)
 
     def get_jt_quotation_anchor_signatures(self):
         """Anclar firmas al pie cuando la última página tiene poco contenido."""

@@ -141,31 +141,36 @@
             </tbody>
         </table>
 
-        <div class="jt-hq-totals-wrap">
-            <table class="jt-hq-totals" cellpadding="0" cellspacing="0">
-                <tr>
-                    <td class="t-lbl">Subtotal</td>
-                    <td class="t-val">
-                        <span t-field="doc.amount_untaxed"
-                              t-options="{'widget': 'monetary', 'display_currency': doc.currency_id}"/>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="t-lbl">ITBIS (18%)</td>
-                    <td class="t-val">
-                        <span t-field="doc.amount_tax"
-                              t-options="{'widget': 'monetary', 'display_currency': doc.currency_id}"/>
-                    </td>
-                </tr>
-                <tr class="grand">
-                    <td class="t-lbl">TOTAL</td>
-                    <td class="t-val">
-                        <span t-field="doc.amount_total"
-                              t-options="{'widget': 'monetary', 'display_currency': doc.currency_id}"/>
-                    </td>
-                </tr>
-            </table>
-        </div>
+        <table width="100%" cellpadding="0" cellspacing="0" border="0" class="jt-hq-totals-outer">
+            <tr>
+                <td class="jt-hq-totals-gap">&#160;</td>
+                <td width="280" class="jt-hq-totals-cell">
+                    <table width="280" cellpadding="0" cellspacing="0" border="0" class="jt-hq-totals">
+                        <tr>
+                            <td class="t-lbl">Subtotal</td>
+                            <td class="t-val">
+                                <span t-field="doc.amount_untaxed"
+                                      t-options="{'widget': 'monetary', 'display_currency': doc.currency_id}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="t-lbl">ITBIS (18%)</td>
+                            <td class="t-val">
+                                <span t-field="doc.amount_tax"
+                                      t-options="{'widget': 'monetary', 'display_currency': doc.currency_id}"/>
+                            </td>
+                        </tr>
+                        <tr class="grand">
+                            <td class="t-lbl">TOTAL</td>
+                            <td class="t-val">
+                                <span t-field="doc.amount_total"
+                                      t-options="{'widget': 'monetary', 'display_currency': doc.currency_id}"/>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
 
         <div class="jt-hq-clear">&#160;</div>
 
@@ -183,23 +188,20 @@
             </t>
         </div>
 
-        <table width="100%" cellpadding="0" cellspacing="0" class="jt-hq-sigs">
-            <tr>
-                <td width="48%">
-                    <div class="jt-hq-sig-head">ENTREGADO POR</div>
-                    <div class="jt-hq-sig-line">&#160;</div>
-                    <div class="jt-hq-sig-date-lbl">Fecha:</div>
-                    <div class="jt-hq-sig-line jt-hq-sig-line-date">&#160;</div>
-                </td>
-                <td width="4%"></td>
-                <td width="48%">
-                    <div class="jt-hq-sig-head">RECIBIDO POR</div>
-                    <div class="jt-hq-sig-line">&#160;</div>
-                    <div class="jt-hq-sig-date-lbl">Fecha:</div>
-                    <div class="jt-hq-sig-line jt-hq-sig-line-date">&#160;</div>
-                </td>
-            </tr>
-        </table>
+        <div class="jt-hq-sigs">
+            <div class="jt-hq-sig-col">
+                <div class="jt-hq-sig-head">ENTREGADO POR</div>
+                <hr class="jt-hq-sig-line"/>
+                <div class="jt-hq-sig-date-lbl">Fecha:</div>
+                <hr class="jt-hq-sig-line jt-hq-sig-line-date"/>
+            </div>
+            <div class="jt-hq-sig-col">
+                <div class="jt-hq-sig-head">RECIBIDO POR</div>
+                <hr class="jt-hq-sig-line"/>
+                <div class="jt-hq-sig-date-lbl">Fecha:</div>
+                <hr class="jt-hq-sig-line jt-hq-sig-line-date"/>
+            </div>
+        </div>
     </template>
 
     <!-- Reporte paralelo — web.html_container, sin web.external_layout -->
@@ -215,24 +217,21 @@
                     <t t-call="justech_report_design.hellenia_quotation_body"/>
                 </div>
                 <div class="footer jt-hq-footer-pdf">
-                    <table width="100%" cellpadding="0" cellspacing="0" class="jt-hq-foot-bar">
-                        <tr>
-                            <td class="jt-hq-foot-contact">
-                                <t t-if="company.phone"><span t-field="company.phone"/></t>
-                                <t t-if="company.email">
-                                    <span class="jt-hq-foot-sep">|</span>
-                                    <span t-field="company.email"/>
-                                </t>
-                                <t t-if="company.website">
-                                    <span class="jt-hq-foot-sep">|</span>
-                                    <span t-field="company.website"/>
-                                </t>
-                            </td>
-                            <td class="jt-hq-foot-page">
-                                Página <span class="page"></span> de <span class="topage"></span>
-                            </td>
-                        </tr>
-                    </table>
+                    <div class="jt-hq-foot-row">
+                        <t t-if="company.phone"><span class="jt-hq-foot-item" t-field="company.phone"/></t>
+                        <t t-if="company.email">
+                            <span class="jt-hq-foot-sep">|</span>
+                            <span class="jt-hq-foot-item" t-field="company.email"/>
+                        </t>
+                        <t t-if="company.website">
+                            <span class="jt-hq-foot-sep">|</span>
+                            <span class="jt-hq-foot-item" t-field="company.website"/>
+                        </t>
+                        <span class="jt-hq-foot-sep">|</span>
+                        <span class="jt-hq-foot-item jt-hq-foot-page">
+                            Página <span class="page"></span> de <span class="topage"></span>
+                        </span>
+                    </div>
                 </div>
             </t>
         </t>

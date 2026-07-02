@@ -44,6 +44,12 @@ h2.hellenia-doc-title,
     border: none !important;
 }
 
+.jt-hq-page table.jt-hq-totals,
+.jt-hq-page table.jt-hq-totals-outer .jt-hq-totals {
+    width: 280px !important;
+    max-width: 280px !important;
+}
+
 .jt-hq-page td,
 .jt-hq-page th {
     border: none !important;
@@ -51,9 +57,14 @@ h2.hellenia-doc-title,
 }
 
 .jt-hq-page div,
-.jt-hq-page p {
+.jt-hq-page p,
+.jt-hq-page hr {
     border: none !important;
     box-shadow: none !important;
+}
+
+.jt-hq-page hr.jt-hq-sig-line {
+    border-top: 1px solid #bdbdbd !important;
 }
 
 .jt-hq-green { color: #3E4827; }
@@ -271,21 +282,40 @@ h2.hellenia-doc-title,
     font-weight: bold;
 }
 
-/* Totales — bloque compacto alineado derecha */
-.jt-hq-totals-wrap {
-    width: 100%;
+/* Totales — bloque compacto derecha (wkhtmltopdf) */
+.jt-hq-totals-outer {
+    width: 100% !important;
     margin: 10px 0 18px 0;
-    text-align: right;
-}
-
-.jt-hq-totals {
-    width: 252px;
-    margin: 0 0 0 auto;
     border: none !important;
 }
 
+.jt-hq-totals-outer td {
+    border: none !important;
+    padding: 0;
+    vertical-align: top;
+}
+
+.jt-hq-totals-gap {
+    width: auto !important;
+}
+
+.jt-hq-totals-cell {
+    width: 280px !important;
+    text-align: right;
+    vertical-align: top;
+    border: none !important;
+}
+
+.jt-hq-totals {
+    width: 280px !important;
+    max-width: 280px !important;
+    margin: 0;
+    border: none !important;
+    border-collapse: collapse;
+}
+
 .jt-hq-totals td {
-    padding: 5px 0;
+    padding: 4px 0;
     font-size: 8.5pt;
     border: none !important;
     vertical-align: middle;
@@ -295,7 +325,8 @@ h2.hellenia-doc-title,
     color: #888888;
     font-weight: bold;
     text-align: left;
-    padding-right: 16px;
+    width: 105px;
+    padding-right: 10px;
     white-space: nowrap;
 }
 
@@ -304,29 +335,25 @@ h2.hellenia-doc-title,
     font-weight: bold;
     text-align: right;
     white-space: nowrap;
-    width: 120px;
-}
-
-.jt-hq-totals tr:not(.grand) td {
-    border-bottom: 1px solid #f0f0f0 !important;
+    width: 165px;
 }
 
 .jt-hq-totals tr.grand td {
     border: none !important;
     border-top: 2px solid #3E4827 !important;
-    padding-top: 12px;
-    padding-bottom: 2px;
+    padding-top: 10px;
+    padding-bottom: 0;
 }
 
 .jt-hq-totals tr.grand .t-lbl {
-    font-size: 12pt;
+    font-size: 11pt;
     color: #3E4827;
     text-transform: uppercase;
     font-weight: bold;
 }
 
 .jt-hq-totals tr.grand .t-val {
-    font-size: 16pt;
+    font-size: 15pt;
     color: #3E4827;
     font-weight: bold;
 }
@@ -382,16 +409,27 @@ h2.hellenia-doc-title,
     padding: 0;
 }
 
-/* Firmas — texto plano + raya, sin caja */
+/* Firmas — solo divs + hr, sin tabla ni caja */
 .jt-hq-sigs {
-    margin: 22px 0 0 0;
-}
-
-.jt-hq-sigs td {
-    vertical-align: top;
-    padding: 0;
+    margin: 24px 0 0 0;
+    width: 100%;
+    overflow: hidden;
     border: none !important;
     background: transparent !important;
+}
+
+.jt-hq-sig-col {
+    float: left;
+    width: 46%;
+    border: none !important;
+    background: transparent !important;
+    padding: 0;
+    margin: 0;
+    box-shadow: none !important;
+}
+
+.jt-hq-sig-col + .jt-hq-sig-col {
+    float: right;
 }
 
 .jt-hq-sig-head {
@@ -400,14 +438,16 @@ h2.hellenia-doc-title,
     text-transform: uppercase;
     color: #888888;
     letter-spacing: 0.6px;
-    margin: 0 0 6px 0;
+    margin: 0 0 8px 0;
+    border: none !important;
 }
 
 .jt-hq-sig-line {
+    display: block;
     border: none !important;
-    border-bottom: 1px solid #bdbdbd !important;
+    border-top: 1px solid #bdbdbd !important;
     height: 0;
-    width: 90%;
+    width: 88%;
     margin: 0 0 14px 0;
     padding: 0;
     background: transparent !important;
@@ -419,56 +459,47 @@ h2.hellenia-doc-title,
     text-transform: uppercase;
     color: #888888;
     letter-spacing: 0.4px;
-    margin: 0 0 6px 0;
+    margin: 0 0 8px 0;
+    border: none !important;
 }
 
 .jt-hq-sig-line-date {
-    width: 70%;
+    width: 65%;
     margin-bottom: 0;
 }
 
-/* Footer PDF — barra verde Hellenia */
+/* Footer PDF — barra verde, una sola línea */
 .jt-hq-footer-pdf {
     background-color: #3E4827 !important;
     color: #ffffff !important;
-    padding: 9px 16px;
+    padding: 10px 16px;
     font-size: 7pt;
     margin: 0;
     border: none !important;
 }
 
-.jt-hq-foot-bar {
-    width: 100%;
+.jt-hq-foot-row {
+    text-align: center;
+    white-space: nowrap;
     border: none !important;
+    background: transparent !important;
+    color: #ffffff !important;
 }
 
-.jt-hq-foot-bar td {
-    border: none !important;
-    vertical-align: middle;
+.jt-hq-foot-item {
     color: #ffffff !important;
+    border: none !important;
     background: transparent !important;
 }
 
-.jt-hq-foot-contact {
-    text-align: left;
-    color: #ffffff !important;
-}
-
-.jt-hq-foot-contact span {
-    color: #ffffff !important;
-}
-
 .jt-hq-foot-sep {
-    color: rgba(255, 255, 255, 0.45) !important;
-    margin: 0 10px;
+    color: rgba(255, 255, 255, 0.5) !important;
+    margin: 0 8px;
+    border: none !important;
 }
 
 .jt-hq-foot-page {
-    text-align: right;
-    white-space: nowrap;
     color: #ffffff !important;
-    font-size: 7pt;
-    width: 120px;
 }
 
 .jt-hq-foot-page .page,

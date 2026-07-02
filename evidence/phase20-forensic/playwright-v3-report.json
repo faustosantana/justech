@@ -1,0 +1,33 @@
+{
+  "phase": "20-forensic-prod-v3",
+  "timestamp_utc": "2026-07-01T12:56:11.596648+00:00",
+  "partner_id": 22,
+  "backup": "/opt/odoo-projects/hellenia/backups/hellenia-prod/2026-07-01_1248",
+  "steps": {
+    "login": {
+      "ok": true,
+      "detail": "admin",
+      "screenshot": "evidence/phase20-forensic/screenshots/v3-01-login.png"
+    },
+    "capture1_on_load": {
+      "ok": true,
+      "detail": "{\"total\": 0, \"checked\": 0, \"details\": [], \"payment_total_ui\": \"RD$ 0.00\"}",
+      "screenshot": "evidence/phase20-forensic/screenshots/v3-04-on-load.png"
+    },
+    "has_invoices": {
+      "ok": false,
+      "detail": "sin líneas en wizard",
+      "screenshot": ""
+    }
+  },
+  "checkbox": {
+    "capture1": {
+      "total": 0,
+      "checked": 0,
+      "details": [],
+      "payment_total_ui": "RD$ 0.00"
+    }
+  },
+  "ok": false,
+  "pass": false
+}

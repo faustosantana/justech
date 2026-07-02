@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Vista previa del configurador de diseño: factura oficial Justech (no estándar Odoo). -->
+    <template id="report_justech_invoice_wizard_iframe">
+        <t t-call="web.html_preview_container">
+            <t t-set="doc" t-value="o or (docs and docs[0])"/>
+            <t t-if="doc">
+                <t t-set="doc" t-value="doc.with_context(lang=doc.partner_id.lang)"/>
+                <t t-set="company" t-value="doc.company_id"/>
+                <div class="article jt-hq-page">
+                    <t t-call="justech_report_design.justech_invoice_body"/>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

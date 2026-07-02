@@ -1,0 +1,26 @@
+# Proveedores — estructura preparada (sin registros en Odoo)
+
+schema_version: "1.0"
+status: structure_only
+records_in_odoo: 0
+
+planned_vendors:
+  - name: "Raudo RD"
+    type: supplier
+    fields_when_created:
+      - name
+      - vat  # RNC si aplica
+      - country_id: DO
+      - supplier_rank: 1
+
+  - name: "Pack-it Dominicana"
+    type: supplier
+
+  - name: "LM Inversiones Inmobiliarias SRL"
+    type: supplier
+
+  - name: "Glys Nuñez"
+    type: supplier
+  # Nota: validar si es proveedor o solo responsable contable
+
+phase: "Fase 6 — Compras"

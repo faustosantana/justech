@@ -1,0 +1,72 @@
+{
+  "phase": "19.2",
+  "timestamp_utc": "2026-06-30T21:48:06.788758+00:00",
+  "database": "hellenia_test",
+  "checks": {
+    "period_validated": {
+      "ok": true,
+      "detail": "{\"all\": 148, \"valid\": 37, \"incomplete\": 0, \"excluded\": 111, \"cancelled\": 0, \"partners_affected\": 0, \"error_lines\": 0}"
+    },
+    "excluded_uat_present": {
+      "ok": true,
+      "detail": 111
+    },
+    "valid_moves_present": {
+      "ok": true,
+      "detail": 37
+    },
+    "no_incomplete_blocking": {
+      "ok": true,
+      "detail": 0
+    },
+    "summary_has_partner_groups": {
+      "ok": true,
+      "detail": 0
+    },
+    "summary_spanish": {
+      "ok": true,
+      "detail": "Resumen validación 606\n————————————————————————\nDocumentos en período: 148\nVálid"
+    },
+    "errors_xlsx_created": {
+      "ok": true,
+      "detail": "DGII_606_errores_202606.xlsx"
+    },
+    "full_period_export": {
+      "ok": true,
+      "detail": "DGII_606_202606.xlsx"
+    },
+    "export_row_count": {
+      "ok": true,
+      "detail": 37
+    },
+    "header_ncf": {
+      "ok": true,
+      "detail": "NCF"
+    },
+    "data_row_12": {
+      "ok": true,
+      "detail": "40100000001"
+    },
+    "history_validation_ok": {
+      "ok": true,
+      "detail": "ok"
+    },
+    "history_export": {
+      "ok": true,
+      "detail": "DGII_606_202606.xlsx"
+    }
+  },
+  "counts": {
+    "all": 148,
+    "valid": 37,
+    "incomplete": 0,
+    "excluded": 111,
+    "cancelled": 0,
+    "partners_affected": 0,
+    "error_lines": 0
+  },
+  "ok": true,
+  "passed": 13,
+  "total": 13,
+  "pass": true
+}

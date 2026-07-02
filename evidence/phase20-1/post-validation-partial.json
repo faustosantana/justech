@@ -1,0 +1,27 @@
+{
+  "phase": "20.1-post-validation-partial",
+  "timestamp_utc": "2026-07-01T13:24:30+00:00",
+  "database": "hellenia_test",
+  "partner_id": 2361,
+  "payment": "PBNKD/2026/00026",
+  "payment_amount": 5000.0,
+  "partial_reconcile_id": 2359,
+  "invoices": {
+    "INV/2026/00212": {"payment_state": "partial", "amount_residual": 6800.0},
+    "INV/2026/00213": {"payment_state": "not_paid", "amount_residual": 11800.0},
+    "INV/2026/00214": {"payment_state": "not_paid", "amount_residual": 11800.0}
+  },
+  "playwright": "evidence/phase20-1/playwright-report.json",
+  "screenshots": [
+    "evidence/phase20-1/screenshots/01-login.png",
+    "evidence/phase20-1/screenshots/02-wizard-on-load.png",
+    "evidence/phase20-1/screenshots/03-one-marked.png",
+    "evidence/phase20-1/screenshots/04-partial-5000.png",
+    "evidence/phase20-1/screenshots/05-after-register.png",
+    "evidence/phase20-1/screenshots/06-payments.png"
+  ],
+  "video": "evidence/phase20-1/video/",
+  "server_logs_note": "web_save + action_register_payments 13:24:14-15 UTC; single payment created",
+  "full_pass": false,
+  "pending": ["retencion_5pct_gobierno", "reporte_607", "reporte_623", "pdf_recibo", "pago_completo"]
+}

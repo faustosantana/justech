@@ -1,0 +1,70 @@
+{
+  "phase": "25A-visual-review",
+  "timestamp_utc": "2026-07-02T11:38:30.730520+00:00",
+  "database": "hellenia_test",
+  "status": "PENDING_USER_VISUAL_APPROVAL",
+  "note": "No declarar PASS FINAL ni listo para producción hasta aprobación explícita del usuario.",
+  "visual_review_doc": "docs/PHASE25_VISUAL_REVIEW.md",
+  "visual_audit_doc": "docs/PHASE25_VISUAL_AUDIT.md",
+  "summary": {
+    "pass": 30,
+    "fail": 9,
+    "no_aplica": 1
+  },
+  "automated_checks": {
+    "std_invoice_unchanged": true,
+    "quotation_unchanged": true,
+    "invoice_1_line_pdf_valid": true,
+    "invoice_1_line_png_created": true,
+    "invoice_5_lines_pdf_valid": true,
+    "invoice_5_lines_png_created": true,
+    "invoice_22_lines_pdf_valid": true,
+    "invoice_22_lines_png_created": true,
+    "invoice_with_discount_pdf_valid": true,
+    "invoice_with_discount_png_created": true,
+    "invoice_no_discount_pdf_valid": true,
+    "invoice_no_discount_png_created": true,
+    "invoice_fiscal_b01_pdf_valid": true,
+    "invoice_fiscal_b01_png_created": true,
+    "invoice_consumo_b02_pdf_valid": true,
+    "invoice_consumo_b02_png_created": true,
+    "invoice_government_pdf_valid": true,
+    "invoice_government_png_created": true,
+    "credit_note_b04_pdf_valid": true,
+    "credit_note_b04_png_created": true
+  },
+  "artifacts": {
+    "pdfs": [
+      "01_invoice_1_line.pdf",
+      "02_invoice_5_lines.pdf",
+      "03_invoice_22_lines.pdf",
+      "04_invoice_with_discount.pdf",
+      "05_invoice_no_discount.pdf",
+      "06_invoice_fiscal_b01.pdf",
+      "07_invoice_consumo_b02.pdf",
+      "08_invoice_government.pdf",
+      "09_credit_note_b04.pdf"
+    ],
+    "pngs": [
+      "01_invoice_1_line.png",
+      "02_invoice_5_lines.png",
+      "03_invoice_22_lines.png",
+      "03_invoice_22_lines_p2.png",
+      "04_invoice_with_discount.png",
+      "05_invoice_no_discount.png",
+      "06_invoice_fiscal_b01.png",
+      "07_invoice_consumo_b02.png",
+      "08_invoice_government.png",
+      "09_credit_note_b04.png"
+    ]
+  },
+  "constraints": {
+    "prod_touched": false,
+    "std_invoice_replaced": false,
+    "dgii_modified": false,
+    "accounting_modified": false,
+    "quotation_modified": false,
+    "purchases_modified": false,
+    "inventory_modified": false
+  }
+}

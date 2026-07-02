@@ -1,0 +1,51 @@
+# Metadatos Golden Configuration — Fase 3.5 definitiva
+
+schema_version: "2.0"
+phase: "3.5"
+phase_name: "Golden Configuration definitiva"
+status: applied_dev
+applied_at_utc: "2026-06-30T04:47:45Z"
+source_document: "Información de la empresa para Odoo"
+
+database: hellenia_dev
+url: "https://dev.hellenia.cloud"
+odoo_build: "19.0+e-20260619"
+
+backup_pre_apply:
+  path: "/opt/odoo-projects/hellenia/backups/dev/2026-06-30_0446"
+  verified: true
+
+scripts:
+  apply: scripts/apply-phase35-golden-config.py
+  validate: scripts/validate-phase35-golden-config.py
+
+constraints_respected:
+  no_infra_changes: true
+  no_module_install: true
+  no_users_created: true
+  no_test_prod: true
+  no_custom: true
+
+logo:
+  status: pending_upload
+  conversion_priority: [svg, png_transparent]
+  targets: [company, reports, portal, favicon]
+
+photography:
+  storage: "Odoo nativo — product.image / image_1920 en product.template"
+  module_required: product  # installed
+  note: "Al activar Ventas/Inventario, las fotos se almacenan en filestore Odoo"
+
+suppliers:
+  status: structure_only
+  file: suppliers.yaml
+
+products:
+  status: not_loaded
+  import_template: data/import/product_import_template.csv
+
+reports_priority:
+  file: reports_priority.yaml
+
+functional_responsibles:
+  file: responsibles.yaml

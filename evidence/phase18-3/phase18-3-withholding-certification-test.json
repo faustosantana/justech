@@ -1,0 +1,166 @@
+{
+  "phase": "18.3-withholding-certification",
+  "timestamp_utc": "2026-06-30T20:56:15.199098+00:00",
+  "database": "hellenia_test",
+  "module_version": "19.0.1.0.7",
+  "checks": {
+    "00_module_upgrade": {
+      "status": "PASS",
+      "detail": "19.0.1.0.7"
+    },
+    "01_catalog_active_complete": {
+      "status": "PASS",
+      "detail": [
+        "RET-GOB-5",
+        "RET-HON-10",
+        "RET-INF-ISR-10",
+        "RET-INF-ITBIS-75",
+        "RET-ISR-2",
+        "RET-ITBIS-100",
+        "RET-ITBIS-30"
+      ]
+    },
+    "02_create_withholding": {
+      "status": "PASS",
+      "detail": "RET-CERT-TMP"
+    },
+    "03_edit_withholding": {
+      "status": "PASS",
+      "detail": "notas actualizadas"
+    },
+    "04_deactivate_hides_selector": {
+      "status": "PASS",
+      "detail": [
+        "RET-ITBIS-30",
+        "RET-ISR-2",
+        "RET-GOB-5",
+        "RET-ITBIS-100"
+      ]
+    },
+    "05_reactivate_shows_selector": {
+      "status": "PASS",
+      "detail": [
+        "RET-ITBIS-100",
+        "RET-ITBIS-30",
+        "RET-GOB-5",
+        "RET-ISR-2",
+        "RET-HON-10"
+      ]
+    },
+    "06_selector_toggle_roundtrip": {
+      "status": "PASS",
+      "detail": "OK"
+    },
+    "07_selector_filters": {
+      "status": "PASS",
+      "detail": "cliente=5 proveedor=6"
+    },
+    "08_multi_withholding_same_invoice": {
+      "status": "PASS",
+      "detail": 2
+    },
+    "09_different_withholdings_per_invoice": {
+      "status": "PASS",
+      "detail": "Ninguna|Retención ITBIS 30%"
+    },
+    "10_base_calculation": {
+      "status": "PASS",
+      "detail": "base_itbis=180.00 wh=9.72"
+    },
+    "11_realtime_withholding_recalc": {
+      "status": "PASS",
+      "detail": "itbis estable wh=9.72"
+    },
+    "12_realtime_net_recalc": {
+      "status": "PASS",
+      "detail": "neto=608.28"
+    },
+    "13_accounting_entries": {
+      "status": "PASS",
+      "detail": "PBNKD/2026/00001"
+    },
+    "14_withholding_accounts_match": {
+      "status": "PASS",
+      "detail": "11080302"
+    },
+    "15_balanced_entry": {
+      "status": "PASS",
+      "detail": "D=1180.00"
+    },
+    "16_bank_reconciliation_ready": {
+      "status": "PASS",
+      "detail": "BNKD"
+    },
+    "17_reports_606_607": {
+      "status": "PASS",
+      "detail": "606=FACTU/2026/06/0140 607=INV/2026/00187"
+    },
+    "18_invoice_history_traceability": {
+      "status": "PASS",
+      "detail": "INV/2026/00188"
+    },
+    "19_payment_history_traceability": {
+      "status": "PASS",
+      "detail": "Retención 5% Gobierno"
+    },
+    "20_no_english_ui": {
+      "status": "PASS",
+      "detail": "etiquetas en español"
+    },
+    "21_no_technical_codes_user": {
+      "status": "PASS",
+      "detail": "nombres limpios"
+    },
+    "22_odoo_hellenia_style": {
+      "status": "PASS",
+      "detail": "markers=4"
+    }
+  },
+  "ok": true,
+  "errors": [],
+  "production_ready": false,
+  "visual_evidence": [
+    "/tmp/hellenia-phase18-3-evidence/01-catalogo-activo.html",
+    "/tmp/hellenia-phase18-3-evidence/07-selector-filtros.html",
+    "/tmp/hellenia-phase18-3-evidence/17-reportes-fiscales.html",
+    "/tmp/hellenia-phase18-3-evidence/18-19-historial.html",
+    "/tmp/hellenia-phase18-3-evidence/22-estilo-odoo.html"
+  ],
+  "visual_evidence_html": {
+    "01-catalogo-activo.html": "<!DOCTYPE html><html lang=\"es\"><head><meta charset=\"utf-8\">\n<title>Catálogo — retenciones activas</title>\n<style>body{font-family:system-ui,sans-serif;margin:2rem}\ntable{border-collapse:collapse;width:100%}td,th{border:1px solid #ccc;padding:8px}\nth{background:#714B67;color:#fff;text-align:left}</style></head>\n<body><h1>Catálogo — retenciones activas</h1><table><tr><th>Elemento</th><th>Valor</th></tr><tr><td>RET-GOB-5</td><td>Retención 5% Gobierno | cuenta=11080302</td></tr><tr><td>RET-ITBIS-30</td><td>Retención ITBIS 30% | cuenta=21030201</td></tr><tr><td>RET-ITBIS-100</td><td>Retención ITBIS 100% | cuenta=21030201</td></tr><tr><td>RET-INF-ISR-10</td><td>Retención ISR 10% Proveedor Informal | cuenta=21030301</td></tr><tr><td>RET-INF-ITBIS-75</td><td>Retención ITBIS 75% Proveedor Informal | cuenta=21030205</td></tr><tr><td>RET-ISR-2</td><td>Retención ISR 2% | cuenta=21030308</td></tr><tr><td>RET-HON-10</td><td>Retención ISR 10% Honorarios | cuenta=21030302</td></tr></table>\n<p>Generado: 2026-06-30T20:56:21.855792+00:00 — hellenia_test</p></body></html>",
+    "07-selector-filtros.html": "<!DOCTYPE html><html lang=\"es\"><head><meta charset=\"utf-8\">\n<title>Selector — filtros cliente/proveedor y operación</title>\n<style>body{font-family:system-ui,sans-serif;margin:2rem}\ntable{border-collapse:collapse;width:100%}td,th{border:1px solid #ccc;padding:8px}\nth{background:#714B67;color:#fff;text-align:left}</style></head>\n<body><h1>Selector — filtros cliente/proveedor y operación</h1><table><tr><th>Elemento</th><th>Valor</th></tr><tr><td>Cliente + Venta</td><td>RET-GOB-5, RET-HON-10, RET-ISR-2, RET-ITBIS-100, RET-ITBIS-30</td></tr><tr><td>Proveedor + Compra</td><td>RET-HON-10, RET-INF-ISR-10, RET-INF-ITBIS-75, RET-ISR-2, RET-ITBIS-100, RET-ITBIS-30</td></tr><tr><td>Cliente + Compra (debe excluir informales)</td><td>RET-HON-10, RET-ISR-2, RET-ITBIS-100, RET-ITBIS-30</td></tr></table>\n<p>Generado: 2026-06-30T20:56:21.862806+00:00 — hellenia_test</p></body></html>",
+    "17-reportes-fiscales.html": "<!DOCTYPE html><html lang=\"es\"><head><meta charset=\"utf-8\">\n<title>Reportes 606 / 607 — facturas con retención en pago</title>\n<style>body{font-family:system-ui,sans-serif;margin:2rem}\ntable{border-collapse:collapse;width:100%}td,th{border:1px solid #ccc;padding:8px}\nth{background:#714B67;color:#fff;text-align:left}</style></head>\n<body><h1>Reportes 606 / 607 — facturas con retención en pago</h1><table><tr><th>Elemento</th><th>Valor</th></tr><tr><td>606 factura proveedor</td><td>FACTU/2026/06/0140</td></tr><tr><td>607 factura cliente</td><td>INV/2026/00187</td></tr><tr><td>NCF proveedor</td><td>B1100020135</td></tr><tr><td>NCF cliente</td><td>B0100020037</td></tr></table>\n<p>Generado: 2026-06-30T20:56:24.342528+00:00 — hellenia_test</p></body></html>",
+    "18-19-historial.html": "<!DOCTYPE html><html lang=\"es\"><head><meta charset=\"utf-8\">\n<title>Historial factura y pago — retenciones</title>\n<style>body{font-family:system-ui,sans-serif;margin:2rem}\ntable{border-collapse:collapse;width:100%}td,th{border:1px solid #ccc;padding:8px}\nth{background:#714B67;color:#fff;text-align:left}</style></head>\n<body><h1>Historial factura y pago — retenciones</h1><table><tr><th>Elemento</th><th>Valor</th></tr><tr><td>Factura</td><td>INV/2026/00188</td></tr><tr><td>NCF</td><td>B0100020038</td></tr><tr><td>Pago vinculado</td><td>PBNKD/2026/00004</td></tr><tr><td>Pago conciliado con factura</td><td>Sí</td></tr><tr><td>Línea retención en asiento pago</td><td>Retención 5% Gobierno</td></tr><tr><td>Cuenta retención</td><td>11080302</td></tr><tr><td>Monto retención</td><td>65.00</td></tr></table>\n<p>Generado: 2026-06-30T20:56:24.737530+00:00 — hellenia_test</p></body></html>",
+    "22-estilo-odoo.html": "<!DOCTYPE html><html lang=\"es\"><head><meta charset=\"utf-8\">\n<title>Estilo visual Odoo / Hellenia</title>\n<style>body{font-family:system-ui,sans-serif;margin:2rem}\ntable{border-collapse:collapse;width:100%}td,th{border:1px solid #ccc;padding:8px}\nth{background:#714B67;color:#fff;text-align:left}</style></head>\n<body><h1>Estilo visual Odoo / Hellenia</h1><table><tr><th>Elemento</th><th>Valor</th></tr><tr><td>Menú administración</td><td>Contabilidad/Configuración/Localización Dominicana/Administrar retenciones</td></tr><tr><td>Padre menú</td><td>Localización Dominicana</td></tr><tr><td>Marcadores UI nativos</td><td>4</td></tr><tr><td>Wizard string</td><td>hellenia.payment.partner.wizard.form</td></tr></table>\n<p>Generado: 2026-06-30T20:56:24.771903+00:00 — hellenia_test</p></body></html>"
+  },
+  "sample_payment": {
+    "payment": "PBNKD/2026/00001",
+    "move": "PBNKD/2026/00001",
+    "lines": [
+      {
+        "account": "11010203",
+        "name": "Transferencia: INV/2026/00186",
+        "debit": 1130.0,
+        "credit": 0.0
+      },
+      {
+        "account": "11030201",
+        "name": "Transferencia: INV/2026/00186",
+        "debit": 0.0,
+        "credit": 1180.0
+      },
+      {
+        "account": "11080302",
+        "name": "Retención 5% Gobierno",
+        "debit": 50.0,
+        "credit": 0.0
+      }
+    ]
+  },
+  "summary": {
+    "passed": 23,
+    "failed": 0,
+    "total": 23
+  },
+  "verdict": "PASS"
+}

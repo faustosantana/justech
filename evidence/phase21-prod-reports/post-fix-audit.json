@@ -1,0 +1,32 @@
+{
+  "phase": "21-prod-post-fix",
+  "timestamp_utc": "2026-07-01T14:03:54.639266+00:00",
+  "fiscal": {
+    "606": {
+      "opens": false,
+      "generates": false,
+      "validates": true,
+      "error": "Generar Excel not visible (may need supervisor)"
+    },
+    "607": {
+      "opens": false,
+      "generates": true,
+      "validates": true,
+      "error": ""
+    },
+    "608": {
+      "opens": false,
+      "generates": true,
+      "validates": false,
+      "error": ""
+    },
+    "623": {
+      "opens": false,
+      "generates": false,
+      "validates": false,
+      "error": "RPC error on open"
+    }
+  },
+  "ok": false,
+  "pass": false
+}

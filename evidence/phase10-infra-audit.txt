@@ -1,0 +1,55 @@
+=== PHASE 10 INFRA AUDIT 2026-06-30T14:22:22Z ===
+## HOSTNAME
+srv.hellenia.cloud
+## DISK
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/sda1        96G   18G   79G  19% /
+/dev/sda1        96G   18G   79G  19% /
+/dev/sda1        96G   18G   79G  19% /
+## MEMORY
+               total        used        free      shared  buff/cache   available
+Mem:           7.8Gi       1.5Gi       529Mi       205Mi       6.3Gi       6.3Gi
+Swap:             0B          0B          0B
+## CPU
+cores=2
+CPU(s):                                  2
+On-line CPU(s) list:                     0,1
+Model name:                              AMD EPYC 9354P 32-Core Processor
+BIOS Model name:                         pc-i440fx-11.0  CPU @ 2.0GHz
+Thread(s) per core:                      1
+## SWAP
+## DOCKER
+NAMES                  STATUS                       PORTS
+hellenia-test-odoo-1   Up About an hour (healthy)   8069/tcp, 8071-8072/tcp
+hellenia-dev-odoo-1    Up 2 hours (healthy)         8069/tcp, 8071-8072/tcp
+hellenia-test-db-1     Up 14 hours (healthy)        5432/tcp
+hellenia-dev-db-1      Up 14 hours (healthy)        5432/tcp
+odoo-pecv-odoo-1       Up 4 days                    8071-8072/tcp, 0.0.0.0:32768->8069/tcp, [::]:32768->8069/tcp
+odoo-pecv-db-1         Up 4 days (healthy)          5432/tcp
+traefik-traefik-1      Up 14 hours                  
+## NETWORKS
+NETWORK ID     NAME                    DRIVER    SCOPE
+24e4ab28fcb4   bridge                  bridge    local
+0b534b9218cf   hellenia-dev_default    bridge    local
+f4b1a06d4e88   hellenia-test_default   bridge    local
+c2e7b47e438b   host                    host      local
+00bb0c562044   none                    null      local
+582ebfc4b04a   odoo-pecv_default       bridge    local
+## VOLUMES
+DRIVER    VOLUME NAME
+local     hellenia-dev_db
+local     hellenia-dev_odoo-data
+local     hellenia-test_db
+local     hellenia-test_odoo-data
+local     odoo-pecv_db
+local     odoo-pecv_odoo-addons
+local     odoo-pecv_odoo-data
+local     traefik-letsencrypt
+local     traefik_traefik-letsencrypt
+## DNS odoo
+2.25.69.179
+## DNS dev
+2.25.69.179
+## DNS test
+2.25.69.179
+## SSL odoo

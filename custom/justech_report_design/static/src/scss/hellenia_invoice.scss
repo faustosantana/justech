@@ -1,73 +1,75 @@
 /* Factura — extensiones mínimas sobre hellenia_quotation.scss */
 
-.jt-inv-band td {
-    padding: 8px 12px !important;
-}
-
+/* Banda — misma altura base que cotización */
 .jt-inv-band .jt-hq-band-title {
     letter-spacing: 0.5px !important;
-}
-
-/* Meta fiscal — integrada en banda, sin recuadro interno */
-.jt-inv-band table,
-.jt-inv-band table tr,
-.jt-inv-band table td,
-.jt-inv-band table th {
-    border: none !important;
-    outline: none !important;
-    box-shadow: none !important;
-}
-
-.jt-inv-band-meta-wrap {
-    border-left: 1px solid rgba(255, 255, 255, 0.35);
-    padding-left: 14px !important;
-    padding-right: 0 !important;
-    text-align: right;
     vertical-align: middle !important;
 }
 
-.jt-inv-band-meta-outer,
-.jt-inv-band-meta-outer td,
-.jt-inv-band-meta-pairs,
-.jt-inv-band-meta-pairs td {
-    background-color: #3E4827 !important;
+.jt-inv-band-meta-wrap {
+    vertical-align: middle !important;
+    border-left: 1px solid rgba(255, 255, 255, 0.35);
+    padding-left: 14px !important;
 }
 
-.jt-inv-band-meta-spacer {
-    width: 36px;
-    min-width: 36px;
-    font-size: 1px;
-    line-height: 1px;
-    padding: 0 !important;
+/* Bloque fiscal — divs, sin tablas internas visibles */
+.jt-inv-band-meta-cols {
+    width: 100%;
+    overflow: hidden;
+    border: none !important;
+    background: transparent !important;
 }
 
-.jt-inv-band-lbl-cell {
+.jt-inv-band-meta-col {
+    float: left;
+    width: 46%;
+    border: none !important;
+    background: transparent !important;
+    padding: 0 4% 0 0;
+    box-sizing: border-box;
+}
+
+.jt-inv-band-meta-col-r {
+    float: right;
+    width: 46%;
+    padding: 0 0 0 4%;
+}
+
+.jt-inv-band-line {
+    margin: 0 0 1px 0;
+    padding: 0;
+    line-height: 1.22;
+    font-size: 8.5pt;
+    border: none !important;
+    background: transparent !important;
+    white-space: nowrap;
+}
+
+.jt-inv-band-line:last-child {
+    margin-bottom: 0;
+}
+
+.jt-inv-band-lbl {
+    display: inline-block;
+    width: 148px;
     color: #ffffff !important;
     font-weight: normal;
     font-size: 8.5pt;
-    line-height: 1.3;
     text-align: left;
     vertical-align: top;
-    width: 138px;
-    min-width: 138px;
-    padding: 0 8px 2px 0;
-    white-space: nowrap;
 }
 
-.jt-inv-band-val-cell {
+.jt-inv-band-val {
+    display: inline-block;
     color: #ffffff !important;
     font-weight: bold;
     font-size: 8.5pt;
-    line-height: 1.3;
     text-align: left;
     vertical-align: top;
-    padding: 0 0 2px 0;
-    white-space: nowrap;
 }
 
-.jt-inv-band-val-cell .jt-inv-ncf-strong {
+.jt-inv-band-val.jt-inv-ncf-strong {
     font-weight: bold;
-    color: #ffffff !important;
 }
 
 /* 3 columnas meta — cliente / pago / vendedor */

@@ -39,58 +39,39 @@
                 <td width="50%" class="jt-hq-band-title jt-inv-band-title">
                     <span t-out="doc.get_jt_invoice_band_title()"/>
                 </td>
-                <td width="50%" align="right" valign="middle" class="jt-inv-band-meta-wrap">
-                    <table cellpadding="0" cellspacing="0" border="0" align="right" class="jt-inv-band-meta-outer">
-                        <tr>
-                            <td valign="top" class="jt-inv-band-meta-group">
-                                <table cellpadding="0" cellspacing="0" border="0" class="jt-inv-band-meta-pairs">
-                                    <tr>
-                                        <td class="jt-inv-band-lbl-cell">No. FACTURA:</td>
-                                        <td class="jt-inv-band-val-cell">
-                                            <span t-out="doc.get_jt_invoice_number_display()"/>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="jt-inv-band-lbl-cell">NCF:</td>
-                                        <td class="jt-inv-band-val-cell">
-                                            <t t-set="ncf_display" t-value="doc.get_jt_ncf_display()"/>
-                                            <span t-att-class="'jt-inv-ncf-strong' if ncf_display and ncf_display != '—' else ''"
-                                                  t-out="ncf_display"/>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="jt-inv-band-lbl-cell">TIPO DE COMPROBANTE:</td>
-                                        <td class="jt-inv-band-val-cell">
-                                            <span t-out="doc.get_jt_document_type_label()"/>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </td>
-                            <td class="jt-inv-band-meta-spacer">&#160;</td>
-                            <td valign="top" class="jt-inv-band-meta-group">
-                                <table cellpadding="0" cellspacing="0" border="0" class="jt-inv-band-meta-pairs">
-                                    <tr>
-                                        <td class="jt-inv-band-lbl-cell">MONEDA:</td>
-                                        <td class="jt-inv-band-val-cell">
-                                            <span t-out="doc.get_jt_currency_display()"/>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="jt-inv-band-lbl-cell">FECHA DE EMISIÓN:</td>
-                                        <td class="jt-inv-band-val-cell">
-                                            <span t-out="doc.get_jt_invoice_date_display()"/>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="jt-inv-band-lbl-cell">FECHA DE VENCIMIENTO:</td>
-                                        <td class="jt-inv-band-val-cell">
-                                            <span t-out="doc.get_jt_invoice_due_date_display()"/>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </td>
-                        </tr>
-                    </table>
+                <td width="50%" valign="middle" class="jt-inv-band-meta-wrap">
+                    <div class="jt-inv-band-meta-cols">
+                        <div class="jt-inv-band-meta-col">
+                            <div class="jt-inv-band-line">
+                                <span class="jt-inv-band-lbl">No. FACTURA:</span>
+                                <span class="jt-inv-band-val" t-out="doc.get_jt_invoice_number_display()"/>
+                            </div>
+                            <div class="jt-inv-band-line">
+                                <span class="jt-inv-band-lbl">NCF:</span>
+                                <t t-set="ncf_display" t-value="doc.get_jt_ncf_display()"/>
+                                <span t-att-class="'jt-inv-band-val jt-inv-ncf-strong' if ncf_display and ncf_display != '—' else 'jt-inv-band-val'"
+                                      t-out="ncf_display"/>
+                            </div>
+                            <div class="jt-inv-band-line">
+                                <span class="jt-inv-band-lbl">TIPO DE COMPROBANTE:</span>
+                                <span class="jt-inv-band-val" t-out="doc.get_jt_document_type_label()"/>
+                            </div>
+                        </div>
+                        <div class="jt-inv-band-meta-col jt-inv-band-meta-col-r">
+                            <div class="jt-inv-band-line">
+                                <span class="jt-inv-band-lbl">MONEDA:</span>
+                                <span class="jt-inv-band-val" t-out="doc.get_jt_currency_display()"/>
+                            </div>
+                            <div class="jt-inv-band-line">
+                                <span class="jt-inv-band-lbl">FECHA DE EMISIÓN:</span>
+                                <span class="jt-inv-band-val" t-out="doc.get_jt_invoice_date_display()"/>
+                            </div>
+                            <div class="jt-inv-band-line">
+                                <span class="jt-inv-band-lbl">FECHA DE VENCIMIENTO:</span>
+                                <span class="jt-inv-band-val" t-out="doc.get_jt_invoice_due_date_display()"/>
+                            </div>
+                        </div>
+                    </div>
                 </td>
             </tr>
         </table>

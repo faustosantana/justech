@@ -134,10 +134,7 @@
                                       t-options="{'widget': 'monetary', 'display_currency': doc.currency_id}"/>
                             </td>
                             <td t-if="has_discount" class="c-disc">
-                                <t t-if="line.discount">
-                                    <span t-out="'%g%%' % line.discount"/>
-                                </t>
-                                <t t-else="">0%</t>
+                                <span t-out="doc.format_jt_discount_percent(line.discount)"/>
                             </td>
                             <td class="c-sub">
                                 <span t-field="line.price_subtotal"

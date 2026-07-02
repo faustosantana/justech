@@ -18,6 +18,13 @@ class SaleOrder(models.Model):
             return "Contado"
         return f"Crédito a {max_days} días"
 
+    def format_jt_discount_percent(self, discount):
+        """Porcentaje de descuento para columna DESC. en cotización."""
+        value = discount or 0
+        if value == int(value):
+            return f"{int(value)}%"
+        return f"{value:g}%"
+
     def get_jt_quotation_has_discount(self):
         """True si alguna línea reportable tiene descuento > 0."""
         self.ensure_one()

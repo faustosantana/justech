@@ -7,19 +7,18 @@ from odoo.addons.purchase.controllers.portal import CustomerPortal
 
 
 class JustechPurchasePortal(CustomerPortal):
-    """Vista previa nativa OC Hellenia — iframe + descargar/imprimir como factura."""
+    """Vista previa nativa OC Hellenia — portal con iframe + descargar/imprimir."""
 
-    def _purchase_order_get_page_view_values(self, order, access_token, **kwargs):
-        values = super()._purchase_order_get_page_view_values(order, access_token, **kwargs)
-        jt_preview = kwargs.get("jt_preview") == "1"
-        values["jt_report_preview"] = jt_preview
-        if jt_preview:
-            values["jt_report_html_url"] = order.get_portal_url(suffix="/jt_report_html")
-            values["jt_report_pdf_url"] = order.get_portal_url(suffix="/jt_report_pdf")
-            values["jt_report_pdf_download_url"] = order.get_portal_url(
+    def _jt_po_preview_values(self, order, access_token=None):
+        return {
+            "order": order,
+            "page_name": "purchase",
+            "jt_report_html_url": order.get_portal_url(suffix="/jt_report_html"),
+            "jt_report_pdf_url": order.get_portal_url(suffix="/jt_report_pdf"),
+            "jt_report_pdf_download_url": order.get_portal_url(
                 suffix="/jt_report_pdf", download=True
-            )
-        return values
+            ),
+        }
 
     def _jt_po_official_report_html(self, order_sudo, download=False):
         report_ref = "purchase.action_report_purchase_order"
@@ -37,6 +36,25 @@ class JustechPurchasePortal(CustomerPortal):
             report_type="pdf",
             report_ref=report_ref,
             download=download,
+        )
+
+    @http.route(
+        ["/my/purchase/<int:order_id>/preview"],
+        type="http",
+        auth="public",
+        website=True,
+    )
+    def portal_purchase_order_justech_preview(self, order_id, access_token=None, **kw):
+        try:
+            order_sudo = self._document_check_access(
+                "purchase.order", order_id, access_token=access_token
+            )
+        except (AccessError, MissingError):
+            return request.redirect("/my")
+        values = self._jt_po_preview_values(order_sudo, access_token=access_token)
+        return request.render(
+            "justech_report_design.justech_purchase_order_portal_preview_page",
+            values,
         )
 
     @http.route(

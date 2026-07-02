@@ -3,7 +3,7 @@ import { registry } from "@web/core/registry";
 import { scrollTo } from "@web/core/utils/scrolling";
 
 export class PurchaseSidebar extends Sidebar {
-    static selector = ".o_portal_purchase_sidebar";
+    static selector = ".o_portal_purchase_sidebar, .o_portal_purchase_preview";
 
     dynamicContent = {
         _window: { "t-on-resize": this.updateIframeSize },

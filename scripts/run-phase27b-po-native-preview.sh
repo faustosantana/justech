@@ -56,7 +56,7 @@ fi
 rm -rf custom/justech_report_design
 tar xzf /tmp/phase27b_native_preview.tgz -C custom
 chmod -R a+rX custom/justech_report_design
-grep -q "jt_preview=1" custom/justech_report_design/models/purchase_order.py
+grep -q 'suffix="/preview"' custom/justech_report_design/models/purchase_order.py
 
 cd ${COMPOSE_DIR}
 docker compose --env-file ../../${ENV_FILE} stop odoo || true

@@ -56,7 +56,7 @@ if not po:
 
 report["purchase_order"] = {"id": po.id, "name": po.name, "state": po.state}
 
-check("module_version", mod.latest_version == "19.0.7.3.0", mod.latest_version)
+check("module_version", mod.latest_version == "19.0.7.3.1", mod.latest_version)
 
 # Botón en formulario
 form = PO.get_view(view_type="form")
@@ -68,7 +68,7 @@ act = po.action_preview_purchase_order()
 preview_url = act.get("url", "")
 check("preview_action_url", act.get("type") == "ir.actions.act_url", act.get("type"))
 check("preview_target_self", act.get("target") == "self", act.get("target"))
-check("preview_portal_mode", "jt_preview=1" in preview_url and "/my/purchase/" in preview_url, preview_url)
+check("preview_portal_mode", "/preview" in preview_url and "/my/purchase/" in preview_url, preview_url)
 check("preview_not_bare_html", "/report/html/" not in preview_url, preview_url)
 report["ui"]["preview_url"] = preview_url
 

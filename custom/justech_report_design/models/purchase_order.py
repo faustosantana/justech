@@ -157,9 +157,9 @@ class PurchaseOrder(models.Model):
         return {
             "type": "ir.actions.act_url",
             "target": "self",
-            "url": self.get_portal_url(query_string="&jt_preview=1"),
+            "url": self.get_portal_url(suffix="/preview"),
         }
 
     def get_jt_po_preview_portal_url(self):
         self.ensure_one()
-        return self.get_portal_url(query_string="&jt_preview=1")
+        return self.get_portal_url(suffix="/preview")

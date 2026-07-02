@@ -65,7 +65,14 @@ docker compose --env-file ../../${ENV_FILE} run --rm -T odoo odoo \
   -u justech_report_design --stop-after-init --no-http > /tmp/phase27b-upgrade.log 2>&1
 tail -10 /tmp/phase27b-upgrade.log
 docker compose --env-file ../../${ENV_FILE} up -d odoo
-sleep 18
+echo "Esperando Odoo healthy..."
+for i in $(seq 1 30); do
+  if docker compose --env-file ../../${ENV_FILE} ps odoo 2>/dev/null | grep -q "(healthy)"; then
+    break
+  fi
+  sleep 2
+done
+sleep 5
 
 docker compose --env-file ../../${ENV_FILE} exec -T odoo odoo shell \
   -d "\$ODOO_DB_NAME" --db_host=db --db_user="\$DB_USER" --db_password="\$DB_PASSWORD" --no-http \

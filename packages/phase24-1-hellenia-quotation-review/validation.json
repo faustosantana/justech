@@ -1,6 +1,6 @@
 {
   "phase": "24.1-report-design-integration",
-  "timestamp_utc": "2026-07-02T02:20:58.070798+00:00",
+  "timestamp_utc": "2026-07-02T02:39:58.152744+00:00",
   "database": "hellenia_test",
   "pass": true,
   "failed_checks": [
@@ -67,9 +67,29 @@
       "status": "PASS",
       "detail": ""
     },
+    "quote_1_no_totals_outer": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_1_no_totals_gap": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_1_totals_wrap": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_1_totals_width_280": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_1_no_sigs_table": {
+      "status": "PASS",
+      "detail": ""
+    },
     "quote_1_single_page": {
       "status": "PASS",
-      "detail": "pages=None size=72020"
+      "detail": "pages=None size=72062"
     },
     "quote_5_pdf": {
       "status": "PASS",
@@ -108,6 +128,26 @@
       "detail": ""
     },
     "quote_5_grand": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_no_totals_outer": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_no_totals_gap": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_totals_wrap": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_totals_width_280": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_no_sigs_table": {
       "status": "PASS",
       "detail": ""
     },
@@ -151,6 +191,26 @@
       "status": "PASS",
       "detail": ""
     },
+    "quote_20_no_totals_outer": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_20_no_totals_gap": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_20_totals_wrap": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_20_totals_width_280": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_20_no_sigs_table": {
+      "status": "PASS",
+      "detail": ""
+    },
     "portal_pdf": {
       "status": "FAIL",
       "detail": "status=200 size=6909"
@@ -166,25 +226,25 @@
       "file": "quotation_1_product.pdf",
       "line_count": 1,
       "pages": null,
-      "size_bytes": 72020
+      "size_bytes": 72062
     },
     "quote_5": {
       "order": "S00135",
       "file": "quotation_5_products.pdf",
       "line_count": 5,
       "pages": null,
-      "size_bytes": 74384
+      "size_bytes": 74454
     },
     "quote_20": {
       "order": "S00138",
       "file": "quotation_25_products.pdf",
       "line_count": 25,
       "pages": null,
-      "size_bytes": 78982
+      "size_bytes": 79008
     }
   },
   "screenshots": {},
-  "module_version": "19.0.1.0.3",
+  "module_version": "19.0.1.0.5",
   "portal": {
     "status": 200,
     "size": 6909,

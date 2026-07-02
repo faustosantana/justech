@@ -18,17 +18,28 @@ class SaleOrder(models.Model):
             return "Contado"
         return f"Crédito a {max_days} días"
 
-    def get_jt_quotation_signature_margin_px(self):
-        """Espacio amplio condiciones → firmas; más líneas = menos margen."""
+    def get_jt_quotation_has_discount(self):
+        """True si alguna línea reportable tiene descuento > 0."""
+        self.ensure_one()
+        lines = self._get_order_lines_to_report().filtered(
+            lambda l: not l.display_type and not l.is_downpayment
+        )
+        return any((l.discount or 0) > 0 for l in lines)
+
+    def get_jt_quotation_signature_spacer_px(self):
+        """Spacer flexible condiciones → firmas; empuja firmas hacia el footer."""
         self.ensure_one()
         lines = self._get_order_lines_to_report().filtered(
             lambda l: not l.display_type and not l.is_downpayment
         )
         count = len(lines)
-        if count <= 1:
-            return 320
-        if count <= 5:
-            return 150
-        if count <= 15:
-            return 70
-        return 35
+        lines_per_page = 22
+        if count > lines_per_page:
+            return 28
+        page_usable = 900
+        fixed = 420
+        line_h = 34
+        sig_h = 85
+        footer_gap = 55
+        used = fixed + count * line_h
+        return max(36, page_usable - used - sig_h - footer_gap)

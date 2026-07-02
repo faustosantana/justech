@@ -7,8 +7,8 @@ EVID="$ROOT/evidence/phase24-1-report-design"
 MOD="$ROOT/custom/justech_report_design"
 
 mkdir -p "$PKG"
-cp "$EVID"/quotation_{1,5}_product*.pdf "$EVID"/quotation_25_products.pdf "$PKG/"
-cp "$EVID"/quotation_{1,5}_product*.png "$EVID"/quotation_25_products.png "$PKG/"
+cp "$EVID"/quotation_{1,5}_product*.pdf "$EVID"/quotation_25_products.pdf "$EVID"/quotation_5_products_discount.pdf "$PKG/" 2>/dev/null || true
+cp "$EVID"/quotation_{1,5}_product*.png "$EVID"/quotation_25_products.png "$EVID"/quotation_5_products_discount.png "$PKG/" 2>/dev/null || true
 cp "$EVID"/validation.json "$PKG/"
 cp "$MOD/report/quotation/hellenia_quotation_template.xml" "$PKG/"
 cp "$MOD/static/src/scss/hellenia_quotation.scss" "$PKG/"

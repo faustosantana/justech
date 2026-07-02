@@ -6,7 +6,8 @@
         <t t-set="company" t-value="doc.company_id"/>
         <t t-set="lines_to_report" t-value="doc._get_order_lines_to_report()"/>
         <t t-set="product_count" t-value="len(lines_to_report.filtered(lambda l: not l.display_type and not l.is_downpayment))"/>
-        <t t-set="signature_margin_px" t-value="doc.get_jt_quotation_signature_margin_px()"/>
+        <t t-set="has_discount" t-value="doc.get_jt_quotation_has_discount()"/>
+        <t t-set="signature_spacer_px" t-value="doc.get_jt_quotation_signature_spacer_px()"/>
         <t t-set="jt_default_terms">(a) Las piezas ofrecidas son únicas y sujetas a disponibilidad.
 (b) Esta cotización tiene una validez de 5 días.
 (c) Se requiere confirmación del pago del 100% para reservar la pieza.
@@ -112,6 +113,7 @@
                     <th>DESCRIPCIÓN</th>
                     <th class="c-qty">CANT.</th>
                     <th class="c-price">P. UNIT.</th>
+                    <th t-if="has_discount" class="c-disc">DESC.</th>
                     <th class="c-sub">SUBTOTAL</th>
                 </tr>
             </thead>
@@ -130,6 +132,12 @@
                             <td class="c-price">
                                 <span t-field="line.price_unit"
                                       t-options="{'widget': 'monetary', 'display_currency': doc.currency_id}"/>
+                            </td>
+                            <td t-if="has_discount" class="c-disc">
+                                <t t-if="line.discount">
+                                    <span t-out="'%g%%' % line.discount"/>
+                                </t>
+                                <t t-else="">0%</t>
                             </td>
                             <td class="c-sub">
                                 <span t-field="line.price_subtotal"
@@ -167,28 +175,32 @@
             </table>
         </div>
 
-        <div class="jt-hq-cond">
-            <div class="jt-hq-cond-title">CONDICIONES</div>
-            <t t-if="doc.note">
-                <div class="jt-hq-cond-body" t-out="doc.note"/>
-            </t>
-            <t t-else="">
-                <div class="jt-hq-cond-body" t-out="jt_default_terms"/>
-            </t>
-        </div>
-
-        <div class="jt-hq-sigs" t-attf-style="margin-top: {{ signature_margin_px }}px;">
-            <div class="jt-hq-sig-col">
-                <div class="jt-hq-sig-head">ENTREGADO POR</div>
-                <hr class="jt-hq-sig-line"/>
-                <div class="jt-hq-sig-date-lbl">Fecha:</div>
-                <hr class="jt-hq-sig-line jt-hq-sig-line-date"/>
+        <div class="jt-hq-lower">
+            <div class="jt-hq-cond">
+                <div class="jt-hq-cond-title">CONDICIONES</div>
+                <t t-if="doc.note">
+                    <div class="jt-hq-cond-body" t-out="doc.note"/>
+                </t>
+                <t t-else="">
+                    <div class="jt-hq-cond-body" t-out="jt_default_terms"/>
+                </t>
             </div>
-            <div class="jt-hq-sig-col">
-                <div class="jt-hq-sig-head">RECIBIDO POR</div>
-                <hr class="jt-hq-sig-line"/>
-                <div class="jt-hq-sig-date-lbl">Fecha:</div>
-                <hr class="jt-hq-sig-line jt-hq-sig-line-date"/>
+
+            <div class="jt-hq-sig-push" t-attf-style="height: {{ signature_spacer_px }}px;"/>
+
+            <div class="jt-hq-sigs">
+                <div class="jt-hq-sig-col">
+                    <div class="jt-hq-sig-head">ENTREGADO POR</div>
+                    <hr class="jt-hq-sig-line"/>
+                    <div class="jt-hq-sig-date-lbl">Fecha:</div>
+                    <hr class="jt-hq-sig-line jt-hq-sig-line-date"/>
+                </div>
+                <div class="jt-hq-sig-col">
+                    <div class="jt-hq-sig-head">RECIBIDO POR</div>
+                    <hr class="jt-hq-sig-line"/>
+                    <div class="jt-hq-sig-date-lbl">Fecha:</div>
+                    <hr class="jt-hq-sig-line jt-hq-sig-line-date"/>
+                </div>
             </div>
         </div>
     </template>

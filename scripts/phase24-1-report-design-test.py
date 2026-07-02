@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import json
 import os
-import re
 import subprocess
 from datetime import datetime, timezone
 
@@ -16,9 +15,10 @@ OUT_DIR = "/tmp/phase24-1-report-design"
 os.makedirs(OUT_DIR, exist_ok=True)
 
 REPORT_NAME = "justech_report_design.report_hellenia_quotation_document"
+DISC_REF = "P24-1E-QUOTE-5P-DISC"
 
 report = {
-    "phase": "24.1-report-design-integration",
+    "phase": "24.1E-signatures-discount-regression",
     "timestamp_utc": datetime.now(timezone.utc).isoformat(),
     "database": DB,
     "pass": False,
@@ -58,54 +58,14 @@ def screenshot(pdf, base):
         return None
 
 
-# Instalar / actualizar módulo
-mod = env["ir.module.module"].search([("name", "=", "justech_report_design")], limit=1)
-if mod.state != "installed":
-    mod.button_immediate_install()
-else:
-    mod.button_immediate_upgrade()
-env.cr.commit()
-report["module_version"] = mod.latest_version
-
-# Limpiar cache QWeb
-env.registry.clear_cache()
-try:
-    env["ir.qweb"].clear_caches()
-except Exception:
-    pass
-
-action = env.ref("justech_report_design.action_report_hellenia_quotation")
-check("action_exists", bool(action))
-check("report_name", action.report_name == REPORT_NAME)
-check(
-    "paperformat",
-    action.paperformat_id.name == "Hellenia Quotation Paperformat",
-    action.paperformat_id.name if action.paperformat_id else "",
-)
-pf = action.paperformat_id
-if pf:
-    check("pf_margins", pf.margin_top == 5 and pf.margin_bottom == 8 and pf.margin_left == 8 and pf.margin_right == 8)
-    check("pf_dpi", pf.dpi == 90)
-
-Report = env["ir.actions.report"]
-cases = [("1P", "quote_1"), ("5P", "quote_5"), ("20P", "quote_20"), ("25P", "quote_25")]
-orders = {}
-for suffix, key in cases:
-    so = env["sale.order"].search([("client_order_ref", "=", f"P23-3-QUOTE-{suffix}")], limit=1)
-    if so:
-        orders[key] = so
-if "quote_20" not in orders and "quote_25" in orders:
-    orders["quote_20"] = orders.pop("quote_25")
-
-for key, so in orders.items():
+def render_case(key, so, fname, Report):
     pdf_bytes, _ = Report._render_qweb_pdf(REPORT_NAME, so.ids)
     html = Report._render_qweb_html(REPORT_NAME, so.ids)[0].decode("utf-8", errors="replace")
-    lc = len(so.order_line.filtered(lambda l: not l.display_type and not l.is_downpayment))
-    fname = f"quotation_{lc}_product{'s' if lc != 1 else ''}.pdf"
     path = os.path.join(OUT_DIR, fname)
     with open(path, "wb") as f:
         f.write(pdf_bytes)
 
+    lc = len(so.order_line.filtered(lambda l: not l.display_type and not l.is_downpayment))
     pages = pdf_pages(path)
     report["pdfs"][key] = {
         "order": so.name,
@@ -129,16 +89,100 @@ for key, so in orders.items():
     check(f"{key}_no_totals_gap", "jt-hq-totals-gap" not in html)
     check(f"{key}_totals_wrap", "jt-hq-totals-wrap" in html)
     check(f"{key}_totals_width_280", 'class="jt-hq-totals"' in html and 'width="280"' in html)
-    check(f"{key}_no_sigs_table", 'class="jt-hq-sigs"' in html and "<table" not in html.split("jt-hq-sigs")[1].split("jt-hq-footer")[0] if "jt-hq-sigs" in html else False)
-    if key == "quote_1":
-        page_ok = pages == 1 if pages else len(pdf_bytes) < 120000
-        check("quote_1_single_page", page_ok, f"pages={pages} size={len(pdf_bytes)}")
+    check(
+        f"{key}_no_sigs_table",
+        'class="jt-hq-sigs"' in html
+        and "<table" not in html.split("jt-hq-sigs")[1].split("jt-hq-footer")[0]
+        if "jt-hq-sigs" in html
+        else False,
+    )
+    check(f"{key}_sig_push", "jt-hq-sig-push" in html)
+    check(f"{key}_lower_zone", "jt-hq-lower" in html)
+
+    has_disc = so.get_jt_quotation_has_discount()
+    thead = html.split("<thead>")[1].split("</thead>")[0] if "<thead>" in html else ""
+    check(f"{key}_discount_col", ("c-disc" in thead) == has_disc, f"has_disc={has_disc}")
 
     shot = screenshot(path, os.path.join(OUT_DIR, f"screenshot_{key}"))
     if shot:
         report["screenshots"][key] = shot
 
-# Portal PDF (reporte paralelo — puede requerir login; informativo)
+    return html
+
+
+# Instalar / actualizar módulo
+mod = env["ir.module.module"].search([("name", "=", "justech_report_design")], limit=1)
+if mod.state != "installed":
+    mod.button_immediate_install()
+else:
+    mod.button_immediate_upgrade()
+env.cr.commit()
+report["module_version"] = mod.latest_version
+
+env.registry.clear_cache()
+try:
+    env["ir.qweb"].clear_caches()
+except Exception:
+    pass
+
+action = env.ref("justech_report_design.action_report_hellenia_quotation")
+check("action_exists", bool(action))
+check("report_name", action.report_name == REPORT_NAME)
+check(
+    "paperformat",
+    action.paperformat_id.name == "Hellenia Quotation Paperformat",
+    action.paperformat_id.name if action.paperformat_id else "",
+)
+pf = action.paperformat_id
+if pf:
+    check("pf_margins", pf.margin_top == 5 and pf.margin_bottom == 8 and pf.margin_left == 8 and pf.margin_right == 8)
+    check("pf_dpi", pf.dpi == 90)
+
+Report = env["ir.actions.report"]
+SaleOrder = env["sale.order"]
+
+cases = [
+    ("1P", "quote_1", "quotation_1_product.pdf"),
+    ("5P", "quote_5", "quotation_5_products.pdf"),
+    ("25P", "quote_25", "quotation_25_products.pdf"),
+]
+orders = {}
+for suffix, key, fname in cases:
+    so = SaleOrder.search([("client_order_ref", "=", f"P23-3-QUOTE-{suffix}")], limit=1)
+    if so:
+        orders[key] = so
+        render_case(key, so, fname, Report)
+
+if "quote_1" in orders:
+    pages = report["pdfs"]["quote_1"].get("pages")
+    size = report["pdfs"]["quote_1"].get("size_bytes", 0)
+    page_ok = pages == 1 if pages else size < 120000
+    check("quote_1_single_page", page_ok, f"pages={pages} size={size}")
+
+# Orden 5 productos con descuento (TEST)
+so_disc = SaleOrder.search([("client_order_ref", "=", DISC_REF)], limit=1)
+if not so_disc and orders.get("quote_5"):
+    so_disc = orders["quote_5"].copy({"client_order_ref": DISC_REF})
+if so_disc:
+    product_lines = so_disc.order_line.filtered(lambda l: not l.display_type and not l.is_downpayment)
+    if product_lines:
+        if all((l.discount or 0) <= 0 for l in product_lines):
+            product_lines[0].discount = 10.0
+        env.cr.commit()
+    render_case("quote_5_disc", so_disc, "quotation_5_products_discount.pdf", Report)
+    html_disc = Report._render_qweb_html(REPORT_NAME, so_disc.ids)[0].decode("utf-8", errors="replace")
+    check("quote_5_disc_has_percent", "10%" in html_disc or "10.0%" in html_disc)
+else:
+    check("quote_5_disc_order", False, "no base quote_5 to clone")
+
+# Sin descuento en órdenes estándar
+for key in ("quote_1", "quote_5", "quote_25"):
+    if key in orders:
+        html = Report._render_qweb_html(REPORT_NAME, orders[key].ids)[0].decode("utf-8", errors="replace")
+        thead = html.split("<thead>")[1].split("</thead>")[0] if "<thead>" in html else ""
+        check(f"{key}_no_discount_col", "c-disc" not in thead)
+
+# Portal PDF (informativo)
 so_portal = orders.get("quote_1")
 if so_portal:
     import urllib.request
@@ -156,7 +200,6 @@ if so_portal:
         report["portal"] = {"status": "error", "detail": str(e)[:200]}
         check("portal_pdf_info", False, str(e)[:200])
 
-# Verificar que sale.report_saleorder no fue reemplazado
 view = env["ir.ui.view"].search([("key", "=", "sale.report_saleorder_raw")], limit=1)
 children = env["ir.ui.view"].search([
     ("inherit_id", "=", view.id),
@@ -164,7 +207,11 @@ children = env["ir.ui.view"].search([
 ])
 check("no_replace_standard", len(children) == 0, f"inherits={children.mapped('key')}")
 
-report["pass"] = len([k for k in report["failed_checks"] if k not in ("portal_pdf", "portal_pdf_info")]) == 0 and "quote_1" in orders
+report["pass"] = (
+    len([k for k in report["failed_checks"] if k not in ("portal_pdf", "portal_pdf_info")]) == 0
+    and "quote_1" in orders
+    and "quote_5_disc" in report["pdfs"]
+)
 
 with open(os.path.join(OUT_DIR, "validation.json"), "w", encoding="utf-8") as f:
     json.dump(report, f, indent=2, ensure_ascii=False)

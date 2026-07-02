@@ -104,7 +104,7 @@ def render_case(key, so, fname, Report):
     thead = html.split("<thead>")[1].split("</thead>")[0] if "<thead>" in html else ""
     check(f"{key}_discount_col", ("c-disc" in thead) == has_disc, f"has_disc={has_disc}")
 
-    totals = html.split("jt-hq-totals")[1].split("</table>")[0] if "jt-hq-totals" in html else ""
+    totals = html.split('class="jt-hq-totals"')[1].split("</table>")[0] if 'class="jt-hq-totals"' in html else ""
     show_disc_totals = so.get_jt_quotation_show_discount_totals()
     check(
         f"{key}_discount_totals",
@@ -118,7 +118,7 @@ def render_case(key, so, fname, Report):
     check(f"{key}_terms_in_pdf", terms[:40] in html if terms else False, terms[:60])
     check(
         f"{key}_terms_from_note",
-        so.get_jt_quotation_terms_from_note() == bool((so.note or "").strip()),
+        so.get_jt_quotation_terms_from_note() == (not __import__("odoo.tools").tools.is_html_empty(so.note)),
     )
 
     push_px = so.get_jt_quotation_signature_push_px()

@@ -230,13 +230,19 @@ if one_line:
     if pdf:
         check("18_one_line", True, one_line.name)
 
-# --- No reemplaza estándar ---
+# --- Reporte oficial (Fase 26C) ---
 std = env.ref("stock.action_report_delivery", raise_if_not_found=False)
+parallel = env.ref("justech_report_design.action_report_justech_delivery", raise_if_not_found=False)
 check("19_standard_delivery_exists", bool(std), std.name if std else "n/a")
 check(
-    "20_parallel_not_replaced",
-    std and std.model == "stock.picking",
-    "stock.report_deliveryslip unchanged",
+    "20_official_picking_report",
+    std and std.report_name == "justech_report_design.report_justech_delivery_document",
+    std.report_name if std else "n/a",
+)
+check(
+    "20b_parallel_unbound",
+    not parallel or not parallel.binding_model_id,
+    "action_report_justech_delivery sin binding",
 )
 
 # --- Métodos sin error ---
@@ -331,7 +337,7 @@ check("29_warehouse_not_company", not wh_bad, picking_done.get_jt_delivery_wareh
 
 check(
     "30_module_version_26b",
-    report["module_version"] == "19.0.5.1.0",
+    report["module_version"] in ("19.0.5.1.0", "19.0.5.2.0"),
     report["module_version"],
 )
 

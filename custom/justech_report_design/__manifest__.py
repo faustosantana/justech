@@ -1,6 +1,6 @@
 {
     "name": "Justech Report Design",
-    "version": "19.0.5.1.0",
+    "version": "19.0.5.2.0",
     "category": "Reporting",
     "summary": "Cotización, factura y conduce Hellenia — diseño Justech QWeb+SCSS",
     "description": """
@@ -12,8 +12,8 @@ Cotización (Fase 24.2):
 Factura fiscal (Fase 26):
 - account.account_invoices → reporte Justech oficial
 
-Conduce de Entrega (Fase 26/26B):
-- action_report_justech_delivery → stock.picking (oficial Justech)
+Conduce de Entrega (Fase 26C):
+- stock.action_report_delivery → reporte Justech oficial (salidas)
 - Impresión desde sale.order y account.move
     """,
     "author": "Justech",

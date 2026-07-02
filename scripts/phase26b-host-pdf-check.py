@@ -23,6 +23,8 @@ def main() -> int:
         "01_from_picking.pdf",
         "02_from_sale_order.pdf",
         "03_from_invoice.pdf",
+        "04_from_sale_order.pdf",
+        "06_from_invoice.pdf",
     )
     parts = []
     for name in pdf_names:

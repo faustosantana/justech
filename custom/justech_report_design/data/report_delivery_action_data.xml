@@ -14,22 +14,20 @@
         <field name="dpi">96</field>
     </record>
 
-    <!-- Principal: stock.picking -->
+    <!-- Principal: stock.picking (binding retirado en Fase 26C — usa stock.action_report_delivery) -->
     <record id="action_report_justech_delivery" model="ir.actions.report">
-        <field name="name">Justech PDF — Conduce de Entrega</field>
+        <field name="name">Conduce de Entrega</field>
         <field name="model">stock.picking</field>
         <field name="report_type">qweb-pdf</field>
         <field name="report_name">justech_report_design.report_justech_delivery_document</field>
         <field name="report_file">justech_report_design.report_justech_delivery_document</field>
         <field name="print_report_name">'Conduce - %s' % (object.name)</field>
         <field name="paperformat_id" ref="justech_report_design.paperformat_hellenia_delivery"/>
-        <field name="binding_model_id" ref="stock.model_stock_picking"/>
-        <field name="binding_type">report</field>
     </record>
 
-    <!-- Paralelo: sale.order (no reemplaza estándar) -->
+    <!-- Desde cotización / orden de venta -->
     <record id="action_report_justech_delivery_sale" model="ir.actions.report">
-        <field name="name">Justech PDF — Conduce de Entrega</field>
+        <field name="name">Conduce de Entrega</field>
         <field name="model">sale.order</field>
         <field name="report_type">qweb-pdf</field>
         <field name="report_name">justech_report_design.report_justech_delivery_document_sale</field>
@@ -40,9 +38,9 @@
         <field name="binding_type">report</field>
     </record>
 
-    <!-- Paralelo: account.move factura cliente -->
+    <!-- Desde factura cliente -->
     <record id="action_report_justech_delivery_invoice" model="ir.actions.report">
-        <field name="name">Justech PDF — Conduce de Entrega</field>
+        <field name="name">Conduce de Entrega</field>
         <field name="model">account.move</field>
         <field name="report_type">qweb-pdf</field>
         <field name="report_name">justech_report_design.report_justech_delivery_document_invoice</field>

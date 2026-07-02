@@ -1,6 +1,6 @@
 {
     "name": "Justech Report Design",
-    "version": "19.0.4.0.0",
+    "version": "19.0.4.0.1",
     "category": "Reporting",
     "summary": "Cotización y factura fiscal Hellenia — diseño Justech QWeb+SCSS",
     "description": """
@@ -27,6 +27,7 @@ Factura fiscal (Fase 26):
         "views/sale_order_views.xml",
         "report/quotation/hellenia_quotation_template.xml",
         "report/invoice/justech_invoice_template.xml",
+        "report/invoice/justech_invoice_preview.xml",
         "data/report_action_data.xml",
         "data/report_invoice_action_data.xml",
         "data/report_official_data.xml",

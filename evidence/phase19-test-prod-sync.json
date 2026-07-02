@@ -1,0 +1,110 @@
+{
+  "phase": "19-test-prod-sync",
+  "timestamp_utc": "2026-07-01T11:01:34+00:00",
+  "result": "PASS",
+  "pass": true,
+  "ok": true,
+  "promotion": {
+    "commit": "acf21caf43fd32a088e012b2008db6d53bb7a759",
+    "commit_short": "acf21ca",
+    "branch": "cursor/phase19-test-prod-sync-dd85",
+    "base_certified_commit": "bbaf1130cb1fdbe9d81b8e750cda122242f6c502",
+    "base_certified_branch": "cursor/phase18-13-native-payment-rebuild-dd85",
+    "commit_before": "bbaf1130cb1fdbe9d81b8e750cda122242f6c502",
+    "backup": "/opt/odoo-projects/hellenia/backups/hellenia-prod/2026-07-01_1059",
+    "pre_manifest": "/opt/odoo-projects/hellenia/backups/hellenia-prod/pre-promotion-2026-07-01_1059.json",
+    "rollback_command": "bash /opt/odoo-projects/hellenia/scripts/restore-hellenia-prod.sh /opt/odoo-projects/hellenia/backups/hellenia-prod/2026-07-01_1059",
+    "modules_upgraded": [
+      "hellenia_account",
+      "hellenia_ui",
+      "hellenia_reports",
+      "justech_l10n_do_base",
+      "justech_l10n_do_ncf",
+      "justech_l10n_do_reports"
+    ],
+    "test_evidence": "evidence/phase18-13-final-payment-retention-test.json",
+    "test_evidence_result": "89/89 PASS",
+    "smoke_http": "200",
+    "healthcheck": "PASS",
+    "healthcheck_report": "/opt/odoo-projects/hellenia/evidence/healthcheck-prod-2026-07-01_1101.json"
+  },
+  "pre_promotion_prod": {
+    "modules": {
+      "hellenia_account": {"state": "installed", "version": "19.0.1.0.18"},
+      "hellenia_ui": {"state": "installed", "version": "19.0.1.0.4"},
+      "hellenia_reports": {"state": "installed", "version": "19.0.1.0.1"},
+      "justech_l10n_do_base": {"state": "installed", "version": "19.0.1.3.0"},
+      "justech_l10n_do_ncf": {"state": "installed", "version": "19.0.1.4.0"},
+      "justech_l10n_do_reports": {"state": "installed", "version": "19.0.1.2.0"}
+    }
+  },
+  "post_promotion_prod": {
+    "modules": {
+      "hellenia_account": {"state": "installed", "version": "19.0.1.0.19"},
+      "hellenia_ui": {"state": "installed", "version": "19.0.1.0.4"},
+      "hellenia_reports": {"state": "installed", "version": "19.0.1.0.1"},
+      "justech_l10n_do_base": {"state": "installed", "version": "19.0.1.3.0"},
+      "justech_l10n_do_ncf": {"state": "installed", "version": "19.0.1.4.0"},
+      "justech_l10n_do_reports": {"state": "installed", "version": "19.0.1.12.1"}
+    }
+  },
+  "test_target": {
+    "modules": {
+      "hellenia_account": {"state": "installed", "version": "19.0.1.0.19"},
+      "hellenia_ui": {"state": "installed", "version": "19.0.1.0.4"},
+      "hellenia_reports": {"state": "installed", "version": "19.0.1.0.1"},
+      "justech_l10n_do_base": {"state": "installed", "version": "19.0.1.3.0"},
+      "justech_l10n_do_ncf": {"state": "installed", "version": "19.0.1.4.0"},
+      "justech_l10n_do_reports": {"state": "installed", "version": "19.0.1.12.1"}
+    }
+  },
+  "differences_corrected": [
+    {"type": "module", "module": "hellenia_account", "before": "19.0.1.0.18", "after": "19.0.1.0.19", "fix": "payment_setup.xml install-safe + post_init_hook"},
+    {"type": "module", "module": "justech_l10n_do_reports", "before": "19.0.1.2.0", "after": "19.0.1.12.1", "fix": "_compute_validation_state implementado"},
+    {"type": "field", "field": "account.payment.hellenia_applied_amount", "note": "persistencia parcial sin retenciones"},
+    {"type": "field", "field": "account.payment.hellenia_withholding_total", "note": "store=True"},
+    {"type": "field", "field": "account.payment.hellenia_net_transfer", "note": "store=True"},
+    {"type": "model", "model": "hellenia.payment.withholding.line", "note": "líneas persistentes retención"},
+    {"type": "model", "model": "hellenia.payment.application.line", "note": "detalle por factura"},
+    {"type": "menu", "menu": "623", "note": "menu_justech_do_report_623 activo"},
+    {"type": "menu", "menu": "606/607/608", "note": "menús DGII verificados"}
+  ],
+  "errors_found": [
+    {
+      "stage": "first_attempt",
+      "error": "hellenia_account install: ParseError payment_setup.xml function model no disponible en install",
+      "resolution": "payment_setup.xml vacío; configuración vía post_init_hook"
+    },
+    {
+      "stage": "first_attempt",
+      "error": "justech_l10n_do_reports upgrade: AttributeError _compute_validation_state",
+      "resolution": "método compute implementado en fiscal_report.py"
+    },
+    {
+      "stage": "healthcheck",
+      "error": "report_dgii período 202607 con date_to=hoy (día 1)",
+      "resolution": "healthcheck-odoo.py usa fin de mes; no afecta funcionalidad PROD"
+    }
+  ],
+  "validation": {
+    "prod_post_sync": {"passed": 23, "failed": 0, "total": 23, "pass": true},
+    "healthcheck_full": {"result": "PASS", "report": "healthcheck-prod-2026-07-01_1101.json"},
+    "checks": {
+      "login": "PASS",
+      "accounting": "PASS",
+      "payments": "PASS",
+      "partial_payment": "PASS",
+      "retentions": "PASS",
+      "report_606": "PASS",
+      "report_607": "PASS",
+      "report_608": "PASS",
+      "report_623": "PASS",
+      "invoice_ncf": "PASS",
+      "pdf": "PASS",
+      "menus": "PASS",
+      "logs_clean": "PASS"
+    }
+  },
+  "rollback_available": true,
+  "summary": "PROD sincronizado con TEST. Commit acf21ca (bbaf113 + fixes install/upgrade). Backup 2026-07-01_1059 disponible."
+}

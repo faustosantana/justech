@@ -1,0 +1,34 @@
+2026-07-02 05:00:49,159 1 WARNING ? odoo.tools.config: option logfile reads 'False' in the config file at /etc/odoo/odoo.conf but isn't a boolean option, skip 
+2026-07-02 05:00:49,159 1 WARNING ? odoo.tools.config: option logfile reads 'False' in the config file at /etc/odoo/odoo.conf but isn't a boolean option, skip 
+2026-07-02 05:00:49,159 1 INFO ? odoo: Odoo version 19.0-20260619 
+2026-07-02 05:00:49,160 1 INFO ? odoo: Using configuration file at /etc/odoo/odoo.conf 
+2026-07-02 05:00:49,160 1 INFO ? odoo: addons paths: _NamespacePath(['/usr/lib/python3/dist-packages/odoo/addons', '/var/lib/odoo/addons/19.0', '/mnt/enterprise/addons', '/mnt/custom', '/usr/lib/python3/dist-packages/addons']) 
+2026-07-02 05:00:49,160 1 INFO ? odoo: database: odoo@db:5432 
+2026-07-02 05:00:49,425 1 INFO hellenia_prod odoo.modules.loading: loading 1 modules... 
+2026-07-02 05:00:49,428 1 INFO hellenia_prod odoo.modules.loading: 1 modules loaded in 0.00s, 0 queries (+0 extra) 
+2026-07-02 05:00:49,449 1 INFO hellenia_prod odoo.modules.loading: updating modules list 
+2026-07-02 05:00:49,453 1 INFO hellenia_prod odoo.addons.base.models.ir_module: ALLOW access to module.update_list on [] to user __system__ #1 via n/a 
+2026-07-02 05:00:51,351 1 INFO hellenia_prod odoo.addons.base.models.ir_module: ALLOW access to module.button_upgrade on ['Justech Report Design'] to user __system__ #1 via n/a 
+2026-07-02 05:00:51,351 1 INFO hellenia_prod odoo.addons.base.models.ir_module: ALLOW access to module.update_list on ['Justech Report Design'] to user __system__ #1 via n/a 
+2026-07-02 05:00:52,938 1 INFO hellenia_prod odoo.addons.base.models.ir_module: ALLOW access to module.button_install on [] to user __system__ #1 via n/a 
+2026-07-02 05:00:52,977 1 INFO hellenia_prod odoo.modules.loading: loading 139 modules... 
+2026-07-02 05:00:53,812 1 WARNING hellenia_prod odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define models.Constraint on the model. 
+2026-07-02 05:00:53,895 1 WARNING hellenia_prod odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define models.Constraint on the model. 
+2026-07-02 05:00:53,945 1 WARNING hellenia_prod odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define models.Constraint on the model. 
+2026-07-02 05:00:53,979 1 INFO hellenia_prod odoo.modules.loading: Loading module justech_report_design (139/139) 
+2026-07-02 05:00:54,079 1 WARNING hellenia_prod odoo.fields: justech.do.fiscal.report.state: selection=[('draft', 'Borrador'), ('validated', 'Validado'), ('pending_approval', 'Requiere aprobación'), ('approved', 'Aprobado'), ('rejected', 'Rechazado'), ('generated', 'Generado'), ('done', 'Generado')] overrides existing selection; use selection_add instead 
+2026-07-02 05:00:54,174 1 INFO hellenia_prod odoo.registry: module justech_report_design: creating or updating database tables 
+2026-07-02 05:00:54,307 1 INFO hellenia_prod odoo.modules.loading: loading justech_report_design/data/paperformat_data.xml 
+2026-07-02 05:00:54,311 1 INFO hellenia_prod odoo.modules.loading: loading justech_report_design/views/sale_order_views.xml 
+2026-07-02 05:00:54,377 1 INFO hellenia_prod odoo.modules.loading: loading justech_report_design/report/quotation/hellenia_quotation_template.xml 
+2026-07-02 05:00:54,394 1 INFO hellenia_prod odoo.modules.loading: loading justech_report_design/data/report_action_data.xml 
+2026-07-02 05:00:54,397 1 INFO hellenia_prod odoo.modules.loading: loading justech_report_design/data/report_official_data.xml 
+2026-07-02 05:00:54,405 1 INFO hellenia_prod odoo.addons.base.models.ir_module: module justech_report_design: no translation for language es_DO 
+2026-07-02 05:00:54,406 1 INFO hellenia_prod odoo.addons.base.models.ir_module: module justech_report_design: no translation for language es_419 
+2026-07-02 05:00:54,414 1 INFO hellenia_prod odoo.modules.loading: Module justech_report_design loaded in 0.43s, 141 queries (+141 other) 
+2026-07-02 05:00:54,414 1 INFO hellenia_prod odoo.modules.loading: 139 modules loaded in 1.44s, 141 queries (+141 extra) 
+2026-07-02 05:00:54,482 1 WARNING hellenia_prod odoo.fields: justech.do.fiscal.report.state: selection=[('draft', 'Borrador'), ('validated', 'Validado'), ('pending_approval', 'Requiere aprobación'), ('approved', 'Aprobado'), ('rejected', 'Rechazado'), ('generated', 'Generado'), ('done', 'Generado')] overrides existing selection; use selection_add instead 
+2026-07-02 05:00:55,743 1 INFO hellenia_prod odoo.modules.loading: Modules loaded. 
+2026-07-02 05:00:55,758 1 INFO hellenia_prod odoo.registry: Registry changed, signaling through the database 
+2026-07-02 05:00:55,760 1 INFO hellenia_prod odoo.registry: Registry loaded in 6.374s 
+2026-07-02 05:00:55,760 1 INFO hellenia_prod odoo.service.server: Stopping workers gracefully 

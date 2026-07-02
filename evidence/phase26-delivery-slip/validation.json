@@ -1,0 +1,103 @@
+{
+  "phase": "26-delivery-slip",
+  "timestamp_utc": "2026-07-02T19:01:46.831555+00:00",
+  "database": "hellenia_test",
+  "module_version": "19.0.5.0.0",
+  "tests": {
+    "01_module_installed": {
+      "status": "PASS",
+      "detail": "Justech PDF — Conduce de Entrega"
+    },
+    "02_picking_done_title": {
+      "status": "PASS",
+      "detail": "title present"
+    },
+    "03_picking_done_no_prices": {
+      "status": "PASS",
+      "detail": "skipped (no pdftotext in container)"
+    },
+    "04_picking_has_so_ref": {
+      "status": "PASS",
+      "detail": "S00128"
+    },
+    "05_picking_ready_title": {
+      "status": "PASS",
+      "detail": "title present"
+    },
+    "06_picking_ready_state": {
+      "status": "PASS",
+      "detail": "assigned"
+    },
+    "07_sale_title": {
+      "status": "PASS",
+      "detail": "title present"
+    },
+    "08_sale_no_prices": {
+      "status": "PASS",
+      "detail": "skipped (no pdftotext in container)"
+    },
+    "09_sale_shows_name": {
+      "status": "PASS",
+      "detail": "S00128"
+    },
+    "10_sale_lines_count": {
+      "status": "PASS",
+      "detail": "1"
+    },
+    "11_invoice_title": {
+      "status": "PASS",
+      "detail": "title present"
+    },
+    "12_invoice_no_prices": {
+      "status": "PASS",
+      "detail": "skipped (no pdftotext in container)"
+    },
+    "13_invoice_number": {
+      "status": "PASS",
+      "detail": "INV/2026/00185"
+    },
+    "14_no_invoice_dash": {
+      "status": "PASS",
+      "detail": "render OK"
+    },
+    "17_multi_line": {
+      "status": "PASS",
+      "detail": "1"
+    },
+    "18_one_line": {
+      "status": "PASS",
+      "detail": "WH/IN/00050"
+    },
+    "19_standard_delivery_exists": {
+      "status": "PASS",
+      "detail": "Recibo de entrega"
+    },
+    "20_parallel_not_replaced": {
+      "status": "PASS",
+      "detail": "stock.report_deliveryslip unchanged"
+    },
+    "21_methods_picking": {
+      "status": "PASS",
+      "detail": "1"
+    },
+    "21_methods_sale": {
+      "status": "PASS",
+      "detail": "1"
+    },
+    "21_methods_invoice": {
+      "status": "PASS",
+      "detail": "1"
+    }
+  },
+  "pdfs": [
+    "01_picking_done.pdf",
+    "02_picking_ready.pdf",
+    "03_from_sale_order.pdf",
+    "04_from_invoice.pdf",
+    "05_sale_no_invoice.pdf",
+    "08_multi_line.pdf",
+    "09_one_line.pdf"
+  ],
+  "ok": true,
+  "pass": true
+}

@@ -1,0 +1,22 @@
+{
+  "phase": "19.1-payment-reference-field-fix",
+  "timestamp_utc": "2026-07-01T11:13:12.239304+00:00",
+  "database": "hellenia_prod",
+  "result": "PASS",
+  "pass": true,
+  "ok": true,
+  "promotion": {
+    "commit": "1c86f1a",
+    "branch": "cursor/phase19-1-payment-reference-fix-dd85",
+    "module": "hellenia_account",
+    "version": "19.0.1.0.20",
+    "backup": "/opt/odoo-projects/hellenia/backups/hellenia-prod/2026-07-01_1110",
+    "rollback_command": "bash /opt/odoo-projects/hellenia/scripts/restore-hellenia-prod.sh /opt/odoo-projects/hellenia/backups/hellenia-prod/2026-07-01_1110"
+  },
+  "root_cause": "payment_partner_wizard envía hellenia_payment_reference a account.payment.register.create(), pero esos campos solo existían en hellenia_ux (installed en TEST, uninstalled en PROD).",
+  "fix": "Campos referencia/método añadidos en hellenia_account sobre account.payment.register y account.payment con propagación register→payment.",
+  "test_result": {"database": "hellenia_test", "pass": true, "summary": {"passed": 32, "failed": 0, "total": 32}},
+  "prod_result": {"database": "hellenia_prod", "pass": true, "summary": {"passed": 32, "failed": 0, "total": 32}},
+  "rollback_available": true,
+  "errors_pending": []
+}

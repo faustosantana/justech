@@ -1,0 +1,71 @@
+{
+  "phase": 6,
+  "mvp": true,
+  "timestamp_utc": "2026-06-30T18:00:13.735411+00:00",
+  "company": "Hellenia, S.R.L.",
+  "modules": {
+    "justech_l10n_do_base": "installed",
+    "justech_l10n_do_ncf": "installed",
+    "justech_l10n_do_reports": "installed"
+  },
+  "tests": {
+    "invoice_b02": {
+      "status": "PASS",
+      "detail": "B0200020143"
+    },
+    "invoice_b01": {
+      "status": "PASS",
+      "detail": "B0100020031"
+    },
+    "credit_note_b04": {
+      "status": "PASS",
+      "detail": "B0400020033"
+    },
+    "duplicate_ncf": {
+      "status": "PASS",
+      "detail": "blocked"
+    },
+    "report_608": {
+      "status": "PASS",
+      "detail": "1 void line(s), ncf=B0200020144"
+    },
+    "purchase_b11": {
+      "status": "PASS",
+      "detail": "B1100020131"
+    },
+    "purchase_b13": {
+      "status": "PASS",
+      "detail": "B1300020001"
+    },
+    "report_607": {
+      "status": "PASS",
+      "detail": "191"
+    },
+    "report_606": {
+      "status": "PASS",
+      "detail": "137"
+    },
+    "balanced_entry": {
+      "status": "PASS",
+      "detail": "debit=118.0 credit=118.0"
+    },
+    "receivable_line": {
+      "status": "PASS",
+      "detail": "118.0"
+    },
+    "pdf_ncf": {
+      "status": "PASS",
+      "detail": "88781 bytes"
+    },
+    "depleted_range": {
+      "status": "PASS",
+      "detail": "blocked"
+    },
+    "expired_range": {
+      "status": "PASS",
+      "detail": "blocked"
+    }
+  },
+  "ok": true,
+  "errors": []
+}

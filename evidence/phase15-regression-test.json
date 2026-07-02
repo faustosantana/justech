@@ -1,0 +1,15 @@
+{
+  "phase": "15",
+  "regression": {
+    "phase6": {
+      "ok": true
+    },
+    "uat": {
+      "ok": true
+    },
+    "validate": {
+      "ok": true
+    }
+  },
+  "ok": true
+}

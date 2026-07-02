@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_justech_do_ncf_range_user,justech.do.ncf.range user,model_justech_do_ncf_range,justech_l10n_do_base.group_justech_do_fiscal_user,1,0,0,0
+access_justech_do_ncf_range_manager,justech.do.ncf.range manager,model_justech_do_ncf_range,justech_l10n_do_base.group_justech_do_fiscal_manager,1,1,1,1
+access_justech_do_ncf_consumption_user,justech.do.ncf.consumption user,model_justech_do_ncf_consumption,justech_l10n_do_base.group_justech_do_fiscal_user,1,0,0,0
+access_justech_do_ncf_consumption_manager,justech.do.ncf.consumption manager,model_justech_do_ncf_consumption,justech_l10n_do_base.group_justech_do_fiscal_manager,1,1,1,0

@@ -1,0 +1,223 @@
+{
+  "phase": "23.5-independent-quote-report",
+  "timestamp_utc": "2026-07-01T21:32:57.599474+00:00",
+  "database": "hellenia_test",
+  "pass": true,
+  "failed_checks": [],
+  "checks": {
+    "action_exists": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "report_name": {
+      "status": "PASS",
+      "detail": "hellenia_reports.report_hellenia_quotation"
+    },
+    "paperformat": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_1_pdf": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_1_redirect_pdf": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_1_uses_independent": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_1_no_external_layout": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_1_no_sale_document": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_1_redirect_independent": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_1_band_white": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_1_no_icons": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_1_no_vendor_email": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_1_no_immediate": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_1_no_excel": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_1_grand_total": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_1_single_page": {
+      "status": "PASS",
+      "detail": "pages=1"
+    },
+    "quote_1_lines": {
+      "status": "PASS",
+      "detail": "lines=1"
+    },
+    "quote_5_pdf": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_redirect_pdf": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_uses_independent": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_no_external_layout": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_no_sale_document": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_redirect_independent": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_band_white": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_no_icons": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_no_vendor_email": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_no_immediate": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_no_excel": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_grand_total": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_5_single_page": {
+      "status": "PASS",
+      "detail": "pages=1"
+    },
+    "quote_20_pdf": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_20_redirect_pdf": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_20_uses_independent": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_20_no_external_layout": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_20_no_sale_document": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_20_redirect_independent": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_20_band_white": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_20_no_icons": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_20_no_vendor_email": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_20_no_immediate": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_20_no_excel": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_20_grand_total": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "quote_20_pages_ok": {
+      "status": "PASS",
+      "detail": "pages=1"
+    },
+    "portal_order_200": {
+      "status": "PASS",
+      "detail": "200"
+    },
+    "portal_pdf_200": {
+      "status": "PASS",
+      "detail": "200"
+    }
+  },
+  "pdfs": {
+    "quote_1": {
+      "order": "S00134",
+      "file": "quotation_1_product.pdf",
+      "pages": 1,
+      "line_count": 1,
+      "size_bytes": 54969
+    },
+    "quote_5": {
+      "order": "S00135",
+      "file": "quotation_5_products.pdf",
+      "pages": 1,
+      "line_count": 5,
+      "size_bytes": 56748
+    },
+    "quote_20": {
+      "order": "S00138",
+      "file": "quotation_25_products.pdf",
+      "pages": 1,
+      "line_count": 25,
+      "size_bytes": 59381
+    }
+  },
+  "screenshots": {
+    "quote_1": "screenshot_quotation_1_product.png",
+    "quote_5": "screenshot_quotation_5_products.png",
+    "quote_20": "screenshot_quotation_25_products.png"
+  },
+  "portal": {
+    "order_page_status": 200,
+    "pdf_status": 200,
+    "pdf_size": 6804
+  },
+  "module_version": "19.0.1.6.0"
+}

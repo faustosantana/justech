@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="paperformat_hellenia_delivery" model="report.paperformat">
+        <field name="name">Justech Conduce de Entrega</field>
+        <field name="default" eval="False"/>
+        <field name="format">Letter</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">8</field>
+        <field name="margin_bottom">12</field>
+        <field name="margin_left">8</field>
+        <field name="margin_right">8</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">0</field>
+        <field name="dpi">96</field>
+    </record>
+
+    <!-- Principal: stock.picking -->
+    <record id="action_report_justech_delivery" model="ir.actions.report">
+        <field name="name">Justech PDF — Conduce de Entrega</field>
+        <field name="model">stock.picking</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">justech_report_design.report_justech_delivery_document</field>
+        <field name="report_file">justech_report_design.report_justech_delivery_document</field>
+        <field name="print_report_name">'Conduce - %s' % (object.name)</field>
+        <field name="paperformat_id" ref="justech_report_design.paperformat_hellenia_delivery"/>
+        <field name="binding_model_id" ref="stock.model_stock_picking"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <!-- Paralelo: sale.order (no reemplaza estándar) -->
+    <record id="action_report_justech_delivery_sale" model="ir.actions.report">
+        <field name="name">Justech PDF — Conduce de Entrega</field>
+        <field name="model">sale.order</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">justech_report_design.report_justech_delivery_document_sale</field>
+        <field name="report_file">justech_report_design.report_justech_delivery_document_sale</field>
+        <field name="print_report_name">'Conduce - %s' % (object.name)</field>
+        <field name="paperformat_id" ref="justech_report_design.paperformat_hellenia_delivery"/>
+        <field name="binding_model_id" ref="sale.model_sale_order"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <!-- Paralelo: account.move factura cliente -->
+    <record id="action_report_justech_delivery_invoice" model="ir.actions.report">
+        <field name="name">Justech PDF — Conduce de Entrega</field>
+        <field name="model">account.move</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">justech_report_design.report_justech_delivery_document_invoice</field>
+        <field name="report_file">justech_report_design.report_justech_delivery_document_invoice</field>
+        <field name="print_report_name">'Conduce - %s' % (object.name)</field>
+        <field name="paperformat_id" ref="justech_report_design.paperformat_hellenia_delivery"/>
+        <field name="domain">[('move_type', 'in', ('out_invoice', 'out_refund'))]</field>
+        <field name="binding_model_id" ref="account.model_account_move"/>
+        <field name="binding_type">report</field>
+    </record>
+</odoo>

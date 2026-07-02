@@ -60,7 +60,7 @@ docker run --rm -v odoo-pecv_odoo-addons:/data:ro -v "${DEST}":/backup alpine \
 
 cp /docker/odoo-pecv/docker-compose.yml "${DEST}/"
 [[ -f "${PROD_ENV}" ]] && cp "${PROD_ENV}" "${DEST}/.env"
-cp "$PROJECT_ROOT/config/production/README.md" "${DEST}/PRODUCTION-REFERENCE.md"
+[[ -f "$PROJECT_ROOT/config/production/README.md" ]] && cp "$PROJECT_ROOT/config/production/README.md" "${DEST}/PRODUCTION-REFERENCE.md" || true
 
 mark_backup_tier "${DEST}"
 apply_retention "${BACKUP_ROOT}" 7 4 6

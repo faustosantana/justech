@@ -1,0 +1,32 @@
+{
+  "schema_version": "1.0",
+  "fase": "21.3",
+  "fecha_mapeo_utc": "2026-06-30T00:00:00Z",
+  "codigo": "609",
+  "nombre_oficial": "Formato de Envío de Pagos por Servicios al Exterior",
+  "normativa": "NG-07-2018-05-2019",
+  "hoja_principal": "Herramienta Formato 609",
+  "fila_encabezado": 11,
+  "fila_inicio_datos": 12,
+  "formato_fecha": "YYYYMMDD",
+  "formato_periodo": "YYYYMM",
+  "columnas": [
+    {"orden": 1, "columna_excel": "A", "nombre_dgii": "Líneas", "tipo_dato": "integer"},
+    {"orden": 2, "columna_excel": "B", "nombre_dgii": "Razón Social", "tipo_dato": "text"},
+    {"orden": 3, "columna_excel": "C", "nombre_dgii": "Tipo Servicio", "tipo_dato": "catalog", "campo_faltante": "justech_do_foreign_service_type"},
+    {"orden": 4, "columna_excel": "D", "nombre_dgii": "País Destino", "tipo_dato": "catalog"},
+    {"orden": 5, "columna_excel": "E", "nombre_dgii": "Número Documento", "tipo_dato": "text", "campo_faltante": "justech_do_foreign_document_ref"},
+    {"orden": 6, "columna_excel": "F", "nombre_dgii": "Fecha Documento", "tipo_dato": "date"},
+    {"orden": 7, "columna_excel": "G", "nombre_dgii": "Monto Facturado", "tipo_dato": "decimal"},
+    {"orden": 8, "columna_excel": "H", "nombre_dgii": "Moneda", "tipo_dato": "text"},
+    {"orden": 9, "columna_excel": "I", "nombre_dgii": "Tasa de Cambio", "tipo_dato": "decimal", "campo_faltante": "justech_do_foreign_exchange_rate"},
+    {"orden": 10, "columna_excel": "J", "nombre_dgii": "Fecha Retención ISR", "tipo_dato": "date", "campo_faltante": "justech_do_foreign_payment_date"},
+    {"orden": 11, "columna_excel": "K", "nombre_dgii": "Renta Presunta", "tipo_dato": "decimal", "campo_faltante": "justech_do_foreign_presumed_income"},
+    {"orden": 12, "columna_excel": "L", "nombre_dgii": "ISR Retenido", "tipo_dato": "decimal", "campo_faltante": "justech_do_foreign_isr_retained"}
+  ],
+  "validaciones": [
+    "Pagos a proveedores en el exterior del período reportado.",
+    "Tipo de servicio y país destino obligatorios.",
+    "Fechas en formato AAAAMMDD sin separadores."
+  ]
+}

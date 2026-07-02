@@ -98,6 +98,7 @@ def render_case(key, so, fname, Report):
     )
     check(f"{key}_sig_push", "jt-hq-sig-push" in html)
     check(f"{key}_lower_zone", "jt-hq-lower" in html)
+    check(f"{key}_anchor_sigs", ("jt-hq-lower-anchor" in html) == so.get_jt_quotation_anchor_signatures())
 
     has_disc = so.get_jt_quotation_has_discount()
     thead = html.split("<thead>")[1].split("</thead>")[0] if "<thead>" in html else ""

@@ -8,6 +8,8 @@
         <t t-set="product_count" t-value="len(lines_to_report.filtered(lambda l: not l.display_type and not l.is_downpayment))"/>
         <t t-set="has_discount" t-value="doc.get_jt_quotation_has_discount()"/>
         <t t-set="signature_spacer_px" t-value="doc.get_jt_quotation_signature_spacer_px()"/>
+        <t t-set="lower_min_height_px" t-value="doc.get_jt_quotation_lower_min_height_px()"/>
+        <t t-set="anchor_signatures" t-value="doc.get_jt_quotation_anchor_signatures()"/>
         <t t-set="jt_default_terms">(a) Las piezas ofrecidas son únicas y sujetas a disponibilidad.
 (b) Esta cotización tiene una validez de 5 días.
 (c) Se requiere confirmación del pago del 100% para reservar la pieza.
@@ -172,7 +174,8 @@
             </table>
         </div>
 
-        <div class="jt-hq-lower">
+        <div t-attf-class="jt-hq-lower {{ 'jt-hq-lower-anchor' if anchor_signatures else '' }}"
+             t-attf-style="{{ 'min-height: %spx;' % lower_min_height_px if anchor_signatures else '' }}">
             <div class="jt-hq-cond">
                 <div class="jt-hq-cond-title">CONDICIONES</div>
                 <t t-if="doc.note">

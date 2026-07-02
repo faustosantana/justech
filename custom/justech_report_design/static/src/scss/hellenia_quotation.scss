@@ -391,6 +391,23 @@ div.article.page.jt-hq-page,
     clear: both;
 }
 
+.jt-hq-lower-anchor {
+    position: relative;
+}
+
+.jt-hq-lower-anchor .jt-hq-sigs {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: 0;
+}
+
+.jt-hq-lower-anchor .jt-hq-sig-push {
+    display: none !important;
+    height: 0 !important;
+}
+
 .jt-hq-sig-push {
     border: none !important;
     background: transparent !important;

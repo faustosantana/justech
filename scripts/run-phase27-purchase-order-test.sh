@@ -56,6 +56,7 @@ done
 
 mkdir -p "$PROJECT_ROOT/packages/phase27-purchase-order"
 (cd "$PROJECT_ROOT/custom" && zip -r "$PROJECT_ROOT/packages/phase27-purchase-order/justech_report_design-v19.0.7.0.0.zip" justech_report_design -x "*.pyc" -x "*__pycache__*")
+(cd "$EVIDENCE_DIR" && zip -r "$PROJECT_ROOT/packages/phase27-purchase-order/phase27-evidence.zip" . -x "*.pyc")
 
 echo "=== RESULTADO ==="
 cat "$EVIDENCE_DIR/validation.json" 2>/dev/null | head -40

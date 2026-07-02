@@ -61,3 +61,18 @@ docker compose -f docker/test/docker-compose.yml run --rm odoo \
 - Sin errores QWeb
 - Reporte estándar de compras sigue operativo
 - Solo TEST hasta aprobación visual del cliente
+
+## Validación TEST (2026-07-02)
+
+| Check | Resultado |
+|-------|-----------|
+| Módulo `19.0.7.0.0` | PASS |
+| 9 escenarios PDF | PASS |
+| Vista previa HTML | PASS |
+| Reporte estándar Odoo | PASS |
+| Botón + menú Imprimir | PASS |
+| Columna descuento condicional | PASS |
+
+Evidencia: `evidence/phase27-purchase-order/` y `packages/phase27-purchase-order/phase27-evidence.zip`
+
+**Estado:** validación técnica PASS — **pendiente aprobación visual** del cliente antes de PROD.

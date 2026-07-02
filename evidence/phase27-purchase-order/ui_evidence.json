@@ -1,0 +1,11 @@
+{
+  "header_button_label": "Orden de Compra PDF",
+  "header_button_method": "action_jt_print_purchase_order",
+  "print_menu_report_name": "Orden de Compra Hellenia",
+  "print_menu_binding_model": "purchase.order",
+  "form_contains_button": true,
+  "view_arch_snippet": "<xpath expr=\"//header\" position=\"inside\">\n                <button name=\"action_jt_print_purchase_order\" type=\"object\" string=\"Orden de Compra PDF\" class=\"btn-secondary\" invisible=\"state == 'cancel'\"/>\n            </xpath>",
+  "html_preview_bytes": 65383,
+  "html_has_title": true,
+  "html_has_observations": true
+}

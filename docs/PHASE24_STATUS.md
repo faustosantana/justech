@@ -10,6 +10,7 @@
 |------|--------|
 | Módulo `justech_report_design` | ✅ Desplegado en TEST |
 | Validación automática | ✅ `pass: true` |
+| Auditoría 24.1G | ✅ `docs/PHASE24_1G_QUOTATION_AUDIT.md` — **NO listo para oficial** (VIS-001) |
 | Paquete revisión | ✅ `packages/phase24-1-hellenia-quotation-review.zip` |
 | Aprobación visual | ⏳ **Pendiente — responsable revisando ZIP** |
 | PROD | ⛔ Bloqueado |

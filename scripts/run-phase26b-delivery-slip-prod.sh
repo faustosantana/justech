@@ -11,6 +11,7 @@ tar czf /tmp/phase26b_justech_report_design.tgz -C custom justech_report_design
 scp -i "${HOME}/.ssh/hellenia_vps_ed25519" /tmp/phase26b_justech_report_design.tgz \
   "${SCRIPT_DIR}/phase26b-delivery-slip-prod.py" \
   "${SCRIPT_DIR}/phase26-delivery-slip-validation.py" \
+  "${SCRIPT_DIR}/phase26b-host-pdf-check.py" \
   root@2.25.69.179:/tmp/
 
 ssh -i "${HOME}/.ssh/hellenia_vps_ed25519" root@2.25.69.179 bash <<'REMOTE'
@@ -86,6 +87,10 @@ for pdf in "$EVIDENCE_DIR"/*.pdf; do
   [ -f "$pdf" ] || continue
   pdftoppm -f 1 -l 1 -png -singlefile "$pdf" "${pdf%.pdf}" 2>/dev/null || true
 done
+
+if command -v pdftotext >/dev/null && [ -f "$EVIDENCE_DIR/validation.json" ]; then
+  python3 "$SCRIPT_DIR/phase26b-host-pdf-check.py" "$EVIDENCE_DIR" || true
+fi
 
 echo "=== RESULTADO PROD 26B ==="
 cat "$EVIDENCE_DIR/validation.json" 2>/dev/null || tail -30 "$EVIDENCE_DIR/shell.log"

@@ -41,6 +41,56 @@ class JtDeliveryReportMixin(models.AbstractModel):
                 lines.append(partner.country_id.name)
         return lines
 
+    def _jt_delivery_delivery_partners(self, partner):
+        """Hijos de entrega del contacto (dirección separada en perfil)."""
+        if not partner:
+            return self.env["res.partner"]
+        delivery = partner.child_ids.filtered(lambda c: c.type == "delivery")
+        if delivery:
+            return delivery
+        return self.env["res.partner"]
+
+    def _jt_delivery_expand_partner_candidates(self, *partners):
+        """Orden: cada partner y sus contactos de entrega."""
+        candidates = []
+        seen = set()
+        for partner in partners:
+            if not partner:
+                continue
+            for cand in (partner, *self._jt_delivery_delivery_partners(partner)):
+                if cand.id not in seen:
+                    seen.add(cand.id)
+                    candidates.append(cand)
+        return candidates
+
+    def _jt_delivery_warehouse_from_picking(self, picking):
+        """Almacén real; nunca el nombre legal de la empresa como etiqueta."""
+        if not picking:
+            return "—"
+        company = (picking.company_id.name or "").strip()
+        wh = picking.picking_type_id.warehouse_id if picking.picking_type_id else False
+        if wh:
+            name = (wh.name or "").strip()
+            code = (wh.code or "").strip()
+            if name and name != company:
+                return name
+            if code:
+                return code
+        if picking.location_id:
+            complete = (
+                picking.location_id.complete_name
+                or picking.location_id.display_name
+                or ""
+            ).strip()
+            if complete:
+                root = complete.split("/")[0].strip()
+                if root and root != company:
+                    return root
+            loc_name = (picking.location_id.name or "").strip()
+            if loc_name:
+                return loc_name
+        return "—"
+
     def _jt_delivery_partner_has_address(self, partner):
         if not partner:
             return False

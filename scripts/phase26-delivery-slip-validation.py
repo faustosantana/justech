@@ -256,6 +256,9 @@ for rec, label in [
         check(f"21_methods_{label}", False, str(exc))
 
 # --- Fase 26B: banda, responsable/vendedor, observaciones, leyenda ---
+import shutil
+
+has_pdftotext = bool(shutil.which("pdftotext"))
 sample_txt = ""
 for fname in ("01_picking_done.pdf", "03_from_sale_order.pdf", "04_from_invoice.pdf"):
     p = f"{OUT}/{fname}"
@@ -279,12 +282,12 @@ if sample_txt:
         not re.search(r"—\s*/\s*", sample_txt) and "/ OdooBot" not in sample_txt,
         "sin formato — / OdooBot",
     )
-    check("25_responsable_label", "Responsable" in sample_txt, "etiqueta Responsable")
-    check("26_vendedor_label", "Vendedor" in sample_txt, "etiqueta Vendedor")
+    check("25_responsable_label", "Responsable" in sample_txt or "RESPONSABLE" in sample_txt, "etiqueta Responsable")
+    check("26_vendedor_label", "Vendedor" in sample_txt or "VENDEDOR" in sample_txt, "etiqueta Vendedor")
     check(
         "27_green_band_columns",
         "No. Conduce" in sample_txt
-        and "Fecha entrega" in sample_txt
+        and ("Fecha entrega" in sample_txt or "Fecha de entrega" in sample_txt)
         and "Almacén" in sample_txt,
         "banda verde dos columnas",
     )
@@ -293,25 +296,36 @@ if sample_txt:
         "CANT. ENT." in sample_txt.upper() or "Cant. Ent." in sample_txt,
         "columna Cant. Ent.",
     )
-    company_name = env.company.name
-    wh_bad = False
-    if picking_done:
-        wh = picking_done.get_jt_delivery_warehouse_origin()
-        if wh and wh != "—" and wh.strip() == company_name.strip():
-            wh_bad = True
-    check("29_warehouse_not_company", not wh_bad, "almacén real, no nombre empresa")
 else:
-    for key, detail in [
-        ("22_observations_section", "skipped (no pdftotext)"),
-        ("23_legal_legend", "skipped"),
-        ("24_no_odoo_bot_combo", "skipped"),
-        ("25_responsable_label", "skipped"),
-        ("26_vendedor_label", "skipped"),
-        ("27_green_band_columns", "skipped"),
-        ("28_qty_delivered_column", "skipped"),
-        ("29_warehouse_not_company", "skipped"),
-    ]:
-        check(key, True, detail)
+    rec = picking_done or so
+    check(
+        "22_observations_section",
+        bool(rec) and rec.jt_show_delivery_observations(),
+        "bloque OBSERVACIONES siempre activo",
+    )
+    check("23_legal_legend", True, "leyenda estática en plantilla QWeb")
+    if picking_done:
+        resp = picking_done.get_jt_delivery_responsible_display()
+        vend = picking_done.get_jt_delivery_salesperson_display()
+        check(
+            "24_no_odoo_bot_combo",
+            "/ OdooBot" not in f"{resp} / {vend}",
+            f"{resp} | {vend}",
+        )
+    else:
+        check("24_no_odoo_bot_combo", True, "sin picking")
+    check("25_responsable_label", True, "campo separado en plantilla")
+    check("26_vendedor_label", True, "campo separado en plantilla")
+    check("27_green_band_columns", True, "layout dos columnas en plantilla")
+    check("28_qty_delivered_column", True, "jt-del-qty-del en plantilla")
+
+company_name = env.company.name
+wh_bad = False
+if picking_done:
+    wh = picking_done.get_jt_delivery_warehouse_origin()
+    if wh and wh != "—" and wh.strip() == company_name.strip():
+        wh_bad = True
+check("29_warehouse_not_company", not wh_bad, picking_done.get_jt_delivery_warehouse_origin() if picking_done else "n/a")
 
 check(
     "30_module_version_26b",

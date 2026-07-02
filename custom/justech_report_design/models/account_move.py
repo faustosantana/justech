@@ -286,11 +286,10 @@ class AccountMove(models.Model):
 
     def _jt_delivery_resolve_shipping_partner(self):
         self.ensure_one()
-        candidates = []
-        if self.partner_shipping_id:
-            candidates.append(self.partner_shipping_id)
-        if self.partner_id:
-            candidates.append(self.partner_id)
+        candidates = self._jt_delivery_expand_partner_candidates(
+            self.partner_shipping_id,
+            self.partner_id,
+        )
         for partner in candidates:
             if self._jt_delivery_partner_has_address(partner):
                 return partner

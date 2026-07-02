@@ -56,6 +56,11 @@ for pdf in "$EVIDENCE_DIR"/*.pdf; do
   pdftoppm -f 1 -l 1 -png -singlefile "$pdf" "${pdf%.pdf}" 2>/dev/null || true
 done
 
+# Validación textual en host (pdftotext no está en el contenedor Odoo)
+if command -v pdftotext >/dev/null && [ -f "$EVIDENCE_DIR/validation.json" ]; then
+  python3 "$SCRIPT_DIR/phase26b-host-pdf-check.py" "$EVIDENCE_DIR" || true
+fi
+
 mkdir -p "$PROJECT_ROOT/packages/phase26-delivery-slip"
 (cd "$PROJECT_ROOT/custom" && zip -r "$PROJECT_ROOT/packages/phase26-delivery-slip/justech_report_design-v19.0.5.0.0.zip" justech_report_design -x "*.pyc" -x "*__pycache__*")
 

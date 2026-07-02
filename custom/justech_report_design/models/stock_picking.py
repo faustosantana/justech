@@ -64,18 +64,14 @@ class StockPicking(models.Model):
     def _jt_delivery_resolve_shipping_partner(self):
         self.ensure_one()
         so = self._jt_delivery_related_sale_order()
-        candidates = []
-        # 1. Dirección en picking (partner_id con calle)
-        if self.partner_id and self._jt_delivery_partner_has_address(self.partner_id):
-            candidates.append(self.partner_id)
-        # 2. Dirección de envío OV
+        raw = []
+        if self.partner_id:
+            raw.append(self.partner_id)
         if so and so.partner_shipping_id:
-            candidates.append(so.partner_shipping_id)
-        # 3. Cliente comercial
+            raw.append(so.partner_shipping_id)
         if so and so.partner_id:
-            candidates.append(so.partner_id)
-        elif self.partner_id:
-            candidates.append(self.partner_id)
+            raw.append(so.partner_id)
+        candidates = self._jt_delivery_expand_partner_candidates(*raw)
         for partner in candidates:
             if self._jt_delivery_partner_has_address(partner):
                 return partner
@@ -95,15 +91,8 @@ class StockPicking(models.Model):
         return "—"
 
     def get_jt_delivery_warehouse_origin(self):
-        wh = self.picking_type_id.warehouse_id if self.picking_type_id else False
-        if wh and wh.name:
-            name = (wh.name or "").strip()
-            company = self.company_id.name if self.company_id else ""
-            if name and name != company:
-                return name
-            if name:
-                return name
-        return "—"
+        self.ensure_one()
+        return self._jt_delivery_warehouse_from_picking(self)
 
     def get_jt_delivery_destination_location(self):
         return self.location_dest_id.display_name if self.location_dest_id else "—"

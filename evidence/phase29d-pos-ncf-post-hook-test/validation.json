@@ -1,0 +1,106 @@
+{
+  "phase": "29D-ncf-post-hook-validation",
+  "database": "hellenia_test",
+  "timestamp_utc": "2026-07-03T02:10:05.332954+00:00",
+  "module_version": "19.0.1.5.2",
+  "ok": true,
+  "tests": [
+    {
+      "name": "factura_manual_b02_ncf",
+      "pass": true,
+      "invoice": "INV/2026/00236",
+      "ncf": "B0200020178",
+      "via": "action_post"
+    },
+    {
+      "name": "factura_manual_b01_ncf_via_post",
+      "pass": true,
+      "invoice": "INV/2026/00237",
+      "ncf": "B0100020040",
+      "via": "_post"
+    },
+    {
+      "name": "cotizacion_factura_ncf",
+      "pass": true,
+      "order": "S00170",
+      "invoice": "INV/2026/00238",
+      "ncf": "B0200020179"
+    },
+    {
+      "name": "no_ncf_borrador_autopost_futuro",
+      "pass": true,
+      "state": "draft",
+      "auto_post": "at_date",
+      "ncf": null
+    },
+    {
+      "name": "no_doble_ncf",
+      "pass": true,
+      "ncf": "B0200020180",
+      "consumption_records": 1
+    },
+    {
+      "name": "pos_consumidor_final_b02_efectivo",
+      "pass": true,
+      "order": "Punto de Venta Hellenia - 000013",
+      "invoice": "INV/2026/00240",
+      "ncf": "B0200020181",
+      "doc": "B02"
+    },
+    {
+      "name": "pos_cliente_rnc_b01_tarjeta",
+      "pass": true,
+      "invoice": "INV/2026/00241",
+      "ncf": "B0100020041"
+    },
+    {
+      "name": "pos_pago_mixto",
+      "pass": true,
+      "ncf": "B0200020182"
+    },
+    {
+      "name": "pos_asientos_contables",
+      "pass": true,
+      "invoices": [
+        "INV/2026/00240",
+        "INV/2026/00241",
+        "INV/2026/00242"
+      ]
+    },
+    {
+      "name": "pos_movimiento_inventario",
+      "pass": true,
+      "qty_before": 88.0,
+      "qty_after": 85.0
+    },
+    {
+      "name": "pos_cierre_sesion",
+      "pass": true,
+      "move": "POSS/2026/00023"
+    },
+    {
+      "name": "override_manual_ncf",
+      "pass": true,
+      "ncf": "B0200020183",
+      "invoice": "INV/2026/00243"
+    },
+    {
+      "name": "reporte_fiscal_607_no_rompe",
+      "pass": true,
+      "sample_ncf": [
+        "B0200020183",
+        "B0200020182",
+        "B0100020041",
+        "B0200020181",
+        "B0200020180"
+      ],
+      "validation_errors": []
+    }
+  ],
+  "errors": [],
+  "summary": {
+    "passed": 13,
+    "total": 13,
+    "all_pass": true
+  }
+}

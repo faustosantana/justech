@@ -1,0 +1,31 @@
+2026-07-03 02:10:03,915 128 WARNING ? odoo.tools.config: option logfile reads 'False' in the config file at /etc/odoo/odoo.conf but isn't a boolean option, skip 
+2026-07-03 02:10:03,915 128 WARNING ? odoo.tools.config: option logfile reads 'False' in the config file at /etc/odoo/odoo.conf but isn't a boolean option, skip 
+2026-07-03 02:10:03,915 128 INFO ? odoo: Odoo version 19.0-20260619 
+2026-07-03 02:10:03,915 128 INFO ? odoo: Using configuration file at /etc/odoo/odoo.conf 
+2026-07-03 02:10:03,915 128 INFO ? odoo: addons paths: _NamespacePath(['/usr/lib/python3/dist-packages/odoo/addons', '/var/lib/odoo/addons/19.0', '/mnt/enterprise/addons', '/mnt/custom', '/usr/lib/python3/dist-packages/addons']) 
+2026-07-03 02:10:03,915 128 INFO ? odoo: database: odoo@db:default 
+2026-07-03 02:10:04,114 128 INFO ? odoo.service.server: Initiating shutdown 
+2026-07-03 02:10:04,115 128 INFO ? odoo.service.server: Hit CTRL-C again or send a second signal to force the shutdown. 
+2026-07-03 02:10:04,141 128 INFO hellenia_test odoo.modules.loading: loading 1 modules... 
+2026-07-03 02:10:04,144 128 INFO hellenia_test odoo.modules.loading: 1 modules loaded in 0.00s, 0 queries (+0 extra) 
+2026-07-03 02:10:04,171 128 INFO hellenia_test odoo.modules.loading: loading 132 modules... 
+2026-07-03 02:10:04,963 128 WARNING hellenia_test odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define models.Constraint on the model. 
+2026-07-03 02:10:05,005 128 WARNING hellenia_test odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define models.Constraint on the model. 
+2026-07-03 02:10:05,039 128 WARNING hellenia_test odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define models.Constraint on the model. 
+2026-07-03 02:10:05,088 128 INFO hellenia_test odoo.modules.loading: 132 modules loaded in 0.92s, 0 queries (+0 extra) 
+2026-07-03 02:10:05,178 128 WARNING hellenia_test odoo.fields: justech.do.fiscal.report.state: selection=[('draft', 'Borrador'), ('validated', 'Validado'), ('pending_approval', 'Requiere aprobación'), ('approved', 'Aprobado'), ('rejected', 'Rechazado'), ('generated', 'Generado'), ('done', 'Generado')] overrides existing selection; use selection_add instead 
+2026-07-03 02:10:05,245 128 INFO hellenia_test odoo.modules.loading: Modules loaded. 
+2026-07-03 02:10:05,255 128 WARNING hellenia_test odoo.schema: Missing not-null constraint on res.users.settings.color_scheme 
+2026-07-03 02:10:05,307 128 INFO hellenia_test odoo.registry: Registry loaded in 1.192s 
+2026-07-03 02:10:07,563 128 INFO hellenia_test odoo.addons.point_of_sale.models.pos_order: PoS synchronisation #73738908 started for PoS orders references: [{'name': 'Order p29d-021005-cf', 'pos_reference': None, 'uuid': 'p29d-021005-cf'}] 
+2026-07-03 02:10:07,673 128 INFO hellenia_test odoo.addons.point_of_sale.models.pos_order: PoS synchronisation #73738908 order {'name': 'Order p29d-021005-cf', 'pos_reference': None, 'uuid': 'p29d-021005-cf'} created pos.order #16 
+2026-07-03 02:10:07,673 128 INFO hellenia_test odoo.addons.point_of_sale.models.pos_order: PoS synchronisation #73738908 finished 
+2026-07-03 02:10:07,959 128 INFO hellenia_test odoo.addons.base.models.ir_actions_report: Will use the Wkhtmltopdf binary at /usr/local/bin/wkhtmltopdf 
+2026-07-03 02:10:07,967 128 INFO hellenia_test odoo.addons.base.models.ir_actions_report: Will use the Wkhtmltoimage binary at /usr/local/bin/wkhtmltoimage 
+2026-07-03 02:10:10,575 128 INFO hellenia_test odoo.addons.point_of_sale.models.pos_order: PoS synchronisation #14285913 started for PoS orders references: [{'name': 'Order p29d-021005-rnc', 'pos_reference': None, 'uuid': 'p29d-021005-rnc'}] 
+2026-07-03 02:10:10,656 128 INFO hellenia_test odoo.addons.point_of_sale.models.pos_order: PoS synchronisation #14285913 order {'name': 'Order p29d-021005-rnc', 'pos_reference': None, 'uuid': 'p29d-021005-rnc'} created pos.order #17 
+2026-07-03 02:10:10,656 128 INFO hellenia_test odoo.addons.point_of_sale.models.pos_order: PoS synchronisation #14285913 finished 
+2026-07-03 02:10:13,293 128 INFO hellenia_test odoo.addons.point_of_sale.models.pos_order: PoS synchronisation #65381461 started for PoS orders references: [{'name': 'Order p29d-021005-mix', 'pos_reference': None, 'uuid': 'p29d-021005-mix'}] 
+2026-07-03 02:10:13,364 128 INFO hellenia_test odoo.addons.point_of_sale.models.pos_order: PoS synchronisation #65381461 order {'name': 'Order p29d-021005-mix', 'pos_reference': None, 'uuid': 'p29d-021005-mix'} created pos.order #18 
+2026-07-03 02:10:13,364 128 INFO hellenia_test odoo.addons.point_of_sale.models.pos_order: PoS synchronisation #65381461 finished 
+{"passed": 13, "total": 13, "all_pass": true}

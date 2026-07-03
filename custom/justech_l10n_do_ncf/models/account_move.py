@@ -268,8 +268,19 @@ class AccountMove(models.Model):
                 if not move.justech_do_ncf_modified:
                     move.justech_do_ncf_modified = origin_ncf
 
+    def _justech_moves_for_ncf_on_post(self, soft=True):
+        """Moves that will be posted in this _post() call and need NCF assignment."""
+        moves = self.filtered(lambda m: m.state == "draft")
+        if soft:
+            today = fields.Date.context_today(self)
+            moves = moves.filtered(lambda m: not m.date or m.date <= today)
+        return moves
+
+    def _post(self, soft=True):
+        self._justech_moves_for_ncf_on_post(soft)._justech_assign_ncf_before_post()
+        return super()._post(soft=soft)
+
     def action_post(self):
-        self._justech_assign_ncf_before_post()
         return super().action_post()
 
     def action_void_ncf(self):

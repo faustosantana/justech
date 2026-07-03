@@ -1,6 +1,6 @@
 {
     "name": "Hellenia UX",
-    "version": "19.0.1.0.0",
+    "version": "19.0.1.2.0",
     "category": "Hidden",
     "summary": "Localización visual RD y experiencia de usuario Hellenia",
     "description": """
@@ -31,6 +31,7 @@ Mejoras UX upgrade-safe (Fase 17):
         "security/ir.model.access.csv",
         "wizard/justech_do_ncf_void_wizard_views.xml",
         "views/account_move_fiscal_views.xml",
+        "views/account_move_invoice_form_phase28_views.xml",
         "views/account_move_form_views.xml",
         "views/account_payment_register_views.xml",
         "views/account_payment_views.xml",

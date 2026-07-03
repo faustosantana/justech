@@ -1,0 +1,16 @@
+<notebook>
+                            <page id="invoice_tab" name="invoice_tab" string="Invoice Lines" invisible="move_type == 'entry'">
+                                <field name="invoice_line_ids" widget="product_label_section_and_note_field_o2m" mode="list,kanban" context="{                                            'default_move_type': context.get('default_move_type'),                                            'journal_id': journal_id,                                            'default_partner_id': commercial_partner_id,                                            'default_currency_id': currency_id or company_currency_id,                                            'default_display_type': 'product',                                            'quick_encoding_vals': quick_encoding_vals,                                        }" readonly="state != 'draft'" aggregated_fields="price_subtotal,price_total" options="{'hide_composition': True, 'hide_prices': True, 'subsections': True}" on_change="1">
+                                    <list name="journal_items" editable="bottom" string="Journal Items" default_order="sequence, id" decoration-warning="((purchase_line_warn_msg and move_type == 'in_invoice')) or ((sale_line_warn_msg and move_type == 'out_invoice'))">
+                                        <control>
+                                            <create name="add_line_control" string="Add a line"/>
+                                            <create name="add_section_control" string="Add a section" context="{'default_display_type': 'line_section'}"/>
+                                            <create name="add_note_control" string="Add a note" context="{'default_display_type': 'line_note'}"/>
+                                            <button name="action_add_from_catalog" string="Catalog" type="object" class="btn-link" context="{'order_id': parent.id}"/>
+                                        </control>
+
+                                        <!-- Displayed fields -->
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="product_id" optional="conditional" widget="product_label_section_and_note_field" domain="                                                     context.get('default_move_type') in ('out_invoice', 'out_refund', 'out_receipt')                                                     and [('sale_ok', '=', True)]                                                     or [('purchase_ok', '=', True)]                                                " readonly="is_downpayment" on_change="1" can_create="True" can_write="True"/>
+                                        <field name="name" widget="section_and_note_text" optional="show" on_change="1"/>
+             

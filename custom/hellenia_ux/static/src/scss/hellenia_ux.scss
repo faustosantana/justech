@@ -28,3 +28,35 @@
 .hellenia-ncf-form-legal {
     font-size: 0.75rem;
 }
+
+/* Fase 28/28B — Factura cliente: encabezado compacto en 2 columnas */
+.o_form_view .hellenia-invoice-header-row {
+    margin-bottom: 0.25rem;
+
+    > .o_group_col_6 {
+        min-width: 0;
+    }
+
+    .o_inner_group {
+        margin-bottom: 0.15rem;
+    }
+
+    .o_wrap_label,
+    .o_cell {
+        align-items: center;
+    }
+
+    .o_field_widget {
+        margin-bottom: 0;
+    }
+}
+
+/* Factura cliente: priorizar líneas de producto visibles de inmediato */
+.o_form_view[data-res-model="account.move"] .hellenia-invoice-header-row + .o_group,
+.o_form_view[data-res-model="account.move"] .hellenia-invoice-header-row ~ .o_notebook {
+    margin-top: 0.25rem;
+}
+
+.o_form_view[data-res-model="account.move"] .o_notebook > .tab-content {
+    padding-top: 0.35rem;
+}

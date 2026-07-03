@@ -1,0 +1,50 @@
+{
+  "phase": "27c-empty-partner-onchange-fix-test",
+  "timestamp_utc": "2026-07-03T00:32:27.166547+00:00",
+  "database": "hellenia_test",
+  "status": "PASS",
+  "module_versions": {
+    "justech_l10n_do_base": "19.0.1.4.2",
+    "justech_l10n_do_ncf": "19.0.1.5.1",
+    "justech_report_design": "19.0.7.3.1"
+  },
+  "checks": {
+    "module_base_version": {
+      "status": "PASS",
+      "detail": "19.0.1.4.2"
+    },
+    "module_ncf_version": {
+      "status": "PASS",
+      "detail": "19.0.1.5.1"
+    },
+    "report_design_unchanged": {
+      "status": "PASS",
+      "detail": "19.0.7.3.1"
+    },
+    "partner_method_empty_recordset": {
+      "status": "PASS",
+      "detail": "False"
+    },
+    "quotation_empty_partner_onchange": {
+      "status": "PASS",
+      "detail": "False"
+    },
+    "quotation_partner_inherits_default": {
+      "status": "PASS",
+      "detail": "B01 - Factura de Crédito Fiscal"
+    },
+    "invoice_empty_partner_onchange": {
+      "status": "PASS",
+      "detail": "False"
+    },
+    "invoice_partner_inherits_default": {
+      "status": "PASS",
+      "detail": "B01 - Factura de Crédito Fiscal"
+    },
+    "invoice_manual_override_preserved": {
+      "status": "PASS",
+      "detail": "B02 - Factura de Consumo"
+    }
+  },
+  "errors": []
+}

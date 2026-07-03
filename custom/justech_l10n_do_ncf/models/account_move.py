@@ -118,6 +118,9 @@ class AccountMove(models.Model):
     def _onchange_partner_justech_do_document_type(self):
         if self.move_type != "out_invoice" or self.debit_origin_id:
             return
+        if not self.partner_id:
+            self.justech_do_document_type_id = False
+            return
         if self.justech_do_document_type_id:
             return
         self.justech_do_document_type_id = self.partner_id.justech_do_get_default_sale_document_type()

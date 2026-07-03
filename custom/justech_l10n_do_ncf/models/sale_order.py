@@ -30,6 +30,9 @@ class SaleOrder(models.Model):
 
     @api.onchange("partner_id")
     def _onchange_partner_justech_do_document_type(self):
+        if not self.partner_id:
+            self.justech_do_document_type_id = False
+            return
         doc = self.partner_id.justech_do_get_default_sale_document_type()
         self.justech_do_document_type_id = doc
 

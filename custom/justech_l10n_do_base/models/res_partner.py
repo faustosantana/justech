@@ -82,6 +82,8 @@ class ResPartner(models.Model):
 
     def justech_do_get_default_sale_document_type(self):
         """Tipo de comprobante de venta configurado en el contacto (out_invoice)."""
+        if not self:
+            return False
         self.ensure_one()
         doc = self.justech_do_default_document_type_id
         if doc and doc.is_sale_document and doc.move_type == "out_invoice":

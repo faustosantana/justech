@@ -1,0 +1,19 @@
+{
+  "ok": true,
+  "commit": "8b732cd76562d0511be2aba268923ab3fb1182eb",
+  "backup_dir": "/opt/odoo-projects/hellenia/backups/dev/2026-07-05_0247",
+  "database": "hellenia_dev",
+  "shell_ok": true,
+  "column_justech_do_partner_id_type": true,
+  "modules_installed": [
+    "hellenia_base",
+    "hellenia_account",
+    "justech_l10n_do_base",
+    "justech_l10n_do_ncf",
+    "justech_l10n_do_reports",
+    "hellenia_reports",
+    "point_of_sale",
+    "hellenia_pos"
+  ],
+  "note": "upgrades via docker run (compose run blocked by traefik yaml anchor)"
+}

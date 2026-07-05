@@ -1,0 +1,258 @@
+2026-07-05 02:48:09,352 1 DEBUG ? odoo.netsvc: logger level set: "odoo.http.rpc.request:INFO" 
+2026-07-05 02:48:09,352 1 DEBUG ? odoo.netsvc: logger level set: "odoo.http.rpc.response:INFO" 
+2026-07-05 02:48:09,352 1 DEBUG ? odoo.netsvc: logger level set: ":INFO" 
+2026-07-05 02:48:09,353 1 DEBUG ? odoo.netsvc: logger level set: "odoo:DEBUG" 
+2026-07-05 02:48:09,353 1 DEBUG ? odoo.netsvc: logger level set: "odoo.sql_db:INFO" 
+2026-07-05 02:48:09,353 1 DEBUG ? odoo.netsvc: logger level set: ":INFO" 
+2026-07-05 02:48:09,353 1 WARNING ? odoo.tools.config: option logfile reads 'False' in the config file at /etc/odoo/odoo.conf but isn't a boolean option, skip 
+2026-07-05 02:48:09,353 1 WARNING ? odoo.tools.config: option logfile reads 'False' in the config file at /etc/odoo/odoo.conf but isn't a boolean option, skip 
+2026-07-05 02:48:09,353 1 INFO ? odoo: Odoo version 19.0-20260619 
+2026-07-05 02:48:09,353 1 INFO ? odoo: Using configuration file at /etc/odoo/odoo.conf 
+2026-07-05 02:48:09,353 1 INFO ? odoo: addons paths: _NamespacePath(['/usr/lib/python3/dist-packages/odoo/addons', '/var/lib/odoo/addons/19.0', '/opt/odoo/enterprise/addons', '/opt/odoo/custom', '/usr/lib/python3/dist-packages/addons']) 
+2026-07-05 02:48:09,353 1 INFO ? odoo: database: odoo@db:5432 
+2026-07-05 02:48:09,579 1 DEBUG ? odoo.service.server: Setting signal handlers 
+2026-07-05 02:48:09,599 1 DEBUG hellenia_dev odoo.registry: Multiprocess load registry signaling: [Registry: 35] [Cache default: 2] [Cache assets: 1] [Cache stable: 2] [Cache templates: 1] [Cache routing: 1] [Cache groups: 1] 
+2026-07-05 02:48:09,618 1 INFO hellenia_dev odoo.modules.loading: loading 1 modules... 
+2026-07-05 02:48:09,618 1 DEBUG hellenia_dev odoo.modules.loading: Loading module base (1/1) 
+2026-07-05 02:48:09,621 1 DEBUG hellenia_dev odoo.modules.loading: Module base loaded in 0.00s, 0 queries 
+2026-07-05 02:48:09,621 1 INFO hellenia_dev odoo.modules.loading: 1 modules loaded in 0.00s, 0 queries (+0 extra) 
+2026-07-05 02:48:09,641 1 INFO hellenia_dev odoo.modules.loading: updating modules list 
+2026-07-05 02:48:09,644 1 INFO hellenia_dev odoo.addons.base.models.ir_module: ALLOW access to module.update_list on [] to user __system__ #1 via n/a 
+2026-07-05 02:48:11,871 1 WARNING hellenia_dev odoo.modules.module_graph: module justech_l10n_do_reports: some depends are not loaded (hellenia_account), skipped 
+2026-07-05 02:48:11,872 1 DEBUG hellenia_dev odoo.modules.loading: Updating graph with 111 more modules 
+2026-07-05 02:48:11,872 1 INFO hellenia_dev odoo.modules.loading: loading 111 modules... 
+2026-07-05 02:48:11,872 1 DEBUG hellenia_dev odoo.modules.loading: Loading module rpc (2/111) 
+2026-07-05 02:48:11,872 1 DEBUG hellenia_dev odoo.modules.loading: Module rpc loaded in 0.00s, 0 queries 
+2026-07-05 02:48:11,872 1 DEBUG hellenia_dev odoo.modules.loading: Loading module uom (3/111) 
+2026-07-05 02:48:11,874 1 DEBUG hellenia_dev odoo.modules.loading: Module uom loaded in 0.00s, 0 queries 
+2026-07-05 02:48:11,874 1 DEBUG hellenia_dev odoo.modules.loading: Loading module web (4/111) 
+2026-07-05 02:48:11,875 1 DEBUG hellenia_dev odoo.modules.loading: Module web loaded in 0.00s, 0 queries 
+2026-07-05 02:48:11,875 1 DEBUG hellenia_dev odoo.modules.loading: Loading module api_doc (5/111) 
+2026-07-05 02:48:11,877 1 DEBUG hellenia_dev odoo.modules.loading: Module api_doc loaded in 0.00s, 0 queries 
+2026-07-05 02:48:11,877 1 DEBUG hellenia_dev odoo.modules.loading: Loading module auth_totp (6/111) 
+2026-07-05 02:48:11,885 1 DEBUG hellenia_dev odoo.modules.loading: Module auth_totp loaded in 0.01s, 0 queries 
+2026-07-05 02:48:11,885 1 DEBUG hellenia_dev odoo.modules.loading: Loading module barcodes (7/111) 
+2026-07-05 02:48:11,887 1 DEBUG hellenia_dev odoo.modules.loading: Module barcodes loaded in 0.00s, 0 queries 
+2026-07-05 02:48:11,887 1 DEBUG hellenia_dev odoo.modules.loading: Loading module base_import (8/111) 
+2026-07-05 02:48:11,889 1 DEBUG hellenia_dev odoo.modules.loading: Module base_import loaded in 0.00s, 0 queries 
+2026-07-05 02:48:11,890 1 DEBUG hellenia_dev odoo.modules.loading: Loading module base_import_module (9/111) 
+2026-07-05 02:48:11,892 1 DEBUG hellenia_dev odoo.modules.loading: Module base_import_module loaded in 0.00s, 0 queries 
+2026-07-05 02:48:11,892 1 DEBUG hellenia_dev odoo.modules.loading: Loading module base_setup (10/111) 
+2026-07-05 02:48:11,894 1 DEBUG hellenia_dev odoo.modules.loading: Module base_setup loaded in 0.00s, 0 queries 
+2026-07-05 02:48:11,894 1 DEBUG hellenia_dev odoo.modules.loading: Loading module bus (11/111) 
+2026-07-05 02:48:11,901 1 DEBUG hellenia_dev odoo.modules.loading: Module bus loaded in 0.01s, 0 queries 
+2026-07-05 02:48:11,901 1 DEBUG hellenia_dev odoo.modules.loading: Loading module http_routing (12/111) 
+2026-07-05 02:48:11,902 1 DEBUG hellenia_dev odoo.modules.loading: Module http_routing loaded in 0.00s, 0 queries 
+2026-07-05 02:48:11,902 1 DEBUG hellenia_dev odoo.modules.loading: Loading module onboarding (13/111) 
+2026-07-05 02:48:11,904 1 DEBUG hellenia_dev odoo.modules.loading: Module onboarding loaded in 0.00s, 0 queries 
+2026-07-05 02:48:11,904 1 DEBUG hellenia_dev odoo.modules.loading: Loading module resource (14/111) 
+2026-07-05 02:48:11,908 1 DEBUG hellenia_dev odoo.modules.loading: Module resource loaded in 0.00s, 0 queries 
+2026-07-05 02:48:11,908 1 DEBUG hellenia_dev odoo.modules.loading: Loading module utm (15/111) 
+2026-07-05 02:48:11,910 1 DEBUG hellenia_dev odoo.modules.loading: Module utm loaded in 0.00s, 0 queries 
+2026-07-05 02:48:11,910 1 DEBUG hellenia_dev odoo.modules.loading: Loading module web_cohort (16/111) 
+2026-07-05 02:48:11,921 1 DEBUG hellenia_dev odoo.modules.loading: Module web_cohort loaded in 0.01s, 0 queries 
+2026-07-05 02:48:11,921 1 DEBUG hellenia_dev odoo.modules.loading: Loading module web_tour (17/111) 
+2026-07-05 02:48:11,923 1 DEBUG hellenia_dev odoo.modules.loading: Module web_tour loaded in 0.00s, 0 queries 
+2026-07-05 02:48:11,923 1 DEBUG hellenia_dev odoo.modules.loading: Loading module auth_passkey (18/111) 
+2026-07-05 02:48:11,948 1 DEBUG hellenia_dev odoo.modules.loading: Module auth_passkey loaded in 0.03s, 0 queries 
+2026-07-05 02:48:11,948 1 DEBUG hellenia_dev odoo.modules.loading: Loading module barcodes_gs1_nomenclature (19/111) 
+2026-07-05 02:48:11,949 1 DEBUG hellenia_dev odoo.modules.loading: Module barcodes_gs1_nomenclature loaded in 0.00s, 0 queries 
+2026-07-05 02:48:11,949 1 DEBUG hellenia_dev odoo.modules.loading: Loading module html_editor (20/111) 
+2026-07-05 02:48:12,060 1 DEBUG hellenia_dev odoo.modules.loading: Module html_editor loaded in 0.11s, 0 queries 
+2026-07-05 02:48:12,060 1 DEBUG hellenia_dev odoo.modules.loading: Loading module iap (21/111) 
+2026-07-05 02:48:12,060 1 DEBUG hellenia_dev odoo.modules.loading: Module iap loaded in 0.00s, 0 queries 
+2026-07-05 02:48:12,060 1 DEBUG hellenia_dev odoo.modules.loading: Loading module web_enterprise (22/111) 
+2026-07-05 02:48:12,067 1 DEBUG hellenia_dev odoo.modules.loading: Module web_enterprise loaded in 0.01s, 0 queries 
+2026-07-05 02:48:12,067 1 DEBUG hellenia_dev odoo.modules.loading: Loading module web_map (23/111) 
+2026-07-05 02:48:12,074 1 DEBUG hellenia_dev odoo.modules.loading: Module web_map loaded in 0.01s, 0 queries 
+2026-07-05 02:48:12,074 1 DEBUG hellenia_dev odoo.modules.loading: Loading module mail (24/111) 
+2026-07-05 02:48:12,077 1 DEBUG hellenia_dev odoo.modules.loading: Module mail loaded in 0.00s, 0 queries 
+2026-07-05 02:48:12,077 1 DEBUG hellenia_dev odoo.modules.loading: Loading module web_mobile (25/111) 
+2026-07-05 02:48:12,079 1 DEBUG hellenia_dev odoo.modules.loading: Module web_mobile loaded in 0.00s, 0 queries 
+2026-07-05 02:48:12,079 1 DEBUG hellenia_dev odoo.modules.loading: Loading module web_unsplash (26/111) 
+2026-07-05 02:48:12,081 1 DEBUG hellenia_dev odoo.modules.loading: Module web_unsplash loaded in 0.00s, 0 queries 
+2026-07-05 02:48:12,081 1 DEBUG hellenia_dev odoo.modules.loading: Loading module ai_auto_install (27/111) 
+2026-07-05 02:48:12,142 1 DEBUG hellenia_dev odoo.modules.loading: Module ai_auto_install loaded in 0.06s, 0 queries 
+2026-07-05 02:48:12,143 1 DEBUG hellenia_dev odoo.modules.loading: Loading module analytic (28/111) 
+2026-07-05 02:48:12,148 1 DEBUG hellenia_dev odoo.modules.loading: Module analytic loaded in 0.01s, 0 queries 
+2026-07-05 02:48:12,148 1 DEBUG hellenia_dev odoo.modules.loading: Loading module auth_signup (29/111) 
+2026-07-05 02:48:12,150 1 DEBUG hellenia_dev odoo.modules.loading: Module auth_signup loaded in 0.00s, 0 queries 
+2026-07-05 02:48:12,150 1 DEBUG hellenia_dev odoo.modules.loading: Loading module auth_totp_mail (30/111) 
+2026-07-05 02:48:12,152 1 DEBUG hellenia_dev odoo.modules.loading: Module auth_totp_mail loaded in 0.00s, 0 queries 
+2026-07-05 02:48:12,152 1 DEBUG hellenia_dev odoo.modules.loading: Loading module base_install_request (31/111) 
+2026-07-05 02:48:12,153 1 DEBUG hellenia_dev odoo.modules.loading: Module base_install_request loaded in 0.00s, 0 queries 
+2026-07-05 02:48:12,153 1 DEBUG hellenia_dev odoo.modules.loading: Loading module contacts (32/111) 
+2026-07-05 02:48:12,154 1 DEBUG hellenia_dev odoo.modules.loading: Module contacts loaded in 0.00s, 0 queries 
+2026-07-05 02:48:12,154 1 DEBUG hellenia_dev odoo.modules.loading: Loading module google_gmail (33/111) 
+2026-07-05 02:48:12,156 1 DEBUG hellenia_dev odoo.modules.loading: Module google_gmail loaded in 0.00s, 0 queries 
+2026-07-05 02:48:12,156 1 DEBUG hellenia_dev odoo.modules.loading: Loading module iap_mail (34/111) 
+2026-07-05 02:48:12,157 1 DEBUG hellenia_dev odoo.modules.loading: Module iap_mail loaded in 0.00s, 0 queries 
+2026-07-05 02:48:12,157 1 DEBUG hellenia_dev odoo.modules.loading: Loading module mail_bot (35/111) 
+2026-07-05 02:48:12,159 1 DEBUG hellenia_dev odoo.modules.loading: Module mail_bot loaded in 0.00s, 0 queries 
+2026-07-05 02:48:12,159 1 DEBUG hellenia_dev odoo.modules.loading: Loading module mail_enterprise (36/111) 
+2026-07-05 02:48:12,162 1 DEBUG hellenia_dev odoo.modules.loading: Module mail_enterprise loaded in 0.00s, 0 queries 
+2026-07-05 02:48:12,162 1 DEBUG hellenia_dev odoo.modules.loading: Loading module microsoft_outlook (37/111) 
+2026-07-05 02:48:12,164 1 DEBUG hellenia_dev odoo.modules.loading: Module microsoft_outlook loaded in 0.00s, 0 queries 
+2026-07-05 02:48:12,164 1 DEBUG hellenia_dev odoo.modules.loading: Loading module phone_validation (38/111) 
+2026-07-05 02:48:12,182 1 DEBUG hellenia_dev odoo.modules.loading: Module phone_validation loaded in 0.02s, 0 queries 
+2026-07-05 02:48:12,182 1 DEBUG hellenia_dev odoo.modules.loading: Loading module privacy_lookup (39/111) 
+2026-07-05 02:48:12,183 1 DEBUG hellenia_dev odoo.modules.loading: Module privacy_lookup loaded in 0.00s, 0 queries 
+2026-07-05 02:48:12,184 1 DEBUG hellenia_dev odoo.modules.loading: Loading module product (40/111) 
+2026-07-05 02:48:12,195 1 DEBUG hellenia_dev odoo.modules.loading: Module product loaded in 0.01s, 0 queries 
+2026-07-05 02:48:12,195 1 DEBUG hellenia_dev odoo.modules.loading: Loading module resource_mail (41/111) 
+2026-07-05 02:48:12,196 1 DEBUG hellenia_dev odoo.modules.loading: Module resource_mail loaded in 0.00s, 0 queries 
+2026-07-05 02:48:12,196 1 DEBUG hellenia_dev odoo.modules.loading: Loading module sales_team (42/111) 
+2026-07-05 02:48:12,198 1 DEBUG hellenia_dev odoo.modules.loading: Module sales_team loaded in 0.00s, 0 queries 
+2026-07-05 02:48:12,198 1 DEBUG hellenia_dev odoo.modules.loading: Loading module contacts_enterprise (43/111) 
+2026-07-05 02:48:12,199 1 DEBUG hellenia_dev odoo.modules.loading: Module contacts_enterprise loaded in 0.00s, 0 queries 
+2026-07-05 02:48:12,199 1 DEBUG hellenia_dev odoo.modules.loading: Loading module iap_extract (44/111) 
+2026-07-05 02:48:12,207 1 DEBUG hellenia_dev odoo.modules.loading: Module iap_extract loaded in 0.01s, 0 queries 
+2026-07-05 02:48:12,207 1 DEBUG hellenia_dev odoo.modules.loading: Loading module mail_mobile (45/111) 
+2026-07-05 02:48:12,213 1 DEBUG hellenia_dev odoo.modules.loading: Module mail_mobile loaded in 0.01s, 0 queries 
+2026-07-05 02:48:12,213 1 DEBUG hellenia_dev odoo.modules.loading: Loading module partner_autocomplete (46/111) 
+2026-07-05 02:48:12,218 1 DEBUG hellenia_dev odoo.modules.loading: Module partner_autocomplete loaded in 0.00s, 0 queries 
+2026-07-05 02:48:12,218 1 DEBUG hellenia_dev odoo.modules.loading: Loading module portal (47/111) 
+2026-07-05 02:48:12,223 1 DEBUG hellenia_dev odoo.modules.loading: Module portal loaded in 0.00s, 0 queries 
+2026-07-05 02:48:12,223 1 DEBUG hellenia_dev odoo.modules.loading: Loading module product_barcodelookup (48/111) 
+2026-07-05 02:48:12,234 1 DEBUG hellenia_dev odoo.modules.loading: Module product_barcodelookup loaded in 0.01s, 0 queries 
+2026-07-05 02:48:12,234 1 DEBUG hellenia_dev odoo.modules.loading: Loading module sms (49/111) 
+2026-07-05 02:48:12,242 1 DEBUG hellenia_dev odoo.modules.loading: Module sms loaded in 0.01s, 0 queries 
+2026-07-05 02:48:12,242 1 DEBUG hellenia_dev odoo.modules.loading: Loading module snailmail (50/111) 
+2026-07-05 02:48:12,297 1 DEBUG hellenia_dev odoo.modules.loading: Module snailmail loaded in 0.06s, 0 queries 
+2026-07-05 02:48:12,297 1 DEBUG hellenia_dev odoo.modules.loading: Loading module auth_passkey_portal (51/111) 
+2026-07-05 02:48:12,298 1 DEBUG hellenia_dev odoo.modules.loading: Module auth_passkey_portal loaded in 0.00s, 0 queries 
+2026-07-05 02:48:12,298 1 DEBUG hellenia_dev odoo.modules.loading: Loading module auth_totp_portal (52/111) 
+2026-07-05 02:48:12,298 1 DEBUG hellenia_dev odoo.modules.loading: Module auth_totp_portal loaded in 0.00s, 0 queries 
+2026-07-05 02:48:12,298 1 DEBUG hellenia_dev odoo.modules.loading: Loading module digest (53/111) 
+2026-07-05 02:48:12,300 1 DEBUG hellenia_dev odoo.modules.loading: Module digest loaded in 0.00s, 0 queries 
+2026-07-05 02:48:12,301 1 DEBUG hellenia_dev odoo.modules.loading: Loading module payment (54/111) 
+2026-07-05 02:48:12,311 1 DEBUG hellenia_dev odoo.modules.loading: Module payment loaded in 0.01s, 0 queries 
+2026-07-05 02:48:12,311 1 DEBUG hellenia_dev odoo.modules.loading: Loading module spreadsheet (55/111) 
+2026-07-05 02:48:12,313 1 DEBUG hellenia_dev odoo.modules.loading: Module spreadsheet loaded in 0.00s, 0 queries 
+2026-07-05 02:48:12,313 1 DEBUG hellenia_dev odoo.modules.loading: Loading module account (56/111) 
+2026-07-05 02:48:12,360 1 DEBUG hellenia_dev odoo.modules.loading: Module account loaded in 0.05s, 0 queries 
+2026-07-05 02:48:12,360 1 DEBUG hellenia_dev odoo.modules.loading: Loading module digest_enterprise (57/111) 
+2026-07-05 02:48:12,362 1 DEBUG hellenia_dev odoo.modules.loading: Module digest_enterprise loaded in 0.00s, 0 queries 
+2026-07-05 02:48:12,362 1 DEBUG hellenia_dev odoo.modules.loading: Loading module spreadsheet_dashboard (58/111) 
+2026-07-05 02:48:12,365 1 DEBUG hellenia_dev odoo.modules.loading: Module spreadsheet_dashboard loaded in 0.00s, 0 queries 
+2026-07-05 02:48:12,365 1 DEBUG hellenia_dev odoo.modules.loading: Loading module spreadsheet_edition (59/111) 
+2026-07-05 02:48:12,378 1 DEBUG hellenia_dev odoo.modules.loading: Module spreadsheet_edition loaded in 0.01s, 0 queries 
+2026-07-05 02:48:12,378 1 DEBUG hellenia_dev odoo.modules.loading: Loading module stock (60/111) 
+2026-07-05 02:48:12,403 1 DEBUG hellenia_dev odoo.modules.loading: Module stock loaded in 0.02s, 0 queries 
+2026-07-05 02:48:12,403 1 DEBUG hellenia_dev odoo.modules.loading: Loading module account_accountant (61/111) 
+2026-07-05 02:48:12,449 1 DEBUG hellenia_dev odoo.modules.loading: Module account_accountant loaded in 0.05s, 0 queries 
+2026-07-05 02:48:12,449 1 DEBUG hellenia_dev odoo.modules.loading: Loading module account_add_gln (62/111) 
+2026-07-05 02:48:12,450 1 DEBUG hellenia_dev odoo.modules.loading: Module account_add_gln loaded in 0.00s, 0 queries 
+2026-07-05 02:48:12,450 1 DEBUG hellenia_dev odoo.modules.loading: Loading module account_check_printing (63/111) 
+2026-07-05 02:48:12,452 1 DEBUG hellenia_dev odoo.modules.loading: Module account_check_printing loaded in 0.00s, 0 queries 
+2026-07-05 02:48:12,452 1 DEBUG hellenia_dev odoo.modules.loading: Loading module account_debit_note (64/111) 
+2026-07-05 02:48:12,454 1 DEBUG hellenia_dev odoo.modules.loading: Module account_debit_note loaded in 0.00s, 0 queries 
+2026-07-05 02:48:12,454 1 DEBUG hellenia_dev odoo.modules.loading: Loading module account_edi_ubl_cii (65/111) 
+2026-07-05 02:48:12,463 1 DEBUG hellenia_dev odoo.modules.loading: Module account_edi_ubl_cii loaded in 0.01s, 0 queries 
+2026-07-05 02:48:12,463 1 DEBUG hellenia_dev odoo.modules.loading: Loading module account_payment (66/111) 
+2026-07-05 02:48:12,468 1 DEBUG hellenia_dev odoo.modules.loading: Module account_payment loaded in 0.01s, 0 queries 
+2026-07-05 02:48:12,468 1 DEBUG hellenia_dev odoo.modules.loading: Loading module base_iban (67/111) 
+2026-07-05 02:48:12,469 1 DEBUG hellenia_dev odoo.modules.loading: Module base_iban loaded in 0.00s, 0 queries 
+2026-07-05 02:48:12,469 1 DEBUG hellenia_dev odoo.modules.loading: Loading module currency_rate_live (68/111) 
+2026-07-05 02:48:12,504 1 DEBUG hellenia_dev odoo.modules.loading: Module currency_rate_live loaded in 0.03s, 0 queries 
+2026-07-05 02:48:12,504 1 DEBUG hellenia_dev odoo.modules.loading: Loading module purchase (69/111) 
+2026-07-05 02:48:12,511 1 DEBUG hellenia_dev odoo.modules.loading: Module purchase loaded in 0.01s, 0 queries 
+2026-07-05 02:48:12,511 1 DEBUG hellenia_dev odoo.modules.loading: Loading module snailmail_account (70/111) 
+2026-07-05 02:48:12,513 1 DEBUG hellenia_dev odoo.modules.loading: Module snailmail_account loaded in 0.00s, 0 queries 
+2026-07-05 02:48:12,513 1 DEBUG hellenia_dev odoo.modules.loading: Loading module spreadsheet_account (71/111) 
+2026-07-05 02:48:12,514 1 DEBUG hellenia_dev odoo.modules.loading: Module spreadsheet_account loaded in 0.00s, 0 queries 
+2026-07-05 02:48:12,514 1 DEBUG hellenia_dev odoo.modules.loading: Loading module spreadsheet_dashboard_account (72/111) 
+2026-07-05 02:48:12,515 1 DEBUG hellenia_dev odoo.modules.loading: Module spreadsheet_dashboard_account loaded in 0.00s, 0 queries 
+2026-07-05 02:48:12,515 1 DEBUG hellenia_dev odoo.modules.loading: Loading module spreadsheet_dashboard_edition (73/111) 
+2026-07-05 02:48:12,519 1 DEBUG hellenia_dev odoo.modules.loading: Module spreadsheet_dashboard_edition loaded in 0.00s, 0 queries 
+2026-07-05 02:48:12,519 1 DEBUG hellenia_dev odoo.modules.loading: Loading module stock_account (74/111) 
+2026-07-05 02:48:12,527 1 DEBUG hellenia_dev odoo.modules.loading: Module stock_account loaded in 0.01s, 0 queries 
+2026-07-05 02:48:12,527 1 DEBUG hellenia_dev odoo.modules.loading: Loading module stock_enterprise (75/111) 
+2026-07-05 02:48:12,533 1 DEBUG hellenia_dev odoo.modules.loading: Module stock_enterprise loaded in 0.01s, 0 queries 
+2026-07-05 02:48:12,533 1 DEBUG hellenia_dev odoo.modules.loading: Loading module stock_sms (76/111) 
+2026-07-05 02:48:12,534 1 DEBUG hellenia_dev odoo.modules.loading: Module stock_sms loaded in 0.00s, 0 queries 
+2026-07-05 02:48:12,534 1 DEBUG hellenia_dev odoo.modules.loading: Loading module account_accountant_check_printing (77/111) 
+2026-07-05 02:48:12,537 1 DEBUG hellenia_dev odoo.modules.loading: Module account_accountant_check_printing loaded in 0.00s, 0 queries 
+2026-07-05 02:48:12,537 1 DEBUG hellenia_dev odoo.modules.loading: Loading module account_bank_statement_import (78/111) 
+2026-07-05 02:48:12,544 1 DEBUG hellenia_dev odoo.modules.loading: Module account_bank_statement_import loaded in 0.01s, 0 queries 
+2026-07-05 02:48:12,544 1 DEBUG hellenia_dev odoo.modules.loading: Loading module account_online_synchronization (79/111) 
+2026-07-05 02:48:12,567 1 DEBUG hellenia_dev odoo.modules.loading: Module account_online_synchronization loaded in 0.02s, 0 queries 
+2026-07-05 02:48:12,567 1 DEBUG hellenia_dev odoo.modules.loading: Loading module account_qr_code_sepa (80/111) 
+2026-07-05 02:48:12,568 1 DEBUG hellenia_dev odoo.modules.loading: Module account_qr_code_sepa loaded in 0.00s, 0 queries 
+2026-07-05 02:48:12,568 1 DEBUG hellenia_dev odoo.modules.loading: Loading module account_reports (81/111) 
+2026-07-05 02:48:12,749 1 DEBUG hellenia_dev odoo.modules.loading: Module account_reports loaded in 0.18s, 0 queries 
+2026-07-05 02:48:12,749 1 DEBUG hellenia_dev odoo.modules.loading: Loading module l10n_do (82/111) 
+2026-07-05 02:48:12,750 1 DEBUG hellenia_dev odoo.modules.loading: Module l10n_do loaded in 0.00s, 0 queries 
+2026-07-05 02:48:12,750 1 DEBUG hellenia_dev odoo.modules.loading: Loading module purchase_accountant (83/111) 
+2026-07-05 02:48:12,754 1 DEBUG hellenia_dev odoo.modules.loading: Module purchase_accountant loaded in 0.00s, 0 queries 
+2026-07-05 02:48:12,754 1 DEBUG hellenia_dev odoo.modules.loading: Loading module purchase_edi_ubl_bis3 (84/111) 
+2026-07-05 02:48:12,755 1 DEBUG hellenia_dev odoo.modules.loading: Module purchase_edi_ubl_bis3 loaded in 0.00s, 0 queries 
+2026-07-05 02:48:12,755 1 DEBUG hellenia_dev odoo.modules.loading: Loading module purchase_stock (85/111) 
+2026-07-05 02:48:12,762 1 DEBUG hellenia_dev odoo.modules.loading: Module purchase_stock loaded in 0.01s, 0 queries 
+2026-07-05 02:48:12,762 1 DEBUG hellenia_dev odoo.modules.loading: Loading module sale (86/111) 
+2026-07-05 02:48:12,772 1 DEBUG hellenia_dev odoo.modules.loading: Module sale loaded in 0.01s, 0 queries 
+2026-07-05 02:48:12,772 1 DEBUG hellenia_dev odoo.modules.loading: Loading module spreadsheet_dashboard_stock (87/111) 
+2026-07-05 02:48:12,774 1 DEBUG hellenia_dev odoo.modules.loading: Module spreadsheet_dashboard_stock loaded in 0.00s, 0 queries 
+2026-07-05 02:48:12,774 1 DEBUG hellenia_dev odoo.modules.loading: Loading module spreadsheet_dashboard_stock_account (88/111) 
+2026-07-05 02:48:12,774 1 DEBUG hellenia_dev odoo.modules.loading: Module spreadsheet_dashboard_stock_account loaded in 0.00s, 0 queries 
+2026-07-05 02:48:12,774 1 DEBUG hellenia_dev odoo.modules.loading: Loading module account_bank_statement_import_camt (89/111) 
+2026-07-05 02:48:12,783 1 DEBUG hellenia_dev odoo.modules.loading: Module account_bank_statement_import_camt loaded in 0.01s, 0 queries 
+2026-07-05 02:48:12,783 1 DEBUG hellenia_dev odoo.modules.loading: Loading module account_bank_statement_import_csv (90/111) 
+2026-07-05 02:48:12,789 1 DEBUG hellenia_dev odoo.modules.loading: Module account_bank_statement_import_csv loaded in 0.01s, 0 queries 
+2026-07-05 02:48:12,789 1 DEBUG hellenia_dev odoo.modules.loading: Loading module account_bank_statement_import_ofx (91/111) 
+2026-07-05 02:48:12,793 1 DEBUG hellenia_dev odoo.modules.loading: Module account_bank_statement_import_ofx loaded in 0.00s, 0 queries 
+2026-07-05 02:48:12,793 1 DEBUG hellenia_dev odoo.modules.loading: Loading module account_extract (92/111) 
+2026-07-05 02:48:12,794 1 DEBUG hellenia_dev odoo.modules.loading: Module account_extract loaded in 0.00s, 0 queries 
+2026-07-05 02:48:12,794 1 DEBUG hellenia_dev odoo.modules.loading: Loading module account_fiscal_categories (93/111) 
+2026-07-05 02:48:12,802 1 DEBUG hellenia_dev odoo.modules.loading: Module account_fiscal_categories loaded in 0.01s, 0 queries 
+2026-07-05 02:48:12,802 1 DEBUG hellenia_dev odoo.modules.loading: Loading module account_followup (94/111) 
+2026-07-05 02:48:12,819 1 DEBUG hellenia_dev odoo.modules.loading: Module account_followup loaded in 0.02s, 0 queries 
+2026-07-05 02:48:12,819 1 DEBUG hellenia_dev odoo.modules.loading: Loading module justech_l10n_do_base (95/111) 
+2026-07-05 02:48:12,824 1 WARNING hellenia_dev odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define models.Constraint on the model. 
+2026-07-05 02:48:12,825 1 DEBUG hellenia_dev odoo.modules.loading: Module justech_l10n_do_base loaded in 0.01s, 0 queries 
+2026-07-05 02:48:12,825 1 DEBUG hellenia_dev odoo.modules.loading: Loading module l10n_do_check_printing (96/111) 
+2026-07-05 02:48:12,831 1 DEBUG hellenia_dev odoo.modules.loading: Module l10n_do_check_printing loaded in 0.01s, 0 queries 
+2026-07-05 02:48:12,831 1 DEBUG hellenia_dev odoo.modules.loading: Loading module l10n_do_reports (97/111) 
+2026-07-05 02:48:12,832 1 DEBUG hellenia_dev odoo.modules.loading: Module l10n_do_reports loaded in 0.00s, 0 queries 
+2026-07-05 02:48:12,832 1 DEBUG hellenia_dev odoo.modules.loading: Loading module sale_account_accountant (98/111) 
+2026-07-05 02:48:12,839 1 DEBUG hellenia_dev odoo.modules.loading: Module sale_account_accountant loaded in 0.01s, 0 queries 
+2026-07-05 02:48:12,839 1 DEBUG hellenia_dev odoo.modules.loading: Loading module sale_edi_ubl (99/111) 
+2026-07-05 02:48:12,840 1 DEBUG hellenia_dev odoo.modules.loading: Module sale_edi_ubl loaded in 0.00s, 0 queries 
+2026-07-05 02:48:12,840 1 DEBUG hellenia_dev odoo.modules.loading: Loading module sale_enterprise (100/111) 
+2026-07-05 02:48:12,841 1 DEBUG hellenia_dev odoo.modules.loading: Module sale_enterprise loaded in 0.00s, 0 queries 
+2026-07-05 02:48:12,841 1 DEBUG hellenia_dev odoo.modules.loading: Loading module sale_purchase (101/111) 
+2026-07-05 02:48:12,843 1 DEBUG hellenia_dev odoo.modules.loading: Module sale_purchase loaded in 0.00s, 0 queries 
+2026-07-05 02:48:12,843 1 DEBUG hellenia_dev odoo.modules.loading: Loading module sale_sms (102/111) 
+2026-07-05 02:48:12,844 1 DEBUG hellenia_dev odoo.modules.loading: Module sale_sms loaded in 0.00s, 0 queries 
+2026-07-05 02:48:12,844 1 DEBUG hellenia_dev odoo.modules.loading: Loading module sale_stock (103/111) 
+2026-07-05 02:48:12,853 1 DEBUG hellenia_dev odoo.modules.loading: Module sale_stock loaded in 0.01s, 0 queries 
+2026-07-05 02:48:12,854 1 DEBUG hellenia_dev odoo.modules.loading: Loading module spreadsheet_dashboard_purchase_stock (104/111) 
+2026-07-05 02:48:12,855 1 DEBUG hellenia_dev odoo.modules.loading: Module spreadsheet_dashboard_purchase_stock loaded in 0.00s, 0 queries 
+2026-07-05 02:48:12,855 1 DEBUG hellenia_dev odoo.modules.loading: Loading module spreadsheet_dashboard_sale (105/111) 
+2026-07-05 02:48:12,856 1 DEBUG hellenia_dev odoo.modules.loading: Module spreadsheet_dashboard_sale loaded in 0.00s, 0 queries 
+2026-07-05 02:48:12,856 1 DEBUG hellenia_dev odoo.modules.loading: Loading module stock_accountant (106/111) 
+2026-07-05 02:48:12,860 1 DEBUG hellenia_dev odoo.modules.loading: Module stock_accountant loaded in 0.00s, 0 queries 
+2026-07-05 02:48:12,860 1 DEBUG hellenia_dev odoo.modules.loading: Loading module account_invoice_extract (107/111) 
+2026-07-05 02:48:12,877 1 DEBUG hellenia_dev odoo.modules.loading: Module account_invoice_extract loaded in 0.02s, 0 queries 
+2026-07-05 02:48:12,877 1 DEBUG hellenia_dev odoo.modules.loading: Loading module justech_l10n_do_ncf (108/111) 
+2026-07-05 02:48:12,883 1 WARNING hellenia_dev odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define models.Constraint on the model. 
+2026-07-05 02:48:12,883 1 DEBUG hellenia_dev odoo.modules.loading: Module justech_l10n_do_ncf loaded in 0.01s, 0 queries 
+2026-07-05 02:48:12,883 1 DEBUG hellenia_dev odoo.modules.loading: Loading module sale_purchase_stock (109/111) 
+2026-07-05 02:48:12,884 1 DEBUG hellenia_dev odoo.modules.loading: Module sale_purchase_stock loaded in 0.00s, 0 queries 
+2026-07-05 02:48:12,884 1 DEBUG hellenia_dev odoo.modules.loading: Loading module snailmail_account_followup (110/111) 
+2026-07-05 02:48:12,896 1 DEBUG hellenia_dev odoo.modules.loading: Module snailmail_account_followup loaded in 0.01s, 0 queries 
+2026-07-05 02:48:12,896 1 DEBUG hellenia_dev odoo.modules.loading: Loading module account_invoice_extract_purchase (111/111) 
+2026-07-05 02:48:12,899 1 DEBUG hellenia_dev odoo.modules.loading: Module account_invoice_extract_purchase loaded in 0.00s, 0 queries 
+2026-07-05 02:48:12,900 1 INFO hellenia_dev odoo.modules.loading: 111 modules loaded in 1.03s, 0 queries (+0 extra) 
+2026-07-05 02:48:13,158 1 ERROR hellenia_dev odoo.modules.loading: Some modules are not loaded, some dependencies or manifest may be missing: ['justech_l10n_do_reports'] 
+2026-07-05 02:48:14,020 1 INFO hellenia_dev odoo.modules.loading: Modules loaded. 
+2026-07-05 02:48:14,036 1 INFO hellenia_dev odoo.registry: Registry changed, signaling through the database 
+2026-07-05 02:48:14,037 1 INFO hellenia_dev odoo.registry: Registry loaded in 4.458s 
+2026-07-05 02:48:14,037 1 INFO hellenia_dev odoo.service.server: Initiating shutdown 
+2026-07-05 02:48:14,037 1 INFO hellenia_dev odoo.service.server: Hit CTRL-C again or send a second signal to force the shutdown. 
+2026-07-05 02:48:14,038 1 DEBUG hellenia_dev odoo.service.server: on_close call <bound method Event.set of <threading.Event at 0x76be8a832030: unset>> 
+2026-07-05 02:48:14,038 1 DEBUG hellenia_dev odoo.service.server: on_close call <function _kick_all at 0x76be8a43cea0> 
+2026-07-05 02:48:14,038 1 DEBUG hellenia_dev odoo.service.server: current thread: <_MainThread(MainThread, started 130560873406592)> 
+2026-07-05 02:48:14,038 1 DEBUG hellenia_dev odoo.service.server: process <_MainThread(MainThread, started 130560873406592)> (False) 
+2026-07-05 02:48:14,038 1 INFO hellenia_dev odoo.sql_db: ConnectionPool(read/write;used=0/count=0/max=64): Closed 1 connections  
+2026-07-05 02:48:14,038 1 DEBUG hellenia_dev odoo.service.server: -- 

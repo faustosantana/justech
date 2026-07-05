@@ -1,0 +1,5198 @@
+{
+  "phase": "C1-partners-rnc-diagnostic",
+  "mode": "read_only",
+  "database": "hellenia_test",
+  "timestamp_utc": "2026-07-05T02:56:17.563664+00:00",
+  "company": {
+    "id": 1,
+    "name": "Hellenia, S.R.L."
+  },
+  "summary": {
+    "posted_customer_moves_total": 334,
+    "posted_no_rnc_count": 254,
+    "posted_no_rnc_pct": 76.0,
+    "unique_partners_no_rnc": 48,
+    "total_amount_no_rnc": 945159.56,
+    "with_ncf_count": 242,
+    "without_ncf_count": 242,
+    "duplicate_name_clusters": 1,
+    "classification_counts": {
+      "smoke_test": 41,
+      "review_required": 3,
+      "incomplete_contact": 4
+    }
+  },
+  "partners": [
+    {
+      "partner_id": 311,
+      "name": "UAT Cliente Consumidor Final",
+      "ref": "P29B-CF",
+      "email": "",
+      "active": true,
+      "commercial_partner_id": 311,
+      "invoice_count": 169,
+      "credit_note_count": 19,
+      "total_amount": 527203.56,
+      "date_min": "2026-06-30",
+      "date_max": "2026-07-03",
+      "journals": {
+        "INV": 188
+      },
+      "doc_types": {
+        "03": 17,
+        "02": 152,
+        "04": 19
+      },
+      "ncf_count": 179,
+      "ncf_samples": [
+        "B0300020001",
+        "B0300020002",
+        "B0300020003",
+        "B0300020004",
+        "B0300020005"
+      ],
+      "sample_invoices": [
+        "DINV/2026/00002",
+        "DINV/2026/00003",
+        "DINV/2026/00004",
+        "DINV/2026/00005",
+        "DINV/2026/00006",
+        "DINV/2026/00007",
+        "DINV/2026/00008",
+        "DINV/2026/00009",
+        "DINV/2026/00010",
+        "DINV/2026/00011"
+      ],
+      "classification": "smoke_test",
+      "classification_labels": [
+        "smoke_test",
+        "consumidor_final_candidate"
+      ]
+    },
+    {
+      "partner_id": 2361,
+      "name": "SMOKE P13.4 CF",
+      "ref": "SMOKE-P134-CF-2361",
+      "email": "",
+      "active": true,
+      "commercial_partner_id": 2361,
+      "invoice_count": 6,
+      "credit_note_count": 0,
+      "total_amount": 70800.0,
+      "date_min": "2026-07-01",
+      "date_max": "2026-07-01",
+      "journals": {
+        "INV": 6
+      },
+      "doc_types": {
+        "02": 6
+      },
+      "ncf_count": 6,
+      "ncf_samples": [
+        "B0200020159",
+        "B0200020160",
+        "B0200020161",
+        "B0200020171",
+        "B0200020172"
+      ],
+      "sample_invoices": [
+        "INV/2026/00200",
+        "INV/2026/00201",
+        "INV/2026/00202",
+        "INV/2026/00212",
+        "INV/2026/00213",
+        "INV/2026/00214"
+      ],
+      "classification": "smoke_test",
+      "classification_labels": [
+        "smoke_test",
+        "consumidor_final_candidate"
+      ]
+    },
+    {
+      "partner_id": 2354,
+      "name": "Cliente cert 19.6 C1",
+      "ref": "",
+      "email": "",
+      "active": true,
+      "commercial_partner_id": 2354,
+      "invoice_count": 3,
+      "credit_note_count": 0,
+      "total_amount": 35400.0,
+      "date_min": "2026-07-01",
+      "date_max": "2026-07-01",
+      "journals": {
+        "INV": 3
+      },
+      "doc_types": {
+        "02": 3
+      },
+      "ncf_count": 3,
+      "ncf_samples": [
+        "B0200020145",
+        "B0200020146",
+        "B0200020147"
+      ],
+      "sample_invoices": [
+        "INV/2026/00186",
+        "INV/2026/00187",
+        "INV/2026/00188"
+      ],
+      "classification": "smoke_test",
+      "classification_labels": [
+        "smoke_test"
+      ]
+    },
+    {
+      "partner_id": 2355,
+      "name": "Cliente cert 19.6 C2",
+      "ref": "",
+      "email": "",
+      "active": true,
+      "commercial_partner_id": 2355,
+      "invoice_count": 3,
+      "credit_note_count": 0,
+      "total_amount": 35400.0,
+      "date_min": "2026-07-01",
+      "date_max": "2026-07-01",
+      "journals": {
+        "INV": 3
+      },
+      "doc_types": {
+        "02": 3
+      },
+      "ncf_count": 3,
+      "ncf_samples": [
+        "B0200020148",
+        "B0200020149",
+        "B0200020150"
+      ],
+      "sample_invoices": [
+        "INV/2026/00189",
+        "INV/2026/00190",
+        "INV/2026/00191"
+      ],
+      "classification": "smoke_test",
+      "classification_labels": [
+        "smoke_test"
+      ]
+    },
+    {
+      "partner_id": 2359,
+      "name": "Cliente cert 19.6 C6",
+      "ref": "",
+      "email": "",
+      "active": true,
+      "commercial_partner_id": 2359,
+      "invoice_count": 3,
+      "credit_note_count": 0,
+      "total_amount": 35400.0,
+      "date_min": "2026-07-01",
+      "date_max": "2026-07-01",
+      "journals": {
+        "INV": 3
+      },
+      "doc_types": {
+        "02": 3
+      },
+      "ncf_count": 3,
+      "ncf_samples": [
+        "B0200020154",
+        "B0200020155",
+        "B0200020156"
+      ],
+      "sample_invoices": [
+        "INV/2026/00195",
+        "INV/2026/00196",
+        "INV/2026/00197"
+      ],
+      "classification": "smoke_test",
+      "classification_labels": [
+        "smoke_test"
+      ]
+    },
+    {
+      "partner_id": 2362,
+      "name": "P199 H3",
+      "ref": "",
+      "email": "",
+      "active": true,
+      "commercial_partner_id": 2362,
+      "invoice_count": 3,
+      "credit_note_count": 0,
+      "total_amount": 35400.0,
+      "date_min": "2026-07-01",
+      "date_max": "2026-07-01",
+      "journals": {
+        "INV": 3
+      },
+      "doc_types": {
+        "02": 3
+      },
+      "ncf_count": 3,
+      "ncf_samples": [
+        "B0200020162",
+        "B0200020163",
+        "B0200020164"
+      ],
+      "sample_invoices": [
+        "INV/2026/00203",
+        "INV/2026/00204",
+        "INV/2026/00205"
+      ],
+      "classification": "review_required",
+      "classification_labels": [
+        "review_required"
+      ]
+    },
+    {
+      "partner_id": 2363,
+      "name": "P199 WEBSAVE",
+      "ref": "",
+      "email": "",
+      "active": true,
+      "commercial_partner_id": 2363,
+      "invoice_count": 3,
+      "credit_note_count": 0,
+      "total_amount": 35400.0,
+      "date_min": "2026-07-01",
+      "date_max": "2026-07-01",
+      "journals": {
+        "INV": 3
+      },
+      "doc_types": {
+        "02": 3
+      },
+      "ncf_count": 3,
+      "ncf_samples": [
+        "B0200020165",
+        "B0200020166",
+        "B0200020167"
+      ],
+      "sample_invoices": [
+        "INV/2026/00206",
+        "INV/2026/00207",
+        "INV/2026/00208"
+      ],
+      "classification": "review_required",
+      "classification_labels": [
+        "review_required"
+      ]
+    },
+    {
+      "partner_id": 2364,
+      "name": "P199 WH",
+      "ref": "",
+      "email": "",
+      "active": true,
+      "commercial_partner_id": 2364,
+      "invoice_count": 3,
+      "credit_note_count": 0,
+      "total_amount": 35400.0,
+      "date_min": "2026-07-01",
+      "date_max": "2026-07-01",
+      "journals": {
+        "INV": 3
+      },
+      "doc_types": {
+        "02": 3
+      },
+      "ncf_count": 3,
+      "ncf_samples": [
+        "B0200020168",
+        "B0200020169",
+        "B0200020170"
+      ],
+      "sample_invoices": [
+        "INV/2026/00209",
+        "INV/2026/00210",
+        "INV/2026/00211"
+      ],
+      "classification": "review_required",
+      "classification_labels": [
+        "review_required"
+      ]
+    },
+    {
+      "partner_id": 10,
+      "name": "Cliente prueba Fase 4",
+      "ref": "PHASE4-CUST",
+      "email": "",
+      "active": true,
+      "commercial_partner_id": 10,
+      "invoice_count": 2,
+      "credit_note_count": 0,
+      "total_amount": 23600.0,
+      "date_min": "2026-06-30",
+      "date_max": "2026-06-30",
+      "journals": {
+        "INV": 2
+      },
+      "doc_types": {
+        "sin_tipo": 2
+      },
+      "ncf_count": 0,
+      "ncf_samples": [],
+      "sample_invoices": [
+        "INV/2026/00001",
+        "INV/2026/00002"
+      ],
+      "classification": "smoke_test",
+      "classification_labels": [
+        "smoke_test"
+      ]
+    },
+    {
+      "partner_id": 13,
+      "name": "PHASE5 Cliente Lab",
+      "ref": "PHASE5-CUST",
+      "email": "",
+      "active": true,
+      "commercial_partner_id": 13,
+      "invoice_count": 1,
+      "credit_note_count": 0,
+      "total_amount": 23600.0,
+      "date_min": "2026-06-30",
+      "date_max": "2026-06-30",
+      "journals": {
+        "INV": 1
+      },
+      "doc_types": {
+        "sin_tipo": 1
+      },
+      "ncf_count": 0,
+      "ncf_samples": [],
+      "sample_invoices": [
+        "INV/2026/00003"
+      ],
+      "classification": "smoke_test",
+      "classification_labels": [
+        "smoke_test"
+      ]
+    },
+    {
+      "partner_id": 2360,
+      "name": "Cliente cert 19.6 C7",
+      "ref": "",
+      "email": "",
+      "active": true,
+      "commercial_partner_id": 2360,
+      "invoice_count": 2,
+      "credit_note_count": 0,
+      "total_amount": 23600.0,
+      "date_min": "2026-07-01",
+      "date_max": "2026-07-01",
+      "journals": {
+        "INV": 2
+      },
+      "doc_types": {
+        "02": 2
+      },
+      "ncf_count": 2,
+      "ncf_samples": [
+        "B0200020157",
+        "B0200020158"
+      ],
+      "sample_invoices": [
+        "INV/2026/00198",
+        "INV/2026/00199"
+      ],
+      "classification": "smoke_test",
+      "classification_labels": [
+        "smoke_test"
+      ]
+    },
+    {
+      "partner_id": 2356,
+      "name": "Cliente cert 19.6 C3",
+      "ref": "",
+      "email": "",
+      "active": true,
+      "commercial_partner_id": 2356,
+      "invoice_count": 1,
+      "credit_note_count": 0,
+      "total_amount": 11800.0,
+      "date_min": "2026-07-01",
+      "date_max": "2026-07-01",
+      "journals": {
+        "INV": 1
+      },
+      "doc_types": {
+        "02": 1
+      },
+      "ncf_count": 1,
+      "ncf_samples": [
+        "B0200020151"
+      ],
+      "sample_invoices": [
+        "INV/2026/00192"
+      ],
+      "classification": "smoke_test",
+      "classification_labels": [
+        "smoke_test"
+      ]
+    },
+    {
+      "partner_id": 2357,
+      "name": "Cliente cert 19.6 C4",
+      "ref": "",
+      "email": "",
+      "active": true,
+      "commercial_partner_id": 2357,
+      "invoice_count": 1,
+      "credit_note_count": 0,
+      "total_amount": 11800.0,
+      "date_min": "2026-07-01",
+      "date_max": "2026-07-01",
+      "journals": {
+        "INV": 1
+      },
+      "doc_types": {
+        "02": 1
+      },
+      "ncf_count": 1,
+      "ncf_samples": [
+        "B0200020152"
+      ],
+      "sample_invoices": [
+        "INV/2026/00193"
+      ],
+      "classification": "smoke_test",
+      "classification_labels": [
+        "smoke_test"
+      ]
+    },
+    {
+      "partner_id": 2358,
+      "name": "Cliente cert 19.6 C5",
+      "ref": "",
+      "email": "",
+      "active": true,
+      "commercial_partner_id": 2358,
+      "invoice_count": 1,
+      "credit_note_count": 0,
+      "total_amount": 11800.0,
+      "date_min": "2026-07-01",
+      "date_max": "2026-07-01",
+      "journals": {
+        "INV": 1
+      },
+      "doc_types": {
+        "02": 1
+      },
+      "ncf_count": 1,
+      "ncf_samples": [
+        "B0200020153"
+      ],
+      "sample_invoices": [
+        "INV/2026/00194"
+      ],
+      "classification": "smoke_test",
+      "classification_labels": [
+        "smoke_test"
+      ]
+    },
+    {
+      "partner_id": 421,
+      "name": "Cliente Demo 085",
+      "ref": "DEMO14-CUST-085",
+      "email": "cliente085@demo.hellenia.local",
+      "active": true,
+      "commercial_partner_id": 421,
+      "invoice_count": 1,
+      "credit_note_count": 0,
+      "total_amount": 944.0,
+      "date_min": "2026-06-16",
+      "date_max": "2026-06-16",
+      "journals": {
+        "INV": 1
+      },
+      "doc_types": {
+        "02": 1
+      },
+      "ncf_count": 1,
+      "ncf_samples": [
+        "B0200020127"
+      ],
+      "sample_invoices": [
+        "INV/2026/00163"
+      ],
+      "classification": "smoke_test",
+      "classification_labels": [
+        "smoke_test"
+      ]
+    },
+    {
+      "partner_id": 436,
+      "name": "Cliente Demo 100",
+      "ref": "DEMO14-CUST-100",
+      "email": "cliente100@demo.hellenia.local",
+      "active": true,
+      "commercial_partner_id": 436,
+      "invoice_count": 1,
+      "credit_note_count": 0,
+      "total_amount": 944.0,
+      "date_min": "2026-06-16",
+      "date_max": "2026-06-16",
+      "journals": {
+        "INV": 1
+      },
+      "doc_types": {
+        "02": 1
+      },
+      "ncf_count": 1,
+      "ncf_samples": [
+        "B0200020142"
+      ],
+      "sample_invoices": [
+        "INV/2026/00178"
+      ],
+      "classification": "smoke_test",
+      "classification_labels": [
+        "smoke_test"
+      ]
+    },
+    {
+      "partner_id": 420,
+      "name": "Cliente Demo 084",
+      "ref": "DEMO14-CUST-084",
+      "email": "cliente084@demo.hellenia.local",
+      "active": true,
+      "commercial_partner_id": 420,
+      "invoice_count": 1,
+      "credit_note_count": 0,
+      "total_amount": 944.0,
+      "date_min": "2026-06-17",
+      "date_max": "2026-06-17",
+      "journals": {
+        "INV": 1
+      },
+      "doc_types": {
+        "02": 1
+      },
+      "ncf_count": 1,
+      "ncf_samples": [
+        "B0200020126"
+      ],
+      "sample_invoices": [
+        "INV/2026/00162"
+      ],
+      "classification": "smoke_test",
+      "classification_labels": [
+        "smoke_test"
+      ]
+    },
+    {
+      "partner_id": 435,
+      "name": "Cliente Demo 099",
+      "ref": "DEMO14-CUST-099",
+      "email": "cliente099@demo.hellenia.local",
+      "active": true,
+      "commercial_partner_id": 435,
+      "invoice_count": 1,
+      "credit_note_count": 0,
+      "total_amount": 944.0,
+      "date_min": "2026-06-17",
+      "date_max": "2026-06-17",
+      "journals": {
+        "INV": 1
+      },
+      "doc_types": {
+        "02": 1
+      },
+      "ncf_count": 1,
+      "ncf_samples": [
+        "B0200020141"
+      ],
+      "sample_invoices": [
+        "INV/2026/00177"
+      ],
+      "classification": "smoke_test",
+      "classification_labels": [
+        "smoke_test"
+      ]
+    },
+    {
+      "partner_id": 419,
+      "name": "Cliente Demo 083",
+      "ref": "DEMO14-CUST-083",
+      "email": "cliente083@demo.hellenia.local",
+      "active": true,
+      "commercial_partner_id": 419,
+      "invoice_count": 1,
+      "credit_note_count": 0,
+      "total_amount": 944.0,
+      "date_min": "2026-06-18",
+      "date_max": "2026-06-18",
+      "journals": {
+        "INV": 1
+      },
+      "doc_types": {
+        "02": 1
+      },
+      "ncf_count": 1,
+      "ncf_samples": [
+        "B0200020125"
+      ],
+      "sample_invoices": [
+        "INV/2026/00161"
+      ],
+      "classification": "smoke_test",
+      "classification_labels": [
+        "smoke_test"
+      ]
+    },
+    {
+      "partner_id": 434,
+      "name": "Cliente Demo 098",
+      "ref": "DEMO14-CUST-098",
+      "email": "cliente098@demo.hellenia.local",
+      "active": true,
+      "commercial_partner_id": 434,
+      "invoice_count": 1,
+      "credit_note_count": 0,
+      "total_amount": 944.0,
+      "date_min": "2026-06-18",
+      "date_max": "2026-06-18",
+      "journals": {
+        "INV": 1
+      },
+      "doc_types": {
+        "02": 1
+      },
+      "ncf_count": 1,
+      "ncf_samples": [
+        "B0200020140"
+      ],
+      "sample_invoices": [
+        "INV/2026/00176"
+      ],
+      "classification": "smoke_test",
+      "classification_labels": [
+        "smoke_test"
+      ]
+    },
+    {
+      "partner_id": 418,
+      "name": "Cliente Demo 082",
+      "ref": "DEMO14-CUST-082",
+      "email": "cliente082@demo.hellenia.local",
+      "active": true,
+      "commercial_partner_id": 418,
+      "invoice_count": 1,
+      "credit_note_count": 0,
+      "total_amount": 944.0,
+      "date_min": "2026-06-19",
+      "date_max": "2026-06-19",
+      "journals": {
+        "INV": 1
+      },
+      "doc_types": {
+        "02": 1
+      },
+      "ncf_count": 1,
+      "ncf_samples": [
+        "B0200020124"
+      ],
+      "sample_invoices": [
+        "INV/2026/00160"
+      ],
+      "classification": "smoke_test",
+      "classification_labels": [
+        "smoke_test"
+      ]
+    },
+    {
+      "partner_id": 433,
+      "name": "Cliente Demo 097",
+      "ref": "DEMO14-CUST-097",
+      "email": "cliente097@demo.hellenia.local",
+      "active": true,
+      "commercial_partner_id": 433,
+      "invoice_count": 1,
+      "credit_note_count": 0,
+      "total_amount": 944.0,
+      "date_min": "2026-06-19",
+      "date_max": "2026-06-19",
+      "journals": {
+        "INV": 1
+      },
+      "doc_types": {
+        "02": 1
+      },
+      "ncf_count": 1,
+      "ncf_samples": [
+        "B0200020139"
+      ],
+      "sample_invoices": [
+        "INV/2026/00175"
+      ],
+      "classification": "smoke_test",
+      "classification_labels": [
+        "smoke_test"
+      ]
+    },
+    {
+      "partner_id": 417,
+      "name": "Cliente Demo 081",
+      "ref": "DEMO14-CUST-081",
+      "email": "cliente081@demo.hellenia.local",
+      "active": true,
+      "commercial_partner_id": 417,
+      "invoice_count": 1,
+      "credit_note_count": 0,
+      "total_amount": 944.0,
+      "date_min": "2026-06-20",
+      "date_max": "2026-06-20",
+      "journals": {
+        "INV": 1
+      },
+      "doc_types": {
+        "02": 1
+      },
+      "ncf_count": 1,
+      "ncf_samples": [
+        "B0200020123"
+      ],
+      "sample_invoices": [
+        "INV/2026/00159"
+      ],
+      "classification": "smoke_test",
+      "classification_labels": [
+        "smoke_test"
+      ]
+    },
+    {
+      "partner_id": 432,
+      "name": "Cliente Demo 096",
+      "ref": "DEMO14-CUST-096",
+      "email": "cliente096@demo.hellenia.local",
+      "active": true,
+      "commercial_partner_id": 432,
+      "invoice_count": 1,
+      "credit_note_count": 0,
+      "total_amount": 944.0,
+      "date_min": "2026-06-20",
+      "date_max": "2026-06-20",
+      "journals": {
+        "INV": 1
+      },
+      "doc_types": {
+        "02": 1
+      },
+      "ncf_count": 1,
+      "ncf_samples": [
+        "B0200020138"
+      ],
+      "sample_invoices": [
+        "INV/2026/00174"
+      ],
+      "classification": "smoke_test",
+      "classification_labels": [
+        "smoke_test"
+      ]
+    },
+    {
+      "partner_id": 416,
+      "name": "Cliente Demo 080",
+      "ref": "DEMO14-CUST-080",
+      "email": "cliente080@demo.hellenia.local",
+      "active": true,
+      "commercial_partner_id": 416,
+      "invoice_count": 1,
+      "credit_note_count": 0,
+      "total_amount": 944.0,
+      "date_min": "2026-06-21",
+      "date_max": "2026-06-21",
+      "journals": {
+        "INV": 1
+      },
+      "doc_types": {
+        "02": 1
+      },
+      "ncf_count": 1,
+      "ncf_samples": [
+        "B0200020122"
+      ],
+      "sample_invoices": [
+        "INV/2026/00158"
+      ],
+      "classification": "smoke_test",
+      "classification_labels": [
+        "smoke_test"
+      ]
+    },
+    {
+      "partner_id": 431,
+      "name": "Cliente Demo 095",
+      "ref": "DEMO14-CUST-095",
+      "email": "cliente095@demo.hellenia.local",
+      "active": true,
+      "commercial_partner_id": 431,
+      "invoice_count": 1,
+      "credit_note_count": 0,
+      "total_amount": 944.0,
+      "date_min": "2026-06-21",
+      "date_max": "2026-06-21",
+      "journals": {
+        "INV": 1
+      },
+      "doc_types": {
+        "02": 1
+      },
+      "ncf_count": 1,
+      "ncf_samples": [
+        "B0200020137"
+      ],
+      "sample_invoices": [
+        "INV/2026/00173"
+      ],
+      "classification": "smoke_test",
+      "classification_labels": [
+        "smoke_test"
+      ]
+    },
+    {
+      "partner_id": 415,
+      "name": "Cliente Demo 079",
+      "ref": "DEMO14-CUST-079",
+      "email": "cliente079@demo.hellenia.local",
+      "active": true,
+      "commercial_partner_id": 415,
+      "invoice_count": 1,
+      "credit_note_count": 0,
+      "total_amount": 944.0,
+      "date_min": "2026-06-22",
+      "date_max": "2026-06-22",
+      "journals": {
+        "INV": 1
+      },
+      "doc_types": {
+        "02": 1
+      },
+      "ncf_count": 1,
+      "ncf_samples": [
+        "B0200020121"
+      ],
+      "sample_invoices": [
+        "INV/2026/00157"
+      ],
+      "classification": "smoke_test",
+      "classification_labels": [
+        "smoke_test"
+      ]
+    },
+    {
+      "partner_id": 430,
+      "name": "Cliente Demo 094",
+      "ref": "DEMO14-CUST-094",
+      "email": "cliente094@demo.hellenia.local",
+      "active": true,
+      "commercial_partner_id": 430,
+      "invoice_count": 1,
+      "credit_note_count": 0,
+      "total_amount": 944.0,
+      "date_min": "2026-06-22",
+      "date_max": "2026-06-22",
+      "journals": {
+        "INV": 1
+      },
+      "doc_types": {
+        "02": 1
+      },
+      "ncf_count": 1,
+      "ncf_samples": [
+        "B0200020136"
+      ],
+      "sample_invoices": [
+        "INV/2026/00172"
+      ],
+      "classification": "smoke_test",
+      "classification_labels": [
+        "smoke_test"
+      ]
+    },
+    {
+      "partner_id": 414,
+      "name": "Cliente Demo 078",
+      "ref": "DEMO14-CUST-078",
+      "email": "cliente078@demo.hellenia.local",
+      "active": true,
+      "commercial_partner_id": 414,
+      "invoice_count": 1,
+      "credit_note_count": 0,
+      "total_amount": 944.0,
+      "date_min": "2026-06-23",
+      "date_max": "2026-06-23",
+      "journals": {
+        "INV": 1
+      },
+      "doc_types": {
+        "02": 1
+      },
+      "ncf_count": 1,
+      "ncf_samples": [
+        "B0200020120"
+      ],
+      "sample_invoices": [
+        "INV/2026/00156"
+      ],
+      "classification": "smoke_test",
+      "classification_labels": [
+        "smoke_test"
+      ]
+    },
+    {
+      "partner_id": 429,
+      "name": "Cliente Demo 093",
+      "ref": "DEMO14-CUST-093",
+      "email": "cliente093@demo.hellenia.local",
+      "active": true,
+      "commercial_partner_id": 429,
+      "invoice_count": 1,
+      "credit_note_count": 0,
+      "total_amount": 944.0,
+      "date_min": "2026-06-23",
+      "date_max": "2026-06-23",
+      "journals": {
+        "INV": 1
+      },
+      "doc_types": {
+        "02": 1
+      },
+      "ncf_count": 1,
+      "ncf_samples": [
+        "B0200020135"
+      ],
+      "sample_invoices": [
+        "INV/2026/00171"
+      ],
+      "classification": "smoke_test",
+      "classification_labels": [
+        "smoke_test"
+      ]
+    },
+    {
+      "partner_id": 413,
+      "name": "Cliente Demo 077",
+      "ref": "DEMO14-CUST-077",
+      "email": "cliente077@demo.hellenia.local",
+      "active": true,
+      "commercial_partner_id": 413,
+      "invoice_count": 1,
+      "credit_note_count": 0,
+      "total_amount": 944.0,
+      "date_min": "2026-06-24",
+      "date_max": "2026-06-24",
+      "journals": {
+        "INV": 1
+      },
+      "doc_types": {
+        "02": 1
+      },
+      "ncf_count": 1,
+      "ncf_samples": [
+        "B0200020119"
+      ],
+      "sample_invoices": [
+        "INV/2026/00155"
+      ],
+      "classification": "smoke_test",
+      "classification_labels": [
+        "smoke_test"
+      ]
+    },
+    {
+      "partner_id": 428,
+      "name": "Cliente Demo 092",
+      "ref": "DEMO14-CUST-092",
+      "email": "cliente092@demo.hellenia.local",
+      "active": true,
+      "commercial_partner_id": 428,
+      "invoice_count": 1,
+      "credit_note_count": 0,
+      "total_amount": 944.0,
+      "date_min": "2026-06-24",
+      "date_max": "2026-06-24",
+      "journals": {
+        "INV": 1
+      },
+      "doc_types": {
+        "02": 1
+      },
+      "ncf_count": 1,
+      "ncf_samples": [
+        "B0200020134"
+      ],
+      "sample_invoices": [
+        "INV/2026/00170"
+      ],
+      "classification": "smoke_test",
+      "classification_labels": [
+        "smoke_test"
+      ]
+    },
+    {
+      "partner_id": 412,
+      "name": "Cliente Demo 076",
+      "ref": "DEMO14-CUST-076",
+      "email": "cliente076@demo.hellenia.local",
+      "active": true,
+      "commercial_partner_id": 412,
+      "invoice_count": 1,
+      "credit_note_count": 0,
+      "total_amount": 944.0,
+      "date_min": "2026-06-25",
+      "date_max": "2026-06-25",
+      "journals": {
+        "INV": 1
+      },
+      "doc_types": {
+        "02": 1
+      },
+      "ncf_count": 1,
+      "ncf_samples": [
+        "B0200020118"
+      ],
+      "sample_invoices": [
+        "INV/2026/00154"
+      ],
+      "classification": "smoke_test",
+      "classification_labels": [
+        "smoke_test"
+      ]
+    },
+    {
+      "partner_id": 427,
+      "name": "Cliente Demo 091",
+      "ref": "DEMO14-CUST-091",
+      "email": "cliente091@demo.hellenia.local",
+      "active": true,
+      "commercial_partner_id": 427,
+      "invoice_count": 1,
+      "credit_note_count": 0,
+      "total_amount": 944.0,
+      "date_min": "2026-06-25",
+      "date_max": "2026-06-25",
+      "journals": {
+        "INV": 1
+      },
+      "doc_types": {
+        "02": 1
+      },
+      "ncf_count": 1,
+      "ncf_samples": [
+        "B0200020133"
+      ],
+      "sample_invoices": [
+        "INV/2026/00169"
+      ],
+      "classification": "smoke_test",
+      "classification_labels": [
+        "smoke_test"
+      ]
+    },
+    {
+      "partner_id": 411,
+      "name": "Cliente Demo 075",
+      "ref": "DEMO14-CUST-075",
+      "email": "cliente075@demo.hellenia.local",
+      "active": true,
+      "commercial_partner_id": 411,
+      "invoice_count": 1,
+      "credit_note_count": 0,
+      "total_amount": 944.0,
+      "date_min": "2026-06-26",
+      "date_max": "2026-06-26",
+      "journals": {
+        "INV": 1
+      },
+      "doc_types": {
+        "02": 1
+      },
+      "ncf_count": 1,
+      "ncf_samples": [
+        "B0200020117"
+      ],
+      "sample_invoices": [
+        "INV/2026/00153"
+      ],
+      "classification": "smoke_test",
+      "classification_labels": [
+        "smoke_test"
+      ]
+    },
+    {
+      "partner_id": 426,
+      "name": "Cliente Demo 090",
+      "ref": "DEMO14-CUST-090",
+      "email": "cliente090@demo.hellenia.local",
+      "active": true,
+      "commercial_partner_id": 426,
+      "invoice_count": 1,
+      "credit_note_count": 0,
+      "total_amount": 944.0,
+      "date_min": "2026-06-26",
+      "date_max": "2026-06-26",
+      "journals": {
+        "INV": 1
+      },
+      "doc_types": {
+        "02": 1
+      },
+      "ncf_count": 1,
+      "ncf_samples": [
+        "B0200020132"
+      ],
+      "sample_invoices": [
+        "INV/2026/00168"
+      ],
+      "classification": "smoke_test",
+      "classification_labels": [
+        "smoke_test"
+      ]
+    },
+    {
+      "partner_id": 410,
+      "name": "Cliente Demo 074",
+      "ref": "DEMO14-CUST-074",
+      "email": "cliente074@demo.hellenia.local",
+      "active": true,
+      "commercial_partner_id": 410,
+      "invoice_count": 1,
+      "credit_note_count": 0,
+      "total_amount": 944.0,
+      "date_min": "2026-06-27",
+      "date_max": "2026-06-27",
+      "journals": {
+        "INV": 1
+      },
+      "doc_types": {
+        "02": 1
+      },
+      "ncf_count": 1,
+      "ncf_samples": [
+        "B0200020116"
+      ],
+      "sample_invoices": [
+        "INV/2026/00152"
+      ],
+      "classification": "smoke_test",
+      "classification_labels": [
+        "smoke_test"
+      ]
+    },
+    {
+      "partner_id": 425,
+      "name": "Cliente Demo 089",
+      "ref": "DEMO14-CUST-089",
+      "email": "cliente089@demo.hellenia.local",
+      "active": true,
+      "commercial_partner_id": 425,
+      "invoice_count": 1,
+      "credit_note_count": 0,
+      "total_amount": 944.0,
+      "date_min": "2026-06-27",
+      "date_max": "2026-06-27",
+      "journals": {
+        "INV": 1
+      },
+      "doc_types": {
+        "02": 1
+      },
+      "ncf_count": 1,
+      "ncf_samples": [
+        "B0200020131"
+      ],
+      "sample_invoices": [
+        "INV/2026/00167"
+      ],
+      "classification": "smoke_test",
+      "classification_labels": [
+        "smoke_test"
+      ]
+    },
+    {
+      "partner_id": 409,
+      "name": "Cliente Demo 073",
+      "ref": "DEMO14-CUST-073",
+      "email": "cliente073@demo.hellenia.local",
+      "active": true,
+      "commercial_partner_id": 409,
+      "invoice_count": 1,
+      "credit_note_count": 0,
+      "total_amount": 944.0,
+      "date_min": "2026-06-28",
+      "date_max": "2026-06-28",
+      "journals": {
+        "INV": 1
+      },
+      "doc_types": {
+        "02": 1
+      },
+      "ncf_count": 1,
+      "ncf_samples": [
+        "B0200020115"
+      ],
+      "sample_invoices": [
+        "INV/2026/00151"
+      ],
+      "classification": "smoke_test",
+      "classification_labels": [
+        "smoke_test"
+      ]
+    },
+    {
+      "partner_id": 424,
+      "name": "Cliente Demo 088",
+      "ref": "DEMO14-CUST-088",
+      "email": "cliente088@demo.hellenia.local",
+      "active": true,
+      "commercial_partner_id": 424,
+      "invoice_count": 1,
+      "credit_note_count": 0,
+      "total_amount": 944.0,
+      "date_min": "2026-06-28",
+      "date_max": "2026-06-28",
+      "journals": {
+        "INV": 1
+      },
+      "doc_types": {
+        "02": 1
+      },
+      "ncf_count": 1,
+      "ncf_samples": [
+        "B0200020130"
+      ],
+      "sample_invoices": [
+        "INV/2026/00166"
+      ],
+      "classification": "smoke_test",
+      "classification_labels": [
+        "smoke_test"
+      ]
+    },
+    {
+      "partner_id": 408,
+      "name": "Cliente Demo 072",
+      "ref": "DEMO14-CUST-072",
+      "email": "cliente072@demo.hellenia.local",
+      "active": true,
+      "commercial_partner_id": 408,
+      "invoice_count": 1,
+      "credit_note_count": 0,
+      "total_amount": 944.0,
+      "date_min": "2026-06-29",
+      "date_max": "2026-06-29",
+      "journals": {
+        "INV": 1
+      },
+      "doc_types": {
+        "02": 1
+      },
+      "ncf_count": 1,
+      "ncf_samples": [
+        "B0200020114"
+      ],
+      "sample_invoices": [
+        "INV/2026/00150"
+      ],
+      "classification": "smoke_test",
+      "classification_labels": [
+        "smoke_test"
+      ]
+    },
+    {
+      "partner_id": 423,
+      "name": "Cliente Demo 087",
+      "ref": "DEMO14-CUST-087",
+      "email": "cliente087@demo.hellenia.local",
+      "active": true,
+      "commercial_partner_id": 423,
+      "invoice_count": 1,
+      "credit_note_count": 0,
+      "total_amount": 944.0,
+      "date_min": "2026-06-29",
+      "date_max": "2026-06-29",
+      "journals": {
+        "INV": 1
+      },
+      "doc_types": {
+        "02": 1
+      },
+      "ncf_count": 1,
+      "ncf_samples": [
+        "B0200020129"
+      ],
+      "sample_invoices": [
+        "INV/2026/00165"
+      ],
+      "classification": "smoke_test",
+      "classification_labels": [
+        "smoke_test"
+      ]
+    },
+    {
+      "partner_id": 407,
+      "name": "Cliente Demo 071",
+      "ref": "DEMO14-CUST-071",
+      "email": "cliente071@demo.hellenia.local",
+      "active": true,
+      "commercial_partner_id": 407,
+      "invoice_count": 1,
+      "credit_note_count": 0,
+      "total_amount": 944.0,
+      "date_min": "2026-06-30",
+      "date_max": "2026-06-30",
+      "journals": {
+        "INV": 1
+      },
+      "doc_types": {
+        "02": 1
+      },
+      "ncf_count": 1,
+      "ncf_samples": [
+        "B0200020113"
+      ],
+      "sample_invoices": [
+        "INV/2026/00149"
+      ],
+      "classification": "smoke_test",
+      "classification_labels": [
+        "smoke_test"
+      ]
+    },
+    {
+      "partner_id": 422,
+      "name": "Cliente Demo 086",
+      "ref": "DEMO14-CUST-086",
+      "email": "cliente086@demo.hellenia.local",
+      "active": true,
+      "commercial_partner_id": 422,
+      "invoice_count": 1,
+      "credit_note_count": 0,
+      "total_amount": 944.0,
+      "date_min": "2026-06-30",
+      "date_max": "2026-06-30",
+      "journals": {
+        "INV": 1
+      },
+      "doc_types": {
+        "02": 1
+      },
+      "ncf_count": 1,
+      "ncf_samples": [
+        "B0200020128"
+      ],
+      "sample_invoices": [
+        "INV/2026/00164"
+      ],
+      "classification": "smoke_test",
+      "classification_labels": [
+        "smoke_test"
+      ]
+    },
+    {
+      "partner_id": 227,
+      "name": "Concurrent Worker 0",
+      "ref": "",
+      "email": "",
+      "active": true,
+      "commercial_partner_id": 227,
+      "invoice_count": 1,
+      "credit_note_count": 0,
+      "total_amount": 59.0,
+      "date_min": "2026-06-30",
+      "date_max": "2026-06-30",
+      "journals": {
+        "PCC": 1
+      },
+      "doc_types": {
+        "02": 1
+      },
+      "ncf_count": 1,
+      "ncf_samples": [
+        "B0200007000"
+      ],
+      "sample_invoices": [
+        "PCC/2026/00001"
+      ],
+      "classification": "incomplete_contact",
+      "classification_labels": [
+        "incomplete_contact",
+        "duplicate_cluster"
+      ]
+    },
+    {
+      "partner_id": 229,
+      "name": "Concurrent Worker 0",
+      "ref": "",
+      "email": "",
+      "active": true,
+      "commercial_partner_id": 229,
+      "invoice_count": 1,
+      "credit_note_count": 0,
+      "total_amount": 59.0,
+      "date_min": "2026-06-30",
+      "date_max": "2026-06-30",
+      "journals": {
+        "PCC": 1
+      },
+      "doc_types": {
+        "02": 1
+      },
+      "ncf_count": 1,
+      "ncf_samples": [
+        "B0200007001"
+      ],
+      "sample_invoices": [
+        "PCC/2026/00002"
+      ],
+      "classification": "incomplete_contact",
+      "classification_labels": [
+        "incomplete_contact",
+        "duplicate_cluster"
+      ]
+    },
+    {
+      "partner_id": 275,
+      "name": "Concurrent Worker 0",
+      "ref": "",
+      "email": "",
+      "active": true,
+      "commercial_partner_id": 275,
+      "invoice_count": 1,
+      "credit_note_count": 0,
+      "total_amount": 59.0,
+      "date_min": "2026-06-30",
+      "date_max": "2026-06-30",
+      "journals": {
+        "PCC": 1
+      },
+      "doc_types": {
+        "02": 1
+      },
+      "ncf_count": 1,
+      "ncf_samples": [
+        "B0200007002"
+      ],
+      "sample_invoices": [
+        "PCC/2026/00003"
+      ],
+      "classification": "incomplete_contact",
+      "classification_labels": [
+        "incomplete_contact",
+        "duplicate_cluster"
+      ]
+    },
+    {
+      "partner_id": 317,
+      "name": "Concurrent Worker 1",
+      "ref": "",
+      "email": "",
+      "active": true,
+      "commercial_partner_id": 317,
+      "invoice_count": 1,
+      "credit_note_count": 0,
+      "total_amount": 59.0,
+      "date_min": "2026-06-30",
+      "date_max": "2026-06-30",
+      "journals": {
+        "PCC": 1
+      },
+      "doc_types": {
+        "02": 1
+      },
+      "ncf_count": 1,
+      "ncf_samples": [
+        "B0200007003"
+      ],
+      "sample_invoices": [
+        "PCC/2026/00004"
+      ],
+      "classification": "incomplete_contact",
+      "classification_labels": [
+        "incomplete_contact"
+      ]
+    }
+  ],
+  "invoices_detail": [
+    {
+      "id": 764,
+      "name": "INV/2026/00163",
+      "date": "2026-06-16",
+      "partner_id": 421,
+      "partner_name": "Cliente Demo 085",
+      "amount_total": 944.0,
+      "journal": "INV",
+      "ncf": "B0200020127",
+      "doc_type": "02"
+    },
+    {
+      "id": 779,
+      "name": "INV/2026/00178",
+      "date": "2026-06-16",
+      "partner_id": 436,
+      "partner_name": "Cliente Demo 100",
+      "amount_total": 944.0,
+      "journal": "INV",
+      "ncf": "B0200020142",
+      "doc_type": "02"
+    },
+    {
+      "id": 763,
+      "name": "INV/2026/00162",
+      "date": "2026-06-17",
+      "partner_id": 420,
+      "partner_name": "Cliente Demo 084",
+      "amount_total": 944.0,
+      "journal": "INV",
+      "ncf": "B0200020126",
+      "doc_type": "02"
+    },
+    {
+      "id": 778,
+      "name": "INV/2026/00177",
+      "date": "2026-06-17",
+      "partner_id": 435,
+      "partner_name": "Cliente Demo 099",
+      "amount_total": 944.0,
+      "journal": "INV",
+      "ncf": "B0200020141",
+      "doc_type": "02"
+    },
+    {
+      "id": 762,
+      "name": "INV/2026/00161",
+      "date": "2026-06-18",
+      "partner_id": 419,
+      "partner_name": "Cliente Demo 083",
+      "amount_total": 944.0,
+      "journal": "INV",
+      "ncf": "B0200020125",
+      "doc_type": "02"
+    },
+    {
+      "id": 777,
+      "name": "INV/2026/00176",
+      "date": "2026-06-18",
+      "partner_id": 434,
+      "partner_name": "Cliente Demo 098",
+      "amount_total": 944.0,
+      "journal": "INV",
+      "ncf": "B0200020140",
+      "doc_type": "02"
+    },
+    {
+      "id": 761,
+      "name": "INV/2026/00160",
+      "date": "2026-06-19",
+      "partner_id": 418,
+      "partner_name": "Cliente Demo 082",
+      "amount_total": 944.0,
+      "journal": "INV",
+      "ncf": "B0200020124",
+      "doc_type": "02"
+    },
+    {
+      "id": 776,
+      "name": "INV/2026/00175",
+      "date": "2026-06-19",
+      "partner_id": 433,
+      "partner_name": "Cliente Demo 097",
+      "amount_total": 944.0,
+      "journal": "INV",
+      "ncf": "B0200020139",
+      "doc_type": "02"
+    },
+    {
+      "id": 760,
+      "name": "INV/2026/00159",
+      "date": "2026-06-20",
+      "partner_id": 417,
+      "partner_name": "Cliente Demo 081",
+      "amount_total": 944.0,
+      "journal": "INV",
+      "ncf": "B0200020123",
+      "doc_type": "02"
+    },
+    {
+      "id": 775,
+      "name": "INV/2026/00174",
+      "date": "2026-06-20",
+      "partner_id": 432,
+      "partner_name": "Cliente Demo 096",
+      "amount_total": 944.0,
+      "journal": "INV",
+      "ncf": "B0200020138",
+      "doc_type": "02"
+    },
+    {
+      "id": 759,
+      "name": "INV/2026/00158",
+      "date": "2026-06-21",
+      "partner_id": 416,
+      "partner_name": "Cliente Demo 080",
+      "amount_total": 944.0,
+      "journal": "INV",
+      "ncf": "B0200020122",
+      "doc_type": "02"
+    },
+    {
+      "id": 774,
+      "name": "INV/2026/00173",
+      "date": "2026-06-21",
+      "partner_id": 431,
+      "partner_name": "Cliente Demo 095",
+      "amount_total": 944.0,
+      "journal": "INV",
+      "ncf": "B0200020137",
+      "doc_type": "02"
+    },
+    {
+      "id": 758,
+      "name": "INV/2026/00157",
+      "date": "2026-06-22",
+      "partner_id": 415,
+      "partner_name": "Cliente Demo 079",
+      "amount_total": 944.0,
+      "journal": "INV",
+      "ncf": "B0200020121",
+      "doc_type": "02"
+    },
+    {
+      "id": 773,
+      "name": "INV/2026/00172",
+      "date": "2026-06-22",
+      "partner_id": 430,
+      "partner_name": "Cliente Demo 094",
+      "amount_total": 944.0,
+      "journal": "INV",
+      "ncf": "B0200020136",
+      "doc_type": "02"
+    },
+    {
+      "id": 757,
+      "name": "INV/2026/00156",
+      "date": "2026-06-23",
+      "partner_id": 414,
+      "partner_name": "Cliente Demo 078",
+      "amount_total": 944.0,
+      "journal": "INV",
+      "ncf": "B0200020120",
+      "doc_type": "02"
+    },
+    {
+      "id": 772,
+      "name": "INV/2026/00171",
+      "date": "2026-06-23",
+      "partner_id": 429,
+      "partner_name": "Cliente Demo 093",
+      "amount_total": 944.0,
+      "journal": "INV",
+      "ncf": "B0200020135",
+      "doc_type": "02"
+    },
+    {
+      "id": 756,
+      "name": "INV/2026/00155",
+      "date": "2026-06-24",
+      "partner_id": 413,
+      "partner_name": "Cliente Demo 077",
+      "amount_total": 944.0,
+      "journal": "INV",
+      "ncf": "B0200020119",
+      "doc_type": "02"
+    },
+    {
+      "id": 771,
+      "name": "INV/2026/00170",
+      "date": "2026-06-24",
+      "partner_id": 428,
+      "partner_name": "Cliente Demo 092",
+      "amount_total": 944.0,
+      "journal": "INV",
+      "ncf": "B0200020134",
+      "doc_type": "02"
+    },
+    {
+      "id": 755,
+      "name": "INV/2026/00154",
+      "date": "2026-06-25",
+      "partner_id": 412,
+      "partner_name": "Cliente Demo 076",
+      "amount_total": 944.0,
+      "journal": "INV",
+      "ncf": "B0200020118",
+      "doc_type": "02"
+    },
+    {
+      "id": 770,
+      "name": "INV/2026/00169",
+      "date": "2026-06-25",
+      "partner_id": 427,
+      "partner_name": "Cliente Demo 091",
+      "amount_total": 944.0,
+      "journal": "INV",
+      "ncf": "B0200020133",
+      "doc_type": "02"
+    },
+    {
+      "id": 754,
+      "name": "INV/2026/00153",
+      "date": "2026-06-26",
+      "partner_id": 411,
+      "partner_name": "Cliente Demo 075",
+      "amount_total": 944.0,
+      "journal": "INV",
+      "ncf": "B0200020117",
+      "doc_type": "02"
+    },
+    {
+      "id": 769,
+      "name": "INV/2026/00168",
+      "date": "2026-06-26",
+      "partner_id": 426,
+      "partner_name": "Cliente Demo 090",
+      "amount_total": 944.0,
+      "journal": "INV",
+      "ncf": "B0200020132",
+      "doc_type": "02"
+    },
+    {
+      "id": 753,
+      "name": "INV/2026/00152",
+      "date": "2026-06-27",
+      "partner_id": 410,
+      "partner_name": "Cliente Demo 074",
+      "amount_total": 944.0,
+      "journal": "INV",
+      "ncf": "B0200020116",
+      "doc_type": "02"
+    },
+    {
+      "id": 768,
+      "name": "INV/2026/00167",
+      "date": "2026-06-27",
+      "partner_id": 425,
+      "partner_name": "Cliente Demo 089",
+      "amount_total": 944.0,
+      "journal": "INV",
+      "ncf": "B0200020131",
+      "doc_type": "02"
+    },
+    {
+      "id": 752,
+      "name": "INV/2026/00151",
+      "date": "2026-06-28",
+      "partner_id": 409,
+      "partner_name": "Cliente Demo 073",
+      "amount_total": 944.0,
+      "journal": "INV",
+      "ncf": "B0200020115",
+      "doc_type": "02"
+    },
+    {
+      "id": 767,
+      "name": "INV/2026/00166",
+      "date": "2026-06-28",
+      "partner_id": 424,
+      "partner_name": "Cliente Demo 088",
+      "amount_total": 944.0,
+      "journal": "INV",
+      "ncf": "B0200020130",
+      "doc_type": "02"
+    },
+    {
+      "id": 751,
+      "name": "INV/2026/00150",
+      "date": "2026-06-29",
+      "partner_id": 408,
+      "partner_name": "Cliente Demo 072",
+      "amount_total": 944.0,
+      "journal": "INV",
+      "ncf": "B0200020114",
+      "doc_type": "02"
+    },
+    {
+      "id": 766,
+      "name": "INV/2026/00165",
+      "date": "2026-06-29",
+      "partner_id": 423,
+      "partner_name": "Cliente Demo 087",
+      "amount_total": 944.0,
+      "journal": "INV",
+      "ncf": "B0200020129",
+      "doc_type": "02"
+    },
+    {
+      "id": 669,
+      "name": "DINV/2026/00002",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "amount_total": 100.0,
+      "journal": "INV",
+      "ncf": "B0300020001",
+      "doc_type": "03"
+    },
+    {
+      "id": 670,
+      "name": "DINV/2026/00003",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "amount_total": 100.0,
+      "journal": "INV",
+      "ncf": "B0300020002",
+      "doc_type": "03"
+    },
+    {
+      "id": 671,
+      "name": "DINV/2026/00004",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "amount_total": 100.0,
+      "journal": "INV",
+      "ncf": "B0300020003",
+      "doc_type": "03"
+    },
+    {
+      "id": 672,
+      "name": "DINV/2026/00005",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "amount_total": 100.0,
+      "journal": "INV",
+      "ncf": "B0300020004",
+      "doc_type": "03"
+    },
+    {
+      "id": 673,
+      "name": "DINV/2026/00006",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "amount_total": 100.0,
+      "journal": "INV",
+      "ncf": "B0300020005",
+      "doc_type": "03"
+    },
+    {
+      "id": 674,
+      "name": "DINV/2026/00007",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "amount_total": 100.0,
+      "journal": "INV",
+      "ncf": "B0300020006",
+      "doc_type": "03"
+    },
+    {
+      "id": 675,
+      "name": "DINV/2026/00008",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "amount_total": 100.0,
+      "journal": "INV",
+      "ncf": "B0300020007",
+      "doc_type": "03"
+    },
+    {
+      "id": 676,
+      "name": "DINV/2026/00009",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "amount_total": 100.0,
+      "journal": "INV",
+      "ncf": "B0300020008",
+      "doc_type": "03"
+    },
+    {
+      "id": 677,
+      "name": "DINV/2026/00010",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "amount_total": 100.0,
+      "journal": "INV",
+      "ncf": "B0300020009",
+      "doc_type": "03"
+    },
+    {
+      "id": 678,
+      "name": "DINV/2026/00011",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "amount_total": 100.0,
+      "journal": "INV",
+      "ncf": "B0300020010",
+      "doc_type": "03"
+    },
+    {
+      "id": 679,
+      "name": "DINV/2026/00012",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "amount_total": 100.0,
+      "journal": "INV",
+      "ncf": "B0300020011",
+      "doc_type": "03"
+    },
+    {
+      "id": 680,
+      "name": "DINV/2026/00013",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "amount_total": 100.0,
+      "journal": "INV",
+      "ncf": "B0300020012",
+      "doc_type": "03"
+    },
+    {
+      "id": 681,
+      "name": "DINV/2026/00014",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "amount_total": 100.0,
+      "journal": "INV",
+      "ncf": "B0300020013",
+      "doc_type": "03"
+    },
+    {
+      "id": 682,
+      "name": "DINV/2026/00015",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "amount_total": 100.0,
+      "journal": "INV",
+      "ncf": "B0300020014",
+      "doc_type": "03"
+    },
+    {
+      "id": 683,
+      "name": "DINV/2026/00016",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "amount_total": 100.0,
+      "journal": "INV",
+      "ncf": "B0300020015",
+      "doc_type": "03"
+    },
+    {
+      "id": 684,
+      "name": "DINV/2026/00017",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "amount_total": 100.0,
+      "journal": "INV",
+      "ncf": "B0300020016",
+      "doc_type": "03"
+    },
+    {
+      "id": 685,
+      "name": "DINV/2026/00018",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "amount_total": 100.0,
+      "journal": "INV",
+      "ncf": "B0300020017",
+      "doc_type": "03"
+    },
+    {
+      "id": 3,
+      "name": "INV/2026/00001",
+      "date": "2026-06-30",
+      "partner_id": 10,
+      "partner_name": "Cliente prueba Fase 4",
+      "amount_total": 11800.0,
+      "journal": "INV",
+      "ncf": null,
+      "doc_type": null
+    },
+    {
+      "id": 8,
+      "name": "INV/2026/00002",
+      "date": "2026-06-30",
+      "partner_id": 10,
+      "partner_name": "Cliente prueba Fase 4",
+      "amount_total": 11800.0,
+      "journal": "INV",
+      "ncf": null,
+      "doc_type": null
+    },
+    {
+      "id": 12,
+      "name": "INV/2026/00003",
+      "date": "2026-06-30",
+      "partner_id": 13,
+      "partner_name": "PHASE5 Cliente Lab",
+      "amount_total": 23600.0,
+      "journal": "INV",
+      "ncf": null,
+      "doc_type": null
+    },
+    {
+      "id": 341,
+      "name": "INV/2026/00005",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "amount_total": 23600.0,
+      "journal": "INV",
+      "ncf": "B0200030000",
+      "doc_type": "02"
+    },
+    {
+      "id": 343,
+      "name": "INV/2026/00006",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "amount_total": 5900.0,
+      "journal": "INV",
+      "ncf": "B0200020000",
+      "doc_type": "02"
+    },
+    {
+      "id": 346,
+      "name": "INV/2026/00007",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "amount_total": 118.0,
+      "journal": "INV",
+      "ncf": "B0200020001",
+      "doc_type": "02"
+    },
+    {
+      "id": 347,
+      "name": "INV/2026/00008",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "amount_total": 119.18,
+      "journal": "INV",
+      "ncf": "B0200020002",
+      "doc_type": "02"
+    },
+    {
+      "id": 348,
+      "name": "INV/2026/00009",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "amount_total": 120.36,
+      "journal": "INV",
+      "ncf": "B0200020003",
+      "doc_type": "02"
+    },
+    {
+      "id": 349,
+      "name": "INV/2026/00010",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "amount_total": 121.54,
+      "journal": "INV",
+      "ncf": "B0200020004",
+      "doc_type": "02"
+    },
+    {
+      "id": 350,
+      "name": "INV/2026/00011",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "amount_total": 122.72,
+      "journal": "INV",
+      "ncf": "B0200020005",
+      "doc_type": "02"
+    },
+    {
+      "id": 351,
+      "name": "INV/2026/00012",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "amount_total": 123.9,
+      "journal": "INV",
+      "ncf": "B0200020006",
+      "doc_type": "02"
+    },
+    {
+      "id": 352,
+      "name": "INV/2026/00013",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "amount_total": 125.08,
+      "journal": "INV",
+      "ncf": "B0200020007",
+      "doc_type": "02"
+    },
+    {
+      "id": 353,
+      "name": "INV/2026/00014",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "amount_total": 126.26,
+      "journal": "INV",
+      "ncf": "B0200020008",
+      "doc_type": "02"
+    },
+    {
+      "id": 354,
+      "name": "INV/2026/00015",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "amount_total": 127.44,
+      "journal": "INV",
+      "ncf": "B0200020009",
+      "doc_type": "02"
+    },
+    {
+      "id": 355,
+      "name": "INV/2026/00016",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "amount_total": 128.62,
+      "journal": "INV",
+      "ncf": "B0200020010",
+      "doc_type": "02"
+    },
+    {
+      "id": 356,
+      "name": "INV/2026/00017",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "amount_total": 129.8,
+      "journal": "INV",
+      "ncf": "B0200020011",
+      "doc_type": "02"
+    },
+    {
+      "id": 357,
+      "name": "INV/2026/00018",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "amount_total": 130.98,
+      "journal": "INV",
+      "ncf": "B0200020012",
+      "doc_type": "02"
+    },
+    {
+      "id": 358,
+      "name": "INV/2026/00019",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "amount_total": 132.16,
+      "journal": "INV",
+      "ncf": "B0200020013",
+      "doc_type": "02"
+    },
+    {
+      "id": 359,
+      "name": "INV/2026/00020",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "amount_total": 133.34,
+      "journal": "INV",
+      "ncf": "B0200020014",
+      "doc_type": "02"
+    },
+    {
+      "id": 360,
+      "name": "INV/2026/00021",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "amount_total": 134.52,
+      "journal": "INV",
+      "ncf": "B0200020015",
+      "doc_type": "02"
+    },
+    {
+      "id": 361,
+      "name": "INV/2026/00022",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "amount_total": 135.7,
+      "journal": "INV",
+      "ncf": "B0200020016",
+      "doc_type": "02"
+    },
+    {
+      "id": 362,
+      "name": "INV/2026/00023",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "amount_total": 136.88,
+      "journal": "INV",
+      "ncf": "B0200020017",
+      "doc_type": "02"
+    },
+    {
+      "id": 363,
+      "name": "INV/2026/00024",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "amount_total": 138.06,
+      "journal": "INV",
+      "ncf": "B0200020018",
+      "doc_type": "02"
+    },
+    {
+      "id": 364,
+      "name": "INV/2026/00025",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "amount_total": 139.24,
+      "journal": "INV",
+      "ncf": "B0200020019",
+      "doc_type": "02"
+    },
+    {
+      "id": 365,
+      "name": "INV/2026/00026",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "amount_total": 140.42,
+      "journal": "INV",
+      "ncf": "B0200020020",
+      "doc_type": "02"
+    },
+    {
+      "id": 366,
+      "name": "INV/2026/00027",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "amount_total": 141.6,
+      "journal": "INV",
+      "ncf": "B0200020021",
+      "doc_type": "02"
+    },
+    {
+      "id": 367,
+      "name": "INV/2026/00028",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "amount_total": 142.78,
+      "journal": "INV",
+      "ncf": "B0200020022",
+      "doc_type": "02"
+    },
+    {
+      "id": 368,
+      "name": "INV/2026/00029",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "amount_total": 143.96,
+      "journal": "INV",
+      "ncf": "B0200020023",
+      "doc_type": "02"
+    },
+    {
+      "id": 369,
+      "name": "INV/2026/00030",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "amount_total": 145.14,
+      "journal": "INV",
+      "ncf": "B0200020024",
+      "doc_type": "02"
+    },
+    {
+      "id": 370,
+      "name": "INV/2026/00031",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "amount_total": 146.32,
+      "journal": "INV",
+      "ncf": "B0200020025",
+      "doc_type": "02"
+    },
+    {
+      "id": 371,
+      "name": "INV/2026/00032",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "amount_total": 147.5,
+      "journal": "INV",
+      "ncf": "B0200020026",
+      "doc_type": "02"
+    },
+    {
+      "id": 372,
+      "name": "INV/2026/00033",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "amount_total": 148.68,
+      "journal": "INV",
+      "ncf": "B0200020027",
+      "doc_type": "02"
+    },
+    {
+      "id": 373,
+      "name": "INV/2026/00034",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "amount_total": 149.86,
+      "journal": "INV",
+      "ncf": "B0200020028",
+      "doc_type": "02"
+    },
+    {
+      "id": 374,
+      "name": "INV/2026/00035",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "amount_total": 151.04,
+      "journal": "INV",
+      "ncf": "B0200020029",
+      "doc_type": "02"
+    },
+    {
+      "id": 375,
+      "name": "INV/2026/00036",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "amount_total": 152.22,
+      "journal": "INV",
+      "ncf": "B0200020030",
+      "doc_type": "02"
+    },
+    {
+      "id": 376,
+      "name": "INV/2026/00037",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "amount_total": 153.4,
+      "journal": "INV",
+      "ncf": "B0200020031",
+      "doc_type": "02"
+    },
+    {
+      "id": 377,
+      "name": "INV/2026/00038",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "amount_total": 154.58,
+      "journal": "INV",
+      "ncf": "B0200020032",
+      "doc_type": "02"
+    },
+    {
+      "id": 378,
+      "name": "INV/2026/00039",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "amount_total": 155.76,
+      "journal": "INV",
+      "ncf": "B0200020033",
+      "doc_type": "02"
+    },
+    {
+      "id": 379,
+      "name": "INV/2026/00040",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "amount_total": 156.94,
+      "journal": "INV",
+      "ncf": "B0200020034",
+      "doc_type": "02"
+    },
+    {
+      "id": 380,
+      "name": "INV/2026/00041",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "amount_total": 158.12,
+      "journal": "INV",
+      "ncf": "B0200020035",
+      "doc_type": "02"
+    },
+    {
+      "id": 381,
+      "name": "INV/2026/00042",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "amount_total": 159.3,
+      "journal": "INV",
+      "ncf": "B0200020036",
+      "doc_type": "02"
+    },
+    {
+      "id": 382,
+      "name": "INV/2026/00043",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "amount_total": 160.48,
+      "journal": "INV",
+      "ncf": "B0200020037",
+      "doc_type": "02"
+    },
+    {
+      "id": 383,
+      "name": "INV/2026/00044",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "amount_total": 161.66,
+      "journal": "INV",
+      "ncf": "B0200020038",
+      "doc_type": "02"
+    },
+    {
+      "id": 384,
+      "name": "INV/2026/00045",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "amount_total": 162.84,
+      "journal": "INV",
+      "ncf": "B0200020039",
+      "doc_type": "02"
+    },
+    {
+      "id": 385,
+      "name": "INV/2026/00046",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "amount_total": 164.02,
+      "journal": "INV",
+      "ncf": "B0200020040",
+      "doc_type": "02"
+    },
+    {
+      "id": 386,
+      "name": "INV/2026/00047",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "amount_total": 165.2,
+      "journal": "INV",
+      "ncf": "B0200020041",
+      "doc_type": "02"
+    },
+    {
+      "id": 387,
+      "name": "INV/2026/00048",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "amount_total": 166.38,
+      "journal": "INV",
+      "ncf": "B0200020042",
+      "doc_type": "02"
+    },
+    {
+      "id": 388,
+      "name": "INV/2026/00049",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "amount_total": 167.56,
+      "journal": "INV",
+      "ncf": "B0200020043",
+      "doc_type": "02"
+    },
+    {
+      "id": 389,
+      "name": "INV/2026/00050",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "amount_total": 168.74,
+      "journal": "INV",
+      "ncf": "B0200020044",
+      "doc_type": "02"
+    },
+    {
+      "id": 390,
+      "name": "INV/2026/00051",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "amount_total": 169.92,
+      "journal": "INV",
+      "ncf": "B0200020045",
+      "doc_type": "02"
+    },
+    {
+      "id": 391,
+      "name": "INV/2026/00052",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "amount_total": 171.1,
+      "journal": "INV",
+      "ncf": "B0200020046",
+      "doc_type": "02"
+    },
+    {
+      "id": 392,
+      "name": "INV/2026/00053",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "amount_total": 172.28,
+      "journal": "INV",
+      "ncf": "B0200020047",
+      "doc_type": "02"
+    },
+    {
+      "id": 393,
+      "name": "INV/2026/00054",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "amount_total": 173.46,
+      "journal": "INV",
+      "ncf": "B0200020048",
+      "doc_type": "02"
+    },
+    {
+      "id": 394,
+      "name": "INV/2026/00055",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "amount_total": 174.64,
+      "journal": "INV",
+      "ncf": "B0200020049",
+      "doc_type": "02"
+    },
+    {
+      "id": 395,
+      "name": "INV/2026/00056",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "amount_total": 175.82,
+      "journal": "INV",
+      "ncf": "B0200020050",
+      "doc_type": "02"
+    }
+  ],
+  "classifications": {
+    "definitions": {
+      "smoke_test": "Nombre/ref patrón prueba (SMOKE, Phase, LAB, P21…)",
+      "consumidor_final_candidate": "Nombre tipo consumidor final",
+      "real_client_candidate": "Volumen/monto alto — posible cliente real sin RNC",
+      "duplicate_candidate": "Nombre duplicado con otros partners sin VAT",
+      "incomplete_contact": "Pocos movimientos o datos mínimos",
+      "review_required": "Revisión manual contador"
+    },
+    "duplicate_clusters": [
+      {
+        "normalized_name": "concurrent worker 0",
+        "partner_ids": [
+          227,
+          229,
+          275
+        ],
+        "count": 3
+      }
+    ]
+  },
+  "ncf_without_rnc": [
+    {
+      "invoice": "INV/2026/00163",
+      "date": "2026-06-16",
+      "partner_id": 421,
+      "partner_name": "Cliente Demo 085",
+      "ncf": "B0200020127",
+      "doc_type": "02",
+      "amount_total": 944.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00178",
+      "date": "2026-06-16",
+      "partner_id": 436,
+      "partner_name": "Cliente Demo 100",
+      "ncf": "B0200020142",
+      "doc_type": "02",
+      "amount_total": 944.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00162",
+      "date": "2026-06-17",
+      "partner_id": 420,
+      "partner_name": "Cliente Demo 084",
+      "ncf": "B0200020126",
+      "doc_type": "02",
+      "amount_total": 944.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00177",
+      "date": "2026-06-17",
+      "partner_id": 435,
+      "partner_name": "Cliente Demo 099",
+      "ncf": "B0200020141",
+      "doc_type": "02",
+      "amount_total": 944.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00161",
+      "date": "2026-06-18",
+      "partner_id": 419,
+      "partner_name": "Cliente Demo 083",
+      "ncf": "B0200020125",
+      "doc_type": "02",
+      "amount_total": 944.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00176",
+      "date": "2026-06-18",
+      "partner_id": 434,
+      "partner_name": "Cliente Demo 098",
+      "ncf": "B0200020140",
+      "doc_type": "02",
+      "amount_total": 944.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00160",
+      "date": "2026-06-19",
+      "partner_id": 418,
+      "partner_name": "Cliente Demo 082",
+      "ncf": "B0200020124",
+      "doc_type": "02",
+      "amount_total": 944.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00175",
+      "date": "2026-06-19",
+      "partner_id": 433,
+      "partner_name": "Cliente Demo 097",
+      "ncf": "B0200020139",
+      "doc_type": "02",
+      "amount_total": 944.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00159",
+      "date": "2026-06-20",
+      "partner_id": 417,
+      "partner_name": "Cliente Demo 081",
+      "ncf": "B0200020123",
+      "doc_type": "02",
+      "amount_total": 944.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00174",
+      "date": "2026-06-20",
+      "partner_id": 432,
+      "partner_name": "Cliente Demo 096",
+      "ncf": "B0200020138",
+      "doc_type": "02",
+      "amount_total": 944.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00158",
+      "date": "2026-06-21",
+      "partner_id": 416,
+      "partner_name": "Cliente Demo 080",
+      "ncf": "B0200020122",
+      "doc_type": "02",
+      "amount_total": 944.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00173",
+      "date": "2026-06-21",
+      "partner_id": 431,
+      "partner_name": "Cliente Demo 095",
+      "ncf": "B0200020137",
+      "doc_type": "02",
+      "amount_total": 944.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00157",
+      "date": "2026-06-22",
+      "partner_id": 415,
+      "partner_name": "Cliente Demo 079",
+      "ncf": "B0200020121",
+      "doc_type": "02",
+      "amount_total": 944.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00172",
+      "date": "2026-06-22",
+      "partner_id": 430,
+      "partner_name": "Cliente Demo 094",
+      "ncf": "B0200020136",
+      "doc_type": "02",
+      "amount_total": 944.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00156",
+      "date": "2026-06-23",
+      "partner_id": 414,
+      "partner_name": "Cliente Demo 078",
+      "ncf": "B0200020120",
+      "doc_type": "02",
+      "amount_total": 944.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00171",
+      "date": "2026-06-23",
+      "partner_id": 429,
+      "partner_name": "Cliente Demo 093",
+      "ncf": "B0200020135",
+      "doc_type": "02",
+      "amount_total": 944.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00155",
+      "date": "2026-06-24",
+      "partner_id": 413,
+      "partner_name": "Cliente Demo 077",
+      "ncf": "B0200020119",
+      "doc_type": "02",
+      "amount_total": 944.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00170",
+      "date": "2026-06-24",
+      "partner_id": 428,
+      "partner_name": "Cliente Demo 092",
+      "ncf": "B0200020134",
+      "doc_type": "02",
+      "amount_total": 944.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00154",
+      "date": "2026-06-25",
+      "partner_id": 412,
+      "partner_name": "Cliente Demo 076",
+      "ncf": "B0200020118",
+      "doc_type": "02",
+      "amount_total": 944.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00169",
+      "date": "2026-06-25",
+      "partner_id": 427,
+      "partner_name": "Cliente Demo 091",
+      "ncf": "B0200020133",
+      "doc_type": "02",
+      "amount_total": 944.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00153",
+      "date": "2026-06-26",
+      "partner_id": 411,
+      "partner_name": "Cliente Demo 075",
+      "ncf": "B0200020117",
+      "doc_type": "02",
+      "amount_total": 944.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00168",
+      "date": "2026-06-26",
+      "partner_id": 426,
+      "partner_name": "Cliente Demo 090",
+      "ncf": "B0200020132",
+      "doc_type": "02",
+      "amount_total": 944.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00152",
+      "date": "2026-06-27",
+      "partner_id": 410,
+      "partner_name": "Cliente Demo 074",
+      "ncf": "B0200020116",
+      "doc_type": "02",
+      "amount_total": 944.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00167",
+      "date": "2026-06-27",
+      "partner_id": 425,
+      "partner_name": "Cliente Demo 089",
+      "ncf": "B0200020131",
+      "doc_type": "02",
+      "amount_total": 944.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00151",
+      "date": "2026-06-28",
+      "partner_id": 409,
+      "partner_name": "Cliente Demo 073",
+      "ncf": "B0200020115",
+      "doc_type": "02",
+      "amount_total": 944.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00166",
+      "date": "2026-06-28",
+      "partner_id": 424,
+      "partner_name": "Cliente Demo 088",
+      "ncf": "B0200020130",
+      "doc_type": "02",
+      "amount_total": 944.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00150",
+      "date": "2026-06-29",
+      "partner_id": 408,
+      "partner_name": "Cliente Demo 072",
+      "ncf": "B0200020114",
+      "doc_type": "02",
+      "amount_total": 944.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00165",
+      "date": "2026-06-29",
+      "partner_id": 423,
+      "partner_name": "Cliente Demo 087",
+      "ncf": "B0200020129",
+      "doc_type": "02",
+      "amount_total": 944.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "DINV/2026/00002",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0300020001",
+      "doc_type": "03",
+      "amount_total": 100.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "DINV/2026/00003",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0300020002",
+      "doc_type": "03",
+      "amount_total": 100.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "DINV/2026/00004",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0300020003",
+      "doc_type": "03",
+      "amount_total": 100.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "DINV/2026/00005",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0300020004",
+      "doc_type": "03",
+      "amount_total": 100.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "DINV/2026/00006",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0300020005",
+      "doc_type": "03",
+      "amount_total": 100.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "DINV/2026/00007",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0300020006",
+      "doc_type": "03",
+      "amount_total": 100.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "DINV/2026/00008",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0300020007",
+      "doc_type": "03",
+      "amount_total": 100.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "DINV/2026/00009",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0300020008",
+      "doc_type": "03",
+      "amount_total": 100.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "DINV/2026/00010",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0300020009",
+      "doc_type": "03",
+      "amount_total": 100.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "DINV/2026/00011",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0300020010",
+      "doc_type": "03",
+      "amount_total": 100.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "DINV/2026/00012",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0300020011",
+      "doc_type": "03",
+      "amount_total": 100.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "DINV/2026/00013",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0300020012",
+      "doc_type": "03",
+      "amount_total": 100.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "DINV/2026/00014",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0300020013",
+      "doc_type": "03",
+      "amount_total": 100.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "DINV/2026/00015",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0300020014",
+      "doc_type": "03",
+      "amount_total": 100.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "DINV/2026/00016",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0300020015",
+      "doc_type": "03",
+      "amount_total": 100.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "DINV/2026/00017",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0300020016",
+      "doc_type": "03",
+      "amount_total": 100.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "DINV/2026/00018",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0300020017",
+      "doc_type": "03",
+      "amount_total": 100.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00005",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200030000",
+      "doc_type": "02",
+      "amount_total": 23600.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00006",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020000",
+      "doc_type": "02",
+      "amount_total": 5900.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00007",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020001",
+      "doc_type": "02",
+      "amount_total": 118.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00008",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020002",
+      "doc_type": "02",
+      "amount_total": 119.18,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00009",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020003",
+      "doc_type": "02",
+      "amount_total": 120.36,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00010",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020004",
+      "doc_type": "02",
+      "amount_total": 121.54,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00011",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020005",
+      "doc_type": "02",
+      "amount_total": 122.72,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00012",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020006",
+      "doc_type": "02",
+      "amount_total": 123.9,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00013",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020007",
+      "doc_type": "02",
+      "amount_total": 125.08,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00014",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020008",
+      "doc_type": "02",
+      "amount_total": 126.26,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00015",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020009",
+      "doc_type": "02",
+      "amount_total": 127.44,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00016",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020010",
+      "doc_type": "02",
+      "amount_total": 128.62,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00017",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020011",
+      "doc_type": "02",
+      "amount_total": 129.8,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00018",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020012",
+      "doc_type": "02",
+      "amount_total": 130.98,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00019",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020013",
+      "doc_type": "02",
+      "amount_total": 132.16,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00020",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020014",
+      "doc_type": "02",
+      "amount_total": 133.34,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00021",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020015",
+      "doc_type": "02",
+      "amount_total": 134.52,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00022",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020016",
+      "doc_type": "02",
+      "amount_total": 135.7,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00023",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020017",
+      "doc_type": "02",
+      "amount_total": 136.88,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00024",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020018",
+      "doc_type": "02",
+      "amount_total": 138.06,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00025",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020019",
+      "doc_type": "02",
+      "amount_total": 139.24,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00026",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020020",
+      "doc_type": "02",
+      "amount_total": 140.42,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00027",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020021",
+      "doc_type": "02",
+      "amount_total": 141.6,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00028",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020022",
+      "doc_type": "02",
+      "amount_total": 142.78,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00029",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020023",
+      "doc_type": "02",
+      "amount_total": 143.96,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00030",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020024",
+      "doc_type": "02",
+      "amount_total": 145.14,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00031",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020025",
+      "doc_type": "02",
+      "amount_total": 146.32,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00032",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020026",
+      "doc_type": "02",
+      "amount_total": 147.5,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00033",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020027",
+      "doc_type": "02",
+      "amount_total": 148.68,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00034",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020028",
+      "doc_type": "02",
+      "amount_total": 149.86,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00035",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020029",
+      "doc_type": "02",
+      "amount_total": 151.04,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00036",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020030",
+      "doc_type": "02",
+      "amount_total": 152.22,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00037",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020031",
+      "doc_type": "02",
+      "amount_total": 153.4,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00038",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020032",
+      "doc_type": "02",
+      "amount_total": 154.58,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00039",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020033",
+      "doc_type": "02",
+      "amount_total": 155.76,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00040",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020034",
+      "doc_type": "02",
+      "amount_total": 156.94,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00041",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020035",
+      "doc_type": "02",
+      "amount_total": 158.12,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00042",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020036",
+      "doc_type": "02",
+      "amount_total": 159.3,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00043",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020037",
+      "doc_type": "02",
+      "amount_total": 160.48,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00044",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020038",
+      "doc_type": "02",
+      "amount_total": 161.66,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00045",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020039",
+      "doc_type": "02",
+      "amount_total": 162.84,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00046",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020040",
+      "doc_type": "02",
+      "amount_total": 164.02,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00047",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020041",
+      "doc_type": "02",
+      "amount_total": 165.2,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00048",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020042",
+      "doc_type": "02",
+      "amount_total": 166.38,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00049",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020043",
+      "doc_type": "02",
+      "amount_total": 167.56,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00050",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020044",
+      "doc_type": "02",
+      "amount_total": 168.74,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00051",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020045",
+      "doc_type": "02",
+      "amount_total": 169.92,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00052",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020046",
+      "doc_type": "02",
+      "amount_total": 171.1,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00053",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020047",
+      "doc_type": "02",
+      "amount_total": 172.28,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00054",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020048",
+      "doc_type": "02",
+      "amount_total": 173.46,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00055",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020049",
+      "doc_type": "02",
+      "amount_total": 174.64,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00056",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020050",
+      "doc_type": "02",
+      "amount_total": 175.82,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00057",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020051",
+      "doc_type": "02",
+      "amount_total": 177.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00058",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020052",
+      "doc_type": "02",
+      "amount_total": 178.18,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00059",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020053",
+      "doc_type": "02",
+      "amount_total": 179.36,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00060",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020054",
+      "doc_type": "02",
+      "amount_total": 180.54,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00061",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020055",
+      "doc_type": "02",
+      "amount_total": 181.72,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00062",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020056",
+      "doc_type": "02",
+      "amount_total": 182.9,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00063",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020057",
+      "doc_type": "02",
+      "amount_total": 184.08,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00064",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020058",
+      "doc_type": "02",
+      "amount_total": 185.26,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00065",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020059",
+      "doc_type": "02",
+      "amount_total": 186.44,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00066",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020060",
+      "doc_type": "02",
+      "amount_total": 187.62,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00067",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020061",
+      "doc_type": "02",
+      "amount_total": 188.8,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00068",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020062",
+      "doc_type": "02",
+      "amount_total": 189.98,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00069",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020063",
+      "doc_type": "02",
+      "amount_total": 191.16,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00070",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020064",
+      "doc_type": "02",
+      "amount_total": 192.34,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00071",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020065",
+      "doc_type": "02",
+      "amount_total": 193.52,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00072",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020066",
+      "doc_type": "02",
+      "amount_total": 194.7,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00073",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020067",
+      "doc_type": "02",
+      "amount_total": 195.88,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00074",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020068",
+      "doc_type": "02",
+      "amount_total": 197.06,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00075",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020069",
+      "doc_type": "02",
+      "amount_total": 198.24,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00076",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020070",
+      "doc_type": "02",
+      "amount_total": 199.42,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00077",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020071",
+      "doc_type": "02",
+      "amount_total": 200.6,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00078",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020072",
+      "doc_type": "02",
+      "amount_total": 201.78,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00079",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020073",
+      "doc_type": "02",
+      "amount_total": 202.96,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00080",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020074",
+      "doc_type": "02",
+      "amount_total": 204.14,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00081",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020075",
+      "doc_type": "02",
+      "amount_total": 205.32,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00082",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020076",
+      "doc_type": "02",
+      "amount_total": 206.5,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00083",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020077",
+      "doc_type": "02",
+      "amount_total": 207.68,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00084",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020078",
+      "doc_type": "02",
+      "amount_total": 208.86,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00085",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020079",
+      "doc_type": "02",
+      "amount_total": 210.04,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00086",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020080",
+      "doc_type": "02",
+      "amount_total": 211.22,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00087",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020081",
+      "doc_type": "02",
+      "amount_total": 212.4,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00088",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020082",
+      "doc_type": "02",
+      "amount_total": 213.58,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00089",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020083",
+      "doc_type": "02",
+      "amount_total": 214.76,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00090",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020084",
+      "doc_type": "02",
+      "amount_total": 215.94,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00091",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020085",
+      "doc_type": "02",
+      "amount_total": 217.12,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00092",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020086",
+      "doc_type": "02",
+      "amount_total": 218.3,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00093",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020087",
+      "doc_type": "02",
+      "amount_total": 219.48,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00094",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020088",
+      "doc_type": "02",
+      "amount_total": 220.66,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00095",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020089",
+      "doc_type": "02",
+      "amount_total": 221.84,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00096",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020090",
+      "doc_type": "02",
+      "amount_total": 223.02,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00097",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020091",
+      "doc_type": "02",
+      "amount_total": 224.2,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00098",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020092",
+      "doc_type": "02",
+      "amount_total": 225.38,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00099",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020093",
+      "doc_type": "02",
+      "amount_total": 226.56,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00100",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020094",
+      "doc_type": "02",
+      "amount_total": 227.74,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00101",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020095",
+      "doc_type": "02",
+      "amount_total": 228.92,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00102",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020096",
+      "doc_type": "02",
+      "amount_total": 230.1,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00103",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020097",
+      "doc_type": "02",
+      "amount_total": 231.28,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00104",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020098",
+      "doc_type": "02",
+      "amount_total": 232.46,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00105",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020099",
+      "doc_type": "02",
+      "amount_total": 233.64,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00106",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020100",
+      "doc_type": "02",
+      "amount_total": 234.82,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00107",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020101",
+      "doc_type": "02",
+      "amount_total": 118116.82,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00108",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020102",
+      "doc_type": "02",
+      "amount_total": 1.18,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00109",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020103",
+      "doc_type": "02",
+      "amount_total": 23718.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00110",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020104",
+      "doc_type": "02",
+      "amount_total": 23719.18,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00111",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020105",
+      "doc_type": "02",
+      "amount_total": 23720.36,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00112",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020106",
+      "doc_type": "02",
+      "amount_total": 23721.54,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00113",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020107",
+      "doc_type": "02",
+      "amount_total": 23722.72,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00114",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020108",
+      "doc_type": "02",
+      "amount_total": 23723.9,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00115",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020109",
+      "doc_type": "02",
+      "amount_total": 23725.08,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00116",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020110",
+      "doc_type": "02",
+      "amount_total": 23726.26,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00117",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020111",
+      "doc_type": "02",
+      "amount_total": 23727.44,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00118",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020112",
+      "doc_type": "02",
+      "amount_total": 23728.62,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00149",
+      "date": "2026-06-30",
+      "partner_id": 407,
+      "partner_name": "Cliente Demo 071",
+      "ncf": "B0200020113",
+      "doc_type": "02",
+      "amount_total": 944.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00164",
+      "date": "2026-06-30",
+      "partner_id": 422,
+      "partner_name": "Cliente Demo 086",
+      "ncf": "B0200020128",
+      "doc_type": "02",
+      "amount_total": 944.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00180",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020143",
+      "doc_type": "02",
+      "amount_total": 23600.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00181",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020144",
+      "doc_type": "02",
+      "amount_total": 5900.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "PCC/2026/00001",
+      "date": "2026-06-30",
+      "partner_id": 227,
+      "partner_name": "Concurrent Worker 0",
+      "ncf": "B0200007000",
+      "doc_type": "02",
+      "amount_total": 59.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "PCC/2026/00002",
+      "date": "2026-06-30",
+      "partner_id": 229,
+      "partner_name": "Concurrent Worker 0",
+      "ncf": "B0200007001",
+      "doc_type": "02",
+      "amount_total": 59.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "PCC/2026/00003",
+      "date": "2026-06-30",
+      "partner_id": 275,
+      "partner_name": "Concurrent Worker 0",
+      "ncf": "B0200007002",
+      "doc_type": "02",
+      "amount_total": 59.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "PCC/2026/00004",
+      "date": "2026-06-30",
+      "partner_id": 317,
+      "partner_name": "Concurrent Worker 1",
+      "ncf": "B0200007003",
+      "doc_type": "02",
+      "amount_total": 59.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "RINV/2026/00001",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0400020000",
+      "doc_type": "04",
+      "amount_total": 23600.0,
+      "move_type": "out_refund"
+    },
+    {
+      "invoice": "RINV/2026/00002",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0400020001",
+      "doc_type": "04",
+      "amount_total": 234.82,
+      "move_type": "out_refund"
+    },
+    {
+      "invoice": "RINV/2026/00003",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0400020002",
+      "doc_type": "04",
+      "amount_total": 233.64,
+      "move_type": "out_refund"
+    },
+    {
+      "invoice": "RINV/2026/00004",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0400020003",
+      "doc_type": "04",
+      "amount_total": 232.46,
+      "move_type": "out_refund"
+    },
+    {
+      "invoice": "RINV/2026/00005",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0400020004",
+      "doc_type": "04",
+      "amount_total": 231.28,
+      "move_type": "out_refund"
+    },
+    {
+      "invoice": "RINV/2026/00006",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0400020005",
+      "doc_type": "04",
+      "amount_total": 230.1,
+      "move_type": "out_refund"
+    },
+    {
+      "invoice": "RINV/2026/00007",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0400020006",
+      "doc_type": "04",
+      "amount_total": 228.92,
+      "move_type": "out_refund"
+    },
+    {
+      "invoice": "RINV/2026/00008",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0400020007",
+      "doc_type": "04",
+      "amount_total": 227.74,
+      "move_type": "out_refund"
+    },
+    {
+      "invoice": "RINV/2026/00009",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0400020008",
+      "doc_type": "04",
+      "amount_total": 226.56,
+      "move_type": "out_refund"
+    },
+    {
+      "invoice": "RINV/2026/00010",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0400020009",
+      "doc_type": "04",
+      "amount_total": 225.38,
+      "move_type": "out_refund"
+    },
+    {
+      "invoice": "RINV/2026/00011",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0400020010",
+      "doc_type": "04",
+      "amount_total": 224.2,
+      "move_type": "out_refund"
+    },
+    {
+      "invoice": "RINV/2026/00012",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0400020011",
+      "doc_type": "04",
+      "amount_total": 223.02,
+      "move_type": "out_refund"
+    },
+    {
+      "invoice": "RINV/2026/00013",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0400020012",
+      "doc_type": "04",
+      "amount_total": 221.84,
+      "move_type": "out_refund"
+    },
+    {
+      "invoice": "RINV/2026/00014",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0400020013",
+      "doc_type": "04",
+      "amount_total": 220.66,
+      "move_type": "out_refund"
+    },
+    {
+      "invoice": "RINV/2026/00015",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0400020014",
+      "doc_type": "04",
+      "amount_total": 219.48,
+      "move_type": "out_refund"
+    },
+    {
+      "invoice": "RINV/2026/00016",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0400020015",
+      "doc_type": "04",
+      "amount_total": 218.3,
+      "move_type": "out_refund"
+    },
+    {
+      "invoice": "RINV/2026/00017",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0400020016",
+      "doc_type": "04",
+      "amount_total": 217.12,
+      "move_type": "out_refund"
+    },
+    {
+      "invoice": "RINV/2026/00018",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0400020017",
+      "doc_type": "04",
+      "amount_total": 215.94,
+      "move_type": "out_refund"
+    },
+    {
+      "invoice": "RINV/2026/00034",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0400020033",
+      "doc_type": "04",
+      "amount_total": 23600.0,
+      "move_type": "out_refund"
+    },
+    {
+      "invoice": "INV/2026/00186",
+      "date": "2026-07-01",
+      "partner_id": 2354,
+      "partner_name": "Cliente cert 19.6 C1",
+      "ncf": "B0200020145",
+      "doc_type": "02",
+      "amount_total": 11800.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00187",
+      "date": "2026-07-01",
+      "partner_id": 2354,
+      "partner_name": "Cliente cert 19.6 C1",
+      "ncf": "B0200020146",
+      "doc_type": "02",
+      "amount_total": 11800.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00188",
+      "date": "2026-07-01",
+      "partner_id": 2354,
+      "partner_name": "Cliente cert 19.6 C1",
+      "ncf": "B0200020147",
+      "doc_type": "02",
+      "amount_total": 11800.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00189",
+      "date": "2026-07-01",
+      "partner_id": 2355,
+      "partner_name": "Cliente cert 19.6 C2",
+      "ncf": "B0200020148",
+      "doc_type": "02",
+      "amount_total": 11800.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00190",
+      "date": "2026-07-01",
+      "partner_id": 2355,
+      "partner_name": "Cliente cert 19.6 C2",
+      "ncf": "B0200020149",
+      "doc_type": "02",
+      "amount_total": 11800.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00191",
+      "date": "2026-07-01",
+      "partner_id": 2355,
+      "partner_name": "Cliente cert 19.6 C2",
+      "ncf": "B0200020150",
+      "doc_type": "02",
+      "amount_total": 11800.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00192",
+      "date": "2026-07-01",
+      "partner_id": 2356,
+      "partner_name": "Cliente cert 19.6 C3",
+      "ncf": "B0200020151",
+      "doc_type": "02",
+      "amount_total": 11800.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00193",
+      "date": "2026-07-01",
+      "partner_id": 2357,
+      "partner_name": "Cliente cert 19.6 C4",
+      "ncf": "B0200020152",
+      "doc_type": "02",
+      "amount_total": 11800.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00194",
+      "date": "2026-07-01",
+      "partner_id": 2358,
+      "partner_name": "Cliente cert 19.6 C5",
+      "ncf": "B0200020153",
+      "doc_type": "02",
+      "amount_total": 11800.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00195",
+      "date": "2026-07-01",
+      "partner_id": 2359,
+      "partner_name": "Cliente cert 19.6 C6",
+      "ncf": "B0200020154",
+      "doc_type": "02",
+      "amount_total": 11800.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00196",
+      "date": "2026-07-01",
+      "partner_id": 2359,
+      "partner_name": "Cliente cert 19.6 C6",
+      "ncf": "B0200020155",
+      "doc_type": "02",
+      "amount_total": 11800.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00197",
+      "date": "2026-07-01",
+      "partner_id": 2359,
+      "partner_name": "Cliente cert 19.6 C6",
+      "ncf": "B0200020156",
+      "doc_type": "02",
+      "amount_total": 11800.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00198",
+      "date": "2026-07-01",
+      "partner_id": 2360,
+      "partner_name": "Cliente cert 19.6 C7",
+      "ncf": "B0200020157",
+      "doc_type": "02",
+      "amount_total": 11800.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00199",
+      "date": "2026-07-01",
+      "partner_id": 2360,
+      "partner_name": "Cliente cert 19.6 C7",
+      "ncf": "B0200020158",
+      "doc_type": "02",
+      "amount_total": 11800.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00200",
+      "date": "2026-07-01",
+      "partner_id": 2361,
+      "partner_name": "SMOKE P13.4 CF",
+      "ncf": "B0200020159",
+      "doc_type": "02",
+      "amount_total": 11800.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00201",
+      "date": "2026-07-01",
+      "partner_id": 2361,
+      "partner_name": "SMOKE P13.4 CF",
+      "ncf": "B0200020160",
+      "doc_type": "02",
+      "amount_total": 11800.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00202",
+      "date": "2026-07-01",
+      "partner_id": 2361,
+      "partner_name": "SMOKE P13.4 CF",
+      "ncf": "B0200020161",
+      "doc_type": "02",
+      "amount_total": 11800.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00203",
+      "date": "2026-07-01",
+      "partner_id": 2362,
+      "partner_name": "P199 H3",
+      "ncf": "B0200020162",
+      "doc_type": "02",
+      "amount_total": 11800.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00204",
+      "date": "2026-07-01",
+      "partner_id": 2362,
+      "partner_name": "P199 H3",
+      "ncf": "B0200020163",
+      "doc_type": "02",
+      "amount_total": 11800.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00205",
+      "date": "2026-07-01",
+      "partner_id": 2362,
+      "partner_name": "P199 H3",
+      "ncf": "B0200020164",
+      "doc_type": "02",
+      "amount_total": 11800.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00206",
+      "date": "2026-07-01",
+      "partner_id": 2363,
+      "partner_name": "P199 WEBSAVE",
+      "ncf": "B0200020165",
+      "doc_type": "02",
+      "amount_total": 11800.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00207",
+      "date": "2026-07-01",
+      "partner_id": 2363,
+      "partner_name": "P199 WEBSAVE",
+      "ncf": "B0200020166",
+      "doc_type": "02",
+      "amount_total": 11800.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00208",
+      "date": "2026-07-01",
+      "partner_id": 2363,
+      "partner_name": "P199 WEBSAVE",
+      "ncf": "B0200020167",
+      "doc_type": "02",
+      "amount_total": 11800.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00209",
+      "date": "2026-07-01",
+      "partner_id": 2364,
+      "partner_name": "P199 WH",
+      "ncf": "B0200020168",
+      "doc_type": "02",
+      "amount_total": 11800.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00210",
+      "date": "2026-07-01",
+      "partner_id": 2364,
+      "partner_name": "P199 WH",
+      "ncf": "B0200020169",
+      "doc_type": "02",
+      "amount_total": 11800.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00211",
+      "date": "2026-07-01",
+      "partner_id": 2364,
+      "partner_name": "P199 WH",
+      "ncf": "B0200020170",
+      "doc_type": "02",
+      "amount_total": 11800.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00212",
+      "date": "2026-07-01",
+      "partner_id": 2361,
+      "partner_name": "SMOKE P13.4 CF",
+      "ncf": "B0200020171",
+      "doc_type": "02",
+      "amount_total": 11800.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00213",
+      "date": "2026-07-01",
+      "partner_id": 2361,
+      "partner_name": "SMOKE P13.4 CF",
+      "ncf": "B0200020172",
+      "doc_type": "02",
+      "amount_total": 11800.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00214",
+      "date": "2026-07-01",
+      "partner_id": 2361,
+      "partner_name": "SMOKE P13.4 CF",
+      "ncf": "B0200020173",
+      "doc_type": "02",
+      "amount_total": 11800.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00230",
+      "date": "2026-07-02",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020175",
+      "doc_type": "02",
+      "amount_total": 1180.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00238",
+      "date": "2026-07-02",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020179",
+      "doc_type": "02",
+      "amount_total": 1180.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00240",
+      "date": "2026-07-02",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020181",
+      "doc_type": "02",
+      "amount_total": 1180.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00242",
+      "date": "2026-07-02",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020182",
+      "doc_type": "02",
+      "amount_total": 1180.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00245",
+      "date": "2026-07-02",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020185",
+      "doc_type": "02",
+      "amount_total": 1180.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00247",
+      "date": "2026-07-02",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020187",
+      "doc_type": "02",
+      "amount_total": 1180.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00249",
+      "date": "2026-07-02",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020188",
+      "doc_type": "02",
+      "amount_total": 1180.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00251",
+      "date": "2026-07-02",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020190",
+      "doc_type": "02",
+      "amount_total": 1180.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00253",
+      "date": "2026-07-02",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020192",
+      "doc_type": "02",
+      "amount_total": 1180.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00255",
+      "date": "2026-07-02",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020193",
+      "doc_type": "02",
+      "amount_total": 1180.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00257",
+      "date": "2026-07-02",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020195",
+      "doc_type": "02",
+      "amount_total": 1180.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00259",
+      "date": "2026-07-02",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020197",
+      "doc_type": "02",
+      "amount_total": 1180.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00260",
+      "date": "2026-07-02",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020198",
+      "doc_type": "02",
+      "amount_total": 1180.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00262",
+      "date": "2026-07-02",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020199",
+      "doc_type": "02",
+      "amount_total": 1180.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00228",
+      "date": "2026-07-03",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020174",
+      "doc_type": "02",
+      "amount_total": 1180.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00231",
+      "date": "2026-07-03",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020176",
+      "doc_type": "02",
+      "amount_total": 1180.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00232",
+      "date": "2026-07-03",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020177",
+      "doc_type": "02",
+      "amount_total": 1180.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00235",
+      "date": "2026-07-03",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200030001",
+      "doc_type": "02",
+      "amount_total": 1180.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00236",
+      "date": "2026-07-03",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020178",
+      "doc_type": "02",
+      "amount_total": 1180.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00239",
+      "date": "2026-07-03",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020180",
+      "doc_type": "02",
+      "amount_total": 1180.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00243",
+      "date": "2026-07-03",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020183",
+      "doc_type": "02",
+      "amount_total": 1180.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00244",
+      "date": "2026-07-03",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020184",
+      "doc_type": "02",
+      "amount_total": 1180.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00246",
+      "date": "2026-07-03",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020186",
+      "doc_type": "02",
+      "amount_total": 1180.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00250",
+      "date": "2026-07-03",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020189",
+      "doc_type": "02",
+      "amount_total": 1180.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00252",
+      "date": "2026-07-03",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020191",
+      "doc_type": "02",
+      "amount_total": 1180.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00256",
+      "date": "2026-07-03",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020194",
+      "doc_type": "02",
+      "amount_total": 1180.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "INV/2026/00258",
+      "date": "2026-07-03",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0200020196",
+      "doc_type": "02",
+      "amount_total": 1180.0,
+      "move_type": "out_invoice"
+    }
+  ],
+  "dgii_607_impact": {
+    "period": "202607",
+    "method": "readonly_estimate",
+    "ytd_invoices_no_rnc": 254,
+    "ytd_amount_no_rnc": 945159.56
+  },
+  "correction_plan": {
+    "smoke_test": {
+      "action": "Archivar partners + excluir de 607 o migrar a partner lab con RNC válido; evaluar NC/anulación facturas fiscales",
+      "owner": "Justech + contador",
+      "partner_ids": [
+        311,
+        2361,
+        2354,
+        2355,
+        2359,
+        10,
+        13,
+        2360,
+        2356,
+        2357,
+        2358,
+        421,
+        436,
+        420,
+        435,
+        419,
+        434,
+        418,
+        433,
+        417,
+        432,
+        416,
+        431,
+        415,
+        430,
+        414,
+        429,
+        413,
+        428,
+        412,
+        427,
+        411,
+        426,
+        410,
+        425,
+        409,
+        424,
+        408,
+        423,
+        407,
+        422
+      ],
+      "invoice_estimate": 241
+    },
+    "consumidor_final_candidate": {
+      "action": "Asignar RNC genérico DGII consumidor final (001-0000000-0) o partner CF maestro; validar tipo B02",
+      "owner": "Contador",
+      "partner_ids": []
+    },
+    "duplicate_candidate": {
+      "action": "Fusionar partners duplicados; reasignar facturas al maestro; completar RNC",
+      "owner": "Justech (merge) + contador (RNC)",
+      "partner_ids": [],
+      "clusters": [
+        {
+          "normalized_name": "concurrent worker 0",
+          "partner_ids": [
+            227,
+            229,
+            275
+          ],
+          "count": 3
+        }
+      ]
+    },
+    "real_client_candidate": {
+      "action": "Completar RNC real antes de declarar; bloquear post futuro sin VAT",
+      "owner": "Contador + operaciones",
+      "partner_ids": []
+    },
+    "incomplete_contact": {
+      "action": "Completar ficha partner o archivar si es basura",
+      "owner": "Justech config",
+      "partner_ids": [
+        227,
+        229,
+        275,
+        317
+      ]
+    },
+    "review_required": {
+      "action": "Revisión caso por caso",
+      "owner": "Contador",
+      "partner_ids": [
+        2362,
+        2363,
+        2364
+      ]
+    },
+    "ncf_without_rnc": {
+      "action": "Prioridad alta: facturas fiscales válidas sin RNC — corregir partner y validar 607; NC si corresponde",
+      "count": 242,
+      "owner": "Contador + Justech"
+    },
+    "code_prevention": {
+      "action": "Validación pre-post RNC obligatorio en justech_l10n_do_ncf / hellenia_ux",
+      "owner": "Justech código (post-aprobación C1)"
+    },
+    "config_prevention": {
+      "action": "Partner consumidor final maestro; reglas DGII exclusion para datos lab",
+      "owner": "Justech configuración"
+    }
+  },
+  "risks": [
+    {
+      "id": "FISC-C1-01",
+      "severity": "critical",
+      "message": "254 comprobantes posted sin RNC (76.0% del total)"
+    },
+    {
+      "id": "FISC-C1-02",
+      "severity": "critical",
+      "message": "242 facturas con NCF asignado pero partner sin RNC — 607 inválido"
+    },
+    {
+      "id": "FISC-C1-04",
+      "severity": "medium",
+      "message": "1 clusters de nombres duplicados sin VAT"
+    }
+  ],
+  "invoices_detail_truncated": true,
+  "invoices_detail_total": 254,
+  "runner_timestamp": "2026-07-04_225613"
+}

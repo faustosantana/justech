@@ -1,0 +1,41 @@
+{
+  "phase": "24.2A-prod-fix",
+  "database": "hellenia_prod",
+  "timestamp_utc": "2026-07-02T05:01:18.504554+00:00",
+  "pass": true,
+  "failed_checks": [],
+  "checks": {
+    "module_version": {
+      "status": "PASS",
+      "detail": "19.0.2.0.1"
+    },
+    "default_get_without_note_field": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "new_order_note": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "new_pdf_has_cond": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "existing_pdf_cond": {
+      "status": "PASS",
+      "detail": "S00020"
+    },
+    "hdr_no_border_attr": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "existing_pdf_ok": {
+      "status": "PASS",
+      "detail": "S00020 73669"
+    },
+    "form_view_terms": {
+      "status": "PASS",
+      "detail": ""
+    }
+  }
+}

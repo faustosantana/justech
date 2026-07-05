@@ -1,0 +1,546 @@
+/* Hellenia Cotización — assets PDF (web.report_assets_common / wkhtmltopdf) */
+
+html, body {
+    margin: 0;
+    padding: 0;
+}
+
+/* Ocultar chrome estándar cuando se usa web.html_container */
+h2.hellenia-doc-title,
+.o_report_layout_standard .address,
+.header.hellenia-header,
+.footer.hellenia-footer {
+    display: none !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+}
+
+.o_body_html.container,
+#wrapwrap,
+.o_body_html main {
+    border: none !important;
+    border-top: none !important;
+    box-shadow: none !important;
+}
+
+main .article.page.jt-hq-page,
+body .article.page.jt-hq-page,
+div.article.page.jt-hq-page,
+.o_body_html .container main .article.jt-hq-page {
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    border-top: none !important;
+    outline: none !important;
+    max-width: none !important;
+    box-shadow: none !important;
+}
+
+.jt-hq-page {
+    font-family: 'DejaVu Sans', Helvetica, Arial, sans-serif;
+    font-size: 9pt;
+    color: #2d2d2d;
+    line-height: 1.5;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    border: none !important;
+    border-top: none !important;
+    box-shadow: none !important;
+    background: #ffffff !important;
+}
+
+.jt-hq-page table {
+    border-collapse: collapse;
+    width: 100%;
+    border: none !important;
+}
+
+.jt-hq-page table.jt-hq-totals {
+    width: 280px !important;
+    max-width: 280px !important;
+}
+
+.jt-hq-page td,
+.jt-hq-page th {
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.jt-hq-page div,
+.jt-hq-page p,
+.jt-hq-page hr {
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.jt-hq-page hr.jt-hq-sig-line {
+    border-top: 1px solid #bdbdbd !important;
+}
+
+.jt-hq-green { color: #3E4827; }
+
+.jt-hq-lbl {
+    color: #888888;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 6.5pt;
+    letter-spacing: 0.4px;
+}
+
+.jt-hq-val {
+    color: #2d2d2d;
+    font-size: 9pt;
+}
+
+.jt-hq-val-bold {
+    color: #2d2d2d;
+    font-size: 9pt;
+    font-weight: bold;
+}
+
+.jt-hq-title {
+    color: #3E4827;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 6.5pt;
+    letter-spacing: 0.7px;
+    margin: 0 0 8px 0;
+    padding: 0;
+    border: none !important;
+}
+
+.jt-hq-title-tight {
+    margin-bottom: 4px;
+}
+
+.jt-hq-hdr {
+    margin: 0 0 10px 0;
+    border: none !important;
+    border-top: none !important;
+}
+
+.jt-hq-hdr td {
+    vertical-align: top;
+    border: none !important;
+    border-top: none !important;
+}
+
+.jt-hq-hdr-logo-cell {
+    padding-right: 14px;
+}
+
+.jt-hq-logo {
+    max-width: 300px;
+    max-height: 95px;
+    width: auto;
+    height: auto;
+    display: block;
+}
+
+.jt-hq-co {
+    text-align: right;
+    font-size: 7.5pt;
+    color: #2d2d2d;
+    line-height: 1.55;
+}
+
+.jt-hq-co-name {
+    font-size: 11pt;
+    font-weight: bold;
+    color: #3E4827;
+    margin: 0 0 2px 0;
+}
+
+.jt-hq-co-lbl {
+    font-weight: bold;
+    color: #3E4827;
+}
+
+.jt-hq-band {
+    background-color: #3E4827;
+}
+
+.jt-hq-band td {
+    padding: 11px 14px;
+    background-color: #3E4827;
+    color: #ffffff;
+}
+
+.jt-hq-band-title {
+    font-size: 11pt;
+    font-weight: bold;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: #ffffff;
+}
+
+.jt-hq-band-num {
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 10pt;
+    text-align: right;
+    display: block;
+    border-left: 1px solid rgba(255, 255, 255, 0.35);
+    padding-left: 14px;
+}
+
+.jt-hq-band-num span {
+    color: #ffffff !important;
+}
+
+.jt-hq-line-soft {
+    border: none;
+    border-bottom: 1px solid #e8e8e8;
+    margin: 0 0 12px 0;
+    height: 0;
+}
+
+.jt-hq-dates td {
+    padding: 6px 0 4px 0;
+}
+
+/* Bloque cliente / vendedor — limpio, sin cajas */
+.jt-hq-cards {
+    margin: 0 0 16px 0;
+}
+
+.jt-hq-card {
+    vertical-align: top;
+    padding: 0 20px 0 0;
+}
+
+.jt-hq-card-r {
+    padding: 0 0 0 20px;
+}
+
+.jt-hq-vdiv {
+    width: 1px;
+    background-color: #ececec;
+    font-size: 1px;
+    padding: 0;
+}
+
+.jt-hq-meta-row {
+    margin: 0 0 5px 0;
+    padding: 0;
+    line-height: 1.45;
+}
+
+.jt-hq-meta-row .jt-hq-lbl {
+    display: inline;
+    margin-right: 8px;
+}
+
+.jt-hq-meta-row .jt-hq-val {
+    display: inline;
+}
+
+.jt-hq-pay {
+    margin-top: 10px;
+    padding-top: 8px;
+    border-top: 1px solid #f0f0f0;
+}
+
+.jt-hq-pay-val {
+    font-size: 9.5pt;
+    font-weight: bold;
+    color: #2d2d2d;
+    margin-top: 2px;
+}
+
+.jt-hq-items {
+    margin: 4px 0 8px 0;
+}
+
+.jt-hq-items thead th {
+    background-color: #3E4827;
+    color: #ffffff !important;
+    font-size: 6.5pt;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+    padding: 9px 10px;
+}
+
+.jt-hq-items tbody td {
+    padding: 9px 12px;
+    font-size: 8.5pt;
+    color: #2d2d2d;
+    vertical-align: middle;
+    border: none !important;
+    border-bottom: none !important;
+}
+
+.jt-hq-items tbody tr:nth-child(even) td {
+    background-color: #f8f9f6;
+}
+
+.jt-hq-items tbody tr:nth-child(odd) td {
+    background-color: #ffffff;
+}
+
+.jt-hq-items .c-num {
+    text-align: center;
+    width: 28px;
+    color: #888888;
+}
+
+.jt-hq-items .c-qty,
+.jt-hq-items .c-price,
+.jt-hq-items .c-disc,
+.jt-hq-items .c-sub {
+    text-align: right;
+    white-space: nowrap;
+}
+
+.jt-hq-items .c-disc {
+    width: 44px;
+    color: #888888;
+}
+
+.jt-hq-items .c-sub {
+    font-weight: bold;
+}
+
+/* Totales — bloque compacto derecha (wkhtmltopdf) */
+.jt-hq-totals-wrap {
+    overflow: hidden;
+    margin: 10px 0 12px 0;
+    border: none !important;
+    background: transparent !important;
+}
+
+.jt-hq-totals {
+    width: 280px !important;
+    max-width: 280px !important;
+    float: right;
+    margin: 0;
+    border: none !important;
+    border-collapse: collapse;
+}
+
+.jt-hq-totals td {
+    padding: 4px 0;
+    font-size: 8.5pt;
+    border: none !important;
+    vertical-align: middle;
+}
+
+.jt-hq-totals .t-lbl {
+    color: #888888;
+    font-weight: bold;
+    text-align: left;
+    width: 105px;
+    padding-right: 10px;
+    white-space: nowrap;
+}
+
+.jt-hq-totals .t-val {
+    color: #2d2d2d;
+    font-weight: bold;
+    text-align: right;
+    white-space: nowrap;
+    width: 165px;
+}
+
+.jt-hq-totals tr.grand td {
+    border: none !important;
+    border-top: 2px solid #3E4827 !important;
+    padding-top: 10px;
+    padding-bottom: 0;
+}
+
+.jt-hq-totals tr.grand .t-lbl {
+    font-size: 11pt;
+    color: #3E4827;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+.jt-hq-totals tr.grand .t-val {
+    font-size: 15pt;
+    color: #3E4827;
+    font-weight: bold;
+}
+
+.jt-hq-clear {
+    clear: both;
+    height: 0;
+    font-size: 0;
+}
+
+.jt-hq-spacer td {
+    font-size: 1px;
+    line-height: 1px;
+}
+
+.jt-hq-cond {
+    margin: 12px 0 0 0;
+    padding: 0;
+    border: none !important;
+    background: transparent !important;
+    clear: both;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+/* Firmas — solo divs; sin tabla (wkhtmltopdf dibuja borde en tablas) */
+.jt-hq-sigs-zone {
+    width: 100%;
+    margin: 8px 0 0 0;
+    clear: both;
+    border: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    outline: none !important;
+    overflow: visible;
+}
+
+.jt-hq-sig-grow {
+    display: block;
+    height: 320px;
+    border: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    outline: none !important;
+    margin: 0;
+    padding: 0;
+    font-size: 0;
+    line-height: 0;
+    overflow: hidden;
+}
+
+.jt-hq-cond-title {
+    color: #3E4827;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 6.5pt;
+    letter-spacing: 0.7px;
+    margin: 0 0 0 0;
+    padding: 0 0 5px 0;
+    border: none !important;
+    border-bottom: 2px solid #3E4827 !important;
+    display: inline-block;
+    min-width: 90px;
+}
+
+.jt-hq-cond-body {
+    font-size: 7.5pt;
+    color: #2d2d2d;
+    line-height: 1.65;
+    white-space: pre-line;
+    margin: 10px 0 0 0;
+    padding: 0;
+    border: none !important;
+    background: transparent !important;
+}
+
+.jt-hq-cond-body * {
+    border: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
+    margin: 0;
+    padding: 0;
+}
+
+/* Firmas — solo divs + hr, sin tabla ni caja; spacer empuja hacia footer */
+.jt-hq-sigs {
+    margin: 0 0 2px 0;
+    width: 100%;
+    overflow: hidden;
+    border: none !important;
+    background: transparent !important;
+    clear: both;
+}
+
+.jt-hq-sig-col {
+    float: left;
+    width: 46%;
+    border: none !important;
+    background: transparent !important;
+    padding: 0;
+    margin: 0;
+    box-shadow: none !important;
+}
+
+.jt-hq-sig-col + .jt-hq-sig-col {
+    float: right;
+}
+
+.jt-hq-sig-head {
+    font-size: 6.5pt;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #888888;
+    letter-spacing: 0.6px;
+    margin: 0 0 8px 0;
+    border: none !important;
+}
+
+.jt-hq-sig-line {
+    display: block;
+    border: none !important;
+    border-top: 1px solid #bdbdbd !important;
+    height: 0;
+    width: 88%;
+    margin: 0 0 14px 0;
+    padding: 0;
+    background: transparent !important;
+}
+
+.jt-hq-sig-date-lbl {
+    font-size: 6.5pt;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #888888;
+    letter-spacing: 0.4px;
+    margin: 0 0 8px 0;
+    border: none !important;
+}
+
+.jt-hq-sig-line-date {
+    width: 65%;
+    margin-bottom: 0;
+}
+
+/* Footer PDF — barra verde, una sola línea */
+.jt-hq-footer-pdf {
+    background-color: #3E4827 !important;
+    color: #ffffff !important;
+    padding: 10px 16px;
+    font-size: 7pt;
+    margin: 0;
+    border: none !important;
+}
+
+.jt-hq-foot-row {
+    text-align: center;
+    white-space: nowrap;
+    border: none !important;
+    background: transparent !important;
+    color: #ffffff !important;
+}
+
+.jt-hq-foot-item {
+    color: #ffffff !important;
+    border: none !important;
+    background: transparent !important;
+}
+
+.jt-hq-foot-sep {
+    color: rgba(255, 255, 255, 0.5) !important;
+    margin: 0 8px;
+    border: none !important;
+}
+
+.jt-hq-foot-page {
+    color: #ffffff !important;
+}
+
+.jt-hq-foot-page .page,
+.jt-hq-foot-page .topage {
+    color: #ffffff !important;
+}

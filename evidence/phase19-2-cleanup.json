@@ -1,0 +1,199 @@
+{
+  "phase": "19.2",
+  "timestamp_utc": "2026-06-30T21:48:03.778542+00:00",
+  "database": "hellenia_test",
+  "excluded_count": 111,
+  "kept_count": 37,
+  "excluded_sample": [
+    {
+      "id": 1485,
+      "name": "FACTU/2026/06/0147",
+      "ref": "P19-ERR-NO-NCF",
+      "partner": "P19 Proveedor Formal B11"
+    },
+    {
+      "id": 1483,
+      "name": "FACTU/2026/06/0146",
+      "ref": "P19-ERR-NO-NCF",
+      "partner": "P19 Proveedor Formal B11"
+    },
+    {
+      "id": 1482,
+      "name": "FACTU/2026/06/0145",
+      "ref": "P19-ERR-NO-TYPE",
+      "partner": "P19 Sin Tipo"
+    },
+    {
+      "id": 1481,
+      "name": "FACTU/2026/06/0144",
+      "ref": "P19-ERR-NO-NCF",
+      "partner": "P19 Proveedor Formal B11"
+    },
+    {
+      "id": 1480,
+      "name": "FACTU/2026/06/0143",
+      "ref": "P19-ERR-NO-TYPE",
+      "partner": "P19 Sin Tipo"
+    },
+    {
+      "id": 1479,
+      "name": "FACTU/2026/06/0142",
+      "ref": "P19-ERR-NO-NCF",
+      "partner": "P19 Proveedor Formal B11"
+    },
+    {
+      "id": 921,
+      "name": "FACTU/2026/06/0136",
+      "ref": false,
+      "partner": "UAT Proveedor Mobiliario RD"
+    },
+    {
+      "id": 545,
+      "name": "FACTU/2026/06/0104",
+      "ref": false,
+      "partner": "UAT Proveedor Mobiliario RD"
+    },
+    {
+      "id": 544,
+      "name": "FACTU/2026/06/0103",
+      "ref": false,
+      "partner": "UAT Proveedor Mobiliario RD"
+    },
+    {
+      "id": 543,
+      "name": "FACTU/2026/06/0102",
+      "ref": false,
+      "partner": "UAT Proveedor Mobiliario RD"
+    },
+    {
+      "id": 542,
+      "name": "FACTU/2026/06/0101",
+      "ref": false,
+      "partner": "UAT Proveedor Mobiliario RD"
+    },
+    {
+      "id": 541,
+      "name": "FACTU/2026/06/0100",
+      "ref": false,
+      "partner": "UAT Proveedor Mobiliario RD"
+    },
+    {
+      "id": 540,
+      "name": "FACTU/2026/06/0099",
+      "ref": false,
+      "partner": "UAT Proveedor Mobiliario RD"
+    },
+    {
+      "id": 539,
+      "name": "FACTU/2026/06/0098",
+      "ref": false,
+      "partner": "UAT Proveedor Mobiliario RD"
+    },
+    {
+      "id": 538,
+      "name": "FACTU/2026/06/0097",
+      "ref": false,
+      "partner": "UAT Proveedor Mobiliario RD"
+    },
+    {
+      "id": 537,
+      "name": "FACTU/2026/06/0096",
+      "ref": false,
+      "partner": "UAT Proveedor Mobiliario RD"
+    },
+    {
+      "id": 536,
+      "name": "FACTU/2026/06/0095",
+      "ref": false,
+      "partner": "UAT Proveedor Mobiliario RD"
+    },
+    {
+      "id": 535,
+      "name": "FACTU/2026/06/0094",
+      "ref": false,
+      "partner": "UAT Proveedor Mobiliario RD"
+    },
+    {
+      "id": 534,
+      "name": "FACTU/2026/06/0093",
+      "ref": false,
+      "partner": "UAT Proveedor Mobiliario RD"
+    },
+    {
+      "id": 533,
+      "name": "FACTU/2026/06/0092",
+      "ref": false,
+      "partner": "UAT Proveedor Mobiliario RD"
+    },
+    {
+      "id": 532,
+      "name": "FACTU/2026/06/0091",
+      "ref": false,
+      "partner": "UAT Proveedor Mobiliario RD"
+    },
+    {
+      "id": 531,
+      "name": "FACTU/2026/06/0090",
+      "ref": false,
+      "partner": "UAT Proveedor Mobiliario RD"
+    },
+    {
+      "id": 530,
+      "name": "FACTU/2026/06/0089",
+      "ref": false,
+      "partner": "UAT Proveedor Mobiliario RD"
+    },
+    {
+      "id": 529,
+      "name": "FACTU/2026/06/0088",
+      "ref": false,
+      "partner": "UAT Proveedor Mobiliario RD"
+    },
+    {
+      "id": 528,
+      "name": "FACTU/2026/06/0087",
+      "ref": false,
+      "partner": "UAT Proveedor Mobiliario RD"
+    },
+    {
+      "id": 527,
+      "name": "FACTU/2026/06/0086",
+      "ref": false,
+      "partner": "UAT Proveedor Mobiliario RD"
+    },
+    {
+      "id": 526,
+      "name": "FACTU/2026/06/0085",
+      "ref": false,
+      "partner": "UAT Proveedor Mobiliario RD"
+    },
+    {
+      "id": 525,
+      "name": "FACTU/2026/06/0084",
+      "ref": false,
+      "partner": "UAT Proveedor Mobiliario RD"
+    },
+    {
+      "id": 524,
+      "name": "FACTU/2026/06/0083",
+      "ref": false,
+      "partner": "UAT Proveedor Mobiliario RD"
+    },
+    {
+      "id": 523,
+      "name": "FACTU/2026/06/0082",
+      "ref": false,
+      "partner": "UAT Proveedor Mobiliario RD"
+    }
+  ],
+  "validation_counts": {
+    "all": 148,
+    "valid": 37,
+    "incomplete": 0,
+    "excluded": 111,
+    "cancelled": 0,
+    "partners_affected": 0,
+    "error_lines": 0
+  },
+  "pass": true
+}

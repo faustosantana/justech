@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+        Fase 24.2 — Cotización oficial Justech.
+        - sale.action_report_saleorder → diseño justech_report_design (botón principal)
+        - Respaldo explícito al reporte estándar Odoo + herencia hellenia_reports
+        - Sin xpath sobre sale.report_saleorder desde este módulo
+    -->
+
+    <!-- Respaldo: reporte estándar (hellenia_reports sigue aplicando su herencia QWeb) -->
+    <record id="action_report_saleorder_backup" model="ir.actions.report">
+        <field name="name">Cotización en PDF (Respaldo)</field>
+        <field name="model">sale.order</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">sale.report_saleorder</field>
+        <field name="report_file">sale.report_saleorder</field>
+        <field name="print_report_name">'Cotización - %s' % (object.name)</field>
+        <field name="paperformat_id" ref="justech_report_design.paperformat_sale_backup"/>
+        <field name="binding_model_id" ref="sale.model_sale_order"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <!-- Acción principal: mismo menú "Cotización en PDF", diseño Justech -->
+    <record id="sale.action_report_saleorder" model="ir.actions.report">
+        <field name="report_name">justech_report_design.report_hellenia_quotation_document</field>
+        <field name="report_file">justech_report_design.report_hellenia_quotation_document</field>
+        <field name="paperformat_id" ref="justech_report_design.paperformat_hellenia_quotation"/>
+    </record>
+
+    <!-- Acción paralela 24.1: retirar del menú Imprimir (evitar duplicado) -->
+    <record id="action_report_hellenia_quotation" model="ir.actions.report">
+        <field name="binding_model_id" eval="False"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <!--
+        Fase 26 — Factura oficial Justech.
+        - account.account_invoices → diseño justech_report_design (único menú Imprimir)
+        - Respaldo estándar sin binding (rollback técnico)
+        - Reporte paralelo 25 retirado del menú
+    -->
+
+    <record id="action_report_invoice_backup" model="ir.actions.report">
+        <field name="name">Factura en PDF (Respaldo)</field>
+        <field name="model">account.move</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">account.report_invoice_with_payments</field>
+        <field name="report_file">account.report_invoice_with_payments</field>
+        <field name="print_report_name">'Factura (Respaldo) - %s' % (object.name)</field>
+        <field name="paperformat_id" ref="justech_report_design.paperformat_sale_backup"/>
+        <field name="binding_model_id" eval="False"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <record id="account.account_invoices" model="ir.actions.report">
+        <field name="report_name">justech_report_design.report_justech_invoice_document</field>
+        <field name="report_file">justech_report_design.report_justech_invoice_document</field>
+        <field name="paperformat_id" ref="justech_report_design.paperformat_hellenia_invoice"/>
+    </record>
+
+    <record id="account.account_invoices_without_payment" model="ir.actions.report">
+        <field name="report_name">justech_report_design.report_justech_invoice_document</field>
+        <field name="report_file">justech_report_design.report_justech_invoice_document</field>
+        <field name="paperformat_id" ref="justech_report_design.paperformat_hellenia_invoice"/>
+        <field name="binding_model_id" eval="False"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <record id="action_report_justech_invoice" model="ir.actions.report">
+        <field name="binding_model_id" eval="False"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <!--
+        Fase 26C — Conduce de Entrega oficial Justech.
+        - stock.action_report_delivery → diseño Justech (salidas / outgoing)
+        - Respaldo estándar hellenia/Odoo para recepciones e internos
+        - Acción paralela picking retirada del menú Imprimir
+        - sale.order y account.move: Conduce de Entrega en menú Imprimir
+    -->
+
+    <record id="action_report_delivery_backup" model="ir.actions.report">
+        <field name="name">Recibo de entrega</field>
+        <field name="model">stock.picking</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">stock.report_deliveryslip</field>
+        <field name="report_file">stock.report_deliveryslip</field>
+        <field name="print_report_name">'Recibo - %s' % (object.name)</field>
+        <field name="paperformat_id" ref="justech_report_design.paperformat_sale_backup"/>
+        <field name="domain">[('picking_type_code', 'in', ('incoming', 'internal'))]</field>
+        <field name="binding_model_id" ref="stock.model_stock_picking"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <record id="stock.action_report_delivery" model="ir.actions.report">
+        <field name="name">Conduce de Entrega</field>
+        <field name="report_name">justech_report_design.report_justech_delivery_document</field>
+        <field name="report_file">justech_report_design.report_justech_delivery_document</field>
+        <field name="paperformat_id" ref="justech_report_design.paperformat_hellenia_delivery"/>
+        <field name="domain">[('picking_type_code', '=', 'outgoing')]</field>
+    </record>
+
+    <record id="action_report_justech_delivery" model="ir.actions.report">
+        <field name="binding_model_id" eval="False"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <!--
+        Fase 27A — Orden de Compra oficial Justech.
+        - purchase.action_report_purchase_order → diseño justech_report_design
+        - Respaldo estándar Odoo sin binding (rollback técnico)
+        - Acción paralela 27 retirada del menú Imprimir
+    -->
+
+    <record id="action_report_purchase_order_backup" model="ir.actions.report">
+        <field name="name">Orden de Compra (Respaldo)</field>
+        <field name="model">purchase.order</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">purchase.report_purchaseorder</field>
+        <field name="report_file">purchase.report_purchaseorder</field>
+        <field name="print_report_name">'Orden de Compra (Respaldo) - %s' % (object.name)</field>
+        <field name="paperformat_id" ref="justech_report_design.paperformat_sale_backup"/>
+        <field name="binding_model_id" eval="False"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <record id="purchase.action_report_purchase_order" model="ir.actions.report">
+        <field name="report_name">justech_report_design.report_justech_purchase_order_document</field>
+        <field name="report_file">justech_report_design.report_justech_purchase_order_document</field>
+        <field name="paperformat_id" ref="justech_report_design.paperformat_hellenia_purchase_order"/>
+    </record>
+
+    <record id="action_report_justech_purchase_order" model="ir.actions.report">
+        <field name="binding_model_id" eval="False"/>
+        <field name="binding_type">report</field>
+    </record>
+</odoo>

@@ -1,0 +1,33 @@
+{
+  "phase": "13.2",
+  "block": 2,
+  "timestamp_utc": "2026-06-30T15:59:40.014585+00:00",
+  "database": "hellenia_prod",
+  "dry_run": false,
+  "actions": [
+    {
+      "action": "company_purchase_tax",
+      "detail": "18% Cost Good"
+    },
+    {
+      "action": "products_remapped",
+      "detail": "1"
+    }
+  ],
+  "before": {
+    "account_count": 288,
+    "tax_count": 38,
+    "bad_15_count": 0,
+    "bad_15_names": []
+  },
+  "after": {
+    "account_count": 288,
+    "tax_count": 38,
+    "bad_15_count": 0,
+    "itbis_18_sale": "18% ITBIS",
+    "products_with_15": 0,
+    "remapped_products": 1
+  },
+  "ok": true,
+  "errors": []
+}

@@ -1,57 +1,49 @@
-# Métodos de pago — Fase 3.5 (sin pasarelas integradas)
+# Métodos de pago — Fase 16 (hellenia_account)
 
-schema_version: "2.0"
+schema_version: "2.1"
 
 configured:
   - name: Efectivo
     journal: CSH1
     type: cash
     direction: inbound_outbound
-    gateway: false
+    odoo_code: manual
 
   - name: Transferencia
-    journal: BNK1
+    journals: [BNKD, BNKU]
     type: bank
     direction: inbound_outbound
-    gateway: false
+    odoo_code: manual
 
-  - name: Tarjetas
-    journal: BNK1
+  - name: Tarjeta
+    journals: [BNKD, BNKU]
     type: bank
     direction: inbound
-    gateway: false
+    odoo_code: manual
     note: "Registro manual — sin datáfono integrado"
 
-  - name: Link de pago
-    journal: BNK1
-    type: bank
-    direction: inbound
-    gateway: false
-    status: structure_only
-    note: "Línea manual creada — integración pasarela pendiente fase posterior"
-
-  - name: Cheques
-    journal: BNK1
+  - name: Cheque
+    journals: [BNKD, BNKU]
     type: bank
     direction: outbound
-    method: check_printing
+    odoo_code: check_printing
+    depends: l10n_do_check_printing
 
 journals:
   - code: CSH1
-    name: Efectivo
+    name: Caja / Efectivo
     type: cash
-    created_phase35: true
-  - code: BNK1
-    name: Bank
+  - code: BNKD
+    name: Banco López de Haro DOP
     type: bank
+    currency: DOP
+  - code: BNKU
+    name: Banco López de Haro USD
+    type: bank
+    currency: USD
+  - code: BNK1
+    name: Banco (legacy)
+    type: bank
+    status: deprecated
 
-restrictions:
-  - "No integrar Stripe, PayPal ni pasarelas en DEV"
-  - "No instalar módulos payment provider adicionales en esta fase"
-
-sales_modules_required:
-  note: "Cotizaciones/facturas/POS requieren sale, stock, point_of_sale — NO instalados (decisión explícita)"
-  modules:
-    sale: uninstalled
-    stock: uninstalled
-    point_of_sale: uninstalled
+module: hellenia_account

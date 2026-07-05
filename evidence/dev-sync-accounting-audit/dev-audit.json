@@ -1,0 +1,381 @@
+{
+  "phase": "accounting-total-audit-readonly",
+  "version": "1.0",
+  "mode": "read_only",
+  "environment": "dev",
+  "database": "hellenia_dev",
+  "timestamp_utc": "2026-07-05T02:51:36.245908+00:00",
+  "company": {
+    "id": 1,
+    "name": "Hellenia, S.R.L.",
+    "vat": "133621282",
+    "country": "DO",
+    "currency": "DOP",
+    "fiscal_enabled": true
+  },
+  "modules": {
+    "account": {
+      "state": "installed",
+      "version": "19.0.1.4"
+    },
+    "stock": {
+      "state": "installed",
+      "version": "19.0.1.1"
+    },
+    "purchase": {
+      "state": "installed",
+      "version": "19.0.1.2"
+    },
+    "point_of_sale": {
+      "state": "installed",
+      "version": "19.0.1.0.2"
+    },
+    "account_reports": {
+      "state": "installed",
+      "version": "19.0.1.0"
+    },
+    "hellenia_account": {
+      "state": "installed",
+      "version": "19.0.1.0.27"
+    },
+    "hellenia_base": {
+      "state": "installed",
+      "version": "19.0.1.0.0"
+    },
+    "hellenia_pos": {
+      "state": "installed",
+      "version": "19.0.1.0.0"
+    },
+    "hellenia_reports": {
+      "state": "installed",
+      "version": "19.0.1.5.7"
+    },
+    "justech_l10n_do_base": {
+      "state": "installed",
+      "version": "19.0.1.4.2"
+    },
+    "justech_l10n_do_ncf": {
+      "state": "installed",
+      "version": "19.0.1.5.2"
+    },
+    "justech_l10n_do_reports": {
+      "state": "installed",
+      "version": "19.0.1.12.4"
+    },
+    "justech_report_design": {
+      "state": "uninstalled",
+      "version": false
+    },
+    "sale": {
+      "state": "installed",
+      "version": "19.0.1.2"
+    }
+  },
+  "areas": {
+    "chart_of_accounts": {
+      "total_accounts": {
+        "ok": true,
+        "detail": "291"
+      },
+      "type_distribution": {
+        "ok": true,
+        "detail": "{'asset_current': 37, 'asset_cash': 6, 'asset_receivable': 8, 'asset_prepayments': 6, 'asset_fixed': 16, 'asset_non_current': 17, 'liability_payable': 10, 'liability_non_current': 49, 'equity': 16, 'income': 12, 'income_other': 4, 'expense_direct_cost': 8, 'expense': 95, 'expense_depreciation': 6, 'equity_unaffected': 1}"
+      },
+      "key_accounts": {
+        "ok": true,
+        "detail": "{'receivable': {'code': '11030201', 'found': True, 'name': 'Accounts Receivable from Customers', 'type': 'asset_receivable', 'active': True}, 'payable': {'code': '21010200', 'found': True, 'name': 'Accounts Payable to Local Suppliers', 'type': 'liability_payable', 'active': True}, 'inventory': {'code': '11050100', 'found': True, 'name': 'Inventory of merchandise or finished products', 'type': 'asset_current', 'active': True}, 'cogs': {'code': '51010100', 'found': True, 'name': 'Cost of Goods', 'type': 'expense_direct_cost', 'active': True}, 'cash': {'code': '11010100', 'found': True, 'name': 'Liquidity Transfer', 'type': 'asset_current', 'active': True}, 'bank': {'code': '11010201', 'found': True, 'name': 'Bank', 'type': 'asset_cash', 'active': True}, 'itbis_paid': {'code': '11080101', 'found': True, 'name': 'ITBIS Paid on Purchases of Local Good', 'type': 'asset_current', 'active': True}}"
+      },
+      "deprecated_used_in_posted": {
+        "ok": true,
+        "detail": "count=0"
+      },
+      "english_name_sample": {
+        "ok": true,
+        "detail": "sample_english_names=20"
+      }
+    },
+    "journals": {
+      "journal_INV": {
+        "ok": true,
+        "detail": "{'found': True, 'name': 'Sales', 'type': 'sale', 'expected_type': 'sale', 'type_match': True}"
+      },
+      "journal_FACTU": {
+        "ok": true,
+        "detail": "{'found': True, 'name': 'Purchases', 'type': 'purchase', 'expected_type': 'purchase', 'type_match': True}"
+      },
+      "journal_BNK1": {
+        "ok": false,
+        "detail": "{'found': False, 'name': None, 'type': None, 'expected_type': 'bank', 'type_match': False}"
+      },
+      "journal_CSH1": {
+        "ok": true,
+        "detail": "{'found': True, 'name': 'Caja / Efectivo', 'type': 'cash', 'expected_type': 'cash', 'type_match': True}"
+      },
+      "journal_MISCE": {
+        "ok": true,
+        "detail": "{'found': True, 'name': 'Miscellaneous Operations', 'type': 'general', 'expected_type': 'general', 'type_match': True}"
+      },
+      "journal_STJ": {
+        "ok": true,
+        "detail": "{'found': True, 'name': 'Inventory Valuation', 'type': 'general', 'expected_type': 'general', 'type_match': True}"
+      },
+      "journal_CAMBI": {
+        "ok": true,
+        "detail": "{'found': True, 'name': 'Exchange Difference', 'type': 'general', 'expected_type': 'general', 'type_match': True}"
+      },
+      "journal_TAX": {
+        "ok": true,
+        "detail": "{'found': True, 'name': 'Tax Returns', 'type': 'general', 'expected_type': 'general', 'type_match': True}"
+      },
+      "journal_CABA": {
+        "ok": true,
+        "detail": "{'found': True, 'name': 'Cash Basis Taxes', 'type': 'general', 'expected_type': 'general', 'type_match': True}"
+      },
+      "total_journals": {
+        "ok": true,
+        "detail": "11"
+      },
+      "journal_list": {
+        "ok": true,
+        "detail": "[{'code': 'INV', 'name': 'Sales', 'type': 'sale'}, {'code': 'FACTU', 'name': 'Purchases', 'type': 'purchase'}, {'code': 'MISCE', 'name': 'Miscellaneous Operations', 'type': 'general'}, {'code': 'BNKD', 'name': 'Banco López de Haro DOP', 'type': 'bank'}, {'code': 'BNKU', 'name': 'Banco López de Haro USD', 'type': 'bank'}, {'code': 'CSH1', 'name': 'Caja / Efectivo', 'type': 'cash'}, {'code': 'CABA', 'name': 'Cash Basis Taxes', 'type': 'general'}, {'code': 'CAMBI', 'name': 'Exchange Difference', 'type': 'general'}, {'code': 'STJ', 'name': 'Inventory Valuation', 'type': 'general'}, {'code': 'TAX', 'name': 'Tax Returns', 'type': 'general'}, {'code': 'PCC', 'name': 'Phase6 Concurrent', 'type': 'sale'}]"
+      },
+      "pos_linked_journals": {
+        "ok": true,
+        "detail": "[]"
+      }
+    },
+    "products": {
+      "categories_total": {
+        "ok": true,
+        "detail": "34"
+      },
+      "categories_without_income_account": {
+        "ok": true,
+        "detail": "0"
+      },
+      "categories_without_expense_account": {
+        "ok": true,
+        "detail": "0"
+      },
+      "products_sale_ok": {
+        "ok": true,
+        "detail": "7"
+      },
+      "products_pos_available": {
+        "ok": true,
+        "detail": "0"
+      },
+      "products_sale_without_tax": {
+        "ok": false,
+        "detail": "4"
+      },
+      "products_purchase_without_tax": {
+        "ok": true,
+        "detail": "0"
+      }
+    },
+    "purchases": {
+      "posted_vendor_bills": {
+        "ok": true,
+        "detail": "3"
+      },
+      "posted_vendor_refunds": {
+        "ok": true,
+        "detail": "0"
+      },
+      "vendor_paid_with_residual": {
+        "ok": true,
+        "detail": "3"
+      }
+    },
+    "sales": {
+      "posted_customer_invoices": {
+        "ok": true,
+        "detail": "5"
+      },
+      "posted_credit_notes": {
+        "ok": true,
+        "detail": "0"
+      },
+      "paid_with_residual": {
+        "ok": true,
+        "detail": "[]"
+      },
+      "open_without_residual": {
+        "ok": true,
+        "detail": "[]"
+      },
+      "invoices_partner_without_vat": {
+        "ok": false,
+        "detail": "5"
+      }
+    },
+    "inventory": {
+      "inventory_account": {
+        "ok": true,
+        "detail": "11050100"
+      },
+      "cogs_account": {
+        "ok": true,
+        "detail": "51010100"
+      },
+      "stock_module": {
+        "ok": true,
+        "detail": "{'state': 'installed', 'version': '19.0.1.1'}"
+      },
+      "details": {
+        "ok": true,
+        "detail": "{'warehouses': [{'name': 'Hellenia, S.R.L.', 'code': 'WH'}], 'warehouse_count': 1, 'quants_with_stock': 4}"
+      }
+    },
+    "pos": {
+      "pos_installed": {
+        "ok": true,
+        "detail": "0"
+      },
+      "details": {
+        "ok": true,
+        "detail": "{'installed': True, 'config_count': 0, 'configs': [], 'open_sessions': 0, 'total_sessions': 0, 'total_orders': 0, 'invoiced_orders': 0}"
+      }
+    },
+    "taxes_dgii": {
+      "sale_itbis_18": {
+        "ok": true,
+        "detail": "['18% ITBIS', 'Restaurant']"
+      },
+      "purchase_itbis_18": {
+        "ok": true,
+        "detail": "['18% Cost Good', '18% Cost Serv.', '18% ITBIS', '18% ITBIS Serv.', '18% ITBIS Imp.']"
+      },
+      "ncf_duplicates": {
+        "ok": true,
+        "detail": "[]"
+      },
+      "posted_out_invoices_without_ncf": {
+        "ok": false,
+        "detail": "3"
+      },
+      "active_ncf_ranges": {
+        "ok": true,
+        "detail": "[{'name': 'Sprint0 Concurrent', 'prefix': 'B02', 'next': 7002, 'end': 7999, 'remaining': 998}]"
+      },
+      "withholding_summary": {
+        "ok": true,
+        "detail": "{'model_exists': True, 'lines': 0, 'no_account': 0, 'no_gl': 0}"
+      },
+      "dgii_move_counts_current_period": {
+        "ok": true,
+        "detail": "{'period': '202607', 'date_from': '2026-07-01', 'date_to': '2026-07-31', '607_out': 0, '606_in': 0, '608_refund': 0}"
+      }
+    },
+    "banks_cash": {
+      "posted_payments": {
+        "ok": true,
+        "detail": "2"
+      },
+      "payments_without_move": {
+        "ok": true,
+        "detail": "[]"
+      },
+      "bank_journals": {
+        "ok": true,
+        "detail": "[{'code': 'BNKD', 'name': 'Banco López de Haro DOP'}, {'code': 'BNKU', 'name': 'Banco López de Haro USD'}]"
+      },
+      "cash_journals": {
+        "ok": true,
+        "detail": "[{'code': 'CSH1', 'name': 'Caja / Efectivo'}]"
+      },
+      "company_bank_accounts": {
+        "ok": true,
+        "detail": "[{'bank': 'Banco López de Haro', 'acc': '4010461048'}, {'bank': 'Banco López de Haro', 'acc': '4040043811'}]"
+      }
+    },
+    "financial_reports": {
+      "account_reports_module": {
+        "ok": true,
+        "detail": "{'state': 'installed', 'version': '19.0.1.0'}"
+      },
+      "reports_accessible": {
+        "ok": true,
+        "detail": "{'account_report_count': 26, 'sample_reports': ['Balance Sheet', 'Cash Flow Statement', 'Executive Summary', 'Bank Reconciliation Report', 'Aged Receivable', 'Aged Payable', 'General Ledger', 'EC Sales List', 'Partner Ledger', 'Customer Statement']}"
+      },
+      "balance_sheet_equation": {
+        "ok": false,
+        "detail": "A=20918.00 L+E=-30818.00"
+      }
+    }
+  },
+  "integrity": {
+    "posted_moves": 10,
+    "unbalanced_count": 0,
+    "ytd_debit": 165318.0,
+    "ytd_credit": 165318.0,
+    "ytd_balanced": true,
+    "orphan_partials": 0
+  },
+  "findings": {
+    "critical": [],
+    "high": [
+      {
+        "area": "sales",
+        "code": "FISC-01",
+        "message": "Facturas posted sin RNC partner: 5",
+        "detail": [
+          "INV/2026/00003",
+          "INV/2026/00001",
+          "INV/2026/00002",
+          "PCC/2026/00001",
+          "PCC/2026/00002"
+        ]
+      },
+      {
+        "area": "pos",
+        "code": "POS-01",
+        "message": "POS instalado sin pos.config"
+      }
+    ],
+    "medium": [
+      {
+        "area": "journals",
+        "code": "JRN-01",
+        "message": "Diarios esperados no encontrados: ['BNK1']"
+      },
+      {
+        "area": "products",
+        "code": "PRD-03",
+        "message": "Productos venta sin impuesto: 4"
+      },
+      {
+        "area": "taxes_dgii",
+        "code": "FISC-03",
+        "message": "Facturas cliente posted sin NCF: 3"
+      }
+    ],
+    "low": [],
+    "info": []
+  },
+  "summary": {
+    "posted_moves": 10,
+    "customer_invoices": 5,
+    "vendor_bills": 3,
+    "payments": 2,
+    "finding_counts": {
+      "critical": 0,
+      "high": 2,
+      "medium": 3,
+      "low": 0,
+      "info": 0
+    },
+    "critical_count": 0,
+    "high_count": 2,
+    "errors_count": 0,
+    "dev_health": "ok"
+  },
+  "errors": [],
+  "ok": false,
+  "pass": false,
+  "schema": {
+    "partner_id_type_column": true
+  },
+  "runner_mode": "read_only_dev_sync_post_install"
+}

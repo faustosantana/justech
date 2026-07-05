@@ -1,0 +1,16 @@
+{
+  "env": "test",
+  "po_url": "https://test.hellenia.cloud/odoo/action-purchase.purchase_rfq/56",
+  "checks": {
+    "button_visible": true,
+    "portal_preview_url": true,
+    "not_bare_html": true,
+    "has_iframe": true,
+    "has_download": true,
+    "has_print": true,
+    "has_back_edit": true,
+    "hellenia_design": true
+  },
+  "preview_url": "https://test.hellenia.cloud/es/my/purchase/56/preview?access_token=b30e6072-ef74-4d73-8073-ade1938f7150",
+  "status": "PASS"
+}

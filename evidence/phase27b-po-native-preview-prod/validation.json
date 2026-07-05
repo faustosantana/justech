@@ -1,0 +1,82 @@
+{
+  "phase": "27b-po-native-preview-prod",
+  "timestamp_utc": "2026-07-02T21:24:23.983309+00:00",
+  "database": "hellenia_prod",
+  "environment": "prod",
+  "status": "PASS",
+  "module_version": "19.0.7.3.1",
+  "checks": {
+    "module_version": {
+      "status": "PASS",
+      "detail": "19.0.7.3.1"
+    },
+    "button_vista_previa": {
+      "status": "PASS",
+      "detail": "True"
+    },
+    "preview_action_url": {
+      "status": "PASS",
+      "detail": "ir.actions.act_url"
+    },
+    "preview_target_self": {
+      "status": "PASS",
+      "detail": "self"
+    },
+    "preview_portal_mode": {
+      "status": "PASS",
+      "detail": "/my/purchase/9/preview?access_token=0f836748-0205-4e65-91a0-41ffef779342"
+    },
+    "preview_not_bare_html": {
+      "status": "PASS",
+      "detail": "/my/purchase/9/preview?access_token=0f836748-0205-4e65-91a0-41ffef779342"
+    },
+    "portal_page_ok": {
+      "status": "PASS",
+      "detail": "200"
+    },
+    "portal_has_iframe": {
+      "status": "PASS",
+      "detail": "True"
+    },
+    "portal_has_download": {
+      "status": "PASS",
+      "detail": "True"
+    },
+    "portal_has_print": {
+      "status": "PASS",
+      "detail": "True"
+    },
+    "portal_has_back_edit": {
+      "status": "PASS",
+      "detail": "True"
+    },
+    "iframe_hellenia_design": {
+      "status": "PASS",
+      "detail": "status=200 band=True"
+    },
+    "download_pdf_ok": {
+      "status": "PASS",
+      "detail": "73524"
+    },
+    "print_menu_pdf_ok": {
+      "status": "PASS",
+      "detail": "73524"
+    },
+    "send_rfq_ok": {
+      "status": "PASS",
+      "detail": "ir.actions.act_window"
+    }
+  },
+  "purchase_order": {
+    "id": 9,
+    "name": "P00008",
+    "state": "purchase"
+  },
+  "ui": {
+    "preview_url": "/my/purchase/9/preview?access_token=0f836748-0205-4e65-91a0-41ffef779342",
+    "iframe_url": "/my/purchase/9/jt_report_html?access_token=0f836748-0205-4e65-91a0-41ffef779342",
+    "download_url": "/my/purchase/9/jt_report_pdf?access_token=0f836748-0205-4e65-91a0-41ffef779342&download=true"
+  },
+  "errors": [],
+  "pass": true
+}

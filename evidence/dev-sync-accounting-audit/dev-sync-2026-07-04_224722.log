@@ -1,0 +1,635 @@
+[2026-07-05 02:47:25] === Step 1: Backup DEV ===
+[2026-07-05 02:47:25] Iniciando backup dev → /opt/odoo-projects/hellenia/backups/dev/2026-07-05_0247
+[2026-07-05 02:47:26] OK  PostgreSQL dump
+[2026-07-05 02:47:27] OK  filestore
+[2026-07-05 02:47:27] === Verificación backup DEV ===
+[2026-07-05 02:47:27] Directorio: /opt/odoo-projects/hellenia/backups/dev/2026-07-05_0247
+[2026-07-05 02:47:27] OK  PostgreSQL dump — postgres_all.sql.gz (2581642 bytes)
+[2026-07-05 02:47:27] OK  Filestore — filestore.tar.gz (3684184 bytes)
+[2026-07-05 02:47:27] OK  docker-compose — docker-compose.yml (1723 bytes)
+[2026-07-05 02:47:27] OK  odoo.conf — odoo.conf (378 bytes)
+[2026-07-05 02:47:27] OK  .env config — .env (374 bytes)
+[2026-07-05 02:47:27] OK  custom — custom.tar.gz (290629 bytes)
+[2026-07-05 02:47:27] OK  postgres_all.sql.gz — integridad gzip
+[2026-07-05 02:47:28] OK  filestore.tar.gz — integridad tar
+[2026-07-05 02:47:28] OK  custom.tar.gz — integridad tar
+[2026-07-05 02:47:28] RESULTADO: backup completo y válido
+[2026-07-05 02:47:28] Backup dev completado: /opt/odoo-projects/hellenia/backups/dev/2026-07-05_0247
+[2026-07-05 02:47:28] Backup dir: /opt/odoo-projects/hellenia/backups/dev/2026-07-05_0247_weekly
+[2026-07-05 02:47:28] === Step 2: Sync custom from GitHub branch cursor/phase27b-partner-doc-type-ux-dd85 ===
+From https://github.com/faustosantana/justech
+ * branch            cursor/phase27b-partner-doc-type-ux-dd85 -> FETCH_HEAD
+Already on 'cursor/phase27b-partner-doc-type-ux-dd85'
+Your branch is up to date with 'origin/cursor/phase27b-partner-doc-type-ux-dd85'.
+Already up to date.
+[2026-07-05 02:47:28] Commit: 8b732cd76562d0511be2aba268923ab3fb1182eb
+sending incremental file list
+deleting ._justech_l10n_do_ncf
+deleting ._justech_l10n_do_base
+deleting ._hellenia_ux
+deleting ._hellenia_pos
+./
+deleting hellenia_account/models/__pycache__/hellenia_withholding_catalog.cpython-312.pyc
+deleting hellenia_account/models/__pycache__/
+deleting hellenia_pos/._views
+deleting hellenia_pos/._tests
+deleting hellenia_pos/._static
+deleting hellenia_pos/._security
+deleting hellenia_pos/._models
+deleting hellenia_pos/._i18n
+deleting hellenia_pos/._data
+deleting hellenia_pos/.___manifest__.py
+deleting hellenia_pos/.___init__.py
+deleting hellenia_pos/._README.md
+deleting hellenia_pos/data/._.gitkeep
+deleting hellenia_pos/i18n/._es.po
+deleting hellenia_pos/models/res_partner.py
+deleting hellenia_pos/models/pos_order.py
+deleting hellenia_pos/models/pos_config.py
+deleting hellenia_pos/models/hellenia_pos_audit_log.py
+deleting hellenia_pos/models/._res_partner.py
+deleting hellenia_pos/models/._pos_order.py
+deleting hellenia_pos/models/._pos_config.py
+deleting hellenia_pos/models/._hellenia_pos_audit_log.py
+deleting hellenia_pos/models/.___init__.py
+deleting hellenia_pos/security/._ir.model.access.csv
+deleting hellenia_pos/static/src/overrides/partner_utils.js
+deleting hellenia_pos/static/src/overrides/._partner_utils.js
+deleting hellenia_pos/static/src/overrides/
+deleting hellenia_pos/static/src/app/utils/order_payment_validation.js
+deleting hellenia_pos/static/src/app/utils/._order_payment_validation.js
+deleting hellenia_pos/static/src/app/utils/
+deleting hellenia_pos/static/src/app/screens/ticket_screen/invoice_button.js
+deleting hellenia_pos/static/src/app/screens/ticket_screen/._invoice_button.js
+deleting hellenia_pos/static/src/app/screens/ticket_screen/
+deleting hellenia_pos/static/src/app/screens/payment_screen/payment_screen.js
+deleting hellenia_pos/static/src/app/screens/payment_screen/._payment_screen.js
+deleting hellenia_pos/static/src/app/screens/payment_screen/
+deleting hellenia_pos/static/src/app/screens/._ticket_screen
+deleting hellenia_pos/static/src/app/screens/._payment_screen
+deleting hellenia_pos/static/src/app/screens/
+deleting hellenia_pos/static/src/app/._utils
+deleting hellenia_pos/static/src/app/._screens
+deleting hellenia_pos/static/src/app/
+deleting hellenia_pos/static/src/._overrides
+deleting hellenia_pos/static/src/._app
+deleting hellenia_pos/static/src/
+deleting hellenia_pos/static/._src
+deleting hellenia_pos/static/._description
+deleting hellenia_pos/static/description/._.gitkeep
+deleting hellenia_pos/tests/test_hellenia_pos_config.py
+deleting hellenia_pos/tests/test_hellenia_pos_audit.py
+deleting hellenia_pos/tests/._test_hellenia_pos_config.py
+deleting hellenia_pos/tests/._test_hellenia_pos_audit.py
+deleting hellenia_pos/tests/._test_hellenia_pos.py
+deleting hellenia_pos/tests/.___init__.py
+deleting hellenia_pos/views/pos_config_views.xml
+deleting hellenia_pos/views/hellenia_pos_audit_log_views.xml
+deleting hellenia_pos/views/._pos_config_views.xml
+deleting hellenia_pos/views/._hellenia_pos_audit_log_views.xml
+deleting hellenia_pos/views/._.gitkeep
+deleting hellenia_ux/._wizard
+deleting hellenia_ux/._views
+deleting hellenia_ux/._static
+deleting hellenia_ux/._security
+deleting hellenia_ux/._models
+deleting hellenia_ux/._data
+deleting hellenia_ux/.___manifest__.py
+deleting hellenia_ux/.___init__.py
+deleting hellenia_ux/data/._post_init.xml
+deleting hellenia_ux/models/._account_payment_register.py
+deleting hellenia_ux/models/._account_payment.py
+deleting hellenia_ux/models/._account_move.py
+deleting hellenia_ux/models/.___init__.py
+deleting hellenia_ux/security/._ir.model.access.csv
+deleting hellenia_ux/static/._src
+deleting hellenia_ux/static/src/._scss
+deleting hellenia_ux/static/src/scss/._hellenia_ux.scss
+deleting hellenia_ux/views/._res_company_views.xml
+deleting hellenia_ux/views/._ncf_range_views.xml
+deleting hellenia_ux/views/._fiscal_security_labels.xml
+deleting hellenia_ux/views/._account_payment_views.xml
+deleting hellenia_ux/views/._account_payment_register_views.xml
+deleting hellenia_ux/views/._account_move_withholding_views.xml
+deleting hellenia_ux/views/._account_move_invoice_form_phase28_views.xml
+deleting hellenia_ux/views/._account_move_form_views.xml
+deleting hellenia_ux/views/._account_move_fiscal_views.xml
+deleting hellenia_ux/wizard/._justech_do_ncf_void_wizard_views.xml
+deleting hellenia_ux/wizard/._justech_do_ncf_void_wizard.py
+deleting hellenia_ux/wizard/.___init__.py
+deleting justech_l10n_do_base/._views
+deleting justech_l10n_do_base/._tests
+deleting justech_l10n_do_base/._security
+deleting justech_l10n_do_base/._models
+deleting justech_l10n_do_base/._data
+deleting justech_l10n_do_base/.___manifest__.py
+deleting justech_l10n_do_base/.___init__.py
+deleting justech_l10n_do_base/._README.md
+deleting justech_l10n_do_base/data/._fiscal_document_type_data.xml
+deleting justech_l10n_do_base/models/._res_partner.py
+deleting justech_l10n_do_base/models/._res_company.py
+deleting justech_l10n_do_base/models/._fiscal_document_type.py
+deleting justech_l10n_do_base/models/._account_journal.py
+deleting justech_l10n_do_base/models/.___init__.py
+deleting justech_l10n_do_base/security/._justech_l10n_do_security.xml
+deleting justech_l10n_do_base/security/._justech_l10n_do_rules.xml
+deleting justech_l10n_do_base/security/._ir.model.access.csv
+deleting justech_l10n_do_base/tests/._test_justech_l10n_do_hardening.py
+deleting justech_l10n_do_base/tests/._test_justech_l10n_do_base.py
+deleting justech_l10n_do_base/tests/.___init__.py
+deleting justech_l10n_do_base/views/._res_partner_views.xml
+deleting justech_l10n_do_base/views/._res_company_views.xml
+deleting justech_l10n_do_base/views/._menu.xml
+deleting justech_l10n_do_base/views/._fiscal_document_type_views.xml
+deleting justech_l10n_do_base/views/._account_journal_views.xml
+deleting justech_l10n_do_ncf/._views
+deleting justech_l10n_do_ncf/._tests
+deleting justech_l10n_do_ncf/._security
+deleting justech_l10n_do_ncf/._report
+deleting justech_l10n_do_ncf/._models
+deleting justech_l10n_do_ncf/.___manifest__.py
+deleting justech_l10n_do_ncf/.___init__.py
+deleting justech_l10n_do_ncf/._README.md
+deleting justech_l10n_do_ncf/models/__pycache__/account_move.cpython-312.pyc
+deleting justech_l10n_do_ncf/models/__pycache__/
+deleting justech_l10n_do_ncf/models/._sale_order.py
+deleting justech_l10n_do_ncf/models/._ncf_range.py
+deleting justech_l10n_do_ncf/models/._ncf_consumption.py
+deleting justech_l10n_do_ncf/models/._account_move.py
+deleting justech_l10n_do_ncf/models/.___init__.py
+deleting justech_l10n_do_ncf/report/._report_invoice.xml
+deleting justech_l10n_do_ncf/security/._justech_l10n_do_ncf_rules.xml
+deleting justech_l10n_do_ncf/security/._ir.model.access.csv
+deleting justech_l10n_do_ncf/tests/._test_justech_l10n_do_ncf.py
+deleting justech_l10n_do_ncf/tests/.___init__.py
+deleting justech_l10n_do_ncf/views/._sale_order_views.xml
+deleting justech_l10n_do_ncf/views/._ncf_range_views.xml
+deleting justech_l10n_do_ncf/views/._ncf_consumption_views.xml
+deleting justech_l10n_do_ncf/views/._menu.xml
+deleting justech_l10n_do_ncf/views/._account_move_views.xml
+deleting justech_l10n_do_reports/models/__pycache__/fiscal_report.cpython-312.pyc
+deleting justech_l10n_do_reports/models/__pycache__/dgii_report_review.cpython-312.pyc
+deleting justech_l10n_do_reports/models/__pycache__/dgii_report_pending_tray.cpython-312.pyc
+deleting justech_l10n_do_reports/models/__pycache__/dgii_report_audit.cpython-312.pyc
+deleting justech_l10n_do_reports/models/__pycache__/dgii_fiscal_workflow.cpython-312.pyc
+deleting justech_l10n_do_reports/models/__pycache__/dgii_exporter_mixin.cpython-312.pyc
+deleting justech_l10n_do_reports/models/__pycache__/dgii_607_exporter.cpython-312.pyc
+deleting justech_l10n_do_reports/models/__pycache__/dgii_606_exporter.cpython-312.pyc
+deleting justech_l10n_do_reports/models/__pycache__/
+deleting justech_l10n_do_reports/tests/__pycache__/test_phase21_dgii_607.cpython-312.pyc
+deleting justech_l10n_do_reports/tests/__pycache__/test_phase20_fiscal_framework.cpython-312.pyc
+deleting justech_l10n_do_reports/tests/__pycache__/
+deleting justech_l10n_do_reports/wizard/__pycache__/fiscal_report_wizard.cpython-312.pyc
+deleting justech_l10n_do_reports/wizard/__pycache__/dgii_report_review_wizard.cpython-312.pyc
+deleting justech_l10n_do_reports/wizard/__pycache__/dgii_export_blocker_wizard.cpython-312.pyc
+deleting justech_l10n_do_reports/wizard/__pycache__/
+hellenia_account/
+hellenia_account/README.md
+hellenia_account/__init__.py
+hellenia_account/__manifest__.py
+hellenia_account/data/.gitkeep
+hellenia_account/data/payment_setup.xml
+hellenia_account/i18n/es.po
+hellenia_account/migrations/19.0.1.0.12/pre-migrate.py
+hellenia_account/models/
+hellenia_account/models/__init__.py
+hellenia_account/models/account_move_line.py
+hellenia_account/models/account_payment_register.py
+hellenia_account/models/hellenia_withholding_catalog.py
+hellenia_account/models/payment_application_line.py
+hellenia_account/models/payment_bank_setup.py
+hellenia_account/models/payment_withholding_line.py
+hellenia_account/reports/payment_receipt_withholding_templates.xml
+hellenia_account/security/ir.model.access.csv
+hellenia_account/static/description/.gitkeep
+hellenia_account/tests/__init__.py
+hellenia_account/tests/test_hellenia_account.py
+hellenia_account/views/
+hellenia_account/views/.gitkeep
+hellenia_account/views/account_move_withholding_views.xml
+hellenia_account/views/account_payment_register_views.xml
+hellenia_account/views/account_payment_withholding_views.xml
+hellenia_account/views/hellenia_withholding_catalog_views.xml
+hellenia_account/views/payment_partner_wizard_views.xml
+hellenia_account/wizards/
+hellenia_account/wizards/__init__.py
+hellenia_account/wizards/payment_partner_wizard.py
+hellenia_account/wizards/payment_register_withholding.py
+hellenia_account/wizards/payment_withholding_wizard_line.py
+hellenia_pos/
+hellenia_pos/README.md
+hellenia_pos/__init__.py
+hellenia_pos/__manifest__.py
+hellenia_pos/data/
+hellenia_pos/data/.gitkeep
+hellenia_pos/i18n/
+hellenia_pos/i18n/es.po
+hellenia_pos/models/
+hellenia_pos/models/__init__.py
+hellenia_pos/security/
+hellenia_pos/security/ir.model.access.csv
+hellenia_pos/static/
+hellenia_pos/static/description/
+hellenia_pos/static/description/.gitkeep
+hellenia_pos/tests/
+hellenia_pos/tests/__init__.py
+hellenia_pos/tests/test_hellenia_pos.py
+hellenia_pos/views/
+hellenia_pos/views/.gitkeep
+hellenia_reports/
+hellenia_reports/README.md
+hellenia_reports/__init__.py
+hellenia_reports/__manifest__.py
+hellenia_reports/data/
+hellenia_reports/data/.gitkeep
+hellenia_reports/data/company_layout_data.xml
+hellenia_reports/data/paperformat_data.xml
+hellenia_reports/data/quotation_terms_default.xml
+hellenia_reports/data/report_actions_data.xml
+hellenia_reports/data/report_layout_data.xml
+hellenia_reports/i18n/
+hellenia_reports/i18n/es.po
+hellenia_reports/models/
+hellenia_reports/models/__init__.py
+hellenia_reports/models/account_move.py
+hellenia_reports/models/base_document_layout.py
+hellenia_reports/models/ir_actions_report.py
+hellenia_reports/models/res_company.py
+hellenia_reports/models/sale_order.py
+hellenia_reports/report/
+hellenia_reports/report/layout_templates.xml
+hellenia_reports/report/report_account_statements.xml
+hellenia_reports/report/report_invoice.xml
+hellenia_reports/report/report_payment_receipt.xml
+hellenia_reports/report/report_purchase.xml
+hellenia_reports/report/report_sale_order.xml
+hellenia_reports/report/report_sale_quotation.xml
+hellenia_reports/report/report_stock.xml
+hellenia_reports/security/
+hellenia_reports/security/ir.model.access.csv
+hellenia_reports/static/
+hellenia_reports/static/description/
+hellenia_reports/static/description/.gitkeep
+hellenia_reports/static/src/
+hellenia_reports/static/src/scss/
+hellenia_reports/static/src/scss/hellenia_reports.scss
+hellenia_reports/tests/
+hellenia_reports/tests/__init__.py
+hellenia_reports/tests/test_hellenia_reports.py
+hellenia_reports/views/
+hellenia_reports/views/.gitkeep
+hellenia_reports/views/account_move_ncf_void_reason_fix.xml
+hellenia_reports/views/res_company_views.xml
+hellenia_ux/
+hellenia_ux/__init__.py
+hellenia_ux/__manifest__.py
+hellenia_ux/data/
+hellenia_ux/data/post_init.xml
+hellenia_ux/models/
+hellenia_ux/models/__init__.py
+hellenia_ux/models/account_move.py
+hellenia_ux/models/account_payment.py
+hellenia_ux/models/account_payment_register.py
+hellenia_ux/security/
+hellenia_ux/security/ir.model.access.csv
+hellenia_ux/static/
+hellenia_ux/static/src/
+hellenia_ux/static/src/scss/
+hellenia_ux/static/src/scss/hellenia_ux.scss
+hellenia_ux/views/
+hellenia_ux/views/account_move_fiscal_views.xml
+hellenia_ux/views/account_move_form_views.xml
+hellenia_ux/views/account_move_invoice_form_phase28_views.xml
+hellenia_ux/views/account_move_withholding_views.xml
+hellenia_ux/views/account_payment_register_views.xml
+hellenia_ux/views/account_payment_views.xml
+hellenia_ux/views/fiscal_security_labels.xml
+hellenia_ux/views/ncf_range_views.xml
+hellenia_ux/views/res_company_views.xml
+hellenia_ux/wizard/
+hellenia_ux/wizard/__init__.py
+hellenia_ux/wizard/justech_do_ncf_void_wizard.py
+hellenia_ux/wizard/justech_do_ncf_void_wizard_views.xml
+justech_l10n_do_base/
+justech_l10n_do_base/README.md
+justech_l10n_do_base/__init__.py
+justech_l10n_do_base/__manifest__.py
+justech_l10n_do_base/data/
+justech_l10n_do_base/data/fiscal_document_type_data.xml
+justech_l10n_do_base/models/
+justech_l10n_do_base/models/__init__.py
+justech_l10n_do_base/models/account_journal.py
+justech_l10n_do_base/models/fiscal_document_type.py
+justech_l10n_do_base/models/res_company.py
+justech_l10n_do_base/models/res_partner.py
+justech_l10n_do_base/security/
+justech_l10n_do_base/security/ir.model.access.csv
+justech_l10n_do_base/security/justech_l10n_do_rules.xml
+justech_l10n_do_base/security/justech_l10n_do_security.xml
+justech_l10n_do_base/tests/
+justech_l10n_do_base/tests/__init__.py
+justech_l10n_do_base/tests/test_justech_l10n_do_base.py
+justech_l10n_do_base/tests/test_justech_l10n_do_hardening.py
+justech_l10n_do_base/views/
+justech_l10n_do_base/views/account_journal_views.xml
+justech_l10n_do_base/views/fiscal_document_type_views.xml
+justech_l10n_do_base/views/menu.xml
+justech_l10n_do_base/views/res_company_views.xml
+justech_l10n_do_base/views/res_partner_views.xml
+justech_l10n_do_ncf/
+justech_l10n_do_ncf/README.md
+justech_l10n_do_ncf/__init__.py
+justech_l10n_do_ncf/__manifest__.py
+justech_l10n_do_ncf/models/
+justech_l10n_do_ncf/models/__init__.py
+justech_l10n_do_ncf/models/account_move.py
+justech_l10n_do_ncf/models/ncf_consumption.py
+justech_l10n_do_ncf/models/ncf_range.py
+justech_l10n_do_ncf/models/sale_order.py
+justech_l10n_do_ncf/report/
+justech_l10n_do_ncf/report/report_invoice.xml
+justech_l10n_do_ncf/security/
+justech_l10n_do_ncf/security/ir.model.access.csv
+justech_l10n_do_ncf/security/justech_l10n_do_ncf_rules.xml
+justech_l10n_do_ncf/tests/
+justech_l10n_do_ncf/tests/__init__.py
+justech_l10n_do_ncf/tests/test_justech_l10n_do_ncf.py
+justech_l10n_do_ncf/views/
+justech_l10n_do_ncf/views/account_move_views.xml
+justech_l10n_do_ncf/views/menu.xml
+justech_l10n_do_ncf/views/ncf_consumption_views.xml
+justech_l10n_do_ncf/views/ncf_range_views.xml
+justech_l10n_do_ncf/views/sale_order_views.xml
+justech_l10n_do_reports/
+justech_l10n_do_reports/README.md
+justech_l10n_do_reports/__init__.py
+justech_l10n_do_reports/__manifest__.py
+justech_l10n_do_reports/hooks.py
+justech_l10n_do_reports/data/dgii_606_mapping.json
+justech_l10n_do_reports/data/dgii_607_mapping.json
+justech_l10n_do_reports/data/dgii_608_mapping.json
+justech_l10n_do_reports/data/dgii_609_mapping.json
+justech_l10n_do_reports/data/dgii_623_mapping.json
+justech_l10n_do_reports/models/
+justech_l10n_do_reports/models/__init__.py
+justech_l10n_do_reports/models/account_move.py
+justech_l10n_do_reports/models/account_move_gov.py
+justech_l10n_do_reports/models/account_payment_gov.py
+justech_l10n_do_reports/models/dgii_606_exporter.py
+justech_l10n_do_reports/models/dgii_607_exporter.py
+justech_l10n_do_reports/models/dgii_608_exporter.py
+justech_l10n_do_reports/models/dgii_609_exporter.py
+justech_l10n_do_reports/models/dgii_623_exporter.py
+justech_l10n_do_reports/models/dgii_exporter_mixin.py
+justech_l10n_do_reports/models/dgii_fiscal_workflow.py
+justech_l10n_do_reports/models/dgii_period.py
+justech_l10n_do_reports/models/dgii_report_approval.py
+justech_l10n_do_reports/models/dgii_report_audit.py
+justech_l10n_do_reports/models/dgii_report_pending_tray.py
+justech_l10n_do_reports/models/dgii_report_review.py
+justech_l10n_do_reports/models/fiscal_report.py
+justech_l10n_do_reports/security/ir.model.access.csv
+justech_l10n_do_reports/security/justech_l10n_do_reports_rules.xml
+justech_l10n_do_reports/tests/
+justech_l10n_do_reports/tests/__init__.py
+justech_l10n_do_reports/tests/test_justech_l10n_do_hardening.py
+justech_l10n_do_reports/tests/test_justech_l10n_do_reports.py
+justech_l10n_do_reports/tests/test_phase19_3_dgii_review.py
+justech_l10n_do_reports/tests/test_phase19_4_period_and_review.py
+justech_l10n_do_reports/tests/test_phase19_5_approval_tray.py
+justech_l10n_do_reports/tests/test_phase19_dgii_606.py
+justech_l10n_do_reports/tests/test_phase20_fiscal_framework.py
+justech_l10n_do_reports/tests/test_phase21_dgii_607.py
+justech_l10n_do_reports/views/dgii_report_pending_tray_views.xml
+justech_l10n_do_reports/views/dgii_report_review_views.xml
+justech_l10n_do_reports/views/fiscal_report_views.xml
+justech_l10n_do_reports/views/menu.xml
+justech_l10n_do_reports/wizard/
+justech_l10n_do_reports/wizard/__init__.py
+justech_l10n_do_reports/wizard/dgii_export_blocker_wizard.py
+justech_l10n_do_reports/wizard/dgii_export_blocker_wizard_views.xml
+justech_l10n_do_reports/wizard/dgii_report_review_wizard.py
+justech_l10n_do_reports/wizard/fiscal_report_wizard.py
+justech_l10n_do_reports/wizard/fiscal_report_wizard_views.xml
+justech_report_design/
+justech_report_design/README.md
+justech_report_design/__init__.py
+justech_report_design/__manifest__.py
+justech_report_design/controllers/
+justech_report_design/controllers/__init__.py
+justech_report_design/controllers/purchase_portal.py
+justech_report_design/data/
+justech_report_design/data/justech_delivery_note_sequence.xml
+justech_report_design/data/paperformat_data.xml
+justech_report_design/data/quotation_terms_default.xml
+justech_report_design/data/report_action_data.xml
+justech_report_design/data/report_delivery_action_data.xml
+justech_report_design/data/report_invoice_action_data.xml
+justech_report_design/data/report_official_data.xml
+justech_report_design/data/report_purchase_action_data.xml
+justech_report_design/models/
+justech_report_design/models/__init__.py
+justech_report_design/models/account_move.py
+justech_report_design/models/ir_actions_report.py
+justech_report_design/models/jt_delivery_report_mixin.py
+justech_report_design/models/justech_delivery_note.py
+justech_report_design/models/justech_delivery_note_line.py
+justech_report_design/models/justech_delivery_note_service.py
+justech_report_design/models/purchase_order.py
+justech_report_design/models/res_company.py
+justech_report_design/models/sale_order.py
+justech_report_design/models/stock_picking.py
+justech_report_design/report/
+justech_report_design/report/delivery/
+justech_report_design/report/delivery/justech_delivery_template.xml
+justech_report_design/report/invoice/
+justech_report_design/report/invoice/justech_invoice_preview.xml
+justech_report_design/report/invoice/justech_invoice_template.xml
+justech_report_design/report/purchase/
+justech_report_design/report/purchase/justech_purchase_order_portal.xml
+justech_report_design/report/purchase/justech_purchase_order_template.xml
+justech_report_design/report/quotation/
+justech_report_design/report/quotation/hellenia_quotation_template.xml
+justech_report_design/security/
+justech_report_design/security/ir.model.access.csv
+justech_report_design/static/
+justech_report_design/static/src/
+justech_report_design/static/src/interactions/
+justech_report_design/static/src/interactions/purchase_sidebar.js
+justech_report_design/static/src/scss/
+justech_report_design/static/src/scss/hellenia_delivery.scss
+justech_report_design/static/src/scss/hellenia_invoice.scss
+justech_report_design/static/src/scss/hellenia_purchase_order.scss
+justech_report_design/static/src/scss/hellenia_quotation.scss
+justech_report_design/views/
+justech_report_design/views/account_move_delivery_views.xml
+justech_report_design/views/justech_delivery_note_views.xml
+justech_report_design/views/purchase_order_views.xml
+justech_report_design/views/res_company_views.xml
+justech_report_design/views/sale_order_delivery_views.xml
+justech_report_design/views/sale_order_views.xml
+justech_report_design/views/stock_picking_delivery_views.xml
+justech_report_design/wizard/
+justech_report_design/wizard/__init__.py
+justech_report_design/wizard/base_document_layout.py
+justech_report_templates_test/
+justech_report_templates_test/__init__.py
+justech_report_templates_test/__manifest__.py
+justech_report_templates_test/data/
+justech_report_templates_test/data/redesign_structure_reference.xml
+
+sent 813,685 bytes  received 12,154 bytes  1,651,678.00 bytes/sec
+total size is 852,584  speedup is 1.03
+sending incremental file list
+./
+accounting-total-audit-readonly.py
+build-phase24-1-review-package.sh
+phase18-8-diagnose-withholding.py
+phase19-11-prod-ui-playwright.py
+phase19-11-test-ui-playwright.py
+phase19-11-ui-repro-web-save.py
+phase19-promote-test-prod-sync.sh
+phase20-1-manual-ui-certification.py
+phase20-1-payment-wizard-playwright.py
+phase20-1-prepare-cert-users.py
+phase20-1-prepare-smoke-test-data.py
+phase20-forensic-prod-playwright-v2.py
+phase20-forensic-prod-playwright-v3.py
+phase20-forensic-prod-playwright-v4.py
+phase20-forensic-prod-playwright-v5.py
+phase20-forensic-prod-playwright-v6.py
+phase20-forensic-prod-playwright.py
+phase21-1-dgii-reports-final-regression.py
+phase21-2-validate-607-test.py
+phase21-3-validate-test.py
+phase21-4-validate-test.py
+phase21-5-validate-test.py
+phase21-dgii-nav-validate-test.py
+phase21-gov-623-post-fix-ui.py
+phase21-gov-623-proof-playwright.py
+phase21-gov-623-proof-setup.py
+phase21-gov-623-proof-verify.py
+phase21-prod-data-audit.py
+phase21-prod-ui-audit.py
+phase21-validate-607-cert-test.py
+phase22-financial-reports-ui.py
+phase22-full-accounting-audit.py
+phase23-1-payment-receipt-visual-test.py
+phase23-2-prod-pdf-certification.py
+phase23-2-prod-smoke-pdf-data.py
+phase23-3-quotation-template-test.py
+phase23-3b-quotation-500-fix-test.py
+phase23-3c-quotation-redesign-test.py
+phase23-3d-quotation-final-adjustments-test.py
+phase23-3e-quotation-final-polish-test.py
+phase23-3f-quotation-premium-polish-test.py
+phase23-3g-revert-logo-test.py
+phase23-3h-paperformat-spacing-test.py
+phase23-3i-premium-quote-test.py
+phase23-4-quote-rebuild-test.py
+phase23-5-hellenia-quote-test.py
+phase23-generate-sample-pdfs.py
+phase24-1-prod-find-5p.py
+phase24-1-prod-parallel-extra.py
+phase24-1-prod-parallel-validation.py
+phase24-1-report-design-test.py
+phase24-1g-quotation-audit.py
+phase24-2-official-quotation-prod.py
+phase24-2-official-quotation-test.py
+phase24-2a-prod-fix-validation.py
+phase24-2b-pdf-evidence.py
+phase25-invoice-report-test.py
+phase25a-invoice-visual-review.py
+phase25b-invoice-design-test.py
+phase25b2-invoice-design-test.py
+phase25b3-invoice-header-test.py
+phase25b4-invoice-band-test.py
+phase25b5-invoice-band-test.py
+phase25b6-invoice-band-test.py
+phase25b7-invoice-band-test.py
+phase25b8-hotfix-doc-type-test.py
+phase26-delivery-slip-audit.py
+phase26-delivery-slip-validation.py
+phase26-official-invoice-prod.py
+phase26b-delivery-slip-prod.py
+phase26b-host-pdf-check.py
+phase26c-delivery-official-prod.py
+phase26d-delivery-ui-prod.py
+phase26e-delivery-note-prod.py
+phase26f-delivery-menu-prod.py
+phase26g-delivery-menu-ux-prod.py
+phase27-create-doc-type-session.py
+phase27-invoice-preview-print-diagnosis.py
+phase27-invoice-preview-print-fix.py
+phase27-partner-default-doc-type-ui-capture.py
+phase27-partner-default-doc-type-validation.py
+phase27-purchase-order-audit.py
+phase27-purchase-order-validation.py
+phase27-ui-http-prod.py
+phase27a-purchase-order-official-prod.py
+phase27b-create-po-preview-session.py
+phase27b-partner-doc-type-ux-validation.py
+phase27b-purchase-order-native-preview-validation.py
+phase27b-purchase-order-native-ui-capture.py
+phase27b-purchase-order-preview-prod.py
+phase27b-purchase-order-ui-capture.py
+phase27c-empty-partner-onchange-fix-validation.py
+phase28-create-prod-session.py
+phase28-ui-prod-validation.py
+phase28b-invoice-form-ux-fix-validation.py
+phase29d-ncf-post-hook-validation.py
+report-templates-comparison-test.py
+report-templates-diagnostic-test.py
+report-templates-restore-test.py
+run-accounting-total-audit-readonly.sh
+run-phase23-3-test.sh
+run-phase23-3b-test.sh
+run-phase23-3c-test.sh
+run-phase23-3d-test.sh
+run-phase23-3e-test.sh
+run-phase23-3f-test.sh
+run-phase23-3g-revert-test.sh
+run-phase23-3g-test.sh
+run-phase23-3h-test.sh
+run-phase23-3i-test.sh
+run-phase23-4-test.sh
+run-phase23-5-test.sh
+run-phase24-1-test.sh
+run-phase24-1g-audit.sh
+run-phase25-test.sh
+run-phase25a-visual-review.sh
+run-phase25b-invoice-design-test.sh
+run-phase25b2-invoice-design-test.sh
+run-phase25b3-invoice-header-test.sh
+run-phase25b4-invoice-band-test.sh
+run-phase25b5-invoice-band-test.sh
+run-phase25b6-invoice-band-test.sh
+run-phase25b7-invoice-band-test.sh
+run-phase25b8-hotfix-doc-type-test.sh
+run-phase26-delivery-slip-test.sh
+run-phase26-official-invoice-prod.sh
+run-phase26b-delivery-slip-prod.sh
+run-phase26c-delivery-official-prod.sh
+run-phase26d-delivery-ui-prod.sh
+run-phase26e-delivery-note-prod.sh
+run-phase26f-delivery-menu-prod.sh
+run-phase26g-delivery-menu-ux-prod.sh
+run-phase27-invoice-preview-print-fix.sh
+run-phase27-partner-default-doc-type.sh
+run-phase27-purchase-order-test.sh
+run-phase27a-purchase-order-official-prod.sh
+run-phase27b-po-native-preview.sh
+run-phase27b-purchase-order-preview-prod.sh
+run-phase28-invoice-preview-client-validation.sh
+run-report-templates-comparison-test.sh
+run-report-templates-diagnostic-test.sh
+
+sent 793,102 bytes  received 2,699 bytes  1,591,602.00 bytes/sec
+total size is 1,686,280  speedup is 2.12
+[2026-07-05 02:47:28] === Step 3: Module upgrades (controlled order) ===
+[2026-07-05 02:47:28] Stopping Odoo worker during upgrades...
+ Container hellenia-dev-odoo-1 Stopping 
+ Container hellenia-dev-odoo-1 Stopped 
+[2026-07-05 02:47:29] --- Upgrading: hellenia_base ---
+yaml: line 16, column 14: unknown anchor 'odoo-traefik-labels' referenced
+[2026-07-05 02:47:29] FAIL: Upgrade failed for module hellenia_base (exit 1) — see /opt/odoo-projects/hellenia/evidence/dev-sync-accounting-audit/upgrade-hellenia_base.log

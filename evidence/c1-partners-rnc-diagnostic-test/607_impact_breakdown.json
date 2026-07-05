@@ -1,0 +1,59 @@
+{
+  "total_ncf_without_rnc": 242,
+  "b02_consumer_may_be_607_ok": 206,
+  "b03_fiscal_credit_needs_rnc": 17,
+  "b04_credit_notes": 19,
+  "non_consumer_ncf_needs_rnc": 36,
+  "b03_samples": [
+    {
+      "invoice": "DINV/2026/00002",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0300020001",
+      "doc_type": "03",
+      "amount_total": 100.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "DINV/2026/00003",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0300020002",
+      "doc_type": "03",
+      "amount_total": 100.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "DINV/2026/00004",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0300020003",
+      "doc_type": "03",
+      "amount_total": 100.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "DINV/2026/00005",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0300020004",
+      "doc_type": "03",
+      "amount_total": 100.0,
+      "move_type": "out_invoice"
+    },
+    {
+      "invoice": "DINV/2026/00006",
+      "date": "2026-06-30",
+      "partner_id": 311,
+      "partner_name": "UAT Cliente Consumidor Final",
+      "ncf": "B0300020005",
+      "doc_type": "03",
+      "amount_total": 100.0,
+      "move_type": "out_invoice"
+    }
+  ]
+}

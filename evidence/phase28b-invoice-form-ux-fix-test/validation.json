@@ -1,0 +1,116 @@
+{
+  "phase": "28b-invoice-form-ux-fix-test",
+  "timestamp_utc": "2026-07-03T01:28:07.823400+00:00",
+  "database": "hellenia_test",
+  "status": "PASS",
+  "module_versions": {
+    "hellenia_ux": "19.0.1.2.0",
+    "justech_l10n_do_ncf": "19.0.1.5.1",
+    "justech_report_design": "19.0.7.3.1"
+  },
+  "checks": {
+    "module_ux_version": {
+      "status": "PASS",
+      "detail": "19.0.1.2.0"
+    },
+    "report_design_unchanged": {
+      "status": "PASS",
+      "detail": "19.0.7.3.1"
+    },
+    "ncf_logic_unchanged": {
+      "status": "PASS",
+      "detail": "19.0.1.5.1"
+    },
+    "invoice_tab_exists": {
+      "status": "PASS",
+      "detail": "['invoice_tab', 'other_info', 'hellenia_fiscal_info_tab', 'hellenia_withholding_tab']"
+    },
+    "default_tab_is_invoice_lines": {
+      "status": "PASS",
+      "detail": "['invoice_tab', 'other_info', 'hellenia_fiscal_info_tab', 'hellenia_withholding_tab']"
+    },
+    "withholding_tab_exists": {
+      "status": "PASS",
+      "detail": "['invoice_tab', 'other_info', 'hellenia_fiscal_info_tab', 'hellenia_withholding_tab']"
+    },
+    "fiscal_tab_after_invoice_tab": {
+      "status": "PASS",
+      "detail": "['invoice_tab', 'other_info', 'hellenia_fiscal_info_tab', 'hellenia_withholding_tab']"
+    },
+    "fiscal_tab_after_other_info": {
+      "status": "PASS",
+      "detail": "['invoice_tab', 'other_info', 'hellenia_fiscal_info_tab', 'hellenia_withholding_tab']"
+    },
+    "withholding_tab_after_fiscal": {
+      "status": "PASS",
+      "detail": "['invoice_tab', 'other_info', 'hellenia_fiscal_info_tab', 'hellenia_withholding_tab']"
+    },
+    "fiscal_tab_exists": {
+      "status": "PASS",
+      "detail": "True"
+    },
+    "header_two_columns": {
+      "status": "PASS",
+      "detail": "True"
+    },
+    "withholdings_not_in_header": {
+      "status": "PASS",
+      "detail": "False"
+    },
+    "withholdings_in_tab": {
+      "status": "PASS",
+      "detail": "True"
+    },
+    "header_fiscal_hidden_justech_do_ncf_modified": {
+      "status": "PASS",
+      "detail": "True"
+    },
+    "header_fiscal_hidden_justech_do_dgii_line_status": {
+      "status": "PASS",
+      "detail": "True"
+    },
+    "invoice_lines_tab_content": {
+      "status": "PASS",
+      "detail": "True"
+    },
+    "add_line_controls": {
+      "status": "PASS",
+      "detail": "True"
+    },
+    "quotation_empty_partner_onchange": {
+      "status": "PASS",
+      "detail": "True"
+    },
+    "invoice_empty_partner_onchange": {
+      "status": "PASS",
+      "detail": "True"
+    },
+    "invoice_partner_inherits_default": {
+      "status": "PASS",
+      "detail": "B01 - Factura de Crédito Fiscal"
+    },
+    "create_invoice_no_partner": {
+      "status": "PASS",
+      "detail": "8217"
+    },
+    "add_product_line": {
+      "status": "PASS",
+      "detail": "1"
+    },
+    "confirm_invoice": {
+      "status": "PASS",
+      "detail": "B0100020037"
+    }
+  },
+  "errors": [],
+  "functional_ids": {
+    "draft_no_partner": 8217,
+    "posted_invoice": 8218
+  },
+  "tab_order": [
+    "invoice_tab",
+    "other_info",
+    "hellenia_fiscal_info_tab",
+    "hellenia_withholding_tab"
+  ]
+}

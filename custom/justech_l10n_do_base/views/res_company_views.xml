@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="base.view_company_form"/>
         <field name="arch" type="xml">
             <xpath expr="//page[@name='general_info']" position="after">
-                <page string="Dominican Fiscal" name="justech_do_fiscal">
+                <page string="Localización Dominicana" name="justech_do_fiscal">
                     <group>
                         <field name="justech_do_fiscal_enabled"/>
                         <field name="justech_do_ncf_alert_days"/>

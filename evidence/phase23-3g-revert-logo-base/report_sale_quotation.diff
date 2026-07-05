@@ -1,0 +1,69 @@
+diff --git a/custom/hellenia_reports/report/report_sale_quotation.xml b/custom/hellenia_reports/report/report_sale_quotation.xml
+index 3a1af0e..1146772 100644
+--- a/custom/hellenia_reports/report/report_sale_quotation.xml
++++ b/custom/hellenia_reports/report/report_sale_quotation.xml
+@@ -1,7 +1,7 @@
+ <?xml version="1.0" encoding="utf-8"?>
+ <odoo>
+ 
+-    <!-- Cotización Hellenia — compacto, wkhtmltopdf-safe -->
++    <!-- Cotización Hellenia — base 23.3E con logo + ajustes finos CSS -->
+     <template id="hellenia_quotation_document">
+         <t t-set="doc" t-value="doc.with_context(lang=doc.partner_id.lang)"/>
+         <t t-set="company" t-value="doc.company_id"/>
+@@ -21,15 +21,24 @@
+              t-att-data-oe-id="doc.id"
+              t-att-data-oe-lang="doc.env.context.get('lang')">
+             <style type="text/css">
++                h2.hellenia-doc-title,
++                .o_report_layout_standard .address {
++                    display: none !important;
++                    height: 0 !important;
++                    margin: 0 !important;
++                    padding: 0 !important;
++                    overflow: hidden !important;
++                }
+                 .hellenia-quote-page {
+                     font-family: 'DejaVu Sans', Helvetica, Arial, sans-serif;
+                     font-size: 9.5pt;
+                     color: #2d2d2d;
+                     line-height: 1.35;
+-                    margin: 0;
++                    margin: -10mm 0 0 0;
+                     padding: 0;
++                    width: 100%;
+                 }
+-                .hellenia-quote-page table { border-collapse: collapse; }
++                .hellenia-quote-page table { border-collapse: collapse; width: 100%; }
+                 .hellenia-quote-hdr-table,
+                 .hellenia-quote-hdr-table td {
+                     border: none !important;
+@@ -199,13 +208,13 @@
+                     padding-top: 4px;
+                 }
+                 .hellenia-quote-signatures td {
++                    border: none;
+                     padding: 0 6px 0 0;
+                     vertical-align: top;
+                 }
+                 .hellenia-quote-sig-label {
+                     font-size: 7pt;
+                     font-weight: bold;
+-                    font-style: italic;
+                     text-transform: uppercase;
+                     color: #3E4827;
+                     letter-spacing: 0.6px;
+@@ -460,10 +469,9 @@
+ 
+             <!-- Pie -->
+             <div class="hellenia-quote-footer">
+-                <t t-if="company.phone">Tel: <span t-field="company.phone"/></t>
+-                <t t-if="company.website"> | Web: <span t-field="company.website"/></t>
+-                <t t-if="company.email"> | Correo: <span t-field="company.email"/></t>
+-                | Santo Domingo, República Dominicana
++                <t t-if="company.phone"><span t-field="company.phone"/></t>
++                <t t-if="company.email"> | <span t-field="company.email"/></t>
++                <t t-if="company.website"> | <span t-field="company.website"/></t>
+             </div>
+         </div>
+     </template>

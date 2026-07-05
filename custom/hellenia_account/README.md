@@ -1,38 +1,27 @@
 # Hellenia Account (`hellenia_account`)
 
-**Estado:** Esqueleto — sin lógica de negocio  
-**Versión Odoo:** 19.0  
+**Estado:** Funcional — Fase 16 pagos/bancos  
+**Versión Odoo:** 19.0.1.0.1  
 **Licencia:** LGPL-3
 
 ## Descripción
 
-Accounting extensions for Hellenia
+Extensiones contables upgrade-safe para Hellenia:
 
-## Estructura
-
-```
-hellenia_account/
-├── README.md
-├── __init__.py
-├── __manifest__.py
-├── models/
-├── views/
-├── security/
-├── data/
-├── static/
-├── tests/
-└── i18n/
-```
+- Diarios bancarios DOP (`BNKD`) y USD (`BNKU`) vinculados a López de Haro
+- Métodos de pago en español: Transferencia, Efectivo, Tarjeta, Cheque
+- Wizard de pago con facturas pendientes y NCF visible
+- Activación retenciones RD clave (`l10n_do`)
 
 ## Dependencias
 
-`hellenia_base`, `account`
+`hellenia_base`, `account`, `justech_l10n_do_ncf`, `l10n_do_check_printing`
 
-## Desarrollo
+## Instalación TEST
 
-Ver [docs/CUSTOM_MODULE_GUIDE.md](../../docs/CUSTOM_MODULE_GUIDE.md) y [docs/CODING_STANDARDS.md](../../docs/CODING_STANDARDS.md).
-
-**No instalar** en ambientes hasta aprobación del cliente.
+```bash
+bash scripts/run-phase16-payments-test.sh
+```
 
 ## Autor
 

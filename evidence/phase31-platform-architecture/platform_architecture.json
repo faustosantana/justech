@@ -1,0 +1,63 @@
+{
+  "phase": "31-replanned",
+  "version": "2.0",
+  "date": "2026-07-05",
+  "mode": "read-only",
+  "status": "ARCHITECTURE_PENDING_APPROVAL",
+  "first_sprint": "F31.1",
+  "first_module": "justech_modules",
+  "deferred": [
+    "justech_withholding",
+    "justech_reports",
+    "fiscal_decoupling",
+    "pos_enterprise",
+    "marketplace_implementation",
+    "ai_implementation"
+  ],
+  "platform_modules": [
+    {
+      "order": 1,
+      "code": "justech_modules",
+      "sprint": "F31.1",
+      "hours": 120,
+      "responsibility": "licenses_features_activation"
+    },
+    {
+      "order": 2,
+      "code": "hellenia_governance",
+      "sprint": "F31.2",
+      "hours": 160,
+      "responsibility": "permissions_roles_policies_audit"
+    },
+    {
+      "order": 3,
+      "code": "justech_admin",
+      "sprint": "F31.3",
+      "hours": 120,
+      "responsibility": "control_center_ui_shell"
+    }
+  ],
+  "dependency_dag": [
+    "justech_modules -> hellenia_governance -> justech_admin",
+    "justech_modules -> functional_modules",
+    "hellenia_governance -> functional_modules"
+  ],
+  "validation": {
+    "separation_correct": true,
+    "duplications_resolved": true,
+    "circular_deps_avoided": true,
+    "register_via_justech_register_manifest": true
+  },
+  "documents": [
+    "docs/ERP_PRODUCTIZATION_PLAN.md",
+    "docs/ERP_PLATFORM_ARCHITECTURE.md",
+    "docs/JUSTECH_MODULES_ARCHITECTURE.md",
+    "docs/HELLENIA_GOVERNANCE_ARCHITECTURE.md",
+    "docs/JUSTECH_ADMIN_ARCHITECTURE.md",
+    "docs/ERP_INFRASTRUCTURE_ROADMAP.md",
+    "docs/ERP_CORE_ARCHITECTURE.md",
+    "docs/ERP_MODULE_CATALOG.md",
+    "docs/ERP_ENTERPRISE_ROADMAP.md"
+  ],
+  "total_infrastructure_hours": 480
+}

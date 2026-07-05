@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Fase 28/28B — Factura cliente: encabezado 2 columnas + pestaña Información Fiscal al final -->
+    <record id="view_move_form_hellenia_invoice_phase28" model="ir.ui.view">
+        <field name="name">account.move.form.hellenia.invoice.phase28</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="hellenia_ux.view_move_form_hellenia_fiscal_ux"/>
+        <field name="priority">55</field>
+        <field name="arch" type="xml">
+            <!-- Encabezado: dos columnas alineadas (solo facturas cliente) -->
+            <xpath expr="//group[@id='header_left_group']/parent::group" position="attributes">
+                <attribute name="class" add="hellenia-invoice-header-row"/>
+            </xpath>
+
+            <xpath expr="//group[@id='header_left_group']//label[@for='partner_id']" position="attributes">
+                <attribute name="string">Cliente</attribute>
+            </xpath>
+
+            <!-- Ocultar campos fiscales del bloque principal (se muestran en pestaña) -->
+            <xpath expr="//field[@name='justech_do_document_type_id'][1]" position="attributes">
+                <attribute name="invisible">move_type in ('out_invoice', 'out_refund')</attribute>
+            </xpath>
+            <xpath expr="//field[@name='justech_do_origin_ncf']" position="attributes">
+                <attribute name="invisible">move_type in ('out_invoice', 'out_refund') or not hellenia_show_origin_ncf</attribute>
+            </xpath>
+            <xpath expr="//field[@name='justech_do_ncf_modified']" position="attributes">
+                <attribute name="invisible">move_type in ('out_invoice', 'out_refund')</attribute>
+            </xpath>
+            <xpath expr="//field[@name='justech_do_dgii_line_status']" position="attributes">
+                <attribute name="invisible">move_type in ('out_invoice', 'out_refund')</attribute>
+            </xpath>
+            <xpath expr="//field[@name='justech_do_include_in_dgii']" position="attributes">
+                <attribute name="invisible">move_type in ('out_invoice', 'out_refund')</attribute>
+            </xpath>
+            <xpath expr="//field[@name='justech_do_dgii_fiscal_state']" position="attributes">
+                <attribute name="invisible">move_type in ('out_invoice', 'out_refund')</attribute>
+            </xpath>
+            <xpath expr="//field[@name='justech_do_dgii_exclusion_reason']" position="attributes">
+                <attribute name="invisible">move_type in ('out_invoice', 'out_refund') or justech_do_include_in_dgii</attribute>
+            </xpath>
+            <xpath expr="//field[@name='justech_do_ncf_cancel_type']" position="attributes">
+                <attribute name="invisible">move_type in ('out_invoice', 'out_refund') or not justech_do_ncf_voided</attribute>
+            </xpath>
+            <xpath expr="//field[@name='justech_do_ncf_void_reason']" position="attributes">
+                <attribute name="invisible">move_type in ('out_invoice', 'out_refund') or not justech_do_ncf_voided</attribute>
+            </xpath>
+
+            <!-- Bloque NCF prominente → pestaña fiscal -->
+            <xpath expr="//div[hasclass('hellenia-ncf-form-block')]" position="attributes">
+                <attribute name="invisible">move_type in ('out_invoice', 'out_refund') or not justech_do_ncf</attribute>
+            </xpath>
+
+            <!-- Columna izquierda: dirección entrega + tipo comprobante -->
+            <xpath expr="//group[@id='header_left_group']/div[hasclass('o_col')]" position="after">
+                <field name="partner_shipping_id"
+                       string="Dirección de entrega"
+                       widget="res_partner_many2one"
+                       invisible="move_type not in ('out_invoice', 'out_refund')"
+                       readonly="state != 'draft'"
+                       context="{'default_type': 'delivery', 'show_address': 1}"/>
+                <field name="justech_do_document_type_id"
+                       string="Tipo de comprobante fiscal"
+                       invisible="move_type not in ('out_invoice', 'out_refund')"
+                       readonly="state != 'draft'"
+                       options="{'no_create': True, 'no_open': True}"/>
+            </xpath>
+
+            <!-- Columna derecha: etiquetas en español -->
+            <xpath expr="//group[@id='header_right_group']/label[@for='invoice_date'][1]" position="attributes">
+                <attribute name="string">Fecha factura</attribute>
+            </xpath>
+            <xpath expr="//group[@id='header_right_group']//field[@name='invoice_date']" position="attributes">
+                <attribute name="string">Fecha factura</attribute>
+            </xpath>
+            <xpath expr="//group[@id='header_right_group']//field[@name='invoice_date_due']" position="attributes">
+                <attribute name="string">Fecha vencimiento</attribute>
+            </xpath>
+            <xpath expr="//group[@id='header_right_group']//label[@for='invoice_date_due']" position="attributes">
+                <attribute name="string">Fecha vencimiento</attribute>
+            </xpath>
+            <xpath expr="//group[@id='header_right_group']//label[@for='invoice_payment_term_id']" position="attributes">
+                <attribute name="string">Términos de pago</attribute>
+            </xpath>
+            <xpath expr="//div[@name='currency_div']//field[@name='currency_id'][1]" position="attributes">
+                <attribute name="string">Moneda</attribute>
+            </xpath>
+            <xpath expr="//group[@id='header_right_group']//field[@name='invoice_currency_rate']" position="attributes">
+                <attribute name="string">Tasa de cambio</attribute>
+                <attribute name="invisible">move_type not in ('out_invoice', 'out_refund') or currency_id == company_currency_id</attribute>
+            </xpath>
+
+            <!-- Pestaña Información Fiscal — después de Otra información (no activa por defecto) -->
+            <xpath expr="//page[@id='other_tab']" position="after">
+                <page string="Información Fiscal"
+                      name="hellenia_fiscal_info_tab"
+                      invisible="move_type not in ('out_invoice', 'out_refund')">
+                    <group>
+                        <group string="Comprobante fiscal">
+                            <field name="justech_do_ncf" readonly="1" string="Número de comprobante fiscal"/>
+                            <field name="justech_do_document_type_id"
+                                   string="Tipo de comprobante fiscal"
+                                   readonly="state != 'draft'"
+                                   options="{'no_create': True, 'no_open': True}"/>
+                            <field name="justech_do_origin_ncf"
+                                   string="NCF origen"
+                                   readonly="state != 'draft'"
+                                   invisible="not hellenia_show_origin_ncf"/>
+                            <field name="justech_do_ncf_modified"
+                                   string="NCF documento modificado"
+                                   readonly="state != 'draft'"/>
+                        </group>
+                        <group string="Estado DGII">
+                            <field name="justech_do_dgii_line_status" string="Estado DGII" readonly="1"/>
+                            <field name="justech_do_dgii_fiscal_state" string="Estado fiscal" readonly="1"/>
+                            <field name="justech_do_ncf_voided" string="NCF anulado" readonly="1"/>
+                            <field name="justech_do_include_in_dgii" string="Incluir en reportes DGII" readonly="state != 'draft'"/>
+                            <field name="justech_do_dgii_exclusion_reason"
+                                   string="Motivo de exclusión fiscal"
+                                   invisible="justech_do_include_in_dgii"
+                                   readonly="state != 'draft'"/>
+                            <field name="justech_do_ncf_cancel_type"
+                                   string="Tipo de anulación DGII"
+                                   invisible="not justech_do_ncf_voided"
+                                   readonly="justech_do_ncf_voided"/>
+                            <field name="justech_do_ncf_void_reason"
+                                   string="Motivo de anulación"
+                                   invisible="not justech_do_ncf_voided"
+                                   readonly="justech_do_ncf_voided"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+
+            <!-- Retenciones — pestaña secundaria (no en encabezado) -->
+            <xpath expr="//page[@name='hellenia_fiscal_info_tab']" position="after">
+                <page string="Retenciones"
+                      name="hellenia_withholding_tab"
+                      invisible="move_type not in ('in_invoice', 'in_refund', 'out_invoice', 'out_refund')">
+                    <group invisible="state != 'draft'">
+                        <group>
+                            <field name="hellenia_ret_isr_gov" string="Gobierno 5%"
+                                   invisible="move_type not in ('out_invoice', 'out_refund')"/>
+                            <field name="hellenia_ret_itbis_30" string="ITBIS retenido 30%"
+                                   invisible="move_type not in ('in_invoice', 'in_refund')"/>
+                        </group>
+                        <group>
+                            <field name="hellenia_ret_isr_10" string="Proveedor informal 10%"
+                                   invisible="move_type not in ('in_invoice', 'in_refund')"/>
+                            <field name="hellenia_ret_itbis_75" string="ITBIS informal 75%"
+                                   invisible="move_type not in ('in_invoice', 'in_refund')"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,20 @@
+2026-07-03 01:28:06,265 665 WARNING ? odoo.tools.config: option logfile reads 'False' in the config file at /etc/odoo/odoo.conf but isn't a boolean option, skip 
+2026-07-03 01:28:06,265 665 WARNING ? odoo.tools.config: option logfile reads 'False' in the config file at /etc/odoo/odoo.conf but isn't a boolean option, skip 
+2026-07-03 01:28:06,265 665 INFO ? odoo: Odoo version 19.0-20260619 
+2026-07-03 01:28:06,265 665 INFO ? odoo: Using configuration file at /etc/odoo/odoo.conf 
+2026-07-03 01:28:06,265 665 INFO ? odoo: addons paths: _NamespacePath(['/usr/lib/python3/dist-packages/odoo/addons', '/var/lib/odoo/addons/19.0', '/mnt/enterprise/addons', '/mnt/custom', '/usr/lib/python3/dist-packages/addons']) 
+2026-07-03 01:28:06,265 665 INFO ? odoo: database: odoo@db:default 
+2026-07-03 01:28:06,476 665 INFO ? odoo.service.server: Initiating shutdown 
+2026-07-03 01:28:06,476 665 INFO ? odoo.service.server: Hit CTRL-C again or send a second signal to force the shutdown. 
+2026-07-03 01:28:06,503 665 INFO hellenia_test odoo.modules.loading: loading 1 modules... 
+2026-07-03 01:28:06,506 665 INFO hellenia_test odoo.modules.loading: 1 modules loaded in 0.00s, 0 queries (+0 extra) 
+2026-07-03 01:28:06,529 665 INFO hellenia_test odoo.modules.loading: loading 123 modules... 
+2026-07-03 01:28:07,283 665 WARNING hellenia_test odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define models.Constraint on the model. 
+2026-07-03 01:28:07,311 665 WARNING hellenia_test odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define models.Constraint on the model. 
+2026-07-03 01:28:07,335 665 WARNING hellenia_test odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define models.Constraint on the model. 
+2026-07-03 01:28:07,390 665 INFO hellenia_test odoo.modules.loading: 123 modules loaded in 0.86s, 0 queries (+0 extra) 
+2026-07-03 01:28:07,473 665 WARNING hellenia_test odoo.fields: justech.do.fiscal.report.state: selection=[('draft', 'Borrador'), ('validated', 'Validado'), ('pending_approval', 'Requiere aprobación'), ('approved', 'Aprobado'), ('rejected', 'Rechazado'), ('generated', 'Generado'), ('done', 'Generado')] overrides existing selection; use selection_add instead 
+2026-07-03 01:28:07,535 665 INFO hellenia_test odoo.modules.loading: Modules loaded. 
+2026-07-03 01:28:07,546 665 WARNING hellenia_test odoo.schema: Missing not-null constraint on res.users.settings.color_scheme 
+2026-07-03 01:28:07,592 665 INFO hellenia_test odoo.registry: Registry loaded in 1.116s 
+{"status": "PASS", "env": "test", "errors": [], "tabs": ["invoice_tab", "other_info", "hellenia_fiscal_info_tab", "hellenia_withholding_tab"]}

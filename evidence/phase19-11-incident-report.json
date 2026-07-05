@@ -1,0 +1,49 @@
+{
+  "phase": "19.11",
+  "timestamp_utc": "2026-07-01T12:30:00+00:00",
+  "rollback_executed": true,
+  "rollback_backup": "/opt/odoo-projects/hellenia/backups/hellenia-prod/2026-07-01_1156",
+  "rollback_note": "Script estándar falló (sin DROP DATABASE). Restauración completada manualmente.",
+  "rollback_pre_safety_backup": "/opt/odoo-projects/hellenia/backups/hellenia-prod/2026-07-01_1221",
+  "prod_module_after_rollback": "19.0.1.0.23",
+  "root_cause": [
+    "_load_pending_invoices precarga amount_to_pay=abs(residual) con apply=False",
+    "UI Odoo 19 lista editable muestra todas las filas marcadas (apply=True visual)",
+    "action_register_payments procesa todas las líneas con apply=True tras web_save",
+    "Fix v25 amount_to_pay=0 nunca desplegado a servidores",
+    "Tests shell 19.7/19.9 no simulaban UI real"
+  ],
+  "prod_view": {
+    "id": 1730,
+    "name": "hellenia.payment.partner.wizard.form",
+    "button": "action_register_payments",
+    "action": "hellenia_account.action_hellenia_register_customer_payment"
+  },
+  "ui_evidence": {
+    "prod_login": {
+      "ok": false,
+      "screenshot": "evidence/phase19-11/screenshots/00-login-fail.png"
+    },
+    "test_playwright": {
+      "ok": false,
+      "apply_on_load": {"checked": 3, "total": 3},
+      "screenshot": "evidence/phase19-11/screenshots-test/05-apply-checkboxes-on-load.png",
+      "url": "https://test.hellenia.cloud"
+    }
+  },
+  "incorrect_payments_removed_by_rollback": [
+    "PBNKD/2026/00005",
+    "PBNKD/2026/00006",
+    "PBNKD/2026/00007"
+  ],
+  "incorrect_payments_still_in_prod": [
+    {"name": "PBNKD/2026/00001", "amount": 11800.0, "create_date": "2026-07-01 11:44:59"},
+    {"name": "PBNKD/2026/00002", "amount": 11800.0, "create_date": "2026-07-01 11:44:59"},
+    {"name": "PBNKD/2026/00003", "amount": 11800.0, "create_date": "2026-07-01 11:44:59"},
+    {"name": "PBNKD/2026/00004", "amount": 11800.0, "create_date": "2026-07-01 11:46:23"}
+  ],
+  "cleanup_recommended": "Cancelar/revertir pagos PBNKD/2026/00001-00004 con autorización contable. Evaluar rollback a 1131 para estado sin PBNKD.",
+  "prod_pass": false,
+  "prod_fail": true,
+  "invalidated_phases": ["19.7", "19.9"]
+}

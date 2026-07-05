@@ -1,0 +1,95 @@
+{
+  "phase": "27b-purchase-order-preview-prod",
+  "timestamp_utc": "2026-07-02T20:53:03.666548+00:00",
+  "database": "hellenia_prod",
+  "status": "PASS",
+  "module_version": "19.0.7.2.0",
+  "checks": {
+    "module_version": {
+      "status": "PASS",
+      "detail": "19.0.7.2.0"
+    },
+    "preview_method": {
+      "status": "PASS",
+      "detail": "True"
+    },
+    "button_visible_arch": {
+      "status": "PASS",
+      "detail": "True"
+    },
+    "preview_action_type": {
+      "status": "PASS",
+      "detail": "ir.actions.act_url"
+    },
+    "preview_target_new": {
+      "status": "PASS",
+      "detail": "new"
+    },
+    "preview_url_html": {
+      "status": "PASS",
+      "detail": "/report/html/justech_report_design.report_justech_purchase_order_document/9"
+    },
+    "preview_html_render": {
+      "status": "PASS",
+      "detail": "61915"
+    },
+    "preview_design_hellenia": {
+      "status": "PASS",
+      "detail": "True"
+    },
+    "preview_no_qweb_error": {
+      "status": "PASS",
+      "detail": "True"
+    },
+    "print_pdf_ok": {
+      "status": "PASS",
+      "detail": "73524"
+    },
+    "preview_print_same_report": {
+      "status": "PASS",
+      "detail": "justech_report_design.report_justech_purchase_order_document"
+    },
+    "send_rfq_method": {
+      "status": "PASS",
+      "detail": "True"
+    },
+    "send_rfq_action": {
+      "status": "PASS",
+      "detail": "ir.actions.act_window"
+    },
+    "http_preview_html": {
+      "status": "PASS",
+      "detail": "status=200 bytes=61928 jt_po_band=True"
+    }
+  },
+  "purchase_order": {
+    "id": 9,
+    "name": "P00008",
+    "state": "purchase"
+  },
+  "ui": {
+    "header_button_strings": [
+      "Send RFQ",
+      "Receive",
+      "Confirm Order",
+      "Approve Order",
+      "Send RFQ",
+      "Confirm Order",
+      "Send PO",
+      "Acknowledge",
+      "Set to Draft",
+      "Vista previa",
+      "Print",
+      "Print",
+      "Cancel",
+      "Lock",
+      "Unlock",
+      "Catalog"
+    ],
+    "has_vista_previa": true,
+    "preview_url": "/report/html/justech_report_design.report_justech_purchase_order_document/9"
+  },
+  "errors": [],
+  "pass": true,
+  "visual_approval_pending": true
+}

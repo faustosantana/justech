@@ -48,6 +48,14 @@ class JustechDoFiscalDocumentType(models.Model):
         string="Default Move Type",
     )
 
+    @api.depends("prefix", "name")
+    def _compute_display_name(self):
+        for doc in self:
+            if doc.prefix and doc.name:
+                doc.display_name = f"{doc.prefix} - {doc.name}"
+            else:
+                doc.display_name = doc.name or doc.prefix or ""
+
     _sql_constraints = [
         (
             "prefix_company_uniq",

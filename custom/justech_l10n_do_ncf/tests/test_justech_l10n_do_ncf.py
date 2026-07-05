@@ -109,6 +109,88 @@ class TestJustechL10nDoNcf(TransactionCase):
         move.action_post()
         self.assertTrue(move.justech_do_ncf.startswith("B01"))
 
+    def test_partner_default_b02_overrides_rnc_heuristic(self):
+        self._create_range(self.doc_b02).action_activate()
+        partner = self.env["res.partner"].create(
+            {
+                "name": "Cliente B2B con default B02",
+                "vat": "131793916",
+                "justech_do_default_document_type_id": self.doc_b02.id,
+            }
+        )
+        move = self.env["account.move"].create(self._invoice_vals(partner))
+        move.action_post()
+        self.assertEqual(move.justech_do_document_type_id, self.doc_b02)
+        self.assertTrue(move.justech_do_ncf.startswith("B02"))
+
+    def test_partner_default_b01_on_direct_invoice(self):
+        self._create_range(self.doc_b01).action_activate()
+        partner = self.env["res.partner"].create(
+            {
+                "name": "Cliente default B01",
+                "vat": "131793916",
+                "justech_do_default_document_type_id": self.doc_b01.id,
+            }
+        )
+        move = self.env["account.move"].create(self._invoice_vals(partner))
+        self.assertEqual(move.justech_do_document_type_id, self.doc_b01)
+        move.action_post()
+        self.assertTrue(move.justech_do_ncf.startswith("B01"))
+
+    def test_manual_document_type_overrides_partner_default(self):
+        self._create_range(self.doc_b02).action_activate()
+        partner = self.env["res.partner"].create(
+            {
+                "name": "Cliente default B02 manual B02",
+                "justech_do_default_document_type_id": self.doc_b01.id,
+            }
+        )
+        move = self.env["account.move"].create(
+            {
+                **self._invoice_vals(partner),
+                "justech_do_document_type_id": self.doc_b02.id,
+            }
+        )
+        move.action_post()
+        self.assertEqual(move.justech_do_document_type_id, self.doc_b02)
+        self.assertTrue(move.justech_do_ncf.startswith("B02"))
+
+    def test_sale_order_inherits_partner_default_to_invoice(self):
+        self._create_range(self.doc_b02).action_activate()
+        partner = self.env["res.partner"].create(
+            {
+                "name": "Cliente SO B02",
+                "justech_do_default_document_type_id": self.doc_b02.id,
+            }
+        )
+        order = self.env["sale.order"].create(
+            {
+                "partner_id": partner.id,
+                "order_line": [
+                    Command.create(
+                        {
+                            "product_id": self.product.id,
+                            "product_uom_qty": 1,
+                            "price_unit": 100.0,
+                        }
+                    )
+                ],
+            }
+        )
+        self.assertEqual(order.justech_do_document_type_id, self.doc_b02)
+        order.action_confirm()
+        invoice = order._create_invoices()
+        self.assertEqual(invoice.justech_do_document_type_id, self.doc_b02)
+        invoice.action_post()
+        self.assertTrue(invoice.justech_do_ncf.startswith("B02"))
+
+    def test_partner_without_default_uses_system_heuristic(self):
+        self._create_range(self.doc_b02).action_activate()
+        partner = self.env["res.partner"].create({"name": "Consumidor sin default"})
+        move = self.env["account.move"].create(self._invoice_vals(partner))
+        move.action_post()
+        self.assertTrue(move.justech_do_ncf.startswith("B02"))
+
     def test_credit_note_b04(self):
         self._create_range(self.doc_b02).action_activate()
         self._create_range(self.doc_b04).action_activate()

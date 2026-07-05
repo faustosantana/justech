@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="0">
+    <!-- Configuración bancos/métodos vía post_init_hook (modelo no disponible en carga XML install) -->
+</odoo>

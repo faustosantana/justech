@@ -1,0 +1,746 @@
+{
+  "phase": "26-delivery-slip-field-audit",
+  "timestamp_utc": "2026-07-02T18:55:57.191488+00:00",
+  "database": "hellenia_test",
+  "models": {
+    "stock.picking": {
+      "exists": true,
+      "fields": {
+        "name": {
+          "type": "char",
+          "string": "Reference",
+          "required": false,
+          "readonly": true,
+          "related": null,
+          "store": true
+        },
+        "origin": {
+          "type": "char",
+          "string": "Source Document",
+          "required": false,
+          "readonly": false,
+          "related": null,
+          "store": true
+        },
+        "state": {
+          "type": "selection",
+          "string": "Status",
+          "required": false,
+          "readonly": true,
+          "related": null,
+          "store": true
+        },
+        "scheduled_date": {
+          "type": "datetime",
+          "string": "Scheduled Date",
+          "required": false,
+          "readonly": false,
+          "related": null,
+          "store": true
+        },
+        "date_done": {
+          "type": "datetime",
+          "string": "Date of Transfer",
+          "required": false,
+          "readonly": false,
+          "related": null,
+          "store": true
+        },
+        "date_deadline": {
+          "type": "datetime",
+          "string": "Deadline",
+          "required": false,
+          "readonly": true,
+          "related": null,
+          "store": true
+        },
+        "partner_id": {
+          "type": "many2one",
+          "string": "Contact",
+          "required": false,
+          "readonly": false,
+          "related": null,
+          "store": true
+        },
+        "user_id": {
+          "type": "many2one",
+          "string": "Responsible",
+          "required": false,
+          "readonly": false,
+          "related": null,
+          "store": true
+        },
+        "sale_id": {
+          "type": "many2one",
+          "string": "Sales Order",
+          "required": false,
+          "readonly": false,
+          "related": null,
+          "store": true
+        },
+        "picking_type_id": {
+          "type": "many2one",
+          "string": "Operation Type",
+          "required": true,
+          "readonly": false,
+          "related": null,
+          "store": true
+        },
+        "location_id": {
+          "type": "many2one",
+          "string": "Source Location",
+          "required": true,
+          "readonly": false,
+          "related": null,
+          "store": true
+        },
+        "location_dest_id": {
+          "type": "many2one",
+          "string": "Destination Location",
+          "required": true,
+          "readonly": false,
+          "related": null,
+          "store": true
+        },
+        "note": {
+          "type": "html",
+          "string": "Notes",
+          "required": false,
+          "readonly": false,
+          "related": null,
+          "store": true
+        },
+        "move_ids": {
+          "type": "one2many",
+          "string": "Stock Moves",
+          "required": false,
+          "readonly": false,
+          "related": null,
+          "store": true
+        },
+        "move_line_ids": {
+          "type": "one2many",
+          "string": "Operations",
+          "required": false,
+          "readonly": false,
+          "related": null,
+          "store": true
+        },
+        "backorder_id": {
+          "type": "many2one",
+          "string": "Back Order of",
+          "required": false,
+          "readonly": true,
+          "related": null,
+          "store": true
+        },
+        "backorder_ids": {
+          "type": "one2many",
+          "string": "Back Orders",
+          "required": false,
+          "readonly": false,
+          "related": null,
+          "store": true
+        }
+      },
+      "missing_requested": [
+        "group_id",
+        "carrier_id",
+        "carrier_tracking_ref",
+        "invoice_ids",
+        "sale_order_id"
+      ]
+    },
+    "stock.move": {
+      "exists": true,
+      "fields": {
+        "product_id": {
+          "type": "many2one",
+          "string": "Product",
+          "required": true,
+          "readonly": false,
+          "related": null,
+          "store": true
+        },
+        "product_uom": {
+          "type": "many2one",
+          "string": "Unit",
+          "required": true,
+          "readonly": false,
+          "related": null,
+          "store": true
+        },
+        "product_uom_qty": {
+          "type": "float",
+          "string": "Demand",
+          "required": true,
+          "readonly": false,
+          "related": null,
+          "store": true
+        },
+        "quantity": {
+          "type": "float",
+          "string": "Quantity",
+          "required": false,
+          "readonly": false,
+          "related": null,
+          "store": true
+        },
+        "state": {
+          "type": "selection",
+          "string": "Status",
+          "required": false,
+          "readonly": true,
+          "related": null,
+          "store": true
+        },
+        "picking_id": {
+          "type": "many2one",
+          "string": "Transfer",
+          "required": false,
+          "readonly": false,
+          "related": null,
+          "store": true
+        },
+        "sale_line_id": {
+          "type": "many2one",
+          "string": "Sale Line",
+          "required": false,
+          "readonly": false,
+          "related": null,
+          "store": true
+        },
+        "description_picking": {
+          "type": "text",
+          "string": "Description Of Picking",
+          "required": false,
+          "readonly": false,
+          "related": null,
+          "store": false
+        }
+      },
+      "missing_requested": [
+        "name"
+      ]
+    },
+    "stock.move.line": {
+      "exists": true,
+      "fields": {
+        "product_id": {
+          "type": "many2one",
+          "string": "Product",
+          "required": false,
+          "readonly": false,
+          "related": null,
+          "store": true
+        },
+        "product_uom_id": {
+          "type": "many2one",
+          "string": "Unit",
+          "required": true,
+          "readonly": false,
+          "related": null,
+          "store": true
+        },
+        "quantity": {
+          "type": "float",
+          "string": "Quantity",
+          "required": false,
+          "readonly": false,
+          "related": null,
+          "store": true
+        },
+        "qty_done": {
+          "type": "float",
+          "string": "Qty Done",
+          "required": false,
+          "readonly": false,
+          "related": null,
+          "store": false
+        },
+        "lot_id": {
+          "type": "many2one",
+          "string": "Lot/Serial Number",
+          "required": false,
+          "readonly": false,
+          "related": null,
+          "store": true
+        },
+        "lot_name": {
+          "type": "char",
+          "string": "Lot/Serial Number Name",
+          "required": false,
+          "readonly": false,
+          "related": null,
+          "store": true
+        },
+        "package_id": {
+          "type": "many2one",
+          "string": "Source Package",
+          "required": false,
+          "readonly": false,
+          "related": null,
+          "store": true
+        },
+        "owner_id": {
+          "type": "many2one",
+          "string": "From Owner",
+          "required": false,
+          "readonly": false,
+          "related": null,
+          "store": true
+        },
+        "move_id": {
+          "type": "many2one",
+          "string": "Stock Operation",
+          "required": false,
+          "readonly": false,
+          "related": null,
+          "store": true
+        },
+        "picking_id": {
+          "type": "many2one",
+          "string": "Transfer",
+          "required": false,
+          "readonly": false,
+          "related": null,
+          "store": true
+        }
+      },
+      "missing_requested": []
+    },
+    "sale.order": {
+      "exists": true,
+      "fields": {
+        "name": {
+          "type": "char",
+          "string": "Order Reference",
+          "required": true,
+          "readonly": false,
+          "related": null,
+          "store": true
+        },
+        "partner_id": {
+          "type": "many2one",
+          "string": "Customer",
+          "required": true,
+          "readonly": false,
+          "related": null,
+          "store": true
+        },
+        "partner_shipping_id": {
+          "type": "many2one",
+          "string": "Delivery Address",
+          "required": true,
+          "readonly": false,
+          "related": null,
+          "store": true
+        },
+        "user_id": {
+          "type": "many2one",
+          "string": "Salesperson",
+          "required": false,
+          "readonly": false,
+          "related": null,
+          "store": true
+        },
+        "state": {
+          "type": "selection",
+          "string": "Status",
+          "required": false,
+          "readonly": true,
+          "related": null,
+          "store": true
+        },
+        "order_line": {
+          "type": "one2many",
+          "string": "Order Lines",
+          "required": false,
+          "readonly": false,
+          "related": null,
+          "store": true
+        },
+        "picking_ids": {
+          "type": "one2many",
+          "string": "Transfers",
+          "required": false,
+          "readonly": false,
+          "related": null,
+          "store": true
+        },
+        "invoice_ids": {
+          "type": "many2many",
+          "string": "Invoices",
+          "required": false,
+          "readonly": true,
+          "related": null,
+          "store": false
+        },
+        "note": {
+          "type": "html",
+          "string": "Terms and conditions",
+          "required": false,
+          "readonly": false,
+          "related": null,
+          "store": true
+        },
+        "client_order_ref": {
+          "type": "char",
+          "string": "Customer Reference",
+          "required": false,
+          "readonly": false,
+          "related": null,
+          "store": true
+        }
+      },
+      "missing_requested": []
+    },
+    "account.move": {
+      "exists": true,
+      "fields": {
+        "name": {
+          "type": "char",
+          "string": "Number",
+          "required": false,
+          "readonly": false,
+          "related": null,
+          "store": true
+        },
+        "partner_id": {
+          "type": "many2one",
+          "string": "Partner",
+          "required": false,
+          "readonly": false,
+          "related": null,
+          "store": true
+        },
+        "partner_shipping_id": {
+          "type": "many2one",
+          "string": "Delivery Address",
+          "required": false,
+          "readonly": false,
+          "related": null,
+          "store": true
+        },
+        "invoice_user_id": {
+          "type": "many2one",
+          "string": "Salesperson",
+          "required": false,
+          "readonly": false,
+          "related": null,
+          "store": true
+        },
+        "state": {
+          "type": "selection",
+          "string": "Status",
+          "required": true,
+          "readonly": true,
+          "related": null,
+          "store": true
+        },
+        "invoice_line_ids": {
+          "type": "one2many",
+          "string": "Invoice lines",
+          "required": false,
+          "readonly": false,
+          "related": null,
+          "store": true
+        },
+        "invoice_origin": {
+          "type": "char",
+          "string": "Origin",
+          "required": false,
+          "readonly": true,
+          "related": null,
+          "store": true
+        }
+      },
+      "missing_requested": [
+        "stock_move_id",
+        "picking_ids"
+      ]
+    },
+    "res.partner": {
+      "exists": true,
+      "fields": {
+        "name": {
+          "type": "char",
+          "string": "Name",
+          "required": false,
+          "readonly": false,
+          "related": null,
+          "store": true
+        },
+        "vat": {
+          "type": "char",
+          "string": "Tax ID",
+          "required": false,
+          "readonly": false,
+          "related": null,
+          "store": true
+        },
+        "street": {
+          "type": "char",
+          "string": "Street",
+          "required": false,
+          "readonly": false,
+          "related": null,
+          "store": true
+        },
+        "street2": {
+          "type": "char",
+          "string": "Street2",
+          "required": false,
+          "readonly": false,
+          "related": null,
+          "store": true
+        },
+        "city": {
+          "type": "char",
+          "string": "City",
+          "required": false,
+          "readonly": false,
+          "related": null,
+          "store": true
+        },
+        "state_id": {
+          "type": "many2one",
+          "string": "State",
+          "required": false,
+          "readonly": false,
+          "related": null,
+          "store": true
+        },
+        "country_id": {
+          "type": "many2one",
+          "string": "Country",
+          "required": false,
+          "readonly": false,
+          "related": null,
+          "store": true
+        },
+        "phone": {
+          "type": "char",
+          "string": "Phone",
+          "required": false,
+          "readonly": false,
+          "related": null,
+          "store": true
+        },
+        "email": {
+          "type": "char",
+          "string": "Email",
+          "required": false,
+          "readonly": false,
+          "related": null,
+          "store": true
+        },
+        "child_ids": {
+          "type": "one2many",
+          "string": "Contact",
+          "required": false,
+          "readonly": false,
+          "related": null,
+          "store": true
+        }
+      },
+      "missing_requested": []
+    },
+    "res.company": {
+      "exists": true,
+      "fields": {
+        "name": {
+          "type": "char",
+          "string": "Company Name",
+          "required": true,
+          "readonly": false,
+          "related": "partner_id.name",
+          "store": true
+        },
+        "logo": {
+          "type": "binary",
+          "string": "Company Logo",
+          "required": false,
+          "readonly": false,
+          "related": "partner_id.image_1920",
+          "store": false
+        },
+        "street": {
+          "type": "char",
+          "string": "Street",
+          "required": false,
+          "readonly": false,
+          "related": null,
+          "store": false
+        },
+        "city": {
+          "type": "char",
+          "string": "City",
+          "required": false,
+          "readonly": false,
+          "related": null,
+          "store": false
+        },
+        "vat": {
+          "type": "char",
+          "string": "Tax ID",
+          "required": false,
+          "readonly": false,
+          "related": "partner_id.vat",
+          "store": false
+        },
+        "phone": {
+          "type": "char",
+          "string": "Phone",
+          "required": false,
+          "readonly": false,
+          "related": "partner_id.phone",
+          "store": true
+        },
+        "email": {
+          "type": "char",
+          "string": "Email",
+          "required": false,
+          "readonly": false,
+          "related": "partner_id.email",
+          "store": true
+        },
+        "website": {
+          "type": "char",
+          "string": "Website Link",
+          "required": false,
+          "readonly": false,
+          "related": "partner_id.website",
+          "store": false
+        }
+      },
+      "missing_requested": []
+    }
+  },
+  "relationships": {
+    "stock.picking_sample": {
+      "id": 166,
+      "name": "WH/OUT/00114",
+      "sale_id": 129,
+      "sale_order_id": 129,
+      "origin": "S00128",
+      "group_id": null,
+      "group_sale_id": null,
+      "invoice_ids": []
+    },
+    "sale.order_sample": {
+      "id": 129,
+      "name": "S00128",
+      "picking_ids": [
+        166
+      ],
+      "picking_names": [
+        "WH/OUT/00114"
+      ],
+      "invoice_ids": [
+        919
+      ],
+      "invoice_names": [
+        "INV/2026/00179"
+      ]
+    },
+    "account.move_sample": {
+      "id": 8145,
+      "name": "INV/2026/00215",
+      "invoice_origin": false,
+      "stock_move_id": null,
+      "picking_ids": []
+    }
+  },
+  "sample_records": {},
+  "field_map": {
+    "conduce_number": {
+      "stock.picking": "name",
+      "sale.order": "name (prefijo COND-/ref cotización en contexto)",
+      "account.move": "name (prefijo COND-/ref factura en contexto)"
+    },
+    "picking_number": {
+      "stock.picking": "name"
+    },
+    "state": {
+      "stock.picking": "state (+ selection_labels via fields_get)",
+      "sale.order": "state",
+      "account.move": "state"
+    },
+    "sale_order": {
+      "stock.picking": "sale_id (Odoo 19) or group_id.sale_id",
+      "sale.order": "self",
+      "account.move": "invoice_origin → sale.order search OR line.sale_line_ids.order_id"
+    },
+    "invoice": {
+      "stock.picking": "sale_id.invoice_ids or group_id.sale_id.invoice_ids",
+      "sale.order": "invoice_ids",
+      "account.move": "self (out_invoice)"
+    },
+    "customer": "partner_id",
+    "delivery_address": {
+      "stock.picking": "partner_id (dest) — check move partner on outgoing",
+      "sale.order": "partner_shipping_id",
+      "account.move": "partner_shipping_id or partner_id"
+    },
+    "scheduled_date": "scheduled_date (picking) / expected_date on moves",
+    "effective_date": "date_done (picking)",
+    "responsible": "user_id (picking) / create_uid fallback",
+    "salesperson": {
+      "stock.picking": "sale_id.user_id",
+      "sale.order": "user_id",
+      "account.move": "invoice_user_id"
+    },
+    "carrier": "carrier_id",
+    "warehouse_origin": "picking_type_id.warehouse_id or location_id",
+    "dest_location": "location_dest_id",
+    "products_lines": {
+      "stock.picking": "move_ids / move_line_ids",
+      "sale.order": "order_line (product lines)",
+      "account.move": "invoice_line_ids (product)"
+    },
+    "qty_requested": {
+      "stock.picking": "move.product_uom_qty",
+      "sale.order": "line.product_uom_qty",
+      "account.move": "line.quantity"
+    },
+    "qty_delivered": {
+      "stock.picking": "move.quantity (done) or move_line.quantity",
+      "sale.order": "line.qty_delivered if exists else product_uom_qty",
+      "account.move": "line.quantity"
+    },
+    "uom": "product_uom / product_uom_id",
+    "lot_serial": "move_line.lot_id.name or lot_name",
+    "observations": {
+      "stock.picking": "note",
+      "sale.order": "note",
+      "account.move": "narration"
+    }
+  },
+  "picking_state_selection": [
+    [
+      "draft",
+      "Draft"
+    ],
+    [
+      "waiting",
+      "Waiting Another Operation"
+    ],
+    [
+      "confirmed",
+      "Waiting"
+    ],
+    [
+      "assigned",
+      "Ready"
+    ],
+    [
+      "done",
+      "Done"
+    ],
+    [
+      "cancel",
+      "Cancelled"
+    ]
+  ]
+}

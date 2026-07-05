@@ -1,0 +1,214 @@
+{
+  "phase": "27-purchase-order-field-audit",
+  "timestamp_utc": "2026-07-02T20:24:28.176088+00:00",
+  "database": "hellenia_test",
+  "models": {
+    "purchase.order": {
+      "name": {
+        "type": "char",
+        "string": "Order Reference",
+        "required": true,
+        "store": true
+      },
+      "state": {
+        "type": "selection",
+        "string": "Status",
+        "required": false,
+        "store": true
+      },
+      "partner_id": {
+        "type": "many2one",
+        "string": "Vendor",
+        "required": true,
+        "store": true
+      },
+      "dest_address_id": {
+        "type": "many2one",
+        "string": "Dropship Address",
+        "required": false,
+        "store": true
+      },
+      "partner_ref": {
+        "type": "char",
+        "string": "Vendor Reference",
+        "required": false,
+        "store": true
+      },
+      "date_order": {
+        "type": "datetime",
+        "string": "Order Deadline",
+        "required": true,
+        "store": true
+      },
+      "date_approve": {
+        "type": "datetime",
+        "string": "Confirmation Date",
+        "required": false,
+        "store": true
+      },
+      "date_planned": {
+        "type": "datetime",
+        "string": "Expected Arrival",
+        "required": false,
+        "store": true
+      },
+      "user_id": {
+        "type": "many2one",
+        "string": "Buyer",
+        "required": false,
+        "store": true
+      },
+      "payment_term_id": {
+        "type": "many2one",
+        "string": "Payment Terms",
+        "required": false,
+        "store": true
+      },
+      "currency_id": {
+        "type": "many2one",
+        "string": "Currency",
+        "required": true,
+        "store": true
+      },
+      "incoterm_id": {
+        "type": "many2one",
+        "string": "Incoterm",
+        "required": false,
+        "store": true
+      },
+      "incoterm_location": {
+        "type": "char",
+        "string": "Incoterm Location",
+        "required": false,
+        "store": true
+      },
+      "note": {
+        "type": "html",
+        "string": "Terms and Conditions",
+        "required": false,
+        "store": true
+      },
+      "order_line": {
+        "type": "one2many",
+        "string": "Order Lines",
+        "required": false,
+        "store": true
+      },
+      "amount_untaxed": {
+        "type": "monetary",
+        "string": "Untaxed Amount",
+        "required": false,
+        "store": true
+      },
+      "amount_tax": {
+        "type": "monetary",
+        "string": "Taxes",
+        "required": false,
+        "store": true
+      },
+      "amount_total": {
+        "type": "monetary",
+        "string": "Total",
+        "required": false,
+        "store": true
+      },
+      "company_id": {
+        "type": "many2one",
+        "string": "Company",
+        "required": true,
+        "store": true
+      }
+    },
+    "purchase.order.line": {
+      "product_id": {
+        "type": "many2one",
+        "string": "Product",
+        "required": false,
+        "store": true
+      },
+      "name": {
+        "type": "text",
+        "string": "Description",
+        "required": true,
+        "store": true
+      },
+      "product_qty": {
+        "type": "float",
+        "string": "Quantity",
+        "required": true,
+        "store": true
+      },
+      "product_uom_id": {
+        "type": "many2one",
+        "string": "Unit",
+        "required": false,
+        "store": true
+      },
+      "price_unit": {
+        "type": "float",
+        "string": "Unit Price",
+        "required": true,
+        "store": true
+      },
+      "discount": {
+        "type": "float",
+        "string": "Discount (%)",
+        "required": false,
+        "store": true
+      },
+      "tax_ids": {
+        "type": "many2many",
+        "string": "Taxes",
+        "required": false,
+        "store": true
+      },
+      "price_subtotal": {
+        "type": "monetary",
+        "string": "Subtotal",
+        "required": false,
+        "store": true
+      },
+      "date_planned": {
+        "type": "datetime",
+        "string": "Expected Arrival",
+        "required": false,
+        "store": true
+      },
+      "display_type": {
+        "type": "selection",
+        "string": "Display Type",
+        "required": false,
+        "store": true
+      }
+    }
+  },
+  "field_map": {
+    "order_number": "purchase.order.name",
+    "state": "purchase.order.state",
+    "vendor": "purchase.order.partner_id",
+    "vendor_address": "partner_id (+ dest_address_id si dropship)",
+    "vendor_vat": "partner_id.vat",
+    "vendor_phone": "partner_id.phone",
+    "vendor_email": "partner_id.email",
+    "order_date": "purchase.order.date_order",
+    "expected_date": "purchase.order.date_planned",
+    "buyer": "purchase.order.user_id",
+    "payment_terms": "purchase.order.payment_term_id",
+    "currency": "purchase.order.currency_id",
+    "incoterm": "purchase.order.incoterm_id + incoterm_location",
+    "vendor_reference": "purchase.order.partner_ref",
+    "observations": "purchase.order.note",
+    "line_product": "purchase.order.line.product_id",
+    "line_description": "purchase.order.line.name",
+    "line_qty": "purchase.order.line.product_qty",
+    "line_uom": "purchase.order.line.product_uom_id",
+    "line_price": "purchase.order.line.price_unit",
+    "line_discount": "purchase.order.line.discount",
+    "line_taxes": "purchase.order.line.tax_ids",
+    "line_subtotal": "purchase.order.line.price_subtotal",
+    "subtotal": "purchase.order.amount_untaxed",
+    "taxes": "purchase.order.amount_tax",
+    "total": "purchase.order.amount_total"
+  },
+  "missing": []
+}

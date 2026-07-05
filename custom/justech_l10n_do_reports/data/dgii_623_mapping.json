@@ -1,0 +1,29 @@
+{
+  "schema_version": "1.0",
+  "fase": "21.4",
+  "fecha_mapeo_utc": "2026-07-01T00:00:00Z",
+  "codigo": "623",
+  "nombre_oficial": "Formato de Envío de Retenciones del Estado",
+  "normativa": "NG-07-2018-05-2019",
+  "archivo_fuente": "data/localizations/do/templates/Formato 623.xls",
+  "hoja_principal": "Herramienta Formato 623",
+  "fila_encabezado": 11,
+  "fila_inicio_datos": 12,
+  "formato_fecha": "YYYYMMDD",
+  "formato_periodo": "YYYYMM",
+  "columnas": [
+    {"orden": 1, "columna_excel": "A", "nombre_dgii": "Líneas", "tipo_dato": "integer"},
+    {"orden": 2, "columna_excel": "B", "nombre_dgii": "RNC Entidad del Estado", "tipo_dato": "identifier"},
+    {"orden": 3, "columna_excel": "C", "nombre_dgii": "Periodo", "tipo_dato": "period"},
+    {"orden": 4, "columna_excel": "D", "nombre_dgii": "Fecha de Retención", "tipo_dato": "date"},
+    {"orden": 5, "columna_excel": "E", "nombre_dgii": "Valor de Retención", "tipo_dato": "decimal"},
+    {"orden": 6, "columna_excel": "F", "nombre_dgii": "Nro. de Referencia", "tipo_dato": "text"},
+    {"orden": 7, "columna_excel": "G", "nombre_dgii": "Tipo de Referencia", "tipo_dato": "catalog"},
+    {"orden": 8, "columna_excel": "H", "nombre_dgii": "Banco", "tipo_dato": "text"}
+  ],
+  "validaciones": [
+    "Retenciones ISR 5% Gobierno sobre ventas a entidades estatales.",
+    "Fecha de retención en formato AAAAMMDD.",
+    "Tipo referencia: 1=Cheque, 2=Transferencia/Depósito."
+  ]
+}

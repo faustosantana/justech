@@ -1,0 +1,830 @@
+2026-07-05 02:48:20,234 1 DEBUG ? odoo.netsvc: logger level set: "odoo.http.rpc.request:INFO" 
+2026-07-05 02:48:20,234 1 DEBUG ? odoo.netsvc: logger level set: "odoo.http.rpc.response:INFO" 
+2026-07-05 02:48:20,234 1 DEBUG ? odoo.netsvc: logger level set: ":INFO" 
+2026-07-05 02:48:20,234 1 DEBUG ? odoo.netsvc: logger level set: "odoo:DEBUG" 
+2026-07-05 02:48:20,234 1 DEBUG ? odoo.netsvc: logger level set: "odoo.sql_db:INFO" 
+2026-07-05 02:48:20,234 1 DEBUG ? odoo.netsvc: logger level set: ":INFO" 
+2026-07-05 02:48:20,234 1 WARNING ? odoo.tools.config: option logfile reads 'False' in the config file at /etc/odoo/odoo.conf but isn't a boolean option, skip 
+2026-07-05 02:48:20,234 1 WARNING ? odoo.tools.config: option logfile reads 'False' in the config file at /etc/odoo/odoo.conf but isn't a boolean option, skip 
+2026-07-05 02:48:20,235 1 INFO ? odoo: Odoo version 19.0-20260619 
+2026-07-05 02:48:20,235 1 INFO ? odoo: Using configuration file at /etc/odoo/odoo.conf 
+2026-07-05 02:48:20,235 1 INFO ? odoo: addons paths: _NamespacePath(['/usr/lib/python3/dist-packages/odoo/addons', '/var/lib/odoo/addons/19.0', '/opt/odoo/enterprise/addons', '/opt/odoo/custom', '/usr/lib/python3/dist-packages/addons']) 
+2026-07-05 02:48:20,235 1 INFO ? odoo: database: odoo@db:5432 
+2026-07-05 02:48:20,464 1 DEBUG ? odoo.service.server: Setting signal handlers 
+2026-07-05 02:48:20,485 1 DEBUG hellenia_dev odoo.registry: Multiprocess load registry signaling: [Registry: 37] [Cache default: 2] [Cache assets: 1] [Cache stable: 2] [Cache templates: 1] [Cache routing: 1] [Cache groups: 1] 
+2026-07-05 02:48:20,504 1 INFO hellenia_dev odoo.modules.loading: loading 1 modules... 
+2026-07-05 02:48:20,504 1 DEBUG hellenia_dev odoo.modules.loading: Loading module base (1/1) 
+2026-07-05 02:48:20,507 1 DEBUG hellenia_dev odoo.modules.loading: Module base loaded in 0.00s, 0 queries 
+2026-07-05 02:48:20,507 1 INFO hellenia_dev odoo.modules.loading: 1 modules loaded in 0.00s, 0 queries (+0 extra) 
+2026-07-05 02:48:20,528 1 INFO hellenia_dev odoo.modules.loading: updating modules list 
+2026-07-05 02:48:20,531 1 INFO hellenia_dev odoo.addons.base.models.ir_module: ALLOW access to module.update_list on [] to user __system__ #1 via n/a 
+2026-07-05 02:48:22,494 1 INFO hellenia_dev odoo.addons.base.models.ir_module: ALLOW access to module.button_upgrade on ['Justech Dominican Fiscal Base'] to user __system__ #1 via n/a 
+2026-07-05 02:48:22,494 1 INFO hellenia_dev odoo.addons.base.models.ir_module: ALLOW access to module.update_list on ['Justech Dominican Fiscal Base'] to user __system__ #1 via n/a 
+2026-07-05 02:48:24,244 1 INFO hellenia_dev odoo.addons.base.models.ir_module: ALLOW access to module.button_install on ['Hellenia Account'] to user __system__ #1 via n/a 
+2026-07-05 02:48:24,328 1 DEBUG hellenia_dev odoo.modules.loading: Updating graph with 113 more modules 
+2026-07-05 02:48:24,329 1 INFO hellenia_dev odoo.modules.loading: loading 114 modules... 
+2026-07-05 02:48:24,329 1 DEBUG hellenia_dev odoo.modules.loading: Loading module rpc (2/114) 
+2026-07-05 02:48:24,329 1 DEBUG hellenia_dev odoo.modules.loading: Module rpc loaded in 0.00s, 0 queries 
+2026-07-05 02:48:24,329 1 DEBUG hellenia_dev odoo.modules.loading: Loading module uom (3/114) 
+2026-07-05 02:48:24,330 1 DEBUG hellenia_dev odoo.modules.loading: Module uom loaded in 0.00s, 0 queries 
+2026-07-05 02:48:24,330 1 DEBUG hellenia_dev odoo.modules.loading: Loading module web (4/114) 
+2026-07-05 02:48:24,331 1 DEBUG hellenia_dev odoo.modules.loading: Module web loaded in 0.00s, 0 queries 
+2026-07-05 02:48:24,332 1 DEBUG hellenia_dev odoo.modules.loading: Loading module api_doc (5/114) 
+2026-07-05 02:48:24,334 1 DEBUG hellenia_dev odoo.modules.loading: Module api_doc loaded in 0.00s, 0 queries 
+2026-07-05 02:48:24,334 1 DEBUG hellenia_dev odoo.modules.loading: Loading module auth_totp (6/114) 
+2026-07-05 02:48:24,342 1 DEBUG hellenia_dev odoo.modules.loading: Module auth_totp loaded in 0.01s, 0 queries 
+2026-07-05 02:48:24,342 1 DEBUG hellenia_dev odoo.modules.loading: Loading module barcodes (7/114) 
+2026-07-05 02:48:24,344 1 DEBUG hellenia_dev odoo.modules.loading: Module barcodes loaded in 0.00s, 0 queries 
+2026-07-05 02:48:24,344 1 DEBUG hellenia_dev odoo.modules.loading: Loading module base_import (8/114) 
+2026-07-05 02:48:24,346 1 DEBUG hellenia_dev odoo.modules.loading: Module base_import loaded in 0.00s, 0 queries 
+2026-07-05 02:48:24,346 1 DEBUG hellenia_dev odoo.modules.loading: Loading module base_import_module (9/114) 
+2026-07-05 02:48:24,349 1 DEBUG hellenia_dev odoo.modules.loading: Module base_import_module loaded in 0.00s, 0 queries 
+2026-07-05 02:48:24,349 1 DEBUG hellenia_dev odoo.modules.loading: Loading module base_setup (10/114) 
+2026-07-05 02:48:24,351 1 DEBUG hellenia_dev odoo.modules.loading: Module base_setup loaded in 0.00s, 0 queries 
+2026-07-05 02:48:24,351 1 DEBUG hellenia_dev odoo.modules.loading: Loading module bus (11/114) 
+2026-07-05 02:48:24,357 1 DEBUG hellenia_dev odoo.modules.loading: Module bus loaded in 0.01s, 0 queries 
+2026-07-05 02:48:24,357 1 DEBUG hellenia_dev odoo.modules.loading: Loading module http_routing (12/114) 
+2026-07-05 02:48:24,359 1 DEBUG hellenia_dev odoo.modules.loading: Module http_routing loaded in 0.00s, 0 queries 
+2026-07-05 02:48:24,359 1 DEBUG hellenia_dev odoo.modules.loading: Loading module onboarding (13/114) 
+2026-07-05 02:48:24,361 1 DEBUG hellenia_dev odoo.modules.loading: Module onboarding loaded in 0.00s, 0 queries 
+2026-07-05 02:48:24,361 1 DEBUG hellenia_dev odoo.modules.loading: Loading module resource (14/114) 
+2026-07-05 02:48:24,365 1 DEBUG hellenia_dev odoo.modules.loading: Module resource loaded in 0.00s, 0 queries 
+2026-07-05 02:48:24,365 1 DEBUG hellenia_dev odoo.modules.loading: Loading module utm (15/114) 
+2026-07-05 02:48:24,367 1 DEBUG hellenia_dev odoo.modules.loading: Module utm loaded in 0.00s, 0 queries 
+2026-07-05 02:48:24,367 1 DEBUG hellenia_dev odoo.modules.loading: Loading module web_cohort (16/114) 
+2026-07-05 02:48:24,378 1 DEBUG hellenia_dev odoo.modules.loading: Module web_cohort loaded in 0.01s, 0 queries 
+2026-07-05 02:48:24,378 1 DEBUG hellenia_dev odoo.modules.loading: Loading module web_tour (17/114) 
+2026-07-05 02:48:24,379 1 DEBUG hellenia_dev odoo.modules.loading: Module web_tour loaded in 0.00s, 0 queries 
+2026-07-05 02:48:24,379 1 DEBUG hellenia_dev odoo.modules.loading: Loading module auth_passkey (18/114) 
+2026-07-05 02:48:24,405 1 DEBUG hellenia_dev odoo.modules.loading: Module auth_passkey loaded in 0.03s, 0 queries 
+2026-07-05 02:48:24,405 1 DEBUG hellenia_dev odoo.modules.loading: Loading module barcodes_gs1_nomenclature (19/114) 
+2026-07-05 02:48:24,407 1 DEBUG hellenia_dev odoo.modules.loading: Module barcodes_gs1_nomenclature loaded in 0.00s, 0 queries 
+2026-07-05 02:48:24,407 1 DEBUG hellenia_dev odoo.modules.loading: Loading module html_editor (20/114) 
+2026-07-05 02:48:24,520 1 DEBUG hellenia_dev odoo.modules.loading: Module html_editor loaded in 0.11s, 0 queries 
+2026-07-05 02:48:24,520 1 DEBUG hellenia_dev odoo.modules.loading: Loading module iap (21/114) 
+2026-07-05 02:48:24,521 1 DEBUG hellenia_dev odoo.modules.loading: Module iap loaded in 0.00s, 0 queries 
+2026-07-05 02:48:24,521 1 DEBUG hellenia_dev odoo.modules.loading: Loading module web_enterprise (22/114) 
+2026-07-05 02:48:24,526 1 DEBUG hellenia_dev odoo.modules.loading: Module web_enterprise loaded in 0.01s, 0 queries 
+2026-07-05 02:48:24,526 1 DEBUG hellenia_dev odoo.modules.loading: Loading module web_map (23/114) 
+2026-07-05 02:48:24,533 1 DEBUG hellenia_dev odoo.modules.loading: Module web_map loaded in 0.01s, 0 queries 
+2026-07-05 02:48:24,533 1 DEBUG hellenia_dev odoo.modules.loading: Loading module mail (24/114) 
+2026-07-05 02:48:24,536 1 DEBUG hellenia_dev odoo.modules.loading: Module mail loaded in 0.00s, 0 queries 
+2026-07-05 02:48:24,536 1 DEBUG hellenia_dev odoo.modules.loading: Loading module web_mobile (25/114) 
+2026-07-05 02:48:24,538 1 DEBUG hellenia_dev odoo.modules.loading: Module web_mobile loaded in 0.00s, 0 queries 
+2026-07-05 02:48:24,538 1 DEBUG hellenia_dev odoo.modules.loading: Loading module web_unsplash (26/114) 
+2026-07-05 02:48:24,539 1 DEBUG hellenia_dev odoo.modules.loading: Module web_unsplash loaded in 0.00s, 0 queries 
+2026-07-05 02:48:24,539 1 DEBUG hellenia_dev odoo.modules.loading: Loading module ai_auto_install (27/114) 
+2026-07-05 02:48:24,599 1 DEBUG hellenia_dev odoo.modules.loading: Module ai_auto_install loaded in 0.06s, 0 queries 
+2026-07-05 02:48:24,599 1 DEBUG hellenia_dev odoo.modules.loading: Loading module analytic (28/114) 
+2026-07-05 02:48:24,603 1 DEBUG hellenia_dev odoo.modules.loading: Module analytic loaded in 0.00s, 0 queries 
+2026-07-05 02:48:24,603 1 DEBUG hellenia_dev odoo.modules.loading: Loading module auth_signup (29/114) 
+2026-07-05 02:48:24,605 1 DEBUG hellenia_dev odoo.modules.loading: Module auth_signup loaded in 0.00s, 0 queries 
+2026-07-05 02:48:24,605 1 DEBUG hellenia_dev odoo.modules.loading: Loading module auth_totp_mail (30/114) 
+2026-07-05 02:48:24,606 1 DEBUG hellenia_dev odoo.modules.loading: Module auth_totp_mail loaded in 0.00s, 0 queries 
+2026-07-05 02:48:24,606 1 DEBUG hellenia_dev odoo.modules.loading: Loading module base_install_request (31/114) 
+2026-07-05 02:48:24,608 1 DEBUG hellenia_dev odoo.modules.loading: Module base_install_request loaded in 0.00s, 0 queries 
+2026-07-05 02:48:24,608 1 DEBUG hellenia_dev odoo.modules.loading: Loading module contacts (32/114) 
+2026-07-05 02:48:24,608 1 DEBUG hellenia_dev odoo.modules.loading: Module contacts loaded in 0.00s, 0 queries 
+2026-07-05 02:48:24,609 1 DEBUG hellenia_dev odoo.modules.loading: Loading module google_gmail (33/114) 
+2026-07-05 02:48:24,611 1 DEBUG hellenia_dev odoo.modules.loading: Module google_gmail loaded in 0.00s, 0 queries 
+2026-07-05 02:48:24,611 1 DEBUG hellenia_dev odoo.modules.loading: Loading module iap_mail (34/114) 
+2026-07-05 02:48:24,611 1 DEBUG hellenia_dev odoo.modules.loading: Module iap_mail loaded in 0.00s, 0 queries 
+2026-07-05 02:48:24,611 1 DEBUG hellenia_dev odoo.modules.loading: Loading module mail_bot (35/114) 
+2026-07-05 02:48:24,613 1 DEBUG hellenia_dev odoo.modules.loading: Module mail_bot loaded in 0.00s, 0 queries 
+2026-07-05 02:48:24,613 1 DEBUG hellenia_dev odoo.modules.loading: Loading module mail_enterprise (36/114) 
+2026-07-05 02:48:24,615 1 DEBUG hellenia_dev odoo.modules.loading: Module mail_enterprise loaded in 0.00s, 0 queries 
+2026-07-05 02:48:24,615 1 DEBUG hellenia_dev odoo.modules.loading: Loading module microsoft_outlook (37/114) 
+2026-07-05 02:48:24,617 1 DEBUG hellenia_dev odoo.modules.loading: Module microsoft_outlook loaded in 0.00s, 0 queries 
+2026-07-05 02:48:24,617 1 DEBUG hellenia_dev odoo.modules.loading: Loading module phone_validation (38/114) 
+2026-07-05 02:48:24,637 1 DEBUG hellenia_dev odoo.modules.loading: Module phone_validation loaded in 0.02s, 0 queries 
+2026-07-05 02:48:24,637 1 DEBUG hellenia_dev odoo.modules.loading: Loading module privacy_lookup (39/114) 
+2026-07-05 02:48:24,639 1 DEBUG hellenia_dev odoo.modules.loading: Module privacy_lookup loaded in 0.00s, 0 queries 
+2026-07-05 02:48:24,639 1 DEBUG hellenia_dev odoo.modules.loading: Loading module product (40/114) 
+2026-07-05 02:48:24,650 1 DEBUG hellenia_dev odoo.modules.loading: Module product loaded in 0.01s, 0 queries 
+2026-07-05 02:48:24,650 1 DEBUG hellenia_dev odoo.modules.loading: Loading module resource_mail (41/114) 
+2026-07-05 02:48:24,651 1 DEBUG hellenia_dev odoo.modules.loading: Module resource_mail loaded in 0.00s, 0 queries 
+2026-07-05 02:48:24,651 1 DEBUG hellenia_dev odoo.modules.loading: Loading module sales_team (42/114) 
+2026-07-05 02:48:24,655 1 DEBUG hellenia_dev odoo.modules.loading: Module sales_team loaded in 0.00s, 0 queries 
+2026-07-05 02:48:24,655 1 DEBUG hellenia_dev odoo.modules.loading: Loading module contacts_enterprise (43/114) 
+2026-07-05 02:48:24,656 1 DEBUG hellenia_dev odoo.modules.loading: Module contacts_enterprise loaded in 0.00s, 0 queries 
+2026-07-05 02:48:24,657 1 DEBUG hellenia_dev odoo.modules.loading: Loading module iap_extract (44/114) 
+2026-07-05 02:48:24,662 1 DEBUG hellenia_dev odoo.modules.loading: Module iap_extract loaded in 0.01s, 0 queries 
+2026-07-05 02:48:24,662 1 DEBUG hellenia_dev odoo.modules.loading: Loading module mail_mobile (45/114) 
+2026-07-05 02:48:24,668 1 DEBUG hellenia_dev odoo.modules.loading: Module mail_mobile loaded in 0.01s, 0 queries 
+2026-07-05 02:48:24,668 1 DEBUG hellenia_dev odoo.modules.loading: Loading module partner_autocomplete (46/114) 
+2026-07-05 02:48:24,673 1 DEBUG hellenia_dev odoo.modules.loading: Module partner_autocomplete loaded in 0.00s, 0 queries 
+2026-07-05 02:48:24,673 1 DEBUG hellenia_dev odoo.modules.loading: Loading module portal (47/114) 
+2026-07-05 02:48:24,678 1 DEBUG hellenia_dev odoo.modules.loading: Module portal loaded in 0.00s, 0 queries 
+2026-07-05 02:48:24,678 1 DEBUG hellenia_dev odoo.modules.loading: Loading module product_barcodelookup (48/114) 
+2026-07-05 02:48:24,687 1 DEBUG hellenia_dev odoo.modules.loading: Module product_barcodelookup loaded in 0.01s, 0 queries 
+2026-07-05 02:48:24,687 1 DEBUG hellenia_dev odoo.modules.loading: Loading module sms (49/114) 
+2026-07-05 02:48:24,696 1 DEBUG hellenia_dev odoo.modules.loading: Module sms loaded in 0.01s, 0 queries 
+2026-07-05 02:48:24,696 1 DEBUG hellenia_dev odoo.modules.loading: Loading module snailmail (50/114) 
+2026-07-05 02:48:24,753 1 DEBUG hellenia_dev odoo.modules.loading: Module snailmail loaded in 0.06s, 0 queries 
+2026-07-05 02:48:24,753 1 DEBUG hellenia_dev odoo.modules.loading: Loading module auth_passkey_portal (51/114) 
+2026-07-05 02:48:24,753 1 DEBUG hellenia_dev odoo.modules.loading: Module auth_passkey_portal loaded in 0.00s, 0 queries 
+2026-07-05 02:48:24,753 1 DEBUG hellenia_dev odoo.modules.loading: Loading module auth_totp_portal (52/114) 
+2026-07-05 02:48:24,754 1 DEBUG hellenia_dev odoo.modules.loading: Module auth_totp_portal loaded in 0.00s, 0 queries 
+2026-07-05 02:48:24,754 1 DEBUG hellenia_dev odoo.modules.loading: Loading module digest (53/114) 
+2026-07-05 02:48:24,756 1 DEBUG hellenia_dev odoo.modules.loading: Module digest loaded in 0.00s, 0 queries 
+2026-07-05 02:48:24,756 1 DEBUG hellenia_dev odoo.modules.loading: Loading module payment (54/114) 
+2026-07-05 02:48:24,767 1 DEBUG hellenia_dev odoo.modules.loading: Module payment loaded in 0.01s, 0 queries 
+2026-07-05 02:48:24,767 1 DEBUG hellenia_dev odoo.modules.loading: Loading module spreadsheet (55/114) 
+2026-07-05 02:48:24,770 1 DEBUG hellenia_dev odoo.modules.loading: Module spreadsheet loaded in 0.00s, 0 queries 
+2026-07-05 02:48:24,770 1 DEBUG hellenia_dev odoo.modules.loading: Loading module account (56/114) 
+2026-07-05 02:48:24,819 1 DEBUG hellenia_dev odoo.modules.loading: Module account loaded in 0.05s, 0 queries 
+2026-07-05 02:48:24,819 1 DEBUG hellenia_dev odoo.modules.loading: Loading module digest_enterprise (57/114) 
+2026-07-05 02:48:24,820 1 DEBUG hellenia_dev odoo.modules.loading: Module digest_enterprise loaded in 0.00s, 0 queries 
+2026-07-05 02:48:24,820 1 DEBUG hellenia_dev odoo.modules.loading: Loading module spreadsheet_dashboard (58/114) 
+2026-07-05 02:48:24,823 1 DEBUG hellenia_dev odoo.modules.loading: Module spreadsheet_dashboard loaded in 0.00s, 0 queries 
+2026-07-05 02:48:24,823 1 DEBUG hellenia_dev odoo.modules.loading: Loading module spreadsheet_edition (59/114) 
+2026-07-05 02:48:24,835 1 DEBUG hellenia_dev odoo.modules.loading: Module spreadsheet_edition loaded in 0.01s, 0 queries 
+2026-07-05 02:48:24,835 1 DEBUG hellenia_dev odoo.modules.loading: Loading module stock (60/114) 
+2026-07-05 02:48:24,860 1 DEBUG hellenia_dev odoo.modules.loading: Module stock loaded in 0.03s, 0 queries 
+2026-07-05 02:48:24,860 1 DEBUG hellenia_dev odoo.modules.loading: Loading module account_accountant (61/114) 
+2026-07-05 02:48:24,904 1 DEBUG hellenia_dev odoo.modules.loading: Module account_accountant loaded in 0.04s, 0 queries 
+2026-07-05 02:48:24,904 1 DEBUG hellenia_dev odoo.modules.loading: Loading module account_add_gln (62/114) 
+2026-07-05 02:48:24,904 1 DEBUG hellenia_dev odoo.modules.loading: Module account_add_gln loaded in 0.00s, 0 queries 
+2026-07-05 02:48:24,904 1 DEBUG hellenia_dev odoo.modules.loading: Loading module account_check_printing (63/114) 
+2026-07-05 02:48:24,906 1 DEBUG hellenia_dev odoo.modules.loading: Module account_check_printing loaded in 0.00s, 0 queries 
+2026-07-05 02:48:24,907 1 DEBUG hellenia_dev odoo.modules.loading: Loading module account_debit_note (64/114) 
+2026-07-05 02:48:24,908 1 DEBUG hellenia_dev odoo.modules.loading: Module account_debit_note loaded in 0.00s, 0 queries 
+2026-07-05 02:48:24,908 1 DEBUG hellenia_dev odoo.modules.loading: Loading module account_edi_ubl_cii (65/114) 
+2026-07-05 02:48:24,919 1 DEBUG hellenia_dev odoo.modules.loading: Module account_edi_ubl_cii loaded in 0.01s, 0 queries 
+2026-07-05 02:48:24,919 1 DEBUG hellenia_dev odoo.modules.loading: Loading module account_payment (66/114) 
+2026-07-05 02:48:24,923 1 DEBUG hellenia_dev odoo.modules.loading: Module account_payment loaded in 0.00s, 0 queries 
+2026-07-05 02:48:24,923 1 DEBUG hellenia_dev odoo.modules.loading: Loading module base_iban (67/114) 
+2026-07-05 02:48:24,924 1 DEBUG hellenia_dev odoo.modules.loading: Module base_iban loaded in 0.00s, 0 queries 
+2026-07-05 02:48:24,924 1 DEBUG hellenia_dev odoo.modules.loading: Loading module currency_rate_live (68/114) 
+2026-07-05 02:48:24,960 1 DEBUG hellenia_dev odoo.modules.loading: Module currency_rate_live loaded in 0.04s, 0 queries 
+2026-07-05 02:48:24,960 1 DEBUG hellenia_dev odoo.modules.loading: Loading module purchase (69/114) 
+2026-07-05 02:48:24,969 1 DEBUG hellenia_dev odoo.modules.loading: Module purchase loaded in 0.01s, 0 queries 
+2026-07-05 02:48:24,969 1 DEBUG hellenia_dev odoo.modules.loading: Loading module snailmail_account (70/114) 
+2026-07-05 02:48:24,971 1 DEBUG hellenia_dev odoo.modules.loading: Module snailmail_account loaded in 0.00s, 0 queries 
+2026-07-05 02:48:24,971 1 DEBUG hellenia_dev odoo.modules.loading: Loading module spreadsheet_account (71/114) 
+2026-07-05 02:48:24,972 1 DEBUG hellenia_dev odoo.modules.loading: Module spreadsheet_account loaded in 0.00s, 0 queries 
+2026-07-05 02:48:24,972 1 DEBUG hellenia_dev odoo.modules.loading: Loading module spreadsheet_dashboard_account (72/114) 
+2026-07-05 02:48:24,973 1 DEBUG hellenia_dev odoo.modules.loading: Module spreadsheet_dashboard_account loaded in 0.00s, 0 queries 
+2026-07-05 02:48:24,973 1 DEBUG hellenia_dev odoo.modules.loading: Loading module spreadsheet_dashboard_edition (73/114) 
+2026-07-05 02:48:24,976 1 DEBUG hellenia_dev odoo.modules.loading: Module spreadsheet_dashboard_edition loaded in 0.00s, 0 queries 
+2026-07-05 02:48:24,976 1 DEBUG hellenia_dev odoo.modules.loading: Loading module stock_account (74/114) 
+2026-07-05 02:48:24,983 1 DEBUG hellenia_dev odoo.modules.loading: Module stock_account loaded in 0.01s, 0 queries 
+2026-07-05 02:48:24,983 1 DEBUG hellenia_dev odoo.modules.loading: Loading module stock_enterprise (75/114) 
+2026-07-05 02:48:24,987 1 DEBUG hellenia_dev odoo.modules.loading: Module stock_enterprise loaded in 0.00s, 0 queries 
+2026-07-05 02:48:24,987 1 DEBUG hellenia_dev odoo.modules.loading: Loading module stock_sms (76/114) 
+2026-07-05 02:48:24,989 1 DEBUG hellenia_dev odoo.modules.loading: Module stock_sms loaded in 0.00s, 0 queries 
+2026-07-05 02:48:24,989 1 DEBUG hellenia_dev odoo.modules.loading: Loading module account_accountant_check_printing (77/114) 
+2026-07-05 02:48:24,991 1 DEBUG hellenia_dev odoo.modules.loading: Module account_accountant_check_printing loaded in 0.00s, 0 queries 
+2026-07-05 02:48:24,991 1 DEBUG hellenia_dev odoo.modules.loading: Loading module account_bank_statement_import (78/114) 
+2026-07-05 02:48:24,996 1 DEBUG hellenia_dev odoo.modules.loading: Module account_bank_statement_import loaded in 0.01s, 0 queries 
+2026-07-05 02:48:24,996 1 DEBUG hellenia_dev odoo.modules.loading: Loading module account_online_synchronization (79/114) 
+2026-07-05 02:48:25,017 1 DEBUG hellenia_dev odoo.modules.loading: Module account_online_synchronization loaded in 0.02s, 0 queries 
+2026-07-05 02:48:25,017 1 DEBUG hellenia_dev odoo.modules.loading: Loading module account_qr_code_sepa (80/114) 
+2026-07-05 02:48:25,018 1 DEBUG hellenia_dev odoo.modules.loading: Module account_qr_code_sepa loaded in 0.00s, 0 queries 
+2026-07-05 02:48:25,018 1 DEBUG hellenia_dev odoo.modules.loading: Loading module account_reports (81/114) 
+2026-07-05 02:48:25,170 1 DEBUG hellenia_dev odoo.modules.loading: Module account_reports loaded in 0.15s, 0 queries 
+2026-07-05 02:48:25,170 1 DEBUG hellenia_dev odoo.modules.loading: Loading module l10n_do (82/114) 
+2026-07-05 02:48:25,171 1 DEBUG hellenia_dev odoo.modules.loading: Module l10n_do loaded in 0.00s, 0 queries 
+2026-07-05 02:48:25,171 1 DEBUG hellenia_dev odoo.modules.loading: Loading module purchase_accountant (83/114) 
+2026-07-05 02:48:25,174 1 DEBUG hellenia_dev odoo.modules.loading: Module purchase_accountant loaded in 0.00s, 0 queries 
+2026-07-05 02:48:25,174 1 DEBUG hellenia_dev odoo.modules.loading: Loading module purchase_edi_ubl_bis3 (84/114) 
+2026-07-05 02:48:25,175 1 DEBUG hellenia_dev odoo.modules.loading: Module purchase_edi_ubl_bis3 loaded in 0.00s, 0 queries 
+2026-07-05 02:48:25,175 1 DEBUG hellenia_dev odoo.modules.loading: Loading module purchase_stock (85/114) 
+2026-07-05 02:48:25,181 1 DEBUG hellenia_dev odoo.modules.loading: Module purchase_stock loaded in 0.01s, 0 queries 
+2026-07-05 02:48:25,181 1 DEBUG hellenia_dev odoo.modules.loading: Loading module sale (86/114) 
+2026-07-05 02:48:25,191 1 DEBUG hellenia_dev odoo.modules.loading: Module sale loaded in 0.01s, 0 queries 
+2026-07-05 02:48:25,191 1 DEBUG hellenia_dev odoo.modules.loading: Loading module spreadsheet_dashboard_stock (87/114) 
+2026-07-05 02:48:25,192 1 DEBUG hellenia_dev odoo.modules.loading: Module spreadsheet_dashboard_stock loaded in 0.00s, 0 queries 
+2026-07-05 02:48:25,192 1 DEBUG hellenia_dev odoo.modules.loading: Loading module spreadsheet_dashboard_stock_account (88/114) 
+2026-07-05 02:48:25,192 1 DEBUG hellenia_dev odoo.modules.loading: Module spreadsheet_dashboard_stock_account loaded in 0.00s, 0 queries 
+2026-07-05 02:48:25,192 1 DEBUG hellenia_dev odoo.modules.loading: Loading module account_bank_statement_import_camt (89/114) 
+2026-07-05 02:48:25,200 1 DEBUG hellenia_dev odoo.modules.loading: Module account_bank_statement_import_camt loaded in 0.01s, 0 queries 
+2026-07-05 02:48:25,200 1 DEBUG hellenia_dev odoo.modules.loading: Loading module account_bank_statement_import_csv (90/114) 
+2026-07-05 02:48:25,205 1 DEBUG hellenia_dev odoo.modules.loading: Module account_bank_statement_import_csv loaded in 0.00s, 0 queries 
+2026-07-05 02:48:25,205 1 DEBUG hellenia_dev odoo.modules.loading: Loading module account_bank_statement_import_ofx (91/114) 
+2026-07-05 02:48:25,208 1 DEBUG hellenia_dev odoo.modules.loading: Module account_bank_statement_import_ofx loaded in 0.00s, 0 queries 
+2026-07-05 02:48:25,208 1 DEBUG hellenia_dev odoo.modules.loading: Loading module account_extract (92/114) 
+2026-07-05 02:48:25,209 1 DEBUG hellenia_dev odoo.modules.loading: Module account_extract loaded in 0.00s, 0 queries 
+2026-07-05 02:48:25,209 1 DEBUG hellenia_dev odoo.modules.loading: Loading module account_fiscal_categories (93/114) 
+2026-07-05 02:48:25,215 1 DEBUG hellenia_dev odoo.modules.loading: Module account_fiscal_categories loaded in 0.01s, 0 queries 
+2026-07-05 02:48:25,216 1 DEBUG hellenia_dev odoo.modules.loading: Loading module account_followup (94/114) 
+2026-07-05 02:48:25,228 1 DEBUG hellenia_dev odoo.modules.loading: Module account_followup loaded in 0.01s, 0 queries 
+2026-07-05 02:48:25,228 1 INFO hellenia_dev odoo.modules.loading: Loading module justech_l10n_do_base (95/114) 
+2026-07-05 02:48:25,269 1 DEBUG hellenia_dev odoo.registry: Patching res.partner.bank.partner_country_name with translate=True 
+2026-07-05 02:48:25,270 1 DEBUG hellenia_dev odoo.registry: Patching res.config.settings.report_footer with translate=True 
+2026-07-05 02:48:25,270 1 DEBUG hellenia_dev odoo.registry: Patching res.config.settings.invoice_terms with translate=True 
+2026-07-05 02:48:25,270 1 DEBUG hellenia_dev odoo.registry: Patching res.config.settings.invoice_terms_html with translate=True 
+2026-07-05 02:48:25,276 1 DEBUG hellenia_dev odoo.registry: Patching base.document.layout.report_header with translate=True 
+2026-07-05 02:48:25,276 1 DEBUG hellenia_dev odoo.registry: Patching base.document.layout.report_footer with translate=True 
+2026-07-05 02:48:25,276 1 DEBUG hellenia_dev odoo.registry: Patching base.document.layout.company_details with translate=True 
+2026-07-05 02:48:25,278 1 DEBUG hellenia_dev odoo.registry: Patching iap.account.description with translate=True 
+2026-07-05 02:48:25,287 1 DEBUG hellenia_dev odoo.registry: Patching product.template.uom_name with translate=True 
+2026-07-05 02:48:25,290 1 DEBUG hellenia_dev odoo.registry: Patching product.pricelist.item.product_uom_name with translate=True 
+2026-07-05 02:48:25,290 1 DEBUG hellenia_dev odoo.registry: Patching product.template.attribute.value.name with translate=True 
+2026-07-05 02:48:25,295 1 DEBUG hellenia_dev odoo.registry: Patching account.move.line.account_name with translate=True 
+2026-07-05 02:48:25,299 1 DEBUG hellenia_dev odoo.registry: Patching account.report.expression.report_line_name with translate=True 
+2026-07-05 02:48:25,299 1 DEBUG hellenia_dev odoo.registry: Patching account.financial.year.op.vat_label with translate=True 
+2026-07-05 02:48:25,301 1 DEBUG hellenia_dev odoo.registry: Patching spreadsheet.dashboard.share.name with translate=True 
+2026-07-05 02:48:25,304 1 DEBUG hellenia_dev odoo.registry: Patching stock.replenishment.option.uom with translate=True 
+2026-07-05 02:48:25,307 1 DEBUG hellenia_dev odoo.registry: Patching account.return.check.return_name with translate=True 
+2026-07-05 02:48:25,367 1 WARNING hellenia_dev odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define models.Constraint on the model. 
+2026-07-05 02:48:25,394 1 INFO hellenia_dev odoo.registry: module justech_l10n_do_base: creating or updating database tables 
+2026-07-05 02:48:25,406 1 DEBUG hellenia_dev odoo.schema: Table 'res_company': column 'security_lead': dropped constraint NOT NULL 
+2026-07-05 02:48:25,422 1 DEBUG hellenia_dev odoo.schema: Table 'res_partner': added column 'justech_do_default_document_type_id' of type int4 
+2026-07-05 02:48:25,423 1 DEBUG hellenia_dev odoo.schema: Table 'res_partner': added column 'justech_do_partner_id_type' of type VARCHAR 
+2026-07-05 02:48:25,424 1 INFO hellenia_dev odoo.models: Prepare computation of res.partner.justech_do_partner_id_type 
+2026-07-05 02:48:25,548 1 DEBUG hellenia_dev odoo.schema: Table 'res_partner': added foreign key 'justech_do_default_document_type_id' references 'justech_do_fiscal_document_type'('id') ON DELETE set null 
+2026-07-05 02:48:25,572 1 INFO hellenia_dev odoo.modules.loading: loading justech_l10n_do_base/security/justech_l10n_do_security.xml 
+2026-07-05 02:48:25,575 1 DEBUG hellenia_dev odoo.registry: Invalidating stable model caches from call_cache_clearing_methods /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_model.py:2192 
+2026-07-05 02:48:25,581 1 DEBUG hellenia_dev odoo.registry: Invalidating groups model caches from _check_disjoint_groups /usr/lib/python3/dist-packages/odoo/addons/base/models/res_groups.py:85 
+2026-07-05 02:48:25,589 1 DEBUG hellenia_dev odoo.registry: Invalidating groups model caches from write /usr/lib/python3/dist-packages/odoo/addons/base/models/res_groups.py:199 
+2026-07-05 02:48:25,590 1 DEBUG hellenia_dev odoo.registry: Invalidating groups model caches from _update_xmlids /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_model.py:2412 
+2026-07-05 02:48:25,591 1 DEBUG hellenia_dev odoo.registry: Invalidating stable model caches from call_cache_clearing_methods /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_model.py:2192 
+2026-07-05 02:48:25,594 1 DEBUG hellenia_dev odoo.registry: Invalidating groups model caches from _check_disjoint_groups /usr/lib/python3/dist-packages/odoo/addons/base/models/res_groups.py:85 
+2026-07-05 02:48:25,601 1 DEBUG hellenia_dev odoo.registry: Invalidating groups model caches from write /usr/lib/python3/dist-packages/odoo/addons/base/models/res_groups.py:199 
+2026-07-05 02:48:25,602 1 DEBUG hellenia_dev odoo.registry: Invalidating groups model caches from _update_xmlids /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_model.py:2412 
+2026-07-05 02:48:25,609 1 DEBUG hellenia_dev odoo.domains: The domain condition [('group_ids', 'in', 17)] should have a list value. 
+2026-07-05 02:48:25,609 1 DEBUG hellenia_dev odoo.domains: The domain condition [('group_ids', 'not in', 17)] should have a list value. 
+2026-07-05 02:48:25,610 1 DEBUG hellenia_dev odoo.registry: Invalidating default model caches from write /usr/lib/python3/dist-packages/odoo/addons/base/models/res_users.py:643 
+2026-07-05 02:48:25,612 1 DEBUG hellenia_dev odoo.registry: Invalidating stable model caches from call_cache_clearing_methods /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_model.py:2192 
+2026-07-05 02:48:25,615 1 DEBUG hellenia_dev odoo.registry: Invalidating groups model caches from _check_disjoint_groups /usr/lib/python3/dist-packages/odoo/addons/base/models/res_groups.py:85 
+2026-07-05 02:48:25,623 1 DEBUG hellenia_dev odoo.registry: Invalidating groups model caches from write /usr/lib/python3/dist-packages/odoo/addons/base/models/res_groups.py:199 
+2026-07-05 02:48:25,623 1 DEBUG hellenia_dev odoo.registry: Invalidating groups model caches from _update_xmlids /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_model.py:2412 
+2026-07-05 02:48:25,629 1 DEBUG hellenia_dev odoo.domains: The domain condition [('group_ids', 'in', 17)] should have a list value. 
+2026-07-05 02:48:25,629 1 DEBUG hellenia_dev odoo.domains: The domain condition [('group_ids', 'not in', 17)] should have a list value. 
+2026-07-05 02:48:25,629 1 DEBUG hellenia_dev odoo.registry: Invalidating default model caches from write /usr/lib/python3/dist-packages/odoo/addons/base/models/res_users.py:643 
+2026-07-05 02:48:25,632 1 DEBUG hellenia_dev odoo.registry: Invalidating stable model caches from call_cache_clearing_methods /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_model.py:2192 
+2026-07-05 02:48:25,634 1 DEBUG hellenia_dev odoo.registry: Invalidating groups model caches from _check_disjoint_groups /usr/lib/python3/dist-packages/odoo/addons/base/models/res_groups.py:85 
+2026-07-05 02:48:25,641 1 DEBUG hellenia_dev odoo.registry: Invalidating groups model caches from write /usr/lib/python3/dist-packages/odoo/addons/base/models/res_groups.py:199 
+2026-07-05 02:48:25,642 1 DEBUG hellenia_dev odoo.registry: Invalidating groups model caches from _update_xmlids /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_model.py:2412 
+2026-07-05 02:48:25,642 1 INFO hellenia_dev odoo.modules.loading: loading justech_l10n_do_base/security/ir.model.access.csv 
+2026-07-05 02:48:26,144 1 DEBUG hellenia_dev odoo.registry: Invalidating stable model caches from call_cache_clearing_methods /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_model.py:2192 
+2026-07-05 02:48:26,146 1 DEBUG hellenia_dev odoo.registry: Invalidating stable model caches from call_cache_clearing_methods /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_model.py:2192 
+2026-07-05 02:48:26,147 1 INFO hellenia_dev odoo.modules.loading: loading justech_l10n_do_base/security/justech_l10n_do_rules.xml 
+2026-07-05 02:48:26,149 1 INFO hellenia_dev odoo.modules.loading: loading justech_l10n_do_base/data/fiscal_document_type_data.xml 
+2026-07-05 02:48:26,153 1 INFO hellenia_dev odoo.modules.loading: loading justech_l10n_do_base/views/fiscal_document_type_views.xml 
+2026-07-05 02:48:26,157 1 DEBUG hellenia_dev odoo.registry: Invalidating templates model caches from write /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_ui_view.py:656 
+2026-07-05 02:48:26,158 1 DEBUG hellenia_dev odoo.registry: Invalidating templates model caches from write /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_ui_view.py:656 
+2026-07-05 02:48:26,171 1 DEBUG hellenia_dev odoo.registry: Invalidating templates model caches from write /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_ui_view.py:656 
+2026-07-05 02:48:26,172 1 DEBUG hellenia_dev odoo.registry: Invalidating templates model caches from write /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_ui_view.py:656 
+2026-07-05 02:48:26,177 1 INFO hellenia_dev odoo.modules.loading: loading justech_l10n_do_base/views/res_company_views.xml 
+2026-07-05 02:48:26,180 1 DEBUG hellenia_dev odoo.registry: Invalidating templates model caches from write /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_ui_view.py:656 
+2026-07-05 02:48:26,182 1 DEBUG hellenia_dev odoo.registry: Invalidating templates model caches from write /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_ui_view.py:656 
+2026-07-05 02:48:26,196 1 INFO hellenia_dev odoo.modules.loading: loading justech_l10n_do_base/views/res_partner_views.xml 
+2026-07-05 02:48:26,199 1 DEBUG hellenia_dev odoo.registry: Invalidating templates model caches from write /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_ui_view.py:656 
+2026-07-05 02:48:26,201 1 DEBUG hellenia_dev odoo.registry: Invalidating templates model caches from write /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_ui_view.py:656 
+2026-07-05 02:48:26,241 1 INFO hellenia_dev odoo.modules.loading: loading justech_l10n_do_base/views/account_journal_views.xml 
+2026-07-05 02:48:26,243 1 DEBUG hellenia_dev odoo.registry: Invalidating templates model caches from write /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_ui_view.py:656 
+2026-07-05 02:48:26,245 1 DEBUG hellenia_dev odoo.registry: Invalidating templates model caches from write /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_ui_view.py:656 
+2026-07-05 02:48:26,269 1 INFO hellenia_dev odoo.modules.loading: loading justech_l10n_do_base/views/menu.xml 
+2026-07-05 02:48:26,272 1 DEBUG hellenia_dev odoo.registry: Invalidating default model caches from write /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_actions.py:119 
+2026-07-05 02:48:26,273 1 DEBUG hellenia_dev odoo.registry: Invalidating default model caches from create /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_actions.py:358 
+2026-07-05 02:48:26,275 1 DEBUG hellenia_dev odoo.registry: Invalidating default model caches from create /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_actions.py:113 
+2026-07-05 02:48:26,276 1 DEBUG hellenia_dev odoo.registry: Invalidating default model caches from write /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_ui_menu.py:160 
+2026-07-05 02:48:26,280 1 DEBUG hellenia_dev odoo.registry: Invalidating default model caches from write /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_ui_menu.py:160 
+2026-07-05 02:48:26,283 1 DEBUG hellenia_dev odoo.registry: Invalidating default model caches from create /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_ui_menu.py:153 
+2026-07-05 02:48:26,290 1 INFO hellenia_dev odoo.addons.base.models.ir_module: module justech_l10n_do_base: no translation for language es_DO 
+2026-07-05 02:48:26,297 1 INFO hellenia_dev odoo.modules.loading: Module justech_l10n_do_base loaded in 1.07s, 371 queries (+371 other) 
+2026-07-05 02:48:26,297 1 DEBUG hellenia_dev odoo.modules.loading: Loading module l10n_do_check_printing (96/114) 
+2026-07-05 02:48:26,301 1 DEBUG hellenia_dev odoo.modules.loading: Module l10n_do_check_printing loaded in 0.00s, 0 queries 
+2026-07-05 02:48:26,301 1 DEBUG hellenia_dev odoo.modules.loading: Loading module l10n_do_reports (97/114) 
+2026-07-05 02:48:26,302 1 DEBUG hellenia_dev odoo.modules.loading: Module l10n_do_reports loaded in 0.00s, 0 queries 
+2026-07-05 02:48:26,302 1 DEBUG hellenia_dev odoo.modules.loading: Loading module sale_account_accountant (98/114) 
+2026-07-05 02:48:26,306 1 DEBUG hellenia_dev odoo.modules.loading: Module sale_account_accountant loaded in 0.00s, 0 queries 
+2026-07-05 02:48:26,306 1 DEBUG hellenia_dev odoo.modules.loading: Loading module sale_edi_ubl (99/114) 
+2026-07-05 02:48:26,307 1 DEBUG hellenia_dev odoo.modules.loading: Module sale_edi_ubl loaded in 0.00s, 0 queries 
+2026-07-05 02:48:26,307 1 DEBUG hellenia_dev odoo.modules.loading: Loading module sale_enterprise (100/114) 
+2026-07-05 02:48:26,308 1 DEBUG hellenia_dev odoo.modules.loading: Module sale_enterprise loaded in 0.00s, 0 queries 
+2026-07-05 02:48:26,308 1 DEBUG hellenia_dev odoo.modules.loading: Loading module sale_purchase (101/114) 
+2026-07-05 02:48:26,310 1 DEBUG hellenia_dev odoo.modules.loading: Module sale_purchase loaded in 0.00s, 0 queries 
+2026-07-05 02:48:26,310 1 DEBUG hellenia_dev odoo.modules.loading: Loading module sale_sms (102/114) 
+2026-07-05 02:48:26,310 1 DEBUG hellenia_dev odoo.modules.loading: Module sale_sms loaded in 0.00s, 0 queries 
+2026-07-05 02:48:26,310 1 DEBUG hellenia_dev odoo.modules.loading: Loading module sale_stock (103/114) 
+2026-07-05 02:48:26,315 1 DEBUG hellenia_dev odoo.modules.loading: Module sale_stock loaded in 0.01s, 0 queries 
+2026-07-05 02:48:26,315 1 DEBUG hellenia_dev odoo.modules.loading: Loading module spreadsheet_dashboard_purchase_stock (104/114) 
+2026-07-05 02:48:26,316 1 DEBUG hellenia_dev odoo.modules.loading: Module spreadsheet_dashboard_purchase_stock loaded in 0.00s, 0 queries 
+2026-07-05 02:48:26,316 1 DEBUG hellenia_dev odoo.modules.loading: Loading module spreadsheet_dashboard_sale (105/114) 
+2026-07-05 02:48:26,317 1 DEBUG hellenia_dev odoo.modules.loading: Module spreadsheet_dashboard_sale loaded in 0.00s, 0 queries 
+2026-07-05 02:48:26,317 1 DEBUG hellenia_dev odoo.modules.loading: Loading module stock_accountant (106/114) 
+2026-07-05 02:48:26,319 1 DEBUG hellenia_dev odoo.modules.loading: Module stock_accountant loaded in 0.00s, 0 queries 
+2026-07-05 02:48:26,319 1 DEBUG hellenia_dev odoo.modules.loading: Loading module account_invoice_extract (107/114) 
+2026-07-05 02:48:26,330 1 DEBUG hellenia_dev odoo.modules.loading: Module account_invoice_extract loaded in 0.01s, 0 queries 
+2026-07-05 02:48:26,330 1 INFO hellenia_dev odoo.modules.loading: Loading module justech_l10n_do_ncf (108/114) 
+2026-07-05 02:48:26,340 1 DEBUG hellenia_dev odoo.registry: Patching res.config.settings.report_footer with translate=True 
+2026-07-05 02:48:26,340 1 DEBUG hellenia_dev odoo.registry: Patching res.config.settings.invoice_terms with translate=True 
+2026-07-05 02:48:26,341 1 DEBUG hellenia_dev odoo.registry: Patching res.config.settings.invoice_terms_html with translate=True 
+2026-07-05 02:48:26,345 1 DEBUG hellenia_dev odoo.registry: Patching product.template.uom_name with translate=True 
+2026-07-05 02:48:26,348 1 DEBUG hellenia_dev odoo.registry: Patching account.move.line.account_name with translate=True 
+2026-07-05 02:48:26,390 1 WARNING hellenia_dev odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define models.Constraint on the model. 
+2026-07-05 02:48:26,409 1 INFO hellenia_dev odoo.registry: module justech_l10n_do_ncf: creating or updating database tables 
+2026-07-05 02:48:26,424 1 DEBUG hellenia_dev odoo.schema: Table 'account_move': added column 'justech_do_ncf_modified' of type VARCHAR 
+2026-07-05 02:48:26,426 1 DEBUG hellenia_dev odoo.schema: Table 'account_move': added column 'justech_do_dgii_line_status' of type VARCHAR 
+2026-07-05 02:48:26,426 1 DEBUG hellenia_dev odoo.models: Table 'account_move': setting default value of new column justech_do_dgii_line_status to '1' 
+2026-07-05 02:48:26,428 1 DEBUG hellenia_dev odoo.schema: Table 'account_move': added column 'justech_do_dgii_fiscal_state' of type VARCHAR 
+2026-07-05 02:48:26,428 1 DEBUG hellenia_dev odoo.models: Table 'account_move': setting default value of new column justech_do_dgii_fiscal_state to 'incomplete' 
+2026-07-05 02:48:26,437 1 DEBUG hellenia_dev odoo.schema: Table 'account_move': added column 'justech_do_ncf_cancel_type' of type VARCHAR 
+2026-07-05 02:48:26,438 1 DEBUG hellenia_dev odoo.schema: Table 'account_move': added column 'justech_do_dgii_exclusion_reason' of type text 
+2026-07-05 02:48:26,438 1 DEBUG hellenia_dev odoo.schema: Table 'account_move': added column 'justech_do_include_in_dgii' of type bool 
+2026-07-05 02:48:26,438 1 DEBUG hellenia_dev odoo.models: Table 'account_move': setting default value of new column justech_do_include_in_dgii to True 
+2026-07-05 02:48:26,452 1 WARNING hellenia_dev py.warnings: /opt/odoo/custom/justech_l10n_do_ncf/models/account_move.py:136: DeprecationWarning: Deprecated since 19.0, use self.env.cr directly
+  File "/usr/bin/odoo", line 6, in <module>
+    odoo.cli.main()
+  File "/usr/lib/python3/dist-packages/odoo/cli/command.py", line 133, in main
+    command().run(args)
+  File "/usr/lib/python3/dist-packages/odoo/cli/server.py", line 127, in run
+    main(args)
+  File "/usr/lib/python3/dist-packages/odoo/cli/server.py", line 118, in main
+    rc = server.start(preload=config['db_name'], stop=stop)
+  File "/usr/lib/python3/dist-packages/odoo/service/server.py", line 1636, in start
+    rc = server.run(preload, stop)
+  File "/usr/lib/python3/dist-packages/odoo/service/server.py", line 691, in run
+    rc = preload_registries(preload)
+  File "/usr/lib/python3/dist-packages/odoo/service/server.py", line 1550, in preload_registries
+    registry = Registry.new(dbname, update_module=update_module, install_modules=config['init'], upgrade_modules=config['update'], reinit_modules=config['reinit'])
+  File "/usr/lib/python3/dist-packages/odoo/tools/func.py", line 88, in locked
+    return func(inst, *args, **kwargs)
+  File "/usr/lib/python3/dist-packages/odoo/orm/registry.py", line 183, in new
+    load_modules(
+  File "/usr/lib/python3/dist-packages/odoo/modules/loading.py", line 464, in load_modules
+    load_module_graph(
+  File "/usr/lib/python3/dist-packages/odoo/modules/loading.py", line 194, in load_module_graph
+    registry.init_models(env.cr, model_names, {'module': package.name}, update_operation == 'install')
+  File "/usr/lib/python3/dist-packages/odoo/orm/registry.py", line 752, in init_models
+    model.init()
+  File "/opt/odoo/custom/justech_l10n_do_ncf/models/account_move.py", line 136, in init
+    self._cr.execute(
+ 
+2026-07-05 02:48:26,459 1 DEBUG hellenia_dev odoo.schema: Table 'sale_order': added column 'justech_do_document_type_id' of type int4 
+2026-07-05 02:48:26,537 1 DEBUG hellenia_dev odoo.schema: Table 'account_move': created index 'account_move__justech_do_dgii_fiscal_state_index' (USING btree ("justech_do_dgii_fiscal_state")) 
+2026-07-05 02:48:26,541 1 DEBUG hellenia_dev odoo.schema: Table 'sale_order': added foreign key 'justech_do_document_type_id' references 'justech_do_fiscal_document_type'('id') ON DELETE set null 
+2026-07-05 02:48:26,557 1 INFO hellenia_dev odoo.modules.loading: loading justech_l10n_do_ncf/security/ir.model.access.csv 
+2026-07-05 02:48:26,561 1 DEBUG hellenia_dev odoo.registry: Invalidating stable model caches from call_cache_clearing_methods /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_model.py:2192 
+2026-07-05 02:48:26,562 1 DEBUG hellenia_dev odoo.registry: Invalidating stable model caches from call_cache_clearing_methods /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_model.py:2192 
+2026-07-05 02:48:26,563 1 DEBUG hellenia_dev odoo.registry: Invalidating stable model caches from call_cache_clearing_methods /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_model.py:2192 
+2026-07-05 02:48:26,563 1 DEBUG hellenia_dev odoo.registry: Invalidating stable model caches from call_cache_clearing_methods /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_model.py:2192 
+2026-07-05 02:48:26,564 1 INFO hellenia_dev odoo.modules.loading: loading justech_l10n_do_ncf/security/justech_l10n_do_ncf_rules.xml 
+2026-07-05 02:48:26,566 1 INFO hellenia_dev odoo.modules.loading: loading justech_l10n_do_ncf/views/ncf_range_views.xml 
+2026-07-05 02:48:26,568 1 DEBUG hellenia_dev odoo.registry: Invalidating templates model caches from write /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_ui_view.py:656 
+2026-07-05 02:48:26,569 1 DEBUG hellenia_dev odoo.registry: Invalidating templates model caches from write /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_ui_view.py:656 
+2026-07-05 02:48:26,579 1 DEBUG hellenia_dev odoo.registry: Invalidating templates model caches from write /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_ui_view.py:656 
+2026-07-05 02:48:26,580 1 DEBUG hellenia_dev odoo.registry: Invalidating templates model caches from write /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_ui_view.py:656 
+2026-07-05 02:48:26,584 1 DEBUG hellenia_dev odoo.registry: Invalidating default model caches from write /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_actions.py:119 
+2026-07-05 02:48:26,585 1 INFO hellenia_dev odoo.modules.loading: loading justech_l10n_do_ncf/views/ncf_consumption_views.xml 
+2026-07-05 02:48:26,587 1 DEBUG hellenia_dev odoo.registry: Invalidating templates model caches from write /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_ui_view.py:656 
+2026-07-05 02:48:26,587 1 DEBUG hellenia_dev odoo.registry: Invalidating templates model caches from write /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_ui_view.py:656 
+2026-07-05 02:48:26,593 1 DEBUG hellenia_dev odoo.registry: Invalidating default model caches from write /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_actions.py:119 
+2026-07-05 02:48:26,593 1 INFO hellenia_dev odoo.modules.loading: loading justech_l10n_do_ncf/views/account_move_views.xml 
+2026-07-05 02:48:26,596 1 DEBUG hellenia_dev odoo.registry: Invalidating templates model caches from write /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_ui_view.py:656 
+2026-07-05 02:48:26,598 1 DEBUG hellenia_dev odoo.registry: Invalidating templates model caches from write /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_ui_view.py:656 
+2026-07-05 02:48:26,663 1 INFO hellenia_dev odoo.modules.loading: loading justech_l10n_do_ncf/views/sale_order_views.xml 
+2026-07-05 02:48:26,666 1 DEBUG hellenia_dev odoo.registry: Invalidating templates model caches from create /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_ui_view.py:639 
+2026-07-05 02:48:26,682 1 INFO hellenia_dev odoo.modules.loading: loading justech_l10n_do_ncf/views/menu.xml 
+2026-07-05 02:48:26,683 1 DEBUG hellenia_dev odoo.registry: Invalidating default model caches from write /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_ui_menu.py:160 
+2026-07-05 02:48:26,686 1 DEBUG hellenia_dev odoo.registry: Invalidating default model caches from write /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_ui_menu.py:160 
+2026-07-05 02:48:26,688 1 INFO hellenia_dev odoo.modules.loading: loading justech_l10n_do_ncf/report/report_invoice.xml 
+2026-07-05 02:48:26,691 1 DEBUG hellenia_dev odoo.registry: Invalidating templates model caches from write /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_ui_view.py:656 
+2026-07-05 02:48:26,693 1 DEBUG hellenia_dev odoo.registry: Invalidating templates model caches from write /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_ui_view.py:656 
+2026-07-05 02:48:26,724 1 INFO hellenia_dev odoo.addons.base.models.ir_module: module justech_l10n_do_ncf: no translation for language es_DO 
+2026-07-05 02:48:26,731 1 INFO hellenia_dev odoo.modules.loading: Module justech_l10n_do_ncf loaded in 0.40s, 322 queries (+322 other) 
+2026-07-05 02:48:26,731 1 DEBUG hellenia_dev odoo.modules.loading: Loading module sale_purchase_stock (109/114) 
+2026-07-05 02:48:26,733 1 DEBUG hellenia_dev odoo.modules.loading: Module sale_purchase_stock loaded in 0.00s, 0 queries 
+2026-07-05 02:48:26,733 1 DEBUG hellenia_dev odoo.modules.loading: Loading module snailmail_account_followup (110/114) 
+2026-07-05 02:48:26,738 1 DEBUG hellenia_dev odoo.modules.loading: Module snailmail_account_followup loaded in 0.01s, 0 queries 
+2026-07-05 02:48:26,738 1 DEBUG hellenia_dev odoo.modules.loading: Loading module account_invoice_extract_purchase (111/114) 
+2026-07-05 02:48:26,741 1 DEBUG hellenia_dev odoo.modules.loading: Module account_invoice_extract_purchase loaded in 0.00s, 0 queries 
+2026-07-05 02:48:26,741 1 INFO hellenia_dev odoo.modules.loading: Loading module hellenia_base (112/114) 
+2026-07-05 02:48:26,790 1 INFO hellenia_dev odoo.modules.loading: loading hellenia_base/security/ir.model.access.csv 
+2026-07-05 02:48:26,799 1 INFO hellenia_dev odoo.addons.base.models.ir_module: module hellenia_base: loading translation file /opt/odoo/custom/hellenia_base/i18n/es.po for language es_DO 
+2026-07-05 02:48:26,799 1 INFO hellenia_dev odoo.addons.base.models.ir_module: module hellenia_base: no translation for language es_DO 
+2026-07-05 02:48:26,824 1 INFO hellenia_dev odoo.modules.loading: Module hellenia_base loaded in 0.08s, 16 queries (+16 other) 
+2026-07-05 02:48:26,824 1 INFO hellenia_dev odoo.modules.loading: Loading module hellenia_account (113/114) 
+2026-07-05 02:48:26,840 1 WARNING hellenia_dev odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define models.Constraint on the model. 
+2026-07-05 02:48:26,845 1 DEBUG hellenia_dev odoo.registry: Patching account.move.line.account_name with translate=True 
+2026-07-05 02:48:26,862 1 INFO hellenia_dev odoo.registry: module hellenia_account: creating or updating database tables 
+2026-07-05 02:48:26,871 1 DEBUG hellenia_dev odoo.schema: Create table 'hellenia_payment_register_wh_catalog_rel': m2m relation between 'account_payment_register' and 'hellenia_withholding_catalog' 
+2026-07-05 02:48:26,872 1 DEBUG hellenia_dev odoo.schema: Table 'account_payment_register': added column 'hellenia_check_bank_id' of type int4 
+2026-07-05 02:48:26,873 1 DEBUG hellenia_dev odoo.schema: Table 'account_payment_register': added column 'hellenia_payment_reference' of type VARCHAR 
+2026-07-05 02:48:26,874 1 DEBUG hellenia_dev odoo.schema: Table 'account_payment_register': added column 'hellenia_card_auth' of type VARCHAR 
+2026-07-05 02:48:26,874 1 DEBUG hellenia_dev odoo.schema: Table 'account_payment_register': added column 'hellenia_card_batch' of type VARCHAR 
+2026-07-05 02:48:26,875 1 DEBUG hellenia_dev odoo.schema: Table 'account_payment_register': added column 'hellenia_check_number' of type VARCHAR 
+2026-07-05 02:48:26,875 1 DEBUG hellenia_dev odoo.schema: Table 'account_payment_register': added column 'hellenia_check_date' of type date 
+2026-07-05 02:48:26,897 1 DEBUG hellenia_dev odoo.schema: Table 'hellenia_withholding_catalog': created 
+2026-07-05 02:48:26,908 1 DEBUG hellenia_dev odoo.schema: Table 'hellenia_payment_withholding_line': created 
+2026-07-05 02:48:26,919 1 DEBUG hellenia_dev odoo.schema: Table 'account_payment': added column 'hellenia_check_bank_id' of type int4 
+2026-07-05 02:48:26,920 1 DEBUG hellenia_dev odoo.schema: Table 'account_payment': added column 'hellenia_payment_reference' of type VARCHAR 
+2026-07-05 02:48:26,920 1 DEBUG hellenia_dev odoo.schema: Table 'account_payment': added column 'hellenia_card_auth' of type VARCHAR 
+2026-07-05 02:48:26,921 1 DEBUG hellenia_dev odoo.schema: Table 'account_payment': added column 'hellenia_card_batch' of type VARCHAR 
+2026-07-05 02:48:26,921 1 DEBUG hellenia_dev odoo.schema: Table 'account_payment': added column 'hellenia_check_number' of type VARCHAR 
+2026-07-05 02:48:26,922 1 DEBUG hellenia_dev odoo.schema: Table 'account_payment': added column 'hellenia_check_date' of type date 
+2026-07-05 02:48:26,922 1 DEBUG hellenia_dev odoo.schema: Table 'account_payment': added column 'hellenia_applied_amount' of type numeric 
+2026-07-05 02:48:26,923 1 DEBUG hellenia_dev odoo.schema: Table 'account_payment': added column 'hellenia_withholding_total' of type numeric 
+2026-07-05 02:48:26,923 1 DEBUG hellenia_dev odoo.schema: Table 'account_payment': added column 'hellenia_net_transfer' of type numeric 
+2026-07-05 02:48:26,924 1 INFO hellenia_dev odoo.models: Prepare computation of account.payment.hellenia_withholding_total 
+2026-07-05 02:48:26,924 1 INFO hellenia_dev odoo.models: Prepare computation of account.payment.hellenia_net_transfer 
+2026-07-05 02:48:26,947 1 WARNING hellenia_dev py.warnings: /opt/odoo/custom/justech_l10n_do_ncf/models/account_move.py:136: DeprecationWarning: Deprecated since 19.0, use self.env.cr directly
+  File "/usr/bin/odoo", line 6, in <module>
+    odoo.cli.main()
+  File "/usr/lib/python3/dist-packages/odoo/cli/command.py", line 133, in main
+    command().run(args)
+  File "/usr/lib/python3/dist-packages/odoo/cli/server.py", line 127, in run
+    main(args)
+  File "/usr/lib/python3/dist-packages/odoo/cli/server.py", line 118, in main
+    rc = server.start(preload=config['db_name'], stop=stop)
+  File "/usr/lib/python3/dist-packages/odoo/service/server.py", line 1636, in start
+    rc = server.run(preload, stop)
+  File "/usr/lib/python3/dist-packages/odoo/service/server.py", line 691, in run
+    rc = preload_registries(preload)
+  File "/usr/lib/python3/dist-packages/odoo/service/server.py", line 1550, in preload_registries
+    registry = Registry.new(dbname, update_module=update_module, install_modules=config['init'], upgrade_modules=config['update'], reinit_modules=config['reinit'])
+  File "/usr/lib/python3/dist-packages/odoo/tools/func.py", line 88, in locked
+    return func(inst, *args, **kwargs)
+  File "/usr/lib/python3/dist-packages/odoo/orm/registry.py", line 183, in new
+    load_modules(
+  File "/usr/lib/python3/dist-packages/odoo/modules/loading.py", line 464, in load_modules
+    load_module_graph(
+  File "/usr/lib/python3/dist-packages/odoo/modules/loading.py", line 194, in load_module_graph
+    registry.init_models(env.cr, model_names, {'module': package.name}, update_operation == 'install')
+  File "/usr/lib/python3/dist-packages/odoo/orm/registry.py", line 752, in init_models
+    model.init()
+  File "/opt/odoo/custom/justech_l10n_do_ncf/models/account_move.py", line 136, in init
+    self._cr.execute(
+ 
+2026-07-05 02:48:26,952 1 DEBUG hellenia_dev odoo.schema: Table 'hellenia_payment_application_line': created 
+2026-07-05 02:48:26,961 1 DEBUG hellenia_dev odoo.schema: Table 'hellenia_payment_partner_wizard_line': created 
+2026-07-05 02:48:26,967 1 DEBUG hellenia_dev odoo.schema: Create table 'hellenia_payment_wizard_line_wh_rel': m2m relation between 'hellenia_payment_partner_wizard_line' and 'hellenia_withholding_catalog' 
+2026-07-05 02:48:26,972 1 DEBUG hellenia_dev odoo.schema: Table 'hellenia_payment_partner_wizard': created 
+2026-07-05 02:48:26,980 1 DEBUG hellenia_dev odoo.schema: Table 'hellenia_payment_withholding_wizard_line': created 
+2026-07-05 02:48:26,994 1 WARNING hellenia_dev odoo.addons.base.models.ir_model: Two fields (invoice_name, move_id) of hellenia.payment.withholding.line() have the same label: Factura. [Modules: hellenia_account and hellenia_account] 
+2026-07-05 02:48:26,995 1 WARNING hellenia_dev odoo.addons.base.models.ir_model: Two fields (invoice_name, move_id) of hellenia.payment.application.line() have the same label: Factura. [Modules: hellenia_account and hellenia_account] 
+2026-07-05 02:48:27,120 1 DEBUG hellenia_dev odoo.schema: Table 'hellenia_withholding_catalog': created index 'hellenia_withholding_catalog__code_index' (USING btree ("code")) 
+2026-07-05 02:48:27,122 1 DEBUG hellenia_dev odoo.schema: Table 'hellenia_withholding_catalog': created index 'hellenia_withholding_catalog__dgii_withholding_code_index' (USING btree ("dgii_withholding_code")) 
+2026-07-05 02:48:27,124 1 DEBUG hellenia_dev odoo.schema: Table 'hellenia_payment_withholding_line': created index 'hellenia_payment_withholding_line__payment_id_index' (USING btree ("payment_id")) 
+2026-07-05 02:48:27,126 1 DEBUG hellenia_dev odoo.schema: Table 'hellenia_payment_withholding_line': created index 'hellenia_payment_withholding_line__move_id_index' (USING btree ("move_id")) 
+2026-07-05 02:48:27,128 1 DEBUG hellenia_dev odoo.schema: Table 'hellenia_payment_withholding_line': created index 'hellenia_payment_withholding_line__invoice_move_id_index' (USING btree ("invoice_move_id")) 
+2026-07-05 02:48:27,130 1 DEBUG hellenia_dev odoo.schema: Table 'hellenia_payment_withholding_line': created index 'hellenia_payment_withholding_line__partner_id_index' (USING btree ("partner_id")) 
+2026-07-05 02:48:27,132 1 DEBUG hellenia_dev odoo.schema: Table 'hellenia_payment_withholding_line': created index 'hellenia_payment_withholding_line__invoice_name_index' (USING btree ("invoice_name")) 
+2026-07-05 02:48:27,134 1 DEBUG hellenia_dev odoo.schema: Table 'hellenia_payment_withholding_line': created index 'hellenia_payment_withholding_line__ncf_index' (USING btree ("ncf")) 
+2026-07-05 02:48:27,136 1 DEBUG hellenia_dev odoo.schema: Table 'hellenia_payment_withholding_line': created index 'hellenia_payment_withholding_line__catalog_id_index' (USING btree ("catalog_id")) 
+2026-07-05 02:48:27,138 1 DEBUG hellenia_dev odoo.schema: Table 'hellenia_payment_withholding_line': created index 'hellenia_payment_withholding_line__account_id_index' (USING btree ("account_id")) 
+2026-07-05 02:48:27,140 1 DEBUG hellenia_dev odoo.schema: Table 'hellenia_payment_withholding_line': created index 'hellenia_payment_withholding_line__company_id_index' (USING btree ("company_id")) 
+2026-07-05 02:48:27,142 1 DEBUG hellenia_dev odoo.schema: Table 'hellenia_payment_withholding_line': created index 'hellenia_payment_withholding_line__date_index' (USING btree ("date")) 
+2026-07-05 02:48:27,144 1 DEBUG hellenia_dev odoo.schema: Table 'hellenia_payment_withholding_line': created index 'hellenia_payment_withholding_line__move_line_id_index' (USING btree ("move_line_id")) 
+2026-07-05 02:48:27,146 1 DEBUG hellenia_dev odoo.schema: Table 'hellenia_payment_withholding_line': created index 'hellenia_payment_withholding_line__partial_reconcile_id_index' (USING btree ("partial_reconcile_id")) 
+2026-07-05 02:48:27,148 1 DEBUG hellenia_dev odoo.schema: Table 'hellenia_payment_application_line': created index 'hellenia_payment_application_line__payment_id_index' (USING btree ("payment_id")) 
+2026-07-05 02:48:27,150 1 DEBUG hellenia_dev odoo.schema: Table 'hellenia_payment_application_line': created index 'hellenia_payment_application_line__move_id_index' (USING btree ("move_id")) 
+2026-07-05 02:48:27,152 1 DEBUG hellenia_dev odoo.schema: Table 'hellenia_payment_application_line': created index 'hellenia_payment_application_line__invoice_name_index' (USING btree ("invoice_name")) 
+2026-07-05 02:48:27,154 1 DEBUG hellenia_dev odoo.schema: Table 'hellenia_payment_application_line': created index 'hellenia_payment_application_line__ncf_index' (USING btree ("ncf")) 
+2026-07-05 02:48:27,156 1 DEBUG hellenia_dev odoo.schema: Table 'hellenia_payment_application_line': created index 'hellenia_payment_application_line__company_id_index' (USING btree ("company_id")) 
+2026-07-05 02:48:27,161 1 DEBUG hellenia_dev odoo.schema: Table 'hellenia_payment_register_wh_catalog_rel': added foreign key 'register_id' references 'account_payment_register'('id') ON DELETE cascade 
+2026-07-05 02:48:27,166 1 DEBUG hellenia_dev odoo.schema: Table 'hellenia_payment_register_wh_catalog_rel': added foreign key 'catalog_id' references 'hellenia_withholding_catalog'('id') ON DELETE cascade 
+2026-07-05 02:48:27,170 1 DEBUG hellenia_dev odoo.schema: Table 'account_payment_register': added foreign key 'hellenia_check_bank_id' references 'res_bank'('id') ON DELETE set null 
+2026-07-05 02:48:27,175 1 DEBUG hellenia_dev odoo.schema: Table 'hellenia_withholding_catalog': added foreign key 'company_id' references 'res_company'('id') ON DELETE restrict 
+2026-07-05 02:48:27,179 1 DEBUG hellenia_dev odoo.schema: Table 'hellenia_withholding_catalog': added foreign key 'tax_id' references 'account_tax'('id') ON DELETE set null 
+2026-07-05 02:48:27,184 1 DEBUG hellenia_dev odoo.schema: Table 'hellenia_withholding_catalog': added foreign key 'account_id' references 'account_account'('id') ON DELETE set null 
+2026-07-05 02:48:27,190 1 DEBUG hellenia_dev odoo.schema: Table 'hellenia_withholding_catalog': added foreign key 'create_uid' references 'res_users'('id') ON DELETE set null 
+2026-07-05 02:48:27,196 1 DEBUG hellenia_dev odoo.schema: Table 'hellenia_withholding_catalog': added foreign key 'write_uid' references 'res_users'('id') ON DELETE set null 
+2026-07-05 02:48:27,200 1 DEBUG hellenia_dev odoo.schema: Table 'hellenia_payment_withholding_line': added foreign key 'payment_id' references 'account_payment'('id') ON DELETE cascade 
+2026-07-05 02:48:27,205 1 DEBUG hellenia_dev odoo.schema: Table 'hellenia_payment_withholding_line': added foreign key 'move_id' references 'account_move'('id') ON DELETE set null 
+2026-07-05 02:48:27,209 1 DEBUG hellenia_dev odoo.schema: Table 'hellenia_payment_withholding_line': added foreign key 'invoice_move_id' references 'account_move'('id') ON DELETE set null 
+2026-07-05 02:48:27,214 1 DEBUG hellenia_dev odoo.schema: Table 'hellenia_payment_withholding_line': added foreign key 'partner_id' references 'res_partner'('id') ON DELETE set null 
+2026-07-05 02:48:27,218 1 DEBUG hellenia_dev odoo.schema: Table 'hellenia_payment_withholding_line': added foreign key 'catalog_id' references 'hellenia_withholding_catalog'('id') ON DELETE set null 
+2026-07-05 02:48:27,222 1 DEBUG hellenia_dev odoo.schema: Table 'hellenia_payment_withholding_line': added foreign key 'account_id' references 'account_account'('id') ON DELETE set null 
+2026-07-05 02:48:27,226 1 DEBUG hellenia_dev odoo.schema: Table 'hellenia_payment_withholding_line': added foreign key 'currency_id' references 'res_currency'('id') ON DELETE set null 
+2026-07-05 02:48:27,231 1 DEBUG hellenia_dev odoo.schema: Table 'hellenia_payment_withholding_line': added foreign key 'company_id' references 'res_company'('id') ON DELETE set null 
+2026-07-05 02:48:27,238 1 DEBUG hellenia_dev odoo.schema: Table 'hellenia_payment_withholding_line': added foreign key 'move_line_id' references 'account_move_line'('id') ON DELETE set null 
+2026-07-05 02:48:27,242 1 DEBUG hellenia_dev odoo.schema: Table 'hellenia_payment_withholding_line': added foreign key 'payment_move_id' references 'account_move'('id') ON DELETE set null 
+2026-07-05 02:48:27,247 1 DEBUG hellenia_dev odoo.schema: Table 'hellenia_payment_withholding_line': added foreign key 'partial_reconcile_id' references 'account_partial_reconcile'('id') ON DELETE set null 
+2026-07-05 02:48:27,253 1 DEBUG hellenia_dev odoo.schema: Table 'hellenia_payment_withholding_line': added foreign key 'create_uid' references 'res_users'('id') ON DELETE set null 
+2026-07-05 02:48:27,258 1 DEBUG hellenia_dev odoo.schema: Table 'hellenia_payment_withholding_line': added foreign key 'write_uid' references 'res_users'('id') ON DELETE set null 
+2026-07-05 02:48:27,261 1 DEBUG hellenia_dev odoo.schema: Table 'account_payment': added foreign key 'hellenia_check_bank_id' references 'res_bank'('id') ON DELETE set null 
+2026-07-05 02:48:27,264 1 DEBUG hellenia_dev odoo.schema: Table 'hellenia_payment_application_line': added foreign key 'payment_id' references 'account_payment'('id') ON DELETE cascade 
+2026-07-05 02:48:27,268 1 DEBUG hellenia_dev odoo.schema: Table 'hellenia_payment_application_line': added foreign key 'move_id' references 'account_move'('id') ON DELETE set null 
+2026-07-05 02:48:27,271 1 DEBUG hellenia_dev odoo.schema: Table 'hellenia_payment_application_line': added foreign key 'currency_id' references 'res_currency'('id') ON DELETE set null 
+2026-07-05 02:48:27,274 1 DEBUG hellenia_dev odoo.schema: Table 'hellenia_payment_application_line': added foreign key 'company_id' references 'res_company'('id') ON DELETE set null 
+2026-07-05 02:48:27,279 1 DEBUG hellenia_dev odoo.schema: Table 'hellenia_payment_application_line': added foreign key 'create_uid' references 'res_users'('id') ON DELETE set null 
+2026-07-05 02:48:27,283 1 DEBUG hellenia_dev odoo.schema: Table 'hellenia_payment_application_line': added foreign key 'write_uid' references 'res_users'('id') ON DELETE set null 
+2026-07-05 02:48:27,286 1 DEBUG hellenia_dev odoo.schema: Table 'hellenia_payment_wizard_line_wh_rel': added foreign key 'line_id' references 'hellenia_payment_partner_wizard_line'('id') ON DELETE cascade 
+2026-07-05 02:48:27,289 1 DEBUG hellenia_dev odoo.schema: Table 'hellenia_payment_wizard_line_wh_rel': added foreign key 'catalog_id' references 'hellenia_withholding_catalog'('id') ON DELETE cascade 
+2026-07-05 02:48:27,292 1 DEBUG hellenia_dev odoo.schema: Table 'hellenia_payment_partner_wizard_line': added foreign key 'wizard_id' references 'hellenia_payment_partner_wizard'('id') ON DELETE cascade 
+2026-07-05 02:48:27,295 1 DEBUG hellenia_dev odoo.schema: Table 'hellenia_payment_partner_wizard_line': added foreign key 'move_id' references 'account_move'('id') ON DELETE cascade 
+2026-07-05 02:48:27,299 1 DEBUG hellenia_dev odoo.schema: Table 'hellenia_payment_partner_wizard_line': added foreign key 'create_uid' references 'res_users'('id') ON DELETE set null 
+2026-07-05 02:48:27,303 1 DEBUG hellenia_dev odoo.schema: Table 'hellenia_payment_partner_wizard_line': added foreign key 'write_uid' references 'res_users'('id') ON DELETE set null 
+2026-07-05 02:48:27,307 1 DEBUG hellenia_dev odoo.schema: Table 'hellenia_payment_partner_wizard': added foreign key 'partner_id' references 'res_partner'('id') ON DELETE cascade 
+2026-07-05 02:48:27,310 1 DEBUG hellenia_dev odoo.schema: Table 'hellenia_payment_partner_wizard': added foreign key 'currency_id' references 'res_currency'('id') ON DELETE set null 
+2026-07-05 02:48:27,313 1 DEBUG hellenia_dev odoo.schema: Table 'hellenia_payment_partner_wizard': added foreign key 'journal_id' references 'account_journal'('id') ON DELETE set null 
+2026-07-05 02:48:27,316 1 DEBUG hellenia_dev odoo.schema: Table 'hellenia_payment_partner_wizard': added foreign key 'payment_method_line_id' references 'account_payment_method_line'('id') ON DELETE set null 
+2026-07-05 02:48:27,319 1 DEBUG hellenia_dev odoo.schema: Table 'hellenia_payment_partner_wizard': added foreign key 'hellenia_check_bank_id' references 'res_bank'('id') ON DELETE set null 
+2026-07-05 02:48:27,323 1 DEBUG hellenia_dev odoo.schema: Table 'hellenia_payment_partner_wizard': added foreign key 'create_uid' references 'res_users'('id') ON DELETE set null 
+2026-07-05 02:48:27,327 1 DEBUG hellenia_dev odoo.schema: Table 'hellenia_payment_partner_wizard': added foreign key 'write_uid' references 'res_users'('id') ON DELETE set null 
+2026-07-05 02:48:27,330 1 DEBUG hellenia_dev odoo.schema: Table 'hellenia_payment_withholding_wizard_line': added foreign key 'wizard_id' references 'hellenia_payment_partner_wizard'('id') ON DELETE cascade 
+2026-07-05 02:48:27,333 1 DEBUG hellenia_dev odoo.schema: Table 'hellenia_payment_withholding_wizard_line': added foreign key 'wizard_line_id' references 'hellenia_payment_partner_wizard_line'('id') ON DELETE cascade 
+2026-07-05 02:48:27,335 1 DEBUG hellenia_dev odoo.schema: Table 'hellenia_payment_withholding_wizard_line': added foreign key 'register_wizard_id' references 'account_payment_register'('id') ON DELETE cascade 
+2026-07-05 02:48:27,338 1 DEBUG hellenia_dev odoo.schema: Table 'hellenia_payment_withholding_wizard_line': added foreign key 'catalog_id' references 'hellenia_withholding_catalog'('id') ON DELETE set null 
+2026-07-05 02:48:27,341 1 DEBUG hellenia_dev odoo.schema: Table 'hellenia_payment_withholding_wizard_line': added foreign key 'tax_id' references 'account_tax'('id') ON DELETE set null 
+2026-07-05 02:48:27,344 1 DEBUG hellenia_dev odoo.schema: Table 'hellenia_payment_withholding_wizard_line': added foreign key 'account_id' references 'account_account'('id') ON DELETE set null 
+2026-07-05 02:48:27,347 1 DEBUG hellenia_dev odoo.schema: Table 'hellenia_payment_withholding_wizard_line': added foreign key 'currency_id' references 'res_currency'('id') ON DELETE set null 
+2026-07-05 02:48:27,351 1 DEBUG hellenia_dev odoo.schema: Table 'hellenia_payment_withholding_wizard_line': added foreign key 'create_uid' references 'res_users'('id') ON DELETE set null 
+2026-07-05 02:48:27,355 1 DEBUG hellenia_dev odoo.schema: Table 'hellenia_payment_withholding_wizard_line': added foreign key 'write_uid' references 'res_users'('id') ON DELETE set null 
+2026-07-05 02:48:27,367 1 INFO hellenia_dev odoo.modules.loading: loading hellenia_account/security/ir.model.access.csv 
+2026-07-05 02:48:27,374 1 DEBUG hellenia_dev odoo.registry: Invalidating stable model caches from call_cache_clearing_methods /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_model.py:2192 
+2026-07-05 02:48:27,378 1 INFO hellenia_dev odoo.modules.loading: loading hellenia_account/data/payment_setup.xml 
+2026-07-05 02:48:27,379 1 INFO hellenia_dev odoo.modules.loading: loading hellenia_account/views/hellenia_withholding_catalog_views.xml 
+2026-07-05 02:48:27,381 1 DEBUG hellenia_dev odoo.registry: Invalidating templates model caches from create /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_ui_view.py:639 
+2026-07-05 02:48:27,392 1 DEBUG hellenia_dev odoo.registry: Invalidating templates model caches from create /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_ui_view.py:639 
+2026-07-05 02:48:27,396 1 DEBUG hellenia_dev odoo.registry: Invalidating templates model caches from create /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_ui_view.py:639 
+2026-07-05 02:48:27,400 1 DEBUG hellenia_dev odoo.registry: Invalidating default model caches from create /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_actions.py:358 
+2026-07-05 02:48:27,402 1 DEBUG hellenia_dev odoo.registry: Invalidating default model caches from create /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_actions.py:113 
+2026-07-05 02:48:27,403 1 DEBUG hellenia_dev odoo.registry: Invalidating default model caches from create /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_ui_menu.py:153 
+2026-07-05 02:48:27,406 1 INFO hellenia_dev odoo.modules.loading: loading hellenia_account/views/account_payment_register_views.xml 
+2026-07-05 02:48:27,409 1 DEBUG hellenia_dev odoo.registry: Invalidating templates model caches from create /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_ui_view.py:639 
+2026-07-05 02:48:27,421 1 INFO hellenia_dev odoo.modules.loading: loading hellenia_account/views/payment_partner_wizard_views.xml 
+2026-07-05 02:48:27,422 1 DEBUG hellenia_dev odoo.registry: Invalidating templates model caches from create /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_ui_view.py:639 
+2026-07-05 02:48:27,430 1 DEBUG hellenia_dev odoo.registry: Invalidating default model caches from create /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_actions.py:358 
+2026-07-05 02:48:27,432 1 DEBUG hellenia_dev odoo.registry: Invalidating default model caches from create /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_actions.py:113 
+2026-07-05 02:48:27,433 1 DEBUG hellenia_dev odoo.registry: Invalidating default model caches from create /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_actions.py:358 
+2026-07-05 02:48:27,434 1 DEBUG hellenia_dev odoo.registry: Invalidating default model caches from create /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_actions.py:113 
+2026-07-05 02:48:27,435 1 DEBUG hellenia_dev odoo.registry: Invalidating templates model caches from create /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_ui_view.py:639 
+2026-07-05 02:48:27,448 1 DEBUG hellenia_dev odoo.registry: Invalidating templates model caches from create /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_ui_view.py:639 
+2026-07-05 02:48:27,456 1 DEBUG hellenia_dev odoo.registry: Invalidating default model caches from write /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_actions.py:119 
+2026-07-05 02:48:27,457 1 DEBUG hellenia_dev odoo.registry: Invalidating default model caches from write /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_actions.py:119 
+2026-07-05 02:48:27,459 1 DEBUG hellenia_dev odoo.registry: Invalidating default model caches from write /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_ui_menu.py:160 
+2026-07-05 02:48:27,460 1 DEBUG hellenia_dev odoo.registry: Invalidating default model caches from write /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_ui_menu.py:160 
+2026-07-05 02:48:27,461 1 INFO hellenia_dev odoo.modules.loading: loading hellenia_account/views/account_payment_withholding_views.xml 
+2026-07-05 02:48:27,463 1 DEBUG hellenia_dev odoo.registry: Invalidating templates model caches from create /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_ui_view.py:639 
+2026-07-05 02:48:27,474 1 INFO hellenia_dev odoo.modules.loading: loading hellenia_account/views/account_move_withholding_views.xml 
+2026-07-05 02:48:27,477 1 DEBUG hellenia_dev odoo.registry: Invalidating templates model caches from create /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_ui_view.py:639 
+2026-07-05 02:48:27,492 1 INFO hellenia_dev odoo.modules.loading: loading hellenia_account/reports/payment_receipt_withholding_templates.xml 
+2026-07-05 02:48:27,494 1 DEBUG hellenia_dev odoo.registry: Invalidating templates model caches from create /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_ui_view.py:639 
+2026-07-05 02:48:27,497 1 WARNING hellenia_dev odoo.addons.base.models.ir_ui_view: Error-prone use of @class in view report_payment_receipt_document_hellenia (): use the hasclass(*classes) function to filter elements by their classes 
+2026-07-05 02:48:27,505 1 INFO hellenia_dev odoo.addons.base.models.ir_module: module hellenia_account: loading translation file /opt/odoo/custom/hellenia_account/i18n/es.po for language es_DO 
+2026-07-05 02:48:27,507 1 INFO hellenia_dev odoo.addons.base.models.ir_module: module hellenia_account: no translation for language es_DO 
+2026-07-05 02:48:27,516 1 DEBUG hellenia_dev odoo.domains: The domain condition [('user_ids', 'in', 1)] should have a list value. 
+2026-07-05 02:48:27,662 1 INFO hellenia_dev odoo.models.unlink: User #1 deleted account.payment.method.line records with IDs: [29] 
+2026-07-05 02:48:27,669 1 INFO hellenia_dev odoo.models.unlink: User #1 deleted account.payment.method.line records with IDs: [30] 
+2026-07-05 02:48:27,690 1 INFO hellenia_dev odoo.models.unlink: User #1 deleted account.payment.method.line records with IDs: [23] 
+2026-07-05 02:48:27,696 1 INFO hellenia_dev odoo.models.unlink: User #1 deleted account.payment.method.line records with IDs: [24] 
+2026-07-05 02:48:27,701 1 INFO hellenia_dev odoo.models.unlink: User #1 deleted account.payment.method.line records with IDs: [25] 
+2026-07-05 02:48:27,719 1 INFO hellenia_dev odoo.models.unlink: User #1 deleted account.payment.method.line records with IDs: [26] 
+2026-07-05 02:48:27,724 1 INFO hellenia_dev odoo.models.unlink: User #1 deleted account.payment.method.line records with IDs: [27] 
+2026-07-05 02:48:27,729 1 INFO hellenia_dev odoo.models.unlink: User #1 deleted account.payment.method.line records with IDs: [28] 
+2026-07-05 02:48:27,828 1 INFO hellenia_dev odoo.modules.loading: Module hellenia_account loaded in 1.00s, 1229 queries (+1229 other) 
+2026-07-05 02:48:27,828 1 INFO hellenia_dev odoo.modules.loading: Loading module justech_l10n_do_reports (114/114) 
+2026-07-05 02:48:27,876 1 WARNING hellenia_dev odoo.fields: justech.do.fiscal.report.state: selection=[('draft', 'Borrador'), ('validated', 'Validado'), ('pending_approval', 'Requiere aprobación'), ('approved', 'Aprobado'), ('rejected', 'Rechazado'), ('generated', 'Generado'), ('done', 'Generado')] overrides existing selection; use selection_add instead 
+2026-07-05 02:48:27,891 1 INFO hellenia_dev odoo.registry: module justech_l10n_do_reports: creating or updating database tables 
+2026-07-05 02:48:27,898 1 DEBUG hellenia_dev odoo.schema: Table 'account_move': added column 'justech_do_gov_retention_bank_id' of type int4 
+2026-07-05 02:48:27,899 1 DEBUG hellenia_dev odoo.schema: Table 'account_move': added column 'justech_do_foreign_service_type' of type VARCHAR 
+2026-07-05 02:48:27,900 1 DEBUG hellenia_dev odoo.schema: Table 'account_move': added column 'justech_do_foreign_document_ref' of type VARCHAR 
+2026-07-05 02:48:27,900 1 DEBUG hellenia_dev odoo.schema: Table 'account_move': added column 'justech_do_gov_retention_ref' of type VARCHAR 
+2026-07-05 02:48:27,901 1 DEBUG hellenia_dev odoo.schema: Table 'account_move': added column 'justech_do_gov_retention_ref_type' of type VARCHAR 
+2026-07-05 02:48:27,901 1 DEBUG hellenia_dev odoo.schema: Table 'account_move': added column 'justech_do_foreign_payment_date' of type date 
+2026-07-05 02:48:27,902 1 DEBUG hellenia_dev odoo.schema: Table 'account_move': added column 'justech_do_gov_retention_date' of type date 
+2026-07-05 02:48:27,902 1 DEBUG hellenia_dev odoo.schema: Table 'account_move': added column 'justech_do_foreign_exchange_rate' of type numeric 
+2026-07-05 02:48:27,903 1 DEBUG hellenia_dev odoo.schema: Table 'account_move': added column 'justech_do_foreign_presumed_income' of type numeric 
+2026-07-05 02:48:27,903 1 DEBUG hellenia_dev odoo.schema: Table 'account_move': added column 'justech_do_foreign_isr_retained' of type numeric 
+2026-07-05 02:48:27,903 1 DEBUG hellenia_dev odoo.schema: Table 'account_move': added column 'justech_do_gov_withholding_amount' of type numeric 
+2026-07-05 02:48:27,904 1 DEBUG hellenia_dev odoo.schema: Table 'account_move': added column 'justech_do_foreign_609' of type bool 
+2026-07-05 02:48:27,914 1 WARNING hellenia_dev py.warnings: /opt/odoo/custom/justech_l10n_do_ncf/models/account_move.py:136: DeprecationWarning: Deprecated since 19.0, use self.env.cr directly
+  File "/usr/bin/odoo", line 6, in <module>
+    odoo.cli.main()
+  File "/usr/lib/python3/dist-packages/odoo/cli/command.py", line 133, in main
+    command().run(args)
+  File "/usr/lib/python3/dist-packages/odoo/cli/server.py", line 127, in run
+    main(args)
+  File "/usr/lib/python3/dist-packages/odoo/cli/server.py", line 118, in main
+    rc = server.start(preload=config['db_name'], stop=stop)
+  File "/usr/lib/python3/dist-packages/odoo/service/server.py", line 1636, in start
+    rc = server.run(preload, stop)
+  File "/usr/lib/python3/dist-packages/odoo/service/server.py", line 691, in run
+    rc = preload_registries(preload)
+  File "/usr/lib/python3/dist-packages/odoo/service/server.py", line 1550, in preload_registries
+    registry = Registry.new(dbname, update_module=update_module, install_modules=config['init'], upgrade_modules=config['update'], reinit_modules=config['reinit'])
+  File "/usr/lib/python3/dist-packages/odoo/tools/func.py", line 88, in locked
+    return func(inst, *args, **kwargs)
+  File "/usr/lib/python3/dist-packages/odoo/orm/registry.py", line 183, in new
+    load_modules(
+  File "/usr/lib/python3/dist-packages/odoo/modules/loading.py", line 464, in load_modules
+    load_module_graph(
+  File "/usr/lib/python3/dist-packages/odoo/modules/loading.py", line 194, in load_module_graph
+    registry.init_models(env.cr, model_names, {'module': package.name}, update_operation == 'install')
+  File "/usr/lib/python3/dist-packages/odoo/orm/registry.py", line 752, in init_models
+    model.init()
+  File "/opt/odoo/custom/justech_l10n_do_ncf/models/account_move.py", line 136, in init
+    self._cr.execute(
+ 
+2026-07-05 02:48:27,920 1 DEBUG hellenia_dev odoo.schema: Table 'account_payment': added column 'justech_do_gov_withholding_catalog_id' of type int4 
+2026-07-05 02:48:27,921 1 DEBUG hellenia_dev odoo.schema: Table 'account_payment': added column 'justech_do_gov_withholding_amount' of type numeric 
+2026-07-05 02:48:27,931 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_fiscal_report': added column 'generated_by_id' of type int4 
+2026-07-05 02:48:27,931 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_fiscal_report': added column 'count_all' of type int4 
+2026-07-05 02:48:27,931 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_fiscal_report': added column 'count_valid' of type int4 
+2026-07-05 02:48:27,932 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_fiscal_report': added column 'count_incomplete' of type int4 
+2026-07-05 02:48:27,932 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_fiscal_report': added column 'count_excluded' of type int4 
+2026-07-05 02:48:27,933 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_fiscal_report': added column 'count_cancelled' of type int4 
+2026-07-05 02:48:27,933 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_fiscal_report': added column 'count_partners_errors' of type int4 
+2026-07-05 02:48:27,933 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_fiscal_report': added column 'created_by_id' of type int4 
+2026-07-05 02:48:27,933 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_fiscal_report': added column 'validated_by_id' of type int4 
+2026-07-05 02:48:27,934 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_fiscal_report': added column 'approved_by_id' of type int4 
+2026-07-05 02:48:27,934 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_fiscal_report': added column 'rejected_by_id' of type int4 
+2026-07-05 02:48:27,934 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_fiscal_report': added column 'approval_submitted_by_id' of type int4 
+2026-07-05 02:48:27,935 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_fiscal_report': added column 'validation_state' of type VARCHAR 
+2026-07-05 02:48:27,935 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_fiscal_report': added column 'error_report_filename' of type VARCHAR 
+2026-07-05 02:48:27,935 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_fiscal_report': added column 'period_code' of type VARCHAR 
+2026-07-05 02:48:27,935 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_fiscal_report': added column 'export_file_hash' of type VARCHAR 
+2026-07-05 02:48:27,936 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_fiscal_report': added column 'validation_log' of type text 
+2026-07-05 02:48:27,936 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_fiscal_report': added column 'rejection_comment' of type text 
+2026-07-05 02:48:27,936 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_fiscal_report': added column 'active' of type bool 
+2026-07-05 02:48:27,937 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_fiscal_report': added column 'has_pending_approval' of type bool 
+2026-07-05 02:48:27,937 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_fiscal_report': added column 'generated_at' of type timestamp 
+2026-07-05 02:48:27,938 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_fiscal_report': added column 'validated_at' of type timestamp 
+2026-07-05 02:48:27,938 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_fiscal_report': added column 'approved_at' of type timestamp 
+2026-07-05 02:48:27,938 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_fiscal_report': added column 'rejected_at' of type timestamp 
+2026-07-05 02:48:27,938 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_fiscal_report': added column 'approval_submitted_at' of type timestamp 
+2026-07-05 02:48:27,942 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_fiscal_report_line': added column 'partner_id' of type int4 
+2026-07-05 02:48:27,943 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_fiscal_report_line': added column 'currency_id' of type int4 
+2026-07-05 02:48:27,943 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_fiscal_report_line': added column 'excluded_by_id' of type int4 
+2026-07-05 02:48:27,944 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_fiscal_report_line': added column 'approved_by_id' of type int4 
+2026-07-05 02:48:27,944 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_fiscal_report_line': added column 'fiscal_state' of type VARCHAR 
+2026-07-05 02:48:27,944 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_fiscal_report_line': added column 'move_name' of type VARCHAR 
+2026-07-05 02:48:27,944 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_fiscal_report_line': added column 'partner_id_type' of type VARCHAR 
+2026-07-05 02:48:27,945 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_fiscal_report_line': added column 'ncf_modified' of type VARCHAR 
+2026-07-05 02:48:27,945 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_fiscal_report_line': added column 'payment_method_code' of type VARCHAR 
+2026-07-05 02:48:27,945 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_fiscal_report_line': added column 'line_approval_state' of type VARCHAR 
+2026-07-05 02:48:27,945 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_fiscal_report_line': added column 'invoice_date_due' of type date 
+2026-07-05 02:48:27,946 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_fiscal_report_line': added column 'exclusion_reason' of type text 
+2026-07-05 02:48:27,946 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_fiscal_report_line': added column 'error_message' of type text 
+2026-07-05 02:48:27,946 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_fiscal_report_line': added column 'amount_withholding' of type numeric 
+2026-07-05 02:48:27,947 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_fiscal_report_line': added column 'include_in_report' of type bool 
+2026-07-05 02:48:27,947 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_fiscal_report_line': added column 'auto_exclusion' of type bool 
+2026-07-05 02:48:27,947 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_fiscal_report_line': added column 'manual_exclusion' of type bool 
+2026-07-05 02:48:27,948 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_fiscal_report_line': added column 'excluded_at' of type timestamp 
+2026-07-05 02:48:27,948 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_fiscal_report_line': added column 'approved_at' of type timestamp 
+2026-07-05 02:48:27,951 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_dgii_report_audit': created 
+2026-07-05 02:48:27,955 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_dgii_report_approval': created 
+2026-07-05 02:48:27,961 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_fiscal_report_wizard': added column 'count_all' of type int4 
+2026-07-05 02:48:27,961 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_fiscal_report_wizard': added column 'count_valid' of type int4 
+2026-07-05 02:48:27,961 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_fiscal_report_wizard': added column 'count_incomplete' of type int4 
+2026-07-05 02:48:27,962 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_fiscal_report_wizard': added column 'count_excluded' of type int4 
+2026-07-05 02:48:27,962 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_fiscal_report_wizard': added column 'count_cancelled' of type int4 
+2026-07-05 02:48:27,962 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_fiscal_report_wizard': added column 'count_partners_errors' of type int4 
+2026-07-05 02:48:27,963 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_fiscal_report_wizard': added column 'saved_report_id' of type int4 
+2026-07-05 02:48:27,963 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_fiscal_report_wizard': added column 'period_code' of type VARCHAR 
+2026-07-05 02:48:27,963 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_fiscal_report_wizard': added column 'validation_state' of type VARCHAR 
+2026-07-05 02:48:27,963 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_fiscal_report_wizard': added column 'error_report_filename' of type VARCHAR 
+2026-07-05 02:48:27,964 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_fiscal_report_wizard': added column 'validation_log' of type text 
+2026-07-05 02:48:27,965 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_dgii_report_exclude_wizard': created 
+2026-07-05 02:48:27,969 1 DEBUG hellenia_dev odoo.schema: Create table 'dgii_excl_wiz_line_rel': m2m relation between 'justech_do_dgii_report_exclude_wizard' and 'justech_do_fiscal_report_line' 
+2026-07-05 02:48:27,971 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_dgii_report_reject_wizard': created 
+2026-07-05 02:48:27,974 1 DEBUG hellenia_dev odoo.schema: Create table 'dgii_reject_wiz_line_rel': m2m relation between 'justech_do_dgii_report_reject_wizard' and 'justech_do_fiscal_report_line' 
+2026-07-05 02:48:27,976 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_dgii_export_blocker_wizard': created 
+2026-07-05 02:48:27,979 1 DEBUG hellenia_dev odoo.schema: Create table 'dgii_blocker_line_rel': m2m relation between 'justech_do_dgii_export_blocker_wizard' and 'justech_do_fiscal_report_line' 
+2026-07-05 02:48:28,082 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_fiscal_report_wizard': column 'period_code': added constraint NOT NULL 
+2026-07-05 02:48:28,117 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_fiscal_report': created index 'justech_do_fiscal_report__period_code_index' (USING btree ("period_code")) 
+2026-07-05 02:48:28,120 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_fiscal_report': created index 'justech_do_fiscal_report__active_index' (USING btree ("active")) 
+2026-07-05 02:48:28,122 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_fiscal_report': created index 'justech_do_fiscal_report__has_pending_approval_index' (USING btree ("has_pending_approval")) 
+2026-07-05 02:48:28,124 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_dgii_report_audit': created index 'justech_do_dgii_report_audit__report_id_index' (USING btree ("report_id")) 
+2026-07-05 02:48:28,126 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_dgii_report_approval': created index 'justech_do_dgii_report_approval__report_id_index' (USING btree ("report_id")) 
+2026-07-05 02:48:28,132 1 DEBUG hellenia_dev odoo.schema: Table 'account_move': added foreign key 'justech_do_gov_retention_bank_id' references 'res_bank'('id') ON DELETE set null 
+2026-07-05 02:48:28,137 1 DEBUG hellenia_dev odoo.schema: Table 'account_payment': added foreign key 'justech_do_gov_withholding_catalog_id' references 'hellenia_withholding_catalog'('id') ON DELETE set null 
+2026-07-05 02:48:28,142 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_fiscal_report': added foreign key 'generated_by_id' references 'res_users'('id') ON DELETE set null 
+2026-07-05 02:48:28,147 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_fiscal_report': added foreign key 'created_by_id' references 'res_users'('id') ON DELETE set null 
+2026-07-05 02:48:28,153 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_fiscal_report': added foreign key 'validated_by_id' references 'res_users'('id') ON DELETE set null 
+2026-07-05 02:48:28,158 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_fiscal_report': added foreign key 'approved_by_id' references 'res_users'('id') ON DELETE set null 
+2026-07-05 02:48:28,163 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_fiscal_report': added foreign key 'rejected_by_id' references 'res_users'('id') ON DELETE set null 
+2026-07-05 02:48:28,168 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_fiscal_report': added foreign key 'approval_submitted_by_id' references 'res_users'('id') ON DELETE set null 
+2026-07-05 02:48:28,173 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_fiscal_report_line': added foreign key 'partner_id' references 'res_partner'('id') ON DELETE set null 
+2026-07-05 02:48:28,177 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_fiscal_report_line': added foreign key 'currency_id' references 'res_currency'('id') ON DELETE set null 
+2026-07-05 02:48:28,183 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_fiscal_report_line': added foreign key 'excluded_by_id' references 'res_users'('id') ON DELETE set null 
+2026-07-05 02:48:28,189 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_fiscal_report_line': added foreign key 'approved_by_id' references 'res_users'('id') ON DELETE set null 
+2026-07-05 02:48:28,193 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_dgii_report_audit': added foreign key 'report_id' references 'justech_do_fiscal_report'('id') ON DELETE cascade 
+2026-07-05 02:48:28,198 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_dgii_report_audit': added foreign key 'user_id' references 'res_users'('id') ON DELETE restrict 
+2026-07-05 02:48:28,202 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_dgii_report_audit': added foreign key 'move_id' references 'account_move'('id') ON DELETE set null 
+2026-07-05 02:48:28,206 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_dgii_report_audit': added foreign key 'line_id' references 'justech_do_fiscal_report_line'('id') ON DELETE set null 
+2026-07-05 02:48:28,211 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_dgii_report_audit': added foreign key 'create_uid' references 'res_users'('id') ON DELETE set null 
+2026-07-05 02:48:28,216 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_dgii_report_audit': added foreign key 'write_uid' references 'res_users'('id') ON DELETE set null 
+2026-07-05 02:48:28,220 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_dgii_report_approval': added foreign key 'report_id' references 'justech_do_fiscal_report'('id') ON DELETE cascade 
+2026-07-05 02:48:28,224 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_dgii_report_approval': added foreign key 'line_id' references 'justech_do_fiscal_report_line'('id') ON DELETE cascade 
+2026-07-05 02:48:28,228 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_dgii_report_approval': added foreign key 'requested_by_id' references 'res_users'('id') ON DELETE restrict 
+2026-07-05 02:48:28,234 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_dgii_report_approval': added foreign key 'reviewed_by_id' references 'res_users'('id') ON DELETE set null 
+2026-07-05 02:48:28,239 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_dgii_report_approval': added foreign key 'create_uid' references 'res_users'('id') ON DELETE set null 
+2026-07-05 02:48:28,244 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_dgii_report_approval': added foreign key 'write_uid' references 'res_users'('id') ON DELETE set null 
+2026-07-05 02:48:28,248 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_fiscal_report_wizard': added foreign key 'saved_report_id' references 'justech_do_fiscal_report'('id') ON DELETE set null 
+2026-07-05 02:48:28,251 1 DEBUG hellenia_dev odoo.schema: Table 'dgii_excl_wiz_line_rel': added foreign key 'wizard_id' references 'justech_do_dgii_report_exclude_wizard'('id') ON DELETE cascade 
+2026-07-05 02:48:28,255 1 DEBUG hellenia_dev odoo.schema: Table 'dgii_excl_wiz_line_rel': added foreign key 'line_id' references 'justech_do_fiscal_report_line'('id') ON DELETE cascade 
+2026-07-05 02:48:28,259 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_dgii_report_exclude_wizard': added foreign key 'report_id' references 'justech_do_fiscal_report'('id') ON DELETE cascade 
+2026-07-05 02:48:28,264 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_dgii_report_exclude_wizard': added foreign key 'create_uid' references 'res_users'('id') ON DELETE set null 
+2026-07-05 02:48:28,269 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_dgii_report_exclude_wizard': added foreign key 'write_uid' references 'res_users'('id') ON DELETE set null 
+2026-07-05 02:48:28,273 1 DEBUG hellenia_dev odoo.schema: Table 'dgii_reject_wiz_line_rel': added foreign key 'wizard_id' references 'justech_do_dgii_report_reject_wizard'('id') ON DELETE cascade 
+2026-07-05 02:48:28,277 1 DEBUG hellenia_dev odoo.schema: Table 'dgii_reject_wiz_line_rel': added foreign key 'line_id' references 'justech_do_fiscal_report_line'('id') ON DELETE cascade 
+2026-07-05 02:48:28,280 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_dgii_report_reject_wizard': added foreign key 'report_id' references 'justech_do_fiscal_report'('id') ON DELETE cascade 
+2026-07-05 02:48:28,285 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_dgii_report_reject_wizard': added foreign key 'create_uid' references 'res_users'('id') ON DELETE set null 
+2026-07-05 02:48:28,291 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_dgii_report_reject_wizard': added foreign key 'write_uid' references 'res_users'('id') ON DELETE set null 
+2026-07-05 02:48:28,295 1 DEBUG hellenia_dev odoo.schema: Table 'dgii_blocker_line_rel': added foreign key 'wizard_id' references 'justech_do_dgii_export_blocker_wizard'('id') ON DELETE cascade 
+2026-07-05 02:48:28,298 1 DEBUG hellenia_dev odoo.schema: Table 'dgii_blocker_line_rel': added foreign key 'line_id' references 'justech_do_fiscal_report_line'('id') ON DELETE cascade 
+2026-07-05 02:48:28,302 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_dgii_export_blocker_wizard': added foreign key 'report_id' references 'justech_do_fiscal_report'('id') ON DELETE cascade 
+2026-07-05 02:48:28,307 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_dgii_export_blocker_wizard': added foreign key 'create_uid' references 'res_users'('id') ON DELETE set null 
+2026-07-05 02:48:28,312 1 DEBUG hellenia_dev odoo.schema: Table 'justech_do_dgii_export_blocker_wizard': added foreign key 'write_uid' references 'res_users'('id') ON DELETE set null 
+2026-07-05 02:48:28,331 1 INFO hellenia_dev odoo.modules.loading: loading justech_l10n_do_reports/security/ir.model.access.csv 
+2026-07-05 02:48:28,339 1 DEBUG hellenia_dev odoo.registry: Invalidating stable model caches from call_cache_clearing_methods /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_model.py:2192 
+2026-07-05 02:48:28,339 1 DEBUG hellenia_dev odoo.registry: Invalidating stable model caches from call_cache_clearing_methods /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_model.py:2192 
+2026-07-05 02:48:28,340 1 DEBUG hellenia_dev odoo.registry: Invalidating stable model caches from call_cache_clearing_methods /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_model.py:2192 
+2026-07-05 02:48:28,340 1 DEBUG hellenia_dev odoo.registry: Invalidating stable model caches from call_cache_clearing_methods /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_model.py:2192 
+2026-07-05 02:48:28,341 1 DEBUG hellenia_dev odoo.registry: Invalidating stable model caches from call_cache_clearing_methods /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_model.py:2192 
+2026-07-05 02:48:28,342 1 DEBUG hellenia_dev odoo.registry: Invalidating stable model caches from call_cache_clearing_methods /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_model.py:2192 
+2026-07-05 02:48:28,345 1 INFO hellenia_dev odoo.modules.loading: loading justech_l10n_do_reports/security/justech_l10n_do_reports_rules.xml 
+2026-07-05 02:48:28,350 1 DEBUG hellenia_dev odoo.domains: The domain condition [('user_ids', 'in', 1)] should have a list value. 
+2026-07-05 02:48:28,353 1 DEBUG hellenia_dev odoo.registry: Invalidating default model caches from create /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_rule.py:195 
+2026-07-05 02:48:28,355 1 DEBUG hellenia_dev odoo.domains: The domain condition [('user_ids', 'in', 1)] should have a list value. 
+2026-07-05 02:48:28,357 1 DEBUG hellenia_dev odoo.registry: Invalidating default model caches from create /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_rule.py:195 
+2026-07-05 02:48:28,358 1 INFO hellenia_dev odoo.modules.loading: loading justech_l10n_do_reports/views/dgii_report_review_views.xml 
+2026-07-05 02:48:28,360 1 DEBUG hellenia_dev odoo.registry: Invalidating templates model caches from create /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_ui_view.py:639 
+2026-07-05 02:48:28,376 1 DEBUG hellenia_dev odoo.registry: Invalidating templates model caches from create /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_ui_view.py:639 
+2026-07-05 02:48:28,380 1 DEBUG hellenia_dev odoo.registry: Invalidating templates model caches from create /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_ui_view.py:639 
+2026-07-05 02:48:28,390 1 DEBUG hellenia_dev odoo.registry: Invalidating templates model caches from create /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_ui_view.py:639 
+2026-07-05 02:48:28,398 1 DEBUG hellenia_dev odoo.registry: Invalidating default model caches from create /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_actions.py:358 
+2026-07-05 02:48:28,402 1 DEBUG hellenia_dev odoo.registry: Invalidating default model caches from create /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_actions.py:113 
+2026-07-05 02:48:28,403 1 INFO hellenia_dev odoo.modules.loading: loading justech_l10n_do_reports/views/dgii_report_pending_tray_views.xml 
+2026-07-05 02:48:28,405 1 DEBUG hellenia_dev odoo.registry: Invalidating templates model caches from create /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_ui_view.py:639 
+2026-07-05 02:48:28,409 1 DEBUG hellenia_dev odoo.registry: Invalidating templates model caches from create /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_ui_view.py:639 
+2026-07-05 02:48:28,413 1 DEBUG hellenia_dev odoo.registry: Invalidating templates model caches from create /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_ui_view.py:639 
+2026-07-05 02:48:28,418 1 DEBUG hellenia_dev odoo.registry: Invalidating templates model caches from create /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_ui_view.py:639 
+2026-07-05 02:48:28,422 1 DEBUG hellenia_dev odoo.registry: Invalidating default model caches from create /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_actions.py:358 
+2026-07-05 02:48:28,425 1 DEBUG hellenia_dev odoo.registry: Invalidating default model caches from create /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_actions.py:113 
+2026-07-05 02:48:28,426 1 INFO hellenia_dev odoo.modules.loading: loading justech_l10n_do_reports/views/fiscal_report_views.xml 
+2026-07-05 02:48:28,428 1 DEBUG hellenia_dev odoo.registry: Invalidating templates model caches from write /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_ui_view.py:656 
+2026-07-05 02:48:28,429 1 DEBUG hellenia_dev odoo.registry: Invalidating templates model caches from write /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_ui_view.py:656 
+2026-07-05 02:48:28,433 1 DEBUG hellenia_dev odoo.registry: Invalidating templates model caches from write /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_ui_view.py:656 
+2026-07-05 02:48:28,433 1 DEBUG hellenia_dev odoo.registry: Invalidating templates model caches from write /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_ui_view.py:656 
+2026-07-05 02:48:28,443 1 DEBUG hellenia_dev odoo.registry: Invalidating default model caches from write /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_actions.py:119 
+2026-07-05 02:48:28,444 1 DEBUG hellenia_dev odoo.registry: Invalidating default model caches from create /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_actions.py:358 
+2026-07-05 02:48:28,446 1 DEBUG hellenia_dev odoo.registry: Invalidating default model caches from create /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_actions.py:113 
+2026-07-05 02:48:28,447 1 DEBUG hellenia_dev odoo.registry: Invalidating default model caches from create /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_actions.py:358 
+2026-07-05 02:48:28,450 1 DEBUG hellenia_dev odoo.registry: Invalidating default model caches from create /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_actions.py:113 
+2026-07-05 02:48:28,450 1 INFO hellenia_dev odoo.modules.loading: loading justech_l10n_do_reports/wizard/fiscal_report_wizard_views.xml 
+2026-07-05 02:48:28,452 1 DEBUG hellenia_dev odoo.registry: Invalidating templates model caches from write /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_ui_view.py:656 
+2026-07-05 02:48:28,453 1 DEBUG hellenia_dev odoo.registry: Invalidating templates model caches from write /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_ui_view.py:656 
+2026-07-05 02:48:28,460 1 DEBUG hellenia_dev odoo.registry: Invalidating default model caches from write /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_actions.py:119 
+2026-07-05 02:48:28,461 1 DEBUG hellenia_dev odoo.registry: Invalidating default model caches from create /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_actions.py:358 
+2026-07-05 02:48:28,462 1 DEBUG hellenia_dev odoo.registry: Invalidating default model caches from create /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_actions.py:113 
+2026-07-05 02:48:28,463 1 INFO hellenia_dev odoo.modules.loading: loading justech_l10n_do_reports/wizard/dgii_export_blocker_wizard_views.xml 
+2026-07-05 02:48:28,464 1 DEBUG hellenia_dev odoo.registry: Invalidating templates model caches from create /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_ui_view.py:639 
+2026-07-05 02:48:28,469 1 INFO hellenia_dev odoo.modules.loading: loading justech_l10n_do_reports/views/menu.xml 
+2026-07-05 02:48:28,471 1 DEBUG hellenia_dev odoo.registry: Invalidating default model caches from create /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_actions.py:358 
+2026-07-05 02:48:28,472 1 DEBUG hellenia_dev odoo.registry: Invalidating default model caches from create /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_actions.py:113 
+2026-07-05 02:48:28,473 1 DEBUG hellenia_dev odoo.registry: Invalidating default model caches from create /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_actions.py:358 
+2026-07-05 02:48:28,474 1 DEBUG hellenia_dev odoo.registry: Invalidating default model caches from create /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_actions.py:113 
+2026-07-05 02:48:28,475 1 DEBUG hellenia_dev odoo.registry: Invalidating default model caches from create /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_actions.py:358 
+2026-07-05 02:48:28,476 1 DEBUG hellenia_dev odoo.registry: Invalidating default model caches from create /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_actions.py:113 
+2026-07-05 02:48:28,477 1 DEBUG hellenia_dev odoo.registry: Invalidating default model caches from create /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_actions.py:358 
+2026-07-05 02:48:28,478 1 DEBUG hellenia_dev odoo.registry: Invalidating default model caches from create /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_actions.py:113 
+2026-07-05 02:48:28,479 1 DEBUG hellenia_dev odoo.registry: Invalidating default model caches from create /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_actions.py:358 
+2026-07-05 02:48:28,480 1 DEBUG hellenia_dev odoo.registry: Invalidating default model caches from create /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_actions.py:113 
+2026-07-05 02:48:28,481 1 DEBUG hellenia_dev odoo.registry: Invalidating default model caches from create /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_actions.py:358 
+2026-07-05 02:48:28,482 1 DEBUG hellenia_dev odoo.registry: Invalidating default model caches from create /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_actions.py:113 
+2026-07-05 02:48:28,483 1 DEBUG hellenia_dev odoo.registry: Invalidating default model caches from create /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_actions.py:358 
+2026-07-05 02:48:28,484 1 DEBUG hellenia_dev odoo.registry: Invalidating default model caches from create /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_actions.py:113 
+2026-07-05 02:48:28,485 1 DEBUG hellenia_dev odoo.registry: Invalidating default model caches from write /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_ui_menu.py:160 
+2026-07-05 02:48:28,489 1 DEBUG hellenia_dev odoo.registry: Invalidating default model caches from create /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_ui_menu.py:153 
+2026-07-05 02:48:28,493 1 DEBUG hellenia_dev odoo.registry: Invalidating default model caches from create /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_ui_menu.py:153 
+2026-07-05 02:48:28,497 1 DEBUG hellenia_dev odoo.registry: Invalidating default model caches from create /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_ui_menu.py:153 
+2026-07-05 02:48:28,500 1 DEBUG hellenia_dev odoo.registry: Invalidating default model caches from create /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_ui_menu.py:153 
+2026-07-05 02:48:28,503 1 DEBUG hellenia_dev odoo.registry: Invalidating default model caches from create /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_ui_menu.py:153 
+2026-07-05 02:48:28,507 1 DEBUG hellenia_dev odoo.registry: Invalidating default model caches from create /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_ui_menu.py:153 
+2026-07-05 02:48:28,510 1 DEBUG hellenia_dev odoo.registry: Invalidating default model caches from create /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_ui_menu.py:153 
+2026-07-05 02:48:28,513 1 DEBUG hellenia_dev odoo.registry: Invalidating default model caches from write /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_ui_menu.py:160 
+2026-07-05 02:48:28,516 1 DEBUG hellenia_dev odoo.registry: Invalidating default model caches from create /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_ui_menu.py:153 
+2026-07-05 02:48:28,519 1 DEBUG hellenia_dev odoo.registry: Invalidating default model caches from create /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_ui_menu.py:153 
+2026-07-05 02:48:28,523 1 DEBUG hellenia_dev odoo.registry: Invalidating default model caches from create /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_ui_menu.py:153 
+2026-07-05 02:48:28,526 1 DEBUG hellenia_dev odoo.registry: Invalidating default model caches from create /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_ui_menu.py:153 
+2026-07-05 02:48:28,535 1 INFO hellenia_dev odoo.addons.base.models.ir_module: module justech_l10n_do_reports: no translation for language es_DO 
+2026-07-05 02:48:28,545 1 INFO hellenia_dev odoo.modules.loading: Module justech_l10n_do_reports loaded in 0.72s, 805 queries (+805 other) 
+2026-07-05 02:48:28,545 1 INFO hellenia_dev odoo.modules.loading: 114 modules loaded in 4.22s, 2743 queries (+2743 extra) 
+2026-07-05 02:48:28,609 1 WARNING hellenia_dev odoo.fields: justech.do.fiscal.report.state: selection=[('draft', 'Borrador'), ('validated', 'Validado'), ('pending_approval', 'Requiere aprobación'), ('approved', 'Aprobado'), ('rejected', 'Rechazado'), ('generated', 'Generado'), ('done', 'Generado')] overrides existing selection; use selection_add instead 
+2026-07-05 02:48:28,722 1 DEBUG hellenia_dev odoo.models: column public_key is in the table auth_passkey_key but not in the corresponding object auth.passkey.key 
+2026-07-05 02:48:28,725 1 DEBUG hellenia_dev odoo.models: column index is in the table auth_totp_device but not in the corresponding object auth_totp.device 
+2026-07-05 02:48:28,725 1 DEBUG hellenia_dev odoo.models: column key is in the table auth_totp_device but not in the corresponding object auth_totp.device 
+2026-07-05 02:48:28,770 1 DEBUG hellenia_dev odoo.models: column web is in the table ir_module_module but not in the corresponding object ir.module.module 
+2026-07-05 02:48:28,841 1 DEBUG hellenia_dev odoo.models: column password is in the table res_users but not in the corresponding object res.users 
+2026-07-05 02:48:28,841 1 DEBUG hellenia_dev odoo.models: column totp_secret is in the table res_users but not in the corresponding object res.users 
+2026-07-05 02:48:28,841 1 DEBUG hellenia_dev odoo.models: column index is in the table res_users_apikeys but not in the corresponding object res.users.apikeys 
+2026-07-05 02:48:28,841 1 DEBUG hellenia_dev odoo.models: column key is in the table res_users_apikeys but not in the corresponding object res.users.apikeys 
+2026-07-05 02:48:28,885 1 DEBUG hellenia_dev odoo.models: column purchase_line_id is in the table vendor_delay_report but not in the corresponding object vendor.delay.report 
+2026-07-05 02:48:28,889 1 INFO hellenia_dev odoo.addons.base.models.ir_model: Deleting 360@ir.ui.menu (justech_l10n_do_reports.menu_justech_do_reports_generate) 
+2026-07-05 02:48:28,890 1 DEBUG hellenia_dev odoo.registry: Invalidating default model caches from write /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_ui_menu.py:160 
+2026-07-05 02:48:28,891 1 DEBUG hellenia_dev odoo.registry: Invalidating default model caches from unlink /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_ui_menu.py:187 
+2026-07-05 02:48:28,916 1 DEBUG hellenia_dev odoo.registry: Invalidating default model caches from unlink /usr/lib/python3/dist-packages/odoo/addons/base/models/ir_model.py:2336 
+2026-07-05 02:48:28,919 1 INFO hellenia_dev odoo.models.unlink: User #1 deleted ir.model.data records with IDs: [60599] 
+2026-07-05 02:48:28,920 1 INFO hellenia_dev odoo.models.unlink: User #1 deleted ir.ui.menu records with IDs: [360] 
+2026-07-05 02:48:28,939 1 DEBUG hellenia_dev odoo.addons.base.models.ir_cron: Job 'Base: Auto-vacuum internal data' (1) will execute at 2026-07-05 02:49:28.926729 
+2026-07-05 02:48:28,939 1 INFO hellenia_dev odoo.registry: verifying fields for every extended model 
+2026-07-05 02:48:28,949 1 DEBUG hellenia_dev odoo.models: Table 'res_company': setting default value of new column security_lead to 0.0 
+2026-07-05 02:48:29,002 1 DEBUG hellenia_dev odoo.schema: Table 'res_company': column 'security_lead': added constraint NOT NULL 
+2026-07-05 02:48:29,752 1 INFO hellenia_dev odoo.modules.loading: Modules loaded. 
+2026-07-05 02:48:29,766 1 INFO hellenia_dev odoo.registry: Registry changed, signaling through the database 
+2026-07-05 02:48:29,767 1 INFO hellenia_dev odoo.registry: Registry loaded in 9.303s 
+2026-07-05 02:48:29,768 1 INFO hellenia_dev odoo.service.server: Initiating shutdown 
+2026-07-05 02:48:29,768 1 INFO hellenia_dev odoo.service.server: Hit CTRL-C again or send a second signal to force the shutdown. 
+2026-07-05 02:48:29,768 1 DEBUG hellenia_dev odoo.service.server: on_close call <bound method Event.set of <threading.Event at 0x74cb9fa5dee0: unset>> 
+2026-07-05 02:48:29,768 1 DEBUG hellenia_dev odoo.service.server: on_close call <function _kick_all at 0x74cb9fabd440> 
+2026-07-05 02:48:29,768 1 DEBUG hellenia_dev odoo.service.server: current thread: <_MainThread(MainThread, started 128418041458816)> 
+2026-07-05 02:48:29,768 1 DEBUG hellenia_dev odoo.service.server: process <_MainThread(MainThread, started 128418041458816)> (False) 
+2026-07-05 02:48:29,768 1 INFO hellenia_dev odoo.sql_db: ConnectionPool(read/write;used=0/count=0/max=64): Closed 1 connections  
+2026-07-05 02:48:29,769 1 DEBUG hellenia_dev odoo.service.server: -- 

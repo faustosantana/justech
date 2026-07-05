@@ -1,38 +1,50 @@
 # Hellenia Reports (`hellenia_reports`)
 
-**Estado:** Esqueleto — sin lógica de negocio  
+**Estado:** Implementado — Fase 13.6  
 **Versión Odoo:** 19.0  
 **Licencia:** LGPL-3
 
 ## Descripción
 
-Custom reports for Hellenia
+Formatos visuales corporativos PDF para documentos comerciales Hellenia:
 
-## Estructura
+- Layout `external_layout_hellenia`
+- Cotización / pedido de venta
+- Factura / nota de crédito (NCF destacado + QR)
+- Orden de compra / RFQ
+- Entrega / recepción (albarán)
 
-```
-hellenia_reports/
-├── README.md
-├── __init__.py
-├── __manifest__.py
-├── models/
-├── views/
-├── security/
-├── data/
-├── static/
-├── tests/
-└── i18n/
+## Instalación
+
+```bash
+# TEST
+scripts/install-hellenia-reports.sh test
+scripts/run-phase13-6-validate-reports.sh test
+
+# PROD (tras PASS en TEST)
+scripts/backup-hellenia.sh prod   # si existe
+scripts/install-hellenia-reports.sh prod
+scripts/run-phase13-6-validate-reports.sh prod
 ```
 
 ## Dependencias
 
-`hellenia_base`
+- `hellenia_base`
+- `sale`, `account`, `purchase`, `stock`
+- `justech_l10n_do_ncf`
 
-## Desarrollo
+## Configuración
 
-Ver [docs/CUSTOM_MODULE_GUIDE.md](../../docs/CUSTOM_MODULE_GUIDE.md) y [docs/CODING_STANDARDS.md](../../docs/CODING_STANDARDS.md).
+Configuración → Empresas → Documentos Hellenia:
 
-**No instalar** en ambientes hasta aprobación del cliente.
+- Colores corporativos
+- Términos y condiciones
+- Aviso legal
+- Firma y sello
+- Redes sociales
+- QR en facturas
+
+También configurar logo y RNC en la ficha de empresa.
 
 ## Autor
 

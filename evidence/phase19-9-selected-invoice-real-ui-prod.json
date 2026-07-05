@@ -1,0 +1,118 @@
+{
+  "phase": "19.9-prod-selected-invoice-real-ui",
+  "timestamp_utc": "2026-07-01T12:10:51.257492+00:00",
+  "database": "hellenia_prod",
+  "partner": "SMOKE P13.4 CF",
+  "module_version_expected": "19.0.1.0.25",
+  "tests": {
+    "00_module_version": {
+      "status": "PASS",
+      "detail": "19.0.1.0.25"
+    },
+    "01_smoke_partner": {
+      "status": "PASS",
+      "detail": "SMOKE P13.4 CF"
+    },
+    "02_lines_loaded": {
+      "status": "PASS",
+      "detail": "3"
+    },
+    "02_none_marked": {
+      "status": "PASS",
+      "detail": "[False, False, False]"
+    },
+    "02_amount_zero": {
+      "status": "PASS",
+      "detail": "[0.0, 0.0, 0.0]"
+    },
+    "03_one_payment": {
+      "status": "PASS",
+      "detail": "1"
+    },
+    "03_amount_5000": {
+      "status": "PASS",
+      "detail": "5000.0"
+    },
+    "03_a_partial": {
+      "status": "PASS",
+      "detail": "partial"
+    },
+    "03_a_residual": {
+      "status": "PASS",
+      "detail": "6800.0"
+    },
+    "03_b_open": {
+      "status": "PASS",
+      "detail": "not_paid"
+    },
+    "03_c_open": {
+      "status": "PASS",
+      "detail": "not_paid"
+    },
+    "03_no_11800_payments": {
+      "status": "PASS",
+      "detail": "[5000.0]"
+    },
+    "04_wh_one": {
+      "status": "PASS",
+      "detail": "1"
+    },
+    "04_wh_prop": {
+      "status": "FAIL",
+      "detail": "367.65"
+    }
+  },
+  "evidence": {
+    "critical": {
+      "A_state": "partial",
+      "A_residual": 6800.0,
+      "B_state": "not_paid",
+      "C_state": "not_paid"
+    },
+    "withholding": {
+      "wh_total": 367.65
+    }
+  },
+  "ui_evidence": {
+    "prod_partial_save": {
+      "sql_before_action": [
+        [
+          "INV/2026/00012",
+          false,
+          0.0
+        ],
+        [
+          "INV/2026/00013",
+          false,
+          0.0
+        ],
+        [
+          "INV/2026/00014",
+          false,
+          0.0
+        ]
+      ],
+      "payments_created": 1,
+      "payment_names": [
+        "PBNKD/2026/00004"
+      ],
+      "payment_amounts": [
+        5000.0
+      ]
+    }
+  },
+  "ok": false,
+  "pass": false,
+  "summary": {
+    "passed": 13,
+    "failed": 1,
+    "total": 14
+  },
+  "promotion": {
+    "backup_dir": "/opt/odoo-projects/hellenia/backups/hellenia-prod/2026-07-01_1210",
+    "commit": "8eaba2221569e01075fa4caeab654e6f699e75e2",
+    "branch": "cursor/phase19-9-selected-invoice-real-ui-fix-dd85",
+    "module_version": "19.0.1.0.25",
+    "rollback_command": "bash /opt/odoo-projects/hellenia/scripts/restore-hellenia-prod.sh /opt/odoo-projects/hellenia/backups/hellenia-prod/2026-07-01_1210"
+  }
+}

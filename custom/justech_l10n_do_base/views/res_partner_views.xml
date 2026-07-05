@@ -6,6 +6,12 @@
         <field name="inherit_id" ref="base.view_partner_form"/>
         <field name="arch" type="xml">
             <field name="vat" position="after">
+                <field name="justech_do_default_document_type_id"
+                       string="Comprobante fiscal por defecto"
+                       help="Este tipo de comprobante se sugerirá automáticamente al crear cotizaciones y facturas para este cliente."
+                       placeholder="Seleccionar comprobante fiscal..."
+                       options="{'no_create': True, 'no_open': True, 'no_quick_create': True}"/>
+                <field name="justech_do_partner_id_type"/>
                 <field name="justech_do_rnc_valid" readonly="1"/>
             </field>
         </field>

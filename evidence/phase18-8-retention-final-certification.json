@@ -1,0 +1,15 @@
+{
+  "phase": "18.8-retention-final-certification",
+  "timestamp_utc": "2026-07-01T01:35:16.057930+00:00",
+  "database": "hellenia_test",
+  "module_version": "19.0.1.0.12",
+  "persistent_model": "hellenia.payment.withholding.line",
+  "root_cause": "Modelo transitorio y persistente compartían nombre; líneas sin fallback post-create; 623 no leía persistencia; pagos históricos sin wizard.",
+  "fix": "Reingeniería modelo persistente, finalize post-create, 623/606/607 desde líneas, vista factura, compute sin store.",
+  "summary": {"passed": 26, "failed": 0, "total": 26},
+  "ok": true,
+  "pass": true,
+  "production_ready_for_approval": true,
+  "accounts_used": {"gov_5": "11080302", "itbis_100": "21030201"},
+  "evidence_623": {"lines": 1, "gov": 500.0}
+}

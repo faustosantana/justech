@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="sale.action_report_saleorder" model="ir.actions.report">
+        <field name="paperformat_id" ref="hellenia_reports.paperformat_hellenia_letter"/>
+    </record>
+    <record id="sale.action_report_pro_forma_invoice" model="ir.actions.report">
+        <field name="paperformat_id" ref="hellenia_reports.paperformat_hellenia_letter"/>
+    </record>
+    <record id="account.account_invoices" model="ir.actions.report">
+        <field name="paperformat_id" ref="hellenia_reports.paperformat_hellenia_letter"/>
+    </record>
+    <record id="account.action_report_payment_receipt" model="ir.actions.report">
+        <field name="paperformat_id" ref="hellenia_reports.paperformat_hellenia_letter"/>
+    </record>
+    <record id="purchase.action_report_purchase_order" model="ir.actions.report">
+        <field name="paperformat_id" ref="hellenia_reports.paperformat_hellenia_letter"/>
+    </record>
+    <record id="purchase.report_purchase_quotation" model="ir.actions.report">
+        <field name="paperformat_id" ref="hellenia_reports.paperformat_hellenia_letter"/>
+    </record>
+    <record id="stock.action_report_delivery" model="ir.actions.report">
+        <field name="paperformat_id" ref="hellenia_reports.paperformat_hellenia_letter"/>
+    </record>
+    <record id="stock.action_report_picking" model="ir.actions.report">
+        <field name="paperformat_id" ref="hellenia_reports.paperformat_hellenia_letter"/>
+    </record>
+    <record id="account_followup.action_report_followup" model="ir.actions.report">
+        <field name="paperformat_id" ref="hellenia_reports.paperformat_hellenia_letter"/>
+    </record>
+</odoo>

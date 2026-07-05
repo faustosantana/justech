@@ -5,10 +5,10 @@ class ResCompany(models.Model):
     _inherit = "res.company"
 
     justech_do_fiscal_enabled = fields.Boolean(
-        string="Dominican Fiscal (Justech)",
+        string="Fiscal dominicano activo",
         default=True,
     )
     justech_do_ncf_alert_days = fields.Integer(
-        string="NCF Range Alert (days)",
+        string="Días de alerta rangos NCF",
         default=30,
     )

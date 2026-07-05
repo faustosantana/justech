@@ -10,4 +10,11 @@
         <field name="privilege_id" ref="account.res_groups_privilege_accounting"/>
         <field name="implied_ids" eval="[(4, ref('group_justech_do_fiscal_user'))]"/>
     </record>
+    <!-- Contadores y administradores contables ven la localización Justech -->
+    <record id="account.group_account_manager" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('group_justech_do_fiscal_user'))]"/>
+    </record>
+    <record id="account.group_account_user" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('group_justech_do_fiscal_user'))]"/>
+    </record>
 </odoo>

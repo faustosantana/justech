@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_hellenia_governance_audit_list" model="ir.ui.view">
+        <field name="name">hellenia.governance.audit.list</field>
+        <field name="model">hellenia.governance.audit</field>
+        <field name="arch" type="xml">
+            <list create="false" edit="false">
+                <field name="create_date"/>
+                <field name="action"/>
+                <field name="user_id"/>
+                <field name="company_id"/>
+                <field name="model"/>
+            </list>
+        </field>
+    </record>
+    <record id="action_hellenia_governance_audit" model="ir.actions.act_window">
+        <field name="name">Auditoría</field>
+        <field name="res_model">hellenia.governance.audit</field>
+        <field name="view_mode">list</field>
+    </record>
+</odoo>

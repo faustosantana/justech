@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="role_admin_erp" model="hellenia.role">
+        <field name="code">admin_erp</field>
+        <field name="name">Administrador ERP</field>
+        <field name="is_system">True</field>
+        <field name="permission_ids" eval="[(6, 0, [
+            ref('perm_pos_view'), ref('perm_pos_open_session'), ref('perm_pos_close_own'),
+            ref('perm_pos_close_other'), ref('perm_pos_fiscal_invoice'), ref('perm_pos_ticket_only'),
+            ref('perm_pos_convert_ticket'), ref('perm_pos_create_customer'), ref('perm_pos_edit_customer'),
+            ref('perm_pos_view_audit'), ref('perm_pos_configure'),
+            ref('perm_ncf_modify'), ref('perm_ncf_void'),
+            ref('perm_dgii_view'), ref('perm_dgii_export_607'), ref('perm_dgii_export_606'),
+            ref('perm_justech_admin_modules'),
+        ])]"/>
+    </record>
+    <record id="role_admin_fiscal" model="hellenia.role">
+        <field name="code">admin_fiscal</field>
+        <field name="name">Administrador Fiscal</field>
+        <field name="is_system">True</field>
+        <field name="permission_ids" eval="[(6, 0, [
+            ref('perm_ncf_modify'), ref('perm_ncf_void'),
+            ref('perm_dgii_view'), ref('perm_dgii_export_607'), ref('perm_dgii_export_606'),
+        ])]"/>
+    </record>
+    <record id="role_accountant" model="hellenia.role">
+        <field name="code">accountant</field>
+        <field name="name">Contador</field>
+        <field name="is_system">True</field>
+        <field name="permission_ids" eval="[(6, 0, [
+            ref('perm_dgii_view'), ref('perm_dgii_export_607'), ref('perm_dgii_export_606'),
+        ])]"/>
+    </record>
+    <record id="role_sales" model="hellenia.role">
+        <field name="code">sales</field>
+        <field name="name">Vendedor</field>
+        <field name="is_system">True</field>
+        <field name="permission_ids" eval="[(6, 0, [])]"/>
+    </record>
+    <record id="role_purchase" model="hellenia.role">
+        <field name="code">purchase</field>
+        <field name="name">Compras</field>
+        <field name="is_system">True</field>
+        <field name="permission_ids" eval="[(6, 0, [])]"/>
+    </record>
+    <record id="role_warehouse" model="hellenia.role">
+        <field name="code">warehouse</field>
+        <field name="name">Almacén</field>
+        <field name="is_system">True</field>
+        <field name="permission_ids" eval="[(6, 0, [])]"/>
+    </record>
+    <record id="role_pos_cashier" model="hellenia.role">
+        <field name="code">pos_cashier</field>
+        <field name="name">Cajero POS</field>
+        <field name="is_system">True</field>
+        <field name="permission_ids" eval="[(6, 0, [
+            ref('perm_pos_view'), ref('perm_pos_open_session'), ref('perm_pos_close_own'),
+            ref('perm_pos_ticket_only'), ref('perm_pos_create_customer'),
+        ])]"/>
+    </record>
+    <record id="role_pos_supervisor" model="hellenia.role">
+        <field name="code">pos_supervisor</field>
+        <field name="name">Supervisor POS</field>
+        <field name="is_system">True</field>
+        <field name="permission_ids" eval="[(6, 0, [
+            ref('perm_pos_view'), ref('perm_pos_open_session'), ref('perm_pos_close_own'),
+            ref('perm_pos_close_other'), ref('perm_pos_fiscal_invoice'), ref('perm_pos_ticket_only'),
+            ref('perm_pos_convert_ticket'), ref('perm_pos_create_customer'), ref('perm_pos_edit_customer'),
+            ref('perm_pos_view_audit'), ref('perm_pos_configure'),
+        ])]"/>
+    </record>
+    <record id="role_justech_support" model="hellenia.role">
+        <field name="code">justech_support</field>
+        <field name="name">Soporte Justech</field>
+        <field name="is_system">True</field>
+        <field name="permission_ids" eval="[(6, 0, [
+            ref('perm_pos_view'), ref('perm_justech_admin_modules'),
+        ])]"/>
+    </record>
+</odoo>

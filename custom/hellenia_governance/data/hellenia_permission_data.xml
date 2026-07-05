@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="perm_pos_view" model="hellenia.permission">
+        <field name="code">pos.view</field>
+        <field name="name">Ver POS</field>
+        <field name="category">pos</field>
+        <field name="risk_level">low</field>
+        <field name="description">Permite acceder al módulo Punto de Venta.</field>
+        <field name="affects">Menú POS, sesiones, pantalla de venta.</field>
+        <field name="impacted_modules">point_of_sale, hellenia_pos</field>
+    </record>
+    <record id="perm_pos_open_session" model="hellenia.permission">
+        <field name="code">pos.open_session</field>
+        <field name="name">Abrir caja</field>
+        <field name="category">pos</field>
+        <field name="risk_level">medium</field>
+        <field name="description">Abrir sesión de caja POS.</field>
+        <field name="affects">Apertura de sesión, fondo inicial.</field>
+        <field name="impacted_modules">point_of_sale</field>
+    </record>
+    <record id="perm_pos_close_own" model="hellenia.permission">
+        <field name="code">pos.close_own_session</field>
+        <field name="name">Cerrar mi caja</field>
+        <field name="category">pos</field>
+        <field name="risk_level">medium</field>
+        <field name="description">Cerrar la sesión POS propia del usuario.</field>
+        <field name="affects">Cierre de sesión, arqueo propio.</field>
+        <field name="impacted_modules">point_of_sale</field>
+    </record>
+    <record id="perm_pos_close_other" model="hellenia.permission">
+        <field name="code">pos.close_other_session</field>
+        <field name="name">Cerrar caja de otro usuario</field>
+        <field name="category">pos</field>
+        <field name="risk_level">high</field>
+        <field name="description">Cerrar sesiones POS abiertas por otros cajeros.</field>
+        <field name="affects">Supervisión, arqueos ajenos.</field>
+        <field name="impacted_modules">point_of_sale</field>
+    </record>
+    <record id="perm_pos_fiscal_invoice" model="hellenia.permission">
+        <field name="code">pos.issue_fiscal_invoice</field>
+        <field name="name">Emitir factura fiscal POS</field>
+        <field name="category">pos</field>
+        <field name="risk_level">critical</field>
+        <field name="description">Emitir comprobante fiscal desde POS.</field>
+        <field name="affects">NCF, facturación electrónica POS.</field>
+        <field name="impacted_modules">hellenia_pos, justech_l10n_do_ncf</field>
+    </record>
+    <record id="perm_pos_ticket_only" model="hellenia.permission">
+        <field name="code">pos.sell_ticket_only</field>
+        <field name="name">Vender solo ticket</field>
+        <field name="category">pos</field>
+        <field name="risk_level">low</field>
+        <field name="description">Vender tickets sin comprobante fiscal.</field>
+        <field name="affects">Órdenes POS no fiscales.</field>
+        <field name="impacted_modules">point_of_sale</field>
+    </record>
+    <record id="perm_pos_convert_ticket" model="hellenia.permission">
+        <field name="code">pos.convert_ticket_invoice</field>
+        <field name="name">Convertir ticket en factura</field>
+        <field name="category">pos</field>
+        <field name="risk_level">high</field>
+        <field name="description">Convertir ticket POS en factura fiscal posterior.</field>
+        <field name="affects">NCF tardío, facturación POS.</field>
+        <field name="impacted_modules">hellenia_pos, justech_l10n_do_ncf</field>
+    </record>
+    <record id="perm_pos_create_customer" model="hellenia.permission">
+        <field name="code">pos.create_customer</field>
+        <field name="name">Crear cliente POS</field>
+        <field name="category">pos</field>
+        <field name="risk_level">medium</field>
+        <field name="description">Crear contactos desde POS.</field>
+        <field name="affects">res.partner desde POS.</field>
+        <field name="impacted_modules">point_of_sale, contacts</field>
+    </record>
+    <record id="perm_pos_edit_customer" model="hellenia.permission">
+        <field name="code">pos.edit_customer</field>
+        <field name="name">Editar cliente POS</field>
+        <field name="category">pos</field>
+        <field name="risk_level">medium</field>
+        <field name="description">Modificar contactos desde POS.</field>
+        <field name="affects">Datos de clientes, RNC.</field>
+        <field name="impacted_modules">point_of_sale, contacts</field>
+    </record>
+    <record id="perm_pos_view_audit" model="hellenia.permission">
+        <field name="code">pos.view_audit</field>
+        <field name="name">Ver auditoría POS</field>
+        <field name="category">pos</field>
+        <field name="risk_level">low</field>
+        <field name="description">Consultar logs de auditoría POS.</field>
+        <field name="affects">Reportes de auditoría POS.</field>
+        <field name="impacted_modules">hellenia_pos</field>
+    </record>
+    <record id="perm_pos_configure" model="hellenia.permission">
+        <field name="code">pos.configure</field>
+        <field name="name">Configurar POS</field>
+        <field name="category">pos</field>
+        <field name="risk_level">high</field>
+        <field name="description">Configurar puntos de venta, métodos de pago y políticas.</field>
+        <field name="affects">pos.config, diarios, impuestos POS.</field>
+        <field name="impacted_modules">point_of_sale</field>
+    </record>
+    <record id="perm_ncf_modify" model="hellenia.permission">
+        <field name="code">ncf.modify</field>
+        <field name="name">Modificar NCF</field>
+        <field name="category">ncf</field>
+        <field name="risk_level">critical</field>
+        <field name="description">Modificar datos de comprobantes fiscales emitidos.</field>
+        <field name="affects">Secuencias NCF, facturas fiscales.</field>
+        <field name="impacted_modules">justech_l10n_do_ncf</field>
+    </record>
+    <record id="perm_ncf_void" model="hellenia.permission">
+        <field name="code">ncf.void</field>
+        <field name="name">Anular NCF</field>
+        <field name="category">ncf</field>
+        <field name="risk_level">critical</field>
+        <field name="description">Anular comprobantes fiscales (NCF).</field>
+        <field name="affects">DGII, secuencias, facturas anuladas.</field>
+        <field name="impacted_modules">justech_l10n_do_ncf</field>
+    </record>
+    <record id="perm_dgii_view" model="hellenia.permission">
+        <field name="code">dgii.view_reports</field>
+        <field name="name">Ver reportes DGII</field>
+        <field name="category">dgii</field>
+        <field name="risk_level">low</field>
+        <field name="description">Acceder a reportes fiscales DGII.</field>
+        <field name="affects">606, 607, 623, panel fiscal.</field>
+        <field name="impacted_modules">justech_l10n_do_reports</field>
+    </record>
+    <record id="perm_dgii_export_607" model="hellenia.permission">
+        <field name="code">dgii.export_607</field>
+        <field name="name">Exportar 607</field>
+        <field name="category">dgii</field>
+        <field name="risk_level">high</field>
+        <field name="description">Generar y exportar reporte 607 ventas.</field>
+        <field name="affects">Declaración DGII ventas.</field>
+        <field name="impacted_modules">justech_l10n_do_reports</field>
+    </record>
+    <record id="perm_dgii_export_606" model="hellenia.permission">
+        <field name="code">dgii.export_606</field>
+        <field name="name">Exportar 606</field>
+        <field name="category">dgii</field>
+        <field name="risk_level">high</field>
+        <field name="description">Generar y exportar reporte 606 compras.</field>
+        <field name="affects">Declaración DGII compras.</field>
+        <field name="impacted_modules">justech_l10n_do_reports</field>
+    </record>
+    <record id="perm_justech_admin_modules" model="hellenia.permission">
+        <field name="code">justech.administer_modules</field>
+        <field name="name">Administrar módulos Justech</field>
+        <field name="category">justech</field>
+        <field name="risk_level">critical</field>
+        <field name="description">Activar/desactivar módulos y features comerciales Justech.</field>
+        <field name="affects">Catálogo comercial, wizard de activación.</field>
+        <field name="impacted_modules">justech_modules</field>
+    </record>
+</odoo>

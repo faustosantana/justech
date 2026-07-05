@@ -1,0 +1,13 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_hellenia_permission_user,hellenia.permission user,model_hellenia_permission,group_governance_user,1,0,0,0
+access_hellenia_permission_manager,hellenia.permission manager,model_hellenia_permission,group_governance_manager,1,1,1,1
+access_hellenia_role_user,hellenia.role user,model_hellenia_role,group_governance_user,1,0,0,0
+access_hellenia_role_manager,hellenia.role manager,model_hellenia_role,group_governance_manager,1,1,1,1
+access_hellenia_user_profile_user,hellenia.user.profile user,model_hellenia_user_profile,group_governance_user,1,0,0,0
+access_hellenia_user_profile_manager,hellenia.user.profile manager,model_hellenia_user_profile,group_governance_manager,1,1,1,1
+access_hellenia_feature_policy_user,hellenia.feature.policy user,model_hellenia_feature_policy,group_governance_user,1,0,0,0
+access_hellenia_feature_policy_manager,hellenia.feature.policy manager,model_hellenia_feature_policy,group_governance_manager,1,1,1,1
+access_hellenia_menu_policy_user,hellenia.menu.policy user,model_hellenia_menu_policy,group_governance_user,1,0,0,0
+access_hellenia_menu_policy_manager,hellenia.menu.policy manager,model_hellenia_menu_policy,group_governance_manager,1,1,1,1
+access_hellenia_governance_audit_user,hellenia.governance.audit user,model_hellenia_governance_audit,group_governance_user,1,0,0,0
+access_hellenia_governance_audit_manager,hellenia.governance.audit manager,model_hellenia_governance_audit,group_governance_manager,1,1,0,0

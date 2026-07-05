@@ -1,0 +1,58 @@
+{
+  "phase": "F31.1.5",
+  "environment": "hellenia_test",
+  "url": "https://test.hellenia.cloud",
+  "timestamp_utc": "2026-07-05T13:14:35Z",
+  "decision": "PASS",
+  "backup_path": "/opt/odoo-projects/hellenia/backups/test/2026-07-05_1305",
+  "backup_verified": true,
+  "prod_touched": false,
+  "commit": false,
+  "push": false,
+  "justech_modules": {
+    "action": "install",
+    "version": "19.0.1.5.0",
+    "state": "installed"
+  },
+  "api_version": 1,
+  "modules_registered_in_catalog": 11,
+  "modules_expected_on_test": 11,
+  "modules_not_installed_on_test": [
+    {
+      "technical_name": "justech_core",
+      "note": "Tiene justech_register en repo; no instalado en TEST por decisión explícita"
+    },
+    {
+      "technical_name": "hellenia_inventory",
+      "note": "Tiene justech_register en repo; no instalado en TEST por decisión explícita"
+    }
+  ],
+  "production_registry_total": 13,
+  "wizard": {
+    "menu": "Justech → Licencias → Module Activation",
+    "module_lines": 11,
+    "feature_lines": 11,
+    "activate_deactivate": "PASS",
+    "audit": "PASS",
+    "no_odoo_install_uninstall": "PASS"
+  },
+  "tests": {
+    "total": 27,
+    "passed": 27,
+    "failed": 0,
+    "errors": 0,
+    "result": "0 failed, 0 error(s) of 27 tests"
+  },
+  "validation": "PASS",
+  "regression": "PASS",
+  "healthcheck": "PASS",
+  "hotfixes_in_local_code": {
+    "hooks.py_odoo19_env_cr": true,
+    "hooks.py_table_existence_guard": true,
+    "wizard_order_by_id": true
+  },
+  "test_fix": {
+    "file": "tests/test_dependencies.py",
+    "change": "always_enabled: False en módulos de prueba para aislar del default F31.1.5"
+  }
+}

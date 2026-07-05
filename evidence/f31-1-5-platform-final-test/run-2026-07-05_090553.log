@@ -1,0 +1,13 @@
+=== F31.1.5 TEST validation ===
+Timestamp: 2026-07-05_090553
+Local evidence: /Users/faustosantana/Projects/jaios/evidence/f31-1-5-platform-final-test
+
+=== Step 1: Backup TEST on VPS ===
+[2026-07-05 13:05:54] Iniciando backup test → /opt/odoo-projects/hellenia/backups/test/2026-07-05_1305
+[2026-07-05 13:05:56] OK  PostgreSQL dump
+[2026-07-05 13:05:58] OK  filestore
+[2026-07-05 13:05:58] Backup test completado: /opt/odoo-projects/hellenia/backups/test/2026-07-05_1305
+Backup path: 
+
+=== Step 2: Verify backup ===
+bash: line 2: $1: unbound variable

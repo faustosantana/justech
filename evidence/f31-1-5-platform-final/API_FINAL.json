@@ -1,0 +1,334 @@
+{
+  "$schema": "justech-modules-api-contract/v1",
+  "contract_version": "1.0.0",
+  "api_version": 1,
+  "module": "justech_modules",
+  "module_version": "19.0.1.5.0",
+  "facade": "justech.license.service",
+  "exception": {
+    "class": "odoo.addons.justech_modules.exceptions.JustechLicenseError",
+    "base": "odoo.exceptions.UserError",
+    "stable": false,
+    "note": "Message-based today; error codes recommended before v2 freeze"
+  },
+  "validate_license_reasons": {
+    "frozen": true,
+    "values": [
+      "invalid_key",
+      "no_license",
+      "revoked",
+      "not_active",
+      "expired",
+      "unknown_feature",
+      "feature_not_included",
+      "ok"
+    ]
+  },
+  "validate_license_response": {
+    "valid": "boolean",
+    "reason": "string (enum validate_license_reasons)",
+    "expires": "date|false",
+    "tier": "string|false (TRIAL|STD|PRO|ENT)"
+  },
+  "check_dependencies_response": {
+    "ok": "boolean",
+    "missing": [
+      {
+        "module_code": "string",
+        "module_name": "string",
+        "dependency_type": "required|optional"
+      }
+    ]
+  },
+  "manifest_registration": {
+    "key": "justech_register",
+    "location": "__manifest__.py",
+    "required_fields": [
+      "feature_code"
+    ],
+    "optional_fields": [
+      "code",
+      "name",
+      "version",
+      "category",
+      "license_required",
+      "tier_minimum",
+      "always_on",
+      "default_active"
+    ],
+    "hook": "post_init_hook \u2192 register_from_manifest(module_name, register_data)"
+  },
+  "public_api": [
+    {
+      "method": "get_api_version",
+      "classification": "PUBLIC",
+      "parameters": [],
+      "returns": "int",
+      "raises": [],
+      "stable": true,
+      "since": "F31.1"
+    },
+    {
+      "method": "is_active",
+      "classification": "PUBLIC",
+      "parameters": [
+        {
+          "name": "feature_code",
+          "type": "str",
+          "required": true
+        },
+        {
+          "name": "company",
+          "type": "res.company recordset",
+          "required": false,
+          "default": "env.company"
+        }
+      ],
+      "returns": "bool",
+      "raises": [],
+      "stable": true,
+      "since": "F31.1",
+      "notes": "Cached via ormcache; respects expired licenses (F31.1.2 LIFE-01)"
+    },
+    {
+      "method": "require_active",
+      "classification": "PUBLIC",
+      "parameters": [
+        {
+          "name": "feature_code",
+          "type": "str",
+          "required": true
+        },
+        {
+          "name": "company",
+          "type": "res.company recordset",
+          "required": false,
+          "default": "env.company"
+        }
+      ],
+      "returns": "None",
+      "raises": [
+        "JustechLicenseError"
+      ],
+      "stable": true,
+      "since": "F31.1"
+    },
+    {
+      "method": "get_feature",
+      "classification": "PUBLIC",
+      "parameters": [
+        {
+          "name": "feature_code",
+          "type": "str",
+          "required": true
+        }
+      ],
+      "returns": "justech.feature recordset (0 or 1)",
+      "raises": [],
+      "stable": false,
+      "since": "F31.1",
+      "stability_risk": "Returns internal ORM model; prefer DTO in future v2"
+    },
+    {
+      "method": "validate_license",
+      "classification": "PUBLIC",
+      "parameters": [
+        {
+          "name": "key",
+          "type": "str|None",
+          "required": false
+        },
+        {
+          "name": "feature_code",
+          "type": "str|None",
+          "required": false
+        },
+        {
+          "name": "company",
+          "type": "res.company recordset",
+          "required": false,
+          "default": "env.company"
+        }
+      ],
+      "returns": "validate_license_response",
+      "raises": [],
+      "stable": true,
+      "since": "F31.1",
+      "notes": "Audits only successful validations today (SEC-02 gap)"
+    },
+    {
+      "method": "check_dependencies",
+      "classification": "PUBLIC",
+      "parameters": [
+        {
+          "name": "feature_code",
+          "type": "str",
+          "required": true
+        },
+        {
+          "name": "company",
+          "type": "res.company recordset",
+          "required": false,
+          "default": "env.company"
+        }
+      ],
+      "returns": "check_dependencies_response",
+      "raises": [],
+      "stable": true,
+      "since": "F31.1"
+    },
+    {
+      "method": "activate_feature",
+      "classification": "PUBLIC",
+      "parameters": [
+        {
+          "name": "feature_code",
+          "type": "str",
+          "required": true
+        },
+        {
+          "name": "company",
+          "type": "res.company recordset",
+          "required": false,
+          "default": "env.company"
+        }
+      ],
+      "returns": "bool (True)",
+      "raises": [
+        "JustechLicenseError"
+      ],
+      "stable": true,
+      "since": "F31.1",
+      "notes": "Enforces max_users on license (F31.1.2 COMP-02)"
+    },
+    {
+      "method": "deactivate_feature",
+      "classification": "PUBLIC",
+      "parameters": [
+        {
+          "name": "feature_code",
+          "type": "str",
+          "required": true
+        },
+        {
+          "name": "company",
+          "type": "res.company recordset",
+          "required": false,
+          "default": "env.company"
+        }
+      ],
+      "returns": "bool (True)",
+      "raises": [
+        "JustechLicenseError"
+      ],
+      "stable": true,
+      "since": "F31.1"
+    },
+    {
+      "method": "register_from_manifest",
+      "classification": "PUBLIC",
+      "parameters": [
+        {
+          "name": "module_name",
+          "type": "str",
+          "required": true
+        },
+        {
+          "name": "register_data",
+          "type": "dict",
+          "required": true
+        }
+      ],
+      "returns": "(justech.module, justech.feature) recordsets",
+      "raises": [],
+      "stable": false,
+      "since": "F31.1",
+      "stability_risk": "Returns internal ORM models; call only from module post_init_hook"
+    },
+    {
+      "method": "get_activation_catalog",
+      "classification": "PUBLIC",
+      "since": "F31.1.5",
+      "stable": true
+    },
+    {
+      "method": "activate_module",
+      "classification": "PUBLIC",
+      "since": "F31.1.5",
+      "stable": true
+    },
+    {
+      "method": "deactivate_module",
+      "classification": "PUBLIC",
+      "since": "F31.1.5",
+      "stable": true
+    }
+  ],
+  "private_api": [
+    {
+      "method": "register_platform_seed",
+      "classification": "PRIVATE",
+      "caller": "justech_modules post_init_hook only",
+      "since": "F31.1"
+    },
+    {
+      "method": "clear_license_cache",
+      "classification": "PRIVATE",
+      "caller": "justech_modules internals and hooks",
+      "since": "F31.1.2",
+      "recommendation": "Reclassify as INTERNAL; external modules must not call"
+    }
+  ],
+  "internal_api": [
+    "_is_active_cached",
+    "_compute_is_active",
+    "_get_feature_id_cached",
+    "_get_feature_record",
+    "_company_has_valid_license",
+    "_get_valid_licenses_for_company",
+    "_get_active_license_for_company",
+    "_feature_granted_to_company",
+    "_feature_is_active_for_company",
+    "_order_features_by_module_dependencies",
+    "_topological_sort_modules",
+    "_collect_missing_module_deps",
+    "_module_is_satisfied",
+    "_upsert_module",
+    "_upsert_feature",
+    "_set_feature_company_active",
+    "_audit"
+  ],
+  "deprecated_api": [],
+  "forbidden_for_consumers": [
+    "env['justech.license']",
+    "env['justech.license.company']",
+    "env['justech.license.feature']",
+    "env['justech.feature.company']",
+    "env['justech.module']",
+    "env['justech.module.dependency']",
+    "env['justech.activation.key']",
+    "justech.license.action_activate",
+    "justech.license._find_by_license_key",
+    "justech.license._hash_license_key",
+    "justech.license_key_util.*"
+  ],
+  "internal_models": [
+    "justech.module",
+    "justech.module.dependency",
+    "justech.feature",
+    "justech.feature.company",
+    "justech.license",
+    "justech.license.feature",
+    "justech.license.company",
+    "justech.license.audit",
+    "justech.activation.key"
+  ],
+  "platform_feature_codes": {
+    "platform_core": {
+      "always_on": true,
+      "license_required": false,
+      "description": "Seeded platform baseline; always active"
+    }
+  },
+  "frozen_date": "2026-07-05"
+}

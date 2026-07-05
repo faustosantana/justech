@@ -10,6 +10,12 @@
               parent="menu_justech_root"
               sequence="10"/>
 
+    <menuitem id="menu_justech_module_activation"
+              name="Module Activation"
+              parent="menu_justech_licensing"
+              action="action_justech_module_activation_wizard"
+              sequence="5"/>
+
     <menuitem id="menu_justech_license"
               name="Licenses"
               parent="menu_justech_licensing"

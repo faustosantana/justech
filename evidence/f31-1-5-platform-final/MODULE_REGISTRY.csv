@@ -1,0 +1,14 @@
+technical_name,module_code,module_name,version,category,country,localization,always_enabled,required_module,feature_codes,commercial_dependencies,odoo_depends,has_justech_register
+hellenia_account,hellenia_account,Hellenia Account,19.0.1.0.27,accounting,DO,,True,True,hellenia_account,hellenia_base|justech_l10n_do_base|justech_l10n_do_ncf,hellenia_base|account|justech_l10n_do_base|justech_l10n_do_ncf|l10n_do_check_printing,True
+hellenia_base,hellenia_base,Hellenia Base,19.0.1.0.0,platform,DO,,True,True,hellenia_base,,base,True
+hellenia_inventory,hellenia_inventory,Hellenia Inventory,19.0.1.0.0,inventory,DO,,True,False,hellenia_inventory,hellenia_base,hellenia_base|stock,True
+hellenia_pos,hellenia_pos,Hellenia POS,19.0.1.0.0,pos,DO,,True,False,hellenia_pos,hellenia_base,hellenia_base|point_of_sale,True
+hellenia_reports,hellenia_reports,Hellenia Reports,19.0.1.5.7,reports,DO,,True,True,hellenia_reports,hellenia_account|justech_l10n_do_ncf,hellenia_base|hellenia_account|sale|account|purchase|stock|justech_l10n_do_ncf|account_reports|account_followup,True
+hellenia_ui,hellenia_ui,Hellenia UI,19.0.1.0.4,ux,DO,,True,False,hellenia_ui,hellenia_base,base|sale_management|purchase|stock|account|contacts|stock_barcode,True
+hellenia_ux,hellenia_ux,Hellenia UX,19.0.1.2.0,ux,DO,,True,False,hellenia_ux,hellenia_ui|hellenia_account,hellenia_ui|hellenia_account|hellenia_reports|justech_l10n_do_ncf|justech_l10n_do_base|justech_l10n_do_reports|sale_management|purchase|stock,True
+justech_core,justech_core,Justech Core,19.0.1.0.0,platform,,,True,False,justech_core,,base,True
+justech_l10n_do_base,justech_l10n_do_base,Justech Dominican Fiscal Base,19.0.1.4.2,fiscal,DO,l10n_do,True,True,l10n_do_base,,account|contacts|l10n_do,True
+justech_l10n_do_ncf,justech_l10n_do_ncf,Justech Dominican NCF,19.0.1.5.2,fiscal,DO,l10n_do,True,True,l10n_do_ncf,justech_l10n_do_base,justech_l10n_do_base|account_debit_note|sale,True
+justech_l10n_do_reports,justech_l10n_do_reports,Justech Dominican Fiscal Reports,19.0.1.12.4,reports,DO,l10n_do,True,True,l10n_do_reports,justech_l10n_do_ncf,justech_l10n_do_ncf|hellenia_account,True
+justech_modules,justech_modules,Justech Modules,19.0.1.5.0,platform,,,True,False,platform_core,,base|mail,True
+justech_report_design,justech_report_design,Justech Report Design,19.0.7.3.1,reports,DO,,True,False,justech_report_design,hellenia_reports,mail|sale|sale_stock|stock|account|purchase|portal|hellenia_reports,True

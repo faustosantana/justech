@@ -7,4 +7,6 @@ from . import justech_license_feature
 from . import justech_license_company
 from . import justech_activation_key
 from . import justech_license_audit
+from . import justech_license_mixin
+from . import justech_module_activation_wizard
 from . import justech_license_service

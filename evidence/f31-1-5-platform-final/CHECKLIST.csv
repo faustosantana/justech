@@ -1,0 +1,11 @@
+id,check,status,detail
+A1,API_VERSION frozen at 1,PASS,justech.license.service.API_VERSION=1
+A2,Public API documented,PASS,docs/JUSTECH_MODULES_SDK.md
+B1,Activation wizard model,PASS,justech.module.activation.wizard
+B2,Wizard uses service API,PASS,activate_feature/deactivate_feature
+C1,All production modules justech_register,PASS,13/13
+C2,always_enabled default,PASS,All registered with always_enabled=True
+F1,Commercial dependency cycles,PASS,[]
+F2,Install order generated,PASS,13
+H1,ACL wizard added,PASS,ir.model.access.csv
+J1,GO LIVE checklist documented,PASS,GO_LIVE_REPORT.md

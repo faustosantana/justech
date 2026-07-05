@@ -1,0 +1,16 @@
+{
+  "timestamp_utc": "2026-07-05T12:56:15.197123+00:00",
+  "environment": "local_audit",
+  "modules_registered": 13,
+  "modules_with_register": 13,
+  "commercial_cycles": [],
+  "install_order_count": 13,
+  "checks": {
+    "ncf_module": true,
+    "dgii_reports": true,
+    "hellenia_account": true,
+    "hellenia_pos": true,
+    "justech_modules": true
+  },
+  "note": "Runtime DEV validation pending user-approved deploy"
+}

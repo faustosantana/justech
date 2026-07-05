@@ -1,0 +1,29 @@
+ Container hellenia-test-db-1 Running 
+ Container hellenia-test-db-1 Waiting 
+ Container hellenia-test-db-1 Healthy 
+ Container hellenia-test-odoo-run-56b35d201082 Creating 
+ Container hellenia-test-odoo-run-56b35d201082 Created 
+2026-07-05 13:09:34,985 1 WARNING ? odoo.tools.config: option logfile reads 'False' in the config file at /etc/odoo/odoo.conf but isn't a boolean option, skip 
+2026-07-05 13:09:34,985 1 WARNING ? odoo.tools.config: option logfile reads 'False' in the config file at /etc/odoo/odoo.conf but isn't a boolean option, skip 
+2026-07-05 13:09:34,985 1 INFO ? odoo: Odoo version 19.0-20260619 
+2026-07-05 13:09:34,985 1 INFO ? odoo: Using configuration file at /etc/odoo/odoo.conf 
+2026-07-05 13:09:34,985 1 INFO ? odoo: addons paths: _NamespacePath(['/usr/lib/python3/dist-packages/odoo/addons', '/var/lib/odoo/addons/19.0', '/mnt/enterprise/addons', '/mnt/custom', '/usr/lib/python3/dist-packages/addons']) 
+2026-07-05 13:09:34,985 1 INFO ? odoo: database: odoo@db:5432 
+2026-07-05 13:09:35,193 1 INFO ? odoo.service.server: Initiating shutdown 
+2026-07-05 13:09:35,193 1 INFO ? odoo.service.server: Hit CTRL-C again or send a second signal to force the shutdown. 
+2026-07-05 13:09:35,221 1 INFO hellenia_test odoo.modules.loading: loading 1 modules... 
+2026-07-05 13:09:35,224 1 INFO hellenia_test odoo.modules.loading: 1 modules loaded in 0.00s, 0 queries (+0 extra) 
+2026-07-05 13:09:35,252 1 INFO hellenia_test odoo.modules.loading: loading 134 modules... 
+2026-07-05 13:09:36,087 1 WARNING hellenia_test odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define models.Constraint on the model. 
+2026-07-05 13:09:36,132 1 WARNING hellenia_test odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define models.Constraint on the model. 
+2026-07-05 13:09:36,164 1 WARNING hellenia_test odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define models.Constraint on the model. 
+2026-07-05 13:09:36,213 1 INFO hellenia_test odoo.modules.loading: 134 modules loaded in 0.96s, 0 queries (+0 extra) 
+2026-07-05 13:09:36,307 1 WARNING hellenia_test odoo.fields: justech.do.fiscal.report.state: selection=[('draft', 'Borrador'), ('validated', 'Validado'), ('pending_approval', 'Requiere aprobación'), ('approved', 'Aprobado'), ('rejected', 'Rechazado'), ('generated', 'Generado'), ('done', 'Generado')] overrides existing selection; use selection_add instead 
+2026-07-05 13:09:36,375 1 INFO hellenia_test odoo.modules.loading: Modules loaded. 
+2026-07-05 13:09:36,386 1 WARNING hellenia_test odoo.schema: Missing not-null constraint on res.users.settings.color_scheme 
+2026-07-05 13:09:36,432 1 INFO hellenia_test odoo.registry: Registry loaded in 1.238s 
+2026-07-05 13:09:36,774 1 INFO hellenia_test odoo.addons.base.models.ir_actions_report: Will use the Wkhtmltopdf binary at /usr/local/bin/wkhtmltopdf 
+2026-07-05 13:09:36,788 1 INFO hellenia_test odoo.addons.base.models.ir_actions_report: Will use the Wkhtmltoimage binary at /usr/local/bin/wkhtmltoimage 
+2026-07-05 13:09:40,215 1 INFO hellenia_test odoo.addons.base.models.ir_actions_report: The PDF report has been generated for model: sale.order, records [171]. 
+2026-07-05 13:09:43,515 1 INFO hellenia_test odoo.addons.base.models.ir_actions_report: The PDF report has been generated for model: account.move, records [8383]. 
+F31_1_5_REGRESSION:{"phase": "F31.1.5-test-regression", "timestamp_utc": "2026-07-05T13:09:36.452097+00:00", "database": "hellenia_test", "status": "PASS", "checks": {"has_partner": {"status": "PASS", "detail": "Cliente Demo 001"}, "has_product": {"status": "PASS", "detail": "[DEMO14-PROD-0001] Producto Demo 0001"}, "quotation_created": {"status": "PASS", "detail": "S00171"}, "quotation_pdf": {"status": "PASS", "detail": "73656"}, "invoice_created": {"status": "PASS", "detail": "False"}, "ncf_field_present": {"status": "PASS", "detail": "pending_post (no NCF yet)"}, "invoice_pdf": {"status": "PASS", "detail": "74137"}, "dgii_606_model": {"status": "PASS", "detail": "justech.do.dgii.606.exporter"}, "dgii_607_model": {"status": "PASS", "detail": "justech.do.dgii.607.exporter"}, "dgii_623_model": {"status": "PASS", "detail": "justech.do.dgii.623.exporter"}, "pos_module": {"status": "PASS", "detail": "installed=1 configs=1"}, "pos_configured": {"status": "PASS", "detail": "Punto de Venta Hellenia"}}, "errors": [], "artifacts": {"quotation": "S00171", "invoice": false}}

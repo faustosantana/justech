@@ -4,3 +4,4 @@ from . import test_dependencies
 from . import test_multi_company
 from . import test_audit_log
 from . import test_hardening
+from . import test_activation_wizard

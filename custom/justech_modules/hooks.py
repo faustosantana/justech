@@ -1,5 +1,17 @@
-def pre_init_hook(cr):
+def pre_init_hook(cr_or_env):
     """Cleanup duplicates and migrate legacy license_key before constraints apply."""
+    cr = getattr(cr_or_env, "cr", cr_or_env)
+    cr.execute(
+        """
+        SELECT EXISTS (
+            SELECT FROM information_schema.tables
+            WHERE table_schema = 'public'
+              AND table_name = 'justech_license_company'
+        )
+        """
+    )
+    if not cr.fetchone()[0]:
+        return
     cr.execute(
         """
         DELETE FROM justech_license_company a
@@ -32,3 +44,6 @@ def post_init_hook(env):
     env["justech.license"].migrate_plaintext_license_keys()
     env["justech.license"].backfill_missing_license_hashes()
     env["justech.license.service"].register_platform_seed()
+    from .hooks_register import register_all_installed_manifests
+
+    register_all_installed_manifests(env)

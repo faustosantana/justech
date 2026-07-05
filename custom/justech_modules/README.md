@@ -1,6 +1,8 @@
 # Justech Modules
 
-Platform licensing engine for Justech ERP (F31.1 / F31.1b).
+Platform licensing engine for Justech ERP (F31.1 → F31.1.5).
+
+**Version:** 19.0.1.5.0 — Platform closed, API v1 frozen.
 
 ## Public API — version 1
 
@@ -11,19 +13,20 @@ service = env["justech.license.service"]
 service.get_api_version()          # → 1
 service.is_active("platform_core")
 service.require_active("dgii_reports")
-service.get_feature("platform_core")
-service.validate_license(key="JT-STD-...", feature_code="dgii_reports")
-service.check_dependencies("dgii_reports")
-service.activate_feature("dgii_reports")
-service.deactivate_feature("dgii_reports")
+service.get_activation_catalog(company=env.company)  # F31.1.5
+service.activate_module("hellenia_pos", company=env.company)
+service.deactivate_module("hellenia_pos", company=env.company)
 ```
 
-Breaking changes require incrementing `API_VERSION` and a migration note.
+## Module Activation Wizard
 
-## Seed data
+**Menu:** Justech → Licencias → Module Activation  
+Uses public API only — no Odoo install/uninstall. See `docs/JUSTECH_WIZARD_ACTIVATION_GUIDE.md`.
 
-Platform catalog (`justech_modules`, `platform_core`) is seeded **only** via
-`post_init_hook` → `register_platform_seed()`. No XML data seed.
+## Manifest registration
+
+All production modules declare `justech_register` in `__manifest__.py`.  
+Bulk sync on post_init via `register_all_installed_manifests()`.
 
 ## DEV install (product module only)
 
@@ -32,8 +35,4 @@ odoo-bin -d hellenia_dev -u justech_modules --test-enable --stop-after-init \
   --test-tags=/justech_modules
 ```
 
-`justech_modules_test` is **DEV-only** and excluded from the product commit.
-
-## Product commit scope
-
-See `evidence/phase31-1b-justech-modules-p0/PRODUCT_COMMIT_FILES.txt`.
+Evidence: `evidence/f31-1-5-platform-final/`

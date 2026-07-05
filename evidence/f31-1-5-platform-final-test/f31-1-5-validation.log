@@ -1,0 +1,40 @@
+ Container hellenia-test-db-1 Running 
+ Container hellenia-test-db-1 Waiting 
+ Container hellenia-test-db-1 Healthy 
+ Container hellenia-test-odoo-run-04f78621196b Creating 
+ Container hellenia-test-odoo-run-04f78621196b Created 
+2026-07-05 13:14:34,311 1 WARNING ? odoo.tools.config: option logfile reads 'False' in the config file at /etc/odoo/odoo.conf but isn't a boolean option, skip 
+2026-07-05 13:14:34,311 1 WARNING ? odoo.tools.config: option logfile reads 'False' in the config file at /etc/odoo/odoo.conf but isn't a boolean option, skip 
+2026-07-05 13:14:34,311 1 INFO ? odoo: Odoo version 19.0-20260619 
+2026-07-05 13:14:34,312 1 INFO ? odoo: Using configuration file at /etc/odoo/odoo.conf 
+2026-07-05 13:14:34,312 1 INFO ? odoo: addons paths: _NamespacePath(['/usr/lib/python3/dist-packages/odoo/addons', '/var/lib/odoo/addons/19.0', '/mnt/enterprise/addons', '/mnt/custom', '/usr/lib/python3/dist-packages/addons']) 
+2026-07-05 13:14:34,312 1 INFO ? odoo: database: odoo@db:5432 
+2026-07-05 13:14:34,522 1 INFO ? odoo.service.server: Initiating shutdown 
+2026-07-05 13:14:34,522 1 INFO ? odoo.service.server: Hit CTRL-C again or send a second signal to force the shutdown. 
+2026-07-05 13:14:34,549 1 INFO hellenia_test odoo.modules.loading: loading 1 modules... 
+2026-07-05 13:14:34,552 1 INFO hellenia_test odoo.modules.loading: 1 modules loaded in 0.00s, 0 queries (+0 extra) 
+2026-07-05 13:14:34,580 1 INFO hellenia_test odoo.modules.loading: loading 134 modules... 
+2026-07-05 13:14:35,411 1 WARNING hellenia_test odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define models.Constraint on the model. 
+2026-07-05 13:14:35,454 1 WARNING hellenia_test odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define models.Constraint on the model. 
+2026-07-05 13:14:35,488 1 WARNING hellenia_test odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define models.Constraint on the model. 
+2026-07-05 13:14:35,537 1 INFO hellenia_test odoo.modules.loading: 134 modules loaded in 0.96s, 0 queries (+0 extra) 
+2026-07-05 13:14:35,630 1 WARNING hellenia_test odoo.fields: justech.do.fiscal.report.state: selection=[('draft', 'Borrador'), ('validated', 'Validado'), ('pending_approval', 'Requiere aprobación'), ('approved', 'Aprobado'), ('rejected', 'Rechazado'), ('generated', 'Generado'), ('done', 'Generado')] overrides existing selection; use selection_add instead 
+2026-07-05 13:14:35,698 1 INFO hellenia_test odoo.modules.loading: Modules loaded. 
+2026-07-05 13:14:35,709 1 WARNING hellenia_test odoo.schema: Missing not-null constraint on res.users.settings.color_scheme 
+2026-07-05 13:14:35,756 1 INFO hellenia_test odoo.registry: Registry loaded in 1.234s 
+2026-07-05 13:14:35,787 1 WARNING hellenia_test py.warnings: /usr/lib/python3/dist-packages/odoo/modules/module.py:401: DeprecationWarning: Since 19.0, use Manifest
+  File "/usr/bin/odoo", line 6, in <module>
+    odoo.cli.main()
+  File "/usr/lib/python3/dist-packages/odoo/cli/command.py", line 133, in main
+    command().run(args)
+  File "/usr/lib/python3/dist-packages/odoo/cli/shell.py", line 162, in run
+    self.shell(dbnames[0])
+  File "/usr/lib/python3/dist-packages/odoo/cli/shell.py", line 148, in shell
+    self.console(local_vars)
+  File "/usr/lib/python3/dist-packages/odoo/cli/shell.py", line 82, in console
+    exec(sys.stdin.read(), local_vars)
+  File "<string>", line 102, in <module>
+  File "/usr/lib/python3/dist-packages/odoo/modules/module.py", line 401, in load_manifest
+    warnings.warn("Since 19.0, use Manifest", DeprecationWarning)
+ 
+F31_1_5_VALIDATION:{"phase": "F31.1.5-test-validation", "timestamp_utc": "2026-07-05T13:14:35.780902+00:00", "database": "hellenia_test", "status": "PASS", "checks": {"justech_modules_installed": {"status": "PASS", "detail": "installed"}, "justech_modules_version": {"status": "PASS", "detail": "19.0.1.5.0"}, "api_version_1": {"status": "PASS", "detail": "1"}, "sdk_method_is_active": {"status": "PASS", "detail": "present"}, "sdk_method_require_active": {"status": "PASS", "detail": "present"}, "sdk_method_get_feature": {"status": "PASS", "detail": "present"}, "sdk_method_validate_license": {"status": "PASS", "detail": "present"}, "sdk_method_check_dependencies": {"status": "PASS", "detail": "present"}, "sdk_method_activate_feature": {"status": "PASS", "detail": "present"}, "sdk_method_deactivate_feature": {"status": "PASS", "detail": "present"}, "sdk_method_register_from_manifest": {"status": "PASS", "detail": "present"}, "sdk_method_get_activation_catalog": {"status": "PASS", "detail": "present"}, "sdk_method_activate_module": {"status": "PASS", "detail": "present"}, "sdk_method_deactivate_module": {"status": "PASS", "detail": "present"}, "platform_core_active": {"status": "PASS", "detail": "True"}, "catalog_installed_modules": {"status": "PASS", "detail": "count=11 expected=11 missing=[]"}, "all_always_enabled": {"status": "PASS", "detail": "modules=11"}, "wizard_visible_lines": {"status": "PASS", "detail": "11/11"}, "deactivate_works": {"status": "PASS", "detail": "False"}, "activate_works": {"status": "PASS", "detail": "True"}, "no_odoo_install_uninstall": {"status": "PASS", "detail": "before=uninstalled after=uninstalled"}, "audit_records": {"status": "PASS", "detail": "2"}, "wizard_menu_exists": {"status": "PASS", "detail": "Module Activation"}}, "errors": [], "wizard": {"total_lines": 22, "module_lines": 11, "feature_lines": 11}, "modules": [{"module_code": "hellenia_account", "license_required": false, "is_active": true, "features": 1}, {"module_code": "justech_l10n_do_base", "license_required": false, "is_active": true, "features": 1}, {"module_code": "justech_l10n_do_ncf", "license_required": false, "is_active": true, "features": 1}, {"module_code": "hellenia_base", "license_required": false, "is_active": true, "features": 1}, {"module_code": "justech_modules", "license_required": false, "is_active": true, "features": 1}, {"module_code": "hellenia_pos", "license_required": false, "is_active": true, "features": 1}, {"module_code": "hellenia_reports", "license_required": false, "is_active": true, "features": 1}, {"module_code": "justech_l10n_do_reports", "license_required": false, "is_active": true, "features": 1}, {"module_code": "justech_report_design", "license_required": false, "is_active": true, "features": 1}, {"module_code": "hellenia_ui", "license_required": false, "is_active": true, "features": 1}, {"module_code": "hellenia_ux", "license_required": false, "is_active": true, "features": 1}], "audit_samples": [{"action": "activate", "feature_id": "f315_test_feat"}, {"action": "deactivate", "feature_id": "f315_test_feat"}], "not_installed_on_test": ["hellenia_inventory", "justech_core"], "expected_installed_count": 11}

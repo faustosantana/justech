@@ -1,4 +1,8 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_justech_activation_wizard_manager,justech.module.activation.wizard manager,model_justech_module_activation_wizard,justech_modules.group_justech_license_manager,1,1,1,1
+access_justech_activation_wizard_line_manager,justech.module.activation.wizard.line manager,model_justech_module_activation_wizard_line,justech_modules.group_justech_license_manager,1,1,1,1
+access_justech_activation_wizard_admin,justech.module.activation.wizard admin,model_justech_module_activation_wizard,base.group_system,1,1,1,1
+access_justech_activation_wizard_line_admin,justech.module.activation.wizard.line admin,model_justech_module_activation_wizard_line,base.group_system,1,1,1,1
 access_justech_module_user,justech.module user,model_justech_module,justech_modules.group_justech_license_user,1,0,0,0
 access_justech_module_manager,justech.module manager,model_justech_module,justech_modules.group_justech_license_manager,1,1,1,1
 access_justech_module_dependency_manager,justech.module.dependency manager,model_justech_module_dependency,justech_modules.group_justech_license_manager,1,1,1,1

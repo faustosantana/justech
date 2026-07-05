@@ -219,7 +219,7 @@ class JustechLicenseService(models.AbstractModel):
             {
                 "code": "justech_modules",
                 "name": "Justech Modules",
-                "version": "19.0.1.2.0",
+                "version": "19.0.1.5.0",
                 "category": "platform",
                 "license_required": False,
                 "tier_minimum": "STD",
@@ -244,39 +244,202 @@ class JustechLicenseService(models.AbstractModel):
         self.clear_license_cache()
 
     @api.model
-    def register_from_manifest(self, module_name, register_data):
+    def register_from_manifest(self, module_name, register_data, manifest=None):
+        """Register module catalog entry + features from __manifest__ justech_register."""
+        manifest = manifest or {}
+        always_enabled = register_data.get("always_enabled", True)
+        module_code = (
+            register_data.get("module_code")
+            or register_data.get("code")
+            or module_name
+        )
         ir_module = self.env["ir.module.module"].search(
             [("name", "=", module_name)], limit=1
         )
         module_vals = {
-            "code": register_data.get("code", module_name),
-            "name": register_data.get("name") or module_name,
-            "version": register_data.get("version"),
+            "code": module_code,
+            "name": register_data.get("module_name")
+            or register_data.get("name")
+            or module_name,
+            "version": register_data.get("version") or manifest.get("version"),
+            "description": register_data.get("description")
+            or manifest.get("summary")
+            or manifest.get("description"),
             "category": register_data.get("category", "platform"),
-            "license_required": register_data.get("license_required", True),
+            "country": register_data.get("country"),
+            "localization": register_data.get("localization"),
+            "required_module": register_data.get("required_module", False),
+            "license_required": False
+            if always_enabled
+            else register_data.get("license_required", True),
             "tier_minimum": register_data.get("tier_minimum", "STD"),
             "state": "registered",
         }
         module = self._upsert_module(module_vals)
         if ir_module:
             module.ir_module_id = ir_module.id
-        feature = self._upsert_feature(
-            {
-                "code": register_data["feature_code"],
-                "name": register_data.get("name") or register_data["feature_code"],
-                "module_id": module.id,
-                "license_required": register_data.get("license_required", True),
-                "always_on": register_data.get("always_on", False),
-                "default_active": register_data.get("default_active", False),
-            }
-        )
+
+        self._register_manifest_dependencies(module, register_data.get("dependencies", []))
+
+        features_data = self._normalize_manifest_features(register_data)
+        features = self.env["justech.feature"]
+        for feat in features_data:
+            feature = self._upsert_feature(
+                {
+                    "code": feat["code"],
+                    "name": feat.get("name") or feat["code"],
+                    "description": feat.get("description"),
+                    "module_id": module.id,
+                    "license_required": False
+                    if always_enabled
+                    else feat.get("license_required", True),
+                    "always_on": feat.get("always_on", False),
+                    "default_active": True
+                    if always_enabled
+                    else feat.get("default_active", False),
+                }
+            )
+            features |= feature
+
         self._audit(
             "register",
-            feature_id=feature.id,
-            details={"module_name": module_name, "register": register_data},
+            feature_id=features[:1].id if features else False,
+            details={
+                "module_name": module_name,
+                "module_code": module_code,
+                "register": register_data,
+            },
         )
         self.clear_license_cache()
-        return module, feature
+        return module, features
+
+    @api.model
+    def _normalize_manifest_features(self, register_data):
+        if register_data.get("features"):
+            return register_data["features"]
+        if register_data.get("feature_code"):
+            return [
+                {
+                    "code": register_data["feature_code"],
+                    "name": register_data.get("name") or register_data["feature_code"],
+                    "description": register_data.get("description"),
+                }
+            ]
+        code = register_data.get("module_code") or register_data.get("code")
+        return [{"code": f"{code}_core", "name": register_data.get("module_name") or code}]
+
+    @api.model
+    def _register_manifest_dependencies(self, module, dependency_codes):
+        Dependency = self.env["justech.module.dependency"]
+        Module = self.env["justech.module"]
+        for dep_code in dependency_codes:
+            depends_on = Module.search([("code", "=", dep_code)], limit=1)
+            if not depends_on:
+                continue
+            existing = Dependency.search(
+                [
+                    ("module_id", "=", module.id),
+                    ("depends_on_module_id", "=", depends_on.id),
+                ],
+                limit=1,
+            )
+            if not existing:
+                Dependency.create(
+                    {
+                        "module_id": module.id,
+                        "depends_on_module_id": depends_on.id,
+                        "dependency_type": "required",
+                    }
+                )
+
+    # --------------------------------------------------------- activation UI
+    @api.model
+    def get_activation_catalog(self, company=None):
+        """Return module/feature activation rows for admin wizard (API v1)."""
+        company = company or self.env.company
+        catalog = []
+        for module in self.env["justech.module"].search([], order="category, code"):
+            deps = module.dependency_ids.filtered(
+                lambda dep: dep.dependency_type == "required"
+            )
+            feature_rows = []
+            module_active = True
+            for feature in module.feature_ids:
+                activation = self.env["justech.feature.company"].search(
+                    [
+                        ("feature_id", "=", feature.id),
+                        ("company_id", "=", company.id),
+                    ],
+                    limit=1,
+                )
+                active = self.is_active(feature.code, company=company)
+                module_active = module_active and active
+                feature_rows.append(
+                    {
+                        "feature_id": feature.id,
+                        "feature_code": feature.code,
+                        "feature_name": feature.name,
+                        "description": feature.description,
+                        "license_required": feature.license_required,
+                        "always_on": feature.always_on,
+                        "default_active": feature.default_active,
+                        "is_active": active,
+                        "activated_at": activation.activated_at,
+                        "activated_by_id": activation.activated_by_id.id,
+                        "activated_by_name": activation.activated_by_id.name,
+                    }
+                )
+            catalog.append(
+                {
+                    "module_id": module.id,
+                    "module_code": module.code,
+                    "module_name": module.name,
+                    "description": module.description,
+                    "category": module.category,
+                    "country": module.country,
+                    "localization": module.localization,
+                    "state": module.state,
+                    "required_module": module.required_module,
+                    "license_required": module.license_required,
+                    "dependencies": [
+                        {
+                            "module_code": dep.depends_on_module_id.code,
+                            "module_name": dep.depends_on_module_id.name,
+                            "dependency_type": dep.dependency_type,
+                        }
+                        for dep in deps
+                    ],
+                    "features": feature_rows,
+                    "is_active": module_active if feature_rows else True,
+                }
+            )
+        return catalog
+
+    @api.model
+    def activate_module(self, module_code, company=None):
+        """Activate all features of a commercial module for a company."""
+        company = company or self.env.company
+        module = self.env["justech.module"].search([("code", "=", module_code)], limit=1)
+        if not module:
+            raise JustechLicenseError(
+                _("Unknown module '%(code)s'.") % {"code": module_code}
+            )
+        for feature in module.feature_ids:
+            self.activate_feature(feature.code, company=company)
+        return True
+
+    @api.model
+    def deactivate_module(self, module_code, company=None):
+        """Deactivate all non-always-on features of a module for a company."""
+        company = company or self.env.company
+        module = self.env["justech.module"].search([("code", "=", module_code)], limit=1)
+        if not module:
+            raise JustechLicenseError(
+                _("Unknown module '%(code)s'.") % {"code": module_code}
+            )
+        for feature in module.feature_ids.filtered(lambda f: not f.always_on):
+            self.deactivate_feature(feature.code, company=company)
+        return True
 
     @api.model
     def _set_feature_company_active(

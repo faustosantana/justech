@@ -1,0 +1,74 @@
+ Container hellenia-test-db-1 Running 
+ Container hellenia-test-db-1 Waiting 
+ Container hellenia-test-db-1 Healthy 
+ Container hellenia-test-odoo-run-da8e09498696 Creating 
+ Container hellenia-test-odoo-run-da8e09498696 Created 
+2026-07-05 13:08:05,758 1 WARNING ? odoo.tools.config: option logfile reads 'False' in the config file at /etc/odoo/odoo.conf but isn't a boolean option, skip 
+2026-07-05 13:08:05,758 1 WARNING ? odoo.tools.config: option logfile reads 'False' in the config file at /etc/odoo/odoo.conf but isn't a boolean option, skip 
+2026-07-05 13:08:05,758 1 INFO ? odoo: Odoo version 19.0-20260619 
+2026-07-05 13:08:05,759 1 INFO ? odoo: Using configuration file at /etc/odoo/odoo.conf 
+2026-07-05 13:08:05,759 1 INFO ? odoo: addons paths: _NamespacePath(['/usr/lib/python3/dist-packages/odoo/addons', '/var/lib/odoo/addons/19.0', '/mnt/enterprise/addons', '/mnt/custom', '/usr/lib/python3/dist-packages/addons']) 
+2026-07-05 13:08:05,759 1 INFO ? odoo: database: odoo@db:5432 
+2026-07-05 13:08:06,030 1 INFO hellenia_test odoo.modules.loading: loading 1 modules... 
+2026-07-05 13:08:06,033 1 INFO hellenia_test odoo.modules.loading: 1 modules loaded in 0.00s, 0 queries (+0 extra) 
+2026-07-05 13:08:06,052 1 INFO hellenia_test odoo.modules.loading: updating modules list 
+2026-07-05 13:08:06,056 1 INFO hellenia_test odoo.addons.base.models.ir_module: ALLOW access to module.update_list on [] to user __system__ #1 via n/a 
+2026-07-05 13:08:07,961 1 INFO hellenia_test odoo.addons.base.models.ir_module: ALLOW access to module.button_install on ['Justech Modules'] to user __system__ #1 via n/a 
+2026-07-05 13:08:08,504 1 INFO hellenia_test odoo.modules.loading: loading 134 modules... 
+2026-07-05 13:08:09,385 1 WARNING hellenia_test odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define models.Constraint on the model. 
+2026-07-05 13:08:09,430 1 WARNING hellenia_test odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define models.Constraint on the model. 
+2026-07-05 13:08:09,462 1 WARNING hellenia_test odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define models.Constraint on the model. 
+2026-07-05 13:08:09,509 1 INFO hellenia_test odoo.modules.loading: Loading module justech_modules (134/134) 
+2026-07-05 13:08:09,614 1 WARNING hellenia_test odoo.fields: justech.do.fiscal.report.state: selection=[('draft', 'Borrador'), ('validated', 'Validado'), ('pending_approval', 'Requiere aprobación'), ('approved', 'Aprobado'), ('rejected', 'Rechazado'), ('generated', 'Generado'), ('done', 'Generado')] overrides existing selection; use selection_add instead 
+2026-07-05 13:08:09,688 1 INFO hellenia_test odoo.registry: module justech_modules: creating or updating database tables 
+2026-07-05 13:08:10,185 1 INFO hellenia_test odoo.modules.loading: loading justech_modules/security/justech_modules_security.xml 
+2026-07-05 13:08:10,226 1 INFO hellenia_test odoo.modules.loading: loading justech_modules/security/ir.model.access.csv 
+2026-07-05 13:08:10,244 1 INFO hellenia_test odoo.modules.loading: loading justech_modules/views/justech_module_activation_wizard_views.xml 
+2026-07-05 13:08:10,267 1 INFO hellenia_test odoo.modules.loading: loading justech_modules/views/justech_module_views.xml 
+2026-07-05 13:08:10,282 1 INFO hellenia_test odoo.modules.loading: loading justech_modules/views/justech_feature_views.xml 
+2026-07-05 13:08:10,293 1 INFO hellenia_test odoo.modules.loading: loading justech_modules/views/justech_license_views.xml 
+2026-07-05 13:08:10,308 1 INFO hellenia_test odoo.modules.loading: loading justech_modules/views/justech_activation_key_views.xml 
+2026-07-05 13:08:10,316 1 INFO hellenia_test odoo.modules.loading: loading justech_modules/views/justech_license_audit_views.xml 
+2026-07-05 13:08:10,324 1 INFO hellenia_test odoo.modules.loading: loading justech_modules/views/menu.xml 
+2026-07-05 13:08:10,360 1 INFO hellenia_test odoo.addons.base.models.ir_module: module justech_modules: no translation for language es_DO 
+2026-07-05 13:08:10,373 1 WARNING hellenia_test py.warnings: /usr/lib/python3/dist-packages/odoo/modules/module.py:401: DeprecationWarning: Since 19.0, use Manifest
+  File "/usr/bin/odoo", line 6, in <module>
+    odoo.cli.main()
+  File "/usr/lib/python3/dist-packages/odoo/cli/command.py", line 133, in main
+    command().run(args)
+  File "/usr/lib/python3/dist-packages/odoo/cli/server.py", line 127, in run
+    main(args)
+  File "/usr/lib/python3/dist-packages/odoo/cli/server.py", line 118, in main
+    rc = server.start(preload=config['db_name'], stop=stop)
+  File "/usr/lib/python3/dist-packages/odoo/service/server.py", line 1636, in start
+    rc = server.run(preload, stop)
+  File "/usr/lib/python3/dist-packages/odoo/service/server.py", line 691, in run
+    rc = preload_registries(preload)
+  File "/usr/lib/python3/dist-packages/odoo/service/server.py", line 1550, in preload_registries
+    registry = Registry.new(dbname, update_module=update_module, install_modules=config['init'], upgrade_modules=config['update'], reinit_modules=config['reinit'])
+  File "/usr/lib/python3/dist-packages/odoo/tools/func.py", line 88, in locked
+    return func(inst, *args, **kwargs)
+  File "/usr/lib/python3/dist-packages/odoo/orm/registry.py", line 183, in new
+    load_modules(
+  File "/usr/lib/python3/dist-packages/odoo/modules/loading.py", line 464, in load_modules
+    load_module_graph(
+  File "/usr/lib/python3/dist-packages/odoo/modules/loading.py", line 243, in load_module_graph
+    getattr(py_module, post_init)(env)
+  File "/mnt/custom/justech_modules/hooks.py", line 49, in post_init_hook
+    register_all_installed_manifests(env)
+  File "/mnt/custom/justech_modules/hooks_register.py", line 44, in register_all_installed_manifests
+    manifest = load_manifest(module_name)
+  File "/usr/lib/python3/dist-packages/odoo/modules/module.py", line 401, in load_manifest
+    warnings.warn("Since 19.0, use Manifest", DeprecationWarning)
+ 
+2026-07-05 13:08:10,450 1 INFO hellenia_test odoo.modules.loading: Module justech_modules loaded in 0.94s, 817 queries (+817 other) 
+2026-07-05 13:08:10,450 1 INFO hellenia_test odoo.modules.loading: 134 modules loaded in 1.95s, 817 queries (+817 extra) 
+2026-07-05 13:08:10,536 1 WARNING hellenia_test odoo.fields: justech.do.fiscal.report.state: selection=[('draft', 'Borrador'), ('validated', 'Validado'), ('pending_approval', 'Requiere aprobación'), ('approved', 'Aprobado'), ('rejected', 'Rechazado'), ('generated', 'Generado'), ('done', 'Generado')] overrides existing selection; use selection_add instead 
+2026-07-05 13:08:10,824 1 INFO hellenia_test odoo.modules.loading: Model hellenia.pos.audit.log is declared but cannot be loaded! (Perhaps a module was partially removed or renamed) 
+2026-07-05 13:08:11,912 1 INFO hellenia_test odoo.modules.loading: Modules loaded. 
+2026-07-05 13:08:11,923 1 WARNING hellenia_test odoo.schema: Missing not-null constraint on res.users.settings.color_scheme 
+2026-07-05 13:08:11,932 1 INFO hellenia_test odoo.registry: Registry changed, signaling through the database 
+2026-07-05 13:08:11,934 1 INFO hellenia_test odoo.registry: Registry loaded in 5.945s 
+2026-07-05 13:08:11,934 1 INFO hellenia_test odoo.service.server: Initiating shutdown 
+2026-07-05 13:08:11,934 1 INFO hellenia_test odoo.service.server: Hit CTRL-C again or send a second signal to force the shutdown. 
+2026-07-05 13:08:11,934 1 INFO hellenia_test odoo.sql_db: ConnectionPool(read/write;used=0/count=0/max=64): Closed 1 connections  

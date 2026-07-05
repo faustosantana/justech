@@ -24,6 +24,7 @@ class TestJustechDependencies(TransactionCase):
                 "feature_code": "dep_base_feature",
                 "name": "Dependency Base",
                 "license_required": True,
+                "always_enabled": False,
                 "category": "platform",
             },
         )
@@ -34,6 +35,7 @@ class TestJustechDependencies(TransactionCase):
                 "feature_code": "dep_child_feature",
                 "name": "Dependency Child",
                 "license_required": True,
+                "always_enabled": False,
                 "category": "platform",
             },
         )

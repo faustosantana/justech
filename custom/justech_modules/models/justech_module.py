@@ -17,8 +17,17 @@ class JustechModule(models.Model):
             ("reports", "Reports"),
             ("pos", "POS"),
             ("integration", "Integration"),
+            ("accounting", "Accounting"),
+            ("inventory", "Inventory"),
+            ("ux", "UX"),
         ],
         default="platform",
+    )
+    country = fields.Char(help="ISO country code, e.g. DO")
+    localization = fields.Char(help="Localization package code")
+    required_module = fields.Boolean(
+        default=False,
+        help="Mandatory module for a standard Hellenia deployment",
     )
     license_required = fields.Boolean(default=True)
     tier_minimum = fields.Selection(

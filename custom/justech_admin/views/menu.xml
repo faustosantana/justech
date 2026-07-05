@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_justech_admin_root"
+              name="Justech Admin"
+              sequence="5"
+              groups="justech_admin.group_justech_admin_user"/>
+    <menuitem id="menu_justech_admin_dashboard"
+              name="Centro de Control"
+              parent="menu_justech_admin_root"
+              action="action_justech_admin_dashboard_open"
+              sequence="1"/>
+</odoo>

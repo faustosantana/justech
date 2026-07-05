@@ -22,10 +22,11 @@ class JustechFeatureCompany(models.Model):
     activated_at = fields.Datetime()
     activated_by_id = fields.Many2one("res.users", ondelete="set null")
 
-    _sql_constraints = [
-        (
-            "company_feature_unique",
-            "UNIQUE(company_id, feature_id)",
-            "Feature activation must be unique per company.",
-        ),
-    ]
+    _company_feature_unique = models.Constraint(
+        "UNIQUE(company_id, feature_id)",
+        "Feature activation must be unique per company.",
+    )
+
+    _feature_company_active_idx = models.Index(
+        "(feature_id, company_id, is_active)"
+    )

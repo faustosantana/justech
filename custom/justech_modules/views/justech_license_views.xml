@@ -6,7 +6,7 @@
         <field name="arch" type="xml">
             <list>
                 <field name="name"/>
-                <field name="license_key"/>
+                <field name="license_key_fingerprint"/>
                 <field name="tier"/>
                 <field name="state"/>
                 <field name="expires_at"/>
@@ -25,7 +25,8 @@
                 <sheet>
                     <group>
                         <field name="name"/>
-                        <field name="license_key"/>
+                        <field name="license_key_fingerprint" readonly="1"/>
+                        <field name="license_key_hash" invisible="1"/>
                         <field name="tier"/>
                         <field name="state"/>
                         <field name="expires_at"/>

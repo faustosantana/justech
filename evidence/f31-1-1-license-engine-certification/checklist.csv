@@ -1,0 +1,21 @@
+check_id,category,description,result
+CERT-01,dataset,500 modules,PASS
+CERT-02,dataset,5000 features,PASS
+CERT-03,dataset,100 companies,PASS
+CERT-04,dataset,mixed licenses,PASS
+CERT-05,api,all 8 public methods,PASS
+CERT-06,unit,20/20 tests hellenia_dev,PASS
+CERT-07,perf,is_active 10k benchmark,DEGRADED
+CERT-08,perf,get_feature 10k benchmark,DEGRADED
+CERT-09,conc,license.company unique,FAIL
+CERT-10,conc,feature.company unique,PASS
+CERT-11,multi,isolation,PASS
+CERT-12,multi,max_companies,PASS
+CERT-13,sec,portal ACL,PASS
+CERT-14,sec,plaintext keys,FAIL
+CERT-15,life,expired blocks is_active,FAIL
+CERT-16,life,revoked,PASS
+CERT-17,rollback,deactivate+revoke,PASS
+CERT-18,compat,enterprise DEV,PASS
+CERT-19,compat,governance ready,READY
+CERT-20,score,weighted >= 75,FAIL

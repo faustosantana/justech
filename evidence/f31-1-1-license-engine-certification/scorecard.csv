@@ -1,0 +1,12 @@
+category,score,weight,weighted
+architecture,82,12,9.84
+api_completeness,88,15,13.2
+performance,55,15,8.25
+concurrency,58,8,4.64
+multi_company,85,12,10.2
+security,65,15,9.75
+lifecycle,72,10,7.2
+rollback,85,8,6.8
+scalability_data,80,10,8.0
+future_readiness,70,5,3.5
+TOTAL,,110,74.0

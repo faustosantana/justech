@@ -1,0 +1,6 @@
+test_id,description,status,severity,detail
+SEC-T01,Portal cannot create license,PASS,critico,access denied
+SEC-T02,Portal cannot activate feature,PASS,critico,access denied
+SEC-T03,License key plaintext at rest,PASS,alto,PASS confirms plaintext exists
+SEC-T04,Audit trail present,PASS,medio,count 12->12
+SEC-T05,ir.rule isolates licenses,PASS,medio,user_visible=0 total=45

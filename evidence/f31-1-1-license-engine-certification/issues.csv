@@ -1,0 +1,10 @@
+severity,code,title,detail
+alto,PERF-01,is_active() slow at scale,avg 2303 us/call — no ormcache; recommend cache + composite indexes
+medio,PERF-02,get_feature() slow at scale,avg 300 us/call
+alto,SEC-01,license_key almacenada en texto plano,Hash/HMAC recomendado antes de SaaS multi-tenant
+medio,SEC-02,validate_license no audita intentos inválidos,Solo audita validaciones exitosas
+critico,LIFE-01,Licencia expirada no bloquea is_active(),feature.company permanece activo tras expiración; revalidar en cada is_active
+medio,COMP-01,Estado 'suspendida' no modelado,Usar draft/revoked; agregar suspended en F31.2 si requerido
+alto,COMP-02,max_users sin enforcement,Campo existe pero API no valida seats de usuarios
+critico,CONC-01,Duplicado license.company permitido,Segundo create sin excepción; count=2 — verificar models.Constraint Odoo 19
+critico,SQL-01,_sql_constraints deprecado Odoo 19,Migrar a models.Constraint en justech_modules para garantizar UNIQUE

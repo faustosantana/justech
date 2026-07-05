@@ -31,9 +31,10 @@ class JustechActivationKey(models.Model):
     used_at = fields.Datetime()
     used_by_id = fields.Many2one("res.users", ondelete="set null")
 
-    _sql_constraints = [
-        ("key_unique", "UNIQUE(key)", "Activation key must be unique."),
-    ]
+    _key_unique = models.Constraint(
+        "UNIQUE(key)",
+        "Activation key must be unique.",
+    )
 
     @api.model
     def _generate_key(self, tier="STD"):

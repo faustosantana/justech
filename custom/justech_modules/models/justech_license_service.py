@@ -1,6 +1,7 @@
 from datetime import date
 
 from odoo import _, api, fields, models
+from odoo.tools import ormcache
 
 from ..exceptions import JustechLicenseError
 
@@ -18,20 +19,40 @@ class JustechLicenseService(models.AbstractModel):
         return self.API_VERSION
 
     @api.model
+    def clear_license_cache(self):
+        """Invalidate cached license lookups (call after license/feature changes)."""
+        self.env.registry.clear_cache()
+
+    @api.model
     def is_active(self, feature_code, company=None):
         company = company or self.env.company
+        return self._is_active_cached(feature_code, company.id)
+
+    @api.model
+    @ormcache("feature_code", "company_id")
+    def _is_active_cached(self, feature_code, company_id):
+        return self._compute_is_active(feature_code, company_id)
+
+    @api.model
+    def _compute_is_active(self, feature_code, company_id):
+        company = self.env["res.company"].browse(company_id)
         feature = self._get_feature_record(feature_code)
         if not feature:
             return False
         if feature.always_on:
             return True
-        if not self._company_has_valid_license(company):
-            return False
         if feature.license_required and not self._feature_granted_to_company(
             feature, company
         ):
             return False
-        return self._feature_is_active_for_company(feature.id, company.id)
+        if not self._feature_is_active_for_company(feature.id, company_id):
+            return False
+        # LIFE-01: revalidate grant after operational activation flag
+        if feature.license_required and not self._feature_granted_to_company(
+            feature, company
+        ):
+            return False
+        return True
 
     @api.model
     def require_active(self, feature_code, company=None):
@@ -43,7 +64,20 @@ class JustechLicenseService(models.AbstractModel):
 
     @api.model
     def get_feature(self, feature_code):
-        return self._get_feature_record(feature_code)
+        feature_id = self._get_feature_id_cached(feature_code)
+        return (
+            self.env["justech.feature"].browse(feature_id)
+            if feature_id
+            else self.env["justech.feature"]
+        )
+
+    @api.model
+    @ormcache("feature_code")
+    def _get_feature_id_cached(self, feature_code):
+        feature = self.env["justech.feature"].search(
+            [("code", "=", feature_code)], limit=1
+        )
+        return feature.id or 0
 
     @api.model
     def validate_license(self, key=None, feature_code=None, company=None):
@@ -54,15 +88,14 @@ class JustechLicenseService(models.AbstractModel):
             "expires": False,
             "tier": False,
         }
+        License = self.env["justech.license"]
         if not key:
             license_rec = self._get_active_license_for_company(company)
             if not license_rec:
                 result["reason"] = "no_license"
                 return result
         else:
-            license_rec = self.env["justech.license"].search(
-                [("license_key", "=", key)], limit=1
-            )
+            license_rec = License._find_by_license_key(key)
             if not license_rec:
                 return result
 
@@ -143,11 +176,13 @@ class JustechLicenseService(models.AbstractModel):
             )
 
         if feature.license_required:
-            if not self._company_has_valid_license(company):
+            license_rec = self._get_active_license_for_company(company)
+            if not license_rec:
                 raise JustechLicenseError(
                     _("No active license for company '%(company)s'.")
                     % {"company": company.name}
                 )
+            license_rec._check_max_users()
             if not self._feature_granted_to_company(feature, company):
                 raise JustechLicenseError(
                     _("Feature '%(code)s' is not included in the active license.")
@@ -184,7 +219,7 @@ class JustechLicenseService(models.AbstractModel):
             {
                 "code": "justech_modules",
                 "name": "Justech Modules",
-                "version": "19.0.1.1.0",
+                "version": "19.0.1.2.0",
                 "category": "platform",
                 "license_required": False,
                 "tier_minimum": "STD",
@@ -206,6 +241,7 @@ class JustechLicenseService(models.AbstractModel):
         )
         if ir_module:
             module.ir_module_id = ir_module.id
+        self.clear_license_cache()
 
     @api.model
     def register_from_manifest(self, module_name, register_data):
@@ -239,6 +275,7 @@ class JustechLicenseService(models.AbstractModel):
             feature_id=feature.id,
             details={"module_name": module_name, "register": register_data},
         )
+        self.clear_license_cache()
         return module, feature
 
     @api.model
@@ -273,60 +310,67 @@ class JustechLicenseService(models.AbstractModel):
             company_id=company.id,
             details={"reason": reason},
         )
+        self.clear_license_cache()
 
     # -------------------------------------------------------------- internals
     @api.model
     def _get_feature_record(self, feature_code):
-        return self.env["justech.feature"].search([("code", "=", feature_code)], limit=1)
+        return self.get_feature(feature_code)
 
     @api.model
     def _company_has_valid_license(self, company):
-        return bool(self._get_active_license_for_company(company))
+        return bool(self._get_valid_licenses_for_company(company))
 
     @api.model
-    def _get_active_license_for_company(self, company):
-        """Return active license explicitly assigned to company (never global)."""
+    def _get_valid_licenses_for_company(self, company):
+        """All non-expired active licenses explicitly assigned to company."""
         today = date.today()
         company_lines = self.env["justech.license.company"].search(
             [
                 ("company_id", "=", company.id),
                 ("license_id.state", "=", "active"),
-            ],
-            order="license_id desc",
+            ]
         )
+        valid = self.env["justech.license"]
         for line in company_lines:
             license_rec = line.license_id
             if license_rec.expires_at and license_rec.expires_at < today:
                 continue
-            return license_rec
-        return self.env["justech.license"]
+            valid |= license_rec
+        return valid
+
+    @api.model
+    def _get_active_license_for_company(self, company):
+        """Primary license for company (most recent valid assignment)."""
+        valid = self._get_valid_licenses_for_company(company)
+        return valid.sorted(key=lambda lic: lic.id, reverse=True)[:1]
 
     @api.model
     def _feature_granted_to_company(self, feature, company):
-        license_rec = self._get_active_license_for_company(company)
-        if not license_rec:
-            return False
         if not feature.license_required:
             return True
-        return bool(
-            license_rec.feature_line_ids.filtered(
+        valid_licenses = self._get_valid_licenses_for_company(company)
+        if not valid_licenses:
+            return False
+        for license_rec in valid_licenses:
+            if license_rec.feature_line_ids.filtered(
                 lambda line: line.feature_id.id == feature.id
-            )
-        )
+            ):
+                return True
+        return False
 
     @api.model
     def _feature_is_active_for_company(self, feature_id, company_id):
-        feature = self.env["justech.feature"].browse(feature_id)
-        company = self.env["res.company"].browse(company_id)
         activation = self.env["justech.feature.company"].search(
             [
-                ("feature_id", "=", feature.id),
-                ("company_id", "=", company.id),
+                ("feature_id", "=", feature_id),
+                ("company_id", "=", company_id),
             ],
             limit=1,
         )
         if activation:
             return activation.is_active
+        feature = self.env["justech.feature"].browse(feature_id)
         return feature.default_active
 
     @api.model

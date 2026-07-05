@@ -1,16 +1,13 @@
 {
     "name": "Justech Modules",
-    "version": "19.0.1.1.0",
+    "version": "19.0.1.2.0",
     "category": "Justech/Platform",
     "summary": "Motor de licencias y catálogo comercial Justech",
     "description": """
 Justech platform licensing engine.
 
-- Module and feature catalog
-- Commercial module dependencies (DAG)
-- License and activation keys
-- Public API v1: is_active, require_active, get_feature, validate_license,
-  activate_feature, deactivate_feature, check_dependencies
+F31.1.2 hardening: hashed license keys, ormcache, Odoo 19 constraints,
+expired license enforcement, max_users seats.
     """,
     "author": "Justech",
     "website": "https://justech.cloud",
@@ -25,6 +22,7 @@ Justech platform licensing engine.
         "views/justech_license_audit_views.xml",
         "views/menu.xml",
     ],
+    "pre_init_hook": "pre_init_hook",
     "post_init_hook": "post_init_hook",
     "installable": True,
     "application": True,

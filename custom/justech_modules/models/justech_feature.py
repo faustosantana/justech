@@ -26,6 +26,7 @@ class JustechFeature(models.Model):
     )
     active = fields.Boolean(default=True)
 
-    _sql_constraints = [
-        ("code_unique", "UNIQUE(code)", "Feature code must be unique."),
-    ]
+    _code_unique = models.Constraint(
+        "UNIQUE(code)",
+        "Feature code must be unique.",
+    )

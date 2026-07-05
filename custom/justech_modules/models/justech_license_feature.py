@@ -1,4 +1,4 @@
-from odoo import fields, models
+from odoo import api, fields, models
 
 
 class JustechLicenseFeature(models.Model):
@@ -19,10 +19,18 @@ class JustechLicenseFeature(models.Model):
         index=True,
     )
 
-    _sql_constraints = [
-        (
-            "license_feature_unique",
-            "UNIQUE(license_id, feature_id)",
-            "Feature already included in this license.",
-        ),
-    ]
+    _license_feature_unique = models.Constraint(
+        "UNIQUE(license_id, feature_id)",
+        "Feature already included in this license.",
+    )
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        records = super().create(vals_list)
+        self.env["justech.license.service"].clear_license_cache()
+        return records
+
+    def unlink(self):
+        res = super().unlink()
+        self.env["justech.license.service"].clear_license_cache()
+        return res

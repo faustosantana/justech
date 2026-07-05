@@ -29,18 +29,14 @@ class JustechModuleDependency(models.Model):
         required=True,
     )
 
-    _sql_constraints = [
-        (
-            "module_dep_unique",
-            "UNIQUE(module_id, depends_on_module_id)",
-            "Dependency must be unique per module pair.",
-        ),
-        (
-            "no_self_dependency",
-            "CHECK(module_id != depends_on_module_id)",
-            "A module cannot depend on itself.",
-        ),
-    ]
+    _module_dep_unique = models.Constraint(
+        "UNIQUE(module_id, depends_on_module_id)",
+        "Dependency must be unique per module pair.",
+    )
+    _no_self_dependency = models.Constraint(
+        "CHECK(module_id != depends_on_module_id)",
+        "A module cannot depend on itself.",
+    )
 
     @api.constrains("module_id", "depends_on_module_id")
     def _check_no_cycle(self):

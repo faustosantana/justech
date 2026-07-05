@@ -1,0 +1,313 @@
+{
+  "phase": "F31.1.1",
+  "timestamp_utc": "2026-07-05T12:30:34.819344+00:00",
+  "database": "hellenia_dev",
+  "module": "justech_modules",
+  "commit_ref": "ac13c3b",
+  "api_version": 1,
+  "dataset": {
+    "modules": 500,
+    "features": 5000,
+    "companies": 100,
+    "licenses": 42,
+    "seed_seconds": 0,
+    "reused": true,
+    "modules_500": {
+      "status": "PASS",
+      "detail": "500"
+    },
+    "features_5000": {
+      "status": "PASS",
+      "detail": "5000"
+    },
+    "companies_100": {
+      "status": "PASS",
+      "detail": "100"
+    }
+  },
+  "api_tests": {
+    "get_api_version": {
+      "status": "PASS",
+      "detail": "1"
+    },
+    "get_feature": {
+      "status": "PASS",
+      "detail": "platform_core"
+    },
+    "is_active_platform_core": {
+      "status": "PASS",
+      "detail": "True"
+    },
+    "is_active_licensed": {
+      "status": "PASS",
+      "detail": "cert_f311_feat_0000_00"
+    },
+    "require_active_ok": {
+      "status": "PASS",
+      "detail": "no exception"
+    },
+    "validate_license": {
+      "status": "PASS",
+      "detail": "{'valid': True, 'reason': 'ok', 'expires': datetime.date(2026, 8, 4), 'tier': 'STD'}"
+    },
+    "check_dependencies": {
+      "status": "PASS",
+      "detail": "{'ok': True, 'missing': []}"
+    },
+    "deactivate_feature": {
+      "status": "PASS",
+      "detail": "deactivated"
+    },
+    "activate_feature": {
+      "status": "PASS",
+      "detail": "reactivated"
+    }
+  },
+  "performance": {
+    "is_active_10k_total_ms": 23025.32,
+    "is_active_avg_us": 2302.53,
+    "get_feature_10k_total_ms": 2998.5,
+    "get_feature_avg_us": 299.85,
+    "is_active_sla_100us": false,
+    "get_feature_sla_50us": false,
+    "is_active_benchmark": {
+      "status": "PASS",
+      "detail": "2302.5 us/call"
+    },
+    "get_feature_benchmark": {
+      "status": "PASS",
+      "detail": "299.9 us/call"
+    }
+  },
+  "concurrency": {
+    "license_company_unique": {
+      "status": "FAIL",
+      "detail": "count=2"
+    },
+    "feature_company_unique": {
+      "status": "PASS",
+      "detail": "count=1"
+    },
+    "activate_idempotent": {
+      "status": "PASS",
+      "detail": "1"
+    }
+  },
+  "multi_company": {
+    "isolation": {
+      "status": "PASS",
+      "detail": "a=True b=False"
+    },
+    "max_companies": {
+      "status": "PASS",
+      "detail": "second company blocked"
+    },
+    "ir_rule_scopes_licenses": {
+      "status": "PASS",
+      "detail": "user_visible=0 total=45"
+    }
+  },
+  "security": {
+    "license_key_stored": {
+      "status": "PASS",
+      "detail": "plaintext in DB"
+    },
+    "portal_cannot_create_license": {
+      "status": "PASS",
+      "detail": "access denied"
+    },
+    "portal_cannot_activate": {
+      "status": "PASS",
+      "detail": "access denied"
+    },
+    "audit_exists": {
+      "status": "PASS",
+      "detail": "count 12->12"
+    }
+  },
+  "lifecycle": {
+    "active": {
+      "status": "PASS",
+      "detail": "active"
+    },
+    "expired": {
+      "status": "FAIL",
+      "detail": "is_active=True"
+    },
+    "revoked": {
+      "status": "PASS",
+      "detail": "revoked"
+    },
+    "draft_not_active": {
+      "status": "PASS",
+      "detail": "draft"
+    },
+    "dependency_missing": {
+      "status": "PASS",
+      "detail": "[{'module_code': 'cert_f311_mod_0049', 'module_name': 'Cert Module 0049', 'dependency_type': 'required'}, {'module_code': 'cert_f311_mod_0048', 'module_name': 'Cert Module 0048', 'dependency_type': 'required'}]"
+    }
+  },
+  "rollback": {
+    "deactivate_and_revoke": {
+      "status": "PASS",
+      "detail": "was=True deact=True rev=True"
+    }
+  },
+  "compatibility": {
+    "odoo_enterprise_dev": {
+      "status": "PASS",
+      "detail": "hellenia_dev Enterprise image"
+    },
+    "odoo_community": {
+      "status": "PARTIAL",
+      "detail": "depends base+mail only; privilege_id Odoo 19 — verify CE 19"
+    },
+    "multi_company": {
+      "status": "PASS",
+      "detail": "ir.rule + explicit license.company"
+    },
+    "future_saas": {
+      "status": "GAP",
+      "detail": "No justech.tenant; tenant-per-DB OK"
+    },
+    "future_marketplace": {
+      "status": "GAP",
+      "detail": "No module.version/release; dependency DAG present"
+    },
+    "future_justech_admin": {
+      "status": "READY",
+      "detail": "API v1 activate/deactivate/validate sufficient for CRUD delegation"
+    },
+    "future_hellenia_governance": {
+      "status": "READY",
+      "detail": "activate_feature/deactivate_feature public; callback hook pending F31.2"
+    }
+  },
+  "issues": [
+    {
+      "severity": "alto",
+      "code": "PERF-01",
+      "title": "is_active() slow at scale",
+      "detail": "avg 2303 us/call — no ormcache; recommend cache + composite indexes"
+    },
+    {
+      "severity": "medio",
+      "code": "PERF-02",
+      "title": "get_feature() slow at scale",
+      "detail": "avg 300 us/call"
+    },
+    {
+      "severity": "alto",
+      "code": "SEC-01",
+      "title": "license_key almacenada en texto plano",
+      "detail": "Hash/HMAC recomendado antes de SaaS multi-tenant"
+    },
+    {
+      "severity": "medio",
+      "code": "SEC-02",
+      "title": "validate_license no audita intentos inválidos",
+      "detail": "Solo audita validaciones exitosas"
+    },
+    {
+      "severity": "critico",
+      "code": "LIFE-01",
+      "title": "Licencia expirada no bloquea is_active()",
+      "detail": "feature.company permanece activo tras expiración; revalidar en cada is_active"
+    },
+    {
+      "severity": "medio",
+      "code": "COMP-01",
+      "title": "Estado 'suspendida' no modelado",
+      "detail": "Usar draft/revoked; agregar suspended en F31.2 si requerido"
+    },
+    {
+      "severity": "alto",
+      "code": "COMP-02",
+      "title": "max_users sin enforcement",
+      "detail": "Campo existe pero API no valida seats de usuarios"
+    },
+    {
+      "severity": "critico",
+      "code": "CONC-01",
+      "title": "Duplicado license.company permitido",
+      "detail": "Segundo create sin excepción; count=2 — verificar models.Constraint Odoo 19"
+    },
+    {
+      "severity": "critico",
+      "code": "SQL-01",
+      "title": "_sql_constraints deprecado Odoo 19",
+      "detail": "Migrar a models.Constraint en justech_modules para garantizar UNIQUE"
+    }
+  ],
+  "recommendations": [
+    "P1: Implement ormcache on is_active/get_feature with invalidation hooks (F31.2)",
+    "P1: Hash license_key at rest; never expose in UI for non-manager",
+    "P1: Enforce max_users in activate_feature / session check",
+    "P2: Add justech.tenant before SaaS pooled multi-DB",
+    "P2: Audit failed validate_license attempts",
+    "P2: Composite index on justech_license_company(company_id, license_id) — verify EXPLAIN",
+    "P3: Add suspended state or document draft semantics",
+    "P3: Row-level lock (FOR UPDATE) on license activation for true concurrent users"
+  ],
+  "scores": {
+    "categories": {
+      "architecture": 82,
+      "api_completeness": 88,
+      "performance": 55,
+      "concurrency": 58,
+      "multi_company": 85,
+      "security": 65,
+      "lifecycle": 72,
+      "rollback": 85,
+      "scalability_data": 80,
+      "future_readiness": 70
+    },
+    "weights": {
+      "architecture": 12,
+      "api_completeness": 15,
+      "performance": 15,
+      "concurrency": 8,
+      "multi_company": 12,
+      "security": 15,
+      "lifecycle": 10,
+      "rollback": 8,
+      "scalability_data": 10,
+      "future_readiness": 5
+    },
+    "weighted_total": 74.0,
+    "threshold_enterprise": 75,
+    "pass": false
+  },
+  "ok": false,
+  "index_recommendations": [
+    {
+      "table": "justech_license_company",
+      "columns": "company_id, license_id",
+      "reason": "is_active hot path lookup by company"
+    },
+    {
+      "table": "justech_feature_company",
+      "columns": "feature_id, company_id, is_active",
+      "reason": "activation check per feature"
+    },
+    {
+      "table": "justech_feature",
+      "columns": "code",
+      "reason": "already UNIQUE — ensure used in all lookups"
+    }
+  ],
+  "unit_tests": {
+    "total": 20,
+    "failed": 0,
+    "errors": 0,
+    "environment": "hellenia_dev"
+  },
+  "licensing_engine_ready": false,
+  "ready_blockers": [
+    "LIFE-01: is_active() no invalida tras expiración de licencia",
+    "PERF-01: is_active() ~2.3ms/call sin cache (5000 features)",
+    "CONC-01: posible duplicado license.company",
+    "SEC-01: license_key texto plano",
+    "COMP-02: max_users sin enforcement"
+  ]
+}

@@ -46,6 +46,7 @@ class JustechModule(models.Model):
         string="Dependencies",
     )
 
-    _sql_constraints = [
-        ("code_unique", "UNIQUE(code)", "Module code must be unique."),
-    ]
+    _code_unique = models.Constraint(
+        "UNIQUE(code)",
+        "Module code must be unique.",
+    )

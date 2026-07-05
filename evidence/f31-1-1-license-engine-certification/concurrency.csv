@@ -1,0 +1,4 @@
+test_id,description,status,severity,detail
+CONC-T01,license.company UNIQUE,FAIL,critico,count=2
+CONC-T02,feature.company UNIQUE,PASS,alto,count=1
+CONC-T03,activate_feature idempotent,PASS,medio,1

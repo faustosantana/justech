@@ -1,0 +1,22 @@
+{
+  "phase": "accounting-total-audit-readonly",
+  "environment": "dev",
+  "database": "hellenia_dev",
+  "mode": "read_only",
+  "audit_completed": false,
+  "blocked": true,
+  "reason": "odoo shell no puede iniciar: columna res_partner.justech_do_partner_id_type definida en código pero ausente en BD",
+  "evidence": "dev-raw.txt — fallo en context_get() antes de ejecutar script",
+  "schema_probe_psql": "column justech_do_partner_id_type NOT FOUND in public.res_partner",
+  "findings": [
+    {
+      "severity": "high",
+      "area": "environment",
+      "code": "ENV-01",
+      "message": "DEV desincronizado — no auditable hasta migración módulos fiscales (-u justech_l10n_do_base o equivalente)"
+    }
+  ],
+  "recommendation": "Sincronizar esquema DEV antes de P1; usar TEST como referencia operativa hasta entonces",
+  "runner_mode": "read_only_confirmed",
+  "timestamp_utc": "2026-07-05T02:42:00+00:00"
+}

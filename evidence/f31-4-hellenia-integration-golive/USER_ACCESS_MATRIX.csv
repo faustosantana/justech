@@ -1,0 +1,6 @@
+user,email,role_functional,odoo_admin,notes
+admin,TBD,Administrador ERP,yes,Internal
+it@justech.do,TBD,Soporte Justech,yes,Justech support
+client_admin,TBD,Administrador ERP,no,Client primary
+accountant,TBD,Contador,no,Client
+pos_cashier,TBD,Cajero POS,no,If POS enabled

@@ -1,0 +1,19 @@
+id,area,check,status,notes
+P1,Platform,justech_modules installed,PASS,19.0.1.5.0
+P2,Platform,hellenia_governance installed,PASS,19.0.1.0.0
+P3,Platform,justech_admin installed,PASS,19.0.1.0.0
+P4,Platform,API v1 frozen,PASS,API_VERSION=1
+P5,Registry,11 modules in wizard TEST,PASS,justech_core/inventory not installed
+P6,Tests,justech_modules 27/27,PASS,
+P7,Tests,hellenia_governance 6/6,PASS,
+P8,Tests,justech_admin 1/1,PASS,
+F1,Fiscal,NCF module active,PASS,
+F2,Fiscal,DGII 606 exporter,PASS,
+F3,Fiscal,DGII 607 exporter,PASS,
+F4,Fiscal,DGII 623 exporter,PASS,
+F5,Fiscal,PDF cotización,PASS,
+F6,Fiscal,PDF factura,PASS,
+O1,Ops,Healthcheck TEST,PASS,
+O2,Ops,SMTP configured,PENDING,ops task
+O3,Ops,Backup cron,PENDING,ops task
+O4,Ops,PROD promotion,NOT_STARTED,awaiting approval

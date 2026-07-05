@@ -1,0 +1,7 @@
+id,risk,severity,mitigation,status
+R1,PROD deploy without backup,critical,Mandatory backup per ROLLBACK_PLAN,open
+R2,POS menu hidden by hellenia_ui,high,Document policy; governance menu.policy future,monitoring
+R3,justech_core/inventory not on TEST,low,Install when needed; registry ready,accepted
+R4,SMTP not verified,medium,Ops checklist before go-live,open
+R5,Client user matrix incomplete,medium,USER_ACCESS_MATRIX.csv review,open
+R6,Fiscal data on PROD differs,high,Full regression on PROD clone first,open

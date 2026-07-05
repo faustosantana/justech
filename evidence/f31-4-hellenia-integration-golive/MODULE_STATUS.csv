@@ -1,0 +1,16 @@
+module_code,installed_test,registered,wizard_active,notes
+justech_modules,yes,yes,yes,platform
+hellenia_governance,yes,yes,yes,F31.2
+justech_admin,yes,yes,yes,F31.3
+justech_l10n_do_base,yes,yes,yes,
+justech_l10n_do_ncf,yes,yes,yes,
+justech_l10n_do_reports,yes,yes,yes,
+hellenia_base,yes,yes,yes,
+hellenia_account,yes,yes,yes,
+hellenia_reports,yes,yes,yes,
+hellenia_ux,yes,yes,yes,
+hellenia_ui,yes,yes,yes,
+hellenia_pos,yes,yes,yes,
+justech_report_design,yes,yes,yes,
+justech_core,no,yes,no,Not installed TEST
+hellenia_inventory,no,yes,no,Not installed TEST

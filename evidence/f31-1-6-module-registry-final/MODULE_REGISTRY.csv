@@ -1,0 +1,14 @@
+technical_name,module_code,version,always_enabled,has_justech_register,feature_codes,commercial_deps
+hellenia_account,hellenia_account,19.0.1.0.27,True,True,hellenia_account,hellenia_base|justech_l10n_do_base|justech_l10n_do_ncf
+hellenia_base,hellenia_base,19.0.1.0.0,True,True,hellenia_base,
+hellenia_inventory,hellenia_inventory,19.0.1.0.0,True,True,hellenia_inventory,hellenia_base
+hellenia_pos,hellenia_pos,19.0.1.0.0,True,True,hellenia_pos,hellenia_base
+hellenia_reports,hellenia_reports,19.0.1.5.7,True,True,hellenia_reports,hellenia_account|justech_l10n_do_ncf
+hellenia_ui,hellenia_ui,19.0.1.0.4,True,True,hellenia_ui,hellenia_base
+hellenia_ux,hellenia_ux,19.0.1.2.0,True,True,hellenia_ux,hellenia_ui|hellenia_account
+justech_core,justech_core,19.0.1.0.0,True,True,justech_core,
+justech_l10n_do_base,justech_l10n_do_base,19.0.1.4.2,True,True,l10n_do_base,
+justech_l10n_do_ncf,justech_l10n_do_ncf,19.0.1.5.2,True,True,l10n_do_ncf,justech_l10n_do_base
+justech_l10n_do_reports,justech_l10n_do_reports,19.0.1.12.4,True,True,l10n_do_reports,justech_l10n_do_ncf
+justech_modules,justech_modules,19.0.1.5.0,True,True,platform_core,
+justech_report_design,justech_report_design,19.0.7.3.1,True,True,justech_report_design,hellenia_reports

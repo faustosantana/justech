@@ -53,4 +53,16 @@ Formatos visuales corporativos para documentos comerciales Hellenia.
     "installable": True,
     "application": False,
     "license": "LGPL-3",
+    "justech_register": {
+        "module_code": "hellenia_reports",
+        "module_name": "Hellenia Reports",
+        "version": "19.0.1.5.7",
+        "category": "reports",
+        "country": "DO",
+        "description": "Corporate PDF formats for Hellenia documents",
+        "dependencies": ["hellenia_account", "justech_l10n_do_ncf"],
+        "always_enabled": True,
+        "required_module": True,
+        "features": [{"code": "hellenia_reports", "name": "Hellenia Reports"}],
+    },
 }

@@ -50,4 +50,15 @@ Mejoras UX upgrade-safe (Fase 17):
     "installable": True,
     "application": False,
     "license": "LGPL-3",
+    "justech_register": {
+        "module_code": "hellenia_ux",
+        "module_name": "Hellenia UX",
+        "version": "19.0.1.2.0",
+        "category": "ux",
+        "country": "DO",
+        "description": "Dominican visual UX and fiscal form improvements",
+        "dependencies": ["hellenia_ui", "hellenia_account"],
+        "always_enabled": True,
+        "features": [{"code": "hellenia_ux", "name": "Hellenia UX"}],
+    },
 }

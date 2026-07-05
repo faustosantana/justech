@@ -82,4 +82,18 @@ Vista previa OC (Fase 27B):
     "installable": True,
     "application": False,
     "license": "LGPL-3",
+    "justech_register": {
+        "module_code": "justech_report_design",
+        "module_name": "Justech Report Design",
+        "version": "19.0.7.3.1",
+        "category": "reports",
+        "country": "DO",
+        "localization": "",
+        "description": "Hellenia PDF design — quotation, invoice, delivery note, PO",
+        "dependencies": ["hellenia_reports"],
+        "always_enabled": True,
+        "features": [
+            {"code": "justech_report_design", "name": "Justech Report Design"},
+        ],
+    },
 }

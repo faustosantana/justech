@@ -30,4 +30,15 @@ Personalización de menús y aplicaciones para Hellenia:
     "installable": True,
     "application": False,
     "license": "LGPL-3",
+    "justech_register": {
+        "module_code": "hellenia_ui",
+        "module_name": "Hellenia UI",
+        "version": "19.0.1.0.4",
+        "category": "ux",
+        "country": "DO",
+        "description": "Main menu and UI labels for Hellenia",
+        "dependencies": ["hellenia_base"],
+        "always_enabled": True,
+        "features": [{"code": "hellenia_ui", "name": "Hellenia UI"}],
+    },
 }

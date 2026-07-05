@@ -31,4 +31,19 @@ NCF management for Dominican Republic — Justech MVP.
     "installable": True,
     "application": False,
     "license": "LGPL-3",
+    "justech_register": {
+        "module_code": "justech_l10n_do_ncf",
+        "module_name": "Justech Dominican NCF",
+        "version": "19.0.1.5.2",
+        "category": "fiscal",
+        "country": "DO",
+        "localization": "l10n_do",
+        "description": "NCF ranges, assignment and validation",
+        "dependencies": ["justech_l10n_do_base"],
+        "always_enabled": True,
+        "required_module": True,
+        "features": [
+            {"code": "l10n_do_ncf", "name": "DO NCF Management"},
+        ],
+    },
 }

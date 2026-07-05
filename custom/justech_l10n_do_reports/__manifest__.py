@@ -34,4 +34,19 @@ Dominican DGII fiscal reports for Justech.
     "installable": True,
     "application": False,
     "license": "LGPL-3",
+    "justech_register": {
+        "module_code": "justech_l10n_do_reports",
+        "module_name": "Justech Dominican Fiscal Reports",
+        "version": "19.0.1.12.4",
+        "category": "reports",
+        "country": "DO",
+        "localization": "l10n_do",
+        "description": "DGII reports 606, 607, 608, 623",
+        "dependencies": ["justech_l10n_do_ncf"],
+        "always_enabled": True,
+        "required_module": True,
+        "features": [
+            {"code": "l10n_do_reports", "name": "DO DGII Reports"},
+        ],
+    },
 }

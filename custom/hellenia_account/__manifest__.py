@@ -34,4 +34,16 @@ Extensiones contables Hellenia (upgrade-safe):
     "installable": True,
     "application": False,
     "license": "LGPL-3",
+    "justech_register": {
+        "module_code": "hellenia_account",
+        "module_name": "Hellenia Account",
+        "version": "19.0.1.0.27",
+        "category": "accounting",
+        "country": "DO",
+        "description": "Banks, payment methods and Hellenia accounting extensions",
+        "dependencies": ["hellenia_base", "justech_l10n_do_base", "justech_l10n_do_ncf"],
+        "always_enabled": True,
+        "required_module": True,
+        "features": [{"code": "hellenia_account", "name": "Hellenia Accounting"}],
+    },
 }

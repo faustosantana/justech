@@ -31,4 +31,19 @@ Dominican fiscal base layer for Justech localization.
     "installable": True,
     "application": False,
     "license": "LGPL-3",
+    "justech_register": {
+        "module_code": "justech_l10n_do_base",
+        "module_name": "Justech Dominican Fiscal Base",
+        "version": "19.0.1.4.2",
+        "category": "fiscal",
+        "country": "DO",
+        "localization": "l10n_do",
+        "description": "Base fiscal configuration for Dominican Republic",
+        "dependencies": [],
+        "always_enabled": True,
+        "required_module": True,
+        "features": [
+            {"code": "l10n_do_base", "name": "DO Fiscal Base"},
+        ],
+    },
 }

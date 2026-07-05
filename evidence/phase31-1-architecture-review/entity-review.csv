@@ -1,0 +1,14 @@
+model,implemented,normalization,relations_ok,indexes_ok,constraints_ok,performance_ok,fields_missing,fields_redundant,verdict,action
+justech.module,yes,good,yes,good,UNIQUE(code),good,odoo_version_min/max manifest_checksum,none,pass,Add version model P1
+justech.feature,yes,good,yes,good,UNIQUE(code),good,tier_minimum depends_feature_ids,active vs is_active naming,partial,Rename active to archived P2
+justech.feature.company,yes,good,yes,good,UNIQUE(company feature),good,deactivated_at reason,none,pass,Keep
+justech.license,yes,good,yes,partial,MISSING UNIQUE(license_key),poor_lookup,tenant_id installation_uuid license_key_hash odoo_edition deployment_mode,computed M2M OK for UI,fail,Fix P0 bugs + constraints
+justech.license.feature,yes,good,yes,good,FK cascade,good,none,none,pass,Keep
+justech.license.company,yes,good,yes,good,FK cascade,good,none,none,pass,Keep
+justech.activation.key,yes,good,yes,good,UNIQUE(key),good,expires_at feature_bundle,none,partial,Integrate API P1
+justech.license.audit,yes,append-only,yes,partial,none,unbounded growth,correlation_id ip_address,none,partial,Retention policy P2
+justech.license.service,yes,n/a,n/a,n/a,n/a,god-service,registry split,partial,Split registry F31.1b
+justech.module.dependency,no,n/a,n/a,n/a,n/a,entire model,n/a,fail,Implement P0
+justech.module.version,no,n/a,n/a,n/a,n/a,entire model,n/a,fail,Implement P1
+justech.tenant,no,n/a,n/a,n/a,n/a,entire model,n/a,fail,Implement P1 F33
+justech.localization,no,n/a,n/a,n/a,n/a,entire model,n/a,fail,Implement P1 F32

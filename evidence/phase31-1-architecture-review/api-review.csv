@@ -1,0 +1,17 @@
+method,visibility,implemented,stable_contract,sufficient_for_week1,sufficient_for_platform,priority,notes,recommendation
+is_active,public,yes,yes,yes,partial,P0,Core check; ambiguous license_required=False path,Document matrix; add cache F31.2
+require_active,public,yes,yes,yes,yes,P0,Raises JustechLicenseError,Keep stable
+get_feature,public,yes,yes,yes,yes,P1,Returns recordset,Keep; add list_features P1
+validate_license,public,yes,yes,yes,partial,P0,No activation key integration,Add redeem_activation_key P1
+register_from_manifest,semi-public,yes,no,yes,partial,P1,Critical for module install hooks,Promote to register_module() stable alias
+register_platform_seed,internal,yes,no,yes,n/a,P2,Duplicates XML seed,Remove duplicate source P0
+_set_feature_company_active,private,yes,no,yes,no,P0,Governance needs public callback,Promote to activate_feature/deactivate_feature
+check_dependencies,missing,no,n/a,no,no,P0,justech.module.dependency not implemented,Implement F31.1b
+activate_feature,missing,no,n/a,no,no,P0,Required by hellenia_governance,Add before commit
+deactivate_feature,missing,no,n/a,no,no,P0,Required by justech_admin,Add before commit
+is_module_licensed,missing,no,n/a,no,partial,P1,Module-level check,Add F31.2
+list_features,missing,no,n/a,no,partial,P1,Admin dashboard,Add F31.2
+get_license_summary,missing,no,n/a,no,partial,P1,Admin dashboard,Add F31.2
+redeem_activation_key,missing,no,n/a,no,partial,P1,justech.activation.key unused,Wire to license creation
+enforce_seats,missing,no,n/a,no,no,P0,max_users max_companies not enforced,Add before commit
+clear_cache,missing,no,n/a,no,partial,P1,ormcache removed week1,Re-add Odoo 19 pattern F31.2

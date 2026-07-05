@@ -1,0 +1,16 @@
+risk_id,category,severity,probability,impact,status,mitigation,owner_phase
+R-01,Logic,CRITICAL,HIGH,HIGH,open,Fix _get_active_license_for_company global fallback,F31.1b pre-commit
+R-02,Performance,HIGH,MEDIUM,HIGH,open,Index license lookup by company; avoid O(n) scan,F31.1b
+R-03,Security,HIGH,MEDIUM,HIGH,open,Hash license_key; UNIQUE constraint,F31.1b pre-commit
+R-04,Architecture,HIGH,HIGH,MEDIUM,open,Implement justech.module.dependency,F31.1b pre-commit
+R-05,Integration,HIGH,MEDIUM,HIGH,open,Public activate_feature/deactivate_feature for governance,F31.1b pre-commit
+R-06,Data integrity,MEDIUM,MEDIUM,MEDIUM,open,Dual state license.feature vs feature.company sync,F31.2
+R-07,Scalability,MEDIUM,LOW,HIGH,open,Audit table retention/partition,F35
+R-08,SaaS,HIGH,LOW,CRITICAL,open,justech.tenant model before F36,F33
+R-09,Circular deps,LOW,LOW,MEDIUM,monitor,Avoid governance↔modules callbacks; use events,F32
+R-10,God service,MEDIUM,HIGH,MEDIUM,open,Split justech.module.registry,F31.1b
+R-11,Seats enforcement,MEDIUM,HIGH,MEDIUM,open,Enforce max_users max_companies in API,F31.1b pre-commit
+R-12,Seed duplication,LOW,HIGH,LOW,open,Single source XML or hook,F31.1b pre-commit
+R-13,Test module in prod,LOW,MEDIUM,MEDIUM,open,Exclude justech_modules_test from product commit,F31.1b
+R-14,Cache absence,MEDIUM,MEDIUM,MEDIUM,open,Re-implement ormcache Odoo 19,F31.2
+R-15,License scope ACL,MEDIUM,MEDIUM,MEDIUM,open,ir.rule on justech.license for holdings,F31.1b

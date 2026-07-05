@@ -1,0 +1,12 @@
+model,phase,priority,required_for,can_add_without_breaking_api,notes
+justech.module.dependency,F31.1b,P0,Commercial DAG marketplace,Yes,Designed in JUSTECH_MODULES_ARCHITECTURE; missing in code
+justech.module.version,F31.2,P1,Marketplace rollback,Yes,Replace Char version on module
+justech.module.release,F35,P2,Signed marketplace packages,Yes,Separate from version history
+justech.tenant,F33,P1,SaaS pooled multi-tenant,Yes,Nullable FK on license
+justech.installation,F33,P1,On-prem registry heartbeat,Yes,UUID per deployment
+justech.localization,F32,P1,Country-specific licensing,Yes,Links features to res.country
+justech.customer.subscription,F35,P2,External billing Stripe,Yes,Separate from license grant
+justech.customer.plan,F35,P2,Commercial SKUs,Yes,Maps to license tier
+justech.feature.flag,F38,P2,IA gradual rollout,Yes,Optional; always_on sufficient short-term
+justech.license.history,F35,P2,Compliance audit trail,Yes,If audit model insufficient
+justech.module.registry,F31.1b,P1,Split god-service,Yes,AbstractModel for registration only

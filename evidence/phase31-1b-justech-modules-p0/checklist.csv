@@ -1,0 +1,13 @@
+check_id,description,result
+G-01,Upgrade justech_modules 19.0.1.0.0 → 19.0.1.1.0,PASS
+G-02,Install revalidation (-i) + tests,PASS
+G-03,20/20 tests PASS,PASS
+G-04,UNIQUE(license_key) applied,PASS
+G-05,Orphan license not global,PASS
+G-06,Multi-company isolation,PASS
+G-07,Dependencies block activation,PASS
+G-08,max_companies blocks excess,PASS
+G-09,Audit activate/deactivate,PASS
+G-10,API_VERSION = 1 documented,PASS
+G-11,TEST not touched,PASS
+G-12,PROD not touched,PASS

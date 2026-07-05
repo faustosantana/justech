@@ -1,0 +1,145 @@
+{
+  "review_id": "F31.1-ARCH-2026-07-05",
+  "module": "justech_modules",
+  "version": "19.0.1.0.0",
+  "branch": "feature/f31-1-justech-modules",
+  "commit_status": "pre-commit",
+  "dev_validation": {
+    "environment": "hellenia_dev",
+    "tests_pass": 9,
+    "tests_total": 9,
+    "install_status": "installed"
+  },
+  "verdict": "NO_APROBADO",
+  "verdict_reason": "MVP Semana 1 sólido pero insuficiente como base de plataforma 10 años sin correcciones P0 pre-commit",
+  "score": {
+    "models": 72,
+    "api": 68,
+    "separation_of_concerns": 65,
+    "scalability_catalog": 90,
+    "scalability_licensing": 55,
+    "security": 62,
+    "extensibility": 75,
+    "overall": 68
+  },
+  "models_implemented": [
+    "justech.module",
+    "justech.feature",
+    "justech.feature.company",
+    "justech.license",
+    "justech.license.feature",
+    "justech.license.company",
+    "justech.activation.key",
+    "justech.license.audit",
+    "justech.license.service"
+  ],
+  "models_missing_from_design": [
+    "justech.module.dependency",
+    "justech.module.version",
+    "justech.module.release",
+    "justech.tenant",
+    "justech.installation",
+    "justech.localization",
+    "justech.customer.subscription",
+    "justech.customer.plan",
+    "justech.feature.flag",
+    "justech.license.history"
+  ],
+  "public_api": {
+    "implemented": [
+      "is_active",
+      "require_active",
+      "get_feature",
+      "validate_license"
+    ],
+    "semi_public": [
+      "register_from_manifest",
+      "register_platform_seed"
+    ],
+    "missing_p0": [
+      "activate_feature",
+      "deactivate_feature",
+      "check_dependencies",
+      "enforce_seats"
+    ],
+    "missing_p1": [
+      "register_module",
+      "is_module_licensed",
+      "list_features",
+      "get_license_summary",
+      "redeem_activation_key"
+    ]
+  },
+  "critical_bugs": [
+    {
+      "id": "BUG-01",
+      "severity": "P0",
+      "title": "Global license fallback",
+      "location": "justech_license_service._get_active_license_for_company",
+      "description": "Licencia activa sin company_line_ids retorna primera licencia global para cualquier empresa"
+    },
+    {
+      "id": "BUG-02",
+      "severity": "P0",
+      "title": "O(n) license scan",
+      "location": "justech_license_service._get_active_license_for_company",
+      "description": "search([('state','=','active')]) sin filtro company ni tenant"
+    },
+    {
+      "id": "BUG-03",
+      "severity": "P0",
+      "title": "license_key sin UNIQUE constraint",
+      "location": "justech.license",
+      "description": "Solo index, no UNIQUE SQL"
+    },
+    {
+      "id": "BUG-04",
+      "severity": "P1",
+      "title": "activation.key no integrada",
+      "location": "justech.activation.key",
+      "description": "Modelo existe pero validate_license no usa claves JT-*"
+    }
+  ],
+  "scalability_assessment": {
+    "100_companies_single_db": "partial",
+    "1000_clients_multi_db": "pass",
+    "500_modules": "pass",
+    "5000_features": "pass",
+    "saas_pooled_multi_tenant": "fail",
+    "audit_long_term": "fail_without_retention"
+  },
+  "deployment_modes": {
+    "on_premise_dedicated": "supported",
+    "odoo_enterprise": "supported_unvalidated",
+    "odoo_community": "supported_unvalidated",
+    "saas_pooled": "not_supported",
+    "multi_tenant_single_db": "not_supported",
+    "white_label": "partial"
+  },
+  "pre_commit_p0_changes": [
+    "P0-01 UNIQUE constraint license_key",
+    "P0-02 Fix global license fallback",
+    "P0-03 Implement justech.module.dependency + check_dependencies",
+    "P0-04 Public activate_feature / deactivate_feature",
+    "P0-05 Enforce max_companies",
+    "P0-06 Remove duplicate seed XML vs hook",
+    "P0-07 Document API_VERSION semver",
+    "P0-08 ir.rule or domain on justech.license",
+    "P0-09 Tests T-05 T-06 dependency and multi-license",
+    "P0-10 Exclude justech_modules_test from product commit"
+  ],
+  "strengths": [
+    "Correct separation modules vs governance vs admin",
+    "justech.* namespace",
+    "depends base only",
+    "Stable feature codes",
+    "Normalized bridge tables",
+    "JustechLicenseError exception",
+    "justech_register manifest extension",
+    "Odoo 19 privilege_id groups",
+    "DEV 9/9 tests pass"
+  ],
+  "generated_at": "2026-07-05T12:30:00-04:00",
+  "reviewer": "F31.1 Architecture Review",
+  "code_modified": false
+}

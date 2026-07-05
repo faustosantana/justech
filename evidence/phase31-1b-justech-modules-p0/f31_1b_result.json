@@ -1,0 +1,43 @@
+{
+  "phase": "31.1b",
+  "sprint": "p0-pre-commit",
+  "date": "2026-07-05",
+  "environment": "hellenia_dev",
+  "vps": "root@2.25.69.179",
+  "result": "PASS",
+  "module_version": "19.0.1.1.0",
+  "api_version": 1,
+  "tests": {
+    "total": 20,
+    "failed": 0,
+    "errors": 0
+  },
+  "validation": {
+    "upgrade": "PASS",
+    "install_revalidation": "PASS",
+    "multi_company": "PASS",
+    "orphan_license_not_global": "PASS",
+    "dependencies_block_activation": "PASS",
+    "max_companies_enforced": "PASS",
+    "audit_activate_deactivate": "PASS"
+  },
+  "p0_implemented": [
+    "P0-01 UNIQUE(license_key)",
+    "P0-02 Fix global license fallback",
+    "P0-03 justech.module.dependency + check_dependencies()",
+    "P0-04 activate_feature() / deactivate_feature()",
+    "P0-05 max_companies enforcement",
+    "P0-06 Single seed source (post_init_hook only)",
+    "P0-07 API_VERSION = 1",
+    "P0-08 ir.rule company scope on justech.license (user group)",
+    "P0-09 Tests dependencies + multi-licencia",
+    "P0-10 justech_modules_test excluded from product commit"
+  ],
+  "not_deployed": ["hellenia_test", "hellenia_prod"],
+  "commit_status": "pre-commit",
+  "dev_logs": {
+    "upgrade": "evidence/phase31-1b-justech-modules-p0/f31_1b_dev_upgrade.log",
+    "install": "evidence/phase31-1b-justech-modules-p0/f31_1b_dev_install.log"
+  },
+  "verdict": "APROBADO"
+}

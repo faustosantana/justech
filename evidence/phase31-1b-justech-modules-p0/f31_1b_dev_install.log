@@ -1,0 +1,62 @@
+2026-07-05 12:21:51,846 1 DEBUG ? odoo.netsvc: logger level set: "odoo.http.rpc.request:INFO" 
+2026-07-05 12:21:51,846 1 DEBUG ? odoo.netsvc: logger level set: "odoo.http.rpc.response:INFO" 
+2026-07-05 12:21:51,846 1 DEBUG ? odoo.netsvc: logger level set: ":INFO" 
+2026-07-05 12:21:51,846 1 DEBUG ? odoo.netsvc: logger level set: "odoo:DEBUG" 
+2026-07-05 12:21:51,846 1 DEBUG ? odoo.netsvc: logger level set: "odoo.sql_db:INFO" 
+2026-07-05 12:21:51,847 1 DEBUG ? odoo.netsvc: logger level set: ":INFO" 
+2026-07-05 12:21:51,847 1 WARNING ? odoo.tools.config: option logfile reads 'False' in the config file at /etc/odoo/odoo.conf but isn't a boolean option, skip 
+2026-07-05 12:21:51,847 1 WARNING ? odoo.tools.config: option logfile reads 'False' in the config file at /etc/odoo/odoo.conf but isn't a boolean option, skip 
+2026-07-05 12:21:51,847 1 INFO ? odoo: Odoo version 19.0-20260619 
+2026-07-05 12:21:51,847 1 INFO ? odoo: Using configuration file at /etc/odoo/odoo.conf 
+2026-07-05 12:21:51,847 1 INFO ? odoo: addons paths: _NamespacePath(['/usr/lib/python3/dist-packages/odoo/addons', '/var/lib/odoo/addons/19.0', '/opt/odoo/enterprise/addons', '/opt/odoo/custom', '/usr/lib/python3/dist-packages/addons']) 
+2026-07-05 12:21:51,847 1 INFO ? odoo: database: odoo@db:5432 
+2026-07-05 12:21:52,072 1 DEBUG ? odoo.service.server: Setting signal handlers 
+2026-07-05 12:21:52,073 1 INFO ? odoo.service.server: HTTP service (werkzeug) running on 78a659ea41f7:8069 
+2026-07-05 12:21:52,090 1 INFO hellenia_dev odoo.tests.common: Importing test framework 
+Stack (most recent call last):
+  File "/usr/bin/odoo", line 6, in <module>
+    odoo.cli.main()
+  File "/usr/lib/python3/dist-packages/odoo/cli/command.py", line 133, in main
+    command().run(args)
+  File "/usr/lib/python3/dist-packages/odoo/cli/server.py", line 127, in run
+    main(args)
+  File "/usr/lib/python3/dist-packages/odoo/cli/server.py", line 118, in main
+    rc = server.start(preload=config['db_name'], stop=stop)
+  File "/usr/lib/python3/dist-packages/odoo/service/server.py", line 1636, in start
+    rc = server.run(preload, stop)
+  File "/usr/lib/python3/dist-packages/odoo/service/server.py", line 691, in run
+    rc = preload_registries(preload)
+  File "/usr/lib/python3/dist-packages/odoo/service/server.py", line 1550, in preload_registries
+    registry = Registry.new(dbname, update_module=update_module, install_modules=config['init'], upgrade_modules=config['update'], reinit_modules=config['reinit'])
+  File "/usr/lib/python3/dist-packages/odoo/tools/func.py", line 88, in locked
+    return func(inst, *args, **kwargs)
+  File "/usr/lib/python3/dist-packages/odoo/orm/registry.py", line 148, in new
+    registry.init(db_name)
+  File "/usr/lib/python3/dist-packages/odoo/orm/registry.py", line 227, in init
+    from odoo.tests.result import OdooTestResult  # noqa: PLC0415
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1310, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/usr/lib/python3/dist-packages/odoo/tests/__init__.py", line 8, in <module>
+    from . import common
+  File "<frozen importlib._bootstrap>", line 1415, in _handle_fromlist
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/usr/lib/python3/dist-packages/odoo/tests/common.py", line 89, in <module>
+    _logger.info("Importing test framework", stack_info=_logger.isEnabledFor(logging.DEBUG))
+2026-07-05 12:21:52,112 1 DEBUG hellenia_dev odoo.registry: Multiprocess load registry signaling: [Registry: 48] [Cache default: 2] [Cache assets: 1] [Cache stable: 2] [Cache templates: 1] [Cache routing: 1] [Cache groups: 1] 
+2026-07-05 12:21:52,131 1 INFO hellenia_dev odoo.modules.loading: loading 1 modules... 
+2026-07-05 12:21:52,132 1 DEBUG hellenia_dev odoo.modules.loading: Loading module base (1/1) 
+2026-07-05 12:21:52,135 1 DEBUG hellenia_dev odoo.modules.loading: Module base loaded in 0.00s, 0 queries 
+2026-07-05 12:21:52,135 1 INFO hellenia_dev odoo.modules.loading: 1 modules loaded in 0.00s, 0 queries (+0 extra) 
+2026-07-05 12:21:52,157 1 INFO hellenia_dev odoo.modules.loading: updating modules list 
+2026-07-05 12:21:52,161 1 INFO hellenia_dev odoo.addons.base.models.ir_module: ALLOW access to module.update_list on [] to user __system__ #1 via n/a 

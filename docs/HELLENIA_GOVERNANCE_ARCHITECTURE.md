@@ -1,18 +1,62 @@
-# Arquitectura de Administración Centralizada — Hellenia
+# Arquitectura de Gobernanza Funcional — hellenia_governance
 
-**Versión:** 1.1 (diseño)  
-**Fecha:** 2026-07-03  
-**Estado:** Propuesta oficial — **sin implementación**  
-**Alcance:** **Todo el ERP Hellenia** — Odoo Enterprise + ecosistema Justech (`custom/`)  
+**Versión:** 2.0 · **Fase 31 replanteada**  
+**Fecha:** 2026-07-05  
+**Estado:** Diseño definitivo — Sprint **F31.2** (después de justech_modules)  
+**Alcance:** Permisos, roles, políticas, menús y auditoría operativa del ERP Justech  
 **Principio rector:** *Ninguna personalización operativa depende de código, XML ni constantes hardcodeadas para activarse o desactivarse.*
 
 ---
 
-## 0. Alcance ERP completo (clarificación v1.1)
+## v2.0 — Cambios vs v1.1
 
-`hellenia_governance` **no es un módulo orientado al POS**. Es el **panel general de gobierno funcional de todo Hellenia**: la capa administrativa única desde la cual un responsable de negocio controla el ERP completo, sin intervención técnica.
+| v1.1 | v2.0 (oficial) |
+|------|----------------|
+| Governance como "panel único" incl. licencias | **Sin licencias** → `justech_modules` |
+| Governance = admin UI | **Sin panel unificado** → `justech_admin` consume governance |
+| Depende hellenia_base | Depende **`justech_modules`** |
+| Implementar en F32 | Implementar en **F31.2** |
 
-### 0.1 Dominios cubiertos
+**Separación de tres pilares:** ver `ERP_PLATFORM_ARCHITECTURE.md`
+
+| Pilar | Módulo | Responsabilidad |
+|-------|--------|-----------------|
+| Comercial | `justech_modules` | Licencias, activación comercial |
+| Operativo | **`hellenia_governance`** | Permisos, roles, menús, auditoría |
+| Administrativo | `justech_admin` | Centro de Control UI |
+
+---
+
+## 0. Alcance v2.0 — Qué gobierna y qué NO
+
+`hellenia_governance` es el **centro de gobierno funcional operativo** del ERP Justech. Controla quién puede hacer qué en el ERP, no si está pagado.
+
+### 0.1 Qué gobierna (SÍ)
+
+| Dominio | Ejemplos |
+|---------|----------|
+| **Permisos funcionales** | void_ncf, export_607, manage_ncf_range |
+| **Roles** | Contador, Vendedor, Admin Fiscal, Cajero POS |
+| **Políticas por empresa** | Fail-closed RNC, política anulación |
+| **Menús** | Visible/oculto, etiquetas ES, usuarios autorizados |
+| **Usuarios funcionales** | Perfiles sin editar 50 grupos Odoo |
+| **Auditoría operativa** | Cambios permisos, políticas, menús |
+| **Features operativas** | Habilitar/deshabilitar función **post-licencia** |
+
+### 0.2 Qué NO gobierna (NO)
+
+| Dominio | Pertenece a |
+|---------|-------------|
+| Licencias, claves activación | **`justech_modules`** |
+| Catálogo comercial módulos | **`justech_modules`** |
+| Validación is_active / require_active | **`justech_modules`** |
+| Panel UI unificado admin | **`justech_admin`** |
+| Healthchecks, backups trigger | **`justech_admin`** |
+| Lógica fiscal NCF/DGII | Módulos funcionales |
+| Instalar/desinstalar módulos Odoo | Apps nativo (acción técnica) |
+| Docker, PostgreSQL, Traefik | Infra externa |
+
+### 0.3 Dominios operativos cubiertos
 
 | Dominio ERP | Ejemplos de gobierno desde el panel |
 |-------------|-------------------------------------|
@@ -37,15 +81,16 @@
 
 POS es **un dominio más** dentro del catálogo. El incidente del menú POS ilustra un fallo sistémico (configuración en código) que este diseño elimina para **todos** los dominios.
 
-### 0.2 Qué gobierna vs qué no
+### 0.4 Qué gobierna vs qué no (tabla operativa)
 
-| Gobierna (UI admin) | No gobierna (permanece técnico/infra) |
-|---------------------|---------------------------------------|
-| Habilitar/deshabilitar funcionalidades de negocio | Instalar/desinstalar módulos Odoo (`Apps`) |
-| Menús visibles y accesos | Código fuente, Docker, backups |
-| Permisos y roles funcionales | Licencia Enterprise |
-| Políticas por compañía | `config/*.env`, Traefik, PostgreSQL |
-| Auditoría de cambios operativos | Neutralización de BD TEST |
+| Gobierna (UI vía justech_admin) | No gobierna |
+|-----------------------------------|-------------|
+| Habilitar/deshabilitar funcionalidades **operativas** (post-licencia) | Licencias comerciales |
+| Menús visibles y accesos | Claves activación |
+| Permisos y roles funcionales | Catálogo módulos comercial |
+| Políticas por compañía | Validación licencia |
+| Auditoría de cambios operativos | Panel admin shell |
+| Sincronización res.groups | Código fuente, Docker, backups |
 
 ---
 
@@ -62,7 +107,7 @@ Hellenia acumula personalizaciones distribuidas en 13 módulos custom sobre Odoo
 | Sin `res.config.settings` | Config fiscal abre formulario de compañía | UX inconsistente |
 | Instalar módulo = habilitar función | `point_of_sale` instalado pero app oculta | Confusión operativa |
 
-**Solución propuesta:** módulo hub **`hellenia_governance`** — **Centro de Gobierno Funcional Hellenia** — que centraliza para **todo el ERP**: features, menús, permisos de negocio, roles, perfiles de usuario, políticas por compañía y auditoría. Los demás módulos **registran** capacidades al instalarse; el administrador **controla** el ERP desde una sola interfaz.
+**Solución v2.0:** módulo **`hellenia_governance`** — capa de **permisos, roles, políticas y auditoría operativa**. Las licencias viven en `justech_modules`. El panel unificado vive en `justech_admin`. Los módulos funcionales **registran** capacidades al instalarse; el administrador **controla** operación desde `justech_admin` → governance.
 
 ---
 
@@ -70,20 +115,22 @@ Hellenia acumula personalizaciones distribuidas en 13 módulos custom sobre Odoo
 
 ### 2.1 Objetivos
 
-1. **Un solo panel** para gobernar todo Hellenia: Ventas, Compras, Inventario, Contabilidad, Fiscal DO, Reportes, POS, Conduces, Retenciones, Auditoría y personalizaciones futuras.
-2. Activar/desactivar cualquier funcionalidad Justech **y** políticas nativas relevantes por compañía, sin XML ni código.
-3. Administración de **todos los menús** del ERP editable (visible/oculto, usuarios, grupos, motivo).
-4. Permisos de **negocio** documentados en todo el ERP (qué hace, qué afecta, riesgos) — no solo POS ni fiscal.
-5. Roles y perfiles funcionales de usuario (empresa, almacén, POS, diarios, sucursal) sin editar grupos Odoo manualmente.
-6. Auditoría completa de cambios de gobernanza en cualquier dominio.
-7. Extensible a futuras personalizaciones sin rediseño arquitectónico.
+1. **Permisos funcionales** documentados en todo el ERP (código, riesgo, rol recomendado).
+2. **Roles de negocio** predefinidos — bundles de permisos por puesto.
+3. Activar/desactivar funcionalidades **operativas** por compañía (requiere licencia previa en modules).
+4. Administración de **menús** editable (visible/oculto, usuarios, motivo) — absorbe `hellenia_ui`.
+5. **Auditoría operativa** de cambios de gobernanza.
+6. Puente a `res.groups` Odoo sin exponer XML IDs al admin.
+7. Extensible: todo módulo Justech nuevo registra permisos vía `justech_register`.
 
-### 2.2 No-objetivos (v1)
+### 2.2 No-objetivos (v2.0)
 
-- Reemplazar el sistema de seguridad nativo de Odoo (se **integra**, no se sustituye).
-- Desinstalar módulos automáticamente al desactivar una feature (solo oculta/bloquea; desinstalación sigue siendo acción técnica explícita).
-- Gestionar licencias Enterprise ni configuración de infraestructura Docker.
-- Panel para personalizaciones de terceros fuera de `custom/`.
+- **Gestionar licencias** → `justech_modules`
+- **Panel UI unificado** → `justech_admin`
+- Reemplazar seguridad nativa Odoo (se integra).
+- Desinstalar módulos al desactivar feature operativa.
+- Gestionar licencia Odoo Enterprise.
+- Lógica de negocio fiscal/contable.
 
 ---
 
@@ -97,22 +144,54 @@ Hellenia acumula personalizaciones distribuidas en 13 módulos custom sobre Odoo
 | Ampliar `hellenia_ui` | ❌ Mezclaría presentación con gobernanza; `hellenia_ui` quedaría como consumidor |
 | **Nuevo `hellenia_governance`** | ✅ Hub dedicado, dependencia clara, evolución independiente |
 
-### 3.2 Dependencias propuestas
+### 3.2 Dependencias v2.0
 
 ```
-hellenia_base
-    └── hellenia_governance
-            ├── (consumido por) hellenia_ui
-            ├── (consumido por) hellenia_pos
-            ├── (consumido por) hellenia_account
-            ├── (consumido por) justech_l10n_do_*
-            └── ...
+base · mail · web
+    └── justech_modules
+            └── hellenia_governance
+                    ├── (consumido por) justech_admin
+                    ├── (consumido por) hellenia_ui → deprecado
+                    ├── (consumido por) justech_l10n_do_*
+                    └── (consumido por) todos módulos Justech
 ```
 
-`hellenia_governance` depende de: `base`, `mail`, `hellenia_base`.  
-Opcionalmente `web` para assets OWL del panel.
+`hellenia_governance` depende de: **`justech_modules`**, `base`, `mail`, `web`.  
+**NO depende de:** `justech_admin`, `hellenia_base`, módulos fiscales.
 
-### 3.3 Relación con `hellenia_ui`
+### 3.3 API pública v2.0
+
+| Método | Descripción |
+|--------|-------------|
+| `has_permission(code, user=None)` | bool — permiso funcional |
+| `require_permission(code)` | Raises AccessError |
+| `get_role(code)` | Record rol |
+| `enable_feature(feature_code, company)` | Habilita operativamente (requiere licencia JM) |
+| `disable_feature(feature_code, company)` | Deshabilita operativamente |
+| `audit(action, model, record_id, details)` | Escribe auditoría |
+| `register_from_manifest(manifest)` | Hook registro permisos/menús |
+
+### 3.4 Relación con justech_modules
+
+```mermaid
+sequenceDiagram
+    participant HG as hellenia_governance
+    participant JM as justech_modules
+    HG->>JM: is_active(feature_code)?
+    alt No licenciado
+        JM-->>HG: False — no enable
+    else Licenciado
+        HG->>HG: enable_feature + sync groups
+    end
+```
+
+**Regla:** `enable_feature()` **siempre** verifica `justech_modules.is_active()` primero.
+
+### 3.5 Relación con justech_admin
+
+Governance expone **views y actions** — admin las embebe. Governance **no** define menú raíz "Centro de Control".
+
+### 3.6 Relación con hellenia_ui
 
 | Responsabilidad | Antes | Después |
 |-----------------|-------|---------|

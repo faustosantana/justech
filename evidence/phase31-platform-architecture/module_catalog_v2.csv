@@ -1,0 +1,11 @@
+code,module,sprint,category,depends,owner_api,handles_licenses,handles_permissions,handles_admin_ui
+JT-PLT-001,justech_modules,F31.1,PLATAFORMA,"base,mail","is_active require_active get_feature validate_license",yes,no,no
+JT-PLT-002,hellenia_governance,F31.2,PLATAFORMA,justech_modules,"has_permission require_permission enable_feature audit",no,yes,no
+JT-PLT-003,justech_admin,F31.3,PLATAFORMA,"justech_modules,hellenia_governance",none,no,no,yes
+JT-CORE-001,justech_l10n_do_base,F31.4,CORE JUSTECH,justech_modules,require_active,yes,yes,no
+JT-CORE-002,justech_l10n_do_ncf,F31.4,CORE JUSTECH,justech_l10n_do_base,require_active,yes,yes,no
+JT-CORE-003,justech_withholding,F32,CORE JUSTECH,justech_l10n_do_base,require_active,yes,yes,no
+JT-LIC-001,justech_l10n_do_reports,F32,LICENCIABLE,justech_withholding,require_active,yes,yes,no
+JT-LIC-002,justech_report_design,F32,LICENCIABLE,justech_modules,require_active,yes,yes,no
+JT-LEG-001,hellenia_account,F32,LEGACY,,,,,
+JT-LEG-003,hellenia_ui,F31.2,LEGACY,hellenia_governance,,,,

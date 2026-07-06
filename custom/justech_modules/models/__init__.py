@@ -10,3 +10,13 @@ from . import justech_license_audit
 from . import justech_license_mixin
 from . import justech_module_activation_wizard
 from . import justech_license_service
+from . import justech_admin_access
+from . import justech_admin_session
+from . import justech_admin_access_audit
+from . import justech_admin_access_service
+from . import justech_admin_key_wizard
+from . import justech_admin_key_setup_wizard
+from . import justech_admin_stepup_wizard
+from . import justech_admin_critical_grant
+from . import justech_commercial_product
+from . import justech_client_module

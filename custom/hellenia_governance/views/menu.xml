@@ -1,38 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <menuitem id="menu_hellenia_governance_root"
-              name="Hellenia Governance"
-              parent="base.menu_administration"
-              sequence="95"
-              groups="hellenia_governance.group_governance_manager"/>
-    <menuitem id="menu_hellenia_permission"
-              name="Permisos"
-              parent="menu_hellenia_governance_root"
-              action="action_hellenia_permission"
-              sequence="10"/>
-    <menuitem id="menu_hellenia_role"
-              name="Roles"
-              parent="menu_hellenia_governance_root"
-              action="action_hellenia_role"
-              sequence="20"/>
-    <menuitem id="menu_hellenia_user_profile"
-              name="Perfiles de usuario"
-              parent="menu_hellenia_governance_root"
-              action="action_hellenia_user_profile"
-              sequence="30"/>
-    <menuitem id="menu_hellenia_feature_policy"
-              name="Políticas de features"
-              parent="menu_hellenia_governance_root"
-              action="action_hellenia_feature_policy"
-              sequence="40"/>
-    <menuitem id="menu_hellenia_menu_policy"
-              name="Políticas de menú"
-              parent="menu_hellenia_governance_root"
-              action="action_hellenia_menu_policy"
-              sequence="50"/>
-    <menuitem id="menu_hellenia_governance_audit"
-              name="Auditoría"
-              parent="menu_hellenia_governance_root"
-              action="action_hellenia_governance_audit"
-              sequence="60"/>
+    <record id="menu_hellenia_governance_root" model="ir.ui.menu">
+        <field name="active" eval="False"/>
+    </record>
 </odoo>

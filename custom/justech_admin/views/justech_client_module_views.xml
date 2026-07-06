@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_justech_client_module_control_form" model="ir.ui.view">
+        <field name="name">justech.client.module.control.form</field>
+        <field name="model">justech.client.module.control</field>
+        <field name="arch" type="xml">
+            <form string="Centro de Administración Justech" create="false" edit="false" delete="false" class="justech-cc-admin-form">
+                <header>
+                    <button name="action_create_admin_key" type="object"
+                            string="Crear Clave Administrativa"
+                            class="btn-primary"
+                            invisible="has_admin_key"/>
+                    <button name="action_refresh" type="object" string="Actualizar"/>
+                    <button name="action_close_panel" type="object" string="Cerrar panel"
+                            invisible="not panel_open"/>
+                </header>
+                <sheet>
+                    <field name="has_admin_key" invisible="1"/>
+                    <field name="show_key_banner" invisible="1"/>
+                    <field name="panel_open" invisible="1"/>
+                    <field name="panel_line_id" invisible="1"/>
+                    <field name="key_banner_html" nolabel="1" invisible="not show_key_banner"/>
+                    <field name="summary_html" nolabel="1"/>
+                    <group string="Filtros" col="4">
+                        <field name="search_text" placeholder="Buscar personalización..."/>
+                        <field name="company_id" options="{'no_create': True}"/>
+                        <field name="filter_status"/>
+                        <field name="filter_active_only"/>
+                        <field name="filter_contracted_only"/>
+                        <field name="filter_pending_only"/>
+                        <button name="action_apply_filters" type="object" string="Aplicar filtros" class="btn-secondary"/>
+                    </group>
+                    <div class="justech-cc-layout" invisible="not panel_open">
+                        <div class="justech-cc-main justech-cc-main-split">
+                            <field name="line_ids" nolabel="1">
+                                <list create="false" edit="false" delete="false"
+                                      decoration-success="status == 'paid_active'"
+                                      decoration-warning="status in ('paid_inactive', 'not_paid')"
+                                      decoration-danger="status == 'blocked'"
+                                      decoration-muted="status in ('expired', 'coming_soon')">
+                                    <field name="name" string="Personalización"/>
+                                    <field name="description"/>
+                                    <field name="status_label" string="Estado"/>
+                                    <field name="paid_label" string="Pagado"/>
+                                    <field name="active_label" string="Activo"/>
+                                    <field name="company_name" string="Empresa"/>
+                                    <field name="license_label" string="Licencia"/>
+                                    <field name="last_modified_at" string="Última modificación"/>
+                                    <field name="last_modified_by_name" string="Modificado por"/>
+                                    <field name="product_code" column_invisible="1"/>
+                                    <field name="status" column_invisible="1"/>
+                                    <field name="is_paid" column_invisible="1"/>
+                                    <field name="is_active" column_invisible="1"/>
+                                    <field name="is_blocked" column_invisible="1"/>
+                                    <field name="configured" column_invisible="1"/>
+                                    <field name="origin" column_invisible="1"/>
+                                    <button name="action_open_manage_menu" type="object"
+                                            string="Administrar ▼" class="btn-link"/>
+                                </list>
+                            </field>
+                        </div>
+                        <div class="justech-cc-side-wrap">
+                            <field name="panel_html" nolabel="1"/>
+                        </div>
+                    </div>
+                    <field name="line_ids" nolabel="1" invisible="panel_open">
+                        <list create="false" edit="false" delete="false"
+                              decoration-success="status == 'paid_active'"
+                              decoration-warning="status in ('paid_inactive', 'not_paid')"
+                              decoration-danger="status == 'blocked'"
+                              decoration-muted="status in ('expired', 'coming_soon')">
+                            <field name="name" string="Personalización"/>
+                            <field name="description"/>
+                            <field name="status_label" string="Estado"/>
+                            <field name="paid_label" string="Pagado"/>
+                            <field name="active_label" string="Activo"/>
+                            <field name="company_name" string="Empresa"/>
+                            <field name="license_label" string="Licencia"/>
+                            <field name="last_modified_at" string="Última modificación"/>
+                            <field name="last_modified_by_name" string="Modificado por"/>
+                            <field name="product_code" column_invisible="1"/>
+                            <field name="status" column_invisible="1"/>
+                            <field name="is_paid" column_invisible="1"/>
+                            <field name="is_active" column_invisible="1"/>
+                            <field name="is_blocked" column_invisible="1"/>
+                            <field name="configured" column_invisible="1"/>
+                            <field name="origin" column_invisible="1"/>
+                            <button name="action_open_manage_menu" type="object"
+                                    string="Administrar ▼" class="btn-link"/>
+                            <button name="action_request_activation" type="object"
+                                    string="Solicitar a Justech"
+                                    invisible="is_paid or status == 'coming_soon'"/>
+                        </list>
+                    </field>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_justech_client_module_manage_menu_form" model="ir.ui.view">
+        <field name="name">justech.client.module.manage.menu.form</field>
+        <field name="model">justech.client.module.manage.menu</field>
+        <field name="arch" type="xml">
+            <form string="Administrar">
+                <sheet>
+                    <div class="oe_title"><h1><field name="module_name" readonly="1"/></h1></div>
+                    <field name="line_id" invisible="1"/>
+                    <field name="is_paid" invisible="1"/>
+                    <field name="is_active" invisible="1"/>
+                    <group>
+                        <button name="action_view_details" type="object" string="Ver detalles" class="btn-link"/>
+                        <button name="action_activate" type="object" string="Activar"
+                                invisible="is_active or not is_paid"/>
+                        <button name="action_deactivate" type="object" string="Desactivar"
+                                invisible="not is_active"/>
+                        <button name="action_mark_paid" type="object" string="Marcar como pagado"
+                                invisible="is_paid"/>
+                        <button name="action_mark_unpaid" type="object" string="Marcar como no pagado"
+                                invisible="not is_paid"/>
+                        <button name="action_add_company" type="object" string="Agregar empresa"/>
+                        <button name="action_view_audit" type="object" string="Ver auditoría"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button string="Cerrar" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_justech_client_module_action_wizard_form" model="ir.ui.view">
+        <field name="name">justech.client.module.action.wizard.form</field>
+        <field name="model">justech.client.module.action.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Clave Administrativa Justech">
+                <sheet>
+                    <p>Ingrese la Clave Administrativa Justech para confirmar esta acción crítica.</p>
+                    <field name="license_info_html" nolabel="1"
+                           invisible="action_type != 'add_company'"/>
+                    <group>
+                        <field name="control_id" invisible="1"/>
+                        <field name="line_id" invisible="1"/>
+                        <field name="product_code" invisible="1"/>
+                        <field name="action_type" invisible="1"/>
+                        <field name="company_id" invisible="1"/>
+                        <field name="license_label" invisible="1"/>
+                        <field name="companies_used" invisible="1"/>
+                        <field name="companies_available" invisible="1"/>
+                        <field name="target_company_id" string="Empresa"
+                                invisible="action_type not in ('add_company', 'remove_company')"
+                                options="{'no_create': True}"/>
+                        <field name="admin_key" password="True"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button string="Cancelar" special="cancel"/>
+                    <button name="action_confirm" string="Confirmar" type="object" class="btn-primary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_justech_client_module_detail_form" model="ir.ui.view">
+        <field name="name">justech.client.module.detail.form</field>
+        <field name="model">justech.client.module.detail</field>
+        <field name="arch" type="xml">
+            <form string="Detalle de personalización" create="false" edit="false">
+                <header>
+                    <button name="action_mark_paid" type="object" string="Marcar como pagado" invisible="is_paid"/>
+                    <button name="action_mark_unpaid" type="object" string="Marcar como no pagado" invisible="not is_paid"/>
+                    <button name="action_activate" type="object" string="Activar" class="btn-primary" invisible="is_active or not is_paid"/>
+                    <button name="action_deactivate" type="object" string="Desactivar" invisible="not is_active"/>
+                    <button name="action_add_company" type="object" string="Agregar empresa"/>
+                    <button name="action_view_audit" type="object" string="Ver auditoría"/>
+                </header>
+                <sheet>
+                    <div class="oe_title"><h1><field name="name" readonly="1"/></h1></div>
+                    <field name="description" readonly="1"/>
+                    <field name="detail_html" nolabel="1"/>
+                    <group string="Auditoría reciente">
+                        <field name="audit_html" nolabel="1"/>
+                    </group>
+                    <field name="product_code" invisible="1"/>
+                    <field name="company_id" invisible="1"/>
+                    <field name="is_paid" invisible="1"/>
+                    <field name="is_active" invisible="1"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_justech_client_module_audit_list" model="ir.ui.view">
+        <field name="name">justech.client.module.audit.list</field>
+        <field name="model">justech.client.module.audit</field>
+        <field name="arch" type="xml">
+            <list create="false" edit="false" delete="false">
+                <field name="create_date" string="Fecha"/>
+                <field name="user_id" string="Usuario"/>
+                <field name="company_id" string="Empresa"/>
+                <field name="commercial_name" string="Personalización"/>
+                <field name="action" string="Acción"/>
+                <field name="origin" string="Origen"/>
+                <field name="state_before"/>
+                <field name="state_after"/>
+                <field name="result" string="Resultado"/>
+                <field name="ip_address" string="IP"/>
+                <field name="reason" string="Motivo"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_justech_client_module_control_open" model="ir.actions.server">
+        <field name="name">Abrir Centro de Administración Justech</field>
+        <field name="model_id" ref="justech_modules.model_justech_admin_access_service"/>
+        <field name="state">code</field>
+        <field name="code">action = env["justech.client.module.control"].action_open()</field>
+    </record>
+</odoo>

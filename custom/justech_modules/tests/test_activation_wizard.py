@@ -2,9 +2,31 @@ from odoo.tests import tagged
 
 from odoo.tests.common import TransactionCase
 
+from odoo.addons.justech_modules.tests.test_admin_access import _provision_test_key
 
-@tagged("post_install", "-at_install")
+
+@tagged("post_install", "-at_install", "justech_modules")
 class TestActivationWizard(TransactionCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.Access = cls.env["justech.admin.access"].sudo()
+        cls.admin = cls.env.ref("base.user_admin")
+        cls.admin.write(
+            {
+                "group_ids": [
+                    (4, cls.env.ref("justech_modules.group_justech_internal_admin").id)
+                ]
+            }
+        )
+        cls._access, cls._key = _provision_test_key(cls.env, cls.admin)
+        svc = cls.env["justech.admin.access.service"].with_user(cls.admin)
+        svc.open_session(cls._key, scope=svc.SCOPE_PLATFORM)
+
+    def setUp(self):
+        super().setUp()
+        self.env = self.env(user=self.admin)
+
     def test_get_activation_catalog_includes_platform(self):
         service = self.env["justech.license.service"]
         catalog = service.get_activation_catalog(company=self.env.company)

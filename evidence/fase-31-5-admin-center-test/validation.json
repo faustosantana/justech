@@ -1,0 +1,67 @@
+2026-07-06 22:09:17,702 24 INFO hellenia_test odoo.registry: Registry loaded in 1.244s 
+2026-07-06 22:09:17,927 24 ERROR hellenia_test odoo.addons.base.models.ir_model: Missing model hellenia.pos.audit.log 
+2026-07-06 22:09:18,135 24 INFO hellenia_test odoo.addons.base.models.ir_model: Access Denied by ACLs for operation: read, uid: 888, model: ir.ui.menu 
+{
+  "fix": "client-modules-ux",
+  "users": {
+    "it@justech.do": {
+      "found": true,
+      "has_group_system": true,
+      "settings_root_visible": true,
+      "modules_menu_visible": true,
+      "open_action_model": "justech.client.module.control",
+      "open_action_name": "Centro de Administraci\u00f3n Justech",
+      "no_popup_on_open": true,
+      "admin_center_title": true
+    },
+    "portal_client_visibility_check@hellenia.local": {
+      "found": true,
+      "has_group_system": false,
+      "settings_root_visible": false
+    }
+  },
+  "checks": {
+    "settings_app_view": true,
+    "control_view_has_summary": true,
+    "control_view_has_admin_menu": true,
+    "control_view_has_panel": true,
+    "open_action_is_admin_center": false,
+    "control_view_has_key_banner": true,
+    "menu_groups_system_only": false,
+    "commercial_rows": 11,
+    "no_technical_names_in_rows": true
+  },
+  "status": "PASS"
+}
+{
+  "fix": "client-modules-ux",
+  "users": {
+    "it@justech.do": {
+      "found": true,
+      "has_group_system": true,
+      "settings_root_visible": true,
+      "modules_menu_visible": true,
+      "open_action_model": "justech.client.module.control",
+      "open_action_name": "Centro de Administraci\u00f3n Justech",
+      "no_popup_on_open": true,
+      "admin_center_title": true
+    },
+    "portal_client_visibility_check@hellenia.local": {
+      "found": true,
+      "has_group_system": false,
+      "settings_root_visible": false
+    }
+  },
+  "checks": {
+    "settings_app_view": true,
+    "control_view_has_summary": true,
+    "control_view_has_admin_menu": true,
+    "control_view_has_panel": true,
+    "open_action_is_admin_center": false,
+    "control_view_has_key_banner": true,
+    "menu_groups_system_only": false,
+    "commercial_rows": 11,
+    "no_technical_names_in_rows": true
+  },
+  "status": "PASS"
+}

@@ -21,6 +21,10 @@ class JustechModuleActivationWizard(models.TransientModel):
 
     @api.model_create_multi
     def create(self, vals_list):
+        if not self.env.su:
+            self.env["justech.admin.access.service"].require_session(
+                self.env["justech.admin.access.service"].SCOPE_PLATFORM
+            )
         records = super().create(vals_list)
         for wizard in records:
             wizard._reload_lines()
@@ -37,8 +41,6 @@ class JustechModuleActivationWizard(models.TransientModel):
             commands.append(
                 {
                     "line_type": "module",
-                    "module_id": module_row["module_id"],
-                    "feature_id": False,
                     "module_code": module_row["module_code"],
                     "display_name": module_row["module_name"],
                     "description": module_row.get("description"),
@@ -56,9 +58,8 @@ class JustechModuleActivationWizard(models.TransientModel):
                 commands.append(
                     {
                         "line_type": "feature",
-                        "module_id": module_row["module_id"],
-                        "feature_id": feat["feature_id"],
                         "module_code": module_row["module_code"],
+                        "feature_code": feat["feature_code"],
                         "display_name": feat["feature_name"],
                         "description": feat.get("description"),
                         "category": module_row.get("category"),
@@ -92,6 +93,17 @@ class JustechModuleActivationWizard(models.TransientModel):
 
     def action_activate_selected(self):
         self.ensure_one()
+        if not self.env.context.get("justech_critical_token"):
+            return self.env["justech.admin.access.service"].prompt_step_up(
+                self._name,
+                self.id,
+                "_action_activate_selected",
+                self.env["justech.admin.access.service"].CRITICAL_PLATFORM_MUTATION,
+            )
+        return self._action_activate_selected()
+
+    def _action_activate_selected(self):
+        self.ensure_one()
         service = self.env["justech.license.service"]
         for line in self.line_ids.filtered("selected"):
             try:
@@ -99,18 +111,27 @@ class JustechModuleActivationWizard(models.TransientModel):
                     service.activate_module(
                         line.module_code, company=self.company_id
                     )
-                else:
-                    feature = line.feature_id
-                    if feature:
-                        service.activate_feature(
-                            feature.code, company=self.company_id
-                        )
+                elif line.feature_code:
+                    service.activate_feature(
+                        line.feature_code, company=self.company_id
+                    )
             except JustechLicenseError as exc:
                 raise UserError(str(exc)) from exc
         self._reload_lines()
         return self.action_refresh()
 
     def action_deactivate_selected(self):
+        self.ensure_one()
+        if not self.env.context.get("justech_critical_token"):
+            return self.env["justech.admin.access.service"].prompt_step_up(
+                self._name,
+                self.id,
+                "_action_deactivate_selected",
+                self.env["justech.admin.access.service"].CRITICAL_PLATFORM_MUTATION,
+            )
+        return self._action_deactivate_selected()
+
+    def _action_deactivate_selected(self):
         self.ensure_one()
         service = self.env["justech.license.service"]
         for line in self.line_ids.filtered("selected"):
@@ -124,12 +145,10 @@ class JustechModuleActivationWizard(models.TransientModel):
                     service.deactivate_module(
                         line.module_code, company=self.company_id
                     )
-                else:
-                    feature = line.feature_id
-                    if feature:
-                        service.deactivate_feature(
-                            feature.code, company=self.company_id
-                        )
+                elif line.feature_code:
+                    service.deactivate_feature(
+                        line.feature_code, company=self.company_id
+                    )
             except JustechLicenseError as exc:
                 raise UserError(str(exc)) from exc
         self._reload_lines()
@@ -151,14 +170,11 @@ class JustechModuleActivationWizardLine(models.TransientModel):
         [("module", "Module"), ("feature", "Feature")],
         required=True,
     )
-    module_id = fields.Many2one("justech.module")
-    feature_id = fields.Many2one("justech.feature")
     module_code = fields.Char()
+    feature_code = fields.Char()
     display_name = fields.Char(string="Name")
     description = fields.Text()
-    category = fields.Selection(
-        selection=lambda self: self.env["justech.module"]._fields["category"].selection
-    )
+    category = fields.Char()
     country = fields.Char()
     dependencies_text = fields.Char(string="Dependencies")
     required_module = fields.Boolean()

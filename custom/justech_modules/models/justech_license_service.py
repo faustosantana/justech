@@ -63,18 +63,34 @@ class JustechLicenseService(models.AbstractModel):
             )
 
     @api.model
+    def _sudo_internal(self):
+        """Gatekeeper access to internal licensing models (never use from UI)."""
+        from odoo import SUPERUSER_ID
+
+        return self.env(user=SUPERUSER_ID)
+
+    @api.model
+    def _require_activation_admin(self):
+        """UI/admin mutations require step-up verification (even with session)."""
+        if self.env.su or self.env.context.get("justech_skip_critical_step_up"):
+            return
+        self.env["justech.admin.access.service"].require_critical_step_up(
+            self.env["justech.admin.access.service"].CRITICAL_PLATFORM_MUTATION
+        )
+
+    @api.model
     def get_feature(self, feature_code):
         feature_id = self._get_feature_id_cached(feature_code)
         return (
-            self.env["justech.feature"].browse(feature_id)
+            self._sudo_internal()["justech.feature"].browse(feature_id)
             if feature_id
-            else self.env["justech.feature"]
+            else self._sudo_internal()["justech.feature"]
         )
 
     @api.model
     @ormcache("feature_code")
     def _get_feature_id_cached(self, feature_code):
-        feature = self.env["justech.feature"].search(
+        feature = self._sudo_internal()["justech.feature"].search(
             [("code", "=", feature_code)], limit=1
         )
         return feature.id or 0
@@ -158,6 +174,7 @@ class JustechLicenseService(models.AbstractModel):
 
     @api.model
     def activate_feature(self, feature_code, company=None):
+        self._require_activation_admin()
         company = company or self.env.company
         feature = self._get_feature_record(feature_code)
         if not feature:
@@ -196,6 +213,7 @@ class JustechLicenseService(models.AbstractModel):
 
     @api.model
     def deactivate_feature(self, feature_code, company=None):
+        self._require_activation_admin()
         company = company or self.env.company
         feature = self._get_feature_record(feature_code)
         if not feature:
@@ -356,16 +374,22 @@ class JustechLicenseService(models.AbstractModel):
     @api.model
     def get_activation_catalog(self, company=None):
         """Return module/feature activation rows for admin wizard (API v1)."""
+        self.env["justech.admin.access.service"].require_justech_settings_access()
+        if not self.env.su:
+            self.env["justech.admin.access.service"].require_session(
+                self.env["justech.admin.access.service"].SCOPE_PLATFORM
+            )
         company = company or self.env.company
+        internal = self._sudo_internal()
         catalog = []
-        for module in self.env["justech.module"].search([], order="category, code"):
+        for module in internal["justech.module"].search([], order="category, code"):
             deps = module.dependency_ids.filtered(
                 lambda dep: dep.dependency_type == "required"
             )
             feature_rows = []
             module_active = True
             for feature in module.feature_ids:
-                activation = self.env["justech.feature.company"].search(
+                activation = internal["justech.feature.company"].search(
                     [
                         ("feature_id", "=", feature.id),
                         ("company_id", "=", company.id),
@@ -376,7 +400,6 @@ class JustechLicenseService(models.AbstractModel):
                 module_active = module_active and active
                 feature_rows.append(
                     {
-                        "feature_id": feature.id,
                         "feature_code": feature.code,
                         "feature_name": feature.name,
                         "description": feature.description,
@@ -385,13 +408,13 @@ class JustechLicenseService(models.AbstractModel):
                         "default_active": feature.default_active,
                         "is_active": active,
                         "activated_at": activation.activated_at,
-                        "activated_by_id": activation.activated_by_id.id,
-                        "activated_by_name": activation.activated_by_id.name,
+                        "activated_by_name": activation.activated_by_id.name
+                        if activation.activated_by_id
+                        else False,
                     }
                 )
             catalog.append(
                 {
-                    "module_id": module.id,
                     "module_code": module.code,
                     "module_name": module.name,
                     "description": module.description,
@@ -416,10 +439,438 @@ class JustechLicenseService(models.AbstractModel):
         return catalog
 
     @api.model
+    def get_commercial_catalog(self, company=None):
+        """Return commercial product catalog for Control Center (API v1 extension)."""
+        self.env["justech.admin.access.service"].require_justech_settings_access()
+        if not self.env.su:
+            svc = self.env["justech.admin.access.service"]
+            if not svc.is_session_valid(svc.SCOPE_ADMIN) and not svc.is_session_valid(
+                svc.SCOPE_PLATFORM
+            ):
+                svc.require_session(svc.SCOPE_ADMIN)
+        company = company or self.env.company
+        internal = self._sudo_internal()
+        Product = internal["justech.commercial.product"]
+        tier_labels = dict(Product._fields["license_tier"].selection)
+        category_labels = dict(Product._fields["category"].selection)
+        catalog = []
+        for product in Product.search([("active", "=", True)], order="sequence, name"):
+            feature_rows = []
+            active_count = 0
+            configured_count = 0
+            for line in product.line_ids:
+                feature = internal["justech.feature"].search(
+                    [("code", "=", line.feature_code)], limit=1
+                )
+                if feature:
+                    configured_count += 1
+                    active = self.is_active(line.feature_code, company=company)
+                    if active:
+                        active_count += 1
+                    always_on = feature.always_on
+                else:
+                    active = False
+                    always_on = False
+                feature_rows.append(
+                    {
+                        "commercial_name": line.commercial_name,
+                        "description": line.description,
+                        "feature_code": line.feature_code,
+                        "icon": line.icon or "fa-circle",
+                        "is_active": active,
+                        "always_on": always_on,
+                        "configured": bool(feature),
+                    }
+                )
+            if feature_rows:
+                if active_count == len(feature_rows):
+                    status = "active"
+                elif active_count > 0:
+                    status = "partial"
+                elif configured_count == 0:
+                    status = "unavailable"
+                else:
+                    status = "inactive"
+            else:
+                status = "unavailable"
+            dep_names = []
+            for dep_product in Product.search([]):
+                if dep_product.id == product.id:
+                    continue
+                if product.module_map_ids.filtered(
+                    lambda m: m.technical_module_code
+                    in dep_product.module_map_ids.mapped("technical_module_code")
+                ):
+                    dep_names.append(dep_product.name)
+            catalog.append(
+                {
+                    "product_code": product.code,
+                    "name": product.name,
+                    "description": product.description,
+                    "icon": product.icon or "fa-cube",
+                    "category": product.category,
+                    "category_label": category_labels.get(product.category, product.category),
+                    "license_tier": product.license_tier,
+                    "license_tier_label": tier_labels.get(
+                        product.license_tier, product.license_tier
+                    ),
+                    "version": product.version_display or "—",
+                    "status": status,
+                    "is_active": status == "active",
+                    "features": feature_rows,
+                    "dependencies": dep_names,
+                    "company_name": company.name,
+                }
+            )
+        return catalog
+
+    @api.model
+    def commercial_name_for_feature(self, feature_code):
+        """Resolve commercial display name for a technical feature code."""
+        internal = self._sudo_internal()
+        line = internal["justech.commercial.product.line"].search(
+            [("feature_code", "=", feature_code)], limit=1
+        )
+        if line:
+            return line.commercial_name
+        feature = internal["justech.feature"].search(
+            [("code", "=", feature_code)], limit=1
+        )
+        return feature.name if feature else feature_code
+
+    # ------------------------------------------------------ client module control
+    CLIENT_MODULE_EXCLUDE = ("marketplace", "ia")
+
+    @api.model
+    def _client_module_status(self, product, company, state, configured, is_active):
+        license_rec = self._get_active_license_for_company(company)
+        if license_rec and license_rec.expires_at:
+            from datetime import date
+
+            if license_rec.expires_at < date.today():
+                return "expired", _("Expirado")
+        if not configured:
+            return "coming_soon", _("Próximamente")
+        if state.is_blocked:
+            return "blocked", _("Bloqueado")
+        if not state.is_paid:
+            return "not_paid", _("No pagado")
+        if is_active:
+            return "paid_active", _("Pagado y activo")
+        return "paid_inactive", _("Pagado pero inactivo")
+
+    @api.model
+    def _product_is_active_for_company(self, product, company):
+        internal = self._sudo_internal()
+        lines = product.line_ids
+        if not lines:
+            return False
+        configured = [
+            ln
+            for ln in lines
+            if internal["justech.feature"].search([("code", "=", ln.feature_code)], limit=1)
+        ]
+        if not configured:
+            return False
+        return all(self.is_active(ln.feature_code, company=company) for ln in configured)
+
+    @api.model
+    def _product_activation_meta(self, product, company):
+        internal = self._sudo_internal()
+        activated_at = False
+        activated_by = False
+        for ln in product.line_ids:
+            feat = internal["justech.feature"].search(
+                [("code", "=", ln.feature_code)], limit=1
+            )
+            if not feat:
+                continue
+            act = internal["justech.feature.company"].search(
+                [("feature_id", "=", feat.id), ("company_id", "=", company.id)],
+                limit=1,
+            )
+            if act and act.activated_at:
+                if not activated_at or act.activated_at > activated_at:
+                    activated_at = act.activated_at
+                    activated_by = act.activated_by_id.name if act.activated_by_id else False
+        state = internal["justech.client.module.state"].search(
+            [("product_id", "=", product.id), ("company_id", "=", company.id)],
+            limit=1,
+        )
+        if state and state.activated_at and (not activated_at or state.activated_at > activated_at):
+            activated_at = state.activated_at
+            activated_by = state.activated_by_id.name if state.activated_by_id else activated_by
+        return activated_at, activated_by
+
+    @api.model
+    def _product_last_change_meta(self, product, company):
+        Audit = self.env["justech.client.module.audit"].sudo()
+        audit = Audit.search(
+            [
+                ("product_code", "=", product.code),
+                ("company_id", "=", company.id),
+            ],
+            order="create_date desc",
+            limit=1,
+        )
+        if audit:
+            user_name = audit.user_id.name if audit.user_id else "—"
+            return audit.create_date, user_name
+        state = self.env["justech.client.module.state"].sudo().search(
+            [("product_id", "=", product.id), ("company_id", "=", company.id)],
+            limit=1,
+        )
+        if state:
+            return state.write_date, "—"
+        return False, "—"
+
+    @api.model
+    def _origin_label(self, origin_code):
+        labels = {
+            "justech": _("Justech"),
+            "marketplace": _("Marketplace"),
+            "partner": _("Partner"),
+            "client": _("Cliente"),
+        }
+        return labels.get(origin_code, origin_code or "—")
+
+    @api.model
+    def get_client_module_rows(self, company=None, view_only=False):
+        """Rows for Módulos del Cliente screen."""
+        self.env["justech.admin.access.service"].require_justech_settings_access()
+        if not view_only and not self.env.su:
+            svc = self.env["justech.admin.access.service"]
+            if not svc.is_session_valid(svc.SCOPE_ADMIN):
+                svc.require_session(svc.SCOPE_ADMIN)
+        company = company or self.env.company
+        internal = self._sudo_internal()
+        Product = internal["justech.commercial.product"]
+        State = internal["justech.client.module.state"]
+        license_rec = self._get_active_license_for_company(company)
+        tier = license_rec.tier if license_rec else "—"
+        rows = []
+        for product in Product.search([("active", "=", True)], order="sequence, name"):
+            if product.code in self.CLIENT_MODULE_EXCLUDE:
+                continue
+            configured = any(
+                internal["justech.feature"].search(
+                    [("code", "=", ln.feature_code)], limit=1
+                )
+                for ln in product.line_ids
+            )
+            state = State.get_or_create(product, company)
+            is_active = self._product_is_active_for_company(product, company)
+            status, status_label = self._client_module_status(
+                product, company, state, configured, is_active
+            )
+            activated_at, activated_by = self._product_activation_meta(product, company)
+            last_modified_at, last_modified_by = self._product_last_change_meta(
+                product, company
+            )
+            rows.append(
+                {
+                    "product_code": product.code,
+                    "name": product.name,
+                    "description": product.description or "",
+                    "is_paid": state.is_paid,
+                    "is_active": is_active,
+                    "is_blocked": state.is_blocked,
+                    "company_name": company.name,
+                    "plan_label": tier,
+                    "license_label": tier,
+                    "activated_at": activated_at,
+                    "activated_by_name": activated_by or "—",
+                    "last_modified_at": last_modified_at,
+                    "last_modified_by_name": last_modified_by or "—",
+                    "origin": state.origin or "justech",
+                    "origin_label": self._origin_label(state.origin or "justech"),
+                    "status": status,
+                    "status_label": status_label,
+                    "configured": configured,
+                    "includes": [ln.commercial_name for ln in product.line_ids],
+                }
+            )
+        return rows
+
+    @api.model
+    def _client_module_audit(
+        self,
+        action,
+        product,
+        company,
+        state_before,
+        state_after,
+        result="success",
+        reason=None,
+        details=None,
+    ):
+        ip = self.env["justech.admin.access.service"]._get_request_ip()
+        state = self.env["justech.client.module.state"].sudo().search(
+            [("product_id", "=", product.id), ("company_id", "=", company.id)],
+            limit=1,
+        )
+        self.env["justech.client.module.audit"].sudo().create(
+            {
+                "user_id": self.env.uid,
+                "company_id": company.id,
+                "ip_address": ip,
+                "action": action,
+                "origin": state.origin if state else "justech",
+                "product_code": product.code,
+                "commercial_name": product.name,
+                "state_before": state_before,
+                "state_after": state_after,
+                "result": result,
+                "reason": reason,
+                "details": details or {},
+            }
+        )
+
+    @api.model
+    def execute_client_module_action(
+        self, action, product_code, company=None, target_company=None, reason=None
+    ):
+        self._require_activation_admin()
+        self = self.with_context(justech_skip_critical_step_up=True)
+        company = company or self.env.company
+        internal = self._sudo_internal()
+        product = internal["justech.commercial.product"].search(
+            [("code", "=", product_code), ("active", "=", True)], limit=1
+        )
+        if not product:
+            raise JustechLicenseError(
+                _("Unknown commercial module '%(code)s'.") % {"code": product_code}
+            )
+        state = internal["justech.client.module.state"].get_or_create(product, company)
+        status_before, _status_label = self._client_module_status(
+            product,
+            company,
+            state,
+            bool(product.line_ids),
+            self._product_is_active_for_company(product, company),
+        )
+
+        if action == "mark_paid":
+            state.sudo().write({"is_paid": True})
+        elif action == "mark_unpaid":
+            state.sudo().write({"is_paid": False})
+        elif action == "block":
+            state.sudo().write({"is_blocked": True})
+        elif action == "unblock":
+            state.sudo().write({"is_blocked": False})
+        elif action == "activate":
+            if not state.is_paid:
+                self._client_module_audit(
+                    action,
+                    product,
+                    company,
+                    status_before,
+                    status_before,
+                    result="fail",
+                    reason="not_paid",
+                )
+                raise JustechLicenseError(
+                    _(
+                        "Este módulo no está incluido en la licencia contratada."
+                    )
+                )
+            if state.is_blocked:
+                raise JustechLicenseError(_("Este módulo está bloqueado."))
+            for ln in product.line_ids:
+                feat = internal["justech.feature"].search(
+                    [("code", "=", ln.feature_code)], limit=1
+                )
+                if feat:
+                    self.activate_feature(ln.feature_code, company=company)
+            state.sudo().write(
+                {
+                    "activated_at": fields.Datetime.now(),
+                    "activated_by_id": self.env.uid,
+                }
+            )
+        elif action == "deactivate":
+            for ln in product.line_ids:
+                feat = internal["justech.feature"].search(
+                    [("code", "=", ln.feature_code)], limit=1
+                )
+                if feat and not feat.always_on:
+                    self.deactivate_feature(ln.feature_code, company=company)
+        elif action == "add_company":
+            target = target_company or company
+            license_rec = self._get_active_license_for_company(company)
+            if not license_rec:
+                raise JustechLicenseError(
+                    _(
+                        "La licencia actual no permite habilitar otra empresa."
+                    )
+                )
+            if license_rec.max_companies > 0:
+                current = len(license_rec.company_line_ids)
+                if target.id not in license_rec.company_line_ids.mapped("company_id").ids:
+                    if current >= license_rec.max_companies:
+                        self._client_module_audit(
+                            action,
+                            product,
+                            target,
+                            status_before,
+                            status_before,
+                            result="fail",
+                            reason="max_companies",
+                        )
+                        raise JustechLicenseError(
+                            _(
+                                "La licencia actual no permite habilitar otra empresa."
+                            )
+                        )
+            if target.id not in license_rec.company_line_ids.mapped("company_id").ids:
+                internal["justech.license.company"].create(
+                    {"license_id": license_rec.id, "company_id": target.id}
+                )
+            if state.is_paid:
+                for ln in product.line_ids:
+                    feat = internal["justech.feature"].search(
+                        [("code", "=", ln.feature_code)], limit=1
+                    )
+                    if feat:
+                        self.activate_feature(ln.feature_code, company=target)
+        elif action == "remove_company":
+            target = target_company
+            if not target:
+                raise JustechLicenseError(_("Target company required."))
+            license_rec = self._get_active_license_for_company(company)
+            if license_rec:
+                line = license_rec.company_line_ids.filtered(
+                    lambda l: l.company_id.id == target.id
+                )
+                line.unlink()
+        else:
+            raise JustechLicenseError(_("Unknown action '%(a)s'.") % {"a": action})
+
+        status_after, _status_label = self._client_module_status(
+            product,
+            company,
+            state,
+            bool(product.line_ids),
+            self._product_is_active_for_company(product, company),
+        )
+        self._client_module_audit(
+            action,
+            product,
+            company,
+            status_before,
+            status_after,
+            reason=reason,
+        )
+        return True
+
+    @api.model
     def activate_module(self, module_code, company=None):
         """Activate all features of a commercial module for a company."""
+        self._require_activation_admin()
         company = company or self.env.company
-        module = self.env["justech.module"].search([("code", "=", module_code)], limit=1)
+        module = self._sudo_internal()["justech.module"].search(
+            [("code", "=", module_code)], limit=1
+        )
         if not module:
             raise JustechLicenseError(
                 _("Unknown module '%(code)s'.") % {"code": module_code}
@@ -431,8 +882,11 @@ class JustechLicenseService(models.AbstractModel):
     @api.model
     def deactivate_module(self, module_code, company=None):
         """Deactivate all non-always-on features of a module for a company."""
+        self._require_activation_admin()
         company = company or self.env.company
-        module = self.env["justech.module"].search([("code", "=", module_code)], limit=1)
+        module = self._sudo_internal()["justech.module"].search(
+            [("code", "=", module_code)], limit=1
+        )
         if not module:
             raise JustechLicenseError(
                 _("Unknown module '%(code)s'.") % {"code": module_code}
@@ -445,7 +899,7 @@ class JustechLicenseService(models.AbstractModel):
     def _set_feature_company_active(
         self, feature, company, active=True, reason="manual"
     ):
-        activation = self.env["justech.feature.company"].search(
+        activation = self._sudo_internal()["justech.feature.company"].search(
             [
                 ("feature_id", "=", feature.id),
                 ("company_id", "=", company.id),
@@ -457,10 +911,11 @@ class JustechLicenseService(models.AbstractModel):
             "activated_at": fields.Datetime.now() if active else False,
             "activated_by_id": self.env.uid if active else False,
         }
+        FeatureCompany = self._sudo_internal()["justech.feature.company"]
         if activation:
             activation.write(vals)
         else:
-            self.env["justech.feature.company"].create(
+            FeatureCompany.create(
                 {
                     "feature_id": feature.id,
                     "company_id": company.id,
@@ -488,7 +943,7 @@ class JustechLicenseService(models.AbstractModel):
     def _get_valid_licenses_for_company(self, company):
         """All non-expired active licenses explicitly assigned to company."""
         today = date.today()
-        company_lines = self.env["justech.license.company"].search(
+        company_lines = self._sudo_internal()["justech.license.company"].search(
             [
                 ("company_id", "=", company.id),
                 ("license_id.state", "=", "active"),
@@ -524,7 +979,7 @@ class JustechLicenseService(models.AbstractModel):
 
     @api.model
     def _feature_is_active_for_company(self, feature_id, company_id):
-        activation = self.env["justech.feature.company"].search(
+        activation = self._sudo_internal()["justech.feature.company"].search(
             [
                 ("feature_id", "=", feature_id),
                 ("company_id", "=", company_id),
@@ -533,7 +988,7 @@ class JustechLicenseService(models.AbstractModel):
         )
         if activation:
             return activation.is_active
-        feature = self.env["justech.feature"].browse(feature_id)
+        feature = self._sudo_internal()["justech.feature"].browse(feature_id)
         return feature.default_active
 
     @api.model

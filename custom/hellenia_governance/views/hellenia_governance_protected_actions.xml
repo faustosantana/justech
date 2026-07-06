@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_hellenia_permission_protected" model="ir.actions.server">
+        <field name="name">Permisos</field>
+        <field name="model_id" ref="justech_modules.model_justech_admin_access_service"/>
+        <field name="state">code</field>
+        <field name="code">action = env["justech.admin.access.service"].action_open_governance_permissions()</field>
+    </record>
+    <record id="action_hellenia_role_protected" model="ir.actions.server">
+        <field name="name">Roles</field>
+        <field name="model_id" ref="justech_modules.model_justech_admin_access_service"/>
+        <field name="state">code</field>
+        <field name="code">action = env["justech.admin.access.service"].action_open_governance_roles()</field>
+    </record>
+    <record id="action_hellenia_user_profile_protected" model="ir.actions.server">
+        <field name="name">Perfiles</field>
+        <field name="model_id" ref="justech_modules.model_justech_admin_access_service"/>
+        <field name="state">code</field>
+        <field name="code">action = env["justech.admin.access.service"].action_open_governance_user_profiles()</field>
+    </record>
+    <record id="action_hellenia_feature_policy_protected" model="ir.actions.server">
+        <field name="name">Feature Policies</field>
+        <field name="model_id" ref="justech_modules.model_justech_admin_access_service"/>
+        <field name="state">code</field>
+        <field name="code">action = env["justech.admin.access.service"].action_open_governance_feature_policies()</field>
+    </record>
+    <record id="action_hellenia_menu_policy_protected" model="ir.actions.server">
+        <field name="name">Menu Policies</field>
+        <field name="model_id" ref="justech_modules.model_justech_admin_access_service"/>
+        <field name="state">code</field>
+        <field name="code">action = env["justech.admin.access.service"].action_open_governance_menu_policies()</field>
+    </record>
+    <record id="action_hellenia_governance_audit_protected" model="ir.actions.server">
+        <field name="name">Auditoría</field>
+        <field name="model_id" ref="justech_modules.model_justech_admin_access_service"/>
+        <field name="state">code</field>
+        <field name="code">action = env["justech.admin.access.service"].action_open_governance_audit()</field>
+    </record>
+</odoo>

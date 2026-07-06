@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Dashboard -->
+    <record id="view_justech_admin_dashboard_form" model="ir.ui.view">
+        <field name="name">justech.admin.dashboard.form</field>
+        <field name="model">justech.admin.dashboard</field>
+        <field name="arch" type="xml">
+            <form string="Dashboard" create="false" edit="false" delete="false">
+                <header>
+                    <button name="action_open_modules" type="object" string="Módulos" class="btn-primary"/>
+                    <button name="action_open_licenses" type="object" string="Licencias"/>
+                    <button name="action_open_internal_users" type="object" string="Usuarios Internos"/>
+                    <button name="action_open_security" type="object" string="Seguridad"/>
+                    <button name="action_open_audit" type="object" string="Auditoría"/>
+                    <button name="action_open_integrations" type="object" string="Integraciones"/>
+                    <button name="action_open_system" type="object" string="Sistema"/>
+                </header>
+                <sheet>
+                    <field name="company_id" invisible="1"/>
+                    <field name="dashboard_html" nolabel="1"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Module Catalog -->
+    <record id="view_justech_control_module_catalog_form" model="ir.ui.view">
+        <field name="name">justech.control.module.catalog.form</field>
+        <field name="model">justech.control.module.catalog</field>
+        <field name="arch" type="xml">
+            <form string="Módulos" create="false" edit="false" delete="false">
+                <sheet>
+                    <field name="company_id" invisible="1"/>
+                    <field name="catalog_html" nolabel="1"/>
+                    <separator string="Catálogo comercial"/>
+                    <field name="card_ids" nolabel="1">
+                        <list create="false" edit="false" delete="false">
+                            <field name="name" string="Módulo"/>
+                            <field name="category_label" string="Categoría"/>
+                            <field name="status_label" string="Estado"/>
+                            <field name="license_tier_label" string="Licencia"/>
+                            <field name="version" string="Versión"/>
+                            <button name="action_open_sheet" type="object" string="Abrir" class="btn-primary"/>
+                        </list>
+                    </field>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Module Sheet -->
+    <record id="view_justech_control_module_sheet_form" model="ir.ui.view">
+        <field name="name">justech.control.module.sheet.form</field>
+        <field name="model">justech.control.module.sheet</field>
+        <field name="arch" type="xml">
+            <form string="Módulo" create="false" edit="false" delete="false">
+                <header>
+                    <button name="action_back_to_catalog" type="object" string="← Catálogo"/>
+                    <button name="action_refresh" type="object" string="Actualizar"/>
+                </header>
+                <sheet>
+                    <div class="oe_title"><h1><field name="name" readonly="1"/></h1></div>
+                    <field name="product_code" invisible="1"/>
+                    <field name="company_id" invisible="1"/>
+                    <field name="header_html" nolabel="1"/>
+                    <separator string="Funciones disponibles"/>
+                    <field name="feature_ids" nolabel="1">
+                        <list create="false" edit="false" delete="false" decoration-success="is_active" decoration-muted="not configured">
+                            <field name="commercial_name" string="Función"/>
+                            <field name="description"/>
+                            <field name="switch_label" string="Estado"/>
+                            <field name="feature_code" column_invisible="1"/>
+                            <field name="is_active" column_invisible="1"/>
+                            <field name="always_on" column_invisible="1"/>
+                            <field name="configured" column_invisible="1"/>
+                            <button name="action_toggle" type="object" string="Cambiar" class="btn-secondary" invisible="always_on or not configured"/>
+                        </list>
+                    </field>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Toggle Wizard -->
+    <record id="view_justech_control_toggle_wizard_form" model="ir.ui.view">
+        <field name="name">justech.control.toggle.wizard.form</field>
+        <field name="model">justech.control.toggle.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Confirmar cambio">
+                <sheet>
+                    <p class="text-muted">Ingrese la Clave Administrativa Justech para confirmar el cambio en <field name="commercial_name" readonly="1" class="fw-bold"/>.</p>
+                    <group>
+                        <field name="sheet_id" invisible="1"/>
+                        <field name="feature_code" invisible="1"/>
+                        <field name="target_active" invisible="1"/>
+                        <field name="admin_key" password="True" placeholder="Clave Administrativa Justech"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_cancel" string="Cancelar" special="cancel"/>
+                    <button name="action_confirm" string="Confirmar" type="object" class="btn-primary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Licenses -->
+    <record id="view_justech_control_licenses_form" model="ir.ui.view">
+        <field name="name">justech.control.licenses.form</field>
+        <field name="model">justech.control.licenses</field>
+        <field name="arch" type="xml">
+            <form string="Licencias" create="false" edit="false" delete="false">
+                <sheet>
+                    <field name="company_id" invisible="1"/>
+                    <field name="content_html" nolabel="1"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Security -->
+    <record id="view_justech_control_security_form" model="ir.ui.view">
+        <field name="name">justech.control.security.form</field>
+        <field name="model">justech.control.security</field>
+        <field name="arch" type="xml">
+            <form string="Seguridad" create="false" edit="false" delete="false">
+                <header>
+                    <button name="action_rotate_key" type="object" string="Rotar clave"/>
+                    <button name="action_revoke_sessions" type="object" string="Revocar sesiones"/>
+                    <button name="action_open_policies" type="object" string="Políticas"/>
+                </header>
+                <sheet>
+                    <field name="company_id" invisible="1"/>
+                    <field name="content_html" nolabel="1"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Audit -->
+    <record id="view_justech_control_audit_form" model="ir.ui.view">
+        <field name="name">justech.control.audit.form</field>
+        <field name="model">justech.control.audit</field>
+        <field name="arch" type="xml">
+            <form string="Auditoría" create="false" edit="false" delete="false">
+                <sheet>
+                    <field name="content_html" nolabel="1"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Integrations -->
+    <record id="view_justech_control_integrations_form" model="ir.ui.view">
+        <field name="name">justech.control.integrations.form</field>
+        <field name="model">justech.control.integrations</field>
+        <field name="arch" type="xml">
+            <form string="Integraciones" create="false" edit="false" delete="false">
+                <sheet>
+                    <field name="content_html" nolabel="1"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- System -->
+    <record id="view_justech_control_system_form" model="ir.ui.view">
+        <field name="name">justech.control.system.form</field>
+        <field name="model">justech.control.system</field>
+        <field name="arch" type="xml">
+            <form string="Sistema" create="false" edit="false" delete="false">
+                <sheet>
+                    <field name="content_html" nolabel="1"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Internal Users -->
+    <record id="view_justech_control_internal_users_form" model="ir.ui.view">
+        <field name="name">justech.control.internal.users.form</field>
+        <field name="model">justech.control.internal.users</field>
+        <field name="arch" type="xml">
+            <form string="Usuarios Internos" create="false" edit="false" delete="false">
+                <header>
+                    <button name="action_open_profiles" type="object" string="Perfiles de usuario"/>
+                </header>
+                <sheet>
+                    <field name="content_html" nolabel="1"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Protected server actions -->
+    <record id="action_justech_control_modules_protected" model="ir.actions.server">
+        <field name="name">Módulos (protegido)</field>
+        <field name="model_id" ref="justech_modules.model_justech_admin_access_service"/>
+        <field name="state">code</field>
+        <field name="code">action = env["justech.admin.access.service"].action_open_commercial_modules()</field>
+    </record>
+    <record id="action_justech_control_licenses_protected" model="ir.actions.server">
+        <field name="name">Licencias (protegido)</field>
+        <field name="model_id" ref="justech_modules.model_justech_admin_access_service"/>
+        <field name="state">code</field>
+        <field name="code">action = env["justech.admin.access.service"].action_open_control_licenses()</field>
+    </record>
+    <record id="action_justech_control_security_protected" model="ir.actions.server">
+        <field name="name">Seguridad (protegido)</field>
+        <field name="model_id" ref="justech_modules.model_justech_admin_access_service"/>
+        <field name="state">code</field>
+        <field name="code">action = env["justech.admin.access.service"].action_open_control_security()</field>
+    </record>
+    <record id="action_justech_control_audit_protected" model="ir.actions.server">
+        <field name="name">Auditoría (protegido)</field>
+        <field name="model_id" ref="justech_modules.model_justech_admin_access_service"/>
+        <field name="state">code</field>
+        <field name="code">action = env["justech.admin.access.service"].action_open_control_audit()</field>
+    </record>
+    <record id="action_justech_control_integrations_protected" model="ir.actions.server">
+        <field name="name">Integraciones (protegido)</field>
+        <field name="model_id" ref="justech_modules.model_justech_admin_access_service"/>
+        <field name="state">code</field>
+        <field name="code">action = env["justech.admin.access.service"].action_open_control_integrations()</field>
+    </record>
+    <record id="action_justech_control_system_protected" model="ir.actions.server">
+        <field name="name">Sistema (protegido)</field>
+        <field name="model_id" ref="justech_modules.model_justech_admin_access_service"/>
+        <field name="state">code</field>
+        <field name="code">action = env["justech.admin.access.service"].action_open_control_system()</field>
+    </record>
+    <record id="action_justech_control_internal_users_protected" model="ir.actions.server">
+        <field name="name">Usuarios Internos (protegido)</field>
+        <field name="model_id" ref="justech_modules.model_justech_admin_access_service"/>
+        <field name="state">code</field>
+        <field name="code">action = env["justech.admin.access.service"].action_open_control_internal_users()</field>
+    </record>
+    <record id="action_justech_client_module_control_protected" model="ir.actions.server">
+        <field name="name">Módulos del Cliente (protegido)</field>
+        <field name="model_id" ref="justech_modules.model_justech_admin_access_service"/>
+        <field name="state">code</field>
+        <field name="code">action = env["justech.admin.access.service"].action_open_client_modules()</field>
+    </record>
+</odoo>

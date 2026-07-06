@@ -23,6 +23,7 @@
                             <field name="selected"/>
                             <field name="line_type"/>
                             <field name="module_code"/>
+                            <field name="feature_code" optional="hide"/>
                             <field name="display_name"/>
                             <field name="category"/>
                             <field name="country"/>
@@ -34,8 +35,6 @@
                             <field name="activated_by_name"/>
                             <field name="description" optional="hide"/>
                             <field name="always_on" column_invisible="True"/>
-                            <field name="module_id" column_invisible="True"/>
-                            <field name="feature_id" column_invisible="True"/>
                         </list>
                     </field>
                 </sheet>

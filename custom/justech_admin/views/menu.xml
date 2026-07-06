@@ -1,12 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <menuitem id="menu_justech_admin_root"
-              name="Justech Admin"
-              sequence="5"
-              groups="justech_admin.group_justech_admin_user"/>
-    <menuitem id="menu_justech_admin_dashboard"
-              name="Centro de Control"
-              parent="menu_justech_admin_root"
+    <!-- Legacy launcher root — hidden (no app in home screen) -->
+    <record id="menu_justech_root" model="ir.ui.menu">
+        <field name="active" eval="False"/>
+    </record>
+
+    <record id="menu_justech_settings_root" model="ir.ui.menu">
+        <field name="name">Justech</field>
+        <field name="parent_id" ref="base.menu_administration"/>
+        <field name="action" ref="action_justech_client_module_control_protected"/>
+        <field name="sequence">95</field>
+        <field name="group_ids" eval="[(6, 0, [ref('base.group_system'), ref('base.group_erp_manager')])]"/>
+    </record>
+
+    <menuitem id="menu_justech_modules"
+              name="Centro de Administración"
+              parent="menu_justech_settings_root"
+              action="action_justech_client_module_control_protected"
+              sequence="10"/>
+
+    <menuitem id="menu_justech_licenses"
+              name="Licencias"
+              parent="menu_justech_settings_root"
+              action="action_justech_control_licenses_protected"
+              sequence="20"/>
+
+    <menuitem id="menu_justech_security"
+              name="Seguridad Justech"
+              parent="menu_justech_settings_root"
+              action="action_justech_control_security_protected"
+              sequence="30"/>
+
+    <menuitem id="menu_justech_audit"
+              name="Auditoría Justech"
+              parent="menu_justech_settings_root"
+              action="action_justech_control_audit_protected"
+              sequence="40"/>
+
+    <!-- Internal-only extras — not shown in Configuración → Justech -->
+    <menuitem id="menu_justech_dashboard"
+              name="Dashboard"
+              parent="menu_justech_root"
               action="action_justech_admin_dashboard_open"
-              sequence="1"/>
+              sequence="1"
+              active="False"/>
+
+    <menuitem id="menu_justech_internal_users"
+              name="Usuarios Internos"
+              parent="menu_justech_root"
+              action="action_justech_control_internal_users_protected"
+              sequence="30"
+              active="False"/>
+
+    <menuitem id="menu_justech_integrations"
+              name="Integraciones"
+              parent="menu_justech_root"
+              action="action_justech_control_integrations_protected"
+              sequence="60"
+              active="False"/>
+
+    <menuitem id="menu_justech_system"
+              name="Sistema"
+              parent="menu_justech_root"
+              action="action_justech_control_system_protected"
+              sequence="70"
+              active="False"/>
 </odoo>

@@ -1,12 +1,12 @@
 {
     "name": "Justech Modules",
-    "version": "19.0.1.5.0",
+    "version": "19.0.1.7.5",
     "category": "Justech/Platform",
     "summary": "Motor de licencias y catálogo comercial Justech",
     "description": """
 Justech platform licensing engine.
 
-F31.1.5: activation wizard, auto module registry, API v1 frozen.
+F31.5: commercial catalog + Control Center API (get_commercial_catalog).
     """,
     "author": "Justech",
     "website": "https://justech.cloud",
@@ -14,6 +14,10 @@ F31.1.5: activation wizard, auto module registry, API v1 frozen.
     "data": [
         "security/justech_modules_security.xml",
         "security/ir.model.access.csv",
+        "data/justech_commercial_catalog.xml",
+        "data/justech_admin_access_bootstrap.xml",
+        "views/justech_admin_access_views.xml",
+        "views/justech_admin_protected_actions.xml",
         "views/justech_module_activation_wizard_views.xml",
         "views/justech_module_views.xml",
         "views/justech_feature_views.xml",
@@ -25,12 +29,12 @@ F31.1.5: activation wizard, auto module registry, API v1 frozen.
     "pre_init_hook": "pre_init_hook",
     "post_init_hook": "post_init_hook",
     "installable": True,
-    "application": True,
+    "application": False,
     "license": "LGPL-3",
     "justech_register": {
         "module_code": "justech_modules",
         "module_name": "Justech Modules",
-        "version": "19.0.1.5.0",
+        "version": "19.0.1.7.5",
         "category": "platform",
         "description": "Platform licensing engine",
         "dependencies": [],

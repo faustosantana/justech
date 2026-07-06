@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_justech" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.justech</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app data-string="Justech" string="Justech" name="justech_settings"
+                     groups="base.group_system">
+                    <block title="Control de módulos y licencias" name="justech_control_block">
+                        <setting string="Centro de Administración Justech"
+                                 help="Administre personalizaciones, licencias y empresas habilitadas del ERP.">
+                            <div class="mt8">
+                                <button name="action_justech_open_client_modules"
+                                        type="object"
+                                        string="Abrir Centro de Administración"
+                                        icon="oi-arrow-right"
+                                        class="btn-link o_web_settings_access_rights"/>
+                            </div>
+                        </setting>
+                        <setting string="Licencias"
+                                 help="Consultar plan, compañías habilitadas y límites de licencia.">
+                            <div class="mt8">
+                                <button name="action_justech_open_licenses"
+                                        type="object"
+                                        string="Abrir Licencias"
+                                        icon="oi-arrow-right"
+                                        class="btn-link o_web_settings_access_rights"/>
+                            </div>
+                        </setting>
+                        <setting string="Seguridad Justech"
+                                 help="Clave administrativa, sesiones y políticas de acceso.">
+                            <div class="mt8">
+                                <button name="action_justech_open_security"
+                                        type="object"
+                                        string="Abrir Seguridad Justech"
+                                        icon="oi-arrow-right"
+                                        class="btn-link o_web_settings_access_rights"/>
+                            </div>
+                        </setting>
+                        <setting string="Auditoría Justech"
+                                 help="Historial de cambios en módulos, licencias y claves.">
+                            <div class="mt8">
+                                <button name="action_justech_open_audit"
+                                        type="object"
+                                        string="Abrir Auditoría Justech"
+                                        icon="oi-arrow-right"
+                                        class="btn-link o_web_settings_access_rights"/>
+                            </div>
+                        </setting>
+                    </block>
+                    <block title="Clave Administrativa Justech" name="justech_key_block">
+                        <setting string="Clave Administrativa Justech"
+                                 help="Las acciones sensibles (activar, pagar, bloquear, agregar compañía) requieren la clave. Consultar la pantalla no la requiere.">
+                            <p class="text-muted mb-0">
+                                Puede consultar el Centro de Administración sin clave. Las acciones críticas requieren la Clave Administrativa Justech.
+                            </p>
+                        </setting>
+                    </block>
+                </app>
+            </xpath>
+        </field>
+    </record>
+</odoo>

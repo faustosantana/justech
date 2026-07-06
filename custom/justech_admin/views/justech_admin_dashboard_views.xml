@@ -1,63 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="view_justech_admin_dashboard_form" model="ir.ui.view">
-        <field name="name">justech.admin.dashboard.form</field>
-        <field name="model">justech.admin.dashboard</field>
-        <field name="arch" type="xml">
-            <form string="Centro de Control Justech">
-                <sheet>
-                    <div class="oe_title">
-                        <h1>Centro de Control</h1>
-                        <h3><field name="client_name" readonly="1"/></h3>
-                    </div>
-                    <group>
-                        <group string="Plataforma">
-                            <field name="company_id"/>
-                            <field name="odoo_version"/>
-                            <field name="api_version"/>
-                            <field name="health_status"/>
-                        </group>
-                        <group string="Módulos y licencias">
-                            <field name="module_count"/>
-                            <field name="active_module_count"/>
-                            <field name="license_count"/>
-                            <field name="feature_count"/>
-                        </group>
-                        <group string="Gobernanza">
-                            <field name="role_count"/>
-                            <field name="permission_count"/>
-                            <field name="profile_count"/>
-                        </group>
-                        <group string="Auditoría">
-                            <field name="audit_license_count"/>
-                            <field name="audit_governance_count"/>
-                        </group>
-                    </group>
-                    <group>
-                        <button name="action_open_modules" type="object" string="Módulos Justech" class="btn-primary"/>
-                        <button name="action_open_activation_wizard" type="object" string="Activación"/>
-                        <button name="action_open_governance_roles" type="object" string="Roles"/>
-                        <button name="action_open_governance_permissions" type="object" string="Permisos"/>
-                        <button name="action_open_governance_audit" type="object" string="Auditoría Governance"/>
-                        <button name="action_open_license_audit" type="object" string="Auditoría Licencias"/>
-                    </group>
-                </sheet>
-            </form>
-        </field>
+    <record id="action_justech_admin_dashboard_open" model="ir.actions.server">
+        <field name="name">Abrir Centro de Control</field>
+        <field name="model_id" ref="justech_modules.model_justech_admin_access_service"/>
+        <field name="state">code</field>
+        <field name="code">action = env["justech.admin.access.service"].action_open_admin_dashboard()</field>
     </record>
     <record id="action_justech_admin_dashboard" model="ir.actions.act_window">
         <field name="name">Centro de Control</field>
         <field name="res_model">justech.admin.dashboard</field>
         <field name="view_mode">form</field>
         <field name="target">current</field>
-    </record>
-    <record id="action_justech_admin_dashboard_open" model="ir.actions.server">
-        <field name="name">Abrir Centro de Control</field>
-        <field name="model_id" ref="model_justech_admin_dashboard"/>
-        <field name="state">code</field>
-        <field name="code">action = env.ref('justech_admin.action_justech_admin_dashboard').read()[0]
-dashboard = env['justech.admin.dashboard'].create({})
-action['res_id'] = dashboard.id
-action</field>
     </record>
 </odoo>

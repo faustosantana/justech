@@ -1,0 +1,69 @@
+{
+  "phase": "LICENSE-4-HELLENIA",
+  "timestamp_utc": "2026-07-07T21:03:23.649810+00:00",
+  "database": "hellenia_prod",
+  "status": "PASS",
+  "checks": {
+    "commercial_products_exist": {
+      "status": "PASS",
+      "detail": "['contabilidad_rd', 'reportes_corporativos', 'ux_fiscal', 'multicurrency_commercial', 'global_audit']"
+    },
+    "license_active": {
+      "status": "PASS",
+      "detail": "active"
+    },
+    "hellenia_company_linked": {
+      "status": "PASS",
+      "detail": "{'company': 'Hellenia, S.R.L.', 'company_id': 1}"
+    },
+    "license_has_features": {
+      "status": "PASS",
+      "detail": "['global_audit', 'hellenia_account', 'hellenia_reports', 'hellenia_ux', 'justech_report_design', 'l10n_do_base', 'l10n_do_ncf', 'l10n_do_reports', 'multicurrency']"
+    },
+    "hellenia_has_active_license": {
+      "status": "PASS",
+      "detail": "2"
+    },
+    "client_modules_has_license_id": {
+      "status": "PASS",
+      "detail": "{'license_id': 2, 'client_name': 'Hellenia, S.R.L.', 'plan_label': 'Professional', 'tier_code': 'PRO', 'primary_company_id': 1, 'company_ids': [1], 'company_count': 1, 'expires_at': datetime.date(2027, 7, 7), 'max_companies': 5}"
+    },
+    "client_modules_plan_not_empty": {
+      "status": "PASS",
+      "detail": "Professional"
+    },
+    "client_modules_no_sin_licencia": {
+      "status": "PASS",
+      "detail": "header ok"
+    },
+    "module_lines_no_sin_licencia": {
+      "status": "PASS",
+      "detail": "['Professional', 'Professional', 'Professional', 'Professional', 'Professional']"
+    },
+    "no_control_justech_in_client_modules": {
+      "status": "PASS",
+      "detail": "['Auditoría', 'Fiscal RD / NCF / DGII', 'Motor Comercial Multimoneda', 'Reportes y Documentos Corporativos', 'UX Fiscal / Contactos y Facturas']"
+    },
+    "no_forbidden_modules": {
+      "status": "PASS",
+      "detail": "['comprobantes_fiscales', 'contabilidad_rd', 'global_audit', 'multicurrency_commercial', 'reportes_corporativos', 'ux_fiscal']"
+    }
+  },
+  "errors": [],
+  "license_id": 2,
+  "product_codes": [
+    "contabilidad_rd",
+    "reportes_corporativos",
+    "ux_fiscal",
+    "multicurrency_commercial",
+    "global_audit"
+  ],
+  "visible_modules": [
+    "Auditoría",
+    "Fiscal RD / NCF / DGII",
+    "Motor Comercial Multimoneda",
+    "Reportes y Documentos Corporativos",
+    "UX Fiscal / Contactos y Facturas"
+  ],
+  "summary_plan": "Professional"
+}

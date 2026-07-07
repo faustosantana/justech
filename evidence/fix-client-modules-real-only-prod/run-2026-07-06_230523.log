@@ -1,0 +1,19 @@
+=== FIX real-only client modules PROD ===
+Transfer starting: 61 files
+
+sent 3243 bytes  received 20 bytes  22802 bytes/sec
+total size is 215023  speedup is 65.90
+Transfer starting: 28 files
+
+sent 1419 bytes  received 20 bytes  10055 bytes/sec
+total size is 111945  speedup is 77.79
+Backup: /opt/odoo-projects/hellenia/backups/hellenia-prod/fix-client-modules-real-only-2026-07-06_230523/hellenia_prod.dump
+ Container hellenia-prod-odoo-1 Stopping 
+ Container hellenia-prod-odoo-1 Stopped 
+2026-07-07 03:05:40,214 1 INFO hellenia_prod odoo.models.unlink: User #1 deleted ir.model.fields records with IDs: [13105] 
+2026-07-07 03:05:40,224 1 INFO hellenia_prod odoo.registry: verifying fields for every extended model 
+2026-07-07 03:05:41,203 1 INFO hellenia_prod odoo.modules.loading: Modules loaded. 
+2026-07-07 03:05:41,220 1 INFO hellenia_prod odoo.registry: Registry changed, signaling through the database 
+2026-07-07 03:05:41,221 1 INFO hellenia_prod odoo.registry: Registry loaded in 8.865s 
+2026-07-07 03:05:41,222 1 INFO hellenia_prod odoo.service.server: Stopping workers gracefully 
+Evidence: /Users/faustosantana/Projects/jaios/evidence/fix-client-modules-real-only-prod

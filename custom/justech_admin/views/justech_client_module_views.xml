@@ -4,7 +4,7 @@
         <field name="name">justech.client.module.control.form</field>
         <field name="model">justech.client.module.control</field>
         <field name="arch" type="xml">
-            <form string="Módulos del Cliente" create="false" edit="false" delete="false" class="justech-cc-admin-form">
+            <form string="Módulos del Cliente" create="false" edit="false" delete="false" class="justech-cc-admin-form justech-cc-real-only">
                 <header>
                     <button name="action_create_admin_key" type="object"
                             string="Crear Clave Administrativa"
@@ -15,82 +15,63 @@
                 <sheet>
                     <field name="has_admin_key" invisible="1"/>
                     <field name="show_key_banner" invisible="1"/>
+                    <field name="show_client_selector" invisible="1"/>
                     <field name="company_id" invisible="1"/>
                     <field name="client_name" invisible="1"/>
                     <field name="key_banner_html" nolabel="1" invisible="not show_key_banner"/>
-                    <field name="summary_html" nolabel="1"/>
-                    <group string="Cliente" col="4">
-                        <field name="license_id" string="Cliente" options="{'no_create': True, 'no_open': True}"/>
-                    </group>
-                    <group string="Buscar y filtrar" col="4">
-                        <field name="search_text" placeholder="Buscar módulo..."/>
-                        <field name="filter_mode"/>
-                        <field name="sort_order"/>
+                    <field name="header_html" nolabel="1"/>
+                    <group col="4" class="justech-cc-filters-row">
+                        <field name="license_id" string="Cliente"
+                               invisible="not show_client_selector"
+                               options="{'no_create': True, 'no_open': True}"/>
+                        <field name="search_text" placeholder="Buscar categoría..."/>
+                        <field name="filter_mode" string="Estado"/>
                         <button name="action_apply_filters" type="object" string="Aplicar" class="btn-secondary"/>
                     </group>
-                    <div class="justech-cc-section">
-                        <h3 class="justech-cc-section-title">Módulos disponibles</h3>
-                        <field name="line_ids" nolabel="1"
-                               domain="[('section', '=', 'available')]"
-                               context="{'default_section': 'available'}">
-                            <list create="false" edit="false" delete="false"
-                                  class="justech-cc-module-list"
-                                  decoration-success="status == 'paid_active'"
-                                  decoration-warning="status == 'not_paid'"
-                                  decoration-danger="status == 'blocked'"
-                                  decoration-muted="status == 'expired'"
-                                  decoration-info="status in ('paid_inactive', 'coming_soon')">
-                                <field name="display_name" string="Módulo"/>
-                                <field name="description" string="Descripción"/>
-                                <field name="status_label" string="Estado"/>
-                                <field name="paid_label" string="Pagado"/>
-                                <field name="active_label" string="Activo"/>
-                                <field name="companies_enabled_text" string="Empresas habilitadas"/>
-                                <field name="license_label" string="Licencia"/>
-                                <field name="main_module_code" column_invisible="1"/>
-                                <field name="product_code" column_invisible="1"/>
-                                <field name="section" column_invisible="1"/>
-                                <field name="is_development" column_invisible="1"/>
-                                <field name="status" column_invisible="1"/>
-                                <field name="is_paid" column_invisible="1"/>
-                                <field name="is_active" column_invisible="1"/>
-                                <field name="is_blocked" column_invisible="1"/>
-                                <field name="name" column_invisible="1"/>
-                                <field name="includes" column_invisible="1"/>
-                                <button name="action_open_administrar" type="object"
-                                        string="Administrar" class="btn-link"/>
-                            </list>
-                        </field>
-                    </div>
-                    <div class="justech-cc-section justech-cc-dev-section">
-                        <h3 class="justech-cc-section-title">En desarrollo</h3>
-                        <field name="line_ids" nolabel="1"
-                               domain="[('section', '=', 'development')]"
-                               context="{'default_section': 'development'}">
-                            <list create="false" edit="false" delete="false"
-                                  class="justech-cc-module-list justech-cc-module-list-dev"
-                                  decoration-info="True">
-                                <field name="display_name" string="Módulo"/>
-                                <field name="description" string="Descripción"/>
-                                <field name="status_label" string="Estado"/>
-                                <field name="paid_label" string="Pagado" column_invisible="1"/>
-                                <field name="active_label" string="Activo" column_invisible="1"/>
-                                <field name="companies_enabled_text" string="Empresas habilitadas" column_invisible="1"/>
-                                <field name="license_label" string="Licencia" column_invisible="1"/>
-                                <field name="main_module_code" column_invisible="1"/>
-                                <field name="product_code" column_invisible="1"/>
-                                <field name="section" column_invisible="1"/>
-                                <field name="is_development" column_invisible="1"/>
-                                <field name="status" column_invisible="1"/>
-                                <field name="is_paid" column_invisible="1"/>
-                                <field name="is_active" column_invisible="1"/>
-                                <field name="name" column_invisible="1"/>
-                                <field name="includes" column_invisible="1"/>
-                                <button name="action_view_information" type="object"
-                                        string="Ver información" class="btn-link"/>
-                            </list>
-                        </field>
-                    </div>
+                    <field name="line_ids" nolabel="1" mode="kanban">
+                        <kanban create="false" edit="false" delete="false"
+                                class="justech-cc-modules-kanban">
+                            <field name="name"/>
+                            <field name="status_label"/>
+                            <field name="paid_label"/>
+                            <field name="active_label"/>
+                            <field name="companies_enabled_text"/>
+                            <field name="license_label"/>
+                            <field name="includes_summary"/>
+                            <field name="status"/>
+                            <field name="main_module_code"/>
+                            <field name="product_code"/>
+                            <templates>
+                                <t t-name="card">
+                                    <div class="justech-cc-module-card">
+                                        <div class="justech-cc-module-card-head">
+                                            <strong class="justech-cc-module-card-title">
+                                                <field name="name"/>
+                                            </strong>
+                                            <span t-attf-class="justech-cc-status justech-cc-status-#{record.status.raw_value}">
+                                                <field name="status_label"/>
+                                            </span>
+                                        </div>
+                                        <div class="justech-cc-module-card-meta">
+                                            <span>Pagado: <field name="paid_label"/></span>
+                                            <span>Activo: <field name="active_label"/></span>
+                                        </div>
+                                        <div class="justech-cc-module-card-meta">
+                                            <span>Empresas: <field name="companies_enabled_text"/></span>
+                                            <span>Licencia: <field name="license_label"/></span>
+                                        </div>
+                                        <div class="justech-cc-module-card-includes">
+                                            Incluye: <field name="includes_summary"/>
+                                        </div>
+                                        <div class="justech-cc-module-card-actions">
+                                            <button name="action_open_administrar" type="object"
+                                                    string="Administrar" class="btn btn-sm btn-primary"/>
+                                        </div>
+                                    </div>
+                                </t>
+                            </templates>
+                        </kanban>
+                    </field>
                 </sheet>
             </form>
         </field>
@@ -102,28 +83,33 @@
         <field name="arch" type="xml">
             <form string="Administrar">
                 <sheet>
-                    <div class="oe_title">
-                        <h1><field name="module_name" readonly="1"/></h1>
-                        <span class="justech-cc-status-pill"><field name="status_label" readonly="1"/></span>
+                    <div class="oe_title justech-cc-manage-title">
+                        <h2><field name="module_name" readonly="1"/></h2>
+                        <div class="justech-cc-manage-meta">
+                            <span>Estado: <field name="status_label" readonly="1"/></span>
+                            <span>Pagado: <field name="paid_label" readonly="1"/></span>
+                            <span>Activo: <field name="active_label" readonly="1"/></span>
+                        </div>
                     </div>
-                    <field name="description" readonly="1"/>
                     <field name="line_id" invisible="1"/>
-                    <field name="is_development" invisible="1"/>
                     <field name="is_paid" invisible="1"/>
                     <field name="is_active" invisible="1"/>
                     <field name="is_blocked" invisible="1"/>
                     <field name="license_id" invisible="1"/>
                     <field name="company_id" invisible="1"/>
-                    <group string="Licencia" invisible="is_development">
-                        <field name="license_html" nolabel="1"/>
-                    </group>
-                    <group string="Empresas habilitadas" invisible="is_development">
-                        <field name="companies_html" nolabel="1"/>
-                    </group>
                     <group string="Qué incluye">
                         <field name="includes_html" nolabel="1"/>
                     </group>
-                    <group string="Acciones" col="2" invisible="is_development">
+                    <group string="Licencia">
+                        <field name="license_html" nolabel="1"/>
+                    </group>
+                    <group string="Empresas habilitadas">
+                        <field name="companies_html" nolabel="1"/>
+                    </group>
+                    <group string="Auditoría reciente">
+                        <field name="audit_html" nolabel="1"/>
+                    </group>
+                    <group string="Acciones" col="2">
                         <button name="action_activate" type="object" string="Activar"
                                 invisible="is_active or not is_paid"/>
                         <button name="action_deactivate" type="object" string="Desactivar"
@@ -137,7 +123,7 @@
                         <button name="action_change_license" type="object" string="Cambiar licencia"/>
                         <button name="action_block" type="object" string="Bloquear" invisible="is_blocked"/>
                         <button name="action_unblock" type="object" string="Desbloquear" invisible="not is_blocked"/>
-                        <button name="action_view_audit" type="object" string="Ver auditoría"/>
+                        <button name="action_view_audit" type="object" string="Ver auditoría completa"/>
                     </group>
                 </sheet>
                 <footer>
@@ -187,7 +173,7 @@
                 <field name="user_id" string="Usuario"/>
                 <field name="client_name" string="Cliente"/>
                 <field name="company_id" string="Empresa"/>
-                <field name="commercial_name" string="Módulo"/>
+                <field name="commercial_name" string="Categoría"/>
                 <field name="action" string="Acción"/>
                 <field name="state_before" string="Estado anterior"/>
                 <field name="state_after" string="Estado nuevo"/>

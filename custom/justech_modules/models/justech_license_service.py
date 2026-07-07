@@ -539,7 +539,6 @@ class JustechLicenseService(models.AbstractModel):
         return feature.name if feature else feature_code
 
     # ------------------------------------------------------ client module control
-    # Sub-productos ocultos (se agrupan bajo módulos principales)
     HIDDEN_PRODUCT_CODES = frozenset(
         {
             "comprobantes_fiscales",
@@ -547,83 +546,81 @@ class JustechLicenseService(models.AbstractModel):
             "contabilidad_rd",
             "marketplace",
             "ia",
+            "crm",
+            "rrhh",
+            "activos_fijos",
+            "ventas",
+            "compras",
         }
     )
 
-    MAIN_CLIENT_MODULES = (
-        {
-            "code": "fiscal_rd",
-            "name": "Fiscal República Dominicana",
-            "description": "Comprobantes fiscales, NCF, DGII, ITBIS, retenciones y reportes fiscales.",
-            "primary_product_code": "contabilidad_rd",
-            "section": "available",
-            "category": "fiscal",
-            "includes": [
-                "Comprobantes Fiscales",
-                "NCF",
-                "DGII",
-                "ITBIS",
-                "Retenciones",
-                "Reportes Fiscales",
-                "Experiencia Fiscal",
-            ],
-        },
-        {
-            "code": "contabilidad",
-            "name": "Contabilidad",
-            "description": "Diario general, plan de cuentas, estados financieros y cuentas por cobrar/pagar.",
-            "primary_product_code": "contabilidad_rd",
-            "section": "available",
-            "category": "fiscal",
-            "includes": [
-                "Diario general",
-                "Plan de cuentas",
-                "Asientos",
-                "Balance",
-                "Estados financieros",
-                "Cuentas por cobrar",
-                "Cuentas por pagar",
-            ],
-        },
+    REAL_CLIENT_CATEGORIES = (
         {
             "code": "ventas",
             "name": "Ventas",
-            "description": "Cotizaciones, órdenes de venta, clientes y pipeline comercial.",
-            "primary_product_code": "ventas",
-            "section": "development",
             "category": "sales",
-            "includes": ["Cotizaciones", "Órdenes de venta", "Clientes", "Pipeline"],
+            "primary_product_code": "ventas",
+            "odoo_modules": ("sale",),
+            "includes": [
+                "Cotizaciones",
+                "Órdenes de venta",
+                "Factura cliente",
+                "Diseño PDF cotización/factura",
+                "Tipo de comprobante en contacto/factura",
+            ],
+            "sequence": 10,
         },
         {
             "code": "compras",
             "name": "Compras",
-            "description": "Proveedores, órdenes de compra, recepciones y facturas de proveedor.",
-            "primary_product_code": "compras",
-            "section": "development",
             "category": "purchase",
+            "primary_product_code": "compras",
+            "odoo_modules": ("purchase",),
             "includes": [
-                "Proveedores",
                 "Órdenes de compra",
-                "Recepciones",
                 "Facturas proveedor",
+                "Recepciones",
+                "Diseño PDF orden de compra",
             ],
+            "sequence": 20,
+        },
+        {
+            "code": "contabilidad_fiscal_rd",
+            "name": "Contabilidad / Fiscal RD",
+            "category": "fiscal",
+            "primary_product_code": "contabilidad_rd",
+            "includes": [
+                "NCF",
+                "DGII",
+                "606",
+                "607",
+                "623",
+                "ITBIS",
+                "Retenciones",
+                "Diario / asientos",
+                "Plan de cuentas",
+            ],
+            "sequence": 30,
         },
         {
             "code": "inventario",
             "name": "Inventario",
-            "description": "Productos, almacenes, existencias y transferencias.",
-            "primary_product_code": "inventario",
-            "section": "available",
             "category": "inventory",
-            "includes": ["Productos", "Almacenes", "Existencias", "Transferencias"],
+            "primary_product_code": "inventario",
+            "includes": [
+                "Productos",
+                "Almacenes",
+                "Transferencias",
+                "Existencias",
+            ],
+            "sequence": 40,
         },
         {
-            "code": "punto_de_venta",
-            "name": "Punto de Venta",
-            "description": "POS fiscal integrado con tickets, caja y facturación desde mostrador.",
-            "primary_product_code": "punto_de_venta",
-            "section": "available",
+            "code": "pos",
+            "name": "POS",
             "category": "pos",
+            "primary_product_code": "punto_de_venta",
+            "requires_odoo_modules": ("hellenia_pos",),
             "includes": [
                 "POS",
                 "Ticket",
@@ -631,83 +628,21 @@ class JustechLicenseService(models.AbstractModel):
                 "Cliente con RNC",
                 "Factura fiscal desde POS",
             ],
+            "sequence": 50,
         },
         {
-            "code": "reportes_corporativos",
-            "name": "Reportes Corporativos",
-            "description": "Diseño PDF corporativo para documentos comerciales.",
-            "primary_product_code": "reportes_corporativos",
-            "section": "available",
+            "code": "reportes_documentos",
+            "name": "Reportes / Documentos",
             "category": "reports",
+            "primary_product_code": "reportes_corporativos",
             "includes": [
-                "Cotizaciones PDF",
-                "Facturas PDF",
-                "Órdenes de compra PDF",
-                "Conduces PDF",
+                "PDF cotización",
+                "PDF factura",
+                "PDF orden compra",
+                "Conduces",
+                "Diseño corporativo",
             ],
-        },
-        {
-            "code": "crm",
-            "name": "CRM",
-            "description": "Relaciones con clientes y oportunidades comerciales.",
-            "primary_product_code": "crm",
-            "section": "development",
-            "category": "crm",
-            "includes": ["Contactos", "Oportunidades", "Actividades", "Pipeline"],
-        },
-        {
-            "code": "activos_fijos",
-            "name": "Activos Fijos",
-            "description": "Depreciación y gestión de activos.",
-            "primary_product_code": "activos_fijos",
-            "section": "development",
-            "category": "assets",
-            "includes": ["Activos", "Depreciación", "Bajas"],
-        },
-        {
-            "code": "rrhh",
-            "name": "RRHH",
-            "description": "Recursos humanos y gestión de personal.",
-            "primary_product_code": "rrhh",
-            "section": "development",
-            "category": "hr",
-            "includes": ["Empleados", "Contratos", "Ausencias"],
-        },
-        {
-            "code": "marketplace",
-            "name": "Marketplace",
-            "description": "Tienda de extensiones Justech.",
-            "primary_product_code": "marketplace",
-            "section": "development",
-            "category": "platform",
-            "includes": ["Extensiones", "Instalación guiada"],
-        },
-        {
-            "code": "ia",
-            "name": "IA",
-            "description": "Asistente inteligente y automatización.",
-            "primary_product_code": "ia",
-            "section": "development",
-            "category": "ai",
-            "includes": ["Asistente IA", "Automatizaciones"],
-        },
-        {
-            "code": "manufactura",
-            "name": "Manufactura",
-            "description": "Producción, BOM y órdenes de fabricación.",
-            "primary_product_code": None,
-            "section": "development",
-            "category": "platform",
-            "includes": ["BOM", "Órdenes de fabricación", "Centros de trabajo"],
-        },
-        {
-            "code": "nomina",
-            "name": "Nómina",
-            "description": "Nómina dominicana y prestaciones.",
-            "primary_product_code": None,
-            "section": "development",
-            "category": "hr",
-            "includes": ["Nómina", "TSS", "Prestaciones"],
+            "sequence": 60,
         },
     )
 
@@ -805,17 +740,13 @@ class JustechLicenseService(models.AbstractModel):
                 last_modified = mod
         return {
             **selected,
-            "total_count": len([r for r in rows if r.get("section") == "available"]),
-            "active_count": len(
-                [r for r in rows if r.get("section") == "available" and r.get("is_active")]
-            ),
+            "total_count": len(rows),
+            "active_count": len([r for r in rows if r.get("is_active")]),
             "pending_count": len(
                 [
                     r
                     for r in rows
-                    if r.get("section") == "available"
-                    and not r.get("is_paid")
-                    and r.get("status") != "coming_soon"
+                    if not r.get("is_paid") and r.get("status") != "coming_soon"
                 ]
             ),
             "last_modified_at": last_modified,
@@ -954,6 +885,47 @@ class JustechLicenseService(models.AbstractModel):
         return self._commercial_icon_for_category(product.category, product.name)
 
     @api.model
+    def _format_client_datetime(self, dt):
+        if not dt:
+            return "—"
+        local_dt = fields.Datetime.context_timestamp(self, dt)
+        return local_dt.strftime("%d/%m/%Y %I:%M %p")
+
+    @api.model
+    def _odoo_module_installed(self, module_name):
+        return bool(
+            self.env["ir.module.module"]
+            .sudo()
+            .search([("name", "=", module_name), ("state", "=", "installed")], limit=1)
+        )
+
+    @api.model
+    def _product_configured(self, product, internal):
+        if not product:
+            return False
+        return any(
+            internal["justech.feature"].search(
+                [("code", "=", ln.feature_code)], limit=1
+            )
+            for ln in product.line_ids
+        )
+
+    @api.model
+    def _category_is_visible(self, category, product_cache, internal):
+        product = product_cache.get(category.get("primary_product_code"))
+        if product and self._product_configured(product, internal):
+            if category.get("requires_odoo_modules"):
+                return all(
+                    self._odoo_module_installed(mod)
+                    for mod in category["requires_odoo_modules"]
+                )
+            return True
+        for mod in category.get("odoo_modules") or ():
+            if self._odoo_module_installed(mod):
+                return True
+        return False
+
+    @api.model
     def _product_row_data(self, product, company, license_rec, client_name, tier_label):
         internal = self._sudo_internal()
         State = internal["justech.client.module.state"]
@@ -987,6 +959,7 @@ class JustechLicenseService(models.AbstractModel):
             "activated_by_name": activated_by or "—",
             "last_modified_at": last_modified_at,
             "last_modified_by_name": last_modified_by or "—",
+            "last_modified_display": self._format_client_datetime(last_modified_at),
             "origin": state.origin or "justech",
             "origin_label": self._origin_label(state.origin or "justech"),
             "status": status,
@@ -995,8 +968,38 @@ class JustechLicenseService(models.AbstractModel):
         }
 
     @api.model
+    def _category_fallback_row(
+        self, category, product, company, license_rec, client_name, tier_label, configured
+    ):
+        if product:
+            return self._product_row_data(
+                product, company, license_rec, client_name, tier_label
+            )
+        return {
+            "product_code": category["code"],
+            "is_paid": False,
+            "is_active": True,
+            "is_blocked": False,
+            "client_name": client_name,
+            "company_name": company.name,
+            "plan_label": tier_label,
+            "license_label": tier_label,
+            "companies_enabled_text": "—",
+            "activated_at": False,
+            "activated_by_name": "—",
+            "last_modified_at": False,
+            "last_modified_by_name": "—",
+            "last_modified_display": "—",
+            "origin": "justech",
+            "origin_label": self._origin_label("justech"),
+            "status": "paid_active",
+            "status_label": _("Activo"),
+            "configured": configured,
+        }
+
+    @api.model
     def get_client_module_rows(self, company=None, license_id=None, view_only=False):
-        """Main module rows for Módulos del Cliente (grouped, commercial)."""
+        """Real client categories for Módulos del Cliente (existing only)."""
         self.env["justech.admin.access.service"].require_justech_settings_access()
         if not view_only and not self.env.su:
             svc = self.env["justech.admin.access.service"]
@@ -1017,55 +1020,44 @@ class JustechLicenseService(models.AbstractModel):
             p.code: p for p in Product.search([("active", "=", True)])
         }
         rows = []
-        for main in self.MAIN_CLIENT_MODULES:
-            primary_code = main.get("primary_product_code")
+        for category in sorted(
+            self.REAL_CLIENT_CATEGORIES, key=lambda c: c.get("sequence", 99)
+        ):
+            if not self._category_is_visible(category, product_cache, internal):
+                continue
+            primary_code = category.get("primary_product_code")
             product = product_cache.get(primary_code) if primary_code else False
-            section = main["section"]
-            is_development = section == "development"
-            if product:
+            configured = self._product_configured(product, internal) if product else False
+            if product and configured:
                 base = self._product_row_data(
                     product, company, license_rec, client_name, tier_label
                 )
-                if is_development or not base["configured"]:
-                    is_development = True
-                    base["status"] = "coming_soon"
-                    base["status_label"] = _("En desarrollo")
-                    base["is_active"] = False
             else:
-                base = {
-                    "product_code": main["code"],
-                    "is_paid": False,
-                    "is_active": False,
-                    "is_blocked": False,
-                    "client_name": client_name,
-                    "company_name": company.name,
-                    "plan_label": tier_label,
-                    "license_label": tier_label,
-                    "companies_enabled_text": "—",
-                    "activated_at": False,
-                    "activated_by_name": "—",
-                    "last_modified_at": False,
-                    "last_modified_by_name": "—",
-                    "origin": "justech",
-                    "origin_label": self._origin_label("justech"),
-                    "status": "coming_soon",
-                    "status_label": _("En desarrollo"),
-                    "configured": False,
-                }
-                is_development = True
+                base = self._category_fallback_row(
+                    category,
+                    product,
+                    company,
+                    license_rec,
+                    client_name,
+                    tier_label,
+                    configured,
+                )
+                if category.get("odoo_modules") and not configured:
+                    base["status"] = "paid_active"
+                    base["status_label"] = _("Activo")
+                    base["is_active"] = True
             rows.append(
                 {
                     **base,
-                    "main_module_code": main["code"],
-                    "name": main["name"],
-                    "display_name": self._commercial_icon_for_category(
-                        main["category"], main["name"]
-                    ),
-                    "description": main["description"],
-                    "includes": main["includes"],
-                    "section": section,
-                    "is_development": is_development,
-                    "product_code": primary_code or main["code"],
+                    "main_module_code": category["code"],
+                    "name": category["name"],
+                    "display_name": category["name"],
+                    "description": "",
+                    "includes": category["includes"],
+                    "includes_summary": ", ".join(category["includes"]),
+                    "section": "available",
+                    "is_development": False,
+                    "product_code": primary_code or category["code"],
                 }
             )
         return rows

@@ -19,16 +19,14 @@ class JustechClientModuleControl(models.TransientModel):
         string="Empresa contexto",
     )
     client_name = fields.Char(compute="_compute_client_context", readonly=True)
+    show_client_selector = fields.Boolean(compute="_compute_client_context", readonly=True)
     line_ids = fields.One2many("justech.client.module.line", "control_id")
     has_admin_key = fields.Boolean(compute="_compute_key_state")
     show_key_banner = fields.Boolean(compute="_compute_key_state")
     summary_plan = fields.Char(compute="_compute_client_context", readonly=True)
     summary_total = fields.Integer(compute="_compute_summary")
     summary_active = fields.Integer(compute="_compute_summary")
-    summary_pending = fields.Integer(compute="_compute_summary")
-    summary_companies = fields.Integer(compute="_compute_client_context", readonly=True)
-    summary_last_modified = fields.Datetime(compute="_compute_summary")
-    summary_html = fields.Html(compute="_compute_summary_html", sanitize=False)
+    header_html = fields.Html(compute="_compute_header_html", sanitize=False)
     key_banner_html = fields.Html(compute="_compute_key_banner_html", sanitize=False)
     search_text = fields.Char(string="Buscar")
     filter_mode = fields.Selection(
@@ -36,21 +34,10 @@ class JustechClientModuleControl(models.TransientModel):
             ("all", "Todos"),
             ("active", "Activos"),
             ("inactive", "Inactivos"),
-            ("paid", "Pagados"),
-            ("unpaid", "No pagados"),
-            ("blocked", "Bloqueados"),
+            ("pending", "Pendientes"),
         ],
         default="all",
-        string="Filtro",
-    )
-    sort_order = fields.Selection(
-        [
-            ("name", "Nombre"),
-            ("status", "Estado"),
-            ("modified", "Última modificación"),
-        ],
-        default="name",
-        string="Ordenar por",
+        string="Estado",
     )
 
     @api.model
@@ -78,17 +65,17 @@ class JustechClientModuleControl(models.TransientModel):
     @api.depends("license_id")
     def _compute_client_context(self):
         license_svc = self.env["justech.license.service"]
+        clients = license_svc.get_commercial_clients()
         for rec in self:
+            rec.show_client_selector = len(clients) > 1
             if not rec.license_id:
                 rec.client_name = rec.env.company.name
                 rec.company_id = rec.env.company
                 rec.summary_plan = "—"
-                rec.summary_companies = 1
                 continue
             dashboard = license_svc.get_client_dashboard(license_id=rec.license_id.id)
             rec.client_name = dashboard.get("client_name") or rec.license_id.name
             rec.summary_plan = dashboard.get("plan_label") or "—"
-            rec.summary_companies = dashboard.get("company_count") or 0
             primary_id = dashboard.get("primary_company_id")
             rec.company_id = (
                 self.env["res.company"].browse(primary_id)
@@ -103,69 +90,26 @@ class JustechClientModuleControl(models.TransientModel):
             rec.has_admin_key = svc.user_has_key()
             rec.show_key_banner = not rec.has_admin_key
 
-    @api.depends("line_ids.is_paid", "line_ids.is_active", "line_ids.status", "line_ids.last_modified_at", "line_ids.section")
+    @api.depends("line_ids.is_paid", "line_ids.is_active", "line_ids.status")
     def _compute_summary(self):
         for rec in self:
-            lines = rec.line_ids.filtered(lambda l: l.section == "available")
+            lines = rec.line_ids
             rec.summary_total = len(lines)
             rec.summary_active = len(lines.filtered("is_active"))
-            rec.summary_pending = len(
-                lines.filtered(lambda l: not l.is_paid and l.status != "coming_soon")
-            )
-            modified = [l.last_modified_at for l in lines if l.last_modified_at]
-            rec.summary_last_modified = max(modified) if modified else False
 
-    @api.depends(
-        "client_name",
-        "summary_plan",
-        "summary_total",
-        "summary_active",
-        "summary_pending",
-        "summary_companies",
-        "summary_last_modified",
-    )
-    def _compute_summary_html(self):
+    @api.depends("client_name", "summary_plan", "summary_total", "summary_active")
+    def _compute_header_html(self):
         for rec in self:
-            last_mod = rec.summary_last_modified or "—"
-            rec.summary_html = Markup(
+            rec.header_html = Markup(
                 f"""
-                <div class="justech-cc-dashboard">
-                    <div class="justech-cc-hero">
-                        <h1>Módulos del Cliente</h1>
-                        <p>Panel comercial para administrar personalizaciones, licencias y empresas habilitadas.</p>
-                    </div>
-                    <div class="justech-cc-section">
-                        <div class="justech-cc-grid">
-                            <div class="justech-cc-card justech-cc-blue">
-                                <div class="justech-cc-card-title">Cliente</div>
-                                <div class="justech-cc-card-value justech-cc-card-plan">{rec.client_name or '—'}</div>
-                            </div>
-                            <div class="justech-cc-card justech-cc-blue">
-                                <div class="justech-cc-card-title">Plan contratado</div>
-                                <div class="justech-cc-card-value justech-cc-card-plan">{rec.summary_plan or '—'}</div>
-                            </div>
-                            <div class="justech-cc-card justech-cc-gray">
-                                <div class="justech-cc-card-title">Módulos principales</div>
-                                <div class="justech-cc-card-value">{rec.summary_total}</div>
-                            </div>
-                            <div class="justech-cc-card justech-cc-green">
-                                <div class="justech-cc-card-title">Activas</div>
-                                <div class="justech-cc-card-value">{rec.summary_active}</div>
-                            </div>
-                            <div class="justech-cc-card justech-cc-yellow">
-                                <div class="justech-cc-card-title">Pendientes</div>
-                                <div class="justech-cc-card-value">{rec.summary_pending}</div>
-                            </div>
-                            <div class="justech-cc-card justech-cc-gray">
-                                <div class="justech-cc-card-title">Empresas habilitadas</div>
-                                <div class="justech-cc-card-value">{rec.summary_companies}</div>
-                            </div>
-                            <div class="justech-cc-card justech-cc-gray">
-                                <div class="justech-cc-card-title">Última modificación</div>
-                                <div class="justech-cc-card-value justech-cc-card-plan">{last_mod}</div>
-                            </div>
-                        </div>
-                    </div>
+                <div class="justech-cc-compact-header">
+                    <h1>Módulos del Cliente</h1>
+                    <p class="justech-cc-client-line">
+                        <strong>Cliente:</strong> {rec.client_name or '—'}
+                        · <strong>Plan:</strong> {rec.summary_plan or '—'}
+                        · <strong>{rec.summary_total}</strong> categorías
+                        · <strong>{rec.summary_active}</strong> activas
+                    </p>
                 </div>
                 """
             )
@@ -178,13 +122,13 @@ class JustechClientModuleControl(models.TransientModel):
                 continue
             rec.key_banner_html = Markup(
                 """
-                <div class="alert alert-warning mb-3" role="alert">
+                <div class="alert alert-warning mb-2 py-2" role="alert">
                     <strong>No existe una Clave Administrativa Justech.</strong>
                 </div>
                 """
             )
 
-    @api.onchange("license_id", "search_text", "filter_mode", "sort_order")
+    @api.onchange("license_id", "search_text", "filter_mode")
     def _onchange_reload(self):
         if self.license_id:
             self._reload_lines()
@@ -207,32 +151,24 @@ class JustechClientModuleControl(models.TransientModel):
         search = (self.search_text or "").strip().lower()
         filtered = []
         for row in rows:
-            if search:
-                haystack = f"{row.get('name') or ''} {row.get('description') or ''}".lower()
-                if search not in haystack:
-                    continue
+            haystack = " ".join(
+                [
+                    row.get("name") or "",
+                    row.get("includes_summary") or "",
+                    " ".join(row.get("includes") or []),
+                ]
+            ).lower()
+            if search and search not in haystack:
+                continue
             mode = self.filter_mode or "all"
             if mode == "active" and not row.get("is_active"):
                 continue
             if mode == "inactive" and row.get("is_active"):
                 continue
-            if mode == "paid" and not row.get("is_paid"):
-                continue
-            if mode == "unpaid" and row.get("is_paid"):
-                continue
-            if mode == "blocked" and row.get("status") != "blocked":
+            if mode == "pending" and row.get("is_paid"):
                 continue
             filtered.append(row)
-        sort_key = self.sort_order or "name"
-        if sort_key == "status":
-            filtered.sort(key=lambda r: (r.get("status_label") or "", r.get("name") or ""))
-        elif sort_key == "modified":
-            filtered.sort(
-                key=lambda r: r.get("last_modified_at") or "",
-                reverse=True,
-            )
-        else:
-            filtered.sort(key=lambda r: r.get("name") or "")
+        filtered.sort(key=lambda r: r.get("name") or "")
         line_fields = set(self.env["justech.client.module.line"]._fields)
         commands = [(5, 0, 0)]
         for row in filtered:
@@ -273,20 +209,21 @@ class JustechClientModuleControl(models.TransientModel):
 class JustechClientModuleLine(models.TransientModel):
     _name = "justech.client.module.line"
     _description = "Client Module Line"
-    _order = "section, name"
+    _order = "name"
 
     control_id = fields.Many2one("justech.client.module.control", ondelete="cascade")
-    main_module_code = fields.Char(string="Módulo principal", readonly=True)
+    main_module_code = fields.Char(string="Categoría", readonly=True)
     product_code = fields.Char(required=True)
     section = fields.Selection(
         [("available", "Disponible"), ("development", "En desarrollo")],
         readonly=True,
     )
     is_development = fields.Boolean(readonly=True)
-    name = fields.Char(string="Módulo", readonly=True)
-    display_name = fields.Char(string="Módulo", readonly=True)
+    name = fields.Char(string="Categoría", readonly=True)
+    display_name = fields.Char(string="Categoría", readonly=True)
     description = fields.Text(readonly=True)
     includes = fields.Json(readonly=True)
+    includes_summary = fields.Char(string="Incluye", readonly=True)
     is_paid = fields.Boolean(readonly=True)
     is_active = fields.Boolean(readonly=True)
     is_blocked = fields.Boolean(readonly=True)
@@ -294,8 +231,9 @@ class JustechClientModuleLine(models.TransientModel):
     active_label = fields.Char(string="Activo", compute="_compute_labels", readonly=True)
     companies_enabled_text = fields.Char(string="Empresas habilitadas", readonly=True)
     license_label = fields.Char(string="Licencia", readonly=True)
-    last_modified_at = fields.Datetime(string="Última modificación", readonly=True)
-    last_modified_by_name = fields.Char(string="Modificado por", readonly=True)
+    last_modified_at = fields.Datetime(readonly=True)
+    last_modified_display = fields.Char(string="Última modificación", readonly=True)
+    last_modified_by_name = fields.Char(readonly=True)
     status = fields.Char(readonly=True)
     status_label = fields.Char(readonly=True)
     configured = fields.Boolean(readonly=True)
@@ -327,17 +265,9 @@ class JustechClientModuleLine(models.TransientModel):
 
     def action_open_administrar(self):
         self.ensure_one()
-        return self._open_manage_panel(_("Administrar"))
-
-    def action_view_information(self):
-        self.ensure_one()
-        return self._open_manage_panel(_("Ver información"))
-
-    def _open_manage_panel(self, title):
-        self.ensure_one()
         return {
             "type": "ir.actions.act_window",
-            "name": title,
+            "name": _("Administrar"),
             "res_model": "justech.client.module.manage.menu",
             "view_mode": "form",
             "target": "new",
@@ -350,23 +280,26 @@ class JustechClientModuleManageMenu(models.TransientModel):
     _description = "Administration panel for a personalization"
 
     line_id = fields.Many2one("justech.client.module.line", required=True, ondelete="cascade")
-    is_development = fields.Boolean(related="line_id.is_development", readonly=True)
     module_name = fields.Char(related="line_id.display_name", readonly=True)
     description = fields.Text(related="line_id.description", readonly=True)
     is_paid = fields.Boolean(related="line_id.is_paid", readonly=True)
     is_active = fields.Boolean(related="line_id.is_active", readonly=True)
     is_blocked = fields.Boolean(related="line_id.is_blocked", readonly=True)
     status_label = fields.Char(related="line_id.status_label", readonly=True)
+    paid_label = fields.Char(related="line_id.paid_label", readonly=True)
+    active_label = fields.Char(related="line_id.active_label", readonly=True)
     license_id = fields.Many2one(related="line_id.control_id.license_id", readonly=True)
     company_id = fields.Many2one(related="line_id.control_id.company_id", readonly=True)
     license_html = fields.Html(compute="_compute_panels", sanitize=False)
     companies_html = fields.Html(compute="_compute_panels", sanitize=False)
     includes_html = fields.Html(compute="_compute_panels", sanitize=False)
+    audit_html = fields.Html(compute="_compute_panels", sanitize=False)
 
     @api.depends("line_id", "license_id")
     def _compute_panels(self):
         license_svc = self.env["justech.license.service"]
         internal = license_svc._sudo_internal()
+        Audit = self.env["justech.client.module.audit"].sudo()
         for rec in self:
             includes = rec.line_id.includes or []
             if includes:
@@ -380,6 +313,22 @@ class JustechClientModuleManageMenu(models.TransientModel):
             product = internal["justech.commercial.product"].search(
                 [("code", "=", rec.line_id.product_code)], limit=1
             )
+            audits = Audit.search(
+                [("product_code", "=", rec.line_id.product_code)],
+                order="create_date desc",
+                limit=5,
+            )
+            if audits:
+                audit_items = "".join(
+                    f"<li><span>{license_svc._format_client_datetime(a.create_date)}</span> "
+                    f"{a.action} · {a.result}</li>"
+                    for a in audits
+                )
+                rec.audit_html = Markup(
+                    f"<ul class='justech-cc-side-history'>{audit_items}</ul>"
+                )
+            else:
+                rec.audit_html = Markup("<p class='text-muted'>Sin movimientos recientes.</p>")
             if not lic:
                 rec.license_html = Markup("<p class='text-muted'>Sin licencia activa.</p>")
                 rec.companies_html = False
@@ -393,7 +342,7 @@ class JustechClientModuleManageMenu(models.TransientModel):
                 <div class="justech-cc-license-box">
                     <p><strong>Plan:</strong> {license_svc._tier_commercial_label(lic.tier)}</p>
                     <p><strong>Empresas utilizadas:</strong> {quota}</p>
-                    <p><strong>Fecha activación:</strong> {rec.line_id.last_modified_at or '—'}</p>
+                    <p><strong>Última modificación:</strong> {rec.line_id.last_modified_display or '—'}</p>
                     <p><strong>Fecha expiración:</strong> {expires}</p>
                 </div>
                 """
@@ -404,7 +353,7 @@ class JustechClientModuleManageMenu(models.TransientModel):
                 for row in checklist
             ) or "<li class='text-muted'>Sin empresas en licencia.</li>"
             rec.companies_html = Markup(
-                f"<p><strong>Empresas habilitadas</strong></p><ul class='justech-cc-checklist'>{items}</ul>"
+                f"<ul class='justech-cc-checklist'>{items}</ul>"
             )
 
     def action_activate(self):

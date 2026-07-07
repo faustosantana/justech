@@ -1,0 +1,25 @@
+{
+  "phase": "fix-real-only",
+  "users": {
+    "it@justech.do": {
+      "found": true,
+      "no_popup": true
+    }
+  },
+  "checks": {
+    "compact_header": true,
+    "kanban_cards": true,
+    "no_development_section": true,
+    "filter_estado": true,
+    "includes_panel": true,
+    "audit_panel": true,
+    "total_rows": 5,
+    "no_forbidden_categories": true,
+    "no_development_rows": true,
+    "has_fiscal_category": true,
+    "includes_summary": true,
+    "formatted_dates": true,
+    "pos_matches_install": true
+  },
+  "status": "PASS"
+}

@@ -1,0 +1,26 @@
+=== FIX real-only client modules TEST ===
+Transfer starting: 61 files
+__manifest__.py
+models/justech_license_service.py
+tests/test_client_module_control.py
+
+sent 7572 bytes  received 650 bytes  55144 bytes/sec
+total size is 215023  speedup is 26.15
+Transfer starting: 28 files
+__manifest__.py
+models/justech_client_module_control.py
+static/src/scss/control_center.scss
+tests/test_client_module_control.py
+views/justech_client_module_views.xml
+
+sent 8197 bytes  received 592 bytes  59345 bytes/sec
+total size is 111902  speedup is 12.73
+ Container hellenia-test-odoo-1 Stopping 
+ Container hellenia-test-odoo-1 Stopped 
+2026-07-07 03:03:16,414 1 WARNING hellenia_test odoo.schema: Missing not-null constraint on res.users.settings.color_scheme 
+2026-07-07 03:03:16,421 1 INFO hellenia_test odoo.registry: Registry changed, signaling through the database 
+2026-07-07 03:03:16,422 1 INFO hellenia_test odoo.registry: Registry loaded in 8.629s 
+2026-07-07 03:03:16,422 1 INFO hellenia_test odoo.service.server: Initiating shutdown 
+2026-07-07 03:03:16,422 1 INFO hellenia_test odoo.service.server: Hit CTRL-C again or send a second signal to force the shutdown. 
+2026-07-07 03:03:16,422 1 INFO hellenia_test odoo.sql_db: ConnectionPool(read/write;used=0/count=0/max=64): Closed 1 connections  
+Evidence: /Users/faustosantana/Projects/jaios/evidence/fix-client-modules-real-only-test

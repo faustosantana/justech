@@ -314,6 +314,104 @@
     color: #374151;
 }
 
+.justech-cc-real-only {
+    .o_form_sheet {
+        padding-top: 8px;
+    }
+}
+
+.justech-cc-compact-header {
+    margin-bottom: 12px;
+    h1 {
+        font-size: 22px;
+        font-weight: 600;
+        color: #1a1f36;
+        margin: 0 0 6px;
+    }
+    .justech-cc-client-line {
+        margin: 0;
+        color: #4b5563;
+        font-size: 14px;
+    }
+}
+
+.justech-cc-filters-row {
+    margin-bottom: 8px !important;
+}
+
+.justech-cc-modules-kanban {
+    .o_kanban_renderer {
+        --KanbanRecord-width: 320px;
+        padding: 0;
+    }
+    .o_kanban_record {
+        width: 320px !important;
+        margin: 0 12px 12px 0 !important;
+    }
+}
+
+.justech-cc-module-card {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 14px 16px;
+    min-height: 180px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+.justech-cc-module-card-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.justech-cc-module-card-title {
+    font-size: 15px;
+    color: #111827;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+}
+
+.justech-cc-module-card-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 16px;
+    font-size: 13px;
+    color: #374151;
+}
+
+.justech-cc-module-card-includes {
+    font-size: 12px;
+    color: #6b7280;
+    line-height: 1.4;
+    flex: 1;
+}
+
+.justech-cc-module-card-actions {
+    margin-top: auto;
+    padding-top: 4px;
+}
+
+.justech-cc-manage-title {
+    margin-bottom: 12px;
+    h2 {
+        margin: 0 0 8px;
+        font-size: 20px;
+    }
+}
+
+.justech-cc-manage-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 20px;
+    font-size: 14px;
+    color: #374151;
+}
+
 .justech-cc-dev-section {
     margin-top: 32px;
     padding-top: 8px;

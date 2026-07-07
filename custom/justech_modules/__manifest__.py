@@ -1,6 +1,6 @@
 {
     "name": "Justech Modules",
-    "version": "19.0.1.7.7",
+    "version": "19.0.1.7.8",
     "category": "Justech/Platform",
     "summary": "Motor de licencias y catálogo comercial Justech",
     "description": """
@@ -34,7 +34,7 @@ F31.5: commercial catalog + Control Center API (get_commercial_catalog).
     "justech_register": {
         "module_code": "justech_modules",
         "module_name": "Justech Modules",
-        "version": "19.0.1.7.7",
+        "version": "19.0.1.7.8",
         "category": "platform",
         "description": "Platform licensing engine",
         "dependencies": [],

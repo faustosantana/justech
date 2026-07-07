@@ -1,0 +1,80 @@
+2026-07-07 22:47:56,315 41 WARNING ? odoo.tools.config: option logfile reads 'False' in the config file at /etc/odoo/odoo.conf but isn't a boolean option, skip 
+2026-07-07 22:47:56,315 41 WARNING ? odoo.tools.config: option logfile reads 'False' in the config file at /etc/odoo/odoo.conf but isn't a boolean option, skip 
+2026-07-07 22:47:56,315 41 INFO ? odoo: Odoo version 19.0-20260619 
+2026-07-07 22:47:56,315 41 INFO ? odoo: Using configuration file at /etc/odoo/odoo.conf 
+2026-07-07 22:47:56,315 41 INFO ? odoo: addons paths: _NamespacePath(['/usr/lib/python3/dist-packages/odoo/addons', '/var/lib/odoo/addons/19.0', '/mnt/enterprise/addons', '/mnt/custom', '/usr/lib/python3/dist-packages/addons']) 
+2026-07-07 22:47:56,315 41 INFO ? odoo: database: odoo@db:default 
+2026-07-07 22:47:56,523 41 INFO ? odoo.service.server: Stopping workers gracefully 
+2026-07-07 22:47:56,551 41 INFO hellenia_prod odoo.modules.loading: loading 1 modules... 
+2026-07-07 22:47:56,554 41 INFO hellenia_prod odoo.modules.loading: 1 modules loaded in 0.00s, 0 queries (+0 extra) 
+2026-07-07 22:47:56,582 41 INFO hellenia_prod odoo.modules.loading: loading 145 modules... 
+2026-07-07 22:47:57,442 41 WARNING hellenia_prod odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define models.Constraint on the model. 
+2026-07-07 22:47:57,530 41 WARNING hellenia_prod odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define models.Constraint on the model. 
+2026-07-07 22:47:57,579 41 WARNING hellenia_prod odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define models.Constraint on the model. 
+2026-07-07 22:47:57,629 41 INFO hellenia_prod odoo.modules.loading: 145 modules loaded in 1.05s, 0 queries (+0 extra) 
+2026-07-07 22:47:57,736 41 WARNING hellenia_prod odoo.fields: justech.do.fiscal.report.state: selection=[('draft', 'Borrador'), ('validated', 'Validado'), ('pending_approval', 'Requiere aprobación'), ('approved', 'Aprobado'), ('rejected', 'Rechazado'), ('generated', 'Generado'), ('done', 'Generado')] overrides existing selection; use selection_add instead 
+2026-07-07 22:47:57,748 41 WARNING hellenia_prod odoo.fields: Translated stored related field (justech.audit.rule.model_description) will not be computed correctly in all languages 
+2026-07-07 22:47:57,818 41 INFO hellenia_prod odoo.modules.loading: Modules loaded. 
+2026-07-07 22:47:57,892 41 INFO hellenia_prod odoo.registry: Registry loaded in 1.369s 
+{
+  "phase": "UX-FLOW-FIX-PROD-SMOKE",
+  "timestamp_utc": "2026-07-07T22:47:57.913305+00:00",
+  "database": "hellenia_prod",
+  "ok": true,
+  "checks": {
+    "module_justech_l10n_do_base": {
+      "pass": true,
+      "detail": "installed"
+    },
+    "module_justech_l10n_do_ncf": {
+      "pass": true,
+      "detail": "installed"
+    },
+    "module_justech_l10n_do_reports": {
+      "pass": true,
+      "detail": "installed"
+    },
+    "module_justech_multicurrency": {
+      "pass": true,
+      "detail": "installed"
+    },
+    "module_justech_admin": {
+      "pass": true,
+      "detail": "installed"
+    },
+    "module_hellenia_ui": {
+      "pass": true,
+      "detail": "installed"
+    },
+    "module_hellenia_ux": {
+      "pass": true,
+      "detail": "installed"
+    },
+    "ncf_ranges_exist": {
+      "pass": true,
+      "detail": "model readable"
+    },
+    "posted_invoices_with_ncf": {
+      "pass": true,
+      "detail": "query ok"
+    },
+    "company_currency": {
+      "pass": true,
+      "detail": "DOP"
+    },
+    "fx_rates_model": {
+      "pass": true,
+      "detail": "rates readable"
+    },
+    "justech_settings_menu": {
+      "pass": true,
+      "detail": "Justech"
+    },
+    "justech_licenses_menu": {
+      "pass": true,
+      "detail": "Licencias y Personalizaciones"
+    }
+  },
+  "errors": [],
+  "summary": "PASS"
+}

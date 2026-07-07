@@ -1,0 +1,211 @@
+ Container hellenia-prod-db-1 Running 
+ Container hellenia-prod-db-1 Waiting 
+ Container hellenia-prod-db-1 Healthy 
+ Container hellenia-prod-odoo-run-f55252aa1e47 Creating 
+ Container hellenia-prod-odoo-run-f55252aa1e47 Created 
+2026-07-07 22:47:03,691 1 WARNING ? odoo.tools.config: option logfile reads 'False' in the config file at /etc/odoo/odoo.conf but isn't a boolean option, skip 
+2026-07-07 22:47:03,692 1 WARNING ? odoo.tools.config: option logfile reads 'False' in the config file at /etc/odoo/odoo.conf but isn't a boolean option, skip 
+2026-07-07 22:47:03,692 1 WARNING ? odoo.tools.config: missing --http-interface/http_interface, using 0.0.0.0 by default, will change to 127.0.0.1 in 20.0 
+2026-07-07 22:47:03,692 1 INFO ? odoo: Odoo version 19.0-20260619 
+2026-07-07 22:47:03,692 1 INFO ? odoo: Using configuration file at /etc/odoo/odoo.conf 
+2026-07-07 22:47:03,692 1 INFO ? odoo: addons paths: _NamespacePath(['/usr/lib/python3/dist-packages/odoo/addons', '/var/lib/odoo/addons/19.0', '/mnt/enterprise/addons', '/mnt/custom', '/usr/lib/python3/dist-packages/addons']) 
+2026-07-07 22:47:03,692 1 INFO ? odoo: database: odoo@db:5432 
+2026-07-07 22:47:03,925 1 INFO ? odoo.service.server: HTTP service (werkzeug) running on 0.0.0.0:8069 
+2026-07-07 22:47:03,966 1 INFO hellenia_prod odoo.modules.loading: loading 1 modules... 
+2026-07-07 22:47:03,969 1 INFO hellenia_prod odoo.modules.loading: 1 modules loaded in 0.00s, 0 queries (+0 extra) 
+2026-07-07 22:47:03,990 1 INFO hellenia_prod odoo.modules.loading: updating modules list 
+2026-07-07 22:47:03,994 1 INFO hellenia_prod odoo.addons.base.models.ir_module: ALLOW access to module.update_list on [] to user __system__ #1 via n/a 
+2026-07-07 22:47:05,858 1 INFO hellenia_prod odoo.addons.base.models.ir_module: ALLOW access to module.button_upgrade on ['Hellenia UI', 'Hellenia UX', 'Justech Admin', 'Auditoría', 'Justech Dominican Fiscal Reports'] to user __system__ #1 via n/a 
+2026-07-07 22:47:05,858 1 INFO hellenia_prod odoo.addons.base.models.ir_module: ALLOW access to module.update_list on ['Hellenia UI', 'Hellenia UX', 'Justech Admin', 'Auditoría', 'Justech Dominican Fiscal Reports'] to user __system__ #1 via n/a 
+2026-07-07 22:47:07,455 1 INFO hellenia_prod odoo.addons.base.models.ir_module: ALLOW access to module.button_install on [] to user __system__ #1 via n/a 
+2026-07-07 22:47:07,506 1 INFO hellenia_prod odoo.modules.loading: loading 145 modules... 
+2026-07-07 22:47:07,507 1 INFO hellenia_prod odoo.modules.loading: Loading module justech_global_audit_log (3/145) 
+2026-07-07 22:47:07,543 1 WARNING hellenia_prod odoo.fields: Translated stored related field (justech.audit.rule.model_description) will not be computed correctly in all languages 
+2026-07-07 22:47:07,547 1 INFO hellenia_prod odoo.registry: module justech_global_audit_log: creating or updating database tables 
+2026-07-07 22:47:07,997 1 WARNING hellenia_prod odoo.addons.base.models.ir_model: Two fields (document_label, record_name) of justech.audit.log() have the same label: Documento. [Modules: justech_global_audit_log and justech_global_audit_log] 
+2026-07-07 22:47:07,997 1 WARNING hellenia_prod odoo.addons.base.models.ir_model: Two fields (field_label_display, field_description) of justech.audit.log() have the same label: Campo. [Modules: justech_global_audit_log and justech_global_audit_log] 
+2026-07-07 22:47:08,218 1 INFO hellenia_prod odoo.modules.loading: loading justech_global_audit_log/security/justech_audit_security.xml 
+2026-07-07 22:47:08,290 1 INFO hellenia_prod odoo.modules.loading: loading justech_global_audit_log/security/ir.model.access.csv 
+2026-07-07 22:47:09,331 1 INFO hellenia_prod odoo.modules.loading: loading justech_global_audit_log/data/audit_field_exclude_data.xml 
+2026-07-07 22:47:09,335 1 INFO hellenia_prod odoo.modules.loading: loading justech_global_audit_log/data/audit_retention_data.xml 
+2026-07-07 22:47:09,337 1 INFO hellenia_prod odoo.modules.loading: loading justech_global_audit_log/data/audit_cron.xml 
+2026-07-07 22:47:09,339 1 INFO hellenia_prod odoo.modules.loading: loading justech_global_audit_log/views/audit_log_views.xml 
+2026-07-07 22:47:09,370 1 INFO hellenia_prod odoo.modules.loading: loading justech_global_audit_log/views/audit_policy_views.xml 
+2026-07-07 22:47:09,385 1 INFO hellenia_prod odoo.modules.loading: loading justech_global_audit_log/views/audit_rule_views.xml 
+2026-07-07 22:47:09,405 1 INFO hellenia_prod odoo.modules.loading: loading justech_global_audit_log/views/audit_field_exclude_views.xml 
+2026-07-07 22:47:09,415 1 INFO hellenia_prod odoo.modules.loading: loading justech_global_audit_log/views/audit_user_exclude_views.xml 
+2026-07-07 22:47:09,424 1 INFO hellenia_prod odoo.modules.loading: loading justech_global_audit_log/views/audit_retention_views.xml 
+2026-07-07 22:47:09,433 1 INFO hellenia_prod odoo.modules.loading: loading justech_global_audit_log/views/audit_dashboard_views.xml 
+2026-07-07 22:47:09,444 1 INFO hellenia_prod odoo.modules.loading: loading justech_global_audit_log/views/partner_audit_button.xml 
+2026-07-07 22:47:09,467 1 INFO hellenia_prod odoo.modules.loading: loading justech_global_audit_log/wizards/audit_export_wizard_views.xml 
+2026-07-07 22:47:09,474 1 INFO hellenia_prod odoo.modules.loading: loading justech_global_audit_log/views/menu.xml 
+2026-07-07 22:47:09,537 1 INFO hellenia_prod odoo.addons.base.models.ir_module: module justech_global_audit_log: no translation for language es_DO 
+2026-07-07 22:47:09,539 1 INFO hellenia_prod odoo.addons.base.models.ir_module: module justech_global_audit_log: no translation for language es_419 
+2026-07-07 22:47:09,548 1 INFO hellenia_prod odoo.modules.loading: Module justech_global_audit_log loaded in 2.04s, 1520 queries (+1520 other) 
+2026-07-07 22:47:09,970 1 INFO hellenia_prod odoo.modules.loading: Loading module justech_admin (62/145) 
+2026-07-07 22:47:10,029 1 WARNING hellenia_prod odoo.fields: Translated stored related field (justech.audit.rule.model_description) will not be computed correctly in all languages 
+2026-07-07 22:47:10,077 1 INFO hellenia_prod odoo.registry: module justech_admin: creating or updating database tables 
+2026-07-07 22:47:10,186 1 WARNING hellenia_prod odoo.addons.base.models.ir_model: Two fields (main_module_code, display_name) of justech.client.module.line() have the same label: Categoría. [Modules: justech_admin and justech_admin] 
+2026-07-07 22:47:10,186 1 WARNING hellenia_prod odoo.addons.base.models.ir_model: Two fields (name, display_name) of justech.client.module.line() have the same label: Categoría. [Modules: justech_admin and justech_admin] 
+2026-07-07 22:47:10,186 1 WARNING hellenia_prod odoo.addons.base.models.ir_model: Two fields (target_company_id, company_id) of justech.client.module.action.wizard() have the same label: Empresa. [Modules: justech_admin and justech_admin] 
+2026-07-07 22:47:10,251 1 INFO hellenia_prod odoo.modules.loading: loading justech_admin/security/justech_admin_security.xml 
+2026-07-07 22:47:10,267 1 INFO hellenia_prod odoo.modules.loading: loading justech_admin/security/ir.model.access.csv 
+2026-07-07 22:47:11,094 1 INFO hellenia_prod odoo.modules.loading: loading justech_admin/views/justech_admin_protected_actions.xml 
+2026-07-07 22:47:11,102 1 INFO hellenia_prod odoo.modules.loading: loading justech_admin/views/justech_control_center_views.xml 
+2026-07-07 22:47:11,264 1 INFO hellenia_prod odoo.modules.loading: loading justech_admin/views/justech_license_admin_wizard_views.xml 
+2026-07-07 22:47:11,275 1 INFO hellenia_prod odoo.modules.loading: loading justech_admin/views/justech_client_module_views.xml 
+2026-07-07 22:47:11,325 1 INFO hellenia_prod odoo.modules.loading: loading justech_admin/views/justech_res_config_settings_views.xml 
+2026-07-07 22:47:11,370 1 INFO hellenia_prod odoo.modules.loading: loading justech_admin/views/justech_admin_dashboard_views.xml 
+2026-07-07 22:47:11,385 1 INFO hellenia_prod odoo.modules.loading: loading justech_admin/views/menu.xml 
+2026-07-07 22:47:11,487 1 INFO hellenia_prod odoo.addons.base.models.ir_module: module justech_admin: no translation for language es_DO 
+2026-07-07 22:47:11,489 1 INFO hellenia_prod odoo.addons.base.models.ir_module: module justech_admin: no translation for language es_419 
+2026-07-07 22:47:11,616 1 INFO hellenia_prod odoo.modules.loading: Module justech_admin loaded in 1.65s, 2613 queries (+2613 other) 
+2026-07-07 22:47:12,090 1 WARNING hellenia_prod odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define models.Constraint on the model. 
+2026-07-07 22:47:12,172 1 INFO hellenia_prod odoo.modules.loading: Loading module hellenia_ui (129/145) 
+2026-07-07 22:47:12,246 1 WARNING hellenia_prod odoo.fields: Translated stored related field (justech.audit.rule.model_description) will not be computed correctly in all languages 
+2026-07-07 22:47:12,308 1 INFO hellenia_prod odoo.registry: module hellenia_ui: creating or updating database tables 
+2026-07-07 22:47:12,408 1 INFO hellenia_prod odoo.modules.loading: loading hellenia_ui/views/menu_customization.xml 
+2026-07-07 22:47:12,452 1 INFO hellenia_prod odoo.modules.loading: loading hellenia_ui/data/menu_labels.xml 
+2026-07-07 22:47:14,822 1 INFO hellenia_prod odoo.addons.base.models.ir_module: module hellenia_ui: no translation for language es_DO 
+2026-07-07 22:47:14,822 1 INFO hellenia_prod odoo.addons.base.models.ir_module: module hellenia_ui: no translation for language es_419 
+2026-07-07 22:47:14,828 1 INFO hellenia_prod odoo.modules.loading: Module hellenia_ui loaded in 2.66s, 4167 queries (+4167 other) 
+2026-07-07 22:47:14,834 1 WARNING hellenia_prod odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define models.Constraint on the model. 
+2026-07-07 22:47:14,883 1 WARNING hellenia_prod odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define models.Constraint on the model. 
+2026-07-07 22:47:14,886 1 INFO hellenia_prod odoo.modules.loading: Loading module justech_l10n_do_reports (143/145) 
+2026-07-07 22:47:15,004 1 WARNING hellenia_prod odoo.fields: justech.do.fiscal.report.state: selection=[('draft', 'Borrador'), ('validated', 'Validado'), ('pending_approval', 'Requiere aprobación'), ('approved', 'Aprobado'), ('rejected', 'Rechazado'), ('generated', 'Generado'), ('done', 'Generado')] overrides existing selection; use selection_add instead 
+2026-07-07 22:47:15,023 1 INFO hellenia_prod odoo.registry: module justech_l10n_do_reports: creating or updating database tables 
+2026-07-07 22:47:15,045 1 WARNING hellenia_prod py.warnings: /mnt/custom/justech_l10n_do_ncf/models/account_move.py:136: DeprecationWarning: Deprecated since 19.0, use self.env.cr directly
+  File "/usr/bin/odoo", line 6, in <module>
+    odoo.cli.main()
+  File "/usr/lib/python3/dist-packages/odoo/cli/command.py", line 133, in main
+    command().run(args)
+  File "/usr/lib/python3/dist-packages/odoo/cli/server.py", line 127, in run
+    main(args)
+  File "/usr/lib/python3/dist-packages/odoo/cli/server.py", line 118, in main
+    rc = server.start(preload=config['db_name'], stop=stop)
+  File "/usr/lib/python3/dist-packages/odoo/service/server.py", line 1636, in start
+    rc = server.run(preload, stop)
+  File "/usr/lib/python3/dist-packages/odoo/service/server.py", line 1174, in run
+    rc = preload_registries(preload)
+  File "/usr/lib/python3/dist-packages/odoo/service/server.py", line 1550, in preload_registries
+    registry = Registry.new(dbname, update_module=update_module, install_modules=config['init'], upgrade_modules=config['update'], reinit_modules=config['reinit'])
+  File "/usr/lib/python3/dist-packages/odoo/tools/func.py", line 88, in locked
+    return func(inst, *args, **kwargs)
+  File "/usr/lib/python3/dist-packages/odoo/orm/registry.py", line 183, in new
+    load_modules(
+  File "/usr/lib/python3/dist-packages/odoo/modules/loading.py", line 464, in load_modules
+    load_module_graph(
+  File "/usr/lib/python3/dist-packages/odoo/modules/loading.py", line 194, in load_module_graph
+    registry.init_models(env.cr, model_names, {'module': package.name}, update_operation == 'install')
+  File "/usr/lib/python3/dist-packages/odoo/orm/registry.py", line 752, in init_models
+    model.init()
+  File "/mnt/custom/justech_l10n_do_ncf/models/account_move.py", line 136, in init
+    self._cr.execute(
+ 
+2026-07-07 22:47:15,212 1 INFO hellenia_prod odoo.modules.loading: loading justech_l10n_do_reports/security/ir.model.access.csv 
+2026-07-07 22:47:15,336 1 INFO hellenia_prod odoo.modules.loading: loading justech_l10n_do_reports/security/justech_l10n_do_reports_rules.xml 
+2026-07-07 22:47:15,340 1 INFO hellenia_prod odoo.modules.loading: loading justech_l10n_do_reports/views/dgii_report_review_views.xml 
+2026-07-07 22:47:15,388 1 INFO hellenia_prod odoo.models.unlink: User #1 deleted ir.actions.act_window.view records with IDs: [326, 327] 
+2026-07-07 22:47:15,393 1 INFO hellenia_prod odoo.modules.loading: loading justech_l10n_do_reports/views/dgii_report_pending_tray_views.xml 
+2026-07-07 22:47:15,431 1 INFO hellenia_prod odoo.models.unlink: User #1 deleted ir.actions.act_window.view records with IDs: [328, 329] 
+2026-07-07 22:47:15,435 1 INFO hellenia_prod odoo.modules.loading: loading justech_l10n_do_reports/views/fiscal_report_views.xml 
+2026-07-07 22:47:15,459 1 INFO hellenia_prod odoo.models.unlink: User #1 deleted ir.actions.act_window.view records with IDs: [330, 331] 
+2026-07-07 22:47:15,475 1 INFO hellenia_prod odoo.models.unlink: User #1 deleted ir.actions.act_window.view records with IDs: [332, 333] 
+2026-07-07 22:47:15,491 1 INFO hellenia_prod odoo.models.unlink: User #1 deleted ir.actions.act_window.view records with IDs: [334, 335] 
+2026-07-07 22:47:15,494 1 INFO hellenia_prod odoo.modules.loading: loading justech_l10n_do_reports/wizard/fiscal_report_wizard_views.xml 
+2026-07-07 22:47:15,506 1 INFO hellenia_prod odoo.modules.loading: loading justech_l10n_do_reports/wizard/dgii_export_blocker_wizard_views.xml 
+2026-07-07 22:47:15,513 1 INFO hellenia_prod odoo.modules.loading: loading justech_l10n_do_reports/views/menu.xml 
+2026-07-07 22:47:15,649 1 INFO hellenia_prod odoo.addons.base.models.ir_module: module justech_l10n_do_reports: no translation for language es_DO 
+2026-07-07 22:47:15,651 1 INFO hellenia_prod odoo.addons.base.models.ir_module: module justech_l10n_do_reports: no translation for language es_419 
+2026-07-07 22:47:15,660 1 INFO hellenia_prod odoo.modules.loading: Module justech_l10n_do_reports loaded in 0.77s, 1065 queries (+1065 other) 
+2026-07-07 22:47:15,660 1 INFO hellenia_prod odoo.modules.loading: Loading module hellenia_ux (144/145) 
+2026-07-07 22:47:15,700 1 INFO hellenia_prod odoo.registry: module hellenia_ux: creating or updating database tables 
+2026-07-07 22:47:15,720 1 WARNING hellenia_prod py.warnings: /mnt/custom/justech_l10n_do_ncf/models/account_move.py:136: DeprecationWarning: Deprecated since 19.0, use self.env.cr directly
+  File "/usr/bin/odoo", line 6, in <module>
+    odoo.cli.main()
+  File "/usr/lib/python3/dist-packages/odoo/cli/command.py", line 133, in main
+    command().run(args)
+  File "/usr/lib/python3/dist-packages/odoo/cli/server.py", line 127, in run
+    main(args)
+  File "/usr/lib/python3/dist-packages/odoo/cli/server.py", line 118, in main
+    rc = server.start(preload=config['db_name'], stop=stop)
+  File "/usr/lib/python3/dist-packages/odoo/service/server.py", line 1636, in start
+    rc = server.run(preload, stop)
+  File "/usr/lib/python3/dist-packages/odoo/service/server.py", line 1174, in run
+    rc = preload_registries(preload)
+  File "/usr/lib/python3/dist-packages/odoo/service/server.py", line 1550, in preload_registries
+    registry = Registry.new(dbname, update_module=update_module, install_modules=config['init'], upgrade_modules=config['update'], reinit_modules=config['reinit'])
+  File "/usr/lib/python3/dist-packages/odoo/tools/func.py", line 88, in locked
+    return func(inst, *args, **kwargs)
+  File "/usr/lib/python3/dist-packages/odoo/orm/registry.py", line 183, in new
+    load_modules(
+  File "/usr/lib/python3/dist-packages/odoo/modules/loading.py", line 464, in load_modules
+    load_module_graph(
+  File "/usr/lib/python3/dist-packages/odoo/modules/loading.py", line 194, in load_module_graph
+    registry.init_models(env.cr, model_names, {'module': package.name}, update_operation == 'install')
+  File "/usr/lib/python3/dist-packages/odoo/orm/registry.py", line 752, in init_models
+    model.init()
+  File "/mnt/custom/justech_l10n_do_ncf/models/account_move.py", line 136, in init
+    self._cr.execute(
+ 
+2026-07-07 22:47:15,860 1 INFO hellenia_prod odoo.modules.loading: loading hellenia_ux/security/ir.model.access.csv 
+2026-07-07 22:47:15,875 1 INFO hellenia_prod odoo.modules.loading: loading hellenia_ux/wizard/justech_do_ncf_void_wizard_views.xml 
+2026-07-07 22:47:15,888 1 INFO hellenia_prod odoo.modules.loading: loading hellenia_ux/views/account_move_fiscal_views.xml 
+2026-07-07 22:47:15,973 1 INFO hellenia_prod odoo.modules.loading: loading hellenia_ux/views/account_move_invoice_form_phase28_views.xml 
+2026-07-07 22:47:16,044 1 INFO hellenia_prod odoo.modules.loading: loading hellenia_ux/views/account_move_form_views.xml 
+2026-07-07 22:47:16,118 1 INFO hellenia_prod odoo.modules.loading: loading hellenia_ux/views/account_payment_register_views.xml 
+2026-07-07 22:47:16,142 1 INFO hellenia_prod odoo.modules.loading: loading hellenia_ux/views/account_payment_views.xml 
+2026-07-07 22:47:16,168 1 INFO hellenia_prod odoo.modules.loading: loading hellenia_ux/views/account_move_withholding_views.xml 
+2026-07-07 22:47:16,204 1 INFO hellenia_prod odoo.modules.loading: loading hellenia_ux/views/res_company_views.xml 
+2026-07-07 22:47:16,222 1 INFO hellenia_prod odoo.modules.loading: loading hellenia_ux/views/ncf_range_views.xml 
+2026-07-07 22:47:16,234 1 INFO hellenia_prod odoo.modules.loading: loading hellenia_ux/views/fiscal_security_labels.xml 
+2026-07-07 22:47:16,237 1 INFO hellenia_prod odoo.modules.loading: loading hellenia_ux/views/ux_flow_fix_views.xml 
+2026-07-07 22:47:16,394 1 WARNING hellenia_prod odoo.addons.base.models.ir_ui_view: An alert (class alert-*) must have an alert, alertdialog or status role or an alert-link class. Please use alert and alertdialog only for what expects to stop any activity to be read immediately.
+View error context:
+{'file': '/mnt/custom/hellenia_ux/views/ux_flow_fix_views.xml',
+ 'line': 2,
+ 'name': 'product.template.form.hellenia.multicurrency.help',
+ 'view': ir.ui.view(1870,),
+ 'view.model': 'product.template',
+ 'view.parent': ir.ui.view(1857,),
+ 'xmlid': 'product_template_form_hellenia_multicurrency_help'} 
+2026-07-07 22:47:16,398 1 INFO hellenia_prod odoo.modules.loading: loading hellenia_ux/data/post_init.xml 
+2026-07-07 22:47:18,483 1 INFO hellenia_prod odoo.addons.base.models.ir_module: module hellenia_ux: no translation for language es_DO 
+2026-07-07 22:47:18,485 1 INFO hellenia_prod odoo.addons.base.models.ir_module: module hellenia_ux: no translation for language es_419 
+2026-07-07 22:47:18,491 1 INFO hellenia_prod odoo.modules.loading: Module hellenia_ux loaded in 2.83s, 4256 queries (+4256 other) 
+2026-07-07 22:47:18,507 1 INFO hellenia_prod odoo.modules.loading: 145 modules loaded in 11.00s, 13621 queries (+13621 extra) 
+2026-07-07 22:47:18,633 1 WARNING hellenia_prod odoo.fields: justech.do.fiscal.report.state: selection=[('draft', 'Borrador'), ('validated', 'Validado'), ('pending_approval', 'Requiere aprobación'), ('approved', 'Aprobado'), ('rejected', 'Rechazado'), ('generated', 'Generado'), ('done', 'Generado')] overrides existing selection; use selection_add instead 
+2026-07-07 22:47:18,645 1 WARNING hellenia_prod odoo.fields: Translated stored related field (justech.audit.rule.model_description) will not be computed correctly in all languages 
+2026-07-07 22:47:19,065 1 INFO hellenia_prod odoo.registry: verifying fields for every extended model 
+2026-07-07 22:47:19,524 1 WARNING hellenia_prod py.warnings: /mnt/custom/justech_l10n_do_ncf/models/account_move.py:136: DeprecationWarning: Deprecated since 19.0, use self.env.cr directly
+  File "/usr/bin/odoo", line 6, in <module>
+    odoo.cli.main()
+  File "/usr/lib/python3/dist-packages/odoo/cli/command.py", line 133, in main
+    command().run(args)
+  File "/usr/lib/python3/dist-packages/odoo/cli/server.py", line 127, in run
+    main(args)
+  File "/usr/lib/python3/dist-packages/odoo/cli/server.py", line 118, in main
+    rc = server.start(preload=config['db_name'], stop=stop)
+  File "/usr/lib/python3/dist-packages/odoo/service/server.py", line 1636, in start
+    rc = server.run(preload, stop)
+  File "/usr/lib/python3/dist-packages/odoo/service/server.py", line 1174, in run
+    rc = preload_registries(preload)
+  File "/usr/lib/python3/dist-packages/odoo/service/server.py", line 1550, in preload_registries
+    registry = Registry.new(dbname, update_module=update_module, install_modules=config['init'], upgrade_modules=config['update'], reinit_modules=config['reinit'])
+  File "/usr/lib/python3/dist-packages/odoo/tools/func.py", line 88, in locked
+    return func(inst, *args, **kwargs)
+  File "/usr/lib/python3/dist-packages/odoo/orm/registry.py", line 183, in new
+    load_modules(
+  File "/usr/lib/python3/dist-packages/odoo/modules/loading.py", line 572, in load_modules
+    registry.init_models(cr, models_to_check, {'models_to_check': True, 'update_custom_fields': True})
+  File "/usr/lib/python3/dist-packages/odoo/orm/registry.py", line 752, in init_models
+    model.init()
+  File "/mnt/custom/justech_l10n_do_ncf/models/account_move.py", line 136, in init
+    self._cr.execute(
+ 
+2026-07-07 22:47:19,544 1 WARNING hellenia_prod odoo.addons.base.models.ir_model: Two fields (document_label, record_name) of justech.audit.log() have the same label: Documento. [Modules: justech_global_audit_log and justech_global_audit_log] 
+2026-07-07 22:47:19,544 1 WARNING hellenia_prod odoo.addons.base.models.ir_model: Two fields (field_label_display, field_description) of justech.audit.log() have the same label: Campo. [Modules: justech_global_audit_log and justech_global_audit_log] 
+2026-07-07 22:47:20,805 1 INFO hellenia_prod odoo.modules.loading: Modules loaded. 
+2026-07-07 22:47:20,823 1 INFO hellenia_prod odoo.registry: Registry changed, signaling through the database 
+2026-07-07 22:47:20,824 1 INFO hellenia_prod odoo.registry: Registry loaded in 16.900s 
+2026-07-07 22:47:20,825 1 INFO hellenia_prod odoo.service.server: Stopping workers gracefully 

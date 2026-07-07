@@ -1,0 +1,7 @@
+=== UX-FLOW-FIX PROD ===
+Commit: 1eeb17ba756c9c776d34873fe8ee355af2b492b4
+Timestamp: 2026-07-07_184612
+
+=== 1. Backup PROD completo ===
+Backup: BACKUP_PATH=/opt/odoo-projects/hellenia/backups/hellenia-prod/ux-flow-fix-2026-07-07_184612
+scp: BACKUP_PATH=/opt/odoo-projects/hellenia/backups/hellenia-prod/ux-flow-fix-2026-07-07_184612/MANIFEST.txt: No such file or directory

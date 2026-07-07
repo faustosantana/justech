@@ -1,0 +1,8 @@
+timestamp=2026-07-07_184612
+type=ux-flow-fix-pre-deploy
+environment=production
+database=hellenia_prod
+commit=1eeb17ba756c9c776d34873fe8ee355af2b492b4
+postgres=postgres_all.sql.gz
+filestore=filestore.tar.gz
+custom=custom_modules.tar.gz

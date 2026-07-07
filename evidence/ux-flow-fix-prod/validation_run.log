@@ -1,0 +1,100 @@
+2026-07-07 22:49:30,446 114 WARNING ? odoo.tools.config: option logfile reads 'False' in the config file at /etc/odoo/odoo.conf but isn't a boolean option, skip 
+2026-07-07 22:49:30,446 114 WARNING ? odoo.tools.config: option logfile reads 'False' in the config file at /etc/odoo/odoo.conf but isn't a boolean option, skip 
+2026-07-07 22:49:30,446 114 INFO ? odoo: Odoo version 19.0-20260619 
+2026-07-07 22:49:30,446 114 INFO ? odoo: Using configuration file at /etc/odoo/odoo.conf 
+2026-07-07 22:49:30,446 114 INFO ? odoo: addons paths: _NamespacePath(['/usr/lib/python3/dist-packages/odoo/addons', '/var/lib/odoo/addons/19.0', '/mnt/enterprise/addons', '/mnt/custom', '/usr/lib/python3/dist-packages/addons']) 
+2026-07-07 22:49:30,446 114 INFO ? odoo: database: odoo@db:default 
+2026-07-07 22:49:30,659 114 INFO ? odoo.service.server: Stopping workers gracefully 
+2026-07-07 22:49:30,688 114 INFO hellenia_prod odoo.modules.loading: loading 1 modules... 
+2026-07-07 22:49:30,693 114 INFO hellenia_prod odoo.modules.loading: 1 modules loaded in 0.00s, 0 queries (+0 extra) 
+2026-07-07 22:49:30,731 114 INFO hellenia_prod odoo.modules.loading: loading 145 modules... 
+2026-07-07 22:49:31,609 114 WARNING hellenia_prod odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define models.Constraint on the model. 
+2026-07-07 22:49:31,710 114 WARNING hellenia_prod odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define models.Constraint on the model. 
+2026-07-07 22:49:31,759 114 WARNING hellenia_prod odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define models.Constraint on the model. 
+2026-07-07 22:49:31,808 114 INFO hellenia_prod odoo.modules.loading: 145 modules loaded in 1.08s, 0 queries (+0 extra) 
+2026-07-07 22:49:31,911 114 WARNING hellenia_prod odoo.fields: justech.do.fiscal.report.state: selection=[('draft', 'Borrador'), ('validated', 'Validado'), ('pending_approval', 'Requiere aprobación'), ('approved', 'Aprobado'), ('rejected', 'Rechazado'), ('generated', 'Generado'), ('done', 'Generado')] overrides existing selection; use selection_add instead 
+2026-07-07 22:49:31,922 114 WARNING hellenia_prod odoo.fields: Translated stored related field (justech.audit.rule.model_description) will not be computed correctly in all languages 
+2026-07-07 22:49:31,985 114 INFO hellenia_prod odoo.modules.loading: Modules loaded. 
+2026-07-07 22:49:32,049 114 INFO hellenia_prod odoo.registry: Registry loaded in 1.390s 
+{
+  "phase": "UX-FLOW-FIX",
+  "timestamp_utc": "2026-07-07T22:49:32.072347+00:00",
+  "database": "hellenia_prod",
+  "ok": true,
+  "findings_fixed": {
+    "count": 17,
+    "total_scope": 10
+  },
+  "pending": [],
+  "checks": {
+    "fix_01_income_type_607": {
+      "pass": true,
+      "detail": "field in invoice form"
+    },
+    "fix_02_fx_warning_so": {
+      "pass": true,
+      "detail": "sale order banner"
+    },
+    "fix_02_fx_warning_inv": {
+      "pass": true,
+      "detail": "invoice banner fields"
+    },
+    "fix_03_invoice_lines_es": {
+      "pass": true,
+      "detail": "<form string=\"Account Entry\" js_class=\"account_move_form\">\n                    <header>\n                        <!-- Post -->\n                        <button name=\"action_post\" string=\"Confirmar\" clas"
+    },
+    "fix_03_menus_en": {
+      "pass": true,
+      "detail": "[]"
+    },
+    "fix_04_void_ncf": {
+      "pass": true,
+      "detail": "no Void NCF in form"
+    },
+    "fix_04_anular_ncf": {
+      "pass": true,
+      "detail": "account.move.form.hellenia.fiscal.ux"
+    },
+    "fix_05_proveedor": {
+      "pass": true,
+      "detail": "<form string=\"Account Entry\" js_class=\"account_move_form\">\n                    <header>\n                        <!-- Post -->\n                        <button name=\"action_post\" string=\"Confirmar\" class=\"oe_highlight\" type=\"object\" data-hotkey=\"q\" context=\"{'validate_analytic': True, 'disable_abnorma"
+    },
+    "fix_06_rnc_column": {
+      "pass": true,
+      "detail": "<list string=\"Contacts\" sample=\"1\" multi_edit=\"1\">\n                    <field name=\"avatar_128\" widget=\"image\" options=\"{'size': [24, 24], 'img_class': 'o_avatar rounded'}\" width=\"30\" nolabel=\"1\"/>\n                    <field name=\"complete_name\" string=\"Name\" column_invisible=\"true\" on_change=\"1\"/>\n"
+    },
+    "fix_06_hide_technical": {
+      "pass": true,
+      "detail": ""
+    },
+    "fix_07_menu_justech_do_document_types": {
+      "pass": true,
+      "detail": "1. Tipos de comprobante"
+    },
+    "fix_07_menu_justech_do_ncf_ranges": {
+      "pass": true,
+      "detail": "2. Rangos NCF"
+    },
+    "fix_07_menu_justech_do_ncf_consumption": {
+      "pass": true,
+      "detail": "3. Consumo NCF"
+    },
+    "fix_08_licencias": {
+      "pass": true,
+      "detail": "Licencias y Personalizaciones"
+    },
+    "fix_09_audit_fiscal": {
+      "pass": true,
+      "detail": "Auditoría Fiscal"
+    },
+    "fix_09_audit_changes": {
+      "pass": true,
+      "detail": "Auditoría de Cambios"
+    },
+    "fix_10_product_help": {
+      "pass": true,
+      "detail": "<form string=\"Product\" name=\"Product Template\">\n                <sheet name=\"product_form\">\n                    <field name=\"product_variant_count\" invisible=\"1\" on_change=\"1\"/>\n                <field name=\"service_type\" widget=\"radio\" invisible=\"True\"/>\n                <field name=\"visible_expense_policy\" invisible=\"1\"/>\n                    <field name=\"is_product_variant\" invisible=\"1\"/>\n       "
+    }
+  },
+  "summary": "PASS"
+}

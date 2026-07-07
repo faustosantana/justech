@@ -1,0 +1,82 @@
+{
+  "phase": "UX-FLOW-FIX",
+  "timestamp_utc": "2026-07-07T22:49:32.072347+00:00",
+  "database": "hellenia_prod",
+  "ok": true,
+  "findings_fixed": {
+    "count": 17,
+    "total_scope": 10
+  },
+  "pending": [],
+  "checks": {
+    "fix_01_income_type_607": {
+      "pass": true,
+      "detail": "field in invoice form"
+    },
+    "fix_02_fx_warning_so": {
+      "pass": true,
+      "detail": "sale order banner"
+    },
+    "fix_02_fx_warning_inv": {
+      "pass": true,
+      "detail": "invoice banner fields"
+    },
+    "fix_03_invoice_lines_es": {
+      "pass": true,
+      "detail": "<form string=\"Account Entry\" js_class=\"account_move_form\">\n                    <header>\n                        <!-- Post -->\n                        <button name=\"action_post\" string=\"Confirmar\" clas"
+    },
+    "fix_03_menus_en": {
+      "pass": true,
+      "detail": "[]"
+    },
+    "fix_04_void_ncf": {
+      "pass": true,
+      "detail": "no Void NCF in form"
+    },
+    "fix_04_anular_ncf": {
+      "pass": true,
+      "detail": "account.move.form.hellenia.fiscal.ux"
+    },
+    "fix_05_proveedor": {
+      "pass": true,
+      "detail": "<form string=\"Account Entry\" js_class=\"account_move_form\">\n                    <header>\n                        <!-- Post -->\n                        <button name=\"action_post\" string=\"Confirmar\" class=\"oe_highlight\" type=\"object\" data-hotkey=\"q\" context=\"{'validate_analytic': True, 'disable_abnorma"
+    },
+    "fix_06_rnc_column": {
+      "pass": true,
+      "detail": "<list string=\"Contacts\" sample=\"1\" multi_edit=\"1\">\n                    <field name=\"avatar_128\" widget=\"image\" options=\"{'size': [24, 24], 'img_class': 'o_avatar rounded'}\" width=\"30\" nolabel=\"1\"/>\n                    <field name=\"complete_name\" string=\"Name\" column_invisible=\"true\" on_change=\"1\"/>\n"
+    },
+    "fix_06_hide_technical": {
+      "pass": true,
+      "detail": ""
+    },
+    "fix_07_menu_justech_do_document_types": {
+      "pass": true,
+      "detail": "1. Tipos de comprobante"
+    },
+    "fix_07_menu_justech_do_ncf_ranges": {
+      "pass": true,
+      "detail": "2. Rangos NCF"
+    },
+    "fix_07_menu_justech_do_ncf_consumption": {
+      "pass": true,
+      "detail": "3. Consumo NCF"
+    },
+    "fix_08_licencias": {
+      "pass": true,
+      "detail": "Licencias y Personalizaciones"
+    },
+    "fix_09_audit_fiscal": {
+      "pass": true,
+      "detail": "Auditoría Fiscal"
+    },
+    "fix_09_audit_changes": {
+      "pass": true,
+      "detail": "Auditoría de Cambios"
+    },
+    "fix_10_product_help": {
+      "pass": true,
+      "detail": "<form string=\"Product\" name=\"Product Template\">\n                <sheet name=\"product_form\">\n                    <field name=\"product_variant_count\" invisible=\"1\" on_change=\"1\"/>\n                <field name=\"service_type\" widget=\"radio\" invisible=\"True\"/>\n                <field name=\"visible_expense_policy\" invisible=\"1\"/>\n                    <field name=\"is_product_variant\" invisible=\"1\"/>\n       "
+    }
+  },
+  "summary": "PASS"
+}

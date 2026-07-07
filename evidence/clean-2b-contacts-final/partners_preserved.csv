@@ -1,0 +1,7 @@
+id,name,active,customer_rank,supplier_rank,parent_id,parent_name,company_id,is_company,email,vat,user_logins,action,reason
+1,"Hellenia, S.R.L.",True,0,0,,,,True,info@helleniadr.com,133621282,,preserve,"res.company:Hellenia, S.R.L."
+2,OdooBot,False,0,0,,,1,False,odoobot@example.com,,__system__,preserve,res.users(system):__system__
+3,Administrator,True,0,0,,,1,False,,,admin,preserve,system:base.partner_admin
+4,Public user,False,0,0,,,,False,,,public,preserve,res.users(system):public
+5,Portal User Template,False,0,0,,,,False,,,portaltemplate,preserve,res.users(system):portaltemplate
+6,JustechIT,True,0,0,,,,False,it@justech.do,,it@justech.do,preserve,res.users(active):it@justech.do

@@ -1,0 +1,6 @@
+id,name,active,customer_rank,supplier_rank,parent_id,parent_name,company_id,is_company,email,vat,user_logins,action,reason,deleted
+26,Demo 15 normal,True,0,0,,,,False,usuario.normal.demo14@hellenia.local,,usuario.normal.demo14,delete,test_user_partner:usuario.normal.demo14,True
+27,Demo 15 accounting,True,0,0,,,,False,usuario.contabilidad.demo15@hellenia.local,,usuario.contabilidad.demo15,delete,test_user_partner:usuario.contabilidad.demo15,True
+28,Demo 15 sales,True,0,0,,,,False,usuario.ventas.demo15@hellenia.local,,usuario.ventas.demo15,delete,test_user_partner:usuario.ventas.demo15,True
+29,Demo 15 purchase,True,0,0,,,,False,usuario.compras.demo15@hellenia.local,,usuario.compras.demo15,delete,test_user_partner:usuario.compras.demo15,True
+30,Demo 15 inventory,True,0,0,,,,False,usuario.inventario.demo15@hellenia.local,,usuario.inventario.demo15,delete,test_user_partner:usuario.inventario.demo15,True

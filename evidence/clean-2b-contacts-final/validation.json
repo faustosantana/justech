@@ -1,0 +1,64 @@
+{
+  "phase": "CLEAN-2B-VALIDATE",
+  "timestamp_utc": "2026-07-07T21:18:30.160514+00:00",
+  "database": "hellenia_prod",
+  "status": "PASS",
+  "checks": {
+    "customers_zero": {
+      "status": "PASS",
+      "detail": 0
+    },
+    "suppliers_zero": {
+      "status": "PASS",
+      "detail": 0
+    },
+    "commercial_contacts_zero": {
+      "status": "PASS",
+      "detail": 0
+    },
+    "visible_non_preserved_zero": {
+      "status": "PASS",
+      "detail": []
+    },
+    "hellenia_company_ok": {
+      "status": "PASS",
+      "detail": "Hellenia, S.R.L."
+    },
+    "license_active": {
+      "status": "PASS",
+      "detail": {
+        "active": true,
+        "id": 4,
+        "state": "active",
+        "plan": "PRO"
+      }
+    },
+    "users_ok": {
+      "status": "PASS",
+      "detail": 2
+    }
+  },
+  "counts": {
+    "partners_total": 6,
+    "customers": 0,
+    "suppliers": 0,
+    "commercial_rank": 0,
+    "visible_for_normal_user": 3,
+    "visible_non_preserved": 0,
+    "visible_non_preserved_names": [],
+    "preserved_partners": 6
+  },
+  "hellenia": {
+    "company_name": "Hellenia, S.R.L.",
+    "company_id": 1,
+    "company_exists": true
+  },
+  "license": {
+    "active": true,
+    "id": 4,
+    "state": "active",
+    "plan": "PRO"
+  },
+  "users_active_internal": 2,
+  "errors": []
+}

@@ -1,0 +1,66 @@
+{
+  "phase": "CLEAN-2B",
+  "timestamp_utc": "2026-07-07T21:15:47.624497+00:00",
+  "database": "hellenia_prod",
+  "company": "Hellenia, S.R.L.",
+  "ok": false,
+  "errors": [
+    "demo_users: Record does not exist or has been deleted.\n(Record: res.users(7,), User: 1)"
+  ],
+  "before": {
+    "partners_total": 11,
+    "partners_customers": 0,
+    "partners_suppliers": 0,
+    "partners_commercial_rank": 0,
+    "partners_preserved": 6,
+    "visible_for_normal_user": 8,
+    "visible_non_preserved": 5,
+    "visible_non_preserved_names": [
+      "Demo 15 accounting",
+      "Demo 15 inventory",
+      "Demo 15 normal",
+      "Demo 15 purchase",
+      "Demo 15 sales"
+    ]
+  },
+  "deleted": {
+    "demo_users": {
+      "count": 0,
+      "error": "Record does not exist or has been deleted.\n(Record: res.users(7,), User: 1)"
+    },
+    "partners": {
+      "count": 5,
+      "ids": [
+        30,
+        29,
+        28,
+        27,
+        26
+      ]
+    }
+  },
+  "preserved_count": 6,
+  "deleted_count": 5,
+  "after": {
+    "partners_total": 6,
+    "partners_customers": 0,
+    "partners_suppliers": 0,
+    "partners_commercial_rank": 0,
+    "partners_preserved": 6,
+    "visible_for_normal_user": 3,
+    "visible_non_preserved": 0,
+    "visible_non_preserved_names": []
+  },
+  "license_active": false,
+  "license_id": false,
+  "users_active_internal": 2,
+  "checks": {
+    "no_customers": true,
+    "no_suppliers": true,
+    "no_commercial_rank": true,
+    "visible_non_preserved_zero": true,
+    "hellenia_company_exists": true,
+    "license_active": false,
+    "users_ok": true
+  }
+}

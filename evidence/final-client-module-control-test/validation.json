@@ -1,0 +1,35 @@
+{
+  "phase": "final-client-module-control",
+  "environment": "test",
+  "timestamp": "2026-07-06T20:47:36Z",
+  "url": "https://test.hellenia.cloud",
+  "modules": {
+    "justech_modules": "19.0.1.7.1",
+    "justech_admin": "19.0.2.1.0"
+  },
+  "tests": {
+    "justech_modules": {
+      "total": 46,
+      "failed": 0,
+      "errors": 0,
+      "status": "PASS"
+    },
+    "justech_admin": {
+      "total": 8,
+      "failed": 0,
+      "errors": 0,
+      "status": "PASS"
+    }
+  },
+  "healthcheck": {
+    "status": "PASS",
+    "report": "/opt/odoo-projects/hellenia/evidence/healthcheck-test-2026-07-06_2047.json"
+  },
+  "fixes_applied": [
+    "ACL: justech_modules.model_justech_client_module_audit prefix in justech_admin",
+    "Bug: _ translation shadowing in execute_client_module_action",
+    "Bug: critical grant double-consumption on activate/deactivate chain"
+  ],
+  "scope_excluded": ["NCF", "DGII", "Facturación", "POS", "Contabilidad", "PDFs", "Reportes fiscales"],
+  "prod_touched": false
+}

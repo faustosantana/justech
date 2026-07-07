@@ -1,0 +1,215 @@
+=== F31.5 Control Center TEST ===
+Transfer starting: 59 files
+__manifest__.py
+data/
+data/justech_commercial_catalog.xml
+models/
+models/__init__.py
+models/justech_admin_access_service.py
+models/justech_commercial_product.py
+models/justech_license_service.py
+security/ir.model.access.csv
+tests/
+tests/__init__.py
+tests/test_commercial_catalog.py
+views/menu.xml
+
+sent 9023 bytes  received 732 bytes  35459 bytes/sec
+total size is 178157  speedup is 18.26
+Transfer starting: 23 files
+./
+__manifest__.py
+models/
+models/__init__.py
+models/justech_admin_dashboard.py
+models/justech_control_center.py
+models/justech_control_renderer.py
+security/ir.model.access.csv
+static/
+static/src/
+static/src/scss/
+static/src/scss/control_center.scss
+tests/test_admin_dashboard.py
+views/
+views/justech_admin_dashboard_views.xml
+views/justech_control_center_views.xml
+views/menu.xml
+
+sent 13738 bytes  received 406 bytes  63114 bytes/sec
+total size is 59667  speedup is 4.22
+Transfer starting: 33 files
+views/menu.xml
+
+sent 1848 bytes  received 60 bytes  10653 bytes/sec
+total size is 40778  speedup is 21.37
+ Container hellenia-test-odoo-1 Stopping 
+ Container hellenia-test-odoo-1 Stopped 
+ Container hellenia-test-db-1 Running 
+ Container hellenia-test-db-1 Waiting 
+ Container hellenia-test-db-1 Healthy 
+ Container hellenia-test-odoo-run-b81114146d70 Creating 
+ Container hellenia-test-odoo-run-b81114146d70 Created 
+2026-07-06 20:33:06,526 1 WARNING ? odoo.tools.config: option logfile reads 'False' in the config file at /etc/odoo/odoo.conf but isn't a boolean option, skip 
+2026-07-06 20:33:06,526 1 WARNING ? odoo.tools.config: option logfile reads 'False' in the config file at /etc/odoo/odoo.conf but isn't a boolean option, skip 
+2026-07-06 20:33:06,526 1 WARNING ? odoo.tools.config: missing --http-interface/http_interface, using 0.0.0.0 by default, will change to 127.0.0.1 in 20.0 
+2026-07-06 20:33:06,527 1 INFO ? odoo: Odoo version 19.0-20260619 
+2026-07-06 20:33:06,527 1 INFO ? odoo: Using configuration file at /etc/odoo/odoo.conf 
+2026-07-06 20:33:06,527 1 INFO ? odoo: addons paths: _NamespacePath(['/usr/lib/python3/dist-packages/odoo/addons', '/var/lib/odoo/addons/19.0', '/mnt/enterprise/addons', '/mnt/custom', '/usr/lib/python3/dist-packages/addons']) 
+2026-07-06 20:33:06,527 1 INFO ? odoo: database: odoo@db:5432 
+2026-07-06 20:33:06,796 1 INFO hellenia_test odoo.modules.loading: loading 1 modules... 
+2026-07-06 20:33:06,800 1 INFO hellenia_test odoo.modules.loading: 1 modules loaded in 0.00s, 0 queries (+0 extra) 
+2026-07-06 20:33:06,820 1 INFO hellenia_test odoo.modules.loading: updating modules list 
+2026-07-06 20:33:06,824 1 INFO hellenia_test odoo.addons.base.models.ir_module: ALLOW access to module.update_list on [] to user __system__ #1 via n/a 
+2026-07-06 20:33:08,699 1 INFO hellenia_test odoo.addons.base.models.ir_module: ALLOW access to module.button_upgrade on ['Justech Admin', 'Justech Modules', 'Hellenia Governance'] to user __system__ #1 via n/a 
+2026-07-06 20:33:08,699 1 INFO hellenia_test odoo.addons.base.models.ir_module: ALLOW access to module.update_list on ['Justech Admin', 'Justech Modules', 'Hellenia Governance'] to user __system__ #1 via n/a 
+2026-07-06 20:33:10,388 1 INFO hellenia_test odoo.addons.base.models.ir_module: ALLOW access to module.button_install on [] to user __system__ #1 via n/a 
+2026-07-06 20:33:10,907 1 INFO hellenia_test odoo.modules.loading: loading 136 modules... 
+2026-07-06 20:33:11,162 1 INFO hellenia_test odoo.modules.loading: Loading module justech_modules (38/136) 
+2026-07-06 20:33:11,239 1 INFO hellenia_test odoo.registry: module justech_modules: creating or updating database tables 
+2026-07-06 20:33:11,496 1 INFO hellenia_test odoo.modules.loading: loading justech_modules/security/justech_modules_security.xml 
+2026-07-06 20:33:11,572 1 INFO hellenia_test odoo.modules.loading: loading justech_modules/security/ir.model.access.csv 
+2026-07-06 20:33:11,617 1 INFO hellenia_test odoo.modules.loading: loading justech_modules/data/justech_commercial_catalog.xml 
+2026-07-06 20:33:11,667 1 INFO hellenia_test odoo.modules.loading: loading justech_modules/data/justech_admin_access_bootstrap.xml 
+2026-07-06 20:33:11,702 1 INFO hellenia_test odoo.modules.loading: loading justech_modules/views/justech_admin_access_views.xml 
+2026-07-06 20:33:11,755 1 INFO hellenia_test odoo.modules.loading: loading justech_modules/views/justech_admin_protected_actions.xml 
+2026-07-06 20:33:11,779 1 INFO hellenia_test odoo.modules.loading: loading justech_modules/views/justech_module_activation_wizard_views.xml 
+2026-07-06 20:33:11,790 1 INFO hellenia_test odoo.modules.loading: loading justech_modules/views/justech_module_views.xml 
+2026-07-06 20:33:11,803 1 INFO hellenia_test odoo.modules.loading: loading justech_modules/views/justech_feature_views.xml 
+2026-07-06 20:33:11,816 1 INFO hellenia_test odoo.modules.loading: loading justech_modules/views/justech_license_views.xml 
+2026-07-06 20:33:11,831 1 INFO hellenia_test odoo.modules.loading: loading justech_modules/views/justech_activation_key_views.xml 
+2026-07-06 20:33:11,839 1 INFO hellenia_test odoo.modules.loading: loading justech_modules/views/justech_license_audit_views.xml 
+2026-07-06 20:33:11,846 1 INFO hellenia_test odoo.modules.loading: loading justech_modules/views/menu.xml 
+2026-07-06 20:33:11,856 1 INFO hellenia_test odoo.addons.base.models.ir_module: module justech_modules: no translation for language es_DO 
+2026-07-06 20:33:11,885 1 INFO hellenia_test odoo.modules.loading: Module justech_modules loaded in 0.72s, 896 queries (+896 other) 
+2026-07-06 20:33:11,927 1 INFO hellenia_test odoo.modules.loading: Loading module hellenia_governance (48/136) 
+2026-07-06 20:33:12,002 1 INFO hellenia_test odoo.registry: module hellenia_governance: creating or updating database tables 
+2026-07-06 20:33:12,071 1 INFO hellenia_test odoo.modules.loading: loading hellenia_governance/security/hellenia_governance_security.xml 
+2026-07-06 20:33:12,087 1 INFO hellenia_test odoo.modules.loading: loading hellenia_governance/security/ir.model.access.csv 
+2026-07-06 20:33:12,109 1 INFO hellenia_test odoo.modules.loading: loading hellenia_governance/data/hellenia_permission_data.xml 
+2026-07-06 20:33:12,117 1 INFO hellenia_test odoo.modules.loading: loading hellenia_governance/data/hellenia_role_data.xml 
+2026-07-06 20:33:12,121 1 INFO hellenia_test odoo.modules.loading: loading hellenia_governance/views/hellenia_permission_views.xml 
+2026-07-06 20:33:12,135 1 INFO hellenia_test odoo.modules.loading: loading hellenia_governance/views/hellenia_role_views.xml 
+2026-07-06 20:33:12,146 1 INFO hellenia_test odoo.modules.loading: loading hellenia_governance/views/hellenia_user_profile_views.xml 
+2026-07-06 20:33:12,158 1 INFO hellenia_test odoo.modules.loading: loading hellenia_governance/views/hellenia_feature_policy_views.xml 
+2026-07-06 20:33:12,166 1 INFO hellenia_test odoo.modules.loading: loading hellenia_governance/views/hellenia_menu_policy_views.xml 
+2026-07-06 20:33:12,174 1 INFO hellenia_test odoo.modules.loading: loading hellenia_governance/views/hellenia_governance_audit_views.xml 
+2026-07-06 20:33:12,182 1 INFO hellenia_test odoo.modules.loading: loading hellenia_governance/views/hellenia_governance_protected_actions.xml 
+2026-07-06 20:33:12,206 1 INFO hellenia_test odoo.modules.loading: loading hellenia_governance/views/menu.xml 
+2026-07-06 20:33:12,217 1 INFO hellenia_test odoo.addons.base.models.ir_module: module hellenia_governance: no translation for language es_DO 
+2026-07-06 20:33:12,241 1 INFO hellenia_test odoo.modules.loading: Module hellenia_governance loaded in 0.31s, 394 queries (+394 other) 
+2026-07-06 20:33:12,408 1 INFO hellenia_test odoo.modules.loading: Loading module justech_admin (59/136) 
+2026-07-06 20:33:12,488 1 INFO hellenia_test odoo.registry: module justech_admin: creating or updating database tables 
+2026-07-06 20:33:12,697 1 INFO hellenia_test odoo.modules.loading: loading justech_admin/security/justech_admin_security.xml 
+2026-07-06 20:33:12,702 1 INFO hellenia_test odoo.modules.loading: loading justech_admin/security/ir.model.access.csv 
+2026-07-06 20:33:12,716 1 INFO hellenia_test odoo.modules.loading: loading justech_admin/views/justech_admin_protected_actions.xml 
+2026-07-06 20:33:12,722 1 INFO hellenia_test odoo.modules.loading: loading justech_admin/views/justech_control_center_views.xml 
+2026-07-06 20:33:12,942 1 INFO hellenia_test odoo.modules.loading: loading justech_admin/views/justech_admin_dashboard_views.xml 
+2026-07-06 20:33:12,948 1 INFO hellenia_test odoo.modules.loading: loading justech_admin/views/menu.xml 
+2026-07-06 20:33:12,984 1 INFO hellenia_test odoo.addons.base.models.ir_module: module justech_admin: no translation for language es_DO 
+2026-07-06 20:33:13,010 1 INFO hellenia_test odoo.modules.loading: Module justech_admin loaded in 0.60s, 523 queries (+523 other) 
+2026-07-06 20:33:13,457 1 WARNING hellenia_test odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define models.Constraint on the model. 
+2026-07-06 20:33:13,503 1 WARNING hellenia_test odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define models.Constraint on the model. 
+2026-07-06 20:33:13,535 1 WARNING hellenia_test odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define models.Constraint on the model. 
+2026-07-06 20:33:13,589 1 INFO hellenia_test odoo.modules.loading: 136 modules loaded in 2.68s, 1813 queries (+1813 extra) 
+2026-07-06 20:33:13,657 1 WARNING hellenia_test odoo.fields: justech.do.fiscal.report.state: selection=[('draft', 'Borrador'), ('validated', 'Validado'), ('pending_approval', 'Requiere aprobación'), ('approved', 'Aprobado'), ('rejected', 'Rechazado'), ('generated', 'Generado'), ('done', 'Generado')] overrides existing selection; use selection_add instead 
+2026-07-06 20:33:13,777 1 WARNING hellenia_test odoo.fields: justech.do.fiscal.report.state: selection=[('draft', 'Borrador'), ('validated', 'Validado'), ('pending_approval', 'Requiere aprobación'), ('approved', 'Aprobado'), ('rejected', 'Rechazado'), ('generated', 'Generado'), ('done', 'Generado')] overrides existing selection; use selection_add instead 
+2026-07-06 20:33:14,011 1 INFO hellenia_test odoo.modules.loading: Model hellenia.pos.audit.log is declared but cannot be loaded! (Perhaps a module was partially removed or renamed) 
+2026-07-06 20:33:14,065 1 INFO hellenia_test odoo.addons.base.models.ir_model: Deleting 442@ir.ui.menu (justech_modules.menu_justech_admin_key_audit) 
+2026-07-06 20:33:14,098 1 INFO hellenia_test odoo.models.unlink: User #1 deleted ir.model.data records with IDs: [288711] 
+2026-07-06 20:33:14,098 1 INFO hellenia_test odoo.models.unlink: User #1 deleted ir.ui.menu records with IDs: [442] 
+2026-07-06 20:33:14,104 1 INFO hellenia_test odoo.addons.base.models.ir_model: Deleting 441@ir.ui.menu (justech_modules.menu_justech_admin_access) 
+2026-07-06 20:33:14,109 1 INFO hellenia_test odoo.models.unlink: User #1 deleted ir.model.data records with IDs: [288710] 
+2026-07-06 20:33:14,110 1 INFO hellenia_test odoo.models.unlink: User #1 deleted ir.ui.menu records with IDs: [441] 
+2026-07-06 20:33:14,114 1 INFO hellenia_test odoo.addons.base.models.ir_model: Deleting 440@ir.ui.menu (justech_admin.menu_justech_admin_dashboard) 
+2026-07-06 20:33:14,119 1 INFO hellenia_test odoo.models.unlink: User #1 deleted ir.model.data records with IDs: [288368] 
+2026-07-06 20:33:14,119 1 INFO hellenia_test odoo.models.unlink: User #1 deleted ir.ui.menu records with IDs: [440] 
+2026-07-06 20:33:14,124 1 INFO hellenia_test odoo.addons.base.models.ir_model: Deleting 439@ir.ui.menu (justech_admin.menu_justech_admin_root) 
+2026-07-06 20:33:14,128 1 INFO hellenia_test odoo.models.unlink: User #1 deleted ir.model.data records with IDs: [288367] 
+2026-07-06 20:33:14,129 1 INFO hellenia_test odoo.models.unlink: User #1 deleted ir.ui.menu records with IDs: [439] 
+2026-07-06 20:33:14,134 1 INFO hellenia_test odoo.addons.base.models.ir_model: Deleting 12719@ir.model.fields (justech_admin.field_justech_admin_dashboard__client_name) 
+2026-07-06 20:33:14,166 1 INFO hellenia_test odoo.models.unlink: User #1 deleted ir.model.data records with IDs: [288356] 
+2026-07-06 20:33:14,166 1 INFO hellenia_test odoo.models.unlink: User #1 deleted ir.model.fields records with IDs: [12719] 
+2026-07-06 20:33:14,172 1 INFO hellenia_test odoo.addons.base.models.ir_model: Deleting 12718@ir.model.fields (justech_admin.field_justech_admin_dashboard__health_status) 
+2026-07-06 20:33:14,205 1 INFO hellenia_test odoo.models.unlink: User #1 deleted ir.model.data records with IDs: [288355] 
+2026-07-06 20:33:14,205 1 INFO hellenia_test odoo.models.unlink: User #1 deleted ir.model.fields records with IDs: [12718] 
+2026-07-06 20:33:14,210 1 INFO hellenia_test odoo.addons.base.models.ir_model: Deleting 12717@ir.model.fields (justech_admin.field_justech_admin_dashboard__audit_governance_count) 
+2026-07-06 20:33:14,248 1 INFO hellenia_test odoo.models.unlink: User #1 deleted ir.model.data records with IDs: [288354] 
+2026-07-06 20:33:14,249 1 INFO hellenia_test odoo.models.unlink: User #1 deleted ir.model.fields records with IDs: [12717] 
+2026-07-06 20:33:14,254 1 INFO hellenia_test odoo.addons.base.models.ir_model: Deleting 12716@ir.model.fields (justech_admin.field_justech_admin_dashboard__audit_license_count) 
+2026-07-06 20:33:14,284 1 INFO hellenia_test odoo.models.unlink: User #1 deleted ir.model.data records with IDs: [288353] 
+2026-07-06 20:33:14,284 1 INFO hellenia_test odoo.models.unlink: User #1 deleted ir.model.fields records with IDs: [12716] 
+2026-07-06 20:33:14,290 1 INFO hellenia_test odoo.addons.base.models.ir_model: Deleting 12715@ir.model.fields (justech_admin.field_justech_admin_dashboard__profile_count) 
+2026-07-06 20:33:14,324 1 INFO hellenia_test odoo.models.unlink: User #1 deleted ir.model.data records with IDs: [288352] 
+2026-07-06 20:33:14,325 1 INFO hellenia_test odoo.models.unlink: User #1 deleted ir.model.fields records with IDs: [12715] 
+2026-07-06 20:33:14,332 1 INFO hellenia_test odoo.addons.base.models.ir_model: Deleting 12714@ir.model.fields (justech_admin.field_justech_admin_dashboard__permission_count) 
+2026-07-06 20:33:14,373 1 INFO hellenia_test odoo.models.unlink: User #1 deleted ir.model.data records with IDs: [288351] 
+2026-07-06 20:33:14,374 1 INFO hellenia_test odoo.models.unlink: User #1 deleted ir.model.fields records with IDs: [12714] 
+2026-07-06 20:33:14,381 1 INFO hellenia_test odoo.addons.base.models.ir_model: Deleting 12713@ir.model.fields (justech_admin.field_justech_admin_dashboard__role_count) 
+2026-07-06 20:33:14,487 1 INFO hellenia_test odoo.models.unlink: User #1 deleted ir.model.data records with IDs: [288350] 
+2026-07-06 20:33:14,488 1 INFO hellenia_test odoo.models.unlink: User #1 deleted ir.model.fields records with IDs: [12713] 
+2026-07-06 20:33:14,494 1 INFO hellenia_test odoo.addons.base.models.ir_model: Deleting 12712@ir.model.fields (justech_admin.field_justech_admin_dashboard__feature_count) 
+2026-07-06 20:33:14,524 1 INFO hellenia_test odoo.models.unlink: User #1 deleted ir.model.data records with IDs: [288349] 
+2026-07-06 20:33:14,524 1 INFO hellenia_test odoo.models.unlink: User #1 deleted ir.model.fields records with IDs: [12712] 
+2026-07-06 20:33:14,530 1 INFO hellenia_test odoo.addons.base.models.ir_model: Deleting 12711@ir.model.fields (justech_admin.field_justech_admin_dashboard__license_count) 
+2026-07-06 20:33:14,563 1 INFO hellenia_test odoo.models.unlink: User #1 deleted ir.model.data records with IDs: [288348] 
+2026-07-06 20:33:14,564 1 INFO hellenia_test odoo.models.unlink: User #1 deleted ir.model.fields records with IDs: [12711] 
+2026-07-06 20:33:14,569 1 INFO hellenia_test odoo.addons.base.models.ir_model: Deleting 12710@ir.model.fields (justech_admin.field_justech_admin_dashboard__active_module_count) 
+2026-07-06 20:33:14,599 1 INFO hellenia_test odoo.models.unlink: User #1 deleted ir.model.data records with IDs: [288347] 
+2026-07-06 20:33:14,599 1 INFO hellenia_test odoo.models.unlink: User #1 deleted ir.model.fields records with IDs: [12710] 
+2026-07-06 20:33:14,605 1 INFO hellenia_test odoo.addons.base.models.ir_model: Deleting 12709@ir.model.fields (justech_admin.field_justech_admin_dashboard__module_count) 
+2026-07-06 20:33:14,634 1 INFO hellenia_test odoo.models.unlink: User #1 deleted ir.model.data records with IDs: [288346] 
+2026-07-06 20:33:14,635 1 INFO hellenia_test odoo.models.unlink: User #1 deleted ir.model.fields records with IDs: [12709] 
+2026-07-06 20:33:14,640 1 INFO hellenia_test odoo.addons.base.models.ir_model: Deleting 12708@ir.model.fields (justech_admin.field_justech_admin_dashboard__api_version) 
+2026-07-06 20:33:14,673 1 INFO hellenia_test odoo.models.unlink: User #1 deleted ir.model.data records with IDs: [288345] 
+2026-07-06 20:33:14,674 1 INFO hellenia_test odoo.models.unlink: User #1 deleted ir.model.fields records with IDs: [12708] 
+2026-07-06 20:33:14,678 1 INFO hellenia_test odoo.addons.base.models.ir_model: Deleting 12707@ir.model.fields (justech_admin.field_justech_admin_dashboard__odoo_version) 
+2026-07-06 20:33:14,710 1 INFO hellenia_test odoo.models.unlink: User #1 deleted ir.model.data records with IDs: [288344] 
+2026-07-06 20:33:14,710 1 INFO hellenia_test odoo.models.unlink: User #1 deleted ir.model.fields records with IDs: [12707] 
+2026-07-06 20:33:14,715 1 INFO hellenia_test odoo.addons.base.models.ir_model: Deleting 438@ir.ui.menu (hellenia_governance.menu_hellenia_governance_audit) 
+2026-07-06 20:33:14,720 1 INFO hellenia_test odoo.models.unlink: User #1 deleted ir.model.data records with IDs: [288338] 
+2026-07-06 20:33:14,720 1 INFO hellenia_test odoo.models.unlink: User #1 deleted ir.ui.menu records with IDs: [438] 
+2026-07-06 20:33:14,725 1 INFO hellenia_test odoo.addons.base.models.ir_model: Deleting 437@ir.ui.menu (hellenia_governance.menu_hellenia_menu_policy) 
+2026-07-06 20:33:14,729 1 INFO hellenia_test odoo.models.unlink: User #1 deleted ir.model.data records with IDs: [288337] 
+2026-07-06 20:33:14,729 1 INFO hellenia_test odoo.models.unlink: User #1 deleted ir.ui.menu records with IDs: [437] 
+2026-07-06 20:33:14,734 1 INFO hellenia_test odoo.addons.base.models.ir_model: Deleting 436@ir.ui.menu (hellenia_governance.menu_hellenia_feature_policy) 
+2026-07-06 20:33:14,738 1 INFO hellenia_test odoo.models.unlink: User #1 deleted ir.model.data records with IDs: [288336] 
+2026-07-06 20:33:14,739 1 INFO hellenia_test odoo.models.unlink: User #1 deleted ir.ui.menu records with IDs: [436] 
+2026-07-06 20:33:14,743 1 INFO hellenia_test odoo.addons.base.models.ir_model: Deleting 435@ir.ui.menu (hellenia_governance.menu_hellenia_user_profile) 
+2026-07-06 20:33:14,747 1 INFO hellenia_test odoo.models.unlink: User #1 deleted ir.model.data records with IDs: [288335] 
+2026-07-06 20:33:14,748 1 INFO hellenia_test odoo.models.unlink: User #1 deleted ir.ui.menu records with IDs: [435] 
+2026-07-06 20:33:14,752 1 INFO hellenia_test odoo.addons.base.models.ir_model: Deleting 434@ir.ui.menu (hellenia_governance.menu_hellenia_role) 
+2026-07-06 20:33:14,756 1 INFO hellenia_test odoo.models.unlink: User #1 deleted ir.model.data records with IDs: [288334] 
+2026-07-06 20:33:14,757 1 INFO hellenia_test odoo.models.unlink: User #1 deleted ir.ui.menu records with IDs: [434] 
+2026-07-06 20:33:14,762 1 INFO hellenia_test odoo.addons.base.models.ir_model: Deleting 433@ir.ui.menu (hellenia_governance.menu_hellenia_permission) 
+2026-07-06 20:33:14,766 1 INFO hellenia_test odoo.models.unlink: User #1 deleted ir.model.data records with IDs: [288333] 
+2026-07-06 20:33:14,766 1 INFO hellenia_test odoo.models.unlink: User #1 deleted ir.ui.menu records with IDs: [433] 
+2026-07-06 20:33:14,771 1 INFO hellenia_test odoo.addons.base.models.ir_model: Deleting 431@ir.ui.menu (justech_modules.menu_justech_license_audit) 
+2026-07-06 20:33:14,775 1 INFO hellenia_test odoo.models.unlink: User #1 deleted ir.model.data records with IDs: [286732] 
+2026-07-06 20:33:14,775 1 INFO hellenia_test odoo.models.unlink: User #1 deleted ir.ui.menu records with IDs: [431] 
+2026-07-06 20:33:14,780 1 INFO hellenia_test odoo.addons.base.models.ir_model: Deleting 430@ir.ui.menu (justech_modules.menu_justech_activation_key) 
+2026-07-06 20:33:14,784 1 INFO hellenia_test odoo.models.unlink: User #1 deleted ir.model.data records with IDs: [286731] 
+2026-07-06 20:33:14,785 1 INFO hellenia_test odoo.models.unlink: User #1 deleted ir.ui.menu records with IDs: [430] 
+2026-07-06 20:33:14,789 1 INFO hellenia_test odoo.addons.base.models.ir_model: Deleting 429@ir.ui.menu (justech_modules.menu_justech_module) 
+2026-07-06 20:33:14,793 1 INFO hellenia_test odoo.models.unlink: User #1 deleted ir.model.data records with IDs: [286730] 
+2026-07-06 20:33:14,794 1 INFO hellenia_test odoo.models.unlink: User #1 deleted ir.ui.menu records with IDs: [429] 
+2026-07-06 20:33:14,798 1 INFO hellenia_test odoo.addons.base.models.ir_model: Deleting 428@ir.ui.menu (justech_modules.menu_justech_feature) 
+2026-07-06 20:33:14,802 1 INFO hellenia_test odoo.models.unlink: User #1 deleted ir.model.data records with IDs: [286729] 
+2026-07-06 20:33:14,803 1 INFO hellenia_test odoo.models.unlink: User #1 deleted ir.ui.menu records with IDs: [428] 
+2026-07-06 20:33:14,807 1 INFO hellenia_test odoo.addons.base.models.ir_model: Deleting 427@ir.ui.menu (justech_modules.menu_justech_license) 
+2026-07-06 20:33:14,811 1 INFO hellenia_test odoo.models.unlink: User #1 deleted ir.model.data records with IDs: [286728] 
+2026-07-06 20:33:14,812 1 INFO hellenia_test odoo.models.unlink: User #1 deleted ir.ui.menu records with IDs: [427] 
+2026-07-06 20:33:14,816 1 INFO hellenia_test odoo.addons.base.models.ir_model: Deleting 426@ir.ui.menu (justech_modules.menu_justech_module_activation) 
+2026-07-06 20:33:14,820 1 INFO hellenia_test odoo.models.unlink: User #1 deleted ir.model.data records with IDs: [286727] 
+2026-07-06 20:33:14,821 1 INFO hellenia_test odoo.models.unlink: User #1 deleted ir.ui.menu records with IDs: [426] 
+2026-07-06 20:33:14,826 1 INFO hellenia_test odoo.addons.base.models.ir_model: Deleting 425@ir.ui.menu (justech_modules.menu_justech_licensing) 
+2026-07-06 20:33:14,829 1 INFO hellenia_test odoo.models.unlink: User #1 deleted ir.model.data records with IDs: [286726] 
+2026-07-06 20:33:14,830 1 INFO hellenia_test odoo.models.unlink: User #1 deleted ir.ui.menu records with IDs: [425] 
+2026-07-06 20:33:14,839 1 INFO hellenia_test odoo.registry: verifying fields for every extended model 
+2026-07-06 20:33:15,830 1 INFO hellenia_test odoo.modules.loading: Modules loaded. 
+2026-07-06 20:33:15,841 1 WARNING hellenia_test odoo.schema: Missing not-null constraint on res.users.settings.color_scheme 
+2026-07-06 20:33:15,848 1 INFO hellenia_test odoo.registry: Registry changed, signaling through the database 
+2026-07-06 20:33:15,849 1 INFO hellenia_test odoo.registry: Registry loaded in 9.092s 
+2026-07-06 20:33:15,849 1 INFO hellenia_test odoo.service.server: Initiating shutdown 
+2026-07-06 20:33:15,849 1 INFO hellenia_test odoo.service.server: Hit CTRL-C again or send a second signal to force the shutdown. 
+2026-07-06 20:33:15,849 1 INFO hellenia_test odoo.sql_db: ConnectionPool(read/write;used=0/count=0/max=64): Closed 1 connections  
+Evidence: /Users/faustosantana/Projects/jaios/evidence/f31-5-control-center-redesign-test

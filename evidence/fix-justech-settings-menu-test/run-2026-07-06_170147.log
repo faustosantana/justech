@@ -1,0 +1,21 @@
+=== Fix Justech Settings Menu TEST ===
+Transfer starting: 61 files
+__manifest__.py
+
+sent 3783 bytes  received 60 bytes  3136 bytes/sec
+total size is 196404  speedup is 51.11
+Transfer starting: 26 files
+__manifest__.py
+tests/test_client_module_control.py
+views/menu.xml
+
+sent 2967 bytes  received 146 bytes  4893 bytes/sec
+total size is 83841  speedup is 26.93
+ Container hellenia-test-odoo-1 Stopping 
+ Container hellenia-test-odoo-1 Stopped 
+2026-07-06 21:02:09,878 1 INFO hellenia_test odoo.registry: Registry changed, signaling through the database 
+2026-07-06 21:02:09,879 1 INFO hellenia_test odoo.registry: Registry loaded in 8.190s 
+2026-07-06 21:02:09,879 1 INFO hellenia_test odoo.service.server: Initiating shutdown 
+2026-07-06 21:02:09,879 1 INFO hellenia_test odoo.service.server: Hit CTRL-C again or send a second signal to force the shutdown. 
+2026-07-06 21:02:09,880 1 INFO hellenia_test odoo.sql_db: ConnectionPool(read/write;used=0/count=0/max=64): Closed 1 connections  
+Evidence: /Users/faustosantana/Projects/jaios/evidence/fix-justech-settings-menu-test

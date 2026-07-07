@@ -1,0 +1,23 @@
+{
+  "phase": "fix-justech-settings-menu",
+  "environment": "test",
+  "timestamp": "2026-07-06T21:03:08Z",
+  "url": "https://test.hellenia.cloud",
+  "modules": {
+    "justech_modules": "19.0.1.7.2",
+    "justech_admin": "19.0.2.2.0"
+  },
+  "menu_path": "Configuración → Justech → Módulos del Cliente",
+  "settings_items": [
+    "Módulos del Cliente",
+    "Licencias",
+    "Seguridad Justech",
+    "Auditoría Justech"
+  ],
+  "tests": {
+    "justech_admin": {"total": 11, "failed": 0, "errors": 0, "status": "PASS"}
+  },
+  "healthcheck": {"status": "PASS"},
+  "launcher_hidden": ["justech_admin", "justech_modules"],
+  "prod_touched": false
+}

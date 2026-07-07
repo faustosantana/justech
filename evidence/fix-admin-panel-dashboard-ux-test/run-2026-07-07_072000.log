@@ -1,0 +1,27 @@
+=== FIX admin panel dashboard UX TEST ===
+Transfer starting: 61 files
+__manifest__.py
+models/justech_license_service.py
+tests/test_client_module_control.py
+
+sent 6868 bytes  received 740 bytes  48427 bytes/sec
+total size is 234181  speedup is 30.78
+Transfer starting: 29 files
+__manifest__.py
+models/justech_client_module_control.py
+static/src/scss/control_center.scss
+tests/test_client_module_admin_panel.py
+tests/test_client_module_control.py
+views/justech_client_module_views.xml
+
+sent 7754 bytes  received 686 bytes  54067 bytes/sec
+total size is 142879  speedup is 16.93
+ Container hellenia-test-odoo-1 Stopping 
+ Container hellenia-test-odoo-1 Stopped 
+2026-07-07 11:20:16,693 1 WARNING hellenia_test odoo.schema: Missing not-null constraint on res.users.settings.color_scheme 
+2026-07-07 11:20:16,700 1 INFO hellenia_test odoo.registry: Registry changed, signaling through the database 
+2026-07-07 11:20:16,701 1 INFO hellenia_test odoo.registry: Registry loaded in 8.398s 
+2026-07-07 11:20:16,701 1 INFO hellenia_test odoo.service.server: Initiating shutdown 
+2026-07-07 11:20:16,701 1 INFO hellenia_test odoo.service.server: Hit CTRL-C again or send a second signal to force the shutdown. 
+2026-07-07 11:20:16,701 1 INFO hellenia_test odoo.sql_db: ConnectionPool(read/write;used=0/count=0/max=64): Closed 1 connections  
+Evidence: /Users/faustosantana/Projects/jaios/evidence/fix-admin-panel-dashboard-ux-test

@@ -1,0 +1,70 @@
+{
+  "phase": "fix-real-justech-customizations-only",
+  "users": {
+    "it@justech.do": {
+      "found": true,
+      "no_popup": true,
+      "visible_lines": 5,
+      "line_names": [
+        "Control Justech",
+        "Fiscal RD / NCF / DGII",
+        "POS Fiscal",
+        "Reportes y Documentos Corporativos",
+        "UX Fiscal / Contactos y Facturas"
+      ],
+      "no_forbidden": true
+    }
+  },
+  "checks": {
+    "kanban_ui": true,
+    "no_development_section": true,
+    "manage_includes": true,
+    "real_catalog_defined": true,
+    "max_five_cards": true,
+    "at_least_one_real": true,
+    "fiscal_rd_present": true,
+    "reportes_present": true,
+    "ux_fiscal_present": true,
+    "only_expected_codes": true,
+    "no_forbidden_names": true,
+    "no_native_odoo_rows": true,
+    "all_rows_have_includes": true,
+    "pos_matches_install": true
+  },
+  "visible_customizations": [
+    {
+      "code": "fiscal_rd",
+      "name": "Fiscal RD / NCF / DGII",
+      "product_code": "contabilidad_rd"
+    },
+    {
+      "code": "ux_fiscal_contactos_facturas",
+      "name": "UX Fiscal / Contactos y Facturas",
+      "product_code": "ux_fiscal"
+    },
+    {
+      "code": "reportes_documentos_corporativos",
+      "name": "Reportes y Documentos Corporativos",
+      "product_code": "reportes_corporativos"
+    },
+    {
+      "code": "pos_fiscal_si_instalado",
+      "name": "POS Fiscal",
+      "product_code": "punto_de_venta"
+    }
+  ],
+  "visible_count": 4,
+  "visible_codes": [
+    "fiscal_rd",
+    "pos_fiscal_si_instalado",
+    "reportes_documentos_corporativos",
+    "ux_fiscal_contactos_facturas"
+  ],
+  "visible_names": [
+    "Fiscal RD / NCF / DGII",
+    "UX Fiscal / Contactos y Facturas",
+    "Reportes y Documentos Corporativos",
+    "POS Fiscal"
+  ],
+  "status": "PASS"
+}

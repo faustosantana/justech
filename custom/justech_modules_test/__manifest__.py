@@ -1,0 +1,20 @@
+{
+    "name": "Justech Modules Test",
+    "version": "19.0.1.0.0",
+    "category": "Justech/Platform",
+    "summary": "DEV-only registration test for justech_modules",
+    "author": "Justech",
+    "depends": ["justech_modules"],
+    "post_init_hook": "post_init_hook",
+    "installable": True,
+    "application": False,
+    "license": "LGPL-3",
+    "justech_register": {
+        "code": "justech_modules_test",
+        "feature_code": "test_feature",
+        "name": "Test Feature",
+        "license_required": True,
+        "category": "platform",
+        "version": "19.0.1.0.0",
+    },
+}

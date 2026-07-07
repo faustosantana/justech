@@ -1,0 +1,19 @@
+{
+  "phase": "fix-settings-justech-visible-ui",
+  "environment": "prod",
+  "timestamp": "2026-07-06T21:27:24Z",
+  "version": "justech_admin 19.0.2.4.0",
+  "root_cause_visual": "Odoo 19 Configuración muestra secciones via res.config.settings <app>, no solo ir.ui.menu",
+  "fix": "Sección Justech en panel lateral de Configuración (res.config.settings) + menú load_menus",
+  "it@justech.do": {
+    "settings_root_visible": true,
+    "settings_app_view": true,
+    "settings_app_arch_has_justech": true,
+    "open_action_model": "justech.admin.key.setup.wizard"
+  },
+  "how_to_access": "Configuración → barra lateral izquierda → Justech → Abrir Módulos del Cliente",
+  "browser_cache": "Hard refresh Ctrl+Shift+R si no aparece de inmediato",
+  "status": "PASS",
+  "backup": "settings-justech-ui-2026-07-06_212646",
+  "odoo_restarted": true
+}

@@ -1,0 +1,11 @@
+=== FIX admin panel functions PROD ===
+Transfer starting: 61 files
+
+sent 3243 bytes  received 20 bytes  22802 bytes/sec
+total size is 228275  speedup is 69.96
+Transfer starting: 29 files
+
+sent 1483 bytes  received 20 bytes  10577 bytes/sec
+total size is 127018  speedup is 84.51
+Backup: fix-admin-panel-functions-2026-07-06_234146.dump
+Evidence: /Users/faustosantana/Projects/jaios/evidence/fix-admin-panel-functions-prod

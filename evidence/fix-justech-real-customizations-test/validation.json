@@ -1,0 +1,67 @@
+{
+  "phase": "fix-justech-real-customizations",
+  "users": {
+    "it@justech.do": {
+      "found": true,
+      "no_popup": true,
+      "visible_lines": 5,
+      "line_names": [
+        "Documentos y Reportes Corporativos",
+        "Fiscal RD / NCF / DGII",
+        "Governance / Control Justech",
+        "POS Fiscal",
+        "UX Fiscal / Formulario Cliente"
+      ]
+    }
+  },
+  "checks": {
+    "kanban_ui": true,
+    "no_development_section": true,
+    "manage_commercial_panel": true,
+    "manage_technical_panel": true,
+    "manage_includes": true,
+    "max_five_cards": true,
+    "at_least_one_real": true,
+    "fiscal_rd_present": true,
+    "reportes_present": true,
+    "no_forbidden_names": true,
+    "no_native_odoo_rows": true,
+    "pos_matches_install": true
+  },
+  "visible_customizations": [
+    {
+      "code": "fiscal_rd",
+      "name": "Fiscal RD / NCF / DGII",
+      "product_code": "contabilidad_rd"
+    },
+    {
+      "code": "reportes_corporativos",
+      "name": "Documentos y Reportes Corporativos",
+      "product_code": "reportes_corporativos"
+    },
+    {
+      "code": "ux_fiscal",
+      "name": "UX Fiscal / Formulario Cliente",
+      "product_code": "ux_fiscal"
+    },
+    {
+      "code": "pos_fiscal",
+      "name": "POS Fiscal",
+      "product_code": "punto_de_venta"
+    }
+  ],
+  "visible_count": 4,
+  "hidden_forbidden_labels": [
+    "CRM",
+    "IA",
+    "RRHH",
+    "Marketplace",
+    "Manufactura",
+    "N\u00f3mina",
+    "Activos Fijos",
+    "Ventas (Odoo nativo)",
+    "Compras (Odoo nativo)",
+    "Inventario (Odoo nativo)"
+  ],
+  "status": "PASS"
+}

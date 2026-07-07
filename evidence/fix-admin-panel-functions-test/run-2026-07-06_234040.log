@@ -1,0 +1,32 @@
+=== FIX admin panel functions TEST ===
+Transfer starting: 61 files
+__manifest__.py
+models/justech_client_module.py
+models/justech_license_service.py
+security/ir.model.access.csv
+tests/test_client_module_control.py
+
+sent 7664 bytes  received 802 bytes  46490 bytes/sec
+total size is 228275  speedup is 26.96
+Transfer starting: 29 files
+__manifest__.py
+models/justech_client_module_control.py
+security/ir.model.access.csv
+static/src/scss/control_center.scss
+tests/
+tests/__init__.py
+tests/test_client_module_admin_panel.py
+tests/test_client_module_control.py
+views/justech_client_module_views.xml
+
+sent 8837 bytes  received 712 bytes  64476 bytes/sec
+total size is 127018  speedup is 13.30
+ Container hellenia-test-odoo-1 Stopping 
+ Container hellenia-test-odoo-1 Stopped 
+2026-07-07 03:40:57,154 1 WARNING hellenia_test odoo.schema: Missing not-null constraint on res.users.settings.color_scheme 
+2026-07-07 03:40:57,160 1 INFO hellenia_test odoo.registry: Registry changed, signaling through the database 
+2026-07-07 03:40:57,161 1 INFO hellenia_test odoo.registry: Registry loaded in 8.942s 
+2026-07-07 03:40:57,161 1 INFO hellenia_test odoo.service.server: Initiating shutdown 
+2026-07-07 03:40:57,161 1 INFO hellenia_test odoo.service.server: Hit CTRL-C again or send a second signal to force the shutdown. 
+2026-07-07 03:40:57,162 1 INFO hellenia_test odoo.sql_db: ConnectionPool(read/write;used=0/count=0/max=64): Closed 1 connections  
+Evidence: /Users/faustosantana/Projects/jaios/evidence/fix-admin-panel-functions-test

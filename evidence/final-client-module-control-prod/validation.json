@@ -1,0 +1,16 @@
+{
+  "phase": "final-client-module-control",
+  "environment": "prod",
+  "timestamp": "2026-07-06T20:48:24Z",
+  "url": "https://odoo.hellenia.cloud",
+  "modules": {
+    "justech_modules": "19.0.1.7.1",
+    "justech_admin": "19.0.2.1.0"
+  },
+  "backup_pattern": "client-module-control-2026-07-06_164752",
+  "healthcheck": {
+    "status": "PASS",
+    "report": "/opt/odoo-projects/hellenia/evidence/healthcheck-prod-2026-07-06_2048.json"
+  },
+  "prod_touched": true
+}

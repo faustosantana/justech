@@ -1,0 +1,32 @@
+{
+  "phase": "fix-admin-panel-functions",
+  "users": {
+    "it@justech.do": {
+      "found": true,
+      "admin_model": "justech.client.module.admin.panel",
+      "feature_count": 5
+    }
+  },
+  "checks": {
+    "commercial_panel_view": true,
+    "legacy_view_disabled": true,
+    "feature_toggle_list": true,
+    "no_includes_json_field": true,
+    "no_technical_status_field": true,
+    "feature_flag_model": true,
+    "fiscal_features_defined": true,
+    "administrar_opens_panel": true,
+    "administrar_not_line_form": true,
+    "panel_has_feature_lines": true,
+    "panel_has_toggle_fields": true,
+    "line_form_redirects": true
+  },
+  "fiscal_feature_labels": [
+    "NCF",
+    "B01 / Cr\u00e9dito Fiscal",
+    "B02 / Consumidor Final",
+    "B03 / Nota de D\u00e9bito",
+    "B04 / Nota de Cr\u00e9dito"
+  ],
+  "status": "PASS"
+}

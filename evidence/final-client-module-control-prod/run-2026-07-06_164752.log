@@ -1,0 +1,22 @@
+=== Final Client Module Control PROD ===
+Transfer starting: 61 files
+
+sent 3243 bytes  received 20 bytes  4996 bytes/sec
+total size is 196403  speedup is 60.19
+Transfer starting: 26 files
+
+sent 1297 bytes  received 20 bytes  6891 bytes/sec
+total size is 82449  speedup is 62.60
+Transfer starting: 33 files
+
+sent 1673 bytes  received 20 bytes  6509 bytes/sec
+total size is 40778  speedup is 24.09
+Backup: /opt/odoo-projects/hellenia/backups/hellenia-prod/client-module-control-2026-07-06_164752/hellenia_prod.dump
+ Container hellenia-prod-odoo-1 Stopping 
+ Container hellenia-prod-odoo-1 Stopped 
+2026-07-06 20:48:16,499 1 INFO hellenia_prod odoo.registry: verifying fields for every extended model 
+2026-07-06 20:48:17,707 1 INFO hellenia_prod odoo.modules.loading: Modules loaded. 
+2026-07-06 20:48:17,725 1 INFO hellenia_prod odoo.registry: Registry changed, signaling through the database 
+2026-07-06 20:48:17,727 1 INFO hellenia_prod odoo.registry: Registry loaded in 10.140s 
+2026-07-06 20:48:17,727 1 INFO hellenia_prod odoo.service.server: Stopping workers gracefully 
+Evidence: /Users/faustosantana/Projects/jaios/evidence/final-client-module-control-prod

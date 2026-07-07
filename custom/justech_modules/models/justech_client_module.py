@@ -45,6 +45,32 @@ class JustechClientModuleState(models.Model):
         )
 
 
+class JustechClientModuleFeatureFlag(models.Model):
+    """Commercial/admin feature toggles per personalization (no fiscal enforcement)."""
+
+    _name = "justech.client.module.feature.flag"
+    _description = "Client Module Commercial Feature Flag"
+    _rec_name = "feature_label"
+
+    customization_code = fields.Char(required=True, index=True)
+    feature_key = fields.Char(required=True, index=True)
+    feature_label = fields.Char(required=True)
+    company_id = fields.Many2one(
+        "res.company", required=True, ondelete="cascade", index=True
+    )
+    is_active = fields.Boolean(default=True, index=True)
+    control_type = fields.Selection(
+        [("commercial", "Control comercial")],
+        default="commercial",
+        required=True,
+    )
+
+    _justech_feature_flag_uniq = models.Constraint(
+        "UNIQUE(customization_code, feature_key, company_id)",
+        "Each feature can have only one flag record per company.",
+    )
+
+
 class JustechClientModuleAudit(models.Model):
     _name = "justech.client.module.audit"
     _description = "Client Module Control Audit"

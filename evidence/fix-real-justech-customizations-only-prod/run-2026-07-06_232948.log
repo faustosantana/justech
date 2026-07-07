@@ -1,0 +1,11 @@
+=== FIX real Justech customizations only PROD ===
+Transfer starting: 61 files
+
+sent 3243 bytes  received 20 bytes  22962 bytes/sec
+total size is 217126  speedup is 66.54
+Transfer starting: 28 files
+
+sent 1419 bytes  received 20 bytes  9986 bytes/sec
+total size is 113364  speedup is 78.78
+Backup: fix-real-justech-customizations-only-2026-07-06_232948.dump
+Evidence: /Users/faustosantana/Projects/jaios/evidence/fix-real-justech-customizations-only-prod

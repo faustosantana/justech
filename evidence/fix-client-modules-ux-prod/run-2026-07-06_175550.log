@@ -1,0 +1,12 @@
+=== Fix Client Modules UX PROD ===
+Transfer starting: 61 files
+models/
+
+sent 3249 bytes  received 26 bytes  19482 bytes/sec
+total size is 198179  speedup is 60.51
+Transfer starting: 28 files
+tests/
+
+sent 1425 bytes  received 26 bytes  8530 bytes/sec
+total size is 102098  speedup is 70.36
+bash: line 2: /opt/odoo-projects/hellenia/config/prod/.env: No such file or directory

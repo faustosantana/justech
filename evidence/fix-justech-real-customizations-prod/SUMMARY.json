@@ -1,0 +1,21 @@
+{
+  "status": "PASS",
+  "environment": "production",
+  "validation": "PASS",
+  "healthcheck": "PASS",
+  "visible_count_client": 3,
+  "visible_count_it_user": 4,
+  "visible_customizations_client": [
+    "Fiscal RD / NCF / DGII",
+    "Documentos y Reportes Corporativos",
+    "UX Fiscal / Formulario Cliente"
+  ],
+  "visible_customizations_it_user": [
+    "Fiscal RD / NCF / DGII",
+    "Documentos y Reportes Corporativos",
+    "UX Fiscal / Formulario Cliente",
+    "Governance / Control Justech"
+  ],
+  "pos_hidden_on_prod": true,
+  "backup": "backups/hellenia-prod/fix-justech-real-customizations-2026-07-06_231848/hellenia_prod.dump"
+}

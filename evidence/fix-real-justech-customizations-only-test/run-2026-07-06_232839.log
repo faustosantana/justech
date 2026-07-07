@@ -1,0 +1,29 @@
+=== FIX real Justech customizations only TEST ===
+Transfer starting: 61 files
+__manifest__.py
+models/justech_admin_access_service.py
+models/justech_license_service.py
+tests/test_client_module_control.py
+
+sent 6826 bytes  received 822 bytes  51294 bytes/sec
+total size is 217126  speedup is 28.39
+Transfer starting: 28 files
+__manifest__.py
+models/justech_admin_dashboard.py
+models/justech_client_module_control.py
+models/justech_control_center.py
+tests/test_client_module_control.py
+views/justech_client_module_views.xml
+views/justech_control_center_views.xml
+
+sent 5302 bytes  received 906 bytes  42202 bytes/sec
+total size is 113364  speedup is 18.26
+ Container hellenia-test-odoo-1 Stopping 
+ Container hellenia-test-odoo-1 Stopped 
+2026-07-07 03:28:55,547 1 WARNING hellenia_test odoo.schema: Missing not-null constraint on res.users.settings.color_scheme 
+2026-07-07 03:28:55,554 1 INFO hellenia_test odoo.registry: Registry changed, signaling through the database 
+2026-07-07 03:28:55,555 1 INFO hellenia_test odoo.registry: Registry loaded in 8.192s 
+2026-07-07 03:28:55,556 1 INFO hellenia_test odoo.service.server: Initiating shutdown 
+2026-07-07 03:28:55,556 1 INFO hellenia_test odoo.service.server: Hit CTRL-C again or send a second signal to force the shutdown. 
+2026-07-07 03:28:55,556 1 INFO hellenia_test odoo.sql_db: ConnectionPool(read/write;used=0/count=0/max=64): Closed 1 connections  
+Evidence: /Users/faustosantana/Projects/jaios/evidence/fix-real-justech-customizations-only-test

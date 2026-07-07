@@ -1,0 +1,18 @@
+{
+  "status": "PASS",
+  "environment": "test",
+  "tests": "61/61 passed",
+  "validation": "PASS",
+  "healthcheck": "PASS",
+  "visible_count": 4,
+  "visible_customizations": [
+    "Fiscal RD / NCF / DGII",
+    "Documentos y Reportes Corporativos",
+    "UX Fiscal / Formulario Cliente",
+    "POS Fiscal"
+  ],
+  "hidden_modules": [
+    "CRM", "IA", "RRHH", "Marketplace", "Manufactura", "Nómina",
+    "Activos Fijos", "Ventas", "Compras", "Inventario"
+  ]
+}

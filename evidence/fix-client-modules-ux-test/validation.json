@@ -1,0 +1,29 @@
+{
+  "fix": "client-modules-ux",
+  "users": {
+    "it@justech.do": {
+      "found": true,
+      "has_group_system": true,
+      "settings_root_visible": true,
+      "modules_menu_visible": true,
+      "open_action_model": "justech.client.module.control",
+      "open_action_name": "M\u00f3dulos del Cliente",
+      "no_popup_on_open": true
+    },
+    "portal_client_visibility_check@hellenia.local": {
+      "found": true,
+      "has_group_system": false,
+      "settings_root_visible": false
+    }
+  },
+  "checks": {
+    "settings_app_view": true,
+    "control_view_has_summary": true,
+    "control_view_has_administrar": true,
+    "control_view_has_key_banner": true,
+    "menu_groups_system_only": false,
+    "commercial_rows": 11,
+    "no_technical_names_in_rows": true
+  },
+  "status": "PASS"
+}

@@ -1,0 +1,34 @@
+{
+  "phase": "fix-admin-panel-dashboard-ux",
+  "users": {
+    "it@justech.do": {
+      "found": true,
+      "admin_model": "justech.client.module.admin.panel",
+      "feature_sections": 4
+    }
+  },
+  "checks": {
+    "dashboard_view": true,
+    "no_list_view": true,
+    "kanban_features": true,
+    "feature_toggles": true,
+    "header_badges": true,
+    "companies_section": true,
+    "timeline_section": true,
+    "danger_actions": true,
+    "no_technical_fields_visible": false,
+    "fiscal_sections": true,
+    "features_have_descriptions": true,
+    "panel_has_header_html": true,
+    "panel_has_kpi": true,
+    "features_in_cards": true,
+    "grouped_sections": true
+  },
+  "section_labels": [
+    "COMPROBANTES",
+    "DGII",
+    "IMPUESTOS",
+    "VALIDACIONES"
+  ],
+  "status": "PASS"
+}

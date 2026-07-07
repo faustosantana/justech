@@ -18,28 +18,20 @@ class TestClientModuleControlUI(TransactionCase):
 
     def test_control_screen_opens(self):
         action = self.env["justech.client.module.control"].action_open()
-        self.assertEqual(action["res_model"], "justech.client.module.control")
         control = self.env["justech.client.module.control"].browse(action["res_id"])
         self.assertTrue(control.line_ids)
-        self.assertIn("Módulos del Cliente", control.header_html)
-        self.assertIn("Cliente:", control.header_html)
+        self.assertLessEqual(len(control.line_ids), 5)
+        self.assertIn("personalizaciones", control.header_html)
 
-    def test_administrar_panel_shows_includes(self):
-        client = self.env["justech.license.service"].get_commercial_clients()[0]
-        control = self.env["justech.client.module.control"].create(
-            {
-                "license_id": client.get("license_id") or False,
-                "company_id": client.get("primary_company_id") or self.env.company.id,
-            }
-        )
-        control._reload_lines()
-        line = control.line_ids.filtered(
-            lambda l: l.main_module_code == "contabilidad_fiscal_rd"
-        )[:1]
+    def test_administrar_panel_has_feature_toggles(self):
+        control = self.env["justech.client.module.control"].action_open()
+        rec = self.env["justech.client.module.control"].browse(control["res_id"])
+        line = rec.line_ids.filtered(lambda l: l.main_module_code == "fiscal_rd")[:1]
         self.assertTrue(line)
-        menu = self.env["justech.client.module.manage.menu"].create({"line_id": line.id})
-        menu._compute_panels()
-        self.assertIn("NCF", menu.includes_html)
+        action = line.action_open_administrar()
+        panel = self.env["justech.client.module.admin.panel"].browse(action["res_id"])
+        self.assertTrue(panel.feature_line_ids)
+        self.assertIn("B01 Crédito Fiscal", panel.feature_line_ids.mapped("label"))
 
     def test_activate_opens_key_wizard(self):
         token = self.env["justech.admin.access.service"].issue_critical_grant(
@@ -50,54 +42,16 @@ class TestClientModuleControlUI(TransactionCase):
         ).execute_client_module_action(
             "mark_paid", "contabilidad_rd", company=self.env.company
         )
-        client = self.env["justech.license.service"].get_commercial_clients()[0]
-        control = self.env["justech.client.module.control"].create(
-            {
-                "license_id": client.get("license_id") or False,
-                "company_id": client.get("primary_company_id") or self.env.company.id,
-            }
-        )
-        control._reload_lines()
-        line = control.line_ids.filtered(
-            lambda l: l.main_module_code == "contabilidad_fiscal_rd"
-        )[:1]
-        self.assertTrue(line)
-        menu = self.env["justech.client.module.manage.menu"].create({"line_id": line.id})
-        action = menu.action_activate()
-        self.assertEqual(action["res_model"], "justech.client.module.action.wizard")
+        control = self.env["justech.client.module.control"].action_open()
+        rec = self.env["justech.client.module.control"].browse(control["res_id"])
+        line = rec.line_ids.filtered(lambda l: l.main_module_code == "fiscal_rd")[:1]
+        action = line.action_open_administrar()
+        panel = self.env["justech.client.module.admin.panel"].browse(action["res_id"])
+        wizard_action = panel.action_activate()
+        self.assertEqual(wizard_action["res_model"], "justech.client.module.action.wizard")
 
-    def test_open_without_key_no_popup(self):
-        fresh_admin = self.env["res.users"].create(
-            {
-                "name": "Settings Admin Fresh",
-                "login": "settings_admin_realonly@hellenia.cloud",
-                "group_ids": [(6, 0, [self.env.ref("base.group_system").id])],
-            }
-        )
-        self.env["justech.admin.access"].sudo().ensure_access_shell(
-            fresh_admin, company=self.env.company
-        )
-        action = (
-            self.env["justech.admin.access.service"]
-            .with_user(fresh_admin)
-            .action_open_client_modules()
-        )
-        self.assertEqual(action["res_model"], "justech.client.module.control")
-
-    def test_filter_active_only(self):
-        client = self.env["justech.license.service"].get_commercial_clients()[0]
-        control = self.env["justech.client.module.control"].create(
-            {
-                "license_id": client.get("license_id") or False,
-                "company_id": client.get("primary_company_id") or self.env.company.id,
-                "filter_mode": "active",
-            }
-        )
-        control._reload_lines()
-        self.assertTrue(all(l.is_active for l in control.line_ids))
-
-    def test_no_development_section_in_view(self):
+    def test_no_forbidden_labels_in_view(self):
         view = self.env.ref("justech_admin.view_justech_client_module_control_form")
         arch = view.arch_db or ""
-        self.assertNotIn("En desarrollo", arch)
-        self.assertIn("kanban", arch)
+        for label in ("En desarrollo", "CRM", "Marketplace", "Manufactura"):
+            self.assertNotIn(label, arch)

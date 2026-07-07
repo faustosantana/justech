@@ -29,9 +29,9 @@ class JustechAdminDashboard(models.TransientModel):
         Session = self.env["justech.admin.session"].sudo()
         for rec in self:
             company = rec.company_id
-            catalog = license_svc.get_commercial_catalog(company=company)
-            active_mods = sum(1 for c in catalog if c["status"] == "active")
-            available_mods = sum(1 for c in catalog if c["status"] != "unavailable")
+            rows = license_svc.get_client_module_rows(company=company, view_only=True)
+            active_mods = sum(1 for r in rows if r.get("is_active"))
+            available_mods = len(rows)
             license_rec = license_svc._get_active_license_for_company(company)
             tier = license_rec.tier if license_rec else "—"
             internal_users = self.env["res.users"].search_count(
@@ -62,8 +62,8 @@ class JustechAdminDashboard(models.TransientModel):
                 cc.card("Empresa", company.name, "", "ok", "fa-sitemap"),
                 cc.card("Estado", "Operacional", "Healthcheck OK", "ok", "fa-heartbeat"),
                 cc.card("Usuarios", str(internal_users), "Internos Justech", "ok", "fa-users"),
-                cc.card("Módulos activos", str(active_mods), f"de {available_mods} disponibles", "ok", "fa-check-circle"),
-                cc.card("Módulos disponibles", str(available_mods), "Catálogo comercial", "ok", "fa-th-large"),
+                cc.card("Módulos activos", str(active_mods), f"de {available_mods} personalizaciones", "ok", "fa-check-circle"),
+                cc.card("Personalizaciones", str(available_mods), "Justech reales", "ok", "fa-th-large"),
                 cc.card("Integraciones", "7", "Hub conectado", "ok", "fa-plug"),
                 cc.card("Healthcheck", "PASS", "Sistema saludable", "pass", "fa-medkit"),
                 cc.card("Backups", "Automático", "Último: programado", "ok", "fa-database"),
@@ -87,7 +87,7 @@ class JustechAdminDashboard(models.TransientModel):
             )
 
     def action_open_modules(self):
-        return self.env["justech.control.module.catalog"].action_open()
+        return self.env["justech.client.module.control"].action_open()
 
     def action_open_licenses(self):
         return self.env["justech.control.licenses"].action_open()

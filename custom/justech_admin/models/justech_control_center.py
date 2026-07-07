@@ -50,31 +50,42 @@ class JustechControlModuleCatalog(models.TransientModel):
             rec.catalog_html = Markup(cc.grid(*cards) if cards else "<p>Sin módulos.</p>")
 
     def _load_cards(self):
-        catalog = self.env["justech.license.service"].get_commercial_catalog(
-            company=self.company_id
+        license_svc = self.env["justech.license.service"]
+        rows = license_svc.get_client_module_rows(
+            company=self.company_id, view_only=True
         )
+        status_map = {
+            "paid_active": "active",
+            "partial": "partial",
+            "paid_inactive": "inactive",
+            "not_paid": "inactive",
+            "blocked": "inactive",
+            "expired": "inactive",
+            "coming_soon": "unavailable",
+        }
         status_labels = {
             "active": _("Activo"),
             "partial": _("Parcial"),
             "inactive": _("Inactivo"),
-            "unavailable": _("Próximamente"),
+            "unavailable": _("No disponible"),
         }
         commands = [(5, 0, 0)]
-        for row in catalog:
+        for row in rows:
+            status = status_map.get(row.get("status"), "inactive")
             commands.append(
                 (
                     0,
                     0,
                     {
-                        "product_code": row["product_code"],
+                        "product_code": row.get("product_code") or row.get("main_module_code"),
                         "name": row["name"],
-                        "description": row["description"],
-                        "icon": row["icon"],
-                        "category_label": row["category_label"],
-                        "status": row["status"],
-                        "status_label": status_labels.get(row["status"], row["status"]),
-                        "license_tier_label": row["license_tier_label"],
-                        "version": row["version"],
+                        "description": row.get("description") or "",
+                        "icon": "fa-cube",
+                        "category_label": _("Personalización Justech"),
+                        "status": status,
+                        "status_label": status_labels.get(status, status),
+                        "license_tier_label": row.get("license_label") or "—",
+                        "version": "—",
                     },
                 )
             )

@@ -554,97 +554,172 @@ class JustechLicenseService(models.AbstractModel):
         }
     )
 
-    REAL_CLIENT_CATEGORIES = (
+    # Explicit whitelist — only real Justech/Hellenia customizations (never Odoo native).
+    REAL_JUSTECH_CUSTOMIZATIONS = (
         {
-            "code": "ventas",
-            "name": "Ventas",
-            "category": "sales",
-            "primary_product_code": "ventas",
-            "odoo_modules": ("sale",),
-            "includes": [
-                "Cotizaciones",
-                "Órdenes de venta",
-                "Factura cliente",
-                "Diseño PDF cotización/factura",
-                "Tipo de comprobante en contacto/factura",
-            ],
-            "sequence": 10,
-        },
-        {
-            "code": "compras",
-            "name": "Compras",
-            "category": "purchase",
-            "primary_product_code": "compras",
-            "odoo_modules": ("purchase",),
-            "includes": [
-                "Órdenes de compra",
-                "Facturas proveedor",
-                "Recepciones",
-                "Diseño PDF orden de compra",
-            ],
-            "sequence": 20,
-        },
-        {
-            "code": "contabilidad_fiscal_rd",
-            "name": "Contabilidad / Fiscal RD",
-            "category": "fiscal",
+            "code": "fiscal_rd",
+            "name": "Fiscal RD / NCF / DGII",
+            "description": (
+                "Motor fiscal dominicano: NCF serie B completa (B01–B04, B11–B17), secuencias, "
+                "DGII 606/607/608/609/623, ITBIS, retenciones y validaciones fiscales RD."
+            ),
             "primary_product_code": "contabilidad_rd",
+            "technical_modules_any": (
+                "justech_l10n_do_base",
+                "justech_l10n_do_ncf",
+                "justech_l10n_do_reports",
+            ),
             "includes": [
                 "NCF",
-                "DGII",
-                "606",
-                "607",
-                "623",
+                "B01/B02/B03/B04/B11/B12/B13/B14/B15/B16/B17",
+                "Secuencias fiscales",
+                "DGII 606",
+                "DGII 607",
+                "DGII 608",
+                "DGII 609",
+                "DGII 623",
                 "ITBIS",
-                "Retenciones",
-                "Diario / asientos",
-                "Plan de cuentas",
+                "Retenciones si aplica",
+                "Validaciones fiscales RD",
+            ],
+            "commercial_features": [
+                {"key": "b01", "label": "B01 Crédito Fiscal", "section": "comprobantes", "section_label": "COMPROBANTES", "section_sequence": 10, "sequence": 10, "description": "Emite comprobantes válidos para crédito fiscal.", "default_on": True},
+                {"key": "b02", "label": "B02 Consumidor Final", "section": "comprobantes", "section_label": "COMPROBANTES", "section_sequence": 10, "sequence": 20, "description": "Comprobantes para consumidor final.", "default_on": True},
+                {"key": "b03", "label": "B03 Nota de Débito", "section": "comprobantes", "section_label": "COMPROBANTES", "section_sequence": 10, "sequence": 30, "description": "Notas de débito fiscales.", "default_on": True},
+                {"key": "b04", "label": "B04 Nota de Crédito", "section": "comprobantes", "section_label": "COMPROBANTES", "section_sequence": 10, "sequence": 40, "description": "Notas de crédito fiscales.", "default_on": True},
+                {"key": "b11", "label": "B11 Comprobante Compras", "section": "comprobantes", "section_label": "COMPROBANTES", "section_sequence": 10, "sequence": 45, "description": "Compras a proveedores informales.", "default_on": True},
+                {"key": "b12", "label": "B12 Registro Único Ingresos", "section": "comprobantes", "section_label": "COMPROBANTES", "section_sequence": 10, "sequence": 46, "description": "Ingresos no operacionales.", "default_on": True},
+                {"key": "b13", "label": "B13 Gastos Menores", "section": "comprobantes", "section_label": "COMPROBANTES", "section_sequence": 10, "sequence": 47, "description": "Gastos menores sin factura formal.", "default_on": True},
+                {"key": "b14", "label": "B14 Regímenes Especiales", "section": "comprobantes", "section_label": "COMPROBANTES", "section_sequence": 10, "sequence": 48, "description": "Zonas francas y regímenes especiales.", "default_on": True},
+                {"key": "b15", "label": "B15 Gubernamental", "section": "comprobantes", "section_label": "COMPROBANTES", "section_sequence": 10, "sequence": 49, "description": "Ventas a entidades gubernamentales.", "default_on": True},
+                {"key": "b16", "label": "B16 Exportaciones", "section": "comprobantes", "section_label": "COMPROBANTES", "section_sequence": 10, "sequence": 50, "description": "Ventas al exterior.", "default_on": True},
+                {"key": "b17", "label": "B17 Pagos al Exterior", "section": "comprobantes", "section_label": "COMPROBANTES", "section_sequence": 10, "sequence": 51, "description": "Pagos a no residentes (606/609).", "default_on": True},
+                {"key": "ncf", "label": "NCF", "section": "comprobantes", "section_label": "COMPROBANTES", "section_sequence": 10, "sequence": 60, "description": "Numeración de comprobantes fiscales.", "default_on": True},
+                {"key": "secuencias", "label": "Secuencias fiscales", "section": "comprobantes", "section_label": "COMPROBANTES", "section_sequence": 10, "sequence": 70, "description": "Secuencias autorizadas por DGII.", "default_on": True},
+                {"key": "dgii_606", "label": "606", "section": "dgii", "section_label": "DGII", "section_sequence": 20, "sequence": 10, "description": "Reporte de compras DGII 606.", "default_on": True},
+                {"key": "dgii_607", "label": "607", "section": "dgii", "section_label": "DGII", "section_sequence": 20, "sequence": 20, "description": "Reporte de ventas DGII 607.", "default_on": True},
+                {"key": "dgii_608", "label": "608", "section": "dgii", "section_label": "DGII", "section_sequence": 20, "sequence": 25, "description": "NCF anulados.", "default_on": True},
+                {"key": "dgii_609", "label": "609", "section": "dgii", "section_label": "DGII", "section_sequence": 20, "sequence": 28, "description": "Pagos al exterior.", "default_on": True},
+                {"key": "dgii_623", "label": "623", "section": "dgii", "section_label": "DGII", "section_sequence": 20, "sequence": 30, "description": "Reporte DGII 623.", "default_on": True},
+                {"key": "itbis", "label": "ITBIS", "section": "impuestos", "section_label": "IMPUESTOS", "section_sequence": 30, "sequence": 10, "description": "Cálculo y declaración de ITBIS.", "default_on": True},
+                {"key": "retenciones", "label": "Retenciones", "section": "impuestos", "section_label": "IMPUESTOS", "section_sequence": 30, "sequence": 20, "description": "Retenciones fiscales aplicables.", "default_on": True},
+                {"key": "validaciones_rd", "label": "Validaciones fiscales RD", "section": "validaciones", "section_label": "VALIDACIONES", "section_sequence": 40, "sequence": 10, "description": "Validaciones normativas dominicanas.", "default_on": True},
+            ],
+            "sequence": 10,
+            "allow_license_actions": True,
+            "visible_to_client": True,
+        },
+        {
+            "code": "ux_fiscal_contactos_facturas",
+            "name": "UX Fiscal / Contactos y Facturas",
+            "description": (
+                "Mejoras fiscales en contactos y facturas: tipo de comprobante, "
+                "validación RNC/Cédula y campos fiscales."
+            ),
+            "primary_product_code": "ux_fiscal",
+            "technical_modules_all": ("hellenia_ux",),
+            "includes": [
+                "Tipo de comprobante en contacto",
+                "Validación RNC/Cédula duplicada",
+                "Pestaña fiscal",
+                "Campos fiscales en factura/contacto",
+                "Mejoras visuales fiscales",
+            ],
+            "commercial_features": [
+                {"key": "tipo_comprobante", "label": "Tipo de comprobante en contacto", "section": "contactos", "section_label": "CONTACTOS", "section_sequence": 10, "sequence": 10, "description": "Selección de tipo de comprobante en el contacto.", "default_on": True},
+                {"key": "rnc_duplicado", "label": "Validación RNC/Cédula duplicada", "section": "contactos", "section_label": "CONTACTOS", "section_sequence": 10, "sequence": 20, "description": "Evita RNC o cédula duplicados.", "default_on": True},
+                {"key": "pestana_fiscal", "label": "Pestaña fiscal", "section": "facturas", "section_label": "FACTURAS", "section_sequence": 20, "sequence": 10, "description": "Pestaña fiscal en formularios de factura.", "default_on": True},
+                {"key": "campos_fiscales", "label": "Campos fiscales en factura", "section": "facturas", "section_label": "FACTURAS", "section_sequence": 20, "sequence": 20, "description": "Campos fiscales en factura y contacto.", "default_on": True},
+                {"key": "mejoras_visuales", "label": "Mejoras visuales fiscales", "section": "facturas", "section_label": "FACTURAS", "section_sequence": 20, "sequence": 30, "description": "Mejoras de usabilidad en pantallas fiscales.", "default_on": True},
+            ],
+            "sequence": 20,
+            "allow_license_actions": True,
+            "visible_to_client": True,
+        },
+        {
+            "code": "reportes_documentos_corporativos",
+            "name": "Reportes y Documentos Corporativos",
+            "description": (
+                "PDF corporativos para cotizaciones, facturas, órdenes de compra y conduces."
+            ),
+            "primary_product_code": "reportes_corporativos",
+            "technical_modules_all": ("justech_report_design",),
+            "includes": [
+                "PDF cotización",
+                "PDF factura",
+                "PDF orden de compra",
+                "Conduces",
+                "Diseño corporativo",
+                "Branding Hellenia",
+            ],
+            "commercial_features": [
+                {"key": "pdf_cotizacion", "label": "PDF Cotización", "section": "documentos", "section_label": "DOCUMENTOS", "section_sequence": 10, "sequence": 10, "description": "Cotización con diseño corporativo.", "default_on": True},
+                {"key": "pdf_factura", "label": "PDF Factura", "section": "documentos", "section_label": "DOCUMENTOS", "section_sequence": 10, "sequence": 20, "description": "Factura PDF con branding Hellenia.", "default_on": True},
+                {"key": "pdf_oc", "label": "PDF Orden de Compra", "section": "documentos", "section_label": "DOCUMENTOS", "section_sequence": 10, "sequence": 30, "description": "Orden de compra en formato corporativo.", "default_on": True},
+                {"key": "pdf_conduce", "label": "PDF Conduce", "section": "documentos", "section_label": "DOCUMENTOS", "section_sequence": 10, "sequence": 40, "description": "Conduce / guía de entrega corporativa.", "default_on": True},
+                {"key": "branding", "label": "Branding Hellenia", "section": "diseno", "section_label": "DISEÑO", "section_sequence": 20, "sequence": 10, "description": "Identidad visual Hellenia en documentos.", "default_on": True},
+                {"key": "diseno", "label": "Diseño corporativo", "section": "diseno", "section_label": "DISEÑO", "section_sequence": 20, "sequence": 20, "description": "Plantillas y layout corporativo.", "default_on": True},
             ],
             "sequence": 30,
+            "allow_license_actions": True,
+            "visible_to_client": True,
         },
         {
-            "code": "inventario",
-            "name": "Inventario",
-            "category": "inventory",
-            "primary_product_code": "inventario",
-            "includes": [
-                "Productos",
-                "Almacenes",
-                "Transferencias",
-                "Existencias",
-            ],
-            "sequence": 40,
-        },
-        {
-            "code": "pos",
-            "name": "POS",
-            "category": "pos",
+            "code": "pos_fiscal_si_instalado",
+            "name": "POS Fiscal",
+            "description": "Punto de venta fiscal integrado con NCF, tickets y caja.",
             "primary_product_code": "punto_de_venta",
-            "requires_odoo_modules": ("hellenia_pos",),
+            "technical_modules_all": ("hellenia_pos",),
+            "requires_product_configured": True,
             "includes": [
-                "POS",
+                "POS fiscal",
                 "Ticket",
                 "Caja",
                 "Cliente con RNC",
                 "Factura fiscal desde POS",
             ],
-            "sequence": 50,
+            "commercial_features": [
+                {"key": "pos_fiscal", "label": "POS fiscal", "section": "pos", "section_label": "PUNTO DE VENTA", "section_sequence": 10, "sequence": 10, "description": "Terminal de venta fiscal integrado.", "default_on": True},
+                {"key": "ticket", "label": "Ticket", "section": "pos", "section_label": "PUNTO DE VENTA", "section_sequence": 10, "sequence": 20, "description": "Impresión de ticket fiscal.", "default_on": True},
+                {"key": "caja", "label": "Caja", "section": "pos", "section_label": "PUNTO DE VENTA", "section_sequence": 10, "sequence": 30, "description": "Control de caja y sesiones POS.", "default_on": True},
+                {"key": "cliente_rnc", "label": "Cliente con RNC", "section": "pos", "section_label": "PUNTO DE VENTA", "section_sequence": 10, "sequence": 40, "description": "Captura de RNC del cliente en POS.", "default_on": True},
+                {"key": "factura_pos", "label": "Factura fiscal desde POS", "section": "pos", "section_label": "PUNTO DE VENTA", "section_sequence": 10, "sequence": 50, "description": "Emisión de factura fiscal desde caja.", "default_on": True},
+            ],
+            "sequence": 40,
+            "allow_license_actions": True,
+            "visible_to_client": True,
         },
         {
-            "code": "reportes_documentos",
-            "name": "Reportes / Documentos",
-            "category": "reports",
-            "primary_product_code": "reportes_corporativos",
+            "code": "control_justech_interno",
+            "name": "Control Justech",
+            "description": (
+                "Administración interna Justech: módulos del cliente, licencias, "
+                "clave administrativa, auditoría y governance."
+            ),
+            "primary_product_code": None,
+            "technical_modules_all": ("hellenia_governance", "justech_modules"),
+            "internal_only": True,
             "includes": [
-                "PDF cotización",
-                "PDF factura",
-                "PDF orden compra",
-                "Conduces",
-                "Diseño corporativo",
+                "Módulos del Cliente",
+                "Licencias",
+                "Clave Administrativa Justech",
+                "Auditoría",
+                "Governance/Admin interno",
             ],
-            "sequence": 60,
+            "commercial_features": [
+                {"key": "modulos_cliente", "label": "Módulos del Cliente", "section": "plataforma", "section_label": "PLATAFORMA", "section_sequence": 10, "sequence": 10, "description": "Consola de personalizaciones del cliente.", "default_on": True},
+                {"key": "licencias", "label": "Licencias", "section": "plataforma", "section_label": "PLATAFORMA", "section_sequence": 10, "sequence": 20, "description": "Gestión de licencias comerciales.", "default_on": True},
+                {"key": "clave_admin", "label": "Clave Administrativa Justech", "section": "plataforma", "section_label": "PLATAFORMA", "section_sequence": 10, "sequence": 30, "description": "Clave para acciones críticas.", "default_on": True},
+                {"key": "auditoria", "label": "Auditoría", "section": "plataforma", "section_label": "PLATAFORMA", "section_sequence": 10, "sequence": 40, "description": "Historial de cambios de plataforma.", "default_on": True},
+                {"key": "governance", "label": "Governance/Admin interno", "section": "plataforma", "section_label": "PLATAFORMA", "section_sequence": 10, "sequence": 50, "description": "Gobierno y permisos internos Justech.", "default_on": True},
+            ],
+            "sequence": 50,
+            "allow_license_actions": False,
+            "visible_to_client": False,
         },
     )
+
+    JUSTECH_REAL_CUSTOMIZATIONS = REAL_JUSTECH_CUSTOMIZATIONS
 
     COMMERCIAL_ICON_MAP = {
         "fiscal": "🧾",
@@ -911,19 +986,237 @@ class JustechLicenseService(models.AbstractModel):
         )
 
     @api.model
-    def _category_is_visible(self, category, product_cache, internal):
-        product = product_cache.get(category.get("primary_product_code"))
-        if product and self._product_configured(product, internal):
-            if category.get("requires_odoo_modules"):
-                return all(
-                    self._odoo_module_installed(mod)
-                    for mod in category["requires_odoo_modules"]
-                )
-            return True
-        for mod in category.get("odoo_modules") or ():
+    def _customization_is_visible(self, customization, product_cache, internal):
+        if customization.get("internal_only") and not self.env.user.has_group(
+            "justech_modules.group_justech_internal_admin"
+        ):
+            return False
+        mods_all = customization.get("technical_modules_all") or ()
+        if mods_all and not all(self._odoo_module_installed(m) for m in mods_all):
+            return False
+        mods_any = customization.get("technical_modules_any") or ()
+        if mods_any and not any(self._odoo_module_installed(m) for m in mods_any):
+            return False
+        if customization.get("requires_product_configured"):
+            product = product_cache.get(customization.get("primary_product_code"))
+            if not product or not self._product_configured(product, internal):
+                return False
+        return bool(mods_all or mods_any)
+
+    @api.model
+    def _customization_technical_status(self, customization):
+        labels = []
+        for mod in (
+            customization.get("technical_modules_all")
+            or customization.get("technical_modules_any")
+            or ()
+        ):
             if self._odoo_module_installed(mod):
-                return True
-        return False
+                labels.append(f"✓ {mod}")
+            else:
+                labels.append(f"✗ {mod}")
+        return labels
+
+    @api.model
+    def get_customization_definition(self, customization_code):
+        for customization in self.REAL_JUSTECH_CUSTOMIZATIONS:
+            if customization["code"] == customization_code:
+                return customization
+        return None
+
+    @api.model
+    def get_commercial_feature_rows(self, customization_code, company=None):
+        """Return ON/OFF feature rows for admin panel (commercial control only)."""
+        company = company or self.env.company
+        definition = self.get_customization_definition(customization_code)
+        if not definition:
+            return []
+        Flag = self.env["justech.client.module.feature.flag"].sudo()
+        rows = []
+        for feature in definition.get("commercial_features") or []:
+            flag = Flag.search(
+                [
+                    ("customization_code", "=", customization_code),
+                    ("feature_key", "=", feature["key"]),
+                    ("company_id", "=", company.id),
+                ],
+                limit=1,
+            )
+            default_on = feature.get("default_on", True)
+            rows.append(
+                {
+                    "feature_key": feature["key"],
+                    "label": feature["label"],
+                    "description": feature.get("description") or "",
+                    "section": feature.get("section") or "general",
+                    "section_label": feature.get("section_label") or _("GENERAL"),
+                    "section_sequence": feature.get("section_sequence", 99),
+                    "sequence": feature.get("sequence", 99),
+                    "is_active": flag.is_active if flag else default_on,
+                    "initial_active": flag.is_active if flag else default_on,
+                    "control_type": feature.get("control_type", "commercial"),
+                }
+            )
+        return rows
+
+    @api.model
+    def get_commercial_feature_sections(self, customization_code, company=None):
+        """Grouped feature sections for dashboard display."""
+        rows = self.get_commercial_feature_rows(customization_code, company=company)
+        sections = {}
+        for row in rows:
+            key = row["section_label"]
+            if key not in sections:
+                sections[key] = {
+                    "section_label": key,
+                    "section_sequence": row["section_sequence"],
+                    "features": [],
+                }
+            sections[key]["features"].append(row)
+        return sorted(sections.values(), key=lambda s: s["section_sequence"])
+
+    @api.model
+    def _commercial_feature_audit(
+        self,
+        customization_code,
+        feature_key,
+        feature_label,
+        company,
+        state_before,
+        state_after,
+        result="success",
+        reason=None,
+    ):
+        definition = self.get_customization_definition(customization_code)
+        product_code = (definition or {}).get("primary_product_code") or customization_code
+        commercial_name = (definition or {}).get("name") or customization_code
+        ip = self.env["justech.admin.access.service"]._get_request_ip()
+        self.env["justech.client.module.audit"].sudo().create(
+            {
+                "user_id": self.env.uid,
+                "company_id": company.id,
+                "client_name": self._client_name_for_company(company),
+                "ip_address": ip,
+                "action": "feature_toggle",
+                "origin": "justech",
+                "product_code": product_code,
+                "commercial_name": commercial_name,
+                "state_before": state_before,
+                "state_after": state_after,
+                "result": result,
+                "reason": reason,
+                "details": {
+                    "customization_code": customization_code,
+                    "feature_key": feature_key,
+                    "feature_label": feature_label,
+                    "control_type": "commercial",
+                },
+            }
+        )
+
+    @api.model
+    def set_commercial_feature(self, customization_code, feature_key, company, is_active):
+        """Persist a commercial feature toggle (does not change fiscal runtime)."""
+        self._require_activation_admin()
+        self = self.with_context(justech_skip_critical_step_up=True)
+        company = company or self.env.company
+        definition = self.get_customization_definition(customization_code)
+        if not definition:
+            raise JustechLicenseError(
+                _("Unknown customization '%(code)s'.") % {"code": customization_code}
+            )
+        feature_def = next(
+            (
+                feature
+                for feature in definition.get("commercial_features") or []
+                if feature["key"] == feature_key
+            ),
+            None,
+        )
+        if not feature_def:
+            raise JustechLicenseError(
+                _("Unknown feature '%(key)s' for '%(code)s'.")
+                % {"key": feature_key, "code": customization_code}
+            )
+        Flag = self.env["justech.client.module.feature.flag"].sudo()
+        flag = Flag.search(
+            [
+                ("customization_code", "=", customization_code),
+                ("feature_key", "=", feature_key),
+                ("company_id", "=", company.id),
+            ],
+            limit=1,
+        )
+        default_on = feature_def.get("default_on", True)
+        before_active = flag.is_active if flag else default_on
+        before_label = "ON" if before_active else "OFF"
+        after_label = "ON" if is_active else "OFF"
+        if flag:
+            flag.write({"is_active": is_active, "feature_label": feature_def["label"]})
+        else:
+            Flag.create(
+                {
+                    "customization_code": customization_code,
+                    "feature_key": feature_key,
+                    "feature_label": feature_def["label"],
+                    "company_id": company.id,
+                    "is_active": is_active,
+                    "control_type": "commercial",
+                }
+            )
+        self._commercial_feature_audit(
+            customization_code,
+            feature_key,
+            feature_def["label"],
+            company,
+            before_label,
+            after_label,
+        )
+        return True
+
+    @api.model
+    def apply_commercial_feature_changes(self, customization_code, company, changes):
+        for change in changes or []:
+            self.set_commercial_feature(
+                customization_code,
+                change["key"],
+                company,
+                bool(change.get("active")),
+            )
+
+    @api.model
+    def get_visible_justech_customizations_report(self, company=None, license_id=None):
+        """Summary for validation: visible customizations and hidden native/future modules."""
+        rows = self.get_client_module_rows(
+            company=company, license_id=license_id, view_only=True
+        )
+        visible = [
+            {
+                "code": r["main_module_code"],
+                "name": r["name"],
+                "product_code": r.get("product_code"),
+            }
+            for r in rows
+        ]
+        hidden_native = []
+        forbidden = [
+            "CRM",
+            "IA",
+            "RRHH",
+            "Marketplace",
+            "Manufactura",
+            "Nómina",
+            "Activos Fijos",
+            "Ventas (Odoo nativo)",
+            "Compras (Odoo nativo)",
+            "Inventario (Odoo nativo)",
+        ]
+        return {
+            "visible_count": len(visible),
+            "visible": visible,
+            "hidden_forbidden_labels": forbidden,
+            "max_expected": 5,
+        }
 
     @api.model
     def _product_row_data(self, product, company, license_rec, client_name, tier_label):
@@ -945,6 +1238,12 @@ class JustechLicenseService(models.AbstractModel):
             product, company
         )
         enabled_companies = self._product_enabled_companies(product, license_rec)
+        if license_rec:
+            license_label = tier_label
+        elif is_active:
+            license_label = _("Licencia pendiente de configurar")
+        else:
+            license_label = _("Licencia pendiente de configurar")
         return {
             "product_code": product.code,
             "is_paid": state.is_paid,
@@ -953,7 +1252,7 @@ class JustechLicenseService(models.AbstractModel):
             "client_name": client_name,
             "company_name": company.name,
             "plan_label": tier_label,
-            "license_label": tier_label,
+            "license_label": license_label,
             "companies_enabled_text": ", ".join(enabled_companies) or "—",
             "activated_at": activated_at,
             "activated_by_name": activated_by or "—",
@@ -968,22 +1267,19 @@ class JustechLicenseService(models.AbstractModel):
         }
 
     @api.model
-    def _category_fallback_row(
-        self, category, product, company, license_rec, client_name, tier_label, configured
+    def _platform_customization_row(
+        self, customization, company, license_rec, client_name, tier_label
     ):
-        if product:
-            return self._product_row_data(
-                product, company, license_rec, client_name, tier_label
-            )
+        tech = self._customization_technical_status(customization)
         return {
-            "product_code": category["code"],
+            "product_code": customization["code"],
             "is_paid": False,
             "is_active": True,
             "is_blocked": False,
             "client_name": client_name,
             "company_name": company.name,
             "plan_label": tier_label,
-            "license_label": tier_label,
+            "license_label": "Plataforma interna",
             "companies_enabled_text": "—",
             "activated_at": False,
             "activated_by_name": "—",
@@ -994,12 +1290,14 @@ class JustechLicenseService(models.AbstractModel):
             "origin_label": self._origin_label("justech"),
             "status": "paid_active",
             "status_label": _("Activo"),
-            "configured": configured,
+            "configured": True,
+            "technical_status_text": ", ".join(tech),
+            "allow_license_actions": False,
         }
 
     @api.model
     def get_client_module_rows(self, company=None, license_id=None, view_only=False):
-        """Real client categories for Módulos del Cliente (existing only)."""
+        """Justech real customizations only (installed technical modules)."""
         self.env["justech.admin.access.service"].require_justech_settings_access()
         if not view_only and not self.env.su:
             svc = self.env["justech.admin.access.service"]
@@ -1020,44 +1318,40 @@ class JustechLicenseService(models.AbstractModel):
             p.code: p for p in Product.search([("active", "=", True)])
         }
         rows = []
-        for category in sorted(
-            self.REAL_CLIENT_CATEGORIES, key=lambda c: c.get("sequence", 99)
+        for customization in sorted(
+            self.REAL_JUSTECH_CUSTOMIZATIONS, key=lambda c: c.get("sequence", 99)
         ):
-            if not self._category_is_visible(category, product_cache, internal):
+            if not self._customization_is_visible(
+                customization, product_cache, internal
+            ):
                 continue
-            primary_code = category.get("primary_product_code")
+            primary_code = customization.get("primary_product_code")
             product = product_cache.get(primary_code) if primary_code else False
-            configured = self._product_configured(product, internal) if product else False
-            if product and configured:
+            if product:
                 base = self._product_row_data(
                     product, company, license_rec, client_name, tier_label
                 )
             else:
-                base = self._category_fallback_row(
-                    category,
-                    product,
-                    company,
-                    license_rec,
-                    client_name,
-                    tier_label,
-                    configured,
+                base = self._platform_customization_row(
+                    customization, company, license_rec, client_name, tier_label
                 )
-                if category.get("odoo_modules") and not configured:
-                    base["status"] = "paid_active"
-                    base["status_label"] = _("Activo")
-                    base["is_active"] = True
+            tech_status = self._customization_technical_status(customization)
             rows.append(
                 {
                     **base,
-                    "main_module_code": category["code"],
-                    "name": category["name"],
-                    "display_name": category["name"],
-                    "description": "",
-                    "includes": category["includes"],
-                    "includes_summary": ", ".join(category["includes"]),
+                    "main_module_code": customization["code"],
+                    "name": customization["name"],
+                    "display_name": customization["name"],
+                    "description": customization["description"],
+                    "includes": customization["includes"],
+                    "includes_summary": ", ".join(customization["includes"]),
                     "section": "available",
                     "is_development": False,
-                    "product_code": primary_code or category["code"],
+                    "product_code": primary_code or customization["code"],
+                    "technical_status_text": ", ".join(tech_status),
+                    "allow_license_actions": customization.get(
+                        "allow_license_actions", True
+                    ),
                 }
             )
         return rows

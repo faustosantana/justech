@@ -1,0 +1,22 @@
+=== Final Client Module Control TEST ===
+Transfer starting: 61 files
+
+sent 3243 bytes  received 20 bytes  7107 bytes/sec
+total size is 196253  speedup is 60.14
+Transfer starting: 26 files
+security/ir.model.access.csv
+
+sent 1470 bytes  received 90 bytes  2982 bytes/sec
+total size is 82449  speedup is 52.85
+Transfer starting: 33 files
+
+sent 1673 bytes  received 20 bytes  5355 bytes/sec
+total size is 40778  speedup is 24.09
+ Container hellenia-test-odoo-1 Stopping 
+ Container hellenia-test-odoo-1 Stopped 
+2026-07-06 20:45:20,061 1 INFO hellenia_test odoo.registry: Registry changed, signaling through the database 
+2026-07-06 20:45:20,062 1 INFO hellenia_test odoo.registry: Registry loaded in 8.494s 
+2026-07-06 20:45:20,062 1 INFO hellenia_test odoo.service.server: Initiating shutdown 
+2026-07-06 20:45:20,062 1 INFO hellenia_test odoo.service.server: Hit CTRL-C again or send a second signal to force the shutdown. 
+2026-07-06 20:45:20,062 1 INFO hellenia_test odoo.sql_db: ConnectionPool(read/write;used=0/count=0/max=64): Closed 1 connections  
+Evidence: /Users/faustosantana/Projects/jaios/evidence/final-client-module-control-test

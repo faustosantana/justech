@@ -439,7 +439,7 @@ class JustechAdminAccessService(models.AbstractModel):
     @api.model
     def action_open_commercial_modules(self):
         self.require_session(self.SCOPE_ADMIN)
-        return self.env["justech.control.module.catalog"].action_open()
+        return self.env["justech.client.module.control"].action_open()
 
     @api.model
     def action_open_control_licenses(self):

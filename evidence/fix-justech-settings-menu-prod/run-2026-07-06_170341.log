@@ -1,0 +1,19 @@
+=== Fix Justech Settings Menu PROD ===
+Transfer starting: 61 files
+
+sent 3243 bytes  received 20 bytes  11019 bytes/sec
+total size is 196404  speedup is 60.19
+Transfer starting: 26 files
+tests/
+
+sent 1303 bytes  received 26 bytes  2429 bytes/sec
+total size is 83775  speedup is 63.04
+Backup: /opt/odoo-projects/hellenia/backups/hellenia-prod/justech-settings-menu-2026-07-06_170341/hellenia_prod.dump
+ Container hellenia-prod-odoo-1 Stopping 
+ Container hellenia-prod-odoo-1 Stopped 
+2026-07-06 21:04:02,357 1 INFO hellenia_prod odoo.registry: verifying fields for every extended model 
+2026-07-06 21:04:03,332 1 INFO hellenia_prod odoo.modules.loading: Modules loaded. 
+2026-07-06 21:04:03,348 1 INFO hellenia_prod odoo.registry: Registry changed, signaling through the database 
+2026-07-06 21:04:03,349 1 INFO hellenia_prod odoo.registry: Registry loaded in 8.596s 
+2026-07-06 21:04:03,351 1 INFO hellenia_prod odoo.service.server: Stopping workers gracefully 
+Evidence: /Users/faustosantana/Projects/jaios/evidence/fix-justech-settings-menu-prod

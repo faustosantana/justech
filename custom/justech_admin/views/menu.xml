@@ -26,13 +26,13 @@
               sequence="20"/>
 
     <menuitem id="menu_justech_security"
-              name="Seguridad Justech"
+              name="Seguridad"
               parent="menu_justech_settings_root"
               action="action_justech_control_security_protected"
               sequence="30"/>
 
     <menuitem id="menu_justech_audit"
-              name="Auditoría Justech"
+              name="Auditoría técnica"
               parent="menu_justech_settings_root"
               action="action_justech_control_audit_protected"
               sequence="40"/>

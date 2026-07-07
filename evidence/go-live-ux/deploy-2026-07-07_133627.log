@@ -1,0 +1,7 @@
+=== UPGRADE ===
+  File "/usr/lib/python3/dist-packages/odoo/tools/convert.py", line 618, in _tag_root
+    raise ParseError('while parsing %s:%s, somewhere inside\n%s' % (
+odoo.tools.convert.ParseError: while parsing /mnt/custom/justech_global_audit_log/views/menu.xml:72, somewhere inside
+<menuitem id="menu_justech_audit_user_exclude" name="Usuarios excluidos" parent="menu_justech_global_audit_security" action="action_justech_audit_user_exclude" sequence="20" groups="justech_global_audit_log.group_justech_audit_manager"/>
+2026-07-07 17:36:54,087 1 INFO hellenia_prod odoo.service.server: Stopping workers gracefully 
+

@@ -1,31 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <menuitem id="menu_justech_platform_root"
-              name="Justech"
-              parent="base.menu_administration"
-              sequence="94"
-              groups="justech_multicurrency.group_justech_multicurrency_user"/>
-
-    <menuitem id="menu_justech_multicurrency_root"
-              name="Multimoneda"
-              parent="menu_justech_platform_root"
-              sequence="50"/>
-
-    <menuitem id="menu_justech_multicurrency_policy"
-              name="Política Comercial"
-              parent="menu_justech_multicurrency_root"
-              action="action_justech_multicurrency_policy"
-              sequence="10"/>
-
-    <menuitem id="menu_justech_multicurrency_dashboard"
-              name="Dashboard"
-              parent="menu_justech_multicurrency_root"
-              action="action_justech_multicurrency_dashboard"
-              sequence="20"/>
-
+    <!-- UX-1: tasas bajo Contabilidad → Configuración (estándar Odoo) -->
     <menuitem id="menu_justech_multicurrency_rates"
               name="Tasas de cambio"
-              parent="menu_justech_multicurrency_root"
+              parent="account.menu_finance_configuration"
               action="action_justech_multicurrency_rates"
-              sequence="30"/>
+              sequence="35"
+              groups="account.group_account_manager"/>
+
+    <!-- Sin menú superior Justech / Multimoneda para usuarios operativos -->
+    <record id="menu_justech_platform_root" model="ir.ui.menu">
+        <field name="active" eval="False"/>
+    </record>
+    <record id="menu_justech_multicurrency_root" model="ir.ui.menu">
+        <field name="active" eval="False"/>
+    </record>
+    <record id="menu_justech_multicurrency_dashboard" model="ir.ui.menu">
+        <field name="active" eval="False"/>
+    </record>
+
+    <!-- Política comercial: solo administración interna (reparent en hook/menu customizer) -->
+    <menuitem id="menu_justech_multicurrency_policy"
+              name="Configuración comercial"
+              parent="base.menu_administration"
+              action="action_justech_multicurrency_policy"
+              sequence="96"
+              groups="base.group_system,base.group_erp_manager"/>
 </odoo>

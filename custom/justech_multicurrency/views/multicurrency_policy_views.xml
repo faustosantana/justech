@@ -18,7 +18,7 @@
         <field name="name">justech.multicurrency.policy.form</field>
         <field name="model">justech.multicurrency.policy</field>
         <field name="arch" type="xml">
-            <form string="Política Comercial Multimoneda">
+            <form string="Configuración comercial">
                 <header>
                     <button name="action_open_dashboard" type="object" string="Ver dashboard" class="btn-primary"/>
                 </header>
@@ -49,7 +49,7 @@
     </record>
 
     <record id="action_justech_multicurrency_policy" model="ir.actions.act_window">
-        <field name="name">Política Comercial</field>
+        <field name="name">Configuración comercial</field>
         <field name="res_model">justech.multicurrency.policy</field>
         <field name="view_mode">list,form</field>
         <field name="context">{'default_company_id': allowed_company_ids[0] if allowed_company_ids else False}</field>

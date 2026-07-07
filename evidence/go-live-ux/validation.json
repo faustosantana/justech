@@ -1,0 +1,53 @@
+{
+  "phase": "GO-LIVE-UX",
+  "timestamp_utc": "2026-07-07T17:40:38.008828+00:00",
+  "database": "hellenia_prod",
+  "ok": true,
+  "checks": {
+    "product_no_justech": true,
+    "product_has_venta_compra": true,
+    "sale_taxes_labeled": true,
+    "purchase_taxes_labeled": true,
+    "taxes_order_ok": true,
+    "no_comercial_tab": true,
+    "accounting_submenu_active": true,
+    "plan_cuentas_visible": true,
+    "monedas_visible": true,
+    "tasas_visible": true,
+    "fiscal_separate": true,
+    "audit_not_root_app": true,
+    "audit_under_settings": true,
+    "platform_justech_hidden": true,
+    "admin_root_no_auditoria": true,
+    "client_no_auditoria_app": true,
+    "client_no_justech_app": true,
+    "ncf_names_clean": true,
+    "ncf_bad_names": [],
+    "purchase_tax_name": "18% ITBIS Compras",
+    "purchase_tax_ok": true
+  },
+  "blockers": [],
+  "menu_audit": {
+    "config_children": [
+      "Ajustes",
+      "Contabilidad",
+      "Invoicing",
+      "Assets and Revenues",
+      "Online Payments",
+      "Tasas de cambio",
+      "Analytic Accounting",
+      "Localización Dominicana"
+    ],
+    "admin_roots": [
+      "Contactos",
+      "Ventas",
+      "Contabilidad",
+      "Compras",
+      "Inventario",
+      "Apps",
+      "Configuración"
+    ],
+    "audit_parent": "Justech",
+    "audit_xid_parent": "justech_admin.menu_justech_settings_root"
+  }
+}

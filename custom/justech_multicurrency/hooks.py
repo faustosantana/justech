@@ -19,6 +19,31 @@ def post_init_hook(env):
     _ensure_company_policies(env)
     _ensure_audit_rules(env)
     _restrict_pricelist_menus(env)
+    _integrate_accounting_menus(env)
+
+
+def _integrate_accounting_menus(env):
+    """UX-1: tasas en Contabilidad; política comercial solo en Configuración interna."""
+    config = env.ref("account.menu_finance_configuration", raise_if_not_found=False)
+    rates = env.ref("justech_multicurrency.menu_justech_multicurrency_rates", raise_if_not_found=False)
+    if config and rates:
+        rates.sudo().write({"parent_id": config.id, "active": True, "sequence": 35})
+
+    for xid in (
+        "justech_multicurrency.menu_justech_platform_root",
+        "justech_multicurrency.menu_justech_multicurrency_root",
+        "justech_multicurrency.menu_justech_multicurrency_dashboard",
+    ):
+        menu = env.ref(xid, raise_if_not_found=False)
+        if menu and menu.active:
+            menu.sudo().active = False
+
+    settings = env.ref("justech_admin.menu_justech_settings_root", raise_if_not_found=False)
+    policy = env.ref("justech_multicurrency.menu_justech_multicurrency_policy", raise_if_not_found=False)
+    if settings and policy:
+        policy.sudo().write(
+            {"parent_id": settings.id, "name": "Configuración comercial", "sequence": 50}
+        )
 
 
 def _restrict_pricelist_menus(env):

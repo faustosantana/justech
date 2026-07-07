@@ -77,6 +77,12 @@ MENU_LABELS_ES = {
     "account.menu_finance_reports": "Reportes",
     "account.menu_finance_configuration": "Configuración",
     "account.menu_account_config": "Ajustes",
+    "account.account_account_menu": "Contabilidad",
+    "account.menu_action_account_form": "Plan de cuentas",
+    "account.menu_action_tax_form": "Impuestos",
+    "account.menu_action_account_journal_form": "Diarios",
+    "account.menu_action_currency_form": "Monedas",
+    "account.menu_action_account_fiscal_position_form": "Posiciones fiscales",
     "account.menu_action_account_payments_receivable": "Pagos",
     "account.menu_action_account_payments_payable": "Pagos",
 }
@@ -249,9 +255,74 @@ class HelleniaUiMenuCustomizer(models.AbstractModel):
             self._set_menu_label(xmlid, label)
 
     @api.model
+    def standardize_ux1_navigation(self):
+        """UX-1 / GO-LIVE-UX: multimoneda nativa, Justech y Auditoría solo internos."""
+        config = self.env.ref("account.menu_finance_configuration", raise_if_not_found=False)
+
+        for xid in (
+            "justech_multicurrency.menu_justech_platform_root",
+            "justech_multicurrency.menu_justech_multicurrency_root",
+            "justech_multicurrency.menu_justech_multicurrency_dashboard",
+        ):
+            menu = self.env.ref(xid, raise_if_not_found=False)
+            if menu and menu.active:
+                menu.active = False
+
+        rates = self.env.ref("justech_multicurrency.menu_justech_multicurrency_rates", raise_if_not_found=False)
+        if config and rates:
+            rates.write({"parent_id": config.id, "active": True, "sequence": 35})
+
+        settings = self.env.ref("justech_admin.menu_justech_settings_root", raise_if_not_found=False)
+        policy = self.env.ref("justech_multicurrency.menu_justech_multicurrency_policy", raise_if_not_found=False)
+        if settings and policy:
+            policy.write({"parent_id": settings.id, "name": "Configuración comercial", "sequence": 50})
+
+        audit_app = self.env.ref("justech_global_audit_log.menu_justech_global_audit_root", raise_if_not_found=False)
+        admin_root = self.env.ref("base.menu_administration", raise_if_not_found=False)
+        if audit_app and settings:
+            audit_app.write({"parent_id": settings.id, "sequence": 60, "active": True})
+        elif audit_app and admin_root:
+            audit_app.write({"parent_id": admin_root.id, "sequence": 97, "active": True})
+
+        if config:
+            config.active = True
+            for child in self.env["ir.ui.menu"].search([("parent_id", "=", config.id)]):
+                if child.name in ("Settings", "Ajustes") and child.parent_id == config:
+                    child.active = True
+        self._restore_standard_accounting_config()
+
+    @api.model
+    def _restore_standard_accounting_config(self):
+        """Reactiva el submenú contable estándar bajo Configuración (Plan, Impuestos, Monedas…)."""
+        config = self.env.ref("account.menu_finance_configuration", raise_if_not_found=False)
+        acct_sub = self.env.ref("account.account_account_menu", raise_if_not_found=False)
+        if not config or not acct_sub:
+            return
+
+        acct_sub.write({"parent_id": config.id, "active": True, "sequence": 10})
+        self._set_menu_label("account.account_account_menu", "Contabilidad")
+
+        standard_children = (
+            "account.menu_action_account_form",
+            "account.menu_action_tax_form",
+            "account.menu_action_account_journal_form",
+            "account.menu_action_currency_form",
+            "account.menu_action_account_fiscal_position_form",
+        )
+        for xid in standard_children:
+            menu = self.env.ref(xid, raise_if_not_found=False)
+            if not menu:
+                continue
+            menu.write({"parent_id": acct_sub.id, "active": True})
+            label = MENU_LABELS_ES.get(xid)
+            if label:
+                self._set_menu_label(xid, label)
+
+    @api.model
     def apply_all(self):
         """Aplica todas las personalizaciones de menú en orden seguro."""
         self.apply_menu_labels()
         self.hide_unused_menus()
         self.repair_accounting_menu_tree()
         self.integrate_justech_menus()
+        self.standardize_ux1_navigation()

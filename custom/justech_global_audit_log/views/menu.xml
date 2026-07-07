@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <!-- Raíz definida sin parent; GO-LIVE-UX reparenta vía hellenia_ui.menu.customizer -->
     <menuitem
         id="menu_justech_global_audit_root"
         name="Auditoría"
-        parent="base.menu_administration"
-        sequence="120"
+        sequence="75"
         groups="justech_global_audit_log.group_audit_user"
     />
 
@@ -28,7 +28,7 @@
 
     <menuitem
         id="menu_justech_audit_rule"
-        name="Reglas de Auditoría"
+        name="Configuración de Auditoría"
         parent="menu_justech_global_audit_root"
         action="action_justech_audit_rule"
         sequence="20"

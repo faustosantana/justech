@@ -6,14 +6,11 @@
         <field name="inherit_id" ref="product.product_template_form_view"/>
         <field name="priority">20</field>
         <field name="arch" type="xml">
-            <!-- Precios comerciales en Información general, ancho completo -->
+            <!-- Precios comerciales integrados en Información general -->
             <xpath expr="//page[@name='general_information']//group[@name='group_standard_price']" position="before">
                 <field name="justech_company_currency_id" invisible="1"/>
-                <group string="Precios Comerciales Justech"
-                       name="justech_commercial_pricing"
-                       colspan="2"
-                       col="2">
-                    <group string="Venta">
+                <group name="justech_commercial_pricing" colspan="2" col="2">
+                    <group string="Venta" name="justech_commercial_sale">
                         <field name="justech_sale_price" string="Precio de venta"/>
                         <field name="justech_sale_currency_id"
                                string="Moneda de venta"
@@ -26,8 +23,12 @@
                         <field name="justech_sale_rate_label"
                                string="Tasa utilizada"
                                readonly="1"/>
+                        <field name="taxes_id"
+                               string="Impuestos de venta"
+                               widget="many2many_tags"
+                               options="{'no_create': True}"/>
                     </group>
-                    <group string="Compra">
+                    <group string="Compra" name="justech_commercial_purchase">
                         <field name="justech_purchase_price" string="Precio de compra"/>
                         <field name="justech_purchase_currency_id"
                                string="Moneda de compra"
@@ -40,13 +41,23 @@
                         <field name="justech_purchase_rate_label"
                                string="Tasa utilizada"
                                readonly="1"/>
+                        <field name="supplier_taxes_id"
+                               string="Impuestos de compra"
+                               widget="many2many_tags"
+                               options="{'no_create': True}"/>
                     </group>
                 </group>
             </xpath>
-            <xpath expr="//field[@name='list_price']" position="attributes">
+            <xpath expr="//page[@name='general_information']//field[@name='list_price']" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>
-            <xpath expr="//field[@name='standard_price']" position="attributes">
+            <xpath expr="//page[@name='general_information']//field[@name='standard_price']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//page[@name='general_information']//group[@name='group_standard_price']//field[@name='taxes_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//page[@name='general_information']//group[@name='group_standard_price']//field[@name='supplier_taxes_id']" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>
         </field>

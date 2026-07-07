@@ -1,6 +1,6 @@
 {
     "name": "Justech Multimoneda",
-    "version": "19.0.2.0.2",
+    "version": "19.0.2.0.5",
     "category": "Justech/Platform",
     "summary": "Capa comercial multimoneda sobre el motor estándar Odoo",
     "description": """
@@ -20,6 +20,7 @@ No modifica contabilidad, NCF, DGII, PDFs ni COA.
     "license": "LGPL-3",
     "depends": [
         "base",
+        "account",
         "product",
         "sale",
         "purchase",
@@ -45,7 +46,7 @@ No modifica contabilidad, NCF, DGII, PDFs ni COA.
     "justech_register": {
         "module_code": "justech_multicurrency",
         "module_name": "Justech Multimoneda",
-        "version": "19.0.2.0.2",
+        "version": "19.0.2.0.5",
         "category": "platform",
         "description": "Corporate multicurrency commercial policy engine",
         "dependencies": ["justech_modules"],

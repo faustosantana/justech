@@ -1,0 +1,29 @@
+{
+  "phase": "GO-LIVE-UX-data-cleanup",
+  "timestamp_utc": "2026-07-07T17:40:33.975253+00:00",
+  "database": "hellenia_prod",
+  "ok": true,
+  "ncf_renames": [
+    {"id": 21, "prefix": "B01", "before": "COA3 B01", "after": "B01 Factura de Crédito Fiscal"},
+    {"id": 14, "prefix": "B02", "before": "SMOKE P13.4 B02", "after": "B02 Factura de Consumo"},
+    {"id": 24, "prefix": "B03", "before": "FISCALRD B03", "after": "B03 Nota de Débito"},
+    {"id": 22, "prefix": "B04", "before": "COA3 B04", "after": "B04 Nota de Crédito"},
+    {"id": 28, "prefix": "B11", "before": "FISCALRD B11", "after": "B11 Comprobante de Compras"},
+    {"id": 25, "prefix": "B12", "before": "FISCALRD B12", "after": "B12 Registro Único de Ingresos"},
+    {"id": 29, "prefix": "B13", "before": "FISCALRD B13", "after": "B13 Gastos Menores"},
+    {"id": 23, "prefix": "B14", "before": "COA3 B14", "after": "B14 Regímenes Especiales de Tributación"},
+    {"id": 26, "prefix": "B15", "before": "FISCALRD B15", "after": "B15 Comprobante Gubernamental"},
+    {"id": 27, "prefix": "B16", "before": "FISCALRD B16", "after": "B16 Comprobante para Exportaciones"},
+    {"id": 30, "prefix": "B17", "before": "FISCALRD B17", "after": "B17 Comprobante para Pagos al Exterior"}
+  ],
+  "tax_fix": {
+    "id": 41,
+    "before": "18% Cost Good",
+    "amount": 18.0,
+    "type_tax_use": "purchase",
+    "sale_itbis_reference": "18% ITBIS",
+    "same_rate_as_sale_itbis": true,
+    "after": "18% ITBIS Compras"
+  },
+  "errors": []
+}

@@ -234,13 +234,20 @@ class JustechAuditService(models.AbstractModel):
         )
 
     @api.model
-    def _get_ip_address(self):
+    def _get_request_meta(self):
         try:
             if request and request.httprequest:
-                return request.httprequest.remote_addr
+                httprequest = request.httprequest
+                user_agent = httprequest.user_agent.string if httprequest.user_agent else False
+                return httprequest.remote_addr, user_agent
         except RuntimeError:
             pass
-        return False
+        return False, False
+
+    @api.model
+    def _get_ip_address(self):
+        ip_address, _user_agent = self._get_request_meta()
+        return ip_address
 
     @api.model
     def _get_model_description(self, model_name):
@@ -323,6 +330,7 @@ class JustechAuditService(models.AbstractModel):
             "company_id": self._get_record_company_id(record) if record else self.env.company.id,
             "change_date": fields.Datetime.now(),
             "ip_address": self._get_ip_address(),
+            "user_agent": self._get_request_meta()[1],
             "event_source": event_source,
             "correlation_id": correlation_id,
         }
@@ -447,6 +455,7 @@ class JustechAuditService(models.AbstractModel):
                     "company_id": data["company_id"],
                     "change_date": fields.Datetime.now(),
                     "ip_address": self._get_ip_address(),
+                    "user_agent": self._get_request_meta()[1],
                 }
             )
         self.schedule_entries(entries)
@@ -487,6 +496,7 @@ class JustechAuditService(models.AbstractModel):
             "company_id": company.id,
             "change_date": fields.Datetime.now(),
             "ip_address": self._get_ip_address(),
+            "user_agent": self._get_request_meta()[1],
             "event_source": source,
             "correlation_id": correlation_id,
         }

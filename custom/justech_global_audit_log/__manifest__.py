@@ -1,19 +1,22 @@
 {
-    "name": "Justech Global Audit Log",
-    "version": "19.0.1.0.0",
-    "category": "Justech/Platform",
-    "summary": "Auditoría global configurable multiempresa para Odoo 19",
+    "name": "Auditoría",
+    "version": "19.0.4.1.0",
+    "category": "Productivity",
+    "summary": "Trazabilidad e investigación de cambios en Odoo",
     "description": """
-Auditoría global Justech — producto enterprise.
+Herramienta de trazabilidad para cualquier cliente Odoo.
 
-- Activación por modelo, operación, empresa y usuario
-- Escritura diferida post-commit para mínimo impacto en performance
-- Retención automática y limpieza programada
-- Exclusión de campos sensibles y modelos técnicos
-- Integración opcional con justech_modules y hellenia_governance
+Responda quién creó, modificó o eliminó un documento, qué cambió,
+cuándo ocurrió y con qué valores antes/después.
+
+- Histórico de cambios con filtros
+- Configuración por modelo, operación y empresa
+- Retención automática
+- Grupos de seguridad independientes
+- Instalable en cualquier proyecto (depende solo de base)
     """,
     "author": "Justech",
-    "website": "https://hellenia.cloud",
+    "website": "https://www.justech.com",
     "license": "LGPL-3",
     "depends": ["base"],
     "data": [
@@ -22,13 +25,14 @@ Auditoría global Justech — producto enterprise.
         "data/audit_field_exclude_data.xml",
         "data/audit_retention_data.xml",
         "data/audit_cron.xml",
+        "views/audit_log_views.xml",
         "views/audit_policy_views.xml",
         "views/audit_rule_views.xml",
         "views/audit_field_exclude_views.xml",
         "views/audit_user_exclude_views.xml",
-        "views/audit_log_views.xml",
         "views/audit_retention_views.xml",
         "views/audit_dashboard_views.xml",
+        "views/partner_audit_button.xml",
         "wizards/audit_export_wizard_views.xml",
         "views/menu.xml",
     ],
@@ -37,10 +41,10 @@ Auditoría global Justech — producto enterprise.
     "application": False,
     "justech_register": {
         "module_code": "justech_global_audit_log",
-        "module_name": "Justech Global Audit Log",
-        "version": "19.0.1.0.0",
+        "module_name": "Auditoría",
+        "version": "19.0.4.1.0",
         "category": "platform",
-        "description": "Enterprise global audit log for Odoo",
+        "description": "Global audit and traceability for Odoo",
         "dependencies": [],
         "always_enabled": False,
         "features": [

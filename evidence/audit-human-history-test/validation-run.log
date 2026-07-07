@@ -1,0 +1,75 @@
+2026-07-07 12:37:42,872 25 WARNING ? odoo.tools.config: option logfile reads 'False' in the config file at /etc/odoo/odoo.conf but isn't a boolean option, skip 
+2026-07-07 12:37:42,872 25 WARNING ? odoo.tools.config: option logfile reads 'False' in the config file at /etc/odoo/odoo.conf but isn't a boolean option, skip 
+2026-07-07 12:37:42,872 25 INFO ? odoo: Odoo version 19.0-20260619 
+2026-07-07 12:37:42,872 25 INFO ? odoo: Using configuration file at /etc/odoo/odoo.conf 
+2026-07-07 12:37:42,872 25 INFO ? odoo: addons paths: _NamespacePath(['/usr/lib/python3/dist-packages/odoo/addons', '/var/lib/odoo/addons/19.0', '/mnt/enterprise/addons', '/mnt/custom', '/usr/lib/python3/dist-packages/addons']) 
+2026-07-07 12:37:42,872 25 INFO ? odoo: database: odoo@db:default 
+2026-07-07 12:37:43,074 25 INFO ? odoo.service.server: Initiating shutdown 
+2026-07-07 12:37:43,074 25 INFO ? odoo.service.server: Hit CTRL-C again or send a second signal to force the shutdown. 
+2026-07-07 12:37:43,103 25 INFO hellenia_test odoo.modules.loading: loading 1 modules... 
+2026-07-07 12:37:43,106 25 INFO hellenia_test odoo.modules.loading: 1 modules loaded in 0.00s, 0 queries (+0 extra) 
+2026-07-07 12:37:43,133 25 INFO hellenia_test odoo.modules.loading: loading 137 modules... 
+2026-07-07 12:37:43,977 25 WARNING hellenia_test odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define models.Constraint on the model. 
+2026-07-07 12:37:44,020 25 WARNING hellenia_test odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define models.Constraint on the model. 
+2026-07-07 12:37:44,056 25 WARNING hellenia_test odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define models.Constraint on the model. 
+2026-07-07 12:37:44,104 25 INFO hellenia_test odoo.modules.loading: 137 modules loaded in 0.97s, 0 queries (+0 extra) 
+2026-07-07 12:37:44,202 25 WARNING hellenia_test odoo.fields: justech.do.fiscal.report.state: selection=[('draft', 'Borrador'), ('validated', 'Validado'), ('pending_approval', 'Requiere aprobación'), ('approved', 'Aprobado'), ('rejected', 'Rechazado'), ('generated', 'Generado'), ('done', 'Generado')] overrides existing selection; use selection_add instead 
+2026-07-07 12:37:44,212 25 WARNING hellenia_test odoo.fields: Translated stored related field (justech.audit.rule.model_description) will not be computed correctly in all languages 
+2026-07-07 12:37:44,272 25 INFO hellenia_test odoo.modules.loading: Modules loaded. 
+2026-07-07 12:37:44,353 25 INFO hellenia_test odoo.registry: Registry loaded in 1.278s 
+Traceback (most recent call last):
+  File "/usr/bin/odoo", line 6, in <module>
+    odoo.cli.main()
+  File "/usr/lib/python3/dist-packages/odoo/cli/command.py", line 133, in main
+    command().run(args)
+  File "/usr/lib/python3/dist-packages/odoo/cli/shell.py", line 162, in run
+    self.shell(dbnames[0])
+  File "/usr/lib/python3/dist-packages/odoo/cli/shell.py", line 148, in shell
+    self.console(local_vars)
+  File "/usr/lib/python3/dist-packages/odoo/cli/shell.py", line 82, in console
+    exec(sys.stdin.read(), local_vars)
+  File "<string>", line 147, in <module>
+  File "<string>", line 60, in validate
+  File "/usr/lib/python3/dist-packages/odoo/orm/decorators.py", line 365, in create
+    return method(self, vals_list)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3/dist-packages/odoo/addons/account/models/partner.py", line 784, in create
+    return super().create(vals_list)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3/dist-packages/odoo/orm/decorators.py", line 365, in create
+    return method(self, vals_list)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3/dist-packages/odoo/addons/base/models/res_partner.py", line 933, in create
+    partners = super().create(vals_list)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3/dist-packages/odoo/orm/decorators.py", line 365, in create
+    return method(self, vals_list)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3/dist-packages/odoo/addons/base/models/properties_base_definition_mixin.py", line 47, in create
+    return super().create(vals_list)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3/dist-packages/odoo/orm/decorators.py", line 365, in create
+    return method(self, vals_list)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3/dist-packages/odoo/addons/mail/models/mail_thread.py", line 328, in create
+    threads = super(MailThread, self).create(vals_list)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3/dist-packages/odoo/orm/decorators.py", line 365, in create
+    return method(self, vals_list)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/custom/justech_global_audit_log/models/base.py", line 52, in create
+    records = super().create(vals_list)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3/dist-packages/odoo/orm/decorators.py", line 365, in create
+    return method(self, vals_list)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3/dist-packages/odoo/orm/models.py", line 4709, in create
+    records = self._create(data_list)
+              ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3/dist-packages/odoo/orm/models.py", line 4947, in _create
+    records._validate_fields(name for data in data_list for name in data['stored'])
+  File "/usr/lib/python3/dist-packages/odoo/orm/models.py", line 1268, in _validate_fields
+    check(records)
+  File "/mnt/custom/justech_l10n_do_base/models/res_partner.py", line 70, in _check_do_rnc_format
+    raise ValidationError(
+odoo.exceptions.ValidationError: Dominican RNC must be 9 to 11 digits (spaces/dashes allowed).

@@ -41,3 +41,7 @@ class JustechAuditRetention(models.Model):
             }
         )
         return purged
+
+    def action_run_now(self):
+        self.ensure_one()
+        return self._cron_purge_old_logs()

@@ -1,0 +1,17 @@
+{
+  "database": "hellenia_prod",
+  "checks": {
+    "dashboard_compute": true,
+    "dashboard_total_logs": true,
+    "dashboard_bulk_count": true,
+    "dashboard_top_user": true,
+    "historico_action": true,
+    "panel_action": true,
+    "menu_settings": true,
+    "rule_off_account.move": true,
+    "rule_off_account.payment": true,
+    "rule_off_pos.order": true
+  },
+  "errors": [],
+  "pass": true
+}

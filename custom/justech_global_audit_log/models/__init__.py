@@ -1,3 +1,4 @@
+from . import audit_display
 from . import audit_service
 from . import audit_policy
 from . import audit_rule
@@ -6,4 +7,5 @@ from . import audit_user_exclude
 from . import audit_log
 from . import audit_retention
 from . import audit_dashboard
+from . import res_partner_audit
 from . import base

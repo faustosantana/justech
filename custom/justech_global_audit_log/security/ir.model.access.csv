@@ -1,4 +1,5 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_justech_audit_log_user,justech.audit.log user,model_justech_audit_log,justech_global_audit_log.group_audit_user,1,0,0,0
 access_justech_audit_log_manager,justech.audit.log manager,model_justech_audit_log,justech_global_audit_log.group_justech_audit_manager,1,0,0,0
 access_justech_audit_rule_manager,justech.audit.rule manager,model_justech_audit_rule,justech_global_audit_log.group_justech_audit_manager,1,1,1,1
 access_justech_audit_policy_manager,justech.audit.policy manager,model_justech_audit_policy,justech_global_audit_log.group_justech_audit_manager,1,1,1,1

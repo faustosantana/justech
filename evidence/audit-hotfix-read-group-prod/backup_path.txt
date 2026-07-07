@@ -1,0 +1,1 @@
+BACKUP=/opt/odoo-projects/hellenia/backups/hellenia-prod/audit-hotfix-readgroup-2026-07-07_124250

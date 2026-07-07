@@ -1,0 +1,27 @@
+{
+  "database": "hellenia_prod",
+  "checks": {
+    "list_no_json_fields": true,
+    "form_json_only_technical": true,
+    "partner_create_log": true,
+    "create_human_summary": true,
+    "create_no_json": true,
+    "create_no_technical": true,
+    "partner_write_log": true,
+    "write_before_after": true,
+    "write_no_json": true,
+    "search_phone": true,
+    "search_document_number": true,
+    "sale_unlink_log": true,
+    "unlink_snapshot_readable": true,
+    "document_history": true,
+    "history_action": true,
+    "partner_history_button": true,
+    "performance_ok": true
+  },
+  "errors": [],
+  "pass": true,
+  "performance": {
+    "list_query_sec": 0.0004
+  }
+}

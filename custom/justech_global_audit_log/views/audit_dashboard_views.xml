@@ -6,33 +6,31 @@
         <field name="arch" type="xml">
             <form create="false" edit="false" delete="false">
                 <header>
-                    <button name="action_open_logs" type="object" string="Ver logs" class="btn-primary"/>
-                    <button name="action_open_rules" type="object" string="Ver reglas"/>
-                    <button name="action_export_wizard" type="object" string="Exportar CSV"/>
+                    <button name="action_open_logs" type="object" string="Histórico de Cambios" class="btn-primary"/>
+                    <button name="action_open_unlinks_today" type="object" string="Eliminaciones hoy"/>
+                    <button name="action_open_changes_today" type="object" string="Cambios hoy"/>
+                    <button name="action_open_rules" type="object" string="Reglas"/>
+                    <button name="action_open_retention" type="object" string="Retención"/>
                 </header>
                 <sheet>
                     <div class="oe_title">
-                        <h1>Dashboard de auditoría Justech</h1>
+                        <h1>Panel de investigación</h1>
                     </div>
+                    <field name="forensic_notice" nolabel="1"/>
                     <group>
-                        <group string="Volumen">
-                            <field name="total_logs"/>
+                        <group string="Hoy">
                             <field name="logs_today"/>
-                            <field name="logs_week"/>
+                            <field name="writes_today"/>
+                            <field name="unlinks_today"/>
+                            <field name="after_hours_count"/>
+                            <field name="bulk_change_count"/>
                         </group>
-                        <group string="Configuración activa">
-                            <field name="active_policies"/>
+                        <group string="Investigación">
+                            <field name="top_user_name"/>
+                            <field name="top_user_count"/>
+                            <field name="last_unlink_summary"/>
                             <field name="active_rules"/>
-                        </group>
-                    </group>
-                    <group>
-                        <group string="Modelo más auditado">
-                            <field name="top_model_name"/>
-                            <field name="top_model_count"/>
-                        </group>
-                        <group string="Retención">
-                            <field name="last_retention_run"/>
-                            <field name="last_purged_count"/>
+                            <field name="table_size_mb"/>
                         </group>
                     </group>
                 </sheet>
@@ -41,7 +39,7 @@
     </record>
 
     <record id="action_justech_audit_dashboard" model="ir.actions.act_window">
-        <field name="name">Dashboard auditoría</field>
+        <field name="name">Panel de investigación</field>
         <field name="res_model">justech.audit.dashboard</field>
         <field name="view_mode">form</field>
         <field name="target">current</field>

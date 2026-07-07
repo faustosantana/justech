@@ -66,8 +66,12 @@ class TestJustechAuditService(TransactionCase):
             ]
         )
         self.assertEqual(len(logs), 1)
+        self.assertIn("creó", logs.human_summary.lower())
+        self.assertNotIn("__create__", logs.human_summary)
+        self.assertEqual(logs.action_label, "Creó")
+        self.assertNotIn("{", logs.after_display or "")
 
-    def test_write_logs_field_change(self):
+    def test_human_write_summary(self):
         self._enable_partner_audit()
         partner = self.env["res.partner"].with_context(justech_skip_audit=True).create(
             {"name": "Write Log Partner", "phone": "8090000000"}
@@ -89,6 +93,38 @@ class TestJustechAuditService(TransactionCase):
         self.assertTrue(logs)
         self.assertIn("8090000000", logs[0].old_value)
         self.assertIn("8090000001", logs[0].new_value)
+        self.assertIn("cambió", logs[0].human_summary.lower())
+        self.assertEqual(logs[0].action_label, "Modificó")
+        self.assertEqual(logs[0].field_label_display, logs[0].field_description)
+
+    def test_unlink_snapshot_display(self):
+        self._enable_partner_audit()
+        partner = self.env["res.partner"].with_context(justech_skip_audit=True).create(
+            {"name": "Unlink Partner"}
+        )
+        snapshot = '{"name": "Unlink Partner"}'
+        self.service.log_unlink(
+            [
+                {
+                    "model_name": "res.partner",
+                    "record_id": partner.id,
+                    "record_name": partner.display_name,
+                    "company_id": self.env.company.id,
+                    "snapshot": snapshot,
+                }
+            ]
+        )
+        logs = self.env["justech.audit.log"].search(
+            [
+                ("model_name", "=", "res.partner"),
+                ("record_id", "=", partner.id),
+                ("operation_type", "=", "unlink"),
+            ]
+        )
+        self.assertEqual(len(logs), 1)
+        self.assertIn("eliminó", logs.human_summary.lower())
+        self.assertEqual(logs.action_label, "Eliminó")
+        self.assertNotIn("__unlink__", logs.field_label_display or "")
 
     def test_log_immutability(self):
         log = self.env["justech.audit.log"].sudo().create(

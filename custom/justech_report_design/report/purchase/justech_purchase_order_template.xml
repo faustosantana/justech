@@ -35,50 +35,32 @@
             </div>
         </div>
 
-        <div class="jt-po-band">
-            <table width="100%" cellpadding="0" cellspacing="0" border="0" class="jt-po-band-layout">
-                <tr>
-                    <td width="34%" valign="middle" class="jt-po-band-title-cell">
-                        <span class="jt-po-band-title">ORDEN DE COMPRA</span>
-                    </td>
-                    <td width="66%" valign="top" class="jt-po-band-meta-cell">
-                        <table width="100%" cellpadding="0" cellspacing="0" border="0" class="jt-po-band-cols">
-                            <tr>
-                                <td width="50%" valign="top" class="jt-po-band-col">
-                                    <div class="jt-po-meta-row">
-                                        <span class="jt-po-label">No. Orden:</span>
-                                        <span class="jt-po-val" t-field="doc.name"/>
-                                    </div>
-                                    <div class="jt-po-meta-row">
-                                        <span class="jt-po-label">Estado:</span>
-                                        <span class="jt-po-val" t-out="doc.get_jt_po_state_display()"/>
-                                    </div>
-                                    <div class="jt-po-meta-row">
-                                        <span class="jt-po-label">Comprador:</span>
-                                        <span class="jt-po-val" t-out="doc.get_jt_po_buyer_display()"/>
-                                    </div>
-                                </td>
-                                <td width="50%" valign="top" class="jt-po-band-col jt-po-band-col-r">
-                                    <div class="jt-po-meta-row">
-                                        <span class="jt-po-label">Moneda:</span>
-                                        <span class="jt-po-val" t-out="doc.get_jt_po_currency_display()"/>
-                                    </div>
-                                    <div class="jt-po-meta-row">
-                                        <span class="jt-po-label">Fecha de Orden:</span>
-                                        <span class="jt-po-val" t-out="doc.get_jt_po_order_date_display()"/>
-                                    </div>
-                                    <div class="jt-po-meta-row">
-                                        <span class="jt-po-label">Fecha Esperada:</span>
-                                        <span class="jt-po-val" t-out="doc.get_jt_po_expected_date_display()"/>
-                                    </div>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-            </table>
-        </div>
+        <table width="100%" cellpadding="0" cellspacing="0" class="jt-hq-band">
+            <tr>
+                <td width="50%" class="jt-hq-band-title">
+                    <span t-out="doc.get_jt_po_band_title()"/>
+                </td>
+                <td width="50%">
+                    <span class="jt-hq-band-num">
+                        <span t-out="doc.get_jt_po_number_prefix()"/>
+                        <span t-field="doc.name"/>
+                    </span>
+                </td>
+            </tr>
+        </table>
 
+        <table width="100%" cellpadding="0" cellspacing="0" class="jt-hq-dates">
+            <tr>
+                <td width="50%" t-if="doc.date_order">
+                    <span class="jt-hq-lbl" t-out="doc.get_jt_po_date_label()"/>
+                    <span class="jt-hq-val-bold" t-out="doc.get_jt_po_order_date_display()"/>
+                </td>
+                <td width="50%" align="right" t-if="doc.get_jt_po_validity_display()">
+                    <span class="jt-hq-lbl">Validez: </span>
+                    <span class="jt-hq-val-bold" t-out="doc.get_jt_po_validity_display()"/>
+                </td>
+            </tr>
+        </table>
         <hr class="jt-hq-line-soft"/>
 
         <table width="100%" cellpadding="0" cellspacing="0" class="jt-hq-cards">
@@ -86,7 +68,7 @@
                 <td width="49%" class="jt-hq-card">
                     <div class="jt-hq-card-title">Información del Proveedor</div>
                     <div class="jt-hq-meta-row">
-                        <span class="jt-hq-lbl">Nombre</span>
+                        <span class="jt-hq-lbl">Proveedor</span>
                         <span class="jt-hq-val"><span t-field="vendor.name"/></span>
                     </div>
                     <div class="jt-hq-meta-row" t-if="vendor.vat">
@@ -112,7 +94,7 @@
                 </td>
                 <td class="jt-hq-vdiv">&#160;</td>
                 <td width="49%" class="jt-hq-card jt-hq-card-r">
-                    <div class="jt-hq-card-title">Información de Compra</div>
+                    <div class="jt-hq-card-title">Información del Documento</div>
                     <div class="jt-hq-meta-row">
                         <span class="jt-hq-lbl">Comprador</span>
                         <span class="jt-hq-val" t-out="doc.get_jt_po_buyer_display()"/>
@@ -120,6 +102,18 @@
                     <div class="jt-hq-meta-row">
                         <span class="jt-hq-lbl">Condiciones de pago</span>
                         <span class="jt-hq-val" t-out="doc.get_jt_payment_term_display()"/>
+                    </div>
+                    <div class="jt-hq-meta-row">
+                        <span class="jt-hq-lbl">Moneda</span>
+                        <span class="jt-hq-val" t-out="doc.get_jt_po_currency_display()"/>
+                    </div>
+                    <div class="jt-hq-meta-row">
+                        <span class="jt-hq-lbl">Empresa</span>
+                        <span class="jt-hq-val" t-out="doc.get_jt_po_company_display()"/>
+                    </div>
+                    <div class="jt-hq-meta-row" t-if="doc.get_jt_po_show_expected_date()">
+                        <span class="jt-hq-lbl">Fecha esperada</span>
+                        <span class="jt-hq-val" t-out="doc.get_jt_po_expected_date_display()"/>
                     </div>
                     <div class="jt-hq-meta-row" t-if="doc.incoterm_id">
                         <span class="jt-hq-lbl">Incoterm</span>
@@ -143,7 +137,7 @@
                     <th class="c-uom">UNIDAD</th>
                     <th class="c-price">P. UNITARIO</th>
                     <th t-if="has_discount" class="c-disc">DESCUENTO</th>
-                    <th class="c-tax">IMPUESTO</th>
+                    <th class="c-tax">IMPUESTOS</th>
                     <th class="c-sub">SUBTOTAL</th>
                 </tr>
             </thead>

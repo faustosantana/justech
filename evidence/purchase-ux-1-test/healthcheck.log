@@ -1,0 +1,5 @@
+[2026-07-07 19:26:14] [PASS] assets_static — HTTP 200
+[2026-07-07 19:26:14] [PASS] websocket_route — HTTP 502 (workers=0, bus en :8069)
+[2026-07-07 19:26:17] [PASS] odoo_fiscal_modules — healthcheck-test-2026-07-07_1926-odoo.json
+[2026-07-07 19:26:17] === RESULTADO: PASS ===
+[2026-07-07 19:26:17] Reporte: /opt/odoo-projects/hellenia/evidence/healthcheck-test-2026-07-07_1926.json

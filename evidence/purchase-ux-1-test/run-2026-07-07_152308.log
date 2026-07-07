@@ -1,0 +1,77 @@
+=== PURCHASE-UX-1 TEST ===
+Transfer starting: 64 files
+./
+README.md
+__init__.py
+__manifest__.py
+controllers/
+controllers/__init__.py
+controllers/purchase_portal.py
+data/
+data/justech_delivery_note_sequence.xml
+data/paperformat_data.xml
+data/quotation_terms_default.xml
+data/report_action_data.xml
+data/report_delivery_action_data.xml
+data/report_invoice_action_data.xml
+data/report_official_data.xml
+data/report_purchase_action_data.xml
+models/
+models/__init__.py
+models/account_move.py
+models/ir_actions_report.py
+models/jt_delivery_report_mixin.py
+models/justech_delivery_note.py
+models/justech_delivery_note_line.py
+models/justech_delivery_note_service.py
+models/purchase_order.py
+models/res_company.py
+models/sale_order.py
+models/stock_picking.py
+report/
+report/delivery/
+report/delivery/justech_delivery_template.xml
+report/invoice/
+report/invoice/justech_invoice_preview.xml
+report/invoice/justech_invoice_template.xml
+report/purchase/
+report/purchase/justech_purchase_order_portal.xml
+report/purchase/justech_purchase_order_template.xml
+report/quotation/
+report/quotation/hellenia_quotation_template.xml
+security/
+security/ir.model.access.csv
+static/
+static/src/
+static/src/interactions/
+static/src/interactions/purchase_sidebar.js
+static/src/scss/
+static/src/scss/hellenia_delivery.scss
+static/src/scss/hellenia_invoice.scss
+static/src/scss/hellenia_purchase_order.scss
+static/src/scss/hellenia_quotation.scss
+tests/
+tests/__init__.py
+tests/test_purchase_report_ux.py
+views/
+views/account_move_delivery_views.xml
+views/justech_delivery_note_views.xml
+views/purchase_order_views.xml
+views/res_company_views.xml
+views/sale_order_delivery_views.xml
+views/sale_order_views.xml
+views/stock_picking_delivery_views.xml
+wizard/
+wizard/__init__.py
+wizard/base_document_layout.py
+
+sent 10360 bytes  received 2860 bytes  76815 bytes/sec
+total size is 186688  speedup is 14.12
+2026-07-07 19:23:21,996 1 INFO hellenia_test odoo.modules.loading: Modules loaded. 
+2026-07-07 19:23:22,015 1 INFO hellenia_test odoo.registry: Registry changed, signaling through the database 
+2026-07-07 19:23:22,016 1 INFO hellenia_test odoo.registry: Registry loaded in 7.820s 
+2026-07-07 19:23:22,016 1 INFO hellenia_test odoo.service.server: Initiating shutdown 
+2026-07-07 19:23:22,017 1 INFO hellenia_test odoo.service.server: Hit CTRL-C again or send a second signal to force the shutdown. 
+2026-07-07 19:23:22,017 1 INFO hellenia_test odoo.sql_db: ConnectionPool(read/write;used=0/count=0/max=64): Closed 1 connections  
+grep: /Users/faustosantana/Projects/jaios/evidence/purchase-ux-1-test/validation.json: No such file or directory
+TEST FAIL

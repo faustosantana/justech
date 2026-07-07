@@ -1,0 +1,62 @@
+{
+  "phase": "PURCHASE-UX-1",
+  "database": "hellenia_prod",
+  "checks": {
+    "rfq_uses_corporate_report": true,
+    "po_uses_corporate_report": true,
+    "title_draft": true,
+    "pdf_draft_letter": true,
+    "pdf_draft_a4": true,
+    "title_sent": true,
+    "pdf_sent_letter": true,
+    "pdf_sent_a4": true,
+    "title_purchase": true,
+    "pdf_purchase_letter": true,
+    "pdf_purchase_a4": true,
+    "uses_jt_hq_band": true,
+    "dynamic_title_in_template": true,
+    "no_purchase_order_english": true,
+    "no_empty_observations_block": true,
+    "spanish_headers": true
+  },
+  "pdfs": [
+    {
+      "state": "draft",
+      "format": "letter",
+      "path": "/var/lib/odoo/purchase-ux-1-pdfs-prod/po-P00001-draft-letter.pdf",
+      "bytes": 73561
+    },
+    {
+      "state": "draft",
+      "format": "a4",
+      "path": "/var/lib/odoo/purchase-ux-1-pdfs-prod/po-P00001-draft-a4.pdf",
+      "bytes": 73561
+    },
+    {
+      "state": "sent",
+      "format": "letter",
+      "path": "/var/lib/odoo/purchase-ux-1-pdfs-prod/po-P00001-sent-letter.pdf",
+      "bytes": 73561
+    },
+    {
+      "state": "sent",
+      "format": "a4",
+      "path": "/var/lib/odoo/purchase-ux-1-pdfs-prod/po-P00001-sent-a4.pdf",
+      "bytes": 73561
+    },
+    {
+      "state": "purchase",
+      "format": "letter",
+      "path": "/var/lib/odoo/purchase-ux-1-pdfs-prod/po-P00001-purchase-letter.pdf",
+      "bytes": 73677
+    },
+    {
+      "state": "purchase",
+      "format": "a4",
+      "path": "/var/lib/odoo/purchase-ux-1-pdfs-prod/po-P00001-purchase-a4.pdf",
+      "bytes": 73677
+    }
+  ],
+  "ok": true,
+  "status": "PASS"
+}

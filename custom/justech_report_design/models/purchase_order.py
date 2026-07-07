@@ -56,6 +56,53 @@ class PurchaseOrder(models.Model):
         names = [t.name for t in taxes if t.name]
         return ", ".join(names) if names else "—"
 
+    def get_jt_po_band_title(self):
+        """Título dinámico PURCHASE-UX-1: RFQ vs Orden de Compra."""
+        self.ensure_one()
+        if self.state in ("draft", "sent"):
+            return _("SOLICITUD DE COTIZACIÓN")
+        if self.state in ("purchase", "done"):
+            return _("ORDEN DE COMPRA")
+        if self.state == "to approve":
+            return _("SOLICITUD DE COTIZACIÓN")
+        if self.state == "cancel":
+            return _("ORDEN DE COMPRA")
+        return _("ORDEN DE COMPRA")
+
+    def get_jt_po_is_rfq_document(self):
+        self.ensure_one()
+        return self.state in ("draft", "sent", "to approve")
+
+    def get_jt_po_number_prefix(self):
+        self.ensure_one()
+        if self.get_jt_po_is_rfq_document():
+            return _("No.")
+        return _("No.")
+
+    def get_jt_po_date_label(self):
+        self.ensure_one()
+        if self.get_jt_po_is_rfq_document():
+            return _("Fecha de solicitud:")
+        return _("Fecha de orden:")
+
+    def get_jt_po_validity_display(self):
+        """Validez solo si el campo existe en el modelo (p. ej. extensiones futuras)."""
+        self.ensure_one()
+        validity = getattr(self, "validity_date", False)
+        if validity:
+            return fields.Date.to_date(validity).strftime("%d/%m/%Y")
+        return False
+
+    def get_jt_po_company_display(self):
+        self.ensure_one()
+        return self.company_id.display_name if self.company_id else "—"
+
+    def get_jt_po_show_expected_date(self):
+        self.ensure_one()
+        return self.state in ("purchase", "done") and bool(
+            self.get_jt_po_expected_date_display() != "—"
+        )
+
     def get_jt_po_state_display(self):
         self.ensure_one()
         labels = {

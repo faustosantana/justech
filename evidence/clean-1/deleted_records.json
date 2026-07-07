@@ -1,0 +1,333 @@
+{
+  "phase": "CLEAN-1",
+  "timestamp_utc": "2026-07-07T14:32:45.849304+00:00",
+  "database": "hellenia_prod",
+  "company": "Hellenia, S.R.L.",
+  "ok": true,
+  "errors": [],
+  "before": {
+    "preflight": {
+      "account_move": 0,
+      "account_move_posted": 0,
+      "account_payment": 0,
+      "bank_statement": 0,
+      "bank_statement_line": 0,
+      "sale_order": 0,
+      "purchase_order": 6,
+      "stock_picking": 10,
+      "stock_move": 10,
+      "delivery_note": 0,
+      "fiscal_report": 0,
+      "ncf_consumption": 0,
+      "crm_lead": 0,
+      "project_project": 0,
+      "project_task": 0,
+      "pos_session": 0,
+      "pos_order": 0,
+      "audit_log": 18,
+      "mail_message_ops": 6,
+      "partners": 27,
+      "products": 8,
+      "accounts": 292,
+      "ncf_ranges": 11,
+      "users": 2
+    },
+    "postflight": {
+      "account_move": 0,
+      "account_move_posted": 0,
+      "account_payment": 0,
+      "bank_statement": 0,
+      "bank_statement_line": 0,
+      "sale_order": 0,
+      "purchase_order": 0,
+      "stock_picking": 0,
+      "stock_move": 0,
+      "delivery_note": 0,
+      "fiscal_report": 0,
+      "ncf_consumption": 0,
+      "crm_lead": 0,
+      "project_project": 0,
+      "project_task": 0,
+      "pos_session": 0,
+      "pos_order": 0,
+      "audit_log": 0,
+      "mail_message_ops": 0,
+      "partners": 27,
+      "products": 8,
+      "accounts": 292,
+      "ncf_ranges": 11,
+      "users": 2
+    }
+  },
+  "deleted": {
+    "fiscal_reports": {
+      "count": 0,
+      "detail": ""
+    },
+    "delivery_notes": {
+      "count": 0,
+      "detail": ""
+    },
+    "account_payments": {
+      "count": 0,
+      "detail": ""
+    },
+    "bank_statements": {
+      "count": 0,
+      "detail": ""
+    },
+    "bank_statement_lines": {
+      "count": 0,
+      "detail": ""
+    },
+    "stock_pickings": {
+      "count": 10,
+      "detail": "sql_purge_done"
+    },
+    "stock_move_lines": {
+      "count": 0,
+      "detail": ""
+    },
+    "stock_moves": {
+      "count": 0,
+      "detail": ""
+    },
+    "stock_scraps": {
+      "count": 0,
+      "detail": ""
+    },
+    "account_moves": {
+      "count": 0,
+      "detail": ""
+    },
+    "account.partial.reconcile": {
+      "count": 0,
+      "detail": ""
+    },
+    "account.full.reconcile": {
+      "count": 0,
+      "detail": ""
+    },
+    "sale_orders": {
+      "count": 0,
+      "detail": ""
+    },
+    "purchase_orders": {
+      "count": 6,
+      "detail": ""
+    },
+    "pos_orders": {
+      "count": 0,
+      "detail": ""
+    },
+    "pos_sessions": {
+      "count": 0,
+      "detail": ""
+    },
+    "ncf_consumptions": {
+      "count": 0,
+      "detail": ""
+    },
+    "audit_logs_test": {
+      "count": 18,
+      "detail": ""
+    },
+    "governance_audit_test": {
+      "count": 0,
+      "detail": ""
+    },
+    "mail_messages_test": {
+      "count": 6,
+      "detail": ""
+    }
+  },
+  "preserved": {
+    "partners": 27,
+    "products": 8,
+    "accounts": 292,
+    "journals": 10,
+    "taxes": 37,
+    "ncf_ranges": 11,
+    "ncf_types": 11,
+    "users_active": 2,
+    "audit_rules": 3,
+    "governance_roles": 9,
+    "governance_permissions": 17,
+    "modules_justech": 7
+  },
+  "sequence_resets": [
+    {
+      "code": "sale.order",
+      "name": "Sales Order",
+      "before": 1,
+      "after": 1
+    },
+    {
+      "code": "purchase.order",
+      "name": "Purchase Order",
+      "before": 1,
+      "after": 1
+    },
+    {
+      "code": "account.payment",
+      "name": "Payment",
+      "before": 1,
+      "after": 1
+    },
+    {
+      "code": "justech.delivery.note",
+      "name": "Conduce de Entrega",
+      "before": 1,
+      "after": 1
+    },
+    {
+      "code": "stock.picking",
+      "name": "Picking INT",
+      "before": 1,
+      "after": 1
+    },
+    {
+      "code": "stock.scrap",
+      "name": "My Company Sequence scrap",
+      "before": 1,
+      "after": 1
+    },
+    {
+      "code": false,
+      "name": "Group Payments Number Sequence",
+      "before": 1,
+      "after": 1,
+      "prefix": "GROUP/%(year)s/"
+    }
+  ],
+  "ncf_resets": [
+    {
+      "name": "COA3 B01",
+      "prefix": "B01",
+      "before_next": 9701,
+      "after_next": 9701,
+      "before_state": "active",
+      "after_state": "active"
+    },
+    {
+      "name": "SMOKE P13.4 B02",
+      "prefix": "B02",
+      "before_next": 9900,
+      "after_next": 9900,
+      "before_state": "active",
+      "after_state": "active"
+    },
+    {
+      "name": "FISCALRD B03",
+      "prefix": "B03",
+      "before_next": 8920,
+      "after_next": 8920,
+      "before_state": "active",
+      "after_state": "active"
+    },
+    {
+      "name": "COA3 B04",
+      "prefix": "B04",
+      "before_next": 9704,
+      "after_next": 9704,
+      "before_state": "active",
+      "after_state": "active"
+    },
+    {
+      "name": "FISCALRD B11",
+      "prefix": "B11",
+      "before_next": 9300,
+      "after_next": 9300,
+      "before_state": "active",
+      "after_state": "active"
+    },
+    {
+      "name": "FISCALRD B12",
+      "prefix": "B12",
+      "before_next": 8980,
+      "after_next": 8980,
+      "before_state": "active",
+      "after_state": "active"
+    },
+    {
+      "name": "FISCALRD B13",
+      "prefix": "B13",
+      "before_next": 9400,
+      "after_next": 9400,
+      "before_state": "active",
+      "after_state": "active"
+    },
+    {
+      "name": "COA3 B14",
+      "prefix": "B14",
+      "before_next": 9709,
+      "after_next": 9709,
+      "before_state": "active",
+      "after_state": "active"
+    },
+    {
+      "name": "FISCALRD B15",
+      "prefix": "B15",
+      "before_next": 9100,
+      "after_next": 9100,
+      "before_state": "active",
+      "after_state": "active"
+    },
+    {
+      "name": "FISCALRD B16",
+      "prefix": "B16",
+      "before_next": 9160,
+      "after_next": 9160,
+      "before_state": "active",
+      "after_state": "active"
+    },
+    {
+      "name": "FISCALRD B17",
+      "prefix": "B17",
+      "before_next": 9500,
+      "after_next": 9500,
+      "before_state": "active",
+      "after_state": "active"
+    }
+  ],
+  "validation": {
+    "no_posted_moves": true,
+    "no_moves": true,
+    "no_payments": true,
+    "no_sale_orders": true,
+    "no_purchase_orders": true,
+    "no_fiscal_reports": true,
+    "no_ncf_consumption": true,
+    "partners_preserved": true,
+    "products_preserved": true,
+    "accounts_preserved": true,
+    "ncf_ranges_preserved": true
+  },
+  "original_preflight": {
+    "account_move": 39,
+    "account_move_posted": 39,
+    "account_payment": 6,
+    "bank_statement": 3,
+    "sale_order": 10,
+    "purchase_order": 6,
+    "stock_picking": 10,
+    "delivery_note": 8,
+    "fiscal_report": 37,
+    "ncf_consumption": 33,
+    "audit_log": 18,
+    "mail_message_ops": 140
+  },
+  "total_deleted": {
+    "fiscal_reports": 37,
+    "delivery_notes": 8,
+    "account_payments": 6,
+    "bank_statements": 3,
+    "account_moves": 39,
+    "sale_orders": 10,
+    "purchase_orders": 6,
+    "stock_pickings": 10,
+    "ncf_consumptions": 33,
+    "audit_logs_test": 18,
+    "mail_messages_test": 32
+  }
+}

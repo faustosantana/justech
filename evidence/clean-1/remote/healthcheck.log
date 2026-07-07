@@ -1,0 +1,18 @@
+[2026-07-07 14:32:48] === Healthcheck completo: prod (https://odoo.hellenia.cloud) ===
+[2026-07-07 14:32:48] [PASS] docker_odoo — hellenia-prod-odoo-1
+[2026-07-07 14:32:48] [PASS] docker_postgres — hellenia-prod-db-1
+[2026-07-07 14:32:48] [PASS] postgresql_ready
+[2026-07-07 14:32:49] [PASS] postgresql_database — hellenia_prod
+[2026-07-07 14:32:49] [PASS] odoo_healthcheck — healthy
+[2026-07-07 14:32:49] [PASS] odoo_internal_http — :8069/web/login
+[2026-07-07 14:32:49] [PASS] odoo_websocket_port — :8072
+[2026-07-07 14:32:49] [PASS] traefik_container
+[2026-07-07 14:32:49] [PASS] traefik_router_link — service=hellenia-prod
+[2026-07-07 14:32:49] [PASS] traefik_router_registered — hellenia-prod
+[2026-07-07 14:32:49] [PASS] https_login — HTTP 200
+[2026-07-07 14:32:49] [PASS] https_tls
+[2026-07-07 14:32:49] [PASS] assets_static — HTTP 200
+[2026-07-07 14:32:49] [PASS] websocket_route — HTTP 400
+[2026-07-07 14:32:52] [PASS] odoo_fiscal_modules — healthcheck-prod-2026-07-07_1432-odoo.json
+[2026-07-07 14:32:52] === RESULTADO: PASS ===
+[2026-07-07 14:32:52] Reporte: /opt/odoo-projects/hellenia/evidence/healthcheck-prod-2026-07-07_1432.json

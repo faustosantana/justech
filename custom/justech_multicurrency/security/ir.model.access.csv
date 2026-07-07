@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_justech_multicurrency_policy_user,justech.multicurrency.policy user,model_justech_multicurrency_policy,group_justech_multicurrency_user,1,0,0,0
+access_justech_multicurrency_policy_manager,justech.multicurrency.policy manager,model_justech_multicurrency_policy,group_justech_multicurrency_manager,1,1,1,1
+access_justech_multicurrency_dashboard_user,justech.multicurrency.dashboard user,model_justech_multicurrency_dashboard,group_justech_multicurrency_user,1,1,1,1
+access_justech_multicurrency_rate_manager,res.currency.rate mc manager,model_res_currency_rate,group_justech_multicurrency_manager,1,1,1,1

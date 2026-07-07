@@ -1,0 +1,42 @@
+{
+  "phase": "MC-PROD-smoke-product",
+  "timestamp_utc": "2026-07-07T15:41:14.637286+00:00",
+  "database": "hellenia_prod",
+  "ok": true,
+  "checks": {
+    "sale_price_usd": {
+      "ok": true,
+      "detail": "100.0"
+    },
+    "purchase_price_usd": {
+      "ok": true,
+      "detail": "70.0"
+    },
+    "list_price_dop": {
+      "ok": true,
+      "detail": "5800.0 ~ 5800.00"
+    },
+    "standard_price_dop": {
+      "ok": true,
+      "detail": "4060.0 ~ 4060.00"
+    },
+    "usd_public_list_item": {
+      "ok": true,
+      "detail": "item"
+    },
+    "usd_public_list_fixed_100": {
+      "ok": true,
+      "detail": "fixed 100.0"
+    }
+  },
+  "artifacts": {
+    "product_id": 14,
+    "product_code": "MC-PROD-USD-20260707154114",
+    "product_variant_id": 14,
+    "rate_used": 58.0,
+    "usd_pricelist_id": 8
+  }
+}
+
+--- MC_PROD_SMOKE_PRODUCT_JSON=/var/lib/odoo/mc-prod-smoke-product.json ---
+SMOKE_PRODUCT_OK=true

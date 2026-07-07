@@ -1,0 +1,68 @@
+{
+  "phase": "MC-PROD-validation",
+  "timestamp_utc": "2026-07-07T15:41:26.421399+00:00",
+  "database": "hellenia_prod",
+  "environment": "production",
+  "url": "https://odoo.hellenia.cloud",
+  "ok": true,
+  "checks": {
+    "module_installed": {
+      "ok": true,
+      "detail": "installed"
+    },
+    "module_version": {
+      "ok": true,
+      "detail": "19.0.2.0.0"
+    },
+    "module_justech_l10n_do_ncf": {
+      "ok": true,
+      "detail": "installed"
+    },
+    "module_justech_l10n_do_reports": {
+      "ok": true,
+      "detail": "installed"
+    },
+    "module_justech_l10n_do_base": {
+      "ok": true,
+      "detail": "installed"
+    },
+    "coa_unchanged": {
+      "ok": true,
+      "detail": "292 -> 292"
+    },
+    "posted_moves_not_modified": {
+      "ok": true,
+      "detail": "0 -> 1 (solo smoke nuevo)"
+    },
+    "policy_commercial_usd": {
+      "ok": true,
+      "detail": "USD"
+    },
+    "policy_accounting_dop": {
+      "ok": true,
+      "detail": "DOP"
+    },
+    "policy_customer_usd": {
+      "ok": true,
+      "detail": "USD"
+    },
+    "policy_supplier_usd": {
+      "ok": true,
+      "detail": "USD"
+    },
+    "policy_public_usd_list": {
+      "ok": true,
+      "detail": "Lista pública USD (USD)"
+    }
+  },
+  "baseline": {
+    "posted_moves": 0,
+    "accounts": 292,
+    "products": 8
+  },
+  "current": {
+    "posted_moves": 1,
+    "accounts": 292
+  },
+  "errors": []
+}

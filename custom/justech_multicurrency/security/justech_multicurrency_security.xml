@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_groups_privilege_justech_multicurrency" model="res.groups.privilege">
+        <field name="name">Multimoneda Justech</field>
+        <field name="category_id" ref="base.module_category_administration"/>
+    </record>
+
+    <record id="group_justech_multicurrency_user" model="res.groups">
+        <field name="name">Usuario</field>
+        <field name="comment">Consulta política multimoneda y dashboard.</field>
+        <field name="privilege_id" ref="res_groups_privilege_justech_multicurrency"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+
+    <record id="group_justech_multicurrency_manager" model="res.groups">
+        <field name="name">Administrador</field>
+        <field name="comment">Administra política comercial y tasas de cambio.</field>
+        <field name="privilege_id" ref="res_groups_privilege_justech_multicurrency"/>
+        <field name="implied_ids" eval="[(4, ref('group_justech_multicurrency_user'))]"/>
+    </record>
+
+    <record id="base.group_system" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('group_justech_multicurrency_manager'))]"/>
+    </record>
+
+    <record id="base.group_erp_manager" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('group_justech_multicurrency_manager'))]"/>
+    </record>
+</odoo>

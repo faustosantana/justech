@@ -1,0 +1,12 @@
+=== MC-PROD — Despliegue precios comerciales USD/DOP ===
+Entorno: hellenia_prod — https://odoo.hellenia.cloud
+Timestamp: 2026-07-07_113725
+Transfer starting: 35 files
+
+sent 1708 bytes  received 20 bytes  3715 bytes/sec
+total size is 59546  speedup is 34.46
+=== Fase 1: Backup PROD ===
+=== Fase 2: Verificar backup ===
+BACKUP_OK=/opt/odoo-projects/hellenia/backups/hellenia-prod/mc-prod-2026-07-07_113725 size=8512533
+=== Fase 3: Baseline pre-despliegue ===
+scp: /tmp/mc-prod-validation.json: No such file or directory

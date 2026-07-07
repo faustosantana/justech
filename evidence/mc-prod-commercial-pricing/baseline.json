@@ -1,0 +1,28 @@
+{
+  "phase": "MC-PROD-baseline",
+  "timestamp_utc": "2026-07-07T15:37:57.132144+00:00",
+  "database": "hellenia_prod",
+  "environment": "production",
+  "url": "https://odoo.hellenia.cloud",
+  "company": {
+    "id": 1,
+    "name": "Hellenia, S.R.L.",
+    "currency": "DOP"
+  },
+  "modules": {
+    "justech_multicurrency": "missing",
+    "justech_modules": "installed",
+    "justech_l10n_do_ncf": "installed",
+    "justech_l10n_do_reports": "installed",
+    "justech_l10n_do_base": "installed"
+  },
+  "counts": {
+    "posted_moves": 0,
+    "accounts": 292,
+    "products": 8
+  },
+  "usd_active": true,
+  "dop_active": true,
+  "usd_rate_inverse": null,
+  "multicurrency_installed": false
+}

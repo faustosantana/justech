@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_justech_currency_rate_list" model="ir.ui.view">
+        <field name="name">res.currency.rate.justech.list</field>
+        <field name="model">res.currency.rate</field>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <list string="Tasas de cambio Justech" editable="bottom">
+                <field name="name"/>
+                <field name="currency_id"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="inverse_company_rate" string="Valor"/>
+                <field name="rate" column_invisible="1"/>
+                <field name="justech_rate_origin"/>
+                <field name="create_uid" string="Usuario"/>
+                <field name="create_date" string="Fecha/Hora"/>
+                <field name="justech_archived" widget="boolean"/>
+                <button name="action_justech_archive_rate" type="object" string="Archivar"
+                        invisible="justech_archived" icon="fa-archive"/>
+                <button name="action_justech_restore_rate" type="object" string="Restaurar"
+                        invisible="not justech_archived" icon="fa-undo"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_justech_currency_rate_form" model="ir.ui.view">
+        <field name="name">res.currency.rate.justech.form</field>
+        <field name="model">res.currency.rate</field>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <form string="Tasa de cambio">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="currency_id"/>
+                            <field name="name"/>
+                            <field name="inverse_company_rate" string="Valor (moneda contable por unidad)"/>
+                            <field name="rate" invisible="1"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group>
+                            <field name="justech_rate_origin"/>
+                            <field name="justech_archived"/>
+                            <field name="create_uid" readonly="1"/>
+                            <field name="create_date" readonly="1"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_justech_currency_rate_search" model="ir.ui.view">
+        <field name="name">res.currency.rate.justech.search</field>
+        <field name="model">res.currency.rate</field>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <search string="Tasas Justech">
+                <field name="currency_id"/>
+                <field name="name"/>
+                <filter name="active_rates" string="Activas Justech" domain="[('justech_archived', '=', False)]"/>
+                <filter name="archived_rates" string="Histórico / archivadas" domain="[('justech_archived', '=', True)]"/>
+                <group>
+                    <filter name="group_currency" string="Moneda" context="{'group_by': 'currency_id'}"/>
+                    <filter name="group_company" string="Empresa" context="{'group_by': 'company_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_justech_multicurrency_rates" model="ir.actions.act_window">
+        <field name="name">Administración de tasas</field>
+        <field name="res_model">res.currency.rate</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_ids" eval="[
+            (5, 0, 0),
+            (0, 0, {'view_mode': 'list', 'view_id': ref('view_justech_currency_rate_list')}),
+            (0, 0, {'view_mode': 'form', 'view_id': ref('view_justech_currency_rate_form')}),
+        ]"/>
+        <field name="search_view_id" ref="view_justech_currency_rate_search"/>
+        <field name="context">{'search_default_active_rates': 1}</field>
+    </record>
+</odoo>

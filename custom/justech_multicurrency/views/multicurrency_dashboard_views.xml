@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_justech_multicurrency_dashboard_form" model="ir.ui.view">
+        <field name="name">justech.multicurrency.dashboard.form</field>
+        <field name="model">justech.multicurrency.dashboard</field>
+        <field name="arch" type="xml">
+            <form string="Dashboard Multimoneda" create="false" edit="false" delete="false">
+                <sheet class="justech_mc_dashboard_sheet">
+                    <field name="summary_html" nolabel="1"/>
+                    <group string="Indicadores" col="4">
+                        <field name="accounting_currency_id" readonly="1"/>
+                        <field name="commercial_currency_id" readonly="1"/>
+                        <field name="default_pricelist_id" readonly="1"/>
+                        <field name="pricelist_count" readonly="1"/>
+                    </group>
+                    <group string="Última tasa registrada" col="4">
+                        <field name="last_rate_currency_id" readonly="1"/>
+                        <field name="last_rate_value" readonly="1"/>
+                        <field name="last_rate_date" readonly="1"/>
+                        <field name="last_rate_datetime" readonly="1"/>
+                        <field name="last_rate_user_id" readonly="1"/>
+                        <field name="last_rate_origin" readonly="1"/>
+                    </group>
+                    <field name="company_id" invisible="1"/>
+                    <field name="policy_id" invisible="1"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_justech_multicurrency_dashboard" model="ir.actions.server">
+        <field name="name">Dashboard Multimoneda</field>
+        <field name="model_id" ref="model_justech_multicurrency_dashboard"/>
+        <field name="state">code</field>
+        <field name="code">action = env["justech.multicurrency.dashboard"].action_open()</field>
+    </record>
+</odoo>

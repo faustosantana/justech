@@ -1,0 +1,10 @@
+=== MC-PROD — Despliegue precios comerciales USD/DOP ===
+Entorno: hellenia_prod — https://odoo.hellenia.cloud
+Timestamp: 2026-07-07_113642
+Transfer starting: 35 files
+
+sent 1708 bytes  received 20 bytes  4234 bytes/sec
+total size is 59546  speedup is 34.46
+=== Fase 1: Backup PROD ===
+=== Fase 2: Verificar backup ===
+bash: line 25: pg_restore: command not found

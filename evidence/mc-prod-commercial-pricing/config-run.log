@@ -1,0 +1,32 @@
+{
+  "phase": "MC-PROD-config",
+  "timestamp_utc": "2026-07-07T15:41:09.900990+00:00",
+  "database": "hellenia_prod",
+  "ok": true,
+  "errors": [],
+  "policy": {
+    "company_id": 1,
+    "accounting_currency": "DOP",
+    "commercial_currency": "USD",
+    "default_customer_currency": "USD",
+    "default_supplier_currency": "USD",
+    "default_pricelist": "Lista pública USD (USD)",
+    "default_product_pricelist": "Lista pública USD (USD)",
+    "public_usd_pricelist_id": 8,
+    "public_usd_pricelist_name": "Lista pública USD (USD)",
+    "usd_rate_inverse": 58.0,
+    "checks": {
+      "accounting_currency_dop": true,
+      "commercial_currency_usd": true,
+      "default_customer_usd": true,
+      "default_supplier_usd": true,
+      "public_usd_pricelist": true,
+      "default_pricelist_usd": true,
+      "default_product_pricelist_usd": true,
+      "usd_rate_set": true
+    }
+  }
+}
+
+--- MC_PROD_CONFIG_JSON=/var/lib/odoo/mc-prod-config.json ---
+CONFIG_OK=true

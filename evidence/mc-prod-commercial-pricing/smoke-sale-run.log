@@ -1,0 +1,64 @@
+{
+  "phase": "MC-PROD-smoke-sale-invoice",
+  "timestamp_utc": "2026-07-07T15:41:19.106018+00:00",
+  "database": "hellenia_prod",
+  "ok": true,
+  "checks": {
+    "customer_usd_pricelist": {
+      "ok": true,
+      "detail": "Lista pública USD (USD)"
+    },
+    "quote_currency_usd": {
+      "ok": true,
+      "detail": "USD"
+    },
+    "line_price_100_usd": {
+      "ok": true,
+      "detail": "100.0"
+    },
+    "invoice_posted": {
+      "ok": true,
+      "detail": "posted"
+    },
+    "invoice_currency_usd": {
+      "ok": true,
+      "detail": "USD"
+    },
+    "company_currency_dop": {
+      "ok": true,
+      "detail": "DOP"
+    },
+    "move_balanced": {
+      "ok": true,
+      "detail": "balanced"
+    },
+    "aml_in_company_currency": {
+      "ok": true,
+      "detail": "3 lines DOP"
+    },
+    "aml_dop_amounts_positive": {
+      "ok": true,
+      "detail": "debit=6844.00"
+    },
+    "ncf_present": {
+      "ok": true,
+      "detail": "B0200009900"
+    },
+    "invoice_pdf": {
+      "ok": true,
+      "detail": "74291 bytes"
+    }
+  },
+  "artifacts": {
+    "partner_id": 76,
+    "sale_order_id": 43,
+    "sale_order_name": "S00001",
+    "invoice_id": 201,
+    "invoice_name": "INV/2026/00001",
+    "ncf": "B0200009900",
+    "product_code": "MC-PROD-USD-20260707154114"
+  }
+}
+
+--- MC_PROD_SMOKE_SALE_JSON=/var/lib/odoo/mc-prod-smoke-sale-invoice.json ---
+SMOKE_SALE_OK=true

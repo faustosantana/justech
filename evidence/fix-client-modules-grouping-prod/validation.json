@@ -1,0 +1,31 @@
+{
+  "phase": "fix-f31.6-grouping",
+  "users": {
+    "it@justech.do": {
+      "found": true,
+      "open_action_model": "justech.client.module.control",
+      "open_action_name": "M\u00f3dulos del Cliente",
+      "no_popup": true
+    }
+  },
+  "checks": {
+    "title_modulos_cliente": true,
+    "section_available": true,
+    "section_development": true,
+    "administrar_button": true,
+    "view_information_button": true,
+    "includes_panel": true,
+    "dev_actions_hidden": true,
+    "total_rows": 14,
+    "available_count": 5,
+    "development_count": 9,
+    "few_main_modules": true,
+    "fiscal_rd_present": true,
+    "no_hidden_as_main": true,
+    "no_internal_product_rows": true,
+    "fiscal_groups_ncf_dgii": true,
+    "dev_not_active": true,
+    "dev_coming_soon": true
+  },
+  "status": "PASS"
+}

@@ -161,7 +161,24 @@
 .justech-cc-admin-form .o_list_table tbody tr.text-success { color: #166534 !important; }
 .justech-cc-admin-form .o_list_table tbody tr.text-warning { color: #854d0e !important; }
 .justech-cc-admin-form .o_list_table tbody tr.text-danger { color: #991b1b !important; }
-.justech-cc-admin-form .o_list_table tbody tr.text-muted { color: #6b7280 !important; }
+.justech-cc-checklist {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    li { padding: 4px 0; font-size: 14px; }
+}
+
+.justech-cc-status-pill {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: #eef2ff;
+    color: #4338ca;
+    font-size: 12px;
+    margin-left: 8px;
+}
+
+.justech-cc-admin-form .o_list_table tbody tr.text-info { color: #1d4ed8 !important; }
 
 .justech-cc-card-icon {
     color: #6366f1;
@@ -295,6 +312,42 @@
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
     font-size: 14px;
     color: #374151;
+}
+
+.justech-cc-dev-section {
+    margin-top: 32px;
+    padding-top: 8px;
+    border-top: 1px solid #e5e7eb;
+}
+
+.justech-cc-module-list {
+    .o_list_table {
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+    }
+    thead th {
+        background: #f8fafc !important;
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: #6b7280;
+    }
+    tbody td {
+        vertical-align: middle;
+        padding-top: 12px !important;
+        padding-bottom: 12px !important;
+    }
+}
+
+.justech-cc-module-list-dev tbody tr {
+    background: #fafafa;
+}
+
+.justech-cc-includes li {
+    padding: 6px 0;
+    border-bottom: 1px solid #f3f4f6;
+    &:last-child { border-bottom: none; }
 }
 
 .justech-cc-nav-bar {

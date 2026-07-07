@@ -9,12 +9,12 @@
                 <app data-string="Justech" string="Justech" name="justech_settings"
                      groups="base.group_system">
                     <block title="Control de módulos y licencias" name="justech_control_block">
-                        <setting string="Centro de Administración Justech"
-                                 help="Administre personalizaciones, licencias y empresas habilitadas del ERP.">
+                        <setting string="Módulos del Cliente"
+                                 help="Administre personalizaciones contratadas, empresas habilitadas y licencias por cliente.">
                             <div class="mt8">
                                 <button name="action_justech_open_client_modules"
                                         type="object"
-                                        string="Abrir Centro de Administración"
+                                        string="Abrir Módulos del Cliente"
                                         icon="oi-arrow-right"
                                         class="btn-link o_web_settings_access_rights"/>
                             </div>
@@ -54,7 +54,7 @@
                         <setting string="Clave Administrativa Justech"
                                  help="Las acciones sensibles (activar, pagar, bloquear, agregar compañía) requieren la clave. Consultar la pantalla no la requiere.">
                             <p class="text-muted mb-0">
-                                Puede consultar el Centro de Administración sin clave. Las acciones críticas requieren la Clave Administrativa Justech.
+                                Puede consultar Módulos del Cliente sin clave. Las acciones críticas requieren la Clave Administrativa Justech.
                             </p>
                         </setting>
                     </block>

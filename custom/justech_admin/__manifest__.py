@@ -1,6 +1,6 @@
 {
     "name": "Justech Admin",
-    "version": "19.0.2.6.0",
+    "version": "19.0.2.8.0",
     "category": "Justech/Platform",
     "summary": "Centro de Control Justech Enterprise",
     "description": """
@@ -30,7 +30,7 @@ F31.5: Rediseño definitivo del Centro de Control — consola comercial Enterpri
     "justech_register": {
         "module_code": "justech_admin",
         "module_name": "Justech Admin",
-        "version": "19.0.2.6.0",
+        "version": "19.0.2.8.0",
         "category": "platform",
         "description": "Enterprise Control Center",
         "dependencies": ["justech_modules", "hellenia_governance"],

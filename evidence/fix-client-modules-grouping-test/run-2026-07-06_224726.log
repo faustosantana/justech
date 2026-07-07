@@ -1,0 +1,30 @@
+=== FIX F31.6 Grouping TEST ===
+Transfer starting: 61 files
+__manifest__.py
+models/justech_license_service.py
+tests/test_client_module_control.py
+
+sent 8041 bytes  received 572 bytes  58952 bytes/sec
+total size is 216686  speedup is 25.16
+Transfer starting: 28 files
+__manifest__.py
+models/justech_client_module_control.py
+static/src/scss/control_center.scss
+tests/test_client_module_control.py
+views/justech_client_module_views.xml
+
+sent 5784 bytes  received 544 bytes  43018 bytes/sec
+total size is 116609  speedup is 18.43
+ Container hellenia-test-odoo-1 Stopping 
+ Container hellenia-test-odoo-1 Stopped 
+2026-07-07 02:47:41,065 1 INFO hellenia_test odoo.registry: verifying fields for every extended model 
+2026-07-07 02:47:42,139 1 INFO hellenia_test odoo.modules.loading: Modules loaded. 
+2026-07-07 02:47:42,149 1 WARNING hellenia_test odoo.schema: Missing not-null constraint on res.users.settings.color_scheme 
+2026-07-07 02:47:42,156 1 INFO hellenia_test odoo.registry: Registry changed, signaling through the database 
+2026-07-07 02:47:42,157 1 INFO hellenia_test odoo.registry: Registry loaded in 8.332s 
+2026-07-07 02:47:42,158 1 INFO hellenia_test odoo.service.server: Initiating shutdown 
+2026-07-07 02:47:42,158 1 INFO hellenia_test odoo.service.server: Hit CTRL-C again or send a second signal to force the shutdown. 
+2026-07-07 02:47:42,158 1 INFO hellenia_test odoo.sql_db: ConnectionPool(read/write;used=0/count=0/max=64): Closed 1 connections  
+grep: /Users/faustosantana/Projects/jaios/evidence/fix-client-modules-grouping-test/validation.json: No such file or directory
+TEST FAIL
+Evidence: /Users/faustosantana/Projects/jaios/evidence/fix-client-modules-grouping-test

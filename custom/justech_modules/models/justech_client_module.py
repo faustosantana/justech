@@ -66,6 +66,7 @@ class JustechClientModuleAudit(models.Model):
     )
     product_code = fields.Char(index=True)
     commercial_name = fields.Char()
+    client_name = fields.Char(string="Cliente", index=True)
     state_before = fields.Char()
     state_after = fields.Char()
     result = fields.Selection(

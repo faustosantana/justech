@@ -539,7 +539,317 @@ class JustechLicenseService(models.AbstractModel):
         return feature.name if feature else feature_code
 
     # ------------------------------------------------------ client module control
-    CLIENT_MODULE_EXCLUDE = ("marketplace", "ia")
+    # Sub-productos ocultos (se agrupan bajo módulos principales)
+    HIDDEN_PRODUCT_CODES = frozenset(
+        {
+            "comprobantes_fiscales",
+            "ux_fiscal",
+            "contabilidad_rd",
+            "marketplace",
+            "ia",
+        }
+    )
+
+    MAIN_CLIENT_MODULES = (
+        {
+            "code": "fiscal_rd",
+            "name": "Fiscal República Dominicana",
+            "description": "Comprobantes fiscales, NCF, DGII, ITBIS, retenciones y reportes fiscales.",
+            "primary_product_code": "contabilidad_rd",
+            "section": "available",
+            "category": "fiscal",
+            "includes": [
+                "Comprobantes Fiscales",
+                "NCF",
+                "DGII",
+                "ITBIS",
+                "Retenciones",
+                "Reportes Fiscales",
+                "Experiencia Fiscal",
+            ],
+        },
+        {
+            "code": "contabilidad",
+            "name": "Contabilidad",
+            "description": "Diario general, plan de cuentas, estados financieros y cuentas por cobrar/pagar.",
+            "primary_product_code": "contabilidad_rd",
+            "section": "available",
+            "category": "fiscal",
+            "includes": [
+                "Diario general",
+                "Plan de cuentas",
+                "Asientos",
+                "Balance",
+                "Estados financieros",
+                "Cuentas por cobrar",
+                "Cuentas por pagar",
+            ],
+        },
+        {
+            "code": "ventas",
+            "name": "Ventas",
+            "description": "Cotizaciones, órdenes de venta, clientes y pipeline comercial.",
+            "primary_product_code": "ventas",
+            "section": "development",
+            "category": "sales",
+            "includes": ["Cotizaciones", "Órdenes de venta", "Clientes", "Pipeline"],
+        },
+        {
+            "code": "compras",
+            "name": "Compras",
+            "description": "Proveedores, órdenes de compra, recepciones y facturas de proveedor.",
+            "primary_product_code": "compras",
+            "section": "development",
+            "category": "purchase",
+            "includes": [
+                "Proveedores",
+                "Órdenes de compra",
+                "Recepciones",
+                "Facturas proveedor",
+            ],
+        },
+        {
+            "code": "inventario",
+            "name": "Inventario",
+            "description": "Productos, almacenes, existencias y transferencias.",
+            "primary_product_code": "inventario",
+            "section": "available",
+            "category": "inventory",
+            "includes": ["Productos", "Almacenes", "Existencias", "Transferencias"],
+        },
+        {
+            "code": "punto_de_venta",
+            "name": "Punto de Venta",
+            "description": "POS fiscal integrado con tickets, caja y facturación desde mostrador.",
+            "primary_product_code": "punto_de_venta",
+            "section": "available",
+            "category": "pos",
+            "includes": [
+                "POS",
+                "Ticket",
+                "Caja",
+                "Cliente con RNC",
+                "Factura fiscal desde POS",
+            ],
+        },
+        {
+            "code": "reportes_corporativos",
+            "name": "Reportes Corporativos",
+            "description": "Diseño PDF corporativo para documentos comerciales.",
+            "primary_product_code": "reportes_corporativos",
+            "section": "available",
+            "category": "reports",
+            "includes": [
+                "Cotizaciones PDF",
+                "Facturas PDF",
+                "Órdenes de compra PDF",
+                "Conduces PDF",
+            ],
+        },
+        {
+            "code": "crm",
+            "name": "CRM",
+            "description": "Relaciones con clientes y oportunidades comerciales.",
+            "primary_product_code": "crm",
+            "section": "development",
+            "category": "crm",
+            "includes": ["Contactos", "Oportunidades", "Actividades", "Pipeline"],
+        },
+        {
+            "code": "activos_fijos",
+            "name": "Activos Fijos",
+            "description": "Depreciación y gestión de activos.",
+            "primary_product_code": "activos_fijos",
+            "section": "development",
+            "category": "assets",
+            "includes": ["Activos", "Depreciación", "Bajas"],
+        },
+        {
+            "code": "rrhh",
+            "name": "RRHH",
+            "description": "Recursos humanos y gestión de personal.",
+            "primary_product_code": "rrhh",
+            "section": "development",
+            "category": "hr",
+            "includes": ["Empleados", "Contratos", "Ausencias"],
+        },
+        {
+            "code": "marketplace",
+            "name": "Marketplace",
+            "description": "Tienda de extensiones Justech.",
+            "primary_product_code": "marketplace",
+            "section": "development",
+            "category": "platform",
+            "includes": ["Extensiones", "Instalación guiada"],
+        },
+        {
+            "code": "ia",
+            "name": "IA",
+            "description": "Asistente inteligente y automatización.",
+            "primary_product_code": "ia",
+            "section": "development",
+            "category": "ai",
+            "includes": ["Asistente IA", "Automatizaciones"],
+        },
+        {
+            "code": "manufactura",
+            "name": "Manufactura",
+            "description": "Producción, BOM y órdenes de fabricación.",
+            "primary_product_code": None,
+            "section": "development",
+            "category": "platform",
+            "includes": ["BOM", "Órdenes de fabricación", "Centros de trabajo"],
+        },
+        {
+            "code": "nomina",
+            "name": "Nómina",
+            "description": "Nómina dominicana y prestaciones.",
+            "primary_product_code": None,
+            "section": "development",
+            "category": "hr",
+            "includes": ["Nómina", "TSS", "Prestaciones"],
+        },
+    )
+
+    COMMERCIAL_ICON_MAP = {
+        "fiscal": "🧾",
+        "sales": "💰",
+        "purchase": "🛒",
+        "inventory": "📦",
+        "pos": "🛒",
+        "crm": "👥",
+        "reports": "📊",
+        "assets": "🏢",
+        "hr": "👥",
+        "platform": "⚙️",
+        "integration": "🔗",
+        "ai": "🤖",
+    }
+
+    @api.model
+    def _tier_commercial_label(self, tier_code):
+        labels = {
+            "TRIAL": _("Trial"),
+            "STD": _("Standard"),
+            "PRO": _("Professional"),
+            "ENT": _("Enterprise"),
+        }
+        return labels.get(tier_code, tier_code or "—")
+
+    @api.model
+    def get_commercial_clients(self):
+        """Active commercial clients derived from valid licenses."""
+        self.env["justech.admin.access.service"].require_justech_settings_access()
+        internal = self._sudo_internal()
+        License = internal["justech.license"]
+        today = date.today()
+        licenses = License.search([("state", "=", "active")])
+        clients = []
+        for lic in licenses:
+            if lic.expires_at and lic.expires_at < today:
+                continue
+            companies = lic.company_line_ids.mapped("company_id")
+            primary = companies[:1] or self.env.company
+            clients.append(
+                {
+                    "license_id": lic.id,
+                    "client_name": lic.name,
+                    "plan_label": self._tier_commercial_label(lic.tier),
+                    "tier_code": lic.tier,
+                    "primary_company_id": primary.id,
+                    "company_ids": companies.ids,
+                    "company_count": len(companies),
+                    "expires_at": lic.expires_at,
+                    "max_companies": lic.max_companies,
+                }
+            )
+        if not clients:
+            company = self.env.company
+            lic = self._get_active_license_for_company(company)
+            clients.append(
+                {
+                    "license_id": lic.id if lic else False,
+                    "client_name": lic.name if lic else company.name,
+                    "plan_label": self._tier_commercial_label(lic.tier) if lic else "—",
+                    "tier_code": lic.tier if lic else False,
+                    "primary_company_id": company.id,
+                    "company_ids": [company.id],
+                    "company_count": 1,
+                    "expires_at": lic.expires_at if lic else False,
+                    "max_companies": lic.max_companies if lic else 0,
+                }
+            )
+        return clients
+
+    @api.model
+    def get_client_dashboard(self, license_id=None, company=None):
+        clients = self.get_commercial_clients()
+        selected = next(
+            (c for c in clients if c["license_id"] == license_id),
+            clients[0] if clients else {},
+        )
+        if not selected:
+            return {}
+        company = (
+            self.env["res.company"].browse(selected["primary_company_id"])
+            if selected.get("primary_company_id")
+            else (company or self.env.company)
+        )
+        rows = self.get_client_module_rows(
+            company=company, license_id=license_id, view_only=True
+        )
+        last_modified = False
+        for row in rows:
+            mod = row.get("last_modified_at")
+            if mod and (not last_modified or mod > last_modified):
+                last_modified = mod
+        return {
+            **selected,
+            "total_count": len([r for r in rows if r.get("section") == "available"]),
+            "active_count": len(
+                [r for r in rows if r.get("section") == "available" and r.get("is_active")]
+            ),
+            "pending_count": len(
+                [
+                    r
+                    for r in rows
+                    if r.get("section") == "available"
+                    and not r.get("is_paid")
+                    and r.get("status") != "coming_soon"
+                ]
+            ),
+            "last_modified_at": last_modified,
+        }
+
+    @api.model
+    def _product_enabled_companies(self, product, license_rec):
+        if not license_rec:
+            return []
+        names = []
+        for comp in license_rec.company_line_ids.mapped("company_id"):
+            if self._product_is_active_for_company(product, comp):
+                names.append(comp.name)
+        return names
+
+    @api.model
+    def _product_companies_checklist(self, product, license_rec):
+        if not license_rec:
+            return []
+        rows = []
+        for comp in license_rec.company_line_ids.mapped("company_id"):
+            rows.append(
+                {
+                    "company_id": comp.id,
+                    "company_name": comp.name,
+                    "enabled": self._product_is_active_for_company(product, comp),
+                }
+            )
+        return rows
+
+    @api.model
+    def _client_name_for_company(self, company):
+        lic = self._get_active_license_for_company(company)
+        return lic.name if lic else company.name
 
     @api.model
     def _client_module_status(self, product, company, state, configured, is_active):
@@ -550,14 +860,14 @@ class JustechLicenseService(models.AbstractModel):
             if license_rec.expires_at < date.today():
                 return "expired", _("Expirado")
         if not configured:
-            return "coming_soon", _("Próximamente")
+            return "coming_soon", _("Disponible")
         if state.is_blocked:
             return "blocked", _("Bloqueado")
         if not state.is_paid:
-            return "not_paid", _("No pagado")
+            return "not_paid", _("Pendiente")
         if is_active:
-            return "paid_active", _("Pagado y activo")
-        return "paid_inactive", _("Pagado pero inactivo")
+            return "paid_active", _("Activo")
+        return "paid_inactive", _("Disponible")
 
     @api.model
     def _product_is_active_for_company(self, product, company):
@@ -635,59 +945,127 @@ class JustechLicenseService(models.AbstractModel):
         return labels.get(origin_code, origin_code or "—")
 
     @api.model
-    def get_client_module_rows(self, company=None, view_only=False):
-        """Rows for Módulos del Cliente screen."""
+    def _commercial_icon_for_category(self, category, name):
+        emoji = self.COMMERCIAL_ICON_MAP.get(category, "📌")
+        return f"{emoji} {name}"
+
+    @api.model
+    def _commercial_icon(self, product):
+        return self._commercial_icon_for_category(product.category, product.name)
+
+    @api.model
+    def _product_row_data(self, product, company, license_rec, client_name, tier_label):
+        internal = self._sudo_internal()
+        State = internal["justech.client.module.state"]
+        configured = any(
+            internal["justech.feature"].search(
+                [("code", "=", ln.feature_code)], limit=1
+            )
+            for ln in product.line_ids
+        )
+        state = State.get_or_create(product, company)
+        is_active = self._product_is_active_for_company(product, company)
+        status, status_label = self._client_module_status(
+            product, company, state, configured, is_active
+        )
+        activated_at, activated_by = self._product_activation_meta(product, company)
+        last_modified_at, last_modified_by = self._product_last_change_meta(
+            product, company
+        )
+        enabled_companies = self._product_enabled_companies(product, license_rec)
+        return {
+            "product_code": product.code,
+            "is_paid": state.is_paid,
+            "is_active": is_active,
+            "is_blocked": state.is_blocked,
+            "client_name": client_name,
+            "company_name": company.name,
+            "plan_label": tier_label,
+            "license_label": tier_label,
+            "companies_enabled_text": ", ".join(enabled_companies) or "—",
+            "activated_at": activated_at,
+            "activated_by_name": activated_by or "—",
+            "last_modified_at": last_modified_at,
+            "last_modified_by_name": last_modified_by or "—",
+            "origin": state.origin or "justech",
+            "origin_label": self._origin_label(state.origin or "justech"),
+            "status": status,
+            "status_label": status_label,
+            "configured": configured,
+        }
+
+    @api.model
+    def get_client_module_rows(self, company=None, license_id=None, view_only=False):
+        """Main module rows for Módulos del Cliente (grouped, commercial)."""
         self.env["justech.admin.access.service"].require_justech_settings_access()
         if not view_only and not self.env.su:
             svc = self.env["justech.admin.access.service"]
             if not svc.is_session_valid(svc.SCOPE_ADMIN):
                 svc.require_session(svc.SCOPE_ADMIN)
-        company = company or self.env.company
         internal = self._sudo_internal()
+        License = internal["justech.license"]
+        license_rec = License.browse(license_id) if license_id else False
+        if license_rec and license_rec.exists():
+            company = license_rec.company_line_ids[:1].company_id or company
+        company = company or self.env.company
+        if not license_rec or not license_rec.exists():
+            license_rec = self._get_active_license_for_company(company)
+        tier_label = self._tier_commercial_label(license_rec.tier) if license_rec else "—"
+        client_name = license_rec.name if license_rec else company.name
         Product = internal["justech.commercial.product"]
-        State = internal["justech.client.module.state"]
-        license_rec = self._get_active_license_for_company(company)
-        tier = license_rec.tier if license_rec else "—"
+        product_cache = {
+            p.code: p for p in Product.search([("active", "=", True)])
+        }
         rows = []
-        for product in Product.search([("active", "=", True)], order="sequence, name"):
-            if product.code in self.CLIENT_MODULE_EXCLUDE:
-                continue
-            configured = any(
-                internal["justech.feature"].search(
-                    [("code", "=", ln.feature_code)], limit=1
+        for main in self.MAIN_CLIENT_MODULES:
+            primary_code = main.get("primary_product_code")
+            product = product_cache.get(primary_code) if primary_code else False
+            section = main["section"]
+            is_development = section == "development"
+            if product:
+                base = self._product_row_data(
+                    product, company, license_rec, client_name, tier_label
                 )
-                for ln in product.line_ids
-            )
-            state = State.get_or_create(product, company)
-            is_active = self._product_is_active_for_company(product, company)
-            status, status_label = self._client_module_status(
-                product, company, state, configured, is_active
-            )
-            activated_at, activated_by = self._product_activation_meta(product, company)
-            last_modified_at, last_modified_by = self._product_last_change_meta(
-                product, company
-            )
+                if is_development or not base["configured"]:
+                    is_development = True
+                    base["status"] = "coming_soon"
+                    base["status_label"] = _("En desarrollo")
+                    base["is_active"] = False
+            else:
+                base = {
+                    "product_code": main["code"],
+                    "is_paid": False,
+                    "is_active": False,
+                    "is_blocked": False,
+                    "client_name": client_name,
+                    "company_name": company.name,
+                    "plan_label": tier_label,
+                    "license_label": tier_label,
+                    "companies_enabled_text": "—",
+                    "activated_at": False,
+                    "activated_by_name": "—",
+                    "last_modified_at": False,
+                    "last_modified_by_name": "—",
+                    "origin": "justech",
+                    "origin_label": self._origin_label("justech"),
+                    "status": "coming_soon",
+                    "status_label": _("En desarrollo"),
+                    "configured": False,
+                }
+                is_development = True
             rows.append(
                 {
-                    "product_code": product.code,
-                    "name": product.name,
-                    "description": product.description or "",
-                    "is_paid": state.is_paid,
-                    "is_active": is_active,
-                    "is_blocked": state.is_blocked,
-                    "company_name": company.name,
-                    "plan_label": tier,
-                    "license_label": tier,
-                    "activated_at": activated_at,
-                    "activated_by_name": activated_by or "—",
-                    "last_modified_at": last_modified_at,
-                    "last_modified_by_name": last_modified_by or "—",
-                    "origin": state.origin or "justech",
-                    "origin_label": self._origin_label(state.origin or "justech"),
-                    "status": status,
-                    "status_label": status_label,
-                    "configured": configured,
-                    "includes": [ln.commercial_name for ln in product.line_ids],
+                    **base,
+                    "main_module_code": main["code"],
+                    "name": main["name"],
+                    "display_name": self._commercial_icon_for_category(
+                        main["category"], main["name"]
+                    ),
+                    "description": main["description"],
+                    "includes": main["includes"],
+                    "section": section,
+                    "is_development": is_development,
+                    "product_code": primary_code or main["code"],
                 }
             )
         return rows
@@ -713,6 +1091,7 @@ class JustechLicenseService(models.AbstractModel):
             {
                 "user_id": self.env.uid,
                 "company_id": company.id,
+                "client_name": self._client_name_for_company(company),
                 "ip_address": ip,
                 "action": action,
                 "origin": state.origin if state else "justech",
@@ -801,7 +1180,7 @@ class JustechLicenseService(models.AbstractModel):
             if not license_rec:
                 raise JustechLicenseError(
                     _(
-                        "La licencia actual no permite habilitar otra empresa."
+                        "Esta licencia no permite habilitar más empresas. Contacte a Justech."
                     )
                 )
             if license_rec.max_companies > 0:
@@ -819,7 +1198,7 @@ class JustechLicenseService(models.AbstractModel):
                         )
                         raise JustechLicenseError(
                             _(
-                                "La licencia actual no permite habilitar otra empresa."
+                                "Esta licencia no permite habilitar más empresas. Contacte a Justech."
                             )
                         )
             if target.id not in license_rec.company_line_ids.mapped("company_id").ids:
@@ -843,6 +1222,13 @@ class JustechLicenseService(models.AbstractModel):
                     lambda l: l.company_id.id == target.id
                 )
                 line.unlink()
+        elif action == "change_license":
+            license_rec = self._get_active_license_for_company(company)
+            new_tier = (reason or "").strip().upper()
+            allowed = {"TRIAL", "STD", "PRO", "ENT"}
+            if not license_rec or new_tier not in allowed:
+                raise JustechLicenseError(_("Plan de licencia no válido."))
+            license_rec.sudo().write({"tier": new_tier})
         else:
             raise JustechLicenseError(_("Unknown action '%(a)s'.") % {"a": action})
 

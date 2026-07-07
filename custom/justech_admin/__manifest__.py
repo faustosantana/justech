@@ -1,6 +1,6 @@
 {
     "name": "Justech Admin",
-    "version": "19.0.2.13.2",
+    "version": "19.0.2.14.2",
     "category": "Justech/Platform",
     "summary": "Centro de Control Justech Enterprise",
     "description": """
@@ -14,6 +14,7 @@ F31.5: Rediseño definitivo del Centro de Control — consola comercial Enterpri
         "security/ir.model.access.csv",
         "views/justech_admin_protected_actions.xml",
         "views/justech_control_center_views.xml",
+        "views/justech_license_admin_wizard_views.xml",
         "views/justech_client_module_views.xml",
         "views/justech_res_config_settings_views.xml",
         "views/justech_admin_dashboard_views.xml",

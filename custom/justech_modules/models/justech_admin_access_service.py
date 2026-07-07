@@ -443,7 +443,7 @@ class JustechAdminAccessService(models.AbstractModel):
 
     @api.model
     def action_open_control_licenses(self):
-        self.require_session(self.SCOPE_ADMIN)
+        self.require_justech_settings_access()
         return self.env["justech.control.licenses"].action_open()
 
     @api.model

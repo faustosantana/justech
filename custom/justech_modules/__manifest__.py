@@ -1,6 +1,6 @@
 {
     "name": "Justech Modules",
-    "version": "19.0.1.8.3",
+    "version": "19.0.1.8.6",
     "category": "Justech/Platform",
     "summary": "Motor de licencias y catálogo comercial Justech",
     "description": """
@@ -15,6 +15,7 @@ F31.5: commercial catalog + Control Center API (get_commercial_catalog).
         "security/justech_modules_security.xml",
         "security/ir.model.access.csv",
         "data/justech_commercial_catalog.xml",
+        "data/justech_commercial_license_catalog.xml",
         "data/justech_admin_access_bootstrap.xml",
         "views/justech_admin_access_views.xml",
         "views/justech_admin_protected_actions.xml",

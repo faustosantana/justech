@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_justech_license_admin_wizard_form" model="ir.ui.view">
+        <field name="name">justech.license.admin.wizard.form</field>
+        <field name="model">justech.license.admin.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Administración de licencia" class="justech-license-wizard-form">
+                <group invisible="mode not in ('create', 'activate', 'change_plan', 'renew', 'suspend', 'reactivate', 'add_company', 'remove_company', 'set_primary_company')">
+                    <field name="mode" invisible="1"/>
+                    <field name="control_id" invisible="1"/>
+                    <field name="dashboard_id" invisible="1"/>
+                    <field name="license_id" invisible="1"/>
+                    <field name="company_id" readonly="mode not in ('create', 'activate')" invisible="mode not in ('create', 'activate')"/>
+                    <field name="license_name" invisible="mode not in ('create', 'activate')"/>
+                    <field name="tier" invisible="mode not in ('create', 'activate', 'change_plan')"/>
+                    <field name="target_state" invisible="mode not in ('create', 'activate')"/>
+                    <field name="max_companies" invisible="mode not in ('create', 'activate')"/>
+                    <field name="starts_at" invisible="mode not in ('create', 'activate', 'renew')"/>
+                    <field name="expires_at" invisible="mode not in ('create', 'activate', 'renew')"/>
+                    <field name="target_company_id" invisible="mode not in ('add_company', 'remove_company', 'set_primary_company')" required="mode in ('add_company', 'remove_company', 'set_primary_company')"/>
+                </group>
+                <group string="Empresas incluidas" invisible="mode not in ('create', 'activate')">
+                    <field name="company_ids" widget="many2many_tags" nolabel="1"/>
+                </group>
+                <group string="Módulos incluidos" invisible="mode not in ('create', 'activate')">
+                    <field name="module_line_ids" nolabel="1">
+                        <list editable="bottom" create="false" delete="false">
+                            <field name="selected" widget="boolean_toggle"/>
+                            <field name="product_name" readonly="1" string="Personalización"/>
+                            <field name="customization_code" column_invisible="1"/>
+                            <field name="product_code" column_invisible="1"/>
+                            <field name="description" column_invisible="1"/>
+                            <field name="sequence" column_invisible="1"/>
+                        </list>
+                    </field>
+                </group>
+                <group string="Confirmación">
+                    <field name="admin_key" password="True" placeholder="Clave Administrativa Justech"/>
+                </group>
+                <footer>
+                    <button name="action_confirm" type="object" string="Confirmar" class="btn-primary"/>
+                    <button string="Cancelar" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

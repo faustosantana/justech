@@ -79,6 +79,17 @@ class JustechLicenseService(models.AbstractModel):
         )
 
     @api.model
+    def _require_license_admin(self):
+        """License administration mutations require license step-up grant."""
+        if self.env.su or self.env.context.get("justech_skip_critical_step_up"):
+            return
+        svc = self.env["justech.admin.access.service"]
+        token = self.env.context.get("justech_critical_token")
+        if token and svc.consume_critical_grant(svc.CRITICAL_LICENSE_CHANGE, token):
+            return
+        svc.require_critical_step_up(svc.CRITICAL_LICENSE_CHANGE)
+
+    @api.model
     def get_feature(self, feature_code):
         feature_id = self._get_feature_id_cached(feature_code)
         return (
@@ -439,6 +450,64 @@ class JustechLicenseService(models.AbstractModel):
         return catalog
 
     @api.model
+    def get_license_wizard_catalog(self, license_rec=None):
+        """Real Hellenia/Justech customizations for license wizard (strict whitelist)."""
+        self.env["justech.admin.access.service"].require_justech_settings_access()
+        internal = self._sudo_internal()
+        Product = internal["justech.commercial.product"]
+        Feature = internal["justech.feature"]
+        product_cache = {p.code: p for p in Product.search([("active", "=", True)])}
+        licensed_codes = set()
+        if license_rec and license_rec.exists():
+            licensed_feature_ids = set(
+                license_rec.feature_line_ids.mapped("feature_id").ids
+            )
+            for code in self.LICENSE_WIZARD_CUSTOMIZATION_CODES:
+                customization = self.get_customization_definition(code)
+                if not customization:
+                    continue
+                primary = customization.get("primary_product_code") or ""
+                if not primary:
+                    continue
+                product = product_cache.get(primary) or Product.search(
+                    [("code", "=", primary)], limit=1
+                )
+                if not product:
+                    continue
+                product_feature_ids = set()
+                for line in product.line_ids:
+                    feature = Feature.search(
+                        [("code", "=", line.feature_code)], limit=1
+                    )
+                    if feature:
+                        product_feature_ids.add(feature.id)
+                if product_feature_ids and product_feature_ids.issubset(
+                    licensed_feature_ids
+                ):
+                    licensed_codes.add(primary)
+        rows = []
+        for code in self.LICENSE_WIZARD_CUSTOMIZATION_CODES:
+            customization = self.get_customization_definition(code)
+            if not customization:
+                continue
+            if not self._customization_is_visible(
+                customization, product_cache, internal
+            ):
+                continue
+            primary = customization.get("primary_product_code")
+            rows.append(
+                {
+                    "customization_code": code,
+                    "product_code": primary or "",
+                    "product_name": customization["name"],
+                    "description": customization.get("description") or "",
+                    "sequence": customization.get("sequence", 10),
+                    "selected": primary in licensed_codes if license_rec else True,
+                }
+            )
+        return rows
+
+    @api.model
     def get_commercial_catalog(self, company=None):
         """Return commercial product catalog for Control Center (API v1 extension)."""
         self.env["justech.admin.access.service"].require_justech_settings_access()
@@ -552,6 +621,17 @@ class JustechLicenseService(models.AbstractModel):
             "ventas",
             "compras",
         }
+    )
+
+    # License wizard — strict whitelist (Hellenia v1.0 real customizations only).
+    LICENSE_WIZARD_CUSTOMIZATION_CODES = (
+        "fiscal_rd",
+        "reportes_documentos_corporativos",
+        "ux_fiscal_contactos_facturas",
+        "multicurrency_commercial",
+        "global_audit",
+        "control_justech_interno",
+        "pos_fiscal_si_instalado",
     )
 
     # Explicit whitelist — only real Justech/Hellenia customizations (never Odoo native).
@@ -690,8 +770,67 @@ class JustechLicenseService(models.AbstractModel):
             "visible_to_client": True,
         },
         {
+            "code": "multicurrency_commercial",
+            "name": "Motor Comercial Multimoneda",
+            "description": (
+                "Política comercial multimoneda, tasas, precios por moneda "
+                "y administración corporativa de divisas."
+            ),
+            "primary_product_code": "multicurrency_commercial",
+            "technical_modules_all": ("justech_multicurrency",),
+            "includes": [
+                "Política multimoneda por empresa",
+                "Precios en moneda comercial",
+                "Dashboard de tasas",
+            ],
+            "commercial_features": [
+                {
+                    "key": "multicurrency",
+                    "label": "Motor Multimoneda",
+                    "section": "multimoneda",
+                    "section_label": "MULTIMONEDA",
+                    "section_sequence": 10,
+                    "sequence": 10,
+                    "description": "Capa comercial multimoneda Justech.",
+                    "default_on": True,
+                },
+            ],
+            "sequence": 35,
+            "allow_license_actions": True,
+            "visible_to_client": True,
+        },
+        {
+            "code": "global_audit",
+            "name": "Auditoría",
+            "description": (
+                "Histórico de cambios, trazabilidad empresarial y exportación de auditoría."
+            ),
+            "primary_product_code": "global_audit",
+            "technical_modules_all": ("justech_global_audit_log",),
+            "includes": [
+                "Histórico de cambios",
+                "Trazabilidad por usuario",
+                "Exportación de auditoría",
+            ],
+            "commercial_features": [
+                {
+                    "key": "global_audit",
+                    "label": "Auditoría Global",
+                    "section": "auditoria",
+                    "section_label": "AUDITORÍA",
+                    "section_sequence": 10,
+                    "sequence": 10,
+                    "description": "Registro global de cambios empresariales.",
+                    "default_on": True,
+                },
+            ],
+            "sequence": 45,
+            "allow_license_actions": True,
+            "visible_to_client": True,
+        },
+        {
             "code": "control_justech_interno",
-            "name": "Control Justech",
+            "name": "Centro de Administración / Módulos del Cliente",
             "description": (
                 "Administración interna Justech: módulos del cliente, licencias, "
                 "clave administrativa, auditoría y governance."
@@ -1424,6 +1563,23 @@ class JustechLicenseService(models.AbstractModel):
         elif action == "unblock":
             state.sudo().write({"is_blocked": False})
         elif action == "activate":
+            license_rec = self._get_active_license_for_company(company)
+            if not license_rec:
+                self._client_module_audit(
+                    action,
+                    product,
+                    company,
+                    status_before,
+                    status_before,
+                    result="fail",
+                    reason="no_active_license",
+                )
+                raise JustechLicenseError(
+                    _(
+                        "Esta empresa no tiene una licencia activa. "
+                        "Cree o active una licencia desde Configuración → Justech → Licencias."
+                    )
+                )
             if not state.is_paid:
                 self._client_module_audit(
                     action,
@@ -1466,8 +1622,21 @@ class JustechLicenseService(models.AbstractModel):
                 raise JustechLicenseError(_("Seleccione la empresa a habilitar."))
             license_rec = self._get_active_license_for_company(company)
             if not license_rec:
+                self._client_module_audit(
+                    action,
+                    product,
+                    target or company,
+                    status_before,
+                    status_before,
+                    result="fail",
+                    reason="no_active_license",
+                )
                 raise JustechLicenseError(
-                    _("No hay una licencia activa para este cliente.")
+                    _(
+                        "Esta empresa no tiene una licencia activa. "
+                        "Cree o active una licencia desde Configuración → Justech → Licencias "
+                        "antes de agregar empresas."
+                    )
                 )
             if license_rec.max_companies > 0:
                 current = len(license_rec.company_line_ids)
@@ -1759,3 +1928,197 @@ class JustechLicenseService(models.AbstractModel):
                 "details": details or {},
             }
         )
+
+    @api.model
+    def _collect_feature_ids_for_products(self, product_codes):
+        internal = self._sudo_internal()
+        Product = internal["justech.commercial.product"]
+        Feature = internal["justech.feature"]
+        feature_ids = set()
+        for code in product_codes or []:
+            product = Product.search([("code", "=", code), ("active", "=", True)], limit=1)
+            if not product:
+                continue
+            for line in product.line_ids:
+                feature = Feature.search([("code", "=", line.feature_code)], limit=1)
+                if feature:
+                    feature_ids.add(feature.id)
+        return list(feature_ids)
+
+    @api.model
+    def admin_upsert_license(
+        self,
+        company,
+        tier="STD",
+        target_state="draft",
+        company_ids=None,
+        starts_at=None,
+        expires_at=None,
+        max_companies=0,
+        product_codes=None,
+        license_id=None,
+        name=None,
+    ):
+        """Create or update a commercial license (internal API — requires step-up)."""
+        self._require_license_admin()
+        internal = self._sudo_internal()
+        License = internal["justech.license"]
+        LicenseCompany = internal["justech.license.company"]
+        LicenseFeature = internal["justech.license.feature"]
+        company = company or self.env.company
+        company_ids = list(company_ids or [company.id])
+        if company.id not in company_ids:
+            company_ids.insert(0, company.id)
+
+        license_rec = License.browse(license_id) if license_id else License.browse()
+        if license_rec and not license_rec.exists():
+            license_rec = License.browse()
+        if not license_rec:
+            license_rec = License.search(
+                [
+                    ("company_line_ids.company_id", "in", company_ids),
+                    ("state", "in", ("draft", "active")),
+                ],
+                limit=1,
+                order="id desc",
+            )
+        created = False
+        if not license_rec:
+            license_rec = License.create(
+                {
+                    "name": name or company.name,
+                    "tier": tier,
+                    "state": "draft",
+                    "starts_at": starts_at,
+                    "expires_at": expires_at,
+                    "max_companies": max_companies,
+                }
+            )
+            created = True
+            self._audit(
+                "register",
+                license_id=license_rec.id,
+                company_id=company.id,
+                details={
+                    "tier": tier,
+                    "company_ids": company_ids,
+                    "product_codes": product_codes or [],
+                },
+            )
+        else:
+            license_rec.write(
+                {
+                    "tier": tier,
+                    "starts_at": starts_at or license_rec.starts_at,
+                    "expires_at": expires_at,
+                    "max_companies": max_companies,
+                    **({"name": name} if name else {}),
+                }
+            )
+
+        existing_company_ids = set(license_rec.company_line_ids.mapped("company_id").ids)
+        for cid in company_ids:
+            if cid not in existing_company_ids:
+                LicenseCompany.create({"license_id": license_rec.id, "company_id": cid})
+
+        feature_ids = self._collect_feature_ids_for_products(product_codes)
+        if feature_ids:
+            license_rec.feature_line_ids.unlink()
+            for feature_id in feature_ids:
+                LicenseFeature.create(
+                    {"license_id": license_rec.id, "feature_id": feature_id}
+                )
+
+        if target_state == "active":
+            license_rec.action_activate()
+            self._audit(
+                "activate",
+                license_id=license_rec.id,
+                company_id=company.id,
+                details={"product_codes": product_codes or [], "created": created},
+            )
+        elif target_state and license_rec.state != target_state:
+            license_rec.write({"state": target_state})
+
+        self.clear_license_cache()
+        return license_rec
+
+    @api.model
+    def admin_activate_license(self, license_id, company=None):
+        self._require_license_admin()
+        internal = self._sudo_internal()
+        license_rec = internal["justech.license"].browse(license_id)
+        if not license_rec.exists():
+            raise JustechLicenseError(_("Licencia no encontrada."))
+        if not license_rec.company_line_ids:
+            raise JustechLicenseError(
+                _("Asigne al menos una empresa antes de activar la licencia.")
+            )
+        license_rec.action_activate()
+        self._audit(
+            "activate",
+            license_id=license_rec.id,
+            company_id=(company or self.env.company).id,
+            details={"via": "admin_activate"},
+        )
+        self.clear_license_cache()
+        return license_rec
+
+    @api.model
+    def admin_change_plan(self, license_id, tier, company=None):
+        self._require_license_admin()
+        allowed = {"TRIAL", "STD", "PRO", "ENT"}
+        tier = (tier or "").upper()
+        if tier not in allowed:
+            raise JustechLicenseError(_("Plan de licencia no válido."))
+        internal = self._sudo_internal()
+        license_rec = internal["justech.license"].browse(license_id)
+        if not license_rec.exists():
+            raise JustechLicenseError(_("Licencia no encontrada."))
+        before = license_rec.tier
+        license_rec.write({"tier": tier})
+        self._audit(
+            "validate",
+            license_id=license_rec.id,
+            company_id=(company or self.env.company).id,
+            details={"action": "change_plan", "before": before, "after": tier},
+        )
+        self.clear_license_cache()
+        return license_rec
+
+    @api.model
+    def admin_add_company_to_license(self, license_id, target_company, company=None):
+        self._require_license_admin()
+        if not target_company:
+            raise JustechLicenseError(_("Seleccione la empresa a habilitar."))
+        internal = self._sudo_internal()
+        license_rec = internal["justech.license"].browse(license_id)
+        if not license_rec.exists() or license_rec.state != "active":
+            raise JustechLicenseError(
+                _(
+                    "No hay una licencia activa. "
+                    "Cree o active una licencia desde Configuración → Justech → Licencias."
+                )
+            )
+        enabled_ids = license_rec.company_line_ids.mapped("company_id").ids
+        if target_company.id in enabled_ids:
+            return license_rec
+        if license_rec.max_companies > 0 and len(enabled_ids) >= license_rec.max_companies:
+            raise JustechLicenseError(
+                _("Esta licencia no permite habilitar más empresas. Ajuste el límite o el plan.")
+            )
+        internal["justech.license.company"].create(
+            {"license_id": license_rec.id, "company_id": target_company.id}
+        )
+        self._audit(
+            "validate",
+            license_id=license_rec.id,
+            company_id=(company or self.env.company).id,
+            details={
+                "action": "add_company",
+                "target_company_id": target_company.id,
+                "target_company_name": target_company.name,
+            },
+        )
+        self.clear_license_cache()
+        return license_rec

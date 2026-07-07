@@ -104,15 +104,128 @@
         </field>
     </record>
 
-    <!-- Licenses -->
+    <!-- Licenses Hub -->
+    <record id="view_justech_control_license_card_kanban" model="ir.ui.view">
+        <field name="name">justech.control.license.card.kanban</field>
+        <field name="model">justech.control.license.card</field>
+        <field name="arch" type="xml">
+            <kanban create="false" edit="false" delete="false" class="justech-license-kanban">
+                <field name="client_name"/>
+                <field name="primary_company"/>
+                <field name="plan_label"/>
+                <field name="status_label"/>
+                <field name="status_icon"/>
+                <field name="status_class"/>
+                <field name="starts_at_display"/>
+                <field name="expires_at_display"/>
+                <field name="companies_used"/>
+                <field name="companies_available"/>
+                <field name="modules_active"/>
+                <field name="last_modified_display"/>
+                <field name="license_ref"/>
+                <templates>
+                    <t t-name="card">
+                        <div t-attf-class="justech-license-kanban-card justech-license-status-#{record.status_class.raw_value}">
+                            <div class="justech-license-kanban-head">
+                                <div>
+                                    <div class="justech-license-kanban-client"><t t-esc="record.client_name.value"/></div>
+                                    <div class="justech-license-kanban-company"><t t-esc="record.primary_company.value"/></div>
+                                </div>
+                                <span t-attf-class="justech-license-kanban-badge justech-license-badge-#{record.status_class.raw_value}">
+                                    <t t-esc="record.status_icon.value"/> <t t-esc="record.status_label.value"/>
+                                </span>
+                            </div>
+                            <div class="justech-license-kanban-meta">
+                                <div><span>Plan</span><strong><t t-esc="record.plan_label.value"/></strong></div>
+                                <div><span>Inicio</span><strong><t t-esc="record.starts_at_display.value"/></strong></div>
+                                <div><span>Vencimiento</span><strong><t t-esc="record.expires_at_display.value"/></strong></div>
+                                <div><span>Empresas</span><strong><t t-esc="record.companies_used.value"/> / <t t-esc="record.companies_available.value"/></strong></div>
+                                <div><span>Módulos activos</span><strong><t t-esc="record.modules_active.value"/></strong></div>
+                                <div><span>Última modificación</span><strong><t t-esc="record.last_modified_display.value"/></strong></div>
+                            </div>
+                            <div class="justech-license-kanban-actions">
+                                <button type="object" name="action_administer" class="btn btn-primary">Administrar</button>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
     <record id="view_justech_control_licenses_form" model="ir.ui.view">
         <field name="name">justech.control.licenses.form</field>
         <field name="model">justech.control.licenses</field>
         <field name="arch" type="xml">
-            <form string="Licencias" create="false" edit="false" delete="false">
+            <form string="Centro de Licencias" create="false" edit="false" delete="false" class="justech-cc-dashboard">
+                <header>
+                    <button name="action_create_license" type="object" string="Crear licencia" class="btn-primary"/>
+                </header>
                 <sheet>
-                    <field name="company_id" invisible="1"/>
-                    <field name="content_html" nolabel="1"/>
+                    <field name="has_cards" invisible="1"/>
+                    <field name="hero_html" nolabel="1"/>
+                    <field name="empty_html" nolabel="1" invisible="has_cards"/>
+                    <field name="card_ids" nolabel="1" invisible="not has_cards" mode="kanban"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- License Dashboard -->
+    <record id="view_justech_control_license_dashboard_form" model="ir.ui.view">
+        <field name="name">justech.control.license.dashboard.form</field>
+        <field name="model">justech.control.license.dashboard</field>
+        <field name="arch" type="xml">
+            <form string="Administrar licencia" create="false" edit="false" delete="false" class="justech-cc-dashboard">
+                <header>
+                    <button name="action_back_to_hub" type="object" string="← Centro de Licencias"/>
+                </header>
+                <sheet>
+                    <div class="justech-cc-hero justech-license-dashboard-hero">
+                        <h1><field name="client_name" readonly="1" nolabel="1" class="oe_inline"/></h1>
+                        <p>
+                            <field name="plan_label" readonly="1" nolabel="1" class="oe_inline"/>
+                            ·
+                            <field name="status_label" readonly="1" nolabel="1" class="oe_inline"/>
+                        </p>
+                    </div>
+                    <field name="license_ref" invisible="1"/>
+                    <field name="hub_id" invisible="1"/>
+                    <field name="status_class" invisible="1"/>
+                    <field name="license_state" invisible="1"/>
+                    <field name="primary_company_id" invisible="1"/>
+                    <separator string="Información general"/>
+                    <field name="general_html" nolabel="1"/>
+                    <separator string="Personalizaciones"/>
+                    <field name="product_line_ids" nolabel="1">
+                        <list create="false" edit="false" delete="false">
+                            <field name="name" string="Personalización"/>
+                            <field name="status_label" string="Estado"/>
+                            <field name="paid_label" string="Pagado"/>
+                            <field name="active_label" string="Activo"/>
+                            <field name="product_code" column_invisible="1"/>
+                            <field name="customization_code" column_invisible="1"/>
+                            <button name="action_administer" type="object" string="Administrar" class="btn-primary"/>
+                        </list>
+                    </field>
+                    <separator string="Empresas"/>
+                    <field name="companies_html" nolabel="1"/>
+                    <div class="justech-license-dashboard-actions">
+                        <button name="action_add_company" type="object" string="Agregar empresa" class="btn-secondary"/>
+                        <button name="action_remove_company" type="object" string="Quitar empresa" class="btn-secondary"/>
+                        <button name="action_set_primary_company" type="object" string="Cambiar empresa principal" class="btn-secondary"/>
+                    </div>
+                    <separator string="Plan"/>
+                    <field name="plan_html" nolabel="1"/>
+                    <div class="justech-license-dashboard-actions">
+                        <button name="action_activate" type="object" string="Activar" class="btn-primary" invisible="license_state == 'active'"/>
+                        <button name="action_change_plan" type="object" string="Cambiar plan" class="btn-secondary"/>
+                        <button name="action_renew" type="object" string="Renovar" class="btn-secondary"/>
+                        <button name="action_suspend" type="object" string="Suspender" class="btn-secondary"/>
+                        <button name="action_reactivate" type="object" string="Reactivar" class="btn-secondary"/>
+                    </div>
+                    <separator string="Auditoría"/>
+                    <field name="audit_html" nolabel="1"/>
                 </sheet>
             </form>
         </field>

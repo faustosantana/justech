@@ -45,6 +45,7 @@ class JustechLicense(models.Model):
         index=True,
     )
     expires_at = fields.Date(index=True)
+    starts_at = fields.Date(string="Start Date", index=True)
     max_users = fields.Integer(default=0, help="0 = unlimited")
     max_companies = fields.Integer(default=0, help="0 = unlimited")
     grace_days = fields.Integer(default=7)

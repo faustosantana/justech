@@ -41,3 +41,12 @@ def section(title, body):
         {body}
     </div>
     """
+
+
+def alert(level, message):
+    cls = {
+        "warning": "alert alert-warning",
+        "info": "alert alert-info",
+        "danger": "alert alert-danger",
+    }.get(level, "alert alert-secondary")
+    return f'<div class="{cls}" role="alert">{message}</div>'

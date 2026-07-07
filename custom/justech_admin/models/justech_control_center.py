@@ -7,6 +7,7 @@ from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
 from . import justech_control_renderer as cc
+from .justech_control_license_commercial import _commercial_license_status
 
 
 class JustechControlModuleCatalog(models.TransientModel):
@@ -336,55 +337,151 @@ class JustechControlToggleWizard(models.TransientModel):
 
 class JustechControlLicenses(models.TransientModel):
     _name = "justech.control.licenses"
-    _description = "Commercial Licenses View"
+    _description = "Commercial License Administration Center"
 
-    company_id = fields.Many2one(
-        "res.company", default=lambda self: self.env.company, required=True
-    )
-    content_html = fields.Html(compute="_compute_content_html", sanitize=False)
+    card_ids = fields.One2many("justech.control.license.card", "hub_id")
+    hero_html = fields.Html(compute="_compute_hero_html", sanitize=False)
+    empty_html = fields.Html(compute="_compute_empty_html", sanitize=False)
+    has_cards = fields.Boolean(compute="_compute_has_cards")
+
+    @api.depends("card_ids")
+    def _compute_has_cards(self):
+        for rec in self:
+            rec.has_cards = bool(rec.card_ids)
+
+    @api.depends()
+    def _compute_hero_html(self):
+        body = """
+        <div class="justech-cc-hero justech-cc-license-hero">
+            <h1>Centro de Licencias</h1>
+            <p>Administre contratos, empresas y personalizaciones de cada cliente.</p>
+        </div>
+        """
+        for rec in self:
+            rec.hero_html = Markup(body)
+
+    @api.depends("card_ids")
+    def _compute_empty_html(self):
+        for rec in self:
+            if rec.card_ids:
+                rec.empty_html = False
+            else:
+                rec.empty_html = Markup(
+                    cc.alert(
+                        "info",
+                        _(
+                            "No hay licencias registradas. "
+                            "Use <strong>Crear licencia</strong> para comenzar."
+                        ),
+                    )
+                )
+
+    def _open_license_wizard(self, mode, license_ref=False):
+        self.ensure_one()
+        ctx = {
+            "default_mode": mode,
+            "default_control_id": self.id,
+            "default_company_id": self.env.company.id,
+        }
+        if license_ref:
+            ctx["default_license_id"] = license_ref
+        return {
+            "type": "ir.actions.act_window",
+            "name": dict(
+                self.env["justech.license.admin.wizard"]._fields["mode"].selection
+            ).get(mode, _("Licencia")),
+            "res_model": "justech.license.admin.wizard",
+            "view_mode": "form",
+            "target": "new",
+            "context": ctx,
+        }
+
+    def action_create_license(self):
+        return self._open_license_wizard("create")
+
+    def action_reopen(self):
+        self.ensure_one()
+        self._load_cards()
+        return {
+            "type": "ir.actions.act_window",
+            "name": _("Centro de Licencias"),
+            "res_model": self._name,
+            "res_id": self.id,
+            "view_mode": "form",
+            "target": "current",
+        }
 
     @api.model
     def action_open(self):
-        JustechControlModuleCatalog._require_admin_session(self)
+        self.env["justech.admin.access.service"].require_justech_settings_access()
         rec = self.create({})
+        rec._load_cards()
         return {
             "type": "ir.actions.act_window",
-            "name": _("Licencias"),
+            "name": _("Centro de Licencias"),
             "res_model": self._name,
             "res_id": rec.id,
             "view_mode": "form",
             "target": "current",
         }
 
-    @api.depends("company_id")
-    def _compute_content_html(self):
+    def _load_cards(self):
         license_svc = self.env["justech.license.service"]
         internal = license_svc._sudo_internal()
-        tier_labels = {"STD": "Standard", "PRO": "Professional", "ENT": "Enterprise"}
-        for rec in self:
-            company = rec.company_id
-            license_rec = license_svc._get_active_license_for_company(company)
-            catalog = license_svc.get_commercial_catalog(company=company)
-            active_products = [c["name"] for c in catalog if c["status"] == "active"]
-            available_products = [c["name"] for c in catalog if c["status"] != "unavailable"]
-            if license_rec:
-                cards = cc.grid(
-                    cc.card(_("Empresa"), company.name, "", "ok", "fa-building"),
-                    cc.card(_("Plan"), tier_labels.get(license_rec.tier, license_rec.tier or "—"), "", "ok", "fa-certificate"),
-                    cc.card(_("Estado"), license_rec.state, "", "active" if license_rec.state == "active" else "inactive", "fa-check"),
-                    cc.card(_("Expira"), str(license_rec.expires_at or "—"), "", "ok", "fa-calendar"),
-                    cc.card(_("Usuarios"), str(license_rec.max_users or "∞"), _("permitidos"), "ok", "fa-users"),
-                    cc.card(_("Empresas"), str(license_rec.max_companies or "∞"), _("permitidas"), "ok", "fa-sitemap"),
-                    cc.card(_("Módulos activos"), str(len(active_products)), "", "ok", "fa-cubes"),
-                    cc.card(_("Módulos contratados"), str(len(available_products)), "", "ok", "fa-list"),
+        License = internal["justech.license"]
+        licenses = License.search([], order="write_date desc, id desc")
+        commands = [(5, 0, 0)]
+        for lic in licenses:
+            primary = lic.company_line_ids[:1].company_id
+            used = len(lic.company_line_ids)
+            max_c = lic.max_companies or 0
+            available = (
+                str(max(max_c - used, 0))
+                if max_c
+                else _("Ilimitadas")
+            )
+            _code, status_label, status_class, status_icon = _commercial_license_status(
+                lic
+            )
+            active_modules = 0
+            if primary:
+                rows = license_svc.get_client_module_rows(
+                    company=primary, license_id=lic.id, view_only=True
                 )
-            else:
-                cards = cc.grid(
-                    cc.card(_("Empresa"), company.name, "", "ok", "fa-building"),
-                    cc.card(_("Plan"), _("Sin licencia"), "", "warn", "fa-exclamation-triangle"),
-                    cc.card(_("Estado"), _("Pendiente"), "", "inactive", "fa-times"),
+                active_modules = len(
+                    [
+                        row
+                        for row in rows
+                        if row.get("is_active") and not row.get("internal_only")
+                    ]
                 )
-            rec.content_html = Markup(cc.section(_("Licencia"), cards))
+            commands.append(
+                (
+                    0,
+                    0,
+                    {
+                        "license_ref": lic.id,
+                        "client_name": lic.name,
+                        "primary_company": primary.name if primary else "—",
+                        "plan_label": license_svc._tier_commercial_label(lic.tier),
+                        "status_code": _code,
+                        "status_label": status_label,
+                        "status_icon": status_icon,
+                        "status_class": status_class,
+                        "starts_at_display": str(lic.starts_at or "—"),
+                        "expires_at_display": str(lic.expires_at or "—"),
+                        "companies_used": used,
+                        "companies_available": available,
+                        "modules_active": active_modules,
+                        "last_modified_display": fields.Datetime.to_string(
+                            lic.write_date
+                        )
+                        if lic.write_date
+                        else "—",
+                    },
+                )
+            )
+        self.card_ids = commands
 
 
 class JustechControlSecurity(models.TransientModel):

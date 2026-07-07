@@ -1,0 +1,32 @@
+=== LICENSE-4 PROD ===
+BACKUP_OK=/opt/odoo-projects/hellenia/backups/hellenia-prod/license-4-2026-07-07_165538
+Transfer starting: 62 files
+__manifest__.py
+data/justech_commercial_license_catalog.xml
+models/justech_license_service.py
+
+sent 6247 bytes  received 1034 bytes  21408 bytes/sec
+total size is 277673  speedup is 38.14
+Transfer starting: 32 files
+__manifest__.py
+models/justech_license_admin_wizard.py
+views/justech_license_admin_wizard_views.xml
+
+sent 4491 bytes  received 290 bytes  10863 bytes/sec
+total size is 197527  speedup is 41.31
+ Container hellenia-prod-odoo-1 Stopping 
+ Container hellenia-prod-odoo-1 Stopped 
+2026-07-07 20:56:04,415 1 INFO hellenia_prod odoo.models.unlink: User #1 deleted ir.model.fields records with IDs: [13623] 
+2026-07-07 20:56:04,420 1 INFO hellenia_prod odoo.addons.base.models.ir_model: Deleting 13622@ir.model.fields (justech_admin.field_justech_license_admin_module_line__icon_display) 
+2026-07-07 20:56:04,462 1 INFO hellenia_prod odoo.models.unlink: User #1 deleted ir.model.data records with IDs: [174458] 
+2026-07-07 20:56:04,463 1 INFO hellenia_prod odoo.models.unlink: User #1 deleted ir.model.fields records with IDs: [13622] 
+2026-07-07 20:56:04,468 1 INFO hellenia_prod odoo.addons.base.models.ir_model: Deleting 13621@ir.model.fields (justech_admin.field_justech_license_admin_module_line__icon) 
+2026-07-07 20:56:04,509 1 INFO hellenia_prod odoo.models.unlink: User #1 deleted ir.model.data records with IDs: [174457] 
+2026-07-07 20:56:04,510 1 INFO hellenia_prod odoo.models.unlink: User #1 deleted ir.model.fields records with IDs: [13621] 
+2026-07-07 20:56:04,520 1 INFO hellenia_prod odoo.registry: verifying fields for every extended model 
+2026-07-07 20:56:05,626 1 INFO hellenia_prod odoo.modules.loading: Modules loaded. 
+2026-07-07 20:56:05,647 1 INFO hellenia_prod odoo.registry: Registry changed, signaling through the database 
+2026-07-07 20:56:05,649 1 INFO hellenia_prod odoo.registry: Registry loaded in 10.909s 
+2026-07-07 20:56:05,651 1 INFO hellenia_prod odoo.service.server: Stopping workers gracefully 
+grep: /Users/faustosantana/Projects/jaios/evidence/license-4-real-catalog-prod/validation.json: No such file or directory
+prod FAIL

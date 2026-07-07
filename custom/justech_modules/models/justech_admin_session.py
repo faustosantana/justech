@@ -25,7 +25,10 @@ class JustechAdminSession(models.Model):
 
     @api.model
     def create_session(self, user, scope, token_hash, ip_address=None):
-        self.search(
+        # Session rows are managed by the access service after key verification;
+        # end users must not need direct CRUD ACL on justech.admin.session.
+        Session = self.sudo()
+        Session.search(
             [
                 ("user_id", "=", user.id),
                 ("scope", "=", scope),
@@ -33,7 +36,7 @@ class JustechAdminSession(models.Model):
             ]
         ).write({"active": False})
         expires = fields.Datetime.now() + timedelta(minutes=self._session_minutes())
-        return self.sudo().create(
+        return Session.create(
             {
                 "user_id": user.id,
                 "scope": scope,

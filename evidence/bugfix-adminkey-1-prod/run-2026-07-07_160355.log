@@ -1,0 +1,22 @@
+=== BUGFIX-ADMINKEY-1 PROD ===
+BACKUP_OK=/opt/odoo-projects/hellenia/backups/hellenia-prod/bugfix-adminkey-1-2026-07-07_160355
+Transfer starting: 61 files
+
+sent 3239 bytes  received 20 bytes  16534 bytes/sec
+total size is 237540  speedup is 72.89
+Transfer starting: 29 files
+
+sent 1479 bytes  received 20 bytes  7722 bytes/sec
+total size is 147515  speedup is 98.41
+ Container hellenia-prod-odoo-1 Stopping 
+ Container hellenia-prod-odoo-1 Stopped 
+2026-07-07 20:04:14,304 1 WARNING hellenia_prod odoo.fields: justech.do.fiscal.report.state: selection=[('draft', 'Borrador'), ('validated', 'Validado'), ('pending_approval', 'Requiere aprobación'), ('approved', 'Aprobado'), ('rejected', 'Rechazado'), ('generated', 'Generado'), ('done', 'Generado')] overrides existing selection; use selection_add instead 
+2026-07-07 20:04:14,421 1 WARNING hellenia_prod odoo.fields: justech.do.fiscal.report.state: selection=[('draft', 'Borrador'), ('validated', 'Validado'), ('pending_approval', 'Requiere aprobación'), ('approved', 'Aprobado'), ('rejected', 'Rechazado'), ('generated', 'Generado'), ('done', 'Generado')] overrides existing selection; use selection_add instead 
+2026-07-07 20:04:14,432 1 WARNING hellenia_prod odoo.fields: Translated stored related field (justech.audit.rule.model_description) will not be computed correctly in all languages 
+2026-07-07 20:04:14,792 1 INFO hellenia_prod odoo.registry: verifying fields for every extended model 
+2026-07-07 20:04:16,107 1 INFO hellenia_prod odoo.modules.loading: Modules loaded. 
+2026-07-07 20:04:16,125 1 INFO hellenia_prod odoo.registry: Registry changed, signaling through the database 
+2026-07-07 20:04:16,126 1 INFO hellenia_prod odoo.registry: Registry loaded in 10.201s 
+2026-07-07 20:04:16,128 1 INFO hellenia_prod odoo.service.server: Stopping workers gracefully 
+grep: /Users/faustosantana/Projects/jaios/evidence/bugfix-adminkey-1-prod/validation.json: No such file or directory
+PROD FAIL

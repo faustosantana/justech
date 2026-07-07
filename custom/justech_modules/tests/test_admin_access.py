@@ -74,6 +74,27 @@ class TestAdminAccess(TransactionCase):
         svc.open_session(self.plain_key, scope=svc.SCOPE_PLATFORM)
         self.assertTrue(svc.is_session_valid(scope=svc.SCOPE_PLATFORM))
 
+    def test_revalidate_key_deactivates_prior_session(self):
+        """Regression BUGFIX-ADMINKEY-1: second Validar must not require session write ACL."""
+        svc = self._as_internal()
+        svc.open_session(self.plain_key, scope=svc.SCOPE_ADMIN)
+        svc.open_session(self.plain_key, scope=svc.SCOPE_ADMIN)
+        self.assertTrue(svc.is_session_valid(scope=svc.SCOPE_ADMIN))
+
+    def test_license_manager_can_open_admin_session(self):
+        mgr_group = self.env.ref("justech_modules.group_justech_license_manager")
+        mgr_user = self.env["res.users"].create(
+            {
+                "name": "License Manager Tester",
+                "login": "license_mgr_adminkey_test@justech.do",
+                "group_ids": [(6, 0, [mgr_group.id])],
+            }
+        )
+        _provision_test_key(self.env, mgr_user)
+        svc = self.AccessSvc.with_user(mgr_user)
+        svc.open_session("TEST-KEY-12345678", scope=svc.SCOPE_ADMIN)
+        self.assertTrue(svc.is_session_valid(scope=svc.SCOPE_ADMIN))
+
     def test_catalog_requires_session(self):
         with self.assertRaises(AccessError):
             self.LicenseSvc.with_user(self.internal_user).get_activation_catalog()

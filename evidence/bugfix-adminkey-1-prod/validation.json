@@ -1,0 +1,41 @@
+{
+  "phase": "BUGFIX-ADMINKEY-1",
+  "timestamp_utc": "2026-07-07T20:04:46.473590+00:00",
+  "database": "hellenia_prod",
+  "status": "PASS",
+  "checks": {
+    "open_session_internal_admin": {
+      "status": "PASS",
+      "detail": "ok"
+    },
+    "revalidate_session_internal_admin": {
+      "status": "PASS",
+      "detail": "second open_session ok"
+    },
+    "action_verify_internal_admin": {
+      "status": "PASS",
+      "detail": "justech.client.module.control"
+    },
+    "control_open_internal_admin": {
+      "status": "PASS",
+      "detail": "ok"
+    },
+    "open_session_license_manager": {
+      "status": "PASS",
+      "detail": "ok"
+    },
+    "revalidate_session_license_manager": {
+      "status": "PASS",
+      "detail": "second open_session ok"
+    },
+    "action_verify_license_manager": {
+      "status": "PASS",
+      "detail": "justech.client.module.control"
+    },
+    "control_open_license_manager": {
+      "status": "PASS",
+      "detail": "ok"
+    }
+  },
+  "errors": []
+}

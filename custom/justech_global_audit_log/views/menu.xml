@@ -3,7 +3,7 @@
     <!-- Raíz definida sin parent; GO-LIVE-UX reparenta vía hellenia_ui.menu.customizer -->
     <menuitem
         id="menu_justech_global_audit_root"
-        name="Auditoría"
+        name="Auditoría de Cambios"
         sequence="75"
         groups="justech_global_audit_log.group_audit_user"
     />

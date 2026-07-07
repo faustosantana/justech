@@ -57,7 +57,7 @@ class JustechClientModuleControl(models.TransientModel):
         rec._reload_lines()
         return {
             "type": "ir.actions.act_window",
-            "name": _("Módulos del Cliente"),
+            "name": _("Licencias y Personalizaciones"),
             "res_model": self._name,
             "res_id": rec.id,
             "view_mode": "form",
@@ -105,7 +105,7 @@ class JustechClientModuleControl(models.TransientModel):
             rec.header_html = Markup(
                 f"""
                 <div class="justech-cc-compact-header">
-                    <h1>Módulos del Cliente</h1>
+                    <h1>Licencias y Personalizaciones</h1>
                     <p class="justech-cc-client-line">
                         <strong>Cliente:</strong> {rec.client_name or '—'}
                         · <strong>Plan:</strong> {rec.summary_plan or '—'}
@@ -200,7 +200,7 @@ class JustechClientModuleControl(models.TransientModel):
         self.ensure_one()
         return {
             "type": "ir.actions.act_window",
-            "name": _("Módulos del Cliente"),
+            "name": _("Licencias y Personalizaciones"),
             "res_model": self._name,
             "res_id": self.id,
             "view_mode": "form",
@@ -872,7 +872,7 @@ class JustechClientModuleActionWizard(models.TransientModel):
             raise self._friendly_license_error(exc) from None
         except MissingError:
             raise UserError(
-                _("La sesión del panel expiró. Vuelva a abrir Módulos del Cliente.")
+                _("La sesión del panel expiró. Vuelva a abrir Licencias y Personalizaciones.")
             ) from None
 
         if control and control.exists():

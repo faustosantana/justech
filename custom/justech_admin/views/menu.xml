@@ -14,7 +14,7 @@
     </record>
 
     <menuitem id="menu_justech_modules"
-              name="Módulos del Cliente"
+              name="Licencias y Personalizaciones"
               parent="menu_justech_settings_root"
               action="action_justech_client_module_control_protected"
               sequence="10"/>

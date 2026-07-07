@@ -1,6 +1,6 @@
 {
     "name": "Hellenia UX",
-    "version": "19.0.1.2.0",
+    "version": "19.0.1.3.0",
     "category": "Hidden",
     "summary": "Localización visual RD y experiencia de usuario Hellenia",
     "description": """
@@ -23,6 +23,7 @@ Mejoras UX upgrade-safe (Fase 17):
         "justech_l10n_do_ncf",
         "justech_l10n_do_base",
         "justech_l10n_do_reports",
+        "justech_multicurrency",
         "sale_management",
         "purchase",
         "stock",
@@ -39,6 +40,7 @@ Mejoras UX upgrade-safe (Fase 17):
         "views/res_company_views.xml",
         "views/ncf_range_views.xml",
         "views/fiscal_security_labels.xml",
+        "views/ux_flow_fix_views.xml",
         "data/post_init.xml",
     ],
     "assets": {
@@ -53,7 +55,7 @@ Mejoras UX upgrade-safe (Fase 17):
     "justech_register": {
         "module_code": "hellenia_ux",
         "module_name": "Hellenia UX",
-        "version": "19.0.1.2.0",
+        "version": "19.0.1.3.0",
         "category": "ux",
         "country": "DO",
         "description": "Dominican visual UX and fiscal form improvements",

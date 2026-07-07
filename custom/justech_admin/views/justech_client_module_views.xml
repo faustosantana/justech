@@ -4,7 +4,7 @@
         <field name="name">justech.client.module.control.form</field>
         <field name="model">justech.client.module.control</field>
         <field name="arch" type="xml">
-            <form string="Módulos del Cliente" create="false" edit="false" delete="false" class="justech-cc-admin-form justech-cc-real-only">
+            <form string="Licencias y Personalizaciones" create="false" edit="false" delete="false" class="justech-cc-admin-form justech-cc-real-only">
                 <header>
                     <button name="action_create_admin_key" type="object"
                             string="Crear Clave Administrativa"
@@ -254,7 +254,7 @@
     </record>
 
     <record id="action_justech_client_module_control_open" model="ir.actions.server">
-        <field name="name">Abrir Módulos del Cliente</field>
+        <field name="name">Abrir Licencias y Personalizaciones</field>
         <field name="model_id" ref="model_justech_client_module_control"/>
         <field name="state">code</field>
         <field name="code">action = env["justech.client.module.control"].action_open()</field>

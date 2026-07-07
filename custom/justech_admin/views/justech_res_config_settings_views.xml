@@ -9,12 +9,12 @@
                 <app data-string="Justech" string="Justech" name="justech_settings"
                      groups="base.group_system">
                     <block title="Control de módulos y licencias" name="justech_control_block">
-                        <setting string="Módulos del Cliente"
+                        <setting string="Licencias y Personalizaciones"
                                  help="Administre personalizaciones contratadas, empresas habilitadas y licencias por cliente.">
                             <div class="mt8">
                                 <button name="action_justech_open_client_modules"
                                         type="object"
-                                        string="Abrir Módulos del Cliente"
+                                        string="Abrir Licencias y Personalizaciones"
                                         icon="oi-arrow-right"
                                         class="btn-link o_web_settings_access_rights"/>
                             </div>

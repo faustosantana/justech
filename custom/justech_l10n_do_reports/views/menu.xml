@@ -101,7 +101,7 @@
               sequence="50"/>
 
     <menuitem id="menu_justech_do_audit_root"
-              name="Auditoría"
+              name="Auditoría Fiscal"
               parent="account.menu_finance"
               sequence="55"
               groups="justech_l10n_do_base.group_justech_do_fiscal_user"/>

@@ -11,6 +11,45 @@ class AccountMove(models.Model):
     hellenia_ret_itbis_30 = fields.Boolean(string="ITBIS retenido 30%")
     hellenia_ret_isr_10 = fields.Boolean(string="Proveedor informal 10%")
     hellenia_ret_itbis_75 = fields.Boolean(string="ITBIS informal 75%")
+    hellenia_fx_rate_missing = fields.Boolean(
+        string="Falta tasa de cambio",
+        compute="_compute_hellenia_fx_rate_warning",
+    )
+    hellenia_fx_rate_warning = fields.Char(
+        compute="_compute_hellenia_fx_rate_warning",
+    )
+
+    @api.depends("currency_id", "company_id", "invoice_date", "date")
+    def _compute_hellenia_fx_rate_warning(self):
+        Rate = self.env["res.currency.rate"]
+        for move in self:
+            move.hellenia_fx_rate_missing = False
+            move.hellenia_fx_rate_warning = False
+            if move.move_type == "entry":
+                continue
+            currency = move.currency_id
+            company = move.company_id
+            if not currency or not company or currency == company.currency_id:
+                continue
+            ref_date = move.invoice_date or move.date or fields.Date.context_today(move)
+            rate = Rate.search(
+                [
+                    ("currency_id", "=", currency.id),
+                    ("company_id", "=", company.id),
+                    ("name", "<=", ref_date),
+                ],
+                order="name desc",
+                limit=1,
+            )
+            if not rate:
+                move.hellenia_fx_rate_missing = True
+                move.hellenia_fx_rate_warning = _(
+                    "No hay tasa de cambio registrada para %(currency)s en la fecha %(date)s. "
+                    "Vaya a Contabilidad → Configuración → Tasas de cambio, registre la tasa del día "
+                    "y vuelva a abrir este documento.",
+                    currency=currency.name,
+                    date=ref_date,
+                )
 
     @api.depends("move_type")
     def _compute_hellenia_show_origin_ncf(self):

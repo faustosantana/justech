@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ============================================================ -->
+    <!-- 1. Tipo de ingreso 607 + 3. Traducciones factura + 2. FX    -->
+    <!-- ============================================================ -->
+    <record id="view_move_form_hellenia_ux_flow_fix" model="ir.ui.view">
+        <field name="name">account.move.form.hellenia.ux.flow.fix</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="hellenia_ux.view_move_form_hellenia_invoice_phase28"/>
+        <field name="priority">60</field>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="before">
+                <field name="hellenia_fx_rate_missing" invisible="1"/>
+                <field name="hellenia_fx_rate_warning" invisible="1"/>
+                <div class="alert alert-warning mb-0" role="alert"
+                     invisible="not hellenia_fx_rate_missing">
+                    <field name="hellenia_fx_rate_warning" nolabel="1" readonly="1"/>
+                </div>
+            </xpath>
+
+            <!-- Tipo de ingreso 607 -->
+            <xpath expr="//page[@name='hellenia_fiscal_info_tab']//field[@name='justech_do_document_type_id']" position="after">
+                <field name="justech_do_income_type_607"
+                       string="Tipo de ingreso (607)"
+                       readonly="state != 'draft'"
+                       help="Clasificación DGII columna F del formato 607. Se sugiere automáticamente según el tipo de comprobante; puede ajustarlo antes de confirmar la factura."/>
+            </xpath>
+
+            <!-- Cliente / Proveedor según tipo de documento -->
+            <xpath expr="//group[@id='header_left_group']//label[@for='partner_id']" position="replace">
+                <label for="partner_id" string="Cliente"
+                       invisible="move_type not in ('out_invoice', 'out_refund', 'out_receipt')"/>
+                <label for="partner_id" string="Proveedor"
+                       invisible="move_type not in ('in_invoice', 'in_refund', 'in_receipt')"/>
+            </xpath>
+            <!-- Etiqueta EN nativa Odoo 19 (Vendor) -->
+            <xpath expr="//label[@for='partner_id'][contains(@invisible, 'in_invoice')]" position="attributes">
+                <attribute name="string">Proveedor</attribute>
+            </xpath>
+            <xpath expr="//label[@for='partner_id'][contains(@invisible, 'out_invoice')]" position="attributes">
+                <attribute name="string">Cliente</attribute>
+            </xpath>
+            <xpath expr="//group[@id='header_left_group']//field[@name='partner_id']" position="attributes">
+                <attribute name="placeholder">Buscar nombre o RNC…</attribute>
+            </xpath>
+
+            <!-- Traducciones pestaña y líneas -->
+            <xpath expr="//page[@id='invoice_tab']" position="attributes">
+                <attribute name="string">Líneas de factura</attribute>
+            </xpath>
+            <xpath expr="//page[@id='invoice_tab']//list[@name='journal_items']" position="attributes">
+                <attribute name="string">Líneas del documento</attribute>
+            </xpath>
+            <xpath expr="//create[@name='add_line_control']" position="attributes">
+                <attribute name="string">Agregar línea</attribute>
+            </xpath>
+            <xpath expr="//create[@name='add_section_control']" position="attributes">
+                <attribute name="string">Agregar sección</attribute>
+            </xpath>
+            <xpath expr="//create[@name='add_note_control']" position="attributes">
+                <attribute name="string">Agregar nota</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_add_from_catalog']" position="attributes">
+                <attribute name="string">Catálogo</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Etiquetas contabilidad: Cliente / Proveedor en formulario base Odoo -->
+    <record id="view_move_form_hellenia_partner_labels" model="ir.ui.view">
+        <field name="name">account.move.form.hellenia.partner.labels</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <xpath expr="//label[@for='partner_id'][@style='font-weight:bold;']" position="attributes">
+                <attribute name="string">Proveedor</attribute>
+            </xpath>
+            <xpath expr="//label[@for='partner_id'][contains(@invisible, 'out_invoice')][not(@style)]" position="attributes">
+                <attribute name="string">Cliente</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Etiquetas contabilidad: Clientes / Proveedores en formulario base -->
+    <record id="view_move_form_hellenia_account_labels" model="ir.ui.view">
+        <field name="name">account.move.form.hellenia.account.labels</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="priority">45</field>
+        <field name="arch" type="xml">
+            <xpath expr="//header/button[@name='action_post']" position="attributes">
+                <attribute name="string">Confirmar</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_register_payment']" position="attributes">
+                <attribute name="string">Registrar pago</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- 2. Alerta multimoneda cotización                            -->
+    <!-- ============================================================ -->
+    <record id="view_order_form_hellenia_fx_warning" model="ir.ui.view">
+        <field name="name">sale.order.form.hellenia.fx.warning</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="priority">55</field>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="before">
+                <field name="hellenia_fx_rate_missing" invisible="1"/>
+                <field name="hellenia_fx_rate_warning" invisible="1"/>
+                <div class="alert alert-warning mb-0" role="alert"
+                     invisible="not hellenia_fx_rate_missing">
+                    <field name="hellenia_fx_rate_warning" nolabel="1" readonly="1"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- 6. RNC en listado clientes + ocultar campo técnico            -->
+    <!-- ============================================================ -->
+    <record id="view_partner_tree_hellenia_rnc" model="ir.ui.view">
+        <field name="name">res.partner.tree.hellenia.rnc</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_tree"/>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='complete_name']" position="after">
+                <field name="vat" string="RNC / Cédula" optional="show"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_partner_form_hellenia_hide_technical" model="ir.ui.view">
+        <field name="name">res.partner.form.hellenia.hide.technical</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="justech_l10n_do_base.view_partner_form_justech_do"/>
+        <field name="priority">25</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='justech_do_partner_id_type']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='vat']" position="attributes">
+                <attribute name="string">RNC / Cédula</attribute>
+                <attribute name="placeholder">001-1234567-8</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- 7. Navegación NCF — guías en formularios                    -->
+    <!-- ============================================================ -->
+    <record id="view_fiscal_document_type_form_ux_guide" model="ir.ui.view">
+        <field name="name">justech.do.fiscal.document.type.form.ux.guide</field>
+        <field name="model">justech.do.fiscal.document.type</field>
+        <field name="inherit_id" ref="justech_l10n_do_base.view_justech_do_fiscal_document_type_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form/sheet" position="before">
+                <div class="alert alert-info mb-0" role="status">
+                    <strong>Paso 1 de 3 — Tipos de comprobante.</strong>
+                    Revise los tipos de NCF habilitados (B01, B02, etc.). Luego configure los Rangos NCF (paso 2).
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_justech_do_ncf_range_form_ux_guide" model="ir.ui.view">
+        <field name="name">justech.do.ncf.range.form.ux.guide</field>
+        <field name="model">justech.do.ncf.range</field>
+        <field name="inherit_id" ref="justech_l10n_do_ncf.view_justech_do_ncf_range_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form/sheet" position="before">
+                <div class="alert alert-info mb-0" role="status">
+                    <strong>Paso 2 de 3 — Rangos NCF.</strong>
+                    Asigne secuencias autorizadas por la DGII. Después consulte Consumo NCF (paso 3).
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- 10. Ayuda multimoneda en producto                           -->
+    <!-- ============================================================ -->
+    <record id="product_template_form_hellenia_multicurrency_help" model="ir.ui.view">
+        <field name="name">product.template.form.hellenia.multicurrency.help</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="justech_multicurrency.product_template_form_view_justech_commercial"/>
+        <field name="priority">25</field>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='justech_commercial_pricing']" position="before">
+                <div class="alert alert-light border mb-2" role="note">
+                    <strong>Precios comerciales vs contables.</strong>
+                    El <em>precio comercial</em> es el que ve el vendedor/comprador en cotizaciones (en la moneda elegida).
+                    El <em>equivalente contable DOP</em> se calcula con la tasa del día para contabilidad.
+                    La <em>moneda de la empresa</em> es la moneda legal de sus libros (usualmente DOP).
+                </div>
+            </xpath>
+            <xpath expr="//field[@name='justech_sale_price']" position="attributes">
+                <attribute name="help">Precio que se propone en cotizaciones y pedidos de venta.</attribute>
+            </xpath>
+            <xpath expr="//field[@name='justech_accounting_sale_price']" position="attributes">
+                <attribute name="help">Valor en moneda de la empresa (DOP) según la tasa vigente.</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,6 +1,6 @@
 {
     "name": "Hellenia UI",
-    "version": "19.0.1.0.7",
+    "version": "19.0.1.0.8",
     "category": "Hidden",
     "summary": "Menú principal y etiquetas UI para Hellenia (upgrade-safe)",
     "description": """
@@ -33,7 +33,7 @@ Personalización de menús y aplicaciones para Hellenia:
     "justech_register": {
         "module_code": "hellenia_ui",
         "module_name": "Hellenia UI",
-        "version": "19.0.1.0.7",
+        "version": "19.0.1.0.8",
         "category": "ux",
         "country": "DO",
         "description": "Main menu and UI labels for Hellenia",

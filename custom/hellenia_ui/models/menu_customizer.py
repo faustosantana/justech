@@ -87,21 +87,53 @@ MENU_LABELS_ES = {
     "account.menu_action_account_payments_payable": "Pagos",
 }
 
+# Etiquetas español — menús contables Enterprise (UX-FLOW-FIX)
+ACCOUNTING_MENU_LABELS_ES = {
+    "account_reports.menu_account_reports": "Informes contables",
+    "account_reports.menu_action_account_report_tree": "Informes contables",
+    "account_reports.menu_action_account_report_horizontal_groups": "Grupos horizontales",
+    "account_reports.menu_action_return_check_templates": "Cheques",
+    "account_reports.menu_action_return_types": "Tipos de declaración",
+    "account_reports.menu_action_account_report_budget_tree": "Presupuestos financieros",
+    "account_accountant.menu_accounting": "Contabilidad",
+    "account.menu_accounting_entries": "Asientos",
+    "account.menu_analytic_accounting": "Contabilidad analítica",
+    "account.menu_analytic__distribution_model": "Modelos de distribución analítica",
+    "account.account_analytic_def_account": "Cuentas analíticas",
+    "account.account_analytic_plan_menu": "Planes analíticos",
+    "account.root_payment_menu": "Pagos en línea",
+    "account_payment.payment_provider_menu": "Proveedores de pago",
+    "account_payment.payment_method_menu": "Métodos de pago",
+    "account_payment.payment_token_menu": "Tokens de pago",
+    "account_payment.payment_transaction_menu": "Transacciones de pago",
+    "account.account_invoicing_menu": "Facturación",
+    "account.menu_action_payment_term_form": "Términos de pago",
+    "account_followup.account_followup_menu": "Niveles de seguimiento",
+    "account.menu_action_incoterm_open": "Incoterms",
+    "account.menu_product_product_categories": "Categorías de producto",
+    "account_asset.menu_finance_config_assets": "Activos e ingresos",
+    "account_asset.menu_action_account_asset_model_form": "Modelos de activos",
+    "account_fiscal_categories.menu_action_account_fiscal_category_list": "Categorías fiscales",
+    "account_online_synchronization.menu_action_online_link_account": "Sincronización en línea",
+}
+
 # Etiquetas español — Localización Justech
 JUSTECH_MENU_LABELS_ES = {
     "justech_l10n_do_base.menu_justech_do_fiscal_root": "Localización Dominicana",
-    "justech_l10n_do_base.menu_justech_do_document_types": "Tipos de NCF",
-    "justech_l10n_do_ncf.menu_justech_do_ncf_ranges": "Rangos NCF",
-    "justech_l10n_do_ncf.menu_justech_do_ncf_consumption": "Consumo NCF",
+    "justech_l10n_do_base.menu_justech_do_document_types": "1. Tipos de comprobante",
+    "justech_l10n_do_ncf.menu_justech_do_ncf_ranges": "2. Rangos NCF",
+    "justech_l10n_do_ncf.menu_justech_do_ncf_consumption": "3. Consumo NCF",
     "justech_l10n_do_base.menu_justech_do_fiscal_config": "Configuración fiscal",
     "justech_l10n_do_reports.menu_justech_do_reports_root": "Reportes DGII",
     "justech_l10n_do_reports.menu_justech_do_report_606": "606 — Compras",
     "justech_l10n_do_reports.menu_justech_do_report_607": "607 — Ventas",
     "justech_l10n_do_reports.menu_justech_do_report_608": "608 — Anulados",
     "justech_l10n_do_reports.menu_justech_do_reports_history": "Historial fiscal",
-    "justech_l10n_do_reports.menu_justech_do_audit_root": "Auditoría",
-    "justech_l10n_do_reports.menu_justech_do_audit_consumption": "Consumo NCF",
+    "justech_l10n_do_reports.menu_justech_do_audit_root": "Auditoría Fiscal",
+    "justech_l10n_do_reports.menu_justech_do_audit_consumption": "Consumo NCF (auditoría)",
     "justech_l10n_do_reports.menu_justech_do_audit_voided": "NCF anulados",
+    "justech_global_audit_log.menu_justech_global_audit_root": "Auditoría de Cambios",
+    "justech_admin.menu_justech_modules": "Licencias y Personalizaciones",
 }
 
 
@@ -319,6 +351,73 @@ class HelleniaUiMenuCustomizer(models.AbstractModel):
                 self._set_menu_label(xid, label)
 
     @api.model
+    def apply_accounting_menu_labels(self):
+        """Traduce menús contables Enterprise visibles en español."""
+        for xmlid, label in ACCOUNTING_MENU_LABELS_ES.items():
+            self._set_menu_label(xmlid, label)
+        # Menús identificados por nombre (sin xmlid estable entre versiones)
+        name_map = {
+            "Reporting": "Informes contables",
+            "Multi-Ledger": "Multi-libro",
+            "Tax Groups": "Grupos de impuestos",
+            "Tax Units": "Unidades de impuesto",
+            "Cash Roundings": "Redondeos de efectivo",
+            "Account Tags": "Etiquetas contables",
+            "Account Groups": "Grupos de cuentas",
+            "Fiscal Years": "Años fiscales",
+            "Accounting Reports": "Informes contables",
+            "Horizontal Groups": "Grupos horizontales",
+            "Checks": "Cheques",
+            "Fiscal Categories": "Categorías fiscales",
+            "Asset Models": "Modelos de activos",
+            "Return Types": "Tipos de declaración",
+            "Financial Budgets": "Presupuestos financieros",
+            "Online Synchronization": "Sincronización en línea",
+            "Invoicing": "Facturación",
+            "Payment Terms": "Términos de pago",
+            "Follow-up Levels": "Niveles de seguimiento",
+            "Incoterms": "Incoterms",
+            "Product Categories": "Categorías de producto",
+            "Assets and Revenues": "Activos e ingresos",
+            "Online Payments": "Pagos en línea",
+            "Payment Providers": "Proveedores de pago",
+            "Payment Methods": "Métodos de pago",
+            "Payment Tokens": "Tokens de pago",
+            "Payment Transactions": "Transacciones de pago",
+            "Analytic Accounting": "Contabilidad analítica",
+            "Analytic Distribution Models": "Modelos de distribución analítica",
+            "Analytic Accounts": "Cuentas analíticas",
+            "Analytic Plans": "Planes analíticos",
+        }
+        config = self.env.ref("account.menu_finance_configuration", raise_if_not_found=False)
+        if config:
+            for menu in self.env["ir.ui.menu"].search([("id", "child_of", config.id)]):
+                new_name = name_map.get(menu.name)
+                if not new_name or new_name == menu.name:
+                    continue
+                for lang in self._active_langs():
+                    menu.with_context(lang=lang).write({"name": new_name})
+        # Menús técnicos bajo Configuración (p. ej. Technical/Reporting)
+        admin = self.env.ref("base.menu_administration", raise_if_not_found=False)
+        if admin:
+            for menu in self.env["ir.ui.menu"].search([("id", "child_of", admin.id)]):
+                new_name = name_map.get(menu.name)
+                if not new_name or new_name == menu.name:
+                    continue
+                for lang in self._active_langs():
+                    menu.with_context(lang=lang).write({"name": new_name})
+
+    @api.model
+    def apply_ux_flow_fix_labels(self):
+        """UX-FLOW-FIX: auditorías, licencias, NCF numerado, menús EN."""
+        self.apply_accounting_menu_labels()
+        for xmlid, label in JUSTECH_MENU_LABELS_ES.items():
+            self._set_menu_label(xmlid, label)
+        # Receivables / Payables
+        self._set_menu_label("account.menu_finance_receivables", "Clientes")
+        self._set_menu_label("account.menu_finance_payables", "Proveedores")
+
+    @api.model
     def apply_all(self):
         """Aplica todas las personalizaciones de menú en orden seguro."""
         self.apply_menu_labels()
@@ -326,3 +425,4 @@ class HelleniaUiMenuCustomizer(models.AbstractModel):
         self.repair_accounting_menu_tree()
         self.integrate_justech_menus()
         self.standardize_ux1_navigation()
+        self.apply_ux_flow_fix_labels()

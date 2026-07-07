@@ -1462,31 +1462,31 @@ class JustechLicenseService(models.AbstractModel):
                     self.deactivate_feature(ln.feature_code, company=company)
         elif action == "add_company":
             target = target_company or company
+            if not target:
+                raise JustechLicenseError(_("Seleccione la empresa a habilitar."))
             license_rec = self._get_active_license_for_company(company)
             if not license_rec:
                 raise JustechLicenseError(
-                    _(
-                        "Esta licencia no permite habilitar más empresas. Contacte a Justech."
-                    )
+                    _("No hay una licencia activa para este cliente.")
                 )
             if license_rec.max_companies > 0:
                 current = len(license_rec.company_line_ids)
-                if target.id not in license_rec.company_line_ids.mapped("company_id").ids:
-                    if current >= license_rec.max_companies:
-                        self._client_module_audit(
-                            action,
-                            product,
-                            target,
-                            status_before,
-                            status_before,
-                            result="fail",
-                            reason="max_companies",
+                enabled_ids = license_rec.company_line_ids.mapped("company_id").ids
+                if target.id not in enabled_ids and current >= license_rec.max_companies:
+                    self._client_module_audit(
+                        action,
+                        product,
+                        target,
+                        status_before,
+                        status_before,
+                        result="fail",
+                        reason="max_companies",
+                    )
+                    raise JustechLicenseError(
+                        _(
+                            "Esta licencia no permite habilitar más empresas. Contacte a Justech."
                         )
-                        raise JustechLicenseError(
-                            _(
-                                "Esta licencia no permite habilitar más empresas. Contacte a Justech."
-                            )
-                        )
+                    )
             if target.id not in license_rec.company_line_ids.mapped("company_id").ids:
                 internal["justech.license.company"].create(
                     {"license_id": license_rec.id, "company_id": target.id}

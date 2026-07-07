@@ -1,0 +1,25 @@
+=== FIX client module actions TEST ===
+Transfer starting: 61 files
+__manifest__.py
+models/justech_license_service.py
+
+sent 5801 bytes  received 724 bytes  11365 bytes/sec
+total size is 236332  speedup is 36.22
+Transfer starting: 29 files
+./
+__manifest__.py
+models/justech_client_module_control.py
+static/src/scss/
+tests/test_client_module_admin_panel.py
+views/
+
+sent 5339 bytes  received 470 bytes  8935 bytes/sec
+total size is 146865  speedup is 25.28
+2026-07-07 17:47:53,949 1 INFO hellenia_test odoo.modules.loading: Modules loaded. 
+2026-07-07 17:47:53,967 1 INFO hellenia_test odoo.registry: Registry changed, signaling through the database 
+2026-07-07 17:47:53,968 1 INFO hellenia_test odoo.registry: Registry loaded in 9.764s 
+2026-07-07 17:47:53,968 1 INFO hellenia_test odoo.service.server: Initiating shutdown 
+2026-07-07 17:47:53,968 1 INFO hellenia_test odoo.service.server: Hit CTRL-C again or send a second signal to force the shutdown. 
+2026-07-07 17:47:53,969 1 INFO hellenia_test odoo.sql_db: ConnectionPool(read/write;used=0/count=0/max=64): Closed 1 connections  
+grep: /Users/faustosantana/Projects/jaios/evidence/fix-client-module-actions-test/validation.json: No such file or directory
+TEST FAIL

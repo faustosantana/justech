@@ -1,5 +1,6 @@
 from odoo.tests import tagged
 
+from odoo.exceptions import UserError
 from odoo.tests.common import TransactionCase
 
 from odoo.addons.justech_modules.tests.test_admin_access import _provision_test_key
@@ -67,3 +68,79 @@ class TestClientModuleAdminPanel(TransactionCase):
         save_action = panel.action_save_changes()
         self.assertEqual(save_action["res_model"], "justech.client.module.action.wizard")
         self.assertEqual(save_action["context"]["default_action_type"], "save_features")
+
+    def _open_panel_and_line(self, customization_code="fiscal_rd"):
+        control = self.env["justech.client.module.control"].action_open()
+        rec = self.env["justech.client.module.control"].browse(control["res_id"])
+        line = rec.line_ids.filtered(lambda l: l.main_module_code == customization_code)[:1]
+        self.assertTrue(line, f"Missing line for {customization_code}")
+        panel_action = line.action_open_administrar()
+        panel = self.env["justech.client.module.admin.panel"].browse(panel_action["res_id"])
+        return rec, line, panel
+
+    def _confirm_wizard(self, panel, line, control, action_type, **extra):
+        wizard = self.env["justech.client.module.action.wizard"].create(
+            {
+                "control_id": control.id,
+                "panel_id": panel.id,
+                "line_id": line.id,
+                "product_code": line.product_code,
+                "customization_code": line.main_module_code,
+                "action_type": action_type,
+                "company_id": control.company_id.id,
+                "license_id": control.license_id.id,
+                "admin_key": "TEST-KEY-12345678",
+                **extra,
+            }
+        )
+        return wizard.action_confirm()
+
+    def test_mark_paid_reopens_panel_after_reload(self):
+        control, line, panel = self._open_panel_and_line()
+        product_code = line.product_code
+        if line.is_paid:
+            self._confirm_wizard(panel, line, control, "mark_unpaid")
+            control._reload_lines()
+            line = control.line_ids.filtered(lambda l: l.product_code == product_code)[:1]
+            panel = self.env["justech.client.module.admin.panel"].browse(
+                line.action_open_administrar()["res_id"]
+            )
+        result = self._confirm_wizard(panel, line, control, "mark_paid")
+        self.assertEqual(result.get("res_model"), "justech.client.module.admin.panel")
+        new_panel = self.env["justech.client.module.admin.panel"].browse(result["res_id"])
+        self.assertTrue(new_panel.exists())
+        self.assertTrue(new_panel.is_paid)
+
+    def test_add_company_license_limit_is_user_friendly(self):
+        control, line, panel = self._open_panel_and_line()
+        license_svc = self.env["justech.license.service"]
+        license_rec = license_svc._get_active_license_for_company(control.company_id)
+        if not license_rec:
+            license_rec = license_svc._sudo_internal()["justech.license"].search(
+                [("state", "=", "active")], limit=1
+            )
+        if not license_rec:
+            self.skipTest("No active license in test DB")
+        license_rec.sudo().write({"max_companies": len(license_rec.company_line_ids)})
+        extra_company = self.env["res.company"].search(
+            [("id", "not in", license_rec.company_line_ids.mapped("company_id").ids)],
+            limit=1,
+        )
+        self.assertTrue(extra_company)
+        wizard = self.env["justech.client.module.action.wizard"].create(
+            {
+                "control_id": control.id,
+                "panel_id": panel.id,
+                "line_id": line.id,
+                "product_code": line.product_code,
+                "customization_code": line.main_module_code,
+                "action_type": "add_company",
+                "company_id": control.company_id.id,
+                "license_id": license_rec.id,
+                "target_company_id": extra_company.id,
+                "admin_key": "TEST-KEY-12345678",
+            }
+        )
+        with self.assertRaises(UserError) as ctx:
+            wizard.action_confirm()
+        self.assertIn("no permite habilitar más empresas", str(ctx.exception))

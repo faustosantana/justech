@@ -2,7 +2,9 @@
 from markupsafe import Markup
 
 from odoo import _, api, fields, models
-from odoo.exceptions import UserError
+from odoo.exceptions import MissingError, UserError
+
+from odoo.addons.justech_modules.exceptions import JustechLicenseError
 
 
 class JustechClientModuleControl(models.TransientModel):
@@ -279,8 +281,8 @@ class JustechClientModuleAdminPanel(models.TransientModel):
     _name = "justech.client.module.admin.panel"
     _description = "Commercial administration panel for a personalization"
 
-    control_id = fields.Many2one("justech.client.module.control", ondelete="cascade")
-    line_id = fields.Many2one("justech.client.module.line", ondelete="cascade")
+    control_id = fields.Many2one("justech.client.module.control", ondelete="set null")
+    line_id = fields.Many2one("justech.client.module.line", ondelete="set null")
     customization_code = fields.Char(readonly=True)
     product_code = fields.Char(readonly=True)
     module_name = fields.Char(string="Personalización", readonly=True)
@@ -360,6 +362,22 @@ class JustechClientModuleAdminPanel(models.TransientModel):
             action["views"] = [(view.id, "form")]
             action["view_id"] = view.id
         return action
+
+    @api.model
+    def action_reopen_for_product(self, control, product_code, customization_code=None):
+        """Reabrir panel tras recargar líneas transient (evita IDs de panel/line obsoletos)."""
+        if not control or not control.exists():
+            return {"type": "ir.actions.act_window_close"}
+        line = control.line_ids.filtered(
+            lambda row: row.product_code == product_code
+            or (
+                customization_code
+                and row.main_module_code == customization_code
+            )
+        )[:1]
+        if line:
+            return self.action_open_for_line(line)
+        return control._return_self_action()
 
     def _load_feature_lines(self):
         license_svc = self.env["justech.license.service"]
@@ -660,39 +678,14 @@ class JustechClientModuleAdminPanel(models.TransientModel):
 
     def action_refresh_panel(self):
         self.ensure_one()
-        self.line_id.control_id._reload_lines()
-        refreshed = self.line_id.control_id.line_ids.filtered(
-            lambda line: line.main_module_code == self.customization_code
-        )[:1]
-        if refreshed:
-            self.write(
-                {
-                    "line_id": refreshed.id,
-                    "status_label": refreshed.status_label,
-                    "paid_label": refreshed.paid_label,
-                    "active_label": refreshed.active_label,
-                    "license_label": refreshed.license_label,
-                    "companies_enabled_text": refreshed.companies_enabled_text,
-                    "is_paid": refreshed.is_paid,
-                    "is_active": refreshed.is_active,
-                    "is_blocked": refreshed.is_blocked,
-                    "last_modified_display": refreshed.last_modified_display or "—",
-                    "last_modified_by_name": refreshed.last_modified_by_name or "—",
-                }
-            )
-        self._load_feature_lines()
-        self._load_company_lines()
-        return {
-            "type": "ir.actions.act_window",
-            "name": _("Administrar personalización"),
-            "res_model": self._name,
-            "res_id": self.id,
-            "view_mode": "form",
-            "target": "new",
-            "view_id": self.env.ref(
-                "justech_admin.view_justech_client_module_admin_panel_form"
-            ).id,
-        }
+        control = self.control_id
+        product_code = self.product_code
+        customization_code = self.customization_code
+        if control and control.exists():
+            control._reload_lines()
+        return self.action_reopen_for_product(
+            control, product_code, customization_code=customization_code
+        )
 
 
 class JustechClientModuleAdminFeatureLine(models.TransientModel):
@@ -833,6 +826,12 @@ class JustechClientModuleActionWizard(models.TransientModel):
                 """
             )
 
+    def _friendly_license_error(self, exc):
+        message = exc.args[0] if exc.args else _("Operación no permitida por la licencia.")
+        if isinstance(message, str):
+            return UserError(message)
+        return UserError(_("Operación no permitida por la licencia."))
+
     def action_confirm(self):
         self.ensure_one()
         svc = self.env["justech.admin.access.service"]
@@ -843,34 +842,44 @@ class JustechClientModuleActionWizard(models.TransientModel):
             )
         svc.verify_key_only(self.admin_key, action=svc.CRITICAL_PLATFORM_MUTATION)
 
+        if self.action_type in ("add_company", "remove_company") and not self.target_company_id:
+            raise UserError(_("Seleccione la empresa para esta acción."))
+
+        control = self.control_id
+        product_code = self.product_code
+        customization_code = self.customization_code
         token = svc.issue_critical_grant(svc.CRITICAL_PLATFORM_MUTATION)
         license_svc = self.env["justech.license.service"].with_context(
             justech_critical_token=token
         )
         reason = self.new_tier if self.action_type == "change_license" else None
-        if self.action_type == "save_features":
-            license_svc.apply_commercial_feature_changes(
-                self.customization_code,
-                self.company_id,
-                self.feature_changes or [],
-            )
-        else:
-            license_svc.execute_client_module_action(
-                self.action_type,
-                self.product_code,
-                company=self.company_id,
-                target_company=self.target_company_id,
-                reason=reason,
-            )
-        control = self.control_id
-        panel = self.panel_id
-        if control:
+        try:
+            if self.action_type == "save_features":
+                license_svc.apply_commercial_feature_changes(
+                    customization_code,
+                    self.company_id,
+                    self.feature_changes or [],
+                )
+            else:
+                license_svc.execute_client_module_action(
+                    self.action_type,
+                    product_code,
+                    company=self.company_id,
+                    target_company=self.target_company_id,
+                    reason=reason,
+                )
+        except JustechLicenseError as exc:
+            raise self._friendly_license_error(exc) from None
+        except MissingError:
+            raise UserError(
+                _("La sesión del panel expiró. Vuelva a abrir Módulos del Cliente.")
+            ) from None
+
+        if control and control.exists():
             control._reload_lines()
-        if panel:
-            return panel.action_refresh_panel()
-        if control:
-            return control._return_self_action()
-        return {"type": "ir.actions.act_window_close"}
+        return self.env["justech.client.module.admin.panel"].action_reopen_for_product(
+            control, product_code, customization_code=customization_code
+        )
 
 
 class JustechClientModuleDetail(models.TransientModel):

@@ -1,0 +1,18 @@
+=== FIX client module actions TEST ===
+Transfer starting: 61 files
+
+sent 3239 bytes  received 20 bytes  6339 bytes/sec
+total size is 236332  speedup is 72.52
+Transfer starting: 29 files
+tests/
+
+sent 1485 bytes  received 26 bytes  3776 bytes/sec
+total size is 147193  speedup is 97.41
+2026-07-07 17:49:43,533 1 INFO hellenia_test odoo.modules.loading: Modules loaded. 
+2026-07-07 17:49:43,550 1 INFO hellenia_test odoo.registry: Registry changed, signaling through the database 
+2026-07-07 17:49:43,551 1 INFO hellenia_test odoo.registry: Registry loaded in 9.407s 
+2026-07-07 17:49:43,551 1 INFO hellenia_test odoo.service.server: Initiating shutdown 
+2026-07-07 17:49:43,551 1 INFO hellenia_test odoo.service.server: Hit CTRL-C again or send a second signal to force the shutdown. 
+2026-07-07 17:49:43,551 1 INFO hellenia_test odoo.sql_db: ConnectionPool(read/write;used=0/count=0/max=64): Closed 1 connections  
+grep: /Users/faustosantana/Projects/jaios/evidence/fix-client-module-actions-test/validation.json: No such file or directory
+TEST FAIL

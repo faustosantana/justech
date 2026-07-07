@@ -1,0 +1,28 @@
+{
+  "phase": "fix-client-module-actions",
+  "database": "hellenia_test",
+  "checks": {
+    "control_opens": true,
+    "lines_tested": true,
+    "no_missing_record": true,
+    "no_rpc_errors": true,
+    "audit_model": true
+  },
+  "actions": {
+    "contabilidad_rd": "tested",
+    "punto_de_venta": "tested",
+    "reportes_corporativos": "tested"
+  },
+  "ok": true,
+  "users": {
+    "it@justech.do": {
+      "found": true,
+      "modules": 5
+    },
+    "admin": {
+      "found": true,
+      "modules": 4
+    }
+  },
+  "status": "PASS"
+}

@@ -1,0 +1,18 @@
+=== BUGFIX-ADMINKEY-2B prod ===
+--- module upgrade ---
+  File "/usr/lib/python3/dist-packages/odoo/tools/func.py", line 88, in locked
+    return func(inst, *args, **kwargs)
+  File "/usr/lib/python3/dist-packages/odoo/orm/registry.py", line 183, in new
+    load_modules(
+  File "/usr/lib/python3/dist-packages/odoo/modules/loading.py", line 572, in load_modules
+    registry.init_models(cr, models_to_check, {'models_to_check': True, 'update_custom_fields': True})
+  File "/usr/lib/python3/dist-packages/odoo/orm/registry.py", line 752, in init_models
+    model.init()
+  File "/mnt/custom/justech_l10n_do_ncf/models/account_move.py", line 136, in init
+    self._cr.execute(
+ 
+2026-07-07 23:10:09,907 1 INFO hellenia_prod odoo.modules.loading: Modules loaded. 
+2026-07-07 23:10:09,929 1 INFO hellenia_prod odoo.registry: Registry changed, signaling through the database 
+2026-07-07 23:10:09,931 1 INFO hellenia_prod odoo.registry: Registry loaded in 15.432s 
+2026-07-07 23:10:09,931 1 INFO hellenia_prod odoo.service.server: Stopping workers gracefully 
+scp: /tmp/bugfix-adminkey2b-validation.json: No such file or directory

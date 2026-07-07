@@ -1,0 +1,18 @@
+{
+  "phase": "BUGFIX-ADMINKEY-2",
+  "timestamp_utc": "2026-07-07T23:04:44.383542+00:00",
+  "status": "PASS",
+  "database": "hellenia_prod",
+  "root_cause": "Seguridad/Auditoría invocaban require_session() directamente, mostrando AccessError en inglés sin abrir el wizard de clave.",
+  "files_fixed": [
+    "custom/justech_modules/models/justech_admin_access_service.py",
+    "custom/justech_modules/models/justech_admin_key_wizard.py",
+    "custom/justech_modules/views/justech_admin_access_views.xml",
+    "custom/justech_admin/views/justech_admin_protected_actions.xml"
+  ],
+  "checks_summary": {
+    "test": "PASS",
+    "prod": "PASS",
+    "healthcheck_prod": "PASS"
+  }
+}

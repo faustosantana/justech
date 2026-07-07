@@ -6,4 +6,18 @@
         <field name="state">code</field>
         <field name="code">action = env["justech.admin.access.service"]._launch_admin_dashboard()</field>
     </record>
+
+    <record id="action_justech_control_security_launcher" model="ir.actions.server">
+        <field name="name">Abrir Seguridad Justech</field>
+        <field name="model_id" ref="justech_modules.model_justech_admin_access_service"/>
+        <field name="state">code</field>
+        <field name="code">action = env["justech.admin.access.service"]._launch_control_security()</field>
+    </record>
+
+    <record id="action_justech_control_audit_launcher" model="ir.actions.server">
+        <field name="name">Abrir Auditoría Justech</field>
+        <field name="model_id" ref="justech_modules.model_justech_admin_access_service"/>
+        <field name="state">code</field>
+        <field name="code">action = env["justech.admin.access.service"]._launch_control_audit()</field>
+    </record>
 </odoo>

@@ -6,9 +6,11 @@
         <field name="arch" type="xml">
             <form string="Clave Administrativa Justech">
                 <sheet>
+                    <field name="prompt_message" nolabel="1" readonly="1" class="text-muted mb-2"/>
                     <group>
                         <field name="scope" invisible="1"/>
                         <field name="target_action_xmlid" invisible="1"/>
+                        <field name="target_method" invisible="1"/>
                         <field name="admin_key" password="True" placeholder="Ingrese Clave Administrativa Justech"/>
                     </group>
                     <p class="text-muted">

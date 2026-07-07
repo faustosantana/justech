@@ -1,0 +1,12 @@
+=== BUGFIX-ADMINKEY-2 test ===
+    model.init()
+  File "/mnt/custom/justech_l10n_do_ncf/models/account_move.py", line 136, in init
+    self._cr.execute(
+ 
+2026-07-07 23:00:39,963 1 INFO hellenia_test odoo.modules.loading: Modules loaded. 
+2026-07-07 23:00:39,982 1 INFO hellenia_test odoo.registry: Registry changed, signaling through the database 
+2026-07-07 23:00:39,983 1 INFO hellenia_test odoo.registry: Registry loaded in 11.668s 
+2026-07-07 23:00:39,984 1 INFO hellenia_test odoo.service.server: Initiating shutdown 
+2026-07-07 23:00:39,984 1 INFO hellenia_test odoo.service.server: Hit CTRL-C again or send a second signal to force the shutdown. 
+2026-07-07 23:00:39,984 1 INFO hellenia_test odoo.sql_db: ConnectionPool(read/write;used=0/count=0/max=64): Closed 1 connections  
+scp: /tmp/bugfix-adminkey2-validation.json: No such file or directory

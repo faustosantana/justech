@@ -1,0 +1,12 @@
+=== BUGFIX-ADMINKEY-2 prod ===
+    registry.init_models(cr, models_to_check, {'models_to_check': True, 'update_custom_fields': True})
+  File "/usr/lib/python3/dist-packages/odoo/orm/registry.py", line 752, in init_models
+    model.init()
+  File "/mnt/custom/justech_l10n_do_ncf/models/account_move.py", line 136, in init
+    self._cr.execute(
+ 
+2026-07-07 23:04:03,166 1 INFO hellenia_prod odoo.modules.loading: Modules loaded. 
+2026-07-07 23:04:03,186 1 INFO hellenia_prod odoo.registry: Registry changed, signaling through the database 
+2026-07-07 23:04:03,187 1 INFO hellenia_prod odoo.registry: Registry loaded in 15.260s 
+2026-07-07 23:04:03,187 1 INFO hellenia_prod odoo.service.server: Stopping workers gracefully 
+scp: /tmp/bugfix-adminkey2-validation.json: No such file or directory

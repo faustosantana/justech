@@ -1,0 +1,8 @@
+[2026-07-07 23:11:58] [PASS] traefik_router_registered — hellenia-prod
+[2026-07-07 23:11:58] [PASS] https_login — HTTP 200
+[2026-07-07 23:11:58] [PASS] https_tls
+[2026-07-07 23:11:58] [PASS] assets_static — HTTP 200
+[2026-07-07 23:11:58] [PASS] websocket_route — HTTP 400
+[2026-07-07 23:12:01] [PASS] odoo_fiscal_modules — healthcheck-prod-2026-07-07_2311-odoo.json
+[2026-07-07 23:12:01] === RESULTADO: PASS ===
+[2026-07-07 23:12:01] Reporte: /opt/odoo-projects/hellenia/evidence/healthcheck-prod-2026-07-07_2311.json

@@ -153,12 +153,21 @@ class JustechAdminAccessService(models.AbstractModel):
         scope = scope or self.SCOPE_PLATFORM
         if not self.user_has_key():
             raise AccessError(
-                "Debe crear una Clave Administrativa Justech antes de continuar."
+                _("Debe crear una Clave Administrativa Justech antes de continuar.")
             )
         if not self.is_session_valid(scope=scope):
-            raise AccessError(
-                "Justech Administrative Key required. Please authenticate again."
+            raise AccessError(self._session_reauth_message(scope))
+
+    @api.model
+    def _session_reauth_message(self, scope=None):
+        scope = scope or self.SCOPE_PLATFORM
+        Session = self.env["justech.admin.session"].sudo()
+        if Session.search_count([("user_id", "=", self.env.uid), ("scope", "=", scope)]):
+            return _(
+                "La sesión administrativa ha expirado. "
+                "Introduzca nuevamente la Clave Administrativa para continuar."
             )
+        return _("Introduzca la Clave Administrativa Justech para continuar.")
 
     @api.model
     def verify_key_only(self, admin_key, action="verify"):
@@ -298,24 +307,40 @@ class JustechAdminAccessService(models.AbstractModel):
         }
 
     @api.model
-    def open_protected(self, action_xmlid, scope=None, name=None):
+    def _protected_wizard_action(self, scope, title, target_method=None, target_action_xmlid=None):
+        ctx = {
+            "default_scope": scope,
+            "default_prompt_message": self._session_reauth_message(scope),
+        }
+        if target_method:
+            ctx["default_target_method"] = target_method
+        if target_action_xmlid:
+            ctx["default_target_action_xmlid"] = target_action_xmlid
+        return {
+            "type": "ir.actions.act_window",
+            "name": title or _("Clave Administrativa Justech"),
+            "res_model": "justech.admin.key.wizard",
+            "view_mode": "form",
+            "target": "new",
+            "context": ctx,
+        }
+
+    @api.model
+    def open_protected(self, action_xmlid, scope=None, name=None, target_method=None):
         self.require_justech_settings_access()
         scope = scope or self.SCOPE_PLATFORM
         if not self.user_has_key():
             return self._action_setup_key_required(action_xmlid, scope)
         if self.is_session_valid(scope=scope):
+            if target_method:
+                return getattr(self, target_method)()
             return self._resolve_action(action_xmlid)
-        return {
-            "type": "ir.actions.act_window",
-            "name": name or _("Justech Administrative Key"),
-            "res_model": "justech.admin.key.wizard",
-            "view_mode": "form",
-            "target": "new",
-            "context": {
-                "default_scope": scope,
-                "default_target_action_xmlid": action_xmlid,
-            },
-        }
+        return self._protected_wizard_action(
+            scope,
+            name,
+            target_method=target_method,
+            target_action_xmlid=action_xmlid,
+        )
 
     @api.model
     def action_open_module_activation(self):
@@ -447,14 +472,32 @@ class JustechAdminAccessService(models.AbstractModel):
         return self.env["justech.control.licenses"].action_open()
 
     @api.model
-    def action_open_control_security(self):
+    def _launch_control_security(self):
         self.require_session(self.SCOPE_ADMIN)
         return self.env["justech.control.security"].action_open()
 
     @api.model
-    def action_open_control_audit(self):
+    def _launch_control_audit(self):
         self.require_session(self.SCOPE_ADMIN)
         return self.env["justech.control.audit"].action_open()
+
+    @api.model
+    def action_open_control_security(self):
+        return self.open_protected(
+            "justech_admin.action_justech_control_security_launcher",
+            self.SCOPE_ADMIN,
+            _("Seguridad Justech"),
+            target_method="_launch_control_security",
+        )
+
+    @api.model
+    def action_open_control_audit(self):
+        return self.open_protected(
+            "justech_admin.action_justech_control_audit_launcher",
+            self.SCOPE_ADMIN,
+            _("Auditoría Justech"),
+            target_method="_launch_control_audit",
+        )
 
     @api.model
     def action_open_control_integrations(self):

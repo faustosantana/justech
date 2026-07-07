@@ -362,6 +362,23 @@
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
 }
 
+.justech-cc-module-card-desc {
+    font-size: 13px;
+    color: #4b5563;
+    line-height: 1.4;
+    min-height: 36px;
+}
+
+.justech-cc-manage-desc {
+    color: #4b5563;
+    font-size: 14px;
+    margin-bottom: 12px;
+}
+
+.justech-cc-manage-sheet .o_group {
+    margin-bottom: 8px;
+}
+
 .justech-cc-module-card-head {
     display: flex;
     align-items: flex-start;
@@ -453,4 +470,337 @@
     flex-wrap: wrap;
     gap: 8px;
     margin-bottom: 16px;
+}
+
+.justech-cc-admin-panel-form {
+    .justech-cc-manage-title h2 {
+        font-size: 22px;
+        font-weight: 600;
+        margin-bottom: 8px;
+    }
+    .justech-cc-feature-list {
+        tbody td {
+            vertical-align: middle;
+        }
+        .o_boolean_toggle {
+            margin: 0;
+        }
+    }
+    footer .btn {
+        margin-right: 6px;
+        margin-bottom: 6px;
+    }
+}
+
+/* Admin dashboard modal — wide, modern console */
+/* CSS min() via interpolation: Sass min() rejects px+vw mix (see assetsbundle log) */
+.modal:has(.justech-cc-admin-dashboard) .modal-dialog {
+    max-width: #{"min(1120px, 96vw)"};
+    width: 96vw;
+}
+
+.modal:has(.justech-cc-admin-dashboard) .modal-content {
+    border-radius: 16px;
+    overflow: hidden;
+    border: none;
+    box-shadow: 0 24px 48px rgba(15, 23, 42, 0.18);
+}
+
+.justech-cc-admin-dashboard {
+    background: #f4f6fb;
+
+    .o_form_sheet_bg,
+    .o_form_statusbar {
+        display: none;
+    }
+}
+
+.justech-dash-shell {
+    padding: 20px 24px 8px;
+    max-width: 100%;
+}
+
+.justech-dash-hero {
+    margin-bottom: 20px;
+
+    .justech-dash-eyebrow {
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: #64748b;
+        margin: 0 0 6px;
+    }
+
+    .justech-dash-title {
+        font-size: 26px;
+        font-weight: 700;
+        color: #0f172a;
+        margin: 0 0 8px;
+        line-height: 1.2;
+    }
+
+    .justech-dash-subtitle {
+        font-size: 14px;
+        color: #64748b;
+        margin: 0;
+        line-height: 1.5;
+        max-width: 720px;
+    }
+}
+
+.justech-dash-header {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.justech-dash-kpi {
+    background: #fff;
+    border-radius: 12px;
+    padding: 14px 16px;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
+    border: 1px solid #e2e8f0;
+    min-width: 0;
+
+    .justech-dash-kpi-label {
+        display: block;
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: #94a3b8;
+        margin-bottom: 6px;
+    }
+
+    .justech-dash-kpi-value {
+        display: block;
+        font-size: 15px;
+        font-weight: 600;
+        color: #1e293b;
+        word-break: break-word;
+    }
+}
+
+.justech-dash-kpi-active {
+    border-left: 4px solid #22c55e;
+}
+
+.justech-dash-kpi-inactive {
+    border-left: 4px solid #eab308;
+}
+
+.justech-dash-kpi-blocked {
+    border-left: 4px solid #ef4444;
+}
+
+.justech-dash-section {
+    background: #fff;
+    border-radius: 14px;
+    padding: 18px 20px;
+    margin-bottom: 16px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+
+.justech-dash-section-title {
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #475569;
+    margin: 0 0 16px;
+}
+
+.justech-dash-feature-kanban {
+    .o_kanban_group {
+        min-width: 100%;
+        width: 100%;
+    }
+
+    .o_kanban_header {
+        background: transparent;
+        border: none;
+        padding: 0 0 12px;
+
+        .o_column_title {
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            color: #334155;
+            text-transform: uppercase;
+        }
+    }
+
+    .o_kanban_record {
+        width: calc(33.333% - 10px);
+        min-width: 220px;
+        margin: 0 5px 10px;
+    }
+
+    @media (max-width: 992px) {
+        .o_kanban_record {
+            width: calc(50% - 10px);
+        }
+    }
+
+    @media (max-width: 576px) {
+        .o_kanban_record {
+            width: 100%;
+            min-width: 0;
+        }
+    }
+}
+
+.justech-dash-feature-card {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 14px 16px;
+    height: 100%;
+    transition: box-shadow 0.15s ease, border-color 0.15s ease;
+
+    &:hover {
+        border-color: #cbd5e1;
+        box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
+    }
+}
+
+.justech-dash-feature-card-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 8px;
+}
+
+.justech-dash-feature-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: #0f172a;
+    line-height: 1.3;
+    flex: 1;
+}
+
+.justech-dash-feature-desc {
+    font-size: 12px;
+    color: #64748b;
+    margin: 0;
+    line-height: 1.45;
+}
+
+.justech-dash-companies {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.justech-dash-company-chip {
+    background: #f1f5f9;
+    border: 1px solid #e2e8f0;
+    border-radius: 999px;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #334155;
+
+    &.enabled {
+        background: #ecfdf5;
+        border-color: #a7f3d0;
+        color: #065f46;
+    }
+
+    &.disabled {
+        opacity: 0.65;
+    }
+}
+
+.justech-dash-empty {
+    color: #94a3b8;
+    font-size: 14px;
+    margin: 0;
+    font-style: italic;
+}
+
+.justech-dash-timeline {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.justech-dash-timeline-item {
+    display: flex;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid #f1f5f9;
+
+    &:last-child {
+        border-bottom: none;
+    }
+}
+
+.justech-dash-timeline-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #3b82f6;
+    margin-top: 6px;
+    flex-shrink: 0;
+}
+
+.justech-dash-timeline-body {
+    flex: 1;
+    min-width: 0;
+
+    strong {
+        display: block;
+        font-size: 14px;
+        font-weight: 500;
+        color: #1e293b;
+        margin-bottom: 2px;
+    }
+}
+
+.justech-dash-timeline-when {
+    font-size: 12px;
+    color: #94a3b8;
+}
+
+.justech-dash-footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 24px;
+    background: #fff;
+    border-top: 1px solid #e2e8f0;
+}
+
+.justech-dash-actions-primary,
+.justech-dash-actions-danger {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+}
+
+.justech-dash-actions-danger {
+    margin-left: auto;
+}
+
+.justech-dash-close {
+    margin-left: auto;
+}
+
+@media (max-width: 768px) {
+    .justech-dash-footer {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .justech-dash-actions-danger,
+    .justech-dash-close {
+        margin-left: 0;
+    }
 }

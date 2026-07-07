@@ -36,12 +36,83 @@ class ProductTemplate(models.Model):
         digits="Product Price",
         help="Equivalente en moneda de la empresa, sincronizado con standard_price.",
     )
+    justech_company_currency_id = fields.Many2one(
+        "res.currency",
+        string="Moneda contable empresa",
+        compute="_compute_justech_commercial_display",
+        help="Moneda funcional usada para el equivalente contable mostrado en pantalla.",
+    )
+    justech_sale_rate_used = fields.Float(
+        string="Tasa venta",
+        compute="_compute_justech_commercial_display",
+        digits=(12, 4),
+        help="Factor de conversión aplicado al precio de venta comercial.",
+    )
+    justech_purchase_rate_used = fields.Float(
+        string="Tasa compra",
+        compute="_compute_justech_commercial_display",
+        digits=(12, 4),
+        help="Factor de conversión aplicado al precio de compra comercial.",
+    )
+    justech_sale_rate_label = fields.Char(
+        string="Tasa venta (texto)",
+        compute="_compute_justech_commercial_display",
+    )
+    justech_purchase_rate_label = fields.Char(
+        string="Tasa compra (texto)",
+        compute="_compute_justech_commercial_display",
+    )
 
     @api.depends("list_price", "standard_price")
     def _compute_justech_accounting_prices(self):
         for template in self:
             template.justech_accounting_sale_price = template.list_price
             template.justech_accounting_purchase_price = template.standard_price
+
+    @api.depends(
+        "justech_sale_price",
+        "justech_sale_currency_id",
+        "justech_purchase_price",
+        "justech_purchase_currency_id",
+        "company_id",
+        "company_id.currency_id",
+        "list_price",
+        "standard_price",
+    )
+    def _compute_justech_commercial_display(self):
+        Policy = self.env["justech.multicurrency.policy"]
+        for template in self:
+            company = template.company_id or self.env.company
+            company_currency = company.currency_id
+            template.justech_company_currency_id = company_currency
+
+            sale_currency = template.justech_sale_currency_id or company_currency
+            purchase_currency = template.justech_purchase_currency_id or company_currency
+
+            template.justech_sale_rate_used = template._justech_display_rate(
+                Policy, sale_currency, company
+            )
+            template.justech_purchase_rate_used = template._justech_display_rate(
+                Policy, purchase_currency, company
+            )
+            template.justech_sale_rate_label = template._justech_format_rate_label(
+                sale_currency, company_currency, template.justech_sale_rate_used
+            )
+            template.justech_purchase_rate_label = template._justech_format_rate_label(
+                purchase_currency, company_currency, template.justech_purchase_rate_used
+            )
+
+    def _justech_display_rate(self, policy, currency, company):
+        company_currency = company.currency_id
+        if not currency or currency == company_currency:
+            return 1.0
+        return policy.convert_to_company_currency(1.0, currency, company=company, date=fields.Date.today())
+
+    @staticmethod
+    def _justech_format_rate_label(currency, company_currency, rate):
+        if not currency or currency == company_currency:
+            return f"Sin conversión ({company_currency.name})"
+        return f"1 {currency.name} = {rate:,.2f} {company_currency.name}"
 
     @api.model
     def _justech_default_commercial_currency(self, company=None):

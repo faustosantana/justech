@@ -1,0 +1,38 @@
+=== 1. BACKUP PROD RAPIDO ===
+BACKUP_OK=/opt/odoo-projects/hellenia/backups/hellenia-prod/mc-ui-2026-07-07_115841 size=8543461
+=== 2. UPGRADE justech_multicurrency ===
+2026-07-07 15:58:53,326 1 INFO hellenia_prod odoo.modules.loading: loading justech_multicurrency/views/multicurrency_policy_views.xml 
+2026-07-07 15:58:53,348 1 INFO hellenia_prod odoo.modules.loading: loading justech_multicurrency/views/multicurrency_dashboard_views.xml 
+2026-07-07 15:58:53,367 1 INFO hellenia_prod odoo.modules.loading: loading justech_multicurrency/views/res_currency_rate_views.xml 
+2026-07-07 15:58:53,412 1 INFO hellenia_prod odoo.models.unlink: User #1 deleted ir.actions.act_window.view records with IDs: [336, 337] 
+2026-07-07 15:58:53,417 1 INFO hellenia_prod odoo.modules.loading: loading justech_multicurrency/views/product_template_views.xml 
+2026-07-07 15:58:53,473 1 INFO hellenia_prod odoo.modules.loading: loading justech_multicurrency/views/menu.xml 
+2026-07-07 15:58:53,510 1 INFO hellenia_prod odoo.addons.base.models.ir_module: module justech_multicurrency: no translation for language es_DO 
+2026-07-07 15:58:53,511 1 INFO hellenia_prod odoo.addons.base.models.ir_module: module justech_multicurrency: no translation for language es_419 
+2026-07-07 15:58:53,518 1 INFO hellenia_prod odoo.modules.loading: Module justech_multicurrency loaded in 1.70s, 549 queries (+549 other) 
+2026-07-07 15:58:53,603 1 WARNING hellenia_prod odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define models.Constraint on the model. 
+2026-07-07 15:58:53,703 1 WARNING hellenia_prod odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define models.Constraint on the model. 
+2026-07-07 15:58:53,755 1 INFO hellenia_prod odoo.modules.loading: 145 modules loaded in 2.87s, 549 queries (+549 extra) 
+2026-07-07 15:58:53,805 1 WARNING hellenia_prod odoo.fields: justech.do.fiscal.report.state: selection=[('draft', 'Borrador'), ('validated', 'Validado'), ('pending_approval', 'Requiere aprobación'), ('approved', 'Aprobado'), ('rejected', 'Rechazado'), ('generated', 'Generado'), ('done', 'Generado')] overrides existing selection; use selection_add instead 
+2026-07-07 15:58:53,919 1 WARNING hellenia_prod odoo.fields: justech.do.fiscal.report.state: selection=[('draft', 'Borrador'), ('validated', 'Validado'), ('pending_approval', 'Requiere aprobación'), ('approved', 'Aprobado'), ('rejected', 'Rechazado'), ('generated', 'Generado'), ('done', 'Generado')] overrides existing selection; use selection_add instead 
+2026-07-07 15:58:53,930 1 WARNING hellenia_prod odoo.fields: Translated stored related field (justech.audit.rule.model_description) will not be computed correctly in all languages 
+2026-07-07 15:58:54,274 1 INFO hellenia_prod odoo.registry: verifying fields for every extended model 
+2026-07-07 15:58:55,392 1 INFO hellenia_prod odoo.modules.loading: Modules loaded. 
+2026-07-07 15:58:55,410 1 INFO hellenia_prod odoo.registry: Registry changed, signaling through the database 
+2026-07-07 15:58:55,411 1 INFO hellenia_prod odoo.registry: Registry loaded in 8.300s 
+2026-07-07 15:58:55,411 1 INFO hellenia_prod odoo.service.server: Stopping workers gracefully 
+
+=== 3-6 POST-UPGRADE (completed) ===
+deleted_web_assets: 21
+VIEW_VALIDATION_OK: true
+  new_title: true (Precios Comerciales Justech)
+  cards_sale: true
+  cards_purchase: true
+  old_block: false
+  kpi_class: true
+  scss_class: true
+  arch_db_new: true
+  justech_view_id: 1857, priority: 20, inherit_id: 511
+  active_form_view_id: 560
+healthcheck: PASS (2026-07-07 15:59:30)
+BACKUP_PATH=/opt/odoo-projects/hellenia/backups/hellenia-prod/mc-ui-2026-07-07_115841

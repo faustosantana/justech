@@ -1,6 +1,6 @@
 {
     "name": "Justech Multimoneda",
-    "version": "19.0.2.0.0",
+    "version": "19.0.2.0.2",
     "category": "Justech/Platform",
     "summary": "Capa comercial multimoneda sobre el motor estándar Odoo",
     "description": """
@@ -45,7 +45,7 @@ No modifica contabilidad, NCF, DGII, PDFs ni COA.
     "justech_register": {
         "module_code": "justech_multicurrency",
         "module_name": "Justech Multimoneda",
-        "version": "19.0.2.0.0",
+        "version": "19.0.2.0.2",
         "category": "platform",
         "description": "Corporate multicurrency commercial policy engine",
         "dependencies": ["justech_modules"],

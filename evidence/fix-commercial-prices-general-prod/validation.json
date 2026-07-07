@@ -1,0 +1,41 @@
+{
+  "phase": "fix-commercial-prices-general",
+  "timestamp_utc": "2026-07-07T16:21:23.092276+00:00",
+  "database": "hellenia_prod",
+  "environment": "production",
+  "url": "https://odoo.hellenia.cloud",
+  "ok": true,
+  "checks": {
+    "no_comercial_tab": true,
+    "general_has_section_title": true,
+    "general_has_venta_group": true,
+    "general_has_compra_group": true,
+    "general_has_sale_fields": true,
+    "general_has_purchase_fields": true,
+    "general_has_equivalents": true,
+    "general_has_rates": true,
+    "full_width_colspan": true,
+    "two_column_layout": true,
+    "no_fancy_scss": true,
+    "section_before_taxes": true,
+    "list_price_hidden": true,
+    "standard_price_hidden": true,
+    "view_id": 1857,
+    "module_version": "19.0.2.0.2",
+    "comercial_in_tabs": false,
+    "no_comercial_in_tabs": true,
+    "tabs_list": [
+      "General Information",
+      "Sales",
+      "Point of Sale",
+      "Prices",
+      "Purchase",
+      "Inventory",
+      "Accounting"
+    ]
+  },
+  "sample_product": {
+    "id": 14,
+    "name": "[MC-PROD-USD-20260707154114] MC-PROD Smoke USD 20260707154114"
+  }
+}

@@ -1,0 +1,64 @@
+=== CACHE + RESTART ===
+deleted_assets 1
+=== VALIDATE ===
+2026-07-07 16:20:44,233 33 WARNING ? odoo.tools.config: option logfile reads 'False' in the config file at /etc/odoo/odoo.conf but isn't a boolean option, skip 
+2026-07-07 16:20:44,233 33 WARNING ? odoo.tools.config: option logfile reads 'False' in the config file at /etc/odoo/odoo.conf but isn't a boolean option, skip 
+2026-07-07 16:20:44,233 33 INFO ? odoo: Odoo version 19.0-20260619 
+2026-07-07 16:20:44,233 33 INFO ? odoo: Using configuration file at /etc/odoo/odoo.conf 
+2026-07-07 16:20:44,233 33 INFO ? odoo: addons paths: _NamespacePath(['/usr/lib/python3/dist-packages/odoo/addons', '/var/lib/odoo/addons/19.0', '/mnt/enterprise/addons', '/mnt/custom', '/usr/lib/python3/dist-packages/addons']) 
+2026-07-07 16:20:44,233 33 INFO ? odoo: database: odoo@db:default 
+2026-07-07 16:20:44,454 33 INFO ? odoo.service.server: Stopping workers gracefully 
+2026-07-07 16:20:44,482 33 INFO hellenia_prod odoo.modules.loading: loading 1 modules... 
+2026-07-07 16:20:44,485 33 INFO hellenia_prod odoo.modules.loading: 1 modules loaded in 0.00s, 0 queries (+0 extra) 
+2026-07-07 16:20:44,514 33 INFO hellenia_prod odoo.modules.loading: loading 145 modules... 
+2026-07-07 16:20:45,397 33 WARNING hellenia_prod odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define models.Constraint on the model. 
+2026-07-07 16:20:45,484 33 WARNING hellenia_prod odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define models.Constraint on the model. 
+2026-07-07 16:20:45,531 33 WARNING hellenia_prod odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define models.Constraint on the model. 
+2026-07-07 16:20:45,583 33 INFO hellenia_prod odoo.modules.loading: 145 modules loaded in 1.07s, 0 queries (+0 extra) 
+2026-07-07 16:20:45,693 33 WARNING hellenia_prod odoo.fields: justech.do.fiscal.report.state: selection=[('draft', 'Borrador'), ('validated', 'Validado'), ('pending_approval', 'Requiere aprobación'), ('approved', 'Aprobado'), ('rejected', 'Rechazado'), ('generated', 'Generado'), ('done', 'Generado')] overrides existing selection; use selection_add instead 
+2026-07-07 16:20:45,704 33 WARNING hellenia_prod odoo.fields: Translated stored related field (justech.audit.rule.model_description) will not be computed correctly in all languages 
+2026-07-07 16:20:45,771 33 INFO hellenia_prod odoo.modules.loading: Modules loaded. 
+2026-07-07 16:20:45,838 33 INFO hellenia_prod odoo.registry: Registry loaded in 1.384s 
+{
+  "phase": "fix-commercial-prices-general",
+  "timestamp_utc": "2026-07-07T16:20:45.859676+00:00",
+  "database": "hellenia_prod",
+  "environment": "production",
+  "url": "https://odoo.hellenia.cloud",
+  "ok": false,
+  "checks": {
+    "no_comercial_tab": true,
+    "general_has_section_title": true,
+    "general_has_venta_group": true,
+    "general_has_compra_group": true,
+    "general_has_sale_fields": true,
+    "general_has_purchase_fields": true,
+    "general_has_equivalents": true,
+    "general_has_rates": true,
+    "full_width_colspan": true,
+    "two_column_layout": true,
+    "no_fancy_scss": true,
+    "section_before_taxes": true,
+    "list_price_hidden": true,
+    "standard_price_hidden": true,
+    "view_id": 1857,
+    "module_version": "19.0.2.0.2",
+    "comercial_in_tabs": false,
+    "tabs_list": [
+      "General Information",
+      "Sales",
+      "Point of Sale",
+      "Prices",
+      "Purchase",
+      "Inventory",
+      "Accounting"
+    ]
+  },
+  "sample_product": {
+    "id": 14,
+    "name": "[MC-PROD-USD-20260707154114] MC-PROD Smoke USD 20260707154114"
+  }
+}
+
+--- FIX_GENERAL_JSON=/var/lib/odoo/fix-commercial-prices-general-prod/validation.json ---
+VALIDATION_OK=false

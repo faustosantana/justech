@@ -6,19 +6,40 @@
         <field name="inherit_id" ref="product.product_template_form_view"/>
         <field name="priority">20</field>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='list_price']" position="before">
-                <group string="Precio comercial Justech" name="justech_commercial_pricing">
-                    <group>
-                        <field name="justech_sale_price"/>
-                        <field name="justech_sale_currency_id" options="{'no_create': True}"/>
-                        <field name="justech_accounting_sale_price" readonly="1"
-                               string="Equivalente contable (venta)"/>
+            <!-- Precios comerciales en Información general, ancho completo -->
+            <xpath expr="//page[@name='general_information']//group[@name='group_standard_price']" position="before">
+                <field name="justech_company_currency_id" invisible="1"/>
+                <group string="Precios Comerciales Justech"
+                       name="justech_commercial_pricing"
+                       colspan="2"
+                       col="2">
+                    <group string="Venta">
+                        <field name="justech_sale_price" string="Precio de venta"/>
+                        <field name="justech_sale_currency_id"
+                               string="Moneda de venta"
+                               options="{'no_create': True}"/>
+                        <field name="justech_accounting_sale_price"
+                               string="Equivalente contable DOP"
+                               widget="monetary"
+                               options="{'currency_field': 'justech_company_currency_id'}"
+                               readonly="1"/>
+                        <field name="justech_sale_rate_label"
+                               string="Tasa utilizada"
+                               readonly="1"/>
                     </group>
-                    <group>
-                        <field name="justech_purchase_price"/>
-                        <field name="justech_purchase_currency_id" options="{'no_create': True}"/>
-                        <field name="justech_accounting_purchase_price" readonly="1"
-                               string="Equivalente contable (compra)"/>
+                    <group string="Compra">
+                        <field name="justech_purchase_price" string="Precio de compra"/>
+                        <field name="justech_purchase_currency_id"
+                               string="Moneda de compra"
+                               options="{'no_create': True}"/>
+                        <field name="justech_accounting_purchase_price"
+                               string="Equivalente contable DOP"
+                               widget="monetary"
+                               options="{'currency_field': 'justech_company_currency_id'}"
+                               readonly="1"/>
+                        <field name="justech_purchase_rate_label"
+                               string="Tasa utilizada"
+                               readonly="1"/>
                     </group>
                 </group>
             </xpath>
@@ -30,6 +51,4 @@
             </xpath>
         </field>
     </record>
-
-    <!-- Restricción adicional de menús vía post_init_hook para IDs variables de sale -->
 </odoo>

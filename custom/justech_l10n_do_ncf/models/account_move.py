@@ -157,6 +157,8 @@ class AccountMove(models.Model):
             return self.env.ref("justech_l10n_do_base.doc_type_b04", raise_if_not_found=False)
         if self.move_type == "out_invoice" and self.debit_origin_id:
             return self.env.ref("justech_l10n_do_base.doc_type_b03", raise_if_not_found=False)
+        if self.move_type == "in_refund" and self.reversed_entry_id:
+            return self.reversed_entry_id.justech_do_document_type_id
         if self.move_type == "out_invoice":
             partner_default = self.partner_id.justech_do_get_default_sale_document_type()
             if partner_default:
@@ -166,8 +168,20 @@ class AccountMove(models.Model):
             return self.env.ref("justech_l10n_do_base.doc_type_b02", raise_if_not_found=False)
         if self.move_type == "in_invoice" and journal.justech_do_default_document_type_id:
             doc = journal.justech_do_default_document_type_id
-            if doc.prefix in ("B11", "B13"):
+            if doc.is_purchase_ncf():
                 return doc
+        return False
+
+    def _justech_purchase_ncf_prefixes(self):
+        return self.env["justech.do.fiscal.document.type"].PURCHASE_NCF_PREFIXES
+
+    def _justech_doc_supports_auto_ncf(self, doc):
+        if not doc:
+            return False
+        if self.move_type in ("out_invoice", "out_refund") and doc.is_sale_ncf():
+            return True
+        if self.move_type in ("in_invoice", "in_refund") and doc.is_purchase_ncf():
+            return True
         return False
 
     def _justech_should_auto_assign_ncf(self):
@@ -179,11 +193,7 @@ class AccountMove(models.Model):
         doc = self._justech_resolve_document_type()
         if not doc or not doc.auto_assign_on_post:
             return False
-        if self.move_type in ("out_invoice", "out_refund"):
-            return True
-        if self.move_type == "in_invoice" and doc.prefix in ("B11", "B13"):
-            return True
-        return False
+        return self._justech_doc_supports_auto_ncf(doc)
 
     def _justech_validate_manual_ncf(self):
         self.ensure_one()

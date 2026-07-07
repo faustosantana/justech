@@ -11,7 +11,9 @@ class TestJustechL10nDoBase(TransactionCase):
         cls.env = cls.env(context=dict(cls.env.context, tracking_disable=True))
 
     def test_document_types_loaded(self):
-        prefixes = {"B01", "B02", "B03", "B04", "B11", "B13"}
+        prefixes = {
+            "B01", "B02", "B03", "B04", "B11", "B12", "B13", "B14", "B15", "B16", "B17",
+        }
         types = self.env["justech.do.fiscal.document.type"].search([])
         found = set(types.mapped("prefix"))
         self.assertTrue(prefixes.issubset(found))

@@ -420,3 +420,64 @@ class TestJustechL10nDoNcf(TransactionCase):
         self.assertNotEqual(move1.justech_do_ncf, move2.justech_do_ncf)
         ncf_range.invalidate_recordset()
         self.assertEqual(ncf_range.next_sequence, 8002)
+
+    def test_extended_document_types_assign_ncf(self):
+        """Smoke NCF para B12, B14, B15, B16 (venta) y B17 (compra)."""
+        sale_types = ("doc_type_b12", "doc_type_b14", "doc_type_b15", "doc_type_b16")
+        for xml_id in sale_types:
+            doc = self.env.ref(f"justech_l10n_do_base.{xml_id}")
+            ncf_range = self._create_range(doc, start=5000, end=5099)
+            ncf_range.write({"journal_ids": [Command.set(self.journal_sale.ids)]})
+            ncf_range.action_activate()
+            partner = self.env["res.partner"].create(
+                {
+                    "name": f"Cliente {doc.prefix}",
+                    "vat": "131793916" if doc.requires_vat else False,
+                    "justech_do_default_document_type_id": doc.id,
+                }
+            )
+            inv = self.env["account.move"].create(
+                {
+                    **self._invoice_vals(partner),
+                    "justech_do_document_type_id": doc.id,
+                }
+            )
+            inv.action_post()
+            self.assertTrue(inv.justech_do_ncf.startswith(doc.prefix), doc.prefix)
+
+        doc_b17 = self.env.ref("justech_l10n_do_base.doc_type_b17")
+        ncf_range = self._create_range(
+            doc_b17,
+            start=7000,
+            end=7099,
+            journal_ids=[Command.set(self.journal_purchase.ids)],
+        )
+        ncf_range.action_activate()
+        self.journal_purchase.write(
+            {
+                "justech_do_use_ncf": True,
+                "justech_do_default_document_type_id": doc_b17.id,
+                "justech_do_document_type_ids": [Command.set([doc_b17.id])],
+            }
+        )
+        vendor = self.env["res.partner"].create({"name": "Proveedor Exterior", "supplier_rank": 1})
+        bill = self.env["account.move"].create(
+            {
+                "move_type": "in_invoice",
+                "partner_id": vendor.id,
+                "journal_id": self.journal_purchase.id,
+                "justech_do_document_type_id": doc_b17.id,
+                "invoice_line_ids": [
+                    Command.create(
+                        {
+                            "name": "Servicio exterior",
+                            "product_id": self.product.id,
+                            "quantity": 1,
+                            "price_unit": 1000.0,
+                        }
+                    )
+                ],
+            }
+        )
+        bill.action_post()
+        self.assertTrue(bill.justech_do_ncf.startswith("B17"))

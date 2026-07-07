@@ -1,0 +1,38 @@
+2026-07-07 13:22:29,730 1326 WARNING ? odoo.tools.config: option logfile reads 'False' in the config file at /etc/odoo/odoo.conf but isn't a boolean option, skip 
+2026-07-07 13:22:29,730 1326 WARNING ? odoo.tools.config: option logfile reads 'False' in the config file at /etc/odoo/odoo.conf but isn't a boolean option, skip 
+2026-07-07 13:22:29,730 1326 INFO ? odoo: Odoo version 19.0-20260619 
+2026-07-07 13:22:29,730 1326 INFO ? odoo: Using configuration file at /etc/odoo/odoo.conf 
+2026-07-07 13:22:29,730 1326 INFO ? odoo: addons paths: _NamespacePath(['/usr/lib/python3/dist-packages/odoo/addons', '/var/lib/odoo/addons/19.0', '/mnt/enterprise/addons', '/mnt/custom', '/usr/lib/python3/dist-packages/addons']) 
+2026-07-07 13:22:29,730 1326 INFO ? odoo: database: odoo@db:default 
+2026-07-07 13:22:29,936 1326 INFO ? odoo.service.server: Initiating shutdown 
+2026-07-07 13:22:29,936 1326 INFO ? odoo.service.server: Hit CTRL-C again or send a second signal to force the shutdown. 
+2026-07-07 13:22:29,963 1326 INFO hellenia_test odoo.modules.loading: loading 1 modules... 
+2026-07-07 13:22:29,966 1326 INFO hellenia_test odoo.modules.loading: 1 modules loaded in 0.00s, 0 queries (+0 extra) 
+2026-07-07 13:22:29,993 1326 INFO hellenia_test odoo.modules.loading: loading 137 modules... 
+2026-07-07 13:22:30,823 1326 WARNING hellenia_test odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define models.Constraint on the model. 
+2026-07-07 13:22:30,867 1326 WARNING hellenia_test odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define models.Constraint on the model. 
+2026-07-07 13:22:30,902 1326 WARNING hellenia_test odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define models.Constraint on the model. 
+2026-07-07 13:22:30,951 1326 INFO hellenia_test odoo.modules.loading: 137 modules loaded in 0.96s, 0 queries (+0 extra) 
+2026-07-07 13:22:31,051 1326 WARNING hellenia_test odoo.fields: justech.do.fiscal.report.state: selection=[('draft', 'Borrador'), ('validated', 'Validado'), ('pending_approval', 'Requiere aprobación'), ('approved', 'Aprobado'), ('rejected', 'Rechazado'), ('generated', 'Generado'), ('done', 'Generado')] overrides existing selection; use selection_add instead 
+2026-07-07 13:22:31,062 1326 WARNING hellenia_test odoo.fields: Translated stored related field (justech.audit.rule.model_description) will not be computed correctly in all languages 
+2026-07-07 13:22:31,126 1326 INFO hellenia_test odoo.modules.loading: Modules loaded. 
+2026-07-07 13:22:31,192 1326 INFO hellenia_test odoo.registry: Registry loaded in 1.256s 
+2026-07-07 13:22:32,269 1326 INFO hellenia_test odoo.addons.base.models.ir_actions_report: Will use the Wkhtmltopdf binary at /usr/local/bin/wkhtmltopdf 
+2026-07-07 13:22:32,279 1326 INFO hellenia_test odoo.addons.base.models.ir_actions_report: Will use the Wkhtmltoimage binary at /usr/local/bin/wkhtmltoimage 
+2026-07-07 13:22:34,817 1326 INFO hellenia_test odoo.addons.base.models.ir_actions_report: The PDF report has been generated for model: account.move, records [8437]. 
+2026-07-07 13:22:37,297 1326 INFO hellenia_test odoo.addons.base.models.ir_actions_report: The PDF report has been generated for model: account.move, records [8438]. 
+2026-07-07 13:22:39,812 1326 INFO hellenia_test odoo.addons.base.models.ir_actions_report: The PDF report has been generated for model: account.move, records [8439]. 
+2026-07-07 13:22:42,295 1326 INFO hellenia_test odoo.addons.base.models.ir_actions_report: The PDF report has been generated for model: account.move, records [8440]. 
+2026-07-07 13:22:44,774 1326 INFO hellenia_test odoo.addons.base.models.ir_actions_report: The PDF report has been generated for model: account.move, records [8441]. 
+2026-07-07 13:22:47,248 1326 INFO hellenia_test odoo.addons.base.models.ir_actions_report: The PDF report has been generated for model: account.move, records [8442]. 
+2026-07-07 13:22:49,720 1326 INFO hellenia_test odoo.addons.base.models.ir_actions_report: The PDF report has been generated for model: account.move, records [8443]. 
+FISCAL_RD_FINAL:{
+  "phase": "FISCAL-RD-FINAL",
+  "timestamp": "2026-07-07T13:22:31.219351+00:00",
+  "pass": true,
+  "errors": [],
+  "tax_orphans": {
+    "ok": true,
+    "detail": "0"
+  }
+}

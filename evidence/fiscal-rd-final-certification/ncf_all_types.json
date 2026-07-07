@@ -1,0 +1,89 @@
+{
+  "types": {
+    "b01_ncf": {
+      "ok": true,
+      "detail": "B0100020056"
+    },
+    "b01_pdf": {
+      "ok": true,
+      "detail": "72222"
+    },
+    "b02_ncf": {
+      "ok": true,
+      "detail": "B0200020205"
+    },
+    "b02_pdf": {
+      "ok": true,
+      "detail": "72001"
+    },
+    "b03_ncf": {
+      "ok": true,
+      "detail": "B0300020036"
+    },
+    "b03_pdf": {
+      "ok": true,
+      "detail": "72611"
+    },
+    "b12_ncf": {
+      "ok": true,
+      "detail": "B1200008980"
+    },
+    "b12_pdf": {
+      "ok": true,
+      "detail": "72162"
+    },
+    "b14_ncf": {
+      "ok": true,
+      "detail": "B1400009040"
+    },
+    "b14_pdf": {
+      "ok": true,
+      "detail": "72365"
+    },
+    "b15_ncf": {
+      "ok": true,
+      "detail": "B1500009100"
+    },
+    "b15_pdf": {
+      "ok": true,
+      "detail": "72401"
+    },
+    "b16_ncf": {
+      "ok": true,
+      "detail": "B1600009160"
+    },
+    "b16_pdf": {
+      "ok": true,
+      "detail": "72401"
+    },
+    "b04_ncf": {
+      "ok": true,
+      "detail": "B0400020041"
+    },
+    "b04_origin": {
+      "ok": true,
+      "detail": "B0100020056"
+    },
+    "b11_ncf": {
+      "ok": true,
+      "detail": "B1100020143"
+    },
+    "b13_ncf": {
+      "ok": true,
+      "detail": "B1300020003"
+    },
+    "b17_ncf": {
+      "ok": true,
+      "detail": "B1700009502"
+    }
+  },
+  "pass": true,
+  "all_types_loaded": {
+    "ok": true,
+    "detail": "missing=set()"
+  },
+  "no_duplicate_ncf": {
+    "ok": true,
+    "detail": "[]"
+  }
+}

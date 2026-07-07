@@ -19,7 +19,7 @@
     {"orden": 3, "columna_excel": "C", "nombre_dgii": "Tipo Id", "tipo_dato": "catalog"},
     {"orden": 4, "columna_excel": "D", "nombre_dgii": "NCF", "tipo_dato": "ncf"},
     {"orden": 5, "columna_excel": "E", "nombre_dgii": "NCF ó Documento Modificado", "tipo_dato": "ncf"},
-    {"orden": 6, "columna_excel": "F", "nombre_dgii": "Tipo Ingreso", "tipo_dato": "catalog", "campo_faltante": "justech_do_income_type_607"},
+    {"orden": 6, "columna_excel": "F", "nombre_dgii": "Tipo Ingreso", "tipo_dato": "catalog", "campo_odoo": "justech_do_income_type_607"},
     {"orden": 7, "columna_excel": "G", "nombre_dgii": "Fecha Comprobante", "tipo_dato": "date"},
     {"orden": 8, "columna_excel": "H", "nombre_dgii": "Fecha Retención", "tipo_dato": "date"},
     {"orden": 9, "columna_excel": "I", "nombre_dgii": "Monto Facturado", "tipo_dato": "decimal"},

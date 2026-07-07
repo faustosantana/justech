@@ -1,18 +1,37 @@
-# Justech Dominican Fiscal Base
+# Módulo Fiscal RD — Justech ERP
 
-Base layer for Hellenia Dominican fiscal localization (MVP).
+Estándar corporativo de localización fiscal para República Dominicana.
 
-## Features
+## Comprobantes NCF (serie B)
 
-- Fiscal document types B01, B02, B03, B04, B11, B13
-- Company fiscal settings
-- Journal NCF configuration
-- Partner RNC format validation
+| Prefijo | Uso |
+|---------|-----|
+| B01 | Factura de Crédito Fiscal |
+| B02 | Factura de Consumo |
+| B03 | Nota de Débito |
+| B04 | Nota de Crédito |
+| B11 | Comprobante de Compras |
+| B12 | Registro Único de Ingresos |
+| B13 | Gastos Menores |
+| B14 | Regímenes Especiales |
+| B15 | Gubernamental |
+| B16 | Exportaciones |
+| B17 | Pagos al Exterior |
 
-## Dependencies
+## Módulos
 
-- `account`, `contacts`, `l10n_do`
+- `justech_l10n_do_base` — tipos documentales, RNC, diarios
+- `justech_l10n_do_ncf` — rangos, asignación, anulación, PDF
+- `justech_l10n_do_reports` — DGII 606/607/608/609/623
 
-## Install
+## Certificación
 
-Install before `justech_l10n_do_ncf`.
+```bash
+odoo shell -d DB --no-http < scripts/fiscal-rd-final-certify-test.py
+```
+
+Evidencia: `evidence/fiscal-rd-final-certification/`
+
+## eNCF (serie E)
+
+Pendiente de módulo EDI/e-CF separado (E31–E47). Los exportadores 607/609 reconocen prefijos E en mapeos.

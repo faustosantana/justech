@@ -7,6 +7,12 @@ class JustechDoFiscalDocumentType(models.Model):
     _description = "Dominican Fiscal Document Type (NCF)"
     _order = "prefix, code"
 
+    # Serie B — comprobantes tradicionales DGII (NG 06-2018)
+    SALE_NCF_PREFIXES = ("B01", "B02", "B03", "B04", "B12", "B14", "B15", "B16")
+    PURCHASE_NCF_PREFIXES = ("B11", "B13", "B17")
+    CONSUMER_NCF_PREFIXES = ("B02", "B12", "E32", "E33")
+    ALL_NCF_PREFIXES = SALE_NCF_PREFIXES + PURCHASE_NCF_PREFIXES
+
     name = fields.Char(required=True, translate=True)
     code = fields.Char(
         string="Type Code",
@@ -86,3 +92,19 @@ class JustechDoFiscalDocumentType(models.Model):
         if len(ncf) != 11:
             return False, False
         return ncf[:3], int(ncf[3:])
+
+    def is_sale_ncf(self):
+        self.ensure_one()
+        return self.prefix in self.SALE_NCF_PREFIXES
+
+    def is_purchase_ncf(self):
+        self.ensure_one()
+        return self.prefix in self.PURCHASE_NCF_PREFIXES
+
+    @api.model
+    def get_by_prefix(self, prefix, company=None):
+        company = company or self.env.company
+        return self.search(
+            [("prefix", "=", prefix), ("company_id", "in", (False, company.id))],
+            limit=1,
+        )

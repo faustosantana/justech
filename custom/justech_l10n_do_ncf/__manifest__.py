@@ -1,6 +1,6 @@
 {
     "name": "Justech Dominican NCF",
-    "version": "19.0.1.5.2",
+    "version": "19.0.1.6.0",
     "category": "Accounting/Localizations",
     "summary": "NCF ranges, assignment and validation (Dominican Republic)",
     "description": """
@@ -34,7 +34,7 @@ NCF management for Dominican Republic — Justech MVP.
     "justech_register": {
         "module_code": "justech_l10n_do_ncf",
         "module_name": "Justech Dominican NCF",
-        "version": "19.0.1.5.2",
+        "version": "19.0.1.6.0",
         "category": "fiscal",
         "country": "DO",
         "localization": "l10n_do",

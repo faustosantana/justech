@@ -84,10 +84,13 @@ class JustechDoDgii607Exporter(models.AbstractModel):
         return "07"
 
     def _income_type_code(self, move):
-        """P1 pendiente — valor por defecto normativo para piloto."""
+        if move.justech_do_income_type_607:
+            return move.justech_do_income_type_607
         prefix = self._ncf_prefix(move)
         if prefix in ("B14", "E44"):
             return "02"
+        if prefix in ("B16", "E46"):
+            return "06"
         if prefix in self.CONSUMER_NCF_PREFIXES:
             return "01"
         return "01"

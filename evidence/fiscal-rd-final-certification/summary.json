@@ -1,0 +1,19 @@
+{
+  "pass": true,
+  "errors": [],
+  "ncf_pass": true,
+  "dgii_pass": true,
+  "supported_prefixes": [
+    "B01",
+    "B02",
+    "B03",
+    "B04",
+    "B11",
+    "B12",
+    "B13",
+    "B14",
+    "B15",
+    "B16",
+    "B17"
+  ]
+}

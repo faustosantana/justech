@@ -1,0 +1,25 @@
+{
+  "reports": {
+    "606": {
+      "ok": true,
+      "detail": "lines=11 export=DGII_606_202607.xlsx"
+    },
+    "607": {
+      "ok": true,
+      "detail": "lines=33 export=DGII_607_202607.xlsx"
+    },
+    "608": {
+      "ok": true,
+      "detail": "lines=0 export=No hay documentos fiscalmente válidos para exportar en el período seleccionado."
+    },
+    "609": {
+      "ok": true,
+      "detail": "lines=0 export=No hay documentos fiscalmente válidos para exportar en el período seleccionado."
+    },
+    "623": {
+      "ok": true,
+      "detail": "lines=0 export=No hay documentos fiscalmente válidos para exportar en el período seleccionado."
+    }
+  },
+  "pass": true
+}

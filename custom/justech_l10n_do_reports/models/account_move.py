@@ -1,9 +1,44 @@
-"""Campos configurables DGII 609 — pagos al exterior."""
-from odoo import fields, models
+"""Campos configurables DGII 609 / 607 — pagos al exterior e ingresos."""
+from odoo import api, fields, models
 
 
 class AccountMove(models.Model):
     _inherit = "account.move"
+
+    justech_do_income_type_607 = fields.Selection(
+        selection=[
+            ("01", "01 — Ingresos por operaciones (no financieros)"),
+            ("02", "02 — Ingresos financieros"),
+            ("03", "03 — Ingresos extraordinarios"),
+            ("04", "04 — Ingresos por arrendamientos"),
+            ("05", "05 — Ingresos por venta de activo depreciable"),
+            ("06", "06 — Otros ingresos"),
+        ],
+        string="Tipo de ingreso (607)",
+        compute="_compute_justech_do_income_type_607",
+        store=True,
+        readonly=False,
+        copy=False,
+        help="Clasificación DGII columna F del formato 607.",
+    )
+
+    @api.depends("justech_do_document_type_id", "justech_do_document_type_id.prefix", "justech_do_ncf")
+    def _compute_justech_do_income_type_607(self):
+        DocType = self.env["justech.do.fiscal.document.type"]
+        for move in self:
+            prefix = ""
+            if move.justech_do_document_type_id:
+                prefix = move.justech_do_document_type_id.prefix
+            elif move.justech_do_ncf and len(move.justech_do_ncf) >= 3:
+                prefix = move.justech_do_ncf[:3]
+            if prefix in ("B14", "E44"):
+                move.justech_do_income_type_607 = "02"
+            elif prefix in ("B16", "E46"):
+                move.justech_do_income_type_607 = "06"
+            elif prefix in DocType.CONSUMER_NCF_PREFIXES:
+                move.justech_do_income_type_607 = "01"
+            else:
+                move.justech_do_income_type_607 = move.justech_do_income_type_607 or "01"
 
     justech_do_foreign_609 = fields.Boolean(
         string="Reportar en 609",

@@ -3,6 +3,8 @@
 Implementación Odoo **Enterprise 19 On-Premise** para Hellenia, S.R.L. (República Dominicana).  
 Referencia profesional RD — administrado por **Justech**. Pipeline: **DEV → TEST → PRODUCCIÓN**.
 
+**Versión producto:** **Hellenia 1.0.0** — ver [evidence/release-1.0/](evidence/release-1.0/)
+
 **Estrategia v3.0:** [docs/PROJECT_STRATEGY.md](docs/PROJECT_STRATEGY.md)
 
 ## Estructura del repositorio
@@ -26,7 +28,7 @@ Referencia profesional RD — administrado por **Justech**. Pipeline: **DEV → 
 |----------|-----|------|
 | DEV | https://dev.hellenia.cloud | 19.0 Community → Enterprise (E1) |
 | TEST | https://test.hellenia.cloud | 19.0 |
-| PROD actual | odoo-pecv | 18 — **no tocar** |
+| PROD | https://odoo.hellenia.cloud | 19.0 EE — **Hellenia 1.0.0** |
 
 ## Documentación principal
 

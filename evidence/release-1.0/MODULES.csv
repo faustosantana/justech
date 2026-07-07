@@ -1,0 +1,19 @@
+module,version,category,release_1_0,summary
+hellenia_account,19.0.1.0.27,production,True,"Bancos, métodos de pago y cobros/pagos Hellenia"
+hellenia_base,19.0.1.0.0,production,True,Base configuration for Hellenia customizations
+hellenia_governance,19.0.1.1.0,production,True,"Permisos funcionales, roles y auditoría operativa"
+hellenia_inventory,19.0.1.0.0,production,True,Inventory extensions for Hellenia
+hellenia_pos,19.0.1.0.0,production,True,Point of Sale extensions for Hellenia
+hellenia_reports,19.0.1.5.7,production,True,Formatos corporativos PDF Hellenia
+hellenia_ui,19.0.1.0.4,production,True,Menú principal y etiquetas UI para Hellenia (upgrade-safe)
+hellenia_ux,19.0.1.2.0,production,True,Localización visual RD y experiencia de usuario Hellenia
+justech_admin,19.0.2.13.1,production,True,Centro de Control Justech Enterprise
+justech_core,19.0.1.0.0,production,True,Shared utilities for Justech Odoo modules
+justech_global_audit_log,19.0.4.1.0,production,True,Trazabilidad e investigación de cambios en Odoo
+justech_l10n_do_base,19.0.1.5.0,production,True,Base fiscal configuration for Dominican Republic (Justech)
+justech_l10n_do_ncf,19.0.1.6.0,production,True,"NCF ranges, assignment and validation (Dominican Republic)"
+justech_l10n_do_reports,19.0.1.13.0,production,True,"DGII reports 606–609, 623 — exportadores oficiales"
+justech_modules,19.0.1.8.2,production,True,Motor de licencias y catálogo comercial Justech
+justech_modules_test,19.0.1.0.0,test,False,DEV-only registration test for justech_modules
+justech_report_design,19.0.7.3.1,production,True,"Cotización, factura y conduce Hellenia — diseño Justech QWeb+SCSS"
+justech_report_templates_test,19.0.1.0.0,test,False,Ambiente TEST para inventariar reportes QWeb estándar vs personalizados

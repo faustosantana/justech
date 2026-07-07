@@ -1,0 +1,359 @@
+{
+  "phase": "RELEASE-1.0",
+  "timestamp": "2026-07-07T13:55:29.306454+00:00",
+  "database": "hellenia_prod",
+  "company": "Hellenia, S.R.L.",
+  "pass": true,
+  "blockers": [],
+  "warnings": [
+    "Optional module not installed: justech_core",
+    "Optional module not installed: hellenia_inventory",
+    "Optional module not installed: hellenia_pos"
+  ],
+  "sections": {
+    "modules": {
+      "justech_modules": {
+        "ok": true,
+        "detail": "19.0.1.8.2"
+      },
+      "justech_admin": {
+        "ok": true,
+        "detail": "19.0.2.13.1"
+      },
+      "justech_l10n_do_base": {
+        "ok": true,
+        "detail": "19.0.1.5.0"
+      },
+      "justech_l10n_do_ncf": {
+        "ok": true,
+        "detail": "19.0.1.6.0"
+      },
+      "justech_l10n_do_reports": {
+        "ok": true,
+        "detail": "19.0.1.13.0"
+      },
+      "justech_report_design": {
+        "ok": true,
+        "detail": "19.0.7.3.1"
+      },
+      "justech_global_audit_log": {
+        "ok": true,
+        "detail": "19.0.4.1.0"
+      },
+      "hellenia_base": {
+        "ok": true,
+        "detail": "19.0.1.0.0"
+      },
+      "hellenia_account": {
+        "ok": true,
+        "detail": "19.0.1.0.27"
+      },
+      "hellenia_ui": {
+        "ok": true,
+        "detail": "19.0.1.0.4"
+      },
+      "hellenia_ux": {
+        "ok": true,
+        "detail": "19.0.1.2.0"
+      },
+      "hellenia_reports": {
+        "ok": true,
+        "detail": "19.0.1.5.7"
+      },
+      "hellenia_governance": {
+        "ok": true,
+        "detail": "19.0.1.1.0"
+      }
+    },
+    "coa": {
+      "justech_catalog": {
+        "ok": true,
+        "detail": "292 cuentas, sample=['110100', '110101', '110102']"
+      }
+    },
+    "fiscal": {
+      "ncf_types": {
+        "ok": true,
+        "detail": "B01,B02,B03,B04,B11,B12,B13,B14,B15,B16,B17"
+      },
+      "ncf_ranges_active": {
+        "ok": true,
+        "detail": "11"
+      }
+    },
+    "dgii": {
+      "606": {
+        "ok": true,
+        "detail": "DGII_606_202607.xlsx"
+      },
+      "607": {
+        "ok": true,
+        "detail": "DGII_607_202607.xlsx"
+      },
+      "608": {
+        "ok": true,
+        "detail": "ok"
+      },
+      "609": {
+        "ok": true,
+        "detail": "ok"
+      },
+      "623": {
+        "ok": true,
+        "detail": "ok"
+      }
+    },
+    "accounting": {
+      "balance": {
+        "ok": true,
+        "detail": "ref ok"
+      },
+      "pnl": {
+        "ok": true,
+        "detail": "ref ok"
+      },
+      "journals": {
+        "ok": true,
+        "detail": "10"
+      },
+      "tax_orphans": {
+        "ok": true,
+        "detail": "0"
+      }
+    },
+    "justech_center": {
+      "activation_catalog": {
+        "ok": true,
+        "detail": "11"
+      },
+      "admin_dashboard": {
+        "ok": true,
+        "detail": "True"
+      },
+      "admin_key_model": {
+        "ok": true,
+        "detail": "False"
+      }
+    },
+    "audit": {
+      "module": {
+        "ok": true,
+        "detail": "installed"
+      },
+      "rules": {
+        "ok": true,
+        "detail": "3"
+      },
+      "logs": {
+        "ok": true,
+        "detail": "18"
+      }
+    },
+    "governance": {
+      "permissions": {
+        "ok": true,
+        "detail": "17"
+      },
+      "roles": {
+        "ok": true,
+        "detail": "9"
+      }
+    },
+    "security": {
+      "fiscal_manager_group": {
+        "ok": true,
+        "detail": "True"
+      },
+      "cron_active": {
+        "ok": true,
+        "detail": "32"
+      }
+    },
+    "pdf": {
+      "invoice_pdf": {
+        "ok": true,
+        "detail": "True"
+      },
+      "quotation_pdf": {
+        "ok": true,
+        "detail": "True"
+      }
+    }
+  },
+  "modules": [
+    {
+      "name": "justech_modules",
+      "state": "installed",
+      "version": "19.0.1.8.2",
+      "required_v1": true
+    },
+    {
+      "name": "justech_admin",
+      "state": "installed",
+      "version": "19.0.2.13.1",
+      "required_v1": true
+    },
+    {
+      "name": "justech_l10n_do_base",
+      "state": "installed",
+      "version": "19.0.1.5.0",
+      "required_v1": true
+    },
+    {
+      "name": "justech_l10n_do_ncf",
+      "state": "installed",
+      "version": "19.0.1.6.0",
+      "required_v1": true
+    },
+    {
+      "name": "justech_l10n_do_reports",
+      "state": "installed",
+      "version": "19.0.1.13.0",
+      "required_v1": true
+    },
+    {
+      "name": "justech_report_design",
+      "state": "installed",
+      "version": "19.0.7.3.1",
+      "required_v1": true
+    },
+    {
+      "name": "justech_global_audit_log",
+      "state": "installed",
+      "version": "19.0.4.1.0",
+      "required_v1": true
+    },
+    {
+      "name": "justech_core",
+      "state": "uninstalled",
+      "version": false,
+      "required_v1": false
+    },
+    {
+      "name": "hellenia_base",
+      "state": "installed",
+      "version": "19.0.1.0.0",
+      "required_v1": true
+    },
+    {
+      "name": "hellenia_account",
+      "state": "installed",
+      "version": "19.0.1.0.27",
+      "required_v1": true
+    },
+    {
+      "name": "hellenia_ui",
+      "state": "installed",
+      "version": "19.0.1.0.4",
+      "required_v1": true
+    },
+    {
+      "name": "hellenia_ux",
+      "state": "installed",
+      "version": "19.0.1.2.0",
+      "required_v1": true
+    },
+    {
+      "name": "hellenia_reports",
+      "state": "installed",
+      "version": "19.0.1.5.7",
+      "required_v1": true
+    },
+    {
+      "name": "hellenia_governance",
+      "state": "installed",
+      "version": "19.0.1.1.0",
+      "required_v1": true
+    },
+    {
+      "name": "hellenia_inventory",
+      "state": "uninstalled",
+      "version": false,
+      "required_v1": false
+    },
+    {
+      "name": "hellenia_pos",
+      "state": "uninstalled",
+      "version": false,
+      "required_v1": false
+    },
+    {
+      "name": "justech_modules_test",
+      "state": "uninstalled",
+      "version": false
+    },
+    {
+      "name": "justech_report_templates_test",
+      "state": "uninstalled",
+      "version": false
+    }
+  ],
+  "dgii": {
+    "606": {
+      "pass": true,
+      "counts": {
+        "all": 7,
+        "valid": 7,
+        "incomplete": 0,
+        "excluded": 0,
+        "cancelled": 0,
+        "partners_affected": 0,
+        "error_lines": 0
+      },
+      "export": "DGII_606_202607.xlsx"
+    },
+    "607": {
+      "pass": true,
+      "counts": {
+        "all": 23,
+        "valid": 23,
+        "incomplete": 0,
+        "excluded": 0,
+        "cancelled": 0,
+        "partners_affected": 0,
+        "error_lines": 0
+      },
+      "export": "DGII_607_202607.xlsx"
+    },
+    "608": {
+      "pass": true,
+      "counts": {
+        "all": 0,
+        "valid": 0,
+        "incomplete": 0,
+        "excluded": 0,
+        "cancelled": 0,
+        "partners_affected": 0,
+        "error_lines": 0
+      },
+      "export": "ok"
+    },
+    "609": {
+      "pass": true,
+      "counts": {
+        "all": 0,
+        "valid": 0,
+        "incomplete": 0,
+        "excluded": 0,
+        "cancelled": 0,
+        "partners_affected": 0,
+        "error_lines": 0
+      },
+      "export": "ok"
+    },
+    "623": {
+      "pass": true,
+      "counts": {
+        "all": 0,
+        "valid": 0,
+        "incomplete": 0,
+        "excluded": 0,
+        "cancelled": 0,
+        "partners_affected": 0,
+        "error_lines": 0
+      },
+      "export": "ok"
+    }
+  },
+  "purchase_606_incomplete": 0
+}

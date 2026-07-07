@@ -1,0 +1,74 @@
+{
+  "validation": {
+    "ok": true,
+    "counts": {
+      "all": 7,
+      "valid": 7,
+      "incomplete": 0,
+      "excluded": 0,
+      "cancelled": 0,
+      "partners_affected": 0,
+      "error_lines": 0
+    },
+    "errors_flat": []
+  },
+  "after_moves": [
+    {
+      "number": "FACTU/2026/07/0001",
+      "ncf": "B1100009200",
+      "expense_type_606": "02",
+      "dgii_state": "valid",
+      "incomplete": false,
+      "errors": []
+    },
+    {
+      "number": "FACTU/2026/07/0002",
+      "ncf": "B1100009201",
+      "expense_type_606": "02",
+      "dgii_state": "valid",
+      "incomplete": false,
+      "errors": []
+    },
+    {
+      "number": "FACTU/2026/07/0003",
+      "ncf": "B1100009202",
+      "expense_type_606": "02",
+      "dgii_state": "valid",
+      "incomplete": false,
+      "errors": []
+    },
+    {
+      "number": "FACTU/2026/07/0004",
+      "ncf": "B1100009300",
+      "expense_type_606": "02",
+      "dgii_state": "valid",
+      "incomplete": false,
+      "errors": []
+    },
+    {
+      "number": "FACTU/2026/07/0005",
+      "ncf": "B1300009400",
+      "expense_type_606": "06",
+      "dgii_state": "valid",
+      "incomplete": false,
+      "errors": []
+    },
+    {
+      "number": "FACTU/2026/07/0006",
+      "ncf": "B1700009500",
+      "expense_type_606": "02",
+      "dgii_state": "valid",
+      "incomplete": false,
+      "errors": []
+    },
+    {
+      "number": "FACTU/2026/07/0007",
+      "ncf": "B1100009301",
+      "expense_type_606": "02",
+      "dgii_state": "valid",
+      "incomplete": false,
+      "errors": []
+    }
+  ],
+  "strict_pass": true
+}

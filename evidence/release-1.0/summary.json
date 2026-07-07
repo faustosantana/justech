@@ -1,0 +1,12 @@
+{
+  "pass": true,
+  "blockers": [],
+  "warnings": [
+    "Optional module not installed: justech_core",
+    "Optional module not installed: hellenia_inventory",
+    "Optional module not installed: hellenia_pos"
+  ],
+  "modules_installed": 13,
+  "modules_required_installed": 13,
+  "dgii_pass": true
+}

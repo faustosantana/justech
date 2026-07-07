@@ -2,6 +2,26 @@
 
 ## [Unreleased]
 
+### Release 1.0 — ver evidence/release-1.0/CHANGELOG.md
+
+## [1.0.0] — 2026-07-07 — RELEASE-1
+
+### Incluido
+- Odoo 19 Enterprise On-Premise PROD (hellenia_prod)
+- Catálogo Justech 292 cuentas adoptado (COA-PROD)
+- Fiscal RD: NCF B01–B17, DGII 606/607/608/609/623
+- Centro Justech: módulos cliente, admin, licencias
+- Auditoría global, Governance Hellenia
+- Report design: factura, cotización, compra, conduce
+
+### Certificaciones
+- COA-2/COA-3, FISCAL-RD-FINAL, COA-PROD-FIX-606
+- RELEASE-1.0 auditoría + backup oficial
+
+### Sin cambios de código en RELEASE-1
+- Solo auditoría, backup, documentación y limpieza evidencia duplicada
+
+
 ### Added — Fase 5 DAFC certificación contable/fiscal RD (2026-06-30)
 - `scripts/certify-phase5-dafc.py` — auditoría bloques A–J + lab E2E con pagos/cobros
 - `docs/DOMINICAN_ACCOUNTING_CERTIFICATION.md`

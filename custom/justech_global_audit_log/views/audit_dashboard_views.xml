@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_justech_audit_dashboard_form" model="ir.ui.view">
+        <field name="name">justech.audit.dashboard.form</field>
+        <field name="model">justech.audit.dashboard</field>
+        <field name="arch" type="xml">
+            <form create="false" edit="false" delete="false">
+                <header>
+                    <button name="action_open_logs" type="object" string="Ver logs" class="btn-primary"/>
+                    <button name="action_open_rules" type="object" string="Ver reglas"/>
+                    <button name="action_export_wizard" type="object" string="Exportar CSV"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>Dashboard de auditoría Justech</h1>
+                    </div>
+                    <group>
+                        <group string="Volumen">
+                            <field name="total_logs"/>
+                            <field name="logs_today"/>
+                            <field name="logs_week"/>
+                        </group>
+                        <group string="Configuración activa">
+                            <field name="active_policies"/>
+                            <field name="active_rules"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Modelo más auditado">
+                            <field name="top_model_name"/>
+                            <field name="top_model_count"/>
+                        </group>
+                        <group string="Retención">
+                            <field name="last_retention_run"/>
+                            <field name="last_purged_count"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_justech_audit_dashboard" model="ir.actions.act_window">
+        <field name="name">Dashboard auditoría</field>
+        <field name="res_model">justech.audit.dashboard</field>
+        <field name="view_mode">form</field>
+        <field name="target">current</field>
+    </record>
+</odoo>

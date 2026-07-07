@@ -1,0 +1,200 @@
+ Container hellenia-test-db-1 Running 
+ Container hellenia-test-db-1 Waiting 
+ Container hellenia-test-db-1 Healthy 
+ Container hellenia-test-odoo-run-1d45cffd97c5 Creating 
+ Container hellenia-test-odoo-run-1d45cffd97c5 Created 
+2026-07-07 11:45:35,310 1 WARNING ? odoo.tools.config: option logfile reads 'False' in the config file at /etc/odoo/odoo.conf but isn't a boolean option, skip 
+2026-07-07 11:45:35,310 1 WARNING ? odoo.tools.config: option logfile reads 'False' in the config file at /etc/odoo/odoo.conf but isn't a boolean option, skip 
+2026-07-07 11:45:35,310 1 WARNING ? odoo.tools.config: missing --http-interface/http_interface, using 0.0.0.0 by default, will change to 127.0.0.1 in 20.0 
+2026-07-07 11:45:35,310 1 INFO ? odoo: Odoo version 19.0-20260619 
+2026-07-07 11:45:35,310 1 INFO ? odoo: Using configuration file at /etc/odoo/odoo.conf 
+2026-07-07 11:45:35,311 1 INFO ? odoo: addons paths: _NamespacePath(['/usr/lib/python3/dist-packages/odoo/addons', '/var/lib/odoo/addons/19.0', '/mnt/enterprise/addons', '/mnt/custom', '/usr/lib/python3/dist-packages/addons']) 
+2026-07-07 11:45:35,311 1 INFO ? odoo: database: odoo@db:5432 
+2026-07-07 11:45:35,584 1 INFO hellenia_test odoo.modules.loading: loading 1 modules... 
+2026-07-07 11:45:35,587 1 INFO hellenia_test odoo.modules.loading: 1 modules loaded in 0.00s, 0 queries (+0 extra) 
+2026-07-07 11:45:35,607 1 INFO hellenia_test odoo.modules.loading: updating modules list 
+2026-07-07 11:45:35,611 1 INFO hellenia_test odoo.addons.base.models.ir_module: ALLOW access to module.update_list on [] to user __system__ #1 via n/a 
+2026-07-07 11:45:37,548 1 INFO hellenia_test odoo.addons.base.models.ir_module: ALLOW access to module.button_install on ['Justech Global Audit Log'] to user __system__ #1 via n/a 
+2026-07-07 11:45:38,102 1 INFO hellenia_test odoo.modules.loading: loading 137 modules... 
+2026-07-07 11:45:39,033 1 WARNING hellenia_test odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define models.Constraint on the model. 
+2026-07-07 11:45:39,079 1 WARNING hellenia_test odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define models.Constraint on the model. 
+2026-07-07 11:45:39,112 1 WARNING hellenia_test odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define models.Constraint on the model. 
+2026-07-07 11:45:39,163 1 INFO hellenia_test odoo.modules.loading: Loading module justech_global_audit_log (137/137) 
+2026-07-07 11:45:39,279 1 WARNING hellenia_test odoo.fields: justech.do.fiscal.report.state: selection=[('draft', 'Borrador'), ('validated', 'Validado'), ('pending_approval', 'Requiere aprobación'), ('approved', 'Aprobado'), ('rejected', 'Rechazado'), ('generated', 'Generado'), ('done', 'Generado')] overrides existing selection; use selection_add instead 
+2026-07-07 11:45:39,317 1 WARNING hellenia_test odoo.fields: Translated stored related field (justech.audit.rule.model_description) will not be computed correctly in all languages 
+2026-07-07 11:45:39,354 1 INFO hellenia_test odoo.registry: module justech_global_audit_log: creating or updating database tables 
+2026-07-07 11:45:39,414 1 WARNING hellenia_test py.warnings: /mnt/custom/justech_global_audit_log/models/audit_log.py:44: DeprecationWarning: Deprecated since 19.0, use self.env.cr directly
+  File "/usr/bin/odoo", line 6, in <module>
+    odoo.cli.main()
+  File "/usr/lib/python3/dist-packages/odoo/cli/command.py", line 133, in main
+    command().run(args)
+  File "/usr/lib/python3/dist-packages/odoo/cli/server.py", line 127, in run
+    main(args)
+  File "/usr/lib/python3/dist-packages/odoo/cli/server.py", line 118, in main
+    rc = server.start(preload=config['db_name'], stop=stop)
+  File "/usr/lib/python3/dist-packages/odoo/service/server.py", line 1636, in start
+    rc = server.run(preload, stop)
+  File "/usr/lib/python3/dist-packages/odoo/service/server.py", line 691, in run
+    rc = preload_registries(preload)
+  File "/usr/lib/python3/dist-packages/odoo/service/server.py", line 1550, in preload_registries
+    registry = Registry.new(dbname, update_module=update_module, install_modules=config['init'], upgrade_modules=config['update'], reinit_modules=config['reinit'])
+  File "/usr/lib/python3/dist-packages/odoo/tools/func.py", line 88, in locked
+    return func(inst, *args, **kwargs)
+  File "/usr/lib/python3/dist-packages/odoo/orm/registry.py", line 183, in new
+    load_modules(
+  File "/usr/lib/python3/dist-packages/odoo/modules/loading.py", line 464, in load_modules
+    load_module_graph(
+  File "/usr/lib/python3/dist-packages/odoo/modules/loading.py", line 194, in load_module_graph
+    registry.init_models(env.cr, model_names, {'module': package.name}, update_operation == 'install')
+  File "/usr/lib/python3/dist-packages/odoo/orm/registry.py", line 752, in init_models
+    model.init()
+  File "/mnt/custom/justech_global_audit_log/models/audit_log.py", line 44, in init
+    self._cr,
+ 
+2026-07-07 11:45:39,419 1 WARNING hellenia_test py.warnings: /mnt/custom/justech_global_audit_log/models/audit_log.py:50: DeprecationWarning: Deprecated since 19.0, use self.env.cr directly
+  File "/usr/bin/odoo", line 6, in <module>
+    odoo.cli.main()
+  File "/usr/lib/python3/dist-packages/odoo/cli/command.py", line 133, in main
+    command().run(args)
+  File "/usr/lib/python3/dist-packages/odoo/cli/server.py", line 127, in run
+    main(args)
+  File "/usr/lib/python3/dist-packages/odoo/cli/server.py", line 118, in main
+    rc = server.start(preload=config['db_name'], stop=stop)
+  File "/usr/lib/python3/dist-packages/odoo/service/server.py", line 1636, in start
+    rc = server.run(preload, stop)
+  File "/usr/lib/python3/dist-packages/odoo/service/server.py", line 691, in run
+    rc = preload_registries(preload)
+  File "/usr/lib/python3/dist-packages/odoo/service/server.py", line 1550, in preload_registries
+    registry = Registry.new(dbname, update_module=update_module, install_modules=config['init'], upgrade_modules=config['update'], reinit_modules=config['reinit'])
+  File "/usr/lib/python3/dist-packages/odoo/tools/func.py", line 88, in locked
+    return func(inst, *args, **kwargs)
+  File "/usr/lib/python3/dist-packages/odoo/orm/registry.py", line 183, in new
+    load_modules(
+  File "/usr/lib/python3/dist-packages/odoo/modules/loading.py", line 464, in load_modules
+    load_module_graph(
+  File "/usr/lib/python3/dist-packages/odoo/modules/loading.py", line 194, in load_module_graph
+    registry.init_models(env.cr, model_names, {'module': package.name}, update_operation == 'install')
+  File "/usr/lib/python3/dist-packages/odoo/orm/registry.py", line 752, in init_models
+    model.init()
+  File "/mnt/custom/justech_global_audit_log/models/audit_log.py", line 50, in init
+    self._cr,
+ 
+2026-07-07 11:45:39,421 1 WARNING hellenia_test py.warnings: /mnt/custom/justech_global_audit_log/models/audit_log.py:56: DeprecationWarning: Deprecated since 19.0, use self.env.cr directly
+  File "/usr/bin/odoo", line 6, in <module>
+    odoo.cli.main()
+  File "/usr/lib/python3/dist-packages/odoo/cli/command.py", line 133, in main
+    command().run(args)
+  File "/usr/lib/python3/dist-packages/odoo/cli/server.py", line 127, in run
+    main(args)
+  File "/usr/lib/python3/dist-packages/odoo/cli/server.py", line 118, in main
+    rc = server.start(preload=config['db_name'], stop=stop)
+  File "/usr/lib/python3/dist-packages/odoo/service/server.py", line 1636, in start
+    rc = server.run(preload, stop)
+  File "/usr/lib/python3/dist-packages/odoo/service/server.py", line 691, in run
+    rc = preload_registries(preload)
+  File "/usr/lib/python3/dist-packages/odoo/service/server.py", line 1550, in preload_registries
+    registry = Registry.new(dbname, update_module=update_module, install_modules=config['init'], upgrade_modules=config['update'], reinit_modules=config['reinit'])
+  File "/usr/lib/python3/dist-packages/odoo/tools/func.py", line 88, in locked
+    return func(inst, *args, **kwargs)
+  File "/usr/lib/python3/dist-packages/odoo/orm/registry.py", line 183, in new
+    load_modules(
+  File "/usr/lib/python3/dist-packages/odoo/modules/loading.py", line 464, in load_modules
+    load_module_graph(
+  File "/usr/lib/python3/dist-packages/odoo/modules/loading.py", line 194, in load_module_graph
+    registry.init_models(env.cr, model_names, {'module': package.name}, update_operation == 'install')
+  File "/usr/lib/python3/dist-packages/odoo/orm/registry.py", line 752, in init_models
+    model.init()
+  File "/mnt/custom/justech_global_audit_log/models/audit_log.py", line 56, in init
+    self._cr,
+ 
+2026-07-07 11:45:40,696 1 WARNING hellenia_test py.warnings: /mnt/custom/justech_l10n_do_ncf/models/account_move.py:136: DeprecationWarning: Deprecated since 19.0, use self.env.cr directly
+  File "/usr/bin/odoo", line 6, in <module>
+    odoo.cli.main()
+  File "/usr/lib/python3/dist-packages/odoo/cli/command.py", line 133, in main
+    command().run(args)
+  File "/usr/lib/python3/dist-packages/odoo/cli/server.py", line 127, in run
+    main(args)
+  File "/usr/lib/python3/dist-packages/odoo/cli/server.py", line 118, in main
+    rc = server.start(preload=config['db_name'], stop=stop)
+  File "/usr/lib/python3/dist-packages/odoo/service/server.py", line 1636, in start
+    rc = server.run(preload, stop)
+  File "/usr/lib/python3/dist-packages/odoo/service/server.py", line 691, in run
+    rc = preload_registries(preload)
+  File "/usr/lib/python3/dist-packages/odoo/service/server.py", line 1550, in preload_registries
+    registry = Registry.new(dbname, update_module=update_module, install_modules=config['init'], upgrade_modules=config['update'], reinit_modules=config['reinit'])
+  File "/usr/lib/python3/dist-packages/odoo/tools/func.py", line 88, in locked
+    return func(inst, *args, **kwargs)
+  File "/usr/lib/python3/dist-packages/odoo/orm/registry.py", line 183, in new
+    load_modules(
+  File "/usr/lib/python3/dist-packages/odoo/modules/loading.py", line 464, in load_modules
+    load_module_graph(
+  File "/usr/lib/python3/dist-packages/odoo/modules/loading.py", line 194, in load_module_graph
+    registry.init_models(env.cr, model_names, {'module': package.name}, update_operation == 'install')
+  File "/usr/lib/python3/dist-packages/odoo/orm/registry.py", line 752, in init_models
+    model.init()
+  File "/mnt/custom/justech_l10n_do_ncf/models/account_move.py", line 136, in init
+    self._cr.execute(
+ 
+2026-07-07 11:45:41,638 1 WARNING hellenia_test odoo.addons.base.models.ir_model: Two fields (main_module_code, display_name) of justech.client.module.line() have the same label: Categoría. [Modules: justech_admin and justech_admin] 
+2026-07-07 11:45:41,638 1 WARNING hellenia_test odoo.addons.base.models.ir_model: Two fields (name, display_name) of justech.client.module.line() have the same label: Categoría. [Modules: justech_admin and justech_admin] 
+2026-07-07 11:45:41,638 1 WARNING hellenia_test odoo.addons.base.models.ir_model: Two fields (target_company_id, company_id) of justech.client.module.action.wizard() have the same label: Empresa. [Modules: justech_admin and justech_admin] 
+2026-07-07 11:45:41,641 1 WARNING hellenia_test odoo.addons.base.models.ir_model: Two fields (invoice_name, move_id) of hellenia.payment.withholding.line() have the same label: Factura. [Modules: hellenia_account and hellenia_account] 
+2026-07-07 11:45:41,641 1 WARNING hellenia_test odoo.addons.base.models.ir_model: Two fields (invoice_name, move_id) of hellenia.payment.application.line() have the same label: Factura. [Modules: hellenia_account and hellenia_account] 
+2026-07-07 11:45:42,838 1 INFO hellenia_test odoo.modules.loading: loading justech_global_audit_log/security/justech_audit_security.xml 
+2026-07-07 11:45:42,848 1 INFO hellenia_test odoo.modules.loading: loading justech_global_audit_log/security/ir.model.access.csv 
+2026-07-07 11:45:42,861 1 INFO hellenia_test odoo.modules.loading: loading justech_global_audit_log/data/audit_field_exclude_data.xml 
+2026-07-07 11:45:42,869 1 INFO hellenia_test odoo.modules.loading: loading justech_global_audit_log/data/audit_retention_data.xml 
+2026-07-07 11:45:42,875 1 INFO hellenia_test odoo.modules.loading: loading justech_global_audit_log/data/audit_cron.xml 
+2026-07-07 11:45:43,019 1 INFO hellenia_test odoo.modules.loading: loading justech_global_audit_log/views/audit_policy_views.xml 
+2026-07-07 11:45:43,043 1 INFO hellenia_test odoo.modules.loading: loading justech_global_audit_log/views/audit_rule_views.xml 
+2026-07-07 11:45:43,059 1 INFO hellenia_test odoo.modules.loading: loading justech_global_audit_log/views/audit_field_exclude_views.xml 
+2026-07-07 11:45:43,067 1 INFO hellenia_test odoo.modules.loading: loading justech_global_audit_log/views/audit_user_exclude_views.xml 
+2026-07-07 11:45:43,074 1 INFO hellenia_test odoo.modules.loading: loading justech_global_audit_log/views/audit_log_views.xml 
+2026-07-07 11:45:43,089 1 INFO hellenia_test odoo.modules.loading: loading justech_global_audit_log/views/audit_retention_views.xml 
+2026-07-07 11:45:43,097 1 INFO hellenia_test odoo.modules.loading: loading justech_global_audit_log/views/audit_dashboard_views.xml 
+2026-07-07 11:45:43,105 1 INFO hellenia_test odoo.modules.loading: loading justech_global_audit_log/wizards/audit_export_wizard_views.xml 
+2026-07-07 11:45:43,111 1 INFO hellenia_test odoo.modules.loading: loading justech_global_audit_log/views/menu.xml 
+2026-07-07 11:45:43,146 1 INFO hellenia_test odoo.addons.base.models.ir_module: module justech_global_audit_log: no translation for language es_DO 
+2026-07-07 11:45:43,148 1 WARNING hellenia_test py.warnings: /usr/lib/python3/dist-packages/odoo/modules/module.py:401: DeprecationWarning: Since 19.0, use Manifest
+  File "/usr/bin/odoo", line 6, in <module>
+    odoo.cli.main()
+  File "/usr/lib/python3/dist-packages/odoo/cli/command.py", line 133, in main
+    command().run(args)
+  File "/usr/lib/python3/dist-packages/odoo/cli/server.py", line 127, in run
+    main(args)
+  File "/usr/lib/python3/dist-packages/odoo/cli/server.py", line 118, in main
+    rc = server.start(preload=config['db_name'], stop=stop)
+  File "/usr/lib/python3/dist-packages/odoo/service/server.py", line 1636, in start
+    rc = server.run(preload, stop)
+  File "/usr/lib/python3/dist-packages/odoo/service/server.py", line 691, in run
+    rc = preload_registries(preload)
+  File "/usr/lib/python3/dist-packages/odoo/service/server.py", line 1550, in preload_registries
+    registry = Registry.new(dbname, update_module=update_module, install_modules=config['init'], upgrade_modules=config['update'], reinit_modules=config['reinit'])
+  File "/usr/lib/python3/dist-packages/odoo/tools/func.py", line 88, in locked
+    return func(inst, *args, **kwargs)
+  File "/usr/lib/python3/dist-packages/odoo/orm/registry.py", line 183, in new
+    load_modules(
+  File "/usr/lib/python3/dist-packages/odoo/modules/loading.py", line 464, in load_modules
+    load_module_graph(
+  File "/usr/lib/python3/dist-packages/odoo/modules/loading.py", line 243, in load_module_graph
+    getattr(py_module, post_init)(env)
+  File "/mnt/custom/justech_global_audit_log/hooks.py", line 13, in post_init_hook
+    _register_justech_module(env)
+  File "/mnt/custom/justech_global_audit_log/hooks.py", line 21, in _register_justech_module
+    register_from_manifest_hook(env, "justech_global_audit_log")
+  File "/mnt/custom/justech_modules/hooks_register.py", line 17, in register_from_manifest_hook
+    manifest = load_manifest(module_name)
+  File "/usr/lib/python3/dist-packages/odoo/modules/module.py", line 401, in load_manifest
+    warnings.warn("Since 19.0, use Manifest", DeprecationWarning)
+ 
+2026-07-07 11:45:43,190 1 INFO hellenia_test odoo.modules.loading: Module justech_global_audit_log loaded in 4.03s, 5388 queries (+5388 other) 
+2026-07-07 11:45:43,190 1 INFO hellenia_test odoo.modules.loading: 137 modules loaded in 5.09s, 5388 queries (+5388 extra) 
+2026-07-07 11:45:43,260 1 WARNING hellenia_test odoo.fields: justech.do.fiscal.report.state: selection=[('draft', 'Borrador'), ('validated', 'Validado'), ('pending_approval', 'Requiere aprobación'), ('approved', 'Aprobado'), ('rejected', 'Rechazado'), ('generated', 'Generado'), ('done', 'Generado')] overrides existing selection; use selection_add instead 
+2026-07-07 11:45:43,309 1 WARNING hellenia_test odoo.fields: Translated stored related field (justech.audit.rule.model_description) will not be computed correctly in all languages 
+2026-07-07 11:45:43,514 1 INFO hellenia_test odoo.modules.loading: Model hellenia.pos.audit.log is declared but cannot be loaded! (Perhaps a module was partially removed or renamed) 
+2026-07-07 11:45:44,530 1 INFO hellenia_test odoo.modules.loading: Modules loaded. 
+2026-07-07 11:45:44,547 1 INFO hellenia_test odoo.registry: Registry changed, signaling through the database 
+2026-07-07 11:45:44,548 1 INFO hellenia_test odoo.registry: Registry loaded in 9.007s 
+2026-07-07 11:45:44,549 1 INFO hellenia_test odoo.service.server: Initiating shutdown 
+2026-07-07 11:45:44,549 1 INFO hellenia_test odoo.service.server: Hit CTRL-C again or send a second signal to force the shutdown. 
+2026-07-07 11:45:44,549 1 INFO hellenia_test odoo.sql_db: ConnectionPool(read/write;used=0/count=0/max=64): Closed 1 connections  

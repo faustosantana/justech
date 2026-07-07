@@ -1,0 +1,69 @@
+=== AUDIT-2 Justech Global Audit Log — TEST only ===
+Transfer starting: 40 files
+created directory /opt/odoo-projects/hellenia/custom/justech_global_audit_log
+./
+__init__.py
+__manifest__.py
+hooks.py
+data/
+data/audit_cron.xml
+data/audit_field_exclude_data.xml
+data/audit_retention_data.xml
+models/
+models/__init__.py
+models/audit_dashboard.py
+models/audit_field_exclude.py
+models/audit_log.py
+models/audit_policy.py
+models/audit_retention.py
+models/audit_rule.py
+models/audit_service.py
+models/audit_user_exclude.py
+models/base.py
+security/
+security/ir.model.access.csv
+security/justech_audit_security.xml
+tests/
+tests/__init__.py
+tests/test_audit_performance.py
+tests/test_audit_retention.py
+tests/test_audit_service.py
+views/
+views/audit_dashboard_views.xml
+views/audit_field_exclude_views.xml
+views/audit_log_views.xml
+views/audit_policy_views.xml
+views/audit_retention_views.xml
+views/audit_rule_views.xml
+views/audit_user_exclude_views.xml
+views/menu.xml
+wizards/
+wizards/__init__.py
+wizards/audit_export_wizard.py
+wizards/audit_export_wizard_views.xml
+
+sent 22527 bytes  received 788 bytes  103118 bytes/sec
+total size is 70453  speedup is 3.02
+ Container hellenia-test-odoo-1 Stopping 
+ Container hellenia-test-odoo-1 Stopped 
+--- Install/upgrade module ---
+  File "/usr/lib/python3/dist-packages/odoo/modules/loading.py", line 59, in load_data
+    convert_file(env, package.name, filename, idref, mode, noupdate=kind == 'demo')
+  File "/usr/lib/python3/dist-packages/odoo/tools/convert.py", line 693, in convert_file
+    convert_xml_import(env, module, fp, idref, mode, noupdate)
+  File "/usr/lib/python3/dist-packages/odoo/tools/convert.py", line 792, in convert_xml_import
+    obj.parse(doc.getroot())
+  File "/usr/lib/python3/dist-packages/odoo/tools/convert.py", line 663, in parse
+    self._tag_root(de)
+  File "/usr/lib/python3/dist-packages/odoo/tools/convert.py", line 618, in _tag_root
+    raise ParseError('while parsing %s:%s, somewhere inside\n%s' % (
+odoo.tools.convert.ParseError: while parsing /mnt/custom/justech_global_audit_log/security/justech_audit_security.xml:3, somewhere inside
+<record id="group_justech_audit_manager" model="res.groups">
+        <field name="name">Justech Audit Manager</field>
+        <field name="category_id" ref="base.module_category_administration"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_system'))]"/>
+    </record>
+2026-07-07 11:45:22,599 1 INFO hellenia_test odoo.service.server: Initiating shutdown 
+2026-07-07 11:45:22,599 1 INFO hellenia_test odoo.service.server: Hit CTRL-C again or send a second signal to force the shutdown. 
+2026-07-07 11:45:22,599 1 INFO hellenia_test odoo.sql_db: ConnectionPool(read/write;used=0/count=0/max=64): Closed 1 connections  
+

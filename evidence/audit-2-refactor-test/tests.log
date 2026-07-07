@@ -1,0 +1,77 @@
+ Container hellenia-test-db-1 Running 
+ Container hellenia-test-db-1 Waiting 
+ Container hellenia-test-db-1 Healthy 
+ Container hellenia-test-odoo-run-5fdfd5125aa0 Creating 
+ Container hellenia-test-odoo-run-5fdfd5125aa0 Created 
+2026-07-07 11:54:04,394 1 WARNING ? odoo.tools.config: option logfile reads 'False' in the config file at /etc/odoo/odoo.conf but isn't a boolean option, skip 
+2026-07-07 11:54:04,394 1 WARNING ? odoo.tools.config: option logfile reads 'False' in the config file at /etc/odoo/odoo.conf but isn't a boolean option, skip 
+2026-07-07 11:54:04,394 1 WARNING ? odoo.tools.config: missing --http-interface/http_interface, using 0.0.0.0 by default, will change to 127.0.0.1 in 20.0 
+2026-07-07 11:54:04,395 1 INFO ? odoo: Odoo version 19.0-20260619 
+2026-07-07 11:54:04,395 1 INFO ? odoo: Using configuration file at /etc/odoo/odoo.conf 
+2026-07-07 11:54:04,395 1 INFO ? odoo: addons paths: _NamespacePath(['/usr/lib/python3/dist-packages/odoo/addons', '/var/lib/odoo/addons/19.0', '/mnt/enterprise/addons', '/mnt/custom', '/usr/lib/python3/dist-packages/addons']) 
+2026-07-07 11:54:04,395 1 INFO ? odoo: database: odoo@db:5432 
+2026-07-07 11:54:04,627 1 INFO ? odoo.service.server: HTTP service (werkzeug) running on dd1d1484e771:8069 
+2026-07-07 11:54:04,643 1 INFO hellenia_test odoo.tests.common: Importing test framework 
+2026-07-07 11:54:04,688 1 INFO hellenia_test odoo.modules.loading: loading 1 modules... 
+2026-07-07 11:54:04,692 1 INFO hellenia_test odoo.modules.loading: 1 modules loaded in 0.00s, 0 queries (+0 extra) 
+2026-07-07 11:54:04,714 1 INFO hellenia_test odoo.modules.loading: updating modules list 
+2026-07-07 11:54:04,718 1 INFO hellenia_test odoo.addons.base.models.ir_module: ALLOW access to module.update_list on [] to user __system__ #1 via n/a 
+2026-07-07 11:54:06,698 1 INFO hellenia_test odoo.addons.base.models.ir_module: ALLOW access to module.button_upgrade on ['Justech Global Audit Log'] to user __system__ #1 via n/a 
+2026-07-07 11:54:06,698 1 INFO hellenia_test odoo.addons.base.models.ir_module: ALLOW access to module.update_list on ['Justech Global Audit Log'] to user __system__ #1 via n/a 
+2026-07-07 11:54:08,432 1 INFO hellenia_test odoo.addons.base.models.ir_module: ALLOW access to module.button_install on [] to user __system__ #1 via n/a 
+2026-07-07 11:54:08,938 1 INFO hellenia_test odoo.modules.loading: loading 137 modules... 
+2026-07-07 11:54:08,939 1 INFO hellenia_test odoo.modules.loading: Loading module justech_global_audit_log (3/137) 
+2026-07-07 11:54:08,968 1 WARNING hellenia_test odoo.fields: Translated stored related field (justech.audit.rule.model_description) will not be computed correctly in all languages 
+2026-07-07 11:54:08,971 1 INFO hellenia_test odoo.registry: module justech_global_audit_log: creating or updating database tables 
+2026-07-07 11:54:09,640 1 INFO hellenia_test odoo.modules.loading: loading justech_global_audit_log/security/justech_audit_security.xml 
+2026-07-07 11:54:09,646 1 INFO hellenia_test odoo.modules.loading: loading justech_global_audit_log/security/ir.model.access.csv 
+2026-07-07 11:54:09,661 1 INFO hellenia_test odoo.modules.loading: loading justech_global_audit_log/data/audit_field_exclude_data.xml 
+2026-07-07 11:54:09,665 1 INFO hellenia_test odoo.modules.loading: loading justech_global_audit_log/data/audit_retention_data.xml 
+2026-07-07 11:54:09,667 1 INFO hellenia_test odoo.modules.loading: loading justech_global_audit_log/data/audit_cron.xml 
+2026-07-07 11:54:09,669 1 INFO hellenia_test odoo.modules.loading: loading justech_global_audit_log/views/audit_policy_views.xml 
+2026-07-07 11:54:09,692 1 INFO hellenia_test odoo.modules.loading: loading justech_global_audit_log/views/audit_rule_views.xml 
+2026-07-07 11:54:09,710 1 INFO hellenia_test odoo.modules.loading: loading justech_global_audit_log/views/audit_field_exclude_views.xml 
+2026-07-07 11:54:09,718 1 INFO hellenia_test odoo.modules.loading: loading justech_global_audit_log/views/audit_user_exclude_views.xml 
+2026-07-07 11:54:09,728 1 INFO hellenia_test odoo.modules.loading: loading justech_global_audit_log/views/audit_log_views.xml 
+2026-07-07 11:54:09,745 1 INFO hellenia_test odoo.modules.loading: loading justech_global_audit_log/views/audit_retention_views.xml 
+2026-07-07 11:54:09,753 1 INFO hellenia_test odoo.modules.loading: loading justech_global_audit_log/views/audit_dashboard_views.xml 
+2026-07-07 11:54:09,762 1 INFO hellenia_test odoo.modules.loading: loading justech_global_audit_log/wizards/audit_export_wizard_views.xml 
+2026-07-07 11:54:09,768 1 INFO hellenia_test odoo.modules.loading: loading justech_global_audit_log/views/menu.xml 
+2026-07-07 11:54:09,802 1 INFO hellenia_test odoo.addons.base.models.ir_module: module justech_global_audit_log: no translation for language es_DO 
+2026-07-07 11:54:09,815 1 INFO hellenia_test odoo.modules.loading: Module justech_global_audit_log loaded in 0.88s, 1271 queries (+1272 other) 
+2026-07-07 11:54:10,783 1 WARNING hellenia_test odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define models.Constraint on the model. 
+2026-07-07 11:54:10,831 1 WARNING hellenia_test odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define models.Constraint on the model. 
+2026-07-07 11:54:10,863 1 WARNING hellenia_test odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define models.Constraint on the model. 
+2026-07-07 11:54:10,913 1 INFO hellenia_test odoo.modules.loading: 137 modules loaded in 1.98s, 1271 queries (+1272 extra) 
+2026-07-07 11:54:11,023 1 WARNING hellenia_test odoo.fields: justech.do.fiscal.report.state: selection=[('draft', 'Borrador'), ('validated', 'Validado'), ('pending_approval', 'Requiere aprobación'), ('approved', 'Aprobado'), ('rejected', 'Rechazado'), ('generated', 'Generado'), ('done', 'Generado')] overrides existing selection; use selection_add instead 
+2026-07-07 11:54:11,037 1 WARNING hellenia_test odoo.fields: Translated stored related field (justech.audit.rule.model_description) will not be computed correctly in all languages 
+2026-07-07 11:54:11,165 1 WARNING hellenia_test odoo.fields: justech.do.fiscal.report.state: selection=[('draft', 'Borrador'), ('validated', 'Validado'), ('pending_approval', 'Requiere aprobación'), ('approved', 'Aprobado'), ('rejected', 'Rechazado'), ('generated', 'Generado'), ('done', 'Generado')] overrides existing selection; use selection_add instead 
+2026-07-07 11:54:11,176 1 WARNING hellenia_test odoo.fields: Translated stored related field (justech.audit.rule.model_description) will not be computed correctly in all languages 
+2026-07-07 11:54:11,449 1 INFO hellenia_test odoo.modules.loading: Model hellenia.pos.audit.log is declared but cannot be loaded! (Perhaps a module was partially removed or renamed) 
+2026-07-07 11:54:11,555 1 INFO hellenia_test odoo.registry: verifying fields for every extended model 
+2026-07-07 11:54:13,234 1 INFO hellenia_test odoo.modules.loading: Modules loaded. 
+2026-07-07 11:54:13,251 1 INFO hellenia_test odoo.registry: Registry changed, signaling through the database 
+2026-07-07 11:54:13,253 1 INFO hellenia_test odoo.registry: Registry loaded in 8.624s 
+2026-07-07 11:54:13,253 1 INFO hellenia_test odoo.service.server: Starting post tests 
+2026-07-07 11:54:13,260 1 INFO hellenia_test odoo.addons.justech_global_audit_log.tests.test_audit_performance: Starting TestJustechAuditPerformance.test_partner_write_overhead_bounded ... 
+2026-07-07 11:54:13,430 1 INFO hellenia_test odoo.addons.base.models.ir_attachment: filestore gc 0 checked, 0 removed 
+2026-07-07 11:54:13,431 1 INFO hellenia_test odoo.addons.justech_global_audit_log.tests.test_audit_retention: Starting TestJustechAuditRetention.test_purge_old_logs ... 
+2026-07-07 11:54:13,439 1 INFO hellenia_test odoo.models.unlink: User #1 deleted justech.audit.log records with IDs: [23] 
+2026-07-07 11:54:13,448 1 INFO hellenia_test odoo.addons.base.models.ir_attachment: filestore gc 0 checked, 0 removed 
+2026-07-07 11:54:13,453 1 INFO hellenia_test odoo.addons.justech_global_audit_log.tests.test_audit_service: Starting TestJustechAuditService.test_create_logs_when_active ... 
+2026-07-07 11:54:13,508 1 INFO hellenia_test odoo.addons.justech_global_audit_log.tests.test_audit_service: Starting TestJustechAuditService.test_excluded_user_skips_audit ... 
+2026-07-07 11:54:13,545 1 INFO hellenia_test odoo.models.unlink: User #1 deleted justech.audit.user.exclude records with IDs: [7] 
+2026-07-07 11:54:13,546 1 INFO hellenia_test odoo.addons.justech_global_audit_log.tests.test_audit_service: Starting TestJustechAuditService.test_governance_bridge_event ... 
+2026-07-07 11:54:13,554 1 INFO hellenia_test odoo.addons.justech_global_audit_log.tests.test_audit_service: Starting TestJustechAuditService.test_log_immutability ... 
+2026-07-07 11:54:13,556 1 INFO hellenia_test odoo.addons.justech_global_audit_log.tests.test_audit_service: Starting TestJustechAuditService.test_no_log_when_inactive ... 
+2026-07-07 11:54:13,574 1 INFO hellenia_test odoo.addons.justech_global_audit_log.tests.test_audit_service: Starting TestJustechAuditService.test_write_logs_field_change ... 
+2026-07-07 11:54:13,613 1 INFO hellenia_test odoo.addons.base.models.ir_attachment: filestore gc 0 checked, 0 removed 
+2026-07-07 11:54:13,614 1 INFO hellenia_test odoo.service.server: 8 post-tests in 0.36s, 277 queries 
+2026-07-07 11:54:13,614 1 INFO hellenia_test odoo.tests.stats: justech_global_audit_log: 14 tests 0.36s 277 queries 
+2026-07-07 11:54:13,614 1 INFO hellenia_test odoo.tests.result: 0 failed, 0 error(s) of 8 tests when loading database 'hellenia_test' 
+2026-07-07 11:54:13,614 1 INFO hellenia_test odoo.service.server: Initiating shutdown 
+2026-07-07 11:54:13,614 1 INFO hellenia_test odoo.service.server: Hit CTRL-C again or send a second signal to force the shutdown. 
+2026-07-07 11:54:13,626 1 INFO hellenia_test odoo.addons.base.models.ir_http: Generating routing map for key None 
+2026-07-07 11:54:13,837 1 INFO hellenia_test werkzeug: 127.0.0.1 - - [07/Jul/2026 11:54:13] "GET /web/login HTTP/1.1" 200 - 59 0.029 4.675
+2026-07-07 11:54:13,849 1 INFO hellenia_test odoo.sql_db: ConnectionPool(read/write;used=0/count=0/max=64): Closed 1 connections  
+2026-07-07 11:54:13,850 1 INFO hellenia_test odoo.sql_db: ConnectionPool(read-only;used=0/count=0/max=64): Closed 1 connections  

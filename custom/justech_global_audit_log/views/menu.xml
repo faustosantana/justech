@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem
+        id="menu_justech_global_audit_root"
+        name="Auditoría Justech"
+        parent="base.menu_custom"
+        sequence="85"
+        groups="justech_global_audit_log.group_justech_audit_manager"
+    />
+
+    <menuitem
+        id="menu_justech_audit_dashboard"
+        name="Dashboard"
+        parent="menu_justech_global_audit_root"
+        action="action_justech_audit_dashboard"
+        sequence="5"
+    />
+
+    <menuitem
+        id="menu_justech_audit_log"
+        name="Logs"
+        parent="menu_justech_global_audit_root"
+        action="action_justech_audit_log"
+        sequence="10"
+    />
+
+    <menuitem
+        id="menu_justech_audit_rule"
+        name="Reglas"
+        parent="menu_justech_global_audit_root"
+        action="action_justech_audit_rule"
+        sequence="20"
+    />
+
+    <menuitem
+        id="menu_justech_audit_policy"
+        name="Políticas"
+        parent="menu_justech_global_audit_root"
+        action="action_justech_audit_policy"
+        sequence="30"
+    />
+
+    <menuitem
+        id="menu_justech_audit_field_exclude"
+        name="Campos excluidos"
+        parent="menu_justech_global_audit_root"
+        action="action_justech_audit_field_exclude"
+        sequence="40"
+    />
+
+    <menuitem
+        id="menu_justech_audit_user_exclude"
+        name="Usuarios excluidos"
+        parent="menu_justech_global_audit_root"
+        action="action_justech_audit_user_exclude"
+        sequence="50"
+    />
+
+    <menuitem
+        id="menu_justech_audit_retention"
+        name="Retención"
+        parent="menu_justech_global_audit_root"
+        action="action_justech_audit_retention"
+        sequence="60"
+    />
+</odoo>

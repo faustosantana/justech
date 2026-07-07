@@ -1,0 +1,30 @@
+=== AUDIT-2 Justech Global Audit Log — TEST only ===
+Transfer starting: 40 files
+security/justech_audit_security.xml
+
+sent 2167 bytes  received 48 bytes  14756 bytes/sec
+total size is 70602  speedup is 31.87
+ Container hellenia-test-odoo-1 Stopping 
+ Container hellenia-test-odoo-1 Stopped 
+--- Install/upgrade module ---
+  File "/mnt/custom/justech_global_audit_log/hooks.py", line 13, in post_init_hook
+    _register_justech_module(env)
+  File "/mnt/custom/justech_global_audit_log/hooks.py", line 21, in _register_justech_module
+    register_from_manifest_hook(env, "justech_global_audit_log")
+  File "/mnt/custom/justech_modules/hooks_register.py", line 17, in register_from_manifest_hook
+    manifest = load_manifest(module_name)
+  File "/usr/lib/python3/dist-packages/odoo/modules/module.py", line 401, in load_manifest
+    warnings.warn("Since 19.0, use Manifest", DeprecationWarning)
+ 
+2026-07-07 11:45:43,190 1 INFO hellenia_test odoo.modules.loading: Module justech_global_audit_log loaded in 4.03s, 5388 queries (+5388 other) 
+2026-07-07 11:45:43,190 1 INFO hellenia_test odoo.modules.loading: 137 modules loaded in 5.09s, 5388 queries (+5388 extra) 
+2026-07-07 11:45:43,260 1 WARNING hellenia_test odoo.fields: justech.do.fiscal.report.state: selection=[('draft', 'Borrador'), ('validated', 'Validado'), ('pending_approval', 'Requiere aprobación'), ('approved', 'Aprobado'), ('rejected', 'Rechazado'), ('generated', 'Generado'), ('done', 'Generado')] overrides existing selection; use selection_add instead 
+2026-07-07 11:45:43,309 1 WARNING hellenia_test odoo.fields: Translated stored related field (justech.audit.rule.model_description) will not be computed correctly in all languages 
+2026-07-07 11:45:43,514 1 INFO hellenia_test odoo.modules.loading: Model hellenia.pos.audit.log is declared but cannot be loaded! (Perhaps a module was partially removed or renamed) 
+2026-07-07 11:45:44,530 1 INFO hellenia_test odoo.modules.loading: Modules loaded. 
+2026-07-07 11:45:44,547 1 INFO hellenia_test odoo.registry: Registry changed, signaling through the database 
+2026-07-07 11:45:44,548 1 INFO hellenia_test odoo.registry: Registry loaded in 9.007s 
+2026-07-07 11:45:44,549 1 INFO hellenia_test odoo.service.server: Initiating shutdown 
+2026-07-07 11:45:44,549 1 INFO hellenia_test odoo.service.server: Hit CTRL-C again or send a second signal to force the shutdown. 
+2026-07-07 11:45:44,549 1 INFO hellenia_test odoo.sql_db: ConnectionPool(read/write;used=0/count=0/max=64): Closed 1 connections  
+Evidence: /Users/faustosantana/Projects/jaios/evidence/audit-2-refactor-test

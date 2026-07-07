@@ -1,0 +1,30 @@
+{
+  "phase": "AUDIT-2",
+  "database": "hellenia_test",
+  "module_installed": true,
+  "policy_active": true,
+  "activated_rules": [
+    "res.partner",
+    "sale.order",
+    "product.template"
+  ],
+  "inactive_fiscal_rules": {
+    "account.move": {
+      "exists": true,
+      "active": false
+    },
+    "account.payment": {
+      "exists": true,
+      "active": false
+    }
+  },
+  "partner_log_ok": true,
+  "benchmark": {
+    "writes": 100,
+    "elapsed_seconds": 0.0107,
+    "logs_created": 0,
+    "acceptable": true
+  },
+  "errors": [],
+  "partner_id": 2835
+}

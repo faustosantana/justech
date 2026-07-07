@@ -1,6 +1,6 @@
 {
     "name": "Hellenia Governance",
-    "version": "19.0.1.1.0",
+    "version": "19.0.1.2.0",
     "category": "Justech/Platform",
     "summary": "Permisos funcionales, roles y auditoría operativa",
     "description": """
@@ -23,9 +23,15 @@ Consume justech_modules para licencias — no las gestiona.
         "views/hellenia_feature_policy_views.xml",
         "views/hellenia_menu_policy_views.xml",
         "views/hellenia_governance_audit_views.xml",
+        "views/res_users_permissions_views.xml",
         "views/hellenia_governance_protected_actions.xml",
         "views/menu.xml",
     ],
+    "assets": {
+        "web.assets_backend": [
+            "hellenia_governance/static/src/scss/permissions_ux.scss",
+        ],
+    },
     "post_init_hook": "post_init_hook",
     "installable": True,
     "application": False,
@@ -33,7 +39,7 @@ Consume justech_modules para licencias — no las gestiona.
     "justech_register": {
         "module_code": "hellenia_governance",
         "module_name": "Hellenia Governance",
-        "version": "19.0.1.1.0",
+        "version": "19.0.1.2.0",
         "category": "platform",
         "description": "Functional permissions and governance",
         "dependencies": ["justech_modules"],

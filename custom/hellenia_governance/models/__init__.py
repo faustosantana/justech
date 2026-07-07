@@ -6,3 +6,4 @@ from . import hellenia_menu_policy
 from . import hellenia_governance_audit
 from . import hellenia_governance_service
 from . import res_users
+from . import hellenia_permissions_internal_wizard

@@ -1,0 +1,74 @@
+{
+  "phase": "PERMISSIONS-UX-1",
+  "timestamp_utc": "2026-07-07T23:24:52.469547+00:00",
+  "database": "hellenia_test",
+  "status": "PASS",
+  "checks": {
+    "01_ten_permissions_registry": {
+      "status": "PASS",
+      "detail": "10"
+    },
+    "02_five_categories": {
+      "status": "PASS",
+      "detail": "['FINANZAS', 'OPERACIONES', 'CONSULTA', 'ADMINISTRACIÓN DEL ERP', 'USO INTERNO JUSTECH']"
+    },
+    "03_view_loaded": {
+      "status": "PASS",
+      "detail": "2404"
+    },
+    "04_view_has_finanzas": {
+      "status": "PASS",
+      "detail": "True"
+    },
+    "05_view_has_internal_section": {
+      "status": "PASS",
+      "detail": "True"
+    },
+    "06_view_has_tooltips": {
+      "status": "PASS",
+      "detail": "8"
+    },
+    "07_view_has_internal_badges": {
+      "status": "PASS",
+      "detail": "True"
+    },
+    "08_normal_permission_activate": {
+      "status": "PASS",
+      "detail": "[48, 1]"
+    },
+    "09_normal_permission_deactivate": {
+      "status": "PASS",
+      "detail": "True"
+    },
+    "10_block_direct_justech_admin": {
+      "status": "PASS",
+      "detail": "True"
+    },
+    "11_wizard_without_session": {
+      "status": "PASS",
+      "detail": "hellenia.permissions.internal.wizard"
+    },
+    "12_admin_session_valid": {
+      "status": "PASS",
+      "detail": "True"
+    },
+    "13_platform_with_session": {
+      "status": "PASS",
+      "detail": "user"
+    },
+    "14_session_expired": {
+      "status": "PASS",
+      "detail": "True"
+    },
+    "15_wizard_after_expiry": {
+      "status": "PASS",
+      "detail": "hellenia.permissions.internal.wizard"
+    }
+  },
+  "metrics": {
+    "permissions_reorganized": 10,
+    "categories": 5,
+    "tooltips": 10
+  },
+  "errors": []
+}

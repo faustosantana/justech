@@ -1,0 +1,45 @@
+.hellenia-permissions-ux {
+    .hellenia-perm-category {
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        color: var(--o-gray-700, #495057);
+        margin-top: 0.75rem;
+    }
+
+    .hellenia-perm-internal-section {
+        color: var(--o-enterprise-color, #714b67);
+    }
+
+    .hellenia-perm-internal-group {
+        background: rgba(113, 75, 103, 0.06);
+        border: 1px solid rgba(113, 75, 103, 0.18);
+        border-radius: 0.5rem;
+        padding: 0.75rem 1rem;
+    }
+
+    .hellenia-perm-internal-row {
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 0.35rem 0.75rem;
+    }
+
+    .hellenia-perm-internal-field {
+        min-width: 8rem;
+        font-weight: 600;
+    }
+
+    .hellenia-perm-badge {
+        font-size: 0.75rem;
+        font-weight: 500;
+    }
+
+    .hellenia-perm-help {
+        font-size: 0.85rem;
+        border-style: dashed;
+    }
+}
+
+.o_form_view .o_field_widget.o_field_radio .o_form_label .fa-question-circle,
+.o_form_view .hellenia-permissions-ux label .o_field_help {
+    cursor: help;
+}

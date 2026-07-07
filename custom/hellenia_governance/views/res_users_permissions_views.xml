@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_hellenia_permissions_internal_wizard_form" model="ir.ui.view">
+        <field name="name">hellenia.permissions.internal.wizard.form</field>
+        <field name="model">hellenia.permissions.internal.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Autorizar permiso interno Justech">
+                <sheet>
+                    <field name="prompt_message" nolabel="1" readonly="1" class="text-muted mb-2"/>
+                    <group>
+                        <field name="user_id" invisible="1"/>
+                        <field name="permission_code" invisible="1"/>
+                        <field name="target_level" invisible="1"/>
+                        <field name="admin_key" password="True" placeholder="Clave Administrativa Justech"/>
+                    </group>
+                    <p class="text-muted">
+                        Este permiso es exclusivo de Justech. No es la contraseña de Odoo del usuario.
+                    </p>
+                </sheet>
+                <footer>
+                    <button name="action_confirm" type="object" string="Autorizar" class="btn-primary"/>
+                    <button string="Cancelar" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_users_form_permissions_ux" model="ir.ui.view">
+        <field name="name">res.users.form.permissions.ux</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="priority">30</field>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='access_rights']" position="attributes">
+                <attribute name="string">Centro de Permisos</attribute>
+            </xpath>
+            <xpath expr="//page[@name='access_rights']/field[@name='group_ids'][@groups='!base.group_no_one']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//page[@name='access_rights']/field[@name='group_ids'][1]" position="before">
+                <div class="hellenia-permissions-ux o_group col-lg-12" groups="!base.group_no_one">
+                    <separator string="FINANZAS" class="hellenia-perm-category"/>
+                    <group col="2">
+                        <field name="perm_ux_accounting" widget="radio" options="{'horizontal': false}"
+                               help="Permite acceder a diarios, asientos contables, reportes financieros y configuración contable."/>
+                        <field name="perm_ux_bank" widget="radio" options="{'horizontal': false}"
+                               help="Permite administrar cuentas bancarias, conciliaciones y pagos."/>
+                        <field name="perm_ux_multicurrency" widget="radio" options="{'horizontal': false}"
+                               help="Permite configurar monedas, tasas de cambio y precios comerciales."/>
+                    </group>
+                    <separator string="OPERACIONES" class="hellenia-perm-category"/>
+                    <group col="2">
+                        <field name="perm_ux_purchase" widget="radio" options="{'horizontal': false}"
+                               help="Permite crear solicitudes, órdenes de compra y administrar proveedores."/>
+                        <field name="perm_ux_inventory" widget="radio" options="{'horizontal': false}"
+                               help="Permite administrar almacenes, existencias y movimientos."/>
+                    </group>
+                    <separator string="CONSULTA" class="hellenia-perm-category"/>
+                    <group col="2">
+                        <field name="perm_ux_dashboard" widget="radio" options="{'horizontal': false}"
+                               help="Permite visualizar indicadores y paneles gerenciales."/>
+                        <field name="perm_ux_audit" widget="radio" options="{'horizontal': false}"
+                               help="Permite consultar el historial de cambios del sistema."/>
+                    </group>
+                    <separator string="ADMINISTRACIÓN DEL ERP" class="hellenia-perm-category"/>
+                    <group col="2">
+                        <field name="perm_ux_governance" widget="radio" options="{'horizontal': false}"
+                               help="Permite administrar configuraciones corporativas del ERP."/>
+                    </group>
+                    <separator string="USO INTERNO JUSTECH" class="hellenia-perm-category hellenia-perm-internal-section"/>
+                    <group col="2" class="hellenia-perm-internal-group">
+                        <label for="perm_ux_justech_admin"/>
+                        <div class="o_row hellenia-perm-internal-row">
+                            <field name="perm_ux_justech_admin" nolabel="1" readonly="1" class="hellenia-perm-internal-field"/>
+                            <span class="badge text-bg-secondary hellenia-perm-badge">🔒 Exclusivo Justech</span>
+                            <button name="action_permissions_ux_activate_internal" type="object"
+                                    string="Activar" class="btn-link"
+                                    context="{'permission_code': 'justech_admin', 'target_level': 'on'}"
+                                    invisible="perm_ux_justech_admin_active"/>
+                            <button name="action_permissions_ux_deactivate_internal" type="object"
+                                    string="Quitar" class="btn-link text-danger"
+                                    context="{'permission_code': 'justech_admin'}"
+                                    invisible="not perm_ux_justech_admin_active"/>
+                            <field name="perm_ux_justech_admin_active" invisible="1"/>
+                        </div>
+                        <label for="perm_ux_justech_platform"/>
+                        <div class="o_row hellenia-perm-internal-row">
+                            <field name="perm_ux_justech_platform" nolabel="1" readonly="1" class="hellenia-perm-internal-field"/>
+                            <span class="badge text-bg-secondary hellenia-perm-badge">Solo soporte autorizado</span>
+                            <button name="action_permissions_ux_activate_internal" type="object"
+                                    string="Usuario" class="btn-link"
+                                    context="{'permission_code': 'justech_platform', 'target_level': 'user'}"
+                                    invisible="perm_ux_justech_platform_active"/>
+                            <button name="action_permissions_ux_activate_internal" type="object"
+                                    string="Administrador" class="btn-link"
+                                    context="{'permission_code': 'justech_platform', 'target_level': 'manager'}"
+                                    invisible="perm_ux_justech_platform_active"/>
+                            <button name="action_permissions_ux_deactivate_internal" type="object"
+                                    string="Quitar" class="btn-link text-danger"
+                                    context="{'permission_code': 'justech_platform'}"
+                                    invisible="not perm_ux_justech_platform_active"/>
+                            <field name="perm_ux_justech_platform_active" invisible="1"/>
+                        </div>
+                    </group>
+                    <div class="alert alert-light hellenia-perm-help mt-2 mb-0" role="note">
+                        <i class="fa fa-question-circle" title="Ayuda"/> Pase el cursor sobre cada permiso para ver su descripción.
+                        Los permisos marcados como exclusivos Justech requieren Clave Administrativa para activarse.
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

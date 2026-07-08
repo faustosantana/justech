@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!-- Producto comercial: Pagos y Retenciones Dominicanas -->
+    <record id="commercial_payments_withholding_rd" model="justech.commercial.product">
+        <field name="code">payments_withholding_rd</field>
+        <field name="name">Pagos y Retenciones Dominicanas</field>
+        <field name="description">Gestión de pagos con retenciones fiscales dominicanas, ITBIS retenido, ISR retenido, conciliación y trazabilidad fiscal.</field>
+        <field name="icon">fa-money</field>
+        <field name="category">fiscal</field>
+        <field name="sequence">38</field>
+        <field name="version_display">2026.1</field>
+        <field name="license_tier">ent</field>
+    </record>
+    <record id="commercial_line_payments_withholding_rd" model="justech.commercial.product.line">
+        <field name="product_id" ref="commercial_payments_withholding_rd"/>
+        <field name="commercial_name">Pagos y Retenciones</field>
+        <field name="description">Pagos con retención ITBIS/ISR, 623 y trazabilidad</field>
+        <field name="feature_code">payments_withholding_rd</field>
+        <field name="sequence">10</field>
+    </record>
+    <record id="commercial_map_pw_1" model="justech.commercial.product.module">
+        <field name="product_id" ref="commercial_payments_withholding_rd"/>
+        <field name="technical_module_code">justech_l10n_do_payments_withholding</field>
+    </record>
+    <record id="commercial_map_pw_2" model="justech.commercial.product.module">
+        <field name="product_id" ref="commercial_payments_withholding_rd"/>
+        <field name="technical_module_code">hellenia_account</field>
+    </record>
+</odoo>

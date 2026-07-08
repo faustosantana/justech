@@ -1,0 +1,61 @@
+{
+  "phase": "RETENCIONES-1",
+  "environment": "TEST (hellenia_test)",
+  "date": "2026-07-08",
+  "prod_touched": false,
+  "data_persisted": false,
+  "notes": "Todas las pruebas de flujo se ejecutaron en transacciones con rollback; no se persistió ningún dato en TEST. El módulo nuevo sí quedó instalado en TEST para validar el catálogo (reversible).",
+  "module": {
+    "technical_code": "justech_l10n_do_payments_withholding",
+    "commercial_code": "payments_withholding_rd",
+    "visible_name": "Pagos y Retenciones Dominicanas",
+    "installed": true,
+    "feature_registered": true,
+    "feature_is_active": true
+  },
+  "catalog_integration": {
+    "in_real_customizations_whitelist": true,
+    "in_license_wizard_codes": true,
+    "appears_in_crear_licencia": true,
+    "appears_in_licencias_personalizaciones": true,
+    "appears_in_modulos_cliente": true,
+    "modulos_cliente_status": "not_paid / Pendiente (disponible para activar)",
+    "commercial_switch_count": 10,
+    "commercial_switch_sections": ["PAGOS", "RETENCIONES", "DOCUMENTOS"],
+    "existing_customizations_intact": true,
+    "hidden_when_module_absent": true
+  },
+  "functional_cases": [
+    {"n": 1,  "case": "Factura de cliente sin retención",            "result": "PASS", "method": "engine no fuerza retención; factura normal posteable"},
+    {"n": 2,  "case": "Factura de cliente con retención (si aplica)", "result": "PASS", "method": "RET-GOB-5 5% sobre base = 11100 (cálculo verificado)"},
+    {"n": 3,  "case": "Factura proveedor con retención ITBIS",        "result": "PASS", "method": "RET-ITBIS-30=11988 / RET-ITBIS-100=39960 sobre ITBIS 39960"},
+    {"n": 4,  "case": "Factura proveedor con retención ISR",          "result": "PASS", "method": "RET-HON-10=22200 / RET-ISR-2=4440 sobre base 222000"},
+    {"n": 5,  "case": "Pago parcial con retención",                   "result": "PASS", "method": "escalado proporcional al 50% verificado (5994, 11100, 2220...)"},
+    {"n": 6,  "case": "Pago total con retención",                     "result": "PASS", "method": "E2E: bill 118000, RET-ITBIS-30=5400, neto 112600"},
+    {"n": 7,  "case": "Asiento contable generado correctamente",      "result": "PASS", "method": "E2E: 1 línea GL de retención por 5400 en el asiento del pago"},
+    {"n": 8,  "case": "Conciliación correcta",                        "result": "PASS", "method": "E2E: residual 0, payment_state=paid, partial_reconcile vinculado"},
+    {"n": 9,  "case": "Reporte 606",                                  "result": "PASS", "method": "healthcheck: report_606 generado OK"},
+    {"n": 10, "case": "Reporte 607",                                  "result": "PASS", "method": "healthcheck: report_607 generado OK"},
+    {"n": 11, "case": "Reporte 623",                                  "result": "PASS", "method": "healthcheck: report_623 generado OK; 623 lee retención gob."},
+    {"n": 12, "case": "Auditoría de cambios",                         "result": "PASS", "method": "toggles comerciales auditan en justech.client.module.audit; global_audit instalado"},
+    {"n": 13, "case": "PDF/comprobante de retención",                 "result": "PASS", "method": "plantilla payment_receipt_withholding + external_layout_hellenia OK"},
+    {"n": 14, "case": "Healthcheck",                                  "result": "PASS", "method": "healthcheck interno Odoo = PASS (módulos, NCF, DGII, PDF, contabilidad)"}
+  ],
+  "e2e_withholding_flow": {
+    "vendor_bill": {"name": "FACTU/2026/07/0013 (rollback)", "untaxed": 100000.0, "itbis": 18000.0, "total": 118000.0},
+    "withholding": {"code": "RET-ITBIS-30", "base": "itbis", "rate": 30.0, "amount": 5400.0},
+    "payment": {"state": "paid", "amount": 118000.0, "withholding_total": 5400.0, "net_transfer": 112600.0, "gl_withholding_lines": 1, "gl_withholding_amount": 5400.0},
+    "reconciliation": {"bill_residual_after": 0.0, "payment_state": "paid", "partial_reconcile_linked": true},
+    "application_line": {"invoice": "FACTU/2026/07/0013", "applied": 118000.0, "withheld": 5400.0, "net": 112600.0}
+  },
+  "healthcheck": {
+    "result": "PASS",
+    "modules_installed": ["justech_l10n_do_base","justech_l10n_do_ncf","justech_l10n_do_reports","hellenia_base","hellenia_reports","hellenia_account","justech_l10n_do_payments_withholding","justech_modules"],
+    "reports_ok": ["606","607","608","623"],
+    "ncf_sequence": "active",
+    "pdf_layout": "external_layout_hellenia",
+    "accounting": "ok",
+    "catalog_payments_withholding": "present"
+  },
+  "overall_result": "PASS"
+}

@@ -1,0 +1,15 @@
+{
+  "label": "stabilization",
+  "ts": "2026-07-09T20:23:05.648294+00:00",
+  "database": "justech_dev",
+  "ok": true,
+  "errors": [],
+  "checks": {
+    "attachments_with_store_fname": 3973,
+    "asset_attachments": 149,
+    "missing_asset_files": 0,
+    "filestore_root": "/opt/odoo-dev/data/filestore/justech_dev",
+    "non_asset_sample_missing": 1,
+    "non_asset_sample_size": 50
+  }
+}

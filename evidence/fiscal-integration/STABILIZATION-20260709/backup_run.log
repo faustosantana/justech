@@ -1,0 +1,67 @@
+========================================
+BACKUP BLINDADO erp.justech.do — 20260709_222306
+========================================
+==> PRE-CHECK 1/4: filestore vivo >= 100MB
+filestore_live_bytes=705491319
+==> PRE-CHECK 2/4: assets físicos en ir_attachment
+{
+  "label": "pre_backup",
+  "ts": "2026-07-09T20:23:11.158168+00:00",
+  "database": "justech_dev",
+  "ok": true,
+  "errors": [],
+  "checks": {
+    "attachments_with_store_fname": 3973,
+    "asset_attachments": 149,
+    "missing_asset_files": 0,
+    "filestore_root": "/opt/odoo-dev/data/filestore/justech_dev",
+    "non_asset_sample_missing": 1,
+    "non_asset_sample_size": 50
+  }
+}
+==> PRE-CHECK 3/4: /web/assets responde 200 (live)
+asset_check 200 /web/assets/759ae65/web.assets_web_print.min.css
+asset_check 200 /web/assets/53fea1f/web.assets_web_dark.min.css
+asset_check 200 /web/assets/8fc97a6/web.assets_web.min.js
+asset_check 200 /web/assets/3f84bca/web.assets_web.min.css
+asset_check 200 /web/assets/2b37a81/web.assets_backend_lazy_dark.min.js
+==> PRE-CHECK 4/4: login responde 200
+login_check 200
+Backup destino: /opt/odoo-dev/backups/fiscal-integration-stabilized-20260709_222306
+==> PostgreSQL dump (justech_dev)
+==> Filestore tar
+filestore_archive_bytes=368330518
+==> Custom addons (justgroup + legacy)
+==> Configuración Odoo
+==> Evidencias (si existen)
+==> Baseline integridad pre-cambio
+==> POST-CHECK: restore real BD + filestore temporal
+==> Crear BD temporal justech_dev_restore_validate
+NOTICE:  database "justech_dev_restore_validate" does not exist, skipping
+==> Restaurar dump
+==> Extraer filestore temporal
+==> Verificar conteos históricos
+ posted     | 2255
+ ncf_adel   | 1504
+ reconciles | 947
+ payments   | 677
+
+==> Validar assets físicos en restore
+{
+  "label": "restore_validate",
+  "ts": "2026-07-09T20:24:41.464646+00:00",
+  "database": "justech_dev_restore_validate",
+  "ok": true,
+  "errors": [],
+  "checks": {
+    "attachments_with_store_fname": 3973,
+    "asset_attachments": 149,
+    "missing_asset_files": 0,
+    "filestore_root": "/tmp/filestore_restore_validate_justech_dev_restore_validate/justech_dev",
+    "non_asset_sample_missing": 1,
+    "non_asset_sample_size": 50
+  }
+}
+==> Eliminar BD temporal
+RESTORE_VALIDATE_OK
+BACKUP_OK /opt/odoo-dev/backups/fiscal-integration-stabilized-20260709_222306

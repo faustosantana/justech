@@ -10,6 +10,7 @@
                 <field name="next_sequence"/>
                 <field name="sequence_end"/>
                 <field name="remaining_count"/>
+                <field name="pct_used" widget="progressbar"/>
                 <field name="date_to"/>
                 <field name="state"/>
             </list>

@@ -1,5 +1,14 @@
 # Roadmap — justech_l10n_do_ncf
 
+## Sprint 2 ✅ (en progreso)
+- [x] Duplicados v2.0 (Python)
+- [x] Centro Administración Fiscal
+- [x] Diagnóstico fiscal read-only
+- [x] UX pestaña comprobante fiscal
+- [ ] Índice SQL v2.0 (Sprint 3)
+- [ ] Reglas Adel B14/RD$250k (Sprint 3)
+- [ ] NC/ND wizards extendidos
+
 ## Sprint 1 ✅
 - [x] Servicios resolver, duplicate, assignment
 - [x] Refactor account.move sin cambio funcional

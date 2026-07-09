@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <menuitem id="menu_justech_do_ncf_admin_center"
+              name="Centro de Administración Fiscal"
+              parent="justech_l10n_do_base.menu_justech_do_fiscal_root"
+              action="action_justech_do_ncf_admin_center"
+              sequence="5"
+              groups="justech_l10n_do_base.group_justech_do_fiscal_manager"/>
     <menuitem id="menu_justech_do_ncf_ranges"
               name="Rangos NCF"
               parent="justech_l10n_do_base.menu_justech_do_fiscal_root"
@@ -10,4 +16,10 @@
               parent="justech_l10n_do_base.menu_justech_do_fiscal_root"
               action="action_justech_do_ncf_consumption"
               sequence="30"/>
+    <menuitem id="menu_justech_do_ncf_diagnostic"
+              name="Diagnóstico Fiscal"
+              parent="justech_l10n_do_base.menu_justech_do_fiscal_root"
+              action="action_justech_do_fiscal_diagnostic"
+              sequence="35"
+              groups="justech_l10n_do_base.group_justech_do_fiscal_manager"/>
 </odoo>

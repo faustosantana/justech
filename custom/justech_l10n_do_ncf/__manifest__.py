@@ -1,18 +1,19 @@
 {
     "name": "Justech Dominican NCF",
-    "version": "19.0.1.8.0",
+    "version": "19.0.2.0.0",
     "category": "Accounting/Localizations",
     "summary": "NCF ranges, assignment and validation (Dominican Republic)",
     "description": """
-NCF management for Dominican Republic — Justech MVP.
+NCF management for Dominican Republic — Justech Enterprise layer.
 
 - NCF ranges and consumption audit
 - Automatic NCF on customer invoices
-- B11/B13 on purchase documents
-- Validations (duplicate, expired, depleted)
+- Fiscal Administration Center
+- Fiscal diagnostic (read-only)
+- Duplicate detection v2.0
     """,
     "author": "Justech",
-    "website": "https://hellenia.cloud",
+    "website": "https://justech.do",
     "depends": [
         "justech_l10n_do_base",
         "account_debit_note",
@@ -21,6 +22,8 @@ NCF management for Dominican Republic — Justech MVP.
     "data": [
         "security/ir.model.access.csv",
         "security/justech_l10n_do_ncf_rules.xml",
+        "views/fiscal_admin_views.xml",
+        "views/fiscal_diagnostic_views.xml",
         "views/ncf_range_views.xml",
         "views/ncf_consumption_views.xml",
         "views/account_move_views.xml",
@@ -34,16 +37,17 @@ NCF management for Dominican Republic — Justech MVP.
     "justech_register": {
         "module_code": "justech_l10n_do_ncf",
         "module_name": "Justech Dominican NCF",
-        "version": "19.0.1.8.0",
+        "version": "19.0.2.0.0",
         "category": "fiscal",
         "country": "DO",
         "localization": "l10n_do",
-        "description": "NCF ranges, assignment and validation",
+        "description": "NCF ranges, assignment, admin center and diagnostics",
         "dependencies": ["justech_l10n_do_base"],
         "always_enabled": True,
         "required_module": True,
         "features": [
             {"code": "l10n_do_ncf", "name": "DO NCF Management"},
+            {"code": "l10n_do_ncf_admin", "name": "DO Fiscal Admin Center"},
         ],
     },
 }

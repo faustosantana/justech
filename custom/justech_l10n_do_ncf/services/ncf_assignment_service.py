@@ -25,7 +25,10 @@ class JustechDoNcfAssignmentService(models.AbstractModel):
             if doc and doc.requires_vat and move.move_type in ("out_invoice", "out_refund"):
                 if not move.partner_id.justech_do_has_rnc():
                     raise UserError(
-                        _("Document type %(doc)s requires a customer RNC.", doc=doc.prefix)
+                        _(
+                            "El tipo de comprobante %(doc)s exige un RNC válido del cliente.",
+                            doc=doc.prefix,
+                        )
                     )
             if move.justech_do_ncf:
                 duplicate.validate_manual_ncf(move)
@@ -35,7 +38,11 @@ class JustechDoNcfAssignmentService(models.AbstractModel):
                     "out_invoice",
                     "out_refund",
                 ):
-                    raise UserError(_("NCF is required before posting this invoice."))
+                    raise UserError(
+                        _(
+                            "Debe indicar o asignar un NCF antes de publicar esta factura."
+                        )
+                    )
                 continue
             doc = move.justech_do_document_type_id
             lock_code = int(doc.code) if doc.code.isdigit() else 0
@@ -48,7 +55,11 @@ class JustechDoNcfAssignmentService(models.AbstractModel):
             )
             if not ncf_range:
                 raise UserError(
-                    _("No active NCF range for document type %(prefix)s.", prefix=doc.prefix)
+                    _(
+                        "No hay rango NCF activo para el tipo %(prefix)s. "
+                        "Revise el Centro de Administración Fiscal.",
+                        prefix=doc.prefix,
+                    )
                 )
             ncf = ncf_range.consume_next(move)
             move.write(

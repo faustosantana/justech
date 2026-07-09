@@ -155,9 +155,6 @@ class AccountMove(models.Model):
             self
         )
 
-    def _justech_purchase_ncf_prefixes(self):
-        return self.env["justech.do.fiscal.document.type"].PURCHASE_NCF_PREFIXES
-
     def _justech_doc_supports_auto_ncf(self, doc):
         self.ensure_one()
         return self.env[

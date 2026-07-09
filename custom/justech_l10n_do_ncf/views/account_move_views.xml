@@ -5,29 +5,42 @@
         <field name="model">account.move</field>
         <field name="inherit_id" ref="account.view_move_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='ref']" position="after">
-                <field name="justech_do_document_type_id" readonly="state != 'draft'"/>
-                <field name="justech_do_ncf" readonly="state != 'draft'"/>
-                <field name="justech_do_origin_ncf" readonly="state != 'draft'"/>
-                <field name="justech_do_ncf_modified" readonly="state != 'draft'"/>
-                <field name="justech_do_dgii_line_status" readonly="1"/>
-                <field name="justech_do_include_in_dgii" readonly="state != 'draft'"/>
-                <field name="justech_do_dgii_fiscal_state" readonly="1"/>
-                <field name="justech_do_dgii_exclusion_reason"
-                       invisible="justech_do_include_in_dgii"
-                       readonly="state != 'draft'"/>
-                <field name="justech_do_ncf_cancel_type"
-                       invisible="not justech_do_ncf_voided"
-                       readonly="justech_do_ncf_voided"/>
-                <field name="justech_do_ncf_voided" readonly="1"/>
-                <field name="justech_do_ncf_void_reason"
-                       readonly="justech_do_ncf_voided"
-                       required="state == 'posted' and justech_do_ncf and not justech_do_ncf_voided"/>
+            <xpath expr="//notebook" position="inside">
+                <page string="Comprobante fiscal" name="justech_fiscal_ncf"
+                      invisible="move_type not in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund')">
+                    <group>
+                        <group string="Comprobante">
+                            <field name="justech_do_document_type_id" readonly="state != 'draft'"/>
+                            <field name="justech_do_ncf" readonly="state != 'draft'"
+                                   placeholder="Se asigna al publicar si hay rango activo"/>
+                            <field name="justech_do_origin_ncf" readonly="state != 'draft'"/>
+                            <field name="justech_do_ncf_modified" readonly="state != 'draft'"/>
+                        </group>
+                        <group string="Estado">
+                            <field name="justech_do_ncf_voided" readonly="1"/>
+                            <field name="justech_do_ncf_void_reason"
+                                   readonly="justech_do_ncf_voided"
+                                   required="state == 'posted' and justech_do_ncf and not justech_do_ncf_voided"/>
+                            <field name="justech_do_ncf_cancel_type"
+                                   invisible="not justech_do_ncf_voided"
+                                   readonly="justech_do_ncf_voided"/>
+                        </group>
+                    </group>
+                    <group string="Reportes DGII" groups="justech_l10n_do_base.group_justech_do_fiscal_manager">
+                        <field name="justech_do_dgii_line_status" readonly="1"/>
+                        <field name="justech_do_include_in_dgii" readonly="state != 'draft'"/>
+                        <field name="justech_do_dgii_fiscal_state" readonly="1"/>
+                        <field name="justech_do_dgii_exclusion_reason"
+                               invisible="justech_do_include_in_dgii"
+                               readonly="state != 'draft'"/>
+                    </group>
+                </page>
             </xpath>
             <xpath expr="//header" position="inside">
-                <button name="action_void_ncf" string="Void NCF" type="object"
+                <button name="action_void_ncf" string="Anular NCF" type="object"
                         invisible="state != 'posted' or not justech_do_ncf or justech_do_ncf_voided"
-                        groups="justech_l10n_do_base.group_justech_do_fiscal_manager"/>
+                        groups="justech_l10n_do_base.group_justech_do_fiscal_manager"
+                        confirm="¿Confirma la anulación del comprobante fiscal? Esta acción no revierte el asiento contable."/>
             </xpath>
         </field>
     </record>

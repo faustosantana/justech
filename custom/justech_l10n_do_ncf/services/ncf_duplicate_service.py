@@ -1,6 +1,8 @@
-"""Detección de NCF duplicados — delega validación de formato."""
+"""Detección de NCF duplicados — clave fiscal v2.0."""
 from odoo import _, models
 from odoo.exceptions import ValidationError
+
+from odoo.addons.justech_l10n_do_ncf.validators import duplicate_scope
 
 
 class JustechDoNcfDuplicateService(models.AbstractModel):
@@ -16,22 +18,76 @@ class JustechDoNcfDuplicateService(models.AbstractModel):
         move.justech_do_ncf = ncf
         prefix, _seq = validator.parse_ncf(ncf)
         if move.justech_do_document_type_id and prefix != move.justech_do_document_type_id.prefix:
-            raise ValidationError(_("NCF prefix does not match document type."))
+            raise ValidationError(
+                _("El prefijo del NCF no coincide con el tipo de comprobante seleccionado.")
+            )
         self.check_duplicate(move, ncf)
 
     def check_duplicate(self, move, ncf):
         move.ensure_one()
-        dup = move.search(
-            [
-                ("id", "!=", move.id),
-                ("company_id", "=", move.company_id.id),
-                ("justech_do_ncf", "=", ncf),
-                ("state", "=", "posted"),
-                ("justech_do_ncf_voided", "=", False),
-            ],
-            limit=1,
+        domain = duplicate_scope.duplicate_search_domain(
+            company_id=move.company_id.id,
+            ncf=ncf,
+            move_type=move.move_type,
+            partner_id=move.partner_id.id if move.partner_id else False,
         )
+        domain.insert(0, ("id", "!=", move.id))
+        dup = move.search(domain, limit=1)
         if dup:
-            raise ValidationError(
-                _("NCF %(ncf)s is already used on %(move)s.", ncf=ncf, move=dup.name)
+            module = duplicate_scope.fiscal_module_for_move_type(move.move_type)
+            if module == "compras":
+                msg = _(
+                    "El NCF %(ncf)s del proveedor ya está registrado en %(move)s.",
+                    ncf=ncf,
+                    move=dup.name,
+                )
+            else:
+                msg = _(
+                    "El NCF %(ncf)s ya fue emitido en %(move)s.",
+                    ncf=ncf,
+                    move=dup.name,
+                )
+            raise ValidationError(msg)
+
+    def find_duplicate_groups_v2(self, company):
+        """Escaneo read-only de duplicados reales v2.0 (para diagnóstico)."""
+        company = company or self.env.company
+        cr = self.env.cr
+        cr.execute(
+            """
+            SELECT am.id, am.name, am.move_type, am.justech_do_ncf,
+                   COALESCE(rp.vat, '') AS partner_vat,
+                   COALESCE(rpc.vat, '') AS company_vat
+            FROM account_move am
+            JOIN res_company rc ON rc.id = am.company_id
+            JOIN res_partner rpc ON rpc.id = rc.partner_id
+            LEFT JOIN res_partner rp ON rp.id = am.partner_id
+            WHERE am.company_id = %s
+              AND am.state = 'posted'
+              AND am.justech_do_ncf IS NOT NULL
+              AND am.justech_do_ncf != ''
+              AND COALESCE(am.justech_do_ncf_voided, false) = false
+            ORDER BY am.justech_do_ncf, am.id
+            """,
+            [company.id],
+        )
+        rows = cr.fetchall()
+        from odoo.addons.justech_l10n_do_base.validators import fiscal_context
+
+        buckets: dict[tuple, list] = {}
+        for row in rows:
+            move_id, name, move_type, ncf, partner_vat, company_vat = row
+            key = fiscal_context.fiscal_duplicate_key_v2(
+                company_id=company.id,
+                move_type=move_type,
+                ncf=ncf,
+                company_vat=company_vat,
+                partner_vat=partner_vat,
             )
+            buckets.setdefault(key, []).append({"id": move_id, "name": name, "ncf": ncf})
+
+        return [
+            {"key": key, "moves": moves}
+            for key, moves in buckets.items()
+            if len(moves) > 1
+        ]

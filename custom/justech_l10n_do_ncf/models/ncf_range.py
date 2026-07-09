@@ -42,6 +42,7 @@ class JustechDoNcfRange(models.Model):
         required=True,
     )
     remaining_count = fields.Integer(compute="_compute_remaining")
+    pct_used = fields.Float(string="% consumido", compute="_compute_pct_used")
     consumption_ids = fields.One2many(
         "justech.do.ncf.consumption",
         "range_id",
@@ -63,6 +64,16 @@ class JustechDoNcfRange(models.Model):
                 rec.remaining_count = 0
             else:
                 rec.remaining_count = max(0, rec.sequence_end - rec.next_sequence + 1)
+
+    @api.depends("sequence_start", "sequence_end", "next_sequence", "state")
+    def _compute_pct_used(self):
+        for rec in self:
+            total = max(1, rec.sequence_end - rec.sequence_start + 1)
+            if rec.state in ("depleted", "cancelled"):
+                rec.pct_used = 100.0
+            else:
+                used = max(0, rec.next_sequence - rec.sequence_start)
+                rec.pct_used = min(100.0, round(100.0 * used / total, 1))
 
     @api.constrains("date_from", "date_to")
     def _check_dates(self):

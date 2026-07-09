@@ -1,0 +1,37 @@
+{
+  "sprint": "Fase 3A Sprint 2",
+  "branch": "feature/fiscal-standard-phase3a",
+  "validated_at": "2026-07-09T18:33:16Z",
+  "module_version": "19.0.2.0.0",
+  "environment": {
+    "database": "justech_ncf_lab",
+    "justech_dev_touched": false
+  },
+  "integrity": {
+    "posted_moves": 2255,
+    "ncf_justech_posted": 1494,
+    "gl_balanced": true,
+    "historical_risk": false
+  },
+  "tests": {
+    "justech_l10n_do_ncf": "27/27 PASS"
+  },
+  "delivered": [
+    "Centro de Administración Fiscal",
+    "Diagnóstico Fiscal read-only",
+    "Duplicados v2.0 Python",
+    "validators/duplicate_scope",
+    "ncf.range.audit.service",
+    "ncf.diagnostic.service",
+    "UX pestaña Comprobante fiscal",
+    "Mensajes español mejorados"
+  ],
+  "pending_sprint2": [
+    "Índice SQL duplicados v2.0",
+    "Reglas Adel B14/RD$250k/export",
+    "NC/ND wizards extendidos",
+    "Multi-company tests 4 empresas",
+    "Validación justech_dev clon (sin operativo)"
+  ],
+  "result": "IN_PROGRESS"
+}

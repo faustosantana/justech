@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Hub central de pagos bajo Contabilidad (HELLENIA-MENU-UAT-2) -->
+    <menuitem id="menu_finance_payments_root"
+              name="Pagos"
+              parent="account.menu_finance"
+              sequence="30"
+              groups="account.group_account_readonly"/>
+
+    <record id="action_hellenia_bank_reconciliation" model="ir.actions.act_window">
+        <field name="name">Conciliación bancaria</field>
+        <field name="res_model">account.bank.statement.line</field>
+        <field name="view_mode">kanban,list</field>
+        <field name="search_view_id" ref="account_accountant.view_bank_statement_line_search_bank_rec_widget"/>
+        <field name="view_id" ref="account_accountant.view_bank_statement_line_kanban_bank_rec_widget"/>
+        <field name="domain">[('state', '!=', 'cancel')]</field>
+        <field name="context">{}</field>
+    </record>
+
+    <menuitem id="menu_finance_bank_reconciliation"
+              name="Conciliación bancaria"
+              parent="menu_finance_payments_root"
+              action="action_hellenia_bank_reconciliation"
+              sequence="40"
+              groups="account.group_account_user"/>
+
+    <menuitem id="menu_finance_payments_customer"
+              name="Pagos de clientes"
+              parent="menu_finance_payments_root"
+              action="account.action_account_payments"
+              sequence="10"
+              groups="account.group_account_readonly"/>
+
+    <menuitem id="menu_finance_payments_vendor"
+              name="Pagos a proveedores"
+              parent="menu_finance_payments_root"
+              action="account.action_account_payments_payable"
+              sequence="20"
+              groups="account.group_account_readonly"/>
+
+    <menuitem id="menu_finance_open_payments_customer"
+              name="Pagos abiertos (clientes)"
+              parent="menu_finance_payments_root"
+              action="justech_l10n_do_treasury.action_treasury_open_payments_customer"
+              sequence="30"
+              groups="account.group_account_readonly"/>
+
+    <menuitem id="menu_finance_open_payments_vendor"
+              name="Pagos abiertos (proveedores)"
+              parent="menu_finance_payments_root"
+              action="justech_l10n_do_treasury.action_treasury_open_payments_vendor"
+              sequence="35"
+              groups="account.group_account_readonly"/>
+
+</odoo>

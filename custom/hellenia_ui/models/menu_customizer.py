@@ -38,27 +38,126 @@ FINANCE_NEVER_ROOT_CHILDREN = (
     "accountant.menu_accounting",
 )
 
-# Submenús operativos que pertenecen bajo account.menu_finance
+# Submenús operativos de primer nivel bajo account.menu_finance (sin asientos/apuntes en raíz)
 FINANCE_OPERATIONAL_XMLIDS = (
     "account.menu_board_journal_1",
     "account.menu_finance_receivables",
     "account.menu_finance_payables",
-    "account.menu_action_move_journal_line_form",
-    "account.menu_action_account_moves_all",
     "account.menu_finance_entries",
     "account.menu_finance_reports",
     "account.menu_finance_configuration",
+    "hellenia_ui.menu_finance_payments_root",
 )
 
-# Secuencias del menú Contabilidad (Dashboard primero → abre tablero, no Ajustes)
+# Secuencias raíz Contabilidad (HELLENIA-MENU-UAT-2)
 FINANCE_CHILD_SEQUENCES = {
     "account.menu_board_journal_1": 1,
-    "account.menu_finance_receivables": 10,
-    "account.menu_finance_payables": 20,
-    "account.menu_action_move_journal_line_form": 30,
-    "account.menu_action_account_moves_all": 40,
-    "account.menu_finance_reports": 50,
-    "account.menu_finance_configuration": 90,
+    "account.menu_finance_receivables": 2,
+    "account.menu_finance_payables": 3,
+    "hellenia_ui.menu_finance_payments_root": 4,
+    "account.menu_finance_entries": 5,
+    "account.account_audit_menu": 6,
+    "account.menu_finance_reports": 7,
+    "justech_l10n_do_reports.menu_justech_do_audit_root": 8,
+    "account.menu_finance_configuration": 9,
+    "justech_report_design.menu_justech_delivery_note_account": 25,
+}
+
+# Secuencias bajo Contabilidad operativa (menu_finance_entries)
+ACCOUNTING_HUB_CHILD_SEQUENCES = {
+    "account.menu_action_move_journal_line_form": 1,
+    "account.menu_action_account_moves_all": 2,
+    "account_asset.menu_action_account_asset_form": 3,
+    "account_loans.menu_action_loans": 4,
+    "account_accountant.menu_account_reconcile": 5,
+    "account_accountant.menu_action_change_lock_date": 6,
+    "account.menu_action_secure_entries": 7,
+}
+
+RECEIVABLES_CHILD_SEQUENCES = {
+    "account.menu_action_move_out_invoice_type": 1,
+    "account.menu_action_move_out_refund_type": 2,
+    "account.menu_action_account_payments_receivable": 3,
+    "justech_l10n_do_treasury.menu_treasury_open_payments_customer": 4,
+    "account.menu_account_customer": 5,
+    "account.product_product_menu_sellable": 6,
+}
+
+PAYABLES_CHILD_SEQUENCES = {
+    "account.menu_action_move_in_invoice_type": 1,
+    "account.menu_action_move_in_refund_type": 2,
+    "account.menu_action_account_payments_payable": 3,
+    "justech_l10n_do_treasury.menu_treasury_open_payments_vendor": 4,
+    "account.menu_account_supplier": 5,
+    "account.product_product_menu_purchasable": 6,
+}
+
+PAYMENTS_HUB_CHILD_SEQUENCES = {
+    "hellenia_ui.menu_finance_payments_customer": 1,
+    "hellenia_ui.menu_finance_payments_vendor": 2,
+    "hellenia_ui.menu_finance_open_payments_customer": 3,
+    "hellenia_ui.menu_finance_open_payments_vendor": 4,
+    "hellenia_ui.menu_finance_bank_reconciliation": 5,
+}
+
+REPORTS_CHILD_SEQUENCES = {
+    "account.account_reports_legal_statements_menu": 1,
+    "account_reports.account_reports_audit_menu": 2,
+    "account.account_reports_partners_reports_menu": 3,
+    "account.account_reports_taxes_and_fiscal_menu": 4,
+    "account.account_reports_management_menu": 5,
+}
+
+LEGAL_REPORTS_SEQUENCES = {
+    "account_reports.menu_action_account_report_balance_sheet": 1,
+    "account_reports.menu_action_account_report_profit_and_loss": 2,
+    "account_reports.menu_action_account_report_general_ledger": 3,
+    "account_reports.menu_action_account_report_coa": 4,
+}
+
+AUDIT_FISCAL_CHILD_SEQUENCES = {
+    "justech_l10n_do_reports.menu_justech_do_report_606": 1,
+    "justech_l10n_do_reports.menu_justech_do_report_607": 2,
+    "justech_l10n_do_reports.menu_justech_do_report_608": 3,
+    "justech_l10n_do_reports.menu_justech_do_report_609": 4,
+    "justech_l10n_do_reports.menu_justech_do_report_623": 5,
+    "justech_l10n_do_ncf.menu_justech_do_ncf_consumption": 6,
+    "justech_l10n_do_ncf.menu_justech_do_ncf_ranges": 7,
+    "justech_l10n_do_base.menu_justech_do_document_types": 8,
+    "hellenia_account.menu_hellenia_withholding_catalog": 9,
+    "justech_l10n_do_reports.menu_justech_do_audit_consumption": 10,
+    "justech_l10n_do_reports.menu_justech_do_audit_voided": 11,
+    "justech_l10n_do_reports.menu_justech_do_reports_history": 12,
+    "justech_l10n_do_reports.menu_justech_do_fiscal_review": 13,
+    "justech_l10n_do_reports.menu_justech_do_fiscal_review_pending": 14,
+}
+
+# Contenedores intermedios que se ocultan tras aplanar hijos útiles
+ACCOUNTING_CONTAINER_HIDE_XMLIDS = (
+    "account.account_transactions_menu",
+    "account.account_closing_menu",
+    "accountant.account_assets_liabilities_menu",
+)
+
+# Declaración fiscal EE: visible bajo Reportes > Impuestos, no duplicada en Contabilidad
+FISCAL_RETURN_MENU = "account_reports.menu_action_account_return"
+
+# Menús contables estándar EE a reactivar (complementan personalizaciones Hellenia)
+STANDARD_ACCOUNTING_RESTORE_XMLIDS = (
+    "account.menu_finance_entries",
+    "account_accountant.menu_account_reconcile",
+    "account_accountant.menu_action_change_lock_date",
+    "account_reports.menu_action_account_return",
+    "account.menu_action_secure_entries",
+    "account_asset.menu_action_account_asset_form",
+    "account_loans.menu_action_loans",
+)
+
+# Solo traducciones claramente necesarias; nombres estándar Odoo se conservan vía PO
+STANDARD_ACCOUNTING_LABELS_ES = {
+    "account.menu_finance_entries": "Contabilidad",
+    "account.account_audit_menu": "Revisión",
+    "hellenia_ui.menu_finance_payments_root": "Pagos",
 }
 
 # Etiquetas español — raíz y submenús contables
@@ -216,10 +315,10 @@ class HelleniaUiMenuCustomizer(models.AbstractModel):
                 [("model", "=", "ir.ui.menu"), ("res_id", "=", child.id)], limit=1
             )
             xid = f"{xml_rec.module}.{xml_rec.name}" if xml_rec else None
-            if xid in FINANCE_NEVER_ROOT_CHILDREN or child.name in ("Settings", "Ajustes", "Accounting"):
+            if xid in FINANCE_NEVER_ROOT_CHILDREN or child.name in ("Settings", "Ajustes"):
                 if settings and child.id == settings.id:
                     child.parent_id = config_parent.id if config_parent else child.parent_id
-                elif xid in HIDE_ACCOUNTING_DUPLICATE_XMLIDS or child.name == "Accounting":
+                elif xid in HIDE_ACCOUNTING_DUPLICATE_XMLIDS:
                     child.active = False
                 elif child.name in ("Settings", "Ajustes") and config_parent:
                     child.parent_id = config_parent.id
@@ -262,27 +361,7 @@ class HelleniaUiMenuCustomizer(models.AbstractModel):
 
     @api.model
     def integrate_justech_menus(self):
-        """Asegura que la localización Justech quede integrada bajo Contabilidad."""
-        fiscal_root = self.env.ref("justech_l10n_do_base.menu_justech_do_fiscal_root", raise_if_not_found=False)
-        config_parent = self.env.ref("account.menu_finance_configuration", raise_if_not_found=False)
-        reports_parent = self.env.ref("account.menu_finance_reports", raise_if_not_found=False)
-
-        if fiscal_root and config_parent and fiscal_root.parent_id != config_parent:
-            fiscal_root.parent_id = config_parent.id
-            fiscal_root.active = True
-
-        reports_root = self.env.ref("justech_l10n_do_reports.menu_justech_do_reports_root", raise_if_not_found=False)
-        if reports_root and reports_parent and reports_root.parent_id != reports_parent:
-            reports_root.parent_id = reports_parent.id
-            reports_root.active = True
-
-        audit_root = self.env.ref("justech_l10n_do_reports.menu_justech_do_audit_root", raise_if_not_found=False)
-        finance = self.env.ref("account.menu_finance", raise_if_not_found=False)
-        if audit_root and finance and audit_root.parent_id != finance:
-            audit_root.parent_id = finance.id
-            audit_root.sequence = 55
-            audit_root.active = True
-
+        """Etiquetas Justech; estructura en restore_standard_accounting_menus()."""
         for xmlid, label in JUSTECH_MENU_LABELS_ES.items():
             self._set_menu_label(xmlid, label)
 
@@ -349,6 +428,147 @@ class HelleniaUiMenuCustomizer(models.AbstractModel):
             label = MENU_LABELS_ES.get(xid)
             if label:
                 self._set_menu_label(xid, label)
+
+    @api.model
+    def _write_menu(self, xmlid, parent_xid=None, active=True, sequence=None):
+        menu = self.env.ref(xmlid, raise_if_not_found=False)
+        if not menu:
+            return False
+        vals = {"active": active}
+        if parent_xid:
+            parent = self.env.ref(parent_xid, raise_if_not_found=False)
+            if parent:
+                vals["parent_id"] = parent.id
+        if sequence is not None:
+            vals["sequence"] = sequence
+        menu.write(vals)
+        return True
+
+    @api.model
+    def _apply_sequences(self, mapping):
+        for xid, seq in mapping.items():
+            menu = self.env.ref(xid, raise_if_not_found=False)
+            if menu:
+                menu.sequence = seq
+
+    @api.model
+    def restore_standard_accounting_menus(self):
+        """Reactiva menús EE y aplica estructura HELLENIA-MENU-UAT-2 sin duplicar raíz."""
+        finance = self.env.ref("account.menu_finance", raise_if_not_found=False)
+        if not finance:
+            return
+
+        finance_entries = self.env.ref("account.menu_finance_entries", raise_if_not_found=False)
+        payments_hub = self.env.ref("hellenia_ui.menu_finance_payments_root", raise_if_not_found=False)
+        reports = self.env.ref("account.menu_finance_reports", raise_if_not_found=False)
+        taxes_reports = self.env.ref("account.account_reports_taxes_and_fiscal_menu", raise_if_not_found=False)
+        audit_fiscal = self.env.ref("justech_l10n_do_reports.menu_justech_do_audit_root", raise_if_not_found=False)
+
+        if finance_entries:
+            finance_entries.write({"parent_id": finance.id, "active": True})
+            self._set_menu_label("account.menu_finance_entries", "Contabilidad")
+
+        # Hub Contabilidad: asientos, apuntes, activos, préstamos, conciliar, bloqueos
+        accounting_children = (
+            "account.menu_action_move_journal_line_form",
+            "account.menu_action_account_moves_all",
+            "account_asset.menu_action_account_asset_form",
+            "account_loans.menu_action_loans",
+            "account_accountant.menu_account_reconcile",
+            "account_accountant.menu_action_change_lock_date",
+            "account.menu_action_secure_entries",
+        )
+        for xid in accounting_children:
+            self._write_menu(xid, parent_xid="account.menu_finance_entries", active=True)
+
+        for xid in ACCOUNTING_CONTAINER_HIDE_XMLIDS:
+            self._write_menu(xid, active=False)
+
+        # Hub Pagos (accesos centralizados; Clientes/Proveedores conservan accesos contextuales Odoo)
+        if payments_hub:
+            payments_hub.write({"parent_id": finance.id, "active": True})
+            for xid in (
+                "hellenia_ui.menu_finance_payments_customer",
+                "hellenia_ui.menu_finance_payments_vendor",
+                "hellenia_ui.menu_finance_open_payments_customer",
+                "hellenia_ui.menu_finance_open_payments_vendor",
+                "hellenia_ui.menu_finance_bank_reconciliation",
+            ):
+                self._write_menu(xid, parent_xid="hellenia_ui.menu_finance_payments_root", active=True)
+
+        # Clientes / Proveedores: mantener pagos contextuales estándar
+        self._write_menu(
+            "account.menu_action_account_payments_receivable",
+            parent_xid="account.menu_finance_receivables",
+            active=True,
+        )
+        self._write_menu(
+            "account.menu_action_account_payments_payable",
+            parent_xid="account.menu_finance_payables",
+            active=True,
+        )
+
+        # Declaración fiscal estándar bajo Reportes > Impuestos (no en Contabilidad)
+        fiscal_return = self.env.ref(FISCAL_RETURN_MENU, raise_if_not_found=False)
+        if fiscal_return and taxes_reports:
+            fiscal_return.write({"parent_id": taxes_reports.id, "active": True, "sequence": 5})
+
+        # DGII / NCF / Retenciones bajo Auditoría Fiscal
+        if audit_fiscal:
+            audit_fiscal.write({"parent_id": finance.id, "active": True})
+
+            dgii_root = self.env.ref("justech_l10n_do_reports.menu_justech_do_reports_root", raise_if_not_found=False)
+            if dgii_root:
+                for child in self.env["ir.ui.menu"].search([("parent_id", "=", dgii_root.id)]):
+                    child.write({"parent_id": audit_fiscal.id, "active": True})
+                dgii_root.active = False
+
+            for xid in (
+                "justech_l10n_do_base.menu_justech_do_document_types",
+                "justech_l10n_do_ncf.menu_justech_do_ncf_ranges",
+                "justech_l10n_do_ncf.menu_justech_do_ncf_consumption",
+                "hellenia_account.menu_hellenia_withholding_catalog",
+            ):
+                self._write_menu(xid, parent_xid="justech_l10n_do_reports.menu_justech_do_audit_root", active=True)
+
+        # Revisión en raíz
+        self._write_menu("account.account_audit_menu", parent_xid="account.menu_finance", active=True)
+
+        for xid in STANDARD_ACCOUNTING_RESTORE_XMLIDS:
+            menu = self.env.ref(xid, raise_if_not_found=False)
+            if menu:
+                menu.active = True
+
+        for xid in ACCOUNTING_CONTAINER_HIDE_XMLIDS:
+            self._write_menu(xid, active=False)
+
+        self._set_menu_label("account_accountant.menu_account_reconcile", "Conciliar")
+
+        for xid, label in STANDARD_ACCOUNTING_LABELS_ES.items():
+            self._set_menu_label(xid, label)
+
+        self._apply_sequences(FINANCE_CHILD_SEQUENCES)
+        self._apply_sequences(ACCOUNTING_HUB_CHILD_SEQUENCES)
+        self._apply_sequences(RECEIVABLES_CHILD_SEQUENCES)
+        self._apply_sequences(PAYABLES_CHILD_SEQUENCES)
+        self._apply_sequences(PAYMENTS_HUB_CHILD_SEQUENCES)
+        self._apply_sequences(REPORTS_CHILD_SEQUENCES)
+        self._apply_sequences(LEGAL_REPORTS_SEQUENCES)
+        self._apply_sequences(AUDIT_FISCAL_CHILD_SEQUENCES)
+
+        # Mayor general bajo Ledgers si existe
+        ledgers = self.env.ref("account_reports.account_reports_audit_menu", raise_if_not_found=False)
+        gl = self.env.ref("account_reports.menu_action_account_report_general_ledger", raise_if_not_found=False)
+        if ledgers and gl and gl.parent_id != ledgers:
+            gl.write({"parent_id": ledgers.id, "active": True, "sequence": 2})
+
+        if reports:
+            for menu in self.env["ir.ui.menu"].search([("id", "child_of", reports.id)]):
+                data = self.env["ir.model.data"].search(
+                    [("model", "=", "ir.ui.menu"), ("res_id", "=", menu.id)], limit=1
+                )
+                if data and data.module.startswith(("account", "stock_accountant", "purchase_accountant", "sale_account")):
+                    menu.active = True
 
     @api.model
     def apply_accounting_menu_labels(self):
@@ -425,4 +645,5 @@ class HelleniaUiMenuCustomizer(models.AbstractModel):
         self.repair_accounting_menu_tree()
         self.integrate_justech_menus()
         self.standardize_ux1_navigation()
+        self.restore_standard_accounting_menus()
         self.apply_ux_flow_fix_labels()

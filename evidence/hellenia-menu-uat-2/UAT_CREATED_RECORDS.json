@@ -1,0 +1,154 @@
+{
+  "partners": [
+    {
+      "id": 114,
+      "name": "UAT-MENU-Cliente Demo"
+    },
+    {
+      "id": 115,
+      "name": "UAT-MENU-Proveedor Demo"
+    }
+  ],
+  "moves": [
+    {
+      "id": 279,
+      "ref": "UAT-MENU-10-PAGO-PROV",
+      "state": "posted",
+      "amount": 1416.0
+    },
+    {
+      "id": 275,
+      "ref": "UAT-MENU-07-PAGO-MAYOR-ABIERTO",
+      "state": "posted",
+      "amount": 1500.0
+    },
+    {
+      "id": 273,
+      "ref": "UAT-MENU-06-PAGO-RET",
+      "state": "posted",
+      "amount": 3540.0
+    },
+    {
+      "id": 271,
+      "ref": "UAT-MENU-05-PAGO-TOTAL",
+      "state": "posted",
+      "amount": 1770.0
+    },
+    {
+      "id": 267,
+      "ref": "UAT-MENU-03-PAGO-ABIERTO-PROV",
+      "state": "posted",
+      "amount": 800.0
+    },
+    {
+      "id": 266,
+      "ref": "UAT-MENU-02-PAGO-ABIERTO-CLI",
+      "state": "posted",
+      "amount": 500.0
+    },
+    {
+      "id": 265,
+      "ref": "UAT-MENU-01-PAGO-NORMAL",
+      "state": "posted",
+      "amount": 1180.0
+    },
+    {
+      "id": 277,
+      "ref": "UAT-MENU-09-FACT-APLICAR-ABIERTO",
+      "state": "posted",
+      "amount": 1062.0
+    },
+    {
+      "id": 276,
+      "ref": "UAT-MENU-08-FACT-RET-SOLO",
+      "state": "posted",
+      "amount": 2950.0
+    },
+    {
+      "id": 274,
+      "ref": "UAT-MENU-07-FACT-MENOR",
+      "state": "posted",
+      "amount": 1180.0
+    },
+    {
+      "id": 272,
+      "ref": "UAT-MENU-06-FACT-RET",
+      "state": "posted",
+      "amount": 3540.0
+    },
+    {
+      "id": 270,
+      "ref": "UAT-MENU-05-FACT-TOTAL",
+      "state": "posted",
+      "amount": 1770.0
+    },
+    {
+      "id": 268,
+      "ref": "UAT-MENU-04-FACT-PARCIAL",
+      "state": "posted",
+      "amount": 2360.0
+    },
+    {
+      "id": 264,
+      "ref": "UAT-MENU-01-FACT-PAGADA",
+      "state": "posted",
+      "amount": 1180.0
+    },
+    {
+      "id": 278,
+      "ref": "UAT-MENU-10-FACT-PROV",
+      "state": "posted",
+      "amount": 1416.0
+    }
+  ],
+  "payments": [
+    {
+      "id": 116,
+      "name": "PBNKD/2026/00008",
+      "memo": "UAT-MENU-10-PAGO-PROV",
+      "amount": 1416.0
+    },
+    {
+      "id": 115,
+      "name": "PBNKD/2026/00007",
+      "memo": "UAT-MENU-07-PAGO-MAYOR-ABIERTO",
+      "amount": 1500.0
+    },
+    {
+      "id": 114,
+      "name": "PBNKD/2026/00006",
+      "memo": "UAT-MENU-06-PAGO-RET",
+      "amount": 3540.0
+    },
+    {
+      "id": 113,
+      "name": "PBNKD/2026/00005",
+      "memo": "UAT-MENU-05-PAGO-TOTAL",
+      "amount": 1770.0
+    },
+    {
+      "id": 111,
+      "name": "PBNKD/2026/00003",
+      "memo": "UAT-MENU-03-PAGO-ABIERTO-PROV",
+      "amount": 800.0
+    },
+    {
+      "id": 110,
+      "name": "PBNKD/2026/00002",
+      "memo": "UAT-MENU-02-PAGO-ABIERTO-CLI",
+      "amount": 500.0
+    },
+    {
+      "id": 109,
+      "name": "PBNKD/2026/00001",
+      "memo": "UAT-MENU-01-PAGO-NORMAL",
+      "amount": 1180.0
+    }
+  ],
+  "statements": [
+    {
+      "id": 22,
+      "name": "UAT-MENU-Extracto"
+    }
+  ]
+}

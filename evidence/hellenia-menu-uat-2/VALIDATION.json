@@ -1,0 +1,22 @@
+{
+  "phase": "HELLENIA-MENU-UAT-2",
+  "database": "hellenia_prod",
+  "module": "hellenia_ui 19.0.1.0.10",
+  "timestamp_utc": "2026-07-09T14:10:30Z",
+  "pass": true,
+  "issues": [],
+  "checks_summary": {
+    "no_root_asientos_apuntes": true,
+    "pagos_hub_visible": true,
+    "bank_reconciliation_visible": true,
+    "auditoria_fiscal_visible": true,
+    "retenciones_visible": true,
+    "reconcile_label": "Conciliar"
+  },
+  "uat_records": {
+    "partners": 2,
+    "moves": 15,
+    "payments_memo": 7,
+    "bank_statements": 1
+  }
+}

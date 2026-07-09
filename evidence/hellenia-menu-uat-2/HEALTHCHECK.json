@@ -1,0 +1,9 @@
+{
+  "status": "PASS",
+  "database": "hellenia_prod",
+  "urls": {
+    "odoo.hellenia.cloud": "200",
+    "justgroup.app": "200"
+  },
+  "timestamp_utc": "2026-07-09T14:10:30Z"
+}

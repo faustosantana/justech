@@ -1,0 +1,37 @@
+{
+  "iteration": "DEV-1",
+  "backup_path": "/opt/odoo-dev/backups/fiscal-integration-dev1-20260709_214432",
+  "restore_validated": true,
+  "restore_test_counts": {
+    "posted_moves": 2255,
+    "ncf_adel": 1504,
+    "partial_reconciles": 947,
+    "payments_active": 677
+  },
+  "installed": [
+    {"module": "justech_l10n_do_base", "version": "19.0.1.6.0"},
+    {"module": "justech_l10n_do_ncf", "version": "19.0.2.1.0"}
+  ],
+  "pending": [
+    "justech_l10n_do_reports",
+    "justech_l10n_do_dashboard",
+    "justech_ncf_activation_per_company"
+  ],
+  "post_validation": {
+    "posted_moves": 2255,
+    "ncf_adel": 1504,
+    "ncf_justech_posted": 0,
+    "partial_reconciles": 947,
+    "payments_active": 677,
+    "gl_balanced": true,
+    "fiscal_enabled_companies": 0,
+    "journals_justech_ncf": 0,
+    "ok": true
+  },
+  "delta_vs_pre": {
+    "posted_moves": 0,
+    "ncf_adel": 0,
+    "partial_reconciles": 0,
+    "payments_active": 0
+  }
+}

@@ -28,8 +28,9 @@
 
 | ID | Objetivo | BD | Estado |
 |----|----------|-----|--------|
-| **A-001** | Baseline read-only + tests NCF + integridad lab | ncf_lab + audit dev | En curso |
-| **A-002** | Instalar `justech_l10n_do_reports` en lab + tests reports | ncf_lab | Pendiente aprobación A-001 |
+| **A-001** | Baseline read-only + tests NCF + integridad lab | ncf_lab + audit dev | ✅ Aprobada |
+| **DEV-1** | Install base+ncf en `justech_dev` (Adel coexistencia) | justech_dev | ✅ Completada |
+| **DEV-2** | Instalar `justech_l10n_do_reports` en erp.justech.do | justech_dev | Pendiente aprobación DEV-1 |
 | **A-003** | Matriz funcional smoke (ventas/compras/NC/ND/pagos read-only) | ncf_lab | Pendiente |
 | **A-004** | Multiempresa 4 compañías — validación datos reales lab | ncf_lab | Pendiente |
 | **A-005** | Clon `justech_dev` → `justech_fiscal_int` + install Justech sin Adel write | nueva BD | Pendiente aprobación |

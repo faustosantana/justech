@@ -7,7 +7,9 @@
 | **Rama origen** | `feature/fiscal-integration-phase-a` |
 | **Rama destino** | `development` |
 | **Tipo merge** | Fast-forward |
-| **Hash `development`** | `bfd1b2327c5cb69094a782c5f56d25a978dbcb66` |
+| **Hash merge Fase A (código fiscal)** | `bfd1b2327c5cb69094a782c5f56d25a978dbcb66` |
+| **Hash cierre evidencia (`development` HEAD)** | `a229d2858557838afb53b1600c61c0038870f56c` |
+| **Healthcheck post-cierre** | PASS (`fiscal-integration-env-healthcheck.py`, 2026-07-09 22:09 UTC) |
 | **Hash anterior `development`** | `40bac91bf1b51b8689daab5c7976a5f7529b4974` |
 | **Entorno runtime** | `erp.justech.do` / BD `justech_dev` |
 | **Producción** | `justgroup.app` — **no tocada** |

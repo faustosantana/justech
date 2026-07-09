@@ -1,0 +1,1 @@
+2026-07-09 19:31:28,668 3476913 INFO justech_ncf_lab odoo.tests.result: 0 failed, 0 error(s) of 31 tests when loading database 'justech_ncf_lab' 

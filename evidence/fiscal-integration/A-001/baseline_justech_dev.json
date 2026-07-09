@@ -1,0 +1,52 @@
+{
+  "iteration": "A-001",
+  "snapshots": [
+    {
+      "label": "justech_dev",
+      "database": "justech_dev",
+      "ts": "2026-07-09T19:30:13.187830+00:00",
+      "posted_moves": 2255,
+      "partial_reconciles": 947,
+      "payments_active": 677,
+      "companies": 4,
+      "companies_fiscal_enabled": 0,
+      "ncf_adel": 1504,
+      "ncf_justech": 0,
+      "gl_balanced": true,
+      "gl_debit": 85656868.89,
+      "gl_credit": 85656868.89,
+      "modules_fiscal": [
+        {
+          "name": "l10n_do",
+          "state": "installed",
+          "version": "19.0.2.0"
+        },
+        {
+          "name": "l10n_do_accounting",
+          "state": "installed",
+          "version": "19.0.1.0.0"
+        },
+        {
+          "name": "l10n_do_check_printing",
+          "state": "installed",
+          "version": "19.0.1.0"
+        },
+        {
+          "name": "l10n_do_ecf_connector",
+          "state": "uninstalled",
+          "version": null
+        },
+        {
+          "name": "l10n_do_ecf_connector_receptor",
+          "state": "uninstalled",
+          "version": null
+        },
+        {
+          "name": "l10n_do_reports",
+          "state": "installed",
+          "version": "19.0.1.0"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,82 @@
+{
+  "iteration": "A-001",
+  "snapshots": [
+    {
+      "label": "justech_ncf_lab",
+      "database": "justech_ncf_lab",
+      "ts": "2026-07-09T19:30:19.942837+00:00",
+      "posted_moves": 2255,
+      "partial_reconciles": 947,
+      "payments_active": 677,
+      "companies": 4,
+      "companies_fiscal_enabled": 4,
+      "ncf_adel": 0,
+      "ncf_justech": 1494,
+      "gl_balanced": true,
+      "gl_debit": 85656868.89,
+      "gl_credit": 85656868.89,
+      "modules_fiscal": [
+        {
+          "name": "hellenia_account",
+          "state": "installed",
+          "version": "19.0.1.0.27"
+        },
+        {
+          "name": "hellenia_base",
+          "state": "installed",
+          "version": "19.0.1.0.0"
+        },
+        {
+          "name": "justech_l10n_do_base",
+          "state": "installed",
+          "version": "19.0.1.6.0"
+        },
+        {
+          "name": "justech_l10n_do_dashboard",
+          "state": "installed",
+          "version": "19.0.1.0.0"
+        },
+        {
+          "name": "justech_l10n_do_ncf",
+          "state": "installed",
+          "version": "19.0.2.1.0"
+        },
+        {
+          "name": "justech_l10n_do_reports",
+          "state": "uninstalled",
+          "version": null
+        },
+        {
+          "name": "l10n_do",
+          "state": "installed",
+          "version": "19.0.2.0"
+        },
+        {
+          "name": "l10n_do_accounting",
+          "state": "uninstalled",
+          "version": null
+        },
+        {
+          "name": "l10n_do_check_printing",
+          "state": "installed",
+          "version": "19.0.1.0"
+        },
+        {
+          "name": "l10n_do_ecf_connector",
+          "state": "uninstalled",
+          "version": null
+        },
+        {
+          "name": "l10n_do_ecf_connector_receptor",
+          "state": "uninstalled",
+          "version": null
+        },
+        {
+          "name": "l10n_do_reports",
+          "state": "installed",
+          "version": "19.0.1.0"
+        }
+      ]
+    }
+  ]
+}

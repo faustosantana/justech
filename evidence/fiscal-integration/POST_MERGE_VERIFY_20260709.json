@@ -1,0 +1,65 @@
+{
+  "passed": true,
+  "errors": [],
+  "checks": [
+    {
+      "name": "adel_active",
+      "ok": true,
+      "detail": "installed"
+    },
+    {
+      "name": "ncf_motor_off",
+      "ok": true,
+      "detail": 0
+    },
+    {
+      "name": "hist_posted_moves",
+      "ok": true,
+      "detail": 2255
+    },
+    {
+      "name": "hist_partial_reconciles",
+      "ok": true,
+      "detail": 947
+    },
+    {
+      "name": "hist_payments_active",
+      "ok": true,
+      "detail": 677
+    },
+    {
+      "name": "hist_ncf_adel",
+      "ok": true,
+      "detail": 1504
+    },
+    {
+      "name": "606_zero_errors",
+      "ok": true,
+      "detail": {
+        "all": 90,
+        "valid": 90,
+        "incomplete": 0,
+        "excluded": 0,
+        "cancelled": 0,
+        "partners_affected": 0,
+        "error_lines": 0
+      }
+    }
+  ],
+  "historical": {
+    "posted_moves": 2255,
+    "partial_reconciles": 947,
+    "payments_active": 677,
+    "ncf_adel": 1504
+  },
+  "606": {
+    "all": 90,
+    "valid": 90,
+    "incomplete": 0,
+    "excluded": 0,
+    "cancelled": 0,
+    "partners_affected": 0,
+    "error_lines": 0
+  },
+  "ts": "2026-07-09T22:06:50.228411+00:00"
+}

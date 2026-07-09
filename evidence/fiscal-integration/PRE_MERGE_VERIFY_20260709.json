@@ -1,0 +1,239 @@
+{
+  "ts": "2026-07-09T22:04:21.456927+00:00",
+  "database": "justech_dev",
+  "environment": "erp.justech.do",
+  "period": "202606",
+  "module_reports": "19.0.1.16.1",
+  "checks": [
+    {
+      "name": "adel_active",
+      "ok": true,
+      "detail": "installed"
+    },
+    {
+      "name": "justech_ncf_motor_disabled",
+      "ok": true,
+      "detail": "fiscal_enabled_companies=0"
+    },
+    {
+      "name": "justech_ncf_posted_zero",
+      "ok": true,
+      "detail": "justech_ncf_posted=0"
+    },
+    {
+      "name": "historical_posted_moves",
+      "ok": true,
+      "detail": {
+        "expected": 2255,
+        "actual": 2255
+      }
+    },
+    {
+      "name": "historical_partial_reconciles",
+      "ok": true,
+      "detail": {
+        "expected": 947,
+        "actual": 947
+      }
+    },
+    {
+      "name": "historical_payments_active",
+      "ok": true,
+      "detail": {
+        "expected": 677,
+        "actual": 677
+      }
+    },
+    {
+      "name": "historical_ncf_adel",
+      "ok": true,
+      "detail": {
+        "expected": 1504,
+        "actual": 1504
+      }
+    },
+    {
+      "name": "606_202606_zero_errors",
+      "ok": true,
+      "detail": {
+        "all": 90,
+        "valid": 90,
+        "incomplete": 0,
+        "excluded": 0,
+        "cancelled": 0,
+        "partners_affected": 0,
+        "error_lines": 0
+      }
+    },
+    {
+      "name": "606_202606_all_valid",
+      "ok": true,
+      "detail": {
+        "all": 90,
+        "valid": 90,
+        "incomplete": 0,
+        "excluded": 0,
+        "cancelled": 0,
+        "partners_affected": 0,
+        "error_lines": 0
+      }
+    },
+    {
+      "name": "ecf_E310000019120_found",
+      "ok": true,
+      "detail": "FP/2026/06/0084"
+    },
+    {
+      "name": "ecf_provider_ncf_resolved",
+      "ok": true,
+      "detail": "E310000019120"
+    },
+    {
+      "name": "ecf_no_ncf_error",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "ecf_no_validation_errors",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "cdt_tax15_catalog_X",
+      "ok": true,
+      "detail": {
+        "tax_id": 15,
+        "tax_name": "2% CDT",
+        "role": "other_tax",
+        "column_606": "X"
+      }
+    },
+    {
+      "name": "cdt_5_invoices_column_X",
+      "ok": true,
+      "detail": [
+        {
+          "move": "FP/2026/06/0083",
+          "ncf": "E310000000209",
+          "N": 1305.76,
+          "W": 725.42,
+          "X": 145.08,
+          "errors": []
+        },
+        {
+          "move": "FP/2026/06/0084",
+          "ncf": "E310000019120",
+          "N": 0.38,
+          "W": 0.21,
+          "X": 0.04,
+          "errors": []
+        },
+        {
+          "move": "FP/2026/06/0044",
+          "ncf": "E310015894257",
+          "N": 187.62,
+          "W": 104.23,
+          "X": 20.85,
+          "errors": []
+        },
+        {
+          "move": "FP/2026/06/0045",
+          "ncf": "E310015890327",
+          "N": 78.44,
+          "W": 43.58,
+          "X": 8.72,
+          "errors": []
+        },
+        {
+          "move": "FP/2026/06/0046",
+          "ncf": "E310015893083",
+          "N": 249.82,
+          "W": 138.79,
+          "X": 27.76,
+          "errors": []
+        }
+      ]
+    }
+  ],
+  "passed": true,
+  "errors": [],
+  "counts_606": {
+    "all": 90,
+    "valid": 90,
+    "incomplete": 0,
+    "excluded": 0,
+    "cancelled": 0,
+    "partners_affected": 0,
+    "error_lines": 0
+  },
+  "target_ecf": {
+    "move_id": 3538,
+    "move_name": "FP/2026/06/0084",
+    "l10n_latam_document_number": "E310000019120",
+    "justech_do_ncf": "",
+    "provider_ncf": "E310000019120",
+    "errors": [],
+    "ncf_errors": []
+  },
+  "cdt_catalog": {
+    "tax_id": 15,
+    "tax_name": "2% CDT",
+    "role": "other_tax",
+    "column_606": "X"
+  },
+  "cdt_invoices": [
+    {
+      "move": "FP/2026/06/0083",
+      "ncf": "E310000000209",
+      "N": 1305.76,
+      "W": 725.42,
+      "X": 145.08,
+      "errors": []
+    },
+    {
+      "move": "FP/2026/06/0084",
+      "ncf": "E310000019120",
+      "N": 0.38,
+      "W": 0.21,
+      "X": 0.04,
+      "errors": []
+    },
+    {
+      "move": "FP/2026/06/0044",
+      "ncf": "E310015894257",
+      "N": 187.62,
+      "W": 104.23,
+      "X": 20.85,
+      "errors": []
+    },
+    {
+      "move": "FP/2026/06/0045",
+      "ncf": "E310015890327",
+      "N": 78.44,
+      "W": 43.58,
+      "X": 8.72,
+      "errors": []
+    },
+    {
+      "move": "FP/2026/06/0046",
+      "ncf": "E310015893083",
+      "N": 249.82,
+      "W": 138.79,
+      "X": 27.76,
+      "errors": []
+    }
+  ],
+  "historical": {
+    "posted_moves": 2255,
+    "partial_reconciles": 947,
+    "payments_active": 677,
+    "ncf_adel": 1504
+  },
+  "adel": {
+    "state": "installed"
+  },
+  "justech_ncf": {
+    "fiscal_enabled_companies": 0,
+    "posted_ncf_count": 0
+  }
+}

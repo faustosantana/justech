@@ -1,0 +1,286 @@
+{
+  "ok": [
+    {
+      "name": "001_s01_tablero_contabilidad.png",
+      "bytes": 310250,
+      "url": "/odoo/accounting"
+    },
+    {
+      "name": "002_s01_menu_raiz_clientes.png",
+      "bytes": 332887,
+      "url": "/odoo/accounting"
+    },
+    {
+      "name": "003_s01_menu_raiz_proveedores.png",
+      "bytes": 266108,
+      "url": "/odoo/accounting"
+    },
+    {
+      "name": "004_s01_menu_raiz_pagos.png",
+      "bytes": 273488,
+      "url": "/odoo/accounting"
+    },
+    {
+      "name": "005_s01_menu_raiz_contabilidad_hub.png",
+      "bytes": 258784,
+      "url": "/odoo/accounting"
+    },
+    {
+      "name": "006_s01_menu_raiz_reportes.png",
+      "bytes": 335744,
+      "url": "/odoo/accounting"
+    },
+    {
+      "name": "007_s01_menu_raiz_auditoria_fiscal.png",
+      "bytes": 387324,
+      "url": "/odoo/accounting"
+    },
+    {
+      "name": "008_s01_menu_raiz_configuracion.png",
+      "bytes": 403621,
+      "url": "/odoo/accounting"
+    },
+    {
+      "name": "009_s02_facturas_cliente_lista.png",
+      "bytes": 392873,
+      "url": "/odoo/action-266"
+    },
+    {
+      "name": "010_s02_factura_pagada.png",
+      "bytes": 309882,
+      "url": "/odoo/action-266/264"
+    },
+    {
+      "name": "011_s02_factura_parcial.png",
+      "bytes": 373735,
+      "url": "/odoo/action-266/268"
+    },
+    {
+      "name": "012_s02_factura_retencion.png",
+      "bytes": 313836,
+      "url": "/odoo/action-266/272"
+    },
+    {
+      "name": "013_s02_pagos_cliente_lista.png",
+      "bytes": 140081,
+      "url": "/odoo/action-241"
+    },
+    {
+      "name": "014_s02_pago_normal_aplicado.png",
+      "bytes": 313263,
+      "url": "/odoo/action-241/109"
+    },
+    {
+      "name": "015_s02_pagos_abiertos_cliente_lista.png",
+      "bytes": 115903,
+      "url": "/odoo/action-725"
+    },
+    {
+      "name": "016_s02_pago_abierto_cliente_form.png",
+      "bytes": 283537,
+      "url": "/odoo/action-725/110"
+    },
+    {
+      "name": "017_s03_facturas_proveedor_lista.png",
+      "bytes": 267613,
+      "url": "/odoo/action-269"
+    },
+    {
+      "name": "018_s03_factura_proveedor.png",
+      "bytes": 382293,
+      "url": "/odoo/action-269/278"
+    },
+    {
+      "name": "019_s03_pagos_proveedor_lista.png",
+      "bytes": 342131,
+      "url": "/odoo/action-242"
+    },
+    {
+      "name": "020_s03_pago_total_proveedor.png",
+      "bytes": 309236,
+      "url": "/odoo/action-242/116"
+    },
+    {
+      "name": "021_s03_pagos_abiertos_proveedor_lista.png",
+      "bytes": 161874,
+      "url": "/odoo/action-726"
+    },
+    {
+      "name": "022_s03_pago_abierto_proveedor_form.png",
+      "bytes": 242886,
+      "url": "/odoo/action-242/111"
+    },
+    {
+      "name": "024_s04_pagos_abiertos_todos_clientes.png",
+      "bytes": 115903,
+      "url": "/odoo/action-725"
+    },
+    {
+      "name": "025_s04_pagos_abiertos_todos_proveedores.png",
+      "bytes": 114877,
+      "url": "/odoo/action-726"
+    },
+    {
+      "name": "026_s04_pago_parcial_cliente.png",
+      "bytes": 313290,
+      "url": "/odoo/action-241/113"
+    },
+    {
+      "name": "027_s04_pago_mayor_factura_saldo.png",
+      "bytes": 248907,
+      "url": "/odoo/action-241/115"
+    },
+    {
+      "name": "028_s05_factura_antes_aplicar.png",
+      "bytes": 372925,
+      "url": "/odoo/action-266/277"
+    },
+    {
+      "name": "029_s05_factura_estado_pago.png",
+      "bytes": 372925,
+      "url": "/odoo/action-266/277"
+    },
+    {
+      "name": "030_s05_pago_abierto_relacionado.png",
+      "bytes": 283537,
+      "url": "/odoo/action-725/110"
+    },
+    {
+      "name": "031_s05_resultado_factura_post_aplicacion.png",
+      "bytes": 309883,
+      "url": "/odoo/action-266/264"
+    },
+    {
+      "name": "032_s06_catalogo_retenciones.png",
+      "bytes": 270487,
+      "url": "/odoo/action-649"
+    },
+    {
+      "name": "033_s06_factura_con_retencion.png",
+      "bytes": 351994,
+      "url": "/odoo/action-266/276"
+    },
+    {
+      "name": "034_s06_pago_con_retencion.png",
+      "bytes": 352819,
+      "url": "/odoo/action-241/114"
+    },
+    {
+      "name": "035_s06_reporte_623_wizard.png",
+      "bytes": 105022,
+      "url": "/odoo/action-658"
+    },
+    {
+      "name": "036_s07_tablero_bancos.png",
+      "bytes": 72992,
+      "url": "/odoo/accounting"
+    },
+    {
+      "name": "037_s07_conciliacion_bancaria_kanban.png",
+      "bytes": 233827,
+      "url": "/odoo/action-727"
+    },
+    {
+      "name": "038_s07_conciliar_apuntes_lista.png",
+      "bytes": 267994,
+      "url": "/odoo/action-420"
+    },
+    {
+      "name": "039_s07_pago_posteado_estado.png",
+      "bytes": 312783,
+      "url": "/odoo/action-241/109"
+    },
+    {
+      "name": "040_s08_asientos_contables_lista.png",
+      "bytes": 556681,
+      "url": "/odoo/action-263"
+    },
+    {
+      "name": "041_s08_asiento_uat_ejemplo.png",
+      "bytes": 312074,
+      "url": "/odoo/action-263/264"
+    },
+    {
+      "name": "042_s08_apuntes_contables_lista.png",
+      "bytes": 712967,
+      "url": "/odoo/action-262"
+    },
+    {
+      "name": "043_s08_mayor_general.png",
+      "bytes": 282460,
+      "url": "/odoo/accounting/general-ledger"
+    },
+    {
+      "name": "044_s08_balance_general.png",
+      "bytes": 290411,
+      "url": "/odoo/accounting/balance-sheet"
+    },
+    {
+      "name": "045_s08_estado_resultados.png",
+      "bytes": 187973,
+      "url": "/odoo/accounting/profit-and-loss"
+    },
+    {
+      "name": "046_s08_balance_comprobacion.png",
+      "bytes": 164063,
+      "url": "/odoo/accounting/trial-balance"
+    },
+    {
+      "name": "047_s09_dgii_606.png",
+      "bytes": 100141,
+      "url": "/odoo/action-644"
+    },
+    {
+      "name": "048_s09_dgii_607.png",
+      "bytes": 98876,
+      "url": "/odoo/action-645"
+    },
+    {
+      "name": "049_s09_dgii_608.png",
+      "bytes": 100310,
+      "url": "/odoo/action-646"
+    },
+    {
+      "name": "050_s09_dgii_609.png",
+      "bytes": 102572,
+      "url": "/odoo/action-657"
+    },
+    {
+      "name": "051_s09_dgii_623.png",
+      "bytes": 105022,
+      "url": "/odoo/action-658"
+    },
+    {
+      "name": "052_s09_ncf_consumo.png",
+      "bytes": 262204,
+      "url": "/odoo/action-573"
+    },
+    {
+      "name": "053_s09_ncf_tipos.png",
+      "bytes": 176899,
+      "url": "/odoo/action-559"
+    },
+    {
+      "name": "054_s09_ncf_rangos.png",
+      "bytes": 251932,
+      "url": "/odoo/action-572"
+    },
+    {
+      "name": "055_s10_auditoria_fiscal_menu.png",
+      "bytes": 144053,
+      "url": "/odoo/accounting"
+    },
+    {
+      "name": "058_s11_flujo_factura_retencion_conciliacion.png",
+      "bytes": 315511,
+      "url": "/odoo/action-266/272"
+    },
+    {
+      "name": "059_s12_flujo_compra_proveedor_pago.png",
+      "bytes": 384350,
+      "url": "/odoo/action-269/278"
+    }
+  ],
+  "fail": [],
+  "total_planned": 56
+}

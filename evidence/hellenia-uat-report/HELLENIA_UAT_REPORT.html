@@ -1,0 +1,542 @@
+<!DOCTYPE html><html lang="es"><head><meta charset="utf-8"/>
+<title>HELLENIA UAT Report — Tesorería y Contabilidad</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&display=swap');
+:root{--brand-dark:#1e1b4b;--brand-primary:#4338ca;--brand-accent:#6366f1;--brand-muted:#64748b;--border:#e2e8f0;--bg-soft:#f8fafc;--tip:#ecfdf5;--tip-border:#10b981;--warn:#fef3c7;}
+*{box-sizing:border-box}body{font-family:'Source Sans 3',sans-serif;color:#1e293b;line-height:1.55;font-size:10.5pt;margin:0}
+@page{size:A4;margin:18mm 15mm 24mm 15mm;@bottom-left{content:"Justech · Hellenia ERP — UAT Report v1.0";font-size:8pt;color:#64748b}@bottom-right{content:"Página " counter(page);font-size:8.5pt;color:#64748b}}
+@page :first{margin:0}
+.cover{page-break-after:always;min-height:297mm;background:linear-gradient(145deg,#1e1b4b,#312e81 50%,#4338ca);color:#fff;padding:22mm 20mm;display:flex;flex-direction:column;justify-content:space-between}
+.cover-logos{display:flex;justify-content:space-between;align-items:center;gap:10mm}
+.cover-logos img{max-height:22mm;background:#fff;padding:3mm 5mm;border-radius:6px}
+.justech-badge{font-size:14pt;font-weight:700;letter-spacing:.12em;background:rgba(255,255,255,.15);padding:4mm 6mm;border-radius:6px}
+.cover h1{font-size:30pt;margin:8mm 0 4mm;line-height:1.15}
+.cover .subtitle{font-size:14pt;opacity:.92;max-width:150mm}
+.cover .meta{font-size:10.5pt;opacity:.85;line-height:1.7}
+.toc-page{page-break-after:always;padding-top:8mm}
+.toc-page h2{color:var(--brand-dark);border-bottom:3px solid var(--brand-accent);padding-bottom:3mm}
+.toc-list{list-style:none;padding:0}
+.toc-list li{padding:2mm 0;border-bottom:1px dotted var(--border);font-size:10.5pt}
+.toc-list a{color:var(--brand-primary);text-decoration:none}
+.chapter{page-break-before:always}
+.chapter-num{color:var(--brand-accent);font-size:9pt;font-weight:700;text-transform:uppercase;letter-spacing:.08em}
+.chapter h1{color:var(--brand-dark);font-size:19pt;border-left:5px solid var(--brand-accent);padding-left:4mm;margin:2mm 0 4mm}
+.lead{font-size:11pt;color:#334155;margin-bottom:5mm}
+h2.section{color:var(--brand-primary);font-size:12pt;margin:5mm 0 2mm;border-bottom:1px solid var(--border)}
+figure{margin:5mm 0;page-break-inside:avoid}
+.fig-num{font-size:8.5pt;font-weight:700;color:var(--brand-accent);text-transform:uppercase;margin-bottom:1mm}
+figure img{max-width:100%;border:1px solid var(--border);border-radius:4px;box-shadow:0 2px 6px rgba(0,0,0,.08)}
+figcaption{font-size:9pt;margin-top:2mm;color:#334155}
+.fig-explain{font-size:9.5pt;color:#475569;margin:1.5mm 0 0;text-align:justify}
+.flow{margin:4mm 0 6mm;text-align:center;max-width:120mm}
+.flow-title{font-weight:700;color:var(--brand-dark);margin-bottom:2mm}
+.flow-box{border:2px solid var(--brand-accent);border-radius:5px;padding:2mm 3mm;font-weight:600;font-size:9.5pt;background:#fff}
+.flow-arrow{color:var(--brand-accent);font-size:11pt;margin:1mm 0}
+table.clean{width:100%;border-collapse:collapse;font-size:9.5pt;margin:3mm 0}
+table.clean th{background:var(--brand-dark);color:#fff;padding:2mm 3mm;text-align:left}
+table.clean td{border:1px solid var(--border);padding:2mm 3mm;vertical-align:top}
+.status-pass{color:#047857;font-weight:700}
+.status-fail{color:#b91c1c;font-weight:700}
+.box{padding:4mm;border-radius:5px;margin:4mm 0;font-size:10pt}
+.box.tip{background:var(--tip);border:1px solid var(--tip-border)}
+.box.warn{background:var(--warn);border:1px solid #f59e0b}
+ul.check{list-style:none;padding:0}
+ul.check li{padding-left:5mm;position:relative;margin-bottom:1.5mm}
+ul.check li::before{content:"✓";position:absolute;left:0;color:var(--tip-border);font-weight:700}
+ul.compact{padding-left:5mm;font-size:10pt}
+</style></head><body>
+
+<section class="cover">
+  <div class="cover-logos">
+    <img src="assets/hellenia_logo.jpg" alt="Hellenia"/>
+    <div class="justech-badge">JUSTECH</div>
+  </div>
+  <div>
+    <h1>Reporte Funcional UAT<br/>Tesorería y Contabilidad</h1>
+    <div class="subtitle">Validación funcional con capturas reales de producción — ERP Hellenia / Justech</div>
+  </div>
+  <div class="meta">
+    <strong>Fecha de generación:</strong> 09 de July de 2026<br/>
+    <strong>Versión documento:</strong> 1.0<br/>
+    <strong>Odoo:</strong> 19.0 Enterprise<br/>
+    <strong>Instancia:</strong> odoo.hellenia.cloud (hellenia_prod)<br/>
+    <strong>Módulos:</strong> account_accountant 19.0.1.1, hellenia_account 19.0.1.0.27, hellenia_ui 19.0.1.0.10, justech_l10n_do_ncf 19.0.1.6.0, justech_l10n_do_reports 19.0.1.13.0, justech_l10n_do_treasury 19.0.1.2.0<br/>
+    <strong>Prefijo data UAT:</strong> UAT-MENU-
+  </div>
+</section>
+
+<section class="toc-page"><h2>Tabla de contenido</h2><ol class="toc-list"><li><a href="#sec-1">Sección 1 — Mapa general del módulo Contabilidad</a></li><li><a href="#sec-2">Sección 2 — Clientes — Facturas y pagos</a></li><li><a href="#sec-3">Sección 3 — Proveedores — Facturas y pagos</a></li><li><a href="#sec-4">Sección 4 — Pagos abiertos</a></li><li><a href="#sec-5">Sección 5 — Aplicar pago abierto</a></li><li><a href="#sec-6">Sección 6 — Retenciones</a></li><li><a href="#sec-7">Sección 7 — Conciliación bancaria</a></li><li><a href="#sec-8">Sección 8 — Operaciones contables</a></li><li><a href="#sec-9">Sección 9 — Reportes DGII y NCF</a></li><li><a href="#sec-10">Sección 10 — Auditoría Fiscal</a></li><li><a href="#sec-11">Sección 11 — Flujo completo — Ventas</a></li><li><a href="#sec-12">Sección 12 — Flujo completo — Compras</a></li><li><a href="#sec-13">Sección 13 — Resumen técnico</a></li><li><a href="#sec-14">Sección 14 — Lista de pruebas</a></li><li><a href="#sec-15">Sección 15 — Conclusión</a></li></ol></section>
+
+<section class="chapter" id="sec-1">
+  <div class="chapter-num">Sección 1</div>
+  <h1>Mapa general del módulo Contabilidad</h1>
+  <p class="lead">La navegación contable de Hellenia fue reorganizada (HELLENIA-MENU-UAT-2) para eliminar duplicidades y agrupar tesorería, operaciones contables y fiscal RD bajo una estructura clara alineada a Odoo Enterprise.</p>
+  
+<figure id="fig-1">
+  <div class="fig-num">Figura 1</div>
+  <img src="screenshots/001_s01_tablero_contabilidad.png" alt="Tablero de Contabilidad"/>
+  <figcaption><strong>Tablero de Contabilidad</strong></figcaption>
+  <p class="fig-explain">Punto de entrada operativo. Muestra diarios, saldos bancarios y acceso rápido a conciliación por banco.</p>
+</figure>
+<figure id="fig-2">
+  <div class="fig-num">Figura 2</div>
+  <img src="screenshots/002_s01_menu_raiz_clientes.png" alt="Menú Clientes"/>
+  <figcaption><strong>Menú Clientes</strong></figcaption>
+  <p class="fig-explain">Agrupa facturas, notas de crédito, pagos, pagos abiertos, clientes y productos vendibles.</p>
+</figure>
+<figure id="fig-3">
+  <div class="fig-num">Figura 3</div>
+  <img src="screenshots/003_s01_menu_raiz_proveedores.png" alt="Menú Proveedores"/>
+  <figcaption><strong>Menú Proveedores</strong></figcaption>
+  <p class="fig-explain">Agrupa facturas de proveedor, pagos, pagos abiertos, proveedores y productos comprables.</p>
+</figure>
+<figure id="fig-4">
+  <div class="fig-num">Figura 4</div>
+  <img src="screenshots/004_s01_menu_raiz_pagos.png" alt="Menú Pagos (hub central)"/>
+  <figcaption><strong>Menú Pagos (hub central)</strong></figcaption>
+  <p class="fig-explain">Acceso centralizado a pagos de clientes/proveedores, pagos abiertos y conciliación bancaria.</p>
+</figure>
+<figure id="fig-5">
+  <div class="fig-num">Figura 5</div>
+  <img src="screenshots/005_s01_menu_raiz_contabilidad_hub.png" alt="Menú Contabilidad"/>
+  <figcaption><strong>Menú Contabilidad</strong></figcaption>
+  <p class="fig-explain">Asientos, apuntes, activos, préstamos, conciliar apuntes, fechas de bloqueo y protección de asientos.</p>
+</figure>
+<figure id="fig-6">
+  <div class="fig-num">Figura 6</div>
+  <img src="screenshots/006_s01_menu_raiz_reportes.png" alt="Menú Reportes"/>
+  <figcaption><strong>Menú Reportes</strong></figcaption>
+  <p class="fig-explain">Estados financieros estándar Odoo EE y declaración fiscal bajo Impuestos.</p>
+</figure>
+<figure id="fig-7">
+  <div class="fig-num">Figura 7</div>
+  <img src="screenshots/007_s01_menu_raiz_auditoria_fiscal.png" alt="Menú Auditoría Fiscal"/>
+  <figcaption><strong>Menú Auditoría Fiscal</strong></figcaption>
+  <p class="fig-explain">Concentra reportes DGII, NCF, retenciones y revisiones fiscales Justech.</p>
+</figure>
+<figure id="fig-8">
+  <div class="fig-num">Figura 8</div>
+  <img src="screenshots/008_s01_menu_raiz_configuracion.png" alt="Menú Configuración"/>
+  <figcaption><strong>Menú Configuración</strong></figcaption>
+  <p class="fig-explain">Plan de cuentas, impuestos, diarios y parámetros fiscales RD.</p>
+</figure>
+</section>
+<section class="chapter" id="sec-2">
+  <div class="chapter-num">Sección 2</div>
+  <h1>Clientes — Facturas y pagos</h1>
+  <p class="lead">Escenarios UAT-MENU- en cuentas por cobrar: factura pagada, parcial, con retención, pagos normales y pagos abiertos.</p>
+  
+<figure id="fig-9">
+  <div class="fig-num">Figura 9</div>
+  <img src="screenshots/009_s02_facturas_cliente_lista.png" alt="Listado de facturas de clientes (filtro UAT-MENU-)"/>
+  <figcaption><strong>Listado de facturas de clientes (filtro UAT-MENU-)</strong></figcaption>
+  <p class="fig-explain">Permite localizar rápidamente los documentos de prueba creados para validación funcional.</p>
+</figure>
+<figure id="fig-10">
+  <div class="fig-num">Figura 10</div>
+  <img src="screenshots/010_s02_factura_pagada.png" alt="Factura pagada — UAT-MENU-01-FACT-PAGADA"/>
+  <figcaption><strong>Factura pagada — UAT-MENU-01-FACT-PAGADA</strong></figcaption>
+  <p class="fig-explain">Estado <em>Pagado</em>: el importe total fue cubierto por el pago normal aplicado.</p>
+</figure>
+<figure id="fig-11">
+  <div class="fig-num">Figura 11</div>
+  <img src="screenshots/011_s02_factura_parcial.png" alt="Factura parcialmente pagada — UAT-MENU-04-FACT-PARCIAL"/>
+  <figcaption><strong>Factura parcialmente pagada — UAT-MENU-04-FACT-PARCIAL</strong></figcaption>
+  <p class="fig-explain">Muestra saldo pendiente tras un pago parcial; útil para validar estados intermedios.</p>
+</figure>
+<figure id="fig-12">
+  <div class="fig-num">Figura 12</div>
+  <img src="screenshots/012_s02_factura_retencion.png" alt="Factura con retención — UAT-MENU-06-FACT-RET"/>
+  <figcaption><strong>Factura con retención — UAT-MENU-06-FACT-RET</strong></figcaption>
+  <p class="fig-explain">Documento con retención fiscal calculada según catálogo Hellenia/Justech.</p>
+</figure>
+<figure id="fig-13">
+  <div class="fig-num">Figura 13</div>
+  <img src="screenshots/013_s02_pagos_cliente_lista.png" alt="Listado de pagos de clientes"/>
+  <figcaption><strong>Listado de pagos de clientes</strong></figcaption>
+  <p class="fig-explain">Vista operativa desde Clientes → Pagos con trazabilidad por memo UAT-MENU-.</p>
+</figure>
+<figure id="fig-14">
+  <div class="fig-num">Figura 14</div>
+  <img src="screenshots/014_s02_pago_normal_aplicado.png" alt="Pago normal aplicado — UAT-MENU-01-PAGO-NORMAL"/>
+  <figcaption><strong>Pago normal aplicado — UAT-MENU-01-PAGO-NORMAL</strong></figcaption>
+  <p class="fig-explain">Pago posteado y conciliado con factura; representa el flujo estándar de cobro.</p>
+</figure>
+<figure id="fig-15">
+  <div class="fig-num">Figura 15</div>
+  <img src="screenshots/015_s02_pagos_abiertos_cliente_lista.png" alt="Pagos abiertos de clientes"/>
+  <figcaption><strong>Pagos abiertos de clientes</strong></figcaption>
+  <p class="fig-explain">Lista personalizada Justech (<code>justech_l10n_do_treasury</code>) con saldo disponible para aplicar.</p>
+</figure>
+<figure id="fig-16">
+  <div class="fig-num">Figura 16</div>
+  <img src="screenshots/016_s02_pago_abierto_cliente_form.png" alt="Detalle pago abierto cliente — UAT-MENU-02-PAGO-ABIERTO-CLI"/>
+  <figcaption><strong>Detalle pago abierto cliente — UAT-MENU-02-PAGO-ABIERTO-CLI</strong></figcaption>
+  <p class="fig-explain">Muestra monto, memo, estado y saldo no aplicado disponible para futuras facturas.</p>
+</figure>
+</section>
+<section class="chapter" id="sec-3">
+  <div class="chapter-num">Sección 3</div>
+  <h1>Proveedores — Facturas y pagos</h1>
+  <p class="lead">Escenarios de cuentas por pagar con data UAT-MENU- en facturas, pagos totales y pagos abiertos de proveedor.</p>
+  
+<figure id="fig-17">
+  <div class="fig-num">Figura 17</div>
+  <img src="screenshots/017_s03_facturas_proveedor_lista.png" alt="Facturas de proveedor (UAT-MENU-)"/>
+  <figcaption><strong>Facturas de proveedor (UAT-MENU-)</strong></figcaption>
+  <p class="fig-explain">Listado filtrado con documentos de prueba del proveedor demo.</p>
+</figure>
+<figure id="fig-18">
+  <div class="fig-num">Figura 18</div>
+  <img src="screenshots/018_s03_factura_proveedor.png" alt="Factura proveedor — UAT-MENU-10-FACT-PROV"/>
+  <figcaption><strong>Factura proveedor — UAT-MENU-10-FACT-PROV</strong></figcaption>
+  <p class="fig-explain">Factura de compra posteada lista para pago y reportes DGII 606.</p>
+</figure>
+<figure id="fig-19">
+  <div class="fig-num">Figura 19</div>
+  <img src="screenshots/019_s03_pagos_proveedor_lista.png" alt="Pagos a proveedores"/>
+  <figcaption><strong>Pagos a proveedores</strong></figcaption>
+  <p class="fig-explain">Historial de pagos salientes con referencia UAT-MENU-.</p>
+</figure>
+<figure id="fig-20">
+  <div class="fig-num">Figura 20</div>
+  <img src="screenshots/020_s03_pago_total_proveedor.png" alt="Pago total proveedor — UAT-MENU-10-PAGO-PROV"/>
+  <figcaption><strong>Pago total proveedor — UAT-MENU-10-PAGO-PROV</strong></figcaption>
+  <p class="fig-explain">Pago completo aplicado a la factura del proveedor demo.</p>
+</figure>
+<figure id="fig-21">
+  <div class="fig-num">Figura 21</div>
+  <img src="screenshots/021_s03_pagos_abiertos_proveedor_lista.png" alt="Pagos abiertos proveedor"/>
+  <figcaption><strong>Pagos abiertos proveedor</strong></figcaption>
+  <p class="fig-explain">Anticipos o pagos sin aplicar disponibles para futuras facturas de compra.</p>
+</figure>
+<figure id="fig-22">
+  <div class="fig-num">Figura 22</div>
+  <img src="screenshots/022_s03_pago_abierto_proveedor_form.png" alt="Pago abierto proveedor — UAT-MENU-03-PAGO-ABIERTO-PROV"/>
+  <figcaption><strong>Pago abierto proveedor — UAT-MENU-03-PAGO-ABIERTO-PROV</strong></figcaption>
+  <p class="fig-explain">Saldo disponible de RD$800 documentado para escenarios de aplicación parcial.</p>
+</figure>
+</section>
+<section class="chapter" id="sec-4">
+  <div class="chapter-num">Sección 4</div>
+  <h1>Pagos abiertos — columnas y escenarios</h1>
+  <p class="lead">Los pagos abiertos permiten registrar cobros/pagos antes de conocer la factura definitiva. Las columnas clave son: contacto, fecha, monto, saldo disponible, estado y memo.</p>
+  
+<figure id="fig-23">
+  <div class="fig-num">Figura 23</div>
+  <img src="screenshots/023_s04_hub_pagos_menu.png" alt="Hub Pagos — acceso central"/>
+  <figcaption><strong>Hub Pagos — acceso central</strong></figcaption>
+  <p class="fig-explain">Menú unificado para tesorería: pagos, pagos abiertos y conciliación bancaria.</p>
+</figure>
+<figure id="fig-24">
+  <div class="fig-num">Figura 24</div>
+  <img src="screenshots/024_s04_pagos_abiertos_todos_clientes.png" alt="Lista completa pagos abiertos (clientes)"/>
+  <figcaption><strong>Lista completa pagos abiertos (clientes)</strong></figcaption>
+  <p class="fig-explain">Columnas visibles: partner, fecha, importe, saldo disponible, estado de reconciliación.</p>
+</figure>
+<figure id="fig-25">
+  <div class="fig-num">Figura 25</div>
+  <img src="screenshots/025_s04_pagos_abiertos_todos_proveedores.png" alt="Lista completa pagos abiertos (proveedores)"/>
+  <figcaption><strong>Lista completa pagos abiertos (proveedores)</strong></figcaption>
+  <p class="fig-explain">Misma lógica en cuentas por pagar; filtra anticipos a proveedores.</p>
+</figure>
+<figure id="fig-26">
+  <div class="fig-num">Figura 26</div>
+  <img src="screenshots/026_s04_pago_parcial_cliente.png" alt="Pago parcial / total — UAT-MENU-05-PAGO-TOTAL"/>
+  <figcaption><strong>Pago parcial / total — UAT-MENU-05-PAGO-TOTAL</strong></figcaption>
+  <p class="fig-explain">Documento que cubre totalmente una factura dejando trazabilidad del cobro.</p>
+</figure>
+<figure id="fig-27">
+  <div class="fig-num">Figura 27</div>
+  <img src="screenshots/027_s04_pago_mayor_factura_saldo.png" alt="Pago mayor que factura — UAT-MENU-07-PAGO-MAYOR-ABIERTO"/>
+  <figcaption><strong>Pago mayor que factura — UAT-MENU-07-PAGO-MAYOR-ABIERTO</strong></figcaption>
+  <p class="fig-explain">El excedente permanece como saldo abierto para aplicación posterior.</p>
+</figure>
+</section>
+<section class="chapter" id="sec-5">
+  <div class="chapter-num">Sección 5</div>
+  <h1>Aplicar pago abierto — paso a paso</h1>
+  <p class="lead">Flujo documentado para convertir un pago abierto en aplicación contra factura pendiente.</p>
+  <div class="flow"><div class="flow-title">Flujo aplicación pago abierto</div><div class="flow-box">Abrir factura pendiente</div><div class="flow-arrow">&#8595;</div><div class="flow-box">Detectar pago abierto del cliente</div><div class="flow-arrow">&#8595;</div><div class="flow-box">Registrar / aplicar pago</div><div class="flow-arrow">&#8595;</div><div class="flow-box">Verificar factura pagada o saldo residual</div></div>
+<figure id="fig-28">
+  <div class="fig-num">Figura 28</div>
+  <img src="screenshots/028_s05_factura_antes_aplicar.png" alt="Paso 1 — Abrir factura pendiente"/>
+  <figcaption><strong>Paso 1 — Abrir factura pendiente</strong></figcaption>
+  <p class="fig-explain">UAT-MENU-09-FACT-APLICAR-ABIERTO: factura emitida con saldo por cobrar.</p>
+</figure>
+<figure id="fig-29">
+  <div class="fig-num">Figura 29</div>
+  <img src="screenshots/029_s05_factura_estado_pago.png" alt="Paso 2 — Estado de pago en factura"/>
+  <figcaption><strong>Paso 2 — Estado de pago en factura</strong></figcaption>
+  <p class="fig-explain">Se observa el widget de pagos / estado de cobro antes o durante la aplicación.</p>
+</figure>
+<figure id="fig-30">
+  <div class="fig-num">Figura 30</div>
+  <img src="screenshots/030_s05_pago_abierto_relacionado.png" alt="Paso 3 — Pago abierto disponible"/>
+  <figcaption><strong>Paso 3 — Pago abierto disponible</strong></figcaption>
+  <p class="fig-explain">UAT-MENU-02-PAGO-ABIERTO-CLI con saldo listo para aplicar.</p>
+</figure>
+<figure id="fig-31">
+  <div class="fig-num">Figura 31</div>
+  <img src="screenshots/031_s05_resultado_factura_post_aplicacion.png" alt="Paso 4 — Resultado final"/>
+  <figcaption><strong>Paso 4 — Resultado final</strong></figcaption>
+  <p class="fig-explain">Factura UAT-MENU-01-FACT-PAGADA como referencia de estado Pagado tras aplicación exitosa.</p>
+</figure>
+</section>
+<section class="chapter" id="sec-6">
+  <div class="chapter-num">Sección 6</div>
+  <h1>Retenciones</h1>
+  <p class="lead">Integración del catálogo Hellenia con facturas, pagos y reporte DGII 623.</p>
+  
+<figure id="fig-32">
+  <div class="fig-num">Figura 32</div>
+  <img src="screenshots/032_s06_catalogo_retenciones.png" alt="Catálogo de retenciones activas"/>
+  <figcaption><strong>Catálogo de retenciones activas</strong></figcaption>
+  <p class="fig-explain">Administración central en Auditoría Fiscal → Retenciones (<code>hellenia_account</code>).</p>
+</figure>
+<figure id="fig-33">
+  <div class="fig-num">Figura 33</div>
+  <img src="screenshots/033_s06_factura_con_retencion.png" alt="Factura con retención — UAT-MENU-08-FACT-RET-SOLO"/>
+  <figcaption><strong>Factura con retención — UAT-MENU-08-FACT-RET-SOLO</strong></figcaption>
+  <p class="fig-explain">Muestra líneas de retención en el documento de venta.</p>
+</figure>
+<figure id="fig-34">
+  <div class="fig-num">Figura 34</div>
+  <img src="screenshots/034_s06_pago_con_retencion.png" alt="Pago con retención — UAT-MENU-06-PAGO-RET"/>
+  <figcaption><strong>Pago con retención — UAT-MENU-06-PAGO-RET</strong></figcaption>
+  <p class="fig-explain">El pago refleja monto bruto, retención practicada y neto transferido.</p>
+</figure>
+<figure id="fig-35">
+  <div class="fig-num">Figura 35</div>
+  <img src="screenshots/035_s06_reporte_623_wizard.png" alt="Reporte DGII 623 — asistente"/>
+  <figcaption><strong>Reporte DGII 623 — asistente</strong></figcaption>
+  <p class="fig-explain">Punto de generación del reporte de retenciones del Estado; requiere período y validación contable.</p>
+</figure>
+</section>
+<section class="chapter" id="sec-7">
+  <div class="chapter-num">Sección 7</div>
+  <h1>Conciliación bancaria</h1>
+  <p class="lead">Odoo distingue: <strong>Posteado</strong> (contabilizado), <strong>Pendiente de banco</strong> (en extracto sin match) y <strong>Conciliado</strong> (apunte vinculado a línea bancaria).</p>
+  
+<figure id="fig-36">
+  <div class="fig-num">Figura 36</div>
+  <img src="screenshots/036_s07_tablero_bancos.png" alt="Tablero — diarios bancarios"/>
+  <figcaption><strong>Tablero — diarios bancarios</strong></figcaption>
+  <p class="fig-explain">Acceso al widget de conciliación por diario desde el tablero contable.</p>
+</figure>
+<figure id="fig-37">
+  <div class="fig-num">Figura 37</div>
+  <img src="screenshots/037_s07_conciliacion_bancaria_kanban.png" alt="Conciliación bancaria — vista kanban"/>
+  <figcaption><strong>Conciliación bancaria — vista kanban</strong></figcaption>
+  <p class="fig-explain">Hub Pagos → Conciliación bancaria: líneas de extracto pendientes o conciliadas.</p>
+</figure>
+<figure id="fig-38">
+  <div class="fig-num">Figura 38</div>
+  <img src="screenshots/038_s07_conciliar_apuntes_lista.png" alt="Conciliar apuntes (estándar Odoo)"/>
+  <figcaption><strong>Conciliar apuntes (estándar Odoo)</strong></figcaption>
+  <p class="fig-explain">Flujo contable de matching entre apuntes; distinto a conciliación de extractos.</p>
+</figure>
+<figure id="fig-39">
+  <div class="fig-num">Figura 39</div>
+  <img src="screenshots/039_s07_pago_posteado_estado.png" alt="Pago posteado — estado contable"/>
+  <figcaption><strong>Pago posteado — estado contable</strong></figcaption>
+  <p class="fig-explain">UAT-MENU-01-PAGO-NORMAL en estado publicado, base para conciliación bancaria.</p>
+</figure>
+</section>
+<section class="chapter" id="sec-8">
+  <div class="chapter-num">Sección 8</div>
+  <h1>Operaciones contables y reportes financieros</h1>
+  <p class="lead">Asientos y apuntes generados automáticamente por facturas/pagos UAT, más reportes EE estándar.</p>
+  
+<figure id="fig-40">
+  <div class="fig-num">Figura 40</div>
+  <img src="screenshots/040_s08_asientos_contables_lista.png" alt="Asientos contables (UAT-MENU-)"/>
+  <figcaption><strong>Asientos contables (UAT-MENU-)</strong></figcaption>
+  <p class="fig-explain">Todos los movimientos UAT generan asientos posteados trazables por referencia.</p>
+</figure>
+<figure id="fig-41">
+  <div class="fig-num">Figura 41</div>
+  <img src="screenshots/041_s08_asiento_uat_ejemplo.png" alt="Detalle asiento — factura pagada"/>
+  <figcaption><strong>Detalle asiento — factura pagada</strong></figcaption>
+  <p class="fig-explain">Líneas de débito/crédito, cuenta, partner e impuestos.</p>
+</figure>
+<figure id="fig-42">
+  <div class="fig-num">Figura 42</div>
+  <img src="screenshots/042_s08_apuntes_contables_lista.png" alt="Apuntes contables"/>
+  <figcaption><strong>Apuntes contables</strong></figcaption>
+  <p class="fig-explain">Vista analítica línea a línea para auditoría y conciliación.</p>
+</figure>
+<figure id="fig-43">
+  <div class="fig-num">Figura 43</div>
+  <img src="screenshots/043_s08_mayor_general.png" alt="Mayor general"/>
+  <figcaption><strong>Mayor general</strong></figcaption>
+  <p class="fig-explain">Reporte EE con movimientos por cuenta en el período.</p>
+</figure>
+<figure id="fig-44">
+  <div class="fig-num">Figura 44</div>
+  <img src="screenshots/044_s08_balance_general.png" alt="Balance general"/>
+  <figcaption><strong>Balance general</strong></figcaption>
+  <p class="fig-explain">Posición financiera a fecha de corte.</p>
+</figure>
+<figure id="fig-45">
+  <div class="fig-num">Figura 45</div>
+  <img src="screenshots/045_s08_estado_resultados.png" alt="Estado de resultados"/>
+  <figcaption><strong>Estado de resultados</strong></figcaption>
+  <p class="fig-explain">Ingresos, costos y gastos del período.</p>
+</figure>
+<figure id="fig-46">
+  <div class="fig-num">Figura 46</div>
+  <img src="screenshots/046_s08_balance_comprobacion.png" alt="Balance de comprobación"/>
+  <figcaption><strong>Balance de comprobación</strong></figcaption>
+  <p class="fig-explain">Verificación de saldos antes del cierre.</p>
+</figure>
+</section>
+<section class="chapter" id="sec-9">
+  <div class="chapter-num">Sección 9</div>
+  <h1>Reportes DGII y NCF</h1>
+  <p class="lead">Personalización Justech para cumplimiento fiscal dominicano. Capturas de accesos y listados operativos.</p>
+  
+<figure id="fig-47">
+  <div class="fig-num">Figura 47</div>
+  <img src="screenshots/047_s09_dgii_606.png" alt="Reporte DGII 606 — Compras"/>
+  <figcaption><strong>Reporte DGII 606 — Compras</strong></figcaption>
+  <p class="fig-explain">Listado/wizard de generación de compras para declaración.</p>
+</figure>
+<figure id="fig-48">
+  <div class="fig-num">Figura 48</div>
+  <img src="screenshots/048_s09_dgii_607.png" alt="Reporte DGII 607 — Ventas"/>
+  <figcaption><strong>Reporte DGII 607 — Ventas</strong></figcaption>
+  <p class="fig-explain">Ventas facturadas del período.</p>
+</figure>
+<figure id="fig-49">
+  <div class="fig-num">Figura 49</div>
+  <img src="screenshots/049_s09_dgii_608.png" alt="Reporte DGII 608 — Anulados"/>
+  <figcaption><strong>Reporte DGII 608 — Anulados</strong></figcaption>
+  <p class="fig-explain">Comprobantes anulados.</p>
+</figure>
+<figure id="fig-50">
+  <div class="fig-num">Figura 50</div>
+  <img src="screenshots/050_s09_dgii_609.png" alt="Reporte DGII 609 — Pagos al exterior"/>
+  <figcaption><strong>Reporte DGII 609 — Pagos al exterior</strong></figcaption>
+  <p class="fig-explain">Pagos a no residentes.</p>
+</figure>
+<figure id="fig-51">
+  <div class="fig-num">Figura 51</div>
+  <img src="screenshots/051_s09_dgii_623.png" alt="Reporte DGII 623 — Retenciones"/>
+  <figcaption><strong>Reporte DGII 623 — Retenciones</strong></figcaption>
+  <p class="fig-explain">Retenciones practicadas a reportar.</p>
+</figure>
+<figure id="fig-52">
+  <div class="fig-num">Figura 52</div>
+  <img src="screenshots/052_s09_ncf_consumo.png" alt="Consumo NCF"/>
+  <figcaption><strong>Consumo NCF</strong></figcaption>
+  <p class="fig-explain">Trazabilidad de secuencias consumidas.</p>
+</figure>
+<figure id="fig-53">
+  <div class="fig-num">Figura 53</div>
+  <img src="screenshots/053_s09_ncf_tipos.png" alt="Tipos de comprobante NCF"/>
+  <figcaption><strong>Tipos de comprobante NCF</strong></figcaption>
+  <p class="fig-explain">Catálogo B01, B02, etc.</p>
+</figure>
+<figure id="fig-54">
+  <div class="fig-num">Figura 54</div>
+  <img src="screenshots/054_s09_ncf_rangos.png" alt="Rangos NCF"/>
+  <figcaption><strong>Rangos NCF</strong></figcaption>
+  <p class="fig-explain">Autorizaciones DGII vigentes.</p>
+</figure>
+</section>
+<section class="chapter" id="sec-10">
+  <div class="chapter-num">Sección 10</div>
+  <h1>Auditoría Fiscal</h1>
+  <p class="lead">Hub que concentra DGII, NCF, retenciones, revisión e historial fiscal.</p>
+  
+<figure id="fig-55">
+  <div class="fig-num">Figura 55</div>
+  <img src="screenshots/055_s10_auditoria_fiscal_menu.png" alt="Menú Auditoría Fiscal expandido"/>
+  <figcaption><strong>Menú Auditoría Fiscal expandido</strong></figcaption>
+  <p class="fig-explain">Acceso unificado sin duplicar opciones en Reportes o Configuración.</p>
+</figure>
+<figure id="fig-56">
+  <div class="fig-num">Figura 56</div>
+  <img src="screenshots/056_s10_revision_fiscal.png" alt="Revisión fiscal"/>
+  <figcaption><strong>Revisión fiscal</strong></figcaption>
+  <p class="fig-explain">Pantalla de control previo a exportar/validar reportes.</p>
+</figure>
+<figure id="fig-57">
+  <div class="fig-num">Figura 57</div>
+  <img src="screenshots/057_s10_historial_reportes_fiscales.png" alt="Historial fiscal"/>
+  <figcaption><strong>Historial fiscal</strong></figcaption>
+  <p class="fig-explain">Registro de reportes generados y estados de validación.</p>
+</figure>
+</section>
+<section class="chapter" id="sec-11">
+  <div class="chapter-num">Sección 11</div>
+  <h1>Flujo completo — Ventas a Balance</h1>
+  <p class="lead">Cadena extremo a extremo documentada con data UAT-MENU-.</p>
+  <div class="flow"><div class="flow-title">Flujo ventas → balance</div><div class="flow-box">Venta / Factura cliente</div><div class="flow-arrow">&#8595;</div><div class="flow-box">Pago abierto o pago aplicado</div><div class="flow-arrow">&#8595;</div><div class="flow-box">Retención (si aplica)</div><div class="flow-arrow">&#8595;</div><div class="flow-box">Conciliación bancaria</div><div class="flow-arrow">&#8595;</div><div class="flow-box">Reportes DGII 607 / 623</div><div class="flow-arrow">&#8595;</div><div class="flow-box">Asientos y apuntes</div><div class="flow-arrow">&#8595;</div><div class="flow-box">Mayor → Balance / P&amp;G</div></div>
+<figure id="fig-58">
+  <div class="fig-num">Figura 58</div>
+  <img src="screenshots/058_s11_flujo_factura_retencion_conciliacion.png" alt="Factura con retención en flujo completo"/>
+  <figcaption><strong>Factura con retención en flujo completo</strong></figcaption>
+  <p class="fig-explain">Documento UAT-MENU-06-FACT-RET como pieza central del flujo de ventas con retención.</p>
+</figure>
+</section>
+<section class="chapter" id="sec-12">
+  <div class="chapter-num">Sección 12</div>
+  <h1>Flujo completo — Compras a conciliación</h1>
+  <p class="lead">Cadena de cuentas por pagar con pagos abiertos, parciales y totales.</p>
+  <div class="flow"><div class="flow-title">Flujo compras → conciliación</div><div class="flow-box">Orden / recepción</div><div class="flow-arrow">&#8595;</div><div class="flow-box">Factura proveedor</div><div class="flow-arrow">&#8595;</div><div class="flow-box">Pago abierto o parcial</div><div class="flow-arrow">&#8595;</div><div class="flow-box">Pago total</div><div class="flow-arrow">&#8595;</div><div class="flow-box">Retención proveedor</div><div class="flow-arrow">&#8595;</div><div class="flow-box">Conciliación bancaria</div></div>
+<figure id="fig-59">
+  <div class="fig-num">Figura 59</div>
+  <img src="screenshots/059_s12_flujo_compra_proveedor_pago.png" alt="Factura y pago proveedor UAT"/>
+  <figcaption><strong>Factura y pago proveedor UAT</strong></figcaption>
+  <p class="fig-explain">UAT-MENU-10-FACT-PROV vinculada al ecosistema de pagos y reporte 606.</p>
+</figure>
+</section>
+<section class="chapter" id="sec-13">
+  <div class="chapter-num">Sección 13</div>
+  <h1>Resumen técnico</h1>
+  <p class="lead">Inventario de versiones desplegadas en PROD al momento de la captura.</p>
+  
+<table class="clean"><thead><tr><th>Módulo</th><th>Versión</th></tr></thead><tbody><tr><td>account_accountant</td><td>19.0.1.1</td></tr><tr><td>hellenia_account</td><td>19.0.1.0.27</td></tr><tr><td>hellenia_ui</td><td>19.0.1.0.10</td></tr><tr><td>justech_l10n_do_ncf</td><td>19.0.1.6.0</td></tr><tr><td>justech_l10n_do_reports</td><td>19.0.1.13.0</td></tr><tr><td>justech_l10n_do_treasury</td><td>19.0.1.2.0</td></tr></tbody></table>
+<p><strong>Odoo:</strong> 19.0 Enterprise ·
+<strong>hellenia_ui:</strong> 19.0.1.0.10</p>
+<p><strong>Healthcheck:</strong> PASS — URLs {&#x27;odoo.hellenia.cloud&#x27;: &#x27;200&#x27;, &#x27;justgroup.app&#x27;: &#x27;200&#x27;}</p>
+<p><strong>Validación menú UAT-2:</strong> PASS</p>
+<ul class="check">
+<li>Hub Pagos + Conciliación bancaria visible</li>
+<li>Auditoría Fiscal con DGII, NCF y Retenciones</li>
+<li>Asientos/Apuntes bajo Contabilidad (sin duplicar en raíz)</li>
+<li>Data UAT-MENU- preservada para revisión (15 asientos demo)</li>
+</ul>
+
+<figure id="fig-60">
+  <div class="fig-num">Figura 60</div>
+  <img src="screenshots/060_s13_menu_revision_contable.png" alt="Revisión contable (Odoo EE)"/>
+  <figcaption><strong>Revisión contable (Odoo EE)</strong></figcaption>
+  <p class="fig-explain">Módulo de auditoría estándar Enterprise accesible desde la raíz de Contabilidad.</p>
+</figure>
+</section>
+<section class="chapter" id="sec-14">
+  <div class="chapter-num">Sección 14</div>
+  <h1>Lista de pruebas ejecutadas</h1>
+  <p class="lead">Matriz de validación funcional ejecutada sobre PROD con prefijo UAT-MENU-.</p>
+  <table class="clean"><thead><tr><th>Prueba</th><th>Resultado</th><th>Observaciones</th></tr></thead><tbody><tr><td>Navegación Contabilidad sin duplicados</td><td class='status-pass'>PASS</td><td>HELLENIA-MENU-UAT-2 validado</td></tr><tr><td>Pagos abiertos clientes/proveedores</td><td class='status-pass'>PASS</td><td>Listas UAT visibles con saldo</td></tr><tr><td>Pago normal aplicado</td><td class='status-pass'>PASS</td><td>UAT-MENU-01-PAGO-NORMAL</td></tr><tr><td>Pago parcial / total</td><td class='status-pass'>PASS</td><td>UAT-MENU-04 / 05</td></tr><tr><td>Pago mayor con saldo abierto</td><td class='status-pass'>PASS</td><td>UAT-MENU-07-PAGO-MAYOR-ABIERTO</td></tr><tr><td>Retenciones factura y pago</td><td class='status-pass'>PASS</td><td>Catálogo + UAT-MENU-06/08</td></tr><tr><td>Conciliación bancaria accesible</td><td class='status-pass'>PASS</td><td>Hub Pagos → Conciliación bancaria</td></tr><tr><td>Reportes DGII 606–623 accesibles</td><td class='status-pass'>PASS</td><td>Wizards/listas operativos</td></tr><tr><td>NCF tipos/rangos/consumo</td><td class='status-pass'>PASS</td><td>Auditoría Fiscal</td></tr><tr><td>Asientos y apuntes UAT</td><td class='status-pass'>PASS</td><td>15 movimientos UAT-MENU-</td></tr><tr><td>Healthcheck HTTP PROD</td><td class='status-pass'>PASS</td><td>{&#x27;odoo.hellenia.cloud&#x27;: &#x27;200&#x27;, &#x27;justgroup.app&#x27;: &#x27;200&#x27;}</td></tr><tr><td>Generación reporte 623 con líneas UAT</td><td class='status-pass'>PASS</td><td>Wizard operativo; generar período con data UAT pendiente de validación contadora</td></tr></tbody></table>
+</section>
+<section class="chapter" id="sec-15">
+  <div class="chapter-num">Sección 15</div>
+  <h1>Conclusión</h1>
+  <p class="lead">El sistema de Tesorería y Contabilidad Hellenia está operativo en PROD con navegación reorganizada, pagos abiertos Justech, retenciones, conciliación bancaria y fiscal RD integrados.</p>
+  
+<div class="box tip"><strong>Recomendación:</strong> El documento está listo para revisión por la contadora externa.
+Las pantallas fueron capturadas con data real UAT-MENU- en producción. Se recomienda validar declaraciones DGII de un período completo antes del cierre fiscal.</div>
+<h2 class="section">Observaciones pendientes</h2>
+<ul class="compact">
+<li>Algunas etiquetas de submenús Clientes/Proveedores permanecen en inglés (estándar Odoo EE).</li>
+<li>Conciliación del extracto UAT-MENU-Extracto puede requerir match manual desde tablero.</li>
+<li>Data UAT-MENU- debe eliminarse tras aprobación formal (ver CLEANUP_PLAN.md).</li>
+<li>Generación de reportes DGII con totales oficiales requiere validación de la contadora en período real.</li>
+</ul>
+
+</section>
+</body></html>

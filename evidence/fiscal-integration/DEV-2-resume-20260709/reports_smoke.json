@@ -1,0 +1,16 @@
+{
+  "ts": "2026-07-09T20:48:54.259834+00:00",
+  "database": "justech_dev",
+  "reports_installed": true,
+  "moves_607_eligible": 741,
+  "moves_606_eligible": 763,
+  "exporter_606_model": true,
+  "exporter_607_model": true,
+  "wizard_607_ok": true,
+  "wizard_606_ok": true,
+  "existing_reports": 0,
+  "existing_606": 0,
+  "existing_607": 0,
+  "errors": [],
+  "ok": true
+}

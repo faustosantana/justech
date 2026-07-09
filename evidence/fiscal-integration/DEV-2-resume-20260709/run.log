@@ -1,0 +1,552 @@
+========================================
+DEV-2 RESUME — 2026-07-09T22:47:49+02:00
+ROLLBACK=/opt/odoo-dev/backups/fiscal-integration-stabilized-20260709_222306
+EVIDENCE=/opt/odoo-dev/evidence/fiscal-integration/DEV-2-resume-20260709_224749
+========================================
+==> PRE: healthcheck completo
+{
+  "ts": "2026-07-09T20:47:54.602442+00:00",
+  "database": "justech_dev",
+  "passed": true,
+  "errors": [],
+  "checks": [
+    {
+      "name": "odoo_env",
+      "ok": true,
+      "detail": "justech_dev"
+    },
+    {
+      "name": "apps_module_registry",
+      "ok": true,
+      "detail": "sample=5"
+    },
+    {
+      "name": "adel_active",
+      "ok": true,
+      "detail": "installed"
+    },
+    {
+      "name": "justech_base_installed",
+      "ok": true,
+      "detail": "19.0.1.6.0"
+    },
+    {
+      "name": "justech_ncf_installed",
+      "ok": true,
+      "detail": "19.0.2.1.0"
+    },
+    {
+      "name": "justech_reports_installed",
+      "ok": true,
+      "detail": "19.0.1.14.0"
+    },
+    {
+      "name": "justech_fiscal_disabled_all",
+      "ok": true,
+      "detail": "enabled=[]"
+    },
+    {
+      "name": "four_companies",
+      "ok": true,
+      "detail": "4"
+    },
+    {
+      "name": "warranty_module",
+      "ok": true,
+      "detail": "19.0.1.8.0"
+    },
+    {
+      "name": "historical_invoices",
+      "ok": true,
+      "detail": "opened=3"
+    },
+    {
+      "name": "payments",
+      "ok": true,
+      "detail": "opened=3"
+    },
+    {
+      "name": "sales_orders",
+      "ok": true,
+      "detail": "C-0003865"
+    },
+    {
+      "name": "posted_moves",
+      "ok": true,
+      "detail": "2255"
+    },
+    {
+      "name": "reconciles_947",
+      "ok": true,
+      "detail": "947"
+    },
+    {
+      "name": "ncf_adel_1504",
+      "ok": true,
+      "detail": "1504"
+    },
+    {
+      "name": "gl_balanced",
+      "ok": true,
+      "detail": "85656868.89 vs 85656868.89"
+    },
+    {
+      "name": "chatter_messages",
+      "ok": true,
+      "detail": "sample=1"
+    },
+    {
+      "name": "asset_attachments_db",
+      "ok": true,
+      "detail": "149"
+    }
+  ]
+}
+==> PRE: baseline histórico
+{
+  "label": "post_install",
+  "ts": "2026-07-09T20:47:59.671367+00:00",
+  "database": "justech_dev",
+  "checks": {
+    "posted_moves": 2255,
+    "partial_reconciles": 947,
+    "payments_active": 677,
+    "companies": 4,
+    "gl_debit": 85656868.89,
+    "gl_credit": 85656868.89,
+    "gl_balanced": true,
+    "ncf_adel": 1504,
+    "ncf_justech_posted": 0,
+    "fiscal_enabled_companies": 0,
+    "journals_justech_ncf": 0,
+    "reconcile_lines_exist": true,
+    "modules": {
+      "justech_l10n_do_base": {
+        "state": "installed",
+        "version": "19.0.1.6.0"
+      },
+      "justech_l10n_do_ncf": {
+        "state": "installed",
+        "version": "19.0.2.1.0"
+      },
+      "justech_l10n_do_reports": {
+        "state": "installed",
+        "version": "19.0.1.14.0"
+      },
+      "l10n_do_accounting": {
+        "state": "installed",
+        "version": "19.0.1.0.0"
+      }
+    }
+  },
+  "errors": [],
+  "ok": true
+}
+==> PRE: validate full (19 checks)
+{
+  "iteration": "DEV-1-validate",
+  "ts": "2026-07-09T20:48:07.559740+00:00",
+  "database": "justech_dev",
+  "passed": true,
+  "errors": [],
+  "warnings": [],
+  "checks": [
+    {
+      "name": "adel_active",
+      "ok": true,
+      "detail": "state=installed"
+    },
+    {
+      "name": "justech_base_installed",
+      "ok": true,
+      "detail": "19.0.1.6.0"
+    },
+    {
+      "name": "justech_ncf_installed",
+      "ok": true,
+      "detail": "19.0.2.1.0"
+    },
+    {
+      "name": "four_companies",
+      "ok": true,
+      "detail": "count=4"
+    },
+    {
+      "name": "justech_fiscal_disabled_all",
+      "ok": true,
+      "detail": "enabled=[]"
+    },
+    {
+      "name": "no_justech_ncf_journals",
+      "ok": true,
+      "detail": "journals=[]"
+    },
+    {
+      "name": "posted_moves_2255",
+      "ok": true,
+      "detail": "got=2255"
+    },
+    {
+      "name": "ncf_adel_1504",
+      "ok": true,
+      "detail": "got=1504"
+    },
+    {
+      "name": "justech_ncf_posted_zero",
+      "ok": true,
+      "detail": "unexpected justech NCF on posted"
+    },
+    {
+      "name": "reconciles_947",
+      "ok": true,
+      "detail": "got=947"
+    },
+    {
+      "name": "payments_677",
+      "ok": true,
+      "detail": "got=677"
+    },
+    {
+      "name": "gl_balanced",
+      "ok": true,
+      "detail": "85656868.89 vs 85656868.89"
+    },
+    {
+      "name": "open_historical_invoices",
+      "ok": true,
+      "detail": "sample=5"
+    },
+    {
+      "name": "open_payments",
+      "ok": true,
+      "detail": "sample=5"
+    },
+    {
+      "name": "open_reconciliations",
+      "ok": true,
+      "detail": "lines=5"
+    },
+    {
+      "name": "open_credit_notes",
+      "ok": true,
+      "detail": "found=3"
+    },
+    {
+      "name": "create_draft_invoice",
+      "ok": true,
+      "detail": "id=3921 journal=Facturas de Ventas"
+    },
+    {
+      "name": "adel_fields_on_move",
+      "ok": true,
+      "detail": "Adel/LatAm fields present"
+    },
+    {
+      "name": "no_fiscal_admin_menu_for_sales",
+      "ok": true,
+      "detail": "menus=[]"
+    }
+  ],
+  "metrics": {
+    "posted_moves": 2255,
+    "ncf_adel": 1504,
+    "reconciles": 947,
+    "payments": 677,
+    "gl_balanced": true,
+    "fiscal_enabled_companies": 0
+  }
+}
+==> PRE: assets físicos
+{
+  "label": "pre_dev2",
+  "ts": "2026-07-09T20:48:12.915860+00:00",
+  "database": "justech_dev",
+  "ok": true,
+  "errors": [],
+  "checks": {
+    "attachments_with_store_fname": 3973,
+    "asset_attachments": 149,
+    "missing_asset_files": 0,
+    "filestore_root": "/opt/odoo-dev/data/filestore/justech_dev",
+    "non_asset_sample_missing": 1,
+    "non_asset_sample_size": 50
+  }
+}
+==> Upgrade stack fiscal (base + ncf + reports)
+==> Fiscal Justech OFF (4 empresas)
+UPDATE 4
+==> POST: baseline histórico
+{
+  "label": "post_install",
+  "ts": "2026-07-09T20:48:41.817025+00:00",
+  "database": "justech_dev",
+  "checks": {
+    "posted_moves": 2255,
+    "partial_reconciles": 947,
+    "payments_active": 677,
+    "companies": 4,
+    "gl_debit": 85656868.89,
+    "gl_credit": 85656868.89,
+    "gl_balanced": true,
+    "ncf_adel": 1504,
+    "ncf_justech_posted": 0,
+    "fiscal_enabled_companies": 0,
+    "journals_justech_ncf": 0,
+    "reconcile_lines_exist": true,
+    "modules": {
+      "justech_l10n_do_base": {
+        "state": "installed",
+        "version": "19.0.1.6.0"
+      },
+      "justech_l10n_do_ncf": {
+        "state": "installed",
+        "version": "19.0.2.1.0"
+      },
+      "justech_l10n_do_reports": {
+        "state": "installed",
+        "version": "19.0.1.14.0"
+      },
+      "l10n_do_accounting": {
+        "state": "installed",
+        "version": "19.0.1.0.0"
+      }
+    }
+  },
+  "errors": [],
+  "ok": true
+}
+==> POST: validate full
+{
+  "iteration": "DEV-1-validate",
+  "ts": "2026-07-09T20:48:48.661672+00:00",
+  "database": "justech_dev",
+  "passed": true,
+  "errors": [],
+  "warnings": [],
+  "checks": [
+    {
+      "name": "adel_active",
+      "ok": true,
+      "detail": "state=installed"
+    },
+    {
+      "name": "justech_base_installed",
+      "ok": true,
+      "detail": "19.0.1.6.0"
+    },
+    {
+      "name": "justech_ncf_installed",
+      "ok": true,
+      "detail": "19.0.2.1.0"
+    },
+    {
+      "name": "four_companies",
+      "ok": true,
+      "detail": "count=4"
+    },
+    {
+      "name": "justech_fiscal_disabled_all",
+      "ok": true,
+      "detail": "enabled=[]"
+    },
+    {
+      "name": "no_justech_ncf_journals",
+      "ok": true,
+      "detail": "journals=[]"
+    },
+    {
+      "name": "posted_moves_2255",
+      "ok": true,
+      "detail": "got=2255"
+    },
+    {
+      "name": "ncf_adel_1504",
+      "ok": true,
+      "detail": "got=1504"
+    },
+    {
+      "name": "justech_ncf_posted_zero",
+      "ok": true,
+      "detail": "unexpected justech NCF on posted"
+    },
+    {
+      "name": "reconciles_947",
+      "ok": true,
+      "detail": "got=947"
+    },
+    {
+      "name": "payments_677",
+      "ok": true,
+      "detail": "got=677"
+    },
+    {
+      "name": "gl_balanced",
+      "ok": true,
+      "detail": "85656868.89 vs 85656868.89"
+    },
+    {
+      "name": "open_historical_invoices",
+      "ok": true,
+      "detail": "sample=5"
+    },
+    {
+      "name": "open_payments",
+      "ok": true,
+      "detail": "sample=5"
+    },
+    {
+      "name": "open_reconciliations",
+      "ok": true,
+      "detail": "lines=5"
+    },
+    {
+      "name": "open_credit_notes",
+      "ok": true,
+      "detail": "found=3"
+    },
+    {
+      "name": "create_draft_invoice",
+      "ok": true,
+      "detail": "id=3922 journal=Facturas de Ventas"
+    },
+    {
+      "name": "adel_fields_on_move",
+      "ok": true,
+      "detail": "Adel/LatAm fields present"
+    },
+    {
+      "name": "no_fiscal_admin_menu_for_sales",
+      "ok": true,
+      "detail": "menus=[]"
+    }
+  ],
+  "metrics": {
+    "posted_moves": 2255,
+    "ncf_adel": 1504,
+    "reconciles": 947,
+    "payments": 677,
+    "gl_balanced": true,
+    "fiscal_enabled_companies": 0
+  }
+}
+==> POST: 606/607 read-only
+{
+  "ts": "2026-07-09T20:48:54.259834+00:00",
+  "database": "justech_dev",
+  "reports_installed": true,
+  "moves_607_eligible": 741,
+  "moves_606_eligible": 763,
+  "exporter_606_model": true,
+  "exporter_607_model": true,
+  "wizard_607_ok": true,
+  "wizard_606_ok": true,
+  "existing_reports": 0,
+  "existing_606": 0,
+  "existing_607": 0,
+  "errors": [],
+  "ok": true
+}
+==> POST: healthcheck
+{
+  "ts": "2026-07-09T20:48:59.547637+00:00",
+  "database": "justech_dev",
+  "passed": true,
+  "errors": [],
+  "checks": [
+    {
+      "name": "odoo_env",
+      "ok": true,
+      "detail": "justech_dev"
+    },
+    {
+      "name": "apps_module_registry",
+      "ok": true,
+      "detail": "sample=5"
+    },
+    {
+      "name": "adel_active",
+      "ok": true,
+      "detail": "installed"
+    },
+    {
+      "name": "justech_base_installed",
+      "ok": true,
+      "detail": "19.0.1.6.0"
+    },
+    {
+      "name": "justech_ncf_installed",
+      "ok": true,
+      "detail": "19.0.2.1.0"
+    },
+    {
+      "name": "justech_reports_installed",
+      "ok": true,
+      "detail": "19.0.1.14.0"
+    },
+    {
+      "name": "justech_fiscal_disabled_all",
+      "ok": true,
+      "detail": "enabled=[]"
+    },
+    {
+      "name": "four_companies",
+      "ok": true,
+      "detail": "4"
+    },
+    {
+      "name": "warranty_module",
+      "ok": true,
+      "detail": "19.0.1.8.0"
+    },
+    {
+      "name": "historical_invoices",
+      "ok": true,
+      "detail": "opened=3"
+    },
+    {
+      "name": "payments",
+      "ok": true,
+      "detail": "opened=3"
+    },
+    {
+      "name": "sales_orders",
+      "ok": true,
+      "detail": "C-0003865"
+    },
+    {
+      "name": "posted_moves",
+      "ok": true,
+      "detail": "2255"
+    },
+    {
+      "name": "reconciles_947",
+      "ok": true,
+      "detail": "947"
+    },
+    {
+      "name": "ncf_adel_1504",
+      "ok": true,
+      "detail": "1504"
+    },
+    {
+      "name": "gl_balanced",
+      "ok": true,
+      "detail": "85656868.89 vs 85656868.89"
+    },
+    {
+      "name": "chatter_messages",
+      "ok": true,
+      "detail": "sample=1"
+    },
+    {
+      "name": "asset_attachments_db",
+      "ok": true,
+      "detail": "149"
+    }
+  ]
+}
+==> POST: assets HTTP
+asset 200 /web/assets/759ae65/web.assets_web_print.min.css
+asset 200 /web/assets/53fea1f/web.assets_web_dark.min.css
+asset 200 /web/assets/8fc97a6/web.assets_web.min.js
+DEV2_RESUME_OK evidence=/opt/odoo-dev/evidence/fiscal-integration/DEV-2-resume-20260709_224749

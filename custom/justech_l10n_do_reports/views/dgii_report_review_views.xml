@@ -14,8 +14,8 @@
                        decoration-warning="fiscal_state == 'incomplete'"
                        decoration-danger="fiscal_state == 'excluded'"
                        decoration-muted="fiscal_state == 'cancelled'"/>
-                <field name="move_name" string="Documento"/>
-                <field name="document_type" string="Tipo documento"/>
+                <field name="move_name" string="Factura"/>
+                <field name="document_type" string="Tipo comprobante fiscal"/>
                 <field name="partner_name" string="Cliente / Proveedor"/>
                 <field name="partner_vat" string="RNC / Cédula"/>
                 <field name="partner_id_type" string="Tipo identificación" optional="show"/>

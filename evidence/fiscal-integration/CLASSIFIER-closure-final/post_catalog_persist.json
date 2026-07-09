@@ -1,0 +1,1 @@
+{"after_upgrade_count": 154, "key_taxes": [{"tax_id": 5, "role": "itbis", "col_606": "N"}, {"tax_id": 14, "role": "isc", "col_606": "W"}, {"tax_id": 15, "role": "other_tax", "col_606": "X"}], "module_version": "19.0.1.16.1", "persisted_without_manual_sync": true}

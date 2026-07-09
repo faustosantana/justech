@@ -1,0 +1,2050 @@
+{
+  "ts": "2026-07-09T21:53:07.283570+00:00",
+  "database": "justech_dev",
+  "period": "202606",
+  "module_version": "19.0.1.16.1",
+  "catalog": {
+    "total": 154,
+    "active": 154
+  },
+  "checks": [
+    {
+      "name": "catalog_persisted_count",
+      "ok": true,
+      "detail": "count=154"
+    },
+    {
+      "name": "catalog_tax5_itbis",
+      "ok": true,
+      "detail": "rows=1"
+    },
+    {
+      "name": "catalog_tax14_isc",
+      "ok": true,
+      "detail": "rows=1"
+    },
+    {
+      "name": "catalog_tax15_cdt",
+      "ok": true,
+      "detail": "rows=1"
+    },
+    {
+      "name": "tax5_role_itbis",
+      "ok": true,
+      "detail": "itbis"
+    },
+    {
+      "name": "tax14_role_isc",
+      "ok": true,
+      "detail": "isc"
+    },
+    {
+      "name": "tax15_role_other",
+      "ok": true,
+      "detail": "other_tax"
+    },
+    {
+      "name": "tax5_col_N",
+      "ok": true,
+      "detail": "N"
+    },
+    {
+      "name": "tax14_col_W",
+      "ok": true,
+      "detail": "W"
+    },
+    {
+      "name": "tax15_col_X",
+      "ok": true,
+      "detail": "X"
+    },
+    {
+      "name": "classifier_service",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "catalog_model",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "sync_method_available",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "exporters_no_name_logic",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "report_606_runs",
+      "ok": true,
+      "detail": "errors=0"
+    },
+    {
+      "name": "report_607_runs",
+      "ok": true,
+      "detail": "errors=0"
+    },
+    {
+      "name": "report_608_runs",
+      "ok": true,
+      "detail": "errors=0"
+    },
+    {
+      "name": "report_609_runs",
+      "ok": true,
+      "detail": "errors=0"
+    },
+    {
+      "name": "report_623_runs",
+      "ok": true,
+      "detail": "errors=0"
+    },
+    {
+      "name": "606_202606_zero_errors",
+      "ok": true,
+      "detail": {
+        "all": 90,
+        "valid": 90,
+        "incomplete": 0,
+        "excluded": 0,
+        "cancelled": 0,
+        "partners_affected": 0,
+        "error_lines": 0
+      }
+    },
+    {
+      "name": "606_202606_all_valid",
+      "ok": true,
+      "detail": {
+        "all": 90,
+        "valid": 90,
+        "incomplete": 0,
+        "excluded": 0,
+        "cancelled": 0,
+        "partners_affected": 0,
+        "error_lines": 0
+      }
+    },
+    {
+      "name": "cdt_5_invoices_column_X",
+      "ok": true,
+      "detail": [
+        {
+          "move": "FP/2026/06/0083",
+          "ncf": "E310000000209",
+          "N": 1305.76,
+          "W": 725.42,
+          "X": 145.08,
+          "errors": []
+        },
+        {
+          "move": "FP/2026/06/0084",
+          "ncf": "E310000019120",
+          "N": 0.38,
+          "W": 0.21,
+          "X": 0.04,
+          "errors": []
+        },
+        {
+          "move": "FP/2026/06/0044",
+          "ncf": "E310015894257",
+          "N": 187.62,
+          "W": 104.23,
+          "X": 20.85,
+          "errors": []
+        },
+        {
+          "move": "FP/2026/06/0045",
+          "ncf": "E310015890327",
+          "N": 78.44,
+          "W": 43.58,
+          "X": 8.72,
+          "errors": []
+        },
+        {
+          "move": "FP/2026/06/0046",
+          "ncf": "E310015893083",
+          "N": 249.82,
+          "W": 138.79,
+          "X": 27.76,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "name": "isc_column_W_sample",
+      "ok": true,
+      "detail": {
+        "N": 0.38,
+        "W": 0.21,
+        "X": 0.04
+      }
+    },
+    {
+      "name": "itbis_column_N_sample",
+      "ok": true,
+      "detail": {
+        "N": 0.38,
+        "W": 0.21,
+        "X": 0.04
+      }
+    },
+    {
+      "name": "cdt_column_X_sample",
+      "ok": true,
+      "detail": {
+        "N": 0.38,
+        "W": 0.21,
+        "X": 0.04
+      }
+    },
+    {
+      "name": "historical_integrity",
+      "ok": true,
+      "detail": {
+        "posted_moves": 2255,
+        "partial_reconciles": 947,
+        "payments_active": 677,
+        "tax_count": 154,
+        "account_move_line_count": 8802,
+        "ncf_adel": 1504
+      }
+    }
+  ],
+  "passed": true,
+  "errors": [],
+  "report_results": {
+    "606": {
+      "counts": {
+        "all": 90,
+        "valid": 90,
+        "incomplete": 0,
+        "excluded": 0,
+        "cancelled": 0,
+        "partners_affected": 0,
+        "error_lines": 0
+      },
+      "error_lines": 0,
+      "ok": true
+    },
+    "607": {
+      "counts": {
+        "all": 74,
+        "valid": 74,
+        "incomplete": 0,
+        "excluded": 0,
+        "cancelled": 0,
+        "partners_affected": 0,
+        "error_lines": 0
+      },
+      "error_lines": 0,
+      "ok": true
+    },
+    "608": {
+      "counts": {
+        "all": 0,
+        "valid": 0,
+        "incomplete": 0,
+        "excluded": 0,
+        "cancelled": 0,
+        "partners_affected": 0,
+        "error_lines": 0
+      },
+      "error_lines": 0,
+      "ok": true
+    },
+    "609": {
+      "counts": {
+        "all": 0,
+        "valid": 0,
+        "incomplete": 0,
+        "excluded": 0,
+        "cancelled": 0,
+        "partners_affected": 0,
+        "error_lines": 0
+      },
+      "error_lines": 0,
+      "ok": true
+    },
+    "623": {
+      "counts": {
+        "all": 0,
+        "valid": 0,
+        "incomplete": 0,
+        "excluded": 0,
+        "cancelled": 0,
+        "partners_affected": 0,
+        "error_lines": 0
+      },
+      "error_lines": 0,
+      "ok": true
+    }
+  },
+  "cdt_invoices": [
+    {
+      "move": "FP/2026/06/0083",
+      "ncf": "E310000000209",
+      "N": 1305.76,
+      "W": 725.42,
+      "X": 145.08,
+      "errors": []
+    },
+    {
+      "move": "FP/2026/06/0084",
+      "ncf": "E310000019120",
+      "N": 0.38,
+      "W": 0.21,
+      "X": 0.04,
+      "errors": []
+    },
+    {
+      "move": "FP/2026/06/0044",
+      "ncf": "E310015894257",
+      "N": 187.62,
+      "W": 104.23,
+      "X": 20.85,
+      "errors": []
+    },
+    {
+      "move": "FP/2026/06/0045",
+      "ncf": "E310015890327",
+      "N": 78.44,
+      "W": 43.58,
+      "X": 8.72,
+      "errors": []
+    },
+    {
+      "move": "FP/2026/06/0046",
+      "ncf": "E310015893083",
+      "N": 249.82,
+      "W": 138.79,
+      "X": 27.76,
+      "errors": []
+    }
+  ],
+  "comparison_606": {
+    "before_fdp_classifier": {
+      "source": "FDP-deploy post_606_202606.json",
+      "valid": 85,
+      "incomplete": 5,
+      "error_lines": 5,
+      "error_type": "CDT unclassified"
+    },
+    "after_classifier": {
+      "valid": 90,
+      "incomplete": 0,
+      "error_lines": 0
+    },
+    "delta_errors": -5,
+    "delta_valid": 5
+  },
+  "historical": {
+    "posted_moves": 2255,
+    "partial_reconciles": 947,
+    "payments_active": 677,
+    "tax_count": 154,
+    "account_move_line_count": 8802,
+    "ncf_adel": 1504
+  },
+  "final_tax_matrix": [
+    {
+      "id": 13,
+      "name": "{\"en_US\": \"0.15% Trans.\"}",
+      "type_tax_use": "none",
+      "amount": 0.0015,
+      "tax_group": "{\"en_US\": \"Other Taxes\", \"es_DO\": \"Otros Impuestos\"}",
+      "classification_role": "other_tax",
+      "column_606": "X",
+      "column_607": "P",
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 21,
+      "name": "{\"en_US\": \"-30% ITBIS Prof. (N02-05)\"}",
+      "type_tax_use": "none",
+      "amount": -5.4,
+      "tax_group": "{\"en_US\": \"ITBIS\", \"es_DO\": \"ITBIS\"}",
+      "classification_role": "ignore",
+      "column_606": null,
+      "column_607": null,
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 51,
+      "name": "{\"en_US\": \"0.15% Trans.\"}",
+      "type_tax_use": "none",
+      "amount": 0.0015,
+      "tax_group": "{\"en_US\": \"Other Taxes\", \"es_DO\": \"Otros Impuestos\"}",
+      "classification_role": "other_tax",
+      "column_606": "X",
+      "column_607": "P",
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 59,
+      "name": "{\"en_US\": \"-30% ITBIS Prof. (N02-05)\"}",
+      "type_tax_use": "none",
+      "amount": -5.4,
+      "tax_group": "{\"en_US\": \"ITBIS\", \"es_DO\": \"ITBIS\"}",
+      "classification_role": "ignore",
+      "column_606": null,
+      "column_607": null,
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 89,
+      "name": "{\"en_US\": \"0.15% Trans.\"}",
+      "type_tax_use": "none",
+      "amount": 0.0015,
+      "tax_group": "{\"en_US\": \"Other Taxes\", \"es_DO\": \"Otros Impuestos\"}",
+      "classification_role": "other_tax",
+      "column_606": "X",
+      "column_607": "P",
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 97,
+      "name": "{\"en_US\": \"-30% ITBIS Prof. (N02-05)\"}",
+      "type_tax_use": "none",
+      "amount": -5.4,
+      "tax_group": "{\"en_US\": \"ITBIS\", \"es_DO\": \"ITBIS\"}",
+      "classification_role": "ignore",
+      "column_606": null,
+      "column_607": null,
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 127,
+      "name": "{\"en_US\": \"0.15% Trans.\"}",
+      "type_tax_use": "none",
+      "amount": 0.0015,
+      "tax_group": "{\"en_US\": \"Other Taxes\", \"es_DO\": \"Otros Impuestos\"}",
+      "classification_role": "other_tax",
+      "column_606": "X",
+      "column_607": "P",
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 135,
+      "name": "{\"en_US\": \"-30% ITBIS Prof. (N02-05)\"}",
+      "type_tax_use": "none",
+      "amount": -5.4,
+      "tax_group": "{\"en_US\": \"ITBIS\", \"es_DO\": \"ITBIS\"}",
+      "classification_role": "ignore",
+      "column_606": null,
+      "column_607": null,
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 2,
+      "name": "{\"en_US\": \"ITBIS Exento\", \"es_DO\": \"ITBIS Exento\"}",
+      "type_tax_use": "purchase",
+      "amount": 0.0,
+      "tax_group": "{\"en_US\": \"ITBIS\", \"es_DO\": \"ITBIS\"}",
+      "classification_role": "itbis",
+      "column_606": "N",
+      "column_607": "J",
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 5,
+      "name": "{\"en_US\": \"18% ITBIS\"}",
+      "type_tax_use": "purchase",
+      "amount": 18.0,
+      "tax_group": "{\"en_US\": \"ITBIS\", \"es_DO\": \"ITBIS\"}",
+      "classification_role": "itbis",
+      "column_606": "N",
+      "column_607": "J",
+      "posted_tax_lines": 469
+    },
+    {
+      "id": 6,
+      "name": "{\"en_US\": \"16% ITBIS\"}",
+      "type_tax_use": "purchase",
+      "amount": 16.0,
+      "tax_group": "{\"en_US\": \"ITBIS\", \"es_DO\": \"ITBIS\"}",
+      "classification_role": "itbis",
+      "column_606": "N",
+      "column_607": "J",
+      "posted_tax_lines": 18
+    },
+    {
+      "id": 7,
+      "name": "{\"en_US\": \"9% ITBIS\"}",
+      "type_tax_use": "purchase",
+      "amount": 9.0,
+      "tax_group": "{\"en_US\": \"ITBIS\", \"es_DO\": \"ITBIS\"}",
+      "classification_role": "itbis",
+      "column_606": "N",
+      "column_607": "J",
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 8,
+      "name": "{\"en_US\": \"8% ITBIS\"}",
+      "type_tax_use": "purchase",
+      "amount": 8.0,
+      "tax_group": "{\"en_US\": \"ITBIS\", \"es_DO\": \"ITBIS\"}",
+      "classification_role": "itbis",
+      "column_606": "N",
+      "column_607": "J",
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 9,
+      "name": "{\"en_US\": \"10% Propina\"}",
+      "type_tax_use": "purchase",
+      "amount": 10.0,
+      "tax_group": "{\"en_US\": \"Propina\"}",
+      "classification_role": "legal_tip",
+      "column_606": "Y",
+      "column_607": "Q",
+      "posted_tax_lines": 17
+    },
+    {
+      "id": 10,
+      "name": "{\"en_US\": \"18% ITBIS Serv.\"}",
+      "type_tax_use": "purchase",
+      "amount": 18.0,
+      "tax_group": "{\"en_US\": \"ITBIS\", \"es_DO\": \"ITBIS\"}",
+      "classification_role": "itbis",
+      "column_606": "N",
+      "column_607": "J",
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 11,
+      "name": "{\"en_US\": \"18% ITBIS Imp.\"}",
+      "type_tax_use": "purchase",
+      "amount": 18.0,
+      "tax_group": "{\"en_US\": \"ITBIS\", \"es_DO\": \"ITBIS\"}",
+      "classification_role": "itbis",
+      "column_606": "N",
+      "column_607": "J",
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 14,
+      "name": "{\"en_US\": \"10% ISC\"}",
+      "type_tax_use": "purchase",
+      "amount": 10.0,
+      "tax_group": "{\"en_US\": \"ISC\"}",
+      "classification_role": "isc",
+      "column_606": "W",
+      "column_607": "O",
+      "posted_tax_lines": 34
+    },
+    {
+      "id": 15,
+      "name": "{\"en_US\": \"2% CDT\"}",
+      "type_tax_use": "purchase",
+      "amount": 2.0,
+      "tax_group": "{\"en_US\": \"Other Taxes\", \"es_DO\": \"Otros Impuestos\"}",
+      "classification_role": "other_tax",
+      "column_606": "X",
+      "column_607": "P",
+      "posted_tax_lines": 34
+    },
+    {
+      "id": 16,
+      "name": "{\"en_US\": \"Telecom\"}",
+      "type_tax_use": "purchase",
+      "amount": 18.0,
+      "tax_group": "{\"en_US\": \"Other Taxes\", \"es_DO\": \"Otros Impuestos\"}",
+      "classification_role": "itbis",
+      "column_606": "N",
+      "column_607": "J",
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 17,
+      "name": "{\"en_US\": \"-100% ITBIS (N07-09)\"}",
+      "type_tax_use": "purchase",
+      "amount": -18.0,
+      "tax_group": "{\"en_US\": \"ITBIS\", \"es_DO\": \"ITBIS\"}",
+      "classification_role": "ignore",
+      "column_606": null,
+      "column_607": null,
+      "posted_tax_lines": 1
+    },
+    {
+      "id": 18,
+      "name": "{\"en_US\": \"-100% ITBIS (N01-11)\"}",
+      "type_tax_use": "purchase",
+      "amount": -18.0,
+      "tax_group": "{\"en_US\": \"ITBIS\", \"es_DO\": \"ITBIS\"}",
+      "classification_role": "ignore",
+      "column_606": null,
+      "column_607": null,
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 19,
+      "name": "{\"en_US\": \"-100% ITBIS (R293-11)\"}",
+      "type_tax_use": "purchase",
+      "amount": -18.0,
+      "tax_group": "{\"en_US\": \"ITBIS\", \"es_DO\": \"ITBIS\"}",
+      "classification_role": "ignore",
+      "column_606": null,
+      "column_607": null,
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 20,
+      "name": "{\"en_US\": \"-30% ITBIS Leg. (N02-05)\"}",
+      "type_tax_use": "purchase",
+      "amount": -5.4,
+      "tax_group": "{\"en_US\": \"ITBIS\", \"es_DO\": \"ITBIS\"}",
+      "classification_role": "ignore",
+      "column_606": null,
+      "column_607": null,
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 22,
+      "name": "{\"en_US\": \"-75% ITBIS (N08-10)\"}",
+      "type_tax_use": "purchase",
+      "amount": -13.5,
+      "tax_group": "{\"en_US\": \"ITBIS\", \"es_DO\": \"ITBIS\"}",
+      "classification_role": "ignore",
+      "column_606": null,
+      "column_607": null,
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 23,
+      "name": "{\"en_US\": \"-10% ISR Fee\"}",
+      "type_tax_use": "purchase",
+      "amount": -10.0,
+      "tax_group": "{\"en_US\": \"ISR\"}",
+      "classification_role": "ignore",
+      "column_606": null,
+      "column_607": null,
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 24,
+      "name": "{\"en_US\": \"-10% ISR Rent.\"}",
+      "type_tax_use": "purchase",
+      "amount": -10.0,
+      "tax_group": "{\"en_US\": \"ISR\"}",
+      "classification_role": "ignore",
+      "column_606": null,
+      "column_607": null,
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 25,
+      "name": "{\"en_US\": \"-10% ISR (L253-12)\"}",
+      "type_tax_use": "purchase",
+      "amount": -10.0,
+      "tax_group": "{\"en_US\": \"ISR\"}",
+      "classification_role": "ignore",
+      "column_606": null,
+      "column_607": null,
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 26,
+      "name": "{\"en_US\": \"-2% ISR (N07-07)\"}",
+      "type_tax_use": "purchase",
+      "amount": -2.0,
+      "tax_group": "{\"en_US\": \"ISR\"}",
+      "classification_role": "ignore",
+      "column_606": null,
+      "column_607": null,
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 27,
+      "name": "{\"en_US\": \"-2% ISR Mat.\"}",
+      "type_tax_use": "purchase",
+      "amount": -2.0,
+      "tax_group": "{\"en_US\": \"ISR\"}",
+      "classification_role": "ignore",
+      "column_606": null,
+      "column_607": null,
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 28,
+      "name": "{\"en_US\": \"-27% ISR (L253-12)\"}",
+      "type_tax_use": "purchase",
+      "amount": -27.0,
+      "tax_group": "{\"en_US\": \"ISR\"}",
+      "classification_role": "ignore",
+      "column_606": null,
+      "column_607": null,
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 30,
+      "name": "{\"en_US\": \"75%\"}",
+      "type_tax_use": "purchase",
+      "amount": 18.0,
+      "tax_group": "{\"en_US\": \"Withholdings\", \"es_DO\": \"Retenciones\"}",
+      "classification_role": "itbis",
+      "column_606": "N",
+      "column_607": "J",
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 31,
+      "name": "{\"en_US\": \"2% Mat.\"}",
+      "type_tax_use": "purchase",
+      "amount": 18.0,
+      "tax_group": "{\"en_US\": \"Withholdings\", \"es_DO\": \"Retenciones\"}",
+      "classification_role": "itbis",
+      "column_606": "N",
+      "column_607": "J",
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 32,
+      "name": "{\"en_US\": \"10% Serv.\"}",
+      "type_tax_use": "purchase",
+      "amount": 18.0,
+      "tax_group": "{\"en_US\": \"Withholdings\", \"es_DO\": \"Retenciones\"}",
+      "classification_role": "itbis",
+      "column_606": "N",
+      "column_607": "J",
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 33,
+      "name": "{\"en_US\": \"2% Serv P.\"}",
+      "type_tax_use": "purchase",
+      "amount": 18.0,
+      "tax_group": "{\"en_US\": \"Withholdings\", \"es_DO\": \"Retenciones\"}",
+      "classification_role": "itbis",
+      "column_606": "N",
+      "column_607": "J",
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 35,
+      "name": "{\"en_US\": \"Restaurant\"}",
+      "type_tax_use": "purchase",
+      "amount": 18.0,
+      "tax_group": "{\"en_US\": \"Withholdings\", \"es_DO\": \"Retenciones\"}",
+      "classification_role": "itbis",
+      "column_606": "N",
+      "column_607": "J",
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 36,
+      "name": "{\"en_US\": \"18% of 10%\"}",
+      "type_tax_use": "purchase",
+      "amount": 1.8,
+      "tax_group": "{\"en_US\": \"ITBIS\", \"es_DO\": \"ITBIS\"}",
+      "classification_role": "itbis",
+      "column_606": "N",
+      "column_607": "J",
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 37,
+      "name": "{\"en_US\": \"18% Cost Good\"}",
+      "type_tax_use": "purchase",
+      "amount": 18.0,
+      "tax_group": "{\"en_US\": \"ITBIS\", \"es_DO\": \"ITBIS\"}",
+      "classification_role": "itbis",
+      "column_606": "N",
+      "column_607": "J",
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 38,
+      "name": "{\"en_US\": \"18% Cost Serv.\"}",
+      "type_tax_use": "purchase",
+      "amount": 18.0,
+      "tax_group": "{\"en_US\": \"ITBIS\", \"es_DO\": \"ITBIS\"}",
+      "classification_role": "itbis",
+      "column_606": "N",
+      "column_607": "J",
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 40,
+      "name": "{\"en_US\": \"ITBIS Exempt\"}",
+      "type_tax_use": "purchase",
+      "amount": 0.0,
+      "tax_group": "{\"en_US\": \"ITBIS\", \"es_DO\": \"ITBIS\"}",
+      "classification_role": "itbis",
+      "column_606": "N",
+      "column_607": "J",
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 43,
+      "name": "{\"en_US\": \"18% ITBIS\"}",
+      "type_tax_use": "purchase",
+      "amount": 18.0,
+      "tax_group": "{\"en_US\": \"ITBIS\", \"es_DO\": \"ITBIS\"}",
+      "classification_role": "itbis",
+      "column_606": "N",
+      "column_607": "J",
+      "posted_tax_lines": 171
+    },
+    {
+      "id": 44,
+      "name": "{\"en_US\": \"16% ITBIS\"}",
+      "type_tax_use": "purchase",
+      "amount": 16.0,
+      "tax_group": "{\"en_US\": \"ITBIS\", \"es_DO\": \"ITBIS\"}",
+      "classification_role": "itbis",
+      "column_606": "N",
+      "column_607": "J",
+      "posted_tax_lines": 11
+    },
+    {
+      "id": 45,
+      "name": "{\"en_US\": \"9% ITBIS\"}",
+      "type_tax_use": "purchase",
+      "amount": 9.0,
+      "tax_group": "{\"en_US\": \"ITBIS\", \"es_DO\": \"ITBIS\"}",
+      "classification_role": "itbis",
+      "column_606": "N",
+      "column_607": "J",
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 46,
+      "name": "{\"en_US\": \"8% ITBIS\"}",
+      "type_tax_use": "purchase",
+      "amount": 8.0,
+      "tax_group": "{\"en_US\": \"ITBIS\", \"es_DO\": \"ITBIS\"}",
+      "classification_role": "itbis",
+      "column_606": "N",
+      "column_607": "J",
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 47,
+      "name": "{\"en_US\": \"10% Propina\"}",
+      "type_tax_use": "purchase",
+      "amount": 10.0,
+      "tax_group": "{\"en_US\": \"Propina\"}",
+      "classification_role": "legal_tip",
+      "column_606": "Y",
+      "column_607": "Q",
+      "posted_tax_lines": 2
+    },
+    {
+      "id": 48,
+      "name": "{\"en_US\": \"18% ITBIS Serv.\"}",
+      "type_tax_use": "purchase",
+      "amount": 18.0,
+      "tax_group": "{\"en_US\": \"ITBIS\", \"es_DO\": \"ITBIS\"}",
+      "classification_role": "itbis",
+      "column_606": "N",
+      "column_607": "J",
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 49,
+      "name": "{\"en_US\": \"18% ITBIS Imp.\"}",
+      "type_tax_use": "purchase",
+      "amount": 18.0,
+      "tax_group": "{\"en_US\": \"ITBIS\", \"es_DO\": \"ITBIS\"}",
+      "classification_role": "itbis",
+      "column_606": "N",
+      "column_607": "J",
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 52,
+      "name": "{\"en_US\": \"10% ISC\"}",
+      "type_tax_use": "purchase",
+      "amount": 10.0,
+      "tax_group": "{\"en_US\": \"ISC\"}",
+      "classification_role": "isc",
+      "column_606": "W",
+      "column_607": "O",
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 53,
+      "name": "{\"en_US\": \"2% CDT\"}",
+      "type_tax_use": "purchase",
+      "amount": 2.0,
+      "tax_group": "{\"en_US\": \"Other Taxes\", \"es_DO\": \"Otros Impuestos\"}",
+      "classification_role": "other_tax",
+      "column_606": "X",
+      "column_607": "P",
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 54,
+      "name": "{\"en_US\": \"Telecom\"}",
+      "type_tax_use": "purchase",
+      "amount": 18.0,
+      "tax_group": "{\"en_US\": \"Other Taxes\", \"es_DO\": \"Otros Impuestos\"}",
+      "classification_role": "itbis",
+      "column_606": "N",
+      "column_607": "J",
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 55,
+      "name": "{\"en_US\": \"-100% ITBIS (N07-09)\"}",
+      "type_tax_use": "purchase",
+      "amount": -18.0,
+      "tax_group": "{\"en_US\": \"ITBIS\", \"es_DO\": \"ITBIS\"}",
+      "classification_role": "ignore",
+      "column_606": null,
+      "column_607": null,
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 56,
+      "name": "{\"en_US\": \"-100% ITBIS (N01-11)\"}",
+      "type_tax_use": "purchase",
+      "amount": -18.0,
+      "tax_group": "{\"en_US\": \"ITBIS\", \"es_DO\": \"ITBIS\"}",
+      "classification_role": "ignore",
+      "column_606": null,
+      "column_607": null,
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 57,
+      "name": "{\"en_US\": \"-100% ITBIS (R293-11)\"}",
+      "type_tax_use": "purchase",
+      "amount": -18.0,
+      "tax_group": "{\"en_US\": \"ITBIS\", \"es_DO\": \"ITBIS\"}",
+      "classification_role": "ignore",
+      "column_606": null,
+      "column_607": null,
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 58,
+      "name": "{\"en_US\": \"-30% ITBIS Leg. (N02-05)\"}",
+      "type_tax_use": "purchase",
+      "amount": -5.4,
+      "tax_group": "{\"en_US\": \"ITBIS\", \"es_DO\": \"ITBIS\"}",
+      "classification_role": "ignore",
+      "column_606": null,
+      "column_607": null,
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 60,
+      "name": "{\"en_US\": \"-75% ITBIS (N08-10)\"}",
+      "type_tax_use": "purchase",
+      "amount": -13.5,
+      "tax_group": "{\"en_US\": \"ITBIS\", \"es_DO\": \"ITBIS\"}",
+      "classification_role": "ignore",
+      "column_606": null,
+      "column_607": null,
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 61,
+      "name": "{\"en_US\": \"-10% ISR Fee\"}",
+      "type_tax_use": "purchase",
+      "amount": -10.0,
+      "tax_group": "{\"en_US\": \"ISR\"}",
+      "classification_role": "ignore",
+      "column_606": null,
+      "column_607": null,
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 62,
+      "name": "{\"en_US\": \"-10% ISR Rent.\"}",
+      "type_tax_use": "purchase",
+      "amount": -10.0,
+      "tax_group": "{\"en_US\": \"ISR\"}",
+      "classification_role": "ignore",
+      "column_606": null,
+      "column_607": null,
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 63,
+      "name": "{\"en_US\": \"-10% ISR (L253-12)\"}",
+      "type_tax_use": "purchase",
+      "amount": -10.0,
+      "tax_group": "{\"en_US\": \"ISR\"}",
+      "classification_role": "ignore",
+      "column_606": null,
+      "column_607": null,
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 64,
+      "name": "{\"en_US\": \"-2% ISR (N07-07)\"}",
+      "type_tax_use": "purchase",
+      "amount": -2.0,
+      "tax_group": "{\"en_US\": \"ISR\"}",
+      "classification_role": "ignore",
+      "column_606": null,
+      "column_607": null,
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 65,
+      "name": "{\"en_US\": \"-2% ISR Mat.\"}",
+      "type_tax_use": "purchase",
+      "amount": -2.0,
+      "tax_group": "{\"en_US\": \"ISR\"}",
+      "classification_role": "ignore",
+      "column_606": null,
+      "column_607": null,
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 66,
+      "name": "{\"en_US\": \"-27% ISR (L253-12)\"}",
+      "type_tax_use": "purchase",
+      "amount": -27.0,
+      "tax_group": "{\"en_US\": \"ISR\"}",
+      "classification_role": "ignore",
+      "column_606": null,
+      "column_607": null,
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 68,
+      "name": "{\"en_US\": \"75%\"}",
+      "type_tax_use": "purchase",
+      "amount": 18.0,
+      "tax_group": "{\"en_US\": \"Withholdings\", \"es_DO\": \"Retenciones\"}",
+      "classification_role": "itbis",
+      "column_606": "N",
+      "column_607": "J",
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 69,
+      "name": "{\"en_US\": \"2% Mat.\"}",
+      "type_tax_use": "purchase",
+      "amount": 18.0,
+      "tax_group": "{\"en_US\": \"Withholdings\", \"es_DO\": \"Retenciones\"}",
+      "classification_role": "itbis",
+      "column_606": "N",
+      "column_607": "J",
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 70,
+      "name": "{\"en_US\": \"10% Serv.\"}",
+      "type_tax_use": "purchase",
+      "amount": 18.0,
+      "tax_group": "{\"en_US\": \"Withholdings\", \"es_DO\": \"Retenciones\"}",
+      "classification_role": "itbis",
+      "column_606": "N",
+      "column_607": "J",
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 71,
+      "name": "{\"en_US\": \"2% Serv P.\"}",
+      "type_tax_use": "purchase",
+      "amount": 18.0,
+      "tax_group": "{\"en_US\": \"Withholdings\", \"es_DO\": \"Retenciones\"}",
+      "classification_role": "itbis",
+      "column_606": "N",
+      "column_607": "J",
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 73,
+      "name": "{\"en_US\": \"Restaurant\"}",
+      "type_tax_use": "purchase",
+      "amount": 18.0,
+      "tax_group": "{\"en_US\": \"Withholdings\", \"es_DO\": \"Retenciones\"}",
+      "classification_role": "itbis",
+      "column_606": "N",
+      "column_607": "J",
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 74,
+      "name": "{\"en_US\": \"18% of 10%\"}",
+      "type_tax_use": "purchase",
+      "amount": 1.8,
+      "tax_group": "{\"en_US\": \"ITBIS\", \"es_DO\": \"ITBIS\"}",
+      "classification_role": "itbis",
+      "column_606": "N",
+      "column_607": "J",
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 75,
+      "name": "{\"en_US\": \"18% Cost Good\"}",
+      "type_tax_use": "purchase",
+      "amount": 18.0,
+      "tax_group": "{\"en_US\": \"ITBIS\", \"es_DO\": \"ITBIS\"}",
+      "classification_role": "itbis",
+      "column_606": "N",
+      "column_607": "J",
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 76,
+      "name": "{\"en_US\": \"18% Cost Serv.\"}",
+      "type_tax_use": "purchase",
+      "amount": 18.0,
+      "tax_group": "{\"en_US\": \"ITBIS\", \"es_DO\": \"ITBIS\"}",
+      "classification_role": "itbis",
+      "column_606": "N",
+      "column_607": "J",
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 78,
+      "name": "{\"en_US\": \"ITBIS Exempt\"}",
+      "type_tax_use": "purchase",
+      "amount": 0.0,
+      "tax_group": "{\"en_US\": \"ITBIS\", \"es_DO\": \"ITBIS\"}",
+      "classification_role": "itbis",
+      "column_606": "N",
+      "column_607": "J",
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 81,
+      "name": "{\"en_US\": \"18% ITBIS\"}",
+      "type_tax_use": "purchase",
+      "amount": 18.0,
+      "tax_group": "{\"en_US\": \"ITBIS\", \"es_DO\": \"ITBIS\"}",
+      "classification_role": "itbis",
+      "column_606": "N",
+      "column_607": "J",
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 82,
+      "name": "{\"en_US\": \"16% ITBIS\"}",
+      "type_tax_use": "purchase",
+      "amount": 16.0,
+      "tax_group": "{\"en_US\": \"ITBIS\", \"es_DO\": \"ITBIS\"}",
+      "classification_role": "itbis",
+      "column_606": "N",
+      "column_607": "J",
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 83,
+      "name": "{\"en_US\": \"9% ITBIS\"}",
+      "type_tax_use": "purchase",
+      "amount": 9.0,
+      "tax_group": "{\"en_US\": \"ITBIS\", \"es_DO\": \"ITBIS\"}",
+      "classification_role": "itbis",
+      "column_606": "N",
+      "column_607": "J",
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 84,
+      "name": "{\"en_US\": \"8% ITBIS\"}",
+      "type_tax_use": "purchase",
+      "amount": 8.0,
+      "tax_group": "{\"en_US\": \"ITBIS\", \"es_DO\": \"ITBIS\"}",
+      "classification_role": "itbis",
+      "column_606": "N",
+      "column_607": "J",
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 85,
+      "name": "{\"en_US\": \"10% Propina\"}",
+      "type_tax_use": "purchase",
+      "amount": 10.0,
+      "tax_group": "{\"en_US\": \"Propina\"}",
+      "classification_role": "legal_tip",
+      "column_606": "Y",
+      "column_607": "Q",
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 86,
+      "name": "{\"en_US\": \"18% ITBIS Serv.\"}",
+      "type_tax_use": "purchase",
+      "amount": 18.0,
+      "tax_group": "{\"en_US\": \"ITBIS\", \"es_DO\": \"ITBIS\"}",
+      "classification_role": "itbis",
+      "column_606": "N",
+      "column_607": "J",
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 87,
+      "name": "{\"en_US\": \"18% ITBIS Imp.\"}",
+      "type_tax_use": "purchase",
+      "amount": 18.0,
+      "tax_group": "{\"en_US\": \"ITBIS\", \"es_DO\": \"ITBIS\"}",
+      "classification_role": "itbis",
+      "column_606": "N",
+      "column_607": "J",
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 90,
+      "name": "{\"en_US\": \"10% ISC\"}",
+      "type_tax_use": "purchase",
+      "amount": 10.0,
+      "tax_group": "{\"en_US\": \"ISC\"}",
+      "classification_role": "isc",
+      "column_606": "W",
+      "column_607": "O",
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 91,
+      "name": "{\"en_US\": \"2% CDT\"}",
+      "type_tax_use": "purchase",
+      "amount": 2.0,
+      "tax_group": "{\"en_US\": \"Other Taxes\", \"es_DO\": \"Otros Impuestos\"}",
+      "classification_role": "other_tax",
+      "column_606": "X",
+      "column_607": "P",
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 92,
+      "name": "{\"en_US\": \"Telecom\"}",
+      "type_tax_use": "purchase",
+      "amount": 18.0,
+      "tax_group": "{\"en_US\": \"Other Taxes\", \"es_DO\": \"Otros Impuestos\"}",
+      "classification_role": "itbis",
+      "column_606": "N",
+      "column_607": "J",
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 93,
+      "name": "{\"en_US\": \"-100% ITBIS (N07-09)\"}",
+      "type_tax_use": "purchase",
+      "amount": -18.0,
+      "tax_group": "{\"en_US\": \"ITBIS\", \"es_DO\": \"ITBIS\"}",
+      "classification_role": "ignore",
+      "column_606": null,
+      "column_607": null,
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 94,
+      "name": "{\"en_US\": \"-100% ITBIS (N01-11)\"}",
+      "type_tax_use": "purchase",
+      "amount": -18.0,
+      "tax_group": "{\"en_US\": \"ITBIS\", \"es_DO\": \"ITBIS\"}",
+      "classification_role": "ignore",
+      "column_606": null,
+      "column_607": null,
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 95,
+      "name": "{\"en_US\": \"-100% ITBIS (R293-11)\"}",
+      "type_tax_use": "purchase",
+      "amount": -18.0,
+      "tax_group": "{\"en_US\": \"ITBIS\", \"es_DO\": \"ITBIS\"}",
+      "classification_role": "ignore",
+      "column_606": null,
+      "column_607": null,
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 96,
+      "name": "{\"en_US\": \"-30% ITBIS Leg. (N02-05)\"}",
+      "type_tax_use": "purchase",
+      "amount": -5.4,
+      "tax_group": "{\"en_US\": \"ITBIS\", \"es_DO\": \"ITBIS\"}",
+      "classification_role": "ignore",
+      "column_606": null,
+      "column_607": null,
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 98,
+      "name": "{\"en_US\": \"-75% ITBIS (N08-10)\"}",
+      "type_tax_use": "purchase",
+      "amount": -13.5,
+      "tax_group": "{\"en_US\": \"ITBIS\", \"es_DO\": \"ITBIS\"}",
+      "classification_role": "ignore",
+      "column_606": null,
+      "column_607": null,
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 99,
+      "name": "{\"en_US\": \"-10% ISR Fee\"}",
+      "type_tax_use": "purchase",
+      "amount": -10.0,
+      "tax_group": "{\"en_US\": \"ISR\"}",
+      "classification_role": "ignore",
+      "column_606": null,
+      "column_607": null,
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 100,
+      "name": "{\"en_US\": \"-10% ISR Rent.\"}",
+      "type_tax_use": "purchase",
+      "amount": -10.0,
+      "tax_group": "{\"en_US\": \"ISR\"}",
+      "classification_role": "ignore",
+      "column_606": null,
+      "column_607": null,
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 101,
+      "name": "{\"en_US\": \"-10% ISR (L253-12)\"}",
+      "type_tax_use": "purchase",
+      "amount": -10.0,
+      "tax_group": "{\"en_US\": \"ISR\"}",
+      "classification_role": "ignore",
+      "column_606": null,
+      "column_607": null,
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 102,
+      "name": "{\"en_US\": \"-2% ISR (N07-07)\"}",
+      "type_tax_use": "purchase",
+      "amount": -2.0,
+      "tax_group": "{\"en_US\": \"ISR\"}",
+      "classification_role": "ignore",
+      "column_606": null,
+      "column_607": null,
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 103,
+      "name": "{\"en_US\": \"-2% ISR Mat.\"}",
+      "type_tax_use": "purchase",
+      "amount": -2.0,
+      "tax_group": "{\"en_US\": \"ISR\"}",
+      "classification_role": "ignore",
+      "column_606": null,
+      "column_607": null,
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 104,
+      "name": "{\"en_US\": \"-27% ISR (L253-12)\"}",
+      "type_tax_use": "purchase",
+      "amount": -27.0,
+      "tax_group": "{\"en_US\": \"ISR\"}",
+      "classification_role": "ignore",
+      "column_606": null,
+      "column_607": null,
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 106,
+      "name": "{\"en_US\": \"75%\"}",
+      "type_tax_use": "purchase",
+      "amount": 18.0,
+      "tax_group": "{\"en_US\": \"Withholdings\", \"es_DO\": \"Retenciones\"}",
+      "classification_role": "itbis",
+      "column_606": "N",
+      "column_607": "J",
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 107,
+      "name": "{\"en_US\": \"2% Mat.\"}",
+      "type_tax_use": "purchase",
+      "amount": 18.0,
+      "tax_group": "{\"en_US\": \"Withholdings\", \"es_DO\": \"Retenciones\"}",
+      "classification_role": "itbis",
+      "column_606": "N",
+      "column_607": "J",
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 108,
+      "name": "{\"en_US\": \"10% Serv.\"}",
+      "type_tax_use": "purchase",
+      "amount": 18.0,
+      "tax_group": "{\"en_US\": \"Withholdings\", \"es_DO\": \"Retenciones\"}",
+      "classification_role": "itbis",
+      "column_606": "N",
+      "column_607": "J",
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 109,
+      "name": "{\"en_US\": \"2% Serv P.\"}",
+      "type_tax_use": "purchase",
+      "amount": 18.0,
+      "tax_group": "{\"en_US\": \"Withholdings\", \"es_DO\": \"Retenciones\"}",
+      "classification_role": "itbis",
+      "column_606": "N",
+      "column_607": "J",
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 111,
+      "name": "{\"en_US\": \"Restaurant\"}",
+      "type_tax_use": "purchase",
+      "amount": 18.0,
+      "tax_group": "{\"en_US\": \"Withholdings\", \"es_DO\": \"Retenciones\"}",
+      "classification_role": "itbis",
+      "column_606": "N",
+      "column_607": "J",
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 112,
+      "name": "{\"en_US\": \"18% of 10%\"}",
+      "type_tax_use": "purchase",
+      "amount": 1.8,
+      "tax_group": "{\"en_US\": \"ITBIS\", \"es_DO\": \"ITBIS\"}",
+      "classification_role": "itbis",
+      "column_606": "N",
+      "column_607": "J",
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 113,
+      "name": "{\"en_US\": \"18% Cost Good\"}",
+      "type_tax_use": "purchase",
+      "amount": 18.0,
+      "tax_group": "{\"en_US\": \"ITBIS\", \"es_DO\": \"ITBIS\"}",
+      "classification_role": "itbis",
+      "column_606": "N",
+      "column_607": "J",
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 114,
+      "name": "{\"en_US\": \"18% Cost Serv.\"}",
+      "type_tax_use": "purchase",
+      "amount": 18.0,
+      "tax_group": "{\"en_US\": \"ITBIS\", \"es_DO\": \"ITBIS\"}",
+      "classification_role": "itbis",
+      "column_606": "N",
+      "column_607": "J",
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 116,
+      "name": "{\"en_US\": \"ITBIS Exempt\"}",
+      "type_tax_use": "purchase",
+      "amount": 0.0,
+      "tax_group": "{\"en_US\": \"ITBIS\", \"es_DO\": \"ITBIS\"}",
+      "classification_role": "itbis",
+      "column_606": "N",
+      "column_607": "J",
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 119,
+      "name": "{\"en_US\": \"18% ITBIS\"}",
+      "type_tax_use": "purchase",
+      "amount": 18.0,
+      "tax_group": "{\"en_US\": \"ITBIS\", \"es_DO\": \"ITBIS\"}",
+      "classification_role": "itbis",
+      "column_606": "N",
+      "column_607": "J",
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 120,
+      "name": "{\"en_US\": \"16% ITBIS\"}",
+      "type_tax_use": "purchase",
+      "amount": 16.0,
+      "tax_group": "{\"en_US\": \"ITBIS\", \"es_DO\": \"ITBIS\"}",
+      "classification_role": "itbis",
+      "column_606": "N",
+      "column_607": "J",
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 121,
+      "name": "{\"en_US\": \"9% ITBIS\"}",
+      "type_tax_use": "purchase",
+      "amount": 9.0,
+      "tax_group": "{\"en_US\": \"ITBIS\", \"es_DO\": \"ITBIS\"}",
+      "classification_role": "itbis",
+      "column_606": "N",
+      "column_607": "J",
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 122,
+      "name": "{\"en_US\": \"8% ITBIS\"}",
+      "type_tax_use": "purchase",
+      "amount": 8.0,
+      "tax_group": "{\"en_US\": \"ITBIS\", \"es_DO\": \"ITBIS\"}",
+      "classification_role": "itbis",
+      "column_606": "N",
+      "column_607": "J",
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 123,
+      "name": "{\"en_US\": \"10% Propina\"}",
+      "type_tax_use": "purchase",
+      "amount": 10.0,
+      "tax_group": "{\"en_US\": \"Propina\"}",
+      "classification_role": "legal_tip",
+      "column_606": "Y",
+      "column_607": "Q",
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 124,
+      "name": "{\"en_US\": \"18% ITBIS Serv.\"}",
+      "type_tax_use": "purchase",
+      "amount": 18.0,
+      "tax_group": "{\"en_US\": \"ITBIS\", \"es_DO\": \"ITBIS\"}",
+      "classification_role": "itbis",
+      "column_606": "N",
+      "column_607": "J",
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 125,
+      "name": "{\"en_US\": \"18% ITBIS Imp.\"}",
+      "type_tax_use": "purchase",
+      "amount": 18.0,
+      "tax_group": "{\"en_US\": \"ITBIS\", \"es_DO\": \"ITBIS\"}",
+      "classification_role": "itbis",
+      "column_606": "N",
+      "column_607": "J",
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 128,
+      "name": "{\"en_US\": \"10% ISC\"}",
+      "type_tax_use": "purchase",
+      "amount": 10.0,
+      "tax_group": "{\"en_US\": \"ISC\"}",
+      "classification_role": "isc",
+      "column_606": "W",
+      "column_607": "O",
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 129,
+      "name": "{\"en_US\": \"2% CDT\"}",
+      "type_tax_use": "purchase",
+      "amount": 2.0,
+      "tax_group": "{\"en_US\": \"Other Taxes\", \"es_DO\": \"Otros Impuestos\"}",
+      "classification_role": "other_tax",
+      "column_606": "X",
+      "column_607": "P",
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 130,
+      "name": "{\"en_US\": \"Telecom\"}",
+      "type_tax_use": "purchase",
+      "amount": 18.0,
+      "tax_group": "{\"en_US\": \"Other Taxes\", \"es_DO\": \"Otros Impuestos\"}",
+      "classification_role": "itbis",
+      "column_606": "N",
+      "column_607": "J",
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 131,
+      "name": "{\"en_US\": \"-100% ITBIS (N07-09)\"}",
+      "type_tax_use": "purchase",
+      "amount": -18.0,
+      "tax_group": "{\"en_US\": \"ITBIS\", \"es_DO\": \"ITBIS\"}",
+      "classification_role": "ignore",
+      "column_606": null,
+      "column_607": null,
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 132,
+      "name": "{\"en_US\": \"-100% ITBIS (N01-11)\"}",
+      "type_tax_use": "purchase",
+      "amount": -18.0,
+      "tax_group": "{\"en_US\": \"ITBIS\", \"es_DO\": \"ITBIS\"}",
+      "classification_role": "ignore",
+      "column_606": null,
+      "column_607": null,
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 133,
+      "name": "{\"en_US\": \"-100% ITBIS (R293-11)\"}",
+      "type_tax_use": "purchase",
+      "amount": -18.0,
+      "tax_group": "{\"en_US\": \"ITBIS\", \"es_DO\": \"ITBIS\"}",
+      "classification_role": "ignore",
+      "column_606": null,
+      "column_607": null,
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 134,
+      "name": "{\"en_US\": \"-30% ITBIS Leg. (N02-05)\"}",
+      "type_tax_use": "purchase",
+      "amount": -5.4,
+      "tax_group": "{\"en_US\": \"ITBIS\", \"es_DO\": \"ITBIS\"}",
+      "classification_role": "ignore",
+      "column_606": null,
+      "column_607": null,
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 136,
+      "name": "{\"en_US\": \"-75% ITBIS (N08-10)\"}",
+      "type_tax_use": "purchase",
+      "amount": -13.5,
+      "tax_group": "{\"en_US\": \"ITBIS\", \"es_DO\": \"ITBIS\"}",
+      "classification_role": "ignore",
+      "column_606": null,
+      "column_607": null,
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 137,
+      "name": "{\"en_US\": \"-10% ISR Fee\"}",
+      "type_tax_use": "purchase",
+      "amount": -10.0,
+      "tax_group": "{\"en_US\": \"ISR\"}",
+      "classification_role": "ignore",
+      "column_606": null,
+      "column_607": null,
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 138,
+      "name": "{\"en_US\": \"-10% ISR Rent.\"}",
+      "type_tax_use": "purchase",
+      "amount": -10.0,
+      "tax_group": "{\"en_US\": \"ISR\"}",
+      "classification_role": "ignore",
+      "column_606": null,
+      "column_607": null,
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 139,
+      "name": "{\"en_US\": \"-10% ISR (L253-12)\"}",
+      "type_tax_use": "purchase",
+      "amount": -10.0,
+      "tax_group": "{\"en_US\": \"ISR\"}",
+      "classification_role": "ignore",
+      "column_606": null,
+      "column_607": null,
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 140,
+      "name": "{\"en_US\": \"-2% ISR (N07-07)\"}",
+      "type_tax_use": "purchase",
+      "amount": -2.0,
+      "tax_group": "{\"en_US\": \"ISR\"}",
+      "classification_role": "ignore",
+      "column_606": null,
+      "column_607": null,
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 141,
+      "name": "{\"en_US\": \"-2% ISR Mat.\"}",
+      "type_tax_use": "purchase",
+      "amount": -2.0,
+      "tax_group": "{\"en_US\": \"ISR\"}",
+      "classification_role": "ignore",
+      "column_606": null,
+      "column_607": null,
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 142,
+      "name": "{\"en_US\": \"-27% ISR (L253-12)\"}",
+      "type_tax_use": "purchase",
+      "amount": -27.0,
+      "tax_group": "{\"en_US\": \"ISR\"}",
+      "classification_role": "ignore",
+      "column_606": null,
+      "column_607": null,
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 144,
+      "name": "{\"en_US\": \"75%\"}",
+      "type_tax_use": "purchase",
+      "amount": 18.0,
+      "tax_group": "{\"en_US\": \"Withholdings\", \"es_DO\": \"Retenciones\"}",
+      "classification_role": "itbis",
+      "column_606": "N",
+      "column_607": "J",
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 145,
+      "name": "{\"en_US\": \"2% Mat.\"}",
+      "type_tax_use": "purchase",
+      "amount": 18.0,
+      "tax_group": "{\"en_US\": \"Withholdings\", \"es_DO\": \"Retenciones\"}",
+      "classification_role": "itbis",
+      "column_606": "N",
+      "column_607": "J",
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 146,
+      "name": "{\"en_US\": \"10% Serv.\"}",
+      "type_tax_use": "purchase",
+      "amount": 18.0,
+      "tax_group": "{\"en_US\": \"Withholdings\", \"es_DO\": \"Retenciones\"}",
+      "classification_role": "itbis",
+      "column_606": "N",
+      "column_607": "J",
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 147,
+      "name": "{\"en_US\": \"2% Serv P.\"}",
+      "type_tax_use": "purchase",
+      "amount": 18.0,
+      "tax_group": "{\"en_US\": \"Withholdings\", \"es_DO\": \"Retenciones\"}",
+      "classification_role": "itbis",
+      "column_606": "N",
+      "column_607": "J",
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 149,
+      "name": "{\"en_US\": \"Restaurant\"}",
+      "type_tax_use": "purchase",
+      "amount": 18.0,
+      "tax_group": "{\"en_US\": \"Withholdings\", \"es_DO\": \"Retenciones\"}",
+      "classification_role": "itbis",
+      "column_606": "N",
+      "column_607": "J",
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 150,
+      "name": "{\"en_US\": \"18% of 10%\"}",
+      "type_tax_use": "purchase",
+      "amount": 1.8,
+      "tax_group": "{\"en_US\": \"ITBIS\", \"es_DO\": \"ITBIS\"}",
+      "classification_role": "itbis",
+      "column_606": "N",
+      "column_607": "J",
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 151,
+      "name": "{\"en_US\": \"18% Cost Good\"}",
+      "type_tax_use": "purchase",
+      "amount": 18.0,
+      "tax_group": "{\"en_US\": \"ITBIS\", \"es_DO\": \"ITBIS\"}",
+      "classification_role": "itbis",
+      "column_606": "N",
+      "column_607": "J",
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 152,
+      "name": "{\"en_US\": \"18% Cost Serv.\"}",
+      "type_tax_use": "purchase",
+      "amount": 18.0,
+      "tax_group": "{\"en_US\": \"ITBIS\", \"es_DO\": \"ITBIS\"}",
+      "classification_role": "itbis",
+      "column_606": "N",
+      "column_607": "J",
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 153,
+      "name": "{\"en_US\": \"-100% ITBIS RST (R265-19)\", \"es_DO\": \"-100% ITBIS RST (R265-19)\"}",
+      "type_tax_use": "purchase",
+      "amount": -18.0,
+      "tax_group": "{\"en_US\": \"ITBIS\", \"es_DO\": \"ITBIS\"}",
+      "classification_role": "ignore",
+      "column_606": null,
+      "column_607": null,
+      "posted_tax_lines": 4
+    },
+    {
+      "id": 1,
+      "name": "{\"en_US\": \"ITBIS Exento\", \"es_DO\": \"ITBIS Exento\"}",
+      "type_tax_use": "sale",
+      "amount": 0.0,
+      "tax_group": "{\"en_US\": \"ITBIS\", \"es_DO\": \"ITBIS\"}",
+      "classification_role": "itbis",
+      "column_606": "N",
+      "column_607": "J",
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 3,
+      "name": "{\"en_US\": \"18% ITBIS\"}",
+      "type_tax_use": "sale",
+      "amount": 18.0,
+      "tax_group": "{\"en_US\": \"ITBIS\", \"es_DO\": \"ITBIS\"}",
+      "classification_role": "itbis",
+      "column_606": "N",
+      "column_607": "J",
+      "posted_tax_lines": 379
+    },
+    {
+      "id": 4,
+      "name": "{\"en_US\": \"10% Propina\"}",
+      "type_tax_use": "sale",
+      "amount": 10.0,
+      "tax_group": "{\"en_US\": \"Propina\"}",
+      "classification_role": "legal_tip",
+      "column_606": "Y",
+      "column_607": "Q",
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 12,
+      "name": "{\"en_US\": \"18% of 10%\"}",
+      "type_tax_use": "sale",
+      "amount": 1.8,
+      "tax_group": "{\"en_US\": \"ITBIS\", \"es_DO\": \"ITBIS\"}",
+      "classification_role": "itbis",
+      "column_606": "N",
+      "column_607": "J",
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 29,
+      "name": "{\"en_US\": \"-5% ISR Gov.\"}",
+      "type_tax_use": "sale",
+      "amount": -5.0,
+      "tax_group": "{\"en_US\": \"ISR\"}",
+      "classification_role": "ignore",
+      "column_606": null,
+      "column_607": null,
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 34,
+      "name": "{\"en_US\": \"Restaurant\"}",
+      "type_tax_use": "sale",
+      "amount": 18.0,
+      "tax_group": "{\"en_US\": \"Withholdings\", \"es_DO\": \"Retenciones\"}",
+      "classification_role": "itbis",
+      "column_606": "N",
+      "column_607": "J",
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 39,
+      "name": "{\"en_US\": \"ITBIS Exempt\"}",
+      "type_tax_use": "sale",
+      "amount": 0.0,
+      "tax_group": "{\"en_US\": \"ITBIS\", \"es_DO\": \"ITBIS\"}",
+      "classification_role": "itbis",
+      "column_606": "N",
+      "column_607": "J",
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 41,
+      "name": "{\"en_US\": \"18% ITBIS\"}",
+      "type_tax_use": "sale",
+      "amount": 18.0,
+      "tax_group": "{\"en_US\": \"ITBIS\", \"es_DO\": \"ITBIS\"}",
+      "classification_role": "itbis",
+      "column_606": "N",
+      "column_607": "J",
+      "posted_tax_lines": 255
+    },
+    {
+      "id": 42,
+      "name": "{\"en_US\": \"10% Propina\"}",
+      "type_tax_use": "sale",
+      "amount": 10.0,
+      "tax_group": "{\"en_US\": \"Propina\"}",
+      "classification_role": "legal_tip",
+      "column_606": "Y",
+      "column_607": "Q",
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 50,
+      "name": "{\"en_US\": \"18% of 10%\"}",
+      "type_tax_use": "sale",
+      "amount": 1.8,
+      "tax_group": "{\"en_US\": \"ITBIS\", \"es_DO\": \"ITBIS\"}",
+      "classification_role": "itbis",
+      "column_606": "N",
+      "column_607": "J",
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 67,
+      "name": "{\"en_US\": \"-5% ISR Gov.\"}",
+      "type_tax_use": "sale",
+      "amount": -5.0,
+      "tax_group": "{\"en_US\": \"ISR\"}",
+      "classification_role": "ignore",
+      "column_606": null,
+      "column_607": null,
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 72,
+      "name": "{\"en_US\": \"Restaurant\"}",
+      "type_tax_use": "sale",
+      "amount": 18.0,
+      "tax_group": "{\"en_US\": \"Withholdings\", \"es_DO\": \"Retenciones\"}",
+      "classification_role": "itbis",
+      "column_606": "N",
+      "column_607": "J",
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 77,
+      "name": "{\"en_US\": \"ITBIS Exempt\"}",
+      "type_tax_use": "sale",
+      "amount": 0.0,
+      "tax_group": "{\"en_US\": \"ITBIS\", \"es_DO\": \"ITBIS\"}",
+      "classification_role": "itbis",
+      "column_606": "N",
+      "column_607": "J",
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 79,
+      "name": "{\"en_US\": \"18% ITBIS\"}",
+      "type_tax_use": "sale",
+      "amount": 18.0,
+      "tax_group": "{\"en_US\": \"ITBIS\", \"es_DO\": \"ITBIS\"}",
+      "classification_role": "itbis",
+      "column_606": "N",
+      "column_607": "J",
+      "posted_tax_lines": 3
+    },
+    {
+      "id": 80,
+      "name": "{\"en_US\": \"10% Propina\"}",
+      "type_tax_use": "sale",
+      "amount": 10.0,
+      "tax_group": "{\"en_US\": \"Propina\"}",
+      "classification_role": "legal_tip",
+      "column_606": "Y",
+      "column_607": "Q",
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 88,
+      "name": "{\"en_US\": \"18% of 10%\"}",
+      "type_tax_use": "sale",
+      "amount": 1.8,
+      "tax_group": "{\"en_US\": \"ITBIS\", \"es_DO\": \"ITBIS\"}",
+      "classification_role": "itbis",
+      "column_606": "N",
+      "column_607": "J",
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 105,
+      "name": "{\"en_US\": \"-5% ISR Gov.\"}",
+      "type_tax_use": "sale",
+      "amount": -5.0,
+      "tax_group": "{\"en_US\": \"ISR\"}",
+      "classification_role": "ignore",
+      "column_606": null,
+      "column_607": null,
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 110,
+      "name": "{\"en_US\": \"Restaurant\"}",
+      "type_tax_use": "sale",
+      "amount": 18.0,
+      "tax_group": "{\"en_US\": \"Withholdings\", \"es_DO\": \"Retenciones\"}",
+      "classification_role": "itbis",
+      "column_606": "N",
+      "column_607": "J",
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 115,
+      "name": "{\"en_US\": \"ITBIS Exempt\"}",
+      "type_tax_use": "sale",
+      "amount": 0.0,
+      "tax_group": "{\"en_US\": \"ITBIS\", \"es_DO\": \"ITBIS\"}",
+      "classification_role": "itbis",
+      "column_606": "N",
+      "column_607": "J",
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 117,
+      "name": "{\"en_US\": \"18% ITBIS\"}",
+      "type_tax_use": "sale",
+      "amount": 18.0,
+      "tax_group": "{\"en_US\": \"ITBIS\", \"es_DO\": \"ITBIS\"}",
+      "classification_role": "itbis",
+      "column_606": "N",
+      "column_607": "J",
+      "posted_tax_lines": 5
+    },
+    {
+      "id": 118,
+      "name": "{\"en_US\": \"10% Propina\"}",
+      "type_tax_use": "sale",
+      "amount": 10.0,
+      "tax_group": "{\"en_US\": \"Propina\"}",
+      "classification_role": "legal_tip",
+      "column_606": "Y",
+      "column_607": "Q",
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 126,
+      "name": "{\"en_US\": \"18% of 10%\"}",
+      "type_tax_use": "sale",
+      "amount": 1.8,
+      "tax_group": "{\"en_US\": \"ITBIS\", \"es_DO\": \"ITBIS\"}",
+      "classification_role": "itbis",
+      "column_606": "N",
+      "column_607": "J",
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 143,
+      "name": "{\"en_US\": \"-5% ISR Gov.\"}",
+      "type_tax_use": "sale",
+      "amount": -5.0,
+      "tax_group": "{\"en_US\": \"ISR\"}",
+      "classification_role": "ignore",
+      "column_606": null,
+      "column_607": null,
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 148,
+      "name": "{\"en_US\": \"Restaurant\"}",
+      "type_tax_use": "sale",
+      "amount": 18.0,
+      "tax_group": "{\"en_US\": \"Withholdings\", \"es_DO\": \"Retenciones\"}",
+      "classification_role": "itbis",
+      "column_606": "N",
+      "column_607": "J",
+      "posted_tax_lines": 0
+    },
+    {
+      "id": 154,
+      "name": "{\"en_US\": \"16% ITBIS\", \"es_DO\": \"16% ITBIS\"}",
+      "type_tax_use": "sale",
+      "amount": 16.0,
+      "tax_group": "{\"en_US\": \"ITBIS\", \"es_DO\": \"ITBIS\"}",
+      "classification_role": "itbis",
+      "column_606": "N",
+      "column_607": "J",
+      "posted_tax_lines": 7
+    }
+  ],
+  "final_tax_matrix_count": 154
+}

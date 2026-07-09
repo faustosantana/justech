@@ -163,7 +163,11 @@ class JustechDoFiscalReportReview(models.Model):
     def _review_lines_606(self):
         return self._review_lines_dgii("justech.do.dgii.606.exporter")
 
+    def _fdp(self):
+        return self.env["justech.do.fiscal.data.provider"]
+
     def _prepare_line_vals_dgii(self, move, result, exporter):
+        fdp = self._fdp()
         itbis = self._move_itbis_amount(move)
         wh_itbis, wh_isr, _, _ = exporter._withholding_breakdown(move)
         errors = result["move_errors"].get(move.id)
@@ -177,13 +181,14 @@ class JustechDoFiscalReportReview(models.Model):
         fiscal_state = move.justech_do_dgii_fiscal_state or "incomplete"
         exclusion_reason = move.justech_do_dgii_exclusion_reason or ""
         auto_exclusion = False
-        if fiscal_state == "excluded" or not move.justech_do_include_in_dgii:
+        fdp = self._fdp()
+        if fiscal_state == "excluded" or not fdp.include_in_dgii(move):
             if not exclusion_reason:
                 exclusion_reason = _(self.AUTO_UAT_EXCLUSION_REASON)
                 auto_exclusion = True
             else:
                 auto_exclusion = True
-        include = bool(move.justech_do_include_in_dgii) and fiscal_state != "cancelled"
+        include = fdp.include_in_dgii(move) and fiscal_state != "cancelled"
         return {
             "move_id": move.id,
             "move_name": move.name or move.ref,
@@ -193,9 +198,9 @@ class JustechDoFiscalReportReview(models.Model):
             else (partner.vat or ""),
             "partner_name": partner.display_name,
             "partner_id_type": partner.justech_do_partner_id_type or "",
-            "document_type": move.justech_do_document_type_id.prefix or "",
-            "ncf": move.justech_do_ncf or "",
-            "ncf_modified": move.justech_do_ncf_modified or move.justech_do_origin_ncf or "",
+            "document_type": fdp.get_document_type_prefix(move),
+            "ncf": fdp.get_ncf(move),
+            "ncf_modified": fdp.get_ncf_modified(move),
             "document_date": move.invoice_date,
             "invoice_date_due": move.invoice_date_due,
             "currency_id": move.currency_id.id,
@@ -220,10 +225,16 @@ class JustechDoFiscalReportReview(models.Model):
 
     def _review_lines_608(self):
         self.ensure_one()
-        moves = self.env["account.move"].search(
-            self._base_move_domain() + [("justech_do_ncf_voided", "=", True)]
+        exporter = self.env["justech.do.dgii.608.exporter"]
+        result = exporter.validate_period(
+            self.company_id, self.date_from, self.date_to, refresh_states=True
         )
-        return [self._prepare_line_vals_generic(move) for move in moves.filtered("justech_do_ncf")]
+        fdp = self._fdp()
+        return [
+            self._prepare_line_vals_generic(move)
+            for move in result["buckets"]["all"]
+            if fdp.get_ncf(move)
+        ]
 
     def _review_lines_623(self):
         self.ensure_one()
@@ -237,6 +248,7 @@ class JustechDoFiscalReportReview(models.Model):
         ]
 
     def _prepare_line_vals_623(self, move, result, exporter):
+        fdp = self._fdp()
         gov_tax = exporter._gov_tax(self.company_id)
         gov_amt = exporter._gov_amount(move, gov_tax)
         errors = result["move_errors"].get(move.id)
@@ -249,11 +261,11 @@ class JustechDoFiscalReportReview(models.Model):
         fiscal_state = move.justech_do_dgii_fiscal_state or "incomplete"
         exclusion_reason = move.justech_do_dgii_exclusion_reason or ""
         auto_exclusion = False
-        if fiscal_state == "excluded" or not move.justech_do_include_in_dgii:
+        if fiscal_state == "excluded" or not fdp.include_in_dgii(move):
             if not exclusion_reason:
                 exclusion_reason = _(self.AUTO_UAT_EXCLUSION_REASON)
             auto_exclusion = True
-        include = bool(move.justech_do_include_in_dgii) and fiscal_state != "cancelled"
+        include = fdp.include_in_dgii(move) and fiscal_state != "cancelled"
         ret_date = exporter._retention_date(move) or move.invoice_date
         return {
             "move_id": move.id,
@@ -264,9 +276,9 @@ class JustechDoFiscalReportReview(models.Model):
             else (partner.vat or ""),
             "partner_name": partner.display_name,
             "partner_id_type": partner.justech_do_partner_id_type or "",
-            "document_type": move.justech_do_document_type_id.prefix or "",
-            "ncf": move.justech_do_ncf or "",
-            "ncf_modified": move.justech_do_ncf_modified or move.justech_do_origin_ncf or "",
+            "document_type": fdp.get_document_type_prefix(move),
+            "ncf": fdp.get_ncf(move),
+            "ncf_modified": fdp.get_ncf_modified(move),
             "document_date": ret_date,
             "invoice_date_due": move.invoice_date_due,
             "currency_id": move.currency_id.id,
@@ -283,28 +295,30 @@ class JustechDoFiscalReportReview(models.Model):
         }
 
     def _prepare_line_vals_generic(self, move):
+        fdp = self._fdp()
         itbis = self._move_itbis_amount(move)
         fiscal_state = move.justech_do_dgii_fiscal_state or "incomplete"
-        if move.justech_do_ncf_voided:
+        if fdp.is_voided(move):
             fiscal_state = "cancelled"
+        void_meta = fdp.get_void_metadata(move)
         return {
             "move_id": move.id,
             "move_name": move.name or move.ref,
             "partner_id": move.partner_id.id,
             "partner_vat": move.partner_id.vat or "",
             "partner_name": move.partner_id.display_name,
-            "document_type": move.justech_do_document_type_id.prefix or "",
-            "ncf": move.justech_do_ncf or "",
-            "ncf_modified": move.justech_do_ncf_modified or "",
-            "document_date": move.invoice_date,
+            "document_type": fdp.get_document_type_prefix(move),
+            "ncf": fdp.get_ncf(move),
+            "ncf_modified": fdp.get_ncf_modified(move),
+            "document_date": void_meta["void_date"] or move.invoice_date,
             "invoice_date_due": move.invoice_date_due,
             "currency_id": move.currency_id.id,
             "amount_untaxed": abs(move.amount_untaxed_signed),
             "amount_tax": itbis,
             "amount_total": abs(move.amount_total_signed),
             "fiscal_state": fiscal_state,
-            "include_in_report": bool(move.justech_do_include_in_dgii),
-            "exclusion_reason": move.justech_do_dgii_exclusion_reason or "",
+            "include_in_report": fdp.include_in_dgii(move),
+            "exclusion_reason": fdp.get_dgii_exclusion_reason(move),
         }
 
     def action_validate_period(self):

@@ -1,0 +1,98 @@
+{
+  "ts": "2026-07-09T20:48:59.547637+00:00",
+  "database": "justech_dev",
+  "passed": true,
+  "errors": [],
+  "checks": [
+    {
+      "name": "odoo_env",
+      "ok": true,
+      "detail": "justech_dev"
+    },
+    {
+      "name": "apps_module_registry",
+      "ok": true,
+      "detail": "sample=5"
+    },
+    {
+      "name": "adel_active",
+      "ok": true,
+      "detail": "installed"
+    },
+    {
+      "name": "justech_base_installed",
+      "ok": true,
+      "detail": "19.0.1.6.0"
+    },
+    {
+      "name": "justech_ncf_installed",
+      "ok": true,
+      "detail": "19.0.2.1.0"
+    },
+    {
+      "name": "justech_reports_installed",
+      "ok": true,
+      "detail": "19.0.1.14.0"
+    },
+    {
+      "name": "justech_fiscal_disabled_all",
+      "ok": true,
+      "detail": "enabled=[]"
+    },
+    {
+      "name": "four_companies",
+      "ok": true,
+      "detail": "4"
+    },
+    {
+      "name": "warranty_module",
+      "ok": true,
+      "detail": "19.0.1.8.0"
+    },
+    {
+      "name": "historical_invoices",
+      "ok": true,
+      "detail": "opened=3"
+    },
+    {
+      "name": "payments",
+      "ok": true,
+      "detail": "opened=3"
+    },
+    {
+      "name": "sales_orders",
+      "ok": true,
+      "detail": "C-0003865"
+    },
+    {
+      "name": "posted_moves",
+      "ok": true,
+      "detail": "2255"
+    },
+    {
+      "name": "reconciles_947",
+      "ok": true,
+      "detail": "947"
+    },
+    {
+      "name": "ncf_adel_1504",
+      "ok": true,
+      "detail": "1504"
+    },
+    {
+      "name": "gl_balanced",
+      "ok": true,
+      "detail": "85656868.89 vs 85656868.89"
+    },
+    {
+      "name": "chatter_messages",
+      "ok": true,
+      "detail": "sample=1"
+    },
+    {
+      "name": "asset_attachments_db",
+      "ok": true,
+      "detail": "149"
+    }
+  ]
+}

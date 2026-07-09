@@ -22,23 +22,15 @@ class AccountMove(models.Model):
         help="Clasificación DGII columna F del formato 607.",
     )
 
-    @api.depends("justech_do_document_type_id", "justech_do_document_type_id.prefix", "justech_do_ncf")
+    @api.depends(
+        "justech_do_document_type_id",
+        "justech_do_document_type_id.prefix",
+        "justech_do_ncf",
+    )
     def _compute_justech_do_income_type_607(self):
-        DocType = self.env["justech.do.fiscal.document.type"]
+        provider = self.env["justech.do.fiscal.data.provider"]
         for move in self:
-            prefix = ""
-            if move.justech_do_document_type_id:
-                prefix = move.justech_do_document_type_id.prefix
-            elif move.justech_do_ncf and len(move.justech_do_ncf) >= 3:
-                prefix = move.justech_do_ncf[:3]
-            if prefix in ("B14", "E44"):
-                move.justech_do_income_type_607 = "02"
-            elif prefix in ("B16", "E46"):
-                move.justech_do_income_type_607 = "06"
-            elif prefix in DocType.CONSUMER_NCF_PREFIXES:
-                move.justech_do_income_type_607 = "01"
-            else:
-                move.justech_do_income_type_607 = move.justech_do_income_type_607 or "01"
+            move.justech_do_income_type_607 = provider.get_income_type_607(move)
 
     justech_do_foreign_609 = fields.Boolean(
         string="Reportar en 609",
@@ -61,9 +53,9 @@ class AccountMove(models.Model):
         copy=False,
     )
     justech_do_foreign_document_ref = fields.Char(
-        string="Documento exterior (609)",
+        string="NCF / documento exterior (609)",
         copy=False,
-        help="Número de factura, contrato o recibo que sustenta el pago al exterior.",
+        help="Número de comprobante o documento que sustenta el pago al exterior.",
     )
     justech_do_foreign_payment_date = fields.Date(
         string="Fecha pago/retención exterior (609)",

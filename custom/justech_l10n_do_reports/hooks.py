@@ -4,6 +4,7 @@ from __future__ import annotations
 
 
 def post_init_hook(env):
+    env["justech.do.dgii.tax.classification"].sudo().sync_from_taxes()
     Report = env["justech.do.fiscal.report"].sudo()
     for report in Report.search([]):
         updates = {}

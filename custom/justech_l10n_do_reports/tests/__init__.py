@@ -6,3 +6,4 @@ from . import test_phase19_5_approval_tray
 from . import test_phase20_fiscal_framework
 from . import test_phase21_dgii_607
 from . import test_justech_l10n_do_hardening
+from . import test_fiscal_provider_reports

@@ -1,0 +1,15 @@
+{
+  "target_ncf": "E310000019120",
+  "move_found": true,
+  "move_id": 3538,
+  "provider_ncf": "E310000019120",
+  "provider_source": "adel_latam",
+  "justech_do_ncf": false,
+  "l10n_latam_document_number": "E310000019120",
+  "606_all_errors": [
+    "FP/2026/06/0084: impuesto no clasificado para DGII: 2% CDT"
+  ],
+  "606_ncf_errors": [],
+  "606_valid_for_ncf": true,
+  "ok": true
+}

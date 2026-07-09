@@ -37,8 +37,8 @@ class JustechDoDgiiExporterMixin(models.AbstractModel):
     def _dgii_withholding_affects(self, catalog):
         raise NotImplementedError
 
-    def _dgii_is_itbis_tax(self, tax):
-        raise NotImplementedError
+    def _classifier(self):
+        return self.env["justech.do.dgii.tax.classifier"]
 
     def _dgii_summary_title(self):
         return _("Resumen validación %(code)s") % {"code": self._dgii_report_code()}
@@ -127,8 +127,11 @@ class JustechDoDgiiExporterMixin(models.AbstractModel):
                             missing_codes.append(catalog.display_name)
         return itbis_wh, isr_wh, isr_type, missing_codes
 
+    def _fdp(self):
+        return self.env["justech.do.fiscal.data.provider"]
+
     def _is_cancelled_move(self, move):
-        return bool(move.justech_do_ncf_voided or move.justech_do_dgii_line_status == "2")
+        return self._fdp().is_voided(move)
 
     def _move_label(self, move):
         return move.name or move.ref or str(move.id)
@@ -136,7 +139,7 @@ class JustechDoDgiiExporterMixin(models.AbstractModel):
     def _refresh_move_fiscal_state(self, move, date_from, date_to):
         if self._is_cancelled_move(move):
             state = "cancelled"
-        elif not move.justech_do_include_in_dgii:
+        elif not self._fdp().include_in_dgii(move):
             state = "excluded"
         elif self._dgii_validate_single_move(move, date_from, date_to):
             state = "incomplete"
@@ -163,7 +166,7 @@ class JustechDoDgiiExporterMixin(models.AbstractModel):
                 state = self._refresh_move_fiscal_state(move, date_from, date_to)
             elif self._is_cancelled_move(move):
                 state = "cancelled"
-            elif not move.justech_do_include_in_dgii:
+            elif not self._fdp().include_in_dgii(move):
                 state = "excluded"
             elif self._dgii_validate_single_move(move, date_from, date_to):
                 state = "incomplete"
@@ -252,7 +255,7 @@ class JustechDoDgiiExporterMixin(models.AbstractModel):
         if moves is not None:
             errors = []
             for move in moves:
-                if not move.justech_do_include_in_dgii or self._is_cancelled_move(move):
+                if not self._fdp().include_in_dgii(move) or self._is_cancelled_move(move):
                     continue
                 errors.extend(self._dgii_validate_single_move(move, date_from, date_to))
             return errors
@@ -264,7 +267,7 @@ class JustechDoDgiiExporterMixin(models.AbstractModel):
         if only_valid:
             return buckets["valid"]
         return buckets["all"].filtered(
-            lambda m: m.justech_do_include_in_dgii and not self._is_cancelled_move(m)
+            lambda m: self._fdp().include_in_dgii(m) and not self._is_cancelled_move(m)
         )
 
     def export_errors_xlsx(self, company, date_from, date_to, result=None):
@@ -296,7 +299,7 @@ class JustechDoDgiiExporterMixin(models.AbstractModel):
             sheet_errors.write(row, 0, move.partner_id.display_name)
             sheet_errors.write(row, 1, move.partner_id.vat or "")
             sheet_errors.write(row, 2, self._move_label(move))
-            sheet_errors.write(row, 3, move.justech_do_ncf or "")
+            sheet_errors.write(row, 3, self._fdp().get_ncf(move))
             sheet_errors.write(row, 4, state_labels.get(move.justech_do_dgii_fiscal_state, ""))
             sheet_errors.write(row, 5, "\n".join(errs), wrap)
             row += 1
@@ -308,11 +311,11 @@ class JustechDoDgiiExporterMixin(models.AbstractModel):
         for row_idx, move in enumerate(buckets["excluded"] | buckets["cancelled"], start=1):
             sheet_excluded.write(row_idx, 0, move.partner_id.display_name)
             sheet_excluded.write(row_idx, 1, self._move_label(move))
-            sheet_excluded.write(row_idx, 2, move.justech_do_ncf or "")
+            sheet_excluded.write(row_idx, 2, self._fdp().get_ncf(move))
             sheet_excluded.write(
                 row_idx, 3, state_labels.get(move.justech_do_dgii_fiscal_state, "")
             )
-            sheet_excluded.write(row_idx, 4, move.justech_do_dgii_exclusion_reason or "")
+            sheet_excluded.write(row_idx, 4, self._fdp().get_dgii_exclusion_reason(move))
 
         sheet_valid = workbook.add_worksheet("Validos"[:31])
         val_headers = [role, _("Factura"), _("NCF"), _("Fecha"), _("Total")]
@@ -321,7 +324,7 @@ class JustechDoDgiiExporterMixin(models.AbstractModel):
         for row_idx, move in enumerate(buckets["valid"], start=1):
             sheet_valid.write(row_idx, 0, move.partner_id.display_name)
             sheet_valid.write(row_idx, 1, self._move_label(move))
-            sheet_valid.write(row_idx, 2, move.justech_do_ncf or "")
+            sheet_valid.write(row_idx, 2, self._fdp().get_ncf(move))
             sheet_valid.write(row_idx, 3, str(move.invoice_date or ""))
             sheet_valid.write(row_idx, 4, abs(move.amount_total_signed))
 

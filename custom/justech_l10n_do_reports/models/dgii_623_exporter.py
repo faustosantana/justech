@@ -30,9 +30,6 @@ class JustechDoDgii623Exporter(models.AbstractModel):
     def _dgii_withholding_affects(self, catalog):
         return getattr(catalog, "affects_623", False) or catalog.code in GOV_CATALOG_CODES
 
-    def _dgii_is_itbis_tax(self, tax):
-        return False
-
     def _hellenia_models_available(self):
         return "hellenia.withholding.catalog" in self.env
 
@@ -59,9 +56,9 @@ class JustechDoDgii623Exporter(models.AbstractModel):
         )
 
     def _persistent_gov_lines(self, move=None, company=None, date_from=None, date_to=None):
-        if "hellenia.payment.withholding.line" not in self.env:
+        Wh = self.env.get("hellenia.payment.withholding.line")
+        if Wh is None:
             return self.env["account.move"].browse()
-        Wh = self.env["hellenia.payment.withholding.line"]
         domain = [
             ("amount", ">", 0),
             "|",
@@ -207,8 +204,9 @@ class JustechDoDgii623Exporter(models.AbstractModel):
             candidates |= extra
         wh_moves = self._persistent_gov_lines(
             company=company, date_from=date_from, date_to=date_to
-        ).mapped("move_id")
-        candidates |= wh_moves
+        )
+        if wh_moves._name == "hellenia.payment.withholding.line":
+            candidates |= wh_moves.mapped("move_id")
         period_moves = self.env["account.move"]
         for move in candidates:
             if not self._has_gov_withholding(move, gov_tax):

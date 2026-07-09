@@ -27,9 +27,6 @@ class JustechDoDgii609Exporter(models.AbstractModel):
     def _dgii_withholding_affects(self, catalog):
         return catalog.withholding_type == "isr"
 
-    def _dgii_is_itbis_tax(self, tax):
-        return False
-
     def _is_foreign_partner(self, partner):
         country = partner.country_id
         if not country or not country.code:
@@ -51,31 +48,20 @@ class JustechDoDgii609Exporter(models.AbstractModel):
         ]
 
     def _document_ref(self, move):
-        return (
-            move.justech_do_foreign_document_ref
-            or move.ref
-            or move.payment_reference
-            or move.name
-            or ""
-        )
+        return self._fdp().get_foreign_document_ref(move)
 
     def _payment_date(self, move):
-        if move.justech_do_foreign_payment_date:
-            return move.justech_do_foreign_payment_date
-        payments = move._get_reconciled_payments()
-        if payments:
-            return min(payments.mapped("date"))
-        return move.invoice_date
+        return self._fdp().get_foreign_payment_date(move)
 
     def _isr_retained(self, move):
-        explicit = move.justech_do_foreign_isr_retained
+        explicit = self._fdp().get_foreign_isr_retained(move)
         if explicit:
             return self._format_amount(explicit)
         _itbis, isr_wh, _isr_type, _missing = self._withholding_breakdown(move)
         return isr_wh
 
     def _presumed_income(self, move):
-        explicit = move.justech_do_foreign_presumed_income
+        explicit = self._fdp().get_foreign_presumed_income(move)
         if explicit:
             return self._format_amount(explicit)
         isr = self._isr_retained(move)
@@ -84,11 +70,7 @@ class JustechDoDgii609Exporter(models.AbstractModel):
         return 0.0
 
     def _exchange_rate(self, move):
-        if move.justech_do_foreign_exchange_rate:
-            return move.justech_do_foreign_exchange_rate
-        if move.currency_id and move.currency_id != move.company_id.currency_id:
-            return move.invoice_currency_rate or 0.0
-        return 1.0
+        return self._fdp().get_foreign_exchange_rate(move)
 
     def _dgii_validate_single_move(self, move, date_from, date_to):
         errors = []
@@ -106,7 +88,7 @@ class JustechDoDgii609Exporter(models.AbstractModel):
                 _("%(doc)s: el proveedor %(partner)s no tiene país configurado.")
                 % {"doc": label, "partner": partner.display_name}
             )
-        if not move.justech_do_foreign_service_type:
+        if not self._fdp().get_foreign_service_type(move):
             errors.append(_("%(doc)s: falta tipo de servicio DGII (609).") % {"doc": label})
         doc_ref = self._document_ref(move)
         if not doc_ref:
@@ -157,10 +139,11 @@ class JustechDoDgii609Exporter(models.AbstractModel):
         partner = move.partner_id
         retention_date = self._payment_date(move)
         isr = self._isr_retained(move)
+        fdp = self._fdp()
         return {
             "A": line_number,
             "B": (partner.name or "")[:30],
-            "C": move.justech_do_foreign_service_type or "",
+            "C": fdp.get_foreign_service_type(move),
             "D": (partner.country_id.code or "").upper(),
             "E": self._document_ref(move),
             "F": self._format_dgii_date(move.invoice_date),

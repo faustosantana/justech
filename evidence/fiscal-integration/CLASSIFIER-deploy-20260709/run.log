@@ -1,0 +1,7 @@
+========================================
+DGII CLASSIFIER DEPLOY — 2026-07-09T23:37:12+02:00
+EVIDENCE=/opt/odoo-dev/evidence/fiscal-integration/CLASSIFIER-deploy-20260709_233712
+PERIOD=202606
+========================================
+==> PRE: backup
+pg_dump: error: could not open output file "/opt/odoo-dev/backups/classifier-pre-20260709_233712/justech_dev.dump": Permission denied

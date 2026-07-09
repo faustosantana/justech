@@ -27,14 +27,6 @@ class JustechDoDgii606Exporter(models.AbstractModel):
     def _dgii_withholding_affects(self, catalog):
         return catalog.affects_606
 
-    def _dgii_is_itbis_tax(self, tax):
-        if not tax:
-            return False
-        name = (tax.name or "").upper()
-        return "ITBIS" in name or (
-            tax.amount in (18.0, 16.0, 9.0, 8.0) and tax.type_tax_use == "purchase"
-        )
-
     def _dgii_base_period_domain(self, company, date_from, date_to):
         return [
             ("company_id", "=", company.id),
@@ -87,10 +79,7 @@ class JustechDoDgii606Exporter(models.AbstractModel):
         return "07"
 
     def _expense_type_code(self, move):
-        doc = move.justech_do_document_type_id
-        if doc and doc.prefix == "B13":
-            return "06"
-        return "02"
+        return self._fdp().get_expense_type_606(move)
 
     def _dgii_validate_single_move(self, move, date_from, date_to):
         errors = []
@@ -106,27 +95,20 @@ class JustechDoDgii606Exporter(models.AbstractModel):
                 _("%(doc)s: el proveedor %(partner)s no tiene tipo de identificación DGII.")
                 % {"doc": label, "partner": partner.display_name}
             )
-        if not move.justech_do_ncf:
+        if not self._fdp().get_ncf(move):
             errors.append(_("%(doc)s: la factura no tiene NCF.") % {"doc": label})
         if move.invoice_date and (move.invoice_date < date_from or move.invoice_date > date_to):
             errors.append(
                 _("%(doc)s: la fecha %(fecha)s está fuera del período.")
                 % {"doc": label, "fecha": move.invoice_date}
             )
-        positive_taxes = move.line_ids.filtered(
-            lambda l: l.tax_line_id and l.tax_line_id.amount > 0
-        )
-        unknown = positive_taxes.filtered(
-            lambda l: not self._dgii_is_itbis_tax(l.tax_line_id)
-            and "ISC" not in (l.tax_line_id.name or "").upper()
-            and l.tax_line_id.type_tax_use == "purchase"
-        )
+        unknown = self._classifier().unknown_taxes(move, self._dgii_report_code())
         if unknown:
             errors.append(
                 _("%(doc)s: impuesto no clasificado para DGII: %(taxes)s")
                 % {
                     "doc": label,
-                    "taxes": ", ".join(unknown.mapped("tax_line_id.name")),
+                    "taxes": ", ".join(unknown.mapped("name")),
                 }
             )
         _itbis_wh, _isr_wh, _isr_type, missing_codes = self._withholding_breakdown(move)
@@ -140,20 +122,21 @@ class JustechDoDgii606Exporter(models.AbstractModel):
     def _dgii_build_row_values(self, move, line_number, date_from, date_to):
         partner = move.partner_id
         services, goods = self._split_goods_services(move)
-        itbis = self._format_amount(
-            self.env["justech.do.fiscal.report"]._move_itbis_amount(move)
-        )
+        classifier = self._classifier()
+        report_code = self._dgii_report_code()
+        itbis = self._format_amount(classifier.move_itbis_amount(move, report_code))
         itbis_wh, isr_wh, isr_type, _missing = self._withholding_breakdown(move)
         total_untaxed = self._format_amount(move.amount_untaxed_signed)
         pay_date = self._payment_date(move, date_from, date_to)
-        ncf_modified = move.justech_do_ncf_modified or move.justech_do_origin_ncf or ""
+        fdp = self._fdp()
+        ncf_modified = fdp.get_ncf_modified(move)
         sign = -1 if move.move_type == "in_refund" else 1
-        return {
+        row = {
             "A": line_number,
             "B": partner.justech_do_clean_vat(),
             "C": partner.justech_do_partner_id_type or "",
-            "D": self._expense_type_code(move),
-            "E": move.justech_do_ncf or "",
+            "D": fdp.get_expense_type_606(move),
+            "E": fdp.get_ncf(move),
             "F": ncf_modified,
             "G": self._format_dgii_date(move.invoice_date),
             "I": self._format_dgii_date(pay_date) if pay_date else "",
@@ -173,8 +156,9 @@ class JustechDoDgii606Exporter(models.AbstractModel):
             "X": 0.0,
             "Y": 0.0,
             "Z": self._payment_method_code(move),
-            "AA": move.justech_do_dgii_line_status or "1",
+            "AA": fdp.get_dgii_line_status(move),
         }
+        return classifier.apply_tax_columns(row, move, report_code, sign=sign)
 
     # Alias retrocompatibles
     def classify_moves_606(self, company, date_from, date_to, refresh_states=True):

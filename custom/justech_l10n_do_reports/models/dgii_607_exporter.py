@@ -29,30 +29,17 @@ class JustechDoDgii607Exporter(models.AbstractModel):
     def _dgii_withholding_affects(self, catalog):
         return catalog.affects_607
 
-    def _dgii_is_itbis_tax(self, tax):
-        if not tax:
-            return False
-        name = (tax.name or "").upper()
-        return "ITBIS" in name or (
-            tax.amount in (18.0, 16.0, 9.0, 8.0) and tax.type_tax_use == "sale"
-        )
-
     def _dgii_base_period_domain(self, company, date_from, date_to):
         return [
             ("company_id", "=", company.id),
             ("state", "=", "posted"),
             ("move_type", "in", ("out_invoice", "out_refund")),
-            ("justech_do_ncf_voided", "=", False),
             ("invoice_date", ">=", date_from),
             ("invoice_date", "<=", date_to),
         ]
 
     def _ncf_prefix(self, move):
-        doc = move.justech_do_document_type_id
-        if doc and doc.prefix:
-            return doc.prefix
-        ncf = move.justech_do_ncf or ""
-        return ncf[:3] if len(ncf) >= 3 else ncf
+        return self._fdp().get_document_type_prefix(move)
 
     def _is_consumer_invoice(self, move):
         return self._ncf_prefix(move) in self.CONSUMER_NCF_PREFIXES
@@ -84,16 +71,7 @@ class JustechDoDgii607Exporter(models.AbstractModel):
         return "07"
 
     def _income_type_code(self, move):
-        if move.justech_do_income_type_607:
-            return move.justech_do_income_type_607
-        prefix = self._ncf_prefix(move)
-        if prefix in ("B14", "E44"):
-            return "02"
-        if prefix in ("B16", "E46"):
-            return "06"
-        if prefix in self.CONSUMER_NCF_PREFIXES:
-            return "01"
-        return "01"
+        return self._fdp().get_income_type_607(move)
 
     def _payment_amount_columns(self, move, total_with_tax, sign):
         """Asigna el total con ITBIS a la columna de medio de pago inferida."""
@@ -116,7 +94,7 @@ class JustechDoDgii607Exporter(models.AbstractModel):
         label = self._move_label(move)
         partner = move.partner_id
         consumer = self._is_consumer_invoice(move)
-        if not move.justech_do_ncf:
+        if not self._fdp().get_ncf(move):
             errors.append(_("%(doc)s: la factura no tiene NCF.") % {"doc": label})
         if not consumer and not partner.vat:
             errors.append(
@@ -133,20 +111,13 @@ class JustechDoDgii607Exporter(models.AbstractModel):
                 _("%(doc)s: la fecha %(fecha)s está fuera del período.")
                 % {"doc": label, "fecha": move.invoice_date}
             )
-        positive_taxes = move.line_ids.filtered(
-            lambda l: l.tax_line_id and l.tax_line_id.amount > 0
-        )
-        unknown = positive_taxes.filtered(
-            lambda l: not self._dgii_is_itbis_tax(l.tax_line_id)
-            and "ISC" not in (l.tax_line_id.name or "").upper()
-            and l.tax_line_id.type_tax_use == "sale"
-        )
+        unknown = self._classifier().unknown_taxes(move, self._dgii_report_code())
         if unknown:
             errors.append(
                 _("%(doc)s: impuesto no clasificado para DGII: %(taxes)s")
                 % {
                     "doc": label,
-                    "taxes": ", ".join(unknown.mapped("tax_line_id.name")),
+                    "taxes": ", ".join(unknown.mapped("name")),
                 }
             )
         _itbis_wh, _isr_wh, _isr_type, missing_codes = self._withholding_breakdown(move)
@@ -159,14 +130,15 @@ class JustechDoDgii607Exporter(models.AbstractModel):
 
     def _dgii_build_row_values(self, move, line_number, date_from, date_to):
         partner = move.partner_id
-        itbis = self._format_amount(
-            self.env["justech.do.fiscal.report"]._move_itbis_amount(move)
-        )
+        classifier = self._classifier()
+        report_code = self._dgii_report_code()
+        itbis = self._format_amount(classifier.move_itbis_amount(move, report_code))
         itbis_wh, isr_wh, _isr_type, _missing = self._withholding_breakdown(move)
         total_untaxed = self._format_amount(move.amount_untaxed_signed)
         total_with_tax = self._format_amount(move.amount_total_signed)
         retention_date = self._retention_date(move, date_from, date_to)
-        ncf_modified = move.justech_do_ncf_modified or move.justech_do_origin_ncf or ""
+        fdp = self._fdp()
+        ncf_modified = fdp.get_ncf_modified(move)
         sign = -1 if move.move_type == "out_refund" else 1
         payment_cols = self._payment_amount_columns(move, total_with_tax, sign)
         vat = ""
@@ -180,7 +152,7 @@ class JustechDoDgii607Exporter(models.AbstractModel):
             "A": line_number,
             "B": vat,
             "C": partner.justech_do_partner_id_type or "",
-            "D": move.justech_do_ncf or "",
+            "D": fdp.get_ncf(move),
             "E": ncf_modified,
             "F": self._income_type_code(move),
             "G": self._format_dgii_date(move.invoice_date),
@@ -196,7 +168,7 @@ class JustechDoDgii607Exporter(models.AbstractModel):
             "Q": 0.0,
         }
         row.update(payment_cols)
-        return row
+        return classifier.apply_tax_columns(row, move, report_code, sign=sign)
 
     def validate_period_607(self, company, date_from, date_to, refresh_states=True):
         return self.validate_period(company, date_from, date_to, refresh_states)

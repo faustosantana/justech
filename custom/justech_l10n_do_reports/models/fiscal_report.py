@@ -124,15 +124,10 @@ class JustechDoFiscalReport(models.Model):
         tax = line.tax_line_id
         if not tax:
             return False
-        name = (tax.name or "").upper()
-        return "ITBIS" in name or (tax.amount in (18.0, 16.0, 9.0, 8.0) and tax.type_tax_use in ("sale", "purchase"))
+        return self.env["justech.do.dgii.tax.classifier"].is_itbis(tax)
 
     def _move_itbis_amount(self, move):
-        return abs(
-            sum(
-                move.line_ids.filtered(self._is_itbis_tax_line).mapped("balance")
-            )
-        )
+        return self.env["justech.do.dgii.tax.classifier"].move_itbis_amount(move, "606")
 
     def _get_dgii_exporter_model(self):
         self.ensure_one()
@@ -298,6 +293,7 @@ class JustechDoFiscalReport(models.Model):
         ]
 
     def _lines_606(self, valid_moves=None):
+        fdp = self.env["justech.do.fiscal.data.provider"]
         if valid_moves is not None:
             moves = valid_moves
         else:
@@ -312,7 +308,7 @@ class JustechDoFiscalReport(models.Model):
                 {
                     "partner_vat": move.partner_id.vat or "",
                     "partner_name": move.partner_id.name,
-                    "ncf": move.justech_do_ncf or move.ref or "",
+                    "ncf": fdp.get_ncf(move) or "",
                     "document_date": move.invoice_date,
                     "amount_untaxed": abs(move.amount_untaxed_signed),
                     "amount_tax": itbis,
@@ -323,6 +319,7 @@ class JustechDoFiscalReport(models.Model):
         return lines
 
     def _lines_607(self, valid_moves=None):
+        fdp = self.env["justech.do.fiscal.data.provider"]
         if valid_moves is not None:
             moves = valid_moves
         else:
@@ -337,8 +334,8 @@ class JustechDoFiscalReport(models.Model):
                 {
                     "partner_vat": move.partner_id.vat or "",
                     "partner_name": move.partner_id.name,
-                    "ncf": move.justech_do_ncf or "",
-                    "document_type": move.justech_do_document_type_id.prefix or "",
+                    "ncf": fdp.get_ncf(move),
+                    "document_type": fdp.get_document_type_prefix(move),
                     "document_date": move.invoice_date,
                     "amount_untaxed": abs(move.amount_untaxed_signed),
                     "amount_tax": itbis,
@@ -349,6 +346,7 @@ class JustechDoFiscalReport(models.Model):
         return lines
 
     def _lines_608(self, valid_moves=None):
+        fdp = self.env["justech.do.fiscal.data.provider"]
         if valid_moves is not None:
             moves = valid_moves
         else:
@@ -357,21 +355,23 @@ class JustechDoFiscalReport(models.Model):
                 self.company_id, self.date_from, self.date_to, only_valid=True
             )
         lines = []
-        for move in moves.filtered("justech_do_ncf"):
+        for move in moves.filtered(lambda m: fdp.get_ncf(m)):
+            void_meta = fdp.get_void_metadata(move)
             lines.append(
                 {
                     "partner_vat": move.partner_id.vat or "",
                     "partner_name": move.partner_id.name,
-                    "ncf": move.justech_do_ncf,
-                    "document_type": move.justech_do_document_type_id.prefix or "",
-                    "document_date": move.justech_do_ncf_void_date or move.invoice_date,
-                    "notes": move.justech_do_ncf_void_reason or "",
+                    "ncf": void_meta["ncf"],
+                    "document_type": fdp.get_document_type_prefix(move),
+                    "document_date": void_meta["void_date"] or move.invoice_date,
+                    "notes": void_meta["void_reason"] or "",
                     "move_id": move.id,
                 }
             )
         return lines
 
     def _lines_609(self, valid_moves=None):
+        fdp = self.env["justech.do.fiscal.data.provider"]
         if valid_moves is not None:
             moves = valid_moves
         else:
@@ -385,8 +385,8 @@ class JustechDoFiscalReport(models.Model):
                 {
                     "partner_vat": move.partner_id.vat or "",
                     "partner_name": move.partner_id.name,
-                    "ncf": move.justech_do_foreign_document_ref or move.ref or move.name,
-                    "document_type": move.justech_do_foreign_service_type or "",
+                    "ncf": fdp.get_foreign_document_ref(move),
+                    "document_type": fdp.get_foreign_service_type(move),
                     "document_date": move.invoice_date,
                     "amount_untaxed": abs(move.amount_untaxed_signed),
                     "amount_tax": 0.0,
@@ -398,6 +398,7 @@ class JustechDoFiscalReport(models.Model):
         return lines
 
     def _lines_623(self, valid_moves=None):
+        fdp = self.env["justech.do.fiscal.data.provider"]
         if valid_moves is not None:
             moves = valid_moves
         else:
@@ -414,13 +415,13 @@ class JustechDoFiscalReport(models.Model):
                 {
                     "partner_vat": move.partner_id.vat or "",
                     "partner_name": move.partner_id.name,
-                    "ncf": move.justech_do_ncf or move.name,
+                    "ncf": fdp.get_ncf(move) or move.name,
                     "document_type": "5% Gobierno",
                     "document_date": exporter._retention_date(move),
                     "amount_untaxed": abs(move.amount_untaxed_signed),
                     "amount_tax": gov_amt,
                     "amount_total": gov_amt,
-                    "notes": move.justech_do_gov_retention_ref or "",
+                    "notes": fdp.get_payment_reference(move),
                     "move_id": move.id,
                 }
             )
@@ -616,7 +617,7 @@ class JustechDoFiscalReportLine(models.Model):
     partner_vat = fields.Char(string="RNC")
     partner_name = fields.Char(string="Nombre")
     ncf = fields.Char(string="NCF")
-    document_type = fields.Char(string="Tipo documento")
+    document_type = fields.Char(string="Tipo comprobante fiscal")
     document_date = fields.Date(string="Fecha")
     amount_untaxed = fields.Float(string="Monto gravado", digits=(16, 2))
     amount_tax = fields.Float(string="ITBIS", digits=(16, 2))

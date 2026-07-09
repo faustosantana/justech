@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="report_invoice_document_justech_ncf" inherit_id="account.report_invoice_document">
-        <xpath expr="//div[@name='reference']" position="after">
+        <!-- Odoo 19: anclar al bloque informations (reference puede no existir según tema/custom) -->
+        <xpath expr="//div[@id='informations']" position="inside">
             <div class="col" t-if="o.justech_do_ncf" name="justech_ncf">
                 <strong>NCF</strong>
                 <div t-field="o.justech_do_ncf"/>

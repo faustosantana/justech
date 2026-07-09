@@ -1,10 +1,4 @@
-import re
-
 from odoo import api, fields, models
-from odoo.exceptions import ValidationError
-
-
-RNC_RE = re.compile(r"^\d{9,11}$")
 
 
 class ResPartner(models.Model):
@@ -36,14 +30,12 @@ class ResPartner(models.Model):
 
     @api.depends("vat")
     def _compute_justech_do_partner_id_type(self):
+        from odoo.addons.justech_l10n_do_base.validators import rnc_format
+
         for partner in self:
             if partner.justech_do_partner_id_type and not partner.vat:
                 continue
-            cleaned = re.sub(r"[\s\-]", "", partner.vat or "")
-            if len(cleaned) == 9:
-                partner.justech_do_partner_id_type = "1"
-            elif len(cleaned) == 11:
-                partner.justech_do_partner_id_type = "2"
+            partner.justech_do_partner_id_type = rnc_format.dgii_id_type_from_vat(partner.vat)
 
     @api.depends("vat", "country_id")
     def _compute_justech_do_rnc_valid(self):
@@ -54,10 +46,7 @@ class ResPartner(models.Model):
 
     @api.model
     def _justech_validate_rnc_format(self, vat):
-        if not vat:
-            return False
-        cleaned = re.sub(r"[\s\-]", "", vat)
-        return bool(RNC_RE.match(cleaned))
+        return self.env["justech.do.fiscal.validator.service"].is_valid_rnc_format(vat)
 
     @api.constrains("vat", "country_id")
     def _check_do_rnc_format(self):
@@ -66,10 +55,7 @@ class ResPartner(models.Model):
                 continue
             if not partner.vat:
                 continue
-            if not partner._justech_validate_rnc_format(partner.vat):
-                raise ValidationError(
-                    "Dominican RNC must be 9 to 11 digits (spaces/dashes allowed)."
-                )
+            self.env["justech.do.fiscal.validator.service"].validate_rnc_format(partner.vat)
 
     def justech_do_has_rnc(self):
         self.ensure_one()
@@ -78,7 +64,7 @@ class ResPartner(models.Model):
     def justech_do_clean_vat(self):
         """RNC/Cédula sin separadores para exportación DGII."""
         self.ensure_one()
-        return re.sub(r"[\s\-]", "", self.vat or "")
+        return self.env["justech.do.fiscal.validator.service"].normalize_vat(self.vat)
 
     def justech_do_get_default_sale_document_type(self):
         """Tipo de comprobante de venta configurado en el contacto (out_invoice)."""

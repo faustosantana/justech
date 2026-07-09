@@ -1,5 +1,5 @@
 from odoo import _, api, fields, models
-from odoo.exceptions import AccessError, UserError, ValidationError
+from odoo.exceptions import AccessError, UserError
 
 
 class AccountMove(models.Model):
@@ -145,146 +145,44 @@ class AccountMove(models.Model):
 
     @api.model
     def _justech_fiscal_enabled(self):
-        company = self.env.company
-        return company.country_id.code == "DO" and company.justech_do_fiscal_enabled
+        return self.env["justech.do.fiscal.config.service"].is_fiscal_enabled(
+            self.env.company
+        )
 
     def _justech_resolve_document_type(self):
         self.ensure_one()
-        if self.justech_do_document_type_id:
-            return self.justech_do_document_type_id
-        journal = self.journal_id
-        if self.move_type == "out_refund":
-            return self.env.ref("justech_l10n_do_base.doc_type_b04", raise_if_not_found=False)
-        if self.move_type == "out_invoice" and self.debit_origin_id:
-            return self.env.ref("justech_l10n_do_base.doc_type_b03", raise_if_not_found=False)
-        if self.move_type == "in_refund" and self.reversed_entry_id:
-            return self.reversed_entry_id.justech_do_document_type_id
-        if self.move_type == "out_invoice":
-            partner_default = self.partner_id.justech_do_get_default_sale_document_type()
-            if partner_default:
-                return partner_default
-            if self.partner_id.justech_do_has_rnc():
-                return self.env.ref("justech_l10n_do_base.doc_type_b01", raise_if_not_found=False)
-            return self.env.ref("justech_l10n_do_base.doc_type_b02", raise_if_not_found=False)
-        if self.move_type == "in_invoice" and journal.justech_do_default_document_type_id:
-            doc = journal.justech_do_default_document_type_id
-            if doc.is_purchase_ncf():
-                return doc
-        return False
+        return self.env["justech.do.ncf.document.type.resolver.service"].resolve_for_move(
+            self
+        )
 
     def _justech_purchase_ncf_prefixes(self):
         return self.env["justech.do.fiscal.document.type"].PURCHASE_NCF_PREFIXES
 
     def _justech_doc_supports_auto_ncf(self, doc):
-        if not doc:
-            return False
-        if self.move_type in ("out_invoice", "out_refund") and doc.is_sale_ncf():
-            return True
-        if self.move_type in ("in_invoice", "in_refund") and doc.is_purchase_ncf():
-            return True
-        return False
+        self.ensure_one()
+        return self.env[
+            "justech.do.ncf.document.type.resolver.service"
+        ].doc_supports_auto_ncf(self, doc)
 
     def _justech_should_auto_assign_ncf(self):
         self.ensure_one()
-        if not self._justech_fiscal_enabled():
-            return False
-        if not self.journal_id.justech_do_use_ncf:
-            return False
-        doc = self._justech_resolve_document_type()
-        if not doc or not doc.auto_assign_on_post:
-            return False
-        return self._justech_doc_supports_auto_ncf(doc)
+        return self.env[
+            "justech.do.ncf.document.type.resolver.service"
+        ].should_auto_assign_ncf(self)
 
     def _justech_validate_manual_ncf(self):
         self.ensure_one()
-        if not self.justech_do_ncf:
-            return
-        ncf = self.env["justech.do.ncf.range"]._validate_ncf_format(self.justech_do_ncf)
-        self.justech_do_ncf = ncf
-        prefix, seq = self.env["justech.do.fiscal.document.type"].parse_ncf(ncf)
-        if self.justech_do_document_type_id and prefix != self.justech_do_document_type_id.prefix:
-            raise ValidationError(_("NCF prefix does not match document type."))
-        self._justech_check_duplicate_ncf(ncf)
+        self.env["justech.do.ncf.duplicate.service"].validate_manual_ncf(self)
 
     def _justech_check_duplicate_ncf(self, ncf):
         self.ensure_one()
-        dup = self.search(
-            [
-                ("id", "!=", self.id),
-                ("company_id", "=", self.company_id.id),
-                ("justech_do_ncf", "=", ncf),
-                ("state", "=", "posted"),
-                ("justech_do_ncf_voided", "=", False),
-            ],
-            limit=1,
-        )
-        if dup:
-            raise ValidationError(
-                _("NCF %(ncf)s is already used on %(move)s.", ncf=ncf, move=dup.name)
-            )
+        self.env["justech.do.ncf.duplicate.service"].check_duplicate(self, ncf)
 
     def _justech_assign_ncf_before_post(self):
-        for move in self:
-            if move.state != "draft":
-                continue
-            if not move._justech_fiscal_enabled():
-                continue
-            if move.justech_do_ncf_voided:
-                continue
-            doc = move._justech_resolve_document_type()
-            if doc and not move.justech_do_document_type_id:
-                move.justech_do_document_type_id = doc.id
-            if doc and doc.requires_vat and move.move_type in ("out_invoice", "out_refund"):
-                if not move.partner_id.justech_do_has_rnc():
-                    raise UserError(
-                        _("Document type %(doc)s requires a customer RNC.", doc=doc.prefix)
-                    )
-            if move.justech_do_ncf:
-                move._justech_validate_manual_ncf()
-                continue
-            if not move._justech_should_auto_assign_ncf():
-                if move.journal_id.justech_do_use_ncf and move.move_type in (
-                    "out_invoice",
-                    "out_refund",
-                ):
-                    raise UserError(_("NCF is required before posting this invoice."))
-                continue
-            doc = move.justech_do_document_type_id
-            lock_code = int(doc.code) if doc.code.isdigit() else 0
-            self.env.cr.execute(
-                "SELECT pg_advisory_xact_lock(%s, %s)",
-                [move.company_id.id, lock_code],
-            )
-            ncf_range = self.env["justech.do.ncf.range"]._find_active_range_for_update(
-                doc, move.journal_id, move.company_id
-            )
-            if not ncf_range:
-                raise UserError(
-                    _("No active NCF range for document type %(prefix)s.", prefix=doc.prefix)
-                )
-            ncf = ncf_range.consume_next(move)
-            move.write(
-                {
-                    "justech_do_ncf": ncf,
-                    "justech_do_ncf_range_id": ncf_range.id,
-                    "justech_do_document_type_id": doc.id,
-                }
-            )
-            if move.move_type == "out_refund" and move.reversed_entry_id:
-                move.justech_do_origin_ncf = move.reversed_entry_id.justech_do_ncf
-            if move.move_type == "in_refund" and move.reversed_entry_id:
-                origin_ncf = move.reversed_entry_id.justech_do_ncf
-                move.justech_do_origin_ncf = origin_ncf
-                if not move.justech_do_ncf_modified:
-                    move.justech_do_ncf_modified = origin_ncf
+        self.env["justech.do.ncf.assignment.service"].assign_before_post(self)
 
     def _justech_moves_for_ncf_on_post(self, soft=True):
-        """Moves that will be posted in this _post() call and need NCF assignment."""
-        moves = self.filtered(lambda m: m.state == "draft")
-        if soft:
-            today = fields.Date.context_today(self)
-            moves = moves.filtered(lambda m: not m.date or m.date <= today)
-        return moves
+        return self.env["justech.do.ncf.assignment.service"].moves_for_post(self, soft)
 
     def _post(self, soft=True):
         self._justech_moves_for_ncf_on_post(soft)._justech_assign_ncf_before_post()

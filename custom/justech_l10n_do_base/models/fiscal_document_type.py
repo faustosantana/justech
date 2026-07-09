@@ -88,10 +88,9 @@ class JustechDoFiscalDocumentType(models.Model):
     @api.model
     def parse_ncf(self, ncf):
         """Parse NCF into prefix and sequence number."""
-        ncf = (ncf or "").strip().upper().replace(" ", "")
-        if len(ncf) != 11:
-            return False, False
-        return ncf[:3], int(ncf[3:])
+        from odoo.addons.justech_l10n_do_base.validators import ncf_format
+
+        return ncf_format.parse_ncf(ncf)
 
     def is_sale_ncf(self):
         self.ensure_one()

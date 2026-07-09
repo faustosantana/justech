@@ -1,9 +1,5 @@
-import re
-
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
-
-NCF_FULL_RE = re.compile(r"^[BE][0-9]{2}[0-9]{8}$")
 
 
 class JustechDoNcfRange(models.Model):
@@ -76,12 +72,7 @@ class JustechDoNcfRange(models.Model):
 
     @api.model
     def _validate_ncf_format(self, ncf):
-        ncf = (ncf or "").strip().upper().replace(" ", "")
-        if not NCF_FULL_RE.match(ncf):
-            raise ValidationError(
-                _("Invalid NCF format. Expected 11 characters (e.g. B0100000001).")
-            )
-        return ncf
+        return self.env["justech.do.fiscal.validator.service"].validate_ncf_format(ncf)
 
     def action_activate(self):
         for rec in self:

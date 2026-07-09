@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_justech_do_fiscal_dashboard_user,justech.do.fiscal.dashboard user,model_justech_do_fiscal_dashboard,justech_l10n_do_base.group_justech_do_fiscal_user,1,0,0,0
+access_justech_do_fiscal_dashboard_manager,justech.do.fiscal.dashboard manager,model_justech_do_fiscal_dashboard,justech_l10n_do_base.group_justech_do_fiscal_manager,1,1,1,1

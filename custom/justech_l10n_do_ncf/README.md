@@ -2,6 +2,18 @@
 
 NCF ranges, automatic assignment, validations and invoice PDF.
 
+## Architecture (Phase 3A)
+
+Business logic extracted to `services/`:
+
+- `justech.do.ncf.document.type.resolver.service`
+- `justech.do.ncf.duplicate.service`
+- `justech.do.ncf.assignment.service`
+
+`account.move` keeps `_justech_*` API as thin wrappers (zero functional change).
+
+See `ARCHITECTURE.md`, `diagrams/`, `MIGRATION.md`.
+
 ## Dependencies
 
 - `justech_l10n_do_base`

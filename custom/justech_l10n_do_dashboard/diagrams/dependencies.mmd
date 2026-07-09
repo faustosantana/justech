@@ -1,0 +1,10 @@
+flowchart TB
+    dash[justech_l10n_do_dashboard]
+    base[justech_l10n_do_base]
+    ncf[justech_l10n_do_ncf]
+    rep[justech_l10n_do_reports optional]
+    pay[justech_l10n_do_payments optional]
+    base --> dash
+    ncf --> dash
+    rep -.-> dash
+    pay -.-> dash

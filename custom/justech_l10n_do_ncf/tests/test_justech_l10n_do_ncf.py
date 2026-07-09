@@ -466,6 +466,7 @@ class TestJustechL10nDoNcf(TransactionCase):
                 "move_type": "in_invoice",
                 "partner_id": vendor.id,
                 "journal_id": self.journal_purchase.id,
+                "invoice_date": date.today(),
                 "justech_do_document_type_id": doc_b17.id,
                 "invoice_line_ids": [
                     Command.create(

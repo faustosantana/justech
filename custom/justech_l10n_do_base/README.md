@@ -2,6 +2,21 @@
 
 Estándar corporativo de localización fiscal para República Dominicana.
 
+## Arquitectura (Fase 3A)
+
+Capa común de servicios fiscales:
+
+| Directorio | Rol |
+|------------|-----|
+| `validators/` | RNC, NCF, contexto fiscal (Python puro) |
+| `services/` | AbstractModels Odoo |
+| `providers/` | Tipos documentales, config |
+| `adapters/` | Integraciones externas (futuro) |
+
+Documentación: `ARCHITECTURE.md`, `CHANGELOG.md`, `MIGRATION.md`, `ROADMAP.md`, `diagrams/`.
+
+Validación anti-hardcode: `python3 tools/fiscal_no_hardcode_check.py`
+
 ## Comprobantes NCF (serie B)
 
 | Prefijo | Uso |

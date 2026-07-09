@@ -1,0 +1,61 @@
+{
+  "sprint": "Fase 3A Sprint 1",
+  "branch": "feature/fiscal-standard-phase3a",
+  "validated_at": "2026-07-09T18:25:18Z",
+  "environment": {
+    "host": "erp.justech.do (207.244.242.58)",
+    "database": "justech_ncf_lab",
+    "config": "/opt/odoo-dev/conf/odoo-ncf-lab.conf",
+    "justech_dev_touched": false
+  },
+  "deploy": {
+    "addons_path": "/opt/odoo-dev/custom-addons/ncf-lab",
+    "modules_upgraded": [
+      "justech_l10n_do_base:19.0.1.6.0",
+      "justech_l10n_do_ncf:19.0.1.8.0"
+    ],
+    "modules_installed": [
+      "justech_l10n_do_dashboard:19.0.1.0.0"
+    ]
+  },
+  "integrity": {
+    "before_after_identical": true,
+    "posted_moves": 2255,
+    "gl_debit": 85656868.89,
+    "gl_credit": 85656868.89,
+    "gl_balanced": true,
+    "partial_reconciles": 947,
+    "payments_posted_like": 677,
+    "ncf_justech_posted": 1494,
+    "historical_risk": false
+  },
+  "services": {
+    "justech.do.fiscal.validator.service": true,
+    "justech.do.fiscal.config.service": true,
+    "justech.do.document.type.provider": true,
+    "justech.do.ncf.document.type.resolver.service": true,
+    "justech.do.ncf.duplicate.service": true,
+    "justech.do.ncf.assignment.service": true
+  },
+  "tests": {
+    "standalone_validators": {
+      "count": 11,
+      "result": "PASS"
+    },
+    "odoo_lab": {
+      "justech_l10n_do_base": "6 tests PASS",
+      "justech_l10n_do_ncf": "20 tests PASS",
+      "total": "26/26 OK"
+    }
+  },
+  "anti_hardcode": {
+    "sprint_modules_clean": true,
+    "tool": "tools/fiscal_no_hardcode_check.py"
+  },
+  "result": "PASS",
+  "notes": [
+    "Histórico contable intacto — criterio abort no activado",
+    "justech_dev operativo no modificado (módulos Justech no instalados allí)",
+    "Test B17 corregido con invoice_date — suite NCF 20/20 PASS (2026-07-09)"
+  ]
+}

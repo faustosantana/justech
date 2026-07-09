@@ -80,8 +80,8 @@ class JustechDoDgiiExporterMixin(models.AbstractModel):
         return bool(tax and tax.amount < 0)
 
     def _catalog_for_tax(self, tax, company):
-        if not tax:
-            return self.env["hellenia.withholding.catalog"]
+        if not tax or "hellenia.withholding.catalog" not in self.env:
+            return self.env["account.tax"].browse()
         return self.env["hellenia.withholding.catalog"].search(
             [("tax_id", "=", tax.id), ("company_id", "=", company.id)],
             limit=1,
@@ -92,8 +92,8 @@ class JustechDoDgiiExporterMixin(models.AbstractModel):
         isr_wh = 0.0
         isr_type = ""
         missing_codes = []
-        Catalog = self.env["hellenia.withholding.catalog"]
-        if Catalog._name not in self.env:
+        Catalog = self.env.get("hellenia.withholding.catalog")
+        if Catalog is None:
             return itbis_wh, isr_wh, isr_type, missing_codes
         for line in move.line_ids.filtered(self._is_withholding_tax_line):
             tax = line.tax_line_id

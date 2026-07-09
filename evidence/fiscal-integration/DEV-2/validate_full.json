@@ -1,0 +1,113 @@
+{
+  "iteration": "DEV-1-validate",
+  "ts": "2026-07-09T19:58:45.234902+00:00",
+  "database": "justech_dev",
+  "passed": true,
+  "errors": [],
+  "warnings": [],
+  "checks": [
+    {
+      "name": "adel_active",
+      "ok": true,
+      "detail": "state=installed"
+    },
+    {
+      "name": "justech_base_installed",
+      "ok": true,
+      "detail": "19.0.1.6.0"
+    },
+    {
+      "name": "justech_ncf_installed",
+      "ok": true,
+      "detail": "19.0.2.1.0"
+    },
+    {
+      "name": "four_companies",
+      "ok": true,
+      "detail": "count=4"
+    },
+    {
+      "name": "justech_fiscal_disabled_all",
+      "ok": true,
+      "detail": "enabled=[]"
+    },
+    {
+      "name": "no_justech_ncf_journals",
+      "ok": true,
+      "detail": "journals=[]"
+    },
+    {
+      "name": "posted_moves_2255",
+      "ok": true,
+      "detail": "got=2255"
+    },
+    {
+      "name": "ncf_adel_1504",
+      "ok": true,
+      "detail": "got=1504"
+    },
+    {
+      "name": "justech_ncf_posted_zero",
+      "ok": true,
+      "detail": "unexpected justech NCF on posted"
+    },
+    {
+      "name": "reconciles_947",
+      "ok": true,
+      "detail": "got=947"
+    },
+    {
+      "name": "payments_677",
+      "ok": true,
+      "detail": "got=677"
+    },
+    {
+      "name": "gl_balanced",
+      "ok": true,
+      "detail": "85656868.89 vs 85656868.89"
+    },
+    {
+      "name": "open_historical_invoices",
+      "ok": true,
+      "detail": "sample=5"
+    },
+    {
+      "name": "open_payments",
+      "ok": true,
+      "detail": "sample=5"
+    },
+    {
+      "name": "open_reconciliations",
+      "ok": true,
+      "detail": "lines=5"
+    },
+    {
+      "name": "open_credit_notes",
+      "ok": true,
+      "detail": "found=3"
+    },
+    {
+      "name": "create_draft_invoice",
+      "ok": true,
+      "detail": "id=3918 journal=Facturas de Ventas"
+    },
+    {
+      "name": "adel_fields_on_move",
+      "ok": true,
+      "detail": "Adel/LatAm fields present"
+    },
+    {
+      "name": "no_fiscal_admin_menu_for_sales",
+      "ok": true,
+      "detail": "menus=[]"
+    }
+  ],
+  "metrics": {
+    "posted_moves": 2255,
+    "ncf_adel": 1504,
+    "reconciles": 947,
+    "payments": 677,
+    "gl_balanced": true,
+    "fiscal_enabled_companies": 0
+  }
+}

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8"/>
+<title>DEV-1 Validación erp.justech.do</title>
+<style>
+body { font-family: system-ui, sans-serif; margin: 2rem; background: #f8fafc; }
+h1 { color: #1B3A5C; }
+.pass { color: #059669; font-weight: bold; }
+table { border-collapse: collapse; width: 100%; background: #fff; }
+th, td { border: 1px solid #e2e8f0; padding: 8px; text-align: left; }
+th { background: #1B3A5C; color: #fff; }
+.metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+.card { background: #fff; padding: 1rem; border-radius: 8px; box-shadow: 0 1px 3px #0001; }
+</style></head><body>
+<h1>Validación DEV-1 — erp.justech.do</h1>
+<p>Generado: 2026-07-09T19:58:45.234902+00:00 · BD: justech_dev</p>
+<p class="pass">Resultado: PASS</p>
+<div class="metrics">
+  <div class="card"><strong>Asientos posted</strong><br>2255</div>
+  <div class="card"><strong>NCF Adel</strong><br>1504</div>
+  <div class="card"><strong>Conciliaciones</strong><br>947</div>
+  <div class="card"><strong>Pagos activos</strong><br>677</div>
+  <div class="card"><strong>GL balanceado</strong><br>Sí</div>
+  <div class="card"><strong>Justech fiscal ON</strong><br>0 empresas</div>
+</div>
+<h2>Checks (19)</h2>
+<table><tr><th>Check</th><th>OK</th><th>Detalle</th></tr><tr><td>adel_active</td><td>✅</td><td>state=installed</td></tr><tr><td>justech_base_installed</td><td>✅</td><td>19.0.1.6.0</td></tr><tr><td>justech_ncf_installed</td><td>✅</td><td>19.0.2.1.0</td></tr><tr><td>four_companies</td><td>✅</td><td>count=4</td></tr><tr><td>justech_fiscal_disabled_all</td><td>✅</td><td>enabled=[]</td></tr><tr><td>no_justech_ncf_journals</td><td>✅</td><td>journals=[]</td></tr><tr><td>posted_moves_2255</td><td>✅</td><td>got=2255</td></tr><tr><td>ncf_adel_1504</td><td>✅</td><td>got=1504</td></tr><tr><td>justech_ncf_posted_zero</td><td>✅</td><td>unexpected justech NCF on posted</td></tr><tr><td>reconciles_947</td><td>✅</td><td>got=947</td></tr><tr><td>payments_677</td><td>✅</td><td>got=677</td></tr><tr><td>gl_balanced</td><td>✅</td><td>85656868.89 vs 85656868.89</td></tr><tr><td>open_historical_invoices</td><td>✅</td><td>sample=5</td></tr><tr><td>open_payments</td><td>✅</td><td>sample=5</td></tr><tr><td>open_reconciliations</td><td>✅</td><td>lines=5</td></tr><tr><td>open_credit_notes</td><td>✅</td><td>found=3</td></tr><tr><td>create_draft_invoice</td><td>✅</td><td>id=3918 journal=Facturas de Ventas</td></tr><tr><td>adel_fields_on_move</td><td>✅</td><td>Adel/LatAm fields present</td></tr><tr><td>no_fiscal_admin_menu_for_sales</td><td>✅</td><td>menus=[]</td></tr></table>
+<p><em>Nota: acceso web externo retorna 403; validación vía Odoo shell + ORM.</em></p>
+</body></html>

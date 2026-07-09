@@ -1,0 +1,39 @@
+{
+  "label": "post_install",
+  "ts": "2026-07-09T20:05:31.388035+00:00",
+  "database": "justech_dev",
+  "checks": {
+    "posted_moves": 2255,
+    "partial_reconciles": 947,
+    "payments_active": 677,
+    "companies": 4,
+    "gl_debit": 85656868.89,
+    "gl_credit": 85656868.89,
+    "gl_balanced": true,
+    "ncf_adel": 1504,
+    "ncf_justech_posted": 0,
+    "fiscal_enabled_companies": 0,
+    "journals_justech_ncf": 0,
+    "reconcile_lines_exist": true,
+    "modules": {
+      "justech_l10n_do_base": {
+        "state": "installed",
+        "version": "19.0.1.6.0"
+      },
+      "justech_l10n_do_ncf": {
+        "state": "installed",
+        "version": "19.0.2.1.0"
+      },
+      "justech_l10n_do_reports": {
+        "state": "installed",
+        "version": "19.0.1.14.0"
+      },
+      "l10n_do_accounting": {
+        "state": "installed",
+        "version": "19.0.1.0.0"
+      }
+    }
+  },
+  "errors": [],
+  "ok": true
+}

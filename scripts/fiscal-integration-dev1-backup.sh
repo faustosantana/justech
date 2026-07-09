@@ -3,7 +3,8 @@
 set -euo pipefail
 
 TS="${1:-$(date +%Y%m%d_%H%M%S)}"
-BACKUP_ROOT="/opt/odoo-dev/backups/fiscal-integration-dev1-${TS}"
+PREFIX="${2:-dev1}"
+BACKUP_ROOT="/opt/odoo-dev/backups/fiscal-integration-${PREFIX}-${TS}"
 DB="justech_dev"
 CONF="/opt/odoo-dev/conf/odoo-dev.conf"
 FILESTORE="/opt/odoo-dev/data/filestore/${DB}"

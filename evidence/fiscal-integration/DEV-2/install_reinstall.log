@@ -1,0 +1,20 @@
+2026-07-09 20:05:09,271 3523802 WARNING justech_dev odoo.fields: Translated stored related field (justech.audit.rule.model_description) will not be computed correctly in all languages 
+--
+2026-07-09 20:05:09,528 3523802 INFO justech_dev odoo.registry: module justech_l10n_do_reports: creating or updating database tables 
+2026-07-09 20:05:09,558 3523802 INFO justech_dev odoo.models: Prepare computation of account.move.justech_do_income_type_607 
+2026-07-09 20:05:09,575 3523802 WARNING justech_dev py.warnings: /opt/odoo-dev/custom-addons/justgroup/custom_addons/justech_l10n_do_ncf/models/account_move.py:136: DeprecationWarning: Deprecated since 19.0, use self.env.cr directly
+--
+2026-07-09 20:05:10,735 3523802 WARNING justech_dev odoo.addons.base.models.ir_module: Failed to render module description for justech_l10n_do_reports: [Errno 13] Permission denied: 'html4css1.css'. Falling back to raw description. 
+2026-07-09 20:05:10,737 3523802 INFO justech_dev odoo.modules.loading: loading justech_l10n_do_reports/security/ir.model.access.csv 
+2026-07-09 20:05:10,770 3523802 INFO justech_dev odoo.modules.loading: loading justech_l10n_do_reports/security/justech_l10n_do_reports_rules.xml 
+2026-07-09 20:05:10,830 3523802 INFO justech_dev odoo.modules.loading: loading justech_l10n_do_reports/views/fiscal_report_views.xml 
+2026-07-09 20:05:10,891 3523802 INFO justech_dev odoo.modules.loading: loading justech_l10n_do_reports/views/dgii_report_review_views.xml 
+2026-07-09 20:05:10,968 3523802 INFO justech_dev odoo.modules.loading: loading justech_l10n_do_reports/views/dgii_report_pending_tray_views.xml 
+2026-07-09 20:05:11,032 3523802 INFO justech_dev odoo.modules.loading: loading justech_l10n_do_reports/views/fiscal_report_actions.xml 
+2026-07-09 20:05:11,078 3523802 INFO justech_dev odoo.modules.loading: loading justech_l10n_do_reports/wizard/fiscal_report_wizard_views.xml 
+2026-07-09 20:05:11,114 3523802 INFO justech_dev odoo.modules.loading: loading justech_l10n_do_reports/wizard/dgii_export_blocker_wizard_views.xml 
+2026-07-09 20:05:11,138 3523802 INFO justech_dev odoo.modules.loading: loading justech_l10n_do_reports/views/menu.xml 
+2026-07-09 20:05:11,334 3523802 INFO justech_dev odoo.addons.base.models.ir_module: module justech_l10n_do_reports: no translation for language es_DO 
+2026-07-09 20:05:11,393 3523802 INFO justech_dev odoo.modules.loading: Module justech_l10n_do_reports loaded in 2.60s, 852 queries (+852 other) 
+2026-07-09 20:05:11,393 3523802 INFO justech_dev odoo.modules.loading: 304 modules loaded in 6.10s, 852 queries (+852 extra) 
+2026-07-09 20:05:11,399 3523802 INFO justech_dev odoo.modules.loading: loading 304 modules... 

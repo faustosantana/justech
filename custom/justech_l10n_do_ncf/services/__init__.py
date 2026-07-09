@@ -1,4 +1,5 @@
 from . import ncf_assignment_service
+from . import ncf_business_rules_service
 from . import ncf_document_type_resolver_service
 from . import ncf_duplicate_service
 from . import ncf_range_audit_service

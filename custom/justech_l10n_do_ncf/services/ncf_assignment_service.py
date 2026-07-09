@@ -10,6 +10,7 @@ class JustechDoNcfAssignmentService(models.AbstractModel):
     def assign_before_post(self, moves):
         resolver = self.env["justech.do.ncf.document.type.resolver.service"]
         duplicate = self.env["justech.do.ncf.duplicate.service"]
+        rules = self.env["justech.do.ncf.business.rules.service"]
         NcfRange = self.env["justech.do.ncf.range"]
 
         for move in moves:
@@ -22,6 +23,7 @@ class JustechDoNcfAssignmentService(models.AbstractModel):
             doc = resolver.resolve_for_move(move)
             if doc and not move.justech_do_document_type_id:
                 move.justech_do_document_type_id = doc.id
+            rules.validate_before_post(move)
             if doc and doc.requires_vat and move.move_type in ("out_invoice", "out_refund"):
                 if not move.partner_id.justech_do_has_rnc():
                     raise UserError(

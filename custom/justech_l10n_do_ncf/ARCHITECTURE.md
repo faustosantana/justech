@@ -9,16 +9,20 @@ y trazabilidad de consumo — producto Justech desacoplado de implementaciones c
 
 | Capa | Ubicación | Responsabilidad |
 |------|-----------|-----------------|
-| **Services** | `services/` | Resolver tipo doc, duplicados, asignación pre-post |
-| **Models** | `models/` | `account.move`, `ncf.range`, `ncf.consumption`, `sale.order` |
+| **Services** | `services/` | Resolver tipo doc, duplicados, reglas Adel, asignación pre-post |
+| **Validators** | `validators/` | Alcance duplicados v2.0, reglas B14/250k/B16 |
+| **Models** | `models/` | `account.move`, `ncf.range`, `ncf.consumption`, `ncf.admin.center`, `sale.order` |
 
 ## Servicios
 
 | Modelo | Rol |
 |--------|-----|
 | `justech.do.ncf.document.type.resolver.service` | Resuelve B01/B02/B04/B11… según move_type |
-| `justech.do.ncf.duplicate.service` | Valida NCF manual + unicidad posted |
-| `justech.do.ncf.assignment.service` | Orquesta locks, rangos y consumo |
+| `justech.do.ncf.duplicate.service` | Valida NCF manual + unicidad posted (v2.0 Python) |
+| `justech.do.ncf.business.rules.service` | B14 sin ITBIS, RD$250k+RNC, B16 exportaciones |
+| `justech.do.ncf.assignment.service` | Orquesta locks, rangos, reglas y consumo |
+| `justech.do.ncf.range.audit.service` | Resumen de uso de rangos |
+| `justech.do.ncf.diagnostic.service` | Escaneo read-only de inconsistencias |
 
 ## Flujo de asignación (sin cambio funcional Sprint 1)
 

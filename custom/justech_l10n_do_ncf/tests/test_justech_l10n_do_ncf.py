@@ -423,23 +423,59 @@ class TestJustechL10nDoNcf(TransactionCase):
 
     def test_extended_document_types_assign_ncf(self):
         """Smoke NCF para B12, B14, B15, B16 (venta) y B17 (compra)."""
+        tax_0 = self.env["account.tax"].search(
+            [
+                ("company_id", "=", self.company.id),
+                ("amount", "=", 0),
+                ("type_tax_use", "=", "sale"),
+            ],
+            limit=1,
+        )
+        if not tax_0:
+            tax_0 = self.env["account.tax"].create(
+                {
+                    "name": "Exento test",
+                    "amount": 0,
+                    "type_tax_use": "sale",
+                    "company_id": self.company.id,
+                }
+            )
+        service = self.env["product.product"].create(
+            {"name": "Servicio export", "type": "service", "list_price": 100.0}
+        )
         sale_types = ("doc_type_b12", "doc_type_b14", "doc_type_b15", "doc_type_b16")
         for xml_id in sale_types:
             doc = self.env.ref(f"justech_l10n_do_base.{xml_id}")
             ncf_range = self._create_range(doc, start=5000, end=5099)
             ncf_range.write({"journal_ids": [Command.set(self.journal_sale.ids)]})
             ncf_range.action_activate()
-            partner = self.env["res.partner"].create(
-                {
-                    "name": f"Cliente {doc.prefix}",
-                    "vat": "131793916" if doc.requires_vat else False,
-                    "justech_do_default_document_type_id": doc.id,
-                }
-            )
+            partner_vals = {
+                "name": f"Cliente {doc.prefix}",
+                "vat": "131793916" if doc.requires_vat else False,
+                "justech_do_default_document_type_id": doc.id,
+            }
+            if doc.prefix == "B16":
+                partner_vals["country_id"] = self.env.ref("base.us").id
+            partner = self.env["res.partner"].create(partner_vals)
+            product = service if doc.prefix == "B16" else self.product
+            taxes = tax_0 if doc.prefix in ("B14", "B16") else self.tax_18
             inv = self.env["account.move"].create(
                 {
-                    **self._invoice_vals(partner),
+                    "move_type": "out_invoice",
+                    "partner_id": partner.id,
+                    "journal_id": self.journal_sale.id,
+                    "invoice_date": date.today(),
                     "justech_do_document_type_id": doc.id,
+                    "invoice_line_ids": [
+                        Command.create(
+                            {
+                                "product_id": product.id,
+                                "quantity": 1,
+                                "price_unit": 100.0,
+                                "tax_ids": [Command.set(taxes.ids)],
+                            }
+                        )
+                    ],
                 }
             )
             inv.action_post()

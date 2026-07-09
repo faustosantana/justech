@@ -1,5 +1,20 @@
 # Changelog — justech_l10n_do_ncf
 
+## [19.0.2.1.0] — 2026-07-09 — Fase 3A Sprint 2 (parte 2)
+
+### Added
+- Validadores `validators/business_rules.py` — reglas Adel: **B14** (sin ITBIS), **RD$250k+RNC**, **B16** exportaciones.
+- Servicio `ncf.business.rules.service` — invocado pre-post desde `ncf.assignment.service`.
+- Pruebas Sprint 2b (`test_ncf_sprint2_part2.py`): NC/ND/compras, multiempresa 4 compañías, B14, 250k, B16.
+- Plan documentado índice SQL v2.0 (`evidence/fiscal-phase3/NCF_INDEX_V2_PLAN.md`) — **sin aplicar**.
+
+### Changed
+- Smoke test `test_extended_document_types_assign_ncf` adaptado a reglas B14/B16.
+- Integridad lab extendida: pagos, conciliaciones, GL (`scripts/fiscal-phase3-sprint2-lab-integrity.py`).
+
+### Known limitation
+- Índice SQL v1 permanece; migración v2.0 requiere aprobación explícita (ver plan).
+
 ## [19.0.2.0.0] — 2026-07-09 — Fase 3A Sprint 2
 
 ### Added

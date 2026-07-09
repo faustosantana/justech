@@ -1,0 +1,13 @@
+{
+  "label": "extended",
+  "ts": "2026-07-09T18:43:11.020673+00:00",
+  "posted_moves": 2255,
+  "gl_debit": 85656868.89,
+  "gl_credit": 85656868.89,
+  "gl_balanced": true,
+  "partial_reconciles": 947,
+  "payments_active": 677,
+  "ncf_posted": 1494,
+  "database": "justech_ncf_lab",
+  "module_version": "19.0.2.1.0"
+}

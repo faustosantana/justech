@@ -1,5 +1,35 @@
 # Migración — justech_l10n_do_ncf
 
+## 19.0.2.0.0 → 19.0.2.1.0 (Fase 3A Sprint 2 — parte 2)
+
+### Impacto
+
+Nuevas validaciones pre-post (B14, RD$250k, B16). **Sin cambios en histórico** ni en índices SQL.
+
+### Procedimiento (justech_ncf_lab)
+
+```bash
+odoo -u justech_l10n_do_ncf -d justech_ncf_lab --stop-after-init --no-http
+odoo -d justech_ncf_lab --test-enable --stop-after-init --no-http \
+  --test-tags=/justech_l10n_do_ncf
+python3 scripts/fiscal-phase3-sprint2-lab-integrity.py  # vía odoo shell
+```
+
+### Rollback
+
+Checkout módulo 19.0.2.0.0 + backup BD lab.
+
+### Validación post-upgrade
+
+- [ ] ND B03 desde factura publicada
+- [ ] NC compra `in_refund` con NCF origen
+- [ ] B14 rechaza ITBIS; acepta exento
+- [ ] B02 ≥ RD$250k exige RNC
+- [ ] B16 exige cliente extranjero
+- [ ] Rangos NCF aislados por compañía (4 empresas lab)
+
+---
+
 ## 19.0.1.8.0 → 19.0.2.0.0 (Fase 3A Sprint 2)
 
 ### Impacto

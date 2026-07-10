@@ -1,0 +1,58 @@
+{
+  "ts": "2026-07-10T08:07:45.150778+00:00",
+  "database": "justech_dev",
+  "passed": true,
+  "checks": [
+    {
+      "name": "gl_balanced",
+      "ok": true,
+      "detail": "86030788.89 vs 86030788.89"
+    },
+    {
+      "name": "posted_moves_positive",
+      "ok": true,
+      "detail": "2512"
+    },
+    {
+      "name": "reconciles_positive",
+      "ok": true,
+      "detail": "1007"
+    },
+    {
+      "name": "wizard_registry",
+      "ok": true,
+      "detail": "justech.payment.partner.wizard"
+    },
+    {
+      "name": "audit_menu_14",
+      "ok": true,
+      "detail": "['606 — Compras', '607 — Ventas', '608 — Comprobantes Anulados', '609 — Pagos al Exterior', '623 — Retenciones del Estado', 'Tipos de Comprobante', 'Rangos NCF', 'Consumo NCF', 'NCF Anulados', 'Historial Fiscal', 'Revisión Fiscal', 'Pendientes de Aprobación', 'Administrar Retenciones', 'Centro de Administración Fiscal']"
+    },
+    {
+      "name": "fiscal_4_companies",
+      "ok": true,
+      "detail": "enabled=['Just Office SRL', 'Omni Solutions SRL', 'PlugSafe SRL', 'JUSTECH S.R.L.']"
+    },
+    {
+      "name": "dual_write_sample",
+      "ok": true,
+      "detail": "muestra dual-write"
+    },
+    {
+      "name": "test_payment_removed",
+      "ok": true,
+      "detail": "OK"
+    },
+    {
+      "name": "http_web/login",
+      "ok": true,
+      "detail": "200"
+    },
+    {
+      "name": "http_web/assets",
+      "ok": true,
+      "detail": "HTTP Error 404: NOT FOUND"
+    }
+  ],
+  "errors": []
+}

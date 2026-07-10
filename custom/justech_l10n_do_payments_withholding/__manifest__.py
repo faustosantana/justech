@@ -1,6 +1,6 @@
 {
     "name": "Justech Pagos y Retenciones Dominicanas",
-    "version": "19.0.1.2.0",
+    "version": "19.0.1.3.1",
     "category": "Accounting/Localizations",
     "summary": "Pagos con retenciones fiscales dominicanas (ITBIS/ISR), 623 y trazabilidad",
     "description": """
@@ -9,7 +9,7 @@ Pagos y Retenciones Dominicanas (Justech)
 
 Motor estándar Justech para pagos con retención fiscal:
 
-- Un solo wizard de registro de pago con retenciones opcionales.
+- Wizard unificado de cobro/pago con retenciones integradas desde un solo lugar.
 - Catálogo configurable vinculado a impuestos l10n_do existentes.
 - Asiento de pago + líneas de retención + conciliación automática.
 - Trazabilidad factura ↔ pago ↔ retención.
@@ -26,6 +26,7 @@ Motor estándar Justech para pagos con retención fiscal:
     "data": [
         "security/ir.model.access.csv",
         "views/justech_withholding_catalog_views.xml",
+        "views/payment_partner_wizard_views.xml",
         "views/account_payment_register_views.xml",
         "views/account_payment_withholding_views.xml",
     ],
@@ -37,7 +38,7 @@ Motor estándar Justech para pagos con retención fiscal:
     "justech_register": {
         "module_code": "justech_l10n_do_payments_withholding",
         "module_name": "Pagos y Retenciones Dominicanas",
-        "version": "19.0.1.2.0",
+        "version": "19.0.1.3.0",
         "category": "accounting",
         "country": "DO",
         "localization": "l10n_do",

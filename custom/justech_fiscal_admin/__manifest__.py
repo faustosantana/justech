@@ -1,6 +1,6 @@
 {
     "name": "Justech Fiscal Administration Center",
-    "version": "19.0.1.1.0",
+    "version": "19.0.1.2.1",
     "summary": "Enterprise fiscal stack administration — settings, health, feature flags",
     "description": """
 Centro de Administración Fiscal Justech (Enterprise).
@@ -38,7 +38,7 @@ Centro de Administración Fiscal Justech (Enterprise).
     "justech_register": {
         "module_code": "justech_fiscal_admin",
         "module_name": "Justech Fiscal Administration Center",
-        "version": "19.0.1.1.0",
+        "version": "19.0.1.2.0",
         "country": "DO",
         "description": "Enterprise fiscal administration center",
         "dependencies": ["justech_l10n_do_ncf", "justech_l10n_do_reports"],

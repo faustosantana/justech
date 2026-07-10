@@ -79,10 +79,31 @@ class JustechDoDgiiExporterMixin(models.AbstractModel):
         tax = line.tax_line_id
         return bool(tax and tax.amount < 0)
 
+    def _withholding_catalog_model(self):
+        if "justech.do.withholding.catalog" in self.env:
+            return self.env["justech.do.withholding.catalog"]
+        if "hellenia.withholding.catalog" in self.env:
+            return self.env["hellenia.withholding.catalog"]
+        return self.env["account.tax"].browse()
+
+    def _payment_withholding_lines(self, payment, move=None):
+        if "justech_withholding_line_ids" in payment._fields:
+            lines = payment.justech_withholding_line_ids
+        elif "hellenia_withholding_line_ids" in payment._fields:
+            lines = payment.hellenia_withholding_line_ids
+        else:
+            return self.env["account.move"].browse()
+        if move:
+            return lines.filtered(lambda w: w.move_id == move)
+        return lines
+
     def _catalog_for_tax(self, tax, company):
-        if not tax or "hellenia.withholding.catalog" not in self.env:
+        if not tax:
             return self.env["account.tax"].browse()
-        return self.env["hellenia.withholding.catalog"].search(
+        Catalog = self._withholding_catalog_model()
+        if not Catalog:
+            return self.env["account.tax"].browse()
+        return Catalog.search(
             [("tax_id", "=", tax.id), ("company_id", "=", company.id)],
             limit=1,
         )
@@ -92,8 +113,8 @@ class JustechDoDgiiExporterMixin(models.AbstractModel):
         isr_wh = 0.0
         isr_type = ""
         missing_codes = []
-        Catalog = self.env.get("hellenia.withholding.catalog")
-        if Catalog is None:
+        Catalog = self._withholding_catalog_model()
+        if not Catalog:
             return itbis_wh, isr_wh, isr_type, missing_codes
         for line in move.line_ids.filtered(self._is_withholding_tax_line):
             tax = line.tax_line_id
@@ -109,22 +130,20 @@ class JustechDoDgiiExporterMixin(models.AbstractModel):
                     missing_codes.append(catalog.display_name)
             elif tax and catalog:
                 missing_codes.append(catalog.display_name or tax.name)
-        PaymentWh = self.env.get("hellenia.payment.withholding.line")
-        if PaymentWh is not None:
-            for payment in move._get_reconciled_payments():
-                for wh in payment.hellenia_withholding_line_ids.filtered(lambda w: w.move_id == move):
-                    amount = self._format_amount(wh.amount)
-                    catalog = wh.catalog_id
-                    if not catalog:
-                        continue
-                    if catalog.withholding_type == "itbis":
-                        itbis_wh += amount
-                    elif catalog.withholding_type == "isr":
-                        isr_wh += amount
-                        if catalog.dgii_withholding_code:
-                            isr_type = catalog.dgii_withholding_code
-                        elif self._dgii_withholding_affects(catalog):
-                            missing_codes.append(catalog.display_name)
+        for payment in move._get_reconciled_payments():
+            for wh in self._payment_withholding_lines(payment, move):
+                amount = self._format_amount(wh.amount)
+                catalog = wh.catalog_id
+                if not catalog:
+                    continue
+                if catalog.withholding_type == "itbis":
+                    itbis_wh += amount
+                elif catalog.withholding_type == "isr":
+                    isr_wh += amount
+                    if catalog.dgii_withholding_code:
+                        isr_type = catalog.dgii_withholding_code
+                    elif self._dgii_withholding_affects(catalog):
+                        missing_codes.append(catalog.display_name)
         return itbis_wh, isr_wh, isr_type, missing_codes
 
     def _fdp(self):

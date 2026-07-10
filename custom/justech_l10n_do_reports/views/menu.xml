@@ -17,7 +17,7 @@
         <field name="context">{'default_report_type': '607'}</field>
     </record>
     <record id="action_justech_do_report_608" model="ir.actions.act_window">
-        <field name="name">608 — Anulados</field>
+        <field name="name">608 — Comprobantes Anulados</field>
         <field name="res_model">justech.do.fiscal.report.wizard</field>
         <field name="view_mode">form</field>
         <field name="view_id" ref="view_justech_do_fiscal_report_wizard"/>
@@ -33,7 +33,7 @@
         <field name="context">{'default_report_type': '609'}</field>
     </record>
     <record id="action_justech_do_report_623" model="ir.actions.act_window">
-        <field name="name">623 — Retenciones Estado</field>
+        <field name="name">623 — Retenciones del Estado</field>
         <field name="res_model">justech.do.fiscal.report.wizard</field>
         <field name="view_mode">form</field>
         <field name="view_id" ref="view_justech_do_fiscal_report_wizard"/>
@@ -59,6 +59,10 @@
         <field name="code">action = env['justech.do.fiscal.audit.actions'].action_open_withholding_catalog()</field>
     </record>
 
+    <record id="account.menu_finance" model="ir.ui.menu">
+        <field name="name">Contabilidad</field>
+    </record>
+
     <menuitem id="menu_justech_do_audit_root"
               name="Auditoría Fiscal"
               parent="account.menu_finance"
@@ -80,7 +84,7 @@
         <field name="active" eval="True"/>
     </record>
     <record id="menu_justech_do_report_608" model="ir.ui.menu">
-        <field name="name">608 — Anulados</field>
+        <field name="name">608 — Comprobantes Anulados</field>
         <field name="parent_id" ref="menu_justech_do_audit_root"/>
         <field name="action" ref="action_justech_do_report_608"/>
         <field name="sequence">30</field>
@@ -94,7 +98,7 @@
         <field name="active" eval="True"/>
     </record>
     <record id="menu_justech_do_report_623" model="ir.ui.menu">
-        <field name="name">623 — Retenciones Estado</field>
+        <field name="name">623 — Retenciones del Estado</field>
         <field name="parent_id" ref="menu_justech_do_audit_root"/>
         <field name="action" ref="action_justech_do_report_623"/>
         <field name="sequence">50</field>
@@ -146,6 +150,7 @@
         <field name="action" ref="action_justech_do_fiscal_review_pending"/>
         <field name="sequence">120</field>
         <field name="active" eval="True"/>
+        <field name="group_ids" eval="[(6, 0, [ref('justech_fiscal_admin.group_justech_fiscal_admin_manager')])]"/>
     </record>
     <menuitem id="menu_justech_do_withholding_catalog"
               name="Administrar Retenciones"
@@ -153,10 +158,12 @@
               action="action_justech_do_withholding_catalog"
               sequence="130"
               groups="account.group_account_manager"/>
-    <menuitem id="menu_justech_fiscal_admin_center_audit"
-              name="Centro de Administración Fiscal"
-              parent="menu_justech_do_audit_root"
-              action="justech_fiscal_admin.action_justech_fiscal_admin_center_server"
-              sequence="140"
-              groups="justech_l10n_do_base.group_justech_do_fiscal_manager"/>
+    <record id="menu_justech_fiscal_admin_center_audit" model="ir.ui.menu">
+        <field name="name">Centro de Administración Fiscal</field>
+        <field name="parent_id" ref="menu_justech_do_audit_root"/>
+        <field name="action" ref="justech_fiscal_admin.action_justech_fiscal_admin_center_server"/>
+        <field name="sequence">140</field>
+        <field name="active" eval="True"/>
+        <field name="group_ids" eval="[(6, 0, [ref('justech_fiscal_admin.group_justech_fiscal_admin_manager')])]"/>
+    </record>
 </odoo>

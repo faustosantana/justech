@@ -30,13 +30,25 @@ class JustechDoDgii623Exporter(models.AbstractModel):
     def _dgii_withholding_affects(self, catalog):
         return getattr(catalog, "affects_623", False) or catalog.code in GOV_CATALOG_CODES
 
-    def _hellenia_models_available(self):
-        return "hellenia.withholding.catalog" in self.env
+    def _withholding_catalog_model(self):
+        if "justech.do.withholding.catalog" in self.env:
+            return self.env["justech.do.withholding.catalog"]
+        if "hellenia.withholding.catalog" in self.env:
+            return self.env["hellenia.withholding.catalog"]
+        return self.env["account.move"].browse()
+
+    def _payment_wh_model(self):
+        if "justech.payment.withholding.line" in self.env:
+            return self.env["justech.payment.withholding.line"]
+        if "hellenia.payment.withholding.line" in self.env:
+            return self.env["hellenia.payment.withholding.line"]
+        return self.env["account.move"].browse()
 
     def _gov_catalog(self, company):
-        if not self._hellenia_models_available():
+        Catalog = self._withholding_catalog_model()
+        if not Catalog:
             return self.env["account.move"].browse()
-        return self.env["hellenia.withholding.catalog"].search(
+        return Catalog.search(
             [
                 ("code", "in", list(GOV_CATALOG_CODES)),
                 ("company_id", "=", company.id),
@@ -56,9 +68,9 @@ class JustechDoDgii623Exporter(models.AbstractModel):
         )
 
     def _persistent_gov_lines(self, move=None, company=None, date_from=None, date_to=None):
-        Wh = self.env.get("hellenia.payment.withholding.line")
-        if Wh is None:
-            return self.env["account.move"].browse()
+        Wh = self._payment_wh_model()
+        if Wh._name not in ("justech.payment.withholding.line", "hellenia.payment.withholding.line"):
+            return Wh.browse()
         domain = [
             ("amount", ">", 0),
             "|",
@@ -75,6 +87,18 @@ class JustechDoDgii623Exporter(models.AbstractModel):
             domain.append(("date", "<=", date_to))
         return Wh.search(domain)
 
+    def _payment_gov_wh_lines(self, payment, move=None):
+        if "justech_withholding_line_ids" in payment._fields:
+            lines = payment.justech_withholding_line_ids
+        elif "hellenia_withholding_line_ids" in payment._fields:
+            lines = payment.hellenia_withholding_line_ids
+        else:
+            return self.env["account.move"].browse()
+        lines = lines.filtered(lambda w: w.catalog_id.code in GOV_CATALOG_CODES and w.amount)
+        if move:
+            lines = lines.filtered(lambda w: w.move_id == move)
+        return lines
+
     def _has_gov_withholding(self, move, gov_tax):
         if move.justech_do_gov_withholding_amount:
             return True
@@ -85,9 +109,7 @@ class JustechDoDgii623Exporter(models.AbstractModel):
         for payment in move._get_reconciled_payments():
             if payment.justech_do_gov_withholding_amount:
                 return True
-            if "hellenia.payment.withholding.line" in self.env and payment.hellenia_withholding_line_ids.filtered(
-                lambda w: w.catalog_id.code in GOV_CATALOG_CODES and w.amount
-            ):
+            if self._payment_gov_wh_lines(payment, move):
                 return True
         hellenia_ret = getattr(move, "hellenia_ret_isr_gov", False)
         return bool(hellenia_ret and self._gov_amount(move, gov_tax))
@@ -102,11 +124,7 @@ class JustechDoDgii623Exporter(models.AbstractModel):
         if payments:
             return self._format_amount(sum(payments.mapped("justech_do_gov_withholding_amount")))
         for payment in move._get_reconciled_payments():
-            if "hellenia.payment.withholding.line" not in self.env:
-                break
-            gov_wh = payment.hellenia_withholding_line_ids.filtered(
-                lambda w: w.catalog_id.code in GOV_CATALOG_CODES and w.amount
-            )
+            gov_wh = self._payment_gov_wh_lines(payment, move)
             if gov_wh:
                 return self._format_amount(sum(gov_wh.mapped("amount")))
         amount = 0.0
@@ -119,16 +137,15 @@ class JustechDoDgii623Exporter(models.AbstractModel):
 
     def _payment_with_gov_data(self, move):
         payments = move._get_reconciled_payments().sorted("date", reverse=True)
-        hellenia = "hellenia.payment.withholding.line" in self.env
         for payment in payments:
             if payment.justech_do_gov_withholding_amount:
                 return payment
-            if hellenia and (
-                payment.hellenia_check_number
-                or payment.hellenia_withholding_line_ids.filtered(
-                    lambda w: w.catalog_id.code in GOV_CATALOG_CODES
-                )
-            ):
+            if self._payment_gov_wh_lines(payment, move):
+                return payment
+            check_no = getattr(payment, "justech_check_number", None) or getattr(
+                payment, "hellenia_check_number", None
+            )
+            if check_no:
                 return payment
         return payments[:1]
 
@@ -149,25 +166,30 @@ class JustechDoDgii623Exporter(models.AbstractModel):
         ref_type = move.justech_do_gov_retention_ref_type or ""
         bank = move.justech_do_gov_retention_bank_id
         if payment:
-            if "hellenia.payment.withholding.line" in self.env:
-                ref = (
-                    ref
-                    or payment.hellenia_check_number
-                    or payment.hellenia_payment_reference
-                    or payment.name
-                    or ""
+            ref = (
+                ref
+                or getattr(payment, "justech_check_number", None)
+                or getattr(payment, "hellenia_check_number", None)
+                or getattr(payment, "justech_payment_reference", None)
+                or getattr(payment, "hellenia_payment_reference", None)
+                or payment.name
+                or ""
+            )
+            if not ref_type:
+                is_check = getattr(payment, "justech_is_check", False) or getattr(
+                    payment, "hellenia_is_check", False
                 )
-                if not ref_type:
-                    if payment.hellenia_is_check or payment.hellenia_check_number:
-                        ref_type = "1"
-                    elif payment.hellenia_is_transfer or payment.hellenia_payment_reference:
-                        ref_type = "2"
-                    else:
-                        ref_type = "2"
-                if not bank and payment.hellenia_check_bank_id:
-                    bank = payment.hellenia_check_bank_id
-            else:
-                ref = ref or payment.name or ""
+                check_no = getattr(payment, "justech_check_number", None) or getattr(
+                    payment, "hellenia_check_number", None
+                )
+                if is_check or check_no:
+                    ref_type = "1"
+                else:
+                    ref_type = "2"
+            if not bank:
+                bank = getattr(payment, "justech_check_bank_id", None) or getattr(
+                    payment, "hellenia_check_bank_id", None
+                )
         if not ref_type:
             ref_type = "2"
         bank_name = bank.name if bank else ""
@@ -205,7 +227,7 @@ class JustechDoDgii623Exporter(models.AbstractModel):
         wh_moves = self._persistent_gov_lines(
             company=company, date_from=date_from, date_to=date_to
         )
-        if wh_moves._name == "hellenia.payment.withholding.line":
+        if wh_moves:
             candidates |= wh_moves.mapped("move_id")
         period_moves = self.env["account.move"]
         for move in candidates:

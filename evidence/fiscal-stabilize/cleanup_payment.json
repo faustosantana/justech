@@ -1,0 +1,14 @@
+{
+  "ts": "2026-07-10T08:07:37.876417+00:00",
+  "database": "justech_dev",
+  "payment_name": "PBNK1/2026/00001",
+  "tag": "FISCALSTD-STAB-TEST",
+  "passed": true,
+  "deleted_payment_id": null,
+  "deleted_wh_line_ids": [],
+  "invoice_preserved": null,
+  "skipped": [
+    "Pago ya eliminado o inexistente"
+  ],
+  "errors": []
+}

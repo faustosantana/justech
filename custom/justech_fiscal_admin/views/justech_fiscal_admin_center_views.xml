@@ -36,6 +36,8 @@
                         <button name="action_open_ncf_ranges" type="object" string="Rangos NCF" class="btn-link"/>
                         <button name="action_open_ncf_admin" type="object" string="Admin NCF" class="btn-link"/>
                         <button name="action_open_dgii_reports" type="object" string="Reportes DGII" class="btn-link"/>
+                        <button name="action_open_withholding_catalog" type="object" string="Retenciones" class="btn-link"/>
+                        <button name="action_sync_withholding_catalog" type="object" string="Sincronizar retenciones" class="btn-link"/>
                     </group>
                 </sheet>
             </form>

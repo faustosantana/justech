@@ -1,4 +1,6 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_justech_payment_partner_wizard,justech.payment.partner.wizard,model_justech_payment_partner_wizard,account.group_account_invoice,1,1,1,1
+access_justech_payment_partner_wizard_line,justech.payment.partner.wizard.line,model_justech_payment_partner_wizard_line,account.group_account_invoice,1,1,1,1
 access_justech_payment_withholding_wizard_line,justech.payment.withholding.wizard.line,model_justech_payment_withholding_wizard_line,account.group_account_invoice,1,1,1,1
 access_justech_payment_withholding_line,justech.payment.withholding.line,model_justech_payment_withholding_line,account.group_account_invoice,1,0,0,0
 access_justech_payment_withholding_line_manager,justech.payment.withholding.line,model_justech_payment_withholding_line,account.group_account_manager,1,1,1,1

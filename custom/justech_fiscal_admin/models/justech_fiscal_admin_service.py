@@ -163,6 +163,45 @@ class JustechFiscalAdminService(models.AbstractModel):
             )
         return rows
 
+    def ncf_consumption_summary(self, company=None):
+        """Consumo de rangos NCF con alertas de agotamiento."""
+        company = company or self.env.company
+        if "justech.do.ncf.range" not in self.env:
+            return {"ranges": [], "alerts": [], "total_remaining": 0}
+        Range = self.env["justech.do.ncf.range"]
+        today = fields.Date.context_today(self)
+        ranges = []
+        alerts = []
+        total_remaining = 0
+        for rng in Range.search([("company_id", "=", company.id)], order="prefix"):
+            capacity = max(1, rng.sequence_end - rng.sequence_start + 1)
+            used = max(0, rng.next_sequence - rng.sequence_start)
+            remaining = max(0, rng.sequence_end - rng.next_sequence + 1)
+            used_pct = (used / capacity) * 100.0
+            total_remaining += remaining
+            expired = bool(rng.date_to and rng.date_to < today)
+            low = remaining <= max(10, int(capacity * 0.1))
+            row = {
+                "prefix": rng.prefix,
+                "name": rng.name,
+                "state": rng.state,
+                "next_sequence": rng.next_sequence,
+                "remaining": remaining,
+                "capacity": capacity,
+                "used_pct": round(used_pct, 1),
+                "expired": expired,
+                "date_to": rng.date_to,
+                "status": "error" if expired else ("warning" if low else "ok"),
+            }
+            ranges.append(row)
+            if expired:
+                alerts.append(_("Rango %(pfx)s vencido.", pfx=rng.prefix))
+            elif low and rng.state == "active":
+                alerts.append(
+                    _("Rango %(pfx)s agotándose: quedan %(n)s NCF.", pfx=rng.prefix, n=remaining)
+                )
+        return {"ranges": ranges, "alerts": alerts, "total_remaining": total_remaining}
+
     def payments_withholding_status(self, company=None):
         """Estado read-only Pagos y Retenciones."""
         company = company or self.env.company
@@ -210,12 +249,14 @@ class JustechFiscalAdminService(models.AbstractModel):
             inconsistencies.append(_("Catálogo retenciones vacío — ejecute sincronización."))
 
         standard_status = "activo" if wh_pkg and wh_pkg.state == "installed" and not inconsistencies else "pendiente"
+        wizard_installed = "justech.payment.partner.wizard" in self.env
 
         return {
             "modules": {
                 "payments_withholding": wh_pkg.state if wh_pkg else "missing",
             },
             "feature_enabled": flags.is_enabled("payments_withholding", company),
+            "wizard_unified": wizard_installed,
             "catalog_total": catalog_count,
             "catalog_active": catalog_active,
             "taxes_reused": taxes_reused,

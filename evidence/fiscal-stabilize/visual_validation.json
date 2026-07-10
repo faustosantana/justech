@@ -1,0 +1,56 @@
+{
+  "ts": "2026-07-10T08:09:27.787105+00:00",
+  "passed": true,
+  "tests": {
+    "contabilidad_loads": {
+      "ok": true,
+      "detail": "https://erp.justech.do/odoo/accounting"
+    },
+    "auditoria_root_rpc": {
+      "ok": true,
+      "detail": "root=951"
+    },
+    "audit_14_options": {
+      "ok": true,
+      "detail": "labels=['606 — Compras', '607 — Ventas', '608 — Comprobantes Anulados', '609 — Pagos al Exterior', '623 — Retenciones del Estado', 'Tipos de Comprobante', 'Rangos NCF', 'Consumo NCF', 'NCF Anulados', 'Historial Fiscal', 'Revisión Fiscal', 'Pendientes de Aprobación', 'Administrar Retenciones', 'Centro de Administración Fiscal'] missing=[]"
+    },
+    "centro_no_rpc": {
+      "ok": true,
+      "detail": "https://erp.justech.do/odoo/justech.fiscal.admin.center/11"
+    },
+    "centro_content": {
+      "ok": true,
+      "detail": ""
+    },
+    "wizard_cobro_no_rpc": {
+      "ok": true,
+      "detail": "https://erp.justech.do/odoo/action-1508"
+    },
+    "wizard_cobro_fields": {
+      "ok": true,
+      "detail": "form=True"
+    },
+    "wizard_pago_no_rpc": {
+      "ok": true,
+      "detail": "https://erp.justech.do/odoo/action-1509"
+    },
+    "wizard_pago_fields": {
+      "ok": true,
+      "detail": "form=True"
+    },
+    "invoices_standard": {
+      "ok": true,
+      "detail": ""
+    },
+    "contabilidad_dark": {
+      "ok": true,
+      "detail": ""
+    },
+    "no_js_errors": {
+      "ok": true,
+      "detail": "[]"
+    }
+  },
+  "js_errors": [],
+  "http_errors": []
+}

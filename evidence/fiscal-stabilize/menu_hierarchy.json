@@ -1,0 +1,104 @@
+{
+  "ts": "2026-07-10T08:07:23.041382+00:00",
+  "database": "justech_dev",
+  "passed": true,
+  "errors": [],
+  "hierarchy": [
+    {
+      "name": "Auditoría Fiscal",
+      "xml_id": "justech_l10n_do_reports.menu_justech_do_audit_root",
+      "active": true
+    },
+    {
+      "name": "Contabilidad",
+      "xml_id": "account.menu_finance",
+      "active": true
+    }
+  ],
+  "children": [
+    {
+      "sequence": 10,
+      "name": "606 — Compras",
+      "xml_id": "justech_l10n_do_reports.menu_justech_do_report_606",
+      "action": "606 — Compras"
+    },
+    {
+      "sequence": 20,
+      "name": "607 — Ventas",
+      "xml_id": "justech_l10n_do_reports.menu_justech_do_report_607",
+      "action": "607 — Ventas"
+    },
+    {
+      "sequence": 30,
+      "name": "608 — Comprobantes Anulados",
+      "xml_id": "justech_l10n_do_reports.menu_justech_do_report_608",
+      "action": "608 — Comprobantes Anulados"
+    },
+    {
+      "sequence": 40,
+      "name": "609 — Pagos al Exterior",
+      "xml_id": "justech_l10n_do_reports.menu_justech_do_report_609",
+      "action": "609 — Pagos al Exterior"
+    },
+    {
+      "sequence": 50,
+      "name": "623 — Retenciones del Estado",
+      "xml_id": "justech_l10n_do_reports.menu_justech_do_report_623",
+      "action": "623 — Retenciones del Estado"
+    },
+    {
+      "sequence": 60,
+      "name": "Tipos de Comprobante",
+      "xml_id": "justech_l10n_do_base.menu_justech_do_document_types",
+      "action": "Tipos de Comprobante"
+    },
+    {
+      "sequence": 70,
+      "name": "Rangos NCF",
+      "xml_id": "justech_l10n_do_ncf.menu_justech_do_ncf_ranges",
+      "action": "Rangos NCF"
+    },
+    {
+      "sequence": 80,
+      "name": "Consumo NCF",
+      "xml_id": "justech_l10n_do_reports.menu_justech_do_audit_consumption",
+      "action": "Consumo NCF"
+    },
+    {
+      "sequence": 90,
+      "name": "NCF Anulados",
+      "xml_id": "justech_l10n_do_reports.menu_justech_do_audit_voided",
+      "action": "NCF Anulados"
+    },
+    {
+      "sequence": 100,
+      "name": "Historial Fiscal",
+      "xml_id": "justech_l10n_do_reports.menu_justech_do_audit_history",
+      "action": "Historial fiscal"
+    },
+    {
+      "sequence": 110,
+      "name": "Revisión Fiscal",
+      "xml_id": "justech_l10n_do_reports.menu_justech_do_fiscal_review",
+      "action": "Revisión fiscal"
+    },
+    {
+      "sequence": 120,
+      "name": "Pendientes de Aprobación",
+      "xml_id": "justech_l10n_do_reports.menu_justech_do_fiscal_review_pending",
+      "action": "Pendientes de aprobación"
+    },
+    {
+      "sequence": 130,
+      "name": "Administrar Retenciones",
+      "xml_id": "justech_l10n_do_reports.menu_justech_do_withholding_catalog",
+      "action": "Administrar Retenciones"
+    },
+    {
+      "sequence": 140,
+      "name": "Centro de Administración Fiscal",
+      "xml_id": "justech_l10n_do_reports.menu_justech_fiscal_admin_center_audit",
+      "action": "Abrir Centro Fiscal Justech"
+    }
+  ]
+}

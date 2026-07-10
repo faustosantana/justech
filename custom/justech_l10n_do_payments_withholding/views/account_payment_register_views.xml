@@ -14,7 +14,8 @@
                     <field name="justech_withholding_catalog_ids"
                            widget="many2many_tags"
                            options="{'no_create': True}"
-                           string="Retenciones a aplicar"/>
+                           string="Retenciones a aplicar"
+                           domain="[('active', '=', True), ('code', 'not in', ['RET-NONE', 'wh_none']), ('company_id', '=', company_id), ('account_id', '!=', False)]"/>
                     <field name="justech_withholding_line_ids" nolabel="1" readonly="1"
                            invisible="not justech_withholding_line_ids">
                         <list>

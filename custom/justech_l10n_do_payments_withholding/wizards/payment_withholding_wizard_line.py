@@ -8,6 +8,8 @@ class JustechPaymentWithholdingWizardLine(models.TransientModel):
     _name = "justech.payment.withholding.wizard.line"
     _description = "Detalle retención transitorio — wizard pago"
 
+    wizard_id = fields.Many2one("justech.payment.partner.wizard", ondelete="cascade")
+    wizard_line_id = fields.Many2one("justech.payment.partner.wizard.line", ondelete="cascade")
     register_wizard_id = fields.Many2one("account.payment.register", ondelete="cascade")
     catalog_id = fields.Many2one("justech.do.withholding.catalog", string="Retención")
     tax_id = fields.Many2one("account.tax", string="Impuesto")
@@ -18,3 +20,4 @@ class JustechPaymentWithholdingWizardLine(models.TransientModel):
     amount = fields.Monetary(string="Monto retenido", currency_field="currency_id")
     account_id = fields.Many2one("account.account", string="Cuenta contable")
     currency_id = fields.Many2one("res.currency", string="Moneda")
+    invoice_name = fields.Char(related="wizard_line_id.invoice_name", string="Factura")

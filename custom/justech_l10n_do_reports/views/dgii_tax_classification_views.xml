@@ -62,5 +62,6 @@
               parent="justech_l10n_do_reports.menu_justech_do_audit_root"
               action="action_justech_do_dgii_tax_classification"
               sequence="3"
+              active="False"
               groups="justech_l10n_do_base.group_justech_do_fiscal_manager"/>
 </odoo>

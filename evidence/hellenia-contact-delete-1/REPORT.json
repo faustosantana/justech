@@ -1,0 +1,48 @@
+{
+  "phase": "HELLENIA-CONTACT-DELETE-1",
+  "ok": true,
+  "backup": "/opt/odoo-projects/hellenia/backups/hellenia-prod/contact-delete-1-2026-07-10_185544",
+  "module": "hellenia_ux 19.0.1.3.2",
+  "audit_target": {
+    "partner_id": 1,
+    "name": "Hellenia, S.R.L.",
+    "email": "info@helleniadr.com",
+    "linked_to_company": true,
+    "company": "Hellenia, S.R.L.",
+    "company_id": 1,
+    "linked_to_user": false,
+    "users": [],
+    "counts": {
+      "invoices": 0,
+      "payments": 0,
+      "sale_orders": 0,
+      "purchase_orders": 0,
+      "messages": 0
+    },
+    "classification": "company",
+    "message_preview": "Este contacto representa a la empresa Hellenia, S.R.L. y forma parte de su configuración legal y contable. No puede eliminarse. Puedes editar sus datos o asignar otro contacto principal a la empresa."
+  },
+  "cases_summary": {
+    "it@justech.do": {
+      "1_nuevo": "PASS",
+      "2_archivado": "PASS",
+      "3_factura": "PASS",
+      "4_usuario": "PASS",
+      "5_empresa": "PASS",
+      "6_proveedor": "PASS",
+      "7_cliente": "PASS"
+    },
+    "info@helleniadr.com": {
+      "1_nuevo": "PASS",
+      "2_archivado": "PASS",
+      "3_factura": "PASS",
+      "4_usuario": "PASS",
+      "5_empresa": "PASS",
+      "6_proveedor": "PASS",
+      "7_cliente": "PASS"
+    }
+  },
+  "healthcheck": "PASS",
+  "integrity_protected": true,
+  "blockers": []
+}

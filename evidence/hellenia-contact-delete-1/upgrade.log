@@ -1,0 +1,119 @@
+ Container hellenia-prod-db-1 Running 
+ Container hellenia-prod-db-1 Waiting 
+ Container hellenia-prod-db-1 Healthy 
+ Container hellenia-prod-odoo-run-6e9946171315 Creating 
+ Container hellenia-prod-odoo-run-6e9946171315 Created 
+2026-07-10 22:55:56,818 1 WARNING ? odoo.tools.config: option logfile reads 'False' in the config file at /etc/odoo/odoo.conf but isn't a boolean option, skip 
+2026-07-10 22:55:56,818 1 WARNING ? odoo.tools.config: option logfile reads 'False' in the config file at /etc/odoo/odoo.conf but isn't a boolean option, skip 
+2026-07-10 22:55:56,818 1 WARNING ? odoo.tools.config: missing --http-interface/http_interface, using 0.0.0.0 by default, will change to 127.0.0.1 in 20.0 
+2026-07-10 22:55:56,819 1 INFO ? odoo: Odoo version 19.0-20260619 
+2026-07-10 22:55:56,819 1 INFO ? odoo: Using configuration file at /etc/odoo/odoo.conf 
+2026-07-10 22:55:56,819 1 INFO ? odoo: addons paths: _NamespacePath(['/usr/lib/python3/dist-packages/odoo/addons', '/var/lib/odoo/addons/19.0', '/mnt/enterprise/addons', '/mnt/custom', '/usr/lib/python3/dist-packages/addons']) 
+2026-07-10 22:55:56,819 1 INFO ? odoo: database: odoo@db:5432 
+2026-07-10 22:55:57,057 1 INFO ? odoo.service.server: HTTP service (werkzeug) running on 0.0.0.0:8069 
+2026-07-10 22:55:57,098 1 INFO hellenia_prod odoo.modules.loading: loading 1 modules... 
+2026-07-10 22:55:57,102 1 INFO hellenia_prod odoo.modules.loading: 1 modules loaded in 0.00s, 0 queries (+0 extra) 
+2026-07-10 22:55:57,127 1 INFO hellenia_prod odoo.modules.loading: updating modules list 
+2026-07-10 22:55:57,131 1 INFO hellenia_prod odoo.addons.base.models.ir_module: ALLOW access to module.update_list on [] to user __system__ #1 via n/a 
+2026-07-10 22:55:59,069 1 INFO hellenia_prod odoo.addons.base.models.ir_module: ALLOW access to module.button_upgrade on ['Hellenia UX'] to user __system__ #1 via n/a 
+2026-07-10 22:55:59,069 1 INFO hellenia_prod odoo.addons.base.models.ir_module: ALLOW access to module.update_list on ['Hellenia UX'] to user __system__ #1 via n/a 
+2026-07-10 22:56:00,730 1 INFO hellenia_prod odoo.addons.base.models.ir_module: ALLOW access to module.button_install on [] to user __system__ #1 via n/a 
+2026-07-10 22:56:00,767 1 INFO hellenia_prod odoo.modules.loading: loading 147 modules... 
+2026-07-10 22:56:01,808 1 WARNING hellenia_prod odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define models.Constraint on the model. 
+2026-07-10 22:56:01,902 1 WARNING hellenia_prod odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define models.Constraint on the model. 
+2026-07-10 22:56:01,956 1 WARNING hellenia_prod odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define models.Constraint on the model. 
+2026-07-10 22:56:02,017 1 INFO hellenia_prod odoo.modules.loading: Loading module hellenia_ux (147/147) 
+2026-07-10 22:56:02,139 1 WARNING hellenia_prod odoo.fields: justech.do.fiscal.report.state: selection=[('draft', 'Borrador'), ('validated', 'Validado'), ('pending_approval', 'Requiere aprobación'), ('approved', 'Aprobado'), ('rejected', 'Rechazado'), ('generated', 'Generado'), ('done', 'Generado')] overrides existing selection; use selection_add instead 
+2026-07-10 22:56:02,149 1 WARNING hellenia_prod odoo.fields: Translated stored related field (justech.audit.rule.model_description) will not be computed correctly in all languages 
+2026-07-10 22:56:02,300 1 INFO hellenia_prod odoo.registry: module hellenia_ux: creating or updating database tables 
+2026-07-10 22:56:02,329 1 WARNING hellenia_prod py.warnings: /mnt/custom/justech_l10n_do_ncf/models/account_move.py:136: DeprecationWarning: Deprecated since 19.0, use self.env.cr directly
+  File "/usr/bin/odoo", line 6, in <module>
+    odoo.cli.main()
+  File "/usr/lib/python3/dist-packages/odoo/cli/command.py", line 133, in main
+    command().run(args)
+  File "/usr/lib/python3/dist-packages/odoo/cli/server.py", line 127, in run
+    main(args)
+  File "/usr/lib/python3/dist-packages/odoo/cli/server.py", line 118, in main
+    rc = server.start(preload=config['db_name'], stop=stop)
+  File "/usr/lib/python3/dist-packages/odoo/service/server.py", line 1636, in start
+    rc = server.run(preload, stop)
+  File "/usr/lib/python3/dist-packages/odoo/service/server.py", line 1174, in run
+    rc = preload_registries(preload)
+  File "/usr/lib/python3/dist-packages/odoo/service/server.py", line 1550, in preload_registries
+    registry = Registry.new(dbname, update_module=update_module, install_modules=config['init'], upgrade_modules=config['update'], reinit_modules=config['reinit'])
+  File "/usr/lib/python3/dist-packages/odoo/tools/func.py", line 88, in locked
+    return func(inst, *args, **kwargs)
+  File "/usr/lib/python3/dist-packages/odoo/orm/registry.py", line 183, in new
+    load_modules(
+  File "/usr/lib/python3/dist-packages/odoo/modules/loading.py", line 464, in load_modules
+    load_module_graph(
+  File "/usr/lib/python3/dist-packages/odoo/modules/loading.py", line 194, in load_module_graph
+    registry.init_models(env.cr, model_names, {'module': package.name}, update_operation == 'install')
+  File "/usr/lib/python3/dist-packages/odoo/orm/registry.py", line 752, in init_models
+    model.init()
+  File "/mnt/custom/justech_l10n_do_ncf/models/account_move.py", line 136, in init
+    self._cr.execute(
+ 
+2026-07-10 22:56:02,398 1 WARNING hellenia_prod odoo.addons.base.models.ir_model: Two fields (treasury_payment_reference, hellenia_payment_reference) of account.payment() have the same label: Referencia. [Modules: justech_l10n_do_treasury and hellenia_ux] 
+2026-07-10 22:56:02,398 1 WARNING hellenia_prod odoo.addons.base.models.ir_model: Two fields (partner_name, display_name) of hellenia.partner.delete.guard() have the same label: Display Name. [Modules: hellenia_ux and None] 
+2026-07-10 22:56:02,656 1 INFO hellenia_prod odoo.modules.loading: loading hellenia_ux/security/ir.model.access.csv 
+2026-07-10 22:56:03,717 1 INFO hellenia_prod odoo.modules.loading: loading hellenia_ux/wizard/justech_do_ncf_void_wizard_views.xml 
+2026-07-10 22:56:03,738 1 INFO hellenia_prod odoo.modules.loading: loading hellenia_ux/wizard/partner_delete_guard_views.xml 
+2026-07-10 22:56:03,750 1 INFO hellenia_prod odoo.modules.loading: loading hellenia_ux/views/account_move_fiscal_views.xml 
+2026-07-10 22:56:03,847 1 INFO hellenia_prod odoo.modules.loading: loading hellenia_ux/views/account_move_invoice_form_phase28_views.xml 
+2026-07-10 22:56:03,928 1 INFO hellenia_prod odoo.modules.loading: loading hellenia_ux/views/account_move_form_views.xml 
+2026-07-10 22:56:04,009 1 INFO hellenia_prod odoo.modules.loading: loading hellenia_ux/views/account_payment_register_views.xml 
+2026-07-10 22:56:04,034 1 INFO hellenia_prod odoo.modules.loading: loading hellenia_ux/views/account_payment_views.xml 
+2026-07-10 22:56:04,048 1 WARNING hellenia_prod odoo.addons.base.models.ir_ui_view: An alert (class alert-*) must have an alert, alertdialog or status role or an alert-link class. Please use alert and alertdialog only for what expects to stop any activity to be read immediately.
+View error context:
+{'file': '/mnt/custom/hellenia_ux/views/account_payment_views.xml',
+ 'line': 9,
+ 'name': 'account.payment.form.hellenia.ux',
+ 'view': ir.ui.view(1789,),
+ 'view.model': 'account.payment',
+ 'view.parent': ir.ui.view(724,),
+ 'xmlid': 'view_account_payment_form_hellenia_ux'} 
+2026-07-10 22:56:04,058 1 WARNING hellenia_prod odoo.addons.base.models.ir_ui_view: An alert (class alert-*) must have an alert, alertdialog or status role or an alert-link class. Please use alert and alertdialog only for what expects to stop any activity to be read immediately.
+View error context:
+{'file': '/mnt/custom/hellenia_ux/views/account_payment_views.xml',
+ 'line': 9,
+ 'name': 'account.payment.form.hellenia.ux',
+ 'view': ir.ui.view(1789,),
+ 'view.model': 'account.payment',
+ 'view.parent': ir.ui.view(724,),
+ 'xmlid': 'view_account_payment_form_hellenia_ux'} 
+2026-07-10 22:56:04,062 1 INFO hellenia_prod odoo.modules.loading: loading hellenia_ux/views/account_move_withholding_views.xml 
+2026-07-10 22:56:04,111 1 INFO hellenia_prod odoo.modules.loading: loading hellenia_ux/views/res_company_views.xml 
+2026-07-10 22:56:04,132 1 INFO hellenia_prod odoo.modules.loading: loading hellenia_ux/views/ncf_range_views.xml 
+2026-07-10 22:56:04,154 1 INFO hellenia_prod odoo.modules.loading: loading hellenia_ux/views/fiscal_security_labels.xml 
+2026-07-10 22:56:04,157 1 INFO hellenia_prod odoo.modules.loading: loading hellenia_ux/views/ux_flow_fix_views.xml 
+2026-07-10 22:56:04,587 1 WARNING hellenia_prod odoo.addons.base.models.ir_ui_view: An alert (class alert-*) must have an alert, alertdialog or status role or an alert-link class. Please use alert and alertdialog only for what expects to stop any activity to be read immediately.
+View error context:
+{'file': '/mnt/custom/hellenia_ux/views/ux_flow_fix_views.xml',
+ 'line': 3,
+ 'name': 'product.template.form.hellenia.multicurrency.help',
+ 'view': ir.ui.view(1870,),
+ 'view.model': 'product.template',
+ 'view.parent': ir.ui.view(1857,),
+ 'xmlid': 'product_template_form_hellenia_multicurrency_help'} 
+2026-07-10 22:56:04,611 1 WARNING hellenia_prod odoo.addons.base.models.ir_ui_view: An alert (class alert-*) must have an alert, alertdialog or status role or an alert-link class. Please use alert and alertdialog only for what expects to stop any activity to be read immediately.
+View error context:
+{'file': '/mnt/custom/hellenia_ux/views/ux_flow_fix_views.xml',
+ 'line': 2,
+ 'name': 'product.template.form.hellenia.multicurrency.help',
+ 'view': ir.ui.view(1870,),
+ 'view.model': 'product.template',
+ 'view.parent': ir.ui.view(1857,),
+ 'xmlid': 'product_template_form_hellenia_multicurrency_help'} 
+2026-07-10 22:56:04,623 1 INFO hellenia_prod odoo.modules.loading: loading hellenia_ux/views/security_access_form_views.xml 
+2026-07-10 22:56:04,950 1 INFO hellenia_prod odoo.modules.loading: loading hellenia_ux/data/post_init.xml 
+2026-07-10 22:56:08,770 1 INFO hellenia_prod odoo.addons.base.models.ir_module: module hellenia_ux: no translation for language es_DO 
+2026-07-10 22:56:08,772 1 INFO hellenia_prod odoo.addons.base.models.ir_module: module hellenia_ux: no translation for language es_419 
+2026-07-10 22:56:08,779 1 INFO hellenia_prod odoo.modules.loading: Module hellenia_ux loaded in 6.76s, 7452 queries (+7452 other) 
+2026-07-10 22:56:08,779 1 INFO hellenia_prod odoo.modules.loading: 147 modules loaded in 8.01s, 7452 queries (+7452 extra) 
+2026-07-10 22:56:08,857 1 WARNING hellenia_prod odoo.fields: justech.do.fiscal.report.state: selection=[('draft', 'Borrador'), ('validated', 'Validado'), ('pending_approval', 'Requiere aprobación'), ('approved', 'Aprobado'), ('rejected', 'Rechazado'), ('generated', 'Generado'), ('done', 'Generado')] overrides existing selection; use selection_add instead 
+2026-07-10 22:56:08,868 1 WARNING hellenia_prod odoo.fields: Translated stored related field (justech.audit.rule.model_description) will not be computed correctly in all languages 
+2026-07-10 22:56:10,299 1 INFO hellenia_prod odoo.modules.loading: Modules loaded. 
+2026-07-10 22:56:10,319 1 INFO hellenia_prod odoo.registry: Registry changed, signaling through the database 
+2026-07-10 22:56:10,321 1 INFO hellenia_prod odoo.registry: Registry loaded in 13.263s 
+2026-07-10 22:56:10,321 1 INFO hellenia_prod odoo.service.server: Stopping workers gracefully 

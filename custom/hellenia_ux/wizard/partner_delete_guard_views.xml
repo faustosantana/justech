@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_hellenia_partner_delete_guard_form" model="ir.ui.view">
+        <field name="name">hellenia.partner.delete.guard.form</field>
+        <field name="model">hellenia.partner.delete.guard</field>
+        <field name="arch" type="xml">
+            <form string="No se puede eliminar el contacto">
+                <group>
+                    <field name="partner_id" invisible="1"/>
+                    <field name="block_reason" invisible="1"/>
+                    <field name="company_id" invisible="1"/>
+                    <field name="user_id" invisible="1"/>
+                    <field name="show_company_button" invisible="1"/>
+                    <field name="show_user_button" invisible="1"/>
+                    <field name="show_edit_button" invisible="1"/>
+                    <field name="show_archive_button" invisible="1"/>
+                    <field name="partner_name" string="Contacto"/>
+                    <field name="partner_email" string="Correo"/>
+                </group>
+                <div class="alert alert-warning" role="alert">
+                    <field name="message" nolabel="1"/>
+                </div>
+                <footer>
+                    <button name="action_open_company"
+                            type="object"
+                            string="Ver empresa"
+                            class="btn-primary"
+                            invisible="not show_company_button"/>
+                    <button name="action_open_user"
+                            type="object"
+                            string="Ver usuario relacionado"
+                            class="btn-primary"
+                            invisible="not show_user_button"/>
+                    <button name="action_archive_partner"
+                            type="object"
+                            string="Archivar contacto"
+                            class="btn-primary"
+                            invisible="not show_archive_button"/>
+                    <button name="action_edit_partner"
+                            type="object"
+                            string="Editar contacto"
+                            class="btn-secondary"
+                            invisible="not show_edit_button"/>
+                    <button string="Cancelar" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_hellenia_partner_delete_guard" model="ir.actions.act_window">
+        <field name="name">Eliminación de contacto</field>
+        <field name="res_model">hellenia.partner.delete.guard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="view_id" ref="view_hellenia_partner_delete_guard_form"/>
+    </record>
+</odoo>

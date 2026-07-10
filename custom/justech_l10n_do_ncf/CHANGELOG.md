@@ -1,5 +1,12 @@
 # Changelog — Estándar Fiscal Justech (cierre)
 
+## [19.0.2.3.1] — 2026-07-10
+
+### Changed
+- Campo `justech_do_document_type_id` oculto en formulario de cotización/pedido (`invisible="1"`).
+- La herencia interna hacia la factura (`_prepare_invoice`) se mantiene intacta.
+- El tipo de comprobante fiscal sigue visible en facturas (cliente/proveedor, NC/ND).
+
 ## [19.0.2.2.4] — 2026-07-10
 
 ### Fixed

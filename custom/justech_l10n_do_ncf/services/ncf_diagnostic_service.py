@@ -194,6 +194,22 @@ class JustechDoNcfDiagnosticService(models.AbstractModel):
             limit=50,
         )
         for move in missing:
+            if move.l10n_latam_document_number:
+                findings.append(
+                    self._finding(
+                        "posted_historical_adel_ncf",
+                        self.SEVERITY_INFO,
+                        _("Histórico Adel (compat)"),
+                        _(
+                            "%(move)s usa NCF histórico %(ncf)s vía l10n_latam.",
+                            move=move.name,
+                            ncf=move.l10n_latam_document_number,
+                        ),
+                        "account.move",
+                        [("id", "=", move.id)],
+                    )
+                )
+                continue
             findings.append(
                 self._finding(
                     "posted_missing_ncf",

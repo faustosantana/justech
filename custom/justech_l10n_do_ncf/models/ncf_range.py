@@ -21,33 +21,47 @@ class JustechDoNcfRange(models.Model):
     prefix = fields.Char(related="document_type_id.prefix", store=True)
     journal_ids = fields.Many2many(
         "account.journal",
-        string="Journals",
+        string="Diarios",
         domain="[('company_id', '=', company_id)]",
     )
-    authorization_number = fields.Char(string="DGII Authorization")
-    sequence_start = fields.Integer(required=True, default=1)
-    sequence_end = fields.Integer(required=True)
-    next_sequence = fields.Integer(required=True, default=1)
-    date_from = fields.Date(required=True, default=fields.Date.context_today)
-    date_to = fields.Date(required=True)
+    authorization_number = fields.Char(string="Autorización DGII")
+    sequence_start = fields.Integer(string="Secuencia inicial", required=True, default=1)
+    sequence_end = fields.Integer(string="Secuencia final", required=True)
+    next_sequence = fields.Integer(string="Próxima secuencia", required=True, default=1)
+    date_from = fields.Date(string="Vigente desde", required=True, default=fields.Date.context_today)
+    date_to = fields.Date(string="Fecha de vencimiento", required=True)
     state = fields.Selection(
         selection=[
-            ("draft", "Draft"),
-            ("active", "Active"),
-            ("depleted", "Depleted"),
-            ("expired", "Expired"),
-            ("cancelled", "Cancelled"),
+            ("draft", "Borrador"),
+            ("active", "Activo"),
+            ("depleted", "Agotado"),
+            ("expired", "Vencido"),
+            ("cancelled", "Cerrado"),
         ],
+        string="Estado",
         default="draft",
         required=True,
     )
-    remaining_count = fields.Integer(compute="_compute_remaining")
-    pct_used = fields.Float(string="% consumido", compute="_compute_pct_used")
+    remaining_count = fields.Integer(string="Disponibles", compute="_compute_remaining")
+    pct_used = fields.Float(string="% Consumido", compute="_compute_pct_used")
+    next_ncf_display = fields.Char(string="Próximo NCF", compute="_compute_next_ncf_display")
     consumption_ids = fields.One2many(
         "justech.do.ncf.consumption",
         "range_id",
-        string="Consumption",
+        string="Consumo",
     )
+
+    STANDARD_RANGE_NAMES = {
+        "B01": "B01 Factura de Crédito Fiscal",
+        "B02": "B02 Factura de Consumo",
+        "B03": "B03 Nota de Débito",
+        "B04": "B04 Nota de Crédito",
+        "B11": "B11 Comprobante de Compras",
+        "B13": "B13 Gastos Menores",
+        "B14": "B14 Regímenes Especiales de Tributación",
+        "B15": "B15 Comprobante Gubernamental",
+        "B17": "B17 Comprobante para Pagos al Exterior",
+    }
 
     _sql_constraints = [
         (
@@ -74,6 +88,26 @@ class JustechDoNcfRange(models.Model):
             else:
                 used = max(0, rec.next_sequence - rec.sequence_start)
                 rec.pct_used = min(100.0, round(100.0 * used / total, 1))
+
+    @api.depends("prefix", "next_sequence")
+    def _compute_next_ncf_display(self):
+        for rec in self:
+            if rec.prefix and rec.next_sequence:
+                rec.next_ncf_display = f"{rec.prefix}{int(rec.next_sequence):08d}"
+            else:
+                rec.next_ncf_display = False
+
+    @api.model
+    def normalize_range_names(self):
+        """Normaliza nombres de rango al estándar Justech (solo metadato name)."""
+        Range = self.sudo()
+        for prefix, standard_name in self.STANDARD_RANGE_NAMES.items():
+            for rng in Range.search([("prefix", "=", prefix)]):
+                if any(
+                    token in (rng.name or "").lower()
+                    for token in ("rollout", "std", "test", "dev", "piloto", "gate")
+                ) or not rng.name.startswith(prefix):
+                    rng.name = standard_name
 
     @api.constrains("date_from", "date_to")
     def _check_dates(self):

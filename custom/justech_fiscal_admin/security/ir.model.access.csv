@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_justech_fiscal_feature_flag_user,justech.fiscal.feature.flag user,model_justech_fiscal_feature_flag,justech_fiscal_admin.group_justech_fiscal_admin_user,1,0,0,0
+access_justech_fiscal_feature_flag_manager,justech.fiscal.feature.flag manager,model_justech_fiscal_feature_flag,justech_fiscal_admin.group_justech_fiscal_admin_manager,1,1,1,1
+access_justech_fiscal_admin_center_user,justech.fiscal.admin.center user,model_justech_fiscal_admin_center,justech_fiscal_admin.group_justech_fiscal_admin_user,1,1,1,1
+access_justech_fiscal_admin_center_manager,justech.fiscal.admin.center manager,model_justech_fiscal_admin_center,justech_fiscal_admin.group_justech_fiscal_admin_manager,1,1,1,1

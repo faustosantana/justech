@@ -4,15 +4,19 @@
         <field name="name">justech.do.ncf.range.list</field>
         <field name="model">justech.do.ncf.range</field>
         <field name="arch" type="xml">
-            <list>
-                <field name="name"/>
-                <field name="prefix"/>
-                <field name="next_sequence"/>
-                <field name="sequence_end"/>
-                <field name="remaining_count"/>
-                <field name="pct_used" widget="progressbar"/>
-                <field name="date_to"/>
-                <field name="state"/>
+            <list string="Rangos NCF">
+                <field name="name" string="Nombre"/>
+                <field name="prefix" string="Prefijo"/>
+                <field name="next_ncf_display" string="Próximo NCF"/>
+                <field name="sequence_end" string="Secuencia Final"/>
+                <field name="remaining_count" string="Disponibles"/>
+                <field name="pct_used" string="% Consumido" widget="progressbar"/>
+                <field name="date_to" string="Fecha de Vencimiento"/>
+                <field name="state" string="Estado" widget="badge"
+                       decoration-success="state == 'active'"
+                       decoration-muted="state == 'draft'"
+                       decoration-danger="state in ('expired', 'depleted', 'cancelled')"/>
+                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
             </list>
         </field>
     </record>
@@ -20,36 +24,39 @@
         <field name="name">justech.do.ncf.range.form</field>
         <field name="model">justech.do.ncf.range</field>
         <field name="arch" type="xml">
-            <form>
+            <form string="Rango NCF">
                 <header>
-                    <button name="action_activate" string="Activate" type="object"
+                    <button name="action_activate" string="Activar" type="object"
                             class="btn-primary" invisible="state != 'draft'"/>
-                    <button name="action_cancel" string="Cancel" type="object"
+                    <button name="action_cancel" string="Cerrar" type="object"
                             invisible="state in ('cancelled', 'depleted', 'expired')"/>
-                    <button name="action_set_draft" string="Set Draft" type="object"
+                    <button name="action_set_draft" string="Volver a borrador" type="object"
                             invisible="state != 'cancelled'"/>
-                    <field name="state" widget="statusbar"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,active,depleted,expired,cancelled"/>
                 </header>
                 <sheet>
                     <group>
-                        <group>
+                        <group string="Identificación">
                             <field name="name"/>
                             <field name="document_type_id"/>
-                            <field name="prefix"/>
+                            <field name="prefix" readonly="1"/>
                             <field name="authorization_number"/>
                         </group>
-                        <group>
+                        <group string="Vigencia">
                             <field name="company_id" groups="base.group_multi_company"/>
                             <field name="date_from"/>
                             <field name="date_to"/>
                             <field name="journal_ids" widget="many2many_tags"/>
                         </group>
                     </group>
-                    <group string="Sequence">
+                    <group string="Secuencia">
                         <field name="sequence_start"/>
                         <field name="sequence_end"/>
                         <field name="next_sequence"/>
-                        <field name="remaining_count"/>
+                        <field name="next_ncf_display" readonly="1"/>
+                        <field name="remaining_count" readonly="1"/>
+                        <field name="pct_used" widget="progressbar" readonly="1"/>
                     </group>
                 </sheet>
             </form>

@@ -22,9 +22,14 @@ class JustechDoNcfDuplicateService(models.AbstractModel):
                 _("El prefijo del NCF no coincide con el tipo de comprobante seleccionado.")
             )
         self.check_duplicate(move, ncf)
+        self.env["justech.do.ncf.compat.sync.service"].sync_manual_ncf(move)
 
     def check_duplicate(self, move, ncf):
         move.ensure_one()
+        if not self.env["justech.do.fiscal.config.service"].is_duplicate_blocking_enabled(
+            move.company_id
+        ):
+            return
         domain = duplicate_scope.duplicate_search_domain(
             company_id=move.company_id.id,
             ncf=ncf,

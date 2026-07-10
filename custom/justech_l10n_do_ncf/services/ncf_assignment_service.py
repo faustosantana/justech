@@ -64,13 +64,8 @@ class JustechDoNcfAssignmentService(models.AbstractModel):
                     )
                 )
             ncf = ncf_range.consume_next(move)
-            move.write(
-                {
-                    "justech_do_ncf": ncf,
-                    "justech_do_ncf_range_id": ncf_range.id,
-                    "justech_do_document_type_id": doc.id,
-                }
-            )
+            compat = self.env["justech.do.ncf.compat.sync.service"]
+            move.write(compat.assignment_write_vals(move, ncf, ncf_range, doc))
             if move.move_type == "out_refund" and move.reversed_entry_id:
                 move.justech_do_origin_ncf = move.reversed_entry_id.justech_do_ncf
             if move.move_type == "in_refund" and move.reversed_entry_id:

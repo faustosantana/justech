@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_justech_fiscal_admin_root"
+              name="Administración Fiscal"
+              parent="justech_l10n_do_base.menu_justech_do_fiscal_root"
+              sequence="5"
+              groups="justech_l10n_do_base.group_justech_do_fiscal_manager"/>
+    <menuitem id="menu_justech_fiscal_admin_center"
+              name="Centro de Administración Fiscal"
+              parent="menu_justech_fiscal_admin_root"
+              action="action_justech_fiscal_admin_center_server"
+              sequence="10"/>
+</odoo>

@@ -1,43 +1,33 @@
 {
     "name": "Justech Pagos y Retenciones Dominicanas",
-    "version": "19.0.1.0.0",
+    "version": "19.0.1.2.0",
     "category": "Accounting/Localizations",
     "summary": "Pagos con retenciones fiscales dominicanas (ITBIS/ISR), 623 y trazabilidad",
     "description": """
 Pagos y Retenciones Dominicanas (Justech)
 ==========================================
 
-Módulo comercial oficial Justech que empaqueta y expone en el catálogo de
-licencias la funcionalidad de pagos con retenciones fiscales dominicanas:
+Motor estándar Justech para pagos con retención fiscal:
 
-- Pagos con retención (ITBIS retenido, ISR retenido).
-- Retención a proveedores y a clientes (gubernamental 5% / 623).
-- Comprobantes de retención y trazabilidad fiscal.
-- Reporte DGII 623.
-
-FASE ACTUAL (Etapa A — empaquetado no destructivo):
-El motor de retenciones ya está entregado y activo en `hellenia_account`
-(modelos `hellenia.withholding.catalog`, `hellenia.payment.withholding.line`,
-`hellenia.payment.application.line` y extensiones de `account.payment` /
-`account.move`). Este módulo NO mueve esa lógica todavía: solo la registra
-como personalización oficial Justech `payments_withholding_rd` en el catálogo
-comercial (Crear Licencia, Licencias y Personalizaciones, Módulos del Cliente)
-con interruptores ON/OFF comerciales listos para cableado futuro.
-
-La reubicación física de los modelos hacia este módulo se hará en una migración
-controlada posterior (ver evidence/retenciones-1/RETENCIONES_MIGRATION_PLAN.md).
+- Un solo wizard de registro de pago con retenciones opcionales.
+- Catálogo configurable vinculado a impuestos l10n_do existentes.
+- Asiento de pago + líneas de retención + conciliación automática.
+- Trazabilidad factura ↔ pago ↔ retención.
+- Compatible con reportes DGII 606/607/623.
     """,
     "author": "Justech",
-    "website": "https://hellenia.cloud",
+    "website": "https://justech.do",
     "depends": [
         "account",
         "justech_l10n_do_base",
         "justech_l10n_do_ncf",
         "justech_l10n_do_reports",
-        "justech_modules",
     ],
     "data": [
-        "data/justech_commercial_catalog.xml",
+        "security/ir.model.access.csv",
+        "views/justech_withholding_catalog_views.xml",
+        "views/account_payment_register_views.xml",
+        "views/account_payment_withholding_views.xml",
     ],
     "post_init_hook": "post_init_hook",
     "installable": True,
@@ -47,7 +37,7 @@ controlada posterior (ver evidence/retenciones-1/RETENCIONES_MIGRATION_PLAN.md).
     "justech_register": {
         "module_code": "justech_l10n_do_payments_withholding",
         "module_name": "Pagos y Retenciones Dominicanas",
-        "version": "19.0.1.0.0",
+        "version": "19.0.1.2.0",
         "category": "accounting",
         "country": "DO",
         "localization": "l10n_do",

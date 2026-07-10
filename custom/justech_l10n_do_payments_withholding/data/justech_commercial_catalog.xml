@@ -22,8 +22,4 @@
         <field name="product_id" ref="commercial_payments_withholding_rd"/>
         <field name="technical_module_code">justech_l10n_do_payments_withholding</field>
     </record>
-    <record id="commercial_map_pw_2" model="justech.commercial.product.module">
-        <field name="product_id" ref="commercial_payments_withholding_rd"/>
-        <field name="technical_module_code">hellenia_account</field>
-    </record>
 </odoo>

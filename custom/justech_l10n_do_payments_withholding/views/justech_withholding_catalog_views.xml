@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_justech_withholding_catalog_search" model="ir.ui.view">
+        <field name="name">justech.do.withholding.catalog.search</field>
+        <field name="model">justech.do.withholding.catalog</field>
+        <field name="arch" type="xml">
+            <search string="Buscar retenciones">
+                <field name="name"/>
+                <field name="code"/>
+                <filter name="filter_active" string="Activas" domain="[('active', '=', True)]"/>
+                <filter name="filter_isr" string="ISR" domain="[('withholding_type', '=', 'isr')]"/>
+                <filter name="filter_itbis" string="ITBIS" domain="[('withholding_type', '=', 'itbis')]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_justech_withholding_catalog_list" model="ir.ui.view">
+        <field name="name">justech.do.withholding.catalog.list</field>
+        <field name="model">justech.do.withholding.catalog</field>
+        <field name="arch" type="xml">
+            <list string="Retenciones" decoration-muted="not active">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="rate" string="Porcentaje"/>
+                <field name="withholding_type" string="Tipo"/>
+                <field name="base_type" string="Base"/>
+                <field name="partner_scope" string="Aplica a"/>
+                <field name="account_id"/>
+                <field name="active" widget="boolean_toggle"/>
+                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_justech_withholding_catalog_form" model="ir.ui.view">
+        <field name="name">justech.do.withholding.catalog.form</field>
+        <field name="model">justech.do.withholding.catalog</field>
+        <field name="arch" type="xml">
+            <form string="Retención">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="code" groups="account.group_account_manager"/>
+                            <field name="withholding_type"/>
+                            <field name="rate"/>
+                            <field name="base_type"/>
+                        </group>
+                        <group>
+                            <field name="tax_id"/>
+                            <field name="account_id"/>
+                            <field name="partner_scope"/>
+                            <field name="move_scope"/>
+                            <field name="active"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    <group string="Reportes DGII">
+                        <field name="affects_606"/>
+                        <field name="affects_607"/>
+                        <field name="affects_623"/>
+                        <field name="dgii_withholding_code"/>
+                    </group>
+                    <field name="notes"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_justech_withholding_catalog" model="ir.actions.act_window">
+        <field name="name">Administrar Retenciones</field>
+        <field name="res_model">justech.do.withholding.catalog</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_filter_active': 1}</field>
+    </record>
+</odoo>

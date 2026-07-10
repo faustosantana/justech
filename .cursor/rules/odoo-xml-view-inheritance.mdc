@@ -1,0 +1,53 @@
+---
+description: Regla permanente — auditar cadena de herencia antes de modificar vistas XML, menús o formularios Odoo.
+globs: "**/*.xml"
+alwaysApply: false
+---
+
+# Vistas XML / menús / formularios — auditoría obligatoria de herencia
+
+Antes de modificar **cualquier** vista XML, menú o formulario existente en este ERP:
+
+## Checklist previo (obligatorio)
+
+1. Identificar el **modelo** y la **vista objetivo** (`ir.ui.view` / XML id).
+2. Localizar **todas** las vistas con `inherit_id` que afectan el mismo objeto.
+3. Revisar la cadena completa de herencia, como mínimo:
+   - vistas estándar Odoo / Enterprise;
+   - `l10n_do`, `l10n_do_accounting`, `l10n_latam_*`;
+   - `hellenia_ux`, `hellenia_*`;
+   - `justech_*`;
+   - módulos del implementador anterior u otros instalados que hereden la misma vista.
+4. Revisar por cada vista: prioridad, secuencia de aplicación, xpath, campos movidos/ocultos, botones, grupos, `invisible`/`readonly`/`required`, conflictos de posición, duplicados.
+5. Determinar si el cambio es **realmente necesario**.
+6. Elegir la modificación **menos invasiva**.
+
+## Prohibido
+
+- Sobrescribir una vista completa.
+- Duplicar vistas existentes.
+- Crear una vista nueva solo para ocultar un conflicto.
+- Mover bloques completos sin necesidad.
+- Modificar el diseño general por conveniencia.
+- Usar CSS global para ocultar errores de arquitectura.
+- Cambiar una vista **sin** auditar previamente toda la cadena de herencia.
+
+## Documentación interna (antes de desplegar)
+
+Registrar brevemente (en evidencia o comentario de PR, no hace falta reporte largo al usuario):
+
+- vista original;
+- vistas heredadas detectadas;
+- conflicto encontrado;
+- cambio mínimo propuesto;
+- impacto esperado.
+
+## Validación post-cambio
+
+- Carga completa; modo claro y oscuro.
+- Usuario administrador, contabilidad y ventas.
+- Las cuatro empresas.
+- Sin `RPC_ERROR`, `OwlError`, 404.
+- Sin campos/botones duplicados ni pantallas incompletas.
+
+Esta regla aplica de forma permanente a todo desarrollo futuro del ERP Justech/Justgroup.

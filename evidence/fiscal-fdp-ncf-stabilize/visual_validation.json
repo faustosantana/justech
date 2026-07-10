@@ -1,0 +1,75 @@
+{
+  "ts": "2026-07-10T12:27:14.918735+00:00",
+  "passed": true,
+  "tests": {
+    "config_last_light": {
+      "ok": true,
+      "detail": "['Dashboard', 'Customers', 'Vendors', 'Accounting', 'Pagos', 'Review', 'Reporting', 'Auditoría Fiscal', 'Configuration']"
+    },
+    "pagos_in_top_light": {
+      "ok": true,
+      "detail": "['Dashboard', 'Customers', 'Vendors', 'Accounting', 'Pagos', 'Review', 'Reporting', 'Auditoría Fiscal', 'Configuration']"
+    },
+    "audit_in_top_light": {
+      "ok": true,
+      "detail": "['Dashboard', 'Customers', 'Vendors', 'Accounting', 'Pagos', 'Review', 'Reporting', 'Auditoría Fiscal', 'Configuration']"
+    },
+    "single_acct_light": {
+      "ok": true,
+      "detail": ""
+    },
+    "wizard_cobro_ui_light": {
+      "ok": true,
+      "detail": "https://erp.justech.do/odoo/action-1508"
+    },
+    "wizard_pago_ui_light": {
+      "ok": true,
+      "detail": "https://erp.justech.do/odoo/action-1509"
+    },
+    "hist_ncf_fdp_light": {
+      "ok": true,
+      "detail": "[{'id': 3667, 'name': 'FC/2026/00372', 'justech_fiscal_ncf': 'B0100001612', 'l10n_latam_document_number': 'B0100001612'}, {'id': 3619, 'name': 'INV/2026/00227', 'justech_fiscal_ncf': 'B0200000045', 'l10n_latam_document_number': 'B0200000045'}, {'id': 3604, 'name': 'FC/2026/00369', 'justech_fiscal_ncf': 'B0100001610', 'l10n_latam_document_number': 'B0100001610'}]"
+    },
+    "accounting_ok_light": {
+      "ok": true,
+      "detail": ""
+    },
+    "config_last_dark": {
+      "ok": true,
+      "detail": "['Dashboard', 'Customers', 'Vendors', 'Accounting', 'Pagos', 'Review', 'Reporting', 'Auditoría Fiscal', 'Configuration']"
+    },
+    "pagos_in_top_dark": {
+      "ok": true,
+      "detail": "['Dashboard', 'Customers', 'Vendors', 'Accounting', 'Pagos', 'Review', 'Reporting', 'Auditoría Fiscal', 'Configuration']"
+    },
+    "audit_in_top_dark": {
+      "ok": true,
+      "detail": "['Dashboard', 'Customers', 'Vendors', 'Accounting', 'Pagos', 'Review', 'Reporting', 'Auditoría Fiscal', 'Configuration']"
+    },
+    "single_acct_dark": {
+      "ok": true,
+      "detail": ""
+    },
+    "wizard_cobro_ui_dark": {
+      "ok": true,
+      "detail": "https://erp.justech.do/odoo/action-1508"
+    },
+    "wizard_pago_ui_dark": {
+      "ok": true,
+      "detail": "https://erp.justech.do/odoo/action-1509"
+    },
+    "hist_ncf_fdp_dark": {
+      "ok": true,
+      "detail": "[{'id': 3667, 'name': 'FC/2026/00372', 'justech_fiscal_ncf': 'B0100001612', 'l10n_latam_document_number': 'B0100001612'}, {'id': 3619, 'name': 'INV/2026/00227', 'justech_fiscal_ncf': 'B0200000045', 'l10n_latam_document_number': 'B0200000045'}, {'id': 3604, 'name': 'FC/2026/00369', 'justech_fiscal_ncf': 'B0100001610', 'l10n_latam_document_number': 'B0100001610'}]"
+    },
+    "accounting_ok_dark": {
+      "ok": true,
+      "detail": ""
+    },
+    "no_js_errors": {
+      "ok": true,
+      "detail": "[]"
+    }
+  },
+  "js_errors": []
+}

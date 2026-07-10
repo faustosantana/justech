@@ -1,5 +1,16 @@
 # Changelog — Estándar Fiscal Justech (cierre)
 
+## [19.0.2.2.4] — 2026-07-10
+
+### Fixed
+- Lectura fiscal en formularios vía campos display seguros (`fiscal_*_display`) y Fiscal Data Provider.
+- Estado histórico Adel: **Histórico compatible** (nunca «Incompleto» cuando hay NCF válido).
+- NCF histórico visible en facturas de venta/compra sin backfill ni escritura.
+
+### Added
+- Regla permanente Cursor: auditoría de herencia XML antes de tocar vistas/menús.
+- UAT de cierre (shell + visual) en `justech_dev`.
+
 ## [19.0.2.0.0] — 2026-07-10
 
 ### Added

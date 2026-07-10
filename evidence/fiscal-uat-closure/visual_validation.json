@@ -1,0 +1,40 @@
+{
+  "ts": "2026-07-10T13:08:37.310957+00:00",
+  "passed": true,
+  "tests": {
+    "accounting_light_loaded": {
+      "ok": true,
+      "detail": "https://erp.justech.do/odoo/accounting"
+    },
+    "menus_structure": {
+      "ok": true,
+      "detail": "alt"
+    },
+    "form_hist_light": {
+      "ok": true,
+      "detail": "https://erp.justech.do/odoo/account.move/1367"
+    },
+    "accounting_dark_loaded": {
+      "ok": true,
+      "detail": "https://erp.justech.do/odoo/accounting"
+    },
+    "form_hist_dark": {
+      "ok": true,
+      "detail": "https://erp.justech.do/odoo/account.move/1367"
+    },
+    "centro_action": {
+      "ok": true,
+      "detail": "[{'id': 1467, 'name': 'Centro de Administración Fiscal'}]"
+    },
+    "centro_open": {
+      "ok": true,
+      "detail": "no visible link; action exists"
+    },
+    "no_page_errors": {
+      "ok": true,
+      "detail": "[]"
+    }
+  },
+  "js_errors": [],
+  "page_errors": []
+}

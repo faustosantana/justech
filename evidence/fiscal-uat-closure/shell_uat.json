@@ -1,0 +1,353 @@
+{
+  "ts": "2026-07-10T13:08:23.325739+00:00",
+  "passed": true,
+  "phases": {
+    "preflight": {
+      "gl_balanced": {
+        "ok": true,
+        "detail": "d=86030788.89 c=86030788.89"
+      },
+      "fiscal_display_fields": {
+        "ok": true,
+        "detail": ""
+      },
+      "fdp": {
+        "ok": true,
+        "detail": ""
+      }
+    },
+    "historico": {
+      "sale_b01_mar": {
+        "ok": true,
+        "detail": "{'name': 'INV/2026/00186', 'ncf': 'B0100000201', 'tipo': '(B01) Crédito Fiscal', 'status': 'Histórico compatible', 'intact': True}"
+      },
+      "sale_b02_mar": {
+        "ok": true,
+        "detail": "{'name': 'INV/2026/00141', 'ncf': 'B0200000035', 'tipo': '(B02) Consumo', 'status': 'Histórico compatible', 'intact': True}"
+      },
+      "purchase_b01_mar": {
+        "ok": true,
+        "detail": "{'name': 'FP/2026/03/0001', 'ncf': 'B0100008679', 'tipo': '(B01) Crédito Fiscal', 'status': 'Histórico compatible', 'intact': True}"
+      },
+      "purchase_e31_mar": {
+        "ok": true,
+        "detail": "{'name': 'FP/2026/03/0004', 'ncf': 'E310000002365', 'tipo': '(E31) Crédito Fiscal Electrónica', 'status': 'Histórico compatible', 'intact': True}"
+      },
+      "sale_apr": {
+        "ok": true,
+        "detail": "{'name': 'INV/2026/00040', 'ncf': 'B0100000255', 'tipo': '(B01) Crédito Fiscal', 'status': 'Histórico compatible', 'intact': True}"
+      },
+      "purchase_apr": {
+        "ok": true,
+        "detail": "{'name': 'FP/2026/04/0086', 'ncf': 'E310000063341', 'tipo': '(E31) Crédito Fiscal Electrónica', 'status': 'Histórico compatible', 'intact': True}"
+      },
+      "sale_may": {
+        "ok": true,
+        "detail": "{'name': 'FC/2026/00272', 'ncf': 'B0100001520', 'tipo': '(B01) Crédito Fiscal', 'status': 'Histórico compatible', 'intact': True}"
+      },
+      "purchase_may": {
+        "ok": true,
+        "detail": "{'name': 'FACTU/2026/05/0035', 'ncf': 'B0100013929', 'tipo': '(B01) Crédito Fiscal', 'status': 'Histórico compatible', 'intact': True}"
+      },
+      "nc_hist": {
+        "ok": true,
+        "detail": "{'name': 'NC/2026/00010', 'ncf': 'B0400000022', 'tipo': 'B04 - Nota de Crédito', 'status': 'Válido', 'intact': True}"
+      },
+      "nd_hist": {
+        "ok": true,
+        "detail": "{'name': 'DF/2026/00004', 'ncf': 'B0300000004', 'tipo': 'B03 - Nota de Débito', 'status': 'Válido', 'intact': True}"
+      },
+      "e31_hist": {
+        "ok": true,
+        "detail": "{'name': 'FP/2026/06/0091', 'ncf': 'E310000095717', 'tipo': '(E31) Crédito Fiscal Electrónica', 'status': 'Histórico compatible', 'intact': True}"
+      },
+      "no_backfill_sample": {
+        "ok": true,
+        "detail": "checked=11"
+      }
+    },
+    "ventas": {
+      "prereq": {
+        "ok": true,
+        "detail": "{'partner': 'Escudea Centro de Vacunacion Infantil S.R.L.', 'product': '[(AGI-1950)] Cargador de carro Agiler  USB C + USB A, 38W, NEGRO (AGI-1950)', 'journal': 'Facturas de Ventas', 'doc': 'B01 - Factura de Crédito Fiscal', 'range': True}"
+      },
+      "post": {
+        "ok": true,
+        "detail": "FC/2026/00393"
+      },
+      "ncf_assigned": {
+        "ok": true,
+        "detail": "B0105185345"
+      },
+      "dual_write": {
+        "ok": true,
+        "detail": "{'justech': 'B0105185345', 'latam': 'B0105185345'}"
+      },
+      "display": {
+        "ok": true,
+        "detail": "{'display': 'B0105185345', 'tipo': 'B01 - Factura de Crédito Fiscal', 'status': 'Válido'}"
+      },
+      "pdf_ncf": {
+        "ok": true,
+        "detail": "B0105185345"
+      },
+      "wizard_ncf": {
+        "ok": true,
+        "detail": "B0105185345"
+      },
+      "payment": {
+        "ok": true,
+        "detail": "{'residual': 0.0, 'payment_state': 'in_payment', 'action': True}"
+      },
+      "gl_after": {
+        "ok": true,
+        "detail": ""
+      },
+      "607_ncf": {
+        "ok": true,
+        "detail": "B0105185345"
+      }
+    },
+    "compras": {
+      "expense_type": {
+        "ok": true,
+        "detail": "02"
+      },
+      "post": {
+        "ok": true,
+        "detail": "FP/2026/07/0015"
+      },
+      "ncf": {
+        "ok": true,
+        "detail": "B1100088905"
+      },
+      "tipo": {
+        "ok": true,
+        "detail": "B11 - Comprobante de Compras"
+      },
+      "dual_write": {
+        "ok": true,
+        "detail": ""
+      },
+      "pago_parcial": {
+        "ok": true,
+        "detail": "566.4"
+      },
+      "pago_total": {
+        "ok": true,
+        "detail": "{'residual': 0.0, 'state': 'in_payment'}"
+      },
+      "606_ncf": {
+        "ok": true,
+        "detail": "B1100088905"
+      },
+      "gl": {
+        "ok": true,
+        "detail": ""
+      }
+    },
+    "pagos": {
+      "payments_count_ge_baseline": {
+        "ok": true,
+        "detail": ""
+      },
+      "withholding_wizard": {
+        "ok": true,
+        "detail": ""
+      },
+      "no_simulated_bank": {
+        "ok": true,
+        "detail": "[]"
+      },
+      "gl": {
+        "ok": true,
+        "detail": ""
+      }
+    },
+    "menus": {
+      "accounting_root": {
+        "ok": true,
+        "detail": "Contabilidad"
+      },
+      "single_accounting_icon": {
+        "ok": true,
+        "detail": "['Contabilidad', 'Contabilidad']"
+      },
+      "top_order_config_last": {
+        "ok": true,
+        "detail": "['Tablero', 'Clientes', 'Proveedores', 'Contabilidad', 'Pagos', 'Revisión', 'Reportes', 'Auditoría Fiscal', 'Configuración']"
+      },
+      "has_Tablero": {
+        "ok": true,
+        "detail": "['Tablero', 'Clientes', 'Proveedores', 'Contabilidad', 'Pagos', 'Revisión', 'Reportes', 'Auditoría Fiscal', 'Configuración']"
+      },
+      "has_Clientes": {
+        "ok": true,
+        "detail": "['Tablero', 'Clientes', 'Proveedores', 'Contabilidad', 'Pagos', 'Revisión', 'Reportes', 'Auditoría Fiscal', 'Configuración']"
+      },
+      "has_Proveedores": {
+        "ok": true,
+        "detail": "['Tablero', 'Clientes', 'Proveedores', 'Contabilidad', 'Pagos', 'Revisión', 'Reportes', 'Auditoría Fiscal', 'Configuración']"
+      },
+      "has_Contabilidad": {
+        "ok": true,
+        "detail": "['Tablero', 'Clientes', 'Proveedores', 'Contabilidad', 'Pagos', 'Revisión', 'Reportes', 'Auditoría Fiscal', 'Configuración']"
+      },
+      "has_Pagos": {
+        "ok": true,
+        "detail": "['Tablero', 'Clientes', 'Proveedores', 'Contabilidad', 'Pagos', 'Revisión', 'Reportes', 'Auditoría Fiscal', 'Configuración']"
+      },
+      "has_Revisión": {
+        "ok": true,
+        "detail": "['Tablero', 'Clientes', 'Proveedores', 'Contabilidad', 'Pagos', 'Revisión', 'Reportes', 'Auditoría Fiscal', 'Configuración']"
+      },
+      "has_Reportes": {
+        "ok": true,
+        "detail": "['Tablero', 'Clientes', 'Proveedores', 'Contabilidad', 'Pagos', 'Revisión', 'Reportes', 'Auditoría Fiscal', 'Configuración']"
+      },
+      "has_Auditoría Fiscal": {
+        "ok": true,
+        "detail": "['Tablero', 'Clientes', 'Proveedores', 'Contabilidad', 'Pagos', 'Revisión', 'Reportes', 'Auditoría Fiscal', 'Configuración']"
+      },
+      "has_Configuración": {
+        "ok": true,
+        "detail": "['Tablero', 'Clientes', 'Proveedores', 'Contabilidad', 'Pagos', 'Revisión', 'Reportes', 'Auditoría Fiscal', 'Configuración']"
+      },
+      "pagos_Pagos de clientes": {
+        "ok": true,
+        "detail": "['Pagos de clientes', 'Pagos a proveedores', 'Pagos abiertos (clientes)', 'Pagos abiertos (proveedores)', 'Conciliación bancaria']"
+      },
+      "pagos_Pagos a proveedores": {
+        "ok": true,
+        "detail": "['Pagos de clientes', 'Pagos a proveedores', 'Pagos abiertos (clientes)', 'Pagos abiertos (proveedores)', 'Conciliación bancaria']"
+      },
+      "pagos_Pagos abiertos (clientes)": {
+        "ok": true,
+        "detail": "['Pagos de clientes', 'Pagos a proveedores', 'Pagos abiertos (clientes)', 'Pagos abiertos (proveedores)', 'Conciliación bancaria']"
+      },
+      "pagos_Pagos abiertos (proveedores)": {
+        "ok": true,
+        "detail": "['Pagos de clientes', 'Pagos a proveedores', 'Pagos abiertos (clientes)', 'Pagos abiertos (proveedores)', 'Conciliación bancaria']"
+      },
+      "pagos_Conciliación bancaria": {
+        "ok": true,
+        "detail": "['Pagos de clientes', 'Pagos a proveedores', 'Pagos abiertos (clientes)', 'Pagos abiertos (proveedores)', 'Conciliación bancaria']"
+      },
+      "audit_606": {
+        "ok": true,
+        "detail": "['606 — Compras', '607 — Ventas', '608 — Comprobantes Anulados', '609 — Pagos al Exterior', '623 — Retenciones del Estado', 'Tipos de Comprobante', 'Rangos NCF', 'Consumo NCF', 'Administrar Retenciones', 'Consumo NCF (Auditoría)', 'NCF Anulados', 'Historial Fiscal', 'Revisión Fiscal', 'Pendientes de Aprobación', 'Centro de Administración Fiscal']"
+      },
+      "audit_607": {
+        "ok": true,
+        "detail": "['606 — Compras', '607 — Ventas', '608 — Comprobantes Anulados', '609 — Pagos al Exterior', '623 — Retenciones del Estado', 'Tipos de Comprobante', 'Rangos NCF', 'Consumo NCF', 'Administrar Retenciones', 'Consumo NCF (Auditoría)', 'NCF Anulados', 'Historial Fiscal', 'Revisión Fiscal', 'Pendientes de Aprobación', 'Centro de Administración Fiscal']"
+      },
+      "audit_608": {
+        "ok": true,
+        "detail": "['606 — Compras', '607 — Ventas', '608 — Comprobantes Anulados', '609 — Pagos al Exterior', '623 — Retenciones del Estado', 'Tipos de Comprobante', 'Rangos NCF', 'Consumo NCF', 'Administrar Retenciones', 'Consumo NCF (Auditoría)', 'NCF Anulados', 'Historial Fiscal', 'Revisión Fiscal', 'Pendientes de Aprobación', 'Centro de Administración Fiscal']"
+      },
+      "audit_609": {
+        "ok": true,
+        "detail": "['606 — Compras', '607 — Ventas', '608 — Comprobantes Anulados', '609 — Pagos al Exterior', '623 — Retenciones del Estado', 'Tipos de Comprobante', 'Rangos NCF', 'Consumo NCF', 'Administrar Retenciones', 'Consumo NCF (Auditoría)', 'NCF Anulados', 'Historial Fiscal', 'Revisión Fiscal', 'Pendientes de Aprobación', 'Centro de Administración Fiscal']"
+      },
+      "audit_623": {
+        "ok": true,
+        "detail": "['606 — Compras', '607 — Ventas', '608 — Comprobantes Anulados', '609 — Pagos al Exterior', '623 — Retenciones del Estado', 'Tipos de Comprobante', 'Rangos NCF', 'Consumo NCF', 'Administrar Retenciones', 'Consumo NCF (Auditoría)', 'NCF Anulados', 'Historial Fiscal', 'Revisión Fiscal', 'Pendientes de Aprobación', 'Centro de Administración Fiscal']"
+      },
+      "audit_Tipos de Comprobante": {
+        "ok": true,
+        "detail": "['606 — Compras', '607 — Ventas', '608 — Comprobantes Anulados', '609 — Pagos al Exterior', '623 — Retenciones del Estado', 'Tipos de Comprobante', 'Rangos NCF', 'Consumo NCF', 'Administrar Retenciones', 'Consumo NCF (Auditoría)', 'NCF Anulados', 'Historial Fiscal', 'Revisión Fiscal', 'Pendientes de Aprobación', 'Centro de Administración Fiscal']"
+      },
+      "audit_Rangos NCF": {
+        "ok": true,
+        "detail": "['606 — Compras', '607 — Ventas', '608 — Comprobantes Anulados', '609 — Pagos al Exterior', '623 — Retenciones del Estado', 'Tipos de Comprobante', 'Rangos NCF', 'Consumo NCF', 'Administrar Retenciones', 'Consumo NCF (Auditoría)', 'NCF Anulados', 'Historial Fiscal', 'Revisión Fiscal', 'Pendientes de Aprobación', 'Centro de Administración Fiscal']"
+      },
+      "audit_Consumo NCF": {
+        "ok": true,
+        "detail": "['606 — Compras', '607 — Ventas', '608 — Comprobantes Anulados', '609 — Pagos al Exterior', '623 — Retenciones del Estado', 'Tipos de Comprobante', 'Rangos NCF', 'Consumo NCF', 'Administrar Retenciones', 'Consumo NCF (Auditoría)', 'NCF Anulados', 'Historial Fiscal', 'Revisión Fiscal', 'Pendientes de Aprobación', 'Centro de Administración Fiscal']"
+      },
+      "audit_Centro de Administración Fiscal": {
+        "ok": true,
+        "detail": "['606 — Compras', '607 — Ventas', '608 — Comprobantes Anulados', '609 — Pagos al Exterior', '623 — Retenciones del Estado', 'Tipos de Comprobante', 'Rangos NCF', 'Consumo NCF', 'Administrar Retenciones', 'Consumo NCF (Auditoría)', 'NCF Anulados', 'Historial Fiscal', 'Revisión Fiscal', 'Pendientes de Aprobación', 'Centro de Administración Fiscal']"
+      },
+      "audit_count_ge_10": {
+        "ok": true,
+        "detail": "15"
+      }
+    },
+    "centro": {
+      "model": {
+        "ok": true,
+        "detail": ""
+      },
+      "service": {
+        "ok": true,
+        "detail": "{}"
+      }
+    },
+    "multi": {
+      "PlugSafe": {
+        "ok": true,
+        "detail": "{'hist': [('FP/2026/07/0032', 'B1700000010'), ('FP/2026/07/0031', 'B1300000010')], 'ranges': 9}"
+      },
+      "Omni Solutions": {
+        "ok": true,
+        "detail": "{'hist': [('FP/2026/07/0014', 'B1700000004'), ('FP/2026/07/0013', 'B1300000004')], 'ranges': 9}"
+      },
+      "Just Office": {
+        "ok": true,
+        "detail": "{'hist': [('FACTU/2026/07/0014', 'B1700000004'), ('FACTU/2026/07/0013', 'B1300000004')], 'ranges': 9}"
+      },
+      "JUSTECH": {
+        "ok": true,
+        "detail": "{'hist': [('FP/2026/07/0015', 'B1100088905'), ('FC/2026/00393', 'B0105185345')], 'ranges': 9}"
+      }
+    },
+    "cleanup": {
+      "payments_not_below_safe": {
+        "ok": true,
+        "detail": "{'before': 738, 'after': 741, 'cleaned': 0}"
+      },
+      "hist_intact": {
+        "ok": true,
+        "detail": "[('INV/2026/00186', 'B0100000201'), ('INV/2026/00141', 'B0200000035'), ('FP/2026/03/0001', 'B0100008679')]"
+      },
+      "gl": {
+        "ok": true,
+        "detail": "d=86032558.89 c=86032558.89"
+      },
+      "uat_removed": {
+        "ok": true,
+        "detail": "0"
+      }
+    }
+  },
+  "created_ids": {
+    "moves": [
+      4200,
+      4202
+    ],
+    "payments": [
+      813,
+      814,
+      815
+    ],
+    "wizards": []
+  },
+  "baseline": {
+    "payments": 738,
+    "posted_moves": 2512,
+    "gl_ok": true,
+    "debit": 86030788.89,
+    "credit": 86030788.89
+  },
+  "cleanup": {
+    "payments": [],
+    "moves": [
+      4204,
+      4203,
+      4202,
+      4200
+    ]
+  },
+  "errors": []
+}

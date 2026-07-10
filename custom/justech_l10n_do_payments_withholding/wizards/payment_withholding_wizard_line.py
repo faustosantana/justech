@@ -12,6 +12,8 @@ class JustechPaymentWithholdingWizardLine(models.TransientModel):
     wizard_line_id = fields.Many2one("justech.payment.partner.wizard.line", ondelete="cascade")
     register_wizard_id = fields.Many2one("account.payment.register", ondelete="cascade")
     catalog_id = fields.Many2one("justech.do.withholding.catalog", string="Retención")
+    company_id = fields.Many2one(related="catalog_id.company_id", string="Empresa", readonly=True)
+    dgii_code = fields.Char(related="catalog_id.dgii_withholding_code", string="Código DGII", readonly=True)
     tax_id = fields.Many2one("account.tax", string="Impuesto")
     label = fields.Char(string="Descripción")
     base_label = fields.Char(string="Tipo de base")

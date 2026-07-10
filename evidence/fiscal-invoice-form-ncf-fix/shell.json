@@ -1,0 +1,55 @@
+{
+  "ok": true,
+  "samples": [
+    {
+      "id": 1367,
+      "name": "FP/2026/03/0001",
+      "ncf": "B0100008679",
+      "tipo": "(B01) Crédito Fiscal",
+      "status": "Histórico compatible",
+      "stored": "incomplete"
+    },
+    {
+      "id": 3037,
+      "name": "INV/2026/00186",
+      "ncf": "B0100000201",
+      "tipo": "(B01) Crédito Fiscal",
+      "status": "Histórico compatible",
+      "stored": "incomplete"
+    },
+    {
+      "id": 1377,
+      "name": "FP/2026/03/0004",
+      "ncf": "E310000002365",
+      "tipo": "(E31) Crédito Fiscal Electrónica",
+      "status": "Histórico compatible",
+      "stored": "incomplete"
+    },
+    {
+      "id": 2491,
+      "name": "INV/2026/00141",
+      "ncf": "B0200000035",
+      "tipo": "(B02) Consumo",
+      "status": "Histórico compatible",
+      "stored": "incomplete"
+    },
+    {
+      "id": 4181,
+      "name": "NC/2026/00010",
+      "ncf": "B0400000022",
+      "tipo": "B04 - Nota de Crédito",
+      "status": "Válido",
+      "stored": "valid"
+    },
+    {
+      "id": 4182,
+      "name": "DF/2026/00004",
+      "ncf": "B0300000004",
+      "tipo": "B03 - Nota de Débito",
+      "status": "Válido",
+      "stored": "valid"
+    }
+  ],
+  "empty_status": "",
+  "payments": 738
+}

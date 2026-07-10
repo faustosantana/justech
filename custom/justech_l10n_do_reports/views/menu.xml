@@ -59,14 +59,12 @@
         <field name="code">action = env['justech.do.fiscal.audit.actions'].action_open_withholding_catalog()</field>
     </record>
 
-    <record id="account.menu_finance" model="ir.ui.menu">
-        <field name="name">Contabilidad</field>
-    </record>
-
+    <!-- Parent: accountant.menu_accounting (Enterprise). Nunca account.menu_finance
+         (queda vacío tras accountant y crearía un segundo icono Contabilidad). -->
     <menuitem id="menu_justech_do_audit_root"
               name="Auditoría Fiscal"
-              parent="account.menu_finance"
-              sequence="55"
+              parent="accountant.menu_accounting"
+              sequence="80"
               groups="justech_l10n_do_base.group_justech_do_fiscal_user"/>
 
     <record id="menu_justech_do_report_606" model="ir.ui.menu">
@@ -116,53 +114,63 @@
         <field name="sequence">70</field>
         <field name="active" eval="True"/>
     </record>
+
+    <menuitem id="menu_justech_do_ncf_consumption_audit"
+              name="Consumo NCF"
+              parent="menu_justech_do_audit_root"
+              action="justech_l10n_do_ncf.action_justech_do_ncf_consumption"
+              sequence="80"/>
+
+    <record id="menu_justech_do_withholding_catalog" model="ir.ui.menu">
+        <field name="name">Administrar Retenciones</field>
+        <field name="parent_id" ref="menu_justech_do_audit_root"/>
+        <field name="action" ref="action_justech_do_withholding_catalog"/>
+        <field name="sequence">90</field>
+        <field name="active" eval="True"/>
+        <field name="group_ids" eval="[(6, 0, [ref('account.group_account_manager')])]"/>
+    </record>
+
     <record id="menu_justech_do_audit_consumption" model="ir.ui.menu">
-        <field name="name">Consumo NCF</field>
+        <field name="name">Consumo NCF (Auditoría)</field>
         <field name="parent_id" ref="menu_justech_do_audit_root"/>
         <field name="action" ref="action_justech_do_audit_consumption"/>
-        <field name="sequence">80</field>
+        <field name="sequence">100</field>
         <field name="active" eval="True"/>
     </record>
     <record id="menu_justech_do_audit_voided" model="ir.ui.menu">
         <field name="name">NCF Anulados</field>
         <field name="parent_id" ref="menu_justech_do_audit_root"/>
         <field name="action" ref="action_justech_do_ncf_voided"/>
-        <field name="sequence">90</field>
+        <field name="sequence">110</field>
         <field name="active" eval="True"/>
     </record>
     <record id="menu_justech_do_audit_history" model="ir.ui.menu">
         <field name="name">Historial Fiscal</field>
         <field name="parent_id" ref="menu_justech_do_audit_root"/>
         <field name="action" ref="action_justech_do_fiscal_report"/>
-        <field name="sequence">100</field>
+        <field name="sequence">120</field>
         <field name="active" eval="True"/>
     </record>
     <record id="menu_justech_do_fiscal_review" model="ir.ui.menu">
         <field name="name">Revisión Fiscal</field>
         <field name="parent_id" ref="menu_justech_do_audit_root"/>
         <field name="action" ref="action_justech_do_fiscal_review"/>
-        <field name="sequence">110</field>
+        <field name="sequence">130</field>
         <field name="active" eval="True"/>
     </record>
     <record id="menu_justech_do_fiscal_review_pending" model="ir.ui.menu">
         <field name="name">Pendientes de Aprobación</field>
         <field name="parent_id" ref="menu_justech_do_audit_root"/>
         <field name="action" ref="action_justech_do_fiscal_review_pending"/>
-        <field name="sequence">120</field>
+        <field name="sequence">140</field>
         <field name="active" eval="True"/>
         <field name="group_ids" eval="[(6, 0, [ref('justech_fiscal_admin.group_justech_fiscal_admin_manager')])]"/>
     </record>
-    <menuitem id="menu_justech_do_withholding_catalog"
-              name="Administrar Retenciones"
-              parent="menu_justech_do_audit_root"
-              action="action_justech_do_withholding_catalog"
-              sequence="130"
-              groups="account.group_account_manager"/>
     <record id="menu_justech_fiscal_admin_center_audit" model="ir.ui.menu">
         <field name="name">Centro de Administración Fiscal</field>
         <field name="parent_id" ref="menu_justech_do_audit_root"/>
         <field name="action" ref="justech_fiscal_admin.action_justech_fiscal_admin_center_server"/>
-        <field name="sequence">140</field>
+        <field name="sequence">150</field>
         <field name="active" eval="True"/>
         <field name="group_ids" eval="[(6, 0, [ref('justech_fiscal_admin.group_justech_fiscal_admin_manager')])]"/>
     </record>

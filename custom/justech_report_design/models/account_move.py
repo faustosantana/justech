@@ -183,7 +183,13 @@ class AccountMove(models.Model):
 
     def get_jt_ncf_display(self):
         self.ensure_one()
-        ncf = getattr(self, "justech_do_ncf", "") or ""
+        ncf = ""
+        if hasattr(self, "justech_get_ncf"):
+            ncf = self.justech_get_ncf() or ""
+        else:
+            fdp = self.env.get("justech.do.fiscal.data.provider")
+            if fdp:
+                ncf = fdp.get_ncf(self) or ""
         return ncf if ncf else "—"
 
     def get_jt_currency_display(self):

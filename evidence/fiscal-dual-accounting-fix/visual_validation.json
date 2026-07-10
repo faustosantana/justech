@@ -1,0 +1,51 @@
+{
+  "ts": "2026-07-10T12:08:07.863526+00:00",
+  "passed": true,
+  "tests": {
+    "single_accounting_icon_light": {
+      "ok": true,
+      "detail": "[{'id': 428, 'name': 'Accounting', 'xmlid': 'accountant.menu_accounting', 'children': 9}]"
+    },
+    "accounting_is_enterprise_light": {
+      "ok": true,
+      "detail": "[{'id': 428, 'name': 'Accounting', 'xmlid': 'accountant.menu_accounting', 'children': 9}]"
+    },
+    "pagos_in_accounting_light": {
+      "ok": true,
+      "detail": "['Dashboard', 'Customers', 'Vendors', 'Accounting', 'Review', 'Reporting', 'Pagos', 'Configuration', 'Auditoría Fiscal']"
+    },
+    "audit_in_accounting_light": {
+      "ok": true,
+      "detail": "['Dashboard', 'Customers', 'Vendors', 'Accounting', 'Review', 'Reporting', 'Pagos', 'Configuration', 'Auditoría Fiscal']"
+    },
+    "accounting_loads_light": {
+      "ok": true,
+      "detail": ""
+    },
+    "single_accounting_icon_dark": {
+      "ok": true,
+      "detail": "[{'id': 428, 'name': 'Accounting', 'xmlid': 'accountant.menu_accounting', 'children': 9}]"
+    },
+    "accounting_is_enterprise_dark": {
+      "ok": true,
+      "detail": "[{'id': 428, 'name': 'Accounting', 'xmlid': 'accountant.menu_accounting', 'children': 9}]"
+    },
+    "pagos_in_accounting_dark": {
+      "ok": true,
+      "detail": "['Dashboard', 'Customers', 'Vendors', 'Accounting', 'Review', 'Reporting', 'Pagos', 'Configuration', 'Auditoría Fiscal']"
+    },
+    "audit_in_accounting_dark": {
+      "ok": true,
+      "detail": "['Dashboard', 'Customers', 'Vendors', 'Accounting', 'Review', 'Reporting', 'Pagos', 'Configuration', 'Auditoría Fiscal']"
+    },
+    "accounting_loads_dark": {
+      "ok": true,
+      "detail": ""
+    },
+    "no_js_errors": {
+      "ok": true,
+      "detail": "[]"
+    }
+  },
+  "js_errors": []
+}

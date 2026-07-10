@@ -1,0 +1,67 @@
+{
+  "ts": "2026-07-10T08:30:52.009556+00:00",
+  "passed": true,
+  "tests": {
+    "contabilidad_light": {
+      "ok": true,
+      "detail": ""
+    },
+    "pagos_5_light": {
+      "ok": true,
+      "detail": "['Pagos de clientes', 'Pagos a proveedores', 'Pagos abiertos (clientes)', 'Pagos abiertos (proveedores)', 'Conciliación bancaria']"
+    },
+    "legacy_hidden_light": {
+      "ok": true,
+      "detail": "['Pagos de clientes', 'Pagos a proveedores', 'Pagos abiertos (clientes)', 'Pagos abiertos (proveedores)', 'Conciliación bancaria']"
+    },
+    "audit_15_light": {
+      "ok": true,
+      "detail": "['606 — Compras', '607 — Ventas', '608 — Comprobantes Anulados', '609 — Pagos al Exterior', '623 — Retenciones del Estado', 'Tipos de Comprobante', 'Rangos NCF', 'Consumo NCF', 'Administrar Retenciones', 'Consumo NCF (Auditoría)', 'NCF Anulados', 'Historial Fiscal', 'Revisión Fiscal', 'Pendientes de Aprobación', 'Centro de Administración Fiscal']"
+    },
+    "wizard_cobro_light": {
+      "ok": true,
+      "detail": "https://erp.justech.do/odoo/action-1508"
+    },
+    "wizard_pago_light": {
+      "ok": true,
+      "detail": "https://erp.justech.do/odoo/action-1509"
+    },
+    "centro_fiscal_light": {
+      "ok": true,
+      "detail": "https://erp.justech.do/odoo/justech.fiscal.admin.center/14"
+    },
+    "contabilidad_dark": {
+      "ok": true,
+      "detail": ""
+    },
+    "pagos_5_dark": {
+      "ok": true,
+      "detail": "['Pagos de clientes', 'Pagos a proveedores', 'Pagos abiertos (clientes)', 'Pagos abiertos (proveedores)', 'Conciliación bancaria']"
+    },
+    "legacy_hidden_dark": {
+      "ok": true,
+      "detail": "['Pagos de clientes', 'Pagos a proveedores', 'Pagos abiertos (clientes)', 'Pagos abiertos (proveedores)', 'Conciliación bancaria']"
+    },
+    "audit_15_dark": {
+      "ok": true,
+      "detail": "['606 — Compras', '607 — Ventas', '608 — Comprobantes Anulados', '609 — Pagos al Exterior', '623 — Retenciones del Estado', 'Tipos de Comprobante', 'Rangos NCF', 'Consumo NCF', 'Administrar Retenciones', 'Consumo NCF (Auditoría)', 'NCF Anulados', 'Historial Fiscal', 'Revisión Fiscal', 'Pendientes de Aprobación', 'Centro de Administración Fiscal']"
+    },
+    "wizard_cobro_dark": {
+      "ok": true,
+      "detail": "https://erp.justech.do/odoo/action-1508"
+    },
+    "wizard_pago_dark": {
+      "ok": true,
+      "detail": "https://erp.justech.do/odoo/action-1509"
+    },
+    "centro_fiscal_dark": {
+      "ok": true,
+      "detail": "https://erp.justech.do/odoo/justech.fiscal.admin.center/15"
+    },
+    "no_js_errors": {
+      "ok": true,
+      "detail": "[]"
+    }
+  },
+  "js_errors": []
+}

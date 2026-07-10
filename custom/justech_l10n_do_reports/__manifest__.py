@@ -1,6 +1,6 @@
 {
     "name": "Justech Dominican Fiscal Reports",
-    "version": "19.0.1.20.0",
+    "version": "19.0.1.21.2",
     "category": "Accounting/Localizations/Reporting",
     "summary": "DGII reports 606–609, 623 — exportadores oficiales",
     "description": """
@@ -14,6 +14,7 @@ Dominican DGII fiscal reports for Justech.
     "author": "Justech",
     "website": "https://hellenia.cloud",
     "depends": [
+        "accountant",
         "justech_l10n_do_ncf",
         "justech_fiscal_admin",
     ],

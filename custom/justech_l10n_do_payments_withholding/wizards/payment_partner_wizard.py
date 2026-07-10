@@ -13,7 +13,7 @@ class JustechPaymentPartnerWizardLine(models.TransientModel):
     move_id = fields.Many2one("account.move", required=True, ondelete="cascade")
     apply = fields.Boolean(string="Aplicar", default=False)
     invoice_name = fields.Char(related="move_id.name", string="Factura")
-    ncf = fields.Char(related="move_id.justech_do_ncf", string="NCF")
+    ncf = fields.Char(compute="_compute_ncf", string="NCF")
     invoice_date = fields.Date(related="move_id.invoice_date", string="Fecha")
     date_maturity = fields.Date(compute="_compute_date_maturity", string="Vencimiento")
     currency_id = fields.Many2one(related="move_id.currency_id", string="Moneda")
@@ -46,6 +46,19 @@ class JustechPaymentPartnerWizardLine(models.TransientModel):
     net_after_withholding = fields.Monetary(
         compute="_compute_withholding_display", string="Neto a pagar/cobrar", currency_field="currency_id"
     )
+
+    @api.depends(
+        "move_id",
+        "move_id.justech_do_ncf",
+        "move_id.l10n_latam_document_number",
+        "move_id.ref",
+        "move_id.payment_reference",
+        "move_id.name",
+    )
+    def _compute_ncf(self):
+        fdp = self.env["justech.do.fiscal.data.provider"]
+        for line in self:
+            line.ncf = fdp.get_ncf(line.move_id) if line.move_id else ""
 
     @api.depends("move_id", "move_id.move_type")
     def _compute_move_scope_filter(self):
@@ -290,12 +303,23 @@ class JustechPaymentPartnerWizard(models.TransientModel):
     def _onchange_currency_journal(self):
         if not self.currency_id:
             return
-        code = "BNKU" if self.currency_id.name == "USD" else "BNKD"
-        if self.payment_method_line_id and "efectivo" in (self.payment_method_line_id.name or "").lower():
-            code = "CSH1"
-        journal = self.env["account.journal"].search(
-            [("code", "=", code), ("company_id", "=", self.env.company.id)], limit=1
+        Journal = self.env["account.journal"]
+        journal = Journal.search(
+            [
+                ("type", "in", ("bank", "cash")),
+                ("company_id", "=", self.env.company.id),
+                ("currency_id", "=", self.currency_id.id),
+            ],
+            limit=1,
         )
+        if not journal:
+            journal = Journal.search(
+                [
+                    ("type", "in", ("bank", "cash")),
+                    ("company_id", "=", self.env.company.id),
+                ],
+                limit=1,
+            )
         if journal:
             self.journal_id = journal
             lines = (

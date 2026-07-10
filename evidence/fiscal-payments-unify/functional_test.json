@@ -1,0 +1,53 @@
+{
+  "ts": "2026-07-10T08:33:47.182181+00:00",
+  "database": "justech_dev",
+  "tag": "FISCAL-PAY-UNIFY-TEST",
+  "passed": true,
+  "steps": [
+    {
+      "name": "sample_invoice",
+      "ok": true,
+      "detail": "FC/2026/00390"
+    },
+    {
+      "name": "journal_method",
+      "ok": true,
+      "detail": "BPD Cta. RD$ ***6389"
+    },
+    {
+      "name": "open_payment_created",
+      "ok": true,
+      "detail": "PBNK1/2026/00221"
+    },
+    {
+      "name": "apply_payment",
+      "ok": true,
+      "detail": "944.0->844.0"
+    },
+    {
+      "name": "withholding_lines",
+      "ok": true,
+      "detail": "[16]"
+    },
+    {
+      "name": "gl_balanced",
+      "ok": true,
+      "detail": "86030988.89 vs 86030988.89"
+    }
+  ],
+  "created_ids": {
+    "open_payment": 807,
+    "apply_payments": [
+      808
+    ]
+  },
+  "errors": []
+}
+{
+  "cleanup": {
+    "deleted": [
+      807
+    ],
+    "errors": []
+  }
+}

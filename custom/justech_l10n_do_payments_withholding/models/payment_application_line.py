@@ -145,7 +145,7 @@ class AccountPaymentApplication(models.Model):
                         "payment_id": pay.id,
                         "move_id": move.id,
                         "invoice_name": move.name,
-                        "ncf": getattr(move, "justech_do_ncf", "") or "",
+                        "ncf": self.env["justech.do.fiscal.data.provider"].get_ncf(move) or "",
                         "invoice_date": move.invoice_date,
                         "invoice_total": move.amount_total,
                         "applied_amount": applied,

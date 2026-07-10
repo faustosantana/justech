@@ -1,0 +1,143 @@
+{
+  "ts": "2026-07-10T12:38:22.448249+00:00",
+  "passed": true,
+  "tests": {
+    "purchase_b01_march_ncf": {
+      "ok": true,
+      "detail": "{'id': 1367, 'name': 'FP/2026/03/0001', 'move_type': 'in_invoice', 'justech_fiscal_ncf': 'B0100008679', 'justech_fiscal_document_type': '(B01) Crédito Fiscal', 'justech_fiscal_source': 'Adel / l10n_latam (histórico)', 'justech_fiscal_status': 'Válido', 'justech_fiscal_expense_type': '09', 'justech_fiscal_income_type': '', 'justech_fiscal_partner_vat': '131734685', 'justech_do_ncf': False, 'l10n_latam_document_number': 'B0100008679'}"
+    },
+    "purchase_b01_march_tipo": {
+      "ok": true,
+      "detail": "{'id': 1367, 'name': 'FP/2026/03/0001', 'move_type': 'in_invoice', 'justech_fiscal_ncf': 'B0100008679', 'justech_fiscal_document_type': '(B01) Crédito Fiscal', 'justech_fiscal_source': 'Adel / l10n_latam (histórico)', 'justech_fiscal_status': 'Válido', 'justech_fiscal_expense_type': '09', 'justech_fiscal_income_type': '', 'justech_fiscal_partner_vat': '131734685', 'justech_do_ncf': False, 'l10n_latam_document_number': 'B0100008679'}"
+    },
+    "purchase_b01_march_origen": {
+      "ok": true,
+      "detail": "{'id': 1367, 'name': 'FP/2026/03/0001', 'move_type': 'in_invoice', 'justech_fiscal_ncf': 'B0100008679', 'justech_fiscal_document_type': '(B01) Crédito Fiscal', 'justech_fiscal_source': 'Adel / l10n_latam (histórico)', 'justech_fiscal_status': 'Válido', 'justech_fiscal_expense_type': '09', 'justech_fiscal_income_type': '', 'justech_fiscal_partner_vat': '131734685', 'justech_do_ncf': False, 'l10n_latam_document_number': 'B0100008679'}"
+    },
+    "purchase_b01_march_form_ui": {
+      "ok": true,
+      "detail": "{'url': 'https://erp.justech.do/odoo/account.move/1367', 'ncf': 'B0100008679', 'tipo': '(B01) Crédito Fiscal', 'has_form': True}"
+    },
+    "purchase_e31_march_ncf": {
+      "ok": true,
+      "detail": "{'id': 1377, 'name': 'FP/2026/03/0004', 'move_type': 'in_invoice', 'justech_fiscal_ncf': 'E310000002365', 'justech_fiscal_document_type': '(E31) Crédito Fiscal Electrónica', 'justech_fiscal_source': 'Adel / l10n_latam (histórico)', 'justech_fiscal_status': 'Válido', 'justech_fiscal_expense_type': '02', 'justech_fiscal_income_type': '', 'justech_fiscal_partner_vat': '130686408', 'justech_do_ncf': False, 'l10n_latam_document_number': 'E310000002365'}"
+    },
+    "purchase_e31_march_tipo": {
+      "ok": true,
+      "detail": "{'id': 1377, 'name': 'FP/2026/03/0004', 'move_type': 'in_invoice', 'justech_fiscal_ncf': 'E310000002365', 'justech_fiscal_document_type': '(E31) Crédito Fiscal Electrónica', 'justech_fiscal_source': 'Adel / l10n_latam (histórico)', 'justech_fiscal_status': 'Válido', 'justech_fiscal_expense_type': '02', 'justech_fiscal_income_type': '', 'justech_fiscal_partner_vat': '130686408', 'justech_do_ncf': False, 'l10n_latam_document_number': 'E310000002365'}"
+    },
+    "purchase_e31_march_origen": {
+      "ok": true,
+      "detail": "{'id': 1377, 'name': 'FP/2026/03/0004', 'move_type': 'in_invoice', 'justech_fiscal_ncf': 'E310000002365', 'justech_fiscal_document_type': '(E31) Crédito Fiscal Electrónica', 'justech_fiscal_source': 'Adel / l10n_latam (histórico)', 'justech_fiscal_status': 'Válido', 'justech_fiscal_expense_type': '02', 'justech_fiscal_income_type': '', 'justech_fiscal_partner_vat': '130686408', 'justech_do_ncf': False, 'l10n_latam_document_number': 'E310000002365'}"
+    },
+    "purchase_e31_march_form_ui": {
+      "ok": true,
+      "detail": "{'url': 'https://erp.justech.do/odoo/account.move/1377', 'ncf': 'E310000002365', 'tipo': '(E31) Crédito Fiscal Electrónica', 'has_form': True}"
+    },
+    "sale_b01_march_ncf": {
+      "ok": true,
+      "detail": "{'id': 3037, 'name': 'INV/2026/00186', 'move_type': 'out_invoice', 'justech_fiscal_ncf': 'B0100000201', 'justech_fiscal_document_type': '(B01) Crédito Fiscal', 'justech_fiscal_source': 'Adel / l10n_latam (histórico)', 'justech_fiscal_status': 'Válido', 'justech_fiscal_expense_type': '', 'justech_fiscal_income_type': '01', 'justech_fiscal_partner_vat': '130832072', 'justech_do_ncf': False, 'l10n_latam_document_number': 'B0100000201'}"
+    },
+    "sale_b01_march_tipo": {
+      "ok": true,
+      "detail": "{'id': 3037, 'name': 'INV/2026/00186', 'move_type': 'out_invoice', 'justech_fiscal_ncf': 'B0100000201', 'justech_fiscal_document_type': '(B01) Crédito Fiscal', 'justech_fiscal_source': 'Adel / l10n_latam (histórico)', 'justech_fiscal_status': 'Válido', 'justech_fiscal_expense_type': '', 'justech_fiscal_income_type': '01', 'justech_fiscal_partner_vat': '130832072', 'justech_do_ncf': False, 'l10n_latam_document_number': 'B0100000201'}"
+    },
+    "sale_b01_march_origen": {
+      "ok": true,
+      "detail": "{'id': 3037, 'name': 'INV/2026/00186', 'move_type': 'out_invoice', 'justech_fiscal_ncf': 'B0100000201', 'justech_fiscal_document_type': '(B01) Crédito Fiscal', 'justech_fiscal_source': 'Adel / l10n_latam (histórico)', 'justech_fiscal_status': 'Válido', 'justech_fiscal_expense_type': '', 'justech_fiscal_income_type': '01', 'justech_fiscal_partner_vat': '130832072', 'justech_do_ncf': False, 'l10n_latam_document_number': 'B0100000201'}"
+    },
+    "sale_b01_march_form_ui": {
+      "ok": true,
+      "detail": "{'url': 'https://erp.justech.do/odoo/account.move/3037', 'ncf': 'B0100000201', 'tipo': '(B01) Crédito Fiscal', 'has_form': True}"
+    },
+    "sale_b02_march_ncf": {
+      "ok": true,
+      "detail": "{'id': 2491, 'name': 'INV/2026/00141', 'move_type': 'out_invoice', 'justech_fiscal_ncf': 'B0200000035', 'justech_fiscal_document_type': '(B02) Consumo', 'justech_fiscal_source': 'Adel / l10n_latam (histórico)', 'justech_fiscal_status': 'Válido', 'justech_fiscal_expense_type': '', 'justech_fiscal_income_type': '01', 'justech_fiscal_partner_vat': '', 'justech_do_ncf': False, 'l10n_latam_document_number': 'B0200000035'}"
+    },
+    "sale_b02_march_tipo": {
+      "ok": true,
+      "detail": "{'id': 2491, 'name': 'INV/2026/00141', 'move_type': 'out_invoice', 'justech_fiscal_ncf': 'B0200000035', 'justech_fiscal_document_type': '(B02) Consumo', 'justech_fiscal_source': 'Adel / l10n_latam (histórico)', 'justech_fiscal_status': 'Válido', 'justech_fiscal_expense_type': '', 'justech_fiscal_income_type': '01', 'justech_fiscal_partner_vat': '', 'justech_do_ncf': False, 'l10n_latam_document_number': 'B0200000035'}"
+    },
+    "sale_b02_march_origen": {
+      "ok": true,
+      "detail": "{'id': 2491, 'name': 'INV/2026/00141', 'move_type': 'out_invoice', 'justech_fiscal_ncf': 'B0200000035', 'justech_fiscal_document_type': '(B02) Consumo', 'justech_fiscal_source': 'Adel / l10n_latam (histórico)', 'justech_fiscal_status': 'Válido', 'justech_fiscal_expense_type': '', 'justech_fiscal_income_type': '01', 'justech_fiscal_partner_vat': '', 'justech_do_ncf': False, 'l10n_latam_document_number': 'B0200000035'}"
+    },
+    "sale_b02_march_form_ui": {
+      "ok": true,
+      "detail": "{'url': 'https://erp.justech.do/odoo/account.move/2491', 'ncf': 'B0200000035', 'tipo': '(B02) Consumo', 'has_form': True}"
+    },
+    "purchase_e31_hist_ncf": {
+      "ok": true,
+      "detail": "{'id': 3660, 'name': 'FP/2026/06/0091', 'move_type': 'in_invoice', 'justech_fiscal_ncf': 'E310000095717', 'justech_fiscal_document_type': '(E31) Crédito Fiscal Electrónica', 'justech_fiscal_source': 'Adel / l10n_latam (histórico)', 'justech_fiscal_status': 'Válido', 'justech_fiscal_expense_type': '09', 'justech_fiscal_income_type': '', 'justech_fiscal_partner_vat': '122021523', 'justech_do_ncf': False, 'l10n_latam_document_number': 'E310000095717'}"
+    },
+    "purchase_e31_hist_tipo": {
+      "ok": true,
+      "detail": "{'id': 3660, 'name': 'FP/2026/06/0091', 'move_type': 'in_invoice', 'justech_fiscal_ncf': 'E310000095717', 'justech_fiscal_document_type': '(E31) Crédito Fiscal Electrónica', 'justech_fiscal_source': 'Adel / l10n_latam (histórico)', 'justech_fiscal_status': 'Válido', 'justech_fiscal_expense_type': '09', 'justech_fiscal_income_type': '', 'justech_fiscal_partner_vat': '122021523', 'justech_do_ncf': False, 'l10n_latam_document_number': 'E310000095717'}"
+    },
+    "purchase_e31_hist_origen": {
+      "ok": true,
+      "detail": "{'id': 3660, 'name': 'FP/2026/06/0091', 'move_type': 'in_invoice', 'justech_fiscal_ncf': 'E310000095717', 'justech_fiscal_document_type': '(E31) Crédito Fiscal Electrónica', 'justech_fiscal_source': 'Adel / l10n_latam (histórico)', 'justech_fiscal_status': 'Válido', 'justech_fiscal_expense_type': '09', 'justech_fiscal_income_type': '', 'justech_fiscal_partner_vat': '122021523', 'justech_do_ncf': False, 'l10n_latam_document_number': 'E310000095717'}"
+    },
+    "purchase_e31_hist_form_ui": {
+      "ok": true,
+      "detail": "{'url': 'https://erp.justech.do/odoo/account.move/3660', 'ncf': 'E310000095717', 'tipo': '(E31) Crédito Fiscal Electrónica', 'has_form': True}"
+    },
+    "credit_note_ncf": {
+      "ok": true,
+      "detail": "{'id': 4181, 'name': 'NC/2026/00010', 'move_type': 'out_refund', 'justech_fiscal_ncf': 'B0400000022', 'justech_fiscal_document_type': 'B04 - Nota de Crédito', 'justech_fiscal_source': 'Justech', 'justech_fiscal_status': 'Válido', 'justech_fiscal_expense_type': '', 'justech_fiscal_income_type': '01', 'justech_fiscal_partner_vat': '101000155', 'justech_do_ncf': 'B0400000022', 'l10n_latam_document_number': 'B0400000022'}"
+    },
+    "credit_note_tipo": {
+      "ok": true,
+      "detail": "{'id': 4181, 'name': 'NC/2026/00010', 'move_type': 'out_refund', 'justech_fiscal_ncf': 'B0400000022', 'justech_fiscal_document_type': 'B04 - Nota de Crédito', 'justech_fiscal_source': 'Justech', 'justech_fiscal_status': 'Válido', 'justech_fiscal_expense_type': '', 'justech_fiscal_income_type': '01', 'justech_fiscal_partner_vat': '101000155', 'justech_do_ncf': 'B0400000022', 'l10n_latam_document_number': 'B0400000022'}"
+    },
+    "credit_note_origen": {
+      "ok": true,
+      "detail": "{'id': 4181, 'name': 'NC/2026/00010', 'move_type': 'out_refund', 'justech_fiscal_ncf': 'B0400000022', 'justech_fiscal_document_type': 'B04 - Nota de Crédito', 'justech_fiscal_source': 'Justech', 'justech_fiscal_status': 'Válido', 'justech_fiscal_expense_type': '', 'justech_fiscal_income_type': '01', 'justech_fiscal_partner_vat': '101000155', 'justech_do_ncf': 'B0400000022', 'l10n_latam_document_number': 'B0400000022'}"
+    },
+    "credit_note_form_ui": {
+      "ok": true,
+      "detail": "{'url': 'https://erp.justech.do/odoo/account.move/4181', 'ncf': 'B0400000022', 'tipo': 'B04 - Nota de Crédito', 'has_form': True}"
+    },
+    "new_justech_sale_ncf": {
+      "ok": true,
+      "detail": "{'id': 4182, 'name': 'DF/2026/00004', 'move_type': 'out_invoice', 'justech_fiscal_ncf': 'B0300000004', 'justech_fiscal_document_type': 'B03 - Nota de Débito', 'justech_fiscal_source': 'Justech', 'justech_fiscal_status': 'Válido', 'justech_fiscal_expense_type': '', 'justech_fiscal_income_type': '01', 'justech_fiscal_partner_vat': '101000155', 'justech_do_ncf': 'B0300000004', 'l10n_latam_document_number': 'B0300000004'}"
+    },
+    "new_justech_sale_tipo": {
+      "ok": true,
+      "detail": "{'id': 4182, 'name': 'DF/2026/00004', 'move_type': 'out_invoice', 'justech_fiscal_ncf': 'B0300000004', 'justech_fiscal_document_type': 'B03 - Nota de Débito', 'justech_fiscal_source': 'Justech', 'justech_fiscal_status': 'Válido', 'justech_fiscal_expense_type': '', 'justech_fiscal_income_type': '01', 'justech_fiscal_partner_vat': '101000155', 'justech_do_ncf': 'B0300000004', 'l10n_latam_document_number': 'B0300000004'}"
+    },
+    "new_justech_sale_origen": {
+      "ok": true,
+      "detail": "{'id': 4182, 'name': 'DF/2026/00004', 'move_type': 'out_invoice', 'justech_fiscal_ncf': 'B0300000004', 'justech_fiscal_document_type': 'B03 - Nota de Débito', 'justech_fiscal_source': 'Justech', 'justech_fiscal_status': 'Válido', 'justech_fiscal_expense_type': '', 'justech_fiscal_income_type': '01', 'justech_fiscal_partner_vat': '101000155', 'justech_do_ncf': 'B0300000004', 'l10n_latam_document_number': 'B0300000004'}"
+    },
+    "new_justech_sale_form_ui": {
+      "ok": true,
+      "detail": "{'url': 'https://erp.justech.do/odoo/account.move/4182', 'ncf': 'B0300000004', 'tipo': 'B03 - Nota de Débito', 'has_form': True}"
+    },
+    "new_justech_purchase_ncf": {
+      "ok": true,
+      "detail": "{'id': 4185, 'name': 'FP/2026/07/0014', 'move_type': 'in_invoice', 'justech_fiscal_ncf': 'B1700000004', 'justech_fiscal_document_type': 'B17 - Comprobante para Pagos al Exterior', 'justech_fiscal_source': 'Justech', 'justech_fiscal_status': 'Válido', 'justech_fiscal_expense_type': '02', 'justech_fiscal_income_type': '', 'justech_fiscal_partner_vat': '130771065', 'justech_do_ncf': 'B1700000004', 'l10n_latam_document_number': 'B1700000004'}"
+    },
+    "new_justech_purchase_tipo": {
+      "ok": true,
+      "detail": "{'id': 4185, 'name': 'FP/2026/07/0014', 'move_type': 'in_invoice', 'justech_fiscal_ncf': 'B1700000004', 'justech_fiscal_document_type': 'B17 - Comprobante para Pagos al Exterior', 'justech_fiscal_source': 'Justech', 'justech_fiscal_status': 'Válido', 'justech_fiscal_expense_type': '02', 'justech_fiscal_income_type': '', 'justech_fiscal_partner_vat': '130771065', 'justech_do_ncf': 'B1700000004', 'l10n_latam_document_number': 'B1700000004'}"
+    },
+    "new_justech_purchase_origen": {
+      "ok": true,
+      "detail": "{'id': 4185, 'name': 'FP/2026/07/0014', 'move_type': 'in_invoice', 'justech_fiscal_ncf': 'B1700000004', 'justech_fiscal_document_type': 'B17 - Comprobante para Pagos al Exterior', 'justech_fiscal_source': 'Justech', 'justech_fiscal_status': 'Válido', 'justech_fiscal_expense_type': '02', 'justech_fiscal_income_type': '', 'justech_fiscal_partner_vat': '130771065', 'justech_do_ncf': 'B1700000004', 'l10n_latam_document_number': 'B1700000004'}"
+    },
+    "new_justech_purchase_form_ui": {
+      "ok": true,
+      "detail": "{'url': 'https://erp.justech.do/odoo/account.move/4185', 'ncf': 'B1700000004', 'tipo': 'B17 - Comprobante para Pagos al Exterior', 'has_form': True}"
+    },
+    "dark_form": {
+      "ok": true,
+      "detail": ""
+    },
+    "no_js_errors": {
+      "ok": true,
+      "detail": "[]"
+    }
+  },
+  "js_errors": []
+}

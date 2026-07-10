@@ -88,10 +88,13 @@ class AccountPaymentRegister(models.TransientModel):
         move = default_move
         if getattr(wh, "wizard_line_id", False) and wh.wizard_line_id.move_id:
             move = wh.wizard_line_id.move_id
+        ncf = ""
+        if move:
+            ncf = self.env["justech.do.fiscal.data.provider"].get_ncf(move) or ""
         return {
             "move_id": move.id if move else False,
             "invoice_name": move.name if move else "",
-            "ncf": getattr(move, "justech_do_ncf", "") or "",
+            "ncf": ncf,
             "catalog_id": wh.catalog_id.id,
             "label": wh.label or (wh.catalog_id.name if wh.catalog_id else wh.tax_id.name),
             "base_label": wh.base_label,
@@ -171,7 +174,7 @@ class AccountPaymentRegister(models.TransientModel):
                         "payment_id": pay.id,
                         "move_id": move.id,
                         "invoice_name": move.name,
-                        "ncf": getattr(move, "justech_do_ncf", "") or "",
+                        "ncf": self.env["justech.do.fiscal.data.provider"].get_ncf(move) or "",
                         "invoice_date": move.invoice_date,
                         "invoice_total": move.amount_total,
                         "applied_amount": applied,

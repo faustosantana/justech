@@ -1,0 +1,283 @@
+{
+  "ts": "2026-07-10T12:36:33.141597+00:00",
+  "passed": true,
+  "companies": {
+    "PlugSafe": {
+      "ok": true,
+      "company_id": 2,
+      "hist": [
+        {
+          "name": "FC/2026/00006",
+          "ncf": "B0100000060",
+          "tipo": "(B01) Crédito Fiscal",
+          "ok": true
+        },
+        {
+          "name": "FC/2026/00005",
+          "ncf": "B0100000059",
+          "tipo": "(B01) Crédito Fiscal",
+          "ok": true
+        },
+        {
+          "name": "FC/2026/00004",
+          "ncf": "B0100000058",
+          "tipo": "(B01) Crédito Fiscal",
+          "ok": true
+        }
+      ],
+      "new": {
+        "name": "FP/2026/07/0032",
+        "ncf": "B1700000010",
+        "latam": "B1700000010",
+        "dual_write": true,
+        "ok": true
+      }
+    },
+    "Omni Solutions": {
+      "ok": true,
+      "company_id": 4,
+      "hist": [
+        {
+          "name": "FC/2026/00005",
+          "ncf": "B1400000002",
+          "tipo": "(B14) Régimen Especial",
+          "ok": true
+        },
+        {
+          "name": "FC/2026/00004",
+          "ncf": "B1500000106",
+          "tipo": "(B15) Factura Gubernamental",
+          "ok": true
+        },
+        {
+          "name": "FC/2026/00003",
+          "ncf": "B1400000001",
+          "tipo": "(B14) Régimen Especial",
+          "ok": true
+        }
+      ],
+      "new": {
+        "name": "FP/2026/07/0014",
+        "ncf": "B1700000004",
+        "latam": "B1700000004",
+        "dual_write": true,
+        "ok": true
+      }
+    },
+    "Just Office": {
+      "ok": true,
+      "company_id": 3,
+      "hist": [
+        {
+          "name": "FACTU/2026/06/0034",
+          "ncf": "E310007640879",
+          "tipo": "(E31) Crédito Fiscal Electrónica",
+          "ok": true
+        },
+        {
+          "name": "FACTU/2026/06/0033",
+          "ncf": "E310009239779",
+          "tipo": "(E31) Crédito Fiscal Electrónica",
+          "ok": true
+        },
+        {
+          "name": "FACTU/2026/06/0032",
+          "ncf": "E310000009417",
+          "tipo": "(E31) Crédito Fiscal Electrónica",
+          "ok": true
+        }
+      ],
+      "new": {
+        "name": "FACTU/2026/07/0014",
+        "ncf": "B1700000004",
+        "latam": "B1700000004",
+        "dual_write": true,
+        "ok": true
+      }
+    },
+    "JUSTECH": {
+      "ok": true,
+      "company_id": 1,
+      "hist": [
+        {
+          "name": "FC/2026/00372",
+          "ncf": "B0100001612",
+          "tipo": "(B01) Crédito Fiscal",
+          "ok": true
+        },
+        {
+          "name": "FP/2026/06/0091",
+          "ncf": "E310000095717",
+          "tipo": "(E31) Crédito Fiscal Electrónica",
+          "ok": true
+        },
+        {
+          "name": "FP/2026/06/0090",
+          "ncf": "E310000089536",
+          "tipo": "(E31) Crédito Fiscal Electrónica",
+          "ok": true
+        }
+      ],
+      "new": {
+        "name": "FP/2026/07/0014",
+        "ncf": "B1700000004",
+        "latam": "B1700000004",
+        "dual_write": true,
+        "ok": true
+      }
+    }
+  },
+  "samples": {
+    "purchase_b01_march": {
+      "ok": true,
+      "id": 1367,
+      "name": "FP/2026/03/0001",
+      "company": "JUSTECH S.R.L.",
+      "move_type": "in_invoice",
+      "justech_do_ncf": false,
+      "latam": "B0100008679",
+      "form_ncf": "B0100008679",
+      "form_tipo": "(B01) Crédito Fiscal",
+      "form_source": "Adel / l10n_latam (histórico)",
+      "form_status": "Válido",
+      "expense": "09",
+      "vat": "131734685",
+      "fdp_ncf": "B0100008679",
+      "fdp_src": "adel_latam",
+      "empty_bad": false
+    },
+    "purchase_e31_march": {
+      "ok": true,
+      "id": 1377,
+      "name": "FP/2026/03/0004",
+      "company": "JUSTECH S.R.L.",
+      "move_type": "in_invoice",
+      "justech_do_ncf": false,
+      "latam": "E310000002365",
+      "form_ncf": "E310000002365",
+      "form_tipo": "(E31) Crédito Fiscal Electrónica",
+      "form_source": "Adel / l10n_latam (histórico)",
+      "form_status": "Válido",
+      "expense": "02",
+      "vat": "130686408",
+      "fdp_ncf": "E310000002365",
+      "fdp_src": "adel_latam",
+      "empty_bad": false
+    },
+    "sale_b01_march": {
+      "ok": true,
+      "id": 3037,
+      "name": "INV/2026/00186",
+      "company": "Just Office SRL",
+      "move_type": "out_invoice",
+      "justech_do_ncf": false,
+      "latam": "B0100000201",
+      "form_ncf": "B0100000201",
+      "form_tipo": "(B01) Crédito Fiscal",
+      "form_source": "Adel / l10n_latam (histórico)",
+      "form_status": "Válido",
+      "expense": "",
+      "vat": "130832072",
+      "fdp_ncf": "B0100000201",
+      "fdp_src": "adel_latam",
+      "empty_bad": false
+    },
+    "sale_b02_march": {
+      "ok": true,
+      "id": 2491,
+      "name": "INV/2026/00141",
+      "company": "Just Office SRL",
+      "move_type": "out_invoice",
+      "justech_do_ncf": false,
+      "latam": "B0200000035",
+      "form_ncf": "B0200000035",
+      "form_tipo": "(B02) Consumo",
+      "form_source": "Adel / l10n_latam (histórico)",
+      "form_status": "Válido",
+      "expense": "",
+      "vat": "",
+      "fdp_ncf": "B0200000035",
+      "fdp_src": "adel_latam",
+      "empty_bad": false
+    },
+    "purchase_e31_hist": {
+      "ok": true,
+      "id": 3660,
+      "name": "FP/2026/06/0091",
+      "company": "JUSTECH S.R.L.",
+      "move_type": "in_invoice",
+      "justech_do_ncf": false,
+      "latam": "E310000095717",
+      "form_ncf": "E310000095717",
+      "form_tipo": "(E31) Crédito Fiscal Electrónica",
+      "form_source": "Adel / l10n_latam (histórico)",
+      "form_status": "Válido",
+      "expense": "09",
+      "vat": "122021523",
+      "fdp_ncf": "E310000095717",
+      "fdp_src": "adel_latam",
+      "empty_bad": false
+    },
+    "credit_note_hist": {
+      "ok": true,
+      "id": 4181,
+      "name": "NC/2026/00010",
+      "company": "JUSTECH S.R.L.",
+      "move_type": "out_refund",
+      "justech_do_ncf": "B0400000022",
+      "latam": "B0400000022",
+      "form_ncf": "B0400000022",
+      "form_tipo": "B04 - Nota de Crédito",
+      "form_source": "Justech",
+      "form_status": "Válido",
+      "expense": "",
+      "vat": "101000155",
+      "fdp_ncf": "B0400000022",
+      "fdp_src": "justech",
+      "empty_bad": false
+    },
+    "new_justech_sale": {
+      "ok": true,
+      "id": 4182,
+      "name": "DF/2026/00004",
+      "company": "JUSTECH S.R.L.",
+      "move_type": "out_invoice",
+      "justech_do_ncf": "B0300000004",
+      "latam": "B0300000004",
+      "form_ncf": "B0300000004",
+      "form_tipo": "B03 - Nota de Débito",
+      "form_source": "Justech",
+      "form_status": "Válido",
+      "expense": "",
+      "vat": "101000155",
+      "fdp_ncf": "B0300000004",
+      "fdp_src": "justech",
+      "empty_bad": false
+    },
+    "new_justech_purchase": {
+      "ok": true,
+      "id": 4185,
+      "name": "FP/2026/07/0014",
+      "company": "JUSTECH S.R.L.",
+      "move_type": "in_invoice",
+      "justech_do_ncf": "B1700000004",
+      "latam": "B1700000004",
+      "form_ncf": "B1700000004",
+      "form_tipo": "B17 - Comprobante para Pagos al Exterior",
+      "form_source": "Justech",
+      "form_status": "Válido",
+      "expense": "02",
+      "vat": "130771065",
+      "fdp_ncf": "B1700000004",
+      "fdp_src": "justech",
+      "empty_bad": false
+    }
+  },
+  "integrity": {
+    "posted_with_ncf_source": 1717,
+    "batch_checked": 80,
+    "batch_empty_display": 0,
+    "payments_count": 738
+  },
+  "empty_bad": false
+}

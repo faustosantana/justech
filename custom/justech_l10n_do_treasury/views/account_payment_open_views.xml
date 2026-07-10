@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_account_payment_open_tree_customer" model="ir.ui.view">
+        <field name="name">account.payment.open.tree.customer</field>
+        <field name="model">account.payment</field>
+        <field name="arch" type="xml">
+            <list string="Pagos abiertos" create="false" edit="false"
+                  decoration-muted="treasury_open_state == 'cancelled'"
+                  decoration-success="treasury_open_state == 'applied'"
+                  decoration-warning="treasury_open_state == 'partial'">
+                <field name="date" string="Fecha"/>
+                <field name="name" string="Número"/>
+                <field name="partner_id" string="Cliente"/>
+                <field name="journal_id" string="Diario"/>
+                <field name="payment_method_line_id" string="Método de pago"/>
+                <field name="currency_id" string="Moneda"/>
+                <field name="amount" string="Monto original"/>
+                <field name="treasury_amount_applied" string="Monto aplicado"/>
+                <field name="treasury_amount_available" string="Saldo disponible"/>
+                <field name="treasury_open_state" string="Estado aplicación"/>
+                <field name="treasury_bank_state" string="Estado bancario"/>
+                <field name="treasury_concept" string="Concepto"/>
+                <field name="treasury_payment_reference" string="Referencia" optional="show"/>
+                <field name="create_uid" string="Usuario" widget="many2one_avatar_user" optional="hide"/>
+                <field name="treasury_is_open" column_invisible="1"/>
+                <field name="partner_type" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_account_payment_open_search" model="ir.ui.view">
+        <field name="name">account.payment.open.search</field>
+        <field name="model">account.payment</field>
+        <field name="arch" type="xml">
+            <search string="Pagos abiertos">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="treasury_concept"/>
+                <field name="treasury_payment_reference"/>
+                <filter name="filter_open" string="Abiertos"
+                        domain="[('treasury_open_state', '=', 'open')]"/>
+                <filter name="filter_partial" string="Parcialmente aplicados"
+                        domain="[('treasury_open_state', '=', 'partial')]"/>
+                <filter name="filter_applied" string="Aplicados"
+                        domain="[('treasury_open_state', '=', 'applied')]"/>
+                <filter name="filter_bank_pending" string="Pendientes de conciliación bancaria"
+                        domain="[('treasury_bank_state', '=', 'bank_pending'), ('state', 'in', ('paid', 'in_process'))]"/>
+                <filter name="filter_bank_reconciled" string="Conciliados con banco"
+                        domain="[('treasury_bank_state', '=', 'bank_reconciled')]"/>
+                <filter name="filter_cancelled" string="Cancelados"
+                        domain="[('state', '=', 'canceled')]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_account_payment_open_tree_vendor" model="ir.ui.view">
+        <field name="name">account.payment.open.tree.vendor</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="view_account_payment_open_tree_customer"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="attributes">
+                <attribute name="string">Proveedor</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_account_payment_open_form" model="ir.ui.view">
+        <field name="name">account.payment.open.form</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="account.view_account_payment_form"/>
+        <field name="priority">30</field>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_treasury_apply_to_invoice"
+                        type="object"
+                        string="Aplicar a factura"
+                        class="btn-primary"
+                        invisible="not treasury_is_open"/>
+                <button name="action_treasury_view_move"
+                        type="object"
+                        string="Ver asiento"
+                        invisible="not move_id"/>
+                <button name="action_treasury_view_reconciliation"
+                        type="object"
+                        string="Ver conciliación"
+                        invisible="not treasury_amount_applied"/>
+            </xpath>
+            <xpath expr="//sheet" position="before">
+                <field name="treasury_is_open" invisible="1"/>
+                <field name="treasury_open_state" invisible="1"/>
+                <div class="alert alert-light border mb-0" role="note"
+                     invisible="treasury_bank_state != 'bank_pending'">
+                    Posteado contablemente. Pendiente de conciliación con el extracto bancario.
+                </div>
+            </xpath>
+            <xpath expr="//field[@name='amount']" position="after">
+                <field name="treasury_amount_applied" readonly="1"/>
+                <field name="treasury_amount_available" readonly="1"/>
+                <field name="treasury_open_state" readonly="1"/>
+                <field name="treasury_bank_state" readonly="1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_treasury_open_payments_customer" model="ir.actions.act_window">
+        <field name="name">Pagos abiertos</field>
+        <field name="res_model">account.payment</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="view_account_payment_open_tree_customer"/>
+        <field name="search_view_id" ref="view_account_payment_open_search"/>
+        <field name="domain">[('partner_type', '=', 'customer'), ('treasury_is_open', '=', True)]</field>
+        <field name="context">{'default_partner_type': 'customer'}</field>
+    </record>
+
+    <record id="action_treasury_open_payments_vendor" model="ir.actions.act_window">
+        <field name="name">Pagos abiertos</field>
+        <field name="res_model">account.payment</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="view_account_payment_open_tree_vendor"/>
+        <field name="search_view_id" ref="view_account_payment_open_search"/>
+        <field name="domain">[('partner_type', '=', 'supplier'), ('treasury_is_open', '=', True)]</field>
+        <field name="context">{'default_partner_type': 'supplier'}</field>
+    </record>
+
+    <!-- Menús abiertos solo bajo Contabilidad → Pagos (no duplicar en CxC/CxP). -->
+</odoo>

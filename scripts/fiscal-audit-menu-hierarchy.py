@@ -47,7 +47,9 @@ def run(env):
         report["errors"].append("menu_justech_do_audit_root no encontrado")
         return report
 
-    finance = env.ref("account.menu_finance", raise_if_not_found=False)
+    finance = env.ref("accountant.menu_accounting", raise_if_not_found=False)
+    if not finance:
+        finance = env.ref("account.menu_finance", raise_if_not_found=False)
     if not finance or root.parent_id.id != finance.id:
         report["errors"].append(
             f"Auditoría Fiscal no cuelga de Contabilidad "

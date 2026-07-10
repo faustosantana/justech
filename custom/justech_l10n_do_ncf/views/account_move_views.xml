@@ -8,14 +8,21 @@
             <xpath expr="//notebook" position="inside">
                 <page string="Comprobante Fiscal" name="justech_fiscal_ncf"
                       invisible="move_type not in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund')">
-                    <group>
-                        <field name="justech_do_document_type_id" readonly="state != 'draft'" string="Tipo"/>
+                    <!-- Lectura unificada vía Fiscal Data Provider (histórico Adel + nuevos Justech) -->
+                    <group string="Datos fiscales">
+                        <field name="fiscal_document_type_display" string="Tipo de comprobante fiscal" readonly="1"/>
+                        <field name="fiscal_ncf_display" string="NCF" readonly="1"/>
+                        <field name="fiscal_status_display" string="Estado fiscal" readonly="1"/>
+                    </group>
+                    <!-- Asignación Justech solo en borrador (escritura, no lectura histórica) -->
+                    <group string="Asignación Justech" invisible="state == 'posted'">
+                        <field name="justech_do_document_type_id" readonly="state != 'draft'" string="Tipo (asignación)"/>
                         <field name="justech_do_ncf" readonly="state != 'draft'"
-                               string="NCF"
+                               string="NCF (asignación)"
                                placeholder="Se asigna al publicar si hay rango activo"/>
-                        <field name="justech_do_ncf_voided" readonly="1" invisible="not justech_do_ncf_voided"/>
                     </group>
                     <group invisible="not justech_do_ncf_voided">
+                        <field name="justech_do_ncf_voided" readonly="1"/>
                         <field name="justech_do_ncf_void_reason" readonly="justech_do_ncf_voided"/>
                         <field name="justech_do_ncf_cancel_type" readonly="justech_do_ncf_voided"/>
                     </group>
@@ -24,7 +31,7 @@
                         <field name="justech_do_ncf_modified" readonly="state != 'draft'"/>
                         <field name="justech_do_include_in_dgii" readonly="state != 'draft'"/>
                         <field name="justech_do_dgii_line_status" readonly="1"/>
-                        <field name="justech_do_dgii_fiscal_state" readonly="1"/>
+                        <field name="justech_do_dgii_fiscal_state" string="Estado DGII interno" readonly="1"/>
                     </group>
                 </page>
             </xpath>

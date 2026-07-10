@@ -4,9 +4,9 @@
         <field name="name">justech.payment.partner.wizard.form</field>
         <field name="model">justech.payment.partner.wizard</field>
         <field name="arch" type="xml">
-            <form string="Registrar pago">
+            <form string="Registrar pago" class="o_treasury_wizard_xl">
                 <group>
-                    <group string="Contacto y moneda">
+                    <group>
                         <field name="partner_type" invisible="1"/>
                         <field name="partner_id"
                                string="Cliente"
@@ -16,14 +16,14 @@
                                string="Proveedor"
                                invisible="partner_type != 'supplier'"
                                options="{'no_create': True}"/>
-                        <field name="currency_id"/>
-                        <field name="payment_date"/>
+                        <field name="currency_id" string="Moneda"/>
+                        <field name="payment_date" string="Fecha de pago"/>
                         <field name="communication" string="Concepto de pago"/>
                     </group>
-                    <group string="Banco y totales">
+                    <group>
                         <field name="journal_id" string="Banco"/>
                         <field name="payment_method_line_id" string="Método de pago"/>
-                        <field name="payment_total" readonly="1" string="Total bruto"/>
+                        <field name="payment_total" readonly="1" string="Total a pagar/cobrar"/>
                         <field name="withholding_total" readonly="1" string="Total retenido"/>
                         <field name="amount_after_withholding" readonly="1" string="Neto a transferir"/>
                     </group>
@@ -32,19 +32,21 @@
                 <group string="Facturas pendientes">
                     <field name="line_ids" nolabel="1">
                         <list editable="bottom" create="0" delete="0">
-                            <field name="apply" string="Aplicar" force_save="1"/>
+                            <field name="apply" string="Seleccionar" force_save="1"
+                                   widget="boolean"
+                                   options="{'autosave': false}"/>
                             <field name="invoice_name" string="Factura"/>
                             <field name="ncf" string="NCF"/>
                             <field name="invoice_date" string="Fecha"/>
                             <field name="date_maturity" string="Vencimiento"/>
+                            <field name="currency_id" string="Moneda"/>
                             <field name="amount_total" string="Total"/>
                             <field name="amount_untaxed" string="Base imponible" optional="show"/>
-                            <field name="amount_tax" string="ITBIS" optional="show"/>
+                            <field name="amount_tax" string="ITBIS facturado" optional="show"/>
                             <field name="amount_residual" string="Pendiente"/>
                             <field name="amount_to_pay" string="Monto a aplicar" force_save="1"
                                    readonly="not apply"/>
                             <field name="company_id" column_invisible="1"/>
-                            <field name="currency_id" column_invisible="1"/>
                             <field name="move_scope_filter" column_invisible="1"/>
                             <field name="withholding_catalog_ids"
                                    string="Retenciones"
@@ -52,9 +54,9 @@
                                    readonly="not apply"
                                    options="{'no_create': True, 'no_open': True}"
                                    domain="[('active', '=', True), ('code', 'not in', ['RET-NONE', 'wh_none']), ('partner_scope', 'in', [parent.partner_type, 'both']), ('move_scope', 'in', [move_scope_filter, 'both']), ('company_id', '=', company_id), ('account_id', '!=', False)]"/>
-                            <field name="withholding_summary" string="Resumen" readonly="1" optional="show"/>
-                            <field name="withholding_amount" string="Retenido" readonly="1"/>
-                            <field name="net_after_withholding" string="Neto" readonly="1" optional="show"/>
+                            <field name="withholding_summary" string="Resumen de retenciones" readonly="1" optional="show"/>
+                            <field name="withholding_amount" string="Total retenido" readonly="1"/>
+                            <field name="net_after_withholding" string="Neto a pagar/cobrar" readonly="1" optional="show"/>
                             <field name="move_id" column_invisible="1"/>
                         </list>
                     </field>
@@ -64,12 +66,14 @@
                     <field name="withholding_line_ids" nolabel="1" readonly="1">
                         <list>
                             <field name="invoice_name" string="Factura"/>
-                            <field name="label" string="Retención"/>
-                            <field name="base_label" string="Tipo de base"/>
+                            <field name="label" string="Tipo de retención"/>
+                            <field name="base_label" string="Base imponible"/>
                             <field name="base_amount" string="Base"/>
                             <field name="rate" string="Porcentaje"/>
                             <field name="amount" string="Monto retenido"/>
                             <field name="account_id" string="Cuenta contable"/>
+                            <field name="dgii_code" string="Código DGII" optional="show"/>
+                            <field name="company_id" string="Empresa" optional="hide"/>
                         </list>
                     </field>
                 </group>
@@ -77,7 +81,7 @@
                 <group string="Datos del método de pago">
                     <field name="justech_show_card_fields" invisible="1"/>
                     <field name="justech_show_check_fields" invisible="1"/>
-                    <field name="justech_payment_reference" string="Referencia"/>
+                    <field name="justech_payment_reference" string="Referencia de pago"/>
                     <field name="justech_card_auth" string="Autorización"
                            invisible="not justech_show_card_fields"/>
                     <field name="justech_card_batch" string="Lote"

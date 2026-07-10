@@ -3,7 +3,17 @@
 from __future__ import annotations
 
 
+def _ensure_audit_under_accountant(env):
+    accounting = env.ref("accountant.menu_accounting", raise_if_not_found=False)
+    if not accounting:
+        return
+    audit = env.ref("justech_l10n_do_reports.menu_justech_do_audit_root", raise_if_not_found=False)
+    if audit and audit.parent_id != accounting:
+        audit.parent_id = accounting
+
+
 def post_init_hook(env):
+    _ensure_audit_under_accountant(env)
     env["justech.do.dgii.tax.classification"].sudo().sync_from_taxes()
     Report = env["justech.do.fiscal.report"].sudo()
     for report in Report.search([]):

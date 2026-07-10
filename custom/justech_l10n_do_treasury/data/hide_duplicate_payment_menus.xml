@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Evitar duplicados: pagos solo bajo Contabilidad → Pagos -->
+    <record id="account.menu_action_account_payments_receivable" model="ir.ui.menu">
+        <field name="active" eval="False"/>
+    </record>
+    <record id="account.menu_action_account_payments_payable" model="ir.ui.menu">
+        <field name="active" eval="False"/>
+    </record>
+</odoo>

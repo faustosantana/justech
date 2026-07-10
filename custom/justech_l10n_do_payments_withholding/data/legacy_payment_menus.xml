@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="0">
+    <!-- Retirar menús del implementador anterior (módulo conservado por histórico). -->
+    <record id="multi_invoice_manual_payment_prod.menu_multi_invoice_manual_payment_root" model="ir.ui.menu">
+        <field name="active" eval="False"/>
+    </record>
+</odoo>

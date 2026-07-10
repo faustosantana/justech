@@ -1,0 +1,225 @@
+{
+  "ts": "2026-07-10T12:53:06.502216+00:00",
+  "passed": true,
+  "tests": {
+    "purchase_b01_march_form_loaded": {
+      "ok": true,
+      "detail": "{'url': 'https://erp.justech.do/odoo/account.move/1367', 'has_form': True}"
+    },
+    "purchase_b01_march_ncf_visible": {
+      "ok": true,
+      "detail": "B0100008679"
+    },
+    "purchase_b01_march_tipo_visible": {
+      "ok": true,
+      "detail": "Base de datos neutralizada para pruebas: no se envían correos electrónicos, etc.\n2\nJUSTECH S.R.L.\nNuevo\nFP/2026/03/0001\n1\nPagos\nConciliación de compra\nDocumentos\n1 / 1\nPagar\nNota de crédito\nNota de dé"
+    },
+    "purchase_b01_march_status": {
+      "ok": true,
+      "detail": "Histórico compatible"
+    },
+    "purchase_b01_march_no_owl_rpc_js": {
+      "ok": true,
+      "detail": "[]"
+    },
+    "purchase_b01_march_rpc_ncf": {
+      "ok": true,
+      "detail": "{'id': 1367, 'fiscal_ncf_display': 'B0100008679', 'fiscal_document_type_display': '(B01) Crédito Fiscal', 'fiscal_status_display': 'Histórico compatible', 'justech_do_ncf': False, 'l10n_latam_document_number': 'B0100008679', 'justech_do_dgii_fiscal_state': 'incomplete'}"
+    },
+    "purchase_b01_march_rpc_status": {
+      "ok": true,
+      "detail": "{'id': 1367, 'fiscal_ncf_display': 'B0100008679', 'fiscal_document_type_display': '(B01) Crédito Fiscal', 'fiscal_status_display': 'Histórico compatible', 'justech_do_ncf': False, 'l10n_latam_document_number': 'B0100008679', 'justech_do_dgii_fiscal_state': 'incomplete'}"
+    },
+    "purchase_b01_march_no_incomplete_display": {
+      "ok": true,
+      "detail": "{'id': 1367, 'fiscal_ncf_display': 'B0100008679', 'fiscal_document_type_display': '(B01) Crédito Fiscal', 'fiscal_status_display': 'Histórico compatible', 'justech_do_ncf': False, 'l10n_latam_document_number': 'B0100008679', 'justech_do_dgii_fiscal_state': 'incomplete'}"
+    },
+    "sale_b01_march_form_loaded": {
+      "ok": true,
+      "detail": "{'url': 'https://erp.justech.do/odoo/account.move/3037', 'has_form': True}"
+    },
+    "sale_b01_march_ncf_visible": {
+      "ok": true,
+      "detail": "B0100000201"
+    },
+    "sale_b01_march_tipo_visible": {
+      "ok": true,
+      "detail": "Base de datos neutralizada para pruebas: no se envían correos electrónicos, etc.\n2\n2\nJUSTECH S.R.L.\nNuevo\nINV/2026/00186\n1 / 1\nEnviar\nImprimir\nVista previa\nNota de crédito\nNota de débito\nCancelar asie"
+    },
+    "sale_b01_march_status": {
+      "ok": true,
+      "detail": "Histórico compatible"
+    },
+    "sale_b01_march_no_owl_rpc_js": {
+      "ok": true,
+      "detail": "[]"
+    },
+    "sale_b01_march_rpc_ncf": {
+      "ok": true,
+      "detail": "{'id': 3037, 'fiscal_ncf_display': 'B0100000201', 'fiscal_document_type_display': '(B01) Crédito Fiscal', 'fiscal_status_display': 'Histórico compatible', 'justech_do_ncf': False, 'l10n_latam_document_number': 'B0100000201', 'justech_do_dgii_fiscal_state': 'incomplete'}"
+    },
+    "sale_b01_march_rpc_status": {
+      "ok": true,
+      "detail": "{'id': 3037, 'fiscal_ncf_display': 'B0100000201', 'fiscal_document_type_display': '(B01) Crédito Fiscal', 'fiscal_status_display': 'Histórico compatible', 'justech_do_ncf': False, 'l10n_latam_document_number': 'B0100000201', 'justech_do_dgii_fiscal_state': 'incomplete'}"
+    },
+    "sale_b01_march_no_incomplete_display": {
+      "ok": true,
+      "detail": "{'id': 3037, 'fiscal_ncf_display': 'B0100000201', 'fiscal_document_type_display': '(B01) Crédito Fiscal', 'fiscal_status_display': 'Histórico compatible', 'justech_do_ncf': False, 'l10n_latam_document_number': 'B0100000201', 'justech_do_dgii_fiscal_state': 'incomplete'}"
+    },
+    "purchase_e31_march_form_loaded": {
+      "ok": true,
+      "detail": "{'url': 'https://erp.justech.do/odoo/account.move/1377', 'has_form': True}"
+    },
+    "purchase_e31_march_ncf_visible": {
+      "ok": true,
+      "detail": "E310000002365"
+    },
+    "purchase_e31_march_tipo_visible": {
+      "ok": true,
+      "detail": "Base de datos neutralizada para pruebas: no se envían correos electrónicos, etc.\n2\n2\nJUSTECH S.R.L.\nNuevo\nFP/2026/03/0004\n1\nPagos\nConciliación de compra\nDocumentos\n1 / 1\nNota de crédito\nNota de débito"
+    },
+    "purchase_e31_march_status": {
+      "ok": true,
+      "detail": "Histórico compatible"
+    },
+    "purchase_e31_march_no_owl_rpc_js": {
+      "ok": true,
+      "detail": "[]"
+    },
+    "purchase_e31_march_rpc_ncf": {
+      "ok": true,
+      "detail": "{'id': 1377, 'fiscal_ncf_display': 'E310000002365', 'fiscal_document_type_display': '(E31) Crédito Fiscal Electrónica', 'fiscal_status_display': 'Histórico compatible', 'justech_do_ncf': False, 'l10n_latam_document_number': 'E310000002365', 'justech_do_dgii_fiscal_state': 'incomplete'}"
+    },
+    "purchase_e31_march_rpc_status": {
+      "ok": true,
+      "detail": "{'id': 1377, 'fiscal_ncf_display': 'E310000002365', 'fiscal_document_type_display': '(E31) Crédito Fiscal Electrónica', 'fiscal_status_display': 'Histórico compatible', 'justech_do_ncf': False, 'l10n_latam_document_number': 'E310000002365', 'justech_do_dgii_fiscal_state': 'incomplete'}"
+    },
+    "purchase_e31_march_no_incomplete_display": {
+      "ok": true,
+      "detail": "{'id': 1377, 'fiscal_ncf_display': 'E310000002365', 'fiscal_document_type_display': '(E31) Crédito Fiscal Electrónica', 'fiscal_status_display': 'Histórico compatible', 'justech_do_ncf': False, 'l10n_latam_document_number': 'E310000002365', 'justech_do_dgii_fiscal_state': 'incomplete'}"
+    },
+    "sale_b02_march_form_loaded": {
+      "ok": true,
+      "detail": "{'url': 'https://erp.justech.do/odoo/account.move/2491', 'has_form': True}"
+    },
+    "sale_b02_march_ncf_visible": {
+      "ok": true,
+      "detail": "B0200000035"
+    },
+    "sale_b02_march_tipo_visible": {
+      "ok": true,
+      "detail": "Base de datos neutralizada para pruebas: no se envían correos electrónicos, etc.\n2\n2\nJUSTECH S.R.L.\nNuevo\nINV/2026/00141\n1 / 1\nEnviar\nImprimir\nPagar\nVista previa\nNota de crédito\nNota de débito\nCancela"
+    },
+    "sale_b02_march_status": {
+      "ok": true,
+      "detail": "Histórico compatible"
+    },
+    "sale_b02_march_no_owl_rpc_js": {
+      "ok": true,
+      "detail": "[]"
+    },
+    "sale_b02_march_rpc_ncf": {
+      "ok": true,
+      "detail": "{'id': 2491, 'fiscal_ncf_display': 'B0200000035', 'fiscal_document_type_display': '(B02) Consumo', 'fiscal_status_display': 'Histórico compatible', 'justech_do_ncf': False, 'l10n_latam_document_number': 'B0200000035', 'justech_do_dgii_fiscal_state': 'incomplete'}"
+    },
+    "sale_b02_march_rpc_status": {
+      "ok": true,
+      "detail": "{'id': 2491, 'fiscal_ncf_display': 'B0200000035', 'fiscal_document_type_display': '(B02) Consumo', 'fiscal_status_display': 'Histórico compatible', 'justech_do_ncf': False, 'l10n_latam_document_number': 'B0200000035', 'justech_do_dgii_fiscal_state': 'incomplete'}"
+    },
+    "sale_b02_march_no_incomplete_display": {
+      "ok": true,
+      "detail": "{'id': 2491, 'fiscal_ncf_display': 'B0200000035', 'fiscal_document_type_display': '(B02) Consumo', 'fiscal_status_display': 'Histórico compatible', 'justech_do_ncf': False, 'l10n_latam_document_number': 'B0200000035', 'justech_do_dgii_fiscal_state': 'incomplete'}"
+    },
+    "credit_note_form_loaded": {
+      "ok": true,
+      "detail": "{'url': 'https://erp.justech.do/odoo/account.move/4181', 'has_form': True}"
+    },
+    "credit_note_ncf_visible": {
+      "ok": true,
+      "detail": "B0400000022"
+    },
+    "credit_note_tipo_visible": {
+      "ok": true,
+      "detail": "Base de datos neutralizada para pruebas: no se envían correos electrónicos, etc.\n2\n2\nJUSTECH S.R.L.\nNuevo\nNC/2026/00010\n1 / 1\nEnviar\nImprimir\nVista previa\nNota de débito\nCancelar asiento\nRestablecer a"
+    },
+    "credit_note_status": {
+      "ok": true,
+      "detail": "Válido"
+    },
+    "credit_note_no_owl_rpc_js": {
+      "ok": true,
+      "detail": "[]"
+    },
+    "credit_note_rpc_ncf": {
+      "ok": true,
+      "detail": "{'id': 4181, 'fiscal_ncf_display': 'B0400000022', 'fiscal_document_type_display': 'B04 - Nota de Crédito', 'fiscal_status_display': 'Válido', 'justech_do_ncf': 'B0400000022', 'l10n_latam_document_number': 'B0400000022', 'justech_do_dgii_fiscal_state': 'valid'}"
+    },
+    "credit_note_rpc_status": {
+      "ok": true,
+      "detail": "{'id': 4181, 'fiscal_ncf_display': 'B0400000022', 'fiscal_document_type_display': 'B04 - Nota de Crédito', 'fiscal_status_display': 'Válido', 'justech_do_ncf': 'B0400000022', 'l10n_latam_document_number': 'B0400000022', 'justech_do_dgii_fiscal_state': 'valid'}"
+    },
+    "credit_note_no_incomplete_display": {
+      "ok": true,
+      "detail": "{'id': 4181, 'fiscal_ncf_display': 'B0400000022', 'fiscal_document_type_display': 'B04 - Nota de Crédito', 'fiscal_status_display': 'Válido', 'justech_do_ncf': 'B0400000022', 'l10n_latam_document_number': 'B0400000022', 'justech_do_dgii_fiscal_state': 'valid'}"
+    },
+    "new_justech_form_loaded": {
+      "ok": true,
+      "detail": "{'url': 'https://erp.justech.do/odoo/account.move/4182', 'has_form': True}"
+    },
+    "new_justech_ncf_visible": {
+      "ok": true,
+      "detail": "B0300000004"
+    },
+    "new_justech_tipo_visible": {
+      "ok": true,
+      "detail": "Base de datos neutralizada para pruebas: no se envían correos electrónicos, etc.\n2\n2\nJUSTECH S.R.L.\nNuevo\nDF/2026/00004\n1 / 1\nEnviar\nImprimir\nPagar\nVista previa\nNota de crédito\nNota de débito\nCancelar"
+    },
+    "new_justech_status": {
+      "ok": true,
+      "detail": "Válido"
+    },
+    "new_justech_no_owl_rpc_js": {
+      "ok": true,
+      "detail": "[]"
+    },
+    "new_justech_rpc_ncf": {
+      "ok": true,
+      "detail": "{'id': 4182, 'fiscal_ncf_display': 'B0300000004', 'fiscal_document_type_display': 'B03 - Nota de Débito', 'fiscal_status_display': 'Válido', 'justech_do_ncf': 'B0300000004', 'l10n_latam_document_number': 'B0300000004', 'justech_do_dgii_fiscal_state': 'valid'}"
+    },
+    "new_justech_rpc_status": {
+      "ok": true,
+      "detail": "{'id': 4182, 'fiscal_ncf_display': 'B0300000004', 'fiscal_document_type_display': 'B03 - Nota de Débito', 'fiscal_status_display': 'Válido', 'justech_do_ncf': 'B0300000004', 'l10n_latam_document_number': 'B0300000004', 'justech_do_dgii_fiscal_state': 'valid'}"
+    },
+    "new_justech_no_incomplete_display": {
+      "ok": true,
+      "detail": "{'id': 4182, 'fiscal_ncf_display': 'B0300000004', 'fiscal_document_type_display': 'B03 - Nota de Débito', 'fiscal_status_display': 'Válido', 'justech_do_ncf': 'B0300000004', 'l10n_latam_document_number': 'B0300000004', 'justech_do_dgii_fiscal_state': 'valid'}"
+    },
+    "company_PlugSafe": {
+      "ok": true,
+      "detail": "[{'id': 4154, 'name': 'FP/2026/07/0032', 'fiscal_ncf_display': 'B1700000010', 'fiscal_document_type_display': 'B17 - Comprobante para Pagos al Exterior', 'fiscal_status_display': 'Válido'}, {'id': 4153, 'name': 'FP/2026/07/0031', 'fiscal_ncf_display': 'B1300000010', 'fiscal_document_type_display': 'B13 - Gastos Menores', 'fiscal_status_display': 'Válido'}]"
+    },
+    "company_Omni Solutions": {
+      "ok": true,
+      "detail": "[{'id': 4163, 'name': 'FP/2026/07/0014', 'fiscal_ncf_display': 'B1700000004', 'fiscal_document_type_display': 'B17 - Comprobante para Pagos al Exterior', 'fiscal_status_display': 'Válido'}, {'id': 4162, 'name': 'FP/2026/07/0013', 'fiscal_ncf_display': 'B1300000004', 'fiscal_document_type_display': 'B13 - Gastos Menores', 'fiscal_status_display': 'Válido'}]"
+    },
+    "company_Just Office": {
+      "ok": true,
+      "detail": "[{'id': 4174, 'name': 'FACTU/2026/07/0014', 'fiscal_ncf_display': 'B1700000004', 'fiscal_document_type_display': 'B17 - Comprobante para Pagos al Exterior', 'fiscal_status_display': 'Válido'}, {'id': 4173, 'name': 'FACTU/2026/07/0013', 'fiscal_ncf_display': 'B1300000004', 'fiscal_document_type_display': 'B13 - Gastos Menores', 'fiscal_status_display': 'Válido'}]"
+    },
+    "company_JUSTECH": {
+      "ok": true,
+      "detail": "[{'id': 4185, 'name': 'FP/2026/07/0014', 'fiscal_ncf_display': 'B1700000004', 'fiscal_document_type_display': 'B17 - Comprobante para Pagos al Exterior', 'fiscal_status_display': 'Válido'}, {'id': 4184, 'name': 'FP/2026/07/0013', 'fiscal_ncf_display': 'B1300000004', 'fiscal_document_type_display': 'B13 - Gastos Menores', 'fiscal_status_display': 'Válido'}]"
+    },
+    "no_page_errors": {
+      "ok": true,
+      "detail": "[]"
+    },
+    "no_critical_http": {
+      "ok": true,
+      "detail": "[]"
+    }
+  },
+  "js_errors": [],
+  "page_errors": [],
+  "failed_requests": []
+}

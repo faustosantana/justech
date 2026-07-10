@@ -1,0 +1,1668 @@
+{
+  "ts": "2026-07-10T08:18:21.185008+00:00",
+  "database": "justech_dev",
+  "modules": {
+    "account_payment": "19.0.2.0",
+    "justech_core": "19.0.1.0.0",
+    "justech_fiscal_admin": "19.0.1.2.0",
+    "justech_global_audit_log": "19.0.4.1.2",
+    "justech_l10n_do_base": "19.0.1.7.1",
+    "justech_l10n_do_ncf": "19.0.2.1.3",
+    "justech_l10n_do_payments_withholding": "19.0.1.3.0",
+    "justech_l10n_do_reports": "19.0.1.19.0",
+    "justech_warranty": "19.0.1.8.0",
+    "multi_invoice_manual_payment_prod": "19.0.1.5.3",
+    "payment": "19.0.2.0",
+    "payment_custom": "19.0.2.0",
+    "website_payment": "19.0.1.0"
+  },
+  "payments_menus": [
+    {
+      "id": 179,
+      "name": "Bancos",
+      "xml_id": "contacts.menu_action_res_bank_form",
+      "active": true,
+      "sequence": 1,
+      "parent": "Cuentas bancarias",
+      "parent_chain": [
+        "Contactos",
+        "Configuración",
+        "Cuentas bancarias",
+        "Bancos"
+      ],
+      "groups": [],
+      "action": {
+        "id": 60,
+        "name": "Bancos",
+        "type": "ir.actions.act_window",
+        "res_model": "res.bank",
+        "binding_model": "ir.model()"
+      },
+      "noupdate": false
+    },
+    {
+      "id": 180,
+      "name": "Cuentas bancarias",
+      "xml_id": "contacts.menu_action_res_partner_bank_form",
+      "active": true,
+      "sequence": 2,
+      "parent": "Cuentas bancarias",
+      "parent_chain": [
+        "Contactos",
+        "Configuración",
+        "Cuentas bancarias",
+        "Cuentas bancarias"
+      ],
+      "groups": [],
+      "action": {
+        "id": 61,
+        "name": "Cuentas bancarias",
+        "type": "ir.actions.act_window",
+        "res_model": "res.partner.bank",
+        "binding_model": "ir.model()"
+      },
+      "noupdate": false
+    },
+    {
+      "id": 645,
+      "name": "Retención",
+      "xml_id": "sale_subscription.menu_sale_subscription_report_cohort",
+      "active": true,
+      "sequence": 2,
+      "parent": "Reportes",
+      "parent_chain": [
+        "Suscripciones",
+        "Reportes",
+        "Retención"
+      ],
+      "groups": [],
+      "action": {
+        "id": 1000,
+        "name": "Análisis de retención",
+        "type": "ir.actions.act_window",
+        "res_model": "sale.order",
+        "binding_model": "ir.model()"
+      },
+      "noupdate": false
+    },
+    {
+      "id": 880,
+      "name": "Pagos",
+      "xml_id": null,
+      "active": true,
+      "sequence": 3,
+      "parent": "Contabilidad",
+      "parent_chain": [
+        "Contabilidad",
+        "Pagos"
+      ],
+      "groups": [
+        "Usuario: solo mostrar documentos propios",
+        "Usuario: todos los documentos",
+        "Administrador",
+        "Mostrar funciones de contabilidad: solo lectura",
+        "Facturación",
+        "Básico",
+        "Mostrar características de contabilidad completas",
+        "Administrador"
+      ],
+      "action": {
+        "id": 1404,
+        "name": "Pago de Múltiples Facturas",
+        "type": "ir.actions.act_window",
+        "res_model": "multi.invoice.manual.payment.wizard",
+        "binding_model": "ir.model()"
+      },
+      "noupdate": false
+    },
+    {
+      "id": 178,
+      "name": "Cuentas bancarias",
+      "xml_id": "contacts.menu_config_bank_accounts",
+      "active": true,
+      "sequence": 6,
+      "parent": "Configuración",
+      "parent_chain": [
+        "Contactos",
+        "Configuración",
+        "Cuentas bancarias"
+      ],
+      "groups": [],
+      "action": null,
+      "noupdate": false
+    },
+    {
+      "id": 312,
+      "name": "Términos de pago",
+      "xml_id": "account.menu_action_payment_term_form",
+      "active": true,
+      "sequence": 10,
+      "parent": "Facturación",
+      "parent_chain": [
+        "Contabilidad",
+        "Configuración",
+        "Facturación",
+        "Términos de pago"
+      ],
+      "groups": [],
+      "action": {
+        "id": 522,
+        "name": "Términos de pago",
+        "type": "ir.actions.act_window",
+        "res_model": "account.payment.term",
+        "binding_model": "ir.model()"
+      },
+      "noupdate": false
+    },
+    {
+      "id": 326,
+      "name": "Proveedores de pago",
+      "xml_id": "account_payment.payment_provider_menu",
+      "active": true,
+      "sequence": 10,
+      "parent": "Pagos en línea",
+      "parent_chain": [
+        "Contabilidad",
+        "Configuración",
+        "Pagos en línea",
+        "Proveedores de pago"
+      ],
+      "groups": [],
+      "action": {
+        "id": 460,
+        "name": "Proveedores de pago",
+        "type": "ir.actions.act_window",
+        "res_model": "payment.provider",
+        "binding_model": "ir.model()"
+      },
+      "noupdate": false
+    },
+    {
+      "id": 360,
+      "name": "Proveedores de pago",
+      "xml_id": "sale.payment_provider_menu",
+      "active": true,
+      "sequence": 10,
+      "parent": "Pagos en línea",
+      "parent_chain": [
+        "Ventas",
+        "Configuración",
+        "Pagos en línea",
+        "Proveedores de pago"
+      ],
+      "groups": [],
+      "action": {
+        "id": 460,
+        "name": "Proveedores de pago",
+        "type": "ir.actions.act_window",
+        "res_model": "payment.provider",
+        "binding_model": "ir.model()"
+      },
+      "noupdate": false
+    },
+    {
+      "id": 274,
+      "name": "Pagos",
+      "xml_id": "account.menu_action_account_payments_receivable",
+      "active": true,
+      "sequence": 15,
+      "parent": "Clientes",
+      "parent_chain": [
+        "Contabilidad",
+        "Clientes",
+        "Pagos"
+      ],
+      "groups": [],
+      "action": {
+        "id": 474,
+        "name": "Pagos del cliente",
+        "type": "ir.actions.act_window",
+        "res_model": "account.payment",
+        "binding_model": "ir.model()"
+      },
+      "noupdate": false
+    },
+    {
+      "id": 327,
+      "name": "Métodos de pago",
+      "xml_id": "account_payment.payment_method_menu",
+      "active": true,
+      "sequence": 15,
+      "parent": "Pagos en línea",
+      "parent_chain": [
+        "Contabilidad",
+        "Configuración",
+        "Pagos en línea",
+        "Métodos de pago"
+      ],
+      "groups": [],
+      "action": {
+        "id": 461,
+        "name": "Métodos de pago",
+        "type": "ir.actions.act_window",
+        "res_model": "payment.method",
+        "binding_model": "ir.model()"
+      },
+      "noupdate": false
+    },
+    {
+      "id": 280,
+      "name": "Pagos",
+      "xml_id": "account.menu_action_account_payments_payable",
+      "active": true,
+      "sequence": 20,
+      "parent": "Proveedores",
+      "parent_chain": [
+        "Contabilidad",
+        "Proveedores",
+        "Pagos"
+      ],
+      "groups": [],
+      "action": {
+        "id": 475,
+        "name": "Pagos de proveedor",
+        "type": "ir.actions.act_window",
+        "res_model": "account.payment",
+        "binding_model": "ir.model()"
+      },
+      "noupdate": false
+    },
+    {
+      "id": 328,
+      "name": "Tokens de pago",
+      "xml_id": "account_payment.payment_token_menu",
+      "active": true,
+      "sequence": 20,
+      "parent": "Pagos en línea",
+      "parent_chain": [
+        "Contabilidad",
+        "Configuración",
+        "Pagos en línea",
+        "Tokens de pago"
+      ],
+      "groups": [
+        "Características técnicas"
+      ],
+      "action": {
+        "id": 464,
+        "name": "Tokens de pago",
+        "type": "ir.actions.act_window",
+        "res_model": "payment.token",
+        "binding_model": "ir.model()"
+      },
+      "noupdate": false
+    },
+    {
+      "id": 361,
+      "name": "Métodos de pago",
+      "xml_id": "sale.payment_method_menu",
+      "active": true,
+      "sequence": 20,
+      "parent": "Pagos en línea",
+      "parent_chain": [
+        "Ventas",
+        "Configuración",
+        "Pagos en línea",
+        "Métodos de pago"
+      ],
+      "groups": [],
+      "action": {
+        "id": 461,
+        "name": "Métodos de pago",
+        "type": "ir.actions.act_window",
+        "res_model": "payment.method",
+        "binding_model": "ir.model()"
+      },
+      "noupdate": false
+    },
+    {
+      "id": 329,
+      "name": "Transacciones de pago",
+      "xml_id": "account_payment.payment_transaction_menu",
+      "active": true,
+      "sequence": 25,
+      "parent": "Pagos en línea",
+      "parent_chain": [
+        "Contabilidad",
+        "Configuración",
+        "Pagos en línea",
+        "Transacciones de pago"
+      ],
+      "groups": [
+        "Características técnicas"
+      ],
+      "action": {
+        "id": 462,
+        "name": "Transacciones de pago",
+        "type": "ir.actions.act_window",
+        "res_model": "payment.transaction",
+        "binding_model": "ir.model()"
+      },
+      "noupdate": false
+    },
+    {
+      "id": 315,
+      "name": "Pagos en línea",
+      "xml_id": "account.root_payment_menu",
+      "active": true,
+      "sequence": 30,
+      "parent": "Configuración",
+      "parent_chain": [
+        "Contabilidad",
+        "Configuración",
+        "Pagos en línea"
+      ],
+      "groups": [
+        "Administrador"
+      ],
+      "action": null,
+      "noupdate": false
+    },
+    {
+      "id": 362,
+      "name": "Tokens de pago",
+      "xml_id": "sale.payment_token_menu",
+      "active": true,
+      "sequence": 30,
+      "parent": "Pagos en línea",
+      "parent_chain": [
+        "Ventas",
+        "Configuración",
+        "Pagos en línea",
+        "Tokens de pago"
+      ],
+      "groups": [
+        "Características técnicas"
+      ],
+      "action": {
+        "id": 464,
+        "name": "Tokens de pago",
+        "type": "ir.actions.act_window",
+        "res_model": "payment.token",
+        "binding_model": "ir.model()"
+      },
+      "noupdate": false
+    },
+    {
+      "id": 910,
+      "name": "Retención",
+      "xml_id": "justech_global_audit_log.menu_justech_audit_retention",
+      "active": true,
+      "sequence": 30,
+      "parent": "Auditoría de Cambios",
+      "parent_chain": [
+        "Auditoría de Cambios",
+        "Retención"
+      ],
+      "groups": [
+        "Administrador"
+      ],
+      "action": {
+        "id": 1452,
+        "name": "Retención",
+        "type": "ir.actions.act_window",
+        "res_model": "justech.audit.retention",
+        "binding_model": "ir.model()"
+      },
+      "noupdate": false
+    },
+    {
+      "id": 363,
+      "name": "Transacciones de pago",
+      "xml_id": "sale.payment_transaction_menu",
+      "active": true,
+      "sequence": 40,
+      "parent": "Pagos en línea",
+      "parent_chain": [
+        "Ventas",
+        "Configuración",
+        "Pagos en línea",
+        "Transacciones de pago"
+      ],
+      "groups": [
+        "Características técnicas"
+      ],
+      "action": {
+        "id": 462,
+        "name": "Transacciones de pago",
+        "type": "ir.actions.act_window",
+        "res_model": "payment.transaction",
+        "binding_model": "ir.model()"
+      },
+      "noupdate": false
+    },
+    {
+      "id": 948,
+      "name": "609 — Pagos al Exterior",
+      "xml_id": "justech_l10n_do_reports.menu_justech_do_report_609",
+      "active": true,
+      "sequence": 40,
+      "parent": "Auditoría Fiscal",
+      "parent_chain": [
+        "Contabilidad",
+        "Auditoría Fiscal",
+        "609 — Pagos al Exterior"
+      ],
+      "groups": [],
+      "action": {
+        "id": 1495,
+        "name": "609 — Pagos al Exterior",
+        "type": "ir.actions.act_window",
+        "res_model": "justech.do.fiscal.report.wizard",
+        "binding_model": "ir.model()"
+      },
+      "noupdate": false
+    },
+    {
+      "id": 359,
+      "name": "Pagos en línea",
+      "xml_id": "sale.payment_menu",
+      "active": true,
+      "sequence": 45,
+      "parent": "Configuración",
+      "parent_chain": [
+        "Ventas",
+        "Configuración",
+        "Pagos en línea"
+      ],
+      "groups": [
+        "Rol / Administrador"
+      ],
+      "action": null,
+      "noupdate": false
+    },
+    {
+      "id": 949,
+      "name": "623 — Retenciones del Estado",
+      "xml_id": "justech_l10n_do_reports.menu_justech_do_report_623",
+      "active": true,
+      "sequence": 50,
+      "parent": "Auditoría Fiscal",
+      "parent_chain": [
+        "Contabilidad",
+        "Auditoría Fiscal",
+        "623 — Retenciones del Estado"
+      ],
+      "groups": [],
+      "action": {
+        "id": 1496,
+        "name": "623 — Retenciones del Estado",
+        "type": "ir.actions.act_window",
+        "res_model": "justech.do.fiscal.report.wizard",
+        "binding_model": "ir.model()"
+      },
+      "noupdate": false
+    },
+    {
+      "id": 388,
+      "name": "Conciliar",
+      "xml_id": "account_accountant.menu_account_reconcile",
+      "active": true,
+      "sequence": 65,
+      "parent": "Bloqueando",
+      "parent_chain": [
+        "Contabilidad",
+        "Contabilidad",
+        "Bloqueando",
+        "Conciliar"
+      ],
+      "groups": [
+        "Mostrar características de contabilidad completas"
+      ],
+      "action": {
+        "id": 623,
+        "name": "Apuntes contables por conciliar",
+        "type": "ir.actions.act_window",
+        "res_model": "account.move.line",
+        "binding_model": "ir.model()"
+      },
+      "noupdate": false
+    },
+    {
+      "id": 881,
+      "name": "Pago de Múltiples Facturas",
+      "xml_id": "multi_invoice_manual_payment_prod.menu_multi_invoice_manual_payment_root",
+      "active": true,
+      "sequence": 90,
+      "parent": "Contabilidad",
+      "parent_chain": [
+        "Contabilidad",
+        "Pago de Múltiples Facturas"
+      ],
+      "groups": [
+        "Mostrar características de contabilidad completas",
+        "Administrador"
+      ],
+      "action": {
+        "id": 1404,
+        "name": "Pago de Múltiples Facturas",
+        "type": "ir.actions.act_window",
+        "res_model": "multi.invoice.manual.payment.wizard",
+        "binding_model": "ir.model()"
+      },
+      "noupdate": false
+    },
+    {
+      "id": 961,
+      "name": "Administrar Retenciones",
+      "xml_id": "justech_l10n_do_reports.menu_justech_do_withholding_catalog",
+      "active": true,
+      "sequence": 130,
+      "parent": "Auditoría Fiscal",
+      "parent_chain": [
+        "Contabilidad",
+        "Auditoría Fiscal",
+        "Administrar Retenciones"
+      ],
+      "groups": [
+        "Administrador"
+      ],
+      "action": {
+        "id": 1506,
+        "name": "Administrar Retenciones",
+        "type": "ir.actions.server",
+        "res_model": null,
+        "binding_model": "ir.model()"
+      },
+      "noupdate": true
+    }
+  ],
+  "fiscal_menus": [
+    {
+      "id": 645,
+      "name": "Retención",
+      "xml_id": "sale_subscription.menu_sale_subscription_report_cohort",
+      "active": true,
+      "sequence": 2,
+      "parent": "Reportes",
+      "parent_chain": [
+        "Suscripciones",
+        "Reportes",
+        "Retención"
+      ],
+      "groups": [],
+      "action": {
+        "id": 1000,
+        "name": "Análisis de retención",
+        "type": "ir.actions.act_window",
+        "res_model": "sale.order",
+        "binding_model": "ir.model()"
+      },
+      "noupdate": false
+    },
+    {
+      "id": 955,
+      "name": "Clasificación fiscal",
+      "xml_id": "justech_l10n_do_reports.menu_justech_do_dgii_tax_classification",
+      "active": false,
+      "sequence": 3,
+      "parent": "Auditoría Fiscal",
+      "parent_chain": [
+        "Contabilidad",
+        "Auditoría Fiscal",
+        "Clasificación fiscal"
+      ],
+      "groups": [
+        "Dominican Fiscal Manager"
+      ],
+      "action": {
+        "id": 1499,
+        "name": "Clasificación fiscal DGII",
+        "type": "ir.actions.act_window",
+        "res_model": "justech.do.dgii.tax.classification",
+        "binding_model": "ir.model()"
+      },
+      "noupdate": false
+    },
+    {
+      "id": 294,
+      "name": "Impuestos y finanzas",
+      "xml_id": "account.account_reports_taxes_and_fiscal_menu",
+      "active": true,
+      "sequence": 4,
+      "parent": "Reportes",
+      "parent_chain": [
+        "Contabilidad",
+        "Reportes",
+        "Impuestos y finanzas"
+      ],
+      "groups": [],
+      "action": null,
+      "noupdate": false
+    },
+    {
+      "id": 956,
+      "name": "Administración Fiscal",
+      "xml_id": "justech_fiscal_admin.menu_justech_fiscal_admin_root",
+      "active": true,
+      "sequence": 5,
+      "parent": "Localización Dominicana",
+      "parent_chain": [
+        "Contabilidad",
+        "Configuración",
+        "Localización Dominicana",
+        "Administración Fiscal"
+      ],
+      "groups": [
+        "Dominican Fiscal Manager",
+        "Dominican Fiscal User",
+        "Fiscal Admin / Administrador"
+      ],
+      "action": null,
+      "noupdate": false
+    },
+    {
+      "id": 307,
+      "name": "Posiciones fiscales",
+      "xml_id": "account.menu_action_account_fiscal_position_form",
+      "active": true,
+      "sequence": 6,
+      "parent": "Contabilidad",
+      "parent_chain": [
+        "Contabilidad",
+        "Configuración",
+        "Contabilidad",
+        "Posiciones fiscales"
+      ],
+      "groups": [],
+      "action": {
+        "id": 535,
+        "name": "Posiciones fiscales",
+        "type": "ir.actions.act_window",
+        "res_model": "account.fiscal.position",
+        "binding_model": "ir.model()"
+      },
+      "noupdate": false
+    },
+    {
+      "id": 321,
+      "name": "Pista de auditoría",
+      "xml_id": "account.account_audit_trail_menu",
+      "active": true,
+      "sequence": 10,
+      "parent": "Registros",
+      "parent_chain": [
+        "Contabilidad",
+        "Revisión",
+        "Registros",
+        "Pista de auditoría"
+      ],
+      "groups": [],
+      "action": {
+        "id": 543,
+        "name": "Pista de auditoría",
+        "type": "ir.actions.act_window",
+        "res_model": "mail.message",
+        "binding_model": "ir.model()"
+      },
+      "noupdate": false
+    },
+    {
+      "id": 391,
+      "name": "Años fiscales",
+      "xml_id": "account_accountant.menu_account_fiscal_year",
+      "active": true,
+      "sequence": 10,
+      "parent": "Contabilidad",
+      "parent_chain": [
+        "Contabilidad",
+        "Configuración",
+        "Contabilidad",
+        "Años fiscales"
+      ],
+      "groups": [
+        "Permite definir años fiscales para más de 1 año o menos de 1 año."
+      ],
+      "action": {
+        "id": 620,
+        "name": "Años fiscales",
+        "type": "ir.actions.act_window",
+        "res_model": "account.fiscal.year",
+        "binding_model": "ir.model()"
+      },
+      "noupdate": false
+    },
+    {
+      "id": 403,
+      "name": "Declaración fiscal",
+      "xml_id": "account_reports.menu_action_account_report_gt",
+      "active": true,
+      "sequence": 10,
+      "parent": "Impuestos y finanzas",
+      "parent_chain": [
+        "Contabilidad",
+        "Reportes",
+        "Impuestos y finanzas",
+        "Declaración fiscal"
+      ],
+      "groups": [
+        "Mostrar funciones de contabilidad: solo lectura",
+        "Básico"
+      ],
+      "action": {
+        "id": 649,
+        "name": "Declaración fiscal",
+        "type": "ir.actions.client",
+        "res_model": false,
+        "binding_model": "ir.model()"
+      },
+      "noupdate": false
+    },
+    {
+      "id": 413,
+      "name": "Auditoría de diario",
+      "xml_id": "account_reports.menu_action_account_report_ja",
+      "active": true,
+      "sequence": 10,
+      "parent": "Control",
+      "parent_chain": [
+        "Contabilidad",
+        "Revisión",
+        "Control",
+        "Auditoría de diario"
+      ],
+      "groups": [
+        "Mostrar funciones de contabilidad: solo lectura"
+      ],
+      "action": {
+        "id": 650,
+        "name": "Auditoría de diario",
+        "type": "ir.actions.client",
+        "res_model": false,
+        "binding_model": "ir.model()"
+      },
+      "noupdate": false
+    },
+    {
+      "id": 425,
+      "name": "Categorías fiscales",
+      "xml_id": "account_fiscal_categories.menu_action_account_fiscal_category_list",
+      "active": true,
+      "sequence": 10,
+      "parent": "Contabilidad",
+      "parent_chain": [
+        "Contabilidad",
+        "Configuración",
+        "Contabilidad",
+        "Categorías fiscales"
+      ],
+      "groups": [
+        "Características técnicas"
+      ],
+      "action": {
+        "id": 685,
+        "name": "Categorías fiscales",
+        "type": "ir.actions.act_window",
+        "res_model": "account.fiscal.category",
+        "binding_model": "ir.model()"
+      },
+      "noupdate": false
+    },
+    {
+      "id": 656,
+      "name": "Configuración Fiscal",
+      "xml_id": "l10n_do_accounting.account_fiscal_sequence_menu_parent",
+      "active": true,
+      "sequence": 10,
+      "parent": "Configuración",
+      "parent_chain": [
+        "Contabilidad",
+        "Configuración",
+        "Configuración Fiscal"
+      ],
+      "groups": [],
+      "action": null,
+      "noupdate": false
+    },
+    {
+      "id": 657,
+      "name": "Secuencia Fiscal",
+      "xml_id": "l10n_do_accounting.account_fiscal_sequence_menu",
+      "active": true,
+      "sequence": 10,
+      "parent": "Configuración Fiscal",
+      "parent_chain": [
+        "Contabilidad",
+        "Configuración",
+        "Configuración Fiscal",
+        "Secuencia Fiscal"
+      ],
+      "groups": [],
+      "action": {
+        "id": 1027,
+        "name": "Fiscal Sequences",
+        "type": "ir.actions.act_window",
+        "res_model": "account.fiscal.sequence",
+        "binding_model": "ir.model()"
+      },
+      "noupdate": false
+    },
+    {
+      "id": 945,
+      "name": "606 — Compras",
+      "xml_id": "justech_l10n_do_reports.menu_justech_do_report_606",
+      "active": true,
+      "sequence": 10,
+      "parent": "Auditoría Fiscal",
+      "parent_chain": [
+        "Contabilidad",
+        "Auditoría Fiscal",
+        "606 — Compras"
+      ],
+      "groups": [],
+      "action": {
+        "id": 1492,
+        "name": "606 — Compras",
+        "type": "ir.actions.act_window",
+        "res_model": "justech.do.fiscal.report.wizard",
+        "binding_model": "ir.model()"
+      },
+      "noupdate": false
+    },
+    {
+      "id": 957,
+      "name": "Centro de Administración Fiscal",
+      "xml_id": "justech_fiscal_admin.menu_justech_fiscal_admin_center",
+      "active": true,
+      "sequence": 10,
+      "parent": "Administración Fiscal",
+      "parent_chain": [
+        "Contabilidad",
+        "Configuración",
+        "Localización Dominicana",
+        "Administración Fiscal",
+        "Centro de Administración Fiscal"
+      ],
+      "groups": [],
+      "action": {
+        "id": 1502,
+        "name": "Abrir Centro Fiscal Justech",
+        "type": "ir.actions.server",
+        "res_model": null,
+        "binding_model": "ir.model()"
+      },
+      "noupdate": false
+    },
+    {
+      "id": 658,
+      "name": "Tipos de comprobante",
+      "xml_id": "l10n_do_accounting.menu_document_type",
+      "active": true,
+      "sequence": 20,
+      "parent": "Contabilidad",
+      "parent_chain": [
+        "Contabilidad",
+        "Configuración",
+        "Contabilidad",
+        "Tipos de comprobante"
+      ],
+      "groups": [],
+      "action": {
+        "id": 1028,
+        "name": "Tipos de comprobante",
+        "type": "ir.actions.act_window",
+        "res_model": "l10n_latam.document.type",
+        "binding_model": "ir.model()"
+      },
+      "noupdate": false
+    },
+    {
+      "id": 909,
+      "name": "Configuración de Auditoría",
+      "xml_id": "justech_global_audit_log.menu_justech_audit_rule",
+      "active": true,
+      "sequence": 20,
+      "parent": "Auditoría de Cambios",
+      "parent_chain": [
+        "Auditoría de Cambios",
+        "Configuración de Auditoría"
+      ],
+      "groups": [
+        "Administrador"
+      ],
+      "action": {
+        "id": 1449,
+        "name": "Reglas de auditoría",
+        "type": "ir.actions.act_window",
+        "res_model": "justech.audit.rule",
+        "binding_model": "ir.model()"
+      },
+      "noupdate": false
+    },
+    {
+      "id": 946,
+      "name": "607 — Ventas",
+      "xml_id": "justech_l10n_do_reports.menu_justech_do_report_607",
+      "active": true,
+      "sequence": 20,
+      "parent": "Auditoría Fiscal",
+      "parent_chain": [
+        "Contabilidad",
+        "Auditoría Fiscal",
+        "607 — Ventas"
+      ],
+      "groups": [],
+      "action": {
+        "id": 1493,
+        "name": "607 — Ventas",
+        "type": "ir.actions.act_window",
+        "res_model": "justech.do.fiscal.report.wizard",
+        "binding_model": "ir.model()"
+      },
+      "noupdate": false
+    },
+    {
+      "id": 414,
+      "name": "Auditoría",
+      "xml_id": "account_reports.account_audit_working_file_menu",
+      "active": true,
+      "sequence": 30,
+      "parent": "Revisión",
+      "parent_chain": [
+        "Contabilidad",
+        "Revisión",
+        "Auditoría"
+      ],
+      "groups": [
+        "Mostrar funciones de contabilidad: solo lectura"
+      ],
+      "action": null,
+      "noupdate": false
+    },
+    {
+      "id": 910,
+      "name": "Retención",
+      "xml_id": "justech_global_audit_log.menu_justech_audit_retention",
+      "active": true,
+      "sequence": 30,
+      "parent": "Auditoría de Cambios",
+      "parent_chain": [
+        "Auditoría de Cambios",
+        "Retención"
+      ],
+      "groups": [
+        "Administrador"
+      ],
+      "action": {
+        "id": 1452,
+        "name": "Retención",
+        "type": "ir.actions.act_window",
+        "res_model": "justech.audit.retention",
+        "binding_model": "ir.model()"
+      },
+      "noupdate": false
+    },
+    {
+      "id": 947,
+      "name": "608 — Comprobantes Anulados",
+      "xml_id": "justech_l10n_do_reports.menu_justech_do_report_608",
+      "active": true,
+      "sequence": 30,
+      "parent": "Auditoría Fiscal",
+      "parent_chain": [
+        "Contabilidad",
+        "Auditoría Fiscal",
+        "608 — Comprobantes Anulados"
+      ],
+      "groups": [],
+      "action": {
+        "id": 1494,
+        "name": "608 — Comprobantes Anulados",
+        "type": "ir.actions.act_window",
+        "res_model": "justech.do.fiscal.report.wizard",
+        "binding_model": "ir.model()"
+      },
+      "noupdate": false
+    },
+    {
+      "id": 426,
+      "name": "Reporte fiscal",
+      "xml_id": "account_fiscal_categories.menu_action_account_fiscal_report",
+      "active": true,
+      "sequence": 40,
+      "parent": "Impuestos y finanzas",
+      "parent_chain": [
+        "Contabilidad",
+        "Reportes",
+        "Impuestos y finanzas",
+        "Reporte fiscal"
+      ],
+      "groups": [
+        "Mostrar funciones de contabilidad: solo lectura"
+      ],
+      "action": {
+        "id": 686,
+        "name": "Reporte fiscal",
+        "type": "ir.actions.client",
+        "res_model": false,
+        "binding_model": "ir.model()"
+      },
+      "noupdate": false
+    },
+    {
+      "id": 948,
+      "name": "609 — Pagos al Exterior",
+      "xml_id": "justech_l10n_do_reports.menu_justech_do_report_609",
+      "active": true,
+      "sequence": 40,
+      "parent": "Auditoría Fiscal",
+      "parent_chain": [
+        "Contabilidad",
+        "Auditoría Fiscal",
+        "609 — Pagos al Exterior"
+      ],
+      "groups": [],
+      "action": {
+        "id": 1495,
+        "name": "609 — Pagos al Exterior",
+        "type": "ir.actions.act_window",
+        "res_model": "justech.do.fiscal.report.wizard",
+        "binding_model": "ir.model()"
+      },
+      "noupdate": false
+    },
+    {
+      "id": 949,
+      "name": "623 — Retenciones del Estado",
+      "xml_id": "justech_l10n_do_reports.menu_justech_do_report_623",
+      "active": true,
+      "sequence": 50,
+      "parent": "Auditoría Fiscal",
+      "parent_chain": [
+        "Contabilidad",
+        "Auditoría Fiscal",
+        "623 — Retenciones del Estado"
+      ],
+      "groups": [],
+      "action": {
+        "id": 1496,
+        "name": "623 — Retenciones del Estado",
+        "type": "ir.actions.act_window",
+        "res_model": "justech.do.fiscal.report.wizard",
+        "binding_model": "ir.model()"
+      },
+      "noupdate": false
+    },
+    {
+      "id": 951,
+      "name": "Auditoría Fiscal",
+      "xml_id": "justech_l10n_do_reports.menu_justech_do_audit_root",
+      "active": true,
+      "sequence": 55,
+      "parent": "Contabilidad",
+      "parent_chain": [
+        "Contabilidad",
+        "Auditoría Fiscal"
+      ],
+      "groups": [
+        "Dominican Fiscal User"
+      ],
+      "action": null,
+      "noupdate": false
+    },
+    {
+      "id": 923,
+      "name": "Tipos de Comprobante",
+      "xml_id": "justech_l10n_do_base.menu_justech_do_document_types",
+      "active": true,
+      "sequence": 60,
+      "parent": "Auditoría Fiscal",
+      "parent_chain": [
+        "Contabilidad",
+        "Auditoría Fiscal",
+        "Tipos de Comprobante"
+      ],
+      "groups": [],
+      "action": {
+        "id": 1465,
+        "name": "Tipos de Comprobante",
+        "type": "ir.actions.act_window",
+        "res_model": "justech.do.fiscal.document.type",
+        "binding_model": "ir.model()"
+      },
+      "noupdate": false
+    },
+    {
+      "id": 395,
+      "name": "Declaración fiscal",
+      "xml_id": "account_reports.menu_action_account_return",
+      "active": true,
+      "sequence": 67,
+      "parent": "Bloqueando",
+      "parent_chain": [
+        "Contabilidad",
+        "Contabilidad",
+        "Bloqueando",
+        "Declaración fiscal"
+      ],
+      "groups": [],
+      "action": {
+        "id": 670,
+        "name": "Abrir declaración fiscal",
+        "type": "ir.actions.server",
+        "res_model": null,
+        "binding_model": "ir.model()"
+      },
+      "noupdate": false
+    },
+    {
+      "id": 926,
+      "name": "Rangos NCF",
+      "xml_id": "justech_l10n_do_ncf.menu_justech_do_ncf_ranges",
+      "active": true,
+      "sequence": 70,
+      "parent": "Auditoría Fiscal",
+      "parent_chain": [
+        "Contabilidad",
+        "Auditoría Fiscal",
+        "Rangos NCF"
+      ],
+      "groups": [],
+      "action": {
+        "id": 1469,
+        "name": "Rangos NCF",
+        "type": "ir.actions.act_window",
+        "res_model": "justech.do.ncf.range",
+        "binding_model": "ir.model()"
+      },
+      "noupdate": false
+    },
+    {
+      "id": 906,
+      "name": "Auditoría de Cambios",
+      "xml_id": "justech_global_audit_log.menu_justech_global_audit_root",
+      "active": true,
+      "sequence": 75,
+      "parent": null,
+      "parent_chain": [
+        "Auditoría de Cambios"
+      ],
+      "groups": [
+        "Usuario"
+      ],
+      "action": null,
+      "noupdate": false
+    },
+    {
+      "id": 952,
+      "name": "Consumo NCF",
+      "xml_id": "justech_l10n_do_reports.menu_justech_do_audit_consumption",
+      "active": true,
+      "sequence": 80,
+      "parent": "Auditoría Fiscal",
+      "parent_chain": [
+        "Contabilidad",
+        "Auditoría Fiscal",
+        "Consumo NCF"
+      ],
+      "groups": [],
+      "action": {
+        "id": 1498,
+        "name": "Consumo NCF",
+        "type": "ir.actions.act_window",
+        "res_model": "justech.do.ncf.consumption",
+        "binding_model": "ir.model()"
+      },
+      "noupdate": false
+    },
+    {
+      "id": 922,
+      "name": "Localización Dominicana",
+      "xml_id": "justech_l10n_do_base.menu_justech_do_fiscal_root",
+      "active": true,
+      "sequence": 90,
+      "parent": "Configuración",
+      "parent_chain": [
+        "Contabilidad",
+        "Configuración",
+        "Localización Dominicana"
+      ],
+      "groups": [
+        "Dominican Fiscal User"
+      ],
+      "action": null,
+      "noupdate": false
+    },
+    {
+      "id": 953,
+      "name": "NCF Anulados",
+      "xml_id": "justech_l10n_do_reports.menu_justech_do_audit_voided",
+      "active": true,
+      "sequence": 90,
+      "parent": "Auditoría Fiscal",
+      "parent_chain": [
+        "Contabilidad",
+        "Auditoría Fiscal",
+        "NCF Anulados"
+      ],
+      "groups": [],
+      "action": {
+        "id": 1497,
+        "name": "NCF Anulados",
+        "type": "ir.actions.act_window",
+        "res_model": "justech.do.ncf.consumption",
+        "binding_model": "ir.model()"
+      },
+      "noupdate": false
+    },
+    {
+      "id": 954,
+      "name": "Historial Fiscal",
+      "xml_id": "justech_l10n_do_reports.menu_justech_do_audit_history",
+      "active": true,
+      "sequence": 100,
+      "parent": "Auditoría Fiscal",
+      "parent_chain": [
+        "Contabilidad",
+        "Auditoría Fiscal",
+        "Historial Fiscal"
+      ],
+      "groups": [],
+      "action": {
+        "id": 1486,
+        "name": "Historial fiscal",
+        "type": "ir.actions.act_window",
+        "res_model": "justech.do.fiscal.report",
+        "binding_model": "ir.model()"
+      },
+      "noupdate": false
+    },
+    {
+      "id": 943,
+      "name": "Revisión Fiscal",
+      "xml_id": "justech_l10n_do_reports.menu_justech_do_fiscal_review",
+      "active": true,
+      "sequence": 110,
+      "parent": "Auditoría Fiscal",
+      "parent_chain": [
+        "Contabilidad",
+        "Auditoría Fiscal",
+        "Revisión Fiscal"
+      ],
+      "groups": [],
+      "action": {
+        "id": 1489,
+        "name": "Revisión fiscal",
+        "type": "ir.actions.act_window",
+        "res_model": "justech.do.fiscal.report",
+        "binding_model": "ir.model()"
+      },
+      "noupdate": false
+    },
+    {
+      "id": 944,
+      "name": "Pendientes de Aprobación",
+      "xml_id": "justech_l10n_do_reports.menu_justech_do_fiscal_review_pending",
+      "active": true,
+      "sequence": 120,
+      "parent": "Auditoría Fiscal",
+      "parent_chain": [
+        "Contabilidad",
+        "Auditoría Fiscal",
+        "Pendientes de Aprobación"
+      ],
+      "groups": [
+        "Fiscal Admin / Administrador"
+      ],
+      "action": {
+        "id": 1485,
+        "name": "Pendientes de aprobación",
+        "type": "ir.actions.act_window",
+        "res_model": "justech.do.fiscal.report",
+        "binding_model": "ir.model()"
+      },
+      "noupdate": false
+    },
+    {
+      "id": 961,
+      "name": "Administrar Retenciones",
+      "xml_id": "justech_l10n_do_reports.menu_justech_do_withholding_catalog",
+      "active": true,
+      "sequence": 130,
+      "parent": "Auditoría Fiscal",
+      "parent_chain": [
+        "Contabilidad",
+        "Auditoría Fiscal",
+        "Administrar Retenciones"
+      ],
+      "groups": [
+        "Administrador"
+      ],
+      "action": {
+        "id": 1506,
+        "name": "Administrar Retenciones",
+        "type": "ir.actions.server",
+        "res_model": null,
+        "binding_model": "ir.model()"
+      },
+      "noupdate": true
+    },
+    {
+      "id": 962,
+      "name": "Centro de Administración Fiscal",
+      "xml_id": "justech_l10n_do_reports.menu_justech_fiscal_admin_center_audit",
+      "active": true,
+      "sequence": 140,
+      "parent": "Auditoría Fiscal",
+      "parent_chain": [
+        "Contabilidad",
+        "Auditoría Fiscal",
+        "Centro de Administración Fiscal"
+      ],
+      "groups": [
+        "Fiscal Admin / Administrador"
+      ],
+      "action": {
+        "id": 1502,
+        "name": "Abrir Centro Fiscal Justech",
+        "type": "ir.actions.server",
+        "res_model": null,
+        "binding_model": "ir.model()"
+      },
+      "noupdate": false
+    }
+  ],
+  "duplicates": [],
+  "obsolete_actions": [],
+  "hidden_by_groups": [
+    {
+      "id": 880,
+      "name": "Pagos",
+      "groups": [
+        "Usuario: solo mostrar documentos propios",
+        "Usuario: todos los documentos",
+        "Administrador",
+        "Mostrar funciones de contabilidad: solo lectura",
+        "Facturación",
+        "Básico",
+        "Mostrar características de contabilidad completas",
+        "Administrador"
+      ]
+    },
+    {
+      "id": 955,
+      "name": "Clasificación fiscal",
+      "groups": [
+        "Dominican Fiscal Manager"
+      ]
+    },
+    {
+      "id": 956,
+      "name": "Administración Fiscal",
+      "groups": [
+        "Dominican Fiscal Manager",
+        "Dominican Fiscal User",
+        "Fiscal Admin / Administrador"
+      ]
+    },
+    {
+      "id": 391,
+      "name": "Años fiscales",
+      "groups": [
+        "Permite definir años fiscales para más de 1 año o menos de 1 año."
+      ]
+    },
+    {
+      "id": 403,
+      "name": "Declaración fiscal",
+      "groups": [
+        "Mostrar funciones de contabilidad: solo lectura",
+        "Básico"
+      ]
+    },
+    {
+      "id": 413,
+      "name": "Auditoría de diario",
+      "groups": [
+        "Mostrar funciones de contabilidad: solo lectura"
+      ]
+    },
+    {
+      "id": 425,
+      "name": "Categorías fiscales",
+      "groups": [
+        "Características técnicas"
+      ]
+    },
+    {
+      "id": 328,
+      "name": "Tokens de pago",
+      "groups": [
+        "Características técnicas"
+      ]
+    },
+    {
+      "id": 909,
+      "name": "Configuración de Auditoría",
+      "groups": [
+        "Administrador"
+      ]
+    },
+    {
+      "id": 329,
+      "name": "Transacciones de pago",
+      "groups": [
+        "Características técnicas"
+      ]
+    },
+    {
+      "id": 315,
+      "name": "Pagos en línea",
+      "groups": [
+        "Administrador"
+      ]
+    },
+    {
+      "id": 362,
+      "name": "Tokens de pago",
+      "groups": [
+        "Características técnicas"
+      ]
+    },
+    {
+      "id": 414,
+      "name": "Auditoría",
+      "groups": [
+        "Mostrar funciones de contabilidad: solo lectura"
+      ]
+    },
+    {
+      "id": 910,
+      "name": "Retención",
+      "groups": [
+        "Administrador"
+      ]
+    },
+    {
+      "id": 363,
+      "name": "Transacciones de pago",
+      "groups": [
+        "Características técnicas"
+      ]
+    },
+    {
+      "id": 426,
+      "name": "Reporte fiscal",
+      "groups": [
+        "Mostrar funciones de contabilidad: solo lectura"
+      ]
+    },
+    {
+      "id": 359,
+      "name": "Pagos en línea",
+      "groups": [
+        "Rol / Administrador"
+      ]
+    },
+    {
+      "id": 951,
+      "name": "Auditoría Fiscal",
+      "groups": [
+        "Dominican Fiscal User"
+      ]
+    },
+    {
+      "id": 388,
+      "name": "Conciliar",
+      "groups": [
+        "Mostrar características de contabilidad completas"
+      ]
+    },
+    {
+      "id": 906,
+      "name": "Auditoría de Cambios",
+      "groups": [
+        "Usuario"
+      ]
+    },
+    {
+      "id": 881,
+      "name": "Pago de Múltiples Facturas",
+      "groups": [
+        "Mostrar características de contabilidad completas",
+        "Administrador"
+      ]
+    },
+    {
+      "id": 922,
+      "name": "Localización Dominicana",
+      "groups": [
+        "Dominican Fiscal User"
+      ]
+    },
+    {
+      "id": 944,
+      "name": "Pendientes de Aprobación",
+      "groups": [
+        "Fiscal Admin / Administrador"
+      ]
+    },
+    {
+      "id": 961,
+      "name": "Administrar Retenciones",
+      "groups": [
+        "Administrador"
+      ]
+    },
+    {
+      "id": 962,
+      "name": "Centro de Administración Fiscal",
+      "groups": [
+        "Fiscal Admin / Administrador"
+      ]
+    }
+  ],
+  "noupdate_menus": [
+    {
+      "id": 961,
+      "name": "Administrar Retenciones",
+      "xml_id": "justech_l10n_do_reports.menu_justech_do_withholding_catalog"
+    }
+  ],
+  "errors": [],
+  "pagos_hub": [
+    {
+      "root_id": 881,
+      "root_name": "Pago de Múltiples Facturas",
+      "root_xml_id": "multi_invoice_manual_payment_prod.menu_multi_invoice_manual_payment_root",
+      "children": []
+    }
+  ],
+  "audit_fiscal": [
+    {
+      "sequence": 10,
+      "name": "606 — Compras",
+      "xml_id": "justech_l10n_do_reports.menu_justech_do_report_606",
+      "action_model": "justech.do.fiscal.report.wizard"
+    },
+    {
+      "sequence": 20,
+      "name": "607 — Ventas",
+      "xml_id": "justech_l10n_do_reports.menu_justech_do_report_607",
+      "action_model": "justech.do.fiscal.report.wizard"
+    },
+    {
+      "sequence": 30,
+      "name": "608 — Comprobantes Anulados",
+      "xml_id": "justech_l10n_do_reports.menu_justech_do_report_608",
+      "action_model": "justech.do.fiscal.report.wizard"
+    },
+    {
+      "sequence": 40,
+      "name": "609 — Pagos al Exterior",
+      "xml_id": "justech_l10n_do_reports.menu_justech_do_report_609",
+      "action_model": "justech.do.fiscal.report.wizard"
+    },
+    {
+      "sequence": 50,
+      "name": "623 — Retenciones del Estado",
+      "xml_id": "justech_l10n_do_reports.menu_justech_do_report_623",
+      "action_model": "justech.do.fiscal.report.wizard"
+    },
+    {
+      "sequence": 60,
+      "name": "Tipos de Comprobante",
+      "xml_id": "justech_l10n_do_base.menu_justech_do_document_types",
+      "action_model": "justech.do.fiscal.document.type"
+    },
+    {
+      "sequence": 70,
+      "name": "Rangos NCF",
+      "xml_id": "justech_l10n_do_ncf.menu_justech_do_ncf_ranges",
+      "action_model": "justech.do.ncf.range"
+    },
+    {
+      "sequence": 80,
+      "name": "Consumo NCF",
+      "xml_id": "justech_l10n_do_reports.menu_justech_do_audit_consumption",
+      "action_model": "justech.do.ncf.consumption"
+    },
+    {
+      "sequence": 90,
+      "name": "NCF Anulados",
+      "xml_id": "justech_l10n_do_reports.menu_justech_do_audit_voided",
+      "action_model": "justech.do.ncf.consumption"
+    },
+    {
+      "sequence": 100,
+      "name": "Historial Fiscal",
+      "xml_id": "justech_l10n_do_reports.menu_justech_do_audit_history",
+      "action_model": "justech.do.fiscal.report"
+    },
+    {
+      "sequence": 110,
+      "name": "Revisión Fiscal",
+      "xml_id": "justech_l10n_do_reports.menu_justech_do_fiscal_review",
+      "action_model": "justech.do.fiscal.report"
+    },
+    {
+      "sequence": 120,
+      "name": "Pendientes de Aprobación",
+      "xml_id": "justech_l10n_do_reports.menu_justech_do_fiscal_review_pending",
+      "action_model": "justech.do.fiscal.report"
+    },
+    {
+      "sequence": 130,
+      "name": "Administrar Retenciones",
+      "xml_id": "justech_l10n_do_reports.menu_justech_do_withholding_catalog",
+      "action_model": null
+    },
+    {
+      "sequence": 140,
+      "name": "Centro de Administración Fiscal",
+      "xml_id": "justech_l10n_do_reports.menu_justech_fiscal_admin_center_audit",
+      "action_model": null
+    }
+  ],
+  "history": {
+    "payments_total": 738,
+    "reconciles": 1007,
+    "gl_debit": 86030788.89,
+    "gl_credit": 86030788.89
+  },
+  "wizards": {
+    "hellenia_payment_partner_wizard": false,
+    "justech_payment_partner_wizard": true
+  },
+  "passed": true
+}

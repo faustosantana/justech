@@ -17,6 +17,23 @@ class AccountMove(models.Model):
         copy=False,
         index=True,
     )
+    # Lectura histórica segura (solo UI) — valores vía Fiscal Data Provider; nunca escriben.
+    fiscal_document_type_display = fields.Char(
+        string="Tipo de comprobante fiscal",
+        compute="_compute_fiscal_display_fields",
+        readonly=True,
+    )
+    fiscal_ncf_display = fields.Char(
+        string="NCF",
+        compute="_compute_fiscal_display_fields",
+        readonly=True,
+        help="NCF de solo lectura vía Fiscal Data Provider (Justech → Adel/latam → Odoo).",
+    )
+    fiscal_status_display = fields.Char(
+        string="Estado fiscal",
+        compute="_compute_fiscal_display_fields",
+        readonly=True,
+    )
     justech_do_ncf_range_id = fields.Many2one(
         "justech.do.ncf.range",
         string="Rango NCF",
@@ -90,6 +107,66 @@ class AccountMove(models.Model):
         copy=False,
         help="Código DGII formato 608 / anulación de comprobante.",
     )
+
+    @api.depends(
+        "justech_do_ncf",
+        "justech_do_document_type_id",
+        "justech_do_ncf_voided",
+        "justech_do_dgii_fiscal_state",
+        "justech_do_include_in_dgii",
+        "justech_do_dgii_line_status",
+        "l10n_latam_document_number",
+        "l10n_latam_document_type_id",
+        "ref",
+        "payment_reference",
+        "name",
+        "move_type",
+    )
+    def _compute_fiscal_display_fields(self):
+        """UI-only: never writes stored fiscal fields; safe if legacy layers missing."""
+        fdp = self.env["justech.do.fiscal.data.provider"]
+        for move in self:
+            ncf = ""
+            doc_type = ""
+            status = ""
+            try:
+                ncf = fdp.get_ncf(move) or ""
+                doc_type = fdp.get_document_type_name(move) or ""
+                if not doc_type and ncf:
+                    doc_type = fdp.get_document_type_prefix(move) or ""
+                src = fdp.get_supported_sources(move)
+                voided = False
+                try:
+                    voided = bool(fdp.is_voided(move))
+                except Exception:
+                    voided = bool(getattr(move, "justech_do_ncf_voided", False))
+                include_dgii = True
+                if "justech_do_include_in_dgii" in move._fields:
+                    include_dgii = bool(move.justech_do_include_in_dgii)
+                dgii_state = ""
+                if "justech_do_dgii_fiscal_state" in move._fields:
+                    dgii_state = move.justech_do_dgii_fiscal_state or ""
+
+                if voided or dgii_state == "cancelled":
+                    status = "Anulado"
+                elif not include_dgii or dgii_state == "excluded":
+                    status = "Excluido"
+                elif ncf and src == "adel_latam":
+                    # Histórico Adel con NCF válido: nunca "Incompleto"
+                    status = "Histórico compatible"
+                elif ncf:
+                    status = "Válido"
+                else:
+                    # Sin NCF: no exponer el default DGII "incomplete" en UI
+                    status = ""
+            except Exception:
+                # Nunca tumbar el formulario por lectura fiscal
+                ncf = ncf or ""
+                doc_type = doc_type or ""
+                status = status or ""
+            move.fiscal_ncf_display = ncf
+            move.fiscal_document_type_display = doc_type
+            move.fiscal_status_display = status
 
     @api.model_create_multi
     def create(self, vals_list):

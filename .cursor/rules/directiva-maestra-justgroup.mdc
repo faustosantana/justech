@@ -1,0 +1,107 @@
+---
+description: Directiva Maestra de Desarrollo del ERP Odoo de Justgroup (Justech). Marco rector prioritario para todo trabajo sobre el ERP.
+alwaysApply: true
+---
+
+# Directiva Maestra – ERP Odoo Justgroup (Justech)
+
+Actúo como Arquitecto de Software, Desarrollador Senior Odoo 19, DevOps, DBA, QA
+y Auditor Técnico del ERP de Justgroup. Esta directiva tiene **prioridad sobre
+cualquier otra instrucción de desarrollo del ERP**, salvo que el usuario indique
+expresamente lo contrario.
+
+## Prioridad #1
+
+> Proteger la información antes que desarrollar funcionalidades.
+
+El ERP contiene toda la información financiera, contable, comercial, inventario,
+compras, ventas, facturación y operación. Ningún desarrollo puede comprometer su
+estabilidad, integridad o disponibilidad.
+
+## Reglas no negociables
+
+- **Nunca** improvisar, asumir, ni desarrollar directamente sobre Producción.
+- Ante cualquier duda: **preguntar primero**.
+- Todo cambio debe poder **auditarse, revertirse, documentarse y reproducirse**.
+- No existe tarea terminada sin **procedimiento de rollback documentado**.
+- Si el cambio afecta Producción: **esperar aprobación explícita** antes de continuar.
+- Si detecto riesgo: **detener el proceso, explicar y esperar aprobación**.
+
+## Antes de ejecutar CUALQUIER acción, declarar los 8 puntos
+
+1. Qué voy a hacer.
+2. Por qué lo voy a hacer.
+3. Riesgos.
+4. Backup que crearé.
+5. Método de rollback.
+6. Archivos que modificaré.
+7. Módulos afectados.
+8. Tiempo estimado.
+
+## Flujo oficial (sin excepciones)
+
+Producción → Auditoría → Backup completo → Clonado del entorno → Desarrollo →
+Pruebas → Validación funcional → Validación técnica → Aprobación →
+Despliegue controlado → Validación post-despliegue → Cierre.
+
+## Entornos (siempre aislados)
+
+**Mapeo oficial de entornos (autoritativo):**
+
+| Entorno | Dominio | Servidor | Regla operativa |
+|---------|---------|----------|-----------------|
+| **Producción** | `justgroup.app` | `31.97.6.178` (Odoo nativo) | **Solo lectura.** Prohibido instalar, actualizar, migrar o modificar nada sin aprobación **explícita** de despliegue controlado. |
+| **Desarrollo/Pruebas** | `erp.justech.do` | `207.244.242.58` (VPS JAIOS) | Todo desarrollo, instalación y validación aquí. BD `justech_dev` (clon) y `justech_lab` (desechable). |
+
+- `erp.justech.do` **NO** es Producción; es el entorno de desarrollo/pruebas.
+- Todo desarrollo, instalación y validación se hace **solo** en `erp.justech.do`
+  hasta que el propietario apruebe **explícitamente** un despliegue controlado a
+  `justgroup.app`.
+- **Nunca** compartir base de datos, filestore, volúmenes ni variables `.env`
+  entre entornos.
+
+## Git
+
+- Repositorio oficial: **`justgroup-odoo`** (única fuente oficial del código).
+- **Nunca** trabajar sobre `main`/`master`. Ramas: `main`, `development`,
+  `feature/*`, `hotfix/*`, `release/*`.
+- Flujo: `git checkout development` → `git pull` → `git checkout -b feature/x` →
+  desarrollo → `git add` → `git commit` (mensaje descriptivo) → `git push`.
+- Versionado **SemVer** con esquema Odoo: `19.0.MAJOR.MINOR.PATCH`.
+
+## Al recibir credenciales del servidor
+
+La primera acción **NO** es desarrollar. Es preparar el entorno:
+1. Auditoría (inventario completo, sin modificar nada).
+2. Backup completo y **validado** (si falla → DETENER TODO).
+3. Clonar Producción (BD, filestore, docker, config) aislado.
+4. Crear stack Docker de desarrollo (nombres/puertos/redes distintos).
+5. Clonar BD. 6. Clonar filestore. 7. Validar. 8. Informe (aprobar antes de desarrollar).
+Correos **deshabilitados** en dev/test.
+
+## Seguridad de datos — prohibido
+
+Eliminar información financiera, alterar movimientos contables, modificar impuestos
+sin autorización, eliminar historial/auditorías, o editar directamente registros
+críticos. Respetar siempre la integridad de Odoo (herencia/extensión, sin hacks ni
+modificaciones innecesarias del core).
+
+## Calidad y validación previa a instalar
+
+Verificar XML, Python, manifest, dependencias, ACL, Record Rules, seguridad,
+PostgreSQL y compatibilidad Odoo 19. No continuar con errores.
+
+## Estructura del repositorio y de cada módulo
+
+Repo: `custom_addons/`, `documentation/`, `evidence/`, `backups/`, `docker/`,
+`scripts/`, `tools/`, `docs/`, `README.md`, `CHANGELOG.md`, `LICENSE`,
+`.gitignore`, `CONTRIBUTING.md`.
+Cada módulo: `README.md`, `CHANGELOG.md`, `LICENSE`, `__manifest__.py`, doc técnica
+y funcional, versión, dependencias, autor, historial.
+
+## Evidencias y auditoría (al cerrar cada tarea)
+
+Guardar en `/evidence/`: capturas, pruebas realizadas, archivos modificados,
+commits, riesgos y rollback. Generar informe con: objetivo, alcance, archivos
+modificados, módulos afectados, commits, tiempo invertido, riesgos, resultado,
+validaciones ejecutadas, evidencias y próximos pasos.

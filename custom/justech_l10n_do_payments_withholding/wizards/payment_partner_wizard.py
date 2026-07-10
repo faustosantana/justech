@@ -222,10 +222,21 @@ class JustechPaymentPartnerWizard(models.TransientModel):
     def default_get(self, fields_list):
         res = super().default_get(fields_list)
         partner_type = self.env.context.get("default_partner_type") or res.get("partner_type") or "customer"
-        res["partner_type"] = partner_type
         partner_id = self.env.context.get("default_partner_id") or res.get("partner_id")
         if not partner_id and self.env.context.get("active_model") == "res.partner":
             partner_id = self.env.context.get("active_id")
+        # Prefill desde factura(s) cuando se abre desde el botón de account.move
+        if self.env.context.get("active_model") == "account.move":
+            moves = self.env["account.move"].browse(self.env.context.get("active_ids") or [])
+            moves = moves.filtered(lambda m: m.state == "posted" and m.is_invoice(include_receipts=True))
+            if moves:
+                move = moves[0]
+                partner_id = partner_id or move.partner_id.id
+                partner_type = (
+                    "customer" if move.is_sale_document(include_receipts=True) else "supplier"
+                )
+                res.setdefault("currency_id", move.currency_id.id)
+        res["partner_type"] = partner_type
         if partner_id:
             res["partner_id"] = partner_id
         currency = self.env.company.currency_id
@@ -233,6 +244,14 @@ class JustechPaymentPartnerWizard(models.TransientModel):
             currency = self.env["res.currency"].browse(self.env.context["default_currency_id"])
         res.setdefault("currency_id", currency.id)
         return res
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        wizards = super().create(vals_list)
+        for wiz in wizards:
+            if wiz.partner_id and not wiz.line_ids:
+                wiz._load_pending_invoices()
+        return wizards
 
     @api.depends("line_ids.withholding_detail_ids")
     def _compute_withholding_lines(self):
@@ -277,14 +296,18 @@ class JustechPaymentPartnerWizard(models.TransientModel):
         )
         if self.currency_id:
             moves = moves.filtered(lambda m: m.currency_id == self.currency_id)
+        preselect_ids = set(self.env.context.get("justech_preselect_move_ids") or [])
+        if not preselect_ids and self.env.context.get("active_model") == "account.move":
+            preselect_ids = set(self.env.context.get("active_ids") or [])
         lines = [Command.clear()]
         for move in moves:
+            selected = move.id in preselect_ids
             lines.append(
                 Command.create(
                     {
                         "move_id": move.id,
-                        "apply": False,
-                        "amount_to_pay": 0.0,
+                        "apply": selected,
+                        "amount_to_pay": abs(move.amount_residual) if selected else 0.0,
                     }
                 )
             )

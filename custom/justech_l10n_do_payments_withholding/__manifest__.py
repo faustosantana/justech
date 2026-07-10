@@ -1,6 +1,6 @@
 {
     "name": "Justech Pagos y Retenciones Dominicanas",
-    "version": "19.0.1.4.1",
+    "version": "19.0.1.5.0",
     "category": "Accounting/Localizations",
     "summary": "Pagos con retenciones fiscales dominicanas (ITBIS/ISR), 623 y trazabilidad",
     "description": """
@@ -26,6 +26,7 @@ Motor estándar Justech para pagos con retención fiscal:
     ],
     "data": [
         "security/ir.model.access.csv",
+        "security/justech_payments_rules.xml",
         "data/legacy_payment_menus.xml",
         "views/justech_withholding_catalog_views.xml",
         "views/payment_partner_wizard_views.xml",
@@ -40,7 +41,7 @@ Motor estándar Justech para pagos con retención fiscal:
     "justech_register": {
         "module_code": "justech_l10n_do_payments_withholding",
         "module_name": "Pagos y Retenciones Dominicanas",
-        "version": "19.0.1.3.0",
+        "version": "19.0.1.5.0",
         "category": "accounting",
         "country": "DO",
         "localization": "l10n_do",

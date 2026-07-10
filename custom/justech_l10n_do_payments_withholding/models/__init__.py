@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from . import (
+    account_move_payment,
     account_payment_gov,
     account_payment_register,
     justech_withholding_catalog,

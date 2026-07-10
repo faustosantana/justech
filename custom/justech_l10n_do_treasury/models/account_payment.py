@@ -85,16 +85,36 @@ class AccountPayment(models.Model):
         )
         return candidates
 
+    @api.depends("memo", "payment_reference", "name")
     def _compute_treasury_concept(self):
+        """Concepto de pago — solo campos reales de account.payment en Odoo 19.
+
+        Odoo 19 no tiene ``ref`` en account.payment; la fuente principal es ``memo``.
+        """
         for pay in self:
-            pay.treasury_concept = pay.memo or pay.ref or ""
+            concept = ""
+            if "memo" in pay._fields:
+                concept = (pay.memo or "").strip()
+            if not concept and "payment_reference" in pay._fields:
+                concept = (pay.payment_reference or "").strip()
+            if not concept and "name" in pay._fields:
+                concept = (pay.name or "").strip()
+            pay.treasury_concept = concept
 
     @api.depends(
         "state",
+        "outstanding_account_id",
         "move_id.line_ids.reconciled",
+        "move_id.line_ids.account_id",
         "move_id.line_ids.account_id.account_type",
     )
     def _compute_treasury_bank_state(self):
+        """Estado bancario vs conciliación de liquidez / outstanding.
+
+        Con cuentas outstanding (estándar Odoo), la partida a conciliar con el
+        extracto suele ser ``asset_current`` (u otro tipo), no ``asset_cash``.
+        Antes solo se miraba cash/credit_card → ``bank_pending`` falso tras conciliar.
+        """
         liquidity_types = ("asset_cash", "asset_credit_card")
         for pay in self:
             if pay.state not in ("in_process", "paid"):
@@ -106,6 +126,12 @@ class AccountPayment(models.Model):
             liquidity_lines = pay.move_id.line_ids.filtered(
                 lambda line: line.account_id.account_type in liquidity_types
             )
+            if pay.outstanding_account_id:
+                outstanding_lines = pay.move_id.line_ids.filtered(
+                    lambda line: line.account_id == pay.outstanding_account_id
+                )
+                if outstanding_lines:
+                    liquidity_lines = outstanding_lines
             if not liquidity_lines:
                 pay.treasury_bank_state = "bank_pending"
             elif all(line.reconciled for line in liquidity_lines):

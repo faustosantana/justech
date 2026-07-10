@@ -1,10 +1,11 @@
-"""Post-init: catálogo retenciones DO y retiro menús pagos legacy."""
+"""Post-init: catálogo retenciones DO y retiro menús/acciones pagos legacy."""
 from __future__ import annotations
 
 
 def _disable_legacy_payment_menus(env):
-    """Desactiva menús del pago múltiple anterior sin desinstalar el módulo."""
+    """Desactiva menús/acciones del pago múltiple anterior sin desinstalar el módulo."""
     Menu = env["ir.ui.menu"].sudo()
+    Action = env["ir.actions.act_window"].sudo()
     legacy_model = "multi.invoice.manual.payment.wizard"
 
     for menu in Menu.search([("name", "in", ("Pago de Múltiples Facturas", "Pagos múltiples"))]):
@@ -20,9 +21,14 @@ def _disable_legacy_payment_menus(env):
             if action and getattr(action, "res_model", None) == legacy_model:
                 menu.active = False
 
-    actions = env["ir.actions.act_window"].sudo().search([("res_model", "=", legacy_model)])
+    actions = Action.search([("res_model", "=", legacy_model)])
     for action in actions:
         Menu.search([("action", "=", f"{action.type},{action.id}")]).write({"active": False})
+        # Quitar binding de formularios/listas para que no cree pagos nuevos desde UI
+        vals = {"binding_model_id": False}
+        if "binding_view_types" in action._fields:
+            vals["binding_view_types"] = False
+        action.write(vals)
 
 
 def _ensure_single_accounting_app(env):

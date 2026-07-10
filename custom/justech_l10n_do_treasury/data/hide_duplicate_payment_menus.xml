@@ -7,4 +7,9 @@
     <record id="account.menu_action_account_payments_payable" model="ir.ui.menu">
         <field name="active" eval="False"/>
     </record>
+    <!-- Un solo icono Contabilidad: Enterprise = accountant.menu_accounting.
+         account.menu_finance queda sin hijos y genera un segundo app icon vacío. -->
+    <record id="account.menu_finance" model="ir.ui.menu">
+        <field name="active" eval="False"/>
+    </record>
 </odoo>

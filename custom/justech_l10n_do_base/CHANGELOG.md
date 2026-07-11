@@ -1,5 +1,11 @@
 # Changelog — justech_l10n_do_base
 
+## [19.0.1.21.0] — 2026-07-11 — Gate Final Producción v1.0
+
+### Changed
+- Versión de release certificada tras Gate Final (Datos/Operación/Seguridad/Infra/Go-Live) en `erp.justech.do` / `justech_dev`.
+- Evidencia: `evidence/gate-final-produccion-v1/GO_LIVE_CERTIFICATION.md`.
+
 ## [19.0.1.20.0] — 2026-07-11 — Padrón DGII Enterprise
 
 ### Fixed

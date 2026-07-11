@@ -1,5 +1,11 @@
 # Changelog — justech_fiscal_admin
 
+## 19.0.1.8.0 — 2026-07-11
+
+- Gate Final de Producción v1.0: certificación PASS (Gates 1–5) en `justech_dev`.
+- Documentación go-live en `evidence/gate-final-produccion-v1/`.
+- Sin cambios funcionales de producto; marca de release certificada.
+
 ## 19.0.1.7.0 — 2026-07-11
 
 - Centro Fiscal: botón «Reimportar tras restore» para padrón global vacío.

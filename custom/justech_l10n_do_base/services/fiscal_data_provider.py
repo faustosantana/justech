@@ -185,6 +185,51 @@ class JustechDoFiscalDataProvider(models.AbstractModel):
             return "06"
         return "02"
 
+    def get_income_expense_type_display(self, move):
+        """Etiqueta UI de ingreso (607) o costo/gasto (606) — solo lectura."""
+        move.ensure_one()
+        move_type = move.move_type if self._has_field(move, "move_type") else ""
+        if move_type in ("out_invoice", "out_refund"):
+            code = self.get_income_type_607(move)
+            labels = {
+                "01": "01 - Ingresos por Operaciones (No Financieros)",
+                "02": "02 - Ingresos Financieros",
+                "03": "03 - Ingresos Extraordinarios",
+                "04": "04 - Ingresos por Arrendamientos",
+                "05": "05 - Ingresos por Venta de Activo Depreciable",
+                "06": "06 - Otros Ingresos",
+            }
+            if self._has_field(move, "l10n_do_income_type"):
+                try:
+                    sel = dict(move._fields["l10n_do_income_type"]._description_selection(move.env))
+                    labels.update(sel)
+                except Exception:
+                    pass
+            return labels.get(code, code or "")
+        if move_type in ("in_invoice", "in_refund"):
+            code = self.get_expense_type_606(move)
+            labels = {
+                "01": "01 - Gastos de Personal",
+                "02": "02 - Gastos por Trabajo, Suministros y Servicio",
+                "03": "03 - Arrendamientos",
+                "04": "04 - Gastos de Activos Fijos",
+                "05": "05 - Gastos de Representación",
+                "06": "06 - Otras Deducciones Admitidas",
+                "07": "07 - Gastos Financieros",
+                "08": "08 - Gastos Extraordinarios",
+                "09": "09 - Compras y Gastos que forman parte del Costo de Venta",
+                "10": "10 - Adquisiciones de Activos",
+                "11": "11 - Gastos de Seguros",
+            }
+            if self._has_field(move, "l10n_do_expense_type"):
+                try:
+                    sel = dict(move._fields["l10n_do_expense_type"]._description_selection(move.env))
+                    labels.update(sel)
+                except Exception:
+                    pass
+            return labels.get(code, code or "")
+        return ""
+
     def get_cancellation_type(self, move):
         move.ensure_one()
         if self._has_field(move, "justech_do_ncf_cancel_type"):

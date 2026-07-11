@@ -1,19 +1,261 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <!--
+      Hereda de l10n_do_accounting (priority 35).
+
+      Layout sheet (ancho completo):
+      1) Datos generales
+      2) Identificación fiscal
+      3) Configuración fiscal
+      4) Relación comercial
+    -->
     <record id="view_partner_form_justech_do" model="ir.ui.view">
         <field name="name">res.partner.form.justech.do</field>
         <field name="model">res.partner</field>
-        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="inherit_id" ref="l10n_do_accounting.view_partner_property_form_inherited"/>
+        <field name="priority">35</field>
         <field name="arch" type="xml">
-            <field name="vat" position="after">
-                <field name="justech_do_default_document_type_id"
-                       string="Comprobante fiscal por defecto"
-                       help="Este tipo de comprobante se sugerirá automáticamente al crear cotizaciones y facturas para este cliente."
-                       placeholder="Seleccionar comprobante fiscal..."
-                       options="{'no_create': True, 'no_open': True, 'no_quick_create': True}"/>
-                <field name="justech_do_partner_id_type"/>
-                <field name="justech_do_rnc_valid" readonly="1"/>
-            </field>
+            <xpath expr="//sheet" position="inside">
+                <field name="justech_do_show_company_fiscal" invisible="1"/>
+                <field name="justech_do_show_personal_id" invisible="1"/>
+                <field name="justech_do_show_default_document_type" invisible="1"/>
+                <field name="justech_do_show_rnc_validation" invisible="1"/>
+                <field name="justech_do_is_dominican" invisible="1"/>
+                <field name="justech_do_vat_label" invisible="1"/>
+                <field name="justech_do_rnc_name_differs" invisible="1"/>
+                <field name="justech_do_rnc_valid" invisible="1"/>
+                <field name="justech_do_rnc_padron_id" invisible="1"/>
+                <field name="justech_do_suggested_document_type_id" invisible="1"/>
+                <field name="justech_do_padron_source_state" invisible="1"/>
+                <field name="justech_do_rnc_duplicate_partner_id" invisible="1"/>
+                <field name="justech_do_rnc_source" invisible="1"/>
+                <field name="justech_do_rnc_contributor_state" invisible="1"/>
+            </xpath>
+
+            <xpath expr="//field[@name='name'][@id='company']" position="attributes">
+                <attribute name="placeholder">Nombre o razón social</attribute>
+                <attribute name="required">False</attribute>
+            </xpath>
+            <xpath expr="(//field[@name='name'][@invisible='is_company'])[1]" position="attributes">
+                <attribute name="required">not is_company and type == 'contact'</attribute>
+            </xpath>
+            <xpath expr="//h3/field[@name='name'][@class='d-block']" position="attributes">
+                <attribute name="required">not is_company and type == 'contact'</attribute>
+            </xpath>
+
+            <!-- Estructura de bloques a ancho completo -->
+            <xpath expr="//sheet/group" position="after">
+                <group string="Identificación fiscal" name="justech_identificacion_fiscal"
+                       col="2"
+                       invisible="parent_id and not is_company">
+                    <group name="justech_id_left">
+                        <field name="justech_do_partner_id_type"
+                               string="Tipo de identificación"
+                               invisible="not justech_do_show_company_fiscal and not justech_do_show_personal_id"/>
+                        <label for="vat"
+                               string="Número de identificación"
+                               invisible="justech_do_show_rnc_validation"/>
+                        <label for="vat"
+                               string="RNC"
+                               invisible="not justech_do_show_rnc_validation"/>
+                        <div class="o_row" name="justech_vat_row"/>
+                        <field name="justech_do_rnc_status"
+                               string="Resultado"
+                               widget="badge"
+                               invisible="not justech_do_show_rnc_validation"
+                               decoration-success="justech_do_rnc_status == 'valid'"
+                               decoration-warning="justech_do_rnc_status == 'not_found'"
+                               decoration-danger="justech_do_rnc_status in ('invalid', 'duplicate', 'error')"
+                               decoration-muted="justech_do_rnc_status == 'pending'"/>
+                        <field name="justech_do_padron_source_info"
+                               string="Fuente"
+                               readonly="1"
+                               invisible="not justech_do_show_rnc_validation or not justech_do_padron_source_info"
+                               class="text-muted"/>
+                        <field name="justech_do_rnc_duplicate_info"
+                               string="Contacto existente"
+                               readonly="1"
+                               invisible="justech_do_rnc_status != 'duplicate'"/>
+                        <button name="action_justech_open_rnc_duplicate"
+                                type="object"
+                                string="Abrir contacto"
+                                class="btn btn-link"
+                                invisible="justech_do_rnc_status != 'duplicate'"/>
+                    </group>
+                    <group name="justech_id_right">
+                        <field name="justech_do_rnc_official_name"
+                               string="Razón social oficial"
+                               readonly="1"
+                               invisible="not justech_do_show_rnc_validation or not justech_do_rnc_official_name"/>
+                        <button name="action_justech_apply_official_name"
+                                type="object"
+                                string="Usar razón social oficial"
+                                class="btn btn-link"
+                                invisible="not justech_do_show_rnc_validation or not justech_do_rnc_official_name or (name and not justech_do_rnc_name_differs)"/>
+                        <field name="justech_do_rnc_trade_name"
+                               string="Nombre comercial"
+                               readonly="1"
+                               invisible="not justech_do_show_rnc_validation or not justech_do_rnc_trade_name"/>
+                        <field name="justech_do_rnc_economic_activity"
+                               string="Actividad económica"
+                               readonly="1"
+                               invisible="not justech_do_show_rnc_validation or not justech_do_rnc_economic_activity"/>
+                        <field name="justech_do_rnc_validated_at"
+                               string="Fecha de validación"
+                               readonly="1"
+                               invisible="not justech_do_show_rnc_validation or not justech_do_rnc_validated_at"/>
+                    </group>
+                </group>
+
+                <group string="Configuración fiscal" name="justech_configuracion_fiscal"
+                       col="2"
+                       invisible="not justech_do_show_default_document_type">
+                    <group>
+                        <field name="justech_do_default_document_type_id"
+                               string="Comprobante fiscal por defecto"
+                               options="{'no_create': True, 'no_open': True, 'no_quick_create': True}"/>
+                        <field name="justech_do_document_suggestion_hint"
+                               string="Sugerencia"
+                               readonly="1"
+                               invisible="not justech_do_document_suggestion_hint"
+                               class="text-muted"/>
+                        <button name="action_justech_apply_suggested_document"
+                                type="object"
+                                string="Aplicar sugerencia"
+                                class="btn btn-link"
+                                invisible="not justech_do_suggested_document_type_id or justech_do_default_document_type_id == justech_do_suggested_document_type_id"/>
+                    </group>
+                    <group/>
+                </group>
+            </xpath>
+
+            <!-- Moves explícitos (destino ya existe) -->
+            <xpath expr="//div[@name='justech_vat_row']" position="inside">
+                <field name="vat" position="move"/>
+                <button name="action_justech_validate_rnc"
+                        type="object"
+                        string="Validar"
+                        class="btn btn-secondary"
+                        invisible="not justech_do_show_rnc_validation"/>
+            </xpath>
+            <xpath expr="//group[@name='justech_id_right']/field[@name='justech_do_rnc_trade_name']" position="after">
+                <field name="l10n_do_dgii_tax_payer_type" position="move"/>
+            </xpath>
+
+            <!-- Relación comercial: bloque en sheet sin duplicar; mueve solo campos de venta seguros -->
+            <xpath expr="//group[@name='justech_configuracion_fiscal']" position="after">
+                <group string="Relación comercial" name="justech_relacion_comercial" col="2">
+                    <group name="justech_rel_left"/>
+                    <group name="justech_rel_right"/>
+                </group>
+            </xpath>
+            <xpath expr="//group[@name='justech_rel_left']" position="inside">
+                <field name="user_id" position="move"/>
+            </xpath>
+            <xpath expr="//group[@name='justech_rel_right']" position="inside">
+                <field name="property_product_pricelist" position="move"/>
+            </xpath>
+
+            <xpath expr="//group[@name='justech_identificacion_fiscal']//field[@name='vat']" position="attributes">
+                <attribute name="nolabel">1</attribute>
+                <attribute name="class">oe_inline</attribute>
+                <attribute name="placeholder"></attribute>
+                <attribute name="readonly">0</attribute>
+                <attribute name="required">justech_do_show_rnc_validation and is_fiscal_info_required</attribute>
+            </xpath>
+            <xpath expr="//group[@name='justech_identificacion_fiscal']//field[@name='l10n_do_dgii_tax_payer_type']" position="attributes">
+                <attribute name="string">Tipo de contribuyente</attribute>
+                <attribute name="readonly">parent_id != False</attribute>
+                <attribute name="invisible">country_code != 'DO' or not is_company or parent_id</attribute>
+            </xpath>
         </field>
+    </record>
+
+    <record id="view_partner_form_justech_do_taxpayer" model="ir.ui.view">
+        <field name="name">res.partner.form.justech.do.taxpayer</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="l10n_do_accounting.view_partner_property_form_inherited"/>
+        <field name="priority">45</field>
+        <field name="active" eval="False"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name'][@id='company']" position="attributes">
+                <attribute name="placeholder">Nombre o razón social</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_justech_do_rnc_padron_list" model="ir.ui.view">
+        <field name="name">justech.do.rnc.padron.list</field>
+        <field name="model">justech.do.rnc.padron</field>
+        <field name="arch" type="xml">
+            <list create="false" edit="false" delete="false">
+                <field name="rnc"/>
+                <field name="name"/>
+                <field name="trade_name"/>
+                <field name="state"/>
+                <field name="category" optional="hide"/>
+                <field name="economic_activity" optional="hide"/>
+                <field name="source"/>
+                <field name="sync_date"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_justech_do_rnc_padron_form" model="ir.ui.view">
+        <field name="name">justech.do.rnc.padron.form</field>
+        <field name="model">justech.do.rnc.padron</field>
+        <field name="arch" type="xml">
+            <form create="false" edit="false" delete="false">
+                <sheet>
+                    <group>
+                        <field name="rnc"/>
+                        <field name="name"/>
+                        <field name="trade_name"/>
+                        <field name="state"/>
+                        <field name="category"/>
+                        <field name="economic_activity"/>
+                        <field name="source"/>
+                        <field name="sync_date"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_justech_do_rnc_padron_import_wizard" model="ir.ui.view">
+        <field name="name">justech.do.rnc.padron.import.wizard.form</field>
+        <field name="model">justech.do.rnc.padron.import.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Actualizar padrón RNC">
+                <group>
+                    <field name="data_file" filename="filename"/>
+                    <field name="filename" invisible="1"/>
+                    <field name="delimiter"/>
+                    <field name="has_header"/>
+                    <field name="replace_all"/>
+                    <field name="source"/>
+                </group>
+                <group string="Resultado" invisible="not result_log">
+                    <field name="result_log" nolabel="1" readonly="1"/>
+                </group>
+                <footer>
+                    <button name="action_import" type="object" string="Importar" class="btn-primary"/>
+                    <button string="Cerrar" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_justech_do_rnc_padron" model="ir.actions.act_window">
+        <field name="name">Padrón RNC</field>
+        <field name="res_model">justech.do.rnc.padron</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="action_justech_do_rnc_padron_import" model="ir.actions.act_window">
+        <field name="name">Actualizar padrón RNC</field>
+        <field name="res_model">justech.do.rnc.padron.import.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
     </record>
 </odoo>

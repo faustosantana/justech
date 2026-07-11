@@ -1,6 +1,6 @@
 {
     "name": "Justech Dominican Fiscal Base",
-    "version": "19.0.1.8.1",
+    "version": "19.0.1.14.0",
     "category": "Accounting/Localizations",
     "summary": "Base fiscal configuration for Dominican Republic (Justech)",
     "description": """
@@ -16,6 +16,7 @@ Dominican fiscal base layer for Justech localization.
         "account",
         "contacts",
         "l10n_do",
+        "l10n_do_accounting",
     ],
     "data": [
         "security/justech_l10n_do_security.xml",
@@ -34,7 +35,7 @@ Dominican fiscal base layer for Justech localization.
     "justech_register": {
         "module_code": "justech_l10n_do_base",
         "module_name": "Justech Dominican Fiscal Base",
-        "version": "19.0.1.6.0",
+        "version": "19.0.1.14.0",
         "category": "fiscal",
         "country": "DO",
         "localization": "l10n_do",

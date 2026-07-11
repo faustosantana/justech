@@ -11,20 +11,27 @@ class JustechDoFiscalConfigService(models.AbstractModel):
         if not (company.country_id.code == "DO" and company.justech_do_fiscal_enabled):
             return False
         if "justech.fiscal.feature.flag" in self.env:
-            return self.env["justech.fiscal.feature.flag"].is_enabled("ncf_motor", company)
+            # Lectura técnica del motor: no exigir grupo Fiscal Admin al facturador.
+            return self.env["justech.fiscal.feature.flag"].sudo().is_enabled(
+                "ncf_motor", company
+            )
         return True
 
     def is_dual_write_enabled(self, company=None):
         company = company or self.env.company
         if "justech.fiscal.feature.flag" not in self.env:
             return True
-        return self.env["justech.fiscal.feature.flag"].is_enabled("ncf_dual_write", company)
+        return self.env["justech.fiscal.feature.flag"].sudo().is_enabled(
+            "ncf_dual_write", company
+        )
 
     def is_duplicate_blocking_enabled(self, company=None):
         company = company or self.env.company
         if "justech.fiscal.feature.flag" not in self.env:
             return True
-        return self.env["justech.fiscal.feature.flag"].is_enabled("duplicate_blocking", company)
+        return self.env["justech.fiscal.feature.flag"].sudo().is_enabled(
+            "duplicate_blocking", company
+        )
 
     def get_param(self, key, company=None, default=None):
         company = company or self.env.company

@@ -16,4 +16,16 @@
               action="action_justech_do_fiscal_document_type"
               sequence="10"
               active="False"/>
+    <menuitem id="menu_justech_do_rnc_padron"
+              name="Padrón RNC"
+              parent="menu_justech_do_fiscal_root"
+              action="action_justech_do_rnc_padron"
+              sequence="20"
+              groups="justech_l10n_do_base.group_justech_do_fiscal_manager"/>
+    <menuitem id="menu_justech_do_rnc_padron_import"
+              name="Actualizar padrón RNC"
+              parent="menu_justech_do_fiscal_root"
+              action="action_justech_do_rnc_padron_import"
+              sequence="21"
+              groups="justech_l10n_do_base.group_justech_do_fiscal_manager"/>
 </odoo>

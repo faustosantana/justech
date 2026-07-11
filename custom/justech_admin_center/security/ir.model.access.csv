@@ -18,3 +18,14 @@ access_jac_op_wiz_manager,justech.admin.module.operation.wizard manager,model_ju
 access_jac_op_wiz_system,justech.admin.module.operation.wizard system,model_justech_admin_module_operation_wizard,base.group_system,1,1,1,1
 access_jac_role_wiz_manager,justech.admin.role.assign.wizard manager,model_justech_admin_role_assign_wizard,group_justech_admin_center_manager,1,1,1,1
 access_jac_role_wiz_system,justech.admin.role.assign.wizard system,model_justech_admin_role_assign_wizard,base.group_system,1,1,1,1
+access_jac_product_user,justech.admin.product user,model_justech_admin_product,group_justech_admin_center_user,1,0,0,0
+access_jac_product_manager,justech.admin.product manager,model_justech_admin_product,group_justech_admin_center_manager,1,1,1,0
+access_jac_product_system,justech.admin.product system,model_justech_admin_product,base.group_system,1,1,1,1
+access_jac_mod_co_user,justech.admin.module.company user,model_justech_admin_module_company,group_justech_admin_center_user,1,0,0,0
+access_jac_mod_co_manager,justech.admin.module.company manager,model_justech_admin_module_company,group_justech_admin_center_manager,1,1,1,0
+access_jac_mod_co_system,justech.admin.module.company system,model_justech_admin_module_company,base.group_system,1,1,1,1
+access_jac_auth_wiz_user,justech.admin.auth.wizard user,model_justech_admin_auth_wizard,group_justech_admin_center_user,1,1,1,1
+access_jac_auth_wiz_manager,justech.admin.auth.wizard manager,model_justech_admin_auth_wizard,group_justech_admin_center_manager,1,1,1,1
+access_jac_auth_wiz_system,justech.admin.auth.wizard system,model_justech_admin_auth_wizard,base.group_system,1,1,1,1
+access_jac_co_act_wiz_manager,justech.admin.company.activation.wizard manager,model_justech_admin_company_activation_wizard,group_justech_admin_center_manager,1,1,1,1
+access_jac_co_act_wiz_system,justech.admin.company.activation.wizard system,model_justech_admin_company_activation_wizard,base.group_system,1,1,1,1

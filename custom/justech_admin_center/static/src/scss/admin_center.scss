@@ -1,72 +1,234 @@
-/* Scoped Justech Admin Center — no global Odoo overrides */
-.o_justech_admin_center .o_jac_kpi_grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  gap: 12px;
-  margin: 12px 0 20px;
+/* Justech Admin Center Enterprise — scoped only (no global Odoo overrides) */
+:root {
+  --jac-navy: #1B3A5C;
+  --jac-teal: #0D9488;
+  --jac-teal-soft: rgba(13, 148, 136, 0.12);
+  --jac-navy-soft: rgba(27, 58, 92, 0.08);
+  --jac-ok: #16a34a;
+  --jac-warn: #ca8a04;
+  --jac-err: #dc2626;
+  --jac-info: #2563eb;
+  --jac-muted: #64748b;
 }
 
+.o_justech_admin_center,
+.o_jac_enterprise,
+.o_jac_module_kanban,
+.o_jac_product_kanban,
+.o_jac_product_form,
+.o_jac_module_form {
+  --jac-card-bg: var(--o-view-background-color, #fff);
+  --jac-card-border: rgba(15, 23, 42, 0.1);
+  --jac-text: var(--o-view-text-color, #0f172a);
+  --jac-text-muted: color-mix(in srgb, var(--jac-text) 65%, transparent);
+}
+
+/* Dark mode: Odoo color scheme */
+.o_web_client.o_dark .o_justech_admin_center,
+.o_web_client.o_dark .o_jac_enterprise,
+.o_web_client.o_dark .o_jac_module_kanban,
+.o_web_client.o_dark .o_jac_product_kanban,
+html.o_dark .o_justech_admin_center,
+.o_color_scheme_dark .o_justech_admin_center,
+.o_color_scheme_dark .o_jac_enterprise,
+.o_color_scheme_dark .o_jac_module_kanban,
+.o_color_scheme_dark .o_jac_product_kanban {
+  --jac-card-bg: color-mix(in srgb, var(--o-view-background-color, #1e293b) 92%, #0f172a);
+  --jac-card-border: rgba(148, 163, 184, 0.28);
+  --jac-text: var(--o-view-text-color, #e2e8f0);
+  --jac-text-muted: color-mix(in srgb, var(--jac-text) 72%, transparent);
+}
+
+.o_jac_enterprise {
+  color: var(--jac-text);
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+.o_jac_brand_row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+}
+
+.o_jac_brand_mark {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: linear-gradient(145deg, var(--jac-navy), var(--jac-teal));
+  color: #fff;
+  font-weight: 800;
+  font-size: 1.35rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.o_jac_brand_title {
+  margin: 0;
+  font-size: 1.45rem;
+  font-weight: 700;
+  color: var(--jac-navy);
+}
+
+.o_color_scheme_dark .o_jac_brand_title,
+.o_web_client.o_dark .o_jac_brand_title {
+  color: #e2e8f0;
+}
+
+.o_jac_brand_sub {
+  margin: 2px 0 0;
+  color: var(--jac-text-muted);
+  font-size: 0.92rem;
+}
+
+.o_jac_kpi_grid,
+.o_justech_admin_center .o_jac_kpi_grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 12px;
+  margin: 12px 0 20px;
+  width: 100%;
+}
+
+.o_jac_kpi_card,
 .o_justech_admin_center .o_jac_kpi_card {
   border-radius: 12px;
   padding: 14px 16px;
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  background: var(--o-view-background-color, #fff);
+  border: 1px solid var(--jac-card-border);
+  background: var(--jac-card-bg);
   box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+  color: var(--jac-text);
 }
 
-.o_justech_admin_center .o_jac_kpi_value {
-  font-size: 1.6rem;
+.o_jac_kpi_value {
+  font-size: 1.55rem;
   font-weight: 700;
   line-height: 1.2;
+  color: var(--jac-text);
 }
 
-.o_justech_admin_center .o_jac_kpi_label {
-  font-size: 0.85rem;
-  opacity: 0.75;
+.o_jac_kpi_label {
+  font-size: 0.82rem;
+  color: var(--jac-text-muted);
+  margin-top: 4px;
 }
 
-.o_justech_admin_center .o_jac_tone_green { border-left: 4px solid #16a34a; }
-.o_justech_admin_center .o_jac_tone_yellow { border-left: 4px solid #ca8a04; }
-.o_justech_admin_center .o_jac_tone_red { border-left: 4px solid #dc2626; }
-.o_justech_admin_center .o_jac_tone_blue { border-left: 4px solid #2563eb; }
-.o_justech_admin_center .o_jac_tone_grey { border-left: 4px solid #94a3b8; }
+.o_jac_product_grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 14px;
+  width: 100%;
+  margin-bottom: 8px;
+}
+
+.o_jac_product_card,
+.o_jac_module_kanban .o_jac_card {
+  border-radius: 12px;
+  padding: 14px;
+  border: 1px solid var(--jac-card-border);
+  background: var(--jac-card-bg);
+  color: var(--jac-text);
+  min-height: 140px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.o_jac_product_head,
+.o_jac_card_head {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  font-size: 1.05rem;
+}
+
+.o_jac_product_head .fa,
+.o_jac_card_head .fa {
+  color: var(--jac-teal);
+  width: 1.2em;
+  text-align: center;
+}
+
+.o_jac_product_desc,
+.o_jac_card_body {
+  color: var(--jac-text-muted);
+  font-size: 0.9rem;
+  line-height: 1.4;
+  flex: 1;
+}
+
+.o_jac_product_meta,
+.o_jac_card_meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 0.78rem;
+  color: var(--jac-text-muted);
+}
+
+.o_jac_tone_green { border-left: 4px solid var(--jac-ok) !important; }
+.o_jac_tone_yellow { border-left: 4px solid var(--jac-warn) !important; }
+.o_jac_tone_red { border-left: 4px solid var(--jac-err) !important; }
+.o_jac_tone_blue { border-left: 4px solid var(--jac-info) !important; }
+.o_jac_tone_grey { border-left: 4px solid #94a3b8 !important; }
 
 .o_justech_admin_center .o_jac_action_row {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  margin-bottom: 16px;
+  margin: 12px 0 16px;
+  max-width: 100%;
 }
 
-.o_jac_module_kanban .o_jac_card {
-  border-radius: 12px;
-  padding: 12px;
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  min-height: 150px;
-  background: var(--o-view-background-color, #fff);
-}
-
-.o_jac_module_kanban .o_jac_card_head {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  margin-bottom: 8px;
-}
-
-.o_jac_module_kanban .o_jac_card_meta {
+.o_jac_card_actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 4px;
-  margin: 8px 0;
+  gap: 6px;
+  margin-top: 4px;
 }
 
-.o_jac_module_kanban .o_jac_tone_green { border-left: 4px solid #16a34a; }
-.o_jac_module_kanban .o_jac_tone_yellow { border-left: 4px solid #ca8a04; }
-.o_jac_module_kanban .o_jac_tone_red { border-left: 4px solid #dc2626; }
-.o_jac_module_kanban .o_jac_tone_blue { border-left: 4px solid #2563eb; }
-.o_jac_module_kanban .o_jac_tone_grey { border-left: 4px solid #94a3b8; }
+.o_jac_card_actions .btn-primary,
+.o_jac_action_row .btn-primary {
+  background: var(--jac-navy);
+  border-color: var(--jac-navy);
+}
 
-.o_jac_matrix table {
-  width: 100%;
-  font-size: 0.9rem;
+.o_jac_card_actions .btn-primary:hover,
+.o_jac_action_row .btn-primary:hover {
+  background: var(--jac-teal);
+  border-color: var(--jac-teal);
+}
+
+/* Avoid horizontal kanban scroll as primary UX */
+.o_jac_module_kanban.o_kanban_view .o_kanban_renderer,
+.o_jac_product_kanban.o_kanban_view .o_kanban_renderer {
+  overflow-x: auto;
+  max-width: 100%;
+}
+
+.o_jac_module_kanban .o_kanban_group,
+.o_jac_product_kanban .o_kanban_group {
+  min-width: 280px;
+  max-width: 360px;
+}
+
+@media (max-width: 768px) {
+  .o_jac_kpi_grid,
+  .o_jac_product_grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .o_jac_brand_title {
+    font-size: 1.2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .o_jac_kpi_grid,
+  .o_jac_product_grid {
+    grid-template-columns: 1fr;
+  }
 }

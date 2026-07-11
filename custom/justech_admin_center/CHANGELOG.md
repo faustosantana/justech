@@ -1,5 +1,13 @@
 # Changelog — justech_admin_center
 
+## 19.0.2.0.0 — 2026-07-11
+
+- Consola Enterprise: productos → submódulos, dashboard responsive, contraste claro/oscuro.
+- Activación / desactivación / motor fiscal por empresa con preview y auditoría.
+- Reautenticación reforzada (hash env PBKDF2 o clave Justech), sesión 15 min, rate limit.
+- Secretos solo por entorno (`JUSTECH_ADMIN_CENTER_PASSWORD_HASH`); nunca en Git.
+- Catálogo dinámico enriquecido; instalación con lock advisory; sin desinstalación en v1.
+
 ## 19.0.1.0.1 — 2026-07-11
 
 - Grupos Odoo 19 con `res.groups.privilege` (sin `category_id`).

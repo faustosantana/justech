@@ -4,12 +4,13 @@
         <field name="name">justech.admin.module.kanban</field>
         <field name="model">justech.admin.module</field>
         <field name="arch" type="xml">
-            <kanban class="o_jac_module_kanban" default_group_by="category">
+            <kanban class="o_jac_module_kanban" default_group_by="product_id">
                 <field name="id"/>
                 <field name="functional_name"/>
                 <field name="short_description"/>
                 <field name="version"/>
                 <field name="category"/>
+                <field name="product_id"/>
                 <field name="technical_state"/>
                 <field name="functional_state"/>
                 <field name="status_visual"/>
@@ -17,6 +18,7 @@
                 <field name="dependency_names"/>
                 <field name="supports_activate"/>
                 <field name="supports_deactivate"/>
+                <field name="company_active_count"/>
                 <templates>
                     <t t-name="card">
                         <div class="o_jac_card" t-attf-class="o_jac_tone_#{record.status_visual.raw_value}">
@@ -24,22 +26,21 @@
                                 <i t-attf-class="fa #{record.icon.raw_value or 'fa-cube'}"/>
                                 <strong><field name="functional_name"/></strong>
                             </div>
-                            <div class="o_jac_card_body text-muted">
+                            <div class="o_jac_card_body">
                                 <field name="short_description"/>
                             </div>
                             <div class="o_jac_card_meta">
                                 <span class="badge text-bg-secondary"><field name="version"/></span>
-                                <span class="badge text-bg-light"><field name="technical_state"/></span>
-                                <span class="badge text-bg-info"><field name="functional_state"/></span>
+                                <span class="badge text-bg-light">Técnico: <field name="technical_state"/></span>
+                                <span class="badge text-bg-info">Funcional: <field name="functional_state"/></span>
+                                <span class="badge text-bg-primary"><field name="company_active_count"/> empresas</span>
                             </div>
                             <div class="o_jac_card_actions">
-                                <button name="action_open_detail" type="object" class="btn btn-link btn-sm">Detalles</button>
+                                <button name="action_open_detail" type="object" class="btn btn-link btn-sm">Administrar</button>
+                                <button name="action_run_health" type="object" class="btn btn-link btn-sm">Diagnosticar</button>
+                                <button name="action_open_module" type="object" class="btn btn-link btn-sm">Abrir</button>
                                 <button name="action_prepare_install" type="object" class="btn btn-primary btn-sm"
                                         invisible="technical_state != 'not_installed'">Instalar</button>
-                                <button name="action_prepare_activate" type="object" class="btn btn-success btn-sm"
-                                        invisible="technical_state != 'installed' or functional_state == 'active' or not supports_activate">Activar</button>
-                                <button name="action_prepare_deactivate" type="object" class="btn btn-warning btn-sm"
-                                        invisible="technical_state != 'installed' or functional_state != 'active' or not supports_deactivate">Desactivar</button>
                             </div>
                         </div>
                     </t>
@@ -55,10 +56,11 @@
             <list>
                 <field name="sequence" widget="handle"/>
                 <field name="functional_name"/>
-                <field name="category"/>
+                <field name="product_id"/>
                 <field name="version"/>
                 <field name="technical_state"/>
                 <field name="functional_state"/>
+                <field name="company_active_count"/>
                 <field name="status_visual" widget="badge"
                          decoration-success="status_visual == 'green'"
                          decoration-warning="status_visual == 'yellow'"
@@ -94,25 +96,51 @@
                     </div>
                     <group>
                         <group string="Resumen">
-                            <field name="category"/>
+                            <field name="product_id"/>
                             <field name="version"/>
+                            <field name="activation_scope"/>
                             <field name="technical_state"/>
                             <field name="functional_state"/>
                             <field name="last_health_at"/>
                             <field name="last_health_summary"/>
                         </group>
-                        <group string="Dependencias">
+                        <group string="Dependencias y alcance">
                             <field name="dependency_names"/>
                             <field name="company_active_count"/>
                             <field name="company_ids_display"/>
+                            <field name="fiscal_engine_capable"/>
+                            <field name="is_critical"/>
                         </group>
                     </group>
                     <notebook>
+                        <page string="Descripción" name="description">
+                            <field name="long_description" nolabel="1"/>
+                            <group>
+                                <field name="what_it_does"/>
+                                <field name="processes_affected"/>
+                                <field name="users_who_use_it"/>
+                                <field name="risk_activate"/>
+                                <field name="risk_deactivate"/>
+                            </group>
+                        </page>
+                        <page string="Empresas" name="companies">
+                            <field name="company_line_ids">
+                                <list>
+                                    <field name="company_id"/>
+                                    <field name="functional_state"/>
+                                    <field name="fiscal_engine"/>
+                                    <field name="last_change_at"/>
+                                    <button name="action_prepare_activate" type="object" string="Activar" class="btn-link"/>
+                                    <button name="action_prepare_deactivate" type="object" string="Desactivar" class="btn-link"/>
+                                    <button name="action_prepare_engine_change" type="object" string="Motor" class="btn-link"
+                                            invisible="not parent.fiscal_engine_capable"/>
+                                </list>
+                            </field>
+                        </page>
                         <page string="Configuración" name="config">
                             <group>
                                 <field name="supports_activate"/>
                                 <field name="supports_deactivate"/>
-                                <field name="is_critical"/>
                                 <field name="feature_flag_codes"/>
                             </group>
                         </page>
@@ -138,6 +166,7 @@
                         <page string="Información técnica" name="tech" groups="base.group_system">
                             <group>
                                 <field name="technical_name"/>
+                                <field name="category"/>
                                 <field name="ir_module_id"/>
                                 <field name="open_action_xmlid"/>
                                 <field name="health_method"/>

@@ -1,4 +1,6 @@
 from . import justech_admin_module
+from . import justech_admin_product
+from . import justech_admin_module_company
 from . import justech_admin_operation
 from . import justech_admin_audit_log
 from . import justech_admin_health_finding
@@ -6,6 +8,9 @@ from . import justech_admin_console
 from . import justech_admin_registry_service
 from . import justech_admin_install_service
 from . import justech_admin_activation_service
+from . import justech_admin_company_activation_service
+from . import justech_admin_center_auth_service
+from . import justech_admin_access_service_inherit
 from . import justech_admin_health_service
 from . import justech_admin_permission_matrix_service
 from . import res_users

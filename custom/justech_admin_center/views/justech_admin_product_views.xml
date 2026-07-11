@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_justech_admin_product_kanban" model="ir.ui.view">
+        <field name="name">justech.admin.product.kanban</field>
+        <field name="model">justech.admin.product</field>
+        <field name="arch" type="xml">
+            <kanban class="o_jac_product_kanban" create="0">
+                <field name="name"/>
+                <field name="short_description"/>
+                <field name="icon"/>
+                <field name="module_count"/>
+                <field name="installed_count"/>
+                <field name="active_company_count"/>
+                <field name="status_visual"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="o_jac_product_card" t-attf-class="o_jac_tone_#{record.status_visual.raw_value}">
+                            <div class="o_jac_product_head">
+                                <i t-attf-class="fa #{record.icon.raw_value or 'fa-cube'}"/>
+                                <strong><field name="name"/></strong>
+                            </div>
+                            <p class="o_jac_product_desc"><field name="short_description"/></p>
+                            <div class="o_jac_product_meta">
+                                <span><field name="module_count"/> submódulos</span>
+                                <span><field name="installed_count"/> instalados</span>
+                                <span><field name="active_company_count"/> activos</span>
+                            </div>
+                            <button name="action_open_detail" type="object" class="btn btn-primary btn-sm">Administrar</button>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_justech_admin_product_list" model="ir.ui.view">
+        <field name="name">justech.admin.product.list</field>
+        <field name="model">justech.admin.product</field>
+        <field name="arch" type="xml">
+            <list create="0">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="module_count"/>
+                <field name="installed_count"/>
+                <field name="active_company_count"/>
+                <field name="status_visual" widget="badge"
+                         decoration-success="status_visual == 'green'"
+                         decoration-warning="status_visual == 'yellow'"
+                         decoration-danger="status_visual == 'red'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_justech_admin_product_form" model="ir.ui.view">
+        <field name="name">justech.admin.product.form</field>
+        <field name="model">justech.admin.product</field>
+        <field name="arch" type="xml">
+            <form class="o_jac_product_form" create="0" delete="0">
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                        <h3 class="text-muted"><field name="short_description" readonly="1"/></h3>
+                    </div>
+                    <group>
+                        <group string="Resumen">
+                            <field name="module_count"/>
+                            <field name="installed_count"/>
+                            <field name="active_company_count"/>
+                            <field name="status_visual" widget="badge"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Descripción" name="desc">
+                            <field name="long_description" nolabel="1"/>
+                        </page>
+                        <page string="Submódulos" name="modules">
+                            <field name="module_ids" mode="list,kanban">
+                                <list>
+                                    <field name="functional_name"/>
+                                    <field name="technical_state"/>
+                                    <field name="functional_state"/>
+                                    <field name="company_active_count"/>
+                                    <field name="status_visual" widget="badge"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Empresas" name="companies">
+                            <p class="text-muted">Matriz de activación por empresa (submódulos de este producto).</p>
+                            <button name="action_open_company_matrix" type="object"
+                                    string="Abrir matriz por empresa" class="btn-secondary"/>
+                        </page>
+                        <page string="Información técnica" name="tech" groups="base.group_system">
+                            <group>
+                                <field name="code"/>
+                                <field name="icon"/>
+                                <field name="sequence"/>
+                                <field name="active"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_justech_admin_product" model="ir.actions.act_window">
+        <field name="name">Productos Justech</field>
+        <field name="res_model">justech.admin.product</field>
+        <field name="view_mode">kanban,list,form</field>
+    </record>
+</odoo>

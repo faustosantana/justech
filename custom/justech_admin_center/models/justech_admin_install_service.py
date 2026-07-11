@@ -45,23 +45,41 @@ class JustechAdminInstallService(models.AbstractModel):
 
     @api.model
     def execute(self, operation):
+        self.env["justech.admin.center.auth.service"].require_session()
         module = operation.module_id
         if not module.technical_name.startswith("justech_"):
             raise UserError(_("Instalación no autorizada."))
-        preview = self.build_preview(module)
-        backup_path = self._create_backup(module.technical_name)
-        operation.write({"backup_path": backup_path, "preview_before": preview["before"], "preview_after": preview["after"], "risks": preview["risks"], "rollback_notes": preview["rollback"]})
+        # Advisory lock — no concurrent installs
+        self.env.cr.execute("SELECT pg_try_advisory_lock(%s)", [87201901])
+        locked = self.env.cr.fetchone()[0]
+        if not locked:
+            raise UserError(_("Ya hay una instalación Justech en curso. Espere a que finalice."))
+        try:
+            preview = self.build_preview(module)
+            backup_path = self._create_backup(module.technical_name)
+            operation.write(
+                {
+                    "backup_path": backup_path,
+                    "preview_before": preview["before"],
+                    "preview_after": preview["after"],
+                    "risks": preview["risks"],
+                    "rollback_notes": preview["rollback"],
+                }
+            )
+            irm = module.ir_module_id.sudo()
+            irm.button_immediate_install()
+            self.env["justech.admin.registry.service"].discover_and_sync()
+            module.invalidate_recordset()
+            module = self.env["justech.admin.module"].browse(module.id)
+            return {
+                "ok": True,
+                "message": _("Módulo %s instalado. Queda inactivo hasta activación funcional.")
+                % module.functional_name,
+                "backup_path": backup_path,
+            }
+        finally:
+            self.env.cr.execute("SELECT pg_advisory_unlock(%s)", [87201901])
 
-        irm = module.ir_module_id.sudo()
-        irm.button_immediate_install()
-        self.env["justech.admin.registry.service"].discover_and_sync()
-        module.invalidate_recordset()
-        module = self.env["justech.admin.module"].browse(module.id)
-        return {
-            "ok": True,
-            "message": _("Módulo %s instalado. Queda inactivo hasta activación funcional.") % module.functional_name,
-            "backup_path": backup_path,
-        }
 
     @api.model
     def _create_backup(self, label):

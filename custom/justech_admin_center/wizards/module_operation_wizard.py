@@ -72,6 +72,7 @@ class JustechAdminModuleOperationWizard(models.TransientModel):
 
     def action_apply(self):
         self.ensure_one()
+        self.env["justech.admin.center.auth.service"].require_session()
         if not self.confirmation:
             raise UserError(_("Debe confirmar que ha leído riesgos y backup."))
         if self.operation_type == "install" and not (

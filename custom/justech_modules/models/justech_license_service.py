@@ -285,6 +285,9 @@ class JustechLicenseService(models.AbstractModel):
         ir_module = self.env["ir.module.module"].search(
             [("name", "=", module_name)], limit=1
         )
+        raw_category = (register_data.get("category") or "platform").strip().lower()
+        allowed = {k for k, _v in self.env["justech.module"]._fields["category"].selection}
+        category = raw_category if raw_category in allowed else "other" if "other" in allowed else "platform"
         module_vals = {
             "code": module_code,
             "name": register_data.get("module_name")
@@ -294,7 +297,7 @@ class JustechLicenseService(models.AbstractModel):
             "description": register_data.get("description")
             or manifest.get("summary")
             or manifest.get("description"),
-            "category": register_data.get("category", "platform"),
+            "category": category,
             "country": register_data.get("country"),
             "localization": register_data.get("localization"),
             "required_module": register_data.get("required_module", False),
@@ -344,8 +347,16 @@ class JustechLicenseService(models.AbstractModel):
 
     @api.model
     def _normalize_manifest_features(self, register_data):
-        if register_data.get("features"):
-            return register_data["features"]
+        features = register_data.get("features")
+        if features:
+            normalized = []
+            for feat in features:
+                if isinstance(feat, str):
+                    normalized.append({"code": feat, "name": feat})
+                elif isinstance(feat, dict) and feat.get("code"):
+                    normalized.append(feat)
+            if normalized:
+                return normalized
         if register_data.get("feature_code"):
             return [
                 {

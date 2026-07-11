@@ -2,7 +2,7 @@ import ast
 import logging
 import os
 
-from odoo import api, fields, models
+from odoo import _, api, fields, models
 from odoo.modules.module import get_module_path, get_modules
 
 _logger = logging.getLogger(__name__)
@@ -19,6 +19,18 @@ CATEGORY_MAP = {
     "integrations": "integrations",
     "pos": "other",
     "inventory": "other",
+}
+
+PRODUCT_CODE_MAP = {
+    "platform": "core",
+    "fiscal": "fiscal",
+    "reports": "fiscal",
+    "payments": "finance",
+    "treasury": "finance",
+    "audit": "audit",
+    "integrations": "integrations",
+    "other": "core",
+    "ux": "core",
 }
 
 
@@ -48,7 +60,9 @@ class JustechAdminRegistryService(models.AbstractModel):
             seen.add(irm.name)
 
         for payload in payloads:
-            self._upsert(Module, IrModule, payload)
+            rec = self._upsert(Module, IrModule, payload)
+            if rec.technical_state == "installed":
+                self.env["justech.admin.company.activation.service"].ensure_lines_for_module(rec)
 
         # Mark missing physical modules
         orphans = Module.search([("technical_name", "not in", list(seen or [""]))])
@@ -87,8 +101,17 @@ class JustechAdminRegistryService(models.AbstractModel):
         category = center.get("category") or CATEGORY_MAP.get(
             (register.get("category") or "").lower(), "other"
         )
+        product_code = center.get("product_code") or PRODUCT_CODE_MAP.get(category, "core")
+        if "warranty" in tech_name:
+            product_code = center.get("product_code") or "warranty"
         deps = manifest.get("depends") or []
         justech_deps = [d for d in deps if d.startswith("justech_")]
+        long_desc = center.get("long_description") or center.get("short_description") or register.get("description") or manifest.get("summary") or ""
+        if "warranty" in tech_name and not center.get("long_description"):
+            long_desc = (
+                "Qué es: producto de garantías Justech. Para qué sirve: registrar y dar seguimiento a garantías. "
+                "Procesos: postventa y RMA. Crítico: no. Ámbito: por empresa. Al desactivar: bloquea nuevas; conserva histórico."
+            )
         return {
             "technical_name": tech_name,
             "functional_name": center.get("functional_name")
@@ -98,10 +121,19 @@ class JustechAdminRegistryService(models.AbstractModel):
             "short_description": center.get("short_description")
             or register.get("description")
             or manifest.get("summary")
-            or "",
+            or _("Sin descripción funcional — complete el contrato justech_admin_center."),
+            "long_description": long_desc,
+            "what_it_does": center.get("what_it_does") or center.get("short_description") or "",
+            "processes_affected": center.get("processes_affected") or "",
+            "users_who_use_it": center.get("users_who_use_it") or "",
+            "risk_activate": center.get("risk_activate") or "",
+            "risk_deactivate": center.get("risk_deactivate") or "",
+            "product_code": product_code,
+            "activation_scope": center.get("activation_scope") or "company",
+            "fiscal_engine_capable": bool(center.get("fiscal_engine_capable")),
             "category": category if category in dict(self.env["justech.admin.module"]._fields["category"].selection) else "other",
-            "icon": center.get("icon") or "fa-cube",
-            "sequence": int(center.get("sequence") or 100),
+            "icon": center.get("icon") or ("fa-shield" if "warranty" in tech_name else "fa-cube"),
+            "sequence": int(center.get("sequence") or (40 if "warranty" in tech_name else 100)),
             "version": register.get("version") or manifest.get("version") or "",
             "dependency_names": ", ".join(justech_deps),
             "open_action_xmlid": center.get("open_action_xmlid") or False,
@@ -116,11 +148,52 @@ class JustechAdminRegistryService(models.AbstractModel):
 
     @api.model
     def _payload_from_ir_module(self, irm):
+        cat = "other"
+        if "warranty" in (irm.name or ""):
+            return {
+                "technical_name": irm.name,
+                "functional_name": "Justech Garantías",
+                "short_description": "Gestión de garantías: registro, seguimiento, aprobaciones y reportes.",
+                "long_description": (
+                    "Qué es: producto de garantías Justech. Para qué sirve: registrar y dar seguimiento a garantías. "
+                    "Procesos: postventa y RMA. Crítico: no. Ámbito: por empresa. Al desactivar: bloquea nuevas; conserva histórico."
+                ),
+                "what_it_does": "Administra garantías de producto por empresa.",
+                "processes_affected": "Postventa, RMA, aprobaciones y alertas.",
+                "users_who_use_it": "Administrador y usuario de Garantías.",
+                "risk_activate": "Habilita operaciones nuevas de garantías.",
+                "risk_deactivate": "Bloquea nuevas; conserva histórico y lectura.",
+                "product_code": "warranty",
+                "activation_scope": "company",
+                "fiscal_engine_capable": False,
+                "category": "other",
+                "icon": "fa-shield",
+                "sequence": 40,
+                "version": irm.latest_version or "",
+                "dependency_names": "",
+                "open_action_xmlid": False,
+                "health_method": False,
+                "feature_flag_codes": "",
+                "supports_activate": True,
+                "supports_deactivate": True,
+                "is_critical": False,
+                "is_installable": irm.state in ("uninstalled", "to install"),
+                "odoo_depends": [],
+            }
         return {
             "technical_name": irm.name,
             "functional_name": irm.shortdesc or irm.name,
-            "short_description": irm.summary or "",
-            "category": "other",
+            "short_description": irm.summary or _("Módulo Justech instalado — complete su descripción funcional."),
+            "long_description": irm.summary or "",
+            "what_it_does": irm.summary or "",
+            "processes_affected": "",
+            "users_who_use_it": "",
+            "risk_activate": "",
+            "risk_deactivate": "",
+            "product_code": PRODUCT_CODE_MAP.get(cat, "core"),
+            "activation_scope": "company",
+            "fiscal_engine_capable": False,
+            "category": cat,
             "icon": "fa-cube",
             "sequence": 200,
             "version": irm.latest_version or "",
@@ -134,6 +207,12 @@ class JustechAdminRegistryService(models.AbstractModel):
             "is_installable": irm.state in ("uninstalled", "to install"),
             "odoo_depends": [],
         }
+
+    @api.model
+    def _resolve_product(self, product_code):
+        Product = self.env["justech.admin.product"].sudo()
+        product = Product.search([("code", "=", product_code)], limit=1)
+        return product
 
     @api.model
     def _upsert(self, Module, IrModule, payload):
@@ -156,10 +235,20 @@ class JustechAdminRegistryService(models.AbstractModel):
         if tech_state == "installed":
             functional = self._resolve_functional_state(tech, payload)
 
+        product = self._resolve_product(payload.get("product_code") or "core")
         vals = {
             "technical_name": tech,
             "functional_name": payload["functional_name"],
             "short_description": payload["short_description"],
+            "long_description": payload.get("long_description") or payload["short_description"],
+            "what_it_does": payload.get("what_it_does") or "",
+            "processes_affected": payload.get("processes_affected") or "",
+            "users_who_use_it": payload.get("users_who_use_it") or "",
+            "risk_activate": payload.get("risk_activate") or "",
+            "risk_deactivate": payload.get("risk_deactivate") or "",
+            "product_id": product.id if product else False,
+            "activation_scope": payload.get("activation_scope") or "company",
+            "fiscal_engine_capable": bool(payload.get("fiscal_engine_capable")),
             "category": payload["category"],
             "icon": payload["icon"],
             "sequence": payload["sequence"],

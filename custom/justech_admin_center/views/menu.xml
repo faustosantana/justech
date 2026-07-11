@@ -8,11 +8,23 @@
               sequence="94"
               groups="base.group_system,justech_admin_center.group_justech_admin_center_user"/>
 
+    <menuitem id="menu_justech_admin_center_products"
+              name="Productos"
+              parent="menu_justech_admin_center_root"
+              action="action_justech_admin_product"
+              sequence="5"/>
+
     <menuitem id="menu_justech_admin_center_catalog"
-              name="Catálogo de módulos"
+              name="Submódulos"
               parent="menu_justech_admin_center_root"
               action="action_justech_admin_module"
               sequence="10"/>
+
+    <menuitem id="menu_justech_admin_center_companies"
+              name="Por empresa"
+              parent="menu_justech_admin_center_root"
+              action="action_justech_admin_module_company"
+              sequence="15"/>
 
     <menuitem id="menu_justech_admin_center_health"
               name="Diagnóstico"

@@ -9,7 +9,24 @@ class JustechAdminModule(models.Model):
     name = fields.Char(related="functional_name", store=True)
     technical_name = fields.Char(required=True, index=True)
     functional_name = fields.Char(required=True)
-    short_description = fields.Text()
+    short_description = fields.Text(required=False)
+    long_description = fields.Html(
+        string="Descripción funcional",
+        help="Qué es, para qué sirve, procesos, criticidad, activar/desactivar.",
+    )
+    what_it_does = fields.Text(string="Para qué se utiliza")
+    processes_affected = fields.Text(string="Procesos que afecta")
+    users_who_use_it = fields.Text(string="Usuarios típicos")
+    risk_activate = fields.Text(string="Riesgo al activar")
+    risk_deactivate = fields.Text(string="Riesgo al desactivar")
+    product_id = fields.Many2one("justech.admin.product", string="Producto", ondelete="set null", index=True)
+    activation_scope = fields.Selection(
+        selection=[("global", "Global"), ("company", "Por empresa")],
+        default="company",
+        required=True,
+    )
+    fiscal_engine_capable = fields.Boolean(default=False)
+    company_line_ids = fields.One2many("justech.admin.module.company", "module_id", string="Empresas")
     category = fields.Selection(
         selection=[
             ("platform", "Plataforma"),
@@ -103,10 +120,11 @@ class JustechAdminModule(models.Model):
                 rec.status_visual = "blue"
 
     def _compute_company_stats(self):
-        companies = self.env["res.company"].sudo().search([])
+        Line = self.env["justech.admin.module.company"]
         for rec in self:
-            rec.company_active_count = len(companies) if rec.technical_state == "installed" else 0
-            rec.company_ids_display = ", ".join(companies.mapped("name")[:4]) if rec.technical_state == "installed" else ""
+            lines = Line.search([("module_id", "=", rec.id), ("functional_state", "=", "active")])
+            rec.company_active_count = len(lines)
+            rec.company_ids_display = ", ".join(lines.mapped("company_id.name")[:6])
 
     def _compute_finding_count(self):
         Finding = self.env["justech.admin.health.finding"]

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="product_core" model="justech.admin.product">
+        <field name="code">core</field>
+        <field name="name">Justech Core</field>
+        <field name="sequence">10</field>
+        <field name="icon">fa-cubes</field>
+        <field name="short_description">Núcleo común del ecosistema Justech. Proporciona registro modular, configuración compartida, seguridad, roles, auditoría, Health Checks y servicios reutilizables. No representa por sí solo una operación comercial.</field>
+        <field name="long_description"><![CDATA[
+            <p><strong>Qué es:</strong> la base compartida del ecosistema Justech.</p>
+            <p><strong>Para qué sirve:</strong> registro de módulos, seguridad, auditoría y health.</p>
+            <p><strong>Si se desactiva:</strong> la consola y servicios comunes dejan de estar disponibles; normalmente debe permanecer activo.</p>
+        ]]></field>
+    </record>
+    <record id="product_fiscal" model="justech.admin.product">
+        <field name="code">fiscal</field>
+        <field name="name">Justech Fiscal</field>
+        <field name="sequence">20</field>
+        <field name="icon">fa-university</field>
+        <field name="short_description">Ecosistema fiscal dominicano: motor NCF, Centro Fiscal, padrón DGII, reportes y retenciones.</field>
+    </record>
+    <record id="product_finance" model="justech.admin.product">
+        <field name="code">finance</field>
+        <field name="name">Justech Finanzas</field>
+        <field name="sequence">30</field>
+        <field name="icon">fa-money</field>
+        <field name="short_description">Pagos, pagos abiertos, tesorería y conciliación operativa.</field>
+    </record>
+    <record id="product_warranty" model="justech.admin.product">
+        <field name="code">warranty</field>
+        <field name="name">Justech Garantías</field>
+        <field name="sequence">40</field>
+        <field name="icon">fa-shield</field>
+        <field name="short_description">Gestión de garantías de producto: registro, seguimiento y aprobaciones.</field>
+    </record>
+    <record id="product_integrations" model="justech.admin.product">
+        <field name="code">integrations</field>
+        <field name="name">Integraciones</field>
+        <field name="sequence">50</field>
+        <field name="icon">fa-exchange</field>
+        <field name="short_description">Conectores DGII, bancos, APIs y proveedores externos.</field>
+    </record>
+    <record id="product_audit" model="justech.admin.product">
+        <field name="code">audit</field>
+        <field name="name">Auditoría y cumplimiento</field>
+        <field name="sequence">60</field>
+        <field name="icon">fa-list-alt</field>
+        <field name="short_description">Auditoría global, logs, diagnósticos y trazabilidad.</field>
+    </record>
+</odoo>

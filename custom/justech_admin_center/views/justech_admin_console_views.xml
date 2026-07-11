@@ -9,18 +9,17 @@
                     <button name="action_sync_catalog" type="object" string="Sincronizar catálogo" class="btn-secondary"/>
                     <button name="action_run_diagnostics" type="object" string="Ejecutar diagnóstico" class="btn-primary"
                             groups="justech_admin_center.group_justech_admin_center_manager"/>
+                    <button name="action_reauth" type="object" string="Reautenticar" class="btn-secondary"/>
+                    <field name="session_ok" invisible="1"/>
                     <field name="last_sync_at"/>
                 </header>
                 <sheet>
-                    <div class="oe_title">
-                        <h1>Administración Justech</h1>
-                        <p class="text-muted">Consola central del ecosistema Justech — módulos, roles, salud y auditoría.</p>
-                    </div>
-                    <field name="kpi_summary" nolabel="1"/>
+                    <field name="dashboard_html" nolabel="1" colspan="2"/>
                     <div class="o_jac_action_row">
-                        <button name="action_open_modules" type="object" class="btn btn-primary" string="Catálogo de módulos"/>
+                        <button name="action_open_products" type="object" class="btn btn-primary" string="Productos"/>
+                        <button name="action_open_modules" type="object" class="btn btn-secondary" string="Submódulos"/>
+                        <button name="action_open_company_matrix" type="object" class="btn btn-secondary" string="Por empresa"/>
                         <button name="action_open_users" type="object" class="btn btn-secondary" string="Usuarios y roles"/>
-                        <button name="action_open_companies" type="object" class="btn btn-secondary" string="Empresas"/>
                         <button name="action_open_permission_matrix" type="object" class="btn btn-secondary" string="Matriz de permisos"/>
                         <button name="action_open_health" type="object" class="btn btn-secondary" string="Health Check"/>
                         <button name="action_open_audit" type="object" class="btn btn-secondary" string="Auditoría"/>
@@ -29,6 +28,7 @@
                         <page string="Resumen" name="summary">
                             <group>
                                 <group>
+                                    <field name="product_count"/>
                                     <field name="installed_count"/>
                                     <field name="active_count"/>
                                     <field name="warning_count"/>
@@ -42,13 +42,9 @@
                                 </group>
                             </group>
                         </page>
-                        <page string="Módulos instalados" name="installed">
-                            <field name="module_ids" mode="kanban"
-                                     domain="[('technical_state', '=', 'installed')]"
-                                     context="{'kanban_view_ref': 'justech_admin_center.view_justech_admin_module_kanban'}"/>
-                        </page>
-                        <page string="Catálogo" name="catalog">
-                            <field name="module_ids" mode="kanban"/>
+                        <page string="Productos" name="products">
+                            <field name="product_ids" mode="kanban"
+                                     context="{'kanban_view_ref': 'justech_admin_center.view_justech_admin_product_kanban'}"/>
                         </page>
                         <page string="Configuración avanzada" name="advanced" groups="base.group_system">
                             <group>

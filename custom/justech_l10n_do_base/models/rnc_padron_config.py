@@ -87,6 +87,46 @@ class JustechDoRncPadronConfig(models.Model):
         default=True,
     )
     lock_until = fields.Datetime(string="Bloqueo hasta", readonly=True)
+    cron_active = fields.Boolean(
+        string="Cron activo",
+        compute="_compute_cron_active",
+        help="Refleja el estado del ir.cron de actualización automática.",
+    )
+
+    @api.depends("auto_update_enabled")
+    def _compute_cron_active(self):
+        for rec in self:
+            rec.cron_active = rec._cron_is_active()
+
+    def _cron_record(self):
+        return self.env.ref(
+            "justech_l10n_do_base.ir_cron_justech_rnc_padron_auto_update",
+            raise_if_not_found=False,
+        )
+
+    def _cron_is_active(self):
+        cron = self._cron_record()
+        return bool(cron and cron.active)
+
+    def _sync_ir_cron(self):
+        """Sincroniza ir.cron.active con auto_update_enabled."""
+        self.ensure_one()
+        cron = self._cron_record()
+        if cron and cron.active != bool(self.auto_update_enabled):
+            cron.sudo().write({"active": bool(self.auto_update_enabled)})
+
+    def _next_run_datetime(self, from_dt=None):
+        """Próxima ejecución: frequency_days + run_hour (UTC naive Odoo)."""
+        self.ensure_one()
+        base = fields.Datetime.to_datetime(from_dt or fields.Datetime.now())
+        days = self.frequency_days or 45
+        hour = self.run_hour if self.run_hour is not None else 3
+        target = base + timedelta(days=days)
+        target = target.replace(hour=int(hour), minute=0, second=0, microsecond=0)
+        if target <= fields.Datetime.now():
+            target = fields.Datetime.now() + timedelta(days=days)
+            target = target.replace(hour=int(hour), minute=0, second=0, microsecond=0)
+        return target
 
     @api.constrains("frequency_days", "max_age_days", "run_hour", "min_keep_ratio")
     def _check_config_values(self):
@@ -143,17 +183,25 @@ class JustechDoRncPadronConfig(models.Model):
         self.ensure_one()
         self._validate_official_url(self.official_url)
         if self.auto_update_enabled:
-            self.next_run_at = fields.Datetime.now() + timedelta(
-                days=self.frequency_days or 45
-            )
+            self.next_run_at = self._next_run_datetime()
         else:
             self.next_run_at = False
+        self._sync_ir_cron()
         return {
             "type": "ir.actions.client",
             "tag": "display_notification",
             "params": {
                 "title": _("Configuración guardada"),
-                "message": _("Parámetros de actualización automática actualizados."),
+                "message": _(
+                    "Actualización automática %(state)s. Frecuencia: %(days)s días. "
+                    "Hora: %(hour)s:00. Cron: %(cron)s."
+                )
+                % {
+                    "state": _("activa") if self.auto_update_enabled else _("inactiva"),
+                    "days": self.frequency_days or 45,
+                    "hour": self.run_hour if self.run_hour is not None else 3,
+                    "cron": _("activo") if self._cron_is_active() else _("inactivo"),
+                },
                 "type": "success",
             },
         }

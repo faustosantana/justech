@@ -686,11 +686,28 @@ class JustechFiscalAdminCenter(models.Model):
 
     def action_padron_retry_last(self):
         self._padron_require_system()
-        Log = self.env["justech.do.rnc.padron.import.log"].sudo()
-        last = Log.search([("state", "=", "failed")], order="id desc", limit=1)
-        if not last:
-            raise UserError(_("No hay una importación fallida reciente para reintentar."))
-        return self.env["justech.do.rnc.padron.auto.service"].run_auto_update(force=True)
+        return self.env["justech.do.rnc.padron.auto.service"].retry_last_failed()
+
+    def action_padron_reimport_after_restore(self):
+        """Tras restore de BD sin padrón: abre wizard de importación global."""
+        self._padron_require_system()
+        count = self.env["justech.do.rnc.padron"].sudo().search_count([])
+        if count > 0:
+            raise UserError(
+                _(
+                    "El padrón global ya tiene %(n)s registros. "
+                    "Use «Actualizar ahora» o importación manual si necesita refrescar."
+                )
+                % {"n": count}
+            )
+        return {
+            "type": "ir.actions.act_window",
+            "name": _("Reimportar padrón DGII tras restore"),
+            "res_model": "justech.do.rnc.padron.import.wizard",
+            "view_mode": "form",
+            "target": "new",
+            "context": {"default_mode": "import"},
+        }
 
     def action_padron_config(self):
         self._padron_require_system()

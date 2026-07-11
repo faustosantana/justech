@@ -1,5 +1,19 @@
 # Changelog — justech_l10n_do_base
 
+## [19.0.1.20.0] — 2026-07-11 — Padrón DGII Enterprise
+
+### Fixed
+- Lock concurrente con `pg_advisory_lock` + `FOR UPDATE NOWAIT`.
+- Si la importación falla tras mutar, restaura automáticamente el snapshot vigente.
+- Rollback ACL alineado a Administrador Fiscal / Settings.
+- `run_hour` aplicado al programar `next_run_at` y como ventana del cron.
+- Cron horario sincronizado con `auto_update_enabled` (activo/inactivo).
+
+### Added
+- Adjunto del archivo fuente en historial para reintento real (`source=retry`).
+- Acción «Reintentar con este archivo» y servicio `retry_last_failed`.
+- Campo `cron_active` en configuración; guía restore/reimportación en status.
+
 ## [19.0.1.19.0] — 2026-07-11 — Contactos: cédula + padrón
 
 ### Fixed

@@ -36,6 +36,11 @@
                             class="btn-warning"
                             invisible="not can_rollback"
                             confirm="¿Restaurar el padrón a la versión previa a esta importación?"/>
+                    <button name="action_retry_from_attachment" type="object"
+                            string="Reintentar con este archivo"
+                            class="btn-primary"
+                            invisible="state != 'failed' or not file_attachment_id"
+                            confirm="¿Reimportar usando el archivo adjunto de este intento fallido?"/>
                     <field name="state" widget="statusbar"
                            statusbar_visible="running,done,done_warn,failed,reverted"/>
                 </header>
@@ -48,6 +53,7 @@
                             <field name="encoding"/>
                             <field name="source"/>
                             <field name="version"/>
+                            <field name="file_attachment_id" invisible="1"/>
                         </group>
                         <group>
                             <field name="user_id"/>
@@ -99,6 +105,7 @@
                         <field name="auto_update_enabled"/>
                         <field name="frequency_days"/>
                         <field name="run_hour"/>
+                        <field name="cron_active" readonly="1"/>
                         <field name="official_url"/>
                         <field name="notify_admins"/>
                     </group>

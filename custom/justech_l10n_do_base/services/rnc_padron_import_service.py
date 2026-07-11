@@ -43,9 +43,32 @@ class JustechDoRncPadronImportService(models.AbstractModel):
             )
 
     @api.model
+    def _advisory_lock_key(self, config):
+        # Clave estable por singleton de configuración (global).
+        return 8_700_000 + int(config.id)
+
+    @api.model
     def _acquire_lock(self, config):
+        """Lock concurrente: advisory PG + marca UI lock_until."""
+        cr = self.env.cr
+        key = self._advisory_lock_key(config)
+        try:
+            cr.execute(
+                "SELECT id FROM justech_do_rnc_padron_config WHERE id=%s FOR UPDATE NOWAIT",
+                [config.id],
+            )
+        except Exception as exc:
+            raise UserError(
+                _("Hay una actualización de padrón en curso. Intente más tarde.")
+            ) from exc
+        cr.execute("SELECT pg_try_advisory_lock(%s)", [key])
+        if not cr.fetchone()[0]:
+            raise UserError(
+                _("Hay una actualización de padrón en curso. Intente más tarde.")
+            )
         now = fields.Datetime.now()
         if config.lock_until and config.lock_until > now:
+            cr.execute("SELECT pg_advisory_unlock(%s)", [key])
             raise UserError(
                 _("Hay una actualización de padrón en curso. Intente más tarde.")
             )
@@ -59,6 +82,12 @@ class JustechDoRncPadronImportService(models.AbstractModel):
         config.with_context(justech_padron_log_allow_write=True).sudo().write(
             {"lock_until": False}
         )
+        try:
+            self.env.cr.execute(
+                "SELECT pg_advisory_unlock(%s)", [self._advisory_lock_key(config)]
+            )
+        except Exception:  # noqa: BLE001
+            _logger.exception("No se pudo liberar advisory lock del padrón")
 
     @api.model
     def file_sha256(self, raw: bytes) -> str:
@@ -361,7 +390,11 @@ class JustechDoRncPadronImportService(models.AbstractModel):
         has_header=False,
         deactivate_absent=False,
     ):
-        """Importación completa: validar → snapshot → upsert por lotes → historial."""
+        """Importación completa: validar → snapshot → upsert por lotes → historial.
+
+        Si la mutación falla tras commits parciales, restaura el snapshot vigente.
+        Nunca deja un padrón a medias cuando hay snapshot previo.
+        """
         self._require_system()
         config = self.env["justech.do.rnc.padron.config"].get_config()
         self._acquire_lock(config)
@@ -373,16 +406,40 @@ class JustechDoRncPadronImportService(models.AbstractModel):
                 "state": "running",
                 "source": source,
                 "filename": filename,
+                "file_size": len(raw or b""),
                 "user_id": self.env.user.id,
                 "started_at": started,
                 "count_before": self.env["justech.do.rnc.padron"].sudo().search_count([]),
                 "version": fields.Datetime.to_string(started),
             }
         )
+        # Conservar payload para reintento (fallo o restore).
+        try:
+            att = (
+                self.env["ir.attachment"]
+                .sudo()
+                .create(
+                    {
+                        "name": filename or "padron_dgii.bin",
+                        "type": "binary",
+                        "datas": base64.b64encode(raw or b""),
+                        "res_model": Log._name,
+                        "res_id": log.id,
+                        "mimetype": "application/octet-stream",
+                    }
+                )
+            )
+            log.with_context(justech_padron_log_allow_write=True).write(
+                {"file_attachment_id": att.id}
+            )
+        except Exception:  # noqa: BLE001
+            _logger.exception("No se pudo adjuntar payload de padrón al historial")
         self.env.cr.commit()
+        snapshot_taken = False
+        mutated = False
         try:
             staged = self.validate_and_stage(raw, filename, delimiter, has_header)
-            # Mismo hash que última exitosa → sin cambios
+            # Mismo hash que última exitosa → sin cambios (no toca padrón vigente)
             last = Log.search(
                 [("state", "in", ("done", "done_warn")), ("file_hash", "!=", False)],
                 order="id desc",
@@ -406,27 +463,30 @@ class JustechDoRncPadronImportService(models.AbstractModel):
                         "summary": _("Archivo idéntico a la última importación (mismo hash)."),
                     }
                 )
+                next_run = config._next_run_datetime() if config.auto_update_enabled else False
                 config.with_context(justech_padron_log_allow_write=True).write(
                     {
                         "last_run_at": fields.Datetime.now(),
                         "last_status": "unchanged",
                         "last_message": _("Sin cambios (hash idéntico)."),
                         "retry_count": 0,
+                        "next_run_at": next_run,
                     }
                 )
                 self._release_lock(config)
                 self.env.cr.commit()
                 return log
 
-            diff = self.preview_diff(staged)
+            self.preview_diff(staged)
             self._save_snapshot()
+            snapshot_taken = True
+            self.env.cr.commit()
 
             Padron = self.env["justech.do.rnc.padron"].sudo()
             sync_date = fields.Datetime.now()
             created = updated = unchanged = 0
             incoming_rncs = []
 
-            # Index existing ids
             existing_map = {
                 r.rnc: r
                 for r in Padron.with_context(active_test=False).search([])
@@ -459,18 +519,20 @@ class JustechDoRncPadronImportService(models.AbstractModel):
                     )
                     if same:
                         unchanged += 1
-                        # refrescar sync_date ligero cada cierto tiempo omitido
                     else:
                         ex.write(vals)
                         updated += 1
+                        mutated = True
                 if len(batch_create) >= BATCH_SIZE:
                     Padron.create(batch_create)
                     batch_create = []
+                    mutated = True
                     self.env.cr.commit()
                 elif i % BATCH_SIZE == 0:
                     self.env.cr.commit()
             if batch_create:
                 Padron.create(batch_create)
+                mutated = True
                 self.env.cr.commit()
 
             # Ausentes: marcar revisión (no borrar)
@@ -486,6 +548,8 @@ class JustechDoRncPadronImportService(models.AbstractModel):
                     [list(incoming_set)],
                 )
                 absent = self.env.cr.rowcount
+                if absent:
+                    mutated = True
                 self.env.cr.execute(
                     """
                     UPDATE justech_do_rnc_padron
@@ -505,6 +569,7 @@ class JustechDoRncPadronImportService(models.AbstractModel):
                      WHERE review_absent = TRUE
                     """
                 )
+                mutated = True
 
             count_after = Padron.search_count([])
             state = "done_warn" if (staged["rejected"] or absent) else "done"
@@ -541,7 +606,7 @@ class JustechDoRncPadronImportService(models.AbstractModel):
                     "summary": summary,
                 }
             )
-            next_run = fields.Datetime.now() + timedelta(days=config.frequency_days or 45)
+            next_run = config._next_run_datetime() if config.auto_update_enabled else False
             config.with_context(justech_padron_log_allow_write=True).write(
                 {
                     "last_run_at": fields.Datetime.now(),
@@ -549,7 +614,7 @@ class JustechDoRncPadronImportService(models.AbstractModel):
                     "last_status": "updated",
                     "last_message": summary,
                     "retry_count": 0,
-                    "next_run_at": next_run if config.auto_update_enabled else False,
+                    "next_run_at": next_run,
                 }
             )
             self._release_lock(config)
@@ -558,7 +623,21 @@ class JustechDoRncPadronImportService(models.AbstractModel):
             return log
         except Exception as exc:
             self.env.cr.rollback()
-            # re-open log in new cursor context after rollback — use new env write
+            restore_note = ""
+            try:
+                if snapshot_taken or mutated:
+                    self._restore_snapshot()
+                    restore_note = _(
+                        " Se restauró el padrón vigente (rollback automático)."
+                    )
+                    self.env.cr.commit()
+            except Exception:  # noqa: BLE001
+                _logger.exception(
+                    "Fallo crítico: no se pudo restaurar snapshot tras error de importación"
+                )
+                restore_note = _(
+                    " ADVERTENCIA: no se pudo restaurar el snapshot automáticamente."
+                )
             try:
                 fail_log = Log.browse(log.id)
                 if fail_log.exists():
@@ -567,8 +646,9 @@ class JustechDoRncPadronImportService(models.AbstractModel):
                             "state": "failed",
                             "finished_at": fields.Datetime.now(),
                             "duration_seconds": int(time.time() - t0),
-                            "error_message": str(exc),
+                            "error_message": "%s%s" % (exc, restore_note),
                             "filename": filename,
+                            "file_hash": self.file_sha256(raw) if raw else False,
                         }
                     )
                 config.invalidate_recordset()
@@ -576,10 +656,11 @@ class JustechDoRncPadronImportService(models.AbstractModel):
                     {
                         "last_run_at": fields.Datetime.now(),
                         "last_status": "failed",
-                        "last_message": str(exc),
+                        "last_message": "%s%s" % (exc, restore_note),
                         "lock_until": False,
                     }
                 )
+                self._release_lock(config)
                 self.env.cr.commit()
             except Exception:  # noqa: BLE001
                 _logger.exception("No se pudo registrar fallo de importación padrón")
@@ -794,11 +875,17 @@ class JustechDoRncPadronImportService(models.AbstractModel):
             "status_label": labels.get(visual, visual),
             "auto_update_enabled": config.auto_update_enabled,
             "frequency_days": config.frequency_days,
+            "run_hour": config.run_hour,
+            "cron_active": config._cron_is_active(),
             "last_run_at": config.last_run_at,
             "next_run_at": config.next_run_at,
             "last_status": config.last_status,
             "last_message": config.last_message,
             "official_url": config.official_url,
+            "needs_reimport": bool(
+                integrity.get("never_loaded") or integrity.get("count", 0) <= 0
+            ),
+            "file_hash_last": last_ok.file_hash if last_ok else False,
             "count_new_last": last_ok.count_new if last_ok else 0,
             "count_updated_last": last_ok.count_updated if last_ok else 0,
             "count_rejected_last": last_ok.count_rejected if last_ok else 0,

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
+import base64
 
 
 class JustechDoRncPadronImportLog(models.Model):
@@ -44,6 +45,13 @@ class JustechDoRncPadronImportLog(models.Model):
     file_hash = fields.Char(string="Hash SHA-256", index=True)
     encoding = fields.Char(string="Codificación")
     delimiter = fields.Char(string="Separador")
+    file_attachment_id = fields.Many2one(
+        "ir.attachment",
+        string="Archivo fuente",
+        readonly=True,
+        ondelete="set null",
+        help="Payload conservado para reintento / reimportación tras restore.",
+    )
     user_id = fields.Many2one(
         "res.users",
         string="Usuario",
@@ -115,6 +123,44 @@ class JustechDoRncPadronImportLog(models.Model):
 
     def action_rollback(self):
         self.ensure_one()
-        if not self.env.user.has_group("base.group_system"):
-            raise UserError(_("Solo administradores del sistema pueden revertir."))
+        if not (
+            self.env.user.has_group("base.group_system")
+            or self.env.user.has_group(
+                "justech_fiscal_admin.group_justech_fiscal_admin_manager"
+            )
+        ):
+            raise UserError(
+                _(
+                    "Solo Administradores del Sistema o Administradores Fiscales "
+                    "pueden revertir el padrón."
+                )
+            )
         return self.env["justech.do.rnc.padron.import.service"].rollback_log(self)
+
+    def action_retry_from_attachment(self):
+        """Reaplica el archivo adjunto de esta importación fallida."""
+        self.ensure_one()
+        if not (
+            self.env.user.has_group("base.group_system")
+            or self.env.user.has_group(
+                "justech_fiscal_admin.group_justech_fiscal_admin_manager"
+            )
+        ):
+            raise UserError(
+                _("Solo administradores autorizados pueden reintentar la importación.")
+            )
+        if not self.file_attachment_id or not self.file_attachment_id.datas:
+            raise UserError(
+                _(
+                    "No hay archivo adjunto para reintentar. "
+                    "Use «Actualizar ahora» para descargar desde la DGII."
+                )
+            )
+        raw = base64.b64decode(self.file_attachment_id.datas)
+        return self.env["justech.do.rnc.padron.import.service"].apply_import(
+            raw,
+            self.filename or self.file_attachment_id.name or "retry.bin",
+            source="retry",
+            delimiter=self.delimiter or None,
+            has_header=False,
+        )

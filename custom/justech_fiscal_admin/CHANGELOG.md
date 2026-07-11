@@ -1,5 +1,11 @@
 # Changelog — justech_fiscal_admin
 
+## 19.0.1.7.0 — 2026-07-11
+
+- Centro Fiscal: botón «Reimportar tras restore» para padrón global vacío.
+- Reintento de última importación usa adjunto fallido cuando existe.
+- Integración Enterprise padrón DGII (lock, cron, historial/checksum).
+
 ## 19.0.1.6.0 — 2026-07-11
 
 - Resolución de empresa del Centro Fiscal vía `env.company` / `allowed_company_ids` (no fija JUSTECH).

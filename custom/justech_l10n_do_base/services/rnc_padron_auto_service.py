@@ -130,7 +130,11 @@ class JustechDoRncPadronAutoService(models.AbstractModel):
         config = self.env["justech.do.rnc.padron.config"].sudo().get_config()
         if not force and not config.auto_update_enabled:
             return True
-        if not force and config.next_run_at and config.next_run_at > fields.Datetime.now():
+        now = fields.Datetime.now()
+        if not force and config.next_run_at and config.next_run_at > now:
+            return True
+        # Ventana horaria: el cron diario solo ejecuta en run_hour (salvo force).
+        if not force and config.run_hour is not None and now.hour != int(config.run_hour):
             return True
 
         try:
@@ -176,8 +180,9 @@ class JustechDoRncPadronAutoService(models.AbstractModel):
                         or "sin cambios" in (log.summary or "").lower()
                         else "updated",
                         "last_message": log.summary or "",
-                        "next_run_at": fields.Datetime.now()
-                        + timedelta(days=config.frequency_days or 45),
+                        "next_run_at": config._next_run_datetime()
+                        if config.auto_update_enabled
+                        else False,
                     }
                 )
                 if config.notify_admins and log.state in ("done", "done_warn"):
@@ -220,8 +225,10 @@ class JustechDoRncPadronAutoService(models.AbstractModel):
                 hours=config.retry_hours or 4
             )
         else:
-            vals["next_run_at"] = fields.Datetime.now() + timedelta(
-                days=config.frequency_days or 45
+            vals["next_run_at"] = (
+                config._next_run_datetime()
+                if config.auto_update_enabled
+                else False
             )
             self._notify_admins(
                 _("Fallo actualización padrón DGII"),
@@ -237,3 +244,14 @@ class JustechDoRncPadronAutoService(models.AbstractModel):
     def cron_auto_update(self):
         """Método invocado por ir.cron (sudo)."""
         return self.sudo().run_auto_update(force=False)
+
+    @api.model
+    def retry_last_failed(self):
+        """Reintenta la última importación fallida (adjunto) o redescarga DGII."""
+        Log = self.env["justech.do.rnc.padron.import.log"].sudo()
+        last = Log.search([("state", "=", "failed")], order="id desc", limit=1)
+        if not last:
+            raise UserError(_("No hay una importación fallida reciente para reintentar."))
+        if last.file_attachment_id and last.file_attachment_id.datas:
+            return last.action_retry_from_attachment()
+        return self.run_auto_update(force=True)

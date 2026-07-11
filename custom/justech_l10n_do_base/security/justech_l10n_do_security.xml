@@ -9,7 +9,7 @@
     </record>
     <record id="group_justech_do_fiscal_manager" model="res.groups">
         <field name="name">Responsable Fiscal</field>
-        <field name="comment">Revisión DGII, rangos, consumo, alertas y aprobación. Sin configuración crítica ni Centro Fiscal.</field>
+        <field name="comment">Revisión DGII, Centro Fiscal en lectura, rangos, consumo, alertas y revalidación. Sin configuración crítica, padrón, feature flags ni permisos.</field>
         <field name="privilege_id" ref="account.res_groups_privilege_accounting"/>
         <field name="implied_ids" eval="[(4, ref('group_justech_do_fiscal_user'))]"/>
     </record>

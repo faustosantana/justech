@@ -42,9 +42,9 @@ class AccountPayment(models.Model):
     )
     treasury_bank_state = fields.Selection(
         [
-            ("not_posted", "No posteado"),
-            ("bank_pending", "Posteado, pendiente de banco"),
-            ("bank_reconciled", "Conciliado con banco"),
+            ("not_posted", "No requiere conciliación"),
+            ("bank_pending", "Pendiente de conciliación"),
+            ("bank_reconciled", "Conciliado"),
         ],
         string="Estado bancario",
         compute="_compute_treasury_bank_state",

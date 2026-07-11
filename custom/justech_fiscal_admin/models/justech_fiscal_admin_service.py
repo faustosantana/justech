@@ -191,23 +191,57 @@ class JustechFiscalAdminService(models.AbstractModel):
             for item in diag:
                 sev_map = {"error": "high", "warning": "medium", "info": "info"}
                 sev = sev_map.get(item.get("severity"), "medium")
-                # Histórico Adel / solo lectura / info conocidos → no contar como error
                 code = (item.get("code") or "").upper()
                 title = item.get("title") or item.get("code") or "?"
+                detail = item.get("detail") or ""
                 if any(
                     x in (title or "").lower()
                     for x in ("adel", "histórico", "historico", "solo lectura", "read-only")
                 ):
                     sev = "info"
+                res_model = item.get("action_model") or ""
+                res_id = 0
+                domain = item.get("action_domain") or []
+                if (
+                    isinstance(domain, (list, tuple))
+                    and len(domain) == 1
+                    and isinstance(domain[0], (list, tuple))
+                    and len(domain[0]) == 3
+                    and domain[0][0] == "id"
+                    and domain[0][1] == "="
+                ):
+                    try:
+                        res_id = int(domain[0][2])
+                    except (TypeError, ValueError):
+                        res_id = 0
+                impact_map = {
+                    "PARTNER_INVALID_RNC": _("Factura/partner con tipo que exige RNC sin validación."),
+                    "POSTED_MISSING_NCF": _("Documento publicado sin comprobante fiscal Justech."),
+                }
+                action_map = {
+                    "PARTNER_INVALID_RNC": _(
+                        "Abrir el partner, corregir RNC/cédula y revalidar contra padrón DGII."
+                    ),
+                    "POSTED_MISSING_NCF": _(
+                        "Abrir la factura, asignar NCF Justech o anular/rehacer según política fiscal."
+                    ),
+                }
                 f = self._finding(
                     code or "DIAG",
                     title,
                     sev,
                     company,
                     category="error" if sev in ("critical", "high") else "warning",
-                    impact=item.get("impact") or "",
-                    action=item.get("recommendation") or item.get("action") or "",
+                    impact=impact_map.get(code) or detail or item.get("impact") or "",
+                    model_name=res_model,
+                    res_model=res_model,
+                    res_id=res_id,
+                    action=action_map.get(code)
+                    or item.get("recommendation")
+                    or item.get("action")
+                    or "",
                 )
+                f["cause"] = detail or title
                 findings.append(f)
                 if sev in ("critical", "high"):
                     issues.append(title)
@@ -236,6 +270,7 @@ class JustechFiscalAdminService(models.AbstractModel):
                 model_name="account.move.line",
                 action=_("Revisar asientos descuadrados de la empresa."),
             )
+            f["cause"] = _("Suma de débitos distinta a suma de créditos en asientos publicados.")
             findings.append(f)
             issues.append(f["name"])
 
@@ -254,10 +289,11 @@ class JustechFiscalAdminService(models.AbstractModel):
                     model_name="justech.do.ncf.consumption",
                     action=_("Abrir diagnóstico de duplicados NCF."),
                 )
+                f["cause"] = _("Más de un movimiento publicado con la misma clave NCF.")
                 findings.append(f)
                 issues.append(f["name"])
 
-        # Padrón: global; solo alertas reales (no AccessError)
+        # Padrón: GLOBAL (no por empresa). Solo alertas reales de integridad.
         if "justech.do.rnc.padron.import.service" in self.env:
             try:
                 pad = self.env["justech.do.rnc.padron.import.service"].sudo().integrity_check()
@@ -267,9 +303,13 @@ class JustechFiscalAdminService(models.AbstractModel):
                         _("Padrón DGII: %s") % i,
                         "critical",
                         company,
-                        impact=_("Validación RNC afectada."),
-                        action=_("Importar o reparar padrón en Centro Fiscal."),
+                        impact=_("Validación RNC afectada (padrón global)."),
+                        action=_(
+                            "Reparar el padrón global una sola vez en Centro Fiscal "
+                            "(no cargar padrón por empresa)."
+                        ),
                     )
+                    f["cause"] = i
                     findings.append(f)
                     issues.append(f["name"])
                 for w in pad.get("warnings", []):
@@ -279,16 +319,25 @@ class JustechFiscalAdminService(models.AbstractModel):
                         "medium",
                         company,
                         category="warning",
-                        action=_("Revisar historial de importación del padrón."),
+                        action=_("Revisar historial global de importación del padrón."),
                     )
+                    f["cause"] = w
                     findings.append(f)
                     warnings.append(f["name"])
                 if pad.get("never_loaded") or pad.get("count", 0) <= 0:
                     recommendations.append(
                         _(
                             "Después de restaurar una base sin padrón DGII, "
-                            "utilice Importar padrón DGII en el Centro Fiscal."
+                            "utilice Importar padrón DGII (global) en el Centro Fiscal."
                         )
+                    )
+                elif pad.get("ok"):
+                    recommendations.append(
+                        _(
+                            "Padrón DGII global operativo (%(n)s registros) — "
+                            "compartido por todas las empresas."
+                        )
+                        % {"n": pad.get("count", 0)}
                     )
             except Exception:  # noqa: BLE001
                 warnings.append(_("No se pudo evaluar el padrón DGII."))

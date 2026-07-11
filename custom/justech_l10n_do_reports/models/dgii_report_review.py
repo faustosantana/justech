@@ -169,7 +169,7 @@ class JustechDoFiscalReportReview(models.Model):
     def _prepare_line_vals_dgii(self, move, result, exporter):
         fdp = self._fdp()
         itbis = self._move_itbis_amount(move)
-        wh_itbis, wh_isr, _, _ = exporter._withholding_breakdown(move)
+        wh_itbis, wh_isr, _wh_extra1, _wh_extra2 = exporter._withholding_breakdown(move)
         errors = result["move_errors"].get(move.id)
         if errors is None and move in result["buckets"]["incomplete"]:
             errors = exporter._dgii_validate_single_move(

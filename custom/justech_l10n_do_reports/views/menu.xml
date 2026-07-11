@@ -172,6 +172,6 @@
         <field name="action" ref="justech_fiscal_admin.action_justech_fiscal_admin_center_server"/>
         <field name="sequence">150</field>
         <field name="active" eval="True"/>
-        <field name="group_ids" eval="[(6, 0, [ref('base.group_system'), ref('justech_fiscal_admin.group_justech_fiscal_admin_manager')])]"/>
+        <field name="group_ids" eval="[(6, 0, [ref('base.group_system'), ref('justech_fiscal_admin.group_justech_fiscal_admin_manager'), ref('justech_l10n_do_base.group_justech_do_fiscal_manager'), ref('justech_l10n_do_base.group_justech_do_fiscal_user')])]"/>
     </record>
 </odoo>

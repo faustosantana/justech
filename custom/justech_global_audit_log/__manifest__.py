@@ -1,6 +1,6 @@
 {
     "name": "Auditoría",
-    "version": "19.0.4.1.2",
+    "version": "19.0.4.1.4",
     "category": "Productivity",
     "summary": "Trazabilidad e investigación de cambios en Odoo",
     "description": """
@@ -21,6 +21,7 @@ cuándo ocurrió y con qué valores antes/después.
     "depends": ["base"],
     "data": [
         "security/justech_audit_security.xml",
+        "security/justech_audit_rules.xml",
         "security/ir.model.access.csv",
         "data/audit_field_exclude_data.xml",
         "data/audit_retention_data.xml",
@@ -42,7 +43,7 @@ cuándo ocurrió y con qué valores antes/después.
     "justech_register": {
         "module_code": "justech_global_audit_log",
         "module_name": "Auditoría",
-        "version": "19.0.4.1.2",
+        "version": "19.0.4.1.4",
         "category": "platform",
         "description": "Global audit and traceability for Odoo",
         "dependencies": [],

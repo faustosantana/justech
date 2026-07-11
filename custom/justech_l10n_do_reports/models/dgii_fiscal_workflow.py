@@ -158,12 +158,15 @@ class JustechDoFiscalReportWorkflow(models.Model):
                 vals["period_code"] = fields.Date.to_date(vals["date_from"]).strftime(
                     "%Y%m"
                 )
-            if vals.get("period_code"):
+            # Expandir a mes completo solo si no vienen fechas (rango personalizado).
+            if vals.get("period_code") and not (
+                vals.get("date_from") and vals.get("date_to")
+            ):
                 date_from, date_to = self.env[
                     "justech.do.dgii.period"
                 ].period_bounds_from_code(vals["period_code"])
-                vals.setdefault("date_from", date_from)
-                vals.setdefault("date_to", date_to)
+                vals["date_from"] = date_from
+                vals["date_to"] = date_to
         reports = super().create(vals_list)
         for report in reports:
             report._sync_dates_from_period_code()
@@ -175,10 +178,13 @@ class JustechDoFiscalReportWorkflow(models.Model):
         return reports
 
     def write(self, vals):
-        if vals.get("period_code"):
+        if vals.get("period_code") and not (
+            vals.get("date_from") and vals.get("date_to")
+        ):
             date_from, date_to = self.env[
                 "justech.do.dgii.period"
             ].period_bounds_from_code(vals["period_code"])
+            vals = dict(vals)
             vals["date_from"] = date_from
             vals["date_to"] = date_to
         if "state" in vals and not self.env.context.get("justech_skip_state_guard"):
@@ -193,12 +199,18 @@ class JustechDoFiscalReportWorkflow(models.Model):
         return super().write(vals)
 
     def _sync_dates_from_period_code(self):
+        """Alinea al mes completo solo si el reporte no usa rango personalizado."""
         for report in self:
             if not report.period_code:
                 continue
             date_from, date_to = self.env[
                 "justech.do.dgii.period"
             ].period_bounds_from_code(report.period_code)
+            if report.date_from and report.date_to and (
+                report.date_from != date_from or report.date_to != date_to
+            ):
+                # Rango personalizado: conservar fechas.
+                continue
             if report.date_from != date_from or report.date_to != date_to:
                 super(JustechDoFiscalReportWorkflow, report).write(
                     {"date_from": date_from, "date_to": date_to}

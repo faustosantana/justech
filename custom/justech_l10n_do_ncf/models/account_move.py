@@ -5,7 +5,10 @@ from odoo.exceptions import AccessError, UserError
 class AccountMove(models.Model):
     _inherit = "account.move"
 
+    # Legacy (pre-2.3.0): company+NCF — too strict for purchases.
     _justech_ncf_unique_index = "account_move_justech_do_ncf_company_uniq"
+    _justech_ncf_sale_unique_index = "account_move_justech_do_ncf_sale_uniq"
+    _justech_ncf_purchase_unique_index = "account_move_justech_do_ncf_purchase_uniq"
 
     justech_do_document_type_id = fields.Many2one(
         "justech.do.fiscal.document.type",
@@ -33,6 +36,12 @@ class AccountMove(models.Model):
         string="Estado fiscal",
         compute="_compute_fiscal_display_fields",
         readonly=True,
+    )
+    fiscal_income_expense_type_display = fields.Char(
+        string="Tipo de ingreso / costo y gasto",
+        compute="_compute_fiscal_display_fields",
+        readonly=True,
+        help="Solo lectura vía Fiscal Data Provider (ingreso 607 o costo/gasto 606).",
     )
     justech_do_ncf_range_id = fields.Many2one(
         "justech.do.ncf.range",
@@ -129,11 +138,13 @@ class AccountMove(models.Model):
             ncf = ""
             doc_type = ""
             status = ""
+            income_expense = ""
             try:
                 ncf = fdp.get_ncf(move) or ""
                 doc_type = fdp.get_document_type_name(move) or ""
                 if not doc_type and ncf:
                     doc_type = fdp.get_document_type_prefix(move) or ""
+                income_expense = fdp.get_income_expense_type_display(move) or ""
                 src = fdp.get_supported_sources(move)
                 voided = False
                 try:
@@ -164,9 +175,11 @@ class AccountMove(models.Model):
                 ncf = ncf or ""
                 doc_type = doc_type or ""
                 status = status or ""
+                income_expense = income_expense or ""
             move.fiscal_ncf_display = ncf
             move.fiscal_document_type_display = doc_type
             move.fiscal_status_display = status
+            move.fiscal_income_expense_type_display = income_expense
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -210,13 +223,32 @@ class AccountMove(models.Model):
 
     def init(self):
         super().init()
+        # Drop legacy company-only unique index (blocks valid multi-vendor purchases).
+        self._cr.execute(
+            f"DROP INDEX IF EXISTS {self._justech_ncf_unique_index}"
+        )
+        # Ventas: único por empresa + NCF (posted, no anulado).
         self._cr.execute(
             f"""
-            CREATE UNIQUE INDEX IF NOT EXISTS {self._justech_ncf_unique_index}
+            CREATE UNIQUE INDEX IF NOT EXISTS {self._justech_ncf_sale_unique_index}
             ON account_move (company_id, justech_do_ncf)
             WHERE state = 'posted'
               AND justech_do_ncf IS NOT NULL
               AND justech_do_ncf != ''
+              AND COALESCE(justech_do_ncf_voided, false) = false
+              AND move_type IN ('out_invoice', 'out_refund', 'out_receipt')
+            """
+        )
+        # Compras: único por empresa + proveedor + NCF (posted, no anulado).
+        self._cr.execute(
+            f"""
+            CREATE UNIQUE INDEX IF NOT EXISTS {self._justech_ncf_purchase_unique_index}
+            ON account_move (company_id, partner_id, justech_do_ncf)
+            WHERE state = 'posted'
+              AND justech_do_ncf IS NOT NULL
+              AND justech_do_ncf != ''
+              AND COALESCE(justech_do_ncf_voided, false) = false
+              AND move_type IN ('in_invoice', 'in_refund', 'in_receipt')
             """
         )
 
@@ -253,7 +285,11 @@ class AccountMove(models.Model):
         self.env["justech.do.ncf.duplicate.service"].check_duplicate(self, ncf)
 
     def _justech_assign_ncf_before_post(self):
-        self.env["justech.do.ncf.assignment.service"].assign_before_post(self)
+        # Motor fiscal: lecturas/escrituras técnicas con privilegios controlados.
+        # El usuario de facturación no necesita ser gerente fiscal para publicar.
+        self.env["justech.do.ncf.assignment.service"].sudo().with_context(
+            justech_ncf_engine=True
+        ).assign_before_post(self)
 
     def _justech_moves_for_ncf_on_post(self, soft=True):
         return self.env["justech.do.ncf.assignment.service"].moves_for_post(self, soft)
@@ -291,7 +327,7 @@ class AccountMove(models.Model):
                     "justech_do_include_in_dgii": False,
                 }
             )
-            consumption = Consumption.search(
+            consumption = Consumption.sudo().search(
                 [
                     ("move_id", "=", move.id),
                     ("ncf", "=", move.justech_do_ncf),
@@ -300,7 +336,8 @@ class AccountMove(models.Model):
                 limit=1,
             )
             if consumption:
-                consumption.write(
+                # Escritura técnica de auditoría; el método ya exige fiscal manager.
+                consumption.sudo().with_context(justech_ncf_engine=True).write(
                     {
                         "state": "voided",
                         "void_user_id": self.env.user.id,

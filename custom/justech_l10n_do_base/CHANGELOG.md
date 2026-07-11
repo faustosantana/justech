@@ -1,5 +1,15 @@
 # Changelog — justech_l10n_do_base
 
+## [19.0.1.19.0] — 2026-07-11 — Contactos: cédula + padrón
+
+### Fixed
+- Validación DGII también para personas con cédula (11 dígitos), no solo RNC empresa (9).
+- Visibilidad del bloque «Validar con DGII» para tipo persona/cédula.
+- Integridad de padrón: logs `running` huérfanos ya no marcan el padrón como «a medias».
+
+### Changed
+- `_compute_justech_do_rnc_valid` y `action_justech_validate_rnc` alineados a longitudes 9/11.
+
 ## [19.0.1.15.0] — 2026-07-11 — Administración padrón DGII
 
 ### Added

@@ -383,6 +383,9 @@ class JustechAuditService(models.AbstractModel):
         entries = []
         for record in records:
             excluded = self.get_excluded_fields(record._name)
+            # Snapshot via sudo: field ACLs must not block operational users
+            # when the audit engine captures values (e.g. signup_type).
+            rec_sudo = record.sudo()
             snapshot = {}
             for field_name, field in record._fields.items():
                 if field_name in excluded or field.type in self.SKIP_FIELD_TYPES:
@@ -390,7 +393,7 @@ class JustechAuditService(models.AbstractModel):
                 if not field.store and not field.related:
                     continue
                 snapshot[field_name] = self._format_value(
-                    record._name, field_name, record[field_name], record=record
+                    record._name, field_name, rec_sudo[field_name], record=rec_sudo
                 )
             entries.append(
                 self._build_entry(
@@ -408,6 +411,7 @@ class JustechAuditService(models.AbstractModel):
         entries = []
         for record in records:
             excluded = self.get_excluded_fields(record._name)
+            rec_sudo = record.sudo()
             for field_name in changed_fields:
                 if field_name in excluded:
                     continue
@@ -418,10 +422,10 @@ class JustechAuditService(models.AbstractModel):
                     record._name,
                     field_name,
                     previous_values[record.id][field_name],
-                    record=record,
+                    record=rec_sudo,
                 )
                 new_text = self._format_value(
-                    record._name, field_name, record[field_name], record=record
+                    record._name, field_name, rec_sudo[field_name], record=rec_sudo
                 )
                 if old_text == new_text:
                     continue

@@ -9,6 +9,7 @@
                 <field name="code"/>
                 <field name="company_id"/>
                 <field name="name"/>
+                <field name="cause"/>
                 <field name="impact"/>
                 <field name="model_name"/>
                 <field name="recommended_action"/>
@@ -30,15 +31,19 @@
                             <field name="severity"/>
                             <field name="company_id"/>
                             <field name="state"/>
+                            <field name="category"/>
                         </group>
                         <group>
                             <field name="model_name"/>
+                            <field name="res_model" invisible="1"/>
+                            <field name="res_id"/>
                             <field name="detected_at"/>
                             <field name="impact"/>
                         </group>
                     </group>
                     <group>
                         <field name="name"/>
+                        <field name="cause"/>
                         <field name="recommended_action"/>
                     </group>
                     <footer>

@@ -1,29 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <!--
+      Auditoría herencia account.payment (antes de cambiar):
+      - Lista abierta: vista primaria propia (no hereda tree estándar).
+      - Formulario abierto: vista primaria propia (evita deformación del form
+        Enterprise account.view_account_payment_form: amount+estado concatenados).
+      - Otras herencias del form estándar (hellenia/justech WH) no aplican aquí.
+    -->
+
     <record id="view_account_payment_open_tree_customer" model="ir.ui.view">
         <field name="name">account.payment.open.tree.customer</field>
         <field name="model">account.payment</field>
         <field name="arch" type="xml">
             <list string="Pagos abiertos" create="false" edit="false"
-                  decoration-muted="treasury_open_state == 'cancelled'"
+                  class="o_treasury_open_payment_list"
+                  decoration-muted="state == 'canceled'"
                   decoration-success="treasury_open_state == 'applied'"
                   decoration-warning="treasury_open_state == 'partial'">
                 <field name="date" string="Fecha"/>
                 <field name="name" string="Número"/>
+                <field name="payment_type" string="Tipo"/>
                 <field name="partner_id" string="Cliente"/>
+                <field name="amount" string="Importe" widget="monetary"
+                         options="{'currency_field': 'currency_id'}"/>
+                <field name="currency_id" string="Moneda" optional="show"
+                         groups="base.group_multi_currency"/>
                 <field name="journal_id" string="Diario"/>
-                <field name="payment_method_line_id" string="Método de pago"/>
-                <field name="currency_id" string="Moneda"/>
-                <field name="amount" string="Monto original"/>
-                <field name="treasury_amount_applied" string="Monto aplicado"/>
-                <field name="treasury_amount_available" string="Saldo disponible"/>
-                <field name="treasury_open_state" string="Estado aplicación"/>
-                <field name="treasury_bank_state" string="Estado bancario"/>
-                <field name="treasury_concept" string="Concepto"/>
-                <field name="treasury_payment_reference" string="Referencia" optional="show"/>
-                <field name="create_uid" string="Usuario" widget="many2one_avatar_user" optional="hide"/>
+                <field name="payment_method_line_id" string="Método de pago" optional="show"/>
+                <field name="state" string="Estado contable" widget="badge"
+                         decoration-info="state == 'in_process'"
+                         decoration-success="state == 'paid'"
+                         decoration-muted="state == 'draft'"
+                         decoration-danger="state == 'canceled'"/>
+                <field name="treasury_bank_state" string="Estado bancario" widget="badge"
+                         decoration-warning="treasury_bank_state == 'bank_pending'"
+                         decoration-success="treasury_bank_state == 'bank_reconciled'"
+                         decoration-muted="treasury_bank_state == 'not_posted'"/>
+                <field name="treasury_amount_applied" string="Aplicado" widget="monetary"
+                         options="{'currency_field': 'currency_id'}"/>
+                <field name="treasury_amount_available" string="Saldo disponible" widget="monetary"
+                         options="{'currency_field': 'currency_id'}"/>
+                <field name="memo" string="Memo" optional="show"/>
                 <field name="treasury_is_open" column_invisible="1"/>
                 <field name="partner_type" column_invisible="1"/>
+                <field name="treasury_open_state" column_invisible="1"/>
             </list>
         </field>
     </record>
@@ -35,7 +55,7 @@
             <search string="Pagos abiertos">
                 <field name="name"/>
                 <field name="partner_id"/>
-                <field name="treasury_concept"/>
+                <field name="memo"/>
                 <field name="treasury_payment_reference"/>
                 <filter name="filter_open" string="Abiertos"
                         domain="[('treasury_open_state', '=', 'open')]"/>
@@ -43,9 +63,10 @@
                         domain="[('treasury_open_state', '=', 'partial')]"/>
                 <filter name="filter_applied" string="Aplicados"
                         domain="[('treasury_open_state', '=', 'applied')]"/>
-                <filter name="filter_bank_pending" string="Pendientes de conciliación bancaria"
+                <separator/>
+                <filter name="filter_bank_pending" string="Pendiente de conciliación"
                         domain="[('treasury_bank_state', '=', 'bank_pending'), ('state', 'in', ('paid', 'in_process'))]"/>
-                <filter name="filter_bank_reconciled" string="Conciliados con banco"
+                <filter name="filter_bank_reconciled" string="Conciliado"
                         domain="[('treasury_bank_state', '=', 'bank_reconciled')]"/>
                 <filter name="filter_cancelled" string="Cancelados"
                         domain="[('state', '=', 'canceled')]"/>
@@ -65,46 +86,100 @@
         </field>
     </record>
 
+    <!-- Formulario primario dedicado: no hereda el form Enterprise deformado.
+         inherit_id=False + mode=primary limpia herencia residual en BD. -->
     <record id="view_account_payment_open_form" model="ir.ui.view">
         <field name="name">account.payment.open.form</field>
         <field name="model">account.payment</field>
-        <field name="inherit_id" ref="account.view_account_payment_form"/>
-        <field name="priority">30</field>
+        <field name="inherit_id" eval="False"/>
+        <field name="mode">primary</field>
+        <field name="priority">1</field>
         <field name="arch" type="xml">
-            <xpath expr="//header" position="inside">
-                <button name="action_treasury_apply_to_invoice"
-                        type="object"
-                        string="Aplicar a factura"
-                        class="btn-primary"
-                        invisible="not treasury_is_open"/>
-                <button name="action_treasury_view_move"
-                        type="object"
-                        string="Ver asiento"
-                        invisible="not move_id"/>
-                <button name="action_treasury_view_reconciliation"
-                        type="object"
-                        string="Ver conciliación"
-                        invisible="not treasury_amount_applied"/>
-            </xpath>
-            <xpath expr="//sheet" position="before">
-                <field name="treasury_is_open" invisible="1"/>
-                <field name="treasury_open_state" invisible="1"/>
-                <div class="alert alert-light border mb-0" role="note"
-                     invisible="treasury_bank_state != 'bank_pending'">
-                    Posteado contablemente. Pendiente de conciliación con el extracto bancario.
-                </div>
-            </xpath>
-            <xpath expr="//field[@name='amount']" position="after">
-                <field name="treasury_amount_applied" readonly="1"/>
-                <field name="treasury_amount_available" readonly="1"/>
-                <field name="treasury_open_state" readonly="1"/>
-                <field name="treasury_bank_state" readonly="1"/>
-            </xpath>
+            <form string="Pago abierto" create="false" class="o_treasury_open_payment_form">
+                <header>
+                    <button name="action_treasury_apply_to_invoice"
+                            type="object"
+                            string="Aplicar a factura"
+                            class="btn-primary"
+                            invisible="not treasury_is_open"/>
+                    <button name="action_treasury_view_move"
+                            type="object"
+                            string="Ver asiento"
+                            invisible="not move_id"/>
+                    <button name="action_treasury_view_reconciliation"
+                            type="object"
+                            string="Conciliación de pagos"
+                            invisible="not treasury_amount_applied"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,in_process,paid"/>
+                </header>
+                <sheet>
+                    <field name="treasury_is_open" invisible="1"/>
+                    <field name="treasury_open_state" invisible="1"/>
+                    <field name="currency_id" invisible="1"/>
+                    <field name="company_id" invisible="1"/>
+                    <field name="move_id" invisible="1"/>
+                    <div class="alert alert-warning mb-3" role="alert"
+                         invisible="treasury_bank_state != 'bank_pending' or state not in ('in_process', 'paid')">
+                        Contablemente registrado. Pendiente de conciliación con el extracto bancario
+                        (Tablero / diarios — conciliación estándar).
+                    </div>
+                    <div class="oe_title">
+                        <label for="name" string="Número del pago"/>
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Datos del pago">
+                            <field name="payment_type" string="Tipo de pago" readonly="1"/>
+                            <field name="partner_type" invisible="1"/>
+                            <field name="partner_id" string="Cliente / Proveedor" readonly="1"/>
+                            <field name="amount" string="Importe" widget="monetary"
+                                   options="{'currency_field': 'currency_id'}" readonly="1"/>
+                            <field name="currency_id" string="Moneda" readonly="1"
+                                   groups="base.group_multi_currency"/>
+                            <field name="date" string="Fecha" readonly="1"/>
+                            <field name="memo" string="Memo" readonly="1"/>
+                        </group>
+                        <group string="Contabilidad y banco">
+                            <field name="journal_id" string="Diario" readonly="1"/>
+                            <field name="payment_method_line_id" string="Método de pago" readonly="1"/>
+                            <field name="state" string="Estado contable" widget="badge"
+                                   decoration-info="state == 'in_process'"
+                                   decoration-success="state == 'paid'"
+                                   decoration-muted="state == 'draft'"
+                                   decoration-danger="state == 'canceled'"
+                                   readonly="1"/>
+                            <field name="treasury_bank_state" string="Estado bancario" widget="badge"
+                                   decoration-warning="treasury_bank_state == 'bank_pending'"
+                                   decoration-success="treasury_bank_state == 'bank_reconciled'"
+                                   decoration-muted="treasury_bank_state == 'not_posted'"
+                                   readonly="1"/>
+                            <field name="treasury_amount_applied" string="Importe aplicado"
+                                   widget="monetary" options="{'currency_field': 'currency_id'}"
+                                   readonly="1"/>
+                            <field name="treasury_amount_available" string="Saldo disponible"
+                                   widget="monetary" options="{'currency_field': 'currency_id'}"
+                                   readonly="1"/>
+                            <field name="treasury_payment_reference" string="Referencia" readonly="1"/>
+                        </group>
+                    </group>
+                    <group string="Facturas relacionadas" invisible="not reconciled_invoice_ids and not reconciled_bill_ids">
+                        <field name="reconciled_invoice_ids" string="Facturas de cliente"
+                               widget="many2many_tags" readonly="1"
+                               invisible="not reconciled_invoice_ids"/>
+                        <field name="reconciled_bill_ids" string="Facturas de proveedor"
+                               widget="many2many_tags" readonly="1"
+                               invisible="not reconciled_bill_ids"/>
+                    </group>
+                </sheet>
+            </form>
         </field>
     </record>
 
     <record id="action_treasury_open_payments_customer" model="ir.actions.act_window">
-        <field name="name">Pagos abiertos</field>
+        <field name="name">Pagos abiertos (clientes)</field>
         <field name="res_model">account.payment</field>
         <field name="view_mode">list,form</field>
         <field name="view_id" ref="view_account_payment_open_tree_customer"/>
@@ -114,7 +189,7 @@
     </record>
 
     <record id="action_treasury_open_payments_vendor" model="ir.actions.act_window">
-        <field name="name">Pagos abiertos</field>
+        <field name="name">Pagos abiertos (proveedores)</field>
         <field name="res_model">account.payment</field>
         <field name="view_mode">list,form</field>
         <field name="view_id" ref="view_account_payment_open_tree_vendor"/>
@@ -123,5 +198,28 @@
         <field name="context">{'default_partner_type': 'supplier'}</field>
     </record>
 
-    <!-- Menús abiertos solo bajo Contabilidad → Pagos (no duplicar en CxC/CxP). -->
+    <record id="action_treasury_open_payments_customer_view_form" model="ir.actions.act_window.view">
+        <field name="sequence">2</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_account_payment_open_form"/>
+        <field name="act_window_id" ref="action_treasury_open_payments_customer"/>
+    </record>
+    <record id="action_treasury_open_payments_customer_view_list" model="ir.actions.act_window.view">
+        <field name="sequence">1</field>
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="view_account_payment_open_tree_customer"/>
+        <field name="act_window_id" ref="action_treasury_open_payments_customer"/>
+    </record>
+    <record id="action_treasury_open_payments_vendor_view_form" model="ir.actions.act_window.view">
+        <field name="sequence">2</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_account_payment_open_form"/>
+        <field name="act_window_id" ref="action_treasury_open_payments_vendor"/>
+    </record>
+    <record id="action_treasury_open_payments_vendor_view_list" model="ir.actions.act_window.view">
+        <field name="sequence">1</field>
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="view_account_payment_open_tree_vendor"/>
+        <field name="act_window_id" ref="action_treasury_open_payments_vendor"/>
+    </record>
 </odoo>

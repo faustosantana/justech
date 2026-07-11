@@ -7,15 +7,23 @@
             <form string="Centro de Administración Fiscal Justech" create="0" delete="0">
                 <header>
                     <button name="action_refresh" string="Actualizar" type="object" class="btn-primary"/>
-                    <button name="action_run_health_check" string="Health Check / Detalle" type="object" class="btn-secondary"/>
-                    <button name="action_open_diagnostic" string="Diagnóstico completo" type="object" class="btn-secondary"/>
+                    <button name="action_run_health_check" string="Health Check / Detalle" type="object"
+                            class="btn-secondary" invisible="not can_revalidate_health"/>
+                    <button name="action_open_diagnostic" string="Diagnóstico completo" type="object"
+                            class="btn-secondary"/>
                 </header>
                 <sheet>
                     <div class="oe_title">
                         <h1>Centro de Administración Fiscal Justech</h1>
                         <h2 class="text-muted">
-                            <field name="company_id" options="{'no_create': True}"/>
+                            <field name="company_id" options="{'no_create': True, 'no_open': True}" readonly="1"/>
                         </h2>
+                        <p class="text-muted" invisible="access_mode != 'officer'">
+                            Modo Responsable Fiscal — lectura y revalidación. Sin cambios de configuración crítica.
+                        </p>
+                        <p class="text-muted" invisible="access_mode != 'user'">
+                            Vista operativa — estado fiscal, rangos y alertas. Sin administración del Centro.
+                        </p>
                     </div>
                     <group>
                         <group>
@@ -33,8 +41,13 @@
                     <field name="dashboard_html" nolabel="1"/>
                     <field name="can_manage_padron" invisible="1"/>
                     <field name="can_manage_users" invisible="1"/>
+                    <field name="can_revalidate_health" invisible="1"/>
+                    <field name="can_open_ncf_admin" invisible="1"/>
                     <field name="is_fiscal_admin" invisible="1"/>
                     <field name="is_system_admin" invisible="1"/>
+                    <field name="is_fiscal_officer" invisible="1"/>
+                    <field name="is_fiscal_user_only" invisible="1"/>
+                    <field name="access_mode" invisible="1"/>
                     <group string="Padrón DGII" invisible="not can_manage_padron">
                         <div colspan="2">
                             <button name="action_padron_import" type="object"
@@ -43,7 +56,7 @@
                             <button name="action_padron_update_now" type="object"
                                     string="Actualizar ahora"
                                     class="btn btn-secondary me-2"
-                                    confirm="¿Descargar el padrón oficial DGII e importarlo ahora?"/>
+                                    confirm="¿Descargar el padrón oficial DGII e importarlo ahora? Es global (todas las empresas)."/>
                             <button name="action_padron_retry_last" type="object"
                                     string="Reintentar última importación"
                                     class="btn btn-secondary me-2"/>
@@ -69,7 +82,7 @@
                         <button name="action_open_health_detail" type="object" string="Detalle Salud Fiscal" class="btn-primary"/>
                         <button name="action_open_feature_flags" type="object" string="Feature Flags" class="btn-link" invisible="not is_fiscal_admin"/>
                         <button name="action_open_ncf_ranges" type="object" string="Rangos NCF" class="btn-link"/>
-                        <button name="action_open_ncf_admin" type="object" string="Admin NCF" class="btn-link"/>
+                        <button name="action_open_ncf_admin" type="object" string="Admin NCF" class="btn-link" invisible="not can_open_ncf_admin"/>
                         <button name="action_open_dgii_reports" type="object" string="Reportes DGII" class="btn-link"/>
                         <button name="action_open_withholding_catalog" type="object" string="Retenciones" class="btn-link"/>
                         <button name="action_sync_withholding_catalog" type="object" string="Sincronizar retenciones" class="btn-link" invisible="not is_fiscal_admin"/>
@@ -89,6 +102,6 @@
         <field name="name">Abrir Centro Fiscal Justech</field>
         <field name="model_id" ref="model_justech_fiscal_admin_center"/>
         <field name="state">code</field>
-        <field name="code">action = env['justech.fiscal.admin.center'].open_for_user()</field>
+        <field name="code">action = env['justech.fiscal.admin.center'].with_company(env.company).open_for_user()</field>
     </record>
 </odoo>

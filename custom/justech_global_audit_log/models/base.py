@@ -29,19 +29,20 @@ class Base(models.AbstractModel):
         data = []
         excluded = service.get_excluded_fields(self._name)
         for record in self:
+            rec_sudo = record.sudo()
             snapshot = {}
             for field_name, field in record._fields.items():
                 if field_name in excluded or field.type in service.SKIP_FIELD_TYPES:
                     continue
                 snapshot[field_name] = service._format_value(
-                    record._name, field_name, record[field_name], record=record
+                    record._name, field_name, rec_sudo[field_name], record=rec_sudo
                 )
             data.append(
                 {
                     "model_name": record._name,
                     "record_id": record.id,
-                    "record_name": record.display_name,
-                    "company_id": service._get_record_company_id(record),
+                    "record_name": rec_sudo.display_name,
+                    "company_id": service._get_record_company_id(rec_sudo),
                     "snapshot": json.dumps(snapshot, ensure_ascii=False, sort_keys=True),
                 }
             )
@@ -69,8 +70,9 @@ class Base(models.AbstractModel):
         if not fields_to_check:
             return super().write(vals)
 
+        # Capture previous values via sudo so field ACLs do not block writers.
         previous_values = {
-            record.id: {field: record[field] for field in fields_to_check}
+            record.id: {field: record.sudo()[field] for field in fields_to_check}
             for record in self
         }
         result = super().write(vals)

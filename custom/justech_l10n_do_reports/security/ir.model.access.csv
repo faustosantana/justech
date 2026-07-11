@@ -1,4 +1,6 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_justech_do_dgii_period_user,justech.do.dgii.period user,model_justech_do_dgii_period,justech_l10n_do_base.group_justech_do_fiscal_user,1,0,0,0
+access_justech_do_dgii_period_manager,justech.do.dgii.period manager,model_justech_do_dgii_period,justech_l10n_do_base.group_justech_do_fiscal_manager,1,0,0,0
 access_justech_do_fiscal_report_user,justech.do.fiscal.report user,model_justech_do_fiscal_report,justech_l10n_do_base.group_justech_do_fiscal_user,1,1,1,0
 access_justech_do_fiscal_report_manager,justech.do.fiscal.report manager,model_justech_do_fiscal_report,justech_l10n_do_base.group_justech_do_fiscal_manager,1,1,1,1
 access_justech_do_fiscal_report_line_user,justech.do.fiscal.report.line user,model_justech_do_fiscal_report_line,justech_l10n_do_base.group_justech_do_fiscal_user,1,1,1,0

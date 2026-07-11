@@ -651,18 +651,66 @@ class JustechDoRncPadronImportService(models.AbstractModel):
         last_ok = Log.search(
             [("state", "in", ("done", "done_warn"))], order="id desc", limit=1
         )
-        if last_log and last_log.state == "failed":
-            warnings.append(_("Última importación fallida."))
-            if severity == "ok":
-                severity = "high"
+        # Cerrar jobs "running" huérfanos cuando el padrón global ya tiene datos.
+        # Evita el falso estado vacío/fallido con cientos de miles de RNC cargados.
+        now = fields.Datetime.now()
         if last_log and last_log.state == "running":
-            issues.append(_("Importación quedó a medias (en proceso)."))
-            severity = "critical"
+            lock_expired = not config.lock_until or config.lock_until < now
+            started = last_log.started_at or last_log.create_date
+            stale = True
+            if started:
+                stale = (now - started) > timedelta(minutes=30)
+            if count > 0 and (lock_expired or stale or last_ok):
+                last_log.with_context(justech_padron_log_allow_write=True).write(
+                    {
+                        "state": "failed",
+                        "finished_at": now,
+                        "error_message": _(
+                            "Importación marcada como huérfana: el padrón global "
+                            "ya tiene %(n)s registros. No requiere recarga por empresa."
+                        )
+                        % {"n": count},
+                    }
+                )
+                if config.last_status == "running":
+                    config.with_context(justech_padron_log_allow_write=True).write(
+                        {
+                            "last_status": "updated" if last_ok else "failed",
+                            "lock_until": False,
+                            "last_message": _(
+                                "Padrón global operativo (%(n)s registros)."
+                            )
+                            % {"n": count},
+                        }
+                    )
+                last_log = Log.search([], order="id desc", limit=1)
+
+        if last_log and last_log.state == "failed":
+            # Fallo reciente sin datos = problema real; con datos + last_ok = aviso suave.
+            if count <= 0:
+                issues.append(_("Última importación fallida y padrón vacío."))
+                severity = "critical"
+            elif not last_ok:
+                warnings.append(_("Última importación fallida."))
+                if severity == "ok":
+                    severity = "high"
+            # Si hay last_ok y count>0, el fallo residual no degrada el estado global.
+        if last_log and last_log.state == "running":
+            # Solo crítico si realmente no hay padrón usable.
+            if count <= 0:
+                issues.append(_("Importación quedó a medias (en proceso)."))
+                severity = "critical"
+            else:
+                warnings.append(
+                    _("Hay una importación en curso; el padrón global sigue operativo.")
+                )
+                if severity == "ok":
+                    severity = "medium"
 
         sync = info.get("sync_date")
         max_age = config.max_age_days or 90
         if sync:
-            age = fields.Datetime.now() - sync
+            age = now - sync
             if age > timedelta(days=max_age):
                 warnings.append(
                     _("Padrón desactualizado (más de %(d)s días).") % {"d": max_age}
@@ -684,9 +732,9 @@ class JustechDoRncPadronImportService(models.AbstractModel):
         status_visual = "grey"
         if count <= 0:
             status_visual = "red"
-        elif severity in ("critical", "high") or (last_log and last_log.state == "failed"):
+        elif severity == "critical":
             status_visual = "red"
-        elif severity == "medium":
+        elif severity in ("high", "medium"):
             status_visual = "yellow"
         else:
             status_visual = "green"
@@ -694,7 +742,7 @@ class JustechDoRncPadronImportService(models.AbstractModel):
         return {
             "severity": severity,
             "status_visual": status_visual,
-            "ok": severity in ("ok", "low", "medium") and count > 0 and severity != "critical",
+            "ok": count > 0 and severity != "critical",
             "count": count,
             "sync_date": sync,
             "source": info.get("source"),
@@ -708,6 +756,7 @@ class JustechDoRncPadronImportService(models.AbstractModel):
             "warnings": warnings,
             "max_age_days": max_age,
             "never_loaded": not last_ok and count <= 0,
+            "is_global": True,
         }
 
     @api.model
@@ -719,14 +768,26 @@ class JustechDoRncPadronImportService(models.AbstractModel):
             [("state", "in", ("done", "done_warn"))], order="id desc", limit=1
         )
         labels = {
-            "green": _("Padrón cargado y vigente"),
-            "yellow": _("Padrón desactualizado"),
+            "green": _("Padrón global cargado y vigente"),
+            "yellow": _("Padrón global operativo con advertencias"),
             "red": _("Padrón vacío o importación fallida"),
             "grey": _("Nunca cargado"),
         }
         visual = integrity["status_visual"]
         if integrity["never_loaded"]:
             visual = "grey"
+        elif integrity.get("count", 0) > 0 and visual == "red" and not integrity.get("issues"):
+            # Defensa: con datos y sin issues reales no mostrar vacío/fallido.
+            visual = "yellow" if integrity.get("warnings") else "green"
+        guide = _(
+            "El padrón DGII es global y compartido por todas las empresas. "
+            "No se carga un padrón por compañía. Un solo historial y un solo cron."
+        )
+        if integrity.get("never_loaded") or integrity.get("count", 0) <= 0:
+            guide = _(
+                "Después de restaurar una base sin padrón DGII, utilice "
+                "Importar padrón DGII (una sola vez, global) para reactivar la validación de RNC."
+            )
         return {
             **integrity,
             "status_visual": visual,
@@ -741,8 +802,5 @@ class JustechDoRncPadronImportService(models.AbstractModel):
             "count_new_last": last_ok.count_new if last_ok else 0,
             "count_updated_last": last_ok.count_updated if last_ok else 0,
             "count_rejected_last": last_ok.count_rejected if last_ok else 0,
-            "guide": _(
-                "Después de restaurar una base sin padrón DGII, utilice "
-                "Importar padrón DGII para reactivar la validación de RNC."
-            ),
+            "guide": guide,
         }

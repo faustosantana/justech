@@ -4,6 +4,7 @@ from odoo.exceptions import UserError
 
 class JustechDoFiscalReportWizard(models.TransientModel):
     _name = "justech.do.fiscal.report.wizard"
+    _inherit = ["justech.do.dgii.period.selector.mixin"]
     _description = "Asistente para generar reporte fiscal DGII"
 
     DGII_EXPORT_TYPES = ("606", "607")
@@ -83,28 +84,28 @@ class JustechDoFiscalReportWizard(models.TransientModel):
 
     @api.model_create_multi
     def create(self, vals_list):
-        period_util = self.env["justech.do.dgii.period"]
+        normalized = []
         for vals in vals_list:
-            if vals.get("period_code"):
-                date_from, date_to = period_util.period_bounds_from_code(
-                    vals["period_code"]
-                )
-                vals["date_from"] = date_from
-                vals["date_to"] = date_to
-        return super().create(vals_list)
+            normalized.append(self._justech_normalize_period_vals(vals))
+        return super().create(normalized)
 
     def write(self, vals):
-        res = super().write(vals)
-        if vals.get("period_code"):
-            period_util = self.env["justech.do.dgii.period"]
+        if any(
+            k in vals
+            for k in (
+                "period_mode",
+                "period_year",
+                "period_month",
+                "period_code",
+                "date_from",
+                "date_to",
+            )
+        ):
             for wiz in self:
-                date_from, date_to = period_util.period_bounds_from_code(
-                    wiz.period_code
-                )
-                super(JustechDoFiscalReportWizard, wiz).write(
-                    {"date_from": date_from, "date_to": date_to}
-                )
-        return res
+                nvals = self._justech_normalize_period_vals(vals, record=wiz)
+                super(JustechDoFiscalReportWizard, wiz).write(nvals)
+            return True
+        return super().write(vals)
 
     @api.model
     def default_get(self, fields_list):
@@ -114,62 +115,26 @@ class JustechDoFiscalReportWizard(models.TransientModel):
         date_from, date_to = period_util.period_bounds_from_code(period_code)
         res.update(
             {
+                "period_mode": res.get("period_mode") or "month",
                 "period_code": period_code,
+                "period_year": int(period_code[:4]),
+                "period_month": str(int(period_code[4:6])),
                 "date_from": date_from,
                 "date_to": date_to,
             }
         )
         return res
 
-    @api.onchange("period_code")
-    def _onchange_period_code(self):
-        if not self.period_code:
-            return
-        try:
-            date_from, date_to = self.env[
-                "justech.do.dgii.period"
-            ].period_bounds_from_code(self.period_code)
-            self.date_from = date_from
-            self.date_to = date_to
-            self.validation_state = "pending"
-            self.validation_log = False
-        except UserError as err:
-            return {
-                "warning": {
-                    "title": _("Período inválido"),
-                    "message": str(err),
-                }
-            }
-
-    @api.onchange("date_from", "date_to")
-    def _onchange_dates(self):
-        if self.date_from and self.date_to and self.date_from > self.date_to:
-            return {
-                "warning": {
-                    "title": _("Fechas incoherentes"),
-                    "message": _("La fecha desde no puede ser posterior a la fecha hasta."),
-                }
-            }
-        if self.date_from and self.date_to and self.period_code:
-            try:
-                self.env["justech.do.dgii.period"].validate_period_dates(
-                    self.date_from, self.date_to, self.period_code
-                )
-            except UserError as err:
-                return {
-                    "warning": {
-                        "title": _("Período incoherente"),
-                        "message": str(err),
-                    }
-                }
-
     def _check_period(self):
         self.ensure_one()
         period_util = self.env["justech.do.dgii.period"]
-        period_util.period_bounds_from_code(self.period_code)
-        period_util.validate_period_dates(
-            self.date_from, self.date_to, self.period_code
-        )
+        if self.period_mode == "custom":
+            period_util.validate_custom_range(self.date_from, self.date_to)
+        else:
+            period_util.period_bounds_from_code(self.period_code)
+            period_util.validate_period_dates(
+                self.date_from, self.date_to, self.period_code
+            )
 
     def _get_dgii_exporter(self):
         self.ensure_one()

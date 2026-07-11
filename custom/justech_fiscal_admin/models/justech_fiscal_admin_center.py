@@ -73,8 +73,20 @@ class JustechFiscalAdminCenter(models.Model):
     health_findings_json = fields.Text(readonly=True)
     is_system_admin = fields.Boolean(compute="_compute_fiscal_caps")
     is_fiscal_admin = fields.Boolean(compute="_compute_fiscal_caps")
+    is_fiscal_officer = fields.Boolean(compute="_compute_fiscal_caps")
+    is_fiscal_user_only = fields.Boolean(compute="_compute_fiscal_caps")
     can_manage_padron = fields.Boolean(compute="_compute_fiscal_caps")
     can_manage_users = fields.Boolean(compute="_compute_fiscal_caps")
+    can_revalidate_health = fields.Boolean(compute="_compute_fiscal_caps")
+    can_open_ncf_admin = fields.Boolean(compute="_compute_fiscal_caps")
+    access_mode = fields.Selection(
+        [
+            ("admin", "Administrador"),
+            ("officer", "Responsable"),
+            ("user", "Usuario"),
+        ],
+        compute="_compute_fiscal_caps",
+    )
 
     def _compute_fiscal_caps(self):
         user = self.env.user
@@ -82,11 +94,27 @@ class JustechFiscalAdminCenter(models.Model):
         is_admin = is_system or user.has_group(
             "justech_fiscal_admin.group_justech_fiscal_admin_manager"
         )
+        is_officer = is_admin or user.has_group(
+            "justech_l10n_do_base.group_justech_do_fiscal_manager"
+        )
+        is_user = is_officer or user.has_group(
+            "justech_l10n_do_base.group_justech_do_fiscal_user"
+        )
         for rec in self:
             rec.is_system_admin = is_system
             rec.is_fiscal_admin = is_admin
+            rec.is_fiscal_officer = is_officer and not is_admin
+            rec.is_fiscal_user_only = is_user and not is_officer
             rec.can_manage_padron = is_admin
             rec.can_manage_users = is_admin
+            rec.can_revalidate_health = is_officer or is_admin
+            rec.can_open_ncf_admin = is_admin or is_officer
+            if is_admin:
+                rec.access_mode = "admin"
+            elif is_officer:
+                rec.access_mode = "officer"
+            else:
+                rec.access_mode = "user"
 
     @api.depends(
         "stack_json",
@@ -153,7 +181,7 @@ class JustechFiscalAdminCenter(models.Model):
             )
 
             padron_html = ""
-            if rec.can_manage_padron:
+            if padron:
                 visual = padron.get("status_visual") or "grey"
                 color = {
                     "green": "success",
@@ -261,73 +289,90 @@ class JustechFiscalAdminCenter(models.Model):
 
     @api.model
     def _user_can_open_center(self):
+        """Quién puede abrir el Centro Fiscal (con distinta profundidad de UI)."""
         user = self.env.user
-        return user.has_group("base.group_system") or user.has_group(
-            "justech_fiscal_admin.group_justech_fiscal_admin_manager"
+        return (
+            user.has_group("base.group_system")
+            or user.has_group("justech_fiscal_admin.group_justech_fiscal_admin_manager")
+            or user.has_group("justech_l10n_do_base.group_justech_do_fiscal_manager")
+            or user.has_group("justech_l10n_do_base.group_justech_do_fiscal_user")
+        )
+
+    @api.model
+    def _user_denied_center_message(self):
+        return _(
+            "No tiene permiso para acceder al Centro de Administración Fiscal. "
+            "Contacte a un administrador del sistema o Administrador Fiscal."
         )
 
     @api.model
     def _current_company(self):
-        """Empresa activa Odoo 19 (context company_id / allowed_company_ids)."""
-        cid = self.env.context.get("company_id")
-        if cid:
-            company = self.env["res.company"].browse(cid)
-            if company.exists():
-                return company
-        allowed = self.env.context.get("allowed_company_ids") or []
-        if allowed:
-            company = self.env["res.company"].browse(allowed[0])
-            if company.exists():
-                return company
-        return self.env.company
+        """Empresa activa de la sesión Odoo 19.
+
+        En Odoo 19 ``env.company`` es la empresa activa del switcher
+        (primer id de ``allowed_company_ids`` / ``cids`` de sesión).
+
+        No se usa un ``company_id`` fijo en contexto.
+        No se toma el primer singleton de la tabla.
+        """
+        company = self.env.company
+        if not company:
+            raise AccessError(_("No hay empresa activa en la sesión."))
+        allowed = self.env.companies
+        if company not in allowed:
+            raise AccessError(
+                _("La empresa activa %(c)s no está entre las empresas autorizadas.")
+                % {"c": company.display_name}
+            )
+        return company
 
     @api.model
     def open_for_user(self):
-        """Abre singleton por empresa activa. Sin create si no es admin fiscal/system."""
+        """Abre el Centro Fiscal de la empresa activa (env.company)."""
         if not self._user_can_open_center():
-            raise AccessError(
-                _(
-                    "No tiene permiso para acceder al Centro de Administración Fiscal. "
-                    "Contacte a un administrador del sistema o Administrador Fiscal."
-                )
-            )
+            raise AccessError(self._user_denied_center_message())
+        # Alinear el entorno al switcher de la sesión (Odoo 19).
         company = self._current_company()
-        allowed_ids = list(self.env.context.get("allowed_company_ids") or self.env.companies.ids)
-        if not allowed_ids:
-            allowed_ids = self.env.companies.ids
-        if company.id not in allowed_ids and company not in self.env.companies:
+        self = self.with_company(company)
+        allowed_ids = list(self.env.companies.ids)
+        if company.id not in allowed_ids:
             raise AccessError(
                 _("No está autorizado a operar en la empresa %(c)s.")
                 % {"c": company.display_name}
             )
-        Center = self.sudo().with_context(
-            allowed_company_ids=allowed_ids,
-            company_id=company.id,
-        )
-        center = Center.search([("company_id", "=", company.id)], limit=1)
+        # Singleton de la empresa activa — búsqueda explícita por company_id.
+        center = self.sudo().search([("company_id", "=", company.id)], limit=1)
         if not center:
-            center = Center.create({"company_id": company.id})
-        center = self.browse(center.id).with_context(
-            allowed_company_ids=allowed_ids,
-            company_id=company.id,
-        )
+            center = self.sudo().create({"company_id": company.id})
+        center = self.browse(center.id).with_company(company)
+        if center.company_id.id != company.id:
+            raise UserError(
+                _(
+                    "Inconsistencia de empresa: se esperaba %(exp)s y se obtuvo %(got)s."
+                )
+                % {
+                    "exp": company.display_name,
+                    "got": center.company_id.display_name,
+                }
+            )
         try:
+            center.check_access("read")
             center._refresh()
         except AccessError:
-            center.sudo().with_context(
-                allowed_company_ids=allowed_ids,
-                company_id=company.id,
-            )._refresh()
-            center = self.browse(center.id).with_context(
-                allowed_company_ids=allowed_ids,
-                company_id=company.id,
-            )
+            if center.company_id.id not in allowed_ids:
+                raise
+            center.sudo().with_company(company)._refresh()
+            center = self.browse(center.id).with_company(company)
         return center.action_open()
 
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
             company_id = vals.get("company_id") or self.env.company.id
+            if company_id not in self.env.companies.ids and not self.env.su:
+                raise AccessError(
+                    _("No puede crear el Centro Fiscal para una empresa no autorizada.")
+                )
             existing = self.sudo().search([("company_id", "=", company_id)], limit=1)
             if existing:
                 raise UserError(
@@ -339,27 +384,31 @@ class JustechFiscalAdminCenter(models.Model):
         return super().create(vals_list)
 
     def _refresh(self):
+        """Recalcula el dashboard exclusivamente para ``self.company_id``.
+
+        La empresa del registro debe coincidir con la activa al abrir desde el menú.
+        Salud, NCF, pagos y retenciones se filtran por esa empresa.
+        Multiempresa del resumen solo incluye ``env.companies`` (autorizadas).
+        """
         self.ensure_one()
         company = self.company_id
-        allowed_ids = list(self.env.context.get("allowed_company_ids") or self.env.companies.ids)
-        if (
-            company.id not in allowed_ids
-            and company not in self.env.companies
-            and not self.env.su
-        ):
+        allowed_ids = list(self.env.companies.ids)
+        if company.id not in allowed_ids and not self.env.su:
             raise AccessError(
                 _("Empresa no autorizada para este usuario: %s") % company.display_name
             )
-        svc = self.env["justech.fiscal.admin.service"].with_context(
-            allowed_company_ids=allowed_ids or [company.id],
-            company_id=company.id,
-        )
+        # Forzar contexto de cálculo a la empresa del centro.
+        # with_company puede no existir en algunos entornos; pasar company explícito.
+        svc = self.env["justech.fiscal.admin.service"]
+        if hasattr(svc, "with_company"):
+            svc = svc.with_company(company)
         stack = svc.stack_status(company)
         health = svc.health_check(company)
         payments = svc.payments_withholding_status(company)
         ncf = svc.ncf_consumption_summary(company)
         padron = {}
-        if self.can_manage_padron and "justech.do.rnc.padron.import.service" in self.env:
+        if "justech.do.rnc.padron.import.service" in self.env:
+            # Estado global: visible a todos los roles con acceso al Centro.
             padron = (
                 self.env["justech.do.rnc.padron.import.service"]
                 .sudo()
@@ -400,7 +449,10 @@ class JustechFiscalAdminCenter(models.Model):
         self.ensure_one()
         return {
             "type": "ir.actions.act_window",
-            "name": _("Centro de Administración Fiscal Justech"),
+            "name": _(
+                "Centro Fiscal — %(company)s",
+                company=self.company_id.display_name,
+            ),
             "res_model": self._name,
             "res_id": self.id,
             "view_mode": "form",
@@ -408,6 +460,7 @@ class JustechFiscalAdminCenter(models.Model):
             "context": {
                 "create": False,
                 "delete": False,
+                # Conservar empresas autorizadas de la sesión; no fijar company_id.
                 "allowed_company_ids": self.env.companies.ids,
             },
         }
@@ -424,7 +477,12 @@ class JustechFiscalAdminCenter(models.Model):
         """Abre el detalle estructurado de Salud Fiscal."""
         self.ensure_one()
         self._refresh()
-        findings = json.loads(self.health_findings_json or "[]")
+        # Filtrar hallazgos a la empresa del centro (nunca cruzar otras)
+        findings = [
+            f
+            for f in json.loads(self.health_findings_json or "[]")
+            if not f.get("company_id") or f.get("company_id") == self.company_id.id
+        ]
         Issue = self.env["justech.fiscal.health.issue"].sudo()
         # limpiar líneas previas de este centro
         Issue.search([("center_id", "=", self.id)]).unlink()
@@ -443,6 +501,7 @@ class JustechFiscalAdminCenter(models.Model):
                     "res_model": f.get("res_model") or False,
                     "res_id": f.get("res_id") or 0,
                     "recommended_action": f.get("recommended_action") or "",
+                    "cause": f.get("cause") or "",
                     "category": f.get("category") or "error",
                     "state": "open",
                 }
@@ -538,6 +597,10 @@ class JustechFiscalAdminCenter(models.Model):
         return self.env.ref("justech_l10n_do_reports.action_justech_do_fiscal_report").read()[0]
 
     def action_open_ncf_admin(self):
+        if not self.can_open_ncf_admin:
+            raise AccessError(
+                _("El Usuario Fiscal no administra el Centro NCF; use Rangos NCF.")
+            )
         return self.env["justech.do.ncf.admin.center"].open_for_user(self.env)
 
     def action_open_withholding_catalog(self):
@@ -552,6 +615,8 @@ class JustechFiscalAdminCenter(models.Model):
         ).read()[0]
 
     def action_sync_withholding_catalog(self):
+        if not self.is_fiscal_admin:
+            raise AccessError(_("Solo Administradores Fiscales pueden sincronizar retenciones."))
         if "justech.do.withholding.catalog" not in self.env:
             raise UserError(_("Catálogo de retenciones no disponible."))
         self.env["justech.do.withholding.catalog"].sync_catalog_from_taxes(self.company_id)

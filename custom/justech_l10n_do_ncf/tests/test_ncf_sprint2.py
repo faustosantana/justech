@@ -98,6 +98,42 @@ class TestJustechNcfSprint2(TransactionCase):
         with self.assertRaises(ValidationError):
             bill2.action_post()
 
+    def test_duplicate_v2_same_ncf_different_vendors_allowed(self):
+        """Compras: mismo NCF, distinta empresa emisora (proveedor) → permitido."""
+        self._create_range(self.doc_b11, self.journal_purchase)
+        self.journal_purchase.write(
+            {
+                "justech_do_use_ncf": True,
+                "justech_do_default_document_type_id": self.doc_b11.id,
+            }
+        )
+        ncf = "B1100008888"
+        for name in ("Prov A Index", "Prov B Index"):
+            vendor = self.env["res.partner"].create({"name": name, "supplier_rank": 1})
+            bill = self.env["account.move"].create(
+                {
+                    "move_type": "in_invoice",
+                    "partner_id": vendor.id,
+                    "journal_id": self.journal_purchase.id,
+                    "invoice_date": date.today(),
+                    "justech_do_document_type_id": self.doc_b11.id,
+                    "justech_do_ncf": ncf,
+                    "invoice_line_ids": [
+                        Command.create(
+                            {
+                                "name": "Line",
+                                "product_id": self.product.id,
+                                "quantity": 1,
+                                "price_unit": 50,
+                            }
+                        )
+                    ],
+                }
+            )
+            bill.action_post()
+            self.assertEqual(bill.justech_do_ncf, ncf)
+            self.assertEqual(bill.state, "posted")
+
     def test_range_audit_summary(self):
         self._create_range(self.doc_b01, self.journal_sale)
         summary = self.env["justech.do.ncf.range.audit.service"].summary_for_company(

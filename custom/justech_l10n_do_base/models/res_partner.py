@@ -170,10 +170,21 @@ class ResPartner(models.Model):
                 is_person and (not is_child or partner.type == "contact")
             )
             partner.justech_do_show_default_document_type = show_doc
+            # Validación padrón: RNC (empresa DO) o Cédula (persona DO con VAT).
             partner.justech_do_show_rnc_validation = bool(
-                is_commercial_company
-                and partner.justech_do_is_dominican
-                and partner.justech_do_partner_id_type == "1"
+                partner.justech_do_is_dominican
+                and not is_child
+                and (
+                    (
+                        is_commercial_company
+                        and partner.justech_do_partner_id_type == "1"
+                    )
+                    or (
+                        is_person
+                        and partner.justech_do_partner_id_type == "2"
+                        and partner.vat
+                    )
+                )
             )
 
     @api.depends(
@@ -253,16 +264,30 @@ class ResPartner(models.Model):
             elif not partner.justech_do_partner_id_type:
                 partner.justech_do_partner_id_type = "2" if is_do else "3"
 
-    @api.depends("vat", "country_id", "country_id.code", "is_company")
+    @api.depends("vat", "country_id", "country_id.code", "is_company", "justech_do_partner_id_type")
     def _compute_justech_do_rnc_valid(self):
         for partner in self:
             is_do = partner.country_id and partner.country_id.code == "DO"
-            if not partner.is_company or not is_do:
+            if not is_do or not partner.vat:
                 partner.justech_do_rnc_valid = False
                 continue
-            partner.justech_do_rnc_valid = partner._justech_validate_rnc_format(
+            cleaned = self.env["justech.do.fiscal.validator.service"].normalize_vat(
                 partner.vat
             )
+            if partner.is_company and partner.justech_do_partner_id_type == "1":
+                partner.justech_do_rnc_valid = bool(
+                    cleaned
+                    and len(cleaned) == 9
+                    and partner._justech_validate_rnc_format(cleaned)
+                )
+            elif not partner.is_company and partner.justech_do_partner_id_type == "2":
+                partner.justech_do_rnc_valid = bool(
+                    cleaned
+                    and len(cleaned) == 11
+                    and partner._justech_validate_rnc_format(cleaned)
+                )
+            else:
+                partner.justech_do_rnc_valid = False
 
     @api.depends("name", "justech_do_rnc_official_name")
     def _compute_justech_do_rnc_name_differs(self):
@@ -659,7 +684,34 @@ class ResPartner(models.Model):
                     },
                 )
                 continue
-            if not partner._justech_validate_rnc_format(cleaned) or len(cleaned) != 9:
+            if not partner._justech_validate_rnc_format(cleaned):
+                self._justech_set_rnc_vals(
+                    partner,
+                    {
+                        "justech_do_rnc_status": "invalid",
+                        "justech_do_rnc_padron_id": False,
+                        "justech_do_rnc_official_name": False,
+                        "justech_do_rnc_trade_name": False,
+                        "justech_do_rnc_contributor_state": False,
+                        "justech_do_rnc_economic_activity": False,
+                        "justech_do_rnc_source": False,
+                        "justech_do_rnc_duplicate_partner_id": False,
+                        "justech_do_rnc_validated_at": fields.Datetime.now(),
+                        "justech_do_padron_source_state": False,
+                        "justech_do_padron_source_info": False,
+                    },
+                )
+                continue
+            # Empresa DO (RNC): exactamente 9. Persona (cédula): exactamente 11.
+            expected_len = 9 if partner.is_company else 11
+            if partner.is_company and partner.justech_do_partner_id_type == "1":
+                expected_len = 9
+            elif (
+                not partner.is_company
+                and partner.justech_do_partner_id_type == "2"
+            ):
+                expected_len = 11
+            if len(cleaned) != expected_len:
                 self._justech_set_rnc_vals(
                     partner,
                     {

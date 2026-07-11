@@ -25,6 +25,7 @@ class JustechFiscalHealthIssue(models.TransientModel):
     )
     severity_rank = fields.Integer(default=50)
     impact = fields.Char(string="Impacto")
+    cause = fields.Text(string="Causa")
     model_name = fields.Char(string="Modelo")
     res_model = fields.Char()
     res_id = fields.Integer()

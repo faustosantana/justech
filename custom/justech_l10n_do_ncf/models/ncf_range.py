@@ -178,7 +178,19 @@ class JustechDoNcfRange(models.Model):
             raise UserError(_("NCF range %(name)s is depleted.", name=self.name))
         doc_type = self.env["justech.do.fiscal.document.type"].browse(doc_type_id)
         ncf = doc_type.format_ncf(next_seq)
-        self.env["justech.do.ncf.consumption"].create(
+        # Empresa fiscal = move.company_id (nunca env.company como fuente autoritativa).
+        if move.company_id != self.company_id:
+            raise UserError(
+                _(
+                    "El rango NCF pertenece a %(range_co)s pero el documento es de %(move_co)s.",
+                    range_co=self.company_id.display_name,
+                    move_co=move.company_id.display_name,
+                )
+            )
+        # Auditoría interna: sudo + contexto técnico; company_id vía rango (= move.company_id).
+        self.env["justech.do.ncf.consumption"].sudo().with_context(
+            justech_ncf_engine=True
+        ).create(
             {
                 "range_id": self.id,
                 "move_id": move.id,

@@ -1,5 +1,12 @@
 # Changelog — justech_fiscal_admin
 
+## 19.0.1.6.0 — 2026-07-11
+
+- Resolución de empresa del Centro Fiscal vía `env.company` / `allowed_company_ids` (no fija JUSTECH).
+- Roles: Responsable (solo lectura + revalidar), Usuario (operativo limitado), Contador/Ventas/Compras sin menú / sin AccessError.
+- Health check: elimina falsos positivos de padrón `running` huérfano; estado global verde con 781,980 RNCs.
+- ACL y menús alineados a grupos fiscal officer / user / admin.
+
 ## 19.0.1.5.0 — 2026-07-11
 
 - Roles fiscales: Usuario / Responsable / Administrador Fiscal (SoD vs Contable).

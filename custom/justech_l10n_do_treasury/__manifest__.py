@@ -1,6 +1,6 @@
 {
     "name": "Justech Tesorería Dominicana",
-    "version": "19.0.1.4.1",
+    "version": "19.0.1.5.0",
     "category": "Accounting/Localizations",
     "summary": "Pagos abiertos, anticipos y experiencia de tesorería (aditivo, no destructivo)",
     "description": """

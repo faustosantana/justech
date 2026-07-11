@@ -8,11 +8,22 @@
                 <group>
                     <field name="report_type"/>
                     <field name="company_id" groups="base.group_multi_company"/>
-                    <field name="period_code" placeholder="202606"/>
-                    <field name="date_from" invisible="1"/>
-                    <field name="date_to" invisible="1"/>
-                    <field name="date_from_display" string="Desde" readonly="1"/>
-                    <field name="date_to_display" string="Hasta" readonly="1"/>
+                </group>
+                <group string="Período">
+                    <field name="period_mode" widget="radio"/>
+                    <field name="period_year" invisible="period_mode != 'month'"/>
+                    <field name="period_month" invisible="period_mode != 'month'"/>
+                    <field name="period_code" readonly="1"
+                           invisible="period_mode != 'month'"/>
+                    <field name="date_from" readonly="period_mode == 'month'"
+                           required="1"/>
+                    <field name="date_to" readonly="period_mode == 'month'"
+                           required="1"/>
+                    <field name="date_from_display" invisible="1"/>
+                    <field name="date_to_display" invisible="1"/>
+                    <field name="period_official_hint" nolabel="1" readonly="1"
+                           invisible="period_mode != 'custom'"
+                           class="text-muted"/>
                     <field name="saved_report_id" invisible="1"/>
                 </group>
                 <group string="Resumen del período" invisible="validation_state == 'pending'">

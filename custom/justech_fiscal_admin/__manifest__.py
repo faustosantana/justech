@@ -1,6 +1,6 @@
 {
     "name": "Justech Fiscal Administration Center",
-    "version": "19.0.1.5.0",
+    "version": "19.0.1.6.0",
     "summary": "Enterprise fiscal stack administration — roles, health, feature flags, padrón DGII",
     "description": """
 Centro de Administración Fiscal Justech (Enterprise).

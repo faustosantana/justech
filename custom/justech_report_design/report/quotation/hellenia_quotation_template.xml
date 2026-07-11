@@ -181,8 +181,11 @@
         <div class="jt-hq-clear"/>
 
         <div class="jt-hq-cond" t-if="doc.jt_show_quotation_conditions()">
-            <div class="jt-hq-cond-title">CONDICIONES</div>
-            <div class="jt-hq-cond-body" t-field="doc.note"/>
+            <div class="jt-hq-cond-rule"/>
+            <div class="jt-hq-cond-title">TÉRMINOS Y CONDICIONES</div>
+            <!-- Campo computado: requiere Python cargado; t-out renderiza Markup/HTML. -->
+            <div class="jt-hq-cond-body" t-out="doc.jt_quotation_note_html"/>
+            <div class="jt-hq-cond-rule"/>
         </div>
 
         <div class="jt-hq-sigs-zone">

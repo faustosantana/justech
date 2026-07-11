@@ -1,8 +1,14 @@
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl-3.0.html)
+import html as html_lib
+import logging
+import re
+
 from markupsafe import Markup
 
 from odoo import _, api, fields, models
 from odoo.tools import formatLang, html_escape, is_html_empty
+
+_logger = logging.getLogger(__name__)
 
 
 class SaleOrder(models.Model):
@@ -14,21 +20,82 @@ class SaleOrder(models.Model):
         "sale_order_id",
         string="Conduces de entrega",
     )
+    # Campo computado para QWeb/PDF: evita AttributeError si el worker
+    # recarga vistas sin reimportar métodos Python (desfase de registry).
+    jt_quotation_note_html = fields.Html(
+        string="Términos cotización (PDF)",
+        compute="_compute_jt_quotation_note_html",
+        sanitize=False,
+    )
+
+    @api.depends("note")
+    def _compute_jt_quotation_note_html(self):
+        for order in self:
+            order.jt_quotation_note_html = order.jt_quotation_note_for_report()
+
+    @api.model
+    def _jt_sanitize_note_html(self, raw):
+        """Convierte note (Html o texto escapado) a Markup seguro para PDF."""
+        if not raw or is_html_empty(raw):
+            return False
+        text = str(raw).strip()
+        if not text:
+            return False
+
+        # Preferir helper de hellenia_reports si está disponible.
+        Company = self.env["res.company"]
+        if hasattr(Company, "hellenia_plain_terms_to_html"):
+            try:
+                converted = Company.hellenia_plain_terms_to_html(text)
+                if converted:
+                    return converted
+            except Exception:
+                _logger.exception("hellenia_plain_terms_to_html failed; using local sanitizer")
+
+        # Sanitizer local (no depende de hellenia_reports en runtime).
+        if "&lt;" in text:
+            text = html_lib.unescape(text)
+        if re.search(r"<(ul|ol|li|p|div|br)\b", text, flags=re.I):
+            plainish = re.sub(r"<br\s*/?>", "\n", text, flags=re.I)
+            plainish = re.sub(r"</?p[^>]*>", "\n", plainish, flags=re.I)
+            plainish = re.sub(r"<[^>]+>", "", plainish)
+            plainish = html_lib.unescape(plainish).strip()
+            if re.search(r"^\([a-z]\)\s", plainish, flags=re.I | re.M) or "\n" in plainish:
+                text = plainish
+            else:
+                return Markup(text)
+
+        lines = []
+        for raw_line in text.replace("\r\n", "\n").replace("\r", "\n").split("\n"):
+            line = raw_line.strip()
+            if not line:
+                continue
+            line = re.sub(r"^\([a-z]\)\s*", "", line, flags=re.I)
+            line = re.sub(r"^[•\-\*]\s*", "", line)
+            if line:
+                lines.append(line)
+        if not lines:
+            return False
+        items = "".join(f"<li>{html_escape(line)}</li>" for line in lines)
+        return Markup(f'<ul class="jt-hq-terms-list">{items}</ul>')
 
     @api.model
     def _jt_company_terms_as_note_html(self, company):
-        """Texto plano de empresa → HTML para sale.order.note (sin fallback en PDF)."""
+        """HTML de empresa → sale.order.note (sin re-escapar etiquetas)."""
         if not company:
             return False
-        terms = company.jt_get_quotation_terms_text()
+        if hasattr(company, "hellenia_get_quotation_terms_html"):
+            note_html = company.hellenia_get_quotation_terms_html()
+            if note_html and not is_html_empty(note_html):
+                return note_html
+        terms = company.jt_get_quotation_terms_text() if hasattr(company, "jt_get_quotation_terms_text") else False
         if not terms:
             return False
-        return Markup("<p>") + Markup(html_escape(terms).replace("\n", "<br/>")) + Markup("</p>")
+        return self._jt_sanitize_note_html(terms)
 
     @api.model
     def default_get(self, fields_list):
         res = super().default_get(fields_list)
-        # Siempre precargar note si está vacío (Odoo a veces no incluye note en fields_list).
         if is_html_empty(res.get("note")):
             company = self.env.company
             if res.get("company_id"):
@@ -54,6 +121,20 @@ class SaleOrder(models.Model):
         """True si la cotización tiene condiciones en note (bloque PDF)."""
         self.ensure_one()
         return not is_html_empty(self.note)
+
+    def jt_quotation_note_for_report(self):
+        """HTML seguro para PDF/vista previa. Nunca lanza por contenido vacío."""
+        self.ensure_one()
+        try:
+            return self._jt_sanitize_note_html(self.note)
+        except Exception:
+            _logger.exception(
+                "jt_quotation_note_for_report failed for sale.order id=%s", self.id
+            )
+            if self.note and not is_html_empty(self.note):
+                # Último recurso: devolver note como Markup (mejor que Error 500).
+                return Markup(str(self.note))
+            return False
 
     def get_jt_payment_term_display(self):
         """Etiqueta española: Contado o Crédito a X días."""

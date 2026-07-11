@@ -1,5 +1,8 @@
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl-3.0.html)
+from markupsafe import Markup
+
 from odoo import models
+from odoo.tools import is_html_empty
 
 
 class SaleOrder(models.Model):
@@ -35,3 +38,13 @@ class SaleOrder(models.Model):
         )
         count = len(lines)
         return max(0, min(100, 130 - count * 7))
+
+    def hellenia_quotation_note_for_report(self):
+        """HTML seguro para PDF: corrige &lt;br/&gt; legado sin cambiar el texto."""
+        self.ensure_one()
+        if is_html_empty(self.note):
+            return False
+        raw = str(self.note)
+        if "&lt;br" in raw or "&lt;p" in raw or raw.strip().startswith("(a)"):
+            return self.company_id.hellenia_plain_terms_to_html(raw)
+        return Markup(raw)

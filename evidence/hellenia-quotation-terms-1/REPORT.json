@@ -1,0 +1,42 @@
+{
+  "phase": "HELLENIA-QUOTATION-TERMS-1",
+  "ok": true,
+  "backup": "/opt/odoo-projects/hellenia/backups/hellenia-prod/quotation-terms-1-2026-07-10_193742",
+  "modules": {
+    "hellenia_reports": "19.0.1.5.8",
+    "justech_report_design": "19.0.7.4.1"
+  },
+  "settings_path": "Configuración → Ventas → Cotizaciones y pedidos → Términos y Condiciones",
+  "checks": {
+    "settings_html": {
+      "status": "PASS",
+      "detail": "Html"
+    },
+    "autoload": {
+      "status": "PASS",
+      "detail": "<ul class=\"jt-hq-terms-list\"><li>Las piezas ofrecidas son únicas y están sujetas a disponibilidad.</li><li>Esta cotización tiene una vigencia de cinco (5) días "
+    },
+    "pdf_html": {
+      "status": "PASS",
+      "detail": "<ul class=\"jt-hq-terms-list\"><li>Las piezas ofrecidas son únicas y están sujetas a disponibilidad.</li><li>Esta cotización tiene una vigencia de cinco (5) días "
+    },
+    "pdf_bytes": {
+      "status": "PASS",
+      "detail": "size=73209"
+    },
+    "new_uses_updated_config": {
+      "status": "PASS",
+      "detail": "<ul><li>TERMINO-TEST-233845 vigencia especial.</li><li>Segundo punto de prueba.</li></ul>"
+    },
+    "old_preserved": {
+      "status": "PASS",
+      "detail": "order=48"
+    },
+    "old_display_clean": {
+      "status": "PASS",
+      "detail": "<ul class=\"jt-hq-terms-list\"><li>Las piezas ofrecidas son únicas y sujetas a disponibilidad.</li><li>Esta cotización tiene una validez de 5 días.</li><li>Se req"
+    }
+  },
+  "healthcheck": "PASS",
+  "blockers": []
+}

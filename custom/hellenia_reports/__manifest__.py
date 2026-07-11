@@ -1,6 +1,6 @@
 {
     "name": "Hellenia Reports",
-    "version": "19.0.1.5.7",
+    "version": "19.0.1.5.9",
     "category": "Reporting",
     "summary": "Formatos corporativos PDF Hellenia",
     "description": """
@@ -9,6 +9,7 @@ Formatos visuales corporativos para documentos comerciales Hellenia.
 - Layout corporativo único (external_layout_hellenia) — identidad #3E4827
 - Cotización, pedido, factura, NC, ND, compras, entregas y recepciones
 - Recibo de pago, estados de cuenta cliente/proveedor
+- Términos y Condiciones de cotización editables (WYSIWYG)
 - Herencia QWeb upgrade-safe (solo presentación)
     """,
     "author": "Justech",
@@ -40,6 +41,7 @@ Formatos visuales corporativos para documentos comerciales Hellenia.
         "data/report_actions_data.xml",
         "data/company_layout_data.xml",
         "views/res_company_views.xml",
+        "views/res_config_settings_views.xml",
         "views/account_move_ncf_void_reason_fix.xml",
     ],
     "assets": {
@@ -50,13 +52,14 @@ Formatos visuales corporativos para documentos comerciales Hellenia.
             "hellenia_reports/static/src/scss/hellenia_reports.scss",
         ],
     },
+    "post_init_hook": "post_init_hook",
     "installable": True,
     "application": False,
     "license": "LGPL-3",
     "justech_register": {
         "module_code": "hellenia_reports",
         "module_name": "Hellenia Reports",
-        "version": "19.0.1.5.7",
+        "version": "19.0.1.5.9",
         "category": "reports",
         "country": "DO",
         "description": "Corporate PDF formats for Hellenia documents",

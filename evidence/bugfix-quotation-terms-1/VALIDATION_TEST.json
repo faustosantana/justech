@@ -1,0 +1,49 @@
+{
+  "phase": "BUGFIX-QUOTATION-TERMS-1",
+  "timestamp_utc": "2026-07-11T02:25:24.611822+00:00",
+  "database": "hellenia_test",
+  "ok": true,
+  "checks": {
+    "hasattr_method": {
+      "status": "PASS",
+      "detail": true
+    },
+    "hasattr_field": {
+      "status": "PASS",
+      "detail": true
+    },
+    "preview_html": {
+      "status": "PASS",
+      "detail": "order=2"
+    },
+    "pdf": {
+      "status": "PASS",
+      "detail": "size=71912"
+    },
+    "terms_format": {
+      "status": "PASS",
+      "detail": "empty_ok"
+    },
+    "autoload": {
+      "status": "PASS",
+      "detail": "<ul class=\"jt-hq-terms-list\"><li>Las piezas ofrecidas son únicas y están sujetas a disponibilidad.</li><li>Esta cotizaci"
+    },
+    "new_uses_config": {
+      "status": "PASS",
+      "detail": "<ul><li>BFQT-022527</li><li>Segundo.</li></ul>"
+    },
+    "old_preserved": {
+      "status": "PASS",
+      "detail": "id=2"
+    },
+    "empty_terms_pdf": {
+      "status": "PASS",
+      "detail": "size=70996"
+    }
+  },
+  "errors": [],
+  "modules": {
+    "hellenia_reports": "19.0.1.5.9",
+    "justech_report_design": "19.0.7.4.2"
+  }
+}

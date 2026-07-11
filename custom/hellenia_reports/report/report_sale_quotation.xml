@@ -313,15 +313,14 @@
                 <tr><td t-attf-style="height: {{ bottom_spacer_px }}px;">&#160;</td></tr>
             </table>
 
-            <!-- CONDICIONES -->
+            <!-- TÉRMINOS Y CONDICIONES -->
             <div class="hq-cond">
-                <div class="hq-cond-title">CONDICIONES</div>
+                <div class="hq-cond-title">TÉRMINOS Y CONDICIONES</div>
                 <t t-if="doc.note">
-                    <div class="hq-cond-body" t-field="doc.note"/>
+                    <div class="hq-cond-body" t-out="doc.hellenia_quotation_note_for_report()"/>
                 </t>
                 <t t-else="">
-                    <div class="hq-cond-body"
-                         t-out="company.hellenia_quotation_terms or hellenia_default_quotation_terms"/>
+                    <div class="hq-cond-body" t-out="company.hellenia_get_quotation_terms_html()"/>
                 </t>
             </div>
 

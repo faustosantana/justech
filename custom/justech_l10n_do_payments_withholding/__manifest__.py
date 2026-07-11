@@ -59,4 +59,15 @@ Motor estándar Justech para pagos con retención fiscal:
             }
         ],
     },
+    "justech_admin_center": {
+        "functional_name": "Pagos y Retenciones",
+        "short_description": "Pagos con retenciones ITBIS/ISR y conciliación",
+        "category": "payments",
+        "icon": "fa-money",
+        "sequence": 40,
+        "feature_flag_codes": ["payments_withholding"],
+        "supports_activate": True,
+        "supports_deactivate": True,
+        "critical": True,
+    },
 }

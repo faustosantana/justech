@@ -52,4 +52,14 @@ cuándo ocurrió y con qué valores antes/después.
             {"code": "global_audit", "name": "Global Audit Log"},
         ],
     },
+    "justech_admin_center": {
+        "functional_name": "Auditoría",
+        "short_description": "Trazabilidad global y políticas de auditoría",
+        "category": "audit",
+        "icon": "fa-shield",
+        "sequence": 50,
+        "supports_activate": True,
+        "supports_deactivate": True,
+        "critical": False,
+    },
 }

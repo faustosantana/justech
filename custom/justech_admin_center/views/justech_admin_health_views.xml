@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_justech_admin_health_list" model="ir.ui.view">
+        <field name="name">justech.admin.health.finding.list</field>
+        <field name="model">justech.admin.health.finding</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="severity"/>
+                <field name="name"/>
+                <field name="module_id"/>
+                <field name="state"/>
+                <button name="action_open_record" type="object" string="Abrir" icon="fa-external-link"/>
+                <button name="action_mark_resolved" type="object" string="Resolver" icon="fa-check"/>
+            </list>
+        </field>
+    </record>
+    <record id="view_justech_admin_health_form" model="ir.ui.view">
+        <field name="name">justech.admin.health.finding.form</field>
+        <field name="model">justech.admin.health.finding</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_mark_resolved" type="object" string="Marcar resuelto" class="btn-primary"/>
+                    <field name="state"/>
+                </header>
+                <sheet>
+                    <group>
+                        <field name="code"/>
+                        <field name="severity"/>
+                        <field name="name"/>
+                        <field name="module_id"/>
+                        <field name="detail"/>
+                        <field name="recommendation"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="action_justech_admin_health" model="ir.actions.act_window">
+        <field name="name">Diagnóstico</field>
+        <field name="res_model">justech.admin.health.finding</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

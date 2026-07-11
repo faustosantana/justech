@@ -52,4 +52,14 @@ Dominican fiscal base layer for Justech localization.
             {"code": "rnc_padron_admin", "name": "Padrón DGII Admin"},
         ],
     },
+    "justech_admin_center": {
+        "functional_name": "Padrón DGII / Base Fiscal",
+        "short_description": "Tipos de comprobante, configuración fiscal y padrón RNC",
+        "category": "fiscal",
+        "icon": "fa-address-book",
+        "sequence": 15,
+        "supports_activate": True,
+        "supports_deactivate": False,
+        "critical": True,
+    },
 }

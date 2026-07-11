@@ -1,0 +1,20 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_jac_module_user,justech.admin.module user,model_justech_admin_module,group_justech_admin_center_user,1,0,0,0
+access_jac_module_manager,justech.admin.module manager,model_justech_admin_module,group_justech_admin_center_manager,1,1,1,0
+access_jac_module_system,justech.admin.module system,model_justech_admin_module,base.group_system,1,1,1,1
+access_jac_operation_user,justech.admin.operation user,model_justech_admin_operation,group_justech_admin_center_user,1,0,0,0
+access_jac_operation_manager,justech.admin.operation manager,model_justech_admin_operation,group_justech_admin_center_manager,1,1,1,0
+access_jac_operation_system,justech.admin.operation system,model_justech_admin_operation,base.group_system,1,1,1,1
+access_jac_audit_user,justech.admin.audit.log user,model_justech_admin_audit_log,group_justech_admin_center_user,1,0,0,0
+access_jac_audit_manager,justech.admin.audit.log manager,model_justech_admin_audit_log,group_justech_admin_center_manager,1,0,1,0
+access_jac_audit_system,justech.admin.audit.log system,model_justech_admin_audit_log,base.group_system,1,1,1,1
+access_jac_finding_user,justech.admin.health.finding user,model_justech_admin_health_finding,group_justech_admin_center_user,1,0,0,0
+access_jac_finding_manager,justech.admin.health.finding manager,model_justech_admin_health_finding,group_justech_admin_center_manager,1,1,1,0
+access_jac_finding_system,justech.admin.health.finding system,model_justech_admin_health_finding,base.group_system,1,1,1,1
+access_jac_console_user,justech.admin.console user,model_justech_admin_console,group_justech_admin_center_user,1,0,0,0
+access_jac_console_manager,justech.admin.console manager,model_justech_admin_console,group_justech_admin_center_manager,1,1,1,0
+access_jac_console_system,justech.admin.console system,model_justech_admin_console,base.group_system,1,1,1,1
+access_jac_op_wiz_manager,justech.admin.module.operation.wizard manager,model_justech_admin_module_operation_wizard,group_justech_admin_center_manager,1,1,1,1
+access_jac_op_wiz_system,justech.admin.module.operation.wizard system,model_justech_admin_module_operation_wizard,base.group_system,1,1,1,1
+access_jac_role_wiz_manager,justech.admin.role.assign.wizard manager,model_justech_admin_role_assign_wizard,group_justech_admin_center_manager,1,1,1,1
+access_jac_role_wiz_system,justech.admin.role.assign.wizard system,model_justech_admin_role_assign_wizard,base.group_system,1,1,1,1

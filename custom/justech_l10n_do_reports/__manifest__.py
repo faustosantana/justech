@@ -52,4 +52,15 @@ Dominican DGII fiscal reports for Justech.
             {"code": "l10n_do_reports", "name": "DO DGII Reports"},
         ],
     },
+    "justech_admin_center": {
+        "functional_name": "Reportes DGII",
+        "short_description": "606, 607, 608, 609, 623 y flujo de declaración",
+        "category": "reports",
+        "icon": "fa-bar-chart",
+        "sequence": 30,
+        "feature_flag_codes": ["dgii_reports"],
+        "supports_activate": True,
+        "supports_deactivate": True,
+        "critical": True,
+    },
 }

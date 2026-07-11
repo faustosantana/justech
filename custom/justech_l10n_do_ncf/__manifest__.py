@@ -50,4 +50,16 @@ NCF management for Dominican Republic — Justech Enterprise layer.
             {"code": "l10n_do_ncf_admin", "name": "DO Fiscal Admin Center"},
         ],
     },
+    "justech_admin_center": {
+        "functional_name": "Motor Fiscal NCF",
+        "short_description": "Rangos, asignación y diagnóstico NCF",
+        "category": "fiscal",
+        "icon": "fa-file-invoice",
+        "sequence": 20,
+        "feature_flag_codes": ["ncf_motor"],
+        "health_method": "justech.do.ncf.diagnostic.service.run_full_scan",
+        "supports_activate": True,
+        "supports_deactivate": True,
+        "critical": True,
+    },
 }

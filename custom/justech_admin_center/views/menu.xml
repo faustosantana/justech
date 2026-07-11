@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Single Settings entry: Administración Justech -->
+    <menuitem id="menu_justech_admin_center_root"
+              name="Administración Justech"
+              parent="base.menu_administration"
+              action="action_justech_admin_console"
+              sequence="94"
+              groups="base.group_system,justech_admin_center.group_justech_admin_center_user"/>
+
+    <menuitem id="menu_justech_admin_center_catalog"
+              name="Catálogo de módulos"
+              parent="menu_justech_admin_center_root"
+              action="action_justech_admin_module"
+              sequence="10"/>
+
+    <menuitem id="menu_justech_admin_center_health"
+              name="Diagnóstico"
+              parent="menu_justech_admin_center_root"
+              action="action_justech_admin_health"
+              sequence="20"/>
+
+    <menuitem id="menu_justech_admin_center_audit"
+              name="Auditoría de cambios"
+              parent="menu_justech_admin_center_root"
+              action="action_justech_admin_audit"
+              sequence="30"/>
+
+    <menuitem id="menu_justech_admin_center_operations"
+              name="Operaciones"
+              parent="menu_justech_admin_center_root"
+              action="action_justech_admin_operation"
+              sequence="40"
+              groups="justech_admin_center.group_justech_admin_center_manager"/>
+</odoo>

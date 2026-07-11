@@ -49,4 +49,16 @@ Centro de Administración Fiscal Justech (Enterprise).
             {"code": "fiscal_feature_flags", "name": "Fiscal Feature Flags"},
         ],
     },
+    "justech_admin_center": {
+        "functional_name": "Centro Fiscal",
+        "short_description": "Administración fiscal, roles, health y padrón DGII",
+        "category": "fiscal",
+        "icon": "fa-university",
+        "sequence": 10,
+        "feature_flag_codes": ["ncf_motor", "dgii_reports"],
+        "open_action_xmlid": "justech_fiscal_admin.action_justech_fiscal_admin_center_server",
+        "supports_activate": True,
+        "supports_deactivate": True,
+        "critical": True,
+    },
 }

@@ -1,0 +1,72 @@
+/* Scoped Justech Admin Center — no global Odoo overrides */
+.o_justech_admin_center .o_jac_kpi_grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 12px;
+  margin: 12px 0 20px;
+}
+
+.o_justech_admin_center .o_jac_kpi_card {
+  border-radius: 12px;
+  padding: 14px 16px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  background: var(--o-view-background-color, #fff);
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+
+.o_justech_admin_center .o_jac_kpi_value {
+  font-size: 1.6rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.o_justech_admin_center .o_jac_kpi_label {
+  font-size: 0.85rem;
+  opacity: 0.75;
+}
+
+.o_justech_admin_center .o_jac_tone_green { border-left: 4px solid #16a34a; }
+.o_justech_admin_center .o_jac_tone_yellow { border-left: 4px solid #ca8a04; }
+.o_justech_admin_center .o_jac_tone_red { border-left: 4px solid #dc2626; }
+.o_justech_admin_center .o_jac_tone_blue { border-left: 4px solid #2563eb; }
+.o_justech_admin_center .o_jac_tone_grey { border-left: 4px solid #94a3b8; }
+
+.o_justech_admin_center .o_jac_action_row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.o_jac_module_kanban .o_jac_card {
+  border-radius: 12px;
+  padding: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  min-height: 150px;
+  background: var(--o-view-background-color, #fff);
+}
+
+.o_jac_module_kanban .o_jac_card_head {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.o_jac_module_kanban .o_jac_card_meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin: 8px 0;
+}
+
+.o_jac_module_kanban .o_jac_tone_green { border-left: 4px solid #16a34a; }
+.o_jac_module_kanban .o_jac_tone_yellow { border-left: 4px solid #ca8a04; }
+.o_jac_module_kanban .o_jac_tone_red { border-left: 4px solid #dc2626; }
+.o_jac_module_kanban .o_jac_tone_blue { border-left: 4px solid #2563eb; }
+.o_jac_module_kanban .o_jac_tone_grey { border-left: 4px solid #94a3b8; }
+
+.o_jac_matrix table {
+  width: 100%;
+  font-size: 0.9rem;
+}

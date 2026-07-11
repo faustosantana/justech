@@ -28,6 +28,13 @@ class JustechDoRncPadron(models.Model):
     source = fields.Char(string="Fuente", default="dgii_txt", required=True)
     sync_date = fields.Datetime(string="Última sincronización", index=True)
     active = fields.Boolean(default=True)
+    review_absent = fields.Boolean(
+        string="Ausente en última fuente (revisión)",
+        default=False,
+        index=True,
+        help="Marcado cuando el RNC no aparece en la última importación. "
+        "No se desactiva automáticamente.",
+    )
 
     _sql_constraints = [
         ("justech_rnc_padron_rnc_uniq", "unique(rnc)", "El RNC ya existe en el padrón local."),
@@ -39,16 +46,18 @@ class JustechDoRncPadron(models.Model):
 
     @api.model
     def lookup(self, rnc):
+        """Consulta operativa del padrón (lectura). No requiere ACL de administración."""
         cleaned = self.normalize_rnc(rnc)
         if not cleaned:
             return self.browse()
-        return self.search([("rnc", "=", cleaned)], limit=1)
+        return self.sudo().search([("rnc", "=", cleaned)], limit=1)
 
     @api.model
     def last_sync_info(self):
-        last = self.search([], order="sync_date desc, id desc", limit=1)
+        Padron = self.sudo()
+        last = Padron.search([], order="sync_date desc, id desc", limit=1)
         return {
-            "count": self.search_count([]),
+            "count": Padron.search_count([]),
             "sync_date": last.sync_date if last else False,
             "source": last.source if last else False,
         }

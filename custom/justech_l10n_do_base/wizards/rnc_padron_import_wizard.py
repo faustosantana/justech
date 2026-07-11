@@ -1,11 +1,8 @@
 # -*- coding: utf-8 -*-
-"""Importación idempotente del padrón RNC (TXT/CSV)."""
+"""Wizard de importación / actualización del padrón RNC (solo Administradores)."""
 from __future__ import annotations
 
 import base64
-import csv
-import io
-from datetime import datetime
 
 from odoo import _, fields, models
 from odoo.exceptions import UserError
@@ -13,9 +10,9 @@ from odoo.exceptions import UserError
 
 class JustechDoRncPadronImportWizard(models.TransientModel):
     _name = "justech.do.rnc.padron.import.wizard"
-    _description = "Actualizar padrón RNC"
+    _description = "Importar / actualizar padrón RNC DGII"
 
-    data_file = fields.Binary(string="Archivo TXT/CSV", required=True)
+    data_file = fields.Binary(string="Archivo TXT/CSV/ZIP")
     filename = fields.Char(string="Nombre de archivo")
     delimiter = fields.Selection(
         [
@@ -23,151 +20,136 @@ class JustechDoRncPadronImportWizard(models.TransientModel):
             (",", "Coma ,"),
             (";", "Punto y coma ;"),
             ("\t", "Tabulador"),
+            ("auto", "Detectar automáticamente"),
         ],
         string="Separador",
-        default="|",
+        default="auto",
         required=True,
     )
     has_header = fields.Boolean(string="Primera fila es encabezado", default=False)
-    replace_all = fields.Boolean(
-        string="Reemplazar padrón completo",
-        default=False,
-        help="Si se marca, archiva el padrón actual antes de importar. "
-        "Por defecto actualiza/inserta por RNC (idempotente).",
+    mode = fields.Selection(
+        [
+            ("import", "Importar padrón DGII"),
+            ("update", "Actualizar padrón DGII"),
+        ],
+        string="Modo",
+        default="import",
+        required=True,
     )
-    source = fields.Char(string="Fuente", default="dgii_txt", required=True)
+    # Preview
+    preview_done = fields.Boolean(readonly=True)
+    file_hash = fields.Char(string="Hash SHA-256", readonly=True)
+    file_size = fields.Integer(string="Tamaño", readonly=True)
+    encoding = fields.Char(string="Codificación", readonly=True)
+    preview_summary = fields.Text(string="Resumen de validación", readonly=True)
+    count_new = fields.Integer(readonly=True)
+    count_updated = fields.Integer(readonly=True)
+    count_unchanged = fields.Integer(readonly=True)
+    count_absent = fields.Integer(readonly=True)
+    count_rejected = fields.Integer(readonly=True)
+    total_valid = fields.Integer(readonly=True)
     result_log = fields.Text(string="Resultado", readonly=True)
+    last_log_id = fields.Many2one(
+        "justech.do.rnc.padron.import.log", string="Último historial", readonly=True
+    )
 
-    def _justech_parse_dgii_row(self, row):
-        """Parsea fila DGII oficial o formato simple Justech.
-
-        DGII (DGII_RNC.TXT):
-          RNC|Razón|Nombre comercial|Actividad|...|Fecha|Estado|Categoría
-
-        Formato simple:
-          RNC|Razón|[Comercial]|[Estado]|[Categoría]|[Actividad]
-        """
-        if not row or not any((c or "").strip() for c in row):
-            return None
-        rnc_raw = row[0] if len(row) > 0 else ""
-        name = (row[1] if len(row) > 1 else "").strip()
-        trade = (row[2] if len(row) > 2 else "").strip() or False
-
-        # Detectar formato oficial DGII: estado/categoría al final.
-        is_dgii = len(row) >= 10 and (row[9] or "").strip().upper() in {
-            "ACTIVO",
-            "SUSPENDIDO",
-            "INACTIVO",
-            "ACTIVE",
-            "INACTIVE",
-        }
-        if is_dgii:
-            activity = (row[3] if len(row) > 3 else "").strip() or False
-            state_raw = (row[9] if len(row) > 9 else "").strip().lower()
-            category = (row[10] if len(row) > 10 else "").strip() or False
-        else:
-            state_raw = (row[3] if len(row) > 3 else "").strip().lower()
-            category = (row[4] if len(row) > 4 else "").strip() or False
-            activity = (row[5] if len(row) > 5 else "").strip() or False
-
-        Padron = self.env["justech.do.rnc.padron"]
-        rnc = Padron.normalize_rnc(rnc_raw)
-        if not rnc or not name:
-            return None
-        if len(rnc) not in (9, 11):
-            return None
-
-        state = "active"
-        if state_raw in ("inactive", "inactivo", "suspendido", "0", "n"):
-            state = "inactive"
-        elif state_raw and state_raw not in (
-            "active",
-            "activo",
-            "1",
-            "s",
-            "si",
-            "sí",
-            "normal",
-        ):
-            # "normal" a veces viene en categoría, no en estado
-            if state_raw not in ("",):
-                state = "unknown"
-
-        if is_dgii:
-            if state_raw in ("activo", "active"):
-                state = "active"
-            elif state_raw in ("suspendido", "inactivo", "inactive"):
-                state = "inactive"
-
-        return {
-            "rnc": rnc,
-            "name": name,
-            "trade_name": trade,
-            "state": state,
-            "category": category,
-            "economic_activity": activity,
-        }
-
-    def action_import(self):
+    def _raw(self):
         self.ensure_one()
         if not self.data_file:
             raise UserError(_("Seleccione un archivo."))
-        raw = base64.b64decode(self.data_file)
-        try:
-            text = raw.decode("utf-8")
-        except UnicodeDecodeError:
-            text = raw.decode("latin-1")
-        reader = csv.reader(io.StringIO(text), delimiter=self.delimiter)
-        rows = list(reader)
-        if not rows:
-            raise UserError(_("El archivo está vacío."))
-        if self.has_header:
-            rows = rows[1:]
+        return base64.b64decode(self.data_file)
 
-        Padron = self.env["justech.do.rnc.padron"].sudo()
-        sync_date = fields.Datetime.now()
-        if self.replace_all:
-            Padron.search([]).write({"active": False})
-
-        created = updated = skipped = 0
-        for row in rows:
-            parsed = self._justech_parse_dgii_row(row)
-            if not parsed:
-                skipped += 1
-                continue
-            vals = {
-                **parsed,
-                "source": self.source,
-                "sync_date": sync_date,
-                "active": True,
-            }
-            existing = Padron.with_context(active_test=False).search(
-                [("rnc", "=", parsed["rnc"])], limit=1
+    def action_validate_preview(self):
+        self.ensure_one()
+        if not (
+            self.env.user.has_group("base.group_system")
+            or self.env.user.has_group(
+                "justech_fiscal_admin.group_justech_fiscal_admin_manager"
             )
-            if existing:
-                existing.write(vals)
-                updated += 1
-            else:
-                Padron.create(vals)
-                created += 1
-
-        self.result_log = _(
-            "Importación %(when)s\n"
-            "Creados: %(c)s\n"
-            "Actualizados: %(u)s\n"
-            "Omitidos: %(s)s\n"
-            "Total activo: %(t)s"
-        ) % {
-            "when": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-            "c": created,
-            "u": updated,
-            "s": skipped,
-            "t": Padron.search_count([]),
-        }
+        ):
+            raise UserError(_("Solo Administradores Fiscales pueden importar el padrón."))
+        svc = self.env["justech.do.rnc.padron.import.service"]
+        delim = False if self.delimiter == "auto" else self.delimiter
+        staged = svc.validate_and_stage(
+            self._raw(), self.filename or "padron.txt", delim, self.has_header
+        )
+        diff = svc.preview_diff(staged)
+        self.write(
+            {
+                "preview_done": True,
+                "file_hash": staged["file_hash"],
+                "file_size": staged["file_size"],
+                "encoding": staged["encoding"],
+                "count_new": diff["count_new"],
+                "count_updated": diff["count_updated"],
+                "count_unchanged": diff["count_unchanged"],
+                "count_absent": diff["count_absent"],
+                "count_rejected": diff["count_rejected"],
+                "total_valid": diff["total_valid"],
+                "preview_summary": _(
+                    "Archivo: %(f)s\n"
+                    "Hash: %(h)s\n"
+                    "Válidos: %(v)s | Rechazados: %(r)s | Duplicados en archivo: %(d)s\n"
+                    "Nuevos: %(n)s | Actualizados: %(u)s | Sin cambios: %(c)s | "
+                    "Ausentes (revisión): %(a)s\n"
+                    "Padrón actual: %(cur)s registros\n\n"
+                    "No se modificarán contactos, facturas ni datos históricos."
+                )
+                % {
+                    "f": staged["filename"],
+                    "h": staged["file_hash"],
+                    "v": diff["total_valid"],
+                    "r": diff["count_rejected"],
+                    "d": staged["dup_in_file"],
+                    "n": diff["count_new"],
+                    "u": diff["count_updated"],
+                    "c": diff["count_unchanged"],
+                    "a": diff["count_absent"],
+                    "cur": diff["current_count"],
+                },
+            }
+        )
         return {
             "type": "ir.actions.act_window",
             "res_model": self._name,
             "res_id": self.id,
             "view_mode": "form",
             "target": "new",
+        }
+
+    def action_confirm_import(self):
+        self.ensure_one()
+        if not self.preview_done:
+            raise UserError(_("Valide el archivo antes de confirmar."))
+        svc = self.env["justech.do.rnc.padron.import.service"]
+        delim = False if self.delimiter == "auto" else self.delimiter
+        source = "update" if self.mode == "update" else "manual"
+        log = svc.apply_import(
+            self._raw(),
+            self.filename or "padron.txt",
+            source=source,
+            delimiter=delim,
+            has_header=self.has_header,
+        )
+        self.write(
+            {
+                "result_log": log.summary or log.error_message or _("Importación finalizada."),
+                "last_log_id": log.id,
+            }
+        )
+        return {
+            "type": "ir.actions.act_window",
+            "res_model": self._name,
+            "res_id": self.id,
+            "view_mode": "form",
+            "target": "new",
+        }
+
+    def action_open_history(self):
+        return {
+            "type": "ir.actions.act_window",
+            "name": _("Historial padrón DGII"),
+            "res_model": "justech.do.rnc.padron.import.log",
+            "view_mode": "list,form",
+            "target": "current",
         }

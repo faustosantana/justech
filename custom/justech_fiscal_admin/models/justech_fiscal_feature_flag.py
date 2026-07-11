@@ -49,14 +49,16 @@ class JustechFiscalFeatureFlag(models.Model):
 
     @api.model
     def is_enabled(self, code, company=None):
+        """Lectura segura de configuración global (sudo). No crea registros."""
         company = company or self.env.company
-        rec = self.search(
+        Flag = self.sudo()
+        rec = Flag.search(
             [("code", "=", code), ("company_id", "=", company.id), ("active", "=", True)],
             limit=1,
         )
         if rec:
             return rec.enabled
-        rec = self.search(
+        rec = Flag.search(
             [("code", "=", code), ("company_id", "=", False), ("active", "=", True)],
             limit=1,
         )

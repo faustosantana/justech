@@ -31,7 +31,7 @@ class JustechFiscalAdminService(models.AbstractModel):
                     "installed": mod.state == "installed" if mod else False,
                 }
             )
-        flags = self.env["justech.fiscal.feature.flag"]
+        flags = self.env["justech.fiscal.feature.flag"].sudo()
         feature_rows = []
         for flag in flags.search(
             ["|", ("company_id", "=", False), ("company_id", "=", company.id)],
@@ -59,47 +59,185 @@ class JustechFiscalAdminService(models.AbstractModel):
             "dashboard_active": flags.is_enabled("fiscal_dashboard", company),
         }
 
+    def _severity_rank(self, severity):
+        return {
+            "critical": 10,
+            "high": 20,
+            "medium": 30,
+            "low": 40,
+            "info": 50,
+        }.get(severity, 50)
+
+    def _finding(
+        self,
+        code,
+        name,
+        severity,
+        company,
+        category="error",
+        impact=None,
+        model_name=None,
+        res_model=None,
+        res_id=None,
+        action=None,
+    ):
+        return {
+            "code": code,
+            "name": name,
+            "severity": severity,
+            "severity_rank": self._severity_rank(severity),
+            "category": category,
+            "company_id": company.id,
+            "company_name": company.display_name,
+            "impact": impact or "",
+            "model_name": model_name or "",
+            "res_model": res_model or "",
+            "res_id": res_id or 0,
+            "recommended_action": action or "",
+        }
+
     def health_check(self, company=None):
+        """Salud fiscal de UNA empresa autorizada (sin contadores cruzados)."""
         company = company or self.env.company
+        allowed = self.env.companies
+        if company not in allowed and not self.env.su:
+            # No evaluar empresas no autorizadas
+            return {
+                "ok": True,
+                "gl_balanced": True,
+                "gl_debit": 0.0,
+                "gl_credit": 0.0,
+                "issues": [],
+                "warnings": [],
+                "recommendations": [],
+                "findings": [],
+                "diagnostic_count": 0,
+                "duplicate_groups": 0,
+                "skipped_unauthorized": True,
+            }
+
+        findings = []
         issues = []
         warnings = []
         recommendations = []
 
         if company.country_id.code != "DO":
-            warnings.append(_("Empresa sin país República Dominicana."))
+            f = self._finding(
+                "COUNTRY_NOT_DO",
+                _("Empresa sin país República Dominicana."),
+                "low",
+                company,
+                category="warning",
+                impact=_("Localización fiscal DO no aplica."),
+                model_name="res.company",
+                res_model="res.company",
+                res_id=company.id,
+                action=_("Verificar país de la empresa."),
+            )
+            findings.append(f)
+            warnings.append(f["name"])
 
         if not company.justech_do_fiscal_enabled:
-            issues.append(_("Motor fiscal desactivado para esta empresa."))
+            f = self._finding(
+                "MOTOR_OFF",
+                _("Motor fiscal desactivado para esta empresa."),
+                "high",
+                company,
+                impact=_("No se asignarán NCF Justech."),
+                model_name="res.company",
+                res_model="res.company",
+                res_id=company.id,
+                action=_("Activar motor fiscal Justech en la empresa."),
+            )
+            findings.append(f)
+            issues.append(f["name"])
 
         sale_j = self.env["account.journal"].search(
             [("company_id", "=", company.id), ("type", "=", "sale")], limit=1
         )
         if sale_j:
             if sale_j.l10n_latam_use_documents:
-                issues.append(
-                    _("Diario de ventas con documentos LATAM activos — riesgo doble motor Adel.")
+                f = self._finding(
+                    "LATAM_DOCS",
+                    _("Diario de ventas con documentos LATAM activos — riesgo doble motor."),
+                    "high",
+                    company,
+                    impact=_("Doble asignación de comprobantes."),
+                    model_name="account.journal",
+                    res_model="account.journal",
+                    res_id=sale_j.id,
+                    action=_("Desactivar 'Usar documentos' LATAM en el diario de ventas."),
                 )
+                findings.append(f)
+                issues.append(f["name"])
             if not sale_j.justech_do_use_ncf:
-                warnings.append(_("Diario de ventas sin NCF Justech activo."))
+                f = self._finding(
+                    "NCF_JOURNAL_OFF",
+                    _("Diario de ventas sin NCF Justech activo."),
+                    "medium",
+                    company,
+                    category="warning",
+                    model_name="account.journal",
+                    res_model="account.journal",
+                    res_id=sale_j.id,
+                    action=_("Activar NCF Justech en el diario."),
+                )
+                findings.append(f)
+                warnings.append(f["name"])
 
-        findings = []
+        diag = []
         if "justech.do.ncf.diagnostic.service" in self.env:
-            findings = self.env["justech.do.ncf.diagnostic.service"].run_full_scan(company)
-            for f in findings:
-                if f.get("severity") == "error":
-                    issues.append(f.get("title", f.get("code", "?")))
-                elif f.get("severity") == "warning":
-                    warnings.append(f.get("title", f.get("code", "?")))
+            diag = self.env["justech.do.ncf.diagnostic.service"].run_full_scan(company)
+            for item in diag:
+                sev_map = {"error": "high", "warning": "medium", "info": "info"}
+                sev = sev_map.get(item.get("severity"), "medium")
+                # Histórico Adel / solo lectura / info conocidos → no contar como error
+                code = (item.get("code") or "").upper()
+                title = item.get("title") or item.get("code") or "?"
+                if any(
+                    x in (title or "").lower()
+                    for x in ("adel", "histórico", "historico", "solo lectura", "read-only")
+                ):
+                    sev = "info"
+                f = self._finding(
+                    code or "DIAG",
+                    title,
+                    sev,
+                    company,
+                    category="error" if sev in ("critical", "high") else "warning",
+                    impact=item.get("impact") or "",
+                    action=item.get("recommendation") or item.get("action") or "",
+                )
+                findings.append(f)
+                if sev in ("critical", "high"):
+                    issues.append(title)
+                elif sev in ("medium", "low"):
+                    warnings.append(title)
 
         cr = self.env.cr
         cr.execute(
-            "SELECT COALESCE(SUM(debit),0), COALESCE(SUM(credit),0) "
-            "FROM account_move_line aml JOIN account_move am ON am.id=aml.move_id WHERE am.state='posted'"
+            """
+            SELECT COALESCE(SUM(aml.debit),0), COALESCE(SUM(aml.credit),0)
+            FROM account_move_line aml
+            JOIN account_move am ON am.id = aml.move_id
+            WHERE am.state = 'posted' AND am.company_id = %s
+            """,
+            (company.id,),
         )
         d, c = cr.fetchone()
         gl_ok = float(d) == float(c)
         if not gl_ok:
-            issues.append(_("Libro mayor desbalanceado."))
+            f = self._finding(
+                "GL_UNBALANCED",
+                _("Libro mayor desbalanceado en esta empresa."),
+                "critical",
+                company,
+                impact=_("Integridad contable comprometida."),
+                model_name="account.move.line",
+                action=_("Revisar asientos descuadrados de la empresa."),
+            )
+            findings.append(f)
+            issues.append(f["name"])
 
         dup_groups = []
         if "justech.do.ncf.duplicate.service" in self.env:
@@ -107,40 +245,92 @@ class JustechFiscalAdminService(models.AbstractModel):
                 company
             )
             if dup_groups:
-                issues.append(_("Duplicados NCF detectados: %(n)s grupos.", n=len(dup_groups)))
+                f = self._finding(
+                    "NCF_DUP",
+                    _("Duplicados NCF detectados: %(n)s grupos.", n=len(dup_groups)),
+                    "critical",
+                    company,
+                    impact=_("Riesgo de rechazo DGII."),
+                    model_name="justech.do.ncf.consumption",
+                    action=_("Abrir diagnóstico de duplicados NCF."),
+                )
+                findings.append(f)
+                issues.append(f["name"])
 
-        if not warnings and not issues:
+        # Padrón: global; solo alertas reales (no AccessError)
+        if "justech.do.rnc.padron.import.service" in self.env:
+            try:
+                pad = self.env["justech.do.rnc.padron.import.service"].sudo().integrity_check()
+                for i in pad.get("issues", []):
+                    f = self._finding(
+                        "PADRON_ISSUE",
+                        _("Padrón DGII: %s") % i,
+                        "critical",
+                        company,
+                        impact=_("Validación RNC afectada."),
+                        action=_("Importar o reparar padrón en Centro Fiscal."),
+                    )
+                    findings.append(f)
+                    issues.append(f["name"])
+                for w in pad.get("warnings", []):
+                    f = self._finding(
+                        "PADRON_WARN",
+                        _("Padrón DGII: %s") % w,
+                        "medium",
+                        company,
+                        category="warning",
+                        action=_("Revisar historial de importación del padrón."),
+                    )
+                    findings.append(f)
+                    warnings.append(f["name"])
+                if pad.get("never_loaded") or pad.get("count", 0) <= 0:
+                    recommendations.append(
+                        _(
+                            "Después de restaurar una base sin padrón DGII, "
+                            "utilice Importar padrón DGII en el Centro Fiscal."
+                        )
+                    )
+            except Exception:  # noqa: BLE001
+                warnings.append(_("No se pudo evaluar el padrón DGII."))
+
+        # Filtrar hallazgos: no contar info / histórico como error
+        error_findings = [
+            f
+            for f in findings
+            if f["severity"] in ("critical", "high") and f["category"] == "error"
+        ]
+        if not warnings and not error_findings:
             recommendations.append(_("Stack fiscal operando correctamente."))
-        if sale_j and sale_j.l10n_latam_use_documents:
-            recommendations.append(
-                _("Desactivar 'Usar documentos' en diario de ventas para evitar doble asignación.")
-            )
 
         return {
-            "ok": not issues,
+            "ok": not error_findings,
             "gl_balanced": gl_ok,
             "gl_debit": float(d),
             "gl_credit": float(c),
-            "issues": issues,
+            "issues": [f["name"] for f in error_findings],
             "warnings": warnings,
             "recommendations": recommendations,
-            "diagnostic_count": len(findings),
+            "findings": findings,
+            "diagnostic_count": len(diag),
             "duplicate_groups": len(dup_groups),
         }
 
     def multi_company_summary(self):
-        companies = self.env["res.company"].search([])
+        """Solo empresas autorizadas del usuario actual."""
+        companies = self.env.companies
         rows = []
         for co in companies:
             hc = self.health_check(co)
+            if hc.get("skipped_unauthorized"):
+                continue
             rows.append(
                 {
                     "id": co.id,
                     "name": co.name,
                     "fiscal_enabled": co.justech_do_fiscal_enabled,
                     "health_ok": hc["ok"],
-                    "issues": len(hc["issues"]),
-                    "warnings": len(hc["warnings"]),
+                    "issues": len(hc.get("issues") or []),
+                    "warnings": len(hc.get("warnings") or []),
                 }
             )
         return rows
@@ -207,7 +397,7 @@ class JustechFiscalAdminService(models.AbstractModel):
         company = company or self.env.company
         Module = self.env["ir.module.module"]
         wh_pkg = Module.search([("name", "=", "justech_l10n_do_payments_withholding")], limit=1)
-        flags = self.env["justech.fiscal.feature.flag"]
+        flags = self.env["justech.fiscal.feature.flag"].sudo()
 
         catalog_count = catalog_active = wh_lines = wh_payments = 0
         banks = []

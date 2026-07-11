@@ -4,10 +4,10 @@
         <field name="name">justech.fiscal.admin.center.form</field>
         <field name="model">justech.fiscal.admin.center</field>
         <field name="arch" type="xml">
-            <form string="Centro de Administración Fiscal Justech">
+            <form string="Centro de Administración Fiscal Justech" create="0" delete="0">
                 <header>
                     <button name="action_refresh" string="Actualizar" type="object" class="btn-primary"/>
-                    <button name="action_run_health_check" string="Health Check" type="object" class="btn-secondary"/>
+                    <button name="action_run_health_check" string="Health Check / Detalle" type="object" class="btn-secondary"/>
                     <button name="action_open_diagnostic" string="Diagnóstico completo" type="object" class="btn-secondary"/>
                 </header>
                 <sheet>
@@ -31,13 +31,48 @@
                         </group>
                     </group>
                     <field name="dashboard_html" nolabel="1"/>
+                    <field name="can_manage_padron" invisible="1"/>
+                    <field name="can_manage_users" invisible="1"/>
+                    <field name="is_fiscal_admin" invisible="1"/>
+                    <field name="is_system_admin" invisible="1"/>
+                    <group string="Padrón DGII" invisible="not can_manage_padron">
+                        <div colspan="2">
+                            <button name="action_padron_import" type="object"
+                                    string="Importar / actualizar padrón DGII"
+                                    class="btn btn-primary me-2"/>
+                            <button name="action_padron_update_now" type="object"
+                                    string="Actualizar ahora"
+                                    class="btn btn-secondary me-2"
+                                    confirm="¿Descargar el padrón oficial DGII e importarlo ahora?"/>
+                            <button name="action_padron_retry_last" type="object"
+                                    string="Reintentar última importación"
+                                    class="btn btn-secondary me-2"/>
+                            <button name="action_padron_history" type="object"
+                                    string="Ver historial"
+                                    class="btn btn-link me-2"/>
+                            <button name="action_padron_integrity" type="object"
+                                    string="Verificar integridad"
+                                    class="btn btn-link me-2"/>
+                            <button name="action_padron_config" type="object"
+                                    string="Configurar actualización automática"
+                                    class="btn btn-link"/>
+                        </div>
+                    </group>
+                    <group string="Usuarios y permisos" invisible="not can_manage_users">
+                        <div colspan="2">
+                            <button name="action_open_fiscal_users" type="object"
+                                    string="Gestionar usuarios fiscales"
+                                    class="btn btn-secondary"/>
+                        </div>
+                    </group>
                     <group string="Acciones rápidas">
-                        <button name="action_open_feature_flags" type="object" string="Feature Flags" class="btn-link"/>
+                        <button name="action_open_health_detail" type="object" string="Detalle Salud Fiscal" class="btn-primary"/>
+                        <button name="action_open_feature_flags" type="object" string="Feature Flags" class="btn-link" invisible="not is_fiscal_admin"/>
                         <button name="action_open_ncf_ranges" type="object" string="Rangos NCF" class="btn-link"/>
                         <button name="action_open_ncf_admin" type="object" string="Admin NCF" class="btn-link"/>
                         <button name="action_open_dgii_reports" type="object" string="Reportes DGII" class="btn-link"/>
                         <button name="action_open_withholding_catalog" type="object" string="Retenciones" class="btn-link"/>
-                        <button name="action_sync_withholding_catalog" type="object" string="Sincronizar retenciones" class="btn-link"/>
+                        <button name="action_sync_withholding_catalog" type="object" string="Sincronizar retenciones" class="btn-link" invisible="not is_fiscal_admin"/>
                     </group>
                 </sheet>
             </form>
@@ -48,6 +83,7 @@
         <field name="res_model">justech.fiscal.admin.center</field>
         <field name="view_mode">form</field>
         <field name="target">current</field>
+        <field name="context">{'create': False, 'delete': False}</field>
     </record>
     <record id="action_justech_fiscal_admin_center_server" model="ir.actions.server">
         <field name="name">Abrir Centro Fiscal Justech</field>

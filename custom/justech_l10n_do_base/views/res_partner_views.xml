@@ -226,20 +226,41 @@
         <field name="name">justech.do.rnc.padron.import.wizard.form</field>
         <field name="model">justech.do.rnc.padron.import.wizard</field>
         <field name="arch" type="xml">
-            <form string="Actualizar padrón RNC">
-                <group>
+            <form string="Padrón DGII">
+                <group invisible="preview_done">
+                    <field name="mode"/>
                     <field name="data_file" filename="filename"/>
                     <field name="filename" invisible="1"/>
                     <field name="delimiter"/>
                     <field name="has_header"/>
-                    <field name="replace_all"/>
-                    <field name="source"/>
+                </group>
+                <group string="Validación" invisible="not preview_done">
+                    <field name="preview_done" invisible="1"/>
+                    <field name="file_hash"/>
+                    <field name="file_size"/>
+                    <field name="encoding"/>
+                    <field name="total_valid"/>
+                    <field name="count_new"/>
+                    <field name="count_updated"/>
+                    <field name="count_unchanged"/>
+                    <field name="count_absent"/>
+                    <field name="count_rejected"/>
+                    <field name="preview_summary" nolabel="1" colspan="2"/>
                 </group>
                 <group string="Resultado" invisible="not result_log">
                     <field name="result_log" nolabel="1" readonly="1"/>
+                    <field name="last_log_id" readonly="1"/>
                 </group>
                 <footer>
-                    <button name="action_import" type="object" string="Importar" class="btn-primary"/>
+                    <button name="action_validate_preview" type="object"
+                            string="Validar archivo" class="btn-primary"
+                            invisible="preview_done"/>
+                    <button name="action_confirm_import" type="object"
+                            string="Confirmar importación" class="btn-primary"
+                            invisible="not preview_done or result_log"
+                            confirm="¿Aplicar la importación al padrón local? Se creará un snapshot para rollback."/>
+                    <button name="action_open_history" type="object"
+                            string="Ver historial" class="btn-link"/>
                     <button string="Cerrar" special="cancel"/>
                 </footer>
             </form>
@@ -253,7 +274,7 @@
     </record>
 
     <record id="action_justech_do_rnc_padron_import" model="ir.actions.act_window">
-        <field name="name">Actualizar padrón RNC</field>
+        <field name="name">Importar / actualizar padrón RNC</field>
         <field name="res_model">justech.do.rnc.padron.import.wizard</field>
         <field name="view_mode">form</field>
         <field name="target">new</field>

@@ -1,14 +1,13 @@
 {
     "name": "Justech Fiscal Administration Center",
-    "version": "19.0.1.2.1",
-    "summary": "Enterprise fiscal stack administration — settings, health, feature flags",
+    "version": "19.0.1.5.0",
+    "summary": "Enterprise fiscal stack administration — roles, health, feature flags, padrón DGII",
     "description": """
 Centro de Administración Fiscal Justech (Enterprise).
 
-- Estado del stack fiscal completo
-- Health check y diagnóstico
-- Feature flags funcionales (sin instalar/desinstalar módulos)
-- Vista multiempresa del motor NCF, Provider, DGII, Dashboard
+- Roles: Usuario / Responsable / Administrador Fiscal
+- Health check detallado multiempresa
+- Feature flags y padrón DGII
     """,
     "author": "Justech",
     "website": "https://justech.do",
@@ -19,11 +18,14 @@ Centro de Administración Fiscal Justech (Enterprise).
     ],
     "data": [
         "security/justech_fiscal_admin_security.xml",
+        "security/justech_fiscal_admin_rules.xml",
         "security/ir.model.access.csv",
         "data/justech_fiscal_feature_flag_data.xml",
         "views/justech_fiscal_admin_center_views.xml",
         "views/justech_fiscal_feature_flag_views.xml",
+        "views/justech_fiscal_health_issue_views.xml",
         "views/justech_res_config_settings_views.xml",
+        "views/res_users_views.xml",
         "views/menu.xml",
     ],
     "assets": {

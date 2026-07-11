@@ -5,7 +5,7 @@ import json
 from markupsafe import Markup
 
 from odoo import _, api, fields, models
-from odoo.exceptions import UserError
+from odoo.exceptions import AccessError, UserError
 
 
 def _status_icon(ok, warn=False):
@@ -27,15 +27,35 @@ def _progress_bar(used_pct):
     )
 
 
-class JustechFiscalAdminCenter(models.TransientModel):
+class JustechFiscalAdminCenter(models.Model):
     _name = "justech.fiscal.admin.center"
     _description = "Centro de Administración Fiscal Justech"
+    _rec_name = "display_name"
 
+    display_name = fields.Char(compute="_compute_display_name", store=True)
     company_id = fields.Many2one(
         "res.company",
         required=True,
         default=lambda self: self.env.company,
+        index=True,
+        ondelete="cascade",
     )
+
+    _sql_constraints = [
+        (
+            "justech_fiscal_admin_center_company_uniq",
+            "unique(company_id)",
+            "Solo puede existir un Centro Fiscal por empresa.",
+        ),
+    ]
+
+    @api.depends("company_id")
+    def _compute_display_name(self):
+        for rec in self:
+            rec.display_name = _(
+                "Centro Fiscal — %(company)s",
+                company=rec.company_id.display_name or "",
+            )
     stack_json = fields.Text(readonly=True)
     health_json = fields.Text(readonly=True)
     dashboard_html = fields.Html(compute="_compute_dashboard_html", sanitize=False)
@@ -49,8 +69,35 @@ class JustechFiscalAdminCenter(models.TransientModel):
 
     payments_json = fields.Text(readonly=True)
     ncf_json = fields.Text(readonly=True)
+    padron_json = fields.Text(readonly=True)
+    health_findings_json = fields.Text(readonly=True)
+    is_system_admin = fields.Boolean(compute="_compute_fiscal_caps")
+    is_fiscal_admin = fields.Boolean(compute="_compute_fiscal_caps")
+    can_manage_padron = fields.Boolean(compute="_compute_fiscal_caps")
+    can_manage_users = fields.Boolean(compute="_compute_fiscal_caps")
 
-    @api.depends("stack_json", "health_json", "payments_json", "ncf_json", "company_id")
+    def _compute_fiscal_caps(self):
+        user = self.env.user
+        is_system = user.has_group("base.group_system")
+        is_admin = is_system or user.has_group(
+            "justech_fiscal_admin.group_justech_fiscal_admin_manager"
+        )
+        for rec in self:
+            rec.is_system_admin = is_system
+            rec.is_fiscal_admin = is_admin
+            rec.can_manage_padron = is_admin
+            rec.can_manage_users = is_admin
+
+    @api.depends(
+        "stack_json",
+        "health_json",
+        "payments_json",
+        "ncf_json",
+        "padron_json",
+        "company_id",
+        "is_fiscal_admin",
+        "can_manage_padron",
+    )
     def _compute_dashboard_html(self):
         svc = self.env["justech.fiscal.admin.service"]
         for rec in self:
@@ -61,6 +108,7 @@ class JustechFiscalAdminCenter(models.TransientModel):
             health = json.loads(rec.health_json) if rec.health_json else {}
             pay = json.loads(rec.payments_json) if rec.payments_json else {}
             ncf = json.loads(rec.ncf_json) if rec.ncf_json else {}
+            padron = json.loads(rec.padron_json) if rec.padron_json else {}
 
             motor_ok = stack.get("motor_active")
             reports_ok = stack.get("reports_active")
@@ -104,9 +152,66 @@ class JustechFiscalAdminCenter(models.TransientModel):
                 f"<li>{_status_icon(False, warn=True)} {a}</li>" for a in ncf.get("alerts", [])
             )
 
+            padron_html = ""
+            if rec.can_manage_padron:
+                visual = padron.get("status_visual") or "grey"
+                color = {
+                    "green": "success",
+                    "yellow": "warning",
+                    "red": "danger",
+                    "grey": "secondary",
+                }.get(visual, "secondary")
+                icon = {
+                    "green": "🟢",
+                    "yellow": "🟡",
+                    "red": "🔴",
+                    "grey": "⚪",
+                }.get(visual, "⚪")
+                pad_issues = "".join(
+                    f"<li>{_status_icon(False)} {i}</li>" for i in padron.get("issues", [])
+                )
+                pad_warns = "".join(
+                    f"<li>{_status_icon(False, warn=True)} {w}</li>"
+                    for w in padron.get("warnings", [])
+                )
+                padron_html = f"""
+                    <div class="card p-3 mb-3 border-{color}">
+                        <h4>{icon} Padrón DGII</h4>
+                        <p class="mb-2"><strong>{padron.get('status_label') or '—'}</strong></p>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <ul class="mb-0">
+                                    <li>Estado actual: {padron.get('status_label') or '—'}</li>
+                                    <li>Última actualización: {padron.get('sync_date') or '—'}</li>
+                                    <li>Cantidad de registros: {padron.get('count', 0)}</li>
+                                    <li>Fuente: {padron.get('source') or '—'}</li>
+                                    <li>Nombre del archivo: {padron.get('filename') or '—'}</li>
+                                    <li>Tamaño: {padron.get('file_size') or 0} bytes</li>
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <ul class="mb-0">
+                                    <li>Hash: <code>{(padron.get('file_hash') or '—')[:16]}…</code></li>
+                                    <li>Usuario última carga: {padron.get('user') or '—'}</li>
+                                    <li>Fecha/hora importación: {padron.get('last_import_at') or '—'}</li>
+                                    <li>Estado última importación: {padron.get('last_import_state') or '—'}</li>
+                                    <li>Actualización automática: {'Sí' if padron.get('auto_update_enabled') else 'No'}</li>
+                                    <li>Frecuencia: {padron.get('frequency_days') or 45} días</li>
+                                    <li>Última ejecución: {padron.get('last_run_at') or '—'}</li>
+                                    <li>Próxima ejecución: {padron.get('next_run_at') or '—'}</li>
+                                    <li>Nuevos / actualizados / rechazados: {padron.get('count_new_last', 0)} / {padron.get('count_updated_last', 0)} / {padron.get('count_rejected_last', 0)}</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <p class="text-muted mt-2 mb-1"><em>{padron.get('guide') or ''}</em></p>
+                        <ul>{pad_issues}{pad_warns}</ul>
+                    </div>
+                """
+
             rec.dashboard_html = Markup(
                 f"""
                 <div class="justech-fiscal-admin">
+                    {padron_html}
                     <div class="row g-3 mb-3">
                         <div class="col-md-3"><div class="card p-3">
                             <h5>{_status_icon(motor_ok)} Motor NCF</h5>
@@ -154,31 +259,113 @@ class JustechFiscalAdminCenter(models.TransientModel):
                 """
             )
 
-    def action_open(self):
-        self.ensure_one()
-        self._refresh()
-        return {
-            "type": "ir.actions.act_window",
-            "name": _("Centro de Administración Fiscal Justech"),
-            "res_model": self._name,
-            "res_id": self.id,
-            "view_mode": "form",
-            "target": "current",
-        }
+    @api.model
+    def _user_can_open_center(self):
+        user = self.env.user
+        return user.has_group("base.group_system") or user.has_group(
+            "justech_fiscal_admin.group_justech_fiscal_admin_manager"
+        )
+
+    @api.model
+    def _current_company(self):
+        """Empresa activa Odoo 19 (context company_id / allowed_company_ids)."""
+        cid = self.env.context.get("company_id")
+        if cid:
+            company = self.env["res.company"].browse(cid)
+            if company.exists():
+                return company
+        allowed = self.env.context.get("allowed_company_ids") or []
+        if allowed:
+            company = self.env["res.company"].browse(allowed[0])
+            if company.exists():
+                return company
+        return self.env.company
 
     @api.model
     def open_for_user(self):
-        center = self.create({"company_id": self.env.company.id})
-        center._refresh()
+        """Abre singleton por empresa activa. Sin create si no es admin fiscal/system."""
+        if not self._user_can_open_center():
+            raise AccessError(
+                _(
+                    "No tiene permiso para acceder al Centro de Administración Fiscal. "
+                    "Contacte a un administrador del sistema o Administrador Fiscal."
+                )
+            )
+        company = self._current_company()
+        allowed_ids = list(self.env.context.get("allowed_company_ids") or self.env.companies.ids)
+        if not allowed_ids:
+            allowed_ids = self.env.companies.ids
+        if company.id not in allowed_ids and company not in self.env.companies:
+            raise AccessError(
+                _("No está autorizado a operar en la empresa %(c)s.")
+                % {"c": company.display_name}
+            )
+        Center = self.sudo().with_context(
+            allowed_company_ids=allowed_ids,
+            company_id=company.id,
+        )
+        center = Center.search([("company_id", "=", company.id)], limit=1)
+        if not center:
+            center = Center.create({"company_id": company.id})
+        center = self.browse(center.id).with_context(
+            allowed_company_ids=allowed_ids,
+            company_id=company.id,
+        )
+        try:
+            center._refresh()
+        except AccessError:
+            center.sudo().with_context(
+                allowed_company_ids=allowed_ids,
+                company_id=company.id,
+            )._refresh()
+            center = self.browse(center.id).with_context(
+                allowed_company_ids=allowed_ids,
+                company_id=company.id,
+            )
         return center.action_open()
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            company_id = vals.get("company_id") or self.env.company.id
+            existing = self.sudo().search([("company_id", "=", company_id)], limit=1)
+            if existing:
+                raise UserError(
+                    _(
+                        "Ya existe un Centro Fiscal para esta empresa. "
+                        "No se permiten registros duplicados."
+                    )
+                )
+        return super().create(vals_list)
+
     def _refresh(self):
-        svc = self.env["justech.fiscal.admin.service"]
-        stack = svc.stack_status(self.company_id)
-        health = svc.health_check(self.company_id)
-        payments = svc.payments_withholding_status(self.company_id)
-        ncf = svc.ncf_consumption_summary(self.company_id)
-        self.write(
+        self.ensure_one()
+        company = self.company_id
+        allowed_ids = list(self.env.context.get("allowed_company_ids") or self.env.companies.ids)
+        if (
+            company.id not in allowed_ids
+            and company not in self.env.companies
+            and not self.env.su
+        ):
+            raise AccessError(
+                _("Empresa no autorizada para este usuario: %s") % company.display_name
+            )
+        svc = self.env["justech.fiscal.admin.service"].with_context(
+            allowed_company_ids=allowed_ids or [company.id],
+            company_id=company.id,
+        )
+        stack = svc.stack_status(company)
+        health = svc.health_check(company)
+        payments = svc.payments_withholding_status(company)
+        ncf = svc.ncf_consumption_summary(company)
+        padron = {}
+        if self.can_manage_padron and "justech.do.rnc.padron.import.service" in self.env:
+            padron = (
+                self.env["justech.do.rnc.padron.import.service"]
+                .sudo()
+                .status_payload()
+            )
+        self.sudo().write(
             {
                 "stack_json": json.dumps(stack, ensure_ascii=False, default=str),
                 "health_json": json.dumps(
@@ -188,12 +375,17 @@ class JustechFiscalAdminCenter(models.TransientModel):
                         "warnings": health["warnings"],
                         "recommendations": health["recommendations"],
                         "gl_balanced": health["gl_balanced"],
+                        "findings": health.get("findings") or [],
                     },
                     ensure_ascii=False,
                     default=str,
                 ),
+                "health_findings_json": json.dumps(
+                    health.get("findings") or [], ensure_ascii=False, default=str
+                ),
                 "payments_json": json.dumps(payments, ensure_ascii=False, default=str),
                 "ncf_json": json.dumps(ncf, ensure_ascii=False, default=str),
+                "padron_json": json.dumps(padron, ensure_ascii=False, default=str),
                 "last_refresh": fields.Datetime.now(),
                 "health_ok": health["ok"],
                 "issue_count": len(health["issues"]),
@@ -204,27 +396,99 @@ class JustechFiscalAdminCenter(models.TransientModel):
             }
         )
 
-    def action_refresh(self):
-        self._refresh()
-        return self.action_open()
-
-    def action_run_health_check(self):
-        self._refresh()
-        health = json.loads(self.health_json)
-        title = _("Salud OK") if health.get("ok") else _("Problemas detectados")
-        body = "\n".join(health.get("issues", []) + health.get("warnings", []))
+    def action_open(self):
+        self.ensure_one()
         return {
-            "type": "ir.actions.client",
-            "tag": "display_notification",
-            "params": {
-                "title": title,
-                "message": body or _("Sin incidencias."),
-                "type": "success" if health.get("ok") else "warning",
-                "sticky": not health.get("ok"),
+            "type": "ir.actions.act_window",
+            "name": _("Centro de Administración Fiscal Justech"),
+            "res_model": self._name,
+            "res_id": self.id,
+            "view_mode": "form",
+            "target": "current",
+            "context": {
+                "create": False,
+                "delete": False,
+                "allowed_company_ids": self.env.companies.ids,
             },
         }
 
+    def action_refresh(self):
+        self._refresh()
+        return False
+
+    def action_run_health_check(self):
+        self._refresh()
+        return self.action_open_health_detail()
+
+    def action_open_health_detail(self):
+        """Abre el detalle estructurado de Salud Fiscal."""
+        self.ensure_one()
+        self._refresh()
+        findings = json.loads(self.health_findings_json or "[]")
+        Issue = self.env["justech.fiscal.health.issue"].sudo()
+        # limpiar líneas previas de este centro
+        Issue.search([("center_id", "=", self.id)]).unlink()
+        vals_list = []
+        for f in findings:
+            vals_list.append(
+                {
+                    "center_id": self.id,
+                    "company_id": f.get("company_id") or self.company_id.id,
+                    "code": f.get("code") or "GEN",
+                    "name": f.get("name") or "",
+                    "severity": f.get("severity") or "medium",
+                    "severity_rank": f.get("severity_rank") or 50,
+                    "impact": f.get("impact") or "",
+                    "model_name": f.get("model_name") or "",
+                    "res_model": f.get("res_model") or False,
+                    "res_id": f.get("res_id") or 0,
+                    "recommended_action": f.get("recommended_action") or "",
+                    "category": f.get("category") or "error",
+                    "state": "open",
+                }
+            )
+        if vals_list:
+            Issue.create(vals_list)
+        return {
+            "type": "ir.actions.act_window",
+            "name": _("Salud Fiscal — Detalle"),
+            "res_model": "justech.fiscal.health.issue",
+            "view_mode": "list,form",
+            "domain": [("center_id", "=", self.id)],
+            "target": "current",
+            "context": {"create": False, "delete": False},
+        }
+
+    def action_open_fiscal_users(self):
+        if not self.can_manage_users:
+            raise AccessError(_("Solo Administradores Fiscales pueden gestionar roles."))
+        return {
+            "type": "ir.actions.act_window",
+            "name": _("Usuarios y permisos fiscales"),
+            "res_model": "res.users",
+            "view_mode": "list,form",
+            "domain": [
+                "|",
+                ("group_ids", "in", [
+                    self.env.ref("justech_l10n_do_base.group_justech_do_fiscal_user").id,
+                    self.env.ref("justech_l10n_do_base.group_justech_do_fiscal_manager").id,
+                    self.env.ref("justech_fiscal_admin.group_justech_fiscal_admin_manager").id,
+                ]),
+                ("share", "=", False),
+            ],
+            "context": {"search_default_filter_no_share": 1},
+        }
+
     def action_open_feature_flags(self):
+        if not (
+            self.env.user.has_group("base.group_system")
+            or self.env.user.has_group(
+                "justech_fiscal_admin.group_justech_fiscal_admin_manager"
+            )
+        ):
+            raise AccessError(
+                _("No tiene permiso para administrar Feature Flags fiscales.")
+            )
         return {
             "type": "ir.actions.act_window",
             "name": _("Feature Flags Fiscales"),
@@ -235,7 +499,10 @@ class JustechFiscalAdminCenter(models.TransientModel):
                 ("company_id", "=", False),
                 ("company_id", "=", self.company_id.id),
             ],
-            "context": {"default_company_id": self.company_id.id},
+            "context": {
+                "default_company_id": self.company_id.id,
+                "create": self.env.user.has_group("base.group_system"),
+            },
         }
 
     def action_open_ncf_ranges(self):
@@ -298,3 +565,80 @@ class JustechFiscalAdminCenter(models.TransientModel):
                 "type": "success",
             },
         }
+
+    def _padron_require_system(self):
+        if not (
+            self.env.user.has_group("base.group_system")
+            or self.env.user.has_group(
+                "justech_fiscal_admin.group_justech_fiscal_admin_manager"
+            )
+        ):
+            raise UserError(
+                _(
+                    "Solo Administradores del Sistema o Administradores Fiscales "
+                    "pueden administrar el padrón DGII."
+                )
+            )
+
+    def action_padron_import(self):
+        self._padron_require_system()
+        empty = self.env["justech.do.rnc.padron"].sudo().search_count([]) == 0
+        return {
+            "type": "ir.actions.act_window",
+            "name": _("Importar padrón DGII") if empty else _("Actualizar padrón DGII"),
+            "res_model": "justech.do.rnc.padron.import.wizard",
+            "view_mode": "form",
+            "target": "new",
+            "context": {"default_mode": "import" if empty else "update"},
+        }
+
+    def action_padron_history(self):
+        self._padron_require_system()
+        return {
+            "type": "ir.actions.act_window",
+            "name": _("Historial padrón DGII"),
+            "res_model": "justech.do.rnc.padron.import.log",
+            "view_mode": "list,form",
+            "target": "current",
+        }
+
+    def action_padron_integrity(self):
+        self._padron_require_system()
+        result = self.env["justech.do.rnc.padron.import.service"].integrity_check()
+        self._refresh()
+        body = "\n".join(result.get("issues", []) + result.get("warnings", []))
+        return {
+            "type": "ir.actions.client",
+            "tag": "display_notification",
+            "params": {
+                "title": _("Integridad padrón: %s") % result.get("status_visual"),
+                "message": body
+                or _("OK — %(n)s registros.") % {"n": result.get("count", 0)},
+                "type": "success" if result.get("status_visual") == "green" else "warning",
+                "sticky": result.get("status_visual") in ("red", "yellow"),
+            },
+        }
+
+    def action_padron_retry_last(self):
+        self._padron_require_system()
+        Log = self.env["justech.do.rnc.padron.import.log"].sudo()
+        last = Log.search([("state", "=", "failed")], order="id desc", limit=1)
+        if not last:
+            raise UserError(_("No hay una importación fallida reciente para reintentar."))
+        return self.env["justech.do.rnc.padron.auto.service"].run_auto_update(force=True)
+
+    def action_padron_config(self):
+        self._padron_require_system()
+        config = self.env["justech.do.rnc.padron.config"].get_config()
+        return {
+            "type": "ir.actions.act_window",
+            "name": _("Configurar actualización automática"),
+            "res_model": "justech.do.rnc.padron.config",
+            "res_id": config.id,
+            "view_mode": "form",
+            "target": "new",
+        }
+
+    def action_padron_update_now(self):
+        self._padron_require_system()
+        return self.env["justech.do.rnc.padron.auto.service"].run_auto_update(force=True)

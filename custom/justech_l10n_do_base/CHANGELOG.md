@@ -1,5 +1,14 @@
 # Changelog — justech_l10n_do_base
 
+## [19.0.1.15.0] — 2026-07-11 — Administración padrón DGII
+
+### Added
+- Historial de importaciones (`justech.do.rnc.padron.import.log`).
+- Configuración de actualización automática (`justech.do.rnc.padron.config`).
+- Servicios de importación por lotes, integridad, snapshot/rollback y descarga DGII.
+- Cron de actualización automática (frecuencia configurable, default 45 días).
+- Administración del padrón restringida a `base.group_system`.
+
 ## [19.0.1.14.0] — 2026-07-11 — Contactos RNC + padrón DGII
 
 ### Added

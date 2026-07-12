@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <!-- Menús operativos bajo Contabilidad; la configuración principal vive en Administración Justech. -->
+  <menuitem id="menu_justech_ecf_root" name="Justech e-CF"
+            parent="account.menu_finance" sequence="55"
+            groups="justech_ecf_core.group_ecf_readonly"/>
+  <menuitem id="menu_justech_ecf_documents" name="Documentos"
+            parent="menu_justech_ecf_root" action="action_justech_ecf_document" sequence="10"/>
+  <menuitem id="menu_justech_ecf_events" name="Eventos"
+            parent="menu_justech_ecf_root" action="action_justech_ecf_document_event" sequence="20"/>
+  <menuitem id="menu_justech_ecf_config" name="Configuración por empresa"
+            parent="menu_justech_ecf_root" action="action_justech_ecf_company_config" sequence="30"
+            groups="justech_ecf_core.group_ecf_responsible"/>
+  <menuitem id="menu_justech_ecf_certs" name="Certificados"
+            parent="menu_justech_ecf_root" action="action_justech_ecf_certificate" sequence="40"
+            groups="justech_ecf_core.group_ecf_responsible"/>
+</odoo>

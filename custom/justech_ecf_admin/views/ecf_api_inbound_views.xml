@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="view_justech_ecf_api_token_list" model="ir.ui.view">
+    <field name="name">justech.ecf.api.token.list</field>
+    <field name="model">justech.ecf.api.token</field>
+    <field name="arch" type="xml">
+      <list>
+        <field name="name"/>
+        <field name="key_prefix"/>
+        <field name="scopes"/>
+        <field name="active"/>
+      </list>
+    </field>
+  </record>
+  <record id="view_justech_ecf_api_token_form" model="ir.ui.view">
+    <field name="name">justech.ecf.api.token.form</field>
+    <field name="model">justech.ecf.api.token</field>
+    <field name="arch" type="xml">
+      <form>
+        <header>
+          <button name="action_rotate" type="object" string="Rotar clave" class="btn-secondary"
+                  groups="justech_ecf_core.group_ecf_admin"/>
+        </header>
+        <sheet>
+          <group>
+            <field name="name"/>
+            <field name="active"/>
+            <field name="scopes"/>
+            <field name="company_ids" widget="many2many_tags"/>
+            <field name="key_prefix"/>
+            <field name="plain_key_once"/>
+          </group>
+        </sheet>
+      </form>
+    </field>
+  </record>
+  <record id="action_justech_ecf_api_token" model="ir.actions.act_window">
+    <field name="name">API keys e-CF</field>
+    <field name="res_model">justech.ecf.api.token</field>
+    <field name="view_mode">list,form</field>
+  </record>
+  <record id="view_justech_ecf_inbound_list" model="ir.ui.view">
+    <field name="name">justech.ecf.inbound.document.list</field>
+    <field name="model">justech.ecf.inbound.document</field>
+    <field name="arch" type="xml">
+      <list>
+        <field name="name"/>
+        <field name="company_id"/>
+        <field name="e_ncf"/>
+        <field name="issuer_rnc"/>
+        <field name="state"/>
+        <field name="is_duplicate"/>
+        <field name="signature_ok"/>
+        <field name="xsd_ok"/>
+      </list>
+    </field>
+  </record>
+  <record id="view_justech_ecf_inbound_form" model="ir.ui.view">
+    <field name="name">justech.ecf.inbound.document.form</field>
+    <field name="model">justech.ecf.inbound.document</field>
+    <field name="arch" type="xml">
+      <form>
+        <header><field name="state" widget="statusbar"/></header>
+        <sheet>
+          <group>
+            <group>
+              <field name="name"/>
+              <field name="company_id"/>
+              <field name="partner_id"/>
+              <field name="e_ncf"/>
+              <field name="document_type_code"/>
+            </group>
+            <group>
+              <field name="issuer_rnc"/>
+              <field name="receiver_rnc"/>
+              <field name="signature_ok"/>
+              <field name="xsd_ok"/>
+              <field name="is_duplicate"/>
+              <field name="draft_move_id"/>
+              <field name="xml_hash_sha256"/>
+            </group>
+          </group>
+          <notebook>
+            <page string="Observaciones"><field name="differences"/><field name="xsd_errors"/></page>
+            <page string="XML"><field name="xml_content" widget="text"/></page>
+            <page string="Acuse local"><field name="ack_xml" widget="text"/></page>
+          </notebook>
+        </sheet>
+        <chatter/>
+      </form>
+    </field>
+  </record>
+  <record id="action_justech_ecf_inbound" model="ir.actions.act_window">
+    <field name="name">Recepciones e-CF</field>
+    <field name="res_model">justech.ecf.inbound.document</field>
+    <field name="view_mode">list,form</field>
+  </record>
+  <menuitem id="menu_justech_ecf_inbound" name="Recepciones"
+            parent="justech_ecf_core.menu_justech_ecf_root" action="action_justech_ecf_inbound" sequence="12"/>
+  <menuitem id="menu_justech_ecf_api" name="API keys"
+            parent="justech_ecf_core.menu_justech_ecf_root" action="action_justech_ecf_api_token" sequence="50"
+            groups="justech_ecf_core.group_ecf_admin"/>
+</odoo>

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="view_justech_ecf_document_form" model="ir.ui.view">
+    <field name="name">justech.ecf.document.form</field>
+    <field name="model">justech.ecf.document</field>
+    <field name="arch" type="xml">
+      <form string="Documento e-CF">
+        <header>
+          <button name="action_generate_xml" type="object" string="Generar XML" class="btn-primary"
+                  invisible="state not in ('draft','validated')"/>
+          <button name="action_sign" type="object" string="Firmar" class="btn-secondary"
+                  invisible="state != 'xml_generated'"/>
+          <button name="action_enqueue" type="object" string="Encolar envío" class="btn-secondary"
+                  invisible="state not in ('signed','retry','contingency')"/>
+          <button name="action_verify_signature" type="object" string="Verificar firma"/>
+          <button name="action_download_xml" type="object" string="Descargar XML"/>
+          <field name="state" widget="statusbar"
+                  statusbar_visible="draft,xml_generated,signed,queued,sent,accepted,rejected"/>
+        </header>
+        <sheet>
+          <group>
+            <group>
+              <field name="name"/>
+              <field name="company_id"/>
+              <field name="document_type_id"/>
+              <field name="e_ncf"/>
+              <field name="move_id"/>
+            </group>
+            <group>
+              <field name="environment"/>
+              <field name="track_id"/>
+              <field name="dgii_status"/>
+              <field name="attempt_count"/>
+              <field name="contingency"/>
+              <field name="xml_hash_sha256"/>
+            </group>
+          </group>
+          <notebook>
+            <page string="Mensajes">
+              <field name="dgii_message"/>
+            </page>
+            <page string="XML">
+              <field name="xml_content" widget="text"/>
+            </page>
+            <page string="XML firmado">
+              <field name="signed_xml" widget="text"/>
+            </page>
+            <page string="Eventos">
+              <field name="event_ids">
+                <list>
+                  <field name="create_date"/>
+                  <field name="event_type"/>
+                  <field name="result"/>
+                  <field name="message"/>
+                  <field name="attempt"/>
+                  <field name="user_id"/>
+                </list>
+              </field>
+            </page>
+          </notebook>
+        </sheet>
+        <chatter/>
+      </form>
+    </field>
+  </record>
+  <record id="view_justech_ecf_document_list" model="ir.ui.view">
+    <field name="name">justech.ecf.document.list</field>
+    <field name="model">justech.ecf.document</field>
+    <field name="arch" type="xml">
+      <list>
+        <field name="name"/>
+        <field name="company_id"/>
+        <field name="document_type_id"/>
+        <field name="e_ncf"/>
+        <field name="state"/>
+        <field name="environment"/>
+        <field name="track_id"/>
+      </list>
+    </field>
+  </record>
+  <record id="action_justech_ecf_document" model="ir.actions.act_window">
+    <field name="name">Documentos e-CF</field>
+    <field name="res_model">justech.ecf.document</field>
+    <field name="view_mode">list,form</field>
+  </record>
+</odoo>

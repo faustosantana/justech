@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_groups_privilege_justech_ecf" model="res.groups.privilege">
+        <field name="name">Justech e-CF</field>
+        <field name="sequence">45</field>
+        <field name="category_id" ref="base.module_category_accounting"/>
+    </record>
+
+    <record id="group_ecf_readonly" model="res.groups">
+        <field name="name">Solo lectura e-CF</field>
+        <field name="privilege_id" ref="res_groups_privilege_justech_ecf"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        <field name="comment">Consulta documentos e-CF sin modificar configuración ni emitir.</field>
+    </record>
+
+    <record id="group_ecf_operator" model="res.groups">
+        <field name="name">Operador e-CF</field>
+        <field name="privilege_id" ref="res_groups_privilege_justech_ecf"/>
+        <field name="implied_ids" eval="[(4, ref('group_ecf_readonly'))]"/>
+        <field name="comment">Opera documentos e-CF (generar/enviar en ambientes permitidos).</field>
+    </record>
+
+    <record id="group_ecf_responsible" model="res.groups">
+        <field name="name">Responsable e-CF</field>
+        <field name="privilege_id" ref="res_groups_privilege_justech_ecf"/>
+        <field name="implied_ids" eval="[(4, ref('group_ecf_operator'))]"/>
+        <field name="comment">Configura empresa, certificados y colas; no abre Producción DGII sin Gate.</field>
+    </record>
+
+    <record id="group_ecf_admin" model="res.groups">
+        <field name="name">Administrador e-CF</field>
+        <field name="privilege_id" ref="res_groups_privilege_justech_ecf"/>
+        <field name="implied_ids" eval="[(4, ref('group_ecf_responsible'))]"/>
+        <field name="comment">Administra e-CF completo, incluida la Gate de Producción.</field>
+        <field name="user_ids" eval="[(4, ref('base.user_admin'))]"/>
+    </record>
+
+    <record id="group_ecf_auditor" model="res.groups">
+        <field name="name">Auditor e-CF</field>
+        <field name="privilege_id" ref="res_groups_privilege_justech_ecf"/>
+        <field name="implied_ids" eval="[(4, ref('group_ecf_readonly'))]"/>
+        <field name="comment">Auditoría e-CF: eventos, historial e integridad.</field>
+    </record>
+</odoo>

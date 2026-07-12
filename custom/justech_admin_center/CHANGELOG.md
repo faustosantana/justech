@@ -1,5 +1,12 @@
 # Changelog — justech_admin_center
 
+## 19.0.2.5.0 — 2026-07-12
+
+- Acciones MISS de Centro Fiscal / Salud Fiscal cableadas a operaciones reales.
+- Hubs Padrón / Fiscal / Tesorería; e-CF integrado en Justech Fiscal.
+- `has_operation_action` oculta «Abrir operación» cuando no hay destino útil.
+- Diagnósticos reales por submódulo; UX en español; contraste claro/oscuro validado.
+
 ## 19.0.2.0.0 — 2026-07-11
 
 - Consola Enterprise: productos → submódulos, dashboard responsive, contraste claro/oscuro.

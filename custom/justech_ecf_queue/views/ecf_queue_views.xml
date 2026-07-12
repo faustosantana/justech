@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="view_justech_ecf_queue_job_list" model="ir.ui.view">
+    <field name="name">justech.ecf.queue.job.list</field>
+    <field name="model">justech.ecf.queue.job</field>
+    <field name="arch" type="xml">
+      <list>
+        <field name="name"/>
+        <field name="company_id"/>
+        <field name="document_id"/>
+        <field name="state"/>
+        <field name="priority"/>
+        <field name="attempt"/>
+        <field name="next_run_at"/>
+      </list>
+    </field>
+  </record>
+  <record id="action_justech_ecf_queue_job" model="ir.actions.act_window">
+    <field name="name">Cola e-CF</field>
+    <field name="res_model">justech.ecf.queue.job</field>
+    <field name="view_mode">list,form</field>
+  </record>
+  <menuitem id="menu_justech_ecf_queue" name="Cola de envío"
+            parent="justech_ecf_core.menu_justech_ecf_root"
+            action="action_justech_ecf_queue_job" sequence="15"
+            groups="justech_ecf_core.group_ecf_operator"/>
+</odoo>

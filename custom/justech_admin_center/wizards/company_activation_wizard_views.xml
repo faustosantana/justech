@@ -4,32 +4,51 @@
         <field name="name">justech.admin.company.activation.wizard.form</field>
         <field name="model">justech.admin.company.activation.wizard</field>
         <field name="arch" type="xml">
-            <form string="Confirmar cambio por empresa">
+            <form class="o_jac_activation_wizard">
+                <field name="line_id" invisible="1"/>
+                <field name="operation" invisible="1"/>
+                <field name="show_engine" invisible="1"/>
                 <group>
-                    <field name="line_id" readonly="1"/>
-                    <field name="operation" readonly="1"/>
-                    <field name="new_engine" invisible="operation != 'engine' and operation != 'activate'"/>
+                    <group string="Resumen">
+                        <field name="product_name"/>
+                        <field name="module_name"/>
+                        <field name="company_name"/>
+                    </group>
+                    <group string="Estados">
+                        <field name="before_state"/>
+                        <field name="after_state"/>
+                        <field name="before_engine" invisible="not before_engine"/>
+                        <field name="after_engine" invisible="not after_engine"/>
+                        <field name="new_engine" invisible="not show_engine"/>
+                    </group>
                 </group>
-                <group string="Estado actual">
-                    <field name="preview_before" nolabel="1" colspan="2"/>
+                <group string="¿Qué habilitará?">
+                    <field name="enables_text" nolabel="1" colspan="2"/>
                 </group>
-                <group string="Estado nuevo">
-                    <field name="preview_after" nolabel="1" colspan="2"/>
+                <group string="Configuración necesaria antes de comenzar">
+                    <field name="setup_text" nolabel="1" colspan="2"/>
                 </group>
-                <group string="Impacto">
+                <group string="Riesgos">
                     <field name="risks" nolabel="1" colspan="2"/>
                 </group>
-                <group string="No afecta">
+                <group string="Qué no se modificará">
                     <field name="no_impact" nolabel="1" colspan="2"/>
                 </group>
-                <group string="Rollback">
+                <group string="Cómo revertir">
                     <field name="rollback_notes" nolabel="1" colspan="2"/>
                 </group>
                 <group>
                     <field name="confirmation"/>
                 </group>
                 <footer>
-                    <button name="action_apply" type="object" string="Aplicar" class="btn-primary"
+                    <button name="action_apply" type="object" string="Activar" class="btn-primary"
+                            invisible="operation != 'activate'"
+                            groups="justech_admin_center.group_justech_admin_center_manager"/>
+                    <button name="action_apply" type="object" string="Desactivar" class="btn-primary"
+                            invisible="operation != 'deactivate'"
+                            groups="justech_admin_center.group_justech_admin_center_manager"/>
+                    <button name="action_apply" type="object" string="Cambiar motor" class="btn-primary"
+                            invisible="operation != 'engine'"
                             groups="justech_admin_center.group_justech_admin_center_manager"/>
                     <button string="Cancelar" special="cancel" class="btn-secondary"/>
                 </footer>

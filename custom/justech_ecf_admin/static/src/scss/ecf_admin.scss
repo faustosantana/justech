@@ -1,0 +1,9 @@
+/* e-CF admin uses Admin Center theme variables — no fixed dark-on-dark colors */
+.o_justech_admin_center .o_jac_hub_form {
+  .o_jac_action_row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+}

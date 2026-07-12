@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_ecf_cert_wiz_resp,ecf.cert.wiz responsible,model_justech_ecf_certificate_wizard,justech_ecf_core.group_ecf_responsible,1,1,1,1
+access_ecf_cert_wiz_admin,ecf.cert.wiz admin,model_justech_ecf_certificate_wizard,justech_ecf_core.group_ecf_admin,1,1,1,1

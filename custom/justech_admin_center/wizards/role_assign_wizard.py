@@ -18,14 +18,37 @@ class JustechAdminRoleAssignWizard(models.TransientModel):
             ("fiscal_admin", "Administrador Fiscal"),
             ("fiscal_manager", "Responsable Fiscal"),
             ("fiscal_user", "Usuario Fiscal"),
+            ("finance_admin", "Administrador Finanzas"),
+            ("finance_user", "Usuario Finanzas"),
+            ("warranty_manager", "Administrador Garantías"),
+            ("warranty_user", "Usuario Garantías"),
             ("auditor", "Auditor"),
             ("readonly", "Solo lectura"),
         ],
+        string="Rol",
     )
+    role_explanation = fields.Char(compute="_compute_role_explanation", string="Este rol permite")
     preview_html = fields.Html(readonly=True)
-    preview_before = fields.Text(readonly=True)
-    preview_after = fields.Text(readonly=True)
+    preview_before = fields.Text(readonly=True, string="Permisos actuales")
+    preview_after = fields.Text(readonly=True, string="Permisos nuevos")
     confirmation = fields.Boolean(string="Confirmo el cambio de rol")
+
+    @api.depends("role_code")
+    def _compute_role_explanation(self):
+        explain = {
+            "justech_admin": "Administrar la consola Justech, productos, empresas y seguridad.",
+            "fiscal_admin": "Administrar configuración fiscal, alertas y permisos fiscales.",
+            "fiscal_manager": "Supervisar operación fiscal y revalidaciones.",
+            "fiscal_user": "Operar funciones fiscales cotidianas.",
+            "finance_admin": "Administrar cobros, pagos, tesorería y retenciones operativas.",
+            "finance_user": "Operar cobros, pagos y tesorería.",
+            "warranty_manager": "Administrar garantías, roles y parámetros.",
+            "warranty_user": "Registrar y dar seguimiento a garantías.",
+            "auditor": "Consultar auditoría y trazabilidad.",
+            "readonly": "Solo lectura de información Justech.",
+        }
+        for wiz in self:
+            wiz.role_explanation = explain.get(wiz.role_code or "", "")
 
     @api.onchange("user_id", "role_code")
     def _onchange_preview(self):

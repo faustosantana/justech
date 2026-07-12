@@ -1,0 +1,15 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_ecf_type_ro,ecf.type readonly,model_justech_ecf_document_type,group_ecf_readonly,1,0,0,0
+access_ecf_type_admin,ecf.type admin,model_justech_ecf_document_type,group_ecf_admin,1,1,1,0
+access_ecf_cfg_ro,ecf.config readonly,model_justech_ecf_company_config,group_ecf_readonly,1,0,0,0
+access_ecf_cfg_resp,ecf.config responsible,model_justech_ecf_company_config,group_ecf_responsible,1,1,1,0
+access_ecf_cfg_admin,ecf.config admin,model_justech_ecf_company_config,group_ecf_admin,1,1,1,1
+access_ecf_cert_ro,ecf.cert readonly,model_justech_ecf_certificate,group_ecf_readonly,1,0,0,0
+access_ecf_cert_resp,ecf.cert responsible,model_justech_ecf_certificate,group_ecf_responsible,1,1,1,0
+access_ecf_cert_admin,ecf.cert admin,model_justech_ecf_certificate,group_ecf_admin,1,1,1,1
+access_ecf_doc_ro,ecf.doc readonly,model_justech_ecf_document,group_ecf_readonly,1,0,0,0
+access_ecf_doc_op,ecf.doc operator,model_justech_ecf_document,group_ecf_operator,1,1,1,0
+access_ecf_doc_admin,ecf.doc admin,model_justech_ecf_document,group_ecf_admin,1,1,1,1
+access_ecf_evt_ro,ecf.event readonly,model_justech_ecf_document_event,group_ecf_readonly,1,0,0,0
+access_ecf_evt_op,ecf.event operator,model_justech_ecf_document_event,group_ecf_operator,1,0,1,0
+access_ecf_evt_admin,ecf.event admin,model_justech_ecf_document_event,group_ecf_admin,1,1,1,1

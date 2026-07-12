@@ -8,8 +8,9 @@
                 <sheet>
                     <group invisible="mode == 'matrix'">
                         <field name="mode" invisible="1"/>
-                        <field name="user_id"/>
-                        <field name="role_code"/>
+                        <field name="user_id" string="Usuario"/>
+                        <field name="role_code" string="Rol"/>
+                        <field name="role_explanation"/>
                         <field name="preview_before"/>
                         <field name="preview_after"/>
                         <field name="confirmation"/>

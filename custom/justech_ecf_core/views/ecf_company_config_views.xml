@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="view_justech_ecf_company_config_form" model="ir.ui.view">
+    <field name="name">justech.ecf.company.config.form</field>
+    <field name="model">justech.ecf.company.config</field>
+    <field name="arch" type="xml">
+      <form string="Configuración e-CF">
+        <header>
+          <button name="action_run_health" type="object" string="Diagnosticar" class="btn-secondary"/>
+          <button name="unlock_production_gate" type="object" string="Desbloquear Gate de Producción"
+                  class="btn-primary" groups="justech_ecf_core.group_ecf_admin"
+                  invisible="production_gate_unlocked"/>
+          <field name="fiscal_mode" widget="statusbar"/>
+        </header>
+        <sheet>
+          <group>
+            <group string="Empresa">
+              <field name="company_id"/>
+              <field name="rnc_emisor"/>
+              <field name="active"/>
+            </group>
+            <group string="Ambiente">
+              <field name="dgii_environment"/>
+              <field name="production_gate_unlocked"/>
+              <field name="certificate_id"/>
+              <field name="setup_complete"/>
+            </group>
+          </group>
+          <group string="Último diagnóstico">
+            <field name="last_health_at"/>
+            <field name="last_health_summary"/>
+          </group>
+          <field name="note" placeholder="Notas de implementación…"/>
+        </sheet>
+      </form>
+    </field>
+  </record>
+  <record id="view_justech_ecf_company_config_list" model="ir.ui.view">
+    <field name="name">justech.ecf.company.config.list</field>
+    <field name="model">justech.ecf.company.config</field>
+    <field name="arch" type="xml">
+      <list>
+        <field name="company_id"/>
+        <field name="fiscal_mode"/>
+        <field name="dgii_environment"/>
+        <field name="setup_complete"/>
+        <field name="production_gate_unlocked"/>
+      </list>
+    </field>
+  </record>
+  <record id="action_justech_ecf_company_config" model="ir.actions.act_window">
+    <field name="name">Configuración e-CF por empresa</field>
+    <field name="res_model">justech.ecf.company.config</field>
+    <field name="view_mode">list,form</field>
+  </record>
+</odoo>

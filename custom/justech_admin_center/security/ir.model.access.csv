@@ -29,3 +29,11 @@ access_jac_auth_wiz_manager,justech.admin.auth.wizard manager,model_justech_admi
 access_jac_auth_wiz_system,justech.admin.auth.wizard system,model_justech_admin_auth_wizard,base.group_system,1,1,1,1
 access_jac_co_act_wiz_manager,justech.admin.company.activation.wizard manager,model_justech_admin_company_activation_wizard,group_justech_admin_center_manager,1,1,1,1
 access_jac_co_act_wiz_system,justech.admin.company.activation.wizard system,model_justech_admin_company_activation_wizard,base.group_system,1,1,1,1
+access_jac_padron_hub_user,justech.admin.padron.hub user,model_justech_admin_padron_hub,group_justech_admin_center_user,1,1,1,1
+access_jac_padron_hub_mgr,justech.admin.padron.hub manager,model_justech_admin_padron_hub,group_justech_admin_center_manager,1,1,1,1
+access_jac_fiscal_hub_user,justech.admin.fiscal.hub user,model_justech_admin_fiscal_hub,group_justech_admin_center_user,1,1,1,1
+access_jac_fiscal_hub_mgr,justech.admin.fiscal.hub manager,model_justech_admin_fiscal_hub,group_justech_admin_center_manager,1,1,1,1
+access_jac_treasury_hub_user,justech.admin.treasury.hub user,model_justech_admin_treasury_hub,group_justech_admin_center_user,1,1,1,1
+access_jac_treasury_hub_mgr,justech.admin.treasury.hub manager,model_justech_admin_treasury_hub,group_justech_admin_center_manager,1,1,1,1
+access_jac_uat_wiz_mgr,justech.admin.uat.archive.wizard manager,model_justech_admin_uat_archive_wizard,group_justech_admin_center_manager,1,1,1,1
+access_jac_uat_wiz_sys,justech.admin.uat.archive.wizard system,model_justech_admin_uat_archive_wizard,base.group_system,1,1,1,1

@@ -2,35 +2,152 @@ from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 
 
+STATE_LABELS = {
+    "unconfigured": "No configurado",
+    "inactive": "Inactivo",
+    "active": "Activo",
+    "blocked": "Bloqueado",
+    "attention": "Requiere atención",
+    "error": "Error",
+    "none": "Sin motor",
+    "traditional_ncf": "NCF tradicional",
+    "electronic": "Facturación electrónica",
+}
+
+# Qué habilita cada familia al activar (sin mezclar NCF en Garantías, etc.)
+ENABLES_BY_PRODUCT = {
+    "warranty": [
+        "Registro de garantías",
+        "Seguimiento de garantías",
+        "Consulta por cliente",
+        "Roles de garantías",
+        "Menús operativos de garantías",
+    ],
+    "fiscal": [
+        "Operaciones fiscales nuevas en la empresa",
+        "Emisión y control según el submódulo",
+        "Menús y roles fiscales relacionados",
+    ],
+    "finance": [
+        "Cobros, pagos o tesorería según el submódulo",
+        "Menús operativos financieros",
+        "Roles de finanzas relacionados",
+    ],
+    "core": [
+        "Servicios de plataforma Justech",
+        "Integración con otros productos",
+    ],
+    "audit": [
+        "Registro de auditoría y diagnósticos",
+    ],
+    "integrations": [
+        "Conexiones con servicios externos",
+    ],
+}
+
+ENABLES_BY_TECH = {
+    "justech_warranty": [
+        "Registro de garantías",
+        "Seguimiento de garantías",
+        "Consulta por cliente",
+        "Roles de garantías",
+        "Menús operativos",
+    ],
+    "justech_l10n_do_ncf": [
+        "Asignación de NCF",
+        "Control de rangos y secuencias",
+        "Emisión fiscal según motor de la empresa",
+    ],
+    "justech_l10n_do_reports": [
+        "Generación de reportes 606, 607, 608, 609 y 623",
+        "Validaciones e historial de declaraciones",
+    ],
+    "justech_l10n_do_treasury": [
+        "Cobros y pagos",
+        "Pagos abiertos",
+        "Flujos de tesorería",
+    ],
+    "justech_l10n_do_payments_withholding": [
+        "Retenciones en cobros y pagos",
+        "Reglas operativas de retención",
+    ],
+    "justech_fiscal_admin": [
+        "Resumen de salud fiscal",
+        "Alertas y permisos fiscales por empresa",
+    ],
+}
+
+
 class JustechAdminCompanyActivationService(models.AbstractModel):
     _name = "justech.admin.company.activation.service"
     _description = "Activación funcional Justech por empresa"
+
+    @api.model
+    def _label(self, value):
+        return STATE_LABELS.get(value, value or "—")
+
+    @api.model
+    def _enables_for(self, module):
+        if module.technical_name in ENABLES_BY_TECH:
+            return ENABLES_BY_TECH[module.technical_name]
+        code = module.product_id.code if module.product_id else "core"
+        return ENABLES_BY_PRODUCT.get(code, ["Funciones operativas del submódulo en la empresa"])
+
+    @api.model
+    def _no_impact_for(self, module):
+        code = module.product_id.code if module.product_id else ""
+        if code == "warranty":
+            return _(
+                "No se modificará: ventas históricas, facturas, contabilidad ni garantías ya registradas."
+            )
+        if code == "finance":
+            return _(
+                "No se modificará: pagos históricos, asientos publicados ni conciliación cerrada."
+            )
+        if code == "fiscal":
+            return _(
+                "No se modificará: NCF ya emitidos, facturas históricas, reportes generados ni contabilidad publicada."
+            )
+        return _(
+            "No se modificará el histórico operativo ni la contabilidad publicada."
+        )
 
     @api.model
     def build_preview(self, line, operation, new_engine=None):
         line.ensure_one()
         module = line.module_id
         company = line.company_id
-        before = {
-            "estado": line.functional_state,
-            "motor": line.fiscal_engine,
-            "empresa": company.name,
-            "modulo": module.functional_name,
-        }
-        after = dict(before)
+        if module.activation_scope == "global":
+            raise UserError(
+                _(
+                    "%s es un componente global de la base. "
+                    "No se activa ni desactiva por empresa."
+                )
+                % module.functional_name
+            )
+
+        before_state = self._label(line.functional_state)
+        before_engine = self._label(line.fiscal_engine) if module.fiscal_engine_capable else False
+        after_state = before_state
+        after_engine = before_engine
         risks = []
+        title = _("Activar producto")
+        enables = self._enables_for(module)
+
         if operation == "activate":
-            after["estado"] = "active"
-            if module.fiscal_engine_capable and new_engine:
-                after["motor"] = new_engine
-            elif module.fiscal_engine_capable and line.fiscal_engine == "none":
-                after["motor"] = "traditional_ncf"
-            risks.append(_("Se habilitarán operaciones nuevas del módulo en esta empresa."))
+            title = _("Activar — %s") % module.functional_name
+            after_state = self._label("active")
+            if module.fiscal_engine_capable:
+                eng = new_engine or (
+                    line.fiscal_engine if line.fiscal_engine != "none" else "traditional_ncf"
+                )
+                after_engine = self._label(eng)
+            risks.append(_("Se habilitarán operaciones nuevas de este submódulo en la empresa."))
         elif operation == "deactivate":
-            after["estado"] = "inactive"
+            title = _("Desactivar — %s") % module.functional_name
+            after_state = self._label("inactive")
             risks.append(_("Se bloquearán nuevas operaciones; el histórico se conserva."))
             if module.is_critical:
-                # ensure another company still has fiscal if needed — soft check
                 others = self.env["justech.admin.module.company"].search(
                     [
                         ("module_id", "=", module.id),
@@ -38,27 +155,59 @@ class JustechAdminCompanyActivationService(models.AbstractModel):
                         ("functional_state", "=", "active"),
                     ]
                 )
-                if not others and module.is_critical:
+                if not others:
                     risks.append(
-                        _("Advertencia: ninguna otra empresa tendrá este módulo crítico activo.")
+                        _("Advertencia: ninguna otra empresa tendrá este submódulo crítico activo.")
                     )
         elif operation == "engine":
+            title = _("Cambiar motor fiscal — %s") % company.name
             if not module.fiscal_engine_capable:
-                raise UserError(_("Este módulo no admite selección de motor fiscal."))
+                raise UserError(_("Este submódulo no admite selección de motor fiscal."))
             if not new_engine:
                 raise UserError(_("Seleccione el motor fiscal destino."))
-            # incompatible engines same company: only one active engine value
-            after["motor"] = new_engine
-            after["estado"] = "active"
-            risks.append(_("No se permite emitir con dos motores incompatibles en la misma empresa."))
+            after_engine = self._label(new_engine)
+            after_state = self._label("active")
+            risks.append(
+                _("No se permite emitir con dos motores incompatibles en la misma empresa.")
+            )
+            enables = [
+                _("Motor fiscal unificado en la empresa: %s") % after_engine,
+            ]
+
+        setup_needed = [
+            _("Revisar responsables y permisos de la empresa"),
+            _("Completar parámetros requeridos del submódulo antes de operar"),
+        ]
+        if module.fiscal_engine_capable and operation in ("activate", "engine"):
+            setup_needed.append(_("Confirmar el motor fiscal (NCF tradicional o electrónico)"))
+
         return {
-            "before": before,
-            "after": after,
+            "title": title,
+            "product_name": module.product_id.name if module.product_id else module.functional_name,
+            "module_name": module.functional_name,
+            "company_name": company.name,
+            "before_state": before_state,
+            "after_state": after_state,
+            "before_engine": before_engine or "",
+            "after_engine": after_engine or "",
+            "enables_text": "\n".join("• %s" % e for e in enables),
+            "setup_text": "\n".join("• %s" % s for s in setup_needed),
             "risks": "\n".join(risks),
-            "no_impact": _(
-                "No afecta histórico, NCF emitidos, pagos históricos ni contabilidad publicada."
-            ),
-            "rollback": _("Revertir el estado funcional desde la misma consola."),
+            "no_impact": self._no_impact_for(module),
+            "rollback": _("Puede revertir el estado funcional desde la misma consola."),
+            # compat keys for audit log (human readable)
+            "before": {
+                "empresa": company.name,
+                "submodulo": module.functional_name,
+                "estado": before_state,
+                "motor": before_engine or "—",
+            },
+            "after": {
+                "empresa": company.name,
+                "submodulo": module.functional_name,
+                "estado": after_state,
+                "motor": after_engine or "—",
+            },
         }
 
     @api.model
@@ -91,7 +240,6 @@ class JustechAdminCompanyActivationService(models.AbstractModel):
             self._sync_company_flags(module, company, enabled=True)
             self._sync_fiscal_enabled(company, enabled=True)
         line.write(vals)
-        # rollup module functional_state
         active_any = self.env["justech.admin.module.company"].search_count(
             [("module_id", "=", module.id), ("functional_state", "=", "active")]
         )
@@ -100,15 +248,14 @@ class JustechAdminCompanyActivationService(models.AbstractModel):
             summary=_("%s / %s → %s") % (module.functional_name, company.name, operation),
             operation=operation,
             module_id=module.id,
-            state_before=str(preview["before"]),
-            state_after=str(preview["after"]),
+            state_before="%s → %s" % (preview["before_state"], preview.get("before_engine") or "—"),
+            state_after="%s → %s" % (preview["after_state"], preview.get("after_engine") or "—"),
             reason=preview["risks"],
         )
         return preview
 
     @api.model
     def _unify_company_engine(self, company, engine, prefer_line=None):
-        """One fiscal engine per company across all engine-capable submodules."""
         Line = self.env["justech.admin.module.company"]
         domain = [
             ("company_id", "=", company.id),
@@ -116,11 +263,9 @@ class JustechAdminCompanyActivationService(models.AbstractModel):
         ]
         lines = Line.search(domain)
         for other in lines:
-            vals = {"fiscal_engine": engine, "functional_state": "active"}
             if prefer_line and other.id == prefer_line.id:
                 continue
-            other.write(vals)
-
+            other.write({"fiscal_engine": engine, "functional_state": "active"})
 
     @api.model
     def _sync_company_flags(self, module, company, enabled):
@@ -134,20 +279,23 @@ class JustechAdminCompanyActivationService(models.AbstractModel):
                 flag = Flag.search([("code", "=", code), ("company_id", "=", False)], limit=1)
             if not flag:
                 continue
-            vals = {}
             if "is_enabled" in Flag._fields:
-                # company-specific: write on company-bound copy if possible
                 if flag.company_id:
-                    vals["is_enabled"] = enabled
-                    flag.write(vals)
+                    flag.write({"is_enabled": enabled})
                 else:
-                    # create/update company override if model allows
                     existing = Flag.search([("code", "=", code), ("company_id", "=", company.id)], limit=1)
                     if existing:
                         existing.write({"is_enabled": enabled})
                     else:
                         try:
-                            Flag.create({"code": code, "company_id": company.id, "is_enabled": enabled, "name": code})
+                            Flag.create(
+                                {
+                                    "code": code,
+                                    "company_id": company.id,
+                                    "is_enabled": enabled,
+                                    "name": code,
+                                }
+                            )
                         except Exception:
                             flag.write({"is_enabled": enabled})
             elif "enabled" in Flag._fields:
@@ -160,9 +308,9 @@ class JustechAdminCompanyActivationService(models.AbstractModel):
 
     @api.model
     def ensure_lines_for_module(self, module):
-        """Create company lines for all companies when module is installed."""
         if module.technical_state != "installed":
             return
+        # Global modules: optional informational lines, all marked active (shared)
         Company = self.env["res.company"].sudo()
         Line = self.env["justech.admin.module.company"].sudo()
         for company in Company.search([]):
@@ -170,11 +318,11 @@ class JustechAdminCompanyActivationService(models.AbstractModel):
                 [("module_id", "=", module.id), ("company_id", "=", company.id)], limit=1
             )
             if existing:
+                if module.activation_scope == "global" and existing.functional_state == "unconfigured":
+                    existing.write({"functional_state": "active"})
                 continue
-            state = "unconfigured"
+            state = "active" if module.activation_scope == "global" else "unconfigured"
             engine = "none"
-            if module.activation_scope == "global" and module.functional_state == "active":
-                state = "active"
             if module.fiscal_engine_capable and getattr(company, "justech_do_fiscal_enabled", False):
                 state = "active"
                 engine = "traditional_ncf"

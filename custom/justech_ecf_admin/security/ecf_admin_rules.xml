@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="rule_ecf_inbound_company" model="ir.rule">
+    <field name="name">e-CF inbound multiempresa</field>
+    <field name="model_id" ref="model_justech_ecf_inbound_document"/>
+    <field name="domain_force">[("company_id", "in", company_ids)]</field>
+    <field name="groups" eval="[(4, ref('justech_ecf_core.group_ecf_readonly'))]"/>
+  </record>
+  <record id="rule_ecf_api_token_company" model="ir.rule">
+    <field name="name">e-CF API token multiempresa</field>
+    <field name="model_id" ref="model_justech_ecf_api_token"/>
+    <field name="domain_force">[(1, "=", 1)]</field>
+    <field name="groups" eval="[(4, ref('justech_ecf_core.group_ecf_admin'))]"/>
+  </record>
+</odoo>

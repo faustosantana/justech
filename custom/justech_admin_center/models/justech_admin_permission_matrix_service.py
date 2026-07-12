@@ -2,18 +2,31 @@ from odoo import api, models, _
 
 
 ROLE_CATALOG = [
-    # code, label, group xmlids (first match wins for mapping)
     ("justech_admin", "Administrador Justech", ["justech_admin_center.group_justech_admin_center_manager"]),
     ("fiscal_admin", "Administrador Fiscal", ["justech_fiscal_admin.group_justech_fiscal_admin_manager"]),
     ("fiscal_manager", "Responsable Fiscal", ["justech_l10n_do_base.group_justech_do_fiscal_manager"]),
     ("fiscal_user", "Usuario Fiscal", ["justech_l10n_do_base.group_justech_do_fiscal_user"]),
-    ("treasury_manager", "Administrador de Tesorería", []),
-    ("treasury_user", "Usuario de Tesorería", []),
-    ("warranty_manager", "Administrador de Garantías", ["justech_warranty.group_warranty_manager"]),
-    ("warranty_user", "Usuario de Garantías", ["justech_warranty.group_warranty_user"]),
+    ("finance_admin", "Administrador Finanzas", []),
+    ("finance_user", "Usuario Finanzas", []),
+    ("warranty_manager", "Administrador Garantías", ["justech_warranty.group_warranty_manager"]),
+    ("warranty_user", "Usuario Garantías", ["justech_warranty.group_warranty_user"]),
     ("auditor", "Auditor", ["justech_global_audit_log.group_justech_audit_manager", "justech_global_audit_log.group_audit_user"]),
     ("readonly", "Solo lectura", []),
 ]
+
+
+ROLE_EXPLAIN = {
+    "justech_admin": "Administrar la consola Justech, productos, empresas y seguridad.",
+    "fiscal_admin": "Administrar configuración fiscal, alertas y permisos fiscales.",
+    "fiscal_manager": "Supervisar operación fiscal y revalidaciones.",
+    "fiscal_user": "Operar funciones fiscales cotidianas.",
+    "finance_admin": "Administrar cobros, pagos, tesorería y retenciones operativas.",
+    "finance_user": "Operar cobros, pagos y tesorería.",
+    "warranty_manager": "Administrar garantías, roles y parámetros.",
+    "warranty_user": "Registrar y dar seguimiento a garantías.",
+    "auditor": "Consultar auditoría y trazabilidad.",
+    "readonly": "Solo lectura de información Justech.",
+}
 
 
 class JustechAdminPermissionMatrixService(models.AbstractModel):
@@ -39,25 +52,21 @@ class JustechAdminPermissionMatrixService(models.AbstractModel):
 
     @api.model
     def render_html(self):
-        modules = self.env["justech.admin.module"].sudo().search([])
         roles = self.role_catalog()
         parts = [
-            '<div class="o_jac_matrix"><table class="table table-sm">',
-            "<thead><tr><th>%s</th><th>%s</th><th>Leer</th><th>Operar</th><th>Aprobar</th><th>Administrar</th></tr></thead><tbody>"
-            % (_("Función / Módulo"), _("Rol")),
+            '<div class="o_jac_matrix"><table class="table table-sm o_jac_table">',
+            "<thead><tr><th>%s</th><th>%s</th><th>%s</th></tr></thead><tbody>"
+            % (_("Rol"), _("Disponible"), _("Este rol permite")),
         ]
-        for mod in modules:
-            for role in roles:
-                if not role["available"] and role["code"] not in ("readonly", "justech_admin"):
-                    continue
-                read = "✓"
-                operate = "✓" if role["code"] not in ("readonly",) else "—"
-                approve = "✓" if role["code"] in ("fiscal_manager", "fiscal_admin", "justech_admin", "warranty_manager", "treasury_manager") else "—"
-                admin = "✓" if role["code"] in ("justech_admin", "fiscal_admin", "warranty_manager", "treasury_manager") else "—"
-                parts.append(
-                    "<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>"
-                    % (mod.functional_name, role["label"], read, operate, approve, admin)
+        for role in roles:
+            parts.append(
+                "<tr><td>%s</td><td>%s</td><td>%s</td></tr>"
+                % (
+                    role["label"],
+                    _("Sí") if role["available"] or role["code"] in ("readonly", "finance_admin", "finance_user") else _("Pendiente de grupo"),
+                    ROLE_EXPLAIN.get(role["code"], ""),
                 )
+            )
         parts.append("</tbody></table></div>")
         return "".join(parts)
 

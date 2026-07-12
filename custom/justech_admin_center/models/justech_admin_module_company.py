@@ -34,6 +34,8 @@ class JustechAdminModuleCompany(models.Model):
     last_change_uid = fields.Many2one("res.users", readonly=True)
     notes = fields.Text()
     product_id = fields.Many2one(related="module_id.product_id", store=True)
+    is_global = fields.Boolean(related="module_id.is_global")
+    activation_scope = fields.Selection(related="module_id.activation_scope")
 
     _sql_constraints = [
         (
@@ -45,12 +47,21 @@ class JustechAdminModuleCompany(models.Model):
 
     def action_prepare_activate(self):
         self.ensure_one()
+        gate = self.env["justech.admin.center.auth.service"].gate_or_wizard()
+        if gate:
+            return gate
         return self.env["justech.admin.company.activation.wizard"].action_open(self, "activate")
 
     def action_prepare_deactivate(self):
         self.ensure_one()
+        gate = self.env["justech.admin.center.auth.service"].gate_or_wizard()
+        if gate:
+            return gate
         return self.env["justech.admin.company.activation.wizard"].action_open(self, "deactivate")
 
     def action_prepare_engine_change(self):
         self.ensure_one()
+        gate = self.env["justech.admin.center.auth.service"].gate_or_wizard()
+        if gate:
+            return gate
         return self.env["justech.admin.company.activation.wizard"].action_open(self, "engine")

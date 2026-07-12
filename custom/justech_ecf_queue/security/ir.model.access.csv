@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_ecf_queue_ro,ecf.queue readonly,model_justech_ecf_queue_job,justech_ecf_core.group_ecf_readonly,1,0,0,0
+access_ecf_queue_op,ecf.queue operator,model_justech_ecf_queue_job,justech_ecf_core.group_ecf_operator,1,1,1,0
+access_ecf_queue_admin,ecf.queue admin,model_justech_ecf_queue_job,justech_ecf_core.group_ecf_admin,1,1,1,1

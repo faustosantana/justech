@@ -13,5 +13,6 @@ from . import justech_admin_center_auth_service
 from . import justech_admin_access_service_inherit
 from . import justech_admin_health_service
 from . import justech_admin_permission_matrix_service
+from . import justech_admin_hubs
 from . import res_users
 from . import res_config_settings

@@ -36,3 +36,8 @@ Thumbs.db
 
 # Legacy
 addons/
+
+# e-CF lab certificates (never commit)
+**/ecf-lab/
+*.p12
+*.pfx

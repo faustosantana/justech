@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <!-- Fuerza sincronización suave: el registry lee justech_admin_center del manifest. -->
+</odoo>

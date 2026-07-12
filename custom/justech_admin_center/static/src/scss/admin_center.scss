@@ -1,14 +1,11 @@
-/* Justech Admin Center Enterprise — scoped only (no global Odoo overrides) */
+/* Justech Admin Center — tema adaptativo (claro/oscuro) alineado a Odoo */
 :root {
   --jac-navy: #1B3A5C;
   --jac-teal: #0D9488;
-  --jac-teal-soft: rgba(13, 148, 136, 0.12);
-  --jac-navy-soft: rgba(27, 58, 92, 0.08);
   --jac-ok: #16a34a;
   --jac-warn: #ca8a04;
   --jac-err: #dc2626;
   --jac-info: #2563eb;
-  --jac-muted: #64748b;
 }
 
 .o_justech_admin_center,
@@ -16,31 +13,90 @@
 .o_jac_module_kanban,
 .o_jac_product_kanban,
 .o_jac_product_form,
-.o_jac_module_form {
-  --jac-card-bg: var(--o-view-background-color, #fff);
-  --jac-card-border: rgba(15, 23, 42, 0.1);
-  --jac-text: var(--o-view-text-color, #0f172a);
-  --jac-text-muted: color-mix(in srgb, var(--jac-text) 65%, transparent);
+.o_jac_module_form,
+.o_jac_hub_form,
+.o_jac_activation_wizard {
+  --jac-card-bg: var(--o-view-background-color, var(--bs-body-bg, #ffffff));
+  --jac-card-border: color-mix(in srgb, var(--bs-body-color, #0f172a) 12%, transparent);
+  --jac-text: var(--o-view-text-color, var(--bs-body-color, #0f172a));
+  --jac-text-muted: color-mix(in srgb, var(--jac-text) 72%, transparent);
+  --jac-surface: color-mix(in srgb, var(--jac-card-bg) 92%, var(--jac-text) 8%);
+  color: var(--jac-text);
 }
 
-/* Dark mode: Odoo color scheme */
 .o_web_client.o_dark .o_justech_admin_center,
 .o_web_client.o_dark .o_jac_enterprise,
 .o_web_client.o_dark .o_jac_module_kanban,
 .o_web_client.o_dark .o_jac_product_kanban,
+.o_web_client.o_dark .o_jac_product_form,
+.o_web_client.o_dark .o_jac_module_form,
+.o_web_client.o_dark .o_jac_hub_form,
+.o_web_client.o_dark .o_jac_activation_wizard,
 html.o_dark .o_justech_admin_center,
 .o_color_scheme_dark .o_justech_admin_center,
 .o_color_scheme_dark .o_jac_enterprise,
 .o_color_scheme_dark .o_jac_module_kanban,
-.o_color_scheme_dark .o_jac_product_kanban {
-  --jac-card-bg: color-mix(in srgb, var(--o-view-background-color, #1e293b) 92%, #0f172a);
-  --jac-card-border: rgba(148, 163, 184, 0.28);
-  --jac-text: var(--o-view-text-color, #e2e8f0);
-  --jac-text-muted: color-mix(in srgb, var(--jac-text) 72%, transparent);
+.o_color_scheme_dark .o_jac_product_kanban,
+.o_color_scheme_dark .o_jac_product_form,
+.o_color_scheme_dark .o_jac_module_form,
+.o_color_scheme_dark .o_jac_hub_form,
+.o_color_scheme_dark .o_jac_activation_wizard,
+[data-bs-theme="dark"] .o_justech_admin_center,
+[data-bs-theme="dark"] .o_jac_enterprise,
+[data-bs-theme="dark"] .o_jac_module_kanban,
+[data-bs-theme="dark"] .o_jac_product_kanban,
+[data-bs-theme="dark"] .o_jac_product_form,
+[data-bs-theme="dark"] .o_jac_module_form,
+[data-bs-theme="dark"] .o_jac_hub_form,
+[data-bs-theme="dark"] .o_jac_activation_wizard {
+  --jac-card-bg: color-mix(in srgb, var(--o-view-background-color, #1e293b) 88%, #0b1220);
+  --jac-card-border: rgba(148, 163, 184, 0.35);
+  --jac-text: #e8eef7;
+  --jac-text-muted: #b6c2d4;
+  --jac-surface: color-mix(in srgb, var(--jac-card-bg) 85%, #000);
+}
+
+/* Forzar legibilidad: anula text-muted / text-bg-light heredados */
+.o_justech_admin_center .text-muted,
+.o_jac_product_form .text-muted,
+.o_jac_module_form .text-muted,
+.o_jac_hub_form .text-muted,
+.o_jac_activation_wizard .text-muted,
+.o_justech_admin_center .o_form_label,
+.o_jac_hub_form .o_form_label,
+.o_jac_activation_wizard .o_form_label {
+  color: var(--jac-text-muted) !important;
+}
+
+.o_justech_admin_center,
+.o_jac_hub_form,
+.o_jac_activation_wizard {
+  color: var(--jac-text);
+}
+
+.o_jac_table,
+.o_jac_matrix table {
+  color: var(--jac-text);
+}
+
+.o_jac_table th,
+.o_jac_matrix th {
+  color: var(--jac-text);
+  border-color: var(--jac-card-border);
+}
+
+.o_jac_table td,
+.o_jac_matrix td {
+  color: var(--jac-text-muted);
+  border-color: var(--jac-card-border);
+}
+
+.modal-content .o_jac_activation_wizard,
+.o_dialog .o_jac_activation_wizard {
+  color: var(--jac-text);
 }
 
 .o_jac_enterprise {
-  color: var(--jac-text);
   max-width: 100%;
   overflow-x: hidden;
 }
@@ -49,7 +105,7 @@ html.o_dark .o_justech_admin_center,
   display: flex;
   align-items: center;
   gap: 14px;
-  margin-bottom: 18px;
+  margin-bottom: 8px;
   flex-wrap: wrap;
 }
 
@@ -72,70 +128,84 @@ html.o_dark .o_justech_admin_center,
   font-size: 1.45rem;
   font-weight: 700;
   color: var(--jac-navy);
+  line-height: 1.25;
 }
 
 .o_color_scheme_dark .o_jac_brand_title,
-.o_web_client.o_dark .o_jac_brand_title {
-  color: #e2e8f0;
+.o_web_client.o_dark .o_jac_brand_title,
+[data-bs-theme="dark"] .o_jac_brand_title {
+  color: #f1f5f9;
 }
 
-.o_jac_brand_sub {
-  margin: 2px 0 0;
+.o_jac_brand_sub,
+.o_jac_section_hint,
+.o_jac_product_lead {
+  margin: 4px 0 12px;
   color: var(--jac-text-muted);
-  font-size: 0.92rem;
+  font-size: 0.95rem;
+  line-height: 1.45;
 }
 
-.o_jac_kpi_grid,
-.o_justech_admin_center .o_jac_kpi_grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-  gap: 12px;
-  margin: 12px 0 20px;
-  width: 100%;
-}
-
-.o_jac_kpi_card,
-.o_justech_admin_center .o_jac_kpi_card {
-  border-radius: 12px;
-  padding: 14px 16px;
-  border: 1px solid var(--jac-card-border);
-  background: var(--jac-card-bg);
-  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
-  color: var(--jac-text);
-}
-
-.o_jac_kpi_value {
-  font-size: 1.55rem;
+.o_jac_section_title {
+  font-size: 1.05rem;
   font-weight: 700;
-  line-height: 1.2;
   color: var(--jac-text);
-}
-
-.o_jac_kpi_label {
-  font-size: 0.82rem;
-  color: var(--jac-text-muted);
-  margin-top: 4px;
-}
-
-.o_jac_product_grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 14px;
-  width: 100%;
-  margin-bottom: 8px;
+  margin: 8px 0 4px;
 }
 
 .o_jac_product_card,
 .o_jac_module_kanban .o_jac_card {
+  position: relative;
   border-radius: 12px;
-  padding: 14px;
+  padding: 16px;
   border: 1px solid var(--jac-card-border);
   background: var(--jac-card-bg);
   color: var(--jac-text);
-  min-height: 140px;
+  min-height: 168px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+}
+
+.o_jac_card_interactive {
+  cursor: pointer;
+}
+
+.o_jac_card_interactive:hover,
+.o_jac_card_interactive:focus-within {
+  border-color: color-mix(in srgb, var(--jac-teal) 55%, var(--jac-card-border));
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.12);
+  transform: translateY(-1px);
+}
+
+.o_jac_card_interactive:focus-within {
+  outline: 2px solid color-mix(in srgb, var(--jac-teal) 70%, transparent);
+  outline-offset: 2px;
+}
+
+/* Whole-card hit target via primary action */
+.o_jac_stretched::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
+}
+
+.o_jac_card_actions {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: auto;
+}
+
+.o_jac_card_actions .btn-link {
+  position: relative;
+  z-index: 3;
 }
 
 .o_jac_product_head,
@@ -144,6 +214,8 @@ html.o_dark .o_justech_admin_center,
   gap: 10px;
   align-items: center;
   font-size: 1.05rem;
+  color: var(--jac-text);
+  flex-wrap: wrap;
 }
 
 .o_jac_product_head .fa,
@@ -153,11 +225,22 @@ html.o_dark .o_justech_admin_center,
   text-align: center;
 }
 
+.o_jac_estado_pill {
+  margin-left: auto;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--jac-surface);
+  color: var(--jac-text-muted);
+  border: 1px solid var(--jac-card-border);
+}
+
 .o_jac_product_desc,
 .o_jac_card_body {
   color: var(--jac-text-muted);
   font-size: 0.9rem;
-  line-height: 1.4;
+  line-height: 1.45;
   flex: 1;
 }
 
@@ -166,7 +249,7 @@ html.o_dark .o_justech_admin_center,
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  font-size: 0.78rem;
+  font-size: 0.8rem;
   color: var(--jac-text-muted);
 }
 
@@ -180,21 +263,15 @@ html.o_dark .o_justech_admin_center,
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  margin: 12px 0 16px;
+  margin: 8px 0 12px;
   max-width: 100%;
-}
-
-.o_jac_card_actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 4px;
 }
 
 .o_jac_card_actions .btn-primary,
 .o_jac_action_row .btn-primary {
   background: var(--jac-navy);
   border-color: var(--jac-navy);
+  color: #fff;
 }
 
 .o_jac_card_actions .btn-primary:hover,
@@ -203,7 +280,23 @@ html.o_dark .o_justech_admin_center,
   border-color: var(--jac-teal);
 }
 
-/* Avoid horizontal kanban scroll as primary UX */
+.o_jac_empty {
+  border: 1px dashed var(--jac-card-border);
+  border-radius: 12px;
+  padding: 20px;
+  color: var(--jac-text-muted);
+  background: var(--jac-surface);
+}
+
+/* Evitar badges Bootstrap de bajo contraste en oscuro */
+.o_jac_module_kanban .badge.text-bg-info,
+.o_jac_module_kanban .badge.text-bg-primary,
+.o_jac_module_kanban .badge.text-bg-light {
+  background: var(--jac-surface) !important;
+  color: var(--jac-text) !important;
+  border: 1px solid var(--jac-card-border);
+}
+
 .o_jac_module_kanban.o_kanban_view .o_kanban_renderer,
 .o_jac_product_kanban.o_kanban_view .o_kanban_renderer {
   overflow-x: auto;
@@ -216,19 +309,22 @@ html.o_dark .o_justech_admin_center,
   max-width: 360px;
 }
 
+.o_jac_product_form .o_notebook .tab-content,
+.o_jac_module_form .o_notebook .tab-content {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+.o_justech_admin_center .oe_stat_button {
+  min-width: 110px;
+}
+
 @media (max-width: 768px) {
-  .o_jac_kpi_grid,
-  .o_jac_product_grid {
-    grid-template-columns: 1fr 1fr;
-  }
   .o_jac_brand_title {
     font-size: 1.2rem;
   }
-}
-
-@media (max-width: 480px) {
-  .o_jac_kpi_grid,
-  .o_jac_product_grid {
-    grid-template-columns: 1fr;
+  .o_jac_product_card,
+  .o_jac_module_kanban .o_jac_card {
+    min-height: 140px;
   }
 }

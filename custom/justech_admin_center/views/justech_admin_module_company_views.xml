@@ -5,20 +5,22 @@
         <field name="model">justech.admin.module.company</field>
         <field name="arch" type="xml">
             <list>
-                <field name="company_id"/>
-                <field name="product_id"/>
-                <field name="module_id"/>
-                <field name="functional_state" widget="badge"
+                <field name="company_id" string="Empresa"/>
+                <field name="product_id" string="Producto"/>
+                <field name="module_id" string="Submódulo"/>
+                <field name="is_global" column_invisible="1"/>
+                <field name="functional_state" string="Estado" widget="badge"
                          decoration-success="functional_state == 'active'"
                          decoration-warning="functional_state in ('attention', 'inactive')"
                          decoration-danger="functional_state in ('blocked', 'error')"/>
-                <field name="fiscal_engine"/>
-                <field name="last_change_at"/>
+                <field name="fiscal_engine" string="Motor fiscal"/>
+                <field name="last_change_at" string="Último cambio"/>
                 <button name="action_prepare_activate" type="object" string="Activar" class="btn-link"
-                        invisible="functional_state == 'active'"/>
+                        invisible="functional_state == 'active' or is_global"/>
                 <button name="action_prepare_deactivate" type="object" string="Desactivar" class="btn-link"
-                        invisible="functional_state != 'active'"/>
-                <button name="action_prepare_engine_change" type="object" string="Motor" class="btn-link"/>
+                        invisible="functional_state != 'active' or is_global"/>
+                <button name="action_prepare_engine_change" type="object" string="Cambiar motor" class="btn-link"
+                        invisible="is_global"/>
             </list>
         </field>
     </record>

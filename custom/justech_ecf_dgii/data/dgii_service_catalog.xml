@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+  <!-- Catálogo de servicios según «Descripción Técnica Servicios DGII» (portal oficial).
+       URLs base oficiales:
+       - Pre-certificación: https://ecf.dgii.gov.do/testecf/...
+       - Certificación: https://ecf.dgii.gov.do/certecf/...
+       - Producción: https://ecf.dgii.gov.do/ecf/... (bloqueada por Gate)
+  -->
+</odoo>

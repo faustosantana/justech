@@ -1,0 +1,23 @@
+{
+    "name": "Justech e-CF Core",
+    "version": "19.0.1.1.0",
+    "category": "Accounting/Localizations",
+    "summary": "Núcleo Justech e-CF: configuración por empresa, documentos, estados y auditoría",
+    "author": "Justech",
+    "website": "https://justech.do",
+    "license": "LGPL-3",
+    "depends": ["base", "mail", "account"],
+    "data": [
+        "security/justech_ecf_security.xml",
+        "security/ir.model.access.csv",
+        "security/justech_ecf_rules.xml",
+        "data/ecf_document_type_data.xml",
+        "views/ecf_company_config_views.xml",
+        "views/ecf_certificate_views.xml",
+        "views/ecf_document_views.xml",
+        "views/ecf_document_event_views.xml",
+        "views/menu.xml",
+    ],
+    "installable": True,
+    "application": False,
+}

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!-- Catálogo oficial e-CF v1.0 según documentación DGII (XSD 31-47). -->
+    <record id="ecf_type_31" model="justech.ecf.document.type">
+        <field name="code">31</field>
+        <field name="name">Factura de Crédito Fiscal Electrónica</field>
+        <field name="xsd_filename">e-CF_31_v.1.0.xsd</field>
+        <field name="catalog_version">1.0</field>
+        <field name="official_modified">2025-10-16</field>
+    </record>
+    <record id="ecf_type_32" model="justech.ecf.document.type">
+        <field name="code">32</field>
+        <field name="name">Factura de Consumo Electrónica</field>
+        <field name="xsd_filename">e-CF_32_v.1.0.xsd</field>
+        <field name="catalog_version">1.0</field>
+        <field name="official_modified">2025-10-16</field>
+    </record>
+    <record id="ecf_type_33" model="justech.ecf.document.type">
+        <field name="code">33</field>
+        <field name="name">Nota de Débito Electrónica</field>
+        <field name="xsd_filename">e-CF_33_v.1.0.xsd</field>
+        <field name="catalog_version">1.0</field>
+        <field name="official_modified">2026-04-01</field>
+    </record>
+    <record id="ecf_type_34" model="justech.ecf.document.type">
+        <field name="code">34</field>
+        <field name="name">Nota de Crédito Electrónica</field>
+        <field name="xsd_filename">e-CF_34_v.1.0.xsd</field>
+        <field name="catalog_version">1.0</field>
+        <field name="official_modified">2026-04-01</field>
+    </record>
+    <record id="ecf_type_41" model="justech.ecf.document.type">
+        <field name="code">41</field>
+        <field name="name">Comprobante Electrónico de Compras</field>
+        <field name="xsd_filename">e-CF_41_v.1.0.xsd</field>
+        <field name="catalog_version">1.0</field>
+        <field name="official_modified">2025-10-16</field>
+    </record>
+    <record id="ecf_type_43" model="justech.ecf.document.type">
+        <field name="code">43</field>
+        <field name="name">Comprobante Electrónico para Gastos Menores</field>
+        <field name="xsd_filename">e-CF_43_v.1.0.xsd</field>
+        <field name="catalog_version">1.0</field>
+        <field name="official_modified">2025-10-16</field>
+    </record>
+    <record id="ecf_type_44" model="justech.ecf.document.type">
+        <field name="code">44</field>
+        <field name="name">Comprobante Electrónico para Regímenes Especiales</field>
+        <field name="xsd_filename">e-CF_44_v.1.0.xsd</field>
+        <field name="catalog_version">1.0</field>
+        <field name="official_modified">2025-10-16</field>
+    </record>
+    <record id="ecf_type_45" model="justech.ecf.document.type">
+        <field name="code">45</field>
+        <field name="name">Comprobante Electrónico Gubernamental</field>
+        <field name="xsd_filename">e-CF_45_v.1.0.xsd</field>
+        <field name="catalog_version">1.0</field>
+        <field name="official_modified">2025-10-16</field>
+    </record>
+    <record id="ecf_type_46" model="justech.ecf.document.type">
+        <field name="code">46</field>
+        <field name="name">Comprobante Electrónico para Exportaciones</field>
+        <field name="xsd_filename">e-CF_46_v.1.0.xsd</field>
+        <field name="catalog_version">1.0</field>
+        <field name="official_modified">2025-10-16</field>
+    </record>
+    <record id="ecf_type_47" model="justech.ecf.document.type">
+        <field name="code">47</field>
+        <field name="name">Comprobante Electrónico para Pagos al Exterior</field>
+        <field name="xsd_filename">e-CF_47_v.1.0.xsd</field>
+        <field name="catalog_version">1.0</field>
+        <field name="official_modified">2025-10-16</field>
+    </record>
+</odoo>

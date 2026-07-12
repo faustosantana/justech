@@ -8,20 +8,16 @@
                 <field name="id"/>
                 <field name="functional_name"/>
                 <field name="short_description"/>
-                <field name="version"/>
-                <field name="category"/>
                 <field name="product_id"/>
-                <field name="technical_state"/>
-                <field name="functional_state"/>
+                <field name="estado_general"/>
                 <field name="status_visual"/>
                 <field name="icon"/>
-                <field name="dependency_names"/>
-                <field name="supports_activate"/>
-                <field name="supports_deactivate"/>
-                <field name="company_active_count"/>
+                <field name="coverage_label"/>
+                <field name="is_global"/>
+                <field name="activation_scope"/>
                 <templates>
                     <t t-name="card">
-                        <div class="o_jac_card" t-attf-class="o_jac_tone_#{record.status_visual.raw_value}">
+                        <div class="o_jac_card o_jac_card_interactive" t-attf-class="o_jac_tone_#{record.status_visual.raw_value}">
                             <div class="o_jac_card_head">
                                 <i t-attf-class="fa #{record.icon.raw_value or 'fa-cube'}"/>
                                 <strong><field name="functional_name"/></strong>
@@ -30,17 +26,13 @@
                                 <field name="short_description"/>
                             </div>
                             <div class="o_jac_card_meta">
-                                <span class="badge text-bg-secondary"><field name="version"/></span>
-                                <span class="badge text-bg-light">Técnico: <field name="technical_state"/></span>
-                                <span class="badge text-bg-info">Funcional: <field name="functional_state"/></span>
-                                <span class="badge text-bg-primary"><field name="company_active_count"/> empresas</span>
+                                <span><field name="estado_general"/></span>
+                                <span><field name="coverage_label"/></span>
                             </div>
                             <div class="o_jac_card_actions">
-                                <button name="action_open_detail" type="object" class="btn btn-link btn-sm">Administrar</button>
-                                <button name="action_run_health" type="object" class="btn btn-link btn-sm">Diagnosticar</button>
-                                <button name="action_open_module" type="object" class="btn btn-link btn-sm">Abrir</button>
-                                <button name="action_prepare_install" type="object" class="btn btn-primary btn-sm"
-                                        invisible="technical_state != 'not_installed'">Instalar</button>
+                                <button name="action_open_admin" type="object" class="btn btn-primary btn-sm o_jac_stretched">Administrar</button>
+                                <button name="action_view_status" type="object" class="btn btn-link btn-sm">Ver estado</button>
+                                <button name="action_configure" type="object" class="btn btn-link btn-sm">Configurar</button>
                             </div>
                         </div>
                     </t>
@@ -57,10 +49,9 @@
                 <field name="sequence" widget="handle"/>
                 <field name="functional_name"/>
                 <field name="product_id"/>
-                <field name="version"/>
-                <field name="technical_state"/>
-                <field name="functional_state"/>
-                <field name="company_active_count"/>
+                <field name="activation_scope"/>
+                <field name="estado_general"/>
+                <field name="coverage_label"/>
                 <field name="status_visual" widget="badge"
                          decoration-success="status_visual == 'green'"
                          decoration-warning="status_visual == 'yellow'"
@@ -74,99 +65,107 @@
         <field name="name">justech.admin.module.form</field>
         <field name="model">justech.admin.module</field>
         <field name="arch" type="xml">
-            <form class="o_jac_module_form" create="0" delete="0">
+            <form class="o_jac_module_form o_justech_admin_center" create="0" delete="0">
                 <header>
-                    <button name="action_prepare_install" type="object" string="Instalar" class="btn-primary"
-                            invisible="technical_state != 'not_installed'"
-                            groups="justech_admin_center.group_justech_admin_center_manager"/>
-                    <button name="action_prepare_activate" type="object" string="Activar" class="btn-success"
-                            invisible="technical_state != 'installed' or functional_state == 'active' or not supports_activate"
-                            groups="justech_admin_center.group_justech_admin_center_manager"/>
-                    <button name="action_prepare_deactivate" type="object" string="Desactivar" class="btn-warning"
-                            invisible="technical_state != 'installed' or functional_state != 'active' or not supports_deactivate"
-                            groups="justech_admin_center.group_justech_admin_center_manager"/>
-                    <button name="action_run_health" type="object" string="Health Check"/>
-                    <button name="action_open_module" type="object" string="Abrir módulo"/>
+                    <button name="action_open_admin" type="object" string="Administrar" class="btn-primary"/>
+                    <button name="action_configure" type="object" string="Configurar" class="btn-secondary"/>
+                    <button name="action_view_status" type="object" string="Ver estado" class="btn-secondary"/>
+                    <field name="has_operation_action" invisible="1"/>
+                    <button name="action_open_operation" type="object" string="Abrir operación" class="btn-secondary"
+                            invisible="not has_operation_action"/>
+                    <button name="action_run_health" type="object" string="Diagnosticar" class="btn-secondary"/>
+                    <button name="action_open_users" type="object" string="Usuarios" class="btn-secondary"/>
+                    <button name="action_open_audit" type="object" string="Auditoría" class="btn-secondary"/>
                     <field name="status_visual" widget="badge"/>
+                    <field name="is_global" invisible="1"/>
                 </header>
                 <sheet>
                     <div class="oe_title">
                         <h1><field name="functional_name" readonly="1"/></h1>
-                        <h3 class="text-muted"><field name="short_description" readonly="1"/></h3>
+                        <field name="product_id" readonly="1"/>
                     </div>
-                    <group>
-                        <group string="Resumen">
-                            <field name="product_id"/>
-                            <field name="version"/>
-                            <field name="activation_scope"/>
-                            <field name="technical_state"/>
-                            <field name="functional_state"/>
-                            <field name="last_health_at"/>
-                            <field name="last_health_summary"/>
-                        </group>
-                        <group string="Dependencias y alcance">
-                            <field name="dependency_names"/>
-                            <field name="company_active_count"/>
-                            <field name="company_ids_display"/>
-                            <field name="fiscal_engine_capable"/>
-                            <field name="is_critical"/>
-                        </group>
-                    </group>
+                    <field name="overview_html" nolabel="1" colspan="2"/>
                     <notebook>
                         <page string="Descripción" name="description">
-                            <field name="long_description" nolabel="1"/>
                             <group>
-                                <field name="what_it_does"/>
-                                <field name="processes_affected"/>
-                                <field name="users_who_use_it"/>
-                                <field name="risk_activate"/>
-                                <field name="risk_deactivate"/>
+                                <field name="what_it_does" string="¿Para qué sirve?"/>
+                                <field name="processes_affected" string="¿Qué procesos afecta?"/>
+                                <field name="users_who_use_it" string="¿Quién lo utiliza?"/>
+                                <field name="risk_activate" string="Si se activa"/>
+                                <field name="risk_deactivate" string="Si se desactiva"/>
+                                <field name="dependency_help" string="Dependencias" readonly="1"/>
+                                <field name="activation_scope" string="Alcance"/>
+                                <field name="coverage_label" string="Cobertura"/>
                             </group>
+                            <separator string="Detalle"/>
+                            <field name="long_description" nolabel="1"/>
                         </page>
-                        <page string="Empresas" name="companies">
-                            <field name="company_line_ids">
-                                <list>
-                                    <field name="company_id"/>
-                                    <field name="functional_state"/>
-                                    <field name="fiscal_engine"/>
-                                    <field name="last_change_at"/>
-                                    <button name="action_prepare_activate" type="object" string="Activar" class="btn-link"/>
-                                    <button name="action_prepare_deactivate" type="object" string="Desactivar" class="btn-link"/>
-                                    <button name="action_prepare_engine_change" type="object" string="Motor" class="btn-link"
+                        <page string="Empresas" name="companies" invisible="is_global">
+                            <p class="o_jac_section_hint">
+                                La instalación es global en la base. La activación y el motor se administran por empresa.
+                            </p>
+                            <field name="company_line_ids" mode="list">
+                                <list editable="bottom" create="0" delete="0">
+                                    <field name="company_id" readonly="1" string="Empresa"/>
+                                    <field name="functional_state" string="Estado"/>
+                                    <field name="fiscal_engine" string="Configuración / motor"
+                                             invisible="not parent.fiscal_engine_capable"/>
+                                    <field name="notes" string="Alertas"/>
+                                    <button name="action_prepare_activate" type="object" string="Activar" class="btn-link"
+                                            invisible="functional_state == 'active'"/>
+                                    <button name="action_prepare_deactivate" type="object" string="Desactivar" class="btn-link"
+                                            invisible="functional_state != 'active'"/>
+                                    <button name="action_prepare_engine_change" type="object" string="Cambiar motor" class="btn-link"
                                             invisible="not parent.fiscal_engine_capable"/>
                                 </list>
                             </field>
                         </page>
-                        <page string="Configuración" name="config">
+                        <page string="Alcance global" name="global_scope" invisible="not is_global">
+                            <p class="o_jac_section_hint">
+                                Este componente es global para toda la base. Está disponible para todas las empresas
+                                y no se activa ni desactiva por compañía.
+                            </p>
                             <group>
-                                <field name="supports_activate"/>
-                                <field name="supports_deactivate"/>
-                                <field name="feature_flag_codes"/>
+                                <field name="coverage_label"/>
+                                <field name="estado_general"/>
                             </group>
                         </page>
-                        <page string="Health Check" name="health">
+                        <page string="Funciones" name="functions">
+                            <field name="functions_help" nolabel="1"/>
+                        </page>
+                        <page string="Estado del sistema" name="health">
                             <field name="finding_ids">
                                 <list>
-                                    <field name="severity"/>
-                                    <field name="name"/>
-                                    <field name="state"/>
+                                    <field name="severity" string="Severidad"/>
+                                    <field name="name" string="Hallazgo"/>
+                                    <field name="state" string="Estado"/>
                                 </list>
                             </field>
                         </page>
                         <page string="Auditoría" name="audit">
                             <field name="audit_ids">
                                 <list>
-                                    <field name="create_date"/>
-                                    <field name="summary"/>
-                                    <field name="result"/>
-                                    <field name="executed_by"/>
+                                    <field name="create_date" string="Fecha"/>
+                                    <field name="summary" string="Resumen"/>
+                                    <field name="result" string="Resultado"/>
+                                    <field name="executed_by" string="Ejecutado por"/>
                                 </list>
                             </field>
                         </page>
                         <page string="Información técnica" name="tech" groups="base.group_system">
                             <group>
                                 <field name="technical_name"/>
+                                <field name="version"/>
                                 <field name="category"/>
+                                <field name="technical_state"/>
+                                <field name="functional_state"/>
+                                <field name="activation_scope"/>
+                                <field name="dependency_names"/>
+                                <field name="feature_flag_codes"/>
+                                <field name="supports_activate"/>
+                                <field name="supports_deactivate"/>
+                                <field name="is_critical"/>
+                                <field name="fiscal_engine_capable"/>
                                 <field name="ir_module_id"/>
                                 <field name="open_action_xmlid"/>
                                 <field name="health_method"/>
@@ -180,7 +179,7 @@
     </record>
 
     <record id="action_justech_admin_module" model="ir.actions.act_window">
-        <field name="name">Catálogo de módulos</field>
+        <field name="name">Catálogo de submódulos</field>
         <field name="res_model">justech.admin.module</field>
         <field name="view_mode">kanban,list,form</field>
     </record>

@@ -88,10 +88,27 @@ GLOBAL_TECH = {
 }
 
 
+NAV_HIDDEN_TECH = {
+    "justech_ecf_core",
+    "justech_modules",
+    "justech_core",
+}
+
+FUNCTIONAL_DEPS = {
+    "justech_ecf_admin": [
+        ("justech_l10n_do_ncf", "1.2 Motor Fiscal NCF"),
+        ("justech_l10n_do_base", "1.4 Padrón DGII"),
+    ],
+    "justech_l10n_do_reports": [
+        ("justech_l10n_do_base", "1.4 Padrón DGII"),
+    ],
+}
+
+
 class JustechAdminModule(models.Model):
     _name = "justech.admin.module"
     _description = "Catálogo de módulo Justech"
-    _order = "sequence, functional_name"
+    _order = "hierarchy_sort, id"
 
     name = fields.Char(related="functional_name", store=True)
     technical_name = fields.Char(required=True, index=True)
@@ -107,6 +124,17 @@ class JustechAdminModule(models.Model):
     risk_activate = fields.Text(string="Riesgo al activar")
     risk_deactivate = fields.Text(string="Riesgo al desactivar")
     product_id = fields.Many2one("justech.admin.product", string="Producto", ondelete="set null", index=True)
+    hierarchy_code = fields.Char(
+        string="Nº",
+        compute="_compute_hierarchy_code",
+        help="Numeración Producto.Módulo (ej. 1.3). Guía de navegación, no código técnico.",
+    )
+    display_name_nav = fields.Char(compute="_compute_hierarchy_code", string="Nombre navegación")
+    recommended_action_label = fields.Char(
+        compute="_compute_action_labels",
+        string="Acción recomendada",
+    )
+    recommended_action_help = fields.Char(compute="_compute_action_labels")
     activation_scope = fields.Selection(
         selection=[("global", "Global"), ("company", "Por empresa")],
         default="company",
@@ -197,6 +225,14 @@ class JustechAdminModule(models.Model):
     dependency_help = fields.Text(compute="_compute_overview_html", string="Dependencias")
     functions_help = fields.Html(compute="_compute_overview_html", sanitize=False, string="Funciones incluidas")
     is_global = fields.Boolean(compute="_compute_is_global")
+    show_in_product_nav = fields.Boolean(
+        compute="_compute_nav_flags",
+        store=True,
+        string="Visible en navegación",
+    )
+    hierarchy_sort = fields.Integer(compute="_compute_nav_flags", store=True)
+    dependency_html = fields.Html(compute="_compute_dependency_html", sanitize=False)
+    breadcrumb_label = fields.Char(compute="_compute_breadcrumb_label")
 
     _sql_constraints = [
         ("technical_name_uniq", "unique(technical_name)", "El módulo técnico ya está registrado."),
@@ -206,6 +242,177 @@ class JustechAdminModule(models.Model):
     def _compute_is_global(self):
         for rec in self:
             rec.is_global = rec.activation_scope == "global"
+
+    @api.depends("technical_name", "hierarchy_code", "product_id")
+    def _compute_nav_flags(self):
+        for rec in self:
+            rec.show_in_product_nav = (
+                rec.technical_name not in NAV_HIDDEN_TECH and bool(rec.hierarchy_code)
+            )
+            try:
+                parts = (rec.hierarchy_code or "99.99").split(".")
+                major = int(parts[0]) if parts and parts[0] else 99
+                minor = int(parts[1]) if len(parts) > 1 else 99
+                rec.hierarchy_sort = major * 100 + minor
+            except (ValueError, TypeError):
+                rec.hierarchy_sort = 9999
+
+    @api.depends("product_id.display_name_nav", "hierarchy_code", "functional_name")
+    def _compute_breadcrumb_label(self):
+        for rec in self:
+            if rec.product_id and rec.hierarchy_code:
+                rec.breadcrumb_label = "%s → %s %s" % (
+                    rec.product_id.display_name_nav,
+                    rec.hierarchy_code,
+                    rec.functional_name or "",
+                )
+            else:
+                rec.breadcrumb_label = rec.functional_name or ""
+
+    def _dependency_status_label(self, dep_mod):
+        if not dep_mod:
+            return _("Bloqueado"), "blocked"
+        if dep_mod.technical_state == "not_installed":
+            return _("Pendiente"), "pending"
+        if dep_mod.functional_state in ("error",):
+            return _("Bloqueado"), "blocked"
+        if dep_mod.functional_state in ("attention", "unconfigured"):
+            return _("Pendiente"), "pending"
+        if dep_mod.functional_state == "active" or dep_mod.technical_state == "installed":
+            return _("Configurado"), "configured"
+        return _("Disponible"), "available"
+
+    @api.depends(
+        "technical_name",
+        "functional_state",
+        "technical_state",
+        "product_id",
+        "hierarchy_code",
+    )
+    def _compute_dependency_html(self):
+        # Dependencias se resuelven en action_resolve_requirements; no HTML en UI.
+        for rec in self:
+            rec.dependency_html = False
+
+    def action_resolve_requirements(self):
+        self.ensure_one()
+        gate = self.env["justech.admin.center.auth.service"].gate_or_wizard()
+        if gate:
+            return gate
+        Module = self.env["justech.admin.module"]
+        for tech, _label in FUNCTIONAL_DEPS.get(self.technical_name, []):
+            dep = Module.search([("technical_name", "=", tech)], limit=1)
+            if not dep:
+                continue
+            _status, cls = self._dependency_status_label(dep)
+            if cls in ("pending", "blocked"):
+                return dep.action_configure()
+        return self.action_open_admin()
+
+    @api.depends("product_id.hierarchy_code", "product_id.code", "sequence", "functional_name", "technical_name")
+    def _compute_hierarchy_code(self):
+        """1.1 Centro Fiscal, 1.3 e-CF, etc. — orden funcional fijo por producto."""
+        module_order = {
+            "fiscal": [
+                "justech_fiscal_admin",
+                "justech_l10n_do_ncf",
+                "justech_ecf_admin",
+                "justech_l10n_do_base",
+                "justech_l10n_do_reports",
+                "justech_l10n_do_payments_withholding",
+                "justech_l10n_do_adel_freeze",
+            ],
+            "finance": [
+                "justech_l10n_do_treasury",
+                "justech_l10n_do_payments_withholding",
+            ],
+            "warranty": ["justech_warranty"],
+            "core": [
+                "justech_admin_center",
+            ],
+            "audit": ["justech_global_audit_log"],
+        }
+        hierarchy_minor = {
+            "finance": {
+                "justech_l10n_do_treasury": 4,
+                "justech_l10n_do_payments_withholding": 6,
+            },
+            "core": {
+                "justech_admin_center": 1,
+            },
+        }
+        for rec in self:
+            pcode = rec.product_id.hierarchy_code if rec.product_id else "?"
+            order = module_order.get(rec.product_id.code if rec.product_id else "", [])
+            # Núcleo e-CF: componente técnico, no entrada de navegación funcional.
+            if rec.technical_name == "justech_ecf_core":
+                rec.hierarchy_code = False
+                rec.display_name_nav = False
+                continue
+            if rec.technical_name in order:
+                idx = hierarchy_minor.get(rec.product_id.code, {}).get(
+                    rec.technical_name,
+                    order.index(rec.technical_name) + 1,
+                )
+            else:
+                idx = max(int(rec.sequence or 99) % 50, 1)
+            rec.hierarchy_code = "%s.%s" % (pcode, idx)
+            rec.display_name_nav = "%s %s" % (rec.hierarchy_code, rec.functional_name or "")
+
+    @api.depends("technical_name", "functional_name", "functional_state")
+    def _compute_action_labels(self):
+        labels = {
+            "justech_ecf_admin": (
+                "Configurar facturación electrónica",
+                "Abre el hub e-CF: empresas, certificados, colas y diagnóstico.",
+            ),
+            "justech_ecf_core": (
+                "Abrir documentos e-CF",
+                "Lista documentos electrónicos de la empresa activa.",
+            ),
+            "justech_l10n_do_base": (
+                "Actualizar padrón DGII",
+                "Abre el hub del padrón compartido (global).",
+            ),
+            "justech_l10n_do_ncf": (
+                "Administrar rangos NCF",
+                "Rangos, secuencias y consumo de NCF tradicional.",
+            ),
+            "justech_fiscal_admin": (
+                "Abrir Centro Fiscal",
+                "Resumen fiscal, alertas y accesos por empresa.",
+            ),
+            "justech_l10n_do_reports": (
+                "Abrir reportes DGII",
+                "606/607/608/609/623 e historial.",
+            ),
+            "justech_l10n_do_treasury": (
+                "Abrir Tesorería",
+                "Pagos abiertos, cobros y conciliación.",
+            ),
+            "justech_warranty": (
+                "Administrar garantías",
+                "Registro, reclamos y configuración.",
+            ),
+            "justech_l10n_do_adel_freeze": (
+                "Revisar salud fiscal",
+                "Controles de integridad y congelamiento preventivo.",
+            ),
+        }
+        # Override display name for 1.7
+        for rec in self:
+            if rec.technical_name == "justech_l10n_do_adel_freeze" and rec.functional_name != "Auditoría y Salud Fiscal":
+                # functional_name comes from registry; labels below still apply
+                pass
+            label, help_txt = labels.get(
+                rec.technical_name,
+                (
+                    "Abrir %s" % (rec.functional_name or _("módulo")),
+                    _("Abre la pantalla administrativa de este módulo."),
+                ),
+            )
+            rec.recommended_action_label = label
+            rec.recommended_action_help = help_txt
 
     @api.depends("technical_state", "functional_state", "active_finding_count")
     def _compute_status_visual(self):
@@ -243,25 +450,32 @@ class JustechAdminModule(models.Model):
         Finding = self.env["justech.admin.health.finding"]
         for rec in self:
             rec.active_finding_count = Finding.search_count(
-                [("module_id", "=", rec.id), ("state", "=", "open")]
+                [
+                    ("module_id", "=", rec.id),
+                    ("state", "in", ["open", "in_progress"]),
+                    ("severity", "in", ["warning", "error", "critical"]),
+                ]
             )
 
     def _compute_overview_html(self):
+        """Estado funcional + ayudas; sin HTML en UI (vistas nativas)."""
         for rec in self:
             if rec.technical_state == "not_installed":
-                estado = _("No instalado")
-            elif rec.functional_state == "error" or rec.active_finding_count:
-                estado = _("Error") if rec.functional_state == "error" else _("Requiere atención")
+                estado = _("Inactivo")
+            elif rec.functional_state == "error":
+                estado = _("Error")
+            elif rec.active_finding_count:
+                estado = _("Atención")
             elif rec.activation_scope == "global" and rec.technical_state == "installed":
-                estado = _("Activo (global)")
+                estado = _("Correcto")
             elif rec.functional_state == "active":
-                estado = _("Activo")
+                estado = _("Correcto")
             elif rec.functional_state == "unconfigured":
                 estado = _("No configurado")
             elif rec.technical_state == "installed":
-                estado = _("Instalado / inactivo")
+                estado = _("Inactivo")
             else:
-                estado = _("Requiere atención")
+                estado = _("No configurado")
             rec.estado_general = estado
 
             deps = [d.strip() for d in (rec.dependency_names or "").split(",") if d.strip()]
@@ -282,49 +496,9 @@ class JustechAdminModule(models.Model):
             else:
                 rec.dependency_help = _("No declara dependencias Justech adicionales.")
 
-            bullets = []
-            if rec.what_it_does:
-                bullets.append(rec.what_it_does)
-            if rec.processes_affected:
-                bullets.append(_("Procesos: %s") % rec.processes_affected)
-            if rec.users_who_use_it:
-                bullets.append(_("Usuarios: %s") % rec.users_who_use_it)
-            if rec.fiscal_engine_capable:
-                bullets.append(
-                    _("Permite seleccionar motor fiscal por empresa (NCF tradicional o electrónico).")
-                )
-            if rec.is_critical:
-                bullets.append(_("Es crítico para la operación: desactivarlo requiere alternativa."))
-            if not bullets:
-                bullets.append(rec.short_description or _("Sin descripción funcional."))
-            funcs = "".join("<li>%s</li>" % b for b in bullets)
-            rec.functions_help = "<ul class='o_jac_func_list'>%s</ul>" % funcs
-
-            crit = _("Sí") if rec.is_critical else _("No")
-            scope = _("Global") if rec.activation_scope == "global" else _("Por empresa")
-            rec.overview_html = (
-                '<div class="o_jac_overview">'
-                "<p><strong>%(what)s</strong></p>"
-                "<p>%(desc)s</p>"
-                '<div class="o_jac_overview_meta">'
-                "<span>%(estado_l)s: <strong>%(estado)s</strong></span>"
-                "<span>%(crit_l)s: <strong>%(crit)s</strong></span>"
-                "<span>%(scope_l)s: <strong>%(scope)s</strong></span>"
-                "<span>%(co_l)s: <strong>%(co)s</strong></span>"
-                "</div></div>"
-            ) % {
-                "what": rec.functional_name,
-                "desc": rec.short_description
-                or _("Complete la descripción funcional de este módulo."),
-                "estado_l": _("Estado general"),
-                "estado": estado,
-                "crit_l": _("¿Es crítico?"),
-                "crit": crit,
-                "scope_l": _("Alcance"),
-                "scope": scope,
-                "co_l": _("Cobertura"),
-                "co": rec.coverage_label,
-            }
+            # Compatibilidad de campos Html: vacíos para no filtrar markup como texto.
+            rec.functions_help = False
+            rec.overview_html = False
 
     def _resolve_action(self, key):
         self.ensure_one()
@@ -347,28 +521,20 @@ class JustechAdminModule(models.Model):
         data.pop("id", None)
         return data
 
-    def check_access(self, operation):
-        res = super().check_access(operation)
-        if self.env.su or not self.env.registry.ready:
-            return res
-        try:
-            Auth = self.env["justech.admin.center.auth.service"]
-        except KeyError:
-            return res
-        if Auth.user_is_authorized() and not Auth.is_session_valid():
-            from odoo.exceptions import AccessError
-
-            raise AccessError(
-                _("Debe abrir Administración Justech e introducir la clave maestra antes de continuar.")
-            )
-        return res
-
+    # La reautenticación se exige solo en acciones (gate_or_wizard), nunca en check_access/read.
+    # Un AccessError aquí expulsaba la sesión Odoo / rompía RPC al navegar.
 
     @api.depends("technical_name", "open_action_xmlid")
     def _compute_has_operation_action(self):
         for rec in self:
             cfg = ADMIN_ACTIONS.get(rec.technical_name) or {}
             rec.has_operation_action = bool(cfg.get("operation") or False)
+
+    def action_back_product(self):
+        self.ensure_one()
+        if self.product_id:
+            return self.product_id.action_open_detail()
+        return self.env["justech.admin.console"].action_open_console()
 
     def action_open_detail(self):
         self.ensure_one()

@@ -101,7 +101,9 @@ class JustechAdminFiscalHub(models.TransientModel):
     _description = "Centro Fiscal — resumen administrativo"
 
     name = fields.Char(default="Centro Fiscal", readonly=True)
-    summary_html = fields.Html(readonly=True, sanitize=False)
+    status_label = fields.Char(readonly=True, string="Estado")
+    open_alert_count = fields.Integer(readonly=True, string="Acciones requeridas")
+    summary_note = fields.Char(readonly=True)
 
     @api.model
     def action_open(self):
@@ -117,31 +119,29 @@ class JustechAdminFiscalHub(models.TransientModel):
             "res_id": hub.id,
             "view_mode": "form",
             "target": "current",
+            "context": {"clear_breadcrumbs": True},
         }
 
     def _load(self):
         Product = self.env["justech.admin.product"].search([("code", "=", "fiscal")], limit=1)
         Finding = self.env["justech.admin.health.finding"]
-        open_n = Finding.search_count(
-            [("module_id", "in", Product.module_ids.ids), ("state", "=", "open")]
-        ) if Product else 0
-        rows = []
-        for m in Product.module_ids if Product else []:
-            rows.append(
-                "<li><strong>%s</strong> — %s · %s</li>"
-                % (m.functional_name, m.estado_general, m.coverage_label)
+        open_n = 0
+        if Product:
+            open_n = Finding.search_count(
+                [
+                    ("module_id", "in", Product.module_ids.ids),
+                    ("state", "in", ["open", "in_progress"]),
+                    ("severity", "in", ["warning", "error", "critical"]),
+                ]
             )
-        self.summary_html = (
-            '<div class="o_jac_overview">'
-            "<p>%s</p>"
-            "<p><strong>%s</strong> %s</p>"
-            "<ul class='o_jac_func_list'>%s</ul>"
-            "</div>"
-        ) % (
-            _("Resumen de salud fiscal, accesos a submódulos y estado por empresa."),
-            _("Alertas abiertas:"),
-            open_n,
-            "".join(rows) or "<li>%s</li>" % _("Sin submódulos"),
+        self.write(
+            {
+                "open_alert_count": open_n,
+                "status_label": _("Atención") if open_n else _("Correcto"),
+                "summary_note": _(
+                    "Salud fiscal, accesos a submódulos y estado por empresa."
+                ),
+            }
         )
 
     def action_open_padron(self):
@@ -180,24 +180,19 @@ class JustechAdminTreasuryHub(models.TransientModel):
     _description = "Administración Tesorería Justech"
 
     name = fields.Char(default="Tesorería", readonly=True)
-    summary_html = fields.Html(readonly=True, sanitize=False)
+    summary_note = fields.Char(readonly=True)
 
     @api.model
     def action_open(self):
         gate = self.env["justech.admin.center.auth.service"].gate_or_wizard()
         if gate:
             return gate
-        hub = self.create({})
-        hub.summary_html = (
-            '<div class="o_jac_overview"><p>%s</p>'
-            "<ul class='o_jac_func_list'>"
-            "<li>%s</li><li>%s</li><li>%s</li>"
-            "</ul></div>"
-        ) % (
-            _("Cobros, pagos, pagos abiertos y conciliación bancaria por empresa."),
-            _("No modifica el histórico contable al abrir estas pantallas."),
-            _("Use los botones para ir a cada función operativa."),
-            _("Diagnóstico verifica instalación, menús y accesos."),
+        hub = self.create(
+            {
+                "summary_note": _(
+                    "Cobros, pagos, pagos abiertos y conciliación bancaria por empresa."
+                ),
+            }
         )
         return {
             "type": "ir.actions.act_window",
@@ -206,6 +201,7 @@ class JustechAdminTreasuryHub(models.TransientModel):
             "res_id": hub.id,
             "view_mode": "form",
             "target": "current",
+            "context": {"clear_breadcrumbs": True},
         }
 
     def action_open_customer_payments(self):

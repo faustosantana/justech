@@ -124,7 +124,7 @@ FUNCTIONAL_CATALOG = {
         "product_code": "core",
     },
     "justech_l10n_do_adel_freeze": {
-        "functional_name": "Salud Fiscal",
+        "functional_name": "Auditoría y Salud Fiscal",
         "short_description": (
             "Controles de salud fiscal y congelamiento preventivo para proteger "
             "la integridad de comprobantes y reportes."
@@ -190,7 +190,7 @@ FUNCTIONAL_CATALOG = {
         "product_code": "fiscal",
     },
     "justech_ecf_admin": {
-        "functional_name": "Justech e-CF",
+        "functional_name": "Facturación electrónica e-CF",
         "short_description": (
             "Facturación electrónica e-CF DGII: configuración por empresa, certificados, "
             "XML/XSD oficiales, firma, colas, contingencia y Gate de Producción."
@@ -213,12 +213,12 @@ FUNCTIONAL_CATALOG = {
         "activation_scope": "company",
     },
     "justech_l10n_do_payments_withholding": {
-        "functional_name": "Retenciones operativas",
+        "functional_name": "Retenciones",
         "short_description": (
             "Capacidad compartida de retenciones en cobros y pagos. Puede abrirse desde "
             "Justech Fiscal y Justech Finanzas, con una sola fuente funcional."
         ),
-        "product_code": "finance",
+        "product_code": "fiscal",
     },
 }
 
@@ -295,8 +295,13 @@ class JustechAdminRegistryService(models.AbstractModel):
         if "padron" in tech_name or "padrón" in tech_name:
             return FUNCTIONAL_CATALOG.get("justech_l10n_do_padron", {})
         if "withhold" in tech_name or "retencion" in tech_name:
-            return FUNCTIONAL_CATALOG.get("justech_l10n_do_withholding", {})
-        if "treasury" in tech_name or "payment" in tech_name:
+            return FUNCTIONAL_CATALOG.get(
+                "justech_l10n_do_payments_withholding",
+                FUNCTIONAL_CATALOG.get("justech_l10n_do_withholding", {}),
+            )
+        if "treasury" in tech_name:
+            return {"product_code": "finance"}
+        if "payment" in tech_name:
             return {"product_code": "finance"}
         if "warranty" in tech_name:
             return FUNCTIONAL_CATALOG.get("justech_warranty", {})
@@ -317,6 +322,8 @@ class JustechAdminRegistryService(models.AbstractModel):
             or override.get("product_code")
             or PRODUCT_CODE_MAP.get(category, "core")
         )
+        if tech_name in FUNCTIONAL_CATALOG and FUNCTIONAL_CATALOG[tech_name].get("product_code"):
+            product_code = FUNCTIONAL_CATALOG[tech_name]["product_code"]
         if "warranty" in tech_name:
             product_code = center.get("product_code") or "warranty"
         activation_scope = (

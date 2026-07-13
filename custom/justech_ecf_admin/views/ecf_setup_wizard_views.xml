@@ -11,7 +11,7 @@
           <field name="fiscal_mode"/>
           <field name="dgii_environment"/>
         </group>
-        <field name="checklist_html" nolabel="1"/>
+        <field name="checklist_html" nolabel="1" widget="html"/>
         <field name="result_message" invisible="not result_message"/>
         <footer>
           <button name="action_back" type="object" string="Volver" class="btn-secondary"/>

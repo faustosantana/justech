@@ -43,25 +43,67 @@ class ResUsers(models.Model):
 
     justech_admin_center_role = fields.Selection(
         selection=[
-            ("none", "Sin rol consola"),
+            ("none", "Sin acceso"),
             ("justech_admin", "Administrador Justech"),
-            ("fiscal_admin", "Administrador Fiscal"),
-            ("fiscal_manager", "Responsable Fiscal"),
-            ("fiscal_user", "Usuario Fiscal"),
-            ("finance_admin", "Administrador Finanzas"),
-            ("finance_user", "Usuario Finanzas"),
-            ("warranty_manager", "Administrador Garantías"),
-            ("warranty_user", "Usuario Garantías"),
-            ("auditor", "Auditor"),
-            ("readonly", "Solo lectura"),
         ],
-        string="Rol Justech (consola)",
+        string="Administración Justech",
         compute="_compute_justech_admin_center_role",
         inverse="_inverse_justech_admin_center_role",
         store=False,
     )
     justech_role_explanation = fields.Char(
         compute="_compute_justech_admin_center_role",
+        string="Este rol permite",
+    )
+    justech_fiscal_role_explanation = fields.Char(
+        compute="_compute_justech_fiscal_role_explanation",
+        string="Este rol permite",
+    )
+    justech_ecf_role = fields.Selection(
+        selection=[
+            ("none", "Sin acceso"),
+            ("ecf_readonly", "Solo lectura e-CF"),
+            ("ecf_operator", "Operador e-CF"),
+            ("ecf_responsible", "Responsable e-CF"),
+            ("ecf_admin", "Administrador e-CF"),
+        ],
+        string="Rol e-CF",
+        compute="_compute_justech_ecf_role",
+        inverse="_inverse_justech_ecf_role",
+        store=False,
+    )
+    justech_ecf_role_explanation = fields.Char(
+        compute="_compute_justech_ecf_role",
+        string="Este rol permite",
+    )
+    justech_finance_role = fields.Selection(
+        selection=[
+            ("none", "Sin acceso"),
+            ("finance_user", "Usuario Finanzas"),
+            ("finance_admin", "Administrador Finanzas"),
+        ],
+        string="Rol finanzas",
+        compute="_compute_justech_finance_role",
+        inverse="_inverse_justech_finance_role",
+        store=False,
+    )
+    justech_finance_role_explanation = fields.Char(
+        compute="_compute_justech_finance_role",
+        string="Este rol permite",
+    )
+    justech_warranty_role = fields.Selection(
+        selection=[
+            ("none", "Sin acceso"),
+            ("warranty_user", "Usuario Garantías"),
+            ("warranty_manager", "Administrador Garantías"),
+        ],
+        string="Rol garantías",
+        compute="_compute_justech_warranty_role",
+        inverse="_inverse_justech_warranty_role",
+        store=False,
+    )
+    justech_warranty_role_explanation = fields.Char(
+        compute="_compute_justech_warranty_role",
         string="Este rol permite",
     )
     justech_cap_admin_console = fields.Boolean(
@@ -125,38 +167,172 @@ class ResUsers(models.Model):
             return test_domain
         return ["!"] + test_domain
 
+    def _role_from_groups(self, order):
+        """order: list of (code, xmlid, explain) highest privilege first."""
+        for code, xmlid, text in order:
+            try:
+                group = self.env.ref(xmlid)
+            except ValueError:
+                continue
+            if group in self.all_group_ids:
+                return code, text
+        return "none", "Sin acceso."
+
     @api.depends_context("uid")
     def _compute_justech_admin_center_role(self):
-        Matrix = self.env["justech.admin.permission.matrix.service"]
+        for user in self:
+            role, explain = user._role_from_groups(
+                [
+                    (
+                        "justech_admin",
+                        "justech_admin_center.group_justech_admin_center_manager",
+                        "Administrar la consola Justech, productos, empresas autorizadas y diagnósticos.",
+                    ),
+                ]
+            )
+            if role == "none":
+                explain = "Sin acceso a Administración Justech."
+            user.justech_admin_center_role = role
+            user.justech_role_explanation = explain
+
+    @api.depends_context("uid")
+    def _compute_justech_fiscal_role_explanation(self):
         explanations = {
-            "justech_admin": "Administrar la consola Justech, productos, empresas y seguridad.",
-            "fiscal_admin": "Administrar configuración fiscal, alertas y permisos fiscales.",
-            "fiscal_manager": "Supervisar operación fiscal y revalidaciones.",
-            "fiscal_user": "Operar funciones fiscales cotidianas sin cambiar configuración crítica.",
-            "finance_admin": "Administrar cobros, pagos, tesorería y retenciones operativas.",
-            "finance_user": "Operar cobros, pagos y tesorería según permisos asignados.",
-            "warranty_manager": "Administrar garantías, roles y parámetros del producto.",
-            "warranty_user": "Registrar y dar seguimiento a garantías.",
-            "auditor": "Consultar auditoría y trazabilidad sin operar.",
-            "readonly": "Solo lectura de información Justech.",
-            "none": "Sin rol funcional Justech asignado en la consola.",
+            "admin": "Administrar Centro Fiscal, NCF, e-CF, padrón, reportes y retenciones.",
+            "officer": "Revisar, aprobar y diagnosticar sin cambiar secretos críticos.",
+            "user": "Operar y consultar funciones fiscales cotidianas.",
+            "none": "Sin acceso fiscal Justech.",
         }
         for user in self:
             role = "none"
-            for item in Matrix.role_catalog():
-                group = item["group"]
-                if group and group in user.all_group_ids:
-                    role = item["code"]
-                    break
-            user.justech_admin_center_role = role
-            user.justech_role_explanation = explanations.get(role, explanations["none"])
+            if "justech_fiscal_role" in user._fields:
+                role = user.justech_fiscal_role or "none"
+            else:
+                if user.has_group("justech_fiscal_admin.group_justech_fiscal_admin_manager"):
+                    role = "admin"
+                elif user.has_group("justech_l10n_do_base.group_justech_do_fiscal_manager"):
+                    role = "officer"
+                elif user.has_group("justech_l10n_do_base.group_justech_do_fiscal_user"):
+                    role = "user"
+            user.justech_fiscal_role_explanation = explanations.get(role, explanations["none"])
+
+    @api.depends_context("uid")
+    def _compute_justech_ecf_role(self):
+        for user in self:
+            role, explain = user._role_from_groups(
+                [
+                    (
+                        "ecf_admin",
+                        "justech_ecf_core.group_ecf_admin",
+                        "Configurar empresas e-CF, certificados, ambientes, asistentes y colas.",
+                    ),
+                    (
+                        "ecf_responsible",
+                        "justech_ecf_core.group_ecf_responsible",
+                        "Operar y supervisar e-CF; validar sin cambiar secretos críticos.",
+                    ),
+                    (
+                        "ecf_operator",
+                        "justech_ecf_core.group_ecf_operator",
+                        "Emitir y gestionar documentos e-CF.",
+                    ),
+                    (
+                        "ecf_readonly",
+                        "justech_ecf_core.group_ecf_readonly",
+                        "Consultar e-CF sin modificar.",
+                    ),
+                ]
+            )
+            if role == "none":
+                explain = "Sin acceso e-CF."
+            user.justech_ecf_role = role
+            user.justech_ecf_role_explanation = explain
+
+    @api.depends_context("uid")
+    def _compute_justech_finance_role(self):
+        for user in self:
+            # Finanzas: marcar vía account groups si no hay grupo Justech dedicado.
+            role = "none"
+            explain = "Sin acceso finanzas Justech (próximo módulo)."
+            if user.has_group("account.group_account_manager"):
+                role = "finance_admin"
+                explain = "Administrar cobros, pagos, tesorería y conciliación."
+            elif user.has_group("account.group_account_invoice") or user.has_group(
+                "account.group_account_user"
+            ):
+                role = "finance_user"
+                explain = "Operar cobros, pagos y tesorería según permisos contables."
+            user.justech_finance_role = role
+            user.justech_finance_role_explanation = explain
+
+    @api.depends_context("uid")
+    def _compute_justech_warranty_role(self):
+        for user in self:
+            role, explain = user._role_from_groups(
+                [
+                    (
+                        "warranty_manager",
+                        "justech_warranty.group_warranty_manager",
+                        "Administrar garantías, roles y parámetros.",
+                    ),
+                    (
+                        "warranty_user",
+                        "justech_warranty.group_warranty_user",
+                        "Registrar y dar seguimiento a garantías.",
+                    ),
+                ]
+            )
+            if role == "none":
+                explain = "Sin acceso a Garantías."
+            user.justech_warranty_role = role
+            user.justech_warranty_role_explanation = explain
+
+    def _write_exclusive_groups(self, xml_map, selected_code):
+        group_ids = []
+        for xid in xml_map.values():
+            try:
+                group_ids.append(self.env.ref(xid).id)
+            except ValueError:
+                pass
+        for user in self:
+            cmds = [(3, gid) for gid in group_ids]
+            xid = xml_map.get(selected_code)
+            if xid:
+                try:
+                    cmds.append((4, self.env.ref(xid).id))
+                except ValueError:
+                    pass
+            if cmds:
+                user.sudo().write({"group_ids": cmds})
+
+    def _inverse_justech_ecf_role(self):
+        xml_map = {
+            "ecf_admin": "justech_ecf_core.group_ecf_admin",
+            "ecf_responsible": "justech_ecf_core.group_ecf_responsible",
+            "ecf_operator": "justech_ecf_core.group_ecf_operator",
+            "ecf_readonly": "justech_ecf_core.group_ecf_readonly",
+        }
+        for user in self:
+            user._write_exclusive_groups(xml_map, user.justech_ecf_role)
+
+    def _inverse_justech_warranty_role(self):
+        xml_map = {
+            "warranty_manager": "justech_warranty.group_warranty_manager",
+            "warranty_user": "justech_warranty.group_warranty_user",
+        }
+        for user in self:
+            user._write_exclusive_groups(xml_map, user.justech_warranty_role)
+
+    def _inverse_justech_finance_role(self):
+        # Sin grupo Justech dedicado aún: no mutar account.* automáticamente.
+        return
 
     def _inverse_justech_admin_center_role(self):
+        xml_map = {
+            "justech_admin": "justech_admin_center.group_justech_admin_center_manager",
+        }
         for user in self:
-            if user.justech_admin_center_role and user.justech_admin_center_role != "none":
-                self.env["justech.admin.permission.matrix.service"].apply_role(
-                    user, user.justech_admin_center_role, preview_only=False
-                )
+            user._write_exclusive_groups(xml_map, user.justech_admin_center_role)
 
     def _compute_justech_caps(self):
         try:

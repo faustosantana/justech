@@ -5,6 +5,8 @@ from . import justech_admin_operation
 from . import justech_admin_audit_log
 from . import justech_admin_health_finding
 from . import justech_admin_console
+from . import justech_admin_system_status
+from . import justech_admin_company_hub
 from . import justech_admin_registry_service
 from . import justech_admin_install_service
 from . import justech_admin_activation_service

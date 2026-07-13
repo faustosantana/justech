@@ -1,5 +1,17 @@
 # Changelog — justech_admin_center
 
+## 19.0.2.11.1 — 2026-07-12
+
+- Reconstrucción UX de Administración Justech: dashboard nativo simplificado, taxonomía de estados única y pendientes solo accionables.
+- Garantías / Fiscal / Estado del sistema sin HTML crudo; UAT fuera de la consola principal; navegación Empresa → Producto → Capacidad.
+
+## 19.0.2.6.0 — 2026-07-12
+
+- Cadena de roles: System → Administrador Justech → Administrador e-CF (implied_ids).
+- AccessError e-CF corregido para System/Justech Admin; roles e-CF en ficha de usuario.
+- Gate de reauth ya no lanza AccessError en `check_access` (evita salida al login).
+- Jerarquía visual 1 / 1.1 / 1.3; pantallas de producto simplificadas; hub e-CF reorganizado.
+
 ## 19.0.2.5.0 — 2026-07-12
 
 - Acciones MISS de Centro Fiscal / Salud Fiscal cableadas a operaciones reales.

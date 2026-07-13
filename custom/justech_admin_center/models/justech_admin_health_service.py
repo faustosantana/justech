@@ -9,6 +9,10 @@ class JustechAdminHealthService(models.AbstractModel):
     def run_global_diagnostics(self):
         Finding = self.env["justech.admin.health.finding"].sudo()
         Finding.search([("state", "=", "open"), ("code", "like", "JAC_%")]).write({"state": "resolved"})
+        # Close informational noise from prior runs
+        Finding.search([("severity", "=", "info"), ("state", "in", ["open", "in_progress"])]).write(
+            {"state": "resolved"}
+        )
         findings = []
 
         sys_group = self.env.ref("base.group_system")
@@ -81,14 +85,7 @@ class JustechAdminHealthService(models.AbstractModel):
         for mod in self.env["justech.admin.module"].search([("technical_state", "=", "installed")]):
             self.run_module_health(mod, create_findings=True, open_findings=False)
 
-        return {
-            "type": "ir.actions.act_window",
-            "name": _("Diagnóstico"),
-            "res_model": "justech.admin.health.finding",
-            "view_mode": "list,form",
-            "domain": [("state", "=", "open")],
-            "target": "current",
-        }
+        return self.env["justech.admin.console"]._ensure_singleton().action_open_pending_center()
 
     @api.model
     def run_module_health(self, module, create_findings=True, open_findings=False):
@@ -105,9 +102,17 @@ class JustechAdminHealthService(models.AbstractModel):
 
         if create_findings:
             Finding.search(
-                [("module_id", "=", module.id), ("state", "=", "open"), ("code", "like", "JAC_M_%")]
+                [
+                    ("module_id", "=", module.id),
+                    ("state", "in", ["open", "in_progress"]),
+                    ("code", "like", "JAC_M_%"),
+                ]
             ).write({"state": "resolved"})
-            for code, severity, name, detail, reco in checks:
+            for check in checks:
+                code, severity, name, detail, reco = check[:5]
+                if severity == "info":
+                    continue
+                extra = check[5] if len(check) > 5 and isinstance(check[5], dict) else {}
                 Finding.create(
                     self._f(
                         "JAC_M_%s_%s" % (module.technical_name, code),
@@ -116,11 +121,13 @@ class JustechAdminHealthService(models.AbstractModel):
                         detail,
                         module=module,
                         recommendation=reco,
+                        **extra,
                     )
                 )
 
         worst = "info"
-        for _c, sev, *_rest in checks:
+        for check in checks:
+            sev = check[1]
             if sev == "critical":
                 worst = "critical"
             elif sev == "error" and worst not in ("critical",):
@@ -135,10 +142,13 @@ class JustechAdminHealthService(models.AbstractModel):
         if open_findings:
             return {
                 "type": "ir.actions.act_window",
-                "name": _("Diagnóstico: %s") % module.functional_name,
+                "name": _("Pendientes — %s") % module.functional_name,
                 "res_model": "justech.admin.health.finding",
-                "view_mode": "list,form",
-                "domain": [("module_id", "=", module.id), ("state", "=", "open")],
+                "view_mode": "kanban,list,form",
+                "domain": [
+                    ("module_id", "=", module.id),
+                    ("state", "in", ["open", "in_progress"]),
+                ],
                 "target": "current",
             }
         return True
@@ -210,24 +220,49 @@ class JustechAdminHealthService(models.AbstractModel):
             )
 
         if tech.startswith("justech_ecf") and "justech.ecf.company.config" in self.env:
-            cfgs = self.env["justech.ecf.company.config"].sudo().search_count([])
-            yield (
-                "ecf_cfg",
-                "info" if cfgs else "warning",
-                _("Configuración e-CF"),
-                _("%s empresas configuradas") % cfgs,
-                _("Ejecutar asistente e-CF") if not cfgs else _("OK"),
-            )
-            if "justech.ecf.dgii.client" in self.env:
-                cat = self.env["justech.ecf.dgii.client"].service_catalog()
-                yield (
-                    "ecf_dgii",
-                    "info",
-                    _("Servicios DGII"),
-                    _("%s servicios documentados; producción bloqueada por defecto")
-                    % len(cat.get("services", [])),
-                    _("OK"),
-                )
+            Config = self.env["justech.ecf.company.config"].sudo()
+            for company in self.env["res.company"].sudo().search([]):
+                cfg = Config.search([("company_id", "=", company.id)], limit=1)
+                if not cfg:
+                    yield (
+                        "ecf_cfg_%s" % company.id,
+                        "warning",
+                        _("e-CF sin configurar — %s") % company.name,
+                        _("La empresa no tiene configuración e-CF."),
+                        _("Configurar e-CF"),
+                        {
+                            "company_id": company.id,
+                            "impact": _("No se pueden emitir comprobantes electrónicos."),
+                            "action_label": _("Configurar e-CF"),
+                            "responsible_hint": _("Administrador fiscal"),
+                            "resolve_xmlid": "justech_ecf_admin.action_justech_ecf_admin_hub",
+                        },
+                    )
+                    continue
+                if not cfg.certificate_id:
+                    yield (
+                        "ecf_cert_%s" % company.id,
+                        "warning",
+                        _("Certificado e-CF pendiente — %s") % company.name,
+                        _("Falta cargar y validar el certificado digital."),
+                        _("Cargar certificado"),
+                        {
+                            "company_id": company.id,
+                            "impact": _("No se pueden firmar comprobantes electrónicos."),
+                            "action_label": _("Configurar certificado"),
+                            "responsible_hint": _("Administrador fiscal"),
+                            "resolve_xmlid": "justech_ecf_core.action_justech_ecf_certificate",
+                        },
+                    )
+                else:
+                    yield (
+                        "ecf_cfg_%s" % company.id,
+                        "info",
+                        _("e-CF configurado — %s") % company.name,
+                        _("Certificado asignado."),
+                        _("OK"),
+                        {"company_id": company.id},
+                    )
 
         if tech == "justech_warranty" and "justech.warranty" in self.env:
             # model name may vary — soft check
@@ -263,15 +298,61 @@ class JustechAdminHealthService(models.AbstractModel):
         return str(result)[:200]
 
     @api.model
-    def _f(self, code, severity, name, detail, module=None, res_model=None, res_id=None, recommendation=None):
-        return {
+    def _f(
+        self,
+        code,
+        severity,
+        name,
+        detail,
+        module=None,
+        res_model=None,
+        res_id=None,
+        recommendation=None,
+        company_id=None,
+        impact=None,
+        action_label=None,
+        responsible_hint=None,
+        resolve_xmlid=None,
+        **kwargs,
+    ):
+        vals = {
             "code": code,
             "severity": severity,
             "name": name,
             "detail": detail,
             "recommendation": recommendation or detail,
+            "impact": impact or detail,
+            "action_label": action_label or _("Resolver"),
+            "responsible_hint": responsible_hint or _("Administrador Justech"),
             "module_id": module.id if module else False,
             "res_model": res_model,
             "res_id": res_id or 0,
+            "company_id": company_id or False,
+            "resolve_xmlid": resolve_xmlid or False,
             "state": "open",
+            "detected_at": fields.Datetime.now(),
+        }
+        vals.update({k: v for k, v in kwargs.items() if k in vals or True})
+        # Keep only known fields
+        return {
+            k: v
+            for k, v in vals.items()
+            if k
+            in {
+                "code",
+                "severity",
+                "name",
+                "detail",
+                "recommendation",
+                "impact",
+                "action_label",
+                "responsible_hint",
+                "module_id",
+                "res_model",
+                "res_id",
+                "company_id",
+                "resolve_xmlid",
+                "state",
+                "detected_at",
+            }
         }

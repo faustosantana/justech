@@ -1,6 +1,6 @@
 {
     "name": "Justech Admin Center",
-    "version": "19.0.2.5.0",
+    "version": "19.0.2.11.1",
     "category": "Administration",
     "summary": "Consola Enterprise Settings → Administración Justech",
     "description": """
@@ -15,6 +15,7 @@ reautenticación segura, diagnóstico y auditoría.
         "web",
         "mail",
         "justech_modules",
+        "justech_fiscal_admin",
     ],
     "data": [
         "security/justech_admin_center_security.xml",
@@ -27,6 +28,7 @@ reautenticación segura, diagnóstico y auditoría.
         "views/justech_admin_operation_views.xml",
         "views/justech_admin_audit_views.xml",
         "views/justech_admin_health_views.xml",
+        "views/justech_admin_status_company_views.xml",
         "views/justech_admin_console_views.xml",
         "views/justech_admin_hub_views.xml",
         "wizards/module_operation_wizard_views.xml",

@@ -64,8 +64,12 @@
                     <div class="oe_title">
                         <h1><field name="name" readonly="1"/></h1>
                     </div>
-                    <field name="summary_html" nolabel="1"/>
-                    <separator string="Submódulos fiscales"/>
+                    <group>
+                        <field name="summary_note" readonly="1" string="Resumen"/>
+                        <field name="status_label" readonly="1"/>
+                        <field name="open_alert_count" readonly="1"/>
+                    </group>
+                    <separator string="Capacidades fiscales"/>
                     <div class="o_jac_action_row">
                         <button name="action_open_padron" type="object" class="btn btn-primary" string="Padrón DGII"/>
                         <button name="action_open_ncf" type="object" class="btn btn-secondary" string="Motor Fiscal NCF"/>
@@ -93,7 +97,9 @@
                     <div class="oe_title">
                         <h1><field name="name" readonly="1"/></h1>
                     </div>
-                    <field name="summary_html" nolabel="1"/>
+                    <group>
+                        <field name="summary_note" readonly="1" string="Resumen"/>
+                    </group>
                     <separator string="Funciones"/>
                     <div class="o_jac_action_row">
                         <button name="action_open_customer_payments" type="object" class="btn btn-secondary" string="Cobros"/>

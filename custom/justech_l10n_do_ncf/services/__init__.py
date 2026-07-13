@@ -5,3 +5,5 @@ from . import ncf_document_type_resolver_service
 from . import ncf_duplicate_service
 from . import ncf_range_audit_service
 from . import ncf_diagnostic_service
+from . import ncf_migration_service
+from . import ncf_reconcile_service

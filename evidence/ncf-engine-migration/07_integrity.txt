@@ -1,0 +1,6 @@
+moves=2404
+payments=696
+reconcile=967
+gl_diff=0.00
+companies=4
+fc_00374=/

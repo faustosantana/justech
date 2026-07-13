@@ -10,9 +10,10 @@ class JustechDoNcfConsumption(models.Model):
     range_id = fields.Many2one(
         "justech.do.ncf.range",
         required=True,
+        index=True,
         ondelete="restrict",
     )
-    move_id = fields.Many2one("account.move", ondelete="set null")
+    move_id = fields.Many2one("account.move", index=True, ondelete="set null")
     ncf = fields.Char(required=True, index=True)
     sequence_number = fields.Integer()
     consumption_date = fields.Datetime(
@@ -30,6 +31,7 @@ class JustechDoNcfConsumption(models.Model):
     company_id = fields.Many2one(
         related="range_id.company_id",
         store=True,
+        index=True,
     )
     void_user_id = fields.Many2one("res.users", string="Voided By", copy=False)
     void_datetime = fields.Datetime(string="Void Date/Time", copy=False)

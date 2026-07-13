@@ -11,11 +11,13 @@ class JustechDoNcfRange(models.Model):
     company_id = fields.Many2one(
         "res.company",
         required=True,
+        index=True,
         default=lambda self: self.env.company,
     )
     document_type_id = fields.Many2one(
         "justech.do.fiscal.document.type",
         required=True,
+        index=True,
         ondelete="restrict",
     )
     prefix = fields.Char(related="document_type_id.prefix", store=True)

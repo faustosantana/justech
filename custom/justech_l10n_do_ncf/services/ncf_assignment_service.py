@@ -36,15 +36,28 @@ class JustechDoNcfAssignmentService(models.AbstractModel):
                 duplicate.validate_manual_ncf(move)
                 continue
             if not resolver.should_auto_assign_ncf(move):
-                if move.journal_id.justech_do_use_ncf and move.move_type in (
-                    "out_invoice",
-                    "out_refund",
-                ):
-                    raise UserError(
-                        _(
-                            "Debe indicar o asignar un NCF antes de publicar esta factura."
+                # Ventas con tipo auto-asignable: no publicar en silencio sin NCF.
+                if move.move_type in ("out_invoice", "out_refund", "out_debit"):
+                    doc_chk = doc or resolver.resolve_for_move(move)
+                    if (
+                        doc_chk
+                        and doc_chk.auto_assign_on_post
+                        and resolver.doc_supports_auto_ncf(move, doc_chk)
+                    ):
+                        if not move.journal_id.justech_do_use_ncf:
+                            raise UserError(
+                                _(
+                                    "El diario %(journal)s no tiene habilitado el Motor NCF "
+                                    "Justech. Active justech_do_use_ncf o asigne NCF "
+                                    "manualmente antes de publicar.",
+                                    journal=move.journal_id.display_name,
+                                )
+                            )
+                        raise UserError(
+                            _(
+                                "Debe indicar o asignar un NCF antes de publicar esta factura."
+                            )
                         )
-                    )
                 continue
             doc = move.justech_do_document_type_id
             lock_code = int(doc.code) if doc.code.isdigit() else 0

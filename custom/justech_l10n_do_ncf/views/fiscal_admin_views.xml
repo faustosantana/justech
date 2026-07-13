@@ -33,6 +33,13 @@
                         <button name="action_open_voided_consumption" type="object" string="Anulaciones" class="btn-link"/>
                         <button name="action_open_document_types" type="object" string="Tipos de comprobante" class="btn-link"/>
                     </group>
+                    <group string="Migración / reconciliación"
+                           groups="base.group_system,justech_l10n_do_base.group_justech_do_fiscal_manager">
+                        <button name="action_open_ncf_migration" type="object"
+                                string="Migrar numeración fiscal al Motor Justech" class="btn-primary"/>
+                        <button name="action_open_ncf_reconcile" type="object"
+                                string="Reconciliar numeración fiscal" class="btn-secondary"/>
+                    </group>
                 </sheet>
             </form>
         </field>

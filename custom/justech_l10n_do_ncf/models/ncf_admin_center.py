@@ -100,6 +100,12 @@ class JustechDoNcfAdminCenter(models.TransientModel):
             "target": "new",
         }
 
+    def action_open_ncf_migration(self):
+        return self.env["justech.do.ncf.migration.wizard"].action_open_wizard()
+
+    def action_open_ncf_reconcile(self):
+        return self.env["justech.do.ncf.reconcile.wizard"].action_open_wizard()
+
     def _action_list(self, model, title, domain=None):
         return {
             "type": "ir.actions.act_window",

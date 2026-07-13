@@ -6,4 +6,32 @@
               action="action_justech_do_ncf_range"
               sequence="20"
               active="False"/>
+
+    <!-- Motor Fiscal NCF — migración / reconciliación (Admin Fiscal + Settings) -->
+    <menuitem id="menu_justech_do_ncf_motor_root"
+              name="Motor Fiscal NCF"
+              parent="justech_l10n_do_base.menu_justech_do_fiscal_root"
+              sequence="25"
+              groups="base.group_system,justech_l10n_do_base.group_justech_do_fiscal_manager"/>
+
+    <menuitem id="menu_justech_do_ncf_migration"
+              name="Migración de numeración"
+              parent="menu_justech_do_ncf_motor_root"
+              action="action_justech_do_ncf_migration_wizard"
+              sequence="10"
+              groups="base.group_system,justech_l10n_do_base.group_justech_do_fiscal_manager"/>
+
+    <menuitem id="menu_justech_do_ncf_reconcile"
+              name="Reconciliar numeración fiscal"
+              parent="menu_justech_do_ncf_motor_root"
+              action="action_justech_do_ncf_reconcile_wizard"
+              sequence="20"
+              groups="base.group_system,justech_l10n_do_base.group_justech_do_fiscal_manager"/>
+
+    <menuitem id="menu_justech_do_ncf_migration_log"
+              name="Auditoría migración NCF"
+              parent="menu_justech_do_ncf_motor_root"
+              action="action_justech_do_ncf_migration_log"
+              sequence="30"
+              groups="base.group_system,justech_l10n_do_base.group_justech_do_fiscal_manager"/>
 </odoo>

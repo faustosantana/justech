@@ -1,0 +1,15 @@
+1|B01|active|1394|1656
+1|B04|active|13|100
+1|B11|active|11|15
+1|B13|active|213|217
+1|B14|active|19|39
+1|B15|depleted|120|132
+1|B15|active|133|144
+2|B01|active|55|78
+3|B01|active|217|343
+3|B02|active|36|100
+3|B04|active|5|1000
+3|B15|active|1|150
+4|B01|active|36|46
+4|B14|active|1|100
+4|B15|active|104|108

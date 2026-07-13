@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <menuitem id="menu_justech_fiscal_admin_root"
-              name="Administración Fiscal"
-              parent="justech_l10n_do_base.menu_justech_do_fiscal_root"
-              sequence="5"
-              groups="base.group_system,justech_fiscal_admin.group_justech_fiscal_admin_manager,justech_l10n_do_base.group_justech_do_fiscal_manager,justech_l10n_do_base.group_justech_do_fiscal_user"/>
-    <menuitem id="menu_justech_fiscal_admin_center"
-              name="Centro de Administración Fiscal"
-              parent="menu_justech_fiscal_admin_root"
-              action="action_justech_fiscal_admin_center_server"
-              sequence="10"
-              groups="base.group_system,justech_fiscal_admin.group_justech_fiscal_admin_manager,justech_l10n_do_base.group_justech_do_fiscal_manager,justech_l10n_do_base.group_justech_do_fiscal_user"/>
+    <!-- Menús legacy del Centro Fiscal bajo Configuración: se mantienen inactivos.
+         El Centro Fiscal operativo vive en Contabilidad → Auditoría Fiscal
+         (justech_l10n_do_reports). -->
+    <record id="menu_justech_fiscal_admin_root" model="ir.ui.menu">
+        <field name="name">Centro Fiscal (legacy)</field>
+        <field name="sequence">99</field>
+        <field name="active" eval="False"/>
+    </record>
+    <record id="menu_justech_fiscal_admin_center" model="ir.ui.menu">
+        <field name="name">Centro de Administración Fiscal (legacy)</field>
+        <field name="parent_id" ref="menu_justech_fiscal_admin_root"/>
+        <field name="sequence">10</field>
+        <field name="active" eval="False"/>
+    </record>
 </odoo>

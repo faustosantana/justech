@@ -1,5 +1,21 @@
 # Changelog — Estándar Fiscal Justech (cierre)
 
+## [19.0.2.4.0] — 2026-07-13
+
+### Added
+- Migración controlada legacy Adel → Motor Fiscal Justech (`justech.do.ncf.migration.*`) con previsualización obligatoria.
+- Reconciliación post-sync de numeración (`justech.do.ncf.reconcile.*`) — solo avanza, nunca retrocede.
+- Auditoría de migración (`justech.do.ncf.migration.log`).
+- Menú Motor Fiscal NCF: migración, reconciliación y auditoría.
+
+### Changed
+- Asignación en ventas auto-asignables: ya no publica en silencio sin NCF (exige diario `justech_do_use_ncf` o NCF manual / rango activo).
+- Dual-write LatAm solo refleja NCF generado por Justech.
+
+### Notes
+- Secuencias Adel permanecen como histórico; `get_fiscal_number` bloqueado si Justech fiscal está activo.
+- Tras sync de transacciones desde Prod: ejecutar reconciliación; no copiar rangos/`ir.sequence` de Prod.
+
 ## [19.0.2.3.1] — 2026-07-10
 
 ### Changed

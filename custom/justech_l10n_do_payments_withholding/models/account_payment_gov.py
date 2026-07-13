@@ -1,7 +1,7 @@
 """Stamp campos DGII 623 desde retenciones Justech — sin dependencia Hellenia."""
 from odoo import fields, models
 
-GOV_CATALOG_CODES = ("RET-GOB-5", "wh_isr_gov")
+GOV_CATALOG_CODES = ("RET-GOB-5", "wh_isr_gov", "RET5%")
 
 
 class AccountPaymentGov623Justech(models.Model):
@@ -16,7 +16,11 @@ class AccountPaymentGov623Justech(models.Model):
     def _justech_stamp_gov_from_withholding(self):
         for pay in self:
             gov_lines = pay.justech_withholding_line_ids.filtered(
-                lambda w: w.catalog_id.code in GOV_CATALOG_CODES and w.amount
+                lambda w: w.amount
+                and (
+                    getattr(w, "affects_623", False)
+                    or (w.catalog_id and w.catalog_id.code in GOV_CATALOG_CODES)
+                )
             )
             if not gov_lines:
                 continue

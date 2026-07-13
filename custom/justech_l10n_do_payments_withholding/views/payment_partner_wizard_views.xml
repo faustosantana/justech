@@ -53,7 +53,7 @@
                                    widget="many2many_tags"
                                    readonly="not apply"
                                    options="{'no_create': True, 'no_open': True}"
-                                   domain="[('active', '=', True), ('code', 'not in', ['RET-NONE', 'wh_none']), ('partner_scope', 'in', [parent.partner_type, 'both']), ('move_scope', 'in', [move_scope_filter, 'both']), ('company_id', '=', company_id), ('account_id', '!=', False)]"/>
+                                   domain="[('active', '=', True), ('code', 'not in', ['RET-NONE', 'wh_none']), ('partner_scope', 'in', [parent.partner_type, 'both']), ('move_scope', 'in', [move_scope_filter, 'both']), '|', ('company_id', '=', False), ('company_id', '=', company_id)]"/>
                             <field name="withholding_summary" string="Resumen de retenciones" readonly="1" optional="show"/>
                             <field name="withholding_amount" string="Total retenido" readonly="1"/>
                             <field name="net_after_withholding" string="Neto a pagar/cobrar" readonly="1" optional="show"/>

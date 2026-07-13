@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
+from markupsafe import Markup, escape
 
 STATE_LABELS = {
     "draft": "Borrador",
@@ -224,11 +225,11 @@ class JustechDoFiscalReportWorkflow(models.Model):
     ):
         self.ensure_one()
         label = AUDIT_LABELS.get(event_type, event_type)
-        body = _("<b>%(event)s</b><br/>%(user)s — %(when)s<br/>%(detail)s") % {
-            "event": label,
-            "user": self.env.user.display_name,
+        body = Markup("<b>%(event)s</b><br/>%(user)s — %(when)s<br/>%(detail)s") % {
+            "event": escape(label),
+            "user": escape(self.env.user.display_name),
             "when": fields.Datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-            "detail": description or "",
+            "detail": escape(description or ""),
         }
         self.message_post(body=body)
         return self._log_audit(

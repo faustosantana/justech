@@ -1,6 +1,6 @@
 {
     "name": "Justech Pagos y Retenciones Dominicanas",
-    "version": "19.0.1.5.0",
+    "version": "19.0.1.6.1",
     "category": "Accounting/Localizations",
     "summary": "Pagos con retenciones fiscales dominicanas (ITBIS/ISR), 623 y trazabilidad",
     "description": """
@@ -25,6 +25,7 @@ Motor estándar Justech para pagos con retención fiscal:
         "justech_l10n_do_reports",
     ],
     "data": [
+        "security/justech_payments_security.xml",
         "security/ir.model.access.csv",
         "security/justech_payments_rules.xml",
         "data/legacy_payment_menus.xml",
@@ -41,7 +42,7 @@ Motor estándar Justech para pagos con retención fiscal:
     "justech_register": {
         "module_code": "justech_l10n_do_payments_withholding",
         "module_name": "Pagos y Retenciones Dominicanas",
-        "version": "19.0.1.5.0",
+        "version": "19.0.1.6.1",
         "category": "accounting",
         "country": "DO",
         "localization": "l10n_do",
@@ -60,7 +61,7 @@ Motor estándar Justech para pagos con retención fiscal:
         ],
     },
     "justech_admin_center": {
-        "product_code": "finance",
+        "product_code": "fiscal",
         "functional_name": "Pagos y Retenciones",
         "short_description": "Pagos con retenciones ITBIS/ISR y conciliación",
         "long_description": "Qué es: capacidad transversal de pagos con retenciones. Para qué sirve: registrar pagos, retenciones ITBIS/ISR y conciliar. Procesos: cuentas por pagar/cobrar. Compartida entre Fiscal y Finanzas. Crítico: sí. Ámbito: por empresa. Al desactivar: bloquea nuevos pagos con retención; conserva históricos.",

@@ -1,5 +1,14 @@
 # Changelog — justech_l10n_do_treasury
 
+## 19.0.1.6.0 — 2026-07-13
+
+### Added
+- Menú Contabilidad → Pagos: clientes / proveedores / todos (dominios reales `partner_type`).
+- UX: diferenciar aplicación a factura vs conciliación bancaria; botón a extracto cuando CxC ya conciliada.
+
+### Fixed
+- Acción de conciliación ya no reabre líneas CxC/CxP conciliadas (caso PBNK1/outstanding).
+
 ## 19.0.1.5.0 — 2026-07-10
 
 ### Fixed

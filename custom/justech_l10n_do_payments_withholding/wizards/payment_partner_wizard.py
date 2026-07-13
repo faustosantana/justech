@@ -156,13 +156,17 @@ class JustechPaymentPartnerWizardLine(models.TransientModel):
                 amount = catalog.compute_withholding_amount(
                     line.move_id, applied_amount=line.amount_to_pay
                 )
-                if not amount:
+                account = catalog.get_account_for_company(
+                    line.move_id.company_id or line.env.company
+                )
+                if not amount or not account:
                     continue
+                tax = catalog.get_tax_for_company(line.move_id.company_id) or catalog.tax_id
                 details.append(
                     Command.create(
                         {
                             "catalog_id": catalog.id,
-                            "tax_id": catalog.tax_id.id,
+                            "tax_id": tax.id if tax else False,
                             "label": catalog.name,
                             "base_label": catalog._base_label(),
                             "base_amount": catalog._base_amount(
@@ -170,7 +174,7 @@ class JustechPaymentPartnerWizardLine(models.TransientModel):
                             ),
                             "rate": catalog.rate,
                             "amount": amount,
-                            "account_id": catalog.account_id.id,
+                            "account_id": account.id,
                             "currency_id": line.currency_id.id,
                         }
                     )

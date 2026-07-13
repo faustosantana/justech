@@ -42,9 +42,9 @@ class AccountPayment(models.Model):
     )
     treasury_bank_state = fields.Selection(
         [
-            ("not_posted", "No requiere conciliación"),
-            ("bank_pending", "Pendiente de conciliación"),
-            ("bank_reconciled", "Conciliado"),
+            ("not_posted", "No requiere conciliación bancaria"),
+            ("bank_pending", "Pendiente de conciliación bancaria"),
+            ("bank_reconciled", "Conciliado con el banco"),
         ],
         string="Estado bancario",
         compute="_compute_treasury_bank_state",
@@ -204,13 +204,96 @@ class AccountPayment(models.Model):
             "view_mode": "form",
         }
 
-    def action_treasury_view_reconciliation(self):
+    def _treasury_outstanding_lines(self):
+        """Líneas de liquidez/outstanding pendientes de conciliación bancaria."""
         self.ensure_one()
-        lines = self._treasury_counterpart_lines(self)
+        if not self.move_id:
+            return self.env["account.move.line"]
+        liquidity_types = ("asset_cash", "asset_credit_card")
+        lines = self.move_id.line_ids.filtered(
+            lambda line: line.account_id.account_type in liquidity_types and not line.reconciled
+        )
+        if self.outstanding_account_id:
+            outstanding = self.move_id.line_ids.filtered(
+                lambda line: line.account_id == self.outstanding_account_id and not line.reconciled
+            )
+            if outstanding:
+                return outstanding
+        return lines
+
+    def action_justech_open_bank_reconciliation(self):
+        """Abre extractos del diario para conciliación bancaria (no re-concilia CxC/CxP)."""
+        self.ensure_one()
+        outstanding = self._treasury_outstanding_lines()
+        action = {
+            "type": "ir.actions.act_window",
+            "name": "Conciliar con extracto bancario",
+            "res_model": "account.bank.statement.line",
+            "view_mode": "kanban,list",
+            "domain": [
+                ("journal_id", "=", self.journal_id.id),
+                ("is_reconciled", "=", False),
+                ("state", "!=", "cancel"),
+            ],
+            "context": {
+                "default_journal_id": self.journal_id.id,
+                "search_default_journal_id": self.journal_id.id,
+                "justech_payment_id": self.id,
+                "justech_outstanding_line_ids": outstanding.ids,
+            },
+        }
+        search_view = self.env.ref(
+            "account_accountant.view_bank_statement_line_search_bank_rec_widget",
+            raise_if_not_found=False,
+        )
+        kanban_view = self.env.ref(
+            "account_accountant.view_bank_statement_line_kanban_bank_rec_widget",
+            raise_if_not_found=False,
+        )
+        if search_view:
+            action["search_view_id"] = (search_view.id,)
+        if kanban_view:
+            action["view_id"] = kanban_view.id
+        return action
+
+    def action_justech_view_reconciliation_status(self):
+        """Ver líneas ya conciliadas (factura y/o banco) sin intentar re-conciliar."""
+        self.ensure_one()
+        lines = self.env["account.move.line"]
+        if self.move_id:
+            lines = self.move_id.line_ids.filtered(lambda l: l.reconciled)
         return {
             "type": "ir.actions.act_window",
-            "name": "Conciliación",
+            "name": "Líneas conciliadas",
             "res_model": "account.move.line",
             "view_mode": "list,form",
             "domain": [("id", "in", lines.ids)],
         }
+
+    def action_treasury_view_reconciliation(self):
+        """Navega según estado real: banco pendiente vs ya aplicado a factura."""
+        self.ensure_one()
+        counterpart = self._treasury_counterpart_lines(self)
+        counterpart_open = counterpart.filtered(lambda l: not l.reconciled and l.amount_residual)
+
+        # Caso PBNK1: CxC ya conciliada con factura; falta solo banco.
+        if self.is_reconciled and self.treasury_bank_state == "bank_pending":
+            return self.action_justech_open_bank_reconciliation()
+
+        if self.treasury_bank_state == "bank_reconciled" and self.is_reconciled:
+            return self.action_justech_view_reconciliation_status()
+
+        if counterpart_open:
+            return {
+                "type": "ir.actions.act_window",
+                "name": "Aplicar a factura / conciliación contable",
+                "res_model": "account.move.line",
+                "view_mode": "list,form",
+                "domain": [("id", "in", counterpart_open.ids)],
+            }
+
+        outstanding = self._treasury_outstanding_lines()
+        if outstanding:
+            return self.action_justech_open_bank_reconciliation()
+
+        return self.action_justech_view_reconciliation_status()

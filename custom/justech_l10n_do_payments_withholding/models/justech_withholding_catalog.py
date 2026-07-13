@@ -17,14 +17,37 @@ class JustechDoWithholdingCatalog(models.Model):
     company_id = fields.Many2one(
         "res.company",
         string="Compañía",
-        required=True,
-        default=lambda self: self.env.company,
+        required=False,
+        default=False,
+        index=True,
+        help=(
+            "Vacío = retención global disponible para todas las empresas autorizadas. "
+            "Con empresa = exclusivo de esa empresa (override opcional)."
+        ),
     )
     tax_id = fields.Many2one(
         "account.tax",
         string="Impuesto retención",
         domain="[('amount', '<', 0)]",
-        help="Impuesto de retención definido en l10n_do (no inventar tasas). Solo visible en administración.",
+        check_company=True,
+        help=(
+            "Impuesto l10n_do de la empresa (solo en retenciones específicas). "
+            "En retenciones globales se resuelve por nombre al aplicar el pago."
+        ),
+    )
+    source_tax_name = fields.Char(
+        string="Nombre impuesto origen",
+        help="Para catálogo global: nombre del impuesto l10n_do a resolver por empresa.",
+        index=True,
+    )
+    source_tax_use = fields.Selection(
+        [
+            ("sale", "Ventas"),
+            ("purchase", "Compras"),
+            ("none", "Ninguno"),
+        ],
+        string="Uso impuesto origen",
+        default="none",
     )
     withholding_type = fields.Selection(
         [
@@ -63,6 +86,11 @@ class JustechDoWithholdingCatalog(models.Model):
         compute="_compute_account_id",
         store=True,
         readonly=False,
+        check_company=True,
+        help=(
+            "Obligatoria en retenciones por empresa. "
+            "En globales puede quedar vacía: se resuelve al aplicar el pago."
+        ),
     )
     partner_scope = fields.Selection(
         [
@@ -99,13 +127,16 @@ class JustechDoWithholdingCatalog(models.Model):
     )
     notes = fields.Text(string="Descripción / ayuda")
 
-    _sql_constraints = [
-        (
-            "justech_wh_catalog_code_company_uniq",
-            "unique(code, company_id)",
-            "El código de retención debe ser único por compañía.",
-        ),
-    ]
+    _sql_constraints = []
+
+    def init(self):
+        """Único por (código, alcance empresa). COALESCE permite globales (company_id NULL)."""
+        self.env.cr.execute(
+            """
+            CREATE UNIQUE INDEX IF NOT EXISTS justech_wh_catalog_code_scope_uniq
+            ON justech_do_withholding_catalog (code, COALESCE(company_id, 0))
+            """
+        )
 
     @api.depends("tax_id", "tax_id.invoice_repartition_line_ids.account_id")
     def _compute_account_id(self):
@@ -119,13 +150,73 @@ class JustechDoWithholdingCatalog(models.Model):
                     account = rep.account_id
             rec.account_id = account
 
-    @api.constrains("active", "account_id", "code")
+    @api.constrains("code", "company_id")
+    def _check_code_scope_unique(self):
+        for rec in self:
+            domain = [("code", "=", rec.code), ("id", "!=", rec.id)]
+            if rec.company_id:
+                domain.append(("company_id", "=", rec.company_id.id))
+            else:
+                domain.append(("company_id", "=", False))
+            if self.search_count(domain):
+                scope = rec.company_id.display_name if rec.company_id else "global"
+                raise ValidationError(
+                    f"Ya existe una retención con código «{rec.code}» en alcance {scope}."
+                )
+
+    @api.constrains("active", "account_id", "code", "company_id", "rate", "source_tax_name")
     def _check_account_required(self):
         for rec in self:
-            if rec.active and rec.code not in ("RET-NONE", "wh_none") and not rec.account_id:
+            if not rec.active or rec.code in ("RET-NONE", "wh_none"):
+                continue
+            if rec.company_id and not rec.account_id:
                 raise ValidationError(
-                    f"La retención «{rec.name}» debe tener cuenta contable antes de activarse."
+                    f"La retención «{rec.name}» (empresa {rec.company_id.display_name}) "
+                    "debe tener cuenta contable antes de activarse."
                 )
+            if not rec.company_id and not rec.account_id:
+                if not rec.rate and not rec.source_tax_name and not rec.tax_id:
+                    raise ValidationError(
+                        f"La retención global «{rec.name}» necesita porcentaje o impuesto origen "
+                        "para poder resolverse por empresa al aplicar el pago."
+                    )
+
+    def get_tax_for_company(self, company):
+        """Resuelve impuesto de retención en la empresa operativa."""
+        self.ensure_one()
+        company = company or self.env.company
+        if self.tax_id and (not self.tax_id.company_id or self.tax_id.company_id == company):
+            return self.tax_id
+        tax_name = self.source_tax_name or (self.tax_id.name if self.tax_id else False)
+        if not tax_name:
+            return self.env["account.tax"]
+        domain = [
+            ("name", "=", tax_name),
+            ("company_id", "=", company.id),
+            ("amount", "<", 0),
+        ]
+        if self.source_tax_use and self.source_tax_use != "none":
+            domain.append(("type_tax_use", "=", self.source_tax_use))
+        return self.env["account.tax"].search(domain, limit=1)
+
+    def get_account_for_company(self, company):
+        """Cuenta contable usable en la empresa del pago (global o específica)."""
+        self.ensure_one()
+        company = company or self.env.company
+        Account = self.env["account.account"]
+        if self.account_id:
+            account = self.account_id
+            if "company_ids" in account._fields:
+                if not account.company_ids or company in account.company_ids:
+                    return account
+            elif not account.company_id or account.company_id == company:
+                return account
+        tax = self.get_tax_for_company(company)
+        if tax:
+            rep = tax.invoice_repartition_line_ids.filtered(lambda l: l.repartition_type == "tax")[:1]
+            if rep.account_id:
+                return rep.account_id
+        return Account
 
     def _itbis_amount(self, move):
         """Monto ITBIS positivo de la factura."""
@@ -155,8 +246,10 @@ class JustechDoWithholdingCatalog(models.Model):
         """Calcula monto retenido: base configurada × tasa nominal del catálogo."""
         self.ensure_one()
         rate = self.rate
-        if not rate and self.tax_id:
-            rate = abs(self.tax_id.amount)
+        if not rate:
+            tax = self.tax_id or self.get_tax_for_company(move.company_id)
+            if tax:
+                rate = abs(tax.amount)
         if not rate:
             return 0.0
         base = self._base_amount(move, applied_amount=applied_amount)
@@ -433,19 +526,21 @@ class JustechDoWithholdingCatalog(models.Model):
         ]
 
     @api.model
-    def _find_catalog_record(self, spec, company):
+    def _find_catalog_record(self, spec, company=None):
+        """Busca registro: preferir global; si company, también override de empresa."""
         Catalog = self.env["justech.do.withholding.catalog"]
-        rec = Catalog.search([("code", "=", spec["code"]), ("company_id", "=", company.id)], limit=1)
-        if not rec and spec.get("legacy_code"):
-            rec = Catalog.search(
-                [("code", "=", spec["legacy_code"]), ("company_id", "=", company.id)],
-                limit=1,
-            )
-        return rec
+        codes = [spec["code"]]
+        if spec.get("legacy_code"):
+            codes.append(spec["legacy_code"])
+        # Global primero
+        rec = Catalog.search([("code", "in", codes), ("company_id", "=", False)], limit=1)
+        if rec or not company:
+            return rec
+        return Catalog.search([("code", "in", codes), ("company_id", "=", company.id)], limit=1)
 
     @api.model
     def _domain_for_payment(self, partner_type, move_type, company=None):
-        """Dominio estándar para selector del wizard de pagos."""
+        """Dominio estándar: globales + override de la empresa activa."""
         company = company or self.env.company
         move_scope = "sale" if move_type in ("out_invoice", "out_refund") else "purchase"
         return [
@@ -453,28 +548,43 @@ class JustechDoWithholdingCatalog(models.Model):
             ("code", "not in", ["RET-NONE", "wh_none"]),
             ("partner_scope", "in", [partner_type, "both"]),
             ("move_scope", "in", [move_scope, "both"]),
+            "|",
+            ("company_id", "=", False),
             ("company_id", "=", company.id),
-            ("account_id", "!=", False),
         ]
 
     @api.model
     def sync_catalog_from_taxes(self, company=None):
-        """Sincroniza catálogo con impuestos l10n_do existentes."""
+        """Sincroniza catálogo GLOBAL compartido (sin copias por empresa).
+
+        ``company`` se usa solo para detectar si existen impuestos l10n_do de referencia
+        y poder activar la ficha global cuando al menos una empresa DO tiene el impuesto.
+        """
         company = company or self.env.company
         Tax = self.env["account.tax"]
         Catalog = self.env["justech.do.withholding.catalog"]
         result = []
         for spec in self._catalog_specs():
             tax = False
-            if spec.get("tax_name") and spec.get("tax_use"):
+            tax_name = spec.get("tax_name")
+            tax_use = spec.get("tax_use")
+            if tax_name and tax_use:
                 tax = Tax.search(
                     [
-                        ("name", "=", spec["tax_name"]),
-                        ("type_tax_use", "=", spec["tax_use"]),
+                        ("name", "=", tax_name),
+                        ("type_tax_use", "=", tax_use),
                         ("company_id", "=", company.id),
                     ],
                     limit=1,
                 )
+                if not tax:
+                    tax = Tax.search(
+                        [
+                            ("name", "=", tax_name),
+                            ("type_tax_use", "=", tax_use),
+                        ],
+                        limit=1,
+                    )
                 if tax and not tax.active:
                     tax.active = True
             wants_active = spec.get("active", True)
@@ -491,28 +601,49 @@ class JustechDoWithholdingCatalog(models.Model):
                 "affects_623": spec.get("affects_623", False),
                 "dgii_withholding_code": spec.get("dgii_withholding_code"),
                 "notes": spec.get("notes"),
-                "company_id": company.id,
-                "tax_id": tax.id if tax else False,
+                "company_id": False,
+                "tax_id": False,
+                "source_tax_name": tax_name or False,
+                "source_tax_use": tax_use or "none",
+                "account_id": False,
                 "rate": spec.get("withholding_rate") or (abs(tax.amount) if tax else 0.0),
                 "active": False,
             }
-            rec = self._find_catalog_record(spec, company)
+            rec = self._find_catalog_record(spec, company=None)
             if rec:
-                rec.write(vals)
+                # No pisar overrides por empresa ni cuentas ya configuradas en globales legacy
+                keep = {
+                    "rate": rec.rate or vals["rate"],
+                    "active": rec.active,
+                }
+                if rec.company_id:
+                    # Existe solo override: crear global sin tocar override
+                    rec = Catalog.create(vals)
+                else:
+                    write_vals = {k: v for k, v in vals.items() if k not in ("active",)}
+                    if rec.account_id:
+                        write_vals.pop("account_id", None)
+                    if rec.tax_id:
+                        write_vals.pop("tax_id", None)
+                    rec.write(write_vals)
+                    vals["rate"] = keep["rate"]
             else:
                 rec = Catalog.create(vals)
-            rec._compute_account_id()
-            can_activate = wants_active and bool(tax) and bool(rec.account_id)
+            can_activate = wants_active and bool(vals["rate"] or tax or rec.source_tax_name)
             if rec.code in ("RET-NONE", "wh_none"):
                 can_activate = False
-            rec.write({"active": can_activate})
+            if can_activate and not rec.active:
+                # Activar solo si alguna empresa puede resolver cuenta
+                resolvable = bool(rec.get_account_for_company(company)) or bool(rec.rate)
+                rec.write({"active": bool(resolvable and can_activate)})
             result.append(
                 {
                     "code": spec["code"],
                     "id": rec.id,
-                    "tax": tax.name if tax else None,
+                    "tax": tax.name if tax else rec.source_tax_name,
                     "active": rec.active,
-                    "account": rec.account_id.code if rec.account_id else None,
+                    "account": False,
+                    "company_id": False,
                 }
             )
         return result

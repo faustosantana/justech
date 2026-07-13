@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from odoo import _, models
 
-GOV_CATALOG_CODES = ("RET-GOB-5", "wh_isr_gov")
+GOV_CATALOG_CODES = ("RET-GOB-5", "wh_isr_gov", "RET5%")
 GOV_TAX_NAME = "-5% ISR Gov."
 
 
@@ -48,10 +48,21 @@ class JustechDoDgii623Exporter(models.AbstractModel):
         Catalog = self._withholding_catalog_model()
         if not Catalog:
             return self.env["account.move"].browse()
-        return Catalog.search(
+        # Preferir override de empresa; si no, catálogo global compartido.
+        rec = Catalog.search(
             [
                 ("code", "in", list(GOV_CATALOG_CODES)),
                 ("company_id", "=", company.id),
+                ("active", "=", True),
+            ],
+            limit=1,
+        )
+        if rec:
+            return rec
+        return Catalog.search(
+            [
+                ("code", "in", list(GOV_CATALOG_CODES)),
+                ("company_id", "=", False),
                 ("active", "=", True),
             ],
             limit=1,
@@ -94,7 +105,13 @@ class JustechDoDgii623Exporter(models.AbstractModel):
             lines = payment.hellenia_withholding_line_ids
         else:
             return self.env["account.move"].browse()
-        lines = lines.filtered(lambda w: w.catalog_id.code in GOV_CATALOG_CODES and w.amount)
+        lines = lines.filtered(
+            lambda w: w.amount
+            and (
+                getattr(w, "affects_623", False)
+                or (w.catalog_id and w.catalog_id.code in GOV_CATALOG_CODES)
+            )
+        )
         if move:
             lines = lines.filtered(lambda w: w.move_id == move)
         return lines

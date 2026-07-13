@@ -53,6 +53,11 @@ class JustechPaymentWithholdingLine(models.Model):
     affects_606 = fields.Boolean(related="catalog_id.affects_606", store=True)
     affects_607 = fields.Boolean(related="catalog_id.affects_607", store=True)
     affects_623 = fields.Boolean(related="catalog_id.affects_623", store=True)
+    dgii_withholding_code = fields.Char(
+        related="catalog_id.dgii_withholding_code",
+        string="Código DGII",
+        store=True,
+    )
     fiscal_report_codes = fields.Char(
         compute="_compute_fiscal_report_codes",
         string="Reportes fiscales",
@@ -86,16 +91,23 @@ class JustechPaymentWithholdingLine(models.Model):
         string="Estado",
     )
 
-    @api.depends("catalog_id.affects_606", "catalog_id.affects_607", "catalog_id.affects_623")
+    @api.depends(
+        "catalog_id.affects_606",
+        "catalog_id.affects_607",
+        "catalog_id.affects_623",
+        "catalog_id.code",
+    )
     def _compute_fiscal_report_codes(self):
+        gov_codes = ("RET-GOB-5", "wh_isr_gov", "RET5%")
         for line in self:
             codes = []
             if line.affects_606:
                 codes.append("606")
             if line.affects_607:
                 codes.append("607")
-            if line.affects_623:
-                codes.append("623")
+            if line.affects_623 or (line.catalog_id and line.catalog_id.code in gov_codes):
+                if "623" not in codes:
+                    codes.append("623")
             line.fiscal_report_codes = "/".join(codes)
 
     @api.depends("payment_id.state", "move_line_id")

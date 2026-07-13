@@ -42,6 +42,10 @@ class AccountPaymentApplication(models.Model):
     justech_show_application_detail = fields.Boolean(
         compute="_compute_justech_show_application_detail",
     )
+    justech_related_invoice_count = fields.Integer(
+        compute="_compute_justech_related_invoice_count",
+        string="Facturas",
+    )
 
     @api.depends(
         "justech_application_line_ids",
@@ -61,6 +65,50 @@ class AccountPaymentApplication(models.Model):
                 or pay.reconciled_bill_ids
                 or pay.state == "posted"
             )
+
+    @api.depends(
+        "reconciled_invoice_ids",
+        "reconciled_bill_ids",
+        "justech_application_line_ids.move_id",
+        "justech_withholding_line_ids.move_id",
+    )
+    def _compute_justech_related_invoice_count(self):
+        for pay in self:
+            moves = pay.reconciled_invoice_ids | pay.reconciled_bill_ids
+            moves |= pay.justech_application_line_ids.mapped("move_id")
+            moves |= pay.justech_withholding_line_ids.mapped("move_id")
+            pay.justech_related_invoice_count = len(moves)
+
+    def action_justech_view_related_invoices(self):
+        self.ensure_one()
+        moves = self.reconciled_invoice_ids | self.reconciled_bill_ids
+        moves |= self.justech_application_line_ids.mapped("move_id")
+        moves |= self.justech_withholding_line_ids.mapped("move_id")
+        moves = moves.exists()
+        if not moves:
+            return False
+        action = {
+            "type": "ir.actions.act_window",
+            "name": "Facturas relacionadas",
+            "res_model": "account.move",
+            "view_mode": "list,form",
+            "domain": [("id", "in", moves.ids)],
+        }
+        if len(moves) == 1:
+            action.update({"view_mode": "form", "res_id": moves.id})
+        return action
+
+    def action_justech_view_payment_move(self):
+        self.ensure_one()
+        if not self.move_id:
+            return False
+        return {
+            "type": "ir.actions.act_window",
+            "name": "Asiento contable",
+            "res_model": "account.move",
+            "res_id": self.move_id.id,
+            "view_mode": "form",
+        }
 
     def _justech_applied_amount_for_invoice(self, move):
         """Monto aplicado a una factura según conciliaciones con el pago."""

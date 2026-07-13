@@ -36,6 +36,7 @@ class JustechDoFiscalReport(models.Model):
         "res.company",
         string="Compañía",
         required=True,
+        index=True,
         default=lambda self: self.env.company,
     )
     date_from = fields.Date(string="Desde", required=True)
@@ -623,4 +624,4 @@ class JustechDoFiscalReportLine(models.Model):
     amount_tax = fields.Float(string="ITBIS", digits=(16, 2))
     amount_total = fields.Float(string="Total", digits=(16, 2))
     notes = fields.Text(string="Notas")
-    move_id = fields.Many2one("account.move", string="Asiento")
+    move_id = fields.Many2one("account.move", string="Asiento", index=True)

@@ -1,6 +1,6 @@
 {
     "name": "Justech Tesorería Dominicana",
-    "version": "19.0.1.5.0",
+    "version": "19.0.1.6.0",
     "category": "Accounting/Localizations",
     "summary": "Pagos abiertos, anticipos y experiencia de tesorería (aditivo, no destructivo)",
     "description": """
@@ -30,6 +30,7 @@ No toca NCF, DGII, COA, retenciones ni el motor fiscal. Compatible con Framework
         "data/hide_duplicate_payment_menus.xml",
         "views/payment_partner_wizard_views.xml",
         "views/account_payment_open_views.xml",
+        "views/account_payment_bank_ux_views.xml",
         "views/account_move_open_payment_alert_views.xml",
         "views/treasury_apply_wizard_views.xml",
         "views/menu_accounting_navigation.xml",
@@ -48,7 +49,7 @@ No toca NCF, DGII, COA, retenciones ni el motor fiscal. Compatible con Framework
     "justech_register": {
         "module_code": "justech_l10n_do_treasury",
         "module_name": "Tesorería Dominicana",
-        "version": "19.0.1.5.0",
+        "version": "19.0.1.6.0",
         "category": "treasury",
         "country": "DO",
         "description": "Pagos abiertos y experiencia de tesorería",

@@ -1,10 +1,39 @@
 # -*- coding: utf-8 -*-
 """Redirige el botón nativo de factura al wizard único Justech."""
-from odoo import models
+from odoo import api, fields, models
 
 
 class AccountMove(models.Model):
     _inherit = "account.move"
+
+    justech_withholding_line_ids = fields.One2many(
+        "justech.payment.withholding.line",
+        "move_id",
+        string="Retenciones aplicadas",
+        copy=False,
+    )
+    justech_withholding_count = fields.Integer(
+        compute="_compute_justech_withholding_count",
+        string="Retenciones",
+    )
+
+    @api.depends("justech_withholding_line_ids")
+    def _compute_justech_withholding_count(self):
+        for move in self:
+            move.justech_withholding_count = len(move.justech_withholding_line_ids)
+
+    def action_justech_view_withholdings(self):
+        self.ensure_one()
+        lines = self.justech_withholding_line_ids
+        if not lines:
+            return False
+        return {
+            "type": "ir.actions.act_window",
+            "name": "Retenciones",
+            "res_model": "justech.payment.withholding.line",
+            "view_mode": "list,form",
+            "domain": [("id", "in", lines.ids)],
+        }
 
     def action_register_payment(self):
         """Único camino operativo: justech.payment.partner.wizard.

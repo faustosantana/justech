@@ -1,6 +1,6 @@
 {
     "name": "Hellenia UI",
-    "version": "19.0.1.0.10",
+    "version": "19.0.1.0.11",
     "category": "Hidden",
     "summary": "Menú principal y etiquetas UI para Hellenia (upgrade-safe)",
     "description": """
@@ -24,10 +24,13 @@ Personalización de menús y aplicaciones para Hellenia:
         "contacts",
         "stock_barcode",
         "justech_l10n_do_treasury",
+        "hellenia_account",
+        "justech_l10n_do_reports",
     ],
     "data": [
         "views/menu_customization.xml",
         "data/menu_accounting_navigation.xml",
+        "data/menu_purchase_navigation.xml",
         "data/menu_labels.xml",
     ],
     "installable": True,
@@ -36,7 +39,7 @@ Personalización de menús y aplicaciones para Hellenia:
     "justech_register": {
         "module_code": "hellenia_ui",
         "module_name": "Hellenia UI",
-        "version": "19.0.1.0.10",
+        "version": "19.0.1.0.11",
         "category": "ux",
         "country": "DO",
         "description": "Main menu and UI labels for Hellenia",

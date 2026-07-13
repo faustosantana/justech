@@ -61,19 +61,21 @@ class AccountPaymentRegister(models.TransientModel):
                 if not catalog._applies_to_move(move, partner_type):
                     continue
                 amount = catalog.compute_withholding_amount(move, applied_amount=applied)
-                if not amount or not catalog.account_id:
+                account = catalog.get_account_for_company(move.company_id or wiz.company_id)
+                if not amount or not account:
                     continue
+                tax = catalog.get_tax_for_company(move.company_id) or catalog.tax_id
                 details.append(
                     Command.create(
                         {
                             "catalog_id": catalog.id,
-                            "tax_id": catalog.tax_id.id,
+                            "tax_id": tax.id if tax else False,
                             "label": catalog.name,
                             "base_label": catalog._base_label(),
                             "base_amount": catalog._base_amount(move, applied_amount=applied),
                             "rate": catalog.rate,
                             "amount": amount,
-                            "account_id": catalog.account_id.id,
+                            "account_id": account.id,
                             "currency_id": wiz.currency_id.id,
                         }
                     )

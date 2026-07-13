@@ -116,9 +116,24 @@ class JustechDoFiscalReportReview(models.Model):
             report.line_ids.unlink()
             lines = report._collect_review_lines()
             report.write({"line_ids": [(0, 0, vals) for vals in lines]})
+            if lines:
+                load_msg = _("Período cargado con %(n)s documento(s).") % {"n": len(lines)}
+            else:
+                load_msg = _(
+                    "No se encontraron documentos para %(rtype)s en %(company)s "
+                    "del %(dfrom)s al %(dto)s. "
+                    "Causas frecuentes: sin retenciones con affects_623/código Gobierno, "
+                    "fecha de retención fuera del período, pago sin vínculo a factura, "
+                    "o empresa incorrecta."
+                ) % {
+                    "rtype": report.report_type,
+                    "company": report.company_id.display_name,
+                    "dfrom": report.date_from,
+                    "dto": report.date_to,
+                }
             report._transition_state(
                 "draft",
-                _("Período cargado con %(n)s documento(s).") % {"n": len(lines)},
+                load_msg,
                 audit_type="validate",
             )
             report._refresh_summary_counts()

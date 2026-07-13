@@ -1,5 +1,11 @@
 # Changelog — Estándar Fiscal Justech (cierre)
 
+## [19.0.2.4.1] — 2026-07-13
+
+### Fixed
+- RPC_ERROR del Centro Fiscal: placeholders `_()` mixtos nombrados/`%.1f` en diagnóstico de rangos NCF.
+- Defensas ante `name`/`remaining_count`/`pct_used` nulos en mensajes de stock bajo.
+
 ## [19.0.2.4.0] — 2026-07-13
 
 ### Added

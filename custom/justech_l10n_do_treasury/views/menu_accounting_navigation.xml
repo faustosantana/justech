@@ -31,46 +31,107 @@
         <field name="context">{}</field>
     </record>
 
+    <!-- Dominios reales (no solo search_default): partner_type estricto. -->
+    <record id="action_payments_customer" model="ir.actions.act_window">
+        <field name="name">Pagos de clientes</field>
+        <field name="res_model">account.payment</field>
+        <field name="view_mode">list,form,kanban,graph</field>
+        <field name="domain">[('partner_type', '=', 'customer')]</field>
+        <field name="context">{
+            'default_payment_type': 'inbound',
+            'default_partner_type': 'customer',
+            'search_default_inbound_filter': 1,
+            'default_move_journal_types': ('bank', 'cash'),
+            'display_account_trust': True,
+        }</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Registrar un cobro de cliente</p>
+            <p>Solo pagos con partner_type = cliente (cobros y devoluciones relacionadas).</p>
+        </field>
+    </record>
+
+    <record id="action_payments_vendor" model="ir.actions.act_window">
+        <field name="name">Pagos de proveedores</field>
+        <field name="res_model">account.payment</field>
+        <field name="view_mode">list,form,kanban,graph</field>
+        <field name="domain">[('partner_type', '=', 'supplier')]</field>
+        <field name="context">{
+            'default_payment_type': 'outbound',
+            'default_partner_type': 'supplier',
+            'search_default_outbound_filter': 1,
+            'default_move_journal_types': ('bank', 'cash'),
+            'display_account_trust': True,
+        }</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Registrar un pago a proveedor</p>
+            <p>Solo pagos con partner_type = proveedor (pagos y devoluciones relacionadas).</p>
+        </field>
+    </record>
+
+    <record id="action_account_payments_all" model="ir.actions.act_window">
+        <field name="name">Todos los pagos</field>
+        <field name="res_model">account.payment</field>
+        <field name="view_mode">list,form,kanban,graph</field>
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Registre un pago de cliente o proveedor.
+            </p>
+            <p>
+                Esta vista muestra cobros y pagos. Use los filtros por tipo de partner,
+                estado, diario, empresa y fecha.
+            </p>
+        </field>
+    </record>
+
     <menuitem id="menu_finance_payments_customer"
               name="Pagos de clientes"
               parent="menu_finance_payments_root"
-              action="account.action_account_payments"
+              action="action_payments_customer"
               sequence="10"
               groups="account.group_account_readonly"/>
 
     <menuitem id="menu_finance_payments_vendor"
-              name="Pagos a proveedores"
+              name="Pagos de proveedores"
               parent="menu_finance_payments_root"
-              action="account.action_account_payments_payable"
+              action="action_payments_vendor"
               sequence="20"
+              groups="account.group_account_readonly"/>
+
+    <menuitem id="menu_finance_payments_all"
+              name="Todos los pagos"
+              parent="menu_finance_payments_root"
+              action="action_account_payments_all"
+              sequence="25"
               groups="account.group_account_readonly"/>
 
     <menuitem id="menu_finance_register_customer_payment"
               name="Registrar cobro / Aplicar pagos"
               parent="menu_finance_payments_root"
               action="justech_l10n_do_payments_withholding.action_justech_register_customer_payment"
-              sequence="25"
+              sequence="30"
               groups="account.group_account_invoice"/>
 
     <menuitem id="menu_finance_register_vendor_payment"
               name="Registrar pago / Aplicar pagos"
               parent="menu_finance_payments_root"
               action="justech_l10n_do_payments_withholding.action_justech_register_vendor_payment"
-              sequence="26"
+              sequence="31"
               groups="account.group_account_invoice"/>
 
     <menuitem id="menu_finance_open_payments_customer"
               name="Pagos abiertos (clientes)"
               parent="menu_finance_payments_root"
               action="action_treasury_open_payments_customer"
-              sequence="30"
+              sequence="40"
               groups="account.group_account_readonly"/>
 
     <menuitem id="menu_finance_open_payments_vendor"
               name="Pagos abiertos (proveedores)"
               parent="menu_finance_payments_root"
               action="action_treasury_open_payments_vendor"
-              sequence="35"
+              sequence="45"
               groups="account.group_account_readonly"/>
 
     <!-- Oculto: duplica conciliación bancaria estándar (acceso vía Tablero / diarios). -->
@@ -78,7 +139,7 @@
         <field name="name">Conciliación bancaria</field>
         <field name="parent_id" ref="menu_finance_payments_root"/>
         <field name="action" ref="action_justech_bank_reconciliation"/>
-        <field name="sequence">40</field>
+        <field name="sequence">50</field>
         <field name="active" eval="False"/>
     </record>
 
@@ -86,7 +147,7 @@
     <menuitem id="menu_receivable_payments_customer"
               name="Pagos de clientes"
               parent="account.menu_finance_receivables"
-              action="account.action_account_payments"
+              action="action_payments_customer"
               sequence="30"
               groups="account.group_account_readonly"/>
 
@@ -110,9 +171,9 @@
     </record>
 
     <menuitem id="menu_payable_payments_vendor"
-              name="Pagos a proveedores"
+              name="Pagos de proveedores"
               parent="account.menu_finance_payables"
-              action="account.action_account_payments_payable"
+              action="action_payments_vendor"
               sequence="30"
               groups="account.group_account_readonly"/>
 

@@ -128,12 +128,28 @@ class JustechDoNcfDiagnosticService(models.AbstractModel):
                     )
                 )
             elif row["health_status"] == "low_stock":
+                name = row.get("name") or _("Rango sin nombre")
+                rem = row.get("remaining_count")
+                if rem is None:
+                    rem = 0
+                pct = row.get("pct_used")
+                try:
+                    pct = float(pct) if pct is not None else 0.0
+                except (TypeError, ValueError):
+                    pct = 0.0
                 findings.append(
                     self._finding(
                         "range_low_stock",
                         self.SEVERITY_WARNING,
                         _("Rango casi agotado"),
-                        _("%(name)s tiene %(rem)s NCF restantes (%.1f%% usado).", name=row["name"], rem=row["remaining_count"], pct=row["pct_used"]),
+                        _(
+                            "%(name)s tiene %(rem)s NCF restantes (%(pct).1f%% usado)."
+                        )
+                        % {
+                            "name": name,
+                            "rem": rem,
+                            "pct": pct,
+                        },
                         "justech.do.ncf.range",
                         [("id", "=", row["range_id"])],
                     )

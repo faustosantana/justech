@@ -9,12 +9,13 @@
                 <attribute name="class" add="o_justech_warranty_compact_form" separator=" "/>
             </xpath>
 
-            <!-- Columnas visibles: producto, cantidad, precio, descuento, impuestos, importe, garantía -->
+            <!-- Producto (plantilla) + descripción (`name`/sol_text) visibles: estándar Odoo.
+                 Solo se oculta la variante `product_id` (redundante con product_template_id). -->
             <xpath expr="//field[@name='order_line']/list/field[@name='product_id']" position="attributes">
                 <attribute name="optional">hide</attribute>
             </xpath>
             <xpath expr="//field[@name='order_line']/list/field[@name='name']" position="attributes">
-                <attribute name="optional">hide</attribute>
+                <attribute name="optional">show</attribute>
             </xpath>
             <xpath expr="//field[@name='order_line']/list/field[@name='analytic_distribution']" position="attributes">
                 <attribute name="optional">hide</attribute>

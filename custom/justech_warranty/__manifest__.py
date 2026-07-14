@@ -27,7 +27,7 @@ RC6.2 (v19.0.1.9.0):
   * Cobertura cliente vs. proveedor con cálculo automático de gap.
   * Reclamos parciales por unidad.
 """,
-    "version": "19.0.1.9.0",
+    "version": "19.0.1.9.1",
     "category": "Justech/Ventas",
     "author": "Justech",
     "maintainer": "Justech",
@@ -76,7 +76,7 @@ RC6.2 (v19.0.1.9.0):
     "justech_register": {
         "module_code": "justech_warranty",
         "module_name": "Justech Garantías",
-        "version": "19.0.1.9.0",
+        "version": "19.0.1.9.1",
         "category": "sales",
         "country": "",
         "localization": "",

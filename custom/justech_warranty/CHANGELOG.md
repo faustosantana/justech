@@ -3,6 +3,14 @@
 Formato basado en [Keep a Changelog](https://keepachangelog.com/) y SemVer Odoo
 (`19.0.MAJOR.MINOR.PATCH`).
 
+## [19.0.1.9.1] - 2026-07-14
+### Fixed
+- **Descripción editable en líneas de cotización/pedido:** se restablece
+  `sale.order.line.name` (`widget="sol_text"`) con `optional="show"` (estándar
+  Odoo 19). La vista de garantías lo había dejado en `optional="hide"` al
+  compactar la grilla, ocultando la columna de descripción y bloqueando la
+  edición libre multilínea tras elegir producto.
+
 ## [19.0.1.9.0] - 2026-07-13
 ### Added
 - **Modelo `justech.warranty.unit`**: unidad trazable individualmente dentro de

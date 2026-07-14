@@ -1,5 +1,16 @@
 # Changelog — Estándar Fiscal Justech (cierre)
 
+## [19.0.2.7.0] — 2026-07-14 — Hotfix moneda DOP + vigencia NCF
+
+### Fixed
+- Oculta `account.document_tax_totals_company_currency_template` (“Impuestos DOP”)
+  en facturas multicurrency; el PDF solo muestra totales en moneda del documento.
+- “Válida hasta:” usa `justech_do_ncf_range_id.date_to` si `l10n_do_ncf_expiration_date`
+  está vacío; oculta la etiqueta cuando no hay fecha.
+
+### Docs
+- `docs/REPORT_HOTFIX_CURRENCY_NCF_VALIDITY.md`
+
 ## [19.0.2.6.2] — 2026-07-14 — Hotfix reportes (gate DO por compañía)
 
 ### Fixed

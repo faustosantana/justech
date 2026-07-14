@@ -57,15 +57,8 @@ class AccountMove(models.Model):
             move.hellenia_show_origin_ncf = move.move_type in ("out_refund", "in_refund")
 
     def action_open_void_ncf_wizard(self):
-        self.ensure_one()
-        return {
-            "type": "ir.actions.act_window",
-            "name": _("Anular comprobante fiscal"),
-            "res_model": "justech.do.ncf.void.wizard",
-            "view_mode": "form",
-            "target": "new",
-            "context": {"default_move_id": self.id},
-        }
+        """Delegar al wizard canónico de justech_l10n_do_ncf (sin lógica propia)."""
+        return super().action_open_void_ncf_wizard()
 
     def _hellenia_get_withholding_tax(self, name, tax_use):
         return self.env["account.tax"].search(

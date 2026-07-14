@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- Vista canónica en justech_l10n_do_ncf.views.ncf_void_wizard_views.xml -->
-    <record id="view_justech_do_ncf_void_wizard_form" model="ir.ui.view">
-        <field name="name">justech.do.ncf.void.wizard.form.hellenia</field>
+    <!-- Hereda la vista canónica Justech; no redefine su XML ID. -->
+    <record id="view_justech_do_ncf_void_wizard_form_hellenia_ux" model="ir.ui.view">
+        <field name="name">justech.do.ncf.void.wizard.form.hellenia.ux</field>
         <field name="model">justech.do.ncf.void.wizard</field>
         <field name="inherit_id" ref="justech_l10n_do_ncf.view_justech_do_ncf_void_wizard_form"/>
         <field name="arch" type="xml">

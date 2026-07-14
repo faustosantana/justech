@@ -115,6 +115,7 @@
 
             <xpath expr="//header" position="inside">
                 <field name="justech_do_can_void_ncf" invisible="1"/>
+                <field name="justech_do_ncf_voided" invisible="1"/>
                 <button name="action_open_void_ncf_wizard" string="Anular NCF" type="object"
                         class="btn-secondary"
                         invisible="not justech_do_can_void_ncf"
@@ -122,9 +123,9 @@
                         title="Anular el NCF registra el comprobante en el 608. No equivale necesariamente a nota de crédito ni devolución."/>
             </xpath>
 
-            <!-- Corrige fórmula rota de l10n_do_accounting que dejaba Cancel siempre visible. -->
+            <!-- Herencia Justech: corrige fórmula rota de l10n_do_accounting (sin modificar el módulo). -->
             <xpath expr="//button[@name='button_cancel']" position="attributes">
-                <attribute name="invisible">not id or state != 'draft'</attribute>
+                <attribute name="invisible">not id or state != 'draft' or justech_do_ncf_voided</attribute>
                 <attribute name="string">Cancelar asiento</attribute>
             </xpath>
         </field>

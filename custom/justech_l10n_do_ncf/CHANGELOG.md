@@ -1,5 +1,17 @@
 # Changelog — Estándar Fiscal Justech (cierre)
 
+## [19.0.2.12.1] — 2026-07-14 — Hotfix void NCF sin Hellenia
+
+### Fixed
+- Wizard 100% en `justech_l10n_do_ncf` (catálogo 608 del move + «Otro» UX).
+- Aviso claro si la factura tiene pagos/parcial; no toca pagos ni conciliaciones.
+- `button_cancel` oculto también con NCF anulado; herencia Justech solo.
+- `button_draft` no reactiva ni reutiliza NCF anulado ni borra traza 608.
+- Sin dependencia de `hellenia_ux` para el flujo.
+
+### Unchanged
+- Producción; secuencias; asientos históricos; 606/607/609/623 lógica.
+
 ## [19.0.2.12.0] — 2026-07-14 — Wizard anulación NCF + Cancelar asiento
 
 ### Added

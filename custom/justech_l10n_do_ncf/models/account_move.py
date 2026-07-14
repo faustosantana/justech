@@ -522,7 +522,57 @@ class AccountMove(models.Model):
                 vals.setdefault(
                     "l10n_do_expense_type", exp.code if exp else False
                 )
+        # No reactivar NCF anulado ni alterar traza 608 vía write genérico.
+        if not self.env.context.get("justech_ncf_engine"):
+            for move in self.filtered("justech_do_ncf_voided"):
+                if vals.get("justech_do_ncf_voided") is False:
+                    raise UserError(
+                        _(
+                            "No se puede reactivar un comprobante fiscal ya anulado "
+                            "(%(ncf)s)."
+                        )
+                        % {"ncf": move._justech_get_issued_ncf() or move.name}
+                    )
+                if "justech_do_ncf" in vals and vals.get("justech_do_ncf") != move.justech_do_ncf:
+                    raise UserError(
+                        _(
+                            "No se puede modificar ni reutilizar el NCF de un "
+                            "comprobante ya anulado (%(ncf)s)."
+                        )
+                        % {"ncf": move.justech_do_ncf or move._justech_get_issued_ncf()}
+                    )
+                for fname in (
+                    "justech_do_ncf_void_date",
+                    "justech_do_ncf_void_reason",
+                    "justech_do_ncf_cancel_type",
+                ):
+                    if fname in vals and vals.get(fname) != move[fname]:
+                        raise UserError(
+                            _("La anulación fiscal de %(doc)s es inmutable.")
+                            % {"doc": move.display_name}
+                        )
         return super().write(vals)
+
+    def button_draft(self):
+        """Restablecer a borrador sin reactivar ni reutilizar NCF anulado."""
+        voided = self.filtered("justech_do_ncf_voided")
+        snapshot = {
+            move.id: {
+                "justech_do_ncf": move.justech_do_ncf,
+                "justech_do_ncf_voided": True,
+                "justech_do_ncf_void_reason": move.justech_do_ncf_void_reason,
+                "justech_do_ncf_void_date": move.justech_do_ncf_void_date,
+                "justech_do_ncf_cancel_type": move.justech_do_ncf_cancel_type,
+                "justech_do_dgii_line_status": "2",
+                "justech_do_dgii_fiscal_state": "cancelled",
+                "justech_do_include_in_dgii": False,
+            }
+            for move in voided
+        }
+        res = super().button_draft()
+        for move in self.browse(list(snapshot)):
+            move.with_context(justech_ncf_engine=True).write(snapshot[move.id])
+        return res
 
     @api.onchange("partner_id")
     def _onchange_partner_justech_do_document_type(self):

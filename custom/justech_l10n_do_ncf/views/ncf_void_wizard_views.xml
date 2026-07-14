@@ -5,7 +5,12 @@
         <field name="model">justech.do.ncf.void.wizard</field>
         <field name="arch" type="xml">
             <form string="Anular comprobante fiscal">
-                <field name="help_note" nolabel="1" colspan="2"/>
+                <div class="alert alert-info" role="alert" invisible="not help_note">
+                    <field name="help_note" nolabel="1"/>
+                </div>
+                <div class="alert alert-warning" role="alert" invisible="not payment_warning">
+                    <field name="payment_warning" nolabel="1"/>
+                </div>
                 <group>
                     <group string="Documento">
                         <field name="move_id"/>
@@ -15,6 +20,7 @@
                         <field name="ncf"/>
                         <field name="invoice_date"/>
                         <field name="state"/>
+                        <field name="payment_state"/>
                     </group>
                     <group string="Anulación">
                         <field name="cancel_type"/>

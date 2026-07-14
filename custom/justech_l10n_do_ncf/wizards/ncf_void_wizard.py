@@ -3,20 +3,14 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
-# Catálogo DGII 608 (mismo selection que account.move.justech_do_ncf_cancel_type).
-_CANCEL_TYPES = [
-    ("01", "01 — Secuencia no utilizada"),
-    ("02", "02 — Errores de impresión"),
-    ("03", "03 — Impresión defectuosa"),
-    ("04", "04 — Corrección de información"),
-    ("05", "05 — Cambio de productos"),
-    ("06", "06 — Devolución de productos"),
-    ("07", "07 — Omisión de productos"),
-    ("08", "08 — Errores en secuencias NCF"),
-    ("09", "09 — Cese de operaciones"),
-    ("10", "10 — Pérdida o hurto de talonario"),
-    ("99", "99 — Otro"),
-]
+
+def _justech_void_cancel_type_selection(env):
+    """Catálogo real 608 desde account.move + opción UX «Otro» (nunca se exporta 99)."""
+    field = env["account.move"]._fields.get("justech_do_ncf_cancel_type")
+    selection = list(field.selection or []) if field else []
+    if not any(code == "99" for code, _label in selection):
+        selection.append(("99", "99 — Otro"))
+    return selection
 
 
 class JustechDoNcfVoidWizard(models.TransientModel):
@@ -34,19 +28,18 @@ class JustechDoNcfVoidWizard(models.TransientModel):
         readonly=True,
     )
     ncf = fields.Char(string="NCF", compute="_compute_ncf", readonly=True)
-
-    @api.depends("move_id", "move_id.justech_do_ncf", "move_id.l10n_latam_document_number")
-    def _compute_ncf(self):
-        for wiz in self:
-            wiz.ncf = wiz.move_id._justech_get_issued_ncf() if wiz.move_id else False
-    invoice_date = fields.Date(related="move_id.invoice_date", string="Fecha de emisión", readonly=True)
+    invoice_date = fields.Date(related="move_id.invoice_date", string="Fecha", readonly=True)
     state = fields.Selection(related="move_id.state", string="Estado actual", readonly=True)
+    payment_state = fields.Selection(
+        related="move_id.payment_state", string="Estado de pago", readonly=True
+    )
+    payment_warning = fields.Char(string="Aviso de pago", compute="_compute_payment_warning")
     cancel_type = fields.Selection(
-        selection=_CANCEL_TYPES,
+        selection="_selection_cancel_type",
         string="Motivo de anulación",
         required=True,
         default="04",
-        help="Código DGII formato 608.",
+        help="Catálogo DGII formato 608 instalado en el documento fiscal.",
     )
     observation = fields.Text(
         string="Observación adicional",
@@ -58,21 +51,38 @@ class JustechDoNcfVoidWizard(models.TransientModel):
         readonly=True,
         default=lambda self: self.env.user,
     )
-    help_note = fields.Html(
+    help_note = fields.Char(
         string="Ayuda",
-        sanitize=True,
         readonly=True,
         default=(
-            "<p>Anular el NCF registra el comprobante en el <strong>608</strong>. "
+            "Anular el NCF registra el comprobante en el 608. "
             "Esta acción no equivale necesariamente a emitir una nota de crédito "
-            "ni a devolver un pago.</p>"
+            "ni a devolver un pago."
         ),
     )
 
-    @api.onchange("cancel_type")
-    def _onchange_cancel_type(self):
-        # UX: resaltar necesidad de observación cuando el motivo es Otro.
-        return
+    @api.model
+    def _selection_cancel_type(self):
+        return _justech_void_cancel_type_selection(self.env)
+
+    @api.depends("move_id", "move_id.justech_do_ncf", "move_id.l10n_latam_document_number")
+    def _compute_ncf(self):
+        for wiz in self:
+            wiz.ncf = wiz.move_id._justech_get_issued_ncf() if wiz.move_id else False
+
+    @api.depends("move_id", "move_id.payment_state")
+    def _compute_payment_warning(self):
+        for wiz in self:
+            ps = wiz.move_id.payment_state if wiz.move_id else False
+            if ps in ("paid", "partial", "in_payment"):
+                wiz.payment_warning = _(
+                    "Esta factura tiene pagos o está conciliada parcialmente "
+                    "(%s). La anulación fiscal del NCF no cancela pagos ni "
+                    "conciliaciones; use nota de crédito u operación contable "
+                    "estándar si debe revertir el cobro."
+                ) % (ps,)
+            else:
+                wiz.payment_warning = False
 
     def action_confirm_void(self):
         self.ensure_one()
@@ -90,10 +100,9 @@ class JustechDoNcfVoidWizard(models.TransientModel):
             raise UserError(
                 _("Si el motivo es «Otro», debe indicar una observación adicional.")
             )
-        label = dict(self._fields["cancel_type"].selection).get(self.cancel_type, self.cancel_type)
+        label = dict(self._selection_cancel_type()).get(self.cancel_type, self.cancel_type)
         reason = observation or label
-        # Código 99 (Otro) no se exporta como código DGII nativo: mapear a 04 para 608
-        # preservando el detalle en la observación/motivo.
+        # 99 es solo UX; el 608 exporta códigos 01–10 del catálogo instalado.
         dgii_code = self.cancel_type if self.cancel_type != "99" else "04"
         move.write(
             {

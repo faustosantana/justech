@@ -109,9 +109,12 @@
         <field name="sequence">60</field>
         <field name="active" eval="True"/>
     </record>
+    <!-- Rangos = Centro de Administración Fiscal unificado bajo Localización Dominicana.
+         No reparentar a Auditoría Fiscal (evita menú duplicado / ubicación confusa). -->
     <record id="justech_l10n_do_ncf.menu_justech_do_ncf_ranges" model="ir.ui.menu">
-        <field name="parent_id" ref="menu_justech_do_audit_root"/>
-        <field name="sequence">70</field>
+        <field name="name">Rangos</field>
+        <field name="parent_id" ref="justech_l10n_do_base.menu_justech_do_fiscal_root"/>
+        <field name="sequence">15</field>
         <field name="active" eval="True"/>
     </record>
 

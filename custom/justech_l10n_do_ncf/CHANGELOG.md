@@ -1,5 +1,19 @@
 # Changelog — Estándar Fiscal Justech (cierre)
 
+## [19.0.2.10.0] — 2026-07-14 — Centro único Rangos (filtros de flujo)
+
+### Added
+- `justech.do.fiscal.range.center` + líneas unificadas:
+  Todos / Ventas / Compras Emitidos / Compras Recibidos.
+- KPIs superiores; ficha de detalle; columna Consume secuencia / Origen / Flujo.
+
+### Changed
+- Menú **Rangos** = Centro de Administración Fiscal (Localización Dominicana).
+- Menús satélite de documentos Compras desactivados (sin duplicar).
+
+### Unchanged
+- Sin rangos ficticios; sin consumo de NCF; histórico intacto.
+
 ## [19.0.2.9.0] — 2026-07-14 — UX admin Compras + costos/gastos editables
 
 ### Added

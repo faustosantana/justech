@@ -1,6 +1,6 @@
 {
     "name": "Justech Dominican Fiscal Reports",
-    "version": "19.0.1.24.3",
+    "version": "19.0.1.24.4",
     "category": "Accounting/Localizations/Reporting",
     "summary": "DGII reports 606–609, 623 — exportadores oficiales",
     "description": """
@@ -40,7 +40,7 @@ Dominican DGII fiscal reports for Justech.
     "justech_register": {
         "module_code": "justech_l10n_do_reports",
         "module_name": "Justech Dominican Fiscal Reports",
-        "version": "19.0.1.24.3",
+        "version": "19.0.1.24.4",
         "category": "reports",
         "country": "DO",
         "localization": "l10n_do",

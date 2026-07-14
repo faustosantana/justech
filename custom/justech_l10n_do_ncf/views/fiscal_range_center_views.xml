@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_justech_do_fiscal_range_center_line_list_all" model="ir.ui.view">
+        <field name="name">justech.do.fiscal.range.center.line.list.all</field>
+        <field name="model">justech.do.fiscal.range.center.line</field>
+        <field name="priority">16</field>
+        <field name="arch" type="xml">
+            <list string="Todos" create="0" delete="0" edit="0">
+                <field name="company_display" string="Empresa"/>
+                <field name="flow" string="Flujo"/>
+                <field name="prefix" string="Código"/>
+                <field name="name" string="Nombre"/>
+                <field name="status_label" string="Estado"/>
+                <field name="consumes_sequence_label" string="Consume secuencia"/>
+                <field name="origin" string="Origen"/>
+                <field name="next_ncf" string="Próximo"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_justech_do_fiscal_range_center_line_list_sale" model="ir.ui.view">
+        <field name="name">justech.do.fiscal.range.center.line.list.sale</field>
+        <field name="model">justech.do.fiscal.range.center.line</field>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <list string="Ventas" create="0" delete="0" edit="0">
+                <field name="company_display" string="Empresa"/>
+                <field name="prefix" string="Código"/>
+                <field name="name" string="Nombre"/>
+                <field name="sequence_start" string="Desde"/>
+                <field name="sequence_end" string="Hasta"/>
+                <field name="next_ncf" string="Próximo"/>
+                <field name="remaining_count" string="Disponibles"/>
+                <field name="status_label" string="Estado"/>
+                <field name="journal_names" string="Diario"/>
+                <field name="responsible_name" string="Responsable"/>
+                <field name="last_used" string="Último uso"/>
+                <field name="consumes_sequence_label" string="Consume secuencia"/>
+                <field name="origin" string="Origen"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_justech_do_fiscal_range_center_line_list_issued" model="ir.ui.view">
+        <field name="name">justech.do.fiscal.range.center.line.list.issued</field>
+        <field name="model">justech.do.fiscal.range.center.line</field>
+        <field name="priority">21</field>
+        <field name="arch" type="xml">
+            <list string="Compras Emitidos" create="0" delete="0" edit="0">
+                <field name="company_display" string="Empresa"/>
+                <field name="prefix" string="Código"/>
+                <field name="name" string="Nombre"/>
+                <field name="sequence_start" string="Desde"/>
+                <field name="sequence_end" string="Hasta"/>
+                <field name="next_ncf" string="Próximo"/>
+                <field name="remaining_count" string="Disponibles"/>
+                <field name="status_label" string="Estado"/>
+                <field name="journal_names" string="Diario"/>
+                <field name="responsible_name" string="Responsable"/>
+                <field name="last_used" string="Último uso"/>
+                <field name="consumes_sequence_label" string="Consume secuencia"/>
+                <field name="origin" string="Origen"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_justech_do_fiscal_range_center_line_list_received" model="ir.ui.view">
+        <field name="name">justech.do.fiscal.range.center.line.list.received</field>
+        <field name="model">justech.do.fiscal.range.center.line</field>
+        <field name="priority">22</field>
+        <field name="arch" type="xml">
+            <list string="Compras Recibidos" create="0" delete="0" edit="0">
+                <field name="prefix" string="Código"/>
+                <field name="name" string="Nombre"/>
+                <field name="document_category" string="Tipo"/>
+                <field name="active_flag" string="Activo"/>
+                <field name="is_received_document" string="Documento Recibido"/>
+                <field name="usage_count" string="Usado en histórico"/>
+                <field name="last_used" string="Último uso"/>
+                <field name="is_electronic_supplier" string="Proveedor Electrónico"/>
+                <field name="participates_606" string="Participa en 606"/>
+                <field name="consumes_sequence_label" string="Consume secuencia"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_justech_do_fiscal_range_center_line_form" model="ir.ui.view">
+        <field name="name">justech.do.fiscal.range.center.line.form</field>
+        <field name="model">justech.do.fiscal.range.center.line</field>
+        <field name="arch" type="xml">
+            <form string="Tipo fiscal" create="0" delete="0">
+                <header>
+                    <button name="action_open_range" type="object" string="Administrar rango"
+                            class="btn-primary"
+                            invisible="flow == 'purchase_received' or not consumes_sequence"
+                            groups="justech_l10n_do_base.group_justech_do_fiscal_manager,base.group_system"/>
+                    <field name="status_label" readonly="1"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group string="General">
+                            <field name="prefix" readonly="1"/>
+                            <field name="name" readonly="1"/>
+                            <field name="help_text" readonly="1"/>
+                            <field name="flow" readonly="1"/>
+                            <field name="origin" readonly="1"/>
+                            <field name="consumes_sequence_label" readonly="1"/>
+                        </group>
+                        <group string="Empresa">
+                            <field name="company_display" readonly="1"/>
+                            <field name="status_label" readonly="1"/>
+                            <field name="journal_names" readonly="1"
+                                   invisible="flow == 'purchase_received'"/>
+                            <field name="range_id" readonly="1"
+                                   invisible="flow == 'purchase_received'"/>
+                            <field name="next_ncf" readonly="1"
+                                   invisible="flow == 'purchase_received'"/>
+                            <field name="remaining_count" readonly="1"
+                                   invisible="flow == 'purchase_received'"/>
+                            <field name="date_to" readonly="1"
+                                   invisible="flow == 'purchase_received'"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Histórico">
+                            <group>
+                                <field name="last_used" readonly="1"/>
+                                <field name="usage_count" readonly="1"/>
+                                <field name="company_display" string="Empresas" readonly="1"/>
+                            </group>
+                        </page>
+                        <page string="Validaciones DGII">
+                            <group>
+                                <field name="participates_606" readonly="1"/>
+                                <field name="participates_607" readonly="1"/>
+                                <field name="participates_608" readonly="1"/>
+                                <field name="participates_609" readonly="1"/>
+                                <field name="participates_623" readonly="1"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_justech_do_fiscal_range_center_form" model="ir.ui.view">
+        <field name="name">justech.do.fiscal.range.center.form</field>
+        <field name="model">justech.do.fiscal.range.center</field>
+        <field name="arch" type="xml">
+            <form string="Rangos" create="0" delete="0" class="o_justech_fiscal_range_center">
+                <header>
+                    <button name="action_refresh" type="object" string="Actualizar" class="btn-primary"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group string="Tipo de Flujo">
+                        <field name="flow_filter" widget="radio" options="{'horizontal': true}"/>
+                    </group>
+
+                    <group col="3" string="Resumen">
+                        <group string="Ventas">
+                            <field name="sale_types_count" string="Tipos"/>
+                            <field name="sale_active_count" string="Activos"/>
+                            <field name="sale_pending_count" string="Pendientes"/>
+                            <field name="sale_expired_count" string="Vencidos"/>
+                        </group>
+                        <group string="Compras Emitidos">
+                            <field name="issued_types_count" string="Tipos"/>
+                            <field name="issued_active_count" string="Activos"/>
+                            <field name="issued_no_range_count" string="Sin rango"/>
+                            <field name="issued_expired_count" string="Vencidos"/>
+                        </group>
+                        <group string="Compras Recibidos">
+                            <field name="received_types_count" string="Tipos"/>
+                            <field name="received_active_count" string="Activos"/>
+                            <field name="received_disabled_count" string="Deshabilitados"/>
+                            <field name="received_historic_count" string="Históricos"/>
+                        </group>
+                    </group>
+
+                    <field name="line_ids"
+                           nolabel="1"
+                           invisible="flow_filter != 'all'"
+                           context="{'tree_view_ref': 'justech_l10n_do_ncf.view_justech_do_fiscal_range_center_line_list_all',
+                                     'form_view_ref': 'justech_l10n_do_ncf.view_justech_do_fiscal_range_center_line_form'}"/>
+                    <field name="line_ids"
+                           nolabel="1"
+                           domain="[('flow', '=', 'sale')]"
+                           invisible="flow_filter != 'sale'"
+                           context="{'tree_view_ref': 'justech_l10n_do_ncf.view_justech_do_fiscal_range_center_line_list_sale',
+                                     'form_view_ref': 'justech_l10n_do_ncf.view_justech_do_fiscal_range_center_line_form'}"/>
+                    <field name="line_ids"
+                           nolabel="1"
+                           domain="[('flow', '=', 'purchase_issued')]"
+                           invisible="flow_filter != 'purchase_issued'"
+                           context="{'tree_view_ref': 'justech_l10n_do_ncf.view_justech_do_fiscal_range_center_line_list_issued',
+                                     'form_view_ref': 'justech_l10n_do_ncf.view_justech_do_fiscal_range_center_line_form'}"/>
+                    <field name="line_ids"
+                           nolabel="1"
+                           domain="[('flow', '=', 'purchase_received')]"
+                           invisible="flow_filter != 'purchase_received'"
+                           context="{'tree_view_ref': 'justech_l10n_do_ncf.view_justech_do_fiscal_range_center_line_list_received',
+                                     'form_view_ref': 'justech_l10n_do_ncf.view_justech_do_fiscal_range_center_line_form'}"/>
+
+                    <div class="alert alert-info" role="alert">
+                        Ventas y Compras Emitidos usan Motor Fiscal Justech (consumen secuencia al publicar).
+                        Compras Recibidos usan LATAM (NCF del proveedor; no consumen secuencia).
+                        No se crean rangos ficticios desde este centro.
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_justech_do_fiscal_range_center" model="ir.actions.server">
+        <field name="name">Rangos</field>
+        <field name="model_id" ref="model_justech_do_fiscal_range_center"/>
+        <field name="state">code</field>
+        <field name="code">action = env['justech.do.fiscal.range.center'].action_open()</field>
+    </record>
+</odoo>

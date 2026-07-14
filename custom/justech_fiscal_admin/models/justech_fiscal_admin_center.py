@@ -583,13 +583,7 @@ class JustechFiscalAdminCenter(models.Model):
         }
 
     def action_open_ncf_ranges(self):
-        return {
-            "type": "ir.actions.act_window",
-            "name": _("Rangos NCF"),
-            "res_model": "justech.do.ncf.range",
-            "view_mode": "list,form",
-            "domain": [("company_id", "=", self.company_id.id)],
-        }
+        return self.env["justech.do.fiscal.range.center"].action_open()
 
     def action_open_purchase_received_types(self):
         return self.env.ref(

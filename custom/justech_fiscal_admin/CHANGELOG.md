@@ -1,5 +1,9 @@
 # Changelog — justech_fiscal_admin
 
+## 19.0.1.8.6 — 2026-07-14
+
+- Botón «Administrar rangos» abre el Centro único (`justech.do.fiscal.range.center`).
+
 ## 19.0.1.8.5 — 2026-07-14
 
 - Centro Fiscal: pestaña Compras (recibidos, emitidos, costos/gastos, rangos, incidencias).

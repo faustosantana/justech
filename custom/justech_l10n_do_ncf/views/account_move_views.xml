@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <!--
-      Cadena inherit auditada (justech_dev):
+      Cadena inherit auditada:
       - account.view_move_form (base)
-      - l10n_do_accounting.view_move_form (prio 16): campos Adel en header (invisibles si
-        l10n_latam_use_documents=False). NO se alteran atributos de esos campos aquí.
-      - justech_l10n_do_ncf.view_move_form_justech_do_ncf (prio 20): este archivo.
-      - hellenia_ux: NO instalado en justech_dev.
-      Visualización fiscal: solo campos FDP de lectura. No activa motor Adel.
+      - l10n_do_accounting.view_move_form (prio 16)
+      - este archivo (prio 20): Compras recibidas LATAM vs emisión Justech B11/B13/B17
     -->
     <record id="view_move_form_justech_do_ncf" model="ir.ui.view">
         <field name="name">account.move.form.justech.ncf</field>
@@ -16,17 +13,41 @@
         <field name="priority">20</field>
         <field name="arch" type="xml">
             <xpath expr="//group[@id='header_left_group']/field[@name='l10n_latam_document_type_id']" position="before">
-                <!-- Borrador: asignación Justech (escritura motor Justech, no Adel) -->
+                <field name="justech_do_purchase_registration_mode"
+                       widget="radio"
+                       invisible="state != 'draft' or move_type not in ('in_invoice', 'in_refund')"
+                       required="state == 'draft' and move_type in ('in_invoice', 'in_refund')"/>
+
+                <!-- Ventas: tipos de venta -->
                 <field name="justech_do_document_type_id"
                        string="Tipo de comprobante"
-                       invisible="state != 'draft' or move_type not in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund')"
+                       invisible="state != 'draft' or move_type not in ('out_invoice', 'out_refund')"
                        readonly="0"
+                       domain="[('is_sale_document', '=', True)]"
                        options="{'no_create': True, 'no_open': True}"/>
+                <!-- Compras emitidas: solo B11/B13/B17 -->
+                <field name="justech_do_document_type_id"
+                       string="Tipo de comprobante"
+                       invisible="state != 'draft' or move_type not in ('in_invoice', 'in_refund') or justech_do_purchase_registration_mode != 'issued'"
+                       readonly="0"
+                       domain="[('is_purchase_document', '=', True)]"
+                       options="{'no_create': True, 'no_open': True}"/>
+                <field name="justech_do_purchase_emission_status"
+                       string="Estado del rango"
+                       readonly="1"
+                       invisible="state != 'draft' or move_type not in ('in_invoice', 'in_refund') or justech_do_purchase_registration_mode != 'issued'"/>
+                <field name="justech_do_purchase_next_ncf"
+                       string="Próximo NCF"
+                       readonly="1"
+                       invisible="state != 'draft' or move_type not in ('in_invoice', 'in_refund') or justech_do_purchase_registration_mode != 'issued' or not justech_do_purchase_next_ncf"/>
                 <field name="justech_do_ncf"
                        string="NCF"
-                       invisible="state != 'draft' or move_type not in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund')"
-                       placeholder="Se asigna al publicar (ventas) o ingrese NCF (compras)"/>
-                <!-- Publicado / histórico: lectura exclusiva vía Fiscal Data Provider -->
+                       invisible="state != 'draft' or (
+                            move_type not in ('out_invoice', 'out_refund')
+                            and not (move_type in ('in_invoice', 'in_refund') and justech_do_purchase_registration_mode == 'issued')
+                       )"
+                       placeholder="Se asigna al publicar"/>
+
                 <field name="fiscal_document_type_display"
                        string="Tipo de comprobante"
                        readonly="1"
@@ -45,7 +66,21 @@
                        invisible="move_type not in ('in_invoice', 'in_refund')"/>
             </xpath>
 
-            <!-- Admin fiscal: sin pestaña propia; dentro de Otra información -->
+            <xpath expr="//field[@name='l10n_latam_document_type_id']" position="attributes">
+                <attribute name="invisible">state != 'draft' or move_type not in ('in_invoice', 'in_refund') or justech_do_purchase_registration_mode != 'received'</attribute>
+                <attribute name="readonly">0</attribute>
+                <attribute name="force_save">1</attribute>
+                <attribute name="domain">[('doc_code_prefix', 'in', ('B01','B02','B03','B04','B14','B15','B16','E31','E32','E33','E34','E41','E43','E44','E45','E46','E47'))]</attribute>
+                <attribute name="options">{"no_create": true}</attribute>
+                <attribute name="string">Tipo de comprobante (recibido)</attribute>
+            </xpath>
+            <xpath expr="//field[@name='l10n_latam_document_number']" position="attributes">
+                <attribute name="invisible">state != 'draft' or move_type not in ('in_invoice', 'in_refund') or justech_do_purchase_registration_mode != 'received'</attribute>
+                <attribute name="readonly">0</attribute>
+                <attribute name="force_save">1</attribute>
+                <attribute name="string">NCF del proveedor</attribute>
+            </xpath>
+
             <xpath expr="//page[@id='other_tab']" position="inside">
                 <group string="Administración fiscal"
                        groups="justech_l10n_do_base.group_justech_do_fiscal_manager"

@@ -1,0 +1,81 @@
+empresa,tipo,documento,motor,consume_secuencia,rango_configurado,proximo_ncf,estado
+JUSTECH S.R.L.,B01,recibido,LATAM (l10n.latam.document.type),No,N/A (NCF del proveedor),N/A,Correcto
+JUSTECH S.R.L.,B02,recibido,LATAM (l10n.latam.document.type),No,N/A (NCF del proveedor),N/A,Correcto
+JUSTECH S.R.L.,B03,recibido,LATAM (l10n.latam.document.type),No,N/A (NCF del proveedor),N/A,Correcto
+JUSTECH S.R.L.,B04,recibido,LATAM (l10n.latam.document.type),No,N/A (NCF del proveedor),N/A,Correcto
+JUSTECH S.R.L.,B14,recibido,LATAM (l10n.latam.document.type),No,N/A (NCF del proveedor),N/A,Correcto
+JUSTECH S.R.L.,B15,recibido,LATAM (l10n.latam.document.type),No,N/A (NCF del proveedor),N/A,Correcto
+JUSTECH S.R.L.,B16,recibido,LATAM (l10n.latam.document.type),No,N/A (NCF del proveedor),N/A,Correcto
+JUSTECH S.R.L.,E31,recibido,LATAM (l10n.latam.document.type),No,N/A (NCF del proveedor),N/A,Correcto
+JUSTECH S.R.L.,E32,recibido,LATAM (l10n.latam.document.type),No,N/A (NCF del proveedor),N/A,Correcto
+JUSTECH S.R.L.,E33,recibido,LATAM (l10n.latam.document.type),No,N/A (NCF del proveedor),N/A,Correcto
+JUSTECH S.R.L.,E34,recibido,LATAM (l10n.latam.document.type),No,N/A (NCF del proveedor),N/A,Correcto
+JUSTECH S.R.L.,E41,recibido,LATAM (l10n.latam.document.type),No,N/A (NCF del proveedor),N/A,Correcto
+JUSTECH S.R.L.,E43,recibido,LATAM (l10n.latam.document.type),No,N/A (NCF del proveedor),N/A,Correcto
+JUSTECH S.R.L.,E44,recibido,LATAM (l10n.latam.document.type),No,N/A (NCF del proveedor),N/A,Correcto
+JUSTECH S.R.L.,E45,recibido,LATAM (l10n.latam.document.type),No,N/A (NCF del proveedor),N/A,Correcto
+JUSTECH S.R.L.,E46,recibido,LATAM (l10n.latam.document.type),No,N/A (NCF del proveedor),N/A,Correcto
+JUSTECH S.R.L.,E47,recibido,LATAM (l10n.latam.document.type),No,N/A (NCF del proveedor),N/A,Correcto
+JUSTECH S.R.L.,B11,emitido,Motor Fiscal Justech,Sí,11-15 (active),B1100000011,Correcto
+JUSTECH S.R.L.,B13,emitido,Motor Fiscal Justech,Sí,213-217 (active),B1300000213,Correcto
+JUSTECH S.R.L.,B17,emitido,Motor Fiscal Justech,Sí,—,—,Falta rango
+Omni Solutions SRL,B01,recibido,LATAM (l10n.latam.document.type),No,N/A (NCF del proveedor),N/A,Correcto
+Omni Solutions SRL,B02,recibido,LATAM (l10n.latam.document.type),No,N/A (NCF del proveedor),N/A,Correcto
+Omni Solutions SRL,B03,recibido,LATAM (l10n.latam.document.type),No,N/A (NCF del proveedor),N/A,Correcto
+Omni Solutions SRL,B04,recibido,LATAM (l10n.latam.document.type),No,N/A (NCF del proveedor),N/A,Correcto
+Omni Solutions SRL,B14,recibido,LATAM (l10n.latam.document.type),No,N/A (NCF del proveedor),N/A,Correcto
+Omni Solutions SRL,B15,recibido,LATAM (l10n.latam.document.type),No,N/A (NCF del proveedor),N/A,Correcto
+Omni Solutions SRL,B16,recibido,LATAM (l10n.latam.document.type),No,N/A (NCF del proveedor),N/A,Correcto
+Omni Solutions SRL,E31,recibido,LATAM (l10n.latam.document.type),No,N/A (NCF del proveedor),N/A,Correcto
+Omni Solutions SRL,E32,recibido,LATAM (l10n.latam.document.type),No,N/A (NCF del proveedor),N/A,Correcto
+Omni Solutions SRL,E33,recibido,LATAM (l10n.latam.document.type),No,N/A (NCF del proveedor),N/A,Correcto
+Omni Solutions SRL,E34,recibido,LATAM (l10n.latam.document.type),No,N/A (NCF del proveedor),N/A,Correcto
+Omni Solutions SRL,E41,recibido,LATAM (l10n.latam.document.type),No,N/A (NCF del proveedor),N/A,Correcto
+Omni Solutions SRL,E43,recibido,LATAM (l10n.latam.document.type),No,N/A (NCF del proveedor),N/A,Correcto
+Omni Solutions SRL,E44,recibido,LATAM (l10n.latam.document.type),No,N/A (NCF del proveedor),N/A,Correcto
+Omni Solutions SRL,E45,recibido,LATAM (l10n.latam.document.type),No,N/A (NCF del proveedor),N/A,Correcto
+Omni Solutions SRL,E46,recibido,LATAM (l10n.latam.document.type),No,N/A (NCF del proveedor),N/A,Correcto
+Omni Solutions SRL,E47,recibido,LATAM (l10n.latam.document.type),No,N/A (NCF del proveedor),N/A,Correcto
+Omni Solutions SRL,B11,emitido,Motor Fiscal Justech,Sí,—,—,Falta rango
+Omni Solutions SRL,B13,emitido,Motor Fiscal Justech,Sí,—,—,Falta rango
+Omni Solutions SRL,B17,emitido,Motor Fiscal Justech,Sí,—,—,Falta rango
+Just Office SRL,B01,recibido,LATAM (l10n.latam.document.type),No,N/A (NCF del proveedor),N/A,Correcto
+Just Office SRL,B02,recibido,LATAM (l10n.latam.document.type),No,N/A (NCF del proveedor),N/A,Correcto
+Just Office SRL,B03,recibido,LATAM (l10n.latam.document.type),No,N/A (NCF del proveedor),N/A,Correcto
+Just Office SRL,B04,recibido,LATAM (l10n.latam.document.type),No,N/A (NCF del proveedor),N/A,Correcto
+Just Office SRL,B14,recibido,LATAM (l10n.latam.document.type),No,N/A (NCF del proveedor),N/A,Correcto
+Just Office SRL,B15,recibido,LATAM (l10n.latam.document.type),No,N/A (NCF del proveedor),N/A,Correcto
+Just Office SRL,B16,recibido,LATAM (l10n.latam.document.type),No,N/A (NCF del proveedor),N/A,Correcto
+Just Office SRL,E31,recibido,LATAM (l10n.latam.document.type),No,N/A (NCF del proveedor),N/A,Correcto
+Just Office SRL,E32,recibido,LATAM (l10n.latam.document.type),No,N/A (NCF del proveedor),N/A,Correcto
+Just Office SRL,E33,recibido,LATAM (l10n.latam.document.type),No,N/A (NCF del proveedor),N/A,Correcto
+Just Office SRL,E34,recibido,LATAM (l10n.latam.document.type),No,N/A (NCF del proveedor),N/A,Correcto
+Just Office SRL,E41,recibido,LATAM (l10n.latam.document.type),No,N/A (NCF del proveedor),N/A,Correcto
+Just Office SRL,E43,recibido,LATAM (l10n.latam.document.type),No,N/A (NCF del proveedor),N/A,Correcto
+Just Office SRL,E44,recibido,LATAM (l10n.latam.document.type),No,N/A (NCF del proveedor),N/A,Correcto
+Just Office SRL,E45,recibido,LATAM (l10n.latam.document.type),No,N/A (NCF del proveedor),N/A,Correcto
+Just Office SRL,E46,recibido,LATAM (l10n.latam.document.type),No,N/A (NCF del proveedor),N/A,Correcto
+Just Office SRL,E47,recibido,LATAM (l10n.latam.document.type),No,N/A (NCF del proveedor),N/A,Correcto
+Just Office SRL,B11,emitido,Motor Fiscal Justech,Sí,—,—,Falta rango
+Just Office SRL,B13,emitido,Motor Fiscal Justech,Sí,—,—,Falta rango
+Just Office SRL,B17,emitido,Motor Fiscal Justech,Sí,—,—,Falta rango
+PlugSafe SRL,B01,recibido,LATAM (l10n.latam.document.type),No,N/A (NCF del proveedor),N/A,Correcto
+PlugSafe SRL,B02,recibido,LATAM (l10n.latam.document.type),No,N/A (NCF del proveedor),N/A,Correcto
+PlugSafe SRL,B03,recibido,LATAM (l10n.latam.document.type),No,N/A (NCF del proveedor),N/A,Correcto
+PlugSafe SRL,B04,recibido,LATAM (l10n.latam.document.type),No,N/A (NCF del proveedor),N/A,Correcto
+PlugSafe SRL,B14,recibido,LATAM (l10n.latam.document.type),No,N/A (NCF del proveedor),N/A,Correcto
+PlugSafe SRL,B15,recibido,LATAM (l10n.latam.document.type),No,N/A (NCF del proveedor),N/A,Correcto
+PlugSafe SRL,B16,recibido,LATAM (l10n.latam.document.type),No,N/A (NCF del proveedor),N/A,Correcto
+PlugSafe SRL,E31,recibido,LATAM (l10n.latam.document.type),No,N/A (NCF del proveedor),N/A,Correcto
+PlugSafe SRL,E32,recibido,LATAM (l10n.latam.document.type),No,N/A (NCF del proveedor),N/A,Correcto
+PlugSafe SRL,E33,recibido,LATAM (l10n.latam.document.type),No,N/A (NCF del proveedor),N/A,Correcto
+PlugSafe SRL,E34,recibido,LATAM (l10n.latam.document.type),No,N/A (NCF del proveedor),N/A,Correcto
+PlugSafe SRL,E41,recibido,LATAM (l10n.latam.document.type),No,N/A (NCF del proveedor),N/A,Correcto
+PlugSafe SRL,E43,recibido,LATAM (l10n.latam.document.type),No,N/A (NCF del proveedor),N/A,Correcto
+PlugSafe SRL,E44,recibido,LATAM (l10n.latam.document.type),No,N/A (NCF del proveedor),N/A,Correcto
+PlugSafe SRL,E45,recibido,LATAM (l10n.latam.document.type),No,N/A (NCF del proveedor),N/A,Correcto
+PlugSafe SRL,E46,recibido,LATAM (l10n.latam.document.type),No,N/A (NCF del proveedor),N/A,Correcto
+PlugSafe SRL,E47,recibido,LATAM (l10n.latam.document.type),No,N/A (NCF del proveedor),N/A,Correcto
+PlugSafe SRL,B11,emitido,Motor Fiscal Justech,Sí,—,—,Falta rango
+PlugSafe SRL,B13,emitido,Motor Fiscal Justech,Sí,—,—,Falta rango
+PlugSafe SRL,B17,emitido,Motor Fiscal Justech,Sí,—,—,Falta rango

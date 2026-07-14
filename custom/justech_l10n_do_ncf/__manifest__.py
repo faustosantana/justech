@@ -1,6 +1,6 @@
 {
     "name": "Justech Dominican NCF",
-    "version": "19.0.2.7.0",
+    "version": "19.0.2.8.0",
     "category": "Accounting/Localizations",
     "summary": "NCF ranges, assignment and validation (Dominican Republic)",
     "description": """
@@ -29,6 +29,7 @@ NCF management for Dominican Republic — Justech Enterprise layer.
         "views/ncf_range_views.xml",
         "views/ncf_consumption_views.xml",
         "views/ncf_migration_views.xml",
+        "views/purchase_emission_config_views.xml",
         "views/account_move_views.xml",
         "views/sale_order_views.xml",
         "views/menu.xml",
@@ -39,10 +40,11 @@ NCF management for Dominican Republic — Justech Enterprise layer.
     "installable": True,
     "application": False,
     "license": "LGPL-3",
+    "post_init_hook": "post_init_hook",
     "justech_register": {
         "module_code": "justech_l10n_do_ncf",
         "module_name": "Justech Dominican NCF",
-        "version": "19.0.2.7.0",
+        "version": "19.0.2.8.0",
         "category": "fiscal",
         "country": "DO",
         "localization": "l10n_do",

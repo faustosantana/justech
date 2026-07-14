@@ -10,6 +10,31 @@ class JustechDoFiscalDocumentType(models.Model):
     # Serie B — comprobantes tradicionales DGII (NG 06-2018)
     SALE_NCF_PREFIXES = ("B01", "B02", "B03", "B04", "B12", "B14", "B15", "B16")
     PURCHASE_NCF_PREFIXES = ("B11", "B13", "B17")
+    # Prefijos LATAM de documentos RECIBIDOS en compras (nunca consumen rango Justech).
+    PURCHASE_RECEIVED_DOC_PREFIXES = (
+        "B01",
+        "B02",
+        "B03",
+        "B04",
+        "B14",
+        "B15",
+        "B16",
+        "E31",
+        "E32",
+        "E33",
+        "E34",
+        "E41",
+        "E43",
+        "E44",
+        "E45",
+        "E46",
+        "E47",
+    )
+    PURCHASE_DOC_FULL_NAMES = {
+        "B11": "Comprobante de Compras / Proveedor Informal",
+        "B13": "Comprobante para Gastos Menores",
+        "B17": "Comprobante para Pagos al Exterior",
+    }
     CONSUMER_NCF_PREFIXES = ("B02", "B12", "E32", "E33")
     ALL_NCF_PREFIXES = SALE_NCF_PREFIXES + PURCHASE_NCF_PREFIXES
 
@@ -60,10 +85,13 @@ class JustechDoFiscalDocumentType(models.Model):
     @api.depends("prefix", "name")
     def _compute_display_name(self):
         for doc in self:
-            if doc.prefix and doc.name:
-                doc.display_name = f"{doc.prefix} - {doc.name}"
+            label = doc.name
+            if doc.prefix in self.PURCHASE_DOC_FULL_NAMES:
+                label = self.PURCHASE_DOC_FULL_NAMES[doc.prefix]
+            if doc.prefix and label:
+                doc.display_name = f"{doc.prefix} — {label}"
             else:
-                doc.display_name = doc.name or doc.prefix or ""
+                doc.display_name = label or doc.prefix or ""
 
     _sql_constraints = [
         (

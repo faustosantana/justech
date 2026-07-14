@@ -17,9 +17,13 @@ class JustechDoNcfDocumentTypeResolverService(models.AbstractModel):
         6. Vacío (el post bloqueará si es cliente nuevo).
         """
         move.ensure_one()
-        if move.justech_do_document_type_id:
-            return move.justech_do_document_type_id
         journal = move.journal_id
+        purchase_issued = move.move_type in ("in_invoice", "in_refund") and getattr(
+            move, "justech_do_purchase_registration_mode", "received"
+        ) == "issued"
+        if move.justech_do_document_type_id:
+            if move.move_type in ("out_invoice", "out_refund") or purchase_issued:
+                return move.justech_do_document_type_id
         if move.move_type == "out_refund":
             return self.env.ref(
                 "justech_l10n_do_base.doc_type_b04", raise_if_not_found=False
@@ -28,7 +32,11 @@ class JustechDoNcfDocumentTypeResolverService(models.AbstractModel):
             return self.env.ref(
                 "justech_l10n_do_base.doc_type_b03", raise_if_not_found=False
             )
-        if move.move_type == "in_refund" and move.reversed_entry_id:
+        if (
+            move.move_type == "in_refund"
+            and purchase_issued
+            and move.reversed_entry_id
+        ):
             return move.reversed_entry_id.justech_do_document_type_id
         if move.move_type == "out_invoice":
             partner = move.partner_id.commercial_partner_id
@@ -64,10 +72,18 @@ class JustechDoNcfDocumentTypeResolverService(models.AbstractModel):
                     return suggested
             # NO usar RNC→B01 genérico: evita degradar gobierno/especial.
             return self.env["justech.do.fiscal.document.type"]
-        if move.move_type == "in_invoice" and journal.justech_do_default_document_type_id:
-            doc = journal.justech_do_default_document_type_id
-            if doc.is_purchase_ncf():
-                return doc
+        # Compras recibidas: no resolver tipo Justech (LATAM externo).
+        if move.move_type in ("in_invoice", "in_refund"):
+            mode = getattr(move, "justech_do_purchase_registration_mode", "received")
+            if mode != "issued":
+                return self.env["justech.do.fiscal.document.type"]
+            if move.justech_do_document_type_id and move.justech_do_document_type_id.is_purchase_ncf():
+                return move.justech_do_document_type_id
+            if journal.justech_do_default_document_type_id:
+                doc = journal.justech_do_default_document_type_id
+                if doc.is_purchase_ncf():
+                    return doc
+            return self.env["justech.do.fiscal.document.type"]
         return self.env["justech.do.fiscal.document.type"]
 
     def doc_supports_auto_ncf(self, move, doc):
@@ -75,7 +91,11 @@ class JustechDoNcfDocumentTypeResolverService(models.AbstractModel):
             return False
         if move.move_type in ("out_invoice", "out_refund") and doc.is_sale_ncf():
             return True
-        if move.move_type in ("in_invoice", "in_refund") and doc.is_purchase_ncf():
+        if (
+            move.move_type in ("in_invoice", "in_refund")
+            and getattr(move, "justech_do_purchase_registration_mode", None) == "issued"
+            and doc.is_purchase_ncf()
+        ):
             return True
         return False
 
@@ -84,6 +104,9 @@ class JustechDoNcfDocumentTypeResolverService(models.AbstractModel):
         config = self.env["justech.do.fiscal.config.service"]
         if not config.is_fiscal_enabled(move.company_id):
             return False
+        if move.move_type in ("in_invoice", "in_refund"):
+            if getattr(move, "justech_do_purchase_registration_mode", "received") != "issued":
+                return False
         if not move.journal_id.justech_do_use_ncf:
             return False
         doc = self.resolve_for_move(move)

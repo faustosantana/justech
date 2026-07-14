@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_justech_do_purchase_emission_config_list" model="ir.ui.view">
+        <field name="name">justech.do.purchase.emission.config.list</field>
+        <field name="model">justech.do.purchase.emission.config</field>
+        <field name="arch" type="xml">
+            <list string="Emisión NCF desde Compras" create="0" delete="0">
+                <field name="company_id"/>
+                <field name="prefix"/>
+                <field name="name_full"/>
+                <field name="status_label"/>
+                <field name="emission_enabled"/>
+                <field name="next_ncf"/>
+                <field name="sequence_start"/>
+                <field name="sequence_end"/>
+                <field name="expiration_date"/>
+                <field name="range_id"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_justech_do_purchase_emission_config_form" model="ir.ui.view">
+        <field name="name">justech.do.purchase.emission.config.form</field>
+        <field name="model">justech.do.purchase.emission.config</field>
+        <field name="arch" type="xml">
+            <form string="Emisión NCF desde Compras" create="0" delete="0">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="company_id" readonly="1"/>
+                            <field name="document_type_id" readonly="1"/>
+                            <field name="prefix" readonly="1"/>
+                            <field name="name_full" readonly="1"/>
+                            <field name="allows_purchase_emission"/>
+                        </group>
+                        <group>
+                            <field name="status_label" readonly="1"/>
+                            <field name="emission_enabled" readonly="1"/>
+                            <field name="range_id" readonly="1"/>
+                            <field name="authorization_date" readonly="1"/>
+                            <field name="expiration_date" readonly="1"/>
+                            <field name="sequence_start" readonly="1"/>
+                            <field name="sequence_end" readonly="1"/>
+                            <field name="next_ncf" readonly="1"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_justech_do_purchase_emission_config" model="ir.actions.act_window">
+        <field name="name">Emisión NCF — Compras (B11/B13/B17)</field>
+        <field name="res_model">justech.do.purchase.emission.config</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

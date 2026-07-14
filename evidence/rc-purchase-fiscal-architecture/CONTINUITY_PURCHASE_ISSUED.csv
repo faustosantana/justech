@@ -1,0 +1,13 @@
+company,prefix,last_actual,last_seq,expected_next,configured_next,status
+JUSTECH S.R.L.,B11,"","",11,11,OK
+JUSTECH S.R.L.,B13,"","",213,213,OK
+JUSTECH S.R.L.,B17,"","","","",N/A_NO_RANGE_NO_HIST
+PlugSafe SRL,B11,"","","","",N/A_NO_RANGE_NO_HIST
+PlugSafe SRL,B13,"","","","",N/A_NO_RANGE_NO_HIST
+PlugSafe SRL,B17,"","","","",N/A_NO_RANGE_NO_HIST
+Just Office SRL,B11,"","","","",N/A_NO_RANGE_NO_HIST
+Just Office SRL,B13,"","","","",N/A_NO_RANGE_NO_HIST
+Just Office SRL,B17,"","","","",N/A_NO_RANGE_NO_HIST
+Omni Solutions SRL,B11,"","","","",N/A_NO_RANGE_NO_HIST
+Omni Solutions SRL,B13,"","","","",N/A_NO_RANGE_NO_HIST
+Omni Solutions SRL,B17,"","","","",N/A_NO_RANGE_NO_HIST

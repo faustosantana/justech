@@ -116,6 +116,81 @@ class AccountMove(models.Model):
         copy=False,
         help="Código DGII formato 608 / anulación de comprobante.",
     )
+    justech_do_purchase_registration_mode = fields.Selection(
+        selection=[
+            ("received", "Documento recibido del proveedor"),
+            ("issued", "Comprobante emitido por la empresa"),
+        ],
+        string="Tipo de registro",
+        default="received",
+        copy=False,
+        help="Compras: separar recepción LATAM vs emisión Justech (B11/B13/B17).",
+    )
+    justech_do_purchase_emission_status = fields.Char(
+        string="Estado del rango (compras)",
+        compute="_compute_purchase_emission_ui",
+    )
+    justech_do_purchase_next_ncf = fields.Char(
+        string="Próximo NCF (compras)",
+        compute="_compute_purchase_emission_ui",
+    )
+
+    @api.depends(
+        "justech_do_purchase_registration_mode",
+        "justech_do_document_type_id",
+        "company_id",
+    )
+    def _compute_purchase_emission_ui(self):
+        Config = self.env["justech.do.purchase.emission.config"]
+        for move in self:
+            move.justech_do_purchase_emission_status = False
+            move.justech_do_purchase_next_ncf = False
+            if (
+                move.move_type not in ("in_invoice", "in_refund")
+                or move.justech_do_purchase_registration_mode != "issued"
+                or not move.justech_do_document_type_id
+            ):
+                continue
+            cfg = Config.get_for(move.company_id, move.justech_do_document_type_id)
+            if not cfg:
+                move.justech_do_purchase_emission_status = "Sin rango autorizado"
+                continue
+            move.justech_do_purchase_emission_status = cfg.status_label
+            if cfg.emission_enabled:
+                move.justech_do_purchase_next_ncf = cfg.next_ncf
+
+    @api.onchange("justech_do_purchase_registration_mode")
+    def _onchange_purchase_registration_mode(self):
+        if self.move_type not in ("in_invoice", "in_refund"):
+            return
+        if self.justech_do_purchase_registration_mode == "received":
+            self.justech_do_document_type_id = False
+            self.justech_do_ncf = False
+            self.justech_do_ncf_range_id = False
+        elif self.justech_do_purchase_registration_mode == "issued":
+            if "l10n_latam_document_type_id" in self._fields:
+                self.l10n_latam_document_type_id = False
+            if "l10n_latam_document_number" in self._fields:
+                self.l10n_latam_document_number = False
+
+    def _justech_purchase_received_latam_domain(self):
+        prefixes = list(
+            self.env["justech.do.fiscal.document.type"].PURCHASE_RECEIVED_DOC_PREFIXES
+        )
+        return [("doc_code_prefix", "in", prefixes)]
+
+    def _justech_is_purchase_received(self):
+        self.ensure_one()
+        return self.move_type in ("in_invoice", "in_refund") and (
+            self.justech_do_purchase_registration_mode or "received"
+        ) == "received"
+
+    def _justech_is_purchase_issued(self):
+        self.ensure_one()
+        return (
+            self.move_type in ("in_invoice", "in_refund")
+            and self.justech_do_purchase_registration_mode == "issued"
+        )
 
     @api.depends(
         "justech_do_ncf",
@@ -184,6 +259,15 @@ class AccountMove(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
+            if vals.get("move_type") in ("in_invoice", "in_refund", "in_receipt"):
+                if vals.get("justech_do_document_type_id") or vals.get("justech_do_ncf"):
+                    vals.setdefault(
+                        "justech_do_purchase_registration_mode", "issued"
+                    )
+                else:
+                    vals.setdefault(
+                        "justech_do_purchase_registration_mode", "received"
+                    )
             if vals.get("reversed_entry_id") and vals.get("move_type") in (
                 "in_refund",
                 "out_refund",

@@ -58,11 +58,11 @@ class JustechDoNcfRange(models.Model):
         "B02": "B02 Factura de Consumo",
         "B03": "B03 Nota de Débito",
         "B04": "B04 Nota de Crédito",
-        "B11": "B11 Comprobante de Compras",
-        "B13": "B13 Gastos Menores",
-        "B14": "B14 Regímenes Especiales de Tributación",
-        "B15": "B15 Comprobante Gubernamental",
-        "B17": "B17 Comprobante para Pagos al Exterior",
+        "B11": "B11 — Comprobante de Compras / Proveedor Informal",
+        "B13": "B13 — Comprobante para Gastos Menores",
+        "B14": "B14 — Regímenes Especiales de Tributación",
+        "B15": "B15 — Comprobante Gubernamental",
+        "B17": "B17 — Comprobante para Pagos al Exterior",
     }
 
     _sql_constraints = [

@@ -1,5 +1,26 @@
 # Changelog — Estándar Fiscal Justech (cierre)
 
+## [19.0.2.8.0] — 2026-07-14 — Compras: recibidos LATAM vs emisión B11/B13/B17
+
+### Added
+- Campo `justech_do_purchase_registration_mode` en facturas de proveedor
+  (`received` | `issued`).
+- Modelo `justech.do.purchase.emission.config`: configuración por empresa de
+  B11/B13/B17 sin inventar rangos; `emission_enabled` solo con rango activo.
+- UX Compras: selector de tipo de registro; LATAM dominio recepción B+E;
+  emisión Justech limitada a `is_purchase_document`.
+- Post-migrate idempotente: 12 configs (4 empresas × 3 tipos) + modo `received`
+  en históricos nulos.
+- Tests `test_purchase_registration_mode`.
+
+### Changed
+- Assignment: documentos recibidos no consumen rangos/secuencias Justech;
+  emisión sin rango bloquea con mensaje nominativo (código + nombre).
+- Nombres display B11/B13/B17 con código + nombre funcional completo.
+
+### Unchanged
+- Continuidad JUSTECH B11@11 / B13@213; sin rangos ficticios; Ventas intactas.
+
 ## [19.0.2.7.0] — 2026-07-14 — Hotfix moneda DOP + vigencia NCF
 
 ### Fixed

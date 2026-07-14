@@ -12,5 +12,6 @@ from . import ncf_range
 from . import ncf_consumption
 from . import ncf_admin_center
 from . import ncf_migration_log
+from . import purchase_emission_config
 from . import account_move
 from . import sale_order

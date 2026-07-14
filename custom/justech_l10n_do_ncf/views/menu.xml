@@ -34,4 +34,11 @@
               action="action_justech_do_ncf_migration_log"
               sequence="30"
               groups="base.group_system,justech_l10n_do_base.group_justech_do_fiscal_manager"/>
+
+    <menuitem id="menu_justech_do_purchase_emission_config"
+              name="Emisión NCF — Compras (B11/B13/B17)"
+              parent="menu_justech_do_ncf_motor_root"
+              action="action_justech_do_purchase_emission_config"
+              sequence="40"
+              groups="base.group_system,justech_l10n_do_base.group_justech_do_fiscal_manager"/>
 </odoo>

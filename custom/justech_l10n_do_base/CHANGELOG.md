@@ -1,5 +1,16 @@
 # Changelog — justech_l10n_do_base
 
+## [19.0.1.24.0] — 2026-07-14 — Prefijos recibidos Compras + nombres B11/B13
+
+### Added
+- `PURCHASE_RECEIVED_DOC_PREFIXES` (B01–B04, B14–B16, E31–E47) para dominio LATAM
+  de documentos recibidos en Compras.
+- `PURCHASE_DOC_FULL_NAMES` para display `B11/B13/B17 — nombre funcional`.
+
+### Changed
+- Nombres catálogo B11/B13 alineados a DGII (Proveedor Informal / Gastos Menores).
+- `display_name` usa guión tipográfico `—`.
+
 ## [19.0.1.23.0] — 2026-07-14 — Catálogo fiscal compartido multiempresa
 
 ### Fixed

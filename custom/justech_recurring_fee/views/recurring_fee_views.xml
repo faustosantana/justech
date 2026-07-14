@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_justech_recurring_fee_list" model="ir.ui.view">
+        <field name="name">justech.recurring.fee.list</field>
+        <field name="model">justech.recurring.fee</field>
+        <field name="arch" type="xml">
+            <list string="Fees recurrentes"
+                  decoration-success="state == 'active'"
+                  decoration-muted="state in ('done', 'cancel')"
+                  decoration-warning="state == 'paused'"
+                  decoration-danger="state == 'attention'">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="amount_total" sum="Total"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="periodicity"/>
+                <field name="next_generation_date"/>
+                <field name="generate_document"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'active'"
+                       decoration-warning="state == 'paused'"
+                       decoration-danger="state == 'attention'"
+                       decoration-muted="state in ('done', 'cancel')"/>
+                <field name="user_id" widget="many2one_avatar_user"/>
+                <field name="last_document_name"/>
+                <field name="next_step"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_justech_recurring_fee_form" model="ir.ui.view">
+        <field name="name">justech.recurring.fee.form</field>
+        <field name="model">justech.recurring.fee</field>
+        <field name="arch" type="xml">
+            <form string="Fee recurrente">
+                <header>
+                    <button name="action_activate" type="object" string="Activar"
+                            class="btn-primary" invisible="state != 'draft'"/>
+                    <button name="action_generate_now" type="object" string="Generar ciclo ahora"
+                            class="btn-secondary"
+                            invisible="state not in ('active', 'attention', 'paused')"
+                            confirm="¿Generar el documento del ciclo actual ahora?"/>
+                    <button name="action_pause" type="object" string="Pausar"
+                            invisible="state != 'active'"/>
+                    <button name="action_reactivate" type="object" string="Reactivar"
+                            class="btn-primary" invisible="state != 'paused'"/>
+                    <button name="action_done" type="object" string="Finalizar"
+                            invisible="state not in ('active', 'paused', 'attention')"/>
+                    <button name="action_cancel" type="object" string="Cancelar"
+                            invisible="state in ('cancel', 'done')"/>
+                    <button name="action_reset_draft" type="object" string="Volver a borrador"
+                            invisible="state not in ('cancel', 'done')"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,active,paused,done"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_sale_orders" type="object"
+                                class="oe_stat_button" icon="fa-pencil-square-o">
+                            <field name="sale_order_count" widget="statinfo" string="Cotizaciones"/>
+                        </button>
+                        <button name="action_view_invoices" type="object"
+                                class="oe_stat_button" icon="fa-file-text-o">
+                            <field name="invoice_count" widget="statinfo" string="Facturas"/>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Pausado" bg_color="text-bg-warning"
+                            invisible="state != 'paused'"/>
+                    <widget name="web_ribbon" title="Atención" bg_color="text-bg-danger"
+                            invisible="state != 'attention'"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="Ej. Servicio administrado Microsoft 365"/></h1>
+                        <h3 class="text-muted"><field name="code" readonly="1"/></h3>
+                    </div>
+
+                    <group string="Resumen">
+                        <group>
+                            <field name="partner_id"/>
+                            <field name="partner_invoice_id"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="user_id"/>
+                            <field name="team_id"/>
+                        </group>
+                        <group>
+                            <field name="amount_total"/>
+                            <field name="currency_id"/>
+                            <field name="periodicity"/>
+                            <field name="next_generation_date"/>
+                            <field name="next_step" readonly="1"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Servicios" name="services">
+                            <field name="line_ids">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="product_id"/>
+                                    <field name="name"/>
+                                    <field name="product_uom_qty"/>
+                                    <field name="product_uom_id"/>
+                                    <field name="price_unit"/>
+                                    <field name="tax_ids" widget="many2many_tags"/>
+                                    <field name="price_subtotal"/>
+                                    <field name="price_total"/>
+                                    <field name="currency_id" column_invisible="1"/>
+                                </list>
+                            </field>
+                            <group class="oe_subtotal_footer">
+                                <field name="amount_untaxed"/>
+                                <field name="amount_total"/>
+                            </group>
+                        </page>
+                        <page string="Automatización" name="automation">
+                            <group>
+                                <group>
+                                    <field name="generate_document"/>
+                                    <div colspan="2" class="alert alert-warning" role="alert"
+                                         invisible="generate_document != 'invoice_auto'">
+                                        Advertencia fiscal: la publicación automática asignará NCF
+                                        con el Motor Fiscal Justech. Solo administradores.
+                                    </div>
+                                    <field name="plan_id"/>
+                                    <field name="auto_renew"/>
+                                    <field name="fiscal_document_type_hint"/>
+                                </group>
+                                <group>
+                                    <field name="date_start"/>
+                                    <field name="date_end"/>
+                                    <field name="next_generation_date"/>
+                                    <field name="custom_period_value"
+                                           invisible="periodicity != 'custom'"/>
+                                    <field name="custom_period_unit"
+                                           invisible="periodicity != 'custom'"/>
+                                    <field name="last_run_at" readonly="1"/>
+                                    <field name="last_error" readonly="1"
+                                           invisible="not last_error"/>
+                                </group>
+                            </group>
+                            <group string="Comercial">
+                                <field name="pricelist_id"/>
+                                <field name="payment_term_id"/>
+                            </group>
+                        </page>
+                        <page string="Documentos generados" name="documents">
+                            <field name="cycle_ids" readonly="1">
+                                <list>
+                                    <field name="cycle_number"/>
+                                    <field name="period_from"/>
+                                    <field name="period_to"/>
+                                    <field name="document_type"/>
+                                    <field name="sale_order_id"/>
+                                    <field name="invoice_id"/>
+                                    <field name="document_name"/>
+                                    <field name="scheduled_date"/>
+                                    <field name="generated_at"/>
+                                    <field name="state"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Notas" name="notes">
+                            <field name="note"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_justech_recurring_fee_search" model="ir.ui.view">
+        <field name="name">justech.recurring.fee.search</field>
+        <field name="model">justech.recurring.fee</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="partner_id"/>
+                <field name="user_id"/>
+                <filter name="filter_active" string="Activos" domain="[('state', '=', 'active')]"/>
+                <filter name="filter_paused" string="Pausados" domain="[('state', '=', 'paused')]"/>
+                <filter name="filter_attention" string="Con error" domain="[('state', '=', 'attention')]"/>
+                <filter name="filter_draft" string="Borrador" domain="[('state', '=', 'draft')]"/>
+                <filter name="filter_overdue"
+                        string="Vencidos"
+                        domain="[('next_generation_date', '&lt;', context_today()), ('state', '=', 'active')]"/>
+                <filter name="filter_next_7"
+                        string="Próximos 7 días"
+                        domain="[('due_within_7_days', '=', True), ('state', '=', 'active')]"/>
+                <separator/>
+                <filter name="group_company" string="Empresa" context="{'group_by': 'company_id'}"/>
+                <filter name="group_partner" string="Cliente" context="{'group_by': 'partner_id'}"/>
+                <filter name="group_periodicity" string="Periodicidad" context="{'group_by': 'periodicity'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_justech_recurring_fee" model="ir.actions.act_window">
+        <field name="name">Fees recurrentes</field>
+        <field name="res_model">justech.recurring.fee</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Crear el primer fee recurrente</p>
+            <p>El fee es el contrato maestro. Desde aquí se generan cotizaciones o facturas por ciclo, sin crear antes una cotización.</p>
+        </field>
+    </record>
+</odoo>

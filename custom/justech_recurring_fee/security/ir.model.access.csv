@@ -1,0 +1,9 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_justech_recurring_fee_user,justech.recurring.fee.user,model_justech_recurring_fee,group_recurring_fee_user,1,1,1,0
+access_justech_recurring_fee_manager,justech.recurring.fee.manager,model_justech_recurring_fee,group_recurring_fee_manager,1,1,1,1
+access_justech_recurring_fee_line_user,justech.recurring.fee.line.user,model_justech_recurring_fee_line,group_recurring_fee_user,1,1,1,1
+access_justech_recurring_fee_line_manager,justech.recurring.fee.line.manager,model_justech_recurring_fee_line,group_recurring_fee_manager,1,1,1,1
+access_justech_recurring_fee_cycle_user,justech.recurring.fee.cycle.user,model_justech_recurring_fee_cycle,group_recurring_fee_user,1,1,1,0
+access_justech_recurring_fee_cycle_manager,justech.recurring.fee.cycle.manager,model_justech_recurring_fee_cycle,group_recurring_fee_manager,1,1,1,1
+access_justech_recurring_fee_salesman,justech.recurring.fee.salesman,model_justech_recurring_fee,sales_team.group_sale_salesman,1,0,0,0
+access_justech_recurring_fee_reactivate_wiz,justech.recurring.fee.reactivate.wizard,model_justech_recurring_fee_reactivate_wizard,group_recurring_fee_user,1,1,1,1

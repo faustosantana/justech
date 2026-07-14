@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Ventas → Fees recurrentes (único menú; no duplicar Suscripciones) -->
+    <menuitem id="menu_justech_recurring_fee"
+              name="Fees recurrentes"
+              parent="sale.sale_menu_root"
+              action="action_justech_recurring_fee"
+              sequence="25"
+              groups="justech_recurring_fee.group_recurring_fee_user"/>
+</odoo>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="module_category_justech_recurring_fee" model="ir.module.category">
+        <field name="name">Fees Recurrentes Justech</field>
+        <field name="sequence">25</field>
+    </record>
+
+    <record id="res_groups_privilege_justech_recurring_fee" model="res.groups.privilege">
+        <field name="name">Fees recurrentes</field>
+        <field name="category_id" ref="module_category_justech_recurring_fee"/>
+    </record>
+
+    <record id="group_recurring_fee_user" model="res.groups">
+        <field name="name">Usuario Fees</field>
+        <field name="privilege_id" ref="res_groups_privilege_justech_recurring_fee"/>
+        <field name="implied_ids" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
+    </record>
+
+    <record id="group_recurring_fee_manager" model="res.groups">
+        <field name="name">Responsable Fees</field>
+        <field name="privilege_id" ref="res_groups_privilege_justech_recurring_fee"/>
+        <field name="implied_ids" eval="[(4, ref('group_recurring_fee_user'))]"/>
+    </record>
+
+    <record id="base.group_system" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('group_recurring_fee_manager'))]"/>
+    </record>
+
+    <record id="rule_recurring_fee_company" model="ir.rule">
+        <field name="name">Fee recurrente: multiempresa</field>
+        <field name="model_id" ref="model_justech_recurring_fee"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        <field name="global" eval="True"/>
+    </record>
+    <record id="rule_recurring_fee_line_company" model="ir.rule">
+        <field name="name">Línea fee: multiempresa</field>
+        <field name="model_id" ref="model_justech_recurring_fee_line"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        <field name="global" eval="True"/>
+    </record>
+    <record id="rule_recurring_fee_cycle_company" model="ir.rule">
+        <field name="name">Ciclo fee: multiempresa</field>
+        <field name="model_id" ref="model_justech_recurring_fee_cycle"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        <field name="global" eval="True"/>
+    </record>
+</odoo>

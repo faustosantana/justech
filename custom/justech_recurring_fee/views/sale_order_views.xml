@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_sale_order_form_justech_fee" model="ir.ui.view">
+        <field name="name">sale.order.form.justech.fee</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='payment_term_id']" position="after">
+                <field name="justech_fee_id" readonly="1"/>
+                <field name="justech_fee_period_from" readonly="1"
+                       invisible="not justech_fee_id"/>
+                <field name="justech_fee_period_to" readonly="1"
+                       invisible="not justech_fee_id"/>
+                <field name="justech_fee_cycle_number" readonly="1"
+                       invisible="not justech_fee_id"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

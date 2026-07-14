@@ -1,5 +1,17 @@
 # Changelog — justech_l10n_do_base
 
+## [19.0.1.23.0] — 2026-07-14 — Catálogo fiscal compartido multiempresa
+
+### Fixed
+- Tipos de comprobante DGII (`justech.do.fiscal.document.type`) pasan a catálogo
+  compartido (`company_id` vacío). Evita AccessError al resolver B01/B02/B14/B15
+  cuando el usuario opera en Omni/Just Office/PlugSafe con switcher sin JUSTECH.
+- Lectura ACL para `sales_team.group_sale_salesman` (solo lectura).
+- Constraint `unique(prefix)` alineada al catálogo global.
+
+### Unchanged
+- Rangos NCF, secuencias y consumo siguen aislados por empresa.
+
 ## [19.0.1.22.0] — 2026-07-14 — Configuración fiscal histórica
 
 ### Added

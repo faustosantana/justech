@@ -29,7 +29,10 @@ class JustechDoFiscalDocumentType(models.Model):
     active = fields.Boolean(default=True)
     company_id = fields.Many2one(
         "res.company",
-        default=lambda self: self.env.company,
+        string="Company",
+        default=False,
+        help="Leave empty for the shared DGII catalog (readable by all companies). "
+        "NCF ranges and sequences stay company-specific; do not set company here.",
     )
     is_sale_document = fields.Boolean(string="Sales Document")
     is_purchase_document = fields.Boolean(string="Purchase Document")
@@ -64,9 +67,9 @@ class JustechDoFiscalDocumentType(models.Model):
 
     _sql_constraints = [
         (
-            "prefix_company_uniq",
-            "unique(prefix, company_id)",
-            "Document type prefix must be unique per company.",
+            "prefix_uniq",
+            "unique(prefix)",
+            "Document type prefix must be unique (shared DGII catalog).",
         ),
     ]
 
@@ -102,13 +105,12 @@ class JustechDoFiscalDocumentType(models.Model):
 
     @api.model
     def get_by_prefix(self, prefix, company=None):
-        """Tipos maestros pueden vivir en una compañía (p.ej. JUSTECH) y
-        reutilizarse en filiales; si no hay registro local, usar el compartido."""
-        company = company or self.env.company
-        doc = self.search(
-            [("prefix", "=", prefix), ("company_id", "in", (False, company.id))],
+        """Shared DGII catalog: prefer global types (company_id empty).
+
+        ``company`` kept for call-site compatibility; ranges stay company-scoped.
+        """
+        _ = company
+        return self.search(
+            [("prefix", "=", prefix), ("company_id", "=", False)],
             limit=1,
-        )
-        if doc:
-            return doc
-        return self.search([("prefix", "=", prefix)], limit=1)
+        ) or self.search([("prefix", "=", prefix)], limit=1)

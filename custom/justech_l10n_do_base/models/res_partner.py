@@ -41,7 +41,32 @@ class ResPartner(models.Model):
         "justech.do.fiscal.document.type",
         string="Comprobante fiscal por defecto",
         domain="[('is_sale_document', '=', True), ('move_type', '=', 'out_invoice')]",
-        help="Definición manual. Se sugiere según tipo de contribuyente; no se impone sola.",
+        help="Comprobante preferido del cliente. Se conserva desde el histórico "
+        "cuando es consistente; en clientes nuevos se asigna al validar el RNC.",
+    )
+    justech_do_fiscal_config_state = fields.Selection(
+        [
+            ("pending_new", "Pendiente de validar — cliente nuevo"),
+            ("validated_padron", "Validado por padrón"),
+            ("confirmed_history", "Confirmado por histórico"),
+            ("needs_review", "Requiere revisión — histórico inconsistente"),
+            ("not_applicable", "No aplica"),
+        ],
+        string="Estado configuración fiscal",
+        default="pending_new",
+        copy=False,
+        index=True,
+        help="Separa clientes históricos (confirmados por facturación) de clientes nuevos.",
+    )
+    justech_do_fiscal_config_source = fields.Char(
+        string="Fuente configuración fiscal",
+        copy=False,
+        help="Ej. Confirmado por historial de facturación / Validado por padrón DGII.",
+    )
+    justech_do_historical_document_prefix = fields.Char(
+        string="Comprobante histórico principal",
+        copy=False,
+        help="Prefijo (B01/B02/…) reconstruido desde facturas publicadas consistentes.",
     )
     justech_do_suggested_document_type_id = fields.Many2one(
         "justech.do.fiscal.document.type",
@@ -550,7 +575,7 @@ class ResPartner(models.Model):
         self.ensure_one()
         return self.env["justech.do.fiscal.validator.service"].normalize_vat(self.vat)
 
-    def justech_do_get_default_sale_document_type(self):
+    def justech_do_get_default_sale_document_type(self, company=None):
         if not self:
             return self.env["justech.do.fiscal.document.type"]
         self.ensure_one()
@@ -562,7 +587,220 @@ class ResPartner(models.Model):
         doc = target.justech_do_default_document_type_id
         if doc and doc.is_sale_document and doc.move_type == "out_invoice":
             return doc
+        # Histórico confirmado o reconstruible por empresa (sin sobrescribir BD aquí).
+        hist = target.justech_do_get_historical_sale_document_type(company=company)
+        if hist:
+            return hist
         return self.env["justech.do.fiscal.document.type"]
+
+    def _justech_do_sale_ncf_prefixes(self):
+        return ("B01", "B02", "B14", "B15", "B16", "B12")
+
+    def justech_do_analyze_invoice_document_history(self, company=None):
+        """Analiza facturas publicadas del cliente (solo lectura).
+
+        Retorna dict por company_id:
+        {prefix, count_top, count_total, ratio, status, last_ncf, last_move, last_date}
+        """
+        self.ensure_one()
+        partner = self.commercial_partner_id
+        Move = self.env["account.move"].sudo()
+        domain = [
+            ("partner_id", "child_of", partner.id),
+            ("move_type", "=", "out_invoice"),
+            ("state", "=", "posted"),
+        ]
+        if company:
+            domain.append(("company_id", "=", company.id))
+        moves = Move.search(domain, order="invoice_date desc, id desc")
+        by_co = {}
+        for move in moves:
+            ncf = move.justech_do_ncf or getattr(move, "l10n_latam_document_number", False) or ""
+            if not ncf or str(ncf).upper().startswith("PROFORMA"):
+                continue
+            prefix = (
+                move.justech_do_document_type_id.prefix
+                if move.justech_do_document_type_id
+                else str(ncf)[:3]
+            )
+            if prefix not in self._justech_do_sale_ncf_prefixes():
+                continue
+            cid = move.company_id.id
+            bucket = by_co.setdefault(cid, {"counts": {}, "last": None})
+            bucket["counts"][prefix] = bucket["counts"].get(prefix, 0) + 1
+            if not bucket["last"]:
+                bucket["last"] = {
+                    "ncf": ncf,
+                    "move": move.name,
+                    "date": str(move.invoice_date or ""),
+                    "prefix": prefix,
+                }
+        result = {}
+        for cid, data in by_co.items():
+            counts = data["counts"]
+            total = sum(counts.values())
+            if not total:
+                continue
+            top_pref, top_n = max(counts.items(), key=lambda x: x[1])
+            ratio = top_n / total
+            status = "consistent" if ratio >= 0.8 else "mixed"
+            result[cid] = {
+                "prefix": top_pref,
+                "count_top": top_n,
+                "count_total": total,
+                "ratio": ratio,
+                "status": status,
+                "types": counts,
+                "last_ncf": data["last"]["ncf"],
+                "last_move": data["last"]["move"],
+                "last_date": data["last"]["date"],
+            }
+        return result
+
+    def justech_do_get_historical_sale_document_type(self, company=None):
+        """Comprobante histórico consistente para la empresa (o el más fuerte)."""
+        self.ensure_one()
+        Doc = self.env["justech.do.fiscal.document.type"]
+        if (
+            self.justech_do_fiscal_config_state == "confirmed_history"
+            and self.justech_do_historical_document_prefix
+            and not company
+        ):
+            doc = Doc.get_by_prefix(
+                self.justech_do_historical_document_prefix, company=self.env.company
+            )
+            if doc:
+                return doc
+        analysis = self.justech_do_analyze_invoice_document_history(company=company)
+        if not analysis:
+            if self.justech_do_historical_document_prefix:
+                return Doc.get_by_prefix(
+                    self.justech_do_historical_document_prefix, company=self.env.company
+                )
+            return Doc
+        if company:
+            data = analysis.get(company.id)
+            if data and data["status"] == "consistent":
+                return Doc.get_by_prefix(data["prefix"], company=company)
+            return Doc
+        # Sin empresa: solo si todas las compañías coherentes apuntan al mismo prefijo.
+        prefixes = {d["prefix"] for d in analysis.values() if d["status"] == "consistent"}
+        if len(prefixes) == 1:
+            return Doc.get_by_prefix(next(iter(prefixes)), company=self.env.company)
+        return Doc
+
+    def justech_do_has_fiscal_history_signal(self):
+        """True si hay evidencia operativa histórica (factura/NCF, pedido o pago)."""
+        self.ensure_one()
+        partner = self.commercial_partner_id
+        Move = self.env["account.move"].sudo()
+        if Move.search_count(
+            [
+                ("partner_id", "child_of", partner.id),
+                ("move_type", "=", "out_invoice"),
+                ("state", "=", "posted"),
+            ]
+        ):
+            return True
+        if self.env["sale.order"].sudo().search_count(
+            [("partner_id", "child_of", partner.id), ("state", "in", ("sale", "done"))]
+        ):
+            return True
+        if self.env["account.payment"].sudo().search_count(
+            [
+                ("partner_id", "child_of", partner.id),
+                ("state", "not in", ("draft", "cancel")),
+            ]
+        ):
+            return True
+        return False
+
+    def justech_do_confirm_fiscal_from_history(self, force=False):
+        """Persiste comprobante/estado desde histórico consistente. No toca facturas."""
+        Doc = self.env["justech.do.fiscal.document.type"]
+        for partner in self:
+            if partner.parent_id:
+                continue
+            if (
+                not force
+                and partner.justech_do_fiscal_config_state
+                in ("validated_padron", "confirmed_history")
+                and partner.justech_do_default_document_type_id
+            ):
+                continue
+            if not partner.justech_do_is_dominican and partner.country_id:
+                partner.write(
+                    {
+                        "justech_do_fiscal_config_state": "not_applicable",
+                        "justech_do_fiscal_config_source": _(
+                            "No aplica — extranjero / fuera de RD"
+                        ),
+                    }
+                )
+                continue
+            analysis = partner.justech_do_analyze_invoice_document_history()
+            if not analysis:
+                if partner.justech_do_has_fiscal_history_signal():
+                    partner.write(
+                        {
+                            "justech_do_fiscal_config_state": "needs_review",
+                            "justech_do_fiscal_config_source": _(
+                                "Histórico sin NCF utilizable — revisión"
+                            ),
+                        }
+                    )
+                else:
+                    partner.write(
+                        {
+                            "justech_do_fiscal_config_state": "pending_new",
+                            "justech_do_fiscal_config_source": _(
+                                "Cliente nuevo — validar RNC/Cédula"
+                            ),
+                        }
+                    )
+                continue
+            statuses = {d["status"] for d in analysis.values()}
+            prefixes = {d["prefix"] for d in analysis.values() if d["status"] == "consistent"}
+            if "mixed" in statuses:
+                partner.write(
+                    {
+                        "justech_do_fiscal_config_state": "needs_review",
+                        "justech_do_fiscal_config_source": _(
+                            "Histórico con tipos mixtos — revisión humana"
+                        ),
+                        "justech_do_historical_document_prefix": False,
+                    }
+                )
+                continue
+            if statuses == {"consistent"} and prefixes:
+                vals = {
+                    "justech_do_fiscal_config_state": "confirmed_history",
+                    "justech_do_fiscal_config_source": _(
+                        "Confirmado por historial de facturación"
+                    ),
+                }
+                if len(prefixes) == 1:
+                    prefix = next(iter(prefixes))
+                    doc = Doc.get_by_prefix(prefix, company=self.env.company)
+                    vals["justech_do_historical_document_prefix"] = prefix
+                    current = partner.justech_do_default_document_type_id
+                    if not current:
+                        vals["justech_do_default_document_type_id"] = (
+                            doc.id if doc else False
+                        )
+                    elif current.prefix != prefix:
+                        vals["justech_do_fiscal_config_state"] = "needs_review"
+                        vals["justech_do_fiscal_config_source"] = _(
+                            "Default distinto del histórico (%(cur)s vs %(hist)s)"
+                        ) % {"cur": current.prefix, "hist": prefix}
+                else:
+                    # Tipos legítimos distintos por empresa: no imponer un default global.
+                    vals["justech_do_historical_document_prefix"] = False
+                    vals["justech_do_fiscal_config_source"] = _(
+                        "Confirmado por historial (tipo por empresa)"
+                    )
+                partner.write(vals)
+        return True
 
     def _commercial_sync_from_company(self):
         commercial_partner = self.commercial_partner_id
@@ -613,7 +851,11 @@ class ResPartner(models.Model):
                 self.vat
             )
             self.vat = cleaned
-        self.justech_do_rnc_status = "pending"
+        # No degradar clientes históricos confirmados al editar VAT/país.
+        if self.justech_do_fiscal_config_state != "confirmed_history":
+            self.justech_do_rnc_status = "pending"
+            if self.justech_do_fiscal_config_state not in ("needs_review", "not_applicable"):
+                self.justech_do_fiscal_config_state = "pending_new"
         self.justech_do_rnc_duplicate_partner_id = False
         if not self.justech_do_show_rnc_validation:
             self.justech_do_rnc_padron_id = False
@@ -812,7 +1054,27 @@ class ResPartner(models.Model):
                 # Nombre vacío: completar con razón social oficial (creación nueva).
                 if not (partner.name or "").strip() and entry.name:
                     vals["name"] = entry.name
+                # Cliente nuevo / sin histórico confirmado: consolidar configuración.
+                if partner.justech_do_fiscal_config_state != "confirmed_history":
+                    vals["justech_do_fiscal_config_state"] = "validated_padron"
+                    vals["justech_do_fiscal_config_source"] = _(
+                        "Validado por padrón DGII"
+                    )
             self._justech_set_rnc_vals(partner, vals)
+            # Asignar comprobante por defecto solo si está vacío y hay sugerencia inequívoca.
+            # No tocar históricos confirmados ni casos en revisión.
+            if (
+                vals.get("justech_do_rnc_status") == "valid"
+                and not partner.justech_do_default_document_type_id
+                and partner.justech_do_fiscal_config_state
+                not in ("needs_review", "confirmed_history")
+            ):
+                partner.invalidate_recordset(
+                    ["justech_do_suggested_document_type_id", "justech_do_document_suggestion_hint"]
+                )
+                suggested = partner.justech_do_suggested_document_type_id
+                if suggested:
+                    partner.justech_do_default_document_type_id = suggested.id
         return True
 
     def action_justech_apply_dgii_data(self):
@@ -875,4 +1137,15 @@ class ResPartner(models.Model):
         self.justech_do_default_document_type_id = (
             self.justech_do_suggested_document_type_id
         )
+        if self.justech_do_fiscal_config_state not in (
+            "confirmed_history",
+            "validated_padron",
+        ):
+            self.justech_do_fiscal_config_state = "validated_padron"
+            self.justech_do_fiscal_config_source = _("Sugerencia fiscal aplicada manualmente")
+        return True
+
+    def action_justech_confirm_fiscal_from_history(self):
+        """Acción UI / auditoría: confirmar desde histórico de facturas."""
+        self.justech_do_confirm_fiscal_from_history(force=True)
         return True

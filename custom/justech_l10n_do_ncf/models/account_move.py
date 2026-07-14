@@ -199,7 +199,10 @@ class AccountMove(models.Model):
                 and not vals.get("debit_origin_id")
             ):
                 partner = self.env["res.partner"].browse(vals["partner_id"])
-                doc = partner.justech_do_get_default_sale_document_type()
+                company = self.env["res.company"].browse(
+                    vals.get("company_id") or self.env.company.id
+                )
+                doc = partner.justech_do_get_default_sale_document_type(company=company)
                 if doc:
                     vals["justech_do_document_type_id"] = doc.id
         return super().create(vals_list)
@@ -211,9 +214,12 @@ class AccountMove(models.Model):
         if not self.partner_id:
             self.justech_do_document_type_id = False
             return
-        if self.justech_do_document_type_id:
-            return
-        self.justech_do_document_type_id = self.partner_id.justech_do_get_default_sale_document_type()
+        # Recalcular al cambiar cliente (no heredar el tipo del partner anterior).
+        self.justech_do_document_type_id = False
+        resolved = self.env[
+            "justech.do.ncf.document.type.resolver.service"
+        ].resolve_for_move(self)
+        self.justech_do_document_type_id = resolved or False
 
     @api.onchange("reversed_entry_id")
     def _onchange_reversed_entry_ncf_modified(self):

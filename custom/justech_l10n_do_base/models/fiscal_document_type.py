@@ -102,8 +102,13 @@ class JustechDoFiscalDocumentType(models.Model):
 
     @api.model
     def get_by_prefix(self, prefix, company=None):
+        """Tipos maestros pueden vivir en una compañía (p.ej. JUSTECH) y
+        reutilizarse en filiales; si no hay registro local, usar el compartido."""
         company = company or self.env.company
-        return self.search(
+        doc = self.search(
             [("prefix", "=", prefix), ("company_id", "in", (False, company.id))],
             limit=1,
         )
+        if doc:
+            return doc
+        return self.search([("prefix", "=", prefix)], limit=1)

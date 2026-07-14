@@ -1,5 +1,17 @@
 # Changelog — justech_l10n_do_base
 
+## [19.0.1.22.0] — 2026-07-14 — Configuración fiscal histórica
+
+### Added
+- Estados de configuración fiscal: Confirmado por histórico / Validado por padrón /
+  Pendiente — cliente nuevo / Requiere revisión / No aplica.
+- Reconstrucción del comprobante por defecto desde facturas publicadas (por empresa).
+- Acción «Confirmar desde histórico» sin tocar documentos ni consumir NCF.
+
+### Changed
+- Clientes históricos consistentes ya no se degradan a «Pendiente de validar».
+- `justech_do_get_default_sale_document_type(company=)` usa histórico confirmado.
+
 ## [19.0.1.21.0] — 2026-07-11 — Gate Final Producción v1.0
 
 ### Changed

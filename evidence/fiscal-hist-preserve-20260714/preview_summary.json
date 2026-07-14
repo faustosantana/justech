@@ -1,0 +1,1128 @@
+{
+  "cutoff": "2026-07-14",
+  "customers": 532,
+  "historical": 182,
+  "new": 350,
+  "buckets": {
+    "historical_consistent": 115,
+    "historical_inconsistent": 5,
+    "historical_consistent_per_company": 1,
+    "new_pending": 350,
+    "historical_no_invoice_ncf": 61
+  },
+  "consistent": 116,
+  "inconsistent": 5,
+  "capital_dbg": [
+    {
+      "id": 1088,
+      "name": "Capital Dbg S.R.L.",
+      "vat": "130279896",
+      "payer": "taxpayer",
+      "rnc_status": "pending",
+      "default_doc": "",
+      "customer_rank": 100,
+      "is_company": true,
+      "country": "DO",
+      "create_date": "2026-03-05",
+      "is_historical": true,
+      "invoice_count": 58,
+      "bucket": "historical_consistent",
+      "proposed_prefixes": [
+        "B01"
+      ],
+      "companies": [
+        {
+          "company_id": 1,
+          "company": "JUSTECH S.R.L.",
+          "proposed_prefix": "B01",
+          "count_top": 50,
+          "count_total": 50,
+          "ratio": 1.0,
+          "types": {
+            "B01": 50
+          },
+          "status": "consistent",
+          "last_invoice": "FC/2026/00374",
+          "last_ncf": "B0100001615",
+          "last_date": "2026-07-13"
+        },
+        {
+          "company_id": 2,
+          "company": "PlugSafe SRL",
+          "proposed_prefix": "B01",
+          "count_top": 5,
+          "count_total": 5,
+          "ratio": 1.0,
+          "types": {
+            "B01": 5
+          },
+          "status": "consistent",
+          "last_invoice": "FC/2026/00006",
+          "last_ncf": "B0100000060",
+          "last_date": "2026-07-07"
+        },
+        {
+          "company_id": 3,
+          "company": "Just Office SRL",
+          "proposed_prefix": "B01",
+          "count_top": 3,
+          "count_total": 3,
+          "ratio": 1.0,
+          "types": {
+            "B01": 3
+          },
+          "status": "consistent",
+          "last_invoice": "INV/2026/00152",
+          "last_ncf": "B0100000210",
+          "last_date": "2026-03-18"
+        }
+      ]
+    }
+  ],
+  "confirmable_auto_sample": [
+    {
+      "id": 743,
+      "name": "A V BLANDINO & CIA S A",
+      "vat": "101000155",
+      "proposed": [
+        "B01"
+      ],
+      "companies": [
+        {
+          "company_id": 1,
+          "company": "JUSTECH S.R.L.",
+          "proposed_prefix": "B01",
+          "count_top": 1,
+          "count_total": 1,
+          "ratio": 1.0,
+          "types": {
+            "B01": 1
+          },
+          "status": "consistent",
+          "last_invoice": "FC/2026/00375",
+          "last_ncf": "B0100001616",
+          "last_date": "2026-07-14"
+        }
+      ],
+      "current_default": "",
+      "rnc_status": "pending"
+    },
+    {
+      "id": 1530,
+      "name": "Instituto Dermatologico y Cirugia de Piel Dr Huberto Bogaert Diaz",
+      "vat": "401005921",
+      "proposed": [
+        "B01",
+        "B14"
+      ],
+      "companies": [
+        {
+          "company_id": 1,
+          "company": "JUSTECH S.R.L.",
+          "proposed_prefix": "B01",
+          "count_top": 37,
+          "count_total": 40,
+          "ratio": 0.925,
+          "types": {
+            "B01": 37,
+            "B14": 3
+          },
+          "status": "consistent",
+          "last_invoice": "FC/2026/00340",
+          "last_ncf": "B1400000021",
+          "last_date": "2026-06-30"
+        },
+        {
+          "company_id": 3,
+          "company": "Just Office SRL",
+          "proposed_prefix": "B01",
+          "count_top": 4,
+          "count_total": 4,
+          "ratio": 1.0,
+          "types": {
+            "B01": 4
+          },
+          "status": "consistent",
+          "last_invoice": "INV/2026/00123",
+          "last_ncf": "B0100000271",
+          "last_date": "2026-05-15"
+        },
+        {
+          "company_id": 4,
+          "company": "Omni Solutions SRL",
+          "proposed_prefix": "B14",
+          "count_top": 2,
+          "count_total": 2,
+          "ratio": 1.0,
+          "types": {
+            "B14": 2
+          },
+          "status": "consistent",
+          "last_invoice": "FC/2026/00005",
+          "last_ncf": "B1400000002",
+          "last_date": "2026-06-25"
+        }
+      ],
+      "current_default": "",
+      "rnc_status": "valid"
+    },
+    {
+      "id": 493,
+      "name": "Bona S A",
+      "vat": "101069392",
+      "proposed": [
+        "B01"
+      ],
+      "companies": [
+        {
+          "company_id": 1,
+          "company": "JUSTECH S.R.L.",
+          "proposed_prefix": "B01",
+          "count_top": 17,
+          "count_total": 17,
+          "ratio": 1.0,
+          "types": {
+            "B01": 17
+          },
+          "status": "consistent",
+          "last_invoice": "FC/2026/00345",
+          "last_ncf": "B0100001588",
+          "last_date": "2026-07-01"
+        }
+      ],
+      "current_default": "",
+      "rnc_status": "pending"
+    },
+    {
+      "id": 1615,
+      "name": "DEFENSA CIVIL",
+      "vat": "",
+      "proposed": [
+        "B15"
+      ],
+      "companies": [
+        {
+          "company_id": 3,
+          "company": "Just Office SRL",
+          "proposed_prefix": "B15",
+          "count_top": 1,
+          "count_total": 1,
+          "ratio": 1.0,
+          "types": {
+            "B15": 1
+          },
+          "status": "consistent",
+          "last_invoice": "INV/2026/00200",
+          "last_ncf": "B1500000003",
+          "last_date": "2026-06-18"
+        }
+      ],
+      "current_default": "",
+      "rnc_status": "pending"
+    },
+    {
+      "id": 1252,
+      "name": "Kaba Consulting SRL",
+      "vat": "130314187",
+      "proposed": [
+        "B01"
+      ],
+      "companies": [
+        {
+          "company_id": 1,
+          "company": "JUSTECH S.R.L.",
+          "proposed_prefix": "B01",
+          "count_top": 27,
+          "count_total": 27,
+          "ratio": 1.0,
+          "types": {
+            "B01": 27
+          },
+          "status": "consistent",
+          "last_invoice": "FC/2026/00354",
+          "last_ncf": "B0100001597",
+          "last_date": "2026-07-01"
+        },
+        {
+          "company_id": 3,
+          "company": "Just Office SRL",
+          "proposed_prefix": "B01",
+          "count_top": 1,
+          "count_total": 1,
+          "ratio": 1.0,
+          "types": {
+            "B01": 1
+          },
+          "status": "consistent",
+          "last_invoice": "INV/2026/00129",
+          "last_ncf": "B0100000189",
+          "last_date": "2026-03-04"
+        }
+      ],
+      "current_default": "",
+      "rnc_status": "pending"
+    },
+    {
+      "id": 1339,
+      "name": "El Catador S.A.",
+      "vat": "101060702",
+      "proposed": [
+        "B01"
+      ],
+      "companies": [
+        {
+          "company_id": 1,
+          "company": "JUSTECH S.R.L.",
+          "proposed_prefix": "B01",
+          "count_top": 20,
+          "count_total": 20,
+          "ratio": 1.0,
+          "types": {
+            "B01": 20
+          },
+          "status": "consistent",
+          "last_invoice": "FC/2026/00373",
+          "last_ncf": "B0100001614",
+          "last_date": "2026-07-13"
+        }
+      ],
+      "current_default": "",
+      "rnc_status": "pending"
+    },
+    {
+      "id": 1088,
+      "name": "Capital Dbg S.R.L.",
+      "vat": "130279896",
+      "proposed": [
+        "B01"
+      ],
+      "companies": [
+        {
+          "company_id": 1,
+          "company": "JUSTECH S.R.L.",
+          "proposed_prefix": "B01",
+          "count_top": 50,
+          "count_total": 50,
+          "ratio": 1.0,
+          "types": {
+            "B01": 50
+          },
+          "status": "consistent",
+          "last_invoice": "FC/2026/00374",
+          "last_ncf": "B0100001615",
+          "last_date": "2026-07-13"
+        },
+        {
+          "company_id": 2,
+          "company": "PlugSafe SRL",
+          "proposed_prefix": "B01",
+          "count_top": 5,
+          "count_total": 5,
+          "ratio": 1.0,
+          "types": {
+            "B01": 5
+          },
+          "status": "consistent",
+          "last_invoice": "FC/2026/00006",
+          "last_ncf": "B0100000060",
+          "last_date": "2026-07-07"
+        },
+        {
+          "company_id": 3,
+          "company": "Just Office SRL",
+          "proposed_prefix": "B01",
+          "count_top": 3,
+          "count_total": 3,
+          "ratio": 1.0,
+          "types": {
+            "B01": 3
+          },
+          "status": "consistent",
+          "last_invoice": "INV/2026/00152",
+          "last_ncf": "B0100000210",
+          "last_date": "2026-03-18"
+        }
+      ],
+      "current_default": "",
+      "rnc_status": "pending"
+    },
+    {
+      "id": 1776,
+      "name": "Amada Rosa Centro de Estetica S.R.L.",
+      "vat": "",
+      "proposed": [
+        "B02"
+      ],
+      "companies": [
+        {
+          "company_id": 3,
+          "company": "Just Office SRL",
+          "proposed_prefix": "B02",
+          "count_top": 1,
+          "count_total": 1,
+          "ratio": 1.0,
+          "types": {
+            "B02": 1
+          },
+          "status": "consistent",
+          "last_invoice": "INV/2026/00141",
+          "last_ncf": "B0200000035",
+          "last_date": "2026-03-09"
+        }
+      ],
+      "current_default": "",
+      "rnc_status": "pending"
+    },
+    {
+      "id": 1775,
+      "name": "DR JUAN BAZIL",
+      "vat": "",
+      "proposed": [
+        "B02"
+      ],
+      "companies": [
+        {
+          "company_id": 3,
+          "company": "Just Office SRL",
+          "proposed_prefix": "B02",
+          "count_top": 1,
+          "count_total": 1,
+          "ratio": 1.0,
+          "types": {
+            "B02": 1
+          },
+          "status": "consistent",
+          "last_invoice": "INV/2026/00137",
+          "last_ncf": "B0200000034",
+          "last_date": "2026-05-20"
+        }
+      ],
+      "current_default": "",
+      "rnc_status": "pending"
+    },
+    {
+      "id": 1903,
+      "name": "Escudea Centro de Vacunacion Infantil S.R.L.",
+      "vat": "131919766",
+      "proposed": [
+        "B01"
+      ],
+      "companies": [
+        {
+          "company_id": 3,
+          "company": "Just Office SRL",
+          "proposed_prefix": "B01",
+          "count_top": 8,
+          "count_total": 8,
+          "ratio": 1.0,
+          "types": {
+            "B01": 8
+          },
+          "status": "consistent",
+          "last_invoice": "INV/2026/00235",
+          "last_ncf": "B0100000336",
+          "last_date": "2026-07-09"
+        }
+      ],
+      "current_default": "",
+      "rnc_status": "pending"
+    },
+    {
+      "id": 1575,
+      "name": "COMUNICACION CORPORATIVA CCK DE REPUBLICA DOMINICANA SRL",
+      "vat": "133448582",
+      "proposed": [
+        "B01"
+      ],
+      "companies": [
+        {
+          "company_id": 1,
+          "company": "JUSTECH S.R.L.",
+          "proposed_prefix": "B01",
+          "count_top": 6,
+          "count_total": 6,
+          "ratio": 1.0,
+          "types": {
+            "B01": 6
+          },
+          "status": "consistent",
+          "last_invoice": "FC/2026/00347",
+          "last_ncf": "B0100001590",
+          "last_date": "2026-07-01"
+        }
+      ],
+      "current_default": "",
+      "rnc_status": "pending"
+    },
+    {
+      "id": 1567,
+      "name": "Banco Multiple Ademi S.A.",
+      "vat": "101745274",
+      "proposed": [
+        "B01"
+      ],
+      "companies": [
+        {
+          "company_id": 1,
+          "company": "JUSTECH S.R.L.",
+          "proposed_prefix": "B01",
+          "count_top": 12,
+          "count_total": 12,
+          "ratio": 1.0,
+          "types": {
+            "B01": 12
+          },
+          "status": "consistent",
+          "last_invoice": "FC/2026/00371",
+          "last_ncf": "B0100001612",
+          "last_date": "2026-07-09"
+        },
+        {
+          "company_id": 3,
+          "company": "Just Office SRL",
+          "proposed_prefix": "B01",
+          "count_top": 1,
+          "count_total": 1,
+          "ratio": 1.0,
+          "types": {
+            "B01": 1
+          },
+          "status": "consistent",
+          "last_invoice": "INV/2026/00192",
+          "last_ncf": "B0100000302",
+          "last_date": "2026-06-12"
+        }
+      ],
+      "current_default": "",
+      "rnc_status": "pending"
+    },
+    {
+      "id": 1570,
+      "name": "Consorcio Mobility Id",
+      "vat": "133516101",
+      "proposed": [
+        "B01"
+      ],
+      "companies": [
+        {
+          "company_id": 3,
+          "company": "Just Office SRL",
+          "proposed_prefix": "B01",
+          "count_top": 5,
+          "count_total": 5,
+          "ratio": 1.0,
+          "types": {
+            "B01": 5
+          },
+          "status": "consistent",
+          "last_invoice": "INV/2026/00210",
+          "last_ncf": "B0100000316",
+          "last_date": "2026-06-25"
+        },
+        {
+          "company_id": 1,
+          "company": "JUSTECH S.R.L.",
+          "proposed_prefix": "B01",
+          "count_top": 2,
+          "count_total": 2,
+          "ratio": 1.0,
+          "types": {
+            "B01": 2
+          },
+          "status": "consistent",
+          "last_invoice": "FC/2026/00307",
+          "last_ncf": "B0100001555",
+          "last_date": "2026-06-11"
+        }
+      ],
+      "current_default": "",
+      "rnc_status": "pending"
+    },
+    {
+      "id": 1577,
+      "name": "Ayuntamiento Municipal Pedro Santana",
+      "vat": "418000114",
+      "proposed": [
+        "B15"
+      ],
+      "companies": [
+        {
+          "company_id": 1,
+          "company": "JUSTECH S.R.L.",
+          "proposed_prefix": "B15",
+          "count_top": 5,
+          "count_total": 5,
+          "ratio": 1.0,
+          "types": {
+            "B15": 5
+          },
+          "status": "consistent",
+          "last_invoice": "FC/2026/00366",
+          "last_ncf": "B1500000140",
+          "last_date": "2026-07-02"
+        }
+      ],
+      "current_default": "",
+      "rnc_status": "pending"
+    },
+    {
+      "id": 1519,
+      "name": "CreditMax Experts",
+      "vat": "133305331",
+      "proposed": [
+        "B01"
+      ],
+      "companies": [
+        {
+          "company_id": 1,
+          "company": "JUSTECH S.R.L.",
+          "proposed_prefix": "B01",
+          "count_top": 9,
+          "count_total": 9,
+          "ratio": 1.0,
+          "types": {
+            "B01": 9
+          },
+          "status": "consistent",
+          "last_invoice": "FC/2026/00216",
+          "last_ncf": "B0100001476",
+          "last_date": "2026-05-05"
+        }
+      ],
+      "current_default": "",
+      "rnc_status": "pending"
+    },
+    {
+      "id": 1236,
+      "name": "ISA GRUPO DERMATOLOGICO SRL",
+      "vat": "131877461",
+      "proposed": [
+        "B01"
+      ],
+      "companies": [
+        {
+          "company_id": 3,
+          "company": "Just Office SRL",
+          "proposed_prefix": "B01",
+          "count_top": 12,
+          "count_total": 12,
+          "ratio": 1.0,
+          "types": {
+            "B01": 12
+          },
+          "status": "consistent",
+          "last_invoice": "INV/2026/00238",
+          "last_ncf": "B0100000339",
+          "last_date": "2026-07-13"
+        }
+      ],
+      "current_default": "",
+      "rnc_status": "pending"
+    },
+    {
+      "id": 1251,
+      "name": "HENRIQUEZ LOGISTICS CENTER SRL",
+      "vat": "131691422",
+      "proposed": [
+        "B14"
+      ],
+      "companies": [
+        {
+          "company_id": 1,
+          "company": "JUSTECH S.R.L.",
+          "proposed_prefix": "B14",
+          "count_top": 1,
+          "count_total": 1,
+          "ratio": 1.0,
+          "types": {
+            "B14": 1
+          },
+          "status": "consistent",
+          "last_invoice": "FC/2026/00083",
+          "last_ncf": "B1400000018",
+          "last_date": "2026-01-02"
+        }
+      ],
+      "current_default": "",
+      "rnc_status": "pending"
+    },
+    {
+      "id": 1868,
+      "name": "CENTRO DE ATENCION A LA DIVERSIDAD INCLUYEME CEADI SRL",
+      "vat": "133159562",
+      "proposed": [
+        "B01"
+      ],
+      "companies": [
+        {
+          "company_id": 3,
+          "company": "Just Office SRL",
+          "proposed_prefix": "B01",
+          "count_top": 1,
+          "count_total": 1,
+          "ratio": 1.0,
+          "types": {
+            "B01": 1
+          },
+          "status": "consistent",
+          "last_invoice": "INV/2026/00202",
+          "last_ncf": "B0100000309",
+          "last_date": "2026-06-19"
+        }
+      ],
+      "current_default": "",
+      "rnc_status": "pending"
+    },
+    {
+      "id": 1534,
+      "name": "JUST OFFICE",
+      "vat": "133399581",
+      "proposed": [
+        "B01"
+      ],
+      "companies": [
+        {
+          "company_id": 1,
+          "company": "JUSTECH S.R.L.",
+          "proposed_prefix": "B01",
+          "count_top": 3,
+          "count_total": 3,
+          "ratio": 1.0,
+          "types": {
+            "B01": 3
+          },
+          "status": "consistent",
+          "last_invoice": "FC/2026/00174",
+          "last_ncf": "B0100001373",
+          "last_date": "2026-03-02"
+        }
+      ],
+      "current_default": "",
+      "rnc_status": "pending"
+    },
+    {
+      "id": 1,
+      "name": "JUSTECH S.R.L.",
+      "vat": "131828061",
+      "proposed": [
+        "B01"
+      ],
+      "companies": [
+        {
+          "company_id": 3,
+          "company": "Just Office SRL",
+          "proposed_prefix": "B01",
+          "count_top": 5,
+          "count_total": 5,
+          "ratio": 1.0,
+          "types": {
+            "B01": 5
+          },
+          "status": "consistent",
+          "last_invoice": "INV/2026/00039",
+          "last_ncf": "B0100000254",
+          "last_date": "2026-04-30"
+        }
+      ],
+      "current_default": "",
+      "rnc_status": "pending"
+    },
+    {
+      "id": 1743,
+      "name": "Body Shop Athletic Club S.R.L.",
+      "vat": "101637587",
+      "proposed": [
+        "B01"
+      ],
+      "companies": [
+        {
+          "company_id": 1,
+          "company": "JUSTECH S.R.L.",
+          "proposed_prefix": "B01",
+          "count_top": 1,
+          "count_total": 1,
+          "ratio": 1.0,
+          "types": {
+            "B01": 1
+          },
+          "status": "consistent",
+          "last_invoice": "FC/2026/00368",
+          "last_ncf": "B0100001609",
+          "last_date": "2026-07-03"
+        }
+      ],
+      "current_default": "",
+      "rnc_status": "pending"
+    },
+    {
+      "id": 1671,
+      "name": "Ibb Tax Financial Consulting S.R.L.",
+      "vat": "132831276",
+      "proposed": [
+        "B01"
+      ],
+      "companies": [
+        {
+          "company_id": 1,
+          "company": "JUSTECH S.R.L.",
+          "proposed_prefix": "B01",
+          "count_top": 1,
+          "count_total": 1,
+          "ratio": 1.0,
+          "types": {
+            "B01": 1
+          },
+          "status": "consistent",
+          "last_invoice": "FC/2026/00150",
+          "last_ncf": "B0100001351",
+          "last_date": "2026-02-25"
+        }
+      ],
+      "current_default": "",
+      "rnc_status": "pending"
+    },
+    {
+      "id": 1239,
+      "name": "AB INDUSTRIAL SUPPLY CORPORATION SRL",
+      "vat": "130154899",
+      "proposed": [
+        "B01"
+      ],
+      "companies": [
+        {
+          "company_id": 3,
+          "company": "Just Office SRL",
+          "proposed_prefix": "B01",
+          "count_top": 3,
+          "count_total": 3,
+          "ratio": 1.0,
+          "types": {
+            "B01": 3
+          },
+          "status": "consistent",
+          "last_invoice": "INV/2026/00181",
+          "last_ncf": "B0100000296",
+          "last_date": "2026-06-08"
+        }
+      ],
+      "current_default": "",
+      "rnc_status": "pending"
+    },
+    {
+      "id": 1866,
+      "name": "Asociacion para El Desarrollo de Microempresas",
+      "vat": "401052458",
+      "proposed": [
+        "B01"
+      ],
+      "companies": [
+        {
+          "company_id": 1,
+          "company": "JUSTECH S.R.L.",
+          "proposed_prefix": "B01",
+          "count_top": 1,
+          "count_total": 1,
+          "ratio": 1.0,
+          "types": {
+            "B01": 1
+          },
+          "status": "consistent",
+          "last_invoice": "FC/2026/00315",
+          "last_ncf": "B0100001563",
+          "last_date": "2026-06-15"
+        }
+      ],
+      "current_default": "",
+      "rnc_status": "pending"
+    },
+    {
+      "id": 1185,
+      "name": "E & N BUEN SABOR",
+      "vat": "111111111",
+      "proposed": [
+        "B02"
+      ],
+      "companies": [
+        {
+          "company_id": 3,
+          "company": "Just Office SRL",
+          "proposed_prefix": "B02",
+          "count_top": 1,
+          "count_total": 1,
+          "ratio": 1.0,
+          "types": {
+            "B02": 1
+          },
+          "status": "consistent",
+          "last_invoice": "INV/2025/00042",
+          "last_ncf": "B0200000002",
+          "last_date": "2025-07-18"
+        }
+      ],
+      "current_default": "",
+      "rnc_status": "pending"
+    },
+    {
+      "id": 1515,
+      "name": "CALE ENTERPRISE CFAP SRL",
+      "vat": "132722094",
+      "proposed": [
+        "B01"
+      ],
+      "companies": [
+        {
+          "company_id": 1,
+          "company": "JUSTECH S.R.L.",
+          "proposed_prefix": "B01",
+          "count_top": 2,
+          "count_total": 2,
+          "ratio": 1.0,
+          "types": {
+            "B01": 2
+          },
+          "status": "consistent",
+          "last_invoice": "CxC/2025/00092",
+          "last_ncf": "B0100000866",
+          "last_date": "2025-04-09"
+        }
+      ],
+      "current_default": "",
+      "rnc_status": "pending"
+    },
+    {
+      "id": 1516,
+      "name": "CAMARA DE COMERCIO Y TURISMO DOMINICO SUIZA INC",
+      "vat": "401511363",
+      "proposed": [
+        "B01"
+      ],
+      "companies": [
+        {
+          "company_id": 1,
+          "company": "JUSTECH S.R.L.",
+          "proposed_prefix": "B01",
+          "count_top": 8,
+          "count_total": 8,
+          "ratio": 1.0,
+          "types": {
+            "B01": 8
+          },
+          "status": "consistent",
+          "last_invoice": "CxC/2024/00013",
+          "last_ncf": "B0100000470",
+          "last_date": "2024-04-02"
+        }
+      ],
+      "current_default": "",
+      "rnc_status": "pending"
+    },
+    {
+      "id": 1811,
+      "name": "Bicley Technology SRL",
+      "vat": "131-75506-2",
+      "proposed": [
+        "B01"
+      ],
+      "companies": [
+        {
+          "company_id": 1,
+          "company": "JUSTECH S.R.L.",
+          "proposed_prefix": "B01",
+          "count_top": 2,
+          "count_total": 2,
+          "ratio": 1.0,
+          "types": {
+            "B01": 2
+          },
+          "status": "consistent",
+          "last_invoice": "FC/2026/00326",
+          "last_ncf": "B0100001573",
+          "last_date": "2026-06-22"
+        }
+      ],
+      "current_default": "",
+      "rnc_status": "pending"
+    },
+    {
+      "id": 1777,
+      "name": "CLINICA DE LA PIEL Y CIRUGIA DERMATOLOGICA DR H BOGAERT SRL",
+      "vat": "101556269",
+      "proposed": [
+        "B01"
+      ],
+      "companies": [
+        {
+          "company_id": 3,
+          "company": "Just Office SRL",
+          "proposed_prefix": "B01",
+          "count_top": 1,
+          "count_total": 1,
+          "ratio": 1.0,
+          "types": {
+            "B01": 1
+          },
+          "status": "consistent",
+          "last_invoice": "INV/2026/00142",
+          "last_ncf": "B0100000198",
+          "last_date": "2026-03-10"
+        }
+      ],
+      "current_default": "",
+      "rnc_status": "pending"
+    },
+    {
+      "id": 1224,
+      "name": "CHADY RAQUEL CRISOSTOMO ROMERO",
+      "vat": "111111111",
+      "proposed": [
+        "B02"
+      ],
+      "companies": [
+        {
+          "company_id": 3,
+          "company": "Just Office SRL",
+          "proposed_prefix": "B02",
+          "count_top": 1,
+          "count_total": 1,
+          "ratio": 1.0,
+          "types": {
+            "B02": 1
+          },
+          "status": "consistent",
+          "last_invoice": "INV/2025/00015",
+          "last_ncf": "B0200000020",
+          "last_date": "2025-12-09"
+        }
+      ],
+      "current_default": "",
+      "rnc_status": "pending"
+    }
+  ],
+  "inconsistent_sample": [
+    {
+      "id": 1521,
+      "name": "DALGANSA SRL",
+      "companies": [
+        {
+          "company_id": 1,
+          "company": "JUSTECH S.R.L.",
+          "proposed_prefix": "B01",
+          "count_top": 18,
+          "count_total": 18,
+          "ratio": 1.0,
+          "types": {
+            "B01": 18
+          },
+          "status": "consistent",
+          "last_invoice": "FC/2026/00360",
+          "last_ncf": "B0100001603",
+          "last_date": "2026-07-01"
+        },
+        {
+          "company_id": 3,
+          "company": "Just Office SRL",
+          "proposed_prefix": "B01",
+          "count_top": 2,
+          "count_total": 4,
+          "ratio": 0.5,
+          "types": {
+            "B01": 2,
+            "B02": 2
+          },
+          "status": "mixed",
+          "last_invoice": "INV/2026/00143",
+          "last_ncf": "B0100000199",
+          "last_date": "2026-03-10"
+        }
+      ]
+    },
+    {
+      "id": 1175,
+      "name": "GENTE BUENA AUTO IMPORT SRL",
+      "companies": [
+        {
+          "company_id": 3,
+          "company": "Just Office SRL",
+          "proposed_prefix": "B01",
+          "count_top": 5,
+          "count_total": 7,
+          "ratio": 0.714,
+          "types": {
+            "B01": 5,
+            "B02": 2
+          },
+          "status": "mixed",
+          "last_invoice": "INV/2026/00227",
+          "last_ncf": "B0200000045",
+          "last_date": "2026-07-07"
+        }
+      ]
+    },
+    {
+      "id": 1209,
+      "name": "Rosa María López Ceballos",
+      "companies": [
+        {
+          "company_id": 3,
+          "company": "Just Office SRL",
+          "proposed_prefix": "B02",
+          "count_top": 5,
+          "count_total": 8,
+          "ratio": 0.625,
+          "types": {
+            "B02": 5,
+            "B01": 3
+          },
+          "status": "mixed",
+          "last_invoice": "INV/2026/00135",
+          "last_ncf": "B0200000033",
+          "last_date": "2026-03-05"
+        }
+      ]
+    },
+    {
+      "id": 1237,
+      "name": "SOLUCIONES SOEN SRL",
+      "companies": [
+        {
+          "company_id": 3,
+          "company": "Just Office SRL",
+          "proposed_prefix": "B01",
+          "count_top": 2,
+          "count_total": 4,
+          "ratio": 0.5,
+          "types": {
+            "B01": 2,
+            "B02": 2
+          },
+          "status": "mixed",
+          "last_invoice": "INV/2026/00204",
+          "last_ncf": "B0200000040",
+          "last_date": "2026-06-23"
+        }
+      ]
+    },
+    {
+      "id": 1229,
+      "name": "KELVIN ALEXANDER RAMIREZ MONTERO",
+      "companies": [
+        {
+          "company_id": 3,
+          "company": "Just Office SRL",
+          "proposed_prefix": "B01",
+          "count_top": 1,
+          "count_total": 2,
+          "ratio": 0.5,
+          "types": {
+            "B01": 1,
+            "B02": 1
+          },
+          "status": "mixed",
+          "last_invoice": "INV/2026/00212",
+          "last_ncf": "B0200000041",
+          "last_date": "2026-06-24"
+        }
+      ]
+    }
+  ]
+}

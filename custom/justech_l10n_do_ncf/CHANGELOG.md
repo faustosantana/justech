@@ -1,5 +1,13 @@
 # Changelog — Estándar Fiscal Justech (cierre)
 
+## [19.0.2.5.0] — 2026-07-14 — Resolución fiscal histórica
+
+### Changed
+- Orden de resolución en factura: default persistido → histórico por empresa →
+  padrón/sugerencia → regla inequívoca (sin RNC→B01 ciego).
+- Onchange de partner recalcula el tipo (no hereda del cliente anterior).
+- Post bloquea clientes nuevos / revisión sin comprobante con mensaje claro.
+
 ## [19.0.2.4.1] — 2026-07-13
 
 ### Fixed

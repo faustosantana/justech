@@ -14,6 +14,37 @@ class JustechDoNcfBusinessRulesService(models.AbstractModel):
         if not self.env["justech.do.fiscal.config.service"].is_fiscal_enabled(move.company_id):
             return
         doc = move.justech_do_document_type_id or move._justech_resolve_document_type()
+        partner = move.partner_id.commercial_partner_id if move.partner_id else False
+        if move.move_type in ("out_invoice", "out_refund") and partner:
+            state = partner.justech_do_fiscal_config_state
+            has_persisted_default = bool(partner.justech_do_default_document_type_id)
+            # Cliente nuevo: exige validación/configuración persistida (no basta sugerencia).
+            if state == "pending_new" and not has_persisted_default:
+                raise UserError(
+                    _(
+                        "Cliente %(partner)s pendiente de validar. "
+                        "Valide el RNC/Cédula y asigne el comprobante fiscal "
+                        "antes de publicar la factura.",
+                        partner=partner.display_name,
+                    )
+                )
+            if state == "needs_review" and not (doc and has_persisted_default):
+                raise UserError(
+                    _(
+                        "Cliente %(partner)s requiere revisión fiscal "
+                        "(%(source)s). No se puede publicar hasta resolver el comprobante.",
+                        partner=partner.display_name,
+                        source=partner.justech_do_fiscal_config_source or state,
+                    )
+                )
+            if not doc and state not in ("confirmed_history", "validated_padron", "not_applicable"):
+                raise UserError(
+                    _(
+                        "Cliente %(partner)s sin comprobante fiscal resoluble. "
+                        "Confirme histórico o valide con padrón antes de publicar.",
+                        partner=partner.display_name,
+                    )
+                )
         if not doc:
             return
         prefix = doc.prefix

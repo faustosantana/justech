@@ -1,0 +1,112 @@
+{
+  "ok": true,
+  "errors": [],
+  "cases": {
+    "capital_confirm": {
+      "state": "confirmed_history",
+      "prefix": "B01",
+      "default": "B01",
+      "source": "Confirmado por historial de facturación"
+    },
+    "case1_b01": {
+      "partner": "AB INDUSTRIAL SUPPLY CORPORATION SRL",
+      "state": "confirmed_history",
+      "doc": "B01"
+    },
+    "case2_b02": {
+      "partner": "ABIGAIL ROMERO",
+      "state": "confirmed_history",
+      "doc": "B02"
+    },
+    "case3_b14": {
+      "partner": "HENRIQUEZ LOGISTICS CENTER SRL",
+      "state": "confirmed_history",
+      "doc": "B14"
+    },
+    "case3_b15": {
+      "partner": "Ayuntamiento Municipal Pedro Santana",
+      "state": "confirmed_history",
+      "doc": "B15"
+    },
+    "case4_new": {
+      "state": "pending_new",
+      "pending": true
+    },
+    "case5_block": {
+      "blocked": true,
+      "msg": "Cliente TEST FISCAL HIST NEW — ROLLBACK pendiente de validar. Valide el RNC/Cédula y asigne el comprobante fiscal antes de publicar la factura."
+    },
+    "case6_mixed": {
+      "partner": "DALGANSA SRL",
+      "state": "needs_review",
+      "default_unchanged_or_empty": true
+    },
+    "case7_partner_change": {
+      "r1": "B01",
+      "r2": "B01"
+    },
+    "case8_multicompany": {
+      "Just Office SRL": null,
+      "Omni Solutions SRL": "B01",
+      "PlugSafe SRL": null,
+      "JUSTECH S.R.L.": "B01"
+    }
+  },
+  "counts": {
+    "customers": 532,
+    "historical_signal": 181,
+    "new": 351,
+    "states_after_confirm_sim": {
+      "pending_new": 351,
+      "confirmed_history": 116,
+      "needs_review": 65
+    },
+    "golive_cutoff": "2026-07-14"
+  },
+  "capital_dbg": {
+    "id": 1088,
+    "name": "Capital Dbg S.R.L.",
+    "vat": "130279896",
+    "analysis": {
+      "1": {
+        "prefix": "B01",
+        "count_top": 49,
+        "count_total": 49,
+        "status": "consistent",
+        "last_ncf": "B0100001613",
+        "last_move": "FC/2026/00372",
+        "types": {
+          "B01": 49
+        }
+      },
+      "2": {
+        "prefix": "B01",
+        "count_top": 5,
+        "count_total": 5,
+        "status": "consistent",
+        "last_ncf": "B0100000060",
+        "last_move": "FC/2026/00006",
+        "types": {
+          "B01": 5
+        }
+      },
+      "3": {
+        "prefix": "B01",
+        "count_top": 3,
+        "count_total": 3,
+        "status": "consistent",
+        "last_ncf": "B0100000210",
+        "last_move": "INV/2026/00152",
+        "types": {
+          "B01": 3
+        }
+      }
+    }
+  },
+  "integrity": {
+    "posted_delta": 0,
+    "payments_delta": 0,
+    "ncf_ranges_unchanged": true,
+    "test_partners_persisted": 0
+  }
+}

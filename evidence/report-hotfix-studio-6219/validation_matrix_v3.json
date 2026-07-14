@@ -1,0 +1,185 @@
+{
+  "checks": [
+    {
+      "company": "JUSTECH S.R.L.",
+      "inv": {
+        "doc": "FC/2026/00373",
+        "has_partner_name": true,
+        "has_vat": true,
+        "has_street": true,
+        "has_do_informations": true,
+        "has_cliente_label": true,
+        "has_ncf": true,
+        "ncf_visible_outside_hidden": true,
+        "has_impuestos_dop": false,
+        "company_ok": true,
+        "leak": false,
+        "vat": "101060702",
+        "partner_name": "El Catador S.A."
+      },
+      "so": {
+        "doc": "C-0003859",
+        "has_partner_name": true,
+        "has_vat": true,
+        "has_addr": true,
+        "has_impuestos_dop": false,
+        "bubble": true,
+        "company_ok": true,
+        "leak": false,
+        "proforma_partner": true,
+        "proforma_vat": true
+      },
+      "po": {
+        "doc": "P00168",
+        "has_partner_name": true,
+        "has_vat": true,
+        "has_impuestos_dop": false,
+        "company_ok": true,
+        "leak": false
+      },
+      "pay": {
+        "doc": "PBNK1/2026/00212",
+        "has_partner": true,
+        "has_impuestos_dop": false,
+        "company_ok": true
+      }
+    },
+    {
+      "company": "PlugSafe SRL",
+      "inv": {
+        "doc": "FC/2026/00006",
+        "has_partner_name": true,
+        "has_vat": true,
+        "has_street": true,
+        "has_do_informations": true,
+        "has_cliente_label": true,
+        "has_ncf": true,
+        "ncf_visible_outside_hidden": true,
+        "has_impuestos_dop": false,
+        "company_ok": true,
+        "leak": false,
+        "vat": "130279896",
+        "partner_name": "Capital Dbg S.R.L."
+      },
+      "so": {
+        "doc": "CPS-0000099",
+        "has_partner_name": true,
+        "has_vat": true,
+        "has_addr": true,
+        "has_impuestos_dop": false,
+        "bubble": true,
+        "company_ok": true,
+        "leak": false,
+        "proforma_partner": true,
+        "proforma_vat": true
+      }
+    },
+    {
+      "company": "Just Office SRL",
+      "inv": {
+        "doc": "INV/2026/00240",
+        "has_partner_name": true,
+        "has_vat": true,
+        "has_street": true,
+        "has_do_informations": true,
+        "has_cliente_label": true,
+        "has_ncf": true,
+        "ncf_visible_outside_hidden": true,
+        "has_impuestos_dop": false,
+        "company_ok": true,
+        "leak": false,
+        "vat": "130615578",
+        "partner_name": "FARMATRIX S A S"
+      },
+      "so": {
+        "doc": "CJO-0000602",
+        "has_partner_name": true,
+        "has_vat": true,
+        "has_addr": true,
+        "has_impuestos_dop": false,
+        "bubble": true,
+        "company_ok": true,
+        "leak": false,
+        "proforma_partner": true,
+        "proforma_vat": true
+      },
+      "po": {
+        "doc": "P00138",
+        "has_partner_name": true,
+        "has_vat": true,
+        "has_impuestos_dop": false,
+        "company_ok": true,
+        "leak": false
+      },
+      "pay": {
+        "doc": "PBPD90/2026/00077",
+        "has_partner": true,
+        "has_impuestos_dop": false,
+        "company_ok": true
+      }
+    },
+    {
+      "company": "Omni Solutions SRL",
+      "inv": {
+        "doc": "FC/2026/00005",
+        "has_partner_name": true,
+        "has_vat": true,
+        "has_street": true,
+        "has_do_informations": true,
+        "has_cliente_label": true,
+        "has_ncf": true,
+        "ncf_visible_outside_hidden": true,
+        "has_impuestos_dop": false,
+        "company_ok": true,
+        "leak": false,
+        "vat": "401005921",
+        "partner_name": "Instituto Dermatologico y Cirugia de Piel Dr Huberto Bogaert Diaz"
+      },
+      "so": {
+        "doc": "COS-0000082",
+        "has_partner_name": true,
+        "has_vat": true,
+        "has_addr": true,
+        "has_impuestos_dop": false,
+        "bubble": true,
+        "company_ok": true,
+        "leak": false,
+        "proforma_partner": true,
+        "proforma_vat": true
+      },
+      "po": {
+        "doc": "P00060",
+        "has_partner_name": true,
+        "has_vat": true,
+        "has_impuestos_dop": false,
+        "company_ok": true,
+        "leak": false
+      }
+    }
+  ],
+  "counts_equal": true,
+  "counts_before": {
+    "sale.order": 732,
+    "account.move": 2406,
+    "account.move.line": 9033,
+    "account.payment": 699,
+    "purchase.order": 139,
+    "res.partner": 1177
+  },
+  "counts_after": {
+    "sale.order": 732,
+    "account.move": 2406,
+    "account.move.line": 9033,
+    "account.payment": 699,
+    "purchase.order": 139,
+    "res.partner": 1177
+  },
+  "views_active": {
+    "6219": false,
+    "6227": false,
+    "6177": true,
+    "1673": true,
+    "6213": true
+  },
+  "hellenia": []
+}

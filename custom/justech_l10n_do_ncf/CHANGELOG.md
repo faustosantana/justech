@@ -1,5 +1,17 @@
 # Changelog — Estándar Fiscal Justech (cierre)
 
+## [19.0.2.6.0] — 2026-07-14 — Hotfix reportes (Studio address + gate DO)
+
+### Fixed
+- Desactiva de forma idempotente la vista Studio destructiva
+  `web_studio.report_editor_customization_diff.view._web.address_layout`
+  (fingerprint + inherit `web.address_layout`) para restaurar address/information_block.
+- Restaura `is_l10n_do_invoice` vía herencia QWeb Justech cuando el documento DO
+  tiene evidencia fiscal (`l10n_latam_*` o Motor Justech), sin forzar latam en diarios.
+
+### Docs
+- `docs/REPORT_HOTFIX_IS_L10N_DO_INVOICE.md`
+
 ## [19.0.2.5.0] — 2026-07-14 — Resolución fiscal histórica
 
 ### Changed

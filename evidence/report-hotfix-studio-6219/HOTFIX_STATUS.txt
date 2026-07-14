@@ -1,0 +1,9 @@
+HOTFIX DE REPORTES LISTO (DEV)
+Evidence: /opt/odoo-dev/evidence/report-hotfix-studio-6219-20260714_151308
+Applied:
+1) ir.ui.view 6219 active=false (Studio address_layout br replace)
+2) ir.ui.view 6227 active=false (Studio invoice destructive replace)
+3) ir.ui.view 4120 is_l10n_do_invoice gate includes l10n_latam_document_number
+Untouched: 6177, 1673, report actions, Bubble layout, Hellenia absent
+Candidate: de9ee58f8a9b067190e58c8a5cf5af9c6d8289690d85b5bccaea86167db1e280
+Production: not modified

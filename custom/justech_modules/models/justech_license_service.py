@@ -1011,8 +1011,6 @@ class JustechLicenseService(models.AbstractModel):
     def _client_module_status(self, product, company, state, configured, is_active):
         license_rec = self._get_active_license_for_company(company)
         if license_rec and license_rec.expires_at:
-            from datetime import date
-
             if license_rec.expires_at < date.today():
                 return "expired", _("Expirado")
         if not configured:

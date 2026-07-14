@@ -7,8 +7,14 @@ class JustechEcfCompanyConfig(models.Model):
     _description = "Configuración e-CF por empresa"
     _rec_name = "company_id"
 
-    company_id = fields.Many2one("res.company", required=True, index=True, ondelete="cascade")
-    active = fields.Boolean(default=True)
+    company_id = fields.Many2one(
+        "res.company",
+        string="Empresa",
+        required=True,
+        index=True,
+        ondelete="cascade",
+    )
+    active = fields.Boolean(string="Activo", default=True)
     fiscal_mode = fields.Selection(
         selection=[
             ("traditional_ncf", "NCF tradicional"),
@@ -38,8 +44,8 @@ class JustechEcfCompanyConfig(models.Model):
     )
     certificate_id = fields.Many2one("justech.ecf.certificate", string="Certificado activo")
     rnc_emisor = fields.Char(string="RNC emisor", related="company_id.vat", readonly=True)
-    setup_step = fields.Integer(default=1)
-    setup_complete = fields.Boolean(default=False)
+    setup_step = fields.Integer(string="Paso de implementación", default=1)
+    setup_complete = fields.Boolean(string="Implementación completa", default=False)
     last_health_at = fields.Datetime(readonly=True)
     last_health_summary = fields.Text(readonly=True)
     note = fields.Text()

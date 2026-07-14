@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <!-- Retirar app Settings "Fiscal Justech" — administración solo en Administración Justech -->
     <record id="res_config_settings_view_form_fiscal_admin" model="ir.ui.view">
         <field name="name">res.config.settings.view.form.inherit.fiscal.admin</field>
         <field name="model">res.config.settings</field>
@@ -7,35 +8,13 @@
         <field name="arch" type="xml">
             <xpath expr="//form" position="inside">
                 <app data-string="Fiscal Justech" string="Fiscal Justech" name="justech_fiscal_settings"
-                     groups="base.group_system,account.group_account_manager">
+                     invisible="1"
+                     groups="base.group_system">
                     <block title="Centro de Administración Fiscal" name="justech_fiscal_admin_block">
                         <setting string="Centro Fiscal Justech"
-                                 help="Estado del stack, salud, feature flags, NCF, DGII y multiempresa.">
-                            <div class="mt8">
-                                <button name="action_justech_open_fiscal_admin_center"
-                                        type="object"
-                                        string="Abrir Centro de Administración Fiscal"
-                                        icon="oi-arrow-right"
-                                        class="btn-link o_web_settings_access_rights"/>
-                            </div>
-                        </setting>
-                        <setting string="Banderas funcionales"
-                                 help="Activar o desactivar comportamiento funcional del stack Justech.">
-                            <div class="mt8">
-                                <button name="action_justech_open_fiscal_feature_flags"
-                                        type="object"
-                                        string="Gestionar banderas funcionales"
-                                        icon="oi-arrow-right"
-                                        class="btn-link o_web_settings_access_rights"/>
-                            </div>
-                        </setting>
-                    </block>
-                    <block title="Información" name="justech_fiscal_info_block">
-                        <setting string="Estándar Fiscal Justech"
-                                 help="Motor NCF con dual-write, Provider histórico, reportes DGII 606-609.">
+                                 help="Use Administración Justech para gobernar el stack fiscal.">
                             <p class="text-muted mb-0">
-                                Administre el stack fiscal completo sin instalar ni desinstalar módulos Odoo.
-                                Use Health Check y Diagnóstico para validar antes de Producción.
+                                Esta sección se administrará desde Ajustes → Administración Justech.
                             </p>
                         </setting>
                     </block>

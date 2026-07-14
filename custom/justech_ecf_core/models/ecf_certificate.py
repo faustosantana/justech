@@ -1,8 +1,6 @@
 import base64
-import hashlib
-from datetime import datetime
 
-from odoo import api, fields, models, _
+from odoo import fields, models, _
 from odoo.exceptions import UserError
 
 
@@ -44,8 +42,17 @@ class JustechEcfCertificate(models.Model):
         from cryptography.fernet import Fernet
         import hashlib as hl
 
-        secret = (self.env["ir.config_parameter"].sudo().get_param("database.secret") or "justech").encode()
-        key = base64.urlsafe_b64encode(hl.sha256(secret).digest())
+        secret = (
+            self.env["ir.config_parameter"].sudo().get_param("database.secret") or ""
+        ).strip()
+        if not secret:
+            raise UserError(
+                _(
+                    "No se puede cifrar/descifrar el certificado: falta "
+                    "database.secret en el sistema."
+                )
+            )
+        key = base64.urlsafe_b64encode(hl.sha256(secret.encode()).digest())
         return Fernet(key)
 
     def encrypt_p12(self, raw_bytes):

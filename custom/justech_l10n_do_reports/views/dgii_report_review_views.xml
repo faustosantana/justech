@@ -14,35 +14,40 @@
                        decoration-warning="fiscal_state == 'incomplete'"
                        decoration-danger="fiscal_state == 'excluded'"
                        decoration-muted="fiscal_state == 'cancelled'"/>
-                <field name="move_name" string="Factura"/>
-                <field name="document_type" string="Tipo comprobante fiscal"/>
-                <field name="partner_name" string="Cliente / Proveedor"/>
+                <field name="move_id" string="Factura"/>
+                <field name="payment_id" string="Pago"/>
+                <field name="document_type" string="Tipo comprobante"/>
+                <field name="partner_name" string="Cliente / Entidad"/>
                 <field name="partner_vat" string="RNC / Cédula"/>
                 <field name="partner_id_type" string="Tipo identificación" optional="show"/>
                 <field name="ncf"/>
-                <field name="ncf_modified" string="NCF modificado" optional="show"/>
+                <field name="ncf_modified" string="NCF modificado" optional="hide"/>
                 <field name="document_date" string="Fecha"/>
-                <field name="invoice_date_due" string="Vencimiento" optional="hide"/>
-                <field name="currency_id" string="Moneda" optional="show"/>
-                <field name="amount_total" string="Total"/>
-                <field name="amount_tax" string="ITBIS"/>
-                <field name="amount_withholding" string="Retenciones" optional="show"/>
-                <field name="payment_method_code" string="Forma de pago" optional="hide"/>
-                <field name="exclusion_reason" string="Motivo de exclusión" optional="show"/>
+                <field name="withholding_base" string="Base" optional="show"/>
+                <field name="withholding_rate" string="%" optional="show"/>
+                <field name="amount_withholding" string="Monto retenido"/>
+                <field name="dgii_withholding_code" string="Código DGII" optional="show"/>
+                <field name="amount_total" string="Total factura" optional="hide"/>
+                <field name="amount_tax" string="ITBIS" optional="hide"/>
+                <field name="currency_id" string="Moneda" optional="hide"/>
+                <field name="inclusion_reason" string="Motivo inclusión" optional="show"/>
+                <field name="exclusion_reason" string="Motivo exclusión" optional="show"/>
                 <field name="auto_exclusion" string="Excl. automática" optional="hide"/>
-                <field name="excluded_by_id" string="Usuario que excluyó" optional="show"/>
-                <field name="excluded_at" string="Fecha de exclusión" optional="show"/>
+                <field name="excluded_by_id" string="Usuario que excluyó" optional="hide"/>
+                <field name="excluded_at" string="Fecha de exclusión" optional="hide"/>
                 <field name="line_approval_state" string="Estado aprobación" optional="show"/>
-                <field name="approved_by_id" string="Aprobado por" optional="show"/>
-                <field name="approved_at" string="Fecha aprobación" optional="show"/>
+                <field name="approved_by_id" string="Aprobado por" optional="hide"/>
+                <field name="approved_at" string="Fecha aprobación" optional="hide"/>
                 <field name="manual_exclusion" column_invisible="1"/>
                 <field name="error_message" optional="hide"/>
-                <field name="move_id" column_invisible="1"/>
+                <field name="move_name" column_invisible="1"/>
                 <field name="partner_id" column_invisible="1"/>
+                <field name="invoice_date_due" column_invisible="1"/>
+                <field name="payment_method_code" column_invisible="1"/>
                 <button name="action_open_move" type="object" icon="fa-external-link"
                         title="Abrir factura"/>
                 <button name="action_open_partner" type="object" icon="fa-user"
-                        title="Abrir proveedor"/>
+                        title="Abrir contacto"/>
                 <button name="action_open_payment" type="object" icon="fa-money"
                         title="Abrir pago"/>
                 <button name="action_view_move_pdf" type="object" icon="fa-file-pdf-o"
@@ -126,43 +131,51 @@
                            statusbar_visible="draft,validated,pending_approval,approved,generated"/>
                 </header>
                 <sheet>
-                    <group>
+                    <div class="oe_title mb-2">
+                        <h1>
+                            <field name="name" readonly="1" class="w-auto"/>
+                        </h1>
+                        <h3 class="text-muted">
+                            <field name="report_type" readonly="1" class="w-auto"/>
+                            ·
+                            <field name="period_code" readonly="1" class="w-auto"/>
+                        </h3>
+                    </div>
+                    <group string="Resumen del período" col="4">
                         <group>
-                            <field name="name" readonly="1"/>
-                            <field name="report_type" readonly="1"/>
                             <field name="company_id" groups="base.group_multi_company" readonly="1"/>
-                            <field name="created_by_id" readonly="1"/>
+                            <field name="date_from_display" string="Desde" readonly="1"/>
+                            <field name="date_to_display" string="Hasta" readonly="1"/>
                         </group>
                         <group>
-                            <field name="period_code" readonly="1"/>
-                            <field name="date_from" invisible="1"/>
-                            <field name="date_to" invisible="1"/>
-                            <field name="date_from_display" readonly="1"/>
-                            <field name="date_to_display" readonly="1"/>
+                            <field name="review_line_count" string="Total documentos" readonly="1"/>
+                            <field name="review_valid_count" string="Válidos" readonly="1"/>
+                            <field name="review_incomplete_count" string="Incompletos" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="review_excluded_count" string="Excluidos" readonly="1"/>
+                            <field name="review_cancelled_count" string="Anulados" readonly="1"/>
+                            <field name="review_pending_approval_count" string="Pendientes de aprobación" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="review_base_total" string="Base total" readonly="1"/>
+                            <field name="review_withholding_total" string="Retención total" readonly="1"/>
                             <field name="validation_state" string="Estado de validación"
                                    widget="badge" invisible="report_type not in ('606', '607')" readonly="1"/>
                         </group>
                     </group>
-                    <group string="Resumen revisión (documentos cargados)">
+                    <group string="Acciones requeridas" invisible="review_incomplete_count == 0 and review_pending_approval_count == 0">
                         <group>
-                            <field name="review_line_count" string="Total documentos" readonly="1"/>
-                            <field name="review_valid_count" string="Válidos para exportar" readonly="1"/>
-                            <field name="review_incomplete_count" string="Incompletos" readonly="1"/>
-                            <field name="review_excluded_count" string="Excluidos" readonly="1"/>
+                            <field name="review_incomplete_count" string="Documentos incompletos" readonly="1"/>
+                            <field name="review_pending_approval_count" string="Exclusiones pendientes" readonly="1"/>
                         </group>
                         <group>
-                            <field name="review_cancelled_count" string="Anulados" readonly="1"/>
-                            <field name="review_pending_approval_count" string="Pendientes aprobación" readonly="1"/>
+                            <field name="review_excluded_count" string="Excluidos / revisables" readonly="1"/>
                             <field name="review_approved_count" string="Exclusiones aprobadas" readonly="1"/>
-                            <field name="validated_by_id" readonly="1"/>
-                            <field name="validated_at" readonly="1"/>
-                            <field name="approved_by_id" readonly="1"/>
-                            <field name="approved_at" readonly="1"/>
-                            <field name="export_file_hash" readonly="1"/>
                         </group>
                     </group>
                     <notebook>
-                        <page string="Todos los documentos">
+                        <page string="Documentos">
                             <field name="line_ids" nolabel="1"
                                    context="{'list_view_ref': 'justech_l10n_do_reports.view_justech_do_fiscal_report_line_review_tree'}"/>
                         </page>
@@ -209,7 +222,19 @@
                                 </list>
                             </field>
                         </page>
-                        <page string="Bitácora">
+                        <page string="Trazabilidad">
+                            <group string="Auditoría del reporte">
+                                <group>
+                                    <field name="created_by_id" readonly="1"/>
+                                    <field name="validated_by_id" readonly="1"/>
+                                    <field name="validated_at" readonly="1"/>
+                                </group>
+                                <group>
+                                    <field name="approved_by_id" readonly="1"/>
+                                    <field name="approved_at" readonly="1"/>
+                                    <field name="export_file_hash" readonly="1"/>
+                                </group>
+                            </group>
                             <field name="audit_ids" readonly="1">
                                 <list>
                                     <field name="create_date" string="Fecha y hora"/>

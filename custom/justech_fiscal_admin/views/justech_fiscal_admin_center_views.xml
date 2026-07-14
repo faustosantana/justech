@@ -4,41 +4,75 @@
         <field name="name">justech.fiscal.admin.center.form</field>
         <field name="model">justech.fiscal.admin.center</field>
         <field name="arch" type="xml">
-            <form string="Centro de Administración Fiscal Justech" create="0" delete="0">
+            <form string="Centro de Administración Fiscal Justech" create="0" delete="0" class="o_justech_fiscal_center_form">
                 <header>
                     <button name="action_refresh" string="Actualizar" type="object" class="btn-primary"/>
-                    <button name="action_run_health_check" string="Health Check / Detalle" type="object"
+                    <button name="action_run_health_check" string="Ejecutar diagnóstico" type="object"
                             class="btn-secondary" invisible="not can_revalidate_health"/>
                     <button name="action_open_diagnostic" string="Diagnóstico completo" type="object"
                             class="btn-secondary"/>
                 </header>
                 <sheet>
-                    <div class="oe_title">
-                        <h1>Centro de Administración Fiscal Justech</h1>
-                        <h2 class="text-muted">
+                    <div class="oe_title mb-2">
+                        <h1>Centro Fiscal Justech</h1>
+                        <h3 class="text-muted mb-0">
                             <field name="company_id" options="{'no_create': True, 'no_open': True}" readonly="1"/>
-                        </h2>
-                        <p class="text-muted" invisible="access_mode != 'officer'">
-                            Modo Responsable Fiscal — lectura y revalidación. Sin cambios de configuración crítica.
+                        </h3>
+                        <p class="text-muted small mb-0" invisible="access_mode != 'officer'">
+                            Modo Responsable Fiscal — lectura y revalidación.
                         </p>
-                        <p class="text-muted" invisible="access_mode != 'user'">
-                            Vista operativa — estado fiscal, rangos y alertas. Sin administración del Centro.
+                        <p class="text-muted small mb-0" invisible="access_mode != 'user'">
+                            Vista operativa — estado, rangos y alertas.
                         </p>
                     </div>
-                    <group>
+
+                    <div class="row g-2 mb-3 o_justech_fiscal_actions">
+                        <div class="col-6 col-md-4 col-lg-2">
+                            <button name="action_open_health_detail" type="object"
+                                    string="Revisar pendientes" class="btn btn-primary w-100"/>
+                        </div>
+                        <div class="col-6 col-md-4 col-lg-2">
+                            <button name="action_open_ncf_ranges" type="object"
+                                    string="Administrar rangos" class="btn btn-secondary w-100"/>
+                        </div>
+                        <div class="col-6 col-md-4 col-lg-2">
+                            <button name="action_open_withholding_catalog" type="object"
+                                    string="Administrar retenciones" class="btn btn-secondary w-100"/>
+                        </div>
+                        <div class="col-6 col-md-4 col-lg-2">
+                            <button name="action_open_dgii_reports" type="object"
+                                    string="Reportes DGII" class="btn btn-secondary w-100"/>
+                        </div>
+                        <div class="col-6 col-md-4 col-lg-2" invisible="not can_manage_padron">
+                            <button name="action_padron_history" type="object"
+                                    string="Padrón DGII" class="btn btn-secondary w-100"/>
+                        </div>
+                        <div class="col-6 col-md-4 col-lg-2" invisible="not can_revalidate_health">
+                            <button name="action_run_health_check" type="object"
+                                    string="Ejecutar diagnóstico" class="btn btn-outline-secondary w-100"/>
+                        </div>
+                    </div>
+
+                    <group class="o_justech_fiscal_kpi_strip" col="4">
                         <group>
-                            <field name="motor_status"/>
-                            <field name="provider_status"/>
-                            <field name="reports_status"/>
+                            <field name="motor_status" string="Motor fiscal"/>
+                            <field name="reports_status" string="Reportes"/>
                         </group>
                         <group>
-                            <field name="health_ok" widget="boolean"/>
-                            <field name="issue_count"/>
-                            <field name="warning_count"/>
-                            <field name="last_refresh"/>
+                            <field name="health_ok" widget="boolean" string="Salud OK"/>
+                            <field name="issue_count" string="Errores"/>
+                        </group>
+                        <group>
+                            <field name="warning_count" string="Advertencias"/>
+                            <field name="last_refresh" string="Última validación"/>
+                        </group>
+                        <group>
+                            <field name="provider_status" string="Provider" invisible="access_mode == 'user'"/>
                         </group>
                     </group>
-                    <field name="dashboard_html" nolabel="1"/>
+
+                    <field name="dashboard_html" nolabel="1" widget="html"/>
+
                     <field name="can_manage_padron" invisible="1"/>
                     <field name="can_manage_users" invisible="1"/>
                     <field name="can_revalidate_health" invisible="1"/>
@@ -48,49 +82,43 @@
                     <field name="is_fiscal_officer" invisible="1"/>
                     <field name="is_fiscal_user_only" invisible="1"/>
                     <field name="access_mode" invisible="1"/>
-                    <group string="Padrón DGII" invisible="not can_manage_padron">
-                        <div colspan="2">
-                            <button name="action_padron_import" type="object"
-                                    string="Importar / actualizar padrón DGII"
-                                    class="btn btn-primary me-2"/>
-                            <button name="action_padron_update_now" type="object"
-                                    string="Actualizar ahora"
-                                    class="btn btn-secondary me-2"
-                                    confirm="¿Descargar el padrón oficial DGII e importarlo ahora? Es global (todas las empresas)."/>
-                            <button name="action_padron_retry_last" type="object"
-                                    string="Reintentar última importación"
-                                    class="btn btn-secondary me-2"/>
-                            <button name="action_padron_reimport_after_restore" type="object"
-                                    string="Reimportar tras restore"
-                                    class="btn btn-warning me-2"
-                                    confirm="¿Abrir importación del padrón global? Solo si la base quedó sin padrón tras un restore."/>
-                            <button name="action_padron_history" type="object"
-                                    string="Ver historial"
-                                    class="btn btn-link me-2"/>
-                            <button name="action_padron_integrity" type="object"
-                                    string="Verificar integridad"
-                                    class="btn btn-link me-2"/>
-                            <button name="action_padron_config" type="object"
-                                    string="Configurar actualización automática"
-                                    class="btn btn-link"/>
-                        </div>
-                    </group>
-                    <group string="Usuarios y permisos" invisible="not can_manage_users">
-                        <div colspan="2">
-                            <button name="action_open_fiscal_users" type="object"
-                                    string="Gestionar usuarios fiscales"
-                                    class="btn btn-secondary"/>
-                        </div>
-                    </group>
-                    <group string="Acciones rápidas">
-                        <button name="action_open_health_detail" type="object" string="Detalle Salud Fiscal" class="btn-primary"/>
-                        <button name="action_open_feature_flags" type="object" string="Feature Flags" class="btn-link" invisible="not is_fiscal_admin"/>
-                        <button name="action_open_ncf_ranges" type="object" string="Rangos NCF" class="btn-link"/>
-                        <button name="action_open_ncf_admin" type="object" string="Admin NCF" class="btn-link" invisible="not can_open_ncf_admin"/>
-                        <button name="action_open_dgii_reports" type="object" string="Reportes DGII" class="btn-link"/>
-                        <button name="action_open_withholding_catalog" type="object" string="Retenciones" class="btn-link"/>
-                        <button name="action_sync_withholding_catalog" type="object" string="Sincronizar retenciones" class="btn-link" invisible="not is_fiscal_admin"/>
-                    </group>
+
+                    <notebook>
+                        <page string="Padrón DGII" invisible="not can_manage_padron">
+                            <div class="d-flex flex-wrap gap-2 mb-2">
+                                <button name="action_padron_import" type="object"
+                                        string="Importar / actualizar" class="btn btn-primary"/>
+                                <button name="action_padron_update_now" type="object"
+                                        string="Actualizar ahora" class="btn btn-secondary"
+                                        confirm="¿Descargar el padrón oficial DGII e importarlo ahora? Es global (todas las empresas)."/>
+                                <button name="action_padron_retry_last" type="object"
+                                        string="Reintentar última" class="btn btn-secondary"/>
+                                <button name="action_padron_reimport_after_restore" type="object"
+                                        string="Reimportar tras restore" class="btn btn-warning"
+                                        confirm="¿Abrir importación del padrón global? Solo si la base quedó sin padrón tras un restore."/>
+                                <button name="action_padron_history" type="object"
+                                        string="Historial" class="btn btn-link"/>
+                                <button name="action_padron_integrity" type="object"
+                                        string="Verificar integridad" class="btn btn-link"/>
+                                <button name="action_padron_config" type="object"
+                                        string="Config. automática" class="btn btn-link"/>
+                            </div>
+                        </page>
+                        <page string="Más" invisible="not is_fiscal_admin">
+                            <group string="Técnico / avanzado">
+                                <button name="action_open_feature_flags" type="object"
+                                        string="Feature Flags" class="btn-link"/>
+                                <button name="action_open_ncf_admin" type="object"
+                                        string="Admin NCF (técnico)" class="btn-link"
+                                        invisible="not can_open_ncf_admin"/>
+                                <button name="action_sync_withholding_catalog" type="object"
+                                        string="Sincronizar catálogo retenciones" class="btn-link"/>
+                                <button name="action_open_fiscal_users" type="object"
+                                        string="Usuarios fiscales" class="btn-link"
+                                        invisible="not can_manage_users"/>
+                            </group>
+                        </page>
+                    </notebook>
                 </sheet>
             </form>
         </field>

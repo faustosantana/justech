@@ -51,6 +51,16 @@ class JustechDoFiscalReportWorkflow(models.Model):
         string="Exclusiones aprobadas",
         compute="_compute_review_counts",
     )
+    review_base_total = fields.Float(
+        string="Base total retenida",
+        digits=(16, 2),
+        compute="_compute_review_counts",
+    )
+    review_withholding_total = fields.Float(
+        string="Retención total",
+        digits=(16, 2),
+        compute="_compute_review_counts",
+    )
     summary_text = fields.Text(
         string="Resumen unificado",
         compute="_compute_summary_text",
@@ -91,16 +101,17 @@ class JustechDoFiscalReportWorkflow(models.Model):
         "line_ids.include_in_report",
         "line_ids.line_approval_state",
         "line_ids.manual_exclusion",
+        "line_ids.withholding_base",
+        "line_ids.amount_withholding",
     )
     def _compute_review_counts(self):
         for report in self:
             lines = report.line_ids
             report.review_line_count = len(lines)
-            report.review_valid_count = len(
-                lines.filtered(
-                    lambda l: l.include_in_report and l.fiscal_state == "valid"
-                )
-            )
+            included = lines.filtered(lambda l: l.include_in_report and l.fiscal_state == "valid")
+            report.review_base_total = sum(included.mapped("withholding_base"))
+            report.review_withholding_total = sum(included.mapped("amount_withholding"))
+            report.review_valid_count = len(included)
             report.review_incomplete_count = len(
                 lines.filtered(lambda l: l.fiscal_state == "incomplete")
             )
@@ -432,9 +443,11 @@ class JustechDoFiscalReportLineWorkflow(models.Model):
 
     def action_open_payment(self):
         self.ensure_one()
-        if not self.move_id:
-            raise UserError(_("No hay documento vinculado."))
-        payments = self.move_id._get_reconciled_payments()
+        payments = self.env["account.payment"]
+        if self.payment_id:
+            payments = self.payment_id
+        elif self.move_id:
+            payments = self.move_id._get_reconciled_payments()
         if not payments:
             raise UserError(_("Este documento no tiene pagos conciliados."))
         if len(payments) == 1:

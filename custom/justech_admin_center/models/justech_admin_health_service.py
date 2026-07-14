@@ -53,8 +53,11 @@ class JustechAdminHealthService(models.AbstractModel):
             )
 
         IrModule = self.env["ir.module.module"].sudo()
+        registered_names = set(
+            self.env["justech.admin.module"].sudo().search([]).mapped("technical_name")
+        )
         for irm in IrModule.search([("name", "=like", "justech_%"), ("state", "=", "installed")]):
-            if not self.env["justech.admin.module"].sudo().search_count([("technical_name", "=", irm.name)]):
+            if irm.name not in registered_names:
                 findings.append(
                     self._f(
                         "JAC_UNREGISTERED",
@@ -64,11 +67,16 @@ class JustechAdminHealthService(models.AbstractModel):
                     )
                 )
 
+        fiscal_enabled_anywhere = False
+        if "justech_do_fiscal_enabled" in self.env["res.company"]._fields:
+            fiscal_enabled_anywhere = any(
+                self.env["res.company"].sudo().search([]).mapped("justech_do_fiscal_enabled")
+            )
         for mod in self.env["justech.admin.module"].sudo().search(
             [("functional_state", "=", "active"), ("technical_state", "=", "installed")]
         ):
             if mod.category == "fiscal" and "justech_do_fiscal_enabled" in self.env["res.company"]._fields:
-                if not any(self.env["res.company"].sudo().search([]).mapped("justech_do_fiscal_enabled")):
+                if not fiscal_enabled_anywhere:
                     findings.append(
                         self._f(
                             "JAC_FISCAL_ACTIVE_NO_CO",
@@ -221,8 +229,13 @@ class JustechAdminHealthService(models.AbstractModel):
 
         if tech.startswith("justech_ecf") and "justech.ecf.company.config" in self.env:
             Config = self.env["justech.ecf.company.config"].sudo()
-            for company in self.env["res.company"].sudo().search([]):
-                cfg = Config.search([("company_id", "=", company.id)], limit=1)
+            companies = self.env["res.company"].sudo().search([])
+            cfg_by_company = {
+                cfg.company_id.id: cfg
+                for cfg in Config.search([("company_id", "in", companies.ids)])
+            }
+            for company in companies:
+                cfg = cfg_by_company.get(company.id)
                 if not cfg:
                     yield (
                         "ecf_cfg_%s" % company.id,

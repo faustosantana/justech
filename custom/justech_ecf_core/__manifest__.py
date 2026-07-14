@@ -1,6 +1,6 @@
 {
     "name": "Justech e-CF Core",
-    "version": "19.0.1.1.0",
+    "version": "19.0.1.2.1",
     "category": "Accounting/Localizations",
     "summary": "Núcleo Justech e-CF: configuración por empresa, documentos, estados y auditoría",
     "author": "Justech",

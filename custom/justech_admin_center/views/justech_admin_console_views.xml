@@ -50,8 +50,9 @@
 
                     <group class="o_jac_company_selector">
                         <group>
-                            <field name="filter_company_id" string="Empresa administrada"
-                                    options="{'no_create': True, 'no_open': True}"/>
+                            <field name="filter_company_id" string="Empresa (sesión y consola)"
+                                    options="{'no_create': True, 'no_open': True}"
+                                    help="Al actualizar, la cabecera de Odoo y esta consola usan la misma empresa."/>
                         </group>
                         <group>
                             <field name="status_label" readonly="1" string="Estado"/>

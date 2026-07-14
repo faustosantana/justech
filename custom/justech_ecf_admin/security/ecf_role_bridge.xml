@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Cadena de roles: System → Administrador Justech → Administrador e-CF -->
+    <record id="justech_admin_center.group_justech_admin_center_manager" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('justech_ecf_core.group_ecf_admin'))]"/>
+    </record>
+
+    <!-- Administrador Fiscal también administra e-CF (si el módulo fiscal está presente) -->
+    <record id="justech_fiscal_admin.group_justech_fiscal_admin_manager" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('justech_ecf_core.group_ecf_admin'))]"/>
+    </record>
+</odoo>

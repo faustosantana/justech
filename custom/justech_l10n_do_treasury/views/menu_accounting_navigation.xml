@@ -106,33 +106,39 @@
               sequence="25"
               groups="account.group_account_readonly"/>
 
-    <menuitem id="menu_finance_register_customer_payment"
-              name="Registrar cobro / Aplicar pagos"
-              parent="menu_finance_payments_root"
-              action="justech_l10n_do_payments_withholding.action_justech_register_customer_payment"
-              sequence="30"
-              groups="account.group_account_invoice"/>
+    <!-- Registrar cobro/pago: fuera del hub (siguen como acciones desde factura). -->
+    <record id="menu_finance_register_customer_payment" model="ir.ui.menu">
+        <field name="name">Registrar cobro / Aplicar pagos</field>
+        <field name="parent_id" ref="menu_finance_payments_root"/>
+        <field name="action" ref="justech_l10n_do_payments_withholding.action_justech_register_customer_payment"/>
+        <field name="sequence">30</field>
+        <field name="active" eval="False"/>
+    </record>
 
-    <menuitem id="menu_finance_register_vendor_payment"
-              name="Registrar pago / Aplicar pagos"
-              parent="menu_finance_payments_root"
-              action="justech_l10n_do_payments_withholding.action_justech_register_vendor_payment"
-              sequence="31"
-              groups="account.group_account_invoice"/>
+    <record id="menu_finance_register_vendor_payment" model="ir.ui.menu">
+        <field name="name">Registrar pago / Aplicar pagos</field>
+        <field name="parent_id" ref="menu_finance_payments_root"/>
+        <field name="action" ref="justech_l10n_do_payments_withholding.action_justech_register_vendor_payment"/>
+        <field name="sequence">31</field>
+        <field name="active" eval="False"/>
+    </record>
 
-    <menuitem id="menu_finance_open_payments_customer"
-              name="Pagos abiertos (clientes)"
-              parent="menu_finance_payments_root"
-              action="action_treasury_open_payments_customer"
-              sequence="40"
-              groups="account.group_account_readonly"/>
+    <!-- Pagos abiertos: conservados en el hub Pagos (distintos de pagos registrados). -->
+    <record id="menu_finance_open_payments_customer" model="ir.ui.menu">
+        <field name="name">Pagos abiertos de clientes</field>
+        <field name="parent_id" ref="menu_finance_payments_root"/>
+        <field name="action" ref="action_treasury_open_payments_customer"/>
+        <field name="sequence">40</field>
+        <field name="active" eval="True"/>
+    </record>
 
-    <menuitem id="menu_finance_open_payments_vendor"
-              name="Pagos abiertos (proveedores)"
-              parent="menu_finance_payments_root"
-              action="action_treasury_open_payments_vendor"
-              sequence="45"
-              groups="account.group_account_readonly"/>
+    <record id="menu_finance_open_payments_vendor" model="ir.ui.menu">
+        <field name="name">Pagos abiertos de proveedores</field>
+        <field name="parent_id" ref="menu_finance_payments_root"/>
+        <field name="action" ref="action_treasury_open_payments_vendor"/>
+        <field name="sequence">45</field>
+        <field name="active" eval="True"/>
+    </record>
 
     <!-- Oculto: duplica conciliación bancaria estándar (acceso vía Tablero / diarios). -->
     <record id="menu_finance_bank_reconciliation" model="ir.ui.menu">
@@ -151,19 +157,13 @@
               sequence="30"
               groups="account.group_account_readonly"/>
 
-    <menuitem id="menu_receivable_register_customer_payment"
-              name="Registrar cobro / Aplicar pagos"
-              parent="account.menu_finance_receivables"
-              action="justech_l10n_do_payments_withholding.action_justech_register_customer_payment"
-              sequence="40"
-              groups="account.group_account_invoice"/>
+    <record id="menu_receivable_register_customer_payment" model="ir.ui.menu">
+        <field name="active" eval="False"/>
+    </record>
 
-    <menuitem id="menu_receivable_open_payments_customer"
-              name="Pagos abiertos (clientes)"
-              parent="account.menu_finance_receivables"
-              action="action_treasury_open_payments_customer"
-              sequence="50"
-              groups="account.group_account_readonly"/>
+    <record id="menu_receivable_open_payments_customer" model="ir.ui.menu">
+        <field name="active" eval="False"/>
+    </record>
 
     <!-- ========== Proveedores ========== -->
     <record id="account.menu_action_move_in_refund_type" model="ir.ui.menu">
@@ -177,17 +177,11 @@
               sequence="30"
               groups="account.group_account_readonly"/>
 
-    <menuitem id="menu_payable_register_vendor_payment"
-              name="Registrar pago / Aplicar pagos"
-              parent="account.menu_finance_payables"
-              action="justech_l10n_do_payments_withholding.action_justech_register_vendor_payment"
-              sequence="40"
-              groups="account.group_account_invoice"/>
+    <record id="menu_payable_register_vendor_payment" model="ir.ui.menu">
+        <field name="active" eval="False"/>
+    </record>
 
-    <menuitem id="menu_payable_open_payments_vendor"
-              name="Pagos abiertos (proveedores)"
-              parent="account.menu_finance_payables"
-              action="action_treasury_open_payments_vendor"
-              sequence="50"
-              groups="account.group_account_readonly"/>
+    <record id="menu_payable_open_payments_vendor" model="ir.ui.menu">
+        <field name="active" eval="False"/>
+    </record>
 </odoo>

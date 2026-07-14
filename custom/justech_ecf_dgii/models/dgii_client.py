@@ -9,7 +9,6 @@ Fuentes oficiales (Descripción Técnica Servicios DGII):
 Producción nunca se llama sin Gate explícita.
 """
 
-import json
 import uuid
 from datetime import datetime
 

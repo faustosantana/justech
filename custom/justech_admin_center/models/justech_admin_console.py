@@ -1,4 +1,5 @@
 from odoo import api, fields, models, _
+from odoo.exceptions import UserError
 
 
 class JustechAdminConsole(models.Model):
@@ -128,6 +129,34 @@ class JustechAdminConsole(models.Model):
             console = self.create({"name": "Administración Justech"})
         return console
 
+    def _align_odoo_company(self, company):
+        """Una sola fuente de contexto: la empresa administrada = sesión Odoo."""
+        self.ensure_one()
+        company = company or self.env.company
+        user = self.env.user
+        if company not in user.company_ids:
+            raise UserError(
+                _("No tiene acceso a la empresa %(company)s.")
+                % {"company": company.display_name}
+            )
+        if user.company_id != company:
+            user.with_context(allowed_company_ids=user.company_ids.ids).sudo().write(
+                {"company_id": company.id}
+            )
+        return company
+
+    def _console_action(self, company):
+        self.ensure_one()
+        company = self._align_odoo_company(company)
+        self.write({"filter_company_id": company.id})
+        # Odoo 19 usa cookie `cids` para la cabecera; ?cids= en URL no basta.
+        return {
+            "type": "ir.actions.act_url",
+            "url": "/justech/admin/console/company/%s?console_id=%s"
+            % (company.id, self.id),
+            "target": "self",
+        }
+
     @api.model
     def action_open_console(self):
         Auth = self.env["justech.admin.center.auth.service"]
@@ -139,42 +168,20 @@ class JustechAdminConsole(models.Model):
         self.env["justech.admin.product"].dedupe_by_code()
         self.env["justech.admin.registry.service"].discover_and_sync()
         self.env["justech.admin.product"].refresh_blurbs()
-        if not console.filter_company_id:
-            console.filter_company_id = self.env.company.id
+        # Entrada: alinear filtro con la empresa de sesión (una sola fuente)
+        console.filter_company_id = self.env.company.id
         console.write({"last_sync_at": fields.Datetime.now()})
-        return {
-            "type": "ir.actions.act_window",
-            "name": _("Administración Justech"),
-            "res_model": "justech.admin.console",
-            "res_id": console.id,
-            "view_mode": "form",
-            "target": "current",
-            "context": {
-                "form_view_initial_mode": "edit",
-                "clear_breadcrumbs": True,
-                "justech_admin_company_id": console.filter_company_id.id,
-            },
-        }
+        return console._console_action(console.filter_company_id)
 
     def action_apply_company(self):
         self.ensure_one()
         gate = self.env["justech.admin.center.auth.service"].gate_or_wizard()
         if gate:
             return gate
+        if not self.filter_company_id:
+            raise UserError(_("Seleccione la empresa a administrar."))
         self.write({"last_sync_at": fields.Datetime.now()})
-        return {
-            "type": "ir.actions.act_window",
-            "name": _("Administración Justech"),
-            "res_model": "justech.admin.console",
-            "res_id": self.id,
-            "view_mode": "form",
-            "target": "current",
-            "context": {
-                "form_view_initial_mode": "edit",
-                "clear_breadcrumbs": True,
-                "justech_admin_company_id": self.filter_company_id.id,
-            },
-        }
+        return self._console_action(self.filter_company_id)
 
     def action_open_pending_center(self):
         self.ensure_one()

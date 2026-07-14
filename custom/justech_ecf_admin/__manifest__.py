@@ -1,6 +1,6 @@
 {
     "name": "Justech e-CF Admin",
-    "version": "19.0.1.1.0",
+    "version": "19.0.1.3.0",
     "category": "Administration",
     "summary": "Integración Justech e-CF en Administración Justech + asistente y dashboard",
     "author": "Justech",
@@ -8,6 +8,7 @@
     "license": "LGPL-3",
     "depends": [
         "justech_admin_center",
+        "justech_fiscal_admin",
         "justech_ecf_core",
         "justech_ecf_xml",
         "justech_ecf_signature",
@@ -17,6 +18,7 @@
     "data": [
         "security/ir.model.access.csv",
         "security/ecf_admin_rules.xml",
+        "security/ecf_role_bridge.xml",
         "views/ecf_dashboard_views.xml",
         "views/ecf_setup_wizard_views.xml",
         "views/ecf_admin_hub_views.xml",

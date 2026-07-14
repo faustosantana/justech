@@ -170,10 +170,10 @@ class JustechFiscalAdminCenter(models.Model):
                 f"<li>{_status_icon(False, warn=True)} {i}</li>" for i in pay.get("inconsistencies", [])
             )
             ncf_rows = "".join(
-                f"<tr><td>{r['prefix']}</td><td>{r['state']}</td>"
+                f"<tr><td>{r['prefix']}</td>"
+                f"<td>{_status_icon(r['status']=='ok', warn=r['status']=='warning')} {r['state']}</td>"
                 f"<td>{r['remaining']}/{r['capacity']}</td>"
-                f"<td>{_progress_bar(r['used_pct'])}</td>"
-                f"<td>{_status_icon(r['status']=='ok', warn=r['status']=='warning')}</td></tr>"
+                f"<td>{_progress_bar(r['used_pct'])}</td></tr>"
                 for r in ncf.get("ranges", [])
             )
             ncf_alerts = "".join(
@@ -238,51 +238,69 @@ class JustechFiscalAdminCenter(models.Model):
 
             rec.dashboard_html = Markup(
                 f"""
-                <div class="justech-fiscal-admin">
-                    {padron_html}
-                    <div class="row g-3 mb-3">
-                        <div class="col-md-3"><div class="card p-3">
-                            <h5>{_status_icon(motor_ok)} Motor NCF</h5>
-                            <p>{rec.motor_status}</p></div></div>
-                        <div class="col-md-3"><div class="card p-3">
-                            <h5>{_status_icon(True, warn=True)} Provider</h5>
-                            <p>{rec.provider_status}</p></div></div>
-                        <div class="col-md-3"><div class="card p-3">
-                            <h5>{_status_icon(reports_ok)} Reportes DGII</h5>
-                            <p>{rec.reports_status}</p></div></div>
-                        <div class="col-md-3"><div class="card p-3">
-                            <h5>{_status_icon(health.get('ok'), warn=health_warn)} Salud Fiscal</h5>
-                            <p>{rec.issue_count} errores · {rec.warning_count} advertencias</p>
-                            <p class="mb-0">GL: {_status_icon(health.get('gl_balanced'))} {'Balanceado' if health.get('gl_balanced') else 'Desbalanceado'}</p>
+                <div class="justech-fiscal-admin o_justech_fiscal_compact">
+                    <div class="row g-2 mb-3">
+                        <div class="col-6 col-md-3"><div class="card p-2 h-100">
+                            <div class="small text-muted">Motor NCF</div>
+                            <div class="fw-bold">{_status_icon(motor_ok)} {rec.motor_status or '—'}</div>
+                        </div></div>
+                        <div class="col-6 col-md-3"><div class="card p-2 h-100">
+                            <div class="small text-muted">Salud fiscal</div>
+                            <div class="fw-bold">{_status_icon(health.get('ok'), warn=health_warn)}
+                                {rec.issue_count} errores · {rec.warning_count} adv.</div>
+                        </div></div>
+                        <div class="col-6 col-md-3"><div class="card p-2 h-100">
+                            <div class="small text-muted">Reportes DGII</div>
+                            <div class="fw-bold">{_status_icon(reports_ok)} {rec.reports_status or '—'}</div>
+                        </div></div>
+                        <div class="col-6 col-md-3"><div class="card p-2 h-100">
+                            <div class="small text-muted">Padrón DGII</div>
+                            <div class="fw-bold">{_status_icon(padron.get('status') == 'ok', warn=padron.get('status') == 'warn')}
+                                {padron.get('status_label') or '—'}</div>
+                            <div class="small text-muted">{padron.get('count', 0)} registros · {padron.get('sync_date') or 'sin sync'}</div>
                         </div></div>
                     </div>
-                    <div class="row g-3 mb-3">
-                        <div class="col-md-6"><div class="card p-3">
-                            <h5>{_status_icon(pay_ok)} Pagos y Retenciones</h5>
-                            <ul class="mb-0">
-                                <li>Wizard unificado: {'Sí' if pay.get('wizard_unified') else 'No'}</li>
+                    <div class="row g-2 mb-3">
+                        <div class="col-12 col-lg-6"><div class="card p-2 h-100">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <strong>Rangos NCF</strong>
+                                <span class="badge text-bg-secondary">{ncf.get('total_remaining', 0)} disponibles</span>
+                            </div>
+                            <table class="table table-sm mb-0">
+                                <thead><tr><th>Prefijo</th><th>Estado</th><th>Restantes</th><th>Uso</th></tr></thead>
+                                <tbody>{ncf_rows or '<tr><td colspan="4" class="text-muted">Sin rangos activos</td></tr>'}</tbody>
+                            </table>
+                            <ul class="mb-0 small">{ncf_alerts}</ul>
+                        </div></div>
+                        <div class="col-12 col-lg-6"><div class="card p-2 h-100">
+                            <strong>Retenciones / pagos</strong>
+                            <ul class="mb-1">
                                 <li>Catálogo activo: {pay.get('catalog_active', 0)} / {pay.get('catalog_total', 0)}</li>
                                 <li>Pagos con retención: {pay.get('payments_with_withholding', 0)}</li>
-                                <li>Líneas retención: {pay.get('withholding_lines', 0)}</li>
+                                <li>Líneas: {pay.get('withholding_lines', 0)}</li>
                             </ul>
-                            <ul>{pay_inc}</ul>
-                        </div></div>
-                        <div class="col-md-6"><div class="card p-3">
-                            <h5>{_status_icon(not ncf.get('alerts'), warn=bool(ncf.get('alerts')))} Consumo NCF</h5>
-                            <p>Disponibles totales: <strong>{ncf.get('total_remaining', 0)}</strong></p>
-                            <table class="table table-sm mb-0">
-                                <thead><tr><th>Prefijo</th><th>Estado</th><th>Restantes</th><th>Uso</th><th></th></tr></thead>
-                                <tbody>{ncf_rows or '<tr><td colspan="5">Sin rangos</td></tr>'}</tbody>
-                            </table>
-                            <ul>{ncf_alerts}</ul>
+                            <ul class="mb-0 small">{pay_inc}</ul>
+                            <hr class="my-2"/>
+                            <strong>Acción recomendada</strong>
+                            <ul class="mb-0">{recs or '<li class="text-muted">Sin acciones pendientes</li>'}</ul>
                         </div></div>
                     </div>
-                    <h4>Módulos del stack fiscal</h4><ul>{modules_html}</ul>
-                    <h4>Feature Flags</h4><ul>{features_html}</ul>
-                    <h4>Multiempresa</h4>
-                    <table class="table table-sm"><thead><tr><th>Empresa</th><th>Fiscal</th><th>Salud</th><th>Errores</th><th>Adv.</th></tr></thead><tbody>{multi_html}</tbody></table>
-                    <h4>Alertas y diagnóstico</h4><ul>{issues}{warns}</ul>
-                    <h4>Recomendaciones</h4><ul>{recs}</ul>
+                    <div class="card p-2 mb-2" invisible="0">
+                        <strong>Alertas</strong>
+                        <ul class="mb-0">{issues}{warns or '<li class="text-muted">Sin alertas</li>'}</ul>
+                    </div>
+                    <details class="mb-2">
+                        <summary class="fw-semibold">Más — técnico</summary>
+                        <div class="mt-2">
+                            <div class="small text-muted mb-1">Última validación: {rec.last_refresh or '—'}</div>
+                            <h6 class="mb-1">Módulos</h6><ul class="small">{modules_html}</ul>
+                            <h6 class="mb-1">Feature flags</h6><ul class="small">{features_html}</ul>
+                            <h6 class="mb-1">Multiempresa</h6>
+                            <table class="table table-sm"><thead><tr><th>Empresa</th><th>Fiscal</th><th>Salud</th><th>Err</th><th>Adv</th></tr></thead>
+                            <tbody>{multi_html}</tbody></table>
+                            {padron_html}
+                        </div>
+                    </details>
                 </div>
                 """
             )

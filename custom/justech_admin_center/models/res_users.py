@@ -50,6 +50,7 @@ class ResUsers(models.Model):
         compute="_compute_justech_admin_center_role",
         inverse="_inverse_justech_admin_center_role",
         store=False,
+        groups="base.group_system,justech_admin_center.group_justech_admin_center_manager",
     )
     justech_role_explanation = fields.Char(
         compute="_compute_justech_admin_center_role",
@@ -71,6 +72,7 @@ class ResUsers(models.Model):
         compute="_compute_justech_ecf_role",
         inverse="_inverse_justech_ecf_role",
         store=False,
+        groups="base.group_system,justech_admin_center.group_justech_admin_center_manager",
     )
     justech_ecf_role_explanation = fields.Char(
         compute="_compute_justech_ecf_role",
@@ -86,6 +88,7 @@ class ResUsers(models.Model):
         compute="_compute_justech_finance_role",
         inverse="_inverse_justech_finance_role",
         store=False,
+        groups="base.group_system,justech_admin_center.group_justech_admin_center_manager",
     )
     justech_finance_role_explanation = fields.Char(
         compute="_compute_justech_finance_role",
@@ -101,6 +104,7 @@ class ResUsers(models.Model):
         compute="_compute_justech_warranty_role",
         inverse="_inverse_justech_warranty_role",
         store=False,
+        groups="base.group_system,justech_admin_center.group_justech_admin_center_manager",
     )
     justech_warranty_role_explanation = fields.Char(
         compute="_compute_justech_warranty_role",
@@ -110,11 +114,13 @@ class ResUsers(models.Model):
         string="Administrar consola Justech",
         compute="_compute_justech_caps",
         inverse="_inverse_cap_admin_console",
+        groups="base.group_system,justech_admin_center.group_justech_admin_center_manager",
     )
     justech_cap_install_modules = fields.Boolean(
         string="Instalar módulos Justech",
         compute="_compute_justech_caps",
         inverse="_inverse_cap_install",
+        groups="base.group_system,justech_admin_center.group_justech_admin_center_manager",
     )
 
     def _compute_justech_test_flags(self):

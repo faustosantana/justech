@@ -282,9 +282,30 @@ class JustechDoFiscalReportReview(models.Model):
             auto_exclusion = True
         include = fdp.include_in_dgii(move) and fiscal_state != "cancelled"
         ret_date = exporter._retention_date(move) or move.invoice_date
+        payment = exporter._payment_with_gov_data(move)
+        persistent = exporter._persistent_gov_lines(move=move)
+        rate = 0.0
+        base = abs(move.amount_untaxed_signed) if move.amount_untaxed_signed else abs(move.amount_untaxed)
+        dgii_code = ""
+        if persistent:
+            rate = persistent[:1].rate or 0.0
+            base = persistent[:1].base_amount or base
+            dgii_code = persistent[:1].dgii_withholding_code or ""
+            if not dgii_code and persistent[:1].catalog_id:
+                dgii_code = persistent[:1].catalog_id.dgii_withholding_code or ""
+        if not rate and gov_amt and base:
+            rate = round(100.0 * gov_amt / base, 4)
+        if not dgii_code:
+            dgii_code = "07"
+        inclusion = _("Retención Estado / Gobierno con importe registrado.")
+        if payment:
+            inclusion = _(
+                "Retención Estado vinculada al pago %(pay)s."
+            ) % {"pay": payment.name}
         return {
             "move_id": move.id,
             "move_name": move.name or move.ref,
+            "payment_id": payment.id if payment else False,
             "partner_id": partner.id,
             "partner_vat": partner.justech_do_clean_vat()
             if hasattr(partner, "justech_do_clean_vat")
@@ -299,8 +320,12 @@ class JustechDoFiscalReportReview(models.Model):
             "currency_id": move.currency_id.id,
             "amount_untaxed": abs(move.amount_untaxed_signed),
             "amount_tax": 0.0,
+            "withholding_base": base,
+            "withholding_rate": rate,
             "amount_withholding": gov_amt,
-            "amount_total": gov_amt,
+            "amount_total": abs(move.amount_total_signed),
+            "dgii_withholding_code": dgii_code,
+            "inclusion_reason": inclusion,
             "payment_method_code": "",
             "fiscal_state": fiscal_state,
             "include_in_report": include,
@@ -604,7 +629,12 @@ class JustechDoFiscalReportLineReview(models.Model):
     ncf_modified = fields.Char(string="NCF modificado")
     invoice_date_due = fields.Date(string="Vencimiento")
     currency_id = fields.Many2one("res.currency", string="Moneda")
-    amount_withholding = fields.Float(string="Retenciones", digits=(16, 2))
+    amount_withholding = fields.Float(string="Monto retenido", digits=(16, 2))
+    payment_id = fields.Many2one("account.payment", string="Pago", index=True)
+    withholding_rate = fields.Float(string="Porcentaje retención", digits=(16, 4))
+    withholding_base = fields.Float(string="Base sujeta a retención", digits=(16, 2))
+    dgii_withholding_code = fields.Char(string="Código retención DGII")
+    inclusion_reason = fields.Char(string="Motivo de inclusión")
     payment_method_code = fields.Char(string="Forma de pago")
     exclusion_reason = fields.Text(string="Motivo exclusión")
     auto_exclusion = fields.Boolean(string="Exclusión automática", default=False)

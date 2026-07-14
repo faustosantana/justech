@@ -1,5 +1,14 @@
 # Changelog
 
+## 19.0.1.0.2
+
+- Restaura cotización: vínculo Fee solo por smart button / pestaña si aplica.
+- Interfaz Fees simplificada (terminología funcional, Responsable/Supervisor).
+- Plan Odoo oculto; frecuencia de cobro como fuente principal.
+- Comprobante fiscal heredado del cliente (lectura + configurar cliente).
+- Documento: cotización / pedido de venta / factura borrador.
+- Suscripción Odoo opcional sin doble motor de generación.
+
 ## 19.0.1.0.1
 
 - Filtro de impuestos por empresa al generar documentos (fix multiempresa).

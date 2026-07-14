@@ -222,14 +222,35 @@ class AccountPayment(models.Model):
         return lines
 
     def action_justech_open_bank_reconciliation(self):
-        """Abre extractos del diario para conciliación bancaria (no re-concilia CxC/CxP)."""
+        """Abre extractos del diario para conciliación bancaria (no re-concilia CxC/CxP).
+
+        Odoo 19: en acciones dinámicas (no BD) no se puede combinar
+        ``view_mode`` multi-modo con un único ``view_id``. Usar ``views``.
+        """
         self.ensure_one()
         outstanding = self._treasury_outstanding_lines()
+        search_view = self.env.ref(
+            "account_accountant.view_bank_statement_line_search_bank_rec_widget",
+            raise_if_not_found=False,
+        )
+        kanban_view = self.env.ref(
+            "account_accountant.view_bank_statement_line_kanban_bank_rec_widget",
+            raise_if_not_found=False,
+        )
+        list_view = self.env.ref(
+            "account_accountant.view_bank_statement_line_tree_bank_rec_widget",
+            raise_if_not_found=False,
+        )
+        views = []
+        if kanban_view:
+            views.append((kanban_view.id, "kanban"))
+        views.append((list_view.id if list_view else False, "list"))
         action = {
             "type": "ir.actions.act_window",
             "name": "Conciliar con extracto bancario",
             "res_model": "account.bank.statement.line",
-            "view_mode": "kanban,list",
+            "view_mode": "kanban,list" if kanban_view else "list",
+            "views": views,
             "domain": [
                 ("journal_id", "=", self.journal_id.id),
                 ("is_reconciled", "=", False),
@@ -242,18 +263,8 @@ class AccountPayment(models.Model):
                 "justech_outstanding_line_ids": outstanding.ids,
             },
         }
-        search_view = self.env.ref(
-            "account_accountant.view_bank_statement_line_search_bank_rec_widget",
-            raise_if_not_found=False,
-        )
-        kanban_view = self.env.ref(
-            "account_accountant.view_bank_statement_line_kanban_bank_rec_widget",
-            raise_if_not_found=False,
-        )
         if search_view:
-            action["search_view_id"] = (search_view.id,)
-        if kanban_view:
-            action["view_id"] = kanban_view.id
+            action["search_view_id"] = [search_view.id]
         return action
 
     def action_justech_view_reconciliation_status(self):

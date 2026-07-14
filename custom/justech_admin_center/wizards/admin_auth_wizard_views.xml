@@ -5,7 +5,7 @@
         <field name="model">justech.admin.auth.wizard</field>
         <field name="arch" type="xml">
             <form string="Autenticación Administración Justech">
-                <field name="info" nolabel="1" colspan="2"/>
+                <field name="info" nolabel="1" colspan="2" widget="html"/>
                 <group>
                     <field name="password" password="True" placeholder="Clave maestra"/>
                 </group>

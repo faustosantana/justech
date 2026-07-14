@@ -1,6 +1,6 @@
 {
     "name": "Justech Fiscal Administration Center",
-    "version": "19.0.1.8.0",
+    "version": "19.0.1.8.4",
     "summary": "Enterprise fiscal stack administration — roles, health, feature flags, padrón DGII",
     "description": """
 Centro de Administración Fiscal Justech (Enterprise).
@@ -40,10 +40,10 @@ Centro de Administración Fiscal Justech (Enterprise).
     "justech_register": {
         "module_code": "justech_fiscal_admin",
         "module_name": "Justech Fiscal Administration Center",
-        "version": "19.0.1.8.0",
+        "version": "19.0.1.8.4",
         "country": "DO",
         "description": "Enterprise fiscal administration center",
-        "dependencies": ["justech_l10n_do_ncf", "justech_l10n_do_reports"],
+        "dependencies": ["justech_l10n_do_base", "justech_l10n_do_ncf"],
         "features": [
             {"code": "fiscal_admin_center", "name": "Fiscal Admin Center"},
             {"code": "fiscal_feature_flags", "name": "Fiscal Feature Flags"},

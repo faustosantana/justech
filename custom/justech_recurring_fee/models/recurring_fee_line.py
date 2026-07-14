@@ -83,7 +83,15 @@ class JustechRecurringFeeLine(models.Model):
             )
         return res
 
-    @api.depends("product_uom_qty", "price_unit", "tax_ids")
+    @api.depends(
+        "product_uom_qty",
+        "price_unit",
+        "tax_ids",
+        "currency_id",
+        "product_id",
+        "fee_id.partner_id",
+        "fee_id.company_id",
+    )
     def _compute_amount(self):
         for line in self:
             taxes = line.tax_ids.filtered(

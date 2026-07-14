@@ -1,18 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <!-- Vínculo discreto: no altera el formulario principal de cotizaciones manuales. -->
     <record id="view_sale_order_form_justech_fee" model="ir.ui.view">
         <field name="name">sale.order.form.justech.fee</field>
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='payment_term_id']" position="after">
-                <field name="justech_fee_id" readonly="1"/>
-                <field name="justech_fee_period_from" readonly="1"
-                       invisible="not justech_fee_id"/>
-                <field name="justech_fee_period_to" readonly="1"
-                       invisible="not justech_fee_id"/>
-                <field name="justech_fee_cycle_number" readonly="1"
-                       invisible="not justech_fee_id"/>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_open_justech_fee"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-refresh"
+                        invisible="not justech_fee_id">
+                    <div class="o_stat_info">
+                        <span class="o_stat_text">Fee recurrente</span>
+                    </div>
+                </button>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="Fee recurrente"
+                      name="justech_fee_page"
+                      invisible="not justech_fee_id">
+                    <group>
+                        <group>
+                            <field name="justech_fee_id" readonly="1"/>
+                            <field name="justech_fee_cycle_number" readonly="1"
+                                   string="Período de cobro Nº"/>
+                        </group>
+                        <group>
+                            <field name="justech_fee_period_from" readonly="1"
+                                   string="Período desde"/>
+                            <field name="justech_fee_period_to" readonly="1"
+                                   string="Período hasta"/>
+                        </group>
+                    </group>
+                </page>
             </xpath>
         </field>
     </record>

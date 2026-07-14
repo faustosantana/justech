@@ -5,6 +5,10 @@ access_ecf_setup_resp,ecf.setup responsible,model_justech_ecf_setup_wizard,juste
 access_ecf_setup_admin,ecf.setup admin,model_justech_ecf_setup_wizard,justech_ecf_core.group_ecf_admin,1,1,1,1
 access_jac_ecf_hub_mgr,jac ecf hub,model_justech_ecf_admin_hub,justech_admin_center.group_justech_admin_center_manager,1,1,1,1
 access_jac_ecf_dash_mgr,jac ecf dash,model_justech_ecf_dashboard,justech_admin_center.group_justech_admin_center_manager,1,1,1,1
+access_jac_ecf_cfg_mgr,jac ecf config,justech_ecf_core.model_justech_ecf_company_config,justech_admin_center.group_justech_admin_center_manager,1,1,1,1
+access_jac_ecf_setup_mgr,jac ecf setup,model_justech_ecf_setup_wizard,justech_admin_center.group_justech_admin_center_manager,1,1,1,1
+access_jac_ecf_cert_mgr,jac ecf cert,justech_ecf_core.model_justech_ecf_certificate,justech_admin_center.group_justech_admin_center_manager,1,1,1,0
+access_jac_ecf_doc_mgr,jac ecf doc,justech_ecf_core.model_justech_ecf_document,justech_admin_center.group_justech_admin_center_manager,1,1,1,0
 access_ecf_api_token_admin,ecf.api.token admin,model_justech_ecf_api_token,justech_ecf_core.group_ecf_admin,1,1,1,1
 access_ecf_api_token_resp,ecf.api.token responsible,model_justech_ecf_api_token,justech_ecf_core.group_ecf_responsible,1,1,1,0
 access_ecf_api_audit_ro,ecf.api.audit readonly,model_justech_ecf_api_audit,justech_ecf_core.group_ecf_auditor,1,0,0,0

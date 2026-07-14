@@ -191,7 +191,7 @@
     </record>
 
     <record id="action_treasury_open_payments_customer" model="ir.actions.act_window">
-        <field name="name">Pagos abiertos (clientes)</field>
+        <field name="name">Pagos abiertos de clientes</field>
         <field name="res_model">account.payment</field>
         <field name="view_mode">list,form</field>
         <field name="view_id" ref="view_account_payment_open_tree_customer"/>
@@ -201,7 +201,7 @@
     </record>
 
     <record id="action_treasury_open_payments_vendor" model="ir.actions.act_window">
-        <field name="name">Pagos abiertos (proveedores)</field>
+        <field name="name">Pagos abiertos de proveedores</field>
         <field name="res_model">account.payment</field>
         <field name="view_mode">list,form</field>
         <field name="view_id" ref="view_account_payment_open_tree_vendor"/>

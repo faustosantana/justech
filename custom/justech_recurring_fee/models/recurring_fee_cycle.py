@@ -25,6 +25,7 @@ class JustechRecurringFeeCycle(models.Model):
     document_type = fields.Selection(
         [
             ("quotation_draft", "Cotización"),
+            ("sale_order_draft", "Pedido de venta"),
             ("invoice_draft", "Factura borrador"),
             ("invoice_auto", "Factura publicada"),
         ],

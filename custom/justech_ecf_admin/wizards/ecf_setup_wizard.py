@@ -6,14 +6,20 @@ class JustechEcfSetupWizard(models.TransientModel):
     _name = "justech.ecf.setup.wizard"
     _description = "Asistente visual de implementación e-CF"
 
-    step = fields.Integer(default=1)
-    company_id = fields.Many2one("res.company", required=True, default=lambda s: s.env.company)
+    step = fields.Integer(string="Paso", default=1)
+    company_id = fields.Many2one(
+        "res.company",
+        string="Empresa",
+        required=True,
+        default=lambda s: s.env.company,
+    )
     fiscal_mode = fields.Selection(
         selection=[
             ("traditional_ncf", "NCF tradicional"),
             ("ecf_certification", "e-CF en certificación"),
             ("ecf_production", "e-CF en producción"),
         ],
+        string="Modo fiscal",
         required=True,
         default="traditional_ncf",
     )
@@ -24,6 +30,7 @@ class JustechEcfSetupWizard(models.TransientModel):
             ("certecf", "Certificación DGII"),
             ("ecf", "Producción DGII (bloqueada)"),
         ],
+        string="Ambiente DGII",
         default="mock",
         required=True,
     )

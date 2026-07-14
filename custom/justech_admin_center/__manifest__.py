@@ -1,6 +1,6 @@
 {
     "name": "Justech Admin Center",
-    "version": "19.0.2.11.1",
+    "version": "19.0.2.11.6",
     "category": "Administration",
     "summary": "Consola Enterprise Settings → Administración Justech",
     "description": """
@@ -51,7 +51,7 @@ reautenticación segura, diagnóstico y auditoría.
     "justech_register": {
         "module_code": "justech_admin_center",
         "module_name": "Justech Admin Center",
-        "version": "19.0.2.5.0",
+        "version": "19.0.2.11.6",
         "category": "platform",
         "country": "DO",
         "description": "Consola central Enterprise Justech",

@@ -1,16 +1,62 @@
-.justech-fiscal-admin .card {
-    border-radius: 8px;
-    border: 1px solid var(--border-color, #dee2e6);
-    min-height: 90px;
+.o_justech_fiscal_center_form,
+.justech-fiscal-admin {
+    --justech-fiscal-card-bg: var(--o-view-background-color, var(--bs-body-bg, #fff));
+    --justech-fiscal-border: var(--border-color, var(--bs-border-color, #dee2e6));
+    --justech-fiscal-muted: var(--o-gray-500, var(--bs-secondary-color, #6c757d));
 }
-.justech-fiscal-admin h4 {
-    margin-top: 1.25rem;
-    font-size: 1rem;
-    font-weight: 600;
+
+.justech-fiscal-admin.o_justech_fiscal_compact {
+    .card {
+        background: var(--justech-fiscal-card-bg);
+        border-radius: 8px;
+        border: 1px solid var(--justech-fiscal-border);
+        min-height: 0;
+        box-shadow: none;
+    }
+
+    .table {
+        --bs-table-bg: transparent;
+        font-size: 0.875rem;
+        margin-bottom: 0.5rem;
+    }
+
+    details > summary {
+        cursor: pointer;
+        color: var(--justech-fiscal-muted);
+    }
+
+    .justech-fiscal-progress {
+        min-width: 80px;
+        max-width: 140px;
+    }
 }
-.justech-fiscal-admin ul {
+
+.o_justech_fiscal_actions {
+    button {
+        white-space: normal;
+        min-height: 2.5rem;
+        font-size: 0.875rem;
+    }
+}
+
+.o_justech_fiscal_kpi_strip {
     margin-bottom: 0.75rem;
 }
-.justech-fiscal-admin .justech-fiscal-progress {
-    min-width: 120px;
+
+@media (max-width: 1024px) {
+    .justech-fiscal-admin.o_justech_fiscal_compact {
+        .col-md-3 {
+            flex: 0 0 50%;
+            max-width: 50%;
+        }
+    }
+}
+
+@media (max-width: 576px) {
+    .justech-fiscal-admin.o_justech_fiscal_compact {
+        .col-6 {
+            flex: 0 0 100%;
+            max-width: 100%;
+        }
+    }
 }

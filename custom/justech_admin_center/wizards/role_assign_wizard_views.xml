@@ -17,7 +17,7 @@
                     </group>
                     <group invisible="mode != 'matrix'">
                         <field name="mode" invisible="1"/>
-                        <field name="preview_html" nolabel="1"/>
+                        <field name="preview_html" nolabel="1" widget="html"/>
                     </group>
                 </sheet>
                 <footer>

@@ -9,10 +9,13 @@ class JustechAdminHealthFinding(models.Model):
 
     name = fields.Char(required=True, string="Título")
     code = fields.Char(required=True, index=True)
-    module_id = fields.Many2one("justech.admin.module", ondelete="cascade", string="Submódulo")
+    module_id = fields.Many2one(
+        "justech.admin.module", ondelete="cascade", string="Submódulo", index=True
+    )
     product_id = fields.Many2one(
         related="module_id.product_id",
         store=True,
+        index=True,
         string="Producto",
     )
     severity = fields.Selection(

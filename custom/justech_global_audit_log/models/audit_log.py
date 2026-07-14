@@ -1,5 +1,3 @@
-import json
-
 from odoo import api, fields, models, tools
 from odoo.exceptions import AccessError
 

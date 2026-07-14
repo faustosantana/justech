@@ -159,6 +159,20 @@ class JustechAdminProduct(models.Model):
         ("code_uniq", "unique(code)", "El código de producto debe ser único."),
     ]
 
+    def init(self):
+        """Garantiza UNIQUE(code) aunque instalaciones antiguas no crearan el constraint."""
+        self.env.cr.execute(
+            """
+            DO $$ BEGIN
+                ALTER TABLE justech_admin_product
+                    ADD CONSTRAINT justech_admin_product_code_uniq UNIQUE (code);
+            EXCEPTION
+                WHEN duplicate_table THEN NULL;
+                WHEN duplicate_object THEN NULL;
+            END $$;
+            """
+        )
+
     @api.depends("sequence", "name", "code")
     def _compute_hierarchy_code(self):
         """Numeración visual estable por producto funcional (no XMLID)."""
@@ -191,9 +205,24 @@ class JustechAdminProduct(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        records = super().create(vals_list)
-        records._sync_sequence_from_hierarchy()
-        return records
+        """Evita duplicados por code (p. ej. XMLID renombrado en data/*.xml)."""
+        result = self.browse()
+        pending = []
+        for vals in vals_list:
+            code = vals.get("code")
+            if code:
+                existing = self.sudo().with_context(active_test=False).search(
+                    [("code", "=", code)], limit=1
+                )
+                if existing:
+                    existing.write({k: v for k, v in vals.items() if k != "code"})
+                    result |= existing
+                    continue
+            pending.append(vals)
+        if pending:
+            result |= super().create(pending)
+        result._sync_sequence_from_hierarchy()
+        return result
 
     def write(self, vals):
         res = super().write(vals)

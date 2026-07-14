@@ -17,6 +17,7 @@ class ResUsers(models.Model):
         compute="_compute_justech_fiscal_role",
         inverse="_inverse_justech_fiscal_role",
         store=False,
+        groups="base.group_system,justech_fiscal_admin.group_justech_fiscal_admin_manager",
     )
     justech_fiscal_company_ids = fields.Many2many(
         related="company_ids",

@@ -8,6 +8,11 @@
               sequence="94"
               groups="base.group_system,justech_admin_center.group_justech_admin_center_user"/>
 
+    <!-- Icono propio Justech (RNG Odoo 19 no admite web_icon en menuitem). -->
+    <record id="menu_justech_admin_center_root" model="ir.ui.menu">
+        <field name="web_icon">justech_admin_center,static/description/icon.png</field>
+    </record>
+
     <!-- Subnavegación solo desde la consola (menús ocultos) -->
     <menuitem id="menu_justech_admin_center_products"
               name="Productos"

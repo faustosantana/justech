@@ -52,7 +52,7 @@ def migrate(cr, version):
     views = View.search([("key", "=", STUDIO_ADDRESS_KEY)])
     if not views:
         _logger.info(
-            "justech_l10n_do_ncf 19.0.2.6.0: Studio key %s not found; skip",
+            "justech_l10n_do_ncf 19.0.2.6.1: Studio key %s not found; skip",
             STUDIO_ADDRESS_KEY,
         )
         return
@@ -63,7 +63,7 @@ def migrate(cr, version):
         inherit = view.inherit_id
         if not _is_destructive_studio_address_view(view, inherit):
             _logger.warning(
-                "justech_l10n_do_ncf 19.0.2.6.0: view id=%s key=%s did not match "
+                "justech_l10n_do_ncf 19.0.2.6.1: view id=%s key=%s did not match "
                 "destructive Studio address fingerprint; left untouched (active=%s)",
                 view.id,
                 view.key,
@@ -73,7 +73,7 @@ def migrate(cr, version):
             continue
         if not view.active:
             _logger.info(
-                "justech_l10n_do_ncf 19.0.2.6.0: view id=%s already inactive (noop)",
+                "justech_l10n_do_ncf 19.0.2.6.1: view id=%s already inactive (noop)",
                 view.id,
             )
             skipped += 1
@@ -81,7 +81,7 @@ def migrate(cr, version):
         view.write({"active": False})
         deactivated += 1
         _logger.info(
-            "justech_l10n_do_ncf 19.0.2.6.0 AUDIT: deactivated Studio view "
+            "justech_l10n_do_ncf 19.0.2.6.1 AUDIT: deactivated Studio view "
             "id=%s key=%s xmlids=%s inherit_key=%s at=%s",
             view.id,
             view.key,
@@ -91,12 +91,12 @@ def migrate(cr, version):
         )
 
     env["ir.config_parameter"].sudo().set_param(
-        "justech_l10n_do_ncf.report_hotfix_19_0_2_6_0",
+        "justech_l10n_do_ncf.report_hotfix_19_0_2_6_1",
         "studio_address=%s deactivated=%s skipped=%s"
         % (STUDIO_ADDRESS_KEY, deactivated, skipped),
     )
     _logger.info(
-        "justech_l10n_do_ncf 19.0.2.6.0: studio address hotfix done "
+        "justech_l10n_do_ncf 19.0.2.6.1: studio address hotfix done "
         "(deactivated=%s skipped=%s)",
         deactivated,
         skipped,

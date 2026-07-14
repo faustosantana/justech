@@ -1,5 +1,10 @@
 # Changelog — Estándar Fiscal Justech (cierre)
 
+## [19.0.2.6.1] — 2026-07-14 — Hotfix reportes (Studio fingerprint)
+
+### Fixed
+- Fingerprint Studio alineado al arch real (`information_block`, `name='address'`).
+
 ## [19.0.2.6.0] — 2026-07-14 — Hotfix reportes (Studio address + gate DO)
 
 ### Fixed

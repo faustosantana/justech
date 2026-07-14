@@ -1,5 +1,20 @@
 # Changelog — Estándar Fiscal Justech (cierre)
 
+## [19.0.2.9.0] — 2026-07-14 — UX admin Compras + costos/gastos editables
+
+### Added
+- `justech_do_expense_type_id` editable en borrador (factura proveedor).
+- Sugerencia histórica no bloqueante (`justech_do_expense_type_manual`).
+- Administración: documentos recibidos LATAM; emisión B11/B13/B17; rangos Compras.
+- Menú Localización Dominicana → Compras.
+- Post-migrate: enlace `l10n_do_expense_type` → catálogo Justech.
+
+### Changed
+- Emisión compras: botón «Administrar rango»; nombres/ayudas operativas.
+
+### Fixed
+- El “Tipo de costos y gastos” deja de ser solo un display readonly.
+
 ## [19.0.2.8.0] — 2026-07-14 — Compras: recibidos LATAM vs emisión B11/B13/B17
 
 ### Added

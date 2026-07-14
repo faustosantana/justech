@@ -193,3 +193,32 @@ class JustechDoPurchaseEmissionConfig(models.Model):
             ],
             limit=1,
         )
+
+    def action_open_range(self):
+        """Abrir rango asociado o asistente de creación filtrado al tipo/empresa."""
+        self.ensure_one()
+        if self.range_id:
+            return {
+                "type": "ir.actions.act_window",
+                "name": "Rango NCF",
+                "res_model": "justech.do.ncf.range",
+                "view_mode": "form",
+                "res_id": self.range_id.id,
+                "target": "current",
+            }
+        return {
+            "type": "ir.actions.act_window",
+            "name": "Configurar rango NCF",
+            "res_model": "justech.do.ncf.range",
+            "view_mode": "list,form",
+            "domain": [
+                ("company_id", "=", self.company_id.id),
+                ("document_type_id", "=", self.document_type_id.id),
+            ],
+            "context": {
+                "default_company_id": self.company_id.id,
+                "default_document_type_id": self.document_type_id.id,
+                "default_prefix": self.prefix,
+            },
+            "target": "current",
+        }

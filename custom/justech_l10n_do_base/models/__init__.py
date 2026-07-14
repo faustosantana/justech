@@ -7,6 +7,7 @@ from ..services import (
     rnc_padron_auto_service,
 )
 from . import fiscal_document_type
+from . import dgii_expense_type
 from . import res_company
 from . import res_partner
 from . import account_journal

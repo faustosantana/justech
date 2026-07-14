@@ -134,6 +134,30 @@ class AccountMove(models.Model):
         string="Próximo NCF (compras)",
         compute="_compute_purchase_emission_ui",
     )
+    # Clasificación 606 por factura (no regla rígida del proveedor).
+    justech_do_expense_type_id = fields.Many2one(
+        "justech.do.dgii.expense.type",
+        string="Tipo de costos y gastos",
+        copy=True,
+        index=True,
+        domain="[('active', '=', True), ('applies_to_606', '=', True)]",
+        help="Clasificación DGII 606 por documento. Editable en borrador.",
+    )
+    justech_do_expense_type_606 = fields.Char(
+        string="Código costos/gastos 606",
+        related="justech_do_expense_type_id.code",
+        store=True,
+        index=True,
+    )
+    justech_do_expense_type_manual = fields.Boolean(
+        string="Tipo de costos/gastos manual",
+        copy=False,
+        help="Si es True, las sugerencias no sobrescriben la selección del usuario.",
+    )
+    justech_do_expense_type_suggestion_label = fields.Char(
+        string="Sugerencia costos/gastos",
+        compute="_compute_expense_type_suggestion_label",
+    )
 
     @api.depends(
         "justech_do_purchase_registration_mode",
@@ -173,6 +197,153 @@ class AccountMove(models.Model):
             if "l10n_latam_document_number" in self._fields:
                 self.l10n_latam_document_number = False
 
+    @api.depends(
+        "partner_id",
+        "justech_do_expense_type_manual",
+        "justech_do_expense_type_id",
+        "move_type",
+    )
+    def _compute_expense_type_suggestion_label(self):
+        for move in self:
+            move.justech_do_expense_type_suggestion_label = False
+            if move.move_type not in ("in_invoice", "in_refund"):
+                continue
+            suggested = move._justech_suggest_expense_type()
+            if not suggested:
+                continue
+            if (
+                move.justech_do_expense_type_id
+                and move.justech_do_expense_type_id == suggested
+            ):
+                continue
+            if move.justech_do_expense_type_manual and move.justech_do_expense_type_id:
+                move.justech_do_expense_type_suggestion_label = (
+                    f"Sugerido por histórico: {suggested.display_name}."
+                )
+            elif not move.justech_do_expense_type_id:
+                move.justech_do_expense_type_suggestion_label = (
+                    f"Sugerido por histórico: {suggested.display_name}."
+                )
+
+    def _justech_expense_type_from_code(self, code):
+        code = (code or "").strip()
+        if not code:
+            return self.env["justech.do.dgii.expense.type"]
+        return self.env["justech.do.dgii.expense.type"].search(
+            [("code", "=", code)], limit=1
+        )
+
+    def _justech_suggest_expense_type(self):
+        """Sugerencia no bloqueante: historial proveedor → default Adel → B13→06."""
+        self.ensure_one()
+        if self.move_type not in ("in_invoice", "in_refund") or not self.partner_id:
+            return self.env["justech.do.dgii.expense.type"]
+        Expense = self.env["justech.do.dgii.expense.type"]
+        company = self.company_id or self.env.company
+        hist = self.search(
+            [
+                ("partner_id", "=", self.partner_id.id),
+                ("company_id", "=", company.id),
+                ("move_type", "in", ("in_invoice", "in_refund")),
+                ("state", "=", "posted"),
+                ("justech_do_expense_type_id", "!=", False),
+                ("id", "!=", self.id or 0),
+            ],
+            order="invoice_date desc, id desc",
+            limit=1,
+        )
+        if hist.justech_do_expense_type_id:
+            return hist.justech_do_expense_type_id
+        # Fallback Adel / latam en historial
+        hist_latam = self.search(
+            [
+                ("partner_id", "=", self.partner_id.id),
+                ("company_id", "=", company.id),
+                ("move_type", "in", ("in_invoice", "in_refund")),
+                ("state", "=", "posted"),
+                ("id", "!=", self.id or 0),
+            ],
+            order="invoice_date desc, id desc",
+            limit=5,
+        )
+        for move in hist_latam:
+            code = False
+            if "l10n_do_expense_type" in move._fields:
+                code = move.l10n_do_expense_type
+            if code:
+                found = self._justech_expense_type_from_code(code)
+                if found:
+                    return found
+        partner_code = False
+        if "l10n_do_expense_type" in self.partner_id._fields:
+            partner_code = self.partner_id.l10n_do_expense_type
+        if partner_code:
+            found = self._justech_expense_type_from_code(partner_code)
+            if found:
+                return found
+        prefix = False
+        if self.justech_do_document_type_id:
+            prefix = self.justech_do_document_type_id.prefix
+        elif "l10n_latam_document_type_id" in self._fields and self.l10n_latam_document_type_id:
+            prefix = self.l10n_latam_document_type_id.doc_code_prefix
+        if prefix == "B13":
+            return self._justech_expense_type_from_code("06")
+        return Expense.browse()
+
+    def _justech_sync_expense_type_to_latam(self, expense_type):
+        """Mantener compatibilidad Adel/606 histórico vía l10n_do_expense_type."""
+        self.ensure_one()
+        if "l10n_do_expense_type" not in self._fields:
+            return {}
+        code = expense_type.code if expense_type else False
+        if self.l10n_do_expense_type != code:
+            return {"l10n_do_expense_type": code}
+        return {}
+
+    def _justech_apply_expense_suggestion(self, force=False):
+        self.ensure_one()
+        if self.move_type not in ("in_invoice", "in_refund"):
+            return {}
+        if self.justech_do_expense_type_manual and self.justech_do_expense_type_id and not force:
+            return {}
+        if self.justech_do_expense_type_id and not force:
+            return {}
+        suggested = self._justech_suggest_expense_type()
+        if not suggested:
+            return {}
+        vals = {"justech_do_expense_type_id": suggested.id}
+        vals.update(self._justech_sync_expense_type_to_latam(suggested))
+        return vals
+
+    @api.onchange("partner_id", "justech_do_document_type_id", "l10n_latam_document_type_id")
+    def _onchange_justech_expense_type_suggest(self):
+        if self.move_type not in ("in_invoice", "in_refund"):
+            return
+        if self.justech_do_expense_type_manual and self.justech_do_expense_type_id:
+            # Restaurar Adel si sobrescribió desde el partner.
+            sync = self._justech_sync_expense_type_to_latam(self.justech_do_expense_type_id)
+            for key, val in sync.items():
+                setattr(self, key, val)
+            return
+        if self.justech_do_expense_type_id:
+            return
+        suggested = self._justech_suggest_expense_type()
+        if suggested:
+            self.justech_do_expense_type_id = suggested
+            sync = self._justech_sync_expense_type_to_latam(suggested)
+            for key, val in sync.items():
+                setattr(self, key, val)
+
+    @api.onchange("justech_do_expense_type_id")
+    def _onchange_justech_expense_type_manual(self):
+        if self.move_type not in ("in_invoice", "in_refund"):
+            return
+        if self.justech_do_expense_type_id:
+            self.justech_do_expense_type_manual = True
+            sync = self._justech_sync_expense_type_to_latam(self.justech_do_expense_type_id)
+            for key, val in sync.items():
+                setattr(self, key, val)
+
     def _justech_purchase_received_latam_domain(self):
         prefixes = list(
             self.env["justech.do.fiscal.document.type"].PURCHASE_RECEIVED_DOC_PREFIXES
@@ -205,6 +376,9 @@ class AccountMove(models.Model):
         "payment_reference",
         "name",
         "move_type",
+        "justech_do_expense_type_id",
+        "justech_do_expense_type_606",
+        "l10n_do_expense_type",
     )
     def _compute_fiscal_display_fields(self):
         """UI-only: never writes stored fiscal fields; safe if legacy layers missing."""
@@ -258,6 +432,7 @@ class AccountMove(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        Expense = self.env["justech.do.dgii.expense.type"]
         for vals in vals_list:
             if vals.get("move_type") in ("in_invoice", "in_refund", "in_receipt"):
                 if vals.get("justech_do_document_type_id") or vals.get("justech_do_ncf"):
@@ -276,6 +451,35 @@ class AccountMove(models.Model):
                 if origin.justech_do_ncf:
                     vals.setdefault("justech_do_origin_ncf", origin.justech_do_ncf)
                     vals.setdefault("justech_do_ncf_modified", origin.justech_do_ncf)
+                if vals.get("move_type") == "in_refund":
+                    if origin.justech_do_expense_type_id:
+                        vals.setdefault(
+                            "justech_do_expense_type_id",
+                            origin.justech_do_expense_type_id.id,
+                        )
+                    elif (
+                        "l10n_do_expense_type" in origin._fields
+                        and origin.l10n_do_expense_type
+                    ):
+                        found = Expense.search(
+                            [("code", "=", origin.l10n_do_expense_type)], limit=1
+                        )
+                        if found:
+                            vals.setdefault("justech_do_expense_type_id", found.id)
+            # Mapear código Adel legado → Justech sin sobrescribir histórico posteado.
+            if (
+                vals.get("move_type") in ("in_invoice", "in_refund")
+                and not vals.get("justech_do_expense_type_id")
+                and vals.get("l10n_do_expense_type")
+            ):
+                found = Expense.search(
+                    [("code", "=", vals["l10n_do_expense_type"])], limit=1
+                )
+                if found:
+                    vals["justech_do_expense_type_id"] = found.id
+            if vals.get("justech_do_expense_type_id") and "l10n_do_expense_type" in self._fields:
+                exp = Expense.browse(vals["justech_do_expense_type_id"])
+                vals.setdefault("l10n_do_expense_type", exp.code)
             if (
                 not vals.get("justech_do_document_type_id")
                 and vals.get("move_type") == "out_invoice"
@@ -289,7 +493,32 @@ class AccountMove(models.Model):
                 doc = partner.justech_do_get_default_sale_document_type(company=company)
                 if doc:
                     vals["justech_do_document_type_id"] = doc.id
-        return super().create(vals_list)
+        moves = super().create(vals_list)
+        for move in moves.filtered(
+            lambda m: m.move_type in ("in_invoice", "in_refund")
+            and not m.justech_do_expense_type_id
+            and m.state == "draft"
+        ):
+            suggest_vals = move._justech_apply_expense_suggestion()
+            if suggest_vals:
+                # Sugerencia inicial: no marca manual (el usuario aún no eligió).
+                move.with_context(justech_expense_suggest=True).write(suggest_vals)
+        return moves
+
+    def write(self, vals):
+        vals = dict(vals)
+        if "justech_do_expense_type_id" in vals and not self.env.context.get(
+            "justech_expense_suggest"
+        ):
+            vals["justech_do_expense_type_manual"] = True
+            exp = self.env["justech.do.dgii.expense.type"].browse(
+                vals.get("justech_do_expense_type_id") or []
+            )
+            if "l10n_do_expense_type" in self._fields:
+                vals.setdefault(
+                    "l10n_do_expense_type", exp.code if exp else False
+                )
+        return super().write(vals)
 
     @api.onchange("partner_id")
     def _onchange_partner_justech_do_document_type(self):
@@ -384,7 +613,24 @@ class AccountMove(models.Model):
     def _justech_moves_for_ncf_on_post(self, soft=True):
         return self.env["justech.do.ncf.assignment.service"].moves_for_post(self, soft)
 
+    def _justech_require_expense_type_before_post(self):
+        for move in self.filtered(
+            lambda m: m.move_type in ("in_invoice", "in_refund")
+            and m.justech_do_include_in_dgii
+        ):
+            if not move.justech_do_expense_type_id and not (
+                "l10n_do_expense_type" in move._fields and move.l10n_do_expense_type
+            ):
+                raise UserError(
+                    _(
+                        "Debe seleccionar el Tipo de costos y gastos antes de publicar "
+                        "la factura de proveedor %(name)s (requerido para el 606)."
+                    )
+                    % {"name": move.display_name}
+                )
+
     def _post(self, soft=True):
+        self._justech_require_expense_type_before_post()
         self._justech_moves_for_ncf_on_post(soft)._justech_assign_ncf_before_post()
         return super()._post(soft=soft)
 

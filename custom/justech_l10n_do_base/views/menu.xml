@@ -30,4 +30,18 @@
               sequence="21"
               groups="base.group_system"
               active="False"/>
+
+    <!-- Contabilidad → Configuración → Localización Dominicana → Compras -->
+    <menuitem id="menu_justech_do_purchase_fiscal_root"
+              name="Compras"
+              parent="menu_justech_do_fiscal_root"
+              sequence="30"
+              groups="justech_l10n_do_base.group_justech_do_fiscal_user,account.group_account_invoice"/>
+
+    <menuitem id="menu_justech_do_dgii_expense_type"
+              name="Tipos de costos y gastos"
+              parent="menu_justech_do_purchase_fiscal_root"
+              action="action_justech_do_dgii_expense_type"
+              sequence="30"
+              groups="justech_l10n_do_base.group_justech_do_fiscal_user,account.group_account_invoice"/>
 </odoo>

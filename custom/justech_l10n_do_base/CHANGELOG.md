@@ -1,5 +1,15 @@
 # Changelog — justech_l10n_do_base
 
+## [19.0.1.25.0] — 2026-07-14 — Catálogo tipos de costos y gastos (606)
+
+### Added
+- Modelo `justech.do.dgii.expense.type` (códigos DGII 01–11) administrable.
+- Menú Configuración → Localización Dominicana → Compras → Tipos de costos y gastos.
+- ACL: lectura operativa; escritura Settings / Administrador Fiscal.
+
+### Unchanged
+- El valor operativo se guarda en la factura; no se impone como regla del proveedor.
+
 ## [19.0.1.24.0] — 2026-07-14 — Prefijos recibidos Compras + nombres B11/B13
 
 ### Added

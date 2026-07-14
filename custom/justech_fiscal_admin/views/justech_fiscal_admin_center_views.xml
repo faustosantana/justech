@@ -84,6 +84,25 @@
                     <field name="access_mode" invisible="1"/>
 
                     <notebook>
+                        <page string="Compras">
+                            <div class="alert alert-info" role="alert">
+                                Administración fiscal de Compras de la empresa activa.
+                                Documentos recibidos: NCF del proveedor (sin secuencia Justech).
+                                Comprobantes emitidos B11/B13/B17: Motor Fiscal Justech al publicar.
+                            </div>
+                            <div class="d-flex flex-wrap gap-2 mb-2">
+                                <button name="action_open_purchase_received_types" type="object"
+                                        string="Documentos recibidos" class="btn btn-secondary"/>
+                                <button name="action_open_purchase_emission_config" type="object"
+                                        string="Comprobantes emitidos" class="btn btn-secondary"/>
+                                <button name="action_open_purchase_expense_types" type="object"
+                                        string="Tipos de costos y gastos" class="btn btn-secondary"/>
+                                <button name="action_open_purchase_ncf_ranges" type="object"
+                                        string="Rangos de Compras" class="btn btn-secondary"/>
+                                <button name="action_open_purchase_incidents" type="object"
+                                        string="Incidencias de Compras" class="btn btn-secondary"/>
+                            </div>
+                        </page>
                         <page string="Padrón DGII" invisible="not can_manage_padron">
                             <div class="d-flex flex-wrap gap-2 mb-2">
                                 <button name="action_padron_import" type="object"

@@ -591,6 +591,43 @@ class JustechFiscalAdminCenter(models.Model):
             "domain": [("company_id", "=", self.company_id.id)],
         }
 
+    def action_open_purchase_received_types(self):
+        return self.env.ref(
+            "justech_l10n_do_ncf.action_justech_do_purchase_received_types"
+        ).read()[0]
+
+    def action_open_purchase_emission_config(self):
+        action = self.env.ref(
+            "justech_l10n_do_ncf.action_justech_do_purchase_emission_config"
+        ).read()[0]
+        action["domain"] = [("company_id", "=", self.company_id.id)]
+        action["context"] = {
+            "default_company_id": self.company_id.id,
+            "search_default_company_id": self.company_id.id,
+        }
+        return action
+
+    def action_open_purchase_expense_types(self):
+        return self.env.ref(
+            "justech_l10n_do_base.action_justech_do_dgii_expense_type"
+        ).read()[0]
+
+    def action_open_purchase_ncf_ranges(self):
+        return {
+            "type": "ir.actions.act_window",
+            "name": _("Rangos de Compras"),
+            "res_model": "justech.do.ncf.range",
+            "view_mode": "list,form",
+            "domain": [
+                ("company_id", "=", self.company_id.id),
+                ("prefix", "in", ("B11", "B13", "B17")),
+            ],
+            "context": {"default_company_id": self.company_id.id},
+        }
+
+    def action_open_purchase_incidents(self):
+        return self.action_open_diagnostic()
+
     def action_open_diagnostic(self):
         wizard = self.env["justech.do.fiscal.diagnostic.wizard"].create(
             {"company_id": self.company_id.id}

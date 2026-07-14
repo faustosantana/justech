@@ -60,10 +60,24 @@
                        string="Tipo de ingreso"
                        readonly="1"
                        invisible="move_type != 'out_invoice'"/>
+
+                <!-- Compras: clasificación 606 editable en borrador (por factura). -->
+                <field name="justech_do_include_in_dgii" invisible="1"/>
+                <field name="justech_do_expense_type_id"
+                       string="Tipo de costos y gastos"
+                       invisible="move_type not in ('in_invoice', 'in_refund') or state != 'draft'"
+                       readonly="0"
+                       required="move_type in ('in_invoice', 'in_refund') and justech_do_include_in_dgii"
+                       options="{'no_create': True, 'no_open': True}"/>
+                <field name="justech_do_expense_type_suggestion_label"
+                       string="Sugerencia"
+                       readonly="1"
+                       invisible="move_type not in ('in_invoice', 'in_refund') or state != 'draft' or not justech_do_expense_type_suggestion_label"/>
+                <field name="justech_do_expense_type_manual" invisible="1"/>
                 <field name="fiscal_income_expense_type_display"
                        string="Tipo de costos y gastos"
                        readonly="1"
-                       invisible="move_type not in ('in_invoice', 'in_refund')"/>
+                       invisible="move_type not in ('in_invoice', 'in_refund') or state == 'draft'"/>
             </xpath>
 
             <xpath expr="//field[@name='l10n_latam_document_type_id']" position="attributes">

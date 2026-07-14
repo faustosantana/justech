@@ -1,5 +1,10 @@
 # Changelog — justech_fiscal_admin
 
+## 19.0.1.8.5 — 2026-07-14
+
+- Centro Fiscal: pestaña Compras (recibidos, emitidos, costos/gastos, rangos, incidencias).
+- ACL escritura sobre `justech.do.dgii.expense.type` para Administrador Fiscal.
+
 ## 19.0.1.8.0 — 2026-07-11
 
 - Gate Final de Producción v1.0: certificación PASS (Gates 1–5) en `justech_dev`.

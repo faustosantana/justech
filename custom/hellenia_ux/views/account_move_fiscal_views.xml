@@ -24,11 +24,11 @@
                 <attribute name="invisible">not justech_do_ncf_voided</attribute>
                 <attribute name="required">0</attribute>
             </xpath>
-            <xpath expr="//button[@name='action_void_ncf']" position="replace">
-                <button name="action_open_void_ncf_wizard" string="Anular comprobante fiscal" type="object"
-                        class="btn-danger"
-                        invisible="state != 'posted' or not justech_do_ncf or justech_do_ncf_voided"
-                        groups="justech_l10n_do_base.group_justech_do_fiscal_manager"/>
+            <!-- Botón authoritative: justech_l10n_do_ncf.action_open_void_ncf_wizard -->
+            <xpath expr="//button[@name='action_open_void_ncf_wizard']" position="attributes">
+                <attribute name="string">Anular comprobante fiscal</attribute>
+                <attribute name="class">btn-danger</attribute>
+                <attribute name="invisible">not justech_do_can_void_ncf</attribute>
             </xpath>
             <xpath expr="//sheet" position="before">
                 <field name="hellenia_show_origin_ncf" invisible="1"/>

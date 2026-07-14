@@ -324,6 +324,7 @@ class TestJustechL10nDoNcf(TransactionCase):
         move = self.env["account.move"].create(self._invoice_vals(partner))
         move.action_post()
         move.justech_do_ncf_void_reason = "Test void fiscal"
+        move.justech_do_ncf_cancel_type = "04"
         move.action_void_ncf()
         self.assertTrue(move.justech_do_ncf_voided)
         consumption = self.env["justech.do.ncf.consumption"].search(
@@ -339,6 +340,7 @@ class TestJustechL10nDoNcf(TransactionCase):
         move = self.env["account.move"].create(self._invoice_vals(partner))
         move.action_post()
         move.justech_do_ncf_void_reason = "Should fail"
+        move.justech_do_ncf_cancel_type = "04"
         fiscal_user = self.env["res.users"].create(
             {
                 "name": "Fiscal User Only",

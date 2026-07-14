@@ -28,3 +28,5 @@ access_justech_do_fiscal_range_center_line_user,justech.do.fiscal.range.center.l
 access_justech_do_fiscal_range_center_line_invoice,justech.do.fiscal.range.center.line invoice,model_justech_do_fiscal_range_center_line,account.group_account_invoice,1,0,0,0
 access_justech_do_fiscal_range_center_line_manager,justech.do.fiscal.range.center.line manager,model_justech_do_fiscal_range_center_line,justech_l10n_do_base.group_justech_do_fiscal_manager,1,1,0,0
 access_justech_do_fiscal_range_center_line_system,justech.do.fiscal.range.center.line system,model_justech_do_fiscal_range_center_line,base.group_system,1,1,1,1
+access_justech_do_ncf_void_wizard_manager,justech.do.ncf.void.wizard manager,model_justech_do_ncf_void_wizard,justech_l10n_do_base.group_justech_do_fiscal_manager,1,1,1,1
+access_justech_do_ncf_void_wizard_system,justech.do.ncf.void.wizard system,model_justech_do_ncf_void_wizard,base.group_system,1,1,1,1

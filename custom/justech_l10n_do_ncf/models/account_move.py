@@ -54,6 +54,10 @@ class AccountMove(models.Model):
     )
     justech_do_ncf_void_reason = fields.Text(string="Motivo de anulación", copy=False)
     justech_do_ncf_void_date = fields.Date(string="Fecha de anulación", copy=False)
+    justech_do_can_void_ncf = fields.Boolean(
+        string="Puede anular NCF",
+        compute="_compute_justech_do_can_void_ncf",
+    )
     justech_do_origin_ncf = fields.Char(
         string="NCF de origen",
         help="NCF referenciado en notas de crédito o débito.",
@@ -637,7 +641,55 @@ class AccountMove(models.Model):
     def action_post(self):
         return super().action_post()
 
+    def _justech_get_issued_ncf(self):
+        """NCF emitido efectivo (Justech o LATAM histórico). No inventa secuencias."""
+        self.ensure_one()
+        if self.justech_do_ncf:
+            return (self.justech_do_ncf or "").strip()
+        fdp = self.env["justech.do.fiscal.data.provider"]
+        return (fdp.get_ncf(self) or "").strip()
+
+    @api.depends(
+        "justech_do_ncf",
+        "justech_do_ncf_voided",
+        "state",
+        "l10n_latam_document_number",
+    )
+    def _compute_justech_do_can_void_ncf(self):
+        for move in self:
+            move.justech_do_can_void_ncf = bool(
+                move.state == "posted"
+                and not move.justech_do_ncf_voided
+                and move._justech_get_issued_ncf()
+            )
+
+    def action_open_void_ncf_wizard(self):
+        """Abre wizard modal para capturar motivo 608 antes de anular."""
+        self.ensure_one()
+        if self.justech_do_ncf_voided:
+            raise UserError(_("Este comprobante fiscal ya fue anulado."))
+        if self.state != "posted":
+            raise UserError(_("Solo documentos publicados pueden anular el comprobante fiscal."))
+        if not self._justech_get_issued_ncf():
+            raise UserError(_("No hay comprobante fiscal para anular."))
+        return {
+            "type": "ir.actions.act_window",
+            "name": _("Anular comprobante fiscal"),
+            "res_model": "justech.do.ncf.void.wizard",
+            "view_mode": "form",
+            "target": "new",
+            "context": {
+                "default_move_id": self.id,
+                "dialog_size": "medium",
+            },
+        }
+
     def action_void_ncf(self):
+        """Anulación fiscal del NCF (no cancela el asiento contable).
+
+        Preferir `action_open_void_ncf_wizard`. Si se invoca directo, exige
+        motivo ya cargado en el documento.
+        """
         if not self.env.user.has_group(
             "justech_l10n_do_base.group_justech_do_fiscal_manager"
         ):
@@ -647,26 +699,39 @@ class AccountMove(models.Model):
         for move in self:
             if move.state != "posted":
                 raise UserError(_("Solo documentos publicados pueden anular el comprobante fiscal."))
-            if not move.justech_do_ncf:
+            issued_ncf = move._justech_get_issued_ncf()
+            if not issued_ncf:
                 raise UserError(_("No hay comprobante fiscal para anular."))
             if move.justech_do_ncf_voided:
-                raise UserError(_("El comprobante fiscal ya está anulado."))
+                raise UserError(_("Este comprobante fiscal ya fue anulado."))
             reason = (move.justech_do_ncf_void_reason or "").strip()
             if not reason:
-                raise UserError(_("Debe indicar el motivo de anulación antes de anular el comprobante fiscal."))
-            move.write(
-                {
-                    "justech_do_ncf_voided": True,
-                    "justech_do_ncf_void_date": fields.Date.context_today(move),
-                    "justech_do_dgii_line_status": "2",
-                    "justech_do_dgii_fiscal_state": "cancelled",
-                    "justech_do_include_in_dgii": False,
-                }
-            )
+                raise UserError(
+                    _(
+                        "Debe indicar el motivo de anulación antes de anular "
+                        "el comprobante fiscal."
+                    )
+                )
+            if not move.justech_do_ncf_cancel_type:
+                raise UserError(
+                    _("Debe indicar el tipo de anulación DGII (catálogo 608).")
+                )
+            prev_state = move.state
+            # Alinear campo Justech con NCF ya emitido (LATAM histórico) sin reinventar.
+            vals = {
+                "justech_do_ncf_voided": True,
+                "justech_do_ncf_void_date": fields.Date.context_today(move),
+                "justech_do_dgii_line_status": "2",
+                "justech_do_dgii_fiscal_state": "cancelled",
+                "justech_do_include_in_dgii": False,
+            }
+            if not move.justech_do_ncf:
+                vals["justech_do_ncf"] = issued_ncf
+            move.write(vals)
             consumption = Consumption.sudo().search(
                 [
                     ("move_id", "=", move.id),
-                    ("ncf", "=", move.justech_do_ncf),
+                    ("ncf", "=", issued_ncf),
                     ("state", "=", "consumed"),
                 ],
                 limit=1,
@@ -681,6 +746,26 @@ class AccountMove(models.Model):
                         "void_reason": reason,
                     }
                 )
+            # Una sola línea de chatter legible (sin HTML crudo).
+            cancel_label = self.env.context.get("justech_void_cancel_label") or dict(
+                move._fields["justech_do_ncf_cancel_type"]._description_selection(self.env)
+            ).get(move.justech_do_ncf_cancel_type, move.justech_do_ncf_cancel_type)
+            body = _(
+                "NCF %(ncf)s anulado.\n"
+                "Motivo: %(motivo)s.\n"
+                "Procesado por: %(user)s.\n"
+                "Fecha: %(fecha)s.\n"
+                "Estado contable: %(prev)s → %(post)s (sin cancelar asiento)."
+            ) % {
+                "ncf": issued_ncf,
+                "motivo": cancel_label,
+                "user": self.env.user.display_name,
+                "fecha": fields.Datetime.to_string(now),
+                "prev": prev_state,
+                "post": move.state,
+            }
+            if not self.env.context.get("justech_skip_void_chatter"):
+                move.message_post(body=body)
 
     @api.constrains("justech_do_ncf", "company_id", "state")
     def _check_ncf_unique_constraint(self):

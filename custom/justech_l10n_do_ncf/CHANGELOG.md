@@ -1,5 +1,30 @@
 # Changelog — Estándar Fiscal Justech (cierre)
 
+## [19.0.2.12.0] — 2026-07-14 — Wizard anulación NCF + Cancelar asiento
+
+### Added
+- Wizard modal `justech.do.ncf.void.wizard`: motivo 608, observación (obligatoria si Otro), ayuda 608.
+- Botón «Anular NCF» abre el wizard (`action_open_void_ncf_wizard`).
+
+### Fixed
+- Motivo inaccesible: ya no exige campo oculto en el form.
+- `button_cancel` (Cancelar asiento): invisible fuera de `draft` (corrige fórmula rota de `l10n_do_accounting`).
+- Anulación idempotente con mensaje claro; chatter legible; no cancela el asiento contable.
+
+### Unchanged
+- Secuencias/rangos; no auto nota de crédito; 606/607/609/623 sin cambios de lógica.
+
+## [19.0.2.11.1] — 2026-07-14 — Hotfix Cotización de referencia (PO)
+
+### Fixed
+- Cotización de referencia: enlace inequívoco vía `sale_line_id` o `origin→sale.order` (bi_convert).
+- Smart button si hay múltiples cotizaciones origen.
+- `partner_ref` ya no recibe el nombre de cotización desde bi_convert.
+- Migración: limpia `partner_ref` solo si `partner_ref == origin == sale.order.name` (misma empresa).
+
+### Unchanged
+- Fiscal, NCF, secuencias, facturas, pagos, GL.
+
 ## [19.0.2.11.0] — 2026-07-14 — RC-FISCAL-UX-FINAL (Centro + columnas)
 
 ### Changed

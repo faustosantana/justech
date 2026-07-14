@@ -16,5 +16,6 @@ from . import purchase_emission_config
 from . import l10n_latam_document_type
 from . import fiscal_range_center
 from . import purchase_order_ux
+from . import purchase_bi_convert_ux
 from . import account_move
 from . import sale_order

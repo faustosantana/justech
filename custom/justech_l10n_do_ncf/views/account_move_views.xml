@@ -114,10 +114,18 @@
             </xpath>
 
             <xpath expr="//header" position="inside">
-                <button name="action_void_ncf" string="Anular NCF" type="object"
-                        invisible="state != 'posted' or not justech_do_ncf or justech_do_ncf_voided"
+                <field name="justech_do_can_void_ncf" invisible="1"/>
+                <button name="action_open_void_ncf_wizard" string="Anular NCF" type="object"
+                        class="btn-secondary"
+                        invisible="not justech_do_can_void_ncf"
                         groups="justech_l10n_do_base.group_justech_do_fiscal_manager"
-                        confirm="¿Confirma la anulación del comprobante fiscal? Esta acción no revierte el asiento contable."/>
+                        title="Anular el NCF registra el comprobante en el 608. No equivale necesariamente a nota de crédito ni devolución."/>
+            </xpath>
+
+            <!-- Corrige fórmula rota de l10n_do_accounting que dejaba Cancel siempre visible. -->
+            <xpath expr="//button[@name='button_cancel']" position="attributes">
+                <attribute name="invisible">not id or state != 'draft'</attribute>
+                <attribute name="string">Cancelar asiento</attribute>
             </xpath>
         </field>
     </record>

@@ -1,20 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <!-- Vista canónica en justech_l10n_do_ncf.views.ncf_void_wizard_views.xml -->
     <record id="view_justech_do_ncf_void_wizard_form" model="ir.ui.view">
-        <field name="name">justech.do.ncf.void.wizard.form</field>
+        <field name="name">justech.do.ncf.void.wizard.form.hellenia</field>
         <field name="model">justech.do.ncf.void.wizard</field>
+        <field name="inherit_id" ref="justech_l10n_do_ncf.view_justech_do_ncf_void_wizard_form"/>
         <field name="arch" type="xml">
-            <form string="Anular comprobante fiscal">
-                <group>
-                    <field name="move_id"/>
-                    <field name="ncf"/>
-                    <field name="void_reason" placeholder="Indique el motivo de anulación fiscal..."/>
-                </group>
-                <footer>
-                    <button name="action_confirm_void" string="Confirmar anulación" type="object" class="btn-danger"/>
-                    <button string="Cancelar" special="cancel" class="btn-secondary"/>
-                </footer>
-            </form>
+            <xpath expr="//form" position="attributes">
+                <attribute name="string">Anular comprobante fiscal</attribute>
+            </xpath>
         </field>
     </record>
 </odoo>

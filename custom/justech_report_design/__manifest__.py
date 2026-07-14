@@ -1,6 +1,6 @@
 {
     "name": "Justech Report Design",
-    "version": "19.0.7.4.0",
+    "version": "19.0.7.4.2",
     "category": "Reporting",
     "summary": "Cotización, factura y conduce Hellenia — diseño Justech QWeb+SCSS",
     "description": """
@@ -27,8 +27,8 @@ Reorganización UX (Fase 26G):
 
 Orden de Compra (Fase 27A — oficial):
 - purchase.action_report_purchase_order → reporte Justech oficial
-- PURCHASE-UX-1: Solicitud de Cotización (RFQ) mismo diseño corporativo
-- Título dinámico: SOLICITUD DE COTIZACIÓN / ORDEN DE COMPRA según estado
+- PURCHASE-UX-1: Solicitud de Orden (RFQ) mismo diseño corporativo
+- Título dinámico: SOLICITUD DE ORDEN / ORDEN DE COMPRA según estado
 
 Vista previa OC (Fase 27B):
 - Botón Vista previa → portal nativo (iframe Hellenia + volver/imprimir/descargar)
@@ -43,7 +43,6 @@ Vista previa OC (Fase 27B):
         "account",
         "purchase",
         "portal",
-        "hellenia_reports",
     ],
     "data": [
         "data/paperformat_data.xml",
@@ -86,12 +85,12 @@ Vista previa OC (Fase 27B):
     "justech_register": {
         "module_code": "justech_report_design",
         "module_name": "Justech Report Design",
-        "version": "19.0.7.4.0",
+        "version": "19.0.7.4.2",
         "category": "reports",
         "country": "DO",
         "localization": "",
         "description": "Hellenia PDF design — quotation, invoice, delivery note, PO",
-        "dependencies": ["hellenia_reports"],
+        "dependencies": ["sale", "account", "purchase"],
         "always_enabled": True,
         "features": [
             {"code": "justech_report_design", "name": "Justech Report Design"},

@@ -1,5 +1,16 @@
 # Changelog — Estándar Fiscal Justech (cierre)
 
+## [19.0.2.11.0] — 2026-07-14 — RC-FISCAL-UX-FINAL (Centro + columnas)
+
+### Changed
+- Filtro superior Tipo de Flujo (dropdown Todos / Ventas / Compras Emitidos / Compras Recibidos).
+- Tarjetas KPI unificadas: Tipos / Activos / Pendientes / Sin rango.
+- Columnas por flujo según UX operativa; `last_used` en Ventas y Compras Emitidos (lectura).
+- Menú raíz: Fiscal República Dominicana (sin menús nuevos).
+
+### Unchanged
+- Sin inventar rangos; sin consumo NCF; DGII/histórico intactos.
+
 ## [19.0.2.10.0] — 2026-07-14 — Centro único Rangos (filtros de flujo)
 
 ### Added

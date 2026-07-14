@@ -15,5 +15,6 @@ from . import ncf_migration_log
 from . import purchase_emission_config
 from . import l10n_latam_document_type
 from . import fiscal_range_center
+from . import purchase_order_ux
 from . import account_move
 from . import sale_order

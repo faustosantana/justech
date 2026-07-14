@@ -9,11 +9,11 @@
                 <field name="company_display" string="Empresa"/>
                 <field name="flow" string="Flujo"/>
                 <field name="prefix" string="Código"/>
-                <field name="name" string="Nombre"/>
+                <field name="name" string="Nombre completo"/>
                 <field name="status_label" string="Estado"/>
                 <field name="consumes_sequence_label" string="Consume secuencia"/>
+                <field name="next_ncf" string="Próximo NCF"/>
                 <field name="origin" string="Origen"/>
-                <field name="next_ncf" string="Próximo"/>
             </list>
         </field>
     </record>
@@ -33,10 +33,7 @@
                 <field name="remaining_count" string="Disponibles"/>
                 <field name="status_label" string="Estado"/>
                 <field name="journal_names" string="Diario"/>
-                <field name="responsible_name" string="Responsable"/>
                 <field name="last_used" string="Último uso"/>
-                <field name="consumes_sequence_label" string="Consume secuencia"/>
-                <field name="origin" string="Origen"/>
             </list>
         </field>
     </record>
@@ -56,10 +53,7 @@
                 <field name="remaining_count" string="Disponibles"/>
                 <field name="status_label" string="Estado"/>
                 <field name="journal_names" string="Diario"/>
-                <field name="responsible_name" string="Responsable"/>
                 <field name="last_used" string="Último uso"/>
-                <field name="consumes_sequence_label" string="Consume secuencia"/>
-                <field name="origin" string="Origen"/>
             </list>
         </field>
     </record>
@@ -72,12 +66,8 @@
             <list string="Compras Recibidos" create="0" delete="0" edit="0">
                 <field name="prefix" string="Código"/>
                 <field name="name" string="Nombre"/>
-                <field name="document_category" string="Tipo"/>
                 <field name="active_flag" string="Activo"/>
-                <field name="is_received_document" string="Documento Recibido"/>
-                <field name="usage_count" string="Usado en histórico"/>
                 <field name="last_used" string="Último uso"/>
-                <field name="is_electronic_supplier" string="Proveedor Electrónico"/>
                 <field name="participates_606" string="Participa en 606"/>
                 <field name="consumes_sequence_label" string="Consume secuencia"/>
             </list>
@@ -157,7 +147,7 @@
                         <h1><field name="name" readonly="1"/></h1>
                     </div>
                     <group string="Tipo de Flujo">
-                        <field name="flow_filter" widget="radio" options="{'horizontal': true}"/>
+                        <field name="flow_filter"/>
                     </group>
 
                     <group col="3" string="Resumen">
@@ -165,19 +155,19 @@
                             <field name="sale_types_count" string="Tipos"/>
                             <field name="sale_active_count" string="Activos"/>
                             <field name="sale_pending_count" string="Pendientes"/>
-                            <field name="sale_expired_count" string="Vencidos"/>
+                            <field name="sale_no_range_count" string="Sin rango"/>
                         </group>
                         <group string="Compras Emitidos">
                             <field name="issued_types_count" string="Tipos"/>
                             <field name="issued_active_count" string="Activos"/>
+                            <field name="issued_pending_count" string="Pendientes"/>
                             <field name="issued_no_range_count" string="Sin rango"/>
-                            <field name="issued_expired_count" string="Vencidos"/>
                         </group>
                         <group string="Compras Recibidos">
                             <field name="received_types_count" string="Tipos"/>
                             <field name="received_active_count" string="Activos"/>
-                            <field name="received_disabled_count" string="Deshabilitados"/>
-                            <field name="received_historic_count" string="Históricos"/>
+                            <field name="received_pending_count" string="Pendientes"/>
+                            <field name="received_no_range_count" string="Sin rango"/>
                         </group>
                     </group>
 

@@ -50,28 +50,25 @@ class JustechDoFiscalRangeCenter(models.Model):
         "center_id",
         string="Tipos",
     )
-    # KPI Ventas
+    # KPI (misma estructura para las 3 tarjetas)
     sale_types_count = fields.Integer(compute="_compute_kpis")
     sale_active_count = fields.Integer(compute="_compute_kpis")
     sale_pending_count = fields.Integer(compute="_compute_kpis")
-    sale_expired_count = fields.Integer(compute="_compute_kpis")
-    # KPI Compras Emitidos
+    sale_no_range_count = fields.Integer(compute="_compute_kpis")
     issued_types_count = fields.Integer(compute="_compute_kpis")
     issued_active_count = fields.Integer(compute="_compute_kpis")
+    issued_pending_count = fields.Integer(compute="_compute_kpis")
     issued_no_range_count = fields.Integer(compute="_compute_kpis")
-    issued_expired_count = fields.Integer(compute="_compute_kpis")
-    # KPI Compras Recibidos
     received_types_count = fields.Integer(compute="_compute_kpis")
     received_active_count = fields.Integer(compute="_compute_kpis")
-    received_disabled_count = fields.Integer(compute="_compute_kpis")
-    received_historic_count = fields.Integer(compute="_compute_kpis")
+    received_pending_count = fields.Integer(compute="_compute_kpis")
+    received_no_range_count = fields.Integer(compute="_compute_kpis")
 
     @api.depends(
         "line_ids",
         "line_ids.flow",
         "line_ids.status",
         "line_ids.active_flag",
-        "line_ids.usage_count",
     )
     def _compute_kpis(self):
         for center in self:
@@ -81,31 +78,34 @@ class JustechDoFiscalRangeCenter(models.Model):
             center.sale_types_count = len(sales)
             center.sale_active_count = len(sales.filtered(lambda l: l.status == "active"))
             center.sale_pending_count = len(
-                sales.filtered(lambda l: l.status in ("no_range", "inactive", "draft"))
+                sales.filtered(
+                    lambda l: l.status in ("inactive", "draft", "expired", "depleted")
+                )
             )
-            center.sale_expired_count = len(
-                sales.filtered(lambda l: l.status in ("expired", "depleted"))
+            center.sale_no_range_count = len(
+                sales.filtered(lambda l: l.status == "no_range")
             )
             center.issued_types_count = len(issued)
             center.issued_active_count = len(
                 issued.filtered(lambda l: l.status == "active")
             )
+            center.issued_pending_count = len(
+                issued.filtered(
+                    lambda l: l.status in ("inactive", "draft", "expired", "depleted")
+                )
+            )
             center.issued_no_range_count = len(
                 issued.filtered(lambda l: l.status == "no_range")
-            )
-            center.issued_expired_count = len(
-                issued.filtered(lambda l: l.status in ("expired", "depleted"))
             )
             center.received_types_count = len(received)
             center.received_active_count = len(
                 received.filtered(lambda l: l.active_flag)
             )
-            center.received_disabled_count = len(
+            center.received_pending_count = len(
                 received.filtered(lambda l: not l.active_flag)
             )
-            center.received_historic_count = len(
-                received.filtered(lambda l: l.usage_count > 0)
-            )
+            # Recibidos nunca tienen rango Justech
+            center.received_no_range_count = 0
 
     @api.model
     def get_or_create(self):
@@ -164,6 +164,9 @@ class JustechDoFiscalRangeCenter(models.Model):
                     rng=rng,
                     document_type=doc,
                 )
+                payload["last_used"] = self._last_used_for_prefix(
+                    company=company, prefix=prefix, move_types=("out_invoice", "out_refund")
+                )
                 vals_list.append((key, payload))
 
         # Compras emitidos: configs B11/B13/B17 por empresa
@@ -205,6 +208,11 @@ class JustechDoFiscalRangeCenter(models.Model):
                 "participates_608": True,
                 "participates_609": prefix == "B17",
                 "participates_623": False,
+                "last_used": self._last_used_for_prefix(
+                    company=cfg.company_id,
+                    prefix=prefix,
+                    move_types=("in_invoice", "in_refund"),
+                ),
             }
             vals_list.append((key, payload))
 
@@ -315,6 +323,18 @@ class JustechDoFiscalRangeCenter(models.Model):
     def _onchange_flow_filter(self):
         # Solo UX; las líneas se filtran en la vista por domain.
         return
+
+    def _last_used_for_prefix(self, company, prefix, move_types):
+        """Lectura operativa: no escribe histórico ni consume NCF."""
+        Move = self.env["account.move"].sudo()
+        domain = [
+            ("company_id", "=", company.id),
+            ("state", "=", "posted"),
+            ("move_type", "in", list(move_types)),
+            ("justech_do_ncf", "=ilike", f"{prefix}%"),
+        ]
+        last = Move.search(domain, order="write_date desc, id desc", limit=1)
+        return last.write_date if last else False
 
     def action_refresh(self):
         self.ensure_one()

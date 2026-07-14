@@ -9,7 +9,7 @@
 
         <xpath expr="//t[@t-set='layout_document_title']" position="replace">
             <t t-set="layout_document_title">
-                <t t-if="o.state in ['draft', 'sent', 'to approve']">Solicitud de cotización Nº <span t-field="o.name"/></t>
+                <t t-if="o.state in ['draft', 'sent', 'to approve']">Solicitud de Orden Nº <span t-field="o.name"/></t>
                 <t t-if="o.state == 'purchase'">Orden de compra Nº <span t-field="o.name"/></t>
                 <t t-if="o.state == 'cancel'">Orden de compra cancelada Nº <span t-field="o.name"/></t>
             </t>
@@ -70,7 +70,7 @@
 
         <xpath expr="//t[@t-set='layout_document_title']" position="replace">
             <t t-set="layout_document_title">
-                <span>Solicitud de cotización <span t-field="o.name"/></span>
+                <span>Solicitud de Orden <span t-field="o.name"/></span>
             </t>
         </xpath>
 

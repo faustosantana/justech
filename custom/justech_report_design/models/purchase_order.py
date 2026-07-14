@@ -60,11 +60,11 @@ class PurchaseOrder(models.Model):
         """Título dinámico PURCHASE-UX-1: RFQ vs Orden de Compra."""
         self.ensure_one()
         if self.state in ("draft", "sent"):
-            return _("SOLICITUD DE COTIZACIÓN")
+            return _("SOLICITUD DE ORDEN")
         if self.state in ("purchase", "done"):
             return _("ORDEN DE COMPRA")
         if self.state == "to approve":
-            return _("SOLICITUD DE COTIZACIÓN")
+            return _("SOLICITUD DE ORDEN")
         if self.state == "cancel":
             return _("ORDEN DE COMPRA")
         return _("ORDEN DE COMPRA")

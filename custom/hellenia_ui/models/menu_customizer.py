@@ -218,7 +218,7 @@ ACCOUNTING_MENU_LABELS_ES = {
 
 # Etiquetas español — Localización Justech
 JUSTECH_MENU_LABELS_ES = {
-    "justech_l10n_do_base.menu_justech_do_fiscal_root": "Localización Dominicana",
+    "justech_l10n_do_base.menu_justech_do_fiscal_root": "Fiscal República Dominicana",
     "justech_l10n_do_base.menu_justech_do_document_types": "1. Tipos de comprobante",
     "justech_l10n_do_ncf.menu_justech_do_ncf_ranges": "2. Rangos NCF",
     "justech_l10n_do_ncf.menu_justech_do_ncf_consumption": "3. Consumo NCF",

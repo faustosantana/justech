@@ -6,7 +6,7 @@
         <field name="view_mode">list,form</field>
     </record>
     <menuitem id="menu_justech_do_fiscal_root"
-              name="Localización Dominicana"
+              name="Fiscal República Dominicana"
               parent="account.menu_finance_configuration"
               sequence="90"
               groups="justech_l10n_do_base.group_justech_do_fiscal_user"/>

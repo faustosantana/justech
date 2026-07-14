@@ -43,19 +43,21 @@ Plantilla
 `justech_l10n_do_ncf.report_invoice_document_justech_l10n_do_gate`
 reemplaza únicamente el `t-set` con:
 
-- país/código DO de la compañía, **y**
-- evidencia fiscal real del documento:
-  - `l10n_latam_use_documents`, o
-  - `l10n_latam_document_number`, o
-  - `justech_do_document_type_id`, o
-  - `justech_do_ncf`
+```python
+bool(o.company_id.country_id and o.company_id.l10n_do_country_code == 'DO')
+```
+
+Criterio: la compañía es dominicana (`l10n_do_country_code == 'DO'`).
+Así vuelven Cliente/RNC también en borradores sin NCF todavía asignado,
+tras el cutover donde `l10n_latam_use_documents` queda en `False`.
 
 ## Qué no hace
 
-- No pone `True` fijo.
+- No pone `True` fijo (exige compañía DO real).
 - No activa `l10n_latam_use_documents` en diarios/compañías.
 - No modifica NCF, tipos, contactos ni asientos.
-- No muestra bloque DO en empresas con `l10n_do_country_code != 'DO'`.
+- No muestra bloque DO en empresas con `l10n_do_country_code != 'DO'`
+  (otras localizaciones / extranjeras).
 
 ## Studio (cotizaciones)
 

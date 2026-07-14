@@ -13,7 +13,13 @@
         inherit_id="l10n_do_accounting.l10n_do_report_invoice_document"
     >
         <xpath expr="//t[@t-set='is_l10n_do_invoice']" position="replace">
-            <t t-set="is_l10n_do_invoice" t-value="bool(o.company_id.country_id and o.company_id.l10n_do_country_code == 'DO' and (o.l10n_latam_use_documents or o.l10n_latam_document_number or o.justech_do_document_type_id or o.justech_do_ncf))"/>
+            <!--
+                DO company gate (not a literal True):
+                restores #do_informations for Dominican companies even when
+                journals no longer set l10n_latam_use_documents after Justech cutover.
+                Non-DO companies keep is_l10n_do_invoice=False.
+            -->
+            <t t-set="is_l10n_do_invoice" t-value="bool(o.company_id.country_id and o.company_id.l10n_do_country_code == 'DO')"/>
         </xpath>
     </template>
 </odoo>

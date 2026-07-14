@@ -1,5 +1,11 @@
 # Changelog — Estándar Fiscal Justech (cierre)
 
+## [19.0.2.6.2] — 2026-07-14 — Hotfix reportes (gate DO por compañía)
+
+### Fixed
+- `is_l10n_do_invoice` usa compañía DO (`l10n_do_country_code`), no el flag latam del diario.
+  Cubre borradores sin NCF; no aplica a empresas no dominicanas.
+
 ## [19.0.2.6.1] — 2026-07-14 — Hotfix reportes (Studio fingerprint)
 
 ### Fixed

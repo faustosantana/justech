@@ -1,30 +1,26 @@
-# Justech Security UX — Permisos Enterprise
+# Justech Security UX — Permisos Justech
 
-Capa de experiencia para administrar usuarios **sin conocer `res.groups`**.
+Interfaz clara para administrar **grupos reales de Odoo** por módulo.
 
 ## Principios
 
-1. `res.groups` es la única fuente de verdad.
-2. No se crean ACL, Record Rules ni permisos paralelos.
-3. La UI sincroniza roles y acciones hacia grupos existentes.
-4. Los grupos técnicos viven en **Permisos Avanzados** (solo Administrador del Sistema).
-5. Un usuario puede pertenecer a **varias áreas a la vez**; cada área es independiente.
+1. `res.groups` + ACL + Record Rules son la única fuente de seguridad.
+2. Esta capa **no** crea ACL, rules ni grupos.
+3. Sync quirúrgico: un módulo no borra permisos de otro.
+4. Capacidades mostradas solo si existe xmlid/grupo real.
+5. Sin dependencias Hellenia.
 
-## Uso
+## Pestañas
 
-1. En el formulario de usuario → pestaña **Permisos Justech**.
-2. Marcar una o más áreas (Comercial, Compras, Inventario, …).
-3. En cada bloque: elegir Rol y permisos específicos.
-4. Revisar el **Resumen general** al final.
+- **Permisos Justech** — operación normal (multiárea).
+- **Permisos Avanzados** — matriz técnica Odoo (Administrador del Sistema).
 
-## Documentación de auditoría
+## Rollback (DEV)
 
-- `docs/GROUP_MATRIX.md`
-- `docs/GROUP_IMPLICATIONS.md`
-- `docs/ROLE_MAPPING.md`
+```text
+/root/backups/justech_dev/rc-security-ux-final-*/
+```
 
-## Rollback
-
-Restaurar módulo desde backup DEV y/o dump PostgreSQL:
-
-`/root/backups/justech_dev/p1-multiarea-*`
+1. Restaurar `justech_security_ux.before.tgz` en addons.
+2. `-u justech_security_ux` en `justech_dev`.
+3. O restaurar dump `justech_dev.dump` si hace falta.

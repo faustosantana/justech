@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <record id="view_users_form_operational_permissions" model="ir.ui.view">
-        <field name="name">res.users.form.justech.enterprise.permissions</field>
+        <field name="name">res.users.form.justech.permissions.modules</field>
         <field name="model">res.users</field>
         <field name="inherit_id" ref="base.view_users_form"/>
         <field name="priority">25</field>
@@ -11,11 +11,12 @@
                 <attribute name="groups">base.group_system</attribute>
             </xpath>
             <xpath expr="//page[@name='access_rights']" position="inside">
-                <div class="alert alert-warning justech-ent-advanced-warning mb-3" role="alert"
+                <div class="alert alert-warning justech-jx-advanced-warning mb-3" role="alert"
                      groups="base.group_system">
-                    <strong>PERMISOS AVANZADOS</strong>
+                    <strong>Configuración técnica.</strong>
                     <p class="mb-0">
-                        Grupos técnicos de Odoo. Configure usuarios normalmente desde «Permisos Justech».
+                        Para la operación normal utilice «Permisos Justech».
+                        Esta matriz modifica grupos Odoo directamente.
                     </p>
                 </div>
             </xpath>
@@ -23,213 +24,160 @@
             <xpath expr="//page[@name='access_rights']" position="before">
                 <page string="Permisos Justech" name="justech_enterprise_permissions"
                       groups="base.group_system,justech_admin_center.group_justech_admin_center_manager">
-                    <div class="alert alert-info justech-ent-banner" role="note">
-                        <field name="op_enterprise_help" nolabel="1" readonly="1"/>
+                    <div class="alert alert-info justech-jx-banner" role="note">
+                        <field name="jx_help" nolabel="1" readonly="1"/>
                     </div>
 
-                    <separator string="ÁREAS DE RESPONSABILIDAD (selección múltiple)"/>
-                    <group col="4" class="justech-ent-area-chips">
-                        <field name="op_area_commercial" widget="boolean"/>
-                        <field name="op_area_purchase" widget="boolean"/>
-                        <field name="op_area_inventory" widget="boolean"/>
-                        <field name="op_area_finance" widget="boolean"/>
-                        <field name="op_area_accounting" widget="boolean"/>
-                        <field name="op_area_fiscal" widget="boolean"/>
-                        <field name="op_area_ecf" widget="boolean"/>
-                        <field name="op_area_warranty" widget="boolean"/>
-                        <field name="op_area_hr" widget="boolean"/>
-                        <field name="op_area_crm" widget="boolean"/>
-                        <field name="op_area_admin" widget="boolean"/>
-                    </group>
-                    <!-- open flags technical -->
+                    <!-- visibility helpers -->
                     <group invisible="1">
-                        <field name="op_area_open_commercial"/>
-                        <field name="op_area_open_purchase"/>
-                        <field name="op_area_open_inventory"/>
-                        <field name="op_area_open_finance"/>
-                        <field name="op_area_open_accounting"/>
-                        <field name="op_area_open_fiscal"/>
-                        <field name="op_area_open_ecf"/>
-                        <field name="op_area_open_warranty"/>
-                        <field name="op_area_open_hr"/>
-                        <field name="op_area_open_crm"/>
-                        <field name="op_area_open_admin"/>
+                        <field name="jx_show_sales"/>
+                        <field name="jx_show_purchase"/>
+                        <field name="jx_show_inventory"/>
+                        <field name="jx_show_accounting"/>
+                        <field name="jx_show_fiscal"/>
+                        <field name="jx_show_payments"/>
+                        <field name="jx_show_withholding"/>
+                        <field name="jx_show_ecf"/>
+                        <field name="jx_show_warranty"/>
+                        <field name="jx_show_fees"/>
+                        <field name="jx_show_crm"/>
+                        <field name="jx_show_hr"/>
+                        <field name="jx_show_admin"/>
                     </group>
 
-                    <!-- COMERCIAL -->
-                    <div invisible="not op_area_commercial" class="justech-ent-panel">
-                        <separator string="✓ COMERCIAL"/>
+                    <!-- VENTAS -->
+                    <group string="1. Ventas" invisible="not jx_show_sales" class="justech-jx-section">
                         <group col="2">
-                            <field name="op_role_commercial" widget="radio" string="Rol"/>
-                            <field name="op_role_card_commercial" nolabel="1" readonly="1" class="justech-ent-role-card"/>
+                            <field name="jx_lvl_sales" widget="radio"/>
+                            <field name="jx_card_sales" nolabel="1" readonly="1" class="justech-jx-card"/>
                         </group>
-                        <separator string="Permisos Comercial"/>
-                        <group col="2">
-                            <field name="op_act_so_quote"/>
-                            <field name="op_act_so_approve"/>
-                            <field name="op_act_so_confirm"/>
-                            <field name="op_act_so_invoice"/>
-                            <field name="op_act_so_credit"/>
-                            <field name="op_act_so_discount"/>
-                            <field name="op_act_so_delete_inv"/>
-                            <field name="op_act_so_edit_posted"/>
+                        <group string="Capacidades adicionales" col="2">
+                            <field name="jx_cap_so_discount"/>
+                            <field name="jx_cap_so_credit_note"/>
+                            <field name="jx_cap_so_cancel_fiscal"/>
                         </group>
-                    </div>
+                    </group>
 
                     <!-- COMPRAS -->
-                    <div invisible="not op_area_purchase" class="justech-ent-panel">
-                        <separator string="✓ COMPRAS"/>
+                    <group string="2. Compras" invisible="not jx_show_purchase" class="justech-jx-section">
                         <group col="2">
-                            <field name="op_role_purchase" widget="radio" string="Rol"/>
-                            <field name="op_role_card_purchase" nolabel="1" readonly="1" class="justech-ent-role-card"/>
-                        </group>
-                        <separator string="Permisos Compras"/>
-                        <group col="2">
-                            <field name="op_act_po_request"/>
-                            <field name="op_act_po_approve_req"/>
-                            <field name="op_act_po_order"/>
-                            <field name="op_act_po_approve_order"/>
-                            <field name="op_act_po_vendor_bill"/>
-                            <field name="op_act_po_received"/>
-                            <field name="op_act_po_b11"/>
-                            <field name="op_act_po_b13"/>
-                            <field name="op_act_po_b17"/>
-                            <field name="op_act_po_cancel"/>
-                            <field name="op_act_po_delete"/>
-                        </group>
-                    </div>
-
-                    <!-- INVENTARIO -->
-                    <div invisible="not op_area_inventory" class="justech-ent-panel">
-                        <separator string="✓ INVENTARIO"/>
-                        <group col="2">
-                            <field name="op_role_inventory" widget="radio" string="Rol"/>
-                            <field name="op_role_card_inventory" nolabel="1" readonly="1" class="justech-ent-role-card"/>
-                        </group>
-                        <separator string="Permisos Inventario"/>
-                        <group col="2">
-                            <field name="op_act_stk_in"/>
-                            <field name="op_act_stk_out"/>
-                            <field name="op_act_stk_adj"/>
-                            <field name="op_act_stk_tr"/>
-                            <field name="op_act_stk_count"/>
-                            <field name="op_act_stk_val"/>
-                        </group>
-                    </div>
-
-                    <!-- FINANZAS -->
-                    <div invisible="not op_area_finance" class="justech-ent-panel">
-                        <separator string="✓ FINANZAS"/>
-                        <group col="2">
-                            <field name="op_role_finance" widget="radio" string="Rol"/>
-                            <field name="op_role_card_finance" nolabel="1" readonly="1" class="justech-ent-role-card"/>
-                        </group>
-                        <separator string="Permisos Finanzas"/>
-                        <group col="2">
-                            <field name="op_act_fin_register_in"/>
-                            <field name="op_act_fin_register_out"/>
-                            <field name="op_act_fin_apply"/>
-                            <field name="op_act_fin_reconcile"/>
-                            <field name="op_act_fin_unreconcile"/>
-                            <field name="op_act_fin_approve"/>
-                            <field name="op_act_fin_bank_create"/>
-                            <field name="op_act_fin_bank_edit"/>
-                            <field name="op_act_fin_export"/>
-                            <field name="op_act_fin_reports"/>
-                        </group>
-                    </div>
-
-                    <!-- CONTABILIDAD -->
-                    <div invisible="not op_area_accounting" class="justech-ent-panel">
-                        <separator string="✓ CONTABILIDAD"/>
-                        <group col="2">
-                            <field name="op_role_accounting" widget="radio" string="Rol"/>
-                            <field name="op_role_card_accounting" nolabel="1" readonly="1" class="justech-ent-role-card"/>
-                        </group>
-                    </div>
-
-                    <!-- FISCAL -->
-                    <div invisible="not op_area_fiscal" class="justech-ent-panel">
-                        <separator string="✓ FISCAL"/>
-                        <group col="2">
-                            <field name="op_role_fiscal" widget="radio" string="Rol"/>
-                            <field name="op_role_card_fiscal" nolabel="1" readonly="1" class="justech-ent-role-card"/>
-                        </group>
-                        <separator string="Permisos Fiscal"/>
-                        <group col="2">
-                            <field name="op_act_fis_void"/>
-                            <field name="op_act_fis_606"/>
-                            <field name="op_act_fis_607"/>
-                            <field name="op_act_fis_608"/>
-                            <field name="op_act_fis_ranges"/>
-                        </group>
-                    </div>
-
-                    <!-- e-CF -->
-                    <div invisible="not op_area_ecf" class="justech-ent-panel">
-                        <separator string="✓ e-CF"/>
-                        <group col="2">
-                            <field name="op_role_ecf" widget="radio" string="Rol"/>
-                            <field name="op_role_card_ecf" nolabel="1" readonly="1" class="justech-ent-role-card"/>
-                        </group>
-                    </div>
-
-                    <!-- GARANTÍAS -->
-                    <div invisible="not op_area_warranty" class="justech-ent-panel">
-                        <separator string="✓ GARANTÍAS"/>
-                        <group col="2">
-                            <field name="op_role_warranty" widget="radio" string="Rol"/>
-                            <field name="op_role_card_warranty" nolabel="1" readonly="1" class="justech-ent-role-card"/>
-                        </group>
-                        <separator string="Permisos Garantías"/>
-                        <group col="2">
-                            <field name="op_act_war_create"/>
-                            <field name="op_act_war_edit"/>
-                            <field name="op_act_war_process"/>
-                            <field name="op_act_war_history"/>
-                        </group>
-                    </div>
-
-                    <!-- RRHH -->
-                    <div invisible="not op_area_hr" class="justech-ent-panel">
-                        <separator string="✓ RECURSOS HUMANOS"/>
-                        <group col="2">
-                            <field name="op_role_hr" widget="radio" string="Rol"/>
-                            <field name="op_role_card_hr" nolabel="1" readonly="1" class="justech-ent-role-card"/>
-                        </group>
-                    </div>
-
-                    <!-- CRM -->
-                    <div invisible="not op_area_crm" class="justech-ent-panel">
-                        <separator string="✓ CRM"/>
-                        <group col="2">
-                            <field name="op_role_crm" widget="radio" string="Rol"/>
-                            <field name="op_role_card_crm" nolabel="1" readonly="1" class="justech-ent-role-card"/>
-                        </group>
-                    </div>
-
-                    <!-- ADMIN -->
-                    <div invisible="not op_area_admin" class="justech-ent-panel">
-                        <separator string="✓ ADMINISTRACIÓN JUSTECH"/>
-                        <group col="2">
-                            <field name="op_role_admin" widget="radio" string="Rol"/>
-                            <field name="op_role_card_admin" nolabel="1" readonly="1" class="justech-ent-role-card"/>
-                        </group>
-                    </div>
-
-                    <separator string="RESUMEN GENERAL"/>
-                    <group col="1">
-                        <group string="Áreas activas">
-                            <field name="op_summary_areas" nolabel="1" readonly="1"/>
+                            <field name="jx_lvl_purchase" widget="radio"/>
+                            <field name="jx_card_purchase" nolabel="1" readonly="1" class="justech-jx-card"/>
                         </group>
                     </group>
+
+                    <!-- INVENTARIO -->
+                    <group string="3. Inventario" invisible="not jx_show_inventory" class="justech-jx-section">
+                        <group col="2">
+                            <field name="jx_lvl_inventory" widget="radio"/>
+                            <field name="jx_card_inventory" nolabel="1" readonly="1" class="justech-jx-card"/>
+                        </group>
+                        <group string="Capacidades adicionales" col="2">
+                            <field name="jx_cap_stk_lots"/>
+                        </group>
+                    </group>
+
+                    <!-- CONTABILIDAD -->
+                    <group string="4. Contabilidad" invisible="not jx_show_accounting" class="justech-jx-section">
+                        <group col="2">
+                            <field name="jx_lvl_accounting" widget="radio"/>
+                            <field name="jx_card_accounting" nolabel="1" readonly="1" class="justech-jx-card"/>
+                        </group>
+                    </group>
+
+                    <!-- FISCAL -->
+                    <group string="5. Fiscal República Dominicana" invisible="not jx_show_fiscal" class="justech-jx-section">
+                        <group col="2">
+                            <field name="jx_lvl_fiscal" widget="radio"/>
+                            <field name="jx_card_fiscal" nolabel="1" readonly="1" class="justech-jx-card"/>
+                        </group>
+                    </group>
+
+                    <!-- PAGOS -->
+                    <group string="6. Pagos y Bancos" invisible="not jx_show_payments" class="justech-jx-section">
+                        <group col="2">
+                            <field name="jx_card_payments" nolabel="1" readonly="1" colspan="2" class="justech-jx-card"/>
+                            <field name="jx_cap_pay_invoice_access"/>
+                            <field name="jx_cap_pay_bank_validate"/>
+                        </group>
+                    </group>
+
+                    <!-- RETENCIONES -->
+                    <group string="7. Retenciones" invisible="not jx_show_withholding" class="justech-jx-section">
+                        <group col="2">
+                            <field name="jx_lvl_withholding" widget="radio"/>
+                            <field name="jx_card_withholding" nolabel="1" readonly="1" class="justech-jx-card"/>
+                        </group>
+                    </group>
+
+                    <!-- e-CF -->
+                    <group string="8. e-CF" invisible="not jx_show_ecf" class="justech-jx-section">
+                        <group col="2">
+                            <field name="jx_lvl_ecf" widget="radio"/>
+                            <field name="jx_card_ecf" nolabel="1" readonly="1" class="justech-jx-card"/>
+                        </group>
+                        <group string="Capacidades adicionales" col="2">
+                            <field name="jx_cap_ecf_auditor"/>
+                        </group>
+                    </group>
+
+                    <!-- GARANTÍAS -->
+                    <group string="9. Garantías" invisible="not jx_show_warranty" class="justech-jx-section">
+                        <group col="2">
+                            <field name="jx_lvl_warranty" widget="radio"/>
+                            <field name="jx_card_warranty" nolabel="1" readonly="1" class="justech-jx-card"/>
+                        </group>
+                    </group>
+
+                    <!-- FEES -->
+                    <group string="10. Fees recurrentes" invisible="not jx_show_fees" class="justech-jx-section">
+                        <group col="2">
+                            <field name="jx_lvl_fees" widget="radio"/>
+                            <field name="jx_card_fees" nolabel="1" readonly="1" class="justech-jx-card"/>
+                        </group>
+                    </group>
+
+                    <!-- CRM -->
+                    <group string="11. CRM" invisible="not jx_show_crm" class="justech-jx-section">
+                        <group col="2">
+                            <field name="jx_lvl_crm" widget="radio"/>
+                            <field name="jx_card_crm" nolabel="1" readonly="1" class="justech-jx-card"/>
+                        </group>
+                    </group>
+
+                    <!-- RRHH -->
+                    <group string="12. Recursos Humanos" invisible="not jx_show_hr" class="justech-jx-section">
+                        <group col="2">
+                            <field name="jx_lvl_hr" widget="radio"/>
+                            <field name="jx_card_hr" nolabel="1" readonly="1" class="justech-jx-card"/>
+                        </group>
+                    </group>
+
+                    <!-- ADMIN -->
+                    <group string="13. Administración Justech" invisible="not jx_show_admin" class="justech-jx-section">
+                        <group col="2">
+                            <field name="jx_lvl_admin" widget="radio"/>
+                            <field name="jx_card_admin" nolabel="1" readonly="1" class="justech-jx-card"/>
+                        </group>
+                    </group>
+
+                    <separator string="RESUMEN GENERAL (efectivo)"/>
                     <group col="2">
+                        <group string="Módulos con acceso">
+                            <field name="jx_summary_modules" nolabel="1" readonly="1"/>
+                        </group>
+                        <group string="Advertencias">
+                            <field name="jx_summary_warnings" nolabel="1" readonly="1"/>
+                        </group>
                         <group string="Puede">
-                            <field name="op_summary_can" nolabel="1" readonly="1"/>
+                            <field name="jx_summary_can" nolabel="1" readonly="1"/>
                         </group>
                         <group string="No puede">
-                            <field name="op_summary_cannot" nolabel="1" readonly="1"/>
+                            <field name="jx_summary_cannot" nolabel="1" readonly="1"/>
                         </group>
+                    </group>
+                    <group string="Ver implementación técnica" groups="base.group_system">
+                        <field name="jx_tech_detail" nolabel="1" readonly="1"/>
                     </group>
                 </page>
             </xpath>

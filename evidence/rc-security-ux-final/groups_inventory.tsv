@@ -1,0 +1,57 @@
+account.group_account_basic	Invoicing & Banks
+account.group_account_invoice	Invoicing
+account.group_account_manager	Administrator
+account.group_account_readonly	Read-only
+account.group_account_secured	Show Inalterability Features
+account.group_account_user	Bookkeeper
+account.group_cash_rounding	Allow the cash rounding management
+account.group_delivery_invoice_address	Delivery Address
+account.group_partial_purchase_deductibility	Partial Purchase Deductibility
+account.group_validate_bank_account	Validate bank account
+crm.group_use_lead	Show Lead Menu
+crm.group_use_recurring_revenues	Show Recurring Revenues Menu
+hr.group_hr_manager	Administrator
+hr.group_hr_user	Officer: Manage all employees
+justech_admin_center.group_justech_admin_center_manager	Administrador Justech
+justech_admin_center.group_justech_admin_center_user	Usuario consola Justech
+justech_ecf_core.group_ecf_admin	Administrador e-CF
+justech_ecf_core.group_ecf_auditor	Auditor e-CF
+justech_ecf_core.group_ecf_operator	Operador e-CF
+justech_ecf_core.group_ecf_readonly	Solo lectura e-CF
+justech_ecf_core.group_ecf_responsible	Responsable e-CF
+justech_fiscal_admin.group_justech_fiscal_admin_manager	Administrador Fiscal
+justech_fiscal_admin.group_justech_fiscal_admin_user	Fiscal Admin / Lectura
+justech_l10n_do_base.group_justech_do_fiscal_manager	Responsable Fiscal
+justech_l10n_do_base.group_justech_do_fiscal_user	Usuario Fiscal
+justech_l10n_do_payments_withholding.group_justech_withholding_catalog_admin	Administrador de Retenciones
+justech_recurring_fee.group_recurring_fee_manager	Responsable Fees
+justech_recurring_fee.group_recurring_fee_user	Usuario Fees
+justech_warranty.group_warranty_manager	Responsable de Garantías
+justech_warranty.group_warranty_user	Usuario de Garantías
+l10n_do_accounting.group_l10n_do_debit_note	Can create Debit Notes
+l10n_do_accounting.group_l10n_do_fiscal_credit_note	Can create Fiscal Credit Notes
+l10n_do_accounting.group_l10n_do_fiscal_invoice_cancel	Can cancel Fiscal Invoices
+purchase.group_purchase_manager	Administrator
+purchase.group_purchase_user	User
+purchase.group_send_reminder	Send an automatic reminder email to confirm delivery
+purchase.group_warning_purchase	A warning can be set on a product or a customer (Purchase)
+sale.group_auto_done_setting	Lock Confirmed Sales
+sale.group_discount_per_so_line	Discount on lines
+sale.group_proforma_sales	Pro-forma Invoices
+sale.group_warning_sale	A warning can be set on a product or a customer (Sale)
+sales_team.group_sale_manager	Administrator
+sales_team.group_sale_salesman	User: Own Documents Only
+sales_team.group_sale_salesman_all_leads	User: All Documents
+stock.group_adv_location	Manage Push and Pull inventory flows
+stock.group_lot_on_delivery_slip	Display Serial & Lot Number in Delivery Slips
+stock.group_production_lot	Manage Lots / Serial Numbers
+stock.group_reception_report	Use Reception Report
+stock.group_stock_lot_print_gs1	Print GS1 Barcodes for Lot & Serial Numbers
+stock.group_stock_manager	Administrator
+stock.group_stock_multi_locations	Manage Multiple Stock Locations
+stock.group_stock_multi_warehouses	Manage Multiple Warehouses
+stock.group_stock_sign_delivery	Require a signature on your delivery orders
+stock.group_stock_user	User
+stock.group_tracking_lot	Manage Packages
+stock.group_tracking_owner	Manage Different Stock Owners
+stock.group_warning_stock	A warning can be set on a partner (Stock)

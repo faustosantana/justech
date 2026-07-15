@@ -1,464 +1,70 @@
 # -*- coding: utf-8 -*-
-"""UX Enterprise de permisos — sincroniza únicamente res.groups existentes."""
+"""Permisos Justech — interfaz sobre res.groups reales (sync quirúrgico)."""
 from odoo import api, fields, models
 
-from .enterprise_permissions_registry import (
-    ENTERPRISE_ACTIONS,
-    ENTERPRISE_CATEGORIES,
-    ENTERPRISE_ROLES,
-)
+from .modules_registry import JX_MODULES
 
 
-def _act_fname(code):
-    return f"op_act_{code}"
+def _level_fname(key):
+    return "jx_lvl_%s" % key
 
 
-def _role_fname(category):
-    return f"op_role_{category}"
+def _cap_fname(code):
+    return "jx_cap_%s" % code
+
+
+def _show_fname(key):
+    return "jx_show_%s" % key
+
+
+def _card_fname(key):
+    return "jx_card_%s" % key
 
 
 class ResUsers(models.Model):
     _inherit = "res.users"
 
-    op_enterprise_help = fields.Char(
+    jx_help = fields.Char(
         string="Ayuda",
         default=(
-            "Active una o varias áreas. Cada área es independiente: "
-            "cambiar Compras no altera Ventas ni Fiscal. "
-            "Los cambios sincronizan grupos reales de Odoo."
+            "Configure varios módulos a la vez. Cada sección modifica solo sus "
+            "grupos Odoo. Use Permisos Avanzados solo para excepciones técnicas."
         ),
     )
-    op_summary_areas = fields.Text(
-        string="Áreas activas", compute="_compute_op_summary_global"
+    jx_summary_modules = fields.Text(
+        string="Módulos con acceso", compute="_compute_jx_summary"
     )
-    op_summary_can = fields.Text(string="Puede", compute="_compute_op_summary_global")
-    op_summary_cannot = fields.Text(string="No puede", compute="_compute_op_summary_global")
-
-    # Intención de abrir área (permite ver el bloque sin grupos aún)
-    op_area_open_commercial = fields.Boolean(string="Abrir Comercial", default=False)
-    op_area_open_purchase = fields.Boolean(string="Abrir Compras", default=False)
-    op_area_open_inventory = fields.Boolean(string="Abrir Inventario", default=False)
-    op_area_open_finance = fields.Boolean(string="Abrir Finanzas", default=False)
-    op_area_open_accounting = fields.Boolean(string="Abrir Contabilidad", default=False)
-    op_area_open_fiscal = fields.Boolean(string="Abrir Fiscal", default=False)
-    op_area_open_ecf = fields.Boolean(string="Abrir e-CF", default=False)
-    op_area_open_warranty = fields.Boolean(string="Abrir Garantías", default=False)
-    op_area_open_hr = fields.Boolean(string="Abrir RRHH", default=False)
-    op_area_open_crm = fields.Boolean(string="Abrir CRM", default=False)
-    op_area_open_admin = fields.Boolean(string="Abrir Administración", default=False)
-
-    # Checkbox de área = abierta o con membresía efectiva
-    op_area_commercial = fields.Boolean(
-        string="Comercial",
-        compute="_compute_op_areas",
-        inverse="_inverse_op_areas",
+    jx_summary_can = fields.Text(string="Puede", compute="_compute_jx_summary")
+    jx_summary_cannot = fields.Text(string="No puede", compute="_compute_jx_summary")
+    jx_summary_warnings = fields.Text(
+        string="Advertencias", compute="_compute_jx_summary"
     )
-    op_area_purchase = fields.Boolean(
-        string="Compras",
-        compute="_compute_op_areas",
-        inverse="_inverse_op_areas",
-    )
-    op_area_inventory = fields.Boolean(
-        string="Inventario",
-        compute="_compute_op_areas",
-        inverse="_inverse_op_areas",
-    )
-    op_area_finance = fields.Boolean(
-        string="Finanzas",
-        compute="_compute_op_areas",
-        inverse="_inverse_op_areas",
-    )
-    op_area_accounting = fields.Boolean(
-        string="Contabilidad",
-        compute="_compute_op_areas",
-        inverse="_inverse_op_areas",
-    )
-    op_area_fiscal = fields.Boolean(
-        string="Fiscal",
-        compute="_compute_op_areas",
-        inverse="_inverse_op_areas",
-    )
-    op_area_ecf = fields.Boolean(
-        string="e-CF",
-        compute="_compute_op_areas",
-        inverse="_inverse_op_areas",
-    )
-    op_area_warranty = fields.Boolean(
-        string="Garantías",
-        compute="_compute_op_areas",
-        inverse="_inverse_op_areas",
-    )
-    op_area_hr = fields.Boolean(
-        string="Recursos Humanos",
-        compute="_compute_op_areas",
-        inverse="_inverse_op_areas",
-    )
-    op_area_crm = fields.Boolean(
-        string="CRM",
-        compute="_compute_op_areas",
-        inverse="_inverse_op_areas",
-    )
-    op_area_admin = fields.Boolean(
-        string="Administración Justech",
-        compute="_compute_op_areas",
-        inverse="_inverse_op_areas",
+    jx_tech_detail = fields.Text(
+        string="Implementación técnica", compute="_compute_jx_summary"
     )
 
-    # Tarjetas de rol por área (independientes)
-    op_role_card_commercial = fields.Text(compute="_compute_op_role_cards")
-    op_role_card_purchase = fields.Text(compute="_compute_op_role_cards")
-    op_role_card_inventory = fields.Text(compute="_compute_op_role_cards")
-    op_role_card_finance = fields.Text(compute="_compute_op_role_cards")
-    op_role_card_accounting = fields.Text(compute="_compute_op_role_cards")
-    op_role_card_fiscal = fields.Text(compute="_compute_op_role_cards")
-    op_role_card_ecf = fields.Text(compute="_compute_op_role_cards")
-    op_role_card_warranty = fields.Text(compute="_compute_op_role_cards")
-    op_role_card_hr = fields.Text(compute="_compute_op_role_cards")
-    op_role_card_crm = fields.Text(compute="_compute_op_role_cards")
-    op_role_card_admin = fields.Text(compute="_compute_op_role_cards")
-
-    # Roles por categoría
-    op_role_commercial = fields.Selection(
-        selection=[
-            ("none", "Sin rol"),
-            ("commercial_own", "Usuario"),
-            ("commercial_all", "Supervisor"),
-            ("commercial_admin", "Administrador"),
-        ],
-        string="Rol comercial",
-        compute="_compute_op_roles",
-        inverse="_inverse_op_enterprise",
-    )
-    op_role_purchase = fields.Selection(
-        selection=[
-            ("none", "Sin rol"),
-            ("purchase_user", "Usuario"),
-            ("purchase_admin", "Administrador"),
-        ],
-        string="Rol compras",
-        compute="_compute_op_roles",
-        inverse="_inverse_op_enterprise",
-    )
-    op_role_inventory = fields.Selection(
-        selection=[
-            ("none", "Sin rol"),
-            ("inventory_user", "Usuario"),
-            ("inventory_admin", "Administrador"),
-        ],
-        string="Rol inventario",
-        compute="_compute_op_roles",
-        inverse="_inverse_op_enterprise",
-    )
-    op_role_finance = fields.Selection(
-        selection=[
-            ("none", "Sin rol"),
-            ("finance_invoice", "Usuario"),
-            ("finance_book", "Supervisor"),
-            ("finance_admin", "Administrador"),
-        ],
-        string="Rol finanzas",
-        compute="_compute_op_roles",
-        inverse="_inverse_op_enterprise",
-    )
-    op_role_accounting = fields.Selection(
-        selection=[
-            ("none", "Sin rol"),
-            ("accounting_ro", "Usuario"),
-            ("accounting_ops", "Supervisor"),
-            ("accounting_admin", "Administrador"),
-        ],
-        string="Rol contabilidad",
-        compute="_compute_op_roles",
-        inverse="_inverse_op_enterprise",
-    )
-    op_role_fiscal = fields.Selection(
-        selection=[
-            ("none", "Sin rol"),
-            ("fiscal_user", "Usuario"),
-            ("fiscal_officer", "Supervisor"),
-            ("fiscal_admin", "Administrador"),
-        ],
-        string="Rol fiscal",
-        compute="_compute_op_roles",
-        inverse="_inverse_op_enterprise",
-    )
-    op_role_ecf = fields.Selection(
-        selection=[
-            ("none", "Sin rol"),
-            ("ecf_ro", "Usuario"),
-            ("ecf_op", "Supervisor"),
-            ("ecf_resp", "Responsable"),
-            ("ecf_admin", "Administrador"),
-        ],
-        string="Rol e-CF",
-        compute="_compute_op_roles",
-        inverse="_inverse_op_enterprise",
-    )
-    op_role_warranty = fields.Selection(
-        selection=[
-            ("none", "Sin rol"),
-            ("warranty_user", "Usuario"),
-            ("warranty_admin", "Administrador"),
-        ],
-        string="Rol garantías",
-        compute="_compute_op_roles",
-        inverse="_inverse_op_enterprise",
-    )
-    op_role_hr = fields.Selection(
-        selection=[
-            ("none", "Sin rol"),
-            ("hr_user", "Usuario"),
-            ("hr_admin", "Administrador"),
-        ],
-        string="Rol RRHH",
-        compute="_compute_op_roles",
-        inverse="_inverse_op_enterprise",
-    )
-    op_role_crm = fields.Selection(
-        selection=[
-            ("none", "Sin rol"),
-            ("crm_leads", "Usuario"),
-        ],
-        string="Rol CRM",
-        compute="_compute_op_roles",
-        inverse="_inverse_op_enterprise",
-    )
-    op_role_admin = fields.Selection(
-        selection=[
-            ("none", "Sin rol"),
-            ("admin_user", "Usuario"),
-            ("admin_manager", "Administrador"),
-        ],
-        string="Rol Administración Justech",
-        compute="_compute_op_roles",
-        inverse="_inverse_op_enterprise",
-    )
-
-    # Acciones (booleans) — nombres humanos
-    op_act_fin_register_in = fields.Boolean(
-        string="Registrar cobros",
-        compute="_compute_op_actions",
-        inverse="_inverse_op_enterprise",
-        help="Permite registrar cobros de clientes. No permite eliminar pagos.",
-    )
-    op_act_fin_register_out = fields.Boolean(
-        string="Registrar pagos",
-        compute="_compute_op_actions",
-        inverse="_inverse_op_enterprise",
-        help="Permite registrar pagos a proveedores. No permite eliminarlos.",
-    )
-    op_act_fin_apply = fields.Boolean(
-        string="Aplicar pagos",
-        compute="_compute_op_actions",
-        inverse="_inverse_op_enterprise",
-        help="Permite aplicar pagos registrados a facturas existentes. No permite eliminarlos.",
-    )
-    op_act_fin_reconcile = fields.Boolean(
-        string="Reconciliar",
-        compute="_compute_op_actions",
-        inverse="_inverse_op_enterprise",
-        help="Permite conciliar movimientos bancarios y contables.",
-    )
-    op_act_fin_unreconcile = fields.Boolean(
-        string="Desconciliar",
-        compute="_compute_op_actions",
-        inverse="_inverse_op_enterprise",
-        help="Permite desconciliar cuando el documento lo permite.",
-    )
-    op_act_fin_approve = fields.Boolean(
-        string="Aprobar pagos",
-        compute="_compute_op_actions",
-        inverse="_inverse_op_enterprise",
-        help="Permite aprobar/gestionar pagos con privilegio administrador.",
-    )
-    op_act_fin_bank_create = fields.Boolean(
-        string="Crear diarios",
-        compute="_compute_op_actions",
-        inverse="_inverse_op_enterprise",
-        help="Permite administrar diarios/cuentas bancarias (validación bancaria).",
-    )
-    op_act_fin_bank_edit = fields.Boolean(
-        string="Modificar diarios",
-        compute="_compute_op_actions",
-        inverse="_inverse_op_enterprise",
-        help="Permite modificar configuración bancaria autorizada.",
-    )
-    op_act_fin_export = fields.Boolean(
-        string="Exportar",
-        compute="_compute_op_actions",
-        inverse="_inverse_op_enterprise",
-        help="Permite exportar información financiera según permisos de Odoo.",
-    )
-    op_act_fin_reports = fields.Boolean(
-        string="Ver reportes",
-        compute="_compute_op_actions",
-        inverse="_inverse_op_enterprise",
-        help="Permite consultar reportes de facturación y pagos.",
-    )
-
-    op_act_po_request = fields.Boolean(
-        string="Crear solicitud", compute="_compute_op_actions", inverse="_inverse_op_enterprise",
-        help="Permite crear solicitudes de compra.",
-    )
-    op_act_po_approve_req = fields.Boolean(
-        string="Aprobar solicitud", compute="_compute_op_actions", inverse="_inverse_op_enterprise",
-        help="Permite aprobar solicitudes (Administrador de compras).",
-    )
-    op_act_po_order = fields.Boolean(
-        string="Crear orden", compute="_compute_op_actions", inverse="_inverse_op_enterprise",
-        help="Permite crear órdenes de compra.",
-    )
-    op_act_po_approve_order = fields.Boolean(
-        string="Aprobar orden", compute="_compute_op_actions", inverse="_inverse_op_enterprise",
-        help="Permite aprobar órdenes de compra.",
-    )
-    op_act_po_vendor_bill = fields.Boolean(
-        string="Registrar factura proveedor", compute="_compute_op_actions", inverse="_inverse_op_enterprise",
-        help="Permite registrar facturas de proveedor.",
-    )
-    op_act_po_received = fields.Boolean(
-        string="Registrar documento recibido", compute="_compute_op_actions", inverse="_inverse_op_enterprise",
-        help="Permite registrar compras con NCF recibido del proveedor.",
-    )
-    op_act_po_b11 = fields.Boolean(
-        string="Emitir B11", compute="_compute_op_actions", inverse="_inverse_op_enterprise",
-        help="Permite emitir comprobantes de compra B11 (Responsable Fiscal).",
-    )
-    op_act_po_b13 = fields.Boolean(
-        string="Emitir B13", compute="_compute_op_actions", inverse="_inverse_op_enterprise",
-        help="Permite emitir comprobantes de compra B13 (Responsable Fiscal).",
-    )
-    op_act_po_b17 = fields.Boolean(
-        string="Emitir B17", compute="_compute_op_actions", inverse="_inverse_op_enterprise",
-        help="Permite emitir comprobantes de compra B17 (Responsable Fiscal).",
-    )
-    op_act_po_cancel = fields.Boolean(
-        string="Cancelar orden", compute="_compute_op_actions", inverse="_inverse_op_enterprise",
-        help="Permite cancelar órdenes según el flujo estándar.",
-    )
-    op_act_po_delete = fields.Boolean(
-        string="Eliminar orden", compute="_compute_op_actions", inverse="_inverse_op_enterprise",
-        help="Permite eliminar órdenes en estados autorizados (Administrador).",
-    )
-
-    op_act_so_quote = fields.Boolean(
-        string="Crear cotización", compute="_compute_op_actions", inverse="_inverse_op_enterprise",
-        help="Permite crear cotizaciones de venta.",
-    )
-    op_act_so_approve = fields.Boolean(
-        string="Aprobar cotización", compute="_compute_op_actions", inverse="_inverse_op_enterprise",
-        help="Permite aprobar cotizaciones (Administrador comercial).",
-    )
-    op_act_so_confirm = fields.Boolean(
-        string="Confirmar venta", compute="_compute_op_actions", inverse="_inverse_op_enterprise",
-        help="Permite confirmar pedidos de venta.",
-    )
-    op_act_so_invoice = fields.Boolean(
-        string="Emitir factura", compute="_compute_op_actions", inverse="_inverse_op_enterprise",
-        help="Permite emitir facturas desde ventas/facturación.",
-    )
-    op_act_so_credit = fields.Boolean(
-        string="Nota de crédito", compute="_compute_op_actions", inverse="_inverse_op_enterprise",
-        help="Permite emitir notas de crédito fiscales.",
-    )
-    op_act_so_discount = fields.Boolean(
-        string="Aplicar descuentos", compute="_compute_op_actions", inverse="_inverse_op_enterprise",
-        help="Permite aplicar descuentos en líneas de venta.",
-    )
-    op_act_so_delete_inv = fields.Boolean(
-        string="Eliminar factura", compute="_compute_op_actions", inverse="_inverse_op_enterprise",
-        help="Permite eliminar facturas en estados autorizados (Administrador).",
-    )
-    op_act_so_edit_posted = fields.Boolean(
-        string="Modificar factura validada", compute="_compute_op_actions", inverse="_inverse_op_enterprise",
-        help="Permite operaciones administrativas sobre facturas publicadas cuando Odoo lo autoriza.",
-    )
-
-    op_act_stk_in = fields.Boolean(
-        string="Entradas", compute="_compute_op_actions", inverse="_inverse_op_enterprise",
-        help="Permite registrar entradas de inventario.",
-    )
-    op_act_stk_out = fields.Boolean(
-        string="Salidas", compute="_compute_op_actions", inverse="_inverse_op_enterprise",
-        help="Permite registrar salidas de inventario.",
-    )
-    op_act_stk_adj = fields.Boolean(
-        string="Ajustes", compute="_compute_op_actions", inverse="_inverse_op_enterprise",
-        help="Permite realizar ajustes de inventario.",
-    )
-    op_act_stk_tr = fields.Boolean(
-        string="Transferencias", compute="_compute_op_actions", inverse="_inverse_op_enterprise",
-        help="Permite transferencias entre ubicaciones.",
-    )
-    op_act_stk_count = fields.Boolean(
-        string="Conteos", compute="_compute_op_actions", inverse="_inverse_op_enterprise",
-        help="Permite conteos/inventarios físicos.",
-    )
-    op_act_stk_val = fields.Boolean(
-        string="Valoración", compute="_compute_op_actions", inverse="_inverse_op_enterprise",
-        help="Permite administrar valoración (Administrador de inventario).",
-    )
-
-    op_act_fis_void = fields.Boolean(
-        string="Anular NCF", compute="_compute_op_actions", inverse="_inverse_op_enterprise",
-        help="Permite anular comprobantes fiscales. No cancela pagos ni emite nota de crédito automáticamente.",
-    )
-    op_act_fis_606 = fields.Boolean(
-        string="Generar 606", compute="_compute_op_actions", inverse="_inverse_op_enterprise",
-        help="Permite generar el formato 606.",
-    )
-    op_act_fis_607 = fields.Boolean(
-        string="Generar 607", compute="_compute_op_actions", inverse="_inverse_op_enterprise",
-        help="Permite generar el formato 607.",
-    )
-    op_act_fis_608 = fields.Boolean(
-        string="Generar 608", compute="_compute_op_actions", inverse="_inverse_op_enterprise",
-        help="Permite generar el formato 608.",
-    )
-    op_act_fis_ranges = fields.Boolean(
-        string="Configurar rangos", compute="_compute_op_actions", inverse="_inverse_op_enterprise",
-        help="Permite administrar rangos NCF.",
-    )
-
-    op_act_war_create = fields.Boolean(
-        string="Crear garantía", compute="_compute_op_actions", inverse="_inverse_op_enterprise",
-        help="Permite crear garantías.",
-    )
-    op_act_war_edit = fields.Boolean(
-        string="Modificar garantía", compute="_compute_op_actions", inverse="_inverse_op_enterprise",
-        help="Permite modificar garantías existentes.",
-    )
-    op_act_war_process = fields.Boolean(
-        string="Procesar garantía", compute="_compute_op_actions", inverse="_inverse_op_enterprise",
-        help="Permite procesar/aprobar garantías.",
-    )
-    op_act_war_history = fields.Boolean(
-        string="Consultar historial", compute="_compute_op_actions", inverse="_inverse_op_enterprise",
-        help="Permite consultar el historial de garantías.",
-    )
-
-    # ------------------------------------------------------------------ helpers
+    # ------------------------------------------------------------------ registry helpers
     @api.model
-    def _op_categories(self):
-        return ENTERPRISE_CATEGORIES
+    def _jx_modules(self):
+        return JX_MODULES
 
     @api.model
-    def _op_roles(self):
-        return ENTERPRISE_ROLES
+    def _jx_module_installed(self, module_name):
+        return bool(
+            self.env["ir.module.module"]
+            .sudo()
+            .search([("name", "=", module_name), ("state", "=", "installed")], limit=1)
+        )
 
     @api.model
-    def _op_actions(self):
-        return ENTERPRISE_ACTIONS
+    def _jx_section_visible(self, section):
+        for mod in section.get("modules") or ():
+            if not self._jx_module_installed(mod):
+                return False
+        return True
 
     @api.model
-    def _op_role_by_code(self, code):
-        for role in ENTERPRISE_ROLES:
-            if role["code"] == code:
-                return role
-        return None
-
-    @api.model
-    def _op_resolve_xmlids(self, xmlids):
+    def _jx_resolve(self, xmlids):
         groups = self.env["res.groups"]
         for xmlid in xmlids or ():
             group = self.env.ref(xmlid, raise_if_not_found=False)
@@ -467,216 +73,555 @@ class ResUsers(models.Model):
         return groups
 
     @api.model
-    def _op_managed_groups(self):
-        groups = self.env["res.groups"]
-        for role in ENTERPRISE_ROLES:
-            groups |= self._op_resolve_xmlids(role["xmlids"])
-        for act in ENTERPRISE_ACTIONS:
-            groups |= self._op_resolve_xmlids(act["xmlids"])
-        return groups
+    def _jx_level_by_code(self, section, code):
+        for level in section.get("levels") or ():
+            if level["code"] == code:
+                return level
+        return None
 
-    def _op_user_has_xmlids(self, user, xmlids):
-        for xmlid in xmlids or ():
+    @api.model
+    def _jx_cap_by_code(self, code):
+        for section in JX_MODULES:
+            for cap in section.get("caps") or ():
+                if cap["code"] == code:
+                    return cap, section
+        return None, None
+
+    def _jx_user_has_all(self, user, xmlids):
+        if not xmlids:
+            return False
+        for xmlid in xmlids:
             if not self.env.ref(xmlid, raise_if_not_found=False):
                 return False
             if not user.has_group(xmlid):
                 return False
-        return bool(xmlids)
+        return True
 
-    def _op_detect_role(self, user, category):
+    def _jx_detect_level(self, user, section):
         best = "none"
-        best_level = 0
-        for role in ENTERPRISE_ROLES:
-            if role["category"] != category:
+        best_idx = -1
+        for idx, level in enumerate(section.get("levels") or ()):
+            if level["code"] == "none":
                 continue
-            if self._op_user_has_xmlids(user, role["xmlids"]) and role["level"] >= best_level:
-                best = role["code"]
-                best_level = role["level"]
+            # level may require optional modules
+            for mod in level.get("modules") or ():
+                if not self._jx_module_installed(mod):
+                    break
+            else:
+                if level["xmlids"] and self._jx_user_has_all(user, level["xmlids"]):
+                    if idx > best_idx:
+                        best = level["code"]
+                        best_idx = idx
         return best
 
-    def _op_category_action_codes(self, category):
-        return [a["code"] for a in ENTERPRISE_ACTIONS if a["category"] == category]
+    def _jx_ladder_groups(self, section):
+        groups = self.env["res.groups"]
+        for level in section.get("levels") or ():
+            groups |= self._jx_resolve(level.get("xmlids"))
+        groups |= self._jx_resolve(section.get("ladder_extra_xmlids"))
+        return groups
 
-    def _op_category_has_membership(self, user, category):
-        role_fname = _role_fname(category)
-        if role_fname in user._fields and user[role_fname] not in (False, "none"):
-            return True
-        for code in self._op_category_action_codes(category):
-            fname = _act_fname(code)
-            if fname in user._fields and user[fname]:
-                return True
-        return False
+    def _jx_apply_group_delta(self, user, add_groups, remove_groups):
+        """Add/remove ONLY the given groups; never wipe group_ids / company_ids."""
+        commands = []
+        for group in add_groups:
+            if group not in user.group_ids:
+                commands.append((4, group.id))
+        for group in remove_groups:
+            if group in user.group_ids:
+                commands.append((3, group.id))
+        if commands:
+            user.with_context(justech_security_ux_sync=True).write(
+                {"group_ids": commands}
+            )
+
+    def _jx_sync_level(self, user, section_key, selected_code):
+        section = next((s for s in JX_MODULES if s["key"] == section_key), None)
+        if not section:
+            return
+        ladder = self._jx_ladder_groups(section)
+        if not ladder and selected_code == "none":
+            return
+        level = self._jx_level_by_code(section, selected_code) or {
+            "code": "none",
+            "xmlids": (),
+        }
+        desired = self._jx_resolve(level.get("xmlids"))
+        # Quitar otros del mismo ladder (solo membrecías explícitas)
+        remove = ladder - desired
+        self._jx_apply_group_delta(user, desired, remove)
+
+    def _jx_sync_cap(self, user, cap_code, enabled):
+        cap, section = self._jx_cap_by_code(cap_code)
+        if not cap:
+            return
+        # Alias a nivel Contabilidad/Facturación: no tocar fuera de ese grupo
+        groups = self._jx_resolve(cap.get("xmlids"))
+        if not groups:
+            return
+        if enabled:
+            self._jx_apply_group_delta(user, groups, self.env["res.groups"])
+        else:
+            # No retirar si el grupo es el nivel deseado de Contabilidad
+            alias = cap.get("aliases_level")
+            if alias:
+                mod_key, level_code = alias
+                lvl_fname = _level_fname(mod_key)
+                if lvl_fname in user._fields and user[lvl_fname] == level_code:
+                    return
+                # Si el nivel efectivo de accounting es >= invoice, no forzar retiro
+                # al desmarcar el atajo de Pagos (evita pelea entre secciones)
+                if mod_key == "accounting" and self._jx_user_has_all(
+                    user, ("account.group_account_invoice",)
+                ):
+                    # Permitir retiro solo si el usuario pidió none en accounting
+                    if lvl_fname in user._fields and user[lvl_fname] != "none":
+                        return
+            self._jx_apply_group_delta(user, self.env["res.groups"], groups)
+
+    # ------------------------------------------------------------------ field factory (declared below explicitly for Odoo)
+
+    # Visibility
+    jx_show_sales = fields.Boolean(compute="_compute_jx_show")
+    jx_show_purchase = fields.Boolean(compute="_compute_jx_show")
+    jx_show_inventory = fields.Boolean(compute="_compute_jx_show")
+    jx_show_accounting = fields.Boolean(compute="_compute_jx_show")
+    jx_show_fiscal = fields.Boolean(compute="_compute_jx_show")
+    jx_show_payments = fields.Boolean(compute="_compute_jx_show")
+    jx_show_withholding = fields.Boolean(compute="_compute_jx_show")
+    jx_show_ecf = fields.Boolean(compute="_compute_jx_show")
+    jx_show_warranty = fields.Boolean(compute="_compute_jx_show")
+    jx_show_fees = fields.Boolean(compute="_compute_jx_show")
+    jx_show_crm = fields.Boolean(compute="_compute_jx_show")
+    jx_show_hr = fields.Boolean(compute="_compute_jx_show")
+    jx_show_admin = fields.Boolean(compute="_compute_jx_show")
+
+    # Levels
+    jx_lvl_sales = fields.Selection(
+        selection=[
+            ("none", "Sin acceso"),
+            ("own", "Usuario: solo sus documentos"),
+            ("all", "Usuario: todos los documentos"),
+            ("manager", "Administrador"),
+        ],
+        string="Nivel Ventas",
+        compute="_compute_jx_levels",
+        inverse="_inverse_jx_lvl_sales",
+    )
+    jx_lvl_purchase = fields.Selection(
+        selection=[
+            ("none", "Sin acceso"),
+            ("user", "Usuario"),
+            ("manager", "Administrador"),
+        ],
+        string="Nivel Compras",
+        compute="_compute_jx_levels",
+        inverse="_inverse_jx_lvl_purchase",
+    )
+    jx_lvl_inventory = fields.Selection(
+        selection=[
+            ("none", "Sin acceso"),
+            ("user", "Usuario"),
+            ("manager", "Administrador"),
+        ],
+        string="Nivel Inventario",
+        compute="_compute_jx_levels",
+        inverse="_inverse_jx_lvl_inventory",
+    )
+    jx_lvl_accounting = fields.Selection(
+        selection=[
+            ("none", "Sin acceso"),
+            ("invoice", "Facturación"),
+            ("accountant", "Contabilidad"),
+            ("manager", "Administrador"),
+        ],
+        string="Nivel Contabilidad",
+        compute="_compute_jx_levels",
+        inverse="_inverse_jx_lvl_accounting",
+    )
+    jx_lvl_fiscal = fields.Selection(
+        selection=[
+            ("none", "Sin acceso fiscal"),
+            ("user", "Usuario Fiscal"),
+            ("officer", "Responsable Fiscal"),
+            ("admin", "Administrador Fiscal"),
+        ],
+        string="Nivel Fiscal",
+        compute="_compute_jx_levels",
+        inverse="_inverse_jx_lvl_fiscal",
+    )
+    jx_lvl_withholding = fields.Selection(
+        selection=[
+            ("none", "Sin administración de catálogo"),
+            ("catalog_admin", "Administrador de Retenciones"),
+        ],
+        string="Nivel Retenciones",
+        compute="_compute_jx_levels",
+        inverse="_inverse_jx_lvl_withholding",
+    )
+    jx_lvl_ecf = fields.Selection(
+        selection=[
+            ("none", "Sin acceso"),
+            ("readonly", "Solo lectura e-CF"),
+            ("operator", "Operador e-CF"),
+            ("responsible", "Responsable e-CF"),
+            ("admin", "Administrador e-CF"),
+        ],
+        string="Nivel e-CF",
+        compute="_compute_jx_levels",
+        inverse="_inverse_jx_lvl_ecf",
+    )
+    jx_lvl_warranty = fields.Selection(
+        selection=[
+            ("none", "Sin acceso"),
+            ("user", "Usuario de Garantías"),
+            ("manager", "Administrador de Garantías"),
+        ],
+        string="Nivel Garantías",
+        compute="_compute_jx_levels",
+        inverse="_inverse_jx_lvl_warranty",
+    )
+    jx_lvl_fees = fields.Selection(
+        selection=[
+            ("none", "Sin acceso"),
+            ("user", "Usuario Fees"),
+            ("manager", "Responsable Fees"),
+        ],
+        string="Nivel Fees",
+        compute="_compute_jx_levels",
+        inverse="_inverse_jx_lvl_fees",
+    )
+    jx_lvl_crm = fields.Selection(
+        selection=[
+            ("none", "Sin flag de Leads"),
+            ("leads", "Usar Leads"),
+        ],
+        string="Nivel CRM",
+        compute="_compute_jx_levels",
+        inverse="_inverse_jx_lvl_crm",
+    )
+    jx_lvl_hr = fields.Selection(
+        selection=[
+            ("none", "Sin acceso"),
+            ("user", "Encargado"),
+            ("manager", "Administrador"),
+        ],
+        string="Nivel RRHH",
+        compute="_compute_jx_levels",
+        inverse="_inverse_jx_lvl_hr",
+    )
+    jx_lvl_admin = fields.Selection(
+        selection=[
+            ("none", "Sin acceso"),
+            ("user", "Usuario consola Justech"),
+            ("manager", "Administrador Justech"),
+        ],
+        string="Nivel Administración Justech",
+        compute="_compute_jx_levels",
+        inverse="_inverse_jx_lvl_admin",
+    )
+
+    # Cards
+    jx_card_sales = fields.Text(compute="_compute_jx_cards")
+    jx_card_purchase = fields.Text(compute="_compute_jx_cards")
+    jx_card_inventory = fields.Text(compute="_compute_jx_cards")
+    jx_card_accounting = fields.Text(compute="_compute_jx_cards")
+    jx_card_fiscal = fields.Text(compute="_compute_jx_cards")
+    jx_card_payments = fields.Text(compute="_compute_jx_cards")
+    jx_card_withholding = fields.Text(compute="_compute_jx_cards")
+    jx_card_ecf = fields.Text(compute="_compute_jx_cards")
+    jx_card_warranty = fields.Text(compute="_compute_jx_cards")
+    jx_card_fees = fields.Text(compute="_compute_jx_cards")
+    jx_card_crm = fields.Text(compute="_compute_jx_cards")
+    jx_card_hr = fields.Text(compute="_compute_jx_cards")
+    jx_card_admin = fields.Text(compute="_compute_jx_cards")
+
+    # Caps
+    jx_cap_so_discount = fields.Boolean(
+        string="Aplicar descuentos en líneas",
+        compute="_compute_jx_caps",
+        inverse="_inverse_jx_cap_so_discount",
+        help="sale.group_discount_per_so_line",
+    )
+    jx_cap_so_credit_note = fields.Boolean(
+        string="Emitir notas de crédito fiscales",
+        compute="_compute_jx_caps",
+        inverse="_inverse_jx_cap_so_credit_note",
+    )
+    jx_cap_so_cancel_fiscal = fields.Boolean(
+        string="Cancelar facturas fiscales",
+        compute="_compute_jx_caps",
+        inverse="_inverse_jx_cap_so_cancel_fiscal",
+    )
+    jx_cap_stk_lots = fields.Boolean(
+        string="Registrar seriales / lotes",
+        compute="_compute_jx_caps",
+        inverse="_inverse_jx_cap_stk_lots",
+    )
+    jx_cap_pay_invoice_access = fields.Boolean(
+        string="Acceso a facturación y pagos (grupo Odoo)",
+        compute="_compute_jx_caps",
+        inverse="_inverse_jx_cap_pay_invoice_access",
+        help=(
+            "ADVERTENCIA: account.group_account_invoice concede facturación + "
+            "cobros + pagos + aplicación. No hay segregación fina."
+        ),
+    )
+    jx_cap_pay_bank_validate = fields.Boolean(
+        string="Validar / administrar cuentas bancarias",
+        compute="_compute_jx_caps",
+        inverse="_inverse_jx_cap_pay_bank_validate",
+    )
+    jx_cap_ecf_auditor = fields.Boolean(
+        string="Auditor e-CF",
+        compute="_compute_jx_caps",
+        inverse="_inverse_jx_cap_ecf_auditor",
+    )
+
+    # ------------------------------------------------------------------ computes / inverses
+    @api.depends_context("uid")
+    def _compute_jx_show(self):
+        visibility = {
+            s["key"]: self._jx_section_visible(s) for s in JX_MODULES
+        }
+        for user in self:
+            for key, visible in visibility.items():
+                fname = _show_fname(key)
+                if fname in user._fields:
+                    user[fname] = visible
 
     @api.depends("group_ids")
-    def _compute_op_roles(self):
-        cats = [c["key"] for c in ENTERPRISE_CATEGORIES]
+    def _compute_jx_levels(self):
+        by_key = {s["key"]: s for s in JX_MODULES}
         for user in self:
-            for cat in cats:
-                fname = _role_fname(cat)
-                if fname in user._fields:
-                    user[fname] = user._op_detect_role(user, cat)
+            for key, section in by_key.items():
+                fname = _level_fname(key)
+                if fname not in user._fields:
+                    continue
+                if not section.get("levels"):
+                    continue
+                user[fname] = self._jx_detect_level(user, section)
 
     @api.depends("group_ids")
-    def _compute_op_actions(self):
+    def _compute_jx_caps(self):
         for user in self:
-            for act in ENTERPRISE_ACTIONS:
-                fname = _act_fname(act["code"])
-                if fname in user._fields:
-                    user[fname] = user._op_user_has_xmlids(user, act["xmlids"])
+            for section in JX_MODULES:
+                for cap in section.get("caps") or ():
+                    fname = _cap_fname(cap["code"])
+                    if fname not in user._fields:
+                        continue
+                    mods_ok = True
+                    for mod in cap.get("modules") or ():
+                        if not self._jx_module_installed(mod):
+                            mods_ok = False
+                            break
+                    user[fname] = bool(
+                        mods_ok and self._jx_user_has_all(user, cap.get("xmlids"))
+                    )
 
     @api.depends(
         "group_ids",
-        "op_area_open_commercial",
-        "op_area_open_purchase",
-        "op_area_open_inventory",
-        "op_area_open_finance",
-        "op_area_open_accounting",
-        "op_area_open_fiscal",
-        "op_area_open_ecf",
-        "op_area_open_warranty",
-        "op_area_open_hr",
-        "op_area_open_crm",
-        "op_area_open_admin",
-        "op_role_commercial",
-        "op_role_purchase",
-        "op_role_inventory",
-        "op_role_finance",
-        "op_role_accounting",
-        "op_role_fiscal",
-        "op_role_ecf",
-        "op_role_warranty",
-        "op_role_hr",
-        "op_role_crm",
-        "op_role_admin",
+        "jx_lvl_sales",
+        "jx_lvl_purchase",
+        "jx_lvl_inventory",
+        "jx_lvl_accounting",
+        "jx_lvl_fiscal",
+        "jx_lvl_withholding",
+        "jx_lvl_ecf",
+        "jx_lvl_warranty",
+        "jx_lvl_fees",
+        "jx_lvl_crm",
+        "jx_lvl_hr",
+        "jx_lvl_admin",
     )
-    def _compute_op_areas(self):
+    def _compute_jx_cards(self):
         for user in self:
-            for cat in (c["key"] for c in ENTERPRISE_CATEGORIES):
-                open_fname = "op_area_open_%s" % cat
-                area_fname = "op_area_%s" % cat
-                opened = bool(user[open_fname]) if open_fname in user._fields else False
-                user[area_fname] = opened or user._op_category_has_membership(user, cat)
+            for section in JX_MODULES:
+                fname = _card_fname(section["key"])
+                if fname not in user._fields:
+                    continue
+                lines = []
+                notes = section.get("notes") or ()
+                if notes:
+                    lines.extend(notes)
+                    lines.append("")
+                lvl_fname = _level_fname(section["key"])
+                level = None
+                if lvl_fname in user._fields and section.get("levels"):
+                    level = self._jx_level_by_code(section, user[lvl_fname])
+                if level:
+                    lines.append(level["label"])
+                    lines.append("Riesgo: %s" % level.get("risk", "—"))
+                    if level.get("can"):
+                        lines.append("Puede:")
+                        lines.extend("• %s" % x for x in level["can"])
+                    if level.get("cannot"):
+                        lines.append("No puede:")
+                        lines.extend("• %s" % x for x in level["cannot"])
+                    if level.get("warning"):
+                        lines.append("")
+                        lines.append("⚠ %s" % level["warning"])
+                    if level.get("xmlids"):
+                        lines.append("")
+                        lines.append("Ver implementación técnica:")
+                        lines.extend("• %s" % x for x in level["xmlids"])
+                elif section.get("caps") and not section.get("levels"):
+                    lines.append("Capacidades asignables (grupos reales):")
+                    for cap in section["caps"]:
+                        on = user[_cap_fname(cap["code"])] if _cap_fname(cap["code"]) in user._fields else False
+                        mark = "✓" if on else "☐"
+                        lines.append("%s %s" % (mark, cap["label"]))
+                        if cap.get("warning"):
+                            lines.append("  ⚠ %s" % cap["warning"])
+                user[fname] = "\n".join(lines) if lines else "—"
 
-    def _inverse_op_areas(self):
-        """Activar/desactivar área sin afectar otras áreas."""
+    @api.depends("group_ids", "company_ids")
+    def _compute_jx_summary(self):
         for user in self:
-            # Evitar sync parcial por cada assignment de op_role/op_act.
-            u = user.with_context(justech_security_ux_skip_sync=True)
-            for cat in (c["key"] for c in ENTERPRISE_CATEGORIES):
-                area_fname = "op_area_%s" % cat
-                open_fname = "op_area_open_%s" % cat
-                if area_fname not in u._fields:
+            modules_lines = []
+            can, cannot, warnings, tech = [], [], [], []
+            for section in JX_MODULES:
+                if not self._jx_section_visible(section):
                     continue
-                if u[area_fname]:
-                    u[open_fname] = True
-                    continue
-                # Desactivar solo esta área
-                u[open_fname] = False
-                role_fname = _role_fname(cat)
-                if role_fname in u._fields:
-                    u[role_fname] = "none"
-                for code in u._op_category_action_codes(cat):
-                    fname = _act_fname(code)
-                    if fname in u._fields:
-                        u[fname] = False
-            user._op_sync_enterprise()
-
-    @api.depends(
-        "op_role_commercial",
-        "op_role_purchase",
-        "op_role_inventory",
-        "op_role_finance",
-        "op_role_accounting",
-        "op_role_fiscal",
-        "op_role_ecf",
-        "op_role_warranty",
-        "op_role_hr",
-        "op_role_crm",
-        "op_role_admin",
-    )
-    def _compute_op_role_cards(self):
-        for user in self:
-            for cat in (c["key"] for c in ENTERPRISE_CATEGORIES):
-                card_fname = "op_role_card_%s" % cat
-                if card_fname not in user._fields:
-                    continue
-                role_code = user[_role_fname(cat)] if _role_fname(cat) in user._fields else "none"
-                role = self._op_role_by_code(role_code) if role_code and role_code != "none" else None
-                if not role:
-                    user[card_fname] = "Sin rol seleccionado en esta área."
-                    continue
-                lines = [role["label"], ""]
-                lines.extend("• %s" % b for b in role["bullets"])
-                user[card_fname] = "\n".join(lines)
-
-    @api.depends("group_ids", "op_area_commercial", "op_area_purchase", "op_area_inventory",
-                 "op_area_finance", "op_area_accounting", "op_area_fiscal", "op_area_ecf",
-                 "op_area_warranty", "op_area_hr", "op_area_crm", "op_area_admin")
-    def _compute_op_summary_global(self):
-        label_by_cat = {c["key"]: c["label"] for c in ENTERPRISE_CATEGORIES}
-        for user in self:
-            active = []
-            can, cannot = [], []
-            for cat in (c["key"] for c in ENTERPRISE_CATEGORIES):
-                area_fname = "op_area_%s" % cat
-                area_on = area_fname in user._fields and user[area_fname]
-                if area_on:
-                    active.append("✓ %s" % label_by_cat[cat])
-                for act in ENTERPRISE_ACTIONS:
-                    if act["category"] != cat:
+                lvl_fname = _level_fname(section["key"])
+                if lvl_fname in user._fields and section.get("levels"):
+                    code = user[lvl_fname]
+                    level = self._jx_level_by_code(section, code)
+                    if level and code != "none":
+                        modules_lines.append(
+                            "• %s: %s" % (section["label"], level["label"])
+                        )
+                        can.extend(level.get("can") or ())
+                        cannot.extend(level.get("cannot") or ())
+                        if level.get("warning"):
+                            warnings.append("• %s: %s" % (section["label"], level["warning"]))
+                        for xmlid in level.get("xmlids") or ():
+                            tech.append("• %s → %s" % (section["label"], xmlid))
+                for cap in section.get("caps") or ():
+                    fname = _cap_fname(cap["code"])
+                    if fname in user._fields and user[fname]:
+                        can.extend(cap.get("can") or ())
+                        if cap.get("warning"):
+                            warnings.append("• %s" % cap["warning"])
+                        for xmlid in cap.get("xmlids") or ():
+                            tech.append("• %s → %s" % (cap["label"], xmlid))
+            if len(user.company_ids) > 1:
+                warnings.append(
+                    "• El usuario tiene acceso a %s empresas." % len(user.company_ids)
+                )
+            # dedupe preserve order
+            def uniq(seq):
+                seen = set()
+                out = []
+                for item in seq:
+                    if item in seen:
                         continue
-                    fname = _act_fname(act["code"])
-                    if fname not in user._fields:
-                        continue
-                    label = "%s — %s" % (label_by_cat[cat], act["label"])
-                    if user[fname]:
-                        can.append("• %s" % label)
-                    elif area_on:
-                        # Solo listar «no puede» de áreas activas
-                        cannot.append("• %s" % label)
-            user.op_summary_areas = "\n".join(active) if active else "—"
-            user.op_summary_can = "\n".join(can) if can else "—"
-            user.op_summary_cannot = "\n".join(cannot) if cannot else "—"
+                    seen.add(item)
+                    out.append(item)
+                return out
 
-    def _inverse_op_enterprise(self):
-        if self.env.context.get("justech_security_ux_skip_sync"):
-            return
-        for user in self:
-            user._op_sync_enterprise()
-
-    def _op_sync_enterprise(self):
-        """Sincroniza grupos gestionados; cada área aporta independientemente."""
-        self.ensure_one()
-        managed = self._op_managed_groups()
-        if not managed:
-            return
-        desired = self.env["res.groups"]
-
-        for cat in (c["key"] for c in ENTERPRISE_CATEGORIES):
-            fname = _role_fname(cat)
-            if fname not in self._fields:
-                continue
-            code = self[fname]
-            if not code or code == "none":
-                continue
-            role = self._op_role_by_code(code)
-            if role:
-                desired |= self._op_resolve_xmlids(role["xmlids"])
-
-        for act in ENTERPRISE_ACTIONS:
-            fname = _act_fname(act["code"])
-            if fname in self._fields and self[fname]:
-                desired |= self._op_resolve_xmlids(act["xmlids"])
-
-        commands = []
-        for group in managed:
-            has_explicit = group in self.group_ids
-            want = group in desired
-            if want and not has_explicit:
-                commands.append((4, group.id))
-            elif not want and has_explicit:
-                commands.append((3, group.id))
-        if commands:
-            self.with_context(justech_security_ux_sync=True).write(
-                {"group_ids": commands}
+            user.jx_summary_modules = (
+                "\n".join(modules_lines) if modules_lines else "—"
             )
+            user.jx_summary_can = (
+                "\n".join("• %s" % x for x in uniq(can)) if can else "—"
+            )
+            user.jx_summary_cannot = (
+                "\n".join("• %s" % x for x in uniq(cannot)[:12]) if cannot else "—"
+            )
+            user.jx_summary_warnings = (
+                "\n".join(uniq(warnings)) if warnings else "—"
+            )
+            user.jx_tech_detail = "\n".join(uniq(tech)) if tech else "—"
+
+    # Level inverses (surgical per module)
+    def _inverse_jx_lvl_sales(self):
+        for u in self:
+            self._jx_sync_level(u, "sales", u.jx_lvl_sales or "none")
+
+    def _inverse_jx_lvl_purchase(self):
+        for u in self:
+            self._jx_sync_level(u, "purchase", u.jx_lvl_purchase or "none")
+
+    def _inverse_jx_lvl_inventory(self):
+        for u in self:
+            self._jx_sync_level(u, "inventory", u.jx_lvl_inventory or "none")
+
+    def _inverse_jx_lvl_accounting(self):
+        for u in self:
+            self._jx_sync_level(u, "accounting", u.jx_lvl_accounting or "none")
+
+    def _inverse_jx_lvl_fiscal(self):
+        for u in self:
+            self._jx_sync_level(u, "fiscal", u.jx_lvl_fiscal or "none")
+
+    def _inverse_jx_lvl_withholding(self):
+        for u in self:
+            self._jx_sync_level(u, "withholding", u.jx_lvl_withholding or "none")
+
+    def _inverse_jx_lvl_ecf(self):
+        for u in self:
+            self._jx_sync_level(u, "ecf", u.jx_lvl_ecf or "none")
+
+    def _inverse_jx_lvl_warranty(self):
+        for u in self:
+            self._jx_sync_level(u, "warranty", u.jx_lvl_warranty or "none")
+
+    def _inverse_jx_lvl_fees(self):
+        for u in self:
+            self._jx_sync_level(u, "fees", u.jx_lvl_fees or "none")
+
+    def _inverse_jx_lvl_crm(self):
+        for u in self:
+            self._jx_sync_level(u, "crm", u.jx_lvl_crm or "none")
+
+    def _inverse_jx_lvl_hr(self):
+        for u in self:
+            self._jx_sync_level(u, "hr", u.jx_lvl_hr or "none")
+
+    def _inverse_jx_lvl_admin(self):
+        for u in self:
+            self._jx_sync_level(u, "admin", u.jx_lvl_admin or "none")
+
+    # Cap inverses
+    def _inverse_jx_cap_so_discount(self):
+        for u in self:
+            self._jx_sync_cap(u, "so_discount", bool(u.jx_cap_so_discount))
+
+    def _inverse_jx_cap_so_credit_note(self):
+        for u in self:
+            self._jx_sync_cap(u, "so_credit_note", bool(u.jx_cap_so_credit_note))
+
+    def _inverse_jx_cap_so_cancel_fiscal(self):
+        for u in self:
+            self._jx_sync_cap(u, "so_cancel_fiscal", bool(u.jx_cap_so_cancel_fiscal))
+
+    def _inverse_jx_cap_stk_lots(self):
+        for u in self:
+            self._jx_sync_cap(u, "stk_lots", bool(u.jx_cap_stk_lots))
+
+    def _inverse_jx_cap_pay_invoice_access(self):
+        for u in self:
+            # Mantener coherencia con nivel Contabilidad
+            if u.jx_cap_pay_invoice_access:
+                if u.jx_lvl_accounting in (False, "none"):
+                    u.with_context(justech_security_ux_skip_level_reenter=True)
+                    self._jx_sync_level(u, "accounting", "invoice")
+                else:
+                    self._jx_sync_cap(u, "pay_invoice_access", True)
+            else:
+                if u.jx_lvl_accounting == "invoice":
+                    self._jx_sync_level(u, "accounting", "none")
+                elif u.jx_lvl_accounting in ("accountant", "manager"):
+                    # no degradar niveles superiores desde el atajo de Pagos
+                    return
+                else:
+                    self._jx_sync_cap(u, "pay_invoice_access", False)
+
+    def _inverse_jx_cap_pay_bank_validate(self):
+        for u in self:
+            self._jx_sync_cap(u, "pay_bank_validate", bool(u.jx_cap_pay_bank_validate))
+
+    def _inverse_jx_cap_ecf_auditor(self):
+        for u in self:
+            self._jx_sync_cap(u, "ecf_auditor", bool(u.jx_cap_ecf_auditor))

@@ -1,0 +1,6 @@
+users=16
+groups=137
+acl=1752
+rules=524
+implied=137
+rel=204

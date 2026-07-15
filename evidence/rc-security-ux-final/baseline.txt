@@ -1,0 +1,7 @@
+users=16
+groups=137
+acl=1752
+rules=524
+rel=204
+hellenia_mod=1
+hellenia_inst=0

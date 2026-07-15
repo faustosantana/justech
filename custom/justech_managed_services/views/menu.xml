@@ -32,9 +32,9 @@
               sequence="20"/>
 
     <menuitem id="menu_justech_ms_designer_root"
-              name="Diseñador"
+              name="Configuración"
               parent="menu_justech_managed_services_root"
-              sequence="70"
+              sequence="90"
               groups="justech_managed_services.group_ms_commercial,justech_managed_services.group_ms_manager"/>
 
     <menuitem id="menu_justech_ms_form_templates"
@@ -50,7 +50,7 @@
               sequence="20"/>
 
     <menuitem id="menu_justech_ms_form_questions"
-              name="Preguntas"
+              name="Banco de preguntas"
               parent="menu_justech_ms_designer_root"
               action="action_justech_ms_form_question"
               sequence="30"/>

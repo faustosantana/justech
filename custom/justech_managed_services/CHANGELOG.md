@@ -1,5 +1,13 @@
 # Changelog — justech_managed_services
 
+## [19.0.2.1.1] — 2026-07-15
+
+### Configuración
+
+- Menú Configuración: Plantillas, Categorías, Banco de preguntas.
+- Banco de preguntas con código, descripción, obligatoriedad, uso en plantillas, filtros y duplicar.
+- Preguntas como registros Odoo (sin XML embebido); plantillas solo referencian el banco.
+
 ## [19.0.2.1.0] — 2026-07-15
 
 ### UX

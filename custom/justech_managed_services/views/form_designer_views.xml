@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <!-- Categorías -->
     <record id="view_justech_ms_form_category_list" model="ir.ui.view">
         <field name="name">justech.ms.form.category.list</field>
         <field name="model">justech.ms.form.category</field>
@@ -30,9 +31,10 @@
                     <field name="question_ids">
                         <list editable="bottom">
                             <field name="sequence" widget="handle"/>
-                            <field name="name"/>
-                            <field name="key"/>
+                            <field name="key" string="Código"/>
+                            <field name="name" string="Pregunta"/>
                             <field name="field_type"/>
+                            <field name="default_required"/>
                             <field name="active"/>
                         </list>
                     </field>
@@ -41,17 +43,23 @@
         </field>
     </record>
 
+    <!-- Banco de preguntas -->
     <record id="view_justech_ms_form_question_list" model="ir.ui.view">
         <field name="name">justech.ms.form.question.list</field>
         <field name="model">justech.ms.form.question</field>
         <field name="arch" type="xml">
-            <list>
-                <field name="sequence" widget="handle"/>
-                <field name="name"/>
+            <list multi_edit="1" default_order="sequence,id">
+                <field name="sequence" widget="handle" string="Orden"/>
+                <field name="key" string="Código"/>
+                <field name="name" string="Pregunta"/>
                 <field name="category_id"/>
-                <field name="field_type"/>
-                <field name="key" optional="hide" groups="justech_managed_services.group_ms_manager"/>
+                <field name="field_type" string="Tipo"/>
+                <field name="default_required" string="Obligatoria"/>
+                <field name="template_count" string="Plantillas"/>
+                <field name="template_names" optional="show" string="Usada en"/>
                 <field name="active"/>
+                <field name="create_date" optional="hide" string="Creación"/>
+                <field name="write_date" optional="hide" string="Modificación"/>
             </list>
         </field>
     </record>
@@ -60,30 +68,99 @@
         <field name="name">justech.ms.form.question.form</field>
         <field name="model">justech.ms.form.question</field>
         <field name="arch" type="xml">
-            <form string="Pregunta">
+            <form string="Pregunta del banco">
+                <header>
+                    <button name="action_duplicate" type="object" string="Duplicar"
+                            class="btn-secondary"/>
+                    <button name="action_open_templates" type="object" string="Ver plantillas"
+                            class="btn-secondary" invisible="template_count == 0"/>
+                </header>
                 <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_open_templates" type="object" class="oe_stat_button" icon="fa-files-o"
+                                invisible="template_count == 0">
+                            <field name="template_count" widget="statinfo" string="Plantillas"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="Texto de la pregunta"/></h1>
+                    </div>
                     <group>
-                        <field name="name"/>
-                        <field name="category_id"/>
-                        <field name="field_type"/>
-                        <field name="sequence"/>
-                        <field name="active"/>
-                        <field name="help_text"/>
+                        <group string="Identificación">
+                            <field name="key" string="Código"/>
+                            <field name="category_id"/>
+                            <field name="sequence" string="Orden sugerido"/>
+                            <field name="active"/>
+                            <field name="default_required" string="Obligatoria"/>
+                        </group>
+                        <group string="Respuesta">
+                            <field name="field_type"/>
+                            <field name="help_text"/>
+                            <field name="create_date" readonly="1"/>
+                            <field name="write_date" readonly="1"/>
+                        </group>
+                    </group>
+                    <group string="Descripción">
+                        <field name="description" nolabel="1" colspan="2"
+                                 placeholder="Descripción u orientación opcional..."/>
                     </group>
                     <group string="Opciones" invisible="field_type not in ('select','multiselect')">
-                        <field name="options_json" widget="text" colspan="2"
+                        <field name="options_json" widget="text" colspan="2" nolabel="1"
                                  placeholder='{"si": "Sí", "no": "No"}'/>
                     </group>
-                    <group string="Técnico" groups="justech_managed_services.group_ms_manager">
-                        <field name="key"/>
-                        <field name="storage"/>
-                        <field name="section_number"/>
-                    </group>
+                    <notebook>
+                        <page string="Plantillas" name="templates">
+                            <field name="template_ids" widget="many2many_tags" readonly="1"/>
+                            <field name="template_line_ids" readonly="1">
+                                <list>
+                                    <field name="template_id"/>
+                                    <field name="sequence"/>
+                                    <field name="required"/>
+                                    <field name="visible"/>
+                                    <field name="active"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Técnico" name="technical" groups="justech_managed_services.group_ms_manager">
+                            <group>
+                                <field name="storage"/>
+                                <field name="section_number"/>
+                            </group>
+                            <div class="alert alert-info" role="alert">
+                                Las plantillas y levantamientos referencian esta pregunta por código.
+                                Al editar el texto o tipo, el cambio se refleja en todas las plantillas
+                                que la usan (salvo que se haya creado una pregunta duplicada independiente).
+                            </div>
+                        </page>
+                    </notebook>
                 </sheet>
             </form>
         </field>
     </record>
 
+    <record id="view_justech_ms_form_question_search" model="ir.ui.view">
+        <field name="name">justech.ms.form.question.search</field>
+        <field name="model">justech.ms.form.question</field>
+        <field name="arch" type="xml">
+            <search string="Banco de preguntas">
+                <field name="name" string="Pregunta"/>
+                <field name="key" string="Código"/>
+                <field name="description"/>
+                <field name="category_id"/>
+                <field name="template_ids" string="Plantilla"/>
+                <filter name="filter_active" string="Activas" domain="[('active', '=', True)]"/>
+                <filter name="filter_inactive" string="Inactivas" domain="[('active', '=', False)]"/>
+                <filter name="filter_required" string="Obligatorias" domain="[('default_required', '=', True)]"/>
+                <filter name="filter_unused" string="Sin plantilla" domain="[('template_line_ids', '=', False)]"/>
+                <separator/>
+                <filter name="group_category" string="Categoría" context="{'group_by': 'category_id'}"/>
+                <filter name="group_type" string="Tipo" context="{'group_by': 'field_type'}"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- Plantillas -->
     <record id="view_justech_ms_form_template_list" model="ir.ui.view">
         <field name="name">justech.ms.form.template.list</field>
         <field name="model">justech.ms.form.template</field>
@@ -122,7 +199,11 @@
                                 <field name="closing_text" nolabel="1" colspan="2"/>
                             </group>
                         </page>
-                        <page string="Preguntas">
+                        <page string="Preguntas del banco">
+                            <div class="alert alert-info" role="alert">
+                                Seleccione preguntas del Banco de preguntas. El texto/tipo se mantiene
+                                sincronizado con el banco; la obligatoriedad se puede ajustar aquí.
+                            </div>
                             <field name="line_ids">
                                 <list editable="bottom">
                                     <field name="sequence" widget="handle"/>
@@ -147,9 +228,20 @@
         <field name="view_mode">list,form</field>
     </record>
     <record id="action_justech_ms_form_question" model="ir.actions.act_window">
-        <field name="name">Preguntas</field>
+        <field name="name">Banco de preguntas</field>
         <field name="res_model">justech.ms.form.question</field>
         <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_justech_ms_form_question_search"/>
+        <field name="context">{'search_default_filter_active': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Cree la primera pregunta del banco.
+            </p>
+            <p>
+                Las plantillas solo referencian estas preguntas. Edite aquí para actualizar
+                el texto en todas las plantillas que la utilicen.
+            </p>
+        </field>
     </record>
     <record id="action_justech_ms_form_template" model="ir.actions.act_window">
         <field name="name">Plantillas</field>

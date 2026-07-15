@@ -113,24 +113,36 @@ class JustechMsFormCategory(models.Model):
 
 class JustechMsFormQuestion(models.Model):
     _name = "justech.ms.form.question"
-    _description = "Pregunta reutilizable de levantamiento"
-    _order = "category_id, sequence, id"
+    _description = "Banco de preguntas de levantamiento"
+    _order = "sequence, category_id, id"
+    _rec_name = "name"
 
-    name = fields.Char(string="Etiqueta", required=True, translate=True)
+    name = fields.Char(string="Pregunta", required=True, translate=True)
     key = fields.Char(
-        string="Clave técnica",
+        string="Código",
         required=True,
         index=True,
-        help="Identificador estable usado en respuestas (form_data).",
+        help="Código estable usado en respuestas (form_data). Único en el banco.",
+    )
+    description = fields.Text(
+        string="Descripción",
+        help="Ayuda opcional para el consultor o el encuestado.",
     )
     category_id = fields.Many2one(
         "justech.ms.form.category",
+        string="Categoría",
         required=True,
         ondelete="restrict",
         index=True,
     )
-    sequence = fields.Integer(default=10)
-    active = fields.Boolean(default=True)
+    sequence = fields.Integer(string="Orden sugerido", default=10, index=True)
+    active = fields.Boolean(default=True, index=True)
+    default_required = fields.Boolean(
+        string="Obligatoria",
+        default=False,
+        help="Valor sugerido al agregar la pregunta a una plantilla. "
+        "Las plantillas pueden sobrescribirlo en la línea.",
+    )
     field_type = fields.Selection(
         [
             ("char", "Texto corto"),
@@ -140,6 +152,7 @@ class JustechMsFormQuestion(models.Model):
             ("multiselect", "Selección múltiple"),
             ("boolean", "Sí / No"),
         ],
+        string="Tipo de respuesta",
         required=True,
         default="char",
     )
@@ -147,17 +160,67 @@ class JustechMsFormQuestion(models.Model):
         string="Opciones (JSON)",
         help='Objeto {"valor": "Etiqueta"} para select/multiselect.',
     )
-    help_text = fields.Char(string="Ayuda")
+    help_text = fields.Char(
+        string="Ayuda corta",
+        help="Texto breve mostrado junto al campo (compatibilidad).",
+    )
     storage = fields.Selection(
         [("json", "JSON"), ("column", "Columna org_*"), ("meta", "Meta")],
         default="json",
         required=True,
+        groups="justech_managed_services.group_ms_manager",
     )
-    section_number = fields.Integer(string="Sección origen")
+    section_number = fields.Integer(
+        string="Sección origen",
+        groups="justech_managed_services.group_ms_manager",
+    )
+    template_line_ids = fields.One2many(
+        "justech.ms.form.template.line",
+        "question_id",
+        string="Líneas de plantilla",
+    )
+    template_ids = fields.Many2many(
+        "justech.ms.form.template",
+        string="Plantillas donde se utiliza",
+        compute="_compute_template_usage",
+        search="_search_template_ids",
+    )
+    template_count = fields.Integer(
+        string="Nº plantillas",
+        compute="_compute_template_usage",
+        store=True,
+    )
+    template_names = fields.Char(
+        string="Plantillas",
+        compute="_compute_template_usage",
+    )
 
     _sql_constraints = [
-        ("key_uniq", "unique(key)", "La clave de pregunta debe ser única."),
+        ("key_uniq", "unique(key)", "El código de pregunta debe ser único."),
     ]
+
+    @api.depends("template_line_ids", "template_line_ids.template_id")
+    def _compute_template_usage(self):
+        for rec in self:
+            templates = rec.template_line_ids.mapped("template_id")
+            rec.template_ids = templates
+            rec.template_count = len(templates)
+            rec.template_names = ", ".join(templates.mapped("name")) if templates else ""
+
+    def _search_template_ids(self, operator, value):
+        TemplateLine = self.env["justech.ms.form.template.line"]
+        if operator in ("ilike", "like", "=", "in"):
+            domain = [("template_id", operator, value)]
+            if operator in ("ilike", "like") and isinstance(value, str):
+                domain = [("template_id.name", operator, value)]
+            question_ids = TemplateLine.search(domain).mapped("question_id").ids
+            return [("id", "in", question_ids)]
+        if operator in ("not in", "!="):
+            question_ids = TemplateLine.search(
+                [("template_id", operator, value)]
+            ).mapped("question_id").ids
+            return [("id", "not in", question_ids)]
+        return []
 
     def get_options_dict(self):
         self.ensure_one()
@@ -168,6 +231,37 @@ class JustechMsFormQuestion(models.Model):
             return data if isinstance(data, dict) else {}
         except (TypeError, ValueError, json.JSONDecodeError):
             return {}
+
+    def copy(self, default=None):
+        self.ensure_one()
+        default = dict(default or {})
+        default.setdefault(
+            "name",
+            _("%s (copia)", self.name),
+        )
+        base_key = (self.key or "pregunta").rstrip("_0123456789")
+        suffix = 1
+        new_key = "%s_copia" % base_key
+        while self.search_count([("key", "=", new_key)]):
+            suffix += 1
+            new_key = "%s_copia_%s" % (base_key, suffix)
+        default.setdefault("key", new_key)
+        return super().copy(default)
+
+    def action_duplicate(self):
+        for rec in self:
+            rec.copy()
+        return True
+
+    def action_open_templates(self):
+        self.ensure_one()
+        return {
+            "type": "ir.actions.act_window",
+            "name": _("Plantillas que usan esta pregunta"),
+            "res_model": "justech.ms.form.template",
+            "view_mode": "list,form",
+            "domain": [("id", "in", self.template_ids.ids)],
+        }
 
 
 class JustechMsFormTemplate(models.Model):
@@ -273,6 +367,11 @@ class JustechMsFormTemplateLine(models.Model):
     question_label = fields.Char(related="question_id.name", readonly=True)
     field_type = fields.Selection(related="question_id.field_type", readonly=True)
 
+    @api.onchange("question_id")
+    def _onchange_question_id(self):
+        if self.question_id:
+            self.required = self.question_id.default_required
+
 
 class JustechMsAssessmentQuestionLine(models.Model):
     _name = "justech.ms.assessment.question.line"
@@ -360,6 +459,9 @@ def seed_form_catalog(env):
             "storage": meta.get("storage") or "json",
             "section_number": section,
             "active": True,
+            "default_required": meta.get("storage") == "column",
+            "description": False,
+            "help_text": False,
         }
         question = Question.search([("key", "=", key)], limit=1)
         if question:
@@ -400,7 +502,8 @@ def seed_form_catalog(env):
                     "template_id": template.id,
                     "question_id": question.id,
                     "sequence": seq,
-                    "required": question.storage == "column",
+                    "required": question.default_required
+                    or question.storage == "column",
                     "active": True,
                     "visible": True,
                 }

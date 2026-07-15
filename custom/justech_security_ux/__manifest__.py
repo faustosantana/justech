@@ -1,15 +1,17 @@
 {
-    "name": "Justech Security UX — Permisos Operativos",
-    "version": "19.0.1.0.0",
+    "name": "Justech Security UX — Permisos Enterprise",
+    "version": "19.0.2.0.0",
     "category": "Administration",
-    "summary": "Capa operativa de permisos sobre res.groups (sin ACL paralela)",
+    "summary": "Administración enterprise de permisos sobre res.groups (sin ACL paralela)",
     "description": """
-Interfaz amigable «Permisos Operativos» en la ficha de usuario.
+Capa UX Enterprise para administrar usuarios por responsabilidades:
 
-- Organiza capacidades por módulo con tooltips.
-- Sincronización bidireccional con res.groups existentes.
-- No crea ACL, ir.rule ni grupos nuevos.
-- Preserva la pestaña técnica «Permisos de acceso (Avanzado)».
+- Navegación por áreas (Comercial, Compras, Inventario, Finanzas, Fiscal, etc.)
+- Tarjetas de roles con capacidades
+- Acciones operativas con tooltips en lenguaje de negocio
+- Permisos Avanzados (res.groups técnicos) solo para Administrador del Sistema
+
+La fuente de verdad sigue siendo res.groups.
     """,
     "author": "Justech",
     "website": "https://justech.do",
@@ -18,6 +20,9 @@ Interfaz amigable «Permisos Operativos» en la ficha de usuario.
         "account",
         "purchase",
         "sale",
+        "stock",
+        "crm",
+        "hr",
         "l10n_do_accounting",
         "justech_l10n_do_base",
         "justech_fiscal_admin",
@@ -40,10 +45,10 @@ Interfaz amigable «Permisos Operativos» en la ficha de usuario.
     "justech_register": {
         "module_code": "justech_security_ux",
         "module_name": "Justech Security UX",
-        "version": "19.0.1.0.0",
+        "version": "19.0.2.0.0",
         "category": "platform",
         "country": "DO",
-        "description": "Permisos operativos UX sobre grupos Odoo",
+        "description": "Permisos enterprise UX sobre grupos Odoo",
         "dependencies": ["justech_admin_center", "justech_l10n_do_base"],
         "always_enabled": False,
         "required_module": False,

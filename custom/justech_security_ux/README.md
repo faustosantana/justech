@@ -1,19 +1,22 @@
-# Justech Security UX — Permisos Operativos
+# Justech Security UX — Permisos Enterprise
 
-Capa de administración amigable de permisos sobre `res.groups`.
+Capa de experiencia para administrar usuarios **sin conocer `res.groups`**.
 
-## Qué hace
+## Principios
 
-- Muestra checkboxes operativos organizados por módulo en la ficha del usuario.
-- Activa/desactiva los grupos reales de Odoo correspondientes.
-- Refleja el estado real si los grupos cambian en Avanzado.
+1. `res.groups` es la única fuente de verdad.
+2. No se crean ACL, Record Rules ni permisos paralelos.
+3. La UI sincroniza roles y acciones hacia grupos existentes.
+4. Los grupos técnicos viven en **Permisos Avanzados** (solo Administrador del Sistema).
 
-## Qué no hace
+## Documentación de auditoría
 
-- No crea una segunda capa de ACL.
-- No modifica `ir.model.access` ni `ir.rule`.
-- No altera `implied_ids` ni migra usuarios.
+- `docs/GROUP_MATRIX.md`
+- `docs/GROUP_IMPLICATIONS.md`
+- `docs/ROLE_MAPPING.md`
 
-## Fuente de verdad
+## Rollback
 
-`res.groups` (y sus implicaciones).
+Restaurar módulo desde backup DEV y/o dump PostgreSQL:
+
+`/root/backups/justech_dev/p1-permissions-enterprise-*`

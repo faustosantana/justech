@@ -1,474 +1,511 @@
 # -*- coding: utf-8 -*-
-"""Permisos operativos: representación amigable de res.groups (bidireccional)."""
+"""UX Enterprise de permisos — sincroniza únicamente res.groups existentes."""
 from odoo import api, fields, models
 
-from .operational_permissions_registry import (
-    OPERATIONAL_CATEGORIES,
-    OPERATIONAL_PERMISSIONS,
+from .enterprise_permissions_registry import (
+    ENTERPRISE_ACTIONS,
+    ENTERPRISE_CATEGORIES,
+    ENTERPRISE_ROLES,
 )
 
 
-def _op_field_name(code):
-    return f"op_perm_{code}"
+def _act_fname(code):
+    return f"op_act_{code}"
+
+
+def _role_fname(category):
+    return f"op_role_{category}"
 
 
 class ResUsers(models.Model):
     _inherit = "res.users"
 
-    op_perm_summary_can = fields.Text(
-        string="Puede",
-        compute="_compute_op_perm_summary",
+    op_nav_category = fields.Selection(
+        selection=[(c["key"], c["label"]) for c in ENTERPRISE_CATEGORIES],
+        string="Área de responsabilidad",
+        default="fiscal",
+        help="Seleccione un área para ver solo roles y acciones relacionadas.",
     )
-    op_perm_summary_cannot = fields.Text(
-        string="No puede",
-        compute="_compute_op_perm_summary",
+    op_role_card_text = fields.Text(
+        string="Detalle del rol",
+        compute="_compute_op_role_card_text",
     )
-    op_perm_help = fields.Char(
-        string="Ayuda permisos operativos",
+    op_summary_can = fields.Text(string="Puede", compute="_compute_op_summary")
+    op_summary_cannot = fields.Text(string="No puede", compute="_compute_op_summary")
+    op_enterprise_help = fields.Char(
+        string="Ayuda",
         default=(
-            "Estos interruptores activan o desactivan grupos reales de Odoo. "
-            "No hay una segunda capa de ACL. Si un permiso no se puede apagar, "
-            "un grupo superior (p. ej. Administrador del sistema) lo mantiene activo."
+            "Configure responsabilidades y acciones. Cada cambio activa o "
+            "desactiva grupos reales de Odoo. No hay una segunda capa de seguridad."
         ),
     )
 
-    # --- CONTABILIDAD ---
-    op_perm_acc_view = fields.Boolean(
-        string="Ver contabilidad",
-        compute="_compute_op_permissions",
-        inverse="_inverse_op_permissions",
-        help=(
-            "Permite consultar asientos, diarios y reportes contables en solo lectura.\n\n"
-            "No permite: crear o publicar asientos; cancelar asientos; "
-            "administrar configuración contable."
-        ),
+    # Roles por categoría
+    op_role_commercial = fields.Selection(
+        selection=[
+            ("none", "Sin acceso comercial"),
+            ("commercial_own", "Usuario de ventas (propios)"),
+            ("commercial_all", "Usuario de ventas (todos)"),
+            ("commercial_admin", "Administrador comercial"),
+        ],
+        string="Rol comercial",
+        compute="_compute_op_roles",
+        inverse="_inverse_op_enterprise",
     )
-    op_perm_acc_create = fields.Boolean(
-        string="Crear asientos",
-        compute="_compute_op_permissions",
-        inverse="_inverse_op_permissions",
-        help=(
-            "Permite crear asientos y trabajar con la contabilidad operativa.\n\n"
-            "No permite: administrar configuración contable avanzada; "
-            "eliminar con privilegios de administrador."
-        ),
+    op_role_purchase = fields.Selection(
+        selection=[
+            ("none", "Sin acceso compras"),
+            ("purchase_user", "Usuario de compras"),
+            ("purchase_admin", "Administrador de compras"),
+        ],
+        string="Rol compras",
+        compute="_compute_op_roles",
+        inverse="_inverse_op_enterprise",
     )
-    op_perm_acc_post = fields.Boolean(
-        string="Publicar asientos",
-        compute="_compute_op_permissions",
-        inverse="_inverse_op_permissions",
-        help=(
-            "Permite publicar asientos contables dentro de las reglas estándar de Odoo.\n\n"
-            "Comparte el mismo grupo técnico que «Crear asientos».\n\n"
-            "No permite: saltarse bloqueos de diarios o inalterabilidad."
-        ),
+    op_role_inventory = fields.Selection(
+        selection=[
+            ("none", "Sin acceso inventario"),
+            ("inventory_user", "Usuario de inventario"),
+            ("inventory_admin", "Administrador de inventario"),
+        ],
+        string="Rol inventario",
+        compute="_compute_op_roles",
+        inverse="_inverse_op_enterprise",
     )
-    op_perm_acc_cancel = fields.Boolean(
-        string="Cancelar asientos",
-        compute="_compute_op_permissions",
-        inverse="_inverse_op_permissions",
-        help=(
-            "Permite cancelar asientos cuando el diario y el estado del documento lo permiten.\n\n"
-            "No permite: anular NCF; romper conciliaciones fuera del flujo estándar."
-        ),
+    op_role_finance = fields.Selection(
+        selection=[
+            ("none", "Sin acceso finanzas"),
+            ("finance_invoice", "Facturación y pagos"),
+            ("finance_book", "Contable operativo"),
+            ("finance_admin", "Administrador financiero"),
+        ],
+        string="Rol finanzas",
+        compute="_compute_op_roles",
+        inverse="_inverse_op_enterprise",
     )
-    op_perm_acc_delete_draft = fields.Boolean(
-        string="Eliminar borradores",
-        compute="_compute_op_permissions",
-        inverse="_inverse_op_permissions",
-        help=(
-            "Permite eliminar borradores contables con privilegios de Administrador contable.\n\n"
-            "No permite: eliminar asientos publicados; alterar histórico publicado."
-        ),
+    op_role_accounting = fields.Selection(
+        selection=[
+            ("none", "Sin acceso contable"),
+            ("accounting_ro", "Consulta contable"),
+            ("accounting_ops", "Contabilidad operativa"),
+            ("accounting_admin", "Administrador contable"),
+        ],
+        string="Rol contabilidad",
+        compute="_compute_op_roles",
+        inverse="_inverse_op_enterprise",
+    )
+    op_role_fiscal = fields.Selection(
+        selection=[
+            ("none", "Sin acceso fiscal"),
+            ("fiscal_user", "Usuario Fiscal"),
+            ("fiscal_officer", "Responsable Fiscal"),
+            ("fiscal_admin", "Administrador Fiscal"),
+        ],
+        string="Rol fiscal",
+        compute="_compute_op_roles",
+        inverse="_inverse_op_enterprise",
+    )
+    op_role_ecf = fields.Selection(
+        selection=[
+            ("none", "Sin acceso e-CF"),
+            ("ecf_ro", "Solo lectura e-CF"),
+            ("ecf_op", "Operador e-CF"),
+            ("ecf_resp", "Responsable e-CF"),
+            ("ecf_admin", "Administrador e-CF"),
+        ],
+        string="Rol e-CF",
+        compute="_compute_op_roles",
+        inverse="_inverse_op_enterprise",
+    )
+    op_role_warranty = fields.Selection(
+        selection=[
+            ("none", "Sin acceso garantías"),
+            ("warranty_user", "Usuario de Garantías"),
+            ("warranty_admin", "Responsable de Garantías"),
+        ],
+        string="Rol garantías",
+        compute="_compute_op_roles",
+        inverse="_inverse_op_enterprise",
+    )
+    op_role_hr = fields.Selection(
+        selection=[
+            ("none", "Sin acceso RRHH"),
+            ("hr_user", "Encargado de empleados"),
+            ("hr_admin", "Administrador de empleados"),
+        ],
+        string="Rol RRHH",
+        compute="_compute_op_roles",
+        inverse="_inverse_op_enterprise",
+    )
+    op_role_crm = fields.Selection(
+        selection=[
+            ("none", "Sin acceso CRM leads"),
+            ("crm_leads", "CRM con leads"),
+        ],
+        string="Rol CRM",
+        compute="_compute_op_roles",
+        inverse="_inverse_op_enterprise",
+    )
+    op_role_admin = fields.Selection(
+        selection=[
+            ("none", "Sin acceso consola Justech"),
+            ("admin_user", "Usuario consola Justech"),
+            ("admin_manager", "Administrador Justech"),
+        ],
+        string="Rol Administración Justech",
+        compute="_compute_op_roles",
+        inverse="_inverse_op_enterprise",
     )
 
-    # --- PAGOS ---
-    op_perm_pay_view = fields.Boolean(
-        string="Ver pagos",
-        compute="_compute_op_permissions",
-        inverse="_inverse_op_permissions",
-        help=(
-            "Permite ver pagos y documentos de facturación relacionados.\n\n"
-            "No permite: registrar o aplicar pagos; cancelar o eliminar pagos."
-        ),
+    # Acciones (booleans) — nombres humanos
+    op_act_fin_register_in = fields.Boolean(
+        string="Registrar cobros",
+        compute="_compute_op_actions",
+        inverse="_inverse_op_enterprise",
+        help="Permite registrar cobros de clientes. No permite eliminar pagos.",
     )
-    op_perm_pay_register = fields.Boolean(
+    op_act_fin_register_out = fields.Boolean(
         string="Registrar pagos",
-        compute="_compute_op_permissions",
-        inverse="_inverse_op_permissions",
-        help=(
-            "Permite registrar pagos desde el flujo de facturación/pagos de Odoo.\n\n"
-            "No permite: eliminar pagos; administrar diarios bancarios."
-        ),
+        compute="_compute_op_actions",
+        inverse="_inverse_op_enterprise",
+        help="Permite registrar pagos a proveedores. No permite eliminarlos.",
     )
-    op_perm_pay_apply = fields.Boolean(
-        string="Aplicar pagos a facturas",
-        compute="_compute_op_permissions",
-        inverse="_inverse_op_permissions",
-        help=(
-            "Permite registrar y aplicar pagos a facturas abiertas.\n\n"
-            "No permite: eliminar pagos; cancelar pagos fuera del flujo estándar; "
-            "modificar diarios; modificar asientos publicados."
-        ),
+    op_act_fin_apply = fields.Boolean(
+        string="Aplicar pagos",
+        compute="_compute_op_actions",
+        inverse="_inverse_op_enterprise",
+        help="Permite aplicar pagos registrados a facturas existentes. No permite eliminarlos.",
     )
-    op_perm_pay_reconcile = fields.Boolean(
-        string="Conciliar pagos",
-        compute="_compute_op_permissions",
-        inverse="_inverse_op_permissions",
-        help=(
-            "Permite conciliar movimientos bancarios/contables con la contabilidad operativa.\n\n"
-            "No permite: administrar bancos sin el permiso específico."
-        ),
+    op_act_fin_reconcile = fields.Boolean(
+        string="Reconciliar",
+        compute="_compute_op_actions",
+        inverse="_inverse_op_enterprise",
+        help="Permite conciliar movimientos bancarios y contables.",
     )
-    op_perm_pay_unreconcile = fields.Boolean(
+    op_act_fin_unreconcile = fields.Boolean(
         string="Desconciliar",
-        compute="_compute_op_permissions",
-        inverse="_inverse_op_permissions",
-        help=(
-            "Permite desconciliar cuando Odoo lo permite en el documento.\n\n"
-            "No permite: forzar desconciliación sobre asientos bloqueados."
-        ),
+        compute="_compute_op_actions",
+        inverse="_inverse_op_enterprise",
+        help="Permite desconciliar cuando el documento lo permite.",
     )
-    op_perm_pay_cancel = fields.Boolean(
-        string="Cancelar pagos",
-        compute="_compute_op_permissions",
-        inverse="_inverse_op_permissions",
-        help=(
-            "Permite cancelar pagos según las reglas estándar del documento.\n\n"
-            "No permite: eliminar pagos definitivos como Administrador; alterar NCF."
-        ),
+    op_act_fin_approve = fields.Boolean(
+        string="Aprobar pagos",
+        compute="_compute_op_actions",
+        inverse="_inverse_op_enterprise",
+        help="Permite aprobar/gestionar pagos con privilegio administrador.",
     )
-    op_perm_pay_delete = fields.Boolean(
-        string="Eliminar pagos",
-        compute="_compute_op_permissions",
-        inverse="_inverse_op_permissions",
-        help=(
-            "Permite eliminar pagos en estados que Odoo autorice al Administrador contable.\n\n"
-            "No permite: borrar pagos conciliados bloqueados."
-        ),
+    op_act_fin_bank_create = fields.Boolean(
+        string="Crear diarios",
+        compute="_compute_op_actions",
+        inverse="_inverse_op_enterprise",
+        help="Permite administrar diarios/cuentas bancarias (validación bancaria).",
     )
-    op_perm_pay_bank_admin = fields.Boolean(
-        string="Administrar diarios bancarios",
-        compute="_compute_op_permissions",
-        inverse="_inverse_op_permissions",
-        help=(
-            "Permite validar/administrar cuentas bancarias.\n\n"
-            "No permite por sí solo: publicar facturas; anular NCF."
-        ),
+    op_act_fin_bank_edit = fields.Boolean(
+        string="Modificar diarios",
+        compute="_compute_op_actions",
+        inverse="_inverse_op_enterprise",
+        help="Permite modificar configuración bancaria autorizada.",
     )
-
-    # --- FACTURACIÓN ---
-    op_perm_inv_view = fields.Boolean(
-        string="Ver facturas",
-        compute="_compute_op_permissions",
-        inverse="_inverse_op_permissions",
-        help=(
-            "Permite ver facturas de cliente/proveedor.\n\n"
-            "No permite: publicar; cancelar fiscales; emitir notas de crédito fiscales."
-        ),
+    op_act_fin_export = fields.Boolean(
+        string="Exportar",
+        compute="_compute_op_actions",
+        inverse="_inverse_op_enterprise",
+        help="Permite exportar información financiera según permisos de Odoo.",
     )
-    op_perm_inv_create = fields.Boolean(
-        string="Crear facturas",
-        compute="_compute_op_permissions",
-        inverse="_inverse_op_permissions",
-        help=(
-            "Permite crear facturas en borrador.\n\n"
-            "No permite: cancelar facturas fiscales sin permiso específico; anular NCF."
-        ),
-    )
-    op_perm_inv_edit_draft = fields.Boolean(
-        string="Editar borradores",
-        compute="_compute_op_permissions",
-        inverse="_inverse_op_permissions",
-        help=(
-            "Permite editar facturas en borrador.\n\n"
-            "No permite: modificar facturas publicadas."
-        ),
-    )
-    op_perm_inv_post = fields.Boolean(
-        string="Publicar facturas",
-        compute="_compute_op_permissions",
-        inverse="_inverse_op_permissions",
-        help=(
-            "Permite publicar facturas y consumir NCF según Motor Fiscal.\n\n"
-            "No permite: anular NCF; administrar rangos."
-        ),
-    )
-    op_perm_inv_cancel = fields.Boolean(
-        string="Cancelar facturas",
-        compute="_compute_op_permissions",
-        inverse="_inverse_op_permissions",
-        help=(
-            "Permite cancelar facturas fiscales (grupo l10n_do).\n\n"
-            "No permite: anular NCF; borrar histórico."
-        ),
-    )
-    op_perm_inv_credit_note = fields.Boolean(
-        string="Nota de crédito",
-        compute="_compute_op_permissions",
-        inverse="_inverse_op_permissions",
-        help=(
-            "Permite crear notas de crédito fiscales.\n\n"
-            "No permite: anular NCF como sustituto de NC; administrar rangos."
-        ),
+    op_act_fin_reports = fields.Boolean(
+        string="Ver reportes",
+        compute="_compute_op_actions",
+        inverse="_inverse_op_enterprise",
+        help="Permite consultar reportes de facturación y pagos.",
     )
 
-    # --- COMPRAS ---
-    op_perm_po_create = fields.Boolean(
-        string="Crear solicitudes",
-        compute="_compute_op_permissions",
-        inverse="_inverse_op_permissions",
-        help=(
-            "Permite crear solicitudes/órdenes de compra.\n\n"
-            "No permite: administrar compras como Administrador."
-        ),
+    op_act_po_request = fields.Boolean(
+        string="Crear solicitud", compute="_compute_op_actions", inverse="_inverse_op_enterprise",
+        help="Permite crear solicitudes de compra.",
     )
-    op_perm_po_approve = fields.Boolean(
-        string="Aprobar compras",
-        compute="_compute_op_permissions",
-        inverse="_inverse_op_permissions",
-        help=(
-            "Permite aprobar y administrar el flujo de compras.\n\n"
-            "No permite: publicar facturas sin permiso de facturación."
-        ),
+    op_act_po_approve_req = fields.Boolean(
+        string="Aprobar solicitud", compute="_compute_op_actions", inverse="_inverse_op_enterprise",
+        help="Permite aprobar solicitudes (Administrador de compras).",
     )
-    op_perm_po_confirm = fields.Boolean(
-        string="Confirmar órdenes",
-        compute="_compute_op_permissions",
-        inverse="_inverse_op_permissions",
-        help="Permite confirmar órdenes de compra (Usuario de Compras).",
+    op_act_po_order = fields.Boolean(
+        string="Crear orden", compute="_compute_op_actions", inverse="_inverse_op_enterprise",
+        help="Permite crear órdenes de compra.",
     )
-    op_perm_po_bill = fields.Boolean(
-        string="Facturar compras",
-        compute="_compute_op_permissions",
-        inverse="_inverse_op_permissions",
-        help=(
-            "Permite generar/procesar facturas de proveedor.\n\n"
-            "No permite: administrar rangos NCF de compras emitidas."
-        ),
+    op_act_po_approve_order = fields.Boolean(
+        string="Aprobar orden", compute="_compute_op_actions", inverse="_inverse_op_enterprise",
+        help="Permite aprobar órdenes de compra.",
     )
-    op_perm_po_received = fields.Boolean(
-        string="Administrar documentos recibidos",
-        compute="_compute_op_permissions",
-        inverse="_inverse_op_permissions",
-        help=(
-            "Permite operar compras con documentos recibidos (Usuario Fiscal).\n\n"
-            "No permite: anular NCF; administrar rangos."
-        ),
+    op_act_po_vendor_bill = fields.Boolean(
+        string="Registrar factura proveedor", compute="_compute_op_actions", inverse="_inverse_op_enterprise",
+        help="Permite registrar facturas de proveedor.",
     )
-    op_perm_po_issued = fields.Boolean(
-        string="Administrar documentos emitidos",
-        compute="_compute_op_permissions",
-        inverse="_inverse_op_permissions",
-        help=(
-            "Permite emitir comprobantes de compra Justech (Responsable Fiscal).\n\n"
-            "No permite: administrar padrón/rangos como Administrador Fiscal."
-        ),
+    op_act_po_received = fields.Boolean(
+        string="Registrar documento recibido", compute="_compute_op_actions", inverse="_inverse_op_enterprise",
+        help="Permite registrar compras con NCF recibido del proveedor.",
+    )
+    op_act_po_b11 = fields.Boolean(
+        string="Emitir B11", compute="_compute_op_actions", inverse="_inverse_op_enterprise",
+        help="Permite emitir comprobantes de compra B11 (Responsable Fiscal).",
+    )
+    op_act_po_b13 = fields.Boolean(
+        string="Emitir B13", compute="_compute_op_actions", inverse="_inverse_op_enterprise",
+        help="Permite emitir comprobantes de compra B13 (Responsable Fiscal).",
+    )
+    op_act_po_b17 = fields.Boolean(
+        string="Emitir B17", compute="_compute_op_actions", inverse="_inverse_op_enterprise",
+        help="Permite emitir comprobantes de compra B17 (Responsable Fiscal).",
+    )
+    op_act_po_cancel = fields.Boolean(
+        string="Cancelar orden", compute="_compute_op_actions", inverse="_inverse_op_enterprise",
+        help="Permite cancelar órdenes según el flujo estándar.",
+    )
+    op_act_po_delete = fields.Boolean(
+        string="Eliminar orden", compute="_compute_op_actions", inverse="_inverse_op_enterprise",
+        help="Permite eliminar órdenes en estados autorizados (Administrador).",
     )
 
-    # --- FISCAL ---
-    op_perm_fis_rnc = fields.Boolean(
-        string="Validar RNC",
-        compute="_compute_op_permissions",
-        inverse="_inverse_op_permissions",
-        help=(
-            "Permite validar/consultar RNC (Usuario Fiscal).\n\n"
-            "No permite: anular NCF; administrar rangos."
-        ),
+    op_act_so_quote = fields.Boolean(
+        string="Crear cotización", compute="_compute_op_actions", inverse="_inverse_op_enterprise",
+        help="Permite crear cotizaciones de venta.",
     )
-    op_perm_fis_docs = fields.Boolean(
-        string="Seleccionar comprobantes",
-        compute="_compute_op_permissions",
-        inverse="_inverse_op_permissions",
-        help="Permite seleccionar tipos de comprobante (Usuario Fiscal).",
+    op_act_so_approve = fields.Boolean(
+        string="Aprobar cotización", compute="_compute_op_actions", inverse="_inverse_op_enterprise",
+        help="Permite aprobar cotizaciones (Administrador comercial).",
     )
-    op_perm_fis_void_ncf = fields.Boolean(
-        string="Anular NCF",
-        compute="_compute_op_permissions",
-        inverse="_inverse_op_permissions",
-        help=(
-            "Permite anular comprobantes fiscales (Responsable Fiscal) vía wizard 608.\n\n"
-            "No permite: necesariamente cancelar asientos; emitir NC automáticamente; "
-            "devolver pagos."
-        ),
+    op_act_so_confirm = fields.Boolean(
+        string="Confirmar venta", compute="_compute_op_actions", inverse="_inverse_op_enterprise",
+        help="Permite confirmar pedidos de venta.",
     )
-    op_perm_fis_606 = fields.Boolean(
-        string="Generar 606",
-        compute="_compute_op_permissions",
-        inverse="_inverse_op_permissions",
-        help="Permite generar/consultar el formato 606 (Usuario Fiscal).",
+    op_act_so_invoice = fields.Boolean(
+        string="Emitir factura", compute="_compute_op_actions", inverse="_inverse_op_enterprise",
+        help="Permite emitir facturas desde ventas/facturación.",
     )
-    op_perm_fis_607 = fields.Boolean(
-        string="Generar 607",
-        compute="_compute_op_permissions",
-        inverse="_inverse_op_permissions",
-        help="Permite generar/consultar el formato 607 (Usuario Fiscal).",
+    op_act_so_credit = fields.Boolean(
+        string="Nota de crédito", compute="_compute_op_actions", inverse="_inverse_op_enterprise",
+        help="Permite emitir notas de crédito fiscales.",
     )
-    op_perm_fis_608 = fields.Boolean(
-        string="Generar 608",
-        compute="_compute_op_permissions",
-        inverse="_inverse_op_permissions",
-        help="Permite generar/consultar el formato 608 (Usuario Fiscal).",
+    op_act_so_discount = fields.Boolean(
+        string="Aplicar descuentos", compute="_compute_op_actions", inverse="_inverse_op_enterprise",
+        help="Permite aplicar descuentos en líneas de venta.",
     )
-    op_perm_fis_ranges = fields.Boolean(
-        string="Administrar rangos",
-        compute="_compute_op_permissions",
-        inverse="_inverse_op_permissions",
-        help=(
-            "Permite administrar rangos NCF y consola fiscal (Administrador Fiscal).\n\n"
-            "No otorga permisos contables generales por sí solo."
-        ),
+    op_act_so_delete_inv = fields.Boolean(
+        string="Eliminar factura", compute="_compute_op_actions", inverse="_inverse_op_enterprise",
+        help="Permite eliminar facturas en estados autorizados (Administrador).",
     )
-    op_perm_fis_ecf = fields.Boolean(
-        string="Administrar e-CF",
-        compute="_compute_op_permissions",
-        inverse="_inverse_op_permissions",
-        help=(
-            "Permite operar/administrar e-CF (Administrador e-CF).\n\n"
-            "No permite: alterar NCF tradicionales fuera de e-CF."
-        ),
+    op_act_so_edit_posted = fields.Boolean(
+        string="Modificar factura validada", compute="_compute_op_actions", inverse="_inverse_op_enterprise",
+        help="Permite operaciones administrativas sobre facturas publicadas cuando Odoo lo autoriza.",
     )
 
-    # --- RETENCIONES ---
-    op_perm_wh_register = fields.Boolean(
-        string="Registrar",
-        compute="_compute_op_permissions",
-        inverse="_inverse_op_permissions",
-        help="Permite registrar retenciones en el flujo de pagos/facturación.",
+    op_act_stk_in = fields.Boolean(
+        string="Entradas", compute="_compute_op_actions", inverse="_inverse_op_enterprise",
+        help="Permite registrar entradas de inventario.",
     )
-    op_perm_wh_apply = fields.Boolean(
-        string="Aplicar",
-        compute="_compute_op_permissions",
-        inverse="_inverse_op_permissions",
-        help="Permite aplicar retenciones en pagos (Facturación).",
+    op_act_stk_out = fields.Boolean(
+        string="Salidas", compute="_compute_op_actions", inverse="_inverse_op_enterprise",
+        help="Permite registrar salidas de inventario.",
     )
-    op_perm_wh_approve = fields.Boolean(
-        string="Aprobar",
-        compute="_compute_op_permissions",
-        inverse="_inverse_op_permissions",
-        help="Permite aprobar/gestionar retenciones (Administrador contable).",
+    op_act_stk_adj = fields.Boolean(
+        string="Ajustes", compute="_compute_op_actions", inverse="_inverse_op_enterprise",
+        help="Permite realizar ajustes de inventario.",
     )
-    op_perm_wh_admin = fields.Boolean(
-        string="Administrar",
-        compute="_compute_op_permissions",
-        inverse="_inverse_op_permissions",
-        help="Permite administrar el catálogo de retenciones Justech.",
+    op_act_stk_tr = fields.Boolean(
+        string="Transferencias", compute="_compute_op_actions", inverse="_inverse_op_enterprise",
+        help="Permite transferencias entre ubicaciones.",
     )
-
-    # --- GARANTÍAS ---
-    op_perm_war_create = fields.Boolean(
-        string="Crear",
-        compute="_compute_op_permissions",
-        inverse="_inverse_op_permissions",
-        help="Permite crear garantías (Usuario de Garantías).",
+    op_act_stk_count = fields.Boolean(
+        string="Conteos", compute="_compute_op_actions", inverse="_inverse_op_enterprise",
+        help="Permite conteos/inventarios físicos.",
     )
-    op_perm_war_edit = fields.Boolean(
-        string="Editar",
-        compute="_compute_op_permissions",
-        inverse="_inverse_op_permissions",
-        help="Permite editar garantías (Usuario de Garantías).",
-    )
-    op_perm_war_approve = fields.Boolean(
-        string="Aprobar",
-        compute="_compute_op_permissions",
-        inverse="_inverse_op_permissions",
-        help="Permite aprobar/gestionar garantías (Responsable de Garantías).",
-    )
-    op_perm_war_admin = fields.Boolean(
-        string="Administrar",
-        compute="_compute_op_permissions",
-        inverse="_inverse_op_permissions",
-        help="Permite administrar configuración de garantías (Responsable de Garantías).",
+    op_act_stk_val = fields.Boolean(
+        string="Valoración", compute="_compute_op_actions", inverse="_inverse_op_enterprise",
+        help="Permite administrar valoración (Administrador de inventario).",
     )
 
-    # ------------------------------------------------------------------ registry
+    op_act_fis_void = fields.Boolean(
+        string="Anular NCF", compute="_compute_op_actions", inverse="_inverse_op_enterprise",
+        help="Permite anular comprobantes fiscales. No cancela pagos ni emite nota de crédito automáticamente.",
+    )
+    op_act_fis_606 = fields.Boolean(
+        string="Generar 606", compute="_compute_op_actions", inverse="_inverse_op_enterprise",
+        help="Permite generar el formato 606.",
+    )
+    op_act_fis_607 = fields.Boolean(
+        string="Generar 607", compute="_compute_op_actions", inverse="_inverse_op_enterprise",
+        help="Permite generar el formato 607.",
+    )
+    op_act_fis_608 = fields.Boolean(
+        string="Generar 608", compute="_compute_op_actions", inverse="_inverse_op_enterprise",
+        help="Permite generar el formato 608.",
+    )
+    op_act_fis_ranges = fields.Boolean(
+        string="Configurar rangos", compute="_compute_op_actions", inverse="_inverse_op_enterprise",
+        help="Permite administrar rangos NCF.",
+    )
+
+    op_act_war_create = fields.Boolean(
+        string="Crear garantía", compute="_compute_op_actions", inverse="_inverse_op_enterprise",
+        help="Permite crear garantías.",
+    )
+    op_act_war_edit = fields.Boolean(
+        string="Modificar garantía", compute="_compute_op_actions", inverse="_inverse_op_enterprise",
+        help="Permite modificar garantías existentes.",
+    )
+    op_act_war_process = fields.Boolean(
+        string="Procesar garantía", compute="_compute_op_actions", inverse="_inverse_op_enterprise",
+        help="Permite procesar/aprobar garantías.",
+    )
+    op_act_war_history = fields.Boolean(
+        string="Consultar historial", compute="_compute_op_actions", inverse="_inverse_op_enterprise",
+        help="Permite consultar el historial de garantías.",
+    )
+
+    # ------------------------------------------------------------------ helpers
     @api.model
-    def _op_perm_registry(self):
-        return OPERATIONAL_PERMISSIONS
+    def _op_categories(self):
+        return ENTERPRISE_CATEGORIES
 
     @api.model
-    def _op_perm_categories(self):
-        return OPERATIONAL_CATEGORIES
+    def _op_roles(self):
+        return ENTERPRISE_ROLES
 
     @api.model
-    def _op_perm_item(self, code):
-        for item in self._op_perm_registry():
-            if item["code"] == code:
-                return item
+    def _op_actions(self):
+        return ENTERPRISE_ACTIONS
+
+    @api.model
+    def _op_role_by_code(self, code):
+        for role in ENTERPRISE_ROLES:
+            if role["code"] == code:
+                return role
         return None
 
     @api.model
-    def _op_perm_resolve_groups(self, item):
+    def _op_resolve_xmlids(self, xmlids):
         groups = self.env["res.groups"]
-        if not item:
-            return groups
-        for xmlid in item.get("xmlids") or ():
+        for xmlid in xmlids or ():
             group = self.env.ref(xmlid, raise_if_not_found=False)
             if group:
                 groups |= group
         return groups
 
     @api.model
-    def _op_perm_managed_groups(self):
+    def _op_managed_groups(self):
         groups = self.env["res.groups"]
-        for item in self._op_perm_registry():
-            groups |= self._op_perm_resolve_groups(item)
+        for role in ENTERPRISE_ROLES:
+            groups |= self._op_resolve_xmlids(role["xmlids"])
+        for act in ENTERPRISE_ACTIONS:
+            groups |= self._op_resolve_xmlids(act["xmlids"])
         return groups
 
-    def _op_perm_user_has_item(self, user, item):
-        groups = self._op_perm_resolve_groups(item)
-        if not groups:
-            return False
-        # has_group incluye implicaciones: refleja el estado real de seguridad.
-        return all(user.has_group(xmlid) for xmlid in item["xmlids"] if self.env.ref(xmlid, raise_if_not_found=False))
+    def _op_user_has_xmlids(self, user, xmlids):
+        for xmlid in xmlids or ():
+            if not self.env.ref(xmlid, raise_if_not_found=False):
+                return False
+            if not user.has_group(xmlid):
+                return False
+        return bool(xmlids)
+
+    def _op_detect_role(self, user, category):
+        best = "none"
+        best_level = 0
+        for role in ENTERPRISE_ROLES:
+            if role["category"] != category:
+                continue
+            if self._op_user_has_xmlids(user, role["xmlids"]) and role["level"] >= best_level:
+                best = role["code"]
+                best_level = role["level"]
+        return best
 
     @api.depends("group_ids")
-    def _compute_op_permissions(self):
+    def _compute_op_roles(self):
+        cats = [c["key"] for c in ENTERPRISE_CATEGORIES]
         for user in self:
-            for item in self._op_perm_registry():
-                fname = _op_field_name(item["code"])
+            for cat in cats:
+                fname = _role_fname(cat)
                 if fname in user._fields:
-                    user[fname] = user._op_perm_user_has_item(user, item)
+                    user[fname] = user._op_detect_role(user, cat)
+
+    @api.depends("group_ids")
+    def _compute_op_actions(self):
+        for user in self:
+            for act in ENTERPRISE_ACTIONS:
+                fname = _act_fname(act["code"])
+                if fname in user._fields:
+                    user[fname] = user._op_user_has_xmlids(user, act["xmlids"])
 
     @api.depends(
-        *[
-            _op_field_name(item["code"])
-            for item in OPERATIONAL_PERMISSIONS
-        ]
+        "op_nav_category",
+        "op_role_commercial",
+        "op_role_purchase",
+        "op_role_inventory",
+        "op_role_finance",
+        "op_role_accounting",
+        "op_role_fiscal",
+        "op_role_ecf",
+        "op_role_warranty",
+        "op_role_hr",
+        "op_role_crm",
+        "op_role_admin",
     )
-    def _compute_op_perm_summary(self):
+    def _compute_op_role_card_text(self):
         for user in self:
-            can_lines = []
-            cannot_lines = []
-            for item in self._op_perm_registry():
-                fname = _op_field_name(item["code"])
+            cat = user.op_nav_category or "fiscal"
+            role_code = user[_role_fname(cat)] if _role_fname(cat) in user._fields else "none"
+            role = self._op_role_by_code(role_code) if role_code and role_code != "none" else None
+            if not role:
+                user.op_role_card_text = "Sin rol seleccionado en esta área."
+                continue
+            lines = [role["label"], ""]
+            lines.extend("• %s" % b for b in role["bullets"])
+            user.op_role_card_text = "\n".join(lines)
+
+    @api.depends("group_ids", "op_nav_category")
+    def _compute_op_summary(self):
+        for user in self:
+            cat = user.op_nav_category or "fiscal"
+            can, cannot = [], []
+            for act in ENTERPRISE_ACTIONS:
+                if act["category"] != cat:
+                    continue
+                fname = _act_fname(act["code"])
                 if fname not in user._fields:
                     continue
-                label = item["label"]
-                if user[fname]:
-                    can_lines.append("✔ %s" % label)
-                else:
-                    cannot_lines.append("✘ %s" % label)
-            user.op_perm_summary_can = "\n".join(can_lines) if can_lines else "—"
-            user.op_perm_summary_cannot = (
-                "\n".join(cannot_lines) if cannot_lines else "—"
-            )
+                (can if user[fname] else cannot).append(
+                    ("✔ " if user[fname] else "✘ ") + act["label"]
+                )
+            user.op_summary_can = "\n".join(can) if can else "—"
+            user.op_summary_cannot = "\n".join(cannot) if cannot else "—"
 
-    def _inverse_op_permissions(self):
+    def _inverse_op_enterprise(self):
         for user in self:
-            user._op_perm_sync_from_fields()
+            user._op_sync_enterprise()
 
-    def _op_perm_sync_from_fields(self):
-        """Aplica membresía de grupos gestionados según checkboxes operativos."""
+    def _op_sync_enterprise(self):
+        """Sincroniza solo grupos gestionados a partir de roles + acciones."""
         self.ensure_one()
-        managed = self._op_perm_managed_groups()
+        managed = self._op_managed_groups()
         if not managed:
             return
         desired = self.env["res.groups"]
-        for item in self._op_perm_registry():
-            fname = _op_field_name(item["code"])
+
+        # Roles: un nivel por categoría
+        for cat in (c["key"] for c in ENTERPRISE_CATEGORIES):
+            fname = _role_fname(cat)
+            if fname not in self._fields:
+                continue
+            code = self[fname]
+            if not code or code == "none":
+                continue
+            role = self._op_role_by_code(code)
+            if role:
+                desired |= self._op_resolve_xmlids(role["xmlids"])
+
+        # Acciones marcadas
+        for act in ENTERPRISE_ACTIONS:
+            fname = _act_fname(act["code"])
             if fname in self._fields and self[fname]:
-                desired |= self._op_perm_resolve_groups(item)
+                desired |= self._op_resolve_xmlids(act["xmlids"])
 
         commands = []
         for group in managed:
@@ -478,7 +515,6 @@ class ResUsers(models.Model):
                 commands.append((4, group.id))
             elif not want and has_explicit:
                 commands.append((3, group.id))
-
         if commands:
             self.with_context(justech_security_ux_sync=True).write(
                 {"group_ids": commands}

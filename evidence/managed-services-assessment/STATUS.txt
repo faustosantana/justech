@@ -1,7 +1,13 @@
 DB=justech_dev
-HOST=vmi3364393
+HOST=vmi3364393 / 207.244.242.58
 MODULE=justech_managed_services
-VERSION=19.0.1.0.0
-BACKUP=/opt/odoo-dev/backups/p0-managed-services-20260715_194056
+VERSION=19.0.1.0.1
+BACKUP=/opt/odoo-dev/backups/p0-ms-uat-manual-20260715_201527
 PROD_TOUCHED=NO
-2026-07-15T17:57:17Z
+PROD_MODULE=ABSENT
+MANUAL_UAT=PASS
+RESPONSIVE_UAT=PASS
+UNINSTALL_REINSTALL=PASS
+PUBLIC_TEST_URL=https://erp.justech.do/servicios/levantamiento/oeKCDagkiByGNBRtig3Iznt5x_ug4hYLq73bEWgBFg8
+BRANCH=feature/managed-services-assessment
+2026-07-15T19:00:00Z

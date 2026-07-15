@@ -29,7 +29,11 @@
         const label = qs("#jt-ms-progress-text");
         const pct = Math.round(((num - 1) / (SECTION_COUNT - 1)) * 100);
         if (progress) progress.style.width = pct + "%";
-        if (label) label.textContent = "Sección " + Math.min(num, 16) + " de 16";
+        if (label) {
+            label.textContent = num >= SECTION_COUNT
+                ? "Revisión y envío"
+                : ("Sección " + num + " de 16");
+        }
         window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
@@ -184,11 +188,12 @@
             if (currentSection > 1) showSection(currentSection - 1);
         });
         qs("#jt-ms-btn-next")?.addEventListener("click", function () {
-            if (currentSection < SECTION_COUNT - 1) showSection(currentSection + 1);
+            if (currentSection < SECTION_COUNT) showSection(currentSection + 1);
+            if (currentSection === SECTION_COUNT) buildReview();
         });
         qs("#jt-ms-btn-review")?.addEventListener("click", function () {
             buildReview();
-            showSection(SECTION_COUNT - 1);
+            showSection(SECTION_COUNT);
         });
         qs("#jt-ms-btn-save")?.addEventListener("click", savePartial);
         qs("#jt-ms-btn-submit")?.addEventListener("click", submitForm);

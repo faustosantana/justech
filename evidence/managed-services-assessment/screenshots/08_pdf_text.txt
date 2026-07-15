@@ -1,0 +1,43 @@
+Levantamiento de Servicios Administrados
+Credicefi (DEMO DEV)
+Referencia:
+ LEV-2026-0006
+Estado:
+ Completado
+Consultor:
+ UAT MS User
+Completado:
+ 2026-07-15 18:28:38
+Responsable:
+ MarÃ
+​
+a UAT â€” Gerente TI
+1. InformaciÃ³n de la organizaciÃ³n
+Empresa:
+ Credicefi (DEMO DEV)
+RNC:
+ 000000000
+DirecciÃ³n:
+ Calle Demo 123, Santo Domingo, RepÃºblica Dominicana
+Responsable:
+ MarÃ
+​
+a UAT â€” Gerente TI
+Contacto:
+ demo.credicefi@example.invalid / 8095550101
+2. Usuarios
+3. Oficinas y ubicaciones
+4. Equipos tecnolÃ³gicos
+5. Plataformas y servicios
+6. Servicios a tercerizar
+7. Niveles de soporte
+8. Horario de cobertura
+9. Modalidad del servicio
+10. Volumen de soporte
+11. Soporte actual
+12. Prioridades y SLA
+13. Seguridad y cumplimiento
+14. Objetivo de la tercerizaciÃ³n
+15. Inicio y presupuesto
+16. Comentarios finales
+Documento generado por Justech â€” Servicios Administrados â€” LEV-2026-0006

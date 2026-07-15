@@ -1,6 +1,6 @@
 {
     "name": "Servicios Administrados",
-    "version": "19.0.1.0.0",
+    "version": "19.0.1.0.1",
     "category": "Services",
     "summary": "Levantamientos de Servicios Administrados — formulario público y CRM",
     "description": """

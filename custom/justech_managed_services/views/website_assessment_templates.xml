@@ -442,7 +442,6 @@
             <t t-set="no_footer" t-value="True"/>
             <t t-set="section_total" t-value="len(form_structure) + 1"/>
             <link rel="stylesheet" type="text/css" href="/justech_managed_services/static/src/css/assessment_public.css"/>
-            <script type="text/javascript" src="/justech_managed_services/static/src/js/assessment_public.js"/>
             <script type="text/javascript">
                 window.JT_MS_FORM_VALUES = <t t-out="form_values_json"/>;
                 window.JT_MS_FIELD_LABELS = <t t-out="field_labels_json"/>;
@@ -450,6 +449,7 @@
                 window.JT_MS_TRACKED_KEYS = <t t-out="tracked_keys_json"/>;
                 window.JT_MS_SECTION_COUNT = <t t-esc="section_total"/>;
             </script>
+            <script type="text/javascript" src="/justech_managed_services/static/src/js/assessment_public.js"/>
             <div class="jt-ms-wrap">
                 <header class="jt-ms-header">
                     <img src="/web/binary/company_logo" alt="Justech" class="jt-ms-logo" onerror="this.src='/justech_managed_services/static/description/icon.png'"/>

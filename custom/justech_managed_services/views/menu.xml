@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_justech_managed_services_root"
+              name="Servicios Administrados"
+              sequence="85"
+              web_icon="justech_managed_services,static/description/icon.png"
+              groups="justech_managed_services.group_ms_user"/>
+
+    <menuitem id="menu_justech_managed_services_assessments"
+              name="Levantamientos"
+              parent="menu_justech_managed_services_root"
+              action="action_justech_managed_service_assessment"
+              sequence="10"/>
+</odoo>

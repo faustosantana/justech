@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="utm_source_managed_service_assessment" model="utm.source">
+        <field name="name">Levantamiento de Servicios Administrados</field>
+    </record>
+</odoo>

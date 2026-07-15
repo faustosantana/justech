@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="paperformat_managed_service_assessment" model="report.paperformat">
+        <field name="name">Levantamiento Servicios Administrados</field>
+        <field name="format">A4</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">40</field>
+        <field name="margin_bottom">28</field>
+        <field name="margin_left">12</field>
+        <field name="margin_right">12</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">35</field>
+    </record>
+
+    <template id="report_managed_service_assessment_document">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-set="data" t-value="doc.get_form_display_values()"/>
+                <div class="page" style="font-family: Arial, sans-serif; font-size: 11px; color: #1f2937;">
+                    <div style="text-align:center; margin-bottom: 20px;">
+                        <img t-att-src="'/logo.png?company=%s' % doc.company_id.id" style="max-height: 60px;" alt="Logo"/>
+                        <h2 style="color:#1a4f8c; margin: 12px 0 4px;">Levantamiento de Servicios Administrados</h2>
+                        <p><strong><t t-esc="doc.partner_id.display_name"/></strong></p>
+                    </div>
+                    <table style="width:100%; margin-bottom: 16px;" class="table table-sm">
+                        <tr><td><strong>Referencia:</strong> <t t-esc="doc.name"/></td><td><strong>Estado:</strong> <t t-esc="dict(doc._fields['state'].selection).get(doc.state)"/></td></tr>
+                        <tr><td><strong>Consultor:</strong> <t t-esc="doc.consultant_id.name or ''"/></td><td><strong>Completado:</strong> <t t-esc="doc.date_done or ''"/></td></tr>
+                        <tr><td colspan="2"><strong>Responsable:</strong> <t t-esc="doc.completed_by_name or doc.org_responsible or ''"/> — <t t-esc="doc.completed_by_job or doc.org_job or ''"/></td></tr>
+                    </table>
+                    <t t-if="doc.summary">
+                        <h3 style="color:#1a4f8c;">Resumen ejecutivo</h3>
+                        <p t-esc="doc.summary"/>
+                    </t>
+                    <h3 style="color:#1a4f8c; border-bottom: 1px solid #d8e2ef; padding-bottom: 4px;">1. Información de la organización</h3>
+                    <p><strong>Empresa:</strong> <t t-esc="doc.org_company_name or data.get('org_company_name', '')"/></p>
+                    <p><strong>RNC:</strong> <t t-esc="doc.org_vat or data.get('org_vat', '')"/></p>
+                    <p><strong>Dirección:</strong> <t t-esc="doc.org_address or data.get('org_address', '')"/></p>
+                    <p><strong>Responsable:</strong> <t t-esc="doc.org_responsible or data.get('org_responsible', '')"/> — <t t-esc="doc.org_job or data.get('org_job', '')"/></p>
+                    <p><strong>Contacto:</strong> <t t-esc="doc.org_email or data.get('org_email', '')"/> / <t t-esc="doc.org_phone or data.get('org_phone', '')"/></p>
+                    <t t-foreach="[
+                        ('2. Usuarios', ['employee_count_range', 'support_users_count', 'work_mode']),
+                        ('3. Oficinas y ubicaciones', ['office_count', 'office_locations', 'offices_connected']),
+                        ('4. Equipos tecnológicos', ['qty_desktop', 'qty_laptop', 'qty_physical_server', 'qty_virtual_server', 'qty_printer', 'qty_mobile', 'qty_wireless_ap', 'qty_network', 'brands']),
+                        ('5. Plataformas y servicios', ['platforms', 'erp_main', 'critical_apps', 'other_platforms']),
+                        ('6. Servicios a tercerizar', ['outsource_services']),
+                        ('7. Niveles de soporte', ['support_levels']),
+                        ('8. Horario de cobertura', ['coverage_schedule', 'coverage_start_time', 'coverage_end_time', 'holidays_operation', 'custom_schedule_comment']),
+                        ('9. Modalidad del servicio', ['service_modality', 'onsite_frequency']),
+                        ('10. Volumen de soporte', ['monthly_requests_range', 'frequent_requests']),
+                        ('11. Soporte actual', ['current_support_provider', 'uses_ticket_platform', 'ticket_platform_name', 'has_inventory', 'has_documentation', 'has_procedures', 'has_monthly_reports']),
+                        ('12. Prioridades y SLA', ['critical_response_time', 'critical_situations', 'other_critical_situation']),
+                        ('13. Seguridad y cumplimiento', ['security_items', 'applicable_regulations', 'confidentiality_requirements', 'technician_access_requirements', 'nda_required']),
+                        ('14. Objetivo de la tercerización', ['outsourcing_objectives']),
+                        ('15. Inicio y presupuesto', ['expected_start', 'budget_status', 'approximate_budget']),
+                        ('16. Comentarios finales', ['final_comments']),
+                    ]" t-as="section">
+                        <h3 style="color:#1a4f8c; border-bottom: 1px solid #d8e2ef; padding-bottom: 4px; margin-top: 14px;" t-esc="section[0]"/>
+                        <t t-foreach="section[1]" t-as="key">
+                            <t t-set="val" t-value="data.get(key)"/>
+                            <t t-if="val">
+                                <p><strong t-esc="key"/>: <t t-esc="val"/></p>
+                            </t>
+                        </t>
+                    </t>
+                    <div style="margin-top: 24px; border-top: 1px solid #d8e2ef; padding-top: 10px; text-align: center; font-size: 10px; color: #6b7280;">
+                        Documento generado por Justech — Servicios Administrados — <t t-esc="doc.name"/>
+                    </div>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

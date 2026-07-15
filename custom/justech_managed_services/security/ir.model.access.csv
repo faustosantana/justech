@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_justech_ms_assessment_user,justech.ms.assessment.user,model_justech_managed_service_assessment,justech_managed_services.group_ms_user,1,1,1,0
+access_justech_ms_assessment_manager,justech.ms.assessment.manager,model_justech_managed_service_assessment,justech_managed_services.group_ms_manager,1,1,1,1

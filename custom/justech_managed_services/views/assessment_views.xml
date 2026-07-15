@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_justech_managed_service_assessment_list" model="ir.ui.view">
+        <field name="name">justech.managed.service.assessment.list</field>
+        <field name="model">justech.managed.service.assessment</field>
+        <field name="arch" type="xml">
+            <list string="Levantamientos" decoration-muted="state == 'cancel'" decoration-success="state == 'done'" decoration-info="state in ('sent', 'in_progress')">
+                <field name="name"/>
+                <field name="title"/>
+                <field name="partner_id"/>
+                <field name="consultant_id" widget="many2one_avatar_user"/>
+                <field name="state" widget="badge" decoration-info="state in ('sent','in_progress')" decoration-success="state == 'done'" decoration-warning="state == 'reviewed'" decoration-danger="state == 'cancel'"/>
+                <field name="completion_percent" widget="progressbar"/>
+                <field name="date_deadline"/>
+                <field name="date_done"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_justech_managed_service_assessment_search" model="ir.ui.view">
+        <field name="name">justech.managed.service.assessment.search</field>
+        <field name="model">justech.managed.service.assessment</field>
+        <field name="arch" type="xml">
+            <search string="Levantamientos">
+                <field name="name"/>
+                <field name="title"/>
+                <field name="partner_id"/>
+                <field name="contact_id"/>
+                <field name="consultant_id"/>
+                <field name="opportunity_id"/>
+                <filter name="filter_draft" string="Borrador" domain="[('state', '=', 'draft')]"/>
+                <filter name="filter_sent" string="Enviado" domain="[('state', '=', 'sent')]"/>
+                <filter name="filter_in_progress" string="En proceso" domain="[('state', '=', 'in_progress')]"/>
+                <filter name="filter_done" string="Completado" domain="[('state', '=', 'done')]"/>
+                <filter name="filter_reviewed" string="Revisado" domain="[('state', '=', 'reviewed')]"/>
+                <filter name="filter_expired" string="Vencidos" domain="[('is_link_expired', '=', True)]"/>
+                <filter name="filter_active_link" string="Enlace activo" domain="[('link_active', '=', True)]"/>
+                <separator/>
+                <filter name="filter_my" string="Mis levantamientos" domain="['|', ('consultant_id', '=', uid), ('create_uid', '=', uid)]"/>
+                <group>
+                    <filter name="group_partner" string="Cliente" context="{'group_by': 'partner_id'}"/>
+                    <filter name="group_consultant" string="Consultor" context="{'group_by': 'consultant_id'}"/>
+                    <filter name="group_state" string="Estado" context="{'group_by': 'state'}"/>
+                    <filter name="group_opportunity" string="Oportunidad" context="{'group_by': 'opportunity_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_justech_managed_service_assessment_form" model="ir.ui.view">
+        <field name="name">justech.managed.service.assessment.form</field>
+        <field name="model">justech.managed.service.assessment</field>
+        <field name="arch" type="xml">
+            <form string="Levantamiento">
+                <header>
+                    <button name="action_generate_link" type="object" string="Generar enlace" class="btn-primary" invisible="access_token"/>
+                    <button name="action_regenerate_link" type="object" string="Regenerar enlace" invisible="not access_token or state not in ('draft','sent','in_progress')"/>
+                    <button name="action_copy_link_notification" type="object" string="Copiar enlace" invisible="not access_token"/>
+                    <button name="action_open_form" type="object" string="Abrir formulario" invisible="not access_token"/>
+                    <button name="action_send_email" type="object" string="Enviar por correo"/>
+                    <button name="action_view_answers" type="object" string="Ver respuestas" invisible="state == 'draft'"/>
+                    <button name="action_print_pdf" type="object" string="Imprimir PDF" invisible="state == 'draft'"/>
+                    <button name="action_create_opportunity" type="object" string="Crear oportunidad" invisible="opportunity_id"/>
+                    <button name="action_open_opportunity" type="object" string="Abrir oportunidad" invisible="not opportunity_id"/>
+                    <button name="action_mark_reviewed" type="object" string="Marcar revisado" invisible="state != 'done'" groups="justech_managed_services.group_ms_manager"/>
+                    <button name="action_reopen_public" type="object" string="Reabrir formulario" invisible="state not in ('done','reviewed','proposal_ready')" groups="justech_managed_services.group_ms_manager"/>
+                    <button name="action_invalidate_link" type="object" string="Invalidar enlace" invisible="not link_active"/>
+                    <button name="action_cancel" type="object" string="Cancelar" invisible="state == 'cancel'" confirm="¿Confirma cancelar este levantamiento?"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,sent,in_progress,done,reviewed,proposal_ready"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="title"/>
+                        <h1><field name="title" placeholder="Título del levantamiento"/></h1>
+                        <h2><field name="name" readonly="1"/></h2>
+                    </div>
+                    <group>
+                        <group string="Cliente">
+                            <field name="partner_id"/>
+                            <field name="contact_id"/>
+                            <field name="email"/>
+                            <field name="phone"/>
+                        </group>
+                        <group string="Seguimiento">
+                            <field name="consultant_id" widget="many2one_avatar_user"/>
+                            <field name="opportunity_id"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="completion_percent" widget="progressbar"/>
+                        </group>
+                    </group>
+                    <group string="Enlace público">
+                        <group>
+                            <field name="access_token" readonly="1" groups="justech_managed_services.group_ms_manager"/>
+                            <field name="public_url" widget="url"/>
+                            <field name="link_active"/>
+                            <field name="date_deadline"/>
+                        </group>
+                        <group>
+                            <field name="date_sent"/>
+                            <field name="date_first_activity"/>
+                            <field name="date_last_activity"/>
+                            <field name="date_done"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Organización (formulario)" name="org">
+                            <group>
+                                <field name="org_company_name"/>
+                                <field name="org_vat"/>
+                                <field name="org_address"/>
+                                <field name="org_responsible"/>
+                                <field name="org_job"/>
+                                <field name="org_email"/>
+                                <field name="org_phone"/>
+                            </group>
+                        </page>
+                        <page string="Resumen" name="summary">
+                            <field name="summary" placeholder="Resumen ejecutivo interno..."/>
+                            <group>
+                                <field name="completed_by_name"/>
+                                <field name="completed_by_job"/>
+                                <field name="acceptance_date"/>
+                                <field name="acceptance_confirmed"/>
+                            </group>
+                        </page>
+                        <page string="Respuestas JSON" name="form_data" groups="justech_managed_services.group_ms_manager">
+                            <field name="form_data" widget="json"/>
+                        </page>
+                        <page string="Notas internas" name="notes">
+                            <field name="internal_notes"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_justech_managed_service_assessment_answers_form" model="ir.ui.view">
+        <field name="name">justech.managed.service.assessment.answers.form</field>
+        <field name="model">justech.managed.service.assessment</field>
+        <field name="arch" type="xml">
+            <form string="Respuestas del levantamiento" create="0" delete="0">
+                <sheet>
+                    <group>
+                        <field name="name" readonly="1"/>
+                        <field name="partner_id" readonly="1"/>
+                        <field name="state" readonly="1"/>
+                        <field name="completion_percent" readonly="1" widget="progressbar"/>
+                    </group>
+                    <notebook>
+                        <page string="Organización">
+                            <group>
+                                <field name="org_company_name" readonly="1"/>
+                                <field name="org_vat" readonly="1"/>
+                                <field name="org_address" readonly="1"/>
+                                <field name="org_responsible" readonly="1"/>
+                                <field name="org_job" readonly="1"/>
+                                <field name="org_email" readonly="1"/>
+                                <field name="org_phone" readonly="1"/>
+                            </group>
+                        </page>
+                        <page string="Todas las respuestas">
+                            <field name="form_data" widget="json" readonly="1"/>
+                        </page>
+                        <page string="Confirmación">
+                            <group>
+                                <field name="completed_by_name" readonly="1"/>
+                                <field name="completed_by_job" readonly="1"/>
+                                <field name="acceptance_date" readonly="1"/>
+                                <field name="acceptance_confirmed" readonly="1"/>
+                                <field name="date_done" readonly="1"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_justech_managed_service_assessment" model="ir.actions.act_window">
+        <field name="name">Levantamientos</field>
+        <field name="res_model">justech.managed.service.assessment</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_justech_managed_service_assessment_search"/>
+        <field name="context">{'search_default_filter_my': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Cree un levantamiento de Servicios Administrados.
+            </p>
+            <p>Genere un enlace seguro para que el cliente complete el formulario sin iniciar sesión.</p>
+        </field>
+    </record>
+</odoo>

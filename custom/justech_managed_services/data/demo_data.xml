@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="demo_partner_credicefi" model="res.partner">
+        <field name="name">Credicefi (DEMO DEV)</field>
+        <field name="is_company" eval="True"/>
+        <field name="email">demo.credicefi@example.invalid</field>
+        <field name="vat">000000000</field>
+        <field name="street">Calle Demo 123</field>
+        <field name="city">Santo Domingo</field>
+    </record>
+
+    <record id="demo_assessment_credicefi" model="justech.managed.service.assessment">
+        <field name="title">Levantamiento inicial de soporte técnico y mesa de ayuda</field>
+        <field name="partner_id" ref="demo_partner_credicefi"/>
+        <field name="email">demo.credicefi@example.invalid</field>
+        <field name="state">draft</field>
+        <field name="form_data" eval="{
+            'support_levels': ['nivel_1', 'nivel_2', 'nivel_3'],
+            'outsource_services': ['soporte_remoto', 'soporte_presencial', 'admin_usuarios', 'admin_servidores'],
+            'coverage_schedule': 'laboral',
+            'service_modality': 'recomendacion_justech',
+        }"/>
+    </record>
+</odoo>

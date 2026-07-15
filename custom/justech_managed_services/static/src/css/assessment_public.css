@@ -1,0 +1,295 @@
+/* Levantamiento público — estilo corporativo Justech */
+:root {
+    --jt-ms-primary: #1a4f8c;
+    --jt-ms-primary-dark: #123a66;
+    --jt-ms-accent: #2d8cff;
+    --jt-ms-bg: #f4f7fb;
+    --jt-ms-card: #ffffff;
+    --jt-ms-border: #d8e2ef;
+    --jt-ms-text: #1f2937;
+    --jt-ms-muted: #6b7280;
+    --jt-ms-success: #0f9d58;
+    --jt-ms-radius: 10px;
+    --jt-ms-shadow: 0 8px 30px rgba(26, 79, 140, 0.08);
+}
+
+body.jt-ms-public {
+    background: var(--jt-ms-bg);
+    font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+    color: var(--jt-ms-text);
+}
+
+.jt-ms-wrap {
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 24px 16px 48px;
+}
+
+.jt-ms-header {
+    text-align: center;
+    margin-bottom: 28px;
+}
+
+.jt-ms-logo {
+    max-height: 64px;
+    margin-bottom: 16px;
+}
+
+.jt-ms-header h1 {
+    font-size: 1.55rem;
+    font-weight: 700;
+    color: var(--jt-ms-primary);
+    margin: 0 0 8px;
+}
+
+.jt-ms-header .jt-ms-client {
+    font-size: 1.1rem;
+    color: var(--jt-ms-muted);
+}
+
+.jt-ms-intro,
+.jt-ms-confidential {
+    background: var(--jt-ms-card);
+    border: 1px solid var(--jt-ms-border);
+    border-radius: var(--jt-ms-radius);
+    padding: 18px 20px;
+    margin-bottom: 20px;
+    line-height: 1.55;
+    box-shadow: var(--jt-ms-shadow);
+}
+
+.jt-ms-progress {
+    background: var(--jt-ms-card);
+    border-radius: var(--jt-ms-radius);
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    border: 1px solid var(--jt-ms-border);
+}
+
+.jt-ms-progress-bar {
+    height: 10px;
+    background: #e5edf7;
+    border-radius: 999px;
+    overflow: hidden;
+}
+
+.jt-ms-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--jt-ms-primary), var(--jt-ms-accent));
+    transition: width 0.3s ease;
+}
+
+.jt-ms-progress-label {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+    color: var(--jt-ms-muted);
+}
+
+.jt-ms-card {
+    background: var(--jt-ms-card);
+    border: 1px solid var(--jt-ms-border);
+    border-radius: var(--jt-ms-radius);
+    padding: 24px;
+    margin-bottom: 20px;
+    box-shadow: var(--jt-ms-shadow);
+}
+
+.jt-ms-section {
+    display: none;
+}
+
+.jt-ms-section.active {
+    display: block;
+}
+
+.jt-ms-section h2 {
+    font-size: 1.25rem;
+    color: var(--jt-ms-primary);
+    margin: 0 0 6px;
+    border-bottom: 2px solid #e8f0fa;
+    padding-bottom: 10px;
+}
+
+.jt-ms-section .jt-ms-section-num {
+    font-size: 0.85rem;
+    color: var(--jt-ms-muted);
+    margin-bottom: 16px;
+}
+
+.jt-ms-field {
+    margin-bottom: 16px;
+}
+
+.jt-ms-field label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+.jt-ms-field input[type="text"],
+.jt-ms-field input[type="email"],
+.jt-ms-field input[type="tel"],
+.jt-ms-field input[type="number"],
+.jt-ms-field input[type="time"],
+.jt-ms-field textarea,
+.jt-ms-field select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--jt-ms-border);
+    border-radius: 8px;
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+
+.jt-ms-field textarea {
+    min-height: 110px;
+    resize: vertical;
+}
+
+.jt-ms-checkgrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 10px;
+}
+
+.jt-ms-check {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 12px 14px;
+    border: 1px solid var(--jt-ms-border);
+    border-radius: 8px;
+    background: #fafcff;
+    cursor: pointer;
+}
+
+.jt-ms-check input {
+    width: 20px;
+    height: 20px;
+    margin-top: 2px;
+    flex-shrink: 0;
+}
+
+.jt-ms-check span {
+    line-height: 1.35;
+}
+
+.jt-ms-level-help {
+    background: #f0f6ff;
+    border-left: 4px solid var(--jt-ms-accent);
+    padding: 12px 14px;
+    margin: 12px 0;
+    border-radius: 0 8px 8px 0;
+    font-size: 0.92rem;
+}
+
+.jt-ms-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: space-between;
+    margin-top: 8px;
+}
+
+.jt-ms-btn {
+    border: none;
+    border-radius: 8px;
+    padding: 12px 20px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+}
+
+.jt-ms-btn:active {
+    transform: scale(0.98);
+}
+
+.jt-ms-btn-primary {
+    background: var(--jt-ms-primary);
+    color: #fff;
+}
+
+.jt-ms-btn-primary:hover {
+    background: var(--jt-ms-primary-dark);
+}
+
+.jt-ms-btn-secondary {
+    background: #e8f0fa;
+    color: var(--jt-ms-primary);
+}
+
+.jt-ms-btn-success {
+    background: var(--jt-ms-success);
+    color: #fff;
+}
+
+.jt-ms-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.jt-ms-review-block {
+    border: 1px solid var(--jt-ms-border);
+    border-radius: 8px;
+    padding: 14px;
+    margin-bottom: 12px;
+    background: #fafcff;
+}
+
+.jt-ms-review-block h3 {
+    margin: 0 0 8px;
+    font-size: 1rem;
+    color: var(--jt-ms-primary);
+}
+
+.jt-ms-alert {
+    padding: 14px 16px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+}
+
+.jt-ms-alert-error {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    color: #991b1b;
+}
+
+.jt-ms-alert-success {
+    background: #ecfdf5;
+    border: 1px solid #a7f3d0;
+    color: #065f46;
+}
+
+.jt-ms-error-page {
+    text-align: center;
+    padding: 60px 20px;
+}
+
+.jt-ms-error-page h1 {
+    color: var(--jt-ms-primary);
+}
+
+.jt-ms-hidden {
+    display: none !important;
+}
+
+@media (max-width: 640px) {
+    .jt-ms-wrap {
+        padding: 16px 12px 32px;
+    }
+    .jt-ms-card {
+        padding: 18px 14px;
+    }
+    .jt-ms-checkgrid {
+        grid-template-columns: 1fr;
+    }
+    .jt-ms-nav {
+        flex-direction: column;
+    }
+    .jt-ms-btn {
+        width: 100%;
+    }
+}

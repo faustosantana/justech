@@ -1,0 +1,7 @@
+DB=justech_dev
+HOST=vmi3364393
+MODULE=justech_managed_services
+VERSION=19.0.1.0.0
+BACKUP=/opt/odoo-dev/backups/p0-managed-services-20260715_194056
+PROD_TOUCHED=NO
+2026-07-15T17:57:17Z

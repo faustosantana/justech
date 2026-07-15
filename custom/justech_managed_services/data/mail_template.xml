@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mail_template_assessment_invite" model="mail.template">
+        <field name="name">Levantamiento Servicios Administrados — Invitación</field>
+        <field name="model_id" ref="model_justech_managed_service_assessment"/>
+        <field name="subject">Levantamiento de Servicios Administrados – Justech</field>
+        <field name="email_from">{{ (object.consultant_id.email_formatted or user.email_formatted) }}</field>
+        <field name="email_to">{{ object.email or object.contact_id.email or object.partner_id.email }}</field>
+        <field name="body_html" type="html">
+<div>
+    <p>Estimado/a <t t-out="object.contact_id.name or object.org_responsible or object.partner_id.name"/>:</p>
+    <p>
+        Como parte del proceso para preparar una propuesta de servicios administrados
+        ajustada a las necesidades de
+        <strong><t t-out="object.partner_id.display_name"/></strong>,
+        le invitamos a completar el siguiente levantamiento de información.
+    </p>
+    <p>
+        El formulario puede guardarse y continuarse posteriormente utilizando el mismo enlace.
+    </p>
+    <p style="margin: 24px 0;">
+        <a t-att-href="object.public_url"
+           style="background-color:#1a4f8c;color:#ffffff;padding:12px 24px;text-decoration:none;border-radius:4px;display:inline-block;">
+            Completar levantamiento
+        </a>
+    </p>
+    <p>
+        La información suministrada será utilizada exclusivamente para dimensionar el
+        alcance del servicio y será tratada de manera confidencial.
+    </p>
+    <p>Atentamente,<br/>Equipo de Justech</p>
+</div>
+        </field>
+        <field name="auto_delete" eval="False"/>
+    </record>
+</odoo>

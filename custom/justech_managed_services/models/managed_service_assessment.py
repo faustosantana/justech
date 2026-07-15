@@ -35,15 +35,49 @@ class JustechManagedServiceAssessment(models.Model):
     title = fields.Char(string="Título del levantamiento")
     partner_id = fields.Many2one(
         "res.partner",
-        string="Cliente / Prospecto",
+        string="Cliente / Empresa",
         required=True,
         tracking=True,
         index=True,
+        domain="['|', ('is_company', '=', True), ('parent_id', '=', False)]",
+        help="Seleccione un contacto/empresa existente en Contactos. "
+        "No escriba el nombre como texto libre.",
+    )
+    partner_vat = fields.Char(
+        related="partner_id.vat",
+        string="RNC",
+        readonly=True,
+    )
+    partner_email = fields.Char(
+        related="partner_id.email",
+        string="Correo del cliente",
+        readonly=True,
     )
     contact_id = fields.Many2one(
         "res.partner",
         string="Contacto responsable",
         domain="[('parent_id', '=', partner_id), ('is_company', '=', False)]",
+        help="Persona de contacto hija de la empresa. Opcional.",
+    )
+    managed_service_id = fields.Many2one(
+        "justech.managed.service",
+        string="Servicio Administrado",
+        index=True,
+        copy=False,
+        tracking=True,
+    )
+    sale_order_ids = fields.One2many(
+        "sale.order",
+        "justech_assessment_id",
+        string="Cotizaciones",
+    )
+    sale_order_count = fields.Integer(
+        string="Cotizaciones",
+        compute="_compute_commercial_counts",
+    )
+    managed_service_count = fields.Integer(
+        string="Servicios",
+        compute="_compute_commercial_counts",
     )
     email = fields.Char(string="Correo electrónico")
     phone = fields.Char(string="Teléfono")
@@ -105,8 +139,12 @@ class JustechManagedServiceAssessment(models.Model):
             ("sent", "Enviado"),
             ("in_progress", "En proceso"),
             ("done", "Completado"),
-            ("reviewed", "Revisado"),
-            ("proposal_ready", "Propuesta preparada"),
+            ("review", "En revisión"),
+            ("needs_info", "Requiere información"),
+            ("approved_proposal", "Aprobado para propuesta"),
+            ("opportunity_created", "Convertido a oportunidad"),
+            ("quotation_ready", "Cotización preparada"),
+            ("service_created", "Servicio creado"),
             ("cancel", "Cancelado"),
         ],
         string="Estado",
@@ -114,6 +152,16 @@ class JustechManagedServiceAssessment(models.Model):
         required=True,
         tracking=True,
         index=True,
+    )
+
+    SUBMITTED_STATES = (
+        "done",
+        "review",
+        "needs_info",
+        "approved_proposal",
+        "opportunity_created",
+        "quotation_ready",
+        "service_created",
     )
     form_data = fields.Json(
         string="Respuestas del formulario",
@@ -141,7 +189,7 @@ class JustechManagedServiceAssessment(models.Model):
     @api.depends("date_deadline", "state")
     def _compute_is_link_expired(self):
         today = fields.Date.context_today(self)
-        closed_states = ("done", "reviewed", "proposal_ready", "cancel")
+        closed_states = self.SUBMITTED_STATES + ("cancel",)
         for record in self:
             record.is_link_expired = bool(
                 record.date_deadline
@@ -151,7 +199,7 @@ class JustechManagedServiceAssessment(models.Model):
 
     def _search_is_link_expired(self, operator, value):
         today = fields.Date.context_today(self)
-        closed_states = ("done", "reviewed", "proposal_ready", "cancel")
+        closed_states = list(self.SUBMITTED_STATES) + ["cancel"]
         if (operator, value) in (("=", True), ("!=", False)):
             return [
                 ("date_deadline", "<", today),
@@ -166,6 +214,16 @@ class JustechManagedServiceAssessment(models.Model):
                 ("state", "in", list(closed_states)),
             ]
         return []
+
+    def _compute_commercial_counts(self):
+        for record in self:
+            record.sale_order_count = len(record.sale_order_ids)
+            if record.managed_service_id:
+                record.managed_service_count = 1
+            else:
+                record.managed_service_count = self.env[
+                    "justech.managed.service"
+                ].search_count([("assessment_id", "=", record.id)])
 
     @api.depends("access_token")
     def _compute_public_url(self):
@@ -280,7 +338,7 @@ class JustechManagedServiceAssessment(models.Model):
             raise ValidationError(_("El enlace público está inactivo."))
         if self.date_deadline and self.date_deadline < fields.Date.context_today(self):
             raise ValidationError(_("El enlace público ha vencido."))
-        if self.state in ("done", "reviewed", "proposal_ready"):
+        if self.state in self.SUBMITTED_STATES:
             raise ValidationError(_("Este levantamiento ya fue enviado."))
 
     @api.model
@@ -292,7 +350,7 @@ class JustechManagedServiceAssessment(models.Model):
             return self.browse(), "invalid"
         if assessment.state == "cancel":
             return assessment, "cancelled"
-        if assessment.state in ("done", "reviewed", "proposal_ready"):
+        if assessment.state in assessment.SUBMITTED_STATES:
             return assessment, "submitted"
         if not assessment.link_active:
             return assessment, "inactive"
@@ -498,6 +556,28 @@ class JustechManagedServiceAssessment(models.Model):
             "justech_managed_services.action_report_managed_service_assessment"
         ).report_action(self)
 
+    def action_download_pdf(self):
+        """Alias visible: Descargar PDF (mismo reporte QWeb)."""
+        return self.action_print_pdf()
+
+    def action_preview_pdf(self):
+        self.ensure_one()
+        return self.env.ref(
+            "justech_managed_services.action_report_managed_service_assessment"
+        ).report_action(self, config=False)
+
+    def _build_opportunity_description(self):
+        self.ensure_one()
+        parts = [
+            _("Referencia levantamiento: %s", self.name),
+            _("Enlace: %s", self.public_url or "-"),
+            "",
+            self.summary or _("Sin resumen interno."),
+        ]
+        if self.org_company_name:
+            parts.append(_("Empresa (formulario): %s", self.org_company_name))
+        return "\n".join(parts)
+
     def _get_or_create_utm_source(self):
         source_name = _("Levantamiento de Servicios Administrados")
         source = self.env["utm.source"].sudo().search(
@@ -514,11 +594,14 @@ class JustechManagedServiceAssessment(models.Model):
         partner = self.partner_id
         source = self._get_or_create_utm_source()
         team = self.env["crm.team"]._get_default_team_id(user_id=self.env.uid)
+        commercial_name = (
+            partner.commercial_company_name or partner.name or self.org_company_name
+        )
         opportunity = self.env["crm.lead"].create(
             {
                 "name": _(
                     "Servicios Administrados — %(partner)s",
-                    partner=partner.display_name,
+                    partner=commercial_name,
                 ),
                 "partner_id": partner.id,
                 "contact_name": self.contact_id.name if self.contact_id else False,
@@ -527,14 +610,16 @@ class JustechManagedServiceAssessment(models.Model):
                 "user_id": self.consultant_id.id if self.consultant_id else False,
                 "team_id": team.id if team else False,
                 "source_id": source.id,
-                "description": _(
-                    "Oportunidad generada desde el levantamiento %(ref)s.",
-                    ref=self.name,
-                ),
+                "description": self._build_opportunity_description(),
                 "type": "opportunity",
             }
         )
-        self.opportunity_id = opportunity
+        self.write(
+            {
+                "opportunity_id": opportunity.id,
+                "state": "opportunity_created",
+            }
+        )
         self.message_post(
             body=_(
                 "Oportunidad CRM creada: %(name)s",
@@ -561,14 +646,227 @@ class JustechManagedServiceAssessment(models.Model):
             "target": "current",
         }
 
-    def action_mark_reviewed(self):
+    def action_mark_review(self):
         for record in self:
-            if record.state != "done":
+            if record.state not in ("done", "needs_info"):
                 raise UserError(
-                    _("Solo puede marcar como revisado un levantamiento completado.")
+                    _("Solo puede marcar en revisión un levantamiento completado.")
                 )
-            record.state = "reviewed"
+            record.state = "review"
         return True
+
+    def action_request_info(self):
+        for record in self:
+            if record.state not in ("done", "review", "approved_proposal"):
+                raise UserError(
+                    _("Solo aplica solicitar información desde Completado o En revisión.")
+                )
+            record.write({"state": "needs_info", "link_active": True})
+            record.message_post(body=_("Se solicitó información adicional al cliente."))
+        return True
+
+    def action_approve_for_proposal(self):
+        for record in self:
+            if record.state not in ("done", "review", "needs_info"):
+                raise UserError(
+                    _(
+                        "Apruebe para propuesta solo desde Completado, "
+                        "En revisión o Requiere información."
+                    )
+                )
+            record.state = "approved_proposal"
+            record.message_post(body=_("Levantamiento aprobado para propuesta comercial."))
+        return True
+
+    def action_create_quotation(self):
+        self.ensure_one()
+        existing = self.sale_order_ids.filtered(
+            lambda o: o.state in ("draft", "sent")
+        )
+        if existing:
+            return {
+                "type": "ir.actions.act_window",
+                "name": _("Cotizaciones"),
+                "res_model": "sale.order",
+                "view_mode": "list,form",
+                "domain": [("id", "in", existing.ids)],
+                "target": "current",
+            }
+        if not self.opportunity_id:
+            self.action_create_opportunity()
+        partner = self.partner_id
+        note_parts = [
+            _("Levantamiento: %s", self.name),
+            self.summary or "",
+        ]
+        order = self.env["sale.order"].create(
+            {
+                "partner_id": partner.id,
+                "partner_invoice_id": partner.id,
+                "partner_shipping_id": partner.id,
+                "opportunity_id": self.opportunity_id.id,
+                "origin": self.name,
+                "client_order_ref": self.name,
+                "user_id": self.consultant_id.id or self.env.user.id,
+                "justech_assessment_id": self.id,
+                "justech_managed_service_id": self.managed_service_id.id,
+                "note": "\n".join(p for p in note_parts if p),
+            }
+        )
+        self.write({"state": "quotation_ready"})
+        self.message_post(
+            body=_("Cotización creada: %s (sin líneas; agregue productos).", order.name)
+        )
+        return {
+            "type": "ir.actions.act_window",
+            "res_model": "sale.order",
+            "res_id": order.id,
+            "view_mode": "form",
+            "target": "current",
+        }
+
+    def action_view_quotations(self):
+        self.ensure_one()
+        return {
+            "type": "ir.actions.act_window",
+            "name": _("Cotizaciones"),
+            "res_model": "sale.order",
+            "view_mode": "list,form",
+            "domain": [
+                "|",
+                ("justech_assessment_id", "=", self.id),
+                ("opportunity_id", "=", self.opportunity_id.id),
+            ]
+            if self.opportunity_id
+            else [("justech_assessment_id", "=", self.id)],
+            "context": {
+                "default_partner_id": self.partner_id.id,
+                "default_justech_assessment_id": self.id,
+                "default_opportunity_id": self.opportunity_id.id,
+            },
+        }
+
+    def action_open_quotation(self):
+        self.ensure_one()
+        order = self.sale_order_ids[:1]
+        if not order and self.opportunity_id:
+            order = self.env["sale.order"].search(
+                [("opportunity_id", "=", self.opportunity_id.id)], limit=1
+            )
+        if not order:
+            raise UserError(_("No hay cotización vinculada. Use Crear cotización."))
+        return {
+            "type": "ir.actions.act_window",
+            "res_model": "sale.order",
+            "res_id": order.id,
+            "view_mode": "form",
+            "target": "current",
+        }
+
+    def action_create_managed_service(self):
+        self.ensure_one()
+        if self.managed_service_id:
+            return self.action_open_managed_service()
+        existing = self.env["justech.managed.service"].search(
+            [("assessment_id", "=", self.id)], limit=1
+        )
+        if existing:
+            self.managed_service_id = existing
+            return self.action_open_managed_service()
+        opportunity = self.opportunity_id
+        sale_order = self.sale_order_ids[:1]
+        won = False
+        if opportunity:
+            stage = opportunity.stage_id
+            won = bool(
+                getattr(stage, "is_won", False)
+                or opportunity.probability >= 100
+            )
+        if sale_order and sale_order.state in ("sale", "done"):
+            initial_state = "implementation"
+        elif won:
+            initial_state = "approved"
+        else:
+            initial_state = "approved"
+        partner = self.partner_id.commercial_partner_id
+        # Prefill from form seed
+        data = self.form_data or {}
+        levels = data.get("support_levels") or []
+        outsource = data.get("outsource_services") or []
+        service = self.env["justech.managed.service"].create(
+            {
+                "title": _(
+                    "Servicios Administrados — %(partner)s",
+                    partner=partner.commercial_company_name or partner.name,
+                ),
+                "partner_id": partner.id,
+                "contact_id": self.contact_id.id,
+                "company_id": self.company_id.id,
+                "salesperson_id": opportunity.user_id.id
+                if opportunity and opportunity.user_id
+                else self.consultant_id.id,
+                "technician_id": self.consultant_id.id,
+                "opportunity_id": opportunity.id if opportunity else False,
+                "assessment_id": self.id,
+                "sale_order_id": sale_order.id if sale_order else False,
+                "state": initial_state,
+                "level_l1": "nivel_1" in levels or True,
+                "level_l2": "nivel_2" in levels,
+                "level_l3": "nivel_3" in levels,
+                "support_remote": "soporte_remoto" in outsource,
+                "support_onsite": "soporte_presencial" in outsource,
+                "scope_notes": self.summary or False,
+            }
+        )
+        if opportunity:
+            opportunity.justech_managed_service_id = service.id
+        if sale_order:
+            sale_order.justech_managed_service_id = service.id
+        self.write(
+            {
+                "managed_service_id": service.id,
+                "state": "service_created",
+            }
+        )
+        self.message_post(
+            body=_("Servicio Administrado creado: %s", service.name)
+        )
+        return {
+            "type": "ir.actions.act_window",
+            "res_model": "justech.managed.service",
+            "res_id": service.id,
+            "view_mode": "form",
+            "target": "current",
+        }
+
+    def action_open_managed_service(self):
+        self.ensure_one()
+        service = self.managed_service_id or self.env[
+            "justech.managed.service"
+        ].search([("assessment_id", "=", self.id)], limit=1)
+        if not service:
+            raise UserError(_("No hay Servicio Administrado vinculado."))
+        return {
+            "type": "ir.actions.act_window",
+            "res_model": "justech.managed.service",
+            "res_id": service.id,
+            "view_mode": "form",
+            "target": "current",
+        }
+
+    def action_open_partner(self):
+        self.ensure_one()
+        return {
+            "type": "ir.actions.act_window",
+            "res_model": "res.partner",
+            "res_id": self.partner_id.id,
+            "view_mode": "form",
+            "target": "current",
+        }
+
+    def action_mark_reviewed(self):
+        """Compatibilidad: 'Marcar revisado' → En revisión."""
+        return self.action_mark_review()
 
     def action_reopen_public(self):
         if not self.env.user.has_group(
@@ -577,12 +875,13 @@ class JustechManagedServiceAssessment(models.Model):
             raise UserError(
                 _("Solo un administrador puede reabrir el formulario público.")
             )
+        reopenable = ("done", "review", "needs_info", "approved_proposal")
         for record in self:
-            if record.state not in ("done", "reviewed", "proposal_ready"):
+            if record.state not in reopenable:
                 raise UserError(
                     _(
                         "Solo puede reabrir levantamientos completados, "
-                        "revisados o con propuesta preparada."
+                        "en revisión, que requieren información o aprobados."
                     )
                 )
             record.write(
@@ -608,7 +907,7 @@ class JustechManagedServiceAssessment(models.Model):
         return True
 
     def unlink(self):
-        protected_states = ("done", "reviewed", "proposal_ready")
+        protected_states = self.SUBMITTED_STATES
         is_manager = self.env.user.has_group(
             "justech_managed_services.group_ms_manager"
         )

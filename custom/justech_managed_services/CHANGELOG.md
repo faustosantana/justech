@@ -1,5 +1,19 @@
 # Changelog — justech_managed_services
 
+## [19.0.2.0.0] — 2026-07-15
+
+### Añadido (Fase 2 operativa)
+
+- Modelo maestro `justech.managed.service` (MS-YYYY-####) con alcance, fee, SLA básico y estados de vida.
+- Flujo navegable: Levantamiento → Oportunidad → Cotización → Servicio → Fee → Ticket.
+- Integración por herencia con `sale.order`, `sale_subscription`, `helpdesk.ticket`, CRM y Contactos.
+- Grupos Comercial y Técnico; menú Resumen / Servicios / Levantamientos / Fees / Tickets.
+- Botón Descargar PDF / Vista previa; estados comerciales del levantamiento ampliados.
+
+### Conservado
+
+- Formulario público Fase 1, tokens y levantamientos existentes (`managed_service_id` opcional).
+
 ## [19.0.1.0.2] — 2026-07-15
 
 ### Corregido (pre-producción)

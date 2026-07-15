@@ -4,11 +4,36 @@
               name="Servicios Administrados"
               sequence="85"
               web_icon="justech_managed_services,static/description/icon.png"
-              groups="justech_managed_services.group_ms_user"/>
+              groups="justech_managed_services.group_ms_user,justech_managed_services.group_ms_technician"/>
+
+    <menuitem id="menu_justech_ms_summary"
+              name="Resumen"
+              parent="menu_justech_managed_services_root"
+              action="action_justech_managed_service_summary"
+              sequence="5"/>
+
+    <menuitem id="menu_justech_ms_services"
+              name="Servicios Administrados"
+              parent="menu_justech_managed_services_root"
+              action="action_justech_managed_service"
+              sequence="10"/>
 
     <menuitem id="menu_justech_managed_services_assessments"
               name="Levantamientos"
               parent="menu_justech_managed_services_root"
               action="action_justech_managed_service_assessment"
-              sequence="10"/>
+              sequence="20"/>
+
+    <menuitem id="menu_justech_ms_fees"
+              name="Fees / Igualas"
+              parent="menu_justech_managed_services_root"
+              action="action_justech_managed_service_fees"
+              sequence="30"
+              groups="justech_managed_services.group_ms_commercial,justech_managed_services.group_ms_manager"/>
+
+    <menuitem id="menu_justech_ms_tickets"
+              name="Tickets"
+              parent="menu_justech_managed_services_root"
+              action="action_justech_ms_tickets"
+              sequence="40"/>
 </odoo>

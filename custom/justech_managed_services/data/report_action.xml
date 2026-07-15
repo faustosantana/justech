@@ -6,7 +6,7 @@
         <field name="report_type">qweb-pdf</field>
         <field name="report_name">justech_managed_services.report_managed_service_assessment_document</field>
         <field name="report_file">justech_managed_services.report_managed_service_assessment_document</field>
-        <field name="print_report_name">'Levantamiento - %s' % (object.name)</field>
+        <field name="print_report_name">'%s_%s' % (object.name, (object.partner_id.commercial_company_name or object.partner_id.name or 'cliente').replace('/', '-'))</field>
         <field name="paperformat_id" ref="paperformat_managed_service_assessment"/>
         <field name="binding_model_id" ref="model_justech_managed_service_assessment"/>
         <field name="binding_type">report</field>

@@ -1,0 +1,21 @@
+{
+  "assessment": "LEV-2026-0007",
+  "opportunity_id": 284,
+  "opportunity": "Servicios Administrados — Credicefi",
+  "quotation": "C-0003890",
+  "service": "MS-2026-0001",
+  "historic_service": "MS-2026-0002",
+  "fee_amount_dop": 35000,
+  "subscription": "C-0003891",
+  "subscription_is_subscription": true,
+  "subscription_plan": "Mensual",
+  "subscription_state": "draft",
+  "ticket_id": 691,
+  "mails": 0,
+  "new_invoices_from_uat": 0,
+  "production_module": "ABSENT",
+  "backup": "/opt/odoo-dev/backups/p2-managed-services-20260715_202722/justech_dev.dump",
+  "version": "19.0.2.0.0",
+  "branch": "feature/managed-services-phase2",
+  "recurrence_mechanism": "sale_subscription (sale.order.is_subscription + plan_id)"
+}

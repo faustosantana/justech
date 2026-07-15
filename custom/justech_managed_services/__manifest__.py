@@ -1,14 +1,15 @@
 {
     "name": "Servicios Administrados",
-    "version": "19.0.1.0.2",
+    "version": "19.0.2.0.0",
     "category": "Services",
-    "summary": "Levantamientos de Servicios Administrados — formulario público y CRM",
+    "summary": "Igualas y Servicios Administrados Justech — levantamiento, CRM, ventas, fee y Helpdesk",
     "description": """
-Fase 1 — Levantamientos de Servicios Administrados Justech.
+Fase 2 — Centro operativo de Servicios Administrados / Igualas.
 
-* Formulario público multipágina con enlace seguro por token.
-* Guardado parcial y envío final.
-* PDF, plantilla de correo e integración con contactos y CRM.
+* Servicio Administrado (maestro) con fee, alcance y SLA básico.
+* Levantamientos (Fase 1) vinculados al servicio.
+* Flujo: Contacto → Levantamiento → Oportunidad → Cotización → Servicio → Fee → Tickets.
+* Reutiliza CRM, Sales, Subscriptions y Helpdesk estándar (sin facturación paralela).
     """,
     "author": "Justech",
     "website": "https://justech.do",
@@ -19,6 +20,10 @@ Fase 1 — Levantamientos de Servicios Administrados Justech.
         "crm",
         "website",
         "portal",
+        "sale_management",
+        "sale_subscription",
+        "helpdesk",
+        "account",
     ],
     "data": [
         "security/managed_services_security.xml",
@@ -26,9 +31,12 @@ Fase 1 — Levantamientos de Servicios Administrados Justech.
         "data/ir_sequence.xml",
         "data/mail_template.xml",
         "data/utm_source.xml",
+        "views/managed_service_views.xml",
         "views/assessment_views.xml",
         "views/res_partner_views.xml",
         "views/crm_lead_views.xml",
+        "views/sale_order_views.xml",
+        "views/helpdesk_ticket_views.xml",
         "views/menu.xml",
         "report/assessment_report.xml",
         "data/report_action.xml",
@@ -43,14 +51,18 @@ Fase 1 — Levantamientos de Servicios Administrados Justech.
     "justech_register": {
         "module_code": "justech_managed_services",
         "module_name": "Servicios Administrados",
-        "version": "19.0.1.0.2",
+        "version": "19.0.2.0.0",
         "category": "services",
         "country": "DO",
         "localization": "",
-        "description": "Levantamientos de Servicios Administrados — fase 1",
-        "dependencies": ["crm", "website"],
+        "description": "Igualas y Servicios Administrados — fase 2 operativa",
+        "dependencies": ["crm", "sale_management", "sale_subscription", "helpdesk", "website"],
         "always_enabled": False,
         "features": [
+            {
+                "code": "managed_service",
+                "name": "Servicio Administrado / Iguala",
+            },
             {
                 "code": "managed_service_assessment",
                 "name": "Levantamiento Servicios Administrados",

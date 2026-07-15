@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_justech_managed_service_list" model="ir.ui.view">
+        <field name="name">justech.managed.service.list</field>
+        <field name="model">justech.managed.service</field>
+        <field name="arch" type="xml">
+            <list string="Servicios Administrados"
+                  decoration-success="state == 'active'"
+                  decoration-info="state in ('approved','implementation')"
+                  decoration-muted="state in ('closed','cancel')"
+                  decoration-warning="state == 'suspended'">
+                <field name="name"/>
+                <field name="title"/>
+                <field name="partner_id"/>
+                <field name="state" widget="badge"
+                         decoration-success="state == 'active'"
+                         decoration-info="state in ('approved','implementation','proposal')"
+                         decoration-warning="state in ('suspended','renewal')"
+                         decoration-danger="state in ('cancel','closed')"/>
+                <field name="fee_amount" sum="Total fees"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="fee_period"/>
+                <field name="date_renewal"/>
+                <field name="salesperson_id" widget="many2one_avatar_user"/>
+                <field name="technician_id" widget="many2one_avatar_user"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_justech_managed_service_kanban" model="ir.ui.view">
+        <field name="name">justech.managed.service.kanban</field>
+        <field name="model">justech.managed.service</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state" class="o_kanban_small_column" sample="1">
+                <field name="name"/>
+                <field name="title"/>
+                <field name="partner_id"/>
+                <field name="state"/>
+                <field name="fee_amount"/>
+                <field name="currency_id"/>
+                <field name="date_renewal"/>
+                <field name="ticket_open_count"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="oe_kanban_global_click">
+                            <strong><field name="name"/></strong>
+                            <div><field name="title"/></div>
+                            <div class="text-muted"><field name="partner_id"/></div>
+                            <div t-if="record.fee_amount.raw_value">
+                                Fee: <field name="fee_amount"/>
+                            </div>
+                            <div t-if="record.date_renewal.raw_value">
+                                Renovación: <field name="date_renewal"/>
+                            </div>
+                            <div t-if="record.ticket_open_count.raw_value">
+                                Tickets abiertos: <field name="ticket_open_count"/>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_justech_managed_service_search" model="ir.ui.view">
+        <field name="name">justech.managed.service.search</field>
+        <field name="model">justech.managed.service</field>
+        <field name="arch" type="xml">
+            <search string="Servicios Administrados">
+                <field name="name"/>
+                <field name="title"/>
+                <field name="partner_id"/>
+                <field name="salesperson_id"/>
+                <field name="technician_id"/>
+                <filter name="filter_active" string="Activos" domain="[('state', '=', 'active')]"/>
+                <filter name="filter_implementation" string="Implementación" domain="[('state', '=', 'implementation')]"/>
+                <filter name="filter_approved" string="Aprobados" domain="[('state', '=', 'approved')]"/>
+                <filter name="filter_fees" string="Con fee" domain="[('fee_amount', '>', 0)]"/>
+                <filter name="filter_renewal" string="Con fecha renovación" domain="[('date_renewal', '!=', False)]"/>
+                <separator/>
+                <filter name="filter_my" string="Mis servicios"
+                        domain="['|', ('salesperson_id', '=', uid), ('technician_id', '=', uid)]"/>
+                <group>
+                    <filter name="group_state" string="Estado" context="{'group_by': 'state'}"/>
+                    <filter name="group_partner" string="Cliente" context="{'group_by': 'partner_id'}"/>
+                    <filter name="group_fee_period" string="Periodicidad" context="{'group_by': 'fee_period'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_justech_managed_service_form" model="ir.ui.view">
+        <field name="name">justech.managed.service.form</field>
+        <field name="model">justech.managed.service</field>
+        <field name="arch" type="xml">
+            <form string="Servicio Administrado">
+                <header>
+                    <button name="action_set_implementation" type="object" string="Pasar a implementación"
+                            invisible="state not in ('approved',)" class="btn-primary"/>
+                    <button name="action_set_active" type="object" string="Activar servicio"
+                            invisible="state not in ('approved','implementation')" class="btn-primary"/>
+                    <button name="action_set_suspended" type="object" string="Suspender"
+                            invisible="state != 'active'" confirm="¿Suspender este servicio?"/>
+                    <button name="action_set_closed" type="object" string="Finalizar"
+                            invisible="state not in ('active','suspended','renewal')"
+                            confirm="¿Finalizar este servicio?"/>
+                    <button name="action_create_ticket" type="object" string="Crear ticket"
+                            invisible="state not in ('active','implementation','suspended')"/>
+                    <button name="action_open_create_subscription" type="object"
+                            string="Crear/abrir suscripción"
+                            groups="justech_managed_services.group_ms_commercial"/>
+                    <field name="state" widget="statusbar"
+                            statusbar_visible="prospect,evaluation,proposal,negotiation,approved,implementation,active"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_assessments" type="object" class="oe_stat_button" icon="fa-list-alt">
+                            <field name="assessment_count" widget="statinfo" string="Levantamientos"/>
+                        </button>
+                        <button name="action_view_opportunity" type="object" class="oe_stat_button" icon="fa-star"
+                                invisible="not opportunity_id">
+                            <div class="o_stat_info"><span class="o_stat_text">Oportunidad</span></div>
+                        </button>
+                        <button name="action_view_sale_orders" type="object" class="oe_stat_button" icon="fa-usd">
+                            <field name="sale_order_count" widget="statinfo" string="Cotizaciones"/>
+                        </button>
+                        <button name="action_view_subscription" type="object" class="oe_stat_button" icon="fa-refresh"
+                                invisible="not subscription_id">
+                            <div class="o_stat_info"><span class="o_stat_text">Suscripción</span></div>
+                        </button>
+                        <button name="action_view_tickets" type="object" class="oe_stat_button" icon="fa-life-ring">
+                            <field name="ticket_count" widget="statinfo" string="Tickets"/>
+                        </button>
+                        <button name="action_view_invoices" type="object" class="oe_stat_button" icon="fa-pencil-square-o">
+                            <field name="invoice_count" widget="statinfo" string="Facturas"/>
+                        </button>
+                        <button name="action_open_partner" type="object" class="oe_stat_button" icon="fa-user">
+                            <div class="o_stat_info"><span class="o_stat_text">Cliente</span></div>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <label for="title"/>
+                        <h1><field name="title" placeholder="Nombre del servicio / iguala"/></h1>
+                        <h2><field name="name" readonly="1"/></h2>
+                    </div>
+                    <group>
+                        <group string="Identificación">
+                            <field name="partner_id" context="{'default_is_company': True, 'show_vat': True}"/>
+                            <field name="contact_id"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="salesperson_id" widget="many2one_avatar_user"/>
+                            <field name="technician_id" widget="many2one_avatar_user"/>
+                        </group>
+                        <group string="Vínculos comerciales">
+                            <field name="opportunity_id"/>
+                            <field name="assessment_id"/>
+                            <field name="sale_order_id"/>
+                            <field name="subscription_id"/>
+                            <field name="helpdesk_team_id"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Vigencia" name="validity">
+                            <group>
+                                <group>
+                                    <field name="date_start"/>
+                                    <field name="date_end"/>
+                                    <field name="date_renewal"/>
+                                </group>
+                                <group>
+                                    <field name="auto_renewal"/>
+                                    <field name="renewal_notice_days"/>
+                                    <field name="contractual_status"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Alcance" name="scope">
+                            <group>
+                                <group string="Niveles y modalidad">
+                                    <field name="level_l1"/>
+                                    <field name="level_l2"/>
+                                    <field name="level_l3"/>
+                                    <field name="support_remote"/>
+                                    <field name="support_onsite"/>
+                                    <field name="coverage_schedule"/>
+                                    <field name="service_level"/>
+                                </group>
+                                <group string="Capacidad">
+                                    <field name="users_covered"/>
+                                    <field name="assets_covered"/>
+                                    <field name="hours_included"/>
+                                    <field name="visits_included"/>
+                                </group>
+                            </group>
+                            <group string="Servicios incluidos">
+                                <field name="included_services" nolabel="1" colspan="2"/>
+                            </group>
+                            <group string="Servicios excluidos">
+                                <field name="excluded_services" nolabel="1" colspan="2"/>
+                            </group>
+                            <group string="Observaciones">
+                                <field name="scope_notes" nolabel="1" colspan="2"/>
+                            </group>
+                        </page>
+                        <page string="SLA básico" name="sla">
+                            <group>
+                                <field name="sla_id"/>
+                                <field name="sla_response_critical"/>
+                                <field name="sla_response_high"/>
+                                <field name="sla_response_normal"/>
+                                <field name="ticket_open_count" readonly="1"/>
+                                <field name="ticket_closed_count" readonly="1"/>
+                            </group>
+                        </page>
+                        <page string="Fee y facturación" name="fee"
+                              groups="justech_managed_services.group_ms_commercial,justech_managed_services.group_ms_manager">
+                            <group>
+                                <group>
+                                    <field name="fee_modality"/>
+                                    <field name="currency_id"/>
+                                    <field name="fee_amount"/>
+                                    <field name="fee_period"/>
+                                    <field name="billing_day"/>
+                                </group>
+                                <group>
+                                    <field name="product_id"/>
+                                    <field name="tax_ids" widget="many2many_tags"/>
+                                    <field name="next_invoice_date"/>
+                                    <field name="auto_billing"/>
+                                    <field name="subscription_id"/>
+                                </group>
+                            </group>
+                            <group>
+                                <field name="billing_notes" placeholder="Observaciones de facturación (sin motor paralelo)..."/>
+                            </group>
+                        </page>
+                        <page string="Notas" name="notes">
+                            <field name="internal_notes"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_justech_managed_service" model="ir.actions.act_window">
+        <field name="name">Servicios Administrados</field>
+        <field name="res_model">justech.managed.service</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="search_view_id" ref="view_justech_managed_service_search"/>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Cree un Servicio Administrado / Iguala.</p>
+            <p>Puede nacer desde una oportunidad ganada o registrarse manualmente para clientes históricos.</p>
+        </field>
+    </record>
+
+    <record id="action_justech_managed_service_fees" model="ir.actions.act_window">
+        <field name="name">Fees / Igualas</field>
+        <field name="res_model">justech.managed.service</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_justech_managed_service_search"/>
+        <field name="context">{'search_default_filter_fees': 1}</field>
+        <field name="domain">[('fee_amount', '>', 0)]</field>
+    </record>
+
+    <record id="action_justech_managed_service_summary" model="ir.actions.act_window">
+        <field name="name">Resumen</field>
+        <field name="res_model">justech.managed.service</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="search_view_id" ref="view_justech_managed_service_search"/>
+        <field name="context">{}</field>
+    </record>
+
+    <record id="action_justech_ms_tickets" model="ir.actions.act_window">
+        <field name="name">Tickets MS</field>
+        <field name="res_model">helpdesk.ticket</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('justech_managed_service_id', '!=', False)]</field>
+        <field name="context">{}</field>
+    </record>
+</odoo>

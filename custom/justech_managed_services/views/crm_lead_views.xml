@@ -9,10 +9,36 @@
                 <button name="action_view_justech_ms_assessments"
                         type="object"
                         class="oe_stat_button"
-                        icon="fa-clipboard">
+                        icon="fa-clipboard"
+                        groups="justech_managed_services.group_ms_user">
                     <field name="justech_ms_assessment_count" widget="statinfo" string="Levantamientos"/>
                 </button>
+                <button name="action_view_justech_managed_service"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-cogs"
+                        groups="justech_managed_services.group_ms_user">
+                    <field name="justech_ms_service_count" widget="statinfo" string="Servicio Adm."/>
+                </button>
+                <button name="action_view_justech_ms_quotations"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-usd"
+                        groups="justech_managed_services.group_ms_commercial,justech_managed_services.group_ms_manager">
+                    <field name="justech_ms_sale_count" widget="statinfo" string="Cotizaciones"/>
+                </button>
             </div>
+            <xpath expr="//header" position="inside">
+                <button name="action_justech_create_quotation" type="object"
+                        string="Crear cotización MS"
+                        groups="justech_managed_services.group_ms_commercial,justech_managed_services.group_ms_manager"
+                        invisible="type == 'lead'"/>
+            </xpath>
+            <xpath expr="//sheet" position="inside">
+                <group string="Servicios Administrados" groups="justech_managed_services.group_ms_user">
+                    <field name="justech_managed_service_id"/>
+                </group>
+            </xpath>
         </field>
     </record>
 </odoo>

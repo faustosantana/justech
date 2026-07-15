@@ -8,4 +8,12 @@
         <field name="company_id" eval="False"/>
         <field name="use_date_range">True</field>
     </record>
+    <record id="seq_justech_managed_service" model="ir.sequence">
+        <field name="name">Servicio Administrado</field>
+        <field name="code">justech.managed.service</field>
+        <field name="prefix">MS-%(range_year)s-</field>
+        <field name="padding">4</field>
+        <field name="company_id" eval="False"/>
+        <field name="use_date_range">True</field>
+    </record>
 </odoo>

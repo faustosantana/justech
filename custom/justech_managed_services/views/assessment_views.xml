@@ -4,12 +4,17 @@
         <field name="name">justech.managed.service.assessment.list</field>
         <field name="model">justech.managed.service.assessment</field>
         <field name="arch" type="xml">
-            <list string="Levantamientos" decoration-muted="state == 'cancel'" decoration-success="state == 'done'" decoration-info="state in ('sent', 'in_progress')">
+            <list string="Levantamientos" decoration-muted="state == 'cancel'" decoration-success="state in ('done','service_created')" decoration-info="state in ('sent', 'in_progress')">
                 <field name="name"/>
                 <field name="title"/>
                 <field name="partner_id"/>
+                <field name="partner_vat" optional="show"/>
                 <field name="consultant_id" widget="many2one_avatar_user"/>
-                <field name="state" widget="badge" decoration-info="state in ('sent','in_progress')" decoration-success="state == 'done'" decoration-warning="state == 'reviewed'" decoration-danger="state == 'cancel'"/>
+                <field name="state" widget="badge"
+                         decoration-info="state in ('sent','in_progress','review')"
+                         decoration-success="state in ('done','approved_proposal','opportunity_created','quotation_ready','service_created')"
+                         decoration-warning="state == 'needs_info'"
+                         decoration-danger="state == 'cancel'"/>
                 <field name="completion_percent" widget="progressbar"/>
                 <field name="date_deadline"/>
                 <field name="date_done"/>
@@ -33,7 +38,8 @@
                 <filter name="filter_sent" string="Enviado" domain="[('state', '=', 'sent')]"/>
                 <filter name="filter_in_progress" string="En proceso" domain="[('state', '=', 'in_progress')]"/>
                 <filter name="filter_done" string="Completado" domain="[('state', '=', 'done')]"/>
-                <filter name="filter_reviewed" string="Revisado" domain="[('state', '=', 'reviewed')]"/>
+                <filter name="filter_review" string="En revisión" domain="[('state', '=', 'review')]"/>
+                <filter name="filter_pending" string="Pendientes comerciales" domain="[('state', 'in', ('done','review','needs_info','approved_proposal'))]"/>
                 <filter name="filter_expired" string="Vencidos" domain="[('is_link_expired', '=', True)]"/>
                 <filter name="filter_active_link" string="Enlace activo" domain="[('link_active', '=', True)]"/>
                 <separator/>
@@ -55,36 +61,84 @@
             <form string="Levantamiento">
                 <header>
                     <button name="action_generate_link" type="object" string="Generar enlace" class="btn-primary" invisible="access_token"/>
-                    <button name="action_regenerate_link" type="object" string="Regenerar enlace" invisible="not access_token or state not in ('draft','sent','in_progress')"/>
+                    <button name="action_send_email" type="object" string="Enviar al cliente"
+                            invisible="state not in ('draft','sent','in_progress','needs_info')"/>
+                    <button name="action_regenerate_link" type="object" string="Regenerar enlace" invisible="not access_token or state not in ('draft','sent','in_progress','needs_info')"/>
                     <button name="action_copy_link_notification" type="object" string="Copiar enlace" invisible="not access_token"/>
                     <button name="action_open_form" type="object" string="Abrir formulario" invisible="not access_token"/>
-                    <button name="action_send_email" type="object" string="Enviar por correo"/>
                     <button name="action_view_answers" type="object" string="Ver respuestas" invisible="state == 'draft'"/>
-                    <button name="action_print_pdf" type="object" string="Imprimir PDF" invisible="state == 'draft'"/>
-                    <button name="action_create_opportunity" type="object" string="Crear oportunidad" invisible="opportunity_id"/>
+                    <button name="action_download_pdf" type="object" string="Descargar PDF" class="btn-primary"
+                            invisible="state in ('draft','cancel')"/>
+                    <button name="action_preview_pdf" type="object" string="Vista previa del PDF"
+                            invisible="state in ('draft','cancel')"/>
+                    <button name="action_mark_review" type="object" string="Marcar en revisión"
+                            invisible="state not in ('done','needs_info')"/>
+                    <button name="action_request_info" type="object" string="Solicitar información adicional"
+                            invisible="state not in ('done','review','approved_proposal')"/>
+                    <button name="action_approve_for_proposal" type="object" string="Aprobar para propuesta" class="btn-primary"
+                            invisible="state not in ('done','review','needs_info')"
+                            groups="justech_managed_services.group_ms_commercial,justech_managed_services.group_ms_manager"/>
+                    <button name="action_create_opportunity" type="object" string="Crear oportunidad"
+                            invisible="opportunity_id"
+                            groups="justech_managed_services.group_ms_commercial,justech_managed_services.group_ms_manager"/>
                     <button name="action_open_opportunity" type="object" string="Abrir oportunidad" invisible="not opportunity_id"/>
-                    <button name="action_mark_reviewed" type="object" string="Marcar revisado" invisible="state != 'done'" groups="justech_managed_services.group_ms_manager"/>
-                    <button name="action_reopen_public" type="object" string="Reabrir formulario" invisible="state not in ('done','reviewed','proposal_ready')" groups="justech_managed_services.group_ms_manager"/>
+                    <button name="action_create_quotation" type="object" string="Crear cotización" class="btn-primary"
+                            invisible="state in ('draft','sent','cancel')"
+                            groups="justech_managed_services.group_ms_commercial,justech_managed_services.group_ms_manager"/>
+                    <button name="action_open_quotation" type="object" string="Abrir cotización" invisible="sale_order_count == 0"/>
+                    <button name="action_create_managed_service" type="object" string="Crear Servicio Administrado" class="btn-primary"
+                            invisible="managed_service_id or state in ('draft','sent','in_progress','cancel')"
+                            groups="justech_managed_services.group_ms_commercial,justech_managed_services.group_ms_manager"/>
+                    <button name="action_open_managed_service" type="object" string="Abrir Servicio Administrado" invisible="not managed_service_id"/>
+                    <button name="action_reopen_public" type="object" string="Reabrir formulario"
+                            invisible="state not in ('done','review','needs_info','approved_proposal')"
+                            groups="justech_managed_services.group_ms_manager"/>
                     <button name="action_invalidate_link" type="object" string="Invalidar enlace" invisible="not link_active"/>
                     <button name="action_cancel" type="object" string="Cancelar" invisible="state == 'cancel'" confirm="¿Confirma cancelar este levantamiento?"/>
-                    <field name="state" widget="statusbar" statusbar_visible="draft,sent,in_progress,done,reviewed,proposal_ready"/>
+                    <field name="state" widget="statusbar"
+                            statusbar_visible="draft,sent,in_progress,done,review,approved_proposal,opportunity_created,quotation_ready,service_created"/>
                 </header>
                 <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_open_partner" type="object" class="oe_stat_button" icon="fa-building">
+                            <div class="o_stat_info"><span class="o_stat_text">Cliente</span></div>
+                        </button>
+                        <button name="action_open_opportunity" type="object" class="oe_stat_button" icon="fa-star"
+                                invisible="not opportunity_id">
+                            <div class="o_stat_info"><span class="o_stat_text">Oportunidad</span></div>
+                        </button>
+                        <button name="action_view_quotations" type="object" class="oe_stat_button" icon="fa-usd">
+                            <field name="sale_order_count" widget="statinfo" string="Cotizaciones"/>
+                        </button>
+                        <button name="action_open_managed_service" type="object" class="oe_stat_button" icon="fa-cogs"
+                                invisible="not managed_service_id">
+                            <field name="managed_service_count" widget="statinfo" string="Servicio"/>
+                        </button>
+                        <button name="action_download_pdf" type="object" class="oe_stat_button" icon="fa-file-pdf-o"
+                                invisible="state in ('draft','cancel')">
+                            <div class="o_stat_info"><span class="o_stat_text">PDF</span></div>
+                        </button>
+                    </div>
                     <div class="oe_title">
                         <label for="title"/>
                         <h1><field name="title" placeholder="Título del levantamiento"/></h1>
                         <h2><field name="name" readonly="1"/></h2>
                     </div>
                     <group>
-                        <group string="Cliente">
-                            <field name="partner_id"/>
-                            <field name="contact_id"/>
+                        <group string="Cliente (Contactos)">
+                            <field name="partner_id"
+                                     context="{'default_is_company': True, 'res_partner_search_mode': 'customer', 'show_vat': True}"
+                                     options="{'always_reload': True}"/>
+                            <field name="partner_vat"/>
+                            <field name="partner_email"/>
+                            <field name="contact_id" context="{'default_parent_id': partner_id, 'default_is_company': False}"/>
                             <field name="email"/>
                             <field name="phone"/>
                         </group>
                         <group string="Seguimiento">
                             <field name="consultant_id" widget="many2one_avatar_user"/>
                             <field name="opportunity_id"/>
+                            <field name="managed_service_id"/>
                             <field name="company_id" groups="base.group_multi_company"/>
                             <field name="completion_percent" widget="progressbar"/>
                         </group>
@@ -105,6 +159,10 @@
                     </group>
                     <notebook>
                         <page string="Organización (formulario)" name="org">
+                            <div class="alert alert-info" role="alert">
+                                Prefill desde Contactos. Los cambios del cliente en el formulario público
+                                no actualizan automáticamente el contacto (revisión interna).
+                            </div>
                             <group>
                                 <field name="org_company_name"/>
                                 <field name="org_vat"/>
@@ -195,7 +253,7 @@
             <p class="o_view_nocontent_smiling_face">
                 Cree un levantamiento de Servicios Administrados.
             </p>
-            <p>Genere un enlace seguro para que el cliente complete el formulario sin iniciar sesión.</p>
+            <p>Seleccione el cliente desde Contactos y genere un enlace seguro.</p>
         </field>
     </record>
 </odoo>

@@ -6,11 +6,40 @@
         <field name="inherit_id" ref="base.view_partner_form"/>
         <field name="arch" type="xml">
             <div name="button_box" position="inside">
+                <button name="action_view_justech_managed_services"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-cogs"
+                        groups="justech_managed_services.group_ms_user,justech_managed_services.group_ms_technician">
+                    <field name="justech_ms_service_count" widget="statinfo" string="Servicios Adm."/>
+                </button>
                 <button name="action_view_justech_ms_assessments"
                         type="object"
                         class="oe_stat_button"
-                        icon="fa-clipboard">
+                        icon="fa-clipboard"
+                        groups="justech_managed_services.group_ms_user,justech_managed_services.group_ms_technician">
                     <field name="justech_ms_assessment_count" widget="statinfo" string="Levantamientos"/>
+                </button>
+                <button name="action_view_justech_ms_tickets"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-life-ring"
+                        groups="justech_managed_services.group_ms_user,justech_managed_services.group_ms_technician">
+                    <field name="justech_ms_ticket_count" widget="statinfo" string="Tickets MS"/>
+                </button>
+                <button name="action_view_justech_ms_quotations"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-usd"
+                        groups="justech_managed_services.group_ms_commercial,justech_managed_services.group_ms_manager">
+                    <field name="justech_ms_sale_count" widget="statinfo" string="Cotiz. MS"/>
+                </button>
+                <button name="action_view_justech_ms_subscriptions"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-refresh"
+                        groups="justech_managed_services.group_ms_commercial,justech_managed_services.group_ms_manager">
+                    <field name="justech_ms_subscription_count" widget="statinfo" string="Suscrip. MS"/>
                 </button>
             </div>
         </field>

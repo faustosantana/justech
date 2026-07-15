@@ -1,0 +1,106 @@
+{
+  "ms0001": {
+    "name": "MS-2026-0001",
+    "partner": "Credicefi",
+    "contact": "Contacto DEMO Credicefi",
+    "state": "active",
+    "assessment": "LEV-2026-0007",
+    "opportunity": "Servicios Administrados \u2014 Credicefi",
+    "quotation": "C-0003890",
+    "subscription": "C-0003891",
+    "fee": 35000.0,
+    "period": "monthly",
+    "product": "Servicios de Iguala",
+    "salesperson": "Fausto Santana",
+    "technician": "Fausto Santana",
+    "date_start": "2026-07-15",
+    "date_renewal": "2027-07-15",
+    "L1": true,
+    "L2": true,
+    "L3": true,
+    "tickets": 1,
+    "ticket_ids": [
+      691
+    ]
+  },
+  "ms0002": {
+    "name": "MS-2026-0002",
+    "partner": "Credicefi",
+    "assessment": false,
+    "opportunity": false,
+    "quotation": false,
+    "fee": 15000.0,
+    "currency": "DOP",
+    "period": "monthly",
+    "product": "Servicios de Iguala",
+    "start": "2025-01-01",
+    "renewal": "2027-01-01",
+    "state": "active",
+    "hours": 16.0,
+    "visits": 0,
+    "users": 20,
+    "assets": 25,
+    "included": true,
+    "excluded": true
+  },
+  "lev0007": {
+    "name": "LEV-2026-0007",
+    "state": "service_created",
+    "opp": 284,
+    "svc": "MS-2026-0001",
+    "so_count": 1,
+    "no_dup_opp": true,
+    "no_dup_svc": true
+  },
+  "ticket": {
+    "id": 691,
+    "name": "DEMO F2 \u2014 Consulta soporte Credicefi",
+    "partner": "Credicefi",
+    "service": "MS-2026-0001",
+    "team": "Soporte Justech",
+    "stage": "Nuevo",
+    "priority": "2"
+  },
+  "perms": {
+    "uat_ms_manager": {
+      "search": 2,
+      "write": true,
+      "fee_page": true
+    },
+    "uat_ms_commercial": {
+      "search": 2,
+      "write": true,
+      "fee_page": true
+    },
+    "uat_ms_technician": {
+      "search": 2,
+      "write": false,
+      "fee_page": false
+    },
+    "uat_ms_noperm": {
+      "search": "ERR",
+      "write": false,
+      "fee_page": false
+    }
+  },
+  "menu": [
+    "Resumen",
+    "Servicios Administrados",
+    "Levantamientos",
+    "Fees / Igualas",
+    "Tickets"
+  ],
+  "urls": {
+    "base": "https://erp.justech.do",
+    "resumen": "https://erp.justech.do/odoo/action-1579",
+    "servicios": "https://erp.justech.do/odoo/action-1577",
+    "ms1": "https://erp.justech.do/odoo/justech.managed.service/1",
+    "ms2": "https://erp.justech.do/odoo/justech.managed.service/2",
+    "lev": "https://erp.justech.do/odoo/justech.managed.service.assessment/7",
+    "opp": "https://erp.justech.do/odoo/crm.lead/284",
+    "so": "https://erp.justech.do/odoo/sale.order/816",
+    "sub": "https://erp.justech.do/odoo/sale.order/817",
+    "ticket": "https://erp.justech.do/odoo/helpdesk.ticket/691",
+    "partner": "https://erp.justech.do/odoo/res.partner/1963"
+  }
+}

@@ -245,18 +245,24 @@ class JustechManagedService(models.Model):
         "subscription_id",
     )
     def _compute_counts(self):
+        """Contadores para smart buttons (sudo solo para conteos; ACLs en acciones)."""
         Assessment = self.env["justech.managed.service.assessment"]
-        Ticket = self.env["helpdesk.ticket"]
+        Ticket = self.env["helpdesk.ticket"].sudo()
+        Order = self.env["sale.order"].sudo()
+        Move = self.env["account.move"].sudo()
         for rec in self:
-            assessments = Assessment.search(
-                [
-                    "|",
-                    ("managed_service_id", "=", rec.id),
-                    ("id", "=", rec.assessment_id.id),
-                ]
-            )
-            rec.assessment_count = len(assessments)
-            orders = self.env["sale.order"].search(
+            if Assessment.has_access("read"):
+                assessments = Assessment.search(
+                    [
+                        "|",
+                        ("managed_service_id", "=", rec.id),
+                        ("id", "=", rec.assessment_id.id),
+                    ]
+                )
+                rec.assessment_count = len(assessments)
+            else:
+                rec.assessment_count = 0
+            orders = Order.search(
                 [
                     "|",
                     ("justech_managed_service_id", "=", rec.id),
@@ -270,7 +276,7 @@ class JustechManagedService(models.Model):
             rec.ticket_closed_count = len(closed)
             rec.ticket_open_count = rec.ticket_count - rec.ticket_closed_count
             if orders:
-                moves = self.env["account.move"].search(
+                rec.invoice_count = Move.search_count(
                     [
                         ("move_type", "in", ("out_invoice", "out_refund")),
                         (
@@ -280,15 +286,18 @@ class JustechManagedService(models.Model):
                         ),
                     ]
                 )
-                rec.invoice_count = len(moves)
             else:
                 rec.invoice_count = 0
             if "documents.document" in self.env and rec.id:
-                rec.document_count = self.env["documents.document"].search_count(
-                    [
-                        ("res_model", "=", self._name),
-                        ("res_id", "=", rec.id),
-                    ]
+                rec.document_count = (
+                    self.env["documents.document"]
+                    .sudo()
+                    .search_count(
+                        [
+                            ("res_model", "=", self._name),
+                            ("res_id", "=", rec.id),
+                        ]
+                    )
                 )
             else:
                 rec.document_count = 0

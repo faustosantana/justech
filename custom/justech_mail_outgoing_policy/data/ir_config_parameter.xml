@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="param_outgoing_policy_enabled" model="ir.config_parameter">
+        <field name="key">justech_mail.outgoing_policy_enabled</field>
+        <field name="value">True</field>
+    </record>
+    <record id="param_force_from" model="ir.config_parameter">
+        <field name="key">justech_mail.force_from</field>
+        <field name="value">Notificaciones Justech &lt;notifications@justech.do&gt;</field>
+    </record>
+    <record id="param_apply_domains" model="ir.config_parameter">
+        <field name="key">justech_mail.apply_domains</field>
+        <field name="value">justech.do</field>
+    </record>
+</odoo>

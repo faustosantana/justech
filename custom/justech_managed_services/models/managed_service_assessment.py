@@ -53,11 +53,22 @@ class JustechManagedServiceAssessment(models.Model):
         string="Correo del cliente",
         readonly=True,
     )
+    partner_phone = fields.Char(
+        related="partner_id.phone",
+        string="Teléfono del cliente",
+        readonly=True,
+    )
     contact_id = fields.Many2one(
         "res.partner",
         string="Contacto responsable",
-        domain="[('parent_id', '=', partner_id), ('is_company', '=', False)]",
-        help="Persona de contacto hija de la empresa. Opcional.",
+        domain=(
+            "['|', '|',"
+            " ('id', '=', partner_id),"
+            " ('parent_id', '=', partner_id),"
+            " '&', ('is_company', '=', False),"
+            " ('commercial_partner_id', '=', partner_id)]"
+        ),
+        help="Persona vinculada a la empresa (hijos o contactos relacionados).",
     )
     managed_service_id = fields.Many2one(
         "justech.managed.service",
@@ -104,6 +115,7 @@ class JustechManagedServiceAssessment(models.Model):
     date_deadline = fields.Date(
         string="Vencimiento del enlace",
         tracking=True,
+        default=lambda self: fields.Date.context_today(self) + timedelta(days=30),
     )
     access_token = fields.Char(
         string="Token de acceso",
@@ -124,9 +136,28 @@ class JustechManagedServiceAssessment(models.Model):
         digits=(5, 2),
     )
     date_sent = fields.Datetime(string="Fecha de envío")
+    date_link_generated = fields.Datetime(string="Fecha de generación del enlace")
+    date_email_sent = fields.Datetime(string="Último correo enviado")
+    email_last_recipient = fields.Char(string="Último destinatario de correo")
     date_first_activity = fields.Datetime(string="Primera actividad")
     date_last_activity = fields.Datetime(string="Última actividad")
     date_done = fields.Datetime(string="Fecha de finalización")
+    invite_subject = fields.Char(
+        string="Asunto sugerido",
+        default="Levantamiento de Servicios Administrados – Justech",
+    )
+    invite_body = fields.Text(
+        string="Mensaje sugerido",
+        help="Texto editable para correo o revisión previa al envío.",
+    )
+    invite_share_text = fields.Text(
+        string="Mensaje para copiar",
+        compute="_compute_invite_share_text",
+    )
+    recipient_display_name = fields.Char(
+        string="Destinatario",
+        compute="_compute_recipient_display",
+    )
     internal_notes = fields.Html(string="Observaciones internas")
     summary = fields.Text(string="Resumen del levantamiento")
     completed_by_name = fields.Char(string="Completado por")
@@ -236,6 +267,99 @@ class JustechManagedServiceAssessment(models.Model):
             else:
                 record.public_url = False
 
+    @api.depends(
+        "contact_id",
+        "org_responsible",
+        "partner_id",
+        "email",
+        "phone",
+        "public_url",
+    )
+    def _compute_invite_share_text(self):
+        for record in self:
+            name = (
+                record.contact_id.name
+                or record.org_responsible
+                or record.partner_id.name
+                or _("cliente")
+            )
+            company = record.partner_id.display_name or ""
+            url = record.public_url or "[ENLACE]"
+            record.invite_share_text = _(
+                "Hola %(name)s,\n\n"
+                "Le compartimos el levantamiento de Servicios Administrados "
+                "de Justech para %(company)s.\n\n"
+                "Puede completarlo y guardar su progreso en el siguiente enlace:\n\n"
+                "%(url)s\n\n"
+                "Quedamos atentos.\n\n"
+                "Justech"
+            ) % {
+                "name": name,
+                "company": company,
+                "url": url,
+            }
+
+    @api.depends("contact_id", "org_responsible", "partner_id", "email", "phone")
+    def _compute_recipient_display(self):
+        for record in self:
+            record.recipient_display_name = (
+                record.contact_id.name
+                or record.org_responsible
+                or record.partner_id.name
+                or False
+            )
+
+    def _suggested_title(self):
+        self.ensure_one()
+        company = (
+            self.partner_id.commercial_company_name
+            or self.partner_id.name
+            or _("Cliente")
+        )
+        return _("Levantamiento de Servicios Administrados — %s", company)
+
+    def _prepare_invite_body(self):
+        self.ensure_one()
+        name = (
+            self.contact_id.name
+            or self.org_responsible
+            or self.partner_id.name
+            or _("cliente")
+        )
+        company = self.partner_id.display_name or ""
+        url = self.public_url or "[ENLACE]"
+        closing = (
+            self.consultant_id.name
+            if self.consultant_id
+            else _("Equipo de Justech")
+        )
+        return _(
+            "Estimado/a %(name)s:\n\n"
+            "Como parte del proceso para preparar una propuesta de servicios "
+            "administrados ajustada a las necesidades de %(company)s, le invitamos "
+            "a completar el siguiente levantamiento de información.\n\n"
+            "Puede guardar su progreso y continuar posteriormente utilizando "
+            "el mismo enlace:\n\n"
+            "%(url)s\n\n"
+            "La información será utilizada exclusivamente para dimensionar el "
+            "alcance del servicio y será tratada de manera confidencial.\n\n"
+            "Atentamente,\n\n"
+            "%(closing)s"
+        ) % {
+            "name": name,
+            "company": company,
+            "url": url,
+            "closing": closing,
+        }
+
+    def _refresh_invite_defaults(self):
+        for record in self:
+            if not record.invite_subject:
+                record.invite_subject = (
+                    "Levantamiento de Servicios Administrados – Justech"
+                )
+            record.invite_body = record._prepare_invite_body()
+
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
@@ -246,16 +370,28 @@ class JustechManagedServiceAssessment(models.Model):
                     )
                     or _("Nuevo")
                 )
+            if not vals.get("date_deadline"):
+                vals["date_deadline"] = fields.Date.context_today(self) + timedelta(
+                    days=30
+                )
             partner_id = vals.get("partner_id")
-            if partner_id and not vals.get("contact_id"):
+            if partner_id:
                 partner = self.env["res.partner"].browse(partner_id)
-                defaults = self._prepare_form_defaults_from_partner(partner)
-                for key, value in defaults.items():
-                    vals.setdefault(key, value)
+                if not vals.get("title"):
+                    vals["title"] = _(
+                        "Levantamiento de Servicios Administrados — %s",
+                        partner.commercial_company_name or partner.name,
+                    )
+                if not vals.get("contact_id"):
+                    defaults = self._prepare_form_defaults_from_partner(partner)
+                    for key, value in defaults.items():
+                        vals.setdefault(key, value)
         records = super().create(vals_list)
         for record in records:
             if record.partner_id:
                 record._sync_org_fields_to_form_data()
+            if not record.invite_body:
+                record.invite_body = record._prepare_invite_body()
         return records
 
     @api.onchange("partner_id")
@@ -264,6 +400,19 @@ class JustechManagedServiceAssessment(models.Model):
             defaults = self._prepare_form_defaults_from_partner(self.partner_id)
             for field_name, value in defaults.items():
                 setattr(self, field_name, value)
+            if (
+                not self.title
+                or self.title.startswith(
+                    "Levantamiento de Servicios Administrados"
+                )
+            ):
+                self.title = self._suggested_title()
+            if (
+                self.contact_id
+                and self.contact_id.commercial_partner_id
+                != self.partner_id.commercial_partner_id
+            ):
+                self.contact_id = False
             if not self.contact_id and self.partner_id.is_company:
                 child = self.env["res.partner"].search(
                     [
@@ -276,14 +425,38 @@ class JustechManagedServiceAssessment(models.Model):
                     self.contact_id = child
             if self.contact_id:
                 self.email = self.contact_id.email or self.partner_id.email
-                self.phone = self.contact_id.phone or self.partner_id.phone
+                self.phone = (
+                    self.contact_id.phone
+                    or getattr(self.contact_id, "mobile", False)
+                    or self.partner_id.phone
+                )
+                if self.contact_id.function:
+                    self.org_job = self.contact_id.function
+                if self.contact_id.name:
+                    self.org_responsible = self.contact_id.name
             else:
                 self.email = self.partner_id.email
-                self.phone = self.partner_id.phone
+                self.phone = self.partner_id.phone or getattr(
+                    self.partner_id, "mobile", False
+                )
+            self.invite_body = self._prepare_invite_body()
+            if not self.invite_subject:
+                self.invite_subject = (
+                    "Levantamiento de Servicios Administrados – Justech"
+                )
+            if not self.date_deadline:
+                self.date_deadline = fields.Date.context_today(self) + timedelta(
+                    days=30
+                )
+        else:
+            self.contact_id = False
+            self.email = False
+            self.phone = False
 
     @api.onchange("contact_id")
     def _onchange_contact_id(self):
         if self.contact_id:
+            # Email/phone on assessment only — do not write back to res.partner.
             self.email = self.contact_id.email
             self.phone = self.contact_id.phone or getattr(
                 self.contact_id, "mobile", False
@@ -292,6 +465,16 @@ class JustechManagedServiceAssessment(models.Model):
                 self.org_job = self.contact_id.function
             if self.contact_id.name:
                 self.org_responsible = self.contact_id.name
+            self.invite_body = self._prepare_invite_body()
+        elif self.partner_id:
+            self.email = self.partner_id.email
+            self.phone = self.partner_id.phone
+            self.invite_body = self._prepare_invite_body()
+
+    @api.onchange("consultant_id", "public_url")
+    def _onchange_refresh_invite_body(self):
+        if self.partner_id:
+            self.invite_body = self._prepare_invite_body()
 
     def _prepare_form_defaults_from_partner(self, partner):
         partner = partner.sudo()
@@ -453,83 +636,326 @@ class JustechManagedServiceAssessment(models.Model):
                     data[key] = record[key]
             record.completion_percent = compute_completion_percent(data)
 
+    def _assert_can_generate_link(self):
+        self.ensure_one()
+        if not self.partner_id:
+            raise UserError(
+                _(
+                    "Debe seleccionar un cliente o prospecto antes de "
+                    "generar el enlace."
+                )
+            )
+        if not (self.title or "").strip():
+            raise UserError(
+                _("Debe indicar un título antes de generar el enlace.")
+            )
+        if not self.consultant_id:
+            raise UserError(
+                _(
+                    "Debe indicar el consultor responsable antes de "
+                    "generar el enlace."
+                )
+            )
+        if not self.date_deadline:
+            raise UserError(
+                _(
+                    "Debe indicar la fecha de vencimiento del enlace "
+                    "antes de generarlo."
+                )
+            )
+        if self.state in self.SUBMITTED_STATES:
+            raise UserError(
+                _(
+                    "El cliente ya completó el levantamiento. "
+                    "El enlace está bloqueado para edición."
+                )
+            )
+        if self.state == "cancel":
+            raise UserError(_("Este levantamiento fue cancelado."))
+        if self.is_link_expired:
+            raise UserError(
+                _(
+                    "El enlace está vencido. Actualice la fecha o "
+                    "regenere el enlace."
+                )
+            )
+        if self.access_token and self.link_active:
+            raise UserError(
+                _("Este levantamiento ya tiene un enlace activo.")
+            )
+
     def action_generate_link(self):
         for record in self:
+            record._assert_can_generate_link()
+            warnings = []
+            if not (record.email or "").strip():
+                warnings.append(
+                    _(
+                        "No se ha definido un correo de destinatario. "
+                        "Puede copiar el enlace y compartirlo manualmente."
+                    )
+                )
             if not record.access_token:
                 record.access_token = record._generate_token()
+            now = fields.Datetime.now()
+            vals = {
+                "link_active": True,
+                "date_link_generated": now,
+            }
             if record.state == "draft":
-                record.state = "sent"
+                vals["state"] = "sent"
             if not record.date_sent:
-                record.date_sent = fields.Datetime.now()
+                vals["date_sent"] = now
+            record.write(vals)
+            record.invalidate_recordset(["public_url"])
+            record._refresh_invite_defaults()
+            record.message_post(
+                body=_(
+                    "Enlace generado el %(date)s. URL: %(url)s",
+                    date=now,
+                    url=record.public_url,
+                )
+            )
+            if warnings:
+                return {
+                    "type": "ir.actions.client",
+                    "tag": "display_notification",
+                    "params": {
+                        "title": _("Enlace generado"),
+                        "message": warnings[0],
+                        "sticky": True,
+                        "type": "warning",
+                        "next": {"type": "ir.actions.act_window", "res_model": record._name, "res_id": record.id, "views": [(False, "form")], "view_mode": "form", "target": "current"},
+                    },
+                }
+        return {
+            "type": "ir.actions.client",
+            "tag": "display_notification",
+            "params": {
+                "title": _("Enlace generado"),
+                "message": _("Enlace activo. Puede abrirlo, copiarlo o preparar el correo."),
+                "type": "success",
+                "sticky": False,
+                "next": {
+                    "type": "ir.actions.act_window",
+                    "res_model": self._name,
+                    "res_id": self.ids[0],
+                    "views": [(False, "form")],
+                    "view_mode": "form",
+                    "target": "current",
+                },
+            },
+        }
+
+    def action_regenerate_link(self):
+        for record in self:
+            if record.state not in ("draft", "sent", "in_progress", "needs_info"):
+                raise UserError(
+                    _(
+                        "Solo puede regenerar el enlace en estados Borrador, "
+                        "Enviado, En proceso o Requiere información."
+                    )
+                )
+            if record.state in record.SUBMITTED_STATES:
+                raise UserError(
+                    _(
+                        "El cliente ya completó el levantamiento. "
+                        "El enlace está bloqueado para edición."
+                    )
+                )
+            if not record.partner_id or not record.title or not record.consultant_id:
+                raise UserError(
+                    _(
+                        "Cliente, título y consultor son obligatorios "
+                        "para regenerar el enlace."
+                    )
+                )
             if not record.date_deadline:
                 record.date_deadline = fields.Date.context_today(record) + timedelta(
                     days=30
                 )
-            record.link_active = True
-        return True
-
-    def action_regenerate_link(self):
-        for record in self:
-            if record.state not in ("draft", "sent", "in_progress"):
-                raise UserError(
-                    _(
-                        "Solo puede regenerar el enlace en estados Borrador, "
-                        "Enviado o En proceso."
-                    )
-                )
             record.access_token = record._generate_token()
             record.link_active = True
-        return True
+            record.date_link_generated = fields.Datetime.now()
+            if record.state == "draft":
+                record.state = "sent"
+            record.invalidate_recordset(["public_url"])
+            record._refresh_invite_defaults()
+            record.message_post(
+                body=_(
+                    "Enlace regenerado. El enlace anterior quedó invalidado. "
+                    "Nueva URL: %s",
+                    record.public_url,
+                )
+            )
+        return {
+            "type": "ir.actions.client",
+            "tag": "display_notification",
+            "params": {
+                "title": _("Enlace regenerado"),
+                "message": _("El enlace anterior quedó invalidado."),
+                "type": "warning",
+                "next": {
+                    "type": "ir.actions.act_window",
+                    "res_model": self._name,
+                    "res_id": self.ids[0],
+                    "views": [(False, "form")],
+                    "view_mode": "form",
+                    "target": "current",
+                },
+            },
+        }
+
+    def _clipboard_action(self, text, title):
+        self.ensure_one()
+        return {
+            "type": "ir.actions.client",
+            "tag": "justech_copy_to_clipboard",
+            "params": {
+                "text": text or "",
+                "title": title,
+            },
+        }
 
     def action_copy_link_notification(self):
         self.ensure_one()
         if not self.access_token:
             raise UserError(_("Genere el enlace antes de copiarlo."))
-        return {
-            "type": "ir.actions.client",
-            "tag": "display_notification",
-            "params": {
-                "title": _("Enlace del levantamiento"),
-                "message": self.public_url,
-                "sticky": True,
-                "type": "success",
-            },
-        }
+        self.message_post(body=_("Enlace copiado al portapapeles."))
+        return self._clipboard_action(
+            self.public_url,
+            _("Enlace copiado"),
+        )
+
+    def action_copy_message(self):
+        self.ensure_one()
+        if not self.access_token:
+            raise UserError(_("Genere el enlace antes de copiar el mensaje."))
+        text = self.invite_share_text or self.invite_body or ""
+        self.message_post(body=_("Mensaje para compartir copiado al portapapeles."))
+        return self._clipboard_action(text, _("Mensaje copiado"))
 
     def action_open_form(self):
         self.ensure_one()
         if not self.access_token:
             raise UserError(_("Genere el enlace público primero."))
+        if self.state == "cancel" or not self.link_active:
+            raise UserError(_("El enlace está cancelado o inactivo."))
+        if self.is_link_expired:
+            raise UserError(
+                _(
+                    "El enlace está vencido. Actualice la fecha o "
+                    "regenere el enlace."
+                )
+            )
         return {
             "type": "ir.actions.act_url",
             "url": self.public_url,
             "target": "new",
         }
 
-    def action_send_email(self):
+    def _assert_email_sendable(self):
         self.ensure_one()
         if not self.access_token:
-            self.action_generate_link()
+            raise UserError(
+                _("No se ha generado token. Genere el enlace primero.")
+            )
+        if not self.link_active or self.state == "cancel":
+            raise UserError(_("El enlace está cancelado o inactivo."))
+        if self.is_link_expired:
+            raise UserError(
+                _(
+                    "El enlace está vencido. Actualice la fecha o "
+                    "regenere el enlace."
+                )
+            )
+        if not (self.email or "").strip():
+            raise UserError(
+                _(
+                    "El contacto no tiene correo. Puede copiar el enlace "
+                    "y compartirlo manualmente."
+                )
+            )
+
+    def _open_mail_composer(self, title):
+        self.ensure_one()
+        self._refresh_invite_defaults()
         template = self.env.ref(
             "justech_managed_services.mail_template_assessment_invite",
             raise_if_not_found=False,
         )
         if not template:
             raise UserError(_("No se encontró la plantilla de correo."))
+        partner_ids = []
+        if self.contact_id:
+            partner_ids.append(self.contact_id.id)
+        elif self.partner_id:
+            partner_ids.append(self.partner_id.id)
+        ctx = {
+            "default_model": self._name,
+            "default_res_ids": self.ids,
+            "default_template_id": template.id,
+            "default_composition_mode": "comment",
+            "default_email_layout_xmlid": "mail.mail_notification_light",
+            "default_partner_ids": partner_ids,
+            "default_subject": self.invite_subject
+            or "Levantamiento de Servicios Administrados – Justech",
+            "mail_post_autofollow": False,
+        }
         return {
             "type": "ir.actions.act_window",
-            "name": _("Enviar levantamiento"),
+            "name": title,
             "res_model": "mail.compose.message",
             "view_mode": "form",
             "target": "new",
-            "context": {
-                "default_model": self._name,
-                "default_res_ids": self.ids,
-                "default_template_id": template.id,
-                "default_composition_mode": "comment",
-                "default_email_layout_xmlid": "mail.mail_notification_light",
-            },
+            "context": ctx,
         }
+
+    def action_prepare_email(self):
+        """Abre el composer para revisión. No envía automáticamente."""
+        self.ensure_one()
+        if not self.access_token:
+            raise UserError(_("Genere el enlace antes de preparar el correo."))
+        if not (self.email or "").strip():
+            return {
+                "type": "ir.actions.client",
+                "tag": "display_notification",
+                "params": {
+                    "title": _("Sin correo de destinatario"),
+                    "message": _(
+                        "El contacto no tiene correo. Puede copiar el enlace "
+                        "y compartirlo manualmente."
+                    ),
+                    "type": "warning",
+                    "sticky": True,
+                },
+            }
+        return self._open_mail_composer(_("Preparar correo del levantamiento"))
+
+    def action_send_email(self):
+        """Abre el composer estándar (revisión obligatoria antes de enviar)."""
+        self.ensure_one()
+        self._assert_email_sendable()
+        action = self._open_mail_composer(_("Enviar levantamiento por correo"))
+        action["context"]["justech_assessment_mark_email_sent"] = True
+        return action
+
+    def action_mark_email_sent(self, recipient=None):
+        """Registra envío tras usar el composer (llamable desde UI/API)."""
+        for record in self:
+            record.write(
+                {
+                    "date_email_sent": fields.Datetime.now(),
+                    "email_last_recipient": recipient or record.email,
+                }
+            )
+            record.message_post(
+                body=_(
+                    "Correo de levantamiento registrado hacia %(email)s.",
+                    email=recipient or record.email or "-",
+                )
+            )
+        return True
 
     def action_view_answers(self):
         self.ensure_one()
@@ -856,10 +1282,24 @@ class JustechManagedServiceAssessment(models.Model):
 
     def action_open_partner(self):
         self.ensure_one()
+        if not self.partner_id:
+            raise UserError(_("No hay cliente seleccionado."))
         return {
             "type": "ir.actions.act_window",
             "res_model": "res.partner",
             "res_id": self.partner_id.id,
+            "view_mode": "form",
+            "target": "current",
+        }
+
+    def action_open_contact(self):
+        self.ensure_one()
+        if not self.contact_id:
+            raise UserError(_("No hay contacto responsable seleccionado."))
+        return {
+            "type": "ir.actions.act_window",
+            "res_model": "res.partner",
+            "res_id": self.contact_id.id,
             "view_mode": "form",
             "target": "current",
         }
@@ -897,8 +1337,24 @@ class JustechManagedServiceAssessment(models.Model):
     def action_invalidate_link(self):
         for record in self:
             record.link_active = False
-            record.message_post(body=_("Enlace público invalidado."))
-        return True
+            record.message_post(body=_("Enlace público cancelado / invalidado."))
+        return {
+            "type": "ir.actions.client",
+            "tag": "display_notification",
+            "params": {
+                "title": _("Enlace cancelado"),
+                "message": _("El enlace público quedó inactivo."),
+                "type": "warning",
+                "next": {
+                    "type": "ir.actions.act_window",
+                    "res_model": self._name,
+                    "res_id": self.ids[0],
+                    "views": [(False, "form")],
+                    "view_mode": "form",
+                    "target": "current",
+                },
+            },
+        }
 
     def action_cancel(self):
         for record in self:

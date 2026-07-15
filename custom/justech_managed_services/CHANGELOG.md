@@ -1,5 +1,17 @@
 # Changelog — justech_managed_services
 
+## [19.0.2.0.1] — 2026-07-15
+
+### Corregido (flujo creación / envío de levantamientos)
+
+- Vista principal de Levantamientos fijada (evita abrir la ficha vacía de “Respuestas”).
+- Encabezado guiado: cliente, contacto, correo, consultor, vencimiento y % completado.
+- Bloque “Envío del levantamiento” con destinatario, asunto y mensaje editables.
+- Botones por estado: Generar enlace, Abrir formulario, Copiar enlace/mensaje, Preparar/Enviar correo, Cancelar/Regenerar.
+- Validaciones claras sin cliente, sin correo, enlace activo/vencido.
+- JSON técnico solo para Administrador MS, al final.
+- Copia al portapapeles vía acción backend OWL.
+
 ## [19.0.2.0.0] — 2026-07-15
 
 ### Añadido (Fase 2 operativa)

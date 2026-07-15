@@ -8,6 +8,8 @@
                 <field name="name"/>
                 <field name="title"/>
                 <field name="partner_id"/>
+                <field name="contact_id" optional="show"/>
+                <field name="email" optional="hide"/>
                 <field name="partner_vat" optional="show"/>
                 <field name="consultant_id" widget="many2one_avatar_user"/>
                 <field name="state" widget="badge"
@@ -57,20 +59,38 @@
     <record id="view_justech_managed_service_assessment_form" model="ir.ui.view">
         <field name="name">justech.managed.service.assessment.form</field>
         <field name="model">justech.managed.service.assessment</field>
+        <field name="priority">1</field>
         <field name="arch" type="xml">
             <form string="Levantamiento">
                 <header>
-                    <button name="action_generate_link" type="object" string="Generar enlace" class="btn-primary" invisible="access_token"/>
-                    <button name="action_send_email" type="object" string="Enviar al cliente"
-                            invisible="state not in ('draft','sent','in_progress','needs_info')"/>
-                    <button name="action_regenerate_link" type="object" string="Regenerar enlace" invisible="not access_token or state not in ('draft','sent','in_progress','needs_info')"/>
-                    <button name="action_copy_link_notification" type="object" string="Copiar enlace" invisible="not access_token"/>
-                    <button name="action_open_form" type="object" string="Abrir formulario" invisible="not access_token"/>
-                    <button name="action_view_answers" type="object" string="Ver respuestas" invisible="state == 'draft'"/>
+                    <!-- Borrador -->
+                    <button name="action_generate_link" type="object" string="Generar enlace"
+                            class="btn-primary"
+                            invisible="state != 'draft' or access_token"/>
+                    <!-- Enviado / En proceso -->
+                    <button name="action_open_form" type="object" string="Abrir formulario"
+                            class="btn-primary"
+                            invisible="not access_token or state not in ('sent','in_progress','needs_info') or not link_active"/>
+                    <button name="action_copy_link_notification" type="object" string="Copiar enlace"
+                            invisible="not access_token or state not in ('draft','sent','in_progress','needs_info')"/>
+                    <button name="action_prepare_email" type="object" string="Preparar correo"
+                            invisible="not access_token or state not in ('sent','in_progress','needs_info')"/>
+                    <button name="action_send_email" type="object" string="Enviar por correo"
+                            class="btn-secondary"
+                            invisible="not access_token or state not in ('sent','in_progress','needs_info')"/>
+                    <button name="action_copy_message" type="object" string="Copiar mensaje"
+                            invisible="not access_token or state not in ('sent','in_progress','needs_info')"/>
+                    <button name="action_invalidate_link" type="object" string="Cancelar enlace"
+                            invisible="not link_active or state not in ('sent','in_progress','needs_info')"
+                            confirm="¿Cancelar el enlace público? El cliente no podrá continuar con él."/>
+                    <button name="action_regenerate_link" type="object" string="Regenerar enlace"
+                            invisible="not access_token or state not in ('draft','sent','in_progress','needs_info')"
+                            confirm="¿Regenerar el enlace? El enlace anterior quedará invalidado."/>
+                    <!-- Completado y posteriores -->
                     <button name="action_download_pdf" type="object" string="Descargar PDF" class="btn-primary"
-                            invisible="state in ('draft','cancel')"/>
-                    <button name="action_preview_pdf" type="object" string="Vista previa del PDF"
-                            invisible="state in ('draft','cancel')"/>
+                            invisible="state not in ('done','review','needs_info','approved_proposal','opportunity_created','quotation_ready','service_created')"/>
+                    <button name="action_view_answers" type="object" string="Abrir respuestas"
+                            invisible="state in ('draft','sent','cancel')"/>
                     <button name="action_mark_review" type="object" string="Marcar en revisión"
                             invisible="state not in ('done','needs_info')"/>
                     <button name="action_request_info" type="object" string="Solicitar información adicional"
@@ -79,29 +99,36 @@
                             invisible="state not in ('done','review','needs_info')"
                             groups="justech_managed_services.group_ms_commercial,justech_managed_services.group_ms_manager"/>
                     <button name="action_create_opportunity" type="object" string="Crear oportunidad"
-                            invisible="opportunity_id"
+                            invisible="opportunity_id or state in ('draft','sent','in_progress','cancel')"
                             groups="justech_managed_services.group_ms_commercial,justech_managed_services.group_ms_manager"/>
                     <button name="action_open_opportunity" type="object" string="Abrir oportunidad" invisible="not opportunity_id"/>
                     <button name="action_create_quotation" type="object" string="Crear cotización" class="btn-primary"
-                            invisible="state in ('draft','sent','cancel')"
+                            invisible="state in ('draft','sent','in_progress','cancel')"
                             groups="justech_managed_services.group_ms_commercial,justech_managed_services.group_ms_manager"/>
                     <button name="action_open_quotation" type="object" string="Abrir cotización" invisible="sale_order_count == 0"/>
                     <button name="action_create_managed_service" type="object" string="Crear Servicio Administrado" class="btn-primary"
                             invisible="managed_service_id or state in ('draft','sent','in_progress','cancel')"
                             groups="justech_managed_services.group_ms_commercial,justech_managed_services.group_ms_manager"/>
                     <button name="action_open_managed_service" type="object" string="Abrir Servicio Administrado" invisible="not managed_service_id"/>
+                    <button name="action_preview_pdf" type="object" string="Vista previa del PDF"
+                            invisible="state in ('draft','sent','cancel')"
+                            groups="justech_managed_services.group_ms_manager"/>
                     <button name="action_reopen_public" type="object" string="Reabrir formulario"
                             invisible="state not in ('done','review','needs_info','approved_proposal')"
                             groups="justech_managed_services.group_ms_manager"/>
-                    <button name="action_invalidate_link" type="object" string="Invalidar enlace" invisible="not link_active"/>
                     <button name="action_cancel" type="object" string="Cancelar" invisible="state == 'cancel'" confirm="¿Confirma cancelar este levantamiento?"/>
                     <field name="state" widget="statusbar"
                             statusbar_visible="draft,sent,in_progress,done,review,approved_proposal,opportunity_created,quotation_ready,service_created"/>
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
-                        <button name="action_open_partner" type="object" class="oe_stat_button" icon="fa-building">
+                        <button name="action_open_partner" type="object" class="oe_stat_button" icon="fa-building"
+                                invisible="not partner_id">
                             <div class="o_stat_info"><span class="o_stat_text">Cliente</span></div>
+                        </button>
+                        <button name="action_open_contact" type="object" class="oe_stat_button" icon="fa-user"
+                                invisible="not contact_id">
+                            <div class="o_stat_info"><span class="o_stat_text">Contacto</span></div>
                         </button>
                         <button name="action_open_opportunity" type="object" class="oe_stat_button" icon="fa-star"
                                 invisible="not opportunity_id">
@@ -115,53 +142,85 @@
                             <field name="managed_service_count" widget="statinfo" string="Servicio"/>
                         </button>
                         <button name="action_download_pdf" type="object" class="oe_stat_button" icon="fa-file-pdf-o"
-                                invisible="state in ('draft','cancel')">
+                                invisible="state in ('draft','sent','cancel')">
                             <div class="o_stat_info"><span class="o_stat_text">PDF</span></div>
                         </button>
                     </div>
                     <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" readonly="1"/></h1>
                         <label for="title"/>
-                        <h1><field name="title" placeholder="Título del levantamiento"/></h1>
-                        <h2><field name="name" readonly="1"/></h2>
+                        <h2><field name="title" placeholder="Levantamiento de Servicios Administrados — Cliente"/></h2>
                     </div>
                     <group>
-                        <group string="Cliente (Contactos)">
+                        <group string="Cliente y contacto">
                             <field name="partner_id"
+                                     string="Cliente / Empresa"
                                      context="{'default_is_company': True, 'res_partner_search_mode': 'customer', 'show_vat': True}"
-                                     options="{'always_reload': True}"/>
+                                     options="{'no_create_edit': False, 'always_reload': True}"/>
                             <field name="partner_vat"/>
                             <field name="partner_email"/>
-                            <field name="contact_id" context="{'default_parent_id': partner_id, 'default_is_company': False}"/>
-                            <field name="email"/>
-                            <field name="phone"/>
+                            <field name="partner_phone"/>
+                            <field name="contact_id"
+                                     string="Contacto responsable"
+                                     context="{'default_parent_id': partner_id, 'default_is_company': False}"/>
+                            <field name="email" string="Correo del contacto"/>
+                            <field name="phone" string="Teléfono"/>
                         </group>
                         <group string="Seguimiento">
                             <field name="consultant_id" widget="many2one_avatar_user"/>
-                            <field name="opportunity_id"/>
-                            <field name="managed_service_id"/>
-                            <field name="company_id" groups="base.group_multi_company"/>
-                            <field name="completion_percent" widget="progressbar"/>
-                        </group>
-                    </group>
-                    <group string="Enlace público">
-                        <group>
-                            <field name="access_token" readonly="1" groups="justech_managed_services.group_ms_manager"/>
-                            <field name="public_url" widget="url"/>
-                            <field name="link_active"/>
                             <field name="date_deadline"/>
-                        </group>
-                        <group>
-                            <field name="date_sent"/>
-                            <field name="date_first_activity"/>
-                            <field name="date_last_activity"/>
-                            <field name="date_done"/>
+                            <field name="completion_percent" widget="progressbar"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="link_active" readonly="1"/>
+                            <field name="is_link_expired" invisible="1"/>
+                            <field name="access_token" invisible="1"/>
                         </group>
                     </group>
                     <notebook>
-                        <page string="Organización (formulario)" name="org">
+                        <page string="Preparación y envío" name="send">
+                            <group string="Enlace público">
+                                <group>
+                                    <field name="public_url" widget="CopyClipboardChar" readonly="1"
+                                             placeholder="Genere el enlace para obtener la URL"/>
+                                    <field name="date_link_generated" readonly="1"/>
+                                    <field name="date_sent" readonly="1"/>
+                                </group>
+                                <group>
+                                    <field name="date_email_sent" readonly="1"/>
+                                    <field name="email_last_recipient" readonly="1"/>
+                                    <field name="date_first_activity" readonly="1"/>
+                                    <field name="date_last_activity" readonly="1"/>
+                                </group>
+                            </group>
+                            <group string="Envío del levantamiento" name="invite_block">
+                                <group string="Destinatario sugerido">
+                                    <field name="recipient_display_name" string="Nombre" readonly="1"/>
+                                    <field name="partner_id" string="Empresa" readonly="1"/>
+                                    <field name="email" string="Correo"/>
+                                    <field name="phone" string="Teléfono"/>
+                                </group>
+                                <group string="Mensaje">
+                                    <field name="invite_subject"/>
+                                    <field name="invite_body" nolabel="1" colspan="2"
+                                              placeholder="El mensaje se completa al seleccionar cliente y generar el enlace."/>
+                                    <field name="invite_share_text" nolabel="1" colspan="2" readonly="1"
+                                              invisible="not access_token"/>
+                                </group>
+                            </group>
+                            <div class="alert alert-info" role="alert" invisible="access_token">
+                                Seleccione el cliente y el contacto, guarde el registro y pulse
+                                <strong>Generar enlace</strong>. Después podrá copiar el enlace,
+                                copiar el mensaje o preparar el correo.
+                            </div>
+                            <div class="alert alert-warning" role="alert" invisible="email or not access_token">
+                                El contacto no tiene correo. Puede copiar el enlace y compartirlo manualmente.
+                            </div>
+                        </page>
+                        <page string="Organización" name="org">
                             <div class="alert alert-info" role="alert">
                                 Prefill desde Contactos. Los cambios del cliente en el formulario público
-                                no actualizan automáticamente el contacto (revisión interna).
+                                no actualizan automáticamente el contacto maestro.
                             </div>
                             <group>
                                 <field name="org_company_name"/>
@@ -173,23 +232,38 @@
                                 <field name="org_phone"/>
                             </group>
                         </page>
-                        <page string="Resumen" name="summary">
+                        <page string="Respuestas" name="answers_readable">
+                            <field name="answers_html" nolabel="1" readonly="1"/>
+                        </page>
+                        <page string="Confirmación" name="summary">
                             <field name="summary" placeholder="Resumen ejecutivo interno..."/>
                             <group>
                                 <field name="completed_by_name"/>
                                 <field name="completed_by_job"/>
                                 <field name="acceptance_date"/>
                                 <field name="acceptance_confirmed"/>
+                                <field name="date_done"/>
+                            </group>
+                            <group string="Notas internas">
+                                <field name="internal_notes" nolabel="1" colspan="2"/>
                             </group>
                         </page>
-                        <page string="Todas las respuestas" name="answers_readable">
-                            <field name="answers_html" nolabel="1" readonly="1"/>
+                        <page string="Relaciones comerciales" name="commercial">
+                            <group>
+                                <field name="opportunity_id"/>
+                                <field name="managed_service_id"/>
+                            </group>
                         </page>
-                        <page string="Respuestas JSON" name="form_data" groups="justech_managed_services.group_ms_manager">
+                        <page string="Técnico" name="form_data" groups="justech_managed_services.group_ms_manager">
+                            <div class="alert alert-warning" role="alert">
+                                Solo administradores. No edite JSON salvo soporte técnico.
+                            </div>
+                            <group>
+                                <field name="access_token" readonly="1"/>
+                                <field name="public_url" readonly="1"/>
+                                <field name="link_active"/>
+                            </group>
                             <field name="form_data" widget="json"/>
-                        </page>
-                        <page string="Notas internas" name="notes">
-                            <field name="internal_notes"/>
                         </page>
                     </notebook>
                 </sheet>
@@ -201,6 +275,7 @@
     <record id="view_justech_managed_service_assessment_answers_form" model="ir.ui.view">
         <field name="name">justech.managed.service.assessment.answers.form</field>
         <field name="model">justech.managed.service.assessment</field>
+        <field name="priority">999</field>
         <field name="arch" type="xml">
             <form string="Respuestas del levantamiento" create="0" delete="0">
                 <sheet>
@@ -248,12 +323,29 @@
         <field name="res_model">justech.managed.service.assessment</field>
         <field name="view_mode">list,form</field>
         <field name="search_view_id" ref="view_justech_managed_service_assessment_search"/>
-        <field name="context">{'search_default_filter_my': 1}</field>
+        <field name="view_id" ref="view_justech_managed_service_assessment_list"/>
+        <field name="context">{}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Cree un levantamiento de Servicios Administrados.
             </p>
-            <p>Seleccione el cliente desde Contactos y genere un enlace seguro.</p>
+            <p>
+                Seleccione el <strong>cliente</strong> y el <strong>contacto responsable</strong>,
+                guarde, genere el enlace y envíelo o cópielo para WhatsApp / Teams.
+            </p>
         </field>
+    </record>
+
+    <record id="action_justech_managed_service_assessment_view_list" model="ir.actions.act_window.view">
+        <field name="sequence">1</field>
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="view_justech_managed_service_assessment_list"/>
+        <field name="act_window_id" ref="action_justech_managed_service_assessment"/>
+    </record>
+    <record id="action_justech_managed_service_assessment_view_form" model="ir.actions.act_window.view">
+        <field name="sequence">2</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_justech_managed_service_assessment_form"/>
+        <field name="act_window_id" ref="action_justech_managed_service_assessment"/>
     </record>
 </odoo>

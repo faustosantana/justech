@@ -28,7 +28,9 @@
         La información suministrada será utilizada exclusivamente para dimensionar el
         alcance del servicio y será tratada de manera confidencial.
     </p>
-    <p>Atentamente,<br/>Equipo de Justech</p>
+    <p>Atentamente,<br/>
+       <t t-out="object.consultant_id.name or 'Equipo de Justech'"/>
+    </p>
 </div>
         </field>
         <field name="auto_delete" eval="False"/>

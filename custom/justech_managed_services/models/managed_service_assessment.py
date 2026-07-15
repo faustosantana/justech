@@ -9,6 +9,7 @@ from html import escape
 
 from markupsafe import Markup
 
+from .form_catalog import build_sections_from_lines
 from .form_schema import (
     FORM_TRACKED_KEYS,
     ORG_FIELD_MAP,
@@ -158,6 +159,24 @@ class JustechManagedServiceAssessment(models.Model):
         string="Destinatario",
         compute="_compute_recipient_display",
     )
+    template_id = fields.Many2one(
+        "justech.ms.form.template",
+        string="Plantilla",
+        tracking=True,
+        index=True,
+    )
+    intro_text = fields.Html(string="Texto inicial", sanitize_style=True)
+    closing_text = fields.Html(string="Texto final", sanitize_style=True)
+    question_line_ids = fields.One2many(
+        "justech.ms.assessment.question.line",
+        "assessment_id",
+        string="Preguntas del levantamiento",
+        copy=True,
+    )
+    uses_custom_form = fields.Boolean(
+        string="Formulario personalizado",
+        compute="_compute_uses_custom_form",
+    )
     internal_notes = fields.Html(string="Observaciones internas")
     summary = fields.Text(string="Resumen del levantamiento")
     completed_by_name = fields.Char(string="Completado por")
@@ -266,6 +285,73 @@ class JustechManagedServiceAssessment(models.Model):
                 )
             else:
                 record.public_url = False
+
+    @api.depends("question_line_ids")
+    def _compute_uses_custom_form(self):
+        for record in self:
+            record.uses_custom_form = bool(
+                record.question_line_ids.filtered(lambda l: l.active and l.visible)
+            )
+
+    def action_apply_template(self):
+        for record in self:
+            if not record.template_id:
+                raise UserError(_("Seleccione una plantilla primero."))
+            record.template_id.copy_lines_to_assessment(record)
+            record.message_post(
+                body=_(
+                    "Plantilla aplicada: %s",
+                    record.template_id.display_name,
+                )
+            )
+        return True
+
+    def get_public_form_structure(self):
+        """Estructura dinámica para el portal (categorías → preguntas)."""
+        self.ensure_one()
+        lines = self.question_line_ids.filtered(
+            lambda l: l.active and l.visible
+        ).sorted("sequence")
+        by_cat = {}
+        for line in lines:
+            by_cat.setdefault(line.category_id, []).append(line)
+        structure = []
+        for category, cat_lines in sorted(
+            by_cat.items(), key=lambda item: (item[0].sequence, item[0].id)
+        ):
+            if not category.active:
+                continue
+            structure.append(
+                {
+                    "id": category.id,
+                    "name": category.name,
+                    "questions": [
+                        {
+                            "key": line.question_id.key,
+                            "label": line.question_id.name,
+                            "type": line.question_id.field_type,
+                            "required": line.required,
+                            "help": line.question_id.help_text or "",
+                            "options": line.question_id.get_options_dict(),
+                            "storage": line.question_id.storage,
+                        }
+                        for line in cat_lines
+                        if line.question_id.active
+                    ],
+                }
+            )
+        return structure
+
+    def get_designer_tracked_keys(self):
+        self.ensure_one()
+        if not self.uses_custom_form:
+            return list(ORG_FIELD_MAP.keys()) + list(FORM_TRACKED_KEYS)
+        return [
+            line.key
+            for line in self.question_line_ids.filtered(
+                lambda l: l.active and l.visible and l.key
+            )
+        ]
 
     @api.depends(
         "contact_id",
@@ -634,7 +720,13 @@ class JustechManagedServiceAssessment(models.Model):
             for key in ORG_FIELD_MAP:
                 if record[key]:
                     data[key] = record[key]
-            record.completion_percent = compute_completion_percent(data)
+            if record.uses_custom_form:
+                tracked = record.get_designer_tracked_keys()
+                total = len(tracked) or 1
+                filled = sum(1 for key in tracked if is_value_filled(data.get(key)))
+                record.completion_percent = round((filled / total) * 100.0, 2)
+            else:
+                record.completion_percent = compute_completion_percent(data)
 
     def _assert_can_generate_link(self):
         self.ensure_one()
@@ -1405,12 +1497,34 @@ class JustechManagedServiceAssessment(models.Model):
 
     def get_form_labels_payload(self):
         """Etiquetas centralizadas para JS (revisión pública)."""
-        return labels_payload()
+        self.ensure_one()
+        if not self.uses_custom_form:
+            return labels_payload()
+        field_labels = {}
+        option_labels = {}
+        section_labels = {}
+        for line in self.question_line_ids.filtered(lambda l: l.active and l.visible):
+            q = line.question_id
+            field_labels[q.key] = q.name
+            opts = q.get_options_dict()
+            if opts:
+                option_labels[q.key] = opts
+            if q.category_id:
+                section_labels[str(q.category_id.id)] = q.category_id.name
+        return {
+            "field_labels": field_labels,
+            "option_labels": option_labels,
+            "section_labels": section_labels,
+            "tracked_keys": self.get_designer_tracked_keys(),
+        }
 
     def get_form_print_sections(self):
         """Secciones con etiquetas/valores legibles para resumen, backend y PDF."""
         self.ensure_one()
-        return build_sections_display(self.get_form_display_values())
+        values = self.get_form_display_values()
+        if self.uses_custom_form:
+            return build_sections_from_lines(self, values)
+        return build_sections_display(values)
 
     def get_form_answers_matrix(self):
         """Matriz de verificación sección → valor (UAT / auditoría)."""

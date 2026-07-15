@@ -1,13 +1,13 @@
 {
     "name": "Servicios Administrados",
-    "version": "19.0.2.0.1",
+    "version": "19.0.2.1.0",
     "category": "Services",
     "summary": "Igualas y Servicios Administrados Justech — levantamiento, CRM, ventas, fee y Helpdesk",
     "description": """
 Fase 2 — Centro operativo de Servicios Administrados / Igualas.
 
 * Servicio Administrado (maestro) con fee, alcance y SLA básico.
-* Levantamientos (Fase 1) vinculados al servicio.
+* Levantamientos con diseñador, plantillas y asistente de creación.
 * Flujo: Contacto → Levantamiento → Oportunidad → Cotización → Servicio → Fee → Tickets.
 * Reutiliza CRM, Sales, Subscriptions y Helpdesk estándar (sin facturación paralela).
     """,
@@ -33,6 +33,8 @@ Fase 2 — Centro operativo de Servicios Administrados / Igualas.
         "data/utm_source.xml",
         "views/managed_service_views.xml",
         "views/assessment_views.xml",
+        "views/form_designer_views.xml",
+        "wizard/assessment_create_wizard_views.xml",
         "views/res_partner_views.xml",
         "views/crm_lead_views.xml",
         "views/sale_order_views.xml",
@@ -46,6 +48,7 @@ Fase 2 — Centro operativo de Servicios Administrados / Igualas.
     "assets": {
         "web.assets_backend": [
             "justech_managed_services/static/src/js/assessment_clipboard.js",
+            "justech_managed_services/static/src/css/assessment_backend.css",
         ],
     },
     "installable": True,
@@ -55,11 +58,11 @@ Fase 2 — Centro operativo de Servicios Administrados / Igualas.
     "justech_register": {
         "module_code": "justech_managed_services",
         "module_name": "Servicios Administrados",
-        "version": "19.0.2.0.1",
+        "version": "19.0.2.1.0",
         "category": "services",
         "country": "DO",
         "localization": "",
-        "description": "Igualas y Servicios Administrados — fase 2 operativa",
+        "description": "Igualas y Servicios Administrados — UX, plantillas y diseñador",
         "dependencies": ["crm", "sale_management", "sale_subscription", "helpdesk", "website"],
         "always_enabled": False,
         "features": [

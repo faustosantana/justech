@@ -434,4 +434,125 @@
             </div>
         </t>
     </template>
+
+    <!-- Formulario dinámico según plantilla / diseñador -->
+    <template id="assessment_public_form_dynamic" name="Levantamiento — Formulario dinámico">
+        <t t-call="website.layout">
+            <t t-set="no_header" t-value="True"/>
+            <t t-set="no_footer" t-value="True"/>
+            <t t-set="section_total" t-value="len(form_structure) + 1"/>
+            <link rel="stylesheet" type="text/css" href="/justech_managed_services/static/src/css/assessment_public.css"/>
+            <script type="text/javascript" src="/justech_managed_services/static/src/js/assessment_public.js"/>
+            <script type="text/javascript">
+                window.JT_MS_FORM_VALUES = <t t-out="form_values_json"/>;
+                window.JT_MS_FIELD_LABELS = <t t-out="field_labels_json"/>;
+                window.JT_MS_OPTION_LABELS = <t t-out="option_labels_json"/>;
+                window.JT_MS_TRACKED_KEYS = <t t-out="tracked_keys_json"/>;
+                window.JT_MS_SECTION_COUNT = <t t-esc="section_total"/>;
+            </script>
+            <div class="jt-ms-wrap">
+                <header class="jt-ms-header">
+                    <img src="/web/binary/company_logo" alt="Justech" class="jt-ms-logo" onerror="this.src='/justech_managed_services/static/description/icon.png'"/>
+                    <p class="jt-ms-client"><t t-esc="partner_name"/></p>
+                    <h1><t t-esc="assessment.title or 'Levantamiento Justech'"/></h1>
+                </header>
+                <div class="jt-ms-intro">
+                    <t t-if="intro_text" t-out="intro_text"/>
+                    <t t-else="">
+                        <p>Complete las preguntas. Puede guardar su progreso y continuar más adelante con el mismo enlace.</p>
+                    </t>
+                </div>
+                <div class="jt-ms-confidential">
+                    <strong>Confidencialidad:</strong> La información será tratada de manera confidencial por Justech.
+                </div>
+                <div id="jt-ms-message" class="jt-ms-alert jt-ms-hidden"/>
+                <div class="jt-ms-progress">
+                    <div class="jt-ms-progress-label">
+                        <span id="jt-ms-progress-text">Sección 1</span>
+                        <span id="jt-ms-progress-pct"><t t-esc="'%.0f' % completion_percent"/>% completado</span>
+                    </div>
+                    <div class="jt-ms-progress-bar">
+                        <div id="jt-ms-progress-fill" class="jt-ms-progress-fill" t-attf-style="width: #{completion_percent}%"/>
+                    </div>
+                </div>
+                <form id="jt-ms-form" class="jt-ms-card" onsubmit="return false;">
+                    <t t-foreach="form_structure" t-as="category">
+                        <div t-attf-class="jt-ms-section#{category_index == 0 and ' active' or ''}" t-att-data-section="category_index + 1">
+                            <h2 t-esc="category['name']"/>
+                            <p class="jt-ms-section-num">Sección <t t-esc="category_index + 1"/> de <t t-esc="len(form_structure)"/></p>
+                            <t t-foreach="category['questions']" t-as="q">
+                                <div class="jt-ms-field">
+                                    <label>
+                                        <t t-esc="q['label']"/>
+                                        <t t-if="q.get('required')"> *</t>
+                                    </label>
+                                    <t t-if="q['type'] == 'text'">
+                                        <textarea t-att-name="q['key']" rows="4"><t t-esc="form_values.get(q['key'], '')"/></textarea>
+                                    </t>
+                                    <t t-elif="q['type'] == 'number'">
+                                        <input type="number" t-att-name="q['key']" t-att-value="form_values.get(q['key'], '')"/>
+                                    </t>
+                                    <t t-elif="q['type'] == 'boolean'">
+                                        <label class="jt-ms-check">
+                                            <input type="checkbox" t-att-name="q['key']" t-att-checked="form_values.get(q['key']) and 'checked' or None"/>
+                                            <span>Sí</span>
+                                        </label>
+                                    </t>
+                                    <t t-elif="q['type'] == 'select'">
+                                        <select t-att-name="q['key']">
+                                            <option value="">— Seleccione —</option>
+                                            <t t-foreach="q['options'].items()" t-as="opt">
+                                                <option t-att-value="opt[0]" t-att-selected="form_values.get(q['key']) == opt[0] and 'selected' or None" t-esc="opt[1]"/>
+                                            </t>
+                                        </select>
+                                    </t>
+                                    <t t-elif="q['type'] == 'multiselect'">
+                                        <t t-set="selected" t-value="form_values.get(q['key']) or []"/>
+                                        <t t-foreach="q['options'].items()" t-as="opt">
+                                            <label class="jt-ms-check">
+                                                <input type="checkbox" t-att-name="q['key'] + '[]'" t-att-value="opt[0]"
+                                                       t-att-checked="opt[0] in selected and 'checked' or None"/>
+                                                <span t-esc="opt[1]"/>
+                                            </label>
+                                        </t>
+                                    </t>
+                                    <t t-else="">
+                                        <input type="text" t-att-name="q['key']" t-att-value="form_values.get(q['key'], '')"/>
+                                    </t>
+                                    <t t-if="q.get('help')">
+                                        <small class="text-muted" t-esc="q['help']"/>
+                                    </t>
+                                </div>
+                            </t>
+                        </div>
+                    </t>
+                    <div class="jt-ms-section" t-att-data-section="len(form_structure) + 1">
+                        <h2>Revisión y envío</h2>
+                        <p class="jt-ms-section-num">Revise sus respuestas antes de enviar</p>
+                        <div id="jt-ms-review-content"/>
+                        <div class="jt-ms-field"><label>Nombre de quien completa</label><input type="text" name="completed_by_name" required="required"/></div>
+                        <div class="jt-ms-field"><label>Cargo</label><input type="text" name="completed_by_job" required="required"/></div>
+                        <label class="jt-ms-check">
+                            <input type="checkbox" name="acceptance_confirmed"/>
+                            <span>Confirmo que la información suministrada representa razonablemente el entorno tecnológico y las necesidades actuales de la organización.</span>
+                        </label>
+                        <t t-if="closing_text">
+                            <div class="jt-ms-intro" t-out="closing_text"/>
+                        </t>
+                    </div>
+                    <div class="jt-ms-section" data-section="done">
+                        <h2>¡Gracias!</h2>
+                        <p>Su levantamiento fue enviado correctamente. Nuestro equipo de Justech revisará la información.</p>
+                    </div>
+                    <div class="jt-ms-nav">
+                        <button type="button" id="jt-ms-btn-prev" class="jt-ms-btn jt-ms-btn-secondary">Anterior</button>
+                        <button type="button" id="jt-ms-btn-save" class="jt-ms-btn jt-ms-btn-secondary">Guardar y continuar</button>
+                        <button type="button" id="jt-ms-btn-next" class="jt-ms-btn jt-ms-btn-primary">Siguiente</button>
+                        <button type="button" id="jt-ms-btn-review" class="jt-ms-btn jt-ms-btn-secondary">Revisar</button>
+                        <button type="button" id="jt-ms-btn-submit" class="jt-ms-btn jt-ms-btn-success">Enviar levantamiento</button>
+                    </div>
+                </form>
+            </div>
+        </t>
+    </template>
 </odoo>

@@ -18,11 +18,42 @@
               action="action_justech_managed_service"
               sequence="10"/>
 
+    <menuitem id="menu_justech_ms_assessment_wizard"
+              name="Nuevo levantamiento"
+              parent="menu_justech_managed_services_root"
+              action="action_justech_ms_assessment_create_wizard"
+              sequence="15"
+              groups="justech_managed_services.group_ms_commercial,justech_managed_services.group_ms_manager,justech_managed_services.group_ms_user"/>
+
     <menuitem id="menu_justech_managed_services_assessments"
               name="Levantamientos"
               parent="menu_justech_managed_services_root"
               action="action_justech_managed_service_assessment"
               sequence="20"/>
+
+    <menuitem id="menu_justech_ms_designer_root"
+              name="Diseñador"
+              parent="menu_justech_managed_services_root"
+              sequence="70"
+              groups="justech_managed_services.group_ms_commercial,justech_managed_services.group_ms_manager"/>
+
+    <menuitem id="menu_justech_ms_form_templates"
+              name="Plantillas"
+              parent="menu_justech_ms_designer_root"
+              action="action_justech_ms_form_template"
+              sequence="10"/>
+
+    <menuitem id="menu_justech_ms_form_categories"
+              name="Categorías"
+              parent="menu_justech_ms_designer_root"
+              action="action_justech_ms_form_category"
+              sequence="20"/>
+
+    <menuitem id="menu_justech_ms_form_questions"
+              name="Preguntas"
+              parent="menu_justech_ms_designer_root"
+              action="action_justech_ms_form_question"
+              sequence="30"/>
 
     <menuitem id="menu_justech_ms_fees"
               name="Fees / Igualas"

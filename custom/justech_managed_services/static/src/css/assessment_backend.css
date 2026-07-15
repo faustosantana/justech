@@ -1,0 +1,96 @@
+/* Backend Justech — Servicios Administrados (sin romper tema Odoo) */
+:root {
+    --jt-ms-primary: #1a4f8c;
+    --jt-ms-primary-dark: #123a66;
+    --jt-ms-accent: #2d8cff;
+    --jt-ms-soft: #eef4fb;
+    --jt-ms-border: #d5e3f2;
+    --jt-ms-card: #ffffff;
+    --jt-ms-radius: 12px;
+}
+
+.o_form_view .jt-ms-backend-form .o_form_sheet {
+    max-width: 1180px;
+    background: linear-gradient(180deg, #f7faff 0%, #ffffff 220px);
+    border: 1px solid var(--jt-ms-border);
+    border-radius: var(--jt-ms-radius);
+    box-shadow: 0 10px 28px rgba(26, 79, 140, 0.08);
+    padding: 28px 32px 36px;
+}
+
+.o_form_view .jt-ms-backend-form .oe_title h1,
+.o_form_view .jt-ms-backend-form .oe_title h2 {
+    color: var(--jt-ms-primary-dark);
+    letter-spacing: -0.02em;
+}
+
+.o_form_view .jt-ms-backend-form .o_notebook .nav-link.active {
+    color: var(--jt-ms-primary) !important;
+    border-bottom-color: var(--jt-ms-primary) !important;
+    font-weight: 600;
+}
+
+.o_form_view .jt-ms-backend-form .o_group {
+    background: var(--jt-ms-card);
+    border: 1px solid var(--jt-ms-border);
+    border-radius: 10px;
+    padding: 12px 14px 4px;
+    margin-bottom: 14px;
+}
+
+.o_form_view .jt-ms-backend-form .o_horizontal_separator,
+.o_form_view .jt-ms-backend-form .o_group .o_td_label {
+    color: var(--jt-ms-primary-dark);
+}
+
+.o_form_view .jt-ms-backend-form .o_progressbar .o_progress {
+    background: #e5edf7;
+    border-radius: 999px;
+    overflow: hidden;
+}
+
+.o_form_view .jt-ms-backend-form .o_progressbar .o_progress > .o_progressbar_complete {
+    background: linear-gradient(90deg, var(--jt-ms-primary), var(--jt-ms-accent));
+}
+
+.o_form_view .jt-ms-backend-form header .btn-primary,
+.o_form_view .jt-ms-wizard .btn-primary {
+    background: var(--jt-ms-primary) !important;
+    border-color: var(--jt-ms-primary) !important;
+    border-radius: 8px;
+    font-weight: 600;
+}
+
+.o_form_view .jt-ms-backend-form header .btn-secondary,
+.o_form_view .jt-ms-wizard .btn-secondary {
+    border-radius: 8px;
+}
+
+.o_form_view .jt-ms-backend-form .oe_stat_button {
+    border-radius: 10px;
+    min-width: 90px;
+}
+
+.o_form_view .jt-ms-backend-form .alert-info {
+    background: var(--jt-ms-soft);
+    border-color: var(--jt-ms-border);
+    color: var(--jt-ms-primary-dark);
+    border-radius: 10px;
+}
+
+.o_kanban_view .o_kanban_record {
+    border-radius: 12px;
+}
+
+.jt-ms-wizard .jt-ms-wizard-steps .badge {
+    font-size: 0.85rem;
+    padding: 0.45rem 0.7rem;
+    border-radius: 999px;
+}
+
+.jt-ms-wizard .o_group {
+    background: #f8fbff;
+    border: 1px solid var(--jt-ms-border);
+    border-radius: 12px;
+    padding: 12px;
+}

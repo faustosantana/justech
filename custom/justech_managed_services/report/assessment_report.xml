@@ -4,63 +4,118 @@
         <field name="name">Levantamiento Servicios Administrados</field>
         <field name="format">A4</field>
         <field name="orientation">Portrait</field>
-        <field name="margin_top">40</field>
-        <field name="margin_bottom">28</field>
-        <field name="margin_left">12</field>
-        <field name="margin_right">12</field>
+        <field name="margin_top">28</field>
+        <field name="margin_bottom">22</field>
+        <field name="margin_left">14</field>
+        <field name="margin_right">14</field>
         <field name="header_line" eval="False"/>
-        <field name="header_spacing">35</field>
+        <field name="header_spacing">20</field>
+        <field name="dpi">90</field>
     </record>
 
     <template id="report_managed_service_assessment_document">
         <t t-call="web.html_container">
             <t t-foreach="docs" t-as="doc">
                 <t t-set="print_sections" t-value="doc.get_form_print_sections()"/>
-                <div class="page" style="font-family: DejaVu Sans, Arial, sans-serif; font-size: 11px; color: #1f2937;">
+                <t t-set="company" t-value="doc.company_id"/>
+                <div class="article jt-ms-report" t-att-data-oe-model="doc._name" t-att-data-oe-id="doc.id">
                     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-                    <div style="text-align:center; margin-bottom: 20px;">
-                        <img t-att-src="'/logo.png?company=%s' % doc.company_id.id" style="max-height: 60px;" alt="Logo"/>
-                        <h2 style="color:#1a4f8c; margin: 12px 0 4px;">Levantamiento de Servicios Administrados</h2>
-                        <p><strong><t t-esc="doc.partner_id.display_name"/></strong></p>
-                    </div>
-                    <table style="width:100%; margin-bottom: 16px;" class="table table-sm">
-                        <tr>
-                            <td><strong>Referencia:</strong> <t t-esc="doc.name"/></td>
-                            <td><strong>Estado:</strong> <t t-esc="dict(doc._fields['state'].selection).get(doc.state)"/></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Consultor:</strong> <t t-esc="doc.consultant_id.name or ''"/></td>
-                            <td><strong>Completado:</strong> <t t-esc="doc.date_done or ''"/></td>
-                        </tr>
-                        <tr>
-                            <td colspan="2">
-                                <strong>Responsable:</strong>
-                                <t t-esc="doc.completed_by_name or doc.org_responsible or ''"/>
-                                —
-                                <t t-esc="doc.completed_by_job or doc.org_job or ''"/>
-                            </td>
-                        </tr>
-                    </table>
-                    <t t-if="doc.summary">
-                        <h3 style="color:#1a4f8c;">Resumen ejecutivo</h3>
-                        <p t-esc="doc.summary"/>
-                    </t>
-                    <t t-foreach="print_sections" t-as="section">
-                        <h3 style="color:#1a4f8c; border-bottom: 1px solid #d8e2ef; padding-bottom: 4px; margin-top: 14px;" t-esc="section['heading']"/>
-                        <t t-if="section['rows']">
-                            <t t-foreach="section['rows']" t-as="row">
-                                <p>
-                                    <strong t-esc="row['label']"/>:
-                                    <t t-esc="row['value']"/>
+                    <!-- Portada -->
+                    <div class="page" style="font-family: DejaVu Sans, Arial, sans-serif; color:#1f2937;">
+                        <div style="min-height: 900px; border: 2px solid #1a4f8c; border-radius: 8px; padding: 48px 40px; position: relative;">
+                            <div style="text-align:center; margin-top: 40px;">
+                                <img t-att-src="'/logo.png?company=%s' % company.id" style="max-height: 72px;" alt="Justech"/>
+                                <p style="margin-top: 28px; letter-spacing: 3px; color:#1a4f8c; font-size: 12px; text-transform: uppercase;">
+                                    Justech · Servicios Administrados
                                 </p>
+                                <h1 style="color:#123a66; font-size: 28px; margin: 18px 0 8px; line-height: 1.25;">
+                                    Levantamiento de Información
+                                </h1>
+                                <p style="font-size: 18px; color:#1a4f8c; margin: 0;">
+                                    <t t-esc="doc.partner_id.commercial_company_name or doc.partner_id.name"/>
+                                </p>
+                            </div>
+                            <div style="margin-top: 80px; background:#eef4fb; border-radius: 8px; padding: 22px 26px;">
+                                <table style="width:100%; font-size: 12px;">
+                                    <tr>
+                                        <td style="padding:6px 0;"><strong>Referencia</strong><br/><t t-esc="doc.name"/></td>
+                                        <td style="padding:6px 0;"><strong>Plantilla</strong><br/><t t-esc="doc.template_id.name or 'Estándar'"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding:6px 0;"><strong>Consultor</strong><br/><t t-esc="doc.consultant_id.name or '-'"/></td>
+                                        <td style="padding:6px 0;"><strong>Fecha</strong><br/><t t-esc="doc.date_done or doc.write_date or ''"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding:6px 0;" colspan="2">
+                                            <strong>Contacto</strong><br/>
+                                            <t t-esc="doc.contact_id.name or doc.org_responsible or '-'"/>
+                                            <t t-if="doc.email"> · <t t-esc="doc.email"/></t>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div style="position:absolute; bottom: 36px; left: 40px; right: 40px; text-align:center; font-size: 10px; color:#6b7280;">
+                                Documento confidencial · Uso exclusivo del cliente y Justech
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Índice + contenido -->
+                    <div class="page" style="font-family: DejaVu Sans, Arial, sans-serif; font-size: 11px; color:#1f2937; page-break-before: always;">
+                        <div style="border-bottom: 3px solid #1a4f8c; padding-bottom: 10px; margin-bottom: 18px;">
+                            <table style="width:100%;">
+                                <tr>
+                                    <td>
+                                        <img t-att-src="'/logo.png?company=%s' % company.id" style="max-height: 36px;" alt="Justech"/>
+                                    </td>
+                                    <td style="text-align:right; color:#1a4f8c;">
+                                        <strong t-esc="doc.name"/><br/>
+                                        <span t-esc="doc.partner_id.display_name"/>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <h2 style="color:#1a4f8c; font-size: 16px; margin: 0 0 10px;">Índice</h2>
+                        <ol style="padding-left: 18px; margin-bottom: 22px; color:#374151;">
+                            <t t-foreach="print_sections" t-as="section">
+                                <li style="margin-bottom: 4px;" t-esc="section['title']"/>
                             </t>
+                        </ol>
+
+                        <t t-if="doc.summary">
+                            <div style="background:#f8fafc; border-left: 4px solid #2d8cff; padding: 12px 14px; margin-bottom: 18px;">
+                                <h3 style="color:#1a4f8c; margin: 0 0 6px; font-size: 13px;">Resumen ejecutivo</h3>
+                                <p style="margin:0;" t-esc="doc.summary"/>
+                            </div>
                         </t>
-                        <t t-else="">
-                            <p style="color:#6b7280;"><em>Sin respuestas registradas en esta sección.</em></p>
+
+                        <t t-foreach="print_sections" t-as="section">
+                            <div style="margin-top: 16px; page-break-inside: avoid;">
+                                <div style="background:#1a4f8c; color:#fff; padding: 8px 12px; border-radius: 4px 4px 0 0;">
+                                    <strong t-esc="section['heading']"/>
+                                </div>
+                                <div style="border: 1px solid #d8e2ef; border-top: 0; border-radius: 0 0 4px 4px; padding: 10px 12px;">
+                                    <t t-if="section['rows']">
+                                        <table style="width:100%; border-collapse: collapse;">
+                                            <t t-foreach="section['rows']" t-as="row">
+                                                <tr>
+                                                    <td style="width:38%; padding: 6px 8px 6px 0; vertical-align: top; color:#123a66; font-weight: 600;" t-esc="row['label']"/>
+                                                    <td style="padding: 6px 0; vertical-align: top;" t-esc="row['value']"/>
+                                                </tr>
+                                            </t>
+                                        </table>
+                                    </t>
+                                    <t t-else="">
+                                        <p style="color:#6b7280; margin: 4px 0;"><em>Sin respuestas registradas en esta sección.</em></p>
+                                    </t>
+                                </div>
+                            </div>
                         </t>
-                    </t>
-                    <div style="margin-top: 24px; border-top: 1px solid #d8e2ef; padding-top: 10px; text-align: center; font-size: 10px; color: #6b7280;">
-                        Documento generado por Justech — Servicios Administrados — <t t-esc="doc.name"/>
+
+                        <div style="margin-top: 28px; border-top: 1px solid #d8e2ef; padding-top: 10px; font-size: 9px; color:#6b7280; text-align: center;">
+                            Justech · justech.do · Documento generado para <t t-esc="doc.partner_id.display_name"/> · <t t-esc="doc.name"/>
+                        </div>
                     </div>
                 </div>
             </t>

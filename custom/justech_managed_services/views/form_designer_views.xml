@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_justech_ms_form_category_list" model="ir.ui.view">
+        <field name="name">justech.ms.form.category.list</field>
+        <field name="model">justech.ms.form.category</field>
+        <field name="arch" type="xml">
+            <list editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="question_count"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_justech_ms_form_category_form" model="ir.ui.view">
+        <field name="name">justech.ms.form.category.form</field>
+        <field name="model">justech.ms.form.category</field>
+        <field name="arch" type="xml">
+            <form string="Categoría">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="code"/>
+                        <field name="sequence"/>
+                        <field name="active"/>
+                    </group>
+                    <field name="description"/>
+                    <field name="question_ids">
+                        <list editable="bottom">
+                            <field name="sequence" widget="handle"/>
+                            <field name="name"/>
+                            <field name="key"/>
+                            <field name="field_type"/>
+                            <field name="active"/>
+                        </list>
+                    </field>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_justech_ms_form_question_list" model="ir.ui.view">
+        <field name="name">justech.ms.form.question.list</field>
+        <field name="model">justech.ms.form.question</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="category_id"/>
+                <field name="field_type"/>
+                <field name="key" optional="hide" groups="justech_managed_services.group_ms_manager"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_justech_ms_form_question_form" model="ir.ui.view">
+        <field name="name">justech.ms.form.question.form</field>
+        <field name="model">justech.ms.form.question</field>
+        <field name="arch" type="xml">
+            <form string="Pregunta">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="category_id"/>
+                        <field name="field_type"/>
+                        <field name="sequence"/>
+                        <field name="active"/>
+                        <field name="help_text"/>
+                    </group>
+                    <group string="Opciones" invisible="field_type not in ('select','multiselect')">
+                        <field name="options_json" widget="text" colspan="2"
+                                 placeholder='{"si": "Sí", "no": "No"}'/>
+                    </group>
+                    <group string="Técnico" groups="justech_managed_services.group_ms_manager">
+                        <field name="key"/>
+                        <field name="storage"/>
+                        <field name="section_number"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_justech_ms_form_template_list" model="ir.ui.view">
+        <field name="name">justech.ms.form.template.list</field>
+        <field name="model">justech.ms.form.template</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="line_count"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_justech_ms_form_template_form" model="ir.ui.view">
+        <field name="name">justech.ms.form.template.form</field>
+        <field name="model">justech.ms.form.template</field>
+        <field name="arch" type="xml">
+            <form string="Plantilla de levantamiento">
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" placeholder="Nombre de la plantilla"/></h1>
+                    </div>
+                    <group>
+                        <field name="code"/>
+                        <field name="sequence"/>
+                        <field name="active"/>
+                        <field name="line_count"/>
+                    </group>
+                    <notebook>
+                        <page string="Textos">
+                            <group string="Texto inicial">
+                                <field name="intro_text" nolabel="1" colspan="2"/>
+                            </group>
+                            <group string="Texto final">
+                                <field name="closing_text" nolabel="1" colspan="2"/>
+                            </group>
+                        </page>
+                        <page string="Preguntas">
+                            <field name="line_ids">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="question_id"/>
+                                    <field name="category_id" optional="show"/>
+                                    <field name="required"/>
+                                    <field name="visible"/>
+                                    <field name="active"/>
+                                    <field name="field_type" optional="hide"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_justech_ms_form_category" model="ir.actions.act_window">
+        <field name="name">Categorías</field>
+        <field name="res_model">justech.ms.form.category</field>
+        <field name="view_mode">list,form</field>
+    </record>
+    <record id="action_justech_ms_form_question" model="ir.actions.act_window">
+        <field name="name">Preguntas</field>
+        <field name="res_model">justech.ms.form.question</field>
+        <field name="view_mode">list,form</field>
+    </record>
+    <record id="action_justech_ms_form_template" model="ir.actions.act_window">
+        <field name="name">Plantillas</field>
+        <field name="res_model">justech.ms.form.template</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

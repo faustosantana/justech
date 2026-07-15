@@ -2,7 +2,10 @@
 
 
 def post_init_hook(env):
-    """Vincula el demo a Credicefi existente en la BD si aplica."""
+    """Semilla del catálogo/plantillas y vínculo demo Credicefi."""
+    from .models.form_catalog import seed_form_catalog
+
+    seed_form_catalog(env)
     partner = env["res.partner"].search(
         [
             ("name", "ilike", "credicefi"),

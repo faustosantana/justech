@@ -1,5 +1,15 @@
 # Changelog — justech_managed_services
 
+## [19.0.2.1.0] — 2026-07-15
+
+### UX
+
+- Asistente Nuevo Levantamiento (cliente → preguntas → enlace → envío).
+- Diseñador: categorías, preguntas, plantillas reutilizables (12 plantillas semilla).
+- Formulario público dinámico según preguntas activas (fallback al formulario clásico).
+- PDF corporativo con portada e índice.
+- Estilos backend Justech (cards, botones, progreso).
+
 ## [19.0.2.0.1] — 2026-07-15
 
 ### Corregido (flujo creación / envío de levantamientos)

@@ -57,11 +57,18 @@ class JustechAssessmentPortal(http.Controller):
             ),
             "completion_percent": assessment.completion_percent or 0,
             "readonly": False,
+            "form_structure": assessment.get_public_form_structure()
+            if assessment.uses_custom_form
+            else [],
+            "intro_text": assessment.intro_text,
+            "closing_text": assessment.closing_text,
         }
-        return request.render(
-            "justech_managed_services.assessment_public_form",
-            values,
+        template = (
+            "justech_managed_services.assessment_public_form_dynamic"
+            if assessment.uses_custom_form
+            else "justech_managed_services.assessment_public_form"
         )
+        return request.render(template, values)
 
     @http.route(
         ["/servicios/levantamiento/<string:token>/save"],

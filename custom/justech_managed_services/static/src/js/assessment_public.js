@@ -5,7 +5,9 @@
 (function () {
     "use strict";
 
-    const SECTION_COUNT = 17; // 16 secciones + revisión/envío
+    // Estático: 16 + revisión. Dinámico: N categorías + revisión (window.JT_MS_SECTION_COUNT).
+    const SECTION_COUNT = window.JT_MS_SECTION_COUNT || 17;
+    const CONTENT_SECTIONS = Math.max(1, SECTION_COUNT - 1);
     let currentSection = 1;
 
     function qs(sel, root) {
@@ -76,7 +78,7 @@
             sectionLabel.textContent =
                 sectionNum >= SECTION_COUNT
                     ? "Revisión y envío"
-                    : "Sección " + sectionNum + " de 16";
+                    : "Sección " + sectionNum + " de " + CONTENT_SECTIONS;
         }
     }
 

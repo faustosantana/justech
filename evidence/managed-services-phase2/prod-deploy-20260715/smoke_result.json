@@ -1,0 +1,152 @@
+{
+  "started": "2026-07-15T22:16:21.783519Z",
+  "checks": {
+    "module_installed": {
+      "ok": true,
+      "detail": "19.0.2.1.1"
+    },
+    "dep_crm": {
+      "ok": true,
+      "detail": "installed"
+    },
+    "dep_sale_management": {
+      "ok": true,
+      "detail": "installed"
+    },
+    "dep_sale_subscription": {
+      "ok": true,
+      "detail": "installed"
+    },
+    "dep_helpdesk": {
+      "ok": true,
+      "detail": "installed"
+    },
+    "dep_account": {
+      "ok": true,
+      "detail": "installed"
+    },
+    "dep_justech_l10n_do_ncf": {
+      "ok": true,
+      "detail": "installed"
+    },
+    "dep_justech_ecf_core": {
+      "ok": true,
+      "detail": "installed"
+    },
+    "dep_justech_recurring_fee": {
+      "ok": true,
+      "detail": "installed"
+    },
+    "dep_website": {
+      "ok": true,
+      "detail": "installed"
+    },
+    "model_justech.managed.service": {
+      "ok": true,
+      "detail": null
+    },
+    "model_justech.managed.service.assessment": {
+      "ok": true,
+      "detail": null
+    },
+    "model_justech.ms.form.question": {
+      "ok": true,
+      "detail": null
+    },
+    "model_justech.ms.form.template": {
+      "ok": true,
+      "detail": null
+    },
+    "model_justech.ms.form.category": {
+      "ok": true,
+      "detail": null
+    },
+    "question_bank": {
+      "ok": true,
+      "detail": 57
+    },
+    "templates": {
+      "ok": true,
+      "detail": 12
+    },
+    "assessment_create": {
+      "ok": true,
+      "detail": "LEV-2026-0002"
+    },
+    "public_url": {
+      "ok": true,
+      "detail": "https://justgroup.app/servicios/levantamiento/E51YN4xTsxcrEyG0697U8aXVxGCcxa07X5PFe_dkGAM"
+    },
+    "pdf": {
+      "ok": true,
+      "detail": 47313
+    },
+    "contacts_read": {
+      "ok": true,
+      "detail": 1182
+    },
+    "crm_read": {
+      "ok": true,
+      "detail": 38
+    },
+    "sale_read": {
+      "ok": true,
+      "detail": 761
+    },
+    "invoice_read": {
+      "ok": true,
+      "detail": null
+    },
+    "helpdesk_read": {
+      "ok": true,
+      "detail": null
+    },
+    "subscription_read": {
+      "ok": true,
+      "detail": null
+    },
+    "ncf_model": {
+      "ok": true,
+      "detail": null
+    },
+    "ecf_modules": {
+      "ok": true,
+      "detail": [
+        "justech_ecf_admin",
+        "justech_ecf_core",
+        "justech_ecf_dgii",
+        "justech_ecf_queue",
+        "justech_ecf_signature",
+        "justech_ecf_xml"
+      ]
+    },
+    "recurring_fee_module": {
+      "ok": true,
+      "detail": "19.0.1.0.2"
+    },
+    "menu_banco": {
+      "ok": true,
+      "detail": "Banco de preguntas"
+    }
+  },
+  "assessment_id": 2,
+  "assessment_name": "LEV-2026-0002",
+  "public_url": "https://justgroup.app/servicios/levantamiento/E51YN4xTsxcrEyG0697U8aXVxGCcxa07X5PFe_dkGAM",
+  "partner": "A V BLANDINO & CIA S A",
+  "http": {
+    "http_login": {
+      "ok": true,
+      "status": 200,
+      "len": 2000
+    },
+    "http_public": {
+      "ok": true,
+      "status": 200
+    }
+  },
+  "web_base_url": "https://justgroup.app",
+  "public_url_live": "https://justgroup.app/servicios/levantamiento/E51YN4xTsxcrEyG0697U8aXVxGCcxa07X5PFe_dkGAM",
+  "overall_pass": true,
+  "failed": [],
+  "ended": "2026-07-15T22:16:33.227401Z"
+}

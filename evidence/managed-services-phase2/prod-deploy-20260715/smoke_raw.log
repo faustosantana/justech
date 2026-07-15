@@ -1,0 +1,1043 @@
+2026-07-15 22:16:16,945 1359480 WARNING ? odoo.tools.config: option db_host reads 'False' in the config file at /etc/odoo/odoo.conf but isn't a boolean option, skip 
+2026-07-15 22:16:16,945 1359480 WARNING ? odoo.tools.config: option db_port reads 'False' in the config file at /etc/odoo/odoo.conf but isn't a boolean option, skip 
+2026-07-15 22:16:16,945 1359480 WARNING ? odoo.tools.config: option db_password reads 'False' in the config file at /etc/odoo/odoo.conf but isn't a boolean option, skip 
+2026-07-15 22:16:16,945 1359480 WARNING ? odoo.tools.config: unknown option 'xmlrpc_port' in the config file at /etc/odoo/odoo.conf, option stored as-is, without parsing 
+2026-07-15 22:16:16,945 1359480 WARNING ? odoo.tools.config: missing --http-interface/http_interface, using 0.0.0.0 by default, will change to 127.0.0.1 in 20.0 
+2026-07-15 22:16:16,974 1359480 INFO ? odoo.modules.loading: loading 1 modules... 
+2026-07-15 22:16:17,336 1359480 INFO ? odoo.modules.loading: 1 modules loaded in 0.36s, 0 queries (+0 extra) 
+2026-07-15 22:16:17,369 1359480 WARNING ? odoo.modules.module: Missing `author` key in manifest for 'studio_hotfix', defaulting to '' 
+2026-07-15 22:16:17,459 1359480 INFO ? odoo.modules.loading: loading 319 modules... 
+2026-07-15 22:16:17,496 1359480 WARNING ? odoo.addons.attachment_indexation.models.ir_attachment: Attachment indexation of PDF documents is unavailable because the 'pdfminer.six' Python library cannot be found on the system. You may install it from https://pypi.org/project/pdfminer.six/ (e.g. `pip3 install pdfminer.six`) 
+2026-07-15 22:16:18,799 1359480 WARNING ? odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define model.Constraint on the model. 
+2026-07-15 22:16:18,799 1359480 WARNING ? odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define model.Constraint on the model. 
+2026-07-15 22:16:18,799 1359480 WARNING ? odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define model.Constraint on the model. 
+2026-07-15 22:16:19,566 1359480 WARNING ? odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define model.Constraint on the model. 
+2026-07-15 22:16:19,572 1359480 WARNING ? odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define model.Constraint on the model. 
+2026-07-15 22:16:19,577 1359480 WARNING ? odoo.tools.translate: no translation language detected, skipping translation <frame at 0x7f95219916c0, file '/usr/lib/odoo/custom-addons/l10n_do_accounting/models/account_move.py', line 35, code <module>> 
+Stack (most recent call last):
+  File "/tmp/prod_smoke_ms.py", line 8, in <module>
+    reg = odoo.modules.registry.Registry.new("justech")
+  File "/usr/lib/python3/dist-packages/odoo/tools/func.py", line 88, in locked
+    return func(inst, *args, **kwargs)
+  File "/usr/lib/python3/dist-packages/odoo/orm/registry.py", line 199, in new
+    load_modules(
+  File "/usr/lib/python3/dist-packages/odoo/modules/loading.py", line 464, in load_modules
+    load_module_graph(
+  File "/usr/lib/python3/dist-packages/odoo/modules/loading.py", line 178, in load_module_graph
+    load_openerp_module(package.name)
+  File "/usr/lib/python3/dist-packages/odoo/modules/module.py", line 505, in load_openerp_module
+    __import__(qualname)
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/usr/lib/odoo/custom-addons/l10n_do_accounting/__init__.py", line 3, in <module>
+    from . import models
+  File "<frozen importlib._bootstrap>", line 1415, in _handle_fromlist
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/usr/lib/odoo/custom-addons/l10n_do_accounting/models/__init__.py", line 10, in <module>
+    from . import account_move
+  File "<frozen importlib._bootstrap>", line 1415, in _handle_fromlist
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/usr/lib/odoo/custom-addons/l10n_do_accounting/models/account_move.py", line 35, in <module>
+    ("2", _("02 - Text Correction")),
+  File "/usr/lib/python3/dist-packages/odoo/tools/translate.py", line 577, in get_text_alias
+    module, lang = _get_translation_source(1)
+  File "/usr/lib/python3/dist-packages/odoo/tools/translate.py", line 566, in _get_translation_source
+    lang = lang or _get_lang(frame, default_lang)
+  File "/usr/lib/python3/dist-packages/odoo/tools/translate.py", line 557, in _get_lang
+    _logger.log(log_level, 'no translation language detected, skipping translation %s', frame, stack_info=True)
+2026-07-15 22:16:19,578 1359480 WARNING ? odoo.tools.translate: no translation language detected, skipping translation <frame at 0x7f95219916c0, file '/usr/lib/odoo/custom-addons/l10n_do_accounting/models/account_move.py', line 36, code <module>> 
+Stack (most recent call last):
+  File "/tmp/prod_smoke_ms.py", line 8, in <module>
+    reg = odoo.modules.registry.Registry.new("justech")
+  File "/usr/lib/python3/dist-packages/odoo/tools/func.py", line 88, in locked
+    return func(inst, *args, **kwargs)
+  File "/usr/lib/python3/dist-packages/odoo/orm/registry.py", line 199, in new
+    load_modules(
+  File "/usr/lib/python3/dist-packages/odoo/modules/loading.py", line 464, in load_modules
+    load_module_graph(
+  File "/usr/lib/python3/dist-packages/odoo/modules/loading.py", line 178, in load_module_graph
+    load_openerp_module(package.name)
+  File "/usr/lib/python3/dist-packages/odoo/modules/module.py", line 505, in load_openerp_module
+    __import__(qualname)
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/usr/lib/odoo/custom-addons/l10n_do_accounting/__init__.py", line 3, in <module>
+    from . import models
+  File "<frozen importlib._bootstrap>", line 1415, in _handle_fromlist
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/usr/lib/odoo/custom-addons/l10n_do_accounting/models/__init__.py", line 10, in <module>
+    from . import account_move
+  File "<frozen importlib._bootstrap>", line 1415, in _handle_fromlist
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/usr/lib/odoo/custom-addons/l10n_do_accounting/models/account_move.py", line 36, in <module>
+    ("3", _("03 - Amount correction")),
+  File "/usr/lib/python3/dist-packages/odoo/tools/translate.py", line 577, in get_text_alias
+    module, lang = _get_translation_source(1)
+  File "/usr/lib/python3/dist-packages/odoo/tools/translate.py", line 566, in _get_translation_source
+    lang = lang or _get_lang(frame, default_lang)
+  File "/usr/lib/python3/dist-packages/odoo/tools/translate.py", line 557, in _get_lang
+    _logger.log(log_level, 'no translation language detected, skipping translation %s', frame, stack_info=True)
+2026-07-15 22:16:19,578 1359480 WARNING ? odoo.tools.translate: no translation language detected, skipping translation <frame at 0x7f95219916c0, file '/usr/lib/odoo/custom-addons/l10n_do_accounting/models/account_move.py', line 37, code <module>> 
+Stack (most recent call last):
+  File "/tmp/prod_smoke_ms.py", line 8, in <module>
+    reg = odoo.modules.registry.Registry.new("justech")
+  File "/usr/lib/python3/dist-packages/odoo/tools/func.py", line 88, in locked
+    return func(inst, *args, **kwargs)
+  File "/usr/lib/python3/dist-packages/odoo/orm/registry.py", line 199, in new
+    load_modules(
+  File "/usr/lib/python3/dist-packages/odoo/modules/loading.py", line 464, in load_modules
+    load_module_graph(
+  File "/usr/lib/python3/dist-packages/odoo/modules/loading.py", line 178, in load_module_graph
+    load_openerp_module(package.name)
+  File "/usr/lib/python3/dist-packages/odoo/modules/module.py", line 505, in load_openerp_module
+    __import__(qualname)
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/usr/lib/odoo/custom-addons/l10n_do_accounting/__init__.py", line 3, in <module>
+    from . import models
+  File "<frozen importlib._bootstrap>", line 1415, in _handle_fromlist
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/usr/lib/odoo/custom-addons/l10n_do_accounting/models/__init__.py", line 10, in <module>
+    from . import account_move
+  File "<frozen importlib._bootstrap>", line 1415, in _handle_fromlist
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/usr/lib/odoo/custom-addons/l10n_do_accounting/models/account_move.py", line 37, in <module>
+    ("4", _("04 - NCF replacement issued in contingency")),
+  File "/usr/lib/python3/dist-packages/odoo/tools/translate.py", line 577, in get_text_alias
+    module, lang = _get_translation_source(1)
+  File "/usr/lib/python3/dist-packages/odoo/tools/translate.py", line 566, in _get_translation_source
+    lang = lang or _get_lang(frame, default_lang)
+  File "/usr/lib/python3/dist-packages/odoo/tools/translate.py", line 557, in _get_lang
+    _logger.log(log_level, 'no translation language detected, skipping translation %s', frame, stack_info=True)
+2026-07-15 22:16:19,578 1359480 WARNING ? odoo.tools.translate: no translation language detected, skipping translation <frame at 0x7f95219916c0, file '/usr/lib/odoo/custom-addons/l10n_do_accounting/models/account_move.py', line 38, code <module>> 
+Stack (most recent call last):
+  File "/tmp/prod_smoke_ms.py", line 8, in <module>
+    reg = odoo.modules.registry.Registry.new("justech")
+  File "/usr/lib/python3/dist-packages/odoo/tools/func.py", line 88, in locked
+    return func(inst, *args, **kwargs)
+  File "/usr/lib/python3/dist-packages/odoo/orm/registry.py", line 199, in new
+    load_modules(
+  File "/usr/lib/python3/dist-packages/odoo/modules/loading.py", line 464, in load_modules
+    load_module_graph(
+  File "/usr/lib/python3/dist-packages/odoo/modules/loading.py", line 178, in load_module_graph
+    load_openerp_module(package.name)
+  File "/usr/lib/python3/dist-packages/odoo/modules/module.py", line 505, in load_openerp_module
+    __import__(qualname)
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/usr/lib/odoo/custom-addons/l10n_do_accounting/__init__.py", line 3, in <module>
+    from . import models
+  File "<frozen importlib._bootstrap>", line 1415, in _handle_fromlist
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/usr/lib/odoo/custom-addons/l10n_do_accounting/models/__init__.py", line 10, in <module>
+    from . import account_move
+  File "<frozen importlib._bootstrap>", line 1415, in _handle_fromlist
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/usr/lib/odoo/custom-addons/l10n_do_accounting/models/account_move.py", line 38, in <module>
+    ("5", _("05 - Reference Electronic Consumer Invoice")),
+  File "/usr/lib/python3/dist-packages/odoo/tools/translate.py", line 577, in get_text_alias
+    module, lang = _get_translation_source(1)
+  File "/usr/lib/python3/dist-packages/odoo/tools/translate.py", line 566, in _get_translation_source
+    lang = lang or _get_lang(frame, default_lang)
+  File "/usr/lib/python3/dist-packages/odoo/tools/translate.py", line 557, in _get_lang
+    _logger.log(log_level, 'no translation language detected, skipping translation %s', frame, stack_info=True)
+2026-07-15 22:16:19,818 1359480 WARNING ? odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define model.Constraint on the model. 
+2026-07-15 22:16:19,818 1359480 WARNING ? odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define model.Constraint on the model. 
+2026-07-15 22:16:19,819 1359480 WARNING ? odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define model.Constraint on the model. 
+2026-07-15 22:16:20,115 1359480 WARNING ? odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define model.Constraint on the model. 
+2026-07-15 22:16:20,116 1359480 WARNING ? odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define model.Constraint on the model. 
+2026-07-15 22:16:20,118 1359480 WARNING ? py.warnings: /usr/lib/odoo/custom-addons/justech_managed_services/controllers/assessment_portal.py:14: DeprecationWarning: Since 19.0, @route(type='json') is a deprecated alias to @route(type='jsonrpc')
+  File "/tmp/prod_smoke_ms.py", line 8, in <module>
+    reg = odoo.modules.registry.Registry.new("justech")
+  File "/usr/lib/python3/dist-packages/odoo/tools/func.py", line 88, in locked
+    return func(inst, *args, **kwargs)
+  File "/usr/lib/python3/dist-packages/odoo/orm/registry.py", line 199, in new
+    load_modules(
+  File "/usr/lib/python3/dist-packages/odoo/modules/loading.py", line 464, in load_modules
+    load_module_graph(
+  File "/usr/lib/python3/dist-packages/odoo/modules/loading.py", line 178, in load_module_graph
+    load_openerp_module(package.name)
+  File "/usr/lib/python3/dist-packages/odoo/modules/module.py", line 505, in load_openerp_module
+    __import__(qualname)
+  File "/usr/lib/odoo/custom-addons/justech_managed_services/__init__.py", line 2, in <module>
+    from . import controllers
+  File "/usr/lib/odoo/custom-addons/justech_managed_services/controllers/__init__.py", line 2, in <module>
+    from . import assessment_portal
+  File "/usr/lib/odoo/custom-addons/justech_managed_services/controllers/assessment_portal.py", line 14, in <module>
+    class JustechAssessmentPortal(http.Controller):
+ 
+2026-07-15 22:16:20,137 1359480 WARNING ? odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define model.Constraint on the model. 
+2026-07-15 22:16:20,138 1359480 WARNING ? odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define model.Constraint on the model. 
+2026-07-15 22:16:20,138 1359480 WARNING ? odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define model.Constraint on the model. 
+2026-07-15 22:16:20,291 1359480 WARNING ? odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define model.Constraint on the model. 
+2026-07-15 22:16:20,291 1359480 WARNING ? odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define model.Constraint on the model. 
+2026-07-15 22:16:20,354 1359480 WARNING ? odoo.tools.translate: no translation language detected, skipping translation <frame at 0x7f9520e96420, file '/usr/lib/odoo/custom-addons/justech_admin_center/models/justech_admin_product.py', line 73, code <module>> 
+Stack (most recent call last):
+  File "/tmp/prod_smoke_ms.py", line 8, in <module>
+    reg = odoo.modules.registry.Registry.new("justech")
+  File "/usr/lib/python3/dist-packages/odoo/tools/func.py", line 88, in locked
+    return func(inst, *args, **kwargs)
+  File "/usr/lib/python3/dist-packages/odoo/orm/registry.py", line 199, in new
+    load_modules(
+  File "/usr/lib/python3/dist-packages/odoo/modules/loading.py", line 464, in load_modules
+    load_module_graph(
+  File "/usr/lib/python3/dist-packages/odoo/modules/loading.py", line 178, in load_module_graph
+    load_openerp_module(package.name)
+  File "/usr/lib/python3/dist-packages/odoo/modules/module.py", line 505, in load_openerp_module
+    __import__(qualname)
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/usr/lib/odoo/custom-addons/justech_admin_center/__init__.py", line 2, in <module>
+    from . import models
+  File "<frozen importlib._bootstrap>", line 1415, in _handle_fromlist
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/usr/lib/odoo/custom-addons/justech_admin_center/models/__init__.py", line 2, in <module>
+    from . import justech_admin_product
+  File "<frozen importlib._bootstrap>", line 1415, in _handle_fromlist
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/usr/lib/odoo/custom-addons/justech_admin_center/models/justech_admin_product.py", line 73, in <module>
+    ("3.1", _("Configuración"), _("Parámetros, tipos y reglas de garantía.")),
+  File "/usr/lib/python3/dist-packages/odoo/tools/translate.py", line 577, in get_text_alias
+    module, lang = _get_translation_source(1)
+  File "/usr/lib/python3/dist-packages/odoo/tools/translate.py", line 566, in _get_translation_source
+    lang = lang or _get_lang(frame, default_lang)
+  File "/usr/lib/python3/dist-packages/odoo/tools/translate.py", line 557, in _get_lang
+    _logger.log(log_level, 'no translation language detected, skipping translation %s', frame, stack_info=True)
+2026-07-15 22:16:20,354 1359480 WARNING ? odoo.tools.translate: no translation language detected, skipping translation <frame at 0x7f9520e96420, file '/usr/lib/odoo/custom-addons/justech_admin_center/models/justech_admin_product.py', line 73, code <module>> 
+Stack (most recent call last):
+  File "/tmp/prod_smoke_ms.py", line 8, in <module>
+    reg = odoo.modules.registry.Registry.new("justech")
+  File "/usr/lib/python3/dist-packages/odoo/tools/func.py", line 88, in locked
+    return func(inst, *args, **kwargs)
+  File "/usr/lib/python3/dist-packages/odoo/orm/registry.py", line 199, in new
+    load_modules(
+  File "/usr/lib/python3/dist-packages/odoo/modules/loading.py", line 464, in load_modules
+    load_module_graph(
+  File "/usr/lib/python3/dist-packages/odoo/modules/loading.py", line 178, in load_module_graph
+    load_openerp_module(package.name)
+  File "/usr/lib/python3/dist-packages/odoo/modules/module.py", line 505, in load_openerp_module
+    __import__(qualname)
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/usr/lib/odoo/custom-addons/justech_admin_center/__init__.py", line 2, in <module>
+    from . import models
+  File "<frozen importlib._bootstrap>", line 1415, in _handle_fromlist
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/usr/lib/odoo/custom-addons/justech_admin_center/models/__init__.py", line 2, in <module>
+    from . import justech_admin_product
+  File "<frozen importlib._bootstrap>", line 1415, in _handle_fromlist
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/usr/lib/odoo/custom-addons/justech_admin_center/models/justech_admin_product.py", line 73, in <module>
+    ("3.1", _("Configuración"), _("Parámetros, tipos y reglas de garantía.")),
+  File "/usr/lib/python3/dist-packages/odoo/tools/translate.py", line 577, in get_text_alias
+    module, lang = _get_translation_source(1)
+  File "/usr/lib/python3/dist-packages/odoo/tools/translate.py", line 566, in _get_translation_source
+    lang = lang or _get_lang(frame, default_lang)
+  File "/usr/lib/python3/dist-packages/odoo/tools/translate.py", line 557, in _get_lang
+    _logger.log(log_level, 'no translation language detected, skipping translation %s', frame, stack_info=True)
+2026-07-15 22:16:20,354 1359480 WARNING ? odoo.tools.translate: no translation language detected, skipping translation <frame at 0x7f9520e96420, file '/usr/lib/odoo/custom-addons/justech_admin_center/models/justech_admin_product.py', line 74, code <module>> 
+Stack (most recent call last):
+  File "/tmp/prod_smoke_ms.py", line 8, in <module>
+    reg = odoo.modules.registry.Registry.new("justech")
+  File "/usr/lib/python3/dist-packages/odoo/tools/func.py", line 88, in locked
+    return func(inst, *args, **kwargs)
+  File "/usr/lib/python3/dist-packages/odoo/orm/registry.py", line 199, in new
+    load_modules(
+  File "/usr/lib/python3/dist-packages/odoo/modules/loading.py", line 464, in load_modules
+    load_module_graph(
+  File "/usr/lib/python3/dist-packages/odoo/modules/loading.py", line 178, in load_module_graph
+    load_openerp_module(package.name)
+  File "/usr/lib/python3/dist-packages/odoo/modules/module.py", line 505, in load_openerp_module
+    __import__(qualname)
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/usr/lib/odoo/custom-addons/justech_admin_center/__init__.py", line 2, in <module>
+    from . import models
+  File "<frozen importlib._bootstrap>", line 1415, in _handle_fromlist
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/usr/lib/odoo/custom-addons/justech_admin_center/models/__init__.py", line 2, in <module>
+    from . import justech_admin_product
+  File "<frozen importlib._bootstrap>", line 1415, in _handle_fromlist
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/usr/lib/odoo/custom-addons/justech_admin_center/models/justech_admin_product.py", line 74, in <module>
+    ("3.2", _("Registro y seguimiento"), _("Altas, vigencia y estado de garantías.")),
+  File "/usr/lib/python3/dist-packages/odoo/tools/translate.py", line 577, in get_text_alias
+    module, lang = _get_translation_source(1)
+  File "/usr/lib/python3/dist-packages/odoo/tools/translate.py", line 566, in _get_translation_source
+    lang = lang or _get_lang(frame, default_lang)
+  File "/usr/lib/python3/dist-packages/odoo/tools/translate.py", line 557, in _get_lang
+    _logger.log(log_level, 'no translation language detected, skipping translation %s', frame, stack_info=True)
+2026-07-15 22:16:20,355 1359480 WARNING ? odoo.tools.translate: no translation language detected, skipping translation <frame at 0x7f9520e96420, file '/usr/lib/odoo/custom-addons/justech_admin_center/models/justech_admin_product.py', line 74, code <module>> 
+Stack (most recent call last):
+  File "/tmp/prod_smoke_ms.py", line 8, in <module>
+    reg = odoo.modules.registry.Registry.new("justech")
+  File "/usr/lib/python3/dist-packages/odoo/tools/func.py", line 88, in locked
+    return func(inst, *args, **kwargs)
+  File "/usr/lib/python3/dist-packages/odoo/orm/registry.py", line 199, in new
+    load_modules(
+  File "/usr/lib/python3/dist-packages/odoo/modules/loading.py", line 464, in load_modules
+    load_module_graph(
+  File "/usr/lib/python3/dist-packages/odoo/modules/loading.py", line 178, in load_module_graph
+    load_openerp_module(package.name)
+  File "/usr/lib/python3/dist-packages/odoo/modules/module.py", line 505, in load_openerp_module
+    __import__(qualname)
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/usr/lib/odoo/custom-addons/justech_admin_center/__init__.py", line 2, in <module>
+    from . import models
+  File "<frozen importlib._bootstrap>", line 1415, in _handle_fromlist
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/usr/lib/odoo/custom-addons/justech_admin_center/models/__init__.py", line 2, in <module>
+    from . import justech_admin_product
+  File "<frozen importlib._bootstrap>", line 1415, in _handle_fromlist
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/usr/lib/odoo/custom-addons/justech_admin_center/models/justech_admin_product.py", line 74, in <module>
+    ("3.2", _("Registro y seguimiento"), _("Altas, vigencia y estado de garantías.")),
+  File "/usr/lib/python3/dist-packages/odoo/tools/translate.py", line 577, in get_text_alias
+    module, lang = _get_translation_source(1)
+  File "/usr/lib/python3/dist-packages/odoo/tools/translate.py", line 566, in _get_translation_source
+    lang = lang or _get_lang(frame, default_lang)
+  File "/usr/lib/python3/dist-packages/odoo/tools/translate.py", line 557, in _get_lang
+    _logger.log(log_level, 'no translation language detected, skipping translation %s', frame, stack_info=True)
+2026-07-15 22:16:20,355 1359480 WARNING ? odoo.tools.translate: no translation language detected, skipping translation <frame at 0x7f9520e96420, file '/usr/lib/odoo/custom-addons/justech_admin_center/models/justech_admin_product.py', line 75, code <module>> 
+Stack (most recent call last):
+  File "/tmp/prod_smoke_ms.py", line 8, in <module>
+    reg = odoo.modules.registry.Registry.new("justech")
+  File "/usr/lib/python3/dist-packages/odoo/tools/func.py", line 88, in locked
+    return func(inst, *args, **kwargs)
+  File "/usr/lib/python3/dist-packages/odoo/orm/registry.py", line 199, in new
+    load_modules(
+  File "/usr/lib/python3/dist-packages/odoo/modules/loading.py", line 464, in load_modules
+    load_module_graph(
+  File "/usr/lib/python3/dist-packages/odoo/modules/loading.py", line 178, in load_module_graph
+    load_openerp_module(package.name)
+  File "/usr/lib/python3/dist-packages/odoo/modules/module.py", line 505, in load_openerp_module
+    __import__(qualname)
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/usr/lib/odoo/custom-addons/justech_admin_center/__init__.py", line 2, in <module>
+    from . import models
+  File "<frozen importlib._bootstrap>", line 1415, in _handle_fromlist
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/usr/lib/odoo/custom-addons/justech_admin_center/models/__init__.py", line 2, in <module>
+    from . import justech_admin_product
+  File "<frozen importlib._bootstrap>", line 1415, in _handle_fromlist
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/usr/lib/odoo/custom-addons/justech_admin_center/models/justech_admin_product.py", line 75, in <module>
+    ("3.3", _("Reclamaciones"), _("Solicitudes y motivos de reclamo.")),
+  File "/usr/lib/python3/dist-packages/odoo/tools/translate.py", line 577, in get_text_alias
+    module, lang = _get_translation_source(1)
+  File "/usr/lib/python3/dist-packages/odoo/tools/translate.py", line 566, in _get_translation_source
+    lang = lang or _get_lang(frame, default_lang)
+  File "/usr/lib/python3/dist-packages/odoo/tools/translate.py", line 557, in _get_lang
+    _logger.log(log_level, 'no translation language detected, skipping translation %s', frame, stack_info=True)
+2026-07-15 22:16:20,355 1359480 WARNING ? odoo.tools.translate: no translation language detected, skipping translation <frame at 0x7f9520e96420, file '/usr/lib/odoo/custom-addons/justech_admin_center/models/justech_admin_product.py', line 75, code <module>> 
+Stack (most recent call last):
+  File "/tmp/prod_smoke_ms.py", line 8, in <module>
+    reg = odoo.modules.registry.Registry.new("justech")
+  File "/usr/lib/python3/dist-packages/odoo/tools/func.py", line 88, in locked
+    return func(inst, *args, **kwargs)
+  File "/usr/lib/python3/dist-packages/odoo/orm/registry.py", line 199, in new
+    load_modules(
+  File "/usr/lib/python3/dist-packages/odoo/modules/loading.py", line 464, in load_modules
+    load_module_graph(
+  File "/usr/lib/python3/dist-packages/odoo/modules/loading.py", line 178, in load_module_graph
+    load_openerp_module(package.name)
+  File "/usr/lib/python3/dist-packages/odoo/modules/module.py", line 505, in load_openerp_module
+    __import__(qualname)
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/usr/lib/odoo/custom-addons/justech_admin_center/__init__.py", line 2, in <module>
+    from . import models
+  File "<frozen importlib._bootstrap>", line 1415, in _handle_fromlist
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/usr/lib/odoo/custom-addons/justech_admin_center/models/__init__.py", line 2, in <module>
+    from . import justech_admin_product
+  File "<frozen importlib._bootstrap>", line 1415, in _handle_fromlist
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/usr/lib/odoo/custom-addons/justech_admin_center/models/justech_admin_product.py", line 75, in <module>
+    ("3.3", _("Reclamaciones"), _("Solicitudes y motivos de reclamo.")),
+  File "/usr/lib/python3/dist-packages/odoo/tools/translate.py", line 577, in get_text_alias
+    module, lang = _get_translation_source(1)
+  File "/usr/lib/python3/dist-packages/odoo/tools/translate.py", line 566, in _get_translation_source
+    lang = lang or _get_lang(frame, default_lang)
+  File "/usr/lib/python3/dist-packages/odoo/tools/translate.py", line 557, in _get_lang
+    _logger.log(log_level, 'no translation language detected, skipping translation %s', frame, stack_info=True)
+2026-07-15 22:16:20,355 1359480 WARNING ? odoo.tools.translate: no translation language detected, skipping translation <frame at 0x7f9520e96420, file '/usr/lib/odoo/custom-addons/justech_admin_center/models/justech_admin_product.py', line 76, code <module>> 
+Stack (most recent call last):
+  File "/tmp/prod_smoke_ms.py", line 8, in <module>
+    reg = odoo.modules.registry.Registry.new("justech")
+  File "/usr/lib/python3/dist-packages/odoo/tools/func.py", line 88, in locked
+    return func(inst, *args, **kwargs)
+  File "/usr/lib/python3/dist-packages/odoo/orm/registry.py", line 199, in new
+    load_modules(
+  File "/usr/lib/python3/dist-packages/odoo/modules/loading.py", line 464, in load_modules
+    load_module_graph(
+  File "/usr/lib/python3/dist-packages/odoo/modules/loading.py", line 178, in load_module_graph
+    load_openerp_module(package.name)
+  File "/usr/lib/python3/dist-packages/odoo/modules/module.py", line 505, in load_openerp_module
+    __import__(qualname)
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/usr/lib/odoo/custom-addons/justech_admin_center/__init__.py", line 2, in <module>
+    from . import models
+  File "<frozen importlib._bootstrap>", line 1415, in _handle_fromlist
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/usr/lib/odoo/custom-addons/justech_admin_center/models/__init__.py", line 2, in <module>
+    from . import justech_admin_product
+  File "<frozen importlib._bootstrap>", line 1415, in _handle_fromlist
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/usr/lib/odoo/custom-addons/justech_admin_center/models/justech_admin_product.py", line 76, in <module>
+    ("3.4", _("Aprobaciones"), _("Flujo de aprobación de reclamos.")),
+  File "/usr/lib/python3/dist-packages/odoo/tools/translate.py", line 577, in get_text_alias
+    module, lang = _get_translation_source(1)
+  File "/usr/lib/python3/dist-packages/odoo/tools/translate.py", line 566, in _get_translation_source
+    lang = lang or _get_lang(frame, default_lang)
+  File "/usr/lib/python3/dist-packages/odoo/tools/translate.py", line 557, in _get_lang
+    _logger.log(log_level, 'no translation language detected, skipping translation %s', frame, stack_info=True)
+2026-07-15 22:16:20,355 1359480 WARNING ? odoo.tools.translate: no translation language detected, skipping translation <frame at 0x7f9520e96420, file '/usr/lib/odoo/custom-addons/justech_admin_center/models/justech_admin_product.py', line 76, code <module>> 
+Stack (most recent call last):
+  File "/tmp/prod_smoke_ms.py", line 8, in <module>
+    reg = odoo.modules.registry.Registry.new("justech")
+  File "/usr/lib/python3/dist-packages/odoo/tools/func.py", line 88, in locked
+    return func(inst, *args, **kwargs)
+  File "/usr/lib/python3/dist-packages/odoo/orm/registry.py", line 199, in new
+    load_modules(
+  File "/usr/lib/python3/dist-packages/odoo/modules/loading.py", line 464, in load_modules
+    load_module_graph(
+  File "/usr/lib/python3/dist-packages/odoo/modules/loading.py", line 178, in load_module_graph
+    load_openerp_module(package.name)
+  File "/usr/lib/python3/dist-packages/odoo/modules/module.py", line 505, in load_openerp_module
+    __import__(qualname)
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/usr/lib/odoo/custom-addons/justech_admin_center/__init__.py", line 2, in <module>
+    from . import models
+  File "<frozen importlib._bootstrap>", line 1415, in _handle_fromlist
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/usr/lib/odoo/custom-addons/justech_admin_center/models/__init__.py", line 2, in <module>
+    from . import justech_admin_product
+  File "<frozen importlib._bootstrap>", line 1415, in _handle_fromlist
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/usr/lib/odoo/custom-addons/justech_admin_center/models/justech_admin_product.py", line 76, in <module>
+    ("3.4", _("Aprobaciones"), _("Flujo de aprobación de reclamos.")),
+  File "/usr/lib/python3/dist-packages/odoo/tools/translate.py", line 577, in get_text_alias
+    module, lang = _get_translation_source(1)
+  File "/usr/lib/python3/dist-packages/odoo/tools/translate.py", line 566, in _get_translation_source
+    lang = lang or _get_lang(frame, default_lang)
+  File "/usr/lib/python3/dist-packages/odoo/tools/translate.py", line 557, in _get_lang
+    _logger.log(log_level, 'no translation language detected, skipping translation %s', frame, stack_info=True)
+2026-07-15 22:16:20,356 1359480 WARNING ? odoo.tools.translate: no translation language detected, skipping translation <frame at 0x7f9520e96420, file '/usr/lib/odoo/custom-addons/justech_admin_center/models/justech_admin_product.py', line 77, code <module>> 
+Stack (most recent call last):
+  File "/tmp/prod_smoke_ms.py", line 8, in <module>
+    reg = odoo.modules.registry.Registry.new("justech")
+  File "/usr/lib/python3/dist-packages/odoo/tools/func.py", line 88, in locked
+    return func(inst, *args, **kwargs)
+  File "/usr/lib/python3/dist-packages/odoo/orm/registry.py", line 199, in new
+    load_modules(
+  File "/usr/lib/python3/dist-packages/odoo/modules/loading.py", line 464, in load_modules
+    load_module_graph(
+  File "/usr/lib/python3/dist-packages/odoo/modules/loading.py", line 178, in load_module_graph
+    load_openerp_module(package.name)
+  File "/usr/lib/python3/dist-packages/odoo/modules/module.py", line 505, in load_openerp_module
+    __import__(qualname)
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/usr/lib/odoo/custom-addons/justech_admin_center/__init__.py", line 2, in <module>
+    from . import models
+  File "<frozen importlib._bootstrap>", line 1415, in _handle_fromlist
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/usr/lib/odoo/custom-addons/justech_admin_center/models/__init__.py", line 2, in <module>
+    from . import justech_admin_product
+  File "<frozen importlib._bootstrap>", line 1415, in _handle_fromlist
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/usr/lib/odoo/custom-addons/justech_admin_center/models/justech_admin_product.py", line 77, in <module>
+    ("3.5", _("Cierre"), _("Cierre y resolución de casos.")),
+  File "/usr/lib/python3/dist-packages/odoo/tools/translate.py", line 577, in get_text_alias
+    module, lang = _get_translation_source(1)
+  File "/usr/lib/python3/dist-packages/odoo/tools/translate.py", line 566, in _get_translation_source
+    lang = lang or _get_lang(frame, default_lang)
+  File "/usr/lib/python3/dist-packages/odoo/tools/translate.py", line 557, in _get_lang
+    _logger.log(log_level, 'no translation language detected, skipping translation %s', frame, stack_info=True)
+2026-07-15 22:16:20,356 1359480 WARNING ? odoo.tools.translate: no translation language detected, skipping translation <frame at 0x7f9520e96420, file '/usr/lib/odoo/custom-addons/justech_admin_center/models/justech_admin_product.py', line 77, code <module>> 
+Stack (most recent call last):
+  File "/tmp/prod_smoke_ms.py", line 8, in <module>
+    reg = odoo.modules.registry.Registry.new("justech")
+  File "/usr/lib/python3/dist-packages/odoo/tools/func.py", line 88, in locked
+    return func(inst, *args, **kwargs)
+  File "/usr/lib/python3/dist-packages/odoo/orm/registry.py", line 199, in new
+    load_modules(
+  File "/usr/lib/python3/dist-packages/odoo/modules/loading.py", line 464, in load_modules
+    load_module_graph(
+  File "/usr/lib/python3/dist-packages/odoo/modules/loading.py", line 178, in load_module_graph
+    load_openerp_module(package.name)
+  File "/usr/lib/python3/dist-packages/odoo/modules/module.py", line 505, in load_openerp_module
+    __import__(qualname)
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/usr/lib/odoo/custom-addons/justech_admin_center/__init__.py", line 2, in <module>
+    from . import models
+  File "<frozen importlib._bootstrap>", line 1415, in _handle_fromlist
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/usr/lib/odoo/custom-addons/justech_admin_center/models/__init__.py", line 2, in <module>
+    from . import justech_admin_product
+  File "<frozen importlib._bootstrap>", line 1415, in _handle_fromlist
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/usr/lib/odoo/custom-addons/justech_admin_center/models/justech_admin_product.py", line 77, in <module>
+    ("3.5", _("Cierre"), _("Cierre y resolución de casos.")),
+  File "/usr/lib/python3/dist-packages/odoo/tools/translate.py", line 577, in get_text_alias
+    module, lang = _get_translation_source(1)
+  File "/usr/lib/python3/dist-packages/odoo/tools/translate.py", line 566, in _get_translation_source
+    lang = lang or _get_lang(frame, default_lang)
+  File "/usr/lib/python3/dist-packages/odoo/tools/translate.py", line 557, in _get_lang
+    _logger.log(log_level, 'no translation language detected, skipping translation %s', frame, stack_info=True)
+2026-07-15 22:16:20,356 1359480 WARNING ? odoo.tools.translate: no translation language detected, skipping translation <frame at 0x7f9520e96420, file '/usr/lib/odoo/custom-addons/justech_admin_center/models/justech_admin_product.py', line 78, code <module>> 
+Stack (most recent call last):
+  File "/tmp/prod_smoke_ms.py", line 8, in <module>
+    reg = odoo.modules.registry.Registry.new("justech")
+  File "/usr/lib/python3/dist-packages/odoo/tools/func.py", line 88, in locked
+    return func(inst, *args, **kwargs)
+  File "/usr/lib/python3/dist-packages/odoo/orm/registry.py", line 199, in new
+    load_modules(
+  File "/usr/lib/python3/dist-packages/odoo/modules/loading.py", line 464, in load_modules
+    load_module_graph(
+  File "/usr/lib/python3/dist-packages/odoo/modules/loading.py", line 178, in load_module_graph
+    load_openerp_module(package.name)
+  File "/usr/lib/python3/dist-packages/odoo/modules/module.py", line 505, in load_openerp_module
+    __import__(qualname)
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/usr/lib/odoo/custom-addons/justech_admin_center/__init__.py", line 2, in <module>
+    from . import models
+  File "<frozen importlib._bootstrap>", line 1415, in _handle_fromlist
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/usr/lib/odoo/custom-addons/justech_admin_center/models/__init__.py", line 2, in <module>
+    from . import justech_admin_product
+  File "<frozen importlib._bootstrap>", line 1415, in _handle_fromlist
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/usr/lib/odoo/custom-addons/justech_admin_center/models/justech_admin_product.py", line 78, in <module>
+    ("3.6", _("Reportes"), _("Indicadores y listados operativos.")),
+  File "/usr/lib/python3/dist-packages/odoo/tools/translate.py", line 577, in get_text_alias
+    module, lang = _get_translation_source(1)
+  File "/usr/lib/python3/dist-packages/odoo/tools/translate.py", line 566, in _get_translation_source
+    lang = lang or _get_lang(frame, default_lang)
+  File "/usr/lib/python3/dist-packages/odoo/tools/translate.py", line 557, in _get_lang
+    _logger.log(log_level, 'no translation language detected, skipping translation %s', frame, stack_info=True)
+2026-07-15 22:16:20,356 1359480 WARNING ? odoo.tools.translate: no translation language detected, skipping translation <frame at 0x7f9520e96420, file '/usr/lib/odoo/custom-addons/justech_admin_center/models/justech_admin_product.py', line 78, code <module>> 
+Stack (most recent call last):
+  File "/tmp/prod_smoke_ms.py", line 8, in <module>
+    reg = odoo.modules.registry.Registry.new("justech")
+  File "/usr/lib/python3/dist-packages/odoo/tools/func.py", line 88, in locked
+    return func(inst, *args, **kwargs)
+  File "/usr/lib/python3/dist-packages/odoo/orm/registry.py", line 199, in new
+    load_modules(
+  File "/usr/lib/python3/dist-packages/odoo/modules/loading.py", line 464, in load_modules
+    load_module_graph(
+  File "/usr/lib/python3/dist-packages/odoo/modules/loading.py", line 178, in load_module_graph
+    load_openerp_module(package.name)
+  File "/usr/lib/python3/dist-packages/odoo/modules/module.py", line 505, in load_openerp_module
+    __import__(qualname)
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/usr/lib/odoo/custom-addons/justech_admin_center/__init__.py", line 2, in <module>
+    from . import models
+  File "<frozen importlib._bootstrap>", line 1415, in _handle_fromlist
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/usr/lib/odoo/custom-addons/justech_admin_center/models/__init__.py", line 2, in <module>
+    from . import justech_admin_product
+  File "<frozen importlib._bootstrap>", line 1415, in _handle_fromlist
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/usr/lib/odoo/custom-addons/justech_admin_center/models/justech_admin_product.py", line 78, in <module>
+    ("3.6", _("Reportes"), _("Indicadores y listados operativos.")),
+  File "/usr/lib/python3/dist-packages/odoo/tools/translate.py", line 577, in get_text_alias
+    module, lang = _get_translation_source(1)
+  File "/usr/lib/python3/dist-packages/odoo/tools/translate.py", line 566, in _get_translation_source
+    lang = lang or _get_lang(frame, default_lang)
+  File "/usr/lib/python3/dist-packages/odoo/tools/translate.py", line 557, in _get_lang
+    _logger.log(log_level, 'no translation language detected, skipping translation %s', frame, stack_info=True)
+2026-07-15 22:16:20,402 1359480 WARNING ? odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define model.Constraint on the model. 
+2026-07-15 22:16:20,402 1359480 WARNING ? odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define model.Constraint on the model. 
+2026-07-15 22:16:20,403 1359480 WARNING ? odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define model.Constraint on the model. 
+2026-07-15 22:16:20,443 1359480 WARNING ? odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define model.Constraint on the model. 
+2026-07-15 22:16:20,561 1359480 WARNING ? odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define model.Constraint on the model. 
+2026-07-15 22:16:20,561 1359480 WARNING ? odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define model.Constraint on the model. 
+2026-07-15 22:16:20,571 1359480 WARNING ? odoo.registry: Model attribute '_sql_constraints' is no longer supported, please define model.Constraint on the model. 
+2026-07-15 22:16:20,618 1359480 INFO ? odoo.modules.loading: 319 modules loaded in 3.16s, 0 queries (+0 extra) 
+2026-07-15 22:16:21,122 1359480 WARNING ? odoo.fields: justech.do.fiscal.report.state: selection=[('draft', 'Borrador'), ('validated', 'Validado'), ('pending_approval', 'Requiere aprobación'), ('approved', 'Aprobado'), ('rejected', 'Rechazado'), ('generated', 'Generado'), ('done', 'Generado')] overrides existing selection; use selection_add instead 
+2026-07-15 22:16:21,152 1359480 WARNING ? odoo.fields: Translated stored related field (justech.audit.rule.model_description) will not be computed correctly in all languages 
+2026-07-15 22:16:21,193 1359480 WARNING ? odoo.fields: Field account.move.l10n_latam_document_type_id: unknown parameter 'auto_join', if this is an actual parameter you may want to override the method _valid_field_parameter on the relevant model in order to allow it 
+2026-07-15 22:16:21,200 1359480 WARNING ? odoo.fields: Field account.move.line.l10n_latam_document_type_id: unknown parameter 'auto_join', if this is an actual parameter you may want to override the method _valid_field_parameter on the relevant model in order to allow it 
+2026-07-15 22:16:21,281 1359480 WARNING ? odoo.fields: Field justech.admin.auth.wizard.password: unknown parameter 'password', if this is an actual parameter you may want to override the method _valid_field_parameter on the relevant model in order to allow it 
+2026-07-15 22:16:21,426 1359480 INFO ? odoo.modules.loading: Modules loaded. 
+2026-07-15 22:16:21,459 1359480 WARNING ? py.warnings: /usr/lib/python3/dist-packages/odoo/orm/registry.py:537: UserWarning: justech.ms.form.question: inconsistent 'compute_sudo' for computed fields template_ids, template_count, template_names. Either set 'compute_sudo' to the same value on all those fields, or use distinct compute methods for sudoed and non-sudoed fields.
+  File "/tmp/prod_smoke_ms.py", line 8, in <module>
+    reg = odoo.modules.registry.Registry.new("justech")
+  File "/usr/lib/python3/dist-packages/odoo/tools/func.py", line 88, in locked
+    return func(inst, *args, **kwargs)
+  File "/usr/lib/python3/dist-packages/odoo/orm/registry.py", line 199, in new
+    load_modules(
+  File "/usr/lib/python3/dist-packages/odoo/modules/loading.py", line 594, in load_modules
+    model._register_hook()
+  File "/usr/lib/python3/dist-packages/odoo/addons/base_automation/models/base_automation.py", line 1040, in _register_hook
+    Model = self.env.get(automation_rule.model_name)
+  File "/usr/lib/python3/dist-packages/odoo/orm/fields.py", line 1746, in __get__
+    self.compute_value(recs)
+  File "/usr/lib/python3/dist-packages/odoo/orm/fields.py", line 1904, in compute_value
+    fields = records.pool.field_computed[self]
+  File "/usr/lib/python3.12/functools.py", line 995, in __get__
+    val = self.func(instance)
+  File "/usr/lib/python3/dist-packages/odoo/orm/registry.py", line 537, in field_computed
+    warnings.warn(
+ 
+2026-07-15 22:16:21,459 1359480 WARNING ? py.warnings: /usr/lib/python3/dist-packages/odoo/orm/registry.py:554: UserWarning: justech.ms.form.question: inconsistent 'store' for computed fields, accessing template_ids, template_names may recompute and update template_count. Use distinct compute methods for stored and non-stored fields.
+  File "/tmp/prod_smoke_ms.py", line 8, in <module>
+    reg = odoo.modules.registry.Registry.new("justech")
+  File "/usr/lib/python3/dist-packages/odoo/tools/func.py", line 88, in locked
+    return func(inst, *args, **kwargs)
+  File "/usr/lib/python3/dist-packages/odoo/orm/registry.py", line 199, in new
+    load_modules(
+  File "/usr/lib/python3/dist-packages/odoo/modules/loading.py", line 594, in load_modules
+    model._register_hook()
+  File "/usr/lib/python3/dist-packages/odoo/addons/base_automation/models/base_automation.py", line 1040, in _register_hook
+    Model = self.env.get(automation_rule.model_name)
+  File "/usr/lib/python3/dist-packages/odoo/orm/fields.py", line 1746, in __get__
+    self.compute_value(recs)
+  File "/usr/lib/python3/dist-packages/odoo/orm/fields.py", line 1904, in compute_value
+    fields = records.pool.field_computed[self]
+  File "/usr/lib/python3.12/functools.py", line 995, in __get__
+    val = self.func(instance)
+  File "/usr/lib/python3/dist-packages/odoo/orm/registry.py", line 554, in field_computed
+    warnings.warn(
+ 
+2026-07-15 22:16:21,783 1359480 INFO ? odoo.registry: Registry loaded in 4.837s 
+2026-07-15 22:16:22,008 1359480 WARNING ? py.warnings: /usr/lib/python3/dist-packages/odoo/orm/fields.py:845: UserWarning: Field 'res.company.country_id' in dependency of res.company.l10n_do_country_code should be searchable. This is necessary to determine which records to recompute when res.country.code is modified. You should either make the field searchable, or simplify the field dependency.
+  File "/tmp/prod_smoke_ms.py", line 52, in <module>
+    ass = Ass.create({
+  File "/usr/lib/python3/dist-packages/odoo/orm/decorators.py", line 365, in create
+    return method(self, vals_list)
+  File "/usr/lib/odoo/custom-addons/justech_managed_services/models/managed_service_assessment.py", line 475, in create
+    records = super().create(vals_list)
+  File "/usr/lib/python3/dist-packages/odoo/orm/decorators.py", line 365, in create
+    return method(self, vals_list)
+  File "/usr/lib/python3/dist-packages/odoo/addons/mail/models/mail_thread.py", line 328, in create
+    threads = super(MailThread, self).create(vals_list)
+  File "/usr/lib/python3/dist-packages/odoo/orm/decorators.py", line 365, in create
+    return method(self, vals_list)
+  File "/usr/lib/odoo/custom-addons/justech_global_audit_log/models/base.py", line 53, in create
+    records = super().create(vals_list)
+  File "/usr/lib/python3/dist-packages/odoo/orm/decorators.py", line 365, in create
+    return method(self, vals_list)
+  File "/usr/lib/python3/dist-packages/odoo/orm/models.py", line 4709, in create
+    records = self._create(data_list)
+  File "/usr/lib/python3/dist-packages/odoo/orm/models.py", line 4931, in _create
+    records.modified(self._fields, create=True)
+  File "/usr/lib/python3/dist-packages/odoo/orm/models.py", line 6802, in modified
+    todo = [self._modified([self._fields[fname] for fname in fnames], create)]
+  File "/usr/lib/python3/dist-packages/odoo/orm/models.py", line 6854, in _modified
+    tree = self.pool.get_trigger_tree(fields, select=select)
+  File "/usr/lib/python3/dist-packages/odoo/orm/registry.py", line 571, in get_trigger_tree
+    if field in self._field_triggers
+  File "/usr/lib/python3.12/functools.py", line 995, in __get__
+    val = self.func(instance)
+  File "/usr/lib/python3/dist-packages/odoo/orm/registry.py", line 663, in _field_triggers
+    dependencies = list(field.resolve_depends(self))
+  File "/usr/lib/python3/dist-packages/odoo/orm/fields.py", line 845, in resolve_depends
+    warnings.warn(
+ 
+2026-07-15 22:16:22,076 1359480 WARNING ? py.warnings: /usr/lib/python3/dist-packages/odoo/orm/fields.py:845: UserWarning: Field 'res.company.country_id' in dependency of account.move.l10n_latam_country_code should be searchable. This is necessary to determine which records to recompute when res.country.code is modified. You should either make the field searchable, or simplify the field dependency.
+  File "/tmp/prod_smoke_ms.py", line 52, in <module>
+    ass = Ass.create({
+  File "/usr/lib/python3/dist-packages/odoo/orm/decorators.py", line 365, in create
+    return method(self, vals_list)
+  File "/usr/lib/odoo/custom-addons/justech_managed_services/models/managed_service_assessment.py", line 475, in create
+    records = super().create(vals_list)
+  File "/usr/lib/python3/dist-packages/odoo/orm/decorators.py", line 365, in create
+    return method(self, vals_list)
+  File "/usr/lib/python3/dist-packages/odoo/addons/mail/models/mail_thread.py", line 328, in create
+    threads = super(MailThread, self).create(vals_list)
+  File "/usr/lib/python3/dist-packages/odoo/orm/decorators.py", line 365, in create
+    return method(self, vals_list)
+  File "/usr/lib/odoo/custom-addons/justech_global_audit_log/models/base.py", line 53, in create
+    records = super().create(vals_list)
+  File "/usr/lib/python3/dist-packages/odoo/orm/decorators.py", line 365, in create
+    return method(self, vals_list)
+  File "/usr/lib/python3/dist-packages/odoo/orm/models.py", line 4709, in create
+    records = self._create(data_list)
+  File "/usr/lib/python3/dist-packages/odoo/orm/models.py", line 4931, in _create
+    records.modified(self._fields, create=True)
+  File "/usr/lib/python3/dist-packages/odoo/orm/models.py", line 6802, in modified
+    todo = [self._modified([self._fields[fname] for fname in fnames], create)]
+  File "/usr/lib/python3/dist-packages/odoo/orm/models.py", line 6854, in _modified
+    tree = self.pool.get_trigger_tree(fields, select=select)
+  File "/usr/lib/python3/dist-packages/odoo/orm/registry.py", line 571, in get_trigger_tree
+    if field in self._field_triggers
+  File "/usr/lib/python3.12/functools.py", line 995, in __get__
+    val = self.func(instance)
+  File "/usr/lib/python3/dist-packages/odoo/orm/registry.py", line 663, in _field_triggers
+    dependencies = list(field.resolve_depends(self))
+  File "/usr/lib/python3/dist-packages/odoo/orm/fields.py", line 845, in resolve_depends
+    warnings.warn(
+ 
+2026-07-15 22:16:22,878 1359480 INFO ? odoo.addons.base.models.ir_actions_report: Will use the Wkhtmltopdf binary at /usr/local/bin/wkhtmltopdf 
+2026-07-15 22:16:22,892 1359480 INFO ? odoo.addons.base.models.ir_actions_report: Will use the Wkhtmltoimage binary at /usr/local/bin/wkhtmltoimage 
+2026-07-15 22:16:31,915 1359480 INFO ? odoo.addons.base.models.ir_actions_report: The PDF report has been generated for model: justech.managed.service.assessment, records [2]. 
+{
+  "started": "2026-07-15T22:16:21.783519Z",
+  "checks": {
+    "module_installed": {
+      "ok": true,
+      "detail": "19.0.2.1.1"
+    },
+    "dep_crm": {
+      "ok": true,
+      "detail": "installed"
+    },
+    "dep_sale_management": {
+      "ok": true,
+      "detail": "installed"
+    },
+    "dep_sale_subscription": {
+      "ok": true,
+      "detail": "installed"
+    },
+    "dep_helpdesk": {
+      "ok": true,
+      "detail": "installed"
+    },
+    "dep_account": {
+      "ok": true,
+      "detail": "installed"
+    },
+    "dep_justech_l10n_do_ncf": {
+      "ok": true,
+      "detail": "installed"
+    },
+    "dep_justech_ecf_core": {
+      "ok": true,
+      "detail": "installed"
+    },
+    "dep_justech_recurring_fee": {
+      "ok": true,
+      "detail": "installed"
+    },
+    "dep_website": {
+      "ok": true,
+      "detail": "installed"
+    },
+    "model_justech.managed.service": {
+      "ok": true,
+      "detail": null
+    },
+    "model_justech.managed.service.assessment": {
+      "ok": true,
+      "detail": null
+    },
+    "model_justech.ms.form.question": {
+      "ok": true,
+      "detail": null
+    },
+    "model_justech.ms.form.template": {
+      "ok": true,
+      "detail": null
+    },
+    "model_justech.ms.form.category": {
+      "ok": true,
+      "detail": null
+    },
+    "question_bank": {
+      "ok": true,
+      "detail": 57
+    },
+    "templates": {
+      "ok": true,
+      "detail": 12
+    },
+    "assessment_create": {
+      "ok": true,
+      "detail": "LEV-2026-0002"
+    },
+    "public_url": {
+      "ok": true,
+      "detail": "https://justgroup.app/servicios/levantamiento/E51YN4xTsxcrEyG0697U8aXVxGCcxa07X5PFe_dkGAM"
+    },
+    "pdf": {
+      "ok": true,
+      "detail": 47313
+    },
+    "contacts_read": {
+      "ok": true,
+      "detail": 1182
+    },
+    "crm_read": {
+      "ok": true,
+      "detail": 38
+    },
+    "sale_read": {
+      "ok": true,
+      "detail": 761
+    },
+    "invoice_read": {
+      "ok": true,
+      "detail": null
+    },
+    "helpdesk_read": {
+      "ok": true,
+      "detail": null
+    },
+    "subscription_read": {
+      "ok": true,
+      "detail": null
+    },
+    "ncf_model": {
+      "ok": true,
+      "detail": null
+    },
+    "ecf_modules": {
+      "ok": true,
+      "detail": [
+        "justech_ecf_admin",
+        "justech_ecf_core",
+        "justech_ecf_dgii",
+        "justech_ecf_queue",
+        "justech_ecf_signature",
+        "justech_ecf_xml"
+      ]
+    },
+    "recurring_fee_module": {
+      "ok": true,
+      "detail": "19.0.1.0.2"
+    },
+    "menu_banco": {
+      "ok": true,
+      "detail": "Banco de preguntas"
+    }
+  },
+  "assessment_id": 2,
+  "assessment_name": "LEV-2026-0002",
+  "public_url": "https://justgroup.app/servicios/levantamiento/E51YN4xTsxcrEyG0697U8aXVxGCcxa07X5PFe_dkGAM",
+  "partner": "A V BLANDINO & CIA S A",
+  "http": {
+    "http_login": {
+      "ok": true,
+      "status": 200,
+      "len": 2000
+    },
+    "http_public": {
+      "ok": true,
+      "status": 200
+    }
+  },
+  "web_base_url": "https://justgroup.app",
+  "public_url_live": "https://justgroup.app/servicios/levantamiento/E51YN4xTsxcrEyG0697U8aXVxGCcxa07X5PFe_dkGAM",
+  "overall_pass": true,
+  "failed": [],
+  "ended": "2026-07-15T22:16:33.227401Z"
+}

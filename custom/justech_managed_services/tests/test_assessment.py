@@ -81,10 +81,61 @@ class TestManagedServiceAssessment(TransactionCase):
 
     def test_crm_opportunity_no_duplicate(self):
         assessment = self._create_assessment()
-        assessment.action_create_opportunity()
+        action1 = assessment.action_create_opportunity()
         self.assertTrue(assessment.opportunity_id)
-        with self.assertRaises(UserError):
-            assessment.action_create_opportunity()
+        opp_id = assessment.opportunity_id.id
+        action2 = assessment.action_create_opportunity()
+        self.assertEqual(assessment.opportunity_id.id, opp_id)
+        self.assertEqual(action1.get("res_id"), action2.get("res_id"))
+
+    def test_print_sections_use_labels(self):
+        assessment = self._create_assessment()
+        assessment.action_generate_link()
+        assessment.public_save_partial(
+            {
+                "org_company_name": "ACME",
+                "employee_count_range": "51_100",
+                "support_users_count": 75,
+                "work_mode": "hibrida",
+                "brands": ["dell", "hp"],
+                "platforms": ["m365", "vpn"],
+                "outsource_services": ["mesa_ayuda", "soporte_remoto", "otro"],
+                "support_levels": ["nivel_1"],
+                "coverage_schedule": "personalizado",
+                "custom_schedule_comment": "Lunes a domingo 7-19",
+                "service_modality": "recomendacion_justech",
+                "monthly_requests_range": "51_100",
+                "frequent_requests": ["passwords", "email"],
+                "current_support_provider": "mixto",
+                "uses_ticket_platform": True,
+                "ticket_platform_name": "Jira",
+                "critical_response_time": "1_hora",
+                "critical_situations": ["sin_internet", "otra"],
+                "other_critical_situation": "Planta fría",
+                "security_items": ["politicas_seguridad"],
+                "nda_required": True,
+                "outsourcing_objectives": ["especialistas"],
+                "expected_start": "30_dias",
+                "budget_status": "alternativas",
+                "approximate_budget": "RD$ 80,000",
+                "final_comments": "Comentario final UAT",
+            }
+        )
+        sections = assessment.get_form_print_sections()
+        self.assertEqual(len(sections), 16)
+        filled_sections = [s for s in sections if s["rows"]]
+        self.assertGreaterEqual(len(filled_sections), 10)
+        joined = " ".join(
+            "%s %s" % (row["label"], row["value"])
+            for section in sections
+            for row in section["rows"]
+        )
+        self.assertIn("Cantidad aproximada de empleados", joined)
+        self.assertIn("51 a 100", joined)
+        self.assertIn("Soporte remoto", joined)
+        self.assertIn("Dell", joined)
+        self.assertNotIn("employee_count_range", joined)
+        self.assertNotIn("soporte_remoto", joined)
 
     def test_unlink_restriction(self):
         assessment = self._create_assessment()

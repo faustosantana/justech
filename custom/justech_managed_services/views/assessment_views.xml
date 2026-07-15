@@ -124,6 +124,9 @@
                                 <field name="acceptance_confirmed"/>
                             </group>
                         </page>
+                        <page string="Todas las respuestas" name="answers_readable">
+                            <field name="answers_html" nolabel="1" readonly="1"/>
+                        </page>
                         <page string="Respuestas JSON" name="form_data" groups="justech_managed_services.group_ms_manager">
                             <field name="form_data" widget="json"/>
                         </page>
@@ -162,6 +165,9 @@
                             </group>
                         </page>
                         <page string="Todas las respuestas">
+                            <field name="answers_html" nolabel="1" readonly="1"/>
+                        </page>
+                        <page string="JSON técnico" groups="justech_managed_services.group_ms_manager">
                             <field name="form_data" widget="json" readonly="1"/>
                         </page>
                         <page string="Confirmación">

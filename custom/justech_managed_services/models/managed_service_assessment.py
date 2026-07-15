@@ -5,7 +5,18 @@ from datetime import timedelta
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 
-from .form_schema import FORM_TRACKED_KEYS, ORG_FIELD_MAP
+from html import escape
+
+from markupsafe import Markup
+
+from .form_schema import (
+    FORM_TRACKED_KEYS,
+    ORG_FIELD_MAP,
+    build_sections_display,
+    compute_completion_percent,
+    is_value_filled,
+    labels_payload,
+)
 
 
 class JustechManagedServiceAssessment(models.Model):
@@ -108,6 +119,11 @@ class JustechManagedServiceAssessment(models.Model):
         string="Respuestas del formulario",
         default=dict,
         copy=False,
+    )
+    answers_html = fields.Html(
+        string="Respuestas formateadas",
+        compute="_compute_answers_html",
+        sanitize=False,
     )
     org_company_name = fields.Char(string="Empresa (formulario)")
     org_vat = fields.Char(string="RNC (formulario)")
@@ -373,20 +389,11 @@ class JustechManagedServiceAssessment(models.Model):
 
     def _compute_completion_from_form_data(self):
         for record in self:
-            total = len(FORM_TRACKED_KEYS) + len(ORG_FIELD_MAP)
-            if not total:
-                record.completion_percent = 0.0
-                continue
-            filled = 0
-            data = record.form_data or {}
+            data = dict(record.form_data or {})
             for key in ORG_FIELD_MAP:
-                if record[key] or data.get(key):
-                    filled += 1
-            for key in FORM_TRACKED_KEYS:
-                value = data.get(key)
-                if value not in (None, False, "", [], {}):
-                    filled += 1
-            record.completion_percent = round((filled / total) * 100.0, 2)
+                if record[key]:
+                    data[key] = record[key]
+            record.completion_percent = compute_completion_percent(data)
 
     def action_generate_link(self):
         for record in self:
@@ -615,11 +622,60 @@ class JustechManagedServiceAssessment(models.Model):
                 )
         return super().unlink()
 
+    def _compute_answers_html(self):
+        for record in self:
+            chunks = []
+            for section in record.get_form_print_sections():
+                chunks.append("<h3>%s</h3>" % escape(section["heading"]))
+                if not section["rows"]:
+                    chunks.append("<p><em>Sin respuestas.</em></p>")
+                    continue
+                chunks.append("<ul>")
+                for row in section["rows"]:
+                    chunks.append(
+                        "<li><strong>%s:</strong> %s</li>"
+                        % (escape(row["label"]), escape(row["value"]))
+                    )
+                chunks.append("</ul>")
+            record.answers_html = Markup("".join(chunks))
+
     def get_form_display_values(self):
-        """Valores para plantillas públicas y PDF."""
+        """Valores crudos para prefill del formulario público."""
         self.ensure_one()
         data = dict(self.form_data or {})
         for key in ORG_FIELD_MAP:
             if self[key]:
                 data.setdefault(key, self[key])
         return data
+
+    def get_form_labels_payload(self):
+        """Etiquetas centralizadas para JS (revisión pública)."""
+        return labels_payload()
+
+    def get_form_print_sections(self):
+        """Secciones con etiquetas/valores legibles para resumen, backend y PDF."""
+        self.ensure_one()
+        return build_sections_display(self.get_form_display_values())
+
+    def get_form_answers_matrix(self):
+        """Matriz de verificación sección → valor (UAT / auditoría)."""
+        self.ensure_one()
+        matrix = []
+        for section in self.get_form_print_sections():
+            matrix.append(
+                {
+                    "section": section["heading"],
+                    "answers": [
+                        {
+                            "key": row["key"],
+                            "label": row["label"],
+                            "value": row["value"],
+                            "filled": is_value_filled(row["raw"])
+                            or row["type"] == "boolean",
+                        }
+                        for row in section["rows"]
+                    ],
+                    "has_answers": bool(section["rows"]),
+                }
+            )
+        return matrix

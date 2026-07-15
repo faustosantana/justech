@@ -1,5 +1,6 @@
 /**
  * Navegación multipágina del levantamiento público Justech.
+ * Progreso, etiquetas y revisión basados en el schema centralizado.
  */
 (function () {
     "use strict";
@@ -20,21 +21,11 @@
         return idx >= 0 ? parts[idx + 1] : "";
     }
 
-    function showSection(num) {
-        currentSection = num;
-        qsa(".jt-ms-section").forEach((el) => {
-            el.classList.toggle("active", parseInt(el.dataset.section, 10) === num);
-        });
-        const progress = qs("#jt-ms-progress-fill");
-        const label = qs("#jt-ms-progress-text");
-        const pct = Math.round(((num - 1) / (SECTION_COUNT - 1)) * 100);
-        if (progress) progress.style.width = pct + "%";
-        if (label) {
-            label.textContent = num >= SECTION_COUNT
-                ? "Revisión y envío"
-                : ("Sección " + num + " de 16");
-        }
-        window.scrollTo({ top: 0, behavior: "smooth" });
+    function isFilled(value) {
+        if (value === null || value === undefined || value === false) return false;
+        if (typeof value === "string" && !value.trim()) return false;
+        if (Array.isArray(value) && !value.length) return false;
+        return true;
     }
 
     function collectFormData() {
@@ -51,7 +42,7 @@
                     const key = name.slice(0, -2);
                     if (!data[key]) data[key] = [];
                     if (el.checked) data[key].push(el.value);
-                } else if (el.type === "checkbox" && !name.endsWith("[]")) {
+                } else {
                     data[name] = el.checked;
                 }
             } else if (el.type === "radio") {
@@ -61,6 +52,52 @@
             }
         });
         return data;
+    }
+
+    function computeCompletionPercent(data) {
+        const tracked = window.JT_MS_TRACKED_KEYS || [];
+        if (!tracked.length) return 0;
+        let filled = 0;
+        tracked.forEach((key) => {
+            if (isFilled(data[key])) filled += 1;
+        });
+        return Math.round((filled / tracked.length) * 100);
+    }
+
+    function updateProgressUI(sectionNum, completionPct) {
+        const fill = qs("#jt-ms-progress-fill");
+        const sectionLabel = qs("#jt-ms-progress-text");
+        const pctLabel = qs("#jt-ms-progress-pct");
+        const pct = Math.max(0, Math.min(100, Number(completionPct) || 0));
+
+        if (fill) fill.style.width = pct + "%";
+        if (pctLabel) pctLabel.textContent = pct + "% completado";
+        if (sectionLabel) {
+            sectionLabel.textContent =
+                sectionNum >= SECTION_COUNT
+                    ? "Revisión y envío"
+                    : "Sección " + sectionNum + " de 16";
+        }
+    }
+
+    function refreshCompletion(sectionNum) {
+        const pct = computeCompletionPercent(collectFormData());
+        updateProgressUI(sectionNum != null ? sectionNum : currentSection, pct);
+        return pct;
+    }
+
+    function showSection(num) {
+        currentSection = num;
+        qsa(".jt-ms-section").forEach((el) => {
+            const section = el.dataset.section;
+            const isActive =
+                section === "done"
+                    ? false
+                    : parseInt(section, 10) === num;
+            el.classList.toggle("active", isActive);
+        });
+        refreshCompletion(num);
+        window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
     function prefillForm(values) {
@@ -97,7 +134,9 @@
                 params: { form_data: data },
                 id: Date.now(),
             }),
-        }).then((r) => r.json()).then((res) => res.result || res);
+        })
+            .then((r) => r.json())
+            .then((res) => res.result || res);
     }
 
     function showMessage(msg, type) {
@@ -113,19 +152,43 @@
         if (box) box.classList.add("jt-ms-hidden");
     }
 
+    function formatDisplayValue(key, value) {
+        const optionLabels = (window.JT_MS_OPTION_LABELS || {})[key] || {};
+        if (typeof value === "boolean") return value ? "Sí" : "No";
+        if (Array.isArray(value)) {
+            return value
+                .map((item) => optionLabels[item] || item)
+                .filter(Boolean)
+                .join(", ");
+        }
+        if (value != null && optionLabels[value]) return optionLabels[value];
+        return value == null ? "" : String(value);
+    }
+
+    function escapeHtml(text) {
+        return String(text)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;");
+    }
+
     function savePartial() {
         const token = getToken();
         hideMessage();
-        return rpc("/servicios/levantamiento/" + token + "/save", collectFormData())
+        const data = collectFormData();
+        const localPct = refreshCompletion(currentSection);
+        return rpc("/servicios/levantamiento/" + token + "/save", data)
             .then((result) => {
                 if (result.error) {
                     showMessage(result.message || "No se pudo guardar.", "error");
                     return false;
                 }
-                if (result.completion_percent != null) {
-                    const fill = qs("#jt-ms-progress-fill");
-                    if (fill) fill.style.width = result.completion_percent + "%";
-                }
+                const pct =
+                    result.completion_percent != null
+                        ? Math.round(result.completion_percent)
+                        : localPct;
+                updateProgressUI(currentSection, pct);
                 showMessage("Progreso guardado correctamente.", "success");
                 setTimeout(hideMessage, 2500);
                 return true;
@@ -159,6 +222,7 @@
                 if (done) done.classList.add("active");
                 const nav = qs(".jt-ms-nav");
                 if (nav) nav.classList.add("jt-ms-hidden");
+                updateProgressUI(SECTION_COUNT, 100);
             })
             .catch(() => showMessage("Error de conexión al enviar.", "error"));
     }
@@ -168,21 +232,54 @@
         if (!container) return;
         const data = collectFormData();
         const labels = window.JT_MS_FIELD_LABELS || {};
+        const tracked = window.JT_MS_TRACKED_KEYS || Object.keys(labels);
         let html = "";
-        Object.keys(data).forEach((key) => {
+
+        tracked.forEach((key) => {
             if (["acceptance_confirmed"].includes(key)) return;
             const val = data[key];
-            if (val == null || val === "" || (Array.isArray(val) && !val.length)) return;
+            if (!isFilled(val) && val !== false) return;
+            if (typeof val === "boolean" && val === false) {
+                // mostrar "No" para booleanos marcados explícitamente en falso
+            }
             const label = labels[key] || key;
-            const display = Array.isArray(val) ? val.join(", ") : String(val);
-            html += '<div class="jt-ms-review-block"><h3>' + label + '</h3><p>' + display + '</p></div>';
+            const display = formatDisplayValue(key, val);
+            if (!display && typeof val !== "boolean") return;
+            html +=
+                '<div class="jt-ms-review-block"><h3>' +
+                escapeHtml(label) +
+                "</h3><p>" +
+                escapeHtml(display) +
+                "</p></div>";
         });
+
+        // Meta de envío
+        ["completed_by_name", "completed_by_job"].forEach((key) => {
+            if (!isFilled(data[key])) return;
+            html +=
+                '<div class="jt-ms-review-block"><h3>' +
+                escapeHtml(labels[key] || key) +
+                "</h3><p>" +
+                escapeHtml(String(data[key])) +
+                "</p></div>";
+        });
+
         container.innerHTML = html || "<p>No hay respuestas registradas aún.</p>";
     }
 
     document.addEventListener("DOMContentLoaded", function () {
         if (window.JT_MS_FORM_VALUES) prefillForm(window.JT_MS_FORM_VALUES);
         showSection(1);
+
+        const form = qs("#jt-ms-form");
+        if (form) {
+            form.addEventListener("input", function () {
+                refreshCompletion(currentSection);
+            });
+            form.addEventListener("change", function () {
+                refreshCompletion(currentSection);
+            });
+        }
 
         qs("#jt-ms-btn-prev")?.addEventListener("click", function () {
             if (currentSection > 1) showSection(currentSection - 1);

@@ -2,7 +2,7 @@
 
 ## Módulo
 
-`justech_managed_services` v19.0.1.0.0
+`justech_managed_services` v19.0.1.0.2
 
 ## Categoría de grupos
 
@@ -46,11 +46,28 @@ Administrador incluye por defecto a `base.user_root` y `base.user_admin` (solo e
 
 - `res.partner` — compute `justech_ms_assessment_count` respeta ACL del modelo assessment.
 - `crm.lead` — idem.
+- Smart buttons **no** usan `sudo()` para abrir Contacto/CRM. Fallan con AccessError estándar si el usuario carece de permisos del modelo destino.
+
+## Grupos estándar mínimos para abrir Contacto / CRM
+
+Además de `group_ms_user` o `group_ms_manager`, un usuario que deba:
+
+| Necesidad | Grupos estándar mínimos recomendados |
+|---|---|
+| Abrir el contacto vinculado y usar smart button desde Contactos | `base.group_user` + acceso Contactos (`base.group_partner_manager` **o** el grupo comercial/contable ya usado en Justech para consultar partners) |
+| Abrir la oportunidad vinculada y usar smart button desde CRM | `sales_team.group_sale_salesman` (Usuario de Ventas) como mínimo |
+| Evitar errores fiscales al abrir ficha de partner en RD | Los grupos fiscales/contables que Justech ya exige para `justech.do.fiscal.document.type` (p. ej. Contabilidad/Facturación). **No** se conceden desde este módulo. |
+
+### Política explícita
+
+- Este módulo **no** modifica grupos fiscales, ACL globales, record rules ajenas ni permisos de Contactos/CRM.
+- Si un usuario solo-MS no puede abrir Contacto/CRM, es esperado: asignar los grupos estándar anteriores desde Administración → Usuarios.
+- Los smart buttons deben fallar de forma controlada (AccessError Odoo) sin elevar privilegios.
 
 ## Sin modificación de
 
 - Grupos estándar de Odoo (excepto asignación explícita en instalación a admin/root del grupo manager).
-- ACL / rules de otros módulos.
+- ACL / rules de otros módulos (incluidos fiscales).
 - Vistas core reemplazadas (solo xpath heredado).
 
 ## Rollback de permisos

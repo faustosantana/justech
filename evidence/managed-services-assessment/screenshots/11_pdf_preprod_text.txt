@@ -1,0 +1,235 @@
+Levantamiento de Servicios Administrados
+Credicefi (DEMO DEV)
+Referencia:
+ LEV-2026-0003
+Estado:
+ Completado
+Consultor:
+ UAT MS User
+Completado:
+ 2026-07-15 19:27:32
+Responsable:
+ 
+MarÃ
+​
+a Preprod 
+â€” 
+Gerente TI
+1. InformaciÃ³n de la organizaciÃ³n
+Nombre de la empresa
+: 
+Credicefi (DEMO DEV)
+RNC
+: 
+000000000
+DirecciÃ³n principal
+: 
+Calle Demo 123, Santo Domingo, RepÃºblica Dominicana
+Nombre del responsable
+: 
+MarÃ
+​
+a Preprod
+Cargo
+: 
+Gerente TI
+Correo electrÃ³nico
+: 
+demo.credicefi@example.invalid
+TelÃ©fono
+: 
+8095550101
+2. Usuarios
+Cantidad aproximada de empleados
+: 
+51 a 100
+Usuarios que requieren soporte
+: 
+75
+Modalidad de trabajo
+: 
+HÃ
+​
+brida
+3. Oficinas y ubicaciones
+Cantidad de oficinas o sucursales
+: 
+3
+Ciudades o ubicaciones
+: 
+Santo Domingo, Santiago
+Â¿Oficinas conectadas entre sÃ
+​
+?
+: 
+Parcialmente
+4. Equipos tecnolÃ³gicos
+Computadoras de escritorio
+: 
+40
+Laptops
+: 
+35
+Servidores fÃ
+​
+sicos
+: 
+2
+Servidores virtuales
+: 
+8
+Impresoras
+: 
+6
+Dispositivos mÃ³viles
+: 
+50
+Puntos de acceso inalÃ¡mbrico
+: 
+12
+Equipos de red
+: 
+10
+Marcas utilizadas
+: 
+Dell, HP, Cisco, Fortinet, Otras
+5. Plataformas y servicios actuales
+Plataformas y servicios actuales
+: 
+Microsoft 365, Microsoft Azure, Active Directory local, VPN, Firewall empresarial, Sistema de respaldo, ERP
+ERP o sistema principal
+: 
+Odoo Justech
+Aplicaciones crÃ
+​
+ticas
+: 
+ERP, Correo, Contabilidad
+Otras plataformas
+: 
+Portal bancario propio
+6. Servicios que desean tercerizar
+Servicios que desean tercerizar
+: 
+Mesa de ayuda, Soporte remoto, Soporte presencial, AdministraciÃ³n de usuarios y accesos, Ciberseguridad, Otro
+7. Niveles de soporte
+Niveles de soporte requeridos
+: 
+Nivel 1, Nivel 2, Nivel 3
+8. Horario de cobertura
+Cobertura
+: 
+Horario personalizado
+Hora de inicio
+: 
+07:00
+Hora de finalizaciÃ³n
+: 
+19:00
+OperaciÃ³n en dÃ
+​
+as feriados
+: 
+Guardia para emergencias
+Comentario de horario personalizado
+: 
+Lunes a sÃ¡bado 7:00-19:00
+9. Modalidad del servicio
+Modalidad del servicio
+: 
+RecomendaciÃ³n de Justech
+Frecuencia presencial
+: 
+Dos veces al mes
+10. Volumen de soporte
+Cantidad aproximada de solicitudes mensuales
+: 
+51 a 100
+Solicitudes frecuentes
+: 
+ContraseÃ±as, Correo, Fallas de computadoras, Microsoft 365, Otros
+11. Soporte actual
+Â¿QuiÃ©n brinda el soporte?
+: 
+Personal interno y proveedor
+Â¿Utilizan plataforma de tickets?
+: 
+SÃ
+​
+Nombre de la plataforma
+: 
+Jira Service Management
+Â¿Tienen inventario actualizado?
+: 
+SÃ
+​
+Â¿Tienen documentaciÃ³n tÃ©cnica?
+: 
+No
+Â¿Tienen procedimientos de soporte?
+: 
+No
+Â¿Tienen reportes mensuales?
+: 
+SÃ
+​
+12. Prioridades y SLA
+Tiempo esperado de respuesta (incidencias crÃ
+​
+ticas)
+: 
+1 hora
+Situaciones crÃ
+​
+ticas
+: 
+Empresa sin internet, Servidor principal fuera de servicio, Incidente de seguridad, Otra
+Otra situaciÃ³n crÃ
+​
+tica
+: 
+CaÃ
+​
+da de core bancario
+13. Seguridad y cumplimiento
+Seguridad y cumplimiento
+: 
+PolÃ
+​
+ticas de seguridad, PolÃ
+​
+ticas de respaldo, InformaciÃ³n financiera sensible, Necesidad de apoyo para establecer controles
+Regulaciones aplicables
+: 
+SIB / continuidad
+Requisitos de confidencialidad
+: 
+NDA + control de acceso
+Requisitos para acceso de tÃ©cnicos
+: 
+Escorts y registro
+Necesidad de NDA
+: 
+SÃ
+​
+14. Objetivo de la tercerizaciÃ³n
+Objetivo de la tercerizaciÃ³n
+: 
+Mejorar tiempos de respuesta, Contar con especialistas, Mejorar seguridad, Obtener reportes
+15. Inicio y presupuesto
+Fecha esperada de inicio
+: 
+Dentro de 30 dÃ
+​
+as
+Presupuesto
+: 
+Desean recibir alternativas
+Presupuesto aproximado (opcional)
+: 
+RD$ 120,000 mensuales
+16. Comentarios finales
+Comentarios finales
+: 
+RemediaciÃ³n preprod â€” cobertura completa 16 secciones.
+Documento generado por Justech â€” Servicios Administrados â€” LEV-2026-0003

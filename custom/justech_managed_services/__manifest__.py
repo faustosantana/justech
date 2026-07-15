@@ -1,6 +1,6 @@
 {
     "name": "Servicios Administrados",
-    "version": "19.0.1.0.1",
+    "version": "19.0.1.0.2",
     "category": "Services",
     "summary": "Levantamientos de Servicios Administrados — formulario público y CRM",
     "description": """
@@ -43,7 +43,7 @@ Fase 1 — Levantamientos de Servicios Administrados Justech.
     "justech_register": {
         "module_code": "justech_managed_services",
         "module_name": "Servicios Administrados",
-        "version": "19.0.1.0.0",
+        "version": "19.0.1.0.2",
         "category": "services",
         "country": "DO",
         "localization": "",

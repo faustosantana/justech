@@ -1,13 +1,15 @@
 DB=justech_dev
 HOST=vmi3364393 / 207.244.242.58
 MODULE=justech_managed_services
-VERSION=19.0.1.0.1
-BACKUP=/opt/odoo-dev/backups/p0-ms-uat-manual-20260715_201527
+VERSION=19.0.1.0.2
+BACKUP=/opt/odoo-dev/backups/p0-ms-preprod-remediation-20260715_192515
 PROD_TOUCHED=NO
 PROD_MODULE=ABSENT
-MANUAL_UAT=PASS
-RESPONSIVE_UAT=PASS
-UNINSTALL_REINSTALL=PASS
-PUBLIC_TEST_URL=https://erp.justech.do/servicios/levantamiento/oeKCDagkiByGNBRtig3Iznt5x_ug4hYLq73bEWgBFg8
+PREPROD_REMEDIATION=PASS
+PDF_MATRIX_16=PASS
+LABELS=PASS
+PROGRESS_DYNAMIC=PASS
 BRANCH=feature/managed-services-assessment
-2026-07-15T19:00:00Z
+PUBLIC_UI_URL=https://erp.justech.do/servicios/levantamiento/ezwxwc9Fqz1eYqJvw_ONTgvao6fN3hKTVLHzgJQHflk
+PUBLIC_DONE_URL=https://erp.justech.do/servicios/levantamiento/RsiuLRw3lAJM-EFsjt9IpYJGTe-T3lsFA8e5r6Ztp7Y
+2026-07-15T19:35:00Z

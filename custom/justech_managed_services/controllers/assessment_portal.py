@@ -2,6 +2,8 @@
 import json
 import logging
 
+from markupsafe import Markup
+
 from odoo import _, http
 from odoo.exceptions import ValidationError
 from odoo.http import request
@@ -36,11 +38,23 @@ class JustechAssessmentPortal(http.Controller):
             return self._render_error("invalid")
         if status in ("cancelled", "inactive", "expired", "submitted"):
             return self._render_error(status, assessment=assessment)
+        labels = assessment.get_form_labels_payload()
         values = {
             "assessment": assessment,
             "partner_name": assessment.partner_id.display_name,
             "form_values": assessment.get_form_display_values(),
-            "form_values_json": json.dumps(assessment.get_form_display_values()),
+            "form_values_json": Markup(
+                json.dumps(assessment.get_form_display_values(), ensure_ascii=False)
+            ),
+            "field_labels_json": Markup(
+                json.dumps(labels.get("field_labels") or {}, ensure_ascii=False)
+            ),
+            "option_labels_json": Markup(
+                json.dumps(labels.get("option_labels") or {}, ensure_ascii=False)
+            ),
+            "tracked_keys_json": Markup(
+                json.dumps(labels.get("tracked_keys") or [], ensure_ascii=False)
+            ),
             "completion_percent": assessment.completion_percent or 0,
             "readonly": False,
         }

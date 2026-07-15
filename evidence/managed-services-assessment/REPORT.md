@@ -47,11 +47,23 @@ Backup UAT: `/opt/odoo-dev/backups/p0-ms-uat-manual-20260715_201527`
 Versión tras fix JS revisión: **19.0.1.0.1**  
 Producción: **ABSENT / no tocada**
 
+## Remediación pre-producción (2026-07-15)
+
+Ver:
+
+- `PREPROD_REMEDIATION.md`
+- `PDF_FIELD_MATRIX.md` (16/16 PASS)
+- `screenshots/11_pdf_preprod_completo.pdf`
+- `screenshots/12_resumen_etiquetas_legibles.png`
+- `screenshots/13_porcentaje_dinamico.png`
+
+Backup remediación: `/opt/odoo-dev/backups/p0-ms-preprod-remediation-20260715_192515`  
+Versión: **19.0.1.0.2**  
+Producción: **ABSENT / no tocada**
+
 ## Riesgos / pendientes
-- Labels técnicos en resumen público (`JT_MS_FIELD_LABELS`)
-- Etiqueta “% completado” estática hasta reload
-- Cobertura parcial de respuestas detalladas en PDF si faltan keys
-- Usuario solo-MS vs ACL fiscal al abrir Contactos/CRM (ajeno; no se elevaron grupos)
+- Mojibake posible de acentos en PDF según motor wkhtmltopdf DEV (contenido/labels correctos)
+- Usuario solo-MS vs ACL fiscal al abrir Contactos/CRM (documentado; no se elevaron grupos)
 - Retenciones / fase 2: no implementadas (por diseño)
 - Correos reales: no enviados (SMTP sink DEV)
 

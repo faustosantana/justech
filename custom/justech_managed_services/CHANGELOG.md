@@ -1,5 +1,20 @@
 # Changelog — justech_managed_services
 
+## [19.0.1.0.2] — 2026-07-15
+
+### Corregido (pre-producción)
+
+- Fuente única de verdad `FORM_FIELDS` en `form_schema.py` (key, etiqueta, sección, tipo, opciones).
+- PDF y resumen usan etiquetas en español y valores formateados (select/multiselect/boolean).
+- Porcentaje “% completado” se actualiza sin reload (barra + texto).
+- Backend muestra respuestas legibles (`answers_html`) alineadas con PDF.
+
+## [19.0.1.0.1] — 2026-07-15
+
+### Corregido
+
+- Navegación del botón Revisar a la sección 17.
+
 ## [19.0.1.0.0] — 2026-07-15
 
 ### Añadido

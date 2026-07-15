@@ -1,5 +1,15 @@
 # Changelog — justech_managed_services
 
+## [19.0.2.1.2] — 2026-07-15
+
+### Corregido (datos cliente + correo)
+
+- Snapshot desde Contactos siempre al crear (aunque exista `contact_id`); sin fallback DEMO (`000000000` / `example.invalid`).
+- Botón **Actualizar desde Contactos**; el formulario público prioriza columnas snapshot sobre JSON obsoleto.
+- **Preparar correo** abre composer con trazabilidad; **Enviar ahora** crea `mail.mail` y registra chatter/estado.
+- Hook `mail.compose.message` marca el envío cuando el usuario confirma en el composer.
+- Primera pestaña: Preparación y envío. `demo_data.xml` pasa a clave `demo` (no se instala en producción).
+
 ## [19.0.2.1.1] — 2026-07-15
 
 ### Configuración

@@ -140,6 +140,17 @@ class JustechManagedServiceAssessment(models.Model):
     date_link_generated = fields.Datetime(string="Fecha de generación del enlace")
     date_email_sent = fields.Datetime(string="Último correo enviado")
     email_last_recipient = fields.Char(string="Último destinatario de correo")
+    email_last_subject = fields.Char(string="Asunto del último correo")
+    email_last_user_id = fields.Many2one(
+        "res.users",
+        string="Último correo preparado/enviado por",
+        readonly=True,
+    )
+    email_last_state = fields.Char(
+        string="Estado del último correo",
+        help="Estado observado del mail.mail asociado al último envío.",
+        readonly=True,
+    )
     date_first_activity = fields.Datetime(string="Primera actividad")
     date_last_activity = fields.Datetime(string="Última actividad")
     date_done = fields.Datetime(string="Fecha de finalización")
@@ -468,14 +479,22 @@ class JustechManagedServiceAssessment(models.Model):
                         "Levantamiento de Servicios Administrados — %s",
                         partner.commercial_company_name or partner.name,
                     )
-                if not vals.get("contact_id"):
-                    defaults = self._prepare_form_defaults_from_partner(partner)
-                    for key, value in defaults.items():
-                        vals.setdefault(key, value)
+                # Always snapshot partner (even when contact_id is set).
+                defaults = self._prepare_form_defaults_from_partner(partner)
+                contact = (
+                    self.env["res.partner"].browse(vals["contact_id"])
+                    if vals.get("contact_id")
+                    else self.env["res.partner"]
+                )
+                if contact:
+                    defaults.update(self._prepare_contact_snapshot(contact))
+                for key, value in defaults.items():
+                    vals.setdefault(key, value)
         records = super().create(vals_list)
         for record in records:
             if record.partner_id:
-                record._sync_org_fields_to_form_data()
+                # Ensure columns + form_data stay aligned after create.
+                record._apply_partner_snapshot(overwrite=False)
             if not record.invite_body:
                 record.invite_body = record._prepare_invite_body()
         return records
@@ -562,39 +581,195 @@ class JustechManagedServiceAssessment(models.Model):
         if self.partner_id:
             self.invite_body = self._prepare_invite_body()
 
+    @api.model
+    def _sanitize_snapshot_value(self, value):
+        """Drop DEMO/placeholder values; never invent fallbacks."""
+        if value is None or value is False:
+            return False
+        text = str(value).strip()
+        if not text:
+            return False
+        lowered = text.lower()
+        if text in {"000000000", "000-0000000-0", "N/A", "n/a", "-"}:
+            return False
+        if "example.invalid" in lowered or lowered.endswith("@example.com"):
+            return False
+        if "calle demo" in lowered or "(demo" in lowered:
+            return False
+        return text
+
     def _prepare_form_defaults_from_partner(self, partner):
+        """Historical snapshot of company data (never writes back to partner)."""
         partner = partner.sudo()
+        street = self._sanitize_snapshot_value(partner.street)
+        street2 = self._sanitize_snapshot_value(partner.street2)
+        city = self._sanitize_snapshot_value(partner.city)
+        state_name = self._sanitize_snapshot_value(
+            partner.state_id.name if partner.state_id else False
+        )
+        zipcode = self._sanitize_snapshot_value(partner.zip)
+        country_name = self._sanitize_snapshot_value(
+            partner.country_id.name if partner.country_id else False
+        )
         address_parts = [
             part
-            for part in [
-                partner.street,
-                partner.street2,
-                partner.city,
-                partner.state_id.name if partner.state_id else False,
-                partner.country_id.name if partner.country_id else False,
-            ]
+            for part in [street, street2, city, state_name, zipcode, country_name]
             if part
         ]
+        website = self._sanitize_snapshot_value(
+            getattr(partner, "website", False) or False
+        )
+        phone = self._sanitize_snapshot_value(partner.phone)
+        mobile = self._sanitize_snapshot_value(
+            getattr(partner, "mobile", False) or False
+        )
         return {
-            "org_company_name": partner.commercial_company_name or partner.name,
-            "org_vat": partner.vat or False,
+            "org_company_name": self._sanitize_snapshot_value(
+                partner.commercial_company_name or partner.name
+            ),
+            "org_vat": self._sanitize_snapshot_value(partner.vat),
             "org_address": ", ".join(address_parts) if address_parts else False,
-            "org_responsible": partner.name if not partner.is_company else False,
-            "org_job": partner.function or False,
-            "org_email": partner.email or False,
-            "org_phone": partner.phone
-            or getattr(partner, "mobile", False)
-            or False,
+            "org_responsible": (
+                self._sanitize_snapshot_value(partner.name)
+                if not partner.is_company
+                else False
+            ),
+            "org_job": self._sanitize_snapshot_value(partner.function),
+            "org_email": self._sanitize_snapshot_value(partner.email),
+            "org_phone": phone or mobile or False,
         }
 
-    def _sync_org_fields_to_form_data(self):
+    @api.model
+    def _prepare_contact_snapshot(self, contact):
+        """Snapshot of responsible contact person."""
+        contact = contact.sudo()
+        phone = self._sanitize_snapshot_value(contact.phone)
+        mobile = self._sanitize_snapshot_value(
+            getattr(contact, "mobile", False) or False
+        )
+        return {
+            "org_responsible": self._sanitize_snapshot_value(contact.name),
+            "org_job": self._sanitize_snapshot_value(contact.function),
+            "org_email": self._sanitize_snapshot_value(contact.email),
+            "org_phone": phone or mobile or False,
+        }
+
+    def _apply_partner_snapshot(self, overwrite=True):
+        """Copy current Contacts data into assessment snapshot fields."""
+        for record in self:
+            if not record.partner_id:
+                raise UserError(_("Seleccione un cliente antes de continuar."))
+            defaults = record._prepare_form_defaults_from_partner(record.partner_id)
+            if record.contact_id:
+                defaults.update(
+                    record._prepare_contact_snapshot(record.contact_id)
+                )
+            vals = {}
+            for field_name, value in defaults.items():
+                if overwrite or not record[field_name]:
+                    vals[field_name] = value
+            # Recipient fields for invitation (also snapshot, not partner writes)
+            recipient_email = False
+            recipient_phone = False
+            if record.contact_id:
+                recipient_email = self._sanitize_snapshot_value(
+                    record.contact_id.email
+                )
+                recipient_phone = self._sanitize_snapshot_value(
+                    record.contact_id.phone
+                ) or self._sanitize_snapshot_value(
+                    getattr(record.contact_id, "mobile", False)
+                )
+            if not recipient_email:
+                recipient_email = self._sanitize_snapshot_value(
+                    record.partner_id.email
+                )
+            if not recipient_phone:
+                recipient_phone = self._sanitize_snapshot_value(
+                    record.partner_id.phone
+                ) or self._sanitize_snapshot_value(
+                    getattr(record.partner_id, "mobile", False)
+                )
+            if overwrite or not record.email:
+                vals["email"] = recipient_email or False
+            if overwrite or not record.phone:
+                vals["phone"] = recipient_phone or False
+            if vals:
+                record.write(vals)
+            record._sync_org_fields_to_form_data(overwrite=overwrite)
+
+    def _sync_org_fields_to_form_data(self, overwrite=False):
         for record in self:
             data = dict(record.form_data or {})
             for field_name in ORG_FIELD_MAP:
                 value = record[field_name]
                 if value:
-                    data[field_name] = value
+                    if overwrite or field_name not in data or not data.get(field_name):
+                        data[field_name] = value
+                elif overwrite and field_name in data:
+                    # Clear DEMO / stale values when refreshing from Contacts
+                    data.pop(field_name, None)
+            # Extra address detail kept only in form_data (portal + PDF)
+            partner = record.partner_id.sudo() if record.partner_id else False
+            if partner and overwrite:
+                extras = {
+                    "org_street": self._sanitize_snapshot_value(partner.street),
+                    "org_street2": self._sanitize_snapshot_value(partner.street2),
+                    "org_city": self._sanitize_snapshot_value(partner.city),
+                    "org_state": self._sanitize_snapshot_value(
+                        partner.state_id.name if partner.state_id else False
+                    ),
+                    "org_zip": self._sanitize_snapshot_value(partner.zip),
+                    "org_country": self._sanitize_snapshot_value(
+                        partner.country_id.name if partner.country_id else False
+                    ),
+                    "org_website": self._sanitize_snapshot_value(
+                        getattr(partner, "website", False)
+                    ),
+                    "org_mobile": self._sanitize_snapshot_value(
+                        getattr(
+                            record.contact_id or partner, "mobile", False
+                        )
+                    ),
+                }
+                for key, value in extras.items():
+                    if value:
+                        data[key] = value
+                    else:
+                        data.pop(key, None)
             record.form_data = data
+
+    def action_refresh_from_contacts(self):
+        """Manual re-copy from Contacts (never automatic after public edits)."""
+        self.ensure_one()
+        if not self.partner_id:
+            raise UserError(_("Seleccione un cliente primero."))
+        answer_keys = [
+            key
+            for key in (self.form_data or {})
+            if key not in ORG_FIELD_MAP
+            and not str(key).startswith("org_")
+            and is_value_filled((self.form_data or {}).get(key))
+        ]
+        self._apply_partner_snapshot(overwrite=True)
+        self.invite_body = self._prepare_invite_body()
+        msg = _("Datos de organización actualizados desde Contactos.")
+        if answer_keys:
+            msg = _(
+                "Datos de organización actualizados desde Contactos. "
+                "Las respuestas ya cargadas del cliente se conservaron."
+            )
+        self.message_post(body=msg)
+        return {
+            "type": "ir.actions.client",
+            "tag": "display_notification",
+            "params": {
+                "title": _("Actualizado desde Contactos"),
+                "message": msg,
+                "type": "success",
+                "sticky": False,
+            },
+        }
 
     def _generate_token(self):
         return secrets.token_urlsafe(32)
@@ -779,6 +954,9 @@ class JustechManagedServiceAssessment(models.Model):
     def action_generate_link(self):
         for record in self:
             record._assert_can_generate_link()
+            # Ensure organization snapshot is filled before exposing the public form.
+            if record.partner_id and not (record.org_company_name or "").strip():
+                record._apply_partner_snapshot(overwrite=True)
             warnings = []
             if not (record.email or "").strip():
                 warnings.append(
@@ -969,8 +1147,12 @@ class JustechManagedServiceAssessment(models.Model):
                 )
             )
 
-    def _open_mail_composer(self, title):
+    def _open_mail_composer(self, title, mark_sent=False):
         self.ensure_one()
+        if not self.partner_id:
+            raise UserError(_("Seleccione un cliente antes de preparar el correo."))
+        if not self.access_token:
+            raise UserError(_("Genere el enlace antes de preparar el correo."))
         self._refresh_invite_defaults()
         template = self.env.ref(
             "justech_managed_services.mail_template_assessment_invite",
@@ -983,16 +1165,39 @@ class JustechManagedServiceAssessment(models.Model):
             partner_ids.append(self.contact_id.id)
         elif self.partner_id:
             partner_ids.append(self.partner_id.id)
+        subject = (
+            self.invite_subject
+            or "Levantamiento de Servicios Administrados – Justech"
+        )
+        self.write(
+            {
+                "email_last_subject": subject,
+                "email_last_user_id": self.env.user.id,
+                "email_last_state": "composer_opened",
+            }
+        )
+        self.message_post(
+            body=_(
+                "Composer de correo abierto. Destinatario sugerido: %(email)s.",
+                email=(self.email or "-"),
+            )
+        )
         ctx = {
             "default_model": self._name,
             "default_res_ids": self.ids,
+            "default_use_template": bool(template),
             "default_template_id": template.id,
             "default_composition_mode": "comment",
             "default_email_layout_xmlid": "mail.mail_notification_light",
-            "default_partner_ids": partner_ids,
-            "default_subject": self.invite_subject
-            or "Levantamiento de Servicios Administrados – Justech",
+            "default_partner_ids": [(6, 0, partner_ids)],
+            "default_subject": subject,
+            "force_email": True,
             "mail_post_autofollow": False,
+            "active_model": self._name,
+            "active_ids": self.ids,
+            "active_id": self.id,
+            "justech_assessment_mark_email_sent": mark_sent,
+            "justech_assessment_id": self.id,
         }
         return {
             "type": "ir.actions.act_window",
@@ -1004,10 +1209,8 @@ class JustechManagedServiceAssessment(models.Model):
         }
 
     def action_prepare_email(self):
-        """Abre el composer para revisión. No envía automáticamente."""
+        """Abre el composer estándar para revisión (no envía solo)."""
         self.ensure_one()
-        if not self.access_token:
-            raise UserError(_("Genere el enlace antes de preparar el correo."))
         if not (self.email or "").strip():
             return {
                 "type": "ir.actions.client",
@@ -1022,29 +1225,106 @@ class JustechManagedServiceAssessment(models.Model):
                     "sticky": True,
                 },
             }
-        return self._open_mail_composer(_("Preparar correo del levantamiento"))
+        return self._open_mail_composer(
+            _("Preparar correo del levantamiento"), mark_sent=True
+        )
 
     def action_send_email(self):
-        """Abre el composer estándar (revisión obligatoria antes de enviar)."""
+        """Enviar ahora: crea mail.mail vía plantilla, registra chatter y estado."""
         self.ensure_one()
         self._assert_email_sendable()
-        action = self._open_mail_composer(_("Enviar levantamiento por correo"))
-        action["context"]["justech_assessment_mark_email_sent"] = True
-        return action
-
-    def action_mark_email_sent(self, recipient=None):
-        """Registra envío tras usar el composer (llamable desde UI/API)."""
-        for record in self:
-            record.write(
+        self._refresh_invite_defaults()
+        template = self.env.ref(
+            "justech_managed_services.mail_template_assessment_invite",
+            raise_if_not_found=False,
+        )
+        if not template:
+            raise UserError(_("No se encontró la plantilla de correo."))
+        subject = (
+            self.invite_subject
+            or "Levantamiento de Servicios Administrados – Justech"
+        )
+        try:
+            mail_id = template.send_mail(
+                self.id,
+                force_send=True,
+                raise_exception=True,
+                email_values={
+                    "email_to": (self.email or "").strip(),
+                    "subject": subject,
+                    "auto_delete": False,
+                },
+            )
+        except Exception as exc:
+            self.write(
                 {
-                    "date_email_sent": fields.Datetime.now(),
-                    "email_last_recipient": recipient or record.email,
+                    "email_last_subject": subject,
+                    "email_last_user_id": self.env.user.id,
+                    "email_last_recipient": self.email,
+                    "email_last_state": "exception",
                 }
             )
+            self.message_post(
+                body=_(
+                    "Error al enviar correo del levantamiento a %(email)s: %(err)s",
+                    email=self.email or "-",
+                    err=str(exc)[:300],
+                )
+            )
+            raise UserError(
+                _(
+                    "No se pudo enviar el correo: %(err)s",
+                    err=str(exc)[:300],
+                )
+            ) from exc
+
+        mail = self.env["mail.mail"].sudo().browse(mail_id).exists()
+        state = mail.state if mail else "sent"
+        self.action_mark_email_sent(
+            recipient=self.email,
+            subject=subject,
+            mail_state=state,
+        )
+        if self.state == "draft" and self.access_token:
+            self.write({"state": "sent", "date_sent": fields.Datetime.now()})
+        return {
+            "type": "ir.actions.client",
+            "tag": "display_notification",
+            "params": {
+                "title": _("Correo enviado"),
+                "message": _(
+                    "Correo creado y procesado hacia %(email)s (estado: %(state)s).",
+                    email=self.email or "-",
+                    state=state or "-",
+                ),
+                "type": "success" if state in ("sent", "outgoing") else "warning",
+                "sticky": False,
+            },
+        }
+
+    def action_mark_email_sent(self, recipient=None, subject=None, mail_state=None):
+        """Registra envío tras composer o Enviar ahora."""
+        for record in self:
+            vals = {
+                "date_email_sent": fields.Datetime.now(),
+                "email_last_recipient": recipient or record.email,
+                "email_last_user_id": self.env.user.id,
+                "email_last_subject": subject
+                or record.email_last_subject
+                or record.invite_subject,
+                "email_last_state": mail_state or "sent",
+            }
+            if record.state == "draft" and record.access_token:
+                vals["state"] = "sent"
+                vals["date_sent"] = fields.Datetime.now()
+            record.write(vals)
             record.message_post(
                 body=_(
-                    "Correo de levantamiento registrado hacia %(email)s.",
+                    "Correo de levantamiento registrado hacia %(email)s "
+                    "(asunto: %(subject)s, estado: %(state)s).",
                     email=recipient or record.email or "-",
+                    subject=vals["email_last_subject"] or "-",
+                    state=vals["email_last_state"] or "-",
                 )
             )
         return True
@@ -1490,9 +1770,19 @@ class JustechManagedServiceAssessment(models.Model):
         """Valores crudos para prefill del formulario público."""
         self.ensure_one()
         data = dict(self.form_data or {})
+        # Snapshot columns win over stale/DEMO values in form_data.
         for key in ORG_FIELD_MAP:
-            if self[key]:
-                data.setdefault(key, self[key])
+            column_val = self[key]
+            if column_val:
+                data[key] = column_val
+            elif key in data and not self._sanitize_snapshot_value(data.get(key)):
+                data.pop(key, None)
+        # Drop obvious DEMO leftovers anywhere in form_data org_* keys
+        for key in list(data.keys()):
+            if str(key).startswith("org_") and not self._sanitize_snapshot_value(
+                data.get(key)
+            ):
+                data.pop(key, None)
         return data
 
     def get_form_labels_payload(self):

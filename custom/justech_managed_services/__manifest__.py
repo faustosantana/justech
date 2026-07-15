@@ -1,6 +1,6 @@
 {
     "name": "Servicios Administrados",
-    "version": "19.0.2.1.1",
+    "version": "19.0.2.1.2",
     "category": "Services",
     "summary": "Igualas y Servicios Administrados Justech — levantamiento, CRM, ventas, fee y Helpdesk",
     "description": """
@@ -43,6 +43,8 @@ Fase 2 — Centro operativo de Servicios Administrados / Igualas.
         "report/assessment_report.xml",
         "data/report_action.xml",
         "views/website_assessment_templates.xml",
+    ],
+    "demo": [
         "data/demo_data.xml",
     ],
     "assets": {
@@ -58,11 +60,11 @@ Fase 2 — Centro operativo de Servicios Administrados / Igualas.
     "justech_register": {
         "module_code": "justech_managed_services",
         "module_name": "Servicios Administrados",
-        "version": "19.0.2.1.1",
+        "version": "19.0.2.1.2",
         "category": "services",
         "country": "DO",
         "localization": "",
-        "description": "Igualas y Servicios Administrados — banco de preguntas y UX",
+        "description": "Igualas y Servicios Administrados — snapshot Contactos y correo trazable",
         "dependencies": ["crm", "sale_management", "sale_subscription", "helpdesk", "website"],
         "always_enabled": False,
         "features": [

@@ -74,10 +74,11 @@
                     <button name="action_copy_link_notification" type="object" string="Copiar enlace"
                             invisible="not access_token or state not in ('draft','sent','in_progress','needs_info')"/>
                     <button name="action_prepare_email" type="object" string="Preparar correo"
-                            invisible="not access_token or state not in ('sent','in_progress','needs_info')"/>
-                    <button name="action_send_email" type="object" string="Enviar por correo"
+                            invisible="not access_token or state not in ('draft','sent','in_progress','needs_info')"/>
+                    <button name="action_send_email" type="object" string="Enviar ahora"
                             class="btn-secondary"
-                            invisible="not access_token or state not in ('sent','in_progress','needs_info')"/>
+                            invisible="not access_token or state not in ('draft','sent','in_progress','needs_info')"
+                            confirm="¿Enviar ahora el correo del levantamiento al destinatario indicado?"/>
                     <button name="action_copy_message" type="object" string="Copiar mensaje"
                             invisible="not access_token or state not in ('sent','in_progress','needs_info')"/>
                     <button name="action_invalidate_link" type="object" string="Cancelar enlace"
@@ -183,6 +184,68 @@
                         </group>
                     </group>
                     <notebook>
+                        <page string="Preparación y envío" name="send">
+                            <group string="Cliente y datos desde Contactos">
+                                <group>
+                                    <field name="partner_id" string="Cliente" readonly="1"/>
+                                    <field name="contact_id" string="Contacto responsable" readonly="1"/>
+                                    <field name="org_company_name"/>
+                                    <field name="org_vat" string="RNC (snapshot)"/>
+                                    <field name="org_address" string="Dirección (snapshot)"/>
+                                </group>
+                                <group>
+                                    <field name="org_responsible"/>
+                                    <field name="org_job"/>
+                                    <field name="org_email"/>
+                                    <field name="org_phone"/>
+                                    <button name="action_refresh_from_contacts"
+                                            type="object"
+                                            string="Actualizar desde Contactos"
+                                            class="btn-secondary"
+                                            invisible="state in ('done','cancel','service_created')"
+                                            confirm="Si el cliente ya respondió el formulario, solo se sobrescribirán los datos de organización. ¿Continuar?"/>
+                                </group>
+                            </group>
+                            <group string="Enlace público">
+                                <group>
+                                    <field name="public_url" widget="CopyClipboardChar" readonly="1"
+                                             placeholder="Genere el enlace para obtener la URL"/>
+                                    <field name="date_link_generated" readonly="1"/>
+                                    <field name="date_sent" readonly="1"/>
+                                </group>
+                                <group>
+                                    <field name="date_email_sent" readonly="1"/>
+                                    <field name="email_last_recipient" readonly="1"/>
+                                    <field name="email_last_subject" readonly="1"/>
+                                    <field name="email_last_user_id" readonly="1"/>
+                                    <field name="email_last_state" readonly="1"/>
+                                    <field name="date_first_activity" readonly="1"/>
+                                    <field name="date_last_activity" readonly="1"/>
+                                </group>
+                            </group>
+                            <group string="Envío del levantamiento" name="invite_block">
+                                <group string="Destinatario sugerido">
+                                    <field name="recipient_display_name" string="Nombre" readonly="1"/>
+                                    <field name="email" string="Correo"/>
+                                    <field name="phone" string="Teléfono"/>
+                                </group>
+                                <group string="Mensaje">
+                                    <field name="invite_subject"/>
+                                    <field name="invite_body" nolabel="1" colspan="2"
+                                              placeholder="El mensaje se completa al seleccionar cliente y generar el enlace."/>
+                                    <field name="invite_share_text" nolabel="1" colspan="2" readonly="1"
+                                              invisible="not access_token"/>
+                                </group>
+                            </group>
+                            <div class="alert alert-info" role="alert" invisible="access_token">
+                                Seleccione el cliente y el contacto, guarde el registro y pulse
+                                <strong>Generar enlace</strong>. Después podrá copiar el enlace,
+                                copiar el mensaje, preparar el correo o enviar ahora.
+                            </div>
+                            <div class="alert alert-warning" role="alert" invisible="email or not access_token">
+                                El contacto no tiene correo. Puede copiar el enlace y compartirlo manualmente.
+                            </div>
+                        </page>
                         <page string="Preguntas" name="designer">
                             <div class="alert alert-info" role="alert">
                                 Active, oculte u ordene preguntas sin editar código. Use una plantilla o personalice este levantamiento.
@@ -205,49 +268,11 @@
                                 </list>
                             </field>
                         </page>
-                        <page string="Preparación y envío" name="send">
-                            <group string="Enlace público">
-                                <group>
-                                    <field name="public_url" widget="CopyClipboardChar" readonly="1"
-                                             placeholder="Genere el enlace para obtener la URL"/>
-                                    <field name="date_link_generated" readonly="1"/>
-                                    <field name="date_sent" readonly="1"/>
-                                </group>
-                                <group>
-                                    <field name="date_email_sent" readonly="1"/>
-                                    <field name="email_last_recipient" readonly="1"/>
-                                    <field name="date_first_activity" readonly="1"/>
-                                    <field name="date_last_activity" readonly="1"/>
-                                </group>
-                            </group>
-                            <group string="Envío del levantamiento" name="invite_block">
-                                <group string="Destinatario sugerido">
-                                    <field name="recipient_display_name" string="Nombre" readonly="1"/>
-                                    <field name="partner_id" string="Empresa" readonly="1"/>
-                                    <field name="email" string="Correo"/>
-                                    <field name="phone" string="Teléfono"/>
-                                </group>
-                                <group string="Mensaje">
-                                    <field name="invite_subject"/>
-                                    <field name="invite_body" nolabel="1" colspan="2"
-                                              placeholder="El mensaje se completa al seleccionar cliente y generar el enlace."/>
-                                    <field name="invite_share_text" nolabel="1" colspan="2" readonly="1"
-                                              invisible="not access_token"/>
-                                </group>
-                            </group>
-                            <div class="alert alert-info" role="alert" invisible="access_token">
-                                Seleccione el cliente y el contacto, guarde el registro y pulse
-                                <strong>Generar enlace</strong>. Después podrá copiar el enlace,
-                                copiar el mensaje o preparar el correo.
-                            </div>
-                            <div class="alert alert-warning" role="alert" invisible="email or not access_token">
-                                El contacto no tiene correo. Puede copiar el enlace y compartirlo manualmente.
-                            </div>
-                        </page>
                         <page string="Organización" name="org">
                             <div class="alert alert-info" role="alert">
-                                Prefill desde Contactos. Los cambios del cliente en el formulario público
-                                no actualizan automáticamente el contacto maestro.
+                                Fotografía histórica desde Contactos. Los cambios del cliente en el formulario público
+                                no actualizan automáticamente el contacto maestro. Use
+                                <strong>Actualizar desde Contactos</strong> para recopiar.
                             </div>
                             <group>
                                 <field name="org_company_name"/>
@@ -258,6 +283,12 @@
                                 <field name="org_email"/>
                                 <field name="org_phone"/>
                             </group>
+                            <button name="action_refresh_from_contacts"
+                                    type="object"
+                                    string="Actualizar desde Contactos"
+                                    class="btn-secondary"
+                                    invisible="state in ('done','cancel','service_created')"
+                                    confirm="¿Sobrescribir los datos de organización con los valores actuales de Contactos?"/>
                         </page>
                         <page string="Respuestas" name="answers_readable">
                             <field name="answers_html" nolabel="1" readonly="1"/>

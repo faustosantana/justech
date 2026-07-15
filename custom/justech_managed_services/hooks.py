@@ -2,7 +2,7 @@
 
 
 def post_init_hook(env):
-    """Semilla del catálogo/plantillas y vínculo demo Credicefi."""
+    """Semilla del catálogo/plantillas y vínculo demo Credicefi (solo si existe)."""
     from .models.form_catalog import seed_form_catalog
 
     seed_form_catalog(env)
@@ -21,6 +21,9 @@ def post_init_hook(env):
         demo_assessment.write(
             {
                 "partner_id": partner.id,
-                "email": partner.email or demo_assessment.email,
+                "email": partner.email or False,
             }
         )
+        # Refresh org snapshot from the real partner (never keep DEMO placeholders).
+        if hasattr(demo_assessment, "_apply_partner_snapshot"):
+            demo_assessment._apply_partner_snapshot(overwrite=True)

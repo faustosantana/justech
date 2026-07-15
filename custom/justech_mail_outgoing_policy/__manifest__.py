@@ -1,19 +1,19 @@
 {
     "name": "Justech Mail Outgoing Policy",
-    "version": "19.0.1.0.0",
+    "version": "19.0.1.1.0",
     "category": "Productivity/Discuss",
-    "summary": "From fijo notifications@ + Reply-To del usuario emisor",
+    "summary": "From de notificaciones por empresa + Reply-To del usuario emisor",
     "description": """
-Política de correo saliente Justech (Microsoft 365 / Outlook).
+Política de correo saliente multiempresa (Microsoft 365 / Outlook).
 
-Evita el error SendAsDenied forzando:
+Evita SendAsDenied forzando por empresa:
 
-- From: Notificaciones Justech <notifications@justech.do>
-- Reply-To: correo del usuario/partner que generó el mensaje
+- JUSTECH: From notifications@justech.do
+- Just Office: From notificaciones@just-offices.com
+- Reply-To: correo del usuario que originó la comunicación
 
-Configurable por parámetros del sistema. No altera plantillas ni
-módulos fiscales. Multiempresa: solo aplica a dominios configurados
-(por defecto justech.do).
+Mapa escalable en parámetro JSON `justech_mail.company_policies`
+(Plug Safe / Omni se agregan sin cambiar código).
     """,
     "author": "Justech",
     "website": "https://www.justech.com",

@@ -1,26 +1,262 @@
+/* Permisos Justech — layout compacto, tema claro/oscuro vía variables Odoo */
+
+.justech-jx-page {
+    max-width: 1100px;
+}
+
 .justech-jx-banner {
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
+    padding: 0.5rem 0.75rem;
 }
 
 .justech-jx-advanced-warning {
     margin-top: 0.5rem;
 }
 
-.justech-jx-section {
-    margin-bottom: 1rem;
-    padding: 0.5rem 0.75rem 0.25rem;
-    border: 1px solid #dee2e6;
+.justech-jx-nav-widget {
+    margin-bottom: 0.75rem;
+}
+
+.justech-jx-toolbar {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0.65rem 0.75rem;
+    border: 1px solid var(--border-color, var(--o-gray-300, #dee2e6));
     border-radius: 0.5rem;
-    background: #fff;
+    background: var(--o-view-background-color, var(--form-view-background, transparent));
+}
+
+.justech-jx-search-row {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.5rem 0.75rem;
+    align-items: center;
+}
+
+.justech-jx-search-label {
+    margin: 0;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.justech-jx-search {
+    min-width: 12rem;
+}
+
+.justech-jx-chip-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+}
+
+.justech-jx-chip {
+    border-radius: 999px !important;
+    padding: 0.15rem 0.7rem !important;
+    font-size: 0.85rem !important;
+    line-height: 1.3 !important;
+}
+
+.justech-jx-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    align-items: center;
+}
+
+.justech-jx-search-hint {
+    font-size: 0.85rem;
+}
+
+.justech-jx-section {
+    margin: 0 0 0.5rem;
+    padding: 0.6rem 0.75rem;
+    border: 1px solid var(--border-color, var(--o-gray-300, #dee2e6));
+    border-radius: 0.5rem;
+    background: var(--o-view-background-color, transparent);
+    min-width: 0;
+}
+
+.justech-jx-section > .o_horizontal_separator,
+.justech-jx-section .o_horizontal_separator {
+    margin: 0 0 0.4rem;
+    font-size: 1rem;
+}
+
+.justech-jx-section-hidden {
+    display: none !important;
+}
+
+.justech-jx-module-grid {
+    display: grid;
+    grid-template-columns: minmax(16rem, 1fr) minmax(16rem, 1fr);
+    gap: 0.75rem 1rem;
+    align-items: start;
+    min-width: 0;
+}
+
+@media (max-width: 768px) {
+    .justech-jx-module-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .justech-jx-search-row {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+.justech-jx-col {
+    min-width: 0;
+    max-width: 100%;
+}
+
+.justech-jx-col .o_field_widget,
+.justech-jx-col .o_radio_item,
+.justech-jx-col label,
+.justech-jx-col .form-check-label,
+.justech-jx-note {
+    overflow-wrap: normal;
+    word-break: normal;
+    white-space: normal;
+    hyphens: manual;
 }
 
 .justech-jx-card {
-    background: #f8f9fa;
-    border: 1px solid #dee2e6;
-    border-radius: 0.5rem;
-    padding: 0.75rem 1rem;
-    min-height: 6rem;
+    border: 1px solid var(--border-color, var(--o-gray-300, #dee2e6));
+    border-radius: 0.35rem;
+    padding: 0.5rem 0.65rem;
+    background: var(--o-gray-100, rgba(127, 127, 127, 0.08));
+    color: inherit;
     white-space: pre-wrap;
-    font-size: 0.92rem;
-    line-height: 1.4;
+    overflow-wrap: normal;
+    word-break: normal;
+    font-size: 0.88rem;
+    line-height: 1.35;
+    min-height: 0;
+    max-height: 14rem;
+    overflow: auto;
+}
+
+.justech-jx-tech-hidden {
+    display: none !important;
+}
+
+/* Fuente de verdad: sin clase show-tech, el detalle técnico no ocupa layout ni se lee visualmente */
+.justech-jx-page:not(.justech-jx-show-tech) .justech-jx-card,
+.justech-jx-page:not(.justech-jx-show-tech) .justech-jx-tech {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+    overflow: hidden !important;
+    position: absolute !important;
+    clip: rect(0 0 0 0) !important;
+}
+
+.justech-jx-cap-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    margin: 0.2rem 0;
+    min-width: 0;
+}
+
+.justech-jx-cap-row .o_field_boolean {
+    flex: 0 0 auto;
+    margin: 0;
+}
+
+.justech-jx-cap-row > label,
+.justech-jx-cap-row .o_form_label {
+    flex: 1 1 auto;
+    margin: 0;
+    padding-top: 0.1rem;
+    font-weight: 500;
+    color: inherit;
+    overflow-wrap: normal;
+    word-break: normal;
+    white-space: normal;
+    min-width: 10rem;
+}
+
+.justech-jx-note {
+    margin: 0.35rem 0 0.5rem;
+    padding: 0.45rem 0.6rem;
+    border-left: 3px solid var(--o-brand-primary, #714b67);
+    background: var(--o-gray-100, rgba(127, 127, 127, 0.08));
+    color: inherit;
+    font-size: 0.86rem;
+    line-height: 1.35;
+}
+
+.justech-jx-note-warn {
+    border-left-color: var(--o-warning, #d97706);
+}
+
+.justech-jx-hit {
+    outline: 2px solid var(--o-brand-primary, #714b67);
+    outline-offset: 2px;
+    border-radius: 0.25rem;
+}
+
+.justech-jx-summary-stash {
+    /* Campos resumen siempre disponibles para el panel, sin ocupar layout */
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    overflow: hidden !important;
+    clip: rect(0 0 0 0) !important;
+    clip-path: inset(50%) !important;
+    white-space: nowrap !important;
+}
+
+.justech-jx-summary-panel {
+    margin-top: 0.5rem;
+    padding: 0.65rem 0.75rem;
+    border: 1px solid var(--border-color, var(--o-gray-300, #dee2e6));
+    border-radius: 0.5rem;
+    background: var(--o-view-background-color, transparent);
+}
+
+.justech-jx-summary-panel.d-none {
+    display: none !important;
+}
+
+.justech-jx-summary-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.justech-jx-summary-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.65rem;
+}
+
+@media (max-width: 768px) {
+    .justech-jx-summary-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+.justech-jx-summary-title {
+    font-weight: 600;
+    margin-bottom: 0.2rem;
+    font-size: 0.9rem;
+}
+
+.justech-jx-summary-pre {
+    margin: 0;
+    white-space: pre-wrap;
+    overflow-wrap: normal;
+    word-break: normal;
+    font-family: inherit;
+    font-size: 0.86rem;
+    line-height: 1.35;
+    color: inherit;
+    background: transparent;
+    border: 0;
+    padding: 0;
 }

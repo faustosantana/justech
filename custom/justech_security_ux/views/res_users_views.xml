@@ -14,171 +14,252 @@
                 <div class="alert alert-warning justech-jx-advanced-warning mb-3" role="alert"
                      groups="base.group_system">
                     <strong>Configuración técnica.</strong>
-                    <p class="mb-0">
-                        Para la operación normal utilice «Permisos Justech».
-                        Esta matriz modifica grupos Odoo directamente.
-                    </p>
+                    <span> Para la operación normal utilice Permisos Justech.</span>
                 </div>
             </xpath>
 
             <xpath expr="//page[@name='access_rights']" position="before">
                 <page string="Permisos Justech" name="justech_enterprise_permissions"
                       groups="base.group_system,justech_admin_center.group_justech_admin_center_manager">
-                    <div class="alert alert-info justech-jx-banner" role="note">
-                        <field name="jx_help" nolabel="1" readonly="1"/>
-                    </div>
+                    <div class="justech-jx-page">
+                        <div class="alert alert-info justech-jx-banner mb-2" role="note">
+                            <field name="jx_help" nolabel="1" readonly="1"/>
+                        </div>
 
-                    <!-- visibility helpers -->
-                    <group invisible="1">
-                        <field name="jx_show_sales"/>
-                        <field name="jx_show_purchase"/>
-                        <field name="jx_show_inventory"/>
-                        <field name="jx_show_accounting"/>
-                        <field name="jx_show_fiscal"/>
-                        <field name="jx_show_payments"/>
-                        <field name="jx_show_withholding"/>
-                        <field name="jx_show_ecf"/>
-                        <field name="jx_show_warranty"/>
-                        <field name="jx_show_fees"/>
-                        <field name="jx_show_crm"/>
-                        <field name="jx_show_hr"/>
-                        <field name="jx_show_admin"/>
-                    </group>
+                        <group invisible="1">
+                            <field name="jx_show_sales"/>
+                            <field name="jx_show_purchase"/>
+                            <field name="jx_show_inventory"/>
+                            <field name="jx_show_accounting"/>
+                            <field name="jx_show_fiscal"/>
+                            <field name="jx_show_payments"/>
+                            <field name="jx_show_withholding"/>
+                            <field name="jx_show_ecf"/>
+                            <field name="jx_show_warranty"/>
+                            <field name="jx_show_fees"/>
+                            <field name="jx_show_crm"/>
+                            <field name="jx_show_hr"/>
+                            <field name="jx_show_admin"/>
+                        </group>
 
-                    <!-- VENTAS -->
-                    <group string="1. Ventas" invisible="not jx_show_sales" class="justech-jx-section">
-                        <group col="2">
-                            <field name="jx_lvl_sales" widget="radio"/>
-                            <field name="jx_card_sales" nolabel="1" readonly="1" class="justech-jx-card"/>
-                        </group>
-                        <group string="Capacidades adicionales" col="2">
-                            <field name="jx_cap_so_discount"/>
-                            <field name="jx_cap_so_credit_note"/>
-                            <field name="jx_cap_so_cancel_fiscal"/>
-                        </group>
-                    </group>
-
-                    <!-- COMPRAS -->
-                    <group string="2. Compras" invisible="not jx_show_purchase" class="justech-jx-section">
-                        <group col="2">
-                            <field name="jx_lvl_purchase" widget="radio"/>
-                            <field name="jx_card_purchase" nolabel="1" readonly="1" class="justech-jx-card"/>
-                        </group>
-                    </group>
-
-                    <!-- INVENTARIO -->
-                    <group string="3. Inventario" invisible="not jx_show_inventory" class="justech-jx-section">
-                        <group col="2">
-                            <field name="jx_lvl_inventory" widget="radio"/>
-                            <field name="jx_card_inventory" nolabel="1" readonly="1" class="justech-jx-card"/>
-                        </group>
-                        <group string="Capacidades adicionales" col="2">
-                            <field name="jx_cap_stk_lots"/>
-                        </group>
-                    </group>
-
-                    <!-- CONTABILIDAD -->
-                    <group string="4. Contabilidad" invisible="not jx_show_accounting" class="justech-jx-section">
-                        <group col="2">
-                            <field name="jx_lvl_accounting" widget="radio"/>
-                            <field name="jx_card_accounting" nolabel="1" readonly="1" class="justech-jx-card"/>
-                        </group>
-                    </group>
-
-                    <!-- FISCAL -->
-                    <group string="5. Fiscal República Dominicana" invisible="not jx_show_fiscal" class="justech-jx-section">
-                        <group col="2">
-                            <field name="jx_lvl_fiscal" widget="radio"/>
-                            <field name="jx_card_fiscal" nolabel="1" readonly="1" class="justech-jx-card"/>
-                        </group>
-                    </group>
-
-                    <!-- PAGOS -->
-                    <group string="6. Pagos y Bancos" invisible="not jx_show_payments" class="justech-jx-section">
-                        <group col="2">
-                            <field name="jx_card_payments" nolabel="1" readonly="1" colspan="2" class="justech-jx-card"/>
-                            <field name="jx_cap_pay_invoice_access"/>
-                            <field name="jx_cap_pay_bank_validate"/>
-                        </group>
-                    </group>
-
-                    <!-- RETENCIONES -->
-                    <group string="7. Retenciones" invisible="not jx_show_withholding" class="justech-jx-section">
-                        <group col="2">
-                            <field name="jx_lvl_withholding" widget="radio"/>
-                            <field name="jx_card_withholding" nolabel="1" readonly="1" class="justech-jx-card"/>
-                        </group>
-                    </group>
-
-                    <!-- e-CF -->
-                    <group string="8. e-CF" invisible="not jx_show_ecf" class="justech-jx-section">
-                        <group col="2">
-                            <field name="jx_lvl_ecf" widget="radio"/>
-                            <field name="jx_card_ecf" nolabel="1" readonly="1" class="justech-jx-card"/>
-                        </group>
-                        <group string="Capacidades adicionales" col="2">
-                            <field name="jx_cap_ecf_auditor"/>
-                        </group>
-                    </group>
-
-                    <!-- GARANTÍAS -->
-                    <group string="9. Garantías" invisible="not jx_show_warranty" class="justech-jx-section">
-                        <group col="2">
-                            <field name="jx_lvl_warranty" widget="radio"/>
-                            <field name="jx_card_warranty" nolabel="1" readonly="1" class="justech-jx-card"/>
-                        </group>
-                    </group>
-
-                    <!-- FEES -->
-                    <group string="10. Fees recurrentes" invisible="not jx_show_fees" class="justech-jx-section">
-                        <group col="2">
-                            <field name="jx_lvl_fees" widget="radio"/>
-                            <field name="jx_card_fees" nolabel="1" readonly="1" class="justech-jx-card"/>
-                        </group>
-                    </group>
-
-                    <!-- CRM -->
-                    <group string="11. CRM" invisible="not jx_show_crm" class="justech-jx-section">
-                        <group col="2">
-                            <field name="jx_lvl_crm" widget="radio"/>
-                            <field name="jx_card_crm" nolabel="1" readonly="1" class="justech-jx-card"/>
-                        </group>
-                    </group>
-
-                    <!-- RRHH -->
-                    <group string="12. Recursos Humanos" invisible="not jx_show_hr" class="justech-jx-section">
-                        <group col="2">
-                            <field name="jx_lvl_hr" widget="radio"/>
-                            <field name="jx_card_hr" nolabel="1" readonly="1" class="justech-jx-card"/>
-                        </group>
-                    </group>
-
-                    <!-- ADMIN -->
-                    <group string="13. Administración Justech" invisible="not jx_show_admin" class="justech-jx-section">
-                        <group col="2">
-                            <field name="jx_lvl_admin" widget="radio"/>
-                            <field name="jx_card_admin" nolabel="1" readonly="1" class="justech-jx-card"/>
-                        </group>
-                    </group>
-
-                    <separator string="RESUMEN GENERAL (efectivo)"/>
-                    <group col="2">
-                        <group string="Módulos con acceso">
+                        <div class="justech-jx-summary-stash">
                             <field name="jx_summary_modules" nolabel="1" readonly="1"/>
-                        </group>
-                        <group string="Advertencias">
                             <field name="jx_summary_warnings" nolabel="1" readonly="1"/>
-                        </group>
-                        <group string="Puede">
                             <field name="jx_summary_can" nolabel="1" readonly="1"/>
-                        </group>
-                        <group string="No puede">
                             <field name="jx_summary_cannot" nolabel="1" readonly="1"/>
-                        </group>
-                    </group>
-                    <group string="Ver implementación técnica" groups="base.group_system">
-                        <field name="jx_tech_detail" nolabel="1" readonly="1"/>
-                    </group>
+                            <field name="jx_tech_detail" nolabel="1" readonly="1" groups="base.group_system"/>
+                        </div>
+
+                        <div class="justech-jx-section" data-jx-module="sales" invisible="not jx_show_sales">
+                            <separator string="Ventas"/>
+                            <div class="justech-jx-module-grid">
+                                <div class="justech-jx-col">
+                                    <field name="jx_lvl_sales" widget="radio" string="Nivel estándar Odoo"/>
+                                    <field name="jx_card_sales" nolabel="1" readonly="1" class="justech-jx-card justech-jx-tech"/>
+                                </div>
+                                <div class="justech-jx-col">
+                                    <separator string="Capacidades adicionales"/>
+                                    <div class="justech-jx-cap-row">
+                                        <field name="jx_cap_so_discount" nolabel="1"/>
+                                        <label for="jx_cap_so_discount" string="Aplicar descuentos en líneas"/>
+                                    </div>
+                                    <div class="justech-jx-cap-row">
+                                        <field name="jx_cap_so_credit_note" nolabel="1"/>
+                                        <label for="jx_cap_so_credit_note" string="Emitir notas de crédito fiscales"/>
+                                    </div>
+                                    <div class="justech-jx-cap-row">
+                                        <field name="jx_cap_so_cancel_fiscal" nolabel="1"/>
+                                        <label for="jx_cap_so_cancel_fiscal" string="Cancelar facturas fiscales"/>
+                                    </div>
+                                    <div class="justech-jx-note">
+                                        Garantías y Fees se administran en sus módulos (sin grupo extra de Ventas).
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="justech-jx-section" data-jx-module="purchase" invisible="not jx_show_purchase">
+                            <separator string="Compras"/>
+                            <div class="justech-jx-module-grid">
+                                <div class="justech-jx-col">
+                                    <field name="jx_lvl_purchase" widget="radio" string="Nivel estándar Odoo"/>
+                                    <field name="jx_card_purchase" nolabel="1" readonly="1" class="justech-jx-card justech-jx-tech"/>
+                                </div>
+                                <div class="justech-jx-col">
+                                    <div class="justech-jx-note">
+                                        Documentos recibidos y B11/B13/B17: dependen de Fiscal + Contabilidad/Facturación
+                                        (sin grupos propios de Compras). Aprobación: Administrador de Compras.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="justech-jx-section" data-jx-module="inventory" invisible="not jx_show_inventory">
+                            <separator string="Inventario"/>
+                            <div class="justech-jx-module-grid">
+                                <div class="justech-jx-col">
+                                    <field name="jx_lvl_inventory" widget="radio" string="Nivel estándar Odoo"/>
+                                    <field name="jx_card_inventory" nolabel="1" readonly="1" class="justech-jx-card justech-jx-tech"/>
+                                </div>
+                                <div class="justech-jx-col">
+                                    <separator string="Capacidades adicionales"/>
+                                    <div class="justech-jx-cap-row">
+                                        <field name="jx_cap_stk_lots" nolabel="1"/>
+                                        <label for="jx_cap_stk_lots" string="Registrar seriales / lotes"/>
+                                    </div>
+                                    <div class="justech-jx-note">
+                                        Ajustes y validación de transferencias siguen el nivel Usuario/Administrador.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="justech-jx-section" data-jx-module="accounting" invisible="not jx_show_accounting">
+                            <separator string="Contabilidad"/>
+                            <div class="justech-jx-module-grid">
+                                <div class="justech-jx-col">
+                                    <field name="jx_lvl_accounting" widget="radio" string="Nivel estándar Odoo"/>
+                                    <field name="jx_card_accounting" nolabel="1" readonly="1" class="justech-jx-card justech-jx-tech"/>
+                                </div>
+                                <div class="justech-jx-col">
+                                    <div class="justech-jx-note">
+                                        Capacidades fiscales DGII/NCF: módulo Fiscal. Publicación/reportes: nivel Contabilidad.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="justech-jx-section" data-jx-module="fiscal" invisible="not jx_show_fiscal">
+                            <separator string="Fiscal República Dominicana"/>
+                            <div class="justech-jx-module-grid">
+                                <div class="justech-jx-col">
+                                    <field name="jx_lvl_fiscal" widget="radio" string="Nivel Fiscal Justech"/>
+                                    <field name="jx_card_fiscal" nolabel="1" readonly="1" class="justech-jx-card justech-jx-tech"/>
+                                </div>
+                                <div class="justech-jx-col">
+                                    <div class="justech-jx-note">
+                                        Capacidades según nivel Fiscal real (no casillas inventadas):
+                                        validar RNC, seleccionar comprobantes, anular NCF,
+                                        606/607/608/609/623, rangos e incidencias.
+                                        Detalle por nivel en «Ver implementación técnica».
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="justech-jx-section" data-jx-module="payments" invisible="not jx_show_payments">
+                            <separator string="Pagos y Bancos"/>
+                            <div class="justech-jx-module-grid">
+                                <div class="justech-jx-col">
+                                    <div class="justech-jx-note justech-jx-note-warn">
+                                        Nivel operativo de Pagos: el grupo Odoo de facturación habilita cobros, pagos
+                                        y aplicar pagos juntos (sin segregación fina).
+                                    </div>
+                                    <div class="justech-jx-cap-row">
+                                        <field name="jx_cap_pay_invoice_access" nolabel="1"/>
+                                        <label for="jx_cap_pay_invoice_access" string="Facturación / cobros / pagos / aplicar"/>
+                                    </div>
+                                    <div class="justech-jx-cap-row">
+                                        <field name="jx_cap_pay_bank_validate" nolabel="1"/>
+                                        <label for="jx_cap_pay_bank_validate" string="Validar / administrar cuentas bancarias"/>
+                                    </div>
+                                    <field name="jx_card_payments" nolabel="1" readonly="1" class="justech-jx-card justech-jx-tech"/>
+                                </div>
+                                <div class="justech-jx-col">
+                                    <div class="justech-jx-note">
+                                        Capacidades reales segregables: solo las dos casillas. Ver / registrar / aplicar /
+                                        conciliar / cancelar / diarios no existen como grupos independientes en esta BD;
+                                        no se inventan controles.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="justech-jx-section" data-jx-module="withholding" invisible="not jx_show_withholding">
+                            <separator string="Retenciones"/>
+                            <div class="justech-jx-module-grid">
+                                <div class="justech-jx-col">
+                                    <field name="jx_lvl_withholding" widget="radio" string="Nivel"/>
+                                    <field name="jx_card_withholding" nolabel="1" readonly="1" class="justech-jx-card justech-jx-tech"/>
+                                </div>
+                                <div class="justech-jx-col">
+                                    <div class="justech-jx-note">Aplicar retenciones en pagos requiere Facturación/Contabilidad.</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="justech-jx-section" data-jx-module="ecf" invisible="not jx_show_ecf">
+                            <separator string="e-CF"/>
+                            <div class="justech-jx-module-grid">
+                                <div class="justech-jx-col">
+                                    <field name="jx_lvl_ecf" widget="radio" string="Nivel e-CF"/>
+                                    <field name="jx_card_ecf" nolabel="1" readonly="1" class="justech-jx-card justech-jx-tech"/>
+                                </div>
+                                <div class="justech-jx-col">
+                                    <div class="justech-jx-cap-row">
+                                        <field name="jx_cap_ecf_auditor" nolabel="1"/>
+                                        <label for="jx_cap_ecf_auditor" string="Auditor e-CF"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="justech-jx-section" data-jx-module="warranty" invisible="not jx_show_warranty">
+                            <separator string="Garantías"/>
+                            <div class="justech-jx-module-grid">
+                                <div class="justech-jx-col">
+                                    <field name="jx_lvl_warranty" widget="radio" string="Nivel"/>
+                                    <field name="jx_card_warranty" nolabel="1" readonly="1" class="justech-jx-card justech-jx-tech"/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="justech-jx-section" data-jx-module="fees" invisible="not jx_show_fees">
+                            <separator string="Fees recurrentes"/>
+                            <div class="justech-jx-module-grid">
+                                <div class="justech-jx-col">
+                                    <field name="jx_lvl_fees" widget="radio" string="Nivel"/>
+                                    <field name="jx_card_fees" nolabel="1" readonly="1" class="justech-jx-card justech-jx-tech"/>
+                                </div>
+                                <div class="justech-jx-col">
+                                    <div class="justech-jx-note">Usuario Fees implica Usuario Ventas (documentos propios).</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="justech-jx-section" data-jx-module="crm" invisible="not jx_show_crm">
+                            <separator string="CRM"/>
+                            <div class="justech-jx-module-grid">
+                                <div class="justech-jx-col">
+                                    <field name="jx_lvl_crm" widget="radio" string="Nivel"/>
+                                    <field name="jx_card_crm" nolabel="1" readonly="1" class="justech-jx-card justech-jx-tech"/>
+                                </div>
+                                <div class="justech-jx-col">
+                                    <div class="justech-jx-note">El acceso CRM operativo depende de Ventas.</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="justech-jx-section" data-jx-module="hr" invisible="not jx_show_hr">
+                            <separator string="Recursos Humanos"/>
+                            <div class="justech-jx-module-grid">
+                                <div class="justech-jx-col">
+                                    <field name="jx_lvl_hr" widget="radio" string="Nivel"/>
+                                    <field name="jx_card_hr" nolabel="1" readonly="1" class="justech-jx-card justech-jx-tech"/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="justech-jx-section" data-jx-module="admin" invisible="not jx_show_admin">
+                            <separator string="Administración Justech"/>
+                            <div class="justech-jx-module-grid">
+                                <div class="justech-jx-col">
+                                    <field name="jx_lvl_admin" widget="radio" string="Nivel"/>
+                                    <field name="jx_card_admin" nolabel="1" readonly="1" class="justech-jx-card justech-jx-tech"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </page>
             </xpath>
         </field>

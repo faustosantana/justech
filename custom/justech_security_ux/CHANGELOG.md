@@ -1,5 +1,27 @@
 # Changelog — justech_security_ux
 
+## [19.0.3.1.1] — 2026-07-15 — Hotfix etiquetas capacidades
+
+### Fixed
+- Etiquetas visibles en casillas de capacidades adicionales (XML/SCSS).
+- Texto aclaratorio en Pagos sin inventar grupos.
+
+### Unchanged
+- Python de sincronización / ACL / rules / implied_ids: 0.
+
+## [19.0.3.1.0] — 2026-07-15 — Hotfix UX compacto
+
+### Changed
+- Navegación por chips (un módulo visible a la vez).
+- Buscador de permisos.
+- Resumen general en panel colapsable.
+- Layout denso en 2 columnas + SCSS compatible tema claro/oscuro.
+- Notas documentales donde no existe grupo segregado.
+
+### Unchanged
+- Sin cambios a Python de sincronización / seguridad.
+- ACL / Record Rules / implied_ids / usuarios: 0.
+
 ## [19.0.3.0.0] — 2026-07-14 — RC Permisos Justech definitivos
 
 ### Changed

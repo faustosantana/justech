@@ -1,11 +1,11 @@
 {
     "name": "Justech Security UX — Permisos Justech",
-    "version": "19.0.3.0.0",
+    "version": "19.0.3.1.1",
     "category": "Administration",
     "summary": "Interfaz por módulos sobre res.groups reales (sin ACL paralela)",
     "description": """
-Pestaña «Permisos Justech»: organiza grupos reales de Odoo por módulos,
-con selección multiárea, niveles estándar y capacidades Justech comprobables.
+Pestaña «Permisos Justech»: navegación compacta por módulos, buscador,
+resumen y compatibilidad tema claro/oscuro. Fuente de verdad: res.groups.
 
 «Permisos Avanzados» conserva la matriz técnica estándar.
 
@@ -35,6 +35,8 @@ No crea ACL, Record Rules ni grupos nuevos.
     "assets": {
         "web.assets_backend": [
             "justech_security_ux/static/src/scss/operational_permissions.scss",
+            "justech_security_ux/static/src/xml/permissions_nav.xml",
+            "justech_security_ux/static/src/js/permissions_nav.js",
         ],
     },
     "installable": True,
@@ -43,10 +45,10 @@ No crea ACL, Record Rules ni grupos nuevos.
     "justech_register": {
         "module_code": "justech_security_ux",
         "module_name": "Justech Security UX",
-        "version": "19.0.3.0.0",
+        "version": "19.0.3.1.1",
         "category": "platform",
         "country": "DO",
-        "description": "Permisos Justech por módulos sobre grupos Odoo",
+        "description": "Permisos Justech compactos por módulos sobre grupos Odoo",
         "dependencies": ["justech_admin_center", "justech_l10n_do_base"],
         "always_enabled": False,
         "required_module": False,

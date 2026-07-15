@@ -1,5 +1,18 @@
 # Changelog — justech_security_ux
 
+## [19.0.2.1.0] — 2026-07-14 — P1 Multiárea de permisos operativos
+
+### Changed
+- Áreas de responsabilidad con selección múltiple (checkboxes); sin radio de una sola área.
+- Cada área activa muestra su bloque independiente (rol + permisos).
+- Desactivar un área no altera las demás.
+- Resumen general: áreas activas + Puede / No puede.
+
+### Unchanged
+- Sin ACL nuevas, sin Record Rules nuevas, sin grupos nuevos.
+- Sincronización únicamente hacia `res.groups` existentes.
+- Producción no tocada.
+
 ## [19.0.2.0.0] — 2026-07-14 — P1 UX Permisos Enterprise
 
 ### Added

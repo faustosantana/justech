@@ -1,14 +1,14 @@
 {
     "name": "Justech Security UX — Permisos Enterprise",
-    "version": "19.0.2.0.0",
+    "version": "19.0.2.1.0",
     "category": "Administration",
     "summary": "Administración enterprise de permisos sobre res.groups (sin ACL paralela)",
     "description": """
 Capa UX Enterprise para administrar usuarios por responsabilidades:
 
-- Navegación por áreas (Comercial, Compras, Inventario, Finanzas, Fiscal, etc.)
-- Tarjetas de roles con capacidades
-- Acciones operativas con tooltips en lenguaje de negocio
+- Selección múltiple de áreas (Comercial + Compras + Inventario, etc.)
+- Bloques independientes por área (rol + permisos)
+- Resumen general de áreas y permisos totales
 - Permisos Avanzados (res.groups técnicos) solo para Administrador del Sistema
 
 La fuente de verdad sigue siendo res.groups.
@@ -45,10 +45,10 @@ La fuente de verdad sigue siendo res.groups.
     "justech_register": {
         "module_code": "justech_security_ux",
         "module_name": "Justech Security UX",
-        "version": "19.0.2.0.0",
+        "version": "19.0.2.1.0",
         "category": "platform",
         "country": "DO",
-        "description": "Permisos enterprise UX sobre grupos Odoo",
+        "description": "Permisos enterprise multiárea UX sobre grupos Odoo",
         "dependencies": ["justech_admin_center", "justech_l10n_do_base"],
         "always_enabled": False,
         "required_module": False,

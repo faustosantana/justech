@@ -20,33 +20,110 @@ def _role_fname(category):
 class ResUsers(models.Model):
     _inherit = "res.users"
 
-    op_nav_category = fields.Selection(
-        selection=[(c["key"], c["label"]) for c in ENTERPRISE_CATEGORIES],
-        string="Área de responsabilidad",
-        default="fiscal",
-        help="Seleccione un área para ver solo roles y acciones relacionadas.",
-    )
-    op_role_card_text = fields.Text(
-        string="Detalle del rol",
-        compute="_compute_op_role_card_text",
-    )
-    op_summary_can = fields.Text(string="Puede", compute="_compute_op_summary")
-    op_summary_cannot = fields.Text(string="No puede", compute="_compute_op_summary")
     op_enterprise_help = fields.Char(
         string="Ayuda",
         default=(
-            "Configure responsabilidades y acciones. Cada cambio activa o "
-            "desactiva grupos reales de Odoo. No hay una segunda capa de seguridad."
+            "Active una o varias áreas. Cada área es independiente: "
+            "cambiar Compras no altera Ventas ni Fiscal. "
+            "Los cambios sincronizan grupos reales de Odoo."
         ),
     )
+    op_summary_areas = fields.Text(
+        string="Áreas activas", compute="_compute_op_summary_global"
+    )
+    op_summary_can = fields.Text(string="Puede", compute="_compute_op_summary_global")
+    op_summary_cannot = fields.Text(string="No puede", compute="_compute_op_summary_global")
+
+    # Intención de abrir área (permite ver el bloque sin grupos aún)
+    op_area_open_commercial = fields.Boolean(string="Abrir Comercial", default=False)
+    op_area_open_purchase = fields.Boolean(string="Abrir Compras", default=False)
+    op_area_open_inventory = fields.Boolean(string="Abrir Inventario", default=False)
+    op_area_open_finance = fields.Boolean(string="Abrir Finanzas", default=False)
+    op_area_open_accounting = fields.Boolean(string="Abrir Contabilidad", default=False)
+    op_area_open_fiscal = fields.Boolean(string="Abrir Fiscal", default=False)
+    op_area_open_ecf = fields.Boolean(string="Abrir e-CF", default=False)
+    op_area_open_warranty = fields.Boolean(string="Abrir Garantías", default=False)
+    op_area_open_hr = fields.Boolean(string="Abrir RRHH", default=False)
+    op_area_open_crm = fields.Boolean(string="Abrir CRM", default=False)
+    op_area_open_admin = fields.Boolean(string="Abrir Administración", default=False)
+
+    # Checkbox de área = abierta o con membresía efectiva
+    op_area_commercial = fields.Boolean(
+        string="Comercial",
+        compute="_compute_op_areas",
+        inverse="_inverse_op_areas",
+    )
+    op_area_purchase = fields.Boolean(
+        string="Compras",
+        compute="_compute_op_areas",
+        inverse="_inverse_op_areas",
+    )
+    op_area_inventory = fields.Boolean(
+        string="Inventario",
+        compute="_compute_op_areas",
+        inverse="_inverse_op_areas",
+    )
+    op_area_finance = fields.Boolean(
+        string="Finanzas",
+        compute="_compute_op_areas",
+        inverse="_inverse_op_areas",
+    )
+    op_area_accounting = fields.Boolean(
+        string="Contabilidad",
+        compute="_compute_op_areas",
+        inverse="_inverse_op_areas",
+    )
+    op_area_fiscal = fields.Boolean(
+        string="Fiscal",
+        compute="_compute_op_areas",
+        inverse="_inverse_op_areas",
+    )
+    op_area_ecf = fields.Boolean(
+        string="e-CF",
+        compute="_compute_op_areas",
+        inverse="_inverse_op_areas",
+    )
+    op_area_warranty = fields.Boolean(
+        string="Garantías",
+        compute="_compute_op_areas",
+        inverse="_inverse_op_areas",
+    )
+    op_area_hr = fields.Boolean(
+        string="Recursos Humanos",
+        compute="_compute_op_areas",
+        inverse="_inverse_op_areas",
+    )
+    op_area_crm = fields.Boolean(
+        string="CRM",
+        compute="_compute_op_areas",
+        inverse="_inverse_op_areas",
+    )
+    op_area_admin = fields.Boolean(
+        string="Administración Justech",
+        compute="_compute_op_areas",
+        inverse="_inverse_op_areas",
+    )
+
+    # Tarjetas de rol por área (independientes)
+    op_role_card_commercial = fields.Text(compute="_compute_op_role_cards")
+    op_role_card_purchase = fields.Text(compute="_compute_op_role_cards")
+    op_role_card_inventory = fields.Text(compute="_compute_op_role_cards")
+    op_role_card_finance = fields.Text(compute="_compute_op_role_cards")
+    op_role_card_accounting = fields.Text(compute="_compute_op_role_cards")
+    op_role_card_fiscal = fields.Text(compute="_compute_op_role_cards")
+    op_role_card_ecf = fields.Text(compute="_compute_op_role_cards")
+    op_role_card_warranty = fields.Text(compute="_compute_op_role_cards")
+    op_role_card_hr = fields.Text(compute="_compute_op_role_cards")
+    op_role_card_crm = fields.Text(compute="_compute_op_role_cards")
+    op_role_card_admin = fields.Text(compute="_compute_op_role_cards")
 
     # Roles por categoría
     op_role_commercial = fields.Selection(
         selection=[
-            ("none", "Sin acceso comercial"),
-            ("commercial_own", "Usuario de ventas (propios)"),
-            ("commercial_all", "Usuario de ventas (todos)"),
-            ("commercial_admin", "Administrador comercial"),
+            ("none", "Sin rol"),
+            ("commercial_own", "Usuario"),
+            ("commercial_all", "Supervisor"),
+            ("commercial_admin", "Administrador"),
         ],
         string="Rol comercial",
         compute="_compute_op_roles",
@@ -54,9 +131,9 @@ class ResUsers(models.Model):
     )
     op_role_purchase = fields.Selection(
         selection=[
-            ("none", "Sin acceso compras"),
-            ("purchase_user", "Usuario de compras"),
-            ("purchase_admin", "Administrador de compras"),
+            ("none", "Sin rol"),
+            ("purchase_user", "Usuario"),
+            ("purchase_admin", "Administrador"),
         ],
         string="Rol compras",
         compute="_compute_op_roles",
@@ -64,9 +141,9 @@ class ResUsers(models.Model):
     )
     op_role_inventory = fields.Selection(
         selection=[
-            ("none", "Sin acceso inventario"),
-            ("inventory_user", "Usuario de inventario"),
-            ("inventory_admin", "Administrador de inventario"),
+            ("none", "Sin rol"),
+            ("inventory_user", "Usuario"),
+            ("inventory_admin", "Administrador"),
         ],
         string="Rol inventario",
         compute="_compute_op_roles",
@@ -74,10 +151,10 @@ class ResUsers(models.Model):
     )
     op_role_finance = fields.Selection(
         selection=[
-            ("none", "Sin acceso finanzas"),
-            ("finance_invoice", "Facturación y pagos"),
-            ("finance_book", "Contable operativo"),
-            ("finance_admin", "Administrador financiero"),
+            ("none", "Sin rol"),
+            ("finance_invoice", "Usuario"),
+            ("finance_book", "Supervisor"),
+            ("finance_admin", "Administrador"),
         ],
         string="Rol finanzas",
         compute="_compute_op_roles",
@@ -85,10 +162,10 @@ class ResUsers(models.Model):
     )
     op_role_accounting = fields.Selection(
         selection=[
-            ("none", "Sin acceso contable"),
-            ("accounting_ro", "Consulta contable"),
-            ("accounting_ops", "Contabilidad operativa"),
-            ("accounting_admin", "Administrador contable"),
+            ("none", "Sin rol"),
+            ("accounting_ro", "Usuario"),
+            ("accounting_ops", "Supervisor"),
+            ("accounting_admin", "Administrador"),
         ],
         string="Rol contabilidad",
         compute="_compute_op_roles",
@@ -96,10 +173,10 @@ class ResUsers(models.Model):
     )
     op_role_fiscal = fields.Selection(
         selection=[
-            ("none", "Sin acceso fiscal"),
-            ("fiscal_user", "Usuario Fiscal"),
-            ("fiscal_officer", "Responsable Fiscal"),
-            ("fiscal_admin", "Administrador Fiscal"),
+            ("none", "Sin rol"),
+            ("fiscal_user", "Usuario"),
+            ("fiscal_officer", "Supervisor"),
+            ("fiscal_admin", "Administrador"),
         ],
         string="Rol fiscal",
         compute="_compute_op_roles",
@@ -107,11 +184,11 @@ class ResUsers(models.Model):
     )
     op_role_ecf = fields.Selection(
         selection=[
-            ("none", "Sin acceso e-CF"),
-            ("ecf_ro", "Solo lectura e-CF"),
-            ("ecf_op", "Operador e-CF"),
-            ("ecf_resp", "Responsable e-CF"),
-            ("ecf_admin", "Administrador e-CF"),
+            ("none", "Sin rol"),
+            ("ecf_ro", "Usuario"),
+            ("ecf_op", "Supervisor"),
+            ("ecf_resp", "Responsable"),
+            ("ecf_admin", "Administrador"),
         ],
         string="Rol e-CF",
         compute="_compute_op_roles",
@@ -119,9 +196,9 @@ class ResUsers(models.Model):
     )
     op_role_warranty = fields.Selection(
         selection=[
-            ("none", "Sin acceso garantías"),
-            ("warranty_user", "Usuario de Garantías"),
-            ("warranty_admin", "Responsable de Garantías"),
+            ("none", "Sin rol"),
+            ("warranty_user", "Usuario"),
+            ("warranty_admin", "Administrador"),
         ],
         string="Rol garantías",
         compute="_compute_op_roles",
@@ -129,9 +206,9 @@ class ResUsers(models.Model):
     )
     op_role_hr = fields.Selection(
         selection=[
-            ("none", "Sin acceso RRHH"),
-            ("hr_user", "Encargado de empleados"),
-            ("hr_admin", "Administrador de empleados"),
+            ("none", "Sin rol"),
+            ("hr_user", "Usuario"),
+            ("hr_admin", "Administrador"),
         ],
         string="Rol RRHH",
         compute="_compute_op_roles",
@@ -139,8 +216,8 @@ class ResUsers(models.Model):
     )
     op_role_crm = fields.Selection(
         selection=[
-            ("none", "Sin acceso CRM leads"),
-            ("crm_leads", "CRM con leads"),
+            ("none", "Sin rol"),
+            ("crm_leads", "Usuario"),
         ],
         string="Rol CRM",
         compute="_compute_op_roles",
@@ -148,9 +225,9 @@ class ResUsers(models.Model):
     )
     op_role_admin = fields.Selection(
         selection=[
-            ("none", "Sin acceso consola Justech"),
-            ("admin_user", "Usuario consola Justech"),
-            ("admin_manager", "Administrador Justech"),
+            ("none", "Sin rol"),
+            ("admin_user", "Usuario"),
+            ("admin_manager", "Administrador"),
         ],
         string="Rol Administración Justech",
         compute="_compute_op_roles",
@@ -417,6 +494,19 @@ class ResUsers(models.Model):
                 best_level = role["level"]
         return best
 
+    def _op_category_action_codes(self, category):
+        return [a["code"] for a in ENTERPRISE_ACTIONS if a["category"] == category]
+
+    def _op_category_has_membership(self, user, category):
+        role_fname = _role_fname(category)
+        if role_fname in user._fields and user[role_fname] not in (False, "none"):
+            return True
+        for code in self._op_category_action_codes(category):
+            fname = _act_fname(code)
+            if fname in user._fields and user[fname]:
+                return True
+        return False
+
     @api.depends("group_ids")
     def _compute_op_roles(self):
         cats = [c["key"] for c in ENTERPRISE_CATEGORIES]
@@ -435,7 +525,18 @@ class ResUsers(models.Model):
                     user[fname] = user._op_user_has_xmlids(user, act["xmlids"])
 
     @api.depends(
-        "op_nav_category",
+        "group_ids",
+        "op_area_open_commercial",
+        "op_area_open_purchase",
+        "op_area_open_inventory",
+        "op_area_open_finance",
+        "op_area_open_accounting",
+        "op_area_open_fiscal",
+        "op_area_open_ecf",
+        "op_area_open_warranty",
+        "op_area_open_hr",
+        "op_area_open_crm",
+        "op_area_open_admin",
         "op_role_commercial",
         "op_role_purchase",
         "op_role_inventory",
@@ -448,48 +549,109 @@ class ResUsers(models.Model):
         "op_role_crm",
         "op_role_admin",
     )
-    def _compute_op_role_card_text(self):
+    def _compute_op_areas(self):
         for user in self:
-            cat = user.op_nav_category or "fiscal"
-            role_code = user[_role_fname(cat)] if _role_fname(cat) in user._fields else "none"
-            role = self._op_role_by_code(role_code) if role_code and role_code != "none" else None
-            if not role:
-                user.op_role_card_text = "Sin rol seleccionado en esta área."
-                continue
-            lines = [role["label"], ""]
-            lines.extend("• %s" % b for b in role["bullets"])
-            user.op_role_card_text = "\n".join(lines)
+            for cat in (c["key"] for c in ENTERPRISE_CATEGORIES):
+                open_fname = "op_area_open_%s" % cat
+                area_fname = "op_area_%s" % cat
+                opened = bool(user[open_fname]) if open_fname in user._fields else False
+                user[area_fname] = opened or user._op_category_has_membership(user, cat)
 
-    @api.depends("group_ids", "op_nav_category")
-    def _compute_op_summary(self):
+    def _inverse_op_areas(self):
+        """Activar/desactivar área sin afectar otras áreas."""
         for user in self:
-            cat = user.op_nav_category or "fiscal"
+            # Evitar sync parcial por cada assignment de op_role/op_act.
+            u = user.with_context(justech_security_ux_skip_sync=True)
+            for cat in (c["key"] for c in ENTERPRISE_CATEGORIES):
+                area_fname = "op_area_%s" % cat
+                open_fname = "op_area_open_%s" % cat
+                if area_fname not in u._fields:
+                    continue
+                if u[area_fname]:
+                    u[open_fname] = True
+                    continue
+                # Desactivar solo esta área
+                u[open_fname] = False
+                role_fname = _role_fname(cat)
+                if role_fname in u._fields:
+                    u[role_fname] = "none"
+                for code in u._op_category_action_codes(cat):
+                    fname = _act_fname(code)
+                    if fname in u._fields:
+                        u[fname] = False
+            user._op_sync_enterprise()
+
+    @api.depends(
+        "op_role_commercial",
+        "op_role_purchase",
+        "op_role_inventory",
+        "op_role_finance",
+        "op_role_accounting",
+        "op_role_fiscal",
+        "op_role_ecf",
+        "op_role_warranty",
+        "op_role_hr",
+        "op_role_crm",
+        "op_role_admin",
+    )
+    def _compute_op_role_cards(self):
+        for user in self:
+            for cat in (c["key"] for c in ENTERPRISE_CATEGORIES):
+                card_fname = "op_role_card_%s" % cat
+                if card_fname not in user._fields:
+                    continue
+                role_code = user[_role_fname(cat)] if _role_fname(cat) in user._fields else "none"
+                role = self._op_role_by_code(role_code) if role_code and role_code != "none" else None
+                if not role:
+                    user[card_fname] = "Sin rol seleccionado en esta área."
+                    continue
+                lines = [role["label"], ""]
+                lines.extend("• %s" % b for b in role["bullets"])
+                user[card_fname] = "\n".join(lines)
+
+    @api.depends("group_ids", "op_area_commercial", "op_area_purchase", "op_area_inventory",
+                 "op_area_finance", "op_area_accounting", "op_area_fiscal", "op_area_ecf",
+                 "op_area_warranty", "op_area_hr", "op_area_crm", "op_area_admin")
+    def _compute_op_summary_global(self):
+        label_by_cat = {c["key"]: c["label"] for c in ENTERPRISE_CATEGORIES}
+        for user in self:
+            active = []
             can, cannot = [], []
-            for act in ENTERPRISE_ACTIONS:
-                if act["category"] != cat:
-                    continue
-                fname = _act_fname(act["code"])
-                if fname not in user._fields:
-                    continue
-                (can if user[fname] else cannot).append(
-                    ("✔ " if user[fname] else "✘ ") + act["label"]
-                )
+            for cat in (c["key"] for c in ENTERPRISE_CATEGORIES):
+                area_fname = "op_area_%s" % cat
+                area_on = area_fname in user._fields and user[area_fname]
+                if area_on:
+                    active.append("✓ %s" % label_by_cat[cat])
+                for act in ENTERPRISE_ACTIONS:
+                    if act["category"] != cat:
+                        continue
+                    fname = _act_fname(act["code"])
+                    if fname not in user._fields:
+                        continue
+                    label = "%s — %s" % (label_by_cat[cat], act["label"])
+                    if user[fname]:
+                        can.append("• %s" % label)
+                    elif area_on:
+                        # Solo listar «no puede» de áreas activas
+                        cannot.append("• %s" % label)
+            user.op_summary_areas = "\n".join(active) if active else "—"
             user.op_summary_can = "\n".join(can) if can else "—"
             user.op_summary_cannot = "\n".join(cannot) if cannot else "—"
 
     def _inverse_op_enterprise(self):
+        if self.env.context.get("justech_security_ux_skip_sync"):
+            return
         for user in self:
             user._op_sync_enterprise()
 
     def _op_sync_enterprise(self):
-        """Sincroniza solo grupos gestionados a partir de roles + acciones."""
+        """Sincroniza grupos gestionados; cada área aporta independientemente."""
         self.ensure_one()
         managed = self._op_managed_groups()
         if not managed:
             return
         desired = self.env["res.groups"]
 
-        # Roles: un nivel por categoría
         for cat in (c["key"] for c in ENTERPRISE_CATEGORIES):
             fname = _role_fname(cat)
             if fname not in self._fields:
@@ -501,7 +663,6 @@ class ResUsers(models.Model):
             if role:
                 desired |= self._op_resolve_xmlids(role["xmlids"])
 
-        # Acciones marcadas
         for act in ENTERPRISE_ACTIONS:
             fname = _act_fname(act["code"])
             if fname in self._fields and self[fname]:

@@ -1,0 +1,19 @@
+{
+  "environment": "justech_dev",
+  "date_utc": "2026-07-16",
+  "all_pass": true,
+  "cases": {
+    "caso1_resolver_sin_encuesta": true,
+    "caso2_cerrar_template_74": true,
+    "caso3_autoclose_48h": true,
+    "caso4_recordatorio": true,
+    "caso5_15_tickets_un_correo": true,
+    "caso6_multiempresa": true,
+    "caso7_portal_cerrado": true,
+    "caso8_rollback_savepoint": true
+  },
+  "production_modified": false,
+  "new_models": false,
+  "new_crons": false,
+  "new_mail_systems": false
+}

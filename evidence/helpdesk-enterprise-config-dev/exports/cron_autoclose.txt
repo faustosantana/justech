@@ -1,0 +1,5 @@
+ id | active |                    cron_name                     
+----+--------+--------------------------------------------------
+ 74 | t      | Helpdesk Ticket: Automatically close the tickets
+(1 row)
+

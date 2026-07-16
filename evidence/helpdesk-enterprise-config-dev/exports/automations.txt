@@ -1,0 +1,6 @@
+ id |                                                       name                                                       | active |       trigger       |       filter_domain       
+----+------------------------------------------------------------------------------------------------------------------+--------+---------------------+---------------------------
+ 14 | {"en_US": "Reabrir ticket si cliente responde", "es_DO": "Reabrir ticket si cliente responde"}                   | t      | on_message_received | 
+ 15 | {"en_US": "Recordatorio consolidado tickets pendientes", "es_DO": "Recordatorio consolidado tickets pendientes"} | t      | on_time_created     | [('stage_id', 'in', [1])]
+(2 rows)
+

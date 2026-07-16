@@ -1,0 +1,50 @@
+{
+  "company": "JUSTECH S.R.L.",
+  "cases": {
+    "A_depleted": {
+      "ok": true,
+      "state": "depleted",
+      "remaining": 0,
+      "pct": 100.0,
+      "blocked": true,
+      "alert_new": true,
+      "idempotent": true,
+      "cross_recipients": 0
+    },
+    "B_expand": {
+      "ok": true,
+      "state": "active",
+      "next": 1657,
+      "preserved": 1657,
+      "available": 14,
+      "pct": 75.0,
+      "authorized": 56,
+      "consumed": 42
+    },
+    "C_preventive": {
+      "ok": true,
+      "remaining": 20,
+      "threshold": 20,
+      "idempotent": true
+    },
+    "D_critical": {
+      "ok": true,
+      "remaining": 5,
+      "threshold": 5,
+      "idempotent": true
+    },
+    "E_expired": {
+      "ok": true,
+      "state": "expired",
+      "remaining": 31,
+      "blocked": true
+    },
+    "F_closed": {
+      "ok": true,
+      "state": "cancelled"
+    }
+  },
+  "ok": true,
+  "range_id": 9,
+  "prefix": "B01"
+}

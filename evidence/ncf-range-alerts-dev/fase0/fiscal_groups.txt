@@ -1,0 +1,13 @@
+71|{"en_US": "Allow to define fiscal years of more or less than a year", "es_DO": "Permite definir años fiscales para más de 1 año o menos de 1 año."}
+95|{"en_US": "Can create Fiscal Credit Notes", "es_DO": "Puede crear Notas de Crédito Fiscales"}
+96|{"en_US": "Can cancel Fiscal Invoices", "es_DO": "Puede cancelar Facturas Fiscales"}
+144|{"en_US": "Justech License User"}
+145|{"en_US": "Justech License Manager"}
+146|{"en_US": "Justech Internal Admin"}
+147|{"en_US": "Justech Support"}
+157|{"en_US": "Usuario Fiscal"}
+158|{"en_US": "Responsable Fiscal"}
+163|{"en_US": "Fiscal Admin / Lectura"}
+164|{"en_US": "Administrador Fiscal"}
+165|{"en_US": "Usuario consola Justech"}
+166|{"en_US": "Administrador Justech"}

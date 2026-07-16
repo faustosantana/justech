@@ -1,0 +1,15 @@
+id,company,name,prefix,state,sequence_start,sequence_end,next_sequence,authorization_number,date_from,date_to,company_id,document_type_id,doc_prefix,doc_name,create_date,write_date
+9,JUSTECH S.R.L.,B01 Factura de Crédito Fiscal,B01,active,1615,1656,1615,5004731218,2026-07-13,2026-12-31,1,1,B01,Crédito Fiscal,2026-07-13 15:42:00.648283,2026-07-13 15:42:00.648283
+10,JUSTECH S.R.L.,B04 Nota de Crédito,B04,active,18,100,18,5004882667,2026-07-13,2027-12-31,1,4,B04,Nota de Crédito,2026-07-13 15:42:00.648283,2026-07-13 15:42:00.648283
+11,JUSTECH S.R.L.,B11 Comprobante de Compras,B11,active,11,15,12,6005128600,2026-07-13,2027-12-31,1,5,B11,Comprobante de Compra,2026-07-13 15:42:00.648283,2026-07-13 15:42:00.648283
+12,JUSTECH S.R.L.,B13 Gastos Menores,B13,active,213,217,213,6005128605,2026-07-13,2027-12-31,1,6,B12,Único Ingreso,2026-07-13 15:42:00.648283,2026-07-13 15:42:00.648283
+13,JUSTECH S.R.L.,B14 Regímenes Especiales de Tributación,B14,active,22,39,22,5004882715,2026-07-13,2026-12-31,1,8,B14,Régimen Especial,2026-07-13 15:42:00.648283,2026-07-13 15:42:00.648283
+14,JUSTECH S.R.L.,B15 Comprobante Gubernamental,B15,active,141,144,141,6005291056,2026-07-13,2027-12-31,1,9,B15,Factura Gubernamental,2026-07-13 15:42:00.648283,2026-07-13 15:42:00.648283
+8,PlugSafe SRL,B01 Factura de Crédito Fiscal,B01,active,61,78,61,00000001,2026-07-13,2026-12-31,2,1,B01,Crédito Fiscal,2026-07-13 15:42:00.648283,2026-07-13 15:42:00.648283
+1,Just Office SRL,B01 Factura de Crédito Fiscal,B01,active,342,343,342,5004798858,2026-07-13,2026-12-31,3,1,B01,Crédito Fiscal,2026-07-13 15:42:00.648283,2026-07-13 15:42:00.648283
+2,Just Office SRL,B02 Factura de Consumo,B02,active,46,100,46,6009657607,2026-07-13,2027-12-31,3,2,B02,Consumo,2026-07-13 15:42:00.648283,2026-07-13 15:42:00.648283
+3,Just Office SRL,B04 Nota de Crédito,B04,active,8,1000,8,5004627998,2026-07-13,2027-12-31,3,4,B04,Nota de Crédito,2026-07-13 15:42:00.648283,2026-07-13 15:42:00.648283
+4,Just Office SRL,B15 Comprobante Gubernamental,B15,active,4,150,4,5004627996,2026-07-13,2026-12-31,3,9,B15,Factura Gubernamental,2026-07-13 15:42:00.648283,2026-07-13 15:42:00.648283
+5,Omni Solutions SRL,B01 Factura de Crédito Fiscal,B01,active,36,46,36,5004809265,2026-07-13,2026-12-31,4,1,B01,Crédito Fiscal,2026-07-13 15:42:00.648283,2026-07-13 15:42:00.648283
+6,Omni Solutions SRL,B14 Regímenes Especiales de Tributación,B14,active,3,100,3,POR CONFIRMAR,2026-07-13,2027-12-31,4,8,B14,Régimen Especial,2026-07-13 15:42:00.648283,2026-07-13 15:42:00.648283
+7,Omni Solutions SRL,B15 Comprobante Gubernamental,B15,active,107,108,107,6005147184,2026-07-13,2027-12-31,4,9,B15,Factura Gubernamental,2026-07-13 15:42:00.648283,2026-07-13 15:42:00.648283

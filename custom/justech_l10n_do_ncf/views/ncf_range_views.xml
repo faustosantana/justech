@@ -7,16 +7,20 @@
             <list string="Rangos NCF">
                 <field name="name" string="Nombre"/>
                 <field name="prefix" string="Prefijo"/>
+                <field name="flow_kind" string="Flujo" optional="show"/>
                 <field name="next_ncf_display" string="Próximo NCF"/>
+                <field name="sequence_start" string="Inicial" optional="hide"/>
                 <field name="sequence_end" string="Secuencia Final"/>
+                <field name="next_sequence" string="Próxima" optional="hide"/>
                 <field name="remaining_count" string="Disponibles"/>
+                <field name="consumed_count" string="Consumidos" optional="hide"/>
                 <field name="pct_used" string="% Consumido" widget="progressbar"/>
                 <field name="date_to" string="Fecha de Vencimiento"/>
                 <field name="state" string="Estado" widget="badge"
                        decoration-success="state == 'active'"
                        decoration-muted="state == 'draft'"
                        decoration-danger="state in ('expired', 'depleted', 'cancelled')"/>
-                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+                <field name="company_id" groups="base.group_multi_company" optional="show"/>
             </list>
         </field>
     </record>
@@ -41,6 +45,7 @@
                             <field name="name"/>
                             <field name="document_type_id"/>
                             <field name="prefix" readonly="1"/>
+                            <field name="flow_kind" readonly="1"/>
                             <field name="authorization_number"/>
                         </group>
                         <group string="Vigencia">
@@ -55,10 +60,17 @@
                         <field name="sequence_end"/>
                         <field name="next_sequence"/>
                         <field name="next_ncf_display" readonly="1"/>
+                        <field name="authorized_total" readonly="1"/>
+                        <field name="consumed_count" readonly="1"/>
                         <field name="remaining_count" readonly="1"/>
                         <field name="pct_used" widget="progressbar" readonly="1"/>
                     </group>
+                    <group string="Alertas (opcional)" groups="justech_l10n_do_base.group_justech_do_fiscal_manager">
+                        <field name="alert_threshold_preventive"/>
+                        <field name="alert_threshold_critical"/>
+                    </group>
                 </sheet>
+                <chatter/>
             </form>
         </field>
     </record>

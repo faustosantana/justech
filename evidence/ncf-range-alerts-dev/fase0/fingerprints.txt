@@ -1,0 +1,5 @@
+ranges_fp=fda13bf0ad1b8ab1ac63532af1ac97e7
+seq_fp=ec58c27ee5d88a666541daed9fbbc42a
+moves=2410|posted=2311
+gl_diff=0.00
+companies=1:JUSTECH S.R.L.,2:PlugSafe SRL,3:Just Office SRL,4:Omni Solutions SRL

@@ -1,5 +1,25 @@
 # Changelog — Estándar Fiscal Justech (cierre)
 
+## [19.0.2.13.0] — 2026-07-16 — Estado y alertas multiempresa de rangos NCF
+
+### Fixed
+- Disponibles / % consumido ya no se fuerzan a 0 / 100 % solo por `state=depleted`.
+- Al ampliar `sequence_end`, se recalcula estado (Agotado→Activo si hay cupo),
+  se preserva `next_sequence` y se registra chatter.
+
+### Added
+- Fórmula única: autorizado / consumidos / disponibles / %.
+- Prioridad de estado: Cerrado > Vencido > Agotado > Activo > Borrador.
+- Alertas `mail.activity` + mensaje por compañía (preventivo/crítico/agotado/
+  próximo a vencer/vencido), idempotentes por ciclo del rango.
+- Cron diario `Justech NCF: alertas de rangos (multiempresa)`.
+- Umbrales opcionales por rango; herencia de umbrales de compañía.
+- Campo `flow_kind` (Ventas / Compras Emitidos).
+
+### Unchanged
+- No consume NCF; no crea rangos ficticios; no toca Producción;
+  Compras Recibidos fuera de esta lógica.
+
 ## [19.0.2.12.3] — 2026-07-16 — Bloqueo tipo≠NCF en compras recibidas
 
 ### Added

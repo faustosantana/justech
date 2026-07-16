@@ -1,0 +1,54 @@
+[
+  {
+    "Empresa": "JUSTECH S.R.L.",
+    "Tipo": "B01",
+    "A_agotado": true,
+    "B_ampliado_activo": true,
+    "proxima_preservada": 1657,
+    "C_preventivo": true,
+    "D_critico": true,
+    "E_vencido": true,
+    "F_cerrado": true,
+    "Aislamiento": true,
+    "PASS": true
+  },
+  {
+    "Empresa": "Just Office SRL",
+    "Tipo": "B01",
+    "A_agotado": true,
+    "B_ampliado_activo": true,
+    "proxima_preservada": 344,
+    "C_preventivo": true,
+    "D_critico": true,
+    "E_vencido": true,
+    "F_cerrado": true,
+    "Aislamiento": true,
+    "PASS": true
+  },
+  {
+    "Empresa": "PlugSafe SRL",
+    "Tipo": "B01",
+    "A_agotado": true,
+    "B_ampliado_activo": true,
+    "proxima_preservada": 79,
+    "C_preventivo": true,
+    "D_critico": true,
+    "E_vencido": true,
+    "F_cerrado": true,
+    "Aislamiento": true,
+    "PASS": true
+  },
+  {
+    "Empresa": "Omni Solutions SRL",
+    "Tipo": "B01",
+    "A_agotado": true,
+    "B_ampliado_activo": true,
+    "proxima_preservada": 47,
+    "C_preventivo": true,
+    "D_critico": true,
+    "E_vencido": true,
+    "F_cerrado": true,
+    "Aislamiento": true,
+    "PASS": true
+  }
+]

@@ -1,5 +1,15 @@
 # Changelog — justech_l10n_do_base
 
+## [19.0.1.26.0] — 2026-07-16 — Umbrales de alerta NCF por empresa
+
+### Added
+- `justech_do_ncf_alert_threshold_preventive` (default 20).
+- `justech_do_ncf_alert_threshold_critical` (default 5).
+- `justech_do_ncf_alert_expiry_days` (default 15).
+
+### Changed
+- `justech_do_ncf_alert_days` queda como legado (oculto en formulario).
+
 ## [19.0.1.25.2] — 2026-07-16 — Consistencia tipo ↔ prefijo NCF
 
 ### Added

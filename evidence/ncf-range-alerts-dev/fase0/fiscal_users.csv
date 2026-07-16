@@ -1,0 +1,10 @@
+user_id,login,partner,group_name,companies
+29,Finanzas@justech.do,Florangel Rodríguez,"{""en_US"": ""Can cancel Fiscal Invoices"", ""es_DO"": ""Puede cancelar Facturas Fiscales""}",JUSTECH S.R.L.; Just Office SRL; Omni Solutions SRL; PlugSafe SRL
+29,Finanzas@justech.do,Florangel Rodríguez,"{""en_US"": ""Can create Fiscal Credit Notes"", ""es_DO"": ""Puede crear Notas de Crédito Fiscales""}",JUSTECH S.R.L.; Just Office SRL; Omni Solutions SRL; PlugSafe SRL
+8,administracion@just-offices.com,Abigail Crisostomo,"{""en_US"": ""Can cancel Fiscal Invoices"", ""es_DO"": ""Puede cancelar Facturas Fiscales""}",JUSTECH S.R.L.; Just Office SRL; Omni Solutions SRL; PlugSafe SRL
+7,administracion@justech.do,Diana Ayala,"{""en_US"": ""Can cancel Fiscal Invoices"", ""es_DO"": ""Puede cancelar Facturas Fiscales""}",JUSTECH S.R.L.; Just Office SRL; Omni Solutions SRL; PlugSafe SRL
+7,administracion@justech.do,Diana Ayala,"{""en_US"": ""Can create Fiscal Credit Notes"", ""es_DO"": ""Puede crear Notas de Crédito Fiscales""}",JUSTECH S.R.L.; Just Office SRL; Omni Solutions SRL; PlugSafe SRL
+5,fausto@justech.do,Fausto Santana,"{""en_US"": ""Can cancel Fiscal Invoices"", ""es_DO"": ""Puede cancelar Facturas Fiscales""}",JUSTECH S.R.L.; Just Office SRL; Omni Solutions SRL; PlugSafe SRL
+2,jinette@dynamicspm.com,Jinette Peralta - Administradora,"{""en_US"": ""Administrador Fiscal""}",JUSTECH S.R.L.; Just Office SRL; Omni Solutions SRL; PlugSafe SRL
+2,jinette@dynamicspm.com,Jinette Peralta - Administradora,"{""en_US"": ""Can cancel Fiscal Invoices"", ""es_DO"": ""Puede cancelar Facturas Fiscales""}",JUSTECH S.R.L.; Just Office SRL; Omni Solutions SRL; PlugSafe SRL
+2,jinette@dynamicspm.com,Jinette Peralta - Administradora,"{""en_US"": ""Can create Fiscal Credit Notes"", ""es_DO"": ""Puede crear Notas de Crédito Fiscales""}",JUSTECH S.R.L.; Just Office SRL; Omni Solutions SRL; PlugSafe SRL

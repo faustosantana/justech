@@ -9,7 +9,10 @@
                 <page string="Localización Dominicana" name="justech_do_fiscal">
                     <group>
                         <field name="justech_do_fiscal_enabled"/>
-                        <field name="justech_do_ncf_alert_days"/>
+                        <field name="justech_do_ncf_alert_threshold_preventive"/>
+                        <field name="justech_do_ncf_alert_threshold_critical"/>
+                        <field name="justech_do_ncf_alert_expiry_days"/>
+                        <field name="justech_do_ncf_alert_days" invisible="1"/>
                     </group>
                 </page>
             </xpath>

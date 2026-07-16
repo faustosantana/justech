@@ -1,0 +1,36 @@
+                                             Table "public.justech_do_ncf_range"
+        Column        |            Type             | Collation | Nullable |                     Default                      
+----------------------+-----------------------------+-----------+----------+--------------------------------------------------
+ id                   | integer                     |           | not null | nextval('justech_do_ncf_range_id_seq'::regclass)
+ company_id           | integer                     |           | not null | 
+ document_type_id     | integer                     |           | not null | 
+ sequence_start       | integer                     |           | not null | 
+ sequence_end         | integer                     |           | not null | 
+ next_sequence        | integer                     |           | not null | 
+ create_uid           | integer                     |           |          | 
+ write_uid            | integer                     |           |          | 
+ name                 | character varying           |           | not null | 
+ prefix               | character varying(3)        |           |          | 
+ authorization_number | character varying           |           |          | 
+ state                | character varying           |           | not null | 
+ date_from            | date                        |           | not null | 
+ date_to              | date                        |           | not null | 
+ create_date          | timestamp without time zone |           |          | 
+ write_date           | timestamp without time zone |           |          | 
+Indexes:
+    "justech_do_ncf_range_pkey" PRIMARY KEY, btree (id)
+    "justech_do_ncf_range__company_id_index" btree (company_id)
+    "justech_do_ncf_range__document_type_id_index" btree (document_type_id)
+Foreign-key constraints:
+    "justech_do_ncf_range_company_id_fkey" FOREIGN KEY (company_id) REFERENCES res_company(id) ON DELETE RESTRICT
+    "justech_do_ncf_range_create_uid_fkey" FOREIGN KEY (create_uid) REFERENCES res_users(id) ON DELETE SET NULL
+    "justech_do_ncf_range_document_type_id_fkey" FOREIGN KEY (document_type_id) REFERENCES justech_do_fiscal_document_type(id) ON DELETE RESTRICT
+    "justech_do_ncf_range_write_uid_fkey" FOREIGN KEY (write_uid) REFERENCES res_users(id) ON DELETE SET NULL
+Referenced by:
+    TABLE "account_journal_justech_do_ncf_range_rel" CONSTRAINT "account_journal_justech_do_ncf_ran_justech_do_ncf_range_id_fkey" FOREIGN KEY (justech_do_ncf_range_id) REFERENCES justech_do_ncf_range(id) ON DELETE CASCADE
+    TABLE "account_move" CONSTRAINT "account_move_justech_do_ncf_range_id_fkey" FOREIGN KEY (justech_do_ncf_range_id) REFERENCES justech_do_ncf_range(id) ON DELETE SET NULL
+    TABLE "justech_do_fiscal_range_center_line" CONSTRAINT "justech_do_fiscal_range_center_line_range_id_fkey" FOREIGN KEY (range_id) REFERENCES justech_do_ncf_range(id) ON DELETE SET NULL
+    TABLE "justech_do_ncf_consumption" CONSTRAINT "justech_do_ncf_consumption_range_id_fkey" FOREIGN KEY (range_id) REFERENCES justech_do_ncf_range(id) ON DELETE RESTRICT
+    TABLE "justech_do_ncf_migration_log" CONSTRAINT "justech_do_ncf_migration_log_range_id_fkey" FOREIGN KEY (range_id) REFERENCES justech_do_ncf_range(id) ON DELETE SET NULL
+    TABLE "justech_do_ncf_reconcile_line" CONSTRAINT "justech_do_ncf_reconcile_line_range_id_fkey" FOREIGN KEY (range_id) REFERENCES justech_do_ncf_range(id) ON DELETE SET NULL
+

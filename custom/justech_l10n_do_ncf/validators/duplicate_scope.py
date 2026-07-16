@@ -26,11 +26,16 @@ def duplicate_search_domain(*, company_id: int, ncf: str, move_type: str, partne
     Dominio Odoo para detectar duplicado fiscal real (v2.0).
     Ventas: único por empresa + NCF en documentos de venta.
     Compras: único por empresa + NCF + proveedor (emisor).
+
+    El NCF puede estar en ``justech_do_ncf`` (emisión Justech) o en
+    ``l10n_latam_document_number`` (documento recibido del proveedor / histórico).
     """
     module = fiscal_module_for_move_type(move_type)
     domain = [
         ("company_id", "=", company_id),
+        "|",
         ("justech_do_ncf", "=", ncf),
+        ("l10n_latam_document_number", "=", ncf),
         ("state", "=", "posted"),
         ("justech_do_ncf_voided", "=", False),
         ("move_type", "in", list(move_types_for_module(module) or [move_type])),

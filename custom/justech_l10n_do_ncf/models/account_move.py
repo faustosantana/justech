@@ -208,26 +208,10 @@ class AccountMove(models.Model):
         "move_type",
     )
     def _compute_expense_type_suggestion_label(self):
+        # UI: la línea «Sugerencia» se eliminó del formulario de compras.
+        # No recalcular texto visible; el usuario elige Tipo de costos y gastos.
         for move in self:
             move.justech_do_expense_type_suggestion_label = False
-            if move.move_type not in ("in_invoice", "in_refund"):
-                continue
-            suggested = move._justech_suggest_expense_type()
-            if not suggested:
-                continue
-            if (
-                move.justech_do_expense_type_id
-                and move.justech_do_expense_type_id == suggested
-            ):
-                continue
-            if move.justech_do_expense_type_manual and move.justech_do_expense_type_id:
-                move.justech_do_expense_type_suggestion_label = (
-                    f"Sugerido por histórico: {suggested.display_name}."
-                )
-            elif not move.justech_do_expense_type_id:
-                move.justech_do_expense_type_suggestion_label = (
-                    f"Sugerido por histórico: {suggested.display_name}."
-                )
 
     def _justech_expense_type_from_code(self, code):
         code = (code or "").strip()
@@ -305,12 +289,19 @@ class AccountMove(models.Model):
         return {}
 
     def _justech_apply_expense_suggestion(self, force=False):
+        """Desactivado: no autocompletar tipo de costos/gastos.
+
+        Se conserva el helper y ``_justech_suggest_expense_type`` por si un
+        flujo administrativo futuro lo necesita con ``force=True`` explícito.
+        """
         self.ensure_one()
+        if not force:
+            return {}
         if self.move_type not in ("in_invoice", "in_refund"):
             return {}
-        if self.justech_do_expense_type_manual and self.justech_do_expense_type_id and not force:
+        if self.justech_do_expense_type_manual and self.justech_do_expense_type_id:
             return {}
-        if self.justech_do_expense_type_id and not force:
+        if self.justech_do_expense_type_id:
             return {}
         suggested = self._justech_suggest_expense_type()
         if not suggested:
@@ -321,20 +312,12 @@ class AccountMove(models.Model):
 
     @api.onchange("partner_id", "justech_do_document_type_id", "l10n_latam_document_type_id")
     def _onchange_justech_expense_type_suggest(self):
+        # No sugerir ni escribir justech_do_expense_type_id automáticamente.
+        # Solo re-sincroniza Adel si el usuario ya eligió un tipo manualmente.
         if self.move_type not in ("in_invoice", "in_refund"):
             return
         if self.justech_do_expense_type_manual and self.justech_do_expense_type_id:
-            # Restaurar Adel si sobrescribió desde el partner.
             sync = self._justech_sync_expense_type_to_latam(self.justech_do_expense_type_id)
-            for key, val in sync.items():
-                setattr(self, key, val)
-            return
-        if self.justech_do_expense_type_id:
-            return
-        suggested = self._justech_suggest_expense_type()
-        if suggested:
-            self.justech_do_expense_type_id = suggested
-            sync = self._justech_sync_expense_type_to_latam(suggested)
             for key, val in sync.items():
                 setattr(self, key, val)
 
@@ -683,8 +666,26 @@ class AccountMove(models.Model):
                     % {"name": move.display_name}
                 )
 
+    def _justech_validate_received_vendor_ncf_before_post(self):
+        """Duplicidad/formato del NCF recibido (campo histórico LATAM), sin consumir rango."""
+        for move in self.filtered(
+            lambda m: m.move_type in ("in_invoice", "in_refund")
+            and (m.justech_do_purchase_registration_mode or "received") == "received"
+        ):
+            ncf = (move.l10n_latam_document_number or "").strip()
+            if not ncf:
+                raise UserError(
+                    _(
+                        "Debe indicar el NCF del proveedor en %(name)s "
+                        "(Documento recibido del proveedor)."
+                    )
+                    % {"name": move.display_name}
+                )
+            move._justech_check_duplicate_ncf(ncf)
+
     def _post(self, soft=True):
         self._justech_require_expense_type_before_post()
+        self._justech_validate_received_vendor_ncf_before_post()
         self._justech_moves_for_ncf_on_post(soft)._justech_assign_ncf_before_post()
         return super()._post(soft=soft)
 

@@ -1,0 +1,27 @@
+{
+  "l10n_latam_document_number": {
+    "string": "NCF del proveedor",
+    "invisible": "state != 'draft' or move_type not in ('in_invoice', 'in_refund') or justech_do_purchase_registration_mode != 'received'",
+    "readonly": "0",
+    "required": "state == 'draft' and move_type in ('in_invoice', 'in_refund') and justech_do_purchase_registration_mode == 'received'"
+  },
+  "justech_do_expense_type_suggestion_label": {
+    "invisible": "1"
+  },
+  "justech_do_expense_type_id": {
+    "string": "Tipo de costos y gastos",
+    "invisible": "move_type not in ('in_invoice', 'in_refund') or state != 'draft'",
+    "readonly": "0",
+    "required": "move_type in ('in_invoice', 'in_refund') and justech_do_include_in_dgii"
+  },
+  "justech_do_ncf": {
+    "string": "NCF",
+    "invisible": "state != 'draft' or (                             move_type not in ('out_invoice', 'out_refund')                             and not (move_type in ('in_invoice', 'in_refund') and justech_do_purchase_registration_mode == 'issued')                        )"
+  },
+  "l10n_latam_document_type_id": {
+    "string": "Tipo de comprobante (recibido)",
+    "invisible": "state != 'draft' or move_type not in ('in_invoice', 'in_refund') or justech_do_purchase_registration_mode != 'received'",
+    "readonly": "0",
+    "required": "l10n_latam_use_documents"
+  }
+}

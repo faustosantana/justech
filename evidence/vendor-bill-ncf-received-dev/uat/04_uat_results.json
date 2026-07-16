@@ -1,0 +1,116 @@
+{
+  "version": "19.0.2.12.2",
+  "view_priority": 200,
+  "ncf_visible_when_received": true,
+  "suggestion_always_hidden": true,
+  "ncf_string": "NCF del proveedor",
+  "companies": [
+    "Just Office SRL",
+    "Omni Solutions SRL",
+    "PlugSafe SRL",
+    "JUSTECH S.R.L."
+  ],
+  "hist": {
+    "ncf": "E310000087599",
+    "type": "(E31) Cr\u00e9dito Fiscal Electr\u00f3nica",
+    "expense": "09 \u2014 Compras y gastos que forman parte del costo de venta",
+    "state": "posted"
+  },
+  "multicompany": {
+    "Just Office SRL": {
+      "ok": true
+    },
+    "Omni Solutions SRL": {
+      "ok": true
+    },
+    "PlugSafe SRL": {
+      "ok": true
+    },
+    "JUSTECH S.R.L.": {
+      "ok": true
+    }
+  },
+  "ranges_unchanged": true,
+  "in_bills": 783,
+  "hist_intact": true,
+  "gl_imbalance": 0,
+  "cases": {
+    "E31": {
+      "ok": true,
+      "ncf": "E319999999001",
+      "justech_ncf": false,
+      "sug_empty": true,
+      "range_id": false,
+      "ncf_fdp": "ERR:ImportError:cannot import name 'FiscalDataProvider' from 'odoo.addons.justech_l10n_do_base.services.fiscal_data_provider' (/opt/odoo-dev/custom-addons/justgroup/custom_addons/justech_l10n_do_base/services/fiscal_data_provider.py)",
+      "expense": "02"
+    },
+    "B01": {
+      "ok": true,
+      "ncf": "B019999999001",
+      "justech_ncf": false,
+      "sug_empty": true,
+      "range_id": false,
+      "ncf_fdp": "ERR:ImportError:cannot import name 'FiscalDataProvider' from 'odoo.addons.justech_l10n_do_base.services.fiscal_data_provider' (/opt/odoo-dev/custom-addons/justgroup/custom_addons/justech_l10n_do_base/services/fiscal_data_provider.py)",
+      "expense": "02"
+    },
+    "B14": {
+      "ok": true,
+      "ncf": "B149999999001",
+      "justech_ncf": false,
+      "sug_empty": true,
+      "range_id": false,
+      "ncf_fdp": "ERR:ImportError:cannot import name 'FiscalDataProvider' from 'odoo.addons.justech_l10n_do_base.services.fiscal_data_provider' (/opt/odoo-dev/custom-addons/justgroup/custom_addons/justech_l10n_do_base/services/fiscal_data_provider.py)",
+      "expense": "02"
+    },
+    "B15": {
+      "ok": true,
+      "ncf": "B159999999001",
+      "justech_ncf": false,
+      "sug_empty": true,
+      "range_id": false,
+      "ncf_fdp": "ERR:ImportError:cannot import name 'FiscalDataProvider' from 'odoo.addons.justech_l10n_do_base.services.fiscal_data_provider' (/opt/odoo-dev/custom-addons/justgroup/custom_addons/justech_l10n_do_base/services/fiscal_data_provider.py)",
+      "expense": "02"
+    },
+    "B16": {
+      "ok": true,
+      "ncf": "B169999999001",
+      "justech_ncf": false,
+      "sug_empty": true,
+      "range_id": false,
+      "ncf_fdp": "ERR:ImportError:cannot import name 'FiscalDataProvider' from 'odoo.addons.justech_l10n_do_base.services.fiscal_data_provider' (/opt/odoo-dev/custom-addons/justgroup/custom_addons/justech_l10n_do_base/services/fiscal_data_provider.py)",
+      "expense": "02"
+    },
+    "B11_issued": {
+      "ok": true,
+      "has_range": true,
+      "bill_latam": false,
+      "bill_justech_ncf": false
+    },
+    "B13_issued": {
+      "ok": true,
+      "has_range": true,
+      "bill_latam": false,
+      "bill_justech_ncf": false
+    },
+    "B17_no_range": {
+      "ok": true,
+      "error": "No existe un rango DGII activo para B17 \u2014 Comprobante para Pagos al Exterior en JUSTECH S.R.L.. Configure y active un rango autorizado antes de publicar.",
+      "posted": "draft"
+    },
+    "expense_manual": {
+      "ok": true,
+      "code": "09",
+      "manual": true,
+      "sug": false
+    },
+    "duplicity": {
+      "ok": false,
+      "blocked": false,
+      "state": "posted",
+      "error": null
+    }
+  },
+  "PASS_VIEW": true,
+  "PASS_CASES": false,
+  "PASS_MC": true
+}

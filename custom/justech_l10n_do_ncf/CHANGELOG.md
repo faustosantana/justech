@@ -1,5 +1,24 @@
 # Changelog — Estándar Fiscal Justech (cierre)
 
+## [19.0.2.12.2] — 2026-07-16 — NCF del proveedor visible + sin Sugerencia
+
+### Fixed
+- `l10n_latam_document_number` («NCF del proveedor») visible y editable en
+  facturas de proveedor con Tipo de registro = Documento recibido.
+- Vista Justech `priority=200` supera Studio (160), que ocultaba el NCF cuando
+  `l10n_latam_use_documents=False`.
+- Campo requerido en borrador recibido; reutiliza el campo histórico (606).
+- Duplicidad compras v2.0 también considera `l10n_latam_document_number`
+  (NCF recibido histórico), no solo `justech_do_ncf`.
+
+### Removed (UI only)
+- Línea «Sugerencia» / «Sugerido por histórico…» del formulario de compras.
+- Autocompletado de `justech_do_expense_type_id` en onchange y `create`.
+
+### Unchanged
+- Campo/modelo de costos y gastos; histórico; emisiones B11/B13/B17;
+  secuencias/rangos; 606/607/608/609/623; Producción.
+
 ## [19.0.2.12.1] — 2026-07-14 — Hotfix void NCF sin Hellenia
 
 ### Fixed

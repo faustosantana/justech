@@ -1,5 +1,13 @@
 # Changelog — justech_l10n_do_reports
 
+## 19.0.1.24.5 — 2026-07-16 — 606: inconsistencia tipo≠NCF
+
+### Added
+- Validación defensiva en exportador 606: si el tipo seleccionado no coincide
+  con el prefijo del NCF almacenado → incompleto / no exportable.
+- Mensaje: «Inconsistencia fiscal: el tipo E31 no coincide con el NCF …».
+- El exportador no modifica ni reconstruye el NCF.
+
 ## 19.0.1.24.2 — 2026-07-13
 
 ### Fixed

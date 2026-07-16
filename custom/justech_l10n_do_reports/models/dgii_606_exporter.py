@@ -97,6 +97,19 @@ class JustechDoDgii606Exporter(models.AbstractModel):
             )
         if not self._fdp().get_ncf(move):
             errors.append(_("%(doc)s: la factura no tiene NCF.") % {"doc": label})
+        type_ncf = self._fdp().check_type_ncf_prefix_consistency(move)
+        if not type_ncf["ok"]:
+            errors.append(
+                _(
+                    "%(doc)s: Inconsistencia fiscal: el tipo %(tipo)s no coincide "
+                    "con el NCF %(ncf)s."
+                )
+                % {
+                    "doc": label,
+                    "tipo": type_ncf["expected"],
+                    "ncf": type_ncf["ncf"],
+                }
+            )
         if move.invoice_date and (move.invoice_date < date_from or move.invoice_date > date_to):
             errors.append(
                 _("%(doc)s: la fecha %(fecha)s está fuera del período.")

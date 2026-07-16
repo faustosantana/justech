@@ -667,7 +667,8 @@ class AccountMove(models.Model):
                 )
 
     def _justech_validate_received_vendor_ncf_before_post(self):
-        """Duplicidad/formato del NCF recibido (campo histórico LATAM), sin consumir rango."""
+        """Duplicidad/formato/consistencia del NCF recibido (LATAM), sin consumir rango."""
+        fdp = self.env["justech.do.fiscal.data.provider"]
         for move in self.filtered(
             lambda m: m.move_type in ("in_invoice", "in_refund")
             and (m.justech_do_purchase_registration_mode or "received") == "received"
@@ -680,6 +681,20 @@ class AccountMove(models.Model):
                         "(Documento recibido del proveedor)."
                     )
                     % {"name": move.display_name}
+                )
+            check = fdp.check_type_ncf_prefix_consistency(move)
+            if not check["ok"]:
+                raise UserError(
+                    _(
+                        "El tipo de comprobante seleccionado es %(tipo)s, pero el NCF "
+                        "ingresado comienza con %(prefijo)s (%(ncf)s). Corrija el tipo "
+                        "de comprobante o el NCF del proveedor antes de registrar la factura."
+                    )
+                    % {
+                        "tipo": check["expected"],
+                        "prefijo": check["found"],
+                        "ncf": check["ncf"] or ncf,
+                    }
                 )
             move._justech_check_duplicate_ncf(ncf)
 

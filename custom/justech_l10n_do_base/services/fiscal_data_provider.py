@@ -105,16 +105,64 @@ class JustechDoFiscalDataProvider(models.AbstractModel):
     def get_document_type_prefix(self, move):
         """Prefijo tipo comprobante (B01, E31, …)."""
         move.ensure_one()
+        selected = self.get_selected_document_type_prefix(move)
+        if selected:
+            return selected
+        ncf = self.get_ncf(move)
+        return ncf[:3].upper() if len(ncf) >= 3 else ""
+
+    def get_selected_document_type_prefix(self, move):
+        """Prefijo del tipo seleccionado (Justech/LATAM), sin fallback al NCF.
+
+        Permite detectar inconsistencias tipo ≠ prefijo del número registrado.
+        """
+        move.ensure_one()
         if self._has_field(move, "justech_do_document_type_id") and move.justech_do_document_type_id:
             prefix = self._clean_text(move.justech_do_document_type_id.prefix)
             if prefix:
-                return prefix.upper()
+                return prefix.upper()[:3]
         latam_doc = self._latam_doc_type_record(move)
         prefix = self._latam_doc_type_prefix(latam_doc)
-        if prefix:
-            return prefix
+        return prefix.upper()[:3] if prefix else ""
+
+    def get_ncf_prefix(self, move):
+        """Primeros 3 caracteres del NCF efectivo (normalizado, sin alterar el valor)."""
+        move.ensure_one()
         ncf = self.get_ncf(move)
-        return ncf[:3].upper() if len(ncf) >= 3 else ""
+        if ncf and len(ncf) >= 3:
+            return ncf[:3].upper()
+        # Lectura cruda por si hay guiones/espacios que _normalize_ncf descartó
+        for name in ("justech_do_ncf", "l10n_latam_document_number"):
+            if not self._has_field(move, name):
+                continue
+            raw = self._clean_text(move[name]).upper().replace(" ", "").replace("-", "")
+            if len(raw) >= 3 and raw[0] in "BE":
+                return raw[:3]
+        return ""
+
+    def check_type_ncf_prefix_consistency(self, move):
+        """Compara tipo seleccionado vs prefijo del NCF almacenado.
+
+        Returns:
+            dict with keys:
+            - ok (bool): True si no hay inconsistencia verificable
+            - expected (str): prefijo del tipo seleccionado
+            - found (str): prefijo del NCF
+            - ncf (str): NCF efectivo
+        No modifica datos.
+        """
+        move.ensure_one()
+        expected = self.get_selected_document_type_prefix(move)
+        ncf = self.get_ncf(move) or ""
+        found = self.get_ncf_prefix(move)
+        if not expected or not found:
+            return {"ok": True, "expected": expected, "found": found, "ncf": ncf}
+        return {
+            "ok": expected == found,
+            "expected": expected,
+            "found": found,
+            "ncf": ncf,
+        }
 
     def get_document_type_name(self, move):
         move.ensure_one()

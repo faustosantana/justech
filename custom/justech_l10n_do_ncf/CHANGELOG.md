@@ -1,5 +1,16 @@
 # Changelog — Estándar Fiscal Justech (cierre)
 
+## [19.0.2.12.3] — 2026-07-16 — Bloqueo tipo≠NCF en compras recibidas
+
+### Added
+- Al publicar documento recibido: el prefijo del NCF del proveedor debe
+  coincidir con el tipo de comprobante seleccionado (E31≠B01… bloqueado).
+- Mensaje claro con tipo, prefijo encontrado y NCF digitado.
+- No aplica a B11/B13/B17 emitidos (Motor Fiscal Justech).
+
+### Unchanged
+- No reescribe NCF; no cambia tipo; no consume secuencia; Producción.
+
 ## [19.0.2.12.2] — 2026-07-16 — NCF del proveedor visible + sin Sugerencia
 
 ### Fixed

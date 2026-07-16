@@ -1,0 +1,104 @@
+{
+  "versions": {
+    "justech_l10n_do_base": "19.0.1.25.2",
+    "justech_l10n_do_ncf": "19.0.2.12.3",
+    "justech_l10n_do_reports": "19.0.1.24.5"
+  },
+  "cases": {
+    "E31_E31": {
+      "ok": true,
+      "state": "posted",
+      "errors": [],
+      "export_E": "E319988776655",
+      "review_tipo": "E31"
+    },
+    "E31_B01": {
+      "ok": true,
+      "blocked": true,
+      "state": "draft",
+      "msg": "El tipo de comprobante seleccionado es E31, pero el NCF ingresado comienza con B01 (B0190290121). Corrija el tipo de comprobante o el NCF del proveedor antes de registrar la factura."
+    },
+    "B01_B01": {
+      "ok": true,
+      "state": "posted",
+      "ncf": "B019988776655"
+    },
+    "B01_E31": {
+      "ok": true,
+      "blocked": true,
+      "msg": "El tipo de comprobante seleccionado es B01, pero el NCF ingresado comienza con E31 (E319988776655). Corrija el tipo de comprobante o el NCF del proveedor antes de registrar la factura.",
+      "state": "draft"
+    },
+    "B11_issued": {
+      "ok": true,
+      "mode": "issued",
+      "has_range": true,
+      "chk_ok_before_ncf": true
+    },
+    "hist_inconsistent": {
+      "ok": true,
+      "errors": [
+        "FP/2026/07/0003: Inconsistencia fiscal: el tipo E31 no coincide con el NCF B0190290121."
+      ],
+      "ncf_unchanged": true
+    }
+  },
+  "mc": {
+    "Just Office SRL": {
+      "ok": true
+    },
+    "Omni Solutions SRL": {
+      "ok": true
+    },
+    "PlugSafe SRL": {
+      "ok": true
+    },
+    "JUSTECH S.R.L.": {
+      "ok": true
+    }
+  },
+  "inventory_dev": [
+    {
+      "company": "JUSTECH S.R.L.",
+      "factura": "FP/2026/07/0003",
+      "proveedor": "Omega Tech S.A.",
+      "tipo": "E31",
+      "ncf": "B0190290121",
+      "prefijo_ncf": "B01",
+      "estado": "posted",
+      "publicada": true,
+      "include_dgii": true,
+      "mode": "received"
+    },
+    {
+      "company": "Just Office SRL",
+      "factura": "FACTU/2026/06/0005",
+      "proveedor": "EMPRESAS SAJOUR GONZALEZ SRL",
+      "tipo": "B15",
+      "ncf": "E310000008337",
+      "prefijo_ncf": "E31",
+      "estado": "posted",
+      "publicada": true,
+      "include_dgii": true,
+      "mode": "received"
+    },
+    {
+      "company": "JUSTECH S.R.L.",
+      "factura": "FP/2026/03/0026",
+      "proveedor": "Omega Tech S.A.",
+      "tipo": "B15",
+      "ncf": "E310000046397",
+      "prefijo_ncf": "E31",
+      "estado": "posted",
+      "publicada": true,
+      "include_dgii": true,
+      "mode": "received"
+    }
+  ],
+  "ranges_unchanged": true,
+  "in_bills": 786,
+  "gl_imbalance": 0,
+  "PASS_CASES": true,
+  "PASS_MC": true,
+  "inventory_count": 3
+}

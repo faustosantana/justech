@@ -1,5 +1,13 @@
 # Changelog — justech_l10n_do_base
 
+## [19.0.1.25.2] — 2026-07-16 — Consistencia tipo ↔ prefijo NCF
+
+### Added
+- `get_selected_document_type_prefix`, `get_ncf_prefix`,
+  `check_type_ncf_prefix_consistency` en Fiscal Data Provider (solo lectura).
+- Permite bloquear publicación/exportación cuando el tipo seleccionado no
+  coincide con el prefijo del NCF almacenado, sin reescribir el NCF.
+
 ## [19.0.1.25.0] — 2026-07-14 — Catálogo tipos de costos y gastos (606)
 
 ### Added

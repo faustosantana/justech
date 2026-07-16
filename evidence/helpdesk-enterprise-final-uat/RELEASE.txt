@@ -1,2 +1,3 @@
-b5f949f8b56943018f9fce0261a8bd478ce0a5cc
+uat_tip=f143b33e0c564e561764d7ceca65de14945fcd27
+config_base=685cf749407c97b5ff6ab423673ce23861a8a60c
 branch=feature/helpdesk-enterprise-config

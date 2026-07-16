@@ -1,14 +1,18 @@
 from datetime import timedelta
 
+from markupsafe import Markup
+
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 
 
 class JustechDoNcfRange(models.Model):
     _name = "justech.do.ncf.range"
-    _description = "Dominican NCF Authorized Range"
+    _description = "Rango autorizado de NCF"
     _inherit = ["mail.thread", "mail.activity.mixin"]
     _order = "date_to, prefix"
+
+    CONSOLIDATED_ALERT_SUMMARY = "Revisar rangos NCF con disponibilidad crítica"
 
     name = fields.Char(required=True, tracking=True)
     company_id = fields.Many2one(
@@ -525,69 +529,10 @@ class JustechDoNcfRange(models.Model):
         return locked[:1]
 
     # ------------------------------------------------------------------
-    # Alertas multiempresa (FASES 6–9)
+    # Alertas internas consolidadas por empresa (sin correo)
     # ------------------------------------------------------------------
-    def _alert_recipient_users(self):
-        self.ensure_one()
-        company = self.company_id
-        users = self.env["res.users"]
-        for xmlid in (
-            "justech_l10n_do_base.group_justech_do_fiscal_manager",
-            "justech_fiscal_admin.group_justech_fiscal_admin_manager",
-            "base.group_system",
-        ):
-            group = self.env.ref(xmlid, raise_if_not_found=False)
-            if group:
-                # Odoo 19: user_ids (no .users)
-                users |= group.user_ids
-        return users.filtered(
-            lambda u: u.active
-            and u.share is False
-            and bool(u.email)
-            and company in u.company_ids
-        )
-
-    def _alert_body(self, alert_type):
-        self.ensure_one()
-        _a, consumed, available, pct = self._metrics()
-        flow = dict(self._fields["flow_kind"].selection).get(
-            self.flow_kind, self.flow_kind or ""
-        )
-        return _(
-            "<p><b>Alerta NCF — %(alert)s</b></p>"
-            "<ul>"
-            "<li>Empresa: %(company)s</li>"
-            "<li>Tipo: %(prefix)s — %(name)s</li>"
-            "<li>Flujo: %(flow)s</li>"
-            "<li>Autorización DGII: %(auth)s</li>"
-            "<li>Secuencia: %(start)s – %(end)s</li>"
-            "<li>Próxima secuencia: %(next)s</li>"
-            "<li>Próximo NCF: %(next_ncf)s</li>"
-            "<li>Disponibles: %(available)s</li>"
-            "<li>Consumidos: %(consumed)s</li>"
-            "<li>Porcentaje consumido: %(pct)s %%</li>"
-            "<li>Vencimiento: %(date_to)s</li>"
-            "<li>Estado: %(state)s</li>"
-            "</ul>"
-        ) % {
-            "alert": alert_type,
-            "company": self.company_id.display_name,
-            "prefix": self.prefix or "",
-            "name": self.name or "",
-            "flow": flow,
-            "auth": self.authorization_number or "—",
-            "start": self.sequence_start,
-            "end": self.sequence_end,
-            "next": self.next_sequence,
-            "next_ncf": self.next_ncf_display or "—",
-            "available": available,
-            "consumed": consumed,
-            "pct": pct,
-            "date_to": self.date_to or "—",
-            "state": dict(self._fields["state"].selection).get(self.state, self.state),
-        }
-
     def _close_depleted_activities(self):
+        """Legacy cleanup: close per-range 'Agotado' activities after expand."""
         Activity = self.env["mail.activity"]
         for rec in self:
             acts = Activity.search(
@@ -597,114 +542,306 @@ class JustechDoNcfRange(models.Model):
                     ("summary", "ilike", "Agotado"),
                 ]
             )
-            acts.action_feedback(feedback=_("Rango ampliado; alerta de agotamiento resuelta."))
+            if acts:
+                acts.action_feedback(
+                    feedback=_("Rango ampliado; alerta de agotamiento resuelta.")
+                )
 
-    def _emit_alert(self, kind, summary, cycle_field):
+    def _classify_alert_kind(self):
+        """Return alert kind for this range, or False if healthy/closed/draft."""
         self.ensure_one()
-        cycle = self._alert_cycle_key()
-        if self[cycle_field] == cycle:
+        if self.state in ("draft", "cancelled"):
             return False
-        users = self._alert_recipient_users()
-        if not users:
-            return False
-        body = self._alert_body(summary)
-        for user in users:
-            self.activity_schedule(
-                act_type_xmlid="justech_l10n_do_ncf.mail_activity_data_ncf_range_alert",
-                summary=summary,
-                note=body,
-                user_id=user.id,
-            )
-        self.message_post(
-            body=body,
-            partner_ids=users.mapped("partner_id").ids,
-            subtype_xmlid="mail.mt_comment",
-            subject=summary,
-        )
-        self[cycle_field] = cycle
-        return True
-
-    def _process_alerts(self):
-        """Evaluate and emit alerts for this range (company-scoped)."""
-        self.ensure_one()
-        if self.state == "draft":
-            return
         today = fields.Date.context_today(self)
-        _a, _c, available, _p = self._metrics()
-        # Ensure state is current before alerting
         if self.state != "cancelled":
             target = self._compute_target_state()
             if self.state != target:
-                self.state = target
-
+                super(JustechDoNcfRange, self).write({"state": target})
+        _a, _c, available, _p = self._metrics()
         if self.state == "expired" or (self.date_to and today > self.date_to):
-            self._emit_alert(
-                "expired",
-                _("NCF vencido — %(company)s / %(prefix)s")
-                % {"company": self.company_id.name, "prefix": self.prefix},
-                "alert_expired_cycle",
-            )
-            return
-
-        if self.state == "cancelled":
-            return
-
+            return "vencido"
         if available <= 0 or self.state == "depleted":
-            self._emit_alert(
-                "depleted",
-                _("NCF agotado — %(company)s / %(prefix)s")
-                % {"company": self.company_id.name, "prefix": self.prefix},
-                "alert_depleted_cycle",
-            )
-            return
-
+            return "agotado"
         critical = self._threshold_critical()
         preventive = self._threshold_preventive()
         if available <= critical:
-            self._emit_alert(
-                "critical",
-                _("NCF crítico (%(n)s disp.) — %(company)s / %(prefix)s")
-                % {
-                    "n": available,
-                    "company": self.company_id.name,
-                    "prefix": self.prefix,
-                },
-                "alert_critical_cycle",
-            )
-        elif available <= preventive:
-            self._emit_alert(
-                "preventive",
-                _("NCF preventivo (%(n)s disp.) — %(company)s / %(prefix)s")
-                % {
-                    "n": available,
-                    "company": self.company_id.name,
-                    "prefix": self.prefix,
-                },
-                "alert_preventive_cycle",
-            )
-
+            return "critico"
+        if available <= preventive:
+            return "preventivo"
         days = self._expiry_alert_days()
         if self.date_to and today <= self.date_to <= today + timedelta(days=days):
-            self._emit_alert(
-                "expiring",
-                _("NCF próximo a vencer — %(company)s / %(prefix)s")
-                % {"company": self.company_id.name, "prefix": self.prefix},
-                "alert_expiring_cycle",
+            return "proximo_vencer"
+        return False
+
+    @api.model
+    def _alert_kind_label(self, kind):
+        return {
+            "preventivo": _("Preventivo"),
+            "critico": _("Crítico"),
+            "agotado": _("Agotado"),
+            "proximo_vencer": _("Próximo a vencer"),
+            "vencido": _("Vencido"),
+        }.get(kind, kind)
+
+    @api.model
+    def _primary_alert_user(self, company):
+        """One assignee per company: Responsable Fiscal → Admin Fiscal → Sistema."""
+        Users = self.env["res.users"]
+        for xmlid in (
+            "justech_l10n_do_base.group_justech_do_fiscal_manager",
+            "justech_fiscal_admin.group_justech_fiscal_admin_manager",
+            "base.group_system",
+        ):
+            group = self.env.ref(xmlid, raise_if_not_found=False)
+            if not group:
+                continue
+            candidates = group.user_ids.filtered(
+                lambda u, co=company: u.active
+                and not u.share
+                and co in u.company_ids
+            )
+            if candidates:
+                return candidates.sorted(key=lambda u: u.id)[:1]
+        return Users.browse()
+
+    @api.model
+    def _consolidated_alert_activity_type(self):
+        return self.env.ref(
+            "justech_l10n_do_ncf.mail_activity_data_ncf_range_alert",
+            raise_if_not_found=False,
+        )
+
+    @api.model
+    def _find_open_consolidated_activities(self, company):
+        Activity = self.env["mail.activity"].sudo()
+        act_type = self._consolidated_alert_activity_type()
+        domain = [
+            ("summary", "=", self.CONSOLIDATED_ALERT_SUMMARY),
+            ("res_model", "=", "res.company"),
+            ("res_id", "=", company.id),
+        ]
+        if act_type:
+            domain.append(("activity_type_id", "=", act_type.id))
+        return Activity.search(domain, order="id")
+
+    @api.model
+    def _build_consolidated_note(self, company, alert_rows, fallback_note=False):
+        counts = {
+            "preventivo": 0,
+            "critico": 0,
+            "agotado": 0,
+            "proximo_vencer": 0,
+            "vencido": 0,
+        }
+        for row in alert_rows:
+            counts[row["kind"]] = counts.get(row["kind"], 0) + 1
+        lines = [
+            "<p><strong>ALERTA DE RANGOS NCF</strong></p>",
+            "<p>Empresa: <strong>%s</strong></p>" % company.display_name,
+            "<p><strong>Resumen:</strong></p><ul>",
+            "<li>Preventivos: %s</li>" % counts["preventivo"],
+            "<li>Críticos: %s</li>" % counts["critico"],
+            "<li>Agotados: %s</li>" % counts["agotado"],
+            "<li>Próximos a vencer: %s</li>" % counts["proximo_vencer"],
+            "<li>Vencidos: %s</li>" % counts["vencido"],
+            "</ul>",
+            "<p><strong>Rangos:</strong></p><ul>",
+        ]
+        for row in sorted(alert_rows, key=lambda r: (r["kind"], r["prefix"] or "")):
+            flow = dict(self._fields["flow_kind"].selection).get(row["flow"], row["flow"] or "")
+            lines.append(
+                "<li>%(prefix)s — %(flow)s — %(available)s disponibles — %(kind)s</li>"
+                % {
+                    "prefix": row["prefix"] or "—",
+                    "flow": flow,
+                    "available": row["available"],
+                    "kind": self._alert_kind_label(row["kind"]),
+                }
+            )
+        lines.append("</ul>")
+        action = self.env.ref(
+            "justech_l10n_do_ncf.action_justech_do_ncf_range", raise_if_not_found=False
+        )
+        if action:
+            href = "/web#action=%s&model=justech.do.ncf.range&view_type=list&cids=%s" % (
+                action.id,
+                company.id,
+            )
+            lines.append(
+                '<p><a href="%s" class="btn btn-primary">Ver rangos NCF</a></p>' % href
+            )
+        if fallback_note:
+            lines.append(
+                "<p><em>No hay Responsable Fiscal configurado para esta empresa. "
+                "Se asignó un administrador con acceso como respaldo.</em></p>"
+            )
+        return Markup("".join(lines))
+
+    @api.model
+    def _company_alert_cycle_key(self, alert_rows):
+        parts = [
+            "%s:%s:%s" % (r["id"], r["kind"], r["available"]) for r in sorted(alert_rows, key=lambda x: x["id"])
+        ]
+        return "|".join(parts)
+
+    @api.model
+    def _process_company_consolidated_alert(self, company):
+        """One internal activity per company. Never sends email."""
+        ranges = self.sudo().search(
+            [("company_id", "=", company.id), ("state", "!=", "draft")]
+        )
+        alert_rows = []
+        for rng in ranges.with_company(company):
+            kind = rng._classify_alert_kind()
+            if not kind:
+                continue
+            _a, _c, available, _p = rng._metrics()
+            alert_rows.append(
+                {
+                    "id": rng.id,
+                    "prefix": rng.prefix,
+                    "flow": rng.flow_kind,
+                    "available": available,
+                    "kind": kind,
+                }
+            )
+
+        existing = self._find_open_consolidated_activities(company)
+        # Mark legacy per-range NCF alert activities as consolidated
+        self._consolidate_legacy_range_activities(company)
+
+        if not alert_rows:
+            for act in existing:
+                act.action_feedback(
+                    feedback=_(
+                        "Todos los rangos NCF de esta empresa tienen disponibilidad "
+                        "y vigencia normales."
+                    )
+                )
+            return {"company": company.name, "alerts": 0, "activity": "closed_or_none"}
+
+        user = self._primary_alert_user(company)
+        fallback = False
+        if not user:
+            # Controlled fallback: system user of company if any
+            user = self.env.ref("base.user_admin", raise_if_not_found=False)
+            if user and company not in user.company_ids:
+                user = self.env["res.users"]
+            fallback = True
+        if not user:
+            return {
+                "company": company.name,
+                "alerts": len(alert_rows),
+                "activity": "skipped_no_assignee",
+            }
+
+        note = self._build_consolidated_note(company, alert_rows, fallback_note=fallback)
+        act_type = self._consolidated_alert_activity_type()
+        vals = {
+            "summary": self.CONSOLIDATED_ALERT_SUMMARY,
+            "note": note,
+            "user_id": user.id,
+            "date_deadline": fields.Date.context_today(self),
+        }
+        if act_type:
+            vals["activity_type_id"] = act_type.id
+
+        if existing:
+            primary = existing[:1]
+            primary.write(vals)
+            extras = existing - primary
+            if extras:
+                extras.action_feedback(
+                    feedback=_(
+                        "Consolidada en actividad multiempresa de rangos NCF."
+                    )
+                )
+            activity = primary
+            action = "updated"
+        else:
+            model_id = self.env["ir.model"]._get_id("res.company")
+            create_vals = dict(vals)
+            create_vals.update(
+                {
+                    "res_model_id": model_id,
+                    "res_id": company.id,
+                }
+            )
+            # Internal only: no mail, no followers notification
+            activity = (
+                self.env["mail.activity"]
+                .sudo()
+                .with_context(
+                    mail_activity_quick_update=True,
+                    mail_notify_force_send=False,
+                    mail_create_nosubscribe=True,
+                    tracking_disable=True,
+                )
+                .create(create_vals)
+            )
+            action = "created"
+
+        # Traceability on company chatter without email (note, no partners)
+        if "mail.thread" in company._inherit or hasattr(company, "message_post"):
+            try:
+                company.sudo().with_context(
+                    mail_notify_force_send=False,
+                    mail_create_nosubscribe=True,
+                ).message_post(
+                    body=note,
+                    subtype_xmlid="mail.mt_note",
+                    message_type="comment",
+                    partner_ids=[],
+                )
+            except Exception:
+                # Company may not support chatter in all builds; activity is enough.
+                pass
+
+        return {
+            "company": company.name,
+            "alerts": len(alert_rows),
+            "activity": action,
+            "activity_id": activity.id,
+            "user_id": user.id,
+            "fallback": fallback,
+        }
+
+    @api.model
+    def _consolidate_legacy_range_activities(self, company):
+        """Close open per-range alert activities for this company (no delete)."""
+        range_ids = self.sudo().search([("company_id", "=", company.id)]).ids
+        if not range_ids:
+            return
+        Activity = self.env["mail.activity"].sudo()
+        legacy = Activity.search(
+            [
+                ("res_model", "=", self._name),
+                ("res_id", "in", range_ids),
+                "|",
+                ("summary", "ilike", "NCF"),
+                ("summary", "ilike", "rango"),
+            ]
+        )
+        # Keep out of consolidated company activities (different res_model)
+        if legacy:
+            legacy.action_feedback(
+                feedback=_("Consolidada en actividad multiempresa de rangos NCF.")
             )
 
     @api.model
     def _cron_process_ncf_range_alerts(self):
-        """Cron: alertas por compañía, sin mezclar empresas."""
+        """Cron: una actividad interna consolidada por empresa. Sin correos."""
         Company = self.env["res.company"].sudo()
+        results = []
         for company in Company.search([]):
-            ranges = self.sudo().search(
-                [
-                    ("company_id", "=", company.id),
-                    ("state", "!=", "draft"),
-                ]
+            results.append(
+                self.with_company(company)
+                .with_context(allowed_company_ids=company.ids)
+                ._process_company_consolidated_alert(company)
             )
-            for rng in ranges.with_company(company).with_context(
-                allowed_company_ids=company.ids
-            ):
-                rng._process_alerts()
-        return True
+        return results
+
+    # Backward-compatible no-op (per-range path removed)
+    def _process_alerts(self):
+        for company in self.mapped("company_id"):
+            self._process_company_consolidated_alert(company)

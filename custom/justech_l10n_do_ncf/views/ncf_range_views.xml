@@ -75,7 +75,7 @@
         </field>
     </record>
     <record id="action_justech_do_ncf_range" model="ir.actions.act_window">
-        <field name="name">Rangos NCF</field>
+        <field name="name">Ver rangos NCF</field>
         <field name="res_model">justech.do.ncf.range</field>
         <field name="view_mode">list,form</field>
     </record>

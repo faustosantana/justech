@@ -1,0 +1,103 @@
+{
+  "cases": {
+    "C1_justech_multi": {
+      "ok": true,
+      "activities": 1,
+      "mail_delta": 0,
+      "alerts": 4,
+      "rendered": true,
+      "has_ranges": true,
+      "note_snip": "<p><strong>ALERTA DE RANGOS NCF</strong></p><p>Empresa: <strong>JUSTECH S.R.L.</strong></p><p><strong>Resumen:</strong></p><ul><li>Preventivos: 1</li><li>Críticos: 3</li><li>Agotados: 0</li><li>Próximos a vencer: 0</li><li>Vencidos: 0</li><"
+    },
+    "C2_second_run": {
+      "ok": true,
+      "activities": 1,
+      "mail_delta": 0,
+      "action": "updated"
+    },
+    "C3_threshold_update": {
+      "ok": true,
+      "same_activity": true,
+      "activities": 1
+    },
+    "C4_normalize_close": {
+      "ok": true,
+      "activities": 0,
+      "mail_delta": 0
+    },
+    "C5_multicompany": {
+      "ok": true,
+      "total_activities": 4,
+      "mail_delta": 0,
+      "per_company": {
+        "JUSTECH": {
+          "ok": true,
+          "activities": 1,
+          "user_id": 2,
+          "user_ok": true
+        },
+        "JUST_OFFICE": {
+          "ok": true,
+          "activities": 1,
+          "user_id": 2,
+          "user_ok": true
+        },
+        "PLUGSAFE": {
+          "ok": true,
+          "activities": 1,
+          "user_id": 2,
+          "user_ok": true
+        },
+        "OMNI": {
+          "ok": true,
+          "activities": 1,
+          "user_id": 2,
+          "user_ok": true
+        }
+      }
+    },
+    "C6_fallback": {
+      "ok": true,
+      "result": {
+        "company": "PlugSafe SRL",
+        "alerts": 1,
+        "activity": "created",
+        "activity_id": 82,
+        "user_id": 2,
+        "fallback": false
+      },
+      "activities": 1
+    }
+  },
+  "companies": {
+    "JUSTECH": {
+      "ok": true,
+      "activities": 1,
+      "user_id": 2,
+      "user_ok": true
+    },
+    "JUST_OFFICE": {
+      "ok": true,
+      "activities": 1,
+      "user_id": 2,
+      "user_ok": true
+    },
+    "PLUGSAFE": {
+      "ok": true,
+      "activities": 1,
+      "user_id": 2,
+      "user_ok": true
+    },
+    "OMNI": {
+      "ok": true,
+      "activities": 1,
+      "user_id": 2,
+      "user_ok": true
+    }
+  },
+  "all_pass": true,
+  "fp_unchanged": true,
+  "mail_unchanged": true,
+  "mail_generated": 0,
+  "version": "19.0.2.14.0"
+}

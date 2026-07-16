@@ -1,5 +1,17 @@
 # Changelog — Estándar Fiscal Justech (cierre)
 
+## [19.0.2.14.0] — 2026-07-16 — Alertas NCF internas consolidadas (sin correo)
+
+### Changed
+- Una sola `mail.activity` consolidada por empresa (no por rango ni por usuario).
+- Eliminado `message_post` con destinatarios en el flujo de alertas (sin correo).
+- Nota HTML con `Markup` (sin etiquetas visibles como texto).
+- Etiqueta del modelo: «Rango autorizado de NCF»; acción «Ver rangos NCF».
+- Actividades legacy por rango se cierran con nota de consolidación.
+
+### Unchanged
+- Cálculo de disponibles/estado; secuencias; multiempresa; Producción.
+
 ## [19.0.2.13.0] — 2026-07-16 — Estado y alertas multiempresa de rangos NCF
 
 ### Fixed

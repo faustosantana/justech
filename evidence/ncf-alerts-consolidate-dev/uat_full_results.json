@@ -1,0 +1,107 @@
+{
+  "checks": {
+    "legacy_consolidated": {
+      "ok": true,
+      "detail": {
+        "closed": 0,
+        "ids": []
+      }
+    },
+    "justech_consolidated": {
+      "ok": true,
+      "detail": {
+        "activities": 1,
+        "alerts": 4,
+        "mail_delta": 0,
+        "html_ok": true,
+        "note_snip": "<p><strong>ALERTA DE RANGOS NCF</strong></p><p>Empresa: <strong>JUSTECH S.R.L.</strong></p><p><strong>Resumen:</strong></p><ul><li>Preventivos: 1</li><li>Críticos: 3</li><li>Agotados: 0</li><li>Próximos a vencer: 0</li><"
+      }
+    },
+    "second_run": {
+      "ok": true,
+      "detail": {
+        "activity_id": 83,
+        "action": "updated"
+      }
+    },
+    "threshold_update": {
+      "ok": true,
+      "detail": {
+        "same_id": true
+      }
+    },
+    "normalize_close": {
+      "ok": true,
+      "detail": {
+        "activities": 0
+      }
+    },
+    "multicompany_4_4": {
+      "ok": true,
+      "detail": {
+        "total": 4,
+        "per": {
+          "JUSTECH": {
+            "ok": true,
+            "activities": 1,
+            "user_id": 2,
+            "cross": false
+          },
+          "JUST_OFFICE": {
+            "ok": true,
+            "activities": 1,
+            "user_id": 2,
+            "cross": false
+          },
+          "PLUGSAFE": {
+            "ok": true,
+            "activities": 1,
+            "user_id": 2,
+            "cross": false
+          },
+          "OMNI": {
+            "ok": true,
+            "activities": 1,
+            "user_id": 2,
+            "cross": false
+          }
+        },
+        "mail_delta": 0
+      }
+    },
+    "ranges_unchanged": {
+      "ok": true,
+      "detail": true
+    },
+    "moves_unchanged": {
+      "ok": true,
+      "detail": 2410
+    },
+    "sequences_unchanged": {
+      "ok": true,
+      "detail": true
+    },
+    "gl_balanced": {
+      "ok": true,
+      "detail": 0.0
+    },
+    "mail_ncf_unchanged": {
+      "ok": true,
+      "detail": 0
+    },
+    "reports_modules": {
+      "ok": true,
+      "detail": {
+        "justech_l10n_do_base": "installed",
+        "justech_l10n_do_ncf": "installed",
+        "justech_l10n_do_reports": "installed"
+      }
+    },
+    "open_range_alert_activities": {
+      "ok": true,
+      "detail": 0
+    }
+  },
+  "all_pass": true,
+  "version": "19.0.2.14.0"
+}

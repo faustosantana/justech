@@ -2,6 +2,26 @@
 
 ## [Unreleased]
 
+### 2026-07-16 — NCF Alerts Baseline v1 (congelamiento)
+
+**BREAKING CHANGES:** Ninguno.
+
+**NEW FEATURES**
+- Alertas internas consolidadas.
+- Eliminación completa de correos NCF (flujo de alertas).
+- Una actividad por empresa.
+- Consolidación automática.
+- Cierre automático.
+- HTML limpio.
+
+**FIXES**
+- Eliminado spam de actividades.
+- Eliminado HTML crudo.
+- Eliminadas actividades duplicadas.
+
+Baseline: commit `aaea7f5f4730a038f005a3e6010354f9da64963a` — tag `ncf-alerts-baseline-v1`  
+Documentación: `docs/releases/NCF_ALERTS_BASELINE_v1.md`
+
 ### Release 1.0 — ver evidence/release-1.0/CHANGELOG.md
 
 ## [1.0.0] — 2026-07-07 — RELEASE-1

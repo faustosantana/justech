@@ -1,6 +1,25 @@
 # Changelog — Estándar Fiscal Justech (cierre)
 
-## [19.0.2.14.0] — 2026-07-16 — Alertas NCF internas consolidadas (sin correo)
+## [19.0.2.14.0] — 2026-07-16 — Alertas NCF internas consolidadas (sin correo) — BASELINE v1
+
+**Congelamiento oficial.** Commit protegido: `aaea7f5f4730a038f005a3e6010354f9da64963a`  
+Tag: `ncf-alerts-baseline-v1` — ver `docs/releases/NCF_ALERTS_BASELINE_v1.md`
+
+### BREAKING CHANGES
+Ninguno.
+
+### NEW FEATURES
+- Alertas internas consolidadas.
+- Eliminación completa de correos NCF (flujo de alertas).
+- Una actividad por empresa.
+- Consolidación automática.
+- Cierre automático.
+- HTML limpio (Markup, sin etiquetas crudas visibles).
+
+### FIXES
+- Eliminado spam de actividades.
+- Eliminado HTML crudo.
+- Eliminadas actividades duplicadas.
 
 ### Changed
 - Una sola `mail.activity` consolidada por empresa (no por rango ni por usuario).

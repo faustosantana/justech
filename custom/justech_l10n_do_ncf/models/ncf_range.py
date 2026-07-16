@@ -12,6 +12,20 @@ class JustechDoNcfRange(models.Model):
     _inherit = ["mail.thread", "mail.activity.mixin"]
     _order = "date_to, prefix"
 
+    ############################################################
+    ## PROTECTED BASELINE
+    ##
+    ## Commit:
+    ## aaea7f5f4730a038f005a3e6010354f9da64963a
+    ##
+    ## NO MODIFICAR ESTA LÓGICA SIN:
+    ##
+    ## 1. Auditoría
+    ## 2. Backup
+    ## 3. Aprobación
+    ## 4. UAT DEV
+    ## 5. UAT Producción
+    ############################################################
     CONSOLIDATED_ALERT_SUMMARY = "Revisar rangos NCF con disponibilidad crítica"
 
     name = fields.Char(required=True, tracking=True)
@@ -583,6 +597,20 @@ class JustechDoNcfRange(models.Model):
             "vencido": _("Vencido"),
         }.get(kind, kind)
 
+    ############################################################
+    ## PROTECTED BASELINE
+    ##
+    ## Commit:
+    ## aaea7f5f4730a038f005a3e6010354f9da64963a
+    ##
+    ## NO MODIFICAR ESTA LÓGICA SIN:
+    ##
+    ## 1. Auditoría
+    ## 2. Backup
+    ## 3. Aprobación
+    ## 4. UAT DEV
+    ## 5. UAT Producción
+    ############################################################
     @api.model
     def _primary_alert_user(self, company):
         """One assignee per company: Responsable Fiscal → Admin Fiscal → Sistema."""
@@ -684,6 +712,20 @@ class JustechDoNcfRange(models.Model):
         ]
         return "|".join(parts)
 
+    ############################################################
+    ## PROTECTED BASELINE
+    ##
+    ## Commit:
+    ## aaea7f5f4730a038f005a3e6010354f9da64963a
+    ##
+    ## NO MODIFICAR ESTA LÓGICA SIN:
+    ##
+    ## 1. Auditoría
+    ## 2. Backup
+    ## 3. Aprobación
+    ## 4. UAT DEV
+    ## 5. UAT Producción
+    ############################################################
     @api.model
     def _process_company_consolidated_alert(self, company):
         """One internal activity per company. Never sends email."""
@@ -828,6 +870,20 @@ class JustechDoNcfRange(models.Model):
                 feedback=_("Consolidada en actividad multiempresa de rangos NCF.")
             )
 
+    ############################################################
+    ## PROTECTED BASELINE
+    ##
+    ## Commit:
+    ## aaea7f5f4730a038f005a3e6010354f9da64963a
+    ##
+    ## NO MODIFICAR ESTA LÓGICA SIN:
+    ##
+    ## 1. Auditoría
+    ## 2. Backup
+    ## 3. Aprobación
+    ## 4. UAT DEV
+    ## 5. UAT Producción
+    ############################################################
     @api.model
     def _cron_process_ncf_range_alerts(self):
         """Cron: una actividad interna consolidada por empresa. Sin correos."""

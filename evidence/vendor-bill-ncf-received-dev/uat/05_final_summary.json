@@ -1,0 +1,14 @@
+{
+  "version": "19.0.2.12.2",
+  "priority": 200,
+  "hist_606": {
+    "ncf": "E310000087599",
+    "expense": "09",
+    "doc_type": "(E31) Cr\u00e9dito Fiscal Electr\u00f3nica"
+  },
+  "hist_intact": true,
+  "in_bills": 783,
+  "gl_imbalance": 0,
+  "duplicity_msg_ok": true,
+  "prod_untouched": true
+}

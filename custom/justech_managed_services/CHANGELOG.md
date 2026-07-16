@@ -1,5 +1,13 @@
 # Changelog — justech_managed_services
 
+## [19.0.2.1.3] — 2026-07-16
+
+### Corregido (vista Cotizaciones)
+
+- Retirados del formulario estándar de Cotizaciones los campos Servicio Administrado y Levantamiento.
+- Campos conservados en el modelo; formularios de Servicios Administrados sin cambio.
+- Se mantiene el smart button «Servicio Adm.» cuando hay vínculo.
+
 ## [19.0.2.1.2] — 2026-07-15
 
 ### Corregido (datos cliente + correo)

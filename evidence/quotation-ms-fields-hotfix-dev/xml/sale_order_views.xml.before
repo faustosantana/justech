@@ -5,6 +5,12 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="justech_managed_service_id"
+                         groups="justech_managed_services.group_ms_user"/>
+                <field name="justech_assessment_id"
+                         groups="justech_managed_services.group_ms_user"/>
+            </xpath>
             <div name="button_box" position="inside">
                 <button name="action_view_justech_managed_service" type="object"
                         class="oe_stat_button" icon="fa-cogs"

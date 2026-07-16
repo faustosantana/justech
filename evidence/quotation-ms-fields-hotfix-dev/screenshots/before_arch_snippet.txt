@@ -1,0 +1,10 @@
+ame="name" readonly="1"/>
+                    </h1>
+                </div>
+                <group name="sale_header">
+                    <group name="partner_details">
+                        <field name="partner_id" widget="res_partner_many2one" context="{'res_partner_search_mode': 'customer', 'show_address': 1, 'show_vat': True}" placeholder="Comience a escribir para encontrar a un cliente..." readonly="state in ['cancel', 'sale']" on_change="1" can_create="True" can_write="True"/>
+                <field name="justech_managed_service_id" can_create="True" can_write="True"/>
+                <field name="justech_assessment_id" can_create="True" can_write="True"/>
+                <field name="justech_do_document_type_id" invisible="1" options="{'no_create': True}" readonly="state in ('sale', 'done', 'cancel')" can_create="True" can_write="True"/>
+                        <field name="partner_invoice_id" options="{'no_quick_create': True}" context="{'default_type': 'invoice', 'show_addre

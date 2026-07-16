@@ -1,0 +1,98 @@
+{
+  "caso1": {
+    "pass": true,
+    "ratings": 0,
+    "tmpl": 82
+  },
+  "caso2": {
+    "pass": true,
+    "ratings": 1,
+    "tmpl": 74,
+    "has_rate": true,
+    "email_to": "",
+    "company": "JUSTECH S.R.L."
+  },
+  "caso3": {
+    "pass": true,
+    "stage": "Cerrado",
+    "ratings": 1
+  },
+  "caso4": {
+    "pass": true,
+    "stage": "En progreso"
+  },
+  "caso5": {
+    "pass": true,
+    "ratings": 1,
+    "same_token": true
+  },
+  "caso6": {
+    "pass": true,
+    "warn": "sin email cliente \u2014 no encolar",
+    "mails": 1,
+    "bad": 0
+  },
+  "digest": {
+    "pass": true,
+    "count": 4,
+    "subjects": [
+      "Tickets pendientes de seguimiento \u2014 16/07/2026 \u2014 Omni Solutions SRL",
+      "Tickets pendientes de seguimiento \u2014 16/07/2026 \u2014 PlugSafe SRL",
+      "Tickets pendientes de seguimiento \u2014 16/07/2026 \u2014 Just Office SRL",
+      "Tickets pendientes de seguimiento \u2014 16/07/2026 \u2014 JUSTECH S.R.L."
+    ],
+    "cross": false,
+    "per_company": true
+  },
+  "multiempresa": {
+    "pass": true,
+    "teams": {
+      "1": {
+        "team": "Soporte Justech",
+        "use_rating": true,
+        "days": 2,
+        "to": 8,
+        "portal": 8,
+        "co": "JUSTECH S.R.L."
+      },
+      "2": {
+        "team": "Atenci\u00f3n al cliente",
+        "use_rating": true,
+        "days": 3,
+        "to": 8,
+        "portal": 8,
+        "co": "PlugSafe SRL"
+      },
+      "3": {
+        "team": "Atenci\u00f3n al cliente",
+        "use_rating": true,
+        "days": 2,
+        "to": 8,
+        "portal": 8,
+        "co": "Just Office SRL"
+      },
+      "4": {
+        "team": "Atenci\u00f3n al cliente",
+        "use_rating": true,
+        "days": 2,
+        "to": 8,
+        "portal": 8,
+        "co": "Omni Solutions SRL"
+      }
+    },
+    "t6_off": true
+  },
+  "regresion": {
+    "pass": true,
+    "td": 0,
+    "rd": 0
+  },
+  "portal": {
+    "pass": true
+  },
+  "smtp": {
+    "pass": true,
+    "host": "localhost"
+  },
+  "all_pass": true
+}

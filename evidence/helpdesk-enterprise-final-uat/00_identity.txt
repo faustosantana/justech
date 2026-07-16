@@ -1,0 +1,12 @@
+host=207.244.242.58
+hostname=vmi3364393.contaboserver.net
+domain=erp.justech.do
+db=justech_dev
+service=odoo-dev
+conf=/opt/odoo-dev/conf/odoo-dev.conf
+data_dir=/opt/odoo-dev/data
+filestore=/opt/odoo-dev/data/filestore/justech_dev
+smtp_sink=127.0.0.1:1025
+email_from=dev-noreply@justech.do
+backup=/opt/odoo-backups/helpdesk-final-uat-dev-20260716_122538
+git_candidate=685cf749407c97b5ff6ab423673ce23861a8a60c

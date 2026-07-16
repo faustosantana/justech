@@ -1,0 +1,50 @@
+ ?column? | count 
+----------+-------
+ tickets  |   468
+(1 row)
+
+    ?column?    | count 
+----------------+-------
+ tickets_active |   465
+(1 row)
+
+    ?column?    | count 
+----------------+-------
+ ratings_ticket |    67
+(1 row)
+
+ ?column?  | count 
+-----------+-------
+ mail_mail |   451
+(1 row)
+
+   ?column?    | count 
+---------------+-------
+ mail_outgoing |    67
+(1 row)
+
+    ?column?    | count 
+----------------+-------
+ mail_exception |   380
+(1 row)
+
+ ?column? | count 
+----------+-------
+ teams    |     6
+(1 row)
+
+ ?column? | count 
+----------+-------
+ stages   |     8
+(1 row)
+
+       ?column?       | count 
+----------------------+-------
+ automations_helpdesk |    14
+(1 row)
+
+      ?column?      | count 
+--------------------+-------
+ templates_helpdesk |    10
+(1 row)
+

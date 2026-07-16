@@ -1,0 +1,2 @@
+id,cron_name,active,interval_number,interval_type,nextcall,lastcall
+74,Helpdesk Ticket: Automatically close the tickets,t,1,days,2026-07-17 01:00:19,2026-07-16 12:04:37

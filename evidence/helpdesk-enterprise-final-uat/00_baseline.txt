@@ -1,0 +1,9 @@
+tickets|468
+tickets_active|465
+ratings_ticket|67
+mail_mail|451
+mail_outgoing|67
+mail_exception|380
+teams|6
+stages|8
+templates_helpdesk|10

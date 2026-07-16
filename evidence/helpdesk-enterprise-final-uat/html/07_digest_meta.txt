@@ -1,0 +1,3 @@
+count=4
+subjects=Tickets pendientes de seguimiento — 16/07/2026 — Omni Solutions SRL | Tickets pendientes de seguimiento — 16/07/2026 — PlugSafe SRL | Tickets pendientes de seguimiento — 16/07/2026 — Just Office SRL | Tickets pendientes de seguimiento — 16/07/2026 — JUSTECH S.R.L.
+tos=Finanzas@justech.do,fausto@justech.do,jinette@dynamicspm.com | Finanzas@justech.do,fausto@justech.do,jinette@dynamicspm.com | Finanzas@justech.do,fausto@justech.do,jinette@dynamicspm.com | Finanzas@justech.do,fausto@justech.do,jesus@justech.do,jinette@dynamicspm.com,soporte1@justech.do,soporte@justech.do

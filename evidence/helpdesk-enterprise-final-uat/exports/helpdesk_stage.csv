@@ -1,0 +1,9 @@
+id,name,sequence,fold,template_id
+1,"{""en_US"": ""New"", ""es_DO"": ""Nuevo""}",0,,72
+2,"{""en_US"": ""In Progress"", ""es_DO"": ""En progreso""}",10,,
+3,"{""en_US"": ""On Hold"", ""es_DO"": ""En espera""}",20,,
+6,"{""en_US"": ""Esperando cliente"", ""es_DO"": ""Esperando cliente""}",30,f,
+7,"{""en_US"": ""Esperando proveedor"", ""es_DO"": ""Esperando proveedor""}",40,f,
+4,"{""en_US"": ""Solved"", ""es_DO"": ""Resuelto""}",50,f,82
+8,"{""en_US"": ""Cerrado"", ""es_DO"": ""Cerrado""}",90,t,74
+5,"{""en_US"": ""Cancelled"", ""es_DO"": ""Cancelado""}",100,t,

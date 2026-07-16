@@ -1,0 +1,11 @@
+id,name,model,active
+80,"{""en_US"": ""Helpdesk: Ticket Received"", ""es_DO"": ""Soporte al cliente: Ticket recibido (copia)""}",helpdesk.ticket,t
+76,"{""en_US"": ""Aviso de cierre de ticket"", ""es_DO"": ""Aviso de cierre de ticket""}",helpdesk.ticket,t
+78,"{""en_US"": ""Alerta: Ticket sin respuesta"", ""es_DO"": ""Alerta: Ticket sin respuesta""}",helpdesk.ticket,t
+77,"{""en_US"": ""Confirmación de solucion de ticket-Resuelto"", ""es_DO"": ""Confirmación de solucion de ticket-Resuelto""}",helpdesk.ticket,t
+79,"{""en_US"": ""Confirmación de solucion de ticket-Resuelto"", ""es_DO"": ""Confirmación de solucion de ticket-Resuelto (copia)""}",helpdesk.ticket,t
+81,"{""en_US"": ""Helpdesk: Ticket Received"", ""es_DO"": ""Soporte al cliente: Ticket recibido (copia)""}",helpdesk.ticket,t
+82,"{""en_US"": ""Soporte al cliente: Confirmacion Resuelto"", ""es_DO"": ""Soporte al cliente: Confirmacion Resuelto""}",helpdesk.ticket,t
+74,"{""en_US"": ""Helpdesk: Ticket Rating Request"", ""es_DO"": ""Soporte al cliente: Solicitud de calificación de ticket""}",helpdesk.ticket,t
+72,"{""en_US"": ""Helpdesk: Ticket Received"", ""es_DO"": ""Soporte al cliente: Ticket recibido""}",helpdesk.ticket,t
+73,"{""en_US"": ""Helpdesk: Ticket Closed"", ""es_DO"": ""Soporte al cliente: Ticket cerrado""}",helpdesk.ticket,t

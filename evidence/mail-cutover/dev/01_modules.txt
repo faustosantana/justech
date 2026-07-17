@@ -1,0 +1,12 @@
+             name             | latest_version |   state   
+------------------------------+----------------+-----------
+ account                      | 19.0.1.4       | installed
+ crm                          | 19.0.1.9       | installed
+ helpdesk                     | 19.0.1.6       | installed
+ justech_mail_outgoing_policy | 19.0.1.1.0     | installed
+ mail                         | 19.0.1.19      | installed
+ portal                       | 19.0.1.0       | installed
+ purchase                     | 19.0.1.2       | installed
+ sale                         | 19.0.1.2       | installed
+(8 rows)
+

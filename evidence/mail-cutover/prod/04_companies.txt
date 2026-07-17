@@ -1,0 +1,8 @@
+ id |        name        |         email          | alias_domain_id |     alias_domain     
+----+--------------------+------------------------+-----------------+----------------------
+  1 | JUSTECH S.R.L.     | info@justech.do        |               3 | justech.do
+  2 | PlugSafe SRL       |                        |               4 | plugsafeservices.com
+  3 | Just Office SRL    | info@just-offices.com  |               1 | just-offices.com
+  4 | Omni Solutions SRL | info@solutionsomni.com |               5 | solutionsomni.com
+(4 rows)
+

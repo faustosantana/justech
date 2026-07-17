@@ -1,0 +1,49 @@
+                                                        Table "public.ir_mail_server"
+                  Column                   |            Type             | Collation | Nullable |                  Default                   
+-------------------------------------------+-----------------------------+-----------+----------+--------------------------------------------
+ id                                        | integer                     |           | not null | nextval('ir_mail_server_id_seq'::regclass)
+ smtp_port                                 | integer                     |           |          | 
+ sequence                                  | integer                     |           |          | 
+ create_uid                                | integer                     |           |          | 
+ write_uid                                 | integer                     |           |          | 
+ name                                      | character varying           |           | not null | 
+ from_filter                               | character varying           |           |          | 
+ smtp_host                                 | character varying           |           |          | 
+ smtp_authentication                       | character varying           |           | not null | 
+ smtp_user                                 | character varying           |           |          | 
+ smtp_pass                                 | character varying           |           |          | 
+ smtp_encryption                           | character varying           |           | not null | 
+ smtp_debug                                | boolean                     |           |          | 
+ active                                    | boolean                     |           |          | 
+ create_date                               | timestamp without time zone |           |          | 
+ write_date                                | timestamp without time zone |           |          | 
+ max_email_size                            | double precision            |           |          | 
+ smtp_ssl_certificate                      | bytea                       |           |          | 
+ smtp_ssl_private_key                      | bytea                       |           |          | 
+ owner_user_id                             | integer                     |           |          | 
+ owner_limit_count                         | integer                     |           |          | 
+ owner_limit_time                          | timestamp without time zone |           |          | 
+ google_gmail_access_token_expiration      | integer                     |           |          | 
+ google_gmail_refresh_token                | character varying           |           |          | 
+ google_gmail_access_token                 | character varying           |           |          | 
+ microsoft_outlook_access_token_expiration | integer                     |           |          | 
+ microsoft_outlook_refresh_token           | character varying           |           |          | 
+ microsoft_outlook_access_token            | character varying           |           |          | 
+Indexes:
+    "ir_mail_server_pkey" PRIMARY KEY, btree (id)
+    "ir_mail_server__name_index" btree (name)
+    "ir_mail_server_unique_owner_user_id" UNIQUE CONSTRAINT, btree (owner_user_id)
+Check constraints:
+    "ir_mail_server_certificate_requires_tls" CHECK (smtp_encryption::text <> 'none'::text OR smtp_authentication::text <> 'certificate'::text)
+Foreign-key constraints:
+    "ir_mail_server_create_uid_fkey" FOREIGN KEY (create_uid) REFERENCES res_users(id) ON DELETE SET NULL
+    "ir_mail_server_owner_user_id_fkey" FOREIGN KEY (owner_user_id) REFERENCES res_users(id) ON DELETE SET NULL
+    "ir_mail_server_write_uid_fkey" FOREIGN KEY (write_uid) REFERENCES res_users(id) ON DELETE SET NULL
+Referenced by:
+    TABLE "mail_compose_message" CONSTRAINT "mail_compose_message_mail_server_id_fkey" FOREIGN KEY (mail_server_id) REFERENCES ir_mail_server(id) ON DELETE SET NULL
+    TABLE "mail_message" CONSTRAINT "mail_message_mail_server_id_fkey" FOREIGN KEY (mail_server_id) REFERENCES ir_mail_server(id) ON DELETE SET NULL
+    TABLE "mail_template" CONSTRAINT "mail_template_mail_server_id_fkey" FOREIGN KEY (mail_server_id) REFERENCES ir_mail_server(id) ON DELETE SET NULL
+    TABLE "mailing_mailing" CONSTRAINT "mailing_mailing_mail_server_id_fkey" FOREIGN KEY (mail_server_id) REFERENCES ir_mail_server(id) ON DELETE SET NULL
+    TABLE "res_config_settings" CONSTRAINT "res_config_settings_mass_mailing_mail_server_id_fkey" FOREIGN KEY (mass_mailing_mail_server_id) REFERENCES ir_mail_server(id) ON DELETE SET NULL
+    TABLE "survey_invite" CONSTRAINT "survey_invite_mail_server_id_fkey" FOREIGN KEY (mail_server_id) REFERENCES ir_mail_server(id) ON DELETE SET NULL
+

@@ -1,0 +1,8 @@
+                 key                  |                                                           left                                                           
+--------------------------------------+--------------------------------------------------------------------------------------------------------------------------
+ justech_mail.apply_domains           | justech.do
+ justech_mail.company_policies        | [{"name": "JUSTECH", "domains": ["justech.do"], "force_from": "Notificaciones Justech <notifications@justech.do>", "shar
+ justech_mail.force_from              | Notificaciones Justech <notifications@justech.do>
+ justech_mail.outgoing_policy_enabled | True
+(4 rows)
+

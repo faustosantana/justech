@@ -1,0 +1,10 @@
+ id | company_id |               alias_name               |     alias_domain     |    company_domain    | alignment 
+----+------------+----------------------------------------+----------------------+----------------------+-----------
+  1 |          1 | customer-care                          | justech.do           | justech.do           | OK
+  2 |          3 | atencion-al-cliente-justoffice-srl     | just-offices.com     | just-offices.com     | OK
+  3 |          4 | atencion-al-cliente-omni-solutions-srl | solutionsomni.com    | solutionsomni.com    | OK
+  4 |          2 | atencion-al-cliente-plugsafe-srl       | plugsafeservices.com | plugsafeservices.com | OK
+  5 |          1 | asistencia                             | justech.do           | justech.do           | OK
+  6 |          1 |                                        | justech.do           | justech.do           | OK
+(6 rows)
+

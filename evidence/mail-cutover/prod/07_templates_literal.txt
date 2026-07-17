@@ -1,0 +1,9 @@
+ id |      model      |                                                     name                                                     |               email_from                | reply_to 
+----+-----------------+--------------------------------------------------------------------------------------------------------------+-----------------------------------------+----------
+ 45 | iap.account     | {"en_US": "IAP Lead Generation Notification", "es_DO": "Notificación de generación de leads IAP"}            | iap@odoo.com                            | 
+ 72 | helpdesk.ticket | {"en_US": "Helpdesk: Ticket Received", "es_DO": "Soporte al cliente: Ticket recibido"}                       | Soporte Justech <asistencia@justech.do> | 
+ 80 | helpdesk.ticket | {"en_US": "Helpdesk: Ticket Received", "es_DO": "Soporte al cliente: Ticket recibido (copia)"}               | Soporte Justech <asistencia@justech.do> | 
+ 81 | helpdesk.ticket | {"en_US": "Helpdesk: Ticket Received", "es_DO": "Soporte al cliente: Ticket recibido (copia)"}               | Soporte Justech <asistencia@justech.do> | 
+ 82 | helpdesk.ticket | {"en_US": "Soporte al cliente: Confirmacion Resuelto", "es_DO": "Soporte al cliente: Confirmacion Resuelto"} | Soporte Justech <asistencia@justech.do> | 
+(5 rows)
+

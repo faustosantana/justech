@@ -1,0 +1,22 @@
+                   key                    |                                                                                                                                                    value                                                                                                                                                     
+------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ base.default_max_email_size              | 10
+ base_setup.default_external_email_server | True
+ digest.default_digest_emails             | True
+ justech_mail.apply_domains               | justech.do
+ justech_mail.company_policies            | [{"name": "JUSTECH", "domains": ["justech.do"], "force_from": "Notificaciones Justech <notifications@justech.do>", "shared_aliases": ["asistencia@justech.do", "info@justech.do", "noreply@justech.do", "notifications@justech.do"], "catchall_addrs": ["catchall@justech.do"]}, {"name": "Just Office", "do
+ justech_mail.force_from                  | Notificaciones Justech <notifications@justech.do>
+ justech_mail.outgoing_policy_enabled     | True
+ mail.activity.gc.delete_overdue_years    | 3
+ mail.catchall.domain                     | justech.do
+ mail.default.from                        | asistencia@justech.do
+ mail.restrict.template.rendering         | True
+ mail.web_push_vapid_private_key          | 8ws2AMg4QeviYZulPh4vm4b0HDFTJ_SYE7LQfD1R2xI
+ mail.web_push_vapid_public_key           | BBAYJkPKCELBHt9Jn2cLM_4j77FKC7feGvw45FbgOYUotnqWbDPYilj28dQGZ-KnOmjUX2R6p1C8CZsQQKrn3Ls
+ mail_mobile.enable_ocn                   | True
+ mass_mailing.mass_mailing_reports        | True
+ mass_mailing.show_blacklist_buttons      | True
+ sale.async_emails                        | False
+ sale.default_invoice_email_template      | 17
+(18 rows)
+

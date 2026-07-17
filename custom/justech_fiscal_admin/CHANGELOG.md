@@ -1,5 +1,11 @@
 # Changelog — justech_fiscal_admin
 
+## 19.0.1.9.0 — 2026-07-17 — P0.1 Dual-write NCF OFF
+
+- Feature flag `ncf_dual_write` desactivado (migración + XML default).
+- `readonly_flag` liberado para permitir gobernanza consciente.
+- Emisión canónica = Justech; LATAM = compras recibidas.
+
 ## 19.0.1.8.6 — 2026-07-14
 
 - Botón «Administrar rangos» abre el Centro único (`justech.do.fiscal.range.center`).

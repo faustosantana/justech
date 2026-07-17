@@ -13,9 +13,9 @@
         <field name="code">ncf_dual_write</field>
         <field name="category">motor</field>
         <field name="sequence">20</field>
-        <field name="description">Escribe justech_do_ncf y l10n_latam_document_number en documentos nuevos.</field>
-        <field name="enabled" eval="True"/>
-        <field name="readonly_flag" eval="True"/>
+        <field name="description">LEGACY/P0.1 OFF: mirror Justech→LATAM del NCF en documentos nuevos. Emisión canónica = Justech; compras recibidas = LATAM. Reactivar solo con aprobación.</field>
+        <field name="enabled" eval="False"/>
+        <field name="readonly_flag" eval="False"/>
     </record>
     <record id="flag_provider_historical" model="justech.fiscal.feature.flag">
         <field name="name">Provider solo histórico</field>

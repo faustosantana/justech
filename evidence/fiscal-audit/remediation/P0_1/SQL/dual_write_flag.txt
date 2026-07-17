@@ -1,0 +1,7 @@
+=== FEATURE FLAGS ===
+             table_name             
+------------------------------------
+ justech_client_module_feature_flag
+ justech_fiscal_feature_flag
+(2 rows)
+

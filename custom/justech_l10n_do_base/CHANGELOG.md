@@ -1,5 +1,14 @@
 # Changelog — justech_l10n_do_base
 
+## [19.0.1.27.0] — 2026-07-17 — P0.1 Fuente de verdad NCF
+
+### Changed
+- `is_dual_write_enabled`: default **OFF** si no hay flag (antes ON).
+- Helper `get_ncf_source_of_truth`: emisión=Justech, recibido=LATAM, lectura=FDP.
+
+### Unchanged
+- FDP solo lectura; umbrales de alerta; baseline de alertas NCF (otro módulo).
+
 ## [19.0.1.26.0] — 2026-07-16 — Umbrales de alerta NCF por empresa
 
 ### Added
@@ -17,6 +26,7 @@
   `check_type_ncf_prefix_consistency` en Fiscal Data Provider (solo lectura).
 - Permite bloquear publicación/exportación cuando el tipo seleccionado no
   coincide con el prefijo del NCF almacenado, sin reescribir el NCF.
+
 
 ## [19.0.1.25.0] — 2026-07-14 — Catálogo tipos de costos y gastos (606)
 

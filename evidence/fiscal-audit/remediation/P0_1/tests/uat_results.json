@@ -1,0 +1,88 @@
+{
+  "checks": {
+    "dual_write_off": {
+      "ok": true,
+      "detail": null
+    },
+    "mirror_empty": {
+      "ok": true,
+      "detail": null
+    },
+    "fdp_priority": {
+      "ok": true,
+      "detail": null
+    },
+    "sot_JUSTECH": {
+      "ok": true,
+      "detail": null
+    },
+    "sot_PLUGSAFE": {
+      "ok": true,
+      "detail": null
+    },
+    "sot_JUST_OFFICE": {
+      "ok": true,
+      "detail": null
+    },
+    "sot_OMNI": {
+      "ok": true,
+      "detail": null
+    },
+    "gate_msg": "Inconsistencia fiscal en Borrador de factura: el tipo de comprobante (B01) no coincide con el prefijo del NCF (B02 / B0200000888). Corrija el tipo o el NCF antes de publicar.",
+    "gate_blocks_mismatch": {
+      "ok": true,
+      "detail": null
+    },
+    "exporter_606": {
+      "ok": true,
+      "detail": null
+    },
+    "exporter_607": {
+      "ok": true,
+      "detail": null
+    },
+    "exporter_608": {
+      "ok": true,
+      "detail": null
+    },
+    "exporter_609": {
+      "ok": true,
+      "detail": null
+    },
+    "exporter_623": {
+      "ok": true,
+      "detail": null
+    },
+    "consistent_ok": {
+      "ok": true,
+      "detail": null
+    },
+    "ranges_fp": {
+      "ok": true,
+      "detail": null
+    },
+    "gl": {
+      "ok": true,
+      "detail": null
+    },
+    "mail_ncf": {
+      "ok": true,
+      "detail": 0
+    },
+    "alert_acts": {
+      "ok": true,
+      "detail": 0
+    },
+    "historic_untouched_count": {
+      "ok": true,
+      "detail": null
+    }
+  },
+  "all_pass": true,
+  "historic_mismatches": 19,
+  "versions": {
+    "justech_fiscal_admin": "19.0.1.9.0",
+    "justech_l10n_do_base": "19.0.1.27.0",
+    "justech_l10n_do_ncf": "19.0.2.15.0"
+  }
+}

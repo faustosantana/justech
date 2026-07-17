@@ -1,5 +1,18 @@
 # Changelog — Estándar Fiscal Justech (cierre)
 
+## [19.0.2.15.0] — 2026-07-17 — P0.1 Fuente canónica NCF + gate prefijo
+
+### BREAKING CHANGES
+Ninguno en datos históricos.
+
+### Changed
+- Gate de publicación: tipo seleccionado debe coincidir con prefijo del NCF (ventas y compras).
+- Dual-write Justech→LATAM desactivado vía flag (módulo fiscal_admin).
+
+### Unchanged
+- Baseline alertas NCF (`19.0.2.14.0` / commit `aaea7f5…`).
+- Unicidad v2.0; rangos; adel_freeze.
+
 ## [19.0.2.14.0] — 2026-07-16 — Alertas NCF internas consolidadas (sin correo) — BASELINE v1
 
 **Congelamiento oficial.** Commit protegido: `aaea7f5f4730a038f005a3e6010354f9da64963a`  

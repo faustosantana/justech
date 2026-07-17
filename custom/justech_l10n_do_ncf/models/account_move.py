@@ -698,10 +698,42 @@ class AccountMove(models.Model):
                 )
             move._justech_check_duplicate_ncf(ncf)
 
+    def _justech_validate_type_ncf_prefix_before_post(self):
+        """P0.1: bloquear publicación si tipo seleccionado ≠ prefijo del NCF efectivo.
+
+        Aplica a ventas y compras emitidas (y refuerza recibidas). No modifica datos.
+        No toca la baseline de alertas NCF.
+        """
+        Config = self.env["justech.do.fiscal.config.service"]
+        fdp = self.env["justech.do.fiscal.data.provider"]
+        for move in self.filtered(
+            lambda m: m.move_type
+            in ("out_invoice", "out_refund", "in_invoice", "in_refund")
+        ):
+            if not Config.is_fiscal_enabled(move.company_id):
+                continue
+            check = fdp.check_type_ncf_prefix_consistency(move)
+            if check["ok"]:
+                continue
+            raise UserError(
+                _(
+                    "Inconsistencia fiscal en %(name)s: el tipo de comprobante "
+                    "(%(tipo)s) no coincide con el prefijo del NCF (%(prefijo)s / %(ncf)s). "
+                    "Corrija el tipo o el NCF antes de publicar."
+                )
+                % {
+                    "name": move.display_name,
+                    "tipo": check["expected"],
+                    "prefijo": check["found"],
+                    "ncf": check["ncf"] or "",
+                }
+            )
+
     def _post(self, soft=True):
         self._justech_require_expense_type_before_post()
         self._justech_validate_received_vendor_ncf_before_post()
         self._justech_moves_for_ncf_on_post(soft)._justech_assign_ncf_before_post()
+        self._justech_validate_type_ncf_prefix_before_post()
         return super()._post(soft=soft)
 
     def action_post(self):

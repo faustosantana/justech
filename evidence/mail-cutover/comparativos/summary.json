@@ -1,0 +1,48 @@
+{
+  "prod_identified": true,
+  "prod": {
+    "host": "justgroup / 31.97.6.178",
+    "domain": "justgroup.app",
+    "db": "justech",
+    "service": "odoo",
+    "module_path": "/usr/lib/odoo/custom-addons/justech_mail_outgoing_policy",
+    "db_version_policy": "19.0.1.1.0",
+    "fs_models": [
+      "mail_mail.py only"
+    ],
+    "alias_mismatches": 4,
+    "helpdesk_hardcodes": [
+      72,
+      80,
+      81,
+      82
+    ],
+    "smtp_active": [
+      "Notificaciones justech.do",
+      "SMTP Just Office"
+    ],
+    "company_first_helper_present": false
+  },
+  "dev": {
+    "host": "vmi3364393 / 207.244.242.58",
+    "domain": "erp.justech.do",
+    "db": "justech_dev",
+    "service": "odoo-dev",
+    "db_version_policy": "19.0.1.1.0",
+    "fs_models": [
+      "mail_mail.py",
+      "res_company.py",
+      "helpdesk_team.py",
+      "mail_compose_message.py"
+    ],
+    "alias_mismatches": 0,
+    "helpdesk_hardcodes": 0,
+    "company_first_helper_present": true
+  },
+  "critical_blockers": [
+    "Same module version 19.0.1.1.0 on Prod FS+DB but code lacks P1 company-first files; upgrade will NOT re-run migrations/19.0.1.1.0 without version bump to 19.0.1.2.0",
+    "Prod has 4 helpdesk alias domain mismatches (JUSTECH/Omni/PlugSafe teams on just-offices.com)",
+    "Prod still has hardcoded asistencia@justech.do on templates 72/80/81/82"
+  ],
+  "go": false
+}

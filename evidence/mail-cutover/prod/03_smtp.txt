@@ -1,0 +1,9 @@
+ id |               name                |       smtp_host       | smtp_port |            smtp_user            | sequence | active |         from_filter         | smtp_encryption | smtp_authentication 
+----+-----------------------------------+-----------------------+-----------+---------------------------------+----------+--------+-----------------------------+-----------------+---------------------
+ 11 | Notificaciones                    | smtp.office365.com    |       587 | notifications@justech.do        |        5 | t      | justech.do                  | starttls        | outlook
+ 12 | SMTP Just Office                  | smtp.outlook.com      |       587 | notificaciones@just-offices.com |        6 | t      | just-offices.com            | starttls        | login
+  6 | Exchange saliente                 | smtp.office365.com    |       587 | fausto@justech.do               |       10 | f      | fausto@justech.do           | starttls        | outlook
+  7 | Correo saliente de Fausto Santana | smtp-mail.outlook.com |       587 | fausto@justech.do               |       10 | f      | fausto@justech.do           | starttls        | outlook
+ 14 | Notificaciones Plug Safe          | smtp.office365.com    |       587 | ventas@plugsafeservices.com     |       10 | f      | ventas@plugsafeservices.com | starttls        | outlook
+(5 rows)
+

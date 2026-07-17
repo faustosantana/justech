@@ -1,0 +1,10 @@
+ id |                                                 left                                                 
+----+------------------------------------------------------------------------------------------------------
+ 72 | {{ (object.company_id.justech_mail_notification_from or object.company_id.email_formatted or object.
+ 73 | {{ (object.company_id.justech_mail_notification_from or object.company_id.email_formatted or object.
+ 74 | {{ (object.company_id.justech_mail_notification_from or object.company_id.email_formatted or object.
+ 80 | {{ (object.company_id.justech_mail_notification_from or object.company_id.email_formatted or object.
+ 81 | {{ (object.company_id.justech_mail_notification_from or object.company_id.email_formatted or object.
+ 82 | {{ (object.company_id.justech_mail_notification_from or object.company_id.email_formatted or object.
+(6 rows)
+

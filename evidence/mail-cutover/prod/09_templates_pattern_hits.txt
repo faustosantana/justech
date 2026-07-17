@@ -1,0 +1,8 @@
+ id |      model      |               email_from                
+----+-----------------+-----------------------------------------
+ 72 | helpdesk.ticket | Soporte Justech <asistencia@justech.do>
+ 80 | helpdesk.ticket | Soporte Justech <asistencia@justech.do>
+ 81 | helpdesk.ticket | Soporte Justech <asistencia@justech.do>
+ 82 | helpdesk.ticket | Soporte Justech <asistencia@justech.do>
+(4 rows)
+

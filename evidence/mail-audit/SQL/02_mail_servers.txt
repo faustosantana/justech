@@ -1,0 +1,42 @@
+ id |               name                |       smtp_host       | smtp_port |            smtp_user            | sequence | active |           from_filter           
+----+-----------------------------------+-----------------------+-----------+---------------------------------+----------+--------+---------------------------------
+  6 | Exchange saliente                 | smtp.office365.com    |       587 | fausto@justech.do               |       10 | f      | fausto@justech.do
+  7 | Correo saliente de Fausto Santana | smtp-mail.outlook.com |       587 | fausto@justech.do               |       10 | f      | fausto@justech.do
+ 11 | Notificaciones                    | smtp.office365.com    |       587 | notifications@justech.do        |       10 | f      | notifications@justech.do
+ 12 | SMTP Just Office                  | smtp.outlook.com      |       587 | administracion@just-offices.com |       10 | f      | administracion@just-offices.com
+ 14 | Notificaciones Plug Safe          | smtp.office365.com    |       587 | ventas@plugsafeservices.com     |       10 | f      | ventas@plugsafeservices.com
+ 15 | Neutralization                    | localhost             |      1025 |                                 |          | t      | 
+(6 rows)
+
+                column_name                
+-------------------------------------------
+ active
+ create_date
+ create_uid
+ from_filter
+ google_gmail_access_token
+ google_gmail_access_token_expiration
+ google_gmail_refresh_token
+ id
+ max_email_size
+ microsoft_outlook_access_token
+ microsoft_outlook_access_token_expiration
+ microsoft_outlook_refresh_token
+ name
+ owner_limit_count
+ owner_limit_time
+ owner_user_id
+ sequence
+ smtp_authentication
+ smtp_debug
+ smtp_encryption
+ smtp_host
+ smtp_pass
+ smtp_port
+ smtp_ssl_certificate
+ smtp_ssl_private_key
+ smtp_user
+ write_date
+ write_uid
+(28 rows)
+

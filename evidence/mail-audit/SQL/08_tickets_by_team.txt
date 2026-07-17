@@ -1,0 +1,10 @@
+ id |                                 name                                 | company_id | count 
+----+----------------------------------------------------------------------+------------+-------
+  1 | {"en_US": "Customer Care", "es_DO": "Atención al cliente"}           |          1 |     0
+  2 | {"en_US": "Atención al cliente"}                                     |          3 |   250
+  3 | {"en_US": "Atención al cliente"}                                     |          4 |     0
+  4 | {"en_US": "Atención al cliente"}                                     |          2 |     0
+  5 | {"en_US": "Soporte Justech", "es_DO": "Soporte Justech"}             |          1 |   218
+  6 | {"en_US": "Cotizaciones / Ventas", "es_DO": "Cotizaciones / Ventas"} |          1 |     0
+(6 rows)
+

@@ -1,0 +1,144 @@
+{
+  "scenarios": {
+    "Soporte Justech": {
+      "company": "JUSTECH S.R.L.",
+      "company_id": 1,
+      "simulated_template_from": "\"OdooBot\" <asistencia@justech.do>",
+      "policy_applies_v1_0_0": true,
+      "policy_reason": "from_domain_in_apply_domains",
+      "final_from_after_policy": "Notificaciones Justech <notifications@justech.do>",
+      "identity_leak_just_office": false,
+      "identity_leak_justech_on_other": false,
+      "alias_domain_mismatch": false
+    },
+    "Atención al cliente": {
+      "company": "PlugSafe SRL",
+      "company_id": 2,
+      "simulated_template_from": "\"OdooBot\" <atencion-al-cliente-plugsafe-srl@just-offices.com>",
+      "policy_applies_v1_0_0": false,
+      "policy_reason": "no_match_leaves_original_from",
+      "final_from_after_policy": "\"OdooBot\" <atencion-al-cliente-plugsafe-srl@just-offices.com>",
+      "identity_leak_just_office": false,
+      "identity_leak_justech_on_other": false,
+      "alias_domain_mismatch": true
+    },
+    "Cotizaciones / Ventas": {
+      "company": "JUSTECH S.R.L.",
+      "company_id": 1,
+      "simulated_template_from": "\"OdooBot\" <catchall@justech.do>",
+      "policy_applies_v1_0_0": true,
+      "policy_reason": "from_domain_in_apply_domains",
+      "final_from_after_policy": "Notificaciones Justech <notifications@justech.do>",
+      "identity_leak_just_office": false,
+      "identity_leak_justech_on_other": false,
+      "alias_domain_mismatch": true
+    }
+  },
+  "decisions": {
+    "From_helpdesk_template": "team.alias_email_from OR company.email_formatted OR user (mail.template id 73/74); several templates HARDCODE asistencia@justech.do",
+    "From_after_policy_DEV_1_0_0": "justech_mail_outgoing_policy.MailMail._justech_apply_outgoing_policy only if From/user domain in apply_domains=justech.do → force notifications@justech.do",
+    "Reply-To_helpdesk": "helpdesk.ticket._notify_get_reply_to → team alias (Enterprise)",
+    "Reply-To_after_policy": "_justech_resolve_reply_to (human user preferred)",
+    "SMTP": "ir.mail_server._find_mail_server by from_filter matching From domain; DEV active=Neutralization localhost:1025",
+    "Logo_layout": "mail notification layout company = record.company_id (ticket) else env.company",
+    "Alias_domain_default": "mail.alias_domain id=1 just-offices.com is first; several teams wrongly bound to it"
+  },
+  "root_cause_chain": [
+    "PRIMARY: helpdesk.team company JUSTECH (id=1) uses mail.alias on domain just-offices.com (team 1 and team 6)",
+    "Helpdesk mail.template email_from prefers object.team_id.alias_email_from → emits Just Office domain for JUSTECH team",
+    "DEV policy 19.0.1.0.0 only rewrites when domain/user in justech.do; From @just-offices.com often NOT rewritten → client sees Just Office",
+    "SECONDARY: templates 72/80/81/82 hardcode Soporte Justech <asistencia@justech.do> regardless of company",
+    "CONSEQUENCE: SMTP from_filter would pick Just Office server in Prod; branding logo may still be JUSTECH via ticket.company_id → mixed identity"
+  ],
+  "teams": [
+    {
+      "team_id": 5,
+      "team": "Soporte Justech",
+      "company_id": 1,
+      "company": "JUSTECH S.R.L.",
+      "alias_name": "asistencia",
+      "alias_domain": "justech.do",
+      "alias_email_from": "\"OdooBot\" <asistencia@justech.do>",
+      "company_email": "info@justech.do",
+      "company_alias_domain": "justech.do",
+      "mismatch_alias_vs_company_domain": false
+    },
+    {
+      "team_id": 1,
+      "team": "Atención al cliente",
+      "company_id": 1,
+      "company": "JUSTECH S.R.L.",
+      "alias_name": "customer-care",
+      "alias_domain": "just-offices.com",
+      "alias_email_from": "\"OdooBot\" <customer-care@just-offices.com>",
+      "company_email": "info@justech.do",
+      "company_alias_domain": "justech.do",
+      "mismatch_alias_vs_company_domain": true
+    },
+    {
+      "team_id": 2,
+      "team": "Atención al cliente",
+      "company_id": 3,
+      "company": "Just Office SRL",
+      "alias_name": "atencion-al-cliente-justoffice-srl",
+      "alias_domain": "just-offices.com",
+      "alias_email_from": "\"OdooBot\" <atencion-al-cliente-justoffice-srl@just-offices.com>",
+      "company_email": "info@just-offices.com",
+      "company_alias_domain": "just-offices.com",
+      "mismatch_alias_vs_company_domain": false
+    },
+    {
+      "team_id": 3,
+      "team": "Atención al cliente",
+      "company_id": 4,
+      "company": "Omni Solutions SRL",
+      "alias_name": "atencion-al-cliente-omni-solutions-srl",
+      "alias_domain": "just-offices.com",
+      "alias_email_from": "\"OdooBot\" <atencion-al-cliente-omni-solutions-srl@just-offices.com>",
+      "company_email": "info@solutionsomni.com",
+      "company_alias_domain": "solutionsomni.com",
+      "mismatch_alias_vs_company_domain": true
+    },
+    {
+      "team_id": 4,
+      "team": "Atención al cliente",
+      "company_id": 2,
+      "company": "PlugSafe SRL",
+      "alias_name": "atencion-al-cliente-plugsafe-srl",
+      "alias_domain": "just-offices.com",
+      "alias_email_from": "\"OdooBot\" <atencion-al-cliente-plugsafe-srl@just-offices.com>",
+      "company_email": false,
+      "company_alias_domain": "plugsafeservices.com",
+      "mismatch_alias_vs_company_domain": true
+    },
+    {
+      "team_id": 6,
+      "team": "Cotizaciones / Ventas",
+      "company_id": 1,
+      "company": "JUSTECH S.R.L.",
+      "alias_name": false,
+      "alias_domain": "just-offices.com",
+      "alias_email_from": "\"OdooBot\" <catchall@justech.do>",
+      "company_email": "info@justech.do",
+      "company_alias_domain": "justech.do",
+      "mismatch_alias_vs_company_domain": true
+    }
+  ],
+  "policy": {
+    "module_version": "19.0.1.0.0",
+    "enabled": "True",
+    "force_from": "Notificaciones Justech <notifications@justech.do>",
+    "apply_domains": "justech.do",
+    "company_policies": false,
+    "has_select_policy": false,
+    "has_policy_applies": true
+  },
+  "repro_ticket": {
+    "id": 790,
+    "company_id": 1,
+    "team_id": 1,
+    "team_alias_email_from": "\"OdooBot\" <customer-care@just-offices.com>",
+    "company_email": "info@justech.do",
+    "template73_rendered_from": "\"OdooBot\" <customer-care@just-offices.com>"
+  }
+}

@@ -1,0 +1,10 @@
+ id | company_id |               alias_name               |         name         
+----+------------+----------------------------------------+----------------------
+  1 |          1 | customer-care                          | justech.do
+  2 |          3 | atencion-al-cliente-justoffice-srl     | just-offices.com
+  3 |          4 | atencion-al-cliente-omni-solutions-srl | solutionsomni.com
+  4 |          2 | atencion-al-cliente-plugsafe-srl       | plugsafeservices.com
+  5 |          1 | asistencia                             | justech.do
+  6 |          1 |                                        | justech.do
+(6 rows)
+

@@ -1,0 +1,22 @@
+  column_name   
+----------------
+ bounce_alias
+ catchall_alias
+ create_date
+ create_uid
+ default_from
+ id
+ name
+ sequence
+ write_date
+ write_uid
+(10 rows)
+
+ id | sequence | create_uid | write_uid |         name         | bounce_alias | catchall_alias | default_from  |        create_date         |         write_date         
+----+----------+------------+-----------+----------------------+--------------+----------------+---------------+----------------------------+----------------------------
+  1 |       10 |          5 |         5 | just-offices.com     | bounce       | catchall       | notifications | 2026-03-04 19:19:42.17234  | 2026-03-04 19:19:42.17234
+  3 |       10 |          5 |         5 | justech.do           | bounce       | catchall       | notifications | 2026-03-04 19:21:50.918295 | 2026-03-04 19:21:50.918295
+  4 |       10 |          5 |         5 | plugsafeservices.com | bounce       | catchall       | notifications | 2026-03-04 19:23:16.854311 | 2026-03-04 19:23:16.854311
+  5 |       10 |          5 |         5 | solutionsomni.com    | bounce       | catchall       | notifications | 2026-03-04 19:23:42.120293 | 2026-03-04 19:23:42.120293
+(4 rows)
+

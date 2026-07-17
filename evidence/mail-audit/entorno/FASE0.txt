@@ -1,0 +1,15 @@
+# FASE 0 — Entorno (DEV)
+
+- Host: vmi3364393 / 207.244.242.58
+- Base DEV: justech_dev
+- Servicio: odoo-dev (active)
+- Dominio: erp.justech.do
+- Conf: /opt/odoo-dev/conf/odoo-dev.conf
+- addons_path: odoo addons + enterprise + /usr/lib/odoo/custom-addons + /opt/odoo-dev/custom-addons/justgroup/custom_addons
+- Filestore: /opt/odoo-dev/data/filestore/justech_dev
+- Repo local: jaios-mail-just-office
+- Branch: feature/mail-just-office-smtp
+- Commit: f74f2b7c45f01da3aa7f501c1fe4091dac4921e3
+- Helpdesk: enterprise `helpdesk` (no justech_helpdesk)
+- Mail policy: justech_mail_outgoing_policy 19.0.1.0.0 (DEV)
+- PRODUCCIÓN NO SERÁ MODIFICADA: confirmado

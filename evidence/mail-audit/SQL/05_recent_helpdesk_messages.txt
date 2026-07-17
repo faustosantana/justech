@@ -1,0 +1,75 @@
+ column_name 
+-------------
+ id
+ state
+ email_to
+ create_date
+(4 rows)
+
+      column_name       
+------------------------
+ email_from
+ id
+ message_type
+ model
+ record_alias_domain_id
+ record_company_id
+ reply_to
+ res_id
+ subtype_id
+(9 rows)
+
+  id   |        create_date         |            email_from             |             reply_to              |      model      | res_id | record_company_id | record_alias_domain_id | alias_domain | ticket_co | team_id |                           team                           
+-------+----------------------------+-----------------------------------+-----------------------------------+-----------------+--------+-------------------+------------------------+--------------+-----------+---------+----------------------------------------------------------
+ 36610 | 2026-07-16 12:04:37.340161 | "OdooBot" <asistencia@justech.do> | "OdooBot" <asistencia@justech.do> | helpdesk.ticket |     33 |                 1 |                      3 | justech.do   |         1 |       5 | {"en_US": "Soporte Justech", "es_DO": "Soporte Justech"}
+ 36609 | 2026-07-16 12:04:37.340161 | "OdooBot" <asistencia@justech.do> | "OdooBot" <asistencia@justech.do> | helpdesk.ticket |     34 |                 1 |                      3 | justech.do   |         1 |       5 | {"en_US": "Soporte Justech", "es_DO": "Soporte Justech"}
+ 36608 | 2026-07-16 12:04:37.340161 | "OdooBot" <asistencia@justech.do> | "OdooBot" <asistencia@justech.do> | helpdesk.ticket |     44 |                 1 |                      3 | justech.do   |         1 |       5 | {"en_US": "Soporte Justech", "es_DO": "Soporte Justech"}
+ 36607 | 2026-07-16 12:04:37.340161 | "OdooBot" <asistencia@justech.do> | "OdooBot" <asistencia@justech.do> | helpdesk.ticket |     45 |                 1 |                      3 | justech.do   |         1 |       5 | {"en_US": "Soporte Justech", "es_DO": "Soporte Justech"}
+ 36606 | 2026-07-16 12:04:37.340161 | "OdooBot" <asistencia@justech.do> | "OdooBot" <asistencia@justech.do> | helpdesk.ticket |     50 |                 1 |                      3 | justech.do   |         1 |       5 | {"en_US": "Soporte Justech", "es_DO": "Soporte Justech"}
+ 36605 | 2026-07-16 12:04:37.340161 | "OdooBot" <asistencia@justech.do> | "OdooBot" <asistencia@justech.do> | helpdesk.ticket |     51 |                 1 |                      3 | justech.do   |         1 |       5 | {"en_US": "Soporte Justech", "es_DO": "Soporte Justech"}
+ 36604 | 2026-07-16 12:04:37.340161 | "OdooBot" <asistencia@justech.do> | "OdooBot" <asistencia@justech.do> | helpdesk.ticket |     57 |                 1 |                      3 | justech.do   |         1 |       5 | {"en_US": "Soporte Justech", "es_DO": "Soporte Justech"}
+ 36603 | 2026-07-16 12:04:37.340161 | "OdooBot" <asistencia@justech.do> | "OdooBot" <asistencia@justech.do> | helpdesk.ticket |     58 |                 1 |                      3 | justech.do   |         1 |       5 | {"en_US": "Soporte Justech", "es_DO": "Soporte Justech"}
+ 36602 | 2026-07-16 12:04:37.340161 | "OdooBot" <asistencia@justech.do> | "OdooBot" <asistencia@justech.do> | helpdesk.ticket |     59 |                 1 |                      3 | justech.do   |         1 |       5 | {"en_US": "Soporte Justech", "es_DO": "Soporte Justech"}
+ 36601 | 2026-07-16 12:04:37.340161 | "OdooBot" <asistencia@justech.do> | "OdooBot" <asistencia@justech.do> | helpdesk.ticket |     61 |                 1 |                      3 | justech.do   |         1 |       5 | {"en_US": "Soporte Justech", "es_DO": "Soporte Justech"}
+ 36600 | 2026-07-16 12:04:37.340161 | "OdooBot" <asistencia@justech.do> | "OdooBot" <asistencia@justech.do> | helpdesk.ticket |     62 |                 1 |                      3 | justech.do   |         1 |       5 | {"en_US": "Soporte Justech", "es_DO": "Soporte Justech"}
+ 36599 | 2026-07-16 12:04:37.340161 | "OdooBot" <asistencia@justech.do> | "OdooBot" <asistencia@justech.do> | helpdesk.ticket |     68 |                 1 |                      3 | justech.do   |         1 |       5 | {"en_US": "Soporte Justech", "es_DO": "Soporte Justech"}
+ 36598 | 2026-07-16 12:04:37.340161 | "OdooBot" <asistencia@justech.do> | "OdooBot" <asistencia@justech.do> | helpdesk.ticket |     70 |                 1 |                      3 | justech.do   |         1 |       5 | {"en_US": "Soporte Justech", "es_DO": "Soporte Justech"}
+ 36597 | 2026-07-16 12:04:37.340161 | "OdooBot" <asistencia@justech.do> | "OdooBot" <asistencia@justech.do> | helpdesk.ticket |     74 |                 1 |                      3 | justech.do   |         1 |       5 | {"en_US": "Soporte Justech", "es_DO": "Soporte Justech"}
+ 36596 | 2026-07-16 12:04:37.340161 | "OdooBot" <asistencia@justech.do> | "OdooBot" <asistencia@justech.do> | helpdesk.ticket |     75 |                 1 |                      3 | justech.do   |         1 |       5 | {"en_US": "Soporte Justech", "es_DO": "Soporte Justech"}
+ 36595 | 2026-07-16 12:04:37.340161 | "OdooBot" <asistencia@justech.do> | "OdooBot" <asistencia@justech.do> | helpdesk.ticket |     85 |                 1 |                      3 | justech.do   |         1 |       5 | {"en_US": "Soporte Justech", "es_DO": "Soporte Justech"}
+ 36594 | 2026-07-16 12:04:37.340161 | "OdooBot" <asistencia@justech.do> | "OdooBot" <asistencia@justech.do> | helpdesk.ticket |     86 |                 1 |                      3 | justech.do   |         1 |       5 | {"en_US": "Soporte Justech", "es_DO": "Soporte Justech"}
+ 36593 | 2026-07-16 12:04:37.340161 | "OdooBot" <asistencia@justech.do> | "OdooBot" <asistencia@justech.do> | helpdesk.ticket |     87 |                 1 |                      3 | justech.do   |         1 |       5 | {"en_US": "Soporte Justech", "es_DO": "Soporte Justech"}
+ 36592 | 2026-07-16 12:04:37.340161 | "OdooBot" <asistencia@justech.do> | "OdooBot" <asistencia@justech.do> | helpdesk.ticket |     88 |                 1 |                      3 | justech.do   |         1 |       5 | {"en_US": "Soporte Justech", "es_DO": "Soporte Justech"}
+ 36591 | 2026-07-16 12:04:37.340161 | "OdooBot" <asistencia@justech.do> | "OdooBot" <asistencia@justech.do> | helpdesk.ticket |     91 |                 1 |                      3 | justech.do   |         1 |       5 | {"en_US": "Soporte Justech", "es_DO": "Soporte Justech"}
+ 36590 | 2026-07-16 12:04:37.340161 | "OdooBot" <asistencia@justech.do> | "OdooBot" <asistencia@justech.do> | helpdesk.ticket |     95 |                 1 |                      3 | justech.do   |         1 |       5 | {"en_US": "Soporte Justech", "es_DO": "Soporte Justech"}
+ 36589 | 2026-07-16 12:04:37.340161 | "OdooBot" <asistencia@justech.do> | "OdooBot" <asistencia@justech.do> | helpdesk.ticket |     96 |                 1 |                      3 | justech.do   |         1 |       5 | {"en_US": "Soporte Justech", "es_DO": "Soporte Justech"}
+ 36588 | 2026-07-16 12:04:37.340161 | "OdooBot" <asistencia@justech.do> | "OdooBot" <asistencia@justech.do> | helpdesk.ticket |     97 |                 1 |                      3 | justech.do   |         1 |       5 | {"en_US": "Soporte Justech", "es_DO": "Soporte Justech"}
+ 36587 | 2026-07-16 12:04:37.340161 | "OdooBot" <asistencia@justech.do> | "OdooBot" <asistencia@justech.do> | helpdesk.ticket |     99 |                 1 |                      3 | justech.do   |         1 |       5 | {"en_US": "Soporte Justech", "es_DO": "Soporte Justech"}
+ 36586 | 2026-07-16 12:04:37.340161 | "OdooBot" <asistencia@justech.do> | "OdooBot" <asistencia@justech.do> | helpdesk.ticket |    101 |                 1 |                      3 | justech.do   |         1 |       5 | {"en_US": "Soporte Justech", "es_DO": "Soporte Justech"}
+ 36585 | 2026-07-16 12:04:37.340161 | "OdooBot" <asistencia@justech.do> | "OdooBot" <asistencia@justech.do> | helpdesk.ticket |    104 |                 1 |                      3 | justech.do   |         1 |       5 | {"en_US": "Soporte Justech", "es_DO": "Soporte Justech"}
+ 36584 | 2026-07-16 12:04:37.340161 | "OdooBot" <asistencia@justech.do> | "OdooBot" <asistencia@justech.do> | helpdesk.ticket |    111 |                 1 |                      3 | justech.do   |         1 |       5 | {"en_US": "Soporte Justech", "es_DO": "Soporte Justech"}
+ 36583 | 2026-07-16 12:04:37.340161 | "OdooBot" <asistencia@justech.do> | "OdooBot" <asistencia@justech.do> | helpdesk.ticket |    112 |                 1 |                      3 | justech.do   |         1 |       5 | {"en_US": "Soporte Justech", "es_DO": "Soporte Justech"}
+ 36582 | 2026-07-16 12:04:37.340161 | "OdooBot" <asistencia@justech.do> | "OdooBot" <asistencia@justech.do> | helpdesk.ticket |    113 |                 1 |                      3 | justech.do   |         1 |       5 | {"en_US": "Soporte Justech", "es_DO": "Soporte Justech"}
+ 36581 | 2026-07-16 12:04:37.340161 | "OdooBot" <asistencia@justech.do> | "OdooBot" <asistencia@justech.do> | helpdesk.ticket |    114 |                 1 |                      3 | justech.do   |         1 |       5 | {"en_US": "Soporte Justech", "es_DO": "Soporte Justech"}
+ 36580 | 2026-07-16 12:04:37.340161 | "OdooBot" <asistencia@justech.do> | "OdooBot" <asistencia@justech.do> | helpdesk.ticket |    115 |                 1 |                      3 | justech.do   |         1 |       5 | {"en_US": "Soporte Justech", "es_DO": "Soporte Justech"}
+ 36579 | 2026-07-16 12:04:37.340161 | "OdooBot" <asistencia@justech.do> | "OdooBot" <asistencia@justech.do> | helpdesk.ticket |    126 |                 1 |                      3 | justech.do   |         1 |       5 | {"en_US": "Soporte Justech", "es_DO": "Soporte Justech"}
+ 36578 | 2026-07-16 12:04:37.340161 | "OdooBot" <asistencia@justech.do> | "OdooBot" <asistencia@justech.do> | helpdesk.ticket |    222 |                 1 |                      3 | justech.do   |         1 |       5 | {"en_US": "Soporte Justech", "es_DO": "Soporte Justech"}
+ 36577 | 2026-07-16 12:04:37.340161 | "OdooBot" <asistencia@justech.do> | "OdooBot" <asistencia@justech.do> | helpdesk.ticket |    262 |                 1 |                      3 | justech.do   |         1 |       5 | {"en_US": "Soporte Justech", "es_DO": "Soporte Justech"}
+ 36576 | 2026-07-16 12:04:37.340161 | "OdooBot" <asistencia@justech.do> | "OdooBot" <asistencia@justech.do> | helpdesk.ticket |    264 |                 1 |                      3 | justech.do   |         1 |       5 | {"en_US": "Soporte Justech", "es_DO": "Soporte Justech"}
+ 36575 | 2026-07-16 12:04:37.340161 | "OdooBot" <asistencia@justech.do> | "OdooBot" <asistencia@justech.do> | helpdesk.ticket |    268 |                 1 |                      3 | justech.do   |         1 |       5 | {"en_US": "Soporte Justech", "es_DO": "Soporte Justech"}
+ 36574 | 2026-07-16 12:04:37.340161 | "OdooBot" <asistencia@justech.do> | "OdooBot" <asistencia@justech.do> | helpdesk.ticket |    271 |                 1 |                      3 | justech.do   |         1 |       5 | {"en_US": "Soporte Justech", "es_DO": "Soporte Justech"}
+ 36573 | 2026-07-16 12:04:37.340161 | "OdooBot" <asistencia@justech.do> | "OdooBot" <asistencia@justech.do> | helpdesk.ticket |    273 |                 1 |                      3 | justech.do   |         1 |       5 | {"en_US": "Soporte Justech", "es_DO": "Soporte Justech"}
+ 36572 | 2026-07-16 12:04:37.340161 | "OdooBot" <asistencia@justech.do> | "OdooBot" <asistencia@justech.do> | helpdesk.ticket |    282 |                 1 |                      3 | justech.do   |         1 |       5 | {"en_US": "Soporte Justech", "es_DO": "Soporte Justech"}
+ 36571 | 2026-07-16 12:04:37.340161 | "OdooBot" <asistencia@justech.do> | "OdooBot" <asistencia@justech.do> | helpdesk.ticket |    288 |                 1 |                      3 | justech.do   |         1 |       5 | {"en_US": "Soporte Justech", "es_DO": "Soporte Justech"}
+ 36570 | 2026-07-16 12:04:37.340161 | "OdooBot" <asistencia@justech.do> | "OdooBot" <asistencia@justech.do> | helpdesk.ticket |    289 |                 1 |                      3 | justech.do   |         1 |       5 | {"en_US": "Soporte Justech", "es_DO": "Soporte Justech"}
+ 36569 | 2026-07-16 12:04:37.340161 | "OdooBot" <asistencia@justech.do> | "OdooBot" <asistencia@justech.do> | helpdesk.ticket |    293 |                 1 |                      3 | justech.do   |         1 |       5 | {"en_US": "Soporte Justech", "es_DO": "Soporte Justech"}
+ 36568 | 2026-07-16 12:04:37.340161 | "OdooBot" <asistencia@justech.do> | "OdooBot" <asistencia@justech.do> | helpdesk.ticket |    294 |                 1 |                      3 | justech.do   |         1 |       5 | {"en_US": "Soporte Justech", "es_DO": "Soporte Justech"}
+ 36567 | 2026-07-16 12:04:37.340161 | "OdooBot" <asistencia@justech.do> | "OdooBot" <asistencia@justech.do> | helpdesk.ticket |    300 |                 1 |                      3 | justech.do   |         1 |       5 | {"en_US": "Soporte Justech", "es_DO": "Soporte Justech"}
+ 36566 | 2026-07-16 12:04:37.340161 | "OdooBot" <asistencia@justech.do> | "OdooBot" <asistencia@justech.do> | helpdesk.ticket |    302 |                 1 |                      3 | justech.do   |         1 |       5 | {"en_US": "Soporte Justech", "es_DO": "Soporte Justech"}
+ 36565 | 2026-07-16 12:04:37.340161 | "OdooBot" <asistencia@justech.do> | "OdooBot" <asistencia@justech.do> | helpdesk.ticket |    314 |                 1 |                      3 | justech.do   |         1 |       5 | {"en_US": "Soporte Justech", "es_DO": "Soporte Justech"}
+ 36564 | 2026-07-16 12:04:37.340161 | "OdooBot" <asistencia@justech.do> | "OdooBot" <asistencia@justech.do> | helpdesk.ticket |    319 |                 1 |                      3 | justech.do   |         1 |       5 | {"en_US": "Soporte Justech", "es_DO": "Soporte Justech"}
+ 36563 | 2026-07-16 12:04:37.340161 | "OdooBot" <asistencia@justech.do> | "OdooBot" <asistencia@justech.do> | helpdesk.ticket |    325 |                 1 |                      3 | justech.do   |         1 |       5 | {"en_US": "Soporte Justech", "es_DO": "Soporte Justech"}
+ 36562 | 2026-07-16 12:04:37.340161 | "OdooBot" <asistencia@justech.do> | "OdooBot" <asistencia@justech.do> | helpdesk.ticket |    365 |                 1 |                      3 | justech.do   |         1 |       5 | {"en_US": "Soporte Justech", "es_DO": "Soporte Justech"}
+ 36561 | 2026-07-16 12:04:37.340161 | "OdooBot" <asistencia@justech.do> | "OdooBot" <asistencia@justech.do> | helpdesk.ticket |    375 |                 1 |                      3 | justech.do   |         1 |       5 | {"en_US": "Soporte Justech", "es_DO": "Soporte Justech"}
+(50 rows)
+

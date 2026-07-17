@@ -2,23 +2,24 @@
     "name": "Justech Mail Outgoing Policy",
     "version": "19.0.1.1.0",
     "category": "Productivity/Discuss",
-    "summary": "From de notificaciones por empresa + Reply-To del usuario emisor",
+    "summary": "Company-first mail identity (From / Reply-To / alias / SMTP domain)",
     "description": """
-Política de correo saliente multiempresa (Microsoft 365 / Outlook).
+Política de correo saliente multiempresa (company-first).
 
-Evita SendAsDenied forzando por empresa:
+Fuente de verdad: res.company del documento (company_id), nunca env.company
+ni un alias de otro dominio.
 
-- JUSTECH: From notifications@justech.do
-- Just Office: From notificaciones@just-offices.com
-- Reply-To: correo del usuario que originó la comunicación
+Helper único: res.company._get_company_mail_identity()
 
-Mapa escalable en parámetro JSON `justech_mail.company_policies`
-(Plug Safe / Omni se agregan sin cambiar código).
+- From / dominio / logo / layout según company_id
+- Reply-To del usuario emisor
+- Helpdesk: alias_domain debe coincidir con company.alias_domain
+- Bloqueo si el alias del equipo pertenece a otra empresa
     """,
     "author": "Justech",
     "website": "https://www.justech.com",
     "license": "LGPL-3",
-    "depends": ["mail"],
+    "depends": ["mail", "helpdesk"],
     "data": [
         "data/ir_config_parameter.xml",
     ],

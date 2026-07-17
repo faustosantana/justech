@@ -1,21 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<odoo noupdate="1">
+<odoo>
+    <!-- Force-update multi-company map on upgrade (noupdate=0) -->
     <record id="param_outgoing_policy_enabled" model="ir.config_parameter">
         <field name="key">justech_mail.outgoing_policy_enabled</field>
         <field name="value">True</field>
     </record>
-    <!-- Legacy Justech keys kept for compatibility -->
-    <record id="param_force_from" model="ir.config_parameter">
-        <field name="key">justech_mail.force_from</field>
-        <field name="value">Notificaciones Justech &lt;notifications@justech.do&gt;</field>
-    </record>
-    <record id="param_apply_domains" model="ir.config_parameter">
-        <field name="key">justech_mail.apply_domains</field>
-        <field name="value">justech.do</field>
-    </record>
-    <!-- Multi-company scalable map (Plug Safe / Omni can be appended later) -->
     <record id="param_company_policies" model="ir.config_parameter">
         <field name="key">justech_mail.company_policies</field>
-        <field name="value">[{"name": "JUSTECH", "domains": ["justech.do"], "force_from": "Notificaciones Justech &lt;notifications@justech.do&gt;", "shared_aliases": ["asistencia@justech.do", "info@justech.do", "noreply@justech.do", "notifications@justech.do"], "catchall_addrs": ["catchall@justech.do"]}, {"name": "Just Office", "domains": ["just-offices.com"], "force_from": "Notificaciones Just Office &lt;notificaciones@just-offices.com&gt;", "shared_aliases": ["info@just-offices.com", "noreply@just-offices.com", "notificaciones@just-offices.com"], "catchall_addrs": ["catchall@just-offices.com"]}]</field>
+        <field name="value">[{"name": "JUSTECH", "domains": ["justech.do"], "force_from": "Notificaciones Justech &lt;notifications@justech.do&gt;", "shared_aliases": ["asistencia@justech.do", "info@justech.do", "noreply@justech.do", "notifications@justech.do", "customer-care@justech.do"], "catchall_addrs": ["catchall@justech.do"]}, {"name": "Just Office", "domains": ["just-offices.com"], "force_from": "Notificaciones Just Office &lt;notificaciones@just-offices.com&gt;", "shared_aliases": ["info@just-offices.com", "noreply@just-offices.com", "notificaciones@just-offices.com", "customer-care@just-offices.com"], "catchall_addrs": ["catchall@just-offices.com"]}, {"name": "PlugSafe", "domains": ["plugsafeservices.com"], "force_from": "Notificaciones PlugSafe &lt;ventas@plugsafeservices.com&gt;", "shared_aliases": ["info@plugsafeservices.com", "ventas@plugsafeservices.com", "noreply@plugsafeservices.com"], "catchall_addrs": ["catchall@plugsafeservices.com"]}, {"name": "Omni", "domains": ["solutionsomni.com"], "force_from": "Notificaciones Omni &lt;info@solutionsomni.com&gt;", "shared_aliases": ["info@solutionsomni.com", "noreply@solutionsomni.com"], "catchall_addrs": ["catchall@solutionsomni.com"]}]</field>
     </record>
 </odoo>

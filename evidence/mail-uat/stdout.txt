@@ -1,0 +1,130 @@
+===UAT_SUMMARY===
+{
+  "pass": false,
+  "go": false,
+  "counts": {
+    "templates_total": 76,
+    "hardcode_literal_from": 1,
+    "alias_mismatches": 0,
+    "errors": 0,
+    "cross_from": 0
+  },
+  "matrix": {
+    "JUSTECH": {
+      "Helpdesk": "PASS",
+      "Sales": "PASS",
+      "Invoice": "PASS",
+      "Purchase": "PASS",
+      "CRM": "PASS",
+      "Portal": "PASS",
+      "Usuarios": "PASS",
+      "Automatizaciones": "PASS"
+    },
+    "PlugSafe": {
+      "Helpdesk": "PASS",
+      "Sales": "PASS",
+      "Invoice": "PASS",
+      "Purchase": "PASS",
+      "CRM": "PASS",
+      "Portal": "PASS",
+      "Usuarios": "PASS",
+      "Automatizaciones": "PASS"
+    },
+    "Just Office": {
+      "Helpdesk": "PASS",
+      "Sales": "PASS",
+      "Invoice": "PASS",
+      "Purchase": "PASS",
+      "CRM": "PASS",
+      "Portal": "PASS",
+      "Usuarios": "PASS",
+      "Automatizaciones": "PASS"
+    },
+    "Omni": {
+      "Helpdesk": "PASS",
+      "Sales": "PASS",
+      "Invoice": "PASS",
+      "Purchase": "PASS",
+      "CRM": "PASS",
+      "Portal": "PASS",
+      "Usuarios": "PASS",
+      "Automatizaciones": "PASS"
+    }
+  },
+  "env_company_trap": [
+    {
+      "active_company": "Just Office SRL",
+      "document_company": "JUSTECH S.R.L.",
+      "final_from": "Notificaciones Justech <notifications@justech.do>",
+      "ok": true
+    }
+  ],
+  "hardcode_count": 1,
+  "hardcode_samples": [
+    {
+      "id": 45,
+      "model": "iap.account",
+      "name": "Notificaci\u00f3n de generaci\u00f3n de leads IAP",
+      "email_from": "iap@odoo.com"
+    }
+  ],
+  "alias_mismatches": [],
+  "errors": [],
+  "regression_modules": {
+    "helpdesk": "installed",
+    "crm": "installed",
+    "sale": "installed",
+    "purchase": "installed",
+    "account": "installed",
+    "portal": "installed",
+    "mail": "installed",
+    "auth_signup": "installed"
+  },
+  "multicompany": [
+    {
+      "company_id": 1,
+      "name": "JUSTECH S.R.L.",
+      "domain": "justech.do",
+      "email_from": "Notificaciones Justech <notifications@justech.do>",
+      "smtp_domain": "justech.do",
+      "display_name": "JUSTECH S.R.L.",
+      "alias_domain": "justech.do",
+      "website": "http://www.justech.do",
+      "ok": true
+    },
+    {
+      "company_id": 2,
+      "name": "PlugSafe SRL",
+      "domain": "plugsafeservices.com",
+      "email_from": "Notificaciones PlugSafe <ventas@plugsafeservices.com>",
+      "smtp_domain": "plugsafeservices.com",
+      "display_name": "PlugSafe SRL",
+      "alias_domain": "plugsafeservices.com",
+      "website": null,
+      "ok": true
+    },
+    {
+      "company_id": 3,
+      "name": "Just Office SRL",
+      "domain": "just-offices.com",
+      "email_from": "Notificaciones Just Office <notificaciones@just-offices.com>",
+      "smtp_domain": "just-offices.com",
+      "display_name": "Just Office SRL",
+      "alias_domain": "just-offices.com",
+      "website": "http://www.just-offices.com",
+      "ok": true
+    },
+    {
+      "company_id": 4,
+      "name": "Omni Solutions SRL",
+      "domain": "solutionsomni.com",
+      "email_from": "Notificaciones Omni <info@solutionsomni.com>",
+      "smtp_domain": "solutionsomni.com",
+      "display_name": "Omni Solutions SRL",
+      "alias_domain": "solutionsomni.com",
+      "website": "http://www.solutionsomni.com",
+      "ok": true
+    }
+  ]
+}
+===END===

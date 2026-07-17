@@ -1,0 +1,20 @@
+ id |                         cron_name                         | active | interval_number | interval_type |      nextcall       |      lastcall       | ir_actions_server_id 
+----+-----------------------------------------------------------+--------+-----------------+---------------+---------------------+---------------------+----------------------
+ 57 | FISCAL SEQUENCE: Expire sequences                         | t      |               1 | days          | 2026-07-17 10:39:46 | 2026-07-16 10:40:03 |                 1024
+ 84 | Justech Audit: limpieza por retención                     | t      |               1 | days          | 2026-07-17 15:04:21 | 2026-07-16 15:04:24 |                 1468
+ 85 | Justech e-CF: procesar cola                               | t      |               1 | minutes       | 2026-07-17 03:29:05 | 2026-07-17 03:28:27 |                 1481
+ 87 | Justech: actualizar padrón DGII                           | f      |               1 | hours         | 2026-07-13 15:06:49 |                     |                 1491
+ 88 | Justech Fees: generar documentos vencidos                 | t      |               1 | days          | 2026-07-18 02:37:24 | 2026-07-17 02:37:49 |                 1555
+ 89 | Justech NCF: alertas internas consolidadas (multiempresa) | t      |               1 | days          | 2026-07-17 21:01:15 | 2026-07-16 21:02:52 |                 1585
+(6 rows)
+
+  id  |                                  name                                  | state | model_id |                             left                             
+------+------------------------------------------------------------------------+-------+----------+--------------------------------------------------------------
+ 1585 | {"en_US": "Justech NCF: alertas internas consolidadas (multiempresa)"} | code  |     1607 | model._cron_process_ncf_range_alerts()
+ 1024 | {"en_US": "FISCAL SEQUENCE: Expire sequences"}                         | code  |      947 | model._expire_sequences()
+ 1481 | {"en_US": "Justech e-CF: procesar cola"}                               | code  |     1571 | model.cron_process_queue()
+ 1491 | {"en_US": "Justech: actualizar padrón DGII"}                           | code  |     1597 | env['justech.do.rnc.padron.auto.service'].cron_auto_update()
+ 1555 | {"en_US": "Justech Fees: generar documentos vencidos"}                 | code  |     1697 | model._cron_generate_due_fees()
+ 1468 | {"en_US": "Justech Audit: limpieza por retención"}                     | code  |     1537 | model._cron_purge_old_logs()
+(6 rows)
+

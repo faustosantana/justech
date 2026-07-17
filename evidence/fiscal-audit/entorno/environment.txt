@@ -1,0 +1,29 @@
+=== ENV ===
+hostname=vmi3364393
+ip=207.244.242.58
+domain=erp.justech.do
+service=odoo-dev.service
+conf=/opt/odoo-dev/conf/odoo-dev.conf
+db_name=justech_dev
+addons_path=/usr/lib/python3/dist-packages/odoo/addons,/usr/lib/odoo/enterprise,/usr/lib/odoo/custom-addons,/opt/odoo-dev/custom-addons/justgroup/custom_addons
+data_dir=/opt/odoo-dev/data
+http_port=8069
+logfile=/opt/odoo-dev/logs/odoo-dev.log
+linux_user=root
+uid=999(odoo) gid=987(odoo) groups=987(odoo)
+ExecStart={ path=/usr/bin/odoo ; argv[]=/usr/bin/odoo -c /opt/odoo-dev/conf/odoo-dev.conf ; ignore_errors=no ; start_time=[Fri 2026-07-17 00:30:07 CEST] ; stop_time=[n/a] ; pid=4047691 ; code=(null) ; status=0/0 }
+User=odoo
+FragmentPath=/etc/systemd/system/odoo-dev.service
+Odoo Server 19.0-20260324
+16.14 (Ubuntu 16.14-0ubuntu0.24.04.1)
+total 36
+drwxr-xr-x   9 odoo odoo 4096 Jul 14 19:39 .
+drwxr-xr-x   5 odoo odoo 4096 Jul  8 19:31 ..
+drwxr-xr-x 259 odoo odoo 4096 Mar 24 13:25 justech_dev
+drwxr-xr-x 259 odoo odoo 4096 Mar 24 13:25 justech_dev.pre-prod-refresh-20260713_103244
+drwxr-xr-x 259 odoo odoo 4096 Mar 24 13:25 justech_lab
+drwxrwxr-x   4 odoo odoo 4096 Jul 14 17:55 justech_lab_currency
+drwxrwxr-x   8 odoo odoo 4096 Jul 14 19:44 justech_lab_p0
+drwxr-xr-x   3 odoo odoo 4096 Jul 10 00:26 justech_ncf_lab
+drwxr-xr-x 259 odoo odoo 4096 Mar 24 13:25 justech_restore_gate4
+471M	/opt/odoo-dev/data/filestore/justech_dev

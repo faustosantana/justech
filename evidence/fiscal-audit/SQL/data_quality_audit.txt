@@ -1,0 +1,77 @@
+=== COMPANIES ===
+ id |        name        |    vat    | justech_do_fiscal_enabled | justech_do_ncf_alert_threshold_preventive | justech_do_ncf_alert_threshold_critical | justech_do_ncf_alert_expiry_days 
+----+--------------------+-----------+---------------------------+-------------------------------------------+-----------------------------------------+----------------------------------
+  1 | JUSTECH S.R.L.     | 131828061 | t                         |                                        20 |                                       5 |                               15
+  2 | PlugSafe SRL       | 132902904 | t                         |                                        20 |                                       5 |                               15
+  3 | Just Office SRL    | 133399581 | t                         |                                        20 |                                       5 |                               15
+  4 | Omni Solutions SRL | 132993276 | t                         |                                        20 |                                       5 |                               15
+(4 rows)
+
+=== RANGES PER COMPANY ===
+ co |      company       | id | prefix | state  | sequence_start | sequence_end | next_sequence | math_remaining |  date_to   
+----+--------------------+----+--------+--------+----------------+--------------+---------------+----------------+------------
+  1 | JUSTECH S.R.L.     |  9 | B01    | active |           1615 |         1656 |          1615 |             42 | 2026-12-31
+  1 | JUSTECH S.R.L.     | 10 | B04    | active |             18 |          100 |            18 |             83 | 2027-12-31
+  1 | JUSTECH S.R.L.     | 11 | B11    | active |             11 |           15 |            12 |              4 | 2027-12-31
+  1 | JUSTECH S.R.L.     | 12 | B13    | active |            213 |          217 |           213 |              5 | 2027-12-31
+  1 | JUSTECH S.R.L.     | 13 | B14    | active |             22 |           39 |            22 |             18 | 2026-12-31
+  1 | JUSTECH S.R.L.     | 14 | B15    | active |            141 |          144 |           141 |              4 | 2027-12-31
+  2 | PlugSafe SRL       |  8 | B01    | active |             61 |           78 |            61 |             18 | 2026-12-31
+  3 | Just Office SRL    |  1 | B01    | active |            342 |          343 |           342 |              2 | 2026-12-31
+  3 | Just Office SRL    |  2 | B02    | active |             46 |          100 |            46 |             55 | 2027-12-31
+  3 | Just Office SRL    |  3 | B04    | active |              8 |         1000 |             8 |            993 | 2027-12-31
+  3 | Just Office SRL    |  4 | B15    | active |              4 |          150 |             4 |            147 | 2026-12-31
+  4 | Omni Solutions SRL |  5 | B01    | active |             36 |           46 |            36 |             11 | 2026-12-31
+  4 | Omni Solutions SRL |  6 | B14    | active |              3 |          100 |             3 |             98 | 2027-12-31
+  4 | Omni Solutions SRL |  7 | B15    | active |            107 |          108 |           107 |              2 | 2027-12-31
+(14 rows)
+
+=== OVERLAPPING RANGES ===
+ company_id | prefix | id_a | id_b | state | state 
+------------+--------+------+------+-------+-------
+(0 rows)
+
+=== ACTIVE BUT MATH DEPLETED OR EXPIRED ===
+ id | company_id | prefix | state | sequence_end | next_sequence | date_to 
+----+------------+--------+-------+--------------+---------------+---------
+(0 rows)
+
+=== NEXT OUTSIDE BOUNDS ===
+ id | company_id | prefix | state | sequence_start | sequence_end | next_sequence 
+----+------------+--------+-------+----------------+--------------+---------------
+(0 rows)
+
+=== DUPLICATE NCF POSTED ===
+ company_id | justech_do_ncf | count 
+------------+----------------+-------
+(0 rows)
+
+=== NCF FORMAT ANOMALIES POSTED ===
+ id | company_id | move_type | justech_do_ncf 
+----+------------+-----------+----------------
+(0 rows)
+
+=== POSTED WITHOUT DOCTYPE ===
+ posted_no_doctype 
+-------------------
+              1539
+(1 row)
+
+=== NCF BY STATE ===
+ state  | count 
+--------+-------
+ posted |     1
+(1 row)
+
+=== PREFIX VS TYPE MISMATCH ===
+ id | company_id | justech_do_ncf | type_prefix | ncf_pfx 
+----+------------+----------------+-------------+---------
+(0 rows)
+
+=== GL ===
+ aml  |    debit    |   credit    | diff 
+------+-------------+-------------+------
+ 9042 | 93180628.15 | 93180628.15 | 0.00
+(1 row)
+
+=== CRONS ===

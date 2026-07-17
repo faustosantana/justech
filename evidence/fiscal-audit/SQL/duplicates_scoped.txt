@@ -1,0 +1,34 @@
+=== TRUE SALE DUPLICATES (same company+NCF among out_*) ===
+ company_id | l10n_latam_document_number | count | move_ids 
+------------+----------------------------+-------+----------
+(0 rows)
+
+=== TRUE PURCHASE DUPLICATES (same company+partner+NCF among in_*) ===
+ company_id | partner_id | l10n_latam_document_number | count | array_agg 
+------------+------------+----------------------------+-------+-----------
+(0 rows)
+
+=== PREFIX MISMATCH SAMPLES ===
+  id  | company_id |  move_type  | l10n_latam_document_number | doc_code_prefix |            name            
+------+------------+-------------+----------------------------+-----------------+----------------------------
+ 3787 |          1 | in_invoice  | b0190290121                | E31             | Crédito Fiscal Electrónica
+ 1436 |          1 | in_invoice  | E310000046397              | B15             | Factura Gubernamental
+ 1338 |          1 | out_invoice | PROFORMA14                 | B01             | Crédito Fiscal
+ 1537 |          1 | out_invoice | B1400000018                | B01             | Crédito Fiscal
+ 2902 |          3 | out_invoice | B0200000020                | B01             | Crédito Fiscal
+ 2344 |          3 | out_invoice | B0200000027                | B01             | Crédito Fiscal
+ 2330 |          3 | out_invoice | B0200000025                | B01             | Crédito Fiscal
+ 2318 |          3 | out_invoice | B0200000022                | B01             | Crédito Fiscal
+ 2319 |          3 | out_invoice | B0200000023                | B01             | Crédito Fiscal
+ 2320 |          3 | out_invoice | B0200000024                | B01             | Crédito Fiscal
+ 2363 |          3 | out_invoice | B0200000028                | B01             | Crédito Fiscal
+ 2368 |          3 | out_invoice | B1600000002                | B01             | Crédito Fiscal
+ 2371 |          3 | out_invoice | B0200000029                | B01             | Crédito Fiscal
+ 2420 |          3 | out_invoice | B0200000030                | B01             | Crédito Fiscal
+ 2334 |          3 | out_invoice | B0200000026                | B01             | Crédito Fiscal
+ 2481 |          3 | out_invoice | B0200000032                | B01             | Crédito Fiscal
+ 2484 |          3 | out_invoice | B0200000033                | B01             | Crédito Fiscal
+ 2474 |          3 | out_invoice | B0200000031                | B01             | Crédito Fiscal
+ 3540 |          3 | in_invoice  | E310000008337              | B15             | Factura Gubernamental
+(19 rows)
+

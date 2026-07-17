@@ -1,0 +1,54 @@
+=== LATAM NCF FILLED ===
+ justech_ncf | latam_number | mismatched_both 
+-------------+--------------+-----------------
+           1 |         1540 |               0
+(1 row)
+
+=== SAMPLE LATAM NCF ===
+  id  | company_id |  move_type  |      name       | l10n_latam_document_number | justech_do_ncf | justech_do_document_type_id 
+------+------------+-------------+-----------------+----------------------------+----------------+-----------------------------
+ 3787 |          1 | in_invoice  | FP/2026/07/0003 | b0190290121                |                |                            
+ 3786 |          1 | in_invoice  | FP/2026/07/0002 | B1100000011                | B1100000011    |                           5
+ 3785 |          1 | in_invoice  | FP/2026/07/0001 | b0100000012                |                |                            
+ 3714 |          1 | out_invoice | FC/2026/00373   | B0100001614                |                |                            
+ 3713 |          3 | out_invoice | INV/2026/00240  | B0100000341                |                |                            
+ 3709 |          3 | out_invoice | INV/2026/00239  | B0100000340                |                |                            
+ 3708 |          3 | out_invoice | INV/2026/00238  | B0100000339                |                |                            
+ 3706 |          1 | out_invoice | FC/2026/00372   | B0100001613                |                |                            
+ 3702 |          1 | in_invoice  | FP/2026/06/0108 | E310000005621              |                |                            
+ 3700 |          1 | in_invoice  | FP/2026/06/0107 | E310009208550              |                |                            
+(10 rows)
+
+=== DUPLICATE LATAM NCF ===
+ company_id | l10n_latam_document_number | count 
+------------+----------------------------+-------
+          1 | B0100001386                |     2
+          1 | B0100001424                |     2
+          1 | B0100001472                |     2
+          1 | E310000000125              |     2
+          1 | E310000000334              |     2
+          1 | E310000000836              |     2
+          3 | B0100000304                |     2
+          3 | B0100000305                |     2
+          3 | B0100000322                |     2
+(9 rows)
+
+=== PREFIX MISMATCH LATAM ===
+ count 
+-------
+    20
+(1 row)
+
+=== BY COMPANY LATAM NCF COUNTS ===
+ company_id |  move_type  | with_ncf | total 
+------------+-------------+----------+-------
+          1 | in_invoice  |      589 |   589
+          1 | out_invoice |      463 |   463
+          1 | out_refund  |        5 |     5
+          2 | out_invoice |        5 |     5
+          3 | in_invoice  |      194 |   194
+          3 | out_invoice |      272 |   272
+          3 | out_refund  |        7 |     7
+          4 | out_invoice |        5 |     5
+(8 rows)
+

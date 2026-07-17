@@ -1,0 +1,52 @@
+=== COLUMNS NCF-LIKE ON account_move ===
+              column_name              
+---------------------------------------
+ justech_do_dgii_exclusion_reason
+ justech_do_dgii_fiscal_state
+ justech_do_dgii_line_status
+ justech_do_document_type_id
+ justech_do_expense_type_606
+ justech_do_expense_type_id
+ justech_do_expense_type_manual
+ justech_do_foreign_609
+ justech_do_foreign_document_ref
+ justech_do_foreign_exchange_rate
+ justech_do_foreign_isr_retained
+ justech_do_foreign_payment_date
+ justech_do_foreign_presumed_income
+ justech_do_foreign_service_type
+ justech_do_gov_retention_bank_id
+ justech_do_gov_retention_date
+ justech_do_gov_retention_ref
+ justech_do_gov_retention_ref_type
+ justech_do_gov_withholding_amount
+ justech_do_include_in_dgii
+ justech_do_income_type_607
+ justech_do_ncf
+ justech_do_ncf_cancel_type
+ justech_do_ncf_modified
+ justech_do_ncf_range_id
+ justech_do_ncf_void_date
+ justech_do_ncf_void_reason
+ justech_do_ncf_voided
+ justech_do_origin_ncf
+ justech_do_purchase_registration_mode
+ l10n_do_cancellation_type
+ l10n_do_ecf_modification_code
+ l10n_do_expense_type
+ l10n_do_fiscal_sequence_id
+ l10n_do_income_type
+ l10n_do_ncf_expiration_date
+ l10n_do_origin_ncf
+ l10n_latam_document_number
+ l10n_latam_document_type_id
+(39 rows)
+
+=== POSTED INVOICES BY DOCTYPE PRESENCE ===
+        jt        |       lt       | count 
+------------------+----------------+-------
+ has_justech_type | has_latam_type |     1
+ no_justech_type  | has_latam_type |  1539
+(2 rows)
+
+=== NCF SOURCE FIELDS FILLED ===

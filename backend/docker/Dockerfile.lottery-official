@@ -1,0 +1,61 @@
+# Official Lottery bake — layers lottery onto the production backend base image.
+# Build context: ./backend
+ARG BASE_IMAGE=jaios-app-backend:pre-lottery-official-20260722
+FROM ${BASE_IMAGE}
+
+WORKDIR /app
+
+COPY app/api/v1/lottery.py /app/app/api/v1/lottery.py
+COPY app/api/v1/router.py /app/app/api/v1/router.py
+COPY app/models/lottery.py /app/app/models/lottery.py
+COPY app/models/__init__.py /app/app/models/__init__.py
+COPY app/core/lottery_isolation.py /app/app/core/lottery_isolation.py
+COPY app/core/admin_permissions.py /app/app/core/admin_permissions.py
+COPY app/assistant/router.py /app/app/assistant/router.py
+COPY app/main.py /app/app/main.py
+COPY app/config.py /app/app/config.py
+
+COPY app/schemas/lottery.py /app/app/schemas/lottery.py
+COPY app/schemas/lottery_chat.py /app/app/schemas/lottery_chat.py
+COPY app/schemas/lottery_product.py /app/app/schemas/lottery_product.py
+COPY app/schemas/lottery_share.py /app/app/schemas/lottery_share.py
+
+COPY app/services/lottery_ai_contracts.py /app/app/services/lottery_ai_contracts.py
+COPY app/services/lottery_aliases.py /app/app/services/lottery_aliases.py
+COPY app/services/lottery_automatic_write_gates.py /app/app/services/lottery_automatic_write_gates.py
+COPY app/services/lottery_chat_context.py /app/app/services/lottery_chat_context.py
+COPY app/services/lottery_chat_service.py /app/app/services/lottery_chat_service.py
+COPY app/services/lottery_circuit_breaker.py /app/app/services/lottery_circuit_breaker.py
+COPY app/services/lottery_exceptions.py /app/app/services/lottery_exceptions.py
+COPY app/services/lottery_export_service.py /app/app/services/lottery_export_service.py
+COPY app/services/lottery_importer.py /app/app/services/lottery_importer.py
+COPY app/services/lottery_intent.py /app/app/services/lottery_intent.py
+COPY app/services/lottery_permissions.py /app/app/services/lottery_permissions.py
+COPY app/services/lottery_product_service.py /app/app/services/lottery_product_service.py
+COPY app/services/lottery_query_service.py /app/app/services/lottery_query_service.py
+COPY app/services/lottery_repository.py /app/app/services/lottery_repository.py
+COPY app/services/lottery_scheduler.py /app/app/services/lottery_scheduler.py
+COPY app/services/lottery_scheduler_service.py /app/app/services/lottery_scheduler_service.py
+COPY app/services/lottery_service.py /app/app/services/lottery_service.py
+COPY app/services/lottery_share_service.py /app/app/services/lottery_share_service.py
+COPY app/services/lottery_sync_alerts.py /app/app/services/lottery_sync_alerts.py
+COPY app/services/lottery_sync_gates.py /app/app/services/lottery_sync_gates.py
+COPY app/services/lottery_sync_lock.py /app/app/services/lottery_sync_lock.py
+COPY app/services/lottery_sync_service.py /app/app/services/lottery_sync_service.py
+COPY app/services/lottery_sync_writer.py /app/app/services/lottery_sync_writer.py
+COPY app/services/lottery_tools.py /app/app/services/lottery_tools.py
+
+COPY alembic/versions/050_process_requirements.py /app/alembic/versions/050_process_requirements.py
+COPY alembic/versions/051_lottery_module.py /app/alembic/versions/051_lottery_module.py
+COPY alembic/versions/052_lottery_draw_uniqueness.py /app/alembic/versions/052_lottery_draw_uniqueness.py
+COPY alembic/versions/053_lottery_productization.py /app/alembic/versions/053_lottery_productization.py
+COPY alembic/versions/054_lottery_secure_shares.py /app/alembic/versions/054_lottery_secure_shares.py
+COPY alembic/versions/055_lottery_sync_control.py /app/alembic/versions/055_lottery_sync_control.py
+COPY alembic/versions/056_lottery_scheduler_operations.py /app/alembic/versions/056_lottery_scheduler_operations.py
+
+# Sanity: lottery module must exist in image
+RUN test -f /app/app/api/v1/lottery.py \
+ && test -f /app/app/models/lottery.py \
+ && grep -q lottery /app/app/api/v1/router.py \
+ && grep -q lottery_module_enabled /app/app/config.py \
+ && python -c "from app.api.v1 import lottery; from app.assistant.router import AssistantSource; assert AssistantSource.LOTTERY.value=='lottery'"

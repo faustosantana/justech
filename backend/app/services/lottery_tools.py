@@ -441,7 +441,7 @@ class LotteryToolExecutor:
             health = await self.catalog.health()
             lot = None
             if params.get("lottery"):
-                lot = await self.resolver.require_resolved(str(params["lottery"]))
+                lot = await self.resolver.resolve_or_raise(str(params["lottery"]))
             data = {
                 "lotteries_count": health.lotteries_count,
                 "draws_count": health.draws_count,

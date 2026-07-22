@@ -128,10 +128,20 @@ def _extract_lotteries(text: str) -> list[str]:
 
 
 def _extract_number(text: str) -> str | None:
-    m = re.search(r"(?:el|n[uú]mero|numero)\s+(\d{1,3})\b", text, re.I)
+    # Avoid treating "últimos 30 sorteos" / "7 días" as a ball number.
+    cleaned = re.sub(
+        r"[uú]ltimos?\s+\d+\s+(sorteos?|dias|días)|"
+        r"\b\d+\s+(sorteos?|dias|días)\s+siguientes|"
+        r"siguientes?\s+\d+\s+(sorteos?|dias|días)|"
+        r"\b\d+\s+sorteos?\b|\b\d+\s+dias\b|\b\d+\s+días\b",
+        " ",
+        text,
+        flags=re.I,
+    )
+    m = re.search(r"(?:el|n[uú]mero|numero)\s+(\d{1,3})\b", cleaned, re.I)
     if m:
         return m.group(1).zfill(2) if len(m.group(1)) <= 2 else m.group(1)
-    m = re.search(r"\b(\d{2})\b", text)
+    m = re.search(r"\b(\d{2})\b", cleaned)
     if m:
         return m.group(1)
     return None
@@ -435,16 +445,9 @@ def resolve_intent(message: str, ctx: LotterySessionContext) -> ResolvedIntent:
 
         number = _extract_number(raw)
         last_n = _extract_int(text, "sorteos", "sorteo", default=None)
-        if last_n and re.search(r"[uú]ltimos?", text):
-            from_d, to_d = _last_n_window(last_n)
-        else:
-            from_d = ctx.last_from_date or parsed_date
-            to_d = ctx.last_to_date or parsed_date
-            if not from_d or not to_d:
-                # Histórico amplio para comparación de un número concreto.
-                from_d, to_d = _last_n_window(3650 if number else 30)
-
         if number:
+            # Comparación de un número: usar histórico amplio, no el rango del turno anterior.
+            from_d, to_d = _last_n_window(3650)
             return ResolvedIntent(
                 kind="tool",
                 tool=LotteryToolName.COMPARE_LOTTERIES,
@@ -457,6 +460,13 @@ def resolve_intent(message: str, ctx: LotterySessionContext) -> ResolvedIntent:
                 },
                 structured_type="lottery_comparison",
             )
+        if last_n and re.search(r"[uú]ltimos?", text):
+            from_d, to_d = _last_n_window(last_n)
+        else:
+            from_d = ctx.last_from_date or parsed_date
+            to_d = ctx.last_to_date or parsed_date
+            if not from_d or not to_d:
+                from_d, to_d = _last_n_window(30)
         mode = "frequencies" if re.search(r"[uú]ltimos?\s+\d+\s+sorteos|tres loter", text) else "repeated_numbers"
         return ResolvedIntent(
             kind="tool",

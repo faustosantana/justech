@@ -70,6 +70,14 @@ class Settings(BaseSettings):
     odoo_api_key: str = ""
     odoo_read_only: bool = True
 
+    # Bid Center (justech_bid_center) — disabled by default; no secrets in git
+    bid_center_enabled: bool = False
+    bid_center_url: str = ""
+    bid_center_api_key: str = ""
+    bid_center_hmac_secret: str = ""
+    bid_center_timeout: float = 15.0
+    bid_center_odoo_web_base: str = ""
+
     m365_read_only: bool = True
     m365_tenant_id: str = ""
     m365_client_id: str = ""

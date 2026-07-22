@@ -6,6 +6,7 @@ from app.api.v1 import (
     integration_links,
     assistant,
     auth,
+    bids,
     companies,
     suppliers,
     company_context,
@@ -47,6 +48,8 @@ api_router.include_router(company_context.router)
 api_router.include_router(corporate_identity.router)
 api_router.include_router(dashboard.router)
 api_router.include_router(dgcp.router)
+api_router.include_router(bids.router)
+api_router.include_router(bids.integrations_router)
 api_router.include_router(odoo.router)
 api_router.include_router(m365.router)
 api_router.include_router(m365_operative.router, prefix="/m365")

@@ -1,0 +1,129 @@
+{
+  "generated_at": "2026-06-15T19:09:12.031631+00:00",
+  "before": {
+    "empresas": {
+      "fields_complete": 6,
+      "fields_total": 28,
+      "completeness_score": 21
+    },
+    "dgcp": {
+      "preparation_pct": 50.0,
+      "checklist": [
+        {
+          "requirement_key": "oferta_tecnica",
+          "document_title": null,
+          "status": "faltante",
+          "display_status": null
+        },
+        {
+          "requirement_key": "certificacion_mipyme",
+          "document_title": "Certificado MIPYMES Justech.pdf",
+          "status": "encontrado_vigente",
+          "display_status": "Cumplido"
+        },
+        {
+          "requirement_key": "rpe",
+          "document_title": "RPE Justech.pdf",
+          "status": "encontrado_vigente",
+          "display_status": "Cumplido"
+        },
+        {
+          "requirement_key": "certificacion_tss",
+          "document_title": "Certificaci\u00f3n TSS - 14 05 26 - JUSTECH.pdf",
+          "status": "encontrado_vigente",
+          "display_status": "Cumplido"
+        },
+        {
+          "requirement_key": "certificacion_dgii",
+          "document_title": "DGII Certificacion de obligaciones al d\u00eda  - JUSTECH 14 05 26.pdf",
+          "status": "encontrado_vigente",
+          "display_status": "Cumplido"
+        },
+        {
+          "requirement_key": "registro_mercantil",
+          "document_title": null,
+          "status": "faltante",
+          "display_status": null
+        },
+        {
+          "requirement_key": "oferta_economica",
+          "document_title": null,
+          "status": "faltante",
+          "display_status": null
+        },
+        {
+          "requirement_key": "sncc_f042",
+          "document_title": "SNCC_F042_Informacion_Oferente.docx",
+          "status": "requiere_completado",
+          "display_status": "Pendiente de completar"
+        }
+      ]
+    },
+    "hub_legal_indexed": 13,
+    "knowledge_assets_active": 14
+  },
+  "actions": [],
+  "after": {
+    "empresas": {
+      "fields_complete": 6,
+      "fields_total": 28,
+      "completeness_score": 21
+    },
+    "dgcp": {
+      "preparation_pct": 50.0,
+      "checklist": [
+        {
+          "requirement_key": "oferta_tecnica",
+          "document_title": null,
+          "status": "faltante",
+          "display_status": null
+        },
+        {
+          "requirement_key": "certificacion_mipyme",
+          "document_title": "Certificado MIPYMES Justech.pdf",
+          "status": "encontrado_vigente",
+          "display_status": "Cumplido"
+        },
+        {
+          "requirement_key": "rpe",
+          "document_title": "RPE Justech.pdf",
+          "status": "encontrado_vigente",
+          "display_status": "Cumplido"
+        },
+        {
+          "requirement_key": "certificacion_tss",
+          "document_title": "Certificaci\u00f3n TSS - 14 05 26 - JUSTECH.pdf",
+          "status": "encontrado_vigente",
+          "display_status": "Cumplido"
+        },
+        {
+          "requirement_key": "certificacion_dgii",
+          "document_title": "DGII Certificacion de obligaciones al d\u00eda  - JUSTECH 14 05 26.pdf",
+          "status": "encontrado_vigente",
+          "display_status": "Cumplido"
+        },
+        {
+          "requirement_key": "registro_mercantil",
+          "document_title": null,
+          "status": "faltante",
+          "display_status": null
+        },
+        {
+          "requirement_key": "oferta_economica",
+          "document_title": null,
+          "status": "faltante",
+          "display_status": null
+        },
+        {
+          "requirement_key": "sncc_f042",
+          "document_title": "SNCC_F042_Informacion_Oferente.docx",
+          "status": "requiere_completado",
+          "display_status": "Pendiente de completar"
+        }
+      ]
+    },
+    "hub_legal_indexed": 13,
+    "knowledge_assets_active": 14
+  },
+  "dedup_deactivated": 0
+}

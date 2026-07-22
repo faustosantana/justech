@@ -9,19 +9,40 @@ from pydantic import BaseModel, Field
 
 class OpportunityStatus(str, Enum):
     DETECTED = "detected"
+    ANALYZING = "analyzing"
+    QUALIFIED = "qualified"
+    NOT_QUALIFIED = "not_qualified"
+    PREPARING = "preparing"
+    PENDING_DOCUMENTS = "pending_documents"
+    READY_TO_SUBMIT = "ready_to_submit"
+    SUBMITTED = "submitted"
+    UNDER_EVALUATION = "under_evaluation"
+    SUSPENDED = "suspended"
+    AWARDED = "awarded"
+    LOST = "lost"
+    CANCELLED = "cancelled"
+    # Legacy — compatibilidad datos existentes (migrados en 049)
     TO_REVIEW = "to_review"
     INTERESTED = "interested"
     TO_BID = "to_bid"
     DISCARDED = "discarded"
     WON = "won"
-    LOST = "lost"
 
 
 class OpportunityAction(str, Enum):
-    MOSTRAR_INTERES = "mostrar_interes"
-    LICITAR = "licitar"
-    REVISAR = "revisar"
+    MARCAR_INTERES = "marcar_interes"
+    DESMARCAR_INTERES = "desmarcar_interes"
+    INICIAR_PREPARACION = "iniciar_preparacion"
+    MARCAR_LISTO_PRESENTAR = "marcar_listo_presentar"
+    MARCAR_PRESENTADA = "marcar_presentada"
+    MARCAR_SUSPENDIDA = "marcar_suspendida"
+    MARCAR_ADJUDICADA = "marcar_adjudicada"
+    MARCAR_NO_ADJUDICADA = "marcar_no_adjudicada"
     DESCARTAR = "descartar"
+    # Legacy aliases
+    MOSTRAR_INTERES = "mostrar_interes"
+    REVISAR = "revisar"
+    LICITAR = "licitar"
     GANADA = "ganada"
     PERDIDA = "perdida"
 
@@ -42,13 +63,56 @@ class OpportunityPriority(str, Enum):
 
 
 ACTION_TO_STATUS: dict[OpportunityAction, OpportunityStatus] = {
+    OpportunityAction.MARCAR_INTERES: OpportunityStatus.INTERESTED,
     OpportunityAction.MOSTRAR_INTERES: OpportunityStatus.INTERESTED,
-    OpportunityAction.LICITAR: OpportunityStatus.TO_BID,
-    OpportunityAction.REVISAR: OpportunityStatus.TO_REVIEW,
-    OpportunityAction.DESCARTAR: OpportunityStatus.DISCARDED,
-    OpportunityAction.GANADA: OpportunityStatus.WON,
+    OpportunityAction.DESMARCAR_INTERES: OpportunityStatus.DETECTED,
+    OpportunityAction.REVISAR: OpportunityStatus.DETECTED,
+    OpportunityAction.INICIAR_PREPARACION: OpportunityStatus.PREPARING,
+    OpportunityAction.LICITAR: OpportunityStatus.PREPARING,
+    OpportunityAction.MARCAR_LISTO_PRESENTAR: OpportunityStatus.READY_TO_SUBMIT,
+    OpportunityAction.MARCAR_PRESENTADA: OpportunityStatus.SUBMITTED,
+    OpportunityAction.MARCAR_SUSPENDIDA: OpportunityStatus.SUSPENDED,
+    OpportunityAction.MARCAR_ADJUDICADA: OpportunityStatus.AWARDED,
+    OpportunityAction.GANADA: OpportunityStatus.AWARDED,
+    OpportunityAction.MARCAR_NO_ADJUDICADA: OpportunityStatus.LOST,
     OpportunityAction.PERDIDA: OpportunityStatus.LOST,
+    OpportunityAction.DESCARTAR: OpportunityStatus.DISCARDED,
 }
+
+
+STATUS_LABELS_ES: dict[str, str] = {
+    "detected": "Nueva",
+    "interested": "Interesada",
+    "preparing": "En preparación",
+    "ready_to_submit": "Lista para presentar",
+    "submitted": "Presentada",
+    "under_evaluation": "Presentada (en evaluación)",
+    "suspended": "Suspendida",
+    "awarded": "Adjudicada",
+    "lost": "No adjudicada",
+    "discarded": "Descartada",
+    "cancelled": "Cancelada",
+    "analyzing": "En análisis",
+    "qualified": "Calificada",
+    "not_qualified": "No calificada",
+    "pending_documents": "Pendiente documentos",
+    "to_review": "Nueva (requiere revisión)",
+    "to_bid": "En preparación",
+    "won": "Adjudicada",
+}
+
+
+PIPELINE_STATUSES: list[str] = [
+    "detected",
+    "interested",
+    "preparing",
+    "ready_to_submit",
+    "submitted",
+    "suspended",
+    "awarded",
+    "lost",
+    "discarded",
+]
 
 
 class DGCPOpportunityCreate(BaseModel):
@@ -64,6 +128,10 @@ class DGCPOpportunityCreate(BaseModel):
     company: OpportunityCompany = OpportunityCompany.UNCLASSIFIED
     deadline: date
     description: str | None = None
+    modalidad: str | None = None
+    source: str = Field(default="manual", max_length=32)
+    source_url: str | None = None
+    responsible_user_id: UUID | None = None
     full_info: dict[str, Any] = Field(default_factory=dict)
     similar_history: list[dict[str, Any]] = Field(default_factory=list)
     risks: list[dict[str, Any]] = Field(default_factory=list)
@@ -109,7 +177,16 @@ class DGCPOpportunityResponse(BaseModel):
     risks: list[dict[str, Any]]
     ai_recommendations: list[str]
     suggested_action: str | None
+    jaios_intelligence: dict[str, Any] = Field(default_factory=dict)
     justech_potential_amount: Decimal
+    needs_review: bool = False
+    funnel_stage: str | None = None
+    funnel_stage_label: str | None = None
+    status_label: str | None = None
+    next_recommended_action: str | None = None
+    primary_action: str | None = None
+    available_actions: list[str] = Field(default_factory=list)
+    responsible_name: str | None = None
     synced_at: datetime | None = None
     created_at: datetime
     updated_at: datetime
@@ -129,6 +206,7 @@ class DGCPOpportunitySummary(BaseModel):
     discarded: int
     won: int
     lost: int
+    presentation: dict[str, int] = Field(default_factory=dict)
 
 
 class DGCPOpportunityListResponse(BaseModel):

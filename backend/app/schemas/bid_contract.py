@@ -167,3 +167,5 @@ class AnalysisRequest(BaseModel):
     force: bool = False
     correlation_id: str | None = None
     odoo_tender_id: int | None = None
+    mode: str = "standard"  # standard | copilot
+    second_opinion: bool = False

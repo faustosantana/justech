@@ -1,0 +1,148 @@
+[
+  {
+    "muestra": "SNCC F.033",
+    "formulario": "SNCC.F033",
+    "estado": "PASS",
+    "plantilla": "SNCC_F033_Of_Economica.docx",
+    "fuente": "M365 / SharePoint",
+    "campos_completados": 3,
+    "campos_faltantes": [
+      "Logo de la dependencia gubernamental"
+    ],
+    "campos_no_mapeados": [
+      "Logo de la dependencia gubernamental",
+      "Nombre Del Formato",
+      "RPE",
+      "Dirección",
+      "Teléfono",
+      "Correo"
+    ],
+    "formato_preservado": "sí",
+    "docx_evidencia": "/app/docs/autofill_evidence/sncc_f033.docx",
+    "docx_bytes": 80881,
+    "pdf_evidencia": "/app/docs/autofill_evidence/sncc_f033.pdf",
+    "pdf_bytes": 106746
+  },
+  {
+    "muestra": "SNCC F.034",
+    "formulario": "SNCC.F034",
+    "estado": "PASS",
+    "plantilla": "SNCC_F034_Presentacion_de_Oferta.docx",
+    "fuente": "M365 / SharePoint",
+    "campos_completados": 3,
+    "campos_faltantes": [
+      "Logo de la dependencia gubernamental"
+    ],
+    "campos_no_mapeados": [
+      "Logo de la dependencia gubernamental",
+      "RPE"
+    ],
+    "formato_preservado": "sí",
+    "docx_evidencia": "/app/docs/autofill_evidence/sncc_f034.docx",
+    "docx_bytes": 98715,
+    "pdf_evidencia": "/app/docs/autofill_evidence/sncc_f034.pdf",
+    "pdf_bytes": 114851
+  },
+  {
+    "muestra": "SNCC F.042",
+    "formulario": "SNCC.F042",
+    "estado": "PASS",
+    "plantilla": "SNCC_F042_Informacion_Oferente.docx",
+    "fuente": "M365 / SharePoint",
+    "campos_completados": 4,
+    "campos_faltantes": [
+      "Logo de la dependencia gubernamental"
+    ],
+    "campos_no_mapeados": [
+      "indicar el nombre jurídico de cada miembro del Consorcio"
+    ],
+    "formato_preservado": "sí",
+    "docx_evidencia": "/app/docs/autofill_evidence/sncc_f042.docx",
+    "docx_bytes": 106304,
+    "pdf_evidencia": "/app/docs/autofill_evidence/sncc_f042.pdf",
+    "pdf_bytes": 107675
+  },
+  {
+    "muestra": "SNCC F.047",
+    "formulario": "SNCC.F047",
+    "estado": "PASS",
+    "plantilla": "SNCC_F047_Autorizacion_Fabricante.docx",
+    "fuente": "M365 / SharePoint",
+    "campos_completados": 3,
+    "campos_faltantes": [
+      "Logo de la dependencia gubernamental"
+    ],
+    "campos_no_mapeados": [
+      "Logo de la dependencia gubernamental",
+      "RPE",
+      "Teléfono",
+      "Correo"
+    ],
+    "formato_preservado": "sí",
+    "docx_evidencia": "/app/docs/autofill_evidence/sncc_f047.docx",
+    "docx_bytes": 104527,
+    "pdf_evidencia": "/app/docs/autofill_evidence/sncc_f047.pdf",
+    "pdf_bytes": 98418
+  },
+  {
+    "muestra": "SNCC F.009",
+    "formulario": "SNCC.F009",
+    "estado": "PASS",
+    "plantilla": "SNCC_F009_Convocatoria_a_LPN.docx",
+    "fuente": "M365 / SharePoint",
+    "campos_completados": 11,
+    "campos_faltantes": [
+      "Logo de la dependencia gubernamental"
+    ],
+    "campos_no_mapeados": [
+      "2092"
+    ],
+    "formato_preservado": "sí",
+    "docx_evidencia": "/app/docs/autofill_evidence/sncc_f009.docx",
+    "docx_bytes": 103609,
+    "pdf_evidencia": "/app/docs/autofill_evidence/sncc_f009.pdf",
+    "pdf_bytes": 108691
+  },
+  {
+    "muestra": "SNCC F.010",
+    "formulario": "SNCC.F010",
+    "estado": "PASS",
+    "plantilla": "SNCC_F010_Convocatoria_LPI.docx",
+    "fuente": "M365 / SharePoint",
+    "campos_completados": 11,
+    "campos_faltantes": [
+      "Logo de la dependencia gubernamental"
+    ],
+    "campos_no_mapeados": [
+      "2092"
+    ],
+    "formato_preservado": "sí",
+    "docx_evidencia": "/app/docs/autofill_evidence/sncc_f010.docx",
+    "docx_bytes": 122424,
+    "pdf_evidencia": "/app/docs/autofill_evidence/sncc_f010.pdf",
+    "pdf_bytes": 119677
+  },
+  {
+    "muestra": "Carta (D.058)",
+    "formulario": "SNCC.D058",
+    "estado": "PASS",
+    "plantilla": "SNCC_D_058_Carta_de_Disponibilidad.docx",
+    "fuente": "M365 / SharePoint",
+    "campos_completados": 5,
+    "campos_faltantes": [
+      "Logo de la dependencia gubernamental"
+    ],
+    "campos_no_mapeados": [
+      "2092"
+    ],
+    "formato_preservado": "sí",
+    "docx_evidencia": "/app/docs/autofill_evidence/carta_(d058).docx",
+    "docx_bytes": 134249,
+    "pdf_evidencia": "/app/docs/autofill_evidence/carta_(d058).pdf",
+    "pdf_bytes": 110659
+  },
+  {
+    "muestra": "Declaración",
+    "estado": "NO INDEXADA"
+  }
+]

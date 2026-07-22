@@ -78,6 +78,25 @@ class Settings(BaseSettings):
     bid_center_timeout: float = 15.0
     bid_center_odoo_web_base: str = ""
 
+    # Bid analysis (Hermes / Huawei ModelArts) — DEV cost guards
+    hermes_service_url: str = "http://hermes-service:8000"
+    hermes_api_token: str = ""
+    hermes_enabled: bool = True
+    hermes_provider: str = "huawei_modelarts"
+    hermes_model: str = "DeepSeek-V3.2"
+    hermes_default_model: str = "DeepSeek-V3.2"
+    hermes_analysis_model: str = "deepseek-v4-flash"
+    bid_analysis_timeout: float = 300.0
+    bid_analysis_temperature: float = 0.2
+    bid_analysis_max_tokens: int = 3500
+    bid_analysis_max_context_chars: int = 18000
+    bid_analysis_daily_max_calls: int = 40
+    bid_analysis_daily_max_tokens: int = 200000
+    bid_analysis_daily_max_cost_usd: float = 5.0
+    bid_analysis_cost_per_1k_tokens: float = 0.0008
+    # Prefer primary Hermes model for structured bid JSON (flash can timeout)
+    bid_analysis_model: str = ""
+
     m365_read_only: bool = True
     m365_tenant_id: str = ""
     m365_client_id: str = ""

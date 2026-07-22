@@ -1,0 +1,217 @@
+{
+  "form_type": "SNCC.F042",
+  "opportunity_id": "e536b191-2393-4f5d-9666-cd6f61521ea3",
+  "opportunity_code": "ACUARIONACIONAL-CCC-CP-2026-0004",
+  "generated_at": "2026-06-16T14:45:28.184671+00:00",
+  "generated_by_user_id": "185d091c-0c1c-43db-b7b8-fb6b819b173a",
+  "generated_by_email": "admin@justech.do",
+  "template_source": "https://justechdo-my.sharepoint.com/personal/fausto_justech_do/_layouts/15/Doc.aspx?sourcedoc=%7BDDBE04DB-2642-410C-ACFA-1A0E79BC67B9%7D&file=SNCC_F042_Informacion_Oferente.docx&action=default&mobileredirect=true",
+  "template_source_type": "m365",
+  "template_hash": "321de12fb6babc3c",
+  "template_version": "7cbb184f3d789c7a39ec520564f161426c680495db5e2f4dd746d261b27f134a",
+  "pdf_engine": "libreoffice",
+  "note": "Copia controlada — plantilla original M365/disco intacta",
+  "docx_copy": "/var/jaios/expedientes/8ebfa281-cd3c-4017-8e47-c572a79d84b2/ACUARIONACIONAL-CCC-CP-2026-0004/02_Formularios_SNCC/SNCC_F042_Informacion_Oferente_ACUARIONACIONAL-CCC-CP-2026-0004_COPIA.docx",
+  "pdf_copy": "/var/jaios/expedientes/8ebfa281-cd3c-4017-8e47-c572a79d84b2/ACUARIONACIONAL-CCC-CP-2026-0004/02_Formularios_SNCC/SNCC_F042_Informacion_Oferente_ACUARIONACIONAL-CCC-CP-2026-0004_COPIA.pdf",
+  "m365_template": {
+    "m365_file_id": "709c0aa6-1281-4e1a-b959-2a4c74de106a",
+    "graph_item_id": "01O6NMEGG3AS7N2QRGBRA2Z6Q2BZ43YZ5Z",
+    "drive_id": null,
+    "source": "onedrive",
+    "name": "SNCC_F042_Informacion_Oferente.docx",
+    "web_url": "https://justechdo-my.sharepoint.com/personal/fausto_justech_do/_layouts/15/Doc.aspx?sourcedoc=%7BDDBE04DB-2642-410C-ACFA-1A0E79BC67B9%7D&file=SNCC_F042_Informacion_Oferente.docx&action=default&mobileredirect=true",
+    "parent_path": "DGCP",
+    "content_hash": "321de12fb6babc3c",
+    "template_version": "7cbb184f3d789c7a39ec520564f161426c680495db5e2f4dd746d261b27f134a",
+    "document_type": "sncc_f042",
+    "resolver": "m365_index"
+  },
+  "fields": [
+    {
+      "key": "fecha_de_emision_del_documento",
+      "label": "Fecha de emisión del documento",
+      "value": "16/06/2026",
+      "source": "Sistema",
+      "status": "completo",
+      "confidence": 0.93
+    },
+    {
+      "key": "no_del_expediente_de_compras",
+      "label": "No. del Expediente de Compras ",
+      "value": "ACUARIONACIONAL-CCC-CP-2026-0004",
+      "source": "DGCP",
+      "status": "completo",
+      "confidence": 0.93
+    },
+    {
+      "key": "logo_de_la_dependencia_gubernamental",
+      "label": "Logo de la dependencia gubernamental",
+      "value": null,
+      "source": null,
+      "status": "no_critico",
+      "confidence": 0.93
+    },
+    {
+      "key": "nombre_de_la_institucion",
+      "label": "Nombre de la Institución",
+      "value": "Acuario Nacional",
+      "source": "DGCP",
+      "status": "completo",
+      "confidence": 0.93
+    },
+    {
+      "key": "departamento_o_unidad_funcional",
+      "label": "Departamento ó unidad funcional",
+      "value": "Acuario Nacional",
+      "source": "DGCP",
+      "status": "completo",
+      "confidence": 0.93
+    },
+    {
+      "key": "3212",
+      "label": "3212",
+      "value": null,
+      "source": null,
+      "status": "pendiente",
+      "confidence": 0.0
+    },
+    {
+      "key": "3213",
+      "label": "3213",
+      "value": null,
+      "source": null,
+      "status": "pendiente",
+      "confidence": 0.0
+    },
+    {
+      "key": "departamento_ó_unidad_funcional",
+      "label": "Departamento Ó Unidad Funcional",
+      "value": null,
+      "source": null,
+      "status": "pendiente",
+      "confidence": 0.0
+    },
+    {
+      "key": "fecha_de_emisión_del_documento",
+      "label": "Fecha De Emisión Del Documento",
+      "value": null,
+      "source": null,
+      "status": "pendiente",
+      "confidence": 0.0
+    },
+    {
+      "key": "no._del_expediente_de_compras_",
+      "label": "No. Del Expediente De Compras ",
+      "value": null,
+      "source": null,
+      "status": "pendiente",
+      "confidence": 0.0
+    },
+    {
+      "key": "nombre_de_la_institución",
+      "label": "Nombre De La Institución",
+      "value": null,
+      "source": null,
+      "status": "pendiente",
+      "confidence": 0.0
+    }
+  ],
+  "missing": [
+    "Logo de la dependencia gubernamental",
+    "3212",
+    "3213",
+    "Departamento Ó Unidad Funcional",
+    "Fecha De Emisión Del Documento",
+    "No. Del Expediente De Compras ",
+    "Nombre De La Institución"
+  ],
+  "alias_mappings": [
+    {
+      "alias_original": "Fecha de emisión del documento",
+      "alias_normalized": "fecha_de_emision_del_documento",
+      "canonical": "fecha",
+      "value_applied": "16/06/2026",
+      "source": "Sistema",
+      "confidence": 0.93,
+      "automatic": true,
+      "mapping_source": "static",
+      "status": "mapeado",
+      "pending_class": "completado"
+    },
+    {
+      "alias_original": "No. del Expediente de Compras ",
+      "alias_normalized": "no_del_expediente_de_compras",
+      "canonical": "proceso_dgcp",
+      "value_applied": "ACUARIONACIONAL-CCC-CP-2026-0004",
+      "source": "DGCP",
+      "confidence": 0.93,
+      "automatic": true,
+      "mapping_source": "static",
+      "status": "mapeado",
+      "pending_class": "completado"
+    },
+    {
+      "alias_original": "Logo de la dependencia gubernamental",
+      "alias_normalized": "logo_de_la_dependencia_gubernamental",
+      "canonical": "logo_dependencia",
+      "value_applied": null,
+      "source": null,
+      "confidence": 0.93,
+      "automatic": true,
+      "mapping_source": "static",
+      "status": "pendiente",
+      "pending_class": "no_critico"
+    },
+    {
+      "alias_original": "Nombre de la Institución",
+      "alias_normalized": "nombre_de_la_institucion",
+      "canonical": "entidad_contratante",
+      "value_applied": "Acuario Nacional",
+      "source": "DGCP",
+      "confidence": 0.93,
+      "automatic": true,
+      "mapping_source": "static",
+      "status": "mapeado",
+      "pending_class": "completado"
+    },
+    {
+      "alias_original": "Departamento ó unidad funcional",
+      "alias_normalized": "departamento_o_unidad_funcional",
+      "canonical": "entidad_contratante",
+      "value_applied": "Acuario Nacional",
+      "source": "DGCP",
+      "confidence": 0.93,
+      "automatic": true,
+      "mapping_source": "static",
+      "status": "mapeado",
+      "pending_class": "completado"
+    }
+  ],
+  "aliases_detected": 5,
+  "aliases_mapped": 4,
+  "aliases_pending": 1,
+  "aliases_critical_pending": 0,
+  "aliases_non_critical_pending": 1,
+  "aliases_ignored": 0,
+  "aliases_not_applicable_stage": 0,
+  "process_stage": "pre_adjudication",
+  "document_usage": "formulario_oferta",
+  "detected_category": "sncc_formulario",
+  "alias_summary": {
+    "total": 5,
+    "completed": 4,
+    "critical_pending": 0,
+    "non_critical_pending": 1,
+    "ignored": 0,
+    "not_applicable_stage": 0
+  },
+  "critical_pending": [],
+  "non_critical_pending": [
+    "Logo de la dependencia gubernamental"
+  ],
+  "ready_for_signature": true,
+  "generate_allowed": true,
+  "draft_allowed": true,
+  "can_pass": true,
+  "completion_status": "READY_FOR_SIGNATURE"
+}

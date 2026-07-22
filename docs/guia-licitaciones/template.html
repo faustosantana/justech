@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <title>{{ title }}</title>
+  <style>
+    @page {
+      size: A4;
+      margin: 22mm 18mm 26mm 18mm;
+      @top-center {
+        content: string(doc-header);
+        font-family: "DejaVu Sans", sans-serif;
+        font-size: 8pt;
+        color: #4a5568;
+        border-bottom: 0.5pt solid #cbd5e0;
+        padding-bottom: 4pt;
+        width: 100%;
+      }
+      @bottom-center {
+        content: "Página " counter(page) " de " counter(pages);
+        font-family: "DejaVu Sans", sans-serif;
+        font-size: 8pt;
+        color: #718096;
+      }
+    }
+
+    @page cover {
+      margin: 0;
+      @top-center { content: none; }
+      @bottom-center { content: none; }
+    }
+
+    @page toc {
+      @top-center { content: string(doc-header); }
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      font-family: "DejaVu Serif", Georgia, serif;
+      font-size: 10.5pt;
+      line-height: 1.55;
+      color: #1a202c;
+      margin: 0;
+      padding: 0;
+    }
+
+    h1, h2, h3, h4 {
+      font-family: "DejaVu Sans", "Helvetica Neue", sans-serif;
+      color: #1a365d;
+      line-height: 1.25;
+      page-break-after: avoid;
+    }
+
+    h1 { font-size: 20pt; margin: 0 0 12pt; }
+    h2 { font-size: 14pt; margin: 18pt 0 8pt; border-bottom: 1pt solid #e2e8f0; padding-bottom: 4pt; }
+    h3 { font-size: 11.5pt; margin: 14pt 0 6pt; color: #2c5282; }
+    h4 { font-size: 10.5pt; margin: 10pt 0 4pt; color: #2d3748; }
+
+    p { margin: 0 0 8pt; text-align: justify; orphans: 3; widows: 3; }
+
+    ul, ol { margin: 0 0 10pt 18pt; padding: 0; }
+    li { margin-bottom: 4pt; }
+
+    a { color: #2b6cb0; text-decoration: none; }
+
+    .cover-page {
+      page: cover;
+      page-break-after: always;
+      height: 297mm;
+      background: linear-gradient(145deg, #1a365d 0%, #2c5282 45%, #2b6cb0 100%);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 48mm 32mm;
+    }
+
+    .cover-brand {
+      font-family: "DejaVu Sans", sans-serif;
+      font-size: 14pt;
+      letter-spacing: 4pt;
+      text-transform: uppercase;
+      opacity: 0.85;
+      margin-bottom: 24pt;
+    }
+
+    .cover-title {
+      font-family: "DejaVu Sans", sans-serif;
+      font-size: 32pt;
+      font-weight: bold;
+      line-height: 1.15;
+      margin-bottom: 12pt;
+    }
+
+    .cover-subtitle {
+      font-family: "DejaVu Sans", sans-serif;
+      font-size: 14pt;
+      opacity: 0.9;
+      margin-bottom: 48pt;
+    }
+
+    .cover-meta {
+      font-family: "DejaVu Sans", sans-serif;
+      font-size: 10pt;
+      opacity: 0.8;
+      line-height: 1.8;
+    }
+
+    .cover-meta strong { opacity: 1; }
+
+    .toc-page {
+      page: toc;
+      page-break-after: always;
+    }
+
+    .toc-page h1 { border: none; }
+
+    .toc-list {
+      list-style: none;
+      margin: 16pt 0 0;
+      padding: 0;
+    }
+
+    .toc-list li {
+      display: flex;
+      align-items: baseline;
+      margin-bottom: 7pt;
+      font-family: "DejaVu Sans", sans-serif;
+      font-size: 10.5pt;
+    }
+
+    .toc-list a {
+      color: #1a365d;
+      flex: 0 1 auto;
+    }
+
+    .toc-list a::after {
+      content: leader(".") target-counter(attr(href), page);
+      flex: 1 1 auto;
+      text-align: right;
+      color: #4a5568;
+      font-size: 10pt;
+    }
+
+    .chapter {
+      page-break-before: always;
+      string-set: doc-header "{{ header_text }}";
+    }
+
+    .chapter:first-of-type {
+      page-break-before: auto;
+    }
+
+    .chapter-number {
+      font-family: "DejaVu Sans", sans-serif;
+      font-size: 9pt;
+      text-transform: uppercase;
+      letter-spacing: 2pt;
+      color: #718096;
+      margin-bottom: 4pt;
+    }
+
+    .lead {
+      font-size: 11.5pt;
+      color: #2d3748;
+      margin-bottom: 14pt;
+      font-style: italic;
+    }
+
+    .callout-box {
+      background: #ebf8ff;
+      border-left: 3pt solid #3182ce;
+      padding: 10pt 12pt;
+      margin: 12pt 0;
+      page-break-inside: avoid;
+    }
+
+    .callout-box.warning {
+      background: #fffaf0;
+      border-color: #dd6b20;
+    }
+
+    .callout-box.important {
+      background: #f0fff4;
+      border-color: #38a169;
+    }
+
+    .callout-box strong {
+      font-family: "DejaVu Sans", sans-serif;
+      display: block;
+      margin-bottom: 4pt;
+      color: #1a365d;
+    }
+
+    table.data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12pt 0 16pt;
+      font-family: "DejaVu Sans", sans-serif;
+      font-size: 9pt;
+      page-break-inside: avoid;
+    }
+
+    table.data-table th {
+      background: #2c5282;
+      color: #fff;
+      text-align: left;
+      padding: 6pt 8pt;
+      font-weight: 600;
+    }
+
+    table.data-table td {
+      border: 0.5pt solid #e2e8f0;
+      padding: 5pt 8pt;
+      vertical-align: top;
+    }
+
+    table.data-table tr:nth-child(even) td {
+      background: #f7fafc;
+    }
+
+    figure.screenshot {
+      margin: 14pt 0 18pt;
+      page-break-inside: avoid;
+      text-align: center;
+    }
+
+    figure.screenshot img {
+      max-width: 100%;
+      border: 0.5pt solid #cbd5e0;
+      border-radius: 2pt;
+      box-shadow: 0 2pt 8pt rgba(0,0,0,0.08);
+    }
+
+    figure.screenshot figcaption {
+      font-family: "DejaVu Sans", sans-serif;
+      font-size: 9pt;
+      color: #4a5568;
+      margin-top: 6pt;
+      text-align: left;
+      padding: 0 4pt;
+    }
+
+    figure.screenshot figcaption strong {
+      color: #1a365d;
+    }
+
+    .callout-list {
+      list-style: none;
+      margin: 8pt 0 0;
+      padding: 0;
+      text-align: left;
+    }
+
+    .callout-list li {
+      display: flex;
+      gap: 8pt;
+      margin-bottom: 5pt;
+      font-size: 9pt;
+      line-height: 1.4;
+    }
+
+    .callout-badge {
+      flex-shrink: 0;
+      width: 16pt;
+      height: 16pt;
+      border-radius: 50%;
+      background: #e53e3e;
+      color: #fff;
+      font-family: "DejaVu Sans", sans-serif;
+      font-size: 8pt;
+      font-weight: bold;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .steps {
+      counter-reset: step;
+      list-style: none;
+      margin: 10pt 0 14pt;
+      padding: 0;
+    }
+
+    .steps li {
+      counter-increment: step;
+      margin-bottom: 8pt;
+      padding-left: 28pt;
+      position: relative;
+    }
+
+    .steps li::before {
+      content: counter(step);
+      position: absolute;
+      left: 0;
+      top: 1pt;
+      width: 18pt;
+      height: 18pt;
+      background: #2c5282;
+      color: #fff;
+      border-radius: 50%;
+      font-family: "DejaVu Sans", sans-serif;
+      font-size: 8pt;
+      font-weight: bold;
+      text-align: center;
+      line-height: 18pt;
+    }
+
+    .example-code {
+      font-family: "DejaVu Sans Mono", monospace;
+      font-size: 9pt;
+      background: #edf2f7;
+      padding: 2pt 5pt;
+      border-radius: 2pt;
+      color: #2d3748;
+    }
+
+    .two-col {
+      display: flex;
+      gap: 14pt;
+      margin: 10pt 0;
+    }
+
+    .two-col > div { flex: 1; }
+
+    .page-break { page-break-before: always; }
+
+    .appendix-table caption {
+      font-family: "DejaVu Sans", sans-serif;
+      font-size: 10pt;
+      font-weight: bold;
+      text-align: left;
+      margin-bottom: 6pt;
+      color: #1a365d;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Portada -->
+  <section class="cover-page">
+    <div class="cover-brand">JAIOS</div>
+    <div class="cover-title">Manual Operativo<br/>de Licitaciones</div>
+    <div class="cover-subtitle">Guía práctica para equipos de licitación, gerencia y ventas</div>
+    <div class="cover-meta">
+      <strong>Versión:</strong> {{ version }}<br/>
+      <strong>Fecha:</strong> {{ generation_date }}<br/>
+      <strong>Proceso de referencia:</strong> {{ example_process }}<br/>
+      <strong>Entidad:</strong> Dirección General de Impuestos Internos (DGII)
+    </div>
+  </section>
+
+  <!-- Tabla de contenidos -->
+  <section class="toc-page">
+    <h1>Tabla de contenidos</h1>
+    <ol class="toc-list">
+      {% for ch in chapters %}
+      <li><a href="#{{ ch.id }}">{{ ch.number }}. {{ ch.title }}</a></li>
+      {% endfor %}
+      <li><a href="#anexos">Anexos — Tablas de referencia</a></li>
+    </ol>
+  </section>
+
+  <!-- Capítulos -->
+  {% for ch in chapters %}
+  <section class="chapter" id="{{ ch.id }}">
+    <div class="chapter-number">Capítulo {{ ch.number }}</div>
+    <h1>{{ ch.title }}</h1>
+    {% if ch.lead %}<p class="lead">{{ ch.lead }}</p>{% endif %}
+
+    {% for block in ch.blocks %}
+      {% if block.type == 'paragraph' %}
+        <p>{{ block.text }}</p>
+      {% elif block.type == 'heading' %}
+        <h{{ block.level }}>{{ block.text }}</h{{ block.level }}>
+      {% elif block.type == 'list' %}
+        <{{ block.ordered|default(false) and 'ol' or 'ul' }}>
+          {% for item in block.items %}<li>{{ item }}</li>{% endfor %}
+        </{{ block.ordered|default(false) and 'ol' or 'ul' }}>
+      {% elif block.type == 'steps' %}
+        <ol class="steps">
+          {% for item in block.items %}<li>{{ item }}</li>{% endfor %}
+        </ol>
+      {% elif block.type == 'callout' %}
+        <div class="callout-box {{ block.variant|default('info') }}">
+          <strong>{{ block.title }}</strong>
+          {{ block.text }}
+        </div>
+      {% elif block.type == 'figure' %}
+        <figure class="screenshot">
+          <img src="{{ block.src }}" alt="{{ block.alt }}"/>
+          <figcaption>
+            <strong>Figura {{ block.number }}.</strong> {{ block.caption }}
+            {% if block.callouts %}
+            <ul class="callout-list">
+              {% for c in block.callouts %}
+              <li>
+                <span class="callout-badge">{{ c.number }}</span>
+                <span>{{ c.text }}</span>
+              </li>
+              {% endfor %}
+            </ul>
+            {% endif %}
+          </figcaption>
+        </figure>
+      {% elif block.type == 'table' %}
+        <table class="data-table">
+          {% if block.caption %}<caption>{{ block.caption }}</caption>{% endif %}
+          <thead>
+            <tr>{% for h in block.headers %}<th>{{ h }}</th>{% endfor %}</tr>
+          </thead>
+          <tbody>
+            {% for row in block.rows %}
+            <tr>{% for cell in row %}<td>{{ cell }}</td>{% endfor %}</tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% elif block.type == 'html' %}
+        {{ block.content|safe }}
+      {% endif %}
+    {% endfor %}
+  </section>
+  {% endfor %}
+
+  <!-- Anexos -->
+  <section class="chapter" id="anexos">
+    <div class="chapter-number">Anexos</div>
+    <h1>Tablas de referencia</h1>
+    <p class="lead">Consulta rápida de estados, permisos y niveles de riesgo utilizados en el módulo de Licitaciones.</p>
+
+    <h2>Roles y permisos DGCP</h2>
+    <table class="data-table appendix-table">
+      <caption>Tabla A.1 — Acceso al módulo de licitaciones por rol</caption>
+      <thead>
+        <tr>
+          <th>Rol</th>
+          <th>Ver DGCP</th>
+          <th>Editar DGCP</th>
+          <th>Alcance general</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in roles_table %}
+        <tr>
+          {% for cell in row %}<td>{{ cell }}</td>{% endfor %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <h2>Estados del checklist de cumplimiento</h2>
+    <table class="data-table appendix-table">
+      <caption>Tabla A.2 — Estados del checklist y su significado operativo</caption>
+      <thead>
+        <tr><th>Estado</th><th>Significado</th><th>Acción recomendada</th></tr>
+      </thead>
+      <tbody>
+        {% for row in checklist_states %}
+        <tr>{% for cell in row %}<td>{{ cell }}</td>{% endfor %}</tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <h2>Estados del expediente</h2>
+    <table class="data-table appendix-table">
+      <caption>Tabla A.3 — Estados del expediente de presentación</caption>
+      <thead>
+        <tr><th>Estado</th><th>Descripción</th><th>¿Puede presentarse?</th></tr>
+      </thead>
+      <tbody>
+        {% for row in expediente_states %}
+        <tr>{% for cell in row %}<td>{{ cell }}</td>{% endfor %}</tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <h2>Estados de actualizaciones del proceso</h2>
+    <table class="data-table appendix-table">
+      <caption>Tabla A.4 — Monitor DGCP: revisión de cambios en el portal</caption>
+      <thead>
+        <tr><th>Estado de revisión</th><th>Nivel de impacto</th><th>Qué hacer</th></tr>
+      </thead>
+      <tbody>
+        {% for row in process_update_states %}
+        <tr>{% for cell in row %}<td>{{ cell }}</td>{% endfor %}</tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <h2>Niveles de riesgo</h2>
+    <table class="data-table appendix-table">
+      <caption>Tabla A.5 — Semáforo de riesgos documentales y de proceso</caption>
+      <thead>
+        <tr><th>Nivel</th><th>Color</th><th>Cuándo aparece</th><th>Respuesta</th></tr>
+      </thead>
+      <tbody>
+        {% for row in risk_levels %}
+        <tr>{% for cell in row %}<td>{{ cell }}</td>{% endfor %}</tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+
+</body>
+</html>

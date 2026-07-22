@@ -250,22 +250,23 @@ async def show_interest(
 
 @router.post("/{jaios_tender_id}/analyze")
 async def analyze_bid(jaios_tender_id: str, body: AnalysisRequest, db: AsyncSession = Depends(get_db)):
+    from app.services.bid_center.analysis_engine import analyze_bid_opportunity
+
     opp = await _get_opp(db, jaios_tender_id)
-    result = {
-        "ok": True,
-        "jaios_tender_id": jaios_tender_id,
-        "status": "completed",
-        "provider": "jaios",
-        "model": getattr(settings, "llm_default_provider", "rules"),
-        "generated_at": datetime.now(timezone.utc).isoformat(),
-        "summary": opp.description or opp.title,
-        "compatibility_score": float(opp.score or 0),
-        "requirements": list(opp.ai_recommendations or []) if isinstance(opp.ai_recommendations, list) else [],
-        "risks": list(opp.risks or []) if isinstance(opp.risks, list) else [],
-        "questions": [],
-        "documents": [],
-        "correlation_id": body.correlation_id,
-    }
+    force = None
+    # Optional DEV override via correlation_id markers (no secrets)
+    cid = (body.correlation_id or "")
+    if cid.endswith(":force_local"):
+        force = "local_rules"
+    result = await analyze_bid_opportunity(
+        opp,
+        correlation_id=body.correlation_id,
+        force_provider=force,
+        mode=body.mode or "standard",
+        second_opinion=bool(body.second_opinion),
+    )
+    if result.get("status") == "running":
+        return result
     _ANALYSIS[jaios_tender_id] = result
     client = get_bid_center_client()
     if client.enabled:

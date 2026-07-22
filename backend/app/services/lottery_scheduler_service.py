@@ -90,10 +90,14 @@ class LotterySchedulerService:
         if mode not in MODES:
             raise SyncEnvironmentGuardError(f"Modo inválido: {mode}")
         if mode == "guarded_write":
-            expected = "ENABLE GUARDED WRITE ON jaios_lottery_staging"
-            if (confirmation or "").strip() != expected:
+            allowed = {
+                "ENABLE GUARDED WRITE ON jaios_lottery_staging",
+                f"ENABLE GUARDED WRITE ON {(settings.lottery_sync_allowed_database or 'jaios').strip()}",
+            }
+            if (confirmation or "").strip() not in allowed:
+                expected = " | ".join(sorted(allowed))
                 raise SyncEnvironmentGuardError(
-                    f"Confirmación fuerte requerida: escriba exactamente '{expected}'"
+                    f"Confirmación fuerte requerida: escriba exactamente una de: {expected}"
                 )
         state = await self.get_or_create_state()
         state.mode = mode
@@ -304,10 +308,14 @@ class LotterySchedulerService:
             # Guarded write path
             bp = backup_path
             if not bp:
-                backups = sorted(
-                    Path("data/lottery-staging-backups").glob("pre-phase*.dump")
-                ) + sorted(Path("data/lottery-staging-backups").glob("pre-sync*.dump"))
-                bp = str(backups[-1]) if backups else None
+                candidates = [
+                    Path("/tmp/pre_stageb_write.dump"),
+                    Path("/tmp/pre_lottery_sync.dump"),
+                ]
+                candidates += sorted(Path("data/lottery-staging-backups").glob("pre-phase*.dump"))
+                candidates += sorted(Path("data/lottery-staging-backups").glob("pre-sync*.dump"))
+                existing = [p for p in candidates if p.exists() and p.stat().st_size >= 1000]
+                bp = str(existing[-1]) if existing else None
             try:
                 assert_automatic_write_gates(
                     database_url=self.database_url,

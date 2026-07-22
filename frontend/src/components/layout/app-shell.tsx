@@ -1,31 +1,54 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { Suspense, useEffect, useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 import { JaiosAssistant } from "@/components/assistant/jaios-assistant";
 import { LoadingState } from "@/components/brand/loading-state";
+import { ApplicationSidebar } from "@/components/navigation/application-sidebar";
+import { ApplicationTopbar } from "@/components/navigation/application-topbar";
 import { PlatformHeader } from "@/components/layout/platform-header";
-import { Sidebar } from "@/components/layout/sidebar";
+import { apiClient } from "@/lib/api";
+import type { PlatformAccess } from "@/lib/admin";
+import { resolveActiveApp } from "@/lib/app-navigation";
 import { useCompanyContext } from "@/lib/company-context";
 import { useAssistantContext } from "@/lib/assistant-context";
 import { assistantContextLabel } from "@/lib/assistant-module-label";
 import { getAccessToken } from "@/lib/auth";
+import { LotteryClientRouteGuard } from "@/components/lottery/lottery-client-route-guard";
+import { cn } from "@/lib/utils";
 
-interface AppShellProps {
+export interface AppShellProps {
   children: React.ReactNode;
   title?: string;
   description?: string;
   hideHeaderTitle?: boolean;
+  /** Pantalla de aplicaciones — sin menú contextual */
+  variant?: "default" | "launcher";
+  hideHeaderSearch?: boolean;
 }
 
-export function AppShell({ children, title, description, hideHeaderTitle = false }: AppShellProps) {
+function AppShellInner({
+  children,
+  title,
+  description,
+  hideHeaderTitle = false,
+  variant = "default",
+  hideHeaderSearch = false,
+}: AppShellProps) {
   const router = useRouter();
   const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const search = searchParams.toString() ? `?${searchParams.toString()}` : "";
   const [ready, setReady] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [access, setAccess] = useState<PlatformAccess | null>(null);
   const assistant = useAssistantContext();
   const { scopeLabel, context } = useCompanyContext();
+
+  const isLauncher = variant === "launcher" || pathname === "/dashboard";
+  const activeApp = isLauncher ? null : resolveActiveApp(pathname, search);
+  const useApplicationChrome = Boolean(activeApp) && !pathname.startsWith("/configuracion");
 
   useEffect(() => {
     if (!getAccessToken()) {
@@ -33,6 +56,7 @@ export function AppShell({ children, title, description, hideHeaderTitle = false
       return;
     }
     setReady(true);
+    apiClient.getPlatformAccess().then(setAccess).catch(() => setAccess(null));
   }, [router]);
 
   useEffect(() => {
@@ -71,17 +95,57 @@ export function AppShell({ children, title, description, hideHeaderTitle = false
     );
   }
 
+  if (isLauncher) {
+    return (
+      <LotteryClientRouteGuard>
+        <div className="flex h-full flex-col overflow-hidden bg-background">
+          <PlatformHeader hideSearch />
+          <main className="min-h-0 flex-1 overflow-y-auto">{children}</main>
+          {assistantNode}
+        </div>
+      </LotteryClientRouteGuard>
+    );
+  }
+
+  if (useApplicationChrome && activeApp) {
+    return (
+      <LotteryClientRouteGuard>
+        <div className="flex h-full overflow-hidden bg-background">
+          <ApplicationSidebar
+            app={activeApp}
+            collapsed={sidebarCollapsed}
+            onToggle={() => setSidebarCollapsed((v) => !v)}
+            access={access}
+          />
+          <div className="flex min-h-0 min-w-0 flex-1 flex-col">
+            <ApplicationTopbar app={activeApp} pathname={pathname} search={search} />
+            <main className="min-h-0 flex-1 overflow-y-auto p-4 md:p-6">{children}</main>
+          </div>
+          {assistantNode}
+        </div>
+      </LotteryClientRouteGuard>
+    );
+  }
+
   return (
-    <div className="flex h-full overflow-hidden bg-background">
-      <Sidebar collapsed={sidebarCollapsed} onToggle={() => setSidebarCollapsed((v) => !v)} />
-      <div className="platform-backdrop flex min-h-0 min-w-0 flex-1 flex-col">
+    <LotteryClientRouteGuard>
+      <div className="flex h-full flex-col overflow-hidden bg-background">
         <PlatformHeader
           title={hideHeaderTitle ? undefined : title}
           subtitle={hideHeaderTitle ? undefined : description}
+          hideSearch={hideHeaderSearch}
         />
-        <main className="min-h-0 flex-1 overflow-y-auto p-4 md:p-6 lg:p-8">{children}</main>
+        <main className={cn("min-h-0 flex-1 overflow-y-auto p-4 md:p-6 lg:p-8")}>{children}</main>
+        {assistantNode}
       </div>
-      {assistantNode}
-    </div>
+    </LotteryClientRouteGuard>
+  );
+}
+
+export function AppShell(props: AppShellProps) {
+  return (
+    <Suspense fallback={<LoadingState message="Cargando…" />}>
+      <AppShellInner {...props} />
+    </Suspense>
   );
 }

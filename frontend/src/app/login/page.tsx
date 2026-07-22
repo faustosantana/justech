@@ -9,7 +9,8 @@ import { AuthLoadingState, AuthShell } from "@/components/auth/auth-shell";
 import { CompanySelector } from "@/components/layout/company-selector";
 import { CompanyContextProvider } from "@/lib/company-context";
 import { apiClient } from "@/lib/api";
-import { setAuthTokens } from "@/lib/auth";
+import { setAuthTokens } from "@/lib/auth"
+import { isLotteryClientRole } from "@/lib/lottery";
 import { cn } from "@/lib/utils";
 
 export default function LoginPage() {
@@ -60,7 +61,7 @@ function LoginPageContent() {
           selected_company_ids: [allowed.items[0].id],
         });
       }
-      router.push("/dashboard");
+      router.push(isLotteryClientRole(getUserRole()) ? "/lottery" : "/dashboard");
     } catch {
       setError("Credenciales inválidas o tenant incorrecto.");
     } finally {
@@ -83,7 +84,7 @@ function LoginPageContent() {
               </div>
               <CompanySelector />
             </div>
-            <button type="button" className="auth-submit flex items-center justify-center gap-2" onClick={() => router.push("/dashboard")}>
+            <button type="button" className="auth-submit flex items-center justify-center gap-2" onClick={() => router.push(isLotteryClientRole(getUserRole()) ? "/lottery" : "/dashboard")}>
               Continuar al panel
               <ArrowRight className="h-4 w-4" />
             </button>

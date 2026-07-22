@@ -22,6 +22,7 @@ export const PLATFORM_MODULES: PlatformModule[] = [
   { id: "search_acceleration", name: "Motor de aceleración de búsqueda", phase: 6, status: "active" },
   { id: "document_repository", name: "Repositorio documental", phase: 6, status: "active", route: "/documents" },
   { id: "supplier_intelligence", name: "Inteligencia de proveedores", phase: 6, status: "future" },
+  { id: "lottery", name: "Resultados de Loterías", phase: 6, status: "active", route: "/lottery" },
   { id: "price_intelligence", name: "Inteligencia de precios", phase: 6, status: "active", route: "/prices" },
   { id: "hermes_memory", name: "Memoria empresarial Hermes", phase: 7, status: "future" },
   { id: "multi_agent", name: "Operaciones multi-agente", phase: 7, status: "future" },

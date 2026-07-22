@@ -50,3 +50,22 @@ class OdooUserMapping(UUIDPrimaryKeyMixin, TimestampMixin, Base):
     default_company_id: Mapped[int | None] = mapped_column(Integer)
     is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
     last_verified_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+
+
+class OdooUserPermissionCache(UUIDPrimaryKeyMixin, TimestampMixin, Base):
+    """Caché local de grupos y permisos CRUD sincronizados desde Odoo."""
+
+    __tablename__ = "odoo_user_permission_cache"
+    __table_args__ = (UniqueConstraint("tenant_id", "jaios_user_id", name="uq_odoo_permission_cache_user"),)
+
+    tenant_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("tenants.id", ondelete="CASCADE"), nullable=False
+    )
+    jaios_user_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), nullable=False
+    )
+    odoo_user_id: Mapped[int] = mapped_column(Integer, nullable=False)
+    groups: Mapped[list] = mapped_column(JSONB, default=list, nullable=False)
+    model_access: Mapped[dict] = mapped_column(JSONB, default=dict, nullable=False)
+    module_access: Mapped[dict] = mapped_column(JSONB, default=dict, nullable=False)
+    synced_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), nullable=False)

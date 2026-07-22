@@ -18,6 +18,33 @@ VALID_ROLES = frozenset({
     "licitaciones",
     "usuario",
     "member",  # legado → tratado como usuario
+    "lottery_client",
+})
+
+
+LOTTERY_PERMISSIONS = frozenset({
+    "lottery.access",
+    "lottery.search",
+    "lottery.chat",
+    "lottery.compare",
+    "lottery.statistics",
+    "lottery.export",
+    "lottery.share",
+    "lottery.saved_queries",
+    "lottery.admin",
+    "lottery.import",
+    "lottery.sync",
+    "lottery.audit",
+})
+
+LOTTERY_CLIENT_PERMISSIONS = frozenset({
+    "lottery.access",
+    "lottery.search",
+    "lottery.chat",
+    "lottery.compare",
+    "lottery.statistics",
+    "lottery.export",
+    "lottery.saved_queries",
 })
 
 PERMISSIONS = frozenset({
@@ -29,15 +56,16 @@ PERMISSIONS = frozenset({
     "view_m365",
     "admin_users",
     "admin_settings",
-})
+}) | LOTTERY_PERMISSIONS
 
 ROLE_PERMISSIONS: dict[str, frozenset[str]] = {
     "owner": PERMISSIONS,
+    # lottery perms included via PERMISSIONS for owner/admin
     "admin": PERMISSIONS,
     "gerencia": frozenset({
         "view_modules", "create_tasks", "reassign_tasks",
         "view_odoo", "view_dgcp", "view_m365",
-    }),
+    }) | LOTTERY_CLIENT_PERMISSIONS,
     "ventas": frozenset({"view_modules", "create_tasks", "view_odoo", "view_dgcp", "view_m365"}),
     "facturacion": frozenset({"view_modules", "create_tasks", "view_odoo", "view_m365"}),
     "finanzas": frozenset({"view_modules", "create_tasks", "view_odoo", "view_m365"}),
@@ -47,6 +75,7 @@ ROLE_PERMISSIONS: dict[str, frozenset[str]] = {
     "licitaciones": frozenset({"view_modules", "create_tasks", "view_dgcp", "view_m365"}),
     "usuario": frozenset({"view_modules", "create_tasks", "view_odoo", "view_dgcp", "view_m365"}),
     "member": frozenset({"view_modules", "create_tasks", "view_odoo", "view_dgcp", "view_m365"}),
+    "lottery_client": LOTTERY_CLIENT_PERMISSIONS,
 }
 
 DEFAULT_MODULES = [
@@ -62,6 +91,7 @@ DEFAULT_MODULES = [
     ("prices", "Precios", True),
     ("documents", "Documentos", True),
     ("hermes", "Hermes", True),
+    ("lottery", "Resultados de Loterías", True),
 ]
 
 DEFAULT_DEPARTMENTS = [
@@ -170,3 +200,7 @@ def can_mutate_admin(role: str | None, is_superadmin: bool = False) -> bool:
 
 def permissions_for_role(role: str | None) -> list[str]:
     return sorted(ROLE_PERMISSIONS.get(normalize_role(role), ROLE_PERMISSIONS["usuario"]))
+
+
+def role_has_permission(role: str | None, permission: str) -> bool:
+    return permission in ROLE_PERMISSIONS.get(normalize_role(role), ROLE_PERMISSIONS["usuario"])

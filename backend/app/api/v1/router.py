@@ -18,6 +18,7 @@ from app.api.v1 import (
     integrations,
     knowledge,
     licitador,
+    lottery,
     llm,
     m365,
     m365_operative,
@@ -63,5 +64,6 @@ api_router.include_router(documents.router)
 api_router.include_router(knowledge.router)
 api_router.include_router(licitador.router)
 api_router.include_router(prices.router)
+api_router.include_router(lottery.router)
 api_router.include_router(assistant.router)
 api_router.include_router(settings_api.router)

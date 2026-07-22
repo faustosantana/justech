@@ -10,12 +10,16 @@ from app.core.exceptions import AuthorizationError, JAIOSException
 from integrations.odoo.exceptions import OdooReadOnlyError
 from app.gateway.middleware import GatewayMiddleware
 from app.services.dgcp_scheduler import start_dgcp_scheduler, stop_dgcp_scheduler
+from app.services.lottery_scheduler import start_lottery_scheduler, stop_lottery_scheduler
+from app.core.lottery_isolation import LotteryClientIsolationMiddleware
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     start_dgcp_scheduler()
+    start_lottery_scheduler()
     yield
+    stop_lottery_scheduler()
     stop_dgcp_scheduler()
 
 
@@ -36,6 +40,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 app.add_middleware(GatewayMiddleware)
+app.add_middleware(LotteryClientIsolationMiddleware)
 app.include_router(api_router, prefix=settings.api_prefix)
 
 

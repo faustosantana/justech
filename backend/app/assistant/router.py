@@ -15,6 +15,7 @@ class AssistantSource(str, Enum):
     ENTERPRISE_SEARCH = "enterprise_search"
     DOCUMENTS = "documents"
     PRICE_INTELLIGENCE = "price_intelligence"
+    LOTTERY = "lottery"
     FUTURE_HERMES = "future_hermes"
     FUTURE_M365 = "future_m365"
     FUTURE_QDRANT = "future_qdrant"
@@ -72,6 +73,14 @@ class AssistantRouter:
             "comparar precio", "alternativas", "quien me sale", "quién me sale",
         )
 
+        lottery_keywords = (
+            "lotería", "loteria", "sorteo", "sorteos", "quiniela", "loteka", "leidsa",
+            "nacional noche", "nacional día", "nacional dia", "resultado de lotería",
+            "resultados de lotería", "boletín", "boletin",
+        )
+        if any(k in lowered for k in lottery_keywords) or (current_module or "").startswith("/lottery"):
+            sources.insert(0, AssistantSource.LOTTERY)
+
         if any(k in lowered for k in price_keywords) or (current_module or "").startswith("/prices"):
             sources.insert(0, AssistantSource.PRICE_INTELLIGENCE)
 
@@ -115,6 +124,7 @@ class AssistantRouter:
             AssistantSource.WORK: "Work Operations",
             AssistantSource.ENTERPRISE_SEARCH: "Búsqueda empresarial",
             AssistantSource.DOCUMENTS: "Documentos",
+            AssistantSource.LOTTERY: "Lotería IA",
             AssistantSource.PRICE_INTELLIGENCE: "Inteligencia de Precios",
             AssistantSource.M365_STUB: "Microsoft 365",
             AssistantSource.FUTURE_M365: "Microsoft 365 (futuro)",

@@ -1884,6 +1884,223 @@ export const apiClient = {
       true,
     ),
 
+  getLotteryHealth: () => request<LotteryHealth>("/lottery/health", {}, true),
+
+  getLotteryLotteries: (limit = 50, offset = 0) =>
+    request<LotteryListResponse>(`/lottery/lotteries${buildQuery({ limit, offset })}`, {}, true),
+
+  getLotteryByDate: (params: { lottery: string; date: string; game?: string }) =>
+    request<DateQueryResponse>(`/lottery/results/by-date${buildQuery(params)}`, {}, true),
+
+  getLotteryFollowingDays: (params: {
+    lottery: string;
+    date: string;
+    days: number;
+    include_base_date?: boolean;
+  }) =>
+    request<CalendarWindowResponse>(
+      `/lottery/results/following-days${buildQuery(params)}`,
+      {},
+      true,
+    ),
+
+  getLotteryFollowingDraws: (params: {
+    lottery: string;
+    date: string;
+    count: number;
+    include_base_date?: boolean;
+  }) =>
+    request<DrawsWindowResponse>(
+      `/lottery/results/following-draws${buildQuery(params)}`,
+      {},
+      true,
+    ),
+
+  getLotteryFrequencies: (params: {
+    lottery: string;
+    from: string;
+    to: string;
+    limit?: number;
+  }) =>
+    request<FrequencyResponse>(`/lottery/statistics/frequencies${buildQuery(params)}`, {}, true),
+
+  compareLotteries: (body: {
+    lotteries: string[];
+    from: string;
+    to: string;
+    mode: string;
+    limit?: number;
+  }) =>
+    request<ComparisonResponse>("/lottery/compare", {
+      method: "POST",
+      body: JSON.stringify(body),
+    }, true),
+
+  createLotteryChatSession: (title?: string) =>
+    request<LotteryChatSession>("/lottery/chat/sessions", {
+      method: "POST",
+      body: JSON.stringify({ title: title ?? null }),
+    }, true),
+
+  listLotteryChatSessions: (limit = 50) =>
+    request<{ items: LotteryChatSession[]; total: number }>(
+      `/lottery/chat/sessions${buildQuery({ limit })}`,
+      {},
+      true,
+    ),
+
+  getLotteryChatSession: (sessionId: string) =>
+    request<LotteryChatSession>(`/lottery/chat/sessions/${sessionId}`, {}, true),
+
+  deleteLotteryChatSession: (sessionId: string) =>
+    request<{ ok: boolean }>(`/lottery/chat/sessions/${sessionId}`, { method: "DELETE" }, true),
+
+  clearLotteryChatContext: (sessionId: string) =>
+    request<LotteryChatSession>(`/lottery/chat/sessions/${sessionId}/clear-context`, {
+      method: "POST",
+    }, true),
+
+  listLotteryChatMessages: (sessionId: string, limit = 50, offset = 0) =>
+    request<{ items: LotteryChatMessage[]; total: number }>(
+      `/lottery/chat/sessions/${sessionId}/messages${buildQuery({ limit, offset })}`,
+      {},
+      true,
+    ),
+
+  sendLotteryChatMessage: (sessionId: string, content: string) =>
+    request<LotteryChatSendResponse>(`/lottery/chat/sessions/${sessionId}/messages`, {
+      method: "POST",
+      body: JSON.stringify({ content }),
+    }, true),
+
+  retryLotteryChatMessage: (sessionId: string) =>
+    request<LotteryChatSendResponse>(`/lottery/chat/sessions/${sessionId}/retry`, {
+      method: "POST",
+    }, true),
+
+  listLotterySavedQueries: () =>
+    request<{ items: LotterySavedQuery[]; total: number }>("/lottery/saved-queries", {}, true),
+
+  renameLotterySavedQuery: (queryId: string, name: string) =>
+    request<LotterySavedQuery>(`/lottery/saved-queries/${queryId}`, {
+      method: "PATCH",
+      body: JSON.stringify({ name }),
+    }, true),
+
+  deleteLotterySavedQuery: (queryId: string) =>
+    request<{ ok: boolean }>(`/lottery/saved-queries/${queryId}`, { method: "DELETE" }, true),
+
+  getLotteryHomeHint: () =>
+    request<{ role: string; is_lottery_client: boolean; home_path: string }>(
+      "/lottery/me/home",
+      {},
+      true,
+    ),
+
+  getLotteryDashboard: () => request<LotteryDashboard>("/lottery/dashboard", {}, true),
+
+  getLotteryDetail: (slug: string) =>
+    request<LotteryDetail>(`/lottery/lotteries/${encodeURIComponent(slug)}`, {}, true),
+
+  listLotteryFavorites: () =>
+    request<{ items: LotteryFavorite[]; total: number }>("/lottery/favorites", {}, true),
+
+  addLotteryFavorite: (lotteryId: string) =>
+    request<LotteryFavorite>(`/lottery/favorites/${lotteryId}`, { method: "POST" }, true),
+
+  removeLotteryFavorite: (lotteryId: string) =>
+    request<{ ok: boolean }>(`/lottery/favorites/${lotteryId}`, { method: "DELETE" }, true),
+
+  listLotteryRecentQueries: () =>
+    request<{ items: LotteryRecentQuery[]; total: number }>("/lottery/recent-queries", {}, true),
+
+  getLotteryPreferences: () => request<LotteryPreferences>("/lottery/preferences", {}, true),
+
+  patchLotteryPreferences: (body: Partial<LotteryPreferences>) =>
+    request<LotteryPreferences>("/lottery/preferences", {
+      method: "PATCH",
+      body: JSON.stringify(body),
+    }, true),
+
+  createLotteryExport: (body: {
+    query_type: string;
+    query_parameters: Record<string, unknown>;
+    format: "csv" | "xlsx" | "pdf";
+    title?: string;
+  }) =>
+    request<LotteryExportResponse>("/lottery/exports", {
+      method: "POST",
+      body: JSON.stringify(body),
+    }, true),
+
+  downloadLotteryExport: async (exportId: string, filename?: string): Promise<void> => {
+    const { fetchAuthenticatedFile, downloadAuthenticatedBlob } = await import(
+      "@/lib/authenticated-file"
+    );
+    const { blob, filename: resolved } = await fetchAuthenticatedFile(
+      `/lottery/exports/${exportId}/download`,
+    );
+    downloadAuthenticatedBlob(blob, filename ?? resolved);
+  },
+
+  getLotteryObservability: () =>
+    request<Record<string, unknown>>("/lottery/observability", {}, true),
+
+  getLotteryAdminSyncRuns: () =>
+    request<{ items: unknown[]; total: number }>("/lottery/admin/sync/runs", {}, true),
+
+  postLotteryAdminSyncDryRun: (body: {
+    source?: string;
+    from_date?: string;
+    to_date?: string;
+    lottery_source_id?: number;
+    limit?: number;
+  }) =>
+    request<Record<string, unknown>>("/lottery/admin/sync/dry-run", {
+      method: "POST",
+      body: JSON.stringify(body),
+    }, true),
+
+  getLotteryAdminScheduler: () =>
+    request<Record<string, unknown>>("/lottery/admin/scheduler", {}, true),
+
+  postLotteryAdminSchedulerRunNow: (source = "fixture") =>
+    request<Record<string, unknown>>(
+      `/lottery/admin/scheduler/run-now?source=${encodeURIComponent(source)}`,
+      { method: "POST" },
+      true,
+    ),
+
+  postLotteryAdminSchedulerDisable: () =>
+    request<Record<string, unknown>>("/lottery/admin/scheduler/disable", { method: "POST" }, true),
+
+  postLotteryAdminSchedulerEnable: (mode = "observe") =>
+    request<Record<string, unknown>>(
+      `/lottery/admin/scheduler/enable?mode=${encodeURIComponent(mode)}`,
+      { method: "POST" },
+      true,
+    ),
+
+  postLotteryAdminSchedulerSetMode: (mode: string, confirmation?: string) => {
+    const q = new URLSearchParams({ mode });
+    if (confirmation) q.set("confirmation", confirmation);
+    return request<Record<string, unknown>>(
+      `/lottery/admin/scheduler/set-mode?${q.toString()}`,
+      { method: "POST" },
+      true,
+    );
+  },
+
+  getLotteryAdminSchedulerAlerts: () =>
+    request<{ items: unknown[] }>("/lottery/admin/scheduler/alerts", {}, true),
+
+  postLotteryAdminCircuitReset: () =>
+    request<Record<string, unknown>>(
+      "/lottery/admin/scheduler/circuit-breaker/reset",
+      { method: "POST" },
+      true,
+    ),
+
   getAdminAccess: () =>
     request<import("@/lib/admin").AdminAccess>("/admin/access", {}, true),
 

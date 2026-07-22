@@ -34,6 +34,17 @@ class JAIOSModule:
 
 _MODULES: tuple[JAIOSModule, ...] = (
     JAIOSModule(
+        id="lottery",
+        name="Resultados de Loterías",
+        phase=ModulePhase.SEARCH_DOCS,
+        status="active",
+        description="Histórico de sorteos, comparación, estadísticas y Lotería IA",
+        depends_on=("core",),
+        provides=("lottery_results", "lottery_statistics", "lottery_chat"),
+        frontend_route="/lottery",
+    ),
+
+    JAIOSModule(
         id="core",
         name="Core Platform",
         phase=ModulePhase.CORE,

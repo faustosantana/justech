@@ -59,6 +59,29 @@ from app.models.search_analytics import SearchAnalyticsEvent
 from app.models.search_index import SearchIndexEntry, SearchIndexState
 from app.models.user import User
 
+
+from app.models.lottery import (
+    LotteryAlias,
+    LotteryAuditLog,
+    LotteryChatMessage,
+    LotteryChatSession,
+    LotteryDraw,
+    LotteryDrawNumber,
+    LotteryDrawRevision,
+    LotteryExport,
+    LotteryImportError,
+    LotteryImportRun,
+    LotteryLottery,
+    LotteryRecentQuery,
+    LotterySavedQuery,
+    LotterySchedulerState,
+    LotterySharedQuery,
+    LotterySyncAlert,
+    LotterySyncRun,
+    LotteryUserFavorite,
+    LotteryUserPreferences,
+)
+
 __all__ = [
     "ApiKey",
     "AuditLog",
@@ -127,4 +150,23 @@ __all__ = [
     "SupplierPriceListLink",
     "SupplierRating",
     "User",
+    "LotteryLottery",
+    "LotteryDraw",
+    "LotteryDrawNumber",
+    "LotteryAlias",
+    "LotteryImportRun",
+    "LotteryImportError",
+    "LotterySavedQuery",
+    "LotteryChatSession",
+    "LotteryChatMessage",
+    "LotteryAuditLog",
+    "LotteryUserFavorite",
+    "LotteryUserPreferences",
+    "LotteryRecentQuery",
+    "LotteryExport",
+    "LotterySharedQuery",
+    "LotterySyncRun",
+    "LotteryDrawRevision",
+    "LotterySchedulerState",
+    "LotterySyncAlert",
 ]

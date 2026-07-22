@@ -25,8 +25,9 @@ class SyncEnvironmentGuardError(RuntimeError):
 
 
 def assert_sync_environment_safe(database_url: str, *, allow_write: bool = False) -> None:
-    """Bloquea sync hacia Producción; escritura solo con allow_write explícito y DB staging."""
-    assert_not_production_database(database_url)
+    """Permite dry-run/observe en allowlist docker; escritura solo vía gates de allowlist/staging."""
+    from app.services.lottery_sync_gates import assert_sync_write_target_allowed
+
     parsed = urlparse(
         database_url.replace("postgresql+asyncpg://", "postgresql://").replace(
             "postgresql+psycopg2://", "postgresql://"
@@ -34,15 +35,28 @@ def assert_sync_environment_safe(database_url: str, *, allow_write: bool = False
     )
     host = (parsed.hostname or "").lower()
     db = (parsed.path or "").lstrip("/").lower()
-    port = parsed.port
-    if host not in ("localhost", "127.0.0.1", "::1"):
-        raise SyncEnvironmentGuardError(f"Sync solo permitido en localhost (host={host})")
+    port = parsed.port or 5432
+    allowed_hosts = {"localhost", "127.0.0.1", "::1", "postgres", "db"}
+    if host not in allowed_hosts:
+        # Mantener bloqueo estricto para hosts remotos no docker-local.
+        assert_not_production_database(database_url)
+        raise SyncEnvironmentGuardError(f"Sync solo permitido en hosts locales/docker (host={host})")
+
     if allow_write:
-        # Phase 8+: escritura automática/manual solo staging :5434
-        if db != "jaios_lottery_staging" or port != 5434:
-            raise SyncEnvironmentGuardError(
-                f"Escritura sync solo jaios_lottery_staging:5434 (db={db} port={port})"
-            )
+        assert_sync_write_target_allowed(database_url)
+        if settings.lottery_scraping_enabled:
+            raise SyncEnvironmentGuardError("LOTTERY_SCRAPING_ENABLED no autoriza escritura automática")
+        return
+
+    # Dry-run / observe: host local/docker + DB conocida (staging o allowlist settings).
+    allowed_db = (settings.lottery_sync_allowed_database or "").strip().lower()
+    allowed_port = int(settings.lottery_sync_allowed_port or 5432)
+    staging_ok = db == "jaios_lottery_staging" and port == 5434
+    allowlist_ok = db == allowed_db and port == allowed_port
+    if not (staging_ok or allowlist_ok):
+        raise SyncEnvironmentGuardError(
+            f"Dry-run sync requiere staging o allowlist (db={db} port={port})"
+        )
     if settings.lottery_scraping_enabled and allow_write:
         raise SyncEnvironmentGuardError("LOTTERY_SCRAPING_ENABLED no autoriza escritura automática")
 

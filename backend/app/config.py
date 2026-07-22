@@ -5,62 +5,6 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    lottery_module_enabled: bool = False
-    lottery_sync_enabled: bool = False
-    lottery_sync_write_enabled: bool = False
-    lottery_sync_days_back: int = 3
-    lottery_sync_request_delay: float = 2.5
-    lottery_sync_max_retries: int = 4
-    lottery_sync_schedule: str = "0 */6 * * *"
-    lottery_sync_source: str = "api"
-    lottery_export_max_rows: int = 5000
-    lottery_max_range_days: int = 3660
-    lottery_default_page_size: int = 50
-    lottery_max_page_size: int = 500
-    lottery_max_compare_lotteries: int = 10
-    lottery_max_draw_count: int = 200
-    lottery_max_days_window: int = 90
-    lottery_max_stats_limit: int = 100
-    lottery_chat_max_history_messages: int = 30
-    lottery_chat_max_tool_calls: int = 8
-    lottery_chat_timeout_seconds: int = 60
-    lottery_chat_max_sessions_per_user: int = 100
-    lottery_chat_max_result_rows: int = 500
-    lottery_export_max_rows_csv: int = 100000
-    lottery_export_max_rows_xlsx: int = 50000
-    lottery_export_max_rows_pdf: int = 5000
-    lottery_export_expiration_minutes: int = 30
-    lottery_export_max_file_size_mb: int = 25
-    lottery_exports_path: str = "/tmp/jaios-lottery-exports"
-    lottery_scheduler_enabled: bool = False
-    lottery_scheduler_mode: str = "disabled"  # disabled | observe | guarded_write
-    lottery_scraping_enabled: bool = False
-    lottery_share_max_ttl_hours: int = 168
-    lottery_share_default_ttl_hours: int = 24
-    lottery_share_max_views_default: int = 50
-    lottery_sync_api_base_url: str = "https://api.elboletoganador.com/api"
-    lottery_sync_user_agent: str = "JAIOS-LotterySync/0.1 (+staging; controlled-write)"
-    lottery_sync_lock_ttl_seconds: int = 120
-    lottery_sync_api_allowlist: str = "api.elboletoganador.com"
-    lottery_sync_max_range_days_write: int = 7
-    lottery_sync_automatic_write_enabled: bool = False
-    lottery_sync_interval_minutes: int = 60
-    lottery_sync_lookback_days: int = 3
-    lottery_sync_max_range_days: int = 7
-    lottery_sync_allowed_database: str = "jaios_lottery_staging"
-    lottery_sync_allowed_port: int = 5434
-    lottery_sync_max_new_per_run: int = 500
-    lottery_sync_max_changed_per_run: int = 0
-    lottery_sync_max_conflicts_per_run: int = 0
-    lottery_sync_max_invalid_per_run: int = 10
-    lottery_sync_require_dry_run: bool = True
-    lottery_sync_require_reconciliation: bool = True
-    lottery_sync_timezone: str = "America/Santo_Domingo"
-    lottery_sync_circuit_failure_threshold: int = 3
-    lottery_sync_write_flag_max_minutes: int = 15
-    lottery_sync_max_run_minutes: int = 15
-    lottery_sync_backup_max_age_hours: int = 24
-    lottery_source_contract_version: str = "elboletoganador.historial.v1"
 
     model_config = SettingsConfigDict(
         env_file=".env",
@@ -183,6 +127,64 @@ class Settings(BaseSettings):
 
     price_list_root_folder: str = "03_PROVEEDORES"
     price_list_scan_all_subfolders: bool = True
+
+    # Resultados de Loterías / Lotería IA (deshabilitado por defecto)
+    lottery_module_enabled: bool = False
+    lottery_sync_enabled: bool = False
+    lottery_sync_write_enabled: bool = False
+    lottery_sync_days_back: int = 3
+    lottery_sync_request_delay: float = 2.5
+    lottery_sync_max_retries: int = 4
+    lottery_sync_schedule: str = "0 */6 * * *"
+    lottery_sync_source: str = "api"
+    lottery_export_max_rows: int = 5000
+    lottery_max_range_days: int = 3660
+    lottery_default_page_size: int = 50
+    lottery_max_page_size: int = 500
+    lottery_max_compare_lotteries: int = 10
+    lottery_max_draw_count: int = 200
+    lottery_max_days_window: int = 90
+    lottery_max_stats_limit: int = 100
+    lottery_chat_max_history_messages: int = 30
+    lottery_chat_max_tool_calls: int = 8
+    lottery_chat_timeout_seconds: int = 60
+    lottery_chat_max_sessions_per_user: int = 100
+    lottery_chat_max_result_rows: int = 500
+    lottery_export_max_rows_csv: int = 100000
+    lottery_export_max_rows_xlsx: int = 50000
+    lottery_export_max_rows_pdf: int = 5000
+    lottery_export_expiration_minutes: int = 30
+    lottery_export_max_file_size_mb: int = 25
+    lottery_exports_path: str = "/tmp/jaios-lottery-exports"
+    lottery_scheduler_enabled: bool = False
+    lottery_scheduler_mode: str = "disabled"  # disabled | observe | guarded_write
+    lottery_scraping_enabled: bool = False
+    lottery_share_max_ttl_hours: int = 168
+    lottery_share_default_ttl_hours: int = 24
+    lottery_share_max_views_default: int = 50
+    lottery_sync_api_base_url: str = "https://api.elboletoganador.com/api"
+    lottery_sync_user_agent: str = "JAIOS-LotterySync/0.1 (+production; write-disabled)"
+    lottery_sync_lock_ttl_seconds: int = 120
+    lottery_sync_api_allowlist: str = "api.elboletoganador.com"
+    lottery_sync_max_range_days_write: int = 7
+    lottery_sync_automatic_write_enabled: bool = False
+    lottery_sync_interval_minutes: int = 60
+    lottery_sync_lookback_days: int = 3
+    lottery_sync_max_range_days: int = 7
+    lottery_sync_allowed_database: str = "jaios"
+    lottery_sync_allowed_port: int = 5432
+    lottery_sync_max_new_per_run: int = 500
+    lottery_sync_max_changed_per_run: int = 0
+    lottery_sync_max_conflicts_per_run: int = 0
+    lottery_sync_max_invalid_per_run: int = 10
+    lottery_sync_require_dry_run: bool = True
+    lottery_sync_require_reconciliation: bool = True
+    lottery_sync_timezone: str = "America/Santo_Domingo"
+    lottery_sync_circuit_failure_threshold: int = 3
+    lottery_sync_write_flag_max_minutes: int = 15
+    lottery_sync_max_run_minutes: int = 15
+    lottery_sync_backup_max_age_hours: int = 24
+    lottery_source_contract_version: str = "elboletoganador.historial.v1"
 
     @property
     def knowledge_sync_folder_list(self) -> list[str]:

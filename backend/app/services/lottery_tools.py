@@ -329,6 +329,45 @@ class LotteryToolExecutor:
             return res, len(res.items), {"numbers": [str(params["number"])]}
 
         if tool == LotteryToolName.COMPARE_LOTTERIES:
+            if params.get("number"):
+                number = str(params["number"])
+                items = []
+                for lot_name in list(params["lotteries"]):
+                    res = await self.query.by_number(
+                        lot_name,
+                        number,
+                        from_date=params.get("from_date"),
+                        to_date=params.get("to_date"),
+                        page=1,
+                        page_size=5,
+                    )
+                    last = None
+                    rows = getattr(res, "items", None) or []
+                    if rows:
+                        first = rows[0]
+                        last = getattr(first, "draw_date", None) or (
+                            first.get("draw_date") if isinstance(first, dict) else None
+                        )
+                    total = getattr(getattr(res, "pagination", None), "total", None)
+                    if total is None:
+                        total = getattr(res, "total", len(rows))
+                    items.append(
+                        {
+                            "lottery": lot_name,
+                            "number": number,
+                            "occurrences": total,
+                            "last_draw_date": str(last) if last else None,
+                        }
+                    )
+                return {
+                    "mode": "number_compare",
+                    "number": number,
+                    "items": items,
+                    "disclaimer": "Análisis histórico informativo; no es predicción.",
+                }, sum(i["occurrences"] or 0 for i in items), {
+                    "semantics": "compare:number",
+                    "numbers": [number],
+                }
             res = await self.query.compare(
                 list(params["lotteries"]),
                 params["from_date"] if isinstance(params["from_date"], date) else date.fromisoformat(str(params["from_date"])),

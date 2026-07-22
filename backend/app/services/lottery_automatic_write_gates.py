@@ -1,4 +1,4 @@
-"""Gates de escritura automática del scheduler (solo staging)."""
+"""Gates de escritura automática del scheduler (staging o allowlist configurada)."""
 
 from __future__ import annotations
 
@@ -7,8 +7,7 @@ from pathlib import Path
 from typing import Any
 
 from app.config import settings
-from app.services.lottery_sync_gates import STAGING_DB_NAME, STAGING_ENV, STAGING_PORT, parse_db_url
-from app.services.lottery_importer import assert_not_production_database
+from app.services.lottery_sync_gates import STAGING_ENV, assert_sync_write_target_allowed
 from app.services.lottery_sync_service import SyncEnvironmentGuardError
 
 
@@ -22,7 +21,7 @@ def assert_automatic_write_gates(
     write_enabled_since: datetime | None = None,
 ) -> None:
     """Todas las condiciones deben cumplirse antes de guarded_write automático."""
-    assert_not_production_database(database_url)
+    assert_sync_write_target_allowed(database_url)
 
     if (mode or "").strip().lower() != "guarded_write":
         raise SyncEnvironmentGuardError("Modo automático debe ser guarded_write")
@@ -42,17 +41,6 @@ def assert_automatic_write_gates(
         raise SyncEnvironmentGuardError("Circuit breaker bloquea escritura")
     if settings.lottery_sync_require_dry_run and dry_run_report is None:
         raise SyncEnvironmentGuardError("Dry-run obligatorio antes de escritura automática")
-
-    parsed = parse_db_url(database_url)
-    host = (parsed.hostname or "").lower()
-    db = (parsed.path or "").lstrip("/").lower()
-    port = parsed.port
-    if host not in ("localhost", "127.0.0.1", "::1"):
-        raise SyncEnvironmentGuardError(f"Host no autorizado: {host}")
-    if port != STAGING_PORT or port != settings.lottery_sync_allowed_port:
-        raise SyncEnvironmentGuardError(f"Puerto debe ser {STAGING_PORT}")
-    if db != STAGING_DB_NAME or db != settings.lottery_sync_allowed_database:
-        raise SyncEnvironmentGuardError(f"Database debe ser {STAGING_DB_NAME}")
 
     if not backup_path:
         raise SyncEnvironmentGuardError("Backup pre-run obligatorio para guarded_write")
@@ -86,9 +74,8 @@ def assert_automatic_write_gates(
         raise SyncEnvironmentGuardError(f"CONFLICTS {conflicts} bloquean escritura automática")
     if invalid > settings.lottery_sync_max_invalid_per_run:
         raise SyncEnvironmentGuardError(f"INVALID {invalid} excede límite")
-    # Ambiguous never inserted; warn via alerts but do not block other NEW if only ambiguity present
     _ = ambiguous
-    _ = STAGING_ENV  # documented constant
+    _ = STAGING_ENV
 
 
 def compute_lookback_range(*, max_draw_date, lookback_days: int | None = None, today=None):

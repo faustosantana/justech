@@ -1,12 +1,10 @@
-"""Gates de escritura sync — solo staging jaios_lottery_staging @ :5434."""
+"""Gates de escritura sync — staging local o allowlist de configuración (docker postgres/jaios)."""
 
 from __future__ import annotations
 
 from pathlib import Path
-from urllib.parse import urlparse
 
 from app.config import settings
-from app.services.lottery_importer import assert_not_production_database
 from app.services.lottery_sync_service import SyncEnvironmentGuardError
 
 
@@ -14,14 +12,42 @@ STAGING_DB_NAME = "jaios_lottery_staging"
 STAGING_PORT = 5434
 STAGING_ENV = "staging"
 
+_ALLOWED_HOSTS = frozenset({"localhost", "127.0.0.1", "::1", "postgres", "db"})
+
 
 def parse_db_url(database_url: str):
+    from urllib.parse import urlparse
+
     parsed = urlparse(
         database_url.replace("postgresql+asyncpg://", "postgresql://").replace(
             "postgresql+psycopg2://", "postgresql://"
         )
     )
     return parsed
+
+
+def assert_sync_write_target_allowed(database_url: str) -> str:
+    """Permite staging (:5434/jaios_lottery_staging) o allowlist de settings (prod docker)."""
+    parsed = parse_db_url(database_url)
+    host = (parsed.hostname or "").lower()
+    db = (parsed.path or "").lstrip("/").lower()
+    port = parsed.port or 5432
+
+    if host not in _ALLOWED_HOSTS:
+        raise SyncEnvironmentGuardError(f"Host no autorizado para escritura sync: {host}")
+
+    if port == STAGING_PORT and db == STAGING_DB_NAME:
+        return "staging"
+
+    allowed_db = (settings.lottery_sync_allowed_database or "").strip().lower()
+    allowed_port = int(settings.lottery_sync_allowed_port or 5432)
+    if port == allowed_port and db == allowed_db:
+        return "allowlist"
+
+    raise SyncEnvironmentGuardError(
+        f"Database/puerto no permitidos para escritura sync (db={db}, port={port}; "
+        f"staging={STAGING_DB_NAME}:{STAGING_PORT} o allowlist={allowed_db}:{allowed_port})"
+    )
 
 
 def assert_write_gates(
@@ -34,23 +60,13 @@ def assert_write_gates(
     backup_path: str | Path | None,
     via_scheduler: bool = False,
 ) -> None:
-    """Bloquea escritura salvo staging explícito con todas las confirmaciones."""
-    assert_not_production_database(database_url)
+    """Bloquea escritura salvo target allowlist/staging con confirmaciones."""
     if not write:
         return
 
+    target = assert_sync_write_target_allowed(database_url)
+
     if via_scheduler:
-        # Path automático: confirmaciones CLI no aplican; usa assert_automatic_write_gates.
-        parsed = parse_db_url(database_url)
-        host = (parsed.hostname or "").lower()
-        db = (parsed.path or "").lstrip("/").lower()
-        port = parsed.port
-        if host not in ("localhost", "127.0.0.1", "::1"):
-            raise SyncEnvironmentGuardError(f"Host no autorizado para escritura: {host}")
-        if port != STAGING_PORT:
-            raise SyncEnvironmentGuardError(f"Puerto debe ser {STAGING_PORT}, recibido {port}")
-        if db != STAGING_DB_NAME:
-            raise SyncEnvironmentGuardError(f"Database debe ser {STAGING_DB_NAME}, recibido {db}")
         if not backup_path:
             raise SyncEnvironmentGuardError("Backup pre-run obligatorio")
         bp = Path(backup_path)
@@ -60,24 +76,26 @@ def assert_write_gates(
 
     if not yes:
         raise SyncEnvironmentGuardError("Escritura requiere --yes")
-    if (environment or "").strip().lower() != STAGING_ENV:
-        raise SyncEnvironmentGuardError("--environment debe ser exactamente 'staging'")
-    if (confirm_database or "").strip() != STAGING_DB_NAME:
-        raise SyncEnvironmentGuardError(
-            f"--confirm-database debe ser exactamente '{STAGING_DB_NAME}'"
-        )
 
-    parsed = parse_db_url(database_url)
-    host = (parsed.hostname or "").lower()
-    db = (parsed.path or "").lstrip("/").lower()
-    port = parsed.port
-
-    if host not in ("localhost", "127.0.0.1", "::1"):
-        raise SyncEnvironmentGuardError(f"Host no autorizado para escritura: {host}")
-    if port != STAGING_PORT:
-        raise SyncEnvironmentGuardError(f"Puerto debe ser {STAGING_PORT}, recibido {port}")
-    if db != STAGING_DB_NAME:
-        raise SyncEnvironmentGuardError(f"Database debe ser {STAGING_DB_NAME}, recibido {db}")
+    if target == "staging":
+        if (environment or "").strip().lower() != STAGING_ENV:
+            raise SyncEnvironmentGuardError("--environment debe ser exactamente 'staging'")
+        if (confirm_database or "").strip() != STAGING_DB_NAME:
+            raise SyncEnvironmentGuardError(
+                f"--confirm-database debe ser exactamente '{STAGING_DB_NAME}'"
+            )
+    else:
+        # Allowlist (p.ej. docker postgres/jaios): environment production|allowlist
+        env = (environment or "").strip().lower()
+        if env not in ("production", "allowlist", "prod"):
+            raise SyncEnvironmentGuardError(
+                "--environment debe ser 'production' o 'allowlist' para escritura en allowlist"
+            )
+        expected = (settings.lottery_sync_allowed_database or "").strip()
+        if (confirm_database or "").strip() != expected:
+            raise SyncEnvironmentGuardError(
+                f"--confirm-database debe ser exactamente '{expected}'"
+            )
 
     if not settings.lottery_sync_enabled:
         raise SyncEnvironmentGuardError("LOTTERY_SYNC_ENABLED debe ser true temporalmente")

@@ -106,6 +106,44 @@ def test_intent_following_draws_distinct():
     assert intent.params["count"] == 7
 
 
+def test_intent_five_following_draws_word_number():
+    ctx = LotterySessionContext(last_lottery="Real", base_date=date(2022, 3, 15))
+    intent = resolve_intent("¿Y los cinco sorteos siguientes?", ctx)
+    assert intent.tool == LotteryToolName.GET_FOLLOWING_DRAWS
+    assert intent.params["count"] == 5
+
+
+def test_intent_number_occurrences_and_last():
+    ctx = LotterySessionContext(last_lottery="Real", base_date=date(2022, 3, 15))
+    occ = resolve_intent("¿Cuántas veces salió el 01 en Quiniela Real?", ctx)
+    assert occ.tool == LotteryToolName.GET_NUMBER_OCCURRENCES
+    assert occ.params["number"] == "01"
+    last = resolve_intent("¿Cuándo fue la última vez que salió el 19?", ctx)
+    assert last.tool == LotteryToolName.GET_LAST_OCCURRENCE
+    assert last.params["number"] == "19"
+
+
+def test_intent_compare_number_two_lotteries():
+    ctx = LotterySessionContext(last_lottery="Real", base_date=date(2022, 3, 15))
+    intent = resolve_intent(
+        "Compara el número 01 entre Quiniela Real y Nacional Noche.",
+        ctx,
+    )
+    assert intent.tool == LotteryToolName.COMPARE_LOTTERIES
+    assert intent.params["number"] == "01"
+    assert "Real" in intent.params["lotteries"]
+    assert "Nacional Noche" in intent.params["lotteries"]
+
+
+def test_intent_freshness_and_last30_compare():
+    ctx = LotterySessionContext(last_lottery="Real", base_date=date(2022, 3, 15))
+    fresh = resolve_intent("¿Hasta qué fecha está actualizada Quiniela Real?", ctx)
+    assert fresh.tool == LotteryToolName.GET_DRAW_COUNT
+    cmp30 = resolve_intent("Compara los últimos 30 sorteos de tres loterías.", ctx)
+    assert cmp30.tool == LotteryToolName.COMPARE_LOTTERIES
+    assert len(cmp30.params["lotteries"]) >= 3
+
+
 def test_intent_prediction_refused():
     intent = resolve_intent("¿Cuál número va a salir mañana?", LotterySessionContext())
     assert intent.kind == "prediction_refused"

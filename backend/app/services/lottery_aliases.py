@@ -255,6 +255,14 @@ class LotteryResolver:
                 lottery=row,
                 message="Lotería inactiva.",
             )
+        # Lottery 2.0: searchable gate (admin can block queries without deactivating)
+        if hasattr(row, "is_searchable") and not row.is_searchable and not allow_inactive:
+            return LotteryResolveResult(
+                query=query,
+                status=ResolveStatus.INACTIVE,
+                lottery=row,
+                message="Lotería no disponible para consulta.",
+            )
         return LotteryResolveResult(query=query, status=ResolveStatus.RESOLVED, lottery=row)
 
 

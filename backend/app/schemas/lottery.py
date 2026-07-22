@@ -38,6 +38,17 @@ class LotteryLotteryResponse(BaseModel):
     first_draw_date: date | None = None
     last_draw_date: date | None = None
     draw_count: int = 0
+    # Lottery 2.0 flags (optional for backward-compatible clients)
+    is_visible: bool = True
+    is_searchable: bool = True
+    is_ai_enabled: bool = True
+    is_comparable: bool = True
+    is_sync_enabled: bool = False
+    is_featured: bool = False
+    commercial_name: str | None = None
+    short_name: str | None = None
+    display_order: int = 1000
+    health_status: str = "unknown"
 
 
 class LotteryListResponse(BaseModel):

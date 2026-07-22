@@ -64,6 +64,29 @@ import type {
   OdooSaleHistoryItem,
   OdooSummary,
 } from "./odoo";
+import type {
+  CalendarWindowResponse,
+  ComparisonResponse,
+  DateQueryResponse,
+  DrawsWindowResponse,
+  FrequencyResponse,
+  LotteryAdminBulkResponse,
+  LotteryAdminLottery,
+  LotteryCatalogResponse,
+  LotteryChatMessage,
+  LotteryChatSendResponse,
+  LotteryChatSession,
+  LotteryDashboard,
+  LotteryDashboardV2,
+  LotteryDetail,
+  LotteryExportResponse,
+  LotteryFavorite,
+  LotteryHealth,
+  LotteryListResponse,
+  LotteryPreferences,
+  LotteryRecentQuery,
+  LotterySavedQuery,
+} from "./lottery";
 import {
   clearAuthTokens,
   getAccessToken,
@@ -1886,8 +1909,67 @@ export const apiClient = {
 
   getLotteryHealth: () => request<LotteryHealth>("/lottery/health", {}, true),
 
-  getLotteryLotteries: (limit = 50, offset = 0) =>
-    request<LotteryListResponse>(`/lottery/lotteries${buildQuery({ limit, offset })}`, {}, true),
+  getLotteryLotteries: (
+    limit = 50,
+    offset = 0,
+    filters?: {
+      searchable_only?: boolean;
+      visible_only?: boolean;
+      ai_only?: boolean;
+      comparable_only?: boolean;
+      include_aggregates?: boolean;
+    },
+  ) =>
+    request<LotteryListResponse>(
+      `/lottery/lotteries${buildQuery({
+        limit,
+        offset,
+        searchable_only: filters?.searchable_only,
+        visible_only: filters?.visible_only,
+        ai_only: filters?.ai_only,
+        comparable_only: filters?.comparable_only,
+        include_aggregates: filters?.include_aggregates,
+      })}`,
+      {},
+      true,
+    ),
+
+  getLotteryDashboardV2: (params?: { from_date?: string; to_date?: string }) =>
+    request<LotteryDashboardV2>(`/lottery/dashboard/v2${buildQuery(params ?? {})}`, {}, true),
+
+  getLotteryCatalog: (params: {
+    q?: string;
+    country?: string;
+    featured_only?: boolean;
+    favorites_only?: boolean;
+    page?: number;
+    page_size?: number;
+  }) => request<LotteryCatalogResponse>(`/lottery/catalog${buildQuery(params)}`, {}, true),
+
+  getLotteryAdminLotteries: (params?: {
+    q?: string;
+    active?: boolean;
+    visible?: boolean;
+    sync_enabled?: boolean;
+    limit?: number;
+    offset?: number;
+  }) => request<LotteryAdminLottery[]>(`/lottery/admin/lotteries${buildQuery(params ?? {})}`, {}, true),
+
+  patchLotteryAdminLottery: (id: string, body: Record<string, unknown>) =>
+    request<LotteryAdminLottery>(`/lottery/admin/lotteries/${encodeURIComponent(id)}`, {
+      method: "PATCH",
+      body: JSON.stringify(body),
+    }, true),
+
+  postLotteryAdminLotteriesBulk: (body: {
+    lottery_ids: string[];
+    action: string;
+    display_order?: number;
+  }) =>
+    request<LotteryAdminBulkResponse>("/lottery/admin/lotteries/bulk", {
+      method: "POST",
+      body: JSON.stringify(body),
+    }, true),
 
   getLotteryByDate: (params: { lottery: string; date: string; game?: string }) =>
     request<DateQueryResponse>(`/lottery/results/by-date${buildQuery(params)}`, {}, true),

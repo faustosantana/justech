@@ -1,26 +1,38 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Star } from "lucide-react";
+import { ChevronLeft, ChevronRight, LineChart, Search, Star } from "lucide-react";
 
 import { AppShell } from "@/components/layout/app-shell";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
 import { ApiError, apiClient } from "@/lib/api";
 import { getAccessToken, getUserRole } from "@/lib/auth";
-import { canAccessLotteryModule, type LotteryLottery } from "@/lib/lottery";
+import {
+  canAccessLotteryModule,
+  healthStatusLabel,
+  type LotteryCatalogCard,
+} from "@/lib/lottery";
+
+const PAGE_SIZE = 50;
 
 export default function LotteryCatalogPage() {
   const router = useRouter();
-  const [items, setItems] = useState<LotteryLottery[]>([]);
-  const [favIds, setFavIds] = useState<Set<string>>(new Set());
+  const [items, setItems] = useState<LotteryCatalogCard[]>([]);
+  const [total, setTotal] = useState(0);
+  const [page, setPage] = useState(1);
   const [q, setQ] = useState("");
-  const [activeOnly, setActiveOnly] = useState(true);
+  const [searchInput, setSearchInput] = useState("");
+  const [featuredOnly, setFeaturedOnly] = useState(false);
+  const [favoritesOnly, setFavoritesOnly] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+
+  const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
 
   const load = useCallback(async () => {
     if (!getAccessToken()) {
@@ -32,120 +44,188 @@ export default function LotteryCatalogPage() {
       setLoading(false);
       return;
     }
+    setLoading(true);
+    setError(null);
     try {
-      const [list, favs] = await Promise.all([
-        apiClient.getLotteryLotteries(100, 0),
-        apiClient.listLotteryFavorites().catch(() => ({ items: [] })),
-      ]);
-      setItems(list.items);
-      setFavIds(new Set(favs.items.map((f) => f.lottery_id)));
+      const res = await apiClient.getLotteryCatalog({
+        q: q || undefined,
+        featured_only: featuredOnly || undefined,
+        favorites_only: favoritesOnly || undefined,
+        page,
+        page_size: PAGE_SIZE,
+      });
+      setItems(res.items);
+      setTotal(res.total);
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "Error al cargar catálogo");
     } finally {
       setLoading(false);
     }
-  }, [router]);
+  }, [router, q, featuredOnly, favoritesOnly, page]);
 
   useEffect(() => {
     void load();
   }, [load]);
 
-  const filtered = useMemo(() => {
-    const term = q.trim().toLowerCase();
-    return items
-      .filter((l) => (activeOnly ? l.active : true))
-      .filter(
-        (l) =>
-          !term ||
-          l.name.toLowerCase().includes(term) ||
-          l.slug.toLowerCase().includes(term) ||
-          String(l.source_id).includes(term),
-      )
-      .sort((a, b) => {
-        const af = favIds.has(a.id) ? 0 : 1;
-        const bf = favIds.has(b.id) ? 0 : 1;
-        if (af !== bf) return af - bf;
-        return a.name.localeCompare(b.name, "es");
-      });
-  }, [items, q, activeOnly, favIds]);
-
-  const toggleFav = async (lot: LotteryLottery) => {
+  const toggleFav = async (card: LotteryCatalogCard) => {
     try {
-      if (favIds.has(lot.id)) {
-        await apiClient.removeLotteryFavorite(lot.id);
-        setFavIds((prev) => {
-          const n = new Set(prev);
-          n.delete(lot.id);
-          return n;
-        });
+      if (card.is_favorite) {
+        await apiClient.removeLotteryFavorite(card.id);
       } else {
-        await apiClient.addLotteryFavorite(lot.id);
-        setFavIds((prev) => new Set(prev).add(lot.id));
+        await apiClient.addLotteryFavorite(card.id);
       }
+      await load();
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "No se pudo actualizar favorito");
     }
   };
 
+  const submitSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    setPage(1);
+    setQ(searchInput.trim());
+  };
+
   return (
-    <AppShell title="Catálogo de loterías" description="50 loterías del histórico importado">
-      <div className="mb-3 flex flex-wrap gap-2">
+    <AppShell title="Catálogo de loterías" description="Todas las loterías visibles autorizadas">
+      <form onSubmit={submitSearch} className="mb-3 flex flex-wrap gap-2">
         <Input
           aria-label="Buscar lotería"
-          placeholder="Buscar por nombre o alias…"
-          value={q}
-          onChange={(e) => setQ(e.target.value)}
+          placeholder="Buscar por nombre…"
+          value={searchInput}
+          onChange={(e) => setSearchInput(e.target.value)}
           className="max-w-xs"
         />
+        <Button type="submit" variant="outline" size="sm">
+          <Search className="mr-1.5 h-3.5 w-3.5" />
+          Buscar
+        </Button>
         <label className="flex items-center gap-2 text-sm">
           <input
             type="checkbox"
-            checked={activeOnly}
-            onChange={(e) => setActiveOnly(e.target.checked)}
+            checked={featuredOnly}
+            onChange={(e) => {
+              setFeaturedOnly(e.target.checked);
+              setPage(1);
+            }}
           />
-          Solo activas
+          Destacadas
         </label>
-        <Button asChild variant="outline">
+        <label className="flex items-center gap-2 text-sm">
+          <input
+            type="checkbox"
+            checked={favoritesOnly}
+            onChange={(e) => {
+              setFavoritesOnly(e.target.checked);
+              setPage(1);
+            }}
+          />
+          Favoritas
+        </label>
+        <Button asChild variant="outline" size="sm">
           <Link href="/lottery">Inicio</Link>
         </Button>
-      </div>
-      {loading && <p className="text-sm text-muted-foreground">Cargando…</p>}
-      {error && <p className="text-sm text-destructive">{error}</p>}
+      </form>
+
+      <p className="mb-3 text-sm text-muted-foreground">
+        {loading ? "Cargando…" : `${total.toLocaleString()} lotería(s) · página ${page} de ${totalPages}`}
+      </p>
+
+      {error && <p className="mb-3 text-sm text-destructive">{error}</p>}
+
+      {!loading && items.length === 0 && (
+        <Card>
+          <CardContent className="py-8 text-center text-sm text-muted-foreground">
+            No hay loterías que coincidan con los filtros.
+          </CardContent>
+        </Card>
+      )}
+
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-        {filtered.map((lot) => (
-          <Card key={lot.id}>
+        {items.map((card) => (
+          <Card key={card.id}>
             <CardHeader className="pb-2">
               <CardTitle className="flex items-start justify-between gap-2 text-base">
-                <Link className="hover:underline" href={`/lottery/lotteries/${lot.slug}`}>
-                  {lot.name}
+                <Link className="hover:underline" href={`/lottery/lotteries/${card.slug}`}>
+                  {card.commercial_name || card.name}
                 </Link>
                 <button
                   type="button"
-                  aria-label={favIds.has(lot.id) ? "Quitar favorito" : "Marcar favorito"}
-                  onClick={() => void toggleFav(lot)}
+                  aria-label={card.is_favorite ? "Quitar favorito" : "Marcar favorito"}
+                  onClick={() => void toggleFav(card)}
                   className="text-amber-500"
                 >
-                  <Star className={`h-4 w-4 ${favIds.has(lot.id) ? "fill-current" : ""}`} />
+                  <Star className={`h-4 w-4 ${card.is_favorite ? "fill-current" : ""}`} />
                 </button>
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-1 text-xs text-muted-foreground">
-              <p>
-                {lot.first_draw_date || "—"} → {lot.last_draw_date || "—"}
-              </p>
-              <p>{lot.draw_count.toLocaleString()} sorteos · {lot.active ? "activa" : "inactiva"}</p>
+            <CardContent className="space-y-2 text-xs text-muted-foreground">
+              {card.last_numbers.length > 0 ? (
+                <p className="font-mono text-base font-semibold text-foreground">
+                  {card.last_numbers.join(" · ")}
+                </p>
+              ) : (
+                <p>Sin números recientes</p>
+              )}
+              <p>Última fecha: {card.last_draw_date || "—"}</p>
+              <p>{card.draw_count.toLocaleString()} sorteos</p>
+              <div className="flex flex-wrap gap-1.5">
+                <Badge
+                  variant={
+                    card.health_status === "healthy"
+                      ? "success"
+                      : card.health_status === "error"
+                        ? "danger"
+                        : "muted"
+                  }
+                >
+                  {healthStatusLabel(card.health_status)}
+                </Badge>
+                {card.is_featured && <Badge variant="warning">Destacada</Badge>}
+              </div>
               <div className="flex flex-wrap gap-2 pt-2">
                 <Button asChild size="sm" variant="outline">
-                  <Link href={`/lottery/search?lottery=${encodeURIComponent(lot.name)}`}>Consultar</Link>
+                  <Link href={`/lottery/search?lottery=${encodeURIComponent(card.name)}`}>
+                    Consultar
+                  </Link>
                 </Button>
                 <Button asChild size="sm" variant="outline">
-                  <Link href={`/lottery/chat`}>Chat</Link>
+                  <Link href={`/lottery/statistics?lottery=${encodeURIComponent(card.name)}`}>
+                    <LineChart className="mr-1 h-3.5 w-3.5" />
+                    Estadísticas
+                  </Link>
                 </Button>
               </div>
             </CardContent>
           </Card>
         ))}
       </div>
+
+      {totalPages > 1 && (
+        <div className="mt-4 flex items-center justify-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            disabled={page <= 1 || loading}
+            onClick={() => setPage((p) => Math.max(1, p - 1))}
+          >
+            <ChevronLeft className="h-4 w-4" />
+            Anterior
+          </Button>
+          <span className="text-sm text-muted-foreground">
+            {page} / {totalPages}
+          </span>
+          <Button
+            variant="outline"
+            size="sm"
+            disabled={page >= totalPages || loading}
+            onClick={() => setPage((p) => p + 1)}
+          >
+            Siguiente
+            <ChevronRight className="h-4 w-4" />
+          </Button>
+        </div>
+      )}
     </AppShell>
   );
 }

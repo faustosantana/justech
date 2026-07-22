@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from datetime import datetime, timezone
 
-from sqlalchemy import func, select, text
+from sqlalchemy import and_, func, select, text
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.config import settings
@@ -77,7 +77,17 @@ class LotteryService:
             note=note,
         )
 
-    async def list_lotteries(self, *, limit: int = 50, offset: int = 0) -> LotteryListResponse:
+    async def list_lotteries(
+        self,
+        *,
+        limit: int = 50,
+        offset: int = 0,
+        searchable_only: bool = False,
+        visible_only: bool = False,
+        ai_only: bool = False,
+        comparable_only: bool = False,
+        include_aggregates: bool = False,
+    ) -> LotteryListResponse:
         if not settings.lottery_module_enabled:
             return LotteryListResponse(
                 items=[],
@@ -86,11 +96,28 @@ class LotteryService:
                 note="Módulo deshabilitado.",
             )
 
-        total = int((await self.db.execute(select(func.count()).select_from(LotteryLottery))).scalar_one())
+        filters = []
+        if not include_aggregates:
+            filters.append(LotteryLottery.is_aggregate.is_(False))
+        if searchable_only:
+            filters.append(LotteryLottery.is_searchable.is_(True))
+        if visible_only:
+            filters.append(LotteryLottery.is_visible.is_(True))
+        if ai_only:
+            filters.append(LotteryLottery.is_ai_enabled.is_(True))
+        if comparable_only:
+            filters.append(LotteryLottery.is_comparable.is_(True))
+
+        count_q = select(func.count()).select_from(LotteryLottery)
+        list_q = select(LotteryLottery)
+        if filters:
+            count_q = count_q.where(and_(*filters))
+            list_q = list_q.where(and_(*filters))
+
+        total = int((await self.db.execute(count_q)).scalar_one())
         rows = (
             await self.db.execute(
-                select(LotteryLottery)
-                .order_by(LotteryLottery.name.asc())
+                list_q.order_by(LotteryLottery.display_order.asc(), LotteryLottery.name.asc())
                 .limit(limit)
                 .offset(offset)
             )
@@ -98,7 +125,7 @@ class LotteryService:
 
         note = None
         if total == 0:
-            note = "Catálogo vacío: la importación histórica se realizará en Fase 2."
+            note = "Catálogo vacío o filtros sin resultados."
 
         return LotteryListResponse(
             items=[LotteryLotteryResponse.model_validate(r) for r in rows],

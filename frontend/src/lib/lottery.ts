@@ -225,3 +225,162 @@ export interface LotteryExportResponse {
   expires_at: string;
   download_url: string;
 }
+
+/** Tarjeta del catálogo Lottery 2.0. */
+export interface LotteryCatalogCard {
+  id: string;
+  slug: string;
+  name: string;
+  commercial_name?: string | null;
+  short_name?: string | null;
+  country?: string | null;
+  logo_url?: string | null;
+  icon_key?: string | null;
+  is_featured: boolean;
+  is_favorite: boolean;
+  draw_count: number;
+  last_draw_date?: string | null;
+  last_numbers: string[];
+  next_draw_estimated_at?: string | null;
+  health_status: string;
+  is_searchable: boolean;
+  is_comparable: boolean;
+  is_ai_enabled: boolean;
+}
+
+export interface LotteryCatalogResponse {
+  items: LotteryCatalogCard[];
+  total: number;
+  page: number;
+  page_size: number;
+}
+
+export interface LotteryLatestResult {
+  lottery: string;
+  slug: string;
+  date: string | null;
+  numbers: string[];
+}
+
+export interface LotteryNumberStat {
+  number: string;
+  count: number;
+}
+
+export interface LotteryDashboardV2 {
+  lotteries_active: number;
+  lotteries_visible: number;
+  lotteries_synced: number;
+  results_today: number;
+  draws_historical: number;
+  numbers_stored: number;
+  last_update_at?: string | null;
+  sources_healthy: number;
+  sources_error: number;
+  latest_results: LotteryLatestResult[];
+  featured: LotteryCatalogCard[];
+  favorites: LotteryCatalogCard[];
+  top_numbers: LotteryNumberStat[];
+  bottom_numbers: LotteryNumberStat[];
+  recent_queries: Record<string, unknown>[];
+  sync_summary: Record<string, unknown>;
+  coverage: Record<string, unknown>;
+  disclaimer: string;
+}
+
+/** Lotería administrable (Lottery 2.0). */
+export interface LotteryAdminLottery {
+  id: string;
+  source_id: number;
+  name: string;
+  commercial_name?: string | null;
+  short_name?: string | null;
+  normalized_name: string;
+  slug: string;
+  country?: string | null;
+  timezone: string;
+  currency?: string | null;
+  active: boolean;
+  is_loto: boolean;
+  is_aggregate: boolean;
+  is_visible: boolean;
+  is_visible_dashboard: boolean;
+  is_visible_catalog: boolean;
+  is_searchable: boolean;
+  is_ai_enabled: boolean;
+  is_comparable: boolean;
+  is_sync_enabled: boolean;
+  is_auto_write_enabled: boolean;
+  is_featured: boolean;
+  display_order: number;
+  logo_url?: string | null;
+  icon_key?: string | null;
+  data_source?: string | null;
+  adapter_key?: string | null;
+  external_id?: string | null;
+  draw_schedule_cron?: string | null;
+  draw_days?: string | null;
+  draw_times?: string | null;
+  sync_interval_minutes?: number | null;
+  sync_post_draw_delay_minutes?: number | null;
+  sync_max_retries?: number | null;
+  sync_active_hours?: string | null;
+  last_sync_at?: string | null;
+  last_result_at?: string | null;
+  next_draw_estimated_at?: string | null;
+  health_status: string;
+  last_error?: string | null;
+  draw_count: number;
+  numbers_count: number;
+  first_draw_date?: string | null;
+  last_draw_date?: string | null;
+  admin_notes?: string | null;
+}
+
+export type LotteryAdminBulkAction =
+  | "enable"
+  | "disable"
+  | "show"
+  | "hide"
+  | "allow_search"
+  | "block_search"
+  | "enable_ai"
+  | "disable_ai"
+  | "enable_sync"
+  | "disable_sync"
+  | "enable_auto_write"
+  | "disable_auto_write"
+  | "feature"
+  | "unfeature"
+  | "set_order";
+
+export interface LotteryAdminBulkResponse {
+  updated: number;
+  action: string;
+}
+
+const LOTTERY_ADMIN_ROLES = new Set(["owner", "admin", "superadmin"]);
+
+export function canAccessLotteryAdmin(
+  role: string | null,
+  permissions?: string[] | null,
+): boolean {
+  if (!role) return false;
+  const r = role.toLowerCase();
+  if (LOTTERY_ADMIN_ROLES.has(r)) return true;
+  if (!permissions?.length) return false;
+  return permissions.includes("lottery.admin") || permissions.includes("lottery_admin_lotteries");
+}
+
+export function healthStatusLabel(status: string): string {
+  switch (status) {
+    case "healthy":
+      return "Saludable";
+    case "error":
+      return "Error";
+    case "degraded":
+      return "Degradado";
+    default:
+      return "Desconocido";
+  }
+}

@@ -401,6 +401,9 @@ class LotterySyncService:
         )
         if not lot:
             return "unknown_lottery"
+        # Lottery 2.0: per-lottery sync gate
+        if hasattr(lot, "is_sync_enabled") and not lot.is_sync_enabled:
+            return "skipped_sync_disabled"
         try:
             d = date.fromisoformat(cand.draw_date)
         except ValueError:

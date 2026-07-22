@@ -257,9 +257,20 @@ class LotterySyncWriter:
                 if cls == "new":
                     report.records_new += 1
                     if write:
-                        draw_id = await self._insert_draw(cand, run.id)
-                        inserted_ids.append(str(draw_id))
-                        report.records_inserted += 1
+                        lot_row = await self.db.scalar(
+                            select(LotteryLottery).where(LotteryLottery.source_id == cand.source_id)
+                        )
+                        if lot_row is not None and hasattr(lot_row, "is_auto_write_enabled") and not lot_row.is_auto_write_enabled:
+                            report.records_skipped += 1
+                            classifications["skipped_auto_write_disabled"] = (
+                                classifications.get("skipped_auto_write_disabled", 0) + 1
+                            )
+                        else:
+                            draw_id = await self._insert_draw(cand, run.id)
+                            inserted_ids.append(str(draw_id))
+                            report.records_inserted += 1
+                elif cls == "skipped_sync_disabled":
+                    report.records_skipped += 1
                 elif cls == "unchanged":
                     report.records_unchanged += 1
                 elif cls == "changed":
@@ -351,6 +362,8 @@ class LotterySyncWriter:
         lot = await self.db.scalar(select(LotteryLottery).where(LotteryLottery.source_id == cand.source_id))
         if not lot:
             return "unknown_lottery"
+        if hasattr(lot, "is_sync_enabled") and not lot.is_sync_enabled:
+            return "skipped_sync_disabled"
         try:
             d = date.fromisoformat(cand.draw_date)
         except ValueError:

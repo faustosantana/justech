@@ -35,6 +35,15 @@ LOTTERY_PERMISSIONS = frozenset({
     "lottery.import",
     "lottery.sync",
     "lottery.audit",
+    # Lottery 2.0 aliases / fine-grained
+    "lottery_view",
+    "lottery_search",
+    "lottery_ai",
+    "lottery_compare",
+    "lottery_export",
+    "lottery_admin_lotteries",
+    "lottery_admin_sync",
+    "lottery_admin_scheduler",
 })
 
 LOTTERY_CLIENT_PERMISSIONS = frozenset({
@@ -45,6 +54,11 @@ LOTTERY_CLIENT_PERMISSIONS = frozenset({
     "lottery.statistics",
     "lottery.export",
     "lottery.saved_queries",
+    "lottery_view",
+    "lottery_search",
+    "lottery_ai",
+    "lottery_compare",
+    "lottery_export",
 })
 
 PERMISSIONS = frozenset({

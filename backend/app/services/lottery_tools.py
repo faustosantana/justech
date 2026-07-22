@@ -185,7 +185,11 @@ class LotteryToolExecutor:
         session_context: dict[str, Any],
     ) -> tuple[Any, int | None, dict[str, Any]]:
         if tool == LotteryToolName.LIST_LOTTERIES:
-            res = await self.catalog.list_lotteries(limit=int(params.get("limit", 50)))
+            res = await self.catalog.list_lotteries(
+                limit=int(params.get("limit", 100)),
+                ai_only=True,
+                include_aggregates=False,
+            )
             return res, res.total, {}
 
         if tool == LotteryToolName.RESOLVE_LOTTERY:
@@ -385,5 +389,96 @@ class LotteryToolExecutor:
             rows = q.scalars().all()
             items = [{"id": str(r.id), "name": r.name, "payload": r.payload} for r in rows]
             return {"items": items, "total": len(items)}, len(items), {}
+
+        if tool == LotteryToolName.GET_LATEST_RESULTS:
+            from app.services.lottery_admin_service import LotteryAdminService
+
+            dash = await LotteryAdminService(self.db).dashboard_v2(
+                tenant_id=self.tenant_id, user_id=self.user_id
+            )
+            return {"items": dash.latest_results}, len(dash.latest_results), {}
+
+        if tool == LotteryToolName.GET_DRAW_COUNT:
+            health = await self.catalog.health()
+            lot = None
+            if params.get("lottery"):
+                lot = await self.resolver.require_resolved(str(params["lottery"]))
+            data = {
+                "lotteries_count": health.lotteries_count,
+                "draws_count": health.draws_count,
+            }
+            if lot:
+                data["lottery"] = lot.name
+                data["lottery_draw_count"] = lot.draw_count
+                data["first_draw_date"] = lot.first_draw_date
+                data["last_draw_date"] = lot.last_draw_date
+            return data, health.draws_count, {}
+
+        if tool in (LotteryToolName.GET_TOP_NUMBERS, LotteryToolName.GET_BOTTOM_NUMBERS):
+            from_d = params.get("from_date") or params.get("from")
+            to_d = params.get("to_date") or params.get("to")
+            if not from_d or not to_d:
+                raise LotteryQueryError("DATE_REQUIRED", "Se requieren from_date y to_date")
+            from_date = from_d if isinstance(from_d, date) else date.fromisoformat(str(from_d))
+            to_date = to_d if isinstance(to_d, date) else date.fromisoformat(str(to_d))
+            lottery = str(params.get("lottery") or "")
+            res = await self.query.frequencies(
+                lottery,
+                from_date,
+                to_date,
+                limit=int(params.get("limit", 10)),
+            )
+            items = list(getattr(res, "items", None) or getattr(res, "frequencies", None) or [])
+            if tool == LotteryToolName.GET_BOTTOM_NUMBERS:
+                items = list(reversed(items))
+            return {"items": _serialize(items[: int(params.get("limit", 10))])}, len(items), {
+                "semantics": "frequencies"
+            }
+
+        if tool == LotteryToolName.GET_LAST_OCCURRENCE:
+            lottery = str(params["lottery"])
+            number = str(params["number"])
+            res = await self.query.by_number(lottery, number, page=1, page_size=1)
+            return res, getattr(res, "total", 1), {"semantics": "last_occurrence"}
+
+        if tool == LotteryToolName.GET_INTERVAL_STATISTICS:
+            lottery = str(params["lottery"])
+            number = str(params["number"])
+            res = await self.query.by_number(lottery, number, page=1, page_size=100)
+            # Derive intervals from occurrence dates if present
+            dates: list[date] = []
+            for item in getattr(res, "items", []) or getattr(res, "occurrences", []) or []:
+                d = getattr(item, "draw_date", None) or (item.get("draw_date") if isinstance(item, dict) else None)
+                if d:
+                    dates.append(d if isinstance(d, date) else date.fromisoformat(str(d)))
+            dates = sorted(set(dates))
+            gaps = [(dates[i] - dates[i - 1]).days for i in range(1, len(dates))]
+            avg = (sum(gaps) / len(gaps)) if gaps else None
+            return {
+                "lottery": lottery,
+                "number": number,
+                "occurrences": len(dates),
+                "first": dates[0].isoformat() if dates else None,
+                "last": dates[-1].isoformat() if dates else None,
+                "avg_gap_days": avg,
+                "min_gap_days": min(gaps) if gaps else None,
+                "max_gap_days": max(gaps) if gaps else None,
+                "disclaimer": "Análisis histórico informativo; no es predicción.",
+            }, len(dates), {"semantics": "interval_statistics"}
+
+        if tool == LotteryToolName.GET_SYNC_STATUS:
+            from app.config import settings as cfg
+
+            rows = (
+                await self.catalog.list_lotteries(limit=200, include_aggregates=False)
+            ).items
+            sync_on = [r for r in rows if getattr(r, "is_sync_enabled", False)]
+            return {
+                "global_sync_enabled": bool(cfg.lottery_sync_enabled),
+                "global_write_enabled": bool(cfg.lottery_sync_write_enabled),
+                "global_auto_write_enabled": bool(cfg.lottery_sync_automatic_write_enabled),
+                "scheduler_enabled": bool(cfg.lottery_scheduler_enabled),
+                "lotteries_sync_enabled": len(sync_on),
+            }, len(sync_on), {}
 
         raise LotteryQueryError("TOOL_ERROR", f"Tool no implementada: {tool.value}")

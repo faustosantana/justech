@@ -372,8 +372,9 @@ export const MODULE_REGISTRY: ModuleDefinition[] = [
       { id: "chat", label: "Lotería IA", icon: Sparkles, contentKey: "lottery:chat", views: ["list"] },
       { id: "guardadas", label: "Guardadas", icon: Bookmark, contentKey: "lottery:saved", views: ["list"] },
       { id: "favoritos", label: "Favoritos", icon: Star, contentKey: "lottery:favorites", views: ["list"] },
-      { id: "admin-sync", label: "Admin sync", icon: Settings, contentKey: "lottery:admin-sync", views: ["list"] },
-      { id: "admin-scheduler", label: "Admin scheduler", icon: Settings, contentKey: "lottery:admin-scheduler", views: ["list"] },
+      { id: "admin-sync", label: "Admin sync", icon: Settings, contentKey: "lottery:admin-sync", views: ["list"], legacyHref: "/lottery/admin/sync", roles: ["owner", "admin", "superadmin"] },
+      { id: "admin-scheduler", label: "Admin scheduler", icon: Settings, contentKey: "lottery:admin-scheduler", views: ["list"], legacyHref: "/lottery/admin/scheduler", roles: ["owner", "admin", "superadmin"] },
+      { id: "admin-lotteries", label: "Admin loterías", icon: Settings, contentKey: "lottery:admin-lotteries", views: ["list"], legacyHref: "/lottery/admin/lotteries", roles: ["owner", "admin", "superadmin"] },
     ],
   },
   {
@@ -620,7 +621,7 @@ export function moduleToNav(module: ModuleDefinition) {
   return module.sections.filter(isSectionNavVisible).map((s) => ({
     id: s.id,
     label: s.label,
-    href: moduleSectionHref(module.id, s.id),
+    href: s.legacyHref ?? moduleSectionHref(module.id, s.id),
     icon: s.icon,
     roles: s.roles,
     moduleKey: s.moduleKey,

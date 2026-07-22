@@ -43,6 +43,15 @@ from app.schemas.lottery_chat import (
     SavedQueryRename,
     SavedQueryResponse,
 )
+from app.schemas.lottery_admin import (
+    LotteryAdminBulkRequest,
+    LotteryAdminBulkResponse,
+    LotteryAdminLotteryResponse,
+    LotteryAdminLotteryUpdate,
+    LotteryCatalogResponse,
+    LotteryDashboardV2,
+)
+from app.services.lottery_admin_service import LotteryAdminService, to_admin_response
 from app.services.lottery_aliases import describe_alias_resolution
 from app.services.lottery_chat_service import LotteryChatService
 from app.services.lottery_exceptions import LotteryQueryError
@@ -111,10 +120,23 @@ async def list_lotteries(
     db: DbSession,
     user: CurrentUser,
     _: Annotated[None, require_lottery_permission("lottery.access", "lottery.search")],
-    limit: Annotated[int, Query(ge=1, le=200)] = 50,
+    limit: Annotated[int, Query(ge=1, le=200)] = 100,
     offset: Annotated[int, Query(ge=0)] = 0,
+    searchable_only: bool = False,
+    visible_only: bool = False,
+    ai_only: bool = False,
+    comparable_only: bool = False,
+    include_aggregates: bool = False,
 ) -> LotteryListResponse:
-    return await LotteryService(db).list_lotteries(limit=limit, offset=offset)
+    return await LotteryService(db).list_lotteries(
+        limit=limit,
+        offset=offset,
+        searchable_only=searchable_only,
+        visible_only=visible_only,
+        ai_only=ai_only,
+        comparable_only=comparable_only,
+        include_aggregates=include_aggregates,
+    )
 
 
 @router.get("/aliases/resolve")
@@ -638,6 +660,101 @@ async def lottery_dashboard(
     _: Annotated[None, require_lottery_permission("lottery.access")],
 ) -> LotteryDashboardResponse:
     return await _make_product(db, user).dashboard()
+
+
+@router.get("/dashboard/v2", response_model=LotteryDashboardV2)
+async def lottery_dashboard_v2(
+    db: DbSession,
+    user: CurrentUser,
+    _: Annotated[None, require_lottery_permission("lottery.access", "lottery_view")],
+    from_date: date | None = None,
+    to_date: date | None = None,
+) -> LotteryDashboardV2:
+    ctx = require_tenant_context()
+    if not ctx.tenant_id:
+        raise forbidden("Tenant requerido")
+    return await LotteryAdminService(db).dashboard_v2(
+        tenant_id=ctx.tenant_id,
+        user_id=user.id,
+        from_date=from_date,
+        to_date=to_date,
+    )
+
+
+@router.get("/catalog", response_model=LotteryCatalogResponse)
+async def lottery_catalog(
+    db: DbSession,
+    user: CurrentUser,
+    _: Annotated[None, require_lottery_permission("lottery.access", "lottery.search", "lottery_view")],
+    q: str | None = None,
+    country: str | None = None,
+    featured_only: bool = False,
+    favorites_only: bool = False,
+    page: Annotated[int, Query(ge=1)] = 1,
+    page_size: Annotated[int, Query(ge=1, le=100)] = 50,
+) -> LotteryCatalogResponse:
+    ctx = require_tenant_context()
+    if not ctx.tenant_id:
+        raise forbidden("Tenant requerido")
+    return await LotteryAdminService(db).list_catalog(
+        tenant_id=ctx.tenant_id,
+        user_id=user.id,
+        q=q,
+        country=country,
+        featured_only=featured_only,
+        favorites_only=favorites_only,
+        page=page,
+        page_size=page_size,
+    )
+
+
+@router.get("/admin/lotteries", response_model=list[LotteryAdminLotteryResponse])
+async def admin_list_lotteries(
+    db: DbSession,
+    user: CurrentUser,
+    _: Annotated[None, require_lottery_permission("lottery.admin", "lottery_admin_lotteries")],
+    q: str | None = None,
+    active: bool | None = None,
+    visible: bool | None = None,
+    sync_enabled: bool | None = None,
+    limit: Annotated[int, Query(ge=1, le=200)] = 100,
+    offset: Annotated[int, Query(ge=0)] = 0,
+) -> list[LotteryAdminLotteryResponse]:
+    rows, _total = await LotteryAdminService(db).list_admin(
+        q=q, active=active, visible=visible, sync_enabled=sync_enabled, limit=limit, offset=offset
+    )
+    return [to_admin_response(r) for r in rows]
+
+
+@router.patch("/admin/lotteries/{lottery_id}", response_model=LotteryAdminLotteryResponse)
+async def admin_update_lottery(
+    lottery_id: UUID,
+    body: LotteryAdminLotteryUpdate,
+    db: DbSession,
+    user: CurrentUser,
+    _: Annotated[None, require_lottery_permission("lottery.admin", "lottery_admin_lotteries")],
+) -> LotteryAdminLotteryResponse:
+    svc = LotteryAdminService(db)
+    lot = await svc.get(lottery_id)
+    if not lot:
+        from fastapi import HTTPException
+
+        raise HTTPException(status_code=404, detail="Lotería no encontrada")
+    updated = await svc.update(lot, body)
+    await db.commit()
+    return to_admin_response(updated)
+
+
+@router.post("/admin/lotteries/bulk", response_model=LotteryAdminBulkResponse)
+async def admin_bulk_lotteries(
+    body: LotteryAdminBulkRequest,
+    db: DbSession,
+    user: CurrentUser,
+    _: Annotated[None, require_lottery_permission("lottery.admin", "lottery_admin_lotteries")],
+) -> LotteryAdminBulkResponse:
+    result = await LotteryAdminService(db).bulk(body)
+    await db.commit()
+    return result
 
 
 @router.get("/lotteries/{slug}", response_model=LotteryDetailResponse)

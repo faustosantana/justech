@@ -65,8 +65,8 @@ export default function LotterySearchPage() {
     }
     if (!canAccessLotteryModule(getUserRole())) return;
     apiClient
-      .getLotteryLotteries(100, 0)
-      .then((r) => setLotteries(r.items.filter((x) => !x.is_aggregate)))
+      .getLotteryLotteries(200, 0, { searchable_only: true, include_aggregates: false })
+      .then((r) => setLotteries(r.items))
       .catch(() => undefined);
   }, [router]);
 
@@ -118,7 +118,7 @@ export default function LotterySearchPage() {
               <option value="Nacional Noche">Nacional Noche</option>
               <option value="New York Día">New York Día</option>
               <option value="New York Noche">New York Noche</option>
-              {lotteries.slice(0, 40).map((l) => (
+              {lotteries.map((l) => (
                 <option key={l.id} value={l.name}>
                   {l.name}
                 </option>

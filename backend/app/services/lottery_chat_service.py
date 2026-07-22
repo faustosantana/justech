@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import asyncio
 import json
 import time
 import uuid
@@ -12,7 +13,7 @@ from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.config import settings
-from app.core.exceptions import LLMProviderError, forbidden, not_found
+from app.core.exceptions import forbidden, not_found
 from app.llm.router import LLMRouter
 from app.models.lottery import LotteryChatMessage, LotteryChatSession, LotterySavedQuery
 from app.schemas.llm import LLMCompletionRequest, LLMMessage, LLMProvider
@@ -301,57 +302,195 @@ class LotteryChatService:
         )
 
     def _template_from_tool(self, tool: str, data: Any, params: dict[str, Any]) -> str:
+        """Redacción local natural en español (fallback seguro sin mensajes internos)."""
         if tool == "lottery_get_result_by_date" and isinstance(data, dict):
-            lot = ((data.get("meta") or {}).get("resolved_lottery") or {}).get("name") or params.get("lottery")
+            lot = ((data.get("meta") or {}).get("resolved_lottery") or {}).get("name") or params.get(
+                "lottery"
+            )
             draws = data.get("draws") or []
-            parts = [f"En {lot} el {data.get('date')} encontré {data.get('total', len(draws))} sorteo(s)."]
-            for d in draws[:5]:
-                nums = ", ".join(n.get("number_raw") or n.get("number_value") for n in (d.get("numbers") or []))
-                ref = d.get("source_reference") or ""
-                parts.append(f"- Sorteo {ref}: {nums}" if ref else f"- {nums}")
-            return "\n".join(parts)
+            date_s = data.get("date")
+            if not draws:
+                return f"No encontré sorteos de {lot} el {date_s}."
+            lines = []
+            for d in draws[:8]:
+                nums = ", ".join(
+                    n.get("number_raw") or n.get("number_value") for n in (d.get("numbers") or [])
+                )
+                lines.append(nums)
+            joined = "; ".join(lines)
+            if len(draws) == 1:
+                return f"El {date_s}, {lot} publicó los números {joined}."
+            return f"El {date_s}, {lot} tuvo {len(draws)} sorteo(s): {joined}."
 
         if tool == "lottery_get_following_days" and isinstance(data, dict):
+            lot = params.get("lottery")
             return (
-                f"Días calendario siguientes (semántica calendar_days): "
-                f"{data.get('calendar_from')} → {data.get('calendar_to')}. "
-                f"Días con sorteo: {len(data.get('days_with_draws') or [])}; "
-                f"sin sorteo: {len(data.get('days_without_draws') or [])}; "
-                f"sorteos en la ventana: {data.get('total_draws')}."
+                f"Para {lot}, en los días calendario del {data.get('calendar_from')} al "
+                f"{data.get('calendar_to')} hubo {data.get('total_draws')} sorteo(s) "
+                f"({len(data.get('days_with_draws') or [])} días con sorteo; "
+                f"{len(data.get('days_without_draws') or [])} sin sorteo). "
+                f"Esto cuenta días de calendario, no el número de sorteos siguientes."
             )
 
         if tool == "lottery_get_following_draws" and isinstance(data, dict):
-            dates = [d.get("draw_date") for d in (data.get("draws") or [])]
+            lot = params.get("lottery")
+            draws = data.get("draws") or []
+            bits = []
+            for d in draws[:10]:
+                nums = ", ".join(
+                    n.get("number_raw") or n.get("number_value") for n in (d.get("numbers") or [])
+                )
+                bits.append(f"{d.get('draw_date')}: {nums}")
             return (
-                f"Siguientes {data.get('count_requested')} sorteos (semántica next_n_draws, "
-                f"no días calendario). Fechas: {', '.join(str(x) for x in dates)}."
+                f"Los {data.get('count_requested')} sorteos siguientes de {lot} "
+                f"(no días calendario) fueron:\n- " + "\n- ".join(bits)
             )
+
+        if tool == "lottery_get_previous_draws" and isinstance(data, dict):
+            draws = data.get("draws") or []
+            bits = [f"{d.get('draw_date')}" for d in draws[:10]]
+            return f"Sorteos anteriores solicitados ({len(draws)}): {', '.join(bits)}."
+
+        if tool == "lottery_get_number_occurrences" and isinstance(data, dict):
+            total = (data.get("pagination") or {}).get("total")
+            if total is None:
+                total = data.get("total") or len(data.get("items") or data.get("occurrences") or [])
+            number = params.get("number")
+            lot = params.get("lottery")
+            items = data.get("items") or data.get("occurrences") or []
+            last = None
+            if items:
+                first = items[0]
+                last = getattr(first, "draw_date", None) or (
+                    first.get("draw_date") if isinstance(first, dict) else None
+                )
+            tail = f" La más reciente en el lote consultado: {last}." if last else ""
+            return f"El número {number} apareció {total} vez/veces en {lot}.{tail}"
+
+        if tool == "lottery_get_last_occurrence" and isinstance(data, dict):
+            number = params.get("number")
+            lot = params.get("lottery")
+            items = data.get("items") or data.get("occurrences") or []
+            if not items:
+                return f"No encontré apariciones del {number} en {lot}."
+            first = items[0]
+            d = getattr(first, "draw_date", None) or (
+                first.get("draw_date") if isinstance(first, dict) else None
+            )
+            return f"La última aparición registrada del {number} en {lot} fue el {d}."
 
         if tool == "lottery_find_repetitions" and isinstance(data, dict):
             items = data.get("items") or []
             if not items:
-                return "No encontré números repetidos en ese rango."
+                return (
+                    f"No encontré números repetidos entre {data.get('from_date')} y "
+                    f"{data.get('to_date')}."
+                )
             bits = [f"{i.get('number')} (×{i.get('count')})" for i in items[:10]]
-            return f"Repeticiones en {data.get('from_date')}–{data.get('to_date')}: " + ", ".join(bits) + "."
+            return (
+                f"En {params.get('lottery')} del {data.get('from_date')} al "
+                f"{data.get('to_date')}, se repitieron: " + ", ".join(bits) + "."
+            )
 
         if tool == "lottery_compare_lotteries" and isinstance(data, dict):
-            mode = data.get("mode")
-            items = (data.get("data") or {}).get("items") or []
+            if data.get("mode") == "number_compare" or params.get("number"):
+                number = data.get("number") or params.get("number")
+                items = data.get("items") or []
+                bits = [
+                    f"{i.get('lottery')}: {i.get('occurrences')} apariciones"
+                    + (f" (última {i.get('last_draw_date')})" if i.get("last_draw_date") else "")
+                    for i in items
+                ]
+                return (
+                    f"Comparación del número {number}:\n- " + "\n- ".join(bits)
+                    if bits
+                    else f"Sin apariciones del {number} en el período analizado."
+                )
+            mode = data.get("mode") or params.get("mode")
+            lots = params.get("lotteries") or [
+                l.get("name") for l in (data.get("lotteries") or []) if isinstance(l, dict)
+            ]
+            inner = data.get("data") if isinstance(data.get("data"), dict) else {}
+            items = inner.get("items") or data.get("items") or []
+            if mode == "frequencies" and isinstance(inner.get("by_lottery"), dict):
+                parts = []
+                for name, block in list(inner["by_lottery"].items())[:5]:
+                    top = block.get("items") or []
+                    tops = ", ".join(f"{t.get('number')} (×{t.get('count')})" for t in top[:5])
+                    parts.append(f"{name}: {tops}")
+                return (
+                    f"Comparación de frecuencias ({params.get('from_date')}–{params.get('to_date')}) "
+                    f"entre {', '.join(str(x) for x in lots)}:\n- " + "\n- ".join(parts)
+                )
+            bits = [
+                f"{i.get('number')} en {', '.join(i.get('lotteries') or [])}"
+                for i in items[:10]
+                if isinstance(i, dict)
+            ]
+            head = f"Entre {', '.join(str(x) for x in lots)} ({params.get('from_date')}–{params.get('to_date')})"
+            if not bits:
+                return f"{head} no encontré coincidencias de números en el modo {mode}."
+            return f"{head} coincidieron: " + "; ".join(bits) + "."
+
+        if tool == "lottery_calculate_frequencies" and isinstance(data, dict):
+            items = data.get("items") or data.get("frequencies") or []
+            bits = [f"{i.get('number')} (×{i.get('count')})" for i in items[:10] if isinstance(i, dict)]
             return (
-                f"Comparación modo {mode} entre "
-                f"{', '.join(l.get('name') for l in (data.get('lotteries') or []))}. "
-                f"Coincidencias: {len(items)}."
+                f"Frecuencias de {params.get('lottery')} "
+                f"({params.get('from_date')}–{params.get('to_date')}): " + ", ".join(bits) + "."
+            )
+
+        if tool == "lottery_get_draw_count" and isinstance(data, dict):
+            if data.get("lottery"):
+                return (
+                    f"{data.get('lottery')} tiene {data.get('lottery_draw_count')} sorteos "
+                    f"históricos (desde {data.get('first_draw_date')} hasta "
+                    f"{data.get('last_draw_date')})."
+                )
+            return (
+                f"Cobertura global: {data.get('lotteries_count')} loterías y "
+                f"{data.get('draws_count')} sorteos."
+            )
+
+        if tool == "lottery_get_coverage" and isinstance(data, dict):
+            return (
+                f"Hay {data.get('lotteries_count')} loterías y {data.get('draws_count')} sorteos "
+                f"en el histórico. Los totales reflejan la cobertura almacenada; "
+                f"pueden existir fechas sin resultado para loterías específicas."
+            )
+
+        if tool == "lottery_list_lotteries" and isinstance(data, dict):
+            items = data.get("items") or []
+            names = [i.get("name") or i.get("commercial_name") for i in items[:30] if isinstance(i, dict)]
+            more = f" (mostrando {len(names)} de {data.get('total') or len(items)})" if items else ""
+            return "Puedes consultar: " + ", ".join(str(n) for n in names if n) + more + "."
+
+        if tool == "lottery_get_latest_results" and isinstance(data, dict):
+            items = data.get("items") or []
+            bits = [
+                f"{i.get('lottery_name') or i.get('name')}: {i.get('date') or i.get('draw_date')}"
+                for i in items[:15]
+                if isinstance(i, dict)
+            ]
+            return "Últimos resultados disponibles:\n- " + "\n- ".join(bits) if bits else "Sin últimos resultados."
+
+        if tool == "lottery_get_sync_status" and isinstance(data, dict):
+            return (
+                "Los datos históricos provienen del adaptador oficial de Lotería en JAIOS "
+                f"(fuente configurada; sync global={data.get('global_sync_enabled')}; "
+                f"loterías con sync habilitado={data.get('lotteries_sync_enabled')}). "
+                "No se usa SQL libre: solo herramientas tipadas."
             )
 
         if tool == "lottery_find_next_occurrences" and isinstance(data, dict):
             items = data.get("items") or []
-            note = data.get("note") or "Próxima aparición histórica — no es predicción."
+            note = "Es aparición histórica, no predicción."
             if not items:
                 return f"No hay apariciones históricas posteriores. {note}"
             first = items[0]
             return (
-                f"Próxima aparición histórica de {data.get('number')} tras {data.get('after_date')}: "
-                f"{first.get('draw_date')} (pos. {first.get('position_label')}). {note}"
+                f"Tras {data.get('after_date')}, el {data.get('number')} volvió a aparecer el "
+                f"{first.get('draw_date')}. {note}"
             )
 
         if tool == "lottery_save_query" and isinstance(data, dict):
@@ -363,7 +502,7 @@ class LotteryChatService:
                 f"{data.get('draws_count')} sorteos."
             )
 
-        return "Consulta histórica completada con datos estructurados."
+        return "Consulta histórica completada con los datos disponibles en JAIOS."
 
     async def _synthesize(
         self,
@@ -373,50 +512,135 @@ class LotteryChatService:
         facts: dict[str, Any],
         context: dict[str, Any],
     ) -> tuple[str, bool, str | None]:
+        """Síntesis: LLMRouter → Hermes/ModelArts → plantilla natural (sin mensajes internos)."""
         if not settings.assistant_synthesis_enabled:
-            return template, False, None
-        provider = None
-        if settings.assistant_synthesis_provider:
-            try:
-                provider = LLMProvider(settings.assistant_synthesis_provider)
-            except ValueError:
-                provider = None
+            return template, True, None
+
         payload = {
             "pregunta": question,
             "plantilla": template,
             "hechos": facts,
             "contexto": context,
         }
-        request = LLMCompletionRequest(
-            messages=[
-                LLMMessage(role="system", content=LOTTERY_SYSTEM_PROMPT),
-                LLMMessage(
-                    role="user",
-                    content=(
-                        "Redacta la respuesta final en español usando SOLO estos hechos. "
-                        "No inventes números. Incluye el disclaimer si falta.\n"
-                        f"{json.dumps(payload, ensure_ascii=False, default=str)[:6000]}"
+        user_content = (
+            "Redacta la respuesta final en español claro usando SOLO estos hechos. "
+            "Responde primero la pregunta con cifras concretas. "
+            "No inventes números. No predigas ni recomiendes apuestas. "
+            "No menciones tools, JSON, errores internos ni 'redacción no disponible'. "
+            "Si falta el disclaimer histórico, agrégalo al final.\n"
+            f"{json.dumps(payload, ensure_ascii=False, default=str)[:6000]}"
+        )
+        messages = [
+            LLMMessage(role="system", content=LOTTERY_SYSTEM_PROMPT),
+            LLMMessage(role="user", content=user_content),
+        ]
+
+        # 1) LLMRouter con reintentos
+        provider = None
+        if settings.assistant_synthesis_provider:
+            try:
+                provider = LLMProvider(settings.assistant_synthesis_provider)
+            except ValueError:
+                provider = None
+        last_err: Exception | None = None
+        for attempt in range(2):
+            try:
+                response = await self.llm.complete(
+                    LLMCompletionRequest(
+                        messages=messages,
+                        provider=provider,
+                        temperature=0.2,
+                        max_tokens=700,
                     ),
-                ),
-            ],
-            provider=provider,
-            temperature=0.2,
-            max_tokens=512,
+                    tenant_id=self.tenant_id,
+                )
+                text = self._sanitize_user_facing((response.content or "").strip())
+                if len(text) >= 20 and not self._looks_internal(text):
+                    return text, False, getattr(response, "model", None)
+            except Exception as exc:  # noqa: BLE001 — fallback controlado
+                last_err = exc
+                await asyncio.sleep(0.35 * (attempt + 1))
+
+        # 2) Hermes / ModelArts (credenciales ya usadas por JAIOS)
+        hermes_text, hermes_model = await self._synthesize_via_hermes(messages)
+        if hermes_text:
+            return hermes_text, False, hermes_model
+
+        # 3) Fallback natural: plantilla local (nunca mensajes internos)
+        _ = last_err
+        return template, True, None
+
+    async def _synthesize_via_hermes(
+        self, messages: list[LLMMessage]
+    ) -> tuple[str | None, str | None]:
+        url = (getattr(settings, "hermes_model_api_url", None) or "").strip()
+        key = (getattr(settings, "hermes_model_api_key", None) or "").strip()
+        if not url or not key or not getattr(settings, "hermes_enabled", True):
+            return None, None
+        model = (
+            getattr(settings, "hermes_default_model", None)
+            or getattr(settings, "hermes_model", None)
+            or "DeepSeek-V3.2"
         )
         try:
-            response = await self.llm.complete(request, tenant_id=self.tenant_id)
-            text = (response.content or "").strip()
-            if len(text) < 20:
-                return template, True, getattr(response, "model", None)
-            return text, False, getattr(response, "model", None)
-        except LLMProviderError:
-            return (
-                f"{template}\n\n"
-                "La consulta fue procesada, pero el servicio de redacción no está disponible. "
-                "Estos son los resultados estructurados.",
-                True,
-                None,
-            )
+            import httpx
+
+            async with httpx.AsyncClient(timeout=45.0) as client:
+                for attempt in range(2):
+                    resp = await client.post(
+                        url,
+                        headers={
+                            "Authorization": f"Bearer {key}",
+                            "Content-Type": "application/json",
+                        },
+                        json={
+                            "model": model,
+                            "messages": [m.model_dump() for m in messages],
+                            "temperature": 0.2,
+                            "max_tokens": 700,
+                        },
+                    )
+                    if resp.status_code >= 500:
+                        await asyncio.sleep(0.4 * (attempt + 1))
+                        continue
+                    resp.raise_for_status()
+                    data = resp.json()
+                    content = (
+                        ((data.get("choices") or [{}])[0].get("message") or {}).get("content") or ""
+                    ).strip()
+                    content = self._sanitize_user_facing(content)
+                    if len(content) >= 20 and not self._looks_internal(content):
+                        return content, str(data.get("model") or model)
+                    break
+        except Exception:
+            return None, None
+        return None, None
+
+    @staticmethod
+    def _looks_internal(text: str) -> bool:
+        low = text.lower()
+        needles = (
+            "redacción no disponible",
+            "redaccion no disponible",
+            "synthesis failed",
+            "tool execution error",
+            "servicio de redacción",
+            "resultados estructurados",
+            "traceback",
+            "llmprovidererror",
+        )
+        return any(n in low for n in needles)
+
+    @classmethod
+    def _sanitize_user_facing(cls, text: str) -> str:
+        if not text:
+            return text
+        lines = []
+        for line in text.splitlines():
+            if cls._looks_internal(line):
+                continue
+            lines.append(line)
+        return "\n".join(lines).strip()
 
     def _suggestions(self, ctx: LotterySessionContext, kind: str) -> list[str]:
         out: list[str] = []

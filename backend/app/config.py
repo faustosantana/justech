@@ -87,6 +87,11 @@ class Settings(BaseSettings):
     hermes_model: str = "DeepSeek-V3.2"
     hermes_default_model: str = "DeepSeek-V3.2"
     hermes_analysis_model: str = "deepseek-v4-flash"
+    # Credenciales ModelArts usadas por Hermes (también para síntesis Lotería IA)
+    hermes_model_api_url: str = ""
+    hermes_model_api_key: str = ""
+    hermes_model_fallback: str = "DeepSeek-V3"
+    hermes_default_provider: str = "huawei_modelarts"
     bid_analysis_timeout: float = 300.0
     bid_analysis_temperature: float = 0.2
     bid_analysis_max_tokens: int = 3500

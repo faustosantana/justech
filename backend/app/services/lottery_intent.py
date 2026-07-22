@@ -65,9 +65,9 @@ INJECTION_RE = re.compile(
 
 LOTTERY_HINTS = [
     (r"quiniela\s+real|\breal\b", "Real"),
-    (r"loteka", "Loteka"),
-    (r"leidsa", "Leidsa"),
-    (r"nacional\s+noche", "Nacional Noche"),
+    (r"quiniela\s+loteka|loteka", "Loteka"),
+    (r"quiniela\s+leidsa|leidsa", "Leidsa"),
+    (r"loter[ií]a\s+nacional|nacional\s+noche", "Nacional Noche"),
     (r"nacional\s+d[ií]a", "Nacional Día"),
     (r"new\s+york\s+noche|\bny\s+noche\b", "New York Noche"),
     (r"new\s+york\s+d[ií]a|\bny\s+d[ií]a\b|new\s+york\s*2:?30", "New York Día"),
@@ -234,16 +234,86 @@ def resolve_intent(message: str, ctx: LotterySessionContext) -> ResolvedIntent:
     parsed_date = _parse_spanish_date(raw)  # do not inherit ctx date for unrelated number queries
     ctx_date = parsed_date or ctx.base_date
 
-    if lottery == "Nacional Día" or "Nacional Día" in mentioned:
+    if lottery == "Nacional Día" or "Nacional Día" in mentioned or re.search(
+        r"por que no.*(nacional\s+d[ií]a)|no puedes consultar nacional",
+        text,
+    ):
         return ResolvedIntent(
             kind="clarify",
             clarify_message=(
-                "«Nacional Día» no tiene mapping definitivo. Candidatos: "
-                "La Primera Tarde (source_id 20) y La Suerte MD (source_id 21). "
-                "Indica cuál deseas consultar."
+                "No consulto «Nacional Día» porque no tiene mapping definitivo en JAIOS. "
+                "Candidatos históricos: La Primera Tarde (source_id 20) y La Suerte MD "
+                "(source_id 21). Indica cuál deseas para consultar datos reales."
             ),
             structured_type="lottery_ambiguity",
             params={"pending_ambiguity": {"alias": "Nacional Día", "candidates": [20, 21]}},
+        )
+
+    if re.search(r"que loter[ií]as puedo|loter[ií]as (puedo|disponibles)|lista(r)? loter", text):
+        return ResolvedIntent(
+            kind="tool",
+            tool=LotteryToolName.LIST_LOTTERIES,
+            params={"limit": 100, "searchable_only": True},
+            structured_type="lottery_result",
+        )
+
+    if re.search(r"fuente de (los )?datos|de donde (salen|vienen)|source_id|adapter", text):
+        return ResolvedIntent(
+            kind="tool",
+            tool=LotteryToolName.GET_SYNC_STATUS,
+            params={},
+            structured_type="lottery_result",
+        )
+
+    if re.search(r"que datos te faltan|qu[eé] te falta|limitaciones de (la )?data|faltantes", text):
+        return ResolvedIntent(
+            kind="tool",
+            tool=LotteryToolName.GET_COVERAGE,
+            params={},
+            structured_type="lottery_result",
+        )
+
+    if re.search(r"actualizadas? hasta hoy|al d[ií]a|estan actualizadas", text):
+        return ResolvedIntent(
+            kind="tool",
+            tool=LotteryToolName.GET_LATEST_RESULTS,
+            params={"limit": 20},
+            structured_type="lottery_result",
+        )
+
+    if re.search(r"analiza(r)? los [uú]ltimos|analisis de los [uú]ltimos|frecuencias? de", text):
+        if not lottery:
+            return ResolvedIntent(
+                kind="clarify",
+                clarify_message="¿De qué lotería quieres el análisis de los últimos sorteos?",
+                structured_type="lottery_ambiguity",
+            )
+        n = _extract_int(text, "sorteos", "sorteo", default=30) or 30
+        from_d, to_d = _last_n_window(n)
+        return ResolvedIntent(
+            kind="tool",
+            tool=LotteryToolName.CALCULATE_FREQUENCIES,
+            params={"lottery": lottery, "from_date": from_d, "to_date": to_d, "limit": 15},
+            structured_type="lottery_frequency",
+        )
+
+    if re.search(r"coincid(ieron|en)|numeros? (en )?comun|aparecieron en (esas|ambas)", text):
+        lots = list(mentioned) or list(ctx.compared_lotteries or [])
+        if ctx.last_lottery and ctx.last_lottery not in lots:
+            lots = [ctx.last_lottery, *lots]
+        if len(lots) < 2:
+            lots = ["Leidsa", "Loteka", "Nacional Noche"]
+        from_d, to_d = _last_n_window(7)
+        return ResolvedIntent(
+            kind="tool",
+            tool=LotteryToolName.COMPARE_LOTTERIES,
+            params={
+                "lotteries": lots[:10],
+                "from_date": from_d,
+                "to_date": to_d,
+                "mode": "repeated_numbers",
+            },
+            structured_type="lottery_comparison",
         )
 
     # coverage / freshness — before generic "salió"

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
-import { ChevronLeft, ChevronRight, LayoutGrid } from "lucide-react";
+import { ChevronLeft, ChevronRight, LayoutGrid, Star } from "lucide-react";
 import { useMemo } from "react";
 
 import type { AppNavItem, JaiosApp } from "@/lib/app-registry";
@@ -157,5 +157,30 @@ function NavLink({
       <Icon className="h-4 w-4 shrink-0" strokeWidth={1.5} />
       {!collapsed && <span className="truncate">{item.label}</span>}
     </Link>
+  );
+}
+
+export function FavoriteToggle({
+  appId,
+  favorited,
+  onToggle,
+}: {
+  appId: string;
+  favorited: boolean;
+  onToggle: (id: string) => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        onToggle(appId);
+      }}
+      className="absolute right-2 top-2 rounded-full p-1 text-muted-foreground/50 transition hover:text-amber-500"
+      aria-label={favorited ? "Quitar de favoritos" : "Agregar a favoritos"}
+    >
+      <Star className={cn("h-3.5 w-3.5", favorited && "fill-amber-400 text-amber-500")} />
+    </button>
   );
 }

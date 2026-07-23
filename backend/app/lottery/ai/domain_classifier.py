@@ -51,9 +51,10 @@ _RESTRICTED = re.compile(
 
 _PREDICTION = re.compile(
     r"\b("
-    r"va\s+a\s+salir|saldr[aá]|predic|apostar|qu[eé]\s+juego|"
+    r"va\s+a\s+salir|saldr[aá]|predic|apostar|apuesta|qu[eé]\s+juego|"
     r"n[uú]mero\s+ganador\s+de\s+ma[nñ]ana|seguro\s+que\s+sale|"
-    r"recomendaci[oó]n\s+de\s+apuesta|qu[eé]\s+n[uú]mero\s+jugo"
+    r"recomendaci[oó]n\s+de\s+apuesta|recomi[eé]ndame\s+una\s+apuesta|"
+    r"qu[eé]\s+n[uú]mero\s+jugo"
     r")\b",
     re.I,
 )

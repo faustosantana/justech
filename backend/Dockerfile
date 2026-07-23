@@ -5,6 +5,7 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     libpq5 \
+    postgresql-client \
     && rm -rf /var/lib/apt/lists/*
 
 ENV PYTHONPATH=/app

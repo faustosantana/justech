@@ -199,6 +199,10 @@ class LotteryDashboardV3(LotteryDashboardV2):
     kpis: dict[str, Any] = Field(default_factory=dict)
     results_today_note: str = (
         "Resultados hoy = draws con draw_date = hoy local (America/Santo_Domingo). "
-        "Pendientes sync = loterías con sync_enabled sin resultado de hoy. "
+        "Esperados = loterías visibles en dashboard. "
+        "Pendientes sync = loterías con sync_enabled sin resultado de hoy "
+        "(solo 3 loterías tienen sincronización automática activa: Leidsa, Loteka y Lotería Nacional). "
         "Pendientes visibles = loterías del dashboard sin resultado de hoy (incluye no sincronizadas)."
     )
+    backup_gate: dict[str, Any] = Field(default_factory=dict)
+    operational_alerts: list[dict[str, Any]] = Field(default_factory=list)

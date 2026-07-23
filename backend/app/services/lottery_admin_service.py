@@ -612,6 +612,55 @@ class LotteryAdminService:
             "loop_seconds": int(getattr(settings, "lottery_sync_worker_loop_seconds", 60) or 60),
         }
 
+        from app.services.lottery_sync_gate_backup import gate_backup_status_dict
+
+        backup_gate = gate_backup_status_dict(database_url=settings.database_url)
+        operational_alerts: list[dict] = []
+        if backup_gate.get("alert"):
+            operational_alerts.append(
+                {
+                    "code": backup_gate["alert"],
+                    "severity": "critical" if not backup_gate.get("ok") else "warning",
+                    "message": f"Backup gate: {backup_gate['alert']}",
+                }
+            )
+        if state and (state.circuit_state or "").lower() == "open":
+            operational_alerts.append(
+                {
+                    "code": "circuit_breaker_open",
+                    "severity": "error",
+                    "message": state.circuit_reason or "Circuit breaker abierto",
+                }
+            )
+        if bool(settings.lottery_sync_worker_standalone) and not last_sync_at:
+            operational_alerts.append(
+                {
+                    "code": "scheduler_sin_tick",
+                    "severity": "warning",
+                    "message": "Worker standalone sin ticks registrados aún",
+                }
+            )
+        for s in source_health:
+            if (s.get("health_status") or "").lower() in {"degraded", "error", "down"}:
+                operational_alerts.append(
+                    {
+                        "code": "fuente_degradada",
+                        "severity": "warning",
+                        "message": f"Fuente {s.get('source_key')}={s.get('health_status')}",
+                    }
+                )
+        if pending_sync > 0:
+            operational_alerts.append(
+                {
+                    "code": "resultado_esperado_pendiente",
+                    "severity": "info",
+                    "message": (
+                        f"{pending_sync} lotería(s) con sync activa sin resultado de hoy "
+                        "(solo 3 tienen sincronización automática)."
+                    ),
+                }
+            )
+
         payload = base.model_dump()
         payload.update(
             {
@@ -628,6 +677,16 @@ class LotteryAdminService:
                 "next_sync_windows": due,
                 "circuit_breakers": circuits,
                 "source_health": source_health,
+                "backup_gate": backup_gate,
+                "operational_alerts": operational_alerts,
+                "results_today_note": (
+                    "Resultados hoy = draws con draw_date = hoy local (America/Santo_Domingo). "
+                    "Esperados = loterías visibles. "
+                    "Pendientes sync = solo loterías con sync_enabled sin resultado de hoy. "
+                    "Solo 3 loterías tienen sincronización automática activa "
+                    "(Leidsa, Loteka, Lotería Nacional). "
+                    "Pendientes visibles incluye loterías sin sync."
+                ),
                 "kpis": {
                     "results_today": base.results_today,
                     "expected_today": expected_today,
@@ -639,6 +698,7 @@ class LotteryAdminService:
                     "errors_last_runs": sum(int(r.get("errors") or 0) for r in run_rows),
                     "phases": windows.get("phases") or {},
                     "auto_write": windows.get("auto_write_lotteries") or [],
+                    "sync_auto_write_note": "Solo 3 loterías tienen sincronización automática activa.",
                 },
             }
         )

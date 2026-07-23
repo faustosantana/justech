@@ -258,6 +258,9 @@ class Settings(BaseSettings):
     lottery_sync_write_flag_max_minutes: int = 15
     lottery_sync_max_run_minutes: int = 15
     lottery_sync_backup_max_age_hours: int = 24
+    lottery_sync_gate_backup_dir: str = "/var/jaios/backups/lottery-sync-gates"
+    lottery_sync_gate_backup_auto_refresh: bool = True
+    lottery_sync_gate_backup_keep: int = 7
     lottery_source_contract_version: str = "elboletoganador.historial.v1"
     # Lottery 3.0 — when true, API process must NOT start APScheduler (worker owns ticks)
     lottery_sync_worker_standalone: bool = False

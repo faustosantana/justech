@@ -175,8 +175,8 @@ services:
     volumes:
       - ./backend:/app
       - ./integrations:/app/integrations
-      # Production guarded_write gate (host dump refreshed ≤24h):
-      # /var/jaios/lottery-sync-gate/pre_lottery_sync.dump:/tmp/pre_lottery_sync.dump:ro
+      # Persistent guarded_write gate dumps (host path in production)
+      - ${LOTTERY_SYNC_GATE_HOST_DIR:-/var/jaios/backups/lottery-sync-gates}:/var/jaios/backups/lottery-sync-gates
     depends_on:
       postgres:
         condition: service_healthy

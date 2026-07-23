@@ -6,7 +6,6 @@ import logging
 import uuid
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta, timezone
-from pathlib import Path
 from typing import Any
 
 from sqlalchemy import func, select
@@ -305,17 +304,33 @@ class LotterySchedulerService:
                 await self.db.flush()
                 return result
 
-            # Guarded write path
+            # Guarded write path — ensure persistent gate dump before authorizing write
+            from app.services.lottery_sync_gate_backup import ensure_fresh_gate_backup
+
             bp = backup_path
             if not bp:
-                candidates = [
-                    Path("/tmp/pre_stageb_write.dump"),
-                    Path("/tmp/pre_lottery_sync.dump"),
-                ]
-                candidates += sorted(Path("data/lottery-staging-backups").glob("pre-phase*.dump"))
-                candidates += sorted(Path("data/lottery-staging-backups").glob("pre-sync*.dump"))
-                existing = [p for p in candidates if p.exists() and p.stat().st_size >= 1000]
-                bp = str(existing[-1]) if existing else None
+                try:
+                    bp = str(
+                        ensure_fresh_gate_backup(
+                            database_url=self.database_url,
+                            run_started_at=None,
+                        )
+                    )
+                except SyncEnvironmentGuardError as exc:
+                    await create_alert(
+                        self.db,
+                        code="backup_gate_invalid",
+                        title="Backup gate inválido",
+                        message=str(exc),
+                        severity="critical",
+                        sync_run_id=dry.run_id,
+                    )
+                    state.last_run_id = dry.run_id
+                    await self.db.flush()
+                    result.status = "blocked"
+                    result.blocked_reason = str(exc)
+                    result.alerts = alerts + ["backup_gate_invalid"]
+                    return result
             try:
                 assert_automatic_write_gates(
                     database_url=self.database_url,

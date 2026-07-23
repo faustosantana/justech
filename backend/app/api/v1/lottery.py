@@ -1248,6 +1248,10 @@ async def lottery_observability(
         "source_contract_version": settings.lottery_source_contract_version,
         "allowed_database": settings.lottery_sync_allowed_database,
         "allowed_port": settings.lottery_sync_allowed_port,
+        "backup_gate": __import__(
+            "app.services.lottery_sync_gate_backup", fromlist=["gate_backup_status_dict"]
+        ).gate_backup_status_dict(database_url=settings.database_url),
+        "worker_standalone": bool(settings.lottery_sync_worker_standalone),
     }
 
 

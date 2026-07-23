@@ -65,9 +65,13 @@ def _apply_pending_fill(text: str, state: ConversationState) -> ConversationStat
         filled = True
 
     if lots:
-        for lot in lots:
-            if lot not in updated.active_lotteries:
-                updated.active_lotteries.append(lot)
+        # Prefer explicit list as the active set when filling lottery slot
+        if "lottery" in state.pending_slots:
+            updated.active_lotteries = list(dict.fromkeys(lots))
+        else:
+            for lot in lots:
+                if lot not in updated.active_lotteries:
+                    updated.active_lotteries.append(lot)
         if "lottery" in updated.pending_slots:
             updated.pending_slots = [s for s in updated.pending_slots if s != "lottery"]
         filled = True
@@ -328,6 +332,39 @@ def _detect_follow_up(text: str, state: ConversationState) -> tuple[Understandin
         if number:
             working.active_numbers = [number]
             lots = list(state.active_lotteries)
+            # If previous turn was a post-occurrence window, keep calendar/draws depth
+            if state.last_intent == "post_occurrence_window" or state.last_analysis.get(
+                "type"
+            ) == "post_occurrence_window":
+                working.last_occurrences = {}
+                return (
+                    UnderstandingResult(
+                        intent="last_occurrence",
+                        lotteries=lots,
+                        numbers=[number],
+                        scope="multiple" if len(lots) > 1 else "single",
+                        tool="lottery_compare_last_occurrence_all"
+                        if len(lots) > 1
+                        else LotteryToolName.GET_LAST_OCCURRENCE.value,
+                        params={
+                            "number": number,
+                            "lotteries": lots,
+                            "lottery": lots[0],
+                            "then_post_window": True,
+                            "calendar_days": state.calendar_window or 7,
+                            "unit": "days" if state.calendar_window else "draws",
+                            "count": int(
+                                state.calendar_window or state.draw_count_context or 7
+                            ),
+                        },
+                        calendar_days=state.calendar_window,
+                        draw_count=state.draw_count_context,
+                        plan=["last_occurrence_each", "post_occurrence_window"],
+                        confidence=0.9,
+                        source="follow_up",
+                    ),
+                    working,
+                )
             return (
                 UnderstandingResult(
                     intent="last_occurrence",
@@ -347,6 +384,39 @@ def _detect_follow_up(text: str, state: ConversationState) -> tuple[Understandin
                 ),
                 working,
             )
+
+    # "¿en cuál se repitió el 24?" — reuse last post-occurrence / active lotteries
+    if state.active_lotteries and (
+        state.last_intent == "post_occurrence_window" or state.last_analysis.get("type") == "post_occurrence_window"
+    ) and re.search(r"repiti[oó]|reapareci[oó]|volvi[oó]\s+a\s+salir|sali[oó]\s+de\s+nuevo", low):
+        number = _extract_number(text) or (state.active_numbers[0] if state.active_numbers else None)
+        working.active_numbers = [number] if number else list(state.active_numbers)
+        return (
+            UnderstandingResult(
+                intent="post_occurrence_window",
+                lotteries=list(state.active_lotteries),
+                numbers=[number] if number else list(state.active_numbers),
+                calendar_days=state.calendar_window,
+                draw_count=state.draw_count_context,
+                scope="multiple" if len(state.active_lotteries) > 1 else "single",
+                tool="lottery_analyze_post_occurrence_window",
+                params={
+                    "number": number,
+                    "lotteries": list(state.active_lotteries),
+                    "per_lottery_dates": {
+                        k: v.date for k, v in state.last_occurrences.items()
+                    },
+                    "unit": "days" if state.calendar_window else "draws",
+                    "count": int(state.calendar_window or state.draw_count_context or 7),
+                    "direction": "after",
+                    "focus": "reappearance",
+                },
+                per_lottery_dates={k: v.date for k, v in state.last_occurrences.items()},
+                confidence=0.9,
+                source="follow_up",
+            ),
+            working,
+        )
 
     # "y ese mismo número en las demás" / "en las demás"
     if state.active_numbers and re.search(

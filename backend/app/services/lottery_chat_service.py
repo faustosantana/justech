@@ -15,7 +15,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.config import settings
 from app.core.exceptions import forbidden, not_found
 from app.llm.router import LLMRouter
-from app.lottery.ai.conversation_state import ConversationState
+from app.lottery.ai.conversation_state import ConversationState, UnderstandingResult
 from app.lottery.ai.planner import build_plan
 from app.lottery.ai.prompts.lottery_assistant_system_v1 import (
     get_active_prompt,
@@ -300,25 +300,56 @@ class LotteryChatService:
                 state.pending_slots = []
                 state.pending_intent = None
                 state.last_tool_results = [{"tool": tool_name, "rows": rows[:8]}]
-                structured, template, tool_trace = await self._execute_plan(
-                    executor, plan, ctx, understanding
-                )
-                tool_name = understanding.tool or (plan.steps[-1].tool if plan.steps else "plan")
-                if understanding.numbers:
-                    state.active_numbers = list(understanding.numbers)
-                if understanding.lotteries:
-                    state.active_lotteries = list(
-                        dict.fromkeys([*state.active_lotteries, *understanding.lotteries])
-                    )
-                if understanding.params.get("lottery"):
-                    lot = str(understanding.params["lottery"])
-                    if lot not in state.active_lotteries:
-                        state.active_lotteries = [lot, *state.active_lotteries]
-                state.last_intent = str(understanding.intent)
-                state.last_plan = [s.purpose or s.tool for s in plan.steps]
-                state.pending_slots = []
-                state.pending_intent = None
                 state.metric_context = understanding.metric or understanding.intent
+                # Chain: after multi last-occurrence, optionally run post window
+                if (understanding.params or {}).get("then_post_window"):
+                    per_dates = {
+                        k: v.date
+                        for k, v in state.last_occurrences.items()
+                        if v and v.date
+                    }
+                    count = int(
+                        (understanding.params or {}).get("count")
+                        or state.calendar_window
+                        or 7
+                    )
+                    unit = (understanding.params or {}).get("unit") or "days"
+                    chained = UnderstandingResult(
+                        intent="post_occurrence_window",
+                        lotteries=lots,
+                        numbers=[str(number)] if number else [],
+                        calendar_days=count if unit == "days" else None,
+                        draw_count=count if unit == "draws" else None,
+                        tool="lottery_analyze_post_occurrence_window",
+                        params={
+                            "number": number,
+                            "lotteries": lots,
+                            "per_lottery_dates": per_dates,
+                            "unit": unit,
+                            "count": count,
+                            "direction": "after",
+                        },
+                        per_lottery_dates=per_dates,
+                        confidence=0.9,
+                        source="follow_up",
+                    )
+                    post_structured, post_template, post_trace = (
+                        await self._execute_post_occurrence_window(executor, chained, ctx)
+                    )
+                    structured = post_structured
+                    template = (
+                        (template or "")
+                        + "\n\n---\n\n"
+                        + (post_template or "")
+                    ).strip()
+                    tool_trace.extend(post_trace)
+                    tool_name = "lottery_analyze_post_occurrence_window"
+                    state.last_intent = "post_occurrence_window"
+                    state.calendar_window = count if unit == "days" else state.calendar_window
+                    state.last_analysis = {
+                        "type": "post_occurrence_window",
+                        "params": dict(chained.params or {}),
+                    }
             else:
                 tool_enum = self._tool_enum(understanding.tool)
                 exec_params = self._normalize_tool_params(understanding.tool, params, state)
@@ -819,6 +850,20 @@ class LotteryChatService:
             f"(fecha base = última aparición del {number or 'número'} por lotería):",
             "",
         ]
+        focus = params.get("focus")
+        if focus == "reappearance" and number:
+            re_lots = [s["lottery"] for s in sections if s.get("reappeared")]
+            if re_lots:
+                lines.insert(
+                    0,
+                    f"El **{number}** se repitió en: {', '.join(re_lots)}.\n",
+                )
+            else:
+                lines.insert(
+                    0,
+                    f"El **{number}** **no** se repitió en la ventana analizada "
+                    f"({', '.join(lotteries) or 'loterías activas'}).\n",
+                )
         for s in sections:
             lines.append(f"**{s['lottery']}**")
             if not s.get("found_base"):

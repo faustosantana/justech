@@ -110,3 +110,48 @@ def test_swap_number_keeps_lotteries():
     assert result.intent == "last_occurrence"
     assert result.numbers == ["57"]
     assert "Real" in (result.lotteries or new_state.active_lotteries)
+
+
+def test_pending_fill_multi_lottery_resumes_compare():
+    state = ConversationState(
+        pending_intent="last_occurrence",
+        pending_slots=["lottery"],
+        pending_params={"number": "24"},
+        active_numbers=["24"],
+    )
+    result, new_state = understand("En la Real y en Leidsa.", state)
+    assert result.needs_clarification is False
+    assert result.intent == "last_occurrence"
+    assert set(result.lotteries or []) == {"Real", "Leidsa"}
+    assert result.tool == "lottery_compare_last_occurrence_all"
+    assert new_state.pending_slots == []
+
+
+def test_reappearance_follow_up_keeps_window():
+    state = ConversationState(
+        active_lotteries=["Real", "Leidsa"],
+        active_numbers=["24"],
+        last_intent="post_occurrence_window",
+        calendar_window=7,
+        last_analysis={"type": "post_occurrence_window"},
+    )
+    state.remember_occurrence(lottery="Real", number="24", draw_date="2026-06-15")
+    state.remember_occurrence(lottery="Leidsa", number="24", draw_date="2026-07-04")
+    result, _ = understand("¿En cuál se repitió el 24?", state)
+    assert result.intent == "post_occurrence_window"
+    assert result.params.get("focus") == "reappearance"
+    assert result.needs_clarification is False
+
+
+def test_swap_after_post_window_chains():
+    state = ConversationState(
+        active_lotteries=["Real", "Leidsa"],
+        active_numbers=["24"],
+        last_intent="post_occurrence_window",
+        calendar_window=7,
+        last_analysis={"type": "post_occurrence_window"},
+    )
+    result, _ = understand("Ahora hazlo con el 57.", state)
+    assert result.numbers == ["57"]
+    assert result.params.get("then_post_window") is True
+    assert result.params.get("count") == 7

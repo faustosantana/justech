@@ -493,11 +493,64 @@ class LotteryChatService:
             return "Últimos resultados disponibles:\n- " + "\n- ".join(bits) if bits else "Sin últimos resultados."
 
         if tool == "lottery_get_sync_status" and isinstance(data, dict):
+            names = [
+                f"{x.get('name')} (source {x.get('source_id')})"
+                for x in (data.get("sync_lotteries") or [])
+                if isinstance(x, dict)
+            ]
+            lista = ", ".join(names) if names else "ninguna"
             return (
-                "Los datos históricos provienen del adaptador oficial de Lotería en JAIOS "
-                f"(fuente configurada; sync global={data.get('global_sync_enabled')}; "
-                f"loterías con sync habilitado={data.get('lotteries_sync_enabled')}). "
-                "No se usa SQL libre: solo herramientas tipadas."
+                f"Sincronización: global={data.get('global_sync_enabled')}, "
+                f"auto-write={data.get('global_auto_write_enabled')}, "
+                f"modo={data.get('scheduler_mode')}, "
+                f"worker_standalone={data.get('worker_standalone')}. "
+                f"Loterías con sync habilitado ({data.get('lotteries_sync_enabled')}): {lista}. "
+                "Solo esas pueden recibir escritura automática."
+            )
+
+        if tool == "lottery_get_missing_today" and isinstance(data, dict):
+            missing = data.get("missing") or []
+            names = [m.get("name") for m in missing if isinstance(m, dict)]
+            return (
+                f"Hoy local ({data.get('local_today')}) faltan resultados en {data.get('count')} "
+                f"lotería(s) con sync habilitado: {', '.join(str(n) for n in names) or 'ninguna'}. "
+                f"{data.get('explanation') or ''}"
+            )
+
+        if tool == "lottery_get_sync_windows" and isinstance(data, dict):
+            due = data.get("sync_enabled_due") or []
+            bits = []
+            for d in due[:5]:
+                bits.append(
+                    f"source {d.get('source_id')}: fase {d.get('phase')}, "
+                    f"cada {d.get('interval_minutes')} min, próximo sorteo {d.get('next_draw_at')}"
+                )
+            phases = data.get("phases") or {}
+            return (
+                f"Ventanas de sync (TZ {data.get('timezone')}): fases={phases}. "
+                + ("Próximas: " + "; ".join(bits) if bits else "Sin loterías sync en ventana activa.")
+            )
+
+        if tool == "lottery_get_source_health" and isinstance(data, dict):
+            items = data.get("sources") or []
+            if not items:
+                return "Aún no hay filas de health multi-fuente registradas (tabla lottery_sources)."
+            bits = [
+                f"{i.get('source_key')} ({i.get('role')}): {i.get('health_status')}/{i.get('circuit_state')}"
+                for i in items[:12]
+                if isinstance(i, dict)
+            ]
+            return "Salud de fuentes: " + "; ".join(bits) + "."
+
+        if tool == "lottery_get_hot_cold" and isinstance(data, dict):
+            hot = ", ".join(f"{h.get('number')} (×{h.get('count')})" for h in (data.get("hot") or [])[:10])
+            cold = ", ".join(
+                f"{c.get('number')} ({c.get('days_since')}d)" for c in (data.get("cold") or [])[:10]
+            )
+            return (
+                f"Análisis descriptivo sobre {data.get('window_draws')} sorteos (hasta {data.get('as_of')}). "
+                f"Calientes: {hot or 'n/d'}. Fríos: {cold or 'n/d'}. "
+                f"{data.get('definition') or 'No es predicción ni recomendación de apuestas.'}"
             )
 
         if tool == "lottery_find_next_occurrences" and isinstance(data, dict):

@@ -221,7 +221,12 @@ def resolve_intent(message: str, ctx: LotterySessionContext) -> ResolvedIntent:
 
     # Lottery 3.0 — operational / analyst intents
     if re.search(
-        r"resultados?\s+hoy.*(cero|0)|por qu[eé].*resultados?\s+hoy|qu[eé] loter[ií]as.*(no|a[uú]n).*(sincron|hoy)|faltan.*(hoy|sincron)",
+        r"cu[aá]ntos?\s+resultados?\s+(hay\s+)?hoy|"
+        r"resultados?\s+hoy|"
+        r"por qu[eé].*resultados?\s+hoy|"
+        r"qu[eé] loter[ií]as.*(no|a[uú]n).*(sincron|hoy)|"
+        r"faltan.*(hoy|sincron)|cu[aá]ntos?\s+faltan|"
+        r"qu[eé] datos faltan( hoy)?|datos te faltan",
         text,
     ):
         return ResolvedIntent(
@@ -230,14 +235,23 @@ def resolve_intent(message: str, ctx: LotterySessionContext) -> ResolvedIntent:
             params={},
             structured_type="lottery_result",
         )
-    if re.search(r"fuentes?.*(degrad|salud|health)|circuit\s*breaker|sincronizaci[oó]n.*(estado|status)|[uú]ltima sincronizaci[oó]n", text):
-        if re.search(r"ventana|pr[oó]xima sincron|scheduler", text):
-            return ResolvedIntent(
-                kind="tool",
-                tool=LotteryToolName.GET_SYNC_WINDOWS,
-                params={},
-                structured_type="lottery_result",
-            )
+    if re.search(
+        r"pr[oó]xima sincronizaci[oó]n|pr[oó]xima sync|ventana(s)? de sync|"
+        r"cu[aá]ndo.*(ser[aá]|es).*sincron",
+        text,
+    ):
+        return ResolvedIntent(
+            kind="tool",
+            tool=LotteryToolName.GET_SYNC_WINDOWS,
+            params={},
+            structured_type="lottery_result",
+        )
+    if re.search(
+        r"fuentes?.*(degrad|salud|health)|circuit\s*breaker|"
+        r"sincronizaci[oó]n.*(estado|status)|[uú]ltima sincronizaci[oó]n|"
+        r"loter[ií]as.*(estan|están)?\s*sincronizando|qu[eé] loter[ií]as.*(sync|sincron)",
+        text,
+    ):
         if re.search(r"fuente|degrad|health|circuit", text):
             return ResolvedIntent(
                 kind="tool",
@@ -251,8 +265,8 @@ def resolve_intent(message: str, ctx: LotterySessionContext) -> ResolvedIntent:
             params={},
             structured_type="lottery_result",
         )
-    if re.search(r"anomal[ií]as|inconsistencias|calidad de datos|datos te faltan|qu[eé] datos.*faltan", text):
-        # quality/anomalies need a lottery — defer to coverage if none
+    if re.search(r"anomal[ií]as|inconsistencias|calidad de datos", text):
+        # quality/anomalies need a lottery — defer to later extraction
         pass
     if re.search(r"n[uú]meros?\s+calientes|n[uú]meros?\s+fr[ií]os|calientes y fr[ií]os", text):
         # resolved after lottery extraction below — placeholder handled later

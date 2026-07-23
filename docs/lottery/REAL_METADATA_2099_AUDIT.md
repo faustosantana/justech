@@ -67,3 +67,9 @@ Expected after fix: `last_draw_date = 2026-07-21`, `draw_count = 4118`.
 - `SYNC_ENABLED=false`
 - `AUTO_WRITE_ENABLED=false`
 - Nacional Día untouched
+
+## Repair status (Lottery 3.0)
+
+Alembic revision `058_lottery_3_0_platform` recomputes all lottery metadata from `lottery_draws` on upgrade.
+Admin API: `POST /api/v1/lottery/admin/metadata/recompute` (optional targeted or full).
+Deploy requires migration bake — not applied by this documentation alone.

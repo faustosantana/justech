@@ -401,6 +401,7 @@ class LotteryQueryService:
         number_type: str | None = None,
         page: int = 1,
         page_size: int | None = None,
+        order: str = "asc",
     ) -> NumberSearchResponse:
         num = _validate_number(number)
         if from_date and to_date:
@@ -418,6 +419,7 @@ class LotteryQueryService:
             number_type=number_type,
             limit=size,
             offset=(page - 1) * size,
+            order=order,
         )
         pages = max(1, math.ceil(total / size)) if total else 0
         occ = [

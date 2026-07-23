@@ -52,6 +52,7 @@ class ChatSendResponse(BaseModel):
     suggestions: list[str] = Field(default_factory=list)
     synthesis_fallback: bool = False
     latency_ms: int = 0
+    runtime_trace: dict[str, Any] | None = None
 
 
 class SavedQueryResponse(BaseModel):

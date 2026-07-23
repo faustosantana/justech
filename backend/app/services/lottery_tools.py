@@ -477,7 +477,10 @@ class LotteryToolExecutor:
         if tool == LotteryToolName.GET_LAST_OCCURRENCE:
             lottery = str(params["lottery"])
             number = str(params["number"])
-            res = await self.query.by_number(lottery, number, page=1, page_size=1)
+            # DESC: page=1 must be the most recent occurrence (not the oldest).
+            res = await self.query.by_number(
+                lottery, number, page=1, page_size=1, order="desc"
+            )
             return res, getattr(res, "total", 1), {"semantics": "last_occurrence"}
 
         if tool == LotteryToolName.GET_INTERVAL_STATISTICS:

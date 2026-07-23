@@ -151,6 +151,7 @@ class LotteryRepository:
         number_type: str | None = None,
         limit: int = 50,
         offset: int = 0,
+        order: str = "asc",
     ) -> tuple[list[tuple[LotteryDraw, LotteryDrawNumber]], int]:
         filters = [
             LotteryDraw.lottery_id == lottery_id,
@@ -173,11 +174,22 @@ class LotteryRepository:
         )
         total = int((await self.db.execute(count_q)).scalar_one())
 
+        if (order or "asc").lower() == "desc":
+            order_by = (
+                desc(LotteryDraw.draw_date),
+                desc(LotteryDraw.draw_time).nullslast(),
+            )
+        else:
+            order_by = (
+                asc(LotteryDraw.draw_date),
+                asc(LotteryDraw.draw_time).nullsfirst(),
+            )
+
         q = (
             select(LotteryDraw, LotteryDrawNumber)
             .join(LotteryDrawNumber, LotteryDrawNumber.draw_id == LotteryDraw.id)
             .where(and_(*filters))
-            .order_by(asc(LotteryDraw.draw_date), asc(LotteryDraw.draw_time).nullsfirst())
+            .order_by(*order_by)
             .limit(limit)
             .offset(offset)
         )

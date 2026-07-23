@@ -15,14 +15,21 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.config import settings
 from app.core.exceptions import forbidden, not_found
 from app.llm.router import LLMRouter
+from app.lottery.ai.conversation_state import ConversationState
+from app.lottery.ai.planner import build_plan
+from app.lottery.ai.prompts.lottery_assistant_system_v1 import (
+    get_active_prompt,
+    get_system_prompt_text,
+)
+from app.lottery.ai.runtime import record_runtime_trace
+from app.lottery.ai.understanding import understand
 from app.models.lottery import LotteryChatMessage, LotteryChatSession, LotterySavedQuery
 from app.schemas.llm import LLMCompletionRequest, LLMMessage, LLMProvider
-from app.services.lottery_ai_contracts import LOTTERY_SYSTEM_PROMPT
+from app.services.lottery_ai_contracts import LotteryToolName
 from app.services.lottery_chat_context import (
     LotterySessionContext,
     merge_context_after_tool,
 )
-from app.services.lottery_intent import resolve_intent
 from app.services.lottery_tools import LotteryToolExecutor, ToolExecutionResult
 
 
@@ -30,6 +37,8 @@ DISCLAIMER = (
     "Los resultados históricos y las estadísticas son únicamente informativos. "
     "No garantizan resultados futuros."
 )
+# Footer-only: do not append into every assistant message body.
+APPEND_DISCLAIMER_TO_BODY = False
 
 
 def _utcnow() -> datetime:
@@ -91,7 +100,7 @@ class LotteryChatService:
 
     async def clear_context(self, session_id: uuid.UUID) -> LotterySessionContext:
         session = await self.get_session(session_id)
-        session.context = {}
+        session.context = {"conversation_v4": ConversationState().to_store()}
         await self.db.flush()
         return LotterySessionContext()
 
@@ -115,7 +124,9 @@ class LotteryChatService:
 
     async def send_message(self, session_id: uuid.UUID, content: str) -> dict[str, Any]:
         session = await self.get_session(session_id)
-        ctx = LotterySessionContext.from_store(session.context or {})
+        raw_ctx = session.context or {}
+        ctx = LotterySessionContext.from_store(raw_ctx)
+        state = ConversationState.from_store(raw_ctx.get("conversation_v4") or raw_ctx)
 
         user_msg = LotteryChatMessage(
             session_id=session.id,
@@ -128,32 +139,62 @@ class LotteryChatService:
         await self.db.flush()
 
         t0 = time.perf_counter()
-        intent = resolve_intent(content, ctx)
+        understanding, state = understand(content, state)
+        plan = build_plan(understanding)
         tool_trace: list[dict[str, Any]] = []
         structured: dict[str, Any] | None = None
         template = ""
         synthesis_fallback = False
         model_name: str | None = None
+        provider_used: str | None = None
+        provider_requested = (
+            getattr(settings, "assistant_synthesis_provider", None)
+            or getattr(settings, "hermes_default_provider", None)
+            or "huawei_modelarts"
+        )
+        model_requested = get_active_prompt().recommended_model
+        fallback_used = False
+        fallback_reason: str | None = None
+        intent_kind = "clarify" if understanding.needs_clarification else "tool"
+        tool_name: str | None = understanding.tool
+        params = dict(understanding.params or {})
 
-        if intent.kind in ("injection_refused", "prediction_refused", "refuse"):
-            template = intent.refuse_message or "No puedo ayudar con esa solicitud."
+        refuse_msg = (understanding.params or {}).get("message") if understanding.params.get("refuse") else None
+        if refuse_msg or understanding.params.get("refuse"):
+            intent_kind = "refuse"
+            template = refuse_msg or understanding.clarification_question or "No puedo ayudar con esa solicitud."
             structured = {
-                "type": intent.structured_type or "lottery_error",
-                "warnings": [{"code": intent.kind.upper(), "message": template}],
-                "disclaimer": DISCLAIMER,
+                "type": "lottery_error",
+                "warnings": [{"code": "REFUSE", "message": template}],
             }
-        elif intent.kind == "clarify":
-            template = intent.clarify_message or "Necesito más información."
+        elif understanding.needs_clarification or not understanding.tool:
+            intent_kind = "clarify"
+            template = (
+                understanding.clarification_question
+                or "¿Puedes precisar un poco más la consulta?"
+            )
             structured = {
-                "type": intent.structured_type or "lottery_ambiguity",
+                "type": "lottery_ambiguity",
                 "warnings": [{"code": "CLARIFY", "message": template}],
-                "disclaimer": DISCLAIMER,
-                **(intent.params or {}),
+                "missing_slots": understanding.missing_slots,
+                "intent": understanding.intent,
+                "numbers": understanding.numbers,
+                "lotteries": understanding.lotteries,
             }
-            if intent.params.get("pending_ambiguity"):
-                ctx.pending_ambiguity = intent.params["pending_ambiguity"]
+            if understanding.numbers:
+                state.active_numbers = list(understanding.numbers)
+            if understanding.lotteries:
+                state.active_lotteries = list(understanding.lotteries)
+            state.last_intent = str(understanding.intent)
+            state.pending_slots = list(understanding.missing_slots)
+            if understanding.intent and understanding.missing_slots:
+                state.pending_intent = str(understanding.intent)
+                state.pending_params = {
+                    **params,
+                    **({"number": understanding.numbers[0]} if understanding.numbers else {}),
+                }
+            state.clarification_question = template
         else:
-            assert intent.tool is not None
             executor = LotteryToolExecutor(
                 self.db,
                 tenant_id=self.tenant_id,
@@ -161,51 +202,124 @@ class LotteryChatService:
                 role=self.role,
                 is_superadmin=self.is_superadmin,
             )
-            result = await executor.execute(
-                intent.tool,
-                intent.params,
-                structured_type=intent.structured_type or "lottery_result",
-                session_context=ctx.to_store(),
-            )
-            tool_trace.append(
-                {
-                    "tool": result.tool,
-                    "status": result.status,
-                    "duration_ms": result.duration_ms,
-                    "error_code": result.error_code,
-                }
-            )
-            structured, template = self._build_structured(result, intent.params)
-            if result.status == "success":
-                ctx = merge_context_after_tool(
-                    ctx,
-                    tool=result.tool,
-                    params=intent.params,
-                    result_summary=result.summary_for_context,
+            # Multi-tool compare last occurrence across lotteries
+            if (
+                understanding.tool == "lottery_compare_last_occurrence_all"
+                or (understanding.scope == "all" and understanding.intent == "last_occurrence")
+                or (
+                    understanding.intent == "compare_numbers"
+                    and len(plan.steps) > 1
                 )
+            ):
+                structured, template, tool_trace = await self._execute_multi_last_occurrence(
+                    executor, understanding, plan, ctx
+                )
+                tool_name = understanding.tool or "lottery_compare_last_occurrence"
+                if understanding.numbers:
+                    state.active_numbers = list(understanding.numbers)
+                if understanding.lotteries:
+                    state.active_lotteries = list(
+                        dict.fromkeys([*state.active_lotteries, *understanding.lotteries])
+                    )
+                state.last_intent = str(understanding.intent)
+                state.last_plan = [s.purpose or s.tool for s in plan.steps]
+                state.pending_slots = []
+                state.pending_intent = None
+            else:
+                tool_enum = self._tool_enum(understanding.tool)
+                exec_params = self._normalize_tool_params(understanding.tool, params, state)
+                result = await executor.execute(
+                    tool_enum,
+                    exec_params,
+                    structured_type="lottery_result",
+                    session_context=ctx.to_store(),
+                )
+                tool_trace.append(
+                    {
+                        "tool": result.tool,
+                        "status": result.status,
+                        "duration_ms": result.duration_ms,
+                        "error_code": result.error_code,
+                    }
+                )
+                structured, template = self._build_structured(result, exec_params)
+                if result.status == "success":
+                    ctx = merge_context_after_tool(
+                        ctx,
+                        tool=result.tool,
+                        params=exec_params,
+                        result_summary=result.summary_for_context,
+                    )
+                    if exec_params.get("lottery"):
+                        lot = str(exec_params["lottery"])
+                        if lot not in state.active_lotteries:
+                            state.active_lotteries = [lot, *[x for x in state.active_lotteries if x != lot]]
+                    if exec_params.get("number"):
+                        state.active_numbers = [str(exec_params["number"])]
+                    if exec_params.get("window_draws") or exec_params.get("count"):
+                        state.draw_count_context = int(
+                            exec_params.get("window_draws") or exec_params.get("count")
+                        )
+                    state.last_intent = str(understanding.intent)
+                    state.last_tool = result.tool
+                    state.last_plan = [s.purpose or s.tool for s in plan.steps]
+                    state.pending_slots = []
+                    state.pending_intent = None
+                    state.clarification_question = None
+                    state.metric_context = understanding.metric or understanding.intent
+                params = exec_params
+                tool_name = result.tool
 
         # LLM synthesis only for successful tool results
         final_text = template
         synthesis_fallback = False
         model_name = None
         if (
-            intent.kind == "tool"
+            intent_kind == "tool"
             and structured
             and structured.get("type")
             not in ("lottery_error", "lottery_ambiguity", "lottery_no_results")
         ):
-            final_text, synthesis_fallback, model_name = await self._synthesize(
+            final_text, synthesis_fallback, model_name, provider_used = await self._synthesize(
                 question=content,
                 template=template,
                 facts=structured,
-                context=ctx.to_store(),
+                context={**ctx.to_store(), "conversation_v4": state.to_store()},
             )
+            if synthesis_fallback:
+                fallback_used = True
+                fallback_reason = "synthesis_unavailable_or_failed"
+                provider_used = provider_used or "local_template"
 
-        if not final_text.endswith(DISCLAIMER.split(".")[0]) and intent.kind != "injection_refused":
-            if DISCLAIMER not in final_text:
-                final_text = f"{final_text.rstrip()}\n\n{DISCLAIMER}"
+        if APPEND_DISCLAIMER_TO_BODY and DISCLAIMER not in final_text and intent_kind != "refuse":
+            final_text = f"{final_text.rstrip()}\n\n{DISCLAIMER}"
+        # Strip accidental duplicated disclaimer from synthesizer
+        if final_text.count(DISCLAIMER) > 1:
+            final_text = final_text.replace(DISCLAIMER, "", final_text.count(DISCLAIMER) - 1).rstrip()
 
         latency_ms = int((time.perf_counter() - t0) * 1000)
+        runtime_trace = {
+            "provider_requested": provider_requested,
+            "provider_used": provider_used or ("local_template" if synthesis_fallback or intent_kind != "tool" else None),
+            "model_requested": model_requested,
+            "model_used": model_name,
+            "fallback_used": fallback_used,
+            "fallback_reason": fallback_reason,
+            "llm_latency_ms": latency_ms,
+            "tools_executed": [t.get("tool") for t in tool_trace],
+            "synthesis_status": (
+                "skipped"
+                if intent_kind != "tool"
+                else ("fallback" if synthesis_fallback else "ok")
+            ),
+            "intent": understanding.intent,
+            "prompt_version": get_active_prompt().version,
+        }
+        state.provider_trace = runtime_trace
+        try:
+            record_runtime_trace(runtime_trace, success=not fallback_used or intent_kind == "clarify")
+        except Exception:  # noqa: BLE001
+            pass
         try:
             from app.lottery.ai.usage import estimate_cost_usd, record_ai_usage
 
@@ -215,7 +329,7 @@ class LotteryChatService:
                 tenant_id=self.tenant_id,
                 user_id=self.user_id,
                 session_id=session.id,
-                provider="hermes" if model_name and "hermes" in str(model_name).lower() else (model_name or "local"),
+                provider=str(provider_used or model_name or "local"),
                 model=model_name,
                 latency_ms=latency_ms,
                 estimated_cost_usd=estimate_cost_usd(prompt_tokens=0, completion_tokens=0),
@@ -224,25 +338,45 @@ class LotteryChatService:
             )
         except Exception:  # noqa: BLE001 — metrics must not break chat
             pass
+
+        merged_context = {
+            **ctx.to_store(),
+            "conversation_v4": state.to_store(),
+            "last_lottery": state.active_lotteries[0] if state.active_lotteries else ctx.last_lottery,
+            "last_numbers": state.active_numbers or ctx.last_numbers,
+            "last_query_semantics": state.last_intent or ctx.last_query_semantics,
+            "last_draw_count": state.draw_count_context or ctx.last_draw_count,
+        }
         assistant_payload = {
             "structured_content": structured,
-            "tool_trace": tool_trace,
-            "intent": intent.kind,
-            "tool": intent.tool.value if intent.tool else None,
-            "params": _jsonable(intent.params),
+            "tool_trace": tool_trace if self.is_superadmin else [],
+            "intent": understanding.intent,
+            "entities": {
+                "lotteries": understanding.lotteries or state.active_lotteries,
+                "numbers": understanding.numbers or state.active_numbers,
+            },
+            "missing_slots": understanding.missing_slots or state.pending_slots,
+            "clarification": template if intent_kind == "clarify" else None,
+            "plan": [s.model_dump() for s in plan.steps],
+            "tool": tool_name,
+            "params": _jsonable(params),
             "synthesis_fallback": synthesis_fallback,
             "model": model_name,
+            "provider": provider_used,
             "latency_ms": latency_ms,
+            "runtime_trace": runtime_trace,
+            "prompt_version": get_active_prompt().version,
+            "analysis_params": structured.get("query") if isinstance(structured, dict) else None,
         }
         assistant_msg = LotteryChatMessage(
             session_id=session.id,
             role="assistant",
             content=final_text,
-            tool_name=intent.tool.value if intent.tool else intent.kind,
+            tool_name=tool_name or intent_kind,
             tool_payload=assistant_payload,
         )
         self.db.add(assistant_msg)
-        session.context = ctx.to_store()
+        session.context = merged_context
         session.last_message_at = _utcnow()
         if session.title in (None, "Nueva consulta") and content.strip():
             session.title = content.strip()[:80]
@@ -254,14 +388,16 @@ class LotteryChatService:
                 "role": "assistant",
                 "content": final_text,
                 "structured_content": structured,
-                "tool_trace": tool_trace,
+                "tool_trace": tool_trace if self.is_superadmin else [],
                 "created_at": assistant_msg.created_at.isoformat() if assistant_msg.created_at else None,
+                "runtime_trace": runtime_trace,
             },
             "user_message_id": str(user_msg.id),
-            "context": ctx.to_store(),
-            "suggestions": self._suggestions(ctx, intent.kind),
+            "context": merged_context,
+            "suggestions": self._suggestions(ctx, intent_kind),
             "synthesis_fallback": synthesis_fallback,
             "latency_ms": latency_ms,
+            "runtime_trace": runtime_trace,
         }
 
     async def retry_last(self, session_id: uuid.UUID) -> dict[str, Any]:
@@ -278,6 +414,135 @@ class LotteryChatService:
             await self.db.delete(messages[-1])
             await self.db.flush()
         return await self.send_message(session_id, last_user.content)
+
+    def _tool_enum(self, tool: str | None) -> LotteryToolName:
+        if not tool:
+            raise ValueError("tool required")
+        return LotteryToolName(tool)
+
+    def _normalize_tool_params(
+        self, tool: str | None, params: dict[str, Any], state: ConversationState
+    ) -> dict[str, Any]:
+        out = dict(params or {})
+        if tool in {
+            LotteryToolName.GET_TOP_NUMBERS.value,
+            LotteryToolName.GET_BOTTOM_NUMBERS.value,
+            LotteryToolName.CALCULATE_FREQUENCIES.value,
+        }:
+            if not out.get("from_date") or not out.get("to_date"):
+                from datetime import date, timedelta
+
+                n = int(out.get("window_draws") or state.draw_count_context or 30)
+                to_d = date.today()
+                from_d = to_d - timedelta(days=max(n, 7))
+                out.setdefault("from_date", from_d)
+                out.setdefault("to_date", to_d)
+                out.setdefault("limit", out.get("limit") or 10)
+        if tool == LotteryToolName.GET_HOT_COLD.value:
+            out.setdefault("window_draws", state.draw_count_context or 30)
+        return out
+
+    async def _execute_multi_last_occurrence(
+        self,
+        executor: LotteryToolExecutor,
+        understanding,
+        plan,
+        ctx: LotterySessionContext,
+    ) -> tuple[dict[str, Any], str, list[dict[str, Any]]]:
+        number = (
+            (understanding.numbers[0] if understanding.numbers else None)
+            or understanding.params.get("number")
+        )
+        tool_trace: list[dict[str, Any]] = []
+        rows: list[dict[str, Any]] = []
+        lotteries = list(understanding.lotteries or [])
+        if not lotteries and understanding.scope == "all":
+            listed = await executor.execute(
+                LotteryToolName.LIST_LOTTERIES,
+                {"limit": 50, "searchable_only": True},
+                structured_type="lottery_result",
+                session_context=ctx.to_store(),
+            )
+            tool_trace.append(
+                {
+                    "tool": listed.tool,
+                    "status": listed.status,
+                    "duration_ms": listed.duration_ms,
+                    "error_code": listed.error_code,
+                }
+            )
+            items = []
+            if isinstance(listed.data, dict):
+                items = listed.data.get("items") or listed.data.get("lotteries") or []
+            elif isinstance(listed.data, list):
+                items = listed.data
+            for item in items:
+                name = item.get("name") if isinstance(item, dict) else getattr(item, "name", None)
+                if name:
+                    lotteries.append(str(name))
+            lotteries = list(dict.fromkeys(lotteries))[:8]
+
+        for lot in lotteries[:8]:
+            result = await executor.execute(
+                LotteryToolName.GET_LAST_OCCURRENCE,
+                {"lottery": lot, "number": number},
+                structured_type="lottery_result",
+                session_context=ctx.to_store(),
+            )
+            tool_trace.append(
+                {
+                    "tool": result.tool,
+                    "status": result.status,
+                    "duration_ms": result.duration_ms,
+                    "error_code": result.error_code,
+                }
+            )
+            d = None
+            pos = None
+            if result.status == "success" and isinstance(result.data, dict):
+                items = result.data.get("occurrences") or result.data.get("items") or []
+                if items:
+                    first = items[0]
+                    d = first.get("draw_date") if isinstance(first, dict) else getattr(first, "draw_date", None)
+                    pos = (
+                        first.get("position_label") or first.get("position")
+                        if isinstance(first, dict)
+                        else getattr(first, "position_label", None)
+                    )
+            rows.append(
+                {
+                    "lottery": lot,
+                    "number": number,
+                    "last_date": str(d) if d else None,
+                    "position": pos,
+                    "found": bool(d),
+                }
+            )
+
+        rows_sorted = sorted(
+            rows, key=lambda r: r["last_date"] or "", reverse=True
+        )
+        found = [r for r in rows_sorted if r["found"]]
+        missing = [r["lottery"] for r in rows_sorted if not r["found"]]
+        lines = [
+            f"Comparación de la última aparición del {number}:",
+        ]
+        for r in found:
+            bit = f"• {r['lottery']}: {r['last_date']}"
+            if r.get("position") is not None:
+                bit += f" (posición {r['position']})"
+            lines.append(bit)
+        if missing:
+            lines.append(f"Sin datos para: {', '.join(missing)}.")
+        lines.append(f"Analicé {len(lotteries)} lotería(s) con tools tipadas.")
+        template = "\n".join(lines)
+        structured = {
+            "type": "lottery_comparison",
+            "tool": "lottery_compare_last_occurrence",
+            "query": {"number": number, "lotteries": lotteries},
+            "data": {"rows": rows_sorted, "missing": missing},
+        }
+        return structured, template, tool_trace
 
     def _build_structured(
         self, result: ToolExecutionResult, params: dict[str, Any]
@@ -389,13 +654,36 @@ class LotteryChatService:
             number = params.get("number")
             lot = params.get("lottery")
             items = data.get("items") or data.get("occurrences") or []
+            total = (data.get("pagination") or {}).get("total") or data.get("total")
+            meta = data.get("meta") or {}
+            resolved = meta.get("resolved_lottery") or {}
             if not items:
                 return f"No encontré apariciones del {number} en {lot}."
             first = items[0]
             d = getattr(first, "draw_date", None) or (
                 first.get("draw_date") if isinstance(first, dict) else None
             )
-            return f"La última aparición registrada del {number} en {lot} fue el {d}."
+            pos = getattr(first, "position_label", None) or (
+                first.get("position_label") if isinstance(first, dict) else None
+            ) or getattr(first, "position", None) or (
+                first.get("position") if isinstance(first, dict) else None
+            )
+            first_d = resolved.get("first_draw_date") or meta.get("first_draw_date")
+            last_d = resolved.get("last_draw_date") or meta.get("last_draw_date")
+            draw_count = resolved.get("draw_count") or meta.get("draw_count")
+            pos_bit = f", en la posición {pos}" if pos is not None else ""
+            sample = ""
+            if draw_count or (first_d and last_d):
+                sample = (
+                    f" Analicé {draw_count or 'los'} sorteos disponibles"
+                    + (f" entre {first_d} y {last_d}" if first_d and last_d else "")
+                    + "."
+                )
+            elif total is not None:
+                sample = f" Hay {total} aparición(es) históricas del {number} en el historial."
+            return (
+                f"En {lot}, el {number} apareció por última vez el {d}{pos_bit}.{sample}"
+            )
 
         if tool == "lottery_find_repetitions" and isinstance(data, dict):
             items = data.get("items") or []
@@ -618,10 +906,10 @@ class LotteryChatService:
         template: str,
         facts: dict[str, Any],
         context: dict[str, Any],
-    ) -> tuple[str, bool, str | None]:
+    ) -> tuple[str, bool, str | None, str | None]:
         """Síntesis: LLMRouter → Hermes/ModelArts → plantilla natural (sin mensajes internos)."""
         if not settings.assistant_synthesis_enabled:
-            return template, True, None
+            return template, True, None, "local_template"
 
         payload = {
             "pregunta": question,
@@ -634,19 +922,21 @@ class LotteryChatService:
             "Responde primero la pregunta con cifras concretas. "
             "No inventes números. No predigas ni recomiendes apuestas. "
             "No menciones tools, JSON, errores internos ni 'redacción no disponible'. "
-            "Si falta el disclaimer histórico, agrégalo al final.\n"
+            "No repitas el aviso legal si ya está implícito en el pie de la UI.\n"
             f"{json.dumps(payload, ensure_ascii=False, default=str)[:6000]}"
         )
         messages = [
-            LLMMessage(role="system", content=LOTTERY_SYSTEM_PROMPT),
+            LLMMessage(role="system", content=get_system_prompt_text()),
             LLMMessage(role="user", content=user_content),
         ]
 
         # 1) LLMRouter con reintentos
         provider = None
+        provider_name: str | None = None
         if settings.assistant_synthesis_provider:
             try:
                 provider = LLMProvider(settings.assistant_synthesis_provider)
+                provider_name = provider.value
             except ValueError:
                 provider = None
         last_err: Exception | None = None
@@ -663,7 +953,9 @@ class LotteryChatService:
                 )
                 text = self._sanitize_user_facing((response.content or "").strip())
                 if len(text) >= 20 and not self._looks_internal(text):
-                    return text, False, getattr(response, "model", None)
+                    used = getattr(response, "provider", None)
+                    used_s = used.value if hasattr(used, "value") else (str(used) if used else provider_name)
+                    return text, False, getattr(response, "model", None), used_s
             except Exception as exc:  # noqa: BLE001 — fallback controlado
                 last_err = exc
                 await asyncio.sleep(0.35 * (attempt + 1))
@@ -671,11 +963,11 @@ class LotteryChatService:
         # 2) Hermes / ModelArts (credenciales ya usadas por JAIOS)
         hermes_text, hermes_model = await self._synthesize_via_hermes(messages)
         if hermes_text:
-            return hermes_text, False, hermes_model
+            return hermes_text, False, hermes_model, "huawei_modelarts"
 
         # 3) Fallback natural: plantilla local (nunca mensajes internos)
         _ = last_err
-        return template, True, None
+        return template, True, None, "local_template"
 
     async def _synthesize_via_hermes(
         self, messages: list[LLMMessage]
@@ -751,19 +1043,25 @@ class LotteryChatService:
 
     def _suggestions(self, ctx: LotterySessionContext, kind: str) -> list[str]:
         out: list[str] = []
+        if kind == "clarify":
+            out = [
+                "En la Real.",
+                "En Leidsa.",
+                "En todas las loterías.",
+                "Últimos 30 sorteos.",
+            ]
+            return out[:6]
         if ctx.base_date and ctx.last_lottery:
             out.append("Ver siete días siguientes.")
             out.append("Ver siete sorteos siguientes.")
             out.append("Buscar repeticiones.")
             out.append("Comparar con Nacional Noche.")
             if ctx.last_numbers:
-                out.append(f"Buscar próxima aparición histórica de {ctx.last_numbers[0]}.")
+                out.append(f"¿Y en Leidsa?")
+                out.append("Compáralas.")
             out.append('Guardar consulta como "Real marzo 2022".')
-        if kind in ("clarify", "injection_refused"):
-            out = [
-                "¿Qué salió en Real el 15 de marzo de 2022?",
-                "Listar loterías disponibles.",
-            ]
+        elif ctx.last_numbers:
+            out = ["¿Y en Leidsa?", "Compáralas.", "¿Cuántas veces ha salido?"]
         return out[:6]
 
     async def _enforce_session_limit(self) -> None:

@@ -491,11 +491,21 @@ def resolve_intent(message: str, ctx: LotterySessionContext) -> ResolvedIntent:
     # count occurrences: "cuántas veces salió el 01"
     if re.search(r"cu[aá]ntas?\s+veces|cuantas?\s+veces|cu[aá]ntas?\s+apariciones", text):
         number = _extract_number(raw) or (ctx.last_numbers[0] if ctx.last_numbers else None)
-        if not lottery or not number:
+        if not number:
             return ResolvedIntent(
                 kind="clarify",
-                clarify_message="Indica la lotería y el número (ej. cuántas veces salió el 01 en Real).",
+                clarify_message="¿Qué número quieres contar? También indica la lotería si aún no la mencionaste.",
                 structured_type="lottery_ambiguity",
+            )
+        if not lottery:
+            return ResolvedIntent(
+                kind="clarify",
+                clarify_message=(
+                    f"¿En cuál lotería quieres contar las apariciones del {number}? "
+                    "Puedo revisarlo en una específica o en todas las disponibles."
+                ),
+                structured_type="lottery_ambiguity",
+                params={"number": number, "pending_slots": ["lottery"]},
             )
         return ResolvedIntent(
             kind="tool",
@@ -505,13 +515,27 @@ def resolve_intent(message: str, ctx: LotterySessionContext) -> ResolvedIntent:
         )
 
     # last occurrence: "última vez que salió el 19"
-    if re.search(r"[uú]ltima\s+vez|cuando fue la ultima|cu[aá]ndo fue la [uú]ltima", text):
+    if re.search(
+        r"[uú]ltima\s+vez|cuando fue la ultima|cu[aá]ndo fue la [uú]ltima|"
+        r"cu[aá]ndo\s+(fue\s+)?la\s+[uú]ltima\s+vez|hace\s+cu[aá]nto.*(sali[oó]|apareci)",
+        text,
+    ):
         number = _extract_number(raw) or (ctx.last_numbers[0] if ctx.last_numbers else None)
-        if not lottery or not number:
+        if not number:
             return ResolvedIntent(
                 kind="clarify",
-                clarify_message="Indica la lotería y el número para la última aparición.",
+                clarify_message="¿De qué número quieres la última aparición? También indica la lotería.",
                 structured_type="lottery_ambiguity",
+            )
+        if not lottery:
+            return ResolvedIntent(
+                kind="clarify",
+                clarify_message=(
+                    f"¿En cuál lotería quieres que busque la última aparición del {number}? "
+                    "Puedo revisarlo en una específica o compararlo entre todas las loterías disponibles."
+                ),
+                structured_type="lottery_ambiguity",
+                params={"number": number, "pending_slots": ["lottery"]},
             )
         return ResolvedIntent(
             kind="tool",
@@ -717,12 +741,16 @@ def resolve_intent(message: str, ctx: LotterySessionContext) -> ResolvedIntent:
             structured_type="lottery_next_occurrences",
         )
 
-    if re.search(r"frecuencia|mas frecuentes|m[aá]s frecuentes", text):
+    if re.search(r"frecuencia|mas frecuentes|m[aá]s frecuentes|n[uú]meros?\s+m[aá]s\s+frecuentes", text):
         if not lottery:
             return ResolvedIntent(
                 kind="clarify",
-                clarify_message="¿De qué lotería quieres las frecuencias?",
+                clarify_message=(
+                    "¿Quieres analizarlos en alguna lotería específica o en todas? "
+                    "También dime si prefieres los últimos 30 sorteos, el último año o todo el historial."
+                ),
                 structured_type="lottery_ambiguity",
+                params={"pending_slots": ["lottery", "period"]},
             )
         from_d = ctx.last_from_date or parsed_date
         to_d = ctx.last_to_date or from_d
@@ -736,13 +764,28 @@ def resolve_intent(message: str, ctx: LotterySessionContext) -> ResolvedIntent:
         )
 
     # by-date: salió / resultados (after more specific patterns)
-    if re.search(r"sali[oó]|resultado|que salio|qu[eé] sali[oó]|mostrar.*fecha", text) or (
+    # Never treat "última vez que salió N" as by-date (handled above).
+    if re.search(r"[uú]ltima\s+vez|cu[aá]ndo fue la [uú]ltima", text):
+        pass
+    elif re.search(r"sali[oó]|resultado|que salio|qu[eé] sali[oó]|mostrar.*fecha", text) or (
         lottery and parsed_date and re.search(r"\d{4}|\bde\b", text)
     ):
-        if not lottery or not parsed_date:
+        if not lottery and not parsed_date:
             return ResolvedIntent(
                 kind="clarify",
                 clarify_message="Indica la lotería y la fecha exacta (ej. Real el 15 de marzo de 2022).",
+                structured_type="lottery_ambiguity",
+            )
+        if not lottery:
+            return ResolvedIntent(
+                kind="clarify",
+                clarify_message="¿De qué lotería quieres el resultado de esa fecha?",
+                structured_type="lottery_ambiguity",
+            )
+        if not parsed_date:
+            return ResolvedIntent(
+                kind="clarify",
+                clarify_message=f"¿Qué fecha exacta quieres consultar en {lottery}?",
                 structured_type="lottery_ambiguity",
             )
         return ResolvedIntent(

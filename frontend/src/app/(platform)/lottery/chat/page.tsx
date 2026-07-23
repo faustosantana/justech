@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
@@ -25,19 +25,91 @@ type UiMessage = {
   content: string;
   structured?: LotteryChatSendResponse["message"]["structured_content"];
   tool_trace?: LotteryChatSendResponse["message"]["tool_trace"];
+  analysis_params?: Record<string, unknown> | null;
 };
 
 const STARTERS = [
+  "¿Cuándo fue la última vez que salió el 57?",
+  "Dame los números más frecuentes.",
   "¿Qué salió en Real el 15 de marzo de 2022?",
-  "¿Y los siete días siguientes?",
-  "¿Cuáles se repitieron?",
-  "¿Y cuáles también aparecieron en Nacional Noche?",
-  "¿Cuándo volvió a salir el 01?",
-  "Muéstrame los siguientes siete sorteos.",
+  "¿Hay resultados pendientes hoy?",
 ];
+
+const isAdminRole = (role: string | null | undefined) =>
+  Boolean(role && ["superadmin", "admin", "tenant_admin"].includes(role));
+
+/** Lightweight markdown: bold, italics, lists, line breaks — no raw HTML. */
+function SimpleMarkdown({ text }: { text: string }) {
+  const blocks = useMemo(() => text.split(/\n{2,}/), [text]);
+  return (
+    <div className="space-y-2 text-sm leading-relaxed">
+      {blocks.map((block, i) => {
+        const lines = block.split("\n");
+        const isList = lines.every((l) => /^\s*([-*•]|\d+\.)\s+/.test(l) || !l.trim());
+        if (isList && lines.some((l) => l.trim())) {
+          return (
+            <ul key={i} className="list-disc space-y-1 pl-5">
+              {lines
+                .filter((l) => l.trim())
+                .map((l, j) => (
+                  <li key={j}>{renderInline(l.replace(/^\s*([-*•]|\d+\.)\s+/, ""))}</li>
+                ))}
+            </ul>
+          );
+        }
+        return (
+          <p key={i} className="whitespace-pre-wrap">
+            {lines.map((line, j) => (
+              <span key={j}>
+                {j > 0 && <br />}
+                {renderInline(line)}
+              </span>
+            ))}
+          </p>
+        );
+      })}
+    </div>
+  );
+}
+
+function renderInline(line: string): ReactNode[] {
+  const parts: ReactNode[] = [];
+  const re = /(\*\*[^*]+\*\*|\*[^*]+\*|`[^`]+`)/g;
+  let last = 0;
+  let m: RegExpExecArray | null;
+  let key = 0;
+  while ((m = re.exec(line)) !== null) {
+    if (m.index > last) parts.push(line.slice(last, m.index));
+    const token = m[0];
+    if (token.startsWith("**")) {
+      parts.push(
+        <strong key={key++} className="font-semibold">
+          {token.slice(2, -2)}
+        </strong>,
+      );
+    } else if (token.startsWith("*")) {
+      parts.push(
+        <em key={key++} className="italic">
+          {token.slice(1, -1)}
+        </em>,
+      );
+    } else {
+      parts.push(
+        <code key={key++} className="rounded bg-muted px-1 text-[0.85em]">
+          {token.slice(1, -1)}
+        </code>,
+      );
+    }
+    last = m.index + token.length;
+  }
+  if (last < line.length) parts.push(line.slice(last));
+  return parts;
+}
 
 export default function LotteryChatPage() {
   const router = useRouter();
+  const role = getUserRole();
+  const showTools = isAdminRole(role);
   const [sessions, setSessions] = useState<LotteryChatSession[]>([]);
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [messages, setMessages] = useState<UiMessage[]>([]);
@@ -45,7 +117,7 @@ export default function LotteryChatPage() {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [fallbackNote, setFallbackNote] = useState(false);
+  const [paramsOpen, setParamsOpen] = useState<Record<string, boolean>>({});
 
   const ensureAuth = useCallback(() => {
     if (!getAccessToken()) {
@@ -73,6 +145,7 @@ export default function LotteryChatPage() {
         content: m.content,
         structured: (m.tool_payload?.structured_content as UiMessage["structured"]) || null,
         tool_trace: (m.tool_payload?.tool_trace as UiMessage["tool_trace"]) || [],
+        analysis_params: (m.tool_payload?.analysis_params as UiMessage["analysis_params"]) || null,
       })),
     );
   }, []);
@@ -105,12 +178,19 @@ export default function LotteryChatPage() {
     })();
   }, [ensureAuth, refreshSessions]);
 
+  const copyText = async (text: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch {
+      /* ignore */
+    }
+  };
+
   const send = async (text: string) => {
     if (!text.trim()) return;
     if (!ensureAuth()) return;
     setLoading(true);
     setError(null);
-    setFallbackNote(false);
     try {
       let sid = sessionId;
       if (!sid) {
@@ -119,13 +199,9 @@ export default function LotteryChatPage() {
         setSessionId(sid);
         await refreshSessions();
       }
-      setMessages((prev) => [
-        ...prev,
-        { id: `u-${Date.now()}`, role: "user", content: text },
-      ]);
+      setMessages((prev) => [...prev, { id: `u-${Date.now()}`, role: "user", content: text }]);
       setInput("");
       const res = await apiClient.sendLotteryChatMessage(sid, text);
-      setFallbackNote(Boolean(res.synthesis_fallback));
       setSuggestions(res.suggestions?.length ? res.suggestions : STARTERS);
       setMessages((prev) => [
         ...prev,
@@ -135,6 +211,10 @@ export default function LotteryChatPage() {
           content: res.message.content,
           structured: res.message.structured_content,
           tool_trace: res.message.tool_trace,
+          analysis_params:
+            (res.message as { analysis_params?: Record<string, unknown> }).analysis_params ||
+            (res.message.structured_content as { query?: Record<string, unknown> } | null)?.query ||
+            null,
         },
       ]);
       await refreshSessions();
@@ -156,17 +236,21 @@ export default function LotteryChatPage() {
   };
 
   return (
-    <AppShell title="Lotería IA" description="Chat histórico con tools tipadas — sin predicción">
-      <div className="mb-3 flex flex-wrap gap-2 text-sm">
-        <Link className="text-primary underline-offset-2 hover:underline" href="/lottery">
-          Inicio
-        </Link>
-        <Link className="text-primary underline-offset-2 hover:underline" href="/lottery/search">
-          Consulta
-        </Link>
+    <AppShell title="Lottery IA" description="Analista conversacional de resultados históricos">
+      <div className="mb-3 flex flex-wrap items-center justify-between gap-2 text-sm">
+        <div className="flex flex-wrap gap-2">
+          <Link className="text-primary underline-offset-2 hover:underline" href="/lottery">
+            Inicio
+          </Link>
+          <Link className="text-primary underline-offset-2 hover:underline" href="/lottery/search">
+            Consulta
+          </Link>
+        </div>
+        <p className="max-w-xl text-[11px] text-muted-foreground">{DISCLAIMER}</p>
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-[240px_1fr]">
+      {/* pb keeps floating JAIOS Assistant from covering the composer */}
+      <div className="grid gap-4 pb-24 lg:grid-cols-[240px_1fr]">
         <Card>
           <CardContent className="space-y-2 py-4">
             <Button className="w-full" onClick={() => void startSession()} disabled={loading}>
@@ -208,34 +292,50 @@ export default function LotteryChatPage() {
               <CardContent className="py-3 text-sm text-destructive">{error}</CardContent>
             </Card>
           )}
-          {fallbackNote && (
-            <p className="text-xs text-amber-700 dark:text-amber-400">
-              Redacción LLM no disponible — se muestran resultados estructurados.
-            </p>
-          )}
 
           <div className="flex-1 space-y-3 overflow-auto rounded-md border p-3">
             {messages.length === 0 && (
               <p className="text-sm text-muted-foreground">
-                Pregunta por resultados históricos. El asistente solo usa tools tipadas sobre
-                PostgreSQL.
+                Pregunta en lenguaje natural. Lottery IA conserva el contexto y solo pide lo que falta.
               </p>
             )}
             {messages.map((m) => (
               <div
                 key={m.id}
                 className={`rounded-md p-3 text-sm ${
-                  m.role === "user" ? "bg-primary/10 ml-8" : "bg-muted/40 mr-4"
+                  m.role === "user" ? "ml-8 bg-primary/10" : "mr-4 bg-muted/40"
                 }`}
               >
                 <p className="mb-1 text-[10px] uppercase tracking-wide text-muted-foreground">
-                  {m.role === "user" ? "Tú" : "Lotería IA"}
+                  {m.role === "user" ? "Tú" : "Lottery IA"}
                 </p>
-                <p className="whitespace-pre-wrap">{m.content}</p>
+                {m.role === "assistant" ? (
+                  <SimpleMarkdown text={m.content} />
+                ) : (
+                  <p className="whitespace-pre-wrap">{m.content}</p>
+                )}
                 {m.role === "assistant" && (
                   <div className="mt-3 space-y-2">
                     <LotteryStructuredRenderer structured={m.structured} />
-                    {m.tool_trace && m.tool_trace.length > 0 && (
+                    {m.analysis_params && (
+                      <div className="rounded border bg-background/60 text-xs">
+                        <button
+                          type="button"
+                          className="w-full px-2 py-1 text-left text-muted-foreground hover:bg-muted/50"
+                          onClick={() =>
+                            setParamsOpen((prev) => ({ ...prev, [m.id]: !prev[m.id] }))
+                          }
+                        >
+                          Parámetros del análisis {paramsOpen[m.id] ? "▾" : "▸"}
+                        </button>
+                        {paramsOpen[m.id] && (
+                          <pre className="overflow-auto px-2 pb-2 text-[11px]">
+                            {JSON.stringify(m.analysis_params, null, 2)}
+                          </pre>
+                        )}
+                      </div>
+                    )}
+                    {showTools && m.tool_trace && m.tool_trace.length > 0 && (
                       <p className="text-[10px] text-muted-foreground">
                         Tools:{" "}
                         {m.tool_trace
@@ -243,10 +343,18 @@ export default function LotteryChatPage() {
                           .join(" · ")}
                       </p>
                     )}
+                    <div className="flex flex-wrap gap-2">
+                      <Button size="sm" variant="ghost" onClick={() => void copyText(m.content)}>
+                        Copiar
+                      </Button>
+                    </div>
                   </div>
                 )}
               </div>
             ))}
+            {loading && (
+              <p className="animate-pulse text-xs text-muted-foreground">Analizando datos…</p>
+            )}
           </div>
 
           <div className="flex flex-wrap gap-2">
@@ -315,8 +423,6 @@ export default function LotteryChatPage() {
               </Button>
             )}
           </form>
-
-          <p className="text-xs text-muted-foreground">{DISCLAIMER}</p>
         </div>
       </div>
     </AppShell>

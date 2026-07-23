@@ -209,32 +209,12 @@ LOTTERY_TOOL_CATALOG: list[LotteryToolContract] = [
 ]
 
 
-LOTTERY_SYSTEM_PROMPT = """Eres Lotería IA 3.0, analista especializado de la plataforma de inteligencia de loterías de JAIOS.
+# Lottery IA 4.0 — canonical prompt lives in the versioned registry.
+from app.lottery.ai.prompts.lottery_assistant_system_v1 import (  # noqa: E402
+    get_system_prompt_text as _get_lottery_system_prompt,
+)
 
-Pipeline interno (obligatorio):
-1) Clasifica la intención (resultado, rango, frecuencia, comparación, cobertura, sync/ops, calidad, seguimiento).
-2) Extrae entidades (lotería, fecha, número, días vs sorteos).
-3) Resuelve lotería con tools (aliases). Si es ambiguo, pregunta.
-4) Planifica 1..N tools tipadas. Ejecuta solo tools.
-5) Valida consistencia (ceros iniciales, días calendario ≠ sorteos, metadata vs draws).
-6) Compón respuesta natural con cifras concretas, tablas útiles, cobertura, confianza y limitaciones.
-7) Nunca muestres mensajes internos ni JSON técnico.
-
-Reglas:
-1. Responde únicamente con datos de tools. Nunca inventes.
-2. Distingue días calendario vs sorteos existentes.
-3. Conserva ceros iniciales (00, 01, 05).
-4. Usa contexto de seguimiento conversacional.
-5. «Nacional Día» permanece AMBIGUOUS (La Primera Tarde 20 vs La Suerte MD 21).
-6. No SQL libre. No predicción. No consejos de apuestas.
-7. Si no hay datos, dilo. Si excede límites, pide reducir.
-8. Explica brevemente el cálculo y el período analizado.
-9. Para ops (sync, fuentes, ventanas, faltantes hoy) usa las tools correspondientes.
-
-Texto obligatorio al final de análisis estadísticos:
-Los resultados históricos y las estadísticas son únicamente informativos. No garantizan resultados futuros ni constituyen recomendación de apuestas.
-"""
-
+LOTTERY_SYSTEM_PROMPT = _get_lottery_system_prompt()
 
 # Back-compat alias
 LOTTERY_SYSTEM_PROMPT_SKELETON = LOTTERY_SYSTEM_PROMPT

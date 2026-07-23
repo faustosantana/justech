@@ -561,6 +561,46 @@ async def send_chat_message(
     return ChatSendResponse(**result)
 
 
+@router.get("/admin/ai/runtime")
+async def admin_ai_runtime(
+    db: DbSession,
+    user: CurrentUser,
+    _: Annotated[None, require_lottery_permission("lottery.admin")],
+) -> dict:
+    """Sanitized Lottery IA runtime — no secrets."""
+    from app.lottery.ai.runtime import runtime_snapshot
+
+    _ = db  # reserved for future DB-backed prompt metrics
+    return runtime_snapshot()
+
+
+@router.get("/admin/ai/prompts")
+async def admin_ai_prompts(
+    user: CurrentUser,
+    _: Annotated[None, require_lottery_permission("lottery.admin")],
+) -> dict:
+    from app.lottery.ai.prompts.lottery_assistant_system_v1 import (
+        get_active_prompt,
+        list_prompt_versions,
+    )
+
+    active = get_active_prompt()
+    return {
+        "active": {
+            "name": active.name,
+            "version": active.version,
+            "status": active.status,
+            "description": active.description,
+            "recommended_model": active.recommended_model,
+            "temperature": active.temperature,
+            "max_tokens": active.max_tokens,
+            "changelog": active.changelog,
+            "body_preview": active.body[:400],
+        },
+        "versions": list_prompt_versions(),
+    }
+
+
 @router.post("/chat/sessions/{session_id}/retry", response_model=ChatSendResponse)
 async def retry_chat_message(
     session_id: UUID,

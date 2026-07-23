@@ -33,7 +33,8 @@ Evidence: `/var/jaios/lottery-bake/lottery-2.0-ai-uat-20260722c/`
 | 10 | compara últimos 30 de tres | `lottery_compare_lotteries` | **PASS** |
 
 - P0: 0 · P1: 0 (after intent fixes)
-- Synthesis fallback activo (“redacción no disponible”) — datos estructurados reales; no predicción/apuestas/SQL libre
+- Synthesis defect (“redacción no disponible”) **closed** in hardening commits `7e78f23` / `d632b1b` — see `LOTTERY_AI_HARDENING_REPORT.md`
+- Post-hardening UAT: **18/18 PASS**, `internal_msgs=0` (`ai_uat_hardening/`)
 - Defects fixed before Stage B: wrong tools for occurrences/last/compare/freshness; `30` misread as ball number; `require_resolved` → `resolve_or_raise`
 
 ## 6–7. Stage B lottery selection
@@ -82,7 +83,24 @@ Counts before/after: **91931 / 388788** (no change — API already aligned).
 - run-now: `guarded_write_ok`, circuit **closed**, inserted=0, draws_after=91931
 - Redis lock acquired per tick; no concurrent conflicts observed
 - Interval: 60 minutes; next_run set after tick
-- 6h monitor started on VPS: `/var/jaios/lottery-bake/lottery-2.0-stageb-20260722/monitor/`
+- 6h monitor: original PID `2612789` failed immediately (`/tmp` script missing); replacement PID `2641006` completed `2026-07-22T23:27:05Z` → `2026-07-23T05:13:22Z` (20777s, 24/24 samples) — see `STAGE_B_MONITORING_EVIDENCE.md`
+
+## 17b. First legitimate new draw (write gate)
+
+- Manual writes ×2 and early scheduler ticks: **0 inserts**
+- During soak, dry-run saw `records_new` up to **6**, but automatic writes stopped after **`write_flag_timeout`** (~1h from `write_enabled_since`); **0 inserts** persisted
+- Gate status: **PENDING REAL DRAW** (no validated Production insert)
+- No artificial results created in Production
+- Residual: Stage B write-flag TTL is too short for multi-hour guarded_write soak (fix in Lottery 3.0 Sync Engine)
+
+## 17c. Lottery IA hardening (closure)
+
+| Item | Result |
+|------|--------|
+| Cause | LLMRouter defaults without valid OpenAI/Anthropic keys; Hermes unused |
+| Fix | Hermes/ModelArts secondary path + natural Spanish templates + sanitize |
+| UAT | 18/18 PASS; no “redacción no disponible” |
+| Real 2099 | Audit only — `REAL_METADATA_2099_AUDIT.md`; sync remains off |
 
 ## 21. Per-lottery sync state (final)
 
@@ -115,11 +133,18 @@ LOTTERY_SYNC_AUTOMATIC_WRITE_ENABLED=true
 
 ## Residual risks
 
-1. Quiniela Real `last_draw_date=2099-07-01` metadata anomaly (excluded from Stage B).
-2. Scheduler dry-run still **fetches** broader API window; **writes** gated by `is_auto_write_enabled` (only 3).
-3. Synthesis LLM unavailable — structured tool answers only.
-4. 6h soak continues via VPS monitor; review `monitor_6h.log` after window.
+1. Quiniela Real `last_draw_date=2099-07-01` metadata anomaly (excluded; repair SQL documented, not applied).
+2. Scheduler **fetches** lookback window; **writes** gated by `is_auto_write_enabled` (only 3).
+3. First legitimate insert not yet observed — **PENDING REAL DRAW**.
+4. OpenAI/Anthropic keys unset; synthesis quality depends on Hermes/ModelArts path.
+5. Nacional Día remains unresolved / unmodified (out of Stage B scope).
+
+## Related docs
+
+- `STAGE_B_MONITORING_EVIDENCE.md`
+- `LOTTERY_AI_HARDENING_REPORT.md`
+- `REAL_METADATA_2099_AUDIT.md`
 
 ## Stop
 
-Stage B complete. **Do not start Stage C** without new authorization.
+Stage B closed under this authorization. **Do not start Stage C** without new authorization.

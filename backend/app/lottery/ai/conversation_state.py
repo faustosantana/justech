@@ -87,7 +87,7 @@ class UnderstandingResult(BaseModel):
     intent: Any = "unsupported"
     lotteries: list[str] = Field(default_factory=list)
     numbers: list[str] = Field(default_factory=list)
-    date: Optional[date] = None
+    query_date: Optional[date] = None
     date_range: Optional[dict[str, Any]] = None
     draw_count: Optional[int] = None
     metric: Optional[str] = None

@@ -477,6 +477,17 @@ export const MODULE_REGISTRY: ModuleDefinition[] = [
         roles: ["owner", "admin", "superadmin"],
         shortDescription: "Worker, ventanas, locks y circuit breaker",
       },
+      {
+        id: "admin-ai",
+        label: "Centro de IA",
+        icon: Brain,
+        contentKey: "lottery:admin-ai",
+        views: ["list"],
+        legacyHref: "/lottery/admin/ai",
+        group: "Administración",
+        roles: ["owner", "admin", "superadmin"],
+        shortDescription: "Agente, prompts, modelos, memoria y herramientas IA",
+      },
     ],
   },
   {
@@ -745,6 +756,7 @@ export const LOTTERY_NAV_INTEGRITY: { contentKey: string; href: string; group: s
   { contentKey: "lottery:admin-lotteries", href: "/lottery/admin/lotteries", group: "Administración" },
   { contentKey: "lottery:admin-sync", href: "/lottery/admin/sync", group: "Administración" },
   { contentKey: "lottery:admin-scheduler", href: "/lottery/admin/scheduler", group: "Administración" },
+  { contentKey: "lottery:admin-ai", href: "/lottery/admin/ai", group: "Administración" },
 ];
 
 export function assertLotteryNavIntegrity(module: ModuleDefinition = MODULE_BY_ID.lottery): string[] {

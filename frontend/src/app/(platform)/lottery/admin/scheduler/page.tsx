@@ -99,6 +99,9 @@ export default function LotteryAdminSchedulerPage() {
         <Link href="/lottery/admin/sync" className="text-primary underline">
           Sync
         </Link>
+        <Link href="/lottery/admin/ai" className="text-primary underline">
+          Centro de IA
+        </Link>
       </div>
       {error && <p className="text-sm text-destructive">{error}</p>}
       {status && (

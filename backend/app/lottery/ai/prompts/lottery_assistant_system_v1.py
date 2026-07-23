@@ -177,8 +177,47 @@ _REGISTRY: dict[str, PromptVersion] = {
     ),
 }
 
+# Runtime override from DB (Admin Center). Code registry remains fallback/seed.
+_DB_ACTIVE: PromptVersion | None = None
+
+
+def set_active_from_db(
+    *,
+    name: str,
+    version: str,
+    status: str,
+    description: str,
+    body: str,
+    recommended_model: str = "DeepSeek-V3.2",
+    temperature: float = 0.2,
+    max_tokens: int = 1200,
+    changelog: str = "",
+    variables: list[str] | None = None,
+) -> PromptVersion:
+    global _DB_ACTIVE
+    _DB_ACTIVE = PromptVersion(
+        name=name,
+        version=version,
+        status=status or "active",
+        description=description,
+        body=body,
+        recommended_model=recommended_model,
+        temperature=temperature,
+        max_tokens=max_tokens,
+        changelog=changelog,
+        variables=list(variables or []),
+    )
+    return _DB_ACTIVE
+
+
+def clear_db_active_prompt() -> None:
+    global _DB_ACTIVE
+    _DB_ACTIVE = None
+
 
 def get_active_prompt() -> PromptVersion:
+    if _DB_ACTIVE and _DB_ACTIVE.body:
+        return _DB_ACTIVE
     for item in _REGISTRY.values():
         if item.status == "active":
             return item
@@ -186,6 +225,10 @@ def get_active_prompt() -> PromptVersion:
 
 
 def list_prompt_versions() -> list[dict[str, Any]]:
+    items = list(_REGISTRY.values())
+    if _DB_ACTIVE:
+        # Surface DB active at front without mutating seed registry statuses incorrectly
+        items = [_DB_ACTIVE, *[p for p in items if p.version != _DB_ACTIVE.version]]
     return [
         {
             "name": p.name,
@@ -198,16 +241,19 @@ def list_prompt_versions() -> list[dict[str, Any]]:
             "changelog": p.changelog,
             "updated_at": p.updated_at,
             "variables": p.variables,
+            "source": "db" if _DB_ACTIVE and p is _DB_ACTIVE else "code",
         }
-        for p in _REGISTRY.values()
+        for p in items
     ]
 
 
 def activate_prompt_version(version: str) -> PromptVersion:
+    """Legacy in-process activate (dev/tests). Prefer Admin Center DB publish in prod."""
     if version not in _REGISTRY:
         raise KeyError(version)
     for p in _REGISTRY.values():
         p.status = "retired" if p.version != version else "active"
+    clear_db_active_prompt()
     return _REGISTRY[version]
 
 
@@ -216,4 +262,6 @@ def get_system_prompt_text() -> str:
 
 
 def get_prompt_body(version: str) -> str:
+    if _DB_ACTIVE and _DB_ACTIVE.version == version:
+        return _DB_ACTIVE.body
     return _REGISTRY[version].body

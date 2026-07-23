@@ -175,6 +175,9 @@ export default function LotteryAdminLotteriesPage() {
         <Link href="/lottery/admin/scheduler" className="text-primary underline">
           Scheduler
         </Link>
+        <Link href="/lottery/admin/ai" className="text-primary underline">
+          Centro de IA
+        </Link>
       </div>
 
       <form

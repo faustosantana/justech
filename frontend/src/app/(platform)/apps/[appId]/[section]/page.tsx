@@ -22,6 +22,7 @@ const LOTTERY_SECTION_REDIRECT: Record<string, string> = {
   "admin-sync": "/lottery/admin/sync",
   "admin-scheduler": "/lottery/admin/scheduler",
   "admin-lotteries": "/lottery/admin/lotteries",
+  "admin-ai": "/lottery/admin/ai",
 };
 
 export default function AppModuleSectionPage() {

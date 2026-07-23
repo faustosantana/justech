@@ -44,6 +44,11 @@ LOTTERY_PERMISSIONS = frozenset({
     "lottery_admin_lotteries",
     "lottery_admin_sync",
     "lottery_admin_scheduler",
+    "lottery_admin_ai",
+    "lottery_admin_prompts",
+    "lottery_admin_models",
+    "lottery_admin_tools",
+    "lottery_admin_safety",
 })
 
 LOTTERY_CLIENT_PERMISSIONS = frozenset({

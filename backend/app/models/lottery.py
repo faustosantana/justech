@@ -626,3 +626,122 @@ class LotteryAiUsage(UUIDPrimaryKeyMixin, Base):
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now(), nullable=False
     )
+
+
+class LotteryAiPromptVersion(UUIDPrimaryKeyMixin, TimestampMixin, Base):
+    __tablename__ = "lottery_ai_prompt_versions"
+    __table_args__ = (
+        UniqueConstraint("name", "version", name="uq_lottery_ai_prompt_name_version"),
+        Index("ix_lottery_ai_prompt_status", "status"),
+    )
+
+    tenant_id: Mapped[uuid.UUID | None] = mapped_column(UUID(as_uuid=True), index=True)
+    name: Mapped[str] = mapped_column(String(128), nullable=False)
+    version: Mapped[str] = mapped_column(String(64), nullable=False)
+    status: Mapped[str] = mapped_column(String(32), nullable=False, default="draft")
+    description: Mapped[str | None] = mapped_column(Text)
+    body: Mapped[str] = mapped_column(Text, nullable=False)
+    blocks: Mapped[dict | None] = mapped_column(JSONB)
+    changelog: Mapped[str | None] = mapped_column(Text)
+    recommended_model: Mapped[str | None] = mapped_column(String(128))
+    temperature: Mapped[float | None] = mapped_column(Numeric(4, 2))
+    max_tokens: Mapped[int | None] = mapped_column(Integer)
+    timeout_seconds: Mapped[int | None] = mapped_column(Integer)
+    variables: Mapped[list | dict | None] = mapped_column(JSONB)
+    tags: Mapped[list | dict | None] = mapped_column(JSONB)
+    checksum: Mapped[str | None] = mapped_column(String(64))
+    benchmark_id: Mapped[uuid.UUID | None] = mapped_column(UUID(as_uuid=True))
+    author_user_id: Mapped[uuid.UUID | None] = mapped_column(UUID(as_uuid=True))
+    published_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    previous_version_id: Mapped[uuid.UUID | None] = mapped_column(UUID(as_uuid=True))
+
+
+class LotteryAiConfigVersion(UUIDPrimaryKeyMixin, TimestampMixin, Base):
+    __tablename__ = "lottery_ai_config_versions"
+    __table_args__ = (Index("ix_lottery_ai_config_status", "status"),)
+
+    tenant_id: Mapped[uuid.UUID | None] = mapped_column(UUID(as_uuid=True), index=True)
+    version_label: Mapped[str] = mapped_column(String(64), nullable=False)
+    status: Mapped[str] = mapped_column(String(32), nullable=False, default="draft")
+    description: Mapped[str | None] = mapped_column(Text)
+    changelog: Mapped[str | None] = mapped_column(Text)
+    payload: Mapped[dict] = mapped_column(JSONB, nullable=False, default=dict)
+    prompt_version_id: Mapped[uuid.UUID | None] = mapped_column(UUID(as_uuid=True))
+    author_user_id: Mapped[uuid.UUID | None] = mapped_column(UUID(as_uuid=True))
+    published_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    previous_version_id: Mapped[uuid.UUID | None] = mapped_column(UUID(as_uuid=True))
+
+
+class LotteryAiToolSetting(UUIDPrimaryKeyMixin, TimestampMixin, Base):
+    __tablename__ = "lottery_ai_tool_settings"
+    __table_args__ = (UniqueConstraint("tool_name", "tenant_id", name="uq_lottery_ai_tool_tenant"),)
+
+    tenant_id: Mapped[uuid.UUID | None] = mapped_column(UUID(as_uuid=True), index=True)
+    tool_name: Mapped[str] = mapped_column(String(128), nullable=False)
+    display_name: Mapped[str | None] = mapped_column(String(255))
+    description: Mapped[str | None] = mapped_column(Text)
+    category: Mapped[str | None] = mapped_column(String(64))
+    enabled: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
+    timeout_seconds: Mapped[int | None] = mapped_column(Integer)
+    rate_limit_per_min: Mapped[int | None] = mapped_column(Integer)
+    allowed_roles: Mapped[list | dict | None] = mapped_column(JSONB)
+    blocked_lottery_ids: Mapped[list | dict | None] = mapped_column(JSONB)
+    config: Mapped[dict | None] = mapped_column(JSONB)
+
+
+class LotteryAiAnalysisPack(UUIDPrimaryKeyMixin, TimestampMixin, Base):
+    __tablename__ = "lottery_ai_analysis_packs"
+    __table_args__ = (UniqueConstraint("pack_key", "tenant_id", name="uq_lottery_ai_pack_tenant"),)
+
+    tenant_id: Mapped[uuid.UUID | None] = mapped_column(UUID(as_uuid=True), index=True)
+    pack_key: Mapped[str] = mapped_column(String(64), nullable=False)
+    display_name: Mapped[str] = mapped_column(String(128), nullable=False)
+    enabled: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
+    config: Mapped[dict] = mapped_column(JSONB, nullable=False, default=dict)
+
+
+class LotteryAiAuditEvent(UUIDPrimaryKeyMixin, Base):
+    __tablename__ = "lottery_ai_audit_events"
+    __table_args__ = (Index("ix_lottery_ai_audit_created", "created_at"),)
+
+    tenant_id: Mapped[uuid.UUID | None] = mapped_column(UUID(as_uuid=True), index=True)
+    user_id: Mapped[uuid.UUID | None] = mapped_column(UUID(as_uuid=True))
+    action: Mapped[str] = mapped_column(String(64), nullable=False)
+    entity_type: Mapped[str | None] = mapped_column(String(64))
+    entity_id: Mapped[str | None] = mapped_column(String(64))
+    before: Mapped[dict | None] = mapped_column(JSONB)
+    after: Mapped[dict | None] = mapped_column(JSONB)
+    reason: Mapped[str | None] = mapped_column(Text)
+    version_label: Mapped[str | None] = mapped_column(String(64))
+    result: Mapped[str | None] = mapped_column(String(32))
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now(), nullable=False
+    )
+
+
+class LotteryAiBenchmark(UUIDPrimaryKeyMixin, TimestampMixin, Base):
+    __tablename__ = "lottery_ai_benchmarks"
+
+    tenant_id: Mapped[uuid.UUID | None] = mapped_column(UUID(as_uuid=True), index=True)
+    name: Mapped[str] = mapped_column(String(128), nullable=False)
+    description: Mapped[str | None] = mapped_column(Text)
+    status: Mapped[str] = mapped_column(String(32), nullable=False, default="draft")
+    cases: Mapped[list | dict] = mapped_column(JSONB, nullable=False, default=list)
+    last_run_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    last_result: Mapped[dict | None] = mapped_column(JSONB)
+    author_user_id: Mapped[uuid.UUID | None] = mapped_column(UUID(as_uuid=True))
+
+
+class LotteryAiAlert(UUIDPrimaryKeyMixin, Base):
+    __tablename__ = "lottery_ai_alerts"
+    __table_args__ = (Index("ix_lottery_ai_alerts_created", "created_at"),)
+
+    tenant_id: Mapped[uuid.UUID | None] = mapped_column(UUID(as_uuid=True), index=True)
+    severity: Mapped[str] = mapped_column(String(16), nullable=False, default="info")
+    code: Mapped[str] = mapped_column(String(64), nullable=False)
+    message: Mapped[str] = mapped_column(Text, nullable=False)
+    details: Mapped[dict | None] = mapped_column(JSONB)
+    acknowledged: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now(), nullable=False
+    )

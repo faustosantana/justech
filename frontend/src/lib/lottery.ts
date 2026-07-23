@@ -388,6 +388,16 @@ export interface LotteryAdminBulkResponse {
 
 const LOTTERY_ADMIN_ROLES = new Set(["owner", "admin", "superadmin"]);
 
+const LOTTERY_ADMIN_PERMISSIONS = new Set([
+  "lottery.admin",
+  "lottery_admin_lotteries",
+  "lottery_admin_ai",
+  "lottery_admin_prompts",
+  "lottery_admin_models",
+  "lottery_admin_tools",
+  "lottery_admin_safety",
+]);
+
 export function canAccessLotteryAdmin(
   role: string | null,
   permissions?: string[] | null,
@@ -395,8 +405,9 @@ export function canAccessLotteryAdmin(
   if (!role) return false;
   const r = role.toLowerCase();
   if (LOTTERY_ADMIN_ROLES.has(r)) return true;
+  if (r === "lottery_admin_ai") return true;
   if (!permissions?.length) return false;
-  return permissions.includes("lottery.admin") || permissions.includes("lottery_admin_lotteries");
+  return permissions.some((p) => LOTTERY_ADMIN_PERMISSIONS.has(p));
 }
 
 export function healthStatusLabel(status: string): string {

@@ -76,6 +76,9 @@ export default function LotteryAdminSyncPage() {
         <Link href="/lottery/admin/lotteries" className="text-primary underline">
           Loterías
         </Link>
+        <Link href="/lottery/admin/ai" className="text-primary underline">
+          Centro de IA
+        </Link>
       </div>
       {error && <p className="text-sm text-destructive">{error}</p>}
       {obs && (

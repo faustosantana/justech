@@ -2747,4 +2747,171 @@ export const apiClient = {
       { method: "POST", body: JSON.stringify(payload) },
       true,
     ),
+
+  // ── Lottery AI Admin ────────────────────────────────────────────────────
+
+  getLotteryAIAdminDashboard: () =>
+    request<Record<string, unknown>>("/lottery/admin/ai/dashboard", {}, true),
+
+  getLotteryAIAlerts: () =>
+    request<{ items: unknown[] }>("/lottery/admin/ai/alerts", {}, true),
+
+  getLotteryAIHermes: () =>
+    request<Record<string, unknown>>("/lottery/admin/ai/hermes", {}, true),
+
+  getLotteryAIRuntime: () =>
+    request<Record<string, unknown>>("/lottery/admin/ai/runtime", {}, true),
+
+  getLotteryAIPrompts: () =>
+    request<{ items: unknown[] }>("/lottery/admin/ai/prompts", {}, true),
+
+  getLotteryAIPrompt: (id: string) =>
+    request<Record<string, unknown>>(`/lottery/admin/ai/prompts/${encodeURIComponent(id)}`, {}, true),
+
+  postLotteryAIPrompt: (body: Record<string, unknown>) =>
+    request<Record<string, unknown>>("/lottery/admin/ai/prompts", {
+      method: "POST",
+      body: JSON.stringify(body),
+    }, true),
+
+  putLotteryAIPrompt: (id: string, body: Record<string, unknown>) =>
+    request<Record<string, unknown>>(`/lottery/admin/ai/prompts/${encodeURIComponent(id)}`, {
+      method: "PUT",
+      body: JSON.stringify(body),
+    }, true),
+
+  postLotteryAIPromptPublish: (id: string) =>
+    request<Record<string, unknown>>(
+      `/lottery/admin/ai/prompts/${encodeURIComponent(id)}/publish`,
+      { method: "POST" },
+      true,
+    ),
+
+  postLotteryAIPromptRollback: (id: string) =>
+    request<Record<string, unknown>>(
+      `/lottery/admin/ai/prompts/${encodeURIComponent(id)}/rollback`,
+      { method: "POST" },
+      true,
+    ),
+
+  getLotteryAIModels: () =>
+    request<Record<string, unknown>>("/lottery/admin/ai/models", {}, true),
+
+  getLotteryAIAgent: () =>
+    request<Record<string, unknown>>("/lottery/admin/ai/agent", {}, true),
+
+  putLotteryAIAgent: (body: Record<string, unknown>) =>
+    request<Record<string, unknown>>("/lottery/admin/ai/agent", {
+      method: "PUT",
+      body: JSON.stringify(body),
+    }, true),
+
+  postLotteryAIAgentPublish: () =>
+    request<Record<string, unknown>>("/lottery/admin/ai/agent/publish", { method: "POST" }, true),
+
+  postLotteryAIAgentRevert: () =>
+    request<Record<string, unknown>>("/lottery/admin/ai/agent/revert", { method: "POST" }, true),
+
+  getLotteryAIMemory: () =>
+    request<Record<string, unknown>>("/lottery/admin/ai/memory", {}, true),
+
+  getLotteryAIMemorySession: (sessionId: string) =>
+    request<Record<string, unknown>>(
+      `/lottery/admin/ai/memory/sessions/${encodeURIComponent(sessionId)}`,
+      {},
+      true,
+    ),
+
+  postLotteryAIMemorySessionClear: (sessionId: string) =>
+    request<Record<string, unknown>>(
+      `/lottery/admin/ai/memory/sessions/${encodeURIComponent(sessionId)}/clear`,
+      { method: "POST" },
+      true,
+    ),
+
+  getLotteryAITools: () =>
+    request<{ items: unknown[] }>("/lottery/admin/ai/tools", {}, true),
+
+  patchLotteryAITool: (name: string, body: Record<string, unknown>) =>
+    request<Record<string, unknown>>(`/lottery/admin/ai/tools/${encodeURIComponent(name)}`, {
+      method: "PATCH",
+      body: JSON.stringify(body),
+    }, true),
+
+  getLotteryAIAnalysisPacks: () =>
+    request<Record<string, unknown>>("/lottery/admin/ai/analysis-packs", {}, true),
+
+  putLotteryAIAnalysisPacks: (body: Record<string, unknown>) =>
+    request<Record<string, unknown>>("/lottery/admin/ai/analysis-packs", {
+      method: "PUT",
+      body: JSON.stringify(body),
+    }, true),
+
+  getLotteryAIDefaults: () =>
+    request<Record<string, unknown>>("/lottery/admin/ai/defaults", {}, true),
+
+  putLotteryAIDefaults: (body: Record<string, unknown>) =>
+    request<Record<string, unknown>>("/lottery/admin/ai/defaults", {
+      method: "PUT",
+      body: JSON.stringify(body),
+    }, true),
+
+  getLotteryAISafety: () =>
+    request<Record<string, unknown>>("/lottery/admin/ai/safety", {}, true),
+
+  postLotteryAISafetyRunTests: () =>
+    request<Record<string, unknown>>("/lottery/admin/ai/safety/run-tests", { method: "POST" }, true),
+
+  postLotteryAIPlayground: (body: { session_id?: string; message: string; context?: Record<string, unknown> }) =>
+    request<Record<string, unknown>>("/lottery/admin/ai/playground", {
+      method: "POST",
+      body: JSON.stringify(body),
+    }, true),
+
+  getLotteryAIBenchmarks: () =>
+    request<{ items: unknown[] }>("/lottery/admin/ai/benchmarks", {}, true),
+
+  postLotteryAIBenchmark: (body: Record<string, unknown>) =>
+    request<Record<string, unknown>>("/lottery/admin/ai/benchmarks", {
+      method: "POST",
+      body: JSON.stringify(body),
+    }, true),
+
+  postLotteryAIBenchmarkRun: (id: string) =>
+    request<Record<string, unknown>>(
+      `/lottery/admin/ai/benchmarks/${encodeURIComponent(id)}/run`,
+      { method: "POST" },
+      true,
+    ),
+
+  getLotteryAISessions: (params?: { limit?: number; offset?: number }) =>
+    request<{ items: unknown[]; total: number }>(
+      `/lottery/admin/ai/sessions${buildQuery(params ?? {})}`,
+      {},
+      true,
+    ),
+
+  getLotteryAIVersions: () =>
+    request<{ items: unknown[] }>("/lottery/admin/ai/versions", {}, true),
+
+  postLotteryAIVersionPublish: (id: string) =>
+    request<Record<string, unknown>>(
+      `/lottery/admin/ai/versions/${encodeURIComponent(id)}/publish`,
+      { method: "POST" },
+      true,
+    ),
+
+  postLotteryAIVersionRollback: (id: string) =>
+    request<Record<string, unknown>>(
+      `/lottery/admin/ai/versions/${encodeURIComponent(id)}/rollback`,
+      { method: "POST" },
+      true,
+    ),
+
+  getLotteryAIAudit: (params?: { limit?: number; offset?: number }) =>
+    request<{ items: unknown[]; total: number }>(
+      `/lottery/admin/ai/audit${buildQuery(params ?? {})}`,
+      {},
+      true,
+    ),
 };

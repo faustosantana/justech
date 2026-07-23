@@ -2753,8 +2753,70 @@ export const apiClient = {
   getLotteryAIAdminDashboard: () =>
     request<Record<string, unknown>>("/lottery/admin/ai/dashboard", {}, true),
 
-  getLotteryAIAlerts: () =>
-    request<{ items: unknown[] }>("/lottery/admin/ai/alerts", {}, true),
+  getLotteryAIAlerts: (params?: { status?: string; severity?: string; code?: string; limit?: number }) => {
+    const q = new URLSearchParams();
+    if (params?.status) q.set("status", params.status);
+    if (params?.severity) q.set("severity", params.severity);
+    if (params?.code) q.set("code", params.code);
+    if (params?.limit) q.set("limit", String(params.limit));
+    const qs = q.toString();
+    return request<{ items: unknown[]; counts?: Record<string, number>; open_alerts_count?: number }>(
+      `/lottery/admin/ai/alerts${qs ? `?${qs}` : ""}`,
+      {},
+      true,
+    );
+  },
+
+  getLotteryAIAlert: (id: string) =>
+    request<Record<string, unknown>>(`/lottery/admin/ai/alerts/${encodeURIComponent(id)}`, {}, true),
+
+  postLotteryAIAlertAcknowledge: (id: string, body?: Record<string, unknown>) =>
+    request<Record<string, unknown>>(
+      `/lottery/admin/ai/alerts/${encodeURIComponent(id)}/acknowledge`,
+      { method: "POST", body: JSON.stringify(body ?? {}) },
+      true,
+    ),
+
+  postLotteryAIAlertResolve: (id: string, body?: Record<string, unknown>) =>
+    request<Record<string, unknown>>(
+      `/lottery/admin/ai/alerts/${encodeURIComponent(id)}/resolve`,
+      { method: "POST", body: JSON.stringify(body ?? {}) },
+      true,
+    ),
+
+  postLotteryAIAlertSilence: (id: string, body: Record<string, unknown>) =>
+    request<Record<string, unknown>>(
+      `/lottery/admin/ai/alerts/${encodeURIComponent(id)}/silence`,
+      { method: "POST", body: JSON.stringify(body) },
+      true,
+    ),
+
+  postLotteryAIAlertReopen: (id: string, body?: Record<string, unknown>) =>
+    request<Record<string, unknown>>(
+      `/lottery/admin/ai/alerts/${encodeURIComponent(id)}/reopen`,
+      { method: "POST", body: JSON.stringify(body ?? {}) },
+      true,
+    ),
+
+  postLotteryAIAlertDetectorRunNow: () =>
+    request<Record<string, unknown>>("/lottery/admin/ai/alerts/detector/run-now", { method: "POST" }, true),
+
+  getLotteryAITones: () => request<{ items: unknown[] }>("/lottery/admin/ai/tones", {}, true),
+
+  getLotteryAITonePreference: () =>
+    request<Record<string, unknown>>("/lottery/admin/ai/tones/preference", {}, true),
+
+  putLotteryAITonePreference: (body: Record<string, unknown>) =>
+    request<Record<string, unknown>>("/lottery/admin/ai/tones/preference", {
+      method: "PUT",
+      body: JSON.stringify(body),
+    }, true),
+
+  postLotteryAITonePreview: (body: Record<string, unknown>) =>
+    request<Record<string, unknown>>("/lottery/admin/ai/tones/preview", {
+      method: "POST",
+      body: JSON.stringify(body),
+    }, true),
 
   getLotteryAIHermes: () =>
     request<Record<string, unknown>>("/lottery/admin/ai/hermes", {}, true),

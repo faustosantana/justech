@@ -1,0 +1,193 @@
+{
+  "v2": {
+    "total": 673,
+    "passed": 451,
+    "pass_rate": 0.6701,
+    "p0": 54,
+    "p1": 147,
+    "p2": 21,
+    "p3": 0,
+    "by_category": {
+      "memory_multiturn": {
+        "total": 70,
+        "passed": 41
+      },
+      "references": {
+        "total": 60,
+        "passed": 42
+      },
+      "calendar_following_days": {
+        "total": 30,
+        "passed": 0
+      },
+      "draw_following": {
+        "total": 30,
+        "passed": 0
+      },
+      "multilottery": {
+        "total": 60,
+        "passed": 20
+      },
+      "number_switch_keep_context": {
+        "total": 25,
+        "passed": 25
+      },
+      "out_of_domain": {
+        "total": 50,
+        "passed": 26
+      },
+      "restricted_technical": {
+        "total": 40,
+        "passed": 32
+      },
+      "prediction": {
+        "total": 40,
+        "passed": 20
+      },
+      "proactive_analysis": {
+        "total": 30,
+        "passed": 30
+      },
+      "preferences_depth": {
+        "total": 20,
+        "passed": 20
+      },
+      "provider_fallback": {
+        "total": 40,
+        "passed": 40
+      },
+      "renderer": {
+        "total": 20,
+        "passed": 20
+      },
+      "days_after": {
+        "total": 30,
+        "passed": 30
+      },
+      "draws_after": {
+        "total": 30,
+        "passed": 30
+      },
+      "number_swap": {
+        "total": 25,
+        "passed": 25
+      },
+      "proactive": {
+        "total": 30,
+        "passed": 30
+      },
+      "scope_depth": {
+        "total": 20,
+        "passed": 20
+      },
+      "ui_format": {
+        "total": 20,
+        "passed": 0
+      },
+      "prompt_coverage": {
+        "total": 3,
+        "passed": 0
+      }
+    },
+    "publish_blocked": true
+  },
+  "v3": {
+    "total": 673,
+    "passed": 454,
+    "pass_rate": 0.6746,
+    "p0": 54,
+    "p1": 145,
+    "p2": 20,
+    "p3": 0,
+    "by_category": {
+      "memory_multiturn": {
+        "total": 70,
+        "passed": 41
+      },
+      "references": {
+        "total": 60,
+        "passed": 42
+      },
+      "calendar_following_days": {
+        "total": 30,
+        "passed": 0
+      },
+      "draw_following": {
+        "total": 30,
+        "passed": 0
+      },
+      "multilottery": {
+        "total": 60,
+        "passed": 20
+      },
+      "number_switch_keep_context": {
+        "total": 25,
+        "passed": 25
+      },
+      "out_of_domain": {
+        "total": 50,
+        "passed": 26
+      },
+      "restricted_technical": {
+        "total": 40,
+        "passed": 32
+      },
+      "prediction": {
+        "total": 40,
+        "passed": 20
+      },
+      "proactive_analysis": {
+        "total": 30,
+        "passed": 30
+      },
+      "preferences_depth": {
+        "total": 20,
+        "passed": 20
+      },
+      "provider_fallback": {
+        "total": 40,
+        "passed": 40
+      },
+      "renderer": {
+        "total": 20,
+        "passed": 20
+      },
+      "days_after": {
+        "total": 30,
+        "passed": 30
+      },
+      "draws_after": {
+        "total": 30,
+        "passed": 30
+      },
+      "number_swap": {
+        "total": 25,
+        "passed": 25
+      },
+      "proactive": {
+        "total": 30,
+        "passed": 30
+      },
+      "scope_depth": {
+        "total": 20,
+        "passed": 20
+      },
+      "ui_format": {
+        "total": 20,
+        "passed": 0
+      },
+      "prompt_coverage": {
+        "total": 3,
+        "passed": 3
+      }
+    },
+    "publish_blocked": true
+  },
+  "decision": {
+    "activate_v3": false,
+    "keep_active": "v2",
+    "reasons": [
+      "bloqueado: v2 p0=54 p1=147; v3 p0=54 p1=145"
+    ]
+  }
+}

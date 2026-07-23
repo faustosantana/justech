@@ -51,6 +51,7 @@ export default function LotteryAIAdminLayout({ children }: { children: React.Rea
   const pathname = usePathname();
   const [denied, setDenied] = useState(false);
   const [checking, setChecking] = useState(true);
+  const [openAlerts, setOpenAlerts] = useState(0);
 
   useEffect(() => {
     if (!getAccessToken()) {
@@ -79,6 +80,10 @@ export default function LotteryAIAdminLayout({ children }: { children: React.Rea
         }
       })
       .finally(() => setChecking(false));
+    apiClient
+      .getLotteryAIAlerts({ status: "open", limit: 1 })
+      .then((res) => setOpenAlerts(Number(res.open_alerts_count ?? res.counts?.open ?? 0)))
+      .catch(() => setOpenAlerts(0));
   }, [router]);
 
   if (checking) {
@@ -129,18 +134,24 @@ export default function LotteryAIAdminLayout({ children }: { children: React.Rea
               </p>
               {group.items.map((item) => {
                 const itemPath = item.href.split("#")[0];
-                const active = itemPath === pathname;
+                const active = itemPath === pathname && (item.href.includes("#") ? pathname === "/lottery/admin/ai" : true);
+                const isAlerts = item.href.includes("#alerts");
                 return (
                   <Link
                     key={item.href}
                     href={item.href}
-                    className={`block rounded px-2 py-1.5 text-sm transition-colors ${
+                    className={`flex items-center justify-between rounded px-2 py-1.5 text-sm transition-colors ${
                       active
                         ? "bg-primary/10 font-medium text-primary"
                         : "text-foreground/80 hover:bg-muted hover:text-foreground"
                     }`}
                   >
-                    {item.label}
+                    <span>{item.label}</span>
+                    {isAlerts && openAlerts > 0 ? (
+                      <span className="rounded-full bg-destructive/90 px-1.5 text-[10px] text-destructive-foreground">
+                        {openAlerts}
+                      </span>
+                    ) : null}
                   </Link>
                 );
               })}

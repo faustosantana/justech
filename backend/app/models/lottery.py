@@ -734,14 +734,68 @@ class LotteryAiBenchmark(UUIDPrimaryKeyMixin, TimestampMixin, Base):
 
 class LotteryAiAlert(UUIDPrimaryKeyMixin, Base):
     __tablename__ = "lottery_ai_alerts"
-    __table_args__ = (Index("ix_lottery_ai_alerts_created", "created_at"),)
+    __table_args__ = (
+        Index("ix_lottery_ai_alerts_created", "created_at"),
+        Index("ix_lottery_ai_alerts_status_code", "status", "code"),
+        Index("ix_lottery_ai_alerts_fingerprint", "tenant_id", "fingerprint", "status"),
+    )
 
     tenant_id: Mapped[uuid.UUID | None] = mapped_column(UUID(as_uuid=True), index=True)
     severity: Mapped[str] = mapped_column(String(16), nullable=False, default="info")
     code: Mapped[str] = mapped_column(String(64), nullable=False)
+    title: Mapped[str | None] = mapped_column(String(255))
     message: Mapped[str] = mapped_column(Text, nullable=False)
     details: Mapped[dict | None] = mapped_column(JSONB)
+    status: Mapped[str] = mapped_column(String(32), nullable=False, default="open")
+    fingerprint: Mapped[str | None] = mapped_column(String(128))
+    component: Mapped[str | None] = mapped_column(String(64))
+    first_detected_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    last_detected_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    occurrence_count: Mapped[int] = mapped_column(Integer, nullable=False, default=1)
     acknowledged: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
+    acknowledged_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    acknowledged_by: Mapped[uuid.UUID | None] = mapped_column(UUID(as_uuid=True))
+    resolved_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    resolved_by: Mapped[uuid.UUID | None] = mapped_column(UUID(as_uuid=True))
+    silenced_until: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    resolution_note: Mapped[str | None] = mapped_column(Text)
+    prompt_version: Mapped[str | None] = mapped_column(String(64))
+    model_name: Mapped[str | None] = mapped_column(String(128))
+    tool_name: Mapped[str | None] = mapped_column(String(128))
+    metric_name: Mapped[str | None] = mapped_column(String(64))
+    metric_value: Mapped[float | None] = mapped_column(Numeric(18, 6))
+    threshold_value: Mapped[float | None] = mapped_column(Numeric(18, 6))
+    auto_resolved: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now(), nullable=False
     )
+    updated_at: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True), server_default=func.now(), onupdate=func.now()
+    )
+
+
+class LotteryAiAlertThreshold(UUIDPrimaryKeyMixin, TimestampMixin, Base):
+    __tablename__ = "lottery_ai_alert_thresholds"
+    __table_args__ = (Index("ix_lottery_ai_alert_thresholds_status", "status"),)
+
+    tenant_id: Mapped[uuid.UUID | None] = mapped_column(UUID(as_uuid=True), index=True)
+    version_label: Mapped[str] = mapped_column(String(64), nullable=False)
+    status: Mapped[str] = mapped_column(String(32), nullable=False, default="active")
+    payload: Mapped[dict] = mapped_column(JSONB, nullable=False, default=dict)
+    changelog: Mapped[str | None] = mapped_column(Text)
+    author_user_id: Mapped[uuid.UUID | None] = mapped_column(UUID(as_uuid=True))
+    previous_version_id: Mapped[uuid.UUID | None] = mapped_column(UUID(as_uuid=True))
+    published_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+
+
+class LotteryAiTonePreference(UUIDPrimaryKeyMixin, TimestampMixin, Base):
+    __tablename__ = "lottery_ai_tone_preferences"
+    __table_args__ = (
+        UniqueConstraint("tenant_id", "user_id", name="uq_lottery_ai_tone_tenant_user"),
+    )
+
+    tenant_id: Mapped[uuid.UUID | None] = mapped_column(UUID(as_uuid=True), index=True)
+    user_id: Mapped[uuid.UUID | None] = mapped_column(UUID(as_uuid=True), index=True)
+    tone_key: Mapped[str] = mapped_column(String(32), nullable=False, default="analitico")
+    allow_user_override: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
+    payload: Mapped[dict | None] = mapped_column(JSONB)

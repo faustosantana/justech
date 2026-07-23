@@ -265,6 +265,10 @@ class Settings(BaseSettings):
     # Lottery 3.0 — when true, API process must NOT start APScheduler (worker owns ticks)
     lottery_sync_worker_standalone: bool = False
     lottery_sync_worker_loop_seconds: int = 60
+    # Lottery AI continuous alert detector (runs inside sync worker; no parallel cron)
+    lottery_ai_alert_detector_enabled: bool = True
+    lottery_ai_alert_detector_interval_seconds: int = 300
+    lottery_ai_alert_lock_ttl_seconds: int = 240
 
 
 

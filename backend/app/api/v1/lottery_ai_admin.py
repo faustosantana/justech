@@ -75,8 +75,195 @@ async def ai_alerts(
     user: CurrentUser,
     tenant: TenantCtx,
     _: Annotated[None, require_ai_admin(*_AI_ADMIN_PERMS)],
+    status: str | None = Query(None),
+    severity: str | None = Query(None),
+    code: str | None = Query(None),
+    limit: int = Query(50, ge=1, le=200),
 ) -> dict:
-    return await _svc(db, user).list_alerts()
+    return await _svc(db, user).list_alerts(status=status, severity=severity, code=code, limit=limit)
+
+
+@router.post("/alerts/detector/run-now")
+async def ai_alert_detector_run_now(
+    db: DbSession,
+    user: CurrentUser,
+    tenant: TenantCtx,
+    _: Annotated[None, require_ai_admin("lottery_admin_ai", "lottery.admin")],
+) -> dict:
+    """Manual detector run — uses Redis lock; never parallel with worker tick."""
+    try:
+        data = await _svc(db, user).run_alert_detector_now()
+        await db.commit()
+        return data
+    except Exception as e:
+        _map_err(e)
+
+
+@router.get("/alerts/{alert_id}")
+async def ai_alert_get(
+    alert_id: UUID,
+    db: DbSession,
+    user: CurrentUser,
+    tenant: TenantCtx,
+    _: Annotated[None, require_ai_admin(*_AI_ADMIN_PERMS)],
+) -> dict:
+    try:
+        return await _svc(db, user).get_alert(alert_id)
+    except Exception as e:
+        _map_err(e)
+
+
+@router.post("/alerts/{alert_id}/acknowledge")
+async def ai_alert_ack(
+    alert_id: UUID,
+    db: DbSession,
+    user: CurrentUser,
+    tenant: TenantCtx,
+    _: Annotated[None, require_ai_admin(*_AI_ADMIN_PERMS)],
+    body: dict[str, Any] = Body(default_factory=dict),
+) -> dict:
+    try:
+        data = await _svc(db, user).acknowledge_alert(alert_id, user_id=user.id, note=body.get("note"))
+        await db.commit()
+        return data
+    except Exception as e:
+        _map_err(e)
+
+
+@router.post("/alerts/{alert_id}/resolve")
+async def ai_alert_resolve(
+    alert_id: UUID,
+    db: DbSession,
+    user: CurrentUser,
+    tenant: TenantCtx,
+    _: Annotated[None, require_ai_admin(*_AI_ADMIN_PERMS)],
+    body: dict[str, Any] = Body(default_factory=dict),
+) -> dict:
+    try:
+        data = await _svc(db, user).resolve_alert(alert_id, user_id=user.id, note=body.get("note"))
+        await db.commit()
+        return data
+    except Exception as e:
+        _map_err(e)
+
+
+@router.post("/alerts/{alert_id}/silence")
+async def ai_alert_silence(
+    alert_id: UUID,
+    db: DbSession,
+    user: CurrentUser,
+    tenant: TenantCtx,
+    _: Annotated[None, require_ai_admin(*_AI_ADMIN_PERMS)],
+    body: dict[str, Any] = Body(...),
+) -> dict:
+    try:
+        until = body.get("until")
+        if not until:
+            raise HTTPException(status_code=400, detail="until_required")
+        data = await _svc(db, user).silence_alert(
+            alert_id, until=until, user_id=user.id, reason=body.get("reason")
+        )
+        await db.commit()
+        return data
+    except Exception as e:
+        _map_err(e)
+
+
+@router.post("/alerts/{alert_id}/reopen")
+async def ai_alert_reopen(
+    alert_id: UUID,
+    db: DbSession,
+    user: CurrentUser,
+    tenant: TenantCtx,
+    _: Annotated[None, require_ai_admin(*_AI_ADMIN_PERMS)],
+    body: dict[str, Any] = Body(default_factory=dict),
+) -> dict:
+    try:
+        data = await _svc(db, user).reopen_alert(alert_id, note=body.get("note"))
+        await db.commit()
+        return data
+    except Exception as e:
+        _map_err(e)
+
+
+@router.get("/alert-thresholds")
+async def ai_alert_thresholds_get(
+    db: DbSession,
+    user: CurrentUser,
+    tenant: TenantCtx,
+    _: Annotated[None, require_ai_admin(*_AI_ADMIN_PERMS)],
+) -> dict:
+    return await _svc(db, user).get_alert_thresholds()
+
+
+@router.put("/alert-thresholds")
+async def ai_alert_thresholds_put(
+    db: DbSession,
+    user: CurrentUser,
+    tenant: TenantCtx,
+    _: Annotated[None, require_ai_admin("lottery_admin_ai", "lottery.admin")],
+    body: dict[str, Any] = Body(...),
+) -> dict:
+    data = await _svc(db, user).put_alert_thresholds(body.get("payload") or body, version_label=body.get("version_label"))
+    await db.commit()
+    return data
+
+
+@router.get("/tones")
+async def ai_tones_list(
+    db: DbSession,
+    user: CurrentUser,
+    tenant: TenantCtx,
+    _: Annotated[None, require_ai_admin(*_AI_ADMIN_PERMS)],
+) -> dict:
+    return await _svc(db, user).list_tones()
+
+
+@router.get("/tones/preference")
+async def ai_tones_preference_get(
+    db: DbSession,
+    user: CurrentUser,
+    tenant: TenantCtx,
+    _: Annotated[None, require_ai_admin(*_AI_ADMIN_PERMS)],
+) -> dict:
+    return await _svc(db, user).get_tone_preference()
+
+
+@router.put("/tones/preference")
+async def ai_tones_preference_put(
+    db: DbSession,
+    user: CurrentUser,
+    tenant: TenantCtx,
+    _: Annotated[None, require_ai_admin(*_AI_ADMIN_PERMS)],
+    body: dict[str, Any] = Body(...),
+) -> dict:
+    data = await _svc(db, user).put_tone_preference(body)
+    await db.commit()
+    return data
+
+
+@router.post("/tones/preference/reset")
+async def ai_tones_preference_reset(
+    db: DbSession,
+    user: CurrentUser,
+    tenant: TenantCtx,
+    _: Annotated[None, require_ai_admin(*_AI_ADMIN_PERMS)],
+    body: dict[str, Any] = Body(default_factory=dict),
+) -> dict:
+    data = await _svc(db, user).reset_tone_preference(scope=body.get("scope") or "user")
+    await db.commit()
+    return data
+
+
+@router.post("/tones/preview")
+async def ai_tones_preview(
+    db: DbSession,
+    user: CurrentUser,
+    tenant: TenantCtx,
+    _: Annotated[None, require_ai_admin(*_AI_ADMIN_PERMS)],
+    body: dict[str, Any] = Body(...),
+) -> dict:
+    return await _svc(db, user).preview_tone(body)
 
 
 @router.get("/hermes")
@@ -530,3 +717,42 @@ async def ai_audit(
     offset: Annotated[int, Query(ge=0)] = 0,
 ) -> dict:
     return await _svc(db, user).list_audit(limit=limit, offset=offset)
+
+
+# ---- Closeout: detector alias + benchmark 300 ----
+
+@router.post("/alerts/detect-now")
+async def ai_alerts_detect_now_alias(
+    db: DbSession,
+    user: CurrentUser,
+    _: TenantCtx,
+    __: Annotated[None, require_ai_admin("lottery_admin_ai", "lottery.admin")],
+) -> dict:
+    """Alias of /alerts/detector/run-now for closeout clients."""
+    data = await _svc(db, user).run_alert_detector_now()
+    await db.commit()
+    return data
+
+
+@router.post("/benchmarks/run-300")
+async def ai_benchmark_run_300(
+    db: DbSession,
+    user: CurrentUser,
+    _: TenantCtx,
+    __: Annotated[None, require_ai_admin("lottery_admin_ai", "lottery.admin")],
+) -> dict:
+    data = await _svc(db, user).run_benchmark_300_suite()
+    await db.commit()
+    return data
+
+
+@router.post("/benchmarks/compare-v2-v3")
+async def ai_benchmark_compare_v2_v3(
+    db: DbSession,
+    user: CurrentUser,
+    _: TenantCtx,
+    __: Annotated[None, require_ai_admin("lottery_admin_ai", "lottery.admin")],
+) -> dict:
+    data = await _svc(db, user).compare_v2_v3_and_gate()
+    await db.commit()
+    return data

@@ -15,18 +15,32 @@ from app.lottery.ai.domain_classifier import classify_domain
 from app.lottery.ai.prompts import lottery_assistant_system_v1 as prompt_mod
 from app.lottery.ai.runtime import runtime_snapshot
 from app.lottery.ai.understanding import understand
-from app.lottery.ai.metrics import ai_quality_metrics
+from app.lottery.ai.alert_thresholds import DEFAULT_ALERT_THRESHOLDS, merge_thresholds
+from app.lottery.ai.metrics import ai_conversational_metrics, ai_quality_metrics
+from app.lottery.ai.tone_templates import (
+    CRITICAL_SAFETY_KEYS,
+    apply_tone_to_prompt,
+    get_tone_template,
+    list_tone_templates,
+    resolve_tone_preference,
+)
 from app.models.lottery import (
     LotteryAiAlert,
+    LotteryAiAlertThreshold,
     LotteryAiAnalysisPack,
     LotteryAiAuditEvent,
     LotteryAiBenchmark,
     LotteryAiConfigVersion,
     LotteryAiPromptVersion,
+    LotteryAiTonePreference,
     LotteryAiToolSetting,
     LotteryChatSession,
 )
 from app.services.lottery_ai_contracts import LOTTERY_TOOL_CATALOG
+
+ALERT_STATUSES = frozenset({"open", "acknowledged", "silenced", "resolved", "reopened"})
+ALERT_SEVERITIES = frozenset({"info", "warning", "high", "critical"})
+ACTIVE_ALERT_STATUSES = frozenset({"open", "acknowledged", "silenced", "reopened"})
 
 
 DEFAULT_AGENT_PAYLOAD: dict[str, Any] = {
@@ -173,6 +187,41 @@ def _checksum(body: str) -> str:
     return hashlib.sha256((body or "").encode("utf-8")).hexdigest()[:16]
 
 
+def _alert_dict(row: LotteryAiAlert) -> dict[str, Any]:
+    return {
+        "id": str(row.id),
+        "tenant_id": str(row.tenant_id) if row.tenant_id else None,
+        "severity": row.severity,
+        "code": row.code,
+        "title": row.title,
+        "message": row.message,
+        "details": row.details or {},
+        "status": row.status or ("acknowledged" if row.acknowledged else "open"),
+        "fingerprint": row.fingerprint,
+        "component": row.component,
+        "first_detected_at": row.first_detected_at.isoformat() if row.first_detected_at else None,
+        "last_detected_at": row.last_detected_at.isoformat() if row.last_detected_at else None,
+        "occurrence_count": row.occurrence_count or 1,
+        "acknowledged": bool(row.acknowledged),
+        "acknowledged_at": row.acknowledged_at.isoformat() if row.acknowledged_at else None,
+        "acknowledged_by": str(row.acknowledged_by) if row.acknowledged_by else None,
+        "resolved_at": row.resolved_at.isoformat() if row.resolved_at else None,
+        "resolved_by": str(row.resolved_by) if row.resolved_by else None,
+        "silenced_until": row.silenced_until.isoformat() if row.silenced_until else None,
+        "resolution_note": row.resolution_note,
+        "prompt_version": row.prompt_version,
+        "model_name": row.model_name,
+        "tool_name": row.tool_name,
+        "metric_name": row.metric_name,
+        "metric_value": float(row.metric_value) if row.metric_value is not None else None,
+        "threshold_value": float(row.threshold_value) if row.threshold_value is not None else None,
+        "auto_resolved": bool(row.auto_resolved),
+        "created_at": row.created_at.isoformat() if row.created_at else None,
+        "updated_at": row.updated_at.isoformat() if row.updated_at else None,
+        "recommendation": (row.details or {}).get("recommendation") if isinstance(row.details, dict) else None,
+    }
+
+
 def _prompt_dict(row: LotteryAiPromptVersion) -> dict[str, Any]:
     return {
         "id": str(row.id),
@@ -306,6 +355,8 @@ class LotteryAiAdminService:
             await self.db.execute(select(func.count()).select_from(LotteryAiBenchmark))
         ).scalar_one()
         if not bm:
+            from app.lottery.ai.benchmark import cases_for_db_seed
+
             self.db.add(
                 LotteryAiBenchmark(
                     id=uuid.uuid4(),
@@ -313,11 +364,46 @@ class LotteryAiAdminService:
                     name="UAT memoria esas loterías",
                     description="Caso permanente P0: 24 → Real+Leidsa → 7 días después",
                     status="active",
-                    cases=MEMORY_UAT_CASES + [
-                        {"id": c["q"][:40], "name": c["q"], "turns": [c["q"]], "expect": {"domain": c["expect"]}, "severity": "P0"}
+                    cases=MEMORY_UAT_CASES
+                    + [
+                        {
+                            "id": c["q"][:40],
+                            "name": c["q"],
+                            "turns": [c["q"]],
+                            "expect": {"domain": c["expect"]},
+                            "severity": "P0",
+                        }
                         for c in SAFETY_TEST_CASES
                     ],
                     author_user_id=self.user_id,
+                )
+            )
+            self.db.add(
+                LotteryAiBenchmark(
+                    id=uuid.uuid4(),
+                    tenant_id=self.tenant_id,
+                    name="Suite 300 closeout",
+                    description="Benchmark ≥300 casos — memoria, dominio, safety, multilotería",
+                    status="active",
+                    cases=cases_for_db_seed(),
+                    author_user_id=self.user_id,
+                )
+            )
+        # Seed default thresholds once
+        th_n = (
+            await self.db.execute(select(func.count()).select_from(LotteryAiAlertThreshold))
+        ).scalar_one()
+        if not th_n:
+            self.db.add(
+                LotteryAiAlertThreshold(
+                    id=uuid.uuid4(),
+                    tenant_id=None,
+                    version_label="defaults-v1",
+                    status="active",
+                    payload=dict(DEFAULT_ALERT_THRESHOLDS),
+                    changelog="Seed closeout thresholds",
+                    author_user_id=self.user_id,
+                    published_at=datetime.now(timezone.utc),
                 )
             )
         await self.db.flush()
@@ -384,6 +470,7 @@ class LotteryAiAdminService:
         await self.ensure_seeded()
         runtime = runtime_snapshot()
         metrics = await ai_quality_metrics(self.db, days=7)
+        conversational = await ai_conversational_metrics(self.db, days=7)
         cfg = await self.get_active_config()
         prompt = (
             await self.db.execute(
@@ -406,11 +493,18 @@ class LotteryAiAdminService:
         alerts = (
             await self.db.execute(
                 select(LotteryAiAlert)
-                .where(LotteryAiAlert.acknowledged.is_(False))
-                .order_by(LotteryAiAlert.created_at.desc())
+                .where(LotteryAiAlert.status.in_(tuple(ACTIVE_ALERT_STATUSES)))
+                .order_by(LotteryAiAlert.last_detected_at.desc().nullslast())
                 .limit(20)
             )
         ).scalars().all()
+        open_count = (
+            await self.db.execute(
+                select(func.count())
+                .select_from(LotteryAiAlert)
+                .where(LotteryAiAlert.status.in_(("open", "reopened")))
+            )
+        ).scalar_one()
 
         ok_rate = metrics.get("resolved_rate")
         fallback_rate = metrics.get("fallback_rate") or 0
@@ -438,6 +532,7 @@ class LotteryAiAdminService:
             "tools_enabled": tools_enabled,
             "tools_total": tools_total,
             "metrics": metrics,
+            "conversational_metrics": conversational,
             "sessions_total": sessions,
             "last_successful_call": runtime.get("last_successful_call"),
             "last_fallback": runtime.get("last_fallback"),
@@ -448,19 +543,12 @@ class LotteryAiAdminService:
                 **(runtime.get("hermes") or {}),
                 "summary": "No utilizado como orquestador.",
             },
-            "benchmark_active": "UAT memoria esas loterías",
-            "deployed_note": "Lottery IA Admin Center — config DB-backed with code fallback",
-            "alerts": [
-                {
-                    "id": str(a.id),
-                    "severity": a.severity,
-                    "code": a.code,
-                    "message": a.message,
-                    "created_at": a.created_at.isoformat() if a.created_at else None,
-                }
-                for a in alerts
-            ],
+            "benchmark_active": "UAT memoria esas loterías / suite 300",
+            "deployed_note": "Lottery IA Admin Center — alerting closeout",
+            "open_alerts_count": int(open_count or 0),
+            "alerts": [_alert_dict(a) for a in alerts],
             "runtime": runtime,
+            "tone_templates": list_tone_templates(),
         }
 
     # ---- prompts ----
@@ -545,19 +633,25 @@ class LotteryAiAdminService:
             raise KeyError("prompt_not_found")
         if row.status == "active":
             return _prompt_dict(row)
-        # Block publish of v3-like without benchmark unless force (admin confirmed)
+        # Gate: any recent benchmark with P0/P1 blocks publish (v3 included)
         bm = (
             await self.db.execute(
                 select(LotteryAiBenchmark)
-                .where(LotteryAiBenchmark.name.ilike("%memoria%"))
+                .where(LotteryAiBenchmark.last_result.is_not(None))
+                .order_by(LotteryAiBenchmark.last_run_at.desc().nullslast())
                 .limit(1)
             )
         ).scalar_one_or_none()
         if bm and bm.last_result and not force:
-            p0 = int((bm.last_result or {}).get("p0", 0) or 0)
-            p1 = int((bm.last_result or {}).get("p1", 0) or 0)
+            p0 = int((bm.last_result or {}).get("p0", 0) or (bm.last_result or {}).get("p0_count", 0) or 0)
+            p1 = int((bm.last_result or {}).get("p1", 0) or (bm.last_result or {}).get("p1_count", 0) or 0)
             if p0 or p1:
                 raise ValueError("benchmark_bloquea_publicacion_p0_p1")
+            # v3 activation additionally requires explicit comparison gate flag in last_result
+            if (row.version or "").lower() in {"v3", "lottery_assistant_system_v3"}:
+                gate = (bm.last_result or {}).get("v3_activation_gate") or {}
+                if gate and not gate.get("activate_v3"):
+                    raise ValueError("v3_no_supera_v2_gate")
 
         prev = (
             await self.db.execute(
@@ -1205,6 +1299,405 @@ class LotteryAiAdminService:
         await self.db.flush()
         return summary
 
+    async def list_alerts(
+        self,
+        *,
+        status: str | None = None,
+        severity: str | None = None,
+        code: str | None = None,
+        limit: int = 50,
+    ) -> dict[str, Any]:
+        limit = max(1, min(200, int(limit)))
+        q = select(LotteryAiAlert).order_by(
+            LotteryAiAlert.last_detected_at.desc().nullslast(),
+            LotteryAiAlert.created_at.desc(),
+        )
+        if status:
+            q = q.where(LotteryAiAlert.status == status)
+        else:
+            # Default: active surface (not resolved)
+            q = q.where(LotteryAiAlert.status.in_(tuple(ACTIVE_ALERT_STATUSES)))
+        if severity:
+            q = q.where(LotteryAiAlert.severity == severity)
+        if code:
+            q = q.where(LotteryAiAlert.code == code)
+        if self.tenant_id:
+            q = q.where(
+                (LotteryAiAlert.tenant_id == self.tenant_id) | (LotteryAiAlert.tenant_id.is_(None))
+            )
+        rows = (await self.db.execute(q.limit(limit))).scalars().all()
+        counts = {}
+        for st in ("open", "acknowledged", "silenced", "resolved", "reopened"):
+            counts[st] = (
+                await self.db.execute(
+                    select(func.count()).select_from(LotteryAiAlert).where(LotteryAiAlert.status == st)
+                )
+            ).scalar_one()
+        critical = (
+            await self.db.execute(
+                select(func.count())
+                .select_from(LotteryAiAlert)
+                .where(
+                    LotteryAiAlert.severity == "critical",
+                    LotteryAiAlert.status.in_(tuple(ACTIVE_ALERT_STATUSES)),
+                )
+            )
+        ).scalar_one()
+        return {
+            "items": [_alert_dict(a) for a in rows],
+            "counts": counts,
+            "critical_open": int(critical or 0),
+            "open_alerts_count": int(counts.get("open", 0) or 0) + int(counts.get("reopened", 0) or 0),
+        }
+
+    async def get_alert(self, alert_id: uuid.UUID) -> dict[str, Any]:
+        row = await self.db.get(LotteryAiAlert, alert_id)
+        if not row:
+            raise KeyError("alert_not_found")
+        return _alert_dict(row)
+
+    async def create_alert(self, data: dict[str, Any]) -> dict[str, Any]:
+        now = datetime.now(timezone.utc)
+        severity = (data.get("severity") or "info").lower()
+        if severity not in ALERT_SEVERITIES:
+            raise ValueError("invalid_severity")
+        code = (data.get("code") or "CUSTOM").strip().upper()
+        fp = data.get("fingerprint") or f"{self.tenant_id or 'global'}:{code}:{data.get('component') or ''}"
+        row = LotteryAiAlert(
+            id=uuid.uuid4(),
+            tenant_id=self.tenant_id,
+            severity=severity,
+            code=code,
+            title=data.get("title"),
+            message=data.get("message") or code,
+            details=data.get("details") or {},
+            status="open",
+            fingerprint=fp,
+            component=data.get("component"),
+            first_detected_at=now,
+            last_detected_at=now,
+            occurrence_count=1,
+            acknowledged=False,
+            prompt_version=data.get("prompt_version"),
+            model_name=data.get("model_name"),
+            tool_name=data.get("tool_name"),
+            metric_name=data.get("metric_name"),
+            metric_value=data.get("metric_value"),
+            threshold_value=data.get("threshold_value"),
+            auto_resolved=False,
+            updated_at=now,
+        )
+        self.db.add(row)
+        await self._audit("alert_create", entity_type="alert", entity_id=str(row.id), after=_alert_dict(row))
+        await self.db.flush()
+        return _alert_dict(row)
+
+    async def upsert_alert(self, data: dict[str, Any]) -> dict[str, Any]:
+        from app.services.lottery_ai_alert_detector import DetectedFinding, LotteryAiAlertDetector
+
+        detector = LotteryAiAlertDetector(self.db, tenant_id=self.tenant_id)
+        finding = DetectedFinding(
+            code=(data.get("code") or "CUSTOM").upper(),
+            severity=(data.get("severity") or "info").lower(),
+            message=data.get("message") or "",
+            title=data.get("title"),
+            component=data.get("component"),
+            fingerprint=data.get("fingerprint"),
+            metric_name=data.get("metric_name"),
+            metric_value=data.get("metric_value"),
+            threshold_value=data.get("threshold_value"),
+            prompt_version=data.get("prompt_version"),
+            model_name=data.get("model_name"),
+            tool_name=data.get("tool_name"),
+            details=data.get("details") or {},
+            recommendation=(data.get("details") or {}).get("recommendation") if isinstance(data.get("details"), dict) else data.get("recommendation"),
+        )
+        row = await detector.upsert_finding(finding)
+        await self._audit("alert_upsert", entity_type="alert", entity_id=str(row.id))
+        return _alert_dict(row)
+
+    async def acknowledge_alert(
+        self, alert_id: uuid.UUID, user_id: uuid.UUID | None = None, note: str | None = None
+    ) -> dict[str, Any]:
+        row = await self.db.get(LotteryAiAlert, alert_id)
+        if not row:
+            raise KeyError("alert_not_found")
+        now = datetime.now(timezone.utc)
+        row.status = "acknowledged"
+        row.acknowledged = True
+        row.acknowledged_at = now
+        row.acknowledged_by = user_id or self.user_id
+        if note:
+            row.resolution_note = note
+        row.updated_at = now
+        await self._audit("alert_acknowledge", entity_type="alert", entity_id=str(row.id))
+        await self.db.flush()
+        return _alert_dict(row)
+
+    async def resolve_alert(
+        self,
+        alert_id: uuid.UUID,
+        user_id: uuid.UUID | None = None,
+        note: str | None = None,
+    ) -> dict[str, Any]:
+        row = await self.db.get(LotteryAiAlert, alert_id)
+        if not row:
+            raise KeyError("alert_not_found")
+        now = datetime.now(timezone.utc)
+        row.status = "resolved"
+        row.acknowledged = True
+        row.resolved_at = now
+        row.resolved_by = user_id or self.user_id
+        row.auto_resolved = False
+        if note:
+            row.resolution_note = note
+        row.updated_at = now
+        await self._audit("alert_resolve", entity_type="alert", entity_id=str(row.id))
+        await self.db.flush()
+        return _alert_dict(row)
+
+    async def silence_alert(
+        self,
+        alert_id: uuid.UUID,
+        until: datetime | str,
+        user_id: uuid.UUID | None = None,
+        reason: str | None = None,
+    ) -> dict[str, Any]:
+        row = await self.db.get(LotteryAiAlert, alert_id)
+        if not row:
+            raise KeyError("alert_not_found")
+        if isinstance(until, str):
+            until_dt = datetime.fromisoformat(until.replace("Z", "+00:00"))
+        else:
+            until_dt = until
+        now = datetime.now(timezone.utc)
+        row.status = "silenced"
+        row.silenced_until = until_dt
+        row.acknowledged = True
+        row.acknowledged_at = now
+        row.acknowledged_by = user_id or self.user_id
+        if reason:
+            row.resolution_note = reason
+        row.updated_at = now
+        await self._audit(
+            "alert_silence",
+            entity_type="alert",
+            entity_id=str(row.id),
+            after={"until": until_dt.isoformat(), "reason": reason},
+        )
+        await self.db.flush()
+        return _alert_dict(row)
+
+    async def reopen_alert(self, alert_id: uuid.UUID, note: str | None = None) -> dict[str, Any]:
+        row = await self.db.get(LotteryAiAlert, alert_id)
+        if not row:
+            raise KeyError("alert_not_found")
+        now = datetime.now(timezone.utc)
+        row.status = "reopened"
+        row.acknowledged = False
+        row.auto_resolved = False
+        row.resolved_at = None
+        row.resolved_by = None
+        row.silenced_until = None
+        row.last_detected_at = now
+        row.occurrence_count = int(row.occurrence_count or 1) + 1
+        if note:
+            row.resolution_note = note
+        row.updated_at = now
+        await self._audit("alert_reopen", entity_type="alert", entity_id=str(row.id))
+        await self.db.flush()
+        return _alert_dict(row)
+
+    async def run_alert_detector_now(self) -> dict[str, Any]:
+        from app.services.lottery_ai_alert_detector import LotteryAiAlertDetector
+
+        detector = LotteryAiAlertDetector(self.db, tenant_id=self.tenant_id)
+        result = await detector.run(initiated_by="admin_run_now", use_lock=True)
+        return {
+            "status": result.status,
+            "findings": result.findings,
+            "upserted": result.upserted,
+            "auto_resolved": result.auto_resolved,
+            "skipped_reason": result.skipped_reason,
+            "codes": result.codes,
+        }
+
+    async def get_alert_thresholds(self) -> dict[str, Any]:
+        row = (
+            await self.db.execute(
+                select(LotteryAiAlertThreshold)
+                .where(LotteryAiAlertThreshold.status == "active")
+                .order_by(LotteryAiAlertThreshold.published_at.desc().nullslast())
+                .limit(1)
+            )
+        ).scalar_one_or_none()
+        return {
+            "defaults": DEFAULT_ALERT_THRESHOLDS,
+            "active": merge_thresholds(row.payload if row else None),
+            "version_label": row.version_label if row else "defaults",
+        }
+
+    async def put_alert_thresholds(self, payload: dict[str, Any], *, version_label: str | None = None) -> dict[str, Any]:
+        merged = merge_thresholds(payload)
+        # archive previous
+        prev = (
+            await self.db.execute(
+                select(LotteryAiAlertThreshold).where(LotteryAiAlertThreshold.status == "active")
+            )
+        ).scalars().all()
+        for p in prev:
+            p.status = "archived"
+        row = LotteryAiAlertThreshold(
+            id=uuid.uuid4(),
+            tenant_id=self.tenant_id,
+            version_label=version_label or datetime.now(timezone.utc).strftime("th-%Y%m%d%H%M"),
+            status="active",
+            payload=merged,
+            author_user_id=self.user_id,
+            published_at=datetime.now(timezone.utc),
+            previous_version_id=prev[0].id if prev else None,
+        )
+        self.db.add(row)
+        await self._audit("alert_thresholds_publish", entity_type="alert_thresholds", entity_id=str(row.id))
+        await self.db.flush()
+        return {"version_label": row.version_label, "active": merged}
+
+    async def list_tones(self) -> dict[str, Any]:
+        return {"items": list_tone_templates(), "critical_safety_keys": sorted(CRITICAL_SAFETY_KEYS)}
+
+    async def get_tone_preference(self) -> dict[str, Any]:
+        tenant_row = (
+            await self.db.execute(
+                select(LotteryAiTonePreference).where(
+                    LotteryAiTonePreference.tenant_id == self.tenant_id,
+                    LotteryAiTonePreference.user_id.is_(None),
+                )
+            )
+        ).scalar_one_or_none()
+        user_row = None
+        if self.user_id:
+            user_row = (
+                await self.db.execute(
+                    select(LotteryAiTonePreference).where(
+                        LotteryAiTonePreference.tenant_id == self.tenant_id,
+                        LotteryAiTonePreference.user_id == self.user_id,
+                    )
+                )
+            ).scalar_one_or_none()
+        allow = True if tenant_row is None else bool(tenant_row.allow_user_override)
+        resolved = resolve_tone_preference(
+            tenant_tone=tenant_row.tone_key if tenant_row else None,
+            user_tone=user_row.tone_key if user_row else None,
+            allow_user_override=allow,
+        )
+        return {
+            "tenant_tone": tenant_row.tone_key if tenant_row else None,
+            "user_tone": user_row.tone_key if user_row else None,
+            "allow_user_override": allow,
+            "resolved": resolved,
+            "template": get_tone_template(resolved),
+        }
+
+    async def put_tone_preference(self, data: dict[str, Any]) -> dict[str, Any]:
+        from app.lottery.ai.tone_templates import sanitize_tone_overrides
+
+        scope = (data.get("scope") or "user").lower()
+        tone_key = data.get("tone_key") or "analitico"
+        get_tone_template(tone_key)  # validate
+        allow = data.get("allow_user_override")
+        payload = sanitize_tone_overrides(data.get("payload"))
+        now_user = self.user_id if scope == "user" else None
+        if scope == "tenant":
+            now_user = None
+        if now_user is None:
+            row = (
+                await self.db.execute(
+                    select(LotteryAiTonePreference).where(
+                        LotteryAiTonePreference.tenant_id == self.tenant_id,
+                        LotteryAiTonePreference.user_id.is_(None),
+                    )
+                )
+            ).scalar_one_or_none()
+        else:
+            row = (
+                await self.db.execute(
+                    select(LotteryAiTonePreference).where(
+                        LotteryAiTonePreference.tenant_id == self.tenant_id,
+                        LotteryAiTonePreference.user_id == now_user,
+                    )
+                )
+            ).scalar_one_or_none()
+        if not row:
+            row = LotteryAiTonePreference(
+                id=uuid.uuid4(),
+                tenant_id=self.tenant_id,
+                user_id=now_user,
+                tone_key=tone_key,
+                allow_user_override=True if allow is None else bool(allow),
+                payload=payload,
+            )
+            self.db.add(row)
+        else:
+            row.tone_key = tone_key
+            if allow is not None and scope == "tenant":
+                row.allow_user_override = bool(allow)
+            row.payload = payload
+        await self._audit("tone_preference_save", entity_type="tone", entity_id=tone_key)
+        await self.db.flush()
+        return await self.get_tone_preference()
+
+    async def reset_tone_preference(self, *, scope: str = "user") -> dict[str, Any]:
+        now_user = self.user_id if scope == "user" else None
+        q = select(LotteryAiTonePreference).where(LotteryAiTonePreference.tenant_id == self.tenant_id)
+        if scope == "user":
+            q = q.where(LotteryAiTonePreference.user_id == now_user)
+        else:
+            q = q.where(LotteryAiTonePreference.user_id.is_(None))
+        row = (await self.db.execute(q)).scalar_one_or_none()
+        if row:
+            await self.db.delete(row)
+            await self._audit("tone_preference_reset", entity_type="tone", entity_id=scope)
+            await self.db.flush()
+        return await self.get_tone_preference()
+
+    async def preview_tone(self, payload: dict[str, Any]) -> dict[str, Any]:
+        """Side-by-side tone/prompt preview — does not mutate active config."""
+        message = (payload.get("message") or "¿Cuándo salió el 57 en Leidsa?").strip()
+        tone_key = payload.get("tone_key") or "analitico"
+        prompt_version = payload.get("prompt_version") or "v2"
+        tpl = get_tone_template(tone_key)
+        try:
+            body = prompt_mod.get_prompt_body(prompt_version)
+        except KeyError:
+            body = prompt_mod.get_system_prompt_text()
+        combined = apply_tone_to_prompt(body, tone_key)
+        state = ConversationState()
+        if payload.get("state"):
+            state = ConversationState.from_store(payload["state"])
+        result, new_state = understand(message, state)
+        return {
+            "sandbox": True,
+            "writes_config": False,
+            "tone_key": tone_key,
+            "prompt_version": prompt_version,
+            "tone": tpl,
+            "system_prompt_preview_chars": len(combined),
+            "system_addon": tpl.get("system_addon"),
+            "understanding": {
+                "intent": result.intent,
+                "needs_clarification": result.needs_clarification,
+                "tool": result.tool,
+                "domain_class": result.domain_class,
+                "lotteries": result.lotteries,
+                "numbers": result.numbers,
+            },
+            "state": new_state.to_store(),
+            "safety_immutable": sorted(CRITICAL_SAFETY_KEYS),
+            "latency_ms": None,
+            "tokens": None,
+            "fallback": False,
+        }
+
     async def list_audit(self, *, limit: int = 50, offset: int = 0) -> dict[str, Any]:
         q = (
             select(LotteryAiAuditEvent)
@@ -1232,24 +1725,71 @@ class LotteryAiAdminService:
             ]
         }
 
-    async def list_alerts(self) -> dict[str, Any]:
-        rows = (
-            await self.db.execute(
-                select(LotteryAiAlert)
-                .where(LotteryAiAlert.acknowledged.is_(False))
-                .order_by(LotteryAiAlert.created_at.desc())
-                .limit(50)
-            )
-        ).scalars().all()
-        return {
-            "items": [
-                {
-                    "id": str(a.id),
-                    "severity": a.severity,
-                    "code": a.code,
-                    "message": a.message,
-                    "created_at": a.created_at.isoformat() if a.created_at else None,
-                }
-                for a in rows
-            ]
-        }
+    async def run_benchmark_300_suite(self) -> dict[str, Any]:
+        from app.lottery.ai.benchmark_300 import run_benchmark_300
+        from app.lottery.ai.prompts.lottery_assistant_system_v1 import get_system_prompt_text
+
+        report = run_benchmark_300(prompt_body=get_system_prompt_text())
+        row = LotteryAiBenchmark(
+            id=uuid.uuid4(),
+            tenant_id=self.tenant_id,
+            name="Benchmark 300 closeout",
+            description="Suite ≥300 casos memoria/dominio/seguridad",
+            status="active",
+            cases=[],
+            last_run_at=datetime.now(timezone.utc),
+            last_result={
+                "total": report["total"],
+                "passed": report["passed"],
+                "pass_rate": report["pass_rate"],
+                "p0": report["p0"],
+                "p1": report["p1"],
+                "p2": report["p2"],
+                "p3": report["p3"],
+                "publish_blocked": report["publish_blocked"],
+                "by_category": report["by_category"],
+            },
+            author_user_id=self.user_id,
+        )
+        self.db.add(row)
+        await self._audit(
+            "benchmark_300_run",
+            entity_type="benchmark",
+            entity_id=str(row.id),
+            after={"p0": report["p0"], "p1": report["p1"], "total": report["total"]},
+        )
+        await self.db.flush()
+        return {**report, "benchmark_id": str(row.id), "results": report["results"][:50]}
+
+    async def compare_v2_v3_and_gate(self) -> dict[str, Any]:
+        from app.lottery.ai.benchmark_300 import compare_v2_v3
+
+        report = compare_v2_v3()
+        decision = report["decision"]
+        activated = False
+        if decision.get("activate_v3"):
+            v3 = (
+                await self.db.execute(
+                    select(LotteryAiPromptVersion).where(LotteryAiPromptVersion.version == "v3")
+                )
+            ).scalar_one_or_none()
+            if v3 and report["v3"]["p0"] == 0 and report["v3"]["p1"] == 0:
+                try:
+                    await self.publish_prompt(v3.id, force=False)
+                    activated = True
+                except ValueError as exc:
+                    decision["reasons"].append(f"publish_blocked:{exc}")
+                    decision["activate_v3"] = False
+                    decision["keep_active"] = "v2"
+        await self._audit(
+            "compare_v2_v3",
+            entity_type="prompt",
+            after={
+                "decision": decision,
+                "activated": activated,
+                "v2": report["v2"],
+                "v3": report["v3"],
+            },
+        )
+        await self.db.flush()
+        return {**report, "activated": activated}

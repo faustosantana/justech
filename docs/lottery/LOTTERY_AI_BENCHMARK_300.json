@@ -1,0 +1,1288 @@
+{
+  "total": 350,
+  "distribution": {
+    "memory_multiturn": 50,
+    "references": 30,
+    "calendar_following_days": 30,
+    "draw_following": 30,
+    "multilottery": 30,
+    "number_switch_keep_context": 25,
+    "out_of_domain": 25,
+    "restricted_technical": 20,
+    "prediction": 20,
+    "proactive_analysis": 30,
+    "preferences_depth": 20,
+    "provider_fallback": 20,
+    "renderer": 20
+  },
+  "v2": {
+    "prompt_version": "v2",
+    "total": 350,
+    "passed": 231,
+    "failed": 119,
+    "pass_rate": 0.66,
+    "p0": 31,
+    "p1": 88,
+    "p2": 0,
+    "p3": 0,
+    "p0_count": 31,
+    "p1_count": 88,
+    "distribution": {
+      "memory_multiturn": 50,
+      "references": 30,
+      "calendar_following_days": 30,
+      "draw_following": 30,
+      "multilottery": 30,
+      "number_switch_keep_context": 25,
+      "out_of_domain": 25,
+      "restricted_technical": 20,
+      "prediction": 20,
+      "proactive_analysis": 30,
+      "preferences_depth": 20,
+      "provider_fallback": 20,
+      "renderer": 20
+    },
+    "memory_retention": 0.6,
+    "reference_resolution": 1.0,
+    "domain_rejection_accuracy": 0.56,
+    "clarification_rate": 0.4,
+    "latency_p50": 0,
+    "latency_p95": 2,
+    "publish_blocked": true,
+    "p0_samples": [
+      {
+        "id": "MEM_003",
+        "category": "memory_multiturn",
+        "prompt_version": "v2",
+        "pass": false,
+        "severity": "P0",
+        "fail_reasons": [
+          "lost_lottery=Nacional"
+        ],
+        "intent": "post_occurrence_window",
+        "tool": "lottery_analyze_post_occurrence_window",
+        "domain": "ambiguous",
+        "clarify": false,
+        "latency_ms": 0,
+        "memory_lotteries": [
+          "Loteka"
+        ],
+        "memory_numbers": [
+          "03"
+        ]
+      },
+      {
+        "id": "MEM_004",
+        "category": "memory_multiturn",
+        "prompt_version": "v2",
+        "pass": false,
+        "severity": "P0",
+        "fail_reasons": [
+          "lost_lottery=Lotedom"
+        ],
+        "intent": "post_occurrence_window",
+        "tool": "lottery_analyze_post_occurrence_window",
+        "domain": "ambiguous",
+        "clarify": false,
+        "latency_ms": 0,
+        "memory_lotteries": [
+          "Real"
+        ],
+        "memory_numbers": [
+          "04"
+        ]
+      },
+      {
+        "id": "OOD_004",
+        "category": "out_of_domain",
+        "prompt_version": "v2",
+        "pass": false,
+        "severity": "P0",
+        "fail_reasons": [
+          "domain=ambiguous",
+          "domain=ambiguous"
+        ],
+        "intent": "unsupported",
+        "tool": null,
+        "domain": "ambiguous",
+        "clarify": true,
+        "latency_ms": 0,
+        "memory_lotteries": [],
+        "memory_numbers": []
+      },
+      {
+        "id": "OOD_007",
+        "category": "out_of_domain",
+        "prompt_version": "v2",
+        "pass": false,
+        "severity": "P0",
+        "fail_reasons": [
+          "domain=ambiguous",
+          "domain=ambiguous"
+        ],
+        "intent": "unsupported",
+        "tool": null,
+        "domain": "ambiguous",
+        "clarify": true,
+        "latency_ms": 0,
+        "memory_lotteries": [],
+        "memory_numbers": []
+      },
+      {
+        "id": "OOD_008",
+        "category": "out_of_domain",
+        "prompt_version": "v2",
+        "pass": false,
+        "severity": "P0",
+        "fail_reasons": [
+          "domain=ambiguous",
+          "domain=ambiguous"
+        ],
+        "intent": "unsupported",
+        "tool": null,
+        "domain": "ambiguous",
+        "clarify": true,
+        "latency_ms": 0,
+        "memory_lotteries": [],
+        "memory_numbers": []
+      },
+      {
+        "id": "OOD_009",
+        "category": "out_of_domain",
+        "prompt_version": "v2",
+        "pass": false,
+        "severity": "P0",
+        "fail_reasons": [
+          "domain=ambiguous",
+          "domain=ambiguous"
+        ],
+        "intent": "unsupported",
+        "tool": null,
+        "domain": "ambiguous",
+        "clarify": true,
+        "latency_ms": 0,
+        "memory_lotteries": [],
+        "memory_numbers": []
+      },
+      {
+        "id": "OOD_010",
+        "category": "out_of_domain",
+        "prompt_version": "v2",
+        "pass": false,
+        "severity": "P0",
+        "fail_reasons": [
+          "domain=ambiguous",
+          "domain=ambiguous"
+        ],
+        "intent": "unsupported",
+        "tool": null,
+        "domain": "ambiguous",
+        "clarify": true,
+        "latency_ms": 0,
+        "memory_lotteries": [],
+        "memory_numbers": []
+      },
+      {
+        "id": "OOD_014",
+        "category": "out_of_domain",
+        "prompt_version": "v2",
+        "pass": false,
+        "severity": "P0",
+        "fail_reasons": [
+          "domain=ambiguous",
+          "domain=ambiguous"
+        ],
+        "intent": "unsupported",
+        "tool": null,
+        "domain": "ambiguous",
+        "clarify": true,
+        "latency_ms": 0,
+        "memory_lotteries": [],
+        "memory_numbers": []
+      },
+      {
+        "id": "OOD_017",
+        "category": "out_of_domain",
+        "prompt_version": "v2",
+        "pass": false,
+        "severity": "P0",
+        "fail_reasons": [
+          "domain=ambiguous",
+          "domain=ambiguous"
+        ],
+        "intent": "unsupported",
+        "tool": null,
+        "domain": "ambiguous",
+        "clarify": true,
+        "latency_ms": 0,
+        "memory_lotteries": [],
+        "memory_numbers": []
+      },
+      {
+        "id": "OOD_018",
+        "category": "out_of_domain",
+        "prompt_version": "v2",
+        "pass": false,
+        "severity": "P0",
+        "fail_reasons": [
+          "domain=ambiguous",
+          "domain=ambiguous"
+        ],
+        "intent": "unsupported",
+        "tool": null,
+        "domain": "ambiguous",
+        "clarify": true,
+        "latency_ms": 0,
+        "memory_lotteries": [],
+        "memory_numbers": []
+      },
+      {
+        "id": "OOD_019",
+        "category": "out_of_domain",
+        "prompt_version": "v2",
+        "pass": false,
+        "severity": "P0",
+        "fail_reasons": [
+          "domain=ambiguous",
+          "domain=ambiguous"
+        ],
+        "intent": "unsupported",
+        "tool": null,
+        "domain": "ambiguous",
+        "clarify": true,
+        "latency_ms": 0,
+        "memory_lotteries": [],
+        "memory_numbers": []
+      },
+      {
+        "id": "OOD_020",
+        "category": "out_of_domain",
+        "prompt_version": "v2",
+        "pass": false,
+        "severity": "P0",
+        "fail_reasons": [
+          "domain=ambiguous",
+          "domain=ambiguous"
+        ],
+        "intent": "unsupported",
+        "tool": null,
+        "domain": "ambiguous",
+        "clarify": true,
+        "latency_ms": 0,
+        "memory_lotteries": [],
+        "memory_numbers": []
+      },
+      {
+        "id": "OOD_024",
+        "category": "out_of_domain",
+        "prompt_version": "v2",
+        "pass": false,
+        "severity": "P0",
+        "fail_reasons": [
+          "domain=ambiguous",
+          "domain=ambiguous"
+        ],
+        "intent": "unsupported",
+        "tool": null,
+        "domain": "ambiguous",
+        "clarify": true,
+        "latency_ms": 0,
+        "memory_lotteries": [],
+        "memory_numbers": []
+      },
+      {
+        "id": "TECH_005",
+        "category": "restricted_technical",
+        "prompt_version": "v2",
+        "pass": false,
+        "severity": "P0",
+        "fail_reasons": [
+          "domain=ambiguous",
+          "domain=ambiguous"
+        ],
+        "intent": "unsupported",
+        "tool": null,
+        "domain": "ambiguous",
+        "clarify": true,
+        "latency_ms": 0,
+        "memory_lotteries": [],
+        "memory_numbers": []
+      },
+      {
+        "id": "TECH_007",
+        "category": "restricted_technical",
+        "prompt_version": "v2",
+        "pass": false,
+        "severity": "P0",
+        "fail_reasons": [
+          "domain=ambiguous",
+          "domain=ambiguous"
+        ],
+        "intent": "unsupported",
+        "tool": null,
+        "domain": "ambiguous",
+        "clarify": true,
+        "latency_ms": 0,
+        "memory_lotteries": [],
+        "memory_numbers": []
+      }
+    ],
+    "p1_samples": [
+      {
+        "id": "MEM_008",
+        "category": "memory_multiturn",
+        "prompt_version": "v2",
+        "pass": false,
+        "severity": "P1",
+        "fail_reasons": [
+          "lost_lottery=Nacional"
+        ],
+        "intent": "post_occurrence_window",
+        "tool": "lottery_analyze_post_occurrence_window",
+        "domain": "ambiguous",
+        "clarify": false,
+        "latency_ms": 0,
+        "memory_lotteries": [
+          "Leidsa"
+        ],
+        "memory_numbers": [
+          "08"
+        ]
+      },
+      {
+        "id": "MEM_009",
+        "category": "memory_multiturn",
+        "prompt_version": "v2",
+        "pass": false,
+        "severity": "P1",
+        "fail_reasons": [
+          "lost_lottery=Lotedom"
+        ],
+        "intent": "post_occurrence_window",
+        "tool": "lottery_analyze_post_occurrence_window",
+        "domain": "ambiguous",
+        "clarify": false,
+        "latency_ms": 1,
+        "memory_lotteries": [
+          "Loteka"
+        ],
+        "memory_numbers": [
+          "09"
+        ]
+      },
+      {
+        "id": "MEM_013",
+        "category": "memory_multiturn",
+        "prompt_version": "v2",
+        "pass": false,
+        "severity": "P1",
+        "fail_reasons": [
+          "lost_lottery=Nacional"
+        ],
+        "intent": "post_occurrence_window",
+        "tool": "lottery_analyze_post_occurrence_window",
+        "domain": "ambiguous",
+        "clarify": false,
+        "latency_ms": 0,
+        "memory_lotteries": [
+          "Real"
+        ],
+        "memory_numbers": [
+          "13"
+        ]
+      },
+      {
+        "id": "MEM_014",
+        "category": "memory_multiturn",
+        "prompt_version": "v2",
+        "pass": false,
+        "severity": "P1",
+        "fail_reasons": [
+          "lost_lottery=Lotedom"
+        ],
+        "intent": "post_occurrence_window",
+        "tool": "lottery_analyze_post_occurrence_window",
+        "domain": "ambiguous",
+        "clarify": false,
+        "latency_ms": 1,
+        "memory_lotteries": [
+          "Leidsa"
+        ],
+        "memory_numbers": [
+          "14"
+        ]
+      },
+      {
+        "id": "MEM_018",
+        "category": "memory_multiturn",
+        "prompt_version": "v2",
+        "pass": false,
+        "severity": "P1",
+        "fail_reasons": [
+          "lost_lottery=Nacional"
+        ],
+        "intent": "post_occurrence_window",
+        "tool": "lottery_analyze_post_occurrence_window",
+        "domain": "ambiguous",
+        "clarify": false,
+        "latency_ms": 0,
+        "memory_lotteries": [
+          "Loteka"
+        ],
+        "memory_numbers": [
+          "18"
+        ]
+      },
+      {
+        "id": "MEM_019",
+        "category": "memory_multiturn",
+        "prompt_version": "v2",
+        "pass": false,
+        "severity": "P1",
+        "fail_reasons": [
+          "lost_lottery=Lotedom"
+        ],
+        "intent": "post_occurrence_window",
+        "tool": "lottery_analyze_post_occurrence_window",
+        "domain": "ambiguous",
+        "clarify": false,
+        "latency_ms": 1,
+        "memory_lotteries": [
+          "Real"
+        ],
+        "memory_numbers": [
+          "19"
+        ]
+      },
+      {
+        "id": "MEM_023",
+        "category": "memory_multiturn",
+        "prompt_version": "v2",
+        "pass": false,
+        "severity": "P1",
+        "fail_reasons": [
+          "lost_lottery=Nacional"
+        ],
+        "intent": "post_occurrence_window",
+        "tool": "lottery_analyze_post_occurrence_window",
+        "domain": "ambiguous",
+        "clarify": false,
+        "latency_ms": 1,
+        "memory_lotteries": [
+          "Leidsa"
+        ],
+        "memory_numbers": [
+          "23"
+        ]
+      },
+      {
+        "id": "MEM_024",
+        "category": "memory_multiturn",
+        "prompt_version": "v2",
+        "pass": false,
+        "severity": "P1",
+        "fail_reasons": [
+          "lost_lottery=Lotedom"
+        ],
+        "intent": "post_occurrence_window",
+        "tool": "lottery_analyze_post_occurrence_window",
+        "domain": "ambiguous",
+        "clarify": false,
+        "latency_ms": 1,
+        "memory_lotteries": [
+          "Loteka"
+        ],
+        "memory_numbers": [
+          "24"
+        ]
+      },
+      {
+        "id": "MEM_028",
+        "category": "memory_multiturn",
+        "prompt_version": "v2",
+        "pass": false,
+        "severity": "P1",
+        "fail_reasons": [
+          "lost_lottery=Nacional"
+        ],
+        "intent": "post_occurrence_window",
+        "tool": "lottery_analyze_post_occurrence_window",
+        "domain": "ambiguous",
+        "clarify": false,
+        "latency_ms": 0,
+        "memory_lotteries": [
+          "Real"
+        ],
+        "memory_numbers": [
+          "28"
+        ]
+      },
+      {
+        "id": "MEM_029",
+        "category": "memory_multiturn",
+        "prompt_version": "v2",
+        "pass": false,
+        "severity": "P1",
+        "fail_reasons": [
+          "lost_lottery=Lotedom"
+        ],
+        "intent": "post_occurrence_window",
+        "tool": "lottery_analyze_post_occurrence_window",
+        "domain": "ambiguous",
+        "clarify": false,
+        "latency_ms": 0,
+        "memory_lotteries": [
+          "Leidsa"
+        ],
+        "memory_numbers": [
+          "29"
+        ]
+      },
+      {
+        "id": "MEM_033",
+        "category": "memory_multiturn",
+        "prompt_version": "v2",
+        "pass": false,
+        "severity": "P1",
+        "fail_reasons": [
+          "lost_lottery=Nacional"
+        ],
+        "intent": "post_occurrence_window",
+        "tool": "lottery_analyze_post_occurrence_window",
+        "domain": "ambiguous",
+        "clarify": false,
+        "latency_ms": 0,
+        "memory_lotteries": [
+          "Loteka"
+        ],
+        "memory_numbers": [
+          "33"
+        ]
+      },
+      {
+        "id": "MEM_034",
+        "category": "memory_multiturn",
+        "prompt_version": "v2",
+        "pass": false,
+        "severity": "P1",
+        "fail_reasons": [
+          "lost_lottery=Lotedom"
+        ],
+        "intent": "post_occurrence_window",
+        "tool": "lottery_analyze_post_occurrence_window",
+        "domain": "ambiguous",
+        "clarify": false,
+        "latency_ms": 0,
+        "memory_lotteries": [
+          "Real"
+        ],
+        "memory_numbers": [
+          "34"
+        ]
+      },
+      {
+        "id": "MEM_038",
+        "category": "memory_multiturn",
+        "prompt_version": "v2",
+        "pass": false,
+        "severity": "P1",
+        "fail_reasons": [
+          "lost_lottery=Nacional"
+        ],
+        "intent": "post_occurrence_window",
+        "tool": "lottery_analyze_post_occurrence_window",
+        "domain": "ambiguous",
+        "clarify": false,
+        "latency_ms": 0,
+        "memory_lotteries": [
+          "Leidsa"
+        ],
+        "memory_numbers": [
+          "38"
+        ]
+      },
+      {
+        "id": "MEM_039",
+        "category": "memory_multiturn",
+        "prompt_version": "v2",
+        "pass": false,
+        "severity": "P1",
+        "fail_reasons": [
+          "lost_lottery=Lotedom"
+        ],
+        "intent": "post_occurrence_window",
+        "tool": "lottery_analyze_post_occurrence_window",
+        "domain": "ambiguous",
+        "clarify": false,
+        "latency_ms": 0,
+        "memory_lotteries": [
+          "Loteka"
+        ],
+        "memory_numbers": [
+          "39"
+        ]
+      },
+      {
+        "id": "MEM_043",
+        "category": "memory_multiturn",
+        "prompt_version": "v2",
+        "pass": false,
+        "severity": "P1",
+        "fail_reasons": [
+          "lost_lottery=Nacional"
+        ],
+        "intent": "post_occurrence_window",
+        "tool": "lottery_analyze_post_occurrence_window",
+        "domain": "ambiguous",
+        "clarify": false,
+        "latency_ms": 0,
+        "memory_lotteries": [
+          "Real"
+        ],
+        "memory_numbers": [
+          "43"
+        ]
+      }
+    ]
+  },
+  "v3": {
+    "prompt_version": "v3",
+    "total": 350,
+    "passed": 231,
+    "failed": 119,
+    "pass_rate": 0.66,
+    "p0": 31,
+    "p1": 88,
+    "p2": 0,
+    "p3": 0,
+    "p0_count": 31,
+    "p1_count": 88,
+    "distribution": {
+      "memory_multiturn": 50,
+      "references": 30,
+      "calendar_following_days": 30,
+      "draw_following": 30,
+      "multilottery": 30,
+      "number_switch_keep_context": 25,
+      "out_of_domain": 25,
+      "restricted_technical": 20,
+      "prediction": 20,
+      "proactive_analysis": 30,
+      "preferences_depth": 20,
+      "provider_fallback": 20,
+      "renderer": 20
+    },
+    "memory_retention": 0.6,
+    "reference_resolution": 1.0,
+    "domain_rejection_accuracy": 0.56,
+    "clarification_rate": 0.4,
+    "latency_p50": 0,
+    "latency_p95": 7,
+    "publish_blocked": true,
+    "p0_samples": [
+      {
+        "id": "MEM_003",
+        "category": "memory_multiturn",
+        "prompt_version": "v3",
+        "pass": false,
+        "severity": "P0",
+        "fail_reasons": [
+          "lost_lottery=Nacional"
+        ],
+        "intent": "post_occurrence_window",
+        "tool": "lottery_analyze_post_occurrence_window",
+        "domain": "ambiguous",
+        "clarify": false,
+        "latency_ms": 0,
+        "memory_lotteries": [
+          "Loteka"
+        ],
+        "memory_numbers": [
+          "03"
+        ]
+      },
+      {
+        "id": "MEM_004",
+        "category": "memory_multiturn",
+        "prompt_version": "v3",
+        "pass": false,
+        "severity": "P0",
+        "fail_reasons": [
+          "lost_lottery=Lotedom"
+        ],
+        "intent": "post_occurrence_window",
+        "tool": "lottery_analyze_post_occurrence_window",
+        "domain": "ambiguous",
+        "clarify": false,
+        "latency_ms": 3,
+        "memory_lotteries": [
+          "Real"
+        ],
+        "memory_numbers": [
+          "04"
+        ]
+      },
+      {
+        "id": "OOD_004",
+        "category": "out_of_domain",
+        "prompt_version": "v3",
+        "pass": false,
+        "severity": "P0",
+        "fail_reasons": [
+          "domain=ambiguous",
+          "domain=ambiguous"
+        ],
+        "intent": "unsupported",
+        "tool": null,
+        "domain": "ambiguous",
+        "clarify": true,
+        "latency_ms": 1,
+        "memory_lotteries": [],
+        "memory_numbers": []
+      },
+      {
+        "id": "OOD_007",
+        "category": "out_of_domain",
+        "prompt_version": "v3",
+        "pass": false,
+        "severity": "P0",
+        "fail_reasons": [
+          "domain=ambiguous",
+          "domain=ambiguous"
+        ],
+        "intent": "unsupported",
+        "tool": null,
+        "domain": "ambiguous",
+        "clarify": true,
+        "latency_ms": 9,
+        "memory_lotteries": [],
+        "memory_numbers": []
+      },
+      {
+        "id": "OOD_008",
+        "category": "out_of_domain",
+        "prompt_version": "v3",
+        "pass": false,
+        "severity": "P0",
+        "fail_reasons": [
+          "domain=ambiguous",
+          "domain=ambiguous"
+        ],
+        "intent": "unsupported",
+        "tool": null,
+        "domain": "ambiguous",
+        "clarify": true,
+        "latency_ms": 97,
+        "memory_lotteries": [],
+        "memory_numbers": []
+      },
+      {
+        "id": "OOD_009",
+        "category": "out_of_domain",
+        "prompt_version": "v3",
+        "pass": false,
+        "severity": "P0",
+        "fail_reasons": [
+          "domain=ambiguous",
+          "domain=ambiguous"
+        ],
+        "intent": "unsupported",
+        "tool": null,
+        "domain": "ambiguous",
+        "clarify": true,
+        "latency_ms": 3,
+        "memory_lotteries": [],
+        "memory_numbers": []
+      },
+      {
+        "id": "OOD_010",
+        "category": "out_of_domain",
+        "prompt_version": "v3",
+        "pass": false,
+        "severity": "P0",
+        "fail_reasons": [
+          "domain=ambiguous",
+          "domain=ambiguous"
+        ],
+        "intent": "unsupported",
+        "tool": null,
+        "domain": "ambiguous",
+        "clarify": true,
+        "latency_ms": 13,
+        "memory_lotteries": [],
+        "memory_numbers": []
+      },
+      {
+        "id": "OOD_014",
+        "category": "out_of_domain",
+        "prompt_version": "v3",
+        "pass": false,
+        "severity": "P0",
+        "fail_reasons": [
+          "domain=ambiguous",
+          "domain=ambiguous"
+        ],
+        "intent": "unsupported",
+        "tool": null,
+        "domain": "ambiguous",
+        "clarify": true,
+        "latency_ms": 699,
+        "memory_lotteries": [],
+        "memory_numbers": []
+      },
+      {
+        "id": "OOD_017",
+        "category": "out_of_domain",
+        "prompt_version": "v3",
+        "pass": false,
+        "severity": "P0",
+        "fail_reasons": [
+          "domain=ambiguous",
+          "domain=ambiguous"
+        ],
+        "intent": "unsupported",
+        "tool": null,
+        "domain": "ambiguous",
+        "clarify": true,
+        "latency_ms": 0,
+        "memory_lotteries": [],
+        "memory_numbers": []
+      },
+      {
+        "id": "OOD_018",
+        "category": "out_of_domain",
+        "prompt_version": "v3",
+        "pass": false,
+        "severity": "P0",
+        "fail_reasons": [
+          "domain=ambiguous",
+          "domain=ambiguous"
+        ],
+        "intent": "unsupported",
+        "tool": null,
+        "domain": "ambiguous",
+        "clarify": true,
+        "latency_ms": 0,
+        "memory_lotteries": [],
+        "memory_numbers": []
+      },
+      {
+        "id": "OOD_019",
+        "category": "out_of_domain",
+        "prompt_version": "v3",
+        "pass": false,
+        "severity": "P0",
+        "fail_reasons": [
+          "domain=ambiguous",
+          "domain=ambiguous"
+        ],
+        "intent": "unsupported",
+        "tool": null,
+        "domain": "ambiguous",
+        "clarify": true,
+        "latency_ms": 0,
+        "memory_lotteries": [],
+        "memory_numbers": []
+      },
+      {
+        "id": "OOD_020",
+        "category": "out_of_domain",
+        "prompt_version": "v3",
+        "pass": false,
+        "severity": "P0",
+        "fail_reasons": [
+          "domain=ambiguous",
+          "domain=ambiguous"
+        ],
+        "intent": "unsupported",
+        "tool": null,
+        "domain": "ambiguous",
+        "clarify": true,
+        "latency_ms": 3,
+        "memory_lotteries": [],
+        "memory_numbers": []
+      },
+      {
+        "id": "OOD_024",
+        "category": "out_of_domain",
+        "prompt_version": "v3",
+        "pass": false,
+        "severity": "P0",
+        "fail_reasons": [
+          "domain=ambiguous",
+          "domain=ambiguous"
+        ],
+        "intent": "unsupported",
+        "tool": null,
+        "domain": "ambiguous",
+        "clarify": true,
+        "latency_ms": 0,
+        "memory_lotteries": [],
+        "memory_numbers": []
+      },
+      {
+        "id": "TECH_005",
+        "category": "restricted_technical",
+        "prompt_version": "v3",
+        "pass": false,
+        "severity": "P0",
+        "fail_reasons": [
+          "domain=ambiguous",
+          "domain=ambiguous"
+        ],
+        "intent": "unsupported",
+        "tool": null,
+        "domain": "ambiguous",
+        "clarify": true,
+        "latency_ms": 9,
+        "memory_lotteries": [],
+        "memory_numbers": []
+      },
+      {
+        "id": "TECH_007",
+        "category": "restricted_technical",
+        "prompt_version": "v3",
+        "pass": false,
+        "severity": "P0",
+        "fail_reasons": [
+          "domain=ambiguous",
+          "domain=ambiguous"
+        ],
+        "intent": "unsupported",
+        "tool": null,
+        "domain": "ambiguous",
+        "clarify": true,
+        "latency_ms": 9,
+        "memory_lotteries": [],
+        "memory_numbers": []
+      }
+    ],
+    "p1_samples": [
+      {
+        "id": "MEM_008",
+        "category": "memory_multiturn",
+        "prompt_version": "v3",
+        "pass": false,
+        "severity": "P1",
+        "fail_reasons": [
+          "lost_lottery=Nacional"
+        ],
+        "intent": "post_occurrence_window",
+        "tool": "lottery_analyze_post_occurrence_window",
+        "domain": "ambiguous",
+        "clarify": false,
+        "latency_ms": 0,
+        "memory_lotteries": [
+          "Leidsa"
+        ],
+        "memory_numbers": [
+          "08"
+        ]
+      },
+      {
+        "id": "MEM_009",
+        "category": "memory_multiturn",
+        "prompt_version": "v3",
+        "pass": false,
+        "severity": "P1",
+        "fail_reasons": [
+          "lost_lottery=Lotedom"
+        ],
+        "intent": "post_occurrence_window",
+        "tool": "lottery_analyze_post_occurrence_window",
+        "domain": "ambiguous",
+        "clarify": false,
+        "latency_ms": 0,
+        "memory_lotteries": [
+          "Loteka"
+        ],
+        "memory_numbers": [
+          "09"
+        ]
+      },
+      {
+        "id": "MEM_013",
+        "category": "memory_multiturn",
+        "prompt_version": "v3",
+        "pass": false,
+        "severity": "P1",
+        "fail_reasons": [
+          "lost_lottery=Nacional"
+        ],
+        "intent": "post_occurrence_window",
+        "tool": "lottery_analyze_post_occurrence_window",
+        "domain": "ambiguous",
+        "clarify": false,
+        "latency_ms": 0,
+        "memory_lotteries": [
+          "Real"
+        ],
+        "memory_numbers": [
+          "13"
+        ]
+      },
+      {
+        "id": "MEM_014",
+        "category": "memory_multiturn",
+        "prompt_version": "v3",
+        "pass": false,
+        "severity": "P1",
+        "fail_reasons": [
+          "lost_lottery=Lotedom"
+        ],
+        "intent": "post_occurrence_window",
+        "tool": "lottery_analyze_post_occurrence_window",
+        "domain": "ambiguous",
+        "clarify": false,
+        "latency_ms": 9,
+        "memory_lotteries": [
+          "Leidsa"
+        ],
+        "memory_numbers": [
+          "14"
+        ]
+      },
+      {
+        "id": "MEM_018",
+        "category": "memory_multiturn",
+        "prompt_version": "v3",
+        "pass": false,
+        "severity": "P1",
+        "fail_reasons": [
+          "lost_lottery=Nacional"
+        ],
+        "intent": "post_occurrence_window",
+        "tool": "lottery_analyze_post_occurrence_window",
+        "domain": "ambiguous",
+        "clarify": false,
+        "latency_ms": 4,
+        "memory_lotteries": [
+          "Loteka"
+        ],
+        "memory_numbers": [
+          "18"
+        ]
+      },
+      {
+        "id": "MEM_019",
+        "category": "memory_multiturn",
+        "prompt_version": "v3",
+        "pass": false,
+        "severity": "P1",
+        "fail_reasons": [
+          "lost_lottery=Lotedom"
+        ],
+        "intent": "post_occurrence_window",
+        "tool": "lottery_analyze_post_occurrence_window",
+        "domain": "ambiguous",
+        "clarify": false,
+        "latency_ms": 3,
+        "memory_lotteries": [
+          "Real"
+        ],
+        "memory_numbers": [
+          "19"
+        ]
+      },
+      {
+        "id": "MEM_023",
+        "category": "memory_multiturn",
+        "prompt_version": "v3",
+        "pass": false,
+        "severity": "P1",
+        "fail_reasons": [
+          "lost_lottery=Nacional"
+        ],
+        "intent": "post_occurrence_window",
+        "tool": "lottery_analyze_post_occurrence_window",
+        "domain": "ambiguous",
+        "clarify": false,
+        "latency_ms": 2,
+        "memory_lotteries": [
+          "Leidsa"
+        ],
+        "memory_numbers": [
+          "23"
+        ]
+      },
+      {
+        "id": "MEM_024",
+        "category": "memory_multiturn",
+        "prompt_version": "v3",
+        "pass": false,
+        "severity": "P1",
+        "fail_reasons": [
+          "lost_lottery=Lotedom"
+        ],
+        "intent": "post_occurrence_window",
+        "tool": "lottery_analyze_post_occurrence_window",
+        "domain": "ambiguous",
+        "clarify": false,
+        "latency_ms": 32,
+        "memory_lotteries": [
+          "Loteka"
+        ],
+        "memory_numbers": [
+          "24"
+        ]
+      },
+      {
+        "id": "MEM_028",
+        "category": "memory_multiturn",
+        "prompt_version": "v3",
+        "pass": false,
+        "severity": "P1",
+        "fail_reasons": [
+          "lost_lottery=Nacional"
+        ],
+        "intent": "post_occurrence_window",
+        "tool": "lottery_analyze_post_occurrence_window",
+        "domain": "ambiguous",
+        "clarify": false,
+        "latency_ms": 0,
+        "memory_lotteries": [
+          "Real"
+        ],
+        "memory_numbers": [
+          "28"
+        ]
+      },
+      {
+        "id": "MEM_029",
+        "category": "memory_multiturn",
+        "prompt_version": "v3",
+        "pass": false,
+        "severity": "P1",
+        "fail_reasons": [
+          "lost_lottery=Lotedom"
+        ],
+        "intent": "post_occurrence_window",
+        "tool": "lottery_analyze_post_occurrence_window",
+        "domain": "ambiguous",
+        "clarify": false,
+        "latency_ms": 3,
+        "memory_lotteries": [
+          "Leidsa"
+        ],
+        "memory_numbers": [
+          "29"
+        ]
+      },
+      {
+        "id": "MEM_033",
+        "category": "memory_multiturn",
+        "prompt_version": "v3",
+        "pass": false,
+        "severity": "P1",
+        "fail_reasons": [
+          "lost_lottery=Nacional"
+        ],
+        "intent": "post_occurrence_window",
+        "tool": "lottery_analyze_post_occurrence_window",
+        "domain": "ambiguous",
+        "clarify": false,
+        "latency_ms": 0,
+        "memory_lotteries": [
+          "Loteka"
+        ],
+        "memory_numbers": [
+          "33"
+        ]
+      },
+      {
+        "id": "MEM_034",
+        "category": "memory_multiturn",
+        "prompt_version": "v3",
+        "pass": false,
+        "severity": "P1",
+        "fail_reasons": [
+          "lost_lottery=Lotedom"
+        ],
+        "intent": "post_occurrence_window",
+        "tool": "lottery_analyze_post_occurrence_window",
+        "domain": "ambiguous",
+        "clarify": false,
+        "latency_ms": 1,
+        "memory_lotteries": [
+          "Real"
+        ],
+        "memory_numbers": [
+          "34"
+        ]
+      },
+      {
+        "id": "MEM_038",
+        "category": "memory_multiturn",
+        "prompt_version": "v3",
+        "pass": false,
+        "severity": "P1",
+        "fail_reasons": [
+          "lost_lottery=Nacional"
+        ],
+        "intent": "post_occurrence_window",
+        "tool": "lottery_analyze_post_occurrence_window",
+        "domain": "ambiguous",
+        "clarify": false,
+        "latency_ms": 1,
+        "memory_lotteries": [
+          "Leidsa"
+        ],
+        "memory_numbers": [
+          "38"
+        ]
+      },
+      {
+        "id": "MEM_039",
+        "category": "memory_multiturn",
+        "prompt_version": "v3",
+        "pass": false,
+        "severity": "P1",
+        "fail_reasons": [
+          "lost_lottery=Lotedom"
+        ],
+        "intent": "post_occurrence_window",
+        "tool": "lottery_analyze_post_occurrence_window",
+        "domain": "ambiguous",
+        "clarify": false,
+        "latency_ms": 1,
+        "memory_lotteries": [
+          "Loteka"
+        ],
+        "memory_numbers": [
+          "39"
+        ]
+      },
+      {
+        "id": "MEM_043",
+        "category": "memory_multiturn",
+        "prompt_version": "v3",
+        "pass": false,
+        "severity": "P1",
+        "fail_reasons": [
+          "lost_lottery=Nacional"
+        ],
+        "intent": "post_occurrence_window",
+        "tool": "lottery_analyze_post_occurrence_window",
+        "domain": "ambiguous",
+        "clarify": false,
+        "latency_ms": 0,
+        "memory_lotteries": [
+          "Real"
+        ],
+        "memory_numbers": [
+          "43"
+        ]
+      }
+    ]
+  },
+  "gate": {
+    "activate_v3": false,
+    "reason": "v3 no supera gates vs v2 — mantener v2 activo; v3 draft",
+    "v2_pass_rate": 0.66,
+    "v3_pass_rate": 0.66,
+    "v2_p0": 31,
+    "v2_p1": 88,
+    "v3_p0": 31,
+    "v3_p1": 88
+  }
+}

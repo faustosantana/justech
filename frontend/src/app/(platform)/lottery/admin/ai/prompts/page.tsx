@@ -207,6 +207,95 @@ export default function LotteryAIPromptsPage() {
           </CardContent>
         </Card>
       </div>
+
+      <TonePreviewPanel />
     </div>
+  );
+}
+
+function TonePreviewPanel() {
+  const [tones, setTones] = useState<unknown[]>([]);
+  const [toneKey, setToneKey] = useState("analitico");
+  const [promptVersion, setPromptVersion] = useState("v2");
+  const [message, setMessage] = useState("¿Cuándo salió el 57 en Leidsa?");
+  const [left, setLeft] = useState<Record<string, unknown> | null>(null);
+  const [right, setRight] = useState<Record<string, unknown> | null>(null);
+  const [err, setErr] = useState<string | null>(null);
+
+  useEffect(() => {
+    apiClient
+      .getLotteryAITones()
+      .then((r) => setTones(r.items ?? []))
+      .catch(() => setTones([]));
+  }, []);
+
+  const run = async () => {
+    setErr(null);
+    try {
+      const [a, b] = await Promise.all([
+        apiClient.postLotteryAITonePreview({ message, tone_key: toneKey, prompt_version: "v2" }),
+        apiClient.postLotteryAITonePreview({ message, tone_key: toneKey, prompt_version: "v3" }),
+      ]);
+      setLeft(a);
+      setRight(b);
+      setPromptVersion(promptVersion);
+    } catch (e) {
+      setErr(e instanceof ApiError ? e.message : "Preview falló");
+    }
+  };
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle className="text-sm">Preview de tono (v2 vs v3) — no altera config activa</CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-3">
+        <div className="flex flex-wrap gap-2">
+          <select
+            className="rounded border border-border bg-background px-2 py-1 text-sm"
+            value={toneKey}
+            onChange={(e) => setToneKey(e.target.value)}
+          >
+            {(tones as { key: string; display_name: string }[]).map((t) => (
+              <option key={t.key} value={t.key}>
+                {t.display_name || t.key}
+              </option>
+            ))}
+            {tones.length === 0 ? <option value="analitico">Analítico</option> : null}
+          </select>
+          <input
+            className="min-w-[240px] flex-1 rounded border border-border bg-background px-2 py-1 text-sm"
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+          />
+          <Button type="button" size="sm" onClick={() => void run()}>
+            Comparar
+          </Button>
+        </div>
+        {err ? <p className="text-sm text-destructive">{err}</p> : null}
+        <div className="grid gap-3 md:grid-cols-2">
+          {[left, right].map((side, idx) => (
+            <div key={idx} className="rounded border border-border/60 p-2 text-xs">
+              <p className="font-medium">{idx === 0 ? "v2" : "v3"}</p>
+              <pre className="mt-1 whitespace-pre-wrap">
+                {side
+                  ? JSON.stringify(
+                      {
+                        intent: (side.understanding as Record<string, unknown>)?.intent,
+                        clarify: (side.understanding as Record<string, unknown>)?.needs_clarification,
+                        domain: (side.understanding as Record<string, unknown>)?.domain_class,
+                        chars: side.system_prompt_preview_chars,
+                        safety_immutable: side.safety_immutable,
+                      },
+                      null,
+                      2,
+                    )
+                  : "—"}
+              </pre>
+            </div>
+          ))}
+        </div>
+      </CardContent>
+    </Card>
   );
 }

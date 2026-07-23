@@ -5,12 +5,12 @@ from __future__ import annotations
 from typing import Annotated, Any
 from uuid import UUID
 
-from fastapi import APIRouter, Body, Depends, Query
+from fastapi import APIRouter, Body, Depends, HTTPException, Query
 
 from app.api.deps import CurrentUser, DbSession, TenantCtx
 from app.config import settings
 from app.core.admin_permissions import role_has_permission
-from app.core.exceptions import bad_request, forbidden, not_found
+from app.core.exceptions import forbidden, not_found
 from app.core.tenant import get_current_role, require_tenant_context
 from app.services.lottery_ai_admin_service import LotteryAiAdminService
 
@@ -52,7 +52,7 @@ def _map_err(exc: Exception):
     if isinstance(exc, PermissionError):
         raise forbidden(str(exc)) from exc
     if isinstance(exc, ValueError):
-        raise bad_request(str(exc)) from exc
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
     raise exc
 
 

@@ -314,7 +314,7 @@ def resolve_intent(message: str, ctx: LotterySessionContext) -> ResolvedIntent:
 
     def_hot_cold = bool(
         re.search(
-            r"(qu[eé]\s+(significa|es|quiere\s+decir)|diferencia\s+entre|en\s+qu[eé]\s+se\s+diferencia).*"
+            r"(qu[eé]\s+(significa|es|quiere\s+decir)|diferencia.*entre|en\s+qu[eé]\s+se\s+diferencia).*"
             r"(caliente|fr[ií]o|atrasad)",
             text,
         )
@@ -322,7 +322,7 @@ def resolve_intent(message: str, ctx: LotterySessionContext) -> ResolvedIntent:
             r"(caliente|fr[ií]o|atrasad).*(significa|definición|definicion|vs|versus|o\s+atrasad)",
             text,
         )
-        or re.search(r"diferencia\s+entre\s+fr[ií]o\s+y\s+atrasad", text)
+        or re.search(r"diferencia.*fr[ií]o.*atrasad|fr[ií]o\s+y\s+atrasad", text)
     )
     hot_cold_list = bool(
         re.search(

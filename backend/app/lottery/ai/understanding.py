@@ -318,6 +318,36 @@ def _detect_follow_up(text: str, state: ConversationState) -> tuple[Understandin
     low = text.lower().strip()
     working = state.model_copy(deep=True)
 
+    # "hazlo con el 57" / "ahora con el 57" — swap number, keep lotteries
+    if state.active_lotteries and state.last_intent and re.search(
+        r"(hazlo|rep[ií]telo|igual).{0,24}(con|para)\s+(el\s+)?\d{1,2}|"
+        r"^ahora\s+(el\s+|con\s+el\s+)?\d{1,2}\b|^con\s+el\s+\d{1,2}\b",
+        low,
+    ):
+        number = _extract_number(text)
+        if number:
+            working.active_numbers = [number]
+            lots = list(state.active_lotteries)
+            return (
+                UnderstandingResult(
+                    intent="last_occurrence",
+                    lotteries=lots,
+                    numbers=[number],
+                    scope="multiple" if len(lots) > 1 else "single",
+                    tool="lottery_compare_last_occurrence_all"
+                    if len(lots) > 1
+                    else LotteryToolName.GET_LAST_OCCURRENCE.value,
+                    params={
+                        "number": number,
+                        "lotteries": lots,
+                        "lottery": lots[0],
+                    },
+                    confidence=0.9,
+                    source="follow_up",
+                ),
+                working,
+            )
+
     # "y ese mismo número en las demás" / "en las demás"
     if state.active_numbers and re.search(
         r"(en\s+)?(las\s+)?dem[aá]s|todas\s+las\s+(dem[aá]s\s+)?loter|"

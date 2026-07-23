@@ -447,7 +447,7 @@ def _map_resolved(
         intent=intent_name,
         lotteries=lots,
         numbers=numbers,
-        date=intent.params.get("date"),
+        query_date=intent.params.get("date"),
         draw_count=intent.params.get("window_draws") or intent.params.get("count"),
         tool=tool,
         params=dict(intent.params or {}),

@@ -339,35 +339,39 @@ class LotteryChatService:
         except Exception:  # noqa: BLE001 — metrics must not break chat
             pass
 
-        merged_context = {
-            **ctx.to_store(),
-            "conversation_v4": state.to_store(),
-            "last_lottery": state.active_lotteries[0] if state.active_lotteries else ctx.last_lottery,
-            "last_numbers": state.active_numbers or ctx.last_numbers,
-            "last_query_semantics": state.last_intent or ctx.last_query_semantics,
-            "last_draw_count": state.draw_count_context or ctx.last_draw_count,
-        }
-        assistant_payload = {
-            "structured_content": structured,
-            "tool_trace": tool_trace if self.is_superadmin else [],
-            "intent": understanding.intent,
-            "entities": {
-                "lotteries": understanding.lotteries or state.active_lotteries,
-                "numbers": understanding.numbers or state.active_numbers,
-            },
-            "missing_slots": understanding.missing_slots or state.pending_slots,
-            "clarification": template if intent_kind == "clarify" else None,
-            "plan": [s.model_dump() for s in plan.steps],
-            "tool": tool_name,
-            "params": _jsonable(params),
-            "synthesis_fallback": synthesis_fallback,
-            "model": model_name,
-            "provider": provider_used,
-            "latency_ms": latency_ms,
-            "runtime_trace": runtime_trace,
-            "prompt_version": get_active_prompt().version,
-            "analysis_params": structured.get("query") if isinstance(structured, dict) else None,
-        }
+        merged_context = _jsonable(
+            {
+                **ctx.to_store(),
+                "conversation_v4": state.to_store(),
+                "last_lottery": state.active_lotteries[0] if state.active_lotteries else ctx.last_lottery,
+                "last_numbers": state.active_numbers or ctx.last_numbers,
+                "last_query_semantics": state.last_intent or ctx.last_query_semantics,
+                "last_draw_count": state.draw_count_context or ctx.last_draw_count,
+            }
+        )
+        assistant_payload = _jsonable(
+            {
+                "structured_content": structured,
+                "tool_trace": tool_trace if self.is_superadmin else [],
+                "intent": understanding.intent,
+                "entities": {
+                    "lotteries": understanding.lotteries or state.active_lotteries,
+                    "numbers": understanding.numbers or state.active_numbers,
+                },
+                "missing_slots": understanding.missing_slots or state.pending_slots,
+                "clarification": template if intent_kind == "clarify" else None,
+                "plan": [s.model_dump() for s in plan.steps],
+                "tool": tool_name,
+                "params": params,
+                "synthesis_fallback": synthesis_fallback,
+                "model": model_name,
+                "provider": provider_used,
+                "latency_ms": latency_ms,
+                "runtime_trace": runtime_trace,
+                "prompt_version": get_active_prompt().version,
+                "analysis_params": structured.get("query") if isinstance(structured, dict) else None,
+            }
+        )
         assistant_msg = LotteryChatMessage(
             session_id=session.id,
             role="assistant",

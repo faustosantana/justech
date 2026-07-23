@@ -249,6 +249,54 @@ def _detect_follow_up(text: str, state: ConversationState) -> tuple[Understandin
                 working,
             )
 
+    # "y los cinco sorteos siguientes" / "ahora los cinco días siguientes"
+    if state.date_context and state.active_lotteries and re.search(
+        r"(sorteos?|d[ií]as?)\s+siguientes|siguientes?\s+\d*\s*(sorteos?|d[ií]as?)",
+        low,
+    ):
+        lot = state.active_lotteries[0]
+        count = 5
+        m = re.search(r"(cinco|5|tres|3|siete|7|diez|10|\d+)\s*(sorteos?|d[ií]as?)?", low)
+        word_map = {"cinco": 5, "tres": 3, "siete": 7, "diez": 10}
+        if m:
+            tok = m.group(1)
+            count = word_map.get(tok, int(tok) if tok.isdigit() else 5)
+        if re.search(r"d[ií]as?", low) and not re.search(r"sorteos?", low):
+            return (
+                UnderstandingResult(
+                    intent="draw_sequence",
+                    lotteries=[lot],
+                    query_date=state.date_context,
+                    tool=LotteryToolName.GET_FOLLOWING_DAYS.value,
+                    params={
+                        "lottery": lot,
+                        "date": state.date_context,
+                        "days": count,
+                        "include_base_date": False,
+                    },
+                    confidence=0.9,
+                    source="follow_up",
+                ),
+                working,
+            )
+        return (
+            UnderstandingResult(
+                intent="draw_sequence",
+                lotteries=[lot],
+                query_date=state.date_context,
+                tool=LotteryToolName.GET_FOLLOWING_DRAWS.value,
+                params={
+                    "lottery": lot,
+                    "date": state.date_context,
+                    "count": count,
+                    "include_base_date": False,
+                },
+                confidence=0.9,
+                source="follow_up",
+            ),
+            working,
+        )
+
     # "ahora dime cuáles están más atrasados" — keep lottery + window
     if re.search(r"atrasad|m[aá]s tiempo sin|fr[ií]os?", low) and state.active_lotteries:
         if state.last_intent in {"frequency", "hot_numbers", "cold_numbers", "overdue_numbers"} or True:

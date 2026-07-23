@@ -256,10 +256,18 @@ class LotteryChatService:
                             state.active_lotteries = [lot, *[x for x in state.active_lotteries if x != lot]]
                     if exec_params.get("number"):
                         state.active_numbers = [str(exec_params["number"])]
+                    if exec_params.get("date") or exec_params.get("base_date"):
+                        d = exec_params.get("date") or exec_params.get("base_date")
+                        state.date_context = d
                     if exec_params.get("window_draws") or exec_params.get("count"):
                         state.draw_count_context = int(
                             exec_params.get("window_draws") or exec_params.get("count")
                         )
+                    # Mirror sticky fields from merged legacy context
+                    if ctx.base_date:
+                        state.date_context = ctx.base_date
+                    if ctx.last_lottery and ctx.last_lottery not in state.active_lotteries:
+                        state.active_lotteries = [ctx.last_lottery, *state.active_lotteries]
                     state.last_intent = str(understanding.intent)
                     state.last_tool = result.tool
                     state.last_plan = [s.purpose or s.tool for s in plan.steps]
@@ -791,7 +799,7 @@ class LotteryChatService:
                 if isinstance(x, dict)
             ]
             lista = ", ".join(names) if names else "ninguna"
-            return (
+            base = (
                 f"Sincronización: global={data.get('global_sync_enabled')}, "
                 f"auto-write={data.get('global_auto_write_enabled')}, "
                 f"modo={data.get('scheduler_mode')}, "
@@ -799,6 +807,15 @@ class LotteryChatService:
                 f"Loterías con sync habilitado ({data.get('lotteries_sync_enabled')}): {lista}. "
                 "Solo esas pueden recibir escritura automática."
             )
+            if params.get("explain_auto_write_trio"):
+                return (
+                    f"{base} En la operación actual de Lottery 3.0 solo se sincronizan "
+                    "automáticamente tres fuentes (Leidsa, Loteka y Lotería Nacional / Nacional Noche) "
+                    "porque así está configurado el auto-write; el resto del catálogo puede consultarse "
+                    "históricamente pero no se escribe en cada corrida de sync. "
+                    "Nacional Día sigue fuera de sync definitivo."
+                )
+            return base
 
         if tool == "lottery_get_missing_today" and isinstance(data, dict):
             missing = data.get("missing") or []

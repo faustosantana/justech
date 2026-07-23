@@ -251,6 +251,9 @@ def resolve_intent(message: str, ctx: LotterySessionContext) -> ResolvedIntent:
     if re.search(
         r"cu[aá]ntos?\s+resultados?\s+(hay\s+)?hoy|"
         r"resultados?\s+hoy|"
+        r"resultados?\s+pendientes|"
+        r"pendientes?\s+hoy|"
+        r"hay\s+resultados?\s+pendientes|"
         r"por qu[eé].*resultados?\s+hoy|"
         r"qu[eé] loter[ií]as.*(no|a[uú]n).*(sincron|hoy)|"
         r"faltan.*(hoy|sincron)|cu[aá]ntos?\s+faltan|"
@@ -261,6 +264,19 @@ def resolve_intent(message: str, ctx: LotterySessionContext) -> ResolvedIntent:
             kind="tool",
             tool=LotteryToolName.GET_MISSING_TODAY,
             params={},
+            structured_type="lottery_result",
+        )
+    if re.search(
+        r"por qu[eé].*(solo|solamente).*(sincron|tres|3)|"
+        r"solo sincronizan|solamente sincronizan|"
+        r"por qu[eé].*tres loter|"
+        r"auto[- ]?write|escritura autom[aá]tica",
+        text,
+    ):
+        return ResolvedIntent(
+            kind="tool",
+            tool=LotteryToolName.GET_SYNC_STATUS,
+            params={"explain_auto_write_trio": True},
             structured_type="lottery_result",
         )
     if re.search(

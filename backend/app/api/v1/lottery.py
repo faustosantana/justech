@@ -600,28 +600,32 @@ async def admin_ai_prompt_activate(
 
 @router.get("/admin/ai/prompts")
 async def admin_ai_prompts(
+    db: DbSession,
     user: CurrentUser,
-    _: Annotated[None, require_lottery_permission("lottery.admin")],
+    _: TenantCtx,
+    __: Annotated[None, require_lottery_permission("lottery.admin")],
 ) -> dict:
-    from app.lottery.ai.prompts.lottery_assistant_system_v1 import (
-        get_active_prompt,
-        list_prompt_versions,
-    )
+    """Compat wrapper: never shadow Admin Center DB prompts with in-memory registry."""
+    from app.core.tenant import require_tenant_context
+    from app.services.lottery_ai_admin_service import LotteryAiAdminService
 
-    active = get_active_prompt()
+    ctx = require_tenant_context()
+    svc = LotteryAiAdminService(db, tenant_id=ctx.tenant_id, user_id=user.id)
+    data = await svc.list_prompts()
+    await db.commit()
+    items = list(data.get("items") or [])
+    active = next((i for i in items if i.get("status") == "active"), None)
+    # Keep legacy keys for older clients while exposing Admin Center contract.
     return {
-        "active": {
-            "name": active.name,
-            "version": active.version,
-            "status": active.status,
-            "description": active.description,
-            "recommended_model": active.recommended_model,
-            "temperature": active.temperature,
-            "max_tokens": active.max_tokens,
-            "changelog": active.changelog,
-            "body_preview": active.body[:400],
+        **data,
+        "items": items,
+        "versions": items,
+        "active": active
+        or {
+            "name": data.get("active_version"),
+            "version": data.get("active_version"),
+            "status": "active" if data.get("active_version") else None,
         },
-        "versions": list_prompt_versions(),
     }
 
 

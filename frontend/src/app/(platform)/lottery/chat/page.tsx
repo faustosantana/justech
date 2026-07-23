@@ -109,7 +109,7 @@ function renderInline(line: string): ReactNode[] {
 export default function LotteryChatPage() {
   const router = useRouter();
   const role = getUserRole();
-  const showTools = isAdminRole(role);
+  const showTools = false; // diagnósticos solo con Modo desarrollador (admin AI); off por defecto
   const [sessions, setSessions] = useState<LotteryChatSession[]>([]);
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [messages, setMessages] = useState<UiMessage[]>([]);

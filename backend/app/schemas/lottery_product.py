@@ -65,6 +65,11 @@ class LotteryPreferences(BaseModel):
     first_day_of_week: int = Field(default=1, ge=0, le=6)
     disclaimer_acknowledged: bool = False
     onboarding_completed: bool = False
+    # Cuando pregunte por un número sin indicar posición
+    default_number_position_scope: Literal[
+        "first_position", "any_position", "specific_position", "ask_each_time"
+    ] = "first_position"
+    default_primary_position: int = Field(default=1, ge=1, le=3)
 
 
 class LotteryPreferencesUpdate(BaseModel):
@@ -80,6 +85,10 @@ class LotteryPreferencesUpdate(BaseModel):
     first_day_of_week: int | None = Field(default=None, ge=0, le=6)
     disclaimer_acknowledged: bool | None = None
     onboarding_completed: bool | None = None
+    default_number_position_scope: (
+        Literal["first_position", "any_position", "specific_position", "ask_each_time"] | None
+    ) = None
+    default_primary_position: int | None = Field(default=None, ge=1, le=3)
 
 
 class LotteryRecentQueryResponse(BaseModel):

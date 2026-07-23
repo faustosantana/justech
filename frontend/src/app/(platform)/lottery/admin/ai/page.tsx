@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 
+import { MetricLine } from "@/components/lottery/ai-admin-display";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ApiError, apiClient } from "@/lib/api";
@@ -12,7 +13,7 @@ function StatusDot({ ok }: { ok: boolean }) {
   return (
     <span
       className={`inline-block h-2 w-2 rounded-full ${ok ? "bg-green-500" : "bg-amber-500"}`}
-      aria-label={ok ? "activo" : "atención"}
+      aria-label={ok ? "ok" : "atención"}
     />
   );
 }
@@ -21,7 +22,7 @@ export default function LotteryAIDashboardPage() {
   const [data, setData] = useState<Record<string, unknown> | null>(null);
   const [alerts, setAlerts] = useState<AlertRow[]>([]);
   const [counts, setCounts] = useState<Record<string, number>>({});
-  const [filter, setFilter] = useState<string>("active");
+  const [filter, setFilter] = useState("active");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState<string | null>(null);
@@ -96,15 +97,15 @@ export default function LotteryAIDashboardPage() {
   const conv = (d.conversational_metrics ?? {}) as Record<string, unknown>;
   const prompt = (d.prompt_active ?? {}) as Record<string, unknown>;
   const hermes = (d.hermes ?? {}) as Record<string, unknown>;
-  const health = String(d.health_semaphore ?? "—");
-  const healthOk = health === "saludable";
+  const health = String(d.health_label ?? d.health_semaphore ?? d.health ?? "Sin datos suficientes");
+  const healthOk = String(d.health_semaphore ?? d.health) === "saludable" || String(d.health) === "ok";
 
   return (
     <div className="space-y-6">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
           <h2 className="text-lg font-semibold">Dashboard</h2>
-          <p className="text-sm text-muted-foreground">Estado del agente IA de Lottery</p>
+          <p className="text-sm text-muted-foreground">Estado real del agente Lottery IA</p>
         </div>
         <Button type="button" variant="outline" size="sm" disabled={busy === "detector"} onClick={() => void runDetector()}>
           {busy === "detector" ? "Ejecutando…" : "Ejecutar detector"}
@@ -116,9 +117,10 @@ export default function LotteryAIDashboardPage() {
           <CardHeader>
             <CardTitle className="text-sm">Proveedor / Modelo</CardTitle>
           </CardHeader>
-          <CardContent className="text-sm">
-            <p className="font-medium">{String(d.provider_active ?? d.provider_configured ?? "—")}</p>
-            <p className="text-muted-foreground">{String(d.model_active ?? d.model_configured ?? "—")}</p>
+          <CardContent className="space-y-1 text-sm">
+            <MetricLine label="Proveedor" value={d.provider_display ?? d.provider ?? d.provider_active} />
+            <MetricLine label="Modelo" value={d.model_display ?? d.model ?? d.model_active} />
+            <MetricLine label="Configurado" value={d.model_configured} />
           </CardContent>
         </Card>
 
@@ -126,20 +128,31 @@ export default function LotteryAIDashboardPage() {
           <CardHeader>
             <CardTitle className="text-sm">Prompt activo</CardTitle>
           </CardHeader>
-          <CardContent className="text-sm">
-            <p>{String(prompt.name ?? "—")}</p>
-            <p className="text-xs text-muted-foreground">v{String(prompt.version ?? "—")}</p>
+          <CardContent className="space-y-1 text-sm">
+            <MetricLine label="Nombre" value={prompt.display ?? prompt.name ?? d.active_prompt} />
+            <MetricLine label="Versión" value={prompt.version ?? d.prompt_version} />
+            <MetricLine label="Estado" value={prompt.status} />
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader>
-            <CardTitle className="text-sm">Salud / Alertas abiertas</CardTitle>
+            <CardTitle className="text-sm">Salud</CardTitle>
           </CardHeader>
           <CardContent className="flex items-center gap-2 text-sm">
             <StatusDot ok={healthOk} />
             <span>{health}</span>
-            <span className="rounded-full bg-muted px-2 py-0.5 text-xs">{openCount} abiertas</span>
+            <span className="rounded-full bg-muted px-2 py-0.5 text-xs">{openCount} alertas abiertas</span>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-sm">Memoria</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-1 text-sm">
+            <MetricLine label="Backend" value={d.memory_backend ?? d.memory_active} />
+            <MetricLine label="Sesiones" value={d.memory_sessions ?? d.sessions_total} />
           </CardContent>
         </Card>
 
@@ -156,11 +169,13 @@ export default function LotteryAIDashboardPage() {
           <CardHeader>
             <CardTitle className="text-sm">Métricas 7d</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-1 text-sm">
-            <p>Consultas: {String(metrics.total_queries ?? "—")}</p>
-            <p>OK rate: {String(metrics.resolved_rate ?? "—")}</p>
-            <p>Fallback: {String(metrics.fallback_rate ?? "—")}</p>
-            <p>p95: {String(metrics.latency_ms_p95 ?? "—")} ms</p>
+          <CardContent className="space-y-1">
+            <MetricLine label="Consultas" value={metrics.queries_display ?? metrics.total_queries} />
+            <MetricLine label="OK rate" value={metrics.resolved_rate} />
+            <MetricLine label="Latencia media" value={metrics.latency_display ?? metrics.latency_ms_avg ?? metrics.avg_latency_ms} />
+            <MetricLine label="p95" value={metrics.latency_ms_p95 != null ? `${metrics.latency_ms_p95} ms` : null} />
+            <MetricLine label="Fallback" value={metrics.fallback_display ?? metrics.fallback_rate} />
+            <MetricLine label="Tokens" value={metrics.tokens_total} />
           </CardContent>
         </Card>
 
@@ -168,11 +183,23 @@ export default function LotteryAIDashboardPage() {
           <CardHeader>
             <CardTitle className="text-sm">Calidad conversacional</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-1 text-sm">
-            <p>Context reuse: {String(conv.context_reuse_rate ?? "—")}</p>
-            <p>Aclaración innecesaria: {String(conv.unnecessary_clarification_rate ?? "—")}</p>
-            <p>Domain reject: {String(conv.domain_rejection_accuracy ?? "—")}</p>
-            <p>Renderer clean: {String(conv.renderer_clean_rate ?? "—")}</p>
+          <CardContent className="space-y-1">
+            <MetricLine label="Context reuse" value={conv.context_reuse_rate} />
+            <MetricLine label="Aclaración innecesaria" value={conv.unnecessary_clarification_rate} />
+            <MetricLine label="Domain reject" value={conv.domain_rejection_accuracy} />
+            <MetricLine label="Renderer clean" value={conv.renderer_clean_rate} />
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-sm">Último éxito / fallback</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-1">
+            <MetricLine label="Éxito" value={d.last_success_at} />
+            <MetricLine label="Fallback" value={d.last_fallback_at} />
+            <MetricLine label="Config publicada" value={d.last_config_publish} />
+            <MetricLine label="Versión config" value={d.config_version} />
           </CardContent>
         </Card>
       </div>
@@ -180,13 +207,7 @@ export default function LotteryAIDashboardPage() {
       <div id="alerts" className="space-y-3">
         <div className="flex flex-wrap gap-2">
           {["active", "open", "acknowledged", "silenced", "resolved", "reopened"].map((s) => (
-            <Button
-              key={s}
-              type="button"
-              size="sm"
-              variant={filter === s ? "default" : "outline"}
-              onClick={() => setFilter(s)}
-            >
+            <Button key={s} type="button" size="sm" variant={filter === s ? "default" : "outline"} onClick={() => setFilter(s)}>
               {s}
               {counts[s] != null ? ` (${counts[s]})` : ""}
             </Button>
@@ -206,58 +227,21 @@ export default function LotteryAIDashboardPage() {
                     <div className="flex flex-wrap items-start justify-between gap-2">
                       <div>
                         <p className="font-medium">
-                          {String(alert.severity ?? "info").toUpperCase()} · {String(alert.code ?? "—")}
+                          {String(alert.severity ?? "info").toUpperCase()} · {String(alert.code ?? "")}
                         </p>
                         <p>{String(alert.title ?? alert.message ?? "")}</p>
                         <p className="mt-1 text-xs text-muted-foreground">
-                          status={String(alert.status)} · component={String(alert.component ?? "—")} ·
-                          occ={String(alert.occurrence_count ?? 1)} · metric={String(alert.metric_name ?? "—")}=
-                          {String(alert.metric_value ?? "—")} / thr={String(alert.threshold_value ?? "—")}
+                          {String(alert.component ?? "")} · ocurrencias {String(alert.occurrence_count ?? 1)}
                         </p>
-                        <p className="text-xs text-muted-foreground">
-                          first={String(alert.first_detected_at ?? "—")} · last=
-                          {String(alert.last_detected_at ?? "—")} · prompt=
-                          {String(alert.prompt_version ?? "—")} · model={String(alert.model_name ?? "—")}
-                        </p>
-                        {alert.recommendation ? (
-                          <p className="mt-1 text-xs">Rec: {String(alert.recommendation)}</p>
-                        ) : null}
                       </div>
                       <div className="flex flex-wrap gap-1">
-                        <Button
-                          type="button"
-                          size="sm"
-                          variant="outline"
-                          disabled={!!busy}
-                          onClick={() => void act(String(alert.id), "acknowledge")}
-                        >
+                        <Button type="button" size="sm" variant="outline" disabled={!!busy} onClick={() => void act(String(alert.id), "acknowledge")}>
                           Reconocer
                         </Button>
-                        <Button
-                          type="button"
-                          size="sm"
-                          variant="outline"
-                          disabled={!!busy}
-                          onClick={() => void act(String(alert.id), "silence")}
-                        >
-                          Silenciar 24h
-                        </Button>
-                        <Button
-                          type="button"
-                          size="sm"
-                          variant="outline"
-                          disabled={!!busy}
-                          onClick={() => void act(String(alert.id), "resolve")}
-                        >
+                        <Button type="button" size="sm" variant="outline" disabled={!!busy} onClick={() => void act(String(alert.id), "resolve")}>
                           Resolver
                         </Button>
-                        <Button
-                          type="button"
-                          size="sm"
-                          variant="ghost"
-                          disabled={!!busy}
-                          onClick={() => void act(String(alert.id), "reopen")}
-                        >
+                        <Button type="button" size="sm" variant="ghost" disabled={!!busy} onClick={() => void act(String(alert.id), "reopen")}>
                           Reabrir
                         </Button>
                       </div>

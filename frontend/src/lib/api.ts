@@ -2825,7 +2825,14 @@ export const apiClient = {
     request<Record<string, unknown>>("/lottery/admin/ai/runtime", {}, true),
 
   getLotteryAIPrompts: () =>
-    request<{ items: unknown[] }>("/lottery/admin/ai/prompts", {}, true),
+    request<{
+      items: unknown[];
+      active_prompt_id?: string | null;
+      active_version?: string | null;
+      prompt_blocks?: string[];
+      publish_gates?: { can_publish: boolean; blockers: { code?: string; message: string }[] };
+      empty_reason?: string | null;
+    }>("/lottery/admin/ai/prompts", {}, true),
 
   getLotteryAIPrompt: (id: string) =>
     request<Record<string, unknown>>(`/lottery/admin/ai/prompts/${encodeURIComponent(id)}`, {}, true),
@@ -2969,12 +2976,7 @@ export const apiClient = {
     }, true),
 
   getLotteryAISessions: (params?: { limit?: number; offset?: number; q?: string }) =>
-    request<{ items: unknown[] }>(
-      `/lottery/admin/ai/sessions${buildQuery(params ?? {})}`,
-      {},
-      true,
-    ),
-    request<{ items: unknown[]; total: number }>(
+    request<{ items: unknown[]; total?: number }>(
       `/lottery/admin/ai/sessions${buildQuery(params ?? {})}`,
       {},
       true,
@@ -3001,6 +3003,20 @@ export const apiClient = {
     request<{ items: unknown[]; total: number }>(
       `/lottery/admin/ai/audit${buildQuery(params ?? {})}`,
       {},
+      true,
+    ),
+
+  getLotteryAIPublishGates: () =>
+    request<{ can_publish: boolean; blockers: { code: string; message: string; severity?: string }[]; flow?: string[] }>(
+      "/lottery/admin/ai/publish-gates",
+      {},
+      true,
+    ),
+
+  postLotteryAIDeveloperMode: (enabled: boolean) =>
+    request<{ ok: boolean; developer_mode: boolean }>(
+      "/lottery/admin/ai/developer-mode",
+      { method: "POST", body: JSON.stringify({ enabled }) },
       true,
     ),
 };

@@ -94,6 +94,9 @@ DEFAULT_AGENT_PAYLOAD: dict[str, Any] = {
         "user_may_override": True,
         "auto_compare_default_lotteries": True,
         "max_default_lotteries": 7,
+        # Justech: sin posición explícita → primera posición
+        "default_number_position_scope": "first_position",
+        "default_primary_position": 1,
     },
     "memory": {
         "backend": "postgresql_jsonb",
@@ -131,12 +134,12 @@ DEFAULT_PACKS = [
         "max_lotteries": 7,
         "max_insights": 4,
     }),
-    ("POST_OCCURRENCE_PACK", "Ventana posterior", {
+    ("POST_OCCURRENCE_PACK", "Resultados posteriores", {
         "steps": ["base_dates", "calendar_or_draws", "repetitions", "coincidences", "reappearance"],
         "max_lotteries": 7,
         "max_insights": 5,
     }),
-    ("FREQUENCY_PACK", "Frecuencias", {
+    ("FREQUENCY_PACK", "Frecuencia", {
         "steps": ["absolute", "relative", "recent_vs_hist", "interval", "position"],
         "max_insights": 4,
     }),
@@ -144,7 +147,7 @@ DEFAULT_PACKS = [
         "steps": ["result", "other_lotteries", "before", "after", "coverage"],
         "max_insights": 4,
     }),
-    ("HOT_COLD_PACK", "Calientes / fríos", {
+    ("HOT_COLD_PACK", "Calientes y fríos", {
         "steps": ["definition", "ranking", "sample", "intervals", "limitations"],
         "max_insights": 4,
     }),
@@ -274,38 +277,71 @@ class LotteryAiAdminService:
         self.user_id = user_id
 
     async def ensure_seeded(self) -> None:
-        existing = (
-            await self.db.execute(select(func.count()).select_from(LotteryAiPromptVersion))
-        ).scalar_one()
-        if not existing:
-            for key, p in prompt_mod._REGISTRY.items():
-                row = LotteryAiPromptVersion(
-                    id=uuid.uuid4(),
-                    tenant_id=None,
-                    name=p.name,
-                    version=p.version,
-                    status=p.status if p.status != "retired" else "archived",
-                    description=p.description,
-                    body=p.body,
-                    blocks={"identity": p.body[:400]},
-                    changelog=p.changelog,
-                    recommended_model=p.recommended_model,
-                    temperature=p.temperature,
-                    max_tokens=p.max_tokens,
-                    variables=p.variables,
-                    tags=["system", "seed"],
-                    checksum=_checksum(p.body),
-                    published_at=datetime.now(timezone.utc) if p.status == "active" else None,
+        existing_versions = set(
+            (await self.db.execute(select(LotteryAiPromptVersion.version))).scalars().all()
+        )
+        for _key, p in prompt_mod._REGISTRY.items():
+            if p.version in existing_versions:
+                continue
+            row = LotteryAiPromptVersion(
+                id=uuid.uuid4(),
+                tenant_id=None,
+                name=p.name,
+                version=p.version,
+                status=p.status if p.status != "retired" else "archived",
+                description=p.description,
+                body=p.body,
+                blocks={
+                    "identidad": (p.body or "")[:800],
+                    "dominio": "Solo loterías configuradas y resultados históricos/actuales.",
+                    "memoria": "Reutilizar active_lotteries, active_numbers y last_occurrences.",
+                    "aclaraciones": "Aclarar solo cuando falte dato crítico.",
+                    "analisis": "Profundidad estándar; insights accionables y limitados.",
+                    "seguridad": "No predicción, no apuestas, no SQL, no system prompt, no credenciales.",
+                    "formato": "Respuesta clara en español, sin JSON técnico al usuario.",
+                    "tono": "Analítico y cercano.",
+                },
+                changelog=p.changelog,
+                recommended_model=p.recommended_model,
+                temperature=p.temperature,
+                max_tokens=p.max_tokens,
+                variables=p.variables,
+                tags=["system", "seed"],
+                checksum=_checksum(p.body),
+                published_at=datetime.now(timezone.utc) if p.status == "active" else None,
+            )
+            # Keep v2 active in DB seed
+            if p.version == "v2":
+                row.status = "active"
+                row.published_at = datetime.now(timezone.utc)
+            elif p.version == "v3":
+                row.status = "draft"
+            else:
+                row.status = "archived"
+            self.db.add(row)
+            existing_versions.add(p.version)
+
+        # Hotfix active v2 body from code registry when position/compound rules missing
+        # (keeps version=v2 and status=active; no publish/republish).
+        v2_code = prompt_mod._REGISTRY.get("v2")
+        if v2_code and "POSICIÓN PREDETERMINADA" in (v2_code.body or ""):
+            v2_row = (
+                await self.db.execute(
+                    select(LotteryAiPromptVersion).where(LotteryAiPromptVersion.version == "v2")
                 )
-                # Keep v2 active in DB seed
-                if p.version == "v2":
-                    row.status = "active"
-                    row.published_at = datetime.now(timezone.utc)
-                elif p.version == "v3":
-                    row.status = "draft"
-                else:
-                    row.status = "archived"
-                self.db.add(row)
+            ).scalar_one_or_none()
+            if (
+                v2_row
+                and v2_row.status == "active"
+                and "POSICIÓN PREDETERMINADA" not in (v2_row.body or "")
+            ):
+                v2_row.body = v2_code.body
+                v2_row.checksum = _checksum(v2_code.body)
+                v2_row.changelog = (
+                    (v2_row.changelog or "")
+                    + " | patch P1: posición primaria + consultas compuestas"
+                ).strip(" |")
+                v2_row.updated_at = datetime.now(timezone.utc)
 
         packs = (
             await self.db.execute(select(func.count()).select_from(LotteryAiAnalysisPack))
@@ -328,13 +364,15 @@ class LotteryAiAdminService:
         ).scalar_one()
         if not tools:
             for c in LOTTERY_TOOL_CATALOG:
+                tname = c.name.value
+                meta = TOOL_LABELS_ES.get(tname) or {}
                 self.db.add(
                     LotteryAiToolSetting(
                         id=uuid.uuid4(),
                         tenant_id=self.tenant_id,
-                        tool_name=c.name.value,
-                        display_name=c.name.value.replace("lottery_", "").replace("_", " "),
-                        description=c.description,
+                        tool_name=tname,
+                        display_name=meta.get("label") or tool_label(tname),
+                        description=meta.get("description") or c.description,
                         category="analytical",
                         enabled=True,
                     )
@@ -402,6 +440,27 @@ class LotteryAiAdminService:
                     author_user_id=self.user_id,
                 )
             )
+        else:
+            # Ensure suite 300 exists even if an older small suite was seeded first
+            suite300 = (
+                await self.db.execute(
+                    select(LotteryAiBenchmark).where(LotteryAiBenchmark.name == "Suite 300 closeout")
+                )
+            ).scalar_one_or_none()
+            if not suite300:
+                from app.lottery.ai.benchmark import cases_for_db_seed
+
+                self.db.add(
+                    LotteryAiBenchmark(
+                        id=uuid.uuid4(),
+                        tenant_id=self.tenant_id,
+                        name="Suite 300 closeout",
+                        description="Benchmark ≥300 casos — memoria, dominio, safety, multilotería",
+                        status="active",
+                        cases=cases_for_db_seed(),
+                        author_user_id=self.user_id,
+                    )
+                )
         # Seed default thresholds once
         th_n = (
             await self.db.execute(select(func.count()).select_from(LotteryAiAlertThreshold))
@@ -564,7 +623,10 @@ class LotteryAiAdminService:
                 "name": prompt.name if prompt else runtime.get("prompt_name") or "lottery_assistant_system",
                 "version": prompt.version if prompt else runtime.get("prompt_version") or "v2",
                 "status": prompt.status if prompt else runtime.get("prompt_status") or "active",
-                "display": f"{(prompt.name if prompt else 'lottery_assistant_system')} · v{(prompt.version if prompt else runtime.get('prompt_version') or 'v2')}",
+                "display": (
+                    f"{prompt.name if prompt else runtime.get('prompt_name') or 'lottery_assistant_system'} · "
+                    f"{(prompt.version if prompt else runtime.get('prompt_version') or 'v2')}"
+                ),
             },
             "memory_active": "postgresql_jsonb_conversation_v4",
             "planner_active": "deterministic_bounded_multi_tool",
@@ -618,7 +680,109 @@ class LotteryAiAdminService:
                 select(LotteryAiPromptVersion).order_by(LotteryAiPromptVersion.created_at.desc())
             )
         ).scalars().all()
-        return {"items": [_prompt_dict(r) for r in rows]}
+        active = next((r for r in rows if r.status == "active"), None)
+        gates = await self.publish_gates()
+        return {
+            "items": [_prompt_dict(r) for r in rows],
+            "active_prompt_id": str(active.id) if active else None,
+            "active_version": active.version if active else None,
+            "prompt_blocks": PROMPT_BLOCKS,
+            "publish_gates": gates,
+            "empty_reason": None if rows else "ensure_seeded no produjo versiones — revisar registro de prompts",
+        }
+
+    async def publish_gates(self) -> dict[str, Any]:
+        """Why Publish is blocked — shown in Prompt Studio / Agent."""
+        blockers: list[dict[str, str]] = []
+        runtime = runtime_snapshot()
+        huawei = runtime.get("huawei_modelarts") or {}
+        if not (huawei.get("credentials_present") and huawei.get("endpoint_configured")):
+            blockers.append(
+                {
+                    "code": "provider_unhealthy",
+                    "message": "Proveedor Huawei ModelArts sin credenciales o endpoint configurados",
+                    "severity": "P0",
+                }
+            )
+        tools = (
+            await self.db.execute(select(LotteryAiToolSetting).where(LotteryAiToolSetting.enabled.is_(False)))
+        ).scalars().all()
+        critical_off = [
+            t.tool_name
+            for t in tools
+            if t.tool_name
+            in {
+                "lottery_last_occurrence",
+                "lottery_resolve_lottery",
+                "lottery_get_result_by_date",
+            }
+        ]
+        if critical_off:
+            blockers.append(
+                {
+                    "code": "critical_tool_disabled",
+                    "message": f"Tools críticas desactivadas: {', '.join(critical_off)}",
+                    "severity": "P0",
+                }
+            )
+        bm = (
+            await self.db.execute(
+                select(LotteryAiBenchmark)
+                .where(LotteryAiBenchmark.last_result.is_not(None))
+                .order_by(LotteryAiBenchmark.last_run_at.desc().nullslast())
+                .limit(1)
+            )
+        ).scalar_one_or_none()
+        if not bm or not bm.last_result:
+            blockers.append(
+                {
+                    "code": "benchmark_required",
+                    "message": "No hay resultado de benchmark reciente — ejecute la suite antes de publicar",
+                    "severity": "P0",
+                }
+            )
+        elif bm and bm.last_result:
+            p0 = int((bm.last_result or {}).get("p0", 0) or (bm.last_result or {}).get("p0_count", 0) or 0)
+            p1 = int((bm.last_result or {}).get("p1", 0) or (bm.last_result or {}).get("p1_count", 0) or 0)
+            if p0 or p1:
+                blockers.append(
+                    {
+                        "code": "benchmark_p0_p1",
+                        "message": f"Último benchmark con P0={p0} / P1={p1} — publicación bloqueada",
+                        "severity": "P0" if p0 else "P1",
+                    }
+                )
+            gate = (bm.last_result or {}).get("v3_activation_gate") or {}
+            if gate and not gate.get("activate_v3"):
+                blockers.append(
+                    {
+                        "code": "v3_gate",
+                        "message": "Gate v3 vs v2 no aprueba activar v3 (mantener v2)",
+                        "severity": "P1",
+                    }
+                )
+        cfg = await self.get_active_config()
+        if not cfg:
+            blockers.append(
+                {
+                    "code": "config_incomplete",
+                    "message": "No hay configuración de agente publicada",
+                    "severity": "P0",
+                }
+            )
+        return {
+            "can_publish": len(blockers) == 0,
+            "blockers": blockers,
+            "flow": [
+                "Borrador",
+                "Validación",
+                "Playground",
+                "Benchmark",
+                "Revisión de impacto",
+                "Publicación",
+                "Activo",
+            ],
+        }
 
     async def get_prompt(self, prompt_id: uuid.UUID) -> dict[str, Any]:
         row = await self.db.get(LotteryAiPromptVersion, prompt_id)
@@ -714,15 +878,33 @@ class LotteryAiAdminService:
         ):
             if field in data:
                 setattr(row, field, data[field])
-        row.checksum = _checksum(row.body)
+        # Compose body from editorial blocks when blocks saved without explicit body
+        if "blocks" in data and isinstance(row.blocks, dict) and "body" not in data:
+            parts = []
+            for key in PROMPT_BLOCKS:
+                chunk = (row.blocks.get(key) or "").strip()
+                if chunk:
+                    parts.append(f"## {key.upper()}\n{chunk}")
+            if parts:
+                row.body = "\n\n".join(parts)
+        row.checksum = _checksum(row.body or "")
+        after = {
+            "id": str(row.id),
+            "version": row.version,
+            "status": row.status,
+            "checksum": row.checksum,
+            "blocks": dict(row.blocks or {}),
+            "body": row.body,
+        }
         await self._audit(
             "prompt_update_draft",
             entity_type="prompt",
             entity_id=str(row.id),
             before=before,
-            after=_prompt_dict(row),
+            after=after,
         )
         await self.db.flush()
+        await self.db.refresh(row)
         return _prompt_dict(row)
 
     async def publish_prompt(self, prompt_id: uuid.UUID, *, force: bool = False) -> dict[str, Any]:
@@ -731,6 +913,15 @@ class LotteryAiAdminService:
             raise KeyError("prompt_not_found")
         if row.status == "active":
             return _prompt_dict(row)
+        if not force:
+            gates = await self.publish_gates()
+            # v3-specific gate already in publish_gates; also block generic P0
+            hard = [b for b in gates.get("blockers") or [] if b.get("code") != "v3_gate"]
+            if (row.version or "").lower() in {"v3", "lottery_assistant_system_v3"}:
+                hard = list(gates.get("blockers") or [])
+            if hard:
+                msgs = "; ".join(b.get("message", "") for b in hard)
+                raise ValueError(f"publicacion_bloqueada: {msgs}")
         # Gate: any recent benchmark with P0/P1 blocks publish (v3 included)
         bm = (
             await self.db.execute(
@@ -852,7 +1043,20 @@ class LotteryAiAdminService:
                 "models": "B",
                 "safety": "E",
                 "hermes_as_orchestrator": "E",
+                "defaults": "A",
+                "tools": "B",
+                "prompts": "B",
             },
+            "editable_fields": [
+                {"key": "understanding_mode", "label": "Modo de comprensión", "class": "A"},
+                {"key": "analysis_depth", "label": "Profundidad de análisis", "class": "A"},
+                {"key": "max_insights", "label": "Máximo de insights", "class": "A"},
+                {"key": "max_lotteries", "label": "Máximo de loterías", "class": "A"},
+                {"key": "timeout_seconds", "label": "Timeout (s)", "class": "A"},
+                {"key": "temperature", "label": "Temperatura", "class": "B", "path": "models.temperature"},
+                {"key": "max_tokens", "label": "Max tokens", "class": "B", "path": "models.max_tokens"},
+            ],
+            "publish_gates": await self.publish_gates(),
             "active": {
                 "id": str(cfg.id) if cfg else None,
                 "version_label": cfg.version_label if cfg else None,
@@ -887,6 +1091,29 @@ class LotteryAiAdminService:
         safety = merged.setdefault("safety", {})
         if merged.get("hermes_as_orchestrator") and not safety.get("hermes_orchestrator_authorized"):
             merged["hermes_as_orchestrator"] = False
+        for c in SAFETY_CONTROLS:
+            if c.get("locked"):
+                safety[c["key"]] = True
+        merged["hermes_as_orchestrator"] = False
+        # Allow A-class field updates from flat form
+        for flat_key in (
+            "understanding_mode",
+            "analysis_depth",
+            "max_insights",
+            "max_lotteries",
+            "timeout_seconds",
+            "max_clarifications",
+            "fallback_enabled",
+            "proactive_analysis",
+        ):
+            if flat_key in payload:
+                merged[flat_key] = payload[flat_key]
+        if "temperature" in payload:
+            models["temperature"] = payload["temperature"]
+        if "max_tokens" in payload:
+            models["max_tokens"] = payload["max_tokens"]
+        if "primary_model" in payload:
+            models["primary_model"] = payload["primary_model"]
         if draft:
             before = dict(draft.payload or {})
             draft.payload = merged
@@ -915,6 +1142,10 @@ class LotteryAiAdminService:
         return {"id": str(row.id), "version_label": row.version_label, "status": row.status, "payload": row.payload}
 
     async def publish_agent(self) -> dict[str, Any]:
+        gates = await self.publish_gates()
+        if not gates.get("can_publish"):
+            msgs = "; ".join(b.get("message", b.get("code", "")) for b in gates.get("blockers") or [])
+            raise ValueError(f"publicacion_bloqueada: {msgs}")
         draft = (
             await self.db.execute(
                 select(LotteryAiConfigVersion)
@@ -925,6 +1156,14 @@ class LotteryAiAdminService:
         ).scalar_one_or_none()
         if not draft:
             raise ValueError("sin_borrador")
+        # Never allow unlocking safety from UI payload
+        payload = dict(draft.payload or {})
+        safety = payload.setdefault("safety", {})
+        for c in SAFETY_CONTROLS:
+            if c.get("locked"):
+                safety[c["key"]] = True
+        payload["hermes_as_orchestrator"] = False
+        draft.payload = payload
         active = await self.get_active_config()
         if active:
             active.status = "replaced"
@@ -1361,6 +1600,16 @@ class LotteryAiAdminService:
         ).scalar_one_or_none()
         if not row:
             raise KeyError("tool_not_found")
+        critical = {
+            "lottery_last_occurrence",
+            "lottery_resolve_lottery",
+            "lottery_get_result_by_date",
+        }
+        if "enabled" in data and not bool(data["enabled"]) and name in critical:
+            if not data.get("confirm_critical_disable"):
+                raise ValueError(
+                    "tool_critica_requiere_confirmacion: envíe confirm_critical_disable=true tras validar impacto"
+                )
         before = {"enabled": row.enabled, "timeout_seconds": row.timeout_seconds}
         if "enabled" in data:
             row.enabled = bool(data["enabled"])
@@ -1391,13 +1640,14 @@ class LotteryAiAdminService:
         for r in rows:
             meta = PACK_META.get(r.pack_key) or {}
             cfg = r.config or {}
+            title = meta.get("display_name") or r.display_name or r.pack_key
             items.append(
                 {
                     "id": str(r.id),
                     "pack_key": r.pack_key,
-                    "name": r.display_name,
-                    "display_name": r.display_name,
-                    "label": r.display_name,
+                    "name": title,
+                    "display_name": title,
+                    "label": title,
                     "description": meta.get("description") or r.display_name,
                     "intent": meta.get("intent"),
                     "tools": meta.get("tools") or cfg.get("steps") or [],
@@ -1448,7 +1698,7 @@ class LotteryAiAdminService:
                     (lot.slug or "").lower(),
                     (lot.normalized_name or "").lower(),
                 ]
-                if any(c and c in aliases_l or a in c for c in candidates for a in aliases_l):
+                if any(c and (c in aliases_l or any(a in c for a in aliases_l)) for c in candidates):
                     return lot
             return None
 
@@ -2224,6 +2474,17 @@ class LotteryAiAdminService:
             "tokens": None,
             "fallback": False,
         }
+
+    async def audit_developer_mode(self, *, enabled: bool) -> dict[str, Any]:
+        await self._audit(
+            "developer_mode_toggle",
+            entity_type="ui",
+            entity_id="developer_mode",
+            after={"enabled": bool(enabled)},
+            reason="Modo desarrollador del Centro IA",
+        )
+        await self.db.flush()
+        return {"ok": True, "developer_mode": bool(enabled)}
 
     async def list_audit(self, *, limit: int = 50, offset: int = 0) -> dict[str, Any]:
         q = (

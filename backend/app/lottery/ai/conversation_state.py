@@ -12,6 +12,12 @@ IntentName = Literal[
     "result_by_date",
     "last_occurrence",
     "first_occurrence",
+    "multi_last_occurrence",
+    "last_occurrence_by_position",
+    "cross_lottery_last_occurrence",
+    "occurrence_in_other_lotteries",
+    "multi_number_query",
+    "compound_lottery_query",
     "number_history",
     "frequency",
     "hot_numbers",
@@ -78,6 +84,13 @@ class ConversationState(BaseModel):
     scope: Literal["single", "multiple", "all", "unknown"] = "unknown"
     # Derived tool results — critical for follow-ups
     last_occurrences: dict[str, OccurrenceMemory] = Field(default_factory=dict)
+    # Position preference (tenant/user) — default first position for Justech
+    default_number_position_scope: Literal[
+        "first_position", "any_position", "specific_position", "ask_each_time"
+    ] = "first_position"
+    default_primary_position: int = 1
+    last_multi_queries: list[dict[str, Any]] = Field(default_factory=list)
+    last_position_scope: Optional[str] = None
     last_tool_results: list[dict[str, Any]] = Field(default_factory=list)
     last_analysis: dict[str, Any] = Field(default_factory=dict)
     last_user_reference: Optional[str] = None

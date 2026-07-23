@@ -213,6 +213,13 @@ export interface LotteryPreferences {
   first_day_of_week: number;
   disclaimer_acknowledged: boolean;
   onboarding_completed: boolean;
+  /** Cuando pregunte por un número sin indicar posición */
+  default_number_position_scope?:
+    | "first_position"
+    | "any_position"
+    | "specific_position"
+    | "ask_each_time";
+  default_primary_position?: number;
 }
 
 export interface LotteryExportResponse {

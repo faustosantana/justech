@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 
+import { MetricLine } from "@/components/lottery/ai-admin-display";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ApiError, apiClient } from "@/lib/api";
@@ -31,7 +32,7 @@ export default function LotteryAISafetyPage() {
   }, [load]);
 
   const runTests = async () => {
-    if (!window.confirm("¿Ejecutar pruebas de seguridad? Esto puede tardar varios segundos.")) return;
+    if (!window.confirm("¿Ejecutar pruebas de seguridad?")) return;
     setRunning(true);
     setMsg(null);
     setTestResult(null);
@@ -46,9 +47,7 @@ export default function LotteryAISafetyPage() {
     }
   };
 
-  const policies = data
-    ? ((data.policies ?? data.rules ?? []) as Record<string, unknown>[])
-    : [];
+  const controls = data ? ((data.controls ?? data.rules ?? []) as Record<string, unknown>[]) : [];
 
   return (
     <div className="space-y-4">
@@ -59,10 +58,14 @@ export default function LotteryAISafetyPage() {
             Actualizar
           </Button>
           <Button size="sm" onClick={() => void runTests()} disabled={running || loading}>
-            {running ? "Ejecutando…" : "Ejecutar pruebas"}
+            {running ? "Ejecutando…" : "Probar"}
           </Button>
         </div>
       </div>
+
+      <p className="text-sm text-muted-foreground">
+        Protecciones críticas bloqueadas. Las plantillas de tono no pueden desactivarlas.
+      </p>
 
       {error && <p className="text-sm text-destructive">{error}</p>}
       {msg && <p className="text-sm text-muted-foreground">{msg}</p>}
@@ -71,42 +74,36 @@ export default function LotteryAISafetyPage() {
       {data && (
         <Card>
           <CardHeader>
-            <CardTitle className="text-sm">Configuración de seguridad</CardTitle>
+            <CardTitle className="text-sm">Resumen</CardTitle>
           </CardHeader>
-          <CardContent className="grid gap-2 text-sm sm:grid-cols-2">
-            <p>Modo: {String(data.mode ?? data.safety_mode ?? "—")}</p>
-            <p>Nivel: {String(data.level ?? data.safety_level ?? "—")}</p>
-            <p>Filtro de contenido: {String(data.content_filter ?? data.content_filter_enabled ?? "—")}</p>
-            <p>PII guard: {String(data.pii_guard ?? data.pii_detection ?? "—")}</p>
-            <p>Max reintentos: {String(data.max_retries ?? "—")}</p>
-            <p>Última revisión: {String(data.last_reviewed_at ?? "—")}</p>
+          <CardContent className="grid gap-2 sm:grid-cols-2">
+            <MetricLine label="Modo" value={data.mode ?? data.safety_mode} />
+            <MetricLine label="Nivel" value={data.level} />
+            <MetricLine label="Críticas bloqueadas" value={data.critical_locked ? "sí" : "no"} />
+            <MetricLine label="Última revisión" value={data.last_reviewed_at} />
           </CardContent>
         </Card>
       )}
 
-      {policies.length > 0 && (
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-sm">Políticas activas</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-2">
-            {policies.map((policy, i) => (
-              <div
-                key={String(policy.id ?? policy.name ?? i)}
-                className="rounded-lg border border-border/60 px-3 py-2 text-sm"
-              >
-                <p className="font-medium">{String(policy.name ?? policy.rule ?? `Política ${i + 1}`)}</p>
-                {policy.description && (
-                  <p className="text-xs text-muted-foreground">{String(policy.description)}</p>
-                )}
-                <p className="text-xs text-muted-foreground">
-                  Estado: {String(policy.status ?? policy.enabled ?? "—")}
-                </p>
-              </div>
-            ))}
-          </CardContent>
-        </Card>
-      )}
+      <div className="grid gap-3 md:grid-cols-2">
+        {controls.map((c, i) => (
+          <Card key={String(c.key ?? i)}>
+            <CardHeader className="py-3">
+              <CardTitle className="flex items-center justify-between text-sm">
+                <span>{String(c.label ?? c.name ?? `Control ${i + 1}`)}</span>
+                <span className="rounded-full bg-muted px-2 py-0.5 text-xs font-medium">
+                  {String(c.state ?? (c.active ? "ACTIVO" : "INACTIVO"))}
+                </span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-1 text-sm">
+              <p className="text-muted-foreground">{String(c.description ?? c.impact ?? "")}</p>
+              <MetricLine label="Clasificación" value={c.classification} />
+              <MetricLine label="Bloqueado" value={c.locked ? "sí" : "no"} />
+            </CardContent>
+          </Card>
+        ))}
+      </div>
 
       {testResult && (
         <Card>
@@ -117,21 +114,23 @@ export default function LotteryAISafetyPage() {
             <p>
               Aprobadas:{" "}
               <span className="font-medium text-green-600">
-                {String(testResult.passed ?? testResult.pass_count ?? "—")}
+                {String(testResult.passed ?? testResult.pass_count ?? 0)}
               </span>
             </p>
             <p>
               Fallidas:{" "}
               <span className="font-medium text-red-600">
-                {String(testResult.failed ?? testResult.fail_count ?? "—")}
+                {String(testResult.failed ?? testResult.fail_count ?? 0)}
               </span>
             </p>
-            <p>Duración: {String(testResult.duration_ms ?? testResult.elapsed_ms ?? "—")} ms</p>
-            {testResult.summary && (
-              <pre className="overflow-auto rounded bg-muted/30 p-2 text-xs">
-                {JSON.stringify(testResult.summary, null, 2)}
-              </pre>
-            )}
+            <p>Resultado global: {testResult.all_pass ? "PASS" : "FAIL"}</p>
+            <ul className="space-y-1 text-xs">
+              {((testResult.results ?? []) as Record<string, unknown>[]).map((r, i) => (
+                <li key={i} className="rounded border border-border/40 px-2 py-1">
+                  {r.pass ? "PASS" : "FAIL"} — {String(r.q)} → expect {String(r.expect)} / got {String(r.got)}
+                </li>
+              ))}
+            </ul>
           </CardContent>
         </Card>
       )}

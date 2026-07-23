@@ -4,7 +4,9 @@
 
 1. Último benchmark con `p0=0` y `p1=0`
 2. Para **v3**: `last_result.v3_activation_gate.activate_v3 == true`
-3. `force=true` solo superadmin consciente (no default)
+3. Proveedor Huawei ModelArts saludable (credenciales + endpoint)
+4. Tools críticas habilitadas (`last_occurrence`, `resolve_lottery`, `get_result_by_date`)
+5. `force=true` solo superadmin consciente (no default)
 
 ## Activación v3 vs v2
 
@@ -18,6 +20,10 @@ Activar v3 solo si:
 - fallback/p95/tokens dentro de umbral (síntesis remota en UAT online)
 
 Si no: **mantener v2**, v3 queda `draft`.
+
+## Clasificación A–E
+
+Ver [LOTTERY_AI_CONFIG_CLASSIFICATION.md](./LOTTERY_AI_CONFIG_CLASSIFICATION.md).
 
 ## Detector / scheduler
 

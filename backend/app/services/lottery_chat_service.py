@@ -60,7 +60,38 @@ class LotteryChatService:
         self.user_id = user_id
         self.role = role
         self.is_superadmin = is_superadmin
+        # Diagnostics (tool names / JSON / traces) off by default even for admins
+        self.developer_mode = False
         self.llm = LLMRouter(db)
+
+    def _expose_diagnostics(self) -> bool:
+        return bool(self.developer_mode and (self.is_superadmin or self.role in {"admin", "tenant_admin", "superadmin"}))
+
+    def _public_structured(self, structured: dict[str, Any] | None) -> dict[str, Any] | None:
+        if not structured:
+            return structured
+        out = dict(structured)
+        if not self._expose_diagnostics():
+            out.pop("tool", None)
+            out.pop("query", None)
+            # Never surface raw technical dumps in data for normal users
+            data = out.get("data")
+            if isinstance(data, dict):
+                cleaned = {
+                    k: v
+                    for k, v in data.items()
+                    if k
+                    not in {
+                        "sql",
+                        "source_id",
+                        "raw",
+                        "uuid",
+                        "tool_payload",
+                        "meta_debug",
+                    }
+                }
+                out["data"] = cleaned
+        return out
 
     async def create_session(self, *, title: str | None = None) -> LotteryChatSession:
         await self._enforce_session_limit()
@@ -139,6 +170,25 @@ class LotteryChatService:
         await self.db.flush()
 
         t0 = time.perf_counter()
+        # Inject tenant/user position preference (Justech default: first_position)
+        try:
+            from app.services.lottery_product_service import LotteryProductService
+
+            prefs = await LotteryProductService(
+                self.db, tenant_id=self.tenant_id, user_id=self.user_id
+            ).get_preferences()
+            state.default_number_position_scope = getattr(
+                prefs, "default_number_position_scope", None
+            ) or "first_position"
+            state.default_primary_position = int(
+                getattr(prefs, "default_primary_position", None) or 1
+            )
+        except Exception:  # noqa: BLE001
+            state.default_number_position_scope = state.default_number_position_scope or "first_position"
+            state.default_primary_position = state.default_primary_position or 1
+        ctx.default_number_position_scope = state.default_number_position_scope
+        ctx.default_primary_position = state.default_primary_position
+
         understanding, state = understand(content, state)
         plan = build_plan(understanding)
         tool_trace: list[dict[str, Any]] = []
@@ -213,7 +263,39 @@ class LotteryChatService:
                 is_superadmin=self.is_superadmin,
             )
             # Multi-tool / specialized plans
-            if understanding.intent == "post_occurrence_window" or understanding.tool == (
+            multi_qs = (understanding.params or {}).get("multi_queries")
+            if (
+                understanding.intent == "multi_last_occurrence"
+                or (isinstance(multi_qs, list) and len(multi_qs) >= 1
+                    and (understanding.params or {}).get("intent") == "multi_last_occurrence")
+                or (isinstance(multi_qs, list) and len(multi_qs) >= 2)
+            ):
+                structured, template, tool_trace = await self._execute_multi_last_occurrence(
+                    executor, understanding, plan, ctx
+                )
+                tool_name = "lottery_get_last_occurrence_multi"
+                nums = [
+                    str(q.get("number"))
+                    for q in (multi_qs or [])
+                    if isinstance(q, dict) and q.get("number")
+                ] or list(understanding.numbers or [])
+                if nums:
+                    state.active_numbers = nums
+                named_lots: list[str] = []
+                for q in multi_qs or []:
+                    if isinstance(q, dict):
+                        named_lots.extend(list(q.get("lotteries") or []))
+                        named_lots.extend(list(q.get("excluded_lotteries") or []))
+                if named_lots:
+                    state.active_lotteries = list(dict.fromkeys([*named_lots, *state.active_lotteries]))
+                state.last_multi_queries = list(multi_qs or [])
+                state.last_position_scope = (understanding.params or {}).get("position_scope") or "first_position"
+                state.last_intent = "multi_last_occurrence"
+                state.last_plan = ["multi_last_occurrence"]
+                state.pending_slots = []
+                state.pending_intent = None
+                state.last_tool = tool_name
+            elif understanding.intent == "post_occurrence_window" or understanding.tool == (
                 "lottery_analyze_post_occurrence_window"
             ):
                 structured, template, tool_trace = await self._execute_post_occurrence_window(
@@ -516,10 +598,11 @@ class LotteryChatService:
                 "last_draw_count": state.draw_count_context or ctx.last_draw_count,
             }
         )
+        public_structured = self._public_structured(structured if isinstance(structured, dict) else None)
         assistant_payload = _jsonable(
             {
-                "structured_content": structured,
-                "tool_trace": tool_trace if self.is_superadmin else [],
+                "structured_content": public_structured,
+                "tool_trace": tool_trace if self._expose_diagnostics() else [],
                 "intent": understanding.intent,
                 "entities": {
                     "lotteries": understanding.lotteries or state.active_lotteries,
@@ -527,23 +610,27 @@ class LotteryChatService:
                 },
                 "missing_slots": understanding.missing_slots or state.pending_slots,
                 "clarification": template if intent_kind == "clarify" else None,
-                "plan": [s.model_dump() for s in plan.steps],
-                "tool": tool_name,
-                "params": params,
+                "plan": [s.model_dump() for s in plan.steps] if self._expose_diagnostics() else [],
+                "tool": tool_name if self._expose_diagnostics() else None,
+                "params": params if self._expose_diagnostics() else {},
                 "synthesis_fallback": synthesis_fallback,
-                "model": model_name,
-                "provider": provider_used,
+                "model": model_name if self._expose_diagnostics() else None,
+                "provider": provider_used if self._expose_diagnostics() else None,
                 "latency_ms": latency_ms,
-                "runtime_trace": runtime_trace,
+                "runtime_trace": runtime_trace if self._expose_diagnostics() else {},
                 "prompt_version": get_active_prompt().version,
-                "analysis_params": structured.get("query") if isinstance(structured, dict) else None,
+                "analysis_params": (
+                    (public_structured or {}).get("query")
+                    if self._expose_diagnostics() and isinstance(public_structured, dict)
+                    else None
+                ),
             }
         )
         assistant_msg = LotteryChatMessage(
             session_id=session.id,
             role="assistant",
             content=final_text,
-            tool_name=tool_name or intent_kind,
+            tool_name=(tool_name or intent_kind) if self._expose_diagnostics() else intent_kind,
             tool_payload=assistant_payload,
         )
         self.db.add(assistant_msg)
@@ -558,10 +645,10 @@ class LotteryChatService:
                 "id": str(assistant_msg.id),
                 "role": "assistant",
                 "content": final_text,
-                "structured_content": structured,
-                "tool_trace": tool_trace if self.is_superadmin else [],
+                "structured_content": public_structured,
+                "tool_trace": tool_trace if self._expose_diagnostics() else [],
                 "created_at": assistant_msg.created_at.isoformat() if assistant_msg.created_at else None,
-                "runtime_trace": runtime_trace,
+                "runtime_trace": runtime_trace if self._expose_diagnostics() else {},
             },
             "user_message_id": str(user_msg.id),
             "context": merged_context,
@@ -620,14 +707,13 @@ class LotteryChatService:
         plan,
         ctx: LotterySessionContext,
     ) -> tuple[dict[str, Any], str, list[dict[str, Any]]]:
-        number = (
-            (understanding.numbers[0] if understanding.numbers else None)
-            or understanding.params.get("number")
-        )
+        from app.lottery.ai.compound_occurrence import position_label
+
+        params = dict(understanding.params or {})
+        multi_queries = params.get("multi_queries")
         tool_trace: list[dict[str, Any]] = []
-        rows: list[dict[str, Any]] = []
-        lotteries = list(understanding.lotteries or [])
-        if not lotteries and understanding.scope == "all":
+
+        async def _list_ai_lotteries() -> list[str]:
             listed = await executor.execute(
                 LotteryToolName.LIST_LOTTERIES,
                 {"limit": 50, "searchable_only": True},
@@ -647,16 +733,30 @@ class LotteryChatService:
                 items = listed.data.get("items") or listed.data.get("lotteries") or []
             elif isinstance(listed.data, list):
                 items = listed.data
+            names: list[str] = []
             for item in items:
                 name = item.get("name") if isinstance(item, dict) else getattr(item, "name", None)
                 if name:
-                    lotteries.append(str(name))
-            lotteries = list(dict.fromkeys(lotteries))[:8]
+                    names.append(str(name))
+            return list(dict.fromkeys(names))
 
-        for lot in lotteries[:8]:
+        def _exclude_match(name: str, excluded: list[str]) -> bool:
+            nl = name.lower()
+            for ex in excluded:
+                el = (ex or "").lower()
+                if not el:
+                    continue
+                if el in nl or nl in el or el.replace("quiniela ", "") in nl:
+                    return True
+            return False
+
+        async def _last_for(lot: str, number: str, position: int | None) -> dict[str, Any]:
+            call_params: dict[str, Any] = {"lottery": lot, "number": number}
+            if position is not None:
+                call_params["position"] = int(position)
             result = await executor.execute(
                 LotteryToolName.GET_LAST_OCCURRENCE,
-                {"lottery": lot, "number": number},
+                call_params,
                 structured_type="lottery_result",
                 session_context=ctx.to_store(),
             )
@@ -670,48 +770,195 @@ class LotteryChatService:
             )
             d = None
             pos = None
+            result_nums = None
+            total = None
+            resolved_name = lot
             if result.status == "success" and isinstance(result.data, dict):
                 items = result.data.get("occurrences") or result.data.get("items") or []
+                meta = result.data.get("meta") or {}
+                resolved = meta.get("resolved_lottery") or {}
+                resolved_name = resolved.get("name") or lot
+                total = (result.data.get("pagination") or {}).get("total") or result.data.get("total")
                 if items:
                     first = items[0]
                     d = first.get("draw_date") if isinstance(first, dict) else getattr(first, "draw_date", None)
                     pos = (
                         first.get("position_label") or first.get("position")
                         if isinstance(first, dict)
-                        else getattr(first, "position_label", None)
+                        else getattr(first, "position_label", None) or getattr(first, "position", None)
                     )
-            rows.append(
-                {
-                    "lottery": lot,
-                    "number": number,
-                    "last_date": str(d) if d else None,
-                    "position": pos,
-                    "found": bool(d),
-                }
-            )
+                    # Enrich with full draw when date known
+                    if d:
+                        try:
+                            date_s = d.isoformat() if hasattr(d, "isoformat") else str(d)[:10]
+                            by_date = await executor.execute(
+                                LotteryToolName.GET_RESULT_BY_DATE,
+                                {"lottery": lot, "date": date_s},
+                                structured_type="lottery_result",
+                                session_context=ctx.to_store(),
+                            )
+                            tool_trace.append(
+                                {
+                                    "tool": by_date.tool,
+                                    "status": by_date.status,
+                                    "duration_ms": by_date.duration_ms,
+                                    "error_code": by_date.error_code,
+                                }
+                            )
+                            if by_date.status == "success" and isinstance(by_date.data, dict):
+                                draws = by_date.data.get("draws") or []
+                                if draws:
+                                    nums = draws[0].get("numbers") or []
+                                    result_nums = " · ".join(
+                                        str(n.get("number_raw") or n.get("number_value") or "")
+                                        for n in nums
+                                        if n
+                                    )
+                        except Exception:  # noqa: BLE001
+                            pass
+            return {
+                "lottery": resolved_name,
+                "number": number,
+                "last_date": str(d)[:10] if d else None,
+                "position": pos,
+                "position_filter": position,
+                "result": result_nums,
+                "found": bool(d),
+                "draws_reviewed": total,
+            }
 
-        rows_sorted = sorted(
-            rows, key=lambda r: r["last_date"] or "", reverse=True
+        # --- Compound independent subqueries ---
+        if isinstance(multi_queries, list) and multi_queries:
+            sections: list[dict[str, Any]] = []
+            all_ai: list[str] | None = None
+            lines: list[str] = ["RESPUESTA", ""]
+            for q in multi_queries:
+                if not isinstance(q, dict) or not q.get("number"):
+                    continue
+                number = str(q["number"])
+                position = q.get("position")
+                scope = q.get("lotteries_scope") or "named"
+                lots = list(q.get("lotteries") or [])
+                excluded = list(q.get("excluded_lotteries") or [])
+                if scope == "all_except_previous":
+                    if all_ai is None:
+                        all_ai = await _list_ai_lotteries()
+                    lots = [n for n in all_ai if not _exclude_match(n, excluded)]
+                elif scope == "defaults_or_clarify" and not lots:
+                    lots = list(understanding.lotteries or [])[:1]
+
+                rows: list[dict[str, Any]] = []
+                for lot in lots[:40]:
+                    rows.append(await _last_for(lot, number, position))
+                rows_sorted = sorted(rows, key=lambda r: r["last_date"] or "", reverse=True)
+                found = [r for r in rows_sorted if r["found"]]
+                truncated = False
+                display = found
+                if len(found) > 5 and scope == "all_except_previous":
+                    display = found[:5]
+                    truncated = True
+
+                pos_txt = position_label(position if position is not None else None)
+                if scope == "all_except_previous":
+                    title_lot = "otras loterías"
+                    if excluded:
+                        title_lot = f"otras loterías (excepto {', '.join(excluded)})"
+                elif lots:
+                    title_lot = lots[0] if len(lots) == 1 else f"{len(lots)} loterías"
+                else:
+                    title_lot = "loterías consultadas"
+
+                lines.append(f"**{number} en {title_lot}, {pos_txt.lower()}**")
+                lines.append("")
+                if len(lots) == 1 and found:
+                    r0 = found[0]
+                    lines.append(f"- Última aparición: {r0['last_date']}")
+                    if r0.get("result"):
+                        lines.append(f"- Resultado completo: {r0['result']}")
+                    if r0.get("draws_reviewed") is not None:
+                        lines.append(f"- Sorteos revisados: {r0['draws_reviewed']}")
+                elif found:
+                    lines.append("| Lotería | Última aparición | Resultado |")
+                    lines.append("|---|---:|---|")
+                    for r in display:
+                        lines.append(
+                            f"| {r['lottery']} | {r['last_date']} | {r.get('result') or '—'} |"
+                        )
+                    if truncated:
+                        lines.append("")
+                        lines.append(
+                            f"Mostrando las 5 apariciones más recientes de {len(found)} loterías con datos. "
+                            "Di «Ver todas» si quieres el listado completo."
+                        )
+                    if found:
+                        top = found[0]
+                        lines.append("")
+                        lines.append(
+                            f"La aparición más reciente del {number} fuera de "
+                            f"{', '.join(excluded) or 'las mencionadas'} fue en "
+                            f"**{top['lottery']}** el **{top['last_date']}**."
+                        )
+                else:
+                    lines.append(f"- No encontré apariciones del {number} con ese criterio.")
+                lines.append("")
+                sections.append(
+                    {
+                        "number": number,
+                        "lotteries_scope": scope,
+                        "excluded_lotteries": excluded,
+                        "position": position,
+                        "position_label": pos_txt,
+                        "rows": rows_sorted,
+                        "display_rows": display,
+                        "truncated": truncated,
+                    }
+                )
+
+            template = "\n".join(lines).strip()
+            structured = {
+                "type": "lottery_comparison",
+                "data": {
+                    "intent": "multi_last_occurrence",
+                    "sections": sections,
+                    "rows": [
+                        r
+                        for s in sections
+                        for r in (s.get("display_rows") or s.get("rows") or [])
+                    ],
+                },
+            }
+            return structured, template, tool_trace
+
+        # --- Legacy: one number across many lotteries ---
+        number = (
+            (understanding.numbers[0] if understanding.numbers else None)
+            or params.get("number")
         )
+        position = params.get("position")
+        rows = []
+        lotteries = list(understanding.lotteries or [])
+        if not lotteries and understanding.scope == "all":
+            lotteries = (await _list_ai_lotteries())[:8]
+
+        for lot in lotteries[:8]:
+            rows.append(await _last_for(lot, str(number), position))
+
+        rows_sorted = sorted(rows, key=lambda r: r["last_date"] or "", reverse=True)
         found = [r for r in rows_sorted if r["found"]]
         missing = [r["lottery"] for r in rows_sorted if not r["found"]]
-        lines = [
-            f"Comparación de la última aparición del {number}:",
-        ]
+        pos_txt = position_label(position if position is not None else None)
+        lines = [f"Comparación de la última aparición del {number} ({pos_txt.lower()}):"]
         for r in found:
             bit = f"• {r['lottery']}: {r['last_date']}"
-            if r.get("position") is not None:
-                bit += f" (posición {r['position']})"
+            if r.get("result"):
+                bit += f" — {r['result']}"
             lines.append(bit)
         if missing:
             lines.append(f"Sin datos para: {', '.join(missing)}.")
-        lines.append(f"Analicé {len(lotteries)} lotería(s) con tools tipadas.")
         template = "\n".join(lines)
         structured = {
             "type": "lottery_comparison",
-            "tool": "lottery_compare_last_occurrence",
-            "query": {"number": number, "lotteries": lotteries},
-            "data": {"rows": rows_sorted, "missing": missing},
+            "data": {"rows": rows_sorted, "missing": missing, "number": number, "position": position},
         }
         return structured, template, tool_trace
 

@@ -15,14 +15,20 @@ function DrawNumbers({ draws }: { draws: Array<Record<string, unknown>> }) {
             <p className="mb-2 text-xs text-muted-foreground">
               {String(d.draw_date || "")}
               {d.draw_time ? ` · ${String(d.draw_time)}` : ""}
-              {d.source_reference ? ` · ref ${String(d.source_reference)}` : ""}
               {d.game_name ? ` · ${String(d.game_name)}` : ""}
             </p>
             <div className="flex flex-wrap gap-3">
               {nums.map((n, j) => (
                 <div key={`${n.position}-${j}`} className="text-center">
                   <p className="text-[10px] uppercase text-muted-foreground">
-                    {n.position_label || n.position}
+                    {n.position_label ||
+                      (n.position === "1" || n.position === 1
+                        ? "Primera posición"
+                        : n.position === "2" || n.position === 2
+                          ? "Segunda posición"
+                          : n.position === "3" || n.position === 3
+                            ? "Tercera posición"
+                            : n.position)}
                   </p>
                   <p className="font-mono text-2xl font-semibold">{n.number_raw || n.number_value}</p>
                   {n.number_type && n.number_type !== "principal" && (
@@ -35,6 +41,30 @@ function DrawNumbers({ draws }: { draws: Array<Record<string, unknown>> }) {
         );
       })}
     </div>
+  );
+}
+
+function OccurrenceRows({ rows }: { rows: Array<Record<string, unknown>> }) {
+  if (!rows.length) return null;
+  return (
+    <table className="w-full text-sm">
+      <thead>
+        <tr className="text-left text-muted-foreground">
+          <th className="py-1">Lotería</th>
+          <th>Última aparición</th>
+          <th>Resultado</th>
+        </tr>
+      </thead>
+      <tbody>
+        {rows.map((r, i) => (
+          <tr key={`${String(r.lottery)}-${i}`} className="border-t">
+            <td className="py-1">{String(r.lottery || "—")}</td>
+            <td className="font-mono text-xs">{String(r.last_date || "—")}</td>
+            <td className="font-mono text-xs">{String(r.result || "—")}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
   );
 }
 
@@ -66,6 +96,12 @@ export function LotteryStructuredRenderer({ structured }: { structured?: Structu
   }
 
   const draws = (data.draws as Array<Record<string, unknown>> | undefined) || [];
+  const occurrences =
+    (data.occurrences as Array<Record<string, unknown>> | undefined) ||
+    (data.items as Array<Record<string, unknown>> | undefined) ||
+    [];
+  const sections = (data.sections as Array<Record<string, unknown>> | undefined) || [];
+  const rows = (data.rows as Array<Record<string, unknown>> | undefined) || [];
 
   if (type === "lottery_result" || type === "lottery_range") {
     return (
@@ -73,16 +109,29 @@ export function LotteryStructuredRenderer({ structured }: { structured?: Structu
         <CardHeader className="pb-2">
           <CardTitle className="text-sm">
             {type === "lottery_range" ? "Ventana histórica" : "Resultados"}
-            {structured.tool ? ` · ${structured.tool}` : ""}
           </CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="space-y-3">
           {draws.length > 0 ? (
             <DrawNumbers draws={draws} />
+          ) : occurrences.length > 0 ? (
+            <ul className="space-y-1 text-sm">
+              {occurrences.slice(0, 12).map((o, i) => (
+                <li key={i} className="font-mono text-xs">
+                  {String(o.draw_date || "")}
+                  {o.position_label || o.position
+                    ? ` · ${String(o.position_label || o.position)}`
+                    : ""}
+                  {o.number_raw || o.number_value
+                    ? ` · ${String(o.number_raw || o.number_value)}`
+                    : ""}
+                </li>
+              ))}
+            </ul>
+          ) : rows.length > 0 ? (
+            <OccurrenceRows rows={rows} />
           ) : (
-            <pre tabIndex={0} className="max-h-48 overflow-auto rounded bg-muted/40 p-2 text-xs outline-none focus-visible:ring-2 focus-visible:ring-ring">
-              {JSON.stringify(data, null, 2).slice(0, 2000)}
-            </pre>
+            <p className="text-sm text-muted-foreground">Consulta completada. Ver respuesta arriba.</p>
           )}
         </CardContent>
       </Card>
@@ -101,18 +150,14 @@ export function LotteryStructuredRenderer({ structured }: { structured?: Structu
             <thead>
               <tr className="text-left text-muted-foreground">
                 <th className="py-1">Número</th>
-                <th>Cantidad</th>
-                <th>Fechas</th>
+                <th>Veces</th>
               </tr>
             </thead>
             <tbody>
               {items.map((it) => (
                 <tr key={String(it.number)} className="border-t">
-                  <td className="py-1 font-mono text-lg">{String(it.number)}</td>
+                  <td className="py-1 font-mono">{String(it.number)}</td>
                   <td>{String(it.count)}</td>
-                  <td className="text-xs text-muted-foreground">
-                    {Array.isArray(it.dates) ? it.dates.join(", ") : ""}
-                  </td>
                 </tr>
               ))}
             </tbody>
@@ -122,41 +167,47 @@ export function LotteryStructuredRenderer({ structured }: { structured?: Structu
     );
   }
 
-  if (type === "lottery_next_occurrences") {
-    const items = (data.items as Array<Record<string, unknown>> | undefined) || [];
-    return (
-      <Card>
-        <CardHeader className="pb-2">
-          <CardTitle className="text-sm">Próxima aparición histórica</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-1 text-sm">
-          <p className="text-xs text-muted-foreground">{String(data.note || "")}</p>
-          {items.map((it, i) => (
-            <p key={i} className="font-mono">
-              {String(it.draw_date)} · pos {String(it.position_label)} · {String(it.number_value)}
-            </p>
-          ))}
-        </CardContent>
-      </Card>
-    );
-  }
-
-  if (type === "lottery_comparison" || type === "lottery_frequency") {
-    const rows = (data.rows as Array<Record<string, unknown>> | undefined) || [];
+  if (type === "lottery_comparison" || type === "lottery_frequencies" || type === "lottery_analytics") {
     const periodA = data.period_a as Record<string, unknown> | undefined;
-    const periodB = data.period_b as Record<string, unknown> | undefined;
+    const periodItems = (data.items as Array<Record<string, unknown>> | undefined) || [];
+    const freqItems =
+      (data.frequencies as Array<Record<string, unknown>> | undefined) ||
+      (data.top as Array<Record<string, unknown>> | undefined) ||
+      [];
+
     return (
       <Card>
         <CardHeader className="pb-2">
           <CardTitle className="text-sm">
-            {type === "lottery_frequency" ? "Frecuencias" : "Comparación"}
+            {data.intent === "multi_last_occurrence"
+              ? "Últimas apariciones"
+              : type === "lottery_frequencies"
+                ? "Frecuencias"
+                : "Comparación"}
           </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-3 text-sm">
-          {periodA && periodB && (
+        <CardContent className="space-y-4">
+          {sections.length > 0 &&
+            sections.map((sec, i) => (
+              <div key={i} className="space-y-2">
+                <p className="text-sm font-medium">
+                  {String(sec.number || "")}
+                  {sec.position_label ? ` · ${String(sec.position_label)}` : ""}
+                </p>
+                <OccurrenceRows
+                  rows={
+                    (sec.display_rows as Array<Record<string, unknown>> | undefined) ||
+                    (sec.rows as Array<Record<string, unknown>> | undefined) ||
+                    []
+                  }
+                />
+              </div>
+            ))}
+          {sections.length === 0 && rows.length > 0 && <OccurrenceRows rows={rows} />}
+          {periodItems.length > 0 && (
             <div className="grid gap-2 sm:grid-cols-2">
-              {[periodA, periodB].map((p, i) => (
-                <div key={i} className="rounded border p-2">
+              {periodItems.map((p, i) => (
+                <div key={i} className="rounded border p-2 text-sm">
                   <p className="text-xs text-muted-foreground">{String(p.label || "")}</p>
                   <p className="font-medium">
                     {String(p.occurrences)} apariciones / {String(p.draws)} sorteos
@@ -171,21 +222,19 @@ export function LotteryStructuredRenderer({ structured }: { structured?: Structu
               ))}
             </div>
           )}
-          {rows.length > 0 && (
+          {freqItems.length > 0 && (
             <table className="w-full text-sm">
               <thead>
                 <tr className="text-left text-muted-foreground">
-                  <th className="py-1">Lotería</th>
-                  <th>Última</th>
-                  <th>Total</th>
+                  <th className="py-1">Número</th>
+                  <th>Veces</th>
                 </tr>
               </thead>
               <tbody>
-                {rows.map((r) => (
-                  <tr key={String(r.lottery)} className="border-t">
-                    <td className="py-1">{String(r.lottery)}</td>
-                    <td className="font-mono text-xs">{String(r.last_date || "—")}</td>
-                    <td>{String(r.occurrences ?? "—")}</td>
+                {freqItems.slice(0, 20).map((it) => (
+                  <tr key={String(it.number)} className="border-t">
+                    <td className="py-1 font-mono">{String(it.number)}</td>
+                    <td>{String(it.count ?? it.occurrences ?? "—")}</td>
                   </tr>
                 ))}
               </tbody>
@@ -199,13 +248,8 @@ export function LotteryStructuredRenderer({ structured }: { structured?: Structu
               Limitaciones: {(data.limitations as string[]).join(" · ")}
             </p>
           ) : null}
-          {!periodA && rows.length === 0 && (
-            <pre
-              tabIndex={0}
-              className="max-h-56 overflow-auto rounded bg-muted/40 p-2 text-xs outline-none focus-visible:ring-2 focus-visible:ring-ring"
-            >
-              {JSON.stringify(data, null, 2).slice(0, 3000)}
-            </pre>
+          {!periodA && sections.length === 0 && rows.length === 0 && freqItems.length === 0 && (
+            <p className="text-sm text-muted-foreground">Consulta completada. Ver respuesta arriba.</p>
           )}
         </CardContent>
       </Card>

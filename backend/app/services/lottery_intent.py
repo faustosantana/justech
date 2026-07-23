@@ -445,6 +445,109 @@ def resolve_intent(message: str, ctx: LotterySessionContext) -> ResolvedIntent:
     parsed_date = _parse_spanish_date(raw)  # do not inherit ctx date for unrelated number queries
     ctx_date = parsed_date or ctx.base_date
 
+    # --- P1: compound / last-occurrence with default first position ---
+    from app.lottery.ai.compound_occurrence import (
+        DEFAULT_PRIMARY_POSITION,
+        DEFAULT_POSITION_SCOPE,
+        is_last_occurrence_question,
+        parse_compound_last_occurrence,
+        resolve_effective_position,
+    )
+
+    pref_scope = getattr(ctx, "default_number_position_scope", None) or DEFAULT_POSITION_SCOPE
+    pref_primary = int(getattr(ctx, "default_primary_position", None) or DEFAULT_PRIMARY_POSITION)
+    compound = parse_compound_last_occurrence(
+        raw, pref_scope=pref_scope, pref_primary=pref_primary
+    )
+    if compound and compound.get("queries"):
+        if compound.get("needs_clarification"):
+            return ResolvedIntent(
+                kind="clarify",
+                clarify_message=compound.get("clarification_question")
+                or "¿Primera posición o cualquier posición?",
+                structured_type="lottery_ambiguity",
+                params={"pending_slots": ["position_scope"], "compound": compound},
+            )
+        if compound.get("intent") == "multi_last_occurrence" and len(compound["queries"]) >= 2:
+            return ResolvedIntent(
+                kind="tool",
+                tool=LotteryToolName.GET_LAST_OCCURRENCE,
+                params={
+                    "multi_queries": compound["queries"],
+                    "intent": "multi_last_occurrence",
+                    "position_scope": compound.get("position_scope"),
+                },
+                structured_type="lottery_comparison",
+            )
+        if compound.get("intent") == "last_occurrence" and compound["queries"]:
+            q0 = compound["queries"][0]
+            lots = list(q0.get("lotteries") or [])
+            if q0.get("lotteries_scope") == "defaults_or_clarify" and not lots:
+                return ResolvedIntent(
+                    kind="clarify",
+                    clarify_message=(
+                        f"¿En cuál lotería quieres la última aparición del {q0.get('number')}? "
+                        "Puedo revisarlo en una específica o en todas las disponibles."
+                    ),
+                    structured_type="lottery_ambiguity",
+                    params={
+                        "number": q0.get("number"),
+                        "position": q0.get("position"),
+                        "pending_slots": ["lottery"],
+                    },
+                )
+            return ResolvedIntent(
+                kind="tool",
+                tool=LotteryToolName.GET_LAST_OCCURRENCE,
+                params={
+                    "lottery": lots[0] if lots else lottery,
+                    "number": q0.get("number"),
+                    "position": q0.get("position"),
+                    "position_scope": q0.get("position_scope"),
+                },
+                structured_type="lottery_result",
+            )
+
+    if is_last_occurrence_question(raw):
+        number = _extract_number(raw) or (ctx.last_numbers[0] if ctx.last_numbers else None)
+        pos_filter, scope_used, needs_ask = resolve_effective_position(
+            raw, pref_scope=pref_scope, pref_primary=pref_primary
+        )
+        if needs_ask:
+            return ResolvedIntent(
+                kind="clarify",
+                clarify_message="¿Busco en primera posición o en cualquier posición?",
+                structured_type="lottery_ambiguity",
+                params={"number": number, "pending_slots": ["position_scope"]},
+            )
+        if not number:
+            return ResolvedIntent(
+                kind="clarify",
+                clarify_message="¿De qué número quieres la última aparición? También indica la lotería.",
+                structured_type="lottery_ambiguity",
+            )
+        if not lottery:
+            return ResolvedIntent(
+                kind="clarify",
+                clarify_message=(
+                    f"¿En cuál lotería quieres que busque la última aparición del {number}? "
+                    "Puedo revisarlo en una específica o compararlo entre todas las loterías disponibles."
+                ),
+                structured_type="lottery_ambiguity",
+                params={"number": number, "position": pos_filter, "pending_slots": ["lottery"]},
+            )
+        return ResolvedIntent(
+            kind="tool",
+            tool=LotteryToolName.GET_LAST_OCCURRENCE,
+            params={
+                "lottery": lottery,
+                "number": number,
+                "position": pos_filter,
+                "position_scope": scope_used,
+            },
+            structured_type="lottery_result",
+        )
+
     def_hot_cold = bool(
         re.search(
             r"(qu[eé]\s+(significa|es\b|quiere\s+decir)|diferencia.*entre|en\s+qu[eé]\s+se\s+diferencia).*"
@@ -623,9 +726,23 @@ def resolve_intent(message: str, ctx: LotterySessionContext) -> ResolvedIntent:
             structured_type="lottery_result",
         )
 
-    # count occurrences: "cuántas veces salió el 01"
+    # count occurrences: "cuántas veces salió el 01" — default first position
     if re.search(r"cu[aá]ntas?\s+veces|cuantas?\s+veces|cu[aá]ntas?\s+apariciones", text):
+        from app.lottery.ai.compound_occurrence import resolve_effective_position
+
         number = _extract_number(raw) or (ctx.last_numbers[0] if ctx.last_numbers else None)
+        pos_filter, scope_used, needs_ask = resolve_effective_position(
+            raw,
+            pref_scope=getattr(ctx, "default_number_position_scope", None),
+            pref_primary=int(getattr(ctx, "default_primary_position", None) or 1),
+        )
+        if needs_ask:
+            return ResolvedIntent(
+                kind="clarify",
+                clarify_message="¿Cuento apariciones en primera posición o en cualquier posición?",
+                structured_type="lottery_ambiguity",
+                params={"number": number, "pending_slots": ["position_scope"]},
+            )
         if not number:
             return ResolvedIntent(
                 kind="clarify",
@@ -640,16 +757,23 @@ def resolve_intent(message: str, ctx: LotterySessionContext) -> ResolvedIntent:
                     "Puedo revisarlo en una específica o en todas las disponibles."
                 ),
                 structured_type="lottery_ambiguity",
-                params={"number": number, "pending_slots": ["lottery"]},
+                params={"number": number, "position": pos_filter, "pending_slots": ["lottery"]},
             )
         return ResolvedIntent(
             kind="tool",
             tool=LotteryToolName.GET_NUMBER_OCCURRENCES,
-            params={"lottery": lottery, "number": number, "page": 1, "page_size": 50},
+            params={
+                "lottery": lottery,
+                "number": number,
+                "page": 1,
+                "page_size": 50,
+                "position": pos_filter,
+                "position_scope": scope_used,
+            },
             structured_type="lottery_result",
         )
 
-    # last occurrence: "última vez que salió el 19"
+    # last occurrence (legacy explicit phrases — also covered earlier)
     if re.search(
         r"[uú]ltima\s+vez|cuando fue la ultima|cu[aá]ndo fue la [uú]ltima|"
         r"cu[aá]ndo\s+(fue\s+)?la\s+[uú]ltima\s+vez|hace\s+cu[aá]nto.*(sali[oó]|apareci)",
@@ -675,7 +799,7 @@ def resolve_intent(message: str, ctx: LotterySessionContext) -> ResolvedIntent:
         return ResolvedIntent(
             kind="tool",
             tool=LotteryToolName.GET_LAST_OCCURRENCE,
-            params={"lottery": lottery, "number": number},
+            params={"lottery": lottery, "number": number, "position": 1, "position_scope": "first_position"},
             structured_type="lottery_result",
         )
 
@@ -830,7 +954,6 @@ def resolve_intent(message: str, ctx: LotterySessionContext) -> ResolvedIntent:
         number = _extract_number(raw)
         last_n = _extract_int(text, "sorteos", "sorteo", default=None)
         if number:
-            # Comparación de un número: usar histórico amplio, no el rango del turno anterior.
             from_d, to_d = _last_n_window(3650)
             return ResolvedIntent(
                 kind="tool",
@@ -841,6 +964,7 @@ def resolve_intent(message: str, ctx: LotterySessionContext) -> ResolvedIntent:
                     "to_date": to_d,
                     "mode": "number_compare",
                     "number": number,
+                    "position": 1,
                 },
                 structured_type="lottery_comparison",
             )
@@ -865,7 +989,12 @@ def resolve_intent(message: str, ctx: LotterySessionContext) -> ResolvedIntent:
             structured_type="lottery_comparison",
         )
 
-    if re.search(r"volvi[oó] a salir|proxima aparicion|pr[oó]xima aparici[oó]n|cuando (sali[oó]|apareci)", text):
+    # Next historical occurrence AFTER a known base date — not "cuándo salió"
+    if re.search(
+        r"volvi[oó] a salir|proxima aparicion|pr[oó]xima aparici[oó]n|"
+        r"cuando\s+(volvi[oó]|apareci[oó])\s+(despu[eé]s|luego)",
+        text,
+    ):
         number = _extract_number(raw) or (ctx.last_numbers[0] if ctx.last_numbers else None)
         if not lottery or not number or not ctx_date:
             return ResolvedIntent(
@@ -898,15 +1027,14 @@ def resolve_intent(message: str, ctx: LotterySessionContext) -> ResolvedIntent:
         return ResolvedIntent(
             kind="tool",
             tool=LotteryToolName.CALCULATE_FREQUENCIES,
-            params={"lottery": lottery, "from_date": from_d, "to_date": to_d, "limit": 20},
+            params={"lottery": lottery, "from_date": from_d, "to_date": to_d, "limit": 20, "position": 1},
             structured_type="lottery_frequency",
         )
 
     # by-date: salió / resultados (after more specific patterns)
-    # Never treat "última vez que salió N" as by-date (handled above).
-    if re.search(r"[uú]ltima\s+vez|cu[aá]ndo fue la [uú]ltima", text):
+    if re.search(r"[uú]ltima\s+vez|cu[aá]ndo fue la [uú]ltima|cu[aá]ndo\s+sali[oó]", text):
         pass
-    elif re.search(r"sali[oó]|resultado|que salio|qu[eé] sali[oó]|mostrar.*fecha", text) or (
+    elif re.search(r"resultado|que salio|qu[eé] sali[oó]|mostrar.*fecha", text) or (
         lottery and parsed_date and re.search(r"\d{4}|\bde\b", text)
     ):
         if not lottery and not parsed_date:
@@ -953,8 +1081,8 @@ def resolve_intent(message: str, ctx: LotterySessionContext) -> ResolvedIntent:
     return ResolvedIntent(
         kind="clarify",
         clarify_message=(
-            "Puedo consultar resultados históricos: fecha exacta, días o sorteos "
-            "siguientes/anteriores, repeticiones, comparaciones y próxima aparición histórica. "
+            "Puedo consultar resultados históricos: fecha exacta, última aparición, "
+            "días o sorteos siguientes/anteriores, repeticiones y comparaciones. "
             "¿Qué deseas consultar?"
         ),
         structured_type="lottery_ambiguity",

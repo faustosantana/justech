@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 
+import { LotteryAIDevModeProvider, useLotteryAIDevMode } from "@/components/lottery/ai-admin-dev-mode";
 import { apiClient } from "@/lib/api";
 import { getAccessToken, getUserRole } from "@/lib/auth";
 import { canAccessLotteryAdmin, isLotteryClientRole } from "@/lib/lottery";
@@ -46,7 +47,36 @@ const NAV_GROUPS = [
   },
 ];
 
-export default function LotteryAIAdminLayout({ children }: { children: React.ReactNode }) {
+function DevModeToggle() {
+  const { developerMode, setDeveloperMode } = useLotteryAIDevMode();
+  const [busy, setBusy] = useState(false);
+
+  const toggle = async () => {
+    const next = !developerMode;
+    if (next && !window.confirm("¿Activar Modo desarrollador? Se mostrarán UUID, JSON y nombres internos. Quedará auditado.")) {
+      return;
+    }
+    setBusy(true);
+    try {
+      await apiClient.postLotteryAIDeveloperMode(next);
+      setDeveloperMode(next);
+    } catch {
+      // Still allow local toggle if audit endpoint fails (offline)
+      setDeveloperMode(next);
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  return (
+    <label className="flex cursor-pointer items-center gap-2 text-xs text-muted-foreground">
+      <input type="checkbox" checked={developerMode} disabled={busy} onChange={() => void toggle()} />
+      Modo desarrollador
+    </label>
+  );
+}
+
+function LayoutInner({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
   const [denied, setDenied] = useState(false);
@@ -105,11 +135,12 @@ export default function LotteryAIAdminLayout({ children }: { children: React.Rea
   return (
     <div className="flex min-h-screen flex-col">
       <header className="border-b border-border/60 bg-background px-6 py-3">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between gap-4">
           <h1 className="text-base font-semibold tracking-tight">
             Centro de Administración de Lottery IA
           </h1>
-          <nav className="flex gap-4 text-sm">
+          <div className="flex items-center gap-4 text-sm">
+            <DevModeToggle />
             <Link href="/lottery" className="text-primary underline">
               Inicio
             </Link>
@@ -122,7 +153,7 @@ export default function LotteryAIAdminLayout({ children }: { children: React.Rea
             <Link href="/lottery/admin/scheduler" className="text-primary underline">
               Scheduler
             </Link>
-          </nav>
+          </div>
         </div>
       </header>
       <div className="flex flex-1 overflow-hidden">
@@ -134,7 +165,8 @@ export default function LotteryAIAdminLayout({ children }: { children: React.Rea
               </p>
               {group.items.map((item) => {
                 const itemPath = item.href.split("#")[0];
-                const active = itemPath === pathname && (item.href.includes("#") ? pathname === "/lottery/admin/ai" : true);
+                const active =
+                  itemPath === pathname && (item.href.includes("#") ? pathname === "/lottery/admin/ai" : true);
                 const isAlerts = item.href.includes("#alerts");
                 return (
                   <Link
@@ -161,5 +193,13 @@ export default function LotteryAIAdminLayout({ children }: { children: React.Rea
         <main className="flex-1 overflow-auto p-6">{children}</main>
       </div>
     </div>
+  );
+}
+
+export default function LotteryAIAdminLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <LotteryAIDevModeProvider>
+      <LayoutInner>{children}</LayoutInner>
+    </LotteryAIDevModeProvider>
   );
 }

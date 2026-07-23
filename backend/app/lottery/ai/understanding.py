@@ -45,6 +45,8 @@ def _ctx_from_state(state: ConversationState) -> LotterySessionContext:
         last_query_semantics=state.last_intent,
         last_from_date=(state.range_context or {}).get("from") if state.range_context else None,
         last_to_date=(state.range_context or {}).get("to") if state.range_context else None,
+        default_number_position_scope=state.default_number_position_scope or "first_position",
+        default_primary_position=int(state.default_primary_position or 1),
     )
 
 
@@ -321,6 +323,90 @@ def _detect_post_occurrence(
 def _detect_follow_up(text: str, state: ConversationState) -> tuple[UnderstandingResult, ConversationState] | None:
     low = text.lower().strip()
     working = state.model_copy(deep=True)
+
+    from app.lottery.ai.compound_occurrence import (
+        follow_up_any_position,
+        follow_up_replace_numbers,
+    )
+
+    # "¿Y en cualquier posición?" — keep multi_queries / numbers / lotteries, widen position
+    if follow_up_any_position(text) and (
+        state.last_multi_queries or state.last_intent in {
+            "multi_last_occurrence",
+            "last_occurrence",
+            "cross_lottery_last_occurrence",
+            "occurrence_in_other_lotteries",
+        }
+    ):
+        queries = []
+        for q in state.last_multi_queries or []:
+            qq = dict(q)
+            qq["position"] = None
+            qq["position_scope"] = "any_position"
+            queries.append(qq)
+        if not queries and state.active_numbers:
+            # Rebuild single/multi from memory
+            for num in state.active_numbers:
+                queries.append(
+                    {
+                        "number": num,
+                        "lotteries": list(state.active_lotteries[:1]) if state.active_lotteries else [],
+                        "lotteries_scope": "named" if state.active_lotteries else "defaults_or_clarify",
+                        "position": None,
+                        "position_scope": "any_position",
+                    }
+                )
+        working.last_position_scope = "any_position"
+        working.last_multi_queries = queries
+        nums = [str(q.get("number")) for q in queries if q.get("number")]
+        return (
+            UnderstandingResult(
+                intent="multi_last_occurrence" if len(queries) > 1 else "last_occurrence",
+                lotteries=list(state.active_lotteries),
+                numbers=nums,
+                scope="multiple" if len(queries) > 1 else "single",
+                tool=LotteryToolName.GET_LAST_OCCURRENCE.value,
+                params={
+                    "multi_queries": queries,
+                    "intent": "multi_last_occurrence" if len(queries) > 1 else "last_occurrence",
+                    "position_scope": "any_position",
+                    "position": None,
+                },
+                confidence=0.95,
+                source="follow_up",
+            ),
+            working,
+        )
+
+    # "Ahora hazlo con el 57 y el 62" — replace numbers, keep lottery layout
+    replaced = follow_up_replace_numbers(text)
+    if replaced and state.last_multi_queries:
+        new_queries = []
+        for i, q in enumerate(state.last_multi_queries):
+            qq = dict(q)
+            if i < len(replaced):
+                qq["number"] = replaced[i]
+            new_queries.append(qq)
+        # If more numbers than prior queries, ignore extras; if fewer, only update prefix
+        working.last_multi_queries = new_queries
+        working.active_numbers = replaced[: len(new_queries)]
+        return (
+            UnderstandingResult(
+                intent="multi_last_occurrence",
+                lotteries=list(state.active_lotteries),
+                numbers=list(working.active_numbers),
+                scope="multiple",
+                tool=LotteryToolName.GET_LAST_OCCURRENCE.value,
+                params={
+                    "multi_queries": new_queries,
+                    "intent": "multi_last_occurrence",
+                    "position_scope": state.last_position_scope or "first_position",
+                },
+                confidence=0.95,
+                source="follow_up",
+            ),
+            working,
+        )
 
     # "hazlo con el 57" / "ahora con el 57" — swap number, keep lotteries
     if state.active_lotteries and state.last_intent and re.search(
@@ -814,6 +900,14 @@ def _map_resolved(
     elif intent.params.get("focus") == "cold_frequency":
         intent_name = "cold_numbers"
 
+    params = dict(intent.params or {})
+    if params.get("intent") == "multi_last_occurrence" or (
+        isinstance(params.get("multi_queries"), list) and len(params.get("multi_queries") or []) >= 2
+    ):
+        intent_name = "multi_last_occurrence"
+    elif params.get("position") is not None and intent_name == "last_occurrence":
+        intent_name = "last_occurrence_by_position"
+
     return UnderstandingResult(
         intent=intent_name,
         lotteries=lots,
@@ -821,7 +915,7 @@ def _map_resolved(
         query_date=intent.params.get("date"),
         draw_count=intent.params.get("window_draws") or intent.params.get("count"),
         tool=tool,
-        params=dict(intent.params or {}),
+        params=params,
         confidence=0.8 if tool else 0.4,
         source="rules",
     )

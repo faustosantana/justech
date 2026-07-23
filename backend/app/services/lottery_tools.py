@@ -477,9 +477,20 @@ class LotteryToolExecutor:
         if tool == LotteryToolName.GET_LAST_OCCURRENCE:
             lottery = str(params["lottery"])
             number = str(params["number"])
+            pos_filter = params.get("position")
+            if pos_filter is not None:
+                try:
+                    pos_filter = int(pos_filter)
+                except (TypeError, ValueError):
+                    pos_filter = None
             # DESC: page=1 must be the most recent occurrence (not the oldest).
             res = await self.query.by_number(
-                lottery, number, page=1, page_size=1, order="desc"
+                lottery,
+                number,
+                page=1,
+                page_size=1,
+                order="desc",
+                position=pos_filter,
             )
             last_date = None
             position = None

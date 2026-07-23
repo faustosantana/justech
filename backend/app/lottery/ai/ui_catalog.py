@@ -69,41 +69,49 @@ TOOL_LABELS_ES: dict[str, dict[str, str]] = {
 
 PACK_META: dict[str, dict[str, Any]] = {
     "LAST_OCCURRENCE_PACK": {
+        "display_name": "Última aparición",
         "intent": "last_occurrence",
         "description": "Última aparición de un número, comparación multilotería e intervalos.",
         "tools": ["lottery_last_occurrence", "lottery_compare_lotteries"],
     },
     "POST_OCCURRENCE_PACK": {
+        "display_name": "Resultados posteriores",
         "intent": "post_occurrence_window",
         "description": "Ventana de días o sorteos posteriores a una aparición recordada.",
         "tools": ["lottery_post_occurrence_window", "lottery_last_occurrence"],
     },
     "FREQUENCY_PACK": {
+        "display_name": "Frecuencia",
         "intent": "frequencies",
         "description": "Frecuencias absolutas/relativas y contraste por período.",
         "tools": ["lottery_calculate_frequencies"],
     },
     "RESULT_BY_DATE_PACK": {
+        "display_name": "Resultado por fecha",
         "intent": "result_by_date",
         "description": "Resultado de una fecha y contexto cercano.",
         "tools": ["lottery_get_result_by_date"],
     },
     "HOT_COLD_PACK": {
+        "display_name": "Calientes y fríos",
         "intent": "hot_cold",
         "description": "Calientes por frecuencia y fríos/atrasados con definición explícita.",
         "tools": ["lottery_hot_numbers", "lottery_cold_numbers", "lottery_overdue_numbers"],
     },
     "LOTTERY_SUMMARY_PACK": {
+        "display_name": "Resumen",
         "intent": "lottery_summary",
         "description": "Resumen de cobertura, últimos resultados y calidad de datos.",
         "tools": ["lottery_coverage_summary", "lottery_sync_status"],
     },
     "CROSS_LOTTERY_PACK": {
+        "display_name": "Comparación multilotería",
         "intent": "compare_numbers",
         "description": "Cruce y coincidencias entre varias loterías.",
         "tools": ["lottery_compare_lotteries"],
     },
     "DEEP_ANALYSIS_PACK": {
+        "display_name": "Análisis profundo",
         "intent": "deep_analysis",
         "description": "Análisis multi-métrica con mayor profundidad e insights.",
         "tools": [

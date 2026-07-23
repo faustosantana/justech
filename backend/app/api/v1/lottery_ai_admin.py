@@ -732,6 +732,32 @@ async def ai_audit(
     return await _svc(db, user).list_audit(limit=limit, offset=offset)
 
 
+@router.get("/publish-gates")
+async def ai_publish_gates(
+    db: DbSession,
+    user: CurrentUser,
+    tenant: TenantCtx,
+    _: Annotated[None, require_ai_admin(*_AI_ADMIN_PERMS)],
+) -> dict:
+    svc = _svc(db, user)
+    data = await svc.publish_gates()
+    await db.commit()
+    return data
+
+
+@router.post("/developer-mode")
+async def ai_developer_mode(
+    db: DbSession,
+    user: CurrentUser,
+    tenant: TenantCtx,
+    _: Annotated[None, require_ai_admin("lottery_admin_ai", "lottery.admin")],
+    body: dict[str, Any] = Body(default_factory=dict),
+) -> dict:
+    data = await _svc(db, user).audit_developer_mode(enabled=bool(body.get("enabled")))
+    await db.commit()
+    return data
+
+
 # ---- Closeout: detector alias + benchmark 300 ----
 
 @router.post("/alerts/detect-now")

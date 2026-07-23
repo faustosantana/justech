@@ -1,100 +1,146 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { ApiError, apiClient } from "@/lib/api";
 
+type LotOption = {
+  id: string;
+  name: string;
+  slug?: string;
+  country?: string | null;
+  logo_url?: string | null;
+  last_draw_date?: string | null;
+  draw_count?: number;
+  health_status?: string;
+  is_sync_enabled?: boolean | null;
+};
+
 const SLOT_COUNT = 7;
 
 export default function LotteryAIDefaultsPage() {
-  const [data, setData] = useState<Record<string, unknown> | null>(null);
-  const [slots, setSlots] = useState<string[]>(Array(SLOT_COUNT).fill(""));
+  const [catalog, setCatalog] = useState<LotOption[]>([]);
+  const [slots, setSlots] = useState<(LotOption | null)[]>(Array(SLOT_COUNT).fill(null));
+  const [queries, setQueries] = useState<string[]>(Array(SLOT_COUNT).fill(""));
   const [msg, setMsg] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState(false);
-  const [thresholdsJson, setThresholdsJson] = useState("{}");
-  const [thresholdsMeta, setThresholdsMeta] = useState<string>("defaults");
-  const [thresholdsBusy, setThresholdsBusy] = useState(false);
 
-  const loadThresholds = useCallback(async () => {
-    try {
-      const res = await apiClient.getLotteryAIAlertThresholds();
-      const active = (res.active ?? res.defaults ?? {}) as Record<string, unknown>;
-      setThresholdsJson(JSON.stringify(active, null, 2));
-      setThresholdsMeta(String(res.version_label ?? "defaults"));
-    } catch (err) {
-      setError(err instanceof ApiError ? err.message : "Error al cargar umbrales de alerta");
-    }
-  }, []);
+  const [positionScope, setPositionScope] = useState<
+    "first_position" | "any_position" | "ask_each_time"
+  >("first_position");
+  const [primaryPosition, setPrimaryPosition] = useState(1);
 
   const load = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
       const res = await apiClient.getLotteryAIDefaults();
-      setData(res);
-      const raw = (res.defaults ?? res.lotteries ?? res.slots ?? []) as unknown[];
-      const filled = Array(SLOT_COUNT)
-        .fill("")
-        .map((_, i) => String(raw[i] ?? ""));
-      setSlots(filled);
-      await loadThresholds();
+      const cat = ((res.catalog ?? []) as LotOption[]).filter((c) => c?.id);
+      setCatalog(cat);
+      const rawSlots = (res.slots ?? (res.defaults as { slots?: unknown[] })?.slots ?? []) as (
+        | LotOption
+        | null
+        | undefined
+      )[];
+      const next = Array(SLOT_COUNT)
+        .fill(null)
+        .map((_, i) => (rawSlots[i] && (rawSlots[i] as LotOption).id ? (rawSlots[i] as LotOption) : null));
+      setSlots(next);
+      setQueries(next.map((s) => s?.name ?? ""));
+      const defs = (res.defaults || {}) as {
+        default_number_position_scope?: string;
+        default_primary_position?: number;
+      };
+      const scope = defs.default_number_position_scope;
+      if (scope === "any_position" || scope === "ask_each_time" || scope === "first_position") {
+        setPositionScope(scope);
+      } else if (scope === "specific_position") {
+        setPositionScope("first_position");
+      }
+      if (typeof defs.default_primary_position === "number") {
+        setPrimaryPosition(defs.default_primary_position);
+      }
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "Error al cargar loterías predeterminadas");
     } finally {
       setLoading(false);
     }
-  }, [loadThresholds]);
+  }, []);
 
   useEffect(() => {
     void load();
   }, [load]);
 
-  const setSlot = (index: number, value: string) => {
-    setSlots((prev) => prev.map((s, i) => (i === index ? value : s)));
+  const usedIds = useMemo(() => new Set(slots.filter(Boolean).map((s) => s!.id)), [slots]);
+
+  const suggestions = (index: number) => {
+    const q = (queries[index] || "").toLowerCase().trim();
+    return catalog
+      .filter((c) => !usedIds.has(c.id) || slots[index]?.id === c.id)
+      .filter((c) => !q || c.name.toLowerCase().includes(q) || (c.slug || "").includes(q))
+      .slice(0, 8);
+  };
+
+  const selectAt = (index: number, lot: LotOption | null) => {
+    setSlots((prev) => {
+      const next = [...prev];
+      if (lot && next.some((s, i) => i !== index && s?.id === lot.id)) {
+        setError("No se permiten loterías duplicadas");
+        return prev;
+      }
+      next[index] = lot;
+      return next;
+    });
+    setQueries((prev) => prev.map((q, i) => (i === index ? lot?.name ?? "" : q)));
+    setError(null);
+  };
+
+  const move = (index: number, dir: -1 | 1) => {
+    const j = index + dir;
+    if (j < 0 || j >= SLOT_COUNT) return;
+    setSlots((prev) => {
+      const next = [...prev];
+      [next[index], next[j]] = [next[j], next[index]];
+      return next;
+    });
+    setQueries((prev) => {
+      const next = [...prev];
+      [next[index], next[j]] = [next[j], next[index]];
+      return next;
+    });
   };
 
   const save = async () => {
     setBusy(true);
     setMsg(null);
     try {
-      const payload: Record<string, unknown> = {
-        ...(data ?? {}),
-        defaults: slots.map((s) => s.trim()).filter(Boolean),
-      };
-      await apiClient.putLotteryAIDefaults(payload);
+      await apiClient.putLotteryAIDefaults({
+        slots: slots.map((s) => (s ? { id: s.id } : null)),
+        default_analysis_lottery_ids: slots.filter(Boolean).map((s) => s!.id),
+        user_may_override: true,
+        default_number_position_scope: positionScope,
+        default_primary_position: primaryPosition,
+      });
+      // Mirror into user/tenant Lottery preferences for chat runtime
+      try {
+        await apiClient.patchLotteryPreferences({
+          default_number_position_scope: positionScope,
+          default_primary_position: primaryPosition,
+        });
+      } catch {
+        /* prefs endpoint may be unavailable for some roles */
+      }
       setMsg("Loterías predeterminadas guardadas");
+      await load();
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "Error al guardar");
     } finally {
       setBusy(false);
-    }
-  };
-
-  const saveThresholds = async () => {
-    setThresholdsBusy(true);
-    setMsg(null);
-    setError(null);
-    try {
-      const parsed = JSON.parse(thresholdsJson) as Record<string, unknown>;
-      const res = await apiClient.putLotteryAIAlertThresholds({ payload: parsed });
-      setThresholdsMeta(String(res.version_label ?? "saved"));
-      if (res.active) {
-        setThresholdsJson(JSON.stringify(res.active, null, 2));
-      }
-      setMsg("Umbrales de alerta guardados");
-    } catch (err) {
-      if (err instanceof SyntaxError) {
-        setError("JSON de umbrales inválido");
-      } else {
-        setError(err instanceof ApiError ? err.message : "Error al guardar umbrales");
-      }
-    } finally {
-      setThresholdsBusy(false);
     }
   };
 
@@ -113,8 +159,8 @@ export default function LotteryAIDefaultsPage() {
       </div>
 
       <p className="text-sm text-muted-foreground">
-        Configure las {SLOT_COUNT} loterías predeterminadas (por tenant) que el agente IA usa en
-        consultas sin contexto explícito.
+        Seleccione hasta {SLOT_COUNT} loterías por nombre comercial. No se requieren UUID ni slugs.
+        El slot 7 puede quedar pendiente.
       </p>
 
       {error && <p className="text-sm text-destructive">{error}</p>}
@@ -122,68 +168,105 @@ export default function LotteryAIDefaultsPage() {
       {loading && <p className="text-sm text-muted-foreground">Cargando…</p>}
 
       <Card>
-        <CardHeader>
-          <CardTitle className="text-sm">Slots de loterías (1–{SLOT_COUNT})</CardTitle>
+        <CardHeader className="py-3">
+          <CardTitle className="text-sm">Preferencias de Lottery IA</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-3">
-          {slots.map((slot, i) => (
-            <div key={i} className="flex items-center gap-3">
-              <span className="w-6 shrink-0 text-right text-sm font-medium text-muted-foreground">
-                {i + 1}
-              </span>
-              <Input
-                placeholder={`Slug o ID de lotería ${i + 1}`}
-                value={slot}
-                onChange={(e) => setSlot(i, e.target.value)}
-                className="font-mono text-sm"
-              />
-            </div>
-          ))}
-        </CardContent>
-      </Card>
-
-      {data?.tenant_overrides !== undefined && (
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-sm">Overrides por tenant</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <pre className="overflow-auto rounded text-xs">
-              {JSON.stringify(data.tenant_overrides, null, 2)}
-            </pre>
-          </CardContent>
-        </Card>
-      )}
-
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0">
-          <div>
-            <CardTitle className="text-sm">Umbrales de alerta (JSON)</CardTitle>
-            <p className="mt-1 text-xs text-muted-foreground">versión: {thresholdsMeta}</p>
-          </div>
-          <div className="flex gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => void loadThresholds()}
-              disabled={thresholdsBusy || loading}
+        <CardContent className="space-y-3 text-sm">
+          <label className="block space-y-1">
+            <span className="font-medium">Cuando pregunte por un número sin indicar posición</span>
+            <select
+              className="mt-1 w-full max-w-md rounded border bg-background px-2 py-1.5"
+              value={positionScope}
+              onChange={(e) =>
+                setPositionScope(e.target.value as "first_position" | "any_position" | "ask_each_time")
+              }
             >
-              Recargar
-            </Button>
-            <Button size="sm" onClick={() => void saveThresholds()} disabled={thresholdsBusy || loading}>
-              {thresholdsBusy ? "Guardando…" : "Guardar umbrales"}
-            </Button>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <textarea
-            className="min-h-[220px] w-full rounded-md border border-border bg-background p-3 font-mono text-xs"
-            value={thresholdsJson}
-            onChange={(e) => setThresholdsJson(e.target.value)}
-            spellCheck={false}
-          />
+              <option value="first_position">Buscar en primera posición</option>
+              <option value="any_position">Buscar en cualquier posición</option>
+              <option value="ask_each_time">Preguntarme cada vez</option>
+            </select>
+          </label>
+          <label className="block space-y-1">
+            <span className="text-muted-foreground">Posición primaria (1–3)</span>
+            <Input
+              type="number"
+              min={1}
+              max={3}
+              className="max-w-[6rem]"
+              value={primaryPosition}
+              onChange={(e) => setPrimaryPosition(Number(e.target.value) || 1)}
+            />
+          </label>
+          <p className="text-xs text-muted-foreground">
+            Justech: valor recomendado «Buscar en primera posición». Solo se amplía a otras posiciones si el
+            usuario lo pide o cambia esta preferencia.
+          </p>
         </CardContent>
       </Card>
+
+      <div className="space-y-3">
+        {slots.map((slot, i) => (
+          <Card key={i}>
+            <CardHeader className="py-3">
+              <CardTitle className="text-sm">Slot {i + 1}</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-2">
+              <div className="flex flex-wrap gap-2">
+                <Input
+                  placeholder="Buscar lotería…"
+                  value={queries[i]}
+                  onChange={(e) => setQueries((prev) => prev.map((q, idx) => (idx === i ? e.target.value : q)))}
+                  className="max-w-sm"
+                />
+                <Button type="button" size="sm" variant="ghost" onClick={() => selectAt(i, null)}>
+                  Limpiar
+                </Button>
+                <Button type="button" size="sm" variant="outline" onClick={() => move(i, -1)} disabled={i === 0}>
+                  Subir
+                </Button>
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="outline"
+                  onClick={() => move(i, 1)}
+                  disabled={i === SLOT_COUNT - 1}
+                >
+                  Bajar
+                </Button>
+              </div>
+              {slot ? (
+                <div className="rounded border border-border/60 p-2 text-sm">
+                  <p className="font-medium">{slot.name}</p>
+                  <p className="text-xs text-muted-foreground">
+                    País: {slot.country ?? "—"} · Último: {slot.last_draw_date ?? "Sin datos suficientes"} ·
+                    Sorteos: {slot.draw_count ?? "Sin datos suficientes"} · Salud:{" "}
+                    {slot.health_status ?? "Sin datos suficientes"} · Sync:{" "}
+                    {slot.is_sync_enabled == null ? "Sin datos suficientes" : slot.is_sync_enabled ? "on" : "off"}
+                  </p>
+                </div>
+              ) : (
+                <ul className="max-h-40 overflow-auto rounded border border-border/40 text-sm">
+                  {suggestions(i).map((opt) => (
+                    <li key={opt.id}>
+                      <button
+                        type="button"
+                        className="block w-full px-3 py-1.5 text-left hover:bg-muted"
+                        onClick={() => selectAt(i, opt)}
+                      >
+                        {opt.name}
+                        <span className="ml-2 text-xs text-muted-foreground">{opt.country ?? ""}</span>
+                      </button>
+                    </li>
+                  ))}
+                  {suggestions(i).length === 0 && (
+                    <li className="px-3 py-2 text-xs text-muted-foreground">Sin coincidencias en catálogo</li>
+                  )}
+                </ul>
+              )}
+            </CardContent>
+          </Card>
+        ))}
+      </div>
     </div>
   );
 }

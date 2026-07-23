@@ -2,12 +2,14 @@
 
 import { useCallback, useEffect, useState } from "react";
 
+import { useLotteryAIDevMode } from "@/components/lottery/ai-admin-dev-mode";
+import { MetricLine } from "@/components/lottery/ai-admin-display";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ApiError, apiClient } from "@/lib/api";
 
 export default function LotteryAIAnalysisPacksPage() {
-  const [data, setData] = useState<Record<string, unknown> | null>(null);
+  const { developerMode } = useLotteryAIDevMode();
   const [packs, setPacks] = useState<Record<string, unknown>[]>([]);
   const [msg, setMsg] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -19,8 +21,7 @@ export default function LotteryAIAnalysisPacksPage() {
     setError(null);
     try {
       const res = await apiClient.getLotteryAIAnalysisPacks();
-      setData(res);
-      const items = (res.packs ?? res.items ?? (Array.isArray(res) ? res : [])) as Record<string, unknown>[];
+      const items = (res.packs ?? res.items ?? []) as Record<string, unknown>[];
       setPacks(items);
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "Error al cargar paquetes");
@@ -33,11 +34,9 @@ export default function LotteryAIAnalysisPacksPage() {
     void load();
   }, [load]);
 
-  const togglePack = (packId: string, currentEnabled: boolean) => {
+  const togglePack = (packKey: string, currentEnabled: boolean) => {
     setPacks((prev) =>
-      prev.map((p) =>
-        String(p.id ?? p.name) === packId ? { ...p, enabled: !currentEnabled } : p,
-      ),
+      prev.map((p) => (String(p.pack_key) === packKey ? { ...p, enabled: !currentEnabled } : p)),
     );
   };
 
@@ -45,9 +44,16 @@ export default function LotteryAIAnalysisPacksPage() {
     setBusy(true);
     setMsg(null);
     try {
-      const payload = data ? { ...data, packs } : { packs };
-      await apiClient.putLotteryAIAnalysisPacks(payload as Record<string, unknown>);
+      await apiClient.putLotteryAIAnalysisPacks({
+        packs: packs.map((p) => ({
+          pack_key: p.pack_key,
+          enabled: p.enabled,
+          config: p.config,
+          display_name: p.display_name ?? p.name,
+        })),
+      });
       setMsg("Paquetes actualizados");
+      await load();
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "Error al guardar paquetes");
     } finally {
@@ -73,49 +79,48 @@ export default function LotteryAIAnalysisPacksPage() {
       {msg && <p className="text-sm text-muted-foreground">{msg}</p>}
       {loading && <p className="text-sm text-muted-foreground">Cargando…</p>}
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-sm">Paquetes disponibles</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-2">
-          {packs.length === 0 && !loading && (
-            <p className="text-sm text-muted-foreground">Sin paquetes registrados.</p>
-          )}
-          {packs.map((pack) => {
-            const packId = String(pack.id ?? pack.name ?? "");
-            const enabled = Boolean(pack.enabled ?? pack.is_enabled);
-            return (
-              <div
-                key={packId}
-                className="flex items-center justify-between rounded-lg border border-border/60 px-3 py-2"
-              >
-                <div>
-                  <p className="text-sm font-medium">
-                    {String(pack.label ?? pack.name ?? packId)}
+      <div className="grid gap-3 md:grid-cols-2">
+        {packs.map((pack) => {
+          const packKey = String(pack.pack_key ?? "");
+          const title = String(pack.display_name ?? pack.name ?? pack.label ?? packKey);
+          const enabled = Boolean(pack.enabled);
+          return (
+            <Card key={packKey || String(pack.id)}>
+              <CardHeader className="py-3">
+                <CardTitle className="text-sm">{title}</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-1 text-sm">
+                <p className="text-muted-foreground">{String(pack.description ?? "")}</p>
+                <MetricLine label="Intención" value={pack.intent} />
+                <MetricLine
+                  label="Tools"
+                  value={Array.isArray(pack.tools) ? (pack.tools as string[]).length : pack.tools_count}
+                />
+                <MetricLine label="Profundidad" value={pack.depth} />
+                <MetricLine label="Max insights" value={pack.max_insights} />
+                <MetricLine label="Estado" value={pack.status ?? (enabled ? "activo" : "inactivo")} />
+                <MetricLine label="Última modificación" value={pack.updated_at} />
+                {developerMode ? (
+                  <p className="font-mono text-[10px] text-muted-foreground">
+                    {packKey} · {String(pack.id)}
                   </p>
-                  {pack.description && (
-                    <p className="text-xs text-muted-foreground">{String(pack.description)}</p>
-                  )}
-                  {pack.tools_count !== undefined && (
-                    <p className="text-xs text-muted-foreground">
-                      {String(pack.tools_count)} tools
-                    </p>
-                  )}
-                </div>
-                <label className="flex cursor-pointer items-center gap-2 text-sm">
+                ) : null}
+                <label className="mt-2 flex cursor-pointer items-center gap-2 text-sm">
                   <input
                     type="checkbox"
                     checked={enabled}
-                    onChange={() => togglePack(packId, enabled)}
-                    aria-label={`${enabled ? "Desactivar" : "Activar"} ${packId}`}
+                    onChange={() => togglePack(packKey, enabled)}
                   />
                   <span>{enabled ? "Activo" : "Inactivo"}</span>
                 </label>
-              </div>
-            );
-          })}
-        </CardContent>
-      </Card>
+              </CardContent>
+            </Card>
+          );
+        })}
+      </div>
+      {packs.length === 0 && !loading && (
+        <p className="text-sm text-muted-foreground">Sin paquetes. Se sembrarán al abrir el Centro IA.</p>
+      )}
     </div>
   );
 }

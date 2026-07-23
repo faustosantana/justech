@@ -551,19 +551,66 @@ class LotteryAdminService:
                 select(LotteryLottery).where(LotteryLottery.is_sync_enabled.is_(True))
             )
         ).scalars().all()
-        pending = 0
-        for lot in sync_lots:
-            has_today = int(
-                (
-                    await self.db.execute(
-                        select(func.count())
-                        .select_from(LotteryDraw)
-                        .where(LotteryDraw.lottery_id == lot.id, LotteryDraw.draw_date == today)
-                    )
-                ).scalar_one()
+        visible_lots = (
+            await self.db.execute(
+                select(LotteryLottery).where(
+                    LotteryLottery.is_visible_dashboard.is_(True),
+                    LotteryLottery.is_aggregate.is_(False),
+                    LotteryLottery.active.is_(True),
+                )
             )
-            if has_today == 0:
-                pending += 1
+        ).scalars().all()
+
+        async def _missing(lots: list) -> tuple[int, list[dict]]:
+            n = 0
+            detail = []
+            for lot in lots:
+                has_today = int(
+                    (
+                        await self.db.execute(
+                            select(func.count())
+                            .select_from(LotteryDraw)
+                            .where(LotteryDraw.lottery_id == lot.id, LotteryDraw.draw_date == today)
+                        )
+                    ).scalar_one()
+                )
+                if has_today == 0:
+                    n += 1
+                    detail.append(
+                        {
+                            "source_id": lot.source_id,
+                            "name": lot.commercial_name or lot.name,
+                            "sync_enabled": lot.is_sync_enabled,
+                            "auto_write": lot.is_auto_write_enabled,
+                            "last_draw_date": lot.last_draw_date.isoformat() if lot.last_draw_date else None,
+                        }
+                    )
+            return n, detail
+
+        pending_sync, pending_sync_detail = await _missing(list(sync_lots))
+        pending_vis, pending_vis_detail = await _missing(list(visible_lots))
+        expected_today = len(visible_lots)
+        pending = pending_sync  # backward-compatible primary pending = sync scope
+
+        last_sync_at = (
+            await self.db.execute(select(func.max(LotterySyncRun.completed_at)))
+        ).scalar_one_or_none()
+        next_sync_at = None
+        if state and state.next_run_at:
+            next_sync_at = state.next_run_at
+        due = windows.get("sync_enabled_due") or []
+        if due and due[0].get("next_draw_at"):
+            # informational; worker loop also polls every 60s
+            pass
+
+        worker_status = {
+            "standalone_configured": bool(settings.lottery_sync_worker_standalone),
+            "scheduler_enabled": bool(settings.lottery_scheduler_enabled),
+            "scheduler_mode": settings.lottery_scheduler_mode,
+            "api_starts_scheduler": not bool(settings.lottery_sync_worker_standalone),
+            "worker_owns_ticks": bool(settings.lottery_sync_worker_standalone),
+            "loop_seconds": int(getattr(settings, "lottery_sync_worker_loop_seconds", 60) or 60),
+        }
 
         payload = base.model_dump()
         payload.update(
@@ -571,13 +618,23 @@ class LotteryAdminService:
                 "local_today": today,
                 "timezone": tz_name,
                 "pending_results": pending,
+                "expected_today": expected_today,
+                "pending_sync_enabled": pending_sync,
+                "pending_visible": pending_vis,
+                "last_sync_at": last_sync_at,
+                "next_sync_at": next_sync_at,
+                "worker_status": worker_status,
                 "recent_sync_runs": run_rows,
-                "next_sync_windows": windows.get("sync_enabled_due") or [],
+                "next_sync_windows": due,
                 "circuit_breakers": circuits,
                 "source_health": source_health,
                 "kpis": {
                     "results_today": base.results_today,
-                    "pending_results": pending,
+                    "expected_today": expected_today,
+                    "pending_sync_enabled": pending_sync,
+                    "pending_visible": pending_vis,
+                    "pending_sync_detail": pending_sync_detail[:20],
+                    "pending_visible_detail": pending_vis_detail[:20],
                     "inserts_last_runs": sum(int(r.get("records_inserted") or 0) for r in run_rows),
                     "errors_last_runs": sum(int(r.get("errors") or 0) for r in run_rows),
                     "phases": windows.get("phases") or {},

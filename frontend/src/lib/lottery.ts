@@ -299,11 +299,18 @@ export interface LotteryDashboardV3 extends LotteryDashboardV2 {
   local_today?: string | null;
   timezone?: string;
   pending_results?: number;
+  expected_today?: number;
+  pending_sync_enabled?: number;
+  pending_visible?: number;
+  last_sync_at?: string | null;
+  next_sync_at?: string | null;
+  worker_status?: Record<string, unknown>;
   recent_sync_runs?: Record<string, unknown>[];
   next_sync_windows?: Record<string, unknown>[];
   circuit_breakers?: Record<string, unknown>[];
   source_health?: Record<string, unknown>[];
   kpis?: Record<string, unknown>;
+  results_today_note?: string;
 }
 
 /** Lotería administrable (Lottery 2.0). */

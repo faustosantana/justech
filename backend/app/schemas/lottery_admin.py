@@ -186,8 +186,19 @@ class LotteryDashboardV3(LotteryDashboardV2):
     local_today: date | None = None
     timezone: str = "America/Santo_Domingo"
     pending_results: int = 0
+    expected_today: int = 0
+    pending_sync_enabled: int = 0
+    pending_visible: int = 0
+    last_sync_at: datetime | None = None
+    next_sync_at: datetime | None = None
+    worker_status: dict[str, Any] = Field(default_factory=dict)
     recent_sync_runs: list[dict[str, Any]] = Field(default_factory=list)
     next_sync_windows: list[dict[str, Any]] = Field(default_factory=list)
     circuit_breakers: list[dict[str, Any]] = Field(default_factory=list)
     source_health: list[dict[str, Any]] = Field(default_factory=list)
     kpis: dict[str, Any] = Field(default_factory=dict)
+    results_today_note: str = (
+        "Resultados hoy = draws con draw_date = hoy local (America/Santo_Domingo). "
+        "Pendientes sync = loterías con sync_enabled sin resultado de hoy. "
+        "Pendientes visibles = loterías del dashboard sin resultado de hoy (incluye no sincronizadas)."
+    )

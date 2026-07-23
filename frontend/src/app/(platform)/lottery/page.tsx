@@ -170,10 +170,30 @@ export default function LotteryPage() {
             <MetricCard label="Visibles" value={dash.lotteries_visible.toLocaleString()} tone="muted" href="/lottery/lotteries" />
             <MetricCard label="Con sync" value={dash.lotteries_synced.toLocaleString()} tone="primary" />
             <MetricCard label="Resultados hoy" value={dash.results_today.toLocaleString()} tone="success" />
-            <MetricCard label="Pendientes hoy" value={(dash.pending_results ?? 0).toLocaleString()} tone="warning" />
+            <MetricCard label="Esperados hoy (visibles)" value={(dash.expected_today ?? 0).toLocaleString()} tone="muted" />
+            <MetricCard
+              label="Pendientes sync"
+              value={(dash.pending_sync_enabled ?? dash.pending_results ?? 0).toLocaleString()}
+              tone="warning"
+              delta="solo sync_enabled"
+            />
+            <MetricCard
+              label="Pendientes visibles"
+              value={(dash.pending_visible ?? 0).toLocaleString()}
+              tone="warning"
+              delta="incluye sin sync"
+            />
             <MetricCard label="Sorteos históricos" value={dash.draws_historical.toLocaleString()} tone="muted" />
             <MetricCard label="Números almacenados" value={dash.numbers_stored.toLocaleString()} tone="muted" />
             <MetricCard label="Última actualización" value={formatDateTime(dash.last_update_at)} tone="warning" />
+            <MetricCard label="Última sync" value={formatDateTime(dash.last_sync_at)} tone="muted" />
+            <MetricCard label="Próxima sync" value={formatDateTime(dash.next_sync_at)} tone="muted" />
+            <MetricCard
+              label="Worker"
+              value={dash.worker_status?.worker_owns_ticks ? "standalone" : "in-API"}
+              tone={dash.worker_status?.standalone_configured ? "success" : "warning"}
+              delta={String(dash.worker_status?.scheduler_mode || "")}
+            />
             <MetricCard
               label="Hoy local"
               value={dash.local_today || "—"}

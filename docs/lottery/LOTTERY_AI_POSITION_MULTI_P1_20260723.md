@@ -36,3 +36,20 @@
 Esperado: intent `multi_last_occurrence`, position=1, tools last_occurrence (no frequency), tabla 44 excluyendo Leidsa, sin JSON.
 
 Follow-ups: «¿Y en cualquier posición?» → any_position; «Ahora hazlo con el 57 y el 62.» → mismos alcances, nuevos números.
+
+## Resultado UAT productivo (2026-07-23)
+
+**Bake:** `jaios-app-backend:lottery-position-multi-20260723b` + frontend `lottery-position-multi-20260723`  
+**Backup:** `/var/jaios/backups/pre_lottery-position-multi-20260723_*.dump`  
+**Sesión:** `0280c178-244b-45f7-b88a-e46cc457b487`
+
+| Paso | Resultado |
+|------|-----------|
+| Q1 compuesto | PASS — 35 Leidsa pos=1 (2026-05-06, `35 · 09 · 71`); 44 `all_except_previous` excl. Leidsa; top = Nacional 2026-07-15; sin frequency; `sc.tool=null` |
+| Q2 cualquier posición | PASS — mismos números/alcances; `position=None` / «Cualquier posición»; 35 ahora 2026-07-01 en 2da |
+| Q3 57 y 62 | PASS — reemplaza números; conserva layout + any_position |
+| Prompt activo | v2 + cuerpo con «POSICIÓN PREDETERMINADA» |
+| Sync compose | Solo cambió tag de imagen; env sync gates iguales |
+| Nacional Día / Etapa C | Sin cambios de datos; Etapa C no iniciada |
+
+**Commits:** `64a3163`, `f778958` on `feature/lottery-3.0`

@@ -268,9 +268,6 @@ def resolve_intent(message: str, ctx: LotterySessionContext) -> ResolvedIntent:
     if re.search(r"anomal[ií]as|inconsistencias|calidad de datos", text):
         # quality/anomalies need a lottery — defer to later extraction
         pass
-    if re.search(r"n[uú]meros?\s+calientes|n[uú]meros?\s+fr[ií]os|calientes y fr[ií]os", text):
-        # resolved after lottery extraction below — placeholder handled later
-        pass
 
     if re.search(r"guarda(r)? (esta )?consulta|salvar consulta|save query", text):
         name_m = re.search(r"(?:como|como|as)\s+[«\"']?([^\"'»]+)[»\"']?", raw, re.I)
@@ -287,17 +284,69 @@ def resolve_intent(message: str, ctx: LotterySessionContext) -> ResolvedIntent:
     parsed_date = _parse_spanish_date(raw)  # do not inherit ctx date for unrelated number queries
     ctx_date = parsed_date or ctx.base_date
 
-    if re.search(r"n[uú]meros?\s+calientes|n[uú]meros?\s+fr[ií]os|calientes y fr[ií]os", text):
-        if not lottery:
+    def_hot_cold = bool(
+        re.search(
+            r"(qu[eé]\s+(significa|es|quiere\s+decir)|diferencia\s+entre|en\s+qu[eé]\s+se\s+diferencia).*"
+            r"(caliente|fr[ií]o|atrasad)",
+            text,
+        )
+        or re.search(
+            r"(caliente|fr[ií]o|atrasad).*(significa|definición|definicion|vs|versus|o\s+atrasad)",
+            text,
+        )
+        or re.search(r"diferencia\s+entre\s+fr[ií]o\s+y\s+atrasad", text)
+    )
+    hot_cold_list = bool(
+        re.search(
+            r"("
+            r"n[uú]meros?\s+(m[aá]s\s+)?(calientes?|fr[ií]os?|atrasados?)|"
+            r"(est[aá]n|estan)\s+(calientes?|fr[ií]os?|atrasados?)|"
+            r"(los\s+)?(m[aá]s\s+)?(calientes?|fr[ií]os?|atrasados?)\b|"
+            r"calientes?\s+y\s+fr[ií]os?|"
+            r"fr[ií]os?\s+por\s+frecuencia|"
+            r"llevan\s+m[aá]s\s+tiempo\s+sin\s+(aparecer|salir)|"
+            r"sin\s+aparecer|"
+            r"compar(a|e).*calientes?"
+            r")",
+            text,
+        )
+    )
+    if def_hot_cold or hot_cold_list:
+        focus = "both"
+        if re.search(r"atrasad|sin\s+aparecer|llevan\s+m[aá]s\s+tiempo", text) and not re.search(
+            r"calientes?", text
+        ):
+            focus = "cold_interval"
+        elif re.search(r"fr[ií]os?.*frecuencia|frecuencia.*fr[ií]os?|m[aá]s\s+fr[ií]os?\s+por\s+frecuencia", text):
+            focus = "cold_frequency"
+        elif re.search(r"\bfr[ií]os?\b", text) and not re.search(r"calientes?", text):
+            focus = "cold_interval"
+        elif re.search(r"calientes?", text) and not re.search(r"fr[ií]os?|atrasad", text):
+            focus = "hot"
+        if def_hot_cold and not hot_cold_list:
+            focus = "definition"
+        if not lottery and focus != "definition":
             return ResolvedIntent(
                 kind="clarify",
-                clarify_message="¿De qué lotería quieres números calientes/fríos (descriptivos, no predicción)?",
+                clarify_message=(
+                    "¿De qué lotería quieres el análisis de números calientes/fríos "
+                    "(descriptivo histórico, no predicción)?"
+                ),
                 structured_type="lottery_ambiguity",
             )
+        window = 30
+        wm = re.search(r"[uú]ltimos?\s+(\d+)\s+sorteos?", text)
+        if wm:
+            window = max(5, min(365, int(wm.group(1))))
         return ResolvedIntent(
             kind="tool",
             tool=LotteryToolName.GET_HOT_COLD,
-            params={"lottery": lottery},
+            params={
+                "lottery": lottery or ctx.last_lottery or "Leidsa",
+                "focus": focus,
+                "window_draws": window,
+                "explain_only": focus == "definition",
+            },
             structured_type="lottery_result",
         )
     if re.search(r"anomal[ií]as|calidad de (los )?datos|inconsistencias de (los )?datos", text) and lottery:

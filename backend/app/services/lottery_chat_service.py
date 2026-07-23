@@ -543,15 +543,42 @@ class LotteryChatService:
             return "Salud de fuentes: " + "; ".join(bits) + "."
 
         if tool == "lottery_get_hot_cold" and isinstance(data, dict):
-            hot = ", ".join(f"{h.get('number')} (×{h.get('count')})" for h in (data.get("hot") or [])[:10])
-            cold = ", ".join(
+            if data.get("focus") == "definition" or not data.get("window_draws"):
+                defs = data.get("definitions") or {}
+                return (
+                    "En JAIOS usamos estas definiciones explícitas (análisis histórico, no predicción):\n"
+                    f"• Caliente: {defs.get('hot') or data.get('definition')}\n"
+                    f"• Frío por frecuencia: {defs.get('cold_frequency') or 'baja frecuencia relativa en la muestra.'}\n"
+                    f"• Frío/atrasado por intervalo: {defs.get('cold_interval') or 'días sin aparecer.'}\n"
+                    "No mezclamos automáticamente «frío por frecuencia» con «atrasado por intervalo»; "
+                    "indicamos cuál métrica se usa en cada respuesta."
+                )
+            lot = data.get("lottery") or "la lotería"
+            hot = ", ".join(
+                f"{h.get('number')} ({h.get('relative_frequency_pct', h.get('count'))}"
+                f"{'%' if h.get('relative_frequency_pct') is not None else '×'})"
+                for h in (data.get("hot") or [])[:10]
+            )
+            cold_i = ", ".join(
                 f"{c.get('number')} ({c.get('days_since')}d)" for c in (data.get("cold") or [])[:10]
             )
-            return (
-                f"Análisis descriptivo sobre {data.get('window_draws')} sorteos (hasta {data.get('as_of')}). "
-                f"Calientes: {hot or 'n/d'}. Fríos: {cold or 'n/d'}. "
-                f"{data.get('definition') or 'No es predicción ni recomendación de apuestas.'}"
+            cold_f = ", ".join(
+                f"{c.get('number')} ({c.get('relative_frequency_pct')}%)"
+                for c in (data.get("cold_by_frequency") or [])[:10]
             )
+            parts = [
+                f"Análisis descriptivo de {lot}: muestra={data.get('window_draws')} sorteos "
+                f"({data.get('sample_numbers')} números), hasta {data.get('as_of')}. "
+                f"Métrica: {data.get('metric_used')}."
+            ]
+            if hot:
+                parts.append(f"Calientes (frecuencia relativa): {hot}.")
+            if cold_f:
+                parts.append(f"Fríos por frecuencia: {cold_f}.")
+            if cold_i:
+                parts.append(f"Atrasados/fríos por intervalo: {cold_i}.")
+            parts.append(str(data.get("definition") or "No es predicción ni recomendación de apuestas."))
+            return " ".join(parts)
 
         if tool == "lottery_find_next_occurrences" and isinstance(data, dict):
             items = data.get("items") or []

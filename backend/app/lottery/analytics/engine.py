@@ -149,8 +149,46 @@ class LotteryAnalyticsEngine:
         *,
         window_draws: int = 30,
         cold_days_threshold: int = 30,
+        focus: str = "both",
     ) -> dict[str, Any]:
-        """Hot = top frequency in last N draws; cold = longest days since last appearance."""
+        """Hot = top relative frequency in last N draws.
+
+        Cold (interval / atrasado) = longest days since last appearance.
+        Cold (frequency) = lowest frequency inside the same window.
+        Definitions are mutually explicit — never mixed without saying which metric.
+        """
+        definitions = {
+            "hot": (
+                f"Caliente: alta frecuencia relativa dentro de los últimos {window_draws} sorteos "
+                "(conteo de apariciones / total de números extraídos en la muestra)."
+            ),
+            "cold_frequency": (
+                f"Frío por frecuencia: baja frecuencia relativa en los últimos {window_draws} sorteos."
+            ),
+            "cold_interval": (
+                f"Frío/atrasado por intervalo: muchos días sin aparecer respecto al último sorteo "
+                f"conocido (umbral ≥{cold_days_threshold} días)."
+            ),
+            "disclaimer": (
+                "Análisis histórico descriptivo. No es predicción ni recomendación de apuestas."
+            ),
+        }
+        if focus == "definition":
+            return {
+                "window_draws": 0,
+                "as_of": None,
+                "hot": [],
+                "cold": [],
+                "cold_by_frequency": [],
+                "focus": "definition",
+                "metric_used": "definition",
+                "definitions": definitions,
+                "definition": (
+                    f"{definitions['hot']} {definitions['cold_frequency']} "
+                    f"{definitions['cold_interval']} {definitions['disclaimer']}"
+                ),
+            }
+
         recent = (
             await self.db.execute(
                 select(LotteryDraw.id, LotteryDraw.draw_date)
@@ -160,7 +198,15 @@ class LotteryAnalyticsEngine:
             )
         ).all()
         if not recent:
-            return {"hot": [], "cold": [], "window_draws": 0}
+            return {
+                "hot": [],
+                "cold": [],
+                "cold_by_frequency": [],
+                "window_draws": 0,
+                "focus": focus,
+                "definitions": definitions,
+                "definition": definitions["disclaimer"],
+            }
         draw_ids = [r[0] for r in recent]
         last_date = recent[0][1]
         nums = (
@@ -168,7 +214,24 @@ class LotteryAnalyticsEngine:
                 select(LotteryDrawNumber.number_value).where(LotteryDrawNumber.draw_id.in_(draw_ids))
             )
         ).scalars().all()
-        hot = [{"number": n, "count": c} for n, c in Counter(nums).most_common(10)]
+        total = max(1, len(nums))
+        counts = Counter(nums)
+        hot = [
+            {
+                "number": n,
+                "count": c,
+                "relative_frequency_pct": round(100.0 * c / total, 2),
+            }
+            for n, c in counts.most_common(10)
+        ]
+        cold_freq = [
+            {
+                "number": n,
+                "count": c,
+                "relative_frequency_pct": round(100.0 * c / total, 2),
+            }
+            for n, c in sorted(counts.items(), key=lambda kv: (kv[1], kv[0]))[:10]
+        ]
 
         last_occ = (
             await self.db.execute(
@@ -178,22 +241,39 @@ class LotteryAnalyticsEngine:
                 .group_by(LotteryDrawNumber.number_value)
             )
         ).all()
-        cold = []
+        cold_interval = []
         for n, d in last_occ:
             gap = (last_date - d).days if d else None
             if gap is not None and gap >= cold_days_threshold:
-                cold.append({"number": n, "days_since": gap, "last_seen": d.isoformat()})
-        cold.sort(key=lambda x: x["days_since"], reverse=True)
+                cold_interval.append({"number": n, "days_since": gap, "last_seen": d.isoformat()})
+        cold_interval.sort(key=lambda x: x["days_since"], reverse=True)
+
+        metric = {
+            "hot": "relative_frequency",
+            "cold_frequency": "relative_frequency",
+            "cold_interval": "days_since_last_appearance",
+            "both": "hot=relative_frequency; cold=days_since_last_appearance",
+        }.get(focus, "relative_frequency")
+
+        def_bits = [definitions["disclaimer"]]
+        if focus in ("hot", "both"):
+            def_bits.insert(0, definitions["hot"])
+        if focus in ("cold_frequency",):
+            def_bits.insert(0, definitions["cold_frequency"])
+        if focus in ("cold_interval", "both"):
+            def_bits.insert(0, definitions["cold_interval"])
+
         return {
             "window_draws": len(recent),
+            "sample_numbers": total,
             "as_of": last_date.isoformat(),
-            "hot": hot,
-            "cold": cold[:15],
-            "definition": (
-                f"Calientes: más frecuentes en los últimos {window_draws} sorteos. "
-                f"Fríos: sin aparecer ≥{cold_days_threshold} días respecto al último sorteo conocido. "
-                "No son recomendaciones de apuesta ni predicciones."
-            ),
+            "hot": hot if focus in ("hot", "both") else [],
+            "cold": cold_interval[:15] if focus in ("cold_interval", "both") else [],
+            "cold_by_frequency": cold_freq if focus in ("cold_frequency", "both") else [],
+            "focus": focus,
+            "metric_used": metric,
+            "definitions": definitions,
+            "definition": " ".join(def_bits),
         }
 
     async def coverage(self, lottery_id: uuid.UUID | None = None) -> dict[str, Any]:

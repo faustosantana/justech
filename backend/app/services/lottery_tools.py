@@ -572,10 +572,21 @@ class LotteryToolExecutor:
             from app.lottery.analytics import LotteryAnalyticsEngine
             from uuid import UUID as _UUID
 
-            q = str(params.get("lottery") or session_context.get("lottery") or "")
+            q = str(params.get("lottery") or session_context.get("lottery") or "Leidsa")
+            focus = str(params.get("focus") or "both")
+            window = int(params.get("window_draws") or 30)
             lot = await self.resolver.resolve_or_raise(q)
-            data = await LotteryAnalyticsEngine(self.db).hot_cold(_UUID(str(lot.id)))
-            return data, len(data.get("hot") or []), {"disclaimer": data.get("definition")}
+            data = await LotteryAnalyticsEngine(self.db).hot_cold(
+                _UUID(str(lot.id)),
+                window_draws=window,
+                focus=focus,
+            )
+            data["lottery"] = lot.commercial_name or lot.name
+            return data, len(data.get("hot") or data.get("cold") or data.get("cold_by_frequency") or [1]), {
+                "disclaimer": data.get("definition"),
+                "metric_used": data.get("metric_used"),
+                "window_draws": data.get("window_draws"),
+            }
 
         if tool == LotteryToolName.GET_COINCIDENCES:
             from app.lottery.analytics import LotteryAnalyticsEngine

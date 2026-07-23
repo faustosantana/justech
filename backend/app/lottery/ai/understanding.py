@@ -1,8 +1,9 @@
-"""Lottery IA 4.0 — hybrid understanding + slot fill over deterministic intent."""
+"""Lottery IA 4.2 — hybrid understanding + slot fill + reference resolution."""
 
 from __future__ import annotations
 
 import re
+from datetime import date
 from typing import Any
 
 from app.lottery.ai.conversation_state import (
@@ -10,17 +11,35 @@ from app.lottery.ai.conversation_state import (
     UnderstandingResult,
     smart_clarify,
 )
+from app.lottery.ai.domain_classifier import classify_domain
+from app.lottery.ai.reference_resolver import (
+    derive_per_lottery_base_dates,
+    resolve_references,
+)
 from app.services.lottery_ai_contracts import LotteryToolName
 from app.services.lottery_chat_context import LotterySessionContext
 from app.services.lottery_intent import ResolvedIntent, resolve_intent, _extract_number, _extract_lotteries
 
 
 def _ctx_from_state(state: ConversationState) -> LotterySessionContext:
+    base = state.date_context
+    if not base and state.last_occurrences:
+        try:
+            dates = [
+                date.fromisoformat(str(v.date)[:10])
+                for v in state.last_occurrences.values()
+                if getattr(v, "date", None)
+            ]
+            if dates:
+                base = max(dates)
+        except Exception:
+            pass
     return LotterySessionContext(
         last_lottery=state.active_lotteries[0] if state.active_lotteries else None,
         compared_lotteries=list(state.active_lotteries[1:] if len(state.active_lotteries) > 1 else []),
-        base_date=state.date_context,
+        base_date=base,
         last_draw_count=state.draw_count_context,
+        last_days=state.calendar_window,
         last_numbers=list(state.active_numbers),
         last_tool=state.last_tool,
         last_query_semantics=state.last_intent,
@@ -85,21 +104,72 @@ def _apply_pending_fill(text: str, state: ConversationState) -> ConversationStat
             updated.pending_slots = [s for s in updated.pending_slots if s != "lottery"]
             filled = True
 
+    if "unit" in state.pending_slots:
+        if re.search(r"sorteos?", text, re.I):
+            updated.pending_params = {**updated.pending_params, "unit": "draws"}
+            updated.pending_slots = [s for s in updated.pending_slots if s != "unit"]
+            filled = True
+        elif re.search(r"d[ií]as?|calendario", text, re.I):
+            updated.pending_params = {**updated.pending_params, "unit": "days"}
+            updated.pending_slots = [s for s in updated.pending_slots if s != "unit"]
+            filled = True
+
     return updated if filled else None
 
 
 def understand(raw: str, state: ConversationState) -> tuple[UnderstandingResult, ConversationState]:
-    """Hybrid understanding: pending slot fill → deterministic intent → smart clarify."""
+    """Hybrid understanding: domain gate → references → pending fill → intent."""
     text = (raw or "").strip()
-    # Follow-ups like "y en Leidsa", "compáralas"
-    follow = _detect_follow_up(text, state)
+    working = state.model_copy(deep=True)
+
+    domain = classify_domain(text)
+    if domain.classification in {
+        "out_of_domain",
+        "restricted_technical",
+        "prediction_request",
+        "harmful_or_illegal",
+    } and not (working.pending_intent and working.pending_slots and len(text.split()) <= 8):
+        return (
+            UnderstandingResult(
+                intent=domain.classification,
+                confidence=domain.confidence,
+                source="domain",
+                domain_class=domain.classification,
+                params={"refuse_message": domain.refuse_message},
+            ),
+            working,
+        )
+
+    refs = resolve_references(text, working)
+    if refs.get("last_user_reference"):
+        working.last_user_reference = refs["last_user_reference"]
+    if refs.get("lotteries"):
+        working.active_lotteries = list(dict.fromkeys(list(refs["lotteries"]) + [
+            x for x in working.active_lotteries if x not in refs["lotteries"]
+        ]))
+        working.scope = "multiple" if len(working.active_lotteries) > 1 else working.scope
+        if working.scope == "unknown":
+            working.scope = "multiple" if len(working.active_lotteries) > 1 else "single"
+    if refs.get("numbers"):
+        working.active_numbers = list(refs["numbers"])
+    if refs.get("post_window"):
+        pw = refs["post_window"]
+        if pw["unit"] == "days":
+            working.calendar_window = int(pw["count"])
+        else:
+            working.draw_count_context = int(pw["count"])
+
+    post = _detect_post_occurrence(text, working, refs)
+    if post:
+        return post
+
+    follow = _detect_follow_up(text, working)
     if follow:
         return follow
 
-    filled = _apply_pending_fill(text, state)
-    working = filled or state
+    filled = _apply_pending_fill(text, working)
+    working = filled or working
 
-    # If pending intent ready after fill → execute
     if working.pending_intent and not working.pending_slots:
         return _resume_pending(working)
 
@@ -146,6 +216,102 @@ def understand(raw: str, state: ConversationState) -> tuple[UnderstandingResult,
             working.clarification_question = result.clarification_question
 
     return result, working
+
+
+def _detect_post_occurrence(
+    text: str,
+    state: ConversationState,
+    refs: dict[str, Any],
+) -> tuple[UnderstandingResult, ConversationState] | None:
+    """P0: multi-lottery calendar/draw windows after last occurrence dates."""
+    pw = refs.get("post_window")
+    low = text.lower()
+    if not pw:
+        if not re.search(r"despu[eé]s|siguientes|posteriores", low):
+            return None
+        if not (state.last_occurrences or state.date_context):
+            return None
+        pw = {
+            "unit": "draws" if re.search(r"sorteos?", low) else "days",
+            "count": state.calendar_window
+            or state.draw_count_context
+            or (5 if re.search(r"sorteos?", low) else 7),
+            "direction": "before" if re.search(r"\bantes\b", low) else "after",
+        }
+
+    lotteries = list(refs.get("lotteries") or state.active_lotteries or [])
+    number = (refs.get("numbers") or state.active_numbers or [None])[0]
+    if not lotteries:
+        return None
+
+    per_dates = derive_per_lottery_base_dates(state, lotteries, number)
+    if not per_dates and not state.date_context:
+        if number and lotteries:
+            working = state.model_copy(deep=True)
+            working.active_lotteries = lotteries
+            working.active_numbers = [str(number)]
+            return (
+                UnderstandingResult(
+                    intent="last_occurrence",
+                    lotteries=lotteries,
+                    numbers=[str(number)],
+                    scope="multiple" if len(lotteries) > 1 else "single",
+                    tool="lottery_compare_last_occurrence_all"
+                    if len(lotteries) > 1
+                    else LotteryToolName.GET_LAST_OCCURRENCE.value,
+                    params={
+                        "number": number,
+                        "lotteries": lotteries,
+                        "lottery": lotteries[0],
+                        "then_post_window": pw,
+                    },
+                    plan=["last_occurrence", "post_window"],
+                    confidence=0.82,
+                    source="follow_up",
+                ),
+                working,
+            )
+        return None
+
+    if not per_dates and state.date_context:
+        per_dates = {lot: state.date_context for lot in lotteries}
+
+    working = state.model_copy(deep=True)
+    working.active_lotteries = lotteries
+    if number:
+        working.active_numbers = [str(number)]
+    if pw["unit"] == "days":
+        working.calendar_window = int(pw["count"])
+    else:
+        working.draw_count_context = int(pw["count"])
+    working.scope = "multiple" if len(lotteries) > 1 else "single"
+    working.pending_slots = []
+    working.pending_intent = None
+    iso_dates = {k: v.isoformat() for k, v in per_dates.items()}
+    return (
+        UnderstandingResult(
+            intent="post_occurrence_window",
+            lotteries=lotteries,
+            numbers=[str(number)] if number else list(state.active_numbers),
+            calendar_days=int(pw["count"]) if pw["unit"] == "days" else None,
+            draw_count=int(pw["count"]) if pw["unit"] == "draws" else None,
+            scope=working.scope,
+            tool="lottery_analyze_post_occurrence_window",
+            params={
+                "number": number,
+                "lotteries": lotteries,
+                "per_lottery_dates": iso_dates,
+                "unit": pw["unit"],
+                "count": int(pw["count"]),
+                "direction": pw["direction"],
+            },
+            per_lottery_dates=iso_dates,
+            plan=["post_occurrence_per_lottery", "insights"],
+            confidence=0.93,
+            source="follow_up",
+        ),
+        working,
+    )
 
 
 def _detect_follow_up(text: str, state: ConversationState) -> tuple[UnderstandingResult, ConversationState] | None:
@@ -272,9 +438,9 @@ def _detect_follow_up(text: str, state: ConversationState) -> tuple[Understandin
                 working,
             )
 
-    # "y los cinco sorteos siguientes" / "ahora los cinco días siguientes"
-    if state.date_context and state.active_lotteries and re.search(
-        r"(sorteos?|d[ií]as?)\s+siguientes|siguientes?\s+\d*\s*(sorteos?|d[ií]as?)",
+    # "y los cinco sorteos siguientes" / "ahora los cinco días siguientes|después"
+    if state.date_context and state.active_lotteries and len(state.active_lotteries) == 1 and not state.last_occurrences and re.search(
+        r"(sorteos?|d[ií]as?)\s+(siguientes?|despu[eé]s)|siguientes?\s+\d*\s*(sorteos?|d[ií]as?)",
         low,
     ):
         lot = state.active_lotteries[0]
@@ -348,20 +514,22 @@ def _resume_pending(state: ConversationState) -> tuple[UnderstandingResult, Conv
     intent = state.pending_intent or "unsupported"
     number = state.pending_params.get("number") or (state.active_numbers[0] if state.active_numbers else None)
     lottery = state.active_lotteries[0] if state.active_lotteries else None
+    lots = list(state.active_lotteries)
     working = state.model_copy(deep=True)
     working.pending_intent = None
     working.pending_slots = []
     working.clarification_question = None
 
-    if intent == "last_occurrence" and number and (lottery or state.scope == "all"):
-        if state.scope == "all":
+    if intent == "last_occurrence" and number and (lottery or lots or state.scope == "all"):
+        if state.scope == "all" or len(lots) > 1:
             return (
                 UnderstandingResult(
                     intent="last_occurrence",
                     numbers=[number],
-                    scope="all",
+                    lotteries=lots,
+                    scope="all" if state.scope == "all" else "multiple",
                     tool="lottery_compare_last_occurrence_all",
-                    params={"number": number, "scope": "all"},
+                    params={"number": number, "lotteries": lots, "scope": state.scope},
                     plan=["list_lotteries", "last_occurrence_each", "sort_by_date", "summarize"],
                     confidence=0.9,
                     source="follow_up",
@@ -442,6 +610,17 @@ def _map_resolved(
 
     intent_name = "unsupported"
     if intent.kind == "clarify":
+        # P0: never re-ask lottery+date when memory can drive post-occurrence windows
+        if re.search(
+            r"(d[ií]as?|sorteos?).{0,16}(siguientes?|despu[eé]s)|(siguientes?|despu[eé]s).{0,16}(d[ií]as?|sorteos?)|"
+            r"siete\s+dias|7\s*dias|cinco\s+sorteos",
+            text,
+            re.I,
+        ) and (state.active_lotteries or state.last_occurrences or state.date_context):
+            refs = resolve_references(text, state)
+            post = _detect_post_occurrence(text, state, refs)
+            if post:
+                return post[0]
         # Infer intent from text for better clarifications
         if re.search(r"[uú]ltima\s+vez|cu[aá]ndo fue la [uú]ltima", text, re.I):
             intent_name = "last_occurrence"
@@ -451,28 +630,39 @@ def _map_resolved(
             intent_name = "hot_numbers"
         missing = []
         msg = (intent.clarify_message or "").lower()
-        if "loter" in msg:
+        if "loter" in msg and not (lots or state.active_lotteries):
             missing.append("lottery")
-        if "fecha" in msg:
+        if "fecha" in msg and not (state.last_occurrences or state.date_context):
             missing.append("date")
         if "n[uú]mero" in msg or "numero" in msg:
             missing.append("number")
         # Fix over-asking: if number already known, drop number from missing
         if numbers and "number" in missing:
             missing = [m for m in missing if m != "number"]
+        if state.active_numbers and "number" in missing:
+            missing = [m for m in missing if m != "number"]
+            if not numbers:
+                numbers = list(state.active_numbers)
         # last occurrence never needs date
         if intent_name == "last_occurrence" and "date" in missing:
             missing = [m for m in missing if m != "date"]
-        if not missing and intent_name == "last_occurrence" and not lots:
+        if not missing and intent_name == "last_occurrence" and not lots and not state.active_lotteries:
             missing = ["lottery"]
+        if not missing:
+            # Clarifier had nothing real to ask — try post-occurrence again
+            refs = resolve_references(text, state)
+            post = _detect_post_occurrence(text, state, refs)
+            if post:
+                return post[0]
         q = smart_clarify(
             intent=intent_name,
             number=numbers[0] if numbers else None,
             missing=missing or ["lottery"],
+            known_lotteries=lots or list(state.active_lotteries),
         )
         return UnderstandingResult(
             intent=intent_name,
-            lotteries=lots,
+            lotteries=lots or list(state.active_lotteries),
             numbers=numbers,
             missing_slots=missing or ["lottery"],
             needs_clarification=True,

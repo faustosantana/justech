@@ -481,7 +481,28 @@ class LotteryToolExecutor:
             res = await self.query.by_number(
                 lottery, number, page=1, page_size=1, order="desc"
             )
-            return res, getattr(res, "total", 1), {"semantics": "last_occurrence"}
+            last_date = None
+            position = None
+            items = list(getattr(res, "items", None) or getattr(res, "occurrences", None) or [])
+            if items:
+                first = items[0]
+                last_date = getattr(first, "draw_date", None) or (
+                    first.get("draw_date") if isinstance(first, dict) else None
+                )
+                position = getattr(first, "position_label", None) or getattr(first, "position", None)
+                if isinstance(first, dict):
+                    position = first.get("position_label") or first.get("position")
+            iso = None
+            if last_date is not None:
+                iso = last_date.isoformat() if hasattr(last_date, "isoformat") else str(last_date)[:10]
+            return res, getattr(res, "total", 1), {
+                "semantics": "last_occurrence",
+                "last_occurrence_date": iso,
+                "base_date": iso,
+                "lottery": lottery,
+                "number": number,
+                "position": position,
+            }
 
         if tool == LotteryToolName.GET_INTERVAL_STATISTICS:
             lottery = str(params["lottery"])

@@ -159,10 +159,20 @@ class LotteryChatService:
         tool_name: str | None = understanding.tool
         params = dict(understanding.params or {})
 
-        refuse_msg = (understanding.params or {}).get("message") if understanding.params.get("refuse") else None
+        refuse_msg = None
+        if understanding.intent in {
+            "out_of_domain",
+            "restricted_technical",
+            "prediction_request",
+            "harmful_or_illegal",
+            "unsupported",
+        }:
+            refuse_msg = (understanding.params or {}).get("refuse_message") or understanding.clarification_question
+        if understanding.params.get("refuse"):
+            refuse_msg = refuse_msg or (understanding.params or {}).get("message")
         if refuse_msg or understanding.params.get("refuse"):
             intent_kind = "refuse"
-            template = refuse_msg or understanding.clarification_question or "No puedo ayudar con esa solicitud."
+            template = refuse_msg or "No puedo ayudar con esa solicitud."
             structured = {
                 "type": "lottery_error",
                 "warnings": [{"code": "REFUSE", "message": template}],
@@ -203,12 +213,39 @@ class LotteryChatService:
                 is_superadmin=self.is_superadmin,
             )
             # Multi-tool / specialized plans
-            if (
+            if understanding.intent == "post_occurrence_window" or understanding.tool == (
+                "lottery_analyze_post_occurrence_window"
+            ):
+                structured, template, tool_trace = await self._execute_post_occurrence_window(
+                    executor, understanding, ctx
+                )
+                tool_name = "lottery_analyze_post_occurrence_window"
+                if understanding.numbers:
+                    state.active_numbers = list(understanding.numbers)
+                if understanding.lotteries:
+                    state.active_lotteries = list(
+                        dict.fromkeys([*understanding.lotteries, *state.active_lotteries])
+                    )
+                if understanding.calendar_days:
+                    state.calendar_window = int(understanding.calendar_days)
+                state.last_intent = "post_occurrence_window"
+                state.last_plan = ["post_occurrence_per_lottery", "insights"]
+                state.pending_slots = []
+                state.pending_intent = None
+                state.last_analysis = {
+                    "type": "post_occurrence_window",
+                    "params": dict(understanding.params or {}),
+                }
+            elif (
                 understanding.tool == "lottery_compare_last_occurrence_all"
                 or (understanding.scope == "all" and understanding.intent == "last_occurrence")
                 or (
                     understanding.intent == "compare_numbers"
                     and understanding.numbers
+                )
+                or (
+                    understanding.intent == "last_occurrence"
+                    and len(understanding.lotteries or []) > 1
                 )
             ):
                 # Prefer dedicated across-lotteries tool when lotteries known
@@ -247,11 +284,22 @@ class LotteryChatService:
                     state.active_numbers = list(understanding.numbers)
                 if lots:
                     state.active_lotteries = list(dict.fromkeys([*state.active_lotteries, *lots]))
+                # Persist per-lottery occurrence dates for follow-ups ("7 días después")
+                rows = ((structured or {}).get("data") or {}).get("rows") or []
+                number = (understanding.numbers or state.active_numbers or [None])[0]
+                for row in rows:
+                    if isinstance(row, dict) and row.get("found") and row.get("last_date"):
+                        state.remember_occurrence(
+                            lottery=str(row.get("lottery")),
+                            number=str(row.get("number") or number or ""),
+                            draw_date=row.get("last_date"),
+                            position=row.get("position"),
+                        )
                 state.last_intent = str(understanding.intent)
                 state.last_plan = [s.purpose or s.tool for s in plan.steps]
                 state.pending_slots = []
                 state.pending_intent = None
-            elif len(plan.steps) > 1:
+                state.last_tool_results = [{"tool": tool_name, "rows": rows[:8]}]
                 structured, template, tool_trace = await self._execute_plan(
                     executor, plan, ctx, understanding
                 )
@@ -305,6 +353,25 @@ class LotteryChatService:
                     if exec_params.get("date") or exec_params.get("base_date"):
                         d = exec_params.get("date") or exec_params.get("base_date")
                         state.date_context = d
+                    # Persist derived last-occurrence date into conversational memory
+                    summary = result.summary_for_context or {}
+                    if summary.get("last_occurrence_date") or summary.get("base_date"):
+                        lot = str(
+                            summary.get("lottery")
+                            or exec_params.get("lottery")
+                            or (state.active_lotteries[0] if state.active_lotteries else "")
+                        )
+                        num = str(
+                            summary.get("number")
+                            or exec_params.get("number")
+                            or (state.active_numbers[0] if state.active_numbers else "")
+                        )
+                        state.remember_occurrence(
+                            lottery=lot,
+                            number=num,
+                            draw_date=summary.get("last_occurrence_date") or summary.get("base_date"),
+                            position=summary.get("position"),
+                        )
                     if exec_params.get("window_draws") or exec_params.get("count"):
                         state.draw_count_context = int(
                             exec_params.get("window_draws") or exec_params.get("count")
@@ -321,6 +388,21 @@ class LotteryChatService:
                     state.pending_intent = None
                     state.clarification_question = None
                     state.metric_context = understanding.metric or understanding.intent
+                    state.last_tool_results = [
+                        {
+                            "tool": result.tool,
+                            "summary": {
+                                k: summary.get(k)
+                                for k in (
+                                    "semantics",
+                                    "last_occurrence_date",
+                                    "lottery",
+                                    "number",
+                                )
+                                if summary.get(k) is not None
+                            },
+                        }
+                    ]
                 params = exec_params
                 tool_name = result.tool
 
@@ -599,6 +681,194 @@ class LotteryChatService:
             "tool": "lottery_compare_last_occurrence",
             "query": {"number": number, "lotteries": lotteries},
             "data": {"rows": rows_sorted, "missing": missing},
+        }
+        return structured, template, tool_trace
+
+    async def _execute_post_occurrence_window(
+        self,
+        executor: LotteryToolExecutor,
+        understanding,
+        ctx: LotterySessionContext,
+    ) -> tuple[dict[str, Any], str, list[dict[str, Any]]]:
+        """Per-lottery calendar/draw windows after remembered occurrence dates."""
+        from datetime import date as date_cls, timedelta
+
+        params = dict(understanding.params or {})
+        lotteries = list(params.get("lotteries") or understanding.lotteries or [])
+        per_dates = dict(params.get("per_lottery_dates") or understanding.per_lottery_dates or {})
+        number = params.get("number") or (
+            understanding.numbers[0] if understanding.numbers else None
+        )
+        unit = params.get("unit") or ("days" if understanding.calendar_days else "draws")
+        count = int(params.get("count") or understanding.calendar_days or understanding.draw_count or 7)
+        direction = params.get("direction") or "after"
+        tool_trace: list[dict[str, Any]] = []
+        sections: list[dict[str, Any]] = []
+
+        for lot in lotteries[:8]:
+            raw = per_dates.get(lot)
+            if not raw:
+                sections.append(
+                    {
+                        "lottery": lot,
+                        "found_base": False,
+                        "message": "Sin fecha base de aparición previa.",
+                        "draws": [],
+                    }
+                )
+                continue
+            try:
+                base = date_cls.fromisoformat(str(raw)[:10])
+            except ValueError:
+                sections.append(
+                    {
+                        "lottery": lot,
+                        "found_base": False,
+                        "message": f"Fecha base inválida: {raw}",
+                        "draws": [],
+                    }
+                )
+                continue
+
+            if unit == "days":
+                if direction == "before":
+                    start, end = base - timedelta(days=count), base - timedelta(days=1)
+                else:
+                    start, end = base + timedelta(days=1), base + timedelta(days=count)
+                result = await executor.execute(
+                    LotteryToolName.GET_FOLLOWING_DAYS
+                    if direction == "after"
+                    else LotteryToolName.GET_PREVIOUS_DAYS,
+                    {
+                        "lottery": lot,
+                        "date": base,
+                        "days": count,
+                        "include_base_date": False,
+                    },
+                    structured_type="lottery_range",
+                    session_context=ctx.to_store(),
+                )
+            else:
+                start = end = base
+                result = await executor.execute(
+                    LotteryToolName.GET_FOLLOWING_DRAWS
+                    if direction == "after"
+                    else LotteryToolName.GET_PREVIOUS_DRAWS,
+                    {
+                        "lottery": lot,
+                        "date": base,
+                        "count": count,
+                        "include_base_date": False,
+                    },
+                    structured_type="lottery_range",
+                    session_context=ctx.to_store(),
+                )
+            tool_trace.append(
+                {
+                    "tool": result.tool,
+                    "status": result.status,
+                    "duration_ms": result.duration_ms,
+                    "error_code": result.error_code,
+                    "lottery": lot,
+                }
+            )
+            draws = []
+            if result.status == "success" and isinstance(result.data, dict):
+                draws = result.data.get("draws") or result.data.get("items") or []
+                if result.summary_for_context:
+                    if result.summary_for_context.get("calendar_from"):
+                        start = result.summary_for_context["calendar_from"]
+                    if result.summary_for_context.get("calendar_to"):
+                        end = result.summary_for_context["calendar_to"]
+            # Collect numbers for insights
+            nums: list[str] = []
+            for d in draws:
+                for n in (d.get("numbers") if isinstance(d, dict) else []) or []:
+                    if isinstance(n, dict):
+                        nums.append(str(n.get("number_raw") or n.get("number_value") or ""))
+            reappeared = bool(number and str(number) in nums)
+            sections.append(
+                {
+                    "lottery": lot,
+                    "found_base": True,
+                    "base_date": base.isoformat(),
+                    "period_from": str(start)[:10],
+                    "period_to": str(end)[:10],
+                    "unit": unit,
+                    "count": count,
+                    "draws": draws[:40],
+                    "numbers_flat": [x for x in nums if x],
+                    "reappeared": reappeared,
+                    "draw_count": len(draws),
+                }
+            )
+
+        # Cross insights
+        all_nums = [n for s in sections for n in s.get("numbers_flat") or []]
+        freq: dict[str, int] = {}
+        for n in all_nums:
+            freq[n] = freq.get(n, 0) + 1
+        repeated = sorted(
+            [{"number": k, "count": v} for k, v in freq.items() if v > 1],
+            key=lambda x: -x["count"],
+        )[:10]
+        top = sorted(freq.items(), key=lambda x: -x[1])[:5]
+        lines = [
+            f"Números en los {count} {'días calendario' if unit == 'days' else 'sorteos'} "
+            f"{'anteriores' if direction == 'before' else 'posteriores'} "
+            f"(fecha base = última aparición del {number or 'número'} por lotería):",
+            "",
+        ]
+        for s in sections:
+            lines.append(f"**{s['lottery']}**")
+            if not s.get("found_base"):
+                lines.append(f"- {s.get('message')}")
+                lines.append("")
+                continue
+            lines.append(f"- Fecha base: {s['base_date']}")
+            lines.append(f"- Período: {s['period_from']} → {s['period_to']}")
+            lines.append(f"- Sorteos en ventana: {s.get('draw_count', 0)}")
+            if s.get("reappeared"):
+                lines.append(f"- El {number} **reapareció** en esta ventana.")
+            sample = s.get("numbers_flat") or []
+            if sample:
+                lines.append(f"- Números: {', '.join(sample[:24])}{'…' if len(sample) > 24 else ''}")
+            lines.append("")
+        if repeated:
+            lines.append("**Repeticiones entre loterías / ventana:**")
+            for r in repeated[:8]:
+                lines.append(f"- {r['number']}: {r['count']} veces")
+            lines.append("")
+        if top:
+            lines.append(
+                "**Más frecuentes en la ventana:** "
+                + ", ".join(f"{n} ({c})" for n, c in top)
+            )
+            lines.append("")
+        lines.append(
+            "Nota: cada lotería usa su propia fecha base; los períodos no son necesariamente el mismo calendario."
+        )
+        template = "\n".join(lines)
+        structured = {
+            "type": "lottery_comparison",
+            "tool": "lottery_analyze_post_occurrence_window",
+            "query": {
+                "number": number,
+                "lotteries": lotteries,
+                "unit": unit,
+                "count": count,
+                "direction": direction,
+            },
+            "data": {
+                "sections": sections,
+                "repeated": repeated,
+                "top_numbers": [{"number": n, "count": c} for n, c in top],
+                "metric": f"{count}_{unit}_{direction}_occurrence_window",
+                "limitations": [
+                    "Ventana descriptiva histórica; no predice resultados futuros.",
+                    "Fechas base distintas por lotería.",
+                ],
+            },
         }
         return structured, template, tool_trace
 

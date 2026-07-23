@@ -329,9 +329,21 @@ export default function LotteryChatPage() {
                           Parámetros del análisis {paramsOpen[m.id] ? "▾" : "▸"}
                         </button>
                         {paramsOpen[m.id] && (
-                          <pre className="overflow-auto px-2 pb-2 text-[11px]">
-                            {JSON.stringify(m.analysis_params, null, 2)}
-                          </pre>
+                          <ul className="space-y-1 px-3 pb-2 text-[11px] text-muted-foreground">
+                            {Object.entries(m.analysis_params)
+                              .filter(([k]) => !/uuid|source_id|sql|token|password|host|slug/i.test(k))
+                              .slice(0, 12)
+                              .map(([k, v]) => (
+                                <li key={k}>
+                                  <span className="font-medium text-foreground">{k}</span>:{" "}
+                                  {typeof v === "string" || typeof v === "number" || typeof v === "boolean"
+                                    ? String(v)
+                                    : Array.isArray(v)
+                                      ? v.slice(0, 8).map(String).join(", ")
+                                      : "—"}
+                                </li>
+                              ))}
+                          </ul>
                         )}
                       </div>
                     )}

@@ -92,5 +92,10 @@ def merge_context_after_tool(
             data["last_to_date"] = result_summary["calendar_to"]
         if sq := result_summary.get("saved_query_id"):
             data["saved_query_id"] = str(sq)
+        # Persist derived last-occurrence date into sticky base_date
+        if result_summary.get("last_occurrence_date") or result_summary.get("base_date"):
+            data["base_date"] = (
+                result_summary.get("last_occurrence_date") or result_summary.get("base_date")
+            )
 
     return LotterySessionContext.model_validate(data)

@@ -679,8 +679,12 @@ def resolve_intent(message: str, ctx: LotterySessionContext) -> ResolvedIntent:
             structured_type="lottery_result",
         )
 
-    # following days
-    if re.search(r"(dias|días)\s+siguientes|siguientes?\s+\d*\s*(dias|días)|siete dias|7 dias", text):
+    # following days (incl. "días después" / "7 dias")
+    if re.search(
+        r"(dias|días)\s+(siguientes?|despu[eé]s)|siguientes?\s+\d*\s*(dias|días)|"
+        r"despu[eé]s\s+(de\s+)?\d*\s*(dias|días)?|siete dias|7 dias|dias despu",
+        text,
+    ):
         if not lottery or not ctx_date:
             return ResolvedIntent(
                 kind="clarify",
@@ -695,10 +699,10 @@ def resolve_intent(message: str, ctx: LotterySessionContext) -> ResolvedIntent:
             structured_type="lottery_range",
         )
 
-    # following draws (incl. "los cinco sorteos siguientes")
+    # following draws (incl. "los cinco sorteos siguientes" / "sorteos después")
     if re.search(
-        r"sorteos?\s+siguientes|siguientes?\s+\d*\s*sorteos|siete sorteos|7 sorteos|"
-        r"(cinco|5|tres|3|diez|10)\s+sorteos?\s+siguientes",
+        r"sorteos?\s+(siguientes?|despu[eé]s)|siguientes?\s+\d*\s*sorteos|siete sorteos|7 sorteos|"
+        r"(cinco|5|tres|3|diez|10)\s+sorteos?\s+(siguientes?|despu[eé]s)",
         text,
     ):
         if not lottery or not ctx_date:

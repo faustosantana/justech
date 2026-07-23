@@ -41,6 +41,18 @@ def build_plan(understanding: UnderstandingResult) -> QueryPlan:
     params = dict(understanding.params or {})
     intent = str(understanding.intent or "")
 
+    if intent == "post_occurrence_window" or tool == "lottery_analyze_post_occurrence_window":
+        return QueryPlan(
+            steps=[
+                PlanStep(
+                    tool="lottery_analyze_post_occurrence_window",
+                    params=params,
+                    purpose="post_occurrence_per_lottery_windows",
+                )
+            ],
+            rationale="post_occurrence_window_from_memory",
+        ).bounded()
+
     if tool == "lottery_compare_last_occurrence_all" or (
         intent == "last_occurrence" and understanding.scope == "all"
     ):

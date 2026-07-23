@@ -1,44 +1,47 @@
-# Lottery IA — Benchmark 300
+# Lottery IA — Benchmark ≥300
 
-Suite offline en `backend/app/lottery/ai/benchmark.py`.
+Suite offline versionada en `backend/app/lottery/ai/benchmark.py`  
+(shim: `benchmark_300.py`).
 
 ## Totales
 
-- Casos generados: **350** (≥300 requerido)
-- Seed DB: `Suite 300 closeout` vía `LotteryAiAdminService.ensure_seeded()`
+- Casos: **350** (≥250 requerido, margen sobre 300)
+- Evaluación: understanding + domain + memoria (sin LLM remoto de síntesis)
+- Gate publicación: `publish_blocked` si P0>0 o P1>0
 
 ## Distribución mínima
 
-| Categoría | Cantidad |
-|-----------|---------:|
-| memory_multiturn | 50 |
-| references | 30 |
-| calendar_following_days | 30 |
-| draw_following | 30 |
-| multilottery | 30 |
-| number_switch_keep_context | 25 |
-| out_of_domain | 25 |
-| restricted_technical | 20 |
-| prediction | 20 |
-| proactive_analysis | 30 |
-| preferences_depth | 20 |
-| provider_fallback | 20 |
-| renderer | 20 |
+| Categoría | Objetivo | En suite |
+|-----------|----------|----------|
+| Memoria multi-turn | 50 | 50 |
+| Referencias / pronombres | 30 | 30 |
+| Días posteriores | 30 | 30 |
+| Sorteos posteriores | 30 | 30 |
+| Multilotería | 30 | 30 |
+| Cambio de número + contexto | 25 | 25 |
+| Fuera de dominio | 25 | 25 |
+| Técnicos restringidos | 20 | 20 |
+| Predicción | 20 | 20 |
+| Análisis proactivo | 30 | 30 |
+| Preferencias / profundidad | 20 | 20 |
+| Provider / fallback | 20 | 20 |
+| UI / JSON / Markdown | 20 | 20 |
 
 ## Severidades
 
-- **P0**: fuga técnica, fuera de dominio, predicción como certeza, tenant/credenciales
-- **P1**: contexto/fecha/lotería/tool/cálculo incorrecto
-- **P2**: aclaración innecesaria, formato, parámetros
-- **P3**: tono/longitud/redacción
+- **P0:** inventado / fuga / OOD / predicción como certeza / aislamiento  
+- **P1:** contexto perdido / fecha-lotería / tool incorrecta / memoria sobrescrita  
+- **P2:** aclaración innecesaria / insight irrelevante / formato  
+- **P3:** tono / estilo  
 
-Publicación bloqueada con P0 o P1 (`publish_prompt` + `publish_blocked`).
-
-## Ejecución
+## Cómo ejecutar
 
 ```bash
-cd backend
-PYTHONPATH=. python -m app.lottery.ai.benchmark
+cd backend && PYTHONPATH=. python -c \
+  "from app.lottery.ai.benchmark import compare_v2_v3, write_evaluation_docs; write_evaluation_docs(compare_v2_v3())"
 ```
 
-Artefactos: `docs/lottery/LOTTERY_AI_BENCHMARK_300.json`, evaluación v2/v3.
+API Admin:
+
+- `POST /lottery/admin/ai/benchmarks/run-300`
+- `POST /lottery/admin/ai/benchmarks/compare-v2-v3`

@@ -49,3 +49,20 @@ UNNECESSARY_CLARIFICATION_HIGH, TOKEN_USAGE_HIGH, NO_SUCCESSFUL_CALL, JSON_VISIB
 
 Umbrales versionados: tabla `lottery_ai_alert_thresholds` + defaults en
 `app/lottery/ai/alert_thresholds.py`.
+
+## Notificaciones externas (stub)
+
+Tras cada upsert del detector se llama `app.lottery.ai.alert_notifications.notify_alert`
+(también desde `run_alert_detector_now`, que incluye resumen `notify` en la respuesta).
+
+Canales: `email`, `webhook`, `slack`, `teams`, `jaios_internal` — **todos OFF** por defecto.
+
+Flags: `LOTTERY_AI_ALERT_EMAIL_ENABLED`, `LOTTERY_AI_ALERT_WEBHOOK_ENABLED`,
+`LOTTERY_AI_ALERT_SLACK_ENABLED`, `LOTTERY_AI_ALERT_TEAMS_ENABLED`,
+`LOTTERY_AI_ALERT_JAIOS_INTERNAL_ENABLED` (default `false`).
+
+Sin `enabled` + recipients/URL no hay envío externo. Deduplicación por
+`fingerprint` + ventana de throttle (`LOTTERY_AI_ALERT_THROTTLE_SECONDS`).
+
+Redis lock del detector: `lottery:ai:alert-detector`
+(`LOCK_KEY` en `lottery_ai_alert_detector.py`).

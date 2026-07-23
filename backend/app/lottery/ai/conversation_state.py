@@ -144,7 +144,14 @@ class ConversationState(BaseModel):
             normalized: dict[str, Any] = {}
             for k, v in raw_occ.items():
                 if isinstance(v, dict):
-                    normalized[k] = v
+                    item = dict(v)
+                    if "date" not in item and item.get("draw_date"):
+                        item["date"] = item.pop("draw_date")
+                    if "number" not in item:
+                        nums = mapped.get("active_numbers") or []
+                        item["number"] = nums[0] if nums else ""
+                    item.setdefault("lottery", k)
+                    normalized[k] = item
                 elif isinstance(v, str):
                     nums = mapped.get("active_numbers") or []
                     normalized[k] = {
@@ -153,6 +160,11 @@ class ConversationState(BaseModel):
                         "lottery": k,
                     }
             mapped["last_occurrences"] = normalized
+        if isinstance(mapped.get("active_numbers"), list):
+            mapped["active_numbers"] = [
+                str(n).zfill(2) if str(n).isdigit() and len(str(n)) <= 2 else str(n)
+                for n in mapped["active_numbers"]
+            ]
         try:
             return cls.model_validate(mapped)
         except Exception:

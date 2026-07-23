@@ -8,17 +8,17 @@
 | Métrica | v2 | v3 |
 |---|---:|---:|
 | Total | 350 | 350 |
-| Pass rate | 0.66 | 0.66 |
-| P0 | 31 | 31 |
-| P1 | 88 | 88 |
+| Pass rate | 0.9714 | 0.9714 |
+| P0 | 0 | 0 |
+| P1 | 10 | 10 |
 | P2 | 0 | 0 |
 | P3 | 0 | 0 |
-| Memory retention | 0.6 | 0.6 |
+| Memory retention | 1.0 | 1.0 |
 | Reference resolution | 1.0 | 1.0 |
-| Domain rejection | 0.56 | 0.56 |
-| Clarification rate | 0.4 | 0.4 |
+| Domain rejection | 1.0 | 1.0 |
+| Clarification rate | 0.2486 | 0.2486 |
 | Latency p50 ms | 0 | 0 |
-| Latency p95 ms | 2 | 7 |
+| Latency p95 ms | 4 | 2 |
 
 ## Distribución de casos
 

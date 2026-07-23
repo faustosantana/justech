@@ -2859,6 +2859,9 @@ export const apiClient = {
   getLotteryAIModels: () =>
     request<Record<string, unknown>>("/lottery/admin/ai/models", {}, true),
 
+  postLotteryAIModelsProbe: () =>
+    request<Record<string, unknown>>("/lottery/admin/ai/models/probe", { method: "POST" }, true),
+
   getLotteryAIAgent: () =>
     request<Record<string, unknown>>("/lottery/admin/ai/agent", {}, true),
 
@@ -2946,7 +2949,31 @@ export const apiClient = {
       true,
     ),
 
-  getLotteryAISessions: (params?: { limit?: number; offset?: number }) =>
+  postLotteryAIBenchmarkRun300: () =>
+    request<Record<string, unknown>>("/lottery/admin/ai/benchmarks/run-300", { method: "POST" }, true),
+
+  postLotteryAIBenchmarkCompareV2V3: () =>
+    request<Record<string, unknown>>(
+      "/lottery/admin/ai/benchmarks/compare-v2-v3",
+      { method: "POST" },
+      true,
+    ),
+
+  getLotteryAIAlertThresholds: () =>
+    request<Record<string, unknown>>("/lottery/admin/ai/alert-thresholds", {}, true),
+
+  putLotteryAIAlertThresholds: (body: Record<string, unknown>) =>
+    request<Record<string, unknown>>("/lottery/admin/ai/alert-thresholds", {
+      method: "PUT",
+      body: JSON.stringify(body),
+    }, true),
+
+  getLotteryAISessions: (params?: { limit?: number; offset?: number; q?: string }) =>
+    request<{ items: unknown[] }>(
+      `/lottery/admin/ai/sessions${buildQuery(params ?? {})}`,
+      {},
+      true,
+    ),
     request<{ items: unknown[]; total: number }>(
       `/lottery/admin/ai/sessions${buildQuery(params ?? {})}`,
       {},

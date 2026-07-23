@@ -16,6 +16,20 @@ export default function LotteryAIDefaultsPage() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState(false);
+  const [thresholdsJson, setThresholdsJson] = useState("{}");
+  const [thresholdsMeta, setThresholdsMeta] = useState<string>("defaults");
+  const [thresholdsBusy, setThresholdsBusy] = useState(false);
+
+  const loadThresholds = useCallback(async () => {
+    try {
+      const res = await apiClient.getLotteryAIAlertThresholds();
+      const active = (res.active ?? res.defaults ?? {}) as Record<string, unknown>;
+      setThresholdsJson(JSON.stringify(active, null, 2));
+      setThresholdsMeta(String(res.version_label ?? "defaults"));
+    } catch (err) {
+      setError(err instanceof ApiError ? err.message : "Error al cargar umbrales de alerta");
+    }
+  }, []);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -28,12 +42,13 @@ export default function LotteryAIDefaultsPage() {
         .fill("")
         .map((_, i) => String(raw[i] ?? ""));
       setSlots(filled);
+      await loadThresholds();
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "Error al cargar loterías predeterminadas");
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [loadThresholds]);
 
   useEffect(() => {
     void load();
@@ -57,6 +72,29 @@ export default function LotteryAIDefaultsPage() {
       setError(err instanceof ApiError ? err.message : "Error al guardar");
     } finally {
       setBusy(false);
+    }
+  };
+
+  const saveThresholds = async () => {
+    setThresholdsBusy(true);
+    setMsg(null);
+    setError(null);
+    try {
+      const parsed = JSON.parse(thresholdsJson) as Record<string, unknown>;
+      const res = await apiClient.putLotteryAIAlertThresholds({ payload: parsed });
+      setThresholdsMeta(String(res.version_label ?? "saved"));
+      if (res.active) {
+        setThresholdsJson(JSON.stringify(res.active, null, 2));
+      }
+      setMsg("Umbrales de alerta guardados");
+    } catch (err) {
+      if (err instanceof SyntaxError) {
+        setError("JSON de umbrales inválido");
+      } else {
+        setError(err instanceof ApiError ? err.message : "Error al guardar umbrales");
+      }
+    } finally {
+      setThresholdsBusy(false);
     }
   };
 
@@ -116,6 +154,36 @@ export default function LotteryAIDefaultsPage() {
           </CardContent>
         </Card>
       )}
+
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between space-y-0">
+          <div>
+            <CardTitle className="text-sm">Umbrales de alerta (JSON)</CardTitle>
+            <p className="mt-1 text-xs text-muted-foreground">versión: {thresholdsMeta}</p>
+          </div>
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => void loadThresholds()}
+              disabled={thresholdsBusy || loading}
+            >
+              Recargar
+            </Button>
+            <Button size="sm" onClick={() => void saveThresholds()} disabled={thresholdsBusy || loading}>
+              {thresholdsBusy ? "Guardando…" : "Guardar umbrales"}
+            </Button>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <textarea
+            className="min-h-[220px] w-full rounded-md border border-border bg-background p-3 font-mono text-xs"
+            value={thresholdsJson}
+            onChange={(e) => setThresholdsJson(e.target.value)}
+            spellCheck={false}
+          />
+        </CardContent>
+      </Card>
     </div>
   );
 }

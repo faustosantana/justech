@@ -569,6 +569,23 @@ class LotteryAiAlertDetector:
                 row = await self.upsert_finding(f)
                 fps.add(row.fingerprint or "")
                 upserted += 1
+                # Optional notify stub — lazy import avoids cycles; channels disabled by default
+                try:
+                    from app.lottery.ai.alert_notifications import notify_alert
+
+                    notify_alert(
+                        {
+                            "id": str(row.id),
+                            "code": row.code,
+                            "fingerprint": row.fingerprint,
+                            "severity": row.severity,
+                            "title": row.title,
+                            "message": row.message,
+                            "status": row.status,
+                        }
+                    )
+                except Exception:  # noqa: BLE001
+                    logger.debug("alert notify stub skipped", exc_info=True)
             auto_resolved = await self.auto_resolve_missing(fps)
             await self._audit(
                 "alert_detector_run",

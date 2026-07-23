@@ -9,9 +9,11 @@ import { ApiError, apiClient } from "@/lib/api";
 export default function LotteryAIBenchmarksPage() {
   const [benchmarks, setBenchmarks] = useState<unknown[]>([]);
   const [msg, setMsg] = useState<string | null>(null);
+  const [summary, setSummary] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [busyId, setBusyId] = useState<string | null>(null);
+  const [suiteBusy, setSuiteBusy] = useState<"300" | "compare" | null>(null);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -44,17 +46,97 @@ export default function LotteryAIBenchmarksPage() {
     }
   };
 
+  const run300 = async () => {
+    setSuiteBusy("300");
+    setError(null);
+    setSummary(null);
+    try {
+      const res = await apiClient.postLotteryAIBenchmarkRun300();
+      const r = res as Record<string, unknown>;
+      const total = r.total ?? r.cases ?? "—";
+      const passRate = r.pass_rate ?? r.score ?? "—";
+      const p0 = r.p0 ?? r.p0_count ?? "—";
+      const p1 = r.p1 ?? r.p1_count ?? "—";
+      const blocked = r.publish_blocked;
+      setSummary(
+        `Suite 300: total=${String(total)} pass_rate=${String(passRate)} p0=${String(p0)} p1=${String(p1)}` +
+          (blocked !== undefined ? ` publish_blocked=${String(blocked)}` : ""),
+      );
+      setMsg("Suite 300 ejecutada");
+      await load();
+    } catch (err) {
+      setError(err instanceof ApiError ? err.message : "Error al ejecutar suite 300");
+    } finally {
+      setSuiteBusy(null);
+    }
+  };
+
+  const compareV2V3 = async () => {
+    setSuiteBusy("compare");
+    setError(null);
+    setSummary(null);
+    try {
+      const res = await apiClient.postLotteryAIBenchmarkCompareV2V3();
+      const r = res as Record<string, unknown>;
+      const gate = (r.v3_activation_gate ?? r.gate ?? r) as Record<string, unknown>;
+      const activate = gate.activate_v3 ?? r.activate_v3;
+      const reason = gate.reason ?? r.reason ?? "";
+      const v2 = (r.v2 ?? {}) as Record<string, unknown>;
+      const v3 = (r.v3 ?? {}) as Record<string, unknown>;
+      setSummary(
+        `Comparar v2 vs v3: activate_v3=${String(activate)} ` +
+          `v2_pass=${String(v2.pass_rate ?? gate.v2_pass_rate ?? "—")} ` +
+          `v3_pass=${String(v3.pass_rate ?? gate.v3_pass_rate ?? "—")} ` +
+          `v3_p0=${String(v3.p0 ?? gate.v3_p0 ?? "—")} v3_p1=${String(v3.p1 ?? gate.v3_p1 ?? "—")}` +
+          (reason ? ` — ${String(reason)}` : ""),
+      );
+      setMsg("Comparación v2 vs v3 completada");
+    } catch (err) {
+      setError(err instanceof ApiError ? err.message : "Error al comparar v2 vs v3");
+    } finally {
+      setSuiteBusy(null);
+    }
+  };
+
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-2">
         <h2 className="text-lg font-semibold">Benchmarks</h2>
-        <Button variant="outline" size="sm" onClick={() => void load()} disabled={loading}>
-          Actualizar
-        </Button>
+        <div className="flex flex-wrap gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => void run300()}
+            disabled={loading || suiteBusy !== null}
+          >
+            {suiteBusy === "300" ? "Ejecutando…" : "Ejecutar suite 300"}
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => void compareV2V3()}
+            disabled={loading || suiteBusy !== null}
+          >
+            {suiteBusy === "compare" ? "Comparando…" : "Comparar v2 vs v3"}
+          </Button>
+          <Button variant="outline" size="sm" onClick={() => void load()} disabled={loading}>
+            Actualizar
+          </Button>
+        </div>
       </div>
 
       {error && <p className="text-sm text-destructive">{error}</p>}
       {msg && <p className="text-sm text-muted-foreground">{msg}</p>}
+      {summary && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-sm">Resumen</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="font-mono text-xs whitespace-pre-wrap">{summary}</p>
+          </CardContent>
+        </Card>
+      )}
       {loading && <p className="text-sm text-muted-foreground">Cargando…</p>}
 
       <Card>
@@ -93,7 +175,7 @@ export default function LotteryAIBenchmarksPage() {
                   size="sm"
                   variant="outline"
                   onClick={() => void run(id)}
-                  disabled={isBusy || loading}
+                  disabled={isBusy || loading || suiteBusy !== null}
                   className="shrink-0"
                 >
                   {isBusy ? "Ejecutando…" : "Ejecutar"}

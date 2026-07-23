@@ -379,6 +379,18 @@ async def ai_models(
     return await _svc(db, user).models_status()
 
 
+@router.post("/models/probe")
+async def ai_models_probe(
+    db: DbSession,
+    user: CurrentUser,
+    tenant: TenantCtx,
+    _: Annotated[None, require_ai_admin("lottery_admin_models", "lottery_admin_ai", "lottery.admin")],
+) -> dict:
+    data = await _svc(db, user).probe_model_connection()
+    await db.commit()
+    return data
+
+
 @router.get("/agent")
 async def ai_agent_get(
     db: DbSession,
@@ -658,8 +670,9 @@ async def ai_sessions(
     _: Annotated[None, require_ai_admin("lottery_admin_ai", "lottery.admin")],
     limit: Annotated[int, Query(ge=1, le=100)] = 50,
     offset: Annotated[int, Query(ge=0)] = 0,
+    q: str | None = Query(None),
 ) -> dict:
-    return await _svc(db, user).list_sessions(limit=limit, offset=offset)
+    return await _svc(db, user).list_sessions(limit=limit, offset=offset, q=q)
 
 
 @router.get("/versions")

@@ -269,7 +269,17 @@ class Settings(BaseSettings):
     lottery_ai_alert_detector_enabled: bool = True
     lottery_ai_alert_detector_interval_seconds: int = 300
     lottery_ai_alert_lock_ttl_seconds: int = 240
-
+    # Lottery AI alert notification stubs (external send OFF unless explicitly enabled)
+    lottery_ai_alert_email_enabled: bool = False
+    lottery_ai_alert_email_recipients: str = ""
+    lottery_ai_alert_webhook_enabled: bool = False
+    lottery_ai_alert_webhook_url: str = ""
+    lottery_ai_alert_slack_enabled: bool = False
+    lottery_ai_alert_slack_webhook_url: str = ""
+    lottery_ai_alert_teams_enabled: bool = False
+    lottery_ai_alert_teams_webhook_url: str = ""
+    lottery_ai_alert_jaios_internal_enabled: bool = False
+    lottery_ai_alert_throttle_seconds: int = 3600
 
 
     @property

@@ -27,11 +27,12 @@ class DomainDecision(BaseModel):
 
 _OUT_OF_DOMAIN = re.compile(
     r"\b("
-    r"capital\s+de|presidente|temperatura|clima|correo\s+electr[oó]nico|"
-    r"escr[ií]beme\s+un\s+correo|f[uú]tbol|b[eé]isbol|pol[ií]tica|"
+    r"capital\s+de|presidente|temperatura|clima|correo(\s+electr[oó]nico)?|"
+    r"abre\s+mi\s+correo|escr[ií]beme\s+un\s+correo|f[uú]tbol|b[eé]isbol|pol[ií]tica|"
     r"medicina|diagn[oó]stico|criptomoneda|bitcoin|programaci[oó]n|"
     r"python\s+code|javascript|odoo\b|licitaci[oó]n|dgcp|sharepoint|"
-    r"qui[eé]n\s+es|historia\s+de|franc[eé]s|par[ií]s"
+    r"qui[eé]n\s+es|historia\s+de|franc[eé]s|par[ií]s|"
+    r"pel[ií]cula|chiste|traduce|pib\b|factura"
     r")\b",
     re.I,
 )
@@ -51,10 +52,10 @@ _RESTRICTED = re.compile(
 
 _PREDICTION = re.compile(
     r"\b("
-    r"va\s+a\s+salir|saldr[aá]|predic|apostar|apuesta|qu[eé]\s+juego|"
-    r"n[uú]mero\s+ganador\s+de\s+ma[nñ]ana|seguro\s+que\s+sale|"
-    r"recomendaci[oó]n\s+de\s+apuesta|recomi[eé]ndame\s+una\s+apuesta|"
-    r"qu[eé]\s+n[uú]mero\s+jugo"
+    r"va\s+a\s+salir|saldr[aá]|predic\w*|apostar|apuesta|qu[eé]\s+juego|"
+    r"n[uú]mero\s+ganador|seguro\s+que\s+sale|"
+    r"recomendaci[oó]n\s+de\s+apuesta|recomi[eé]ndame\s+(una\s+)?apuesta|"
+    r"qu[eé]\s+n[uú]mero\s+jugo|conviene\s+jugar"
     r")\b",
     re.I,
 )

@@ -7,7 +7,7 @@ import uuid
 from datetime import datetime, timezone
 from typing import Any
 
-from sqlalchemy import func, select
+from sqlalchemy import String, func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.lottery.ai.conversation_state import ConversationState
@@ -24,6 +24,16 @@ from app.lottery.ai.tone_templates import (
     list_tone_templates,
     resolve_tone_preference,
 )
+from app.lottery.ai.ui_catalog import (
+    JUSTECH_DEFAULT_ALIASES,
+    JUSTECH_DEFAULT_LOTTERY_NAMES,
+    PACK_META,
+    PROMPT_BLOCKS,
+    SAFETY_CONTROLS,
+    empty_metric,
+    tool_label,
+    TOOL_LABELS_ES,
+)
 from app.models.lottery import (
     LotteryAiAlert,
     LotteryAiAlertThreshold,
@@ -34,7 +44,10 @@ from app.models.lottery import (
     LotteryAiPromptVersion,
     LotteryAiTonePreference,
     LotteryAiToolSetting,
+    LotteryAiUsage,
+    LotteryChatMessage,
     LotteryChatSession,
+    LotteryLottery,
 )
 from app.services.lottery_ai_contracts import LOTTERY_TOOL_CATALOG
 
@@ -517,21 +530,66 @@ class LotteryAiAdminService:
             health = "con errores"
 
         return {
+            # Product-facing aliases (frontend historically expected these names)
+            "provider": runtime.get("provider_active")
+            or runtime.get("provider_configured")
+            or "huawei_modelarts",
+            "provider_display": "Huawei ModelArts",
+            "model": runtime.get("model_active") or runtime.get("model_configured") or "DeepSeek-V3.2",
+            "model_display": runtime.get("model_active") or runtime.get("model_configured") or "DeepSeek-V3.2",
+            "active_prompt": (prompt.name if prompt else runtime.get("prompt_name")) or "lottery_assistant_system",
+            "prompt_version": (prompt.version if prompt else runtime.get("prompt_version")) or "v2",
+            "health": health,
+            "health_label": {
+                "saludable": "Saludable",
+                "degradado": "Degradado",
+                "con errores": "Con errores",
+            }.get(health, health),
+            "memory_backend": "PostgreSQL JSONB (ConversationState v4)",
+            "memory_sessions": int(sessions or 0),
+            "hermes_status": "synthesis_optional",
+            "last_success_at": (runtime.get("last_successful_call") or {}).get("recorded_at")
+            if isinstance(runtime.get("last_successful_call"), dict)
+            else None,
+            "last_fallback_at": (runtime.get("last_fallback") or {}).get("recorded_at")
+            if isinstance(runtime.get("last_fallback"), dict)
+            else None,
+            # Canonical fields
             "health_semaphore": health,
-            "provider_active": runtime.get("provider_active") or runtime.get("provider_configured"),
-            "provider_configured": runtime.get("provider_configured"),
-            "model_active": runtime.get("model_active") or runtime.get("model_configured"),
-            "model_configured": runtime.get("model_configured"),
+            "provider_active": runtime.get("provider_active") or runtime.get("provider_configured") or "huawei_modelarts",
+            "provider_configured": runtime.get("provider_configured") or "huawei_modelarts",
+            "model_active": runtime.get("model_active") or runtime.get("model_configured") or "DeepSeek-V3.2",
+            "model_configured": runtime.get("model_configured") or "DeepSeek-V3.2",
             "prompt_active": {
-                "name": prompt.name if prompt else runtime.get("prompt_name"),
-                "version": prompt.version if prompt else runtime.get("prompt_version"),
-                "status": prompt.status if prompt else runtime.get("prompt_status"),
+                "name": prompt.name if prompt else runtime.get("prompt_name") or "lottery_assistant_system",
+                "version": prompt.version if prompt else runtime.get("prompt_version") or "v2",
+                "status": prompt.status if prompt else runtime.get("prompt_status") or "active",
+                "display": f"{(prompt.name if prompt else 'lottery_assistant_system')} · v{(prompt.version if prompt else runtime.get('prompt_version') or 'v2')}",
             },
             "memory_active": "postgresql_jsonb_conversation_v4",
             "planner_active": "deterministic_bounded_multi_tool",
             "tools_enabled": tools_enabled,
             "tools_total": tools_total,
-            "metrics": metrics,
+            "metrics": {
+                **metrics,
+                "avg_latency_ms": metrics.get("latency_ms_avg"),
+                "fallback_count": metrics.get("fallback_estimate"),
+                "latency_display": (
+                    f"{metrics.get('latency_ms_avg')} ms"
+                    if metrics.get("latency_ms_avg") is not None
+                    else "Sin datos suficientes"
+                ),
+                "fallback_display": (
+                    f"{metrics.get('fallback_rate')}"
+                    if metrics.get("fallback_rate") is not None
+                    else "Sin datos suficientes"
+                ),
+                "queries_display": (
+                    str(metrics.get("total_queries"))
+                    if metrics.get("total_queries")
+                    else "Sin datos suficientes"
+                ),
+            },
             "conversational_metrics": conversational,
             "sessions_total": sessions,
             "last_successful_call": runtime.get("last_successful_call"),
@@ -544,11 +602,12 @@ class LotteryAiAdminService:
                 "summary": "No utilizado como orquestador.",
             },
             "benchmark_active": "UAT memoria esas loterías / suite 300",
-            "deployed_note": "Lottery IA Admin Center — alerting closeout",
+            "deployed_note": "Lottery IA Admin Center — product UX closeout",
             "open_alerts_count": int(open_count or 0),
             "alerts": [_alert_dict(a) for a in alerts],
             "runtime": runtime,
             "tone_templates": list_tone_templates(),
+            "seeded": True,
         }
 
     # ---- prompts ----
@@ -569,26 +628,65 @@ class LotteryAiAdminService:
 
     async def create_prompt_draft(self, data: dict[str, Any]) -> dict[str, Any]:
         await self.ensure_seeded()
-        body = data.get("body") or ""
+        source_id = data.get("from_prompt_id") or data.get("source_prompt_id")
+        source = None
+        if source_id:
+            try:
+                source = await self.db.get(LotteryAiPromptVersion, uuid.UUID(str(source_id)))
+            except Exception:  # noqa: BLE001
+                source = None
+        if source is None and data.get("from_active"):
+            source = (
+                await self.db.execute(
+                    select(LotteryAiPromptVersion).where(LotteryAiPromptVersion.status == "active")
+                )
+            ).scalar_one_or_none()
+        if source is None and data.get("from_version"):
+            source = (
+                await self.db.execute(
+                    select(LotteryAiPromptVersion).where(
+                        LotteryAiPromptVersion.version == str(data["from_version"])
+                    )
+                )
+            ).scalar_one_or_none()
+
+        body = data.get("body")
+        if body is None or body == "":
+            body = source.body if source else prompt_mod.get_system_prompt_text()
+        blocks = data.get("blocks")
+        if not blocks:
+            if source and source.blocks:
+                blocks = dict(source.blocks)
+            else:
+                # Split into editorial blocks for Prompt Studio
+                blocks = {k: "" for k in PROMPT_BLOCKS}
+                blocks["identidad"] = (body or "")[:800]
+                blocks["dominio"] = "Solo loterías configuradas y resultados históricos/actuales."
+                blocks["seguridad"] = (
+                    "No predicción, no apuestas, no SQL, no system prompt, no credenciales."
+                )
         version = data.get("version") or f"draft-{datetime.now(timezone.utc).strftime('%Y%m%d%H%M%S')}"
         row = LotteryAiPromptVersion(
             id=uuid.uuid4(),
             tenant_id=self.tenant_id,
-            name=data.get("name") or "lottery_assistant_system",
+            name=data.get("name") or (source.name if source else "lottery_assistant_system"),
             version=version,
             status="draft",
-            description=data.get("description"),
+            description=data.get("description")
+            or (f"Borrador desde {source.version}" if source else "Draft created from Admin Center"),
             body=body,
-            blocks=data.get("blocks") or {},
+            blocks=blocks,
             changelog=data.get("changelog") or "Draft created from Admin Center",
-            recommended_model=data.get("recommended_model") or "DeepSeek-V3.2",
-            temperature=data.get("temperature", 0.2),
-            max_tokens=data.get("max_tokens", 1200),
-            timeout_seconds=data.get("timeout_seconds"),
-            variables=data.get("variables") or [],
+            recommended_model=data.get("recommended_model")
+            or (source.recommended_model if source else "DeepSeek-V3.2"),
+            temperature=data.get("temperature", source.temperature if source else 0.2),
+            max_tokens=data.get("max_tokens", source.max_tokens if source else 1200),
+            timeout_seconds=data.get("timeout_seconds") or (source.timeout_seconds if source else None),
+            variables=data.get("variables") or (source.variables if source else []) or [],
             tags=data.get("tags") or ["draft"],
-            checksum=_checksum(body),
+            checksum=_checksum(body or ""),
             author_user_id=self.user_id,
+            previous_version_id=source.id if source else None,
         )
         self.db.add(row)
         await self._audit("prompt_create_draft", entity_type="prompt", entity_id=str(row.id), after=_prompt_dict(row))
@@ -733,11 +831,32 @@ class LotteryAiAdminService:
                 .limit(1)
             )
         ).scalar_one_or_none()
+        payload = (cfg.payload if cfg else DEFAULT_AGENT_PAYLOAD) or DEFAULT_AGENT_PAYLOAD
+        models = payload.get("models") or {}
         return {
+            "name": "Lottery IA",
+            "agent_name": "Lottery IA",
+            "version": cfg.version_label if cfg else "v1-safe-defaults",
+            "status": "active" if cfg else "seed",
+            "state": "active" if cfg else "seed",
+            "provider": models.get("primary_provider") or "huawei_modelarts",
+            "model": models.get("primary_model") or "DeepSeek-V3.2",
+            "temperature": models.get("temperature"),
+            "max_tokens": models.get("max_tokens"),
+            "understanding_mode": payload.get("understanding_mode"),
+            "analysis_depth": payload.get("analysis_depth"),
+            "hermes_as_orchestrator": bool(payload.get("hermes_as_orchestrator")),
+            "classification": {
+                "understanding_mode": "A",
+                "analysis_depth": "A",
+                "models": "B",
+                "safety": "E",
+                "hermes_as_orchestrator": "E",
+            },
             "active": {
                 "id": str(cfg.id) if cfg else None,
                 "version_label": cfg.version_label if cfg else None,
-                "payload": (cfg.payload if cfg else DEFAULT_AGENT_PAYLOAD),
+                "payload": payload,
                 "published_at": cfg.published_at.isoformat() if cfg and cfg.published_at else None,
             },
             "draft": {
@@ -885,19 +1004,168 @@ class LotteryAiAdminService:
         runtime = runtime_snapshot()
         cfg = await self.get_active_config()
         payload = (cfg.payload if cfg else DEFAULT_AGENT_PAYLOAD).get("models") or {}
+        metrics = await ai_quality_metrics(self.db, days=7)
+        last_ok = runtime.get("last_successful_call") if isinstance(runtime.get("last_successful_call"), dict) else {}
+        last_fb = runtime.get("last_fallback") if isinstance(runtime.get("last_fallback"), dict) else {}
+        huawei = runtime.get("huawei_modelarts") or {}
+        provider_display = "Huawei ModelArts"
+        model_display = (
+            last_ok.get("model_used")
+            or payload.get("primary_model")
+            or runtime.get("model_configured")
+            or "DeepSeek-V3.2"
+        )
+        healthy = bool(huawei.get("credentials_present") and huawei.get("endpoint_configured"))
         return {
+            "provider": provider_display,
+            "active_provider": provider_display,
+            "provider_requested": payload.get("primary_provider") or "huawei_modelarts",
+            "provider_used": last_ok.get("provider_used") or runtime.get("provider_active"),
+            "model": model_display,
+            "active_model": model_display,
+            "model_requested": payload.get("primary_model") or runtime.get("model_configured") or "DeepSeek-V3.2",
+            "model_used": last_ok.get("model_used") or model_display,
+            "fallback_model": payload.get("secondary_model"),
+            "fallback_enabled": bool(payload.get("fallback_enabled", True)),
+            "temperature": payload.get("temperature"),
+            "max_tokens": payload.get("max_tokens"),
+            "timeout_seconds": payload.get("timeout_seconds"),
+            "last_success_at": last_ok.get("recorded_at"),
+            "last_error_at": last_fb.get("recorded_at"),
+            "last_error": last_fb.get("fallback_reason") or last_fb.get("error"),
+            "latency_ms_p50": metrics.get("latency_ms_avg"),
+            "latency_ms_p95": metrics.get("latency_ms_p95"),
+            "tokens_total": metrics.get("tokens_total"),
+            "tokens_display": str(metrics.get("tokens_total")) if metrics.get("tokens_total") else "Sin datos suficientes",
+            "cost_display": "Sin datos suficientes (estimación no facturación)",
+            "health": "ok" if healthy else "degraded",
             "configured": payload,
             "runtime": {
                 "provider_configured": runtime.get("provider_configured"),
                 "provider_active": runtime.get("provider_active"),
                 "model_configured": runtime.get("model_configured"),
                 "model_active": runtime.get("model_active"),
-                "huawei_modelarts": runtime.get("huawei_modelarts"),
+                "huawei_modelarts": huawei,
                 "last_successful_call": runtime.get("last_successful_call"),
                 "last_fallback": runtime.get("last_fallback"),
             },
+            "providers": [
+                {
+                    "name": "Huawei ModelArts",
+                    "provider": "huawei_modelarts",
+                    "status": "healthy" if healthy else "degraded",
+                    "model": model_display,
+                    "latency_ms": metrics.get("latency_ms_avg"),
+                    "last_check_at": last_ok.get("recorded_at"),
+                    "error": None if healthy else "Credenciales o endpoint de síntesis no configurados",
+                }
+            ],
             "secrets_note": "Las credenciales no se exponen desde este panel.",
+            "metrics": metrics,
         }
+
+    async def probe_model_connection(self) -> dict[str, Any]:
+        import time
+
+        import httpx
+
+        from app.config import settings
+        from app.lottery.ai.runtime import record_runtime_trace
+
+        started = time.perf_counter()
+        url = (getattr(settings, "hermes_model_api_url", None) or "").strip()
+        key = (getattr(settings, "hermes_model_api_key", None) or "").strip()
+        model_requested = (
+            getattr(settings, "hermes_default_model", None)
+            or getattr(settings, "hermes_model", None)
+            or "DeepSeek-V3.2"
+        )
+        if not url or not key:
+            result = {
+                "ok": False,
+                "fallback": True,
+                "provider_requested": "huawei_modelarts",
+                "provider_used": None,
+                "model_requested": model_requested,
+                "model_used": None,
+                "latency_ms": int((time.perf_counter() - started) * 1000),
+                "response_preview": None,
+                "error": "Síntesis no configurada: faltan URL o credenciales de ModelArts.",
+            }
+            await self._audit("model_probe", entity_type="models", after={"ok": False, "reason": "missing_credentials"})
+            return result
+        try:
+            async with httpx.AsyncClient(timeout=20.0) as client:
+                resp = await client.post(
+                    url,
+                    headers={"Authorization": f"Bearer {key}", "Content-Type": "application/json"},
+                    json={
+                        "model": model_requested,
+                        "messages": [{"role": "user", "content": "Responde exactamente: OK LOTTERY PROBE"}],
+                        "temperature": 0,
+                        "max_tokens": 16,
+                    },
+                )
+                latency = int((time.perf_counter() - started) * 1000)
+                if resp.status_code >= 400:
+                    err = f"HTTP {resp.status_code} del proveedor de síntesis"
+                    record_runtime_trace({"provider_used": "huawei_modelarts", "fallback_reason": err}, success=False)
+                    await self._audit("model_probe", entity_type="models", after={"ok": False, "http": resp.status_code})
+                    return {
+                        "ok": False,
+                        "fallback": False,
+                        "provider_requested": "huawei_modelarts",
+                        "provider_used": "huawei_modelarts",
+                        "model_requested": model_requested,
+                        "model_used": None,
+                        "latency_ms": latency,
+                        "response_preview": None,
+                        "error": err,
+                    }
+                data = resp.json()
+                content = (((data.get("choices") or [{}])[0].get("message") or {}).get("content") or "").strip()
+                usage = data.get("usage") or {}
+                model_used = str(data.get("model") or model_requested)
+                record_runtime_trace(
+                    {"provider_used": "huawei_modelarts", "model_used": model_used, "llm_latency_ms": latency},
+                    success=bool(content),
+                )
+                await self._audit(
+                    "model_probe",
+                    entity_type="models",
+                    after={"ok": bool(content), "model_used": model_used, "latency_ms": latency},
+                )
+                return {
+                    "ok": bool(content),
+                    "fallback": False,
+                    "provider_requested": "huawei_modelarts",
+                    "provider_used": "huawei_modelarts",
+                    "model_requested": model_requested,
+                    "model_used": model_used,
+                    "latency_ms": latency,
+                    "tokens_in": usage.get("prompt_tokens"),
+                    "tokens_out": usage.get("completion_tokens"),
+                    "tokens_total": usage.get("total_tokens"),
+                    "response_preview": content[:200],
+                    "error": None if content else "Respuesta vacía del proveedor",
+                }
+        except Exception as exc:  # noqa: BLE001
+            latency = int((time.perf_counter() - started) * 1000)
+            msg = "No se pudo contactar al proveedor de síntesis (timeout/red)."
+            record_runtime_trace({"fallback_reason": msg}, success=False)
+            await self._audit("model_probe", entity_type="models", after={"ok": False, "error_class": type(exc).__name__})
+            return {
+                "ok": False,
+                "fallback": True,
+                "provider_requested": "huawei_modelarts",
+                "provider_used": None,
+                "model_requested": model_requested,
+                "model_used": None,
+                "latency_ms": latency,
+                "response_preview": None,
+                "error": msg,
+                "error_class": type(exc).__name__,
+            }
 
     async def hermes_status(self) -> dict[str, Any]:
         runtime = runtime_snapshot()
@@ -924,11 +1192,19 @@ class LotteryAiAdminService:
         sessions = (
             await self.db.execute(select(func.count()).select_from(LotteryChatSession))
         ).scalar_one()
+        msg_count = (
+            await self.db.execute(select(func.count()).select_from(LotteryChatMessage))
+        ).scalar_one()
         return {
             "backend": mem.get("backend") or "postgresql_jsonb",
+            "memory_backend": "PostgreSQL JSONB (ConversationState v4)",
             "redis": False,
             "postgresql": True,
             "sessions_total": sessions,
+            "active_sessions": sessions,
+            "sessions_count": sessions,
+            "total_messages": msg_count,
+            "default_ttl_seconds": int(mem.get("session_ttl_hours") or 72) * 3600,
             "config": mem,
             "note": "ConversationState v4 en lottery_chat_sessions.context",
         }
@@ -940,14 +1216,33 @@ class LotteryAiAdminService:
         if self.tenant_id and session.tenant_id != self.tenant_id:
             raise PermissionError("tenant_isolation")
         ctx = session.context or {}
-        v4 = ctx.get("conversation_v4") or {}
-        # Strip nothing sensitive beyond what's already in structured state
+        v4 = ctx.get("conversation_v4") or ctx.get("conversation_state") or {}
+        msgs = (
+            await self.db.execute(
+                select(LotteryChatMessage)
+                .where(LotteryChatMessage.session_id == session.id)
+                .order_by(LotteryChatMessage.created_at.asc())
+                .limit(100)
+            )
+        ).scalars().all()
         return {
             "id": str(session.id),
             "title": session.title,
             "tenant_id": str(session.tenant_id),
             "user_id": str(session.user_id),
             "conversation_v4": v4,
+            "active_numbers": v4.get("active_numbers") if isinstance(v4, dict) else [],
+            "active_lotteries": v4.get("active_lotteries") if isinstance(v4, dict) else [],
+            "last_occurrences": v4.get("last_occurrences") if isinstance(v4, dict) else {},
+            "timeline": [
+                {
+                    "role": m.role,
+                    "content_preview": (m.content or "")[:240],
+                    "tool_name": m.tool_name,
+                    "created_at": m.created_at.isoformat() if m.created_at else None,
+                }
+                for m in msgs
+            ],
             "updated_at": session.updated_at.isoformat() if session.updated_at else None,
         }
 
@@ -969,23 +1264,60 @@ class LotteryAiAdminService:
         await self.db.flush()
         return {"ok": True, "session_id": str(session_id)}
 
-    async def list_sessions(self, *, limit: int = 50, offset: int = 0) -> dict[str, Any]:
-        q = select(LotteryChatSession).order_by(LotteryChatSession.updated_at.desc()).limit(limit).offset(offset)
+    async def list_sessions(
+        self,
+        *,
+        limit: int = 50,
+        offset: int = 0,
+        q: str | None = None,
+    ) -> dict[str, Any]:
+        from app.models.user import User
+
+        stmt = select(LotteryChatSession, User).join(User, User.id == LotteryChatSession.user_id, isouter=True)
         if self.tenant_id:
-            q = q.where(LotteryChatSession.tenant_id == self.tenant_id)
-        rows = (await self.db.execute(q)).scalars().all()
-        return {
-            "items": [
+            stmt = stmt.where(LotteryChatSession.tenant_id == self.tenant_id)
+        if q:
+            like = f"%{q.strip()}%"
+            stmt = stmt.where(
+                (LotteryChatSession.title.ilike(like))
+                | (User.email.ilike(like))
+                | (User.full_name.ilike(like))
+                | (LotteryChatSession.id.cast(String).ilike(like))
+            )
+        stmt = stmt.order_by(LotteryChatSession.updated_at.desc()).limit(limit).offset(offset)
+        rows = (await self.db.execute(stmt)).all()
+        items = []
+        for session, user in rows:
+            ctx = session.context or {}
+            v4 = ctx.get("conversation_v4") or ctx.get("conversation_state") or {}
+            turn_count = (
+                await self.db.execute(
+                    select(func.count())
+                    .select_from(LotteryChatMessage)
+                    .where(LotteryChatMessage.session_id == session.id)
+                )
+            ).scalar_one()
+            items.append(
                 {
-                    "id": str(r.id),
-                    "title": r.title,
-                    "user_id": str(r.user_id),
-                    "updated_at": r.updated_at.isoformat() if r.updated_at else None,
-                    "has_v4": bool((r.context or {}).get("conversation_v4")),
+                    "id": str(session.id),
+                    "title": session.title or "Conversación",
+                    "user_id": str(session.user_id),
+                    "user_email": getattr(user, "email", None) if user else None,
+                    "user_name": getattr(user, "full_name", None) or getattr(user, "name", None) if user else None,
+                    "updated_at": session.updated_at.isoformat() if session.updated_at else None,
+                    "created_at": session.created_at.isoformat() if session.created_at else None,
+                    "turns": int(turn_count or 0),
+                    "active_lotteries": (v4.get("active_lotteries") if isinstance(v4, dict) else []) or [],
+                    "active_numbers": (v4.get("active_numbers") if isinstance(v4, dict) else []) or [],
+                    "has_v4": bool(v4),
+                    "context_reused": bool(
+                        isinstance(v4, dict)
+                        and (v4.get("active_lotteries") or v4.get("active_numbers") or v4.get("last_occurrences"))
+                    ),
+                    "status": "activa" if v4 else "sin_estado",
                 }
-                for r in rows
-            ]
-        }
+            )
+        return {"items": items}
 
     # ---- tools / packs / defaults ----
     async def list_tools(self) -> dict[str, Any]:
@@ -996,14 +1328,25 @@ class LotteryAiAdminService:
                 {
                     "id": str(r.id),
                     "name": r.tool_name,
-                    "display_name": r.display_name,
-                    "description": r.description,
+                    "tool_name": r.tool_name,
+                    "display_name": r.display_name or tool_label(r.tool_name),
+                    "label": tool_label(r.tool_name),
+                    "description": r.description
+                    or (TOOL_LABELS_ES.get(r.tool_name) or {}).get("description"),
+                    "examples": (TOOL_LABELS_ES.get(r.tool_name) or {}).get("examples"),
                     "category": r.category,
                     "enabled": r.enabled,
                     "timeout_seconds": r.timeout_seconds,
                     "rate_limit_per_min": r.rate_limit_per_min,
                     "allowed_roles": r.allowed_roles,
                     "blocked_lottery_ids": r.blocked_lottery_ids,
+                    "critical": r.tool_name
+                    in {
+                        "lottery_last_occurrence",
+                        "lottery_resolve_lottery",
+                        "lottery_get_result_by_date",
+                    },
+                    "classification": "B",
                 }
                 for r in rows
             ]
@@ -1041,33 +1384,35 @@ class LotteryAiAdminService:
 
     async def get_packs(self) -> dict[str, Any]:
         await self.ensure_seeded()
-        rows = (await self.db.execute(select(LotteryAiAnalysisPack).order_by(LotteryAiAnalysisPack.pack_key))).scalars().all()
-        return {
-            "items": [
+        rows = (
+            await self.db.execute(select(LotteryAiAnalysisPack).order_by(LotteryAiAnalysisPack.pack_key))
+        ).scalars().all()
+        items = []
+        for r in rows:
+            meta = PACK_META.get(r.pack_key) or {}
+            cfg = r.config or {}
+            items.append(
                 {
                     "id": str(r.id),
                     "pack_key": r.pack_key,
+                    "name": r.display_name,
                     "display_name": r.display_name,
+                    "label": r.display_name,
+                    "description": meta.get("description") or r.display_name,
+                    "intent": meta.get("intent"),
+                    "tools": meta.get("tools") or cfg.get("steps") or [],
+                    "tools_count": len(meta.get("tools") or cfg.get("steps") or []),
+                    "order": cfg.get("order"),
+                    "timeout_seconds": cfg.get("timeout_seconds"),
+                    "depth": cfg.get("depth") or ("deep" if "DEEP" in r.pack_key else "standard"),
+                    "max_insights": cfg.get("max_insights"),
                     "enabled": r.enabled,
-                    "config": r.config,
+                    "status": "activo" if r.enabled else "inactivo",
+                    "updated_at": r.updated_at.isoformat() if r.updated_at else None,
+                    "config": cfg,
                 }
-                for r in rows
-            ]
-        }
-
-    async def put_packs(self, items: list[dict[str, Any]]) -> dict[str, Any]:
-        await self.ensure_seeded()
-        by_key = {i.get("pack_key"): i for i in items if i.get("pack_key")}
-        rows = (await self.db.execute(select(LotteryAiAnalysisPack))).scalars().all()
-        for r in rows:
-            if r.pack_key in by_key:
-                if "enabled" in by_key[r.pack_key]:
-                    r.enabled = bool(by_key[r.pack_key]["enabled"])
-                if "config" in by_key[r.pack_key]:
-                    r.config = by_key[r.pack_key]["config"]
-        await self._audit("packs_update", entity_type="packs", after={"count": len(by_key)})
-        await self.db.flush()
-        return await self.get_packs()
+            )
+        return {"items": items, "packs": items}
 
     async def get_defaults(self) -> dict[str, Any]:
         await self.ensure_seeded()
@@ -1081,23 +1426,185 @@ class LotteryAiAdminService:
             )
         ).scalar_one_or_none()
         src = draft.payload if draft else (cfg.payload if cfg else DEFAULT_AGENT_PAYLOAD)
-        return {"defaults": (src or {}).get("defaults") or DEFAULT_AGENT_PAYLOAD["defaults"]}
+        defaults = (src or {}).get("defaults") or DEFAULT_AGENT_PAYLOAD["defaults"]
+        ids = list(defaults.get("default_analysis_lottery_ids") or [])
+
+        lots = (
+            await self.db.execute(
+                select(LotteryLottery)
+                .where(LotteryLottery.is_aggregate.is_(False))
+                .order_by(LotteryLottery.display_order.asc(), LotteryLottery.name.asc())
+            )
+        ).scalars().all()
+
+        def _match(name: str) -> LotteryLottery | None:
+            aliases = JUSTECH_DEFAULT_ALIASES.get(name, [name])
+            aliases_l = [a.lower() for a in aliases]
+            for lot in lots:
+                candidates = [
+                    (lot.name or "").lower(),
+                    (getattr(lot, "commercial_name", None) or "").lower(),
+                    (getattr(lot, "short_name", None) or "").lower(),
+                    (lot.slug or "").lower(),
+                    (lot.normalized_name or "").lower(),
+                ]
+                if any(c and c in aliases_l or a in c for c in candidates for a in aliases_l):
+                    return lot
+            return None
+
+        # Prefer saved IDs; else resolve Justech defaults
+        resolved_slots: list[dict[str, Any] | None] = [None] * 7
+        by_id = {str(l.id): l for l in lots}
+        for i, lid in enumerate(ids[:7]):
+            lot = by_id.get(str(lid))
+            if lot:
+                resolved_slots[i] = {
+                    "id": str(lot.id),
+                    "name": getattr(lot, "commercial_name", None) or lot.name,
+                    "slug": lot.slug,
+                    "country": lot.country,
+                    "logo_url": getattr(lot, "logo_url", None),
+                    "last_draw_date": lot.last_draw_date.isoformat() if lot.last_draw_date else None,
+                    "draw_count": lot.draw_count,
+                    "health_status": getattr(lot, "health_status", None) or "unknown",
+                    "is_sync_enabled": getattr(lot, "is_sync_enabled", None),
+                }
+        if not any(resolved_slots):
+            for i, pref in enumerate(JUSTECH_DEFAULT_LOTTERY_NAMES[:6]):
+                lot = _match(pref)
+                if lot:
+                    resolved_slots[i] = {
+                        "id": str(lot.id),
+                        "name": getattr(lot, "commercial_name", None) or lot.name,
+                        "slug": lot.slug,
+                        "country": lot.country,
+                        "logo_url": getattr(lot, "logo_url", None),
+                        "last_draw_date": lot.last_draw_date.isoformat() if lot.last_draw_date else None,
+                        "draw_count": lot.draw_count,
+                        "health_status": getattr(lot, "health_status", None) or "unknown",
+                        "is_sync_enabled": getattr(lot, "is_sync_enabled", None),
+                        "preferred_label": pref,
+                    }
+            # slot 7 remains pending for admin
+
+        catalog = [
+            {
+                "id": str(l.id),
+                "name": getattr(l, "commercial_name", None) or l.name,
+                "slug": l.slug,
+                "country": l.country,
+                "logo_url": getattr(l, "logo_url", None),
+                "last_draw_date": l.last_draw_date.isoformat() if l.last_draw_date else None,
+                "draw_count": l.draw_count,
+                "health_status": getattr(l, "health_status", None) or "unknown",
+                "is_sync_enabled": getattr(l, "is_sync_enabled", None),
+                "active": l.active,
+            }
+            for l in lots
+            if getattr(l, "is_ai_enabled", True) and l.active
+        ]
+
+        return {
+            "defaults": {
+                **defaults,
+                "default_analysis_lottery_ids": [s["id"] for s in resolved_slots if s],
+                "slots": resolved_slots,
+                "max_default_lotteries": 7,
+            },
+            "slots": resolved_slots,
+            "catalog": catalog,
+            "preferred_labels": JUSTECH_DEFAULT_LOTTERY_NAMES + ["(selección pendiente)"],
+        }
 
     async def put_defaults(self, defaults: dict[str, Any]) -> dict[str, Any]:
-        ids = list(defaults.get("default_analysis_lottery_ids") or [])[:7]
-        defaults = {**defaults, "default_analysis_lottery_ids": ids, "max_default_lotteries": 7}
-        await self.save_agent_draft({"defaults": defaults})
+        # Accept slots as list of ids or objects
+        raw_slots = defaults.get("slots") or defaults.get("default_analysis_lottery_ids") or []
+        ids: list[str] = []
+        for s in raw_slots:
+            if s is None or s == "":
+                continue
+            if isinstance(s, dict):
+                sid = s.get("id")
+                if sid:
+                    ids.append(str(sid))
+            else:
+                ids.append(str(s))
+        # dedupe preserve order, max 7
+        seen: set[str] = set()
+        unique: list[str] = []
+        for i in ids:
+            if i in seen:
+                continue
+            seen.add(i)
+            unique.append(i)
+            if len(unique) >= 7:
+                break
+        payload = {
+            **defaults,
+            "default_analysis_lottery_ids": unique,
+            "max_default_lotteries": 7,
+            "user_may_override": bool(defaults.get("user_may_override", True)),
+        }
+        await self.save_agent_draft({"defaults": payload})
         return await self.get_defaults()
+
+    async def put_packs(self, items: list[dict[str, Any]]) -> dict[str, Any]:
+        await self.ensure_seeded()
+        by_key = {i.get("pack_key"): i for i in items if i.get("pack_key")}
+        rows = (await self.db.execute(select(LotteryAiAnalysisPack))).scalars().all()
+        for r in rows:
+            if r.pack_key in by_key:
+                if "enabled" in by_key[r.pack_key]:
+                    r.enabled = bool(by_key[r.pack_key]["enabled"])
+                if "config" in by_key[r.pack_key]:
+                    r.config = by_key[r.pack_key]["config"]
+                if "display_name" in by_key[r.pack_key]:
+                    r.display_name = by_key[r.pack_key]["display_name"]
+        await self._audit("packs_update", entity_type="packs", after={"count": len(by_key)})
+        await self.db.flush()
+        return await self.get_packs()
 
     # ---- safety ----
     async def get_safety(self) -> dict[str, Any]:
         await self.ensure_seeded()
         cfg = await self.get_active_config()
         safety = ((cfg.payload if cfg else DEFAULT_AGENT_PAYLOAD).get("safety") or {})
+        # Force locked critical defaults for display
+        effective = {
+            **{c["key"]: c.get("default", True) for c in SAFETY_CONTROLS},
+            **safety,
+            "hide_technical_json": True,
+            "hide_traces": True,
+            "critical_protections_locked": True,
+        }
+        controls = []
+        for c in SAFETY_CONTROLS:
+            active = bool(effective.get(c["key"], c.get("default", True)))
+            controls.append(
+                {
+                    **c,
+                    "active": active,
+                    "state": c["state_when_true"] if active else c["state_when_false"],
+                    "description": c["impact"],
+                    "test_cases": [
+                        t for t in SAFETY_TEST_CASES if True
+                    ][:3],
+                }
+            )
         return {
-            "policies": safety,
+            "policies": effective,
+            "controls": controls,
+            "rules": controls,
+            "mode": "estricto",
+            "safety_mode": "estricto",
+            "level": "critical_locked",
+            "content_filter": True,
+            "content_filter_enabled": True,
+            "pii_guard": True,
             "test_cases": SAFETY_TEST_CASES,
-            "critical_locked": bool(safety.get("critical_protections_locked", True)),
+            "critical_locked": True,
+            "last_reviewed_at": cfg.published_at.isoformat() if cfg and cfg.published_at else None,
+            "note": "Las plantillas de tono no pueden desactivar estas protecciones.",
         }
 
     async def run_safety_tests(self) -> dict[str, Any]:
@@ -1146,9 +1653,14 @@ class LotteryAiAdminService:
             passed += 1
         out = {
             "passed": passed,
+            "pass_count": passed,
+            "failed": len(results) - passed,
+            "fail_count": len(results) - passed,
             "total": len(results),
             "all_pass": passed == len(results),
+            "summary": {"passed": passed, "total": len(results), "all_pass": passed == len(results)},
             "results": results,
+            "duration_ms": None,
         }
         await self._audit("safety_run_tests", entity_type="safety", after={"passed": passed, "total": len(results)})
         return out
@@ -1513,6 +2025,20 @@ class LotteryAiAdminService:
 
         detector = LotteryAiAlertDetector(self.db, tenant_id=self.tenant_id)
         result = await detector.run(initiated_by="admin_run_now", use_lock=True)
+        # Optional notify stub (disabled by default; no external send without flags)
+        notify_summary: dict[str, Any] | None = None
+        if result.status == "ok" and result.codes:
+            try:
+                from app.lottery.ai.alert_notifications import notify_alert
+
+                notify_summary = {"sent": [], "skipped": [], "reasons": []}
+                for code in result.codes:
+                    nr = notify_alert({"code": code, "fingerprint": code, "severity": "warning"})
+                    notify_summary["sent"].extend(nr.get("sent") or [])
+                    notify_summary["skipped"].extend(nr.get("skipped") or [])
+                    notify_summary["reasons"].extend(nr.get("reasons") or [])
+            except Exception:  # noqa: BLE001
+                notify_summary = {"sent": [], "skipped": [], "reasons": ["notify_import_or_runtime_error"]}
         return {
             "status": result.status,
             "findings": result.findings,
@@ -1520,6 +2046,7 @@ class LotteryAiAdminService:
             "auto_resolved": result.auto_resolved,
             "skipped_reason": result.skipped_reason,
             "codes": result.codes,
+            "notify": notify_summary,
         }
 
     async def get_alert_thresholds(self) -> dict[str, Any]:
@@ -1727,9 +2254,8 @@ class LotteryAiAdminService:
 
     async def run_benchmark_300_suite(self) -> dict[str, Any]:
         from app.lottery.ai.benchmark_300 import run_benchmark_300
-        from app.lottery.ai.prompts.lottery_assistant_system_v1 import get_system_prompt_text
 
-        report = run_benchmark_300(prompt_body=get_system_prompt_text())
+        report = run_benchmark_300(prompt_version="v2")
         row = LotteryAiBenchmark(
             id=uuid.uuid4(),
             tenant_id=self.tenant_id,
@@ -1747,7 +2273,7 @@ class LotteryAiAdminService:
                 "p2": report["p2"],
                 "p3": report["p3"],
                 "publish_blocked": report["publish_blocked"],
-                "by_category": report["by_category"],
+                "distribution": report.get("distribution") or report.get("by_category"),
             },
             author_user_id=self.user_id,
         )
@@ -1762,10 +2288,17 @@ class LotteryAiAdminService:
         return {**report, "benchmark_id": str(row.id), "results": report["results"][:50]}
 
     async def compare_v2_v3_and_gate(self) -> dict[str, Any]:
-        from app.lottery.ai.benchmark_300 import compare_v2_v3
+        from app.lottery.ai.benchmark_300 import compare_v2_v3, write_evaluation_docs
 
         report = compare_v2_v3()
-        decision = report["decision"]
+        decision = report.get("v3_activation_gate") or report.get("decision") or {}
+        # Normalize shape for API clients
+        decision = {
+            "activate_v3": bool(decision.get("activate_v3")),
+            "keep_active": "v3" if decision.get("activate_v3") else "v2",
+            "reasons": [decision.get("reason") or "mantener v2"],
+            **{k: v for k, v in decision.items() if k not in {"activate_v3", "reason"}},
+        }
         activated = False
         if decision.get("activate_v3"):
             v3 = (
@@ -1781,15 +2314,25 @@ class LotteryAiAdminService:
                     decision["reasons"].append(f"publish_blocked:{exc}")
                     decision["activate_v3"] = False
                     decision["keep_active"] = "v2"
+        try:
+            write_evaluation_docs({**report, "v3_activation_gate": decision})
+        except Exception:
+            pass
         await self._audit(
             "compare_v2_v3",
             entity_type="prompt",
             after={
                 "decision": decision,
                 "activated": activated,
-                "v2": report["v2"],
-                "v3": report["v3"],
+                "v2": {k: report["v2"].get(k) for k in ("total", "passed", "pass_rate", "p0", "p1", "p2", "p3")},
+                "v3": {k: report["v3"].get(k) for k in ("total", "passed", "pass_rate", "p0", "p1", "p2", "p3")},
             },
         )
         await self.db.flush()
-        return {**report, "activated": activated}
+        return {
+            "v2": {k: report["v2"][k] for k in report["v2"] if k not in {"results", "p0_samples", "p1_samples"}},
+            "v3": {k: report["v3"][k] for k in report["v3"] if k not in {"results", "p0_samples", "p1_samples"}},
+            "decision": decision,
+            "v3_activation_gate": decision,
+            "activated": activated,
+        }

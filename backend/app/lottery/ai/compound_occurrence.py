@@ -237,10 +237,13 @@ def parse_compound_last_occurrence(
 
 
 def follow_up_any_position(text: str) -> bool:
-    t = _norm(text)
+    t = _norm(text).strip(" ¿?¡!.")
     return bool(
         re.search(
-            r"^(y\s+)?en\s+cualquier\s+posicion|ahora\s+en\s+cualquier|sin\s+importar\s+posicion",
+            r"^(y\s+)?en\s+cualquier\s+posicion|"
+            r"^(y\s+)?ahora\s+en\s+cualquier(\s+posicion)?|"
+            r"sin\s+importar\s+(la\s+)?posicion|"
+            r"cualquier\s+posicion\??$",
             t,
         )
     )

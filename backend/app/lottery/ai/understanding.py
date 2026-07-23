@@ -165,6 +165,14 @@ def understand(raw: str, state: ConversationState) -> tuple[UnderstandingResult,
         else:
             working.draw_count_context = int(pw["count"])
 
+    # Position / multi-query follow-ups must win over post-occurrence clarifiers
+    from app.lottery.ai.compound_occurrence import follow_up_any_position, follow_up_replace_numbers
+
+    if follow_up_any_position(text) or follow_up_replace_numbers(text):
+        follow_early = _detect_follow_up(text, working)
+        if follow_early:
+            return follow_early
+
     post = _detect_post_occurrence(text, working, refs)
     if post:
         return post

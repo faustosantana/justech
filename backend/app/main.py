@@ -17,7 +17,15 @@ from app.core.lottery_isolation import LotteryClientIsolationMiddleware
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     start_dgcp_scheduler()
-    start_lottery_scheduler()
+    # Lottery 3.0: Sync Engine runs as standalone worker when configured
+    if settings.lottery_sync_worker_standalone:
+        import logging
+
+        logging.getLogger(__name__).info(
+            "Lottery scheduler not started in API (LOTTERY_SYNC_WORKER_STANDALONE=true)"
+        )
+    else:
+        start_lottery_scheduler()
     yield
     stop_lottery_scheduler()
     stop_dgcp_scheduler()

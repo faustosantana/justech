@@ -158,6 +158,34 @@ services:
       - jaios-net
     restart: unless-stopped
 
+  # ─── Lottery Sync Worker (Lottery 3.0 — independent lifecycle) ──────────────
+  lottery-sync-worker:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      target: development
+    env_file:
+      - .env
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://${POSTGRES_USER:-jaios}:${POSTGRES_PASSWORD:-jaios_secret}@postgres:5432/${POSTGRES_DB:-jaios}
+      - REDIS_URL=redis://redis:6379/0
+      - LOTTERY_SYNC_WORKER_STANDALONE=true
+      - LOTTERY_MODULE_ENABLED=true
+    command: ["python", "-m", "app.lottery.sync.worker"]
+    volumes:
+      - ./backend:/app
+      - ./integrations:/app/integrations
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - jaios-net
+    restart: unless-stopped
+    profiles:
+      - lottery-sync
+
 networks:
   jaios-net:
     driver: bridge

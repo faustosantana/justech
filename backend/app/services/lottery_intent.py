@@ -50,7 +50,8 @@ WORD_NUMBERS = {
 }
 
 PREDICTION_RE = re.compile(
-    r"(va a salir|saldr[aá]|n[uú]mero.?probable|predicc|mañana saldr|"
+    r"(va a salir|saldr[aá]|n[uú]mero.?probable|predicc|predecir|permite predecir|"
+    r"siguiente sorteo|pr[oó]ximo resultado|mañana saldr|"
     r"recomienda.*(apostar|jugad)|qu[eé] n[uú]mero (juego|apuesto))",
     re.I,
 )
@@ -221,6 +222,33 @@ def resolve_intent(message: str, ctx: LotterySessionContext) -> ResolvedIntent:
 
     # Lottery 3.0 — operational / analyst intents
     if re.search(
+        r"qu[eé]\s+per[ií]odo\s+(analiz|usaste|revis)|"
+        r"cu[aá]ntos?\s+sorteos?\s+(utiliz|analiz|usaste|revis)|"
+        r"qu[eé]\s+par[aá]metros?\s+(usaste|empleaste|aplicaste)|"
+        r"muestra\s+(usaste|analiz)",
+        text,
+    ):
+        # Prefer last hot/cold context; otherwise coverage summary
+        if ctx.last_lottery or (ctx.last_tool and "hot" in (ctx.last_tool or "")):
+            return ResolvedIntent(
+                kind="tool",
+                tool=LotteryToolName.GET_HOT_COLD,
+                params={
+                    "lottery": ctx.last_lottery or "Leidsa",
+                    "focus": "definition",
+                    "window_draws": 30,
+                    "explain_only": True,
+                    "report_params": True,
+                },
+                structured_type="lottery_result",
+            )
+        return ResolvedIntent(
+            kind="tool",
+            tool=LotteryToolName.GET_COVERAGE,
+            params={},
+            structured_type="lottery_result",
+        )
+    if re.search(
         r"cu[aá]ntos?\s+resultados?\s+(hay\s+)?hoy|"
         r"resultados?\s+hoy|"
         r"por qu[eé].*resultados?\s+hoy|"
@@ -313,7 +341,9 @@ def resolve_intent(message: str, ctx: LotterySessionContext) -> ResolvedIntent:
     )
     if def_hot_cold or hot_cold_list:
         focus = "both"
-        if re.search(r"atrasad|sin\s+aparecer|llevan\s+m[aá]s\s+tiempo", text) and not re.search(
+        if def_hot_cold:
+            focus = "definition"
+        elif re.search(r"atrasad|sin\s+aparecer|llevan\s+m[aá]s\s+tiempo", text) and not re.search(
             r"calientes?", text
         ):
             focus = "cold_interval"
@@ -323,8 +353,6 @@ def resolve_intent(message: str, ctx: LotterySessionContext) -> ResolvedIntent:
             focus = "cold_interval"
         elif re.search(r"calientes?", text) and not re.search(r"fr[ií]os?|atrasad", text):
             focus = "hot"
-        if def_hot_cold and not hot_cold_list:
-            focus = "definition"
         if not lottery and focus != "definition":
             return ResolvedIntent(
                 kind="clarify",

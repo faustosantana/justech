@@ -545,6 +545,15 @@ class LotteryChatService:
         if tool == "lottery_get_hot_cold" and isinstance(data, dict):
             if data.get("focus") == "definition" or not data.get("window_draws"):
                 defs = data.get("definitions") or {}
+                if params.get("report_params"):
+                    return (
+                        f"Parámetros del análisis descriptivo: lotería={data.get('lottery') or params.get('lottery') or 'Leidsa'}, "
+                        f"ventana={params.get('window_draws') or 30} sorteos, "
+                        "métrica caliente=frecuencia relativa; "
+                        "frío por frecuencia=baja frecuencia relativa; "
+                        "atrasado=días sin aparecer. "
+                        "Es análisis histórico, no predicción."
+                    )
                 return (
                     "En JAIOS usamos estas definiciones explícitas (análisis histórico, no predicción):\n"
                     f"• Caliente: {defs.get('hot') or data.get('definition')}\n"

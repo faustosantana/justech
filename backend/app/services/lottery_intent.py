@@ -219,6 +219,45 @@ def resolve_intent(message: str, ctx: LotterySessionContext) -> ResolvedIntent:
             structured_type="lottery_error",
         )
 
+    # Lottery 3.0 — operational / analyst intents
+    if re.search(
+        r"resultados?\s+hoy.*(cero|0)|por qu[eé].*resultados?\s+hoy|qu[eé] loter[ií]as.*(no|a[uú]n).*(sincron|hoy)|faltan.*(hoy|sincron)",
+        text,
+    ):
+        return ResolvedIntent(
+            kind="tool",
+            tool=LotteryToolName.GET_MISSING_TODAY,
+            params={},
+            structured_type="lottery_result",
+        )
+    if re.search(r"fuentes?.*(degrad|salud|health)|circuit\s*breaker|sincronizaci[oó]n.*(estado|status)|[uú]ltima sincronizaci[oó]n", text):
+        if re.search(r"ventana|pr[oó]xima sincron|scheduler", text):
+            return ResolvedIntent(
+                kind="tool",
+                tool=LotteryToolName.GET_SYNC_WINDOWS,
+                params={},
+                structured_type="lottery_result",
+            )
+        if re.search(r"fuente|degrad|health|circuit", text):
+            return ResolvedIntent(
+                kind="tool",
+                tool=LotteryToolName.GET_SOURCE_HEALTH,
+                params={},
+                structured_type="lottery_result",
+            )
+        return ResolvedIntent(
+            kind="tool",
+            tool=LotteryToolName.GET_SYNC_STATUS,
+            params={},
+            structured_type="lottery_result",
+        )
+    if re.search(r"anomal[ií]as|inconsistencias|calidad de datos|datos te faltan|qu[eé] datos.*faltan", text):
+        # quality/anomalies need a lottery — defer to coverage if none
+        pass
+    if re.search(r"n[uú]meros?\s+calientes|n[uú]meros?\s+fr[ií]os|calientes y fr[ií]os", text):
+        # resolved after lottery extraction below — placeholder handled later
+        pass
+
     if re.search(r"guarda(r)? (esta )?consulta|salvar consulta|save query", text):
         name_m = re.search(r"(?:como|como|as)\s+[«\"']?([^\"'»]+)[»\"']?", raw, re.I)
         name = (name_m.group(1).strip() if name_m else None) or "Consulta guardada"
@@ -233,6 +272,27 @@ def resolve_intent(message: str, ctx: LotterySessionContext) -> ResolvedIntent:
     lottery = mentioned[0] if mentioned else ctx.last_lottery
     parsed_date = _parse_spanish_date(raw)  # do not inherit ctx date for unrelated number queries
     ctx_date = parsed_date or ctx.base_date
+
+    if re.search(r"n[uú]meros?\s+calientes|n[uú]meros?\s+fr[ií]os|calientes y fr[ií]os", text):
+        if not lottery:
+            return ResolvedIntent(
+                kind="clarify",
+                clarify_message="¿De qué lotería quieres números calientes/fríos (descriptivos, no predicción)?",
+                structured_type="lottery_ambiguity",
+            )
+        return ResolvedIntent(
+            kind="tool",
+            tool=LotteryToolName.GET_HOT_COLD,
+            params={"lottery": lottery},
+            structured_type="lottery_result",
+        )
+    if re.search(r"anomal[ií]as|calidad de (los )?datos|inconsistencias de (los )?datos", text) and lottery:
+        return ResolvedIntent(
+            kind="tool",
+            tool=LotteryToolName.GET_DATA_QUALITY,
+            params={"lottery": lottery},
+            structured_type="lottery_result",
+        )
 
     if lottery == "Nacional Día" or "Nacional Día" in mentioned or re.search(
         r"por que no.*(nacional\s+d[ií]a)|no puedes consultar nacional",

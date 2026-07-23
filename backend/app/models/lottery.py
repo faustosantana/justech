@@ -16,6 +16,7 @@ from sqlalchemy import (
     ForeignKey,
     Index,
     Integer,
+    Numeric,
     String,
     Text,
     Time,
@@ -84,6 +85,20 @@ class LotteryLottery(UUIDPrimaryKeyMixin, TimestampMixin, Base):
     last_error: Mapped[str | None] = mapped_column(Text)
     numbers_count: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
     admin_notes: Mapped[str | None] = mapped_column(Text)
+
+    # Lottery 3.0 — multi-country + smart sync windows
+    country_code: Mapped[str | None] = mapped_column(String(8), default="DO")
+    operator_key: Mapped[str | None] = mapped_column(String(64))
+    flag_emoji: Mapped[str | None] = mapped_column(String(16))
+    sync_priority: Mapped[int] = mapped_column(Integer, nullable=False, default=100)
+    sync_timeout_seconds: Mapped[int | None] = mapped_column(Integer)
+    sync_pre_window_minutes: Mapped[int | None] = mapped_column(Integer)
+    sync_live_window_minutes: Mapped[int | None] = mapped_column(Integer)
+    sync_post_window_minutes: Mapped[int | None] = mapped_column(Integer)
+    sync_pre_interval_minutes: Mapped[int | None] = mapped_column(Integer)
+    sync_live_interval_minutes: Mapped[int | None] = mapped_column(Integer)
+    sync_post_interval_minutes: Mapped[int | None] = mapped_column(Integer)
+    sync_backoff_seconds: Mapped[int | None] = mapped_column(Integer)
 
     draws: Mapped[list["LotteryDraw"]] = relationship(back_populates="lottery")
     aliases: Mapped[list["LotteryAlias"]] = relationship(back_populates="lottery")
@@ -529,3 +544,85 @@ class LotteryDrawRevision(UUIDPrimaryKeyMixin, Base):
     created_by: Mapped[str | None] = mapped_column(String(255))
     reverted_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     reverted_by: Mapped[str | None] = mapped_column(String(255))
+
+
+class LotterySource(UUIDPrimaryKeyMixin, TimestampMixin, Base):
+    __tablename__ = "lottery_sources"
+    __table_args__ = (
+        UniqueConstraint("lottery_id", "source_key", name="uq_lottery_sources_lottery_key"),
+        Index("ix_lottery_sources_lottery_role", "lottery_id", "role"),
+    )
+
+    lottery_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("lottery_lotteries.id", ondelete="CASCADE"), nullable=False
+    )
+    source_key: Mapped[str] = mapped_column(String(128), nullable=False)
+    adapter_key: Mapped[str] = mapped_column(String(128), nullable=False)
+    role: Mapped[str] = mapped_column(String(32), nullable=False, default="primary")
+    priority: Mapped[int] = mapped_column(Integer, nullable=False, default=100)
+    enabled: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
+    health_status: Mapped[str] = mapped_column(String(32), nullable=False, default="unknown")
+    latency_ema_ms: Mapped[int | None] = mapped_column(Integer)
+    last_error: Mapped[str | None] = mapped_column(Text)
+    last_success_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    last_failure_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    circuit_state: Mapped[str] = mapped_column(String(32), nullable=False, default="closed")
+
+
+class LotterySourceAttempt(UUIDPrimaryKeyMixin, Base):
+    __tablename__ = "lottery_source_attempts"
+
+    sync_run_id: Mapped[uuid.UUID | None] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("lottery_sync_runs.id", ondelete="CASCADE")
+    )
+    lottery_source_id: Mapped[uuid.UUID | None] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("lottery_sources.id", ondelete="SET NULL")
+    )
+    source_key: Mapped[str] = mapped_column(String(128), nullable=False)
+    role: Mapped[str] = mapped_column(String(32), nullable=False)
+    ok: Mapped[bool] = mapped_column(Boolean, nullable=False)
+    latency_ms: Mapped[int | None] = mapped_column(Integer)
+    error: Mapped[str | None] = mapped_column(Text)
+    candidates: Mapped[int | None] = mapped_column(Integer, default=0)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now(), nullable=False
+    )
+
+
+class LotterySourceConflict(UUIDPrimaryKeyMixin, Base):
+    __tablename__ = "lottery_source_conflicts"
+
+    lottery_id: Mapped[uuid.UUID | None] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("lottery_lotteries.id", ondelete="CASCADE")
+    )
+    draw_date: Mapped[date] = mapped_column(Date, nullable=False)
+    field: Mapped[str] = mapped_column(String(64), nullable=False)
+    primary_value: Mapped[str | None] = mapped_column(Text)
+    other_value: Mapped[str | None] = mapped_column(Text)
+    other_source: Mapped[str | None] = mapped_column(String(128))
+    status: Mapped[str] = mapped_column(String(32), nullable=False, default="open")
+    evidence: Mapped[dict | None] = mapped_column(JSONB)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now(), nullable=False
+    )
+    resolved_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+
+
+class LotteryAiUsage(UUIDPrimaryKeyMixin, Base):
+    __tablename__ = "lottery_ai_usage"
+
+    tenant_id: Mapped[uuid.UUID | None] = mapped_column(UUID(as_uuid=True))
+    user_id: Mapped[uuid.UUID | None] = mapped_column(UUID(as_uuid=True))
+    session_id: Mapped[uuid.UUID | None] = mapped_column(UUID(as_uuid=True))
+    provider: Mapped[str | None] = mapped_column(String(64))
+    model: Mapped[str | None] = mapped_column(String(128))
+    prompt_tokens: Mapped[int | None] = mapped_column(Integer)
+    completion_tokens: Mapped[int | None] = mapped_column(Integer)
+    total_tokens: Mapped[int | None] = mapped_column(Integer)
+    latency_ms: Mapped[int | None] = mapped_column(Integer)
+    estimated_cost_usd: Mapped[float | None] = mapped_column(Numeric(12, 6))
+    tool_names: Mapped[dict | list | None] = mapped_column(JSONB)
+    ok: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now(), nullable=False
+    )

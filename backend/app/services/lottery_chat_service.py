@@ -206,6 +206,24 @@ class LotteryChatService:
                 final_text = f"{final_text.rstrip()}\n\n{DISCLAIMER}"
 
         latency_ms = int((time.perf_counter() - t0) * 1000)
+        try:
+            from app.lottery.ai.usage import estimate_cost_usd, record_ai_usage
+
+            tools_used = [t.get("tool") for t in tool_trace if isinstance(t, dict) and t.get("tool")]
+            await record_ai_usage(
+                self.db,
+                tenant_id=self.tenant_id,
+                user_id=self.user_id,
+                session_id=session.id,
+                provider="hermes" if model_name and "hermes" in str(model_name).lower() else (model_name or "local"),
+                model=model_name,
+                latency_ms=latency_ms,
+                estimated_cost_usd=estimate_cost_usd(prompt_tokens=0, completion_tokens=0),
+                tool_names=[str(x) for x in tools_used if x],
+                ok=not synthesis_fallback or bool(final_text),
+            )
+        except Exception:  # noqa: BLE001 — metrics must not break chat
+            pass
         assistant_payload = {
             "structured_content": structured,
             "tool_trace": tool_trace,

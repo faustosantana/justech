@@ -33,6 +33,13 @@ class LotteryToolName(str, Enum):
     GET_LAST_OCCURRENCE = "lottery_get_last_occurrence"
     GET_INTERVAL_STATISTICS = "lottery_get_interval_statistics"
     GET_SYNC_STATUS = "lottery_get_sync_status"
+    GET_DATA_QUALITY = "lottery_get_data_quality"
+    GET_ANOMALIES = "lottery_get_anomalies"
+    GET_SOURCE_HEALTH = "lottery_get_source_health"
+    GET_SYNC_WINDOWS = "lottery_get_sync_windows"
+    GET_HOT_COLD = "lottery_get_hot_cold"
+    GET_COINCIDENCES = "lottery_get_coincidences"
+    GET_MISSING_TODAY = "lottery_get_missing_today"
 
 
 # Permisos mínimos por tool (cualquiera de la tupla basta)
@@ -61,6 +68,13 @@ TOOL_PERMISSIONS: dict[LotteryToolName, tuple[str, ...]] = {
     LotteryToolName.GET_LAST_OCCURRENCE: ("lottery.statistics", "lottery.search"),
     LotteryToolName.GET_INTERVAL_STATISTICS: ("lottery.statistics",),
     LotteryToolName.GET_SYNC_STATUS: ("lottery.access",),
+    LotteryToolName.GET_DATA_QUALITY: ("lottery.statistics", "lottery.admin"),
+    LotteryToolName.GET_ANOMALIES: ("lottery.statistics", "lottery.admin"),
+    LotteryToolName.GET_SOURCE_HEALTH: ("lottery.access", "lottery.admin"),
+    LotteryToolName.GET_SYNC_WINDOWS: ("lottery.access", "lottery.admin"),
+    LotteryToolName.GET_HOT_COLD: ("lottery.statistics",),
+    LotteryToolName.GET_COINCIDENCES: ("lottery.compare", "lottery.statistics"),
+    LotteryToolName.GET_MISSING_TODAY: ("lottery.access", "lottery.search"),
 }
 
 
@@ -157,29 +171,65 @@ LOTTERY_TOOL_CATALOG: list[LotteryToolContract] = [
         description="Lista consultas guardadas del usuario en el tenant.",
         permissions=TOOL_PERMISSIONS[LotteryToolName.GET_SAVED_QUERIES],
     ),
+    LotteryToolContract(
+        name=LotteryToolName.GET_DATA_QUALITY,
+        description="Calidad de datos y drift de metadata de una lotería.",
+        permissions=TOOL_PERMISSIONS[LotteryToolName.GET_DATA_QUALITY],
+    ),
+    LotteryToolContract(
+        name=LotteryToolName.GET_ANOMALIES,
+        description="Anomalías detectadas (fechas futuras, duplicados, faltantes).",
+        permissions=TOOL_PERMISSIONS[LotteryToolName.GET_ANOMALIES],
+    ),
+    LotteryToolContract(
+        name=LotteryToolName.GET_SOURCE_HEALTH,
+        description="Salud de fuentes multi-source y circuit breakers.",
+        permissions=TOOL_PERMISSIONS[LotteryToolName.GET_SOURCE_HEALTH],
+    ),
+    LotteryToolContract(
+        name=LotteryToolName.GET_SYNC_WINDOWS,
+        description="Ventanas inteligentes de sincronización y próxima consulta.",
+        permissions=TOOL_PERMISSIONS[LotteryToolName.GET_SYNC_WINDOWS],
+    ),
+    LotteryToolContract(
+        name=LotteryToolName.GET_HOT_COLD,
+        description="Números calientes/fríos descriptivos (sin predicción).",
+        permissions=TOOL_PERMISSIONS[LotteryToolName.GET_HOT_COLD],
+    ),
+    LotteryToolContract(
+        name=LotteryToolName.GET_COINCIDENCES,
+        description="Coincidencias de números entre loterías en las mismas fechas.",
+        permissions=TOOL_PERMISSIONS[LotteryToolName.GET_COINCIDENCES],
+    ),
+    LotteryToolContract(
+        name=LotteryToolName.GET_MISSING_TODAY,
+        description="Loterías sincronizadas que aún no tienen resultado de hoy (TZ local).",
+        permissions=TOOL_PERMISSIONS[LotteryToolName.GET_MISSING_TODAY],
+    ),
 ]
 
 
-LOTTERY_SYSTEM_PROMPT = """Eres Lotería IA 2.0, asistente analítico de consulta histórica dentro de JAIOS.
+LOTTERY_SYSTEM_PROMPT = """Eres Lotería IA 3.0, analista especializado de la plataforma de inteligencia de loterías de JAIOS.
 
 Pipeline interno (obligatorio):
-1) Clasifica la intención (resultado, rango, frecuencia, comparación, cobertura, seguimiento).
+1) Clasifica la intención (resultado, rango, frecuencia, comparación, cobertura, sync/ops, calidad, seguimiento).
 2) Extrae entidades (lotería, fecha, número, días vs sorteos).
 3) Resuelve lotería con tools (aliases). Si es ambiguo, pregunta.
 4) Planifica 1..N tools tipadas. Ejecuta solo tools.
-5) Valida consistencia (ceros iniciales, días calendario ≠ sorteos).
-6) Compón respuesta con datos reales, tablas cuando ayuden, cobertura y limitaciones.
-7) Indica confianza cualitativa solo si hay datos suficientes.
+5) Valida consistencia (ceros iniciales, días calendario ≠ sorteos, metadata vs draws).
+6) Compón respuesta natural con cifras concretas, tablas útiles, cobertura, confianza y limitaciones.
+7) Nunca muestres mensajes internos ni JSON técnico.
 
 Reglas:
 1. Responde únicamente con datos de tools. Nunca inventes.
 2. Distingue días calendario vs sorteos existentes.
 3. Conserva ceros iniciales (00, 01, 05).
-4. Usa contexto de seguimiento (lotería/fecha previa) cuando el usuario diga «y los siguientes…».
+4. Usa contexto de seguimiento conversacional.
 5. «Nacional Día» permanece AMBIGUOUS (La Primera Tarde 20 vs La Suerte MD 21).
 6. No SQL libre. No predicción. No consejos de apuestas.
 7. Si no hay datos, dilo. Si excede límites, pide reducir.
-8. Toda cifra debe citar lotería/rango/fuente de la tool.
+8. Explica brevemente el cálculo y el período analizado.
+9. Para ops (sync, fuentes, ventanas, faltantes hoy) usa las tools correspondientes.
 
 Texto obligatorio al final de análisis estadísticos:
 Los resultados históricos y las estadísticas son únicamente informativos. No garantizan resultados futuros ni constituyen recomendación de apuestas.

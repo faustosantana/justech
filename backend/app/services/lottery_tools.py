@@ -517,7 +517,122 @@ class LotteryToolExecutor:
                 "global_write_enabled": bool(cfg.lottery_sync_write_enabled),
                 "global_auto_write_enabled": bool(cfg.lottery_sync_automatic_write_enabled),
                 "scheduler_enabled": bool(cfg.lottery_scheduler_enabled),
+                "scheduler_mode": cfg.lottery_scheduler_mode,
+                "worker_standalone": bool(cfg.lottery_sync_worker_standalone),
                 "lotteries_sync_enabled": len(sync_on),
+                "sync_lotteries": [
+                    {"name": r.name, "source_id": r.source_id, "last_draw_date": str(getattr(r, "last_draw_date", None))}
+                    for r in sync_on
+                ],
             }, len(sync_on), {}
+
+        if tool == LotteryToolName.GET_DATA_QUALITY:
+            from app.lottery.analytics import LotteryAnalyticsEngine
+            from uuid import UUID as _UUID
+
+            q = str(params.get("lottery") or session_context.get("lottery") or "")
+            lot = await self.resolver.resolve_or_raise(q)
+            data = await LotteryAnalyticsEngine(self.db).data_quality(_UUID(str(lot.id)))
+            return data, 1, {"confidence": "high", "limitations": ["descriptivo"]}
+
+        if tool == LotteryToolName.GET_ANOMALIES:
+            from app.lottery.analytics import LotteryAnalyticsEngine
+            from uuid import UUID as _UUID
+
+            q = str(params.get("lottery") or session_context.get("lottery") or "")
+            lot = await self.resolver.resolve_or_raise(q)
+            data = await LotteryAnalyticsEngine(self.db).anomalies(_UUID(str(lot.id)))
+            return data, data.get("count", 0), {}
+
+        if tool == LotteryToolName.GET_SOURCE_HEALTH:
+            from app.models.lottery import LotterySource
+            from sqlalchemy import select
+
+            rows = (await self.db.execute(select(LotterySource).limit(100))).scalars().all()
+            items = [
+                {
+                    "source_key": r.source_key,
+                    "role": r.role,
+                    "health_status": r.health_status,
+                    "circuit_state": r.circuit_state,
+                    "latency_ema_ms": r.latency_ema_ms,
+                    "enabled": r.enabled,
+                }
+                for r in rows
+            ]
+            return {"sources": items, "count": len(items)}, len(items), {}
+
+        if tool == LotteryToolName.GET_SYNC_WINDOWS:
+            from app.lottery.sync.dispatcher import dispatch_status
+
+            data = await dispatch_status(self.db)
+            return data, len(data.get("sync_enabled_due") or []), {}
+
+        if tool == LotteryToolName.GET_HOT_COLD:
+            from app.lottery.analytics import LotteryAnalyticsEngine
+            from uuid import UUID as _UUID
+
+            q = str(params.get("lottery") or session_context.get("lottery") or "")
+            lot = await self.resolver.resolve_or_raise(q)
+            data = await LotteryAnalyticsEngine(self.db).hot_cold(_UUID(str(lot.id)))
+            return data, len(data.get("hot") or []), {"disclaimer": data.get("definition")}
+
+        if tool == LotteryToolName.GET_COINCIDENCES:
+            from app.lottery.analytics import LotteryAnalyticsEngine
+            from uuid import UUID as _UUID
+            from datetime import date as date_cls
+
+            ids = params.get("lottery_ids") or []
+            if not ids and session_context.get("lottery_ids"):
+                ids = session_context["lottery_ids"]
+            if len(ids) < 2:
+                # fallback: resolve compare list from names
+                raise LotteryQueryError("VALIDATION", "Se requieren al menos 2 loterías para coincidencias")
+            on_date = params.get("on_date")
+            od = date_cls.fromisoformat(on_date) if on_date else None
+            data = await LotteryAnalyticsEngine(self.db).coincidences(
+                [_UUID(str(x)) for x in ids], on_date=od
+            )
+            return data, len(data.get("matches") or []), {}
+
+        if tool == LotteryToolName.GET_MISSING_TODAY:
+            from app.lottery.core.timeutil import local_today
+            from app.models.lottery import LotteryDraw, LotteryLottery
+            from sqlalchemy import func, select
+
+            today = local_today()
+            lots = (
+                await self.db.execute(
+                    select(LotteryLottery).where(LotteryLottery.is_sync_enabled.is_(True))
+                )
+            ).scalars().all()
+            missing = []
+            for lot in lots:
+                cnt = int(
+                    (
+                        await self.db.execute(
+                            select(func.count())
+                            .select_from(LotteryDraw)
+                            .where(LotteryDraw.lottery_id == lot.id, LotteryDraw.draw_date == today)
+                        )
+                    ).scalar_one()
+                )
+                if cnt == 0:
+                    missing.append(
+                        {
+                            "name": lot.commercial_name or lot.name,
+                            "source_id": lot.source_id,
+                            "last_draw_date": lot.last_draw_date.isoformat() if lot.last_draw_date else None,
+                        }
+                    )
+            return {
+                "local_today": today.isoformat(),
+                "missing": missing,
+                "count": len(missing),
+                "explanation": (
+                    "Resultados Hoy = 0 cuando no hay draws con draw_date = hoy en la zona "
+                    "America/Santo_Domingo, o cuando el sync aún no validó el sorteo del día."
+                ),
+            }, len(missing), {}
 
         raise LotteryQueryError("TOOL_ERROR", f"Tool no implementada: {tool.value}")

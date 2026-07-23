@@ -934,10 +934,10 @@ class LotteryToolExecutor:
         }, 2, {"semantics": "compare_number_periods"}
 
     async def _monthly_trend(self, params: dict[str, Any]) -> tuple[Any, int | None, dict[str, Any]]:
-        from collections import Counter
-from datetime import timedelta
-from app.models.lottery import LotteryDraw, LotteryDrawNumber
-from sqlalchemy import select, func
+        from datetime import timedelta
+
+        from app.models.lottery import LotteryDraw, LotteryDrawNumber
+        from sqlalchemy import func, select
 
         lot = await self.resolver.resolve_or_raise(str(params["lottery"]))
         months = int(params.get("months") or 12)
@@ -976,9 +976,14 @@ from sqlalchemy import select, func
                 .group_by("m")
                 .order_by("m")
             )
-        _ = Counter  # reserved for future mode analysis
         rows = (await self.db.execute(q)).all()
-        series = [{"month": (r[0].date().isoformat() if hasattr(r[0], "date") else str(r[0])[:10]), "count": int(r[1])} for r in rows]
+        series = [
+            {
+                "month": (r[0].date().isoformat() if hasattr(r[0], "date") else str(r[0])[:10]),
+                "count": int(r[1]),
+            }
+            for r in rows
+        ]
         return {
             "lottery": lot.commercial_name or lot.name,
             "number": number,

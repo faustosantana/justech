@@ -43,8 +43,12 @@ export type ModuleSection = {
   moduleKey?: string;
   /** Tab Odoo cuando contentKey es odoo:tab */
   odooTab?: string;
-  /** Ruta legacy para iframe interno opcional */
+  /** Ruta App Router real (evita /apps/... sin resolver) */
   legacyHref?: string;
+  /** Agrupación visual del sidebar (Inicio / Análisis / …) */
+  group?: string;
+  /** Descripción corta para tooltips / encabezados */
+  shortDescription?: string;
 };
 
 export type ModuleDefinition = {

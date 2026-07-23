@@ -10,6 +10,8 @@ export type AppNavItem = {
   icon: LucideIcon;
   roles?: string[];
   moduleKey?: string;
+  group?: string;
+  title?: string;
 };
 
 export type JaiosApp = {
@@ -25,21 +27,32 @@ export type JaiosApp = {
   adminOnly?: boolean;
 };
 
-export const JAIOS_APPS: JaiosApp[] = MODULE_REGISTRY.map((m) => ({
-  id: m.id,
-  label: m.label,
-  homeHref: moduleBase(m.id),
-  icon: m.icon,
-  accent: m.accent,
-  routePrefixes: [moduleBase(m.id), ...m.routePrefixes.filter((p) => !p.startsWith("/apps/"))],
-  odooTabs: m.odooTabs,
-  searchPlaceholder: m.searchPlaceholder,
-  adminOnly: m.adminOnly,
-  nav: [
-    { id: "dashboard", label: "Dashboard", href: moduleBase(m.id), icon: LayoutDashboard },
-    ...moduleToNav(m),
-  ],
-}));
+export const JAIOS_APPS: JaiosApp[] = MODULE_REGISTRY.map((m) => {
+  const isLottery = m.id === "lottery";
+  const homeHref = isLottery ? "/lottery" : moduleBase(m.id);
+  const sectionNav = moduleToNav(m);
+  // Lottery: Resumen ya cubre el home — no duplicar "Dashboard" vía /apps/lottery
+  const nav = isLottery
+    ? sectionNav
+    : [
+        { id: "dashboard", label: "Dashboard", href: moduleBase(m.id), icon: LayoutDashboard },
+        ...sectionNav,
+      ];
+  return {
+    id: m.id,
+    label: m.label,
+    homeHref,
+    icon: m.icon,
+    accent: m.accent,
+    routePrefixes: isLottery
+      ? ["/lottery", "/apps/lottery"]
+      : [moduleBase(m.id), ...m.routePrefixes.filter((p) => !p.startsWith("/apps/"))],
+    odooTabs: m.odooTabs,
+    searchPlaceholder: m.searchPlaceholder,
+    adminOnly: m.adminOnly,
+    nav,
+  };
+});
 
 export const APP_BY_ID = Object.fromEntries(JAIOS_APPS.map((a) => [a.id, a])) as Record<string, JaiosApp>;
 

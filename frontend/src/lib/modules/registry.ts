@@ -358,23 +358,125 @@ export const MODULE_REGISTRY: ModuleDefinition[] = [
       "Frecuencias Nacional Noche",
     ],
     defaultQuickActions: [
-      qa("inicio", "Inicio", Dices, "/lottery"),
-      qa("buscar", "Consultar", FileSearch, "/lottery/search"),
+      qa("inicio", "Resumen", Dices, "/lottery"),
+      qa("buscar", "Consulta histórica", FileSearch, "/lottery/search"),
       qa("chat", "Lotería IA", Sparkles, "/lottery/chat"),
       qa("comparar", "Comparar", TrendingUp, "/lottery/compare"),
     ],
     sections: [
-      { id: "inicio", label: "Inicio", icon: BarChart3, contentKey: "lottery:home", views: ["dashboard"] },
-      { id: "consulta", label: "Consulta", icon: FileSearch, contentKey: "lottery:search", views: ["list"] },
-      { id: "catalogo", label: "Catálogo", icon: Dices, contentKey: "lottery:lotteries", views: ["list"] },
-      { id: "comparar", label: "Comparar", icon: TrendingUp, contentKey: "lottery:compare", views: ["charts"] },
-      { id: "estadisticas", label: "Estadísticas", icon: LineChart, contentKey: "lottery:statistics", views: ["charts"] },
-      { id: "chat", label: "Lotería IA", icon: Sparkles, contentKey: "lottery:chat", views: ["list"] },
-      { id: "guardadas", label: "Guardadas", icon: Bookmark, contentKey: "lottery:saved", views: ["list"] },
-      { id: "favoritos", label: "Favoritos", icon: Star, contentKey: "lottery:favorites", views: ["list"] },
-      { id: "admin-sync", label: "Admin sync", icon: Settings, contentKey: "lottery:admin-sync", views: ["list"], legacyHref: "/lottery/admin/sync", roles: ["owner", "admin", "superadmin"] },
-      { id: "admin-scheduler", label: "Admin scheduler", icon: Settings, contentKey: "lottery:admin-scheduler", views: ["list"], legacyHref: "/lottery/admin/scheduler", roles: ["owner", "admin", "superadmin"] },
-      { id: "admin-lotteries", label: "Admin loterías", icon: Settings, contentKey: "lottery:admin-lotteries", views: ["list"], legacyHref: "/lottery/admin/lotteries", roles: ["owner", "admin", "superadmin"] },
+      {
+        id: "inicio",
+        label: "Resumen",
+        icon: BarChart3,
+        contentKey: "lottery:dashboard",
+        views: ["dashboard"],
+        legacyHref: "/lottery",
+        group: "Inicio",
+        shortDescription: "KPIs, resultados de hoy y estado del worker",
+      },
+      {
+        id: "catalogo",
+        label: "Catálogo",
+        icon: Dices,
+        contentKey: "lottery:lotteries",
+        views: ["list"],
+        legacyHref: "/lottery/lotteries",
+        group: "Inicio",
+        shortDescription: "Loterías visibles y ficha de cada una",
+      },
+      {
+        id: "consulta",
+        label: "Consulta histórica",
+        icon: FileSearch,
+        contentKey: "lottery:search",
+        views: ["list"],
+        legacyHref: "/lottery/search",
+        group: "Análisis",
+        shortDescription: "Buscar por lotería, fecha o número",
+      },
+      {
+        id: "comparar",
+        label: "Comparar",
+        icon: TrendingUp,
+        contentKey: "lottery:compare",
+        views: ["charts"],
+        legacyHref: "/lottery/compare",
+        group: "Análisis",
+        shortDescription: "Frecuencias y coincidencias entre loterías",
+      },
+      {
+        id: "estadisticas",
+        label: "Estadísticas",
+        icon: LineChart,
+        contentKey: "lottery:statistics",
+        views: ["charts"],
+        legacyHref: "/lottery/statistics",
+        group: "Análisis",
+        shortDescription: "Calientes, fríos, cobertura y calidad",
+      },
+      {
+        id: "chat",
+        label: "Lotería IA",
+        icon: Sparkles,
+        contentKey: "lottery:chat",
+        views: ["list"],
+        legacyHref: "/lottery/chat",
+        group: "Análisis",
+        shortDescription: "Preguntas con tools y análisis histórico",
+      },
+      {
+        id: "favoritos",
+        label: "Favoritos",
+        icon: Star,
+        contentKey: "lottery:favorites",
+        views: ["list"],
+        legacyHref: "/lottery/favorites",
+        group: "Mi espacio",
+        shortDescription: "Loterías marcadas por el usuario",
+      },
+      {
+        id: "guardadas",
+        label: "Consultas guardadas",
+        icon: Bookmark,
+        contentKey: "lottery:saved",
+        views: ["list"],
+        legacyHref: "/lottery/saved",
+        group: "Mi espacio",
+        shortDescription: "Consultas reutilizables del usuario",
+      },
+      {
+        id: "admin-lotteries",
+        label: "Loterías",
+        icon: Settings,
+        contentKey: "lottery:admin-lotteries",
+        views: ["list"],
+        legacyHref: "/lottery/admin/lotteries",
+        group: "Administración",
+        roles: ["owner", "admin", "superadmin"],
+        shortDescription: "Visibilidad, sync y auto-write por lotería",
+      },
+      {
+        id: "admin-sync",
+        label: "Sincronización",
+        icon: Settings,
+        contentKey: "lottery:admin-sync",
+        views: ["list"],
+        legacyHref: "/lottery/admin/sync",
+        group: "Administración",
+        roles: ["owner", "admin", "superadmin"],
+        shortDescription: "Runs, backup gate y escritura controlada",
+      },
+      {
+        id: "admin-scheduler",
+        label: "Scheduler y fuentes",
+        icon: Settings,
+        contentKey: "lottery:admin-scheduler",
+        views: ["list"],
+        legacyHref: "/lottery/admin/scheduler",
+        group: "Administración",
+        roles: ["owner", "admin", "superadmin"],
+        shortDescription: "Worker, ventanas, locks y circuit breaker",
+      },
     ],
   },
   {
@@ -612,8 +714,8 @@ export function buildVisibleSectionActivity(module: ModuleDefinition, limit = 6)
     .map((s) => ({
       id: s.id,
       title: s.label,
-      subtitle: "Abrir sección",
-      href: moduleSectionHref(module.id, s.id),
+      subtitle: s.shortDescription || "Abrir sección",
+      href: s.legacyHref ?? moduleSectionHref(module.id, s.id),
     }));
 }
 
@@ -625,7 +727,51 @@ export function moduleToNav(module: ModuleDefinition) {
     icon: s.icon,
     roles: s.roles,
     moduleKey: s.moduleKey,
+    group: s.group,
+    title: s.shortDescription,
   }));
+}
+
+/** Mapa canónico menú Lottery → ruta App Router (pruebas de integridad). */
+export const LOTTERY_NAV_INTEGRITY: { contentKey: string; href: string; group: string }[] = [
+  { contentKey: "lottery:dashboard", href: "/lottery", group: "Inicio" },
+  { contentKey: "lottery:lotteries", href: "/lottery/lotteries", group: "Inicio" },
+  { contentKey: "lottery:search", href: "/lottery/search", group: "Análisis" },
+  { contentKey: "lottery:compare", href: "/lottery/compare", group: "Análisis" },
+  { contentKey: "lottery:statistics", href: "/lottery/statistics", group: "Análisis" },
+  { contentKey: "lottery:chat", href: "/lottery/chat", group: "Análisis" },
+  { contentKey: "lottery:favorites", href: "/lottery/favorites", group: "Mi espacio" },
+  { contentKey: "lottery:saved", href: "/lottery/saved", group: "Mi espacio" },
+  { contentKey: "lottery:admin-lotteries", href: "/lottery/admin/lotteries", group: "Administración" },
+  { contentKey: "lottery:admin-sync", href: "/lottery/admin/sync", group: "Administración" },
+  { contentKey: "lottery:admin-scheduler", href: "/lottery/admin/scheduler", group: "Administración" },
+];
+
+export function assertLotteryNavIntegrity(module: ModuleDefinition = MODULE_BY_ID.lottery): string[] {
+  const errors: string[] = [];
+  if (!module) {
+    return ["lottery module missing from MODULE_REGISTRY"];
+  }
+  const byKey = new Map(module.sections.map((s) => [s.contentKey, s]));
+  for (const expected of LOTTERY_NAV_INTEGRITY) {
+    const section = byKey.get(expected.contentKey);
+    if (!section) {
+      errors.push(`missing section ${expected.contentKey}`);
+      continue;
+    }
+    if (section.legacyHref !== expected.href) {
+      errors.push(`${expected.contentKey}: legacyHref=${section.legacyHref} expected ${expected.href}`);
+    }
+    if ((section.group || "") !== expected.group) {
+      errors.push(`${expected.contentKey}: group=${section.group} expected ${expected.group}`);
+    }
+  }
+  for (const section of module.sections) {
+    if (!section.legacyHref?.startsWith("/lottery")) {
+      errors.push(`${section.contentKey}: missing /lottery legacyHref`);
+    }
+  }
+  return errors;
 }
 
 export function filterModuleQuickActions(module: ModuleDefinition): QuickAction[] {

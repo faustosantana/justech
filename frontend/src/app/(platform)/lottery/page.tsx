@@ -183,6 +183,31 @@ export default function LotteryPage() {
               tone="warning"
               delta="incluye sin sync"
             />
+          </div>
+
+          <Card className="border-amber-500/30 bg-amber-500/5">
+            <CardContent className="space-y-1 py-3 text-sm text-muted-foreground">
+              <p className="font-medium text-foreground">Cómo leer Resultados hoy</p>
+              <p>
+                {dash.results_today_note ||
+                  "Resultados hoy usa la fecha local America/Santo_Domingo. Esperados cuenta loterías visibles; pendientes sync solo las 3 con sincronización automática."}
+              </p>
+              <p className="text-amber-900 dark:text-amber-200">
+                Solo 3 loterías tienen sincronización automática activa (Leidsa, Loteka y Lotería Nacional).
+              </p>
+              {Array.isArray(dash.operational_alerts) && dash.operational_alerts.length > 0 && (
+                <ul className="mt-2 list-disc space-y-1 pl-5">
+                  {dash.operational_alerts.slice(0, 6).map((a, i) => (
+                    <li key={`${String(a.code)}-${i}`}>
+                      <span className="font-medium">{String(a.code)}</span>: {String(a.message)}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </CardContent>
+          </Card>
+
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5">
             <MetricCard label="Sorteos históricos" value={dash.draws_historical.toLocaleString()} tone="muted" />
             <MetricCard label="Números almacenados" value={dash.numbers_stored.toLocaleString()} tone="muted" />
             <MetricCard label="Última actualización" value={formatDateTime(dash.last_update_at)} tone="warning" />
@@ -210,6 +235,16 @@ export default function LotteryPage() {
               label="Fuentes con error"
               value={dash.sources_error.toLocaleString()}
               tone={dash.sources_error > 0 ? "danger" : "muted"}
+            />
+            <MetricCard
+              label="Backup gate"
+              value={dash.backup_gate?.ok ? "OK" : String(dash.backup_gate?.alert || "—")}
+              tone={dash.backup_gate?.ok ? "success" : "warning"}
+              delta={
+                dash.backup_gate?.age_hours != null
+                  ? `${Number(dash.backup_gate.age_hours).toFixed(1)}h / ${dash.backup_gate.max_age_hours}h`
+                  : undefined
+              }
             />
           </div>
 

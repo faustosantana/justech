@@ -311,6 +311,8 @@ export interface LotteryDashboardV3 extends LotteryDashboardV2 {
   source_health?: Record<string, unknown>[];
   kpis?: Record<string, unknown>;
   results_today_note?: string;
+  backup_gate?: Record<string, unknown>;
+  operational_alerts?: Record<string, unknown>[];
 }
 
 /** Lotería administrable (Lottery 2.0). */

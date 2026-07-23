@@ -129,6 +129,9 @@ class LotteryCatalogCard(BaseModel):
     commercial_name: str | None = None
     short_name: str | None = None
     country: str | None = None
+    country_code: str | None = None
+    flag_emoji: str | None = None
+    timezone: str | None = None
     logo_url: str | None = None
     icon_key: str | None = None
     is_featured: bool = False
@@ -136,11 +139,14 @@ class LotteryCatalogCard(BaseModel):
     draw_count: int = 0
     last_draw_date: date | None = None
     last_numbers: list[str] = Field(default_factory=list)
+    last_sync_at: datetime | None = None
     next_draw_estimated_at: datetime | None = None
+    draw_times: str | None = None
     health_status: str = "unknown"
     is_searchable: bool = True
     is_comparable: bool = True
     is_ai_enabled: bool = True
+    is_sync_enabled: bool = False
 
 
 class LotteryCatalogResponse(BaseModel):
@@ -172,3 +178,16 @@ class LotteryDashboardV2(BaseModel):
         "Análisis histórico únicamente. No garantiza resultados futuros ni constituye "
         "recomendación de apuestas."
     )
+
+
+class LotteryDashboardV3(LotteryDashboardV2):
+    """Executive ops dashboard — Lottery 3.0."""
+
+    local_today: date | None = None
+    timezone: str = "America/Santo_Domingo"
+    pending_results: int = 0
+    recent_sync_runs: list[dict[str, Any]] = Field(default_factory=list)
+    next_sync_windows: list[dict[str, Any]] = Field(default_factory=list)
+    circuit_breakers: list[dict[str, Any]] = Field(default_factory=list)
+    source_health: list[dict[str, Any]] = Field(default_factory=list)
+    kpis: dict[str, Any] = Field(default_factory=dict)

@@ -28,7 +28,7 @@ import {
   canAccessLotteryModule,
   healthStatusLabel,
   type LotteryCatalogCard,
-  type LotteryDashboardV2,
+  type LotteryDashboardV3,
 } from "@/lib/lottery";
 
 function formatDateTime(value?: string | null): string {
@@ -96,7 +96,7 @@ export default function LotteryPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [dash, setDash] = useState<LotteryDashboardV2 | null>(null);
+  const [dash, setDash] = useState<LotteryDashboardV3 | null>(null);
 
   const load = useCallback(async () => {
     if (!getAccessToken()) {
@@ -111,7 +111,7 @@ export default function LotteryPage() {
     setLoading(true);
     setError(null);
     try {
-      const data = await apiClient.getLotteryDashboardV2();
+      const data = await apiClient.getLotteryDashboardV3();
       setDash(data);
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "No se pudo cargar el dashboard");
@@ -122,6 +122,8 @@ export default function LotteryPage() {
 
   useEffect(() => {
     void load();
+    const id = window.setInterval(() => void load(), 60_000);
+    return () => window.clearInterval(id);
   }, [load]);
 
   const coverage = dash?.coverage ?? {};
@@ -130,7 +132,7 @@ export default function LotteryPage() {
   return (
     <AppShell
       title="Resultados de Loterías"
-      description="Dashboard histórico — Lottery 2.0"
+      description="Centro de operaciones — Lottery 3.0"
     >
       <div className="mb-4 flex flex-wrap items-center gap-2">
         <Button asChild variant="outline" size="sm">
@@ -168,9 +170,16 @@ export default function LotteryPage() {
             <MetricCard label="Visibles" value={dash.lotteries_visible.toLocaleString()} tone="muted" href="/lottery/lotteries" />
             <MetricCard label="Con sync" value={dash.lotteries_synced.toLocaleString()} tone="primary" />
             <MetricCard label="Resultados hoy" value={dash.results_today.toLocaleString()} tone="success" />
+            <MetricCard label="Pendientes hoy" value={(dash.pending_results ?? 0).toLocaleString()} tone="warning" />
             <MetricCard label="Sorteos históricos" value={dash.draws_historical.toLocaleString()} tone="muted" />
             <MetricCard label="Números almacenados" value={dash.numbers_stored.toLocaleString()} tone="muted" />
             <MetricCard label="Última actualización" value={formatDateTime(dash.last_update_at)} tone="warning" />
+            <MetricCard
+              label="Hoy local"
+              value={dash.local_today || "—"}
+              tone="muted"
+              delta={dash.timezone || "America/Santo_Domingo"}
+            />
             <MetricCard
               label="Fuentes saludables"
               value={dash.sources_healthy.toLocaleString()}
@@ -206,6 +215,57 @@ export default function LotteryPage() {
                     ))}
                   </div>
                 )}
+              </SectionCard>
+
+              <SectionCard
+                title="Operación de sync"
+                description="Ventanas inteligentes y corridas recientes (auto-refresh 60s)"
+              >
+                <div className="space-y-3 text-sm">
+                  <div>
+                    <p className="mb-1 font-medium">Próximas ventanas</p>
+                    {(dash.next_sync_windows ?? []).length === 0 ? (
+                      <p className="text-muted-foreground">Sin loterías sync en ventana activa.</p>
+                    ) : (
+                      <ul className="space-y-1 text-xs">
+                        {(dash.next_sync_windows ?? []).slice(0, 8).map((w, i) => (
+                          <li key={i} className="rounded border border-border/50 px-2 py-1 font-mono">
+                            src:{String(w.source_id)} · {String(w.phase)} · cada {String(w.interval_minutes)}m ·{" "}
+                            {String(w.reason)}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                  <div>
+                    <p className="mb-1 font-medium">Últimas sincronizaciones</p>
+                    {(dash.recent_sync_runs ?? []).length === 0 ? (
+                      <p className="text-muted-foreground">Sin corridas recientes.</p>
+                    ) : (
+                      <ul className="space-y-1 text-xs">
+                        {(dash.recent_sync_runs ?? []).slice(0, 5).map((r) => (
+                          <li key={String(r.id)} className="rounded border border-border/50 px-2 py-1">
+                            {String(r.started_at || "").slice(0, 19)} · {String(r.status)} ·{" "}
+                            {r.dry_run ? "dry-run" : "write"} · new={String(r.records_new)} ins=
+                            {String(r.records_inserted)} err={String(r.errors)}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                  {(dash.circuit_breakers ?? []).length > 0 && (
+                    <div>
+                      <p className="mb-1 font-medium">Circuit breakers</p>
+                      <ul className="space-y-1 text-xs">
+                        {(dash.circuit_breakers ?? []).map((c, i) => (
+                          <li key={i}>
+                            {String(c.scope)}: {String(c.state)} {c.reason ? `(${String(c.reason)})` : ""}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
               </SectionCard>
 
               <div className="grid gap-4 md:grid-cols-2">

@@ -78,6 +78,7 @@ import type {
   LotteryChatSession,
   LotteryDashboard,
   LotteryDashboardV2,
+  LotteryDashboardV3,
   LotteryDetail,
   LotteryExportResponse,
   LotteryFavorite,
@@ -1936,6 +1937,8 @@ export const apiClient = {
 
   getLotteryDashboardV2: (params?: { from_date?: string; to_date?: string }) =>
     request<LotteryDashboardV2>(`/lottery/dashboard/v2${buildQuery(params ?? {})}`, {}, true),
+  getLotteryDashboardV3: (params?: { from_date?: string; to_date?: string }) =>
+    request<LotteryDashboardV3>(`/lottery/dashboard/v3${buildQuery(params ?? {})}`, {}, true),
 
   getLotteryCatalog: (params: {
     q?: string;

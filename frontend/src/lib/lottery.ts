@@ -226,7 +226,7 @@ export interface LotteryExportResponse {
   download_url: string;
 }
 
-/** Tarjeta del catálogo Lottery 2.0. */
+/** Tarjeta del catálogo Lottery 3.0. */
 export interface LotteryCatalogCard {
   id: string;
   slug: string;
@@ -234,6 +234,9 @@ export interface LotteryCatalogCard {
   commercial_name?: string | null;
   short_name?: string | null;
   country?: string | null;
+  country_code?: string | null;
+  flag_emoji?: string | null;
+  timezone?: string | null;
   logo_url?: string | null;
   icon_key?: string | null;
   is_featured: boolean;
@@ -241,11 +244,14 @@ export interface LotteryCatalogCard {
   draw_count: number;
   last_draw_date?: string | null;
   last_numbers: string[];
+  last_sync_at?: string | null;
   next_draw_estimated_at?: string | null;
+  draw_times?: string | null;
   health_status: string;
   is_searchable: boolean;
   is_comparable: boolean;
   is_ai_enabled: boolean;
+  is_sync_enabled?: boolean;
 }
 
 export interface LotteryCatalogResponse {
@@ -286,6 +292,18 @@ export interface LotteryDashboardV2 {
   sync_summary: Record<string, unknown>;
   coverage: Record<string, unknown>;
   disclaimer: string;
+}
+
+/** Executive ops dashboard — Lottery 3.0 */
+export interface LotteryDashboardV3 extends LotteryDashboardV2 {
+  local_today?: string | null;
+  timezone?: string;
+  pending_results?: number;
+  recent_sync_runs?: Record<string, unknown>[];
+  next_sync_windows?: Record<string, unknown>[];
+  circuit_breakers?: Record<string, unknown>[];
+  source_health?: Record<string, unknown>[];
+  kpis?: Record<string, unknown>;
 }
 
 /** Lotería administrable (Lottery 2.0). */

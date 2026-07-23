@@ -681,6 +681,141 @@ async def lottery_dashboard_v2(
     )
 
 
+@router.get("/dashboard/v3")
+async def lottery_dashboard_v3(
+    db: DbSession,
+    user: CurrentUser,
+    _: Annotated[None, require_lottery_permission("lottery.access", "lottery_view")],
+    from_date: date | None = None,
+    to_date: date | None = None,
+):
+    """Executive ops dashboard (Lottery 3.0)."""
+    ctx = require_tenant_context()
+    if not ctx.tenant_id:
+        raise forbidden("Tenant requerido")
+    return await LotteryAdminService(db).dashboard_v3(
+        tenant_id=ctx.tenant_id,
+        user_id=user.id,
+        from_date=from_date,
+        to_date=to_date,
+    )
+
+
+@router.get("/sync/windows")
+async def lottery_sync_windows(
+    db: DbSession,
+    user: CurrentUser,
+    _: Annotated[None, require_lottery_permission("lottery.access", "lottery.admin", "lottery_view")],
+):
+    from app.lottery.sync.dispatcher import dispatch_status
+
+    return await dispatch_status(db)
+
+
+@router.post("/admin/metadata/recompute")
+async def admin_recompute_metadata(
+    db: DbSession,
+    user: CurrentUser,
+    _: Annotated[None, require_lottery_permission("lottery.admin", "lottery_admin_lotteries")],
+    lottery_id: UUID | None = None,
+):
+    """Recompute denormalized metadata from lottery_draws (fixes Real 2099 etc.). Does not enable sync."""
+    from app.lottery.core.metadata import recompute_all_lottery_metadata, recompute_lottery_metadata
+
+    if lottery_id:
+        result = await recompute_lottery_metadata(db, lottery_id)
+    else:
+        result = await recompute_all_lottery_metadata(db)
+    await db.commit()
+    return result
+
+
+@router.get("/analytics/coverage")
+async def analytics_coverage(
+    db: DbSession,
+    user: CurrentUser,
+    _: Annotated[None, require_lottery_permission("lottery.access", "lottery.search", "lottery.statistics")],
+    lottery_id: UUID | None = None,
+):
+    from app.lottery.analytics import LotteryAnalyticsEngine
+
+    return await LotteryAnalyticsEngine(db).coverage(lottery_id)
+
+
+@router.get("/analytics/{lottery_id}/frequencies")
+async def analytics_frequencies(
+    lottery_id: UUID,
+    db: DbSession,
+    user: CurrentUser,
+    _: Annotated[None, require_lottery_permission("lottery.statistics")],
+    from_date: date | None = None,
+    to_date: date | None = None,
+    limit: Annotated[int, Query(ge=1, le=200)] = 100,
+):
+    from app.lottery.analytics import LotteryAnalyticsEngine
+
+    return await LotteryAnalyticsEngine(db).frequencies(
+        lottery_id, from_date=from_date, to_date=to_date, limit=limit
+    )
+
+
+@router.get("/analytics/{lottery_id}/hot-cold")
+async def analytics_hot_cold(
+    lottery_id: UUID,
+    db: DbSession,
+    user: CurrentUser,
+    _: Annotated[None, require_lottery_permission("lottery.statistics")],
+    window_draws: Annotated[int, Query(ge=5, le=365)] = 30,
+    cold_days_threshold: Annotated[int, Query(ge=1, le=3650)] = 30,
+):
+    from app.lottery.analytics import LotteryAnalyticsEngine
+
+    return await LotteryAnalyticsEngine(db).hot_cold(
+        lottery_id, window_draws=window_draws, cold_days_threshold=cold_days_threshold
+    )
+
+
+@router.get("/analytics/{lottery_id}/quality")
+async def analytics_quality(
+    lottery_id: UUID,
+    db: DbSession,
+    user: CurrentUser,
+    _: Annotated[None, require_lottery_permission("lottery.statistics", "lottery.admin")],
+):
+    from app.lottery.analytics import LotteryAnalyticsEngine
+
+    return await LotteryAnalyticsEngine(db).data_quality(lottery_id)
+
+
+@router.get("/analytics/{lottery_id}/anomalies")
+async def analytics_anomalies(
+    lottery_id: UUID,
+    db: DbSession,
+    user: CurrentUser,
+    _: Annotated[None, require_lottery_permission("lottery.statistics", "lottery.admin")],
+):
+    from app.lottery.analytics import LotteryAnalyticsEngine
+
+    return await LotteryAnalyticsEngine(db).anomalies(lottery_id)
+
+
+@router.get("/analytics/coincidences")
+async def analytics_coincidences(
+    db: DbSession,
+    user: CurrentUser,
+    _: Annotated[None, require_lottery_permission("lottery.compare", "lottery.statistics")],
+    lottery_ids: Annotated[list[UUID], Query(min_length=2)],
+    on_date: date | None = None,
+    from_date: date | None = None,
+    to_date: date | None = None,
+):
+    from app.lottery.analytics import LotteryAnalyticsEngine
+
+    return await LotteryAnalyticsEngine(db).coincidences(
+        lottery_ids, on_date=on_date, from_date=from_date, to_date=to_date
+    )
+
+
 @router.get("/catalog", response_model=LotteryCatalogResponse)
 async def lottery_catalog(
     db: DbSession,
@@ -691,7 +826,7 @@ async def lottery_catalog(
     featured_only: bool = False,
     favorites_only: bool = False,
     page: Annotated[int, Query(ge=1)] = 1,
-    page_size: Annotated[int, Query(ge=1, le=100)] = 50,
+    page_size: Annotated[int, Query(ge=1, le=500)] = 50,
 ) -> LotteryCatalogResponse:
     ctx = require_tenant_context()
     if not ctx.tenant_id:

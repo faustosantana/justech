@@ -164,7 +164,7 @@ export default function LotteryAdminLotteriesPage() {
   }
 
   return (
-    <AppShell title="Admin loterías" description="Visibilidad, búsqueda, IA y sincronización">
+    <AppShell title="Admin loterías" description="Centro de operaciones Lottery 3.0 — visibilidad, sync, ventanas">
       <div className="mb-3 flex flex-wrap gap-2 text-sm">
         <Link href="/lottery" className="text-primary underline">
           Inicio

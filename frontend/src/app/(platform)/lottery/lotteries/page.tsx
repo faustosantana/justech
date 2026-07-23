@@ -18,7 +18,7 @@ import {
   type LotteryCatalogCard,
 } from "@/lib/lottery";
 
-const PAGE_SIZE = 50;
+const PAGE_SIZE = 100;
 
 export default function LotteryCatalogPage() {
   const router = useRouter();
@@ -147,6 +147,7 @@ export default function LotteryCatalogPage() {
             <CardHeader className="pb-2">
               <CardTitle className="flex items-start justify-between gap-2 text-base">
                 <Link className="hover:underline" href={`/lottery/lotteries/${card.slug}`}>
+                  <span className="mr-1">{card.flag_emoji || "🏳️"}</span>
                   {card.commercial_name || card.name}
                 </Link>
                 <button
@@ -160,6 +161,10 @@ export default function LotteryCatalogPage() {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-2 text-xs text-muted-foreground">
+              <p>
+                {card.country_code || card.country || "—"} · {card.timezone || "America/Santo_Domingo"}
+                {card.draw_times ? ` · ${card.draw_times}` : ""}
+              </p>
               {card.last_numbers.length > 0 ? (
                 <p className="font-mono text-base font-semibold text-foreground">
                   {card.last_numbers.join(" · ")}
@@ -167,7 +172,8 @@ export default function LotteryCatalogPage() {
               ) : (
                 <p>Sin números recientes</p>
               )}
-              <p>Última fecha: {card.last_draw_date || "—"}</p>
+              <p>Último resultado: {card.last_draw_date || "—"}</p>
+              <p>Última sync: {card.last_sync_at ? new Date(card.last_sync_at).toLocaleString("es-DO") : "—"}</p>
               <p>{card.draw_count.toLocaleString()} sorteos</p>
               <div className="flex flex-wrap gap-1.5">
                 <Badge
@@ -181,18 +187,26 @@ export default function LotteryCatalogPage() {
                 >
                   {healthStatusLabel(card.health_status)}
                 </Badge>
+                {card.is_sync_enabled && <Badge variant="outline">sync</Badge>}
+                {card.is_ai_enabled && <Badge variant="outline">IA</Badge>}
                 {card.is_featured && <Badge variant="warning">Destacada</Badge>}
               </div>
-              <div className="flex flex-wrap gap-2 pt-2">
+              <div className="flex flex-wrap gap-1.5 pt-1">
                 <Button asChild size="sm" variant="outline">
-                  <Link href={`/lottery/search?lottery=${encodeURIComponent(card.name)}`}>
-                    Consultar
+                  <Link href={`/lottery/lotteries/${card.slug}`}>Historial</Link>
+                </Button>
+                <Button asChild size="sm" variant="outline">
+                  <Link href={`/lottery/statistics?lottery=${encodeURIComponent(card.slug)}`}>
+                    <LineChart className="mr-1 h-3 w-3" />
+                    Stats
                   </Link>
                 </Button>
                 <Button asChild size="sm" variant="outline">
-                  <Link href={`/lottery/statistics?lottery=${encodeURIComponent(card.name)}`}>
-                    <LineChart className="mr-1 h-3.5 w-3.5" />
-                    Estadísticas
+                  <Link href={`/lottery/chat?lottery=${encodeURIComponent(card.slug)}`}>IA</Link>
+                </Button>
+                <Button asChild size="sm" variant="outline">
+                  <Link href={`/lottery/search?lottery=${encodeURIComponent(card.name)}`}>
+                    Consultar
                   </Link>
                 </Button>
               </div>

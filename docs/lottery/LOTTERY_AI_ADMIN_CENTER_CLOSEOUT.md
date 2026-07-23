@@ -1,10 +1,22 @@
 # Lottery IA — Admin Center Closeout
 
 **Fecha:** 2026-07-23  
-**Entorno:** producción `jaios.justech.do` (tras bake)  
-**Ruta:** `/lottery/admin/ai`  
+**Entorno:** producción `https://jaios.justech.do`  
+**Ruta:** `/lottery/admin/ai` (HTTP 200)  
 **Prompt activo final:** **v2** (`lottery_assistant_system_v2`)  
-**Prompt v3:** draft (no activado)
+**Prompt v3:** draft (no activado)  
+
+### Deploy closeout
+
+| Ítem | Valor |
+|------|-------|
+| Imágenes | `jaios-app-backend:aiadmin-closeout-20260723`, `jaios-app-frontend:aiadmin-closeout-20260723` |
+| Rollback | `pre-aiadmin-closeout-20260723` |
+| Backup | `/var/jaios/backups/pre_lottery_aiadmin-closeout-20260723_20260723223727.dump` |
+| Migración | `060_lottery_ai_alerting_closeout` (head) |
+| Evidence | `/var/jaios/lottery-bake/lottery-aiadmin-closeout-20260723/` |
+| Commits | `624d96b`, `0cfe009` |
+| Worker | mismo tag backend; `ai_detector=True` intervalo 300s |
 
 ---
 

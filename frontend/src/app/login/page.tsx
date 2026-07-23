@@ -9,7 +9,7 @@ import { AuthLoadingState, AuthShell } from "@/components/auth/auth-shell";
 import { CompanySelector } from "@/components/layout/company-selector";
 import { CompanyContextProvider } from "@/lib/company-context";
 import { apiClient } from "@/lib/api";
-import { setAuthTokens } from "@/lib/auth"
+import { getUserRole, setAuthTokens } from "@/lib/auth";
 import { isLotteryClientRole } from "@/lib/lottery";
 import { cn } from "@/lib/utils";
 

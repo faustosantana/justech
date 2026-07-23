@@ -52,7 +52,8 @@ WORD_NUMBERS = {
 PREDICTION_RE = re.compile(
     r"(va a salir|saldr[aá]|n[uú]mero.?probable|predicc|predecir|permite predecir|"
     r"siguiente sorteo|pr[oó]ximo resultado|mañana saldr|"
-    r"recomienda.*(apostar|jugad)|qu[eé] n[uú]mero (juego|apuesto))",
+    r"recomienda.*(apostar|jugad)|qu[eé] n[uú]mero (juego|apuesto)|"
+    r"n[uú]mero para apostar|para apostar|apostar ma[nñ]ana|qu[eé] juego)",
     re.I,
 )
 
@@ -220,6 +221,122 @@ def resolve_intent(message: str, ctx: LotterySessionContext) -> ResolvedIntent:
             structured_type="lottery_error",
         )
 
+    # 4.1 — year-over-year / period compare for a number
+    if re.search(
+        r"(ha|has|han)\s+salido\s+m[aá]s|"
+        r"m[aá]s\s+(este|el)\s+a[nñ]o|"
+        r"compar(a|ar).*(a[nñ]o\s+pasado|este\s+a[nñ]o)|"
+        r"este\s+a[nñ]o\s+que\s+(el\s+)?(a[nñ]o\s+)?pasado",
+        text,
+    ):
+        number = _extract_number(raw) or (ctx.last_numbers[0] if ctx.last_numbers else None)
+        lottery = _extract_lottery(text) or ctx.last_lottery
+        if not number:
+            return ResolvedIntent(
+                kind="clarify",
+                clarify_message="¿Qué número quieres comparar entre este año y el anterior?",
+                structured_type="lottery_ambiguity",
+            )
+        if not lottery:
+            return ResolvedIntent(
+                kind="clarify",
+                clarify_message=(
+                    f"¿En cuál lotería comparo el {number} entre este año y el pasado? "
+                    "También puedo hacerlo en todas las sincronizadas."
+                ),
+                structured_type="lottery_ambiguity",
+                params={"number": number, "pending_slots": ["lottery"]},
+            )
+        return ResolvedIntent(
+            kind="tool",
+            tool=LotteryToolName.COMPARE_NUMBER_PERIODS,
+            params={
+                "lottery": lottery,
+                "number": number,
+                "period_a": "current_year",
+                "period_b": "previous_year",
+            },
+            structured_type="lottery_comparison",
+        )
+
+    if re.search(r"analiz(a|ar|ame|emos)\s+(el\s+)?\d+|analiz(a|ar)\s+el\s+n[uú]mero", text):
+        number = _extract_number(raw)
+        lottery = _extract_lottery(text) or ctx.last_lottery
+        if number and not lottery:
+            return ResolvedIntent(
+                kind="clarify",
+                clarify_message=(
+                    f"Claro. ¿Quieres analizar el {number} en una lotería específica o compararlo entre todas? "
+                    "También puedo revisar todo el historial, el último año o los últimos 30 sorteos."
+                ),
+                structured_type="lottery_ambiguity",
+                params={"number": number, "pending_slots": ["lottery", "period"]},
+            )
+
+    if re.search(
+        r"analiz(a|ar).*(completa|completa(mente)?|resumen)|"
+        r"haz(me)?\s+un\s+an[aá]lisis|dame\s+lo\s+m[aá]s\s+importante|"
+        r"analiz(a|ala)\s+(la\s+)?(real|leidsa|loteka|nacional)",
+        text,
+    ):
+        lottery = _extract_lottery(text) or ctx.last_lottery
+        if not lottery:
+            return ResolvedIntent(
+                kind="clarify",
+                clarify_message="¿De qué lotería quieres el resumen analítico?",
+                structured_type="lottery_ambiguity",
+            )
+        return ResolvedIntent(
+            kind="tool",
+            tool=LotteryToolName.GET_LOTTERY_SUMMARY,
+            params={"lottery": lottery},
+            structured_type="lottery_result",
+        )
+
+    if re.search(
+        r"m[aá]s\s+actualizada|ultima\s+fecha|hasta\s+qu[eé]\s+fecha|"
+        r"[uú]ltima\s+fecha\s+disponible",
+        text,
+    ):
+        lottery = _extract_lottery(text) or ctx.last_lottery
+        return ResolvedIntent(
+            kind="tool",
+            tool=LotteryToolName.GET_LATEST_AVAILABLE_DATE,
+            params={"lottery": lottery} if lottery else {},
+            structured_type="lottery_result",
+        )
+
+    if re.search(r"datos?\s+incompletos|completitud|qu[eé]\s+tan\s+confiables?", text):
+        lottery = _extract_lottery(text) or ctx.last_lottery
+        if re.search(r"confiables?|confianza", text):
+            return ResolvedIntent(
+                kind="tool",
+                tool=LotteryToolName.EXPLAIN_ANALYSIS_METHOD,
+                params={"metric": "general"},
+                structured_type="lottery_result",
+            )
+        return ResolvedIntent(
+            kind="tool",
+            tool=LotteryToolName.GET_DATA_COMPLETENESS,
+            params={"lottery": lottery} if lottery else {},
+            structured_type="lottery_result",
+        )
+
+    if re.search(r"fr[ií]o\s+por\s+tiempo|atrasad|por\s+intervalo|no\s+por\s+frecuencia", text):
+        lottery = _extract_lottery(text) or ctx.last_lottery
+        if not lottery:
+            return ResolvedIntent(
+                kind="clarify",
+                clarify_message="¿En qué lotería quieres los atrasados (frío por intervalo/tiempo)?",
+                structured_type="lottery_ambiguity",
+            )
+        return ResolvedIntent(
+            kind="tool",
+            tool=LotteryToolName.GET_OVERDUE_NUMBERS,
+            params={"lottery": lottery, "focus": "cold_interval", "window_draws": ctx.last_draw_count or 30},
+            structured_type="lottery_result",
+        )
+
     # Lottery 3.0 — operational / analyst intents
     if re.search(
         r"qu[eé]\s+per[ií]odo\s+(analiz|usaste|revis)|"
@@ -330,7 +447,7 @@ def resolve_intent(message: str, ctx: LotterySessionContext) -> ResolvedIntent:
 
     def_hot_cold = bool(
         re.search(
-            r"(qu[eé]\s+(significa|es|quiere\s+decir)|diferencia.*entre|en\s+qu[eé]\s+se\s+diferencia).*"
+            r"(qu[eé]\s+(significa|es\b|quiere\s+decir)|diferencia.*entre|en\s+qu[eé]\s+se\s+diferencia).*"
             r"(caliente|fr[ií]o|atrasad)",
             text,
         )
@@ -349,6 +466,7 @@ def resolve_intent(message: str, ctx: LotterySessionContext) -> ResolvedIntent:
             r"calientes?\s+y\s+fr[ií]os?|"
             r"fr[ií]os?\s+por\s+frecuencia|"
             r"llevan\s+m[aá]s\s+tiempo\s+sin\s+(aparecer|salir)|"
+            r"m[aá]s\s+tiempo\s+sin\s+(aparecer|salir)|"
             r"sin\s+aparecer|"
             r"compar(a|e).*calientes?"
             r")",
@@ -359,9 +477,10 @@ def resolve_intent(message: str, ctx: LotterySessionContext) -> ResolvedIntent:
         focus = "both"
         if def_hot_cold:
             focus = "definition"
-        elif re.search(r"atrasad|sin\s+aparecer|llevan\s+m[aá]s\s+tiempo", text) and not re.search(
-            r"calientes?", text
-        ):
+        elif re.search(
+            r"atrasad|sin\s+aparecer|llevan\s+m[aá]s\s+tiempo|m[aá]s\s+tiempo\s+sin",
+            text,
+        ) and not re.search(r"calientes?", text):
             focus = "cold_interval"
         elif re.search(r"fr[ií]os?.*frecuencia|frecuencia.*fr[ií]os?|m[aá]s\s+fr[ií]os?\s+por\s+frecuencia", text):
             focus = "cold_frequency"

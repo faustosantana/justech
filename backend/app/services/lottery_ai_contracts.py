@@ -40,6 +40,18 @@ class LotteryToolName(str, Enum):
     GET_HOT_COLD = "lottery_get_hot_cold"
     GET_COINCIDENCES = "lottery_get_coincidences"
     GET_MISSING_TODAY = "lottery_get_missing_today"
+    # Lottery IA 4.1 analytical coverage
+    COMPARE_NUMBER_PERIODS = "lottery_compare_number_periods"
+    COMPARE_NUMBER_ACROSS_LOTTERIES = "lottery_compare_number_across_lotteries"
+    GET_POSITION_DISTRIBUTION = "lottery_get_position_distribution"
+    GET_OVERDUE_NUMBERS = "lottery_get_overdue_numbers"
+    GET_MONTHLY_TREND = "lottery_get_monthly_trend"
+    GET_YEARLY_COMPARISON = "lottery_get_yearly_comparison"
+    GET_LOTTERY_SUMMARY = "lottery_get_lottery_summary"
+    GET_DATA_COMPLETENESS = "lottery_get_data_completeness"
+    GET_EXPECTED_VS_RECEIVED = "lottery_get_expected_vs_received"
+    GET_LATEST_AVAILABLE_DATE = "lottery_get_latest_available_date"
+    EXPLAIN_ANALYSIS_METHOD = "lottery_explain_analysis_method"
 
 
 # Permisos mínimos por tool (cualquiera de la tupla basta)
@@ -75,6 +87,17 @@ TOOL_PERMISSIONS: dict[LotteryToolName, tuple[str, ...]] = {
     LotteryToolName.GET_HOT_COLD: ("lottery.statistics",),
     LotteryToolName.GET_COINCIDENCES: ("lottery.compare", "lottery.statistics"),
     LotteryToolName.GET_MISSING_TODAY: ("lottery.access", "lottery.search"),
+    LotteryToolName.COMPARE_NUMBER_PERIODS: ("lottery.statistics",),
+    LotteryToolName.COMPARE_NUMBER_ACROSS_LOTTERIES: ("lottery.compare", "lottery.statistics"),
+    LotteryToolName.GET_POSITION_DISTRIBUTION: ("lottery.statistics",),
+    LotteryToolName.GET_OVERDUE_NUMBERS: ("lottery.statistics",),
+    LotteryToolName.GET_MONTHLY_TREND: ("lottery.statistics",),
+    LotteryToolName.GET_YEARLY_COMPARISON: ("lottery.statistics",),
+    LotteryToolName.GET_LOTTERY_SUMMARY: ("lottery.access", "lottery.search"),
+    LotteryToolName.GET_DATA_COMPLETENESS: ("lottery.statistics", "lottery.access"),
+    LotteryToolName.GET_EXPECTED_VS_RECEIVED: ("lottery.access", "lottery.search"),
+    LotteryToolName.GET_LATEST_AVAILABLE_DATE: ("lottery.access", "lottery.search"),
+    LotteryToolName.EXPLAIN_ANALYSIS_METHOD: ("lottery.access", "lottery.statistics"),
 }
 
 

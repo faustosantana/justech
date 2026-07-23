@@ -649,4 +649,342 @@ class LotteryToolExecutor:
                 ),
             }, len(missing), {}
 
+        if tool == LotteryToolName.COMPARE_NUMBER_PERIODS:
+            return await self._compare_number_periods(params)
+
+        if tool == LotteryToolName.COMPARE_NUMBER_ACROSS_LOTTERIES:
+            number = str(params["number"])
+            lots = [str(x) for x in (params.get("lotteries") or [])][:8]
+            if not lots:
+                raise LotteryQueryError("VALIDATION", "Se requieren loterías")
+            rows = []
+            for lot in lots:
+                try:
+                    res = await self.query.by_number(lot, number, page=1, page_size=1, order="desc")
+                    items = getattr(res, "occurrences", None) or []
+                    last = None
+                    pos = None
+                    if items:
+                        last = items[0].draw_date
+                        pos = items[0].position_label or items[0].position
+                    total = getattr(getattr(res, "pagination", None), "total", None) or getattr(res, "total", 0)
+                    rows.append(
+                        {
+                            "lottery": lot,
+                            "number": number,
+                            "occurrences": total,
+                            "last_date": last.isoformat() if last else None,
+                            "position": pos,
+                            "found": bool(last),
+                        }
+                    )
+                except Exception:  # noqa: BLE001 — partial ok
+                    rows.append(
+                        {
+                            "lottery": lot,
+                            "number": number,
+                            "occurrences": 0,
+                            "last_date": None,
+                            "found": False,
+                            "error": "sin_datos",
+                        }
+                    )
+            rows_sorted = sorted(rows, key=lambda r: r.get("last_date") or "", reverse=True)
+            return {
+                "number": number,
+                "rows": rows_sorted,
+                "metric": "last_occurrence_and_count_across_lotteries",
+                "limitations": ["Máximo 8 loterías por turno", "Análisis histórico, no predicción"],
+            }, len(rows_sorted), {"semantics": "compare_across_lotteries"}
+
+        if tool == LotteryToolName.GET_POSITION_DISTRIBUTION:
+            from app.lottery.analytics import LotteryAnalyticsEngine
+            from datetime import timedelta
+            from uuid import UUID as _UUID
+
+            lot = await self.resolver.resolve_or_raise(str(params["lottery"]))
+            window = int(params.get("window_draws") or 100)
+            to_d = date.today()
+            from_d = to_d - timedelta(days=max(window, 30))
+            data = await LotteryAnalyticsEngine(self.db).position_distribution(
+                _UUID(str(lot.id)), from_date=from_d, to_date=to_d
+            )
+            data["lottery"] = lot.commercial_name or lot.name
+            data["from"] = from_d.isoformat()
+            data["to"] = to_d.isoformat()
+            data["window_draws_hint"] = window
+            data["metric"] = "position_distribution"
+            data["limitations"] = ["Distribución descriptiva en la ventana de fechas aproximada"]
+            return data, 1, {}
+
+        if tool == LotteryToolName.GET_OVERDUE_NUMBERS:
+            # Dedicated overdue = hot_cold cold_interval
+            params = {**params, "focus": "cold_interval"}
+            return await self._dispatch(LotteryToolName.GET_HOT_COLD, params, session_context)
+
+        if tool == LotteryToolName.GET_MONTHLY_TREND:
+            return await self._monthly_trend(params)
+
+        if tool == LotteryToolName.GET_YEARLY_COMPARISON:
+            # Alias to compare current calendar year vs previous for a number (or top freqs)
+            if params.get("number"):
+                return await self._compare_number_periods(
+                    {
+                        **params,
+                        "period_a": "current_year",
+                        "period_b": "previous_year",
+                    }
+                )
+            raise LotteryQueryError("VALIDATION", "Indica el número a comparar entre años")
+
+        if tool == LotteryToolName.GET_LOTTERY_SUMMARY:
+            lot = await self.resolver.resolve_or_raise(str(params["lottery"]))
+            return {
+                "lottery": lot.commercial_name or lot.name,
+                "source_id": lot.source_id,
+                "draw_count": lot.draw_count,
+                "first_draw_date": lot.first_draw_date.isoformat() if lot.first_draw_date else None,
+                "last_draw_date": lot.last_draw_date.isoformat() if lot.last_draw_date else None,
+                "sync_enabled": bool(getattr(lot, "is_sync_enabled", False)),
+                "auto_write_enabled": bool(getattr(lot, "is_auto_write_enabled", False)),
+                "metric": "lottery_summary",
+                "limitations": ["Resumen operativo; no es predicción"],
+            }, 1, {"semantics": "lottery_summary"}
+
+        if tool == LotteryToolName.GET_DATA_COMPLETENESS:
+            from app.lottery.analytics import LotteryAnalyticsEngine
+            from uuid import UUID as _UUID
+
+            if params.get("lottery"):
+                lot = await self.resolver.resolve_or_raise(str(params["lottery"]))
+                data = await LotteryAnalyticsEngine(self.db).data_quality(_UUID(str(lot.id)))
+                data["lottery"] = lot.commercial_name or lot.name
+            else:
+                health = await self.catalog.health()
+                data = {
+                    "lotteries_count": health.lotteries_count,
+                    "draws_count": health.draws_count,
+                    "metric": "global_completeness_proxy",
+                }
+            data["metric"] = data.get("metric") or "data_completeness"
+            data["limitations"] = ["Completitud descriptiva sobre draws almacenados"]
+            return data, 1, {}
+
+        if tool == LotteryToolName.GET_EXPECTED_VS_RECEIVED:
+            # Today: expected = sync-enabled lotteries; received = those with draw today
+            miss, n, _ = await self._dispatch(LotteryToolName.GET_MISSING_TODAY, {}, session_context)
+            sync_on = int(miss.get("count") or 0)
+            # Reconstruct expected count
+            from app.models.lottery import LotteryLottery
+            from sqlalchemy import select, func
+
+            expected = int(
+                (
+                    await self.db.execute(
+                        select(func.count()).select_from(LotteryLottery).where(
+                            LotteryLottery.is_sync_enabled.is_(True)
+                        )
+                    )
+                ).scalar_one()
+            )
+            received = max(0, expected - sync_on)
+            return {
+                "local_today": miss.get("local_today"),
+                "expected_sync_enabled": expected,
+                "received_today": received,
+                "pending": sync_on,
+                "missing": miss.get("missing") or [],
+                "metric": "expected_vs_received_today",
+                "definition": "Esperado = loterías con sync habilitado; recibido = draw_date=hoy",
+                "limitations": ["No modela calendarios de sorteo futuros; solo día local actual"],
+                "explanation": miss.get("explanation"),
+            }, expected, {}
+
+        if tool == LotteryToolName.GET_LATEST_AVAILABLE_DATE:
+            if params.get("lottery"):
+                lot = await self.resolver.resolve_or_raise(str(params["lottery"]))
+                return {
+                    "lottery": lot.commercial_name or lot.name,
+                    "last_draw_date": lot.last_draw_date.isoformat() if lot.last_draw_date else None,
+                    "draw_count": lot.draw_count,
+                    "metric": "latest_available_date",
+                }, 1, {}
+            rows = (await self.catalog.list_lotteries(limit=100, include_aggregates=False)).items
+            items = [
+                {
+                    "lottery": r.commercial_name or r.name,
+                    "last_draw_date": str(getattr(r, "last_draw_date", None) or ""),
+                    "sync_enabled": bool(getattr(r, "is_sync_enabled", False)),
+                }
+                for r in rows
+            ]
+            items.sort(key=lambda x: x.get("last_draw_date") or "", reverse=True)
+            return {
+                "items": items[:20],
+                "most_recent": items[0] if items else None,
+                "metric": "latest_available_date_catalog",
+            }, len(items), {}
+
+        if tool == LotteryToolName.EXPLAIN_ANALYSIS_METHOD:
+            metric = str(params.get("metric") or "general")
+            defs = {
+                "hot": "Caliente = mayor frecuencia relativa en la muestra de N sorteos.",
+                "cold_frequency": "Frío por frecuencia = menor frecuencia relativa en la muestra.",
+                "cold_interval": "Atrasado = más días desde la última aparición (intervalo).",
+                "frequency": "Frecuencia histórica = apariciones / sorteos en el período; no es probabilidad futura.",
+                "general": (
+                    "Lottery IA usa tools tipadas sobre PostgreSQL. "
+                    "Reporta muestra, período, métrica y limitaciones. "
+                    "No predice resultados ni recomienda apuestas."
+                ),
+            }
+            return {
+                "metric": metric,
+                "definition": defs.get(metric, defs["general"]),
+                "definitions": defs,
+                "limitations": ["Explicación metodológica; no implica predicción"],
+            }, 1, {"semantics": "explain_method"}
+
         raise LotteryQueryError("TOOL_ERROR", f"Tool no implementada: {tool.value}")
+
+    async def _compare_number_periods(self, params: dict[str, Any]) -> tuple[Any, int | None, dict[str, Any]]:
+        from datetime import timedelta
+
+        lottery = str(params["lottery"])
+        number = str(params["number"])
+        today = date.today()
+        period_a = str(params.get("period_a") or "current_year")
+        period_b = str(params.get("period_b") or "previous_year")
+
+        def _bounds(key: str) -> tuple[date, date, str]:
+            if key == "current_year":
+                return date(today.year, 1, 1), today, f"año {today.year}"
+            if key == "previous_year":
+                y = today.year - 1
+                return date(y, 1, 1), date(y, 12, 31), f"año {y}"
+            if key.startswith("last_"):
+                n = int(key.split("_", 1)[1])
+                return today - timedelta(days=n), today, f"últimos {n} días"
+            # ISO ranges "YYYY-MM-DD:YYYY-MM-DD"
+            if ":" in key:
+                a, b = key.split(":", 1)
+                return date.fromisoformat(a), date.fromisoformat(b), f"{a}→{b}"
+            return date(today.year, 1, 1), today, period_a
+
+        a0, a1, a_label = _bounds(period_a)
+        b0, b1, b_label = _bounds(period_b)
+
+        async def _period_stats(from_d: date, to_d: date) -> dict[str, Any]:
+            res = await self.query.by_number(
+                lottery, number, from_date=from_d, to_date=to_d, page=1, page_size=1, order="desc"
+            )
+            occ = getattr(getattr(res, "pagination", None), "total", None) or getattr(res, "total", 0) or 0
+            # Approximate draws in period via frequencies total or range query
+            try:
+                rng = await self.query.range(
+                    lottery, from_d, to_d, page=1, page_size=1
+                )
+                draws = getattr(getattr(rng, "pagination", None), "total", None) or getattr(rng, "total", 0) or 0
+            except Exception:  # noqa: BLE001
+                draws = 0
+            rel = (float(occ) / float(draws) * 100.0) if draws else None
+            return {
+                "from": from_d.isoformat(),
+                "to": to_d.isoformat(),
+                "occurrences": int(occ),
+                "draws": int(draws),
+                "relative_frequency_pct": round(rel, 3) if rel is not None else None,
+            }
+
+        stats_a = await _period_stats(a0, a1)
+        stats_b = await _period_stats(b0, b1)
+        delta_occ = stats_a["occurrences"] - stats_b["occurrences"]
+        delta_rel = None
+        if stats_a["relative_frequency_pct"] is not None and stats_b["relative_frequency_pct"] is not None:
+            delta_rel = round(stats_a["relative_frequency_pct"] - stats_b["relative_frequency_pct"], 3)
+
+        more = "igual"
+        if stats_a["relative_frequency_pct"] is not None and stats_b["relative_frequency_pct"] is not None:
+            if stats_a["relative_frequency_pct"] > stats_b["relative_frequency_pct"]:
+                more = "period_a"
+            elif stats_a["relative_frequency_pct"] < stats_b["relative_frequency_pct"]:
+                more = "period_b"
+        elif stats_a["occurrences"] > stats_b["occurrences"]:
+            more = "period_a"
+        elif stats_a["occurrences"] < stats_b["occurrences"]:
+            more = "period_b"
+
+        return {
+            "lottery": lottery,
+            "number": number,
+            "period_a": {"label": a_label, **stats_a},
+            "period_b": {"label": b_label, **stats_b},
+            "delta_occurrences": delta_occ,
+            "delta_relative_frequency_pct": delta_rel,
+            "higher_relative_frequency": more,
+            "metric": "compare_number_periods_relative_frequency",
+            "definition": (
+                "Frecuencia relativa = apariciones del número / sorteos del período. "
+                "Es estadística histórica, no probabilidad de que salga."
+            ),
+            "limitations": [
+                "Períodos con distinta cantidad de sorteos se comparan por frecuencia relativa",
+                "No implica predicción",
+            ],
+        }, 2, {"semantics": "compare_number_periods"}
+
+    async def _monthly_trend(self, params: dict[str, Any]) -> tuple[Any, int | None, dict[str, Any]]:
+        from collections import Counter
+from datetime import timedelta
+from app.models.lottery import LotteryDraw, LotteryDrawNumber
+from sqlalchemy import select, func
+
+        lot = await self.resolver.resolve_or_raise(str(params["lottery"]))
+        months = int(params.get("months") or 12)
+        to_d = date.today()
+        from_d = to_d - timedelta(days=max(30, months * 31))
+        number = params.get("number")
+        q = (
+            select(
+                func.date_trunc("month", LotteryDraw.draw_date).label("m"),
+                func.count().label("cnt"),
+            )
+            .select_from(LotteryDraw)
+            .where(
+                LotteryDraw.lottery_id == lot.id,
+                LotteryDraw.draw_date >= from_d,
+                LotteryDraw.draw_date <= to_d,
+            )
+            .group_by("m")
+            .order_by("m")
+        )
+        if number:
+            num = str(number).zfill(2) if len(str(number)) <= 2 else str(number)
+            q = (
+                select(
+                    func.date_trunc("month", LotteryDraw.draw_date).label("m"),
+                    func.count().label("cnt"),
+                )
+                .select_from(LotteryDrawNumber)
+                .join(LotteryDraw, LotteryDraw.id == LotteryDrawNumber.draw_id)
+                .where(
+                    LotteryDraw.lottery_id == lot.id,
+                    LotteryDrawNumber.number_value == num,
+                    LotteryDraw.draw_date >= from_d,
+                    LotteryDraw.draw_date <= to_d,
+                )
+                .group_by("m")
+                .order_by("m")
+            )
+        _ = Counter  # reserved for future mode analysis
+        rows = (await self.db.execute(q)).all()
+        series = [{"month": (r[0].date().isoformat() if hasattr(r[0], "date") else str(r[0])[:10]), "count": int(r[1])} for r in rows]
+        return {
+            "lottery": lot.commercial_name or lot.name,
+            "number": number,
+            "from": from_d.isoformat(),
+            "to": to_d.isoformat(),
+            "series": series,
+            "metric": "monthly_trend",
+            "limitations": ["Agregación mensual descriptiva"],
+        }, len(series), {}

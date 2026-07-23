@@ -142,6 +142,9 @@ export function LotteryStructuredRenderer({ structured }: { structured?: Structu
   }
 
   if (type === "lottery_comparison" || type === "lottery_frequency") {
+    const rows = (data.rows as Array<Record<string, unknown>> | undefined) || [];
+    const periodA = data.period_a as Record<string, unknown> | undefined;
+    const periodB = data.period_b as Record<string, unknown> | undefined;
     return (
       <Card>
         <CardHeader className="pb-2">
@@ -149,10 +152,61 @@ export function LotteryStructuredRenderer({ structured }: { structured?: Structu
             {type === "lottery_frequency" ? "Frecuencias" : "Comparación"}
           </CardTitle>
         </CardHeader>
-        <CardContent>
-          <pre tabIndex={0} className="max-h-56 overflow-auto rounded bg-muted/40 p-2 text-xs outline-none focus-visible:ring-2 focus-visible:ring-ring">
-            {JSON.stringify(data, null, 2).slice(0, 3000)}
-          </pre>
+        <CardContent className="space-y-3 text-sm">
+          {periodA && periodB && (
+            <div className="grid gap-2 sm:grid-cols-2">
+              {[periodA, periodB].map((p, i) => (
+                <div key={i} className="rounded border p-2">
+                  <p className="text-xs text-muted-foreground">{String(p.label || "")}</p>
+                  <p className="font-medium">
+                    {String(p.occurrences)} apariciones / {String(p.draws)} sorteos
+                  </p>
+                  <p className="text-xs">
+                    Frecuencia relativa: {String(p.relative_frequency_pct ?? "—")}%
+                  </p>
+                  <p className="text-[10px] text-muted-foreground">
+                    {String(p.from)} → {String(p.to)}
+                  </p>
+                </div>
+              ))}
+            </div>
+          )}
+          {rows.length > 0 && (
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="text-left text-muted-foreground">
+                  <th className="py-1">Lotería</th>
+                  <th>Última</th>
+                  <th>Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                {rows.map((r) => (
+                  <tr key={String(r.lottery)} className="border-t">
+                    <td className="py-1">{String(r.lottery)}</td>
+                    <td className="font-mono text-xs">{String(r.last_date || "—")}</td>
+                    <td>{String(r.occurrences ?? "—")}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+          {data.metric ? (
+            <p className="text-[11px] text-muted-foreground">Métrica: {String(data.metric)}</p>
+          ) : null}
+          {Array.isArray(data.limitations) && data.limitations.length > 0 ? (
+            <p className="text-[11px] text-muted-foreground">
+              Limitaciones: {(data.limitations as string[]).join(" · ")}
+            </p>
+          ) : null}
+          {!periodA && rows.length === 0 && (
+            <pre
+              tabIndex={0}
+              className="max-h-56 overflow-auto rounded bg-muted/40 p-2 text-xs outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            >
+              {JSON.stringify(data, null, 2).slice(0, 3000)}
+            </pre>
+          )}
         </CardContent>
       </Card>
     );

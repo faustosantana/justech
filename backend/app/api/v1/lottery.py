@@ -574,6 +574,30 @@ async def admin_ai_runtime(
     return runtime_snapshot()
 
 
+@router.get("/admin/ai/metrics")
+async def admin_ai_metrics(
+    db: DbSession,
+    user: CurrentUser,
+    _: Annotated[None, require_lottery_permission("lottery.admin")],
+    days: Annotated[int, Query(ge=1, le=90)] = 7,
+) -> dict:
+    from app.lottery.ai.metrics import ai_quality_metrics
+
+    return await ai_quality_metrics(db, days=days)
+
+
+@router.post("/admin/ai/prompts/{version}/activate")
+async def admin_ai_prompt_activate(
+    version: str,
+    user: CurrentUser,
+    _: Annotated[None, require_lottery_permission("lottery.admin")],
+) -> dict:
+    from app.lottery.ai.prompts.lottery_assistant_system_v1 import activate_prompt_version
+
+    p = activate_prompt_version(version)
+    return {"ok": True, "active_version": p.version, "name": p.name}
+
+
 @router.get("/admin/ai/prompts")
 async def admin_ai_prompts(
     user: CurrentUser,

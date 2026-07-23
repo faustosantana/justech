@@ -202,29 +202,75 @@ class LotteryChatService:
                 role=self.role,
                 is_superadmin=self.is_superadmin,
             )
-            # Multi-tool compare last occurrence across lotteries
+            # Multi-tool / specialized plans
             if (
                 understanding.tool == "lottery_compare_last_occurrence_all"
                 or (understanding.scope == "all" and understanding.intent == "last_occurrence")
                 or (
                     understanding.intent == "compare_numbers"
-                    and len(plan.steps) > 1
+                    and understanding.numbers
                 )
             ):
-                structured, template, tool_trace = await self._execute_multi_last_occurrence(
-                    executor, understanding, plan, ctx
+                # Prefer dedicated across-lotteries tool when lotteries known
+                lots = list(understanding.lotteries or state.active_lotteries)
+                number = (understanding.numbers or state.active_numbers or [None])[0]
+                if lots and number and (
+                    understanding.tool
+                    in {
+                        LotteryToolName.COMPARE_NUMBER_ACROSS_LOTTERIES.value,
+                        LotteryToolName.COMPARE_LOTTERIES.value,
+                    }
+                    or understanding.intent == "compare_numbers"
+                ):
+                    result = await executor.execute(
+                        LotteryToolName.COMPARE_NUMBER_ACROSS_LOTTERIES,
+                        {"lotteries": lots[:8], "number": number},
+                        structured_type="lottery_comparison",
+                        session_context=ctx.to_store(),
+                    )
+                    tool_trace.append(
+                        {
+                            "tool": result.tool,
+                            "status": result.status,
+                            "duration_ms": result.duration_ms,
+                            "error_code": result.error_code,
+                        }
+                    )
+                    structured, template = self._build_structured(result, {"lotteries": lots, "number": number})
+                    tool_name = result.tool
+                else:
+                    structured, template, tool_trace = await self._execute_multi_last_occurrence(
+                        executor, understanding, plan, ctx
+                    )
+                    tool_name = understanding.tool or "lottery_compare_last_occurrence"
+                if understanding.numbers:
+                    state.active_numbers = list(understanding.numbers)
+                if lots:
+                    state.active_lotteries = list(dict.fromkeys([*state.active_lotteries, *lots]))
+                state.last_intent = str(understanding.intent)
+                state.last_plan = [s.purpose or s.tool for s in plan.steps]
+                state.pending_slots = []
+                state.pending_intent = None
+            elif len(plan.steps) > 1:
+                structured, template, tool_trace = await self._execute_plan(
+                    executor, plan, ctx, understanding
                 )
-                tool_name = understanding.tool or "lottery_compare_last_occurrence"
+                tool_name = understanding.tool or (plan.steps[-1].tool if plan.steps else "plan")
                 if understanding.numbers:
                     state.active_numbers = list(understanding.numbers)
                 if understanding.lotteries:
                     state.active_lotteries = list(
                         dict.fromkeys([*state.active_lotteries, *understanding.lotteries])
                     )
+                if understanding.params.get("lottery"):
+                    lot = str(understanding.params["lottery"])
+                    if lot not in state.active_lotteries:
+                        state.active_lotteries = [lot, *state.active_lotteries]
                 state.last_intent = str(understanding.intent)
                 state.last_plan = [s.purpose or s.tool for s in plan.steps]
                 state.pending_slots = []
                 state.pending_intent = None
+                state.metric_context = understanding.metric or understanding.intent
             else:
                 tool_enum = self._tool_enum(understanding.tool)
                 exec_params = self._normalize_tool_params(understanding.tool, params, state)
@@ -556,6 +602,71 @@ class LotteryChatService:
         }
         return structured, template, tool_trace
 
+    async def _execute_plan(
+        self,
+        executor: LotteryToolExecutor,
+        plan,
+        ctx: LotterySessionContext,
+        understanding,
+    ) -> tuple[dict[str, Any], str, list[dict[str, Any]]]:
+        """Execute bounded multi-step plan; keep last successful analytical result."""
+        tool_trace: list[dict[str, Any]] = []
+        last_structured: dict[str, Any] | None = None
+        last_template = "Consulta completada."
+        lotteries_from_list: list[str] = []
+        for step in plan.steps:
+            params = dict(step.params or {})
+            # Inject lotteries discovered earlier
+            if (
+                step.tool == LotteryToolName.COMPARE_NUMBER_ACROSS_LOTTERIES.value
+                and not params.get("lotteries")
+                and lotteries_from_list
+            ):
+                params["lotteries"] = lotteries_from_list[:8]
+            try:
+                tool_enum = LotteryToolName(step.tool)
+            except ValueError:
+                tool_trace.append(
+                    {"tool": step.tool, "status": "error", "duration_ms": 0, "error_code": "UNKNOWN_TOOL"}
+                )
+                continue
+            result = await executor.execute(
+                tool_enum,
+                self._normalize_tool_params(step.tool, params, ConversationState()),
+                structured_type="lottery_result",
+                session_context=ctx.to_store(),
+            )
+            tool_trace.append(
+                {
+                    "tool": result.tool,
+                    "status": result.status,
+                    "duration_ms": result.duration_ms,
+                    "error_code": result.error_code,
+                    "purpose": step.purpose,
+                }
+            )
+            if result.status != "success":
+                continue
+            if step.tool == LotteryToolName.LIST_LOTTERIES.value and isinstance(result.data, dict):
+                items = result.data.get("items") or result.data.get("lotteries") or []
+                for item in items:
+                    name = item.get("name") if isinstance(item, dict) else getattr(item, "name", None)
+                    if name:
+                        lotteries_from_list.append(str(name))
+                continue
+            if step.tool == LotteryToolName.RESOLVE_LOTTERY.value:
+                continue
+            last_structured, last_template = self._build_structured(result, params)
+        if last_structured is None:
+            last_structured = {
+                "type": "lottery_error",
+                "warnings": [{"code": "PLAN_PARTIAL", "message": "No se pudieron completar todos los pasos."}],
+            }
+            last_template = "No pude completar el análisis con los datos disponibles."
+        last_structured["plan"] = [s.model_dump() for s in plan.steps]
+        last_structured["tool_trace_count"] = len(tool_trace)
+        return last_structured, last_template, tool_trace
+
     def _build_structured(
         self, result: ToolExecutionResult, params: dict[str, Any]
     ) -> tuple[dict[str, Any], str]:
@@ -816,6 +927,71 @@ class LotteryChatService:
                     "Nacional Día sigue fuera de sync definitivo."
                 )
             return base
+
+        if tool == "lottery_compare_number_periods" and isinstance(data, dict):
+            a = data.get("period_a") or {}
+            b = data.get("period_b") or {}
+            lot = data.get("lottery")
+            number = data.get("number")
+            higher = data.get("higher_relative_frequency")
+            winner = a.get("label") if higher == "period_a" else (
+                b.get("label") if higher == "period_b" else "ninguno (empate)"
+            )
+            return (
+                f"En {lot}, el {number}: "
+                f"{a.get('label')} → {a.get('occurrences')} apariciones en {a.get('draws')} sorteos "
+                f"({a.get('relative_frequency_pct')}%). "
+                f"{b.get('label')} → {b.get('occurrences')} apariciones en {b.get('draws')} sorteos "
+                f"({b.get('relative_frequency_pct')}%). "
+                f"Mayor frecuencia relativa: {winner}. "
+                f"Métrica: {data.get('metric')}. {data.get('definition')} "
+                f"Limitaciones: {'; '.join(data.get('limitations') or [])}."
+            )
+
+        if tool == "lottery_compare_number_across_lotteries" and isinstance(data, dict):
+            rows = data.get("rows") or []
+            lines = [f"Última aparición del {data.get('number')} por lotería:"]
+            for r in rows:
+                if r.get("found"):
+                    lines.append(
+                        f"• {r.get('lottery')}: {r.get('last_date')} "
+                        f"(×{r.get('occurrences')} históricas)"
+                    )
+                else:
+                    lines.append(f"• {r.get('lottery')}: sin registros")
+            lines.append(f"Métrica: {data.get('metric')}.")
+            return "\n".join(lines)
+
+        if tool == "lottery_get_lottery_summary" and isinstance(data, dict):
+            return (
+                f"Resumen de {data.get('lottery')}: {data.get('draw_count')} sorteos, "
+                f"desde {data.get('first_draw_date')} hasta {data.get('last_draw_date')}. "
+                f"Sync={data.get('sync_enabled')}, auto-write={data.get('auto_write_enabled')}. "
+                f"Métrica: {data.get('metric')}."
+            )
+
+        if tool == "lottery_get_latest_available_date" and isinstance(data, dict):
+            if data.get("lottery"):
+                return (
+                    f"La fecha más reciente disponible en {data.get('lottery')} es "
+                    f"{data.get('last_draw_date')} ({data.get('draw_count')} sorteos)."
+                )
+            top = data.get("most_recent") or {}
+            return (
+                f"La lotería más actualizada en catálogo es {top.get('lottery')} "
+                f"hasta {top.get('last_draw_date')}."
+            )
+
+        if tool == "lottery_explain_analysis_method" and isinstance(data, dict):
+            return str(data.get("definition") or "Análisis histórico descriptivo.")
+
+        if tool == "lottery_get_expected_vs_received" and isinstance(data, dict):
+            return (
+                f"Hoy ({data.get('local_today')}): esperadas {data.get('expected_sync_enabled')} "
+                f"loterías con sync; recibidas {data.get('received_today')}; "
+                f"pendientes {data.get('pending')}. "
+                f"Definición: {data.get('definition')}."
+            )
 
         if tool == "lottery_get_missing_today" and isinstance(data, dict):
             missing = data.get("missing") or []

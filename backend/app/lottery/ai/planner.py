@@ -1,4 +1,4 @@
-"""Lottery IA 4.0 — query planner (multi-tool, bounded)."""
+"""Lottery IA 4.1 — query planner (multi-tool, bounded, period/cross-lottery)."""
 
 from __future__ import annotations
 
@@ -7,6 +7,7 @@ from typing import Any
 from pydantic import BaseModel, Field
 
 from app.lottery.ai.conversation_state import UnderstandingResult
+from app.services.lottery_ai_contracts import LotteryToolName
 
 
 MAX_TOOLS_PER_TURN = 8
@@ -38,9 +39,10 @@ def build_plan(understanding: UnderstandingResult) -> QueryPlan:
 
     tool = understanding.tool
     params = dict(understanding.params or {})
+    intent = str(understanding.intent or "")
 
     if tool == "lottery_compare_last_occurrence_all" or (
-        understanding.intent == "last_occurrence" and understanding.scope == "all"
+        intent == "last_occurrence" and understanding.scope == "all"
     ):
         number = params.get("number") or (
             understanding.numbers[0] if understanding.numbers else None
@@ -48,38 +50,79 @@ def build_plan(understanding: UnderstandingResult) -> QueryPlan:
         return QueryPlan(
             steps=[
                 PlanStep(
-                    tool="lottery_list_lotteries",
+                    tool=LotteryToolName.LIST_LOTTERIES.value,
                     params={"limit": 50, "searchable_only": True},
                     purpose="list_ai_enabled_lotteries",
                 ),
                 PlanStep(
-                    tool="lottery_get_last_occurrence",
-                    params={"number": number, "scope": "all"},
-                    purpose="search_last_occurrence_per_lottery",
+                    tool=LotteryToolName.COMPARE_NUMBER_ACROSS_LOTTERIES.value,
+                    params={"number": number, "lotteries": understanding.lotteries},
+                    purpose="last_occurrence_all_or_named",
                 ),
             ],
             rationale="compare_last_occurrence_across_lotteries",
         ).bounded()
 
-    if understanding.intent == "compare_numbers" and understanding.numbers:
+    if intent in {"compare_numbers", "compare_lotteries"} and understanding.numbers:
         lots = list(understanding.lotteries)
         number = understanding.numbers[0]
-        steps = [
-            PlanStep(
-                tool="lottery_get_last_occurrence",
-                params={"lottery": lot, "number": number},
-                purpose=f"last_occurrence_{lot}",
-            )
-            for lot in lots[:MAX_TOOLS_PER_TURN]
-        ]
-        if steps:
+        if lots:
             return QueryPlan(
-                steps=steps,
-                rationale="compare_number_across_named_lotteries",
+                steps=[
+                    PlanStep(
+                        tool=LotteryToolName.COMPARE_NUMBER_ACROSS_LOTTERIES.value,
+                        params={"lotteries": lots[:8], "number": number},
+                        purpose="compare_number_across_named_lotteries",
+                    )
+                ],
+                rationale="compare_number_across_lotteries",
             ).bounded()
+
+    if intent in {"compare_number_periods", "yearly_comparison"} or tool in {
+        LotteryToolName.COMPARE_NUMBER_PERIODS.value,
+        LotteryToolName.GET_YEARLY_COMPARISON.value,
+    }:
+        return QueryPlan(
+            steps=[
+                PlanStep(
+                    tool=LotteryToolName.RESOLVE_LOTTERY.value,
+                    params={"lottery": params.get("lottery")},
+                    purpose="resolve_lottery",
+                ),
+                PlanStep(
+                    tool=LotteryToolName.COMPARE_NUMBER_PERIODS.value,
+                    params={
+                        "lottery": params.get("lottery"),
+                        "number": params.get("number")
+                        or (understanding.numbers[0] if understanding.numbers else None),
+                        "period_a": params.get("period_a") or "current_year",
+                        "period_b": params.get("period_b") or "previous_year",
+                    },
+                    purpose="compare_relative_frequency_periods",
+                ),
+            ],
+            rationale="compare_number_periods",
+        ).bounded()
+
+    if intent == "lottery_summary" or tool == LotteryToolName.GET_LOTTERY_SUMMARY.value:
+        return QueryPlan(
+            steps=[
+                PlanStep(
+                    tool=LotteryToolName.GET_LOTTERY_SUMMARY.value,
+                    params=params,
+                    purpose="lottery_summary",
+                ),
+                PlanStep(
+                    tool=LotteryToolName.GET_LATEST_AVAILABLE_DATE.value,
+                    params={"lottery": params.get("lottery")},
+                    purpose="latest_date",
+                ),
+            ],
+            rationale="lottery_summary_pack",
+        ).bounded()
 
     # Default single-tool plan
     return QueryPlan(
-        steps=[PlanStep(tool=tool, params=params, purpose=understanding.intent)],
+        steps=[PlanStep(tool=tool, params=params, purpose=intent or "tool")],
         rationale="single_tool",
     ).bounded()

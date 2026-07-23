@@ -152,8 +152,31 @@ def _detect_follow_up(text: str, state: ConversationState) -> tuple[Understandin
     low = text.lower().strip()
     working = state.model_copy(deep=True)
 
-    # "compáralas" / "comparalas" / "compara las dos"
-    if re.search(r"comp[aá]ralas|compara(r)?\s+las|comparaci[oó]n", low) and state.active_numbers:
+    # "y ese mismo número en las demás" / "en las demás"
+    if state.active_numbers and re.search(
+        r"(en\s+)?(las\s+)?dem[aá]s|todas\s+las\s+(dem[aá]s\s+)?loter|"
+        r"ese\s+mismo\s+n[uú]mero|el\s+mismo\s+n[uú]mero",
+        low,
+    ):
+        number = state.active_numbers[0]
+        working.scope = "all"
+        working.pending_slots = []
+        return (
+            UnderstandingResult(
+                intent="last_occurrence",
+                numbers=[number],
+                scope="all",
+                tool="lottery_compare_last_occurrence_all",
+                params={"number": number, "scope": "all"},
+                plan=["list_lotteries", "compare_across"],
+                confidence=0.88,
+                source="follow_up",
+            ),
+            working,
+        )
+
+    # "compáralas" / "comparalas" / "compara las dos" / "compárame eso"
+    if re.search(r"comp[aá]ralas|compara(r)?\s+las|comparaci[oó]n|comp[aá]rame\s+(eso|eso)|comp[aá]rame\s+eso", low) and state.active_numbers:
         lots = list(state.active_lotteries)
         if len(lots) >= 2 or state.scope == "all":
             return (
@@ -162,13 +185,13 @@ def _detect_follow_up(text: str, state: ConversationState) -> tuple[Understandin
                     lotteries=lots,
                     numbers=list(state.active_numbers),
                     scope="multiple" if lots else "all",
-                    tool=LotteryToolName.COMPARE_LOTTERIES.value,
+                    tool=LotteryToolName.COMPARE_NUMBER_ACROSS_LOTTERIES.value,
                     params={
                         "lotteries": lots,
                         "number": state.active_numbers[0],
                         "mode": "number_compare",
                     },
-                    plan=["resolve_lotteries", "last_or_frequency_per_lottery", "summarize"],
+                    plan=["compare_across_lotteries"],
                     confidence=0.88,
                     source="follow_up",
                 ),
@@ -474,8 +497,11 @@ def _map_resolved(
         LotteryToolName.GET_RESULT_BY_DATE.value: "result_by_date",
         LotteryToolName.GET_NUMBER_OCCURRENCES.value: "number_history",
         LotteryToolName.GET_TOP_NUMBERS.value: "frequency",
+        LotteryToolName.CALCULATE_FREQUENCIES.value: "frequency",
         LotteryToolName.GET_HOT_COLD.value: "hot_numbers",
         LotteryToolName.COMPARE_LOTTERIES.value: "compare_lotteries",
+        LotteryToolName.COMPARE_NUMBER_PERIODS.value: "compare_number_periods",
+        LotteryToolName.COMPARE_NUMBER_ACROSS_LOTTERIES.value: "compare_numbers",
         LotteryToolName.GET_MISSING_TODAY.value: "missing_results",
         LotteryToolName.GET_SYNC_STATUS.value: "sync_status",
         LotteryToolName.GET_SYNC_WINDOWS.value: "next_sync",
@@ -483,6 +509,13 @@ def _map_resolved(
         LotteryToolName.GET_FOLLOWING_DAYS.value: "draw_sequence",
         LotteryToolName.GET_COVERAGE.value: "data_coverage",
         LotteryToolName.GET_DATA_QUALITY.value: "data_quality",
+        LotteryToolName.GET_DATA_COMPLETENESS.value: "data_completeness",
+        LotteryToolName.GET_LOTTERY_SUMMARY.value: "lottery_summary",
+        LotteryToolName.GET_LATEST_AVAILABLE_DATE.value: "latest_date",
+        LotteryToolName.GET_OVERDUE_NUMBERS.value: "overdue_numbers",
+        LotteryToolName.EXPLAIN_ANALYSIS_METHOD.value: "explain_metric",
+        LotteryToolName.GET_EXPECTED_VS_RECEIVED.value: "expected_vs_received",
+        LotteryToolName.GET_YEARLY_COMPARISON.value: "compare_number_periods",
     }
     if tool:
         intent_name = mapping.get(tool, "general_domain_question")

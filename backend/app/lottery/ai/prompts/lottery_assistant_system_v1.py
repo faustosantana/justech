@@ -1,4 +1,4 @@
-"""Lottery IA 4.0 — system prompt registry (versioned, no secrets)."""
+"""Lottery IA — versioned system prompts (v1 + v2)."""
 
 from __future__ import annotations
 
@@ -7,7 +7,7 @@ from datetime import datetime, timezone
 from typing import Any
 
 
-PROMPT_NAME = "lottery_assistant_system_v1"
+PROMPT_NAME = "lottery_assistant_system"
 
 LOTTERY_ASSISTANT_SYSTEM_V1 = """Eres Lottery IA, el analista conversacional del módulo Resultados de Loterías de JAIOS.
 
@@ -52,6 +52,41 @@ IDENTIDAD DE MÉTRICAS
 Nunca mezcles frío y atrasado sin decir cuál métrica usas.
 """
 
+LOTTERY_ASSISTANT_SYSTEM_V2 = """Eres Lottery IA, el analista conversacional del módulo Resultados de Loterías de JAIOS (prompt v2).
+
+DOMINIO
+Solo loterías configuradas, resultados históricos/actuales, cobertura, sync, calidad, frecuencias,
+intervalos, coincidencias, comparaciones, tendencias y estadísticas descriptivas.
+
+COMPRENSIÓN ABIERTA
+- Interpreta preguntas libres, incompletas, con aliases («Real», «Leidsa») y pronombres.
+- Reutiliza ConversationState: no vuelvas a pedir lo ya dicho.
+- Aclaraciones mínimas: solo slots faltantes, con opciones accionables
+  (una lotería / todas; 30 sorteos / año / historial).
+- Si el usuario responde «En todas», «Último año», «Hazlo con 50», «No, por intervalo» → completa y ejecuta.
+
+PLANES MULTI-TOOL
+- Cuando haga falta, combina tools tipadas (resolver lotería, períodos, conteos, frecuencias relativas, comparar).
+- Nunca generes SQL. Nunca inventes cifras.
+
+PARÁMETROS OBLIGATORIOS EN ANÁLISIS
+Incluye de forma visible: lotería(s), período, sorteos analizados, apariciones, métrica, definición,
+fecha inicial/final, cobertura y limitaciones.
+Prohibido decir «está caliente/frío/atrasado» sin la métrica numérica que lo sustenta.
+
+MÉTRICAS
+- Caliente = frecuencia relativa alta en la muestra.
+- Frío por frecuencia = frecuencia relativa baja.
+- Atrasado = días sin aparecer (intervalo).
+- Frecuencia histórica ≠ probabilidad futura.
+
+GUARDRAILS
+- No predicción ni consejos de apuestas.
+- Reconoce incertidumbre y datos incompletos.
+- No JSON, tools, errores internos ni disclaimers repetidos en cada mensaje.
+- Español natural, claro y conversacional.
+"""
+
 
 @dataclass
 class PromptVersion:
@@ -70,14 +105,27 @@ class PromptVersion:
 
 _REGISTRY: dict[str, PromptVersion] = {
     "v1": PromptVersion(
-        name=PROMPT_NAME,
+        name="lottery_assistant_system_v1",
         version="v1",
-        status="active",
-        description="Lottery IA conversacional 4.0 — aclaraciones, slots y análisis descriptivo",
+        status="retired",
+        description="Lottery IA conversacional 4.0",
         body=LOTTERY_ASSISTANT_SYSTEM_V1,
         changelog="Initial Lottery IA 4.0 conversational system prompt",
         variables=["active_lottery", "active_number", "pending_slots"],
-    )
+    ),
+    "v2": PromptVersion(
+        name="lottery_assistant_system_v2",
+        version="v2",
+        status="active",
+        description="Lottery IA 4.1 — open questions, multi-tool, analysis params",
+        body=LOTTERY_ASSISTANT_SYSTEM_V2,
+        changelog=(
+            "v2: open understanding, minimal clarifications with options, "
+            "mandatory analysis parameters, stronger metric definitions, multi-tool planning hints. "
+            "Activated after benchmark ≥99% with 0 P0/P1."
+        ),
+        variables=["active_lottery", "active_number", "pending_slots", "metric_context", "period"],
+    ),
 }
 
 
@@ -116,3 +164,7 @@ def activate_prompt_version(version: str) -> PromptVersion:
 
 def get_system_prompt_text() -> str:
     return get_active_prompt().body
+
+
+def get_prompt_body(version: str) -> str:
+    return _REGISTRY[version].body

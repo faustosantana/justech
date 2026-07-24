@@ -28,6 +28,13 @@ from app.schemas.lottery_admin import (
 )
 
 
+# J-10H — Universo de producto ordinario = is_featured (eligible_for_active_analysis).
+_PRODUCT_SCOPE = (
+    LotteryLottery.is_featured.is_(True),
+    LotteryLottery.is_aggregate.is_(False),
+)
+
+
 class LotteryAdminService:
     def __init__(self, db: AsyncSession):
         self.db = db
@@ -39,12 +46,18 @@ class LotteryAdminService:
         active: bool | None = None,
         visible: bool | None = None,
         sync_enabled: bool | None = None,
+        featured: bool | None = True,
         limit: int = 100,
         offset: int = 0,
     ) -> tuple[list[LotteryLottery], int]:
+        """Lista admin. Por defecto solo destacadas (producto). featured=False → archivadas."""
         stmt = select(LotteryLottery)
         count_stmt = select(func.count()).select_from(LotteryLottery)
-        filters = []
+        filters = [LotteryLottery.is_aggregate.is_(False)]
+        if featured is True:
+            filters.append(LotteryLottery.is_featured.is_(True))
+        elif featured is False:
+            filters.append(LotteryLottery.is_featured.is_(False))
         if q:
             like = f"%{q.strip().lower()}%"
             filters.append(
@@ -60,9 +73,8 @@ class LotteryAdminService:
             filters.append(LotteryLottery.is_visible.is_(visible))
         if sync_enabled is not None:
             filters.append(LotteryLottery.is_sync_enabled.is_(sync_enabled))
-        if filters:
-            stmt = stmt.where(and_(*filters))
-            count_stmt = count_stmt.where(and_(*filters))
+        stmt = stmt.where(and_(*filters))
+        count_stmt = count_stmt.where(and_(*filters))
         total = int((await self.db.execute(count_stmt)).scalar_one())
         rows = (
             await self.db.execute(
@@ -145,18 +157,25 @@ class LotteryAdminService:
         user_id: uuid.UUID,
         q: str | None = None,
         country: str | None = None,
-        featured_only: bool = False,
+        featured_only: bool = True,
         favorites_only: bool = False,
+        include_archived: bool = False,
         page: int = 1,
         page_size: int = 50,
     ) -> LotteryCatalogResponse:
+        """Catálogo ordinario: solo is_featured. include_archived=True → solo no destacadas (admin)."""
         page = max(1, page)
         page_size = min(max(1, page_size), 500)
         filters = [
-            LotteryLottery.is_visible.is_(True),
-            LotteryLottery.is_visible_catalog.is_(True),
             LotteryLottery.is_aggregate.is_(False),
         ]
+        if include_archived:
+            filters.append(LotteryLottery.is_featured.is_(False))
+        else:
+            # J-10H: producto ordinario = destacadas (aunque featured_only llegue False).
+            filters.append(LotteryLottery.is_featured.is_(True))
+            filters.append(LotteryLottery.is_visible.is_(True))
+            filters.append(LotteryLottery.is_visible_catalog.is_(True))
         if q:
             like = f"%{q.strip().lower()}%"
             filters.append(
@@ -168,8 +187,7 @@ class LotteryAdminService:
             )
         if country:
             filters.append(LotteryLottery.country == country)
-        if featured_only:
-            filters.append(LotteryLottery.is_featured.is_(True))
+        # featured_only retained for API compat; ordinary path already forces featured.
 
         fav_ids: set[uuid.UUID] = set()
         fav_rows = (
@@ -271,12 +289,11 @@ class LotteryAdminService:
             today = datetime.now(ZoneInfo(tz_name)).date()
         except Exception:
             today = datetime.now(timezone.utc).date()
+        # J-10H: KPIs de producto = solo is_featured (no contaminar con inventario histórico).
         active = int(
             (
                 await self.db.execute(
-                    select(func.count()).select_from(LotteryLottery).where(
-                        LotteryLottery.active.is_(True), LotteryLottery.is_aggregate.is_(False)
-                    )
+                    select(func.count()).select_from(LotteryLottery).where(*_PRODUCT_SCOPE)
                 )
             ).scalar_one()
         )
@@ -284,7 +301,8 @@ class LotteryAdminService:
             (
                 await self.db.execute(
                     select(func.count()).select_from(LotteryLottery).where(
-                        LotteryLottery.is_visible.is_(True), LotteryLottery.is_aggregate.is_(False)
+                        *_PRODUCT_SCOPE,
+                        LotteryLottery.is_visible.is_(True),
                     )
                 )
             ).scalar_one()
@@ -293,7 +311,8 @@ class LotteryAdminService:
             (
                 await self.db.execute(
                     select(func.count()).select_from(LotteryLottery).where(
-                        LotteryLottery.is_sync_enabled.is_(True)
+                        *_PRODUCT_SCOPE,
+                        LotteryLottery.is_sync_enabled.is_(True),
                     )
                 )
             ).scalar_one()
@@ -302,10 +321,16 @@ class LotteryAdminService:
         numbers = int(
             (await self.db.execute(select(func.count()).select_from(LotteryDrawNumber))).scalar_one()
         )
+        featured_ids_sq = select(LotteryLottery.id).where(*_PRODUCT_SCOPE)
         results_today = int(
             (
                 await self.db.execute(
-                    select(func.count()).select_from(LotteryDraw).where(LotteryDraw.draw_date == today)
+                    select(func.count())
+                    .select_from(LotteryDraw)
+                    .where(
+                        LotteryDraw.draw_date == today,
+                        LotteryDraw.lottery_id.in_(featured_ids_sq),
+                    )
                 )
             ).scalar_one()
         )
@@ -313,7 +338,8 @@ class LotteryAdminService:
             (
                 await self.db.execute(
                     select(func.count()).select_from(LotteryLottery).where(
-                        LotteryLottery.health_status == "healthy"
+                        *_PRODUCT_SCOPE,
+                        LotteryLottery.health_status == "healthy",
                     )
                 )
             ).scalar_one()
@@ -322,7 +348,8 @@ class LotteryAdminService:
             (
                 await self.db.execute(
                     select(func.count()).select_from(LotteryLottery).where(
-                        LotteryLottery.health_status == "error"
+                        *_PRODUCT_SCOPE,
+                        LotteryLottery.health_status == "error",
                     )
                 )
             ).scalar_one()
@@ -355,10 +382,7 @@ class LotteryAdminService:
             await self.db.execute(
                 select(LotteryLottery, latest_subq.c.max_date)
                 .join(latest_subq, latest_subq.c.lottery_id == LotteryLottery.id)
-                .where(
-                    LotteryLottery.is_visible_dashboard.is_(True),
-                    LotteryLottery.is_aggregate.is_(False),
-                )
+                .where(*_PRODUCT_SCOPE)
                 .order_by(latest_subq.c.max_date.desc(), LotteryLottery.display_order.asc())
                 .limit(12)
             )
@@ -403,8 +427,8 @@ class LotteryAdminService:
             )
         ).items
 
-        # Top/bottom numbers across all draws in optional range (global, real data)
-        freq_filters = []
+        # Top/bottom numbers — solo sorteos de loterías destacadas (producto).
+        freq_filters = [LotteryDraw.lottery_id.in_(select(LotteryLottery.id).where(*_PRODUCT_SCOPE))]
         if from_date:
             freq_filters.append(LotteryDraw.draw_date >= from_date)
         if to_date:
@@ -412,12 +436,11 @@ class LotteryAdminService:
         freq_stmt = (
             select(LotteryDrawNumber.number_value, func.count().label("cnt"))
             .join(LotteryDraw, LotteryDraw.id == LotteryDrawNumber.draw_id)
+            .where(and_(*freq_filters))
             .group_by(LotteryDrawNumber.number_value)
             .order_by(func.count().desc())
             .limit(10)
         )
-        if freq_filters:
-            freq_stmt = freq_stmt.where(and_(*freq_filters))
         top = [
             {"number": n, "count": int(c)}
             for n, c in (await self.db.execute(freq_stmt)).all()
@@ -425,12 +448,11 @@ class LotteryAdminService:
         bottom_stmt = (
             select(LotteryDrawNumber.number_value, func.count().label("cnt"))
             .join(LotteryDraw, LotteryDraw.id == LotteryDrawNumber.draw_id)
+            .where(and_(*freq_filters))
             .group_by(LotteryDrawNumber.number_value)
             .order_by(func.count().asc())
             .limit(10)
         )
-        if freq_filters:
-            bottom_stmt = bottom_stmt.where(and_(*freq_filters))
         bottom = [
             {"number": n, "count": int(c)}
             for n, c in (await self.db.execute(bottom_stmt)).all()
@@ -470,11 +492,14 @@ class LotteryAdminService:
                     (
                         await self.db.execute(
                             select(func.count()).select_from(LotteryLottery).where(
-                                LotteryLottery.is_auto_write_enabled.is_(True)
+                                *_PRODUCT_SCOPE,
+                                LotteryLottery.is_auto_write_enabled.is_(True),
                             )
                         )
                     ).scalar_one()
                 ),
+                "product_scope": "FEATURED_SEVEN",
+                "archived_inventory_excluded": True,
             },
         )
 
@@ -548,16 +573,15 @@ class LotteryAdminService:
         ]
         sync_lots = (
             await self.db.execute(
-                select(LotteryLottery).where(LotteryLottery.is_sync_enabled.is_(True))
+                select(LotteryLottery).where(
+                    *_PRODUCT_SCOPE,
+                    LotteryLottery.is_sync_enabled.is_(True),
+                )
             )
         ).scalars().all()
         visible_lots = (
             await self.db.execute(
-                select(LotteryLottery).where(
-                    LotteryLottery.is_visible_dashboard.is_(True),
-                    LotteryLottery.is_aggregate.is_(False),
-                    LotteryLottery.active.is_(True),
-                )
+                select(LotteryLottery).where(*_PRODUCT_SCOPE)
             )
         ).scalars().all()
 
@@ -680,12 +704,12 @@ class LotteryAdminService:
                 "backup_gate": backup_gate,
                 "operational_alerts": operational_alerts,
                 "results_today_note": (
-                    "Resultados hoy = draws con draw_date = hoy local (America/Santo_Domingo). "
-                    "Esperados = loterías visibles. "
-                    "Pendientes sync = solo loterías con sync_enabled sin resultado de hoy. "
-                    "Solo 3 loterías tienen sincronización automática activa "
-                    "(Leidsa, Loteka, Lotería Nacional). "
-                    "Pendientes visibles incluye loterías sin sync."
+                    "J-10H: todos los indicadores de producto usan únicamente las loterías "
+                    "destacadas (is_featured). El inventario archivado no cuenta. "
+                    "Resultados hoy = draws de hoy (TZ America/Santo_Domingo) de las siete. "
+                    "Esperados = cantidad de loterías activas del producto. "
+                    "Pendientes sync = destacadas con sync_enabled sin resultado de hoy. "
+                    "Pendientes visibles = destacadas sin resultado de hoy."
                 ),
                 "kpis": {
                     "results_today": base.results_today,

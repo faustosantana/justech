@@ -1919,6 +1919,8 @@ export const apiClient = {
       ai_only?: boolean;
       comparable_only?: boolean;
       include_aggregates?: boolean;
+      featured_only?: boolean;
+      include_archived?: boolean;
     },
   ) =>
     request<LotteryListResponse>(
@@ -1930,6 +1932,8 @@ export const apiClient = {
         ai_only: filters?.ai_only,
         comparable_only: filters?.comparable_only,
         include_aggregates: filters?.include_aggregates,
+        featured_only: filters?.featured_only ?? true,
+        include_archived: filters?.include_archived,
       })}`,
       {},
       true,
@@ -1945,15 +1949,22 @@ export const apiClient = {
     country?: string;
     featured_only?: boolean;
     favorites_only?: boolean;
+    include_archived?: boolean;
     page?: number;
     page_size?: number;
-  }) => request<LotteryCatalogResponse>(`/lottery/catalog${buildQuery(params)}`, {}, true),
+  }) =>
+    request<LotteryCatalogResponse>(
+      `/lottery/catalog${buildQuery({ featured_only: true, ...params })}`,
+      {},
+      true,
+    ),
 
   getLotteryAdminLotteries: (params?: {
     q?: string;
     active?: boolean;
     visible?: boolean;
     sync_enabled?: boolean;
+    featured?: boolean | null;
     limit?: number;
     offset?: number;
   }) => request<LotteryAdminLottery[]>(`/lottery/admin/lotteries${buildQuery(params ?? {})}`, {}, true),

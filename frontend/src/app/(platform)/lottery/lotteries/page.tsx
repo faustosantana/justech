@@ -27,7 +27,6 @@ export default function LotteryCatalogPage() {
   const [page, setPage] = useState(1);
   const [q, setQ] = useState("");
   const [searchInput, setSearchInput] = useState("");
-  const [featuredOnly, setFeaturedOnly] = useState(false);
   const [favoritesOnly, setFavoritesOnly] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
@@ -49,7 +48,7 @@ export default function LotteryCatalogPage() {
     try {
       const res = await apiClient.getLotteryCatalog({
         q: q || undefined,
-        featured_only: featuredOnly || undefined,
+        featured_only: true,
         favorites_only: favoritesOnly || undefined,
         page,
         page_size: PAGE_SIZE,
@@ -61,7 +60,7 @@ export default function LotteryCatalogPage() {
     } finally {
       setLoading(false);
     }
-  }, [router, q, featuredOnly, favoritesOnly, page]);
+  }, [router, q, favoritesOnly, page]);
 
   useEffect(() => {
     void load();
@@ -87,11 +86,14 @@ export default function LotteryCatalogPage() {
   };
 
   return (
-    <AppShell title="Catálogo de loterías" description="Todas las loterías visibles autorizadas">
+    <AppShell
+      title="Catálogo de loterías"
+      description="Solo las siete loterías activas del producto. El resto está en Archivo histórico."
+    >
       <form onSubmit={submitSearch} className="mb-3 flex flex-wrap gap-2">
         <Input
           aria-label="Buscar lotería"
-          placeholder="Buscar por nombre…"
+          placeholder="Buscar entre las siete activas…"
           value={searchInput}
           onChange={(e) => setSearchInput(e.target.value)}
           className="max-w-xs"
@@ -100,17 +102,6 @@ export default function LotteryCatalogPage() {
           <Search className="mr-1.5 h-3.5 w-3.5" />
           Buscar
         </Button>
-        <label className="flex items-center gap-2 text-sm">
-          <input
-            type="checkbox"
-            checked={featuredOnly}
-            onChange={(e) => {
-              setFeaturedOnly(e.target.checked);
-              setPage(1);
-            }}
-          />
-          Destacadas
-        </label>
         <label className="flex items-center gap-2 text-sm">
           <input
             type="checkbox"
@@ -128,7 +119,9 @@ export default function LotteryCatalogPage() {
       </form>
 
       <p className="mb-3 text-sm text-muted-foreground">
-        {loading ? "Cargando…" : `${total.toLocaleString()} lotería(s) · página ${page} de ${totalPages}`}
+        {loading
+          ? "Cargando…"
+          : `${total.toLocaleString()} lotería(s) activas · página ${page} de ${totalPages}`}
       </p>
 
       {error && <p className="mb-3 text-sm text-destructive">{error}</p>}

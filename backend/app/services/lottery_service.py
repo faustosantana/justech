@@ -87,6 +87,8 @@ class LotteryService:
         ai_only: bool = False,
         comparable_only: bool = False,
         include_aggregates: bool = False,
+        featured_only: bool = True,
+        include_archived: bool = False,
     ) -> LotteryListResponse:
         if not settings.lottery_module_enabled:
             return LotteryListResponse(
@@ -99,6 +101,11 @@ class LotteryService:
         filters = []
         if not include_aggregates:
             filters.append(LotteryLottery.is_aggregate.is_(False))
+        # J-10H: selectores ordinarios = solo destacadas (salvo include_archived admin).
+        if include_archived:
+            filters.append(LotteryLottery.is_featured.is_(False))
+        elif featured_only:
+            filters.append(LotteryLottery.is_featured.is_(True))
         if searchable_only:
             filters.append(LotteryLottery.is_searchable.is_(True))
         if visible_only:

@@ -95,6 +95,7 @@ export default function LotteryAdminLotteriesPage() {
       }
       const data = await apiClient.getLotteryAdminLotteries({
         q: search || undefined,
+        featured: true,
         limit: 200,
         offset: 0,
       });
@@ -164,11 +165,17 @@ export default function LotteryAdminLotteriesPage() {
   }
 
   return (
-    <AppShell title="Admin loterías" description="Centro de operaciones Lottery 3.0 — visibilidad, sync, ventanas">
-      <div className="mb-4">
+    <AppShell
+      title="Loterías activas (producto)"
+      description="Solo las siete destacadas. El inventario histórico no aparece aquí."
+    >
+      <div className="mb-4 flex flex-wrap gap-2">
         <Button asChild variant="outline" size="sm">
-          <Link href="/lottery/admin/lotteries/archivo-historico">Archivo histórico (fuera del universo activo)</Link>
+          <Link href="/lottery/admin/lotteries/archivo-historico">Archivo histórico</Link>
         </Button>
+        <p className="self-center text-xs text-muted-foreground">
+          Mostrando {rows.length} activas · archivo separado
+        </p>
       </div>
       <div className="mb-3 flex flex-wrap gap-2 text-sm">
         <Link href="/lottery" className="text-primary underline">

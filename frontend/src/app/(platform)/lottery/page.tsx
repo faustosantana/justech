@@ -1,94 +1,87 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
   Activity,
-  AlertTriangle,
-  BarChart3,
-  CheckCircle2,
-  Dices,
+  ArrowRight,
   MessageSquare,
   RefreshCw,
-  Star,
-  TrendingDown,
-  TrendingUp,
+  Search,
+  Sparkles,
 } from "lucide-react";
 
 import { AppShell } from "@/components/layout/app-shell";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { MetricCard } from "@/components/ui/metric-card";
-import { SectionCard } from "@/components/ui/section-card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { MetricCard } from "@/components/ui/metric-card";
 import { ApiError, apiClient } from "@/lib/api";
 import { getAccessToken, getUserRole } from "@/lib/auth";
 import {
+  canAccessLotteryAdmin,
   canAccessLotteryModule,
   healthStatusLabel,
   type LotteryCatalogCard,
   type LotteryDashboardV3,
 } from "@/lib/lottery";
 
-function formatDateTime(value?: string | null): string {
+function formatDate(value?: string | null): string {
   if (!value) return "—";
   try {
-    return new Date(value).toLocaleString("es-DO", {
-      dateStyle: "medium",
-      timeStyle: "short",
-    });
+    return new Date(value).toLocaleDateString("es-DO", { dateStyle: "medium" });
   } catch {
     return value;
   }
 }
 
-function CatalogMiniCard({ card }: { card: LotteryCatalogCard }) {
-  return (
-    <Link
-      href={`/lottery/lotteries/${card.slug}`}
-      className="block rounded-xl border border-border/60 bg-card/80 p-3 transition hover:border-primary/30 hover:shadow-sm"
-    >
-      <div className="flex items-start justify-between gap-2">
-        <p className="font-medium leading-tight">{card.commercial_name || card.name}</p>
-        {card.is_favorite && <Star className="h-3.5 w-3.5 shrink-0 fill-amber-400 text-amber-500" />}
-      </div>
-      <p className="mt-1 text-xs text-muted-foreground">
-        {card.last_draw_date || "Sin fecha"} · {card.draw_count.toLocaleString()} sorteos
-      </p>
-      {card.last_numbers.length > 0 && (
-        <p className="mt-2 font-mono text-sm tracking-wide">{card.last_numbers.join(" · ")}</p>
-      )}
-      <div className="mt-2">
-        <Badge
-          variant={
-            card.health_status === "healthy"
-              ? "success"
-              : card.health_status === "error"
-                ? "danger"
-                : "muted"
-          }
-        >
-          {healthStatusLabel(card.health_status)}
-        </Badge>
-      </div>
-    </Link>
-  );
+function expedienteHref(number: string, lotteryIds: string[]) {
+  const n = String(number).replace(/\D/g, "");
+  if (!n) return "/lottery/admin/control-center/motor/historial-numero";
+  const params = new URLSearchParams({ number: n, auto: "1", featured: "1" });
+  if (lotteryIds.length) params.set("lottery_ids", lotteryIds.join(","));
+  return `/lottery/admin/control-center/motor/historial-numero?${params.toString()}`;
 }
 
-function DashboardSkeleton() {
+function ActiveLotteryCard({
+  card,
+  lotteryIds,
+}: {
+  card: LotteryCatalogCard;
+  lotteryIds: string[];
+}) {
   return (
-    <div className="space-y-4 animate-pulse" role="status" aria-label="Cargando dashboard">
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5">
-        {Array.from({ length: 8 }).map((_, i) => (
-          <div key={i} className="h-24 rounded-xl bg-muted/60" />
-        ))}
-      </div>
-      <div className="grid gap-4 lg:grid-cols-2">
-        <div className="h-48 rounded-xl bg-muted/60" />
-        <div className="h-48 rounded-xl bg-muted/60" />
-      </div>
-    </div>
+    <Card className="border-primary/20 bg-gradient-to-b from-primary/5 to-transparent">
+      <CardHeader className="pb-2">
+        <CardTitle className="flex items-start justify-between gap-2 text-base">
+          <span>{card.commercial_name || card.name}</span>
+          <Badge variant={card.is_sync_enabled ? "success" : "muted"}>
+            {card.is_sync_enabled ? "Sync auto" : "Análisis"}
+          </Badge>
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-3 text-sm">
+        <p className="text-muted-foreground">
+          Último sorteo: <span className="text-foreground">{formatDate(card.last_draw_date)}</span>
+        </p>
+        {card.last_numbers.length > 0 ? (
+          <p className="font-mono text-lg tracking-wide">{card.last_numbers.join(" · ")}</p>
+        ) : (
+          <p className="text-muted-foreground">Sin resultado reciente</p>
+        )}
+        <p className="text-xs text-muted-foreground">
+          {card.draw_count.toLocaleString()} sorteos · {healthStatusLabel(card.health_status)}
+        </p>
+        <Button asChild size="sm" className="w-full">
+          <Link href={expedienteHref(card.last_numbers[0] || "50", lotteryIds)}>
+            Abrir expediente
+            <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
+          </Link>
+        </Button>
+      </CardContent>
+    </Card>
   );
 }
 
@@ -97,6 +90,8 @@ export default function LotteryPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [dash, setDash] = useState<LotteryDashboardV3 | null>(null);
+  const [quickNumber, setQuickNumber] = useState("");
+  const [isAdmin, setIsAdmin] = useState(false);
 
   const load = useCallback(async () => {
     if (!getAccessToken()) {
@@ -104,17 +99,19 @@ export default function LotteryPage() {
       return;
     }
     if (!canAccessLotteryModule(getUserRole())) {
-      setError("Sin permiso lottery.access");
+      setError("Sin permiso para el módulo de loterías");
       setLoading(false);
       return;
     }
     setLoading(true);
     setError(null);
     try {
+      const access = await apiClient.getPlatformAccess().catch(() => null);
+      setIsAdmin(canAccessLotteryAdmin(getUserRole(), access?.permissions ?? []));
       const data = await apiClient.getLotteryDashboardV3();
       setDash(data);
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : "No se pudo cargar el dashboard");
+      setError(err instanceof ApiError ? err.message : "No se pudo cargar el centro de inteligencia");
     } finally {
       setLoading(false);
     }
@@ -122,372 +119,204 @@ export default function LotteryPage() {
 
   useEffect(() => {
     void load();
-    const id = window.setInterval(() => void load(), 60_000);
-    return () => window.clearInterval(id);
+    const t = window.setInterval(() => void load(), 60_000);
+    return () => window.clearInterval(t);
   }, [load]);
 
-  const coverage = dash?.coverage ?? {};
-  const syncSummary = dash?.sync_summary ?? {};
+  const seven = useMemo(() => dash?.featured ?? [], [dash]);
+  const lotteryIds = useMemo(() => seven.map((c) => c.id), [seven]);
+
+  const openQuick = () => {
+    const n = quickNumber.replace(/\D/g, "");
+    if (!n) return;
+    router.push(expedienteHref(n, lotteryIds));
+  };
 
   return (
     <AppShell
-      title="Resultados de Loterías"
-      description="Centro de operaciones — Lottery 3.0"
+      title="Centro de Inteligencia de Loterías"
+      description="Análisis basado exclusivamente en las siete loterías activas."
     >
-      <div className="mb-4 flex flex-wrap items-center gap-2">
-        <Button asChild variant="outline" size="sm">
-          <Link href="/lottery/search">Consultar</Link>
-        </Button>
-        <Button asChild variant="outline" size="sm">
-          <Link href="/lottery/lotteries">Catálogo</Link>
-        </Button>
-        <Button asChild variant="outline" size="sm">
-          <Link href="/lottery/statistics">Estadísticas</Link>
-        </Button>
-        <Button variant="ghost" size="sm" onClick={() => void load()} disabled={loading}>
-          <RefreshCw className={`mr-1.5 h-3.5 w-3.5 ${loading ? "animate-spin" : ""}`} />
-          Actualizar
-        </Button>
+      <div className="mb-6 rounded-2xl border border-primary/25 bg-gradient-to-br from-primary/10 via-background to-background p-5 md:p-7">
+        <div className="flex flex-wrap items-start justify-between gap-3">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">JAIOS · Lottery</p>
+            <h1 className="mt-1 text-2xl font-semibold tracking-tight md:text-3xl">
+              Centro de Inteligencia de Loterías
+            </h1>
+            <p className="mt-2 max-w-2xl text-sm text-muted-foreground md:text-base">
+              Análisis basado exclusivamente en las siete loterías activas. El inventario histórico
+              permanece archivado y no forma parte de esta experiencia.
+            </p>
+          </div>
+          <Button variant="outline" size="sm" onClick={() => void load()} disabled={loading}>
+            <RefreshCw className={`mr-1.5 h-3.5 w-3.5 ${loading ? "animate-spin" : ""}`} />
+            Actualizar
+          </Button>
+        </div>
       </div>
 
-      {loading && <DashboardSkeleton />}
+      {error ? <p className="mb-4 text-sm text-destructive">{error}</p> : null}
 
-      {error && (
-        <Card className="border-destructive/40">
-          <CardContent className="flex flex-wrap items-center justify-between gap-3 py-4">
-            <p className="text-sm text-destructive">{error}</p>
-            <Button size="sm" variant="outline" onClick={() => void load()}>
-              Reintentar
+      {dash ? (
+        <div className="mb-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          <MetricCard label="Loterías activas" value={String(dash.lotteries_active)} tone="primary" />
+          <MetricCard label="Visibles" value={String(dash.lotteries_visible)} tone="primary" />
+          <MetricCard label="Esperados hoy" value={String(dash.expected_today ?? 0)} tone="muted" />
+          <MetricCard label="Pendientes visibles" value={String(dash.pending_visible ?? 0)} tone="muted" />
+          <MetricCard label="Con sync auto" value={String(dash.lotteries_synced)} tone="muted" />
+          <MetricCard label="Resultados hoy" value={String(dash.results_today)} tone="muted" />
+          <MetricCard label="Pendientes sync" value={String(dash.pending_sync_enabled ?? 0)} tone="muted" />
+          <MetricCard label="Fuentes saludables" value={String(dash.sources_healthy)} tone="muted" />
+        </div>
+      ) : null}
+
+      {/* BLOQUE 1 — Siete loterías */}
+      <section className="mb-8">
+        <div className="mb-3 flex items-end justify-between gap-2">
+          <div>
+            <h2 className="text-lg font-semibold">Las siete loterías activas</h2>
+            <p className="text-sm text-muted-foreground">Universo exclusivo de análisis y experiencia.</p>
+          </div>
+          <Button asChild variant="outline" size="sm">
+            <Link href="/lottery/lotteries">Ver catálogo</Link>
+          </Button>
+        </div>
+        {loading && !dash ? (
+          <p className="text-sm text-muted-foreground">Cargando…</p>
+        ) : (
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {seven.map((card) => (
+              <ActiveLotteryCard key={card.id} card={card} lotteryIds={lotteryIds} />
+            ))}
+          </div>
+        )}
+        {!loading && seven.length !== 7 ? (
+          <p className="mt-2 text-sm text-amber-700 dark:text-amber-300">
+            Se esperaban 7 loterías destacadas; hay {seven.length}. Revise Administración → Loterías.
+          </p>
+        ) : null}
+      </section>
+
+      {/* BLOQUE 2 — Señales */}
+      <section className="mb-8">
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-base">
+              <Sparkles className="h-4 w-4 text-primary" />
+              Señales actuales
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="flex flex-wrap gap-2">
+            <Button asChild>
+              <Link href="/lottery/admin/control-center/motor/historial-numero">Explorar señales</Link>
+            </Button>
+            <Button asChild variant="outline">
+              <Link href="/lottery/admin/control-center/motor/comparador">Comparador</Link>
+            </Button>
+            <p className="w-full text-sm text-muted-foreground">
+              Las señales se calculan únicamente sobre las siete loterías activas.
+            </p>
+          </CardContent>
+        </Card>
+      </section>
+
+      {/* BLOQUE 3 — Análisis rápido */}
+      <section className="mb-8">
+        <Card className="border-primary/30">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-base">
+              <Search className="h-4 w-4" />
+              Análisis rápido de número
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="flex flex-wrap items-end gap-2">
+            <div className="space-y-1">
+              <label className="text-xs text-muted-foreground" htmlFor="quick-n">
+                Número (1–100)
+              </label>
+              <Input
+                id="quick-n"
+                inputMode="numeric"
+                placeholder="ej. 50"
+                value={quickNumber}
+                onChange={(e) => setQuickNumber(e.target.value)}
+                className="w-32"
+              />
+            </div>
+            <Button onClick={openQuick}>Abrir expediente</Button>
+          </CardContent>
+        </Card>
+      </section>
+
+      {/* BLOQUE 4 — Actividad reciente */}
+      <section className="mb-8">
+        <h2 className="mb-3 text-lg font-semibold">Actividad y resultados recientes</h2>
+        <div className="grid gap-2">
+          {(dash?.latest_results || []).slice(0, 7).map((row, idx) => (
+            <div
+              key={`${row.slug}-${idx}`}
+              className="flex flex-wrap items-center justify-between gap-2 rounded-lg border px-3 py-2 text-sm"
+            >
+              <div>
+                <span className="font-medium">{row.lottery}</span>
+                <span className="ml-2 text-muted-foreground">{row.date || "—"}</span>
+              </div>
+              <span className="font-mono">{(row.numbers || []).join(" · ") || "—"}</span>
+            </div>
+          ))}
+          {!loading && !(dash?.latest_results || []).length ? (
+            <p className="text-sm text-muted-foreground">Sin resultados recientes de las siete activas.</p>
+          ) : null}
+        </div>
+      </section>
+
+      {/* BLOQUE 5 — Copiloto */}
+      <section className="mb-8">
+        <Card>
+          <CardContent className="flex flex-wrap items-center justify-between gap-3 pt-6">
+            <div>
+              <p className="font-medium">Copiloto de Lotería IA</p>
+              <p className="text-sm text-muted-foreground">
+                Pregunte sobre números y relaciones dentro del universo de siete loterías.
+              </p>
+            </div>
+            <Button asChild>
+              <Link href="/lottery/chat">
+                <MessageSquare className="mr-1.5 h-4 w-4" />
+                Abrir copiloto
+              </Link>
             </Button>
           </CardContent>
         </Card>
-      )}
+      </section>
 
-      {!loading && dash && (
-        <div className="space-y-6">
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5">
-            <MetricCard label="Loterías activas" value={dash.lotteries_active.toLocaleString()} tone="primary" href="/lottery/lotteries" />
-            <MetricCard label="Visibles" value={dash.lotteries_visible.toLocaleString()} tone="muted" href="/lottery/lotteries" />
-            <MetricCard label="Con sync" value={dash.lotteries_synced.toLocaleString()} tone="primary" />
-            <MetricCard label="Resultados hoy" value={dash.results_today.toLocaleString()} tone="success" />
-            <MetricCard label="Esperados hoy (visibles)" value={(dash.expected_today ?? 0).toLocaleString()} tone="muted" />
-            <MetricCard
-              label="Pendientes sync"
-              value={(dash.pending_sync_enabled ?? dash.pending_results ?? 0).toLocaleString()}
-              tone="warning"
-              delta="solo sync_enabled"
-            />
-            <MetricCard
-              label="Pendientes visibles"
-              value={(dash.pending_visible ?? 0).toLocaleString()}
-              tone="warning"
-              delta="incluye sin sync"
-            />
-          </div>
-
-          <Card className="border-amber-500/30 bg-amber-500/5">
-            <CardContent className="space-y-1 py-3 text-sm text-muted-foreground">
-              <p className="font-medium text-foreground">Cómo leer Resultados hoy</p>
-              <p>
-                {dash.results_today_note ||
-                  "Resultados hoy usa la fecha local America/Santo_Domingo. Esperados cuenta loterías visibles; pendientes sync solo las 3 con sincronización automática."}
+      {isAdmin ? (
+        <section className="rounded-xl border border-dashed p-4">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <div>
+              <p className="flex items-center gap-2 text-sm font-medium">
+                <Activity className="h-4 w-4" />
+                Administración / Estado del sistema
               </p>
-              <p className="text-amber-900 dark:text-amber-200">
-                Solo 3 loterías tienen sincronización automática activa (Leidsa, Loteka y Lotería Nacional).
+              <p className="text-xs text-muted-foreground">
+                Worker, sync, health, backup gate y archivo histórico (fuera de la experiencia ordinaria).
               </p>
-              {Array.isArray(dash.operational_alerts) && dash.operational_alerts.length > 0 && (
-                <ul className="mt-2 list-disc space-y-1 pl-5">
-                  {dash.operational_alerts.slice(0, 6).map((a, i) => (
-                    <li key={`${String(a.code)}-${i}`}>
-                      <span className="font-medium">{String(a.code)}</span>: {String(a.message)}
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </CardContent>
-          </Card>
-
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5">
-            <MetricCard label="Sorteos históricos" value={dash.draws_historical.toLocaleString()} tone="muted" />
-            <MetricCard label="Números almacenados" value={dash.numbers_stored.toLocaleString()} tone="muted" />
-            <MetricCard label="Última actualización" value={formatDateTime(dash.last_update_at)} tone="warning" />
-            <MetricCard label="Última sync" value={formatDateTime(dash.last_sync_at)} tone="muted" />
-            <MetricCard label="Próxima sync" value={formatDateTime(dash.next_sync_at)} tone="muted" />
-            <MetricCard
-              label="Worker"
-              value={dash.worker_status?.worker_owns_ticks ? "standalone" : "in-API"}
-              tone={dash.worker_status?.standalone_configured ? "success" : "warning"}
-              delta={String(dash.worker_status?.scheduler_mode || "")}
-            />
-            <MetricCard
-              label="Hoy local"
-              value={dash.local_today || "—"}
-              tone="muted"
-              delta={dash.timezone || "America/Santo_Domingo"}
-            />
-            <MetricCard
-              label="Fuentes saludables"
-              value={dash.sources_healthy.toLocaleString()}
-              tone="success"
-              delta={`${dash.sources_error} con error`}
-            />
-            <MetricCard
-              label="Fuentes con error"
-              value={dash.sources_error.toLocaleString()}
-              tone={dash.sources_error > 0 ? "danger" : "muted"}
-            />
-            <MetricCard
-              label="Backup gate"
-              value={dash.backup_gate?.ok ? "OK" : String(dash.backup_gate?.alert || "—")}
-              tone={dash.backup_gate?.ok ? "success" : "warning"}
-              delta={
-                dash.backup_gate?.age_hours != null
-                  ? `${Number(dash.backup_gate.age_hours).toFixed(1)}h / ${dash.backup_gate.max_age_hours}h`
-                  : undefined
-              }
-            />
-          </div>
-
-          <div className="grid gap-4 lg:grid-cols-3">
-            <div className="lg:col-span-2 space-y-4">
-              <SectionCard title="Últimos resultados" description="Sorteos más recientes por lotería visible" href="/lottery/lotteries" actionLabel="Ver catálogo">
-                {dash.latest_results.length === 0 ? (
-                  <p className="text-sm text-muted-foreground">No hay resultados recientes.</p>
-                ) : (
-                  <div className="grid gap-2 sm:grid-cols-2">
-                    {dash.latest_results.map((item) => (
-                      <Link
-                        key={`${item.slug}-${item.date}`}
-                        href={`/lottery/lotteries/${item.slug}`}
-                        className="rounded-xl border border-border/60 p-3 transition hover:border-primary/30"
-                      >
-                        <p className="font-medium">{item.lottery}</p>
-                        <p className="text-xs text-muted-foreground">{item.date || "—"}</p>
-                        {item.numbers.length > 0 && (
-                          <p className="mt-2 font-mono text-sm">{item.numbers.join(" · ")}</p>
-                        )}
-                      </Link>
-                    ))}
-                  </div>
-                )}
-              </SectionCard>
-
-              <SectionCard
-                title="Operación de sync"
-                description="Ventanas inteligentes y corridas recientes (auto-refresh 60s)"
-              >
-                <div className="space-y-3 text-sm">
-                  <div>
-                    <p className="mb-1 font-medium">Próximas ventanas</p>
-                    {(dash.next_sync_windows ?? []).length === 0 ? (
-                      <p className="text-muted-foreground">Sin loterías sync en ventana activa.</p>
-                    ) : (
-                      <ul className="space-y-1 text-xs">
-                        {(dash.next_sync_windows ?? []).slice(0, 8).map((w, i) => (
-                          <li key={i} className="rounded border border-border/50 px-2 py-1 font-mono">
-                            src:{String(w.source_id)} · {String(w.phase)} · cada {String(w.interval_minutes)}m ·{" "}
-                            {String(w.reason)}
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                  </div>
-                  <div>
-                    <p className="mb-1 font-medium">Últimas sincronizaciones</p>
-                    {(dash.recent_sync_runs ?? []).length === 0 ? (
-                      <p className="text-muted-foreground">Sin corridas recientes.</p>
-                    ) : (
-                      <ul className="space-y-1 text-xs">
-                        {(dash.recent_sync_runs ?? []).slice(0, 5).map((r) => (
-                          <li key={String(r.id)} className="rounded border border-border/50 px-2 py-1">
-                            {String(r.started_at || "").slice(0, 19)} · {String(r.status)} ·{" "}
-                            {r.dry_run ? "dry-run" : "write"} · new={String(r.records_new)} ins=
-                            {String(r.records_inserted)} err={String(r.errors)}
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                  </div>
-                  {(dash.circuit_breakers ?? []).length > 0 && (
-                    <div>
-                      <p className="mb-1 font-medium">Circuit breakers</p>
-                      <ul className="space-y-1 text-xs">
-                        {(dash.circuit_breakers ?? []).map((c, i) => (
-                          <li key={i}>
-                            {String(c.scope)}: {String(c.state)} {c.reason ? `(${String(c.reason)})` : ""}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-                </div>
-              </SectionCard>
-
-              <div className="grid gap-4 md:grid-cols-2">
-                <SectionCard title="Destacadas" href="/lottery/lotteries" actionLabel="Catálogo">
-                  {dash.featured.length === 0 ? (
-                    <p className="text-sm text-muted-foreground">Sin loterías destacadas.</p>
-                  ) : (
-                    <div className="grid gap-2">
-                      {dash.featured.map((c) => (
-                        <CatalogMiniCard key={c.id} card={c} />
-                      ))}
-                    </div>
-                  )}
-                </SectionCard>
-
-                <SectionCard title="Favoritas" href="/lottery/favorites" actionLabel="Ver todas">
-                  {dash.favorites.length === 0 ? (
-                    <p className="text-sm text-muted-foreground">
-                      Marca favoritas desde el{" "}
-                      <Link href="/lottery/lotteries" className="text-primary underline">
-                        catálogo
-                      </Link>
-                      .
-                    </p>
-                  ) : (
-                    <div className="grid gap-2">
-                      {dash.favorites.map((c) => (
-                        <CatalogMiniCard key={c.id} card={c} />
-                      ))}
-                    </div>
-                  )}
-                </SectionCard>
-              </div>
             </div>
-
-            <div className="space-y-4">
-              <SectionCard title="Lotería IA" description="Consultas en lenguaje natural">
-                <Button asChild className="w-full">
-                  <Link href="/lottery/chat">
-                    <MessageSquare className="mr-2 h-4 w-4" />
-                    Abrir chat
-                  </Link>
-                </Button>
-              </SectionCard>
-
-              <SectionCard title="Números más frecuentes" description="Histórico global">
-                {dash.top_numbers.length === 0 ? (
-                  <p className="text-sm text-muted-foreground">Sin datos de frecuencia.</p>
-                ) : (
-                  <ul className="space-y-1 text-sm">
-                    {dash.top_numbers.map((n) => (
-                      <li key={n.number} className="flex items-center justify-between gap-2">
-                        <span className="flex items-center gap-1.5 font-mono font-semibold">
-                          <TrendingUp className="h-3.5 w-3.5 text-emerald-600" />
-                          {n.number}
-                        </span>
-                        <span className="text-muted-foreground">{n.count.toLocaleString()}</span>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </SectionCard>
-
-              <SectionCard title="Números menos frecuentes" description="Histórico global">
-                {dash.bottom_numbers.length === 0 ? (
-                  <p className="text-sm text-muted-foreground">Sin datos de frecuencia.</p>
-                ) : (
-                  <ul className="space-y-1 text-sm">
-                    {dash.bottom_numbers.map((n) => (
-                      <li key={n.number} className="flex items-center justify-between gap-2">
-                        <span className="flex items-center gap-1.5 font-mono font-semibold">
-                          <TrendingDown className="h-3.5 w-3.5 text-amber-600" />
-                          {n.number}
-                        </span>
-                        <span className="text-muted-foreground">{n.count.toLocaleString()}</span>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </SectionCard>
+            <div className="flex flex-wrap gap-2">
+              <Button asChild size="sm" variant="outline">
+                <Link href="/lottery/admin/sync">Sync / worker</Link>
+              </Button>
+              <Button asChild size="sm" variant="outline">
+                <Link href="/lottery/admin/lotteries">Loterías activas</Link>
+              </Button>
+              <Button asChild size="sm" variant="outline">
+                <Link href="/lottery/admin/lotteries/archivo-historico">Archivo histórico</Link>
+              </Button>
             </div>
           </div>
-
-          <div className="grid gap-4 md:grid-cols-2">
-            <SectionCard title="Resumen de sincronización" description="Estado operativo de fuentes">
-              <dl className="grid gap-2 text-sm">
-                {"sync_enabled_global" in syncSummary && (
-                  <div className="flex justify-between gap-2">
-                    <dt className="text-muted-foreground">Sync global</dt>
-                    <dd>{String(syncSummary.sync_enabled_global)}</dd>
-                  </div>
-                )}
-                {"lotteries_sync_enabled" in syncSummary && (
-                  <div className="flex justify-between gap-2">
-                    <dt className="text-muted-foreground">Loterías con sync</dt>
-                    <dd>{String(syncSummary.lotteries_sync_enabled)}</dd>
-                  </div>
-                )}
-                {"lotteries_auto_write_enabled" in syncSummary && (
-                  <div className="flex justify-between gap-2">
-                    <dt className="text-muted-foreground">Auto-escritura</dt>
-                    <dd>{String(syncSummary.lotteries_auto_write_enabled)}</dd>
-                  </div>
-                )}
-              </dl>
-            </SectionCard>
-
-            <SectionCard title="Cobertura histórica" description="Rango de datos importados">
-              <dl className="grid gap-2 text-sm">
-                {"first_draw_date" in coverage && (
-                  <div className="flex justify-between gap-2">
-                    <dt className="text-muted-foreground">Primer sorteo</dt>
-                    <dd>{String(coverage.first_draw_date ?? "—")}</dd>
-                  </div>
-                )}
-                {"last_draw_date" in coverage && (
-                  <div className="flex justify-between gap-2">
-                    <dt className="text-muted-foreground">Último sorteo</dt>
-                    <dd>{String(coverage.last_draw_date ?? "—")}</dd>
-                  </div>
-                )}
-                {"lotteries_total" in coverage && (
-                  <div className="flex justify-between gap-2">
-                    <dt className="text-muted-foreground">Loterías totales</dt>
-                    <dd>{String(coverage.lotteries_total)}</dd>
-                  </div>
-                )}
-              </dl>
-              <div className="mt-3 flex flex-wrap gap-2 text-xs text-muted-foreground">
-                <span className="inline-flex items-center gap-1">
-                  <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" />
-                  {dash.sources_healthy} saludables
-                </span>
-                <span className="inline-flex items-center gap-1">
-                  <AlertTriangle className="h-3.5 w-3.5 text-destructive" />
-                  {dash.sources_error} con error
-                </span>
-                <span className="inline-flex items-center gap-1">
-                  <Activity className="h-3.5 w-3.5" />
-                  <BarChart3 className="h-3.5 w-3.5" />
-                  {dash.draws_historical.toLocaleString()} sorteos
-                </span>
-              </div>
-            </SectionCard>
-          </div>
-
-          {dash.recent_queries.length > 0 && (
-            <SectionCard title="Consultas recientes">
-              <ul className="space-y-2 text-sm">
-                {dash.recent_queries.map((q, idx) => (
-                  <li key={String(q.id ?? idx)} className="rounded-lg border border-border/50 px-3 py-2">
-                    <p className="font-medium">{String(q.title ?? q.query_type ?? "Consulta")}</p>
-                    {q.query_type != null && (
-                      <p className="text-xs text-muted-foreground">{String(q.query_type)}</p>
-                    )}
-                  </li>
-                ))}
-              </ul>
-            </SectionCard>
-          )}
-
-          <div className="rounded-xl border border-amber-500/30 bg-amber-500/5 px-4 py-3 text-xs text-muted-foreground">
-            <Dices className="mb-1 inline h-3.5 w-3.5 text-amber-700" />{" "}
-            {dash.disclaimer}
-          </div>
-        </div>
-      )}
+        </section>
+      ) : null}
     </AppShell>
   );
 }

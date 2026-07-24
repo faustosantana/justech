@@ -127,7 +127,17 @@ async def list_lotteries(
     ai_only: bool = False,
     comparable_only: bool = False,
     include_aggregates: bool = False,
+    featured_only: bool = True,
+    include_archived: bool = False,
 ) -> LotteryListResponse:
+    # J-10H: por defecto solo destacadas; include_archived exige admin.
+    if include_archived:
+        role = get_current_role()
+        if not user.is_superadmin and not (
+            role_has_permission(role, "lottery.admin")
+            or role_has_permission(role, "lottery_admin_lotteries")
+        ):
+            raise forbidden("Archivo histórico requiere lottery.admin")
     return await LotteryService(db).list_lotteries(
         limit=limit,
         offset=offset,
@@ -136,6 +146,8 @@ async def list_lotteries(
         ai_only=ai_only,
         comparable_only=comparable_only,
         include_aggregates=include_aggregates,
+        featured_only=featured_only,
+        include_archived=include_archived,
     )
 
 
@@ -891,14 +903,22 @@ async def lottery_catalog(
     _: Annotated[None, require_lottery_permission("lottery.access", "lottery.search", "lottery_view")],
     q: str | None = None,
     country: str | None = None,
-    featured_only: bool = False,
+    featured_only: bool = True,
     favorites_only: bool = False,
+    include_archived: bool = False,
     page: Annotated[int, Query(ge=1)] = 1,
     page_size: Annotated[int, Query(ge=1, le=500)] = 50,
 ) -> LotteryCatalogResponse:
     ctx = require_tenant_context()
     if not ctx.tenant_id:
         raise forbidden("Tenant requerido")
+    if include_archived:
+        role = get_current_role()
+        if not user.is_superadmin and not (
+            role_has_permission(role, "lottery.admin")
+            or role_has_permission(role, "lottery_admin_lotteries")
+        ):
+            raise forbidden("Archivo histórico requiere lottery.admin")
     return await LotteryAdminService(db).list_catalog(
         tenant_id=ctx.tenant_id,
         user_id=user.id,
@@ -906,6 +926,7 @@ async def lottery_catalog(
         country=country,
         featured_only=featured_only,
         favorites_only=favorites_only,
+        include_archived=include_archived,
         page=page,
         page_size=page_size,
     )
@@ -920,11 +941,19 @@ async def admin_list_lotteries(
     active: bool | None = None,
     visible: bool | None = None,
     sync_enabled: bool | None = None,
+    featured: bool | None = True,
     limit: Annotated[int, Query(ge=1, le=200)] = 100,
     offset: Annotated[int, Query(ge=0)] = 0,
 ) -> list[LotteryAdminLotteryResponse]:
+    """Por defecto solo destacadas. featured=false → archivadas; omitir con cuidado (None=todas)."""
     rows, _total = await LotteryAdminService(db).list_admin(
-        q=q, active=active, visible=visible, sync_enabled=sync_enabled, limit=limit, offset=offset
+        q=q,
+        active=active,
+        visible=visible,
+        sync_enabled=sync_enabled,
+        featured=featured,
+        limit=limit,
+        offset=offset,
     )
     return [to_admin_response(r) for r in rows]
 

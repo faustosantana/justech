@@ -7,14 +7,21 @@ import { useRouter } from "next/navigation";
 import { AppShell } from "@/components/layout/app-shell";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { ApiError, apiClient } from "@/lib/api";
 import { getAccessToken, getUserRole } from "@/lib/auth";
-import { canAccessLotteryAdmin } from "@/lib/lottery";
-import { fetchArchivedLotteries, type ActiveLotteryItem } from "@/components/lottery/control-center/active-lotteries";
+import { canAccessLotteryAdmin, type LotteryAdminLottery } from "@/lib/lottery";
 
 export default function ArchivoHistoricoLotteriesPage() {
   const router = useRouter();
-  const [items, setItems] = useState<ActiveLotteryItem[]>([]);
+  const [items, setItems] = useState<LotteryAdminLottery[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -32,7 +39,12 @@ export default function ArchivoHistoricoLotteriesPage() {
           setLoading(false);
           return;
         }
-        setItems(await fetchArchivedLotteries());
+        const rows = await apiClient.getLotteryAdminLotteries({
+          featured: false,
+          limit: 200,
+          offset: 0,
+        });
+        setItems(rows);
       } catch (err) {
         setError(err instanceof ApiError ? err.message : "No se pudo cargar el archivo histórico");
       } finally {
@@ -48,36 +60,47 @@ export default function ArchivoHistoricoLotteriesPage() {
     >
       <div className="mb-4 flex flex-wrap gap-2">
         <Button asChild variant="outline" size="sm">
-          <Link href="/lottery/admin/lotteries">Volver a loterías</Link>
+          <Link href="/lottery/admin/lotteries">Volver a loterías activas</Link>
         </Button>
       </div>
       <Card className="mb-4 border-amber-300 bg-amber-50 dark:bg-amber-950/30">
         <CardContent className="pt-6 text-sm">
-          Esta fuente se conserva únicamente como histórico y no participa en los análisis,
-          señales ni cálculos activos. Para incorporar una lotería al universo operativo, márquela
-          como destacada de forma deliberada en Administración → Loterías.
+          Esta lotería se conserva únicamente como histórico y no participa en la experiencia ni en
+          los análisis activos. No aparece en dashboard, catálogo, buscadores ni filtros ordinarios.
         </CardContent>
       </Card>
       {error ? <p className="text-sm text-destructive">{error}</p> : null}
       {loading ? <p className="text-sm text-muted-foreground">Cargando…</p> : null}
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">
-            Loterías archivadas ({items.length})
-          </CardTitle>
+          <CardTitle className="text-base">Loterías archivadas ({items.length})</CardTitle>
         </CardHeader>
-        <CardContent>
-          <ul className="space-y-2 text-sm">
-            {items.map((l) => (
-              <li key={l.id} className="rounded border p-2">
-                <div className="font-medium">{l.name}</div>
-                <div className="text-xs text-muted-foreground">Fuera del universo activo</div>
-              </li>
-            ))}
-            {!loading && !items.length ? (
-              <li className="text-muted-foreground">No hay loterías archivadas visibles.</li>
-            ) : null}
-          </ul>
+        <CardContent className="overflow-x-auto">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Nombre</TableHead>
+                <TableHead>ID</TableHead>
+                <TableHead>Estado</TableHead>
+                <TableHead>Sorteos</TableHead>
+                <TableHead>Último resultado</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {items.map((l) => (
+                <TableRow key={l.id}>
+                  <TableCell className="font-medium">{l.commercial_name || l.name}</TableCell>
+                  <TableCell className="font-mono text-xs">{l.id}</TableCell>
+                  <TableCell>Archivada</TableCell>
+                  <TableCell>{(l.draw_count ?? 0).toLocaleString()}</TableCell>
+                  <TableCell>{l.last_draw_date || "—"}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+          {!loading && !items.length ? (
+            <p className="mt-3 text-sm text-muted-foreground">No hay loterías archivadas.</p>
+          ) : null}
         </CardContent>
       </Card>
     </AppShell>

@@ -7,14 +7,17 @@ No duplica fórmulas ni scoring.
 from __future__ import annotations
 
 from typing import Annotated, Any
-from uuid import UUID
 
 from fastapi import APIRouter, Body, HTTPException, Query
-from sqlalchemy import select
 
 from app.api.deps import CurrentUser, DbSession, TenantCtx
 from app.api.v1.lottery_ai_admin import require_ai_admin
 
+from app.lottery.numeric_relations.active_scope import (
+    get_active_analysis_lotteries,
+    get_archived_analysis_lotteries,
+    resolve_active_scope_ids,
+)
 from app.lottery.numeric_relations.api_schemas import (
     AnalyzeBody,
     enrich_table_rows,
@@ -24,7 +27,6 @@ from app.lottery.numeric_relations.api_schemas import (
 from app.lottery.numeric_relations.catalog import build_catalog
 from app.lottery.numeric_relations.db_history import analyze_from_db
 from app.lottery.numeric_relations.service import NumericRelationsService
-from app.models.lottery import LotteryLottery
 
 router = APIRouter(
     prefix="/lottery/admin/numeric-relations",
@@ -48,6 +50,7 @@ async def numeric_relations_tables(
         "range": {"min": 1, "max": 100},
         "source": "NumericRelationsService/catalog",
         "tables_are_separate": True,
+        "ui_columns_product": ["number", "code", "companions", "companion_count", "analyze"],
     }
 
 
@@ -167,25 +170,36 @@ async def numeric_relations_lotteries(
     user: CurrentUser,
     _: TenantCtx,
     __: Annotated[None, require_ai_admin(*_PERMS)],
+    scope: str = Query(
+        "active",
+        pattern="^(active|archived)$",
+        description="active=is_featured (universo de producto); archived=histórico admin",
+    ),
 ) -> dict[str, Any]:
-    """Catálogo mínimo para el formulario de análisis (id/name/slug).
+    """Catálogo para formularios de análisis.
 
-    Evita depender del listado ORM completo / defaults de IA cuando el esquema
-    DEV aún no tiene todas las columnas 2.0/3.0.
+    Por defecto solo loterías activas (is_featured). Las archivadas requieren
+    scope=archived (zona administrativa; no entran en cálculos activos).
     """
-    rows = (
-        await db.execute(
-            select(LotteryLottery.id, LotteryLottery.name, LotteryLottery.slug)
-            .where(LotteryLottery.is_aggregate.is_(False))
-            .order_by(LotteryLottery.name.asc())
-            .limit(300)
+    if scope == "archived":
+        lots = await get_archived_analysis_lotteries(db)
+        label = "ARCHIVED"
+        note = (
+            "Esta fuente se conserva únicamente como histórico y no participa en los "
+            "análisis, señales ni cálculos activos."
         )
-    ).all()
-    items = [
-        {"id": str(UUID(str(r.id))), "name": r.name, "slug": r.slug}
-        for r in rows
-    ]
-    return {"items": items, "source": "lottery_numeric_relations.lotteries"}
+    else:
+        lots = await get_active_analysis_lotteries(db)
+        label = "ACTIVE"
+        note = "Análisis realizado con las loterías activas (destacadas) configuradas en el sistema."
+    items = [{"id": x.id, "name": x.name, "slug": x.slug, "analysis_scope": label} for x in lots]
+    return {
+        "items": items,
+        "count": len(items),
+        "analysis_scope": label,
+        "user_note": note,
+        "source": "lottery_numeric_relations.lotteries.active_scope",
+    }
 
 
 @router.post("/analyze")
@@ -198,11 +212,14 @@ async def numeric_relations_analyze(
 ) -> dict[str, Any]:
     """Análisis histórico — una sola implementación del motor."""
     try:
+        accepted, _active_used, scope_meta = await resolve_active_scope_ids(
+            db, list(body.lottery_ids), require_non_empty=True
+        )
         limit = limit_from_body(body)
         result = await analyze_from_db(
             db,
             observed_number=body.observed_number,
-            lottery_ids=list(body.lottery_ids),
+            lottery_ids=accepted,
             limit=limit,
         )
         payload = result.to_dict()
@@ -233,6 +250,7 @@ async def numeric_relations_analyze(
             "occurrence_limit_explicit": limit.to_dict(),
             "tables_are_separate": True,
             **engine_meta,
+            **scope_meta,
         }
         return payload
     except ValueError as exc:

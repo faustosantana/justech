@@ -9,6 +9,10 @@ from fastapi import APIRouter, HTTPException
 
 from app.api.deps import CurrentUser, DbSession, TenantCtx
 from app.api.v1.lottery_ai_admin import require_ai_admin
+from app.lottery.numeric_relations.active_scope import (
+    get_active_lottery_id_set,
+    resolve_active_scope_ids,
+)
 from app.lottery.numeric_relations.historical.aggregates import HistoricalAggregatesService
 from app.lottery.numeric_relations.historical.api_schemas import (
     CompareBody,
@@ -39,11 +43,16 @@ router = APIRouter(
 _PERMS = ("lottery_admin_ai", "lottery.admin", "lottery_admin_tools")
 
 
-def _scope_from_body(body_scope, names: dict[str, str]) -> LotteryScope:
+def _scope_from_ids(
+    primary: list[str],
+    confirming: list[str],
+    follow_up: list[str],
+    names: dict[str, str],
+) -> LotteryScope:
     return LotteryScope(
-        primary_lottery_ids=tuple(str(x) for x in body_scope.primary_lottery_ids),
-        confirming_lottery_ids=tuple(str(x) for x in (body_scope.confirming_lottery_ids or [])),
-        follow_up_lottery_ids=tuple(str(x) for x in (body_scope.follow_up_lottery_ids or [])),
+        primary_lottery_ids=tuple(primary),
+        confirming_lottery_ids=tuple(confirming),
+        follow_up_lottery_ids=tuple(follow_up),
         lottery_names=names,
     )
 
@@ -61,20 +70,33 @@ def _window_from_body(w) -> ConfirmationWindowConfig:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
 
 
-def _all_lottery_ids(scope) -> list[str]:
-    ids = set()
-    for xs in (
-        scope.primary_lottery_ids,
-        scope.confirming_lottery_ids or [],
-        scope.follow_up_lottery_ids or [],
-    ):
-        for x in xs:
-            ids.add(str(x))
-    return sorted(ids)
+async def _clamp_scope_ids(db: DbSession, body_scope) -> tuple[list[str], list[str], list[str], dict]:
+    """Aplica universo activo (is_featured); ignora IDs no destacados."""
+    primary_req = [str(x) for x in body_scope.primary_lottery_ids]
+    confirming_req = [str(x) for x in (body_scope.confirming_lottery_ids or primary_req)]
+    follow_req = [str(x) for x in (body_scope.follow_up_lottery_ids or primary_req)]
+    primary, _active_used, meta = await resolve_active_scope_ids(
+        db, primary_req, require_non_empty=True
+    )
+    all_active_ids = await get_active_lottery_id_set(db)
+    confirming = [x for x in confirming_req if x in all_active_ids] or list(primary)
+    follow_up = [x for x in follow_req if x in all_active_ids] or list(primary)
+    rejected = set(meta.get("ignored_non_active_lottery_ids") or [])
+    for raw in confirming_req + follow_req:
+        if raw not in all_active_ids:
+            rejected.add(raw)
+    meta["ignored_non_active_lottery_ids"] = sorted(rejected)
+    meta["ignored_non_active_count"] = len(rejected)
+    meta["methodology_version"] = METHODOLOGY_VERSION
+    return primary, confirming, follow_up, meta
 
 
 async def _prepare(db: DbSession, body: HistoricalSearchBody | PatternDetailBody | CompareBody):
-    lids = _all_lottery_ids(body.scope)
+    try:
+        primary, confirming, follow_up, scope_meta = await _clamp_scope_ids(db, body.scope)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    lids = sorted(set(primary) | set(confirming) | set(follow_up))
     try:
         universe, names = await load_universe_from_db(
             db,
@@ -84,9 +106,39 @@ async def _prepare(db: DbSession, body: HistoricalSearchBody | PatternDetailBody
         )
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
-    scope = _scope_from_body(body.scope, names)
+    scope = _scope_from_ids(primary, confirming, follow_up, names)
     window = _window_from_body(body.confirmation_window)
-    return universe, scope, window, names
+    return universe, scope, window, names, scope_meta
+
+
+async def _prepare_numbers(
+    db: DbSession, body: NumberProfileBody | NumbersCompareBody | WhyStrengthenedBody | NumberOccurrencesBody
+):
+    try:
+        primary, confirming, follow_up, scope_meta = await _clamp_scope_ids(db, body.scope)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    lids = sorted(set(primary) | set(confirming) | set(follow_up))
+    try:
+        universe, names = await load_universe_from_db(
+            db,
+            lottery_ids=lids,
+            date_from=getattr(body, "date_from", None),
+            date_to=getattr(body, "date_to", None),
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    scope = _scope_from_ids(primary, confirming, follow_up, names)
+    window = _window_from_body(body.confirmation_window)
+    return universe, scope, window, names, scope_meta
+
+
+def _with_scope_meta(out: dict[str, Any], scope_meta: dict[str, Any]) -> dict[str, Any]:
+    out = dict(out)
+    out["analysis_scope_meta"] = scope_meta
+    out.setdefault("analysis_scope", scope_meta.get("analysis_scope"))
+    out.setdefault("active_lottery_count", scope_meta.get("active_lottery_count"))
+    return out
 
 
 @router.post("/conditions/search")
@@ -98,7 +150,7 @@ async def search_conditions(
     __: Annotated[None, require_ai_admin(*_PERMS)],
 ) -> dict[str, Any]:
     """1. Buscar condiciones históricas (eventos atómicos + combinaciones + tasas)."""
-    universe, scope, window, _names = await _prepare(db, body)
+    universe, scope, window, _names, scope_meta = await _prepare(db, body)
     svc = HistoricalRelationsService(universe=universe)
     result = svc.search_conditions(
         observed_number=body.observed_number,
@@ -118,7 +170,7 @@ async def search_conditions(
         ]
         result["min_sample_filter"] = body.min_sample
     result["ai_conclusions"] = None  # never invent
-    return result
+    return _with_scope_meta(result, scope_meta)
 
 
 @router.post("/posterior/summary")
@@ -130,7 +182,7 @@ async def posterior_summary(
     __: Annotated[None, require_ai_admin(*_PERMS)],
 ) -> dict[str, Any]:
     """2. Resumen posterior / ciclos / tasas por horizonte."""
-    universe, scope, window, _ = await _prepare(db, body)
+    universe, scope, window, _, scope_meta = await _prepare(db, body)
     svc = HistoricalRelationsService(universe=universe)
     full = svc.search_conditions(
         observed_number=body.observed_number,
@@ -142,7 +194,7 @@ async def posterior_summary(
         confirmer=body.confirmer,
         max_horizon=body.max_horizon,
     )
-    return {
+    return _with_scope_meta({
         "methodology_version": METHODOLOGY_VERSION,
         "effective_parameters": full["effective_parameters"],
         "statistics": full["statistics"],
@@ -150,7 +202,9 @@ async def posterior_summary(
         "combination_event_count": full["combination_event_count"],
         "atomic_event_count": full["atomic_event_count"],
         "ai_conclusions": None,
-    }
+    },
+        scope_meta,
+    )
 
 
 @router.post("/combinations")
@@ -162,7 +216,7 @@ async def combinations(
     __: Annotated[None, require_ai_admin(*_PERMS)],
 ) -> dict[str, Any]:
     """3. Combinaciones N-C-{V} + pares/tríos."""
-    universe, scope, window, _ = await _prepare(db, body)
+    universe, scope, window, _, scope_meta = await _prepare(db, body)
     agg = HistoricalAggregatesService(universe=universe)
     out = agg.compute(
         observed_number=body.observed_number,
@@ -178,13 +232,15 @@ async def combinations(
     patterns = out["combination_patterns"]
     if body.min_sample is not None:
         patterns = [p for p in patterns if p["event_count"] >= int(body.min_sample)]
-    return {
+    return _with_scope_meta({
         "methodology_version": METHODOLOGY_VERSION,
         "effective_parameters": out["effective_parameters"],
         "combination_patterns": patterns,
         "totals": out["totals"],
         "ai_conclusions": None,
-    }
+    },
+        scope_meta,
+    )
 
 
 @router.post("/matrix")
@@ -196,7 +252,7 @@ async def matrix(
     __: Annotated[None, require_ai_admin(*_PERMS)],
 ) -> dict[str, Any]:
     """4. Matriz candidato × confirmador."""
-    universe, scope, window, _ = await _prepare(db, body)
+    universe, scope, window, _, scope_meta = await _prepare(db, body)
     agg = HistoricalAggregatesService(universe=universe)
     out = agg.compute(
         observed_number=body.observed_number,
@@ -208,12 +264,14 @@ async def matrix(
         confirmer=body.confirmer,
         max_horizon=body.max_horizon,
     )
-    return {
+    return _with_scope_meta({
         "methodology_version": METHODOLOGY_VERSION,
         "effective_parameters": out["effective_parameters"],
         "matrix": out["matrix"],
         "ai_conclusions": None,
-    }
+    },
+        scope_meta,
+    )
 
 
 @router.post("/patterns/detail")
@@ -225,7 +283,7 @@ async def pattern_detail(
     __: Annotated[None, require_ai_admin(*_PERMS)],
 ) -> dict[str, Any]:
     """5. Detalle de patrón atómico o combinación + evidencia."""
-    universe, scope, window, _ = await _prepare(db, body)
+    universe, scope, window, _, scope_meta = await _prepare(db, body)
     confirmer = body.confirmer
     if body.confirmers:
         # combination detail: filter candidate; match confirmers set
@@ -299,14 +357,16 @@ async def pattern_detail(
         confirmer=confirmer,
         max_horizon=body.max_horizon,
     )
-    return {
+    return _with_scope_meta({
         "methodology_version": METHODOLOGY_VERSION,
         "pattern_level": "atomic",
         "pattern": matches[0] if matches else None,
         "evidence": full["atomic_events"],
         "effective_parameters": out["effective_parameters"],
         "ai_conclusions": None,
-    }
+    },
+        scope_meta,
+    )
 
 
 @router.post("/evidence/by-draw")
@@ -318,7 +378,7 @@ async def evidence_by_draw(
     __: Annotated[None, require_ai_admin(*_PERMS)],
 ) -> dict[str, Any]:
     """6. Evidencia agrupada por draw_id ancla."""
-    universe, scope, window, _ = await _prepare(db, body)
+    universe, scope, window, _, scope_meta = await _prepare(db, body)
     svc = HistoricalRelationsService(universe=universe)
     full = svc.search_conditions(
         observed_number=body.observed_number,
@@ -345,12 +405,14 @@ async def evidence_by_draw(
             {"anchor": e["anchor"], "combinations": [], "atomics": []},
         )
         by_draw[did]["atomics"].append(e)
-    return {
+    return _with_scope_meta({
         "methodology_version": METHODOLOGY_VERSION,
         "effective_parameters": full["effective_parameters"],
         "by_draw_id": by_draw,
         "ai_conclusions": None,
-    }
+    },
+        scope_meta,
+    )
 
 
 @router.post("/cycles")
@@ -362,7 +424,7 @@ async def cycles(
     __: Annotated[None, require_ai_admin(*_PERMS)],
 ) -> dict[str, Any]:
     """7. Ciclos + censura."""
-    universe, scope, window, _ = await _prepare(db, body)
+    universe, scope, window, _, scope_meta = await _prepare(db, body)
     svc = HistoricalRelationsService(universe=universe)
     full = svc.search_conditions(
         observed_number=body.observed_number,
@@ -374,14 +436,16 @@ async def cycles(
         confirmer=body.confirmer,
         max_horizon=body.max_horizon,
     )
-    return {
+    return _with_scope_meta({
         "methodology_version": METHODOLOGY_VERSION,
         "effective_parameters": full["effective_parameters"],
         "cycles": full["statistics"]["cycles"],
         "response_rates": full["statistics"]["response_rates"],
         "terminology": full["statistics"]["terminology"],
         "ai_conclusions": None,
-    }
+    },
+        scope_meta,
+    )
 
 
 @router.post("/compare")
@@ -393,7 +457,7 @@ async def compare(
     __: Annotated[None, require_ai_admin(*_PERMS)],
 ) -> dict[str, Any]:
     """8–9. Comparar candidatos / confirmadores / combinaciones / loterías."""
-    universe, scope, window, _ = await _prepare(db, body)
+    universe, scope, window, _, scope_meta = await _prepare(db, body)
     agg = HistoricalAggregatesService(universe=universe)
     out = agg.compute(
         observed_number=body.observed_number,
@@ -417,7 +481,10 @@ async def compare(
                 }
             )
         items.sort(key=lambda x: -x["total_events"])
-        return {"methodology_version": METHODOLOGY_VERSION, "compare_mode": mode, "items": items, "ai_conclusions": None}
+        return _with_scope_meta(
+            {"methodology_version": METHODOLOGY_VERSION, "compare_mode": mode, "items": items, "ai_conclusions": None},
+            scope_meta,
+        )
 
     if mode == "confirmers":
         wanted = set(body.confirmers) or {p["confirmer"] for p in out["atomic_patterns"]}
@@ -432,15 +499,21 @@ async def compare(
                 }
             )
         items.sort(key=lambda x: -x["total_events"])
-        return {"methodology_version": METHODOLOGY_VERSION, "compare_mode": mode, "items": items, "ai_conclusions": None}
+        return _with_scope_meta(
+            {"methodology_version": METHODOLOGY_VERSION, "compare_mode": mode, "items": items, "ai_conclusions": None},
+            scope_meta,
+        )
 
     if mode == "combinations":
-        return {
-            "methodology_version": METHODOLOGY_VERSION,
-            "compare_mode": mode,
-            "items": out["combination_patterns"][:50],
-            "ai_conclusions": None,
-        }
+        return _with_scope_meta(
+            {
+                "methodology_version": METHODOLOGY_VERSION,
+                "compare_mode": mode,
+                "items": out["combination_patterns"][:50],
+                "ai_conclusions": None,
+            },
+            scope_meta,
+        )
 
     # lotteries
     by_lot: dict[str, int] = {}
@@ -448,7 +521,10 @@ async def compare(
         for lid, cnt in (p.get("by_primary_lottery") or {}).items():
             by_lot[lid] = by_lot.get(lid, 0) + int(cnt)
     items = [{"lottery_id": k, "event_count": v} for k, v in sorted(by_lot.items(), key=lambda x: -x[1])]
-    return {"methodology_version": METHODOLOGY_VERSION, "compare_mode": mode, "items": items, "ai_conclusions": None}
+    return _with_scope_meta(
+        {"methodology_version": METHODOLOGY_VERSION, "compare_mode": mode, "items": items, "ai_conclusions": None},
+        scope_meta,
+    )
 
 
 # --- J-9 Historial del Número ---
@@ -475,22 +551,6 @@ def _audit_nr_query(
     )
 
 
-async def _prepare_numbers(db: DbSession, body: NumberProfileBody | NumbersCompareBody | WhyStrengthenedBody):
-    lids = _all_lottery_ids(body.scope)
-    try:
-        universe, names = await load_universe_from_db(
-            db,
-            lottery_ids=lids,
-            date_from=getattr(body, "date_from", None),
-            date_to=getattr(body, "date_to", None),
-        )
-    except ValueError as exc:
-        raise HTTPException(status_code=400, detail=str(exc)) from exc
-    scope = _scope_from_body(body.scope, names)
-    window = _window_from_body(body.confirmation_window)
-    return universe, scope, window, names
-
-
 @router.post("/numbers/profile")
 async def number_profile(
     body: NumberProfileBody,
@@ -503,7 +563,7 @@ async def number_profile(
     import time as _time
 
     t0 = _time.perf_counter()
-    universe, scope, window, _ = await _prepare_numbers(db, body)
+    universe, scope, window, _, scope_meta = await _prepare_numbers(db, body)
     svc = NumberExplorerService(universe=universe)
     out = svc.profile(
         number=body.number,
@@ -525,7 +585,7 @@ async def number_profile(
         duration_ms=round((_time.perf_counter() - t0) * 1000, 1),
     )
     out["ai_conclusions"] = None
-    return out
+    return _with_scope_meta(out, scope_meta)
 
 
 @router.post("/numbers/occurrences")
@@ -540,7 +600,7 @@ async def number_occurrences(
     import time as _time
 
     t0 = _time.perf_counter()
-    universe, scope, window, _ = await _prepare_numbers(db, body)
+    universe, scope, window, _, scope_meta = await _prepare_numbers(db, body)
     svc = NumberExplorerService(universe=universe)
     out = svc.occurrences(
         number=body.number,
@@ -565,7 +625,7 @@ async def number_occurrences(
         duration_ms=round((_time.perf_counter() - t0) * 1000, 1),
     )
     out["ai_conclusions"] = None
-    return out
+    return _with_scope_meta(out, scope_meta)
 
 
 @router.post("/numbers/occurrences/detail")
@@ -577,12 +637,16 @@ async def number_occurrence_detail(
     __: Annotated[None, require_ai_admin(*_PERMS)],
 ) -> dict[str, Any]:
     """J-9 — Expediente de una aparición (Modo B)."""
-    lids = _all_lottery_ids(body.scope)
+    try:
+        primary, confirming, follow_up, scope_meta = await _clamp_scope_ids(db, body.scope)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    lids = sorted(set(primary) | set(confirming) | set(follow_up))
     try:
         universe, names = await load_universe_from_db(db, lottery_ids=lids)
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
-    scope = _scope_from_body(body.scope, names)
+    scope = _scope_from_ids(primary, confirming, follow_up, names)
     window = _window_from_body(body.confirmation_window)
     svc = NumberExplorerService(universe=universe)
     try:
@@ -601,7 +665,7 @@ async def number_occurrence_detail(
         payload={"number": body.number, "draw_id": body.draw_id, "trace_id": out.get("trace_id")},
     )
     out["ai_conclusions"] = None
-    return out
+    return _with_scope_meta(out, scope_meta)
 
 
 @router.post("/numbers/occurrences/next-draws")
@@ -613,7 +677,12 @@ async def number_next_draws(
     __: Annotated[None, require_ai_admin(*_PERMS)],
 ) -> dict[str, Any]:
     """J-9 — Próximos N sorteos (por defecto 7) o días calendario."""
-    lids = [str(x) for x in body.follow_up_lottery_ids]
+    try:
+        lids, _active, scope_meta = await resolve_active_scope_ids(
+            db, [str(x) for x in body.follow_up_lottery_ids], require_non_empty=True
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
     try:
         universe, _names = await load_universe_from_db(db, lottery_ids=lids)
     except ValueError as exc:
@@ -637,7 +706,7 @@ async def number_next_draws(
         payload={"draw_id": body.draw_id, "mode": body.mode, "count": body.count, "trace_id": out.get("trace_id")},
     )
     out["ai_conclusions"] = None
-    return out
+    return _with_scope_meta(out, scope_meta)
 
 
 @router.post("/numbers/compare")
@@ -649,7 +718,7 @@ async def numbers_compare(
     __: Annotated[None, require_ai_admin(*_PERMS)],
 ) -> dict[str, Any]:
     """J-9 — Comparar dos números observados (p. ej. 35 vs 40)."""
-    universe, scope, window, _ = await _prepare_numbers(db, body)
+    universe, scope, window, _, scope_meta = await _prepare_numbers(db, body)
     svc = NumberExplorerService(universe=universe)
     out = svc.compare_numbers(
         number_a=body.number_a,
@@ -666,7 +735,7 @@ async def numbers_compare(
         payload={"number_a": body.number_a, "number_b": body.number_b, "trace_id": out.get("trace_id")},
     )
     out["ai_conclusions"] = None
-    return out
+    return _with_scope_meta(out, scope_meta)
 
 
 @router.post("/numbers/why-strengthened")
@@ -678,7 +747,7 @@ async def why_strengthened(
     __: Annotated[None, require_ai_admin(*_PERMS)],
 ) -> dict[str, Any]:
     """J-9 — Explicación determinista «¿Por qué se fortaleció?»."""
-    universe, scope, window, _ = await _prepare_numbers(db, body)
+    universe, scope, window, _, scope_meta = await _prepare_numbers(db, body)
     svc = NumberExplorerService(universe=universe)
     analyzed = None
     if body.draw_id:
@@ -742,4 +811,4 @@ async def why_strengthened(
         action="numbers.why_strengthened",
         payload={"number": body.number, "candidate": body.candidate, "trace_id": out.get("trace_id")},
     )
-    return out
+    return _with_scope_meta(out, scope_meta)

@@ -28,7 +28,7 @@ export default function RelacionesPage() {
     <div className="space-y-4">
       <MotorToolIntro
         title="Relaciones numéricas"
-        description="Número observado → Compañero (Tabla 1) → Confirmador (Tabla 2). La fuerza pertenece al compañero; el modelo técnico N→C→V queda en evidencia avanzada."
+        description="Mapa central: número observado → compañero (Tabla 1) → confirmador (Tabla 2). La fuerza pertenece al compañero; el modelo técnico N→C→V queda en evidencia avanzada. Use Agrupaciones o Auditoría para explorar el mismo universo sin salir del menú único."
       />
       {error ? <p className="text-sm text-destructive">{error}</p> : null}
       <RelationsAnalyzeForm catalog={catalog} mode="relations" />

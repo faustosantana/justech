@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-/** Encabezado secundario J-10 para herramientas del motor (después del análisis). */
+/** Encabezado secundario para herramientas del motor (menú único J-10X). */
 export function MotorToolIntro({
   title,
   description,
@@ -11,8 +11,8 @@ export function MotorToolIntro({
   return (
     <div className="space-y-2">
       <p className="text-xs text-muted-foreground">
-        <Link href="/lottery/admin/control-center" className="text-primary underline-offset-2 hover:underline">
-          ← Inteligencia (7 destacadas)
+        <Link href="/lottery" className="text-primary underline-offset-2 hover:underline">
+          ← Lottery IA Control Center
         </Link>
         <span className="mx-2">·</span>
         Herramienta de consulta · no altera fórmulas ni el histórico

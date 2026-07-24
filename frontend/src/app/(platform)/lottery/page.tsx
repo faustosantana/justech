@@ -6,10 +6,13 @@ import { useRouter } from "next/navigation";
 import {
   Activity,
   ArrowRight,
+  GitCompare,
   MessageSquare,
+  Network,
   RefreshCw,
   Search,
   Sparkles,
+  Table2,
 } from "lucide-react";
 
 import { AppShell } from "@/components/layout/app-shell";
@@ -20,6 +23,7 @@ import { Badge } from "@/components/ui/badge";
 import { MetricCard } from "@/components/ui/metric-card";
 import { ApiError, apiClient } from "@/lib/api";
 import { getAccessToken, getUserRole } from "@/lib/auth";
+import { lotteryDisplayName } from "@/lib/lottery-display-names";
 import {
   canAccessLotteryAdmin,
   canAccessLotteryModule,
@@ -27,6 +31,45 @@ import {
   type LotteryCatalogCard,
   type LotteryDashboardV3,
 } from "@/lib/lottery";
+
+const TOOLS = [
+  {
+    href: "/lottery/admin/control-center/motor/historial-numero",
+    label: "Historial del Número",
+    desc: "Expediente de apariciones, confirmaciones y seguimiento",
+    icon: Search,
+  },
+  {
+    href: "/lottery/admin/control-center/motor/comparador",
+    label: "Comparador",
+    desc: "Compare candidatos, confirmadores y loterías",
+    icon: GitCompare,
+  },
+  {
+    href: "/lottery/admin/control-center/motor/table1",
+    label: "Tabla 1",
+    desc: "Compañeros del motor matemático",
+    icon: Table2,
+  },
+  {
+    href: "/lottery/admin/control-center/motor/table2",
+    label: "Tabla 2",
+    desc: "Confirmadores del motor matemático",
+    icon: Table2,
+  },
+  {
+    href: "/lottery/admin/control-center/motor/agrupaciones",
+    label: "Agrupaciones",
+    desc: "Grupos T1 y T2 en una sola vista",
+    icon: Network,
+  },
+  {
+    href: "/lottery/admin/control-center/motor/relaciones",
+    label: "Relaciones",
+    desc: "Mapa número → compañero → confirmador",
+    icon: Sparkles,
+  },
+] as const;
 
 function formatDate(value?: string | null): string {
   if (!value) return "—";
@@ -52,11 +95,12 @@ function ActiveLotteryCard({
   card: LotteryCatalogCard;
   lotteryIds: string[];
 }) {
+  const title = lotteryDisplayName(card.id, card.commercial_name || card.name);
   return (
     <Card className="border-primary/20 bg-gradient-to-b from-primary/5 to-transparent">
       <CardHeader className="pb-2">
         <CardTitle className="flex items-start justify-between gap-2 text-base">
-          <span>{card.commercial_name || card.name}</span>
+          <span>{title}</span>
           <Badge variant={card.is_sync_enabled ? "success" : "muted"}>
             {card.is_sync_enabled ? "Sync auto" : "Análisis"}
           </Badge>
@@ -99,7 +143,7 @@ export default function LotteryPage() {
       return;
     }
     if (!canAccessLotteryModule(getUserRole())) {
-      setError("Sin permiso para el módulo de loterías");
+      setError("Sin permiso para Lottery IA Control Center");
       setLoading(false);
       return;
     }
@@ -111,7 +155,7 @@ export default function LotteryPage() {
       const data = await apiClient.getLotteryDashboardV3();
       setDash(data);
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : "No se pudo cargar el centro de inteligencia");
+      setError(err instanceof ApiError ? err.message : "No se pudo cargar Lottery IA Control Center");
     } finally {
       setLoading(false);
     }
@@ -134,19 +178,21 @@ export default function LotteryPage() {
 
   return (
     <AppShell
-      title="Centro de Inteligencia de Loterías"
-      description="Análisis basado exclusivamente en las siete loterías activas."
+      title="Lottery IA Control Center"
+      description="Una sola plataforma de inteligencia sobre las siete loterías activas."
     >
       <div className="mb-6 rounded-2xl border border-primary/25 bg-gradient-to-br from-primary/10 via-background to-background p-5 md:p-7">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">JAIOS · Lottery</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">
+              JAIOS · Lottery IA
+            </p>
             <h1 className="mt-1 text-2xl font-semibold tracking-tight md:text-3xl">
-              Centro de Inteligencia de Loterías
+              Lottery IA Control Center
             </h1>
             <p className="mt-2 max-w-2xl text-sm text-muted-foreground md:text-base">
-              Análisis basado exclusivamente en las siete loterías activas. El inventario histórico
-              permanece archivado y no forma parte de esta experiencia.
+              Historial, comparador, tablas y relaciones en un solo menú. Análisis exclusivo sobre
+              las siete loterías activas; el inventario histórico permanece en archivo.
             </p>
           </div>
           <Button variant="outline" size="sm" onClick={() => void load()} disabled={loading}>
@@ -164,19 +210,36 @@ export default function LotteryPage() {
           <MetricCard label="Visibles" value={String(dash.lotteries_visible)} tone="primary" />
           <MetricCard label="Esperados hoy" value={String(dash.expected_today ?? 0)} tone="muted" />
           <MetricCard label="Pendientes visibles" value={String(dash.pending_visible ?? 0)} tone="muted" />
-          <MetricCard label="Con sync auto" value={String(dash.lotteries_synced)} tone="muted" />
-          <MetricCard label="Resultados hoy" value={String(dash.results_today)} tone="muted" />
-          <MetricCard label="Pendientes sync" value={String(dash.pending_sync_enabled ?? 0)} tone="muted" />
-          <MetricCard label="Fuentes saludables" value={String(dash.sources_healthy)} tone="muted" />
         </div>
       ) : null}
 
-      {/* BLOQUE 1 — Siete loterías */}
+      <section className="mb-8">
+        <h2 className="mb-3 text-lg font-semibold">Herramientas de inteligencia</h2>
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {TOOLS.map((tool) => {
+            const Icon = tool.icon;
+            return (
+              <Link
+                key={tool.href}
+                href={tool.href}
+                className="rounded-xl border bg-card p-4 transition hover:border-primary/40 hover:bg-muted/40"
+              >
+                <div className="mb-2 flex items-center gap-2 font-medium">
+                  <Icon className="h-4 w-4 text-primary" />
+                  {tool.label}
+                </div>
+                <p className="text-sm text-muted-foreground">{tool.desc}</p>
+              </Link>
+            );
+          })}
+        </div>
+      </section>
+
       <section className="mb-8">
         <div className="mb-3 flex items-end justify-between gap-2">
           <div>
             <h2 className="text-lg font-semibold">Las siete loterías activas</h2>
-            <p className="text-sm text-muted-foreground">Universo exclusivo de análisis y experiencia.</p>
+            <p className="text-sm text-muted-foreground">Universo exclusivo de análisis.</p>
           </div>
           <Button asChild variant="outline" size="sm">
             <Link href="/lottery/lotteries">Ver catálogo</Link>
@@ -193,35 +256,12 @@ export default function LotteryPage() {
         )}
         {!loading && seven.length !== 7 ? (
           <p className="mt-2 text-sm text-amber-700 dark:text-amber-300">
-            Se esperaban 7 loterías destacadas; hay {seven.length}. Revise Administración → Loterías.
+            Se esperaban 7 loterías destacadas; hay {seven.length}. Revise Administración → Catálogo
+            admin.
           </p>
         ) : null}
       </section>
 
-      {/* BLOQUE 2 — Señales */}
-      <section className="mb-8">
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-base">
-              <Sparkles className="h-4 w-4 text-primary" />
-              Señales actuales
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="flex flex-wrap gap-2">
-            <Button asChild>
-              <Link href="/lottery/admin/control-center/motor/historial-numero">Explorar señales</Link>
-            </Button>
-            <Button asChild variant="outline">
-              <Link href="/lottery/admin/control-center/motor/comparador">Comparador</Link>
-            </Button>
-            <p className="w-full text-sm text-muted-foreground">
-              Las señales se calculan únicamente sobre las siete loterías activas.
-            </p>
-          </CardContent>
-        </Card>
-      </section>
-
-      {/* BLOQUE 3 — Análisis rápido */}
       <section className="mb-8">
         <Card className="border-primary/30">
           <CardHeader>
@@ -245,13 +285,18 @@ export default function LotteryPage() {
               />
             </div>
             <Button onClick={openQuick}>Abrir expediente</Button>
+            <Button asChild variant="outline">
+              <Link href="/lottery/chat">
+                <MessageSquare className="mr-1.5 h-4 w-4" />
+                Copiloto
+              </Link>
+            </Button>
           </CardContent>
         </Card>
       </section>
 
-      {/* BLOQUE 4 — Actividad reciente */}
       <section className="mb-8">
-        <h2 className="mb-3 text-lg font-semibold">Actividad y resultados recientes</h2>
+        <h2 className="mb-3 text-lg font-semibold">Resultados recientes</h2>
         <div className="grid gap-2">
           {(dash?.latest_results || []).slice(0, 7).map((row, idx) => (
             <div
@@ -259,7 +304,9 @@ export default function LotteryPage() {
               className="flex flex-wrap items-center justify-between gap-2 rounded-lg border px-3 py-2 text-sm"
             >
               <div>
-                <span className="font-medium">{row.lottery}</span>
+                <span className="font-medium">
+                  {lotteryDisplayName(undefined, row.lottery)}
+                </span>
                 <span className="ml-2 text-muted-foreground">{row.date || "—"}</span>
               </div>
               <span className="font-mono">{(row.numbers || []).join(" · ") || "—"}</span>
@@ -271,47 +318,30 @@ export default function LotteryPage() {
         </div>
       </section>
 
-      {/* BLOQUE 5 — Copiloto */}
-      <section className="mb-8">
-        <Card>
-          <CardContent className="flex flex-wrap items-center justify-between gap-3 pt-6">
-            <div>
-              <p className="font-medium">Copiloto de Lotería IA</p>
-              <p className="text-sm text-muted-foreground">
-                Pregunte sobre números y relaciones dentro del universo de siete loterías.
-              </p>
-            </div>
-            <Button asChild>
-              <Link href="/lottery/chat">
-                <MessageSquare className="mr-1.5 h-4 w-4" />
-                Abrir copiloto
-              </Link>
-            </Button>
-          </CardContent>
-        </Card>
-      </section>
-
       {isAdmin ? (
         <section className="rounded-xl border border-dashed p-4">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <div>
               <p className="flex items-center gap-2 text-sm font-medium">
                 <Activity className="h-4 w-4" />
-                Administración / Estado del sistema
+                Administración
               </p>
               <p className="text-xs text-muted-foreground">
-                Worker, sync, health, backup gate y archivo histórico (fuera de la experiencia ordinaria).
+                Sync, archivo histórico y Prompt Studio (fuera de la experiencia ordinaria).
               </p>
             </div>
             <div className="flex flex-wrap gap-2">
               <Button asChild size="sm" variant="outline">
-                <Link href="/lottery/admin/sync">Sync / worker</Link>
+                <Link href="/lottery/admin/sync">Sync</Link>
               </Button>
               <Button asChild size="sm" variant="outline">
-                <Link href="/lottery/admin/lotteries">Loterías activas</Link>
+                <Link href="/lottery/admin/lotteries">Catálogo admin</Link>
               </Button>
               <Button asChild size="sm" variant="outline">
-                <Link href="/lottery/admin/lotteries/archivo-historico">Archivo histórico</Link>
+                <Link href="/lottery/admin/lotteries/archivo-historico">Archivo</Link>
+              </Button>
+              <Button asChild size="sm" variant="outline">
+                <Link href="/lottery/admin/control-center/prompt-studio">Prompt Studio</Link>
               </Button>
             </div>
           </div>

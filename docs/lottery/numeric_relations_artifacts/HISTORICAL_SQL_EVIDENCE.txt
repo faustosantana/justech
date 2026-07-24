@@ -1,0 +1,14 @@
+SET
+ multi_date_pairs 
+------------------
+               43
+(1 row)
+
+SET
+               draw_id                | draw_date  | draw_time |  lottery_name   | hit_position | hit_value | position | position_label | number_value 
+--------------------------------------+------------+-----------+-----------------+--------------+-----------+----------+----------------+--------------
+ a1c9bcef-cbb5-4c61-a878-c9c8723aa1ad | 2026-06-23 |           | Quiniela Leidsa |            3 | 26        |        1 | 1ro            | 29
+ a1c9bcef-cbb5-4c61-a878-c9c8723aa1ad | 2026-06-23 |           | Quiniela Leidsa |            3 | 26        |        2 | 2do            | 01
+ a1c9bcef-cbb5-4c61-a878-c9c8723aa1ad | 2026-06-23 |           | Quiniela Leidsa |            3 | 26        |        3 | 3ro            | 26
+(3 rows)
+

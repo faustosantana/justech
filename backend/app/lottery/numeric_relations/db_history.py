@@ -76,7 +76,8 @@ async def load_occurrences_from_db(
             for draw, num_row in rows:
                 collected.append((draw, num_row, name_by_id.get(str(lid), str(lid))))
 
-    # Unique draws (same draw may match multiple variants)
+    # Unique draws by stable draw_id (NOT lottery_id+draw_date).
+    # Same calendar date can host multiple draws; mixing by date would be incorrect.
     by_draw: dict[str, tuple[LotteryDraw, str]] = {}
     for draw, _hit, lname in collected:
         key = str(draw.id)

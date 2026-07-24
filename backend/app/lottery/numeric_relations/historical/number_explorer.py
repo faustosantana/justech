@@ -26,6 +26,8 @@ from app.lottery.numeric_relations.historical.models import (
 from app.lottery.numeric_relations.historical.presentation import (
     build_structured_explanation,
     condition_verdict,
+    format_cycle_sentence,
+    format_rate_sentence,
     natural_occurrence_line,
 )
 from app.lottery.numeric_relations.historical.rates import rates_payload
@@ -337,10 +339,11 @@ class NumberExplorerService:
                 for k, v in by_lottery.most_common()
             ],
             "condicion": [
-                {"etiqueta": "Condición positiva (todos confirmados)", "cantidad": positive},
-                {"etiqueta": "Condición parcial", "cantidad": partial},
-                {"etiqueta": "Condición negativa", "cantidad": negative},
+                {"etiqueta": "Sí se dio la condición", "cantidad": positive},
+                {"etiqueta": "Se dio parcialmente", "cantidad": partial},
+                {"etiqueta": "No se dio la condición", "cantidad": negative},
             ],
+            "condicion_censurados": 0,  # filled below with seven-draw censura
             "candidatos_fortalecidos": [
                 {"candidato": k, "veces": v} for k, v in cand_hist.most_common()
             ],
@@ -361,31 +364,92 @@ class NumberExplorerService:
         # seven-draw response distribution from posteriors
         seven_dist = Counter()
         censored_7 = 0
+        evaluable_7 = 0
         for p in posteriors:
             if p.draws_until_response is None:
-                if p.censored or (p.max_horizon < 7):
-                    # check if we have <7 available
-                    available = len(p.draws_examined)
-                    if available < 7:
-                        censored_7 += 1
-                        continue
+                available = len(p.draws_examined)
+                if p.censored or available < 7:
+                    censored_7 += 1
+                    continue
+                evaluable_7 += 1
                 seven_dist["no_aparecio_en_7"] += 1
             elif int(p.draws_until_response) <= 7:
+                evaluable_7 += 1
                 seven_dist[str(int(p.draws_until_response))] += 1
             else:
+                evaluable_7 += 1
                 seven_dist["no_aparecio_en_7"] += 1
+        charts["condicion_censurados"] = censored_7
         charts["respuesta_en_siete_sorteos"] = {
+            "casos_evaluables": evaluable_7,
             "por_posicion": [
-                {"sorteo": i, "cantidad": seven_dist.get(str(i), 0)} for i in range(1, 8)
+                {
+                    "sorteo": i,
+                    "cantidad": seven_dist.get(str(i), 0),
+                    "evaluables": evaluable_7,
+                    "porcentaje": (
+                        round(100.0 * seven_dist.get(str(i), 0) / evaluable_7, 1)
+                        if evaluable_7
+                        else 0
+                    ),
+                }
+                for i in range(1, 8)
             ],
             "no_aparecio_en_7": seven_dist.get("no_aparecio_en_7", 0),
             "sin_seguimiento_suficiente": censored_7,
         }
 
+        # Enrich candidatos with display-only historical hints from aliases when available
+        r3 = (stats.get("aliases") or {}).get("response_rate_within_3") or {}
+        r3_den = int(r3.get("denominator") or r3.get("sample_size") or 0) or None
+        r3_num = int(r3.get("numerator") or 0) if r3_den else None
+        charts["candidatos_fortalecidos"] = [
+            {
+                "candidato": k,
+                "veces": v,
+                "casos_evaluables": r3_den,
+                "respuesta_en_3": (
+                    f"{r3_num} de {r3_den}" if r3_den is not None and r3_num is not None else None
+                ),
+            }
+            for k, v in cand_hist.most_common()
+        ]
+
+        # Señales para UI (orden de visualización; no es ranking oficial de fuerza)
+        cycle = (stats.get("cycles") or {}).get("typical_cycle_draws")
+        signals = []
+        for k, v in cand_hist.most_common(12):
+            signals.append(
+                {
+                    "number": int(k),
+                    "confirmation_count": int(v),
+                    "evaluable_cases": int(r3_den or v),
+                    "rate_within_3": (
+                        float(r3.get("rate")) if r3.get("rate") is not None else None
+                    ),
+                    "typical_cycle": float(cycle) if cycle is not None else None,
+                    "evidence_level": header["nivel_evidencia"],
+                    "activators_text": (
+                        f"El número {n} activó fortalezas sobre el {k} en {v} ocasión(es) "
+                        f"con confirmadores de Tabla 2."
+                    ),
+                    "historical_rate_label": (
+                        format_rate_sentence(r3, within_label="dentro de tres sorteos")
+                        if r3
+                        else "Sin tasa histórica agregada para este período."
+                    ),
+                    "typical_cycle_label": (
+                        format_cycle_sentence(stats.get("cycles") or {})
+                        if stats.get("cycles")
+                        else "Ciclo no calculado."
+                    ),
+                }
+            )
+        charts["senales"] = signals
+
         top_cand = cand_hist.most_common(1)[0][0] if cand_hist else None
         top_conf = conf_hist.most_common(1)[0][0] if conf_hist else None
         top_lot = by_lottery.most_common(1)[0] if by_lottery else None
-        r3 = (stats.get("aliases") or {}).get("response_rate_within_3") or {}
         narrative = self._profile_narrative(
             n=n,
             total=total,
@@ -690,6 +754,34 @@ class NumberExplorerService:
         )
         return {
             "candidato": c,
+            "observed_number": n,
+            "table1_candidates": (
+                list(analyzed.get("table1_candidates") or [])
+                if analyzed and analyzed.get("table1_candidates")
+                else (
+                    [
+                        int(b["candidato"])
+                        for b in ((analyzed or {}).get("relation_tree") or {}).get("candidatos") or []
+                    ]
+                    if analyzed
+                    else []
+                )
+            ),
+            "related_confirmers": neighbors,
+            "observed_confirmers": found,
+            "confirmation_count": len(found),
+            "historical_cases": (
+                historical_sample.get("casos") if historical_sample else None
+            ),
+            "evaluable_cases": (
+                historical_sample.get("evaluables") if historical_sample else None
+            ),
+            "response_within_3": (
+                historical_sample.get("respuesta_3") if historical_sample else None
+            ),
+            "typical_cycle": (
+                historical_sample.get("ciclo") if historical_sample else None
+            ),
             "pasos": steps,
             "conclusion": conclusion,
             "confirmadores": found,

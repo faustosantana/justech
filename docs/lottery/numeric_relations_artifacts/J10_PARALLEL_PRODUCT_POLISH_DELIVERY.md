@@ -80,14 +80,14 @@ O cherry-pick selectivo omitiendo commits que choquen con el closeout.
 
 ## Tabla de commits
 
-| Commit | Funcionalidad | Archivos | Dependencias | Riesgo conflicto |
-|--------|---------------|----------|--------------|------------------|
-| J-10P.0 | Auditoría/plan | PLAN.md | — | Bajo |
-| J-10P.1 | Señales UI + orden | signal-*, nr-empty, historial (señales) | — | Medio (historial) |
-| J-10P.2 | Gráficas + backend charts | historical-charts, number_explorer, historial charts | P.1 | Medio–alto |
-| J-10P.3 | Why + estados | why-panel, why fields, historial | P.1–2 | Medio |
-| J-10P.4 | Tests | test_j10p, node-test | P.1–3 | Bajo |
-| J-10P.5 | Informe integración | DELIVERY.md | — | Bajo |
+| Commit | SHA | Funcionalidad | Archivos | Dependencias | Riesgo de conflicto |
+|--------|-----|---------------|----------|--------------|---------------------|
+| J-10P.0 | `7616894` | Auditoría/plan | PLAN.md | — | Bajo |
+| J-10P.1 | `4727906` | Señales UI + orden | signal-*, nr-empty | — | Bajo |
+| J-10P.2 | `8d6b96e` | Gráficas + backend charts | historical-charts, number_explorer | P.1 | Medio |
+| J-10P.3 | `4a2e03a` | Why + estados + wire historial | why-panel, historial | P.1–2 | Alto (historial) |
+| J-10P.4 | `5b38fcb` | Tests | test_j10p, node-test | P.1–3 | Bajo |
+| J-10P.5 | `37c0396` | Informe integración | DELIVERY.md | — | Bajo |
 
 ## Comandos de integración (después de J-10.5)
 

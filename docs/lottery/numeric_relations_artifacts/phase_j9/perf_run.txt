@@ -1,0 +1,42 @@
+{
+  "targets": {
+    "profile": {
+      "avg_ms": 1827.5,
+      "limit": 2000,
+      "pass": true,
+      "cold_ms": 2252.3
+    },
+    "occurrences": {
+      "avg_ms": 1854.0,
+      "limit": 2000,
+      "pass": true
+    },
+    "detail": {
+      "avg_ms": 965.8,
+      "limit": 1500,
+      "pass": true
+    },
+    "next_draws": {
+      "avg_ms": 957.4,
+      "limit": 1500,
+      "pass": true
+    },
+    "compare": {
+      "avg_ms": 2640.5,
+      "limit": 3000,
+      "pass": true
+    }
+  },
+  "seven_draws_pass": true,
+  "cases_keys": [
+    "A_frequent_35",
+    "occurrences_page1_total",
+    "B_negative",
+    "C_partial",
+    "positive_or_partial",
+    "D_multi_confirmers",
+    "compare_35_40",
+    "E_small_sample",
+    "F_censored"
+  ]
+}

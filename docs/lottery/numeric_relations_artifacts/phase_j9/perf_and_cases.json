@@ -1,0 +1,356 @@
+{
+  "api": "http://127.0.0.1:8001/api/v1",
+  "database": "jaios_lottery_dev@5433",
+  "production_untouched": true,
+  "perf": {
+    "profile": {
+      "cold": {
+        "n": 1,
+        "min_ms": 2252.3,
+        "max_ms": 2252.3,
+        "avg_ms": 2252.3,
+        "median_ms": 2252.3,
+        "p95_ms": 2252.3
+      },
+      "hot": {
+        "n": 9,
+        "min_ms": 1674.7,
+        "max_ms": 1911.1,
+        "avg_ms": 1780.3,
+        "median_ms": 1751.4,
+        "p95_ms": 1900.7
+      },
+      "all": {
+        "n": 10,
+        "min_ms": 1674.7,
+        "max_ms": 2252.3,
+        "avg_ms": 1827.5,
+        "median_ms": 1774.8,
+        "p95_ms": 2098.7
+      },
+      "sample_size": 515,
+      "aparecio": 515
+    },
+    "occurrences": {
+      "n": 10,
+      "min_ms": 1709.0,
+      "max_ms": 2231.1,
+      "avg_ms": 1854.0,
+      "median_ms": 1788.7,
+      "p95_ms": 2204.4
+    },
+    "detail": {
+      "n": 10,
+      "min_ms": 811.7,
+      "max_ms": 1048.4,
+      "avg_ms": 965.8,
+      "median_ms": 963.3,
+      "p95_ms": 1041.5
+    },
+    "next_draws": {
+      "n": 10,
+      "min_ms": 847.8,
+      "max_ms": 998.5,
+      "avg_ms": 957.4,
+      "median_ms": 965.6,
+      "p95_ms": 997.9
+    },
+    "why": {
+      "n": 10,
+      "min_ms": 1642.4,
+      "max_ms": 2484.2,
+      "avg_ms": 1829.4,
+      "median_ms": 1768.6,
+      "p95_ms": 2222.0
+    },
+    "compare": {
+      "n": 10,
+      "min_ms": 2513.4,
+      "max_ms": 2786.3,
+      "avg_ms": 2640.5,
+      "median_ms": 2617.9,
+      "p95_ms": 2755.3
+    }
+  },
+  "seven_draws": [
+    {
+      "anchor": "3a673213-6482-475f-a5bf-967332729e7f",
+      "lottery_id": "0118037f-8f8b-4a82-899c-42cd50b6e194",
+      "api_ids": [],
+      "db_ids": [],
+      "ids_match": true,
+      "numbers_ok": true,
+      "censored_api": true,
+      "api_label_mode": "DRAWS"
+    },
+    {
+      "anchor": "4f17ecff-d169-4f11-aa68-e875c02ee3a4",
+      "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+      "api_ids": [
+        "483e1258-d06e-49c0-b756-771d425c578e",
+        "3b4a2767-edd2-42f7-b1a8-87efff8e970f",
+        "0b97ff46-a084-4fb3-ae0d-dbb14634657d",
+        "ac702b70-28ce-4bf0-b4fc-dde0407a3b22",
+        "3e04a1e3-e540-4dc0-b5e2-ce2bd68db6df",
+        "e452866d-fbf7-4f89-94c0-4d7aad062a89",
+        "4f3e20b0-0da7-4ea2-b7c2-2fc2b66e3a26"
+      ],
+      "db_ids": [
+        "483e1258-d06e-49c0-b756-771d425c578e",
+        "3b4a2767-edd2-42f7-b1a8-87efff8e970f",
+        "0b97ff46-a084-4fb3-ae0d-dbb14634657d",
+        "ac702b70-28ce-4bf0-b4fc-dde0407a3b22",
+        "3e04a1e3-e540-4dc0-b5e2-ce2bd68db6df",
+        "e452866d-fbf7-4f89-94c0-4d7aad062a89",
+        "4f3e20b0-0da7-4ea2-b7c2-2fc2b66e3a26"
+      ],
+      "ids_match": true,
+      "numbers_ok": true,
+      "censored_api": false,
+      "api_label_mode": "DRAWS"
+    },
+    {
+      "anchor": "c613a726-e593-4356-95ed-9ce834e815a4",
+      "lottery_id": "e76951f3-c120-4787-aeae-2225187fd769",
+      "api_ids": [
+        "cca664ae-45fb-4194-b3f8-6bff8cb1b94b",
+        "e9d39987-cc92-41bb-a65d-06cbf67ab6cd",
+        "890761fe-fc12-41b2-bef3-83731c3eab66",
+        "91d46e81-059e-4753-81d2-6e5c74fff014"
+      ],
+      "db_ids": [
+        "cca664ae-45fb-4194-b3f8-6bff8cb1b94b",
+        "e9d39987-cc92-41bb-a65d-06cbf67ab6cd",
+        "890761fe-fc12-41b2-bef3-83731c3eab66",
+        "91d46e81-059e-4753-81d2-6e5c74fff014"
+      ],
+      "ids_match": true,
+      "numbers_ok": true,
+      "censored_api": true,
+      "api_label_mode": "DRAWS"
+    },
+    {
+      "anchor": "1d1862a7-715a-4f63-9724-c77291187154",
+      "lottery_id": "0118037f-8f8b-4a82-899c-42cd50b6e194",
+      "api_ids": [
+        "03e1b50a-b0ad-4217-8d30-b78ba3d7b805",
+        "f8d99e78-c821-4a6f-ba28-0b227240ce52",
+        "dcab27e7-2714-4765-9623-17b6da4dba6c",
+        "5f41b938-84ba-4fd3-803c-2d2fcfbfe603",
+        "326b6fb8-1ccc-4204-84e8-b398b41485c2",
+        "83d0fa26-eead-420a-b208-71b618204cd1",
+        "35c4309e-59e4-479c-9410-3b8f54ed7f78"
+      ],
+      "db_ids": [
+        "03e1b50a-b0ad-4217-8d30-b78ba3d7b805",
+        "f8d99e78-c821-4a6f-ba28-0b227240ce52",
+        "dcab27e7-2714-4765-9623-17b6da4dba6c",
+        "5f41b938-84ba-4fd3-803c-2d2fcfbfe603",
+        "326b6fb8-1ccc-4204-84e8-b398b41485c2",
+        "83d0fa26-eead-420a-b208-71b618204cd1",
+        "35c4309e-59e4-479c-9410-3b8f54ed7f78"
+      ],
+      "ids_match": true,
+      "numbers_ok": true,
+      "censored_api": false,
+      "api_label_mode": "DRAWS"
+    },
+    {
+      "anchor": "49d03523-b8f7-4111-ae6b-c59b59592ea4",
+      "lottery_id": "b9f2c5a2-bc3e-4382-9b6d-3cee16db00fd",
+      "api_ids": [
+        "14fb6a22-9883-4b73-a31c-ba880046a9a3",
+        "d9311a89-deac-4ce1-b655-c28e2cc5db69",
+        "b31a47bb-5313-4030-ba07-5f057ea534e6",
+        "bd231f78-867b-4448-8f7b-c2c8b73e0646",
+        "5ecea617-a5ea-4446-b4de-052caa9f0670",
+        "5f393e2a-94be-44e8-a8d0-0bf967800689",
+        "61d101c9-950f-4a9a-b3f2-30f7d8fbb93d"
+      ],
+      "db_ids": [
+        "14fb6a22-9883-4b73-a31c-ba880046a9a3",
+        "d9311a89-deac-4ce1-b655-c28e2cc5db69",
+        "b31a47bb-5313-4030-ba07-5f057ea534e6",
+        "bd231f78-867b-4448-8f7b-c2c8b73e0646",
+        "5ecea617-a5ea-4446-b4de-052caa9f0670",
+        "5f393e2a-94be-44e8-a8d0-0bf967800689",
+        "61d101c9-950f-4a9a-b3f2-30f7d8fbb93d"
+      ],
+      "ids_match": true,
+      "numbers_ok": true,
+      "censored_api": false,
+      "api_label_mode": "DRAWS"
+    }
+  ],
+  "cases": {
+    "A_frequent_35": {
+      "header": {
+        "titulo": "EXPEDIENTE DEL NÚMERO 35",
+        "aparecio": 515,
+        "primera_aparicion": "9 de enero de 2015",
+        "ultima_aparicion": "20 de julio de 2026",
+        "loterias_donde_ha_salido": 4,
+        "periodo": "2015–2026",
+        "nivel_evidencia": "Muestra más sólida",
+        "sample_warning": null
+      },
+      "condition_summary": {
+        "positivas": 0,
+        "negativas": 414,
+        "parciales": 101,
+        "total_apariciones": 515,
+        "con_alguna_confirmacion": 101,
+        "porcentaje_observado": 19.6,
+        "texto": "En 101 de las 515 veces que salió el número 35, al menos uno de sus compañeros de Tabla 1 recibió una confirmación de Tabla 2.",
+        "disclaimer": "Estos son resultados históricos observados. No constituyen garantía de un resultado futuro."
+      },
+      "top_candidates": [
+        {
+          "candidato": 54,
+          "veces": 46
+        },
+        {
+          "candidato": 86,
+          "veces": 34
+        },
+        {
+          "candidato": 11,
+          "veces": 17
+        },
+        {
+          "candidato": 6,
+          "veces": 11
+        }
+      ],
+      "top_confirmers": [
+        {
+          "confirmador": 14,
+          "veces": 46
+        },
+        {
+          "confirmador": 19,
+          "veces": 31
+        },
+        {
+          "confirmador": 60,
+          "veces": 11
+        },
+        {
+          "confirmador": 69,
+          "veces": 9
+        },
+        {
+          "confirmador": 57,
+          "veces": 5
+        }
+      ]
+    },
+    "occurrences_page1_total": 515,
+    "B_negative": {
+      "draw_id": "3a673213-6482-475f-a5bf-967332729e7f",
+      "fecha": "2026-07-20",
+      "fecha_texto": "20 de julio de 2026",
+      "loteria": "Loteria Nacional",
+      "lottery_id": "0118037f-8f8b-4a82-899c-42cd50b6e194",
+      "estado": "NO SE DIO LA CONDICIÓN",
+      "status": "no",
+      "texto": "20 de julio de 2026 — Loteria Nacional. Salió el 35, pero ninguno de sus compañeros recibió confirmación dentro de la ventana seleccionada.",
+      "candidatos_confirmados": []
+    },
+    "C_partial": {
+      "draw_id": "9fb0e8f3-83ea-4f9c-9eef-bd97fc0692d6",
+      "fecha": "2026-06-06",
+      "fecha_texto": "6 de junio de 2026",
+      "loteria": "Loto Leidsa",
+      "lottery_id": "e76951f3-c120-4787-aeae-2225187fd769",
+      "estado": "SE DIO PARCIALMENTE",
+      "status": "partial",
+      "texto": "El 2026-06-06 salió el 35 en Loto Leidsa. El 14 apareció en loto leidsa y confirmó al candidato 54. El 54 no reapareció dentro de la ventana máxima.",
+      "candidatos_confirmados": [
+        54
+      ]
+    },
+    "positive_or_partial": {
+      "draw_id": "9fb0e8f3-83ea-4f9c-9eef-bd97fc0692d6",
+      "fecha": "2026-06-06",
+      "fecha_texto": "6 de junio de 2026",
+      "loteria": "Loto Leidsa",
+      "lottery_id": "e76951f3-c120-4787-aeae-2225187fd769",
+      "estado": "SE DIO PARCIALMENTE",
+      "status": "partial",
+      "texto": "El 2026-06-06 salió el 35 en Loto Leidsa. El 14 apareció en loto leidsa y confirmó al candidato 54. El 54 no reapareció dentro de la ventana máxima.",
+      "candidatos_confirmados": [
+        54
+      ]
+    },
+    "D_multi_confirmers": null,
+    "compare_35_40": {
+      "conclusiones": [
+        "El número 35 tiene más apariciones (515 vs 397).",
+        "El número 40 generó más condiciones positivas/parciales.",
+        "El número 35 tuvo una respuesta más frecuente dentro de tres sorteos.",
+        "El número 35 tiene una muestra histórica mayor.",
+        "No se declara un ganador absoluto."
+      ]
+    },
+    "E_small_sample": {
+      "ms": 28.3,
+      "aparecio": 11,
+      "nivel": "Muestra moderada",
+      "warning": null
+    },
+    "F_censored": null
+  },
+  "permissions": {
+    "client_profile": {
+      "status": 403,
+      "pass": true
+    },
+    "admin_profile": {
+      "status": 200,
+      "pass": true
+    }
+  },
+  "targets": {
+    "profile_ms": 2000,
+    "occurrences_ms": 2000,
+    "detail_ms": 1500,
+    "next_draws_ms": 1500,
+    "compare_ms": 3000
+  },
+  "lottery_ids": [
+    "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+    "b9f2c5a2-bc3e-4382-9b6d-3cee16db00fd",
+    "0118037f-8f8b-4a82-899c-42cd50b6e194",
+    "e76951f3-c120-4787-aeae-2225187fd769"
+  ],
+  "seven_draws_pass": true,
+  "targets_assessment": {
+    "profile": {
+      "avg_ms": 1827.5,
+      "limit": 2000,
+      "pass": true,
+      "cold_ms": 2252.3
+    },
+    "occurrences": {
+      "avg_ms": 1854.0,
+      "limit": 2000,
+      "pass": true
+    },
+    "detail": {
+      "avg_ms": 965.8,
+      "limit": 1500,
+      "pass": true
+    },
+    "next_draws": {
+      "avg_ms": 957.4,
+      "limit": 1500,
+      "pass": true
+    },
+    "compare": {
+      "avg_ms": 2640.5,
+      "limit": 3000,
+      "pass": true
+    }
+  }
+}

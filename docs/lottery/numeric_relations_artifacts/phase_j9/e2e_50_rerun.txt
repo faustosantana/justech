@@ -1,0 +1,11 @@
+{
+  "pass_ratio": "50/50",
+  "failed": 0,
+  "perf_ms": {
+    "min": 0.0,
+    "max": 1052.9,
+    "avg": 206.3
+  },
+  "universe_load_ms": 302.3
+}
+E2E 50/50 PASS

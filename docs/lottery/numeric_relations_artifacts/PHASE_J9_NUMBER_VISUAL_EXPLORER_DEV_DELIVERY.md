@@ -83,7 +83,10 @@ E2E ambiente: `jaios_lottery_dev` @ `127.0.0.1:5433`, loterías Leidsa/Loteka/Na
 
 Carpeta: `docs/lottery/numeric_relations_artifacts/phase_j9/screenshots/`
 
-Estado: checklist de 20 capturas documentada. Generación visual requiere remount de API+FE DEV con esta rama (`jaios-cc-dev-web` está arriba; API J-9 aún no montada en contenedor al cierre). Checklist:
+**Estado:** **20/20 completas** con datos reales DEV tras remount API (`:8001` `j9_nr_dev_server`) + FE (`:3011`).
+
+Detalle, rendimiento, permisos y veredicto:  
+`PHASE_J9_FINAL_VISUAL_PERFORMANCE_VALIDATION.md`
 
 1. buscador · 2. expediente general · 3. condición positiva · 4. negativa · 5. parcial  
 6. árbol · 7. candidato fortalecido · 8. por qué · 9. apariciones · 10. siete sorteos  
@@ -111,21 +114,21 @@ Estado: checklist de 20 capturas documentada. Generación visual requiere remoun
 
 | Ítem | Severidad |
 |------|-----------|
-| Perfil O(apariciones) sin caché de agregados | Medio (DEV OK; Prod requiere medición) |
-| Capturas UI pendientes de remount API | Bajo (no bloquea metodología) |
-| Comparador recalcula dos perfiles completos | Medio en rangos amplios |
+| Perfil cold puntual &gt; 2 s (avg OK) | Bajo — medido y justificado |
+| Comparador recalcula dos perfiles completos | Medio en rangos amplios (&lt; 3 s en medición) |
+| Caché de agregados de perfil | Pendiente no bloqueante |
 | No hay índices nuevos | OK — no demostrados necesarios aún |
 
 ---
 
 ## 9. Veredicto
 
-**GO CONDICIONADO**
+**GO PARA DESPLIEGUE** (validación visual + rendimiento cerrada en DEV)
 
-Condiciones antes de autorización de despliegue:
+Condición operativa restante:
 
-1. Remount API+FE DEV con esta rama y completar las 20 capturas.
-2. Medir latencia de `/numbers/profile` con número de alta frecuencia (p. ej. 35) en ventana completa.
-3. Autorización expresa del usuario (no desplegar Producción sin GO).
+1. Autorización expresa del usuario antes de cualquier despliegue a Producción.
 
-**Producción permanece intacta.**
+Ver informe final: `PHASE_J9_FINAL_VISUAL_PERFORMANCE_VALIDATION.md`.
+
+**Producción permanece intacta.** No se desplegó fuera de DEV.

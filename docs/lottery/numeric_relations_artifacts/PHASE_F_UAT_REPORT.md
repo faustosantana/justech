@@ -34,7 +34,7 @@ Listo para Producción solo tras autorización expresa y después de cerrar los 
 
 - Rama: `feature/lottery-numeric-relations-motor`
 - Commits base UAT: `459a799`, `3f4d134`, `cf4a732`
-- Commit correcciones Fase F: `74b2fbf`
+- Commit correcciones Fase F: `b6b03b8`
 - Tag rollback vigente: `restore/lottery-pre-numeric-relations-motor-20260723` → `25ccd8aa…`  
   - **Hallazgo:** se esperaba `5136606`; el tag actual apunta a `25ccd8aa`. Ambos son anteriores al motor (`459a799`). Confirmar/re-etiquetar si se requiere exactamente `5136606`.
   - No se movió el tag durante Fase F.

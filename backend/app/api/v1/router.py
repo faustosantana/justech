@@ -20,6 +20,7 @@ from app.api.v1 import (
     licitador,
     lottery,
     lottery_ai_admin,
+    lottery_nr_historical,
     lottery_numeric_relations,
     lottery_predictions,
     llm,
@@ -70,6 +71,7 @@ api_router.include_router(prices.router)
 api_router.include_router(lottery.router)
 api_router.include_router(lottery_ai_admin.router)
 api_router.include_router(lottery_numeric_relations.router)
+api_router.include_router(lottery_nr_historical.router)
 api_router.include_router(lottery_predictions.router)
 api_router.include_router(assistant.router)
 api_router.include_router(settings_api.router)

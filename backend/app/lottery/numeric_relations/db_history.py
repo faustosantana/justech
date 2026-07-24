@@ -60,7 +60,7 @@ async def load_occurrences_from_db(
         await db.execute(select(Lottery).where(Lottery.id.in_(lot_ids)))
     ).scalars().all()
     for lot in lots:
-        name_by_id[str(lot.id)] = lot.commercial_name or lot.name or lot.slug
+        name_by_id[str(lot.id)] = getattr(lot, "commercial_name", None) or lot.name or lot.slug
 
     fetch_limit = 5000 if limit.mode == "all" else max(int(limit.k or 1) * 5, 50)
 

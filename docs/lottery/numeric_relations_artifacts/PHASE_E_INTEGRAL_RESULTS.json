@@ -1,0 +1,4470 @@
+{
+  "phase": "E",
+  "environment": "jaios_lottery_dev",
+  "sync_modified": false,
+  "production_modified": false,
+  "checks": {
+    "A_math": {
+      "ok": true,
+      "table1_rows": 100,
+      "table2_rows": 100,
+      "table1_groups": 30,
+      "table2_groups": 43,
+      "range": "1..100",
+      "tables_separate": true,
+      "example_t1_1": {
+        "visible": "0.0008196721",
+        "code": 34
+      },
+      "example_t2_1": {
+        "visible": "1220.00000000",
+        "code": 5
+      }
+    },
+    "B_target_draw_26": {
+      "draw_id": "a1c9bcef-cbb5-4c61-a878-c9c8723aa1ad",
+      "numbers": [
+        "29",
+        "01",
+        "26"
+      ],
+      "expected": [
+        "29",
+        "01",
+        "26"
+      ],
+      "ok": true
+    },
+    "B_history": {
+      "last_5": {
+        "count": 5,
+        "draw_ids": [
+          "a1c9bcef-cbb5-4c61-a878-c9c8723aa1ad",
+          "56521f71-0a78-4b77-8125-db9075099e75",
+          "ff8029d0-cafa-4207-b9b2-6686d2fda63b",
+          "8d654a4f-bbdf-457c-a38c-297105fa85a5",
+          "cbe734de-192c-4cce-a942-1ed4f13aca13"
+        ],
+        "null_times": 5,
+        "includes_target": true
+      },
+      "last_10": {
+        "count": 10,
+        "draw_ids": [
+          "a1c9bcef-cbb5-4c61-a878-c9c8723aa1ad",
+          "56521f71-0a78-4b77-8125-db9075099e75",
+          "ff8029d0-cafa-4207-b9b2-6686d2fda63b",
+          "8d654a4f-bbdf-457c-a38c-297105fa85a5",
+          "cbe734de-192c-4cce-a942-1ed4f13aca13",
+          "1ea5396e-b6ed-42cf-a743-77f260e61d5e",
+          "5d4f6a83-658d-496f-a514-890d13e7b306",
+          "925dfaa6-3be9-4546-8ca5-500aab0e3426",
+          "1f77a7f3-94a6-42cf-adce-b5f5bef86635",
+          "9815d123-273b-4ef1-b47c-207944caaa48"
+        ],
+        "null_times": 10,
+        "includes_target": true
+      },
+      "last_20": {
+        "count": 20,
+        "draw_ids": [
+          "a1c9bcef-cbb5-4c61-a878-c9c8723aa1ad",
+          "56521f71-0a78-4b77-8125-db9075099e75",
+          "ff8029d0-cafa-4207-b9b2-6686d2fda63b",
+          "8d654a4f-bbdf-457c-a38c-297105fa85a5",
+          "cbe734de-192c-4cce-a942-1ed4f13aca13",
+          "1ea5396e-b6ed-42cf-a743-77f260e61d5e",
+          "5d4f6a83-658d-496f-a514-890d13e7b306",
+          "925dfaa6-3be9-4546-8ca5-500aab0e3426",
+          "1f77a7f3-94a6-42cf-adce-b5f5bef86635",
+          "9815d123-273b-4ef1-b47c-207944caaa48",
+          "48a74b57-f371-403d-9ad8-8894750e87f9",
+          "cabb6301-a668-4b58-b4f6-cbdfc58ea29a",
+          "f6c46036-a17d-449b-bd66-82894115f6ac",
+          "6070919b-53fd-448f-972e-a8c46cc0bcb0",
+          "51573ed9-4947-45d3-b191-c1dfdf696d9b",
+          "a5ba9dd3-6950-48f3-8b19-afd2eea9e3ab",
+          "8c058778-782a-4caf-8582-3d55ebec968f",
+          "7128bcf5-864a-45d0-b033-41acf12cad15",
+          "2726ab8d-869c-41b7-a991-8cad481a73ea",
+          "3968f5fd-0ab7-4fef-bde1-f163d98e1ba9"
+        ],
+        "null_times": 20,
+        "includes_target": true
+      },
+      "all": {
+        "count": 106,
+        "draw_ids": [
+          "a1c9bcef-cbb5-4c61-a878-c9c8723aa1ad",
+          "56521f71-0a78-4b77-8125-db9075099e75",
+          "ff8029d0-cafa-4207-b9b2-6686d2fda63b",
+          "8d654a4f-bbdf-457c-a38c-297105fa85a5",
+          "cbe734de-192c-4cce-a942-1ed4f13aca13",
+          "1ea5396e-b6ed-42cf-a743-77f260e61d5e",
+          "5d4f6a83-658d-496f-a514-890d13e7b306",
+          "925dfaa6-3be9-4546-8ca5-500aab0e3426",
+          "1f77a7f3-94a6-42cf-adce-b5f5bef86635",
+          "9815d123-273b-4ef1-b47c-207944caaa48",
+          "48a74b57-f371-403d-9ad8-8894750e87f9",
+          "cabb6301-a668-4b58-b4f6-cbdfc58ea29a",
+          "f6c46036-a17d-449b-bd66-82894115f6ac",
+          "6070919b-53fd-448f-972e-a8c46cc0bcb0",
+          "51573ed9-4947-45d3-b191-c1dfdf696d9b",
+          "a5ba9dd3-6950-48f3-8b19-afd2eea9e3ab",
+          "8c058778-782a-4caf-8582-3d55ebec968f",
+          "7128bcf5-864a-45d0-b033-41acf12cad15",
+          "2726ab8d-869c-41b7-a991-8cad481a73ea",
+          "3968f5fd-0ab7-4fef-bde1-f163d98e1ba9",
+          "62d73e41-7b2e-4c17-84f5-479fca2f2e82",
+          "5e560e90-cfe7-479b-be1b-a0a73bceb78c",
+          "1ed0e996-40c9-46bb-9674-984da37aa22c",
+          "8dbfa824-6710-4bd6-a0e1-12ca61985659",
+          "23acd607-b44f-4319-9c1d-e35ba57cb508",
+          "2ca5240c-5636-482c-bfe9-88d3bcd68295",
+          "1b6ee2cb-7445-41b9-9ac7-7ba55d0c3f60",
+          "69f5cfbe-d258-46e4-9f3f-2e10bd045b1c",
+          "98d71d66-26e6-44c3-b936-d686df8ad37c",
+          "9e72015b-fd48-4291-8f0c-55639bafeffb",
+          "fe4e4b4e-bc21-42a6-8b60-36b12b199b05",
+          "ea922b64-0b4e-4a87-afe0-cbe4dd5a5745",
+          "59c47c0e-0da2-443d-b82e-569ee0389c92",
+          "6af6b7d0-0b8a-45c4-9c96-f754f125a298",
+          "09fc2a0a-47f4-46d5-a733-5588c3404cb2",
+          "d9613ec2-f75f-4d6c-a565-041cd1785333",
+          "140ee353-7696-4e65-a432-2ea44e26102c",
+          "e5d5de5d-e79b-4567-97c3-1d0b4ff219cd",
+          "2410f951-471e-472d-a6e4-2acc90339053",
+          "53c5a5af-3eea-448b-9d0b-d09565303249",
+          "c15c01ce-0c19-40a7-b841-8e5a5419e9eb",
+          "8c089c77-bdfa-49ac-ade5-58373531de6b",
+          "13bded6a-2add-4534-a2c6-702bedd40895",
+          "f8e5021f-022c-497d-8c82-acdccb5c0e00",
+          "308fbd59-3f98-4081-a272-4ff535542936",
+          "80062102-7d90-44be-a492-89da9b2c8ec9",
+          "d302c550-49e9-4737-a631-48b5256200a4",
+          "d495c91e-e3cb-4dcf-b9f9-8496c1839c8f",
+          "f23c1e07-504c-496d-8eb0-bddbccdc0787",
+          "d41371c4-9a4e-4649-b58a-6b7d46a24916",
+          "2420c572-b753-45ee-8ee8-4aa2aa799ec8",
+          "daf79991-6fe1-4dcf-9987-e6b12550bb76",
+          "1ed93bbe-9455-45e1-a5f9-59b062d5143d",
+          "084af73a-43f5-4f8a-a067-34c9bc0b2dff",
+          "a3865393-060b-4ebf-a133-0c632d1a6ce8",
+          "9d3d9def-1a53-492e-96b4-825edb2d9d49",
+          "480b9e6d-c5d0-41ee-b33a-3d3d36dc8391",
+          "8386694c-9a86-4a07-9a46-5940c65f3ad1",
+          "2be4a2ca-d2d0-4f4d-a109-b8043dc3134a",
+          "b37de55e-6c92-4e81-ad68-adaa8cd63141",
+          "8d89d8a4-6905-4ba5-a626-442529102781",
+          "2950fc7d-d429-40df-b2c0-c5548c4c43ee",
+          "5cd895f0-5830-4f0f-98b7-3c1ffbf3acc0",
+          "c510d1bb-f9f2-438c-90bd-61d299aae6a8",
+          "e0993167-2905-4ba6-8797-c67a0b5a8e84",
+          "97d4e47a-4500-4504-87f9-4fe508295d2d",
+          "0c4e04a8-78a6-4275-9189-e4147a6979c3",
+          "6c5c33cb-3f28-47dd-967a-164abf3e6bb6",
+          "8037c809-ec51-4f9f-8963-8fd5a3e9cc79",
+          "10b274c8-15cd-47a9-ab11-8bccc6caee89",
+          "4334db0d-9317-4ddc-9a67-04d0d6a2f5a5",
+          "cb545e30-3397-42be-8372-7c0bf4e3b4ca",
+          "5fee1fcb-4495-4fd6-b856-423caa1d46ac",
+          "5e02b7b8-ec21-429f-acd3-1946e6544ad3",
+          "3f7deec3-4cda-4af1-a346-fd35ce7abbc2",
+          "aa8dfb05-7e4b-46a4-a29e-cee73040ca27",
+          "035f7422-dc45-4c40-a086-1e9f05742ea8",
+          "3600bc43-a42e-4e40-8b1e-d12f7bed0923",
+          "7b9d6c3a-c8a2-4ea3-80da-89aadd3085e8",
+          "ed7e05ae-2850-4d3e-8106-359e02808bf1",
+          "8c51d33b-5181-4c86-af59-fcc3c79157c5",
+          "80feff51-1d8a-475e-8f53-4f557713fae6",
+          "fbecb5fe-f9a2-4d6d-9eb0-85063b38f297",
+          "5c5bb90a-a728-4cf6-84d0-46e4c7340df6",
+          "b821a88f-9926-4a02-869c-6e9ec3a4cdcf",
+          "a30dedd4-a76f-465b-a1b5-70abb6acbf61",
+          "a52eeb0d-1fcd-43b1-bfa0-7fe7c1c27085",
+          "680c7512-bd9a-47ca-bab1-35d80cf0e36e",
+          "e8c9d17e-2c71-4fb3-b071-071546a91dd3",
+          "dcd3ba68-854d-4409-96bf-9f07a73d9211",
+          "6cda5b38-8068-466b-b384-1aec4e9f73ef",
+          "9e22ede3-10c3-48bb-b678-0552fb16ad07",
+          "cdfaa8a9-7fa4-4fc1-adae-6d0035a7898e",
+          "ae16777b-91ef-49a5-af05-b2713acb3d83",
+          "fb76752a-5198-4d56-8282-cd1ef900bdf9",
+          "637a84bf-d723-471e-b64a-c988c4eebd91",
+          "f27c627b-c8e6-4adb-b8e8-9599baa18079",
+          "0158b866-882d-40b5-b566-285fced633e3",
+          "344a0c4f-6a75-4c53-b74a-19a36b614170",
+          "84dc044a-5671-42b0-8278-4fda501ad119",
+          "c7ab1336-c781-4ffa-be43-630cd24334a1",
+          "ce72045b-d6a8-4f9d-9310-9b8a772e7e05",
+          "7def11cf-d8ca-413a-9950-02213a1dba52",
+          "041661b2-d813-4ce9-ad07-015c91171f96",
+          "37ee956c-d662-4dbe-9f89-a58981557767",
+          "1fbf4355-5d7e-494b-a40d-0304a23e7232"
+        ],
+        "null_times": 106,
+        "includes_target": true
+      },
+      "multi_lottery_45_last_10": {
+        "count": 10,
+        "lotteries": [
+          "Quiniela Leidsa",
+          "Quiniela Loteka"
+        ],
+        "draw_ids": [
+          "9291acde-9274-4aba-bc9a-b4f286c5124b",
+          "554317bf-afe3-4eaf-84b0-679d294ab966",
+          "b6459b0b-7f53-4395-9166-ac681a511171",
+          "401e96d7-3a95-43ae-a175-2d33478b3b82",
+          "c6ba1b7a-4e4a-46ec-b3b6-4abbe5ec0c65",
+          "198a86ef-7d88-4f92-ac18-8f8d72e69e03",
+          "317ccb4d-73c7-4e6e-bbc5-05680e68818a",
+          "a4410235-0d48-495f-a5eb-fb51518ee78e",
+          "3c728a13-23b0-457b-b4d1-64e87d7a9d16",
+          "4b7cc8f1-9bad-46bd-aa3d-90cc6c3f931b"
+        ]
+      },
+      "same_date_multiple_draw_ids_samples": [
+        {
+          "lottery_id": "0e3481c1-c981-46e9-a3bd-e1d8bb4ff5ce",
+          "draw_date": "2025-08-27",
+          "draw_ids": [
+            "9bab8d2d-ca9f-4439-94b3-990bf71aa38f",
+            "b524a604-c64f-40eb-9b5f-a3db7afd9fe4"
+          ]
+        },
+        {
+          "lottery_id": "0e3481c1-c981-46e9-a3bd-e1d8bb4ff5ce",
+          "draw_date": "2025-11-05",
+          "draw_ids": [
+            "075b6677-897a-46ee-910c-bd132dcfa936",
+            "6241958f-a42d-4341-9787-5d9833cf5f9e"
+          ]
+        },
+        {
+          "lottery_id": "0e3481c1-c981-46e9-a3bd-e1d8bb4ff5ce",
+          "draw_date": "2026-02-07",
+          "draw_ids": [
+            "92299417-7cdd-455e-8f68-592193024e93",
+            "af7788ea-ac50-40dd-aa50-aaec4dbf8e9c"
+          ]
+        }
+      ]
+    },
+    "C_no_or_some_matches_99": {
+      "occurrences_used": 5,
+      "ranking_len": 0,
+      "includes_score_zero": false,
+      "metadata": {
+        "draw_ids_analyzed_count": 5,
+        "draw_ids_analyzed": [
+          "6ccc79a8-73f1-4d6c-bf59-6c04d3941146",
+          "c9763e5d-b0b2-48e5-b013-53429c1e9069",
+          "0f09ea49-7753-4de6-9b55-c89cdbd43e9d",
+          "77657ca7-ae15-4d91-a98e-91e3b772919e",
+          "6a68a36a-8663-41a1-8b40-96a2db326bbe"
+        ],
+        "internal_dedupe_discarded_count": 0,
+        "possible_content_duplicate_draws_detected": false,
+        "possible_content_duplicate_groups": [],
+        "content_duplicates_kept_separate_by_draw_id": true,
+        "sync_duplicate_policy": "Draws with identical lottery/date/numbers but different draw_id remain separate occurrences. Sync is not modified; duplicates are not hidden.",
+        "trigger": "drawn_number_equals_observed_number_only",
+        "exclude_observed_from_matches": true,
+        "exclude_companion_from_neighbors": true,
+        "ranking_includes_score_zero": true,
+        "ranking_sort": "score_desc_then_number_asc"
+      }
+    },
+    "D_dedupe_metadata": {
+      "has_draw_ids_count": true,
+      "has_internal_discarded": true,
+      "has_content_dup_flag": true,
+      "kept_separate": true,
+      "sample": {
+        "draw_ids_analyzed_count": 10,
+        "internal_dedupe_discarded_count": 0,
+        "possible_content_duplicate_draws_detected": false,
+        "sync_duplicate_policy": "Draws with identical lottery/date/numbers but different draw_id remain separate occurrences. Sync is not modified; duplicates are not hidden."
+      }
+    },
+    "E_api_schemas": {
+      "rejects_0": true,
+      "rejects_101": true,
+      "all_ok": true,
+      "requires_k": true
+    },
+    "G_chat": {
+      "Analiza el 26 en las últimas 10 veces que salió en Leidsa.": {
+        "kind": "tool",
+        "tool": "lottery_analyze_numeric_relations",
+        "params": {
+          "observed_number": 26,
+          "number": "26",
+          "lotteries": [
+            "Leidsa"
+          ],
+          "occurrence_mode": "last_k",
+          "occurrence_k": 10,
+          "lottery": "Leidsa"
+        },
+        "ok": true
+      },
+      "Analiza el 34 en todas las ocurrencias disponibles en Leidsa.": {
+        "kind": "tool",
+        "tool": "lottery_analyze_numeric_relations",
+        "params": {
+          "observed_number": 34,
+          "number": "34",
+          "lotteries": [
+            "Leidsa"
+          ],
+          "occurrence_mode": "all",
+          "lottery": "Leidsa"
+        },
+        "ok": true
+      },
+      "Analiza el 45 en Leidsa y Loteka con las últimas 20 veces.": {
+        "kind": "tool",
+        "tool": "lottery_analyze_numeric_relations",
+        "params": {
+          "observed_number": 45,
+          "number": "45",
+          "lotteries": [
+            "Leidsa",
+            "Loteka"
+          ],
+          "occurrence_mode": "last_k",
+          "occurrence_k": 20
+        },
+        "ok": true
+      },
+      "¿Cuáles compañeros están más fuertes cuando sale el 18?": {
+        "kind": "clarify",
+        "tool": null,
+        "params": {
+          "number": "18",
+          "observed_number": 18,
+          "pending_slots": [
+            "lottery",
+            "occurrence_limit"
+          ]
+        },
+        "ok": true
+      },
+      "Analiza el 26.": {
+        "kind": "clarify",
+        "tool": null,
+        "params": {
+          "number": "26",
+          "pending_slots": [
+            "lottery",
+            "period"
+          ]
+        },
+        "ok": true
+      },
+      "empty_no_invention": {
+        "ok": true,
+        "excerpt": "Analicé el número observado 26 (código madre 26) en Leidsa con límite «todas las ocurrencias». No encontré ocurrencias históricas donde saliera ese número, así que no hay compañeros fortalecidos ni ranking que reportar. No invento compañero"
+      }
+    }
+  },
+  "failures_introduced": [],
+  "failures_preexisting": [],
+  "failures_pending": [],
+  "residual_risks": [
+    {
+      "id": "SYNC_CONTENT_DUPLICATE_DRAWS",
+      "severity": "accepted_temporary",
+      "description": "Distinct draw_id may share lottery/date/identical numbers with different source_reference. Counted as separate occurrences. Sync not modified."
+    }
+  ],
+  "e2e": [
+    {
+      "observed_number": 26,
+      "mother_code": 26,
+      "lottery_names": [
+        "Leidsa"
+      ],
+      "occurrence_limit": {
+        "mode": "last_k",
+        "k": 10
+      },
+      "occurrences_found": 106,
+      "occurrences_used": 10,
+      "companions": [
+        27,
+        38
+      ],
+      "historical_occurrences": [
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "a1c9bcef-cbb5-4c61-a878-c9c8723aa1ad",
+          "draw_date": "2026-06-23",
+          "draw_time": null,
+          "observed_number": 26,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 29
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 1
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 26
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "56521f71-0a78-4b77-8125-db9075099e75",
+          "draw_date": "2026-06-19",
+          "draw_time": null,
+          "observed_number": 26,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 14
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 26
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 53
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "ff8029d0-cafa-4207-b9b2-6686d2fda63b",
+          "draw_date": "2026-02-06",
+          "draw_time": null,
+          "observed_number": 26,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 52
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 26
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 49
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "8d654a4f-bbdf-457c-a38c-297105fa85a5",
+          "draw_date": "2026-01-24",
+          "draw_time": null,
+          "observed_number": 26,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 77
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 36
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 26
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "cbe734de-192c-4cce-a942-1ed4f13aca13",
+          "draw_date": "2025-12-10",
+          "draw_time": null,
+          "observed_number": 26,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 26
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 30
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 97
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "1ea5396e-b6ed-42cf-a743-77f260e61d5e",
+          "draw_date": "2025-11-24",
+          "draw_time": null,
+          "observed_number": 26,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 26
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 16
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 44
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "5d4f6a83-658d-496f-a514-890d13e7b306",
+          "draw_date": "2025-11-14",
+          "draw_time": null,
+          "observed_number": 26,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 73
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 15
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 26
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "925dfaa6-3be9-4546-8ca5-500aab0e3426",
+          "draw_date": "2025-10-13",
+          "draw_time": null,
+          "observed_number": 26,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 26
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 25
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 24
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "1f77a7f3-94a6-42cf-adce-b5f5bef86635",
+          "draw_date": "2025-10-12",
+          "draw_time": null,
+          "observed_number": 26,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 26
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 48
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 58
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "9815d123-273b-4ef1-b47c-207944caaa48",
+          "draw_date": "2025-10-11",
+          "draw_time": null,
+          "observed_number": 26,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 26
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 1
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 95
+            }
+          ]
+        }
+      ],
+      "ranking": [
+        {
+          "number": 27,
+          "score": 0,
+          "table2_code": 53,
+          "neighbors": [
+            68,
+            76,
+            92
+          ],
+          "matched_neighbors": [],
+          "matches": []
+        },
+        {
+          "number": 38,
+          "score": 0,
+          "table2_code": 44,
+          "neighbors": [],
+          "matched_neighbors": [],
+          "matches": []
+        }
+      ],
+      "analysis_metadata": {
+        "draw_ids_analyzed_count": 10,
+        "draw_ids_analyzed": [
+          "a1c9bcef-cbb5-4c61-a878-c9c8723aa1ad",
+          "56521f71-0a78-4b77-8125-db9075099e75",
+          "ff8029d0-cafa-4207-b9b2-6686d2fda63b",
+          "8d654a4f-bbdf-457c-a38c-297105fa85a5",
+          "cbe734de-192c-4cce-a942-1ed4f13aca13",
+          "1ea5396e-b6ed-42cf-a743-77f260e61d5e",
+          "5d4f6a83-658d-496f-a514-890d13e7b306",
+          "925dfaa6-3be9-4546-8ca5-500aab0e3426",
+          "1f77a7f3-94a6-42cf-adce-b5f5bef86635",
+          "9815d123-273b-4ef1-b47c-207944caaa48"
+        ],
+        "internal_dedupe_discarded_count": 0,
+        "possible_content_duplicate_draws_detected": false,
+        "possible_content_duplicate_groups": [],
+        "content_duplicates_kept_separate_by_draw_id": true,
+        "sync_duplicate_policy": "Draws with identical lottery/date/numbers but different draw_id remain separate occurrences. Sync is not modified; duplicates are not hidden.",
+        "trigger": "drawn_number_equals_observed_number_only",
+        "exclude_observed_from_matches": true,
+        "exclude_companion_from_neighbors": true,
+        "ranking_includes_score_zero": true,
+        "ranking_sort": "score_desc_then_number_asc"
+      },
+      "chat_reply": "Analicé el número observado 26 (código madre 26) en Leidsa.\nLímite solicitado: últimas 10 ocurrencias. Ocurrencias encontradas en histórico: 106; usadas: 10.\nCompañeros de Tabla 1: 27, 38.\nPrimero en el ranking: 27 con puntuación 0.\nRanking completo (incluye score 0):\n1. 27 — score 0 (T2=53, vecinos 68, 76, 92)\n2. 38 — score 0 (T2=44, vecinos )\nAclaración: es una señal histórica del método de relaciones numéricas; no es certeza ni garantía de resultados futuros, ni recomendación de apuestas.",
+      "target_draw_in_used": true,
+      "target_draw_numbers": [
+        29,
+        1,
+        26
+      ]
+    },
+    {
+      "observed_number": 34,
+      "mother_code": 34,
+      "lottery_names": [
+        "Leidsa"
+      ],
+      "occurrence_limit": {
+        "mode": "all"
+      },
+      "occurrences_found": 115,
+      "occurrences_used": 115,
+      "companions": [
+        1,
+        17,
+        33,
+        49,
+        76
+      ],
+      "historical_occurrences": [
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "1871b32e-6d26-4a30-9ce5-8f855f4685d5",
+          "draw_date": "2026-06-04",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 16
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 40
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 34
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "6b8cf2d3-e12b-449a-8683-098001adb73d",
+          "draw_date": "2026-05-19",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 36
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 34
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 73
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "b2a92b86-edc3-4d66-9d19-8d00bde69cb5",
+          "draw_date": "2026-04-06",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 22
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 34
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 25
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "ae7e982e-bbad-4ea5-a6dd-66f402b66b0e",
+          "draw_date": "2026-03-11",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 34
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 44
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 3
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "f651d94f-8e4d-423b-b998-1af9832364f5",
+          "draw_date": "2026-03-01",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 54
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 98
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 34
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "eb22ab80-8a99-4b59-b8fb-abe6ca60c3d4",
+          "draw_date": "2026-02-19",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 84
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 34
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 79
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "3bc1412a-27cf-4992-81cb-89c2a5f931e9",
+          "draw_date": "2025-09-14",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 34
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 57
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 68
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "8e93b360-1ff3-46c8-8053-a1d97c08c4c8",
+          "draw_date": "2025-08-31",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 97
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 85
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 34
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "be7aba80-24b7-4552-bfe1-5640070ba2fa",
+          "draw_date": "2025-07-20",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 36
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 34
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 52
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "efb060d0-6c2a-4a82-9d2a-8e35dfd40444",
+          "draw_date": "2025-07-15",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 45
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 34
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 69
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "ee44a49e-3013-4346-b497-a3b93d824e8c",
+          "draw_date": "2025-05-15",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 34
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 36
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 28
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "3b261d81-2ccb-4258-a97d-7da080913211",
+          "draw_date": "2025-04-23",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 34
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 91
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 74
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "3076ddee-2c8f-4130-80a5-dc186c8c67a6",
+          "draw_date": "2025-03-26",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 81
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 34
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 88
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "74e088ff-53df-4755-a5a9-18c007555334",
+          "draw_date": "2025-02-12",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 34
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 12
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 52
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "2b49f69b-b81a-4729-96e5-28b63da6f463",
+          "draw_date": "2025-01-20",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 2
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 5
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 34
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "aebd4f61-4f06-4919-815f-772145c16895",
+          "draw_date": "2024-11-30",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 41
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 34
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 80
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "1a690a77-379b-4fe9-83e9-fc05648d702c",
+          "draw_date": "2024-11-01",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 34
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 92
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 93
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "a7edab89-170e-4dac-bc3a-b25d09770d6f",
+          "draw_date": "2024-10-23",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 48
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 34
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 79
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "b5806b86-db69-4bf9-8635-ef91bb5437eb",
+          "draw_date": "2024-10-16",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 66
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 34
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 65
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "0a308122-798a-4f6a-993d-0a446e2e2c23",
+          "draw_date": "2024-08-24",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 25
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 34
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 91
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "0407fa7f-4bad-4d97-8f11-04ebdfaac35d",
+          "draw_date": "2024-08-09",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 34
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 52
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 43
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "3ddccb83-02f7-4476-b498-97a1f14697a9",
+          "draw_date": "2024-08-02",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 5
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 34
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 62
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "128dbbf4-03d6-4918-b8d4-8d592fc465a6",
+          "draw_date": "2024-06-29",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 38
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 42
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 34
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "bd598603-2883-4b98-b7e8-c0d96f138ce5",
+          "draw_date": "2024-06-09",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 61
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 59
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 34
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "39843a64-f27e-47b0-bfe2-da88eed57767",
+          "draw_date": "2024-05-14",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 35
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 34
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 86
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "1bc48c49-9f5b-4a04-b798-0f4c87756df4",
+          "draw_date": "2024-03-24",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 95
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 74
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 34
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "be2e694c-8687-47c2-afbc-103f1d823f47",
+          "draw_date": "2023-10-29",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 34
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 16
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 74
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "630e6014-bccb-47f6-b1d1-69b323ea5ff2",
+          "draw_date": "2023-10-10",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 34
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 75
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 15
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "e77e1761-69cc-4274-b57d-97674ab57d06",
+          "draw_date": "2023-10-04",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 69
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 96
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 34
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "4b816ea0-ca6f-41be-bf75-6c2c4b2c0804",
+          "draw_date": "2023-09-27",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 36
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 34
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 3
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "96fbf740-9a83-4295-a6cf-c92ee941c364",
+          "draw_date": "2023-09-23",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 76
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 63
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 34
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "3bf58b64-de2a-48e1-8279-4c22291c1800",
+          "draw_date": "2023-09-17",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 49
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 72
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 34
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "b3b53e37-5955-4b01-8487-ec4649e7827a",
+          "draw_date": "2023-09-02",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 34
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 15
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 51
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "1b6ee2cb-7445-41b9-9ac7-7ba55d0c3f60",
+          "draw_date": "2023-08-28",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 26
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 34
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 22
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "9f7bec9a-fc9d-4408-9989-09380b9efe3b",
+          "draw_date": "2023-07-25",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 59
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 34
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 68
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "dbe2cf59-ba5b-4a85-ab49-bfb1f149d67c",
+          "draw_date": "2023-05-21",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 58
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 50
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 34
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "11fc52e4-2709-4a86-9790-b02e1b2b5b16",
+          "draw_date": "2023-04-24",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 16
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 34
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 38
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "1d3add6e-acf1-473c-8b5a-77552c36d101",
+          "draw_date": "2023-04-20",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 34
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 45
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 1
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "3e6b3031-6c3f-42c4-9ba5-70d3170bb245",
+          "draw_date": "2023-03-14",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 16
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 34
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 24
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "237f784b-f405-4909-b2b1-4bbb844dc091",
+          "draw_date": "2022-12-27",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 12
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 34
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 48
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "73a3974b-da3f-4be6-9a46-319a4c3ea882",
+          "draw_date": "2022-08-21",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 34
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 4
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 52
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "05a69da7-c744-468b-b40c-a2f9f9150779",
+          "draw_date": "2022-07-12",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 90
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 23
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 34
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "f529c04d-6fa5-4914-9ba6-f597d9a29e8b",
+          "draw_date": "2022-06-15",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 39
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 79
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 34
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "e5d5de5d-e79b-4567-97c3-1d0b4ff219cd",
+          "draw_date": "2022-05-26",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 34
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 26
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 43
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "0a694245-15bc-4c8f-8e4a-d9c5b265c3dd",
+          "draw_date": "2022-05-19",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 11
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 34
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 88
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "c9539a9e-4fbf-4d71-9129-838bbb29a24b",
+          "draw_date": "2022-04-24",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 90
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 34
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 96
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "e7b2f05a-8c8c-4785-932e-d9686a96c197",
+          "draw_date": "2022-04-12",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 30
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 33
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 34
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "3a1aad0e-eba8-4e9e-94e3-ac1399446c21",
+          "draw_date": "2022-03-29",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 61
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 66
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 34
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "9202fa4d-cb10-4040-be5c-ef719f0ff3ef",
+          "draw_date": "2022-02-20",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 89
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 22
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 34
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "321abf84-3c11-4b60-83f5-5e20ef8496c0",
+          "draw_date": "2021-12-26",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 79
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 34
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 48
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "2114cbe0-4e58-4321-982a-ec725fd926cb",
+          "draw_date": "2021-11-20",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 34
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 87
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 42
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "ba817fdf-5857-4520-9ad9-be33ad8db8fd",
+          "draw_date": "2021-10-17",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 46
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 67
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 34
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "65612906-d2f9-4980-9e7a-38d34e732a60",
+          "draw_date": "2021-08-09",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 14
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 75
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 34
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "91406dde-02a6-4b39-9f1d-03d4e703d74c",
+          "draw_date": "2021-08-01",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 30
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 34
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 54
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "5f83688c-55e1-4a9f-b4cc-f43bcff3d786",
+          "draw_date": "2021-06-25",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 0
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 66
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 34
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "6f38bb51-0a16-4a74-a84e-140967af5881",
+          "draw_date": "2021-06-06",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 95
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 34
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 56
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "6ac069c9-dca5-4789-9320-3954d75a7b63",
+          "draw_date": "2021-02-24",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 54
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 34
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 6
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "a8524bfd-ba58-4722-835c-445b83294629",
+          "draw_date": "2021-01-25",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 34
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 93
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 28
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "5b311702-98a7-4dda-a8eb-98ad801556db",
+          "draw_date": "2020-10-08",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 27
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 34
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 35
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "3a0123a1-c769-41e8-a3f0-759a2c3ff4e6",
+          "draw_date": "2020-10-06",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 71
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 34
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 82
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "0b2e0d9a-2ec9-4c90-aa29-12394edc56df",
+          "draw_date": "2020-09-27",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 34
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 92
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 96
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "f7e75f7d-ea78-4582-af38-bcd5e421eb5c",
+          "draw_date": "2020-08-24",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 98
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 34
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 15
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "9c11c954-bf69-4c76-8129-6ed159a1c661",
+          "draw_date": "2020-08-22",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 34
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 93
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 16
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "a6482a39-b5f9-4a46-93dc-e4561eafef6e",
+          "draw_date": "2020-08-01",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 80
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 34
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 67
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "c5396aa6-36c3-4321-bf37-729a5caa8e7f",
+          "draw_date": "2020-07-25",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 34
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 54
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 95
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "938535c3-c719-435e-b96a-7dc223c3a191",
+          "draw_date": "2020-06-18",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 34
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 8
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 69
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "17337227-49d1-46a6-b9af-c52aef88d81e",
+          "draw_date": "2019-08-06",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 34
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 74
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 91
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "51c06ac7-bc31-4dd4-8b94-192967bea64f",
+          "draw_date": "2019-08-01",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 89
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 90
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 34
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "e403f1cd-274c-4562-a0bf-5706a57ba410",
+          "draw_date": "2019-07-26",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 7
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 54
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 34
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "2f392ab9-ee5d-4c31-960d-b1cef82c9877",
+          "draw_date": "2019-07-20",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 34
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 56
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 4
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "abc40342-110b-446e-8604-41ce1e98008b",
+          "draw_date": "2019-06-25",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 34
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 25
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 63
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "df238bbf-83e5-4c91-9578-01429e032611",
+          "draw_date": "2019-06-19",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 43
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 34
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 68
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "c278c10f-ea4c-4067-9589-6472ada66cd5",
+          "draw_date": "2019-06-06",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 34
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 56
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 98
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "cab8b485-08c0-448d-afb6-af34b93bb6f2",
+          "draw_date": "2019-04-16",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 39
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 34
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 4
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "04cf9cae-44b1-4dce-852e-fe589a940cee",
+          "draw_date": "2019-03-20",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 17
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 34
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 21
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "7085a99a-eb20-4099-b87b-af216019810d",
+          "draw_date": "2019-03-11",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 0
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 34
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 91
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "79e3e2fd-2587-4f92-ae3a-94d9f1d92dff",
+          "draw_date": "2019-03-07",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 34
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 47
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 71
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "6bc33be3-9a86-467a-be7e-65f6e5ec42e9",
+          "draw_date": "2019-01-27",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 34
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 95
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 27
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "8eb9770e-a667-49fd-9f6d-7cbc41a7a68b",
+          "draw_date": "2018-12-10",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 1
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 34
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 5
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "f194da35-2f5e-4c67-be88-8eb0dfd730fe",
+          "draw_date": "2018-12-02",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 34
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 75
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 75
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "22df2a8f-35ce-4cd6-b0a9-5a315e657e0f",
+          "draw_date": "2018-10-30",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 66
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 90
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 34
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "8bcc2955-1cb6-4ccb-a75d-770a173b70c4",
+          "draw_date": "2018-10-27",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 79
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 5
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 34
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "fbe2f68d-c172-4926-b9a9-f964435b94b0",
+          "draw_date": "2018-09-19",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 56
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 24
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 34
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "d45e3cbb-3b50-4431-915e-aa7cf21be328",
+          "draw_date": "2018-06-19",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 2
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 77
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 34
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "add9f0e2-951e-4a15-ab1d-bad11a3cf20e",
+          "draw_date": "2018-06-18",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 77
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 34
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 87
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "efd139f6-5356-4240-8a51-aaf1a67a8f6f",
+          "draw_date": "2018-06-17",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 96
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 66
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 34
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "464532c3-6127-4d01-8ea3-5801a5d655c6",
+          "draw_date": "2018-05-12",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 85
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 44
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 34
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "1c91831e-ddb1-44c1-9bfd-22e2a74ad9dc",
+          "draw_date": "2018-05-09",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 34
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 31
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 11
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "c681e79b-c668-4901-bc2d-45df7fd24241",
+          "draw_date": "2018-04-10",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 34
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 88
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 83
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "d7c0cd4a-2464-47b6-acd7-b9527b0b6a00",
+          "draw_date": "2018-01-03",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 34
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 11
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 29
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "c8bf87d4-9b32-4ca3-8576-407deb21fc58",
+          "draw_date": "2017-07-14",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 36
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 38
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 34
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "08544580-4e65-4a4d-9bae-778b1a115fe6",
+          "draw_date": "2017-06-05",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 34
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 53
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 42
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "fc743e20-5840-4c69-99cb-2868aac8f322",
+          "draw_date": "2017-04-09",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 2
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 34
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 90
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "56d6fccd-254a-478c-b946-621003ebcb95",
+          "draw_date": "2017-03-30",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 2
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 55
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 34
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "1f891177-27e2-43b1-9010-7c90980aefaa",
+          "draw_date": "2017-02-03",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 34
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 90
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 58
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "58982cb1-65be-46f4-a6a5-599bbdef5ebe",
+          "draw_date": "2016-12-06",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 34
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 4
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 91
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "0eb08cb6-0cce-458f-ac1a-fb313d29452c",
+          "draw_date": "2016-11-30",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 95
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 54
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 34
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "1049c6e3-b273-4745-9c15-8549cfaa62b9",
+          "draw_date": "2016-09-13",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 34
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 79
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 95
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "60ab475a-1f44-46bd-9d55-72ae6025c3db",
+          "draw_date": "2016-08-26",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 23
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 34
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 41
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "482fcba8-e116-4431-a11e-6b16bcc5db54",
+          "draw_date": "2016-06-28",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 32
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 34
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 51
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "4fa18222-589f-452f-ab0b-50904c6f99c1",
+          "draw_date": "2016-05-22",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 65
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 58
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 34
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "9d28aa48-57e3-4ce0-8a28-6d4de4820a2f",
+          "draw_date": "2016-02-14",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 58
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 34
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 68
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "0bef7f8e-73e2-4f53-afba-165ff8c5266d",
+          "draw_date": "2016-02-01",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 13
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 34
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 13
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "a22aaf21-f454-47c9-bec5-0084665b1a44",
+          "draw_date": "2015-11-09",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 76
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 59
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 34
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "3fb6235d-5b66-4710-bb24-a67b64e22a7a",
+          "draw_date": "2015-11-03",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 59
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 56
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 34
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "daff3c76-f584-443a-b301-2b0bcf6eb554",
+          "draw_date": "2015-11-02",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 28
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 34
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 68
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "6265abcd-3a3d-4285-972c-85c28d2dddb5",
+          "draw_date": "2015-10-16",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 36
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 61
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 34
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "ed3d58bf-9cfc-4c8e-97f1-215206815d50",
+          "draw_date": "2015-10-02",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 76
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 34
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 98
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "c5fac68d-ebbb-4497-894d-51d322f166f1",
+          "draw_date": "2015-09-03",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 21
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 34
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 77
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "04f33444-0853-4e1b-bac3-b1a5b984ada2",
+          "draw_date": "2015-07-09",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 75
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 53
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 34
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "37ee956c-d662-4dbe-9f89-a58981557767",
+          "draw_date": "2015-05-18",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 34
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 91
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 26
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "5d76e47f-b31d-4a76-b199-d6aeeefe60ca",
+          "draw_date": "2015-05-14",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 34
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 1
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 22
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "aca3c91b-4726-46d1-be24-3f78b9b3ff43",
+          "draw_date": "2015-05-11",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 81
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 81
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 34
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "0395603c-a44a-4b9a-b34e-c25d80074e4c",
+          "draw_date": "2015-02-25",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 93
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 34
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 5
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "01105fc3-7a8a-4f44-9f4b-65a048c3846e",
+          "draw_date": "2015-01-10",
+          "draw_time": null,
+          "observed_number": 34,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 79
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 34
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 47
+            }
+          ]
+        }
+      ],
+      "ranking": [
+        {
+          "number": 76,
+          "score": 9,
+          "table2_code": 53,
+          "neighbors": [
+            27,
+            68,
+            92
+          ],
+          "matched_neighbors": [
+            27,
+            68,
+            92
+          ],
+          "matches": [
+            {
+              "neighbor": 68,
+              "draw_id": "3bc1412a-27cf-4992-81cb-89c2a5f931e9",
+              "draw_date": "2025-09-14",
+              "points": 1
+            },
+            {
+              "neighbor": 92,
+              "draw_id": "1a690a77-379b-4fe9-83e9-fc05648d702c",
+              "draw_date": "2024-11-01",
+              "points": 1
+            },
+            {
+              "neighbor": 68,
+              "draw_id": "9f7bec9a-fc9d-4408-9989-09380b9efe3b",
+              "draw_date": "2023-07-25",
+              "points": 1
+            },
+            {
+              "neighbor": 27,
+              "draw_id": "5b311702-98a7-4dda-a8eb-98ad801556db",
+              "draw_date": "2020-10-08",
+              "points": 1
+            },
+            {
+              "neighbor": 92,
+              "draw_id": "0b2e0d9a-2ec9-4c90-aa29-12394edc56df",
+              "draw_date": "2020-09-27",
+              "points": 1
+            },
+            {
+              "neighbor": 68,
+              "draw_id": "df238bbf-83e5-4c91-9578-01429e032611",
+              "draw_date": "2019-06-19",
+              "points": 1
+            },
+            {
+              "neighbor": 27,
+              "draw_id": "6bc33be3-9a86-467a-be7e-65f6e5ec42e9",
+              "draw_date": "2019-01-27",
+              "points": 1
+            },
+            {
+              "neighbor": 68,
+              "draw_id": "9d28aa48-57e3-4ce0-8a28-6d4de4820a2f",
+              "draw_date": "2016-02-14",
+              "points": 1
+            },
+            {
+              "neighbor": 68,
+              "draw_id": "daff3c76-f584-443a-b301-2b0bcf6eb554",
+              "draw_date": "2015-11-02",
+              "points": 1
+            }
+          ]
+        },
+        {
+          "number": 17,
+          "score": 2,
+          "table2_code": 59,
+          "neighbors": [
+            13
+          ],
+          "matched_neighbors": [
+            13
+          ],
+          "matches": [
+            {
+              "neighbor": 13,
+              "draw_id": "0bef7f8e-73e2-4f53-afba-165ff8c5266d",
+              "draw_date": "2016-02-01",
+              "points": 1
+            },
+            {
+              "neighbor": 13,
+              "draw_id": "0bef7f8e-73e2-4f53-afba-165ff8c5266d",
+              "draw_date": "2016-02-01",
+              "points": 1
+            }
+          ]
+        },
+        {
+          "number": 1,
+          "score": 0,
+          "table2_code": 5,
+          "neighbors": [
+            10,
+            100
+          ],
+          "matched_neighbors": [],
+          "matches": []
+        },
+        {
+          "number": 33,
+          "score": 0,
+          "table2_code": 85,
+          "neighbors": [],
+          "matched_neighbors": [],
+          "matches": []
+        },
+        {
+          "number": 49,
+          "score": 0,
+          "table2_code": 72,
+          "neighbors": [],
+          "matched_neighbors": [],
+          "matches": []
+        }
+      ],
+      "analysis_metadata": {
+        "draw_ids_analyzed_count": 115,
+        "draw_ids_analyzed": [
+          "1871b32e-6d26-4a30-9ce5-8f855f4685d5",
+          "6b8cf2d3-e12b-449a-8683-098001adb73d",
+          "b2a92b86-edc3-4d66-9d19-8d00bde69cb5",
+          "ae7e982e-bbad-4ea5-a6dd-66f402b66b0e",
+          "f651d94f-8e4d-423b-b998-1af9832364f5",
+          "eb22ab80-8a99-4b59-b8fb-abe6ca60c3d4",
+          "3bc1412a-27cf-4992-81cb-89c2a5f931e9",
+          "8e93b360-1ff3-46c8-8053-a1d97c08c4c8",
+          "be7aba80-24b7-4552-bfe1-5640070ba2fa",
+          "efb060d0-6c2a-4a82-9d2a-8e35dfd40444",
+          "ee44a49e-3013-4346-b497-a3b93d824e8c",
+          "3b261d81-2ccb-4258-a97d-7da080913211",
+          "3076ddee-2c8f-4130-80a5-dc186c8c67a6",
+          "74e088ff-53df-4755-a5a9-18c007555334",
+          "2b49f69b-b81a-4729-96e5-28b63da6f463",
+          "aebd4f61-4f06-4919-815f-772145c16895",
+          "1a690a77-379b-4fe9-83e9-fc05648d702c",
+          "a7edab89-170e-4dac-bc3a-b25d09770d6f",
+          "b5806b86-db69-4bf9-8635-ef91bb5437eb",
+          "0a308122-798a-4f6a-993d-0a446e2e2c23",
+          "0407fa7f-4bad-4d97-8f11-04ebdfaac35d",
+          "3ddccb83-02f7-4476-b498-97a1f14697a9",
+          "128dbbf4-03d6-4918-b8d4-8d592fc465a6",
+          "bd598603-2883-4b98-b7e8-c0d96f138ce5",
+          "39843a64-f27e-47b0-bfe2-da88eed57767",
+          "1bc48c49-9f5b-4a04-b798-0f4c87756df4",
+          "be2e694c-8687-47c2-afbc-103f1d823f47",
+          "630e6014-bccb-47f6-b1d1-69b323ea5ff2",
+          "e77e1761-69cc-4274-b57d-97674ab57d06",
+          "4b816ea0-ca6f-41be-bf75-6c2c4b2c0804",
+          "96fbf740-9a83-4295-a6cf-c92ee941c364",
+          "3bf58b64-de2a-48e1-8279-4c22291c1800",
+          "b3b53e37-5955-4b01-8487-ec4649e7827a",
+          "1b6ee2cb-7445-41b9-9ac7-7ba55d0c3f60",
+          "9f7bec9a-fc9d-4408-9989-09380b9efe3b",
+          "dbe2cf59-ba5b-4a85-ab49-bfb1f149d67c",
+          "11fc52e4-2709-4a86-9790-b02e1b2b5b16",
+          "1d3add6e-acf1-473c-8b5a-77552c36d101",
+          "3e6b3031-6c3f-42c4-9ba5-70d3170bb245",
+          "237f784b-f405-4909-b2b1-4bbb844dc091",
+          "73a3974b-da3f-4be6-9a46-319a4c3ea882",
+          "05a69da7-c744-468b-b40c-a2f9f9150779",
+          "f529c04d-6fa5-4914-9ba6-f597d9a29e8b",
+          "e5d5de5d-e79b-4567-97c3-1d0b4ff219cd",
+          "0a694245-15bc-4c8f-8e4a-d9c5b265c3dd",
+          "c9539a9e-4fbf-4d71-9129-838bbb29a24b",
+          "e7b2f05a-8c8c-4785-932e-d9686a96c197",
+          "3a1aad0e-eba8-4e9e-94e3-ac1399446c21",
+          "9202fa4d-cb10-4040-be5c-ef719f0ff3ef",
+          "321abf84-3c11-4b60-83f5-5e20ef8496c0",
+          "2114cbe0-4e58-4321-982a-ec725fd926cb",
+          "ba817fdf-5857-4520-9ad9-be33ad8db8fd",
+          "65612906-d2f9-4980-9e7a-38d34e732a60",
+          "91406dde-02a6-4b39-9f1d-03d4e703d74c",
+          "5f83688c-55e1-4a9f-b4cc-f43bcff3d786",
+          "6f38bb51-0a16-4a74-a84e-140967af5881",
+          "6ac069c9-dca5-4789-9320-3954d75a7b63",
+          "a8524bfd-ba58-4722-835c-445b83294629",
+          "5b311702-98a7-4dda-a8eb-98ad801556db",
+          "3a0123a1-c769-41e8-a3f0-759a2c3ff4e6",
+          "0b2e0d9a-2ec9-4c90-aa29-12394edc56df",
+          "f7e75f7d-ea78-4582-af38-bcd5e421eb5c",
+          "9c11c954-bf69-4c76-8129-6ed159a1c661",
+          "a6482a39-b5f9-4a46-93dc-e4561eafef6e",
+          "c5396aa6-36c3-4321-bf37-729a5caa8e7f",
+          "938535c3-c719-435e-b96a-7dc223c3a191",
+          "17337227-49d1-46a6-b9af-c52aef88d81e",
+          "51c06ac7-bc31-4dd4-8b94-192967bea64f",
+          "e403f1cd-274c-4562-a0bf-5706a57ba410",
+          "2f392ab9-ee5d-4c31-960d-b1cef82c9877",
+          "abc40342-110b-446e-8604-41ce1e98008b",
+          "df238bbf-83e5-4c91-9578-01429e032611",
+          "c278c10f-ea4c-4067-9589-6472ada66cd5",
+          "cab8b485-08c0-448d-afb6-af34b93bb6f2",
+          "04cf9cae-44b1-4dce-852e-fe589a940cee",
+          "7085a99a-eb20-4099-b87b-af216019810d",
+          "79e3e2fd-2587-4f92-ae3a-94d9f1d92dff",
+          "6bc33be3-9a86-467a-be7e-65f6e5ec42e9",
+          "8eb9770e-a667-49fd-9f6d-7cbc41a7a68b",
+          "f194da35-2f5e-4c67-be88-8eb0dfd730fe",
+          "22df2a8f-35ce-4cd6-b0a9-5a315e657e0f",
+          "8bcc2955-1cb6-4ccb-a75d-770a173b70c4",
+          "fbe2f68d-c172-4926-b9a9-f964435b94b0",
+          "d45e3cbb-3b50-4431-915e-aa7cf21be328",
+          "add9f0e2-951e-4a15-ab1d-bad11a3cf20e",
+          "efd139f6-5356-4240-8a51-aaf1a67a8f6f",
+          "464532c3-6127-4d01-8ea3-5801a5d655c6",
+          "1c91831e-ddb1-44c1-9bfd-22e2a74ad9dc",
+          "c681e79b-c668-4901-bc2d-45df7fd24241",
+          "d7c0cd4a-2464-47b6-acd7-b9527b0b6a00",
+          "c8bf87d4-9b32-4ca3-8576-407deb21fc58",
+          "08544580-4e65-4a4d-9bae-778b1a115fe6",
+          "fc743e20-5840-4c69-99cb-2868aac8f322",
+          "56d6fccd-254a-478c-b946-621003ebcb95",
+          "1f891177-27e2-43b1-9010-7c90980aefaa",
+          "58982cb1-65be-46f4-a6a5-599bbdef5ebe",
+          "0eb08cb6-0cce-458f-ac1a-fb313d29452c",
+          "1049c6e3-b273-4745-9c15-8549cfaa62b9",
+          "60ab475a-1f44-46bd-9d55-72ae6025c3db",
+          "482fcba8-e116-4431-a11e-6b16bcc5db54",
+          "4fa18222-589f-452f-ab0b-50904c6f99c1",
+          "9d28aa48-57e3-4ce0-8a28-6d4de4820a2f",
+          "0bef7f8e-73e2-4f53-afba-165ff8c5266d",
+          "a22aaf21-f454-47c9-bec5-0084665b1a44",
+          "3fb6235d-5b66-4710-bb24-a67b64e22a7a",
+          "daff3c76-f584-443a-b301-2b0bcf6eb554",
+          "6265abcd-3a3d-4285-972c-85c28d2dddb5",
+          "ed3d58bf-9cfc-4c8e-97f1-215206815d50",
+          "c5fac68d-ebbb-4497-894d-51d322f166f1",
+          "04f33444-0853-4e1b-bac3-b1a5b984ada2",
+          "37ee956c-d662-4dbe-9f89-a58981557767",
+          "5d76e47f-b31d-4a76-b199-d6aeeefe60ca",
+          "aca3c91b-4726-46d1-be24-3f78b9b3ff43",
+          "0395603c-a44a-4b9a-b34e-c25d80074e4c",
+          "01105fc3-7a8a-4f44-9f4b-65a048c3846e"
+        ],
+        "internal_dedupe_discarded_count": 0,
+        "possible_content_duplicate_draws_detected": false,
+        "possible_content_duplicate_groups": [],
+        "content_duplicates_kept_separate_by_draw_id": true,
+        "sync_duplicate_policy": "Draws with identical lottery/date/numbers but different draw_id remain separate occurrences. Sync is not modified; duplicates are not hidden.",
+        "trigger": "drawn_number_equals_observed_number_only",
+        "exclude_observed_from_matches": true,
+        "exclude_companion_from_neighbors": true,
+        "ranking_includes_score_zero": true,
+        "ranking_sort": "score_desc_then_number_asc"
+      },
+      "chat_reply": "Analicé el número observado 34 (código madre 34) en Leidsa.\nLímite solicitado: todas las ocurrencias. Ocurrencias encontradas en histórico: 115; usadas: 115.\nCompañeros de Tabla 1: 1, 17, 33, 49, 76.\nPrimero en el ranking: 76 con puntuación 9.\nVecinos que lo fortalecieron: 27, 68, 92.\nSorteos de refuerzo: 68 en Quiniela Leidsa (2025-09-14, pos 3); 92 en Quiniela Leidsa (2024-11-01, pos 2); 68 en Quiniela Leidsa (2023-07-25, pos 3); 27 en Quiniela Leidsa (2020-10-08, pos 1); 92 en Quiniela Leidsa (2020-09-27, pos 2); 68 en Quiniela Leidsa (2019-06-19, pos 3).\nRanking completo (incluye score 0):\n1. 76 — score 9 (T2=53, vecinos 27, 68, 92)\n2. 17 — score 2 (T2=59, vecinos 13)\n3. 1 — score 0 (T2=5, vecinos 10, 100)\n4. 33 — score 0 (T2=85, vecinos )\n5. 49 — score 0 (T2=72, vecinos )\nAclaración: es una señal histórica del método de relaciones numéricas; no es certeza ni garantía de resultados futuros, ni recomendación de apuestas."
+    },
+    {
+      "observed_number": 45,
+      "mother_code": 45,
+      "lottery_names": [
+        "Leidsa",
+        "Loteka"
+      ],
+      "occurrence_limit": {
+        "mode": "last_k",
+        "k": 20
+      },
+      "occurrences_found": 240,
+      "occurrences_used": 20,
+      "companions": [
+        69,
+        80
+      ],
+      "historical_occurrences": [
+        {
+          "lottery_id": "b9f2c5a2-bc3e-4382-9b6d-3cee16db00fd",
+          "lottery_name": "Quiniela Loteka",
+          "draw_id": "9291acde-9274-4aba-bc9a-b4f286c5124b",
+          "draw_date": "2026-07-17",
+          "draw_time": null,
+          "observed_number": 45,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 6
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 45
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 62
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "554317bf-afe3-4eaf-84b0-679d294ab966",
+          "draw_date": "2026-06-13",
+          "draw_time": null,
+          "observed_number": 45,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 85
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 45
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 78
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "b6459b0b-7f53-4395-9166-ac681a511171",
+          "draw_date": "2026-06-01",
+          "draw_time": null,
+          "observed_number": 45,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 57
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 17
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 45
+            }
+          ]
+        },
+        {
+          "lottery_id": "b9f2c5a2-bc3e-4382-9b6d-3cee16db00fd",
+          "lottery_name": "Quiniela Loteka",
+          "draw_id": "401e96d7-3a95-43ae-a175-2d33478b3b82",
+          "draw_date": "2026-05-12",
+          "draw_time": null,
+          "observed_number": 45,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 59
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 45
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 16
+            }
+          ]
+        },
+        {
+          "lottery_id": "b9f2c5a2-bc3e-4382-9b6d-3cee16db00fd",
+          "lottery_name": "Quiniela Loteka",
+          "draw_id": "c6ba1b7a-4e4a-46ec-b3b6-4abbe5ec0c65",
+          "draw_date": "2026-05-05",
+          "draw_time": null,
+          "observed_number": 45,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 45
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 70
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 52
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "198a86ef-7d88-4f92-ac18-8f8d72e69e03",
+          "draw_date": "2026-04-30",
+          "draw_time": null,
+          "observed_number": 45,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 39
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 13
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 45
+            }
+          ]
+        },
+        {
+          "lottery_id": "b9f2c5a2-bc3e-4382-9b6d-3cee16db00fd",
+          "lottery_name": "Quiniela Loteka",
+          "draw_id": "317ccb4d-73c7-4e6e-bbc5-05680e68818a",
+          "draw_date": "2026-04-28",
+          "draw_time": null,
+          "observed_number": 45,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 57
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 45
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 43
+            }
+          ]
+        },
+        {
+          "lottery_id": "b9f2c5a2-bc3e-4382-9b6d-3cee16db00fd",
+          "lottery_name": "Quiniela Loteka",
+          "draw_id": "a4410235-0d48-495f-a5eb-fb51518ee78e",
+          "draw_date": "2026-02-19",
+          "draw_time": null,
+          "observed_number": 45,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 45
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 22
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 40
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "3c728a13-23b0-457b-b4d1-64e87d7a9d16",
+          "draw_date": "2026-02-09",
+          "draw_time": null,
+          "observed_number": 45,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 45
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 46
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 88
+            }
+          ]
+        },
+        {
+          "lottery_id": "b9f2c5a2-bc3e-4382-9b6d-3cee16db00fd",
+          "lottery_name": "Quiniela Loteka",
+          "draw_id": "4b7cc8f1-9bad-46bd-aa3d-90cc6c3f931b",
+          "draw_date": "2026-02-07",
+          "draw_time": null,
+          "observed_number": 45,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 7
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 17
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 45
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "f56a2253-9291-4a38-b86e-f1b97ed3f1c0",
+          "draw_date": "2026-01-31",
+          "draw_time": null,
+          "observed_number": 45,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 91
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 45
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 85
+            }
+          ]
+        },
+        {
+          "lottery_id": "b9f2c5a2-bc3e-4382-9b6d-3cee16db00fd",
+          "lottery_name": "Quiniela Loteka",
+          "draw_id": "2a0340a0-efba-4c9f-a244-b8720e8b72d1",
+          "draw_date": "2026-01-16",
+          "draw_time": null,
+          "observed_number": 45,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 95
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 9
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 45
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "c27d9432-c4c3-4cce-a087-691481998d96",
+          "draw_date": "2026-01-06",
+          "draw_time": null,
+          "observed_number": 45,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 45
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 24
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 73
+            }
+          ]
+        },
+        {
+          "lottery_id": "b9f2c5a2-bc3e-4382-9b6d-3cee16db00fd",
+          "lottery_name": "Quiniela Loteka",
+          "draw_id": "2e6c6d1c-130d-4f43-a2fb-4e00ac61adaa",
+          "draw_date": "2025-12-05",
+          "draw_time": null,
+          "observed_number": 45,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 91
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 53
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 45
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "232e9858-67ec-4f4e-956b-8cfe4401ff99",
+          "draw_date": "2025-11-21",
+          "draw_time": null,
+          "observed_number": 45,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 22
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 41
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 45
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "2374c9be-d002-4ee1-a2db-b36cf612fb30",
+          "draw_date": "2025-11-15",
+          "draw_time": null,
+          "observed_number": 45,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 45
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 76
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 63
+            }
+          ]
+        },
+        {
+          "lottery_id": "b9f2c5a2-bc3e-4382-9b6d-3cee16db00fd",
+          "lottery_name": "Quiniela Loteka",
+          "draw_id": "e727eee5-06ae-4b9b-a1a1-c8f5f7d42621",
+          "draw_date": "2025-11-14",
+          "draw_time": null,
+          "observed_number": 45,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 45
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 29
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 96
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "3bbcbcd6-5426-4a86-b717-a285ea3ec008",
+          "draw_date": "2025-11-12",
+          "draw_time": null,
+          "observed_number": 45,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 45
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 33
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 42
+            }
+          ]
+        },
+        {
+          "lottery_id": "b9f2c5a2-bc3e-4382-9b6d-3cee16db00fd",
+          "lottery_name": "Quiniela Loteka",
+          "draw_id": "4f93a13f-0199-4efc-bad9-7aea78cfcc30",
+          "draw_date": "2025-11-01",
+          "draw_time": null,
+          "observed_number": 45,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 45
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 72
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 28
+            }
+          ]
+        },
+        {
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "lottery_name": "Quiniela Leidsa",
+          "draw_id": "5d36d0b7-3b2b-4761-9aed-c4c25b70b260",
+          "draw_date": "2025-10-29",
+          "draw_time": null,
+          "observed_number": 45,
+          "draw_numbers": [
+            {
+              "position": 1,
+              "position_label": "1ro",
+              "drawn_number": 45
+            },
+            {
+              "position": 2,
+              "position_label": "2do",
+              "drawn_number": 64
+            },
+            {
+              "position": 3,
+              "position_label": "3ro",
+              "drawn_number": 59
+            }
+          ]
+        }
+      ],
+      "ranking": [
+        {
+          "number": 69,
+          "score": 4,
+          "table2_code": 47,
+          "neighbors": [
+            11,
+            57,
+            91
+          ],
+          "matched_neighbors": [
+            57,
+            91
+          ],
+          "matches": [
+            {
+              "neighbor": 57,
+              "draw_id": "b6459b0b-7f53-4395-9166-ac681a511171",
+              "draw_date": "2026-06-01",
+              "points": 1
+            },
+            {
+              "neighbor": 57,
+              "draw_id": "317ccb4d-73c7-4e6e-bbc5-05680e68818a",
+              "draw_date": "2026-04-28",
+              "points": 1
+            },
+            {
+              "neighbor": 91,
+              "draw_id": "f56a2253-9291-4a38-b86e-f1b97ed3f1c0",
+              "draw_date": "2026-01-31",
+              "points": 1
+            },
+            {
+              "neighbor": 91,
+              "draw_id": "2e6c6d1c-130d-4f43-a2fb-4e00ac61adaa",
+              "draw_date": "2025-12-05",
+              "points": 1
+            }
+          ]
+        },
+        {
+          "number": 80,
+          "score": 0,
+          "table2_code": 13,
+          "neighbors": [
+            8
+          ],
+          "matched_neighbors": [],
+          "matches": []
+        }
+      ],
+      "analysis_metadata": {
+        "draw_ids_analyzed_count": 20,
+        "draw_ids_analyzed": [
+          "9291acde-9274-4aba-bc9a-b4f286c5124b",
+          "554317bf-afe3-4eaf-84b0-679d294ab966",
+          "b6459b0b-7f53-4395-9166-ac681a511171",
+          "401e96d7-3a95-43ae-a175-2d33478b3b82",
+          "c6ba1b7a-4e4a-46ec-b3b6-4abbe5ec0c65",
+          "198a86ef-7d88-4f92-ac18-8f8d72e69e03",
+          "317ccb4d-73c7-4e6e-bbc5-05680e68818a",
+          "a4410235-0d48-495f-a5eb-fb51518ee78e",
+          "3c728a13-23b0-457b-b4d1-64e87d7a9d16",
+          "4b7cc8f1-9bad-46bd-aa3d-90cc6c3f931b",
+          "f56a2253-9291-4a38-b86e-f1b97ed3f1c0",
+          "2a0340a0-efba-4c9f-a244-b8720e8b72d1",
+          "c27d9432-c4c3-4cce-a087-691481998d96",
+          "2e6c6d1c-130d-4f43-a2fb-4e00ac61adaa",
+          "232e9858-67ec-4f4e-956b-8cfe4401ff99",
+          "2374c9be-d002-4ee1-a2db-b36cf612fb30",
+          "e727eee5-06ae-4b9b-a1a1-c8f5f7d42621",
+          "3bbcbcd6-5426-4a86-b717-a285ea3ec008",
+          "4f93a13f-0199-4efc-bad9-7aea78cfcc30",
+          "5d36d0b7-3b2b-4761-9aed-c4c25b70b260"
+        ],
+        "internal_dedupe_discarded_count": 0,
+        "possible_content_duplicate_draws_detected": false,
+        "possible_content_duplicate_groups": [],
+        "content_duplicates_kept_separate_by_draw_id": true,
+        "sync_duplicate_policy": "Draws with identical lottery/date/numbers but different draw_id remain separate occurrences. Sync is not modified; duplicates are not hidden.",
+        "trigger": "drawn_number_equals_observed_number_only",
+        "exclude_observed_from_matches": true,
+        "exclude_companion_from_neighbors": true,
+        "ranking_includes_score_zero": true,
+        "ranking_sort": "score_desc_then_number_asc"
+      },
+      "chat_reply": "Analicé el número observado 45 (código madre 45) en Leidsa, Loteka.\nLímite solicitado: últimas 20 ocurrencias. Ocurrencias encontradas en histórico: 240; usadas: 20.\nCompañeros de Tabla 1: 69, 80.\nPrimero en el ranking: 69 con puntuación 4.\nVecinos que lo fortalecieron: 57, 91.\nSorteos de refuerzo: 57 en Quiniela Leidsa (2026-06-01, pos 1); 57 en Quiniela Loteka (2026-04-28, pos 1); 91 en Quiniela Leidsa (2026-01-31, pos 1); 91 en Quiniela Loteka (2025-12-05, pos 1).\nRanking completo (incluye score 0):\n1. 69 — score 4 (T2=47, vecinos 11, 57, 91)\n2. 80 — score 0 (T2=13, vecinos 8)\nAclaración: es una señal histórica del método de relaciones numéricas; no es certeza ni garantía de resultados futuros, ni recomendación de apuestas."
+    }
+  ],
+  "recommendation": "GO_CONDICIONADO",
+  "recommendation_reason": "Motor/histórico/API/chat OK en DEV. Riesgo residual de draws duplicados por sync aceptado temporalmente. UI visual requiere verificación en navegador admin. Producción no autorizada."
+}

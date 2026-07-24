@@ -167,6 +167,7 @@ class AnalysisResult:
     historical_occurrences: list[dict[str, Any]]
     direct_companions: list[int]
     candidates: list[StrengthenedCandidate]
+    analysis_metadata: dict[str, Any] = field(default_factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -183,4 +184,5 @@ class AnalysisResult:
             "companions_analyzed": list(self.direct_companions),
             "ranking": [c.to_dict() for c in self.candidates],
             "candidates": [c.to_dict() for c in self.candidates],
+            "analysis_metadata": dict(self.analysis_metadata),
         }

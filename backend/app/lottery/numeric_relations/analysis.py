@@ -92,6 +92,7 @@ def analyze_observed_number(
     ]
 
     candidates: list[StrengthenedCandidate] = []
+    internal_dedupe_discarded = 0
     for companion in companions:
         t2_code = cat.get_table2_code_for_number(companion)
         table2_group = list(cat.table2_code_to_numbers.get(t2_code, []))
@@ -120,6 +121,7 @@ def analyze_observed_number(
                         companion=companion,
                     )
                     if key in seen_keys:
+                        internal_dedupe_discarded += 1
                         continue
                     seen_keys.add(key)
                     m = Match(
@@ -159,6 +161,42 @@ def analyze_observed_number(
 
     candidates.sort(key=lambda c: (-c.score, c.number))
 
+    draw_ids_analyzed = [str(o.draw_id) for o in occurrences_used_list]
+    # Possible sync duplicates: same lottery + identical number multiset, distinct draw_id.
+    # Kept separate intentionally — do not merge or drop.
+    fingerprint_to_draws: dict[str, list[str]] = {}
+    for o in occurrences_used_list:
+        nums = tuple(
+            sorted(
+                (int(ref.position), int(ref.drawn_number)) for ref in o.draw_numbers
+            )
+        )
+        fp = f"{o.lottery_id}|{o.draw_date.isoformat()}|{nums}"
+        fingerprint_to_draws.setdefault(fp, []).append(str(o.draw_id))
+    possible_content_duplicate_groups = [
+        {"fingerprint": fp, "draw_ids": ids, "kept_separate": True}
+        for fp, ids in fingerprint_to_draws.items()
+        if len(ids) > 1
+    ]
+
+    analysis_metadata = {
+        "draw_ids_analyzed_count": len(draw_ids_analyzed),
+        "draw_ids_analyzed": draw_ids_analyzed,
+        "internal_dedupe_discarded_count": internal_dedupe_discarded,
+        "possible_content_duplicate_draws_detected": bool(possible_content_duplicate_groups),
+        "possible_content_duplicate_groups": possible_content_duplicate_groups,
+        "content_duplicates_kept_separate_by_draw_id": True,
+        "sync_duplicate_policy": (
+            "Draws with identical lottery/date/numbers but different draw_id remain "
+            "separate occurrences. Sync is not modified; duplicates are not hidden."
+        ),
+        "trigger": "drawn_number_equals_observed_number_only",
+        "exclude_observed_from_matches": True,
+        "exclude_companion_from_neighbors": True,
+        "ranking_includes_score_zero": True,
+        "ranking_sort": "score_desc_then_number_asc",
+    }
+
     return AnalysisResult(
         observed_number=n,
         mother_code=mother_code,
@@ -171,6 +209,7 @@ def analyze_observed_number(
         historical_occurrences=historical_payload,
         direct_companions=list(companions),
         candidates=candidates,
+        analysis_metadata=analysis_metadata,
     )
 
 

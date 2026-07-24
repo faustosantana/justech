@@ -118,6 +118,7 @@ async def numeric_relations_analyze(
                 c.get("trace") for c in (payload.get("ranking") or []) if c.get("trace")
             ],
         }
+        engine_meta = dict(payload.get("analysis_metadata") or {})
         payload["metadata"] = {
             "engine": "lottery.numeric_relations",
             "llm_calculates": False,
@@ -125,6 +126,7 @@ async def numeric_relations_analyze(
             "universe": "1..100",
             "occurrence_limit_explicit": limit.to_dict(),
             "tables_are_separate": True,
+            **engine_meta,
         }
         return payload
     except ValueError as exc:

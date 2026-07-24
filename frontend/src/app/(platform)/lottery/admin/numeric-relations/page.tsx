@@ -435,11 +435,13 @@ export default function LotteryNumericRelationsAdminPage() {
                   </div>
 
                   <div>
-                    <div className="mb-1 font-medium">Fechas y sorteos utilizados</div>
+                    <div className="mb-1 font-medium">Fechas y sorteos utilizados (por draw_id)</div>
                     <ul className="list-disc space-y-1 pl-5 text-muted-foreground">
                       {hist.map((h, i) => (
                         <li key={i}>
-                          {String(h.lottery_name)} — {String(h.draw_date)} — números{" "}
+                          {String(h.lottery_name)} — {String(h.draw_date)}
+                          {h.draw_time ? ` ${String(h.draw_time)}` : " (hora NULL)"} —{" "}
+                          <span className="font-mono text-xs">draw_id={String(h.draw_id)}</span> — números{" "}
                           {((h.draw_numbers as { drawn_number: number }[]) || [])
                             .map((d) => d.drawn_number)
                             .join(", ")}
@@ -447,6 +449,41 @@ export default function LotteryNumericRelationsAdminPage() {
                       ))}
                       {hist.length === 0 ? <li>Ninguna ocurrencia histórica encontrada.</li> : null}
                     </ul>
+                  </div>
+
+                  <div className="rounded border p-3 text-xs text-muted-foreground">
+                    <div className="mb-1 font-medium text-foreground">Metadata técnica (dedupe / sync)</div>
+                    <div>
+                      draw_ids analizados:{" "}
+                      {String(
+                        (result.metadata as Record<string, unknown> | undefined)
+                          ?.draw_ids_analyzed_count ??
+                          (result.analysis_metadata as Record<string, unknown> | undefined)
+                            ?.draw_ids_analyzed_count ??
+                          "—"
+                      )}
+                    </div>
+                    <div>
+                      descartados por dedupe interno:{" "}
+                      {String(
+                        (result.metadata as Record<string, unknown> | undefined)
+                          ?.internal_dedupe_discarded_count ??
+                          (result.analysis_metadata as Record<string, unknown> | undefined)
+                            ?.internal_dedupe_discarded_count ??
+                          "—"
+                      )}
+                    </div>
+                    <div>
+                      posibles duplicados por contenido (sync):{" "}
+                      {String(
+                        (result.metadata as Record<string, unknown> | undefined)
+                          ?.possible_content_duplicate_draws_detected ??
+                          (result.analysis_metadata as Record<string, unknown> | undefined)
+                            ?.possible_content_duplicate_draws_detected ??
+                          false
+                      )}{" "}
+                      — permanecen separados por draw_id distinto (sync no modificado).
+                    </div>
                   </div>
 
                   <div>

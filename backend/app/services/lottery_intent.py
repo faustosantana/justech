@@ -259,7 +259,8 @@ def resolve_intent(message: str, ctx: LotterySessionContext) -> ResolvedIntent:
         r"relaciones?\s+num[eé]ricas?|"
         r"c[oó]digo\s+madre|"
         r"motor\s+de\s+relaciones|"
-        r"analiz(a|ar|ame|emos).{0,40}([uú]ltimas?\s+\d+\s+veces?|veces?\s+que\s+sali)|"
+        r"analiz(a|ar|ame|emos).{0,80}([uú]ltimas?\s+\d+\s+veces?|veces?\s+que\s+sali|"
+        r"todas\s+(las\s+)?(ocurrencias|veces|apariciones))|"
         r"busc(a|ar).{0,40}([uú]ltimas?\s+\d+\s+veces?|veces?\s+que\s+sali)|"
         r"muestr(a|ame)\s+todas\s+las\s+ocurrencias|"
         r"cuando\s+sale\s+el\s+\d+",

@@ -952,6 +952,7 @@ class LotteryToolExecutor:
                 zero_score.append(cand)
         payload["matches"] = all_matches
         payload["companions_score_zero"] = zero_score
+        engine_meta = dict(payload.get("analysis_metadata") or {})
         payload["metadata"] = {
             "engine": "lottery.numeric_relations",
             "llm_calculates": False,
@@ -961,6 +962,7 @@ class LotteryToolExecutor:
                 "Señal histórica del método de relaciones numéricas; "
                 "no es certeza ni garantía de resultados futuros."
             ),
+            **engine_meta,
         }
         ranking = payload.get("ranking") or []
         return (
@@ -972,6 +974,10 @@ class LotteryToolExecutor:
                 "occurrences_used": payload.get("occurrences_used"),
                 "top_companion": ranking[0].get("number") if ranking else None,
                 "top_score": ranking[0].get("score") if ranking else None,
+                "draw_ids_analyzed_count": engine_meta.get("draw_ids_analyzed_count"),
+                "possible_content_duplicate_draws_detected": engine_meta.get(
+                    "possible_content_duplicate_draws_detected"
+                ),
             },
         )
 

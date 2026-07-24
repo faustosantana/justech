@@ -1,0 +1,224 @@
+...........................................                              [100%]
+=============================== warnings summary ===============================
+.venv/lib/python3.9/site-packages/_pytest/config/__init__.py:1474
+  /Users/faustosantana/Projects/jaios-platform/backend/.venv/lib/python3.9/site-packages/_pytest/config/__init__.py:1474: PytestConfigWarning: Unknown config option: asyncio_mode
+  
+    self._warn_or_fail_if_strict(f"Unknown config option: {key}\n")
+
+tests/test_lottery_numeric_relations_analysis.py::test_history_searches_only_drawn_number_n_not_companions
+  /Users/faustosantana/Projects/jaios-platform/backend/.venv/lib/python3.9/site-packages/_pytest/fixtures.py:1182: PytestRemovedIn9Warning: 'test_history_searches_only_drawn_number_n_not_companions' requested an async fixture '_dispose_db_engine_after_test' with autouse=True, with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+  See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+    warnings.warn(
+
+tests/test_lottery_numeric_relations_analysis.py::test_n_excluded_as_confirmation
+  /Users/faustosantana/Projects/jaios-platform/backend/.venv/lib/python3.9/site-packages/_pytest/fixtures.py:1182: PytestRemovedIn9Warning: 'test_n_excluded_as_confirmation' requested an async fixture '_dispose_db_engine_after_test' with autouse=True, with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+  See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+    warnings.warn(
+
+tests/test_lottery_numeric_relations_analysis.py::test_exclude_self_and_strengthen_companion_not_neighbor
+  /Users/faustosantana/Projects/jaios-platform/backend/.venv/lib/python3.9/site-packages/_pytest/fixtures.py:1182: PytestRemovedIn9Warning: 'test_exclude_self_and_strengthen_companion_not_neighbor' requested an async fixture '_dispose_db_engine_after_test' with autouse=True, with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+  See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+    warnings.warn(
+
+tests/test_lottery_numeric_relations_analysis.py::test_multiple_neighbors_same_draw_sum_multiple_points
+  /Users/faustosantana/Projects/jaios-platform/backend/.venv/lib/python3.9/site-packages/_pytest/fixtures.py:1182: PytestRemovedIn9Warning: 'test_multiple_neighbors_same_draw_sum_multiple_points' requested an async fixture '_dispose_db_engine_after_test' with autouse=True, with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+  See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+    warnings.warn(
+
+tests/test_lottery_numeric_relations_analysis.py::test_scores_accumulate_across_draws_and_dedupe
+  /Users/faustosantana/Projects/jaios-platform/backend/.venv/lib/python3.9/site-packages/_pytest/fixtures.py:1182: PytestRemovedIn9Warning: 'test_scores_accumulate_across_draws_and_dedupe' requested an async fixture '_dispose_db_engine_after_test' with autouse=True, with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+  See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+    warnings.warn(
+
+tests/test_lottery_numeric_relations_analysis.py::test_all_companions_ranked_including_zero
+  /Users/faustosantana/Projects/jaios-platform/backend/.venv/lib/python3.9/site-packages/_pytest/fixtures.py:1182: PytestRemovedIn9Warning: 'test_all_companions_ranked_including_zero' requested an async fixture '_dispose_db_engine_after_test' with autouse=True, with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+  See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+    warnings.warn(
+
+tests/test_lottery_numeric_relations_analysis.py::test_trace_contains_full_path
+  /Users/faustosantana/Projects/jaios-platform/backend/.venv/lib/python3.9/site-packages/_pytest/fixtures.py:1182: PytestRemovedIn9Warning: 'test_trace_contains_full_path' requested an async fixture '_dispose_db_engine_after_test' with autouse=True, with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+  See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+    warnings.warn(
+
+tests/test_lottery_numeric_relations_analysis.py::test_lottery_scope_not_mixed
+  /Users/faustosantana/Projects/jaios-platform/backend/.venv/lib/python3.9/site-packages/_pytest/fixtures.py:1182: PytestRemovedIn9Warning: 'test_lottery_scope_not_mixed' requested an async fixture '_dispose_db_engine_after_test' with autouse=True, with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+  See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+    warnings.warn(
+
+tests/test_lottery_numeric_relations_analysis.py::test_occurrence_limit_last_k
+  /Users/faustosantana/Projects/jaios-platform/backend/.venv/lib/python3.9/site-packages/_pytest/fixtures.py:1182: PytestRemovedIn9Warning: 'test_occurrence_limit_last_k' requested an async fixture '_dispose_db_engine_after_test' with autouse=True, with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+  See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+    warnings.warn(
+
+tests/test_lottery_numeric_relations_draw_grouping.py::test_same_lottery_date_different_draw_ids_stay_separate
+  /Users/faustosantana/Projects/jaios-platform/backend/.venv/lib/python3.9/site-packages/_pytest/fixtures.py:1182: PytestRemovedIn9Warning: 'test_same_lottery_date_different_draw_ids_stay_separate' requested an async fixture '_dispose_db_engine_after_test' with autouse=True, with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+  See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+    warnings.warn(
+
+tests/test_lottery_numeric_relations_draw_grouping.py::test_analysis_dedupe_keys_include_draw_id_not_only_date
+  /Users/faustosantana/Projects/jaios-platform/backend/.venv/lib/python3.9/site-packages/_pytest/fixtures.py:1182: PytestRemovedIn9Warning: 'test_analysis_dedupe_keys_include_draw_id_not_only_date' requested an async fixture '_dispose_db_engine_after_test' with autouse=True, with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+  See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+    warnings.warn(
+
+tests/test_lottery_numeric_relations_draw_grouping.py::test_db_history_source_groups_by_draw_id_only
+  /Users/faustosantana/Projects/jaios-platform/backend/.venv/lib/python3.9/site-packages/_pytest/fixtures.py:1182: PytestRemovedIn9Warning: 'test_db_history_source_groups_by_draw_id_only' requested an async fixture '_dispose_db_engine_after_test' with autouse=True, with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+  See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+    warnings.warn(
+
+tests/test_lottery_numeric_relations_exclusions.py::test_validate_n_range
+  /Users/faustosantana/Projects/jaios-platform/backend/.venv/lib/python3.9/site-packages/_pytest/fixtures.py:1182: PytestRemovedIn9Warning: 'test_validate_n_range' requested an async fixture '_dispose_db_engine_after_test' with autouse=True, with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+  See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+    warnings.warn(
+
+tests/test_lottery_numeric_relations_exclusions.py::test_numbers_outside_1_100_ignored_in_peers
+  /Users/faustosantana/Projects/jaios-platform/backend/.venv/lib/python3.9/site-packages/_pytest/fixtures.py:1182: PytestRemovedIn9Warning: 'test_numbers_outside_1_100_ignored_in_peers' requested an async fixture '_dispose_db_engine_after_test' with autouse=True, with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+  See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+    warnings.warn(
+
+tests/test_lottery_numeric_relations_groups.py::test_catalog_maps_bidirectional_and_separated
+  /Users/faustosantana/Projects/jaios-platform/backend/.venv/lib/python3.9/site-packages/_pytest/fixtures.py:1182: PytestRemovedIn9Warning: 'test_catalog_maps_bidirectional_and_separated' requested an async fixture '_dispose_db_engine_after_test' with autouse=True, with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+  See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+    warnings.warn(
+
+tests/test_lottery_numeric_relations_groups.py::test_get_companions_for_mother_code_34_includes_1
+  /Users/faustosantana/Projects/jaios-platform/backend/.venv/lib/python3.9/site-packages/_pytest/fixtures.py:1182: PytestRemovedIn9Warning: 'test_get_companions_for_mother_code_34_includes_1' requested an async fixture '_dispose_db_engine_after_test' with autouse=True, with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+  See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+    warnings.warn(
+
+tests/test_lottery_numeric_relations_groups.py::test_exclude_self_neighbors
+  /Users/faustosantana/Projects/jaios-platform/backend/.venv/lib/python3.9/site-packages/_pytest/fixtures.py:1182: PytestRemovedIn9Warning: 'test_exclude_self_neighbors' requested an async fixture '_dispose_db_engine_after_test' with autouse=True, with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+  See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+    warnings.warn(
+
+tests/test_lottery_numeric_relations_metadata.py::test_analysis_metadata_reports_draw_ids_and_keeps_content_duplicates_separate
+  /Users/faustosantana/Projects/jaios-platform/backend/.venv/lib/python3.9/site-packages/_pytest/fixtures.py:1182: PytestRemovedIn9Warning: 'test_analysis_metadata_reports_draw_ids_and_keeps_content_duplicates_separate' requested an async fixture '_dispose_db_engine_after_test' with autouse=True, with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+  See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+    warnings.warn(
+
+tests/test_lottery_numeric_relations_phase_cd.py::test_api_analyze_body_validates_observed_number_1_100
+  /Users/faustosantana/Projects/jaios-platform/backend/.venv/lib/python3.9/site-packages/_pytest/fixtures.py:1182: PytestRemovedIn9Warning: 'test_api_analyze_body_validates_observed_number_1_100' requested an async fixture '_dispose_db_engine_after_test' with autouse=True, with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+  See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+    warnings.warn(
+
+tests/test_lottery_numeric_relations_phase_cd.py::test_api_no_hidden_occurrence_default
+  /Users/faustosantana/Projects/jaios-platform/backend/.venv/lib/python3.9/site-packages/_pytest/fixtures.py:1182: PytestRemovedIn9Warning: 'test_api_no_hidden_occurrence_default' requested an async fixture '_dispose_db_engine_after_test' with autouse=True, with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+  See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+    warnings.warn(
+
+tests/test_lottery_numeric_relations_phase_cd.py::test_tables_api_enrichment_keeps_table1_and_table2_separate
+  /Users/faustosantana/Projects/jaios-platform/backend/.venv/lib/python3.9/site-packages/_pytest/fixtures.py:1182: PytestRemovedIn9Warning: 'test_tables_api_enrichment_keeps_table1_and_table2_separate' requested an async fixture '_dispose_db_engine_after_test' with autouse=True, with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+  See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+    warnings.warn(
+
+tests/test_lottery_numeric_relations_phase_cd.py::test_tool_registered_with_permissions
+  /Users/faustosantana/Projects/jaios-platform/backend/.venv/lib/python3.9/site-packages/_pytest/fixtures.py:1182: PytestRemovedIn9Warning: 'test_tool_registered_with_permissions' requested an async fixture '_dispose_db_engine_after_test' with autouse=True, with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+  See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+    warnings.warn(
+
+tests/test_lottery_numeric_relations_phase_cd.py::test_intent_single_lottery_last_10
+  /Users/faustosantana/Projects/jaios-platform/backend/.venv/lib/python3.9/site-packages/_pytest/fixtures.py:1182: PytestRemovedIn9Warning: 'test_intent_single_lottery_last_10' requested an async fixture '_dispose_db_engine_after_test' with autouse=True, with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+  See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+    warnings.warn(
+
+tests/test_lottery_numeric_relations_phase_cd.py::test_intent_multi_lottery
+  /Users/faustosantana/Projects/jaios-platform/backend/.venv/lib/python3.9/site-packages/_pytest/fixtures.py:1182: PytestRemovedIn9Warning: 'test_intent_multi_lottery' requested an async fixture '_dispose_db_engine_after_test' with autouse=True, with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+  See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+    warnings.warn(
+
+tests/test_lottery_numeric_relations_phase_cd.py::test_intent_all_occurrences
+  /Users/faustosantana/Projects/jaios-platform/backend/.venv/lib/python3.9/site-packages/_pytest/fixtures.py:1182: PytestRemovedIn9Warning: 'test_intent_all_occurrences' requested an async fixture '_dispose_db_engine_after_test' with autouse=True, with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+  See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+    warnings.warn(
+
+tests/test_lottery_numeric_relations_phase_cd.py::test_intent_asks_when_occurrence_limit_missing
+  /Users/faustosantana/Projects/jaios-platform/backend/.venv/lib/python3.9/site-packages/_pytest/fixtures.py:1182: PytestRemovedIn9Warning: 'test_intent_asks_when_occurrence_limit_missing' requested an async fixture '_dispose_db_engine_after_test' with autouse=True, with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+  See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+    warnings.warn(
+
+tests/test_lottery_numeric_relations_phase_cd.py::test_intent_asks_when_lottery_missing
+  /Users/faustosantana/Projects/jaios-platform/backend/.venv/lib/python3.9/site-packages/_pytest/fixtures.py:1182: PytestRemovedIn9Warning: 'test_intent_asks_when_lottery_missing' requested an async fixture '_dispose_db_engine_after_test' with autouse=True, with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+  See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+    warnings.warn(
+
+tests/test_lottery_numeric_relations_phase_cd.py::test_planner_single_tool_to_motor
+  /Users/faustosantana/Projects/jaios-platform/backend/.venv/lib/python3.9/site-packages/_pytest/fixtures.py:1182: PytestRemovedIn9Warning: 'test_planner_single_tool_to_motor' requested an async fixture '_dispose_db_engine_after_test' with autouse=True, with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+  See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+    warnings.warn(
+
+tests/test_lottery_numeric_relations_phase_cd.py::test_controlled_example_ranking_and_zero_score
+  /Users/faustosantana/Projects/jaios-platform/backend/.venv/lib/python3.9/site-packages/_pytest/fixtures.py:1182: PytestRemovedIn9Warning: 'test_controlled_example_ranking_and_zero_score' requested an async fixture '_dispose_db_engine_after_test' with autouse=True, with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+  See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+    warnings.warn(
+
+tests/test_lottery_numeric_relations_phase_cd.py::test_exclude_observed_n_and_dedupe_and_multi_neighbor
+  /Users/faustosantana/Projects/jaios-platform/backend/.venv/lib/python3.9/site-packages/_pytest/fixtures.py:1182: PytestRemovedIn9Warning: 'test_exclude_observed_n_and_dedupe_and_multi_neighbor' requested an async fixture '_dispose_db_engine_after_test' with autouse=True, with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+  See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+    warnings.warn(
+
+tests/test_lottery_numeric_relations_phase_cd.py::test_last_k_vs_all_occurrence_limits
+  /Users/faustosantana/Projects/jaios-platform/backend/.venv/lib/python3.9/site-packages/_pytest/fixtures.py:1182: PytestRemovedIn9Warning: 'test_last_k_vs_all_occurrence_limits' requested an async fixture '_dispose_db_engine_after_test' with autouse=True, with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+  See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+    warnings.warn(
+
+tests/test_lottery_numeric_relations_phase_cd.py::test_chat_template_based_only_on_motor_result
+  /Users/faustosantana/Projects/jaios-platform/backend/.venv/lib/python3.9/site-packages/_pytest/fixtures.py:1182: PytestRemovedIn9Warning: 'test_chat_template_based_only_on_motor_result' requested an async fixture '_dispose_db_engine_after_test' with autouse=True, with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+  See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+    warnings.warn(
+
+tests/test_lottery_numeric_relations_phase_cd.py::test_chat_template_no_invention_when_empty
+  /Users/faustosantana/Projects/jaios-platform/backend/.venv/lib/python3.9/site-packages/_pytest/fixtures.py:1182: PytestRemovedIn9Warning: 'test_chat_template_no_invention_when_empty' requested an async fixture '_dispose_db_engine_after_test' with autouse=True, with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+  See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+    warnings.warn(
+
+tests/test_lottery_numeric_relations_phase_cd.py::test_admin_screen_permission_gate
+  /Users/faustosantana/Projects/jaios-platform/backend/.venv/lib/python3.9/site-packages/_pytest/fixtures.py:1182: PytestRemovedIn9Warning: 'test_admin_screen_permission_gate' requested an async fixture '_dispose_db_engine_after_test' with autouse=True, with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+  See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+    warnings.warn(
+
+tests/test_lottery_numeric_relations_phase_cd.py::test_centralization_single_engine_symbol
+  /Users/faustosantana/Projects/jaios-platform/backend/.venv/lib/python3.9/site-packages/_pytest/fixtures.py:1182: PytestRemovedIn9Warning: 'test_centralization_single_engine_symbol' requested an async fixture '_dispose_db_engine_after_test' with autouse=True, with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+  See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+    warnings.warn(
+
+tests/test_lottery_numeric_relations_phase_cd.py::test_ui_page_keeps_table_tabs_separate
+  /Users/faustosantana/Projects/jaios-platform/backend/.venv/lib/python3.9/site-packages/_pytest/fixtures.py:1182: PytestRemovedIn9Warning: 'test_ui_page_keeps_table_tabs_separate' requested an async fixture '_dispose_db_engine_after_test' with autouse=True, with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+  See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+    warnings.warn(
+
+tests/test_lottery_numeric_relations_table1.py::test_table1_example_1
+  /Users/faustosantana/Projects/jaios-platform/backend/.venv/lib/python3.9/site-packages/_pytest/fixtures.py:1182: PytestRemovedIn9Warning: 'test_table1_example_1' requested an async fixture '_dispose_db_engine_after_test' with autouse=True, with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+  See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+    warnings.warn(
+
+tests/test_lottery_numeric_relations_table1.py::test_table1_example_5
+  /Users/faustosantana/Projects/jaios-platform/backend/.venv/lib/python3.9/site-packages/_pytest/fixtures.py:1182: PytestRemovedIn9Warning: 'test_table1_example_5' requested an async fixture '_dispose_db_engine_after_test' with autouse=True, with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+  See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+    warnings.warn(
+
+tests/test_lottery_numeric_relations_table1.py::test_table1_all_100_have_11_digits_and_code_matches_sum
+  /Users/faustosantana/Projects/jaios-platform/backend/.venv/lib/python3.9/site-packages/_pytest/fixtures.py:1182: PytestRemovedIn9Warning: 'test_table1_all_100_have_11_digits_and_code_matches_sum' requested an async fixture '_dispose_db_engine_after_test' with autouse=True, with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+  See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+    warnings.warn(
+
+tests/test_lottery_numeric_relations_table2.py::test_table2_example_1
+  /Users/faustosantana/Projects/jaios-platform/backend/.venv/lib/python3.9/site-packages/_pytest/fixtures.py:1182: PytestRemovedIn9Warning: 'test_table2_example_1' requested an async fixture '_dispose_db_engine_after_test' with autouse=True, with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+  See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+    warnings.warn(
+
+tests/test_lottery_numeric_relations_table2.py::test_table2_example_5
+  /Users/faustosantana/Projects/jaios-platform/backend/.venv/lib/python3.9/site-packages/_pytest/fixtures.py:1182: PytestRemovedIn9Warning: 'test_table2_example_5' requested an async fixture '_dispose_db_engine_after_test' with autouse=True, with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+  See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+    warnings.warn(
+
+tests/test_lottery_numeric_relations_table2.py::test_table2_example_3
+  /Users/faustosantana/Projects/jaios-platform/backend/.venv/lib/python3.9/site-packages/_pytest/fixtures.py:1182: PytestRemovedIn9Warning: 'test_table2_example_3' requested an async fixture '_dispose_db_engine_after_test' with autouse=True, with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+  See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+    warnings.warn(
+
+tests/test_lottery_numeric_relations_table2.py::test_table2_all_100_have_12_digits_and_code_matches_sum
+  /Users/faustosantana/Projects/jaios-platform/backend/.venv/lib/python3.9/site-packages/_pytest/fixtures.py:1182: PytestRemovedIn9Warning: 'test_table2_all_100_have_12_digits_and_code_matches_sum' requested an async fixture '_dispose_db_engine_after_test' with autouse=True, with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+  See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+    warnings.warn(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+43 passed, 44 warnings in 0.22s

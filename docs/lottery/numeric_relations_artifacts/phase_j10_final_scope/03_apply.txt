@@ -1,0 +1,71 @@
+{
+  "dry_run": true,
+  "wrote": "docs/lottery/numeric_relations_artifacts/phase_j10_final_scope/01_featured_audit_before.json",
+  "featured_before": [
+    "Gana Mas",
+    "Loteria Nacional",
+    "Loto Leidsa",
+    "Loto Real",
+    "Quiniela Leidsa",
+    "Quiniela Loteka",
+    "Quiniela Real"
+  ],
+  "deactivate": [
+    {
+      "id": "e76951f3-c120-4787-aeae-2225187fd769",
+      "name": "Loto Leidsa",
+      "is_featured_before": true,
+      "is_featured_after": false,
+      "draw_count": 1164
+    },
+    {
+      "id": "70906330-2d41-4eca-bf1f-68ce222b3775",
+      "name": "Loto Real",
+      "is_featured_before": true,
+      "is_featured_after": false,
+      "draw_count": 1166
+    }
+  ],
+  "missing": [],
+  "name_mismatch": [],
+  "forbidden_still_featured_risk": [
+    "Loto Leidsa",
+    "Loto Real"
+  ]
+}
+{
+  "applied": true,
+  "wrote": "docs/lottery/numeric_relations_artifacts/phase_j10_final_scope/02_featured_after.json",
+  "featured_after": [
+    {
+      "id": "43250709-ee65-476f-91f6-cb8438f49d65",
+      "name": "Gana Mas"
+    },
+    {
+      "id": "0118037f-8f8b-4a82-899c-42cd50b6e194",
+      "name": "Loteria Nacional"
+    },
+    {
+      "id": "1624b6f2-88c6-42b5-a597-bf9c0f98a6b5",
+      "name": "New York 10:30"
+    },
+    {
+      "id": "1c488641-adb6-4790-89e7-879d361da7cc",
+      "name": "New York 2:30"
+    },
+    {
+      "id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+      "name": "Quiniela Leidsa"
+    },
+    {
+      "id": "b9f2c5a2-bc3e-4382-9b6d-3cee16db00fd",
+      "name": "Quiniela Loteka"
+    },
+    {
+      "id": "205c58d2-cfcf-44e6-894d-97358b3d540b",
+      "name": "Quiniela Real"
+    }
+  ],
+  "count": 7
+}
+OK j10f_set_final_featured_lotteries_dev

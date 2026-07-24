@@ -1,0 +1,158 @@
+{
+  "generated_at": "2026-07-24T21:32:58.745668+00:00",
+  "database": "jaios_lottery_dev",
+  "wanted_ids": [
+    "0118037f-8f8b-4a82-899c-42cd50b6e194",
+    "1624b6f2-88c6-42b5-a597-bf9c0f98a6b5",
+    "1c488641-adb6-4790-89e7-879d361da7cc",
+    "205c58d2-cfcf-44e6-894d-97358b3d540b",
+    "43250709-ee65-476f-91f6-cb8438f49d65",
+    "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+    "b9f2c5a2-bc3e-4382-9b6d-3cee16db00fd"
+  ],
+  "wanted_names": [
+    "Gana Mas",
+    "Loteria Nacional",
+    "New York 10:30",
+    "New York 2:30",
+    "Quiniela Leidsa",
+    "Quiniela Loteka",
+    "Quiniela Real"
+  ],
+  "featured_before": [
+    "Gana Mas",
+    "Loteria Nacional",
+    "Loto Leidsa",
+    "Loto Real",
+    "Quiniela Leidsa",
+    "Quiniela Loteka",
+    "Quiniela Real"
+  ],
+  "activate_or_keep": [
+    {
+      "id": "0118037f-8f8b-4a82-899c-42cd50b6e194",
+      "name": "Loteria Nacional",
+      "is_featured_before": true,
+      "is_featured_after": true,
+      "draw_count": 3978,
+      "last_draw_date": "2026-07-20",
+      "country": "DO",
+      "timezone": "America/Santo_Domingo"
+    },
+    {
+      "id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+      "name": "Quiniela Leidsa",
+      "is_featured_before": true,
+      "is_featured_after": true,
+      "draw_count": 4050,
+      "last_draw_date": "2026-07-20",
+      "country": "DO",
+      "timezone": "America/Santo_Domingo"
+    },
+    {
+      "id": "b9f2c5a2-bc3e-4382-9b6d-3cee16db00fd",
+      "name": "Quiniela Loteka",
+      "is_featured_before": true,
+      "is_featured_after": true,
+      "draw_count": 4081,
+      "last_draw_date": "2026-07-20",
+      "country": "DO",
+      "timezone": "America/Santo_Domingo"
+    },
+    {
+      "id": "43250709-ee65-476f-91f6-cb8438f49d65",
+      "name": "Gana Mas",
+      "is_featured_before": true,
+      "is_featured_after": true,
+      "draw_count": 3857,
+      "last_draw_date": "2026-07-21",
+      "country": "DO",
+      "timezone": "America/Santo_Domingo"
+    },
+    {
+      "id": "205c58d2-cfcf-44e6-894d-97358b3d540b",
+      "name": "Quiniela Real",
+      "is_featured_before": true,
+      "is_featured_after": true,
+      "draw_count": 4118,
+      "last_draw_date": "2026-07-21",
+      "country": "DO",
+      "timezone": "America/Santo_Domingo"
+    },
+    {
+      "id": "1c488641-adb6-4790-89e7-879d361da7cc",
+      "name": "New York 2:30",
+      "is_featured_before": false,
+      "is_featured_after": true,
+      "draw_count": 3573,
+      "last_draw_date": "2026-07-21",
+      "country": "DO",
+      "timezone": "America/Santo_Domingo"
+    },
+    {
+      "id": "1624b6f2-88c6-42b5-a597-bf9c0f98a6b5",
+      "name": "New York 10:30",
+      "is_featured_before": false,
+      "is_featured_after": true,
+      "draw_count": 3559,
+      "last_draw_date": "2026-07-20",
+      "country": "DO",
+      "timezone": "America/Santo_Domingo"
+    }
+  ],
+  "deactivate": [
+    {
+      "id": "e76951f3-c120-4787-aeae-2225187fd769",
+      "name": "Loto Leidsa",
+      "is_featured_before": true,
+      "is_featured_after": false,
+      "draw_count": 1164
+    },
+    {
+      "id": "70906330-2d41-4eca-bf1f-68ce222b3775",
+      "name": "Loto Real",
+      "is_featured_before": true,
+      "is_featured_after": false,
+      "draw_count": 1166
+    }
+  ],
+  "missing": [],
+  "name_mismatch": [],
+  "forbidden_still_featured_risk": [
+    "Loto Leidsa",
+    "Loto Real"
+  ],
+  "apply_result": {
+    "featured_after": [
+      {
+        "id": "43250709-ee65-476f-91f6-cb8438f49d65",
+        "name": "Gana Mas"
+      },
+      {
+        "id": "0118037f-8f8b-4a82-899c-42cd50b6e194",
+        "name": "Loteria Nacional"
+      },
+      {
+        "id": "1624b6f2-88c6-42b5-a597-bf9c0f98a6b5",
+        "name": "New York 10:30"
+      },
+      {
+        "id": "1c488641-adb6-4790-89e7-879d361da7cc",
+        "name": "New York 2:30"
+      },
+      {
+        "id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+        "name": "Quiniela Leidsa"
+      },
+      {
+        "id": "b9f2c5a2-bc3e-4382-9b6d-3cee16db00fd",
+        "name": "Quiniela Loteka"
+      },
+      {
+        "id": "205c58d2-cfcf-44e6-894d-97358b3d540b",
+        "name": "Quiniela Real"
+      }
+    ],
+    "count": 7
+  }
+}

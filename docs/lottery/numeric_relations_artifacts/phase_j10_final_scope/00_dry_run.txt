@@ -1,0 +1,36 @@
+{
+  "dry_run": true,
+  "wrote": "docs/lottery/numeric_relations_artifacts/phase_j10_final_scope/01_featured_audit_before.json",
+  "featured_before": [
+    "Gana Mas",
+    "Loteria Nacional",
+    "Loto Leidsa",
+    "Loto Real",
+    "Quiniela Leidsa",
+    "Quiniela Loteka",
+    "Quiniela Real"
+  ],
+  "deactivate": [
+    {
+      "id": "e76951f3-c120-4787-aeae-2225187fd769",
+      "name": "Loto Leidsa",
+      "is_featured_before": true,
+      "is_featured_after": false,
+      "draw_count": 1164
+    },
+    {
+      "id": "70906330-2d41-4eca-bf1f-68ce222b3775",
+      "name": "Loto Real",
+      "is_featured_before": true,
+      "is_featured_after": false,
+      "draw_count": 1166
+    }
+  ],
+  "missing": [],
+  "name_mismatch": [],
+  "forbidden_still_featured_risk": [
+    "Loto Leidsa",
+    "Loto Real"
+  ]
+}
+OK dry-run (no writes)

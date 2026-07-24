@@ -1,0 +1,536 @@
+{
+  "environment": "DEV jaios_lottery_dev:5433",
+  "universe_load_ms": 303.0,
+  "lottery_ids": [
+    "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+    "b9f2c5a2-bc3e-4382-9b6d-3cee16db00fd",
+    "0118037f-8f8b-4a82-899c-42cd50b6e194",
+    "e76951f3-c120-4787-aeae-2225187fd769"
+  ],
+  "lottery_names": {
+    "0118037f-8f8b-4a82-899c-42cd50b6e194": "Loteria Nacional",
+    "523875dc-c7f4-4883-b0f6-b440397e3aeb": "Quiniela Leidsa",
+    "b9f2c5a2-bc3e-4382-9b6d-3cee16db00fd": "Quiniela Loteka",
+    "e76951f3-c120-4787-aeae-2225187fd769": "Loto Leidsa"
+  },
+  "total": 50,
+  "passed": 50,
+  "failed": 0,
+  "pass_ratio": "50/50",
+  "perf_ms": {
+    "min": 0.0,
+    "max": 2002.6,
+    "avg": 397.3
+  },
+  "failures": [],
+  "cases": [
+    {
+      "id": "C01",
+      "expect": "profile",
+      "pass": true,
+      "errors": [],
+      "meta": {
+        "aparecio": 287
+      },
+      "ms": 1274.2
+    },
+    {
+      "id": "C02",
+      "expect": "profile",
+      "pass": true,
+      "errors": [],
+      "meta": {
+        "aparecio": 218
+      },
+      "ms": 1443.4
+    },
+    {
+      "id": "C03",
+      "expect": "profile",
+      "pass": true,
+      "errors": [],
+      "meta": {
+        "aparecio": 283
+      },
+      "ms": 17.1
+    },
+    {
+      "id": "C04",
+      "expect": "profile",
+      "pass": true,
+      "errors": [],
+      "meta": {
+        "aparecio": 0
+      },
+      "ms": 15.2
+    },
+    {
+      "id": "C05",
+      "expect": "profile",
+      "pass": true,
+      "errors": [],
+      "meta": {
+        "aparecio": 401
+      },
+      "ms": 187.4
+    },
+    {
+      "id": "C06",
+      "expect": "profile",
+      "pass": true,
+      "errors": [],
+      "meta": {
+        "aparecio": 242
+      },
+      "ms": 15.2
+    },
+    {
+      "id": "C07",
+      "expect": "profile",
+      "pass": true,
+      "errors": [],
+      "meta": {
+        "aparecio": 337
+      },
+      "ms": 14.8
+    },
+    {
+      "id": "C08",
+      "expect": "profile",
+      "pass": true,
+      "errors": [],
+      "meta": {
+        "aparecio": 155
+      },
+      "ms": 13.1
+    },
+    {
+      "id": "C09",
+      "expect": "profile",
+      "pass": true,
+      "errors": [],
+      "meta": {
+        "aparecio": 341
+      },
+      "ms": 15.6
+    },
+    {
+      "id": "C10",
+      "expect": "profile",
+      "pass": true,
+      "errors": [],
+      "meta": {
+        "aparecio": 166
+      },
+      "ms": 842.6
+    },
+    {
+      "id": "C11",
+      "expect": "occurrence_sample",
+      "pass": true,
+      "errors": [],
+      "meta": {
+        "status": "no"
+      },
+      "ms": 759.2
+    },
+    {
+      "id": "C12",
+      "expect": "occurrence_sample",
+      "pass": true,
+      "errors": [],
+      "meta": {
+        "status": "partial"
+      },
+      "ms": 1128.4
+    },
+    {
+      "id": "C13",
+      "expect": "occurrence_sample",
+      "pass": true,
+      "errors": [],
+      "meta": {
+        "status": "no"
+      },
+      "ms": 13.1
+    },
+    {
+      "id": "C14",
+      "expect": "occurrence_sample",
+      "pass": true,
+      "errors": [],
+      "meta": {
+        "status": "no"
+      },
+      "ms": 11.8
+    },
+    {
+      "id": "C15",
+      "expect": "occurrence_sample",
+      "pass": true,
+      "errors": [],
+      "meta": {
+        "status": "no"
+      },
+      "ms": 11.9
+    },
+    {
+      "id": "C16",
+      "expect": "occurrence_sample",
+      "pass": true,
+      "errors": [],
+      "meta": {
+        "status": "no"
+      },
+      "ms": 13.1
+    },
+    {
+      "id": "C17",
+      "expect": "occurrence_sample",
+      "pass": true,
+      "errors": [],
+      "meta": {
+        "status": "no"
+      },
+      "ms": 12.8
+    },
+    {
+      "id": "C18",
+      "expect": "occurrence_sample",
+      "pass": true,
+      "errors": [],
+      "meta": {
+        "status": "no"
+      },
+      "ms": 12.0
+    },
+    {
+      "id": "C19",
+      "expect": "occurrence_sample",
+      "pass": true,
+      "errors": [],
+      "meta": {
+        "status": "no"
+      },
+      "ms": 12.1
+    },
+    {
+      "id": "C20",
+      "expect": "occurrence_sample",
+      "pass": true,
+      "errors": [],
+      "meta": {
+        "status": "partial"
+      },
+      "ms": 1510.1
+    },
+    {
+      "id": "C21",
+      "expect": "next_draws",
+      "pass": true,
+      "errors": [],
+      "meta": {
+        "returned": 2,
+        "censored": true
+      },
+      "ms": 639.9
+    },
+    {
+      "id": "C22",
+      "expect": "next_draws",
+      "pass": true,
+      "errors": [],
+      "meta": {
+        "returned": 7,
+        "censored": false
+      },
+      "ms": 30.7
+    },
+    {
+      "id": "C23",
+      "expect": "next_draws",
+      "pass": true,
+      "errors": [],
+      "meta": {
+        "returned": 7,
+        "censored": false
+      },
+      "ms": 188.5
+    },
+    {
+      "id": "C24",
+      "expect": "next_draws",
+      "pass": true,
+      "errors": [],
+      "meta": {
+        "returned": 7,
+        "censored": false
+      },
+      "ms": 31.1
+    },
+    {
+      "id": "C25",
+      "expect": "next_draws",
+      "pass": true,
+      "errors": [],
+      "meta": {
+        "returned": 7,
+        "censored": false
+      },
+      "ms": 31.0
+    },
+    {
+      "id": "C26",
+      "expect": "next_draws",
+      "pass": true,
+      "errors": [],
+      "meta": {
+        "returned": 7,
+        "censored": false
+      },
+      "ms": 47.9
+    },
+    {
+      "id": "C27",
+      "expect": "next_draws",
+      "pass": true,
+      "errors": [],
+      "meta": {
+        "returned": 7,
+        "censored": false
+      },
+      "ms": 32.2
+    },
+    {
+      "id": "C28",
+      "expect": "next_draws",
+      "pass": true,
+      "errors": [],
+      "meta": {
+        "returned": 1,
+        "censored": true
+      },
+      "ms": 30.5
+    },
+    {
+      "id": "C29",
+      "expect": "next_draws",
+      "pass": true,
+      "errors": [],
+      "meta": {
+        "returned": 1,
+        "censored": true
+      },
+      "ms": 1234.0
+    },
+    {
+      "id": "C30",
+      "expect": "next_draws",
+      "pass": true,
+      "errors": [],
+      "meta": {
+        "returned": 7,
+        "censored": false
+      },
+      "ms": 33.8
+    },
+    {
+      "id": "C31",
+      "expect": "filter_positive",
+      "pass": true,
+      "errors": [],
+      "meta": {
+        "filtered": 0
+      },
+      "ms": 958.5
+    },
+    {
+      "id": "C32",
+      "expect": "filter_negative",
+      "pass": true,
+      "errors": [],
+      "meta": {
+        "filtered": 237
+      },
+      "ms": 890.6
+    },
+    {
+      "id": "C33",
+      "expect": "filter_partial",
+      "pass": true,
+      "errors": [],
+      "meta": {
+        "filtered": 50
+      },
+      "ms": 926.1
+    },
+    {
+      "id": "C34",
+      "expect": "compare",
+      "pass": true,
+      "errors": [],
+      "meta": {
+        "conclusiones": 5
+      },
+      "ms": 2002.6
+    },
+    {
+      "id": "C35",
+      "expect": "why",
+      "pass": true,
+      "errors": [],
+      "meta": {},
+      "ms": 1019.3
+    },
+    {
+      "id": "C36",
+      "expect": "t1_t2_consistency",
+      "pass": true,
+      "errors": [],
+      "meta": {
+        "candidates": []
+      },
+      "ms": 0.0
+    },
+    {
+      "id": "C37",
+      "expect": "t1_t2_consistency",
+      "pass": true,
+      "errors": [],
+      "meta": {
+        "candidates": [
+          69,
+          80
+        ]
+      },
+      "ms": 0.0
+    },
+    {
+      "id": "C38",
+      "expect": "no_dup_confirmer",
+      "pass": true,
+      "errors": [],
+      "meta": {},
+      "ms": 10.3
+    },
+    {
+      "id": "C39",
+      "expect": "strength_to_candidate",
+      "pass": true,
+      "errors": [],
+      "meta": {},
+      "ms": 21.5
+    },
+    {
+      "id": "C40",
+      "expect": "censored_or_complete",
+      "pass": true,
+      "errors": [],
+      "meta": {
+        "note": "muestra sin censura en top 10 (válido)"
+      },
+      "ms": 207.1
+    },
+    {
+      "id": "C41",
+      "expect": "small_sample",
+      "pass": true,
+      "errors": [],
+      "meta": {
+        "sample": 91,
+        "nivel": "Muestra más sólida"
+      },
+      "ms": 222.8
+    },
+    {
+      "id": "C42",
+      "expect": "pagination",
+      "pass": true,
+      "errors": [],
+      "meta": {
+        "total": 268
+      },
+      "ms": 25.0
+    },
+    {
+      "id": "C43",
+      "expect": "lottery_dist",
+      "pass": true,
+      "errors": [],
+      "meta": {},
+      "ms": 12.7
+    },
+    {
+      "id": "C44",
+      "expect": "seven_not_calendar",
+      "pass": true,
+      "errors": [],
+      "meta": {
+        "draws": 2,
+        "calendar": 0
+      },
+      "ms": 836.0
+    },
+    {
+      "id": "C45",
+      "expect": "verdict_math",
+      "pass": true,
+      "errors": [],
+      "meta": {},
+      "ms": 544.4
+    },
+    {
+      "id": "C46",
+      "expect": "occurrence_sample",
+      "pass": true,
+      "errors": [],
+      "meta": {
+        "status": "no"
+      },
+      "ms": 39.8
+    },
+    {
+      "id": "C47",
+      "expect": "next_draws",
+      "pass": true,
+      "errors": [],
+      "meta": {
+        "returned": 7,
+        "censored": false
+      },
+      "ms": 42.1
+    },
+    {
+      "id": "C48",
+      "expect": "profile",
+      "pass": true,
+      "errors": [],
+      "meta": {
+        "aparecio": 130
+      },
+      "ms": 12.1
+    },
+    {
+      "id": "C49",
+      "expect": "compare",
+      "pass": true,
+      "errors": [],
+      "meta": {
+        "conclusiones": 5
+      },
+      "ms": 1194.2
+    },
+    {
+      "id": "C50",
+      "expect": "full_pipeline",
+      "pass": true,
+      "errors": [],
+      "meta": {
+        "next": 7,
+        "status": "no"
+      },
+      "ms": 1278.2
+    }
+  ],
+  "production_untouched": true
+}

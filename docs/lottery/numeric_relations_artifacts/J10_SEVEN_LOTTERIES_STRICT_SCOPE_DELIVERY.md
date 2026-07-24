@@ -52,16 +52,16 @@ Las loterías no destacadas (Anguila, Haití, Miami, etc.) **no se borran**; que
 
 ## Tabla de commits
 
-| Commit | Funcionalidad | Archivos clave | Dependencias | Riesgo |
-|--------|---------------|----------------|--------------|--------|
-| J-10L.0 | Auditoría | `J10_SEVEN_LOTTERIES_SCOPE_AUDIT.md` | — | Bajo |
-| J-10L.1 | Política backend | `active_scope*.py` | — | Bajo |
-| J-10L.2 | Cálculos/señales | `lottery_nr_historical.py`, analyze | L.1 | Medio |
-| J-10L.3 | UX filtros/API lotteries | NR lotteries, `api.ts`, `active-lotteries.ts` | L.1 | Medio |
-| J-10L.4 | Tabla 1/2 | `motor-table.tsx`, table1/2 pages | — | Bajo |
-| J-10L.5 | Archivo admin | `archivo-historico/page.tsx` | L.3 | Bajo |
-| J-10L.6 | IA + tests + hash | `ai_active_scope.py`, tests | L.1 | Bajo |
-| J-10L.7 | Delivery | este archivo | — | Bajo |
+| Commit | SHA | Funcionalidad | Archivos clave | Dependencias | Riesgo |
+|--------|-----|---------------|----------------|--------------|--------|
+| J-10L.0 | `efafcb8` | Auditoría | SCOPE_AUDIT.md | — | Bajo |
+| J-10L.1 | `6e96db2` | Política backend | active_scope*.py | — | Bajo |
+| J-10L.2 | `ef40467` | Cálculos/señales | lottery_nr_historical, analyze | L.1 | Medio |
+| J-10L.3 | `8b259d3` | UX filtros/API | api.ts, active-lotteries | L.1 | Medio |
+| J-10L.4 | `ab22e29` | Tabla 1/2 | motor-table | — | Bajo |
+| J-10L.5 | `ae2e1cc` | Archivo admin | archivo-historico | L.3 | Bajo |
+| J-10L.6 | `b03c1b3` | IA + tests | ai_active_scope, tests | L.1 | Bajo |
+| J-10L.7 | `c62d088` | Delivery | DELIVERY.md | — | Bajo |
 
 ## Integración manual post J-10S
 

@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { ApiError, apiClient } from "@/lib/api";
 import { getAccessToken, getUserRole } from "@/lib/auth";
+import { lotteryDisplayName } from "@/lib/lottery-display-names";
 import {
   canAccessLotteryModule,
   healthStatusLabel,
@@ -141,7 +142,7 @@ export default function LotteryCatalogPage() {
               <CardTitle className="flex items-start justify-between gap-2 text-base">
                 <Link className="hover:underline" href={`/lottery/lotteries/${card.slug}`}>
                   <span className="mr-1">{card.flag_emoji || "🏳️"}</span>
-                  {card.commercial_name || card.name}
+                  {lotteryDisplayName(card.id, card.commercial_name || card.name)}
                 </Link>
                 <button
                   type="button"

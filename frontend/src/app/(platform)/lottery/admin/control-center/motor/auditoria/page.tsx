@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { ApiError, apiClient } from "@/lib/api";
+import { lotteryDisplayName } from "@/lib/lottery-display-names";
 
 const STATUS_LABELS = [
   "Cálculo verificado",
@@ -236,12 +237,16 @@ export default function AuditoriaPage() {
     <div className="space-y-4">
       <MotorToolIntro
         title="Auditoría"
-        description="Busque dentro de esta pantalla por número, fecha, lotería o draw_id. Verá compañeros, confirmadores, candidato fortalecido y estado de verificación sin depender solo del expediente."
+        description="Trazabilidad por sorteo: busque por número, fecha, lotería o draw_id. Cada fila muestra compañeros, confirmadores, candidato fortalecido y estado en español, con enlace al expediente completo."
       />
 
       <Card>
         <CardHeader>
           <CardTitle className="text-base">Buscar casos auditables</CardTitle>
+          <p className="text-sm text-muted-foreground">
+            Alcance predeterminado: las siete loterías activas. Los estados se muestran en lenguaje
+            claro (sin códigos técnicos en la vista principal).
+          </p>
         </CardHeader>
         <CardContent className="grid gap-3 md:grid-cols-3 lg:grid-cols-6">
           <label className="text-sm">
@@ -263,10 +268,10 @@ export default function AuditoriaPage() {
               value={lotteryId}
               onChange={(e) => setLotteryId(e.target.value)}
             >
-              <option value="">7 destacadas</option>
+              <option value="">7 activas</option>
               {catalog.map((l) => (
                 <option key={l.id} value={l.id}>
-                  {l.name}
+                  {lotteryDisplayName(l.id, l.name)}
                 </option>
               ))}
             </select>
@@ -322,7 +327,7 @@ export default function AuditoriaPage() {
                 <div className="flex flex-wrap items-start justify-between gap-2">
                   <div>
                     <div className="font-semibold">
-                      Número {number} · {r.loteria} · {r.fecha_texto}
+                      Número {number} · {lotteryDisplayName(r.lottery_id, r.loteria)} · {r.fecha_texto}
                     </div>
                     <div className="text-muted-foreground">{r.estado}</div>
                   </div>

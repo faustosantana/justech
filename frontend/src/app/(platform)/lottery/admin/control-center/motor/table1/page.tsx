@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 
 import { MotorNumberDetail, MotorNumberTable } from "@/components/lottery/control-center/motor-table";
+import { MotorToolIntro } from "@/components/lottery/control-center/motor-tool-intro";
 import type { MotorTableRow } from "@/components/lottery/control-center/motor-types";
 import { ApiError, apiClient } from "@/lib/api";
 
@@ -61,8 +62,10 @@ export default function Table1Page() {
 
   return (
     <div className="space-y-4">
-      <h1 className="text-xl font-semibold">Motor Matemático · Tabla 1</h1>
-      <p className="text-sm text-muted-foreground">Operación N ÷ 1220 · catálogo solo lectura</p>
+      <MotorToolIntro
+        title="Tabla 1 — compañeros del número"
+        description="Catálogo de solo lectura. Cada número tiene compañeros de Tabla 1 que pueden fortalecerse cuando un confirmador de Tabla 2 aparece."
+      />
       {error ? <p className="text-sm text-destructive">{error}</p> : null}
       {loading ? <p className="text-sm text-muted-foreground">Cargando…</p> : null}
       <MotorNumberDetail row={detail} onClose={() => setDetail(null)} />

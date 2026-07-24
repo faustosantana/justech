@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 
 import { MotorGroupsView } from "@/components/lottery/control-center/groups-view";
+import { MotorToolIntro } from "@/components/lottery/control-center/motor-tool-intro";
 import type { GroupEntry } from "@/components/lottery/control-center/motor-types";
 import { ApiError, apiClient } from "@/lib/api";
 
@@ -25,8 +26,10 @@ export default function GroupsTable1Page() {
 
   return (
     <div className="space-y-4">
-      <h1 className="text-xl font-semibold">Agrupaciones · Tabla 1</h1>
-      <p className="text-sm text-muted-foreground">Validación visual: código 34 → integrantes del grupo T1</p>
+      <MotorToolIntro
+        title="Agrupaciones Tabla 1"
+        description="Grupos de compañeros de Tabla 1. Solo consulta; no modifica el catálogo."
+      />
       {error ? <p className="text-sm text-destructive">{error}</p> : null}
       <MotorGroupsView groups={groups} table="table1" title="Agrupaciones Tabla 1" highlightCode={34} />
     </div>

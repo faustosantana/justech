@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 
 import { RelationsAnalyzeForm } from "@/components/lottery/control-center/relations-form";
+import { MotorToolIntro } from "@/components/lottery/control-center/motor-tool-intro";
 import type { LotOption } from "@/components/lottery/control-center/motor-types";
 import { ApiError, apiClient } from "@/lib/api";
 
@@ -25,10 +26,10 @@ export default function RelacionesPage() {
 
   return (
     <div className="space-y-4">
-      <h1 className="text-xl font-semibold">Motor Matemático · Relaciones</h1>
-      <p className="text-sm text-muted-foreground">
-        Ejecución manual del motor histórico. Expandir ranking para ver trazas por punto.
-      </p>
+      <MotorToolIntro
+        title="Relaciones numéricas"
+        description="Ejecute el análisis histórico v1 para un número. Expandir el ranking muestra la traza por sorteo (draw_id)."
+      />
       {error ? <p className="text-sm text-destructive">{error}</p> : null}
       <RelationsAnalyzeForm catalog={catalog} mode="relations" />
     </div>

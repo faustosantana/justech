@@ -2,37 +2,51 @@
 
 import Link from "next/link";
 
+import { MotorToolIntro } from "@/components/lottery/control-center/motor-tool-intro";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function AuditoriaPage() {
   return (
     <div className="space-y-4">
-      <h1 className="text-xl font-semibold">Motor Matemático · Auditoría</h1>
+      <MotorToolIntro
+        title="Auditoría"
+        description="Cómo se demuestra cada conclusión del motor: cada punto ancla en un draw_id real, sin mezclar sorteos por fecha."
+      />
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">Trazabilidad por draw_id</CardTitle>
+          <CardTitle className="text-base">Trazabilidad por sorteo</CardTitle>
         </CardHeader>
         <CardContent className="space-y-2 text-sm text-muted-foreground">
           <p>
-            Cada punto del ranking en{" "}
+            En{" "}
             <Link className="underline" href="/lottery/admin/control-center/motor/relaciones">
               Relaciones
             </Link>{" "}
-            se expande para mostrar: observed_number, draw_id, lotería, fecha/hora, posición,
-            peers, mother_code, companion, table2_code/group, neighbor, score_delta, dedupe key.
+            y en el{" "}
+            <Link className="underline" href="/lottery/admin/control-center/motor/historial-numero">
+              Historial del Número
+            </Link>
+            , cada caso muestra número observado, lotería, fecha, compañeros, confirmadores y qué
+            ocurrió después.
           </p>
           <p>
-            El JSON bruto está oculto por defecto; use «Ver JSON» (administradores) en cada traza.
+            La evidencia técnica (JSON) permanece colapsada y solo para administradores. El motor no
+            altera histórico ni fórmulas.
           </p>
-          <p>
-            Identidad de sorteo = <code>draw_id</code>. El motor no altera histórico ni fórmulas.
-          </p>
-          <Link
-            className="inline-block rounded border px-3 py-1.5 text-foreground hover:bg-muted"
-            href="/lottery/admin/control-center/motor/relaciones"
-          >
-            Ir a Relaciones / traza
-          </Link>
+          <div className="flex flex-wrap gap-2 pt-2">
+            <Link
+              className="inline-block rounded border px-3 py-1.5 text-foreground hover:bg-muted"
+              href="/lottery/admin/control-center/motor/historial-numero"
+            >
+              Ir al Historial del Número
+            </Link>
+            <Link
+              className="inline-block rounded border px-3 py-1.5 text-foreground hover:bg-muted"
+              href="/lottery/admin/control-center/motor/relaciones"
+            >
+              Ir a Relaciones
+            </Link>
+          </div>
         </CardContent>
       </Card>
     </div>

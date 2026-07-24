@@ -1,0 +1,8 @@
+branch=feature/nr-number-visual-explorer-j9
+head=e84b81147c611eab9f133ad74238f01ab59d039c
+dirty=2
+pg_dev=jaios-lottery-pg-dev:5433/jaios_lottery_dev
+backup_present=yes
+cc_api_status=exited
+cc_web_status=running
+note=full_app_api_exited_import_error; using slim j9_nr_dev_server on :8001 exclusive DEV DSN

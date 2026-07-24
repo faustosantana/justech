@@ -1,0 +1,28 @@
+{
+  "yes": null,
+  "multi": {
+    "item": {
+      "draw_id": "6c14f43a-a54d-40e8-bd60-10dfc457ff14",
+      "fecha_texto": "17 de junio de 2023",
+      "loteria": "Loteria Nacional",
+      "estado": "SE DIO PARCIALMENTE"
+    },
+    "candidato": 86,
+    "confirmaciones": 2,
+    "confirmadores": [
+      19,
+      46
+    ]
+  },
+  "cens": null,
+  "tiny": {
+    "titulo": "EXPEDIENTE DEL NÚMERO 99",
+    "aparecio": 0,
+    "primera_aparicion": null,
+    "ultima_aparicion": null,
+    "loterias_donde_ha_salido": 0,
+    "periodo": null,
+    "nivel_evidencia": "Sin muestra",
+    "sample_warning": "Sin ocurrencias para este patrón."
+  }
+}

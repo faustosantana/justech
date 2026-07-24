@@ -1,0 +1,51 @@
+
+> jaios-frontend@0.1.0 lint
+> next lint
+
+`next lint` is deprecated and will be removed in Next.js 16.
+For new projects, use create-next-app to choose your preferred linter.
+For existing projects, migrate to the ESLint CLI:
+npx @next/codemod@canary next-lint-to-eslint-cli .
+
+
+./src/app/(platform)/bids/[id]/page.tsx
+57:7  Error: Do not use an `<a>` element to navigate to `/bids/`. Use `<Link />` from `next/link` instead. See: https://nextjs.org/docs/messages/no-html-link-for-pages  @next/next/no-html-link-for-pages
+
+./src/app/(platform)/empresas/[id]/page.tsx
+56:6  Warning: React Hook useEffect has a missing dependency: 'reload'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/comunicaciones/whatsapp-inbox.tsx
+659:13  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/components/dgcp/dgcp-autofill-document-panel.tsx
+138:5  Warning: React Hook useCallback has a missing dependency: 'overrides'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+166:5  Warning: React Hook useCallback has a missing dependency: 'pdfUrl'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+424:6  Warning: React Hook useEffect has a missing dependency: 'pdfUrl'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/layout/app-shell.tsx
+69:6  Warning: React Hook useEffect has a missing dependency: 'assistant'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/module/module-dashboard-page.tsx
+13:3  Error: Do not assign to the variable `module`. See: https://nextjs.org/docs/messages/no-assign-module-variable  @next/next/no-assign-module-variable
+
+./src/components/modules/precios/precios-alertas-section.tsx
+26:3  Warning: React Hook useEffect has a missing dependency: 'load'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/modules/proveedores/supplier-detail-view.tsx
+63:6  Warning: React Hook useEffect has a missing dependency: 'reload'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/settings/hermes-prompts-admin-panel.tsx
+56:6  Warning: React Hook useCallback has a missing dependency: 'selectEntry'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/settings/integration-form.tsx
+82:6  Warning: React Hook useEffect has a missing dependency: 'load'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/settings/supplier-integration-panel.tsx
+89:6  Warning: React Hook useEffect has a missing dependency: 'load'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/app/api-reference/config/eslint#disabling-rules
+npm notice
+npm notice New major version of npm available! 10.9.8 -> 12.0.1
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.0.1
+npm notice To update run: npm install -g npm@12.0.1
+npm notice

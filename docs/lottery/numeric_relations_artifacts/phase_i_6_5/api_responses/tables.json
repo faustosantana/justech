@@ -1,0 +1,38 @@
+{
+  "t1_len": 100,
+  "t2_len": 100,
+  "n1": {
+    "number": 1,
+    "table": "table_1",
+    "formula": "1 \u00f7 1220",
+    "visible_value": "0.0008196721",
+    "digits_without_point": "00008196721",
+    "digit_count": 11,
+    "digit_list": [
+      0,
+      0,
+      0,
+      0,
+      8,
+      1,
+      9,
+      6,
+      7,
+      2,
+      1
+    ],
+    "code": 34,
+    "group_numbers": [
+      1,
+      17,
+      33,
+      49,
+      76
+    ],
+    "group_label": "C\u00f3digo 34",
+    "literal_digit_sum": 34,
+    "read_only": true,
+    "editable": false,
+    "engine_ref": "app.lottery.numeric_relations.table1.format_table1_digits"
+  }
+}

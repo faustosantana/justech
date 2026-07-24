@@ -1,0 +1,41 @@
+Wrote to /home/pwuser/shot/package.json:
+
+{
+  "name": "shot",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}
+
+
+
+
+added 2 packages, and audited 3 packages in 5s
+
+1 high severity vulnerability
+
+To address all issues, run:
+  npm audit fix --force
+
+Run `npm audit` for details.
+saved hub/00_control_center.png
+saved motor/01_table1.png
+saved motor/02_table2.png
+saved motor/03_groups_t1.png
+saved motor/04_groups_t2.png
+saved motor/05_relaciones.png
+saved motor/06_auditoria.png
+saved predicciones/07_motors.png
+saved predicciones/08_run.png
+saved prompt_studio/09_bloques.png
+saved prompt_studio/10_compilado.png
+saved prompt_studio/11_versiones.png
+saved playground/12_playground.png
+saved benchmark/13_benchmark.png
+DONE

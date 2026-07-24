@@ -1,0 +1,694 @@
+{
+  "observed_number": 45,
+  "mother_code": 45,
+  "primary_table": "table_1",
+  "lottery_ids": [
+    "e76951f3-c120-4787-aeae-2225187fd769",
+    "b9f2c5a2-bc3e-4382-9b6d-3cee16db00fd"
+  ],
+  "lottery_names": [
+    "e76951f3-c120-4787-aeae-2225187fd769",
+    "Quiniela Loteka"
+  ],
+  "occurrence_limit": {
+    "mode": "last_k",
+    "k": 10
+  },
+  "occurrences_found": 123,
+  "occurrences_used": 10,
+  "historical_occurrences": [
+    {
+      "lottery_id": "b9f2c5a2-bc3e-4382-9b6d-3cee16db00fd",
+      "lottery_name": "Quiniela Loteka",
+      "draw_id": "9291acde-9274-4aba-bc9a-b4f286c5124b",
+      "draw_date": "2026-07-17",
+      "draw_time": null,
+      "observed_number": 45,
+      "draw_numbers": [
+        {
+          "position": 1,
+          "position_label": "1ro",
+          "drawn_number": 6
+        },
+        {
+          "position": 2,
+          "position_label": "2do",
+          "drawn_number": 45
+        },
+        {
+          "position": 3,
+          "position_label": "3ro",
+          "drawn_number": 62
+        }
+      ]
+    },
+    {
+      "lottery_id": "b9f2c5a2-bc3e-4382-9b6d-3cee16db00fd",
+      "lottery_name": "Quiniela Loteka",
+      "draw_id": "401e96d7-3a95-43ae-a175-2d33478b3b82",
+      "draw_date": "2026-05-12",
+      "draw_time": null,
+      "observed_number": 45,
+      "draw_numbers": [
+        {
+          "position": 1,
+          "position_label": "1ro",
+          "drawn_number": 59
+        },
+        {
+          "position": 2,
+          "position_label": "2do",
+          "drawn_number": 45
+        },
+        {
+          "position": 3,
+          "position_label": "3ro",
+          "drawn_number": 16
+        }
+      ]
+    },
+    {
+      "lottery_id": "b9f2c5a2-bc3e-4382-9b6d-3cee16db00fd",
+      "lottery_name": "Quiniela Loteka",
+      "draw_id": "c6ba1b7a-4e4a-46ec-b3b6-4abbe5ec0c65",
+      "draw_date": "2026-05-05",
+      "draw_time": null,
+      "observed_number": 45,
+      "draw_numbers": [
+        {
+          "position": 1,
+          "position_label": "1ro",
+          "drawn_number": 45
+        },
+        {
+          "position": 2,
+          "position_label": "2do",
+          "drawn_number": 70
+        },
+        {
+          "position": 3,
+          "position_label": "3ro",
+          "drawn_number": 52
+        }
+      ]
+    },
+    {
+      "lottery_id": "b9f2c5a2-bc3e-4382-9b6d-3cee16db00fd",
+      "lottery_name": "Quiniela Loteka",
+      "draw_id": "317ccb4d-73c7-4e6e-bbc5-05680e68818a",
+      "draw_date": "2026-04-28",
+      "draw_time": null,
+      "observed_number": 45,
+      "draw_numbers": [
+        {
+          "position": 1,
+          "position_label": "1ro",
+          "drawn_number": 57
+        },
+        {
+          "position": 2,
+          "position_label": "2do",
+          "drawn_number": 45
+        },
+        {
+          "position": 3,
+          "position_label": "3ro",
+          "drawn_number": 43
+        }
+      ]
+    },
+    {
+      "lottery_id": "b9f2c5a2-bc3e-4382-9b6d-3cee16db00fd",
+      "lottery_name": "Quiniela Loteka",
+      "draw_id": "a4410235-0d48-495f-a5eb-fb51518ee78e",
+      "draw_date": "2026-02-19",
+      "draw_time": null,
+      "observed_number": 45,
+      "draw_numbers": [
+        {
+          "position": 1,
+          "position_label": "1ro",
+          "drawn_number": 45
+        },
+        {
+          "position": 2,
+          "position_label": "2do",
+          "drawn_number": 22
+        },
+        {
+          "position": 3,
+          "position_label": "3ro",
+          "drawn_number": 40
+        }
+      ]
+    },
+    {
+      "lottery_id": "b9f2c5a2-bc3e-4382-9b6d-3cee16db00fd",
+      "lottery_name": "Quiniela Loteka",
+      "draw_id": "4b7cc8f1-9bad-46bd-aa3d-90cc6c3f931b",
+      "draw_date": "2026-02-07",
+      "draw_time": null,
+      "observed_number": 45,
+      "draw_numbers": [
+        {
+          "position": 1,
+          "position_label": "1ro",
+          "drawn_number": 7
+        },
+        {
+          "position": 2,
+          "position_label": "2do",
+          "drawn_number": 17
+        },
+        {
+          "position": 3,
+          "position_label": "3ro",
+          "drawn_number": 45
+        }
+      ]
+    },
+    {
+      "lottery_id": "b9f2c5a2-bc3e-4382-9b6d-3cee16db00fd",
+      "lottery_name": "Quiniela Loteka",
+      "draw_id": "2a0340a0-efba-4c9f-a244-b8720e8b72d1",
+      "draw_date": "2026-01-16",
+      "draw_time": null,
+      "observed_number": 45,
+      "draw_numbers": [
+        {
+          "position": 1,
+          "position_label": "1ro",
+          "drawn_number": 95
+        },
+        {
+          "position": 2,
+          "position_label": "2do",
+          "drawn_number": 9
+        },
+        {
+          "position": 3,
+          "position_label": "3ro",
+          "drawn_number": 45
+        }
+      ]
+    },
+    {
+      "lottery_id": "b9f2c5a2-bc3e-4382-9b6d-3cee16db00fd",
+      "lottery_name": "Quiniela Loteka",
+      "draw_id": "2e6c6d1c-130d-4f43-a2fb-4e00ac61adaa",
+      "draw_date": "2025-12-05",
+      "draw_time": null,
+      "observed_number": 45,
+      "draw_numbers": [
+        {
+          "position": 1,
+          "position_label": "1ro",
+          "drawn_number": 91
+        },
+        {
+          "position": 2,
+          "position_label": "2do",
+          "drawn_number": 53
+        },
+        {
+          "position": 3,
+          "position_label": "3ro",
+          "drawn_number": 45
+        }
+      ]
+    },
+    {
+      "lottery_id": "b9f2c5a2-bc3e-4382-9b6d-3cee16db00fd",
+      "lottery_name": "Quiniela Loteka",
+      "draw_id": "e727eee5-06ae-4b9b-a1a1-c8f5f7d42621",
+      "draw_date": "2025-11-14",
+      "draw_time": null,
+      "observed_number": 45,
+      "draw_numbers": [
+        {
+          "position": 1,
+          "position_label": "1ro",
+          "drawn_number": 45
+        },
+        {
+          "position": 2,
+          "position_label": "2do",
+          "drawn_number": 29
+        },
+        {
+          "position": 3,
+          "position_label": "3ro",
+          "drawn_number": 96
+        }
+      ]
+    },
+    {
+      "lottery_id": "b9f2c5a2-bc3e-4382-9b6d-3cee16db00fd",
+      "lottery_name": "Quiniela Loteka",
+      "draw_id": "4f93a13f-0199-4efc-bad9-7aea78cfcc30",
+      "draw_date": "2025-11-01",
+      "draw_time": null,
+      "observed_number": 45,
+      "draw_numbers": [
+        {
+          "position": 1,
+          "position_label": "1ro",
+          "drawn_number": 45
+        },
+        {
+          "position": 2,
+          "position_label": "2do",
+          "drawn_number": 72
+        },
+        {
+          "position": 3,
+          "position_label": "3ro",
+          "drawn_number": 28
+        }
+      ]
+    }
+  ],
+  "direct_companions": [
+    69,
+    80
+  ],
+  "companions_analyzed": [
+    69,
+    80
+  ],
+  "ranking": [
+    {
+      "number": 69,
+      "table1_code": 45,
+      "table2_code": 47,
+      "table2_group": [
+        11,
+        57,
+        69,
+        91
+      ],
+      "neighbors": [
+        11,
+        57,
+        91
+      ],
+      "matched_neighbors": [
+        57,
+        91
+      ],
+      "score": 2,
+      "matches": [
+        {
+          "companion": 69,
+          "neighbor": 57,
+          "lottery_id": "b9f2c5a2-bc3e-4382-9b6d-3cee16db00fd",
+          "lottery_name": "Quiniela Loteka",
+          "draw_id": "317ccb4d-73c7-4e6e-bbc5-05680e68818a",
+          "draw_date": "2026-04-28",
+          "position": 1,
+          "position_label": "1ro",
+          "observed_number": 45,
+          "mother_code": 45,
+          "table2_code": 47,
+          "table2_group": [
+            11,
+            57,
+            69,
+            91
+          ],
+          "neighbors": [
+            11,
+            57,
+            91
+          ],
+          "points": 1,
+          "dedupe_key": "b9f2c5a2-bc3e-4382-9b6d-3cee16db00fd|317ccb4d-73c7-4e6e-bbc5-05680e68818a|1|57|69",
+          "trace": "sali\u00f3 45 \u2192 ocurrencia hist\u00f3rica real del 45 (Quiniela Loteka, 2026-04-28, sorteo 317ccb4d-73c7-4e6e-bbc5-05680e68818a, posici\u00f3n 1ro) \u2192 c\u00f3digo madre 45 \u2192 compa\u00f1ero 69 \u2192 c\u00f3digo Tabla 2 47 \u2192 grupo Tabla 2 [11,57,69,91] \u2192 vecinos [11,57,91] \u2192 vecino encontrado 57 \u2192 +1 al compa\u00f1ero 69"
+        },
+        {
+          "companion": 69,
+          "neighbor": 91,
+          "lottery_id": "b9f2c5a2-bc3e-4382-9b6d-3cee16db00fd",
+          "lottery_name": "Quiniela Loteka",
+          "draw_id": "2e6c6d1c-130d-4f43-a2fb-4e00ac61adaa",
+          "draw_date": "2025-12-05",
+          "position": 1,
+          "position_label": "1ro",
+          "observed_number": 45,
+          "mother_code": 45,
+          "table2_code": 47,
+          "table2_group": [
+            11,
+            57,
+            69,
+            91
+          ],
+          "neighbors": [
+            11,
+            57,
+            91
+          ],
+          "points": 1,
+          "dedupe_key": "b9f2c5a2-bc3e-4382-9b6d-3cee16db00fd|2e6c6d1c-130d-4f43-a2fb-4e00ac61adaa|1|91|69",
+          "trace": "sali\u00f3 45 \u2192 ocurrencia hist\u00f3rica real del 45 (Quiniela Loteka, 2025-12-05, sorteo 2e6c6d1c-130d-4f43-a2fb-4e00ac61adaa, posici\u00f3n 1ro) \u2192 c\u00f3digo madre 45 \u2192 compa\u00f1ero 69 \u2192 c\u00f3digo Tabla 2 47 \u2192 grupo Tabla 2 [11,57,69,91] \u2192 vecinos [11,57,91] \u2192 vecino encontrado 91 \u2192 +1 al compa\u00f1ero 69"
+        }
+      ],
+      "trace": "sali\u00f3 45 \u2192 c\u00f3digo madre 45 \u2192 compa\u00f1ero 69 \u2192 c\u00f3digo Tabla 2 47 \u2192 vecinos coincidentes [57,91] \u2192 score 2 \u2192 se fortalece 69 para el pr\u00f3ximo sorteo"
+    },
+    {
+      "number": 80,
+      "table1_code": 45,
+      "table2_code": 13,
+      "table2_group": [
+        8,
+        80
+      ],
+      "neighbors": [
+        8
+      ],
+      "matched_neighbors": [],
+      "score": 0,
+      "matches": [],
+      "trace": "sali\u00f3 45 \u2192 c\u00f3digo madre 45 \u2192 compa\u00f1ero 80 \u2192 c\u00f3digo Tabla 2 13 \u2192 sin coincidencias de vecinos \u2192 score 0"
+    }
+  ],
+  "candidates": [
+    {
+      "number": 69,
+      "table1_code": 45,
+      "table2_code": 47,
+      "table2_group": [
+        11,
+        57,
+        69,
+        91
+      ],
+      "neighbors": [
+        11,
+        57,
+        91
+      ],
+      "matched_neighbors": [
+        57,
+        91
+      ],
+      "score": 2,
+      "matches": [
+        {
+          "companion": 69,
+          "neighbor": 57,
+          "lottery_id": "b9f2c5a2-bc3e-4382-9b6d-3cee16db00fd",
+          "lottery_name": "Quiniela Loteka",
+          "draw_id": "317ccb4d-73c7-4e6e-bbc5-05680e68818a",
+          "draw_date": "2026-04-28",
+          "position": 1,
+          "position_label": "1ro",
+          "observed_number": 45,
+          "mother_code": 45,
+          "table2_code": 47,
+          "table2_group": [
+            11,
+            57,
+            69,
+            91
+          ],
+          "neighbors": [
+            11,
+            57,
+            91
+          ],
+          "points": 1,
+          "dedupe_key": "b9f2c5a2-bc3e-4382-9b6d-3cee16db00fd|317ccb4d-73c7-4e6e-bbc5-05680e68818a|1|57|69",
+          "trace": "sali\u00f3 45 \u2192 ocurrencia hist\u00f3rica real del 45 (Quiniela Loteka, 2026-04-28, sorteo 317ccb4d-73c7-4e6e-bbc5-05680e68818a, posici\u00f3n 1ro) \u2192 c\u00f3digo madre 45 \u2192 compa\u00f1ero 69 \u2192 c\u00f3digo Tabla 2 47 \u2192 grupo Tabla 2 [11,57,69,91] \u2192 vecinos [11,57,91] \u2192 vecino encontrado 57 \u2192 +1 al compa\u00f1ero 69"
+        },
+        {
+          "companion": 69,
+          "neighbor": 91,
+          "lottery_id": "b9f2c5a2-bc3e-4382-9b6d-3cee16db00fd",
+          "lottery_name": "Quiniela Loteka",
+          "draw_id": "2e6c6d1c-130d-4f43-a2fb-4e00ac61adaa",
+          "draw_date": "2025-12-05",
+          "position": 1,
+          "position_label": "1ro",
+          "observed_number": 45,
+          "mother_code": 45,
+          "table2_code": 47,
+          "table2_group": [
+            11,
+            57,
+            69,
+            91
+          ],
+          "neighbors": [
+            11,
+            57,
+            91
+          ],
+          "points": 1,
+          "dedupe_key": "b9f2c5a2-bc3e-4382-9b6d-3cee16db00fd|2e6c6d1c-130d-4f43-a2fb-4e00ac61adaa|1|91|69",
+          "trace": "sali\u00f3 45 \u2192 ocurrencia hist\u00f3rica real del 45 (Quiniela Loteka, 2025-12-05, sorteo 2e6c6d1c-130d-4f43-a2fb-4e00ac61adaa, posici\u00f3n 1ro) \u2192 c\u00f3digo madre 45 \u2192 compa\u00f1ero 69 \u2192 c\u00f3digo Tabla 2 47 \u2192 grupo Tabla 2 [11,57,69,91] \u2192 vecinos [11,57,91] \u2192 vecino encontrado 91 \u2192 +1 al compa\u00f1ero 69"
+        }
+      ],
+      "trace": "sali\u00f3 45 \u2192 c\u00f3digo madre 45 \u2192 compa\u00f1ero 69 \u2192 c\u00f3digo Tabla 2 47 \u2192 vecinos coincidentes [57,91] \u2192 score 2 \u2192 se fortalece 69 para el pr\u00f3ximo sorteo"
+    },
+    {
+      "number": 80,
+      "table1_code": 45,
+      "table2_code": 13,
+      "table2_group": [
+        8,
+        80
+      ],
+      "neighbors": [
+        8
+      ],
+      "matched_neighbors": [],
+      "score": 0,
+      "matches": [],
+      "trace": "sali\u00f3 45 \u2192 c\u00f3digo madre 45 \u2192 compa\u00f1ero 80 \u2192 c\u00f3digo Tabla 2 13 \u2192 sin coincidencias de vecinos \u2192 score 0"
+    }
+  ],
+  "analysis_metadata": {
+    "draw_ids_analyzed_count": 10,
+    "draw_ids_analyzed": [
+      "9291acde-9274-4aba-bc9a-b4f286c5124b",
+      "401e96d7-3a95-43ae-a175-2d33478b3b82",
+      "c6ba1b7a-4e4a-46ec-b3b6-4abbe5ec0c65",
+      "317ccb4d-73c7-4e6e-bbc5-05680e68818a",
+      "a4410235-0d48-495f-a5eb-fb51518ee78e",
+      "4b7cc8f1-9bad-46bd-aa3d-90cc6c3f931b",
+      "2a0340a0-efba-4c9f-a244-b8720e8b72d1",
+      "2e6c6d1c-130d-4f43-a2fb-4e00ac61adaa",
+      "e727eee5-06ae-4b9b-a1a1-c8f5f7d42621",
+      "4f93a13f-0199-4efc-bad9-7aea78cfcc30"
+    ],
+    "internal_dedupe_discarded_count": 0,
+    "possible_content_duplicate_draws_detected": false,
+    "possible_content_duplicate_groups": [],
+    "content_duplicates_kept_separate_by_draw_id": true,
+    "sync_duplicate_policy": "Draws with identical lottery/date/numbers but different draw_id remain separate occurrences. Sync is not modified; duplicates are not hidden.",
+    "trigger": "drawn_number_equals_observed_number_only",
+    "exclude_observed_from_matches": true,
+    "exclude_companion_from_neighbors": true,
+    "ranking_includes_score_zero": true,
+    "ranking_sort": "score_desc_then_number_asc"
+  },
+  "matches": [
+    {
+      "companion": 69,
+      "neighbor": 57,
+      "lottery_id": "b9f2c5a2-bc3e-4382-9b6d-3cee16db00fd",
+      "lottery_name": "Quiniela Loteka",
+      "draw_id": "317ccb4d-73c7-4e6e-bbc5-05680e68818a",
+      "draw_date": "2026-04-28",
+      "position": 1,
+      "position_label": "1ro",
+      "observed_number": 45,
+      "mother_code": 45,
+      "table2_code": 47,
+      "table2_group": [
+        11,
+        57,
+        69,
+        91
+      ],
+      "neighbors": [
+        11,
+        57,
+        91
+      ],
+      "points": 1,
+      "dedupe_key": "b9f2c5a2-bc3e-4382-9b6d-3cee16db00fd|317ccb4d-73c7-4e6e-bbc5-05680e68818a|1|57|69",
+      "trace": "sali\u00f3 45 \u2192 ocurrencia hist\u00f3rica real del 45 (Quiniela Loteka, 2026-04-28, sorteo 317ccb4d-73c7-4e6e-bbc5-05680e68818a, posici\u00f3n 1ro) \u2192 c\u00f3digo madre 45 \u2192 compa\u00f1ero 69 \u2192 c\u00f3digo Tabla 2 47 \u2192 grupo Tabla 2 [11,57,69,91] \u2192 vecinos [11,57,91] \u2192 vecino encontrado 57 \u2192 +1 al compa\u00f1ero 69"
+    },
+    {
+      "companion": 69,
+      "neighbor": 91,
+      "lottery_id": "b9f2c5a2-bc3e-4382-9b6d-3cee16db00fd",
+      "lottery_name": "Quiniela Loteka",
+      "draw_id": "2e6c6d1c-130d-4f43-a2fb-4e00ac61adaa",
+      "draw_date": "2025-12-05",
+      "position": 1,
+      "position_label": "1ro",
+      "observed_number": 45,
+      "mother_code": 45,
+      "table2_code": 47,
+      "table2_group": [
+        11,
+        57,
+        69,
+        91
+      ],
+      "neighbors": [
+        11,
+        57,
+        91
+      ],
+      "points": 1,
+      "dedupe_key": "b9f2c5a2-bc3e-4382-9b6d-3cee16db00fd|2e6c6d1c-130d-4f43-a2fb-4e00ac61adaa|1|91|69",
+      "trace": "sali\u00f3 45 \u2192 ocurrencia hist\u00f3rica real del 45 (Quiniela Loteka, 2025-12-05, sorteo 2e6c6d1c-130d-4f43-a2fb-4e00ac61adaa, posici\u00f3n 1ro) \u2192 c\u00f3digo madre 45 \u2192 compa\u00f1ero 69 \u2192 c\u00f3digo Tabla 2 47 \u2192 grupo Tabla 2 [11,57,69,91] \u2192 vecinos [11,57,91] \u2192 vecino encontrado 91 \u2192 +1 al compa\u00f1ero 69"
+    }
+  ],
+  "companions_score_zero": [
+    {
+      "number": 80,
+      "table1_code": 45,
+      "table2_code": 13,
+      "table2_group": [
+        8,
+        80
+      ],
+      "neighbors": [
+        8
+      ],
+      "matched_neighbors": [],
+      "score": 0,
+      "matches": [],
+      "trace": "sali\u00f3 45 \u2192 c\u00f3digo madre 45 \u2192 compa\u00f1ero 80 \u2192 c\u00f3digo Tabla 2 13 \u2192 sin coincidencias de vecinos \u2192 score 0"
+    }
+  ],
+  "score": {
+    "top": {
+      "number": 69,
+      "table1_code": 45,
+      "table2_code": 47,
+      "table2_group": [
+        11,
+        57,
+        69,
+        91
+      ],
+      "neighbors": [
+        11,
+        57,
+        91
+      ],
+      "matched_neighbors": [
+        57,
+        91
+      ],
+      "score": 2,
+      "matches": [
+        {
+          "companion": 69,
+          "neighbor": 57,
+          "lottery_id": "b9f2c5a2-bc3e-4382-9b6d-3cee16db00fd",
+          "lottery_name": "Quiniela Loteka",
+          "draw_id": "317ccb4d-73c7-4e6e-bbc5-05680e68818a",
+          "draw_date": "2026-04-28",
+          "position": 1,
+          "position_label": "1ro",
+          "observed_number": 45,
+          "mother_code": 45,
+          "table2_code": 47,
+          "table2_group": [
+            11,
+            57,
+            69,
+            91
+          ],
+          "neighbors": [
+            11,
+            57,
+            91
+          ],
+          "points": 1,
+          "dedupe_key": "b9f2c5a2-bc3e-4382-9b6d-3cee16db00fd|317ccb4d-73c7-4e6e-bbc5-05680e68818a|1|57|69",
+          "trace": "sali\u00f3 45 \u2192 ocurrencia hist\u00f3rica real del 45 (Quiniela Loteka, 2026-04-28, sorteo 317ccb4d-73c7-4e6e-bbc5-05680e68818a, posici\u00f3n 1ro) \u2192 c\u00f3digo madre 45 \u2192 compa\u00f1ero 69 \u2192 c\u00f3digo Tabla 2 47 \u2192 grupo Tabla 2 [11,57,69,91] \u2192 vecinos [11,57,91] \u2192 vecino encontrado 57 \u2192 +1 al compa\u00f1ero 69"
+        },
+        {
+          "companion": 69,
+          "neighbor": 91,
+          "lottery_id": "b9f2c5a2-bc3e-4382-9b6d-3cee16db00fd",
+          "lottery_name": "Quiniela Loteka",
+          "draw_id": "2e6c6d1c-130d-4f43-a2fb-4e00ac61adaa",
+          "draw_date": "2025-12-05",
+          "position": 1,
+          "position_label": "1ro",
+          "observed_number": 45,
+          "mother_code": 45,
+          "table2_code": 47,
+          "table2_group": [
+            11,
+            57,
+            69,
+            91
+          ],
+          "neighbors": [
+            11,
+            57,
+            91
+          ],
+          "points": 1,
+          "dedupe_key": "b9f2c5a2-bc3e-4382-9b6d-3cee16db00fd|2e6c6d1c-130d-4f43-a2fb-4e00ac61adaa|1|91|69",
+          "trace": "sali\u00f3 45 \u2192 ocurrencia hist\u00f3rica real del 45 (Quiniela Loteka, 2025-12-05, sorteo 2e6c6d1c-130d-4f43-a2fb-4e00ac61adaa, posici\u00f3n 1ro) \u2192 c\u00f3digo madre 45 \u2192 compa\u00f1ero 69 \u2192 c\u00f3digo Tabla 2 47 \u2192 grupo Tabla 2 [11,57,69,91] \u2192 vecinos [11,57,91] \u2192 vecino encontrado 91 \u2192 +1 al compa\u00f1ero 69"
+        }
+      ],
+      "trace": "sali\u00f3 45 \u2192 c\u00f3digo madre 45 \u2192 compa\u00f1ero 69 \u2192 c\u00f3digo Tabla 2 47 \u2192 vecinos coincidentes [57,91] \u2192 score 2 \u2192 se fortalece 69 para el pr\u00f3ximo sorteo"
+    },
+    "ranking_length": 2
+  },
+  "trace": {
+    "match_traces": [
+      "sali\u00f3 45 \u2192 ocurrencia hist\u00f3rica real del 45 (Quiniela Loteka, 2026-04-28, sorteo 317ccb4d-73c7-4e6e-bbc5-05680e68818a, posici\u00f3n 1ro) \u2192 c\u00f3digo madre 45 \u2192 compa\u00f1ero 69 \u2192 c\u00f3digo Tabla 2 47 \u2192 grupo Tabla 2 [11,57,69,91] \u2192 vecinos [11,57,91] \u2192 vecino encontrado 57 \u2192 +1 al compa\u00f1ero 69",
+      "sali\u00f3 45 \u2192 ocurrencia hist\u00f3rica real del 45 (Quiniela Loteka, 2025-12-05, sorteo 2e6c6d1c-130d-4f43-a2fb-4e00ac61adaa, posici\u00f3n 1ro) \u2192 c\u00f3digo madre 45 \u2192 compa\u00f1ero 69 \u2192 c\u00f3digo Tabla 2 47 \u2192 grupo Tabla 2 [11,57,69,91] \u2192 vecinos [11,57,91] \u2192 vecino encontrado 91 \u2192 +1 al compa\u00f1ero 69"
+    ],
+    "candidate_traces": [
+      "sali\u00f3 45 \u2192 c\u00f3digo madre 45 \u2192 compa\u00f1ero 69 \u2192 c\u00f3digo Tabla 2 47 \u2192 vecinos coincidentes [57,91] \u2192 score 2 \u2192 se fortalece 69 para el pr\u00f3ximo sorteo",
+      "sali\u00f3 45 \u2192 c\u00f3digo madre 45 \u2192 compa\u00f1ero 80 \u2192 c\u00f3digo Tabla 2 13 \u2192 sin coincidencias de vecinos \u2192 score 0"
+    ]
+  },
+  "metadata": {
+    "engine": "lottery.numeric_relations",
+    "llm_calculates": false,
+    "exclude_observed_from_matches": true,
+    "universe": "1..100",
+    "occurrence_limit_explicit": {
+      "mode": "last_k",
+      "k": 10
+    },
+    "tables_are_separate": true,
+    "draw_ids_analyzed_count": 10,
+    "draw_ids_analyzed": [
+      "9291acde-9274-4aba-bc9a-b4f286c5124b",
+      "401e96d7-3a95-43ae-a175-2d33478b3b82",
+      "c6ba1b7a-4e4a-46ec-b3b6-4abbe5ec0c65",
+      "317ccb4d-73c7-4e6e-bbc5-05680e68818a",
+      "a4410235-0d48-495f-a5eb-fb51518ee78e",
+      "4b7cc8f1-9bad-46bd-aa3d-90cc6c3f931b",
+      "2a0340a0-efba-4c9f-a244-b8720e8b72d1",
+      "2e6c6d1c-130d-4f43-a2fb-4e00ac61adaa",
+      "e727eee5-06ae-4b9b-a1a1-c8f5f7d42621",
+      "4f93a13f-0199-4efc-bad9-7aea78cfcc30"
+    ],
+    "internal_dedupe_discarded_count": 0,
+    "possible_content_duplicate_draws_detected": false,
+    "possible_content_duplicate_groups": [],
+    "content_duplicates_kept_separate_by_draw_id": true,
+    "sync_duplicate_policy": "Draws with identical lottery/date/numbers but different draw_id remain separate occurrences. Sync is not modified; duplicates are not hidden.",
+    "trigger": "drawn_number_equals_observed_number_only",
+    "exclude_companion_from_neighbors": true,
+    "ranking_includes_score_zero": true,
+    "ranking_sort": "score_desc_then_number_asc"
+  }
+}

@@ -1,0 +1,81 @@
+{
+  "prompt_id": "235d836d-cc0f-4279-88bf-6a46a3fe2de4",
+  "compiled": {
+    "body": "[REDACTED_COMPILED_BODY len=1254]",
+    "fragments": [
+      {
+        "key": "identidad",
+        "title": "Identidad",
+        "chars": 800,
+        "tokens": 200
+      },
+      {
+        "key": "dominio",
+        "title": "Dominio",
+        "chars": 60,
+        "tokens": 15
+      },
+      {
+        "key": "memoria",
+        "title": "Memoria",
+        "chars": 63,
+        "tokens": 15
+      },
+      {
+        "key": "aclaraciones",
+        "title": "Aclaraciones",
+        "chars": 64,
+        "tokens": 16
+      },
+      {
+        "key": "analisis",
+        "title": "Análisis",
+        "chars": 55,
+        "tokens": 13
+      },
+      {
+        "key": "herramientas",
+        "title": "Herramientas",
+        "chars": 0,
+        "tokens": 0
+      },
+      {
+        "key": "respuesta",
+        "title": "Respuesta",
+        "chars": 0,
+        "tokens": 0
+      },
+      {
+        "key": "reglas_prediccion",
+        "title": "Reglas de predicción",
+        "chars": 0,
+        "tokens": 0
+      },
+      {
+        "key": "seguridad",
+        "title": "Seguridad",
+        "chars": 70,
+        "tokens": 17
+      }
+    ],
+    "assembly_order": [
+      "identidad",
+      "dominio",
+      "memoria",
+      "aclaraciones",
+      "analisis",
+      "herramientas",
+      "respuesta",
+      "reglas_prediccion",
+      "instrucciones_especificas",
+      "seguridad"
+    ],
+    "chars": 1254,
+    "tokens_estimated": 313,
+    "body_present": true
+  },
+  "search_matches": [],
+  "secrets_detected": [],
+  "view": "normal",
+  "sensitive_stripped": true
+}

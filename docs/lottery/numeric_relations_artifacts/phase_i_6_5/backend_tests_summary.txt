@@ -1,0 +1,17 @@
+=== test_lottery_ia_control_center (container) ===
+..........                                                               [100%]
+10 passed in 1.35s
+
+=== NR + AI admin + phase_cd (host .venv, frontend path OK) ===
+
+=== Earlier container suite (phase_cd failed due to missing /frontend mount) ===
+.................................................F.................      [100%]
+=================================== FAILURES ===================================
+E   FileNotFoundError: [Errno 2] No such file or directory: '/frontend/src/app/(platform)/lottery/admin/numeric-relations/page.tsx'
+/usr/local/lib/python3.12/pathlib.py:1013: FileNotFoundError: [Errno 2] No such file or directory: '/frontend/src/app/(platform)/lottery/admin/numeric-relations/page.tsx'
+=========================== short test summary info ============================
+FAILED tests/test_lottery_numeric_relations_phase_cd.py::test_ui_page_keeps_table_tabs_separate
+1 failed, 66 passed in 0.85s
+
+=== I-6.5 re-run with frontend path (host) ===
+32 passed in 22.79s (includes phase_cd UI path test)

@@ -1,0 +1,24 @@
+{
+  "mode": "draft",
+  "prompt_id": "235d836d-cc0f-4279-88bf-6a46a3fe2de4",
+  "message": "Dame la predicción del 34 en Leidsa usando las últimas 20",
+  "intent": {
+    "kind": "tool",
+    "tool": "lottery_analyze_numeric_relations",
+    "params": {
+      "observed_number": 34,
+      "number": "34",
+      "lotteries": [
+        "Leidsa"
+      ],
+      "occurrence_mode": "last_k",
+      "occurrence_k": 20,
+      "lottery": "Leidsa"
+    },
+    "clarify_message": null,
+    "refuse_message": null
+  },
+  "latency_ms": 2,
+  "note": "Playground de intent/planificación; no altera versión ACTIVA ni ejecuta motores salvo que se invoque analyze explícitamente en UI.",
+  "active_unchanged": true
+}

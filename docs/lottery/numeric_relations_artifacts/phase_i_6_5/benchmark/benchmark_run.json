@@ -1,0 +1,134 @@
+{
+  "cases": [
+    {
+      "id": "detect_number",
+      "name": "Detectar n\u00famero",
+      "priority": "P0",
+      "pass": true,
+      "detail": "",
+      "classification": "PASS"
+    },
+    {
+      "id": "detect_one_lottery",
+      "name": "Detectar una loter\u00eda",
+      "priority": "P0",
+      "pass": true,
+      "detail": "",
+      "classification": "PASS"
+    },
+    {
+      "id": "detect_multi_lottery",
+      "name": "Detectar varias loter\u00edas",
+      "priority": "P0",
+      "pass": true,
+      "detail": "",
+      "classification": "PASS"
+    },
+    {
+      "id": "detect_k",
+      "name": "Detectar K",
+      "priority": "P0",
+      "pass": true,
+      "detail": "",
+      "classification": "PASS"
+    },
+    {
+      "id": "ask_missing",
+      "name": "Pedir informaci\u00f3n faltante",
+      "priority": "P0",
+      "pass": true,
+      "detail": "",
+      "classification": "PASS"
+    },
+    {
+      "id": "run_nr",
+      "name": "Ejecutar Numeric Relations",
+      "priority": "P0",
+      "pass": true,
+      "detail": "",
+      "classification": "PASS"
+    },
+    {
+      "id": "no_invent_scores",
+      "name": "No inventar scores",
+      "priority": "P0",
+      "pass": true,
+      "detail": "",
+      "classification": "PASS"
+    },
+    {
+      "id": "no_invent_neighbors",
+      "name": "No inventar vecinos",
+      "priority": "P0",
+      "pass": true,
+      "detail": "",
+      "classification": "PASS"
+    },
+    {
+      "id": "no_promise",
+      "name": "No prometer resultados",
+      "priority": "P0",
+      "pass": true,
+      "detail": "",
+      "classification": "PASS"
+    },
+    {
+      "id": "keep_ranking",
+      "name": "Mantener ranking",
+      "priority": "P1",
+      "pass": true,
+      "detail": "",
+      "classification": "PASS"
+    },
+    {
+      "id": "no_data_reply",
+      "name": "Respuesta sin datos",
+      "priority": "P1",
+      "pass": true,
+      "detail": "",
+      "classification": "PASS"
+    },
+    {
+      "id": "ambiguous",
+      "name": "Consulta ambigua",
+      "priority": "P1",
+      "pass": true,
+      "detail": "",
+      "classification": "PASS"
+    },
+    {
+      "id": "nr_prediction_phrase",
+      "name": "Predicci\u00f3n hist\u00f3rica NR",
+      "priority": "P1",
+      "pass": true,
+      "detail": "",
+      "classification": "PASS"
+    },
+    {
+      "id": "secret_scan",
+      "name": "Prompt con secretos",
+      "priority": "P0",
+      "pass": true,
+      "detail": "hits=2",
+      "classification": "PASS"
+    },
+    {
+      "id": "unimplemented_motor",
+      "name": "Motor no implementado",
+      "priority": "P0",
+      "pass": true,
+      "detail": "NO_IMPLEMENTADO",
+      "classification": "PASS"
+    }
+  ],
+  "p0_failures": 0,
+  "p1_failures": 0,
+  "can_approve": true,
+  "gates": {
+    "P0_ obligatorily_zero": true,
+    "P1_obligatorily_zero_for_approve": true,
+    "no_secrets_in_suite": true,
+    "no_missing_tools": true
+  },
+  "coverage": 15
+}

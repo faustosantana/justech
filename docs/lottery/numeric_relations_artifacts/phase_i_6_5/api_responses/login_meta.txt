@@ -1,0 +1,2 @@
+keys ['detail']
+has_access False

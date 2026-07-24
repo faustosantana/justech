@@ -1,0 +1,35 @@
+PASS prompts_list code=200 items=3 active=1
+PASS caso1_table1_100 
+PASS caso1_n1_formula 1 ÷ 1220
+PASS caso1_n1_visible 0.0008196721
+PASS caso1_n1_digits 00008196721
+PASS caso1_n1_code34 34
+PASS caso1_table2_100 
+PASS caso1_t2_n1 1220 ÷ 1 code=5 digits=122000000000
+PASS group_34_t1 {'code': 34, 'numbers': [1, 17, 33, 49, 76], 'table': 'table_1'}
+PASS group_53_t2 {'code': 53, 'numbers': [27, 68, 76, 92], 'table': 'table_2'}
+PASS lotteries_loaded count=49
+PASS caso2_companions_27_38 [27, 38]
+PASS caso2_score0_visible zero_count=2 ranking=2
+PASS caso2_draw_ids draw_ids_sample=[] n=0
+PASS caso2_llm_false 
+PASS caso3_prediction code=200
+PASS caso3_disclaimer 
+PASS caso3_ranking_from_motor 
+PASS caso3_no_guarantee 
+PASS motors_nr_active 
+PASS motors_freq_stub 
+PASS stub_activate_blocked code=400 detail={'detail': "motor 'frequencies' is NO_IMPLEMENTADO — cannot activate, weight, or execute"}
+PASS caso4_multi names={'e76951f3-c120-4787-aeae-2225187fd769', 'Quiniela Loteka'}
+PASS prompt_schema 
+PASS draft_create code=200 status=draft
+PASS draft_save 
+PASS secret_blocked code=400
+PASS compiled_visible 
+PASS compiled_no_secret 
+PASS compare 
+PASS playground 
+PASS benchmark_gates p0=0 p1=0
+PASS active_unchanged before=ba2940bf-698f-4bea-8a39-31536f1bcc22 after=ba2940bf-698f-4bea-8a39-31536f1bcc22
+PASS permisos_403 code=403
+SUMMARY passed=34 failed=0 total=34

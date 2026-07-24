@@ -1,0 +1,721 @@
+{
+  "observed_number": 26,
+  "mother_code": 26,
+  "primary_table": "table_1",
+  "lottery_ids": [
+    "e76951f3-c120-4787-aeae-2225187fd769"
+  ],
+  "lottery_names": [
+    "Loto Leidsa"
+  ],
+  "occurrence_limit": {
+    "mode": "last_k",
+    "k": 10
+  },
+  "occurrences_found": 189,
+  "occurrences_used": 10,
+  "historical_occurrences": [
+    {
+      "lottery_id": "e76951f3-c120-4787-aeae-2225187fd769",
+      "lottery_name": "Loto Leidsa",
+      "draw_id": "542254bd-f978-4c43-86a3-866ea5cc7483",
+      "draw_date": "2026-06-17",
+      "draw_time": null,
+      "observed_number": 26,
+      "draw_numbers": [
+        {
+          "position": 1,
+          "position_label": "posici\u00f3n 1",
+          "drawn_number": 22
+        },
+        {
+          "position": 2,
+          "position_label": "posici\u00f3n 2",
+          "drawn_number": 26
+        },
+        {
+          "position": 3,
+          "position_label": "posici\u00f3n 3",
+          "drawn_number": 30
+        },
+        {
+          "position": 4,
+          "position_label": "posici\u00f3n 4",
+          "drawn_number": 36
+        },
+        {
+          "position": 5,
+          "position_label": "posici\u00f3n 5",
+          "drawn_number": 38
+        },
+        {
+          "position": 6,
+          "position_label": "posici\u00f3n 6",
+          "drawn_number": 39
+        },
+        {
+          "position": 7,
+          "position_label": "Loto",
+          "drawn_number": 5
+        },
+        {
+          "position": 8,
+          "position_label": "M\u00e1s",
+          "drawn_number": 11
+        }
+      ]
+    },
+    {
+      "lottery_id": "e76951f3-c120-4787-aeae-2225187fd769",
+      "lottery_name": "Loto Leidsa",
+      "draw_id": "03b1c809-f9b1-4b51-9f6f-b9efd98555e7",
+      "draw_date": "2026-05-13",
+      "draw_time": null,
+      "observed_number": 26,
+      "draw_numbers": [
+        {
+          "position": 1,
+          "position_label": "posici\u00f3n 1",
+          "drawn_number": 4
+        },
+        {
+          "position": 2,
+          "position_label": "posici\u00f3n 2",
+          "drawn_number": 10
+        },
+        {
+          "position": 3,
+          "position_label": "posici\u00f3n 3",
+          "drawn_number": 25
+        },
+        {
+          "position": 4,
+          "position_label": "posici\u00f3n 4",
+          "drawn_number": 26
+        },
+        {
+          "position": 5,
+          "position_label": "posici\u00f3n 5",
+          "drawn_number": 33
+        },
+        {
+          "position": 6,
+          "position_label": "posici\u00f3n 6",
+          "drawn_number": 34
+        },
+        {
+          "position": 7,
+          "position_label": "Loto",
+          "drawn_number": 10
+        },
+        {
+          "position": 8,
+          "position_label": "M\u00e1s",
+          "drawn_number": 2
+        }
+      ]
+    },
+    {
+      "lottery_id": "e76951f3-c120-4787-aeae-2225187fd769",
+      "lottery_name": "Loto Leidsa",
+      "draw_id": "a4e67d1e-b166-4693-8e7f-b06e80133af3",
+      "draw_date": "2026-04-29",
+      "draw_time": null,
+      "observed_number": 26,
+      "draw_numbers": [
+        {
+          "position": 1,
+          "position_label": "posici\u00f3n 1",
+          "drawn_number": 2
+        },
+        {
+          "position": 2,
+          "position_label": "posici\u00f3n 2",
+          "drawn_number": 9
+        },
+        {
+          "position": 3,
+          "position_label": "posici\u00f3n 3",
+          "drawn_number": 12
+        },
+        {
+          "position": 4,
+          "position_label": "posici\u00f3n 4",
+          "drawn_number": 15
+        },
+        {
+          "position": 5,
+          "position_label": "posici\u00f3n 5",
+          "drawn_number": 26
+        },
+        {
+          "position": 6,
+          "position_label": "posici\u00f3n 6",
+          "drawn_number": 32
+        },
+        {
+          "position": 7,
+          "position_label": "Loto",
+          "drawn_number": 1
+        },
+        {
+          "position": 8,
+          "position_label": "M\u00e1s",
+          "drawn_number": 1
+        }
+      ]
+    },
+    {
+      "lottery_id": "e76951f3-c120-4787-aeae-2225187fd769",
+      "lottery_name": "Loto Leidsa",
+      "draw_id": "79579bbd-3a1c-40f4-b0b4-a94f86ec0ec9",
+      "draw_date": "2026-03-11",
+      "draw_time": null,
+      "observed_number": 26,
+      "draw_numbers": [
+        {
+          "position": 1,
+          "position_label": "posici\u00f3n 1",
+          "drawn_number": 1
+        },
+        {
+          "position": 2,
+          "position_label": "posici\u00f3n 2",
+          "drawn_number": 4
+        },
+        {
+          "position": 3,
+          "position_label": "posici\u00f3n 3",
+          "drawn_number": 13
+        },
+        {
+          "position": 4,
+          "position_label": "posici\u00f3n 4",
+          "drawn_number": 26
+        },
+        {
+          "position": 5,
+          "position_label": "posici\u00f3n 5",
+          "drawn_number": 37
+        },
+        {
+          "position": 6,
+          "position_label": "posici\u00f3n 6",
+          "drawn_number": 40
+        },
+        {
+          "position": 7,
+          "position_label": "Loto",
+          "drawn_number": 12
+        },
+        {
+          "position": 8,
+          "position_label": "M\u00e1s",
+          "drawn_number": 1
+        }
+      ]
+    },
+    {
+      "lottery_id": "e76951f3-c120-4787-aeae-2225187fd769",
+      "lottery_name": "Loto Leidsa",
+      "draw_id": "8b529e97-fd9d-4113-9bc4-ea90a5c6dfa7",
+      "draw_date": "2026-02-18",
+      "draw_time": null,
+      "observed_number": 26,
+      "draw_numbers": [
+        {
+          "position": 1,
+          "position_label": "posici\u00f3n 1",
+          "drawn_number": 10
+        },
+        {
+          "position": 2,
+          "position_label": "posici\u00f3n 2",
+          "drawn_number": 14
+        },
+        {
+          "position": 3,
+          "position_label": "posici\u00f3n 3",
+          "drawn_number": 26
+        },
+        {
+          "position": 4,
+          "position_label": "posici\u00f3n 4",
+          "drawn_number": 29
+        },
+        {
+          "position": 5,
+          "position_label": "posici\u00f3n 5",
+          "drawn_number": 32
+        },
+        {
+          "position": 6,
+          "position_label": "posici\u00f3n 6",
+          "drawn_number": 36
+        },
+        {
+          "position": 7,
+          "position_label": "Loto",
+          "drawn_number": 11
+        },
+        {
+          "position": 8,
+          "position_label": "M\u00e1s",
+          "drawn_number": 12
+        }
+      ]
+    },
+    {
+      "lottery_id": "e76951f3-c120-4787-aeae-2225187fd769",
+      "lottery_name": "Loto Leidsa",
+      "draw_id": "9b14ed5b-c70c-454b-a1d3-ef3a821870ec",
+      "draw_date": "2026-01-17",
+      "draw_time": null,
+      "observed_number": 26,
+      "draw_numbers": [
+        {
+          "position": 1,
+          "position_label": "posici\u00f3n 1",
+          "drawn_number": 4
+        },
+        {
+          "position": 2,
+          "position_label": "posici\u00f3n 2",
+          "drawn_number": 13
+        },
+        {
+          "position": 3,
+          "position_label": "posici\u00f3n 3",
+          "drawn_number": 15
+        },
+        {
+          "position": 4,
+          "position_label": "posici\u00f3n 4",
+          "drawn_number": 23
+        },
+        {
+          "position": 5,
+          "position_label": "posici\u00f3n 5",
+          "drawn_number": 26
+        },
+        {
+          "position": 6,
+          "position_label": "posici\u00f3n 6",
+          "drawn_number": 29
+        },
+        {
+          "position": 7,
+          "position_label": "Loto",
+          "drawn_number": 6
+        },
+        {
+          "position": 8,
+          "position_label": "M\u00e1s",
+          "drawn_number": 14
+        }
+      ]
+    },
+    {
+      "lottery_id": "e76951f3-c120-4787-aeae-2225187fd769",
+      "lottery_name": "Loto Leidsa",
+      "draw_id": "5e832c51-b575-46ef-ae0a-f3171d6a06d4",
+      "draw_date": "2025-11-29",
+      "draw_time": null,
+      "observed_number": 26,
+      "draw_numbers": [
+        {
+          "position": 1,
+          "position_label": "posici\u00f3n 1",
+          "drawn_number": 3
+        },
+        {
+          "position": 2,
+          "position_label": "posici\u00f3n 2",
+          "drawn_number": 4
+        },
+        {
+          "position": 3,
+          "position_label": "posici\u00f3n 3",
+          "drawn_number": 21
+        },
+        {
+          "position": 4,
+          "position_label": "posici\u00f3n 4",
+          "drawn_number": 25
+        },
+        {
+          "position": 5,
+          "position_label": "posici\u00f3n 5",
+          "drawn_number": 26
+        },
+        {
+          "position": 6,
+          "position_label": "posici\u00f3n 6",
+          "drawn_number": 27
+        },
+        {
+          "position": 7,
+          "position_label": "Loto",
+          "drawn_number": 5
+        },
+        {
+          "position": 8,
+          "position_label": "M\u00e1s",
+          "drawn_number": 1
+        }
+      ]
+    },
+    {
+      "lottery_id": "e76951f3-c120-4787-aeae-2225187fd769",
+      "lottery_name": "Loto Leidsa",
+      "draw_id": "f1b84445-8aa9-4f08-bccf-7fec97993d7b",
+      "draw_date": "2025-11-22",
+      "draw_time": null,
+      "observed_number": 26,
+      "draw_numbers": [
+        {
+          "position": 1,
+          "position_label": "posici\u00f3n 1",
+          "drawn_number": 7
+        },
+        {
+          "position": 2,
+          "position_label": "posici\u00f3n 2",
+          "drawn_number": 10
+        },
+        {
+          "position": 3,
+          "position_label": "posici\u00f3n 3",
+          "drawn_number": 12
+        },
+        {
+          "position": 4,
+          "position_label": "posici\u00f3n 4",
+          "drawn_number": 18
+        },
+        {
+          "position": 5,
+          "position_label": "posici\u00f3n 5",
+          "drawn_number": 21
+        },
+        {
+          "position": 6,
+          "position_label": "posici\u00f3n 6",
+          "drawn_number": 26
+        },
+        {
+          "position": 7,
+          "position_label": "Loto",
+          "drawn_number": 2
+        },
+        {
+          "position": 8,
+          "position_label": "M\u00e1s",
+          "drawn_number": 4
+        }
+      ]
+    },
+    {
+      "lottery_id": "e76951f3-c120-4787-aeae-2225187fd769",
+      "lottery_name": "Loto Leidsa",
+      "draw_id": "0ea1ae66-9a3d-4905-9183-5962f346de7a",
+      "draw_date": "2025-09-17",
+      "draw_time": null,
+      "observed_number": 26,
+      "draw_numbers": [
+        {
+          "position": 1,
+          "position_label": "posici\u00f3n 1",
+          "drawn_number": 1
+        },
+        {
+          "position": 2,
+          "position_label": "posici\u00f3n 2",
+          "drawn_number": 23
+        },
+        {
+          "position": 3,
+          "position_label": "posici\u00f3n 3",
+          "drawn_number": 26
+        },
+        {
+          "position": 4,
+          "position_label": "posici\u00f3n 4",
+          "drawn_number": 29
+        },
+        {
+          "position": 5,
+          "position_label": "posici\u00f3n 5",
+          "drawn_number": 35
+        },
+        {
+          "position": 6,
+          "position_label": "posici\u00f3n 6",
+          "drawn_number": 36
+        },
+        {
+          "position": 7,
+          "position_label": "Loto",
+          "drawn_number": 3
+        },
+        {
+          "position": 8,
+          "position_label": "M\u00e1s",
+          "drawn_number": 11
+        }
+      ]
+    },
+    {
+      "lottery_id": "e76951f3-c120-4787-aeae-2225187fd769",
+      "lottery_name": "Loto Leidsa",
+      "draw_id": "5d17df65-b2c2-4e9e-ae74-99c64de3cb37",
+      "draw_date": "2025-08-20",
+      "draw_time": null,
+      "observed_number": 26,
+      "draw_numbers": [
+        {
+          "position": 1,
+          "position_label": "posici\u00f3n 1",
+          "drawn_number": 2
+        },
+        {
+          "position": 2,
+          "position_label": "posici\u00f3n 2",
+          "drawn_number": 17
+        },
+        {
+          "position": 3,
+          "position_label": "posici\u00f3n 3",
+          "drawn_number": 18
+        },
+        {
+          "position": 4,
+          "position_label": "posici\u00f3n 4",
+          "drawn_number": 24
+        },
+        {
+          "position": 5,
+          "position_label": "posici\u00f3n 5",
+          "drawn_number": 26
+        },
+        {
+          "position": 6,
+          "position_label": "posici\u00f3n 6",
+          "drawn_number": 38
+        },
+        {
+          "position": 7,
+          "position_label": "Loto",
+          "drawn_number": 1
+        },
+        {
+          "position": 8,
+          "position_label": "M\u00e1s",
+          "drawn_number": 10
+        }
+      ]
+    }
+  ],
+  "direct_companions": [
+    27,
+    38
+  ],
+  "companions_analyzed": [
+    27,
+    38
+  ],
+  "ranking": [
+    {
+      "number": 27,
+      "table1_code": 26,
+      "table2_code": 53,
+      "table2_group": [
+        27,
+        68,
+        76,
+        92
+      ],
+      "neighbors": [
+        68,
+        76,
+        92
+      ],
+      "matched_neighbors": [],
+      "score": 0,
+      "matches": [],
+      "trace": "sali\u00f3 26 \u2192 c\u00f3digo madre 26 \u2192 compa\u00f1ero 27 \u2192 c\u00f3digo Tabla 2 53 \u2192 sin coincidencias de vecinos \u2192 score 0"
+    },
+    {
+      "number": 38,
+      "table1_code": 26,
+      "table2_code": 44,
+      "table2_group": [
+        38
+      ],
+      "neighbors": [],
+      "matched_neighbors": [],
+      "score": 0,
+      "matches": [],
+      "trace": "sali\u00f3 26 \u2192 c\u00f3digo madre 26 \u2192 compa\u00f1ero 38 \u2192 c\u00f3digo Tabla 2 44 \u2192 sin coincidencias de vecinos \u2192 score 0"
+    }
+  ],
+  "candidates": [
+    {
+      "number": 27,
+      "table1_code": 26,
+      "table2_code": 53,
+      "table2_group": [
+        27,
+        68,
+        76,
+        92
+      ],
+      "neighbors": [
+        68,
+        76,
+        92
+      ],
+      "matched_neighbors": [],
+      "score": 0,
+      "matches": [],
+      "trace": "sali\u00f3 26 \u2192 c\u00f3digo madre 26 \u2192 compa\u00f1ero 27 \u2192 c\u00f3digo Tabla 2 53 \u2192 sin coincidencias de vecinos \u2192 score 0"
+    },
+    {
+      "number": 38,
+      "table1_code": 26,
+      "table2_code": 44,
+      "table2_group": [
+        38
+      ],
+      "neighbors": [],
+      "matched_neighbors": [],
+      "score": 0,
+      "matches": [],
+      "trace": "sali\u00f3 26 \u2192 c\u00f3digo madre 26 \u2192 compa\u00f1ero 38 \u2192 c\u00f3digo Tabla 2 44 \u2192 sin coincidencias de vecinos \u2192 score 0"
+    }
+  ],
+  "analysis_metadata": {
+    "draw_ids_analyzed_count": 10,
+    "draw_ids_analyzed": [
+      "542254bd-f978-4c43-86a3-866ea5cc7483",
+      "03b1c809-f9b1-4b51-9f6f-b9efd98555e7",
+      "a4e67d1e-b166-4693-8e7f-b06e80133af3",
+      "79579bbd-3a1c-40f4-b0b4-a94f86ec0ec9",
+      "8b529e97-fd9d-4113-9bc4-ea90a5c6dfa7",
+      "9b14ed5b-c70c-454b-a1d3-ef3a821870ec",
+      "5e832c51-b575-46ef-ae0a-f3171d6a06d4",
+      "f1b84445-8aa9-4f08-bccf-7fec97993d7b",
+      "0ea1ae66-9a3d-4905-9183-5962f346de7a",
+      "5d17df65-b2c2-4e9e-ae74-99c64de3cb37"
+    ],
+    "internal_dedupe_discarded_count": 0,
+    "possible_content_duplicate_draws_detected": false,
+    "possible_content_duplicate_groups": [],
+    "content_duplicates_kept_separate_by_draw_id": true,
+    "sync_duplicate_policy": "Draws with identical lottery/date/numbers but different draw_id remain separate occurrences. Sync is not modified; duplicates are not hidden.",
+    "trigger": "drawn_number_equals_observed_number_only",
+    "exclude_observed_from_matches": true,
+    "exclude_companion_from_neighbors": true,
+    "ranking_includes_score_zero": true,
+    "ranking_sort": "score_desc_then_number_asc"
+  },
+  "matches": [],
+  "companions_score_zero": [
+    {
+      "number": 27,
+      "table1_code": 26,
+      "table2_code": 53,
+      "table2_group": [
+        27,
+        68,
+        76,
+        92
+      ],
+      "neighbors": [
+        68,
+        76,
+        92
+      ],
+      "matched_neighbors": [],
+      "score": 0,
+      "matches": [],
+      "trace": "sali\u00f3 26 \u2192 c\u00f3digo madre 26 \u2192 compa\u00f1ero 27 \u2192 c\u00f3digo Tabla 2 53 \u2192 sin coincidencias de vecinos \u2192 score 0"
+    },
+    {
+      "number": 38,
+      "table1_code": 26,
+      "table2_code": 44,
+      "table2_group": [
+        38
+      ],
+      "neighbors": [],
+      "matched_neighbors": [],
+      "score": 0,
+      "matches": [],
+      "trace": "sali\u00f3 26 \u2192 c\u00f3digo madre 26 \u2192 compa\u00f1ero 38 \u2192 c\u00f3digo Tabla 2 44 \u2192 sin coincidencias de vecinos \u2192 score 0"
+    }
+  ],
+  "score": {
+    "top": {
+      "number": 27,
+      "table1_code": 26,
+      "table2_code": 53,
+      "table2_group": [
+        27,
+        68,
+        76,
+        92
+      ],
+      "neighbors": [
+        68,
+        76,
+        92
+      ],
+      "matched_neighbors": [],
+      "score": 0,
+      "matches": [],
+      "trace": "sali\u00f3 26 \u2192 c\u00f3digo madre 26 \u2192 compa\u00f1ero 27 \u2192 c\u00f3digo Tabla 2 53 \u2192 sin coincidencias de vecinos \u2192 score 0"
+    },
+    "ranking_length": 2
+  },
+  "trace": {
+    "match_traces": [],
+    "candidate_traces": [
+      "sali\u00f3 26 \u2192 c\u00f3digo madre 26 \u2192 compa\u00f1ero 27 \u2192 c\u00f3digo Tabla 2 53 \u2192 sin coincidencias de vecinos \u2192 score 0",
+      "sali\u00f3 26 \u2192 c\u00f3digo madre 26 \u2192 compa\u00f1ero 38 \u2192 c\u00f3digo Tabla 2 44 \u2192 sin coincidencias de vecinos \u2192 score 0"
+    ]
+  },
+  "metadata": {
+    "engine": "lottery.numeric_relations",
+    "llm_calculates": false,
+    "exclude_observed_from_matches": true,
+    "universe": "1..100",
+    "occurrence_limit_explicit": {
+      "mode": "last_k",
+      "k": 10
+    },
+    "tables_are_separate": true,
+    "draw_ids_analyzed_count": 10,
+    "draw_ids_analyzed": [
+      "542254bd-f978-4c43-86a3-866ea5cc7483",
+      "03b1c809-f9b1-4b51-9f6f-b9efd98555e7",
+      "a4e67d1e-b166-4693-8e7f-b06e80133af3",
+      "79579bbd-3a1c-40f4-b0b4-a94f86ec0ec9",
+      "8b529e97-fd9d-4113-9bc4-ea90a5c6dfa7",
+      "9b14ed5b-c70c-454b-a1d3-ef3a821870ec",
+      "5e832c51-b575-46ef-ae0a-f3171d6a06d4",
+      "f1b84445-8aa9-4f08-bccf-7fec97993d7b",
+      "0ea1ae66-9a3d-4905-9183-5962f346de7a",
+      "5d17df65-b2c2-4e9e-ae74-99c64de3cb37"
+    ],
+    "internal_dedupe_discarded_count": 0,
+    "possible_content_duplicate_draws_detected": false,
+    "possible_content_duplicate_groups": [],
+    "content_duplicates_kept_separate_by_draw_id": true,
+    "sync_duplicate_policy": "Draws with identical lottery/date/numbers but different draw_id remain separate occurrences. Sync is not modified; duplicates are not hidden.",
+    "trigger": "drawn_number_equals_observed_number_only",
+    "exclude_companion_from_neighbors": true,
+    "ranking_includes_score_zero": true,
+    "ranking_sort": "score_desc_then_number_asc"
+  }
+}

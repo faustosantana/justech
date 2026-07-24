@@ -1,0 +1,229 @@
+
+> jaios-frontend@0.1.0 build
+> next build
+
+   ▲ Next.js 15.5.19
+   - Environments: .env.local
+
+   Creating an optimized production build ...
+ ⚠ Compiled with warnings in 32.7s
+
+./src/app/formulario-perfil/[token]/page.tsx
+Attempted import error: 'getApiUrl' is not exported from '@/lib/api' (imported as 'getApiUrl').
+
+Import trace for requested module:
+./src/app/formulario-perfil/[token]/page.tsx
+
+./src/app/lottery/shared/[token]/page.tsx
+Attempted import error: 'getApiUrl' is not exported from '@/lib/api' (imported as 'getApiUrl').
+
+Import trace for requested module:
+./src/app/lottery/shared/[token]/page.tsx
+
+./src/components/modules/licitaciones/licitaciones-sections.tsx
+Attempted import error: 'PIPELINE_STATUSES' is not exported from '@/lib/dgcp' (imported as 'PIPELINE_STATUSES').
+
+Import trace for requested module:
+./src/components/modules/licitaciones/licitaciones-sections.tsx
+./src/lib/modules/render-section-content.tsx
+./src/components/module/module-section-renderer.tsx
+./src/app/(platform)/apps/[appId]/[section]/page.tsx
+
+ ⚠ Compiled with warnings in 10.0s
+
+./src/app/formulario-perfil/[token]/page.tsx
+Attempted import error: 'getApiUrl' is not exported from '@/lib/api' (imported as 'getApiUrl').
+
+Import trace for requested module:
+./src/app/formulario-perfil/[token]/page.tsx
+
+./src/app/lottery/shared/[token]/page.tsx
+Attempted import error: 'getApiUrl' is not exported from '@/lib/api' (imported as 'getApiUrl').
+
+Import trace for requested module:
+./src/app/lottery/shared/[token]/page.tsx
+
+./src/components/modules/licitaciones/licitaciones-sections.tsx
+Attempted import error: 'PIPELINE_STATUSES' is not exported from '@/lib/dgcp' (imported as 'PIPELINE_STATUSES').
+
+Import trace for requested module:
+./src/components/modules/licitaciones/licitaciones-sections.tsx
+./src/lib/modules/render-section-content.tsx
+./src/components/module/module-section-renderer.tsx
+./src/app/(platform)/apps/[appId]/[section]/page.tsx
+
+ ✓ Compiled successfully in 44s
+   Skipping validation of types
+   Skipping linting
+   Collecting page data ...
+   Generating static pages (0/129) ...
+   Generating static pages (32/129) 
+   Generating static pages (64/129) 
+   Generating static pages (96/129) 
+ ✓ Generating static pages (129/129)
+   Finalizing page optimization ...
+   Collecting build traces ...
+
+Route (app)                                                    Size  First Load JS
+┌ ○ /                                                         313 B         112 kB
+├ ○ /_not-found                                                1 kB         104 kB
+├ ○ /admin                                                  1.87 kB         160 kB
+├ ○ /admin/departamentos                                    1.15 kB         159 kB
+├ ○ /admin/integraciones                                    1.54 kB         160 kB
+├ ○ /admin/microsoft365                                       189 B         103 kB
+├ ○ /admin/modulos                                          1.31 kB         160 kB
+├ ○ /admin/reglas                                           1.52 kB         160 kB
+├ ○ /admin/roles                                            1.16 kB         159 kB
+├ ○ /admin/usuarios                                         3.54 kB         162 kB
+├ ƒ /apps/[appId]                                              6 kB         145 kB
+├ ƒ /apps/[appId]/[section]                                 6.72 kB         145 kB
+├ ƒ /apps/[appId]/perfil/[id]                                 17 kB         157 kB
+├ ○ /bids                                                    1.8 kB         105 kB
+├ ƒ /bids/[id]                                              1.26 kB         104 kB
+├ ○ /command-center                                           189 B         103 kB
+├ ○ /comunicaciones                                           189 B         103 kB
+├ ○ /configuracion                                          1.69 kB         160 kB
+├ ○ /configuracion/apariencia                               4.57 kB         114 kB
+├ ○ /configuracion/apis                                      4.2 kB         127 kB
+├ ƒ /configuracion/apis/[id]                                1.84 kB         131 kB
+├ ○ /configuracion/apis/nuevo                               1.93 kB         131 kB
+├ ○ /configuracion/auditoria                                 1.3 kB         121 kB
+├ ○ /configuracion/departamentos                              989 B         121 kB
+├ ○ /configuracion/dgcp                                       189 B         103 kB
+├ ○ /configuracion/empresas                                 5.45 kB         129 kB
+├ ○ /configuracion/estado                                   4.59 kB         128 kB
+├ ○ /configuracion/ia/hermes                                6.58 kB         130 kB
+├ ○ /configuracion/ia/prompts                               6.35 kB         129 kB
+├ ○ /configuracion/integraciones                             5.7 kB         129 kB
+├ ƒ /configuracion/integraciones/[provider]                 1.49 kB         128 kB
+├ ○ /configuracion/integraciones/apis                         189 B         103 kB
+├ ○ /configuracion/integraciones/dgcp                       1.09 kB         127 kB
+├ ○ /configuracion/integraciones/diagnostico                4.63 kB         128 kB
+├ ○ /configuracion/integraciones/hermes                     1.47 kB         131 kB
+├ ○ /configuracion/integraciones/ingram                       189 B         103 kB
+├ ○ /configuracion/integraciones/microsoft365               1.23 kB         131 kB
+├ ○ /configuracion/integraciones/odoo                       1.27 kB         131 kB
+├ ○ /configuracion/integraciones/omega                        189 B         103 kB
+├ ○ /configuracion/integraciones/proveedores                4.37 kB         127 kB
+├ ƒ /configuracion/integraciones/proveedores/[provider]     7.24 kB         130 kB
+├ ○ /configuracion/integraciones/whatsapp                   1.24 kB         127 kB
+├ ○ /configuracion/m365                                       189 B         103 kB
+├ ○ /configuracion/modulos                                  1.15 kB         121 kB
+├ ○ /configuracion/odoo                                       189 B         103 kB
+├ ○ /configuracion/reglas                                   3.07 kB         123 kB
+├ ○ /configuracion/repositorios                               189 B         103 kB
+├ ○ /configuracion/roles                                      995 B         121 kB
+├ ○ /configuracion/seguridad                                1.28 kB         111 kB
+├ ○ /configuracion/seguridad/permisos-ia                     5.5 kB         129 kB
+├ ○ /configuracion/usuarios                                 5.12 kB         128 kB
+├ ○ /dashboard                                                884 B         163 kB
+├ ○ /dashboard/centro-de-mando                                919 B         163 kB
+├ ○ /dgcp                                                   5.93 kB         164 kB
+├ ƒ /dgcp/[id]                                              18.7 kB         177 kB
+├ ○ /documentos                                               189 B         103 kB
+├ ○ /documentos/empresas                                      189 B         103 kB
+├ ƒ /documentos/empresas/[id]                                 189 B         103 kB
+├ ○ /documentos/identidad                                     191 B         161 kB
+├ ○ /documentos/legales                                       244 B         163 kB
+├ ○ /documentos/pendientes                                  2.07 kB         160 kB
+├ ○ /documentos/plantillas                                  6.41 kB         165 kB
+├ ○ /documentos/precios                                     5.52 kB         164 kB
+├ ○ /documentos/repositorios                                4.89 kB         169 kB
+├ ○ /documentos/salidas                                       915 B         159 kB
+├ ○ /documentos/seguimiento                                 1.07 kB         159 kB
+├ ○ /documents                                              7.24 kB         166 kB
+├ ○ /documents/identity                                       192 B         161 kB
+├ ○ /empresas                                               5.98 kB         164 kB
+├ ƒ /empresas/[id]                                          4.92 kB         163 kB
+├ ƒ /formulario-perfil/[token]                              4.73 kB         124 kB
+├ ○ /inteligencia/bandeja                                     189 B         103 kB
+├ ○ /inteligencia/busqueda-comercial                        3.51 kB         162 kB
+├ ○ /inteligencia/centro-hermes                             2.13 kB         160 kB
+├ ○ /inteligencia/comercial                                 4.01 kB         162 kB
+├ ○ /licitador                                                189 B         103 kB
+├ ○ /licitador/documentos-legales                             191 B         163 kB
+├ ○ /licitador/empresas                                       189 B         103 kB
+├ ○ /licitador/plantillas                                     189 B         103 kB
+├ ○ /licitador/precios                                        189 B         103 kB
+├ ○ /login                                                  9.74 kB         138 kB
+├ ○ /lottery                                                5.68 kB         164 kB
+├ ○ /lottery/admin/ai                                       4.82 kB         125 kB
+├ ○ /lottery/admin/ai/agent                                 5.16 kB         125 kB
+├ ○ /lottery/admin/ai/analysis-packs                        3.72 kB         123 kB
+├ ○ /lottery/admin/ai/audit                                 3.23 kB         123 kB
+├ ○ /lottery/admin/ai/benchmarks                            3.75 kB         123 kB
+├ ○ /lottery/admin/ai/defaults                              4.54 kB         124 kB
+├ ○ /lottery/admin/ai/memory                                4.46 kB         124 kB
+├ ○ /lottery/admin/ai/models                                 3.7 kB         123 kB
+├ ○ /lottery/admin/ai/playground                            3.63 kB         123 kB
+├ ○ /lottery/admin/ai/prompts                               6.15 kB         129 kB
+├ ○ /lottery/admin/ai/safety                                3.73 kB         123 kB
+├ ○ /lottery/admin/ai/sessions                              2.67 kB         116 kB
+├ ○ /lottery/admin/ai/tools                                 3.55 kB         123 kB
+├ ○ /lottery/admin/ai/versions                              3.38 kB         123 kB
+├ ○ /lottery/admin/control-center                             167 B         106 kB
+├ ○ /lottery/admin/control-center/motor/auditoria           1.14 kB         114 kB
+├ ○ /lottery/admin/control-center/motor/groups-table1       1.85 kB         125 kB
+├ ○ /lottery/admin/control-center/motor/groups-table2       1.86 kB         125 kB
+├ ○ /lottery/admin/control-center/motor/relaciones            659 B         125 kB
+├ ○ /lottery/admin/control-center/motor/table1                961 B         125 kB
+├ ○ /lottery/admin/control-center/motor/table2                974 B         125 kB
+├ ○ /lottery/admin/control-center/predicciones              3.22 kB         123 kB
+├ ○ /lottery/admin/control-center/predicciones/run            667 B         125 kB
+├ ○ /lottery/admin/control-center/prompt-studio             4.03 kB         127 kB
+├ ○ /lottery/admin/control-center/prompt-studio/benchmark   2.96 kB         123 kB
+├ ○ /lottery/admin/control-center/prompt-studio/compilado   3.28 kB         123 kB
+├ ○ /lottery/admin/control-center/prompt-studio/playground  3.09 kB         123 kB
+├ ○ /lottery/admin/control-center/prompt-studio/versiones   3.41 kB         123 kB
+├ ○ /lottery/admin/lotteries                                4.06 kB         162 kB
+├ ○ /lottery/admin/numeric-relations                        4.78 kB         163 kB
+├ ○ /lottery/admin/scheduler                                2.04 kB         160 kB
+├ ○ /lottery/admin/sync                                     2.19 kB         161 kB
+├ ○ /lottery/chat                                           4.84 kB         163 kB
+├ ○ /lottery/compare                                        2.42 kB         161 kB
+├ ○ /lottery/favorites                                       1.4 kB         160 kB
+├ ○ /lottery/lotteries                                      2.92 kB         161 kB
+├ ƒ /lottery/lotteries/[slug]                               1.79 kB         160 kB
+├ ○ /lottery/print                                          3.99 kB         117 kB
+├ ○ /lottery/saved                                          1.78 kB         160 kB
+├ ○ /lottery/search                                         2.88 kB         161 kB
+├ ƒ /lottery/shared/[token]                                 1.33 kB         121 kB
+├ ○ /lottery/statistics                                     2.21 kB         161 kB
+├ ○ /m365                                                   5.32 kB         164 kB
+├ ○ /m365/configuracion                                       189 B         103 kB
+├ ○ /m365/cuentas                                            2.1 kB         160 kB
+├ ○ /m365/operativo                                         13.1 kB         178 kB
+├ ○ /m365/operativo/intelligence                            2.24 kB         161 kB
+├ ○ /notifications                                          2.12 kB         160 kB
+├ ○ /odoo                                                   5.08 kB         163 kB
+├ ƒ /odoo/customers/[id]                                    2.41 kB         161 kB
+├ ƒ /odoo/invoices/[id]                                     2.39 kB         161 kB
+├ ƒ /odoo/products/[id]                                     1.88 kB         160 kB
+├ ○ /odoo/settings                                          3.02 kB         161 kB
+├ ƒ /odoo/vendors/[id]                                      1.61 kB         160 kB
+├ ○ /oportunidades                                          3.26 kB         162 kB
+├ ○ /prices                                                 2.57 kB         161 kB
+├ ƒ /prices/[id]                                            3.97 kB         162 kB
+├ ○ /prices/drafts                                          3.88 kB         162 kB
+├ ○ /prices/proveedores                                       189 B         103 kB
+├ ○ /repositorios                                             189 B         103 kB
+├ ○ /search                                                 2.77 kB         161 kB
+├ ○ /tasks                                                  4.34 kB         163 kB
+├ ƒ /tasks/[id]                                             4.29 kB         163 kB
+└ ○ /work                                                   3.02 kB         161 kB
++ First Load JS shared by all                                103 kB
+  ├ chunks/1255-b8cf77ab14370e57.js                           46 kB
+  ├ chunks/4bd1b696-100b9d70ed4e49c1.js                     54.2 kB
+  └ other shared chunks (total)                              2.7 kB
+
+
+ƒ Middleware                                                34.1 kB
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
+npm notice
+npm notice New major version of npm available! 10.9.8 -> 12.0.1
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.0.1
+npm notice To update run: npm install -g npm@12.0.1
+npm notice

@@ -1,0 +1,26 @@
+{
+  "a": {
+    "id": "ba2940bf-698f-4bea-8a39-31536f1bcc22",
+    "display_name": "lottery_assistant_system_v2",
+    "version": "v2",
+    "status_label": "ACTIVO"
+  },
+  "b": {
+    "id": "235d836d-cc0f-4279-88bf-6a46a3fe2de4",
+    "display_name": "I65 Draft",
+    "version": "draft-20260724130142",
+    "status_label": "BORRADOR"
+  },
+  "block_diff": [
+    {
+      "key": "aclaraciones",
+      "a_chars": 39,
+      "b_chars": 64,
+      "changed": true
+    }
+  ],
+  "body_changed": true,
+  "model_a": "DeepSeek-V3.2",
+  "model_b": "DeepSeek-V3.2",
+  "guide": "Una versión es una fotografía completa del prompt, sus herramientas, motores y configuración en un momento determinado."
+}

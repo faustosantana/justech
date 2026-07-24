@@ -556,21 +556,29 @@ class LotteryAdminService:
                     "opened_at": state.circuit_opened_at.isoformat() if state.circuit_opened_at else None,
                 }
             )
-        sources = (
-            await self.db.execute(select(LotterySource).order_by(LotterySource.priority.asc()).limit(50))
-        ).scalars().all()
-        source_health = [
-            {
-                "lottery_id": str(s.lottery_id),
-                "source_key": s.source_key,
-                "role": s.role,
-                "health_status": s.health_status,
-                "circuit_state": s.circuit_state,
-                "latency_ema_ms": s.latency_ema_ms,
-                "enabled": s.enabled,
-            }
-            for s in sources
-        ]
+        source_health: list[dict] = []
+        try:
+            sources = (
+                await self.db.execute(
+                    select(LotterySource).order_by(LotterySource.priority.asc()).limit(50)
+                )
+            ).scalars().all()
+            source_health = [
+                {
+                    "lottery_id": str(s.lottery_id),
+                    "source_key": s.source_key,
+                    "role": s.role,
+                    "health_status": s.health_status,
+                    "circuit_state": s.circuit_state,
+                    "latency_ema_ms": s.latency_ema_ms,
+                    "enabled": s.enabled,
+                }
+                for s in sources
+            ]
+        except Exception:
+            # DEV / esquemas parciales sin lottery_sources: no bloquear dashboard de producto.
+            await self.db.rollback()
+            source_health = []
         sync_lots = (
             await self.db.execute(
                 select(LotteryLottery).where(

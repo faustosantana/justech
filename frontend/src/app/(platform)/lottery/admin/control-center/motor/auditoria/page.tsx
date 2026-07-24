@@ -48,7 +48,7 @@ export default function AuditoriaPage() {
   const [dateTo, setDateTo] = useState("");
   const [lotteryId, setLotteryId] = useState("");
   const [drawId, setDrawId] = useState("");
-  const [catalog, setCatalog] = useState<LotOption[]>([]);
+  const [catalog, setCatalog] = useState<(LotOption & { is_featured?: boolean })[]>([]);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [rows, setRows] = useState<AuditRow[]>([]);
@@ -57,16 +57,32 @@ export default function AuditoriaPage() {
   useEffect(() => {
     void (async () => {
       try {
-        const lots = await apiClient.getLotteryNumericRelationsLotteries();
-        setCatalog((lots.items || []).filter((c) => c?.id));
+        const admin = await apiClient.getLotteryAdminLotteries({ limit: 200 });
+        const items = (admin || []).map((c) => ({
+          id: String(c.id),
+          name: String(c.name),
+          is_featured: Boolean(c.is_featured),
+        }));
+        setCatalog(items.filter((c) => c.id));
       } catch {
-        /* keep empty */
+        try {
+          const lots = await apiClient.getLotteryCatalog({ featured_only: true, page_size: 50 });
+          setCatalog(
+            (lots.items || []).map((c) => ({
+              id: String(c.id),
+              name: String(c.name),
+              is_featured: true,
+            })),
+          );
+        } catch {
+          /* keep empty */
+        }
       }
     })();
   }, []);
 
   const featuredIds = useMemo(
-    () => catalog.filter((c) => (c as LotOption & { is_featured?: boolean }).is_featured).map((c) => c.id),
+    () => catalog.filter((c) => c.is_featured).map((c) => c.id),
     [catalog],
   );
 

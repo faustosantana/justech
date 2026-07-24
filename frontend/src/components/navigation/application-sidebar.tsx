@@ -86,7 +86,7 @@ export function ApplicationSidebar({ app, collapsed, onToggle, access }: Props) 
         <button
           type="button"
           onClick={onToggle}
-          className="hidden rounded-lg p-1.5 text-muted-foreground hover:bg-muted md:inline-flex"
+          className="inline-flex rounded-lg p-1.5 text-muted-foreground hover:bg-muted"
           aria-label={collapsed ? "Expandir menú" : "Colapsar menú"}
         >
           {collapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}

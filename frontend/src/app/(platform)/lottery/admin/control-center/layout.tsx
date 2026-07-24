@@ -118,9 +118,9 @@ export default function ControlCenterLayout({ children }: { children: React.Reac
 
   return (
     <AppShell>
-      <div className="mx-auto flex max-w-7xl flex-col gap-4 p-4 md:flex-row md:p-6">
-        {/* Mobile: single nav control — secondary menu as drawer/accordion */}
-        <div className="md:hidden">
+      {/* ≤768px: un solo control Metodología; ≥769px: aside secundario persistente */}
+      <div className="mx-auto flex max-w-7xl flex-col gap-4 p-4 min-[769px]:flex-row min-[769px]:p-6">
+        <div className="min-[769px]:hidden">
           <div className="flex items-center justify-between gap-2">
             <Link href="/lottery/admin/control-center" className="text-lg font-semibold">
               Lottery IA · Inteligencia
@@ -148,8 +148,7 @@ export default function ControlCenterLayout({ children }: { children: React.Reac
           ) : null}
         </div>
 
-        {/* Desktop: persistent secondary nav */}
-        <aside className="hidden w-56 shrink-0 md:block">
+        <aside className="hidden w-56 shrink-0 min-[769px]:block">
           <Link href="/lottery/admin/control-center" className="mb-3 block text-lg font-semibold">
             Lottery IA · Inteligencia
           </Link>

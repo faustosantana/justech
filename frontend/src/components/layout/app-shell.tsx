@@ -59,6 +59,18 @@ function AppShellInner({
     apiClient.getPlatformAccess().then(setAccess).catch(() => setAccess(null));
   }, [router]);
 
+  // ≤768: start collapsed so Control Center Metodología is not a second full sidebar.
+  useEffect(() => {
+    if (typeof window === "undefined" || !window.matchMedia) return;
+    const mq = window.matchMedia("(max-width: 768px)");
+    const apply = () => {
+      if (mq.matches) setSidebarCollapsed(true);
+    };
+    apply();
+    mq.addEventListener?.("change", apply);
+    return () => mq.removeEventListener?.("change", apply);
+  }, []);
+
   useEffect(() => {
     const isRecordDetailRoute =
       /\/dgcp\/[^/]+/.test(pathname) ||

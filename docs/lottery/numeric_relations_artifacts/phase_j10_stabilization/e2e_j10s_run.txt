@@ -1,0 +1,14 @@
+{
+  "verdict": "GO PARA DESPLIEGUE",
+  "fail": [],
+  "fair_delta": -6.6,
+  "featured": [
+    "Gana Mas",
+    "Loteria Nacional",
+    "Loto Leidsa",
+    "Loto Real",
+    "Quiniela Leidsa",
+    "Quiniela Loteka",
+    "Quiniela Real"
+  ]
+}

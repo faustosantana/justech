@@ -53,6 +53,11 @@ class LotteryToolName(str, Enum):
     GET_LATEST_AVAILABLE_DATE = "lottery_get_latest_available_date"
     EXPLAIN_ANALYSIS_METHOD = "lottery_explain_analysis_method"
     ANALYZE_NUMERIC_RELATIONS = "lottery_analyze_numeric_relations"
+    HISTORICAL_RELATION_CONDITIONS = "lottery_historical_relation_conditions"
+    CANDIDATE_RESPONSE_SUMMARY = "lottery_candidate_response_summary"
+    CONFIRMER_COMBINATIONS = "lottery_confirmer_combinations"
+    RELATION_PATTERN_DETAIL = "lottery_relation_pattern_detail"
+    COMPARE_HISTORICAL_PATTERNS = "lottery_compare_historical_patterns"
 
 
 # Permisos mínimos por tool (cualquiera de la tupla basta)
@@ -100,6 +105,11 @@ TOOL_PERMISSIONS: dict[LotteryToolName, tuple[str, ...]] = {
     LotteryToolName.GET_LATEST_AVAILABLE_DATE: ("lottery.access", "lottery.search"),
     LotteryToolName.EXPLAIN_ANALYSIS_METHOD: ("lottery.access", "lottery.statistics"),
     LotteryToolName.ANALYZE_NUMERIC_RELATIONS: ("lottery.statistics", "lottery.search"),
+    LotteryToolName.HISTORICAL_RELATION_CONDITIONS: ("lottery.statistics", "lottery.search"),
+    LotteryToolName.CANDIDATE_RESPONSE_SUMMARY: ("lottery.statistics", "lottery.search"),
+    LotteryToolName.CONFIRMER_COMBINATIONS: ("lottery.statistics", "lottery.search"),
+    LotteryToolName.RELATION_PATTERN_DETAIL: ("lottery.statistics", "lottery.search"),
+    LotteryToolName.COMPARE_HISTORICAL_PATTERNS: ("lottery.statistics", "lottery.search"),
 }
 
 
@@ -239,6 +249,39 @@ LOTTERY_TOOL_CATALOG: list[LotteryToolContract] = [
             "No predice ni recomienda apuestas."
         ),
         permissions=TOOL_PERMISSIONS[LotteryToolName.ANALYZE_NUMERIC_RELATIONS],
+    ),
+    LotteryToolContract(
+        name=LotteryToolName.HISTORICAL_RELATION_CONDITIONS,
+        description=(
+            "Busca condiciones históricas N→candidato T1→confirmador T2 con draw_id, "
+            "tasas y ciclos. No inventa estadísticas."
+        ),
+        permissions=TOOL_PERMISSIONS[LotteryToolName.HISTORICAL_RELATION_CONDITIONS],
+    ),
+    LotteryToolContract(
+        name=LotteryToolName.CANDIDATE_RESPONSE_SUMMARY,
+        description=(
+            "Resumen de respuesta posterior del candidato (horizontes 1/2/3/5/10), "
+            "censura y ciclos. No es probabilidad de ganar."
+        ),
+        permissions=TOOL_PERMISSIONS[LotteryToolName.CANDIDATE_RESPONSE_SUMMARY],
+    ),
+    LotteryToolContract(
+        name=LotteryToolName.CONFIRMER_COMBINATIONS,
+        description=(
+            "Combinaciones de confirmadores Tabla 2 (pares/tríos/conjunto) y soporte histórico."
+        ),
+        permissions=TOOL_PERMISSIONS[LotteryToolName.CONFIRMER_COMBINATIONS],
+    ),
+    LotteryToolContract(
+        name=LotteryToolName.RELATION_PATTERN_DETAIL,
+        description="Detalle de patrón atómico o combinación con evidencia calculada.",
+        permissions=TOOL_PERMISSIONS[LotteryToolName.RELATION_PATTERN_DETAIL],
+    ),
+    LotteryToolContract(
+        name=LotteryToolName.COMPARE_HISTORICAL_PATTERNS,
+        description="Compara patrones/candidatos/loterías usando agregados históricos calculados.",
+        permissions=TOOL_PERMISSIONS[LotteryToolName.COMPARE_HISTORICAL_PATTERNS],
     ),
 ]
 

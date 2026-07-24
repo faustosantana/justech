@@ -880,6 +880,29 @@ class LotteryToolExecutor:
         if tool == LotteryToolName.ANALYZE_NUMERIC_RELATIONS:
             return await self._analyze_numeric_relations(params)
 
+        if tool in {
+            LotteryToolName.HISTORICAL_RELATION_CONDITIONS,
+            LotteryToolName.CANDIDATE_RESPONSE_SUMMARY,
+            LotteryToolName.CONFIRMER_COMBINATIONS,
+            LotteryToolName.RELATION_PATTERN_DETAIL,
+            LotteryToolName.COMPARE_HISTORICAL_PATTERNS,
+        }:
+            from app.lottery.numeric_relations.historical.tools_bridge import run_historical_tool
+
+            kind_map = {
+                LotteryToolName.HISTORICAL_RELATION_CONDITIONS: "historical_relation_conditions",
+                LotteryToolName.CANDIDATE_RESPONSE_SUMMARY: "candidate_response_summary",
+                LotteryToolName.CONFIRMER_COMBINATIONS: "confirmer_combinations",
+                LotteryToolName.RELATION_PATTERN_DETAIL: "relation_pattern_detail",
+                LotteryToolName.COMPARE_HISTORICAL_PATTERNS: "compare_historical_patterns",
+            }
+            return await run_historical_tool(
+                self.db,
+                self.resolver,
+                kind=kind_map[tool],
+                params=params,
+            )
+
         raise LotteryQueryError("TOOL_ERROR", f"Tool no implementada: {tool.value}")
 
     async def _analyze_numeric_relations(

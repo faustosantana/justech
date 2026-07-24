@@ -246,6 +246,85 @@ def resolve_intent(message: str, ctx: LotterySessionContext) -> ResolvedIntent:
             structured_type="lottery_error",
         )
 
+    # Analizador histórico T1↔T2 (ciclos, combinaciones, tasas) — antes del analyze NR actual.
+    _hist_signals = bool(
+        re.search(
+            r"ciclo\s+(promedio|medio|observado)|"
+            r"tasa\s+hist[oó]rica|"
+            r"respuesta\s+(hist[oó]rica|posterior)|"
+            r"combinaci[oó]n(es)?\s+de\s+confirm|"
+            r"confirmador(es)?|"
+            r"fortalec(i[oó]|i[oó]n).{0,40}\d+|"
+            r"cu[aá]ntas\s+veces.{0,60}fortalec|"
+            r"desde\s+20\d{2}|"
+            r"en\s+20\d{2}.{0,40}candidato|"
+            r"patr[oó]n\s+hist[oó]rico|"
+            r"matriz\s+de\s+combin|"
+            r"compara(r)?\s+(leidsa|loteka|candidatos|patrones)",
+            text,
+            re.I,
+        )
+    )
+    if _hist_signals:
+        number = _extract_number(raw) or (ctx.last_numbers[0] if ctx.last_numbers else None)
+        lotteries = _extract_lotteries(text) or ([ctx.last_lottery] if ctx.last_lottery else [])
+        lotteries = [x for x in lotteries if x]
+        if not number:
+            return ResolvedIntent(
+                kind="clarify",
+                clarify_message="¿Qué número observado N (1..100) analizo en el histórico de relaciones?",
+                structured_type="lottery_ambiguity",
+            )
+        if not lotteries:
+            return ResolvedIntent(
+                kind="clarify",
+                clarify_message=(
+                    f"¿En cuál lotería principal analizo el histórico del {number}? "
+                    "Follow-up por defecto = misma principal."
+                ),
+                structured_type="lottery_ambiguity",
+            )
+        n_int = int(str(number).lstrip("0") or "0")
+        year_m = re.search(r"\b(20\d{2})\b", text)
+        params_h: dict[str, Any] = {
+            "observed_number": n_int,
+            "lotteries": lotteries,
+            "lottery": lotteries[0],
+            "primary_lotteries": lotteries[:1],
+            "confirming_lotteries": lotteries,
+            "confirmation_window_mode": "SAME_DRAW",
+        }
+        if year_m:
+            params_h["year"] = int(year_m.group(1))
+        cand_m = re.search(r"candidato\s+(\d{1,3})", text, re.I)
+        conf_m = re.search(r"confirmador\s+(\d{1,3})", text, re.I)
+        if cand_m:
+            params_h["candidate"] = int(cand_m.group(1))
+        if conf_m:
+            params_h["confirmer"] = int(conf_m.group(1))
+
+        if re.search(r"combinaci|pares|tr[ií]os", text, re.I):
+            tool_h = LotteryToolName.CONFIRMER_COMBINATIONS
+            st = "lottery_nr_combinations"
+        elif re.search(r"ciclo|tasa|respuesta\s+posterior|m[aá]s\s+r[aá]pido", text, re.I):
+            tool_h = LotteryToolName.CANDIDATE_RESPONSE_SUMMARY
+            st = "lottery_nr_posterior"
+        elif re.search(r"compara", text, re.I):
+            tool_h = LotteryToolName.COMPARE_HISTORICAL_PATTERNS
+            st = "lottery_nr_compare"
+        elif re.search(r"detalle|patr[oó]n|cu[aá]ntas\s+veces", text, re.I):
+            tool_h = LotteryToolName.RELATION_PATTERN_DETAIL
+            st = "lottery_nr_pattern"
+        else:
+            tool_h = LotteryToolName.HISTORICAL_RELATION_CONDITIONS
+            st = "lottery_nr_historical_conditions"
+        return ResolvedIntent(
+            kind="tool",
+            tool=tool_h,
+            params=params_h,
+            structured_type=st,
+        )
+
     # Motor de Relaciones Numéricas (antes del "analiza el N" genérico).
     # Incluye "Analiza el N en Leidsa y Loteka" sin K explícito → clarify occurrence_limit
     # (nunca caer al catch-all de "fecha exacta").

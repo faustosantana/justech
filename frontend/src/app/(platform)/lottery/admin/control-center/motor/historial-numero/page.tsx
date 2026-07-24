@@ -6,6 +6,7 @@ import { useSearchParams } from "next/navigation";
 import { PrimaryHistoricalCharts } from "@/components/lottery/control-center/historical-charts";
 import type { LotOption } from "@/components/lottery/control-center/motor-types";
 import { NR_EMPTY_COPY, NrEmptyState } from "@/components/lottery/control-center/nr-empty-states";
+import { WINDOW_MODE_LABELS } from "@/components/lottery/control-center/nr-labels";
 import { SignalCard } from "@/components/lottery/control-center/signal-card";
 import { sortSignalsForDisplay } from "@/components/lottery/control-center/signal-order";
 import { WhyStrengthenedPanel } from "@/components/lottery/control-center/why-strengthened-panel";
@@ -13,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { ApiError, apiClient } from "@/lib/api";
+import { lotteryDisplayName } from "@/lib/lottery-display-names";
 
 type ChartBar = { label: string; value: number; hint?: string };
 
@@ -89,6 +91,7 @@ export default function HistorialNumeroPage() {
   const [showTech, setShowTech] = useState(false);
   const [showMethod, setShowMethod] = useState(!bootAuto);
   const [showFilters, setShowFilters] = useState(!bootAuto);
+  const [showAdvancedScope, setShowAdvancedScope] = useState(false);
   const [condFilter, setCondFilter] = useState("all");
   const [page, setPage] = useState(1);
   const [playerStep, setPlayerStep] = useState(0);
@@ -372,7 +375,7 @@ export default function HistorialNumeroPage() {
               checked={value.includes(lot.id)}
               onChange={() => onChange(toggle(value, lot.id))}
             />
-            {lot.name}
+            {lotteryDisplayName(lot.id, lot.name)}
           </label>
         ))}
       </div>
@@ -425,23 +428,43 @@ export default function HistorialNumeroPage() {
           </div>
 
           <LotChecks
-            label="Lotería donde apareció"
+            label="Loterías del universo activo"
             value={appearedIn}
-            onChange={setAppearedIn}
-            help="Elija una, varias o todas las loterías donde buscar apariciones del número."
+            onChange={(next) => {
+              setAppearedIn(next);
+              if (!showAdvancedScope) {
+                setConfirmIn(next);
+                setFollowIn(next);
+              }
+            }}
+            help="Por defecto: las siete loterías activas. Confirmación y seguimiento usan el mismo universo."
           />
-          <LotChecks
-            label="Loterías donde buscar confirmaciones"
-            value={confirmIn}
-            onChange={setConfirmIn}
-            help="Aquí buscaremos los números de Tabla 2 que puedan fortalecer a los compañeros de Tabla 1."
-          />
-          <LotChecks
-            label="Lotería donde comprobar qué ocurrió después"
-            value={followIn}
-            onChange={setFollowIn}
-            help="Aquí revisaremos si el número fortalecido apareció posteriormente."
-          />
+
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={() => setShowAdvancedScope((v) => !v)}
+          >
+            {showAdvancedScope ? "Ocultar opciones avanzadas" : "Opciones avanzadas de alcance"}
+          </Button>
+
+          {showAdvancedScope ? (
+            <div className="space-y-3 rounded-lg border border-dashed p-3">
+              <LotChecks
+                label="Loterías donde buscar confirmaciones"
+                value={confirmIn}
+                onChange={setConfirmIn}
+                help="Aquí buscaremos los números de Tabla 2 que puedan fortalecer a los compañeros de Tabla 1."
+              />
+              <LotChecks
+                label="Lotería donde comprobar qué ocurrió después"
+                value={followIn}
+                onChange={setFollowIn}
+                help="Aquí revisaremos si el número fortalecido apareció posteriormente."
+              />
+            </div>
+          ) : null}
 
           <label className="block max-w-sm">
             Ventana de confirmación
@@ -450,10 +473,15 @@ export default function HistorialNumeroPage() {
               value={windowMode}
               onChange={(e) => setWindowMode(e.target.value)}
             >
-              <option value="SAME_DRAW">Mismo sorteo</option>
-              <option value="SAME_DATE">Misma fecha</option>
-              <option value="HOURS_AFTER">Horas después</option>
-              <option value="NEXT_K_DRAWS">Próximos sorteos</option>
+              {Object.entries(WINDOW_MODE_LABELS)
+                .filter(([k]) =>
+                  ["SAME_DRAW", "SAME_DATE", "HOURS_AFTER", "NEXT_K_DRAWS"].includes(k),
+                )
+                .map(([value, label]) => (
+                  <option key={value} value={value}>
+                    {label}
+                  </option>
+                ))}
             </select>
             <FieldHelp>Define en qué momento se buscan los confirmadores de Tabla 2.</FieldHelp>
           </label>

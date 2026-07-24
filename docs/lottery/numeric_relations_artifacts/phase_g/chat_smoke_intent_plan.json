@@ -1,0 +1,179 @@
+{
+  "chat_caso1": {
+    "message": "Analiza el 26 en Leidsa en las últimas 10 veces.",
+    "intent": {
+      "kind": "tool",
+      "tool": "lottery_analyze_numeric_relations",
+      "params": {
+        "observed_number": 26,
+        "number": "26",
+        "lotteries": [
+          "Leidsa"
+        ],
+        "occurrence_mode": "last_k",
+        "occurrence_k": 10,
+        "lottery": "Leidsa"
+      },
+      "clarify_message": null,
+      "refuse_message": null,
+      "structured_type": "lottery_numeric_relations"
+    },
+    "plan_steps": 1,
+    "plan_rationale": "numeric_relations_single_engine",
+    "plan": {
+      "steps": [
+        {
+          "tool": "lottery_analyze_numeric_relations",
+          "params": {
+            "observed_number": 26,
+            "number": "26",
+            "lotteries": [
+              "Leidsa"
+            ],
+            "occurrence_mode": "last_k",
+            "occurrence_k": 10,
+            "lottery": "Leidsa"
+          },
+          "purpose": "numeric_relations_motor"
+        }
+      ],
+      "rationale": "numeric_relations_single_engine",
+      "max_tools": 8
+    }
+  },
+  "chat_caso2": {
+    "message": "Analiza el 34 en todas las ocurrencias en Leidsa.",
+    "intent": {
+      "kind": "tool",
+      "tool": "lottery_analyze_numeric_relations",
+      "params": {
+        "observed_number": 34,
+        "number": "34",
+        "lotteries": [
+          "Leidsa"
+        ],
+        "occurrence_mode": "all",
+        "lottery": "Leidsa"
+      },
+      "clarify_message": null,
+      "refuse_message": null,
+      "structured_type": "lottery_numeric_relations"
+    },
+    "plan_steps": 1,
+    "plan_rationale": "numeric_relations_single_engine",
+    "plan": {
+      "steps": [
+        {
+          "tool": "lottery_analyze_numeric_relations",
+          "params": {
+            "observed_number": 34,
+            "number": "34",
+            "lotteries": [
+              "Leidsa"
+            ],
+            "occurrence_mode": "all",
+            "lottery": "Leidsa"
+          },
+          "purpose": "numeric_relations_motor"
+        }
+      ],
+      "rationale": "numeric_relations_single_engine",
+      "max_tools": 8
+    }
+  },
+  "chat_caso3_bare": {
+    "message": "Analiza el 45 en Leidsa y Loteka.",
+    "intent": {
+      "kind": "clarify",
+      "tool": null,
+      "params": {
+        "number": "45",
+        "observed_number": 45,
+        "lotteries": [
+          "Leidsa",
+          "Loteka"
+        ],
+        "pending_slots": [
+          "occurrence_limit"
+        ]
+      },
+      "clarify_message": "¿Cuántas últimas ocurrencias del 45 uso en Leidsa, Loteka? Elige explícitamente: 5, 10, 20 o todas. No hay un valor por defecto oculto.",
+      "refuse_message": null,
+      "structured_type": "lottery_ambiguity"
+    },
+    "plan_steps": 0,
+    "plan_rationale": "awaiting_clarification",
+    "plan": {
+      "steps": [],
+      "rationale": "awaiting_clarification",
+      "max_tools": 8
+    }
+  },
+  "chat_caso3_full": {
+    "message": "Analiza el 45 en Leidsa y Loteka en las últimas 20 veces.",
+    "intent": {
+      "kind": "tool",
+      "tool": "lottery_analyze_numeric_relations",
+      "params": {
+        "observed_number": 45,
+        "number": "45",
+        "lotteries": [
+          "Leidsa",
+          "Loteka"
+        ],
+        "occurrence_mode": "last_k",
+        "occurrence_k": 20
+      },
+      "clarify_message": null,
+      "refuse_message": null,
+      "structured_type": "lottery_numeric_relations"
+    },
+    "plan_steps": 1,
+    "plan_rationale": "numeric_relations_single_engine",
+    "plan": {
+      "steps": [
+        {
+          "tool": "lottery_analyze_numeric_relations",
+          "params": {
+            "observed_number": 45,
+            "number": "45",
+            "lotteries": [
+              "Leidsa",
+              "Loteka"
+            ],
+            "occurrence_mode": "last_k",
+            "occurrence_k": 20
+          },
+          "purpose": "numeric_relations_motor"
+        }
+      ],
+      "rationale": "numeric_relations_single_engine",
+      "max_tools": 8
+    }
+  },
+  "chat_caso5": {
+    "message": "Analiza el 26",
+    "intent": {
+      "kind": "clarify",
+      "tool": null,
+      "params": {
+        "number": "26",
+        "observed_number": 26,
+        "pending_slots": [
+          "lottery",
+          "occurrence_limit"
+        ]
+      },
+      "clarify_message": "Para analizar el 26 con relaciones numéricas, ¿en qué lotería o loterías? (ej. Leidsa, Loteka). No invento loterías.",
+      "refuse_message": null,
+      "structured_type": "lottery_ambiguity"
+    },
+    "plan_steps": 0,
+    "plan_rationale": "awaiting_clarification",
+    "plan": {
+      "steps": [],
+      "rationale": "awaiting_clarification",
+      "max_tools": 8
+    }
+  }
+}

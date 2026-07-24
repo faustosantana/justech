@@ -1,0 +1,13 @@
+=== PRE-BACKUP alembic ===
+           version_num            
+----------------------------------
+ 032_lottery_scheduler_operations
+(1 row)
+
+ draws 
+-------
+ 91927
+(1 row)
+
+Creating dump...
+BACKUP_FILE=jaios_lottery_dev_pre_061_20260724_084802.dump

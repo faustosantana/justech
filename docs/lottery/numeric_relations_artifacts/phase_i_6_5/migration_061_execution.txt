@@ -1,0 +1,124 @@
+=== TOOL: jaios-backend:latest + mounted ./backend (branch code) ===
+=== DATABASE: host.docker.internal:5433 / jaios_lottery_dev ===
+=== BEFORE (psql) ===
+032_lottery_scheduler_operations
+=== STAMP 058 ===
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+ERROR [alembic.util.messaging] Can't locate revision identified by '032_lottery_scheduler_operations'
+FAILED: Can't locate revision identified by '032_lottery_scheduler_operations'
+=== CURRENT AFTER STAMP ===
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+ERROR [alembic.util.messaging] Can't locate revision identified by '032_lottery_scheduler_operations'
+FAILED: Can't locate revision identified by '032_lottery_scheduler_operations'
+=== UPGRADE 061 ===
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+ERROR [alembic.util.messaging] Can't locate revision identified by '032_lottery_scheduler_operations'
+FAILED: Can't locate revision identified by '032_lottery_scheduler_operations'
+=== CURRENT AFTER UPGRADE ===
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+ERROR [alembic.util.messaging] Can't locate revision identified by '032_lottery_scheduler_operations'
+FAILED: Can't locate revision identified by '032_lottery_scheduler_operations'
+=== VALIDATE OBJECTS ===
+             List of relations
+ Schema |       Name       | Type  | Owner 
+--------+------------------+-------+-------
+ jaios  | lottery_ai_usage | table | jaios
+(1 row)
+
+ column_name 
+-------------
+(0 rows)
+
+=== DRAWS UNCHANGED ===
+91927
+=== IDEMPOTENT RE-RUN (expect already at head) ===
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+ERROR [alembic.util.messaging] Can't locate revision identified by '032_lottery_scheduler_operations'
+FAILED: Can't locate revision identified by '032_lottery_scheduler_operations'
+=== FIX STALE alembic_version 032 → 058 via SQL (schema already ~058) ===
+UPDATE 1
+       version_num        
+--------------------------
+ 058_lottery_3_0_platform
+(1 row)
+
+=== UPGRADE 059→061 ===
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+INFO  [alembic.runtime.migration] Running upgrade 058_lottery_3_0_platform -> 059_lottery_ai_admin_center, 059 — Lottery AI Admin Center (prompts, config versions, tools, packs, audit).
+INFO  [alembic.runtime.migration] Running upgrade 059_lottery_ai_admin_center -> 060_lottery_ai_alerting_closeout, 060 — Lottery AI alerting closeout: alerts lifecycle, thresholds, tone prefs.
+INFO  [alembic.runtime.migration] Running upgrade 060_lottery_ai_alerting_closeout -> 061_lottery_ia_control_center, 061 — Lottery IA Control Center: prediction motors registry + prompt version metadata.
+=== CURRENT ===
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+061_lottery_ia_control_center (head)
+=== VALIDATE ===
+                   List of relations
+ Schema |             Name              | Type  | Owner 
+--------+-------------------------------+-------+-------
+ jaios  | lottery_prediction_motor_runs | table | jaios
+ jaios  | lottery_prediction_motors     | table | jaios
+(2 rows)
+
+                  List of relations
+ Schema |            Name             | Type  | Owner 
+--------+-----------------------------+-------+-------
+ jaios  | lottery_ai_alert_thresholds | table | jaios
+ jaios  | lottery_ai_alerts           | table | jaios
+ jaios  | lottery_ai_analysis_packs   | table | jaios
+ jaios  | lottery_ai_audit_events     | table | jaios
+ jaios  | lottery_ai_benchmarks       | table | jaios
+ jaios  | lottery_ai_config_versions  | table | jaios
+ jaios  | lottery_ai_prompt_versions  | table | jaios
+ jaios  | lottery_ai_tone_preferences | table | jaios
+ jaios  | lottery_ai_tool_settings    | table | jaios
+ jaios  | lottery_ai_usage            | table | jaios
+(10 rows)
+
+   column_name   
+-----------------
+ analysis_steps
+ archived_at
+ change_reason
+ display_name
+ parent_draft_of
+(5 rows)
+
+                                   Table "jaios.lottery_prediction_motors"
+       Column       |           Type           | Collation | Nullable |               Default                
+--------------------+--------------------------+-----------+----------+--------------------------------------
+ id                 | uuid                     |           | not null | 
+ tenant_id          | uuid                     |           |          | 
+ key                | character varying(64)    |           | not null | 
+ name               | character varying(128)   |           | not null | 
+ description        | text                     |           |          | 
+ status             | character varying(32)    |           | not null | 'NO_IMPLEMENTADO'::character varying
+ implemented        | boolean                  |           | not null | false
+ implementation_ref | character varying(255)   |           |          | 
+ version            | character varying(64)    |           |          | 
+ priority           | integer                  |           | not null | 100
+ weight             | numeric(8,4)             |           |          | 
+ docs               | text                     |           |          | 
+ health             | character varying(32)    |           |          | 
+ last_run_at        | timestamp with time zone |           |          | 
+ last_run_result    | jsonb                    |           |          | 
+ updated_by         | uuid                     |           |          | 
+ created_at         | timestamp with time zone |           | not null | now()
+ updated_at         | timestamp with time zone |           | not null | now()
+Indexes:
+    "pk_lottery_prediction_motors" PRIMARY KEY, btree (id)
+    "ix_lottery_prediction_motors_status" btree (status)
+    "ix_lottery_prediction_motors_tenant_id" btree (tenant_id)
+    "uq_lottery_prediction_motor_tenant_key" UNIQUE CONSTRAINT, btree (key, tenant_id)
+Referenced by:
+    TABLE "lottery_prediction_motor_runs" CONSTRAINT "fk_lottery_prediction_motor_runs_motor_id_lottery_predi_ab6a" FOREIGN KEY (motor_id) REFERENCES lottery_prediction_motors(id) ON DELETE CASCADE
+
+DRAWS=91927
+=== SECOND UPGRADE (idempotent) ===
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.

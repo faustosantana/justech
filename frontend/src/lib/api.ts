@@ -2774,6 +2774,27 @@ export const apiClient = {
       true,
     ),
 
+  getLotteryNumericRelationsNumber: (n: number, table: "table1" | "table2") =>
+    request<Record<string, unknown>>(
+      `/lottery/admin/numeric-relations/numbers/${n}?table=${encodeURIComponent(table)}`,
+      {},
+      true,
+    ),
+
+  getLotteryNumericRelationsExport: (table: "table1" | "table2", format: "json" | "csv") =>
+    request<{
+      table: string;
+      format: string;
+      count: number;
+      items?: Record<string, unknown>[];
+      csv?: string;
+      read_only?: boolean;
+    }>(
+      `/lottery/admin/numeric-relations/export?table=${encodeURIComponent(table)}&format=${encodeURIComponent(format)}`,
+      {},
+      true,
+    ),
+
   postLotteryNumericRelationsAnalyze: (body: {
     observed_number: number;
     lottery_ids: string[];
@@ -2781,6 +2802,27 @@ export const apiClient = {
     occurrence_k?: number | null;
   }) =>
     request<Record<string, unknown>>("/lottery/admin/numeric-relations/analyze", {
+      method: "POST",
+      body: JSON.stringify(body),
+    }, true),
+
+  getLotteryPredictionMotors: () =>
+    request<{ items: Record<string, unknown>[] }>("/lottery/admin/predictions/motors", {}, true),
+
+  patchLotteryPredictionMotor: (key: string, body: Record<string, unknown>) =>
+    request<Record<string, unknown>>(
+      `/lottery/admin/predictions/motors/${encodeURIComponent(key)}`,
+      { method: "PATCH", body: JSON.stringify(body) },
+      true,
+    ),
+
+  postLotteryPredictionNumericRelations: (body: {
+    observed_number: number;
+    lottery_ids: string[];
+    occurrence_mode: "last_k" | "all";
+    occurrence_k?: number | null;
+  }) =>
+    request<Record<string, unknown>>("/lottery/admin/predictions/numeric-relations/run", {
       method: "POST",
       body: JSON.stringify(body),
     }, true),
@@ -2881,6 +2923,41 @@ export const apiClient = {
   putLotteryAIPrompt: (id: string, body: Record<string, unknown>) =>
     request<Record<string, unknown>>(`/lottery/admin/ai/prompts/${encodeURIComponent(id)}`, {
       method: "PUT",
+      body: JSON.stringify(body),
+    }, true),
+
+  getLotteryPromptStudioSchema: () =>
+    request<{ blocks: unknown[]; tools?: unknown[]; guide?: string }>(
+      "/lottery/admin/ai/prompt-studio/schema",
+      {},
+      true,
+    ),
+
+  getLotteryPromptCompiled: (id: string, q?: string) => {
+    const qs = q ? `?q=${encodeURIComponent(q)}` : "";
+    return request<Record<string, unknown>>(
+      `/lottery/admin/ai/prompts/${encodeURIComponent(id)}/compiled${qs}`,
+      {},
+      true,
+    );
+  },
+
+  getLotteryPromptCompare: (a: string, b: string) =>
+    request<Record<string, unknown>>(
+      `/lottery/admin/ai/prompt-studio/compare?a=${encodeURIComponent(a)}&b=${encodeURIComponent(b)}`,
+      {},
+      true,
+    ),
+
+  postLotteryControlCenterBenchmark: () =>
+    request<Record<string, unknown>>("/lottery/admin/ai/control-center/benchmark/run", {
+      method: "POST",
+      body: "{}",
+    }, true),
+
+  postLotteryControlCenterPlayground: (body: Record<string, unknown>) =>
+    request<Record<string, unknown>>("/lottery/admin/ai/control-center/playground", {
+      method: "POST",
       body: JSON.stringify(body),
     }, true),
 

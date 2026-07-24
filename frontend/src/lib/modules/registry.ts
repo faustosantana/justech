@@ -489,6 +489,17 @@ export const MODULE_REGISTRY: ModuleDefinition[] = [
         shortDescription: "Agente, prompts, modelos, memoria y herramientas IA",
       },
       {
+        id: "admin-control-center",
+        label: "Lottery IA Control Center",
+        icon: Brain,
+        contentKey: "lottery:admin-control-center",
+        views: ["list"],
+        legacyHref: "/lottery/admin/control-center",
+        group: "Administración",
+        roles: ["owner", "admin", "superadmin"],
+        shortDescription: "Motor Matemático, Predicciones y Prompt Studio administrable",
+      },
+      {
         id: "admin-numeric-relations",
         label: "Relaciones numéricas",
         icon: Brain,
@@ -768,6 +779,11 @@ export const LOTTERY_NAV_INTEGRITY: { contentKey: string; href: string; group: s
   { contentKey: "lottery:admin-sync", href: "/lottery/admin/sync", group: "Administración" },
   { contentKey: "lottery:admin-scheduler", href: "/lottery/admin/scheduler", group: "Administración" },
   { contentKey: "lottery:admin-ai", href: "/lottery/admin/ai", group: "Administración" },
+  {
+    contentKey: "lottery:admin-control-center",
+    href: "/lottery/admin/control-center",
+    group: "Administración",
+  },
   {
     contentKey: "lottery:admin-numeric-relations",
     href: "/lottery/admin/numeric-relations",

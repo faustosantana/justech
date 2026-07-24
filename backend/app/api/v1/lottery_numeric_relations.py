@@ -9,15 +9,17 @@ from __future__ import annotations
 from typing import Annotated, Any
 from uuid import UUID
 
-from fastapi import APIRouter, Body, HTTPException
+from fastapi import APIRouter, Body, HTTPException, Query
 from sqlalchemy import select
 
 from app.api.deps import CurrentUser, DbSession, TenantCtx
 from app.api.v1.lottery_ai_admin import require_ai_admin
+
 from app.lottery.numeric_relations.api_schemas import (
     AnalyzeBody,
     enrich_table_rows,
     limit_from_body,
+    number_detail,
 )
 from app.lottery.numeric_relations.catalog import build_catalog
 from app.lottery.numeric_relations.db_history import analyze_from_db
@@ -83,6 +85,80 @@ async def numeric_relations_comparative(
 ) -> dict[str, Any]:
     svc = NumericRelationsService()
     return {"items": svc.comparative_table(), "source": "NumericRelationsService"}
+
+
+@router.get("/numbers/{n}")
+async def numeric_relations_number_detail(
+    n: int,
+    db: DbSession,
+    user: CurrentUser,
+    _: TenantCtx,
+    __: Annotated[None, require_ai_admin(*_PERMS)],
+    table: str = Query("table1", pattern="^(table1|table2)$"),
+) -> dict[str, Any]:
+    """Detalle completo de un número en Tabla 1 o Tabla 2 (vistas separadas)."""
+    try:
+        return number_detail(n, table)  # type: ignore[arg-type]
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@router.get("/export")
+async def numeric_relations_export(
+    db: DbSession,
+    user: CurrentUser,
+    _: TenantCtx,
+    __: Annotated[None, require_ai_admin(*_PERMS)],
+    table: str = Query("table1", pattern="^(table1|table2)$"),
+    format: str = Query("json", pattern="^(json|csv)$"),
+) -> dict[str, Any]:
+    """Exportación técnica de auditoría (JSON o CSV como texto). Solo lectura."""
+    rows = enrich_table_rows(table)
+    if format == "json":
+        return {
+            "table": table,
+            "format": "json",
+            "count": len(rows),
+            "items": rows,
+            "read_only": True,
+            "source": "NumericRelationsService/catalog",
+        }
+    # CSV textual (sin escribir archivo en disco)
+    headers = [
+        "number",
+        "formula",
+        "visible_value",
+        "digits_without_point",
+        "digit_count",
+        "code",
+        "literal_digit_sum",
+        "group_numbers",
+    ]
+    lines = [",".join(headers)]
+    for r in rows:
+        group = ";".join(str(x) for x in (r.get("group_numbers") or []))
+        lines.append(
+            ",".join(
+                [
+                    str(r.get("number", "")),
+                    f"\"{r.get('formula', '')}\"",
+                    str(r.get("visible_value", "")),
+                    str(r.get("digits_without_point", "")),
+                    str(r.get("digit_count", "")),
+                    str(r.get("code", "")),
+                    str(r.get("literal_digit_sum", "")),
+                    f"\"{group}\"",
+                ]
+            )
+        )
+    return {
+        "table": table,
+        "format": "csv",
+        "count": len(rows),
+        "csv": "\n".join(lines),
+        "read_only": True,
+        "source": "NumericRelationsService/catalog",
+    }
 
 
 @router.get("/lotteries")

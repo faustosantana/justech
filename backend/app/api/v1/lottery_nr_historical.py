@@ -13,7 +13,13 @@ from app.lottery.numeric_relations.historical.aggregates import HistoricalAggreg
 from app.lottery.numeric_relations.historical.api_schemas import (
     CompareBody,
     HistoricalSearchBody,
+    NumberOccurrenceDetailBody,
+    NumberNextDrawsBody,
+    NumberOccurrencesBody,
+    NumberProfileBody,
+    NumbersCompareBody,
     PatternDetailBody,
+    WhyStrengthenedBody,
 )
 from app.lottery.numeric_relations.historical.db_universe import load_universe_from_db
 from app.lottery.numeric_relations.historical.enums import ConfirmationWindowMode
@@ -21,6 +27,7 @@ from app.lottery.numeric_relations.historical.models import (
     ConfirmationWindowConfig,
     LotteryScope,
 )
+from app.lottery.numeric_relations.historical.number_explorer import NumberExplorerService
 from app.lottery.numeric_relations.historical.service import HistoricalRelationsService
 from app.lottery.numeric_relations.historical.version import METHODOLOGY_VERSION
 
@@ -442,3 +449,297 @@ async def compare(
             by_lot[lid] = by_lot.get(lid, 0) + int(cnt)
     items = [{"lottery_id": k, "event_count": v} for k, v in sorted(by_lot.items(), key=lambda x: -x[1])]
     return {"methodology_version": METHODOLOGY_VERSION, "compare_mode": mode, "items": items, "ai_conclusions": None}
+
+
+# --- J-9 Historial del Número ---
+
+
+def _audit_nr_query(
+    *,
+    user: CurrentUser,
+    action: str,
+    payload: dict[str, Any],
+    duration_ms: float | None = None,
+) -> None:
+    """Auditoría ligera sin secretos (stdout estructurado / logs app)."""
+    import logging
+
+    logging.getLogger("lottery.nr.historial").info(
+        "nr_historial_query",
+        extra={
+            "action": action,
+            "user_id": str(getattr(user, "id", None) or getattr(user, "sub", None) or ""),
+            "payload": payload,
+            "duration_ms": duration_ms,
+        },
+    )
+
+
+async def _prepare_numbers(db: DbSession, body: NumberProfileBody | NumbersCompareBody | WhyStrengthenedBody):
+    lids = _all_lottery_ids(body.scope)
+    try:
+        universe, names = await load_universe_from_db(
+            db,
+            lottery_ids=lids,
+            date_from=getattr(body, "date_from", None),
+            date_to=getattr(body, "date_to", None),
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    scope = _scope_from_body(body.scope, names)
+    window = _window_from_body(body.confirmation_window)
+    return universe, scope, window, names
+
+
+@router.post("/numbers/profile")
+async def number_profile(
+    body: NumberProfileBody,
+    db: DbSession,
+    user: CurrentUser,
+    _: TenantCtx,
+    __: Annotated[None, require_ai_admin(*_PERMS)],
+) -> dict[str, Any]:
+    """J-9 — Perfil / expediente resumen del número."""
+    import time as _time
+
+    t0 = _time.perf_counter()
+    universe, scope, window, _ = await _prepare_numbers(db, body)
+    svc = NumberExplorerService(universe=universe)
+    out = svc.profile(
+        number=body.number,
+        scope=scope,
+        window=window,
+        date_from=body.date_from,
+        date_to=body.date_to,
+        max_horizon=body.max_horizon,
+    )
+    _audit_nr_query(
+        user=user,
+        action="numbers.profile",
+        payload={
+            "number": body.number,
+            "date_from": str(body.date_from) if body.date_from else None,
+            "date_to": str(body.date_to) if body.date_to else None,
+            "trace_id": out.get("trace_id"),
+        },
+        duration_ms=round((_time.perf_counter() - t0) * 1000, 1),
+    )
+    out["ai_conclusions"] = None
+    return out
+
+
+@router.post("/numbers/occurrences")
+async def number_occurrences(
+    body: NumberOccurrencesBody,
+    db: DbSession,
+    user: CurrentUser,
+    _: TenantCtx,
+    __: Annotated[None, require_ai_admin(*_PERMS)],
+) -> dict[str, Any]:
+    """J-9 — Apariciones paginadas del número."""
+    import time as _time
+
+    t0 = _time.perf_counter()
+    universe, scope, window, _ = await _prepare_numbers(db, body)
+    svc = NumberExplorerService(universe=universe)
+    out = svc.occurrences(
+        number=body.number,
+        scope=scope,
+        window=window,
+        date_from=body.date_from,
+        date_to=body.date_to,
+        max_horizon=body.max_horizon,
+        page=body.page,
+        page_size=body.page_size,
+        year=body.year,
+        lottery_id=str(body.lottery_id) if body.lottery_id else None,
+        condition=body.condition,
+        candidate=body.candidate,
+        confirmer=body.confirmer,
+        order=body.order,
+    )
+    _audit_nr_query(
+        user=user,
+        action="numbers.occurrences",
+        payload={"number": body.number, "page": body.page, "trace_id": out.get("trace_id")},
+        duration_ms=round((_time.perf_counter() - t0) * 1000, 1),
+    )
+    out["ai_conclusions"] = None
+    return out
+
+
+@router.post("/numbers/occurrences/detail")
+async def number_occurrence_detail(
+    body: NumberOccurrenceDetailBody,
+    db: DbSession,
+    user: CurrentUser,
+    _: TenantCtx,
+    __: Annotated[None, require_ai_admin(*_PERMS)],
+) -> dict[str, Any]:
+    """J-9 — Expediente de una aparición (Modo B)."""
+    lids = _all_lottery_ids(body.scope)
+    try:
+        universe, names = await load_universe_from_db(db, lottery_ids=lids)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    scope = _scope_from_body(body.scope, names)
+    window = _window_from_body(body.confirmation_window)
+    svc = NumberExplorerService(universe=universe)
+    try:
+        out = svc.occurrence_detail(
+            number=body.number,
+            draw_id=body.draw_id,
+            scope=scope,
+            window=window,
+            max_horizon=body.max_horizon,
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+    _audit_nr_query(
+        user=user,
+        action="numbers.occurrence_detail",
+        payload={"number": body.number, "draw_id": body.draw_id, "trace_id": out.get("trace_id")},
+    )
+    out["ai_conclusions"] = None
+    return out
+
+
+@router.post("/numbers/occurrences/next-draws")
+async def number_next_draws(
+    body: NumberNextDrawsBody,
+    db: DbSession,
+    user: CurrentUser,
+    _: TenantCtx,
+    __: Annotated[None, require_ai_admin(*_PERMS)],
+) -> dict[str, Any]:
+    """J-9 — Próximos N sorteos (por defecto 7) o días calendario."""
+    lids = [str(x) for x in body.follow_up_lottery_ids]
+    try:
+        universe, _names = await load_universe_from_db(db, lottery_ids=lids)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    svc = NumberExplorerService(universe=universe)
+    try:
+        out = svc.next_draws(
+            draw_id=body.draw_id,
+            follow_up_lottery_ids=lids,
+            count=body.count,
+            mode=body.mode,
+            tz_name=body.timezone,
+            strengthened_candidates=body.strengthened_candidates,
+            confirmer_watch=body.confirmer_watch,
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+    _audit_nr_query(
+        user=user,
+        action="numbers.next_draws",
+        payload={"draw_id": body.draw_id, "mode": body.mode, "count": body.count, "trace_id": out.get("trace_id")},
+    )
+    out["ai_conclusions"] = None
+    return out
+
+
+@router.post("/numbers/compare")
+async def numbers_compare(
+    body: NumbersCompareBody,
+    db: DbSession,
+    user: CurrentUser,
+    _: TenantCtx,
+    __: Annotated[None, require_ai_admin(*_PERMS)],
+) -> dict[str, Any]:
+    """J-9 — Comparar dos números observados (p. ej. 35 vs 40)."""
+    universe, scope, window, _ = await _prepare_numbers(db, body)
+    svc = NumberExplorerService(universe=universe)
+    out = svc.compare_numbers(
+        number_a=body.number_a,
+        number_b=body.number_b,
+        scope=scope,
+        window=window,
+        date_from=body.date_from,
+        date_to=body.date_to,
+        max_horizon=body.max_horizon,
+    )
+    _audit_nr_query(
+        user=user,
+        action="numbers.compare",
+        payload={"number_a": body.number_a, "number_b": body.number_b, "trace_id": out.get("trace_id")},
+    )
+    out["ai_conclusions"] = None
+    return out
+
+
+@router.post("/numbers/why-strengthened")
+async def why_strengthened(
+    body: WhyStrengthenedBody,
+    db: DbSession,
+    user: CurrentUser,
+    _: TenantCtx,
+    __: Annotated[None, require_ai_admin(*_PERMS)],
+) -> dict[str, Any]:
+    """J-9 — Explicación determinista «¿Por qué se fortaleció?»."""
+    universe, scope, window, _ = await _prepare_numbers(db, body)
+    svc = NumberExplorerService(universe=universe)
+    analyzed = None
+    if body.draw_id:
+        try:
+            analyzed = svc.occurrence_detail(
+                number=body.number,
+                draw_id=body.draw_id,
+                scope=scope,
+                window=window,
+                max_horizon=body.max_horizon,
+            )
+        except ValueError as exc:
+            raise HTTPException(status_code=404, detail=str(exc)) from exc
+    # Historical sample for candidate from profile aggregates (lightweight reuse)
+    profile = svc.profile(
+        number=body.number,
+        scope=scope,
+        window=window,
+        date_from=body.date_from,
+        date_to=body.date_to,
+        max_horizon=body.max_horizon,
+    )
+    cand_hist = {
+        int(x["candidato"]): int(x["veces"])
+        for x in (profile.get("charts") or {}).get("candidatos_fortalecidos") or []
+    }
+    r3 = ((profile.get("charts") or {}).get("tasas") or {}).get("response_rate_within_3") or {}
+    cycles = (profile.get("charts") or {}).get("ciclos") or {}
+    hist = {
+        "casos": cand_hist.get(int(body.candidate)),
+        "respuesta_3": (
+            f"En {r3.get('numerator')} de {r3.get('denominator')} casos evaluables apareció dentro de tres sorteos."
+            if r3.get("denominator")
+            else None
+        ),
+        "ciclo": (
+            f"Su ciclo típico observado fue de {cycles.get('median')} sorteos."
+            if cycles.get("median") is not None
+            else None
+        ),
+    }
+    why = svc.why_strengthened(
+        number=body.number,
+        candidate=body.candidate,
+        analyzed=analyzed,
+        historical_sample=hist,
+    )
+    out = {
+        "methodology_version": METHODOLOGY_VERSION,
+        "trace_id": profile.get("trace_id"),
+        "why": why,
+        "effective_parameters": {
+            "number": body.number,
+            "candidate": body.candidate,
+            "draw_id": body.draw_id,
+        },
+        "ai_conclusions": None,
+    }
+    _audit_nr_query(
+        user=user,
+        action="numbers.why_strengthened",
+        payload={"number": body.number, "candidate": body.candidate, "trace_id": out.get("trace_id")},
+    )
+    return out

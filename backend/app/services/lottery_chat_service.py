@@ -438,7 +438,11 @@ class LotteryChatService:
                 result = await executor.execute(
                     tool_enum,
                     exec_params,
-                    structured_type="lottery_result",
+                    structured_type=(
+                        "lottery_numeric_relations"
+                        if understanding.intent == "numeric_relations"
+                        else "lottery_result"
+                    ),
                     session_context=ctx.to_store(),
                 )
                 tool_trace.append(
@@ -698,6 +702,12 @@ class LotteryChatService:
                 out.setdefault("limit", out.get("limit") or 10)
         if tool == LotteryToolName.GET_HOT_COLD.value:
             out.setdefault("window_draws", state.draw_count_context or 30)
+        if tool == LotteryToolName.ANALYZE_NUMERIC_RELATIONS.value:
+            if not out.get("lotteries") and state.active_lotteries:
+                out["lotteries"] = list(state.active_lotteries)
+            if out.get("observed_number") is None and out.get("number") is not None:
+                out["observed_number"] = int(str(out["number"]).lstrip("0") or "0")
+            # Never invent occurrence limit here — intent/UI must be explicit
         return out
 
     async def _execute_multi_last_occurrence(
@@ -1547,6 +1557,11 @@ class LotteryChatService:
         if tool == "lottery_explain_analysis_method" and isinstance(data, dict):
             return str(data.get("definition") or "Análisis histórico descriptivo.")
 
+        if tool == "lottery_analyze_numeric_relations" and isinstance(data, dict):
+            from app.lottery.numeric_relations.chat_narrative import format_numeric_relations_reply
+
+            return format_numeric_relations_reply(data)
+
         if tool == "lottery_get_expected_vs_received" and isinstance(data, dict):
             return (
                 f"Hoy ({data.get('local_today')}): esperadas {data.get('expected_sync_enabled')} "
@@ -1682,6 +1697,10 @@ class LotteryChatService:
             "No inventes números. No predigas ni recomiendes apuestas. "
             "No menciones tools, JSON, errores internos ni 'redacción no disponible'. "
             "No repitas el aviso legal si ya está implícito en el pie de la UI.\n"
+            "Si los hechos incluyen motor de relaciones numéricas: no inventes compañeros, "
+            "códigos, vecinos, puntuaciones ni coincidencias; si occurrences_used=0 o ranking "
+            "vacío, dilo explícitamente y no completes con datos inventados. "
+            "Aclara que es señal histórica del método, no certeza.\n"
             f"{json.dumps(payload, ensure_ascii=False, default=str)[:6000]}"
         )
         messages = [

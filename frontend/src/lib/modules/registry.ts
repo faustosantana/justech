@@ -488,6 +488,17 @@ export const MODULE_REGISTRY: ModuleDefinition[] = [
         roles: ["owner", "admin", "superadmin"],
         shortDescription: "Agente, prompts, modelos, memoria y herramientas IA",
       },
+      {
+        id: "admin-numeric-relations",
+        label: "Relaciones numéricas",
+        icon: Brain,
+        contentKey: "lottery:admin-numeric-relations",
+        views: ["list"],
+        legacyHref: "/lottery/admin/numeric-relations",
+        group: "Administración",
+        roles: ["owner", "admin", "superadmin"],
+        shortDescription: "Auditoría del Motor de Relaciones Numéricas (Tablas 1/2 y análisis)",
+      },
     ],
   },
   {
@@ -757,6 +768,11 @@ export const LOTTERY_NAV_INTEGRITY: { contentKey: string; href: string; group: s
   { contentKey: "lottery:admin-sync", href: "/lottery/admin/sync", group: "Administración" },
   { contentKey: "lottery:admin-scheduler", href: "/lottery/admin/scheduler", group: "Administración" },
   { contentKey: "lottery:admin-ai", href: "/lottery/admin/ai", group: "Administración" },
+  {
+    contentKey: "lottery:admin-numeric-relations",
+    href: "/lottery/admin/numeric-relations",
+    group: "Administración",
+  },
 ];
 
 export function assertLotteryNavIntegrity(module: ModuleDefinition = MODULE_BY_ID.lottery): string[] {

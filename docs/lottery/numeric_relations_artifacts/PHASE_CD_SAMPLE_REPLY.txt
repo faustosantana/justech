@@ -1,0 +1,10 @@
+Analicé el número observado 26 (código madre 26) en Leidsa.
+Límite solicitado: todas las ocurrencias. Ocurrencias encontradas en histórico: 1; usadas: 1.
+Compañeros de Tabla 1: 27, 38.
+Primero en el ranking: 27 con puntuación 3.
+Vecinos que lo fortalecieron: 68, 76, 92.
+Sorteos de refuerzo: 68 en Leidsa (2026-05-01, pos 2); 76 en Leidsa (2026-05-01, pos 3); 92 en Leidsa (2026-05-01, pos 4).
+Ranking completo (incluye score 0):
+1. 27 — score 3 (T2=53, vecinos 68, 76, 92)
+2. 38 — score 0 (T2=44, vecinos )
+Aclaración: es una señal histórica del método de relaciones numéricas; no es certeza ni garantía de resultados futuros, ni recomendación de apuestas.

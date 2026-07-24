@@ -133,6 +133,18 @@ def build_plan(understanding: UnderstandingResult) -> QueryPlan:
             rationale="lottery_summary_pack",
         ).bounded()
 
+    if intent == "numeric_relations" or tool == LotteryToolName.ANALYZE_NUMERIC_RELATIONS.value:
+        return QueryPlan(
+            steps=[
+                PlanStep(
+                    tool=LotteryToolName.ANALYZE_NUMERIC_RELATIONS.value,
+                    params=params,
+                    purpose="numeric_relations_motor",
+                )
+            ],
+            rationale="numeric_relations_single_engine",
+        ).bounded()
+
     # Default single-tool plan
     return QueryPlan(
         steps=[PlanStep(tool=tool, params=params, purpose=intent or "tool")],

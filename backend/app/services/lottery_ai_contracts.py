@@ -52,6 +52,7 @@ class LotteryToolName(str, Enum):
     GET_EXPECTED_VS_RECEIVED = "lottery_get_expected_vs_received"
     GET_LATEST_AVAILABLE_DATE = "lottery_get_latest_available_date"
     EXPLAIN_ANALYSIS_METHOD = "lottery_explain_analysis_method"
+    ANALYZE_NUMERIC_RELATIONS = "lottery_analyze_numeric_relations"
 
 
 # Permisos mínimos por tool (cualquiera de la tupla basta)
@@ -98,6 +99,7 @@ TOOL_PERMISSIONS: dict[LotteryToolName, tuple[str, ...]] = {
     LotteryToolName.GET_EXPECTED_VS_RECEIVED: ("lottery.access", "lottery.search"),
     LotteryToolName.GET_LATEST_AVAILABLE_DATE: ("lottery.access", "lottery.search"),
     LotteryToolName.EXPLAIN_ANALYSIS_METHOD: ("lottery.access", "lottery.statistics"),
+    LotteryToolName.ANALYZE_NUMERIC_RELATIONS: ("lottery.statistics", "lottery.search"),
 }
 
 
@@ -228,6 +230,15 @@ LOTTERY_TOOL_CATALOG: list[LotteryToolContract] = [
         name=LotteryToolName.GET_MISSING_TODAY,
         description="Loterías sincronizadas que aún no tienen resultado de hoy (TZ local).",
         permissions=TOOL_PERMISSIONS[LotteryToolName.GET_MISSING_TODAY],
+    ),
+    LotteryToolContract(
+        name=LotteryToolName.ANALYZE_NUMERIC_RELATIONS,
+        description=(
+            "Motor de Relaciones Numéricas: compañeros Tabla 1, vecinos Tabla 2 y "
+            "ranking histórico anclado a ocurrencias reales del número observado N. "
+            "No predice ni recomienda apuestas."
+        ),
+        permissions=TOOL_PERMISSIONS[LotteryToolName.ANALYZE_NUMERIC_RELATIONS],
     ),
 ]
 

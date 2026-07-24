@@ -877,7 +877,103 @@ class LotteryToolExecutor:
                 "limitations": ["Explicación metodológica; no implica predicción"],
             }, 1, {"semantics": "explain_method"}
 
+        if tool == LotteryToolName.ANALYZE_NUMERIC_RELATIONS:
+            return await self._analyze_numeric_relations(params)
+
         raise LotteryQueryError("TOOL_ERROR", f"Tool no implementada: {tool.value}")
+
+    async def _analyze_numeric_relations(
+        self, params: dict[str, Any]
+    ) -> tuple[Any, int | None, dict[str, Any]]:
+        """Fachada única: DB history → NumericRelationsService (sin recalcular en el tool)."""
+        from app.lottery.numeric_relations.db_history import analyze_from_db
+        from app.lottery.numeric_relations.models import OccurrenceLimit
+
+        raw_n = params.get("observed_number", params.get("number"))
+        try:
+            observed = int(str(raw_n).lstrip("0") or "0")
+        except (TypeError, ValueError) as exc:
+            raise LotteryQueryError(
+                "NUMBER_INVALID", "observed_number debe ser un entero 1..100"
+            ) from exc
+        if observed < 1 or observed > 100:
+            raise LotteryQueryError(
+                "NUMBER_INVALID", "observed_number debe estar entre 1 y 100"
+            )
+
+        lot_names: list[str] = []
+        if params.get("lotteries"):
+            lot_names = [str(x) for x in params["lotteries"] if x]
+        elif params.get("lottery"):
+            lot_names = [str(params["lottery"])]
+        if not lot_names:
+            raise LotteryQueryError(
+                "LOTTERY_REQUIRED",
+                "Indica al menos una lotería (no se inventan loterías)",
+            )
+
+        mode = str(params.get("occurrence_mode") or "").strip().lower()
+        if mode in {"all", "all_occurrences"}:
+            limit = OccurrenceLimit.all()
+        elif mode == "last_k":
+            k_raw = params.get("occurrence_k", params.get("k"))
+            if k_raw is None:
+                raise LotteryQueryError(
+                    "OCCURRENCE_LIMIT_REQUIRED",
+                    "occurrence_k es obligatorio cuando occurrence_mode=last_k",
+                )
+            limit = OccurrenceLimit.last_k(int(k_raw))
+        else:
+            raise LotteryQueryError(
+                "OCCURRENCE_LIMIT_REQUIRED",
+                "Indica occurrence_mode=last_k (con k=5|10|20) o all; no hay default oculto",
+            )
+
+        lottery_ids = []
+        name_by_id: dict[str, str] = {}
+        for name in lot_names:
+            lot = await self.resolver.resolve_or_raise(name)
+            lottery_ids.append(lot.id)
+            name_by_id[str(lot.id)] = lot.commercial_name or lot.name or name
+
+        result = await analyze_from_db(
+            self.db,
+            observed_number=observed,
+            lottery_ids=lottery_ids,
+            limit=limit,
+            lottery_names=name_by_id,
+        )
+        payload = result.to_dict()
+        all_matches: list[dict[str, Any]] = []
+        zero_score: list[dict[str, Any]] = []
+        for cand in payload.get("ranking") or []:
+            all_matches.extend(cand.get("matches") or [])
+            if int(cand.get("score") or 0) == 0:
+                zero_score.append(cand)
+        payload["matches"] = all_matches
+        payload["companions_score_zero"] = zero_score
+        payload["metadata"] = {
+            "engine": "lottery.numeric_relations",
+            "llm_calculates": False,
+            "huawei_invents": False,
+            "exclude_observed_from_matches": True,
+            "disclaimer": (
+                "Señal histórica del método de relaciones numéricas; "
+                "no es certeza ni garantía de resultados futuros."
+            ),
+        }
+        ranking = payload.get("ranking") or []
+        return (
+            payload,
+            len(ranking),
+            {
+                "semantics": "numeric_relations_analysis",
+                "observed_number": observed,
+                "occurrences_used": payload.get("occurrences_used"),
+                "top_companion": ranking[0].get("number") if ranking else None,
+                "top_score": ranking[0].get("score") if ranking else None,
+            },
+        )
 
     async def _compare_number_periods(self, params: dict[str, Any]) -> tuple[Any, int | None, dict[str, Any]]:
         from datetime import timedelta

@@ -2750,6 +2750,34 @@ export const apiClient = {
 
   // ── Lottery AI Admin ────────────────────────────────────────────────────
 
+  getLotteryNumericRelationsTables: () =>
+    request<{
+      table1: Record<string, unknown>[];
+      table2: Record<string, unknown>[];
+      range: { min: number; max: number };
+      tables_are_separate?: boolean;
+      source?: string;
+    }>("/lottery/admin/numeric-relations/tables", {}, true),
+
+  getLotteryNumericRelationsGroups: () =>
+    request<{
+      table1_groups: Record<string, { code: number; numbers: number[]; table: string }>;
+      table2_groups: Record<string, { code: number; numbers: number[]; table: string }>;
+      tables_are_separate?: boolean;
+      source?: string;
+    }>("/lottery/admin/numeric-relations/groups", {}, true),
+
+  postLotteryNumericRelationsAnalyze: (body: {
+    observed_number: number;
+    lottery_ids: string[];
+    occurrence_mode: "last_k" | "all";
+    occurrence_k?: number | null;
+  }) =>
+    request<Record<string, unknown>>("/lottery/admin/numeric-relations/analyze", {
+      method: "POST",
+      body: JSON.stringify(body),
+    }, true),
+
   getLotteryAIAdminDashboard: () =>
     request<Record<string, unknown>>("/lottery/admin/ai/dashboard", {}, true),
 

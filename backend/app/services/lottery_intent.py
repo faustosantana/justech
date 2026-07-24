@@ -194,6 +194,36 @@ def _last_n_window(n: int, *, anchor: date | None = None) -> tuple[date, date]:
     return start, end
 
 
+def _extract_occurrence_limit_params(text: str) -> dict[str, Any] | None:
+    """Extrae límite explícito 5/10/20/all. None = no especificado (pedir aclaración)."""
+    if re.search(
+        r"todas\s+(las\s+)?(ocurrencias|veces|apariciones)|"
+        r"todo\s+el\s+hist[oó]rico|"
+        r"todas\s+las\s+ocurrencias\s+disponibles|"
+        r"all_occurrences|\bocurrence_mode\s*=\s*all\b",
+        text,
+        re.I,
+    ):
+        return {"occurrence_mode": "all"}
+    m = re.search(
+        r"[uú]ltimas?\s+(\d+)\s+(veces?|apariciones|ocurrencias)",
+        text,
+        re.I,
+    )
+    if m:
+        return {"occurrence_mode": "last_k", "occurrence_k": int(m.group(1))}
+    m = re.search(r"\blast[_\s-]?(\d+)\b", text, re.I)
+    if m and int(m.group(1)) in {5, 10, 20}:
+        return {"occurrence_mode": "last_k", "occurrence_k": int(m.group(1))}
+    # Respuesta corta al clarifier: solo "5", "10", "20", "todas"
+    t = text.strip().lower()
+    if t in {"5", "10", "20"}:
+        return {"occurrence_mode": "last_k", "occurrence_k": int(t)}
+    if t in {"todas", "all", "todas las ocurrencias"}:
+        return {"occurrence_mode": "all"}
+    return None
+
+
 def resolve_intent(message: str, ctx: LotterySessionContext) -> ResolvedIntent:
     raw = message.strip()
     text = _norm(raw)
@@ -219,6 +249,97 @@ def resolve_intent(message: str, ctx: LotterySessionContext) -> ResolvedIntent:
                 "No garantizan resultados futuros."
             ),
             structured_type="lottery_error",
+        )
+
+    # Motor de Relaciones Numéricas (antes del "analiza el N" genérico)
+    if re.search(
+        r"compa[nñ]eros?|"
+        r"vecinos?|"
+        r"fortalec|"
+        r"relaciones?\s+num[eé]ricas?|"
+        r"c[oó]digo\s+madre|"
+        r"motor\s+de\s+relaciones|"
+        r"analiz(a|ar|ame|emos).{0,40}([uú]ltimas?\s+\d+\s+veces?|veces?\s+que\s+sali)|"
+        r"busc(a|ar).{0,40}([uú]ltimas?\s+\d+\s+veces?|veces?\s+que\s+sali)|"
+        r"muestr(a|ame)\s+todas\s+las\s+ocurrencias|"
+        r"cuando\s+sale\s+el\s+\d+",
+        text,
+        re.I,
+    ):
+        number = _extract_number(raw) or (ctx.last_numbers[0] if ctx.last_numbers else None)
+        lotteries = _extract_lotteries(text)
+        if not lotteries and ctx.last_lottery:
+            lotteries = [ctx.last_lottery]
+        if ctx.compared_lotteries:
+            for x in ctx.compared_lotteries:
+                if x not in lotteries:
+                    lotteries.append(x)
+        limit_params = _extract_occurrence_limit_params(text)
+        if not number:
+            return ResolvedIntent(
+                kind="clarify",
+                clarify_message=(
+                    "¿Qué número observado (1–100) quieres analizar con el "
+                    "Motor de Relaciones Numéricas?"
+                ),
+                structured_type="lottery_ambiguity",
+                params={"pending_slots": ["number", "lottery", "occurrence_limit"]},
+            )
+        try:
+            n_int = int(str(number).lstrip("0") or "0")
+        except ValueError:
+            n_int = 0
+        if n_int < 1 or n_int > 100:
+            return ResolvedIntent(
+                kind="clarify",
+                clarify_message="El número observado debe estar entre 1 y 100.",
+                structured_type="lottery_ambiguity",
+                params={"pending_slots": ["number"]},
+            )
+        if not lotteries:
+            return ResolvedIntent(
+                kind="clarify",
+                clarify_message=(
+                    f"Para analizar el {n_int} con relaciones numéricas, "
+                    "¿en qué lotería o loterías? (ej. Leidsa, Loteka). "
+                    "No invento loterías."
+                ),
+                structured_type="lottery_ambiguity",
+                params={
+                    "number": str(n_int),
+                    "observed_number": n_int,
+                    "pending_slots": ["lottery", "occurrence_limit"],
+                },
+            )
+        if not limit_params:
+            return ResolvedIntent(
+                kind="clarify",
+                clarify_message=(
+                    f"¿Cuántas últimas ocurrencias del {n_int} uso en "
+                    f"{', '.join(lotteries)}? Elige explícitamente: 5, 10, 20 o todas. "
+                    "No hay un valor por defecto oculto."
+                ),
+                structured_type="lottery_ambiguity",
+                params={
+                    "number": str(n_int),
+                    "observed_number": n_int,
+                    "lotteries": lotteries,
+                    "pending_slots": ["occurrence_limit"],
+                },
+            )
+        params: dict[str, Any] = {
+            "observed_number": n_int,
+            "number": str(n_int),
+            "lotteries": lotteries,
+            **limit_params,
+        }
+        if len(lotteries) == 1:
+            params["lottery"] = lotteries[0]
+        return ResolvedIntent(
+            kind="tool",
+            tool=LotteryToolName.ANALYZE_NUMERIC_RELATIONS,
+            params=params,
+            structured_type="lottery_numeric_relations",
         )
 
     # 4.1 — year-over-year / period compare for a number

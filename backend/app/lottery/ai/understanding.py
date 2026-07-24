@@ -101,6 +101,16 @@ def _apply_pending_fill(text: str, state: ConversationState) -> ConversationStat
         updated.pending_slots = [s for s in updated.pending_slots if s not in {"period", "draw_count"}]
         filled = True
 
+    # Numeric relations: explicit 5 / 10 / 20 / todas
+    if "occurrence_limit" in state.pending_slots or state.pending_intent == "numeric_relations":
+        from app.services.lottery_intent import _extract_occurrence_limit_params
+
+        lim = _extract_occurrence_limit_params(text)
+        if lim:
+            updated.pending_params = {**updated.pending_params, **lim}
+            updated.pending_slots = [s for s in updated.pending_slots if s != "occurrence_limit"]
+            filled = True
+
     # Lottery alias short answers: "En la Real", "Leidsa"
     if not lots and "lottery" in state.pending_slots:
         alias = re.sub(r"^(en\s+la\s+|en\s+el\s+|en\s+)", "", text.strip(), flags=re.I)
@@ -771,6 +781,60 @@ def _resume_pending(state: ConversationState) -> tuple[UnderstandingResult, Conv
             working,
         )
 
+    if intent == "numeric_relations" and number and lots:
+        pp = dict(state.pending_params or {})
+        mode = pp.get("occurrence_mode")
+        if mode not in {"last_k", "all"}:
+            return (
+                UnderstandingResult(
+                    intent="numeric_relations",
+                    numbers=[str(number)],
+                    lotteries=lots,
+                    missing_slots=["occurrence_limit"],
+                    needs_clarification=True,
+                    clarification_question=(
+                        f"¿Cuántas últimas ocurrencias del {number} uso? Elige: 5, 10, 20 o todas."
+                    ),
+                    confidence=0.85,
+                    source="follow_up",
+                    params={**pp, "observed_number": int(str(number).lstrip("0") or "0")},
+                ),
+                state.model_copy(
+                    update={
+                        "pending_intent": "numeric_relations",
+                        "pending_slots": ["occurrence_limit"],
+                        "pending_params": {
+                            **pp,
+                            "number": number,
+                            "observed_number": int(str(number).lstrip("0") or "0"),
+                            "lotteries": lots,
+                        },
+                    }
+                ),
+            )
+        params = {
+            "observed_number": int(str(number).lstrip("0") or "0"),
+            "number": str(number),
+            "lotteries": lots,
+            "occurrence_mode": mode,
+        }
+        if mode == "last_k":
+            params["occurrence_k"] = int(pp.get("occurrence_k") or 0)
+        if len(lots) == 1:
+            params["lottery"] = lots[0]
+        return (
+            UnderstandingResult(
+                intent="numeric_relations",
+                lotteries=lots,
+                numbers=[str(number)],
+                tool=LotteryToolName.ANALYZE_NUMERIC_RELATIONS.value,
+                params=params,
+                confidence=0.92,
+                source="follow_up",
+            ),
+            working,
+        )
+
     return (
         UnderstandingResult(
             intent="unsupported",
@@ -794,6 +858,8 @@ def _map_resolved(
     numbers = []
     if intent.params.get("number"):
         numbers = [str(intent.params["number"])]
+    elif intent.params.get("observed_number") is not None:
+        numbers = [str(intent.params["observed_number"])]
     # Also extract from text for clarify paths
     if not numbers:
         n = _extract_number(text)
@@ -804,6 +870,34 @@ def _map_resolved(
 
     intent_name = "unsupported"
     if intent.kind == "clarify":
+        pending = list(intent.params.get("pending_slots") or [])
+        # Motor de Relaciones Numéricas — conservar mensaje y slots explícitos
+        if (
+            "occurrence_limit" in pending
+            or intent.params.get("observed_number") is not None
+            or re.search(
+                r"compa[nñ]eros?|vecinos?|relaciones?\s+num|c[oó]digo\s+madre|"
+                r"[uú]ltimas?\s+\d+\s+veces?",
+                text,
+                re.I,
+            )
+        ) and (
+            pending
+            or "relaciones" in (intent.clarify_message or "").lower()
+            or "ocurrencias" in (intent.clarify_message or "").lower()
+        ):
+            return UnderstandingResult(
+                intent="numeric_relations",
+                lotteries=lots or [str(x) for x in (intent.params.get("lotteries") or [])],
+                numbers=numbers,
+                missing_slots=pending or ["lottery"],
+                needs_clarification=True,
+                clarification_question=intent.clarify_message
+                or "¿Puedes precisar lotería y cantidad de ocurrencias (5, 10, 20 o todas)?",
+                confidence=0.9,
+                source="rules",
+                params=dict(intent.params or {}),
+            )
         # P0: never re-ask lottery+date when memory can drive post-occurrence windows
         if re.search(
             r"(d[ií]as?|sorteos?).{0,16}(siguientes?|despu[eé]s)|(siguientes?|despu[eé]s).{0,16}(d[ií]as?|sorteos?)|"
@@ -900,6 +994,7 @@ def _map_resolved(
         LotteryToolName.EXPLAIN_ANALYSIS_METHOD.value: "explain_metric",
         LotteryToolName.GET_EXPECTED_VS_RECEIVED.value: "expected_vs_received",
         LotteryToolName.GET_YEARLY_COMPARISON.value: "compare_number_periods",
+        LotteryToolName.ANALYZE_NUMERIC_RELATIONS.value: "numeric_relations",
     }
     if tool:
         intent_name = mapping.get(tool, "general_domain_question")

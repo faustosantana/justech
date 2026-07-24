@@ -43,6 +43,7 @@ const NAV_GROUPS = [
       { label: "Sesiones", href: "/lottery/admin/ai/sessions" },
       { label: "Versiones", href: "/lottery/admin/ai/versions" },
       { label: "Auditoría", href: "/lottery/admin/ai/audit" },
+      { label: "Relaciones numéricas", href: "/lottery/admin/numeric-relations" },
     ],
   },
 ];

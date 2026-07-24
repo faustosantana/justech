@@ -1,0 +1,33 @@
+{
+  "scope": "j9_four_lotteries",
+  "aparecio": 515,
+  "times": [
+    2374.6,
+    1919.3,
+    1862.6,
+    2206.6,
+    2296.7,
+    1965.3,
+    3027.0,
+    2083.5,
+    2020.4,
+    1982.4
+  ],
+  "avg_ms": 2173.8,
+  "median_ms": 2051.9,
+  "min_ms": 1862.6,
+  "max_ms": 3027.0,
+  "j9_baseline_avg": 1827.5,
+  "delta_pct": 19.0,
+  "pass_within_15pct": false,
+  "multi_confirmers": {
+    "draw_id": "6c14f43a-a54d-40e8-bd60-10dfc457ff14",
+    "candidato": 86,
+    "confirmadores": [
+      19,
+      46
+    ],
+    "confirmaciones": 2,
+    "estado": "SE DIO PARCIALMENTE"
+  }
+}

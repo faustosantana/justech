@@ -63,7 +63,7 @@ export default function Table2Page() {
     <div className="space-y-4">
       <MotorToolIntro
         title="Tabla 2 — confirmadores"
-        description="Catálogo de solo lectura. Los vecinos de Tabla 2 confirman a un compañero de Tabla 1; la fuerza la recibe el compañero, no el confirmador."
+        description="Tabla 2 identifica los números que pueden confirmar a un compañero de Tabla 1. Catálogo de solo lectura; la fuerza la recibe el compañero, no el confirmador."
       />
       {error ? <p className="text-sm text-destructive">{error}</p> : null}
       {loading ? <p className="text-sm text-muted-foreground">Cargando…</p> : null}

@@ -1,0 +1,24 @@
+{
+  "scope": "j9_four_lotteries_full_window",
+  "aparecio": 466,
+  "times": [
+    2612.8,
+    2073.3,
+    1874.4,
+    2236.3,
+    2001.8,
+    1689.2,
+    1740.0,
+    1740.1,
+    1666.2,
+    1593.3
+  ],
+  "avg_ms": 1922.7,
+  "median_ms": 1807.2,
+  "min_ms": 1593.3,
+  "max_ms": 2612.8,
+  "p95_ms": 2236.3,
+  "j9_baseline_avg": 1827.5,
+  "delta_pct": 5.2,
+  "pass_within_15pct": true
+}

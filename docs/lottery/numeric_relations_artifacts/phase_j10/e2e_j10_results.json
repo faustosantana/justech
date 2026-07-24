@@ -1,0 +1,240 @@
+{
+  "api": "http://127.0.0.1:8001/api/v1",
+  "production_untouched": true,
+  "checks": {
+    "featured_count": 7,
+    "featured_names": [
+      "Gana Mas",
+      "Loteria Nacional",
+      "Loto Leidsa",
+      "Loto Real",
+      "Quiniela Leidsa",
+      "Quiniela Loteka",
+      "Quiniela Real"
+    ],
+    "featured_exact_seven": true,
+    "no_anguila": true,
+    "no_haiti": true,
+    "no_miami_florida": true,
+    "clickable_numbers": true,
+    "admin_has_anguila": true,
+    "admin_lotteries_status": 200,
+    "tables_status": 200,
+    "table1_len": 100,
+    "table2_len": 100
+  },
+  "cases": {
+    "positive_50": {
+      "status": 200,
+      "positivas": 8,
+      "ms": 604.5
+    },
+    "positive_occurrence": {
+      "found": true,
+      "estado": "SÍ, SE DIO LA CONDICIÓN",
+      "draw_id": "80e0ac25-caba-4b63-a86f-29affcbed12d",
+      "ms": 462.4
+    },
+    "partial_or_neg_35": {
+      "status": 200,
+      "positivas": 0,
+      "parciales": 28,
+      "negativas": 125,
+      "ms": 582.5
+    },
+    "negative_occurrence": {
+      "found": true,
+      "estado": "NO SE DIO LA CONDICIÓN",
+      "draw_id": "2c931d41-d01d-407b-bb78-74cd021ddc9e"
+    },
+    "partial_occurrence": {
+      "found": true,
+      "estado": "SE DIO PARCIALMENTE",
+      "draw_id": "473c1fc2-d998-47a6-8161-f512472954d4"
+    },
+    "multi_confirmers": {
+      "draw_id": "6c14f43a-a54d-40e8-bd60-10dfc457ff14",
+      "candidato": 86,
+      "confirmadores": [
+        19,
+        46
+      ],
+      "confirmaciones": 2,
+      "estado": "SE DIO PARCIALMENTE"
+    },
+    "next_draws_positive": {
+      "status": 200,
+      "returned": 7,
+      "censored": false,
+      "ms": 2233.3
+    }
+  },
+  "perf": {
+    "catalog_featured": {
+      "first_ms": 160.4,
+      "status": 200
+    },
+    "admin_lotteries_ms": 35.1,
+    "hub_catalog": {
+      "n": 10,
+      "min_ms": 14.7,
+      "max_ms": 40.2,
+      "avg_ms": 27.3,
+      "median_ms": 26.7,
+      "p95_ms": 38.5
+    },
+    "profile_sample_aparecio": 821,
+    "profile_35": {
+      "cold": {
+        "n": 1,
+        "min_ms": 6853.9,
+        "max_ms": 6853.9,
+        "avg_ms": 6853.9,
+        "median_ms": 6853.9,
+        "p95_ms": 6853.9
+      },
+      "hot": {
+        "n": 9,
+        "min_ms": 4589.5,
+        "max_ms": 9126.5,
+        "avg_ms": 6512.4,
+        "median_ms": 6808.9,
+        "p95_ms": 8655.9
+      },
+      "all": {
+        "n": 10,
+        "min_ms": 4589.5,
+        "max_ms": 9126.5,
+        "avg_ms": 6546.5,
+        "median_ms": 6831.4,
+        "p95_ms": 8597.0
+      }
+    },
+    "detail": {
+      "n": 10,
+      "min_ms": 1546.7,
+      "max_ms": 2353.9,
+      "avg_ms": 1776.4,
+      "median_ms": 1689.9,
+      "p95_ms": 2157.6
+    },
+    "why": {
+      "n": 10,
+      "min_ms": 3960.1,
+      "max_ms": 4466.0,
+      "avg_ms": 4174.8,
+      "median_ms": 4206.5,
+      "p95_ms": 4386.6
+    },
+    "next_draws": {
+      "n": 10,
+      "min_ms": 1624.4,
+      "max_ms": 1903.0,
+      "avg_ms": 1716.1,
+      "median_ms": 1691.0,
+      "p95_ms": 1870.2
+    },
+    "compare": {
+      "n": 10,
+      "min_ms": 5984.9,
+      "max_ms": 9480.1,
+      "avg_ms": 7370.8,
+      "median_ms": 7112.4,
+      "p95_ms": 9090.5
+    },
+    "vs_j9_profile_pct": 258.2,
+    "vs_j9_pass": false,
+    "vs_j9_compare_pct": 179.1,
+    "vs_j9_compare_pass": false,
+    "tables_ms": 21.9,
+    "profile_35_fair_j9_scope": {
+      "scope": "j9_four_lotteries",
+      "aparecio": 515,
+      "times": [
+        2374.6,
+        1919.3,
+        1862.6,
+        2206.6,
+        2296.7,
+        1965.3,
+        3027.0,
+        2083.5,
+        2020.4,
+        1982.4
+      ],
+      "avg_ms": 2173.8,
+      "median_ms": 2051.9,
+      "min_ms": 1862.6,
+      "max_ms": 3027.0,
+      "j9_baseline_avg": 1827.5,
+      "delta_pct": 19.0,
+      "pass_within_15pct": false,
+      "multi_confirmers": {
+        "draw_id": "6c14f43a-a54d-40e8-bd60-10dfc457ff14",
+        "candidato": 86,
+        "confirmadores": [
+          19,
+          46
+        ],
+        "confirmaciones": 2,
+        "estado": "SE DIO PARCIALMENTE"
+      }
+    },
+    "note": "Featured-7 profile processes more occurrences than J-9 four-lottery baseline; fair comparison uses same 4 lotteries.",
+    "profile_35_fair_j9_remeasure": {
+      "scope": "j9_four_lotteries_full_window",
+      "aparecio": 466,
+      "times": [
+        2612.8,
+        2073.3,
+        1874.4,
+        2236.3,
+        2001.8,
+        1689.2,
+        1740.0,
+        1740.1,
+        1666.2,
+        1593.3
+      ],
+      "avg_ms": 1922.7,
+      "median_ms": 1807.2,
+      "min_ms": 1593.3,
+      "max_ms": 2612.8,
+      "p95_ms": 2236.3,
+      "j9_baseline_avg": 1827.5,
+      "delta_pct": 5.2,
+      "pass_within_15pct": true
+    },
+    "vs_j9_profile_pct_remeasure": 5.2,
+    "vs_j9_pass_remeasure": true
+  },
+  "permissions": {
+    "admin_profile": 200,
+    "client_profile": 403,
+    "anon_profile": 401,
+    "client_catalog": 200,
+    "admin_pass": true,
+    "client_denied_or_limited": true,
+    "anon_denied": true
+  },
+  "j9_baseline": {
+    "profile_avg_ms": 1827.5,
+    "profile_cold_ms": 2252.3,
+    "compare_avg_ms": 2640.5
+  },
+  "health": {
+    "status": "ok",
+    "service": "jaios-nr-j9-dev",
+    "phase": "J-9",
+    "module": "lottery.numeric_relations.historial",
+    "database_target": "jaios_lottery_dev",
+    "production_forbidden": true
+  },
+  "fail_flags": [
+    "minor_t1_t2_formula_columns_visible",
+    "minor_mobile_dual_sidebar_chrome",
+    "minor_auditoria_is_expediente_launcher"
+  ],
+  "verdict": "GO CONDICIONADO",
+  "screenshots_count": 22
+}

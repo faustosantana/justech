@@ -31,10 +31,12 @@ function NumberChip({
   return (
     <Link
       href={href}
-      className="inline-flex h-10 min-w-10 items-center justify-center rounded-md border border-primary/30 bg-primary/5 px-2 font-mono text-base font-semibold text-primary transition hover:bg-primary/15"
-      title={`Abrir expediente del ${value}`}
+      className="inline-flex flex-col items-center justify-center rounded-md border border-primary/30 bg-primary/5 px-2 py-1 text-primary transition hover:bg-primary/15"
+      title={`Analizar este número: ${value}`}
+      aria-label={`Analizar este número ${value}`}
     >
-      {value}
+      <span className="font-mono text-base font-semibold">{value}</span>
+      <span className="text-[10px] font-medium leading-tight">Analizar este número</span>
     </Link>
   );
 }
@@ -128,7 +130,7 @@ export default function ControlCenterHubPage() {
                       href={expedienteHref(nums[0] || "35", scopeIds)}
                       className="text-primary underline-offset-2 hover:underline"
                     >
-                      Ver expediente
+                      Analizar este número
                     </Link>
                     <span className="text-muted-foreground">·</span>
                     <Link
@@ -144,6 +146,10 @@ export default function ControlCenterHubPage() {
           })}
         </div>
       )}
+
+      <p className="rounded-md border border-amber-200/80 bg-amber-50 px-3 py-2 text-sm text-amber-950 dark:bg-amber-950/30 dark:text-amber-50">
+        Las señales muestran relaciones y respuestas históricas. No garantizan resultados futuros.
+      </p>
 
       <section className="space-y-2 border-t pt-4">
         <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">

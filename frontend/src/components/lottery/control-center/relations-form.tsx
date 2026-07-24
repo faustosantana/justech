@@ -154,7 +154,12 @@ export function RelationsAnalyzeForm({ catalog, mode = "relations", onResult }: 
             </CardHeader>
             <CardContent className="space-y-2 text-sm">
               <div>Número observado: {String(result.observed_number ?? "—")}</div>
-              <div>Código madre: {String(result.mother_code ?? "—")}</div>
+              <div>
+                Compañeros de Tabla 1:{" "}
+                {Array.isArray(result.direct_companions)
+                  ? (result.direct_companions as number[]).join(", ")
+                  : "—"}
+              </div>
               <div>
                 Loterías:{" "}
                 {Array.isArray(result.lottery_names)
@@ -162,22 +167,16 @@ export function RelationsAnalyzeForm({ catalog, mode = "relations", onResult }: 
                   : "—"}
               </div>
               <div>
-                Draw IDs analizados:{" "}
+                Sorteos analizados:{" "}
                 {String(result.occurrences_used ?? result.occurrences_found ?? "—")}
               </div>
-              <div>
-                Compañeros directos:{" "}
-                {Array.isArray(result.direct_companions)
-                  ? (result.direct_companions as number[]).join(", ")
-                  : "—"}
-              </div>
-              <div className="text-xs text-muted-foreground">
-                Metadata dedupe: {JSON.stringify(meta).slice(0, 240)}…
-              </div>
-              <div className="text-xs">
-                Posibles duplicados por contenido:{" "}
-                {String(meta.possible_content_duplicates ?? meta.dedupe_notes ?? "revisar metadata")}
-              </div>
+              <details className="text-xs text-muted-foreground">
+                <summary className="cursor-pointer">Ver evidencia técnica</summary>
+                <p className="mt-1">
+                  Código madre (técnico): {String(result.mother_code ?? "—")}
+                </p>
+                <p>Metadata dedupe: {JSON.stringify(meta).slice(0, 240)}…</p>
+              </details>
             </CardContent>
           </Card>
 
@@ -200,8 +199,8 @@ export function RelationsAnalyzeForm({ catalog, mode = "relations", onResult }: 
                     onClick={() => setExpandedRank((cur) => (cur === r.number ? null : r.number))}
                   >
                     <span>
-                      #{r.number} · score {r.score ?? 0} · T2 {r.table2_code} · vecinos{" "}
-                      {(r.matched_neighbors || r.neighbors || []).join(", ") || "—"}
+                      Compañero #{r.number} fortalecido · fuerza {r.score ?? 0} · confirmadores{" "}
+                      {(r.matched_neighbors || r.neighbors || []).join(", ") || "ninguno"}
                     </span>
                     <span className="text-xs text-muted-foreground">
                       {expandedRank === r.number ? "▲" : "▼"} traza

@@ -77,13 +77,15 @@ export default function HistorialNumeroPage() {
     .map((s) => s.trim())
     .filter(Boolean);
   const bootDrawId = searchParams.get("draw_id") || "";
+  const bootDateFrom = searchParams.get("date_from") || "2015-01-01";
+  const bootDateTo = searchParams.get("date_to") || "";
 
   const [catalog, setCatalog] = useState<LotOption[]>([]);
   const [featuredIds, setFeaturedIds] = useState<string[]>([]);
   const [number, setNumber] = useState(bootNumber);
   const [numberB, setNumberB] = useState("40");
-  const [dateFrom, setDateFrom] = useState("2015-01-01");
-  const [dateTo, setDateTo] = useState("");
+  const [dateFrom, setDateFrom] = useState(bootDateFrom);
+  const [dateTo, setDateTo] = useState(bootDateTo);
   const [appearedIn, setAppearedIn] = useState<string[]>([]);
   const [confirmIn, setConfirmIn] = useState<string[]>([]);
   const [followIn, setFollowIn] = useState<string[]>([]);

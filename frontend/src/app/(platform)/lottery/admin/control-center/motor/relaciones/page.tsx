@@ -28,7 +28,7 @@ export default function RelacionesPage() {
     <div className="space-y-4">
       <MotorToolIntro
         title="Relaciones numéricas"
-        description="Ejecute el análisis histórico v1 para un número. Expandir el ranking muestra la traza por sorteo (draw_id)."
+        description="Número observado → Compañero (Tabla 1) → Confirmador (Tabla 2). La fuerza pertenece al compañero; el modelo técnico N→C→V queda en evidencia avanzada."
       />
       {error ? <p className="text-sm text-destructive">{error}</p> : null}
       <RelationsAnalyzeForm catalog={catalog} mode="relations" />

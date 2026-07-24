@@ -1,0 +1,24 @@
+{
+  "verdict": "GO CONDICIONADO",
+  "fail": [
+    "perf_profile_degraded"
+  ],
+  "featured": [
+    "Gana Mas",
+    "Loteria Nacional",
+    "Loto Leidsa",
+    "Loto Real",
+    "Quiniela Leidsa",
+    "Quiniela Loteka",
+    "Quiniela Real"
+  ],
+  "perf_vs_j9": 258.2,
+  "profile_avg": {
+    "n": 10,
+    "min_ms": 4589.5,
+    "max_ms": 9126.5,
+    "avg_ms": 6546.5,
+    "median_ms": 6831.4,
+    "p95_ms": 8597.0
+  }
+}

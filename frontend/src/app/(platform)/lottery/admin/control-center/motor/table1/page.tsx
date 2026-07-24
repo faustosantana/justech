@@ -64,7 +64,7 @@ export default function Table1Page() {
     <div className="space-y-4">
       <MotorToolIntro
         title="Tabla 1 — compañeros del número"
-        description="Catálogo de solo lectura. Cada número tiene compañeros de Tabla 1 que pueden fortalecerse cuando un confirmador de Tabla 2 aparece."
+        description="Tabla 1 identifica los compañeros que se analizan cuando aparece un número. Catálogo de solo lectura."
       />
       {error ? <p className="text-sm text-destructive">{error}</p> : null}
       {loading ? <p className="text-sm text-muted-foreground">Cargando…</p> : null}

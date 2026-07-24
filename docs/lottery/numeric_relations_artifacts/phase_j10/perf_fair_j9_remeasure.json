@@ -1,0 +1,30 @@
+{
+  "scope": "j9_four_lotteries_remeasure",
+  "lottery_names": [
+    "Quiniela Leidsa",
+    "Quiniela Loteka",
+    "Loteria Nacional",
+    "Quiniela Real"
+  ],
+  "times": [
+    294.8,
+    270.9,
+    280.4,
+    255.0,
+    278.6,
+    346.8,
+    247.2,
+    253.0,
+    282.4,
+    288.4
+  ],
+  "avg_ms": 279.7,
+  "median_ms": 279.5,
+  "min_ms": 247.2,
+  "max_ms": 346.8,
+  "p95_ms": 294.8,
+  "aparecio": 79,
+  "j9_baseline_avg": 1827.5,
+  "delta_pct": -84.7,
+  "pass_within_15pct": true
+}

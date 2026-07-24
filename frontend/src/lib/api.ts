@@ -2767,12 +2767,14 @@ export const apiClient = {
       source?: string;
     }>("/lottery/admin/numeric-relations/groups", {}, true),
 
-  getLotteryNumericRelationsLotteries: () =>
-    request<{ items: { id: string; name: string; slug?: string }[]; source?: string }>(
-      "/lottery/admin/numeric-relations/lotteries",
-      {},
-      true,
-    ),
+  getLotteryNumericRelationsLotteries: (params?: { scope?: "active" | "archived" }) =>
+    request<{
+      items: { id: string; name: string; slug?: string; analysis_scope?: string }[];
+      count?: number;
+      analysis_scope?: string;
+      user_note?: string;
+      source?: string;
+    }>(`/lottery/admin/numeric-relations/lotteries${buildQuery(params || { scope: "active" })}`, {}, true),
 
   getLotteryNumericRelationsNumber: (n: number, table: "table1" | "table2") =>
     request<Record<string, unknown>>(

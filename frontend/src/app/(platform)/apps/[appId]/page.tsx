@@ -22,7 +22,7 @@ export default function AppModuleDashboardPage() {
 
   if (!mod) notFound();
   if (appId === "lottery") {
-    return <LoadingState message="Abriendo Resultados de Loterías…" />;
+    return <LoadingState message="Abriendo Lottery IA Control Center…" />;
   }
 
   return <ModuleDashboardPage appId={appId} />;

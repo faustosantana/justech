@@ -59,7 +59,7 @@ function AppShellInner({
     apiClient.getPlatformAccess().then(setAccess).catch(() => setAccess(null));
   }, [router]);
 
-  // ≤768: start collapsed so Control Center Metodología is not a second full sidebar.
+  // ≤768: start collapsed so the AppShell drawer is the only navigation surface.
   useEffect(() => {
     if (typeof window === "undefined" || !window.matchMedia) return;
     const mq = window.matchMedia("(max-width: 768px)");

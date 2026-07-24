@@ -1,4 +1,4 @@
-/** Tipos y helpers del módulo Resultados de Loterías. */
+/** Tipos y helpers del módulo Lottery IA Control Center. */
 
 export interface LotteryHealth {
   module_enabled: boolean;

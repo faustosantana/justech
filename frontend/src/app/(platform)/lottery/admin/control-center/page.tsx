@@ -1,47 +1,181 @@
+"use client";
+
 import Link from "next/link";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ApiError, apiClient } from "@/lib/api";
+import type { LotteryCatalogCard } from "@/lib/lottery";
 
-const CARDS = [
-  {
-    title: "Motor Matemático",
-    href: "/lottery/admin/control-center/motor/table1",
-    body: "Ver fórmulas, Tabla 1/2, agrupaciones, relaciones y trazabilidad. Solo lectura del motor v1.0.0.",
-  },
-  {
-    title: "Predicciones",
-    href: "/lottery/admin/control-center/predicciones",
-    body: "Activar/desactivar motores implementados. Predicción real = presentación del ranking histórico NR.",
-  },
-  {
-    title: "Prompt Studio",
-    href: "/lottery/admin/control-center/prompt-studio",
-    body: "Bloques con ayuda, prompt compilado, borradores, versiones humanas, playground y benchmark.",
-  },
-];
+function expedienteHref(number: string | number, lotteryIds: string[]) {
+  const n = String(number).replace(/\D/g, "");
+  if (!n) return "/lottery/admin/control-center/motor/historial-numero";
+  const params = new URLSearchParams({
+    number: n,
+    auto: "1",
+    featured: "1",
+  });
+  if (lotteryIds.length) params.set("lottery_ids", lotteryIds.join(","));
+  return `/lottery/admin/control-center/motor/historial-numero?${params.toString()}`;
+}
+
+function NumberChip({
+  value,
+  lotteryIds,
+}: {
+  value: string;
+  lotteryIds: string[];
+}) {
+  const href = expedienteHref(value, lotteryIds);
+  return (
+    <Link
+      href={href}
+      className="inline-flex h-10 min-w-10 items-center justify-center rounded-md border border-primary/30 bg-primary/5 px-2 font-mono text-base font-semibold text-primary transition hover:bg-primary/15"
+      title={`Abrir expediente del ${value}`}
+    >
+      {value}
+    </Link>
+  );
+}
 
 export default function ControlCenterHubPage() {
+  const [cards, setCards] = useState<LotteryCatalogCard[]>([]);
+  const [error, setError] = useState<string | null>(null);
+  const [busy, setBusy] = useState(true);
+
+  const load = useCallback(async () => {
+    setBusy(true);
+    setError(null);
+    try {
+      const res = await apiClient.getLotteryCatalog({
+        featured_only: true,
+        page: 1,
+        page_size: 12,
+      });
+      setCards(res.items || []);
+    } catch (err) {
+      setError(err instanceof ApiError ? err.message : "No se pudieron cargar las destacadas");
+      setCards([]);
+    } finally {
+      setBusy(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    void load();
+  }, [load]);
+
+  const allFeaturedIds = useMemo(() => cards.map((c) => c.id), [cards]);
+
   return (
-    <div className="space-y-4">
-      <div>
-        <h1 className="text-2xl font-semibold tracking-tight">Lottery IA Control Center</h1>
-        <p className="text-sm text-muted-foreground">
-          Plataforma administrativa: conocimiento, reglas y motores auditables. No modifica sync ni
-          Producción.
+    <div className="space-y-6">
+      <div className="space-y-1">
+        <h1 className="text-2xl font-semibold tracking-tight">Inteligencia numérica</h1>
+        <p className="max-w-2xl text-sm text-muted-foreground">
+          Resultados recientes de las siete loterías destacadas. Pulse cualquier número para abrir
+          su expediente: condición, candidato fortalecido, confirmadores y qué ocurrió después.
         </p>
       </div>
-      <div className="grid gap-3 md:grid-cols-3">
-        {CARDS.map((c) => (
-          <Link key={c.href} href={c.href}>
-            <Card className="h-full transition hover:border-primary/50">
-              <CardHeader>
-                <CardTitle className="text-base">{c.title}</CardTitle>
-              </CardHeader>
-              <CardContent className="text-sm text-muted-foreground">{c.body}</CardContent>
-            </Card>
+
+      {error ? (
+        <div className="rounded-md border border-destructive/40 bg-destructive/5 px-3 py-2 text-sm text-destructive">
+          {error}
+        </div>
+      ) : null}
+
+      {busy ? (
+        <p className="text-sm text-muted-foreground">Cargando destacadas…</p>
+      ) : cards.length === 0 ? (
+        <Card>
+          <CardContent className="space-y-3 pt-6 text-sm text-muted-foreground">
+            <p>
+              No hay loterías marcadas como destacadas. En DEV ejecute el seed canónico de siete
+              loterías y vuelva a cargar.
+            </p>
+            <Button type="button" variant="outline" onClick={() => void load()}>
+              Reintentar
+            </Button>
+          </CardContent>
+        </Card>
+      ) : (
+        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+          {cards.map((card) => {
+            const nums = (card.last_numbers || []).map(String);
+            const scopeIds = [card.id];
+            return (
+              <Card key={card.id} className="overflow-hidden">
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-base">{card.commercial_name || card.name}</CardTitle>
+                  <p className="text-xs text-muted-foreground">
+                    {card.last_draw_date
+                      ? `Último sorteo: ${card.last_draw_date}`
+                      : "Sin fecha de último sorteo"}
+                  </p>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  {nums.length === 0 ? (
+                    <p className="text-sm text-muted-foreground">Sin números recientes.</p>
+                  ) : (
+                    <div className="flex flex-wrap gap-2">
+                      {nums.map((n) => (
+                        <NumberChip key={`${card.id}-${n}`} value={n} lotteryIds={scopeIds} />
+                      ))}
+                    </div>
+                  )}
+                  <div className="flex flex-wrap gap-2 text-xs">
+                    <Link
+                      href={expedienteHref(nums[0] || "35", scopeIds)}
+                      className="text-primary underline-offset-2 hover:underline"
+                    >
+                      Ver expediente
+                    </Link>
+                    <span className="text-muted-foreground">·</span>
+                    <Link
+                      href={expedienteHref(nums[0] || "35", allFeaturedIds)}
+                      className="text-muted-foreground underline-offset-2 hover:underline"
+                    >
+                      Analizar en las 7 destacadas
+                    </Link>
+                  </div>
+                </CardContent>
+              </Card>
+            );
+          })}
+        </div>
+      )}
+
+      <section className="space-y-2 border-t pt-4">
+        <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+          Herramientas del motor
+        </h2>
+        <p className="text-sm text-muted-foreground">
+          Disponibles después del análisis principal. No alteran fórmulas ni el histórico.
+        </p>
+        <div className="flex flex-wrap gap-2 text-sm">
+          <Link className="rounded-md border px-3 py-1.5 hover:bg-muted" href="/lottery/admin/control-center/motor/historial-numero">
+            Historial del Número
           </Link>
-        ))}
-      </div>
+          <Link className="rounded-md border px-3 py-1.5 hover:bg-muted" href="/lottery/admin/control-center/motor/table1">
+            Tabla 1
+          </Link>
+          <Link className="rounded-md border px-3 py-1.5 hover:bg-muted" href="/lottery/admin/control-center/motor/table2">
+            Tabla 2
+          </Link>
+          <Link className="rounded-md border px-3 py-1.5 hover:bg-muted" href="/lottery/admin/control-center/motor/groups-table1">
+            Agrupaciones T1
+          </Link>
+          <Link className="rounded-md border px-3 py-1.5 hover:bg-muted" href="/lottery/admin/control-center/motor/groups-table2">
+            Agrupaciones T2
+          </Link>
+          <Link className="rounded-md border px-3 py-1.5 hover:bg-muted" href="/lottery/admin/control-center/motor/relaciones">
+            Relaciones
+          </Link>
+          <Link className="rounded-md border px-3 py-1.5 hover:bg-muted" href="/lottery/admin/control-center/motor/auditoria">
+            Auditoría
+          </Link>
+        </div>
+      </section>
     </div>
   );
 }

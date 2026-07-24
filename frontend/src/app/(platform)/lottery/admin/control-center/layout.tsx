@@ -8,38 +8,35 @@ import { AppShell } from "@/components/layout/app-shell";
 import { getAccessToken, getUserRole } from "@/lib/auth";
 import { canAccessLotteryAdmin, isLotteryClientRole } from "@/lib/lottery";
 
+/** Nav J-10: análisis primero; tablas y auditoría después; Prompt Studio colapsado al final. */
 const NAV = [
   {
-    label: "Motor Matemático",
+    label: "Análisis",
+    items: [
+      { href: "/lottery/admin/control-center", label: "Inteligencia (7 destacadas)", exact: true },
+      { href: "/lottery/admin/control-center/motor/historial-numero", label: "Historial del Número" },
+      { href: "/lottery/admin/control-center/motor/comparador", label: "Comparador" },
+    ],
+  },
+  {
+    label: "Motor (consulta)",
     items: [
       { href: "/lottery/admin/control-center/motor/table1", label: "Tabla 1" },
       { href: "/lottery/admin/control-center/motor/table2", label: "Tabla 2" },
       { href: "/lottery/admin/control-center/motor/groups-table1", label: "Agrupaciones T1" },
       { href: "/lottery/admin/control-center/motor/groups-table2", label: "Agrupaciones T2" },
       { href: "/lottery/admin/control-center/motor/relaciones", label: "Relaciones" },
-      { href: "/lottery/admin/control-center/motor/historico", label: "Histórico" },
-      { href: "/lottery/admin/control-center/motor/historial-numero", label: "Historial del Número" },
-      { href: "/lottery/admin/control-center/motor/combinaciones", label: "Matriz" },
-      { href: "/lottery/admin/control-center/motor/patron", label: "Patrón" },
-      { href: "/lottery/admin/control-center/motor/comparador", label: "Comparador" },
       { href: "/lottery/admin/control-center/motor/auditoria", label: "Auditoría" },
     ],
   },
   {
-    label: "Predicciones",
+    label: "Avanzado",
     items: [
-      { href: "/lottery/admin/control-center/predicciones", label: "Motores" },
-      { href: "/lottery/admin/control-center/predicciones/run", label: "Ejecutar" },
-    ],
-  },
-  {
-    label: "Prompt Studio",
-    items: [
-      { href: "/lottery/admin/control-center/prompt-studio", label: "Bloques" },
-      { href: "/lottery/admin/control-center/prompt-studio/compilado", label: "Prompt compilado" },
-      { href: "/lottery/admin/control-center/prompt-studio/versiones", label: "Versiones" },
-      { href: "/lottery/admin/control-center/prompt-studio/playground", label: "Playground" },
-      { href: "/lottery/admin/control-center/prompt-studio/benchmark", label: "Benchmark" },
+      { href: "/lottery/admin/control-center/motor/historico", label: "Histórico (consulta)" },
+      { href: "/lottery/admin/control-center/motor/combinaciones", label: "Matriz" },
+      { href: "/lottery/admin/control-center/motor/patron", label: "Patrón" },
+      { href: "/lottery/admin/control-center/predicciones", label: "Predicciones" },
+      { href: "/lottery/admin/control-center/prompt-studio", label: "Prompt Studio" },
     ],
   },
 ];
@@ -77,7 +74,7 @@ export default function ControlCenterLayout({ children }: { children: React.Reac
       <div className="mx-auto flex max-w-7xl flex-col gap-4 p-4 md:flex-row md:p-6">
         <aside className="w-full shrink-0 md:w-56">
           <Link href="/lottery/admin/control-center" className="mb-3 block text-lg font-semibold">
-            Lottery IA · Control Center
+            Lottery IA · Inteligencia
           </Link>
           <nav className="space-y-4 text-sm">
             {NAV.map((g) => (
@@ -87,7 +84,10 @@ export default function ControlCenterLayout({ children }: { children: React.Reac
                 </div>
                 <ul className="space-y-1">
                   {g.items.map((item) => {
-                    const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
+                    const exact = "exact" in item && item.exact;
+                    const active = exact
+                      ? pathname === item.href
+                      : pathname === item.href || pathname.startsWith(`${item.href}/`);
                     return (
                       <li key={item.href}>
                         <Link

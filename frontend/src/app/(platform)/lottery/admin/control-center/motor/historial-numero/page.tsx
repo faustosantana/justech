@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useSearchParams } from "next/navigation";
 
 import type { LotOption } from "@/components/lottery/control-center/motor-types";
 import { Button } from "@/components/ui/button";
@@ -67,8 +68,19 @@ function FieldHelp({ children }: { children: React.ReactNode }) {
 }
 
 export default function HistorialNumeroPage() {
+  const searchParams = useSearchParams();
+  const bootNumber = searchParams.get("number") || "35";
+  const bootAuto = searchParams.get("auto") === "1";
+  const bootFeatured = searchParams.get("featured") === "1";
+  const bootLotteryIds = (searchParams.get("lottery_ids") || "")
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean);
+  const bootDrawId = searchParams.get("draw_id") || "";
+
   const [catalog, setCatalog] = useState<LotOption[]>([]);
-  const [number, setNumber] = useState("35");
+  const [featuredIds, setFeaturedIds] = useState<string[]>([]);
+  const [number, setNumber] = useState(bootNumber);
   const [numberB, setNumberB] = useState("40");
   const [dateFrom, setDateFrom] = useState("2015-01-01");
   const [dateTo, setDateTo] = useState("");
@@ -91,23 +103,37 @@ export default function HistorialNumeroPage() {
   const [page, setPage] = useState(1);
   const [playerStep, setPlayerStep] = useState(0);
   const [playing, setPlaying] = useState(false);
+  const [catalogReady, setCatalogReady] = useState(false);
+  const autoStarted = useRef(false);
   const abortRef = useRef<AbortController | null>(null);
   const playTimer = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
-    void apiClient
-      .getLotteryNumericRelationsLotteries()
-      .then((lots) => {
+    void (async () => {
+      try {
+        const [lots, featuredCat] = await Promise.all([
+          apiClient.getLotteryNumericRelationsLotteries(),
+          apiClient.getLotteryCatalog({ featured_only: true, page: 1, page_size: 12 }).catch(() => null),
+        ]);
         const items = (lots.items || []).filter((c) => c?.id);
         setCatalog(items);
-        if (items.length && appearedIn.length === 0) {
-          const all = items.map((c) => c.id);
-          setAppearedIn(all);
-          setConfirmIn(all);
-          setFollowIn(all);
-        }
-      })
-      .catch((err) => setError(err instanceof ApiError ? err.message : "Error loterías"));
+        const feat = (featuredCat?.items || []).map((c) => c.id).filter(Boolean);
+        setFeaturedIds(feat);
+        const preferred =
+          bootLotteryIds.length > 0
+            ? bootLotteryIds
+            : bootFeatured && feat.length
+              ? feat
+              : items.map((c) => c.id);
+        setAppearedIn(preferred);
+        setConfirmIn(preferred);
+        setFollowIn(preferred);
+        setCatalogReady(true);
+      } catch (err) {
+        setError(err instanceof ApiError ? err.message : "Error loterías");
+        setCatalogReady(true);
+      }
+    })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -202,6 +228,16 @@ export default function HistorialNumeroPage() {
     },
     [baseBody, horizon, scopeBody.follow_up_lottery_ids],
   );
+
+  useEffect(() => {
+    if (!catalogReady || !bootAuto || autoStarted.current) return;
+    if (!appearedIn.length) return;
+    autoStarted.current = true;
+    void (async () => {
+      await analyze();
+      if (bootDrawId) await openCase(bootDrawId);
+    })();
+  }, [catalogReady, bootAuto, appearedIn.length, analyze, openCase, bootDrawId]);
 
   const askWhy = useCallback(
     async (candidate: number) => {
@@ -406,6 +442,18 @@ export default function HistorialNumeroPage() {
               }}
             >
               Usar todo el histórico
+            </Button>
+            <Button
+              variant="outline"
+              className="min-h-11"
+              disabled={!featuredIds.length}
+              onClick={() => {
+                setAppearedIn(featuredIds);
+                setConfirmIn(featuredIds);
+                setFollowIn(featuredIds);
+              }}
+            >
+              Solo las 7 destacadas
             </Button>
             <Button variant="ghost" className="min-h-11" onClick={() => setShowMethod((v) => !v)}>
               Ver metodología

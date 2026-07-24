@@ -2806,6 +2806,54 @@ export const apiClient = {
       body: JSON.stringify(body),
     }, true),
 
+  postLotteryNrHistoryConditions: (body: Record<string, unknown>) =>
+    request<Record<string, unknown>>("/lottery/admin/numeric-relations/history/conditions/search", {
+      method: "POST",
+      body: JSON.stringify(body),
+    }, true),
+
+  postLotteryNrHistoryPosterior: (body: Record<string, unknown>) =>
+    request<Record<string, unknown>>("/lottery/admin/numeric-relations/history/posterior/summary", {
+      method: "POST",
+      body: JSON.stringify(body),
+    }, true),
+
+  postLotteryNrHistoryCombinations: (body: Record<string, unknown>) =>
+    request<Record<string, unknown>>("/lottery/admin/numeric-relations/history/combinations", {
+      method: "POST",
+      body: JSON.stringify(body),
+    }, true),
+
+  postLotteryNrHistoryMatrix: (body: Record<string, unknown>) =>
+    request<Record<string, unknown>>("/lottery/admin/numeric-relations/history/matrix", {
+      method: "POST",
+      body: JSON.stringify(body),
+    }, true),
+
+  postLotteryNrHistoryPatternDetail: (body: Record<string, unknown>) =>
+    request<Record<string, unknown>>("/lottery/admin/numeric-relations/history/patterns/detail", {
+      method: "POST",
+      body: JSON.stringify(body),
+    }, true),
+
+  postLotteryNrHistoryCycles: (body: Record<string, unknown>) =>
+    request<Record<string, unknown>>("/lottery/admin/numeric-relations/history/cycles", {
+      method: "POST",
+      body: JSON.stringify(body),
+    }, true),
+
+  postLotteryNrHistoryCompare: (body: Record<string, unknown>) =>
+    request<Record<string, unknown>>("/lottery/admin/numeric-relations/history/compare", {
+      method: "POST",
+      body: JSON.stringify(body),
+    }, true),
+
+  postLotteryNrHistoryEvidenceByDraw: (body: Record<string, unknown>) =>
+    request<Record<string, unknown>>("/lottery/admin/numeric-relations/history/evidence/by-draw", {
+      method: "POST",
+      body: JSON.stringify(body),
+    }, true),
+
   getLotteryPredictionMotors: () =>
     request<{ items: Record<string, unknown>[] }>("/lottery/admin/predictions/motors", {}, true),
 

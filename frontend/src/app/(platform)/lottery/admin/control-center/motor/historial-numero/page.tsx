@@ -98,7 +98,8 @@ export default function HistorialNumeroPage() {
   const [why, setWhy] = useState<Record<string, unknown> | null>(null);
   const [compare, setCompare] = useState<Record<string, unknown> | null>(null);
   const [showTech, setShowTech] = useState(false);
-  const [showMethod, setShowMethod] = useState(true);
+  const [showMethod, setShowMethod] = useState(!bootAuto);
+  const [showFilters, setShowFilters] = useState(!bootAuto);
   const [condFilter, setCondFilter] = useState("all");
   const [page, setPage] = useState(1);
   const [playerStep, setPlayerStep] = useState(0);
@@ -235,9 +236,27 @@ export default function HistorialNumeroPage() {
     autoStarted.current = true;
     void (async () => {
       await analyze();
-      if (bootDrawId) await openCase(bootDrawId);
+      if (bootDrawId) {
+        await openCase(bootDrawId);
+        return;
+      }
+      // Abrir de inmediato la aparición más reciente del alcance (expediente-first).
+      try {
+        const body = {
+          ...baseBody(),
+          page: 1,
+          page_size: 1,
+          condition: "all",
+          order: "desc",
+        };
+        const res = await apiClient.postLotteryNrNumberOccurrences(body);
+        const first = ((res.items || []) as Record<string, unknown>[])[0];
+        if (first?.draw_id) await openCase(String(first.draw_id));
+      } catch {
+        /* perfil ya cargado; caso opcional */
+      }
     })();
-  }, [catalogReady, bootAuto, appearedIn.length, analyze, openCase, bootDrawId]);
+  }, [catalogReady, bootAuto, appearedIn.length, analyze, openCase, bootDrawId, baseBody]);
 
   const askWhy = useCallback(
     async (candidate: number) => {
@@ -322,7 +341,9 @@ export default function HistorialNumeroPage() {
     <div>
       <div className="mb-1 font-medium">{label}</div>
       <div className="flex flex-wrap gap-2">
-        {catalog.map((lot) => (
+        {catalog
+          .filter((lot) => !featuredIds.length || appearedIn.length === 0 || featuredIds.includes(lot.id) || value.includes(lot.id) || !bootFeatured)
+          .map((lot) => (
           <label key={lot.id} className="flex items-center gap-1 rounded border px-2 py-1 text-sm">
             <input
               type="checkbox"
@@ -339,14 +360,20 @@ export default function HistorialNumeroPage() {
 
   return (
     <div className="space-y-6">
-      <header className="space-y-1">
-        <h1 className="text-2xl font-semibold tracking-tight">HISTORIAL DEL NÚMERO</h1>
-        <p className="max-w-3xl text-sm text-muted-foreground">
-          Conozca todas las veces que salió un número, cómo actuaron sus relaciones matemáticas y qué
-          sucedió después.
-        </p>
+      <header className="flex flex-wrap items-start justify-between gap-2">
+        <div className="space-y-1">
+          <h1 className="text-2xl font-semibold tracking-tight">HISTORIAL DEL NÚMERO</h1>
+          <p className="max-w-3xl text-sm text-muted-foreground">
+            Conozca todas las veces que salió un número, cómo actuaron sus relaciones matemáticas y qué
+            sucedió después.
+          </p>
+        </div>
+        <Button variant="outline" className="min-h-11" onClick={() => setShowFilters((v) => !v)}>
+          {showFilters ? "Ocultar filtros" : "Cambiar búsqueda"}
+        </Button>
       </header>
 
+      {showFilters ? (
       <Card>
         <CardHeader>
           <CardTitle className="text-base">Buscar número</CardTitle>
@@ -462,6 +489,16 @@ export default function HistorialNumeroPage() {
           {error ? <p className="text-sm text-destructive">{error}</p> : null}
         </CardContent>
       </Card>
+      ) : (
+        <div className="rounded-md border bg-muted/30 px-3 py-2 text-sm">
+          Investigando el <strong>{number}</strong>
+          {busy ? "…" : profile ? " — expediente listo." : "."}{" "}
+          <button type="button" className="text-primary underline" onClick={() => setShowFilters(true)}>
+            Ajustar búsqueda
+          </button>
+          {error ? <span className="ml-2 text-destructive">{error}</span> : null}
+        </div>
+      )}
 
       {showMethod ? (
         <Card>
@@ -546,6 +583,46 @@ export default function HistorialNumeroPage() {
 
           <Card>
             <CardHeader>
+              <CardTitle className="text-base">Señales observadas</CardTitle>
+            </CardHeader>
+            <CardContent className="grid gap-3 text-sm md:grid-cols-2">
+              <div>
+                <div className="text-xs uppercase text-muted-foreground">Candidatos más fortalecidos</div>
+                <ul className="mt-1 space-y-1">
+                  {(((charts.candidatos_fortalecidos || []) as Record<string, unknown>[]).slice(0, 5).length
+                    ? ((charts.candidatos_fortalecidos || []) as Record<string, unknown>[]).slice(0, 5)
+                    : []
+                  ).map((r) => (
+                    <li key={String(r.candidato)}>
+                      Nº {String(r.candidato)} · {String(r.veces)} veces
+                    </li>
+                  ))}
+                  {!((charts.candidatos_fortalecidos || []) as unknown[]).length ? (
+                    <li className="text-muted-foreground">Sin fortalezas en este período.</li>
+                  ) : null}
+                </ul>
+              </div>
+              <div>
+                <div className="text-xs uppercase text-muted-foreground">Confirmadores más frecuentes</div>
+                <ul className="mt-1 space-y-1">
+                  {(((charts.confirmadores || []) as Record<string, unknown>[]).slice(0, 5).length
+                    ? ((charts.confirmadores || []) as Record<string, unknown>[]).slice(0, 5)
+                    : []
+                  ).map((r) => (
+                    <li key={String(r.confirmador)}>
+                      Nº {String(r.confirmador)} · {String(r.veces)} veces
+                    </li>
+                  ))}
+                  {!((charts.confirmadores || []) as unknown[]).length ? (
+                    <li className="text-muted-foreground">Sin confirmadores en este período.</li>
+                  ) : null}
+                </ul>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
               <CardTitle className="text-base">Resumen automático</CardTitle>
             </CardHeader>
             <CardContent className="whitespace-pre-line text-sm leading-relaxed">
@@ -553,156 +630,11 @@ export default function HistorialNumeroPage() {
             </CardContent>
           </Card>
 
-          <div className="grid gap-4 lg:grid-cols-2">
-            <SimpleBars
-              title="¿Cuántas veces salió el número?"
-              description={`El número ${number} apareció ${String(header.aparecio)} veces en el período analizado.`}
-              items={((charts.apariciones_por_anio || []) as Record<string, unknown>[]).map((r) => ({
-                label: String(r.anio),
-                value: Number(r.cantidad || 0),
-              }))}
-            />
-            <SimpleBars
-              title="¿En cuáles loterías salió más?"
-              items={((charts.apariciones_por_loteria || []) as Record<string, unknown>[]).map((r) => ({
-                label: String(r.loteria),
-                value: Number(r.cantidad || 0),
-                hint: `${r.porcentaje}%`,
-              }))}
-            />
-            <SimpleBars
-              title="¿Cuántas veces se dio la condición?"
-              items={((charts.condicion || []) as Record<string, unknown>[]).map((r) => ({
-                label: String(r.etiqueta),
-                value: Number(r.cantidad || 0),
-              }))}
-            />
-            <SimpleBars
-              title="¿Cuáles compañeros fueron fortalecidos más veces?"
-              items={((charts.candidatos_fortalecidos || []) as Record<string, unknown>[]).map((r) => ({
-                label: `Nº ${r.candidato}`,
-                value: Number(r.veces || 0),
-              }))}
-            />
-            <SimpleBars
-              title="¿Cuáles números confirmaron más?"
-              items={((charts.confirmadores || []) as Record<string, unknown>[]).map((r) => ({
-                label: `Nº ${r.confirmador}`,
-                value: Number(r.veces || 0),
-              }))}
-            />
-            <SimpleBars
-              title="¿Cuánto tardó en aparecer el número fortalecido?"
-              items={[
-                ...(((charts.respuesta_en_siete_sorteos as Record<string, unknown>)?.por_posicion ||
-                  []) as Record<string, unknown>[]).map((r) => ({
-                  label: `Sorteo ${r.sorteo}`,
-                  value: Number(r.cantidad || 0),
-                })),
-                {
-                  label: "No en 7",
-                  value: Number(
-                    (charts.respuesta_en_siete_sorteos as Record<string, unknown>)?.no_aparecio_en_7 || 0,
-                  ),
-                },
-                {
-                  label: "Sin seguimiento",
-                  value: Number(
-                    (charts.respuesta_en_siete_sorteos as Record<string, unknown>)
-                      ?.sin_seguimiento_suficiente || 0,
-                  ),
-                },
-              ]}
-            />
-            <SimpleBars
-              title="Comportamiento por mes"
-              items={((charts.por_mes || []) as Record<string, unknown>[]).map((r) => ({
-                label: String(r.mes),
-                value: Number(r.cantidad || 0),
-              }))}
-            />
-            <SimpleBars
-              title="Comportamiento por día de la semana"
-              items={((charts.por_dia_semana || []) as Record<string, unknown>[]).map((r) => ({
-                label: String(r.dia),
-                value: Number(r.cantidad || 0),
-              }))}
-            />
-          </div>
-
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-base">TODAS LAS APARICIONES</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              <div className="flex flex-wrap gap-2">
-                {[
-                  ["all", "Todas"],
-                  ["positive", "Condición positiva"],
-                  ["partial", "Parcial"],
-                  ["negative", "Negativa"],
-                ].map(([k, lab]) => (
-                  <Button
-                    key={k}
-                    size="sm"
-                    variant={condFilter === k ? "default" : "outline"}
-                    onClick={() => {
-                      setCondFilter(k);
-                      void loadOccurrences(1, k);
-                    }}
-                  >
-                    {lab}
-                  </Button>
-                ))}
-              </div>
-              <p className="text-sm text-muted-foreground">
-                Total filtrado: {String(occurrences?.total ?? "—")}
-              </p>
-              <ul className="space-y-3">
-                {occItems.map((item) => (
-                  <li key={String(item.draw_id)} className="rounded-lg border p-3 text-sm">
-                    <div className="font-medium">
-                      {String(item.fecha_texto)} — {String(item.loteria)}
-                    </div>
-                    <p className="mt-1 text-muted-foreground">{String(item.texto)}</p>
-                    <div className="mt-2 font-semibold">{String(item.estado)}</div>
-                    <div className="mt-2 flex flex-wrap gap-2">
-                      <Button size="sm" onClick={() => void openCase(String(item.draw_id))}>
-                        Ver caso
-                      </Button>
-                      <Button size="sm" variant="outline" onClick={() => void openCase(String(item.draw_id))}>
-                        Ver siete sorteos posteriores
-                      </Button>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-              <div className="flex gap-2">
-                <Button
-                  variant="outline"
-                  disabled={page <= 1}
-                  onClick={() => void loadOccurrences(page - 1, condFilter)}
-                >
-                  Anterior
-                </Button>
-                <Button
-                  variant="outline"
-                  disabled={page * 10 >= Number(occurrences?.total || 0)}
-                  onClick={() => void loadOccurrences(page + 1, condFilter)}
-                >
-                  Siguiente
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </>
-      ) : null}
-
       {detail ? (
         <section className="space-y-4" aria-label="Expediente de aparición">
           <Card>
             <CardHeader>
-              <CardTitle className="text-base">Modo B — Aparición específica</CardTitle>
+              <CardTitle className="text-base">Expediente de esta aparición</CardTitle>
             </CardHeader>
             <CardContent className="space-y-2 text-sm">
               <div className="text-lg font-semibold">{String(verdict.headline)}</div>
@@ -859,6 +791,153 @@ export default function HistorialNumeroPage() {
           ) : null}
         </section>
       ) : null}
+
+          <div className="grid gap-4 lg:grid-cols-2">
+            <SimpleBars
+              title="¿Cuántas veces salió el número?"
+              description={`El número ${number} apareció ${String(header.aparecio)} veces en el período analizado.`}
+              items={((charts.apariciones_por_anio || []) as Record<string, unknown>[]).map((r) => ({
+                label: String(r.anio),
+                value: Number(r.cantidad || 0),
+              }))}
+            />
+            <SimpleBars
+              title="¿En cuáles loterías salió más?"
+              items={((charts.apariciones_por_loteria || []) as Record<string, unknown>[]).map((r) => ({
+                label: String(r.loteria),
+                value: Number(r.cantidad || 0),
+                hint: `${r.porcentaje}%`,
+              }))}
+            />
+            <SimpleBars
+              title="¿Cuántas veces se dio la condición?"
+              items={((charts.condicion || []) as Record<string, unknown>[]).map((r) => ({
+                label: String(r.etiqueta),
+                value: Number(r.cantidad || 0),
+              }))}
+            />
+            <SimpleBars
+              title="¿Cuáles compañeros fueron fortalecidos más veces?"
+              items={((charts.candidatos_fortalecidos || []) as Record<string, unknown>[]).map((r) => ({
+                label: `Nº ${r.candidato}`,
+                value: Number(r.veces || 0),
+              }))}
+            />
+            <SimpleBars
+              title="¿Cuáles números confirmaron más?"
+              items={((charts.confirmadores || []) as Record<string, unknown>[]).map((r) => ({
+                label: `Nº ${r.confirmador}`,
+                value: Number(r.veces || 0),
+              }))}
+            />
+            <SimpleBars
+              title="¿Cuánto tardó en aparecer el número fortalecido?"
+              items={[
+                ...(((charts.respuesta_en_siete_sorteos as Record<string, unknown>)?.por_posicion ||
+                  []) as Record<string, unknown>[]).map((r) => ({
+                  label: `Sorteo ${r.sorteo}`,
+                  value: Number(r.cantidad || 0),
+                })),
+                {
+                  label: "No en 7",
+                  value: Number(
+                    (charts.respuesta_en_siete_sorteos as Record<string, unknown>)?.no_aparecio_en_7 || 0,
+                  ),
+                },
+                {
+                  label: "Sin seguimiento",
+                  value: Number(
+                    (charts.respuesta_en_siete_sorteos as Record<string, unknown>)
+                      ?.sin_seguimiento_suficiente || 0,
+                  ),
+                },
+              ]}
+            />
+            <SimpleBars
+              title="Comportamiento por mes"
+              items={((charts.por_mes || []) as Record<string, unknown>[]).map((r) => ({
+                label: String(r.mes),
+                value: Number(r.cantidad || 0),
+              }))}
+            />
+            <SimpleBars
+              title="Comportamiento por día de la semana"
+              items={((charts.por_dia_semana || []) as Record<string, unknown>[]).map((r) => ({
+                label: String(r.dia),
+                value: Number(r.cantidad || 0),
+              }))}
+            />
+          </div>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base">TODAS LAS APARICIONES</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <div className="flex flex-wrap gap-2">
+                {[
+                  ["all", "Todas"],
+                  ["positive", "Condición positiva"],
+                  ["partial", "Parcial"],
+                  ["negative", "Negativa"],
+                ].map(([k, lab]) => (
+                  <Button
+                    key={k}
+                    size="sm"
+                    variant={condFilter === k ? "default" : "outline"}
+                    onClick={() => {
+                      setCondFilter(k);
+                      void loadOccurrences(1, k);
+                    }}
+                  >
+                    {lab}
+                  </Button>
+                ))}
+              </div>
+              <p className="text-sm text-muted-foreground">
+                Total filtrado: {String(occurrences?.total ?? "—")}
+              </p>
+              <ul className="space-y-3">
+                {occItems.map((item) => (
+                  <li key={String(item.draw_id)} className="rounded-lg border p-3 text-sm">
+                    <div className="font-medium">
+                      {String(item.fecha_texto)} — {String(item.loteria)}
+                    </div>
+                    <p className="mt-1 text-muted-foreground">{String(item.texto)}</p>
+                    <div className="mt-2 font-semibold">{String(item.estado)}</div>
+                    <div className="mt-2 flex flex-wrap gap-2">
+                      <Button size="sm" onClick={() => void openCase(String(item.draw_id))}>
+                        Ver caso
+                      </Button>
+                      <Button size="sm" variant="outline" onClick={() => void openCase(String(item.draw_id))}>
+                        Ver siete sorteos posteriores
+                      </Button>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  disabled={page <= 1}
+                  onClick={() => void loadOccurrences(page - 1, condFilter)}
+                >
+                  Anterior
+                </Button>
+                <Button
+                  variant="outline"
+                  disabled={page * 10 >= Number(occurrences?.total || 0)}
+                  onClick={() => void loadOccurrences(page + 1, condFilter)}
+                >
+                  Siguiente
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </>
+      ) : null}
+
+
 
       <Card>
         <CardHeader>

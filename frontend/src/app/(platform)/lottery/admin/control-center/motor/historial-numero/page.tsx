@@ -3,7 +3,12 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 
+import { PrimaryHistoricalCharts } from "@/components/lottery/control-center/historical-charts";
 import type { LotOption } from "@/components/lottery/control-center/motor-types";
+import { NR_EMPTY_COPY, NrEmptyState } from "@/components/lottery/control-center/nr-empty-states";
+import { SignalCard } from "@/components/lottery/control-center/signal-card";
+import { sortSignalsForDisplay } from "@/components/lottery/control-center/signal-order";
+import { WhyStrengthenedPanel } from "@/components/lottery/control-center/why-strengthened-panel";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -11,49 +16,31 @@ import { ApiError, apiClient } from "@/lib/api";
 
 type ChartBar = { label: string; value: number; hint?: string };
 
-function SimpleBars({ title, description, items }: { title: string; description?: string; items: ChartBar[] }) {
+function SecondaryBars({ title, items }: { title: string; items: ChartBar[] }) {
   const max = Math.max(1, ...items.map((i) => i.value));
-  if (!items.length || items.every((i) => i.value === 0)) {
-    return (
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-base">{title}</CardTitle>
-        </CardHeader>
-        <CardContent className="text-sm text-muted-foreground">
-          No hay datos suficientes para esta gráfica con los filtros actuales.
-        </CardContent>
-      </Card>
-    );
+  if (!items.length) {
+    return <NrEmptyState title={title} body={NR_EMPTY_COPY.noHistory.body} />;
   }
   return (
     <Card>
       <CardHeader>
         <CardTitle className="text-base">{title}</CardTitle>
-        {description ? <p className="text-sm text-muted-foreground">{description}</p> : null}
       </CardHeader>
       <CardContent className="space-y-2" role="img" aria-label={title}>
         {items.map((item) => (
-          <div key={item.label} className="grid grid-cols-[7rem_1fr_3rem] items-center gap-2 text-sm">
+          <div key={item.label} className="grid grid-cols-[7rem_1fr_4rem] items-center gap-2 text-sm">
             <span className="truncate" title={item.label}>
               {item.label}
             </span>
             <div className="h-3 rounded bg-muted" aria-hidden>
               <div
-                className="h-3 rounded bg-primary/80"
-                style={{ width: `${Math.max(4, (100 * item.value) / max)}%` }}
+                className="h-3 rounded bg-primary/70"
+                style={{ width: `${Math.max(item.value === 0 ? 0 : 4, (100 * item.value) / max)}%` }}
               />
             </div>
             <span className="text-right tabular-nums">{item.value}</span>
           </div>
         ))}
-        <ul className="sr-only">
-          {items.map((i) => (
-            <li key={i.label}>
-              {i.label}: {i.value}
-              {i.hint ? ` (${i.hint})` : ""}
-            </li>
-          ))}
-        </ul>
       </CardContent>
     </Card>
   );
@@ -323,6 +310,39 @@ export default function HistorialNumeroPage() {
   const charts = (profile?.charts || {}) as Record<string, unknown>;
   const steps = (profile?.methodology_steps || []) as Record<string, unknown>[];
   const occItems = ((occurrences?.items || []) as Record<string, unknown>[]) || [];
+  const displaySignals = useMemo(() => {
+    const raw = ((charts.senales || []) as Record<string, unknown>[]).map((s) => ({
+      number: Number(s.number),
+      confirmation_count: Number(s.confirmation_count || 0),
+      evaluable_cases: Number(s.evaluable_cases || 0),
+      rate_within_3: s.rate_within_3 == null ? null : Number(s.rate_within_3),
+      typical_cycle: s.typical_cycle == null ? null : Number(s.typical_cycle),
+      evidence_level: String(s.evidence_level || header.nivel_evidencia || "Evidencia limitada"),
+      activators_text: String(s.activators_text || "Activación histórica observada."),
+      historical_rate_label: String(s.historical_rate_label || "Sin tasa agregada."),
+      typical_cycle_label: String(s.typical_cycle_label || "Ciclo no calculado."),
+    }));
+    return sortSignalsForDisplay(raw);
+  }, [charts.senales, header.nivel_evidencia]);
+
+  const signalHref = useCallback(
+    (n: number) => {
+      const q = new URLSearchParams();
+      q.set("number", String(n));
+      q.set("auto", "1");
+      if (bootFeatured) q.set("featured", "1");
+      if (appearedIn.length) q.set("lottery_ids", appearedIn.join(","));
+      if (dateFrom) q.set("date_from", dateFrom);
+      if (dateTo) q.set("date_to", dateTo);
+      return `/lottery/admin/control-center/motor/historial-numero?${q.toString()}`;
+    },
+    [appearedIn, bootFeatured, dateFrom, dateTo],
+  );
+
+  const sampleWarning =
+    profile && Number(profile.sample_size || 0) > 0 && Number(profile.sample_size || 0) < 10
+      ? NR_EMPTY_COPY.smallSample(Number(profile.sample_size)).body
+      : null;
   const tree = (detail?.relation_tree || {}) as Record<string, unknown>;
   const branches = (tree.candidatos || []) as Record<string, unknown>[];
   const verdict = (detail?.verdict || {}) as Record<string, unknown>;
@@ -583,45 +603,33 @@ export default function HistorialNumeroPage() {
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-base">Señales observadas</CardTitle>
-            </CardHeader>
-            <CardContent className="grid gap-3 text-sm md:grid-cols-2">
-              <div>
-                <div className="text-xs uppercase text-muted-foreground">Candidatos más fortalecidos</div>
-                <ul className="mt-1 space-y-1">
-                  {(((charts.candidatos_fortalecidos || []) as Record<string, unknown>[]).slice(0, 5).length
-                    ? ((charts.candidatos_fortalecidos || []) as Record<string, unknown>[]).slice(0, 5)
-                    : []
-                  ).map((r) => (
-                    <li key={String(r.candidato)}>
-                      Nº {String(r.candidato)} · {String(r.veces)} veces
-                    </li>
-                  ))}
-                  {!((charts.candidatos_fortalecidos || []) as unknown[]).length ? (
-                    <li className="text-muted-foreground">Sin fortalezas en este período.</li>
-                  ) : null}
-                </ul>
+          <section className="space-y-3" aria-label="Señales y predicciones">
+            <div>
+              <h2 className="text-lg font-semibold">Señales y predicciones</h2>
+              <p className="text-sm text-muted-foreground">
+                Orden de visualización (no es fuerza matemática oficial): más confirmaciones, mayor
+                muestra evaluable, mejor respuesta en 3 sorteos, ciclo más corto, número ascendente.
+              </p>
+            </div>
+            {displaySignals.length ? (
+              <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+                {displaySignals.map((s) => (
+                  <SignalCard
+                    key={s.number}
+                    number={s.number}
+                    evidenceLevel={s.evidence_level}
+                    confirmationCount={s.confirmation_count}
+                    activatorsText={s.activators_text}
+                    historicalRateLabel={s.historical_rate_label}
+                    typicalCycleLabel={s.typical_cycle_label}
+                    analysisHref={signalHref(s.number)}
+                  />
+                ))}
               </div>
-              <div>
-                <div className="text-xs uppercase text-muted-foreground">Confirmadores más frecuentes</div>
-                <ul className="mt-1 space-y-1">
-                  {(((charts.confirmadores || []) as Record<string, unknown>[]).slice(0, 5).length
-                    ? ((charts.confirmadores || []) as Record<string, unknown>[]).slice(0, 5)
-                    : []
-                  ).map((r) => (
-                    <li key={String(r.confirmador)}>
-                      Nº {String(r.confirmador)} · {String(r.veces)} veces
-                    </li>
-                  ))}
-                  {!((charts.confirmadores || []) as unknown[]).length ? (
-                    <li className="text-muted-foreground">Sin confirmadores en este período.</li>
-                  ) : null}
-                </ul>
-              </div>
-            </CardContent>
-          </Card>
+            ) : (
+              <NrEmptyState {...NR_EMPTY_COPY.noSignals} />
+            )}
+          </section>
 
           <Card>
             <CardHeader>
@@ -702,23 +710,7 @@ export default function HistorialNumeroPage() {
             ))}
           </div>
 
-          {why ? (
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-base">
-                  ¿Por qué se fortaleció el número {String(why.candidato)}?
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-2 text-sm">
-                <ol className="list-decimal space-y-1 pl-5">
-                  {((why.pasos || []) as string[]).map((p, i) => (
-                    <li key={i}>{p}</li>
-                  ))}
-                </ol>
-                <p className="font-medium">Conclusión: {String(why.conclusion)}</p>
-              </CardContent>
-            </Card>
-          ) : null}
+          {why ? <WhyStrengthenedPanel why={why} /> : null}
 
           {nextDraws ? (
             <Card>
@@ -794,82 +786,42 @@ export default function HistorialNumeroPage() {
         </section>
       ) : null}
 
-          <div className="grid gap-4 lg:grid-cols-2">
-            <SimpleBars
-              title="¿Cuántas veces salió el número?"
-              description={`El número ${number} apareció ${String(header.aparecio)} veces en el período analizado.`}
-              items={((charts.apariciones_por_anio || []) as Record<string, unknown>[]).map((r) => ({
-                label: String(r.anio),
-                value: Number(r.cantidad || 0),
-              }))}
-            />
-            <SimpleBars
-              title="¿En cuáles loterías salió más?"
-              items={((charts.apariciones_por_loteria || []) as Record<string, unknown>[]).map((r) => ({
-                label: String(r.loteria),
-                value: Number(r.cantidad || 0),
-                hint: `${r.porcentaje}%`,
-              }))}
-            />
-            <SimpleBars
-              title="¿Cuántas veces se dio la condición?"
-              items={((charts.condicion || []) as Record<string, unknown>[]).map((r) => ({
-                label: String(r.etiqueta),
-                value: Number(r.cantidad || 0),
-              }))}
-            />
-            <SimpleBars
-              title="¿Cuáles compañeros fueron fortalecidos más veces?"
-              items={((charts.candidatos_fortalecidos || []) as Record<string, unknown>[]).map((r) => ({
-                label: `Nº ${r.candidato}`,
-                value: Number(r.veces || 0),
-              }))}
-            />
-            <SimpleBars
-              title="¿Cuáles números confirmaron más?"
-              items={((charts.confirmadores || []) as Record<string, unknown>[]).map((r) => ({
-                label: `Nº ${r.confirmador}`,
-                value: Number(r.veces || 0),
-              }))}
-            />
-            <SimpleBars
-              title="¿Cuánto tardó en aparecer el número fortalecido?"
-              items={[
-                ...(((charts.respuesta_en_siete_sorteos as Record<string, unknown>)?.por_posicion ||
-                  []) as Record<string, unknown>[]).map((r) => ({
-                  label: `Sorteo ${r.sorteo}`,
+          <PrimaryHistoricalCharts
+            number={number}
+            header={header}
+            charts={charts}
+            condition={cond}
+            sampleWarning={sampleWarning}
+          />
+
+          <details className="rounded border p-3">
+            <summary className="cursor-pointer text-sm font-medium">
+              Más contexto (confirmadores y calendario)
+            </summary>
+            <div className="mt-3 grid gap-4 lg:grid-cols-2">
+              <SecondaryBars
+                title="Números que confirmaron más veces"
+                items={((charts.confirmadores || []) as Record<string, unknown>[]).map((r) => ({
+                  label: `Nº ${r.confirmador}`,
+                  value: Number(r.veces || 0),
+                }))}
+              />
+              <SecondaryBars
+                title="Comportamiento por mes"
+                items={((charts.por_mes || []) as Record<string, unknown>[]).map((r) => ({
+                  label: String(r.mes),
                   value: Number(r.cantidad || 0),
-                })),
-                {
-                  label: "No en 7",
-                  value: Number(
-                    (charts.respuesta_en_siete_sorteos as Record<string, unknown>)?.no_aparecio_en_7 || 0,
-                  ),
-                },
-                {
-                  label: "Sin seguimiento",
-                  value: Number(
-                    (charts.respuesta_en_siete_sorteos as Record<string, unknown>)
-                      ?.sin_seguimiento_suficiente || 0,
-                  ),
-                },
-              ]}
-            />
-            <SimpleBars
-              title="Comportamiento por mes"
-              items={((charts.por_mes || []) as Record<string, unknown>[]).map((r) => ({
-                label: String(r.mes),
-                value: Number(r.cantidad || 0),
-              }))}
-            />
-            <SimpleBars
-              title="Comportamiento por día de la semana"
-              items={((charts.por_dia_semana || []) as Record<string, unknown>[]).map((r) => ({
-                label: String(r.dia),
-                value: Number(r.cantidad || 0),
-              }))}
-            />
-          </div>
+                }))}
+              />
+              <SecondaryBars
+                title="Comportamiento por día de la semana"
+                items={((charts.por_dia_semana || []) as Record<string, unknown>[]).map((r) => ({
+                  label: String(r.dia),
+                  value: Number(r.cantidad || 0),
+                }))}
+              />
+            </div>
+          </details>
 
           <Card>
             <CardHeader>

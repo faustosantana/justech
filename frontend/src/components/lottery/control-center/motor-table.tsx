@@ -17,7 +17,6 @@ type Props = {
   title: string;
   onDetail: (row: MotorTableRow) => void;
   onExport?: (format: "json" | "csv") => void;
-  /** Si true, muestra panel colapsado de cálculo técnico (admin). */
   allowTechnical?: boolean;
 };
 
@@ -27,22 +26,19 @@ export function MotorNumberTable({
   title,
   onDetail,
   onExport,
-  allowTechnical = false,
+  allowTechnical = true,
 }: Props) {
   const [qNumber, setQNumber] = useState("");
   const [qCode, setQCode] = useState("");
   const [sortKey, setSortKey] = useState<SortKey>("number");
   const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
   const [page, setPage] = useState(0);
-<<<<<<< HEAD
-  const [showCalc, setShowCalc] = useState(false);
-=======
   const [showTech, setShowTech] = useState(false);
->>>>>>> ab22e29 (J-10L.4 simplify Table 1 and Table 2 technical columns)
   const pageSize = 25;
 
-  const companionLabel = table === "table1" ? "Compañeros" : "Confirmadores relacionados";
-  const companionCountLabel = table === "table1" ? "Cantidad de compañeros" : "Cantidad de confirmadores";
+  const companionLabel = table === "table1" ? "Compañeros" : "Confirmadores";
+  const analyzeHref = (n: number) =>
+    `/lottery/admin/control-center/motor/historial-numero?number=${n}&auto=1&featured=1`;
 
   const filtered = useMemo(() => {
     let list = [...rows];
@@ -59,7 +55,7 @@ export function MotorNumberTable({
   }, [rows, qNumber, qCode, sortKey, sortDir]);
 
   const pageCount = Math.max(1, Math.ceil(filtered.length / pageSize));
-  const pageRows = filtered.slice(page * pageSize, (page + 1) * pageSize);
+  const pageRows = filtered.slice(page * pageSize, page * pageSize + pageSize);
 
   const toggleSort = (key: SortKey) => {
     if (sortKey === key) setSortDir((d) => (d === "asc" ? "desc" : "asc"));
@@ -69,13 +65,6 @@ export function MotorNumberTable({
     }
   };
 
-<<<<<<< HEAD
-  const groupLabel = table === "table1" ? "Compañeros" : "Confirmadores relacionados";
-  const analyzeHref = (n: number) =>
-    `/lottery/admin/control-center/motor/historial-numero?number=${n}&auto=1&featured=1`;
-
-=======
->>>>>>> ab22e29 (J-10L.4 simplify Table 1 and Table 2 technical columns)
   return (
     <Card>
       <CardHeader className="space-y-3">
@@ -89,22 +78,16 @@ export function MotorNumberTable({
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
-<<<<<<< HEAD
-            <Button
-              type="button"
-              variant={showCalc ? "default" : "outline"}
-              size="sm"
-              onClick={() => setShowCalc((v) => !v)}
-            >
-              {showCalc ? "Ocultar cálculo" : "Ver cálculo"}
-            </Button>
-=======
             {allowTechnical ? (
-              <Button type="button" variant="ghost" size="sm" onClick={() => setShowTech((v) => !v)}>
-                {showTech ? "Ocultar cálculo técnico" : "Ver cálculo técnico"}
+              <Button
+                type="button"
+                variant={showTech ? "default" : "outline"}
+                size="sm"
+                onClick={() => setShowTech((v) => !v)}
+              >
+                {showTech ? "Ocultar cálculo" : "Ver cálculo"}
               </Button>
             ) : null}
->>>>>>> ab22e29 (J-10L.4 simplify Table 1 and Table 2 technical columns)
             {onExport ? (
               <>
                 <Button type="button" variant="outline" size="sm" onClick={() => onExport("json")}>
@@ -151,55 +134,13 @@ export function MotorNumberTable({
               <th className="cursor-pointer py-2 pr-3" onClick={() => toggleSort("code")}>
                 Código
               </th>
-<<<<<<< HEAD
-              <th className="py-2 pr-3">{groupLabel}</th>
-              <th className="py-2 pr-3">Cantidad</th>
-              {showCalc ? (
-                <>
-                  <th className="py-2 pr-3">Fórmula</th>
-                  <th className="py-2 pr-3">Resultado</th>
-                  <th className="py-2 pr-3">Cadena dígitos</th>
-                  <th className="cursor-pointer py-2 pr-3" onClick={() => toggleSort("digit_count")}>
-                    Cant. dígitos
-                  </th>
-                </>
-              ) : null}
-=======
               <th className="py-2 pr-3">{companionLabel}</th>
-              <th className="py-2 pr-3">{companionCountLabel}</th>
->>>>>>> ab22e29 (J-10L.4 simplify Table 1 and Table 2 technical columns)
+              <th className="py-2 pr-3">Cantidad</th>
               <th className="py-2">Acción</th>
             </tr>
           </thead>
           <tbody>
             {pageRows.map((r) => {
-<<<<<<< HEAD
-              const group = r.group_numbers || [];
-              return (
-                <tr key={`${table}-${r.number}`} className="border-b border-border/40 align-top">
-                  <td className="py-1.5 pr-3 font-medium">{r.number}</td>
-                  <td className="py-1.5 pr-3 font-semibold">{r.code}</td>
-                  <td className="py-1.5 pr-3 text-xs">
-                    <div className="font-medium">{r.group_label || `Código ${r.code}`}</div>
-                    <div className="text-muted-foreground">{group.join(", ") || "—"}</div>
-                  </td>
-                  <td className="py-1.5 pr-3 tabular-nums">{group.length}</td>
-                  {showCalc ? (
-                    <>
-                      <td className="py-1.5 pr-3 font-mono text-xs">{r.formula}</td>
-                      <td className="py-1.5 pr-3 font-mono text-xs">{r.visible_value}</td>
-                      <td className="break-all py-1.5 pr-3 font-mono text-xs">{r.digits_without_point}</td>
-                      <td className="py-1.5 pr-3">{r.digit_count}</td>
-                    </>
-                  ) : null}
-                  <td className="py-1.5">
-                    <div className="flex flex-col gap-1">
-                      <Button type="button" size="sm" asChild>
-                        <Link href={analyzeHref(r.number)}>Analizar</Link>
-                      </Button>
-                      <Button type="button" size="sm" variant="outline" onClick={() => onDetail(r)}>
-                        Ver detalle
-=======
               const companions = r.group_numbers || [];
               return (
                 <tr key={`${table}-${r.number}`} className="border-b border-border/40 align-top">
@@ -211,16 +152,17 @@ export function MotorNumberTable({
                   <td className="py-1.5 pr-3 tabular-nums">{companions.length}</td>
                   <td className="py-1.5">
                     <div className="flex flex-col gap-1 sm:flex-row">
-                      <Button type="button" size="sm" className="min-h-11" onClick={() => onDetail(r)}>
-                        Analizar
+                      <Button type="button" size="sm" className="min-h-11" asChild>
+                        <Link href={analyzeHref(r.number)}>Analizar</Link>
                       </Button>
-                      <Button type="button" size="sm" variant="outline" className="min-h-11" asChild>
-                        <Link
-                          href={`/lottery/admin/control-center/motor/historial-numero?number=${r.number}&auto=1&featured=1`}
-                        >
-                          Ver expediente
-                        </Link>
->>>>>>> ab22e29 (J-10L.4 simplify Table 1 and Table 2 technical columns)
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant="outline"
+                        className="min-h-11"
+                        onClick={() => onDetail(r)}
+                      >
+                        Ver detalle
                       </Button>
                     </div>
                   </td>
@@ -230,10 +172,10 @@ export function MotorNumberTable({
           </tbody>
         </table>
         {showTech && allowTechnical ? (
-          <div className="mt-4 rounded border p-3 text-xs">
+          <div className="mt-4 rounded border p-3 text-xs" role="region" aria-label="Cálculo técnico">
             <p className="mb-2 font-medium">Cálculo técnico (no forma parte de la vista principal)</p>
             <ul className="space-y-1 font-mono">
-              {pageRows.slice(0, 5).map((r) => (
+              {pageRows.slice(0, 8).map((r) => (
                 <li key={`tech-${r.number}`}>
                   {r.number}: {r.formula} → {r.visible_value} · dígitos={r.digits_without_point} ·
                   cant={r.digit_count}
@@ -295,36 +237,11 @@ export function MotorNumberDetail({
           <span className="font-medium">{table === "table1" ? "Compañeros:" : "Confirmadores:"}</span>{" "}
           {companions.join(", ") || "—"}
         </div>
-<<<<<<< HEAD
-        <details className="rounded border p-2">
-          <summary className="cursor-pointer text-sm font-medium">Ver cálculo</summary>
-          <div className="mt-2 space-y-1 text-sm">
-            <div>
-              <span className="font-medium">Operación:</span> <code>{row.formula}</code>
-            </div>
-            <div>
-              <span className="font-medium">Valor decimal:</span> <code>{row.visible_value}</code>
-            </div>
-            <div>
-              <span className="font-medium">Cadena exacta:</span>{" "}
-              <code className="break-all">{row.digits_without_point}</code>
-            </div>
-            <div>
-              <span className="font-medium">Suma literal:</span> {row.literal_digit_sum ?? row.code}
-            </div>
-            <div>
-              <span className="font-medium">Implementación:</span>{" "}
-              <code className="text-xs">{row.engine_ref || "NumericRelationsService"}</code>
-            </div>
-          </div>
-        </details>
-        <div className="rounded bg-muted px-2 py-1 text-xs">Indicador: solo lectura · editable=false</div>
-=======
         <div>
           <span className="font-medium">Cantidad:</span> {companions.length}
         </div>
         <details className="rounded border p-2 text-xs">
-          <summary className="cursor-pointer font-medium">Ver cálculo técnico</summary>
+          <summary className="cursor-pointer font-medium">Ver cálculo</summary>
           <div className="mt-2 space-y-1 font-mono">
             <div>Fórmula: {row.formula}</div>
             <div>Resultado: {row.visible_value}</div>
@@ -332,7 +249,6 @@ export function MotorNumberDetail({
             <div>Cant. dígitos: {row.digit_count}</div>
           </div>
         </details>
->>>>>>> ab22e29 (J-10L.4 simplify Table 1 and Table 2 technical columns)
       </CardContent>
     </Card>
   );

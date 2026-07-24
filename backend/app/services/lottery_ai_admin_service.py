@@ -239,15 +239,28 @@ def _alert_dict(row: LotteryAiAlert) -> dict[str, Any]:
 
 
 def _prompt_dict(row: LotteryAiPromptVersion) -> dict[str, Any]:
+    status_map = {
+        "draft": "BORRADOR",
+        "validated": "EN_VALIDACION",
+        "approved": "APROBADO",
+        "active": "ACTIVO",
+        "replaced": "REEMPLAZADO",
+        "archived": "ARCHIVADO",
+    }
+    human = status_map.get(row.status, row.status)
     return {
         "id": str(row.id),
         "name": row.name,
+        "display_name": getattr(row, "display_name", None) or row.name,
         "version": row.version,
         "status": row.status,
+        "status_label": human,
         "description": row.description,
         "body": row.body,
         "blocks": row.blocks or {},
         "changelog": row.changelog,
+        "change_reason": getattr(row, "change_reason", None),
+        "notes": getattr(row, "notes", None),
         "recommended_model": row.recommended_model,
         "temperature": float(row.temperature) if row.temperature is not None else None,
         "max_tokens": row.max_tokens,
@@ -256,11 +269,28 @@ def _prompt_dict(row: LotteryAiPromptVersion) -> dict[str, Any]:
         "tags": row.tags or [],
         "checksum": row.checksum,
         "benchmark_id": str(row.benchmark_id) if row.benchmark_id else None,
+        "benchmark_summary": getattr(row, "benchmark_summary", None),
+        "gates_snapshot": getattr(row, "gates_snapshot", None),
+        "analysis_steps": getattr(row, "analysis_steps", None),
+        "tool_bindings": getattr(row, "tool_bindings", None),
+        "motor_bindings": getattr(row, "motor_bindings", None),
         "author_user_id": str(row.author_user_id) if row.author_user_id else None,
         "published_at": row.published_at.isoformat() if row.published_at else None,
+        "archived_at": (
+            row.archived_at.isoformat()
+            if getattr(row, "archived_at", None)
+            else None
+        ),
         "previous_version_id": str(row.previous_version_id) if row.previous_version_id else None,
+        "parent_draft_of": (
+            str(row.parent_draft_of) if getattr(row, "parent_draft_of", None) else None
+        ),
         "created_at": row.created_at.isoformat() if row.created_at else None,
         "updated_at": row.updated_at.isoformat() if row.updated_at else None,
+        "guide": (
+            "Una versión es una fotografía completa del prompt, sus herramientas, "
+            "motores y configuración en un momento determinado."
+        ),
     }
 
 
@@ -851,6 +881,13 @@ class LotteryAiAdminService:
             checksum=_checksum(body or ""),
             author_user_id=self.user_id,
             previous_version_id=source.id if source else None,
+            display_name=data.get("display_name")
+            or (f"Borrador desde {source.version}" if source else "Borrador nuevo"),
+            change_reason=data.get("change_reason") or data.get("changelog"),
+            notes=data.get("notes"),
+            parent_draft_of=source.id if source else None,
+            analysis_steps=data.get("analysis_steps")
+            or (source.analysis_steps if source and getattr(source, "analysis_steps", None) else None),
         )
         self.db.add(row)
         await self._audit("prompt_create_draft", entity_type="prompt", entity_id=str(row.id), after=_prompt_dict(row))
@@ -858,12 +895,35 @@ class LotteryAiAdminService:
         return _prompt_dict(row)
 
     async def update_prompt_draft(self, prompt_id: uuid.UUID, data: dict[str, Any]) -> dict[str, Any]:
+        from app.lottery.ai.prompt_studio import (
+            PROMPT_STUDIO_BLOCKS,
+            compile_prompt_from_blocks,
+            scan_secrets,
+        )
+
         row = await self.db.get(LotteryAiPromptVersion, prompt_id)
         if not row:
             raise KeyError("prompt_not_found")
-        if row.status not in {"draft", "validated"}:
+        if row.status not in {"draft", "validated", "approved"}:
             raise ValueError("solo_borrador_editable")
         before = _prompt_dict(row)
+
+        # Secret scan on any textual payload
+        texts: list[str] = []
+        if "body" in data and data["body"] is not None:
+            texts.append(str(data["body"]))
+        if "blocks" in data and isinstance(data["blocks"], dict):
+            texts.extend(str(v) for v in data["blocks"].values())
+        for field in ("description", "changelog", "change_reason", "notes", "display_name"):
+            if field in data and data[field] is not None:
+                texts.append(str(data[field]))
+        blob = "\n".join(texts)
+        hits = scan_secrets(blob)
+        if hits:
+            raise ValueError(
+                "secreto_detectado: " + "; ".join(h["message"] for h in hits)
+            )
+
         for field in (
             "description",
             "body",
@@ -875,18 +935,31 @@ class LotteryAiAdminService:
             "timeout_seconds",
             "variables",
             "tags",
+            "display_name",
+            "change_reason",
+            "notes",
+            "analysis_steps",
+            "tool_bindings",
+            "motor_bindings",
         ):
-            if field in data:
+            if field in data and hasattr(row, field):
                 setattr(row, field, data[field])
         # Compose body from editorial blocks when blocks saved without explicit body
         if "blocks" in data and isinstance(row.blocks, dict) and "body" not in data:
-            parts = []
-            for key in PROMPT_BLOCKS:
-                chunk = (row.blocks.get(key) or "").strip()
-                if chunk:
-                    parts.append(f"## {key.upper()}\n{chunk}")
-            if parts:
-                row.body = "\n\n".join(parts)
+            compiled = compile_prompt_from_blocks(
+                {k: str(v or "") for k, v in row.blocks.items()},
+                assembly_order=[b["key"] for b in PROMPT_STUDIO_BLOCKS],
+            )
+            if compiled["body"]:
+                row.body = compiled["body"]
+            else:
+                parts = []
+                for key in PROMPT_BLOCKS:
+                    chunk = (row.blocks.get(key) or "").strip()
+                    if chunk:
+                        parts.append(f"## {key.upper()}\n{chunk}")
+                if parts:
+                    row.body = "\n\n".join(parts)
         row.checksum = _checksum(row.body or "")
         after = {
             "id": str(row.id),

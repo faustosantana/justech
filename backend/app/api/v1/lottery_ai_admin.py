@@ -795,3 +795,227 @@ async def ai_benchmark_compare_v2_v3(
     data = await _svc(db, user).compare_v2_v3_and_gate()
     await db.commit()
     return data
+
+
+# ---- Control Center Prompt Studio (I-3..I-6) ----
+
+@router.get("/prompt-studio/schema")
+async def prompt_studio_schema(
+    db: DbSession,
+    user: CurrentUser,
+    _: TenantCtx,
+    __: Annotated[None, require_ai_admin("lottery_admin_prompts", "lottery_admin_ai", "lottery.admin")],
+) -> dict:
+    from app.lottery.ai.prompt_studio import prompt_schema
+    from app.services.lottery_ai_contracts import LOTTERY_TOOL_CATALOG
+    from app.lottery.ai.ui_catalog import TOOL_LABELS_ES, tool_label
+
+    tools = []
+    for t in LOTTERY_TOOL_CATALOG:
+        meta = TOOL_LABELS_ES.get(t.name, {})
+        tools.append(
+            {
+                "technical_name": t.name,
+                "human_name": tool_label(t.name),
+                "description": meta.get("description") or getattr(t, "description", ""),
+                "examples": meta.get("examples"),
+                "status": "registered",
+            }
+        )
+    return {**prompt_schema(), "tools": tools}
+
+
+@router.get("/prompts/{prompt_id}/compiled")
+async def prompt_compiled(
+    prompt_id: UUID,
+    db: DbSession,
+    user: CurrentUser,
+    _: TenantCtx,
+    __: Annotated[None, require_ai_admin("lottery_admin_prompts", "lottery_admin_ai", "lottery.admin")],
+    q: str | None = Query(None),
+) -> dict:
+    from app.lottery.ai.prompt_studio import compile_prompt_from_blocks, estimate_tokens, scan_secrets
+
+    svc = _svc(db, user)
+    try:
+        p = await svc.get_prompt(prompt_id)
+    except Exception as e:
+        _map_err(e)
+        raise
+    blocks = {k: str(v or "") for k, v in (p.get("blocks") or {}).items()}
+    compiled = compile_prompt_from_blocks(blocks) if any(blocks.values()) else {
+        "body": p.get("body") or "",
+        "fragments": [{"key": "body", "title": "Body", "chars": len(p.get("body") or ""), "tokens": estimate_tokens(p.get("body") or "")}],
+        "assembly_order": ["body"],
+        "chars": len(p.get("body") or ""),
+        "tokens_estimated": estimate_tokens(p.get("body") or ""),
+    }
+    body = compiled["body"]
+    secrets = scan_secrets(body)
+    matches = []
+    if q:
+        for i, line in enumerate(body.splitlines(), start=1):
+            if q.lower() in line.lower():
+                matches.append({"line": i, "text": line})
+    return {
+        "prompt_id": str(prompt_id),
+        "compiled": compiled,
+        "search_matches": matches,
+        "secrets_detected": secrets,
+        "view": "normal",
+        "sensitive_stripped": True,
+    }
+
+
+@router.get("/prompt-studio/compare")
+async def prompts_compare(
+    db: DbSession,
+    user: CurrentUser,
+    _: TenantCtx,
+    __: Annotated[None, require_ai_admin("lottery_admin_prompts", "lottery_admin_ai", "lottery.admin")],
+    a: UUID = Query(...),
+    b: UUID = Query(...),
+) -> dict:
+    svc = _svc(db, user)
+    try:
+        pa = await svc.get_prompt(a)
+        pb = await svc.get_prompt(b)
+    except Exception as e:
+        _map_err(e)
+        raise
+    blocks_a = pa.get("blocks") or {}
+    blocks_b = pb.get("blocks") or {}
+    keys = sorted(set(blocks_a) | set(blocks_b))
+    block_diff = []
+    for k in keys:
+        va, vb = blocks_a.get(k) or "", blocks_b.get(k) or ""
+        if va != vb:
+            block_diff.append({"key": k, "a_chars": len(va), "b_chars": len(vb), "changed": True})
+    return {
+        "a": {"id": pa["id"], "display_name": pa.get("display_name"), "version": pa["version"], "status_label": pa.get("status_label")},
+        "b": {"id": pb["id"], "display_name": pb.get("display_name"), "version": pb["version"], "status_label": pb.get("status_label")},
+        "block_diff": block_diff,
+        "body_changed": (pa.get("body") or "") != (pb.get("body") or ""),
+        "model_a": pa.get("recommended_model"),
+        "model_b": pb.get("recommended_model"),
+        "guide": pa.get("guide"),
+    }
+
+
+@router.post("/prompts/{prompt_id}/archive")
+async def prompt_archive(
+    prompt_id: UUID,
+    db: DbSession,
+    user: CurrentUser,
+    _: TenantCtx,
+    __: Annotated[None, require_ai_admin("lottery_admin_prompts", "lottery_admin_ai", "lottery.admin")],
+) -> dict:
+    from datetime import datetime, timezone
+
+    svc = _svc(db, user)
+    row = await db.get(__import__("app.models.lottery", fromlist=["LotteryAiPromptVersion"]).LotteryAiPromptVersion, prompt_id)
+    if not row:
+        raise not_found("prompt_not_found")
+    if row.status == "active":
+        raise HTTPException(status_code=400, detail="no_archivar_activo")
+    row.status = "archived"
+    row.archived_at = datetime.now(timezone.utc)
+    await db.flush()
+    await db.commit()
+    return await svc.get_prompt(prompt_id)
+
+
+@router.post("/prompts/{prompt_id}/validate-draft")
+async def prompt_validate_draft(
+    prompt_id: UUID,
+    db: DbSession,
+    user: CurrentUser,
+    _: TenantCtx,
+    __: Annotated[None, require_ai_admin("lottery_admin_prompts", "lottery_admin_ai", "lottery.admin")],
+) -> dict:
+    """BORRADOR → EN_VALIDACION (no publica / no activa)."""
+    from app.lottery.ai.control_center_benchmark import run_intent_benchmark
+    from app.lottery.ai.prompt_studio import scan_secrets
+
+    svc = _svc(db, user)
+    try:
+        p = await svc.get_prompt(prompt_id)
+    except Exception as e:
+        _map_err(e)
+        raise
+    if p["status"] not in {"draft", "validated", "approved"}:
+        raise HTTPException(status_code=400, detail="solo_borrador_o_validacion")
+    secrets = scan_secrets(p.get("body") or "")
+    if secrets:
+        raise HTTPException(status_code=400, detail={"code": "secrets", "hits": secrets})
+    bench = run_intent_benchmark()
+    row = await db.get(__import__("app.models.lottery", fromlist=["LotteryAiPromptVersion"]).LotteryAiPromptVersion, prompt_id)
+    if not row:
+        raise not_found("prompt_not_found")
+    row.benchmark_summary = {
+        "p0_failures": bench["p0_failures"],
+        "p1_failures": bench["p1_failures"],
+        "can_approve": bench["can_approve"],
+    }
+    if bench["can_approve"]:
+        row.status = "approved"
+    else:
+        row.status = "draft"
+    await db.flush()
+    await db.commit()
+    return {
+        "prompt": await svc.get_prompt(prompt_id),
+        "benchmark": bench,
+        "active_unchanged": True,
+        "published": False,
+    }
+
+
+@router.post("/control-center/benchmark/run")
+async def control_center_benchmark_run(
+    db: DbSession,
+    user: CurrentUser,
+    _: TenantCtx,
+    __: Annotated[None, require_ai_admin("lottery_admin_ai", "lottery.admin")],
+) -> dict:
+    from app.lottery.ai.control_center_benchmark import run_intent_benchmark
+
+    return run_intent_benchmark()
+
+
+@router.post("/control-center/playground")
+async def control_center_playground(
+    db: DbSession,
+    user: CurrentUser,
+    _: TenantCtx,
+    __: Annotated[None, require_ai_admin("lottery_admin_ai", "lottery.admin", "lottery_admin_prompts")],
+    body: dict[str, Any] = Body(...),
+) -> dict:
+    """Ejecuta intent contra borrador vs activo sin publicar."""
+    import time
+
+    from app.services.lottery_chat_context import LotterySessionContext
+    from app.services.lottery_intent import resolve_intent
+
+    message = str(body.get("message") or "").strip()
+    if not message:
+        raise HTTPException(status_code=400, detail="message_required")
+    ctx = LotterySessionContext()
+    t0 = time.perf_counter()
+    intent = resolve_intent(message, ctx)
+    latency_ms = int((time.perf_counter() - t0) * 1000)
+    return {
+        "mode": body.get("mode") or "draft",
+        "prompt_id": body.get("prompt_id"),
+        "message": message,
+        "intent": {
+            "kind": intent.kind,
+            "tool": getattr(intent.tool, "value", intent.tool),
+            "params": intent.params,
+            "clarify_message": intent.clarify_message,
+            "refuse_message": intent.refuse_message,
+        },
+        "latency_ms": latency_ms,
+        "note": "Playground de intent/planificación; no altera versión ACTIVA ni ejecuta motores salvo que se invoque analyze explícitamente en UI.",
+        "active_unchanged": True,
+    }

@@ -69,8 +69,11 @@ LOTTERY_HINTS = [
     (r"quiniela\s+real|\breal\b", "Real"),
     (r"quiniela\s+loteka|loteka", "Loteka"),
     (r"quiniela\s+leidsa|leidsa", "Leidsa"),
-    (r"loter[ií]a\s+nacional|nacional\s+noche", "Nacional Noche"),
-    (r"nacional\s+d[ií]a", "Nacional Día"),
+    (r"gana\s*m[aá]s|ganamas", "Gana Más"),
+    # Nacional: noche/día primero; "nacional" genérico al final (resolver afina).
+    (r"nacional\s+noche|loter[ií]a\s+nacional\s+noche", "Nacional Noche"),
+    (r"nacional\s+d[ií]a|loter[ií]a\s+nacional\s+d[ií]a", "Nacional Día"),
+    (r"loter[ií]a\s+nacional|\bnacional\b", "Nacional"),
     (r"new\s+york\s+noche|\bny\s+noche\b", "New York Noche"),
     (r"new\s+york\s+d[ií]a|\bny\s+d[ií]a\b|new\s+york\s*2:?30", "New York Día"),
 ]
@@ -251,24 +254,48 @@ def resolve_intent(message: str, ctx: LotterySessionContext) -> ResolvedIntent:
             structured_type="lottery_error",
         )
 
-    # Motor de Relaciones Numéricas (antes del "analiza el N" genérico)
-    if re.search(
-        r"compa[nñ]eros?|"
-        r"vecinos?|"
-        r"fortalec|"
-        r"relaciones?\s+num[eé]ricas?|"
-        r"c[oó]digo\s+madre|"
-        r"motor\s+de\s+relaciones|"
-        r"analiz(a|ar|ame|emos).{0,80}([uú]ltimas?\s+\d+\s+veces?|veces?\s+que\s+sali|"
-        r"todas\s+(las\s+)?(ocurrencias|veces|apariciones))|"
-        r"busc(a|ar).{0,40}([uú]ltimas?\s+\d+\s+veces?|veces?\s+que\s+sali)|"
-        r"muestr(a|ame)\s+todas\s+las\s+ocurrencias|"
-        r"cuando\s+sale\s+el\s+\d+",
-        text,
-        re.I,
-    ):
+    # Motor de Relaciones Numéricas (antes del "analiza el N" genérico).
+    # Incluye "Analiza el N en Leidsa y Loteka" sin K explícito → clarify occurrence_limit
+    # (nunca caer al catch-all de "fecha exacta").
+    _nr_signals = bool(
+        re.search(
+            r"compa[nñ]eros?|"
+            r"vecinos?|"
+            r"fortalec|"
+            r"relaciones?\s+num[eé]ricas?|"
+            r"c[oó]digo\s+madre|"
+            r"motor\s+de\s+relaciones|"
+            r"analiz(a|ar|ame|emos).{0,80}([uú]ltimas?\s+\d+\s+veces?|veces?\s+que\s+sali|"
+            r"todas\s+(las\s+)?(ocurrencias|veces|apariciones))|"
+            r"busc(a|ar).{0,40}([uú]ltimas?\s+\d+\s+veces?|veces?\s+que\s+sali)|"
+            r"muestr(a|ame)\s+todas\s+las\s+ocurrencias|"
+            r"cuando\s+sale\s+el\s+\d+",
+            text,
+            re.I,
+        )
+    )
+    _analiza_observed = bool(
+        re.search(
+            r"analiz(a|ar|ame|emos)\s+(el\s+)?\d+|analiz(a|ar)\s+el\s+n[uú]mero",
+            text,
+            re.I,
+        )
+    )
+    if _nr_signals or _analiza_observed:
         number = _extract_number(raw) or (ctx.last_numbers[0] if ctx.last_numbers else None)
         lotteries = _extract_lotteries(text)
+        # "en todas las loterías (seleccionadas)" → contexto de sesión, sin inventar.
+        if re.search(
+            r"todas\s+las\s+loter[ií]as(\s+seleccionadas)?|"
+            r"todas\s+las\s+seleccionadas",
+            text,
+            re.I,
+        ):
+            session_lots = list(ctx.compared_lotteries or [])
+            if ctx.last_lottery and ctx.last_lottery not in session_lots:
+                session_lots = [ctx.last_lottery, *session_lots]
+            if session_lots:
+                lotteries = session_lots
         if not lotteries and ctx.last_lottery:
             lotteries = [ctx.last_lottery]
         if ctx.compared_lotteries:
@@ -381,19 +408,7 @@ def resolve_intent(message: str, ctx: LotterySessionContext) -> ResolvedIntent:
             structured_type="lottery_comparison",
         )
 
-    if re.search(r"analiz(a|ar|ame|emos)\s+(el\s+)?\d+|analiz(a|ar)\s+el\s+n[uú]mero", text):
-        number = _extract_number(raw)
-        lottery = _extract_lottery(text) or ctx.last_lottery
-        if number and not lottery:
-            return ResolvedIntent(
-                kind="clarify",
-                clarify_message=(
-                    f"Claro. ¿Quieres analizar el {number} en una lotería específica o compararlo entre todas? "
-                    "También puedo revisar todo el historial, el último año o los últimos 30 sorteos."
-                ),
-                structured_type="lottery_ambiguity",
-                params={"number": number, "pending_slots": ["lottery", "period"]},
-            )
+    # "analiza el N" genérico ya se enruta al Motor NR arriba (clarify lotería / K).
 
     if re.search(
         r"analiz(a|ar).*(completa|completa(mente)?|resumen)|"

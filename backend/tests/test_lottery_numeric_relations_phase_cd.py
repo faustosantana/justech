@@ -114,6 +114,62 @@ def test_intent_multi_lottery():
     assert intent.params["occurrence_k"] == 20
 
 
+def test_intent_multi_lottery_bare_asks_occurrence_limit_not_date():
+    """Phase G: 'Analiza el 45 en Leidsa y Loteka' must enter NR, keep both lotteries, ask K."""
+    ctx = LotterySessionContext()
+    intent = resolve_intent("Analiza el 45 en Leidsa y Loteka.", ctx)
+    assert intent.kind == "clarify"
+    assert intent.structured_type == "lottery_ambiguity"
+    lots = [str(x).lower() for x in (intent.params.get("lotteries") or [])]
+    assert any("leidsa" in x for x in lots)
+    assert any("loteka" in x for x in lots)
+    assert intent.params.get("observed_number") == 45
+    assert "occurrence_limit" in (intent.params.get("pending_slots") or [])
+    msg = (intent.clarify_message or "").lower()
+    assert "fecha" not in msg
+    assert "5" in msg and "todas" in msg
+
+
+def test_intent_multi_lottery_nacional_gana_mas():
+    ctx = LotterySessionContext()
+    intent = resolve_intent(
+        "Analiza el 18 en Nacional, Leidsa y Loteka en todas las ocurrencias",
+        ctx,
+    )
+    assert intent.kind == "tool"
+    assert intent.tool == LotteryToolName.ANALYZE_NUMERIC_RELATIONS
+    lots = [str(x).lower() for x in (intent.params.get("lotteries") or [])]
+    assert len(lots) >= 3
+    assert any("nacional" in x for x in lots)
+    assert any("leidsa" in x for x in lots)
+    assert any("loteka" in x for x in lots)
+    assert intent.params.get("occurrence_mode") == "all"
+
+
+def test_intent_analiza_n_asks_lottery_only_missing():
+    ctx = LotterySessionContext()
+    intent = resolve_intent("Analiza el 26.", ctx)
+    assert intent.kind == "clarify"
+    assert intent.params.get("observed_number") == 26
+    pending = intent.params.get("pending_slots") or []
+    assert "lottery" in pending
+    msg = (intent.clarify_message or "").lower()
+    assert "fecha" not in msg
+
+
+def test_planner_multi_lottery_single_step():
+    understanding, _ = understand(
+        "Analiza el 45 en Leidsa y Loteka con las últimas 20 veces",
+        ConversationState(),
+    )
+    plan = build_plan(understanding)
+    assert len(plan.steps) == 1
+    assert plan.steps[0].tool == LotteryToolName.ANALYZE_NUMERIC_RELATIONS.value
+    lots = plan.steps[0].params.get("lotteries") or []
+    assert len(lots) >= 2
+    assert plan.rationale == "numeric_relations_single_engine"
+
+
 def test_intent_all_occurrences():
     ctx = LotterySessionContext()
     intent = resolve_intent(

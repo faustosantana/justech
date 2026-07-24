@@ -18,6 +18,7 @@ const NAV = [
       { href: "/lottery/admin/control-center/motor/groups-table2", label: "Agrupaciones T2" },
       { href: "/lottery/admin/control-center/motor/relaciones", label: "Relaciones" },
       { href: "/lottery/admin/control-center/motor/historico", label: "Histórico" },
+      { href: "/lottery/admin/control-center/motor/historial-numero", label: "Historial del Número" },
       { href: "/lottery/admin/control-center/motor/combinaciones", label: "Matriz" },
       { href: "/lottery/admin/control-center/motor/patron", label: "Patrón" },
       { href: "/lottery/admin/control-center/motor/comparador", label: "Comparador" },

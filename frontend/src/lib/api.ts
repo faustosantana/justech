@@ -2854,6 +2854,45 @@ export const apiClient = {
       body: JSON.stringify(body),
     }, true),
 
+  postLotteryNrNumberProfile: (body: Record<string, unknown>) =>
+    request<Record<string, unknown>>("/lottery/admin/numeric-relations/history/numbers/profile", {
+      method: "POST",
+      body: JSON.stringify(body),
+    }, true),
+
+  postLotteryNrNumberOccurrences: (body: Record<string, unknown>) =>
+    request<Record<string, unknown>>("/lottery/admin/numeric-relations/history/numbers/occurrences", {
+      method: "POST",
+      body: JSON.stringify(body),
+    }, true),
+
+  postLotteryNrNumberOccurrenceDetail: (body: Record<string, unknown>) =>
+    request<Record<string, unknown>>(
+      "/lottery/admin/numeric-relations/history/numbers/occurrences/detail",
+      { method: "POST", body: JSON.stringify(body) },
+      true,
+    ),
+
+  postLotteryNrNumberNextDraws: (body: Record<string, unknown>) =>
+    request<Record<string, unknown>>(
+      "/lottery/admin/numeric-relations/history/numbers/occurrences/next-draws",
+      { method: "POST", body: JSON.stringify(body) },
+      true,
+    ),
+
+  postLotteryNrNumbersCompare: (body: Record<string, unknown>) =>
+    request<Record<string, unknown>>("/lottery/admin/numeric-relations/history/numbers/compare", {
+      method: "POST",
+      body: JSON.stringify(body),
+    }, true),
+
+  postLotteryNrWhyStrengthened: (body: Record<string, unknown>) =>
+    request<Record<string, unknown>>(
+      "/lottery/admin/numeric-relations/history/numbers/why-strengthened",
+      { method: "POST", body: JSON.stringify(body) },
+      true,
+    ),
+
   getLotteryPredictionMotors: () =>
     request<{ items: Record<string, unknown>[] }>("/lottery/admin/predictions/motors", {}, true),
 

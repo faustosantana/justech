@@ -1,0 +1,11 @@
+wrote 01_final_seven_lotteries.png (162347)
+wrote 02_no_loto_leidsa.png (162382)
+wrote 03_no_loto_real.png (162382)
+wrote 04_active_filters_only.png (145177)
+wrote 08_number_profile_final.png (145238)
+wrote 09_signals_final.png (145237)
+wrote 05_archived_lotteries_admin.png (108799)
+wrote 06_table_1_final.png (156062)
+wrote 07_table_2_final.png (154963)
+wrote 10_mobile_final.png (73217)
+OK screenshots

@@ -1,0 +1,28 @@
+saved 01_hub.png url= https://jaios.justech.do/lottery/admin/control-center title= JAIOS — Justech AI Operating System
+saved 02_table1.png url= https://jaios.justech.do/lottery/admin/control-center/motor/table1 title= JAIOS — Justech AI Operating System
+saved 03_table2.png url= https://jaios.justech.do/lottery/admin/control-center/motor/table2 title= JAIOS — Justech AI Operating System
+saved 04_groups_t1.png url= https://jaios.justech.do/lottery/admin/control-center/motor/groups-table1 title= JAIOS — Justech AI Operating System
+saved 05_groups_t2.png url= https://jaios.justech.do/lottery/admin/control-center/motor/groups-table2 title= JAIOS — Justech AI Operating System
+saved 06_relaciones.png url= https://jaios.justech.do/lottery/admin/control-center/motor/relaciones title= JAIOS — Justech AI Operating System
+saved 07_auditoria.png url= https://jaios.justech.do/lottery/admin/control-center/motor/auditoria title= JAIOS — Justech AI Operating System
+saved 08_predicciones.png url= https://jaios.justech.do/lottery/admin/control-center/predicciones title= JAIOS — Justech AI Operating System
+saved 09_predicciones_run.png url= https://jaios.justech.do/lottery/admin/control-center/predicciones/run title= JAIOS — Justech AI Operating System
+saved 10_prompt_studio.png url= https://jaios.justech.do/lottery/admin/control-center/prompt-studio title= JAIOS — Justech AI Operating System
+saved 11_compilado.png url= https://jaios.justech.do/lottery/admin/control-center/prompt-studio/compilado title= JAIOS — Justech AI Operating System
+saved 12_versiones.png url= https://jaios.justech.do/lottery/admin/control-center/prompt-studio/versiones title= JAIOS — Justech AI Operating System
+saved 13_playground.png url= https://jaios.justech.do/lottery/admin/control-center/prompt-studio/playground title= JAIOS — Justech AI Operating System
+saved 14_benchmark.png url= https://jaios.justech.do/lottery/admin/control-center/prompt-studio/benchmark title= JAIOS — Justech AI Operating System
+saved 15_multi_45_leidsa_loteka_k10.png url= https://jaios.justech.do/lottery/admin/control-center/motor/relaciones title= JAIOS — Justech AI Operating System
+node:internal/modules/run_main:122
+    triggerUncaughtException(
+    ^
+
+page.goto: net::ERR_NETWORK_CHANGED at https://jaios.justech.do/lottery/admin/control-center/motor/table1
+Call log:
+  - navigating to "https://jaios.justech.do/lottery/admin/control-center/motor/table1", waiting until "domcontentloaded"
+
+    at /home/pwuser/shot/i8_prod_visual.mjs:112:12 {
+  name: 'Error'
+}
+
+Node.js v22.11.0

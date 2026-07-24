@@ -1,0 +1,4 @@
+openapi_paths 618
+predictions 3
+prompt-studio 2
+numeric-relations 8

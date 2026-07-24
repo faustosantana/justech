@@ -1,0 +1,29 @@
+monitor_start_utc=2026-07-24T14:02:48+00:00
+14:02:48 health=ok err_window=0 draws=91937 sync=true
+14:03:48 health=ok err_window=0 draws=91937 sync=true
+14:04:49 health=ok err_window=0 draws=91937 sync=true
+14:05:49 health=ok err_window=0 draws=91937 sync=true
+14:06:49 health=ok err_window=0 draws=91937 sync=true
+14:07:50 health=ok err_window=0 draws=91937 sync=true
+14:08:50 health=ok err_window=0 draws=91937 sync=true
+14:09:50 health=ok err_window=0 draws=91937 sync=true
+14:10:50 health=ok err_window=0 draws=91937 sync=true
+14:11:51 health=ok err_window=0 draws=91937 sync=true
+14:12:51 health=ok err_window=0 draws=91937 sync=true
+14:13:51 health=ok err_window=0 draws=91937 sync=true
+14:14:52 health=ok err_window=0 draws=91937 sync=true
+14:15:52 health=ok err_window=0 draws=91937 sync=true
+14:16:52 health=ok err_window=0 draws=91937 sync=true
+monitor_end_utc=2026-07-24T14:17:52+00:00
+err_total_windows=0
+NAME                              IMAGE                                        STATUS
+jaios-app-backend-1               jaios-app-backend:control-center-20260724    Up 17 minutes (healthy)
+jaios-app-frontend-1              jaios-app-frontend:control-center-20260724   Up 17 minutes
+jaios-app-gateway-1               nginx:1.27-alpine                            Up 17 minutes
+jaios-app-hermes-service-1        jaios-app-hermes-service                     Up 25 hours (healthy)
+jaios-app-lottery-sync-worker-1   jaios-app-backend:control-center-20260724    Up 17 minutes
+jaios-app-n8n-1                   n8nio/n8n:1.72.1                             Up 6 weeks
+jaios-app-postgres-1              postgres:16-alpine                           Up 25 hours (healthy)
+jaios-app-qdrant-1                qdrant/qdrant:v1.12.5                        Up 6 weeks
+jaios-app-redis-1                 redis:7-alpine                               Up 6 weeks (healthy)
+jaios-app-whatsapp-bridge-1       jaios-app-whatsapp-bridge                    Up 5 weeks

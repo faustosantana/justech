@@ -1,0 +1,20 @@
+admin_email admin@justech.do
+user_email diana@justech.do
+secret_paths []
+admin_tables	200
+noperm_tables	403
+noperm_prompts	403
+noperm_schema	403
+noperm_benchmark	403
+noperm_export_json	403
+noperm_secret	404
+admin_secret	404
+noperm_pred_run	403
+admin_validate_secret	400	{"detail":"solo_borrador_o_validacion"}
+admin_compiled	200
+admin_versions_list	200
+admin_benchmark	200
+noperm_validate_secret	403	{"detail":"Permiso requerido: lottery_admin_prompts o lottery_admin_ai o lottery.admin"}
+noperm_compiled	403
+noperm_versions_list	403
+noperm_benchmark	403

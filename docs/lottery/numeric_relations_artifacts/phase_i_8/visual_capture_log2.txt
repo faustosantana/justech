@@ -1,0 +1,54 @@
+saved 01_hub.png url= https://jaios.justech.do/lottery/admin/control-center
+saved 02_table1.png url= https://jaios.justech.do/lottery/admin/control-center/motor/table1
+saved 03_table2.png url= https://jaios.justech.do/lottery/admin/control-center/motor/table2
+saved 04_groups_t1.png url= https://jaios.justech.do/lottery/admin/control-center/motor/groups-table1
+saved 05_groups_t2.png url= https://jaios.justech.do/lottery/admin/control-center/motor/groups-table2
+ERR 06_relaciones.png page.goto: net::ERR_NETWORK_CHANGED at https://jaios.justech.do/lottery/admin/control-center/motor/relaciones
+Call log:
+  - navigating to "https://jaios.justech.do/lottery/admin/control-center/motor/relaciones", waiting until "domcontentloaded"
+
+ERR 07_auditoria.png page.goto: Navigation to "https://jaios.justech.do/lottery/admin/control-center/motor/auditoria" is interrupted by another navigation to "chrome-error://chromewebdata/"
+Call log:
+  - navigating to "https://jaios.justech.do/lottery/admin/control-center/motor/auditoria", waiting until "domcontentloaded"
+
+ERR 08_predicciones.png page.goto: Navigation to "https://jaios.justech.do/lottery/admin/control-center/predicciones" is interrupted by another navigation to "https://jaios.justech.do/lottery/admin/control-center/motor/auditoria"
+Call log:
+  - navigating to "https://jaios.justech.do/lottery/admin/control-center/predicciones", waiting until "domcontentloaded"
+
+ERR 09_predicciones_run.png page.goto: Navigation to "https://jaios.justech.do/lottery/admin/control-center/predicciones/run" is interrupted by another navigation to "https://jaios.justech.do/lottery/admin/control-center/predicciones"
+Call log:
+  - navigating to "https://jaios.justech.do/lottery/admin/control-center/predicciones/run", waiting until "domcontentloaded"
+
+ERR 10_prompt_studio.png page.goto: Navigation to "https://jaios.justech.do/lottery/admin/control-center/prompt-studio" is interrupted by another navigation to "https://jaios.justech.do/lottery/admin/control-center/predicciones/run"
+Call log:
+  - navigating to "https://jaios.justech.do/lottery/admin/control-center/prompt-studio", waiting until "domcontentloaded"
+
+ERR 11_compilado.png page.goto: Navigation to "https://jaios.justech.do/lottery/admin/control-center/prompt-studio/compilado" is interrupted by another navigation to "https://jaios.justech.do/lottery/admin/control-center/prompt-studio"
+Call log:
+  - navigating to "https://jaios.justech.do/lottery/admin/control-center/prompt-studio/compilado", waiting until "domcontentloaded"
+
+ERR 12_versiones.png page.goto: Navigation to "https://jaios.justech.do/lottery/admin/control-center/prompt-studio/versiones" is interrupted by another navigation to "https://jaios.justech.do/lottery/admin/control-center/prompt-studio/compilado"
+Call log:
+  - navigating to "https://jaios.justech.do/lottery/admin/control-center/prompt-studio/versiones", waiting until "domcontentloaded"
+
+ERR 13_playground.png page.goto: net::ERR_NETWORK_CHANGED at https://jaios.justech.do/lottery/admin/control-center/prompt-studio/playground
+Call log:
+  - navigating to "https://jaios.justech.do/lottery/admin/control-center/prompt-studio/playground", waiting until "domcontentloaded"
+
+ERR 14_benchmark.png page.goto: Navigation to "https://jaios.justech.do/lottery/admin/control-center/prompt-studio/benchmark" is interrupted by another navigation to "chrome-error://chromewebdata/"
+Call log:
+  - navigating to "https://jaios.justech.do/lottery/admin/control-center/prompt-studio/benchmark", waiting until "domcontentloaded"
+
+node:internal/modules/run_main:122
+    triggerUncaughtException(
+    ^
+
+page.goto: Navigation to "https://jaios.justech.do/lottery/admin/control-center/motor/table1" is interrupted by another navigation to "https://jaios.justech.do/lottery/admin/control-center/prompt-studio/benchmark"
+Call log:
+  - navigating to "https://jaios.justech.do/lottery/admin/control-center/motor/table1", waiting until "domcontentloaded"
+
+    at /home/pwuser/shot/i8_prod_visual2.mjs:163:12 {
+  name: 'Error'
+}
+
+Node.js v22.11.0

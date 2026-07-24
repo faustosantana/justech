@@ -1,0 +1,207 @@
+{
+  "A_table1_n1": {
+    "formula": "1 ÷ 1220",
+    "digits": "00008196721",
+    "code": 34,
+    "visible": "0.0008196721",
+    "chain": null
+  },
+  "B_table2_n1": {
+    "formula": "1220 ÷ 1",
+    "digits": "122000000000",
+    "code": 5,
+    "visible": "1220.00000000",
+    "chain": null
+  },
+  "lotteries": {
+    "leidsa": {
+      "id": "e76951f3-c120-4787-aeae-2225187fd769",
+      "name": "Loto Leidsa"
+    },
+    "loteka": {
+      "id": "b9f2c5a2-bc3e-4382-9b6d-3cee16db00fd",
+      "name": "Quiniela Loteka"
+    }
+  },
+  "C_rel26": {
+    "direct_companions": [
+      27,
+      38
+    ],
+    "mother_code": 26,
+    "llm_calculates": false,
+    "top5": [
+      {
+        "n": 27,
+        "score": 0,
+        "neighbors": [
+          68,
+          76,
+          92
+        ]
+      },
+      {
+        "n": 38,
+        "score": 0,
+        "neighbors": []
+      }
+    ]
+  },
+  "D_pred34": {
+    "guarantees_outcome": false,
+    "warning": "Este resultado es una señal histórica producida por el Motor de Relaciones Numéricas. No constituye garantía de resultado.",
+    "draw_ids_sample": [],
+    "occurrences": 162,
+    "top5": [
+      {
+        "n": 1,
+        "score": 43,
+        "neighbors": [
+          10
+        ],
+        "table2_code": 5
+      },
+      {
+        "n": 17,
+        "score": 32,
+        "neighbors": [
+          13
+        ],
+        "table2_code": 59
+      },
+      {
+        "n": 76,
+        "score": 25,
+        "neighbors": [
+          27
+        ],
+        "table2_code": 53
+      },
+      {
+        "n": 33,
+        "score": 0,
+        "neighbors": [],
+        "table2_code": 85
+      },
+      {
+        "n": 49,
+        "score": 0,
+        "neighbors": [],
+        "table2_code": 72
+      }
+    ],
+    "keys": [
+      "observed_number",
+      "mother_code",
+      "primary_table",
+      "lottery_ids",
+      "lottery_names",
+      "occurrence_limit",
+      "occurrences_found",
+      "occurrences_used",
+      "historical_occurrences",
+      "direct_companions",
+      "companions_analyzed",
+      "ranking",
+      "candidates",
+      "analysis_metadata",
+      "prediction_kind",
+      "matches",
+      "companions_score_zero",
+      "disclaimer",
+      "llm_calculates",
+      "guarantees_outcome",
+      "explanation",
+      "warning",
+      "motor"
+    ]
+  },
+  "E_multi45": {
+    "lottery_names": [
+      "e76951f3-c120-4787-aeae-2225187fd769",
+      "Quiniela Loteka"
+    ],
+    "lottery_ids_n": 2,
+    "direct_companions": [
+      69,
+      80
+    ],
+    "top5": [
+      {
+        "n": 69,
+        "score": 2
+      },
+      {
+        "n": 80,
+        "score": 0
+      }
+    ]
+  },
+  "F_chat": {
+    "valid": {
+      "status": 200,
+      "excerpt": "Analicé el número 26 en la Quiniela Leidsa, examinando sus últimas 10 apariciones en el histórico.\n\n**Resultado del análisis de relaciones numéricas:**\n*   **Número observado:** 26 (código madre 26).\n*   **Compañeros directos identificados (Tabla 1):** 27 y 38.\n*   **Puntuación del ranking:** Ambos compañeros (27 y 38) obtuvieron una puntuación de 0. Esto significa que, en el análisis de las últimas 10 veces que salió el 26, no se encontraron coincidencias con los números vecinos asociados a estos compañeros en la Tabla 2 del método.\n\n**Interpretación:** Este resultado (puntuación 0) es una señal histórica del método de relaciones numéricas aplicado al período solicitado. Indica que, para las últimas 10 ocurrencias del 26, los patrones de vecinos asociados a sus compañeros 27 y 38 no se manifestaron. No es una certeza ni garantía de resultados futuros.",
+      "keys": [
+        "message",
+        "user_message_id",
+        "context",
+        "suggestions",
+        "synthesis_fallback",
+        "latency_ms",
+        "runtime_trace"
+      ]
+    },
+    "missing": {
+      "status": 200,
+      "excerpt": "¿Cuántas últimas ocurrencias del 26 uso en Leidsa? Elige explícitamente: 5, 10, 20 o todas. No hay un valor por defecto oculto.",
+      "keys": [
+        "message",
+        "user_message_id",
+        "context",
+        "suggestions",
+        "synthesis_fallback",
+        "latency_ms",
+        "runtime_trace"
+      ]
+    },
+    "multi": {
+      "status": 200,
+      "excerpt": "Analicé el número 26 en Quiniela Leidsa y Quiniela Loteka, usando sus últimas 10 apariciones históricas.\n\n**Resultado del análisis de relaciones numéricas:**\n- **Número observado (código madre):** 26\n- **Loterías analizadas:** Quiniela Leidsa, Quiniela Loteka\n- **Período de muestra:** Últimas 10 ocurrencias (desde el 10/12/2025 al 07/07/2026)\n- **Compañeros directos en la Tabla 1:** 27 y 38.\n- **Ranking de señales:**\n    1. **Número 27** — puntuación 1 (apareció junto al vecino 76 en Loteka, 20/05/2026, posición 1ro).\n    2. **Número 38** — puntuación 0 (no se encontraron vecinos que lo fortalecieran en la muestra).\n\n**Interpretación:**\nEn el contexto histórico analizado, el compañero 27 mostró una leve señal de relación con el número 26, basada en la aparición de un vecino (76) en un sorteo específico. El compañero 38 no presentó esta señal. Es importante aclarar que este es un patrón o",
+      "keys": [
+        "message",
+        "user_message_id",
+        "context",
+        "suggestions",
+        "synthesis_fallback",
+        "latency_ms",
+        "runtime_trace"
+      ]
+    },
+    "absolute": {
+      "status": 200,
+      "excerpt": "No puedo predecir resultados futuros ni recomendar apuestas. Solo consulto el histórico verificado. Los resultados pasados no garantizan resultados futuros.",
+      "keys": [
+        "message",
+        "user_message_id",
+        "context",
+        "suggestions",
+        "synthesis_fallback",
+        "latency_ms",
+        "runtime_trace"
+      ]
+    },
+    "stub": {
+      "status": 200,
+      "excerpt": "No puedo predecir resultados futuros ni recomendar apuestas. Solo consulto el histórico verificado. Puedes pedir una señal histórica del Motor de Relaciones Numéricas (ej. «predicción del 34 en Leidsa con las últimas 20»). No garantiza resultados futuros.",
+      "keys": [
+        "message",
+        "user_message_id",
+        "context",
+        "suggestions",
+        "synthesis_fallback",
+        "latency_ms",
+        "runtime_trace"
+      ]
+    }
+  }
+}

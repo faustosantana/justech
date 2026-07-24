@@ -1,0 +1,248 @@
+Resultados de Loterías
+
+INICIO
+
+Resumen
+Catálogo
+
+ANÁLISIS
+
+Consulta histórica
+Comparar
+Estadísticas
+Lotería IA
+
+MI ESPACIO
+
+Favoritos
+Consultas guardadas
+
+ADMINISTRACIÓN
+
+Loterías
+Sincronización
+Scheduler y fuentes
+Centro de IA
+Lottery IA Control Center
+Aplicaciones
+Aplicaciones
+Resultados de Loterías
+table2
+⌘K
+JUSTECH S.R.L.
+Assistant
+Salir
+Lottery IA · Control Center
+MOTOR MATEMÁTICO
+Tabla 1
+Tabla 2
+Agrupaciones T1
+Agrupaciones T2
+Relaciones
+Auditoría
+PREDICCIONES
+Motores
+Ejecutar
+PROMPT STUDIO
+Bloques
+Prompt compilado
+Versiones
+Playground
+Benchmark
+Motor Matemático · Tabla 2
+
+Operación 1220 ÷ N · cadena de 12 dígitos · vista separada de Tabla 1
+
+Tabla 2 — 100 números
+
+Universo fijo 1–100 · Solo lectura · No se mezcla con la otra tabla
+
+Export JSON
+Export CSV
+100 filas · pág. 1/4
+Número	Fórmula	Resultado	Cadena dígitos	Cant. dígitos	Código	Grupo	Acción
+1	1220 ÷ 1	1220.00000000	122000000000	12	5	
+Código 5
+1, 10, 100
+	
+Ver detalle
+Copiar
+
+2	1220 ÷ 2	610.000000000	610000000000	12	7	
+Código 7
+2, 20
+	
+Ver detalle
+Copiar
+
+3	1220 ÷ 3	406.666666667	406666666667	12	65	
+Código 65
+3, 30, 83
+	
+Ver detalle
+Copiar
+
+4	1220 ÷ 4	305.000000000	305000000000	12	8	
+Código 8
+4, 40
+	
+Ver detalle
+Copiar
+
+5	1220 ÷ 5	244.000000000	244000000000	12	10	
+Código 10
+5, 50
+	
+Ver detalle
+Copiar
+
+6	1220 ÷ 6	203.333333333	203333333333	12	32	
+Código 32
+6, 60
+	
+Ver detalle
+Copiar
+
+7	1220 ÷ 7	174.285714286	174285714286	12	55	
+Código 55
+7, 9, 22, 29, 35, 42, 44, 53, 63, 70, 90
+	
+Ver detalle
+Copiar
+
+8	1220 ÷ 8	152.500000000	152500000000	12	13	
+Código 13
+8, 80
+	
+Ver detalle
+Copiar
+
+9	1220 ÷ 9	135.555555556	135555555556	12	55	
+Código 55
+7, 9, 22, 29, 35, 42, 44, 53, 63, 70, 90
+	
+Ver detalle
+Copiar
+
+10	1220 ÷ 10	122.000000000	122000000000	12	5	
+Código 5
+1, 10, 100
+	
+Ver detalle
+Copiar
+
+11	1220 ÷ 11	110.909090909	110909090909	12	47	
+Código 47
+11, 57, 69, 91
+	
+Ver detalle
+Copiar
+
+12	1220 ÷ 12	101.666666667	101666666667	12	57	
+Código 57
+12, 41, 56, 71, 89
+	
+Ver detalle
+Copiar
+
+13	1220 ÷ 13	93.8461538462	938461538462	12	59	
+Código 59
+13, 17
+	
+Ver detalle
+Copiar
+
+14	1220 ÷ 14	87.1428571429	871428571429	12	58	
+Código 58
+14, 54
+	
+Ver detalle
+Copiar
+
+15	1220 ÷ 15	81.3333333333	813333333333	12	39	
+Código 39
+15, 96
+	
+Ver detalle
+Copiar
+
+16	1220 ÷ 16	76.2500000000	762500000000	12	20	
+Código 20
+16, 25
+	
+Ver detalle
+Copiar
+
+17	1220 ÷ 17	71.7647058824	717647058824	12	59	
+Código 59
+13, 17
+	
+Ver detalle
+Copiar
+
+18	1220 ÷ 18	67.7777777778	677777777778	12	84	
+Código 84
+18
+	
+Ver detalle
+Copiar
+
+19	1220 ÷ 19	64.2105263158	642105263158	12	43	
+Código 43
+19, 46, 86
+	
+Ver detalle
+Copiar
+
+20	1220 ÷ 20	61.0000000000	610000000000	12	7	
+Código 7
+2, 20
+	
+Ver detalle
+Copiar
+
+21	1220 ÷ 21	58.0952380952	580952380952	12	56	
+Código 56
+21, 51
+	
+Ver detalle
+Copiar
+
+22	1220 ÷ 22	55.4545454545	554545454545	12	55	
+Código 55
+7, 9, 22, 29, 35, 42, 44, 53, 63, 70, 90
+	
+Ver detalle
+Copiar
+
+23	1220 ÷ 23	53.0434782609	530434782609	12	51	
+Código 51
+23, 28, 73, 77, 87
+	
+Ver detalle
+Copiar
+
+24	1220 ÷ 24	50.8333333333	508333333333	12	40	
+Código 40
+24
+	
+Ver detalle
+Copiar
+
+25	1220 ÷ 25	48.8000000000	488000000000	12	20	
+Código 20
+16, 25
+	
+Ver detalle
+Copiar
+Anterior
+Siguiente
+JAIOS Assistant
+
+JAIOS Copiloto
+
+Copiloto empresarial · solo lectura
+
+Nueva conversación
+
+Consultando en: JUSTECH S.R.L. · JAIOS

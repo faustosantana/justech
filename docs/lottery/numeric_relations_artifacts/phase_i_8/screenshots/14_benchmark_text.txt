@@ -1,0 +1,65 @@
+Resultados de Loterías
+
+INICIO
+
+Resumen
+Catálogo
+
+ANÁLISIS
+
+Consulta histórica
+Comparar
+Estadísticas
+Lotería IA
+
+MI ESPACIO
+
+Favoritos
+Consultas guardadas
+
+ADMINISTRACIÓN
+
+Loterías
+Sincronización
+Scheduler y fuentes
+Centro de IA
+Lottery IA Control Center
+Aplicaciones
+Aplicaciones
+Resultados de Loterías
+benchmark
+⌘K
+JUSTECH S.R.L.
+Assistant
+Salir
+Lottery IA · Control Center
+MOTOR MATEMÁTICO
+Tabla 1
+Tabla 2
+Agrupaciones T1
+Agrupaciones T2
+Relaciones
+Auditoría
+PREDICCIONES
+Motores
+Ejecutar
+PROMPT STUDIO
+Bloques
+Prompt compilado
+Versiones
+Playground
+Benchmark
+Benchmark · Control Center
+
+Gates: P0=0 y P1=0 para aprobar borrador. No publica ni activa.
+
+Ejecutar benchmark
+JAIOS Assistant
+
+JAIOS Copiloto
+
+Copiloto empresarial · solo lectura
+
+Nueva conversación
+
+Consultando en: JUSTECH S.R.L. · JAIOS

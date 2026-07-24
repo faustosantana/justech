@@ -1,0 +1,213 @@
+Resultados de Loterías
+
+INICIO
+
+Resumen
+Catálogo
+
+ANÁLISIS
+
+Consulta histórica
+Comparar
+Estadísticas
+Lotería IA
+
+MI ESPACIO
+
+Favoritos
+Consultas guardadas
+
+ADMINISTRACIÓN
+
+Loterías
+Sincronización
+Scheduler y fuentes
+Centro de IA
+Lottery IA Control Center
+Aplicaciones
+Aplicaciones
+Resultados de Loterías
+table1
+⌘K
+JUSTECH S.R.L.
+Assistant
+Salir
+Lottery IA · Control Center
+MOTOR MATEMÁTICO
+Tabla 1
+Tabla 2
+Agrupaciones T1
+Agrupaciones T2
+Relaciones
+Auditoría
+PREDICCIONES
+Motores
+Ejecutar
+PROMPT STUDIO
+Bloques
+Prompt compilado
+Versiones
+Playground
+Benchmark
+Motor Matemático · Tabla 1
+
+Operación N ÷ 1220 · catálogo solo lectura
+
+Tabla 1 — 100 números
+
+Universo fijo 1–100 · Solo lectura · No se mezcla con la otra tabla
+
+Export JSON
+Export CSV
+20 filas · pág. 1/1
+Número	Fórmula	Resultado	Cadena dígitos	Cant. dígitos	Código	Grupo	Acción
+1	1 ÷ 1220	0.0008196721	00008196721	11	34	
+Código 34
+1, 17, 33, 49, 76
+	
+Ver detalle
+Copiar
+
+10	10 ÷ 1220	0.0081967213	00081967213	11	37	
+Código 37
+5, 10, 42
+	
+Ver detalle
+Copiar
+
+11	11 ÷ 1220	0.0090163934	00090163934	11	35	
+Código 35
+6, 11, 43, 54, 86
+	
+Ver detalle
+Copiar
+
+12	12 ÷ 1220	0.0098360656	00098360656	11	43	
+Código 43
+12, 28, 44, 60, 81, 92
+	
+Ver detalle
+Copiar
+
+13	13 ÷ 1220	0.0106557377	00106557377	11	41	
+Código 41
+13, 29, 93
+	
+Ver detalle
+Copiar
+
+14	14 ÷ 1220	0.0114754098	00114754098	11	39	
+Código 39
+9, 14, 30, 41, 46, 62, 78, 94
+	
+Ver detalle
+Copiar
+
+15	15 ÷ 1220	0.0122950820	00122950820	11	29	
+Código 29
+15
+	
+Ver detalle
+Copiar
+
+16	16 ÷ 1220	0.0131147541	00131147541	11	27	
+Código 27
+16
+	
+Ver detalle
+Copiar
+
+17	17 ÷ 1220	0.0139344262	00139344262	11	34	
+Código 34
+1, 17, 33, 49, 76
+	
+Ver detalle
+Copiar
+
+18	18 ÷ 1220	0.0147540984	00147540984	11	42	
+Código 42
+7, 18, 23, 50, 55, 66, 71
+	
+Ver detalle
+Copiar
+
+19	19 ÷ 1220	0.0155737705	00155737705	11	40	
+Código 40
+8, 19, 51, 56, 67, 72
+	
+Ver detalle
+Copiar
+
+21	21 ÷ 1220	0.0172131148	00172131148	11	28	
+Código 28
+21, 26, 53
+	
+Ver detalle
+Copiar
+
+31	31 ÷ 1220	0.0254098361	00254098361	11	38	
+Código 38
+20, 31, 47, 52, 63, 100
+	
+Ver detalle
+Copiar
+
+41	41 ÷ 1220	0.0336065574	00336065574	11	39	
+Código 39
+9, 14, 30, 41, 46, 62, 78, 94
+	
+Ver detalle
+Copiar
+
+51	51 ÷ 1220	0.0418032787	00418032787	11	40	
+Código 40
+8, 19, 51, 56, 67, 72
+	
+Ver detalle
+Copiar
+
+61	61 ÷ 1220	0.0500000000	00500000000	11	5	
+Código 5
+61
+	
+Ver detalle
+Copiar
+
+71	71 ÷ 1220	0.0581967213	00581967213	11	42	
+Código 42
+7, 18, 23, 50, 55, 66, 71
+	
+Ver detalle
+Copiar
+
+81	81 ÷ 1220	0.0663934426	00663934426	11	43	
+Código 43
+12, 28, 44, 60, 81, 92
+	
+Ver detalle
+Copiar
+
+91	91 ÷ 1220	0.0745901639	00745901639	11	44	
+Código 44
+22, 59, 70, 75, 91
+	
+Ver detalle
+Copiar
+
+100	100 ÷ 1220	0.0819672131	00819672131	11	38	
+Código 38
+20, 31, 47, 52, 63, 100
+	
+Ver detalle
+Copiar
+Anterior
+Siguiente
+JAIOS Assistant
+
+JAIOS Copiloto
+
+Copiloto empresarial · solo lectura
+
+Nueva conversación
+
+Consultando en: JUSTECH S.R.L. · JAIOS

@@ -1,0 +1,74 @@
+Resultados de Loterías
+
+INICIO
+
+Resumen
+Catálogo
+
+ANÁLISIS
+
+Consulta histórica
+Comparar
+Estadísticas
+Lotería IA
+
+MI ESPACIO
+
+Favoritos
+Consultas guardadas
+
+ADMINISTRACIÓN
+
+Loterías
+Sincronización
+Scheduler y fuentes
+Centro de IA
+Lottery IA Control Center
+Aplicaciones
+Aplicaciones
+Resultados de Loterías
+groups table1
+⌘K
+JUSTECH S.R.L.
+Assistant
+Salir
+Lottery IA · Control Center
+MOTOR MATEMÁTICO
+Tabla 1
+Tabla 2
+Agrupaciones T1
+Agrupaciones T2
+Relaciones
+Auditoría
+PREDICCIONES
+Motores
+Ejecutar
+PROMPT STUDIO
+Bloques
+Prompt compilado
+Versiones
+Playground
+Benchmark
+Agrupaciones · Tabla 1
+
+Validación visual: código 34 → integrantes del grupo T1
+
+Agrupaciones Tabla 1
+
+Vista exclusiva de Tabla 1. No mezcla la otra tabla.
+
+Código 34 · 5 integrantes
+1
+17
+33
+49
+76
+JAIOS Assistant
+
+JAIOS Copiloto
+
+Copiloto empresarial · solo lectura
+
+Nueva conversación
+
+Consultando en: JUSTECH S.R.L. · JAIOS

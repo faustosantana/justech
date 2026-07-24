@@ -1,0 +1,70 @@
+Resultados de Loterías
+
+INICIO
+
+Resumen
+Catálogo
+
+ANÁLISIS
+
+Consulta histórica
+Comparar
+Estadísticas
+Lotería IA
+
+MI ESPACIO
+
+Favoritos
+Consultas guardadas
+
+ADMINISTRACIÓN
+
+Loterías
+Sincronización
+Scheduler y fuentes
+Centro de IA
+Lottery IA Control Center
+Aplicaciones
+Aplicaciones
+Resultados de Loterías
+control center
+⌘K
+JUSTECH S.R.L.
+Assistant
+Salir
+Lottery IA · Control Center
+MOTOR MATEMÁTICO
+Tabla 1
+Tabla 2
+Agrupaciones T1
+Agrupaciones T2
+Relaciones
+Auditoría
+PREDICCIONES
+Motores
+Ejecutar
+PROMPT STUDIO
+Bloques
+Prompt compilado
+Versiones
+Playground
+Benchmark
+Lottery IA Control Center
+
+Plataforma administrativa: conocimiento, reglas y motores auditables. No modifica sync ni Producción.
+
+Motor Matemático
+Ver fórmulas, Tabla 1/2, agrupaciones, relaciones y trazabilidad. Solo lectura del motor v1.0.0.
+Predicciones
+Activar/desactivar motores implementados. Predicción real = presentación del ranking histórico NR.
+Prompt Studio
+Bloques con ayuda, prompt compilado, borradores, versiones humanas, playground y benchmark.
+JAIOS Assistant
+
+JAIOS Copiloto
+
+Copiloto empresarial · solo lectura
+
+Nueva conversación
+
+Consultando en: JUSTECH S.R.L. · JAIOS

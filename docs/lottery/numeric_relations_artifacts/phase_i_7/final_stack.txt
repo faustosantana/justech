@@ -1,0 +1,14 @@
+SYNC=true
+ALEMBIC=061_lottery_ia_control_center (head)
+DRAWS=91937
+NAME                              IMAGE                                        STATUS
+jaios-app-backend-1               jaios-app-backend:control-center-20260724    Up 19 minutes (healthy)
+jaios-app-frontend-1              jaios-app-frontend:control-center-20260724   Up 19 minutes
+jaios-app-gateway-1               nginx:1.27-alpine                            Up 19 minutes
+jaios-app-hermes-service-1        jaios-app-hermes-service                     Up 25 hours (healthy)
+jaios-app-lottery-sync-worker-1   jaios-app-backend:control-center-20260724    Up 19 minutes
+jaios-app-n8n-1                   n8nio/n8n:1.72.1                             Up 6 weeks
+jaios-app-postgres-1              postgres:16-alpine                           Up 25 hours (healthy)
+jaios-app-qdrant-1                qdrant/qdrant:v1.12.5                        Up 6 weeks
+jaios-app-redis-1                 redis:7-alpine                               Up 6 weeks (healthy)
+jaios-app-whatsapp-bridge-1       jaios-app-whatsapp-bridge                    Up 5 weeks

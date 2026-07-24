@@ -1,0 +1,12 @@
+=== MONITOR I-8 ===
+2026-07-24T15:58:31+00:00
+{"status":"ok","service":"jaios-api","version":"0.1.0"}
+BACKEND_ERR=0
+FRONTEND_ERR=18
+GATEWAY_ERR=0
+SYNC_ERR=0
+SYNC_FLAG=true
+DRAWS=91937
+ALEMBIC=061_lottery_ia_control_center (head)
+      6 403 Forbidden
+      1 400 Bad Request

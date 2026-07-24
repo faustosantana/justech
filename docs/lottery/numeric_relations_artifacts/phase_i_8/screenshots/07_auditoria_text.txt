@@ -1,0 +1,70 @@
+Resultados de Loterías
+
+INICIO
+
+Resumen
+Catálogo
+
+ANÁLISIS
+
+Consulta histórica
+Comparar
+Estadísticas
+Lotería IA
+
+MI ESPACIO
+
+Favoritos
+Consultas guardadas
+
+ADMINISTRACIÓN
+
+Loterías
+Sincronización
+Scheduler y fuentes
+Centro de IA
+Lottery IA Control Center
+Aplicaciones
+Aplicaciones
+Resultados de Loterías
+auditoria
+⌘K
+JUSTECH S.R.L.
+Assistant
+Salir
+Lottery IA · Control Center
+MOTOR MATEMÁTICO
+Tabla 1
+Tabla 2
+Agrupaciones T1
+Agrupaciones T2
+Relaciones
+Auditoría
+PREDICCIONES
+Motores
+Ejecutar
+PROMPT STUDIO
+Bloques
+Prompt compilado
+Versiones
+Playground
+Benchmark
+Motor Matemático · Auditoría
+Trazabilidad por draw_id
+
+Cada punto del ranking en Relaciones se expande para mostrar: observed_number, draw_id, lotería, fecha/hora, posición, peers, mother_code, companion, table2_code/group, neighbor, score_delta, dedupe key.
+
+El JSON bruto está oculto por defecto; use «Ver JSON» (administradores) en cada traza.
+
+Identidad de sorteo = draw_id. El motor no altera histórico ni fórmulas.
+
+Ir a Relaciones / traza
+JAIOS Assistant
+
+JAIOS Copiloto
+
+Copiloto empresarial · solo lectura
+
+Nueva conversación
+
+Consultando en: JUSTECH S.R.L. · JAIOS

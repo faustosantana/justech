@@ -1,0 +1,152 @@
+Resultados de Loterías
+
+INICIO
+
+Resumen
+Catálogo
+
+ANÁLISIS
+
+Consulta histórica
+Comparar
+Estadísticas
+Lotería IA
+
+MI ESPACIO
+
+Favoritos
+Consultas guardadas
+
+ADMINISTRACIÓN
+
+Loterías
+Sincronización
+Scheduler y fuentes
+Centro de IA
+Lottery IA Control Center
+Aplicaciones
+Aplicaciones
+Resultados de Loterías
+run
+⌘K
+JUSTECH S.R.L.
+Assistant
+Salir
+Lottery IA · Control Center
+MOTOR MATEMÁTICO
+Tabla 1
+Tabla 2
+Agrupaciones T1
+Agrupaciones T2
+Relaciones
+Auditoría
+PREDICCIONES
+Motores
+Ejecutar
+PROMPT STUDIO
+Bloques
+Prompt compilado
+Versiones
+Playground
+Benchmark
+Predicción · Relaciones Numéricas
+
+Presentación del ranking histórico. No es una fórmula predictiva nueva ni garantía de acierto.
+
+Predicción por Relaciones Numéricas
+
+Huawei interpreta; el motor calcula. Sin default oculto de cantidad.
+
+Número observado N
+Cantidad de ocurrencias
+5
+10
+20
+todas
+Loterías (una o varias)
+Anguila 02:00 PM
+Anguila 03:00 PM
+Anguila 04:00 PM
+Anguila 05:00 PM
+Anguila 07:00 PM
+Anguila 08:00 AM
+Anguila 08:00 PM
+Anguila 09:00 AM
+Anguila 10:00 AM
+Anguila 11:00 AM
+Anguila 12:00 PM
+Anguila 1:00 PM
+Anguila 6:00 PM
+Anguila 9:00 PM
+Cash4Life
+El Agarra 4
+El Quemaito Mayor
+Florida Dia
+Florida Noche
+Gana Mas
+Haiti Bolet 05:30 PM
+Haiti Bolet 06:30 PM
+Haiti Bolet 07:30 PM
+Haiti Bolet 10:30 AM
+Haiti Bolet 11:30 AM
+Haiti Bolet 9:30 AM
+King Lottery AM
+King Lottery PM
+La Primera Noche
+La Primera Tarde
+La Suerte 6PM
+La Suerte MD
+Loteria Nacional
+Loto 5
+Loto Leidsa
+Loto Pool
+Loto Real
+Mega Chance
+Mega Lotto
+Mega Millions
+New York 10:30
+New York 2:30
+Pega 3 Mas
+Power Ball
+Quiniela Leidsa
+Quiniela LoteDom
+Quiniela Loteka
+Quiniela Real
+Super Kino Tv
+Ejecutar predicción
+
+Este resultado es una señal histórica producida por el Motor de Relaciones Numéricas. No constituye garantía de resultado.
+
+Resultado
+Número observado: 34
+Código madre: 34
+Loterías: Quiniela Leidsa
+Draw IDs analizados: 116
+Compañeros directos: 1, 17, 33, 49, 76
+Metadata dedupe: {"draw_ids_analyzed_count":116,"draw_ids_analyzed":["e95e3422-873a-469c-88bb-87101edc26d9","1871b32e-6d26-4a30-9ce5-8f855f4685d5","6b8cf2d3-e12b-449a-8683-098001adb73d","b2a92b86-edc3-4d66-9d19-8d00bde69cb5","ae7e982e-bbad-4ea5-a6dd-66f402b…
+Posibles duplicados por contenido: revisar metadata
+Ranking
+Ver JSON
+#76 · score 9 · T2 53 · vecinos 27, 68, 92
+▼ traza
+#17 · score 2 · T2 59 · vecinos 13
+▼ traza
+#1 · score 0 · T2 5 · vecinos —
+▼ traza
+#33 · score 0 · T2 85 · vecinos —
+▼ traza
+#49 · score 0 · T2 72 · vecinos —
+▼ traza
+Compañeros score 0
+
+1, 33, 49
+
+JAIOS Assistant
+
+JAIOS Copiloto
+
+Copiloto empresarial · solo lectura
+
+Nueva conversación
+
+Consultando en: JUSTECH S.R.L. · JAIOS

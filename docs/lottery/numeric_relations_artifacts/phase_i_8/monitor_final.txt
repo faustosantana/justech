@@ -1,0 +1,9 @@
+2026-07-24T16:08:38+00:00
+{"status":"ok","service":"jaios-api","version":"0.1.0"}
+DRAWS=91937
+SYNC=true
+ERR_B=0
+ERR_S=0
+ERR_G=0
+ALEMBIC=061_lottery_ia_control_center
+IMAGES=control-center-20260724

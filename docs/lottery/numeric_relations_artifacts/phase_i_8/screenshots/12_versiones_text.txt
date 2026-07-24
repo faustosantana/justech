@@ -1,0 +1,73 @@
+Resultados de Loterías
+
+INICIO
+
+Resumen
+Catálogo
+
+ANÁLISIS
+
+Consulta histórica
+Comparar
+Estadísticas
+Lotería IA
+
+MI ESPACIO
+
+Favoritos
+Consultas guardadas
+
+ADMINISTRACIÓN
+
+Loterías
+Sincronización
+Scheduler y fuentes
+Centro de IA
+Lottery IA Control Center
+Aplicaciones
+Aplicaciones
+Resultados de Loterías
+versiones
+⌘K
+JUSTECH S.R.L.
+Assistant
+Salir
+Lottery IA · Control Center
+MOTOR MATEMÁTICO
+Tabla 1
+Tabla 2
+Agrupaciones T1
+Agrupaciones T2
+Relaciones
+Auditoría
+PREDICCIONES
+Motores
+Ejecutar
+PROMPT STUDIO
+Bloques
+Prompt compilado
+Versiones
+Playground
+Benchmark
+Versiones de prompt
+
+Una versión es una fotografía completa del prompt, sus herramientas, motores y configuración en un momento determinado.
+
+Comparar seleccionadas
+	Nombre	Versión	Estado	Modelo	Fecha	Notas / motivo	Acciones
+	lottery_assistant_system	draft-20260724103903	BORRADOR	DeepSeek-V3.2	2026-07-24T10:39:03.055420+00:00	Draft created from Admin Center	Duplicar
+	lottery_assistant_system	draft-20260724103357	BORRADOR	DeepSeek-V3.2	2026-07-24T10:33:57.622548+00:00	Draft created from Admin Center	Duplicar
+	lottery_assistant_system_v2	draft-20260723205648	REEMPLAZADO	DeepSeek-V3.2	2026-07-23T20:57:11.615575+00:00	UAT productivo draft	Duplicar
+	lottery_assistant_system	draft-20260723202007	BORRADOR	DeepSeek-V3.2	2026-07-23T20:59:00.686620+00:00	Draft created from Admin Center	Duplicar
+	lottery_assistant_system_v1	v1	ARCHIVADO	DeepSeek-V3.2	2026-07-23T20:12:51.908129+00:00	Initial Lottery IA 4.0 conversational system prompt	Duplicar
+	lottery_assistant_system_v2	v2	ACTIVO	DeepSeek-V3.2	2026-07-23T21:37:45.813894+00:00	v2: open understanding, minimal clarifications with options, mandatory analysis parameters, stronger metric definitions, multi-tool planning hints. Activated after benchmark ≥99% with 0 P0/P1. | patch P1: posición primaria + consultas compuestas	Duplicar
+	lottery_assistant_system_v3	v3	BORRADOR	DeepSeek-V3.2	2026-07-23T20:12:51.908129+00:00	v3 draft: strict domain, tech refuse, reference memory, per-lottery derived dates. Activate only after 4.2 benchmark with 0 P0/P1.	Duplicar
+JAIOS Assistant
+
+JAIOS Copiloto
+
+Copiloto empresarial · solo lectura
+
+Nueva conversación
+
+Consultando en: JUSTECH S.R.L. · JAIOS

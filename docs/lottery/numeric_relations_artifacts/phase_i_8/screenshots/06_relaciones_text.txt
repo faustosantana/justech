@@ -1,0 +1,125 @@
+Resultados de Loterías
+
+INICIO
+
+Resumen
+Catálogo
+
+ANÁLISIS
+
+Consulta histórica
+Comparar
+Estadísticas
+Lotería IA
+
+MI ESPACIO
+
+Favoritos
+Consultas guardadas
+
+ADMINISTRACIÓN
+
+Loterías
+Sincronización
+Scheduler y fuentes
+Centro de IA
+Lottery IA Control Center
+Aplicaciones
+Aplicaciones
+Resultados de Loterías
+relaciones
+⌘K
+JUSTECH S.R.L.
+Assistant
+Salir
+Lottery IA · Control Center
+MOTOR MATEMÁTICO
+Tabla 1
+Tabla 2
+Agrupaciones T1
+Agrupaciones T2
+Relaciones
+Auditoría
+PREDICCIONES
+Motores
+Ejecutar
+PROMPT STUDIO
+Bloques
+Prompt compilado
+Versiones
+Playground
+Benchmark
+Motor Matemático · Relaciones
+
+Ejecución manual del motor histórico. Expandir ranking para ver trazas por punto.
+
+Analizar relaciones
+
+Huawei interpreta; el motor calcula. Sin default oculto de cantidad.
+
+Número observado N
+Cantidad de ocurrencias
+5
+10
+20
+todas
+Loterías (una o varias)
+Anguila 02:00 PM
+Anguila 03:00 PM
+Anguila 04:00 PM
+Anguila 05:00 PM
+Anguila 07:00 PM
+Anguila 08:00 AM
+Anguila 08:00 PM
+Anguila 09:00 AM
+Anguila 10:00 AM
+Anguila 11:00 AM
+Anguila 12:00 PM
+Anguila 1:00 PM
+Anguila 6:00 PM
+Anguila 9:00 PM
+Cash4Life
+El Agarra 4
+El Quemaito Mayor
+Florida Dia
+Florida Noche
+Gana Mas
+Haiti Bolet 05:30 PM
+Haiti Bolet 06:30 PM
+Haiti Bolet 07:30 PM
+Haiti Bolet 10:30 AM
+Haiti Bolet 11:30 AM
+Haiti Bolet 9:30 AM
+King Lottery AM
+King Lottery PM
+La Primera Noche
+La Primera Tarde
+La Suerte 6PM
+La Suerte MD
+Loteria Nacional
+Loto 5
+Loto Leidsa
+Loto Pool
+Loto Real
+Mega Chance
+Mega Lotto
+Mega Millions
+New York 10:30
+New York 2:30
+Pega 3 Mas
+Power Ball
+Quiniela Leidsa
+Quiniela LoteDom
+Quiniela Loteka
+Quiniela Real
+Super Kino Tv
+Analizar relaciones
+JAIOS Assistant
+
+JAIOS Copiloto
+
+Copiloto empresarial · solo lectura
+
+Nueva conversación
+
+Consultando en: JUSTECH S.R.L. · JAIOS

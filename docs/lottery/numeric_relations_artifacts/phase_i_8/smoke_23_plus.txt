@@ -1,0 +1,28 @@
+META alembic=061_lottery_ia_control_center draws=91937 active_prompt=72b294c5-606e-4adb-b978-8e14be68edaa
+PASS health — 200
+PASS tables — code=200
+PASS table1_n1 — 1 ÷ 1220
+PASS table2_n1 — 1220 ÷ 1
+PASS groups_34_53
+PASS lotteries — n=49
+PASS relaciones_26 — comps=[27, 38]
+PASS llm_false
+PASS motors_nr
+PASS motors_stub
+PASS stub_blocked — code=400
+PASS prediction_34
+PASS prediction_no_guarantee
+PASS multi_45
+PASS prompt_schema
+PASS prompts_list — active=1
+PASS prompt_compiled
+PASS chat_session — code=200
+PASS chat_message — code=200
+PASS chat_missing — code=200
+PASS chat_multi — code=200
+PASS chat_absolute — code=200
+PASS chat_stub_motor — code=200
+PASS permisos_403 — [('tables', 403), ('compiled', 403), ('prompts', 403), ('schema', 403), ('benchmark', 403), ('export_json', 403)]
+PASS openapi_cc — code=200 paths=618
+PASS draws_unchanged — 91937->91937
+PASS active_prompt_unchanged — 72b294c5-606e-4adb-b978-8e14be68edaa->72b294c5-606e-4adb-b978-8e14be68edaa

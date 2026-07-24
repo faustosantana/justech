@@ -1,0 +1,43 @@
+Unable to find image 'mcr.microsoft.com/playwright:v1.49.0-jammy' locally
+v1.49.0-jammy: Pulling from playwright
+512354f423f2: Pulling fs layer
+1c8503a62744: Pulling fs layer
+6e5fea31d25b: Pulling fs layer
+7478e0ac0f23: Pulling fs layer
+1c8503a62744: Download complete
+7478e0ac0f23: Download complete
+7478e0ac0f23: Pull complete
+6e5fea31d25b: Download complete
+1c8503a62744: Pull complete
+6e5fea31d25b: Pull complete
+512354f423f2: Download complete
+512354f423f2: Pull complete
+Digest: sha256:98b1ad488de36b22d41fdd1b0c5b9cceaa78a8d2661c6ab02d2108a07c182338
+Status: Downloaded newer image for mcr.microsoft.com/playwright:v1.49.0-jammy
+saved 01_hub.png url= https://jaios.justech.do/lottery/admin/control-center
+saved 02_table1.png url= https://jaios.justech.do/lottery/admin/control-center/motor/table1
+saved 03_table2.png url= https://jaios.justech.do/lottery/admin/control-center/motor/table2
+saved 04_groups_t1.png url= https://jaios.justech.do/lottery/admin/control-center/motor/groups-table1
+saved 05_groups_t2.png url= https://jaios.justech.do/lottery/admin/control-center/motor/groups-table2
+saved 06_relaciones.png url= https://jaios.justech.do/lottery/admin/control-center/motor/relaciones
+saved 07_auditoria.png url= https://jaios.justech.do/lottery/admin/control-center/motor/auditoria
+saved 08_predicciones.png url= https://jaios.justech.do/lottery/admin/control-center/predicciones
+saved 09_predicciones_run.png url= https://jaios.justech.do/lottery/admin/control-center/predicciones/run
+saved 10_prompt_studio.png url= https://jaios.justech.do/lottery/admin/control-center/prompt-studio
+saved 11_compilado.png url= https://jaios.justech.do/lottery/admin/control-center/prompt-studio/compilado
+saved 12_versiones.png url= https://jaios.justech.do/lottery/admin/control-center/prompt-studio/versiones
+saved 13_playground.png url= https://jaios.justech.do/lottery/admin/control-center/prompt-studio/playground
+saved 14_benchmark.png url= https://jaios.justech.do/lottery/admin/control-center/prompt-studio/benchmark
+saved 16_func_table1_n1.png url= https://jaios.justech.do/lottery/admin/control-center/motor/table1
+saved 17_func_table2_n1.png url= https://jaios.justech.do/lottery/admin/control-center/motor/table2
+lottery_select Quiniela Leidsa true
+saved 18_func_rel_26_leidsa_k10.png url= https://jaios.justech.do/lottery/admin/control-center/motor/relaciones
+lottery_select Quiniela Leidsa true
+lottery_select Quiniela Loteka true
+saved 15_multi_45_leidsa_loteka_k10.png url= https://jaios.justech.do/lottery/admin/control-center/motor/relaciones
+lottery_select Quiniela Leidsa true
+saved 19_func_pred_34_all.png url= https://jaios.justech.do/lottery/admin/control-center/predicciones/run
+saved 20_lottery_home.png url= https://jaios.justech.do/lottery
+saved 21_noperm_compilado_redirect.png url= https://jaios.justech.do/login?session=expired
+FINDINGS []
+DONE_VISUAL

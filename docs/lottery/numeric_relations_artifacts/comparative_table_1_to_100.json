@@ -1,0 +1,902 @@
+[
+  {
+    "number": 1,
+    "table1_visible": "0.0008196721",
+    "table1_digits": "00008196721",
+    "table1_code": 34,
+    "table2_visible": "1220.00000000",
+    "table2_digits": "122000000000",
+    "table2_code": 5
+  },
+  {
+    "number": 2,
+    "table1_visible": "0.0016393443",
+    "table1_digits": "00016393443",
+    "table1_code": 33,
+    "table2_visible": "610.000000000",
+    "table2_digits": "610000000000",
+    "table2_code": 7
+  },
+  {
+    "number": 3,
+    "table1_visible": "0.0024590164",
+    "table1_digits": "00024590164",
+    "table1_code": 31,
+    "table2_visible": "406.666666667",
+    "table2_digits": "406666666667",
+    "table2_code": 65
+  },
+  {
+    "number": 4,
+    "table1_visible": "0.0032786885",
+    "table1_digits": "00032786885",
+    "table1_code": 47,
+    "table2_visible": "305.000000000",
+    "table2_digits": "305000000000",
+    "table2_code": 8
+  },
+  {
+    "number": 5,
+    "table1_visible": "0.0040983607",
+    "table1_digits": "00040983607",
+    "table1_code": 37,
+    "table2_visible": "244.000000000",
+    "table2_digits": "244000000000",
+    "table2_code": 10
+  },
+  {
+    "number": 6,
+    "table1_visible": "0.0049180328",
+    "table1_digits": "00049180328",
+    "table1_code": 35,
+    "table2_visible": "203.333333333",
+    "table2_digits": "203333333333",
+    "table2_code": 32
+  },
+  {
+    "number": 7,
+    "table1_visible": "0.0057377049",
+    "table1_digits": "00057377049",
+    "table1_code": 42,
+    "table2_visible": "174.285714286",
+    "table2_digits": "174285714286",
+    "table2_code": 55
+  },
+  {
+    "number": 8,
+    "table1_visible": "0.0065573770",
+    "table1_digits": "00065573770",
+    "table1_code": 40,
+    "table2_visible": "152.500000000",
+    "table2_digits": "152500000000",
+    "table2_code": 13
+  },
+  {
+    "number": 9,
+    "table1_visible": "0.0073770492",
+    "table1_digits": "00073770492",
+    "table1_code": 39,
+    "table2_visible": "135.555555556",
+    "table2_digits": "135555555556",
+    "table2_code": 55
+  },
+  {
+    "number": 10,
+    "table1_visible": "0.0081967213",
+    "table1_digits": "00081967213",
+    "table1_code": 37,
+    "table2_visible": "122.000000000",
+    "table2_digits": "122000000000",
+    "table2_code": 5
+  },
+  {
+    "number": 11,
+    "table1_visible": "0.0090163934",
+    "table1_digits": "00090163934",
+    "table1_code": 35,
+    "table2_visible": "110.909090909",
+    "table2_digits": "110909090909",
+    "table2_code": 47
+  },
+  {
+    "number": 12,
+    "table1_visible": "0.0098360656",
+    "table1_digits": "00098360656",
+    "table1_code": 43,
+    "table2_visible": "101.666666667",
+    "table2_digits": "101666666667",
+    "table2_code": 57
+  },
+  {
+    "number": 13,
+    "table1_visible": "0.0106557377",
+    "table1_digits": "00106557377",
+    "table1_code": 41,
+    "table2_visible": "93.8461538462",
+    "table2_digits": "938461538462",
+    "table2_code": 59
+  },
+  {
+    "number": 14,
+    "table1_visible": "0.0114754098",
+    "table1_digits": "00114754098",
+    "table1_code": 39,
+    "table2_visible": "87.1428571429",
+    "table2_digits": "871428571429",
+    "table2_code": 58
+  },
+  {
+    "number": 15,
+    "table1_visible": "0.0122950820",
+    "table1_digits": "00122950820",
+    "table1_code": 29,
+    "table2_visible": "81.3333333333",
+    "table2_digits": "813333333333",
+    "table2_code": 39
+  },
+  {
+    "number": 16,
+    "table1_visible": "0.0131147541",
+    "table1_digits": "00131147541",
+    "table1_code": 27,
+    "table2_visible": "76.2500000000",
+    "table2_digits": "762500000000",
+    "table2_code": 20
+  },
+  {
+    "number": 17,
+    "table1_visible": "0.0139344262",
+    "table1_digits": "00139344262",
+    "table1_code": 34,
+    "table2_visible": "71.7647058824",
+    "table2_digits": "717647058824",
+    "table2_code": 59
+  },
+  {
+    "number": 18,
+    "table1_visible": "0.0147540984",
+    "table1_digits": "00147540984",
+    "table1_code": 42,
+    "table2_visible": "67.7777777778",
+    "table2_digits": "677777777778",
+    "table2_code": 84
+  },
+  {
+    "number": 19,
+    "table1_visible": "0.0155737705",
+    "table1_digits": "00155737705",
+    "table1_code": 40,
+    "table2_visible": "64.2105263158",
+    "table2_digits": "642105263158",
+    "table2_code": 43
+  },
+  {
+    "number": 20,
+    "table1_visible": "0.0163934426",
+    "table1_digits": "00163934426",
+    "table1_code": 38,
+    "table2_visible": "61.0000000000",
+    "table2_digits": "610000000000",
+    "table2_code": 7
+  },
+  {
+    "number": 21,
+    "table1_visible": "0.0172131148",
+    "table1_digits": "00172131148",
+    "table1_code": 28,
+    "table2_visible": "58.0952380952",
+    "table2_digits": "580952380952",
+    "table2_code": 56
+  },
+  {
+    "number": 22,
+    "table1_visible": "0.0180327869",
+    "table1_digits": "00180327869",
+    "table1_code": 44,
+    "table2_visible": "55.4545454545",
+    "table2_digits": "554545454545",
+    "table2_code": 55
+  },
+  {
+    "number": 23,
+    "table1_visible": "0.0188524590",
+    "table1_digits": "00188524590",
+    "table1_code": 42,
+    "table2_visible": "53.0434782609",
+    "table2_digits": "530434782609",
+    "table2_code": 51
+  },
+  {
+    "number": 24,
+    "table1_visible": "0.0196721311",
+    "table1_digits": "00196721311",
+    "table1_code": 31,
+    "table2_visible": "50.8333333333",
+    "table2_digits": "508333333333",
+    "table2_code": 40
+  },
+  {
+    "number": 25,
+    "table1_visible": "0.0204918033",
+    "table1_digits": "00204918033",
+    "table1_code": 30,
+    "table2_visible": "48.8000000000",
+    "table2_digits": "488000000000",
+    "table2_code": 20
+  },
+  {
+    "number": 26,
+    "table1_visible": "0.0213114754",
+    "table1_digits": "00213114754",
+    "table1_code": 28,
+    "table2_visible": "46.9230769231",
+    "table2_digits": "469230769231",
+    "table2_code": 52
+  },
+  {
+    "number": 27,
+    "table1_visible": "0.0221311475",
+    "table1_digits": "00221311475",
+    "table1_code": 26,
+    "table2_visible": "45.1851851852",
+    "table2_digits": "451851851852",
+    "table2_code": 53
+  },
+  {
+    "number": 28,
+    "table1_visible": "0.0229508197",
+    "table1_digits": "00229508197",
+    "table1_code": 43,
+    "table2_visible": "43.5714285714",
+    "table2_digits": "435714285714",
+    "table2_code": 51
+  },
+  {
+    "number": 29,
+    "table1_visible": "0.0237704918",
+    "table1_digits": "00237704918",
+    "table1_code": 41,
+    "table2_visible": "42.0689655172",
+    "table2_digits": "420689655172",
+    "table2_code": 55
+  },
+  {
+    "number": 30,
+    "table1_visible": "0.0245901639",
+    "table1_digits": "00245901639",
+    "table1_code": 39,
+    "table2_visible": "40.6666666667",
+    "table2_digits": "406666666667",
+    "table2_code": 65
+  },
+  {
+    "number": 31,
+    "table1_visible": "0.0254098361",
+    "table1_digits": "00254098361",
+    "table1_code": 38,
+    "table2_visible": "39.3548387097",
+    "table2_digits": "393548387097",
+    "table2_code": 66
+  },
+  {
+    "number": 32,
+    "table1_visible": "0.0262295082",
+    "table1_digits": "00262295082",
+    "table1_code": 36,
+    "table2_visible": "38.1250000000",
+    "table2_digits": "381250000000",
+    "table2_code": 19
+  },
+  {
+    "number": 33,
+    "table1_visible": "0.0270491803",
+    "table1_digits": "00270491803",
+    "table1_code": 34,
+    "table2_visible": "36.9696969697",
+    "table2_digits": "369696969697",
+    "table2_code": 85
+  },
+  {
+    "number": 34,
+    "table1_visible": "0.0278688525",
+    "table1_digits": "00278688525",
+    "table1_code": 51,
+    "table2_visible": "35.8823529412",
+    "table2_digits": "358823529412",
+    "table2_code": 52
+  },
+  {
+    "number": 35,
+    "table1_visible": "0.0286885246",
+    "table1_digits": "00286885246",
+    "table1_code": 49,
+    "table2_visible": "34.8571428571",
+    "table2_digits": "348571428571",
+    "table2_code": 55
+  },
+  {
+    "number": 36,
+    "table1_visible": "0.0295081967",
+    "table1_digits": "00295081967",
+    "table1_code": 47,
+    "table2_visible": "33.8888888889",
+    "table2_digits": "338888888889",
+    "table2_code": 87
+  },
+  {
+    "number": 37,
+    "table1_visible": "0.0303278689",
+    "table1_digits": "00303278689",
+    "table1_code": 46,
+    "table2_visible": "32.9729729730",
+    "table2_digits": "329729729730",
+    "table2_code": 60
+  },
+  {
+    "number": 38,
+    "table1_visible": "0.0311475410",
+    "table1_digits": "00311475410",
+    "table1_code": 26,
+    "table2_visible": "32.1052631579",
+    "table2_digits": "321052631579",
+    "table2_code": 44
+  },
+  {
+    "number": 39,
+    "table1_visible": "0.0319672131",
+    "table1_digits": "00319672131",
+    "table1_code": 33,
+    "table2_visible": "31.2820512821",
+    "table2_digits": "312820512821",
+    "table2_code": 35
+  },
+  {
+    "number": 40,
+    "table1_visible": "0.0327868852",
+    "table1_digits": "00327868852",
+    "table1_code": 49,
+    "table2_visible": "30.5000000000",
+    "table2_digits": "305000000000",
+    "table2_code": 8
+  },
+  {
+    "number": 41,
+    "table1_visible": "0.0336065574",
+    "table1_digits": "00336065574",
+    "table1_code": 39,
+    "table2_visible": "29.7560975610",
+    "table2_digits": "297560975610",
+    "table2_code": 57
+  },
+  {
+    "number": 42,
+    "table1_visible": "0.0344262295",
+    "table1_digits": "00344262295",
+    "table1_code": 37,
+    "table2_visible": "29.0476190476",
+    "table2_digits": "290476190476",
+    "table2_code": 55
+  },
+  {
+    "number": 43,
+    "table1_visible": "0.0352459016",
+    "table1_digits": "00352459016",
+    "table1_code": 35,
+    "table2_visible": "28.3720930233",
+    "table2_digits": "283720930233",
+    "table2_code": 42
+  },
+  {
+    "number": 44,
+    "table1_visible": "0.0360655738",
+    "table1_digits": "00360655738",
+    "table1_code": 43,
+    "table2_visible": "27.7272727273",
+    "table2_digits": "277272727273",
+    "table2_code": 55
+  },
+  {
+    "number": 45,
+    "table1_visible": "0.0368852459",
+    "table1_digits": "00368852459",
+    "table1_code": 50,
+    "table2_visible": "27.1111111111",
+    "table2_digits": "271111111111",
+    "table2_code": 19
+  },
+  {
+    "number": 46,
+    "table1_visible": "0.0377049180",
+    "table1_digits": "00377049180",
+    "table1_code": 39,
+    "table2_visible": "26.5217391304",
+    "table2_digits": "265217391304",
+    "table2_code": 43
+  },
+  {
+    "number": 47,
+    "table1_visible": "0.0385245902",
+    "table1_digits": "00385245902",
+    "table1_code": 38,
+    "table2_visible": "25.9574468085",
+    "table2_digits": "259574468085",
+    "table2_code": 63
+  },
+  {
+    "number": 48,
+    "table1_visible": "0.0393442623",
+    "table1_digits": "00393442623",
+    "table1_code": 36,
+    "table2_visible": "25.4166666667",
+    "table2_digits": "254166666667",
+    "table2_code": 61
+  },
+  {
+    "number": 49,
+    "table1_visible": "0.0401639344",
+    "table1_digits": "00401639344",
+    "table1_code": 34,
+    "table2_visible": "24.8979591837",
+    "table2_digits": "248979591837",
+    "table2_code": 72
+  },
+  {
+    "number": 50,
+    "table1_visible": "0.0409836066",
+    "table1_digits": "00409836066",
+    "table1_code": 42,
+    "table2_visible": "24.4000000000",
+    "table2_digits": "244000000000",
+    "table2_code": 10
+  },
+  {
+    "number": 51,
+    "table1_visible": "0.0418032787",
+    "table1_digits": "00418032787",
+    "table1_code": 40,
+    "table2_visible": "23.9215686275",
+    "table2_digits": "239215686275",
+    "table2_code": 56
+  },
+  {
+    "number": 52,
+    "table1_visible": "0.0426229508",
+    "table1_digits": "00426229508",
+    "table1_code": 38,
+    "table2_visible": "23.4615384615",
+    "table2_digits": "234615384615",
+    "table2_code": 48
+  },
+  {
+    "number": 53,
+    "table1_visible": "0.0434426230",
+    "table1_digits": "00434426230",
+    "table1_code": 28,
+    "table2_visible": "23.0188679245",
+    "table2_digits": "230188679245",
+    "table2_code": 55
+  },
+  {
+    "number": 54,
+    "table1_visible": "0.0442622951",
+    "table1_digits": "00442622951",
+    "table1_code": 35,
+    "table2_visible": "22.5925925926",
+    "table2_digits": "225925925926",
+    "table2_code": 58
+  },
+  {
+    "number": 55,
+    "table1_visible": "0.0450819672",
+    "table1_digits": "00450819672",
+    "table1_code": 42,
+    "table2_visible": "22.1818181818",
+    "table2_digits": "221818181818",
+    "table2_code": 49
+  },
+  {
+    "number": 56,
+    "table1_visible": "0.0459016393",
+    "table1_digits": "00459016393",
+    "table1_code": 40,
+    "table2_visible": "21.7857142857",
+    "table2_digits": "217857142857",
+    "table2_code": 57
+  },
+  {
+    "number": 57,
+    "table1_visible": "0.0467213115",
+    "table1_digits": "00467213115",
+    "table1_code": 30,
+    "table2_visible": "21.4035087719",
+    "table2_digits": "214035087719",
+    "table2_code": 47
+  },
+  {
+    "number": 58,
+    "table1_visible": "0.0475409836",
+    "table1_digits": "00475409836",
+    "table1_code": 46,
+    "table2_visible": "21.0344827586",
+    "table2_digits": "210344827586",
+    "table2_code": 50
+  },
+  {
+    "number": 59,
+    "table1_visible": "0.0483606557",
+    "table1_digits": "00483606557",
+    "table1_code": 44,
+    "table2_visible": "20.6779661017",
+    "table2_digits": "206779661017",
+    "table2_code": 52
+  },
+  {
+    "number": 60,
+    "table1_visible": "0.0491803279",
+    "table1_digits": "00491803279",
+    "table1_code": 43,
+    "table2_visible": "20.3333333333",
+    "table2_digits": "203333333333",
+    "table2_code": 32
+  },
+  {
+    "number": 61,
+    "table1_visible": "0.0500000000",
+    "table1_digits": "00500000000",
+    "table1_code": 5,
+    "table2_visible": "20.0000000000",
+    "table2_digits": "200000000000",
+    "table2_code": 2
+  },
+  {
+    "number": 62,
+    "table1_visible": "0.0508196721",
+    "table1_digits": "00508196721",
+    "table1_code": 39,
+    "table2_visible": "19.6774193548",
+    "table2_digits": "196774193548",
+    "table2_code": 64
+  },
+  {
+    "number": 63,
+    "table1_visible": "0.0516393443",
+    "table1_digits": "00516393443",
+    "table1_code": 38,
+    "table2_visible": "19.3650793651",
+    "table2_digits": "193650793651",
+    "table2_code": 55
+  },
+  {
+    "number": 64,
+    "table1_visible": "0.0524590164",
+    "table1_digits": "00524590164",
+    "table1_code": 36,
+    "table2_visible": "19.0625000000",
+    "table2_digits": "190625000000",
+    "table2_code": 23
+  },
+  {
+    "number": 65,
+    "table1_visible": "0.0532786885",
+    "table1_digits": "00532786885",
+    "table1_code": 52,
+    "table2_visible": "18.7692307692",
+    "table2_digits": "187692307692",
+    "table2_code": 60
+  },
+  {
+    "number": 66,
+    "table1_visible": "0.0540983607",
+    "table1_digits": "00540983607",
+    "table1_code": 42,
+    "table2_visible": "18.4848484848",
+    "table2_digits": "184848484848",
+    "table2_code": 69
+  },
+  {
+    "number": 67,
+    "table1_visible": "0.0549180328",
+    "table1_digits": "00549180328",
+    "table1_code": 40,
+    "table2_visible": "18.2089552239",
+    "table2_digits": "182089552239",
+    "table2_code": 54
+  },
+  {
+    "number": 68,
+    "table1_visible": "0.0557377049",
+    "table1_digits": "00557377049",
+    "table1_code": 47,
+    "table2_visible": "17.9411764706",
+    "table2_digits": "179411764706",
+    "table2_code": 53
+  },
+  {
+    "number": 69,
+    "table1_visible": "0.0565573770",
+    "table1_digits": "00565573770",
+    "table1_code": 45,
+    "table2_visible": "17.6811594203",
+    "table2_digits": "176811594203",
+    "table2_code": 47
+  },
+  {
+    "number": 70,
+    "table1_visible": "0.0573770492",
+    "table1_digits": "00573770492",
+    "table1_code": 44,
+    "table2_visible": "17.4285714286",
+    "table2_digits": "174285714286",
+    "table2_code": 55
+  },
+  {
+    "number": 71,
+    "table1_visible": "0.0581967213",
+    "table1_digits": "00581967213",
+    "table1_code": 42,
+    "table2_visible": "17.1830985915",
+    "table2_digits": "171830985915",
+    "table2_code": 57
+  },
+  {
+    "number": 72,
+    "table1_visible": "0.0590163934",
+    "table1_digits": "00590163934",
+    "table1_code": 40,
+    "table2_visible": "16.9444444444",
+    "table2_digits": "169444444444",
+    "table2_code": 52
+  },
+  {
+    "number": 73,
+    "table1_visible": "0.0598360656",
+    "table1_digits": "00598360656",
+    "table1_code": 48,
+    "table2_visible": "16.7123287671",
+    "table2_digits": "167123287671",
+    "table2_code": 51
+  },
+  {
+    "number": 74,
+    "table1_visible": "0.0606557377",
+    "table1_digits": "00606557377",
+    "table1_code": 46,
+    "table2_visible": "16.4864864865",
+    "table2_digits": "164864864865",
+    "table2_code": 66
+  },
+  {
+    "number": 75,
+    "table1_visible": "0.0614754098",
+    "table1_digits": "00614754098",
+    "table1_code": 44,
+    "table2_visible": "16.2666666667",
+    "table2_digits": "162666666667",
+    "table2_code": 64
+  },
+  {
+    "number": 76,
+    "table1_visible": "0.0622950820",
+    "table1_digits": "00622950820",
+    "table1_code": 34,
+    "table2_visible": "16.0526315789",
+    "table2_digits": "160526315789",
+    "table2_code": 53
+  },
+  {
+    "number": 77,
+    "table1_visible": "0.0631147541",
+    "table1_digits": "00631147541",
+    "table1_code": 32,
+    "table2_visible": "15.8441558442",
+    "table2_digits": "158441558442",
+    "table2_code": 51
+  },
+  {
+    "number": 78,
+    "table1_visible": "0.0639344262",
+    "table1_digits": "00639344262",
+    "table1_code": 39,
+    "table2_visible": "15.6410256410",
+    "table2_digits": "156410256410",
+    "table2_code": 35
+  },
+  {
+    "number": 79,
+    "table1_visible": "0.0647540984",
+    "table1_digits": "00647540984",
+    "table1_code": 47,
+    "table2_visible": "15.4430379747",
+    "table2_digits": "154430379747",
+    "table2_code": 54
+  },
+  {
+    "number": 80,
+    "table1_visible": "0.0655737705",
+    "table1_digits": "00655737705",
+    "table1_code": 45,
+    "table2_visible": "15.2500000000",
+    "table2_digits": "152500000000",
+    "table2_code": 13
+  },
+  {
+    "number": 81,
+    "table1_visible": "0.0663934426",
+    "table1_digits": "00663934426",
+    "table1_code": 43,
+    "table2_visible": "15.0617283951",
+    "table2_digits": "150617283951",
+    "table2_code": 48
+  },
+  {
+    "number": 82,
+    "table1_visible": "0.0672131148",
+    "table1_digits": "00672131148",
+    "table1_code": 33,
+    "table2_visible": "14.8780487805",
+    "table2_digits": "148780487805",
+    "table2_code": 60
+  },
+  {
+    "number": 83,
+    "table1_visible": "0.0680327869",
+    "table1_digits": "00680327869",
+    "table1_code": 49,
+    "table2_visible": "14.6987951807",
+    "table2_digits": "146987951807",
+    "table2_code": 65
+  },
+  {
+    "number": 84,
+    "table1_visible": "0.0688524590",
+    "table1_digits": "00688524590",
+    "table1_code": 47,
+    "table2_visible": "14.5238095238",
+    "table2_digits": "145238095238",
+    "table2_code": 50
+  },
+  {
+    "number": 85,
+    "table1_visible": "0.0696721311",
+    "table1_digits": "00696721311",
+    "table1_code": 36,
+    "table2_visible": "14.3529411765",
+    "table2_digits": "143529411765",
+    "table2_code": 48
+  },
+  {
+    "number": 86,
+    "table1_visible": "0.0704918033",
+    "table1_digits": "00704918033",
+    "table1_code": 35,
+    "table2_visible": "14.1860465116",
+    "table2_digits": "141860465116",
+    "table2_code": 43
+  },
+  {
+    "number": 87,
+    "table1_visible": "0.0713114754",
+    "table1_digits": "00713114754",
+    "table1_code": 33,
+    "table2_visible": "14.0229885057",
+    "table2_digits": "140229885057",
+    "table2_code": 51
+  },
+  {
+    "number": 88,
+    "table1_visible": "0.0721311475",
+    "table1_digits": "00721311475",
+    "table1_code": 31,
+    "table2_visible": "13.8636363636",
+    "table2_digits": "138636363636",
+    "table2_code": 54
+  },
+  {
+    "number": 89,
+    "table1_visible": "0.0729508197",
+    "table1_digits": "00729508197",
+    "table1_code": 48,
+    "table2_visible": "13.7078651685",
+    "table2_digits": "137078651685",
+    "table2_code": 57
+  },
+  {
+    "number": 90,
+    "table1_visible": "0.0737704918",
+    "table1_digits": "00737704918",
+    "table1_code": 46,
+    "table2_visible": "13.5555555556",
+    "table2_digits": "135555555556",
+    "table2_code": 55
+  },
+  {
+    "number": 91,
+    "table1_visible": "0.0745901639",
+    "table1_digits": "00745901639",
+    "table1_code": 44,
+    "table2_visible": "13.4065934066",
+    "table2_digits": "134065934066",
+    "table2_code": 47
+  },
+  {
+    "number": 92,
+    "table1_visible": "0.0754098361",
+    "table1_digits": "00754098361",
+    "table1_code": 43,
+    "table2_visible": "13.2608695652",
+    "table2_digits": "132608695652",
+    "table2_code": 53
+  },
+  {
+    "number": 93,
+    "table1_visible": "0.0762295082",
+    "table1_digits": "00762295082",
+    "table1_code": 41,
+    "table2_visible": "13.1182795699",
+    "table2_digits": "131182795699",
+    "table2_code": 61
+  },
+  {
+    "number": 94,
+    "table1_visible": "0.0770491803",
+    "table1_digits": "00770491803",
+    "table1_code": 39,
+    "table2_visible": "12.9787234043",
+    "table2_digits": "129787234043",
+    "table2_code": 50
+  },
+  {
+    "number": 95,
+    "table1_visible": "0.0778688525",
+    "table1_digits": "00778688525",
+    "table1_code": 56,
+    "table2_visible": "12.8421052632",
+    "table2_digits": "128421052632",
+    "table2_code": 36
+  },
+  {
+    "number": 96,
+    "table1_visible": "0.0786885246",
+    "table1_digits": "00786885246",
+    "table1_code": 54,
+    "table2_visible": "12.7083333333",
+    "table2_digits": "127083333333",
+    "table2_code": 39
+  },
+  {
+    "number": 97,
+    "table1_visible": "0.0795081967",
+    "table1_digits": "00795081967",
+    "table1_code": 52,
+    "table2_visible": "12.5773195876",
+    "table2_digits": "125773195876",
+    "table2_code": 61
+  },
+  {
+    "number": 98,
+    "table1_visible": "0.0803278689",
+    "table1_digits": "00803278689",
+    "table1_code": 51,
+    "table2_visible": "12.4489795918",
+    "table2_digits": "124489795918",
+    "table2_code": 67
+  },
+  {
+    "number": 99,
+    "table1_visible": "0.0811475410",
+    "table1_digits": "00811475410",
+    "table1_code": 31,
+    "table2_visible": "12.3232323232",
+    "table2_digits": "123232323232",
+    "table2_code": 28
+  },
+  {
+    "number": 100,
+    "table1_visible": "0.0819672131",
+    "table1_digits": "00819672131",
+    "table1_code": 38,
+    "table2_visible": "12.2000000000",
+    "table2_digits": "122000000000",
+    "table2_code": 5
+  }
+]

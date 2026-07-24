@@ -1,0 +1,119 @@
+{
+  "table1": {
+    "1": {
+      "number": 1,
+      "table": "table_1",
+      "formula": "1 ÷ 1220",
+      "visible_value": "0.0008196721",
+      "digits_without_point": "00008196721",
+      "digit_count": 11,
+      "digit_list": [
+        0,
+        0,
+        0,
+        0,
+        8,
+        1,
+        9,
+        6,
+        7,
+        2,
+        1
+      ],
+      "code": 34
+    },
+    "5": {
+      "number": 5,
+      "table": "table_1",
+      "formula": "5 ÷ 1220",
+      "visible_value": "0.0040983607",
+      "digits_without_point": "00040983607",
+      "digit_count": 11,
+      "digit_list": [
+        0,
+        0,
+        0,
+        4,
+        0,
+        9,
+        8,
+        3,
+        6,
+        0,
+        7
+      ],
+      "code": 37
+    }
+  },
+  "table2": {
+    "1": {
+      "number": 1,
+      "table": "table_2",
+      "formula": "1220 ÷ 1",
+      "visible_value": "1220.00000000",
+      "digits_without_point": "122000000000",
+      "digit_count": 12,
+      "digit_list": [
+        1,
+        2,
+        2,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "code": 5
+    },
+    "3": {
+      "number": 3,
+      "table": "table_2",
+      "formula": "1220 ÷ 3",
+      "visible_value": "406.666666667",
+      "digits_without_point": "406666666667",
+      "digit_count": 12,
+      "digit_list": [
+        4,
+        0,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        7
+      ],
+      "code": 65
+    },
+    "5": {
+      "number": 5,
+      "table": "table_2",
+      "formula": "1220 ÷ 5",
+      "visible_value": "244.000000000",
+      "digits_without_point": "244000000000",
+      "digit_count": 12,
+      "digit_list": [
+        2,
+        4,
+        4,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "code": 10
+    }
+  }
+}

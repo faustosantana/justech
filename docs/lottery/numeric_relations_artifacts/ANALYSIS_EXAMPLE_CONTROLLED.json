@@ -1,0 +1,298 @@
+{
+  "observed_number": 26,
+  "mother_code": 26,
+  "primary_table": "table_1",
+  "lottery_ids": [
+    "f0a8f0be-2cde-4024-84ea-39f64117bfe4"
+  ],
+  "lottery_names": [
+    "Quiniela Leidsa (controlado)"
+  ],
+  "occurrence_limit": {
+    "mode": "all"
+  },
+  "occurrences_found": 1,
+  "occurrences_used": 1,
+  "historical_occurrences": [
+    {
+      "lottery_id": "f0a8f0be-2cde-4024-84ea-39f64117bfe4",
+      "lottery_name": "Quiniela Leidsa (controlado)",
+      "draw_id": "69b1bb61-8187-458f-8085-60441fa869b7",
+      "draw_date": "2026-05-01",
+      "draw_time": null,
+      "observed_number": 26,
+      "draw_numbers": [
+        {
+          "position": 1,
+          "position_label": "Primera",
+          "drawn_number": 26
+        },
+        {
+          "position": 2,
+          "position_label": "Segunda",
+          "drawn_number": 68
+        },
+        {
+          "position": 3,
+          "position_label": "Tercera",
+          "drawn_number": 76
+        },
+        {
+          "position": 4,
+          "position_label": "Cuarta",
+          "drawn_number": 92
+        }
+      ]
+    }
+  ],
+  "direct_companions": [
+    27,
+    38
+  ],
+  "companions_analyzed": [
+    27,
+    38
+  ],
+  "ranking": [
+    {
+      "number": 27,
+      "table1_code": 26,
+      "table2_code": 53,
+      "table2_group": [
+        27,
+        68,
+        76,
+        92
+      ],
+      "neighbors": [
+        68,
+        76,
+        92
+      ],
+      "matched_neighbors": [
+        68,
+        76,
+        92
+      ],
+      "score": 3,
+      "matches": [
+        {
+          "companion": 27,
+          "neighbor": 68,
+          "lottery_id": "f0a8f0be-2cde-4024-84ea-39f64117bfe4",
+          "lottery_name": "Quiniela Leidsa (controlado)",
+          "draw_id": "69b1bb61-8187-458f-8085-60441fa869b7",
+          "draw_date": "2026-05-01",
+          "position": 2,
+          "position_label": "Segunda",
+          "observed_number": 26,
+          "mother_code": 26,
+          "table2_code": 53,
+          "table2_group": [
+            27,
+            68,
+            76,
+            92
+          ],
+          "neighbors": [
+            68,
+            76,
+            92
+          ],
+          "points": 1,
+          "dedupe_key": "f0a8f0be-2cde-4024-84ea-39f64117bfe4|69b1bb61-8187-458f-8085-60441fa869b7|2|68|27",
+          "trace": "salió 26 → ocurrencia histórica real del 26 (Quiniela Leidsa (controlado), 2026-05-01, sorteo 69b1bb61-8187-458f-8085-60441fa869b7, posición Segunda) → código madre 26 → compañero 27 → código Tabla 2 53 → grupo Tabla 2 [27,68,76,92] → vecinos [68,76,92] → vecino encontrado 68 → +1 al compañero 27"
+        },
+        {
+          "companion": 27,
+          "neighbor": 76,
+          "lottery_id": "f0a8f0be-2cde-4024-84ea-39f64117bfe4",
+          "lottery_name": "Quiniela Leidsa (controlado)",
+          "draw_id": "69b1bb61-8187-458f-8085-60441fa869b7",
+          "draw_date": "2026-05-01",
+          "position": 3,
+          "position_label": "Tercera",
+          "observed_number": 26,
+          "mother_code": 26,
+          "table2_code": 53,
+          "table2_group": [
+            27,
+            68,
+            76,
+            92
+          ],
+          "neighbors": [
+            68,
+            76,
+            92
+          ],
+          "points": 1,
+          "dedupe_key": "f0a8f0be-2cde-4024-84ea-39f64117bfe4|69b1bb61-8187-458f-8085-60441fa869b7|3|76|27",
+          "trace": "salió 26 → ocurrencia histórica real del 26 (Quiniela Leidsa (controlado), 2026-05-01, sorteo 69b1bb61-8187-458f-8085-60441fa869b7, posición Tercera) → código madre 26 → compañero 27 → código Tabla 2 53 → grupo Tabla 2 [27,68,76,92] → vecinos [68,76,92] → vecino encontrado 76 → +1 al compañero 27"
+        },
+        {
+          "companion": 27,
+          "neighbor": 92,
+          "lottery_id": "f0a8f0be-2cde-4024-84ea-39f64117bfe4",
+          "lottery_name": "Quiniela Leidsa (controlado)",
+          "draw_id": "69b1bb61-8187-458f-8085-60441fa869b7",
+          "draw_date": "2026-05-01",
+          "position": 4,
+          "position_label": "Cuarta",
+          "observed_number": 26,
+          "mother_code": 26,
+          "table2_code": 53,
+          "table2_group": [
+            27,
+            68,
+            76,
+            92
+          ],
+          "neighbors": [
+            68,
+            76,
+            92
+          ],
+          "points": 1,
+          "dedupe_key": "f0a8f0be-2cde-4024-84ea-39f64117bfe4|69b1bb61-8187-458f-8085-60441fa869b7|4|92|27",
+          "trace": "salió 26 → ocurrencia histórica real del 26 (Quiniela Leidsa (controlado), 2026-05-01, sorteo 69b1bb61-8187-458f-8085-60441fa869b7, posición Cuarta) → código madre 26 → compañero 27 → código Tabla 2 53 → grupo Tabla 2 [27,68,76,92] → vecinos [68,76,92] → vecino encontrado 92 → +1 al compañero 27"
+        }
+      ],
+      "trace": "salió 26 → código madre 26 → compañero 27 → código Tabla 2 53 → vecinos coincidentes [68,76,92] → score 3 → se fortalece 27 para el próximo sorteo"
+    },
+    {
+      "number": 38,
+      "table1_code": 26,
+      "table2_code": 44,
+      "table2_group": [
+        38
+      ],
+      "neighbors": [],
+      "matched_neighbors": [],
+      "score": 0,
+      "matches": [],
+      "trace": "salió 26 → código madre 26 → compañero 38 → código Tabla 2 44 → sin coincidencias de vecinos → score 0"
+    }
+  ],
+  "candidates": [
+    {
+      "number": 27,
+      "table1_code": 26,
+      "table2_code": 53,
+      "table2_group": [
+        27,
+        68,
+        76,
+        92
+      ],
+      "neighbors": [
+        68,
+        76,
+        92
+      ],
+      "matched_neighbors": [
+        68,
+        76,
+        92
+      ],
+      "score": 3,
+      "matches": [
+        {
+          "companion": 27,
+          "neighbor": 68,
+          "lottery_id": "f0a8f0be-2cde-4024-84ea-39f64117bfe4",
+          "lottery_name": "Quiniela Leidsa (controlado)",
+          "draw_id": "69b1bb61-8187-458f-8085-60441fa869b7",
+          "draw_date": "2026-05-01",
+          "position": 2,
+          "position_label": "Segunda",
+          "observed_number": 26,
+          "mother_code": 26,
+          "table2_code": 53,
+          "table2_group": [
+            27,
+            68,
+            76,
+            92
+          ],
+          "neighbors": [
+            68,
+            76,
+            92
+          ],
+          "points": 1,
+          "dedupe_key": "f0a8f0be-2cde-4024-84ea-39f64117bfe4|69b1bb61-8187-458f-8085-60441fa869b7|2|68|27",
+          "trace": "salió 26 → ocurrencia histórica real del 26 (Quiniela Leidsa (controlado), 2026-05-01, sorteo 69b1bb61-8187-458f-8085-60441fa869b7, posición Segunda) → código madre 26 → compañero 27 → código Tabla 2 53 → grupo Tabla 2 [27,68,76,92] → vecinos [68,76,92] → vecino encontrado 68 → +1 al compañero 27"
+        },
+        {
+          "companion": 27,
+          "neighbor": 76,
+          "lottery_id": "f0a8f0be-2cde-4024-84ea-39f64117bfe4",
+          "lottery_name": "Quiniela Leidsa (controlado)",
+          "draw_id": "69b1bb61-8187-458f-8085-60441fa869b7",
+          "draw_date": "2026-05-01",
+          "position": 3,
+          "position_label": "Tercera",
+          "observed_number": 26,
+          "mother_code": 26,
+          "table2_code": 53,
+          "table2_group": [
+            27,
+            68,
+            76,
+            92
+          ],
+          "neighbors": [
+            68,
+            76,
+            92
+          ],
+          "points": 1,
+          "dedupe_key": "f0a8f0be-2cde-4024-84ea-39f64117bfe4|69b1bb61-8187-458f-8085-60441fa869b7|3|76|27",
+          "trace": "salió 26 → ocurrencia histórica real del 26 (Quiniela Leidsa (controlado), 2026-05-01, sorteo 69b1bb61-8187-458f-8085-60441fa869b7, posición Tercera) → código madre 26 → compañero 27 → código Tabla 2 53 → grupo Tabla 2 [27,68,76,92] → vecinos [68,76,92] → vecino encontrado 76 → +1 al compañero 27"
+        },
+        {
+          "companion": 27,
+          "neighbor": 92,
+          "lottery_id": "f0a8f0be-2cde-4024-84ea-39f64117bfe4",
+          "lottery_name": "Quiniela Leidsa (controlado)",
+          "draw_id": "69b1bb61-8187-458f-8085-60441fa869b7",
+          "draw_date": "2026-05-01",
+          "position": 4,
+          "position_label": "Cuarta",
+          "observed_number": 26,
+          "mother_code": 26,
+          "table2_code": 53,
+          "table2_group": [
+            27,
+            68,
+            76,
+            92
+          ],
+          "neighbors": [
+            68,
+            76,
+            92
+          ],
+          "points": 1,
+          "dedupe_key": "f0a8f0be-2cde-4024-84ea-39f64117bfe4|69b1bb61-8187-458f-8085-60441fa869b7|4|92|27",
+          "trace": "salió 26 → ocurrencia histórica real del 26 (Quiniela Leidsa (controlado), 2026-05-01, sorteo 69b1bb61-8187-458f-8085-60441fa869b7, posición Cuarta) → código madre 26 → compañero 27 → código Tabla 2 53 → grupo Tabla 2 [27,68,76,92] → vecinos [68,76,92] → vecino encontrado 92 → +1 al compañero 27"
+        }
+      ],
+      "trace": "salió 26 → código madre 26 → compañero 27 → código Tabla 2 53 → vecinos coincidentes [68,76,92] → score 3 → se fortalece 27 para el próximo sorteo"
+    },
+    {
+      "number": 38,
+      "table1_code": 26,
+      "table2_code": 44,
+      "table2_group": [
+        38
+      ],
+      "neighbors": [],
+      "matched_neighbors": [],
+      "score": 0,
+      "matches": [],
+      "trace": "salió 26 → código madre 26 → compañero 38 → código Tabla 2 44 → sin coincidencias de vecinos → score 0"
+    }
+  ]
+}

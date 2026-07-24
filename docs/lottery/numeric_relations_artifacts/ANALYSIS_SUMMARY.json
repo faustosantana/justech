@@ -1,0 +1,22 @@
+{
+  "observed_number": 26,
+  "companion_with_multi_hits": 27,
+  "neighbors_matched": [
+    68,
+    76,
+    92
+  ],
+  "score": 3,
+  "ranking": [
+    {
+      "number": 27,
+      "score": 3
+    },
+    {
+      "number": 38,
+      "score": 0
+    }
+  ],
+  "sample_match_trace": "salió 26 → ocurrencia histórica real del 26 (Quiniela Leidsa (controlado), 2026-05-01, sorteo 69b1bb61-8187-458f-8085-60441fa869b7, posición Segunda) → código madre 26 → compañero 27 → código Tabla 2 53 → grupo Tabla 2 [27,68,76,92] → vecinos [68,76,92] → vecino encontrado 68 → +1 al compañero 27",
+  "candidate_trace": "salió 26 → código madre 26 → compañero 27 → código Tabla 2 53 → vecinos coincidentes [68,76,92] → score 3 → se fortalece 27 para el próximo sorteo"
+}

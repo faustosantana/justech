@@ -73,8 +73,21 @@ Ancestros requeridos + fix Fase G:
 | `255cf9c` | Hardening UAT Fase F (permisos, schema adapter, evidencia) |
 | `4c8e748` | Cierre referencias reporte Fase F |
 | `8d1e1cd` | Fix multi-lotería intent/planner (Fase G) |
+| *(tip packaging)* | RC publish: slim API, Docker FE standalone, docs smoke/checklist |
 
 HEAD RC = tip de `feature/lottery-numeric-relations-motor` que contiene los anteriores.
+
+### Paridad DEV UAT ↔ DEV RC
+
+Funcionalmente equivalentes para Numeric Relations sobre la misma BD DEV.
+
+| | UAT (Fase F) | RC (Fase G) |
+|-|--------------|-------------|
+| API | slim `:8011` | slim `:8001` (`jaios-nr-rc-dev`) |
+| UI | Next dev `:3011` | Docker standalone `:3001` |
+| Código NR | `4c8e748` | + `8d1e1cd` (único delta funcional: multi-lotería) |
+
+Diferencias no funcionales documentadas: ignore ESLint/TS en build FE; stub `admin-nav`; no se usa `app.main` completo.
 
 ---
 
@@ -146,3 +159,29 @@ Detalle: `PRODUCTION_DEPLOY_CHECKLIST.md`.
 - Módulo `LOTTERY_MODULE_ENABLED=true`.
 - Permisos admin para auditoría; tool chat con permisos de estadísticas/búsqueda según contrato.
 - LLM/Huawei solo para interpretación (no para matemática).
+
+---
+
+## Smoke RC (Fase G)
+
+Ejecutado 2026-07-24 — detalle en `phase_g/PHASE_G_SMOKE_RC_REPORT.md`.
+
+| Caso | Estado |
+|------|--------|
+| 1 — 26 Leidsa | PASS |
+| 2 — 34 todas | PASS |
+| 3 — 45 Leidsa+Loteka (una llamada) | PASS |
+| 4 — 403 sin permisos | PASS |
+| 5 — Analiza el 26 (clarify) | PASS |
+
+---
+
+## Veredicto
+
+**GO CONDICIONADO**
+
+Listo para Producción en alcance Numeric Relations (motor, API admin, UI, chat tool, multi-lotería), sujeto a:
+
+1. Autorización expresa de despliegue a Producción (no ejecutado en Fase G).
+2. Entrypoint de plataforma: si Producción no usa el slim server, resolver `integration_connector` / `app.main` en el stack de deploy.
+3. Packaging FE: retirar stub `admin-nav` e `ignoreDuringBuilds` cuando se limpie la deuda lint legacy (no afecta el motor).

@@ -1,0 +1,598 @@
+{
+  "checks": [
+    {
+      "name": "production_forbidden",
+      "pass": true,
+      "detail": {
+        "status": "ok",
+        "service": "jaios-nr-j9-dev",
+        "phase": "J-9",
+        "module": "lottery.numeric_relations.historial",
+        "database_target": "jaios_lottery_dev",
+        "production_forbidden": true
+      }
+    },
+    {
+      "name": "db_dev",
+      "pass": true,
+      "detail": {
+        "status": "ok",
+        "service": "jaios-nr-j9-dev",
+        "phase": "J-9",
+        "module": "lottery.numeric_relations.historial",
+        "database_target": "jaios_lottery_dev",
+        "production_forbidden": true
+      }
+    },
+    {
+      "name": "catalog_featured_200",
+      "pass": true,
+      "detail": 200
+    },
+    {
+      "name": "featured_count_7",
+      "pass": true,
+      "detail": 7
+    },
+    {
+      "name": "featured_names_exact",
+      "pass": true,
+      "detail": [
+        "Gana Mas",
+        "Loteria Nacional",
+        "New York 10:30",
+        "New York 2:30",
+        "Quiniela Leidsa",
+        "Quiniela Loteka",
+        "Quiniela Real"
+      ]
+    },
+    {
+      "name": "no_Loto_Leidsa",
+      "pass": true,
+      "detail": [
+        "Gana Mas",
+        "Loteria Nacional",
+        "New York 10:30",
+        "New York 2:30",
+        "Quiniela Leidsa",
+        "Quiniela Loteka",
+        "Quiniela Real"
+      ]
+    },
+    {
+      "name": "no_Loto_Real",
+      "pass": true,
+      "detail": [
+        "Gana Mas",
+        "Loteria Nacional",
+        "New York 10:30",
+        "New York 2:30",
+        "Quiniela Leidsa",
+        "Quiniela Loteka",
+        "Quiniela Real"
+      ]
+    },
+    {
+      "name": "nr_lotteries_active_200",
+      "pass": true,
+      "detail": 200
+    },
+    {
+      "name": "nr_active_count_7",
+      "pass": true,
+      "detail": 7
+    },
+    {
+      "name": "nr_active_names",
+      "pass": true,
+      "detail": [
+        "Gana Mas",
+        "Loteria Nacional",
+        "New York 10:30",
+        "New York 2:30",
+        "Quiniela Leidsa",
+        "Quiniela Loteka",
+        "Quiniela Real"
+      ]
+    },
+    {
+      "name": "nr_no_anguila",
+      "pass": true,
+      "detail": [
+        "Gana Mas",
+        "Loteria Nacional",
+        "New York 10:30",
+        "New York 2:30",
+        "Quiniela Leidsa",
+        "Quiniela Loteka",
+        "Quiniela Real"
+      ]
+    },
+    {
+      "name": "nr_no_haiti",
+      "pass": true,
+      "detail": [
+        "Gana Mas",
+        "Loteria Nacional",
+        "New York 10:30",
+        "New York 2:30",
+        "Quiniela Leidsa",
+        "Quiniela Loteka",
+        "Quiniela Real"
+      ]
+    },
+    {
+      "name": "nr_no_miami",
+      "pass": true,
+      "detail": [
+        "Gana Mas",
+        "Loteria Nacional",
+        "New York 10:30",
+        "New York 2:30",
+        "Quiniela Leidsa",
+        "Quiniela Loteka",
+        "Quiniela Real"
+      ]
+    },
+    {
+      "name": "archived_has_loto_leidsa",
+      "pass": true,
+      "detail": [
+        "Anguila 02:00 PM",
+        "Anguila 03:00 PM",
+        "Anguila 04:00 PM",
+        "Anguila 05:00 PM",
+        "Anguila 07:00 PM",
+        "Anguila 08:00 AM",
+        "Anguila 08:00 PM",
+        "Anguila 09:00 AM",
+        "Anguila 10:00 AM",
+        "Anguila 11:00 AM",
+        "Anguila 12:00 PM",
+        "Anguila 1:00 PM",
+        "Anguila 6:00 PM",
+        "Anguila 9:00 PM",
+        "Cash4Life",
+        "El Agarra 4",
+        "El Quemaito Mayor",
+        "Florida Dia",
+        "Florida Noche",
+        "Haiti Bolet 05:30 PM"
+      ]
+    },
+    {
+      "name": "archived_has_loto_real",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "archived_not_empty",
+      "pass": true,
+      "detail": 42
+    },
+    {
+      "name": "analyze_rejects_only_archived",
+      "pass": true,
+      "detail": {
+        "status": 400,
+        "body": "{\"detail\":\"Ninguna lotería activa (destacada) quedó en el alcance. El análisis solo utiliza las loterías marcadas como destacadas.\"}"
+      }
+    },
+    {
+      "name": "profile_50_200",
+      "pass": true,
+      "detail": 200
+    },
+    {
+      "name": "profile_50_scope",
+      "pass": true,
+      "detail": {
+        "analysis_scope": "FEATURED_SEVEN",
+        "analysis_scope_enum": "ACTIVE",
+        "active_lottery_count": 7,
+        "active_lottery_ids": [
+          "43250709-ee65-476f-91f6-cb8438f49d65",
+          "0118037f-8f8b-4a82-899c-42cd50b6e194",
+          "1624b6f2-88c6-42b5-a597-bf9c0f98a6b5",
+          "1c488641-adb6-4790-89e7-879d361da7cc",
+          "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "b9f2c5a2-bc3e-4382-9b6d-3cee16db00fd",
+          "205c58d2-cfcf-44e6-894d-97358b3d540b"
+        ],
+        "active_lottery_names": [
+          "Gana Mas",
+          "Loteria Nacional",
+          "New York 10:30",
+          "New York 2:30",
+          "Quiniela Leidsa",
+          "Quiniela Loteka",
+          "Quiniela Real"
+        ],
+        "scope_set_hash": "fa6983310ee918b7",
+        "user_note": "Análisis realizado con las loterías activas (destacadas) configuradas en el sistema.",
+        "name_discrepancy": {
+          "expected_product_count": 7,
+          "active_count": 7,
+          "matches_expected_product_names": false,
+          "matches_seed_featured_names": false,
+          "missing_vs_product": [
+            "gana más",
+            "lotería nacional"
+          ],
+          "extra_vs_product": [
+            "gana mas",
+            "loteria nacional"
+          ],
+          "note": "Si difiere, no alterar DB automáticamente. Ajustar is_featured solo con acción administrativa deliberada."
+        },
+        "ignored_non_active_lottery_ids": [],
+        "ignored_non_active_count": 0,
+        "methodology_version": "nr-historical-relations-j1.0.0"
+      }
+    },
+    {
+      "name": "profile_50_count7",
+      "pass": true,
+      "detail": 7
+    },
+    {
+      "name": "profile_50_no_loto_leidsa_chart",
+      "pass": true,
+      "detail": [
+        "Gana Mas",
+        "Loteria Nacional",
+        "New York 10:30",
+        "New York 2:30",
+        "Quiniela Leidsa",
+        "Quiniela Loteka",
+        "Quiniela Real"
+      ]
+    },
+    {
+      "name": "profile_35_200",
+      "pass": true,
+      "detail": 200
+    },
+    {
+      "name": "profile_35_scope",
+      "pass": true,
+      "detail": {
+        "analysis_scope": "FEATURED_SEVEN",
+        "analysis_scope_enum": "ACTIVE",
+        "active_lottery_count": 7,
+        "active_lottery_ids": [
+          "43250709-ee65-476f-91f6-cb8438f49d65",
+          "0118037f-8f8b-4a82-899c-42cd50b6e194",
+          "1624b6f2-88c6-42b5-a597-bf9c0f98a6b5",
+          "1c488641-adb6-4790-89e7-879d361da7cc",
+          "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "b9f2c5a2-bc3e-4382-9b6d-3cee16db00fd",
+          "205c58d2-cfcf-44e6-894d-97358b3d540b"
+        ],
+        "active_lottery_names": [
+          "Gana Mas",
+          "Loteria Nacional",
+          "New York 10:30",
+          "New York 2:30",
+          "Quiniela Leidsa",
+          "Quiniela Loteka",
+          "Quiniela Real"
+        ],
+        "scope_set_hash": "fa6983310ee918b7",
+        "user_note": "Análisis realizado con las loterías activas (destacadas) configuradas en el sistema.",
+        "name_discrepancy": {
+          "expected_product_count": 7,
+          "active_count": 7,
+          "matches_expected_product_names": false,
+          "matches_seed_featured_names": false,
+          "missing_vs_product": [
+            "gana más",
+            "lotería nacional"
+          ],
+          "extra_vs_product": [
+            "gana mas",
+            "loteria nacional"
+          ],
+          "note": "Si difiere, no alterar DB automáticamente. Ajustar is_featured solo con acción administrativa deliberada."
+        },
+        "ignored_non_active_lottery_ids": [],
+        "ignored_non_active_count": 0,
+        "methodology_version": "nr-historical-relations-j1.0.0"
+      }
+    },
+    {
+      "name": "profile_35_count7",
+      "pass": true,
+      "detail": 7
+    },
+    {
+      "name": "profile_35_no_loto_leidsa_chart",
+      "pass": true,
+      "detail": [
+        "Gana Mas",
+        "Loteria Nacional",
+        "New York 10:30",
+        "New York 2:30",
+        "Quiniela Leidsa",
+        "Quiniela Loteka",
+        "Quiniela Real"
+      ]
+    },
+    {
+      "name": "profile_86_200",
+      "pass": true,
+      "detail": 200
+    },
+    {
+      "name": "profile_86_scope",
+      "pass": true,
+      "detail": {
+        "analysis_scope": "FEATURED_SEVEN",
+        "analysis_scope_enum": "ACTIVE",
+        "active_lottery_count": 7,
+        "active_lottery_ids": [
+          "43250709-ee65-476f-91f6-cb8438f49d65",
+          "0118037f-8f8b-4a82-899c-42cd50b6e194",
+          "1624b6f2-88c6-42b5-a597-bf9c0f98a6b5",
+          "1c488641-adb6-4790-89e7-879d361da7cc",
+          "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "b9f2c5a2-bc3e-4382-9b6d-3cee16db00fd",
+          "205c58d2-cfcf-44e6-894d-97358b3d540b"
+        ],
+        "active_lottery_names": [
+          "Gana Mas",
+          "Loteria Nacional",
+          "New York 10:30",
+          "New York 2:30",
+          "Quiniela Leidsa",
+          "Quiniela Loteka",
+          "Quiniela Real"
+        ],
+        "scope_set_hash": "fa6983310ee918b7",
+        "user_note": "Análisis realizado con las loterías activas (destacadas) configuradas en el sistema.",
+        "name_discrepancy": {
+          "expected_product_count": 7,
+          "active_count": 7,
+          "matches_expected_product_names": false,
+          "matches_seed_featured_names": false,
+          "missing_vs_product": [
+            "gana más",
+            "lotería nacional"
+          ],
+          "extra_vs_product": [
+            "gana mas",
+            "loteria nacional"
+          ],
+          "note": "Si difiere, no alterar DB automáticamente. Ajustar is_featured solo con acción administrativa deliberada."
+        },
+        "ignored_non_active_lottery_ids": [],
+        "ignored_non_active_count": 0,
+        "methodology_version": "nr-historical-relations-j1.0.0"
+      }
+    },
+    {
+      "name": "profile_86_count7",
+      "pass": true,
+      "detail": 7
+    },
+    {
+      "name": "profile_86_no_loto_leidsa_chart",
+      "pass": true,
+      "detail": [
+        "Gana Mas",
+        "Loteria Nacional",
+        "New York 10:30",
+        "New York 2:30",
+        "Quiniela Leidsa",
+        "Quiniela Loteka",
+        "Quiniela Real"
+      ]
+    },
+    {
+      "name": "client_403_or_401",
+      "pass": true,
+      "detail": 403
+    },
+    {
+      "name": "anon_401",
+      "pass": true,
+      "detail": 401
+    },
+    {
+      "name": "tables_200",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "table1_has_formula_internal",
+      "pass": true,
+      "detail": {
+        "number": 1,
+        "table": "table_1",
+        "formula": "1 ÷ 1220",
+        "visible_value": "0.0008196721",
+        "digits_without_point": "00008196721",
+        "digit_count": 11,
+        "digit_list": [
+          0,
+          0,
+          0,
+          0,
+          8,
+          1,
+          9,
+          6,
+          7,
+          2,
+          1
+        ],
+        "code": 34,
+        "group_numbers": [
+          1,
+          17,
+          33,
+          49,
+          76
+        ],
+        "group_label": "Código 34",
+        "literal_digit_sum": 34,
+        "read_only": true,
+        "editable": false,
+        "engine_ref": "app.lottery.numeric_relations.table1.format_table1_digits"
+      }
+    }
+  ],
+  "perf": {
+    "profile_50": {
+      "avg": 1726.1,
+      "median": 1725.4,
+      "p95": 1725.4,
+      "samples": [
+        1841.5,
+        1725.4,
+        1611.3
+      ]
+    },
+    "profile_35": {
+      "avg": 2544.6,
+      "median": 2417.4,
+      "p95": 2417.4,
+      "samples": [
+        2360.2,
+        2417.4,
+        2856.1
+      ]
+    },
+    "profile_86": {
+      "avg": 1496.3,
+      "median": 1453.7,
+      "p95": 1453.7,
+      "samples": [
+        1453.7,
+        1413.8,
+        1621.2
+      ]
+    }
+  },
+  "profiles": {
+    "50": {
+      "header": {
+        "titulo": "EXPEDIENTE DEL NÚMERO 50",
+        "aparecio": 596,
+        "primera_aparicion": "12 de enero de 2015",
+        "ultima_aparicion": "30 de agosto de 2023",
+        "loterias_donde_ha_salido": 7,
+        "periodo": "2015–2023",
+        "nivel_evidencia": "Muestra más sólida",
+        "sample_warning": null
+      },
+      "condition_summary": {
+        "positivas": 15,
+        "negativas": 581,
+        "parciales": 0,
+        "total_apariciones": 596,
+        "con_alguna_confirmacion": 15,
+        "porcentaje_observado": 2.5,
+        "texto": "En 15 de las 596 veces que salió el número 50, al menos uno de sus compañeros de Tabla 1 recibió una confirmación de Tabla 2.",
+        "disclaimer": "Estos son resultados históricos observados. No constituyen garantía de un resultado futuro."
+      },
+      "active_lottery_names": [
+        "Gana Mas",
+        "Loteria Nacional",
+        "New York 10:30",
+        "New York 2:30",
+        "Quiniela Leidsa",
+        "Quiniela Loteka",
+        "Quiniela Real"
+      ],
+      "scope_set_hash": "fa6983310ee918b7",
+      "sample_size": 596,
+      "evaluable_events": 15,
+      "perf_ms": [
+        1841.522250091657,
+        1725.3759591840208,
+        1611.3065420649946
+      ]
+    },
+    "35": {
+      "header": {
+        "titulo": "EXPEDIENTE DEL NÚMERO 35",
+        "aparecio": 543,
+        "primera_aparicion": "5 de enero de 2015",
+        "ultima_aparicion": "26 de agosto de 2023",
+        "loterias_donde_ha_salido": 7,
+        "periodo": "2015–2023",
+        "nivel_evidencia": "Muestra más sólida",
+        "sample_warning": null
+      },
+      "condition_summary": {
+        "positivas": 0,
+        "negativas": 475,
+        "parciales": 68,
+        "total_apariciones": 543,
+        "con_alguna_confirmacion": 68,
+        "porcentaje_observado": 12.5,
+        "texto": "En 68 de las 543 veces que salió el número 35, al menos uno de sus compañeros de Tabla 1 recibió una confirmación de Tabla 2.",
+        "disclaimer": "Estos son resultados históricos observados. No constituyen garantía de un resultado futuro."
+      },
+      "active_lottery_names": [
+        "Gana Mas",
+        "Loteria Nacional",
+        "New York 10:30",
+        "New York 2:30",
+        "Quiniela Leidsa",
+        "Quiniela Loteka",
+        "Quiniela Real"
+      ],
+      "scope_set_hash": "fa6983310ee918b7",
+      "sample_size": 543,
+      "evaluable_events": 68,
+      "perf_ms": [
+        2360.1927920244634,
+        2417.4383338540792,
+        2856.0910001397133
+      ]
+    },
+    "86": {
+      "header": {
+        "titulo": "EXPEDIENTE DEL NÚMERO 86",
+        "aparecio": 598,
+        "primera_aparicion": "9 de enero de 2015",
+        "ultima_aparicion": "28 de agosto de 2023",
+        "loterias_donde_ha_salido": 7,
+        "periodo": "2015–2023",
+        "nivel_evidencia": "Muestra más sólida",
+        "sample_warning": null
+      },
+      "condition_summary": {
+        "positivas": 0,
+        "negativas": 598,
+        "parciales": 0,
+        "total_apariciones": 598,
+        "con_alguna_confirmacion": 0,
+        "porcentaje_observado": 0.0,
+        "texto": "En 0 de las 598 veces que salió el número 86, al menos uno de sus compañeros de Tabla 1 recibió una confirmación de Tabla 2.",
+        "disclaimer": "Estos son resultados históricos observados. No constituyen garantía de un resultado futuro."
+      },
+      "active_lottery_names": [
+        "Gana Mas",
+        "Loteria Nacional",
+        "New York 10:30",
+        "New York 2:30",
+        "Quiniela Leidsa",
+        "Quiniela Loteka",
+        "Quiniela Real"
+      ],
+      "scope_set_hash": "fa6983310ee918b7",
+      "sample_size": 598,
+      "evaluable_events": 0,
+      "perf_ms": [
+        1453.7406249437481,
+        1413.8201249297708,
+        1621.2006248533726
+      ]
+    }
+  },
+  "verdict_partial": "PASS"
+}

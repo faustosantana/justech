@@ -215,6 +215,10 @@ def _extract_occurrence_limit_params(text: str) -> dict[str, Any] | None:
     )
     if m:
         return {"occurrence_mode": "last_k", "occurrence_k": int(m.group(1))}
+    # «últimas 20» / «usando las últimas 10» sin la palabra veces (solo K UI 5|10|20)
+    m = re.search(r"[uú]ltimas?\s+(\d+)\b", text, re.I)
+    if m and int(m.group(1)) in {5, 10, 20}:
+        return {"occurrence_mode": "last_k", "occurrence_k": int(m.group(1))}
     m = re.search(r"\blast[_\s-]?(\d+)\b", text, re.I)
     if m and int(m.group(1)) in {5, 10, 20}:
         return {"occurrence_mode": "last_k", "occurrence_k": int(m.group(1))}
@@ -242,21 +246,11 @@ def resolve_intent(message: str, ctx: LotterySessionContext) -> ResolvedIntent:
             structured_type="lottery_error",
         )
 
-    if PREDICTION_RE.search(raw) or PREDICTION_RE.search(text):
-        return ResolvedIntent(
-            kind="prediction_refused",
-            refuse_message=(
-                "No puedo predecir resultados futuros ni recomendar apuestas. "
-                "Solo consulto el histórico verificado. "
-                "Los resultados históricos y las estadísticas son únicamente informativos. "
-                "No garantizan resultados futuros."
-            ),
-            structured_type="lottery_error",
-        )
-
     # Motor de Relaciones Numéricas (antes del "analiza el N" genérico).
     # Incluye "Analiza el N en Leidsa y Loteka" sin K explícito → clarify occurrence_limit
     # (nunca caer al catch-all de "fecha exacta").
+    # También acepta "predicción del N" / "predice compañeros" como señal histórica NR
+    # (no es promesa de acierto; el motor calcula, Huawei interpreta).
     _nr_signals = bool(
         re.search(
             r"compa[nñ]eros?|"
@@ -265,6 +259,10 @@ def resolve_intent(message: str, ctx: LotterySessionContext) -> ResolvedIntent:
             r"relaciones?\s+num[eé]ricas?|"
             r"c[oó]digo\s+madre|"
             r"motor\s+de\s+relaciones|"
+            r"predicci[oó]n\s+(del?\s+)?\d+|"
+            r"predice\s+(los\s+)?(compa|n[uú]meros?)|"
+            r"n[uú]meros?\s+m[aá]s\s+fuertes|"
+            r"despu[eé]s\s+de\s+salir\s+(el\s+)?\d+|"
             r"analiz(a|ar|ame|emos).{0,80}([uú]ltimas?\s+\d+\s+veces?|veces?\s+que\s+sali|"
             r"todas\s+(las\s+)?(ocurrencias|veces|apariciones))|"
             r"busc(a|ar).{0,40}([uú]ltimas?\s+\d+\s+veces?|veces?\s+que\s+sali)|"
@@ -281,6 +279,21 @@ def resolve_intent(message: str, ctx: LotterySessionContext) -> ResolvedIntent:
             re.I,
         )
     )
+    if not (_nr_signals or _analiza_observed) and (
+        PREDICTION_RE.search(raw) or PREDICTION_RE.search(text)
+    ):
+        return ResolvedIntent(
+            kind="prediction_refused",
+            refuse_message=(
+                "No puedo predecir resultados futuros ni recomendar apuestas. "
+                "Solo consulto el histórico verificado. "
+                "Puedes pedir una señal histórica del Motor de Relaciones Numéricas "
+                "(ej. «predicción del 34 en Leidsa con las últimas 20»). "
+                "No garantiza resultados futuros."
+            ),
+            structured_type="lottery_error",
+        )
+
     if _nr_signals or _analiza_observed:
         number = _extract_number(raw) or (ctx.last_numbers[0] if ctx.last_numbers else None)
         lotteries = _extract_lotteries(text)

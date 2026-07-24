@@ -888,6 +888,22 @@ class LotteryToolExecutor:
         """Fachada única: DB history → NumericRelationsService (sin recalcular en el tool)."""
         from app.lottery.numeric_relations.db_history import analyze_from_db
         from app.lottery.numeric_relations.models import OccurrenceLimit
+        from app.services.lottery_prediction_service import PredictionMotorService
+
+        # Gate: motor ACTIVO only (Control Center Predicciones)
+        try:
+            motor_svc = PredictionMotorService(self.db)
+            if not await motor_svc.is_executable("numeric_relations"):
+                raise LotteryQueryError(
+                    "MOTOR_INACTIVE",
+                    "El motor Relaciones Numéricas está inactivo o no ejecutable. "
+                    "Actívelo en Lottery IA → Predicciones.",
+                )
+        except LotteryQueryError:
+            raise
+        except Exception:
+            # Si el registry aún no está migrado, no bloquear el motor v1.0.0.
+            pass
 
         raw_n = params.get("observed_number", params.get("number"))
         try:

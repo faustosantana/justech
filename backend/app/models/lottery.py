@@ -654,6 +654,17 @@ class LotteryAiPromptVersion(UUIDPrimaryKeyMixin, TimestampMixin, Base):
     author_user_id: Mapped[uuid.UUID | None] = mapped_column(UUID(as_uuid=True))
     published_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     previous_version_id: Mapped[uuid.UUID | None] = mapped_column(UUID(as_uuid=True))
+    # Control Center I-4/I-5 — human metadata (additive)
+    display_name: Mapped[str | None] = mapped_column(String(255))
+    change_reason: Mapped[str | None] = mapped_column(Text)
+    notes: Mapped[str | None] = mapped_column(Text)
+    analysis_steps: Mapped[list | dict | None] = mapped_column(JSONB)
+    tool_bindings: Mapped[list | dict | None] = mapped_column(JSONB)
+    motor_bindings: Mapped[list | dict | None] = mapped_column(JSONB)
+    benchmark_summary: Mapped[dict | None] = mapped_column(JSONB)
+    gates_snapshot: Mapped[dict | None] = mapped_column(JSONB)
+    archived_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    parent_draft_of: Mapped[uuid.UUID | None] = mapped_column(UUID(as_uuid=True))
 
 
 class LotteryAiConfigVersion(UUIDPrimaryKeyMixin, TimestampMixin, Base):
@@ -799,3 +810,51 @@ class LotteryAiTonePreference(UUIDPrimaryKeyMixin, TimestampMixin, Base):
     tone_key: Mapped[str] = mapped_column(String(32), nullable=False, default="analitico")
     allow_user_override: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
     payload: Mapped[dict | None] = mapped_column(JSONB)
+
+
+class LotteryPredictionMotor(UUIDPrimaryKeyMixin, TimestampMixin, Base):
+    """Registry de motores de predicción (orquestación; sin fórmulas nuevas)."""
+
+    __tablename__ = "lottery_prediction_motors"
+    __table_args__ = (
+        UniqueConstraint("key", "tenant_id", name="uq_lottery_prediction_motor_tenant_key"),
+        Index("ix_lottery_prediction_motors_status", "status"),
+    )
+
+    tenant_id: Mapped[uuid.UUID | None] = mapped_column(UUID(as_uuid=True), index=True)
+    key: Mapped[str] = mapped_column(String(64), nullable=False)
+    name: Mapped[str] = mapped_column(String(128), nullable=False)
+    description: Mapped[str | None] = mapped_column(Text)
+    status: Mapped[str] = mapped_column(String(32), nullable=False, default="NO_IMPLEMENTADO")
+    implemented: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
+    implementation_ref: Mapped[str | None] = mapped_column(String(255))
+    version: Mapped[str | None] = mapped_column(String(64))
+    priority: Mapped[int] = mapped_column(Integer, nullable=False, default=100)
+    weight: Mapped[float | None] = mapped_column(Numeric(8, 4))
+    docs: Mapped[str | None] = mapped_column(Text)
+    health: Mapped[str | None] = mapped_column(String(32), default="n/a")
+    last_run_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    last_run_result: Mapped[dict | None] = mapped_column(JSONB)
+    updated_by: Mapped[uuid.UUID | None] = mapped_column(UUID(as_uuid=True))
+
+
+class LotteryPredictionMotorRun(UUIDPrimaryKeyMixin, Base):
+    __tablename__ = "lottery_prediction_motor_runs"
+    __table_args__ = (Index("ix_lottery_prediction_runs_motor", "motor_id", "started_at"),)
+
+    motor_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("lottery_prediction_motors.id", ondelete="CASCADE"),
+        nullable=False,
+        index=True,
+    )
+    started_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    finished_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    trigger: Mapped[str] = mapped_column(String(32), nullable=False, default="admin")
+    input: Mapped[dict] = mapped_column(JSONB, nullable=False, default=dict)
+    output: Mapped[dict | None] = mapped_column(JSONB)
+    ok: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
+    user_id: Mapped[uuid.UUID | None] = mapped_column(UUID(as_uuid=True))
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now(), nullable=False
+    )

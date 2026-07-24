@@ -2767,6 +2767,13 @@ export const apiClient = {
       source?: string;
     }>("/lottery/admin/numeric-relations/groups", {}, true),
 
+  getLotteryNumericRelationsLotteries: () =>
+    request<{ items: { id: string; name: string; slug?: string }[]; source?: string }>(
+      "/lottery/admin/numeric-relations/lotteries",
+      {},
+      true,
+    ),
+
   postLotteryNumericRelationsAnalyze: (body: {
     observed_number: number;
     lottery_ids: string[];

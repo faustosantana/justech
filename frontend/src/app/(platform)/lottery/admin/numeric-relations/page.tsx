@@ -202,16 +202,19 @@ export default function LotteryNumericRelationsAdminPage() {
     setLoading(true);
     setError(null);
     try {
-      const [tables, groups, defaults] = await Promise.all([
+      const [tables, groups, lots] = await Promise.all([
         apiClient.getLotteryNumericRelationsTables(),
         apiClient.getLotteryNumericRelationsGroups(),
-        apiClient.getLotteryAIDefaults().catch(() => ({ catalog: [] as LotOption[] })),
+        apiClient.getLotteryNumericRelationsLotteries().catch(async () => {
+          const defaults = await apiClient.getLotteryAIDefaults().catch(() => ({ catalog: [] as LotOption[] }));
+          return { items: ((defaults as { catalog?: LotOption[] }).catalog || []) as LotOption[] };
+        }),
       ]);
       setTable1((tables.table1 || []) as TableRow[]);
       setTable2((tables.table2 || []) as TableRow[]);
       setGroups1((groups.table1_groups || {}) as Record<string, GroupEntry>);
       setGroups2((groups.table2_groups || {}) as Record<string, GroupEntry>);
-      const cat = ((defaults as { catalog?: LotOption[] }).catalog || []).filter((c) => c?.id);
+      const cat = ((lots as { items?: LotOption[] }).items || []).filter((c) => c?.id);
       setCatalog(cat);
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "No se pudo cargar el motor");

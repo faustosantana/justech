@@ -15,7 +15,7 @@ from app.lottery.numeric_relations.models import (
     HistoricalOccurrence,
     OccurrenceLimit,
 )
-from app.models.lottery import Lottery, LotteryDraw, LotteryDrawNumber
+from app.models.lottery import LotteryDraw, LotteryDrawNumber, LotteryLottery
 from app.services.lottery_repository import LotteryRepository
 
 
@@ -56,11 +56,20 @@ async def load_occurrences_from_db(
 
     lot_ids = [UUID(str(x)) for x in lottery_ids]
     name_by_id: dict[str, str] = {}
+    # Solo columnas presentes en DEV/prod histórico: evita SELECT * del modelo 2.0/3.0
+    # cuando la DB aún no tiene is_visible / sync_* (deriva de esquema, no de sync).
     lots = (
-        await db.execute(select(Lottery).where(Lottery.id.in_(lot_ids)))
-    ).scalars().all()
+        await db.execute(
+            select(
+                LotteryLottery.id,
+                LotteryLottery.name,
+                LotteryLottery.commercial_name,
+                LotteryLottery.slug,
+            ).where(LotteryLottery.id.in_(lot_ids))
+        )
+    ).all()
     for lot in lots:
-        name_by_id[str(lot.id)] = getattr(lot, "commercial_name", None) or lot.name or lot.slug
+        name_by_id[str(lot.id)] = lot.commercial_name or lot.name or lot.slug
 
     fetch_limit = 5000 if limit.mode == "all" else max(int(limit.k or 1) * 5, 50)
 

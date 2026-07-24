@@ -7,8 +7,10 @@ No duplica fórmulas ni scoring.
 from __future__ import annotations
 
 from typing import Annotated, Any
+from uuid import UUID
 
 from fastapi import APIRouter, Body, HTTPException
+from sqlalchemy import select
 
 from app.api.deps import CurrentUser, DbSession, TenantCtx
 from app.api.v1.lottery_ai_admin import require_ai_admin
@@ -20,13 +22,14 @@ from app.lottery.numeric_relations.api_schemas import (
 from app.lottery.numeric_relations.catalog import build_catalog
 from app.lottery.numeric_relations.db_history import analyze_from_db
 from app.lottery.numeric_relations.service import NumericRelationsService
+from app.models.lottery import LotteryLottery
 
 router = APIRouter(
     prefix="/lottery/admin/numeric-relations",
     tags=["Lottery Numeric Relations"],
 )
 
-_PERMS = ("lottery_admin_ai", "lottery.admin", "lottery_admin_tools", "lottery.statistics")
+_PERMS = ("lottery_admin_ai", "lottery.admin", "lottery_admin_tools")
 
 
 @router.get("/tables")
@@ -80,6 +83,33 @@ async def numeric_relations_comparative(
 ) -> dict[str, Any]:
     svc = NumericRelationsService()
     return {"items": svc.comparative_table(), "source": "NumericRelationsService"}
+
+
+@router.get("/lotteries")
+async def numeric_relations_lotteries(
+    db: DbSession,
+    user: CurrentUser,
+    _: TenantCtx,
+    __: Annotated[None, require_ai_admin(*_PERMS)],
+) -> dict[str, Any]:
+    """Catálogo mínimo para el formulario de análisis (id/name/slug).
+
+    Evita depender del listado ORM completo / defaults de IA cuando el esquema
+    DEV aún no tiene todas las columnas 2.0/3.0.
+    """
+    rows = (
+        await db.execute(
+            select(LotteryLottery.id, LotteryLottery.name, LotteryLottery.slug)
+            .where(LotteryLottery.is_aggregate.is_(False))
+            .order_by(LotteryLottery.name.asc())
+            .limit(300)
+        )
+    ).all()
+    items = [
+        {"id": str(UUID(str(r.id))), "name": r.name, "slug": r.slug}
+        for r in rows
+    ]
+    return {"items": items, "source": "lottery_numeric_relations.lotteries"}
 
 
 @router.post("/analyze")

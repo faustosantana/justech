@@ -68,12 +68,13 @@ export default function Table1Page() {
       />
       {error ? <p className="text-sm text-destructive">{error}</p> : null}
       {loading ? <p className="text-sm text-muted-foreground">Cargando…</p> : null}
-      <MotorNumberDetail row={detail} onClose={() => setDetail(null)} />
+      <MotorNumberDetail row={detail} table="table1" onClose={() => setDetail(null)} />
       {!loading ? (
         <MotorNumberTable
           rows={rows}
           table="table1"
           title="Tabla 1 — 100 números"
+          allowTechnical
           onDetail={(r) => void onDetail(r)}
           onExport={(f) => void onExport(f)}
         />

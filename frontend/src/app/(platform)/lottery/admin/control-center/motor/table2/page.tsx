@@ -67,12 +67,13 @@ export default function Table2Page() {
       />
       {error ? <p className="text-sm text-destructive">{error}</p> : null}
       {loading ? <p className="text-sm text-muted-foreground">Cargando…</p> : null}
-      <MotorNumberDetail row={detail} onClose={() => setDetail(null)} />
+      <MotorNumberDetail row={detail} table="table2" onClose={() => setDetail(null)} />
       {!loading ? (
         <MotorNumberTable
           rows={rows}
           table="table2"
           title="Tabla 2 — 100 números"
+          allowTechnical
           onDetail={(r) => void onDetail(r)}
           onExport={(f) => void onExport(f)}
         />

@@ -1,0 +1,3 @@
+/Users/faustosantana/Projects/justech-audit-post-j10x/backend/app/api/v1/lottery.py:1272:        sqlite_path=Path("/Users/faustosantana/Projects/lottery-history-scraper/data/lottery.db"),
+/Users/faustosantana/Projects/justech-audit-post-j10x/backend/app/services/lottery_sync_service.py:326:            path = sqlite_path or Path("/Users/faustosantana/Projects/lottery-history-scraper/data/lottery.db")
+/Users/faustosantana/Projects/justech-audit-post-j10x/backend/app/services/lottery_sync_writer.py:145:        return SqliteSnapshotAdapter(sqlite_path or Path("/Users/faustosantana/Projects/lottery-history-scraper/data/lottery.db"))

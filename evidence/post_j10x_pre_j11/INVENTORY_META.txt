@@ -1,0 +1,42 @@
+utc=2026-07-25T00:12:25Z
+branch=audit/nr-post-j10x-pre-j11
+commit=2dca05775f9bc093968bab6d8179ddd0decd20da
+worktree=/Users/faustosantana/Projects/justech-audit-post-j10x
+production_forbidden=true
+--- tree top ---
+Makefile
+README.md
+agents
+backend
+database
+desktop
+docker
+docker-compose.yml
+docs
+e2e
+evidence
+frontend
+integrations
+scripts
+services
+--- backend lottery packages ---
+backend/app/lottery
+backend/app/lottery/ai
+backend/app/lottery/ai/prompts
+backend/app/lottery/analytics
+backend/app/lottery/core
+backend/app/lottery/numeric_relations
+backend/app/lottery/numeric_relations/historical
+backend/app/lottery/predictions
+backend/app/lottery/sync
+--- FE lottery pages count ---
+      49
+--- test lottery files ---
+      34
+--- FEATURED policy ---
+11:EXPECTED_PRODUCT_SEVEN_NAMES = (
+21:SEED_FEATURED_SEVEN_NAMES = (
+31:ANALYSIS_SCOPE_LABEL = "FEATURED_SEVEN"
+91:        "analysis_scope": ANALYSIS_SCOPE_LABEL,
+109:    expected_norm = {n.strip().casefold() for n in EXPECTED_PRODUCT_SEVEN_NAMES}
+110:    seed_norm = {n.strip().casefold() for n in SEED_FEATURED_SEVEN_NAMES}

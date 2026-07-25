@@ -6,7 +6,7 @@
 |-------|--------|
 | Branch | `feature/nr-pre-j11a-hardening` |
 | Base | `564a8c0` |
-| Tip | `4fb17ea` (pushed to origin) |
+| Tip | `6b86e2e` (pushed to origin) |
 | Worktree | `/Users/faustosantana/Projects/justech-pre-j11a-hardening` |
 | Audit reference | `0435642` / `audit/nr-post-j10x-pre-j11` |
 | Production | **intacta** (`j10x-20260724`) — no deploy |
@@ -76,6 +76,7 @@ Observaciones:
 1. E2E lottery CI es opt-in hasta configurar secrets DEV.
 2. Secret store LLM aún in-memory (fundación); persistencia en J-11A.
 3. Rate limit in-process (adecuado single-worker; Redis después).
+4. El workflow YAML vive en `docs/lottery/pre_j11a/ci/` porque el PAT actual no tiene scope `workflow`; hay que copiarlo a `.github/workflows/` con un token adecuado.
 
 **No iniciar J-11A en este informe.** Esperar autorización expresa.  
 **No desplegar a Producción.**

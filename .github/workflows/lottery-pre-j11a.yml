@@ -1,0 +1,153 @@
+# Pre-J11A — CI backend / frontend / guards (TD-004/005)
+# No usa Producción. E2E opcional si hay servicios DEV.
+
+name: lottery-pre-j11a
+
+on:
+  push:
+    branches: ["feature/nr-pre-j11a-hardening", "main", "master"]
+    paths:
+      - "backend/**"
+      - "frontend/**"
+      - "e2e/**"
+      - "docs/lottery/pre_j11a/**"
+      - ".github/workflows/lottery-pre-j11a.yml"
+  pull_request:
+    paths:
+      - "backend/**"
+      - "frontend/**"
+      - "e2e/**"
+      - ".github/workflows/lottery-pre-j11a.yml"
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    env:
+      APP_ENV: test
+      LOTTERY_MODULE_ENABLED: "true"
+      LOTTERY_SYNC_ENABLED: "false"
+      LOTTERY_SYNC_WRITE_ENABLED: "false"
+      LOTTERY_SCHEDULER_ENABLED: "false"
+      # Sin path SQLite de laptop; pruebas unitarias usan tmp
+      LOTTERY_SYNC_SQLITE_PATH: ""
+      JAIOS_CREDENTIAL_ENCRYPTION_KEY: "pre-j11a-ci-test-master-key-not-for-prod"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: backend/pyproject.toml
+      - name: Install backend
+        run: |
+          python -m pip install -U pip
+          pip install -e ".[dev]" || pip install -e .
+          pip install pytest pytest-asyncio cryptography
+      - name: Pre-J11A unit tests (sqlite / guards / secrets)
+        run: |
+          mkdir -p ../artifacts
+          pytest -q \
+            tests/test_pre_j11a_sqlite_config.py \
+            tests/test_pre_j11a_api_guards.py \
+            tests/test_pre_j11a_llm_secrets.py \
+            --junitxml=../artifacts/pytest-pre-j11a.xml
+      - name: No hardcoded laptop SQLite in runtime
+        run: |
+          if grep -RIn "/Users/faustosantana/Projects/lottery-history-scraper" \
+            app/api/v1/lottery.py \
+            app/services/lottery_sync_service.py \
+            app/services/lottery_sync_writer.py \
+            app/lottery/sync_sqlite_config.py ; then
+            echo "Hardcoded laptop SQLite path found" >&2
+            exit 1
+          fi
+      - name: Methodology version marker
+        run: |
+          grep -RIn "nr-historical-relations-j1.0.0" app/lottery/numeric_relations --include='*.py'
+      - name: No NR formulas in frontend (scan)
+        working-directory: ${{ github.workspace }}
+        run: |
+          if grep -RInE "TABLE_1\s*=|table1_companions\s*=" frontend/src --include='*.ts' --include='*.tsx' ; then
+            echo "Posible fórmula NR en frontend" >&2
+            exit 1
+          fi
+          exit 0
+      - name: Upload pytest report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pytest-pre-j11a
+          path: artifacts/pytest-pre-j11a.xml
+          if-no-files-found: ignore
+
+  frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - name: Install
+        run: npm ci || npm install
+      - name: Lint
+        run: npm run lint
+      - name: Typecheck
+        run: npx tsc --noEmit
+      - name: Build
+        run: npm run build
+        env:
+          NEXT_TELEMETRY_DISABLED: "1"
+
+  security-methodology:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: No secrets in repo (heuristic)
+        run: |
+          if grep -RInE "sk-[A-Za-z0-9]{20,}|OPENAI_API_KEY[[:space:]]*=[[:space:]]*['\"][^'\"]+['\"]" \
+            --exclude-dir=node_modules --exclude-dir=.git --exclude='*.md' . ; then
+            echo "Posible secreto expuesto" >&2
+            exit 1
+          fi
+          exit 0
+      - name: FEATURED_SEVEN marker present
+        run: |
+          grep -RInE "FEATURED_SEVEN|is_featured" backend/app/lottery --include='*.py' | head -20
+
+  e2e-lottery:
+    runs-on: ubuntu-latest
+    if: ${{ vars.LOTTERY_E2E_ENABLED == 'true' }}
+    needs: [backend, frontend]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Install Playwright
+        working-directory: e2e
+        run: |
+          npm ci || npm install
+          npx playwright install --with-deps chromium
+      - name: Run lottery E2E
+        working-directory: e2e
+        env:
+          PLAYWRIGHT_BASE_URL: ${{ secrets.LOTTERY_E2E_BASE_URL }}
+          PLAYWRIGHT_API_URL: ${{ secrets.LOTTERY_E2E_API_URL }}
+        run: npx playwright test tests/lottery-pre-j11a.spec.ts
+      - name: Upload Playwright artifacts
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-lottery-pre-j11a
+          path: |
+            .qa/e2e/html-report
+            .qa/e2e/test-results
+          if-no-files-found: ignore

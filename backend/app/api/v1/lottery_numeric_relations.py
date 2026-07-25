@@ -8,10 +8,11 @@ from __future__ import annotations
 
 from typing import Annotated, Any
 
-from fastapi import APIRouter, Body, HTTPException, Query
+from fastapi import APIRouter, Body, Depends, HTTPException, Query, Request, Response
 
 from app.api.deps import CurrentUser, DbSession, TenantCtx
 from app.api.v1.lottery_ai_admin import require_ai_admin
+from app.lottery.api_guards import enforce_nr_rate_limit, validate_lottery_id_count
 
 from app.lottery.numeric_relations.active_scope import (
     get_active_analysis_lotteries,
@@ -28,9 +29,18 @@ from app.lottery.numeric_relations.catalog import build_catalog
 from app.lottery.numeric_relations.db_history import analyze_from_db
 from app.lottery.numeric_relations.service import NumericRelationsService
 
+async def _nr_rate_limit_dep(
+    request: Request,
+    response: Response,
+    user: CurrentUser,
+) -> None:
+    enforce_nr_rate_limit(user_id=user.id, route=request.url.path, response=response)
+
+
 router = APIRouter(
     prefix="/lottery/admin/numeric-relations",
     tags=["Lottery Numeric Relations"],
+    dependencies=[Depends(_nr_rate_limit_dep)],
 )
 
 _PERMS = ("lottery_admin_ai", "lottery.admin", "lottery_admin_tools")
@@ -211,6 +221,7 @@ async def numeric_relations_analyze(
     body: AnalyzeBody = Body(...),
 ) -> dict[str, Any]:
     """Análisis histórico — una sola implementación del motor."""
+    validate_lottery_id_count(list(body.lottery_ids or []), field="lottery_ids")
     try:
         accepted, _active_used, scope_meta = await resolve_active_scope_ids(
             db, list(body.lottery_ids), require_non_empty=True

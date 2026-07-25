@@ -5,10 +5,11 @@ from __future__ import annotations
 from typing import Annotated, Any
 from uuid import UUID
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request, Response
 
 from app.api.deps import CurrentUser, DbSession, TenantCtx
 from app.api.v1.lottery_ai_admin import require_ai_admin
+from app.lottery.api_guards import enforce_nr_rate_limit, validate_nr_body_bounds
 from app.lottery.numeric_relations.active_scope import (
     get_active_lottery_id_set,
     resolve_active_scope_ids,
@@ -35,9 +36,18 @@ from app.lottery.numeric_relations.historical.number_explorer import NumberExplo
 from app.lottery.numeric_relations.historical.service import HistoricalRelationsService
 from app.lottery.numeric_relations.historical.version import METHODOLOGY_VERSION
 
+async def _nr_rate_limit_dep(
+    request: Request,
+    response: Response,
+    user: CurrentUser,
+) -> None:
+    enforce_nr_rate_limit(user_id=user.id, route=request.url.path, response=response)
+
+
 router = APIRouter(
     prefix="/lottery/admin/numeric-relations/history",
     tags=["Lottery Numeric Relations History"],
+    dependencies=[Depends(_nr_rate_limit_dep)],
 )
 
 _PERMS = ("lottery_admin_ai", "lottery.admin", "lottery_admin_tools")
@@ -92,6 +102,7 @@ async def _clamp_scope_ids(db: DbSession, body_scope) -> tuple[list[str], list[s
 
 
 async def _prepare(db: DbSession, body: HistoricalSearchBody | PatternDetailBody | CompareBody):
+    validate_nr_body_bounds(body)
     try:
         primary, confirming, follow_up, scope_meta = await _clamp_scope_ids(db, body.scope)
     except ValueError as exc:
@@ -114,6 +125,7 @@ async def _prepare(db: DbSession, body: HistoricalSearchBody | PatternDetailBody
 async def _prepare_numbers(
     db: DbSession, body: NumberProfileBody | NumbersCompareBody | WhyStrengthenedBody | NumberOccurrencesBody
 ):
+    validate_nr_body_bounds(body)
     try:
         primary, confirming, follow_up, scope_meta = await _clamp_scope_ids(db, body.scope)
     except ValueError as exc:
@@ -637,6 +649,7 @@ async def number_occurrence_detail(
     __: Annotated[None, require_ai_admin(*_PERMS)],
 ) -> dict[str, Any]:
     """J-9 — Expediente de una aparición (Modo B)."""
+    validate_nr_body_bounds(body)
     try:
         primary, confirming, follow_up, scope_meta = await _clamp_scope_ids(db, body.scope)
     except ValueError as exc:
@@ -677,6 +690,7 @@ async def number_next_draws(
     __: Annotated[None, require_ai_admin(*_PERMS)],
 ) -> dict[str, Any]:
     """J-9 — Próximos N sorteos (por defecto 7) o días calendario."""
+    validate_nr_body_bounds(body)
     try:
         lids, _active, scope_meta = await resolve_active_scope_ids(
             db, [str(x) for x in body.follow_up_lottery_ids], require_non_empty=True

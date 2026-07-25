@@ -211,6 +211,17 @@ class Settings(BaseSettings):
     lottery_sync_max_retries: int = 4
     lottery_sync_schedule: str = "0 */6 * * *"
     lottery_sync_source: str = "api"
+    # Snapshot SQLite para sync dry-run / import — obligatorio vía env cuando source=sqlite.
+    # Nunca usar paths de laptop hardcodeados (Pre-J11A TD-001).
+    lottery_sync_sqlite_path: str = ""
+    # NR API guards (Pre-J11A TD-003/006) — valores documentados en PRE_J11A_API_GUARDS_AND_RATE_LIMITS.md
+    lottery_nr_rate_limit_per_minute: int = 90
+    lottery_nr_max_range_days: int = 15000  # ~41 años; cubre histórico sin consultas abiertas patológicas
+    lottery_nr_max_lotteries_per_request: int = 7
+    lottery_nr_max_numbers_list: int = 20
+    lottery_nr_max_page_size: int = 100
+    lottery_nr_default_page_size: int = 20
+    lottery_nr_request_timeout_seconds: int = 45
     lottery_export_max_rows: int = 5000
     lottery_max_range_days: int = 3660
     lottery_default_page_size: int = 50

@@ -6,7 +6,7 @@ from datetime import date
 from typing import Annotated, Literal
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, HTTPException, Query
 
 from app.api.deps import CurrentUser, DbSession, TenantCtx, get_current_user_optional
 from app.config import settings
@@ -1267,9 +1267,21 @@ async def sync_dry_run(
     svc = LotterySyncService(db, database_url=settings.database_url)
     from_d = date_cls.fromisoformat(body.from_date) if body.from_date else None
     to_d = date_cls.fromisoformat(body.to_date) if body.to_date else None
+    from app.lottery.sync_sqlite_config import (
+        LotterySyncSqliteConfigError,
+        resolve_sqlite_snapshot_path,
+    )
+
+    sqlite_path = None
+    if (body.source or "sqlite") == "sqlite":
+        try:
+            sqlite_path = resolve_sqlite_snapshot_path()
+        except LotterySyncSqliteConfigError as exc:
+            raise HTTPException(status_code=400, detail=str(exc)) from exc
+
     report = await svc.dry_run(
         source=body.source,
-        sqlite_path=Path("/Users/faustosantana/Projects/lottery-history-scraper/data/lottery.db"),
+        sqlite_path=sqlite_path,
         from_date=from_d,
         to_date=to_d,
         lottery_source_id=body.lottery_source_id,

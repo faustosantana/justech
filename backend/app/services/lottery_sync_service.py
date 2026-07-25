@@ -323,7 +323,9 @@ class LotterySyncService:
         if source == "api":
             adapter = ElBoletoApiAdapter()
         else:
-            path = sqlite_path or Path("/Users/faustosantana/Projects/lottery-history-scraper/data/lottery.db")
+            from app.lottery.sync_sqlite_config import resolve_sqlite_snapshot_path
+
+            path = resolve_sqlite_snapshot_path(sqlite_path)
             adapter = SqliteSnapshotAdapter(path)
 
         started = datetime.now(timezone.utc)

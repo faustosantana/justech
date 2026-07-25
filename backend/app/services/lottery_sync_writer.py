@@ -142,7 +142,9 @@ class LotterySyncWriter:
             return fixture or FixtureSourceAdapter()
         if source == "api":
             return ElBoletoApiAdapter()
-        return SqliteSnapshotAdapter(sqlite_path or Path("/Users/faustosantana/Projects/lottery-history-scraper/data/lottery.db"))
+        from app.lottery.sync_sqlite_config import resolve_sqlite_snapshot_path
+
+        return SqliteSnapshotAdapter(resolve_sqlite_snapshot_path(sqlite_path))
 
     async def run(
         self,

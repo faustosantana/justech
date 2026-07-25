@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 import uuid
 from datetime import date
 from pathlib import Path
@@ -19,7 +20,8 @@ from app.services.lottery_sync_service import SyncCandidate, SyncEnvironmentGuar
 from app.services.lottery_sync_writer import FixtureSourceAdapter, LotterySyncWriter
 
 STAGING_URL = "postgresql+asyncpg://jaios_staging:jaios_staging_local_only@localhost:5434/jaios_lottery_staging"
-BACKUP_DIR = Path("/Users/faustosantana/Projects/jaios-lottery/data/lottery-staging-backups")
+# Opcional: dumps locales de staging — nunca hardcodear laptop path (Pre-J11A).
+BACKUP_DIR = Path(os.environ["LOTTERY_STAGING_BACKUP_DIR"]) if os.environ.get("LOTTERY_STAGING_BACKUP_DIR") else None
 
 
 @pytest.fixture(autouse=True)
@@ -44,6 +46,8 @@ def _flags(monkeypatch):
 
 @pytest.fixture
 def backup_path():
+    if BACKUP_DIR is None or not BACKUP_DIR.is_dir():
+        pytest.skip("set LOTTERY_STAGING_BACKUP_DIR for write-gate backup fixtures")
     files = sorted(BACKUP_DIR.glob("pre-phase7-*.dump"))
     if not files:
         pytest.skip("no pre-phase7 backup")

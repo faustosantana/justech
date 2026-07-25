@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 import uuid
 from datetime import date, timedelta
 from pathlib import Path
@@ -27,7 +28,8 @@ from app.services.lottery_sync_service import (
 )
 
 DEV_URL = "postgresql+asyncpg://jaios:jaios_dev_local_only@localhost:5433/jaios_lottery_dev"
-SQLITE = Path("/Users/faustosantana/Projects/lottery-history-scraper/data/lottery.db")
+# Snapshot opcional vía env — sin path de laptop hardcodeado (Pre-J11A TD-001).
+SQLITE = Path(os.environ["LOTTERY_SYNC_SQLITE_PATH"]) if os.environ.get("LOTTERY_SYNC_SQLITE_PATH") else None
 
 
 @pytest.fixture(autouse=True)
@@ -166,8 +168,8 @@ async def test_share_create_view_revoke_expire(db_session):
 
 @pytest.mark.asyncio
 async def test_sync_dry_run_no_write(db_session):
-    if not SQLITE.exists():
-        pytest.skip("sqlite source missing")
+    if SQLITE is None or not SQLITE.exists():
+        pytest.skip("sqlite source missing (set LOTTERY_SYNC_SQLITE_PATH)")
     before = int(await db_session.scalar(select(func.count()).select_from(LotteryDraw)) or 0)
     assert before == 91927
     svc = LotterySyncService(db_session, database_url=DEV_URL)

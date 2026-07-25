@@ -60,3 +60,4 @@ credentials.json
 # Lottery DEV backups / local dump artifacts (never commit)
 docs/lottery/numeric_relations_artifacts/**/backups/*.dump
 **/._*
+backend/.venv-prej11a/

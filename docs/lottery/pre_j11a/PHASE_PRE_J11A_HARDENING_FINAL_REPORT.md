@@ -33,7 +33,7 @@
 
 ### B4 — CI (TD-004/005)
 
-- `.github/workflows/lottery-pre-j11a.yml`
+- `docs/lottery/pre_j11a/ci/lottery-pre-j11a.yml` → install under `.github/workflows/` when PAT has workflow scope
 - E2E spec `e2e/tests/lottery-pre-j11a.spec.ts`
 
 ### B5 — LLM secrets (TD-010)

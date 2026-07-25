@@ -2,7 +2,7 @@
 
 ## Workflow
 
-`.github/workflows/lottery-pre-j11a.yml`
+`docs/lottery/pre_j11a/ci/lottery-pre-j11a.yml` (install to `.github/workflows/` with a token that has `workflow` scope)
 
 ### A. Backend (obligatorio)
 

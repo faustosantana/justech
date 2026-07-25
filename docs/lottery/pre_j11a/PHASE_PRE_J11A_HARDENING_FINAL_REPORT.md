@@ -6,6 +6,7 @@
 |-------|--------|
 | Branch | `feature/nr-pre-j11a-hardening` |
 | Base | `564a8c0` |
+| Tip | `4fb17ea` (pushed to origin) |
 | Worktree | `/Users/faustosantana/Projects/justech-pre-j11a-hardening` |
 | Audit reference | `0435642` / `audit/nr-post-j10x-pre-j11` |
 | Production | **intacta** (`j10x-20260724`) — no deploy |

@@ -1,0 +1,1515 @@
+{
+  "audit_id": "12ce64df-0739-40c4-8fba-ff8fc38226dd",
+  "branch": "feature/nr-dynamics-topology-manual-rules-audit",
+  "base_commit": "ba15158",
+  "methodology_version": "nr-historical-relations-j1.0.0",
+  "motor_modified": false,
+  "tables_modified": false,
+  "production_touched": false,
+  "j11a_started": false,
+  "random_baseline_used": false,
+  "manual_cases": [
+    {
+      "case_id": "M1",
+      "classification": "FUERTE_OFICIAL_UNICO",
+      "certainty": "ALTA",
+      "official": [
+        29
+      ],
+      "manual": 29,
+      "evidence": "Motor produce únicamente 29."
+    },
+    {
+      "case_id": "M2",
+      "classification": "VECINO_T2_DIRECTO",
+      "certainty": "ALTA",
+      "official": [],
+      "manual": 75,
+      "evidence": "75 es vecino T2 de [62] sin ruta T1×T2 oficial."
+    },
+    {
+      "case_id": "M3",
+      "classification": "FUERTE_OFICIAL_ENTRE_VARIOS",
+      "certainty": "ALTA",
+      "official": [
+        22,
+        35
+      ],
+      "manual": 35,
+      "evidence": "Motor produce [22, 35]; socio eligió 35."
+    },
+    {
+      "case_id": "M4",
+      "classification": "FUERTE_OFICIAL_UNICO",
+      "certainty": "ALTA",
+      "official": [
+        54
+      ],
+      "manual": 54,
+      "evidence": "Motor produce únicamente 54."
+    },
+    {
+      "case_id": "M5",
+      "classification": "FUERTE_OFICIAL_UNICO",
+      "certainty": "ALTA",
+      "official": [
+        94
+      ],
+      "manual": 94,
+      "evidence": "39+58→94 es fuerte oficial. 39+84→94 también. 58 y 84 son vecinos T2 del mismo grupo [58,84,94]; ambos son confirmadores válidos. No es necesario tratar 58 como error."
+    }
+  ],
+  "m5b_39_84": {
+    "classification": "FUERTE_OFICIAL_UNICO",
+    "official": [
+      94
+    ],
+    "both_confirm": true
+  },
+  "hist_35_54_14": {
+    "activations": 15,
+    "exact_rate_pct": 73.33,
+    "years": [
+      2019,
+      2020,
+      2021,
+      2022,
+      2024,
+      2025,
+      2026
+    ]
+  },
+  "hist_39_94_84": {
+    "activations": 20,
+    "exact_rate_pct": 85.0,
+    "years": [
+      2019,
+      2020,
+      2021,
+      2022,
+      2023,
+      2024,
+      2026
+    ]
+  },
+  "hist_39_94_58": {
+    "activations": 12,
+    "exact_rate_pct": 66.67,
+    "years": [
+      2019,
+      2020,
+      2023,
+      2024,
+      2025,
+      2026
+    ]
+  },
+  "sequences": {
+    "opp_-1": 1545,
+    "hit_-1": 1198,
+    "rate_-1": 77.54,
+    "flags": {
+      "-1→F": 393,
+      "+1→F": 336,
+      "F→-1": 381,
+      "F→+1": 345,
+      "F→+2": 243,
+      "F→+1→+2": 39,
+      "F→-1→F": 140,
+      "F→-2": 274,
+      "F→-1→-2": 55,
+      "F→-1→-2→F_partial": 49
+    },
+    "examples": {
+      "-1→F": [
+        {
+          "case_date": "2019-07-24",
+          "fuerte": 50,
+          "n_m1": 23,
+          "n_p1": 55,
+          "n_m2": 18,
+          "first_day": {
+            "23": 1,
+            "55": 2,
+            "18": 2,
+            "50": 5
+          }
+        },
+        {
+          "case_date": "2019-07-27",
+          "fuerte": 90,
+          "n_m1": 74,
+          "n_p1": null,
+          "n_m2": 58,
+          "first_day": {
+            "58": 3,
+            "74": 4,
+            "90": 5
+          }
+        },
+        {
+          "case_date": "2019-07-30",
+          "fuerte": 93,
+          "n_m1": 29,
+          "n_p1": null,
+          "n_m2": 13,
+          "first_day": {
+            "29": 1,
+            "13": 3,
+            "93": 6
+          }
+        },
+        {
+          "case_date": "2019-08-14",
+          "fuerte": 52,
+          "n_m1": 47,
+          "n_p1": 63,
+          "n_m2": 31,
+          "first_day": {
+            "47": 1,
+            "31": 2,
+            "52": 3
+          }
+        },
+        {
+          "case_date": "2019-08-15",
+          "fuerte": 87,
+          "n_m1": 82,
+          "n_p1": null,
+          "n_m2": 39,
+          "first_day": {
+            "39": 2,
+            "82": 5,
+            "87": 6
+          }
+        },
+        {
+          "case_date": "2019-08-26",
+          "fuerte": 50,
+          "n_m1": 23,
+          "n_p1": 55,
+          "n_m2": 18,
+          "first_day": {
+            "23": 1,
+            "55": 3,
+            "18": 3,
+            "50": 3
+          }
+        },
+        {
+          "case_date": "2019-08-28",
+          "fuerte": 42,
+          "n_m1": 10,
+          "n_p1": null,
+          "n_m2": 5,
+          "first_day": {
+            "10": 1,
+            "5": 1,
+            "42": 4
+          }
+        },
+        {
+          "case_date": "2019-09-03",
+          "fuerte": 40,
+          "n_m1": 35,
+          "n_p1": 83,
+          "n_m2": null,
+          "first_day": {
+            "35": 2,
+            "40": 5
+          }
+        }
+      ],
+      "+1→F": [
+        {
+          "case_date": "2019-07-24",
+          "fuerte": 50,
+          "n_m1": 23,
+          "n_p1": 55,
+          "n_m2": 18,
+          "first_day": {
+            "23": 1,
+            "55": 2,
+            "18": 2,
+            "50": 5
+          }
+        },
+        {
+          "case_date": "2019-08-27",
+          "fuerte": 28,
+          "n_m1": 12,
+          "n_p1": 44,
+          "n_m2": null,
+          "first_day": {
+            "44": 4,
+            "60": 5,
+            "28": 5,
+            "12": 6
+          }
+        },
+        {
+          "case_date": "2019-09-15",
+          "fuerte": 56,
+          "n_m1": 51,
+          "n_p1": 67,
+          "n_m2": 19,
+          "first_day": {
+            "67": 1,
+            "51": 3,
+            "56": 3,
+            "19": 5,
+            "72": 6
+          }
+        },
+        {
+          "case_date": "2019-09-19",
+          "fuerte": 9,
+          "n_m1": null,
+          "n_p1": 14,
+          "n_m2": null,
+          "first_day": {
+            "14": 1,
+            "30": 3,
+            "9": 3
+          }
+        },
+        {
+          "case_date": "2019-09-19",
+          "fuerte": 25,
+          "n_m1": null,
+          "n_p1": 57,
+          "n_m2": null,
+          "first_day": {
+            "57": 1,
+            "25": 3
+          }
+        },
+        {
+          "case_date": "2019-09-26",
+          "fuerte": 26,
+          "n_m1": 21,
+          "n_p1": 53,
+          "n_m2": null,
+          "first_day": {
+            "53": 2,
+            "26": 3,
+            "21": 5
+          }
+        },
+        {
+          "case_date": "2019-09-28",
+          "fuerte": 69,
+          "n_m1": null,
+          "n_p1": 80,
+          "n_m2": null,
+          "first_day": {
+            "80": 3,
+            "69": 4
+          }
+        },
+        {
+          "case_date": "2019-10-08",
+          "fuerte": 17,
+          "n_m1": 1,
+          "n_p1": 33,
+          "n_m2": null,
+          "first_day": {
+            "33": 1,
+            "1": 1,
+            "17": 2,
+            "49": 3
+          }
+        }
+      ],
+      "F→-1": [
+        {
+          "case_date": "2019-07-27",
+          "fuerte": 11,
+          "n_m1": 6,
+          "n_p1": 43,
+          "n_m2": null,
+          "first_day": {
+            "11": 1,
+            "43": 4,
+            "54": 5,
+            "6": 6
+          }
+        },
+        {
+          "case_date": "2019-08-04",
+          "fuerte": 60,
+          "n_m1": 44,
+          "n_p1": 81,
+          "n_m2": 28,
+          "first_day": {
+            "60": 1,
+            "28": 1,
+            "81": 3,
+            "44": 4,
+            "92": 7
+          }
+        },
+        {
+          "case_date": "2019-08-21",
+          "fuerte": 80,
+          "n_m1": 69,
+          "n_p1": null,
+          "n_m2": null,
+          "first_day": {
+            "80": 4,
+            "69": 7
+          }
+        },
+        {
+          "case_date": "2019-08-27",
+          "fuerte": 28,
+          "n_m1": 12,
+          "n_p1": 44,
+          "n_m2": null,
+          "first_day": {
+            "44": 4,
+            "60": 5,
+            "28": 5,
+            "12": 6
+          }
+        },
+        {
+          "case_date": "2019-08-27",
+          "fuerte": 44,
+          "n_m1": 28,
+          "n_p1": 60,
+          "n_m2": 12,
+          "first_day": {
+            "44": 4,
+            "60": 5,
+            "28": 5,
+            "81": 6,
+            "12": 6
+          }
+        },
+        {
+          "case_date": "2019-09-07",
+          "fuerte": 91,
+          "n_m1": 75,
+          "n_p1": null,
+          "n_m2": 70,
+          "first_day": {
+            "91": 1,
+            "75": 4
+          }
+        },
+        {
+          "case_date": "2019-09-11",
+          "fuerte": 42,
+          "n_m1": 10,
+          "n_p1": null,
+          "n_m2": 5,
+          "first_day": {
+            "5": 1,
+            "42": 1,
+            "10": 5
+          }
+        },
+        {
+          "case_date": "2019-09-11",
+          "fuerte": 76,
+          "n_m1": 49,
+          "n_p1": null,
+          "n_m2": 33,
+          "first_day": {
+            "76": 3,
+            "49": 4,
+            "33": 6
+          }
+        }
+      ],
+      "F→+1": [
+        {
+          "case_date": "2019-07-27",
+          "fuerte": 11,
+          "n_m1": 6,
+          "n_p1": 43,
+          "n_m2": null,
+          "first_day": {
+            "11": 1,
+            "43": 4,
+            "54": 5,
+            "6": 6
+          }
+        },
+        {
+          "case_date": "2019-07-29",
+          "fuerte": 10,
+          "n_m1": 5,
+          "n_p1": 42,
+          "n_m2": null,
+          "first_day": {
+            "10": 2,
+            "42": 3
+          }
+        },
+        {
+          "case_date": "2019-08-01",
+          "fuerte": 23,
+          "n_m1": 18,
+          "n_p1": 50,
+          "n_m2": 7,
+          "first_day": {
+            "23": 2,
+            "50": 3,
+            "7": 3,
+            "55": 4
+          }
+        },
+        {
+          "case_date": "2019-08-04",
+          "fuerte": 60,
+          "n_m1": 44,
+          "n_p1": 81,
+          "n_m2": 28,
+          "first_day": {
+            "60": 1,
+            "28": 1,
+            "81": 3,
+            "44": 4,
+            "92": 7
+          }
+        },
+        {
+          "case_date": "2019-08-27",
+          "fuerte": 44,
+          "n_m1": 28,
+          "n_p1": 60,
+          "n_m2": 12,
+          "first_day": {
+            "44": 4,
+            "60": 5,
+            "28": 5,
+            "81": 6,
+            "12": 6
+          }
+        },
+        {
+          "case_date": "2019-08-28",
+          "fuerte": 10,
+          "n_m1": 5,
+          "n_p1": 42,
+          "n_m2": null,
+          "first_day": {
+            "10": 1,
+            "5": 1,
+            "42": 4
+          }
+        },
+        {
+          "case_date": "2019-09-08",
+          "fuerte": 11,
+          "n_m1": 6,
+          "n_p1": 43,
+          "n_m2": null,
+          "first_day": {
+            "6": 2,
+            "11": 2,
+            "43": 4
+          }
+        },
+        {
+          "case_date": "2019-09-16",
+          "fuerte": 60,
+          "n_m1": 44,
+          "n_p1": 81,
+          "n_m2": 28,
+          "first_day": {
+            "60": 4,
+            "44": 5,
+            "28": 5,
+            "81": 7
+          }
+        }
+      ],
+      "F→+2": [
+        {
+          "case_date": "2019-07-27",
+          "fuerte": 11,
+          "n_m1": 6,
+          "n_p1": 43,
+          "n_m2": null,
+          "first_day": {
+            "11": 1,
+            "43": 4,
+            "54": 5,
+            "6": 6
+          }
+        },
+        {
+          "case_date": "2019-08-01",
+          "fuerte": 23,
+          "n_m1": 18,
+          "n_p1": 50,
+          "n_m2": 7,
+          "first_day": {
+            "23": 2,
+            "50": 3,
+            "7": 3,
+            "55": 4
+          }
+        },
+        {
+          "case_date": "2019-08-04",
+          "fuerte": 12,
+          "n_m1": null,
+          "n_p1": 28,
+          "n_m2": null,
+          "first_day": {
+            "28": 1,
+            "12": 1,
+            "44": 4
+          }
+        },
+        {
+          "case_date": "2019-08-04",
+          "fuerte": 60,
+          "n_m1": 44,
+          "n_p1": 81,
+          "n_m2": 28,
+          "first_day": {
+            "60": 1,
+            "28": 1,
+            "81": 3,
+            "44": 4,
+            "92": 7
+          }
+        },
+        {
+          "case_date": "2019-08-27",
+          "fuerte": 44,
+          "n_m1": 28,
+          "n_p1": 60,
+          "n_m2": 12,
+          "first_day": {
+            "44": 4,
+            "60": 5,
+            "28": 5,
+            "81": 6,
+            "12": 6
+          }
+        },
+        {
+          "case_date": "2019-09-15",
+          "fuerte": 56,
+          "n_m1": 51,
+          "n_p1": 67,
+          "n_m2": 19,
+          "first_day": {
+            "67": 1,
+            "51": 3,
+            "56": 3,
+            "19": 5,
+            "72": 6
+          }
+        },
+        {
+          "case_date": "2019-09-20",
+          "fuerte": 11,
+          "n_m1": 6,
+          "n_p1": 43,
+          "n_m2": null,
+          "first_day": {
+            "6": 2,
+            "11": 5,
+            "43": 6,
+            "54": 7
+          }
+        },
+        {
+          "case_date": "2019-10-06",
+          "fuerte": 35,
+          "n_m1": null,
+          "n_p1": 40,
+          "n_m2": null,
+          "first_day": {
+            "35": 5,
+            "83": 6
+          }
+        }
+      ],
+      "F→+1→+2": [
+        {
+          "case_date": "2019-07-27",
+          "fuerte": 11,
+          "n_m1": 6,
+          "n_p1": 43,
+          "n_m2": null,
+          "first_day": {
+            "11": 1,
+            "43": 4,
+            "54": 5,
+            "6": 6
+          }
+        },
+        {
+          "case_date": "2019-08-01",
+          "fuerte": 23,
+          "n_m1": 18,
+          "n_p1": 50,
+          "n_m2": 7,
+          "first_day": {
+            "23": 2,
+            "50": 3,
+            "7": 3,
+            "55": 4
+          }
+        },
+        {
+          "case_date": "2019-08-04",
+          "fuerte": 60,
+          "n_m1": 44,
+          "n_p1": 81,
+          "n_m2": 28,
+          "first_day": {
+            "60": 1,
+            "28": 1,
+            "81": 3,
+            "44": 4,
+            "92": 7
+          }
+        },
+        {
+          "case_date": "2019-08-27",
+          "fuerte": 44,
+          "n_m1": 28,
+          "n_p1": 60,
+          "n_m2": 12,
+          "first_day": {
+            "44": 4,
+            "60": 5,
+            "28": 5,
+            "81": 6,
+            "12": 6
+          }
+        },
+        {
+          "case_date": "2019-09-20",
+          "fuerte": 11,
+          "n_m1": 6,
+          "n_p1": 43,
+          "n_m2": null,
+          "first_day": {
+            "6": 2,
+            "11": 5,
+            "43": 6,
+            "54": 7
+          }
+        },
+        {
+          "case_date": "2019-10-31",
+          "fuerte": 44,
+          "n_m1": 28,
+          "n_p1": 60,
+          "n_m2": 12,
+          "first_day": {
+            "44": 2,
+            "60": 5,
+            "81": 6
+          }
+        },
+        {
+          "case_date": "2020-08-06",
+          "fuerte": 44,
+          "n_m1": 28,
+          "n_p1": 60,
+          "n_m2": 12,
+          "first_day": {
+            "44": 1,
+            "12": 1,
+            "60": 2,
+            "81": 3,
+            "28": 7
+          }
+        },
+        {
+          "case_date": "2020-09-07",
+          "fuerte": 9,
+          "n_m1": null,
+          "n_p1": 14,
+          "n_m2": null,
+          "first_day": {
+            "9": 1,
+            "14": 2,
+            "30": 3
+          }
+        }
+      ],
+      "F→-1→F": [
+        {
+          "case_date": "2019-07-27",
+          "fuerte": 11,
+          "n_m1": 6,
+          "n_p1": 43,
+          "n_m2": null,
+          "first_day": {
+            "11": 1,
+            "43": 4,
+            "54": 5,
+            "6": 6
+          }
+        },
+        {
+          "case_date": "2019-08-04",
+          "fuerte": 60,
+          "n_m1": 44,
+          "n_p1": 81,
+          "n_m2": 28,
+          "first_day": {
+            "60": 1,
+            "28": 1,
+            "81": 3,
+            "44": 4,
+            "92": 7
+          }
+        },
+        {
+          "case_date": "2019-09-07",
+          "fuerte": 91,
+          "n_m1": 75,
+          "n_p1": null,
+          "n_m2": 70,
+          "first_day": {
+            "91": 1,
+            "75": 4
+          }
+        },
+        {
+          "case_date": "2019-09-11",
+          "fuerte": 42,
+          "n_m1": 10,
+          "n_p1": null,
+          "n_m2": 5,
+          "first_day": {
+            "5": 1,
+            "42": 1,
+            "10": 5
+          }
+        },
+        {
+          "case_date": "2019-09-11",
+          "fuerte": 76,
+          "n_m1": 49,
+          "n_p1": null,
+          "n_m2": 33,
+          "first_day": {
+            "76": 3,
+            "49": 4,
+            "33": 6
+          }
+        },
+        {
+          "case_date": "2019-09-12",
+          "fuerte": 76,
+          "n_m1": 49,
+          "n_p1": null,
+          "n_m2": 33,
+          "first_day": {
+            "76": 2,
+            "49": 3,
+            "33": 5
+          }
+        },
+        {
+          "case_date": "2019-09-16",
+          "fuerte": 60,
+          "n_m1": 44,
+          "n_p1": 81,
+          "n_m2": 28,
+          "first_day": {
+            "60": 4,
+            "44": 5,
+            "28": 5,
+            "81": 7
+          }
+        },
+        {
+          "case_date": "2019-09-26",
+          "fuerte": 26,
+          "n_m1": 21,
+          "n_p1": 53,
+          "n_m2": null,
+          "first_day": {
+            "53": 2,
+            "26": 3,
+            "21": 5
+          }
+        }
+      ],
+      "F→-2": [
+        {
+          "case_date": "2019-08-01",
+          "fuerte": 23,
+          "n_m1": 18,
+          "n_p1": 50,
+          "n_m2": 7,
+          "first_day": {
+            "23": 2,
+            "50": 3,
+            "7": 3,
+            "55": 4
+          }
+        },
+        {
+          "case_date": "2019-08-01",
+          "fuerte": 71,
+          "n_m1": 66,
+          "n_p1": null,
+          "n_m2": 55,
+          "first_day": {
+            "71": 1,
+            "55": 4
+          }
+        },
+        {
+          "case_date": "2019-08-11",
+          "fuerte": 42,
+          "n_m1": 10,
+          "n_p1": null,
+          "n_m2": 5,
+          "first_day": {
+            "42": 2,
+            "10": 2,
+            "5": 6
+          }
+        },
+        {
+          "case_date": "2019-08-17",
+          "fuerte": 71,
+          "n_m1": 66,
+          "n_p1": null,
+          "n_m2": 55,
+          "first_day": {
+            "66": 1,
+            "71": 1,
+            "55": 4
+          }
+        },
+        {
+          "case_date": "2019-08-27",
+          "fuerte": 44,
+          "n_m1": 28,
+          "n_p1": 60,
+          "n_m2": 12,
+          "first_day": {
+            "44": 4,
+            "60": 5,
+            "28": 5,
+            "81": 6,
+            "12": 6
+          }
+        },
+        {
+          "case_date": "2019-09-08",
+          "fuerte": 53,
+          "n_m1": 26,
+          "n_p1": null,
+          "n_m2": 21,
+          "first_day": {
+            "26": 1,
+            "53": 2,
+            "21": 3
+          }
+        },
+        {
+          "case_date": "2019-09-11",
+          "fuerte": 76,
+          "n_m1": 49,
+          "n_p1": null,
+          "n_m2": 33,
+          "first_day": {
+            "76": 3,
+            "49": 4,
+            "33": 6
+          }
+        },
+        {
+          "case_date": "2019-09-12",
+          "fuerte": 76,
+          "n_m1": 49,
+          "n_p1": null,
+          "n_m2": 33,
+          "first_day": {
+            "76": 2,
+            "49": 3,
+            "33": 5
+          }
+        }
+      ],
+      "F→-1→-2": [
+        {
+          "case_date": "2019-08-27",
+          "fuerte": 44,
+          "n_m1": 28,
+          "n_p1": 60,
+          "n_m2": 12,
+          "first_day": {
+            "44": 4,
+            "60": 5,
+            "28": 5,
+            "81": 6,
+            "12": 6
+          }
+        },
+        {
+          "case_date": "2019-09-11",
+          "fuerte": 76,
+          "n_m1": 49,
+          "n_p1": null,
+          "n_m2": 33,
+          "first_day": {
+            "76": 3,
+            "49": 4,
+            "33": 6
+          }
+        },
+        {
+          "case_date": "2019-09-12",
+          "fuerte": 76,
+          "n_m1": 49,
+          "n_p1": null,
+          "n_m2": 33,
+          "first_day": {
+            "76": 2,
+            "49": 3,
+            "33": 5
+          }
+        },
+        {
+          "case_date": "2019-09-23",
+          "fuerte": 87,
+          "n_m1": 82,
+          "n_p1": null,
+          "n_m2": 39,
+          "first_day": {
+            "87": 2,
+            "82": 5,
+            "39": 7
+          }
+        },
+        {
+          "case_date": "2019-12-24",
+          "fuerte": 79,
+          "n_m1": 68,
+          "n_p1": 84,
+          "n_m2": 36,
+          "first_day": {
+            "79": 1,
+            "68": 4,
+            "84": 6,
+            "36": 6
+          }
+        },
+        {
+          "case_date": "2020-01-07",
+          "fuerte": 90,
+          "n_m1": 74,
+          "n_p1": null,
+          "n_m2": 58,
+          "first_day": {
+            "90": 2,
+            "74": 3,
+            "58": 4
+          }
+        },
+        {
+          "case_date": "2020-02-24",
+          "fuerte": 90,
+          "n_m1": 74,
+          "n_p1": null,
+          "n_m2": 58,
+          "first_day": {
+            "90": 1,
+            "74": 2,
+            "58": 6
+          }
+        },
+        {
+          "case_date": "2020-07-01",
+          "fuerte": 76,
+          "n_m1": 49,
+          "n_p1": null,
+          "n_m2": 33,
+          "first_day": {
+            "76": 1,
+            "49": 4,
+            "33": 7
+          }
+        }
+      ],
+      "F→-1→-2→F_partial": [
+        {
+          "case_date": "2019-11-19",
+          "fuerte": 72,
+          "n_m1": 67,
+          "n_p1": null,
+          "n_m2": 56,
+          "first_day": {
+            "56": 1,
+            "72": 3,
+            "67": 6
+          }
+        },
+        {
+          "case_date": "2019-11-21",
+          "fuerte": 71,
+          "n_m1": 66,
+          "n_p1": null,
+          "n_m2": 55,
+          "first_day": {
+            "55": 1,
+            "71": 5,
+            "66": 6
+          }
+        },
+        {
+          "case_date": "2019-12-08",
+          "fuerte": 76,
+          "n_m1": 49,
+          "n_p1": null,
+          "n_m2": 33,
+          "first_day": {
+            "33": 1,
+            "76": 5,
+            "49": 7
+          }
+        },
+        {
+          "case_date": "2019-12-28",
+          "fuerte": 54,
+          "n_m1": 43,
+          "n_p1": 86,
+          "n_m2": 11,
+          "first_day": {
+            "11": 2,
+            "86": 3,
+            "54": 3,
+            "43": 4
+          }
+        },
+        {
+          "case_date": "2020-08-31",
+          "fuerte": 68,
+          "n_m1": 36,
+          "n_p1": 79,
+          "n_m2": 4,
+          "first_day": {
+            "84": 1,
+            "4": 1,
+            "68": 2,
+            "36": 5,
+            "79": 7
+          }
+        },
+        {
+          "case_date": "2020-09-19",
+          "fuerte": 90,
+          "n_m1": 74,
+          "n_p1": null,
+          "n_m2": 58,
+          "first_day": {
+            "58": 2,
+            "90": 3,
+            "74": 4
+          }
+        },
+        {
+          "case_date": "2020-09-21",
+          "fuerte": 92,
+          "n_m1": 81,
+          "n_p1": null,
+          "n_m2": 60,
+          "first_day": {
+            "60": 4,
+            "92": 6,
+            "81": 7
+          }
+        },
+        {
+          "case_date": "2020-11-20",
+          "fuerte": 90,
+          "n_m1": 74,
+          "n_p1": null,
+          "n_m2": 58,
+          "first_day": {
+            "58": 2,
+            "90": 3,
+            "74": 6
+          }
+        }
+      ]
+    }
+  },
+  "minus_one_role": {
+    "producers_top": [
+      [
+        42,
+        64
+      ],
+      [
+        44,
+        59
+      ],
+      [
+        53,
+        57
+      ],
+      [
+        63,
+        56
+      ],
+      [
+        70,
+        55
+      ],
+      [
+        90,
+        53
+      ],
+      [
+        29,
+        53
+      ],
+      [
+        71,
+        39
+      ],
+      [
+        28,
+        32
+      ],
+      [
+        87,
+        29
+      ],
+      [
+        92,
+        29
+      ],
+      [
+        26,
+        28
+      ],
+      [
+        56,
+        28
+      ],
+      [
+        23,
+        28
+      ],
+      [
+        41,
+        26
+      ]
+    ],
+    "numbers_top": [
+      [
+        10,
+        64
+      ],
+      [
+        28,
+        59
+      ],
+      [
+        26,
+        57
+      ],
+      [
+        52,
+        56
+      ],
+      [
+        59,
+        55
+      ],
+      [
+        74,
+        53
+      ],
+      [
+        13,
+        53
+      ],
+      [
+        66,
+        39
+      ],
+      [
+        12,
+        32
+      ],
+      [
+        82,
+        29
+      ],
+      [
+        81,
+        29
+      ],
+      [
+        21,
+        28
+      ],
+      [
+        51,
+        28
+      ],
+      [
+        18,
+        28
+      ],
+      [
+        30,
+        26
+      ]
+    ],
+    "minus1_then_fuerte": 393,
+    "minus1_then_minus2": 286,
+    "minus1_was_confirmer_count": 0,
+    "interpretation": "−1 funciona principalmente como destino frecuente de la familia (tasa 77.54%). En 393 activaciones −1 apareció antes que el fuerte (puente/precursor). En 286 casos −1 precedió a −2. Fue el confirmador original en 0 activaciones."
+  },
+  "misses": {
+    "count": 552,
+    "with_t1_companion": 507,
+    "top_substitutes": [
+      [
+        "21",
+        16
+      ],
+      [
+        "31",
+        15
+      ],
+      [
+        "70",
+        15
+      ],
+      [
+        "93",
+        14
+      ],
+      [
+        "91",
+        12
+      ],
+      [
+        "19",
+        12
+      ],
+      [
+        "59",
+        12
+      ],
+      [
+        "81",
+        12
+      ],
+      [
+        "26",
+        12
+      ],
+      [
+        "75",
+        12
+      ],
+      [
+        "74",
+        11
+      ],
+      [
+        "5",
+        11
+      ],
+      [
+        "22",
+        11
+      ],
+      [
+        "47",
+        11
+      ],
+      [
+        "40",
+        11
+      ]
+    ],
+    "top_t1_dist": [
+      [
+        "1",
+        120
+      ],
+      [
+        "-1",
+        101
+      ],
+      [
+        "-2",
+        72
+      ],
+      [
+        "2",
+        64
+      ],
+      [
+        "-3",
+        41
+      ],
+      [
+        "3",
+        35
+      ],
+      [
+        "-4",
+        25
+      ],
+      [
+        "4",
+        23
+      ],
+      [
+        "5",
+        10
+      ],
+      [
+        "6",
+        5
+      ],
+      [
+        "7",
+        4
+      ],
+      [
+        "-6",
+        4
+      ],
+      [
+        "-5",
+        3
+      ]
+    ]
+  },
+  "multi_strong_days": 585,
+  "tie_break_candidates": [
+    {
+      "rule": "more_confirmers",
+      "description": "Elegir el fuerte con más confirmadores T2 observados",
+      "m3_matches_manual": true,
+      "multi_days": 585,
+      "max_confirmers_exact_rate_pct": 74.87,
+      "note": "Candidata de investigación; no incorporada al motor. Ver contraejemplos en multi_days."
+    },
+    {
+      "rule": "manual_M3_35_over_22",
+      "description": "En 49+44+70 el socio eligió 35 (2 conf) sobre 22 (1 conf)",
+      "matches": true,
+      "counterexamples_needed": true
+    }
+  ],
+  "cycles_top": [
+    [
+      "F→-1→F",
+      140
+    ],
+    [
+      "A→B→A:70→84→70",
+      31
+    ],
+    [
+      "A→B→A:42→21→42",
+      31
+    ],
+    [
+      "A→B→A:7→11→7",
+      29
+    ],
+    [
+      "A→B→A:7→31→7",
+      29
+    ],
+    [
+      "A→B→A:7→28→7",
+      29
+    ],
+    [
+      "A→B→A:7→92→7",
+      28
+    ],
+    [
+      "A→B→A:9→73→9",
+      28
+    ],
+    [
+      "A→B→A:70→90→70",
+      28
+    ],
+    [
+      "A→B→A:9→32→9",
+      27
+    ],
+    [
+      "A→B→A:70→32→70",
+      27
+    ],
+    [
+      "A→B→A:70→81→70",
+      27
+    ],
+    [
+      "A→B→A:9→25→9",
+      27
+    ],
+    [
+      "A→B→A:42→14→42",
+      26
+    ],
+    [
+      "A→B→A:42→44→42",
+      26
+    ],
+    [
+      "A→B→A:42→31→42",
+      26
+    ],
+    [
+      "A→B→A:70→21→70",
+      26
+    ],
+    [
+      "A→B→A:42→19→42",
+      25
+    ],
+    [
+      "A→B→A:42→6→42",
+      25
+    ],
+    [
+      "A→B→A:9→8→9",
+      25
+    ]
+  ],
+  "direct_t2": {
+    "note": "41+62 no produce fuerte oficial; 75 es vecino T2 de 62",
+    "geometry": [
+      {
+        "observed": 62,
+        "manual": 75,
+        "t2_group": [
+          62,
+          75
+        ],
+        "t2_pos_observed": 1,
+        "t2_pos_manual": 2,
+        "t2_dist": 1
+      }
+    ],
+    "official_hits_on_pair": [],
+    "historical_chains_with_41_and_62_roles": 0
+  }
+}

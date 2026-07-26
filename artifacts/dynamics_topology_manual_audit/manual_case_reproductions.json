@@ -1,0 +1,979 @@
+{
+  "cases": [
+    {
+      "case_id": "M1",
+      "observed": [
+        41,
+        41,
+        70
+      ],
+      "observed_unique": [
+        41,
+        70
+      ],
+      "manual_fuerte": 29,
+      "notes": "41+41+70 → fuerte manual 29",
+      "whatsapp_refs": [
+        "libreta socio"
+      ],
+      "methodology_version": "nr-historical-relations-j1.0.0",
+      "official_fuertes": [
+        29
+      ],
+      "hit_detail": [
+        {
+          "fuerte": 29,
+          "origin": 41,
+          "confirmers": [
+            70
+          ],
+          "n_confirmers": 1,
+          "t1_companions_of_origin": [
+            13,
+            29,
+            93
+          ],
+          "t2_group": [
+            7,
+            9,
+            22,
+            29,
+            35,
+            42,
+            44,
+            53,
+            63,
+            70,
+            90
+          ]
+        }
+      ],
+      "direct_t2_links": [
+        {
+          "observed": 70,
+          "manual": 29,
+          "t2_group": [
+            7,
+            9,
+            22,
+            29,
+            35,
+            42,
+            44,
+            53,
+            63,
+            70,
+            90
+          ],
+          "t2_pos_observed": 10,
+          "t2_pos_manual": 4,
+          "t2_dist": -6
+        }
+      ],
+      "classification": "FUERTE_OFICIAL_UNICO",
+      "evidence": "Motor produce únicamente 29.",
+      "certainty": "ALTA",
+      "m5_alternate_84": null,
+      "m3_tiebreak": null,
+      "geometry": {
+        "29": {
+          "t1_candidates": [
+            15
+          ],
+          "t1_group": [
+            13,
+            29,
+            93
+          ],
+          "t1_code": 41,
+          "t2_group": [
+            7,
+            9,
+            22,
+            29,
+            35,
+            42,
+            44,
+            53,
+            63,
+            70,
+            90
+          ],
+          "t2_code": 55
+        },
+        "41": {
+          "t1_candidates": [
+            13,
+            29,
+            93
+          ],
+          "t1_group": [
+            9,
+            14,
+            30,
+            41,
+            46,
+            62,
+            78,
+            94
+          ],
+          "t1_code": 39,
+          "t2_group": [
+            12,
+            41,
+            56,
+            71,
+            89
+          ],
+          "t2_code": 57
+        },
+        "70": {
+          "t1_candidates": [],
+          "t1_group": [
+            22,
+            59,
+            70,
+            75,
+            91
+          ],
+          "t1_code": 44,
+          "t2_group": [
+            7,
+            9,
+            22,
+            29,
+            35,
+            42,
+            44,
+            53,
+            63,
+            70,
+            90
+          ],
+          "t2_code": 55
+        }
+      }
+    },
+    {
+      "case_id": "M2",
+      "observed": [
+        41,
+        62
+      ],
+      "observed_unique": [
+        41,
+        62
+      ],
+      "manual_fuerte": 75,
+      "notes": "41+62 → fuerte manual 75 (prev: DIRECT_T2_NEIGHBOR_SIGNAL)",
+      "whatsapp_refs": [
+        "libreta socio"
+      ],
+      "methodology_version": "nr-historical-relations-j1.0.0",
+      "official_fuertes": [],
+      "hit_detail": [],
+      "direct_t2_links": [
+        {
+          "observed": 62,
+          "manual": 75,
+          "t2_group": [
+            62,
+            75
+          ],
+          "t2_pos_observed": 1,
+          "t2_pos_manual": 2,
+          "t2_dist": 1
+        }
+      ],
+      "classification": "VECINO_T2_DIRECTO",
+      "evidence": "75 es vecino T2 de [62] sin ruta T1×T2 oficial.",
+      "certainty": "ALTA",
+      "m5_alternate_84": null,
+      "m3_tiebreak": null,
+      "geometry": {
+        "41": {
+          "t1_candidates": [
+            13,
+            29,
+            93
+          ],
+          "t1_group": [
+            9,
+            14,
+            30,
+            41,
+            46,
+            62,
+            78,
+            94
+          ],
+          "t1_code": 39,
+          "t2_group": [
+            12,
+            41,
+            56,
+            71,
+            89
+          ],
+          "t2_code": 57
+        },
+        "62": {
+          "t1_candidates": [],
+          "t1_group": [
+            9,
+            14,
+            30,
+            41,
+            46,
+            62,
+            78,
+            94
+          ],
+          "t1_code": 39,
+          "t2_group": [
+            62,
+            75
+          ],
+          "t2_code": 64
+        },
+        "75": {
+          "t1_candidates": [],
+          "t1_group": [
+            22,
+            59,
+            70,
+            75,
+            91
+          ],
+          "t1_code": 44,
+          "t2_group": [
+            62,
+            75
+          ],
+          "t2_code": 64
+        }
+      }
+    },
+    {
+      "case_id": "M3",
+      "observed": [
+        49,
+        44,
+        70
+      ],
+      "observed_unique": [
+        44,
+        49,
+        70
+      ],
+      "manual_fuerte": 35,
+      "notes": "49+44+70 → fuerte manual 35 (motor también 22)",
+      "whatsapp_refs": [
+        "libreta socio"
+      ],
+      "methodology_version": "nr-historical-relations-j1.0.0",
+      "official_fuertes": [
+        22,
+        35
+      ],
+      "hit_detail": [
+        {
+          "fuerte": 35,
+          "origin": 49,
+          "confirmers": [
+            44,
+            70
+          ],
+          "n_confirmers": 2,
+          "t1_companions_of_origin": [
+            35,
+            40,
+            83
+          ],
+          "t2_group": [
+            7,
+            9,
+            22,
+            29,
+            35,
+            42,
+            44,
+            53,
+            63,
+            70,
+            90
+          ]
+        },
+        {
+          "fuerte": 22,
+          "origin": 44,
+          "confirmers": [
+            70
+          ],
+          "n_confirmers": 1,
+          "t1_companions_of_origin": [
+            22,
+            59,
+            70,
+            75,
+            91
+          ],
+          "t2_group": [
+            7,
+            9,
+            22,
+            29,
+            35,
+            42,
+            44,
+            53,
+            63,
+            70,
+            90
+          ]
+        }
+      ],
+      "direct_t2_links": [
+        {
+          "observed": 44,
+          "manual": 35,
+          "t2_group": [
+            7,
+            9,
+            22,
+            29,
+            35,
+            42,
+            44,
+            53,
+            63,
+            70,
+            90
+          ],
+          "t2_pos_observed": 7,
+          "t2_pos_manual": 5,
+          "t2_dist": -2
+        },
+        {
+          "observed": 70,
+          "manual": 35,
+          "t2_group": [
+            7,
+            9,
+            22,
+            29,
+            35,
+            42,
+            44,
+            53,
+            63,
+            70,
+            90
+          ],
+          "t2_pos_observed": 10,
+          "t2_pos_manual": 5,
+          "t2_dist": -5
+        }
+      ],
+      "classification": "FUERTE_OFICIAL_ENTRE_VARIOS",
+      "evidence": "Motor produce [22, 35]; socio eligió 35.",
+      "certainty": "ALTA",
+      "m5_alternate_84": null,
+      "m3_tiebreak": {
+        "candidates": [
+          22,
+          35
+        ],
+        "manual_choice": 35,
+        "comparison": {
+          "22": {
+            "fuerte": 22,
+            "origin": 44,
+            "confirmers": [
+              70
+            ],
+            "n_confirmers": 1,
+            "t1_companions_of_origin": [
+              22,
+              59,
+              70,
+              75,
+              91
+            ],
+            "t2_group": [
+              7,
+              9,
+              22,
+              29,
+              35,
+              42,
+              44,
+              53,
+              63,
+              70,
+              90
+            ],
+            "t1_group": [
+              22,
+              59,
+              70,
+              75,
+              91
+            ],
+            "t1_pos": 1,
+            "t2_pos": 3
+          },
+          "35": {
+            "fuerte": 35,
+            "origin": 49,
+            "confirmers": [
+              44,
+              70
+            ],
+            "n_confirmers": 2,
+            "t1_companions_of_origin": [
+              35,
+              40,
+              83
+            ],
+            "t2_group": [
+              7,
+              9,
+              22,
+              29,
+              35,
+              42,
+              44,
+              53,
+              63,
+              70,
+              90
+            ],
+            "t1_group": [
+              35,
+              40,
+              83
+            ],
+            "t1_pos": 1,
+            "t2_pos": 5
+          }
+        },
+        "hypothesis_more_confirmers": true,
+        "hypothesis_note": "35 tiene 2 confirmadores (44,70); 22 tiene 1 (70). Coincide con la elección manual en este caso. No se incorpora como regla; ver contraejemplos históricos."
+      },
+      "geometry": {
+        "35": {
+          "t1_candidates": [
+            6,
+            11,
+            43,
+            54,
+            86
+          ],
+          "t1_group": [
+            35,
+            40,
+            83
+          ],
+          "t1_code": 49,
+          "t2_group": [
+            7,
+            9,
+            22,
+            29,
+            35,
+            42,
+            44,
+            53,
+            63,
+            70,
+            90
+          ],
+          "t2_code": 55
+        },
+        "44": {
+          "t1_candidates": [
+            22,
+            59,
+            70,
+            75,
+            91
+          ],
+          "t1_group": [
+            12,
+            28,
+            44,
+            60,
+            81,
+            92
+          ],
+          "t1_code": 43,
+          "t2_group": [
+            7,
+            9,
+            22,
+            29,
+            35,
+            42,
+            44,
+            53,
+            63,
+            70,
+            90
+          ],
+          "t2_code": 55
+        },
+        "49": {
+          "t1_candidates": [
+            35,
+            40,
+            83
+          ],
+          "t1_group": [
+            1,
+            17,
+            33,
+            49,
+            76
+          ],
+          "t1_code": 34,
+          "t2_group": [
+            49
+          ],
+          "t2_code": 72
+        },
+        "70": {
+          "t1_candidates": [],
+          "t1_group": [
+            22,
+            59,
+            70,
+            75,
+            91
+          ],
+          "t1_code": 44,
+          "t2_group": [
+            7,
+            9,
+            22,
+            29,
+            35,
+            42,
+            44,
+            53,
+            63,
+            70,
+            90
+          ],
+          "t2_code": 55
+        }
+      }
+    },
+    {
+      "case_id": "M4",
+      "observed": [
+        35,
+        14
+      ],
+      "observed_unique": [
+        14,
+        35
+      ],
+      "manual_fuerte": 54,
+      "notes": "35+14 → 54; WhatsApp 23-jun-2026 y 22-jul-2026",
+      "whatsapp_refs": [
+        "2026-06-23 Nacional 35 + Loteka 14 → 54 next day",
+        "2026-07-22 NY Día 35 + Nacional 14 → 54 en Gana Más 2026-07-23"
+      ],
+      "methodology_version": "nr-historical-relations-j1.0.0",
+      "official_fuertes": [
+        54
+      ],
+      "hit_detail": [
+        {
+          "fuerte": 54,
+          "origin": 35,
+          "confirmers": [
+            14
+          ],
+          "n_confirmers": 1,
+          "t1_companions_of_origin": [
+            6,
+            11,
+            43,
+            54,
+            86
+          ],
+          "t2_group": [
+            14,
+            54
+          ]
+        }
+      ],
+      "direct_t2_links": [
+        {
+          "observed": 14,
+          "manual": 54,
+          "t2_group": [
+            14,
+            54
+          ],
+          "t2_pos_observed": 1,
+          "t2_pos_manual": 2,
+          "t2_dist": 1
+        }
+      ],
+      "classification": "FUERTE_OFICIAL_UNICO",
+      "evidence": "Motor produce únicamente 54.",
+      "certainty": "ALTA",
+      "m5_alternate_84": null,
+      "m3_tiebreak": null,
+      "geometry": {
+        "14": {
+          "t1_candidates": [],
+          "t1_group": [
+            9,
+            14,
+            30,
+            41,
+            46,
+            62,
+            78,
+            94
+          ],
+          "t1_code": 39,
+          "t2_group": [
+            14,
+            54
+          ],
+          "t2_code": 58
+        },
+        "35": {
+          "t1_candidates": [
+            6,
+            11,
+            43,
+            54,
+            86
+          ],
+          "t1_group": [
+            35,
+            40,
+            83
+          ],
+          "t1_code": 49,
+          "t2_group": [
+            7,
+            9,
+            22,
+            29,
+            35,
+            42,
+            44,
+            53,
+            63,
+            70,
+            90
+          ],
+          "t2_code": 55
+        },
+        "54": {
+          "t1_candidates": [
+            96
+          ],
+          "t1_group": [
+            6,
+            11,
+            43,
+            54,
+            86
+          ],
+          "t1_code": 35,
+          "t2_group": [
+            14,
+            54
+          ],
+          "t2_code": 58
+        }
+      }
+    },
+    {
+      "case_id": "M5",
+      "observed": [
+        39,
+        58
+      ],
+      "observed_unique": [
+        39,
+        58
+      ],
+      "manual_fuerte": 94,
+      "notes": "Manuscrito 39+58→94; auditoría también vio 39→94←84",
+      "whatsapp_refs": [
+        "libreta socio",
+        "deep audit 39→94←84"
+      ],
+      "methodology_version": "nr-historical-relations-j1.0.0",
+      "official_fuertes": [
+        94
+      ],
+      "hit_detail": [
+        {
+          "fuerte": 94,
+          "origin": 39,
+          "confirmers": [
+            58
+          ],
+          "n_confirmers": 1,
+          "t1_companions_of_origin": [
+            9,
+            14,
+            30,
+            41,
+            46,
+            62,
+            78,
+            94
+          ],
+          "t2_group": [
+            58,
+            84,
+            94
+          ]
+        }
+      ],
+      "direct_t2_links": [
+        {
+          "observed": 58,
+          "manual": 94,
+          "t2_group": [
+            58,
+            84,
+            94
+          ],
+          "t2_pos_observed": 1,
+          "t2_pos_manual": 3,
+          "t2_dist": 2
+        }
+      ],
+      "classification": "FUERTE_OFICIAL_UNICO",
+      "evidence": "39+58→94 es fuerte oficial. 39+84→94 también. 58 y 84 son vecinos T2 del mismo grupo [58,84,94]; ambos son confirmadores válidos. No es necesario tratar 58 como error.",
+      "certainty": "ALTA",
+      "m5_alternate_84": {
+        "pair": [
+          39,
+          84
+        ],
+        "official": [
+          94
+        ],
+        "detail": [
+          {
+            "fuerte": 94,
+            "origin": 39,
+            "confirmers": [
+              84
+            ]
+          }
+        ],
+        "58_and_84_same_t2_group": true,
+        "t2_group_58_84_94": [
+          58,
+          84,
+          94
+        ],
+        "both_confirm_94": true
+      },
+      "m3_tiebreak": null,
+      "geometry": {
+        "39": {
+          "t1_candidates": [
+            9,
+            14,
+            30,
+            41,
+            46,
+            62,
+            78,
+            94
+          ],
+          "t1_group": [
+            2,
+            39,
+            82,
+            87
+          ],
+          "t1_code": 33,
+          "t2_group": [
+            39,
+            78
+          ],
+          "t2_code": 35
+        },
+        "58": {
+          "t1_candidates": [],
+          "t1_group": [
+            37,
+            58,
+            74,
+            90
+          ],
+          "t1_code": 46,
+          "t2_group": [
+            58,
+            84,
+            94
+          ],
+          "t2_code": 50
+        },
+        "94": {
+          "t1_candidates": [],
+          "t1_group": [
+            9,
+            14,
+            30,
+            41,
+            46,
+            62,
+            78,
+            94
+          ],
+          "t1_code": 39,
+          "t2_group": [
+            58,
+            84,
+            94
+          ],
+          "t2_code": 50
+        }
+      }
+    }
+  ],
+  "m5b_39_84": {
+    "case_id": "M5b",
+    "observed": [
+      39,
+      84
+    ],
+    "observed_unique": [
+      39,
+      84
+    ],
+    "manual_fuerte": 94,
+    "notes": "Par alterno 39+84→94",
+    "whatsapp_refs": [
+      "deep audit"
+    ],
+    "methodology_version": "nr-historical-relations-j1.0.0",
+    "official_fuertes": [
+      94
+    ],
+    "hit_detail": [
+      {
+        "fuerte": 94,
+        "origin": 39,
+        "confirmers": [
+          84
+        ],
+        "n_confirmers": 1,
+        "t1_companions_of_origin": [
+          9,
+          14,
+          30,
+          41,
+          46,
+          62,
+          78,
+          94
+        ],
+        "t2_group": [
+          58,
+          84,
+          94
+        ]
+      }
+    ],
+    "direct_t2_links": [
+      {
+        "observed": 84,
+        "manual": 94,
+        "t2_group": [
+          58,
+          84,
+          94
+        ],
+        "t2_pos_observed": 2,
+        "t2_pos_manual": 3,
+        "t2_dist": 1
+      }
+    ],
+    "classification": "FUERTE_OFICIAL_UNICO",
+    "evidence": "Motor produce únicamente 94.",
+    "certainty": "ALTA",
+    "m5_alternate_84": null,
+    "m3_tiebreak": null,
+    "geometry": {
+      "39": {
+        "t1_candidates": [
+          9,
+          14,
+          30,
+          41,
+          46,
+          62,
+          78,
+          94
+        ],
+        "t1_group": [
+          2,
+          39,
+          82,
+          87
+        ],
+        "t1_code": 33,
+        "t2_group": [
+          39,
+          78
+        ],
+        "t2_code": 35
+      },
+      "84": {
+        "t1_candidates": [],
+        "t1_group": [
+          4,
+          36,
+          68,
+          79,
+          84
+        ],
+        "t1_code": 47,
+        "t2_group": [
+          58,
+          84,
+          94
+        ],
+        "t2_code": 50
+      },
+      "94": {
+        "t1_candidates": [],
+        "t1_group": [
+          9,
+          14,
+          30,
+          41,
+          46,
+          62,
+          78,
+          94
+        ],
+        "t1_code": 39,
+        "t2_group": [
+          58,
+          84,
+          94
+        ],
+        "t2_code": 50
+      }
+    }
+  }
+}

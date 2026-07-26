@@ -1,0 +1,3 @@
+rule,description,m3_matches_manual,multi_days,max_confirmers_exact_rate_pct,note
+more_confirmers,Elegir el fuerte con más confirmadores T2 observados,True,585,74.87,Candidata de investigación; no incorporada al motor. Ver contraejemplos en multi_days.
+manual_M3_35_over_22,En 49+44+70 el socio eligió 35 (2 conf) sobre 22 (1 conf),,,,

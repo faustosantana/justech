@@ -1,0 +1,77 @@
+%PDF-1.4
+1 0 obj<< /Type /Catalog /Pages 2 0 R >>endobj
+2 0 obj<< /Type /Pages /Kids [3 0 R] /Count 1 >>endobj
+3 0 obj<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 4 0 R /Resources << /Font << /F1 5 0 R >> >> >>endobj
+4 0 obj<< /Length 1613 >>stream
+BT
+/F1 9 Tf
+50 770 Td
+(AUDITORIA DINAMICA / TOPOLOGIA / REGLAS MANUALES \(PRE-J11A\)) Tj
+0 -12 Td
+(audit_id: 12ce64df-0739-40c4-8fba-ff8fc38226dd) Tj
+0 -12 Td
+(rama: feature/nr-dynamics-topology-manual-rules-audit) Tj
+0 -12 Td
+(Motor/Tablas/Produccion: intactos. J-11A: no iniciado.) Tj
+0 -12 Td
+() Tj
+0 -12 Td
+(CASOS MANUALES:) Tj
+0 -12 Td
+(- M1: manual=29 official=[29] ? FUERTE_OFICIAL_UNICO \(ALTA\)) Tj
+0 -12 Td
+(  Motor produce únicamente 29.) Tj
+0 -12 Td
+(- M2: manual=75 official=[] ? VECINO_T2_DIRECTO \(ALTA\)) Tj
+0 -12 Td
+(  75 es vecino T2 de [62] sin ruta T1×T2 oficial.) Tj
+0 -12 Td
+(- M3: manual=35 official=[22, 35] ? FUERTE_OFICIAL_ENTRE_VARIOS \(ALTA\)) Tj
+0 -12 Td
+(  Motor produce [22, 35]; socio eligió 35.) Tj
+0 -12 Td
+(- M4: manual=54 official=[54] ? FUERTE_OFICIAL_UNICO \(ALTA\)) Tj
+0 -12 Td
+(  Motor produce únicamente 54.) Tj
+0 -12 Td
+(- M5: manual=94 official=[94] ? FUERTE_OFICIAL_UNICO \(ALTA\)) Tj
+0 -12 Td
+(  39+58?94 es fuerte oficial. 39+84?94 también. 58 y 84 son vecinos T2 del mismo grupo [58,84,94]; ambos son c) Tj
+0 -12 Td
+() Tj
+0 -12 Td
+(35?54?14 activaciones: 15 exact=73.33%) Tj
+0 -12 Td
+(39?94?58 activaciones: 12) Tj
+0 -12 Td
+(39?94?84 activaciones: 20) Tj
+0 -12 Td
+() Tj
+0 -12 Td
+(Misses 552 con compañero T1: 507) Tj
+0 -12 Td
+(Tasa -1: 77.54%) Tj
+0 -12 Td
+(?1 funciona principalmente como destino frecuente de la familia \(tasa 77.54%\). En 393 activaciones ?1 apareció) Tj
+0 -12 Td
+() Tj
+0 -12 Td
+(NO incorporar DIRECT_T2 ni desempates al motor sin autorizacion.) Tj
+0 -12 Td
+(Ver libro HTML completo en docs/lottery/dynamics_topology_manual_audit/index.html) Tj
+ET
+endstream
+endobj
+5 0 obj<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>endobj
+xref
+0 6
+0000000000 65535 f 
+0000000009 00000 n 
+0000000056 00000 n 
+0000000111 00000 n 
+0000000235 00000 n 
+0000001898 00000 n 
+trailer<< /Size 6 /Root 1 0 R >>
+startxref
+1966
+%%EOF

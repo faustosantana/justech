@@ -1,0 +1,6 @@
+case_id,observed,manual_fuerte,official_fuertes,classification,certainty,evidence
+M1,41|41|70,29,29,FUERTE_OFICIAL_UNICO,ALTA,Motor produce únicamente 29.
+M2,41|62,75,,VECINO_T2_DIRECTO,ALTA,75 es vecino T2 de [62] sin ruta T1×T2 oficial.
+M3,49|44|70,35,22|35,FUERTE_OFICIAL_ENTRE_VARIOS,ALTA,"Motor produce [22, 35]; socio eligió 35."
+M4,35|14,54,54,FUERTE_OFICIAL_UNICO,ALTA,Motor produce únicamente 54.
+M5,39|58,94,94,FUERTE_OFICIAL_UNICO,ALTA,"39+58→94 es fuerte oficial. 39+84→94 también. 58 y 84 son vecinos T2 del mismo grupo [58,84,94]; ambos son confirmadores válidos. No es necesario tratar 58 como error."

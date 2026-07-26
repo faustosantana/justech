@@ -147,28 +147,29 @@ docker build -f Dockerfile --target production \
   . 2>&1 | tee "$BAKE_ROOT/logs/frontend_build.log"
 
 cd "$APP_ROOT"
-python3 - <<PY
-from pathlib import Path
-p = Path("docker-compose.harden.yml")
-t = p.read_text()
-import re
-t = re.sub(r"jaios-app-backend:[^\n]+", "jaios-app-backend:${TAG}", t)
-t = re.sub(r"jaios-app-frontend:[^\n]+", "jaios-app-frontend:${TAG}", t)
-# keep prospective off + FE port
-if "LOTTERY_PROSPECTIVE_PERSIST_ENABLED" not in t:
-    t = t.replace(
-        'LOTTERY_SYNC_GATE_BACKUP_AUTO_REFRESH: "true"',
-        'LOTTERY_SYNC_GATE_BACKUP_AUTO_REFRESH: "true"\n      LOTTERY_PROSPECTIVE_PERSIST_ENABLED: "false"\n      LOTTERY_PROSPECTIVE_SCHEDULER_ENABLED: "false"',
-        1,
-    )
-if "PORT:" not in t.split("frontend:")[1][:200]:
-    t = t.replace(
-        f"  frontend:\n    image: jaios-app-frontend:${TAG}\n",
-        f"  frontend:\n    image: jaios-app-frontend:${TAG}\n    environment:\n      PORT: \"3000\"\n      HOSTNAME: \"0.0.0.0\"\n",
-    )
-p.write_text(t)
-print(p.read_text())
-PY
+# Rewrite harden overlay atomically (avoid duplicate YAML keys from prior runs).
+cat > docker-compose.harden.yml <<EOF
+services:
+  backend:
+    image: jaios-app-backend:${TAG}
+    volumes:
+      - /var/jaios/backups/lottery-sync-gates:/var/jaios/backups/lottery-sync-gates
+    environment:
+      LOTTERY_SYNC_WORKER_STANDALONE: "true"
+      LOTTERY_SYNC_GATE_BACKUP_DIR: /var/jaios/backups/lottery-sync-gates
+      LOTTERY_SYNC_GATE_BACKUP_AUTO_REFRESH: "true"
+      LOTTERY_PROSPECTIVE_PERSIST_ENABLED: "false"
+      LOTTERY_PROSPECTIVE_SCHEDULER_ENABLED: "false"
+  frontend:
+    image: jaios-app-frontend:${TAG}
+    environment:
+      PORT: "3000"
+      HOSTNAME: "0.0.0.0"
+  lottery-sync-worker:
+    image: jaios-app-backend:${TAG}
+EOF
+docker compose "${COMPOSE_FILES[@]}" config >/dev/null
+echo "compose harden retargeted to ${TAG}"
 
 docker compose "${COMPOSE_FILES[@]}" up -d backend frontend lottery-sync-worker
 docker compose "${COMPOSE_FILES[@]}" restart gateway

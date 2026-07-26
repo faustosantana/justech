@@ -92,12 +92,16 @@ function applyDashboardConfig(
     ordered.push(...byId.values())
     list = ordered
   } else {
-    const rank = new Map(
-      PRODUCT_SEVEN_LOTTERY_NAMES.map((n, i) => [n.toLowerCase(), i]),
-    )
+    const norm = (s: string) =>
+      s
+        .normalize('NFD')
+        .replace(/\p{M}/gu, '')
+        .toLowerCase()
+        .trim()
+    const rank = new Map(PRODUCT_SEVEN_LOTTERY_NAMES.map((n, i) => [norm(n), i]))
     list = [...list].sort((a, b) => {
-      const ra = rank.get(String(a.lottery || '').toLowerCase()) ?? 99
-      const rb = rank.get(String(b.lottery || '').toLowerCase()) ?? 99
+      const ra = rank.get(norm(String(a.lottery || ''))) ?? 99
+      const rb = rank.get(norm(String(b.lottery || ''))) ?? 99
       return ra - rb
     })
   }

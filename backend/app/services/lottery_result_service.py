@@ -101,17 +101,23 @@ class LotteryResultService:
         self, *, limit_per_lottery: int = 1
     ) -> list[dict[str, Any]]:
         """Latest draw card(s) per featured lottery, ordered by product seven names."""
+        import unicodedata
+
         from app.lottery.numeric_relations.active_scope_policy import (
             EXPECTED_PRODUCT_SEVEN_NAMES,
         )
 
+        def _norm(s: str) -> str:
+            raw = unicodedata.normalize("NFKD", str(s or ""))
+            return "".join(ch for ch in raw if not unicodedata.combining(ch)).strip().lower()
+
         limit_per_lottery = max(1, min(int(limit_per_lottery or 1), 7))
         featured = await self.list_featured_lotteries()
-        by_name = {str(x.get("name") or "").strip().lower(): x for x in featured}
+        by_name = {_norm(str(x.get("name") or "")): x for x in featured}
         ordered: list[dict[str, Any]] = []
         seen: set[str] = set()
         for name in EXPECTED_PRODUCT_SEVEN_NAMES:
-            hit = by_name.get(name.strip().lower())
+            hit = by_name.get(_norm(name))
             if hit and hit["id"] not in seen:
                 ordered.append(hit)
                 seen.add(hit["id"])

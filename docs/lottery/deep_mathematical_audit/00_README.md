@@ -15,4 +15,7 @@
 
 **Abrir dashboard:** [index.html](index.html)
 
+Seguimiento Q1–Q10: [31_FOLLOWUP_Q1_Q10.md](31_FOLLOWUP_Q1_Q10.md)  
+Datos: `artifacts/deep_mathematical_audit/followup_q1_q10/`
+
 Artefactos exactos: `artifacts/deep_mathematical_audit/`

@@ -359,6 +359,38 @@ async def numeric_relations_historical_audit(
     }
 
 
+@router.get("/historical-audit/four-year/summary")
+async def numeric_relations_four_year_audit_summary(
+    user: CurrentUser,
+    _: TenantCtx,
+    __: Annotated[None, require_ai_admin(*_PERMS)],
+) -> dict[str, Any]:
+    """Read-only four-year audit snapshot (precomputed evidence). Not predictive."""
+    import json
+    from pathlib import Path
+
+    path = (
+        Path(__file__).resolve().parents[4]
+        / "artifacts/four_year_audit/statistics.json"
+    )
+    if not path.exists():
+        raise HTTPException(
+            status_code=404,
+            detail="four-year audit evidence missing; run scripts/run_four_year_seven_lottery_audit.py",
+        )
+    data = json.loads(path.read_text(encoding="utf-8"))
+    return {
+        "audit_id": data.get("audit_id"),
+        "trace_id": data.get("audit_id"),
+        "status": "completed",
+        "summary": data,
+        "source": "precomputed_four_year_evidence",
+        "production_forbidden": True,
+        "requested_by": str(user.id),
+        "disclaimer": "Auditoría histórica de 4 años; no es garantía predictiva.",
+    }
+
+
 @router.get("/historical-audit/{audit_id}")
 async def numeric_relations_historical_audit_get(
     audit_id: str,
@@ -440,3 +472,35 @@ async def numeric_relations_historical_audit_cancel(
     if not ok:
         raise HTTPException(status_code=404, detail="audit_id not found")
     return {"audit_id": audit_id, "status": "cancelled", "requested_by": str(user.id)}
+
+
+@router.get("/historical-audit/four-year/summary")
+async def numeric_relations_four_year_audit_summary(
+    user: CurrentUser,
+    _: TenantCtx,
+    __: Annotated[None, require_ai_admin(*_PERMS)],
+) -> dict[str, Any]:
+    """Read-only four-year audit snapshot (precomputed evidence). Not predictive."""
+    import json
+    from pathlib import Path
+
+    path = (
+        Path(__file__).resolve().parents[4]
+        / "artifacts/four_year_audit/statistics.json"
+    )
+    if not path.exists():
+        raise HTTPException(
+            status_code=404,
+            detail="four-year audit evidence missing; run scripts/run_four_year_seven_lottery_audit.py",
+        )
+    data = json.loads(path.read_text(encoding="utf-8"))
+    return {
+        "audit_id": data.get("audit_id"),
+        "trace_id": data.get("audit_id"),
+        "status": "completed",
+        "summary": data,
+        "source": "precomputed_four_year_evidence",
+        "production_forbidden": True,
+        "requested_by": str(user.id),
+        "disclaimer": "Auditoría histórica de 4 años; no es garantía predictiva.",
+    }

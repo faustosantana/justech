@@ -1,0 +1,2218 @@
+[
+  {
+    "id": "FY-001",
+    "date": "2026-06-21",
+    "year": 2026,
+    "level": "NIVEL_5_MULTIPLES_FUERTES",
+    "observations": [
+      {
+        "lottery_name": "Gana Mas",
+        "lottery_id": "43250709-ee65-476f-91f6-cb8438f49d65",
+        "draw_id": "d6732010-5902-4533-a13c-2fb016cf6856",
+        "draw_time": null,
+        "position": 1,
+        "number": 41,
+        "source_reference": "224681"
+      },
+      {
+        "lottery_name": "Loteria Nacional",
+        "lottery_id": "0118037f-8f8b-4a82-899c-42cd50b6e194",
+        "draw_id": "901c62d2-5868-4915-b6bd-3902516f518c",
+        "draw_time": null,
+        "position": 1,
+        "number": 44,
+        "source_reference": "224692"
+      },
+      {
+        "lottery_name": "New York 10:30",
+        "lottery_id": "1624b6f2-88c6-42b5-a597-bf9c0f98a6b5",
+        "draw_id": "69dcdb6c-ca8e-412c-b066-975f2f0e997b",
+        "draw_time": null,
+        "position": 1,
+        "number": 65,
+        "source_reference": "224704"
+      },
+      {
+        "lottery_name": "New York 2:30",
+        "lottery_id": "1c488641-adb6-4790-89e7-879d361da7cc",
+        "draw_id": "da0f6039-21c9-4410-9c42-a67327f323f8",
+        "draw_time": null,
+        "position": 1,
+        "number": 39,
+        "source_reference": "224680"
+      },
+      {
+        "lottery_name": "Quiniela Leidsa",
+        "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+        "draw_id": "a8a12588-b47e-4779-9ff5-67d54b8404c5",
+        "draw_time": null,
+        "position": 1,
+        "number": 70,
+        "source_reference": "224686"
+      },
+      {
+        "lottery_name": "Quiniela Loteka",
+        "lottery_id": "b9f2c5a2-bc3e-4382-9b6d-3cee16db00fd",
+        "draw_id": "fb1e9073-070f-4cf1-a487-56c6aa9e478e",
+        "draw_time": null,
+        "position": 1,
+        "number": 62,
+        "source_reference": "224700"
+      },
+      {
+        "lottery_name": "Quiniela Real",
+        "lottery_id": "205c58d2-cfcf-44e6-894d-97358b3d540b",
+        "draw_id": "08526f84-7229-415a-822f-ddc032c5da71",
+        "draw_time": null,
+        "position": 1,
+        "number": 49,
+        "source_reference": "224676"
+      }
+    ],
+    "official_strengthened": [
+      {
+        "candidate": 9,
+        "generator_observed": 39,
+        "generator_lottery": "New York 2:30",
+        "confirmers": [
+          44,
+          70
+        ],
+        "confirmer_lotteries": [
+          "Loteria Nacional",
+          "Quiniela Leidsa"
+        ],
+        "n_confirmers": 2
+      },
+      {
+        "candidate": 29,
+        "generator_observed": 41,
+        "generator_lottery": "Gana Mas",
+        "confirmers": [
+          44,
+          70
+        ],
+        "confirmer_lotteries": [
+          "Loteria Nacional",
+          "Quiniela Leidsa"
+        ],
+        "n_confirmers": 2
+      },
+      {
+        "candidate": 35,
+        "generator_observed": 49,
+        "generator_lottery": "Quiniela Real",
+        "confirmers": [
+          44,
+          70
+        ],
+        "confirmer_lotteries": [
+          "Loteria Nacional",
+          "Quiniela Leidsa"
+        ],
+        "n_confirmers": 2
+      },
+      {
+        "candidate": 22,
+        "generator_observed": 44,
+        "generator_lottery": "Loteria Nacional",
+        "confirmers": [
+          70
+        ],
+        "confirmer_lotteries": [
+          "Quiniela Leidsa"
+        ],
+        "n_confirmers": 1
+      },
+      {
+        "candidate": 75,
+        "generator_observed": 44,
+        "generator_lottery": "Loteria Nacional",
+        "confirmers": [
+          62
+        ],
+        "confirmer_lotteries": [
+          "Quiniela Loteka"
+        ],
+        "n_confirmers": 1
+      }
+    ],
+    "windows": {
+      "W1_next_chronological_draw": {
+        "hit": false,
+        "first_appearance": null
+      },
+      "W2_same_day_other_draws": {
+        "hit": false,
+        "first_appearance": null
+      },
+      "W3_next_calendar_day": {
+        "hit": false,
+        "first_appearance": null
+      },
+      "W4_next_3_featured_draws": {
+        "hit": false,
+        "first_appearance": null
+      },
+      "W5_next_7_featured_draws": {
+        "hit": false,
+        "first_appearance": null
+      },
+      "W6_next_14_featured_draws": {
+        "hit": true,
+        "first_appearance": {
+          "date": "2026-06-23",
+          "lottery_name": "Loteria Nacional",
+          "lottery_id": "0118037f-8f8b-4a82-899c-42cd50b6e194",
+          "draw_id": "1d1862a7-715a-4f63-9724-c77291187154",
+          "source_reference": "224790",
+          "draw_time": null,
+          "position": 1,
+          "position_label": "1ro",
+          "number": 35
+        }
+      },
+      "W7_next_3_calendar_days": {
+        "hit": true,
+        "first_appearance": {
+          "date": "2026-06-23",
+          "lottery_name": "Loteria Nacional",
+          "lottery_id": "0118037f-8f8b-4a82-899c-42cd50b6e194",
+          "draw_id": "1d1862a7-715a-4f63-9724-c77291187154",
+          "source_reference": "224790",
+          "draw_time": null,
+          "position": 1,
+          "position_label": "1ro",
+          "number": 35
+        }
+      },
+      "W8_next_7_calendar_days": {
+        "hit": true,
+        "first_appearance": {
+          "date": "2026-06-23",
+          "lottery_name": "Loteria Nacional",
+          "lottery_id": "0118037f-8f8b-4a82-899c-42cd50b6e194",
+          "draw_id": "1d1862a7-715a-4f63-9724-c77291187154",
+          "source_reference": "224790",
+          "draw_time": null,
+          "position": 1,
+          "position_label": "1ro",
+          "number": 35
+        }
+      }
+    },
+    "direct_t2_sample": [
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 41,
+        "lottery": "Gana Mas",
+        "direct_t2_neighbor": 12,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 41,
+        "lottery": "Gana Mas",
+        "direct_t2_neighbor": 56,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 41,
+        "lottery": "Gana Mas",
+        "direct_t2_neighbor": 71,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 41,
+        "lottery": "Gana Mas",
+        "direct_t2_neighbor": 89,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 44,
+        "lottery": "Loteria Nacional",
+        "direct_t2_neighbor": 7,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      }
+    ],
+    "explanation": "39 (New York 2:30) genera candidato T1 9; confirmado por [44, 70] (Loteria Nacional, Quiniela Leidsa). 41 (Gana Mas) genera candidato T1 29; confirmado por [44, 70] (Loteria Nacional, Quiniela Leidsa). 49 (Quiniela Real) genera candidato T1 35; confirmado por [44, 70] (Loteria Nacional, Quiniela Leidsa). 44 (Loteria Nacional) genera candidato T1 22; confirmado por [70] (Quiniela Leidsa). 44 (Loteria Nacional) genera candidato T1 75; confirmado por [62] (Quiniela Loteka). No apareció en la ventana día calendario siguiente (W3). Nivel: NIVEL_5_MULTIPLES_FUERTES."
+  },
+  {
+    "id": "FY-002",
+    "date": "2026-06-23",
+    "year": 2026,
+    "level": "NIVEL_2_UNA_CONFIRMACION",
+    "observations": [
+      {
+        "lottery_name": "Gana Mas",
+        "lottery_id": "43250709-ee65-476f-91f6-cb8438f49d65",
+        "draw_id": "7c7ea7eb-0b6f-475e-9520-2c6ec8701be6",
+        "draw_time": null,
+        "position": 1,
+        "number": 7,
+        "source_reference": "224766"
+      },
+      {
+        "lottery_name": "Loteria Nacional",
+        "lottery_id": "0118037f-8f8b-4a82-899c-42cd50b6e194",
+        "draw_id": "1d1862a7-715a-4f63-9724-c77291187154",
+        "draw_time": null,
+        "position": 1,
+        "number": 35,
+        "source_reference": "224790"
+      },
+      {
+        "lottery_name": "New York 10:30",
+        "lottery_id": "1624b6f2-88c6-42b5-a597-bf9c0f98a6b5",
+        "draw_id": "fad4c63c-8cd3-4fa3-ab56-c176433cbf3f",
+        "draw_time": null,
+        "position": 1,
+        "number": 15,
+        "source_reference": "224792"
+      },
+      {
+        "lottery_name": "New York 2:30",
+        "lottery_id": "1c488641-adb6-4790-89e7-879d361da7cc",
+        "draw_id": "1d65f1d0-ae0e-4336-8d13-389997dc812b",
+        "draw_time": null,
+        "position": 1,
+        "number": 84,
+        "source_reference": "224765"
+      },
+      {
+        "lottery_name": "Quiniela Leidsa",
+        "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+        "draw_id": "a1c9bcef-cbb5-4c61-a878-c9c8723aa1ad",
+        "draw_time": null,
+        "position": 1,
+        "number": 29,
+        "source_reference": "224789"
+      },
+      {
+        "lottery_name": "Quiniela Loteka",
+        "lottery_id": "b9f2c5a2-bc3e-4382-9b6d-3cee16db00fd",
+        "draw_id": "5faf3955-ba7a-4819-b7bc-00e0b4517b68",
+        "draw_time": null,
+        "position": 1,
+        "number": 14,
+        "source_reference": "224784"
+      },
+      {
+        "lottery_name": "Quiniela Real",
+        "lottery_id": "205c58d2-cfcf-44e6-894d-97358b3d540b",
+        "draw_id": "e896a589-9110-428d-a7f1-ffcfaf029b49",
+        "draw_time": null,
+        "position": 1,
+        "number": 67,
+        "source_reference": "224761"
+      }
+    ],
+    "official_strengthened": [
+      {
+        "candidate": 54,
+        "generator_observed": 35,
+        "generator_lottery": "Loteria Nacional",
+        "confirmers": [
+          14
+        ],
+        "confirmer_lotteries": [
+          "Quiniela Loteka"
+        ],
+        "n_confirmers": 1
+      }
+    ],
+    "windows": {
+      "W1_next_chronological_draw": {
+        "hit": false,
+        "first_appearance": null
+      },
+      "W2_same_day_other_draws": {
+        "hit": false,
+        "first_appearance": null
+      },
+      "W3_next_calendar_day": {
+        "hit": true,
+        "first_appearance": {
+          "date": "2026-06-24",
+          "lottery_name": "Quiniela Loteka",
+          "lottery_id": "b9f2c5a2-bc3e-4382-9b6d-3cee16db00fd",
+          "draw_id": "444811ef-a3a7-441a-a7a4-385fa151c345",
+          "source_reference": "224826",
+          "draw_time": null,
+          "position": 1,
+          "position_label": "1ro",
+          "number": 54
+        }
+      },
+      "W4_next_3_featured_draws": {
+        "hit": false,
+        "first_appearance": null
+      },
+      "W5_next_7_featured_draws": {
+        "hit": true,
+        "first_appearance": {
+          "date": "2026-06-24",
+          "lottery_name": "Quiniela Loteka",
+          "lottery_id": "b9f2c5a2-bc3e-4382-9b6d-3cee16db00fd",
+          "draw_id": "444811ef-a3a7-441a-a7a4-385fa151c345",
+          "source_reference": "224826",
+          "draw_time": null,
+          "position": 1,
+          "position_label": "1ro",
+          "number": 54
+        }
+      },
+      "W6_next_14_featured_draws": {
+        "hit": true,
+        "first_appearance": {
+          "date": "2026-06-24",
+          "lottery_name": "Quiniela Loteka",
+          "lottery_id": "b9f2c5a2-bc3e-4382-9b6d-3cee16db00fd",
+          "draw_id": "444811ef-a3a7-441a-a7a4-385fa151c345",
+          "source_reference": "224826",
+          "draw_time": null,
+          "position": 1,
+          "position_label": "1ro",
+          "number": 54
+        }
+      },
+      "W7_next_3_calendar_days": {
+        "hit": true,
+        "first_appearance": {
+          "date": "2026-06-24",
+          "lottery_name": "Quiniela Loteka",
+          "lottery_id": "b9f2c5a2-bc3e-4382-9b6d-3cee16db00fd",
+          "draw_id": "444811ef-a3a7-441a-a7a4-385fa151c345",
+          "source_reference": "224826",
+          "draw_time": null,
+          "position": 1,
+          "position_label": "1ro",
+          "number": 54
+        }
+      },
+      "W8_next_7_calendar_days": {
+        "hit": true,
+        "first_appearance": {
+          "date": "2026-06-24",
+          "lottery_name": "Quiniela Loteka",
+          "lottery_id": "b9f2c5a2-bc3e-4382-9b6d-3cee16db00fd",
+          "draw_id": "444811ef-a3a7-441a-a7a4-385fa151c345",
+          "source_reference": "224826",
+          "draw_time": null,
+          "position": 1,
+          "position_label": "1ro",
+          "number": 54
+        }
+      }
+    },
+    "direct_t2_sample": [
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 7,
+        "lottery": "Gana Mas",
+        "direct_t2_neighbor": 9,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 7,
+        "lottery": "Gana Mas",
+        "direct_t2_neighbor": 22,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 7,
+        "lottery": "Gana Mas",
+        "direct_t2_neighbor": 29,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 7,
+        "lottery": "Gana Mas",
+        "direct_t2_neighbor": 35,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 7,
+        "lottery": "Gana Mas",
+        "direct_t2_neighbor": 42,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      }
+    ],
+    "explanation": "35 (Loteria Nacional) genera candidato T1 54; confirmado por [14] (Quiniela Loteka). Al día siguiente apareció 54 en Quiniela Loteka pos 1 (ref 224826). Nivel: NIVEL_2_UNA_CONFIRMACION."
+  },
+  {
+    "id": "FY-003",
+    "date": "2026-07-22",
+    "year": 2026,
+    "level": "NIVEL_5_MULTIPLES_FUERTES",
+    "observations": [
+      {
+        "lottery_name": "Gana Mas",
+        "lottery_id": "43250709-ee65-476f-91f6-cb8438f49d65",
+        "draw_id": "0cf612b7-083a-481a-883b-41e2ebba2c1b",
+        "draw_time": null,
+        "position": 1,
+        "number": 60,
+        "source_reference": "226040"
+      },
+      {
+        "lottery_name": "Loteria Nacional",
+        "lottery_id": "0118037f-8f8b-4a82-899c-42cd50b6e194",
+        "draw_id": "3aa518e2-a381-45b7-8c5e-7e19825dc8d5",
+        "draw_time": null,
+        "position": 1,
+        "number": 14,
+        "source_reference": "226060"
+      },
+      {
+        "lottery_name": "New York 10:30",
+        "lottery_id": "1624b6f2-88c6-42b5-a597-bf9c0f98a6b5",
+        "draw_id": "e77b15c2-c4af-4281-814c-2340e221d0c9",
+        "draw_time": null,
+        "position": 1,
+        "number": 38,
+        "source_reference": "226064"
+      },
+      {
+        "lottery_name": "New York 2:30",
+        "lottery_id": "1c488641-adb6-4790-89e7-879d361da7cc",
+        "draw_id": "69f3cf8d-490a-4be2-ac7e-67ec4dc148c5",
+        "draw_time": null,
+        "position": 1,
+        "number": 35,
+        "source_reference": "226039"
+      },
+      {
+        "lottery_name": "Quiniela Leidsa",
+        "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+        "draw_id": "6fff8fd6-35ba-4ad2-9a52-ef8c4b1d976c",
+        "draw_time": null,
+        "position": 1,
+        "number": 37,
+        "source_reference": "226059"
+      },
+      {
+        "lottery_name": "Quiniela Loteka",
+        "lottery_id": "b9f2c5a2-bc3e-4382-9b6d-3cee16db00fd",
+        "draw_id": "b7e77f51-737a-4500-84e6-77c5b7a58ad4",
+        "draw_time": null,
+        "position": 1,
+        "number": 52,
+        "source_reference": "226055"
+      },
+      {
+        "lottery_name": "Quiniela Real",
+        "lottery_id": "205c58d2-cfcf-44e6-894d-97358b3d540b",
+        "draw_id": "802f2ae2-e77d-495e-be95-ebf305d84a35",
+        "draw_time": null,
+        "position": 1,
+        "number": 12,
+        "source_reference": "226035"
+      }
+    ],
+    "official_strengthened": [
+      {
+        "candidate": 6,
+        "generator_observed": 35,
+        "generator_lottery": "New York 2:30",
+        "confirmers": [
+          60
+        ],
+        "confirmer_lotteries": [
+          "Gana Mas"
+        ],
+        "n_confirmers": 1
+      },
+      {
+        "candidate": 42,
+        "generator_observed": 37,
+        "generator_lottery": "Quiniela Leidsa",
+        "confirmers": [
+          35
+        ],
+        "confirmer_lotteries": [
+          "New York 2:30"
+        ],
+        "n_confirmers": 1
+      },
+      {
+        "candidate": 54,
+        "generator_observed": 35,
+        "generator_lottery": "New York 2:30",
+        "confirmers": [
+          14
+        ],
+        "confirmer_lotteries": [
+          "Loteria Nacional"
+        ],
+        "n_confirmers": 1
+      },
+      {
+        "candidate": 63,
+        "generator_observed": 38,
+        "generator_lottery": "New York 10:30",
+        "confirmers": [
+          35
+        ],
+        "confirmer_lotteries": [
+          "New York 2:30"
+        ],
+        "n_confirmers": 1
+      },
+      {
+        "candidate": 65,
+        "generator_observed": 52,
+        "generator_lottery": "Quiniela Loteka",
+        "confirmers": [
+          37
+        ],
+        "confirmer_lotteries": [
+          "Quiniela Leidsa"
+        ],
+        "n_confirmers": 1
+      }
+    ],
+    "windows": {
+      "W1_next_chronological_draw": {
+        "hit": true,
+        "first_appearance": {
+          "date": "2026-07-23",
+          "lottery_name": "Gana Mas",
+          "lottery_id": "43250709-ee65-476f-91f6-cb8438f49d65",
+          "draw_id": "f18eb0a7-eadb-4979-9352-e2b547dd388c",
+          "source_reference": "226103",
+          "draw_time": null,
+          "position": 1,
+          "position_label": "1ro",
+          "number": 54
+        }
+      },
+      "W2_same_day_other_draws": {
+        "hit": false,
+        "first_appearance": null
+      },
+      "W3_next_calendar_day": {
+        "hit": true,
+        "first_appearance": {
+          "date": "2026-07-23",
+          "lottery_name": "Gana Mas",
+          "lottery_id": "43250709-ee65-476f-91f6-cb8438f49d65",
+          "draw_id": "f18eb0a7-eadb-4979-9352-e2b547dd388c",
+          "source_reference": "226103",
+          "draw_time": null,
+          "position": 1,
+          "position_label": "1ro",
+          "number": 54
+        }
+      },
+      "W4_next_3_featured_draws": {
+        "hit": true,
+        "first_appearance": {
+          "date": "2026-07-23",
+          "lottery_name": "Gana Mas",
+          "lottery_id": "43250709-ee65-476f-91f6-cb8438f49d65",
+          "draw_id": "f18eb0a7-eadb-4979-9352-e2b547dd388c",
+          "source_reference": "226103",
+          "draw_time": null,
+          "position": 1,
+          "position_label": "1ro",
+          "number": 54
+        }
+      },
+      "W5_next_7_featured_draws": {
+        "hit": true,
+        "first_appearance": {
+          "date": "2026-07-23",
+          "lottery_name": "Gana Mas",
+          "lottery_id": "43250709-ee65-476f-91f6-cb8438f49d65",
+          "draw_id": "f18eb0a7-eadb-4979-9352-e2b547dd388c",
+          "source_reference": "226103",
+          "draw_time": null,
+          "position": 1,
+          "position_label": "1ro",
+          "number": 54
+        }
+      },
+      "W6_next_14_featured_draws": {
+        "hit": true,
+        "first_appearance": {
+          "date": "2026-07-23",
+          "lottery_name": "Gana Mas",
+          "lottery_id": "43250709-ee65-476f-91f6-cb8438f49d65",
+          "draw_id": "f18eb0a7-eadb-4979-9352-e2b547dd388c",
+          "source_reference": "226103",
+          "draw_time": null,
+          "position": 1,
+          "position_label": "1ro",
+          "number": 54
+        }
+      },
+      "W7_next_3_calendar_days": {
+        "hit": true,
+        "first_appearance": {
+          "date": "2026-07-23",
+          "lottery_name": "Gana Mas",
+          "lottery_id": "43250709-ee65-476f-91f6-cb8438f49d65",
+          "draw_id": "f18eb0a7-eadb-4979-9352-e2b547dd388c",
+          "source_reference": "226103",
+          "draw_time": null,
+          "position": 1,
+          "position_label": "1ro",
+          "number": 54
+        }
+      },
+      "W8_next_7_calendar_days": {
+        "hit": true,
+        "first_appearance": {
+          "date": "2026-07-23",
+          "lottery_name": "Gana Mas",
+          "lottery_id": "43250709-ee65-476f-91f6-cb8438f49d65",
+          "draw_id": "f18eb0a7-eadb-4979-9352-e2b547dd388c",
+          "source_reference": "226103",
+          "draw_time": null,
+          "position": 1,
+          "position_label": "1ro",
+          "number": 54
+        }
+      }
+    },
+    "direct_t2_sample": [
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 35,
+        "lottery": "New York 2:30",
+        "direct_t2_neighbor": 7,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 35,
+        "lottery": "New York 2:30",
+        "direct_t2_neighbor": 9,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 35,
+        "lottery": "New York 2:30",
+        "direct_t2_neighbor": 22,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 35,
+        "lottery": "New York 2:30",
+        "direct_t2_neighbor": 29,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 35,
+        "lottery": "New York 2:30",
+        "direct_t2_neighbor": 44,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      }
+    ],
+    "explanation": "35 (New York 2:30) genera candidato T1 6; confirmado por [60] (Gana Mas). 37 (Quiniela Leidsa) genera candidato T1 42; confirmado por [35] (New York 2:30). 35 (New York 2:30) genera candidato T1 54; confirmado por [14] (Loteria Nacional). 38 (New York 10:30) genera candidato T1 63; confirmado por [35] (New York 2:30). 52 (Quiniela Loteka) genera candidato T1 65; confirmado por [37] (Quiniela Leidsa). Al día siguiente apareció 54 en Gana Mas pos 1 (ref 226103). Nivel: NIVEL_5_MULTIPLES_FUERTES."
+  },
+  {
+    "id": "FY-004",
+    "date": "2024-02-22",
+    "year": 2024,
+    "level": "NIVEL_3_DOS_CONFIRMACIONES",
+    "observations": [
+      {
+        "lottery_name": "Gana Mas",
+        "lottery_id": "43250709-ee65-476f-91f6-cb8438f49d65",
+        "draw_id": "259feca2-26f3-4ba8-8626-160e823bf4c7",
+        "draw_time": null,
+        "position": 1,
+        "number": 70,
+        "source_reference": "174675"
+      },
+      {
+        "lottery_name": "Loteria Nacional",
+        "lottery_id": "0118037f-8f8b-4a82-899c-42cd50b6e194",
+        "draw_id": "eb4449cc-e9c4-4ec8-bf20-4c6df08a0323",
+        "draw_time": null,
+        "position": 1,
+        "number": 26,
+        "source_reference": "174694"
+      },
+      {
+        "lottery_name": "New York 10:30",
+        "lottery_id": "1624b6f2-88c6-42b5-a597-bf9c0f98a6b5",
+        "draw_id": "b7a1fd75-7a48-4df6-b1d2-8f859c829447",
+        "draw_time": null,
+        "position": 1,
+        "number": 82,
+        "source_reference": "174698"
+      },
+      {
+        "lottery_name": "New York 2:30",
+        "lottery_id": "1c488641-adb6-4790-89e7-879d361da7cc",
+        "draw_id": "3302179b-a7ba-4fe5-a594-42196dbc71ca",
+        "draw_time": null,
+        "position": 1,
+        "number": 42,
+        "source_reference": "174677"
+      },
+      {
+        "lottery_name": "Quiniela Leidsa",
+        "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+        "draw_id": "5649c569-f71b-4a69-ba15-436623bdc679",
+        "draw_time": null,
+        "position": 1,
+        "number": 67,
+        "source_reference": "174693"
+      },
+      {
+        "lottery_name": "Quiniela Loteka",
+        "lottery_id": "b9f2c5a2-bc3e-4382-9b6d-3cee16db00fd",
+        "draw_id": "8b563483-e4c8-4b9c-a8bd-aa5ee730ea3d",
+        "draw_time": null,
+        "position": 1,
+        "number": 22,
+        "source_reference": "174688"
+      },
+      {
+        "lottery_name": "Quiniela Real",
+        "lottery_id": "205c58d2-cfcf-44e6-894d-97358b3d540b",
+        "draw_id": "ad6a2950-5878-4fa3-b761-38f08580db6f",
+        "draw_time": null,
+        "position": 1,
+        "number": 55,
+        "source_reference": "174673"
+      }
+    ],
+    "official_strengthened": [
+      {
+        "candidate": 7,
+        "generator_observed": 42,
+        "generator_lottery": "New York 2:30",
+        "confirmers": [
+          22,
+          70
+        ],
+        "confirmer_lotteries": [
+          "Gana Mas",
+          "Quiniela Loteka"
+        ],
+        "n_confirmers": 2
+      }
+    ],
+    "windows": {
+      "W1_next_chronological_draw": {
+        "hit": false,
+        "first_appearance": null
+      },
+      "W2_same_day_other_draws": {
+        "hit": false,
+        "first_appearance": null
+      },
+      "W3_next_calendar_day": {
+        "hit": true,
+        "first_appearance": {
+          "date": "2024-02-23",
+          "lottery_name": "Quiniela Leidsa",
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "draw_id": "21b99987-3628-48d2-9145-c74985a4194e",
+          "source_reference": "174722",
+          "draw_time": null,
+          "position": 2,
+          "position_label": "2do",
+          "number": 7
+        }
+      },
+      "W4_next_3_featured_draws": {
+        "hit": false,
+        "first_appearance": null
+      },
+      "W5_next_7_featured_draws": {
+        "hit": true,
+        "first_appearance": {
+          "date": "2024-02-23",
+          "lottery_name": "Quiniela Leidsa",
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "draw_id": "21b99987-3628-48d2-9145-c74985a4194e",
+          "source_reference": "174722",
+          "draw_time": null,
+          "position": 2,
+          "position_label": "2do",
+          "number": 7
+        }
+      },
+      "W6_next_14_featured_draws": {
+        "hit": true,
+        "first_appearance": {
+          "date": "2024-02-23",
+          "lottery_name": "Quiniela Leidsa",
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "draw_id": "21b99987-3628-48d2-9145-c74985a4194e",
+          "source_reference": "174722",
+          "draw_time": null,
+          "position": 2,
+          "position_label": "2do",
+          "number": 7
+        }
+      },
+      "W7_next_3_calendar_days": {
+        "hit": true,
+        "first_appearance": {
+          "date": "2024-02-23",
+          "lottery_name": "Quiniela Leidsa",
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "draw_id": "21b99987-3628-48d2-9145-c74985a4194e",
+          "source_reference": "174722",
+          "draw_time": null,
+          "position": 2,
+          "position_label": "2do",
+          "number": 7
+        }
+      },
+      "W8_next_7_calendar_days": {
+        "hit": true,
+        "first_appearance": {
+          "date": "2024-02-23",
+          "lottery_name": "Quiniela Leidsa",
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "draw_id": "21b99987-3628-48d2-9145-c74985a4194e",
+          "source_reference": "174722",
+          "draw_time": null,
+          "position": 2,
+          "position_label": "2do",
+          "number": 7
+        }
+      }
+    },
+    "direct_t2_sample": [
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 70,
+        "lottery": "Gana Mas",
+        "direct_t2_neighbor": 9,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 70,
+        "lottery": "Gana Mas",
+        "direct_t2_neighbor": 22,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 70,
+        "lottery": "Gana Mas",
+        "direct_t2_neighbor": 29,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 70,
+        "lottery": "Gana Mas",
+        "direct_t2_neighbor": 35,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 70,
+        "lottery": "Gana Mas",
+        "direct_t2_neighbor": 42,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      }
+    ],
+    "explanation": "42 (New York 2:30) genera candidato T1 7; confirmado por [22, 70] (Gana Mas, Quiniela Loteka). Al día siguiente apareció 7 en Quiniela Leidsa pos 2 (ref 174722). Nivel: NIVEL_3_DOS_CONFIRMACIONES."
+  },
+  {
+    "id": "FY-005",
+    "date": "2024-09-12",
+    "year": 2024,
+    "level": "NIVEL_5_MULTIPLES_FUERTES",
+    "observations": [
+      {
+        "lottery_name": "Gana Mas",
+        "lottery_id": "43250709-ee65-476f-91f6-cb8438f49d65",
+        "draw_id": "2bf133eb-b8fc-4b8b-8bb3-8a832b2aa0d9",
+        "draw_time": null,
+        "position": 1,
+        "number": 14,
+        "source_reference": "180425"
+      },
+      {
+        "lottery_name": "Loteria Nacional",
+        "lottery_id": "0118037f-8f8b-4a82-899c-42cd50b6e194",
+        "draw_id": "b331c25b-ffa6-4422-bcbf-2fc12f409d55",
+        "draw_time": null,
+        "position": 1,
+        "number": 28,
+        "source_reference": "180438"
+      },
+      {
+        "lottery_name": "New York 10:30",
+        "lottery_id": "1624b6f2-88c6-42b5-a597-bf9c0f98a6b5",
+        "draw_id": "aba12dcd-4832-435f-ac7a-78ab82e6473b",
+        "draw_time": null,
+        "position": 1,
+        "number": 76,
+        "source_reference": "180448"
+      },
+      {
+        "lottery_name": "New York 2:30",
+        "lottery_id": "1c488641-adb6-4790-89e7-879d361da7cc",
+        "draw_id": "d94241d6-9bf8-434a-8a0a-d88842ba495a",
+        "draw_time": null,
+        "position": 1,
+        "number": 96,
+        "source_reference": "180424"
+      },
+      {
+        "lottery_name": "Quiniela Leidsa",
+        "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+        "draw_id": "86284811-d00d-4051-a231-3ca89820de0a",
+        "draw_time": null,
+        "position": 1,
+        "number": 35,
+        "source_reference": "180439"
+      },
+      {
+        "lottery_name": "Quiniela Loteka",
+        "lottery_id": "b9f2c5a2-bc3e-4382-9b6d-3cee16db00fd",
+        "draw_id": "e7ccf8b4-fc16-424b-98c9-a2667e65f665",
+        "draw_time": null,
+        "position": 1,
+        "number": 46,
+        "source_reference": "180430"
+      },
+      {
+        "lottery_name": "Quiniela Real",
+        "lottery_id": "205c58d2-cfcf-44e6-894d-97358b3d540b",
+        "draw_id": "085c9085-5607-4c0b-a164-45f2aa062f28",
+        "draw_time": null,
+        "position": 1,
+        "number": 55,
+        "source_reference": "180422"
+      }
+    ],
+    "official_strengthened": [
+      {
+        "candidate": 53,
+        "generator_observed": 28,
+        "generator_lottery": "Loteria Nacional",
+        "confirmers": [
+          35
+        ],
+        "confirmer_lotteries": [
+          "Quiniela Leidsa"
+        ],
+        "n_confirmers": 1
+      },
+      {
+        "candidate": 54,
+        "generator_observed": 35,
+        "generator_lottery": "Quiniela Leidsa",
+        "confirmers": [
+          14
+        ],
+        "confirmer_lotteries": [
+          "Gana Mas"
+        ],
+        "n_confirmers": 1
+      },
+      {
+        "candidate": 86,
+        "generator_observed": 35,
+        "generator_lottery": "Quiniela Leidsa",
+        "confirmers": [
+          46
+        ],
+        "confirmer_lotteries": [
+          "Quiniela Loteka"
+        ],
+        "n_confirmers": 1
+      },
+      {
+        "candidate": 90,
+        "generator_observed": 46,
+        "generator_lottery": "Quiniela Loteka",
+        "confirmers": [
+          35
+        ],
+        "confirmer_lotteries": [
+          "Quiniela Leidsa"
+        ],
+        "n_confirmers": 1
+      }
+    ],
+    "windows": {
+      "W1_next_chronological_draw": {
+        "hit": true,
+        "first_appearance": {
+          "date": "2024-09-13",
+          "lottery_name": "Gana Mas",
+          "lottery_id": "43250709-ee65-476f-91f6-cb8438f49d65",
+          "draw_id": "1945355b-0221-4313-8246-3a1477ce7687",
+          "source_reference": "180460",
+          "draw_time": null,
+          "position": 1,
+          "position_label": "1ro",
+          "number": 86
+        }
+      },
+      "W2_same_day_other_draws": {
+        "hit": false,
+        "first_appearance": null
+      },
+      "W3_next_calendar_day": {
+        "hit": true,
+        "first_appearance": {
+          "date": "2024-09-13",
+          "lottery_name": "Gana Mas",
+          "lottery_id": "43250709-ee65-476f-91f6-cb8438f49d65",
+          "draw_id": "1945355b-0221-4313-8246-3a1477ce7687",
+          "source_reference": "180460",
+          "draw_time": null,
+          "position": 1,
+          "position_label": "1ro",
+          "number": 86
+        }
+      },
+      "W4_next_3_featured_draws": {
+        "hit": true,
+        "first_appearance": {
+          "date": "2024-09-13",
+          "lottery_name": "Gana Mas",
+          "lottery_id": "43250709-ee65-476f-91f6-cb8438f49d65",
+          "draw_id": "1945355b-0221-4313-8246-3a1477ce7687",
+          "source_reference": "180460",
+          "draw_time": null,
+          "position": 1,
+          "position_label": "1ro",
+          "number": 86
+        }
+      },
+      "W5_next_7_featured_draws": {
+        "hit": true,
+        "first_appearance": {
+          "date": "2024-09-13",
+          "lottery_name": "Gana Mas",
+          "lottery_id": "43250709-ee65-476f-91f6-cb8438f49d65",
+          "draw_id": "1945355b-0221-4313-8246-3a1477ce7687",
+          "source_reference": "180460",
+          "draw_time": null,
+          "position": 1,
+          "position_label": "1ro",
+          "number": 86
+        }
+      },
+      "W6_next_14_featured_draws": {
+        "hit": true,
+        "first_appearance": {
+          "date": "2024-09-13",
+          "lottery_name": "Gana Mas",
+          "lottery_id": "43250709-ee65-476f-91f6-cb8438f49d65",
+          "draw_id": "1945355b-0221-4313-8246-3a1477ce7687",
+          "source_reference": "180460",
+          "draw_time": null,
+          "position": 1,
+          "position_label": "1ro",
+          "number": 86
+        }
+      },
+      "W7_next_3_calendar_days": {
+        "hit": true,
+        "first_appearance": {
+          "date": "2024-09-13",
+          "lottery_name": "Gana Mas",
+          "lottery_id": "43250709-ee65-476f-91f6-cb8438f49d65",
+          "draw_id": "1945355b-0221-4313-8246-3a1477ce7687",
+          "source_reference": "180460",
+          "draw_time": null,
+          "position": 1,
+          "position_label": "1ro",
+          "number": 86
+        }
+      },
+      "W8_next_7_calendar_days": {
+        "hit": true,
+        "first_appearance": {
+          "date": "2024-09-13",
+          "lottery_name": "Gana Mas",
+          "lottery_id": "43250709-ee65-476f-91f6-cb8438f49d65",
+          "draw_id": "1945355b-0221-4313-8246-3a1477ce7687",
+          "source_reference": "180460",
+          "draw_time": null,
+          "position": 1,
+          "position_label": "1ro",
+          "number": 86
+        }
+      }
+    },
+    "direct_t2_sample": [
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 28,
+        "lottery": "Loteria Nacional",
+        "direct_t2_neighbor": 23,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 28,
+        "lottery": "Loteria Nacional",
+        "direct_t2_neighbor": 73,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 28,
+        "lottery": "Loteria Nacional",
+        "direct_t2_neighbor": 77,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 28,
+        "lottery": "Loteria Nacional",
+        "direct_t2_neighbor": 87,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 76,
+        "lottery": "New York 10:30",
+        "direct_t2_neighbor": 27,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      }
+    ],
+    "explanation": "28 (Loteria Nacional) genera candidato T1 53; confirmado por [35] (Quiniela Leidsa). 35 (Quiniela Leidsa) genera candidato T1 54; confirmado por [14] (Gana Mas). 35 (Quiniela Leidsa) genera candidato T1 86; confirmado por [46] (Quiniela Loteka). 46 (Quiniela Loteka) genera candidato T1 90; confirmado por [35] (Quiniela Leidsa). Al día siguiente apareció 86 en Gana Mas pos 1 (ref 180460). Nivel: NIVEL_5_MULTIPLES_FUERTES."
+  },
+  {
+    "id": "FY-006",
+    "date": "2023-06-12",
+    "year": 2023,
+    "level": "NIVEL_2_UNA_CONFIRMACION",
+    "observations": [
+      {
+        "lottery_name": "Gana Mas",
+        "lottery_id": "43250709-ee65-476f-91f6-cb8438f49d65",
+        "draw_id": "39725531-c2ab-4a7c-84d8-709748125602",
+        "draw_time": null,
+        "position": 1,
+        "number": 94,
+        "source_reference": "161897"
+      },
+      {
+        "lottery_name": "Loteria Nacional",
+        "lottery_id": "0118037f-8f8b-4a82-899c-42cd50b6e194",
+        "draw_id": "5a9742cd-35bf-42d7-8d40-84f9c569bb2d",
+        "draw_time": null,
+        "position": 1,
+        "number": 28,
+        "source_reference": "107936"
+      },
+      {
+        "lottery_name": "New York 10:30",
+        "lottery_id": "1624b6f2-88c6-42b5-a597-bf9c0f98a6b5",
+        "draw_id": "bfb4fcaa-660c-43e2-b008-9287404f65c4",
+        "draw_time": null,
+        "position": 1,
+        "number": 47,
+        "source_reference": "48674"
+      },
+      {
+        "lottery_name": "New York 2:30",
+        "lottery_id": "1c488641-adb6-4790-89e7-879d361da7cc",
+        "draw_id": "5ce20d5f-0673-4c75-8add-ccd5aaae6b03",
+        "draw_time": null,
+        "position": 1,
+        "number": 77,
+        "source_reference": "46211"
+      },
+      {
+        "lottery_name": "Quiniela Leidsa",
+        "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+        "draw_id": "49083939-3e95-41bc-bc73-a2ffc0232075",
+        "draw_time": null,
+        "position": 1,
+        "number": 74,
+        "source_reference": "115421"
+      },
+      {
+        "lottery_name": "Quiniela Loteka",
+        "lottery_id": "b9f2c5a2-bc3e-4382-9b6d-3cee16db00fd",
+        "draw_id": "d5a9189d-12c7-4329-820c-39ca59c6525e",
+        "draw_time": null,
+        "position": 1,
+        "number": 71,
+        "source_reference": "34664"
+      },
+      {
+        "lottery_name": "Quiniela Real",
+        "lottery_id": "205c58d2-cfcf-44e6-894d-97358b3d540b",
+        "draw_id": "ea1b5d5a-c3bd-4695-9f2b-0712b416cc09",
+        "draw_time": null,
+        "position": 1,
+        "number": 49,
+        "source_reference": "34711"
+      }
+    ],
+    "official_strengthened": [
+      {
+        "candidate": 84,
+        "generator_observed": 47,
+        "generator_lottery": "New York 10:30",
+        "confirmers": [
+          94
+        ],
+        "confirmer_lotteries": [
+          "Gana Mas"
+        ],
+        "n_confirmers": 1
+      }
+    ],
+    "windows": {
+      "W1_next_chronological_draw": {
+        "hit": false,
+        "first_appearance": null
+      },
+      "W2_same_day_other_draws": {
+        "hit": false,
+        "first_appearance": null
+      },
+      "W3_next_calendar_day": {
+        "hit": true,
+        "first_appearance": {
+          "date": "2023-06-13",
+          "lottery_name": "Quiniela Loteka",
+          "lottery_id": "b9f2c5a2-bc3e-4382-9b6d-3cee16db00fd",
+          "draw_id": "b31ebd08-f9cb-4ff5-9fa8-f7269a094ade",
+          "source_reference": "34663",
+          "draw_time": null,
+          "position": 3,
+          "position_label": "3ro",
+          "number": 84
+        }
+      },
+      "W4_next_3_featured_draws": {
+        "hit": false,
+        "first_appearance": null
+      },
+      "W5_next_7_featured_draws": {
+        "hit": true,
+        "first_appearance": {
+          "date": "2023-06-13",
+          "lottery_name": "Quiniela Loteka",
+          "lottery_id": "b9f2c5a2-bc3e-4382-9b6d-3cee16db00fd",
+          "draw_id": "b31ebd08-f9cb-4ff5-9fa8-f7269a094ade",
+          "source_reference": "34663",
+          "draw_time": null,
+          "position": 3,
+          "position_label": "3ro",
+          "number": 84
+        }
+      },
+      "W6_next_14_featured_draws": {
+        "hit": true,
+        "first_appearance": {
+          "date": "2023-06-13",
+          "lottery_name": "Quiniela Loteka",
+          "lottery_id": "b9f2c5a2-bc3e-4382-9b6d-3cee16db00fd",
+          "draw_id": "b31ebd08-f9cb-4ff5-9fa8-f7269a094ade",
+          "source_reference": "34663",
+          "draw_time": null,
+          "position": 3,
+          "position_label": "3ro",
+          "number": 84
+        }
+      },
+      "W7_next_3_calendar_days": {
+        "hit": true,
+        "first_appearance": {
+          "date": "2023-06-13",
+          "lottery_name": "Quiniela Loteka",
+          "lottery_id": "b9f2c5a2-bc3e-4382-9b6d-3cee16db00fd",
+          "draw_id": "b31ebd08-f9cb-4ff5-9fa8-f7269a094ade",
+          "source_reference": "34663",
+          "draw_time": null,
+          "position": 3,
+          "position_label": "3ro",
+          "number": 84
+        }
+      },
+      "W8_next_7_calendar_days": {
+        "hit": true,
+        "first_appearance": {
+          "date": "2023-06-13",
+          "lottery_name": "Quiniela Loteka",
+          "lottery_id": "b9f2c5a2-bc3e-4382-9b6d-3cee16db00fd",
+          "draw_id": "b31ebd08-f9cb-4ff5-9fa8-f7269a094ade",
+          "source_reference": "34663",
+          "draw_time": null,
+          "position": 3,
+          "position_label": "3ro",
+          "number": 84
+        }
+      }
+    },
+    "direct_t2_sample": [
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 94,
+        "lottery": "Gana Mas",
+        "direct_t2_neighbor": 58,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 28,
+        "lottery": "Loteria Nacional",
+        "direct_t2_neighbor": 23,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 28,
+        "lottery": "Loteria Nacional",
+        "direct_t2_neighbor": 73,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 28,
+        "lottery": "Loteria Nacional",
+        "direct_t2_neighbor": 77,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 28,
+        "lottery": "Loteria Nacional",
+        "direct_t2_neighbor": 87,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      }
+    ],
+    "explanation": "47 (New York 10:30) genera candidato T1 84; confirmado por [94] (Gana Mas). Al día siguiente apareció 84 en Quiniela Loteka pos 3 (ref 34663). Nivel: NIVEL_2_UNA_CONFIRMACION."
+  },
+  {
+    "id": "FY-007",
+    "date": "2024-12-04",
+    "year": 2024,
+    "level": "NIVEL_2_UNA_CONFIRMACION",
+    "observations": [
+      {
+        "lottery_name": "Gana Mas",
+        "lottery_id": "43250709-ee65-476f-91f6-cb8438f49d65",
+        "draw_id": "1bd710e7-b708-42f5-9928-951eda06918b",
+        "draw_time": null,
+        "position": 1,
+        "number": 47,
+        "source_reference": "182795"
+      },
+      {
+        "lottery_name": "Loteria Nacional",
+        "lottery_id": "0118037f-8f8b-4a82-899c-42cd50b6e194",
+        "draw_id": "9c19542b-5975-4598-a3c7-1d12a113e387",
+        "draw_time": null,
+        "position": 1,
+        "number": 50,
+        "source_reference": "182812"
+      },
+      {
+        "lottery_name": "New York 10:30",
+        "lottery_id": "1624b6f2-88c6-42b5-a597-bf9c0f98a6b5",
+        "draw_id": "35b0b95b-04c2-4dcf-b134-3e85c24e964b",
+        "draw_time": null,
+        "position": 1,
+        "number": 94,
+        "source_reference": "182815"
+      },
+      {
+        "lottery_name": "New York 2:30",
+        "lottery_id": "1c488641-adb6-4790-89e7-879d361da7cc",
+        "draw_id": "5c6e8269-1d08-4dde-9bdb-db9c83573e19",
+        "draw_time": null,
+        "position": 1,
+        "number": 22,
+        "source_reference": "182796"
+      },
+      {
+        "lottery_name": "Quiniela Leidsa",
+        "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+        "draw_id": "8e0a990a-e75b-471b-b696-7826f16967b2",
+        "draw_time": null,
+        "position": 1,
+        "number": 90,
+        "source_reference": "182808"
+      },
+      {
+        "lottery_name": "Quiniela Loteka",
+        "lottery_id": "b9f2c5a2-bc3e-4382-9b6d-3cee16db00fd",
+        "draw_id": "1bcff672-d9c3-45f1-a574-369214875573",
+        "draw_time": null,
+        "position": 1,
+        "number": 24,
+        "source_reference": "182801"
+      },
+      {
+        "lottery_name": "Quiniela Real",
+        "lottery_id": "205c58d2-cfcf-44e6-894d-97358b3d540b",
+        "draw_id": "55414f2c-7ee3-400b-8575-e8c75ce2e480",
+        "draw_time": null,
+        "position": 1,
+        "number": 75,
+        "source_reference": "182818"
+      }
+    ],
+    "official_strengthened": [
+      {
+        "candidate": 84,
+        "generator_observed": 47,
+        "generator_lottery": "Gana Mas",
+        "confirmers": [
+          94
+        ],
+        "confirmer_lotteries": [
+          "New York 10:30"
+        ],
+        "n_confirmers": 1
+      }
+    ],
+    "windows": {
+      "W1_next_chronological_draw": {
+        "hit": false,
+        "first_appearance": null
+      },
+      "W2_same_day_other_draws": {
+        "hit": false,
+        "first_appearance": null
+      },
+      "W3_next_calendar_day": {
+        "hit": false,
+        "first_appearance": null
+      },
+      "W4_next_3_featured_draws": {
+        "hit": false,
+        "first_appearance": null
+      },
+      "W5_next_7_featured_draws": {
+        "hit": false,
+        "first_appearance": null
+      },
+      "W6_next_14_featured_draws": {
+        "hit": false,
+        "first_appearance": null
+      },
+      "W7_next_3_calendar_days": {
+        "hit": true,
+        "first_appearance": {
+          "date": "2024-12-07",
+          "lottery_name": "Quiniela Loteka",
+          "lottery_id": "b9f2c5a2-bc3e-4382-9b6d-3cee16db00fd",
+          "draw_id": "0d3cf999-44e2-480c-a932-ee63bfd5a31d",
+          "source_reference": "182892",
+          "draw_time": null,
+          "position": 2,
+          "position_label": "2do",
+          "number": 84
+        }
+      },
+      "W8_next_7_calendar_days": {
+        "hit": true,
+        "first_appearance": {
+          "date": "2024-12-07",
+          "lottery_name": "Quiniela Loteka",
+          "lottery_id": "b9f2c5a2-bc3e-4382-9b6d-3cee16db00fd",
+          "draw_id": "0d3cf999-44e2-480c-a932-ee63bfd5a31d",
+          "source_reference": "182892",
+          "draw_time": null,
+          "position": 2,
+          "position_label": "2do",
+          "number": 84
+        }
+      }
+    },
+    "direct_t2_sample": [
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 50,
+        "lottery": "Loteria Nacional",
+        "direct_t2_neighbor": 5,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 94,
+        "lottery": "New York 10:30",
+        "direct_t2_neighbor": 58,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 22,
+        "lottery": "New York 2:30",
+        "direct_t2_neighbor": 7,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 22,
+        "lottery": "New York 2:30",
+        "direct_t2_neighbor": 9,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 22,
+        "lottery": "New York 2:30",
+        "direct_t2_neighbor": 29,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      }
+    ],
+    "explanation": "47 (Gana Mas) genera candidato T1 84; confirmado por [94] (New York 10:30). No apareció en la ventana día calendario siguiente (W3). Nivel: NIVEL_2_UNA_CONFIRMACION."
+  },
+  {
+    "id": "FY-008",
+    "date": "2025-03-16",
+    "year": 2025,
+    "level": "NIVEL_2_UNA_CONFIRMACION",
+    "observations": [
+      {
+        "lottery_name": "Gana Mas",
+        "lottery_id": "43250709-ee65-476f-91f6-cb8438f49d65",
+        "draw_id": "dd3ba38a-2c21-4eb6-94e4-e2e6bd633477",
+        "draw_time": null,
+        "position": 1,
+        "number": 58,
+        "source_reference": "186065"
+      },
+      {
+        "lottery_name": "Loteria Nacional",
+        "lottery_id": "0118037f-8f8b-4a82-899c-42cd50b6e194",
+        "draw_id": "ed931537-42dd-4402-9759-58755f8f0ca8",
+        "draw_time": null,
+        "position": 1,
+        "number": 37,
+        "source_reference": "186072"
+      },
+      {
+        "lottery_name": "New York 10:30",
+        "lottery_id": "1624b6f2-88c6-42b5-a597-bf9c0f98a6b5",
+        "draw_id": "1906798b-2822-48af-bcbe-8ccde4111106",
+        "draw_time": null,
+        "position": 1,
+        "number": 84,
+        "source_reference": "186081"
+      },
+      {
+        "lottery_name": "New York 2:30",
+        "lottery_id": "1c488641-adb6-4790-89e7-879d361da7cc",
+        "draw_id": "5c033b09-c722-420b-8643-c8e6c387ead2",
+        "draw_time": null,
+        "position": 1,
+        "number": 65,
+        "source_reference": "186064"
+      },
+      {
+        "lottery_name": "Quiniela Leidsa",
+        "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+        "draw_id": "3b3c387b-9200-46d6-82bb-7de244bb7e83",
+        "draw_time": null,
+        "position": 1,
+        "number": 56,
+        "source_reference": "186066"
+      },
+      {
+        "lottery_name": "Quiniela Loteka",
+        "lottery_id": "b9f2c5a2-bc3e-4382-9b6d-3cee16db00fd",
+        "draw_id": "8e7e70c8-181e-4f95-bc11-f64a4479d9d4",
+        "draw_time": null,
+        "position": 1,
+        "number": 44,
+        "source_reference": "186074"
+      },
+      {
+        "lottery_name": "Quiniela Real",
+        "lottery_id": "205c58d2-cfcf-44e6-894d-97358b3d540b",
+        "draw_id": "c932dba7-12f0-4356-9f22-cce615e63e68",
+        "draw_time": null,
+        "position": 1,
+        "number": 67,
+        "source_reference": "186062"
+      }
+    ],
+    "official_strengthened": [
+      {
+        "candidate": 42,
+        "generator_observed": 37,
+        "generator_lottery": "Loteria Nacional",
+        "confirmers": [
+          44
+        ],
+        "confirmer_lotteries": [
+          "Quiniela Loteka"
+        ],
+        "n_confirmers": 1
+      }
+    ],
+    "windows": {
+      "W1_next_chronological_draw": {
+        "hit": false,
+        "first_appearance": null
+      },
+      "W2_same_day_other_draws": {
+        "hit": false,
+        "first_appearance": null
+      },
+      "W3_next_calendar_day": {
+        "hit": false,
+        "first_appearance": null
+      },
+      "W4_next_3_featured_draws": {
+        "hit": false,
+        "first_appearance": null
+      },
+      "W5_next_7_featured_draws": {
+        "hit": false,
+        "first_appearance": null
+      },
+      "W6_next_14_featured_draws": {
+        "hit": true,
+        "first_appearance": {
+          "date": "2025-03-18",
+          "lottery_name": "New York 2:30",
+          "lottery_id": "1c488641-adb6-4790-89e7-879d361da7cc",
+          "draw_id": "6aebb2b3-0402-406e-b8f9-494dfc812997",
+          "source_reference": "186119",
+          "draw_time": null,
+          "position": 2,
+          "position_label": "2do",
+          "number": 42
+        }
+      },
+      "W7_next_3_calendar_days": {
+        "hit": true,
+        "first_appearance": {
+          "date": "2025-03-18",
+          "lottery_name": "New York 2:30",
+          "lottery_id": "1c488641-adb6-4790-89e7-879d361da7cc",
+          "draw_id": "6aebb2b3-0402-406e-b8f9-494dfc812997",
+          "source_reference": "186119",
+          "draw_time": null,
+          "position": 2,
+          "position_label": "2do",
+          "number": 42
+        }
+      },
+      "W8_next_7_calendar_days": {
+        "hit": true,
+        "first_appearance": {
+          "date": "2025-03-18",
+          "lottery_name": "New York 2:30",
+          "lottery_id": "1c488641-adb6-4790-89e7-879d361da7cc",
+          "draw_id": "6aebb2b3-0402-406e-b8f9-494dfc812997",
+          "source_reference": "186119",
+          "draw_time": null,
+          "position": 2,
+          "position_label": "2do",
+          "number": 42
+        }
+      }
+    },
+    "direct_t2_sample": [
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 58,
+        "lottery": "Gana Mas",
+        "direct_t2_neighbor": 84,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 58,
+        "lottery": "Gana Mas",
+        "direct_t2_neighbor": 94,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 37,
+        "lottery": "Loteria Nacional",
+        "direct_t2_neighbor": 65,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 37,
+        "lottery": "Loteria Nacional",
+        "direct_t2_neighbor": 82,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 84,
+        "lottery": "New York 10:30",
+        "direct_t2_neighbor": 58,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      }
+    ],
+    "explanation": "37 (Loteria Nacional) genera candidato T1 42; confirmado por [44] (Quiniela Loteka). No apareció en la ventana día calendario siguiente (W3). Nivel: NIVEL_2_UNA_CONFIRMACION."
+  },
+  {
+    "id": "FY-009",
+    "date": "2024-11-29",
+    "year": 2024,
+    "level": "NIVEL_5_MULTIPLES_FUERTES",
+    "observations": [
+      {
+        "lottery_name": "Gana Mas",
+        "lottery_id": "43250709-ee65-476f-91f6-cb8438f49d65",
+        "draw_id": "c1dac29e-fbe2-443a-8434-909d5673495e",
+        "draw_time": null,
+        "position": 1,
+        "number": 85,
+        "source_reference": "182646"
+      },
+      {
+        "lottery_name": "Loteria Nacional",
+        "lottery_id": "0118037f-8f8b-4a82-899c-42cd50b6e194",
+        "draw_id": "4ea453af-328c-4ef2-9a61-5e12aef02701",
+        "draw_time": null,
+        "position": 1,
+        "number": 34,
+        "source_reference": "182658"
+      },
+      {
+        "lottery_name": "New York 10:30",
+        "lottery_id": "1624b6f2-88c6-42b5-a597-bf9c0f98a6b5",
+        "draw_id": "0067244c-a7de-4f1f-9394-8840ba7f52ac",
+        "draw_time": null,
+        "position": 1,
+        "number": 40,
+        "source_reference": "182666"
+      },
+      {
+        "lottery_name": "New York 2:30",
+        "lottery_id": "1c488641-adb6-4790-89e7-879d361da7cc",
+        "draw_id": "11bd6143-f8ab-4bcf-831b-8355ca582f7a",
+        "draw_time": null,
+        "position": 1,
+        "number": 35,
+        "source_reference": "182647"
+      },
+      {
+        "lottery_name": "Quiniela Leidsa",
+        "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+        "draw_id": "b4b910f9-ad73-4e46-ba6b-4dbc09295fdd",
+        "draw_time": null,
+        "position": 1,
+        "number": 31,
+        "source_reference": "182655"
+      },
+      {
+        "lottery_name": "Quiniela Loteka",
+        "lottery_id": "b9f2c5a2-bc3e-4382-9b6d-3cee16db00fd",
+        "draw_id": "904b7e25-f593-4d7a-97dd-71e9a037741c",
+        "draw_time": null,
+        "position": 1,
+        "number": 92,
+        "source_reference": "182653"
+      },
+      {
+        "lottery_name": "Quiniela Real",
+        "lottery_id": "205c58d2-cfcf-44e6-894d-97358b3d540b",
+        "draw_id": "a9529895-e669-481d-b090-3117e510f1a0",
+        "draw_time": null,
+        "position": 1,
+        "number": 64,
+        "source_reference": "182641"
+      }
+    ],
+    "official_strengthened": [
+      {
+        "candidate": 72,
+        "generator_observed": 40,
+        "generator_lottery": "New York 10:30",
+        "confirmers": [
+          34
+        ],
+        "confirmer_lotteries": [
+          "Loteria Nacional"
+        ],
+        "n_confirmers": 1
+      },
+      {
+        "candidate": 76,
+        "generator_observed": 34,
+        "generator_lottery": "Loteria Nacional",
+        "confirmers": [
+          92
+        ],
+        "confirmer_lotteries": [
+          "Quiniela Loteka"
+        ],
+        "n_confirmers": 1
+      }
+    ],
+    "windows": {
+      "W1_next_chronological_draw": {
+        "hit": false,
+        "first_appearance": null
+      },
+      "W2_same_day_other_draws": {
+        "hit": false,
+        "first_appearance": null
+      },
+      "W3_next_calendar_day": {
+        "hit": true,
+        "first_appearance": {
+          "date": "2024-11-30",
+          "lottery_name": "Loteria Nacional",
+          "lottery_id": "0118037f-8f8b-4a82-899c-42cd50b6e194",
+          "draw_id": "80abf1e1-6404-4c21-a0d2-88b4e3cccff0",
+          "source_reference": "182686",
+          "draw_time": null,
+          "position": 3,
+          "position_label": "3ro",
+          "number": 72
+        }
+      },
+      "W4_next_3_featured_draws": {
+        "hit": true,
+        "first_appearance": {
+          "date": "2024-11-30",
+          "lottery_name": "Loteria Nacional",
+          "lottery_id": "0118037f-8f8b-4a82-899c-42cd50b6e194",
+          "draw_id": "80abf1e1-6404-4c21-a0d2-88b4e3cccff0",
+          "source_reference": "182686",
+          "draw_time": null,
+          "position": 3,
+          "position_label": "3ro",
+          "number": 72
+        }
+      },
+      "W5_next_7_featured_draws": {
+        "hit": true,
+        "first_appearance": {
+          "date": "2024-11-30",
+          "lottery_name": "Loteria Nacional",
+          "lottery_id": "0118037f-8f8b-4a82-899c-42cd50b6e194",
+          "draw_id": "80abf1e1-6404-4c21-a0d2-88b4e3cccff0",
+          "source_reference": "182686",
+          "draw_time": null,
+          "position": 3,
+          "position_label": "3ro",
+          "number": 72
+        }
+      },
+      "W6_next_14_featured_draws": {
+        "hit": true,
+        "first_appearance": {
+          "date": "2024-11-30",
+          "lottery_name": "Loteria Nacional",
+          "lottery_id": "0118037f-8f8b-4a82-899c-42cd50b6e194",
+          "draw_id": "80abf1e1-6404-4c21-a0d2-88b4e3cccff0",
+          "source_reference": "182686",
+          "draw_time": null,
+          "position": 3,
+          "position_label": "3ro",
+          "number": 72
+        }
+      },
+      "W7_next_3_calendar_days": {
+        "hit": true,
+        "first_appearance": {
+          "date": "2024-11-30",
+          "lottery_name": "Loteria Nacional",
+          "lottery_id": "0118037f-8f8b-4a82-899c-42cd50b6e194",
+          "draw_id": "80abf1e1-6404-4c21-a0d2-88b4e3cccff0",
+          "source_reference": "182686",
+          "draw_time": null,
+          "position": 3,
+          "position_label": "3ro",
+          "number": 72
+        }
+      },
+      "W8_next_7_calendar_days": {
+        "hit": true,
+        "first_appearance": {
+          "date": "2024-11-30",
+          "lottery_name": "Loteria Nacional",
+          "lottery_id": "0118037f-8f8b-4a82-899c-42cd50b6e194",
+          "draw_id": "80abf1e1-6404-4c21-a0d2-88b4e3cccff0",
+          "source_reference": "182686",
+          "draw_time": null,
+          "position": 3,
+          "position_label": "3ro",
+          "number": 72
+        }
+      }
+    },
+    "direct_t2_sample": [
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 85,
+        "lottery": "Gana Mas",
+        "direct_t2_neighbor": 52,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 85,
+        "lottery": "Gana Mas",
+        "direct_t2_neighbor": 81,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 34,
+        "lottery": "Loteria Nacional",
+        "direct_t2_neighbor": 26,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 34,
+        "lottery": "Loteria Nacional",
+        "direct_t2_neighbor": 59,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 40,
+        "lottery": "New York 10:30",
+        "direct_t2_neighbor": 4,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      }
+    ],
+    "explanation": "40 (New York 10:30) genera candidato T1 72; confirmado por [34] (Loteria Nacional). 34 (Loteria Nacional) genera candidato T1 76; confirmado por [92] (Quiniela Loteka). Al día siguiente apareció 72 en Loteria Nacional pos 3 (ref 182686). Nivel: NIVEL_5_MULTIPLES_FUERTES."
+  },
+  {
+    "id": "FY-010",
+    "date": "2024-07-01",
+    "year": 2024,
+    "level": "NIVEL_5_MULTIPLES_FUERTES",
+    "observations": [
+      {
+        "lottery_name": "Gana Mas",
+        "lottery_id": "43250709-ee65-476f-91f6-cb8438f49d65",
+        "draw_id": "fe477d3c-0554-4cdf-83b8-2df137fe6a4b",
+        "draw_time": null,
+        "position": 1,
+        "number": 39,
+        "source_reference": "178363"
+      },
+      {
+        "lottery_name": "Loteria Nacional",
+        "lottery_id": "0118037f-8f8b-4a82-899c-42cd50b6e194",
+        "draw_id": "6df0c5c5-756e-4bef-aa80-0ebfead1b219",
+        "draw_time": null,
+        "position": 1,
+        "number": 68,
+        "source_reference": "178370"
+      },
+      {
+        "lottery_name": "New York 10:30",
+        "lottery_id": "1624b6f2-88c6-42b5-a597-bf9c0f98a6b5",
+        "draw_id": "7a58e7cf-015c-47bc-bf6a-160cd5bf71b9",
+        "draw_time": null,
+        "position": 1,
+        "number": 18,
+        "source_reference": "178380"
+      },
+      {
+        "lottery_name": "New York 2:30",
+        "lottery_id": "1c488641-adb6-4790-89e7-879d361da7cc",
+        "draw_id": "33c9d415-6cbf-4084-9d93-969291b17057",
+        "draw_time": null,
+        "position": 1,
+        "number": 4,
+        "source_reference": "178362"
+      },
+      {
+        "lottery_name": "Quiniela Leidsa",
+        "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+        "draw_id": "9627e52e-b6e6-4348-b0db-b33ff90d0960",
+        "draw_time": null,
+        "position": 1,
+        "number": 7,
+        "source_reference": "178371"
+      },
+      {
+        "lottery_name": "Quiniela Loteka",
+        "lottery_id": "b9f2c5a2-bc3e-4382-9b6d-3cee16db00fd",
+        "draw_id": "083d21ce-e74c-402d-9364-33c1b2cd040c",
+        "draw_time": null,
+        "position": 1,
+        "number": 58,
+        "source_reference": "178368"
+      },
+      {
+        "lottery_name": "Quiniela Real",
+        "lottery_id": "205c58d2-cfcf-44e6-894d-97358b3d540b",
+        "draw_id": "9a15a395-706a-43ee-b827-06d9b17e9524",
+        "draw_time": null,
+        "position": 1,
+        "number": 90,
+        "source_reference": "178359"
+      }
+    ],
+    "official_strengthened": [
+      {
+        "candidate": 9,
+        "generator_observed": 39,
+        "generator_lottery": "Gana Mas",
+        "confirmers": [
+          7,
+          90
+        ],
+        "confirmer_lotteries": [
+          "Quiniela Leidsa",
+          "Quiniela Real"
+        ],
+        "n_confirmers": 2
+      },
+      {
+        "candidate": 94,
+        "generator_observed": 39,
+        "generator_lottery": "Gana Mas",
+        "confirmers": [
+          58
+        ],
+        "confirmer_lotteries": [
+          "Quiniela Loteka"
+        ],
+        "n_confirmers": 1
+      }
+    ],
+    "windows": {
+      "W1_next_chronological_draw": {
+        "hit": false,
+        "first_appearance": null
+      },
+      "W2_same_day_other_draws": {
+        "hit": false,
+        "first_appearance": null
+      },
+      "W3_next_calendar_day": {
+        "hit": false,
+        "first_appearance": null
+      },
+      "W4_next_3_featured_draws": {
+        "hit": false,
+        "first_appearance": null
+      },
+      "W5_next_7_featured_draws": {
+        "hit": false,
+        "first_appearance": null
+      },
+      "W6_next_14_featured_draws": {
+        "hit": false,
+        "first_appearance": null
+      },
+      "W7_next_3_calendar_days": {
+        "hit": false,
+        "first_appearance": null
+      },
+      "W8_next_7_calendar_days": {
+        "hit": false,
+        "first_appearance": null
+      }
+    },
+    "direct_t2_sample": [
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 39,
+        "lottery": "Gana Mas",
+        "direct_t2_neighbor": 78,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 68,
+        "lottery": "Loteria Nacional",
+        "direct_t2_neighbor": 27,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 68,
+        "lottery": "Loteria Nacional",
+        "direct_t2_neighbor": 76,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 68,
+        "lottery": "Loteria Nacional",
+        "direct_t2_neighbor": 92,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 4,
+        "lottery": "New York 2:30",
+        "direct_t2_neighbor": 40,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      }
+    ],
+    "explanation": "39 (Gana Mas) genera candidato T1 9; confirmado por [7, 90] (Quiniela Leidsa, Quiniela Real). 39 (Gana Mas) genera candidato T1 94; confirmado por [58] (Quiniela Loteka). No apareció en la ventana día calendario siguiente (W3). Nivel: NIVEL_5_MULTIPLES_FUERTES."
+  }
+]

@@ -20,6 +20,7 @@ export default function MotorHistoricalAuditPage() {
   const [summary, setSummary] = useState<Record<string, unknown> | null>(null);
   const [cases, setCases] = useState<CaseRow[]>([]);
   const [selected, setSelected] = useState<CaseRow | null>(null);
+  const [fourYear, setFourYear] = useState<Record<string, unknown> | null>(null);
 
   const metrics = useMemo(() => {
     const pop = (summary?.population_metrics as Record<string, unknown>) || {};
@@ -55,6 +56,20 @@ export default function MotorHistoricalAuditPage() {
       setSummary(null);
       setCases([]);
       setError(err instanceof ApiError ? err.message : "No se pudo ejecutar la auditoría");
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const loadFourYear = async () => {
+    setBusy(true);
+    setError(null);
+    try {
+      const res = await apiClient.getLotteryNumericRelationsFourYearAuditSummary();
+      setFourYear((res.summary as Record<string, unknown>) || res);
+    } catch (err) {
+      setFourYear(null);
+      setError(err instanceof ApiError ? err.message : "No se pudo cargar la auditoría de 4 años");
     } finally {
       setBusy(false);
     }
@@ -119,6 +134,9 @@ export default function MotorHistoricalAuditPage() {
             <Button type="button" variant="outline" onClick={exportJson} disabled={!cases.length}>
               Exportar JSON
             </Button>
+            <Button type="button" variant="secondary" onClick={() => void loadFourYear()} disabled={busy}>
+              Cargar auditoría 4 años
+            </Button>
           </div>
           {error ? <p className="text-sm text-destructive">{error}</p> : null}
           {auditId ? (
@@ -128,6 +146,41 @@ export default function MotorHistoricalAuditPage() {
           ) : null}
         </CardContent>
       </Card>
+
+      {fourYear ? (
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base">Auditoría 4 años (no predictiva)</CardTitle>
+          </CardHeader>
+          <CardContent className="grid gap-2 text-sm sm:grid-cols-2 lg:grid-cols-3">
+            <div>
+              Rango: {String((fourYear.actual_range as Record<string, unknown> | undefined)?.from ?? "—")} →{" "}
+              {String((fourYear.actual_range as Record<string, unknown> | undefined)?.to ?? "—")}
+            </div>
+            <div>Fechas: {String(fourYear.dates_analyzed_ge2_obs ?? "—")}</div>
+            <div>
+              Veredicto estadístico:{" "}
+              {String((fourYear.verdicts as Record<string, unknown> | undefined)?.veredicto_estadistico ?? "—")}
+            </div>
+            <div>
+              Lift same-k:{" "}
+              {String(
+                (
+                  ((fourYear.aggregates as Record<string, unknown> | undefined)?.baselines_w3 as
+                    | Record<string, unknown>
+                    | undefined) || {}
+                ).lift_official_vs_random_same_k ?? "—",
+              )}
+            </div>
+            <div className="sm:col-span-2 text-muted-foreground">
+              J-11A:{" "}
+              {Array.isArray((fourYear.verdicts as Record<string, unknown> | undefined)?.decision_j11a)
+                ? ((fourYear.verdicts as Record<string, unknown>).decision_j11a as string[]).join(" · ")
+                : "—"}
+            </div>
+          </CardContent>
+        </Card>
+      ) : null}
 
       {summary ? (
         <Card>

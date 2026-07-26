@@ -2859,6 +2859,13 @@ export const apiClient = {
     );
   },
 
+  getLotteryNumericRelationsFourYearAuditSummary: () =>
+    request<Record<string, unknown>>(
+      "/lottery/admin/numeric-relations/historical-audit/four-year/summary",
+      undefined,
+      true,
+    ),
+
   postLotteryNrHistoryConditions: (body: Record<string, unknown>) =>
     request<Record<string, unknown>>("/lottery/admin/numeric-relations/history/conditions/search", {
       method: "POST",

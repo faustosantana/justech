@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8"/>
+<title>Auditoría 4 años — FEATURED_SEVEN</title>
+<style>
+body{font-family:system-ui,sans-serif;max-width:960px;margin:2rem auto;padding:0 1rem;line-height:1.5;color:#111}
+h1,h2{letter-spacing:-0.02em} .card{border:1px solid #ddd;border-radius:12px;padding:1rem 1.25rem;margin:1rem 0}
+.muted{color:#555} table{border-collapse:collapse;width:100%} th,td{border-bottom:1px solid #eee;padding:.4rem .5rem;text-align:left}
+.badge{display:inline-block;background:#eef;padding:.15rem .5rem;border-radius:999px;font-size:.85rem}
+.warn{background:#fff7ed;border-color:#fdba74}
+</style></head><body>
+<h1>Auditoría histórica de 4 años</h1>
+<p class="muted">Metodología nr-historical-relations-j1.0.0 · Solo lectura · FEATURED_SEVEN = 7 · Producción no modificada</p>
+<div class="card warn"><strong>Aviso:</strong> frecuencias históricas e intervalos. No es garantía predictiva.</div>
+<div class="card">
+<h2>Resumen ejecutivo</h2>
+<p><span class="badge">Veredicto matemático: GEOMETRIA_CORRECTA</span>
+<span class="badge">Veredicto estadístico: SIN_VENTAJA</span></p>
+<ul>
+<li>Rango real: 2022-07-26 → 2026-07-23</li>
+<li>Fechas analizadas (≥2 observados): 1457</li>
+<li>Días con fuerte oficial: 795</li>
+<li>Ventana principal W3 (día siguiente): hit rate 0.284635
+  (226/794),
+  IC95 [0.254343, 0.317001]</li>
+<li>Lift vs random same-k: 1.066</li>
+<li>Lift vs random one: 1.4868</li>
+<li>Decisión J-11A: GO_PARA_J11A_SOLO_COMO_COPILOTO_ANALITICO, NO_GO_PARA_J11A_PREDICTIVO</li>
+</ul>
+</div>
+<div class="card">
+<h2>¿Qué significa?</h2>
+<p>Se midió si los candidatos fortalecidos por Tabla&nbsp;1×Tabla&nbsp;2 aparecen al día siguiente
+con más frecuencia que una selección aleatoria con la misma cantidad de candidatos.
+Un lift cercano a 1 indica que no hay ventaja clara frente al azar controlado.</p>
+</div>
+<div class="card">
+<h2>Cobertura por año (aprox.)</h2>
+<table><tr><th>Año</th><th>Desde</th><th>Hasta</th><th>Sorteos</th><th>Cobertura%</th></tr>
+<tr><td>2022</td><td>2022-07-26</td><td>2022-12-31</td><td>1090</td><td>97.93</td></tr><tr><td>2023</td><td>2023-01-01</td><td>2023-12-31</td><td>2480</td><td>97.06</td></tr><tr><td>2024</td><td>2024-01-01</td><td>2024-12-31</td><td>2511</td><td>98.01</td></tr><tr><td>2025</td><td>2025-01-01</td><td>2025-12-31</td><td>2497</td><td>97.73</td></tr><tr><td>2026</td><td>2026-01-01</td><td>2026-07-23</td><td>1401</td><td>98.11</td></tr>
+</table>
+</div>
+<div class="card">
+<h2>Walk-forward</h2>
+<table><tr><th>Train</th><th>Test</th><th>In-sample</th><th>OOS</th><th>Δ pp</th></tr>
+<tr><td>[2022]</td><td>2023</td><td>0.2625</td><td>0.251185</td><td>-1.132</td></tr><tr><td>[2022, 2023]</td><td>2024</td><td>0.254296</td><td>0.298507</td><td>4.421</td></tr><tr><td>[2022, 2023, 2024]</td><td>2025</td><td>0.272358</td><td>0.283505</td><td>1.115</td></tr><tr><td>[2022, 2023, 2024, 2025]</td><td>2026</td><td>0.27551</td><td>0.33945</td><td>6.394</td></tr>
+</table>
+</div>
+<p class="muted">audit_id / trace_id: 2e523103-fcf9-439e-b6d4-2db0f1e47a40</p>
+</body></html>

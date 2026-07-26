@@ -1,0 +1,8 @@
+metric,value
+audit_id,2e523103-fcf9-439e-b6d4-2db0f1e47a40
+dates_analyzed,1457
+days_with_fuerte,795
+w3_hit_rate,0.284635
+lift_vs_random_same_k,1.066
+veredicto_estadistico,SIN_VENTAJA
+decision_j11a,GO_PARA_J11A_SOLO_COMO_COPILOTO_ANALITICO|NO_GO_PARA_J11A_PREDICTIVO

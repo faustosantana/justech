@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<title>Auditoría forense NR — 7 años</title>
+<style>
+body{font-family:Georgia,serif;max-width:960px;margin:2rem auto;padding:0 1.25rem;line-height:1.55;color:#111;background:#fff}
+h1,h2,h3{font-family:system-ui,sans-serif}
+.card{border:1px solid #e5e7eb;border-radius:14px;padding:1.1rem 1.25rem;margin:1rem 0;background:#fafafa}
+.warn{background:#fff7ed;border-color:#fdba74}
+.ok{background:#eff6ff;border-color:#93c5fd}
+nav a{display:block;margin:.2rem 0;font-family:system-ui,sans-serif;font-size:14px}
+img{max-width:100%;border:1px solid #eee;border-radius:10px;background:#fff}
+table{border-collapse:collapse;width:100%;font-size:14px}
+td,th{border-bottom:1px solid #eee;padding:.4rem .5rem;text-align:left}
+code{background:#f3f4f6;padding:0 .25rem;border-radius:4px}
+</style>
+</head>
+<body>
+<h1>Auditoría forense del Motor de Relaciones Numéricas</h1>
+<p>audit_id <code>c667ed2f-db12-483a-882b-8ac7bb3166bd</code> · nr-historical-relations-j1.0.0 · solo lectura · FEATURED_SEVEN</p>
+<div class="card warn">
+<strong>Imparcial.</strong> Describe frecuencias históricas. Incluye control de azar.
+No modifica motor, tablas ni producción. No inicia J-11A.
+</div>
+<div class="card ok">
+<table>
+<tr><th>Rango análisis</th><td>2019-07-23 → 2026-07-16</td></tr>
+<tr><th>Activaciones</th><td>2222</td></tr>
+<tr><th>Exacto ≤7d</th><td>75.16% (1670/2222)</td></tr>
+<tr><th>Azar exacto</th><td>75.02%</td></tr>
+<tr><th>Lift exacto</th><td><strong>1.0018</strong></td></tr>
+<tr><th>Miss → compañero T1</th><td>91.85% de misses</td></tr>
+<tr><th>Lift familia</th><td><strong>1.0032</strong></td></tr>
+</table>
+</div>
+<h2>Gráficos</h2>
+<p>Observado vs azar</p><img src="assets/baseline_compare.svg" alt="baseline"/>
+<p>Ranking en misses</p><img src="assets/miss_ranking.svg" alt="miss"/>
+<p>Día de aparición del exacto</p><img src="assets/day_offset_hits.svg" alt="days"/>
+<p>Tasa exacta por año</p><img src="assets/yearly_exact.svg" alt="yearly"/>
+<h2>Capítulos del libro</h2>
+<nav>
+<a href="00_ISOLATION.md">00_ISOLATION.md</a>
+<a href="01_EXECUTIVE_SUMMARY.md">01_EXECUTIVE_SUMMARY.md</a>
+<a href="02_DATA_COVERAGE.md">02_DATA_COVERAGE.md</a>
+<a href="03_METHODOLOGY.md">03_METHODOLOGY.md</a>
+<a href="04_RELATIONSHIP_TREE.md">04_RELATIONSHIP_TREE.md</a>
+<a href="05_GROUP_ANALYSIS.md">05_GROUP_ANALYSIS.md</a>
+<a href="06_TABLE1_ANALYSIS.md">06_TABLE1_ANALYSIS.md</a>
+<a href="07_TABLE2_ANALYSIS.md">07_TABLE2_ANALYSIS.md</a>
+<a href="08_STRONG_NUMBER_ANALYSIS.md">08_STRONG_NUMBER_ANALYSIS.md</a>
+<a href="09_COMPANION_ANALYSIS.md">09_COMPANION_ANALYSIS.md</a>
+<a href="10_NEIGHBOR_ANALYSIS.md">10_NEIGHBOR_ANALYSIS.md</a>
+<a href="11_DISTANCE_ANALYSIS.md">11_DISTANCE_ANALYSIS.md</a>
+<a href="12_YEARLY_ANALYSIS.md">12_YEARLY_ANALYSIS.md</a>
+<a href="13_LOTTERY_ANALYSIS.md">13_LOTTERY_ANALYSIS.md</a>
+<a href="14_SEVEN_DAY_ANALYSIS.md">14_SEVEN_DAY_ANALYSIS.md</a>
+<a href="15_NEW_PATTERNS.md">15_NEW_PATTERNS.md</a>
+<a href="16_CASE_STUDIES.md">16_CASE_STUDIES.md</a>
+<a href="17_STATISTICAL_RESULTS.md">17_STATISTICAL_RESULTS.md</a>
+<a href="18_COUNTER_EXAMPLES.md">18_COUNTER_EXAMPLES.md</a>
+<a href="19_FINAL_CONCLUSIONS.md">19_FINAL_CONCLUSIONS.md</a>
+<a href="20_RECOMMENDATIONS.md">20_RECOMMENDATIONS.md</a>
+</nav>
+<p><a href="README.md">README</a> · Artefactos en <code>artifacts/forensic_audit/</code></p>
+</body></html>

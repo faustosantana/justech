@@ -1,0 +1,533 @@
+[
+  {
+    "id": "FX-001",
+    "date": "2019-07-27",
+    "year": 2019,
+    "fuerte": 11,
+    "generator": 35,
+    "generator_lottery": "Quiniela Leidsa",
+    "confirmers": [
+      91
+    ],
+    "confirmer_lotteries": [
+      "Quiniela Real"
+    ],
+    "fuerte_hit": true,
+    "first_day_offset": 1,
+    "first_appearance": {
+      "date": "2019-07-28",
+      "lottery": "New York 2:30",
+      "position": 1,
+      "source_reference": "47626"
+    },
+    "outcome_bucket": "FUERTE_EXACTO",
+    "closest_distance": 0,
+    "closest_number": 11,
+    "miss_flags": null,
+    "tree_summary": {
+      "table1_companions": [
+        6,
+        43,
+        54,
+        86
+      ],
+      "table2_neighbors": [
+        57,
+        69,
+        91
+      ],
+      "result_counts_by_distance": {
+        "SIN_RELACION": 120,
+        "RELACION_INDIRECTA": 12,
+        "FUERTE_EXACTO": 4,
+        "VECINO_TABLA2": 5,
+        "COMPANERO_TABLA1": 4
+      }
+    }
+  },
+  {
+    "id": "FX-002",
+    "date": "2019-08-01",
+    "year": 2019,
+    "fuerte": 71,
+    "generator": 42,
+    "generator_lottery": "New York 10:30",
+    "confirmers": [
+      89
+    ],
+    "confirmer_lotteries": [
+      "Quiniela Leidsa"
+    ],
+    "fuerte_hit": true,
+    "first_day_offset": 1,
+    "first_appearance": {
+      "date": "2019-08-02",
+      "lottery": "Gana Mas",
+      "position": 2,
+      "source_reference": "163137"
+    },
+    "outcome_bucket": "FUERTE_EXACTO",
+    "closest_distance": 0,
+    "closest_number": 71,
+    "miss_flags": null,
+    "tree_summary": {
+      "table1_companions": [
+        7,
+        18,
+        23,
+        50,
+        55,
+        66
+      ],
+      "table2_neighbors": [
+        12,
+        41,
+        56,
+        89
+      ],
+      "result_counts_by_distance": {
+        "SIN_RELACION": 83,
+        "FUERTE_EXACTO": 3,
+        "RELACION_INDIRECTA": 50,
+        "COMPANERO_TABLA1": 6,
+        "VECINO_TABLA2": 3
+      }
+    }
+  },
+  {
+    "id": "FX-003",
+    "date": "2019-07-24",
+    "year": 2019,
+    "fuerte": 50,
+    "generator": 42,
+    "generator_lottery": "Quiniela Leidsa",
+    "confirmers": [
+      5
+    ],
+    "confirmer_lotteries": [
+      "Gana Mas"
+    ],
+    "fuerte_hit": true,
+    "first_day_offset": 5,
+    "first_appearance": {
+      "date": "2019-07-29",
+      "lottery": "New York 2:30",
+      "position": 1,
+      "source_reference": "47625"
+    },
+    "outcome_bucket": "FUERTE_EXACTO",
+    "closest_distance": 0,
+    "closest_number": 50,
+    "miss_flags": null,
+    "tree_summary": {
+      "table1_companions": [
+        7,
+        18,
+        23,
+        55,
+        66,
+        71
+      ],
+      "table2_neighbors": [
+        5
+      ],
+      "result_counts_by_distance": {
+        "RELACION_INDIRECTA": 26,
+        "SIN_RELACION": 106,
+        "COMPANERO_TABLA1": 13,
+        "FUERTE_EXACTO": 1
+      }
+    }
+  },
+  {
+    "id": "FX-004",
+    "date": "2019-07-27",
+    "year": 2019,
+    "fuerte": 86,
+    "generator": 35,
+    "generator_lottery": "Quiniela Leidsa",
+    "confirmers": [
+      46
+    ],
+    "confirmer_lotteries": [
+      "New York 10:30"
+    ],
+    "fuerte_hit": false,
+    "first_day_offset": null,
+    "first_appearance": null,
+    "outcome_bucket": "COMPANERO_TABLA1",
+    "closest_distance": 1,
+    "closest_number": 11,
+    "miss_flags": {
+      "appeared_example": 11,
+      "es_fuerte": false,
+      "pertenece_grupo_t1": true,
+      "pertenece_grupo_t2": false,
+      "comparte_codigo_t1": true,
+      "comparte_codigo_t2": false,
+      "es_companero": true,
+      "es_vecino": false,
+      "relacion_indirecta": false,
+      "distancia": 1,
+      "distancia_label": "COMPANERO_TABLA1"
+    },
+    "tree_summary": {
+      "table1_companions": [
+        6,
+        11,
+        43,
+        54
+      ],
+      "table2_neighbors": [
+        19,
+        46
+      ],
+      "result_counts_by_distance": {
+        "SIN_RELACION": 115,
+        "COMPANERO_TABLA1": 8,
+        "RELACION_INDIRECTA": 20,
+        "VECINO_TABLA2": 2
+      }
+    }
+  },
+  {
+    "id": "FX-005",
+    "date": "2019-07-29",
+    "year": 2019,
+    "fuerte": 5,
+    "generator": 37,
+    "generator_lottery": "Quiniela Loteka,Quiniela Real",
+    "confirmers": [
+      50
+    ],
+    "confirmer_lotteries": [
+      "New York 2:30"
+    ],
+    "fuerte_hit": false,
+    "first_day_offset": null,
+    "first_appearance": null,
+    "outcome_bucket": "COMPANERO_TABLA1",
+    "closest_distance": 1,
+    "closest_number": 10,
+    "miss_flags": {
+      "appeared_example": 10,
+      "es_fuerte": false,
+      "pertenece_grupo_t1": true,
+      "pertenece_grupo_t2": false,
+      "comparte_codigo_t1": true,
+      "comparte_codigo_t2": false,
+      "es_companero": true,
+      "es_vecino": false,
+      "relacion_indirecta": false,
+      "distancia": 1,
+      "distancia_label": "COMPANERO_TABLA1"
+    },
+    "tree_summary": {
+      "table1_companions": [
+        10,
+        42
+      ],
+      "table2_neighbors": [
+        50
+      ],
+      "result_counts_by_distance": {
+        "SIN_RELACION": 119,
+        "RELACION_INDIRECTA": 21,
+        "COMPANERO_TABLA1": 4,
+        "VECINO_TABLA2": 1
+      }
+    }
+  },
+  {
+    "id": "FX-006",
+    "date": "2019-08-02",
+    "year": 2019,
+    "fuerte": 26,
+    "generator": 28,
+    "generator_lottery": "Loteria Nacional",
+    "confirmers": [
+      34
+    ],
+    "confirmer_lotteries": [
+      "New York 2:30"
+    ],
+    "fuerte_hit": false,
+    "first_day_offset": null,
+    "first_appearance": null,
+    "outcome_bucket": "COMPANERO_TABLA1",
+    "closest_distance": 1,
+    "closest_number": 21,
+    "miss_flags": {
+      "appeared_example": 21,
+      "es_fuerte": false,
+      "pertenece_grupo_t1": true,
+      "pertenece_grupo_t2": false,
+      "comparte_codigo_t1": true,
+      "comparte_codigo_t2": false,
+      "es_companero": true,
+      "es_vecino": false,
+      "relacion_indirecta": false,
+      "distancia": 1,
+      "distancia_label": "COMPANERO_TABLA1"
+    },
+    "tree_summary": {
+      "table1_companions": [
+        21,
+        53
+      ],
+      "table2_neighbors": [
+        34,
+        59,
+        72
+      ],
+      "result_counts_by_distance": {
+        "RELACION_INDIRECTA": 36,
+        "SIN_RELACION": 103,
+        "COMPANERO_TABLA1": 3,
+        "VECINO_TABLA2": 4
+      }
+    }
+  },
+  {
+    "id": "FX-007",
+    "date": "2019-10-21",
+    "year": 2019,
+    "fuerte": 45,
+    "generator": 50,
+    "generator_lottery": "Gana Mas",
+    "confirmers": [
+      32
+    ],
+    "confirmer_lotteries": [
+      "New York 10:30"
+    ],
+    "fuerte_hit": false,
+    "first_day_offset": null,
+    "first_appearance": null,
+    "outcome_bucket": "VECINO_TABLA2",
+    "closest_distance": 3,
+    "closest_number": 32,
+    "miss_flags": {
+      "appeared_example": 32,
+      "es_fuerte": false,
+      "pertenece_grupo_t1": false,
+      "pertenece_grupo_t2": true,
+      "comparte_codigo_t1": false,
+      "comparte_codigo_t2": true,
+      "es_companero": false,
+      "es_vecino": true,
+      "relacion_indirecta": false,
+      "distancia": 3,
+      "distancia_label": "VECINO_TABLA2"
+    },
+    "tree_summary": {
+      "table1_companions": [],
+      "table2_neighbors": [
+        32
+      ],
+      "result_counts_by_distance": {
+        "SIN_RELACION": 139,
+        "VECINO_TABLA2": 3,
+        "RELACION_INDIRECTA": 4
+      }
+    }
+  },
+  {
+    "id": "FX-008",
+    "date": "2019-11-27",
+    "year": 2019,
+    "fuerte": 89,
+    "generator": 48,
+    "generator_lottery": "New York 10:30",
+    "confirmers": [
+      41
+    ],
+    "confirmer_lotteries": [
+      "New York 2:30"
+    ],
+    "fuerte_hit": false,
+    "first_day_offset": null,
+    "first_appearance": null,
+    "outcome_bucket": "VECINO_TABLA2",
+    "closest_distance": 3,
+    "closest_number": 12,
+    "miss_flags": {
+      "appeared_example": 12,
+      "es_fuerte": false,
+      "pertenece_grupo_t1": false,
+      "pertenece_grupo_t2": true,
+      "comparte_codigo_t1": false,
+      "comparte_codigo_t2": true,
+      "es_companero": false,
+      "es_vecino": true,
+      "relacion_indirecta": false,
+      "distancia": 3,
+      "distancia_label": "VECINO_TABLA2"
+    },
+    "tree_summary": {
+      "table1_companions": [
+        73
+      ],
+      "table2_neighbors": [
+        12,
+        41,
+        56,
+        71
+      ],
+      "result_counts_by_distance": {
+        "SIN_RELACION": 93,
+        "RELACION_INDIRECTA": 43,
+        "VECINO_TABLA2": 8
+      }
+    }
+  },
+  {
+    "id": "FX-009",
+    "date": "2022-03-22",
+    "year": 2022,
+    "fuerte": 96,
+    "generator": 54,
+    "generator_lottery": "New York 10:30",
+    "confirmers": [
+      15
+    ],
+    "confirmer_lotteries": [
+      "Loteria Nacional"
+    ],
+    "fuerte_hit": false,
+    "first_day_offset": null,
+    "first_appearance": null,
+    "outcome_bucket": "SIN_RELACION",
+    "closest_distance": 5,
+    "closest_number": null,
+    "miss_flags": {
+      "appeared_example": null,
+      "es_fuerte": false,
+      "pertenece_grupo_t1": false,
+      "pertenece_grupo_t2": false,
+      "comparte_codigo_t1": false,
+      "comparte_codigo_t2": false,
+      "es_companero": false,
+      "es_vecino": false,
+      "relacion_indirecta": false,
+      "distancia": 5,
+      "distancia_label": "SIN_RELACION",
+      "note": "No featured numbers in next-7-day window"
+    },
+    "tree_summary": {
+      "table1_companions": [],
+      "table2_neighbors": [
+        15
+      ],
+      "result_counts_by_distance": {
+        "SIN_RELACION": 145
+      }
+    }
+  },
+  {
+    "id": "FX-010",
+    "date": "2019-07-24",
+    "year": 2019,
+    "fuerte": 7,
+    "generator": 42,
+    "generator_lottery": "Quiniela Leidsa",
+    "confirmers": [
+      9,
+      70
+    ],
+    "confirmer_lotteries": [
+      "Loteria Nacional",
+      "New York 10:30",
+      "New York 2:30"
+    ],
+    "fuerte_hit": true,
+    "first_day_offset": 2,
+    "first_appearance": {
+      "date": "2019-07-26",
+      "lottery": "Quiniela Leidsa",
+      "position": 1,
+      "source_reference": "116735"
+    },
+    "outcome_bucket": "FUERTE_EXACTO",
+    "closest_distance": 0,
+    "closest_number": 7,
+    "miss_flags": null,
+    "tree_summary": {
+      "table1_companions": [
+        18,
+        23,
+        50,
+        55,
+        66,
+        71
+      ],
+      "table2_neighbors": [
+        9,
+        22,
+        29,
+        35,
+        42,
+        44,
+        53,
+        63,
+        70,
+        90
+      ],
+      "result_counts_by_distance": {
+        "RELACION_INDIRECTA": 58,
+        "SIN_RELACION": 67,
+        "VECINO_TABLA2": 7,
+        "COMPANERO_TABLA1": 12,
+        "FUERTE_EXACTO": 2
+      }
+    }
+  },
+  {
+    "id": "FX-011",
+    "date": "2019-08-06",
+    "year": 2019,
+    "fuerte": 72,
+    "generator": 40,
+    "generator_lottery": "Quiniela Real",
+    "confirmers": [
+      34,
+      59
+    ],
+    "confirmer_lotteries": [
+      "New York 2:30",
+      "Quiniela Leidsa"
+    ],
+    "fuerte_hit": true,
+    "first_day_offset": 1,
+    "first_appearance": {
+      "date": "2019-08-07",
+      "lottery": "Gana Mas",
+      "position": 3,
+      "source_reference": "163132"
+    },
+    "outcome_bucket": "FUERTE_EXACTO",
+    "closest_distance": 0,
+    "closest_number": 72,
+    "miss_flags": null,
+    "tree_summary": {
+      "table1_companions": [
+        8,
+        19,
+        51,
+        56,
+        67
+      ],
+      "table2_neighbors": [
+        26,
+        34,
+        59
+      ],
+      "result_counts_by_distance": {
+        "SIN_RELACION": 110,
+        "FUERTE_EXACTO": 2,
+        "RELACION_INDIRECTA": 27,
+        "COMPANERO_TABLA1": 7
+      }
+    }
+  }
+]

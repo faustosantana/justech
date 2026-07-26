@@ -1,0 +1,730 @@
+{
+  "case_id": "C4",
+  "date": "2026-06-23",
+  "observations": [
+    {
+      "alias": "Nacional",
+      "lottery": "Loteria Nacional",
+      "number": 35
+    },
+    {
+      "alias": "Loteka",
+      "lottery": "Quiniela Loteka",
+      "number": 14
+    }
+  ],
+  "manual_fuerte": 54,
+  "observation_db_evidence": [
+    {
+      "alias": "Nacional",
+      "lottery": "Loteria Nacional",
+      "number": 35,
+      "present_in_db": true,
+      "draw_numbers": [
+        35,
+        0,
+        63
+      ],
+      "lottery_id": "0118037f-8f8b-4a82-899c-42cd50b6e194"
+    },
+    {
+      "alias": "Loteka",
+      "lottery": "Quiniela Loteka",
+      "number": 14,
+      "present_in_db": true,
+      "draw_numbers": [
+        14,
+        42,
+        57
+      ],
+      "lottery_id": "b9f2c5a2-bc3e-4382-9b6d-3cee16db00fd"
+    }
+  ],
+  "db_first_number_check": [
+    {
+      "alias": "Nacional",
+      "lottery": "Loteria Nacional",
+      "stated": 35,
+      "db_first": 35,
+      "match": true
+    },
+    {
+      "alias": "Loteka",
+      "lottery": "Quiniela Loteka",
+      "stated": 14,
+      "db_first": 14,
+      "match": true
+    }
+  ],
+  "draws_that_day_featured": [
+    {
+      "name": "Gana Mas",
+      "lottery_id": "43250709-ee65-476f-91f6-cb8438f49d65",
+      "draw_id": "7c7ea7eb-0b6f-475e-9520-2c6ec8701be6",
+      "draw_date": "2026-06-23",
+      "numbers": [
+        7,
+        23,
+        59
+      ]
+    },
+    {
+      "name": "Loteria Nacional",
+      "lottery_id": "0118037f-8f8b-4a82-899c-42cd50b6e194",
+      "draw_id": "1d1862a7-715a-4f63-9724-c77291187154",
+      "draw_date": "2026-06-23",
+      "numbers": [
+        35,
+        0,
+        63
+      ]
+    },
+    {
+      "name": "New York 10:30",
+      "lottery_id": "1624b6f2-88c6-42b5-a597-bf9c0f98a6b5",
+      "draw_id": "fad4c63c-8cd3-4fa3-ab56-c176433cbf3f",
+      "draw_date": "2026-06-23",
+      "numbers": [
+        15,
+        56,
+        65
+      ]
+    },
+    {
+      "name": "New York 2:30",
+      "lottery_id": "1c488641-adb6-4790-89e7-879d361da7cc",
+      "draw_id": "1d65f1d0-ae0e-4336-8d13-389997dc812b",
+      "draw_date": "2026-06-23",
+      "numbers": [
+        84,
+        70,
+        31
+      ]
+    },
+    {
+      "name": "Quiniela Leidsa",
+      "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+      "draw_id": "a1c9bcef-cbb5-4c61-a878-c9c8723aa1ad",
+      "draw_date": "2026-06-23",
+      "numbers": [
+        29,
+        1,
+        26
+      ]
+    },
+    {
+      "name": "Quiniela Loteka",
+      "lottery_id": "b9f2c5a2-bc3e-4382-9b6d-3cee16db00fd",
+      "draw_id": "5faf3955-ba7a-4819-b7bc-00e0b4517b68",
+      "draw_date": "2026-06-23",
+      "numbers": [
+        14,
+        42,
+        57
+      ]
+    },
+    {
+      "name": "Quiniela Real",
+      "lottery_id": "205c58d2-cfcf-44e6-894d-97358b3d540b",
+      "draw_id": "e896a589-9110-428d-a7f1-ffcfaf029b49",
+      "draw_date": "2026-06-23",
+      "numbers": [
+        67,
+        69,
+        16
+      ]
+    }
+  ],
+  "table_reconstruction": {
+    "35": {
+      "observed": 35,
+      "motor_mother_code": 35,
+      "table1_code_of_number": 49,
+      "table1_companions_mother_eq_n": [
+        6,
+        11,
+        43,
+        54,
+        86
+      ],
+      "table1_peers_same_code_as_number": [
+        35,
+        40,
+        83
+      ],
+      "table2_code": 55,
+      "table2_neighbors": [
+        7,
+        9,
+        22,
+        29,
+        42,
+        44,
+        53,
+        63,
+        70,
+        90
+      ],
+      "table2_group": [
+        7,
+        9,
+        22,
+        29,
+        35,
+        42,
+        44,
+        53,
+        63,
+        70,
+        90
+      ]
+    },
+    "14": {
+      "observed": 14,
+      "motor_mother_code": 14,
+      "table1_code_of_number": 39,
+      "table1_companions_mother_eq_n": [],
+      "table1_peers_same_code_as_number": [
+        9,
+        14,
+        30,
+        41,
+        46,
+        62,
+        78,
+        94
+      ],
+      "table2_code": 58,
+      "table2_neighbors": [
+        54
+      ],
+      "table2_group": [
+        14,
+        54
+      ]
+    },
+    "54": {
+      "observed": 54,
+      "motor_mother_code": 54,
+      "table1_code_of_number": 35,
+      "table1_companions_mother_eq_n": [
+        96
+      ],
+      "table1_peers_same_code_as_number": [
+        6,
+        11,
+        43,
+        54,
+        86
+      ],
+      "table2_code": 58,
+      "table2_neighbors": [
+        14
+      ],
+      "table2_group": [
+        14,
+        54
+      ]
+    }
+  },
+  "hypotheses": [
+    {
+      "id": "A",
+      "name": "companions(a) ∩ neighbors(b) for pair of same-day observations",
+      "hit": true,
+      "produced": [
+        54
+      ],
+      "edges_for_fuerte": [
+        {
+          "companions_of": 35,
+          "neighbors_of": 14,
+          "intersection": [
+            54
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F",
+      "name": "candidate companions(N) confirmed when another same-day obs ∈ neighbors(candidate)",
+      "hit": true,
+      "produced": [
+        54
+      ],
+      "detail_for_fuerte": [
+        {
+          "observed_N": 35,
+          "candidate": 54,
+          "confirmers_from_other_obs": [
+            14
+          ]
+        }
+      ]
+    },
+    {
+      "id": "B",
+      "name": "neighbors(a) ∩ neighbors(b)",
+      "hit": false,
+      "produced": []
+    },
+    {
+      "id": "C",
+      "name": "companions(a) ∩ companions(b)",
+      "hit": false,
+      "produced": []
+    },
+    {
+      "id": "D",
+      "name": "manual Fuerte ∈ companions(any observed) [necessary but weak]",
+      "hit": true,
+      "produced": [
+        6,
+        11,
+        43,
+        54,
+        86
+      ]
+    },
+    {
+      "id": "E",
+      "name": "manual Fuerte ∈ neighbors(any observed)",
+      "hit": true,
+      "produced": [
+        7,
+        9,
+        22,
+        29,
+        42,
+        44,
+        53,
+        54,
+        63,
+        70,
+        90
+      ]
+    },
+    {
+      "id": "G",
+      "name": "Singleton T2 neighbor of an observed number (pair predictor)",
+      "hit": true,
+      "produced": [
+        54
+      ],
+      "pairs": [
+        {
+          "observed": 35,
+          "neighbors": [
+            7,
+            9,
+            22,
+            29,
+            42,
+            44,
+            53,
+            63,
+            70,
+            90
+          ],
+          "singleton": false
+        },
+        {
+          "observed": 14,
+          "neighbors": [
+            54
+          ],
+          "singleton": true
+        }
+      ]
+    },
+    {
+      "id": "H",
+      "name": "t1_peers(a) ∩ t1_peers(b) (shared Tabla1 code of the drawn numbers)",
+      "hit": false,
+      "produced": []
+    }
+  ],
+  "validation_lab": {
+    "lab": "Motor Validation Lab",
+    "read_only": true,
+    "modifies_motor": false,
+    "methodology_version": "nr-historical-relations-j1.0.0",
+    "as_of_date": "2026-06-23",
+    "observations": [
+      {
+        "number": 35,
+        "lottery_name": "Loteria Nacional"
+      },
+      {
+        "number": 14,
+        "lottery_name": "Quiniela Loteka"
+      }
+    ],
+    "observed_numbers": [
+      35,
+      14
+    ],
+    "manual_fuerte": 54,
+    "tables_per_number": {
+      "35": {
+        "number": 35,
+        "motor_mother_code": 35,
+        "table1_code_of_number": 49,
+        "companions_tabla1": [
+          6,
+          11,
+          43,
+          54,
+          86
+        ],
+        "peers_same_table1_code_as_number": [
+          35,
+          40,
+          83
+        ],
+        "table2_code": 55,
+        "neighbors_tabla2": [
+          7,
+          9,
+          22,
+          29,
+          42,
+          44,
+          53,
+          63,
+          70,
+          90
+        ],
+        "table2_group": [
+          7,
+          9,
+          22,
+          29,
+          35,
+          42,
+          44,
+          53,
+          63,
+          70,
+          90
+        ]
+      },
+      "14": {
+        "number": 14,
+        "motor_mother_code": 14,
+        "table1_code_of_number": 39,
+        "companions_tabla1": [],
+        "peers_same_table1_code_as_number": [
+          9,
+          14,
+          30,
+          41,
+          46,
+          62,
+          78,
+          94
+        ],
+        "table2_code": 58,
+        "neighbors_tabla2": [
+          54
+        ],
+        "table2_group": [
+          14,
+          54
+        ]
+      },
+      "54": {
+        "number": 54,
+        "motor_mother_code": 54,
+        "table1_code_of_number": 35,
+        "companions_tabla1": [
+          96
+        ],
+        "peers_same_table1_code_as_number": [
+          6,
+          11,
+          43,
+          54,
+          86
+        ],
+        "table2_code": 58,
+        "neighbors_tabla2": [
+          14
+        ],
+        "table2_group": [
+          14,
+          54
+        ]
+      }
+    },
+    "crosses_and_intersections": [
+      {
+        "id": "A",
+        "name": "Intersección compañeros(a) ∩ vecinos(b)",
+        "produced": [
+          54
+        ],
+        "edges": [
+          {
+            "companions_of": 35,
+            "neighbors_of": 14,
+            "intersection": [
+              54
+            ]
+          },
+          {
+            "companions_of": 14,
+            "neighbors_of": 35,
+            "intersection": []
+          }
+        ],
+        "hit_manual": true
+      },
+      {
+        "id": "F",
+        "name": "Candidato T1 confirmado por otro observado (forma del motor oficial)",
+        "produced": [
+          54
+        ],
+        "detail": [
+          {
+            "observed_N": 35,
+            "candidate": 54,
+            "confirmers_from_other_observations": [
+              14
+            ]
+          }
+        ],
+        "hit_manual": true
+      },
+      {
+        "id": "B",
+        "name": "Intersección vecinos(a) ∩ vecinos(b)",
+        "produced": [],
+        "hit_manual": false
+      },
+      {
+        "id": "E",
+        "name": "Vecinos T2 de cualquier observado",
+        "produced": [
+          7,
+          9,
+          22,
+          29,
+          42,
+          44,
+          53,
+          54,
+          63,
+          70,
+          90
+        ],
+        "hit_manual": true
+      },
+      {
+        "id": "D",
+        "name": "Compañeros T1 de cualquier observado",
+        "produced": [
+          6,
+          11,
+          43,
+          54,
+          86
+        ],
+        "hit_manual": true
+      }
+    ],
+    "mathematical_ranking": [
+      {
+        "number": 54,
+        "evidence_weight": 11.0,
+        "hypotheses": [
+          "A",
+          "F",
+          "E",
+          "D"
+        ]
+      },
+      {
+        "number": 6,
+        "evidence_weight": 1.0,
+        "hypotheses": [
+          "D"
+        ]
+      },
+      {
+        "number": 7,
+        "evidence_weight": 1.0,
+        "hypotheses": [
+          "E"
+        ]
+      },
+      {
+        "number": 9,
+        "evidence_weight": 1.0,
+        "hypotheses": [
+          "E"
+        ]
+      },
+      {
+        "number": 11,
+        "evidence_weight": 1.0,
+        "hypotheses": [
+          "D"
+        ]
+      },
+      {
+        "number": 22,
+        "evidence_weight": 1.0,
+        "hypotheses": [
+          "E"
+        ]
+      },
+      {
+        "number": 29,
+        "evidence_weight": 1.0,
+        "hypotheses": [
+          "E"
+        ]
+      },
+      {
+        "number": 42,
+        "evidence_weight": 1.0,
+        "hypotheses": [
+          "E"
+        ]
+      },
+      {
+        "number": 43,
+        "evidence_weight": 1.0,
+        "hypotheses": [
+          "D"
+        ]
+      },
+      {
+        "number": 44,
+        "evidence_weight": 1.0,
+        "hypotheses": [
+          "E"
+        ]
+      },
+      {
+        "number": 53,
+        "evidence_weight": 1.0,
+        "hypotheses": [
+          "E"
+        ]
+      },
+      {
+        "number": 63,
+        "evidence_weight": 1.0,
+        "hypotheses": [
+          "E"
+        ]
+      },
+      {
+        "number": 70,
+        "evidence_weight": 1.0,
+        "hypotheses": [
+          "E"
+        ]
+      },
+      {
+        "number": 86,
+        "evidence_weight": 1.0,
+        "hypotheses": [
+          "D"
+        ]
+      },
+      {
+        "number": 90,
+        "evidence_weight": 1.0,
+        "hypotheses": [
+          "E"
+        ]
+      }
+    ],
+    "motor_shaped_result": 54,
+    "coincidence": "SI",
+    "explanation": {
+      "relation": "Número observado N → compañeros Tabla1 (candidatos) → cada candidato consulta vecinos Tabla2 → si un confirmador (otro número observado el mismo día) aparece en esos vecinos, solo el candidato de Tabla1 se fortalece.",
+      "detail": [
+        {
+          "observed_N": 35,
+          "candidate": 54,
+          "confirmers_from_other_observations": [
+            14
+          ]
+        }
+      ],
+      "methodology_version": "nr-historical-relations-j1.0.0"
+    },
+    "notes": [
+      "Este laboratorio no altera Tablas ni el motor.",
+      "El endpoint /analyze oficial opera sobre UN solo observed_number y ranking histórico; aquí se explica el cruce multi-observación del mismo día con la misma geometría T1×T2."
+    ]
+  },
+  "motor_per_observed_number": [
+    {
+      "observed": 35,
+      "lottery": "Loteria Nacional",
+      "lottery_id": "0118037f-8f8b-4a82-899c-42cd50b6e194",
+      "companions": [
+        6,
+        11,
+        43,
+        54,
+        86
+      ],
+      "manual_fuerte_in_companions": true,
+      "manual_fuerte_companion_index": 4,
+      "note": "Official /analyze ranks companions by historical confirmer hits on past occurrences of this single observed number; it does not natively ingest multi-lottery same-day observation sets."
+    },
+    {
+      "observed": 14,
+      "lottery": "Quiniela Loteka",
+      "lottery_id": "b9f2c5a2-bc3e-4382-9b6d-3cee16db00fd",
+      "companions": [],
+      "manual_fuerte_in_companions": false,
+      "manual_fuerte_companion_index": null,
+      "note": "Official /analyze ranks companions by historical confirmer hits on past occurrences of this single observed number; it does not natively ingest multi-lottery same-day observation sets."
+    }
+  ],
+  "matching_hypotheses": [
+    "A",
+    "F",
+    "D",
+    "E",
+    "G"
+  ],
+  "exact_singleton_hypotheses": [
+    "A",
+    "F",
+    "G"
+  ],
+  "motor_shaped_matches": [
+    "A",
+    "F"
+  ],
+  "coincidence": "SI (hipótesis exacta singleton)",
+  "lab_coincidence": "SI",
+  "next_day_verification": {
+    "date": "2026-06-24",
+    "expected_number": 54,
+    "lottery_filter": "any_featured",
+    "appeared": true,
+    "hits": [
+      {
+        "name": "Quiniela Loteka",
+        "draw_date": "2026-06-24",
+        "numbers": [
+          "54",
+          "69",
+          "13"
+        ]
+      }
+    ]
+  },
+  "methodology_version_reference": "nr-historical-relations-j1.0.0",
+  "dev_db_max_note": "DEV max draw_date may be before some case dates"
+}

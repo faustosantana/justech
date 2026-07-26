@@ -1,0 +1,189 @@
+{
+  "methodology_version": "nr-historical-relations-j1.0.0",
+  "production_forbidden": true,
+  "motor_modified": false,
+  "tables_modified": false,
+  "draw_count_dev": 91927,
+  "cases": [
+    {
+      "id": "C1",
+      "manual_fuerte": 29,
+      "coincidence": "SI (hipótesis exacta singleton)",
+      "matching_hypotheses": [
+        "A",
+        "F",
+        "D",
+        "E"
+      ],
+      "exact_singleton_hypotheses": [
+        "A",
+        "F"
+      ]
+    },
+    {
+      "id": "C2",
+      "manual_fuerte": 75,
+      "coincidence": "SI (hipótesis exacta singleton)",
+      "matching_hypotheses": [
+        "E",
+        "G"
+      ],
+      "exact_singleton_hypotheses": [
+        "G"
+      ]
+    },
+    {
+      "id": "C3",
+      "manual_fuerte": 35,
+      "coincidence": "SI (relación motor-shaped; puede haber otros candidatos en el conjunto)",
+      "matching_hypotheses": [
+        "A",
+        "F",
+        "B",
+        "D",
+        "E"
+      ],
+      "exact_singleton_hypotheses": []
+    },
+    {
+      "id": "C4",
+      "manual_fuerte": 54,
+      "coincidence": "SI (hipótesis exacta singleton)",
+      "matching_hypotheses": [
+        "A",
+        "F",
+        "D",
+        "E",
+        "G"
+      ],
+      "exact_singleton_hypotheses": [
+        "A",
+        "F",
+        "G"
+      ]
+    },
+    {
+      "id": "C5",
+      "manual_fuerte": 54,
+      "coincidence": "SI (hipótesis exacta singleton)",
+      "matching_hypotheses": [
+        "A",
+        "F",
+        "D",
+        "E",
+        "G"
+      ],
+      "exact_singleton_hypotheses": [
+        "A",
+        "F",
+        "G"
+      ]
+    }
+  ],
+  "hypothesis_stats": [
+    {
+      "hypothesis": "A",
+      "cases": 5,
+      "coincidences_fuerte_recovered": 4,
+      "false_negatives_cases": 1,
+      "success_pct": 80.0,
+      "exact_singleton_pct": 60.0,
+      "avg_extra_numbers_when_fired": 0.2,
+      "precision_case_recovery": 0.8,
+      "recall_case_recovery": 0.8,
+      "f1_case_recovery": 0.8,
+      "evidence_level": "baja"
+    },
+    {
+      "hypothesis": "B",
+      "cases": 5,
+      "coincidences_fuerte_recovered": 1,
+      "false_negatives_cases": 4,
+      "success_pct": 20.0,
+      "exact_singleton_pct": 0.0,
+      "avg_extra_numbers_when_fired": 1.6,
+      "precision_case_recovery": 0.2,
+      "recall_case_recovery": 0.2,
+      "f1_case_recovery": 0.2,
+      "evidence_level": "baja"
+    },
+    {
+      "hypothesis": "C",
+      "cases": 5,
+      "coincidences_fuerte_recovered": 0,
+      "false_negatives_cases": 5,
+      "success_pct": 0.0,
+      "exact_singleton_pct": 0.0,
+      "avg_extra_numbers_when_fired": 0.0,
+      "precision_case_recovery": 0.0,
+      "recall_case_recovery": 0.0,
+      "f1_case_recovery": 0.0,
+      "evidence_level": "nula"
+    },
+    {
+      "hypothesis": "D",
+      "cases": 5,
+      "coincidences_fuerte_recovered": 4,
+      "false_negatives_cases": 1,
+      "success_pct": 80.0,
+      "exact_singleton_pct": 0.0,
+      "avg_extra_numbers_when_fired": 4.0,
+      "precision_case_recovery": 0.8,
+      "recall_case_recovery": 0.8,
+      "f1_case_recovery": 0.8,
+      "evidence_level": "baja"
+    },
+    {
+      "hypothesis": "E",
+      "cases": 5,
+      "coincidences_fuerte_recovered": 5,
+      "false_negatives_cases": 0,
+      "success_pct": 100.0,
+      "exact_singleton_pct": 0.0,
+      "avg_extra_numbers_when_fired": 9.4,
+      "precision_case_recovery": 1.0,
+      "recall_case_recovery": 1.0,
+      "f1_case_recovery": 1.0,
+      "evidence_level": "media"
+    },
+    {
+      "hypothesis": "F",
+      "cases": 5,
+      "coincidences_fuerte_recovered": 4,
+      "false_negatives_cases": 1,
+      "success_pct": 80.0,
+      "exact_singleton_pct": 60.0,
+      "avg_extra_numbers_when_fired": 0.2,
+      "precision_case_recovery": 0.8,
+      "recall_case_recovery": 0.8,
+      "f1_case_recovery": 0.8,
+      "evidence_level": "baja"
+    },
+    {
+      "hypothesis": "G",
+      "cases": 5,
+      "coincidences_fuerte_recovered": 3,
+      "false_negatives_cases": 2,
+      "success_pct": 60.0,
+      "exact_singleton_pct": 60.0,
+      "avg_extra_numbers_when_fired": 0.0,
+      "precision_case_recovery": 0.6,
+      "recall_case_recovery": 0.6,
+      "f1_case_recovery": 0.6,
+      "evidence_level": "baja"
+    },
+    {
+      "hypothesis": "H",
+      "cases": 5,
+      "coincidences_fuerte_recovered": 0,
+      "false_negatives_cases": 5,
+      "success_pct": 0.0,
+      "exact_singleton_pct": 0.0,
+      "avg_extra_numbers_when_fired": 1.6,
+      "precision_case_recovery": 0.0,
+      "recall_case_recovery": 0.0,
+      "f1_case_recovery": 0.0,
+      "evidence_level": "nula"
+    }
+  ]
+}

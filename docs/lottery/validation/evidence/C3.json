@@ -1,0 +1,978 @@
+{
+  "case_id": "C3",
+  "date": "2026-06-21",
+  "observations": [
+    {
+      "alias": "Real",
+      "lottery": "Quiniela Real",
+      "number": 49
+    },
+    {
+      "alias": "Nacional",
+      "lottery": "Loteria Nacional",
+      "number": 44
+    },
+    {
+      "alias": "Leidsa",
+      "lottery": "Quiniela Leidsa",
+      "number": 70
+    }
+  ],
+  "manual_fuerte": 35,
+  "observation_db_evidence": [
+    {
+      "alias": "Real",
+      "lottery": "Quiniela Real",
+      "number": 49,
+      "present_in_db": true,
+      "draw_numbers": [
+        49,
+        48,
+        34
+      ],
+      "lottery_id": "205c58d2-cfcf-44e6-894d-97358b3d540b"
+    },
+    {
+      "alias": "Nacional",
+      "lottery": "Loteria Nacional",
+      "number": 44,
+      "present_in_db": true,
+      "draw_numbers": [
+        44,
+        0,
+        10
+      ],
+      "lottery_id": "0118037f-8f8b-4a82-899c-42cd50b6e194"
+    },
+    {
+      "alias": "Leidsa",
+      "lottery": "Quiniela Leidsa",
+      "number": 70,
+      "present_in_db": true,
+      "draw_numbers": [
+        70,
+        33,
+        82
+      ],
+      "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb"
+    }
+  ],
+  "db_first_number_check": [
+    {
+      "alias": "Real",
+      "lottery": "Quiniela Real",
+      "stated": 49,
+      "db_first": 49,
+      "match": true
+    },
+    {
+      "alias": "Nacional",
+      "lottery": "Loteria Nacional",
+      "stated": 44,
+      "db_first": 44,
+      "match": true
+    },
+    {
+      "alias": "Leidsa",
+      "lottery": "Quiniela Leidsa",
+      "stated": 70,
+      "db_first": 70,
+      "match": true
+    }
+  ],
+  "draws_that_day_featured": [
+    {
+      "name": "Gana Mas",
+      "lottery_id": "43250709-ee65-476f-91f6-cb8438f49d65",
+      "draw_id": "d6732010-5902-4533-a13c-2fb016cf6856",
+      "draw_date": "2026-06-21",
+      "numbers": [
+        41,
+        58,
+        89
+      ]
+    },
+    {
+      "name": "Loteria Nacional",
+      "lottery_id": "0118037f-8f8b-4a82-899c-42cd50b6e194",
+      "draw_id": "901c62d2-5868-4915-b6bd-3902516f518c",
+      "draw_date": "2026-06-21",
+      "numbers": [
+        44,
+        0,
+        10
+      ]
+    },
+    {
+      "name": "New York 10:30",
+      "lottery_id": "1624b6f2-88c6-42b5-a597-bf9c0f98a6b5",
+      "draw_id": "69dcdb6c-ca8e-412c-b066-975f2f0e997b",
+      "draw_date": "2026-06-21",
+      "numbers": [
+        65,
+        99,
+        32
+      ]
+    },
+    {
+      "name": "New York 2:30",
+      "lottery_id": "1c488641-adb6-4790-89e7-879d361da7cc",
+      "draw_id": "da0f6039-21c9-4410-9c42-a67327f323f8",
+      "draw_date": "2026-06-21",
+      "numbers": [
+        39,
+        19,
+        10
+      ]
+    },
+    {
+      "name": "Quiniela Leidsa",
+      "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+      "draw_id": "a8a12588-b47e-4779-9ff5-67d54b8404c5",
+      "draw_date": "2026-06-21",
+      "numbers": [
+        70,
+        33,
+        82
+      ]
+    },
+    {
+      "name": "Quiniela Loteka",
+      "lottery_id": "b9f2c5a2-bc3e-4382-9b6d-3cee16db00fd",
+      "draw_id": "fb1e9073-070f-4cf1-a487-56c6aa9e478e",
+      "draw_date": "2026-06-21",
+      "numbers": [
+        62,
+        14,
+        36
+      ]
+    },
+    {
+      "name": "Quiniela Real",
+      "lottery_id": "205c58d2-cfcf-44e6-894d-97358b3d540b",
+      "draw_id": "08526f84-7229-415a-822f-ddc032c5da71",
+      "draw_date": "2026-06-21",
+      "numbers": [
+        49,
+        48,
+        34
+      ]
+    }
+  ],
+  "table_reconstruction": {
+    "49": {
+      "observed": 49,
+      "motor_mother_code": 49,
+      "table1_code_of_number": 34,
+      "table1_companions_mother_eq_n": [
+        35,
+        40,
+        83
+      ],
+      "table1_peers_same_code_as_number": [
+        1,
+        17,
+        33,
+        49,
+        76
+      ],
+      "table2_code": 72,
+      "table2_neighbors": [],
+      "table2_group": [
+        49
+      ]
+    },
+    "44": {
+      "observed": 44,
+      "motor_mother_code": 44,
+      "table1_code_of_number": 43,
+      "table1_companions_mother_eq_n": [
+        22,
+        59,
+        70,
+        75,
+        91
+      ],
+      "table1_peers_same_code_as_number": [
+        12,
+        28,
+        44,
+        60,
+        81,
+        92
+      ],
+      "table2_code": 55,
+      "table2_neighbors": [
+        7,
+        9,
+        22,
+        29,
+        35,
+        42,
+        53,
+        63,
+        70,
+        90
+      ],
+      "table2_group": [
+        7,
+        9,
+        22,
+        29,
+        35,
+        42,
+        44,
+        53,
+        63,
+        70,
+        90
+      ]
+    },
+    "70": {
+      "observed": 70,
+      "motor_mother_code": 70,
+      "table1_code_of_number": 44,
+      "table1_companions_mother_eq_n": [],
+      "table1_peers_same_code_as_number": [
+        22,
+        59,
+        70,
+        75,
+        91
+      ],
+      "table2_code": 55,
+      "table2_neighbors": [
+        7,
+        9,
+        22,
+        29,
+        35,
+        42,
+        44,
+        53,
+        63,
+        90
+      ],
+      "table2_group": [
+        7,
+        9,
+        22,
+        29,
+        35,
+        42,
+        44,
+        53,
+        63,
+        70,
+        90
+      ]
+    },
+    "35": {
+      "observed": 35,
+      "motor_mother_code": 35,
+      "table1_code_of_number": 49,
+      "table1_companions_mother_eq_n": [
+        6,
+        11,
+        43,
+        54,
+        86
+      ],
+      "table1_peers_same_code_as_number": [
+        35,
+        40,
+        83
+      ],
+      "table2_code": 55,
+      "table2_neighbors": [
+        7,
+        9,
+        22,
+        29,
+        42,
+        44,
+        53,
+        63,
+        70,
+        90
+      ],
+      "table2_group": [
+        7,
+        9,
+        22,
+        29,
+        35,
+        42,
+        44,
+        53,
+        63,
+        70,
+        90
+      ]
+    }
+  },
+  "hypotheses": [
+    {
+      "id": "A",
+      "name": "companions(a) ∩ neighbors(b) for pair of same-day observations",
+      "hit": true,
+      "produced": [
+        22,
+        35
+      ],
+      "edges_for_fuerte": [
+        {
+          "companions_of": 49,
+          "neighbors_of": 44,
+          "intersection": [
+            35
+          ]
+        },
+        {
+          "companions_of": 49,
+          "neighbors_of": 70,
+          "intersection": [
+            35
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F",
+      "name": "candidate companions(N) confirmed when another same-day obs ∈ neighbors(candidate)",
+      "hit": true,
+      "produced": [
+        22,
+        35
+      ],
+      "detail_for_fuerte": [
+        {
+          "observed_N": 49,
+          "candidate": 35,
+          "confirmers_from_other_obs": [
+            44,
+            70
+          ]
+        }
+      ]
+    },
+    {
+      "id": "B",
+      "name": "neighbors(a) ∩ neighbors(b)",
+      "hit": true,
+      "produced": [
+        7,
+        9,
+        22,
+        29,
+        35,
+        42,
+        53,
+        63,
+        90
+      ]
+    },
+    {
+      "id": "C",
+      "name": "companions(a) ∩ companions(b)",
+      "hit": false,
+      "produced": []
+    },
+    {
+      "id": "D",
+      "name": "manual Fuerte ∈ companions(any observed) [necessary but weak]",
+      "hit": true,
+      "produced": [
+        22,
+        35,
+        40,
+        59,
+        70,
+        75,
+        83,
+        91
+      ]
+    },
+    {
+      "id": "E",
+      "name": "manual Fuerte ∈ neighbors(any observed)",
+      "hit": true,
+      "produced": [
+        7,
+        9,
+        22,
+        29,
+        35,
+        42,
+        44,
+        53,
+        63,
+        70,
+        90
+      ]
+    },
+    {
+      "id": "G",
+      "name": "Singleton T2 neighbor of an observed number (pair predictor)",
+      "hit": false,
+      "produced": [],
+      "pairs": [
+        {
+          "observed": 49,
+          "neighbors": [],
+          "singleton": false
+        },
+        {
+          "observed": 44,
+          "neighbors": [
+            7,
+            9,
+            22,
+            29,
+            35,
+            42,
+            53,
+            63,
+            70,
+            90
+          ],
+          "singleton": false
+        },
+        {
+          "observed": 70,
+          "neighbors": [
+            7,
+            9,
+            22,
+            29,
+            35,
+            42,
+            44,
+            53,
+            63,
+            90
+          ],
+          "singleton": false
+        }
+      ]
+    },
+    {
+      "id": "H",
+      "name": "t1_peers(a) ∩ t1_peers(b) (shared Tabla1 code of the drawn numbers)",
+      "hit": false,
+      "produced": []
+    }
+  ],
+  "validation_lab": {
+    "lab": "Motor Validation Lab",
+    "read_only": true,
+    "modifies_motor": false,
+    "methodology_version": "nr-historical-relations-j1.0.0",
+    "as_of_date": "2026-06-21",
+    "observations": [
+      {
+        "number": 49,
+        "lottery_name": "Quiniela Real"
+      },
+      {
+        "number": 44,
+        "lottery_name": "Loteria Nacional"
+      },
+      {
+        "number": 70,
+        "lottery_name": "Quiniela Leidsa"
+      }
+    ],
+    "observed_numbers": [
+      49,
+      44,
+      70
+    ],
+    "manual_fuerte": 35,
+    "tables_per_number": {
+      "49": {
+        "number": 49,
+        "motor_mother_code": 49,
+        "table1_code_of_number": 34,
+        "companions_tabla1": [
+          35,
+          40,
+          83
+        ],
+        "peers_same_table1_code_as_number": [
+          1,
+          17,
+          33,
+          49,
+          76
+        ],
+        "table2_code": 72,
+        "neighbors_tabla2": [],
+        "table2_group": [
+          49
+        ]
+      },
+      "44": {
+        "number": 44,
+        "motor_mother_code": 44,
+        "table1_code_of_number": 43,
+        "companions_tabla1": [
+          22,
+          59,
+          70,
+          75,
+          91
+        ],
+        "peers_same_table1_code_as_number": [
+          12,
+          28,
+          44,
+          60,
+          81,
+          92
+        ],
+        "table2_code": 55,
+        "neighbors_tabla2": [
+          7,
+          9,
+          22,
+          29,
+          35,
+          42,
+          53,
+          63,
+          70,
+          90
+        ],
+        "table2_group": [
+          7,
+          9,
+          22,
+          29,
+          35,
+          42,
+          44,
+          53,
+          63,
+          70,
+          90
+        ]
+      },
+      "70": {
+        "number": 70,
+        "motor_mother_code": 70,
+        "table1_code_of_number": 44,
+        "companions_tabla1": [],
+        "peers_same_table1_code_as_number": [
+          22,
+          59,
+          70,
+          75,
+          91
+        ],
+        "table2_code": 55,
+        "neighbors_tabla2": [
+          7,
+          9,
+          22,
+          29,
+          35,
+          42,
+          44,
+          53,
+          63,
+          90
+        ],
+        "table2_group": [
+          7,
+          9,
+          22,
+          29,
+          35,
+          42,
+          44,
+          53,
+          63,
+          70,
+          90
+        ]
+      },
+      "35": {
+        "number": 35,
+        "motor_mother_code": 35,
+        "table1_code_of_number": 49,
+        "companions_tabla1": [
+          6,
+          11,
+          43,
+          54,
+          86
+        ],
+        "peers_same_table1_code_as_number": [
+          35,
+          40,
+          83
+        ],
+        "table2_code": 55,
+        "neighbors_tabla2": [
+          7,
+          9,
+          22,
+          29,
+          42,
+          44,
+          53,
+          63,
+          70,
+          90
+        ],
+        "table2_group": [
+          7,
+          9,
+          22,
+          29,
+          35,
+          42,
+          44,
+          53,
+          63,
+          70,
+          90
+        ]
+      }
+    },
+    "crosses_and_intersections": [
+      {
+        "id": "A",
+        "name": "Intersección compañeros(a) ∩ vecinos(b)",
+        "produced": [
+          22,
+          35
+        ],
+        "edges": [
+          {
+            "companions_of": 49,
+            "neighbors_of": 44,
+            "intersection": [
+              35
+            ]
+          },
+          {
+            "companions_of": 44,
+            "neighbors_of": 49,
+            "intersection": []
+          },
+          {
+            "companions_of": 49,
+            "neighbors_of": 70,
+            "intersection": [
+              35
+            ]
+          },
+          {
+            "companions_of": 70,
+            "neighbors_of": 49,
+            "intersection": []
+          },
+          {
+            "companions_of": 44,
+            "neighbors_of": 70,
+            "intersection": [
+              22
+            ]
+          },
+          {
+            "companions_of": 70,
+            "neighbors_of": 44,
+            "intersection": []
+          }
+        ],
+        "hit_manual": true
+      },
+      {
+        "id": "F",
+        "name": "Candidato T1 confirmado por otro observado (forma del motor oficial)",
+        "produced": [
+          22,
+          35
+        ],
+        "detail": [
+          {
+            "observed_N": 49,
+            "candidate": 35,
+            "confirmers_from_other_observations": [
+              44,
+              70
+            ]
+          },
+          {
+            "observed_N": 44,
+            "candidate": 22,
+            "confirmers_from_other_observations": [
+              70
+            ]
+          }
+        ],
+        "hit_manual": true
+      },
+      {
+        "id": "B",
+        "name": "Intersección vecinos(a) ∩ vecinos(b)",
+        "produced": [
+          7,
+          9,
+          22,
+          29,
+          35,
+          42,
+          53,
+          63,
+          90
+        ],
+        "hit_manual": true
+      },
+      {
+        "id": "E",
+        "name": "Vecinos T2 de cualquier observado",
+        "produced": [
+          7,
+          9,
+          22,
+          29,
+          35,
+          42,
+          44,
+          53,
+          63,
+          70,
+          90
+        ],
+        "hit_manual": true
+      },
+      {
+        "id": "D",
+        "name": "Compañeros T1 de cualquier observado",
+        "produced": [
+          22,
+          35,
+          40,
+          59,
+          70,
+          75,
+          83,
+          91
+        ],
+        "hit_manual": true
+      }
+    ],
+    "mathematical_ranking": [
+      {
+        "number": 22,
+        "evidence_weight": 13.0,
+        "hypotheses": [
+          "A",
+          "F",
+          "B",
+          "E",
+          "D"
+        ]
+      },
+      {
+        "number": 35,
+        "evidence_weight": 13.0,
+        "hypotheses": [
+          "A",
+          "F",
+          "B",
+          "E",
+          "D"
+        ]
+      },
+      {
+        "number": 7,
+        "evidence_weight": 3.0,
+        "hypotheses": [
+          "B",
+          "E"
+        ]
+      },
+      {
+        "number": 9,
+        "evidence_weight": 3.0,
+        "hypotheses": [
+          "B",
+          "E"
+        ]
+      },
+      {
+        "number": 29,
+        "evidence_weight": 3.0,
+        "hypotheses": [
+          "B",
+          "E"
+        ]
+      },
+      {
+        "number": 42,
+        "evidence_weight": 3.0,
+        "hypotheses": [
+          "B",
+          "E"
+        ]
+      },
+      {
+        "number": 53,
+        "evidence_weight": 3.0,
+        "hypotheses": [
+          "B",
+          "E"
+        ]
+      },
+      {
+        "number": 63,
+        "evidence_weight": 3.0,
+        "hypotheses": [
+          "B",
+          "E"
+        ]
+      },
+      {
+        "number": 90,
+        "evidence_weight": 3.0,
+        "hypotheses": [
+          "B",
+          "E"
+        ]
+      },
+      {
+        "number": 70,
+        "evidence_weight": 2.0,
+        "hypotheses": [
+          "E",
+          "D"
+        ]
+      },
+      {
+        "number": 40,
+        "evidence_weight": 1.0,
+        "hypotheses": [
+          "D"
+        ]
+      },
+      {
+        "number": 44,
+        "evidence_weight": 1.0,
+        "hypotheses": [
+          "E"
+        ]
+      },
+      {
+        "number": 59,
+        "evidence_weight": 1.0,
+        "hypotheses": [
+          "D"
+        ]
+      },
+      {
+        "number": 75,
+        "evidence_weight": 1.0,
+        "hypotheses": [
+          "D"
+        ]
+      },
+      {
+        "number": 83,
+        "evidence_weight": 1.0,
+        "hypotheses": [
+          "D"
+        ]
+      },
+      {
+        "number": 91,
+        "evidence_weight": 1.0,
+        "hypotheses": [
+          "D"
+        ]
+      }
+    ],
+    "motor_shaped_result": [
+      22,
+      35
+    ],
+    "coincidence": "SI_CON_OTROS_CANDIDATOS",
+    "explanation": {
+      "relation": "Número observado N → compañeros Tabla1 (candidatos) → cada candidato consulta vecinos Tabla2 → si un confirmador (otro número observado el mismo día) aparece en esos vecinos, solo el candidato de Tabla1 se fortalece.",
+      "detail": [
+        {
+          "observed_N": 49,
+          "candidate": 35,
+          "confirmers_from_other_observations": [
+            44,
+            70
+          ]
+        }
+      ],
+      "methodology_version": "nr-historical-relations-j1.0.0"
+    },
+    "notes": [
+      "Este laboratorio no altera Tablas ni el motor.",
+      "El endpoint /analyze oficial opera sobre UN solo observed_number y ranking histórico; aquí se explica el cruce multi-observación del mismo día con la misma geometría T1×T2."
+    ]
+  },
+  "motor_per_observed_number": [
+    {
+      "observed": 49,
+      "lottery": "Quiniela Real",
+      "lottery_id": "205c58d2-cfcf-44e6-894d-97358b3d540b",
+      "companions": [
+        35,
+        40,
+        83
+      ],
+      "manual_fuerte_in_companions": true,
+      "manual_fuerte_companion_index": 1,
+      "note": "Official /analyze ranks companions by historical confirmer hits on past occurrences of this single observed number; it does not natively ingest multi-lottery same-day observation sets."
+    },
+    {
+      "observed": 44,
+      "lottery": "Loteria Nacional",
+      "lottery_id": "0118037f-8f8b-4a82-899c-42cd50b6e194",
+      "companions": [
+        22,
+        59,
+        70,
+        75,
+        91
+      ],
+      "manual_fuerte_in_companions": false,
+      "manual_fuerte_companion_index": null,
+      "note": "Official /analyze ranks companions by historical confirmer hits on past occurrences of this single observed number; it does not natively ingest multi-lottery same-day observation sets."
+    },
+    {
+      "observed": 70,
+      "lottery": "Quiniela Leidsa",
+      "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+      "companions": [],
+      "manual_fuerte_in_companions": false,
+      "manual_fuerte_companion_index": null,
+      "note": "Official /analyze ranks companions by historical confirmer hits on past occurrences of this single observed number; it does not natively ingest multi-lottery same-day observation sets."
+    }
+  ],
+  "matching_hypotheses": [
+    "A",
+    "F",
+    "B",
+    "D",
+    "E"
+  ],
+  "exact_singleton_hypotheses": [],
+  "motor_shaped_matches": [
+    "A",
+    "F"
+  ],
+  "coincidence": "SI (relación motor-shaped; puede haber otros candidatos en el conjunto)",
+  "lab_coincidence": "SI_CON_OTROS_CANDIDATOS",
+  "next_day_verification": null,
+  "methodology_version_reference": "nr-historical-relations-j1.0.0",
+  "dev_db_max_note": "DEV max draw_date may be before some case dates"
+}

@@ -266,3 +266,34 @@ async def numeric_relations_analyze(
         return payload
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@router.post("/validation-lab")
+async def numeric_relations_validation_lab(
+    db: DbSession,
+    user: CurrentUser,
+    _: TenantCtx,
+    __: Annotated[None, require_ai_admin(*_PERMS)],
+    body: dict[str, Any] = Body(...),
+) -> dict[str, Any]:
+    """Motor Validation Lab — solo explicación. No modifica el motor ni las tablas."""
+    from datetime import date as date_cls
+
+    from app.lottery.numeric_relations.validation_lab import run_validation_lab
+
+    try:
+        observed = body.get("observations") or body.get("observed") or []
+        if not isinstance(observed, list) or not observed:
+            raise ValueError("observations requerido: lista de {number, lottery_name?}")
+        manual = body.get("manual_fuerte")
+        as_of = body.get("date") or body.get("as_of_date")
+        as_of_date = date_cls.fromisoformat(str(as_of)) if as_of else None
+        result = run_validation_lab(
+            observed=observed,
+            manual_fuerte=int(manual) if manual is not None else None,
+            as_of_date=as_of_date,
+        )
+        result["requested_by"] = str(user.id)
+        return result
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc

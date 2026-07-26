@@ -2819,6 +2819,17 @@ export const apiClient = {
       body: JSON.stringify(body),
     }, true),
 
+  /** Motor Validation Lab — explain-only; does not modify NR formulas. */
+  postLotteryNumericRelationsValidationLab: (body: {
+    observations: Array<{ number: number; lottery_name?: string; lottery_id?: string }>;
+    manual_fuerte?: number | null;
+    date?: string | null;
+  }) =>
+    request<Record<string, unknown>>("/lottery/admin/numeric-relations/validation-lab", {
+      method: "POST",
+      body: JSON.stringify(body),
+    }, true),
+
   postLotteryNrHistoryConditions: (body: Record<string, unknown>) =>
     request<Record<string, unknown>>("/lottery/admin/numeric-relations/history/conditions/search", {
       method: "POST",

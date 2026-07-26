@@ -245,7 +245,7 @@ async function request<T>(
               ? "No se encontró el recurso solicitado."
               : response.status === 403
                 ? "No tiene permisos para esta acción."
-                : `No se pudo completar la solicitud (${response.status}).`;
+                : `No se pudo completar la solicitud (${response.status}).`);
       throw new ApiError(
         response.status,
         body.error ?? "API_ERROR",

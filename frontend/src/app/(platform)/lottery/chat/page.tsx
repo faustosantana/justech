@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 
 import { LotteryStructuredRenderer } from "@/components/lottery/lottery-structured-renderer";
@@ -108,6 +108,7 @@ function renderInline(line: string): ReactNode[] {
 
 export default function LotteryChatPage() {
   const router = useRouter();
+  const search = useSearchParams();
   const role = getUserRole();
   const showTools = false; // diagnósticos solo con Modo desarrollador (admin AI); off por defecto
   const [sessions, setSessions] = useState<LotteryChatSession[]>([]);
@@ -118,6 +119,24 @@ export default function LotteryChatPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [paramsOpen, setParamsOpen] = useState<Record<string, boolean>>({});
+
+  useEffect(() => {
+    const q = search.get("q") || "";
+    const n = search.get("number") || "";
+    const lottery = search.get("lottery") || "";
+    const date = search.get("date") || "";
+    const highlight = search.get("highlight") || "";
+    if (q) setInput(q);
+    const contextual = [
+      n ? `Explícame el análisis completo del ${n}.` : null,
+      n && highlight ? `Explícame por qué el sistema relaciona ${n} con ${highlight}.` : null,
+      n ? `Muéstrame el comportamiento histórico del ${n}.` : null,
+      lottery && date && n
+        ? `Usa el contexto ya calculado del ${n} en ${lottery} (${date}); no inventes relaciones.`
+        : null,
+    ].filter(Boolean) as string[];
+    if (contextual.length) setSuggestions(contextual);
+  }, [search]);
 
   const ensureAuth = useCallback(() => {
     if (!getAccessToken()) {

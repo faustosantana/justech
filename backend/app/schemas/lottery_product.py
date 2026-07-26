@@ -52,6 +52,17 @@ class LotteryFavoriteReorderRequest(BaseModel):
     lottery_ids: list[UUID] = Field(min_length=1, max_length=50)
 
 
+class LotteryDashboardConfig(BaseModel):
+    """Preferencias de tarjetas del Inicio (por usuario/empresa vía preferences JSONB)."""
+
+    lottery_ids: list[str] = Field(default_factory=list)  # orden; vacío = siete activas
+    disabled_ids: list[str] = Field(default_factory=list)
+    recent_draws: int = Field(default=1, ge=1, le=7)
+    show_primera: bool = True
+    show_segunda: bool = True
+    show_tercera: bool = True
+
+
 class LotteryPreferences(BaseModel):
     default_lottery_id: UUID | None = None
     default_date_mode: Literal["exact", "range"] = "exact"
@@ -70,6 +81,7 @@ class LotteryPreferences(BaseModel):
         "first_position", "any_position", "specific_position", "ask_each_time"
     ] = "first_position"
     default_primary_position: int = Field(default=1, ge=1, le=3)
+    dashboard: LotteryDashboardConfig = Field(default_factory=LotteryDashboardConfig)
 
 
 class LotteryPreferencesUpdate(BaseModel):
@@ -89,6 +101,7 @@ class LotteryPreferencesUpdate(BaseModel):
         Literal["first_position", "any_position", "specific_position", "ask_each_time"] | None
     ) = None
     default_primary_position: int | None = Field(default=None, ge=1, le=3)
+    dashboard: LotteryDashboardConfig | None = None
 
 
 class LotteryRecentQueryResponse(BaseModel):

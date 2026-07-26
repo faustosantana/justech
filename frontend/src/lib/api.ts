@@ -2159,6 +2159,13 @@ export const apiClient = {
       true,
     ),
 
+  getLotteryResultadosLotteries: () =>
+    request<{ items: { id: string; name: string; slug?: string }[]; total: number }>(
+      "/lottery/resultados/lotteries",
+      {},
+      true,
+    ),
+
   getLotteryResultadosSyncStatus: () =>
     request<Record<string, unknown>>("/lottery/resultados/sync-status", {}, true),
 

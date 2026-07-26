@@ -1,56 +1,63 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 
 import {
   HistoricalAnalyzerForm,
   RateCell,
 } from "@/components/lottery/control-center/historical-form";
 import type { LotOption } from "@/components/lottery/control-center/motor-types";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ApiError, apiClient } from "@/lib/api";
+import { canAccessLotteryAdmin } from "@/lib/lottery";
+import { getUserRole } from "@/lib/auth";
 
 export default function PatronPage() {
+  const search = useSearchParams();
+  const isAdmin = canAccessLotteryAdmin(getUserRole());
   const [catalog, setCatalog] = useState<LotOption[]>([]);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<Record<string, unknown> | null>(null);
-  const [confirmersSet, setConfirmersSet] = useState("");
 
   useEffect(() => {
     void apiClient
       .getLotteryNumericRelationsLotteries()
       .then((lots) => setCatalog((lots.items || []).filter((c) => c?.id)))
-      .catch((err) => setError(err instanceof ApiError ? err.message : "Error loterías"));
+      .catch((err) =>
+        setError(err instanceof ApiError ? err.message : "No se pudieron cargar las loterías"),
+      );
   }, []);
 
-  const onSubmit = useCallback(
-    async (body: Record<string, unknown>) => {
-      setBusy(true);
-      setError(null);
-      try {
-        if (!body.candidate) throw new Error("Detalle de patrón requiere candidato T1");
-        const payload = { ...body };
-        if (confirmersSet.trim()) {
-          payload.confirmers = confirmersSet
-            .split(/[,\s]+/)
-            .map((x) => Number(x))
-            .filter((x) => Number.isInteger(x) && x >= 1 && x <= 100);
-          delete payload.confirmer;
-        } else if (!body.confirmer) {
-          throw new Error("Indica confirmador V o conjunto V (ej. 6,9,11)");
-        }
-        const res = await apiClient.postLotteryNrHistoryPatternDetail(payload);
-        setResult(res);
-      } catch (err) {
-        setError(err instanceof ApiError ? err.message : err instanceof Error ? err.message : "Error");
-        setResult(null);
-      } finally {
-        setBusy(false);
+  const onSubmit = useCallback(async (body: Record<string, unknown>) => {
+    setBusy(true);
+    setError(null);
+    try {
+      if (!body.candidate) {
+        setError(null);
+        throw new Error("Seleccione un compañero de Tabla 1.");
       }
-    },
-    [confirmersSet],
-  );
+      if (!body.confirmer && !body.confirmers) {
+        throw new Error("Seleccione un número de confirmación.");
+      }
+      const res = await apiClient.postLotteryNrHistoryPatternDetail(body);
+      setResult(res);
+    } catch (err) {
+      setError(
+        err instanceof ApiError
+          ? err.message
+          : err instanceof Error
+            ? err.message
+            : "No fue posible cargar el patrón.",
+      );
+      setResult(null);
+    } finally {
+      setBusy(false);
+    }
+  }, []);
 
   const pattern = (result?.pattern || null) as Record<string, unknown> | null;
   const evidence = (result?.evidence || []) as Record<string, unknown>[];
@@ -59,10 +66,19 @@ export default function PatronPage() {
 
   return (
     <div className="space-y-4">
-      <h1 className="text-xl font-semibold">Detalle de Patrón</h1>
-      <p className="text-sm text-muted-foreground">
-        Atómico N→C→V o combinación N→C→{"{V}"}. Muestra tasas, ciclos, censura y evidencia expandible.
-      </p>
+      <div className="flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <h1 className="text-xl font-semibold text-blue-900">Consultar patrón</h1>
+          <p className="text-sm text-muted-foreground">
+            Revise cómo se comporta un número frente a su compañero de Tabla 1, la confirmación de
+            Tabla 2 y el histórico.
+          </p>
+        </div>
+        <Button variant="outline" asChild>
+          <Link href="/lottery/patrones">Volver a Patrones</Link>
+        </Button>
+      </div>
+
       <HistoricalAnalyzerForm
         catalog={catalog}
         title="Consultar patrón"
@@ -70,61 +86,59 @@ export default function PatronPage() {
         onSubmit={onSubmit}
         busy={busy}
         error={error}
-        extra={
-          <label className="block text-xs">
-            Conjunto de confirmadores (opcional, ej. 6,9,11) — prioriza sobre V simple
-            <input
-              className="mt-1 w-full rounded border px-2 py-1"
-              value={confirmersSet}
-              onChange={(e) => setConfirmersSet(e.target.value)}
-              placeholder="6,9,11"
-            />
-          </label>
-        }
+        requireCandidate
+        requireConfirmer
+        initialObserved={search.get("number") || search.get("observed") || ""}
+        initialCandidate={search.get("candidate") || search.get("with") || ""}
+        initialConfirmer={search.get("confirmer") || ""}
       />
+
       {pattern ? (
-        <Card>
+        <Card className="border-blue-100">
           <CardHeader>
-            <CardTitle className="text-base">{String(pattern.pattern_key)}</CardTitle>
+            <CardTitle className="text-base text-blue-900">Resultado del patrón</CardTitle>
           </CardHeader>
           <CardContent className="space-y-2 text-sm">
-            <div>Eventos: {String(pattern.event_count)} · {String(pattern.sample_tier)}</div>
-            {pattern.sample_warning ? (
-              <div className="text-amber-700 text-xs">{String(pattern.sample_warning)}</div>
-            ) : null}
+            <div>
+              Casos revisados: {String(pattern.event_count ?? "—")}
+              {pattern.sample_warning ? (
+                <span className="ml-2 text-amber-700">{String(pattern.sample_warning)}</span>
+              ) : null}
+            </div>
             <div className="grid gap-2 md:grid-cols-3">
               <div>
-                <div className="font-medium">Próximo</div>
+                <div className="font-medium">Próximo sorteo</div>
                 <RateCell rate={aliases.response_rate_next_draw} />
               </div>
               <div>
-                <div className="font-medium">Dentro 3</div>
-                <RateCell rate={aliases.response_rate_within_3} />
+                <div className="font-medium">Ventana corta</div>
+                <RateCell rate={aliases.response_rate_short_window} />
               </div>
               <div>
-                <div className="font-medium">Dentro 5</div>
-                <RateCell rate={aliases.response_rate_within_5} />
+                <div className="font-medium">Ventana amplia</div>
+                <RateCell rate={aliases.response_rate_long_window} />
               </div>
             </div>
-            <div>Por año: {JSON.stringify(pattern.by_year || {})}</div>
-          </CardContent>
-        </Card>
-      ) : null}
-      {evidence.length ? (
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-base">Evidencia ({evidence.length})</CardTitle>
-          </CardHeader>
-          <CardContent className="max-h-96 space-y-2 overflow-auto text-xs">
-            {evidence.map((e) => (
-              <details key={String(e.event_id)} className="rounded border p-2">
-                <summary>
-                  {String(e.event_id)} · ancla{" "}
-                  {String((e.anchor as Record<string, unknown>)?.draw_id)}
+            {evidence.length > 0 && (
+              <div className="pt-2">
+                <p className="mb-1 font-medium">Evidencia reciente</p>
+                <ul className="list-disc space-y-1 pl-5 text-xs text-slate-600">
+                  {evidence.slice(0, 8).map((ev, i) => (
+                    <li key={i}>{String(ev.summary || ev.texto || ev.headline || "Caso histórico")}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            {isAdmin && (
+              <details className="pt-2">
+                <summary className="cursor-pointer text-xs font-medium text-slate-700">
+                  Detalle técnico (administración)
                 </summary>
-                <pre className="mt-2 whitespace-pre-wrap">{JSON.stringify(e, null, 2)}</pre>
+                <pre className="mt-2 max-h-60 overflow-auto rounded bg-slate-50 p-2 text-[11px]">
+                  {JSON.stringify(result, null, 2)}
+                </pre>
               </details>
-            ))}
+            )}
           </CardContent>
         </Card>
       ) : null}

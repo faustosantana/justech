@@ -45,6 +45,10 @@ async def build_ia_dashboard(db: AsyncSession) -> dict[str, Any]:
     pending = await results_svc.get_pending()
     latest = await results_svc.get_latest_n_dates(1, featured_only=True)
     last_row = latest[0] if latest else None
+    try:
+        loterias_recientes = await results_svc.latest_draws_by_featured(limit_per_lottery=3)
+    except Exception:
+        loterias_recientes = []
 
     # Pilot persistence is DEV/UAT-only; never crash Dashboard in Production.
     preds: list[dict[str, Any]] = []
@@ -142,6 +146,7 @@ async def build_ia_dashboard(db: AsyncSession) -> dict[str, Any]:
             "estado": (last_eval or {}).get("estado") or ("Sin predicción" if last_row else "—"),
             "prediction_id": (last_eval or {}).get("prediction_id"),
         },
+        "loterias_recientes": loterias_recientes,
         "freeze": freeze,
         "production_modified": False,
         "generated_for": "Lottery IA Dashboard",

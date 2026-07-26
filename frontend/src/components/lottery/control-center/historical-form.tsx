@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import type { LotOption } from "@/components/lottery/control-center/motor-types";
 import { WINDOW_MODE_LABELS } from "@/components/lottery/control-center/nr-labels";
 import { lotteryDisplayName } from "@/lib/lottery-display-names";
+import { apiClient } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -71,19 +72,38 @@ type Props = {
   extra?: React.ReactNode;
   /** Preselect all catalog ids once when form primaryIds still empty. */
   defaultSelectAll?: boolean;
+  /** Show visible Tabla 1 companion selector and require it before submit. */
+  requireCandidate?: boolean;
+  /** Also require a confirmation number (Tabla 2 neighbor). */
+  requireConfirmer?: boolean;
+  initialObserved?: string;
+  initialCandidate?: string;
+  initialConfirmer?: string;
 };
 
 function toggle(ids: string[], id: string): string[] {
   return ids.includes(id) ? ids.filter((x) => x !== id) : [...ids, id];
 }
 
+function extractCompanions(detail: Record<string, unknown>, observed: number): number[] {
+  const nested = (detail.detail || {}) as Record<string, unknown>;
+  const raw =
+    (nested.group_members as number[]) ||
+    (detail.group_numbers as number[]) ||
+    (detail.group_members as number[]) ||
+    [];
+  return (Array.isArray(raw) ? raw : [])
+    .map((x) => Number(x))
+    .filter((n) => Number.isInteger(n) && n >= 1 && n <= 100 && n !== observed);
+}
+
 export function buildHistoryBody(form: HistoryFormState): Record<string, unknown> {
   const n = Number(form.observed);
   if (!Number.isInteger(n) || n < 1 || n > 100) {
-    throw new Error("El número observado debe estar entre 1 y 100");
+    throw new Error("El número a analizar debe estar entre 1 y 100");
   }
   if (form.primaryIds.length < 1) {
-    throw new Error("Selecciona al menos una lotería del universo activo");
+    throw new Error("Seleccione al menos una lotería incluida");
   }
   const confirming =
     form.confirmingIds.length > 0 ? form.confirmingIds : form.primaryIds;
@@ -128,10 +148,24 @@ export function HistoricalAnalyzerForm({
   error,
   extra,
   defaultSelectAll = true,
+  requireCandidate = false,
+  requireConfirmer = false,
+  initialObserved,
+  initialCandidate,
+  initialConfirmer,
 }: Props) {
-  const [form, setForm] = useState<HistoryFormState>(DEFAULT_HISTORY_FORM);
+  const [form, setForm] = useState<HistoryFormState>(() => ({
+    ...DEFAULT_HISTORY_FORM,
+    observed: initialObserved || "",
+    candidate: initialCandidate || "",
+    confirmer: initialConfirmer || "",
+  }));
   const [localError, setLocalError] = useState<string | null>(null);
   const [showAdvanced, setShowAdvanced] = useState(false);
+  const [t1Options, setT1Options] = useState<number[]>([]);
+  const [t2Options, setT2Options] = useState<number[]>([]);
+  const [loadingCompanions, setLoadingCompanions] = useState(false);
+  const [fieldHint, setFieldHint] = useState<string | null>(null);
 
   useEffect(() => {
     if (!defaultSelectAll || !catalog.length) return;
@@ -142,14 +176,110 @@ export function HistoricalAnalyzerForm({
     });
   }, [catalog, defaultSelectAll]);
 
+  useEffect(() => {
+    if (initialObserved) {
+      setForm((f) => ({ ...f, observed: initialObserved }));
+    }
+  }, [initialObserved]);
+
+  useEffect(() => {
+    if (initialCandidate) {
+      setForm((f) => ({ ...f, candidate: initialCandidate }));
+    }
+  }, [initialCandidate]);
+
+  useEffect(() => {
+    if (initialConfirmer) {
+      setForm((f) => ({ ...f, confirmer: initialConfirmer }));
+    }
+  }, [initialConfirmer]);
+
+  useEffect(() => {
+    if (!requireCandidate && !requireConfirmer) return;
+    const n = Number(String(form.observed).replace(/\D/g, ""));
+    if (!Number.isInteger(n) || n < 1 || n > 100) {
+      setT1Options([]);
+      setT2Options([]);
+      return;
+    }
+    let cancelled = false;
+    setLoadingCompanions(true);
+    void (async () => {
+      try {
+        const [t1, t2] = await Promise.all([
+          apiClient.getLotteryNumericRelationsNumber(n, "table1"),
+          apiClient.getLotteryNumericRelationsNumber(n, "table2"),
+        ]);
+        if (cancelled) return;
+        const companions = extractCompanions(t1, n);
+        const neighbors = extractCompanions(t2, n);
+        setT1Options(companions);
+        setT2Options(neighbors);
+        setForm((f) => {
+          let candidate = f.candidate;
+          let confirmer = f.confirmer;
+          if (requireCandidate) {
+            if (companions.length === 1) candidate = String(companions[0]);
+            else if (candidate && !companions.includes(Number(candidate))) candidate = "";
+            else if (initialCandidate && companions.includes(Number(initialCandidate))) {
+              candidate = String(initialCandidate);
+            }
+          }
+          if (requireConfirmer) {
+            if (neighbors.length === 1) confirmer = String(neighbors[0]);
+            else if (confirmer && !neighbors.includes(Number(confirmer))) confirmer = "";
+            else if (initialConfirmer && neighbors.includes(Number(initialConfirmer))) {
+              confirmer = String(initialConfirmer);
+            }
+          }
+          return { ...f, candidate, confirmer };
+        });
+      } catch {
+        if (!cancelled) {
+          setT1Options([]);
+          setT2Options([]);
+        }
+      } finally {
+        if (!cancelled) setLoadingCompanions(false);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [
+    form.observed,
+    requireCandidate,
+    requireConfirmer,
+    initialCandidate,
+    initialConfirmer,
+  ]);
+
   const primaryLabel = useMemo(() => {
     return form.primaryIds
       .map((id) => lotteryDisplayName(id, catalog.find((c) => c.id === id)?.name))
       .join(", ");
   }, [form.primaryIds, catalog]);
 
+  const canSubmit = useMemo(() => {
+    const n = Number(form.observed);
+    if (!Number.isInteger(n) || n < 1 || n > 100) return false;
+    if (form.primaryIds.length < 1) return false;
+    if (requireCandidate && !form.candidate) return false;
+    if (requireConfirmer && !form.confirmer) return false;
+    return true;
+  }, [form, requireCandidate, requireConfirmer]);
+
   const run = async () => {
     setLocalError(null);
+    setFieldHint(null);
+    if (requireCandidate && !form.candidate) {
+      setFieldHint("Seleccione un compañero de Tabla 1.");
+      return;
+    }
+    if (requireConfirmer && !form.confirmer) {
+      setFieldHint("Seleccione un número de confirmación.");
+      return;
+    }
     try {
       const body = buildHistoryBody(form);
       await onSubmit(body);
@@ -159,9 +289,9 @@ export function HistoricalAnalyzerForm({
   };
 
   return (
-    <Card>
+    <Card className="border-blue-100">
       <CardHeader>
-        <CardTitle className="text-base">{title}</CardTitle>
+        <CardTitle className="text-base text-blue-900">{title}</CardTitle>
         <p className="text-sm text-muted-foreground">
           Por defecto analiza las siete loterías activas. Confirmación y seguimiento usan el mismo
           universo salvo que abra opciones avanzadas.
@@ -170,7 +300,7 @@ export function HistoricalAnalyzerForm({
       <CardContent className="space-y-3 text-sm">
         <div className="flex flex-wrap gap-3">
           <label>
-            Número observado
+            Número a analizar
             <Input
               className="mt-1 w-28"
               value={form.observed}
@@ -197,7 +327,7 @@ export function HistoricalAnalyzerForm({
             />
           </label>
           <label>
-            Horizonte posterior
+            Sorteos posteriores a revisar
             <Input
               className="mt-1 w-24"
               value={form.horizon}
@@ -206,8 +336,78 @@ export function HistoricalAnalyzerForm({
           </label>
         </div>
 
+        {requireCandidate ? (
+          <div className="rounded-lg border border-sky-100 bg-sky-50/50 p-3">
+            <label className="block font-medium text-blue-900">
+              Candidato de Tabla 1 / Compañero de Tabla 1
+              <select
+                className="mt-1 w-full max-w-md rounded border bg-background px-2 py-2"
+                value={form.candidate}
+                onChange={(e) => {
+                  setFieldHint(null);
+                  setForm((f) => ({ ...f, candidate: e.target.value }));
+                }}
+                disabled={loadingCompanions || t1Options.length === 0}
+              >
+                <option value="">
+                  {loadingCompanions
+                    ? "Cargando compañeros…"
+                    : t1Options.length
+                      ? "Seleccione un compañero"
+                      : "Escriba un número para ver compañeros"}
+                </option>
+                {t1Options.map((n) => (
+                  <option key={n} value={String(n)}>
+                    {String(n).padStart(2, "0")}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <p className="mt-2 text-xs text-slate-600">
+              Seleccione uno de los compañeros de Tabla 1 para revisar cómo se comporta frente a
+              Tabla 2 y al histórico.
+            </p>
+            {fieldHint && !form.candidate ? (
+              <p className="mt-1 text-xs text-amber-700">{fieldHint}</p>
+            ) : null}
+          </div>
+        ) : null}
+
+        {requireConfirmer ? (
+          <div className="rounded-lg border border-emerald-100 bg-emerald-50/40 p-3">
+            <label className="block font-medium text-blue-900">
+              Números de confirmación
+              <select
+                className="mt-1 w-full max-w-md rounded border bg-background px-2 py-2"
+                value={form.confirmer}
+                onChange={(e) => {
+                  setFieldHint(null);
+                  setForm((f) => ({ ...f, confirmer: e.target.value }));
+                }}
+                disabled={loadingCompanions || t2Options.length === 0}
+              >
+                <option value="">
+                  {loadingCompanions
+                    ? "Cargando confirmaciones…"
+                    : t2Options.length
+                      ? "Seleccione un número de confirmación"
+                      : "Escriba un número para ver confirmaciones"}
+                </option>
+                {t2Options.map((n) => (
+                  <option key={n} value={String(n)}>
+                    {String(n).padStart(2, "0")}
+                  </option>
+                ))}
+              </select>
+            </label>
+            {fieldHint && form.candidate && !form.confirmer ? (
+              <p className="mt-1 text-xs text-amber-700">{fieldHint}</p>
+            ) : null}
+          </div>
+        ) : null}
+
         <fieldset>
-          <legend className="mb-1 font-medium">Ventana de confirmación</legend>
+          <legend className="mb-1 font-medium">Momento de confirmación</legend>
           <select
             className="mt-1 w-full max-w-md rounded border bg-background px-2 py-2"
             value={form.windowMode}
@@ -243,7 +443,7 @@ export function HistoricalAnalyzerForm({
 
         <div>
           <div className="mb-1 flex flex-wrap items-center justify-between gap-2">
-            <span className="font-medium">Loterías del universo activo</span>
+            <span className="font-medium">Loterías incluidas</span>
             <div className="flex gap-2 text-xs">
               <button
                 type="button"
@@ -304,37 +504,39 @@ export function HistoricalAnalyzerForm({
 
         {showAdvanced ? (
           <div className="space-y-3 rounded-lg border border-dashed p-3">
-            <div className="flex flex-wrap gap-3">
+            {!requireCandidate ? (
               <label>
-                Candidato T1 (opcional)
+                Compañero de Tabla 1 (opcional)
                 <Input
                   className="mt-1 w-24"
                   value={form.candidate}
                   onChange={(e) => setForm((f) => ({ ...f, candidate: e.target.value }))}
                 />
               </label>
+            ) : null}
+            {!requireConfirmer ? (
               <label>
-                Confirmador T2 (opcional)
+                Número de confirmación (opcional)
                 <Input
                   className="mt-1 w-24"
                   value={form.confirmer}
                   onChange={(e) => setForm((f) => ({ ...f, confirmer: e.target.value }))}
                 />
               </label>
-              <label>
-                Muestra mínima (opcional)
-                <Input
-                  className="mt-1 w-24"
-                  value={form.minSample}
-                  onChange={(e) => setForm((f) => ({ ...f, minSample: e.target.value }))}
-                />
-              </label>
-            </div>
+            ) : null}
+            <label>
+              Muestra mínima (opcional)
+              <Input
+                className="mt-1 w-24"
+                value={form.minSample}
+                onChange={(e) => setForm((f) => ({ ...f, minSample: e.target.value }))}
+              />
+            </label>
 
             <div>
-              <div className="mb-1 font-medium">Loterías confirmadoras</div>
+              <div className="mb-1 font-medium">Loterías de confirmación</div>
               <p className="mb-1 text-xs text-muted-foreground">
-                Si no marca ninguna, se usan las del universo activo seleccionado arriba.
+                Si no marca ninguna, se usan las loterías incluidas arriba.
               </p>
               <div className="flex max-h-28 flex-wrap gap-2 overflow-y-auto rounded border p-2">
                 {catalog.map((l) => (
@@ -362,7 +564,7 @@ export function HistoricalAnalyzerForm({
                     setForm((f) => ({ ...f, followDefaultSamePrimary: e.target.checked }))
                   }
                 />
-                Por defecto: mismo universo activo
+                Por defecto: mismas loterías incluidas
                 {form.followDefaultSamePrimary && primaryLabel ? ` (${primaryLabel})` : ""}
               </label>
               {!form.followDefaultSamePrimary ? (
@@ -386,7 +588,12 @@ export function HistoricalAnalyzerForm({
         ) : null}
 
         {extra}
-        <Button type="button" disabled={busy} onClick={() => void run()}>
+        <Button
+          type="button"
+          className="bg-blue-600 hover:bg-blue-700"
+          disabled={busy || !canSubmit}
+          onClick={() => void run()}
+        >
           {busy ? "Calculando…" : submitLabel}
         </Button>
         {localError || error ? (
@@ -410,7 +617,7 @@ export function RateCell({ rate }: { rate: Record<string, unknown> | null | unde
         {pct != null ? ` (${pct}%)` : ""}
       </div>
       <div className="text-muted-foreground">
-        n={String(rate.sample_size)} · {String(rate.sample_tier)}
+        Casos: {String(rate.sample_size)}
       </div>
       {warn ? <div className="text-amber-700">{warn}</div> : null}
     </div>

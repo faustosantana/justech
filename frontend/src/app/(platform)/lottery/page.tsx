@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import {
@@ -18,27 +18,96 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { ApiError, apiClient } from '@/lib/api'
 import { getAccessToken, getUserRole } from '@/lib/auth'
-import { canAccessLotteryAdmin, canAccessLotteryModule, DISCLAIMER } from '@/lib/lottery'
+import {
+  canAccessLotteryAdmin,
+  canAccessLotteryModule,
+  DEFAULT_DASHBOARD_CONFIG,
+  DISCLAIMER,
+  PRODUCT_SEVEN_LOTTERY_NAMES,
+  type LotteryDashboardConfig,
+  type LotteryPreferences,
+} from '@/lib/lottery'
+
+type LotteryCard = {
+  lottery_id?: string
+  lottery?: string
+  date?: string | null
+  hora?: string | null
+  primera?: string | null
+  segunda?: string | null
+  tercera?: string | null
+  status_label?: string
+  is_today?: boolean
+  draws?: {
+    date?: string | null
+    primera?: string | null
+    segunda?: string | null
+    tercera?: string | null
+  }[]
+}
 
 type Dash = {
   motor?: Record<string, unknown>
   resultados?: Record<string, unknown>
   ultimo_sorteo?: Record<string, unknown>
   piloto?: Record<string, unknown>
+  loterias_recientes?: LotteryCard[]
 }
 
 function fmtDate(v: unknown): string {
   if (!v) return '—'
   try {
-    return new Date(String(v)).toLocaleDateString('es-DO', { dateStyle: 'medium' })
+    return new Date(`${String(v)}T12:00:00`).toLocaleDateString('es-DO', {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric',
+    })
   } catch {
     return String(v)
   }
 }
 
+function todayIso(): string {
+  const d = new Date()
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+}
+
+function applyDashboardConfig(
+  cards: LotteryCard[],
+  cfg: LotteryDashboardConfig,
+): LotteryCard[] {
+  const disabled = new Set(cfg.disabled_ids || [])
+  let list = cards.filter((c) => c.lottery_id && !disabled.has(String(c.lottery_id)))
+
+  if (cfg.lottery_ids?.length) {
+    const byId = new Map(list.map((c) => [String(c.lottery_id), c]))
+    const ordered: LotteryCard[] = []
+    for (const id of cfg.lottery_ids) {
+      const hit = byId.get(id)
+      if (hit) {
+        ordered.push(hit)
+        byId.delete(id)
+      }
+    }
+    ordered.push(...byId.values())
+    list = ordered
+  } else {
+    const rank = new Map(
+      PRODUCT_SEVEN_LOTTERY_NAMES.map((n, i) => [n.toLowerCase(), i]),
+    )
+    list = [...list].sort((a, b) => {
+      const ra = rank.get(String(a.lottery || '').toLowerCase()) ?? 99
+      const rb = rank.get(String(b.lottery || '').toLowerCase()) ?? 99
+      return ra - rb
+    })
+  }
+  return list
+}
+
 export default function LotteryHomePage() {
   const router = useRouter()
   const [data, setData] = useState<Dash | null>(null)
+  const [prefs, setPrefs] = useState<LotteryPreferences | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [busy, setBusy] = useState(true)
   const isAdmin = canAccessLotteryAdmin(getUserRole())
@@ -55,8 +124,12 @@ export default function LotteryHomePage() {
     }
     setBusy(true)
     try {
-      const dash = (await apiClient.getLotteryIaDashboard()) as Dash
+      const [dash, preferences] = await Promise.all([
+        apiClient.getLotteryIaDashboard() as Promise<Dash>,
+        apiClient.getLotteryPreferences().catch(() => null),
+      ])
       setData(dash)
+      setPrefs(preferences)
       setError(null)
     } catch (err) {
       setError(
@@ -73,11 +146,17 @@ export default function LotteryHomePage() {
     void load()
   }, [load])
 
+  const dashCfg = prefs?.dashboard || DEFAULT_DASHBOARD_CONFIG
+  const lotteryCards = useMemo(
+    () => applyDashboardConfig(data?.loterias_recientes || [], dashCfg),
+    [data?.loterias_recientes, dashCfg],
+  )
+
   const r = data?.resultados || {}
   const last = data?.ultimo_sorteo || {}
-  const resultado = (last.resultado || {}) as Record<string, unknown>
   const syncOk = String(r.estado_sync || '').toLowerCase() !== 'error'
   const pending = Number(r.pendientes_sincronizar || 0)
+  const today = todayIso()
 
   return (
     <AppShell>
@@ -93,10 +172,18 @@ export default function LotteryHomePage() {
             <Button asChild className="bg-white text-blue-700 hover:bg-blue-50">
               <Link href="/lottery/analizar">Analizar número</Link>
             </Button>
-            <Button asChild variant="outline" className="border-white/40 bg-white/10 text-white hover:bg-white/20">
-              <Link href="/lottery/resultados">Ver resultados de hoy</Link>
+            <Button
+              asChild
+              variant="outline"
+              className="border-white/40 bg-white/10 text-white hover:bg-white/20"
+            >
+              <Link href={`/lottery/resultados?date=${today}`}>Ver resultados de hoy</Link>
             </Button>
-            <Button asChild variant="outline" className="border-white/40 bg-white/10 text-white hover:bg-white/20">
+            <Button
+              asChild
+              variant="outline"
+              className="border-white/40 bg-white/10 text-white hover:bg-white/20"
+            >
               <Link href="/lottery/chat">Abrir Chat inteligente</Link>
             </Button>
           </div>
@@ -134,44 +221,14 @@ export default function LotteryHomePage() {
                 <span className="font-medium">{fmtDate(r.ultima_actualizacion || r.ultima_fecha)}</span>
               </p>
               {pending > 0 && (
-                <p className="text-amber-700">La sincronización todavía no ha terminado ({pending} pendientes).</p>
+                <p className="text-amber-700">
+                  La sincronización todavía no ha terminado ({pending} pendientes).
+                </p>
               )}
             </CardContent>
           </Card>
 
-          <Card className="border-blue-100 md:col-span-2">
-            <CardHeader className="pb-2">
-              <CardTitle className="flex items-center gap-2 text-base text-blue-900">
-                <CalendarDays className="h-4 w-4" /> Resultados recientes
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-2 text-sm">
-              <p>
-                <span className="text-slate-500">Lotería:</span>{' '}
-                <span className="font-medium">{String(last.loteria || '—')}</span>
-              </p>
-              <p>
-                <span className="text-slate-500">Fecha:</span>{' '}
-                <span className="font-medium">{fmtDate(last.fecha)}</span>
-              </p>
-              <div className="flex flex-wrap items-center gap-2 pt-1">
-                {resultado.primera ? (
-                  <>
-                    <LotteryNumberLink number={String(resultado.primera)} />
-                    <LotteryNumberLink number={String(resultado.segunda || '')} />
-                    <LotteryNumberLink number={String(resultado.tercera || '')} />
-                  </>
-                ) : (
-                  <span className="text-slate-500">No hay resultados para este período.</span>
-                )}
-              </div>
-              <p className="text-xs text-slate-500">
-                Total sorteos: {String(r.total_sorteos ?? '—')} · Último disponible: {fmtDate(r.ultima_fecha)}
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="border-blue-100">
+          <Card className="border-blue-100 md:col-span-2 xl:col-span-2">
             <CardHeader className="pb-2">
               <CardTitle className="flex items-center gap-2 text-base text-blue-900">
                 <Sparkles className="h-4 w-4" /> Recomendación
@@ -180,7 +237,7 @@ export default function LotteryHomePage() {
             <CardContent className="space-y-2 text-sm">
               {Array.isArray(last.prediccion) && last.prediccion.length ? (
                 <>
-                  <p className="text-xs uppercase text-amber-700">Número fuerte / alternativas</p>
+                  <p className="text-xs uppercase text-amber-700">Números destacados</p>
                   <div className="flex flex-wrap gap-2">
                     {(last.prediccion as unknown[]).map((n, i) => (
                       <LotteryNumberLink
@@ -196,11 +253,107 @@ export default function LotteryHomePage() {
                   </p>
                 </>
               ) : (
-                <p className="text-slate-600">Sin recomendación destacada todavía. Analice un número para comenzar.</p>
+                <p className="text-slate-600">
+                  Sin recomendación destacada todavía. Analice un número para comenzar.
+                </p>
               )}
             </CardContent>
           </Card>
         </div>
+
+        <section className="space-y-3">
+          <div className="flex flex-wrap items-end justify-between gap-2">
+            <div>
+              <h2 className="text-lg font-semibold text-blue-900">Resultados recientes</h2>
+              <p className="text-sm text-slate-600">
+                Loterías activas con su último sorteo. Pulse un número para analizarlo.
+              </p>
+            </div>
+            {isAdmin && (
+              <Button variant="outline" size="sm" asChild>
+                <Link href="/lottery/administracion/dashboard">Configurar Dashboard</Link>
+              </Button>
+            )}
+          </div>
+
+          {!lotteryCards.length && !busy ? (
+            <p className="text-sm text-slate-500">No hay resultados disponibles por ahora.</p>
+          ) : (
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              {lotteryCards.map((card) => {
+                const draws =
+                  dashCfg.recent_draws > 1 && card.draws?.length
+                    ? card.draws.slice(0, dashCfg.recent_draws)
+                    : [
+                        {
+                          date: card.date,
+                          primera: card.primera,
+                          segunda: card.segunda,
+                          tercera: card.tercera,
+                        },
+                      ]
+                return (
+                  <Card key={card.lottery_id || card.lottery} className="border-blue-100">
+                    <CardContent className="space-y-3 pt-5">
+                      <div>
+                        <p className="font-semibold text-slate-900">{card.lottery || '—'}</p>
+                        <p className="text-sm text-slate-500">{fmtDate(draws[0]?.date || card.date)}</p>
+                        <p
+                          className={`mt-1 text-xs font-medium ${
+                            card.is_today ? 'text-emerald-700' : 'text-amber-700'
+                          }`}
+                        >
+                          {card.status_label || 'Último disponible'}
+                        </p>
+                      </div>
+                      {draws.map((draw, idx) => (
+                        <div key={`${card.lottery_id}-${draw.date}-${idx}`} className="space-y-1">
+                          {idx > 0 && (
+                            <p className="text-xs text-slate-500">{fmtDate(draw.date)}</p>
+                          )}
+                          <div className="flex flex-wrap items-center gap-2">
+                            {dashCfg.show_primera !== false && (
+                              <LotteryNumberLink
+                                number={String(draw.primera || '')}
+                                size="lg"
+                                lottery={card.lottery}
+                                date={draw.date}
+                                position="primera"
+                              />
+                            )}
+                            {dashCfg.show_segunda !== false && (
+                              <LotteryNumberLink
+                                number={String(draw.segunda || '')}
+                                size="lg"
+                                lottery={card.lottery}
+                                date={draw.date}
+                                position="segunda"
+                                className="bg-sky-600 hover:bg-sky-700"
+                              />
+                            )}
+                            {dashCfg.show_tercera !== false && (
+                              <LotteryNumberLink
+                                number={String(draw.tercera || '')}
+                                size="lg"
+                                lottery={card.lottery}
+                                date={draw.date}
+                                position="tercera"
+                                className="bg-indigo-600 hover:bg-indigo-700"
+                              />
+                            )}
+                            {!draw.primera && !draw.segunda && !draw.tercera && (
+                              <span className="text-sm text-slate-500">Sin resultados</span>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </CardContent>
+                  </Card>
+                )
+              })}
+            </div>
+          )}
+        </section>
 
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {[

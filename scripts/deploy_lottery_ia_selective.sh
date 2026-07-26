@@ -122,6 +122,8 @@ COPY overlay/backend/app/services/lottery_ai_alert_detector.py /app/app/services
 COPY overlay/backend/app/services/lottery_prediction_service.py /app/app/services/lottery_prediction_service.py
 COPY overlay/backend/app/services/lottery_sync_gate_backup.py /app/app/services/lottery_sync_gate_backup.py
 COPY overlay/backend/app/schemas/lottery_admin.py /app/app/schemas/lottery_admin.py
+COPY overlay/backend/app/schemas/lottery_product.py /app/app/schemas/lottery_product.py
+COPY overlay/backend/app/services/lottery_product_service.py /app/app/services/lottery_product_service.py
 COPY overlay/backend/app/models/lottery_prospective.py /app/app/models/lottery_prospective.py
 COPY overlay/backend/alembic/versions/062_lottery_prospective_pilot.py /app/alembic/versions/062_lottery_prospective_pilot.py
 COPY overlay/artifacts/tiebreak /app/artifacts/tiebreak

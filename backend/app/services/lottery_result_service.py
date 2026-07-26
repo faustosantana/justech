@@ -97,6 +97,64 @@ class LotteryResultService:
             for l in q.scalars().all()
         ]
 
+    async def latest_draws_by_featured(
+        self, *, limit_per_lottery: int = 1
+    ) -> list[dict[str, Any]]:
+        """Latest draw card(s) per featured lottery, ordered by product seven names."""
+        from app.lottery.numeric_relations.active_scope_policy import (
+            EXPECTED_PRODUCT_SEVEN_NAMES,
+        )
+
+        limit_per_lottery = max(1, min(int(limit_per_lottery or 1), 7))
+        featured = await self.list_featured_lotteries()
+        by_name = {str(x.get("name") or "").strip().lower(): x for x in featured}
+        ordered: list[dict[str, Any]] = []
+        seen: set[str] = set()
+        for name in EXPECTED_PRODUCT_SEVEN_NAMES:
+            hit = by_name.get(name.strip().lower())
+            if hit and hit["id"] not in seen:
+                ordered.append(hit)
+                seen.add(hit["id"])
+        for lot in featured:
+            if lot["id"] not in seen:
+                ordered.append(lot)
+                seen.add(lot["id"])
+
+        today = date.today().isoformat()
+        cards: list[dict[str, Any]] = []
+        for lot in ordered:
+            draws = await self.get_by_lottery(lot["id"], limit=limit_per_lottery)
+            latest = draws[0] if draws else None
+            draw_date = (latest or {}).get("date")
+            cards.append(
+                {
+                    "lottery_id": lot["id"],
+                    "lottery": lot["name"],
+                    "date": draw_date,
+                    "hora": (latest or {}).get("hora"),
+                    "primera": (latest or {}).get("primera"),
+                    "segunda": (latest or {}).get("segunda"),
+                    "tercera": (latest or {}).get("tercera"),
+                    "status_label": (
+                        "Actualizado"
+                        if draw_date == today
+                        else ("Último disponible" if draw_date else "Sin resultados")
+                    ),
+                    "is_today": bool(draw_date == today),
+                    "draws": [
+                        {
+                            "date": d.get("date"),
+                            "hora": d.get("hora"),
+                            "primera": d.get("primera"),
+                            "segunda": d.get("segunda"),
+                            "tercera": d.get("tercera"),
+                        }
+                        for d in draws
+                    ],
+                }
+            )
+        return cards
+
     async def _lottery_by_slug_or_id(self, lottery: str) -> LotteryLottery | None:
         try:
             return await self.query.resolver.resolve_or_raise(lottery)

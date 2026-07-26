@@ -11,6 +11,16 @@ import { canAccessLotteryAdmin } from '@/lib/lottery'
 
 const BLOCKS = [
   {
+    title: 'Experiencia',
+    items: [
+      {
+        href: '/lottery/administracion/dashboard',
+        label: 'Configuración del Dashboard',
+        desc: 'Activar, ordenar y elegir cuántos sorteos mostrar en el Inicio.',
+      },
+    ],
+  },
+  {
     title: 'Resultados',
     items: [
       {
@@ -29,9 +39,9 @@ const BLOCKS = [
         desc: 'Inventario y mantenimiento del archivo histórico.',
       },
       {
-        href: '/lottery/resultados',
-        label: 'Centro de Resultados',
-        desc: 'Consulta operativa de sorteos y pendientes de sync.',
+        href: '/lottery/admin/sync',
+        label: 'Actualizar / sincronizar / reprocesar',
+        desc: 'Funciones administrativas de sync, duplicados y fuentes.',
       },
     ],
   },

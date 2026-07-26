@@ -9,13 +9,35 @@ type Props = {
   className?: string;
   size?: "sm" | "md" | "lg";
   title?: string;
+  lottery?: string | null;
+  date?: string | null;
+  position?: string | number | null;
+  withNumber?: string | number | null;
 };
 
-/** Clickable lottery number → full analysis screen. */
-export function LotteryNumberLink({ number, className, size = "md", title }: Props) {
+/** Clickable lottery number → full analysis screen with optional draw context. */
+export function LotteryNumberLink({
+  number,
+  className,
+  size = "md",
+  title,
+  lottery,
+  date,
+  position,
+  withNumber,
+}: Props) {
   const n = String(number).replace(/\D/g, "");
   if (!n) return <span className={className}>—</span>;
-  const href = `/lottery/analizar?number=${n}&auto=1`;
+  const params = new URLSearchParams();
+  params.set("number", n);
+  params.set("auto", "1");
+  if (lottery) params.set("lottery", String(lottery));
+  if (date) params.set("date", String(date));
+  if (position != null && String(position) !== "") params.set("position", String(position));
+  if (withNumber != null && String(withNumber).replace(/\D/g, "")) {
+    params.set("with", String(withNumber).replace(/\D/g, ""));
+  }
+  const href = `/lottery/analizar?${params.toString()}`;
   const sizeCls =
     size === "lg"
       ? "min-h-14 min-w-14 text-2xl font-bold"
@@ -25,9 +47,9 @@ export function LotteryNumberLink({ number, className, size = "md", title }: Pro
   return (
     <Link
       href={href}
-      title={title || `Analizar el ${n}`}
+      title={title || `Analizar número ${n.padStart(2, "0")}`}
       className={cn(
-        "inline-flex items-center justify-center rounded-full bg-blue-600 text-white shadow-sm transition hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400",
+        "inline-flex cursor-pointer items-center justify-center rounded-full bg-blue-600 text-white shadow-sm transition hover:scale-105 hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400",
         sizeCls,
         className,
       )}

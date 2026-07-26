@@ -200,6 +200,35 @@ export interface LotteryRecentQuery {
   created_at?: string | null;
 }
 
+export interface LotteryDashboardConfig {
+  lottery_ids: string[];
+  disabled_ids: string[];
+  recent_draws: number;
+  show_primera: boolean;
+  show_segunda: boolean;
+  show_tercera: boolean;
+}
+
+export const DEFAULT_DASHBOARD_CONFIG: LotteryDashboardConfig = {
+  lottery_ids: [],
+  disabled_ids: [],
+  recent_draws: 1,
+  show_primera: true,
+  show_segunda: true,
+  show_tercera: true,
+};
+
+/** Nombres de producto de las siete loterías activas (orden de Inicio). */
+export const PRODUCT_SEVEN_LOTTERY_NAMES = [
+  "Gana Más",
+  "Lotería Nacional",
+  "New York 10:30",
+  "New York 2:30",
+  "Quiniela Leidsa",
+  "Quiniela Loteka",
+  "Quiniela Real",
+] as const;
+
 export interface LotteryPreferences {
   default_lottery_id?: string | null;
   default_date_mode: "exact" | "range";
@@ -220,6 +249,7 @@ export interface LotteryPreferences {
     | "specific_position"
     | "ask_each_time";
   default_primary_position?: number;
+  dashboard?: LotteryDashboardConfig;
 }
 
 export interface LotteryExportResponse {

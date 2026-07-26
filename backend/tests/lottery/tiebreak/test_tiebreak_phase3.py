@@ -133,11 +133,15 @@ def test_multi_strong_result_when_unresolved():
         {"numbers": [44, 63], "mode": "socio", "derivation_depth": 0, "create_signals": False},
         persist=False,
     )
-    # Either multi-fuerte or ordered with trace
     multi = (r.tiebreak or {}).get("multi_fuerte_numbers") or []
     assert r.tiebreak is not None
-    if multi:
-        assert set(multi) >= {22, 70} or len(multi) >= 2
+    assert r.tiebreak.get("unresolved_multi") is True
+    assert set(multi) >= {22, 70}
+    assert r.primary_signal["classification"] == "EMPATE_MULTI_FUERTE"
+    assert {c["number"] for c in r.ranked_candidates if c["classification"] == "EMPATE_MULTI_FUERTE"} >= {
+        22,
+        70,
+    }
 
 
 def test_original_14_errors_are_audited():

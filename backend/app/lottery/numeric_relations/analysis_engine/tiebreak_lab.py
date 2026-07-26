@@ -240,7 +240,7 @@ def evaluate_split(
 ) -> dict[str, Any]:
     cat = build_catalog()
     use = scenarios if limit is None else scenarios[:limit]
-    top1 = top2 = top3 = hist_in_cands = multi_n = 0
+    top1 = top2 = top3 = top1_or_multi = hist_in_cands = multi_n = 0
     rows = []
     for sc in use:
         nums = (
@@ -288,13 +288,20 @@ def evaluate_split(
         hist_in_cands += int(hf in cand_nums)
         multi_n += int(bool(pick["multi"]))
         if pick["multi"]:
-            if hf in pick["multi"]:
+            in_multi = hf in pick["multi"]
+            if in_multi:
+                top1_or_multi += 1
                 top2 += 1
                 top3 += 1
-            # top1 unresolved — not counted as top1 hit
+            # strict top1 unresolved — not counted as unique fuerte
+            hit_top1 = False
+            hit_top2 = in_multi
         else:
-            top1 += int(pick["primary"] == hf)
-            top2 += int(hf in pick["top_nums"][:2])
+            hit_top1 = pick["primary"] == hf
+            hit_top2 = hf in pick["top_nums"][:2]
+            top1 += int(hit_top1)
+            top1_or_multi += int(hit_top1)
+            top2 += int(hit_top2)
             top3 += int(hf in pick["top_nums"][:3])
         rows.append(
             {
@@ -302,8 +309,12 @@ def evaluate_split(
                 "historical": hf,
                 "primary": pick["primary"],
                 "multi": pick["multi"],
-                "hit_top1": pick["primary"] == hf if not pick["multi"] else False,
-                "hit_top2": hf in (pick["multi"] or pick["top_nums"][:2]),
+                "hit_top1": hit_top1,
+                "hit_top1_or_multi": bool(
+                    (pick["multi"] and hf in pick["multi"])
+                    or (not pick["multi"] and pick["primary"] == hf)
+                ),
+                "hit_top2": hit_top2,
             }
         )
     n = len(use) or 1
@@ -311,6 +322,8 @@ def evaluate_split(
         "n": len(use),
         "top1": top1,
         "top1_rate": top1 / n,
+        "top1_or_multi": top1_or_multi,
+        "top1_or_multi_rate": top1_or_multi / n,
         "top2": top2,
         "top2_rate": top2 / n,
         "top3": top3,

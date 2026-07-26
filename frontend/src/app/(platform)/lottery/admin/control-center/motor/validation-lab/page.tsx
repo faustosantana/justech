@@ -26,7 +26,7 @@ const PRESETS: Array<{
     manual: "29",
   },
   {
-    label: "Caso 2 — 21-Jun-2026",
+    label: "Caso 2 — 21-Jun-2026 (T2 directa)",
     date: "2026-06-21",
     rows: [
       { lottery_name: "Loteria Nacional", number: "41" },
@@ -75,9 +75,19 @@ export default function MotorValidationLabPage() {
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<Record<string, unknown> | null>(null);
 
-  const coincidence = useMemo(() => {
-    const c = result?.coincidence;
-    return typeof c === "string" ? c : null;
+  const manualStatus = useMemo(() => {
+    const m = result?.manual_status;
+    return m && typeof m === "object" ? (m as Record<string, unknown>) : null;
+  }, [result]);
+
+  const fuerteOficial = useMemo(() => {
+    const f = result?.fuerte_oficial;
+    return f && typeof f === "object" ? (f as Record<string, unknown>) : null;
+  }, [result]);
+
+  const senalT2 = useMemo(() => {
+    const s = result?.senal_t2_directa;
+    return s && typeof s === "object" ? (s as Record<string, unknown>) : null;
   }, [result]);
 
   const run = async () => {
@@ -90,12 +100,11 @@ export default function MotorValidationLabPage() {
           number: Number(r.number),
         }))
         .filter((r) => Number.isFinite(r.number) && r.number >= 1 && r.number <= 100);
-      const body = {
+      const res = await apiClient.postLotteryNumericRelationsValidationLab({
         observations,
         manual_fuerte: manual ? Number(manual) : null,
         date: date || null,
-      };
-      const res = await apiClient.postLotteryNumericRelationsValidationLab(body);
+      });
       setResult(res);
     } catch (err) {
       setResult(null);
@@ -105,13 +114,17 @@ export default function MotorValidationLabPage() {
     }
   };
 
+  const classification = String(manualStatus?.classification ?? "—");
+  const isOfficial = classification === "FUERTE_OFICIAL";
+  const isT2 = classification === "DIRECT_T2_NEIGHBOR_SIGNAL";
+
   return (
     <div className="space-y-4">
       <div>
         <h1 className="text-xl font-semibold tracking-tight">Motor Validation Lab</h1>
         <p className="mt-1 max-w-3xl text-sm text-muted-foreground">
-          Modo auditoría: reconstruye Tabla 1, Tabla 2, compañeros, vecinos, cruces e
-          intersecciones. No modifica el Motor NR ni crea reglas nuevas.
+          Auditoría explicativa. Distingue <strong>Fuerte oficial</strong> (T1×T2) de{" "}
+          <strong>Señal T2 directa</strong> (no oficial). No modifica el Motor NR.
         </p>
       </div>
 
@@ -150,7 +163,7 @@ export default function MotorValidationLabPage() {
               <Input type="date" value={date} onChange={(e) => setDate(e.target.value)} className="mt-1" />
             </label>
             <label className="text-sm">
-              Fuerte manual (opcional)
+              Resultado manual
               <Input value={manual} onChange={(e) => setManual(e.target.value)} className="mt-1" />
             </label>
           </div>
@@ -189,56 +202,109 @@ export default function MotorValidationLabPage() {
       </Card>
 
       {result ? (
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-base">
-              Resultado — Coinciden: {coincidence ?? "—"}
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4 text-sm">
-            <div className="grid gap-2 sm:grid-cols-3">
-              <div className="rounded border p-3">
-                <p className="text-xs text-muted-foreground">Fuerte manual</p>
-                <p className="text-lg font-semibold">{String(result.manual_fuerte ?? "—")}</p>
-              </div>
-              <div className="rounded border p-3">
-                <p className="text-xs text-muted-foreground">Resultado forma-motor (F)</p>
-                <p className="text-lg font-semibold">{JSON.stringify(result.motor_shaped_result)}</p>
-              </div>
-              <div className="rounded border p-3">
-                <p className="text-xs text-muted-foreground">Metodología</p>
-                <p className="font-medium">{String(result.methodology_version)}</p>
-              </div>
-            </div>
+        <>
+          <div className="grid gap-3 md:grid-cols-2">
+            <Card className={isOfficial ? "border-emerald-600/50" : ""}>
+              <CardHeader>
+                <CardTitle className="text-base">Fuerte oficial</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-2 text-sm">
+                <p className="text-xs text-muted-foreground">
+                  Geometría: Tabla 1 candidato × Tabla 2 confirmador
+                </p>
+                <p>
+                  Candidatos fortalecidos:{" "}
+                  <span className="font-semibold">{JSON.stringify(fuerteOficial?.candidates ?? [])}</span>
+                </p>
+                <p>
+                  Resultado motor:{" "}
+                  <span className="font-semibold">{JSON.stringify(fuerteOficial?.result ?? "—")}</span>
+                </p>
+                {isOfficial ? (
+                  <p className="rounded bg-emerald-500/10 px-2 py-1 text-emerald-800 dark:text-emerald-200">
+                    El resultado manual coincide con un fuerte oficial.
+                  </p>
+                ) : (
+                  <p className="text-muted-foreground">
+                    Sin candidato fortalecido igual al manual (o vacío).
+                  </p>
+                )}
+              </CardContent>
+            </Card>
 
-            <div>
-              <h3 className="mb-2 font-medium">Ranking matemático (evidencia)</h3>
-              <pre className="overflow-auto rounded bg-muted/40 p-3 text-xs">
-                {JSON.stringify(result.mathematical_ranking, null, 2)}
-              </pre>
-            </div>
-            <div>
-              <h3 className="mb-2 font-medium">Tabla 1 / Tabla 2 por número</h3>
-              <pre className="overflow-auto rounded bg-muted/40 p-3 text-xs">
-                {JSON.stringify(result.tables_per_number, null, 2)}
-              </pre>
-            </div>
-            <div>
-              <h3 className="mb-2 font-medium">Cruces e intersecciones</h3>
-              <pre className="overflow-auto rounded bg-muted/40 p-3 text-xs">
-                {JSON.stringify(result.crosses_and_intersections, null, 2)}
-              </pre>
-            </div>
-            {result.explanation ? (
-              <div>
-                <h3 className="mb-2 font-medium">Explicación</h3>
+            <Card className={isT2 ? "border-amber-600/50" : ""}>
+              <CardHeader>
+                <CardTitle className="text-base">Señal T2 directa</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-2 text-sm">
+                <p className="text-xs text-muted-foreground">
+                  Clasificación: DIRECT_T2_NEIGHBOR_SIGNAL — no es fuerte oficial
+                </p>
+                <p>
+                  Vecinos T2 de observados:{" "}
+                  <span className="font-semibold">{JSON.stringify(senalT2?.all_direct_neighbors ?? [])}</span>
+                </p>
+                <p>
+                  Solo secundarios (no oficiales):{" "}
+                  <span className="font-semibold">{JSON.stringify(senalT2?.secondary_only_not_official ?? [])}</span>
+                </p>
+                {isT2 ? (
+                  <p className="rounded bg-amber-500/10 px-2 py-1 text-amber-900 dark:text-amber-100">
+                    Estado: Señal T2 directa, no fuerte oficial. Relación:{" "}
+                    {JSON.stringify(manualStatus?.direct_t2_edges_for_manual)}
+                  </p>
+                ) : (
+                  <p className="text-muted-foreground">El manual no está clasificado solo como señal T2.</p>
+                )}
+              </CardContent>
+            </Card>
+          </div>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base">
+                Comparación — {String(manualStatus?.label_es ?? result.coincidence ?? "—")}
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3 text-sm">
+              <div className="grid gap-2 sm:grid-cols-3">
+                <div className="rounded border p-3">
+                  <p className="text-xs text-muted-foreground">Resultado manual</p>
+                  <p className="text-lg font-semibold">{String(result.manual_fuerte ?? "—")}</p>
+                </div>
+                <div className="rounded border p-3">
+                  <p className="text-xs text-muted-foreground">Clasificación</p>
+                  <p className="font-semibold">{classification}</p>
+                </div>
+                <div className="rounded border p-3">
+                  <p className="text-xs text-muted-foreground">Metodología</p>
+                  <p className="font-medium">{String(result.methodology_version)}</p>
+                </div>
+              </div>
+              {result.explanation ? (
                 <pre className="overflow-auto rounded bg-muted/40 p-3 text-xs">
                   {JSON.stringify(result.explanation, null, 2)}
                 </pre>
-              </div>
-            ) : null}
-          </CardContent>
-        </Card>
+              ) : null}
+              <details>
+                <summary className="cursor-pointer text-sm font-medium">Detalle técnico completo</summary>
+                <pre className="mt-2 overflow-auto rounded bg-muted/40 p-3 text-xs">
+                  {JSON.stringify(
+                    {
+                      tables_per_number: result.tables_per_number,
+                      crosses_and_intersections: result.crosses_and_intersections,
+                      mathematical_ranking: result.mathematical_ranking,
+                      senal_t2_directa: result.senal_t2_directa,
+                      fuerte_oficial: result.fuerte_oficial,
+                    },
+                    null,
+                    2,
+                  )}
+                </pre>
+              </details>
+            </CardContent>
+          </Card>
+        </>
       ) : null}
     </div>
   );

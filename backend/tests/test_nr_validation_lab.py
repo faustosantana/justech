@@ -11,10 +11,9 @@ def test_case4_35_14_produces_54_exact():
         observed=[{"number": 35, "lottery_name": "Nacional"}, {"number": 14, "lottery_name": "Loteka"}],
         manual_fuerte=54,
     )
-    assert out["coincidence"] == "SI"
-    assert out["motor_shaped_result"] == 54
-    f = next(h for h in out["crosses_and_intersections"] if h["id"] == "F")
-    assert f["produced"] == [54]
+    assert out["coincidence"] == "SI_FUERTE_OFICIAL"
+    assert out["fuerte_oficial"]["result"] == 54
+    assert out["manual_status"]["classification"] == "FUERTE_OFICIAL"
 
 
 def test_case1_41_70_produces_29():
@@ -22,21 +21,22 @@ def test_case1_41_70_produces_29():
         observed=[{"number": 41}, {"number": 70}],
         manual_fuerte=29,
     )
-    assert out["coincidence"] in ("SI", "SI_CON_OTROS_CANDIDATOS")
-    assert 29 in (out["motor_shaped_result"] if isinstance(out["motor_shaped_result"], list) else [out["motor_shaped_result"]])
+    assert out["coincidence"] in ("SI_FUERTE_OFICIAL", "SI_FUERTE_OFICIAL_CON_OTROS")
+    assert out["manual_status"]["is_official_fuerte"] is True
 
 
-def test_case2_41_62_does_not_motor_shape_75():
-    """Documented divergence: 75 is T2 neighbor of 62, not F-shaped confirmation of 41."""
+def test_case2_classified_as_direct_t2_not_official():
     out = run_validation_lab(
         observed=[{"number": 41}, {"number": 62}],
         manual_fuerte=75,
     )
-    f = next(h for h in out["crosses_and_intersections"] if h["id"] == "F")
-    e = next(h for h in out["crosses_and_intersections"] if h["id"] == "E")
-    assert f["hit_manual"] is False
-    assert e["hit_manual"] is True
-    assert out["coincidence"] == "PARCIAL_RELACION_ALTERNATIVA"
+    assert out["coincidence"] == "SENAL_T2_DIRECTA_NO_OFICIAL"
+    assert out["manual_status"]["classification"] == "DIRECT_T2_NEIGHBOR_SIGNAL"
+    assert out["manual_status"]["is_official_fuerte"] is False
+    assert out["manual_status"]["is_direct_t2_neighbor_signal"] is True
+    assert out["fuerte_oficial"]["candidates"] == []
+    edges = out["manual_status"]["direct_t2_edges_for_manual"]
+    assert any(e["observed"] == 62 and e["direct_t2_neighbor"] == 75 for e in edges)
 
 
 def test_lab_does_not_change_catalog():

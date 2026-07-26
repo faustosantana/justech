@@ -1,0 +1,1198 @@
+{
+  "methodology_note": "DIRECT_T2_NEIGHBOR_SIGNAL backtest — not official strengthening",
+  "split_date": "2023-01-01",
+  "featured_draws": 27230,
+  "total_number_slots": 80884,
+  "windows": [
+    "same_draw",
+    "next_draw_same_lottery",
+    "same_day_other_lottery",
+    "next_calendar_day",
+    "next_7_draws_same_lottery"
+  ],
+  "global": {
+    "t2_direct": {
+      "same_draw": {
+        "activations": 23147,
+        "hits": 1422,
+        "misses": 21725,
+        "precision": 0.061433,
+        "wilson_ci_95": [
+          0.058412,
+          0.0646
+        ]
+      },
+      "next_draw_same_lottery": {
+        "activations": 23147,
+        "hits": 1998,
+        "misses": 21149,
+        "precision": 0.086318,
+        "wilson_ci_95": [
+          0.082768,
+          0.090005
+        ]
+      },
+      "same_day_other_lottery": {
+        "activations": 23147,
+        "hits": 8073,
+        "misses": 15074,
+        "precision": 0.348771,
+        "wilson_ci_95": [
+          0.342657,
+          0.354935
+        ]
+      },
+      "next_calendar_day": {
+        "activations": 23147,
+        "hits": 9029,
+        "misses": 14118,
+        "precision": 0.390072,
+        "wilson_ci_95": [
+          0.383807,
+          0.396374
+        ]
+      },
+      "next_7_draws_same_lottery": {
+        "activations": 23147,
+        "hits": 9420,
+        "misses": 13727,
+        "precision": 0.406964,
+        "wilson_ci_95": [
+          0.400651,
+          0.413308
+        ]
+      }
+    },
+    "random_same_k": {
+      "same_draw": {
+        "activations": 23147,
+        "hits": 1332,
+        "misses": 21815,
+        "precision": 0.057545,
+        "wilson_ci_95": [
+          0.054618,
+          0.060619
+        ]
+      },
+      "next_draw_same_lottery": {
+        "activations": 23147,
+        "hits": 2025,
+        "misses": 21122,
+        "precision": 0.087484,
+        "wilson_ci_95": [
+          0.083913,
+          0.091193
+        ]
+      },
+      "same_day_other_lottery": {
+        "activations": 23147,
+        "hits": 8103,
+        "misses": 15044,
+        "precision": 0.350067,
+        "wilson_ci_95": [
+          0.343947,
+          0.356236
+        ]
+      },
+      "next_calendar_day": {
+        "activations": 23147,
+        "hits": 9049,
+        "misses": 14098,
+        "precision": 0.390936,
+        "wilson_ci_95": [
+          0.384669,
+          0.39724
+        ]
+      },
+      "next_7_draws_same_lottery": {
+        "activations": 23147,
+        "hits": 9413,
+        "misses": 13734,
+        "precision": 0.406662,
+        "wilson_ci_95": [
+          0.40035,
+          0.413005
+        ]
+      }
+    }
+  },
+  "discovery": {
+    "t2_direct": {
+      "same_draw": {
+        "activations": 15568,
+        "hits": 957,
+        "misses": 14611,
+        "precision": 0.061472,
+        "wilson_ci_95": [
+          0.057806,
+          0.065355
+        ]
+      },
+      "next_draw_same_lottery": {
+        "activations": 15568,
+        "hits": 1374,
+        "misses": 14194,
+        "precision": 0.088258,
+        "wilson_ci_95": [
+          0.083903,
+          0.092816
+        ]
+      },
+      "same_day_other_lottery": {
+        "activations": 15568,
+        "hits": 5358,
+        "misses": 10210,
+        "precision": 0.344168,
+        "wilson_ci_95": [
+          0.336744,
+          0.351668
+        ]
+      },
+      "next_calendar_day": {
+        "activations": 15568,
+        "hits": 6014,
+        "misses": 9554,
+        "precision": 0.386305,
+        "wilson_ci_95": [
+          0.378686,
+          0.393981
+        ]
+      },
+      "next_7_draws_same_lottery": {
+        "activations": 15568,
+        "hits": 6346,
+        "misses": 9222,
+        "precision": 0.407631,
+        "wilson_ci_95": [
+          0.399936,
+          0.415372
+        ]
+      }
+    },
+    "random_same_k": {
+      "same_draw": {
+        "activations": 15568,
+        "hits": 905,
+        "misses": 14663,
+        "precision": 0.058132,
+        "wilson_ci_95": [
+          0.054564,
+          0.061918
+        ]
+      },
+      "next_draw_same_lottery": {
+        "activations": 15568,
+        "hits": 1367,
+        "misses": 14201,
+        "precision": 0.087808,
+        "wilson_ci_95": [
+          0.083464,
+          0.092356
+        ]
+      },
+      "same_day_other_lottery": {
+        "activations": 15568,
+        "hits": 5384,
+        "misses": 10184,
+        "precision": 0.345838,
+        "wilson_ci_95": [
+          0.338405,
+          0.353347
+        ]
+      },
+      "next_calendar_day": {
+        "activations": 15568,
+        "hits": 6074,
+        "misses": 9494,
+        "precision": 0.390159,
+        "wilson_ci_95": [
+          0.382525,
+          0.397848
+        ]
+      },
+      "next_7_draws_same_lottery": {
+        "activations": 15568,
+        "hits": 6303,
+        "misses": 9265,
+        "precision": 0.404869,
+        "wilson_ci_95": [
+          0.397182,
+          0.412602
+        ]
+      }
+    }
+  },
+  "validation": {
+    "t2_direct": {
+      "same_draw": {
+        "activations": 7579,
+        "hits": 465,
+        "misses": 7114,
+        "precision": 0.061354,
+        "wilson_ci_95": [
+          0.05617,
+          0.066982
+        ]
+      },
+      "next_draw_same_lottery": {
+        "activations": 7579,
+        "hits": 624,
+        "misses": 6955,
+        "precision": 0.082333,
+        "wilson_ci_95": [
+          0.076354,
+          0.088735
+        ]
+      },
+      "same_day_other_lottery": {
+        "activations": 7579,
+        "hits": 2715,
+        "misses": 4864,
+        "precision": 0.358227,
+        "wilson_ci_95": [
+          0.347506,
+          0.369091
+        ]
+      },
+      "next_calendar_day": {
+        "activations": 7579,
+        "hits": 3015,
+        "misses": 4564,
+        "precision": 0.39781,
+        "wilson_ci_95": [
+          0.386845,
+          0.408878
+        ]
+      },
+      "next_7_draws_same_lottery": {
+        "activations": 7579,
+        "hits": 3074,
+        "misses": 4505,
+        "precision": 0.405594,
+        "wilson_ci_95": [
+          0.39459,
+          0.416694
+        ]
+      }
+    },
+    "random_same_k": {
+      "same_draw": {
+        "activations": 7579,
+        "hits": 427,
+        "misses": 7152,
+        "precision": 0.05634,
+        "wilson_ci_95": [
+          0.05137,
+          0.061759
+        ]
+      },
+      "next_draw_same_lottery": {
+        "activations": 7579,
+        "hits": 658,
+        "misses": 6921,
+        "precision": 0.086819,
+        "wilson_ci_95": [
+          0.080687,
+          0.093369
+        ]
+      },
+      "same_day_other_lottery": {
+        "activations": 7579,
+        "hits": 2719,
+        "misses": 4860,
+        "precision": 0.358754,
+        "wilson_ci_95": [
+          0.34803,
+          0.369622
+        ]
+      },
+      "next_calendar_day": {
+        "activations": 7579,
+        "hits": 2975,
+        "misses": 4604,
+        "precision": 0.392532,
+        "wilson_ci_95": [
+          0.381595,
+          0.403578
+        ]
+      },
+      "next_7_draws_same_lottery": {
+        "activations": 7579,
+        "hits": 3110,
+        "misses": 4469,
+        "precision": 0.410344,
+        "wilson_ci_95": [
+          0.399318,
+          0.421462
+        ]
+      }
+    }
+  },
+  "per_lottery_global": {
+    "Gana Mas": {
+      "t2_direct": {
+        "same_draw": {
+          "activations": 3308,
+          "hits": 178,
+          "misses": 3130,
+          "precision": 0.053809,
+          "wilson_ci_95": [
+            0.046624,
+            0.062029
+          ]
+        },
+        "next_draw_same_lottery": {
+          "activations": 3308,
+          "hits": 281,
+          "misses": 3027,
+          "precision": 0.084946,
+          "wilson_ci_95": [
+            0.075919,
+            0.094935
+          ]
+        },
+        "same_day_other_lottery": {
+          "activations": 3308,
+          "hits": 1157,
+          "misses": 2151,
+          "precision": 0.349758,
+          "wilson_ci_95": [
+            0.333689,
+            0.366175
+          ]
+        },
+        "next_calendar_day": {
+          "activations": 3308,
+          "hits": 1334,
+          "misses": 1974,
+          "precision": 0.403265,
+          "wilson_ci_95": [
+            0.386669,
+            0.420085
+          ]
+        },
+        "next_7_draws_same_lottery": {
+          "activations": 3308,
+          "hits": 1326,
+          "misses": 1982,
+          "precision": 0.400846,
+          "wilson_ci_95": [
+            0.38427,
+            0.417653
+          ]
+        }
+      },
+      "random_same_k": {
+        "same_draw": {
+          "activations": 3308,
+          "hits": 211,
+          "misses": 3097,
+          "precision": 0.063785,
+          "wilson_ci_95": [
+            0.055953,
+            0.072629
+          ]
+        },
+        "next_draw_same_lottery": {
+          "activations": 3308,
+          "hits": 262,
+          "misses": 3046,
+          "precision": 0.079202,
+          "wilson_ci_95": [
+            0.07048,
+            0.088901
+          ]
+        },
+        "same_day_other_lottery": {
+          "activations": 3308,
+          "hits": 1161,
+          "misses": 2147,
+          "precision": 0.350967,
+          "wilson_ci_95": [
+            0.334884,
+            0.367396
+          ]
+        },
+        "next_calendar_day": {
+          "activations": 3308,
+          "hits": 1252,
+          "misses": 2056,
+          "precision": 0.378476,
+          "wilson_ci_95": [
+            0.362098,
+            0.395136
+          ]
+        },
+        "next_7_draws_same_lottery": {
+          "activations": 3308,
+          "hits": 1322,
+          "misses": 1986,
+          "precision": 0.399637,
+          "wilson_ci_95": [
+            0.383071,
+            0.416437
+          ]
+        }
+      }
+    },
+    "Loteria Nacional": {
+      "t2_direct": {
+        "same_draw": {
+          "activations": 3381,
+          "hits": 201,
+          "misses": 3180,
+          "precision": 0.05945,
+          "wilson_ci_95": [
+            0.051968,
+            0.067932
+          ]
+        },
+        "next_draw_same_lottery": {
+          "activations": 3381,
+          "hits": 293,
+          "misses": 3088,
+          "precision": 0.086661,
+          "wilson_ci_95": [
+            0.07764,
+            0.096619
+          ]
+        },
+        "same_day_other_lottery": {
+          "activations": 3381,
+          "hits": 1198,
+          "misses": 2183,
+          "precision": 0.354333,
+          "wilson_ci_95": [
+            0.338384,
+            0.370613
+          ]
+        },
+        "next_calendar_day": {
+          "activations": 3381,
+          "hits": 1306,
+          "misses": 2075,
+          "precision": 0.386276,
+          "wilson_ci_95": [
+            0.370002,
+            0.402809
+          ]
+        },
+        "next_7_draws_same_lottery": {
+          "activations": 3381,
+          "hits": 1364,
+          "misses": 2017,
+          "precision": 0.403431,
+          "wilson_ci_95": [
+            0.387013,
+            0.420068
+          ]
+        }
+      },
+      "random_same_k": {
+        "same_draw": {
+          "activations": 3381,
+          "hits": 192,
+          "misses": 3189,
+          "precision": 0.056788,
+          "wilson_ci_95": [
+            0.049478,
+            0.065104
+          ]
+        },
+        "next_draw_same_lottery": {
+          "activations": 3381,
+          "hits": 301,
+          "misses": 3080,
+          "precision": 0.089027,
+          "wilson_ci_95": [
+            0.079888,
+            0.099099
+          ]
+        },
+        "same_day_other_lottery": {
+          "activations": 3381,
+          "hits": 1209,
+          "misses": 2172,
+          "precision": 0.357587,
+          "wilson_ci_95": [
+            0.341601,
+            0.373896
+          ]
+        },
+        "next_calendar_day": {
+          "activations": 3381,
+          "hits": 1326,
+          "misses": 2055,
+          "precision": 0.392192,
+          "wilson_ci_95": [
+            0.375865,
+            0.408763
+          ]
+        },
+        "next_7_draws_same_lottery": {
+          "activations": 3381,
+          "hits": 1363,
+          "misses": 2018,
+          "precision": 0.403135,
+          "wilson_ci_95": [
+            0.386719,
+            0.419771
+          ]
+        }
+      }
+    },
+    "New York 10:30": {
+      "t2_direct": {
+        "same_draw": {
+          "activations": 2985,
+          "hits": 182,
+          "misses": 2803,
+          "precision": 0.060972,
+          "wilson_ci_95": [
+            0.052939,
+            0.070133
+          ]
+        },
+        "next_draw_same_lottery": {
+          "activations": 2985,
+          "hits": 242,
+          "misses": 2743,
+          "precision": 0.081072,
+          "wilson_ci_95": [
+            0.07181,
+            0.091411
+          ]
+        },
+        "same_day_other_lottery": {
+          "activations": 2985,
+          "hits": 1068,
+          "misses": 1917,
+          "precision": 0.357789,
+          "wilson_ci_95": [
+            0.340785,
+            0.375158
+          ]
+        },
+        "next_calendar_day": {
+          "activations": 2985,
+          "hits": 1191,
+          "misses": 1794,
+          "precision": 0.398995,
+          "wilson_ci_95": [
+            0.381568,
+            0.416681
+          ]
+        },
+        "next_7_draws_same_lottery": {
+          "activations": 2985,
+          "hits": 1233,
+          "misses": 1752,
+          "precision": 0.413065,
+          "wilson_ci_95": [
+            0.395524,
+            0.43083
+          ]
+        }
+      },
+      "random_same_k": {
+        "same_draw": {
+          "activations": 2985,
+          "hits": 158,
+          "misses": 2827,
+          "precision": 0.052931,
+          "wilson_ci_95": [
+            0.045458,
+            0.061553
+          ]
+        },
+        "next_draw_same_lottery": {
+          "activations": 2985,
+          "hits": 242,
+          "misses": 2743,
+          "precision": 0.081072,
+          "wilson_ci_95": [
+            0.07181,
+            0.091411
+          ]
+        },
+        "same_day_other_lottery": {
+          "activations": 2985,
+          "hits": 1034,
+          "misses": 1951,
+          "precision": 0.346399,
+          "wilson_ci_95": [
+            0.329536,
+            0.363656
+          ]
+        },
+        "next_calendar_day": {
+          "activations": 2985,
+          "hits": 1186,
+          "misses": 1799,
+          "precision": 0.39732,
+          "wilson_ci_95": [
+            0.379908,
+            0.414996
+          ]
+        },
+        "next_7_draws_same_lottery": {
+          "activations": 2985,
+          "hits": 1237,
+          "misses": 1748,
+          "precision": 0.414405,
+          "wilson_ci_95": [
+            0.396854,
+            0.432177
+          ]
+        }
+      }
+    },
+    "New York 2:30": {
+      "t2_direct": {
+        "same_draw": {
+          "activations": 3022,
+          "hits": 193,
+          "misses": 2829,
+          "precision": 0.063865,
+          "wilson_ci_95": [
+            0.055689,
+            0.073149
+          ]
+        },
+        "next_draw_same_lottery": {
+          "activations": 3022,
+          "hits": 256,
+          "misses": 2766,
+          "precision": 0.084712,
+          "wilson_ci_95": [
+            0.075304,
+            0.095175
+          ]
+        },
+        "same_day_other_lottery": {
+          "activations": 3022,
+          "hits": 1052,
+          "misses": 1970,
+          "precision": 0.348114,
+          "wilson_ci_95": [
+            0.331332,
+            0.365282
+          ]
+        },
+        "next_calendar_day": {
+          "activations": 3022,
+          "hits": 1163,
+          "misses": 1859,
+          "precision": 0.384844,
+          "wilson_ci_95": [
+            0.367653,
+            0.402328
+          ]
+        },
+        "next_7_draws_same_lottery": {
+          "activations": 3022,
+          "hits": 1228,
+          "misses": 1794,
+          "precision": 0.406353,
+          "wilson_ci_95": [
+            0.388971,
+            0.423973
+          ]
+        }
+      },
+      "random_same_k": {
+        "same_draw": {
+          "activations": 3022,
+          "hits": 174,
+          "misses": 2848,
+          "precision": 0.057578,
+          "wilson_ci_95": [
+            0.04982,
+            0.066459
+          ]
+        },
+        "next_draw_same_lottery": {
+          "activations": 3022,
+          "hits": 268,
+          "misses": 2754,
+          "precision": 0.088683,
+          "wilson_ci_95": [
+            0.079062,
+            0.099348
+          ]
+        },
+        "same_day_other_lottery": {
+          "activations": 3022,
+          "hits": 1050,
+          "misses": 1972,
+          "precision": 0.347452,
+          "wilson_ci_95": [
+            0.330678,
+            0.364613
+          ]
+        },
+        "next_calendar_day": {
+          "activations": 3022,
+          "hits": 1191,
+          "misses": 1831,
+          "precision": 0.39411,
+          "wilson_ci_95": [
+            0.376832,
+            0.411656
+          ]
+        },
+        "next_7_draws_same_lottery": {
+          "activations": 3022,
+          "hits": 1220,
+          "misses": 1802,
+          "precision": 0.403706,
+          "wilson_ci_95": [
+            0.386346,
+            0.421311
+          ]
+        }
+      }
+    },
+    "Quiniela Leidsa": {
+      "t2_direct": {
+        "same_draw": {
+          "activations": 3438,
+          "hits": 240,
+          "misses": 3198,
+          "precision": 0.069808,
+          "wilson_ci_95": [
+            0.061761,
+            0.078815
+          ]
+        },
+        "next_draw_same_lottery": {
+          "activations": 3438,
+          "hits": 310,
+          "misses": 3128,
+          "precision": 0.090169,
+          "wilson_ci_95": [
+            0.081046,
+            0.100206
+          ]
+        },
+        "same_day_other_lottery": {
+          "activations": 3438,
+          "hits": 1204,
+          "misses": 2234,
+          "precision": 0.350204,
+          "wilson_ci_95": [
+            0.334433,
+            0.366309
+          ]
+        },
+        "next_calendar_day": {
+          "activations": 3438,
+          "hits": 1349,
+          "misses": 2089,
+          "precision": 0.392379,
+          "wilson_ci_95": [
+            0.376186,
+            0.408813
+          ]
+        },
+        "next_7_draws_same_lottery": {
+          "activations": 3438,
+          "hits": 1398,
+          "misses": 2040,
+          "precision": 0.406632,
+          "wilson_ci_95": [
+            0.390325,
+            0.423147
+          ]
+        }
+      },
+      "random_same_k": {
+        "same_draw": {
+          "activations": 3438,
+          "hits": 200,
+          "misses": 3238,
+          "precision": 0.058173,
+          "wilson_ci_95": [
+            0.050831,
+            0.066502
+          ]
+        },
+        "next_draw_same_lottery": {
+          "activations": 3438,
+          "hits": 342,
+          "misses": 3096,
+          "precision": 0.099476,
+          "wilson_ci_95": [
+            0.089914,
+            0.109933
+          ]
+        },
+        "same_day_other_lottery": {
+          "activations": 3438,
+          "hits": 1238,
+          "misses": 2200,
+          "precision": 0.360093,
+          "wilson_ci_95": [
+            0.344211,
+            0.376287
+          ]
+        },
+        "next_calendar_day": {
+          "activations": 3438,
+          "hits": 1346,
+          "misses": 2092,
+          "precision": 0.391507,
+          "wilson_ci_95": [
+            0.375321,
+            0.407935
+          ]
+        },
+        "next_7_draws_same_lottery": {
+          "activations": 3438,
+          "hits": 1427,
+          "misses": 2011,
+          "precision": 0.415067,
+          "wilson_ci_95": [
+            0.3987,
+            0.431624
+          ]
+        }
+      }
+    },
+    "Quiniela Loteka": {
+      "t2_direct": {
+        "same_draw": {
+          "activations": 3507,
+          "hits": 214,
+          "misses": 3293,
+          "precision": 0.061021,
+          "wilson_ci_95": [
+            0.053569,
+            0.069434
+          ]
+        },
+        "next_draw_same_lottery": {
+          "activations": 3507,
+          "hits": 319,
+          "misses": 3188,
+          "precision": 0.090961,
+          "wilson_ci_95": [
+            0.081886,
+            0.100931
+          ]
+        },
+        "same_day_other_lottery": {
+          "activations": 3507,
+          "hits": 1201,
+          "misses": 2306,
+          "precision": 0.342458,
+          "wilson_ci_95": [
+            0.326932,
+            0.358328
+          ]
+        },
+        "next_calendar_day": {
+          "activations": 3507,
+          "hits": 1356,
+          "misses": 2151,
+          "precision": 0.386655,
+          "wilson_ci_95": [
+            0.37067,
+            0.402889
+          ]
+        },
+        "next_7_draws_same_lottery": {
+          "activations": 3507,
+          "hits": 1422,
+          "misses": 2085,
+          "precision": 0.405475,
+          "wilson_ci_95": [
+            0.389337,
+            0.42182
+          ]
+        }
+      },
+      "random_same_k": {
+        "same_draw": {
+          "activations": 3507,
+          "hits": 183,
+          "misses": 3324,
+          "precision": 0.052181,
+          "wilson_ci_95": [
+            0.045299,
+            0.060044
+          ]
+        },
+        "next_draw_same_lottery": {
+          "activations": 3507,
+          "hits": 325,
+          "misses": 3182,
+          "precision": 0.092672,
+          "wilson_ci_95": [
+            0.083515,
+            0.10272
+          ]
+        },
+        "same_day_other_lottery": {
+          "activations": 3507,
+          "hits": 1195,
+          "misses": 2312,
+          "precision": 0.340747,
+          "wilson_ci_95": [
+            0.325242,
+            0.3566
+          ]
+        },
+        "next_calendar_day": {
+          "activations": 3507,
+          "hits": 1361,
+          "misses": 2146,
+          "precision": 0.388081,
+          "wilson_ci_95": [
+            0.372083,
+            0.404324
+          ]
+        },
+        "next_7_draws_same_lottery": {
+          "activations": 3507,
+          "hits": 1436,
+          "misses": 2071,
+          "precision": 0.409467,
+          "wilson_ci_95": [
+            0.393299,
+            0.425832
+          ]
+        }
+      }
+    },
+    "Quiniela Real": {
+      "t2_direct": {
+        "same_draw": {
+          "activations": 3506,
+          "hits": 214,
+          "misses": 3292,
+          "precision": 0.061038,
+          "wilson_ci_95": [
+            0.053584,
+            0.069453
+          ]
+        },
+        "next_draw_same_lottery": {
+          "activations": 3506,
+          "hits": 297,
+          "misses": 3209,
+          "precision": 0.084712,
+          "wilson_ci_95": [
+            0.075943,
+            0.09439
+          ]
+        },
+        "same_day_other_lottery": {
+          "activations": 3506,
+          "hits": 1193,
+          "misses": 2313,
+          "precision": 0.340274,
+          "wilson_ci_95": [
+            0.324773,
+            0.356125
+          ]
+        },
+        "next_calendar_day": {
+          "activations": 3506,
+          "hits": 1330,
+          "misses": 2176,
+          "precision": 0.37935,
+          "wilson_ci_95": [
+            0.363428,
+            0.395535
+          ]
+        },
+        "next_7_draws_same_lottery": {
+          "activations": 3506,
+          "hits": 1449,
+          "misses": 2057,
+          "precision": 0.413292,
+          "wilson_ci_95": [
+            0.397095,
+            0.429678
+          ]
+        }
+      },
+      "random_same_k": {
+        "same_draw": {
+          "activations": 3506,
+          "hits": 214,
+          "misses": 3292,
+          "precision": 0.061038,
+          "wilson_ci_95": [
+            0.053584,
+            0.069453
+          ]
+        },
+        "next_draw_same_lottery": {
+          "activations": 3506,
+          "hits": 285,
+          "misses": 3221,
+          "precision": 0.081289,
+          "wilson_ci_95": [
+            0.072695,
+            0.0908
+          ]
+        },
+        "same_day_other_lottery": {
+          "activations": 3506,
+          "hits": 1216,
+          "misses": 2290,
+          "precision": 0.346834,
+          "wilson_ci_95": [
+            0.331254,
+            0.362749
+          ]
+        },
+        "next_calendar_day": {
+          "activations": 3506,
+          "hits": 1387,
+          "misses": 2119,
+          "precision": 0.395608,
+          "wilson_ci_95": [
+            0.379544,
+            0.411899
+          ]
+        },
+        "next_7_draws_same_lottery": {
+          "activations": 3506,
+          "hits": 1408,
+          "misses": 2098,
+          "precision": 0.401597,
+          "wilson_ci_95": [
+            0.385486,
+            0.417924
+          ]
+        }
+      }
+    }
+  },
+  "official_f_same_day_then_next_day": {
+    "discovery": {
+      "activations": 1338,
+      "hits": 328,
+      "misses": 1010,
+      "precision": 0.245142,
+      "wilson_ci_95": [
+        0.222843,
+        0.2689
+      ]
+    },
+    "validation": {
+      "activations": 707,
+      "hits": 202,
+      "misses": 505,
+      "precision": 0.285714,
+      "wilson_ci_95": [
+        0.253642,
+        0.320103
+      ]
+    },
+    "global": {
+      "activations": 2045,
+      "hits": 530,
+      "misses": 1515,
+      "precision": 0.259169,
+      "wilson_ci_95": [
+        0.240641,
+        0.278599
+      ]
+    }
+  },
+  "lifts_next_calendar_day": {
+    "discovery": {
+      "t2_precision": 0.386305,
+      "random_same_k_precision": 0.390159,
+      "lift_vs_random_same_k": 0.9901,
+      "approx_single_number_day_base_rate": 0.174957,
+      "t2_wilson": [
+        0.378686,
+        0.393981
+      ],
+      "random_wilson": [
+        0.382525,
+        0.397848
+      ]
+    },
+    "validation": {
+      "t2_precision": 0.39781,
+      "random_same_k_precision": 0.392532,
+      "lift_vs_random_same_k": 1.0134,
+      "approx_single_number_day_base_rate": 0.174957,
+      "t2_wilson": [
+        0.386845,
+        0.408878
+      ],
+      "random_wilson": [
+        0.381595,
+        0.403578
+      ]
+    },
+    "global": {
+      "t2_precision": 0.390072,
+      "random_same_k_precision": 0.390936,
+      "lift_vs_random_same_k": 0.9978,
+      "approx_single_number_day_base_rate": 0.174957,
+      "t2_wilson": [
+        0.383807,
+        0.396374
+      ],
+      "random_wilson": [
+        0.384669,
+        0.39724
+      ]
+    }
+  },
+  "lifts_next_7_draws": {
+    "discovery": {
+      "t2_precision": 0.407631,
+      "random_same_k_precision": 0.404869,
+      "lift_vs_random_same_k": 1.0068,
+      "approx_single_number_day_base_rate": 0.174957,
+      "t2_wilson": [
+        0.399936,
+        0.415372
+      ],
+      "random_wilson": [
+        0.397182,
+        0.412602
+      ]
+    },
+    "validation": {
+      "t2_precision": 0.405594,
+      "random_same_k_precision": 0.410344,
+      "lift_vs_random_same_k": 0.9884,
+      "approx_single_number_day_base_rate": 0.174957,
+      "t2_wilson": [
+        0.39459,
+        0.416694
+      ],
+      "random_wilson": [
+        0.399318,
+        0.421462
+      ]
+    },
+    "global": {
+      "t2_precision": 0.406964,
+      "random_same_k_precision": 0.406662,
+      "lift_vs_random_same_k": 1.0007,
+      "approx_single_number_day_base_rate": 0.174957,
+      "t2_wilson": [
+        0.400651,
+        0.413308
+      ],
+      "random_wilson": [
+        0.40035,
+        0.413005
+      ]
+    }
+  },
+  "c2_pattern_verdict": "A_RECHAZADO",
+  "c2_classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+  "not_official_fuerte": true
+}

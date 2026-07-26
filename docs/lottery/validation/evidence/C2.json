@@ -523,12 +523,97 @@
         ]
       }
     ],
+    "fuerte_oficial": {
+      "candidates": [],
+      "result": [],
+      "geometry": "T1_candidato_x_T2_confirmador"
+    },
+    "senal_t2_directa": {
+      "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+      "all_direct_neighbors": [
+        12,
+        56,
+        71,
+        75,
+        89
+      ],
+      "secondary_only_not_official": [
+        12,
+        56,
+        71,
+        75,
+        89
+      ],
+      "edges": [
+        {
+          "observed": 41,
+          "direct_t2_neighbor": 12,
+          "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+          "is_official_fuerte": false
+        },
+        {
+          "observed": 41,
+          "direct_t2_neighbor": 56,
+          "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+          "is_official_fuerte": false
+        },
+        {
+          "observed": 41,
+          "direct_t2_neighbor": 71,
+          "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+          "is_official_fuerte": false
+        },
+        {
+          "observed": 41,
+          "direct_t2_neighbor": 89,
+          "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+          "is_official_fuerte": false
+        },
+        {
+          "observed": 62,
+          "direct_t2_neighbor": 75,
+          "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+          "is_official_fuerte": false
+        }
+      ],
+      "is_official_fuerte": false
+    },
+    "manual_status": {
+      "manual_fuerte": 75,
+      "is_official_fuerte": false,
+      "is_direct_t2_neighbor_signal": true,
+      "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+      "official_strengthened_candidates": [],
+      "direct_t2_edges_for_manual": [
+        {
+          "observed": 62,
+          "direct_t2_neighbor": 75,
+          "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+          "is_official_fuerte": false
+        }
+      ],
+      "label_es": "Señal T2 directa — no fuerte oficial"
+    },
     "motor_shaped_result": [],
-    "coincidence": "PARCIAL_RELACION_ALTERNATIVA",
-    "explanation": null,
+    "coincidence": "SENAL_T2_DIRECTA_NO_OFICIAL",
+    "explanation": {
+      "kind": "DIRECT_T2_NEIGHBOR_SIGNAL",
+      "relation": "El número manual es vecino directo Tabla2 de un observado, pero NO fue producido como candidato Tabla1 confirmado. No cumple la regla oficial de fortalecimiento.",
+      "edges": [
+        {
+          "observed": 62,
+          "direct_t2_neighbor": 75,
+          "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+          "is_official_fuerte": false
+        }
+      ],
+      "methodology_version": "nr-historical-relations-j1.0.0",
+      "not_equivalent_to_official_fuerte": true
+    },
     "notes": [
       "Este laboratorio no altera Tablas ni el motor.",
-      "El endpoint /analyze oficial opera sobre UN solo observed_number y ranking histórico; aquí se explica el cruce multi-observación del mismo día con la misma geometría T1×T2."
+      "FUERTE OFICIAL ≠ SEÑAL T2 DIRECTA — no confundir.",
+      "DIRECT_T2_NEIGHBOR_SIGNAL es secundaria/experimental hasta decisión metodológica aparte."
     ]
   },
   "motor_per_observed_number": [
@@ -564,7 +649,7 @@
   ],
   "motor_shaped_matches": [],
   "coincidence": "SI (hipótesis exacta singleton)",
-  "lab_coincidence": "PARCIAL_RELACION_ALTERNATIVA",
+  "lab_coincidence": "SENAL_T2_DIRECTA_NO_OFICIAL",
   "next_day_verification": null,
   "methodology_version_reference": "nr-historical-relations-j1.0.0",
   "dev_db_max_note": "DEV max draw_date may be before some case dates"

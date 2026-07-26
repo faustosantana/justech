@@ -644,9 +644,132 @@
         ]
       }
     ],
+    "fuerte_oficial": {
+      "candidates": [
+        54
+      ],
+      "result": 54,
+      "geometry": "T1_candidato_x_T2_confirmador"
+    },
+    "senal_t2_directa": {
+      "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+      "all_direct_neighbors": [
+        7,
+        9,
+        22,
+        29,
+        42,
+        44,
+        53,
+        54,
+        63,
+        70,
+        90
+      ],
+      "secondary_only_not_official": [
+        7,
+        9,
+        22,
+        29,
+        42,
+        44,
+        53,
+        63,
+        70,
+        90
+      ],
+      "edges": [
+        {
+          "observed": 35,
+          "direct_t2_neighbor": 7,
+          "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+          "is_official_fuerte": false
+        },
+        {
+          "observed": 35,
+          "direct_t2_neighbor": 9,
+          "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+          "is_official_fuerte": false
+        },
+        {
+          "observed": 35,
+          "direct_t2_neighbor": 22,
+          "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+          "is_official_fuerte": false
+        },
+        {
+          "observed": 35,
+          "direct_t2_neighbor": 29,
+          "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+          "is_official_fuerte": false
+        },
+        {
+          "observed": 35,
+          "direct_t2_neighbor": 42,
+          "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+          "is_official_fuerte": false
+        },
+        {
+          "observed": 35,
+          "direct_t2_neighbor": 44,
+          "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+          "is_official_fuerte": false
+        },
+        {
+          "observed": 35,
+          "direct_t2_neighbor": 53,
+          "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+          "is_official_fuerte": false
+        },
+        {
+          "observed": 35,
+          "direct_t2_neighbor": 63,
+          "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+          "is_official_fuerte": false
+        },
+        {
+          "observed": 35,
+          "direct_t2_neighbor": 70,
+          "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+          "is_official_fuerte": false
+        },
+        {
+          "observed": 35,
+          "direct_t2_neighbor": 90,
+          "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+          "is_official_fuerte": false
+        },
+        {
+          "observed": 14,
+          "direct_t2_neighbor": 54,
+          "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+          "is_official_fuerte": false
+        }
+      ],
+      "is_official_fuerte": false
+    },
+    "manual_status": {
+      "manual_fuerte": 54,
+      "is_official_fuerte": true,
+      "is_direct_t2_neighbor_signal": false,
+      "classification": "FUERTE_OFICIAL",
+      "official_strengthened_candidates": [
+        54
+      ],
+      "direct_t2_edges_for_manual": [
+        {
+          "observed": 14,
+          "direct_t2_neighbor": 54,
+          "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+          "is_official_fuerte": false
+        }
+      ],
+      "label_es": "Fuerte oficial (Tabla1 candidato × Tabla2 confirmador)"
+    },
     "motor_shaped_result": 54,
-    "coincidence": "SI",
+    "coincidence": "SI_FUERTE_OFICIAL",
     "explanation": {
+      "kind": "FUERTE_OFICIAL",
       "relation": "Número observado N → compañeros Tabla1 (candidatos) → cada candidato consulta vecinos Tabla2 → si un confirmador (otro número observado el mismo día) aparece en esos vecinos, solo el candidato de Tabla1 se fortalece.",
       "detail": [
         {
@@ -661,7 +784,8 @@
     },
     "notes": [
       "Este laboratorio no altera Tablas ni el motor.",
-      "El endpoint /analyze oficial opera sobre UN solo observed_number y ranking histórico; aquí se explica el cruce multi-observación del mismo día con la misma geometría T1×T2."
+      "FUERTE OFICIAL ≠ SEÑAL T2 DIRECTA — no confundir.",
+      "DIRECT_T2_NEIGHBOR_SIGNAL es secundaria/experimental hasta decisión metodológica aparte."
     ]
   },
   "motor_per_observed_number": [
@@ -707,7 +831,7 @@
     "F"
   ],
   "coincidence": "SI (hipótesis exacta singleton)",
-  "lab_coincidence": "SI",
+  "lab_coincidence": "SI_FUERTE_OFICIAL",
   "next_day_verification": {
     "date": "2026-06-24",
     "expected_number": 54,

@@ -180,32 +180,90 @@ def run_validation_lab(
     ranking = build_mathematical_ranking(hyps)
 
     motor_shaped = next((h for h in hyps if h["id"] == "F"), None)
-    motor_top = (motor_shaped or {}).get("produced") or []
+    motor_top = list((motor_shaped or {}).get("produced") or [])
     motor_result = motor_top[0] if len(motor_top) == 1 else motor_top
 
+    # DIRECT_T2_NEIGHBOR_SIGNAL — secondary; never equals official fuerte
+    direct_t2_edges: list[dict[str, Any]] = []
+    direct_t2_numbers: set[int] = set()
+    for n in dict.fromkeys(nums):
+        for v in _neighbors(cat, n):
+            direct_t2_numbers.add(v)
+            direct_t2_edges.append(
+                {
+                    "observed": n,
+                    "direct_t2_neighbor": v,
+                    "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+                    "is_official_fuerte": False,
+                }
+            )
+    # signals that are T2-direct but NOT official strengthened candidates
+    official_set = set(motor_top)
+    secondary_only = sorted(direct_t2_numbers - official_set)
+
     coincidence: str | None = None
+    manual_status: dict[str, Any] | None = None
     if manual_fuerte is not None:
-        if motor_shaped and motor_shaped.get("hit_manual") and len(motor_shaped.get("produced") or []) == 1:
-            coincidence = "SI"
-        elif motor_shaped and motor_shaped.get("hit_manual"):
-            coincidence = "SI_CON_OTROS_CANDIDATOS"
-        elif any(h.get("hit_manual") for h in hyps if h["id"] in ("A", "E")):
-            coincidence = "PARCIAL_RELACION_ALTERNATIVA"
+        mf = int(manual_fuerte)
+        is_official = mf in official_set
+        is_direct_t2 = any(
+            e["direct_t2_neighbor"] == mf for e in direct_t2_edges
+        )
+        if is_official and len(motor_top) == 1:
+            coincidence = "SI_FUERTE_OFICIAL"
+        elif is_official:
+            coincidence = "SI_FUERTE_OFICIAL_CON_OTROS"
+        elif is_direct_t2:
+            coincidence = "SENAL_T2_DIRECTA_NO_OFICIAL"
         else:
             coincidence = "NO"
 
+        matching_edges = [e for e in direct_t2_edges if e["direct_t2_neighbor"] == mf]
+        manual_status = {
+            "manual_fuerte": mf,
+            "is_official_fuerte": is_official,
+            "is_direct_t2_neighbor_signal": is_direct_t2 and not is_official,
+            "classification": (
+                "FUERTE_OFICIAL"
+                if is_official
+                else "DIRECT_T2_NEIGHBOR_SIGNAL"
+                if is_direct_t2
+                else "UNEXPLAINED"
+            ),
+            "official_strengthened_candidates": motor_top,
+            "direct_t2_edges_for_manual": matching_edges,
+            "label_es": (
+                "Fuerte oficial (Tabla1 candidato × Tabla2 confirmador)"
+                if is_official
+                else "Señal T2 directa — no fuerte oficial"
+                if is_direct_t2
+                else "Sin relación oficial ni señal T2 directa"
+            ),
+        }
+
     explanation = None
-    if motor_shaped and manual_fuerte is not None and motor_shaped.get("hit_manual"):
+    if motor_shaped and manual_fuerte is not None and int(manual_fuerte) in official_set:
         detail = [
             d for d in (motor_shaped.get("detail") or []) if d.get("candidate") == int(manual_fuerte)
         ]
         explanation = {
+            "kind": "FUERTE_OFICIAL",
             "relation": "Número observado N → compañeros Tabla1 (candidatos) → "
             "cada candidato consulta vecinos Tabla2 → si un confirmador "
             "(otro número observado el mismo día) aparece en esos vecinos, "
             "solo el candidato de Tabla1 se fortalece.",
             "detail": detail,
             "methodology_version": METHODOLOGY_VERSION,
+        }
+    elif manual_status and manual_status.get("classification") == "DIRECT_T2_NEIGHBOR_SIGNAL":
+        explanation = {
+            "kind": "DIRECT_T2_NEIGHBOR_SIGNAL",
+            "relation": "El número manual es vecino directo Tabla2 de un observado, "
+            "pero NO fue producido como candidato Tabla1 confirmado. "
+            "No cumple la regla oficial de fortalecimiento.",
+            "edges": manual_status.get("direct_t2_edges_for_manual"),
+            "methodology_version": METHODOLOGY_VERSION,
+            "not_equivalent_to_official_fuerte": True,
         }
 
     return {
@@ -220,12 +278,25 @@ def run_validation_lab(
         "tables_per_number": per_number,
         "crosses_and_intersections": hyps,
         "mathematical_ranking": ranking,
+        "fuerte_oficial": {
+            "candidates": motor_top,
+            "result": motor_result,
+            "geometry": "T1_candidato_x_T2_confirmador",
+        },
+        "senal_t2_directa": {
+            "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+            "all_direct_neighbors": sorted(direct_t2_numbers),
+            "secondary_only_not_official": secondary_only,
+            "edges": direct_t2_edges,
+            "is_official_fuerte": False,
+        },
+        "manual_status": manual_status,
         "motor_shaped_result": motor_result,
         "coincidence": coincidence,
         "explanation": explanation,
         "notes": [
             "Este laboratorio no altera Tablas ni el motor.",
-            "El endpoint /analyze oficial opera sobre UN solo observed_number y ranking histórico; "
-            "aquí se explica el cruce multi-observación del mismo día con la misma geometría T1×T2.",
+            "FUERTE OFICIAL ≠ SEÑAL T2 DIRECTA — no confundir.",
+            "DIRECT_T2_NEIGHBOR_SIGNAL es secundaria/experimental hasta decisión metodológica aparte.",
         ],
     }

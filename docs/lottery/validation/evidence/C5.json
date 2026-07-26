@@ -19,16 +19,24 @@
       "alias": "New York Día",
       "lottery": "New York 2:30",
       "number": 35,
-      "present_in_db": false,
-      "draw_numbers": null,
+      "present_in_db": true,
+      "draw_numbers": [
+        35,
+        61,
+        45
+      ],
       "lottery_id": "1c488641-adb6-4790-89e7-879d361da7cc"
     },
     {
       "alias": "Nacional",
       "lottery": "Loteria Nacional",
       "number": 14,
-      "present_in_db": false,
-      "draw_numbers": null,
+      "present_in_db": true,
+      "draw_numbers": [
+        14,
+        7,
+        16
+      ],
       "lottery_id": "0118037f-8f8b-4a82-899c-42cd50b6e194"
     }
   ],
@@ -37,18 +45,96 @@
       "alias": "New York Día",
       "lottery": "New York 2:30",
       "stated": 35,
-      "db_first": null,
-      "match": false
+      "db_first": 35,
+      "match": true
     },
     {
       "alias": "Nacional",
       "lottery": "Loteria Nacional",
       "stated": 14,
-      "db_first": null,
-      "match": false
+      "db_first": 14,
+      "match": true
     }
   ],
-  "draws_that_day_featured": [],
+  "draws_that_day_featured": [
+    {
+      "name": "Gana Mas",
+      "lottery_id": "43250709-ee65-476f-91f6-cb8438f49d65",
+      "draw_id": "0cf612b7-083a-481a-883b-41e2ebba2c1b",
+      "draw_date": "2026-07-22",
+      "numbers": [
+        60,
+        8,
+        2
+      ]
+    },
+    {
+      "name": "Loteria Nacional",
+      "lottery_id": "0118037f-8f8b-4a82-899c-42cd50b6e194",
+      "draw_id": "3aa518e2-a381-45b7-8c5e-7e19825dc8d5",
+      "draw_date": "2026-07-22",
+      "numbers": [
+        14,
+        7,
+        16
+      ]
+    },
+    {
+      "name": "New York 10:30",
+      "lottery_id": "1624b6f2-88c6-42b5-a597-bf9c0f98a6b5",
+      "draw_id": "e77b15c2-c4af-4281-814c-2340e221d0c9",
+      "draw_date": "2026-07-22",
+      "numbers": [
+        38,
+        95,
+        49
+      ]
+    },
+    {
+      "name": "New York 2:30",
+      "lottery_id": "1c488641-adb6-4790-89e7-879d361da7cc",
+      "draw_id": "69f3cf8d-490a-4be2-ac7e-67ec4dc148c5",
+      "draw_date": "2026-07-22",
+      "numbers": [
+        35,
+        61,
+        45
+      ]
+    },
+    {
+      "name": "Quiniela Leidsa",
+      "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+      "draw_id": "6fff8fd6-35ba-4ad2-9a52-ef8c4b1d976c",
+      "draw_date": "2026-07-22",
+      "numbers": [
+        37,
+        14,
+        65
+      ]
+    },
+    {
+      "name": "Quiniela Loteka",
+      "lottery_id": "b9f2c5a2-bc3e-4382-9b6d-3cee16db00fd",
+      "draw_id": "b7e77f51-737a-4500-84e6-77c5b7a58ad4",
+      "draw_date": "2026-07-22",
+      "numbers": [
+        52,
+        37,
+        18
+      ]
+    },
+    {
+      "name": "Quiniela Real",
+      "lottery_id": "205c58d2-cfcf-44e6-894d-97358b3d540b",
+      "draw_id": "802f2ae2-e77d-495e-be95-ebf305d84a35",
+      "draw_date": "2026-07-22",
+      "numbers": [
+        12,
+        37,
+        33
+      ]
+    }
+  ],
   "table_reconstruction": {
     "35": {
       "observed": 35,
@@ -558,9 +644,132 @@
         ]
       }
     ],
+    "fuerte_oficial": {
+      "candidates": [
+        54
+      ],
+      "result": 54,
+      "geometry": "T1_candidato_x_T2_confirmador"
+    },
+    "senal_t2_directa": {
+      "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+      "all_direct_neighbors": [
+        7,
+        9,
+        22,
+        29,
+        42,
+        44,
+        53,
+        54,
+        63,
+        70,
+        90
+      ],
+      "secondary_only_not_official": [
+        7,
+        9,
+        22,
+        29,
+        42,
+        44,
+        53,
+        63,
+        70,
+        90
+      ],
+      "edges": [
+        {
+          "observed": 35,
+          "direct_t2_neighbor": 7,
+          "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+          "is_official_fuerte": false
+        },
+        {
+          "observed": 35,
+          "direct_t2_neighbor": 9,
+          "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+          "is_official_fuerte": false
+        },
+        {
+          "observed": 35,
+          "direct_t2_neighbor": 22,
+          "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+          "is_official_fuerte": false
+        },
+        {
+          "observed": 35,
+          "direct_t2_neighbor": 29,
+          "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+          "is_official_fuerte": false
+        },
+        {
+          "observed": 35,
+          "direct_t2_neighbor": 42,
+          "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+          "is_official_fuerte": false
+        },
+        {
+          "observed": 35,
+          "direct_t2_neighbor": 44,
+          "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+          "is_official_fuerte": false
+        },
+        {
+          "observed": 35,
+          "direct_t2_neighbor": 53,
+          "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+          "is_official_fuerte": false
+        },
+        {
+          "observed": 35,
+          "direct_t2_neighbor": 63,
+          "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+          "is_official_fuerte": false
+        },
+        {
+          "observed": 35,
+          "direct_t2_neighbor": 70,
+          "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+          "is_official_fuerte": false
+        },
+        {
+          "observed": 35,
+          "direct_t2_neighbor": 90,
+          "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+          "is_official_fuerte": false
+        },
+        {
+          "observed": 14,
+          "direct_t2_neighbor": 54,
+          "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+          "is_official_fuerte": false
+        }
+      ],
+      "is_official_fuerte": false
+    },
+    "manual_status": {
+      "manual_fuerte": 54,
+      "is_official_fuerte": true,
+      "is_direct_t2_neighbor_signal": false,
+      "classification": "FUERTE_OFICIAL",
+      "official_strengthened_candidates": [
+        54
+      ],
+      "direct_t2_edges_for_manual": [
+        {
+          "observed": 14,
+          "direct_t2_neighbor": 54,
+          "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+          "is_official_fuerte": false
+        }
+      ],
+      "label_es": "Fuerte oficial (Tabla1 candidato × Tabla2 confirmador)"
+    },
     "motor_shaped_result": 54,
-    "coincidence": "SI",
+    "coincidence": "SI_FUERTE_OFICIAL",
     "explanation": {
+      "kind": "FUERTE_OFICIAL",
       "relation": "Número observado N → compañeros Tabla1 (candidatos) → cada candidato consulta vecinos Tabla2 → si un confirmador (otro número observado el mismo día) aparece en esos vecinos, solo el candidato de Tabla1 se fortalece.",
       "detail": [
         {
@@ -575,7 +784,8 @@
     },
     "notes": [
       "Este laboratorio no altera Tablas ni el motor.",
-      "El endpoint /analyze oficial opera sobre UN solo observed_number y ranking histórico; aquí se explica el cruce multi-observación del mismo día con la misma geometría T1×T2."
+      "FUERTE OFICIAL ≠ SEÑAL T2 DIRECTA — no confundir.",
+      "DIRECT_T2_NEIGHBOR_SIGNAL es secundaria/experimental hasta decisión metodológica aparte."
     ]
   },
   "motor_per_observed_number": [
@@ -621,13 +831,23 @@
     "F"
   ],
   "coincidence": "SI (hipótesis exacta singleton)",
-  "lab_coincidence": "SI",
+  "lab_coincidence": "SI_FUERTE_OFICIAL",
   "next_day_verification": {
     "date": "2026-07-23",
     "expected_number": 54,
     "lottery_filter": "Gana Mas",
-    "appeared": false,
-    "hits": []
+    "appeared": true,
+    "hits": [
+      {
+        "name": "Gana Mas",
+        "draw_date": "2026-07-23",
+        "numbers": [
+          "54",
+          "19",
+          "77"
+        ]
+      }
+    ]
   },
   "methodology_version_reference": "nr-historical-relations-j1.0.0",
   "dev_db_max_note": "DEV max draw_date may be before some case dates"

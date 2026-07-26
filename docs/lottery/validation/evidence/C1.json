@@ -727,9 +727,156 @@
         ]
       }
     ],
+    "fuerte_oficial": {
+      "candidates": [
+        29
+      ],
+      "result": 29,
+      "geometry": "T1_candidato_x_T2_confirmador"
+    },
+    "senal_t2_directa": {
+      "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+      "all_direct_neighbors": [
+        7,
+        9,
+        12,
+        22,
+        29,
+        35,
+        42,
+        44,
+        53,
+        56,
+        63,
+        71,
+        89,
+        90
+      ],
+      "secondary_only_not_official": [
+        7,
+        9,
+        12,
+        22,
+        35,
+        42,
+        44,
+        53,
+        56,
+        63,
+        71,
+        89,
+        90
+      ],
+      "edges": [
+        {
+          "observed": 41,
+          "direct_t2_neighbor": 12,
+          "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+          "is_official_fuerte": false
+        },
+        {
+          "observed": 41,
+          "direct_t2_neighbor": 56,
+          "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+          "is_official_fuerte": false
+        },
+        {
+          "observed": 41,
+          "direct_t2_neighbor": 71,
+          "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+          "is_official_fuerte": false
+        },
+        {
+          "observed": 41,
+          "direct_t2_neighbor": 89,
+          "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+          "is_official_fuerte": false
+        },
+        {
+          "observed": 70,
+          "direct_t2_neighbor": 7,
+          "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+          "is_official_fuerte": false
+        },
+        {
+          "observed": 70,
+          "direct_t2_neighbor": 9,
+          "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+          "is_official_fuerte": false
+        },
+        {
+          "observed": 70,
+          "direct_t2_neighbor": 22,
+          "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+          "is_official_fuerte": false
+        },
+        {
+          "observed": 70,
+          "direct_t2_neighbor": 29,
+          "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+          "is_official_fuerte": false
+        },
+        {
+          "observed": 70,
+          "direct_t2_neighbor": 35,
+          "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+          "is_official_fuerte": false
+        },
+        {
+          "observed": 70,
+          "direct_t2_neighbor": 42,
+          "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+          "is_official_fuerte": false
+        },
+        {
+          "observed": 70,
+          "direct_t2_neighbor": 44,
+          "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+          "is_official_fuerte": false
+        },
+        {
+          "observed": 70,
+          "direct_t2_neighbor": 53,
+          "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+          "is_official_fuerte": false
+        },
+        {
+          "observed": 70,
+          "direct_t2_neighbor": 63,
+          "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+          "is_official_fuerte": false
+        },
+        {
+          "observed": 70,
+          "direct_t2_neighbor": 90,
+          "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+          "is_official_fuerte": false
+        }
+      ],
+      "is_official_fuerte": false
+    },
+    "manual_status": {
+      "manual_fuerte": 29,
+      "is_official_fuerte": true,
+      "is_direct_t2_neighbor_signal": false,
+      "classification": "FUERTE_OFICIAL",
+      "official_strengthened_candidates": [
+        29
+      ],
+      "direct_t2_edges_for_manual": [
+        {
+          "observed": 70,
+          "direct_t2_neighbor": 29,
+          "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+          "is_official_fuerte": false
+        }
+      ],
+      "label_es": "Fuerte oficial (Tabla1 candidato × Tabla2 confirmador)"
+    },
     "motor_shaped_result": 29,
-    "coincidence": "SI",
+    "coincidence": "SI_FUERTE_OFICIAL",
     "explanation": {
+      "kind": "FUERTE_OFICIAL",
       "relation": "Número observado N → compañeros Tabla1 (candidatos) → cada candidato consulta vecinos Tabla2 → si un confirmador (otro número observado el mismo día) aparece en esos vecinos, solo el candidato de Tabla1 se fortalece.",
       "detail": [
         {
@@ -744,7 +891,8 @@
     },
     "notes": [
       "Este laboratorio no altera Tablas ni el motor.",
-      "El endpoint /analyze oficial opera sobre UN solo observed_number y ranking histórico; aquí se explica el cruce multi-observación del mismo día con la misma geometría T1×T2."
+      "FUERTE OFICIAL ≠ SEÑAL T2 DIRECTA — no confundir.",
+      "DIRECT_T2_NEIGHBOR_SIGNAL es secundaria/experimental hasta decisión metodológica aparte."
     ]
   },
   "motor_per_observed_number": [
@@ -799,7 +947,7 @@
     "F"
   ],
   "coincidence": "SI (hipótesis exacta singleton)",
-  "lab_coincidence": "SI",
+  "lab_coincidence": "SI_FUERTE_OFICIAL",
   "next_day_verification": null,
   "methodology_version_reference": "nr-historical-relations-j1.0.0",
   "dev_db_max_note": "DEV max draw_date may be before some case dates"

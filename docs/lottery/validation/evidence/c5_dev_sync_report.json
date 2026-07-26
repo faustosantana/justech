@@ -1,0 +1,451 @@
+{
+  "started_at": "2026-07-26T03:39:59.345184+00:00",
+  "database": "jaios_lottery_dev",
+  "port": 5433,
+  "from_date": "2026-07-22",
+  "to_date": "2026-07-23",
+  "draws_before": 91927,
+  "fetched": [
+    {
+      "lottery_uuid": "0118037f-8f8b-4a82-899c-42cd50b6e194",
+      "lottery_name": "Loteria Nacional",
+      "source_id": 4,
+      "draw_date": "2026-07-22",
+      "source_reference": "226060",
+      "numbers": [
+        "14",
+        "7",
+        "16"
+      ],
+      "hora": "21:00:27"
+    },
+    {
+      "lottery_uuid": "0118037f-8f8b-4a82-899c-42cd50b6e194",
+      "lottery_name": "Loteria Nacional",
+      "source_id": 4,
+      "draw_date": "2026-07-23",
+      "source_reference": "226120",
+      "numbers": [
+        "28",
+        "17",
+        "77"
+      ],
+      "hora": "21:03:16"
+    },
+    {
+      "lottery_uuid": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+      "lottery_name": "Quiniela Leidsa",
+      "source_id": 5,
+      "draw_date": "2026-07-22",
+      "source_reference": "226059",
+      "numbers": [
+        "37",
+        "14",
+        "65"
+      ],
+      "hora": "20:58:15"
+    },
+    {
+      "lottery_uuid": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+      "lottery_name": "Quiniela Leidsa",
+      "source_id": 5,
+      "draw_date": "2026-07-23",
+      "source_reference": "226119",
+      "numbers": [
+        "34",
+        "14",
+        "7"
+      ],
+      "hora": "21:03:32"
+    },
+    {
+      "lottery_uuid": "b9f2c5a2-bc3e-4382-9b6d-3cee16db00fd",
+      "lottery_name": "Quiniela Loteka",
+      "source_id": 6,
+      "draw_date": "2026-07-22",
+      "source_reference": "226055",
+      "numbers": [
+        "52",
+        "37",
+        "18"
+      ],
+      "hora": "20:05:20"
+    },
+    {
+      "lottery_uuid": "b9f2c5a2-bc3e-4382-9b6d-3cee16db00fd",
+      "lottery_name": "Quiniela Loteka",
+      "source_id": 6,
+      "draw_date": "2026-07-23",
+      "source_reference": "226116",
+      "numbers": [
+        "24",
+        "77",
+        "27"
+      ],
+      "hora": "20:08:07"
+    },
+    {
+      "lottery_uuid": "43250709-ee65-476f-91f6-cb8438f49d65",
+      "lottery_name": "Gana Mas",
+      "source_id": 12,
+      "draw_date": "2026-07-22",
+      "source_reference": "226040",
+      "numbers": [
+        "60",
+        "8",
+        "2"
+      ],
+      "hora": "14:43:13"
+    },
+    {
+      "lottery_uuid": "43250709-ee65-476f-91f6-cb8438f49d65",
+      "lottery_name": "Gana Mas",
+      "source_id": 12,
+      "draw_date": "2026-07-23",
+      "source_reference": "226103",
+      "numbers": [
+        "54",
+        "19",
+        "77"
+      ],
+      "hora": "14:43:56"
+    },
+    {
+      "lottery_uuid": "205c58d2-cfcf-44e6-894d-97358b3d540b",
+      "lottery_name": "Quiniela Real",
+      "source_id": 13,
+      "draw_date": "2026-07-22",
+      "source_reference": "226035",
+      "numbers": [
+        "12",
+        "37",
+        "33"
+      ],
+      "hora": "13:02:45"
+    },
+    {
+      "lottery_uuid": "205c58d2-cfcf-44e6-894d-97358b3d540b",
+      "lottery_name": "Quiniela Real",
+      "source_id": 13,
+      "draw_date": "2026-07-23",
+      "source_reference": "226099",
+      "numbers": [
+        "40",
+        "57",
+        "38"
+      ],
+      "hora": "13:02:40"
+    },
+    {
+      "lottery_uuid": "1c488641-adb6-4790-89e7-879d361da7cc",
+      "lottery_name": "New York 2:30",
+      "source_id": 16,
+      "draw_date": "2026-07-22",
+      "source_reference": "226039",
+      "numbers": [
+        "35",
+        "61",
+        "45"
+      ],
+      "hora": "14:32:05"
+    },
+    {
+      "lottery_uuid": "1c488641-adb6-4790-89e7-879d361da7cc",
+      "lottery_name": "New York 2:30",
+      "source_id": 16,
+      "draw_date": "2026-07-23",
+      "source_reference": "226102",
+      "numbers": [
+        "0",
+        "91",
+        "22"
+      ],
+      "hora": "14:31:08"
+    },
+    {
+      "lottery_uuid": "1624b6f2-88c6-42b5-a597-bf9c0f98a6b5",
+      "lottery_name": "New York 10:30",
+      "source_id": 17,
+      "draw_date": "2026-07-22",
+      "source_reference": "226064",
+      "numbers": [
+        "38",
+        "95",
+        "49"
+      ],
+      "hora": "22:31:11"
+    },
+    {
+      "lottery_uuid": "1624b6f2-88c6-42b5-a597-bf9c0f98a6b5",
+      "lottery_name": "New York 10:30",
+      "source_id": 17,
+      "draw_date": "2026-07-23",
+      "source_reference": "226125",
+      "numbers": [
+        "35",
+        "6",
+        "68"
+      ],
+      "hora": "22:30:26"
+    }
+  ],
+  "inserted": [
+    {
+      "draw_id": "3aa518e2-a381-45b7-8c5e-7e19825dc8d5",
+      "lottery_uuid": "0118037f-8f8b-4a82-899c-42cd50b6e194",
+      "lottery_name": "Loteria Nacional",
+      "source_id": 4,
+      "draw_date": "2026-07-22",
+      "source_reference": "226060",
+      "numbers": [
+        "14",
+        "7",
+        "16"
+      ],
+      "content_hash": "fc2d69b6756aa2e9145caf7b554860c32db3831be265863af2b3da3a12551b2e"
+    },
+    {
+      "draw_id": "a7da3c94-c40e-432f-bf27-92acc47ff037",
+      "lottery_uuid": "0118037f-8f8b-4a82-899c-42cd50b6e194",
+      "lottery_name": "Loteria Nacional",
+      "source_id": 4,
+      "draw_date": "2026-07-23",
+      "source_reference": "226120",
+      "numbers": [
+        "28",
+        "17",
+        "77"
+      ],
+      "content_hash": "5ec82aa39f948de4e1600befcdd52512c052b36c3b4f7a0c9f0735b37016c40e"
+    },
+    {
+      "draw_id": "6fff8fd6-35ba-4ad2-9a52-ef8c4b1d976c",
+      "lottery_uuid": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+      "lottery_name": "Quiniela Leidsa",
+      "source_id": 5,
+      "draw_date": "2026-07-22",
+      "source_reference": "226059",
+      "numbers": [
+        "37",
+        "14",
+        "65"
+      ],
+      "content_hash": "626f2fe4fc3531a71e690b26f83d59d41c995e1d41712af48a2f9a280fbda332"
+    },
+    {
+      "draw_id": "507c1ca9-47c6-45ba-8140-5dc84225d13c",
+      "lottery_uuid": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+      "lottery_name": "Quiniela Leidsa",
+      "source_id": 5,
+      "draw_date": "2026-07-23",
+      "source_reference": "226119",
+      "numbers": [
+        "34",
+        "14",
+        "7"
+      ],
+      "content_hash": "4ee463299efd9c57642a6a305112d251a515e8a1b75ae9337f9f6ce86fd45a62"
+    },
+    {
+      "draw_id": "b7e77f51-737a-4500-84e6-77c5b7a58ad4",
+      "lottery_uuid": "b9f2c5a2-bc3e-4382-9b6d-3cee16db00fd",
+      "lottery_name": "Quiniela Loteka",
+      "source_id": 6,
+      "draw_date": "2026-07-22",
+      "source_reference": "226055",
+      "numbers": [
+        "52",
+        "37",
+        "18"
+      ],
+      "content_hash": "d21b2d02fdead4285fa36e46a84a5cc81bdc04977fdebf376eae9ac40cda460e"
+    },
+    {
+      "draw_id": "8dee1537-b825-43f3-ae4b-1bc7c4b7ed14",
+      "lottery_uuid": "b9f2c5a2-bc3e-4382-9b6d-3cee16db00fd",
+      "lottery_name": "Quiniela Loteka",
+      "source_id": 6,
+      "draw_date": "2026-07-23",
+      "source_reference": "226116",
+      "numbers": [
+        "24",
+        "77",
+        "27"
+      ],
+      "content_hash": "bed46f357ef71c88673644a2ec7ba89b175da9b628bc78b51736da61030261bc"
+    },
+    {
+      "draw_id": "0cf612b7-083a-481a-883b-41e2ebba2c1b",
+      "lottery_uuid": "43250709-ee65-476f-91f6-cb8438f49d65",
+      "lottery_name": "Gana Mas",
+      "source_id": 12,
+      "draw_date": "2026-07-22",
+      "source_reference": "226040",
+      "numbers": [
+        "60",
+        "8",
+        "2"
+      ],
+      "content_hash": "a2398b4fc7409c8adaa5d9a42f3a5e0d267b74a7e67b0571bc23376747ed4c11"
+    },
+    {
+      "draw_id": "f18eb0a7-eadb-4979-9352-e2b547dd388c",
+      "lottery_uuid": "43250709-ee65-476f-91f6-cb8438f49d65",
+      "lottery_name": "Gana Mas",
+      "source_id": 12,
+      "draw_date": "2026-07-23",
+      "source_reference": "226103",
+      "numbers": [
+        "54",
+        "19",
+        "77"
+      ],
+      "content_hash": "906cd3f6d280ebd49d8be84da6416861db960c0f329d4d07d4eefa98d2ab38b7"
+    },
+    {
+      "draw_id": "802f2ae2-e77d-495e-be95-ebf305d84a35",
+      "lottery_uuid": "205c58d2-cfcf-44e6-894d-97358b3d540b",
+      "lottery_name": "Quiniela Real",
+      "source_id": 13,
+      "draw_date": "2026-07-22",
+      "source_reference": "226035",
+      "numbers": [
+        "12",
+        "37",
+        "33"
+      ],
+      "content_hash": "f5f429c4a0f590e146fb9c7850a6b8e0220076923083d262559a14d85b55c5b4"
+    },
+    {
+      "draw_id": "83cb3ae2-ef6c-458c-a20a-a350aa1de4cf",
+      "lottery_uuid": "205c58d2-cfcf-44e6-894d-97358b3d540b",
+      "lottery_name": "Quiniela Real",
+      "source_id": 13,
+      "draw_date": "2026-07-23",
+      "source_reference": "226099",
+      "numbers": [
+        "40",
+        "57",
+        "38"
+      ],
+      "content_hash": "d555f85890427e21b1b2ddc9a9802a95c1b14b84b6ce20b5661b45575163af29"
+    },
+    {
+      "draw_id": "69f3cf8d-490a-4be2-ac7e-67ec4dc148c5",
+      "lottery_uuid": "1c488641-adb6-4790-89e7-879d361da7cc",
+      "lottery_name": "New York 2:30",
+      "source_id": 16,
+      "draw_date": "2026-07-22",
+      "source_reference": "226039",
+      "numbers": [
+        "35",
+        "61",
+        "45"
+      ],
+      "content_hash": "cceb67ba3738137b105fed82a62bda82fed859ad7c2aca911a4b2282ea7b3736"
+    },
+    {
+      "draw_id": "aa51d128-0d03-4b7b-8643-fca52841bf27",
+      "lottery_uuid": "1c488641-adb6-4790-89e7-879d361da7cc",
+      "lottery_name": "New York 2:30",
+      "source_id": 16,
+      "draw_date": "2026-07-23",
+      "source_reference": "226102",
+      "numbers": [
+        "0",
+        "91",
+        "22"
+      ],
+      "content_hash": "b1effa6f706c96698fbbfa6fc86c659235d3aa12d9341eab535824ae1083fd7b"
+    },
+    {
+      "draw_id": "e77b15c2-c4af-4281-814c-2340e221d0c9",
+      "lottery_uuid": "1624b6f2-88c6-42b5-a597-bf9c0f98a6b5",
+      "lottery_name": "New York 10:30",
+      "source_id": 17,
+      "draw_date": "2026-07-22",
+      "source_reference": "226064",
+      "numbers": [
+        "38",
+        "95",
+        "49"
+      ],
+      "content_hash": "6358ff1657ec71c9f8c8632796175d15b7cd340022562628dc6f4b6b4b4fe6c9"
+    },
+    {
+      "draw_id": "b80fabf2-85de-4366-8ade-f8c6de401dd1",
+      "lottery_uuid": "1624b6f2-88c6-42b5-a597-bf9c0f98a6b5",
+      "lottery_name": "New York 10:30",
+      "source_id": 17,
+      "draw_date": "2026-07-23",
+      "source_reference": "226125",
+      "numbers": [
+        "35",
+        "6",
+        "68"
+      ],
+      "content_hash": "fcb123a727e4dafee564290ce1df2cda97def7561e8ec83a31374acf3266d349"
+    }
+  ],
+  "skipped_existing": [],
+  "errors": [],
+  "production_touched": false,
+  "draws_after": 91941,
+  "rows_added": 14,
+  "finished_at": "2026-07-26T03:40:41.661901+00:00",
+  "featured_count": 7,
+  "rollback_delete_draw_ids": [
+    "3aa518e2-a381-45b7-8c5e-7e19825dc8d5",
+    "a7da3c94-c40e-432f-bf27-92acc47ff037",
+    "6fff8fd6-35ba-4ad2-9a52-ef8c4b1d976c",
+    "507c1ca9-47c6-45ba-8140-5dc84225d13c",
+    "b7e77f51-737a-4500-84e6-77c5b7a58ad4",
+    "8dee1537-b825-43f3-ae4b-1bc7c4b7ed14",
+    "0cf612b7-083a-481a-883b-41e2ebba2c1b",
+    "f18eb0a7-eadb-4979-9352-e2b547dd388c",
+    "802f2ae2-e77d-495e-be95-ebf305d84a35",
+    "83cb3ae2-ef6c-458c-a20a-a350aa1de4cf",
+    "69f3cf8d-490a-4be2-ac7e-67ec4dc148c5",
+    "aa51d128-0d03-4b7b-8643-fca52841bf27",
+    "e77b15c2-c4af-4281-814c-2340e221d0c9",
+    "b80fabf2-85de-4366-8ade-f8c6de401dd1"
+  ],
+  "c5_probe": {
+    "New York 2:30:2026-07-22": {
+      "lottery_uuid": "1c488641-adb6-4790-89e7-879d361da7cc",
+      "name": "New York 2:30",
+      "draw_id": "69f3cf8d-490a-4be2-ac7e-67ec4dc148c5",
+      "draw_date": "2026-07-22",
+      "source_reference": "226039",
+      "numbers": [
+        "35",
+        "61",
+        "45"
+      ]
+    },
+    "Loteria Nacional:2026-07-22": {
+      "lottery_uuid": "0118037f-8f8b-4a82-899c-42cd50b6e194",
+      "name": "Loteria Nacional",
+      "draw_id": "3aa518e2-a381-45b7-8c5e-7e19825dc8d5",
+      "draw_date": "2026-07-22",
+      "source_reference": "226060",
+      "numbers": [
+        "14",
+        "7",
+        "16"
+      ]
+    },
+    "Gana Mas:2026-07-23": {
+      "lottery_uuid": "43250709-ee65-476f-91f6-cb8438f49d65",
+      "name": "Gana Mas",
+      "draw_id": "f18eb0a7-eadb-4979-9352-e2b547dd388c",
+      "draw_date": "2026-07-23",
+      "source_reference": "226103",
+      "numbers": [
+        "54",
+        "19",
+        "77"
+      ]
+    }
+  }
+}

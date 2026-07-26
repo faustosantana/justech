@@ -11,3 +11,7 @@
 | J-11A | **not started** |
 | Validation window | Next **7 calendar days** only (never same day) |
 | Methodology | `nr-historical-relations-j1.0.0` |
+| Status | **COMPLETE** (read-only book delivered) |
+| audit_id | `c667ed2f-db12-483a-882b-8ac7bb3166bd` |
+| Book | `docs/lottery/forensic_audit/index.html` |
+| Artifacts | `artifacts/forensic_audit/` |

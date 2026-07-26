@@ -120,9 +120,81 @@ def chat(
         from app.lottery.numeric_relations.analysis_engine.scientific_validation.investigator import (
             investigator_answer,
         )
+        from app.lottery.numeric_relations.analysis_engine.tiebreak_engine import (
+            SELECTED_RULE_ID,
+            DEFAULT_PRACTICAL_THRESHOLD,
+        )
+        import json
+        from pathlib import Path
 
         inv = investigator_answer(message, numbers=intent.numbers or None)
-        tool_results["investigate_phase2"] = {"tool": "investigate_phase2", "data": inv}
+        # Phase 3 tiebreak / prospective overlays
+        low = message.lower()
+        tb_path = Path("artifacts/tiebreak/final_benchmark.json")
+        if not tb_path.exists():
+            tb_path = (
+                Path(__file__).resolve().parents[4]
+                / "artifacts/tiebreak/final_benchmark.json"
+            )
+        if any(
+            k in low
+            for k in (
+                "desempate",
+                "tiebreak",
+                "empatados",
+                "14 errores",
+                "motor anterior",
+                "predicciones bloqueadas",
+                "predicción bloqueada",
+                "prediccion bloqueada",
+            )
+        ):
+            extra: dict = {
+                "selected_rule": SELECTED_RULE_ID,
+                "practical_threshold": DEFAULT_PRACTICAL_THRESHOLD,
+            }
+            if tb_path.exists():
+                extra["benchmark"] = json.loads(tb_path.read_text(encoding="utf-8"))
+            if "14" in low or "errores" in low:
+                errp = Path("artifacts/tiebreak/error_cases.json")
+                if errp.exists():
+                    extra["error_cases_n"] = len(json.loads(errp.read_text(encoding="utf-8")))
+            if "bloquead" in low:
+                from app.lottery.numeric_relations.analysis_engine.prospective_validation import (
+                    get_prospective_store,
+                )
+
+                extra["prospective"] = get_prospective_store().metrics()
+                extra["locked"] = [
+                    p.to_dict()
+                    for p in get_prospective_store().list()
+                    if p.status in {"LOCKED", "EVALUATED"}
+                ]
+            if "desempate" in low or "regla" in low:
+                inv["message"] = (
+                    f"Regla de desempate operativa: {SELECTED_RULE_ID} "
+                    f"(umbral práctico={DEFAULT_PRACTICAL_THRESHOLD}). "
+                    "Se aplica solo tras el ranking; no rediscubre candidatos. "
+                    "Si el empate estructural persiste → EMPATE_MULTI_FUERTE."
+                )
+            if "14" in low:
+                bench = extra.get("benchmark") or {}
+                o14 = bench.get("original_14") or {}
+                inv["message"] = (
+                    f"Los 14 errores Phase-2 están auditados. "
+                    f"Baseline top1={((o14.get('baseline') or {}).get('top1_rate'))}, "
+                    f"socio+multi top2={((o14.get('socio_multi') or {}).get('top2_rate'))}."
+                )
+            if "bloquead" in low:
+                inv["message"] = (
+                    f"Predicciones prospectivas: {extra.get('prospective')}. "
+                    "Una predicción LOCKED no se puede modificar."
+                )
+            inv["tiebreak"] = extra
+            tool_results["investigate_phase2"] = {"tool": "investigate_phase2", "data": inv}
+        else:
+            tool_results["investigate_phase2"] = {"tool": "investigate_phase2", "data": inv}
+
         response = build_response(
             intent,
             memory,

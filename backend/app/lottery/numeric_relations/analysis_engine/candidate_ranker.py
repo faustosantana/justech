@@ -338,7 +338,7 @@ def rank_all_candidates(
             -c.components.CROSS_TABLE_SUPPORT,
             -c.components.T2_CONFIRMATION_SUPPORT,
             -c.components.T1_SOURCE_SUPPORT,
-            c.number,
+            # No lexicographic number bias — real ties are handled by TiebreakEngine.
         )
     )
 

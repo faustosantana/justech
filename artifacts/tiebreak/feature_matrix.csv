@@ -1,0 +1,15 @@
+scenario_id,date,chosen,historical,real_tie,score_gap,diff_t1_sources,diff_t2_confirmers,diff_independent_paths,diff_duplicate_paths,diff_total_paths,hist_has_origin_as_t1,chosen_has_origin_as_t1,both_cross_table,competitors_tied
+3c0782d12f38b6bf,2023-11-10,22,70,True,0.0,0,0,0,0,-1,True,True,True,2
+33115e931422c906,2023-12-22,22,70,True,0.0,0,0,0,0,-1,True,True,True,2
+8c6da1d61ea96b1b,2024-01-06,29,71,True,0.0,0,0,0,0,-2,True,False,True,2
+02b798261529349c,2024-01-07,22,70,True,0.0,0,0,0,0,-1,True,True,True,2
+00ec3633ce4f1a74,2024-01-14,22,70,True,0.0,0,0,0,0,-1,True,True,True,2
+697db885597a30a0,2024-01-27,23,53,True,0.0,0,0,0,0,0,True,False,True,2
+37fc83b1a465e809,2024-02-03,22,70,True,0.0,0,0,0,0,-1,True,True,True,2
+a9d65921621f9748,2024-02-19,23,53,True,0.0,0,0,0,0,0,True,False,True,2
+e7d4e6113d8da6e1,2024-02-28,22,70,True,0.0,0,0,0,0,-1,True,True,True,2
+b6ca93c563bb9485,2024-05-14,29,71,True,0.0,0,0,0,0,-2,True,False,True,2
+6719239a5dccaac2,2024-05-22,22,70,True,0.0,0,0,0,0,-1,True,True,True,2
+2ad10143318cbb39,2024-05-26,22,70,True,0.0,0,0,0,0,-2,True,True,True,2
+b871b10305c95824,2024-05-26,22,7,False,2.0,0,0,0,1,-2,True,False,True,1
+1f2a69b5530f8ead,2024-06-17,22,70,True,0.0,0,0,0,0,-1,True,True,True,2

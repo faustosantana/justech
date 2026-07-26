@@ -58,6 +58,14 @@ def detect_intent(message: str, memory: SessionMemory | None = None) -> IntentRe
             "calibracion",
             "benchmark científico",
             "benchmark cientifico",
+            "desempate",
+            "tiebreak",
+            "empatados",
+            "14 errores",
+            "predicción bloqueada",
+            "prediccion bloqueada",
+            "predicciones bloqueadas",
+            "motor anterior",
         )
     ):
         return IntentResult(

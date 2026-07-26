@@ -39,6 +39,10 @@ from app.lottery.numeric_relations.analysis_engine.schemas import (
     new_id,
 )
 from app.lottery.numeric_relations.analysis_engine.signal_tracker import get_signal_store
+from app.lottery.numeric_relations.analysis_engine.tiebreak_engine import (
+    DEFAULT_PRACTICAL_THRESHOLD,
+    apply_selected_tiebreak,
+)
 
 
 def run_complete_analysis(
@@ -47,6 +51,8 @@ def run_complete_analysis(
     catalog: TableCatalog | None = None,
     persist: bool = True,
     include_table2: bool | None = None,
+    enable_tiebreak: bool = True,
+    practical_tie_threshold: float = DEFAULT_PRACTICAL_THRESHOLD,
 ) -> CompleteAnalysisResult:
     stages: list[str] = []
     cat = catalog or build_catalog()
@@ -94,6 +100,22 @@ def run_complete_analysis(
     ranked = rank_all_candidates(discovered, profile=req.mode)
     stages.append("candidates_ranked")
 
+    if isinstance(request, dict) and "enable_tiebreak" in request:
+        enable_tiebreak = bool(request["enable_tiebreak"])
+    if isinstance(request, dict) and "practical_tie_threshold" in request:
+        practical_tie_threshold = float(request["practical_tie_threshold"])
+
+    tiebreak_decisions: list[dict[str, Any]] = []
+    if enable_tiebreak:
+        ranked, decisions = apply_selected_tiebreak(
+            ranked,
+            observed_numbers=list(observed),  # first-seen order (= generator-first if provided)
+            practical_threshold=practical_tie_threshold,
+            enable=True,
+        )
+        tiebreak_decisions = [d.to_dict() for d in decisions]
+        stages.append("tiebreak_applied")
+
     for c in ranked:
         c.analytical_confidence = compute_analytical_confidence(
             c, ranked=ranked, observed_count=len(observed)
@@ -119,12 +141,14 @@ def run_complete_analysis(
         )
         stages.append("experimental_signals_created")
 
+    # Multi-fuerte unresolved: surface first EMPATE as primary payload, keep peers in alternatives
+    multi = [c for c in ranked if c.classification == "EMPATE_MULTI_FUERTE"]
     primary = next(
         (c for c in ranked if c.classification == "FUERTE_PRINCIPAL"),
         None,
     )
-    # Broad/experimental / direct-T2 reconstructions may surface top ranked
-    # even when no official FUERTE_PRINCIPAL exists (e.g. 41+62→75).
+    if primary is None and multi:
+        primary = multi[0]
     if primary is None and ranked:
         for pref in (
             "FUERTE_SECUNDARIO",
@@ -148,6 +172,7 @@ def run_complete_analysis(
             "reason": primary.classification_reason,
             "table1_sources": primary.evidence.table1_sources,
             "table2_confirmers": primary.evidence.direct_confirmers,
+            "multi_fuerte_peers": [c.number for c in multi] if multi else [],
         }
 
     alternatives = [
@@ -170,6 +195,14 @@ def run_complete_analysis(
             "cross_table_support": primary.evidence.cross_table_support,
             "multi_source_support": primary.evidence.multi_source_support,
         }
+
+    tiebreak_payload = {
+        "enabled": enable_tiebreak,
+        "practical_threshold": practical_tie_threshold,
+        "decisions": tiebreak_decisions,
+        "unresolved_multi": bool(multi),
+        "multi_fuerte_numbers": [c.number for c in multi],
+    }
 
     result = CompleteAnalysisResult(
         analysis_id=analysis_id,
@@ -197,7 +230,9 @@ def run_complete_analysis(
             "La confianza analítica no es probabilidad de acierto.",
             "No se recomienda apostar con base en este análisis.",
             "Los pesos del ranking son configurables y deben validarse con backtest.",
+            "Empates estructurales no resueltos se reportan como EMPATE_MULTI_FUERTE.",
         ],
+        tiebreak=tiebreak_payload,
     )
 
     if persist:

@@ -119,6 +119,7 @@ def normalize_request(raw: AnalysisRequest | dict[str, Any]) -> AnalysisRequest:
 
 
 def unique_observed(numbers: list[int]) -> list[int]:
+    """De-dupe preserving first-seen order (supports generator-first tiebreak)."""
     seen: set[int] = set()
     out: list[int] = []
     for n in numbers:

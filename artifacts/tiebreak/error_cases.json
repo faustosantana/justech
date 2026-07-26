@@ -1,0 +1,2046 @@
+[
+  {
+    "scenario_id": "3c0782d12f38b6bf",
+    "date": "2023-11-10",
+    "year": 2023,
+    "lotteries": [
+      "Gana Mas",
+      "Loteria Nacional"
+    ],
+    "positions": [
+      1,
+      1
+    ],
+    "observed_numbers_sorted": [
+      44,
+      63
+    ],
+    "observed_generator_first": [
+      44,
+      63
+    ],
+    "origin": 44,
+    "confirmer": 63,
+    "chosen_by_motor_phase2": 22,
+    "historical_fuerte": 70,
+    "hist_rank_phase2": 2,
+    "score_gap": 0.0,
+    "real_tie": true,
+    "chosen_detail": {
+      "number": 22,
+      "rank": 1,
+      "score": 174.0,
+      "classification": "FUERTE_PRINCIPAL",
+      "table1_sources": [
+        44
+      ],
+      "direct_confirmers": [
+        63
+      ],
+      "independent_path_count": 4,
+      "same_source_repetitions": 0,
+      "direct_path_count": 4,
+      "total_path_count": 10,
+      "cross_table_support": true,
+      "multi_source_support": true,
+      "ambiguity_score": 1.0,
+      "components": {
+        "T1_SOURCE_SUPPORT": 1.0,
+        "T2_CONFIRMATION_SUPPORT": 1.0,
+        "CROSS_TABLE_SUPPORT": 1.0,
+        "MULTIPLE_OBSERVED_SUPPORT": 1.0,
+        "INDEPENDENT_PATH_SUPPORT": 4.0,
+        "DIRECT_PATH_SUPPORT": 4.0,
+        "MULTI_CONFIRMATION_SUPPORT": 0.0,
+        "HISTORICAL_EXACT_RATE": 0.0,
+        "HISTORICAL_D1_D3_RATE": 0.0,
+        "HISTORICAL_D1_D7_RATE": 0.0,
+        "FIRST_POSITION_SUPPORT": 0.0,
+        "ANY_POSITION_SUPPORT": 0.0,
+        "RECENT_PATTERN_SUPPORT": 0.0,
+        "CROSS_LOTTERY_SUPPORT": 0.0,
+        "CHAIN_CONTINUITY_SUPPORT": 0.0,
+        "DERIVATION_DEPTH_PENALTY": 0.0,
+        "AMBIGUITY_PENALTY": 1.0,
+        "DUPLICATE_PATH_PENALTY": 0.0
+      }
+    },
+    "historical_detail": {
+      "number": 70,
+      "rank": 2,
+      "score": 174.0,
+      "classification": "FUERTE_SECUNDARIO",
+      "table1_sources": [
+        44
+      ],
+      "direct_confirmers": [
+        63
+      ],
+      "independent_path_count": 4,
+      "same_source_repetitions": 0,
+      "direct_path_count": 4,
+      "total_path_count": 9,
+      "cross_table_support": true,
+      "multi_source_support": true,
+      "ambiguity_score": 1.0,
+      "components": {
+        "T1_SOURCE_SUPPORT": 1.0,
+        "T2_CONFIRMATION_SUPPORT": 1.0,
+        "CROSS_TABLE_SUPPORT": 1.0,
+        "MULTIPLE_OBSERVED_SUPPORT": 1.0,
+        "INDEPENDENT_PATH_SUPPORT": 4.0,
+        "DIRECT_PATH_SUPPORT": 4.0,
+        "MULTI_CONFIRMATION_SUPPORT": 0.0,
+        "HISTORICAL_EXACT_RATE": 0.0,
+        "HISTORICAL_D1_D3_RATE": 0.0,
+        "HISTORICAL_D1_D7_RATE": 0.0,
+        "FIRST_POSITION_SUPPORT": 0.0,
+        "ANY_POSITION_SUPPORT": 0.0,
+        "RECENT_PATTERN_SUPPORT": 0.0,
+        "CROSS_LOTTERY_SUPPORT": 0.0,
+        "CHAIN_CONTINUITY_SUPPORT": 0.0,
+        "DERIVATION_DEPTH_PENALTY": 0.0,
+        "AMBIGUITY_PENALTY": 1.0,
+        "DUPLICATE_PATH_PENALTY": 0.0
+      }
+    },
+    "alternatives": [
+      {
+        "number": 22,
+        "score": 174.0,
+        "cls": "FUERTE_PRINCIPAL"
+      },
+      {
+        "number": 70,
+        "score": 174.0,
+        "cls": "FUERTE_SECUNDARIO"
+      },
+      {
+        "number": 59,
+        "score": 2.0,
+        "cls": "FAMILIA_T1"
+      },
+      {
+        "number": 75,
+        "score": 2.0,
+        "cls": "FAMILIA_T1"
+      },
+      {
+        "number": 91,
+        "score": 2.0,
+        "cls": "FAMILIA_T1"
+      },
+      {
+        "number": 11,
+        "score": -50.0,
+        "cls": "DERIVACION_RELEVANTE"
+      }
+    ],
+    "input_order": [
+      44,
+      63
+    ],
+    "frequency_notes": {
+      "n_confirmers_activation": 1,
+      "n_fuertes_same_day": 2
+    }
+  },
+  {
+    "scenario_id": "33115e931422c906",
+    "date": "2023-12-22",
+    "year": 2023,
+    "lotteries": [
+      "Quiniela Loteka",
+      "Loteria Nacional"
+    ],
+    "positions": [
+      1,
+      1
+    ],
+    "observed_numbers_sorted": [
+      7,
+      44
+    ],
+    "observed_generator_first": [
+      44,
+      7
+    ],
+    "origin": 44,
+    "confirmer": 7,
+    "chosen_by_motor_phase2": 22,
+    "historical_fuerte": 70,
+    "hist_rank_phase2": 2,
+    "score_gap": 0.0,
+    "real_tie": true,
+    "chosen_detail": {
+      "number": 22,
+      "rank": 1,
+      "score": 174.0,
+      "classification": "FUERTE_PRINCIPAL",
+      "table1_sources": [
+        44
+      ],
+      "direct_confirmers": [
+        7
+      ],
+      "independent_path_count": 4,
+      "same_source_repetitions": 0,
+      "direct_path_count": 4,
+      "total_path_count": 10,
+      "cross_table_support": true,
+      "multi_source_support": true,
+      "ambiguity_score": 1.0,
+      "components": {
+        "T1_SOURCE_SUPPORT": 1.0,
+        "T2_CONFIRMATION_SUPPORT": 1.0,
+        "CROSS_TABLE_SUPPORT": 1.0,
+        "MULTIPLE_OBSERVED_SUPPORT": 1.0,
+        "INDEPENDENT_PATH_SUPPORT": 4.0,
+        "DIRECT_PATH_SUPPORT": 4.0,
+        "MULTI_CONFIRMATION_SUPPORT": 0.0,
+        "HISTORICAL_EXACT_RATE": 0.0,
+        "HISTORICAL_D1_D3_RATE": 0.0,
+        "HISTORICAL_D1_D7_RATE": 0.0,
+        "FIRST_POSITION_SUPPORT": 0.0,
+        "ANY_POSITION_SUPPORT": 0.0,
+        "RECENT_PATTERN_SUPPORT": 0.0,
+        "CROSS_LOTTERY_SUPPORT": 0.0,
+        "CHAIN_CONTINUITY_SUPPORT": 0.0,
+        "DERIVATION_DEPTH_PENALTY": 0.0,
+        "AMBIGUITY_PENALTY": 1.0,
+        "DUPLICATE_PATH_PENALTY": 0.0
+      }
+    },
+    "historical_detail": {
+      "number": 70,
+      "rank": 2,
+      "score": 174.0,
+      "classification": "FUERTE_SECUNDARIO",
+      "table1_sources": [
+        44
+      ],
+      "direct_confirmers": [
+        7
+      ],
+      "independent_path_count": 4,
+      "same_source_repetitions": 0,
+      "direct_path_count": 4,
+      "total_path_count": 9,
+      "cross_table_support": true,
+      "multi_source_support": true,
+      "ambiguity_score": 1.0,
+      "components": {
+        "T1_SOURCE_SUPPORT": 1.0,
+        "T2_CONFIRMATION_SUPPORT": 1.0,
+        "CROSS_TABLE_SUPPORT": 1.0,
+        "MULTIPLE_OBSERVED_SUPPORT": 1.0,
+        "INDEPENDENT_PATH_SUPPORT": 4.0,
+        "DIRECT_PATH_SUPPORT": 4.0,
+        "MULTI_CONFIRMATION_SUPPORT": 0.0,
+        "HISTORICAL_EXACT_RATE": 0.0,
+        "HISTORICAL_D1_D3_RATE": 0.0,
+        "HISTORICAL_D1_D7_RATE": 0.0,
+        "FIRST_POSITION_SUPPORT": 0.0,
+        "ANY_POSITION_SUPPORT": 0.0,
+        "RECENT_PATTERN_SUPPORT": 0.0,
+        "CROSS_LOTTERY_SUPPORT": 0.0,
+        "CHAIN_CONTINUITY_SUPPORT": 0.0,
+        "DERIVATION_DEPTH_PENALTY": 0.0,
+        "AMBIGUITY_PENALTY": 1.0,
+        "DUPLICATE_PATH_PENALTY": 0.0
+      }
+    },
+    "alternatives": [
+      {
+        "number": 22,
+        "score": 174.0,
+        "cls": "FUERTE_PRINCIPAL"
+      },
+      {
+        "number": 70,
+        "score": 174.0,
+        "cls": "FUERTE_SECUNDARIO"
+      },
+      {
+        "number": 59,
+        "score": 2.0,
+        "cls": "FAMILIA_T1"
+      },
+      {
+        "number": 75,
+        "score": 2.0,
+        "cls": "FAMILIA_T1"
+      },
+      {
+        "number": 91,
+        "score": 2.0,
+        "cls": "FAMILIA_T1"
+      },
+      {
+        "number": 11,
+        "score": -50.0,
+        "cls": "DERIVACION_RELEVANTE"
+      }
+    ],
+    "input_order": [
+      44,
+      7
+    ],
+    "frequency_notes": {
+      "n_confirmers_activation": 1,
+      "n_fuertes_same_day": 4
+    }
+  },
+  {
+    "scenario_id": "8c6da1d61ea96b1b",
+    "date": "2024-01-06",
+    "year": 2024,
+    "lotteries": [
+      "Gana Mas",
+      "Quiniela Real"
+    ],
+    "positions": [
+      1,
+      1
+    ],
+    "observed_numbers_sorted": [
+      41,
+      42
+    ],
+    "observed_generator_first": [
+      42,
+      41
+    ],
+    "origin": 42,
+    "confirmer": 41,
+    "chosen_by_motor_phase2": 29,
+    "historical_fuerte": 71,
+    "hist_rank_phase2": 2,
+    "score_gap": 0.0,
+    "real_tie": true,
+    "chosen_detail": {
+      "number": 29,
+      "rank": 1,
+      "score": 152.0,
+      "classification": "FUERTE_PRINCIPAL",
+      "table1_sources": [
+        41
+      ],
+      "direct_confirmers": [
+        42
+      ],
+      "independent_path_count": 3,
+      "same_source_repetitions": 0,
+      "direct_path_count": 3,
+      "total_path_count": 9,
+      "cross_table_support": true,
+      "multi_source_support": true,
+      "ambiguity_score": 1.0,
+      "components": {
+        "T1_SOURCE_SUPPORT": 1.0,
+        "T2_CONFIRMATION_SUPPORT": 1.0,
+        "CROSS_TABLE_SUPPORT": 1.0,
+        "MULTIPLE_OBSERVED_SUPPORT": 1.0,
+        "INDEPENDENT_PATH_SUPPORT": 3.0,
+        "DIRECT_PATH_SUPPORT": 3.0,
+        "MULTI_CONFIRMATION_SUPPORT": 0.0,
+        "HISTORICAL_EXACT_RATE": 0.0,
+        "HISTORICAL_D1_D3_RATE": 0.0,
+        "HISTORICAL_D1_D7_RATE": 0.0,
+        "FIRST_POSITION_SUPPORT": 0.0,
+        "ANY_POSITION_SUPPORT": 0.0,
+        "RECENT_PATTERN_SUPPORT": 0.0,
+        "CROSS_LOTTERY_SUPPORT": 0.0,
+        "CHAIN_CONTINUITY_SUPPORT": 0.0,
+        "DERIVATION_DEPTH_PENALTY": 0.0,
+        "AMBIGUITY_PENALTY": 1.0,
+        "DUPLICATE_PATH_PENALTY": 0.0
+      }
+    },
+    "historical_detail": {
+      "number": 71,
+      "rank": 2,
+      "score": 152.0,
+      "classification": "FUERTE_SECUNDARIO",
+      "table1_sources": [
+        42
+      ],
+      "direct_confirmers": [
+        41
+      ],
+      "independent_path_count": 3,
+      "same_source_repetitions": 0,
+      "direct_path_count": 3,
+      "total_path_count": 7,
+      "cross_table_support": true,
+      "multi_source_support": true,
+      "ambiguity_score": 1.0,
+      "components": {
+        "T1_SOURCE_SUPPORT": 1.0,
+        "T2_CONFIRMATION_SUPPORT": 1.0,
+        "CROSS_TABLE_SUPPORT": 1.0,
+        "MULTIPLE_OBSERVED_SUPPORT": 1.0,
+        "INDEPENDENT_PATH_SUPPORT": 3.0,
+        "DIRECT_PATH_SUPPORT": 3.0,
+        "MULTI_CONFIRMATION_SUPPORT": 0.0,
+        "HISTORICAL_EXACT_RATE": 0.0,
+        "HISTORICAL_D1_D3_RATE": 0.0,
+        "HISTORICAL_D1_D7_RATE": 0.0,
+        "FIRST_POSITION_SUPPORT": 0.0,
+        "ANY_POSITION_SUPPORT": 0.0,
+        "RECENT_PATTERN_SUPPORT": 0.0,
+        "CROSS_LOTTERY_SUPPORT": 0.0,
+        "CHAIN_CONTINUITY_SUPPORT": 0.0,
+        "DERIVATION_DEPTH_PENALTY": 0.0,
+        "AMBIGUITY_PENALTY": 1.0,
+        "DUPLICATE_PATH_PENALTY": 0.0
+      }
+    },
+    "alternatives": [
+      {
+        "number": 29,
+        "score": 152.0,
+        "cls": "FUERTE_PRINCIPAL"
+      },
+      {
+        "number": 71,
+        "score": 152.0,
+        "cls": "FUERTE_SECUNDARIO"
+      },
+      {
+        "number": 7,
+        "score": 59.0,
+        "cls": "CANDIDATO_PARCIAL"
+      },
+      {
+        "number": 13,
+        "score": 32.0,
+        "cls": "CANDIDATO_PARCIAL"
+      },
+      {
+        "number": 18,
+        "score": 32.0,
+        "cls": "CANDIDATO_PARCIAL"
+      },
+      {
+        "number": 23,
+        "score": 32.0,
+        "cls": "CANDIDATO_PARCIAL"
+      }
+    ],
+    "input_order": [
+      42,
+      41
+    ],
+    "frequency_notes": {
+      "n_confirmers_activation": 1,
+      "n_fuertes_same_day": 2
+    }
+  },
+  {
+    "scenario_id": "02b798261529349c",
+    "date": "2024-01-07",
+    "year": 2024,
+    "lotteries": [
+      "Quiniela Leidsa",
+      "Quiniela Real"
+    ],
+    "positions": [
+      1,
+      1
+    ],
+    "observed_numbers_sorted": [
+      44,
+      53
+    ],
+    "observed_generator_first": [
+      44,
+      53
+    ],
+    "origin": 44,
+    "confirmer": 53,
+    "chosen_by_motor_phase2": 22,
+    "historical_fuerte": 70,
+    "hist_rank_phase2": 2,
+    "score_gap": 0.0,
+    "real_tie": true,
+    "chosen_detail": {
+      "number": 22,
+      "rank": 1,
+      "score": 174.0,
+      "classification": "FUERTE_PRINCIPAL",
+      "table1_sources": [
+        44
+      ],
+      "direct_confirmers": [
+        53
+      ],
+      "independent_path_count": 4,
+      "same_source_repetitions": 0,
+      "direct_path_count": 4,
+      "total_path_count": 10,
+      "cross_table_support": true,
+      "multi_source_support": true,
+      "ambiguity_score": 1.0,
+      "components": {
+        "T1_SOURCE_SUPPORT": 1.0,
+        "T2_CONFIRMATION_SUPPORT": 1.0,
+        "CROSS_TABLE_SUPPORT": 1.0,
+        "MULTIPLE_OBSERVED_SUPPORT": 1.0,
+        "INDEPENDENT_PATH_SUPPORT": 4.0,
+        "DIRECT_PATH_SUPPORT": 4.0,
+        "MULTI_CONFIRMATION_SUPPORT": 0.0,
+        "HISTORICAL_EXACT_RATE": 0.0,
+        "HISTORICAL_D1_D3_RATE": 0.0,
+        "HISTORICAL_D1_D7_RATE": 0.0,
+        "FIRST_POSITION_SUPPORT": 0.0,
+        "ANY_POSITION_SUPPORT": 0.0,
+        "RECENT_PATTERN_SUPPORT": 0.0,
+        "CROSS_LOTTERY_SUPPORT": 0.0,
+        "CHAIN_CONTINUITY_SUPPORT": 0.0,
+        "DERIVATION_DEPTH_PENALTY": 0.0,
+        "AMBIGUITY_PENALTY": 1.0,
+        "DUPLICATE_PATH_PENALTY": 0.0
+      }
+    },
+    "historical_detail": {
+      "number": 70,
+      "rank": 2,
+      "score": 174.0,
+      "classification": "FUERTE_SECUNDARIO",
+      "table1_sources": [
+        44
+      ],
+      "direct_confirmers": [
+        53
+      ],
+      "independent_path_count": 4,
+      "same_source_repetitions": 0,
+      "direct_path_count": 4,
+      "total_path_count": 9,
+      "cross_table_support": true,
+      "multi_source_support": true,
+      "ambiguity_score": 1.0,
+      "components": {
+        "T1_SOURCE_SUPPORT": 1.0,
+        "T2_CONFIRMATION_SUPPORT": 1.0,
+        "CROSS_TABLE_SUPPORT": 1.0,
+        "MULTIPLE_OBSERVED_SUPPORT": 1.0,
+        "INDEPENDENT_PATH_SUPPORT": 4.0,
+        "DIRECT_PATH_SUPPORT": 4.0,
+        "MULTI_CONFIRMATION_SUPPORT": 0.0,
+        "HISTORICAL_EXACT_RATE": 0.0,
+        "HISTORICAL_D1_D3_RATE": 0.0,
+        "HISTORICAL_D1_D7_RATE": 0.0,
+        "FIRST_POSITION_SUPPORT": 0.0,
+        "ANY_POSITION_SUPPORT": 0.0,
+        "RECENT_PATTERN_SUPPORT": 0.0,
+        "CROSS_LOTTERY_SUPPORT": 0.0,
+        "CHAIN_CONTINUITY_SUPPORT": 0.0,
+        "DERIVATION_DEPTH_PENALTY": 0.0,
+        "AMBIGUITY_PENALTY": 1.0,
+        "DUPLICATE_PATH_PENALTY": 0.0
+      }
+    },
+    "alternatives": [
+      {
+        "number": 22,
+        "score": 174.0,
+        "cls": "FUERTE_PRINCIPAL"
+      },
+      {
+        "number": 70,
+        "score": 174.0,
+        "cls": "FUERTE_SECUNDARIO"
+      },
+      {
+        "number": 59,
+        "score": 2.0,
+        "cls": "FAMILIA_T1"
+      },
+      {
+        "number": 75,
+        "score": 2.0,
+        "cls": "FAMILIA_T1"
+      },
+      {
+        "number": 91,
+        "score": 2.0,
+        "cls": "FAMILIA_T1"
+      },
+      {
+        "number": 11,
+        "score": -50.0,
+        "cls": "DERIVACION_RELEVANTE"
+      }
+    ],
+    "input_order": [
+      44,
+      53
+    ],
+    "frequency_notes": {
+      "n_confirmers_activation": 2,
+      "n_fuertes_same_day": 2
+    }
+  },
+  {
+    "scenario_id": "00ec3633ce4f1a74",
+    "date": "2024-01-14",
+    "year": 2024,
+    "lotteries": [
+      "Loteria Nacional",
+      "Quiniela Loteka"
+    ],
+    "positions": [
+      1,
+      1
+    ],
+    "observed_numbers_sorted": [
+      29,
+      44
+    ],
+    "observed_generator_first": [
+      44,
+      29
+    ],
+    "origin": 44,
+    "confirmer": 29,
+    "chosen_by_motor_phase2": 22,
+    "historical_fuerte": 70,
+    "hist_rank_phase2": 2,
+    "score_gap": 0.0,
+    "real_tie": true,
+    "chosen_detail": {
+      "number": 22,
+      "rank": 1,
+      "score": 174.0,
+      "classification": "FUERTE_PRINCIPAL",
+      "table1_sources": [
+        44
+      ],
+      "direct_confirmers": [
+        29
+      ],
+      "independent_path_count": 4,
+      "same_source_repetitions": 0,
+      "direct_path_count": 4,
+      "total_path_count": 10,
+      "cross_table_support": true,
+      "multi_source_support": true,
+      "ambiguity_score": 1.0,
+      "components": {
+        "T1_SOURCE_SUPPORT": 1.0,
+        "T2_CONFIRMATION_SUPPORT": 1.0,
+        "CROSS_TABLE_SUPPORT": 1.0,
+        "MULTIPLE_OBSERVED_SUPPORT": 1.0,
+        "INDEPENDENT_PATH_SUPPORT": 4.0,
+        "DIRECT_PATH_SUPPORT": 4.0,
+        "MULTI_CONFIRMATION_SUPPORT": 0.0,
+        "HISTORICAL_EXACT_RATE": 0.0,
+        "HISTORICAL_D1_D3_RATE": 0.0,
+        "HISTORICAL_D1_D7_RATE": 0.0,
+        "FIRST_POSITION_SUPPORT": 0.0,
+        "ANY_POSITION_SUPPORT": 0.0,
+        "RECENT_PATTERN_SUPPORT": 0.0,
+        "CROSS_LOTTERY_SUPPORT": 0.0,
+        "CHAIN_CONTINUITY_SUPPORT": 0.0,
+        "DERIVATION_DEPTH_PENALTY": 0.0,
+        "AMBIGUITY_PENALTY": 1.0,
+        "DUPLICATE_PATH_PENALTY": 0.0
+      }
+    },
+    "historical_detail": {
+      "number": 70,
+      "rank": 2,
+      "score": 174.0,
+      "classification": "FUERTE_SECUNDARIO",
+      "table1_sources": [
+        44
+      ],
+      "direct_confirmers": [
+        29
+      ],
+      "independent_path_count": 4,
+      "same_source_repetitions": 0,
+      "direct_path_count": 4,
+      "total_path_count": 9,
+      "cross_table_support": true,
+      "multi_source_support": true,
+      "ambiguity_score": 1.0,
+      "components": {
+        "T1_SOURCE_SUPPORT": 1.0,
+        "T2_CONFIRMATION_SUPPORT": 1.0,
+        "CROSS_TABLE_SUPPORT": 1.0,
+        "MULTIPLE_OBSERVED_SUPPORT": 1.0,
+        "INDEPENDENT_PATH_SUPPORT": 4.0,
+        "DIRECT_PATH_SUPPORT": 4.0,
+        "MULTI_CONFIRMATION_SUPPORT": 0.0,
+        "HISTORICAL_EXACT_RATE": 0.0,
+        "HISTORICAL_D1_D3_RATE": 0.0,
+        "HISTORICAL_D1_D7_RATE": 0.0,
+        "FIRST_POSITION_SUPPORT": 0.0,
+        "ANY_POSITION_SUPPORT": 0.0,
+        "RECENT_PATTERN_SUPPORT": 0.0,
+        "CROSS_LOTTERY_SUPPORT": 0.0,
+        "CHAIN_CONTINUITY_SUPPORT": 0.0,
+        "DERIVATION_DEPTH_PENALTY": 0.0,
+        "AMBIGUITY_PENALTY": 1.0,
+        "DUPLICATE_PATH_PENALTY": 0.0
+      }
+    },
+    "alternatives": [
+      {
+        "number": 22,
+        "score": 174.0,
+        "cls": "FUERTE_PRINCIPAL"
+      },
+      {
+        "number": 70,
+        "score": 174.0,
+        "cls": "FUERTE_SECUNDARIO"
+      },
+      {
+        "number": 15,
+        "score": 32.0,
+        "cls": "CANDIDATO_PARCIAL"
+      },
+      {
+        "number": 59,
+        "score": 2.0,
+        "cls": "FAMILIA_T1"
+      },
+      {
+        "number": 75,
+        "score": 2.0,
+        "cls": "FAMILIA_T1"
+      },
+      {
+        "number": 91,
+        "score": 2.0,
+        "cls": "FAMILIA_T1"
+      }
+    ],
+    "input_order": [
+      44,
+      29
+    ],
+    "frequency_notes": {
+      "n_confirmers_activation": 1,
+      "n_fuertes_same_day": 3
+    }
+  },
+  {
+    "scenario_id": "697db885597a30a0",
+    "date": "2024-01-27",
+    "year": 2024,
+    "lotteries": [
+      "Quiniela Loteka",
+      "New York 10:30"
+    ],
+    "positions": [
+      1,
+      1
+    ],
+    "observed_numbers_sorted": [
+      28,
+      42
+    ],
+    "observed_generator_first": [
+      28,
+      42
+    ],
+    "origin": 28,
+    "confirmer": 42,
+    "chosen_by_motor_phase2": 23,
+    "historical_fuerte": 53,
+    "hist_rank_phase2": 2,
+    "score_gap": 0.0,
+    "real_tie": true,
+    "chosen_detail": {
+      "number": 23,
+      "rank": 1,
+      "score": 152.0,
+      "classification": "FUERTE_PRINCIPAL",
+      "table1_sources": [
+        42
+      ],
+      "direct_confirmers": [
+        28
+      ],
+      "independent_path_count": 3,
+      "same_source_repetitions": 0,
+      "direct_path_count": 3,
+      "total_path_count": 9,
+      "cross_table_support": true,
+      "multi_source_support": true,
+      "ambiguity_score": 1.0,
+      "components": {
+        "T1_SOURCE_SUPPORT": 1.0,
+        "T2_CONFIRMATION_SUPPORT": 1.0,
+        "CROSS_TABLE_SUPPORT": 1.0,
+        "MULTIPLE_OBSERVED_SUPPORT": 1.0,
+        "INDEPENDENT_PATH_SUPPORT": 3.0,
+        "DIRECT_PATH_SUPPORT": 3.0,
+        "MULTI_CONFIRMATION_SUPPORT": 0.0,
+        "HISTORICAL_EXACT_RATE": 0.0,
+        "HISTORICAL_D1_D3_RATE": 0.0,
+        "HISTORICAL_D1_D7_RATE": 0.0,
+        "FIRST_POSITION_SUPPORT": 0.0,
+        "ANY_POSITION_SUPPORT": 0.0,
+        "RECENT_PATTERN_SUPPORT": 0.0,
+        "CROSS_LOTTERY_SUPPORT": 0.0,
+        "CHAIN_CONTINUITY_SUPPORT": 0.0,
+        "DERIVATION_DEPTH_PENALTY": 0.0,
+        "AMBIGUITY_PENALTY": 1.0,
+        "DUPLICATE_PATH_PENALTY": 0.0
+      }
+    },
+    "historical_detail": {
+      "number": 53,
+      "rank": 2,
+      "score": 152.0,
+      "classification": "FUERTE_SECUNDARIO",
+      "table1_sources": [
+        28
+      ],
+      "direct_confirmers": [
+        42
+      ],
+      "independent_path_count": 3,
+      "same_source_repetitions": 0,
+      "direct_path_count": 3,
+      "total_path_count": 9,
+      "cross_table_support": true,
+      "multi_source_support": true,
+      "ambiguity_score": 1.0,
+      "components": {
+        "T1_SOURCE_SUPPORT": 1.0,
+        "T2_CONFIRMATION_SUPPORT": 1.0,
+        "CROSS_TABLE_SUPPORT": 1.0,
+        "MULTIPLE_OBSERVED_SUPPORT": 1.0,
+        "INDEPENDENT_PATH_SUPPORT": 3.0,
+        "DIRECT_PATH_SUPPORT": 3.0,
+        "MULTI_CONFIRMATION_SUPPORT": 0.0,
+        "HISTORICAL_EXACT_RATE": 0.0,
+        "HISTORICAL_D1_D3_RATE": 0.0,
+        "HISTORICAL_D1_D7_RATE": 0.0,
+        "FIRST_POSITION_SUPPORT": 0.0,
+        "ANY_POSITION_SUPPORT": 0.0,
+        "RECENT_PATTERN_SUPPORT": 0.0,
+        "CROSS_LOTTERY_SUPPORT": 0.0,
+        "CHAIN_CONTINUITY_SUPPORT": 0.0,
+        "DERIVATION_DEPTH_PENALTY": 0.0,
+        "AMBIGUITY_PENALTY": 1.0,
+        "DUPLICATE_PATH_PENALTY": 0.0
+      }
+    },
+    "alternatives": [
+      {
+        "number": 23,
+        "score": 152.0,
+        "cls": "FUERTE_PRINCIPAL"
+      },
+      {
+        "number": 53,
+        "score": 152.0,
+        "cls": "FUERTE_SECUNDARIO"
+      },
+      {
+        "number": 7,
+        "score": 59.0,
+        "cls": "CANDIDATO_PARCIAL"
+      },
+      {
+        "number": 18,
+        "score": 32.0,
+        "cls": "CANDIDATO_PARCIAL"
+      },
+      {
+        "number": 21,
+        "score": 32.0,
+        "cls": "CANDIDATO_PARCIAL"
+      },
+      {
+        "number": 26,
+        "score": 32.0,
+        "cls": "CANDIDATO_PARCIAL"
+      }
+    ],
+    "input_order": [
+      28,
+      42
+    ],
+    "frequency_notes": {
+      "n_confirmers_activation": 1,
+      "n_fuertes_same_day": 3
+    }
+  },
+  {
+    "scenario_id": "37fc83b1a465e809",
+    "date": "2024-02-03",
+    "year": 2024,
+    "lotteries": [
+      "Quiniela Real",
+      "New York 2:30"
+    ],
+    "positions": [
+      1,
+      1
+    ],
+    "observed_numbers_sorted": [
+      29,
+      44
+    ],
+    "observed_generator_first": [
+      44,
+      29
+    ],
+    "origin": 44,
+    "confirmer": 29,
+    "chosen_by_motor_phase2": 22,
+    "historical_fuerte": 70,
+    "hist_rank_phase2": 2,
+    "score_gap": 0.0,
+    "real_tie": true,
+    "chosen_detail": {
+      "number": 22,
+      "rank": 1,
+      "score": 174.0,
+      "classification": "FUERTE_PRINCIPAL",
+      "table1_sources": [
+        44
+      ],
+      "direct_confirmers": [
+        29
+      ],
+      "independent_path_count": 4,
+      "same_source_repetitions": 0,
+      "direct_path_count": 4,
+      "total_path_count": 10,
+      "cross_table_support": true,
+      "multi_source_support": true,
+      "ambiguity_score": 1.0,
+      "components": {
+        "T1_SOURCE_SUPPORT": 1.0,
+        "T2_CONFIRMATION_SUPPORT": 1.0,
+        "CROSS_TABLE_SUPPORT": 1.0,
+        "MULTIPLE_OBSERVED_SUPPORT": 1.0,
+        "INDEPENDENT_PATH_SUPPORT": 4.0,
+        "DIRECT_PATH_SUPPORT": 4.0,
+        "MULTI_CONFIRMATION_SUPPORT": 0.0,
+        "HISTORICAL_EXACT_RATE": 0.0,
+        "HISTORICAL_D1_D3_RATE": 0.0,
+        "HISTORICAL_D1_D7_RATE": 0.0,
+        "FIRST_POSITION_SUPPORT": 0.0,
+        "ANY_POSITION_SUPPORT": 0.0,
+        "RECENT_PATTERN_SUPPORT": 0.0,
+        "CROSS_LOTTERY_SUPPORT": 0.0,
+        "CHAIN_CONTINUITY_SUPPORT": 0.0,
+        "DERIVATION_DEPTH_PENALTY": 0.0,
+        "AMBIGUITY_PENALTY": 1.0,
+        "DUPLICATE_PATH_PENALTY": 0.0
+      }
+    },
+    "historical_detail": {
+      "number": 70,
+      "rank": 2,
+      "score": 174.0,
+      "classification": "FUERTE_SECUNDARIO",
+      "table1_sources": [
+        44
+      ],
+      "direct_confirmers": [
+        29
+      ],
+      "independent_path_count": 4,
+      "same_source_repetitions": 0,
+      "direct_path_count": 4,
+      "total_path_count": 9,
+      "cross_table_support": true,
+      "multi_source_support": true,
+      "ambiguity_score": 1.0,
+      "components": {
+        "T1_SOURCE_SUPPORT": 1.0,
+        "T2_CONFIRMATION_SUPPORT": 1.0,
+        "CROSS_TABLE_SUPPORT": 1.0,
+        "MULTIPLE_OBSERVED_SUPPORT": 1.0,
+        "INDEPENDENT_PATH_SUPPORT": 4.0,
+        "DIRECT_PATH_SUPPORT": 4.0,
+        "MULTI_CONFIRMATION_SUPPORT": 0.0,
+        "HISTORICAL_EXACT_RATE": 0.0,
+        "HISTORICAL_D1_D3_RATE": 0.0,
+        "HISTORICAL_D1_D7_RATE": 0.0,
+        "FIRST_POSITION_SUPPORT": 0.0,
+        "ANY_POSITION_SUPPORT": 0.0,
+        "RECENT_PATTERN_SUPPORT": 0.0,
+        "CROSS_LOTTERY_SUPPORT": 0.0,
+        "CHAIN_CONTINUITY_SUPPORT": 0.0,
+        "DERIVATION_DEPTH_PENALTY": 0.0,
+        "AMBIGUITY_PENALTY": 1.0,
+        "DUPLICATE_PATH_PENALTY": 0.0
+      }
+    },
+    "alternatives": [
+      {
+        "number": 22,
+        "score": 174.0,
+        "cls": "FUERTE_PRINCIPAL"
+      },
+      {
+        "number": 70,
+        "score": 174.0,
+        "cls": "FUERTE_SECUNDARIO"
+      },
+      {
+        "number": 15,
+        "score": 32.0,
+        "cls": "CANDIDATO_PARCIAL"
+      },
+      {
+        "number": 59,
+        "score": 2.0,
+        "cls": "FAMILIA_T1"
+      },
+      {
+        "number": 75,
+        "score": 2.0,
+        "cls": "FAMILIA_T1"
+      },
+      {
+        "number": 91,
+        "score": 2.0,
+        "cls": "FAMILIA_T1"
+      }
+    ],
+    "input_order": [
+      44,
+      29
+    ],
+    "frequency_notes": {
+      "n_confirmers_activation": 2,
+      "n_fuertes_same_day": 3
+    }
+  },
+  {
+    "scenario_id": "a9d65921621f9748",
+    "date": "2024-02-19",
+    "year": 2024,
+    "lotteries": [
+      "Loteria Nacional",
+      "Quiniela Loteka"
+    ],
+    "positions": [
+      1,
+      1
+    ],
+    "observed_numbers_sorted": [
+      28,
+      42
+    ],
+    "observed_generator_first": [
+      28,
+      42
+    ],
+    "origin": 28,
+    "confirmer": 42,
+    "chosen_by_motor_phase2": 23,
+    "historical_fuerte": 53,
+    "hist_rank_phase2": 2,
+    "score_gap": 0.0,
+    "real_tie": true,
+    "chosen_detail": {
+      "number": 23,
+      "rank": 1,
+      "score": 152.0,
+      "classification": "FUERTE_PRINCIPAL",
+      "table1_sources": [
+        42
+      ],
+      "direct_confirmers": [
+        28
+      ],
+      "independent_path_count": 3,
+      "same_source_repetitions": 0,
+      "direct_path_count": 3,
+      "total_path_count": 9,
+      "cross_table_support": true,
+      "multi_source_support": true,
+      "ambiguity_score": 1.0,
+      "components": {
+        "T1_SOURCE_SUPPORT": 1.0,
+        "T2_CONFIRMATION_SUPPORT": 1.0,
+        "CROSS_TABLE_SUPPORT": 1.0,
+        "MULTIPLE_OBSERVED_SUPPORT": 1.0,
+        "INDEPENDENT_PATH_SUPPORT": 3.0,
+        "DIRECT_PATH_SUPPORT": 3.0,
+        "MULTI_CONFIRMATION_SUPPORT": 0.0,
+        "HISTORICAL_EXACT_RATE": 0.0,
+        "HISTORICAL_D1_D3_RATE": 0.0,
+        "HISTORICAL_D1_D7_RATE": 0.0,
+        "FIRST_POSITION_SUPPORT": 0.0,
+        "ANY_POSITION_SUPPORT": 0.0,
+        "RECENT_PATTERN_SUPPORT": 0.0,
+        "CROSS_LOTTERY_SUPPORT": 0.0,
+        "CHAIN_CONTINUITY_SUPPORT": 0.0,
+        "DERIVATION_DEPTH_PENALTY": 0.0,
+        "AMBIGUITY_PENALTY": 1.0,
+        "DUPLICATE_PATH_PENALTY": 0.0
+      }
+    },
+    "historical_detail": {
+      "number": 53,
+      "rank": 2,
+      "score": 152.0,
+      "classification": "FUERTE_SECUNDARIO",
+      "table1_sources": [
+        28
+      ],
+      "direct_confirmers": [
+        42
+      ],
+      "independent_path_count": 3,
+      "same_source_repetitions": 0,
+      "direct_path_count": 3,
+      "total_path_count": 9,
+      "cross_table_support": true,
+      "multi_source_support": true,
+      "ambiguity_score": 1.0,
+      "components": {
+        "T1_SOURCE_SUPPORT": 1.0,
+        "T2_CONFIRMATION_SUPPORT": 1.0,
+        "CROSS_TABLE_SUPPORT": 1.0,
+        "MULTIPLE_OBSERVED_SUPPORT": 1.0,
+        "INDEPENDENT_PATH_SUPPORT": 3.0,
+        "DIRECT_PATH_SUPPORT": 3.0,
+        "MULTI_CONFIRMATION_SUPPORT": 0.0,
+        "HISTORICAL_EXACT_RATE": 0.0,
+        "HISTORICAL_D1_D3_RATE": 0.0,
+        "HISTORICAL_D1_D7_RATE": 0.0,
+        "FIRST_POSITION_SUPPORT": 0.0,
+        "ANY_POSITION_SUPPORT": 0.0,
+        "RECENT_PATTERN_SUPPORT": 0.0,
+        "CROSS_LOTTERY_SUPPORT": 0.0,
+        "CHAIN_CONTINUITY_SUPPORT": 0.0,
+        "DERIVATION_DEPTH_PENALTY": 0.0,
+        "AMBIGUITY_PENALTY": 1.0,
+        "DUPLICATE_PATH_PENALTY": 0.0
+      }
+    },
+    "alternatives": [
+      {
+        "number": 23,
+        "score": 152.0,
+        "cls": "FUERTE_PRINCIPAL"
+      },
+      {
+        "number": 53,
+        "score": 152.0,
+        "cls": "FUERTE_SECUNDARIO"
+      },
+      {
+        "number": 7,
+        "score": 59.0,
+        "cls": "CANDIDATO_PARCIAL"
+      },
+      {
+        "number": 18,
+        "score": 32.0,
+        "cls": "CANDIDATO_PARCIAL"
+      },
+      {
+        "number": 21,
+        "score": 32.0,
+        "cls": "CANDIDATO_PARCIAL"
+      },
+      {
+        "number": 26,
+        "score": 32.0,
+        "cls": "CANDIDATO_PARCIAL"
+      }
+    ],
+    "input_order": [
+      28,
+      42
+    ],
+    "frequency_notes": {
+      "n_confirmers_activation": 1,
+      "n_fuertes_same_day": 4
+    }
+  },
+  {
+    "scenario_id": "e7d4e6113d8da6e1",
+    "date": "2024-02-28",
+    "year": 2024,
+    "lotteries": [
+      "Quiniela Leidsa",
+      "New York 10:30"
+    ],
+    "positions": [
+      1,
+      1
+    ],
+    "observed_numbers_sorted": [
+      44,
+      63
+    ],
+    "observed_generator_first": [
+      44,
+      63
+    ],
+    "origin": 44,
+    "confirmer": 63,
+    "chosen_by_motor_phase2": 22,
+    "historical_fuerte": 70,
+    "hist_rank_phase2": 2,
+    "score_gap": 0.0,
+    "real_tie": true,
+    "chosen_detail": {
+      "number": 22,
+      "rank": 1,
+      "score": 174.0,
+      "classification": "FUERTE_PRINCIPAL",
+      "table1_sources": [
+        44
+      ],
+      "direct_confirmers": [
+        63
+      ],
+      "independent_path_count": 4,
+      "same_source_repetitions": 0,
+      "direct_path_count": 4,
+      "total_path_count": 10,
+      "cross_table_support": true,
+      "multi_source_support": true,
+      "ambiguity_score": 1.0,
+      "components": {
+        "T1_SOURCE_SUPPORT": 1.0,
+        "T2_CONFIRMATION_SUPPORT": 1.0,
+        "CROSS_TABLE_SUPPORT": 1.0,
+        "MULTIPLE_OBSERVED_SUPPORT": 1.0,
+        "INDEPENDENT_PATH_SUPPORT": 4.0,
+        "DIRECT_PATH_SUPPORT": 4.0,
+        "MULTI_CONFIRMATION_SUPPORT": 0.0,
+        "HISTORICAL_EXACT_RATE": 0.0,
+        "HISTORICAL_D1_D3_RATE": 0.0,
+        "HISTORICAL_D1_D7_RATE": 0.0,
+        "FIRST_POSITION_SUPPORT": 0.0,
+        "ANY_POSITION_SUPPORT": 0.0,
+        "RECENT_PATTERN_SUPPORT": 0.0,
+        "CROSS_LOTTERY_SUPPORT": 0.0,
+        "CHAIN_CONTINUITY_SUPPORT": 0.0,
+        "DERIVATION_DEPTH_PENALTY": 0.0,
+        "AMBIGUITY_PENALTY": 1.0,
+        "DUPLICATE_PATH_PENALTY": 0.0
+      }
+    },
+    "historical_detail": {
+      "number": 70,
+      "rank": 2,
+      "score": 174.0,
+      "classification": "FUERTE_SECUNDARIO",
+      "table1_sources": [
+        44
+      ],
+      "direct_confirmers": [
+        63
+      ],
+      "independent_path_count": 4,
+      "same_source_repetitions": 0,
+      "direct_path_count": 4,
+      "total_path_count": 9,
+      "cross_table_support": true,
+      "multi_source_support": true,
+      "ambiguity_score": 1.0,
+      "components": {
+        "T1_SOURCE_SUPPORT": 1.0,
+        "T2_CONFIRMATION_SUPPORT": 1.0,
+        "CROSS_TABLE_SUPPORT": 1.0,
+        "MULTIPLE_OBSERVED_SUPPORT": 1.0,
+        "INDEPENDENT_PATH_SUPPORT": 4.0,
+        "DIRECT_PATH_SUPPORT": 4.0,
+        "MULTI_CONFIRMATION_SUPPORT": 0.0,
+        "HISTORICAL_EXACT_RATE": 0.0,
+        "HISTORICAL_D1_D3_RATE": 0.0,
+        "HISTORICAL_D1_D7_RATE": 0.0,
+        "FIRST_POSITION_SUPPORT": 0.0,
+        "ANY_POSITION_SUPPORT": 0.0,
+        "RECENT_PATTERN_SUPPORT": 0.0,
+        "CROSS_LOTTERY_SUPPORT": 0.0,
+        "CHAIN_CONTINUITY_SUPPORT": 0.0,
+        "DERIVATION_DEPTH_PENALTY": 0.0,
+        "AMBIGUITY_PENALTY": 1.0,
+        "DUPLICATE_PATH_PENALTY": 0.0
+      }
+    },
+    "alternatives": [
+      {
+        "number": 22,
+        "score": 174.0,
+        "cls": "FUERTE_PRINCIPAL"
+      },
+      {
+        "number": 70,
+        "score": 174.0,
+        "cls": "FUERTE_SECUNDARIO"
+      },
+      {
+        "number": 59,
+        "score": 2.0,
+        "cls": "FAMILIA_T1"
+      },
+      {
+        "number": 75,
+        "score": 2.0,
+        "cls": "FAMILIA_T1"
+      },
+      {
+        "number": 91,
+        "score": 2.0,
+        "cls": "FAMILIA_T1"
+      },
+      {
+        "number": 11,
+        "score": -50.0,
+        "cls": "DERIVACION_RELEVANTE"
+      }
+    ],
+    "input_order": [
+      44,
+      63
+    ],
+    "frequency_notes": {
+      "n_confirmers_activation": 1,
+      "n_fuertes_same_day": 3
+    }
+  },
+  {
+    "scenario_id": "b6ca93c563bb9485",
+    "date": "2024-05-14",
+    "year": 2024,
+    "lotteries": [
+      "Quiniela Real",
+      "Gana Mas"
+    ],
+    "positions": [
+      1,
+      1
+    ],
+    "observed_numbers_sorted": [
+      41,
+      42
+    ],
+    "observed_generator_first": [
+      42,
+      41
+    ],
+    "origin": 42,
+    "confirmer": 41,
+    "chosen_by_motor_phase2": 29,
+    "historical_fuerte": 71,
+    "hist_rank_phase2": 2,
+    "score_gap": 0.0,
+    "real_tie": true,
+    "chosen_detail": {
+      "number": 29,
+      "rank": 1,
+      "score": 152.0,
+      "classification": "FUERTE_PRINCIPAL",
+      "table1_sources": [
+        41
+      ],
+      "direct_confirmers": [
+        42
+      ],
+      "independent_path_count": 3,
+      "same_source_repetitions": 0,
+      "direct_path_count": 3,
+      "total_path_count": 9,
+      "cross_table_support": true,
+      "multi_source_support": true,
+      "ambiguity_score": 1.0,
+      "components": {
+        "T1_SOURCE_SUPPORT": 1.0,
+        "T2_CONFIRMATION_SUPPORT": 1.0,
+        "CROSS_TABLE_SUPPORT": 1.0,
+        "MULTIPLE_OBSERVED_SUPPORT": 1.0,
+        "INDEPENDENT_PATH_SUPPORT": 3.0,
+        "DIRECT_PATH_SUPPORT": 3.0,
+        "MULTI_CONFIRMATION_SUPPORT": 0.0,
+        "HISTORICAL_EXACT_RATE": 0.0,
+        "HISTORICAL_D1_D3_RATE": 0.0,
+        "HISTORICAL_D1_D7_RATE": 0.0,
+        "FIRST_POSITION_SUPPORT": 0.0,
+        "ANY_POSITION_SUPPORT": 0.0,
+        "RECENT_PATTERN_SUPPORT": 0.0,
+        "CROSS_LOTTERY_SUPPORT": 0.0,
+        "CHAIN_CONTINUITY_SUPPORT": 0.0,
+        "DERIVATION_DEPTH_PENALTY": 0.0,
+        "AMBIGUITY_PENALTY": 1.0,
+        "DUPLICATE_PATH_PENALTY": 0.0
+      }
+    },
+    "historical_detail": {
+      "number": 71,
+      "rank": 2,
+      "score": 152.0,
+      "classification": "FUERTE_SECUNDARIO",
+      "table1_sources": [
+        42
+      ],
+      "direct_confirmers": [
+        41
+      ],
+      "independent_path_count": 3,
+      "same_source_repetitions": 0,
+      "direct_path_count": 3,
+      "total_path_count": 7,
+      "cross_table_support": true,
+      "multi_source_support": true,
+      "ambiguity_score": 1.0,
+      "components": {
+        "T1_SOURCE_SUPPORT": 1.0,
+        "T2_CONFIRMATION_SUPPORT": 1.0,
+        "CROSS_TABLE_SUPPORT": 1.0,
+        "MULTIPLE_OBSERVED_SUPPORT": 1.0,
+        "INDEPENDENT_PATH_SUPPORT": 3.0,
+        "DIRECT_PATH_SUPPORT": 3.0,
+        "MULTI_CONFIRMATION_SUPPORT": 0.0,
+        "HISTORICAL_EXACT_RATE": 0.0,
+        "HISTORICAL_D1_D3_RATE": 0.0,
+        "HISTORICAL_D1_D7_RATE": 0.0,
+        "FIRST_POSITION_SUPPORT": 0.0,
+        "ANY_POSITION_SUPPORT": 0.0,
+        "RECENT_PATTERN_SUPPORT": 0.0,
+        "CROSS_LOTTERY_SUPPORT": 0.0,
+        "CHAIN_CONTINUITY_SUPPORT": 0.0,
+        "DERIVATION_DEPTH_PENALTY": 0.0,
+        "AMBIGUITY_PENALTY": 1.0,
+        "DUPLICATE_PATH_PENALTY": 0.0
+      }
+    },
+    "alternatives": [
+      {
+        "number": 29,
+        "score": 152.0,
+        "cls": "FUERTE_PRINCIPAL"
+      },
+      {
+        "number": 71,
+        "score": 152.0,
+        "cls": "FUERTE_SECUNDARIO"
+      },
+      {
+        "number": 7,
+        "score": 59.0,
+        "cls": "CANDIDATO_PARCIAL"
+      },
+      {
+        "number": 13,
+        "score": 32.0,
+        "cls": "CANDIDATO_PARCIAL"
+      },
+      {
+        "number": 18,
+        "score": 32.0,
+        "cls": "CANDIDATO_PARCIAL"
+      },
+      {
+        "number": 23,
+        "score": 32.0,
+        "cls": "CANDIDATO_PARCIAL"
+      }
+    ],
+    "input_order": [
+      42,
+      41
+    ],
+    "frequency_notes": {
+      "n_confirmers_activation": 1,
+      "n_fuertes_same_day": 3
+    }
+  },
+  {
+    "scenario_id": "6719239a5dccaac2",
+    "date": "2024-05-22",
+    "year": 2024,
+    "lotteries": [
+      "Quiniela Loteka",
+      "Loteria Nacional"
+    ],
+    "positions": [
+      1,
+      1
+    ],
+    "observed_numbers_sorted": [
+      9,
+      44
+    ],
+    "observed_generator_first": [
+      44,
+      9
+    ],
+    "origin": 44,
+    "confirmer": 9,
+    "chosen_by_motor_phase2": 22,
+    "historical_fuerte": 70,
+    "hist_rank_phase2": 2,
+    "score_gap": 0.0,
+    "real_tie": true,
+    "chosen_detail": {
+      "number": 22,
+      "rank": 1,
+      "score": 174.0,
+      "classification": "FUERTE_PRINCIPAL",
+      "table1_sources": [
+        44
+      ],
+      "direct_confirmers": [
+        9
+      ],
+      "independent_path_count": 4,
+      "same_source_repetitions": 0,
+      "direct_path_count": 4,
+      "total_path_count": 10,
+      "cross_table_support": true,
+      "multi_source_support": true,
+      "ambiguity_score": 1.0,
+      "components": {
+        "T1_SOURCE_SUPPORT": 1.0,
+        "T2_CONFIRMATION_SUPPORT": 1.0,
+        "CROSS_TABLE_SUPPORT": 1.0,
+        "MULTIPLE_OBSERVED_SUPPORT": 1.0,
+        "INDEPENDENT_PATH_SUPPORT": 4.0,
+        "DIRECT_PATH_SUPPORT": 4.0,
+        "MULTI_CONFIRMATION_SUPPORT": 0.0,
+        "HISTORICAL_EXACT_RATE": 0.0,
+        "HISTORICAL_D1_D3_RATE": 0.0,
+        "HISTORICAL_D1_D7_RATE": 0.0,
+        "FIRST_POSITION_SUPPORT": 0.0,
+        "ANY_POSITION_SUPPORT": 0.0,
+        "RECENT_PATTERN_SUPPORT": 0.0,
+        "CROSS_LOTTERY_SUPPORT": 0.0,
+        "CHAIN_CONTINUITY_SUPPORT": 0.0,
+        "DERIVATION_DEPTH_PENALTY": 0.0,
+        "AMBIGUITY_PENALTY": 1.0,
+        "DUPLICATE_PATH_PENALTY": 0.0
+      }
+    },
+    "historical_detail": {
+      "number": 70,
+      "rank": 2,
+      "score": 174.0,
+      "classification": "FUERTE_SECUNDARIO",
+      "table1_sources": [
+        44
+      ],
+      "direct_confirmers": [
+        9
+      ],
+      "independent_path_count": 4,
+      "same_source_repetitions": 0,
+      "direct_path_count": 4,
+      "total_path_count": 9,
+      "cross_table_support": true,
+      "multi_source_support": true,
+      "ambiguity_score": 1.0,
+      "components": {
+        "T1_SOURCE_SUPPORT": 1.0,
+        "T2_CONFIRMATION_SUPPORT": 1.0,
+        "CROSS_TABLE_SUPPORT": 1.0,
+        "MULTIPLE_OBSERVED_SUPPORT": 1.0,
+        "INDEPENDENT_PATH_SUPPORT": 4.0,
+        "DIRECT_PATH_SUPPORT": 4.0,
+        "MULTI_CONFIRMATION_SUPPORT": 0.0,
+        "HISTORICAL_EXACT_RATE": 0.0,
+        "HISTORICAL_D1_D3_RATE": 0.0,
+        "HISTORICAL_D1_D7_RATE": 0.0,
+        "FIRST_POSITION_SUPPORT": 0.0,
+        "ANY_POSITION_SUPPORT": 0.0,
+        "RECENT_PATTERN_SUPPORT": 0.0,
+        "CROSS_LOTTERY_SUPPORT": 0.0,
+        "CHAIN_CONTINUITY_SUPPORT": 0.0,
+        "DERIVATION_DEPTH_PENALTY": 0.0,
+        "AMBIGUITY_PENALTY": 1.0,
+        "DUPLICATE_PATH_PENALTY": 0.0
+      }
+    },
+    "alternatives": [
+      {
+        "number": 22,
+        "score": 174.0,
+        "cls": "FUERTE_PRINCIPAL"
+      },
+      {
+        "number": 70,
+        "score": 174.0,
+        "cls": "FUERTE_SECUNDARIO"
+      },
+      {
+        "number": 59,
+        "score": 2.0,
+        "cls": "FAMILIA_T1"
+      },
+      {
+        "number": 75,
+        "score": 2.0,
+        "cls": "FAMILIA_T1"
+      },
+      {
+        "number": 91,
+        "score": 2.0,
+        "cls": "FAMILIA_T1"
+      },
+      {
+        "number": 11,
+        "score": -50.0,
+        "cls": "DERIVACION_RELEVANTE"
+      }
+    ],
+    "input_order": [
+      44,
+      9
+    ],
+    "frequency_notes": {
+      "n_confirmers_activation": 1,
+      "n_fuertes_same_day": 3
+    }
+  },
+  {
+    "scenario_id": "2ad10143318cbb39",
+    "date": "2024-05-26",
+    "year": 2024,
+    "lotteries": [
+      "Loteria Nacional",
+      "New York 10:30"
+    ],
+    "positions": [
+      1,
+      2
+    ],
+    "observed_numbers_sorted": [
+      42,
+      44
+    ],
+    "observed_generator_first": [
+      44,
+      42
+    ],
+    "origin": 44,
+    "confirmer": 42,
+    "chosen_by_motor_phase2": 22,
+    "historical_fuerte": 70,
+    "hist_rank_phase2": 2,
+    "score_gap": 0.0,
+    "real_tie": true,
+    "chosen_detail": {
+      "number": 22,
+      "rank": 1,
+      "score": 170.0,
+      "classification": "FUERTE_PRINCIPAL",
+      "table1_sources": [
+        44
+      ],
+      "direct_confirmers": [
+        42
+      ],
+      "independent_path_count": 4,
+      "same_source_repetitions": 0,
+      "direct_path_count": 4,
+      "total_path_count": 12,
+      "cross_table_support": true,
+      "multi_source_support": true,
+      "ambiguity_score": 2.0,
+      "components": {
+        "T1_SOURCE_SUPPORT": 1.0,
+        "T2_CONFIRMATION_SUPPORT": 1.0,
+        "CROSS_TABLE_SUPPORT": 1.0,
+        "MULTIPLE_OBSERVED_SUPPORT": 1.0,
+        "INDEPENDENT_PATH_SUPPORT": 4.0,
+        "DIRECT_PATH_SUPPORT": 4.0,
+        "MULTI_CONFIRMATION_SUPPORT": 0.0,
+        "HISTORICAL_EXACT_RATE": 0.0,
+        "HISTORICAL_D1_D3_RATE": 0.0,
+        "HISTORICAL_D1_D7_RATE": 0.0,
+        "FIRST_POSITION_SUPPORT": 0.0,
+        "ANY_POSITION_SUPPORT": 0.0,
+        "RECENT_PATTERN_SUPPORT": 0.0,
+        "CROSS_LOTTERY_SUPPORT": 0.0,
+        "CHAIN_CONTINUITY_SUPPORT": 0.0,
+        "DERIVATION_DEPTH_PENALTY": 0.0,
+        "AMBIGUITY_PENALTY": 2.0,
+        "DUPLICATE_PATH_PENALTY": 0.0
+      }
+    },
+    "historical_detail": {
+      "number": 70,
+      "rank": 2,
+      "score": 170.0,
+      "classification": "FUERTE_SECUNDARIO",
+      "table1_sources": [
+        44
+      ],
+      "direct_confirmers": [
+        42
+      ],
+      "independent_path_count": 4,
+      "same_source_repetitions": 0,
+      "direct_path_count": 4,
+      "total_path_count": 10,
+      "cross_table_support": true,
+      "multi_source_support": true,
+      "ambiguity_score": 2.0,
+      "components": {
+        "T1_SOURCE_SUPPORT": 1.0,
+        "T2_CONFIRMATION_SUPPORT": 1.0,
+        "CROSS_TABLE_SUPPORT": 1.0,
+        "MULTIPLE_OBSERVED_SUPPORT": 1.0,
+        "INDEPENDENT_PATH_SUPPORT": 4.0,
+        "DIRECT_PATH_SUPPORT": 4.0,
+        "MULTI_CONFIRMATION_SUPPORT": 0.0,
+        "HISTORICAL_EXACT_RATE": 0.0,
+        "HISTORICAL_D1_D3_RATE": 0.0,
+        "HISTORICAL_D1_D7_RATE": 0.0,
+        "FIRST_POSITION_SUPPORT": 0.0,
+        "ANY_POSITION_SUPPORT": 0.0,
+        "RECENT_PATTERN_SUPPORT": 0.0,
+        "CROSS_LOTTERY_SUPPORT": 0.0,
+        "CHAIN_CONTINUITY_SUPPORT": 0.0,
+        "DERIVATION_DEPTH_PENALTY": 0.0,
+        "AMBIGUITY_PENALTY": 2.0,
+        "DUPLICATE_PATH_PENALTY": 0.0
+      }
+    },
+    "alternatives": [
+      {
+        "number": 22,
+        "score": 170.0,
+        "cls": "FUERTE_PRINCIPAL"
+      },
+      {
+        "number": 70,
+        "score": 170.0,
+        "cls": "FUERTE_SECUNDARIO"
+      },
+      {
+        "number": 7,
+        "score": 168.0,
+        "cls": "FUERTE_SECUNDARIO"
+      },
+      {
+        "number": 18,
+        "score": 32.0,
+        "cls": "CANDIDATO_PARCIAL"
+      },
+      {
+        "number": 23,
+        "score": 32.0,
+        "cls": "CANDIDATO_PARCIAL"
+      },
+      {
+        "number": 50,
+        "score": 32.0,
+        "cls": "CANDIDATO_PARCIAL"
+      }
+    ],
+    "input_order": [
+      44,
+      42
+    ],
+    "frequency_notes": {
+      "n_confirmers_activation": 1,
+      "n_fuertes_same_day": 4
+    }
+  },
+  {
+    "scenario_id": "b871b10305c95824",
+    "date": "2024-05-26",
+    "year": 2024,
+    "lotteries": [
+      "New York 10:30",
+      "Loteria Nacional"
+    ],
+    "positions": [
+      2,
+      1
+    ],
+    "observed_numbers_sorted": [
+      42,
+      44
+    ],
+    "observed_generator_first": [
+      42,
+      44
+    ],
+    "origin": 42,
+    "confirmer": 44,
+    "chosen_by_motor_phase2": 22,
+    "historical_fuerte": 7,
+    "hist_rank_phase2": 3,
+    "score_gap": 2.0,
+    "real_tie": false,
+    "chosen_detail": {
+      "number": 22,
+      "rank": 1,
+      "score": 170.0,
+      "classification": "FUERTE_PRINCIPAL",
+      "table1_sources": [
+        44
+      ],
+      "direct_confirmers": [
+        42
+      ],
+      "independent_path_count": 4,
+      "same_source_repetitions": 0,
+      "direct_path_count": 4,
+      "total_path_count": 12,
+      "cross_table_support": true,
+      "multi_source_support": true,
+      "ambiguity_score": 2.0,
+      "components": {
+        "T1_SOURCE_SUPPORT": 1.0,
+        "T2_CONFIRMATION_SUPPORT": 1.0,
+        "CROSS_TABLE_SUPPORT": 1.0,
+        "MULTIPLE_OBSERVED_SUPPORT": 1.0,
+        "INDEPENDENT_PATH_SUPPORT": 4.0,
+        "DIRECT_PATH_SUPPORT": 4.0,
+        "MULTI_CONFIRMATION_SUPPORT": 0.0,
+        "HISTORICAL_EXACT_RATE": 0.0,
+        "HISTORICAL_D1_D3_RATE": 0.0,
+        "HISTORICAL_D1_D7_RATE": 0.0,
+        "FIRST_POSITION_SUPPORT": 0.0,
+        "ANY_POSITION_SUPPORT": 0.0,
+        "RECENT_PATTERN_SUPPORT": 0.0,
+        "CROSS_LOTTERY_SUPPORT": 0.0,
+        "CHAIN_CONTINUITY_SUPPORT": 0.0,
+        "DERIVATION_DEPTH_PENALTY": 0.0,
+        "AMBIGUITY_PENALTY": 2.0,
+        "DUPLICATE_PATH_PENALTY": 0.0
+      }
+    },
+    "historical_detail": {
+      "number": 7,
+      "rank": 3,
+      "score": 168.0,
+      "classification": "FUERTE_SECUNDARIO",
+      "table1_sources": [
+        42
+      ],
+      "direct_confirmers": [
+        44
+      ],
+      "independent_path_count": 4,
+      "same_source_repetitions": 1,
+      "direct_path_count": 4,
+      "total_path_count": 10,
+      "cross_table_support": true,
+      "multi_source_support": true,
+      "ambiguity_score": 2.0,
+      "components": {
+        "T1_SOURCE_SUPPORT": 1.0,
+        "T2_CONFIRMATION_SUPPORT": 1.0,
+        "CROSS_TABLE_SUPPORT": 1.0,
+        "MULTIPLE_OBSERVED_SUPPORT": 1.0,
+        "INDEPENDENT_PATH_SUPPORT": 4.0,
+        "DIRECT_PATH_SUPPORT": 4.0,
+        "MULTI_CONFIRMATION_SUPPORT": 0.0,
+        "HISTORICAL_EXACT_RATE": 0.0,
+        "HISTORICAL_D1_D3_RATE": 0.0,
+        "HISTORICAL_D1_D7_RATE": 0.0,
+        "FIRST_POSITION_SUPPORT": 0.0,
+        "ANY_POSITION_SUPPORT": 0.0,
+        "RECENT_PATTERN_SUPPORT": 0.0,
+        "CROSS_LOTTERY_SUPPORT": 0.0,
+        "CHAIN_CONTINUITY_SUPPORT": 0.0,
+        "DERIVATION_DEPTH_PENALTY": 0.0,
+        "AMBIGUITY_PENALTY": 2.0,
+        "DUPLICATE_PATH_PENALTY": 1.0
+      }
+    },
+    "alternatives": [
+      {
+        "number": 22,
+        "score": 170.0,
+        "cls": "FUERTE_PRINCIPAL"
+      },
+      {
+        "number": 70,
+        "score": 170.0,
+        "cls": "FUERTE_SECUNDARIO"
+      },
+      {
+        "number": 7,
+        "score": 168.0,
+        "cls": "FUERTE_SECUNDARIO"
+      },
+      {
+        "number": 18,
+        "score": 32.0,
+        "cls": "CANDIDATO_PARCIAL"
+      },
+      {
+        "number": 23,
+        "score": 32.0,
+        "cls": "CANDIDATO_PARCIAL"
+      },
+      {
+        "number": 50,
+        "score": 32.0,
+        "cls": "CANDIDATO_PARCIAL"
+      }
+    ],
+    "input_order": [
+      42,
+      44
+    ],
+    "frequency_notes": {
+      "n_confirmers_activation": 1,
+      "n_fuertes_same_day": 4
+    }
+  },
+  {
+    "scenario_id": "1f2a69b5530f8ead",
+    "date": "2024-06-17",
+    "year": 2024,
+    "lotteries": [
+      "Quiniela Real",
+      "Loteria Nacional"
+    ],
+    "positions": [
+      1,
+      1
+    ],
+    "observed_numbers_sorted": [
+      44,
+      53
+    ],
+    "observed_generator_first": [
+      44,
+      53
+    ],
+    "origin": 44,
+    "confirmer": 53,
+    "chosen_by_motor_phase2": 22,
+    "historical_fuerte": 70,
+    "hist_rank_phase2": 2,
+    "score_gap": 0.0,
+    "real_tie": true,
+    "chosen_detail": {
+      "number": 22,
+      "rank": 1,
+      "score": 174.0,
+      "classification": "FUERTE_PRINCIPAL",
+      "table1_sources": [
+        44
+      ],
+      "direct_confirmers": [
+        53
+      ],
+      "independent_path_count": 4,
+      "same_source_repetitions": 0,
+      "direct_path_count": 4,
+      "total_path_count": 10,
+      "cross_table_support": true,
+      "multi_source_support": true,
+      "ambiguity_score": 1.0,
+      "components": {
+        "T1_SOURCE_SUPPORT": 1.0,
+        "T2_CONFIRMATION_SUPPORT": 1.0,
+        "CROSS_TABLE_SUPPORT": 1.0,
+        "MULTIPLE_OBSERVED_SUPPORT": 1.0,
+        "INDEPENDENT_PATH_SUPPORT": 4.0,
+        "DIRECT_PATH_SUPPORT": 4.0,
+        "MULTI_CONFIRMATION_SUPPORT": 0.0,
+        "HISTORICAL_EXACT_RATE": 0.0,
+        "HISTORICAL_D1_D3_RATE": 0.0,
+        "HISTORICAL_D1_D7_RATE": 0.0,
+        "FIRST_POSITION_SUPPORT": 0.0,
+        "ANY_POSITION_SUPPORT": 0.0,
+        "RECENT_PATTERN_SUPPORT": 0.0,
+        "CROSS_LOTTERY_SUPPORT": 0.0,
+        "CHAIN_CONTINUITY_SUPPORT": 0.0,
+        "DERIVATION_DEPTH_PENALTY": 0.0,
+        "AMBIGUITY_PENALTY": 1.0,
+        "DUPLICATE_PATH_PENALTY": 0.0
+      }
+    },
+    "historical_detail": {
+      "number": 70,
+      "rank": 2,
+      "score": 174.0,
+      "classification": "FUERTE_SECUNDARIO",
+      "table1_sources": [
+        44
+      ],
+      "direct_confirmers": [
+        53
+      ],
+      "independent_path_count": 4,
+      "same_source_repetitions": 0,
+      "direct_path_count": 4,
+      "total_path_count": 9,
+      "cross_table_support": true,
+      "multi_source_support": true,
+      "ambiguity_score": 1.0,
+      "components": {
+        "T1_SOURCE_SUPPORT": 1.0,
+        "T2_CONFIRMATION_SUPPORT": 1.0,
+        "CROSS_TABLE_SUPPORT": 1.0,
+        "MULTIPLE_OBSERVED_SUPPORT": 1.0,
+        "INDEPENDENT_PATH_SUPPORT": 4.0,
+        "DIRECT_PATH_SUPPORT": 4.0,
+        "MULTI_CONFIRMATION_SUPPORT": 0.0,
+        "HISTORICAL_EXACT_RATE": 0.0,
+        "HISTORICAL_D1_D3_RATE": 0.0,
+        "HISTORICAL_D1_D7_RATE": 0.0,
+        "FIRST_POSITION_SUPPORT": 0.0,
+        "ANY_POSITION_SUPPORT": 0.0,
+        "RECENT_PATTERN_SUPPORT": 0.0,
+        "CROSS_LOTTERY_SUPPORT": 0.0,
+        "CHAIN_CONTINUITY_SUPPORT": 0.0,
+        "DERIVATION_DEPTH_PENALTY": 0.0,
+        "AMBIGUITY_PENALTY": 1.0,
+        "DUPLICATE_PATH_PENALTY": 0.0
+      }
+    },
+    "alternatives": [
+      {
+        "number": 22,
+        "score": 174.0,
+        "cls": "FUERTE_PRINCIPAL"
+      },
+      {
+        "number": 70,
+        "score": 174.0,
+        "cls": "FUERTE_SECUNDARIO"
+      },
+      {
+        "number": 59,
+        "score": 2.0,
+        "cls": "FAMILIA_T1"
+      },
+      {
+        "number": 75,
+        "score": 2.0,
+        "cls": "FAMILIA_T1"
+      },
+      {
+        "number": 91,
+        "score": 2.0,
+        "cls": "FAMILIA_T1"
+      },
+      {
+        "number": 11,
+        "score": -50.0,
+        "cls": "DERIVACION_RELEVANTE"
+      }
+    ],
+    "input_order": [
+      44,
+      53
+    ],
+    "frequency_notes": {
+      "n_confirmers_activation": 2,
+      "n_fuertes_same_day": 3
+    }
+  }
+]

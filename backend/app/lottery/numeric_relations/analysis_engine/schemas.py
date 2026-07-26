@@ -297,6 +297,7 @@ class CompleteAnalysisResult:
     explanation: dict[str, Any]
     experimental: bool = True
     limitations: list[str] = field(default_factory=list)
+    tiebreak: dict[str, Any] | None = None
     created_at: str = field(default_factory=lambda: datetime.utcnow().isoformat() + "Z")
 
     def to_dict(self) -> dict[str, Any]:

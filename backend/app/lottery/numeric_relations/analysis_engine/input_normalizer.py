@@ -58,10 +58,22 @@ def normalize_mode(mode: str | None) -> str:
         "manual_reconstruido": RankProfile.MANUAL_RECONSTRUCTED.value,
         "perfil_manual": RankProfile.MANUAL_RECONSTRUCTED.value,
         "experimental": RankProfile.EXPERIMENTAL.value,
+        "conservador": "conservador",
+        "balanceado": "balanceado",
+        "agresivo": "agresivo",
+        "socio": "socio",
+        "perfil_socio": "socio",
     }
-    if m not in aliases and m not in {e.value for e in RankProfile}:
-        raise ValueError(f"unsupported rank profile: {mode}")
-    return aliases.get(m, m)
+    if m in aliases:
+        return aliases[m]
+    if m in {e.value for e in RankProfile} or m in {
+        "conservador",
+        "balanceado",
+        "agresivo",
+        "socio",
+    }:
+        return m
+    raise ValueError(f"unsupported rank profile: {mode}")
 
 
 def normalize_request(raw: AnalysisRequest | dict[str, Any]) -> AnalysisRequest:

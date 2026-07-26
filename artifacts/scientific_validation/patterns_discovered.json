@@ -1,0 +1,297 @@
+{
+  "min_support": 5,
+  "n_match_rows_used": 240,
+  "frequent_origin_fuerte": [
+    {
+      "key": [
+        35,
+        11
+      ],
+      "count": 6
+    },
+    {
+      "key": [
+        40,
+        56
+      ],
+      "count": 6
+    },
+    {
+      "key": [
+        43,
+        44
+      ],
+      "count": 6
+    },
+    {
+      "key": [
+        26,
+        27
+      ],
+      "count": 6
+    },
+    {
+      "key": [
+        38,
+        63
+      ],
+      "count": 6
+    },
+    {
+      "key": [
+        28,
+        53
+      ],
+      "count": 5
+    },
+    {
+      "key": [
+        36,
+        85
+      ],
+      "count": 5
+    },
+    {
+      "key": [
+        43,
+        28
+      ],
+      "count": 5
+    },
+    {
+      "key": [
+        49,
+        35
+      ],
+      "count": 5
+    }
+  ],
+  "frequent_observed_pair_fuerte": [],
+  "stable_observed_combos": [],
+  "lottery_pairs": [
+    {
+      "key": [
+        "Quiniela Real",
+        "Quiniela Leidsa"
+      ],
+      "count": 11
+    },
+    {
+      "key": [
+        "New York 10:30",
+        "Gana Mas"
+      ],
+      "count": 10
+    },
+    {
+      "key": [
+        "New York 2:30",
+        "New York 10:30"
+      ],
+      "count": 10
+    },
+    {
+      "key": [
+        "Quiniela Leidsa",
+        "New York 2:30"
+      ],
+      "count": 9
+    },
+    {
+      "key": [
+        "New York 2:30",
+        "Quiniela Loteka"
+      ],
+      "count": 9
+    },
+    {
+      "key": [
+        "Quiniela Leidsa",
+        "Gana Mas"
+      ],
+      "count": 8
+    },
+    {
+      "key": [
+        "Quiniela Leidsa",
+        "New York 10:30"
+      ],
+      "count": 8
+    },
+    {
+      "key": [
+        "Quiniela Loteka",
+        "New York 2:30"
+      ],
+      "count": 8
+    },
+    {
+      "key": [
+        "New York 10:30",
+        "Quiniela Leidsa"
+      ],
+      "count": 8
+    },
+    {
+      "key": [
+        "Gana Mas",
+        "Quiniela Real"
+      ],
+      "count": 8
+    },
+    {
+      "key": [
+        "Loteria Nacional",
+        "Quiniela Loteka"
+      ],
+      "count": 8
+    },
+    {
+      "key": [
+        "New York 10:30",
+        "Quiniela Real"
+      ],
+      "count": 7
+    },
+    {
+      "key": [
+        "New York 2:30",
+        "Quiniela Real"
+      ],
+      "count": 7
+    },
+    {
+      "key": [
+        "Quiniela Real",
+        "New York 2:30"
+      ],
+      "count": 7
+    },
+    {
+      "key": [
+        "Quiniela Loteka",
+        "Quiniela Real"
+      ],
+      "count": 7
+    },
+    {
+      "key": [
+        "New York 10:30",
+        "New York 2:30"
+      ],
+      "count": 7
+    },
+    {
+      "key": [
+        "Quiniela Leidsa",
+        "Quiniela Loteka"
+      ],
+      "count": 6
+    },
+    {
+      "key": [
+        "New York 10:30",
+        "Loteria Nacional"
+      ],
+      "count": 6
+    },
+    {
+      "key": [
+        "New York 10:30",
+        "Quiniela Loteka"
+      ],
+      "count": 6
+    },
+    {
+      "key": [
+        "Quiniela Leidsa",
+        "Quiniela Real"
+      ],
+      "count": 5
+    },
+    {
+      "key": [
+        "New York 2:30",
+        "Gana Mas"
+      ],
+      "count": 5
+    },
+    {
+      "key": [
+        "Loteria Nacional",
+        "New York 2:30"
+      ],
+      "count": 5
+    },
+    {
+      "key": [
+        "Gana Mas",
+        "Quiniela Leidsa"
+      ],
+      "count": 5
+    },
+    {
+      "key": [
+        "Loteria Nacional",
+        "New York 10:30"
+      ],
+      "count": 5
+    },
+    {
+      "key": [
+        "New York 2:30",
+        "Loteria Nacional"
+      ],
+      "count": 5
+    },
+    {
+      "key": [
+        "Quiniela Real",
+        "Gana Mas"
+      ],
+      "count": 5
+    },
+    {
+      "key": [
+        "New York 2:30",
+        "Quiniela Leidsa"
+      ],
+      "count": 5
+    }
+  ],
+  "position_pairs": [
+    {
+      "key": [
+        1,
+        1
+      ],
+      "count": 236
+    }
+  ],
+  "temporal_window_D_plus": {
+    "1": 42,
+    "2": 37,
+    "3": 28,
+    "4": 29,
+    "5": 14,
+    "6": 21,
+    "7": 12
+  },
+  "confirmer_cardinality": {
+    "confirmers=1": 240
+  },
+  "hypothesis_only": [
+    {
+      "id": "H_PENDING_SAME_DAY_MULTI_FUERTE",
+      "statement": "Días con múltiples fuertes oficiales pueden requerir regla de selección parcial (notebook del socio).",
+      "status": "pendiente_de_validacion",
+      "evidence_in_this_run": "no inventada — ver analyst_workflow_reconstruction previa"
+    },
+    {
+      "id": "H_PENDING_DIRECT_T2_POLICY",
+      "statement": "Cuándo elevar o aislar VECINO_T2_DIRECTO frente a oficiales sigue abierto.",
+      "status": "hipotesis"
+    }
+  ],
+  "disclaimer": "Solo patrones con soporte empírico ≥ min_support. No son reglas nuevas del motor."
+}

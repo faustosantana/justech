@@ -1,0 +1,101 @@
+{
+  "profiles_compared": [
+    "perfil_conservador",
+    "perfil_balanceado",
+    "perfil_agresivo",
+    "perfil_socio",
+    "perfil_experimental"
+  ],
+  "ranking": [
+    {
+      "profile": "perfil_conservador",
+      "methodology_match_rate": 0.944,
+      "exact_D1_D7": 194,
+      "exact_D1_D3": 117,
+      "failures": 14
+    },
+    {
+      "profile": "perfil_balanceado",
+      "methodology_match_rate": 0.944,
+      "exact_D1_D7": 194,
+      "exact_D1_D3": 117,
+      "failures": 14
+    },
+    {
+      "profile": "perfil_agresivo",
+      "methodology_match_rate": 0.944,
+      "exact_D1_D7": 194,
+      "exact_D1_D3": 117,
+      "failures": 14
+    },
+    {
+      "profile": "perfil_socio",
+      "methodology_match_rate": 0.944,
+      "exact_D1_D7": 194,
+      "exact_D1_D3": 117,
+      "failures": 14
+    },
+    {
+      "profile": "perfil_experimental",
+      "methodology_match_rate": 0.944,
+      "exact_D1_D7": 194,
+      "exact_D1_D3": 117,
+      "failures": 14
+    }
+  ],
+  "best_methodology_reproduction": "perfil_conservador",
+  "recommendation": "El perfil 'perfil_conservador' reproduce mejor el fuerte histórico oficial T1×T2 en este dataset ciego (match metodológico). Esto no implica ventaja predictiva sobre azar.",
+  "details": {
+    "perfil_conservador": {
+      "n_analyses": 250,
+      "methodology_match_rate": 0.944,
+      "methodology_matches": 236,
+      "failures": 14,
+      "exact_D+1": 52,
+      "exact_D+3": 28,
+      "exact_D1_D3": 117,
+      "exact_D1_D7": 194
+    },
+    "perfil_balanceado": {
+      "n_analyses": 250,
+      "methodology_match_rate": 0.944,
+      "methodology_matches": 236,
+      "failures": 14,
+      "exact_D+1": 52,
+      "exact_D+3": 28,
+      "exact_D1_D3": 117,
+      "exact_D1_D7": 194
+    },
+    "perfil_agresivo": {
+      "n_analyses": 250,
+      "methodology_match_rate": 0.944,
+      "methodology_matches": 236,
+      "failures": 14,
+      "exact_D+1": 52,
+      "exact_D+3": 28,
+      "exact_D1_D3": 117,
+      "exact_D1_D7": 194
+    },
+    "perfil_socio": {
+      "n_analyses": 250,
+      "methodology_match_rate": 0.944,
+      "methodology_matches": 236,
+      "failures": 14,
+      "exact_D+1": 52,
+      "exact_D+3": 28,
+      "exact_D1_D3": 117,
+      "exact_D1_D7": 194
+    },
+    "perfil_experimental": {
+      "n_analyses": 250,
+      "methodology_match_rate": 0.944,
+      "methodology_matches": 236,
+      "failures": 14,
+      "exact_D+1": 52,
+      "exact_D+3": 28,
+      "exact_D1_D3": 117,
+      "exact_D1_D7": 194
+    }
+  },
+  "ml_used_for_decision": false
+}

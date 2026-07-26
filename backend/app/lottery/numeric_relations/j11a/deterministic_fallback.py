@@ -107,6 +107,10 @@ def deterministic_reply(
         lines = [f"- {s['number']} ({s['classification']}) estado={s['status']}" for s in data]
         return "Señales activas (experimentales):\n" + "\n".join(lines)
 
+    if intent.intent == "INVESTIGATE":
+        data = tool_results.get("investigate_phase2", {}).get("data") or {}
+        return data.get("message") or "Sin datos de investigación Fase 2."
+
     if intent.intent == "SHOW_CHAIN":
         data = tool_results.get("get_chain_timeline", {}).get("data") or {}
         tl = data.get("timeline") or []

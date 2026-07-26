@@ -1,0 +1,466 @@
+{
+  "n_failures": 14,
+  "n_analyzed": 250,
+  "failure_rate": 0.056,
+  "repetitive_patterns": {
+    "HIST_IN_ALTERNATIVES": 14,
+    "HIST_FUERTE_IN_ALTERNATIVES": 14
+  },
+  "failures_by_year": {
+    "2023": 2,
+    "2024": 12
+  },
+  "sample_cases": [
+    {
+      "scenario_id": "3c0782d12f38b6bf",
+      "date": "2023-11-10",
+      "observed_numbers": [
+        44,
+        63
+      ],
+      "chosen": 22,
+      "historical_outcome_fuerte": 70,
+      "why_motor_chose": {
+        "classification": "FUERTE_PRINCIPAL",
+        "score": 174.0,
+        "reason": "Mayor respaldo estructural tras análisis completo T1×T2.",
+        "table1_sources": [
+          44
+        ],
+        "table2_confirmers": [
+          63
+        ]
+      },
+      "hist_rank_in_motor": 2,
+      "missing_evidence_flags": [
+        "fuerte_historico_no_fue_primero"
+      ],
+      "ignored_routes_note": "Si el fuerte histórico no está en ranking, las rutas T1×T2 hacia ese destino no fueron descubiertas con las entradas observadas.",
+      "error_pattern": "HIST_FUERTE_IN_ALTERNATIVES",
+      "lotteries": [
+        "Gana Mas",
+        "Loteria Nacional"
+      ]
+    },
+    {
+      "scenario_id": "33115e931422c906",
+      "date": "2023-12-22",
+      "observed_numbers": [
+        7,
+        44
+      ],
+      "chosen": 22,
+      "historical_outcome_fuerte": 70,
+      "why_motor_chose": {
+        "classification": "FUERTE_PRINCIPAL",
+        "score": 174.0,
+        "reason": "Mayor respaldo estructural tras análisis completo T1×T2.",
+        "table1_sources": [
+          44
+        ],
+        "table2_confirmers": [
+          7
+        ]
+      },
+      "hist_rank_in_motor": 2,
+      "missing_evidence_flags": [
+        "fuerte_historico_no_fue_primero"
+      ],
+      "ignored_routes_note": "Si el fuerte histórico no está en ranking, las rutas T1×T2 hacia ese destino no fueron descubiertas con las entradas observadas.",
+      "error_pattern": "HIST_FUERTE_IN_ALTERNATIVES",
+      "lotteries": [
+        "Quiniela Loteka",
+        "Loteria Nacional"
+      ]
+    },
+    {
+      "scenario_id": "8c6da1d61ea96b1b",
+      "date": "2024-01-06",
+      "observed_numbers": [
+        41,
+        42
+      ],
+      "chosen": 29,
+      "historical_outcome_fuerte": 71,
+      "why_motor_chose": {
+        "classification": "FUERTE_PRINCIPAL",
+        "score": 152.0,
+        "reason": "Mayor respaldo estructural tras análisis completo T1×T2.",
+        "table1_sources": [
+          41
+        ],
+        "table2_confirmers": [
+          42
+        ]
+      },
+      "hist_rank_in_motor": 2,
+      "missing_evidence_flags": [
+        "fuerte_historico_no_fue_primero"
+      ],
+      "ignored_routes_note": "Si el fuerte histórico no está en ranking, las rutas T1×T2 hacia ese destino no fueron descubiertas con las entradas observadas.",
+      "error_pattern": "HIST_FUERTE_IN_ALTERNATIVES",
+      "lotteries": [
+        "Gana Mas",
+        "Quiniela Real"
+      ]
+    },
+    {
+      "scenario_id": "02b798261529349c",
+      "date": "2024-01-07",
+      "observed_numbers": [
+        44,
+        53
+      ],
+      "chosen": 22,
+      "historical_outcome_fuerte": 70,
+      "why_motor_chose": {
+        "classification": "FUERTE_PRINCIPAL",
+        "score": 174.0,
+        "reason": "Mayor respaldo estructural tras análisis completo T1×T2.",
+        "table1_sources": [
+          44
+        ],
+        "table2_confirmers": [
+          53
+        ]
+      },
+      "hist_rank_in_motor": 2,
+      "missing_evidence_flags": [
+        "fuerte_historico_no_fue_primero"
+      ],
+      "ignored_routes_note": "Si el fuerte histórico no está en ranking, las rutas T1×T2 hacia ese destino no fueron descubiertas con las entradas observadas.",
+      "error_pattern": "HIST_FUERTE_IN_ALTERNATIVES",
+      "lotteries": [
+        "Quiniela Leidsa",
+        "Quiniela Real"
+      ]
+    },
+    {
+      "scenario_id": "00ec3633ce4f1a74",
+      "date": "2024-01-14",
+      "observed_numbers": [
+        29,
+        44
+      ],
+      "chosen": 22,
+      "historical_outcome_fuerte": 70,
+      "why_motor_chose": {
+        "classification": "FUERTE_PRINCIPAL",
+        "score": 174.0,
+        "reason": "Mayor respaldo estructural tras análisis completo T1×T2.",
+        "table1_sources": [
+          44
+        ],
+        "table2_confirmers": [
+          29
+        ]
+      },
+      "hist_rank_in_motor": 2,
+      "missing_evidence_flags": [
+        "fuerte_historico_no_fue_primero"
+      ],
+      "ignored_routes_note": "Si el fuerte histórico no está en ranking, las rutas T1×T2 hacia ese destino no fueron descubiertas con las entradas observadas.",
+      "error_pattern": "HIST_FUERTE_IN_ALTERNATIVES",
+      "lotteries": [
+        "Loteria Nacional",
+        "Quiniela Loteka"
+      ]
+    },
+    {
+      "scenario_id": "697db885597a30a0",
+      "date": "2024-01-27",
+      "observed_numbers": [
+        28,
+        42
+      ],
+      "chosen": 23,
+      "historical_outcome_fuerte": 53,
+      "why_motor_chose": {
+        "classification": "FUERTE_PRINCIPAL",
+        "score": 152.0,
+        "reason": "Mayor respaldo estructural tras análisis completo T1×T2.",
+        "table1_sources": [
+          42
+        ],
+        "table2_confirmers": [
+          28
+        ]
+      },
+      "hist_rank_in_motor": 2,
+      "missing_evidence_flags": [
+        "fuerte_historico_no_fue_primero"
+      ],
+      "ignored_routes_note": "Si el fuerte histórico no está en ranking, las rutas T1×T2 hacia ese destino no fueron descubiertas con las entradas observadas.",
+      "error_pattern": "HIST_FUERTE_IN_ALTERNATIVES",
+      "lotteries": [
+        "Quiniela Loteka",
+        "New York 10:30"
+      ]
+    },
+    {
+      "scenario_id": "37fc83b1a465e809",
+      "date": "2024-02-03",
+      "observed_numbers": [
+        29,
+        44
+      ],
+      "chosen": 22,
+      "historical_outcome_fuerte": 70,
+      "why_motor_chose": {
+        "classification": "FUERTE_PRINCIPAL",
+        "score": 174.0,
+        "reason": "Mayor respaldo estructural tras análisis completo T1×T2.",
+        "table1_sources": [
+          44
+        ],
+        "table2_confirmers": [
+          29
+        ]
+      },
+      "hist_rank_in_motor": 2,
+      "missing_evidence_flags": [
+        "fuerte_historico_no_fue_primero"
+      ],
+      "ignored_routes_note": "Si el fuerte histórico no está en ranking, las rutas T1×T2 hacia ese destino no fueron descubiertas con las entradas observadas.",
+      "error_pattern": "HIST_FUERTE_IN_ALTERNATIVES",
+      "lotteries": [
+        "Quiniela Real",
+        "New York 2:30"
+      ]
+    },
+    {
+      "scenario_id": "a9d65921621f9748",
+      "date": "2024-02-19",
+      "observed_numbers": [
+        28,
+        42
+      ],
+      "chosen": 23,
+      "historical_outcome_fuerte": 53,
+      "why_motor_chose": {
+        "classification": "FUERTE_PRINCIPAL",
+        "score": 152.0,
+        "reason": "Mayor respaldo estructural tras análisis completo T1×T2.",
+        "table1_sources": [
+          42
+        ],
+        "table2_confirmers": [
+          28
+        ]
+      },
+      "hist_rank_in_motor": 2,
+      "missing_evidence_flags": [
+        "fuerte_historico_no_fue_primero"
+      ],
+      "ignored_routes_note": "Si el fuerte histórico no está en ranking, las rutas T1×T2 hacia ese destino no fueron descubiertas con las entradas observadas.",
+      "error_pattern": "HIST_FUERTE_IN_ALTERNATIVES",
+      "lotteries": [
+        "Loteria Nacional",
+        "Quiniela Loteka"
+      ]
+    },
+    {
+      "scenario_id": "e7d4e6113d8da6e1",
+      "date": "2024-02-28",
+      "observed_numbers": [
+        44,
+        63
+      ],
+      "chosen": 22,
+      "historical_outcome_fuerte": 70,
+      "why_motor_chose": {
+        "classification": "FUERTE_PRINCIPAL",
+        "score": 174.0,
+        "reason": "Mayor respaldo estructural tras análisis completo T1×T2.",
+        "table1_sources": [
+          44
+        ],
+        "table2_confirmers": [
+          63
+        ]
+      },
+      "hist_rank_in_motor": 2,
+      "missing_evidence_flags": [
+        "fuerte_historico_no_fue_primero"
+      ],
+      "ignored_routes_note": "Si el fuerte histórico no está en ranking, las rutas T1×T2 hacia ese destino no fueron descubiertas con las entradas observadas.",
+      "error_pattern": "HIST_FUERTE_IN_ALTERNATIVES",
+      "lotteries": [
+        "Quiniela Leidsa",
+        "New York 10:30"
+      ]
+    },
+    {
+      "scenario_id": "b6ca93c563bb9485",
+      "date": "2024-05-14",
+      "observed_numbers": [
+        41,
+        42
+      ],
+      "chosen": 29,
+      "historical_outcome_fuerte": 71,
+      "why_motor_chose": {
+        "classification": "FUERTE_PRINCIPAL",
+        "score": 152.0,
+        "reason": "Mayor respaldo estructural tras análisis completo T1×T2.",
+        "table1_sources": [
+          41
+        ],
+        "table2_confirmers": [
+          42
+        ]
+      },
+      "hist_rank_in_motor": 2,
+      "missing_evidence_flags": [
+        "fuerte_historico_no_fue_primero"
+      ],
+      "ignored_routes_note": "Si el fuerte histórico no está en ranking, las rutas T1×T2 hacia ese destino no fueron descubiertas con las entradas observadas.",
+      "error_pattern": "HIST_FUERTE_IN_ALTERNATIVES",
+      "lotteries": [
+        "Quiniela Real",
+        "Gana Mas"
+      ]
+    },
+    {
+      "scenario_id": "6719239a5dccaac2",
+      "date": "2024-05-22",
+      "observed_numbers": [
+        9,
+        44
+      ],
+      "chosen": 22,
+      "historical_outcome_fuerte": 70,
+      "why_motor_chose": {
+        "classification": "FUERTE_PRINCIPAL",
+        "score": 174.0,
+        "reason": "Mayor respaldo estructural tras análisis completo T1×T2.",
+        "table1_sources": [
+          44
+        ],
+        "table2_confirmers": [
+          9
+        ]
+      },
+      "hist_rank_in_motor": 2,
+      "missing_evidence_flags": [
+        "fuerte_historico_no_fue_primero"
+      ],
+      "ignored_routes_note": "Si el fuerte histórico no está en ranking, las rutas T1×T2 hacia ese destino no fueron descubiertas con las entradas observadas.",
+      "error_pattern": "HIST_FUERTE_IN_ALTERNATIVES",
+      "lotteries": [
+        "Quiniela Loteka",
+        "Loteria Nacional"
+      ]
+    },
+    {
+      "scenario_id": "2ad10143318cbb39",
+      "date": "2024-05-26",
+      "observed_numbers": [
+        42,
+        44
+      ],
+      "chosen": 22,
+      "historical_outcome_fuerte": 70,
+      "why_motor_chose": {
+        "classification": "FUERTE_PRINCIPAL",
+        "score": 170.0,
+        "reason": "Mayor respaldo estructural tras análisis completo T1×T2.",
+        "table1_sources": [
+          44
+        ],
+        "table2_confirmers": [
+          42
+        ]
+      },
+      "hist_rank_in_motor": 2,
+      "missing_evidence_flags": [
+        "fuerte_historico_no_fue_primero"
+      ],
+      "ignored_routes_note": "Si el fuerte histórico no está en ranking, las rutas T1×T2 hacia ese destino no fueron descubiertas con las entradas observadas.",
+      "error_pattern": "HIST_FUERTE_IN_ALTERNATIVES",
+      "lotteries": [
+        "Loteria Nacional",
+        "New York 10:30"
+      ]
+    },
+    {
+      "scenario_id": "b871b10305c95824",
+      "date": "2024-05-26",
+      "observed_numbers": [
+        42,
+        44
+      ],
+      "chosen": 22,
+      "historical_outcome_fuerte": 7,
+      "why_motor_chose": {
+        "classification": "FUERTE_PRINCIPAL",
+        "score": 170.0,
+        "reason": "Mayor respaldo estructural tras análisis completo T1×T2.",
+        "table1_sources": [
+          44
+        ],
+        "table2_confirmers": [
+          42
+        ]
+      },
+      "hist_rank_in_motor": 3,
+      "missing_evidence_flags": [
+        "fuerte_historico_no_fue_primero"
+      ],
+      "ignored_routes_note": "Si el fuerte histórico no está en ranking, las rutas T1×T2 hacia ese destino no fueron descubiertas con las entradas observadas.",
+      "error_pattern": "HIST_FUERTE_IN_ALTERNATIVES",
+      "lotteries": [
+        "New York 10:30",
+        "Loteria Nacional"
+      ]
+    },
+    {
+      "scenario_id": "1f2a69b5530f8ead",
+      "date": "2024-06-17",
+      "observed_numbers": [
+        44,
+        53
+      ],
+      "chosen": 22,
+      "historical_outcome_fuerte": 70,
+      "why_motor_chose": {
+        "classification": "FUERTE_PRINCIPAL",
+        "score": 174.0,
+        "reason": "Mayor respaldo estructural tras análisis completo T1×T2.",
+        "table1_sources": [
+          44
+        ],
+        "table2_confirmers": [
+          53
+        ]
+      },
+      "hist_rank_in_motor": 2,
+      "missing_evidence_flags": [
+        "fuerte_historico_no_fue_primero"
+      ],
+      "ignored_routes_note": "Si el fuerte histórico no está en ranking, las rutas T1×T2 hacia ese destino no fueron descubiertas con las entradas observadas.",
+      "error_pattern": "HIST_FUERTE_IN_ALTERNATIVES",
+      "lotteries": [
+        "Quiniela Real",
+        "Loteria Nacional"
+      ]
+    }
+  ],
+  "all_case_ids": [
+    "3c0782d12f38b6bf",
+    "33115e931422c906",
+    "8c6da1d61ea96b1b",
+    "02b798261529349c",
+    "00ec3633ce4f1a74",
+    "697db885597a30a0",
+    "37fc83b1a465e809",
+    "a9d65921621f9748",
+    "e7d4e6113d8da6e1",
+    "b6ca93c563bb9485",
+    "6719239a5dccaac2",
+    "2ad10143318cbb39",
+    "b871b10305c95824",
+    "1f2a69b5530f8ead"
+  ],
+  "note": "Solo documentación. No se aplican correcciones automáticas al motor."
+}

@@ -1,0 +1,2744 @@
+{
+  "dataset": {
+    "seed": 20260726,
+    "source": "/Users/faustosantana/Projects/justech-forensic-audit/artifacts/deep_mathematical_audit/all_activations.csv",
+    "methodology_note": "Blind set built from historical official T1×T2 activations. Manual partner cases excluded from train/val/test; reserved as benchmark.",
+    "excluded_manual_rows": 40,
+    "total_scenarios": 2437,
+    "counts": {
+      "train": 1462,
+      "validation": 487,
+      "test": 488
+    },
+    "date_range": {
+      "min": "2019-07-24",
+      "max": "2026-07-14"
+    },
+    "manual_benchmark_reserved": [
+      {
+        "id": "M1",
+        "numbers": [
+          41,
+          41,
+          70
+        ],
+        "expected": 29
+      },
+      {
+        "id": "M2",
+        "numbers": [
+          41,
+          62
+        ],
+        "expected": 75
+      },
+      {
+        "id": "M3",
+        "numbers": [
+          49,
+          44,
+          70
+        ],
+        "expected": 35
+      },
+      {
+        "id": "M4",
+        "numbers": [
+          35,
+          14
+        ],
+        "expected": 54
+      },
+      {
+        "id": "M5",
+        "numbers": [
+          39,
+          58
+        ],
+        "expected": 94
+      }
+    ]
+  },
+  "historical": {
+    "variant": "perfil_socio",
+    "n_analyses": 250,
+    "methodology_match_rate": 0.944,
+    "methodology_matches": 236,
+    "failures": 14,
+    "exact_D+1": 52,
+    "exact_D+2": 37,
+    "exact_D+3": 28,
+    "exact_D+4": 24,
+    "exact_D+5": 22,
+    "exact_D+6": 14,
+    "exact_D+7": 17,
+    "exact_D1_D3": 117,
+    "exact_D1_D7": 194,
+    "hist_fuerte_D+1": 54,
+    "hist_fuerte_D+2": 40,
+    "hist_fuerte_D+3": 28,
+    "hist_fuerte_D+4": 27,
+    "hist_fuerte_D+5": 26,
+    "hist_fuerte_D+6": 14,
+    "hist_fuerte_D+7": 17,
+    "by_lottery": {
+      "Quiniela Leidsa": {
+        "n": 33,
+        "match": 31
+      },
+      "Gana Mas": {
+        "n": 38,
+        "match": 36
+      },
+      "Quiniela Real": {
+        "n": 32,
+        "match": 29
+      },
+      "Loteria Nacional": {
+        "n": 34,
+        "match": 31
+      },
+      "New York 2:30": {
+        "n": 32,
+        "match": 32
+      },
+      "New York 10:30": {
+        "n": 46,
+        "match": 45
+      },
+      "Quiniela Loteka": {
+        "n": 35,
+        "match": 32
+      }
+    },
+    "limitations": [
+      "exact_D+n cuenta acierto predictivo solo cuando el motor coincidió con el fuerte histórico.",
+      "El dataset proviene de activaciones oficiales T1×T2; no es muestreo aleatorio de todos los días.",
+      "No afirma ventaja predictiva sobre azar sin baseline explícito."
+    ]
+  },
+  "historical_rows_path": "/Users/faustosantana/Projects/justech-forensic-audit/artifacts/scientific_validation/historical_validation_socio.json",
+  "error_analysis": {
+    "n_failures": 14,
+    "n_analyzed": 250,
+    "failure_rate": 0.056,
+    "repetitive_patterns": {
+      "HIST_IN_ALTERNATIVES": 14,
+      "HIST_FUERTE_IN_ALTERNATIVES": 14
+    },
+    "failures_by_year": {
+      "2023": 2,
+      "2024": 12
+    },
+    "sample_cases": [
+      {
+        "scenario_id": "3c0782d12f38b6bf",
+        "date": "2023-11-10",
+        "observed_numbers": [
+          44,
+          63
+        ],
+        "chosen": 22,
+        "historical_outcome_fuerte": 70,
+        "why_motor_chose": {
+          "classification": "FUERTE_PRINCIPAL",
+          "score": 174.0,
+          "reason": "Mayor respaldo estructural tras análisis completo T1×T2.",
+          "table1_sources": [
+            44
+          ],
+          "table2_confirmers": [
+            63
+          ]
+        },
+        "hist_rank_in_motor": 2,
+        "missing_evidence_flags": [
+          "fuerte_historico_no_fue_primero"
+        ],
+        "ignored_routes_note": "Si el fuerte histórico no está en ranking, las rutas T1×T2 hacia ese destino no fueron descubiertas con las entradas observadas.",
+        "error_pattern": "HIST_FUERTE_IN_ALTERNATIVES",
+        "lotteries": [
+          "Gana Mas",
+          "Loteria Nacional"
+        ]
+      },
+      {
+        "scenario_id": "33115e931422c906",
+        "date": "2023-12-22",
+        "observed_numbers": [
+          7,
+          44
+        ],
+        "chosen": 22,
+        "historical_outcome_fuerte": 70,
+        "why_motor_chose": {
+          "classification": "FUERTE_PRINCIPAL",
+          "score": 174.0,
+          "reason": "Mayor respaldo estructural tras análisis completo T1×T2.",
+          "table1_sources": [
+            44
+          ],
+          "table2_confirmers": [
+            7
+          ]
+        },
+        "hist_rank_in_motor": 2,
+        "missing_evidence_flags": [
+          "fuerte_historico_no_fue_primero"
+        ],
+        "ignored_routes_note": "Si el fuerte histórico no está en ranking, las rutas T1×T2 hacia ese destino no fueron descubiertas con las entradas observadas.",
+        "error_pattern": "HIST_FUERTE_IN_ALTERNATIVES",
+        "lotteries": [
+          "Quiniela Loteka",
+          "Loteria Nacional"
+        ]
+      },
+      {
+        "scenario_id": "8c6da1d61ea96b1b",
+        "date": "2024-01-06",
+        "observed_numbers": [
+          41,
+          42
+        ],
+        "chosen": 29,
+        "historical_outcome_fuerte": 71,
+        "why_motor_chose": {
+          "classification": "FUERTE_PRINCIPAL",
+          "score": 152.0,
+          "reason": "Mayor respaldo estructural tras análisis completo T1×T2.",
+          "table1_sources": [
+            41
+          ],
+          "table2_confirmers": [
+            42
+          ]
+        },
+        "hist_rank_in_motor": 2,
+        "missing_evidence_flags": [
+          "fuerte_historico_no_fue_primero"
+        ],
+        "ignored_routes_note": "Si el fuerte histórico no está en ranking, las rutas T1×T2 hacia ese destino no fueron descubiertas con las entradas observadas.",
+        "error_pattern": "HIST_FUERTE_IN_ALTERNATIVES",
+        "lotteries": [
+          "Gana Mas",
+          "Quiniela Real"
+        ]
+      },
+      {
+        "scenario_id": "02b798261529349c",
+        "date": "2024-01-07",
+        "observed_numbers": [
+          44,
+          53
+        ],
+        "chosen": 22,
+        "historical_outcome_fuerte": 70,
+        "why_motor_chose": {
+          "classification": "FUERTE_PRINCIPAL",
+          "score": 174.0,
+          "reason": "Mayor respaldo estructural tras análisis completo T1×T2.",
+          "table1_sources": [
+            44
+          ],
+          "table2_confirmers": [
+            53
+          ]
+        },
+        "hist_rank_in_motor": 2,
+        "missing_evidence_flags": [
+          "fuerte_historico_no_fue_primero"
+        ],
+        "ignored_routes_note": "Si el fuerte histórico no está en ranking, las rutas T1×T2 hacia ese destino no fueron descubiertas con las entradas observadas.",
+        "error_pattern": "HIST_FUERTE_IN_ALTERNATIVES",
+        "lotteries": [
+          "Quiniela Leidsa",
+          "Quiniela Real"
+        ]
+      },
+      {
+        "scenario_id": "00ec3633ce4f1a74",
+        "date": "2024-01-14",
+        "observed_numbers": [
+          29,
+          44
+        ],
+        "chosen": 22,
+        "historical_outcome_fuerte": 70,
+        "why_motor_chose": {
+          "classification": "FUERTE_PRINCIPAL",
+          "score": 174.0,
+          "reason": "Mayor respaldo estructural tras análisis completo T1×T2.",
+          "table1_sources": [
+            44
+          ],
+          "table2_confirmers": [
+            29
+          ]
+        },
+        "hist_rank_in_motor": 2,
+        "missing_evidence_flags": [
+          "fuerte_historico_no_fue_primero"
+        ],
+        "ignored_routes_note": "Si el fuerte histórico no está en ranking, las rutas T1×T2 hacia ese destino no fueron descubiertas con las entradas observadas.",
+        "error_pattern": "HIST_FUERTE_IN_ALTERNATIVES",
+        "lotteries": [
+          "Loteria Nacional",
+          "Quiniela Loteka"
+        ]
+      },
+      {
+        "scenario_id": "697db885597a30a0",
+        "date": "2024-01-27",
+        "observed_numbers": [
+          28,
+          42
+        ],
+        "chosen": 23,
+        "historical_outcome_fuerte": 53,
+        "why_motor_chose": {
+          "classification": "FUERTE_PRINCIPAL",
+          "score": 152.0,
+          "reason": "Mayor respaldo estructural tras análisis completo T1×T2.",
+          "table1_sources": [
+            42
+          ],
+          "table2_confirmers": [
+            28
+          ]
+        },
+        "hist_rank_in_motor": 2,
+        "missing_evidence_flags": [
+          "fuerte_historico_no_fue_primero"
+        ],
+        "ignored_routes_note": "Si el fuerte histórico no está en ranking, las rutas T1×T2 hacia ese destino no fueron descubiertas con las entradas observadas.",
+        "error_pattern": "HIST_FUERTE_IN_ALTERNATIVES",
+        "lotteries": [
+          "Quiniela Loteka",
+          "New York 10:30"
+        ]
+      },
+      {
+        "scenario_id": "37fc83b1a465e809",
+        "date": "2024-02-03",
+        "observed_numbers": [
+          29,
+          44
+        ],
+        "chosen": 22,
+        "historical_outcome_fuerte": 70,
+        "why_motor_chose": {
+          "classification": "FUERTE_PRINCIPAL",
+          "score": 174.0,
+          "reason": "Mayor respaldo estructural tras análisis completo T1×T2.",
+          "table1_sources": [
+            44
+          ],
+          "table2_confirmers": [
+            29
+          ]
+        },
+        "hist_rank_in_motor": 2,
+        "missing_evidence_flags": [
+          "fuerte_historico_no_fue_primero"
+        ],
+        "ignored_routes_note": "Si el fuerte histórico no está en ranking, las rutas T1×T2 hacia ese destino no fueron descubiertas con las entradas observadas.",
+        "error_pattern": "HIST_FUERTE_IN_ALTERNATIVES",
+        "lotteries": [
+          "Quiniela Real",
+          "New York 2:30"
+        ]
+      },
+      {
+        "scenario_id": "a9d65921621f9748",
+        "date": "2024-02-19",
+        "observed_numbers": [
+          28,
+          42
+        ],
+        "chosen": 23,
+        "historical_outcome_fuerte": 53,
+        "why_motor_chose": {
+          "classification": "FUERTE_PRINCIPAL",
+          "score": 152.0,
+          "reason": "Mayor respaldo estructural tras análisis completo T1×T2.",
+          "table1_sources": [
+            42
+          ],
+          "table2_confirmers": [
+            28
+          ]
+        },
+        "hist_rank_in_motor": 2,
+        "missing_evidence_flags": [
+          "fuerte_historico_no_fue_primero"
+        ],
+        "ignored_routes_note": "Si el fuerte histórico no está en ranking, las rutas T1×T2 hacia ese destino no fueron descubiertas con las entradas observadas.",
+        "error_pattern": "HIST_FUERTE_IN_ALTERNATIVES",
+        "lotteries": [
+          "Loteria Nacional",
+          "Quiniela Loteka"
+        ]
+      },
+      {
+        "scenario_id": "e7d4e6113d8da6e1",
+        "date": "2024-02-28",
+        "observed_numbers": [
+          44,
+          63
+        ],
+        "chosen": 22,
+        "historical_outcome_fuerte": 70,
+        "why_motor_chose": {
+          "classification": "FUERTE_PRINCIPAL",
+          "score": 174.0,
+          "reason": "Mayor respaldo estructural tras análisis completo T1×T2.",
+          "table1_sources": [
+            44
+          ],
+          "table2_confirmers": [
+            63
+          ]
+        },
+        "hist_rank_in_motor": 2,
+        "missing_evidence_flags": [
+          "fuerte_historico_no_fue_primero"
+        ],
+        "ignored_routes_note": "Si el fuerte histórico no está en ranking, las rutas T1×T2 hacia ese destino no fueron descubiertas con las entradas observadas.",
+        "error_pattern": "HIST_FUERTE_IN_ALTERNATIVES",
+        "lotteries": [
+          "Quiniela Leidsa",
+          "New York 10:30"
+        ]
+      },
+      {
+        "scenario_id": "b6ca93c563bb9485",
+        "date": "2024-05-14",
+        "observed_numbers": [
+          41,
+          42
+        ],
+        "chosen": 29,
+        "historical_outcome_fuerte": 71,
+        "why_motor_chose": {
+          "classification": "FUERTE_PRINCIPAL",
+          "score": 152.0,
+          "reason": "Mayor respaldo estructural tras análisis completo T1×T2.",
+          "table1_sources": [
+            41
+          ],
+          "table2_confirmers": [
+            42
+          ]
+        },
+        "hist_rank_in_motor": 2,
+        "missing_evidence_flags": [
+          "fuerte_historico_no_fue_primero"
+        ],
+        "ignored_routes_note": "Si el fuerte histórico no está en ranking, las rutas T1×T2 hacia ese destino no fueron descubiertas con las entradas observadas.",
+        "error_pattern": "HIST_FUERTE_IN_ALTERNATIVES",
+        "lotteries": [
+          "Quiniela Real",
+          "Gana Mas"
+        ]
+      },
+      {
+        "scenario_id": "6719239a5dccaac2",
+        "date": "2024-05-22",
+        "observed_numbers": [
+          9,
+          44
+        ],
+        "chosen": 22,
+        "historical_outcome_fuerte": 70,
+        "why_motor_chose": {
+          "classification": "FUERTE_PRINCIPAL",
+          "score": 174.0,
+          "reason": "Mayor respaldo estructural tras análisis completo T1×T2.",
+          "table1_sources": [
+            44
+          ],
+          "table2_confirmers": [
+            9
+          ]
+        },
+        "hist_rank_in_motor": 2,
+        "missing_evidence_flags": [
+          "fuerte_historico_no_fue_primero"
+        ],
+        "ignored_routes_note": "Si el fuerte histórico no está en ranking, las rutas T1×T2 hacia ese destino no fueron descubiertas con las entradas observadas.",
+        "error_pattern": "HIST_FUERTE_IN_ALTERNATIVES",
+        "lotteries": [
+          "Quiniela Loteka",
+          "Loteria Nacional"
+        ]
+      },
+      {
+        "scenario_id": "2ad10143318cbb39",
+        "date": "2024-05-26",
+        "observed_numbers": [
+          42,
+          44
+        ],
+        "chosen": 22,
+        "historical_outcome_fuerte": 70,
+        "why_motor_chose": {
+          "classification": "FUERTE_PRINCIPAL",
+          "score": 170.0,
+          "reason": "Mayor respaldo estructural tras análisis completo T1×T2.",
+          "table1_sources": [
+            44
+          ],
+          "table2_confirmers": [
+            42
+          ]
+        },
+        "hist_rank_in_motor": 2,
+        "missing_evidence_flags": [
+          "fuerte_historico_no_fue_primero"
+        ],
+        "ignored_routes_note": "Si el fuerte histórico no está en ranking, las rutas T1×T2 hacia ese destino no fueron descubiertas con las entradas observadas.",
+        "error_pattern": "HIST_FUERTE_IN_ALTERNATIVES",
+        "lotteries": [
+          "Loteria Nacional",
+          "New York 10:30"
+        ]
+      },
+      {
+        "scenario_id": "b871b10305c95824",
+        "date": "2024-05-26",
+        "observed_numbers": [
+          42,
+          44
+        ],
+        "chosen": 22,
+        "historical_outcome_fuerte": 7,
+        "why_motor_chose": {
+          "classification": "FUERTE_PRINCIPAL",
+          "score": 170.0,
+          "reason": "Mayor respaldo estructural tras análisis completo T1×T2.",
+          "table1_sources": [
+            44
+          ],
+          "table2_confirmers": [
+            42
+          ]
+        },
+        "hist_rank_in_motor": 3,
+        "missing_evidence_flags": [
+          "fuerte_historico_no_fue_primero"
+        ],
+        "ignored_routes_note": "Si el fuerte histórico no está en ranking, las rutas T1×T2 hacia ese destino no fueron descubiertas con las entradas observadas.",
+        "error_pattern": "HIST_FUERTE_IN_ALTERNATIVES",
+        "lotteries": [
+          "New York 10:30",
+          "Loteria Nacional"
+        ]
+      },
+      {
+        "scenario_id": "1f2a69b5530f8ead",
+        "date": "2024-06-17",
+        "observed_numbers": [
+          44,
+          53
+        ],
+        "chosen": 22,
+        "historical_outcome_fuerte": 70,
+        "why_motor_chose": {
+          "classification": "FUERTE_PRINCIPAL",
+          "score": 174.0,
+          "reason": "Mayor respaldo estructural tras análisis completo T1×T2.",
+          "table1_sources": [
+            44
+          ],
+          "table2_confirmers": [
+            53
+          ]
+        },
+        "hist_rank_in_motor": 2,
+        "missing_evidence_flags": [
+          "fuerte_historico_no_fue_primero"
+        ],
+        "ignored_routes_note": "Si el fuerte histórico no está en ranking, las rutas T1×T2 hacia ese destino no fueron descubiertas con las entradas observadas.",
+        "error_pattern": "HIST_FUERTE_IN_ALTERNATIVES",
+        "lotteries": [
+          "Quiniela Real",
+          "Loteria Nacional"
+        ]
+      }
+    ],
+    "all_case_ids": [
+      "3c0782d12f38b6bf",
+      "33115e931422c906",
+      "8c6da1d61ea96b1b",
+      "02b798261529349c",
+      "00ec3633ce4f1a74",
+      "697db885597a30a0",
+      "37fc83b1a465e809",
+      "a9d65921621f9748",
+      "e7d4e6113d8da6e1",
+      "b6ca93c563bb9485",
+      "6719239a5dccaac2",
+      "2ad10143318cbb39",
+      "b871b10305c95824",
+      "1f2a69b5530f8ead"
+    ],
+    "note": "Solo documentación. No se aplican correcciones automáticas al motor."
+  },
+  "patterns": {
+    "min_support": 5,
+    "n_match_rows_used": 240,
+    "frequent_origin_fuerte": [
+      {
+        "key": [
+          35,
+          11
+        ],
+        "count": 6
+      },
+      {
+        "key": [
+          40,
+          56
+        ],
+        "count": 6
+      },
+      {
+        "key": [
+          43,
+          44
+        ],
+        "count": 6
+      },
+      {
+        "key": [
+          26,
+          27
+        ],
+        "count": 6
+      },
+      {
+        "key": [
+          38,
+          63
+        ],
+        "count": 6
+      },
+      {
+        "key": [
+          28,
+          53
+        ],
+        "count": 5
+      },
+      {
+        "key": [
+          36,
+          85
+        ],
+        "count": 5
+      },
+      {
+        "key": [
+          43,
+          28
+        ],
+        "count": 5
+      },
+      {
+        "key": [
+          49,
+          35
+        ],
+        "count": 5
+      }
+    ],
+    "frequent_observed_pair_fuerte": [],
+    "stable_observed_combos": [],
+    "lottery_pairs": [
+      {
+        "key": [
+          "Quiniela Real",
+          "Quiniela Leidsa"
+        ],
+        "count": 11
+      },
+      {
+        "key": [
+          "New York 10:30",
+          "Gana Mas"
+        ],
+        "count": 10
+      },
+      {
+        "key": [
+          "New York 2:30",
+          "New York 10:30"
+        ],
+        "count": 10
+      },
+      {
+        "key": [
+          "Quiniela Leidsa",
+          "New York 2:30"
+        ],
+        "count": 9
+      },
+      {
+        "key": [
+          "New York 2:30",
+          "Quiniela Loteka"
+        ],
+        "count": 9
+      },
+      {
+        "key": [
+          "Quiniela Leidsa",
+          "Gana Mas"
+        ],
+        "count": 8
+      },
+      {
+        "key": [
+          "Quiniela Leidsa",
+          "New York 10:30"
+        ],
+        "count": 8
+      },
+      {
+        "key": [
+          "Quiniela Loteka",
+          "New York 2:30"
+        ],
+        "count": 8
+      },
+      {
+        "key": [
+          "New York 10:30",
+          "Quiniela Leidsa"
+        ],
+        "count": 8
+      },
+      {
+        "key": [
+          "Gana Mas",
+          "Quiniela Real"
+        ],
+        "count": 8
+      },
+      {
+        "key": [
+          "Loteria Nacional",
+          "Quiniela Loteka"
+        ],
+        "count": 8
+      },
+      {
+        "key": [
+          "New York 10:30",
+          "Quiniela Real"
+        ],
+        "count": 7
+      },
+      {
+        "key": [
+          "New York 2:30",
+          "Quiniela Real"
+        ],
+        "count": 7
+      },
+      {
+        "key": [
+          "Quiniela Real",
+          "New York 2:30"
+        ],
+        "count": 7
+      },
+      {
+        "key": [
+          "Quiniela Loteka",
+          "Quiniela Real"
+        ],
+        "count": 7
+      },
+      {
+        "key": [
+          "New York 10:30",
+          "New York 2:30"
+        ],
+        "count": 7
+      },
+      {
+        "key": [
+          "Quiniela Leidsa",
+          "Quiniela Loteka"
+        ],
+        "count": 6
+      },
+      {
+        "key": [
+          "New York 10:30",
+          "Loteria Nacional"
+        ],
+        "count": 6
+      },
+      {
+        "key": [
+          "New York 10:30",
+          "Quiniela Loteka"
+        ],
+        "count": 6
+      },
+      {
+        "key": [
+          "Quiniela Leidsa",
+          "Quiniela Real"
+        ],
+        "count": 5
+      },
+      {
+        "key": [
+          "New York 2:30",
+          "Gana Mas"
+        ],
+        "count": 5
+      },
+      {
+        "key": [
+          "Loteria Nacional",
+          "New York 2:30"
+        ],
+        "count": 5
+      },
+      {
+        "key": [
+          "Gana Mas",
+          "Quiniela Leidsa"
+        ],
+        "count": 5
+      },
+      {
+        "key": [
+          "Loteria Nacional",
+          "New York 10:30"
+        ],
+        "count": 5
+      },
+      {
+        "key": [
+          "New York 2:30",
+          "Loteria Nacional"
+        ],
+        "count": 5
+      },
+      {
+        "key": [
+          "Quiniela Real",
+          "Gana Mas"
+        ],
+        "count": 5
+      },
+      {
+        "key": [
+          "New York 2:30",
+          "Quiniela Leidsa"
+        ],
+        "count": 5
+      }
+    ],
+    "position_pairs": [
+      {
+        "key": [
+          1,
+          1
+        ],
+        "count": 236
+      }
+    ],
+    "temporal_window_D_plus": {
+      "1": 42,
+      "2": 37,
+      "3": 28,
+      "4": 29,
+      "5": 14,
+      "6": 21,
+      "7": 12
+    },
+    "confirmer_cardinality": {
+      "confirmers=1": 240
+    },
+    "hypothesis_only": [
+      {
+        "id": "H_PENDING_SAME_DAY_MULTI_FUERTE",
+        "statement": "Días con múltiples fuertes oficiales pueden requerir regla de selección parcial (notebook del socio).",
+        "status": "pendiente_de_validacion",
+        "evidence_in_this_run": "no inventada — ver analyst_workflow_reconstruction previa"
+      },
+      {
+        "id": "H_PENDING_DIRECT_T2_POLICY",
+        "statement": "Cuándo elevar o aislar VECINO_T2_DIRECTO frente a oficiales sigue abierto.",
+        "status": "hipotesis"
+      }
+    ],
+    "disclaimer": "Solo patrones con soporte empírico ≥ min_support. No son reglas nuevas del motor."
+  },
+  "calibration": {
+    "profiles_compared": [
+      "perfil_conservador",
+      "perfil_balanceado",
+      "perfil_agresivo",
+      "perfil_socio",
+      "perfil_experimental"
+    ],
+    "ranking": [
+      {
+        "profile": "perfil_conservador",
+        "methodology_match_rate": 0.944,
+        "exact_D1_D7": 194,
+        "exact_D1_D3": 117,
+        "failures": 14
+      },
+      {
+        "profile": "perfil_balanceado",
+        "methodology_match_rate": 0.944,
+        "exact_D1_D7": 194,
+        "exact_D1_D3": 117,
+        "failures": 14
+      },
+      {
+        "profile": "perfil_agresivo",
+        "methodology_match_rate": 0.944,
+        "exact_D1_D7": 194,
+        "exact_D1_D3": 117,
+        "failures": 14
+      },
+      {
+        "profile": "perfil_socio",
+        "methodology_match_rate": 0.944,
+        "exact_D1_D7": 194,
+        "exact_D1_D3": 117,
+        "failures": 14
+      },
+      {
+        "profile": "perfil_experimental",
+        "methodology_match_rate": 0.944,
+        "exact_D1_D7": 194,
+        "exact_D1_D3": 117,
+        "failures": 14
+      }
+    ],
+    "best_methodology_reproduction": "perfil_conservador",
+    "recommendation": "El perfil 'perfil_conservador' reproduce mejor el fuerte histórico oficial T1×T2 en este dataset ciego (match metodológico). Esto no implica ventaja predictiva sobre azar.",
+    "details": {
+      "perfil_conservador": {
+        "n_analyses": 250,
+        "methodology_match_rate": 0.944,
+        "methodology_matches": 236,
+        "failures": 14,
+        "exact_D+1": 52,
+        "exact_D+3": 28,
+        "exact_D1_D3": 117,
+        "exact_D1_D7": 194
+      },
+      "perfil_balanceado": {
+        "n_analyses": 250,
+        "methodology_match_rate": 0.944,
+        "methodology_matches": 236,
+        "failures": 14,
+        "exact_D+1": 52,
+        "exact_D+3": 28,
+        "exact_D1_D3": 117,
+        "exact_D1_D7": 194
+      },
+      "perfil_agresivo": {
+        "n_analyses": 250,
+        "methodology_match_rate": 0.944,
+        "methodology_matches": 236,
+        "failures": 14,
+        "exact_D+1": 52,
+        "exact_D+3": 28,
+        "exact_D1_D3": 117,
+        "exact_D1_D7": 194
+      },
+      "perfil_socio": {
+        "n_analyses": 250,
+        "methodology_match_rate": 0.944,
+        "methodology_matches": 236,
+        "failures": 14,
+        "exact_D+1": 52,
+        "exact_D+3": 28,
+        "exact_D1_D3": 117,
+        "exact_D1_D7": 194
+      },
+      "perfil_experimental": {
+        "n_analyses": 250,
+        "methodology_match_rate": 0.944,
+        "methodology_matches": 236,
+        "failures": 14,
+        "exact_D+1": 52,
+        "exact_D+3": 28,
+        "exact_D1_D3": 117,
+        "exact_D1_D7": 194
+      }
+    },
+    "ml_used_for_decision": false,
+    "full": {
+      "perfil_conservador": {
+        "n_analyses": 250,
+        "methodology_match_rate": 0.944,
+        "methodology_matches": 236,
+        "failures": 14,
+        "exact_D+1": 52,
+        "exact_D+3": 28,
+        "exact_D1_D3": 117,
+        "exact_D1_D7": 194
+      },
+      "perfil_balanceado": {
+        "n_analyses": 250,
+        "methodology_match_rate": 0.944,
+        "methodology_matches": 236,
+        "failures": 14,
+        "exact_D+1": 52,
+        "exact_D+3": 28,
+        "exact_D1_D3": 117,
+        "exact_D1_D7": 194
+      },
+      "perfil_agresivo": {
+        "n_analyses": 250,
+        "methodology_match_rate": 0.944,
+        "methodology_matches": 236,
+        "failures": 14,
+        "exact_D+1": 52,
+        "exact_D+3": 28,
+        "exact_D1_D3": 117,
+        "exact_D1_D7": 194
+      },
+      "perfil_socio": {
+        "n_analyses": 250,
+        "methodology_match_rate": 0.944,
+        "methodology_matches": 236,
+        "failures": 14,
+        "exact_D+1": 52,
+        "exact_D+3": 28,
+        "exact_D1_D3": 117,
+        "exact_D1_D7": 194
+      },
+      "perfil_experimental": {
+        "n_analyses": 250,
+        "methodology_match_rate": 0.944,
+        "methodology_matches": 236,
+        "failures": 14,
+        "exact_D+1": 52,
+        "exact_D+3": 28,
+        "exact_D1_D3": 117,
+        "exact_D1_D7": 194
+      }
+    }
+  },
+  "benchmark": {
+    "blind_benchmark_table": [
+      {
+        "variant": "motor_actual",
+        "n": 250,
+        "methodology_match_rate": 0.944,
+        "exact_D+1": 52,
+        "exact_D1_D3": 117,
+        "exact_D1_D7": 194,
+        "failures": 14
+      },
+      {
+        "variant": "sin_derivaciones",
+        "n": 250,
+        "methodology_match_rate": 0.944,
+        "exact_D+1": 52,
+        "exact_D1_D3": 117,
+        "exact_D1_D7": 194,
+        "failures": 14
+      },
+      {
+        "variant": "perfil_socio",
+        "n": 250,
+        "methodology_match_rate": 0.944,
+        "exact_D+1": 52,
+        "exact_D1_D3": 117,
+        "exact_D1_D7": 194,
+        "failures": 14
+      },
+      {
+        "variant": "perfil_experimental",
+        "n": 250,
+        "methodology_match_rate": 0.944,
+        "exact_D+1": 52,
+        "exact_D1_D3": 117,
+        "exact_D1_D7": 194,
+        "failures": 14
+      },
+      {
+        "variant": "sin_tabla2",
+        "n": 250,
+        "methodology_match_rate": 0.216,
+        "exact_D+1": 11,
+        "exact_D1_D3": 28,
+        "exact_D1_D7": 47,
+        "failures": 196
+      },
+      {
+        "variant": "solo_tabla1",
+        "n": 250,
+        "methodology_match_rate": 0.216,
+        "exact_D+1": 11,
+        "exact_D1_D3": 28,
+        "exact_D1_D7": 47,
+        "failures": 196
+      }
+    ],
+    "best_blind_variant": "motor_actual",
+    "manual_benchmark_final": [
+      {
+        "case": "M1",
+        "variant": "perfil_socio",
+        "expected": 29,
+        "produced": 29,
+        "match": true,
+        "classification": "FUERTE_PRINCIPAL"
+      },
+      {
+        "case": "M1",
+        "variant": "motor_actual",
+        "expected": 29,
+        "produced": 29,
+        "match": true,
+        "classification": "FUERTE_PRINCIPAL"
+      },
+      {
+        "case": "M1",
+        "variant": "sin_derivaciones",
+        "expected": 29,
+        "produced": 29,
+        "match": true,
+        "classification": "FUERTE_PRINCIPAL"
+      },
+      {
+        "case": "M2",
+        "variant": "perfil_socio",
+        "expected": 75,
+        "produced": 75,
+        "match": true,
+        "classification": "VECINO_T2_DIRECTO"
+      },
+      {
+        "case": "M2",
+        "variant": "motor_actual",
+        "expected": 75,
+        "produced": 75,
+        "match": true,
+        "classification": "VECINO_T2_DIRECTO"
+      },
+      {
+        "case": "M2",
+        "variant": "sin_derivaciones",
+        "expected": 75,
+        "produced": 75,
+        "match": true,
+        "classification": "VECINO_T2_DIRECTO"
+      },
+      {
+        "case": "M3",
+        "variant": "perfil_socio",
+        "expected": 35,
+        "produced": 35,
+        "match": true,
+        "classification": "FUERTE_PRINCIPAL"
+      },
+      {
+        "case": "M3",
+        "variant": "motor_actual",
+        "expected": 35,
+        "produced": 35,
+        "match": true,
+        "classification": "FUERTE_PRINCIPAL"
+      },
+      {
+        "case": "M3",
+        "variant": "sin_derivaciones",
+        "expected": 35,
+        "produced": 35,
+        "match": true,
+        "classification": "FUERTE_PRINCIPAL"
+      },
+      {
+        "case": "M4",
+        "variant": "perfil_socio",
+        "expected": 54,
+        "produced": 54,
+        "match": true,
+        "classification": "FUERTE_PRINCIPAL"
+      },
+      {
+        "case": "M4",
+        "variant": "motor_actual",
+        "expected": 54,
+        "produced": 54,
+        "match": true,
+        "classification": "FUERTE_PRINCIPAL"
+      },
+      {
+        "case": "M4",
+        "variant": "sin_derivaciones",
+        "expected": 54,
+        "produced": 54,
+        "match": true,
+        "classification": "FUERTE_PRINCIPAL"
+      },
+      {
+        "case": "M5",
+        "variant": "perfil_socio",
+        "expected": 94,
+        "produced": 94,
+        "match": true,
+        "classification": "FUERTE_PRINCIPAL"
+      },
+      {
+        "case": "M5",
+        "variant": "motor_actual",
+        "expected": 94,
+        "produced": 94,
+        "match": true,
+        "classification": "FUERTE_PRINCIPAL"
+      },
+      {
+        "case": "M5",
+        "variant": "sin_derivaciones",
+        "expected": 94,
+        "produced": 94,
+        "match": true,
+        "classification": "FUERTE_PRINCIPAL"
+      }
+    ]
+  },
+  "explainability_samples": {
+    "35_14": {
+      "observed_numbers": [
+        35,
+        14
+      ],
+      "primary_signal": {
+        "number": 54,
+        "classification": "FUERTE_PRINCIPAL",
+        "analytical_confidence": 85.0,
+        "score": 156.0,
+        "reason": "Mayor respaldo estructural tras análisis completo T1×T2.",
+        "table1_sources": [
+          35
+        ],
+        "table2_confirmers": [
+          14
+        ]
+      },
+      "decisions": {
+        "first": {
+          "role": "primero",
+          "number": 54,
+          "classification": "FUERTE_PRINCIPAL",
+          "score": 156.0,
+          "why": "Mayor respaldo estructural tras análisis completo T1×T2.",
+          "evidence_had": {
+            "table1_sources": [
+              35
+            ],
+            "table2_confirmers": [
+              14
+            ],
+            "independent_paths": 3,
+            "cross_table_support": true
+          },
+          "evidence_lacked": [],
+          "components": {
+            "T1_SOURCE_SUPPORT": 1.0,
+            "T2_CONFIRMATION_SUPPORT": 1.0,
+            "CROSS_TABLE_SUPPORT": 1.0,
+            "MULTIPLE_OBSERVED_SUPPORT": 1.0,
+            "INDEPENDENT_PATH_SUPPORT": 3.0,
+            "DIRECT_PATH_SUPPORT": 3.0,
+            "MULTI_CONFIRMATION_SUPPORT": 0.0,
+            "HISTORICAL_EXACT_RATE": 0.0,
+            "HISTORICAL_D1_D3_RATE": 0.0,
+            "HISTORICAL_D1_D7_RATE": 0.0,
+            "FIRST_POSITION_SUPPORT": 0.0,
+            "ANY_POSITION_SUPPORT": 0.0,
+            "RECENT_PATTERN_SUPPORT": 0.0,
+            "CROSS_LOTTERY_SUPPORT": 0.0,
+            "CHAIN_CONTINUITY_SUPPORT": 0.0,
+            "DERIVATION_DEPTH_PENALTY": 0.0,
+            "AMBIGUITY_PENALTY": 0.0,
+            "DUPLICATE_PATH_PENALTY": 0.0
+          },
+          "penalties": []
+        },
+        "second": {
+          "role": "segundo",
+          "number": 6,
+          "classification": "FAMILIA_T1",
+          "score": 12.0,
+          "why": "Solo familia T1; insuficiente para fuerte en perfil actual.",
+          "evidence_had": {
+            "table1_sources": [
+              35
+            ],
+            "table2_confirmers": null,
+            "independent_paths": 1,
+            "cross_table_support": false
+          },
+          "evidence_lacked": [
+            "sin_confirmacion_tabla2",
+            "sin_cruce_t1_t2"
+          ],
+          "components": {
+            "T1_SOURCE_SUPPORT": 1.0,
+            "T2_CONFIRMATION_SUPPORT": 0.0,
+            "CROSS_TABLE_SUPPORT": 0.0,
+            "MULTIPLE_OBSERVED_SUPPORT": 0.0,
+            "INDEPENDENT_PATH_SUPPORT": 1.0,
+            "DIRECT_PATH_SUPPORT": 1.0,
+            "MULTI_CONFIRMATION_SUPPORT": 0.0,
+            "HISTORICAL_EXACT_RATE": 0.0,
+            "HISTORICAL_D1_D3_RATE": 0.0,
+            "HISTORICAL_D1_D7_RATE": 0.0,
+            "FIRST_POSITION_SUPPORT": 0.0,
+            "ANY_POSITION_SUPPORT": 0.0,
+            "RECENT_PATTERN_SUPPORT": 0.0,
+            "CROSS_LOTTERY_SUPPORT": 0.0,
+            "CHAIN_CONTINUITY_SUPPORT": 0.0,
+            "DERIVATION_DEPTH_PENALTY": 0.0,
+            "AMBIGUITY_PENALTY": 0.0,
+            "DUPLICATE_PATH_PENALTY": 0.0
+          },
+          "penalties": []
+        },
+        "discarded": [
+          {
+            "role": "descartado_relativo",
+            "number": 11,
+            "classification": "FAMILIA_T1",
+            "score": 12.0,
+            "why": "Solo familia T1; insuficiente para fuerte en perfil actual.",
+            "evidence_had": {
+              "table1_sources": [
+                35
+              ],
+              "table2_confirmers": null,
+              "independent_paths": 1,
+              "cross_table_support": false
+            },
+            "evidence_lacked": [
+              "sin_confirmacion_tabla2",
+              "sin_cruce_t1_t2"
+            ],
+            "components": {
+              "T1_SOURCE_SUPPORT": 1.0,
+              "T2_CONFIRMATION_SUPPORT": 0.0,
+              "CROSS_TABLE_SUPPORT": 0.0,
+              "MULTIPLE_OBSERVED_SUPPORT": 0.0,
+              "INDEPENDENT_PATH_SUPPORT": 1.0,
+              "DIRECT_PATH_SUPPORT": 1.0,
+              "MULTI_CONFIRMATION_SUPPORT": 0.0,
+              "HISTORICAL_EXACT_RATE": 0.0,
+              "HISTORICAL_D1_D3_RATE": 0.0,
+              "HISTORICAL_D1_D7_RATE": 0.0,
+              "FIRST_POSITION_SUPPORT": 0.0,
+              "ANY_POSITION_SUPPORT": 0.0,
+              "RECENT_PATTERN_SUPPORT": 0.0,
+              "CROSS_LOTTERY_SUPPORT": 0.0,
+              "CHAIN_CONTINUITY_SUPPORT": 0.0,
+              "DERIVATION_DEPTH_PENALTY": 0.0,
+              "AMBIGUITY_PENALTY": 0.0,
+              "DUPLICATE_PATH_PENALTY": 0.0
+            },
+            "penalties": []
+          },
+          {
+            "role": "descartado_relativo",
+            "number": 43,
+            "classification": "FAMILIA_T1",
+            "score": 12.0,
+            "why": "Solo familia T1; insuficiente para fuerte en perfil actual.",
+            "evidence_had": {
+              "table1_sources": [
+                35
+              ],
+              "table2_confirmers": null,
+              "independent_paths": 1,
+              "cross_table_support": false
+            },
+            "evidence_lacked": [
+              "sin_confirmacion_tabla2",
+              "sin_cruce_t1_t2"
+            ],
+            "components": {
+              "T1_SOURCE_SUPPORT": 1.0,
+              "T2_CONFIRMATION_SUPPORT": 0.0,
+              "CROSS_TABLE_SUPPORT": 0.0,
+              "MULTIPLE_OBSERVED_SUPPORT": 0.0,
+              "INDEPENDENT_PATH_SUPPORT": 1.0,
+              "DIRECT_PATH_SUPPORT": 1.0,
+              "MULTI_CONFIRMATION_SUPPORT": 0.0,
+              "HISTORICAL_EXACT_RATE": 0.0,
+              "HISTORICAL_D1_D3_RATE": 0.0,
+              "HISTORICAL_D1_D7_RATE": 0.0,
+              "FIRST_POSITION_SUPPORT": 0.0,
+              "ANY_POSITION_SUPPORT": 0.0,
+              "RECENT_PATTERN_SUPPORT": 0.0,
+              "CROSS_LOTTERY_SUPPORT": 0.0,
+              "CHAIN_CONTINUITY_SUPPORT": 0.0,
+              "DERIVATION_DEPTH_PENALTY": 0.0,
+              "AMBIGUITY_PENALTY": 0.0,
+              "DUPLICATE_PATH_PENALTY": 0.0
+            },
+            "penalties": []
+          },
+          {
+            "role": "descartado_relativo",
+            "number": 86,
+            "classification": "FAMILIA_T1",
+            "score": 12.0,
+            "why": "Solo familia T1; insuficiente para fuerte en perfil actual.",
+            "evidence_had": {
+              "table1_sources": [
+                35
+              ],
+              "table2_confirmers": null,
+              "independent_paths": 1,
+              "cross_table_support": false
+            },
+            "evidence_lacked": [
+              "sin_confirmacion_tabla2",
+              "sin_cruce_t1_t2"
+            ],
+            "components": {
+              "T1_SOURCE_SUPPORT": 1.0,
+              "T2_CONFIRMATION_SUPPORT": 0.0,
+              "CROSS_TABLE_SUPPORT": 0.0,
+              "MULTIPLE_OBSERVED_SUPPORT": 0.0,
+              "INDEPENDENT_PATH_SUPPORT": 1.0,
+              "DIRECT_PATH_SUPPORT": 1.0,
+              "MULTI_CONFIRMATION_SUPPORT": 0.0,
+              "HISTORICAL_EXACT_RATE": 0.0,
+              "HISTORICAL_D1_D3_RATE": 0.0,
+              "HISTORICAL_D1_D7_RATE": 0.0,
+              "FIRST_POSITION_SUPPORT": 0.0,
+              "ANY_POSITION_SUPPORT": 0.0,
+              "RECENT_PATTERN_SUPPORT": 0.0,
+              "CROSS_LOTTERY_SUPPORT": 0.0,
+              "CHAIN_CONTINUITY_SUPPORT": 0.0,
+              "DERIVATION_DEPTH_PENALTY": 0.0,
+              "AMBIGUITY_PENALTY": 0.0,
+              "DUPLICATE_PATH_PENALTY": 0.0
+            },
+            "penalties": []
+          },
+          {
+            "role": "descartado_relativo",
+            "number": 19,
+            "classification": "DERIVACION_RELEVANTE",
+            "score": -50.0,
+            "why": "Derivación relevante; no fuerte principal en perfil estricto.",
+            "evidence_had": {
+              "table1_sources": null,
+              "table2_confirmers": null,
+              "independent_paths": 0,
+              "cross_table_support": false
+            },
+            "evidence_lacked": [
+              "sin_fuente_tabla1",
+              "sin_confirmacion_tabla2",
+              "sin_cruce_t1_t2"
+            ],
+            "components": {
+              "T1_SOURCE_SUPPORT": 0.0,
+              "T2_CONFIRMATION_SUPPORT": 0.0,
+              "CROSS_TABLE_SUPPORT": 0.0,
+              "MULTIPLE_OBSERVED_SUPPORT": 0.0,
+              "INDEPENDENT_PATH_SUPPORT": 0.0,
+              "DIRECT_PATH_SUPPORT": 0.0,
+              "MULTI_CONFIRMATION_SUPPORT": 0.0,
+              "HISTORICAL_EXACT_RATE": 0.0,
+              "HISTORICAL_D1_D3_RATE": 0.0,
+              "HISTORICAL_D1_D7_RATE": 0.0,
+              "FIRST_POSITION_SUPPORT": 0.0,
+              "ANY_POSITION_SUPPORT": 0.0,
+              "RECENT_PATTERN_SUPPORT": 0.0,
+              "CROSS_LOTTERY_SUPPORT": 0.0,
+              "CHAIN_CONTINUITY_SUPPORT": 0.0,
+              "DERIVATION_DEPTH_PENALTY": 1.0,
+              "AMBIGUITY_PENALTY": 0.0,
+              "DUPLICATE_PATH_PENALTY": 0.0
+            },
+            "penalties": [
+              "Penalización por profundidad de derivación=1.0"
+            ]
+          },
+          {
+            "role": "descartado_relativo",
+            "number": 46,
+            "classification": "DERIVACION_RELEVANTE",
+            "score": -50.0,
+            "why": "Derivación relevante; no fuerte principal en perfil estricto.",
+            "evidence_had": {
+              "table1_sources": null,
+              "table2_confirmers": null,
+              "independent_paths": 0,
+              "cross_table_support": false
+            },
+            "evidence_lacked": [
+              "sin_fuente_tabla1",
+              "sin_confirmacion_tabla2",
+              "sin_cruce_t1_t2"
+            ],
+            "components": {
+              "T1_SOURCE_SUPPORT": 0.0,
+              "T2_CONFIRMATION_SUPPORT": 0.0,
+              "CROSS_TABLE_SUPPORT": 0.0,
+              "MULTIPLE_OBSERVED_SUPPORT": 0.0,
+              "INDEPENDENT_PATH_SUPPORT": 0.0,
+              "DIRECT_PATH_SUPPORT": 0.0,
+              "MULTI_CONFIRMATION_SUPPORT": 0.0,
+              "HISTORICAL_EXACT_RATE": 0.0,
+              "HISTORICAL_D1_D3_RATE": 0.0,
+              "HISTORICAL_D1_D7_RATE": 0.0,
+              "FIRST_POSITION_SUPPORT": 0.0,
+              "ANY_POSITION_SUPPORT": 0.0,
+              "RECENT_PATTERN_SUPPORT": 0.0,
+              "CROSS_LOTTERY_SUPPORT": 0.0,
+              "CHAIN_CONTINUITY_SUPPORT": 0.0,
+              "DERIVATION_DEPTH_PENALTY": 1.0,
+              "AMBIGUITY_PENALTY": 0.0,
+              "DUPLICATE_PATH_PENALTY": 0.0
+            },
+            "penalties": [
+              "Penalización por profundidad de derivación=1.0"
+            ]
+          },
+          {
+            "role": "descartado_relativo",
+            "number": 57,
+            "classification": "DERIVACION_RELEVANTE",
+            "score": -50.0,
+            "why": "Derivación relevante; no fuerte principal en perfil estricto.",
+            "evidence_had": {
+              "table1_sources": null,
+              "table2_confirmers": null,
+              "independent_paths": 0,
+              "cross_table_support": false
+            },
+            "evidence_lacked": [
+              "sin_fuente_tabla1",
+              "sin_confirmacion_tabla2",
+              "sin_cruce_t1_t2"
+            ],
+            "components": {
+              "T1_SOURCE_SUPPORT": 0.0,
+              "T2_CONFIRMATION_SUPPORT": 0.0,
+              "CROSS_TABLE_SUPPORT": 0.0,
+              "MULTIPLE_OBSERVED_SUPPORT": 0.0,
+              "INDEPENDENT_PATH_SUPPORT": 0.0,
+              "DIRECT_PATH_SUPPORT": 0.0,
+              "MULTI_CONFIRMATION_SUPPORT": 0.0,
+              "HISTORICAL_EXACT_RATE": 0.0,
+              "HISTORICAL_D1_D3_RATE": 0.0,
+              "HISTORICAL_D1_D7_RATE": 0.0,
+              "FIRST_POSITION_SUPPORT": 0.0,
+              "ANY_POSITION_SUPPORT": 0.0,
+              "RECENT_PATTERN_SUPPORT": 0.0,
+              "CROSS_LOTTERY_SUPPORT": 0.0,
+              "CHAIN_CONTINUITY_SUPPORT": 0.0,
+              "DERIVATION_DEPTH_PENALTY": 1.0,
+              "AMBIGUITY_PENALTY": 0.0,
+              "DUPLICATE_PATH_PENALTY": 0.0
+            },
+            "penalties": [
+              "Penalización por profundidad de derivación=1.0"
+            ]
+          }
+        ],
+        "summary": "Primero 54 por mayor respaldo estructural (FUERTE_PRINCIPAL). Segundo 6."
+      },
+      "evidence_summary": {
+        "table1_sources": [
+          35
+        ],
+        "table2_confirmers": [
+          14
+        ],
+        "independent_paths": 3,
+        "cross_table_support": true,
+        "multi_source_support": true
+      },
+      "graph_complete_before_discovery": true
+    },
+    "39_58": {
+      "observed_numbers": [
+        39,
+        58
+      ],
+      "primary_signal": {
+        "number": 94,
+        "classification": "FUERTE_PRINCIPAL",
+        "analytical_confidence": 85.0,
+        "score": 156.0,
+        "reason": "Mayor respaldo estructural tras análisis completo T1×T2.",
+        "table1_sources": [
+          39
+        ],
+        "table2_confirmers": [
+          58
+        ]
+      },
+      "decisions": {
+        "first": {
+          "role": "primero",
+          "number": 94,
+          "classification": "FUERTE_PRINCIPAL",
+          "score": 156.0,
+          "why": "Mayor respaldo estructural tras análisis completo T1×T2.",
+          "evidence_had": {
+            "table1_sources": [
+              39
+            ],
+            "table2_confirmers": [
+              58
+            ],
+            "independent_paths": 3,
+            "cross_table_support": true
+          },
+          "evidence_lacked": [],
+          "components": {
+            "T1_SOURCE_SUPPORT": 1.0,
+            "T2_CONFIRMATION_SUPPORT": 1.0,
+            "CROSS_TABLE_SUPPORT": 1.0,
+            "MULTIPLE_OBSERVED_SUPPORT": 1.0,
+            "INDEPENDENT_PATH_SUPPORT": 3.0,
+            "DIRECT_PATH_SUPPORT": 3.0,
+            "MULTI_CONFIRMATION_SUPPORT": 0.0,
+            "HISTORICAL_EXACT_RATE": 0.0,
+            "HISTORICAL_D1_D3_RATE": 0.0,
+            "HISTORICAL_D1_D7_RATE": 0.0,
+            "FIRST_POSITION_SUPPORT": 0.0,
+            "ANY_POSITION_SUPPORT": 0.0,
+            "RECENT_PATTERN_SUPPORT": 0.0,
+            "CROSS_LOTTERY_SUPPORT": 0.0,
+            "CHAIN_CONTINUITY_SUPPORT": 0.0,
+            "DERIVATION_DEPTH_PENALTY": 0.0,
+            "AMBIGUITY_PENALTY": 0.0,
+            "DUPLICATE_PATH_PENALTY": 0.0
+          },
+          "penalties": []
+        },
+        "second": {
+          "role": "segundo",
+          "number": 78,
+          "classification": "FAMILIA_T1",
+          "score": 34.0,
+          "why": "Solo familia T1; insuficiente para fuerte en perfil actual.",
+          "evidence_had": {
+            "table1_sources": [
+              39
+            ],
+            "table2_confirmers": null,
+            "independent_paths": 2,
+            "cross_table_support": false
+          },
+          "evidence_lacked": [
+            "sin_confirmacion_tabla2",
+            "sin_cruce_t1_t2"
+          ],
+          "components": {
+            "T1_SOURCE_SUPPORT": 1.0,
+            "T2_CONFIRMATION_SUPPORT": 0.0,
+            "CROSS_TABLE_SUPPORT": 0.0,
+            "MULTIPLE_OBSERVED_SUPPORT": 0.0,
+            "INDEPENDENT_PATH_SUPPORT": 2.0,
+            "DIRECT_PATH_SUPPORT": 2.0,
+            "MULTI_CONFIRMATION_SUPPORT": 0.0,
+            "HISTORICAL_EXACT_RATE": 0.0,
+            "HISTORICAL_D1_D3_RATE": 0.0,
+            "HISTORICAL_D1_D7_RATE": 0.0,
+            "FIRST_POSITION_SUPPORT": 0.0,
+            "ANY_POSITION_SUPPORT": 0.0,
+            "RECENT_PATTERN_SUPPORT": 0.0,
+            "CROSS_LOTTERY_SUPPORT": 0.0,
+            "CHAIN_CONTINUITY_SUPPORT": 0.0,
+            "DERIVATION_DEPTH_PENALTY": 0.0,
+            "AMBIGUITY_PENALTY": 0.0,
+            "DUPLICATE_PATH_PENALTY": 0.0
+          },
+          "penalties": []
+        },
+        "discarded": [
+          {
+            "role": "descartado_relativo",
+            "number": 62,
+            "classification": "FAMILIA_T1",
+            "score": 12.0,
+            "why": "Solo familia T1; insuficiente para fuerte en perfil actual.",
+            "evidence_had": {
+              "table1_sources": [
+                39
+              ],
+              "table2_confirmers": null,
+              "independent_paths": 1,
+              "cross_table_support": false
+            },
+            "evidence_lacked": [
+              "sin_confirmacion_tabla2",
+              "sin_cruce_t1_t2"
+            ],
+            "components": {
+              "T1_SOURCE_SUPPORT": 1.0,
+              "T2_CONFIRMATION_SUPPORT": 0.0,
+              "CROSS_TABLE_SUPPORT": 0.0,
+              "MULTIPLE_OBSERVED_SUPPORT": 0.0,
+              "INDEPENDENT_PATH_SUPPORT": 1.0,
+              "DIRECT_PATH_SUPPORT": 1.0,
+              "MULTI_CONFIRMATION_SUPPORT": 0.0,
+              "HISTORICAL_EXACT_RATE": 0.0,
+              "HISTORICAL_D1_D3_RATE": 0.0,
+              "HISTORICAL_D1_D7_RATE": 0.0,
+              "FIRST_POSITION_SUPPORT": 0.0,
+              "ANY_POSITION_SUPPORT": 0.0,
+              "RECENT_PATTERN_SUPPORT": 0.0,
+              "CROSS_LOTTERY_SUPPORT": 0.0,
+              "CHAIN_CONTINUITY_SUPPORT": 0.0,
+              "DERIVATION_DEPTH_PENALTY": 0.0,
+              "AMBIGUITY_PENALTY": 0.0,
+              "DUPLICATE_PATH_PENALTY": 0.0
+            },
+            "penalties": []
+          },
+          {
+            "role": "descartado_relativo",
+            "number": 9,
+            "classification": "FAMILIA_T1",
+            "score": 2.0,
+            "why": "Solo familia T1; insuficiente para fuerte en perfil actual.",
+            "evidence_had": {
+              "table1_sources": [
+                39
+              ],
+              "table2_confirmers": null,
+              "independent_paths": 1,
+              "cross_table_support": false
+            },
+            "evidence_lacked": [
+              "sin_confirmacion_tabla2",
+              "sin_cruce_t1_t2"
+            ],
+            "components": {
+              "T1_SOURCE_SUPPORT": 1.0,
+              "T2_CONFIRMATION_SUPPORT": 0.0,
+              "CROSS_TABLE_SUPPORT": 0.0,
+              "MULTIPLE_OBSERVED_SUPPORT": 0.0,
+              "INDEPENDENT_PATH_SUPPORT": 1.0,
+              "DIRECT_PATH_SUPPORT": 1.0,
+              "MULTI_CONFIRMATION_SUPPORT": 0.0,
+              "HISTORICAL_EXACT_RATE": 0.0,
+              "HISTORICAL_D1_D3_RATE": 0.0,
+              "HISTORICAL_D1_D7_RATE": 0.0,
+              "FIRST_POSITION_SUPPORT": 0.0,
+              "ANY_POSITION_SUPPORT": 0.0,
+              "RECENT_PATTERN_SUPPORT": 0.0,
+              "CROSS_LOTTERY_SUPPORT": 0.0,
+              "CHAIN_CONTINUITY_SUPPORT": 0.0,
+              "DERIVATION_DEPTH_PENALTY": 2.0,
+              "AMBIGUITY_PENALTY": 0.0,
+              "DUPLICATE_PATH_PENALTY": 0.0
+            },
+            "penalties": [
+              "Penalización por profundidad de derivación=2.0"
+            ]
+          },
+          {
+            "role": "descartado_relativo",
+            "number": 14,
+            "classification": "FAMILIA_T1",
+            "score": 2.0,
+            "why": "Solo familia T1; insuficiente para fuerte en perfil actual.",
+            "evidence_had": {
+              "table1_sources": [
+                39
+              ],
+              "table2_confirmers": null,
+              "independent_paths": 1,
+              "cross_table_support": false
+            },
+            "evidence_lacked": [
+              "sin_confirmacion_tabla2",
+              "sin_cruce_t1_t2"
+            ],
+            "components": {
+              "T1_SOURCE_SUPPORT": 1.0,
+              "T2_CONFIRMATION_SUPPORT": 0.0,
+              "CROSS_TABLE_SUPPORT": 0.0,
+              "MULTIPLE_OBSERVED_SUPPORT": 0.0,
+              "INDEPENDENT_PATH_SUPPORT": 1.0,
+              "DIRECT_PATH_SUPPORT": 1.0,
+              "MULTI_CONFIRMATION_SUPPORT": 0.0,
+              "HISTORICAL_EXACT_RATE": 0.0,
+              "HISTORICAL_D1_D3_RATE": 0.0,
+              "HISTORICAL_D1_D7_RATE": 0.0,
+              "FIRST_POSITION_SUPPORT": 0.0,
+              "ANY_POSITION_SUPPORT": 0.0,
+              "RECENT_PATTERN_SUPPORT": 0.0,
+              "CROSS_LOTTERY_SUPPORT": 0.0,
+              "CHAIN_CONTINUITY_SUPPORT": 0.0,
+              "DERIVATION_DEPTH_PENALTY": 2.0,
+              "AMBIGUITY_PENALTY": 0.0,
+              "DUPLICATE_PATH_PENALTY": 0.0
+            },
+            "penalties": [
+              "Penalización por profundidad de derivación=2.0"
+            ]
+          },
+          {
+            "role": "descartado_relativo",
+            "number": 30,
+            "classification": "FAMILIA_T1",
+            "score": 2.0,
+            "why": "Solo familia T1; insuficiente para fuerte en perfil actual.",
+            "evidence_had": {
+              "table1_sources": [
+                39
+              ],
+              "table2_confirmers": null,
+              "independent_paths": 1,
+              "cross_table_support": false
+            },
+            "evidence_lacked": [
+              "sin_confirmacion_tabla2",
+              "sin_cruce_t1_t2"
+            ],
+            "components": {
+              "T1_SOURCE_SUPPORT": 1.0,
+              "T2_CONFIRMATION_SUPPORT": 0.0,
+              "CROSS_TABLE_SUPPORT": 0.0,
+              "MULTIPLE_OBSERVED_SUPPORT": 0.0,
+              "INDEPENDENT_PATH_SUPPORT": 1.0,
+              "DIRECT_PATH_SUPPORT": 1.0,
+              "MULTI_CONFIRMATION_SUPPORT": 0.0,
+              "HISTORICAL_EXACT_RATE": 0.0,
+              "HISTORICAL_D1_D3_RATE": 0.0,
+              "HISTORICAL_D1_D7_RATE": 0.0,
+              "FIRST_POSITION_SUPPORT": 0.0,
+              "ANY_POSITION_SUPPORT": 0.0,
+              "RECENT_PATTERN_SUPPORT": 0.0,
+              "CROSS_LOTTERY_SUPPORT": 0.0,
+              "CHAIN_CONTINUITY_SUPPORT": 0.0,
+              "DERIVATION_DEPTH_PENALTY": 2.0,
+              "AMBIGUITY_PENALTY": 0.0,
+              "DUPLICATE_PATH_PENALTY": 0.0
+            },
+            "penalties": [
+              "Penalización por profundidad de derivación=2.0"
+            ]
+          },
+          {
+            "role": "descartado_relativo",
+            "number": 41,
+            "classification": "FAMILIA_T1",
+            "score": 2.0,
+            "why": "Solo familia T1; insuficiente para fuerte en perfil actual.",
+            "evidence_had": {
+              "table1_sources": [
+                39
+              ],
+              "table2_confirmers": null,
+              "independent_paths": 1,
+              "cross_table_support": false
+            },
+            "evidence_lacked": [
+              "sin_confirmacion_tabla2",
+              "sin_cruce_t1_t2"
+            ],
+            "components": {
+              "T1_SOURCE_SUPPORT": 1.0,
+              "T2_CONFIRMATION_SUPPORT": 0.0,
+              "CROSS_TABLE_SUPPORT": 0.0,
+              "MULTIPLE_OBSERVED_SUPPORT": 0.0,
+              "INDEPENDENT_PATH_SUPPORT": 1.0,
+              "DIRECT_PATH_SUPPORT": 1.0,
+              "MULTI_CONFIRMATION_SUPPORT": 0.0,
+              "HISTORICAL_EXACT_RATE": 0.0,
+              "HISTORICAL_D1_D3_RATE": 0.0,
+              "HISTORICAL_D1_D7_RATE": 0.0,
+              "FIRST_POSITION_SUPPORT": 0.0,
+              "ANY_POSITION_SUPPORT": 0.0,
+              "RECENT_PATTERN_SUPPORT": 0.0,
+              "CROSS_LOTTERY_SUPPORT": 0.0,
+              "CHAIN_CONTINUITY_SUPPORT": 0.0,
+              "DERIVATION_DEPTH_PENALTY": 2.0,
+              "AMBIGUITY_PENALTY": 0.0,
+              "DUPLICATE_PATH_PENALTY": 0.0
+            },
+            "penalties": [
+              "Penalización por profundidad de derivación=2.0"
+            ]
+          },
+          {
+            "role": "descartado_relativo",
+            "number": 46,
+            "classification": "FAMILIA_T1",
+            "score": 2.0,
+            "why": "Solo familia T1; insuficiente para fuerte en perfil actual.",
+            "evidence_had": {
+              "table1_sources": [
+                39
+              ],
+              "table2_confirmers": null,
+              "independent_paths": 1,
+              "cross_table_support": false
+            },
+            "evidence_lacked": [
+              "sin_confirmacion_tabla2",
+              "sin_cruce_t1_t2"
+            ],
+            "components": {
+              "T1_SOURCE_SUPPORT": 1.0,
+              "T2_CONFIRMATION_SUPPORT": 0.0,
+              "CROSS_TABLE_SUPPORT": 0.0,
+              "MULTIPLE_OBSERVED_SUPPORT": 0.0,
+              "INDEPENDENT_PATH_SUPPORT": 1.0,
+              "DIRECT_PATH_SUPPORT": 1.0,
+              "MULTI_CONFIRMATION_SUPPORT": 0.0,
+              "HISTORICAL_EXACT_RATE": 0.0,
+              "HISTORICAL_D1_D3_RATE": 0.0,
+              "HISTORICAL_D1_D7_RATE": 0.0,
+              "FIRST_POSITION_SUPPORT": 0.0,
+              "ANY_POSITION_SUPPORT": 0.0,
+              "RECENT_PATTERN_SUPPORT": 0.0,
+              "CROSS_LOTTERY_SUPPORT": 0.0,
+              "CHAIN_CONTINUITY_SUPPORT": 0.0,
+              "DERIVATION_DEPTH_PENALTY": 2.0,
+              "AMBIGUITY_PENALTY": 0.0,
+              "DUPLICATE_PATH_PENALTY": 0.0
+            },
+            "penalties": [
+              "Penalización por profundidad de derivación=2.0"
+            ]
+          }
+        ],
+        "summary": "Primero 94 por mayor respaldo estructural (FUERTE_PRINCIPAL). Segundo 78."
+      },
+      "evidence_summary": {
+        "table1_sources": [
+          39
+        ],
+        "table2_confirmers": [
+          58
+        ],
+        "independent_paths": 3,
+        "cross_table_support": true,
+        "multi_source_support": true
+      },
+      "graph_complete_before_discovery": true
+    },
+    "49_44_70": {
+      "observed_numbers": [
+        49,
+        44,
+        70
+      ],
+      "primary_signal": {
+        "number": 35,
+        "classification": "FUERTE_PRINCIPAL",
+        "analytical_confidence": 93.0,
+        "score": 236.0,
+        "reason": "Mayor respaldo estructural tras análisis completo T1×T2.",
+        "table1_sources": [
+          49
+        ],
+        "table2_confirmers": [
+          44,
+          70
+        ]
+      },
+      "decisions": {
+        "first": {
+          "role": "primero",
+          "number": 35,
+          "classification": "FUERTE_PRINCIPAL",
+          "score": 236.0,
+          "why": "Mayor respaldo estructural tras análisis completo T1×T2.",
+          "evidence_had": {
+            "table1_sources": [
+              49
+            ],
+            "table2_confirmers": [
+              44,
+              70
+            ],
+            "independent_paths": 5,
+            "cross_table_support": true
+          },
+          "evidence_lacked": [],
+          "components": {
+            "T1_SOURCE_SUPPORT": 1.0,
+            "T2_CONFIRMATION_SUPPORT": 2.0,
+            "CROSS_TABLE_SUPPORT": 1.0,
+            "MULTIPLE_OBSERVED_SUPPORT": 1.0,
+            "INDEPENDENT_PATH_SUPPORT": 5.0,
+            "DIRECT_PATH_SUPPORT": 5.0,
+            "MULTI_CONFIRMATION_SUPPORT": 1.0,
+            "HISTORICAL_EXACT_RATE": 0.0,
+            "HISTORICAL_D1_D3_RATE": 0.0,
+            "HISTORICAL_D1_D7_RATE": 0.0,
+            "FIRST_POSITION_SUPPORT": 0.0,
+            "ANY_POSITION_SUPPORT": 0.0,
+            "RECENT_PATTERN_SUPPORT": 0.0,
+            "CROSS_LOTTERY_SUPPORT": 0.0,
+            "CHAIN_CONTINUITY_SUPPORT": 0.0,
+            "DERIVATION_DEPTH_PENALTY": 0.0,
+            "AMBIGUITY_PENALTY": 1.0,
+            "DUPLICATE_PATH_PENALTY": 1.0
+          },
+          "penalties": [
+            "Penalización por ambigüedad=1.0",
+            "Penalización por rutas duplicadas=1.0"
+          ]
+        },
+        "second": {
+          "role": "segundo",
+          "number": 22,
+          "classification": "FUERTE_SECUNDARIO",
+          "score": 174.0,
+          "why": "Confirmado T1×T2 pero por debajo del principal en ranking.",
+          "evidence_had": {
+            "table1_sources": [
+              44
+            ],
+            "table2_confirmers": [
+              70
+            ],
+            "independent_paths": 4,
+            "cross_table_support": true
+          },
+          "evidence_lacked": [],
+          "components": {
+            "T1_SOURCE_SUPPORT": 1.0,
+            "T2_CONFIRMATION_SUPPORT": 1.0,
+            "CROSS_TABLE_SUPPORT": 1.0,
+            "MULTIPLE_OBSERVED_SUPPORT": 1.0,
+            "INDEPENDENT_PATH_SUPPORT": 4.0,
+            "DIRECT_PATH_SUPPORT": 4.0,
+            "MULTI_CONFIRMATION_SUPPORT": 0.0,
+            "HISTORICAL_EXACT_RATE": 0.0,
+            "HISTORICAL_D1_D3_RATE": 0.0,
+            "HISTORICAL_D1_D7_RATE": 0.0,
+            "FIRST_POSITION_SUPPORT": 0.0,
+            "ANY_POSITION_SUPPORT": 0.0,
+            "RECENT_PATTERN_SUPPORT": 0.0,
+            "CROSS_LOTTERY_SUPPORT": 0.0,
+            "CHAIN_CONTINUITY_SUPPORT": 0.0,
+            "DERIVATION_DEPTH_PENALTY": 0.0,
+            "AMBIGUITY_PENALTY": 1.0,
+            "DUPLICATE_PATH_PENALTY": 0.0
+          },
+          "penalties": [
+            "Penalización por ambigüedad=1.0"
+          ]
+        },
+        "discarded": [
+          {
+            "role": "descartado_relativo",
+            "number": 59,
+            "classification": "CANDIDATO_PARCIAL",
+            "score": 32.0,
+            "why": "Perfil exige confirmación Tabla 2.",
+            "evidence_had": {
+              "table1_sources": [
+                44
+              ],
+              "table2_confirmers": null,
+              "independent_paths": 1,
+              "cross_table_support": false
+            },
+            "evidence_lacked": [
+              "sin_confirmacion_tabla2",
+              "sin_cruce_t1_t2"
+            ],
+            "components": {
+              "T1_SOURCE_SUPPORT": 1.0,
+              "T2_CONFIRMATION_SUPPORT": 0.0,
+              "CROSS_TABLE_SUPPORT": 0.0,
+              "MULTIPLE_OBSERVED_SUPPORT": 1.0,
+              "INDEPENDENT_PATH_SUPPORT": 1.0,
+              "DIRECT_PATH_SUPPORT": 1.0,
+              "MULTI_CONFIRMATION_SUPPORT": 0.0,
+              "HISTORICAL_EXACT_RATE": 0.0,
+              "HISTORICAL_D1_D3_RATE": 0.0,
+              "HISTORICAL_D1_D7_RATE": 0.0,
+              "FIRST_POSITION_SUPPORT": 0.0,
+              "ANY_POSITION_SUPPORT": 0.0,
+              "RECENT_PATTERN_SUPPORT": 0.0,
+              "CROSS_LOTTERY_SUPPORT": 0.0,
+              "CHAIN_CONTINUITY_SUPPORT": 0.0,
+              "DERIVATION_DEPTH_PENALTY": 2.0,
+              "AMBIGUITY_PENALTY": 0.0,
+              "DUPLICATE_PATH_PENALTY": 0.0
+            },
+            "penalties": [
+              "Penalización por profundidad de derivación=2.0"
+            ]
+          },
+          {
+            "role": "descartado_relativo",
+            "number": 75,
+            "classification": "CANDIDATO_PARCIAL",
+            "score": 32.0,
+            "why": "Perfil exige confirmación Tabla 2.",
+            "evidence_had": {
+              "table1_sources": [
+                44
+              ],
+              "table2_confirmers": null,
+              "independent_paths": 1,
+              "cross_table_support": false
+            },
+            "evidence_lacked": [
+              "sin_confirmacion_tabla2",
+              "sin_cruce_t1_t2"
+            ],
+            "components": {
+              "T1_SOURCE_SUPPORT": 1.0,
+              "T2_CONFIRMATION_SUPPORT": 0.0,
+              "CROSS_TABLE_SUPPORT": 0.0,
+              "MULTIPLE_OBSERVED_SUPPORT": 1.0,
+              "INDEPENDENT_PATH_SUPPORT": 1.0,
+              "DIRECT_PATH_SUPPORT": 1.0,
+              "MULTI_CONFIRMATION_SUPPORT": 0.0,
+              "HISTORICAL_EXACT_RATE": 0.0,
+              "HISTORICAL_D1_D3_RATE": 0.0,
+              "HISTORICAL_D1_D7_RATE": 0.0,
+              "FIRST_POSITION_SUPPORT": 0.0,
+              "ANY_POSITION_SUPPORT": 0.0,
+              "RECENT_PATTERN_SUPPORT": 0.0,
+              "CROSS_LOTTERY_SUPPORT": 0.0,
+              "CHAIN_CONTINUITY_SUPPORT": 0.0,
+              "DERIVATION_DEPTH_PENALTY": 2.0,
+              "AMBIGUITY_PENALTY": 0.0,
+              "DUPLICATE_PATH_PENALTY": 0.0
+            },
+            "penalties": [
+              "Penalización por profundidad de derivación=2.0"
+            ]
+          },
+          {
+            "role": "descartado_relativo",
+            "number": 91,
+            "classification": "CANDIDATO_PARCIAL",
+            "score": 32.0,
+            "why": "Perfil exige confirmación Tabla 2.",
+            "evidence_had": {
+              "table1_sources": [
+                44
+              ],
+              "table2_confirmers": null,
+              "independent_paths": 1,
+              "cross_table_support": false
+            },
+            "evidence_lacked": [
+              "sin_confirmacion_tabla2",
+              "sin_cruce_t1_t2"
+            ],
+            "components": {
+              "T1_SOURCE_SUPPORT": 1.0,
+              "T2_CONFIRMATION_SUPPORT": 0.0,
+              "CROSS_TABLE_SUPPORT": 0.0,
+              "MULTIPLE_OBSERVED_SUPPORT": 1.0,
+              "INDEPENDENT_PATH_SUPPORT": 1.0,
+              "DIRECT_PATH_SUPPORT": 1.0,
+              "MULTI_CONFIRMATION_SUPPORT": 0.0,
+              "HISTORICAL_EXACT_RATE": 0.0,
+              "HISTORICAL_D1_D3_RATE": 0.0,
+              "HISTORICAL_D1_D7_RATE": 0.0,
+              "FIRST_POSITION_SUPPORT": 0.0,
+              "ANY_POSITION_SUPPORT": 0.0,
+              "RECENT_PATTERN_SUPPORT": 0.0,
+              "CROSS_LOTTERY_SUPPORT": 0.0,
+              "CHAIN_CONTINUITY_SUPPORT": 0.0,
+              "DERIVATION_DEPTH_PENALTY": 2.0,
+              "AMBIGUITY_PENALTY": 0.0,
+              "DUPLICATE_PATH_PENALTY": 0.0
+            },
+            "penalties": [
+              "Penalización por profundidad de derivación=2.0"
+            ]
+          },
+          {
+            "role": "descartado_relativo",
+            "number": 40,
+            "classification": "FAMILIA_T1",
+            "score": 12.0,
+            "why": "Solo familia T1; insuficiente para fuerte en perfil actual.",
+            "evidence_had": {
+              "table1_sources": [
+                49
+              ],
+              "table2_confirmers": null,
+              "independent_paths": 1,
+              "cross_table_support": false
+            },
+            "evidence_lacked": [
+              "sin_confirmacion_tabla2",
+              "sin_cruce_t1_t2"
+            ],
+            "components": {
+              "T1_SOURCE_SUPPORT": 1.0,
+              "T2_CONFIRMATION_SUPPORT": 0.0,
+              "CROSS_TABLE_SUPPORT": 0.0,
+              "MULTIPLE_OBSERVED_SUPPORT": 0.0,
+              "INDEPENDENT_PATH_SUPPORT": 1.0,
+              "DIRECT_PATH_SUPPORT": 1.0,
+              "MULTI_CONFIRMATION_SUPPORT": 0.0,
+              "HISTORICAL_EXACT_RATE": 0.0,
+              "HISTORICAL_D1_D3_RATE": 0.0,
+              "HISTORICAL_D1_D7_RATE": 0.0,
+              "FIRST_POSITION_SUPPORT": 0.0,
+              "ANY_POSITION_SUPPORT": 0.0,
+              "RECENT_PATTERN_SUPPORT": 0.0,
+              "CROSS_LOTTERY_SUPPORT": 0.0,
+              "CHAIN_CONTINUITY_SUPPORT": 0.0,
+              "DERIVATION_DEPTH_PENALTY": 0.0,
+              "AMBIGUITY_PENALTY": 0.0,
+              "DUPLICATE_PATH_PENALTY": 0.0
+            },
+            "penalties": []
+          },
+          {
+            "role": "descartado_relativo",
+            "number": 83,
+            "classification": "FAMILIA_T1",
+            "score": 12.0,
+            "why": "Solo familia T1; insuficiente para fuerte en perfil actual.",
+            "evidence_had": {
+              "table1_sources": [
+                49
+              ],
+              "table2_confirmers": null,
+              "independent_paths": 1,
+              "cross_table_support": false
+            },
+            "evidence_lacked": [
+              "sin_confirmacion_tabla2",
+              "sin_cruce_t1_t2"
+            ],
+            "components": {
+              "T1_SOURCE_SUPPORT": 1.0,
+              "T2_CONFIRMATION_SUPPORT": 0.0,
+              "CROSS_TABLE_SUPPORT": 0.0,
+              "MULTIPLE_OBSERVED_SUPPORT": 0.0,
+              "INDEPENDENT_PATH_SUPPORT": 1.0,
+              "DIRECT_PATH_SUPPORT": 1.0,
+              "MULTI_CONFIRMATION_SUPPORT": 0.0,
+              "HISTORICAL_EXACT_RATE": 0.0,
+              "HISTORICAL_D1_D3_RATE": 0.0,
+              "HISTORICAL_D1_D7_RATE": 0.0,
+              "FIRST_POSITION_SUPPORT": 0.0,
+              "ANY_POSITION_SUPPORT": 0.0,
+              "RECENT_PATTERN_SUPPORT": 0.0,
+              "CROSS_LOTTERY_SUPPORT": 0.0,
+              "CHAIN_CONTINUITY_SUPPORT": 0.0,
+              "DERIVATION_DEPTH_PENALTY": 0.0,
+              "AMBIGUITY_PENALTY": 0.0,
+              "DUPLICATE_PATH_PENALTY": 0.0
+            },
+            "penalties": []
+          },
+          {
+            "role": "descartado_relativo",
+            "number": 57,
+            "classification": "DERIVACION_RELEVANTE",
+            "score": -40.0,
+            "why": "Derivación relevante; no fuerte principal en perfil estricto.",
+            "evidence_had": {
+              "table1_sources": null,
+              "table2_confirmers": null,
+              "independent_paths": 0,
+              "cross_table_support": false
+            },
+            "evidence_lacked": [
+              "sin_fuente_tabla1",
+              "sin_confirmacion_tabla2",
+              "sin_cruce_t1_t2"
+            ],
+            "components": {
+              "T1_SOURCE_SUPPORT": 0.0,
+              "T2_CONFIRMATION_SUPPORT": 0.0,
+              "CROSS_TABLE_SUPPORT": 0.0,
+              "MULTIPLE_OBSERVED_SUPPORT": 1.0,
+              "INDEPENDENT_PATH_SUPPORT": 0.0,
+              "DIRECT_PATH_SUPPORT": 0.0,
+              "MULTI_CONFIRMATION_SUPPORT": 0.0,
+              "HISTORICAL_EXACT_RATE": 0.0,
+              "HISTORICAL_D1_D3_RATE": 0.0,
+              "HISTORICAL_D1_D7_RATE": 0.0,
+              "FIRST_POSITION_SUPPORT": 0.0,
+              "ANY_POSITION_SUPPORT": 0.0,
+              "RECENT_PATTERN_SUPPORT": 0.0,
+              "CROSS_LOTTERY_SUPPORT": 0.0,
+              "CHAIN_CONTINUITY_SUPPORT": 0.0,
+              "DERIVATION_DEPTH_PENALTY": 1.0,
+              "AMBIGUITY_PENALTY": 0.0,
+              "DUPLICATE_PATH_PENALTY": 0.0
+            },
+            "penalties": [
+              "Penalización por profundidad de derivación=1.0"
+            ]
+          }
+        ],
+        "summary": "Primero 35 por mayor respaldo estructural (FUERTE_PRINCIPAL). Segundo 22."
+      },
+      "evidence_summary": {
+        "table1_sources": [
+          49
+        ],
+        "table2_confirmers": [
+          44,
+          70
+        ],
+        "independent_paths": 5,
+        "cross_table_support": true,
+        "multi_source_support": true
+      },
+      "graph_complete_before_discovery": true
+    }
+  },
+  "production_modified": false,
+  "ml_decides_fuerte": false,
+  "rule_inventory": {
+    "version": "phase2-rule-inventory-1.0",
+    "rules": [
+      {
+        "id": "R01_FULL_GRAPH_BEFORE_DISCOVERY",
+        "statement": "Construir grafo completo de todos los observados antes de descubrir candidatos.",
+        "status": "confirmada_por_evidencia",
+        "evidence": "tests graph_complete_before_discovery; stages ordenados"
+      },
+      {
+        "id": "R02_T1_MOTHER_COMPANIONS",
+        "statement": "Tabla 1: número observado como código madre → compañeros T1.",
+        "status": "confirmada_por_evidencia",
+        "evidence": "fórmulas validadas + reconstrucción M1/M4/M5"
+      },
+      {
+        "id": "R03_T2_CONFIRMATION",
+        "statement": "Tabla 2: confirmador = observado ∈ vecinos T2 del candidato T1.",
+        "status": "confirmada_por_evidencia",
+        "evidence": "strengthen_official geometry; M1/M3/M4/M5"
+      },
+      {
+        "id": "R04_NO_EARLY_GREEDY",
+        "statement": "Prohibido elegir el primer match T1+confirmación sin comparar alternativas.",
+        "status": "confirmada_por_evidencia",
+        "evidence": "orchestrator + tests anti-greedy"
+      },
+      {
+        "id": "R05_COMPANION_NEIGHBOR_SEPARATION",
+        "statement": "COMPAÑERO_T1 ≠ VECINO_T2; no reetiquetar.",
+        "status": "confirmada_por_evidencia",
+        "evidence": "M5 labeling tests; guardrail NO_TABLE_CONFUSION"
+      },
+      {
+        "id": "R06_FUERTE_REQUIRES_T1xT2_STRICT",
+        "statement": "En perfiles estricto/socio, FUERTE_PRINCIPAL requiere T1 + confirmación T2.",
+        "status": "confirmada_por_evidencia",
+        "evidence": "perfil_socio methodology_match_rate=0.944"
+      },
+      {
+        "id": "R07_DIRECT_T2_SEPARATE",
+        "statement": "VECINO_T2_DIRECTO se clasifica aparte y no se eleva a fuerte oficial.",
+        "status": "confirmada_por_evidencia",
+        "evidence": "M2 41+62→75"
+      },
+      {
+        "id": "R08_T2_GROUP_SPECIFICITY",
+        "statement": "Entre varios VECINO_T2_DIRECTO, preferir grupos T2 más pequeños.",
+        "status": "inferida",
+        "evidence": "calibración ad-hoc para M2; pendiente validación ciega amplia"
+      },
+      {
+        "id": "R09_DERIVATION_DEPTH_CAP",
+        "statement": "Derivaciones limitadas a profundidad ≤ 2 con penalización.",
+        "status": "regla_pendiente_de_validacion",
+        "evidence": "implementada; aporte predictivo no demostrado vs sin_derivaciones"
+      },
+      {
+        "id": "R10_MULTI_CONFIRMER_BOOST",
+        "statement": "Más confirmadores T2 aumentan score (MULTI_CONFIRMATION_SUPPORT).",
+        "status": "inferida",
+        "evidence": "M3 35 tiene 2 confirmadores vs 22 con 1"
+      },
+      {
+        "id": "R11_DEFAULT_FIRST_POSITION",
+        "statement": "Si no se especifica posición, usar primera.",
+        "status": "confirmada_por_evidencia",
+        "evidence": "input_normalizer + tests"
+      },
+      {
+        "id": "R12_SAME_DAY_CHAIN",
+        "statement": "Tras cumplimiento, se puede abrir nuevo análisis el mismo día.",
+        "status": "inferida",
+        "evidence": "reconstrucción workflow junio 2026; no es fórmula de fuerte"
+      },
+      {
+        "id": "R13_PARTIAL_SELECTION_MULTI_FUERTE",
+        "statement": "Cuando hay varios oficiales el mismo día, el socio elige un subconjunto (p.ej. solo 29).",
+        "status": "hipotesis",
+        "evidence": "analyst_workflow — pendiente formalizar"
+      },
+      {
+        "id": "R14_WEIGHT_PROFILE_SOCIO",
+        "statement": "Pesos del perfil socio reproducen mejor el fuerte histórico oficial.",
+        "status": "regla_pendiente_de_validacion",
+        "evidence": "se completa tras calibration lab de esta fase"
+      },
+      {
+        "id": "R15_NO_ML_FOR_FUERTE",
+        "statement": "La decisión del fuerte es determinística; ML solo mide/compara.",
+        "status": "confirmada_por_evidencia",
+        "evidence": "arquitectura Phase 2 / Fase J"
+      }
+    ],
+    "pending_to_discover": [
+      "Regla de desempate cuando hay ≥2 FUERTE_OFICIAL el mismo día",
+      "Política de inclusión de posiciones 2/3 en entradas",
+      "Cuándo el socio ignora un oficial con menos confirmadores",
+      "Cadenas F→F+1 día siguiente más allá del cierre simple",
+      "Uso real de derivaciones nivel 2 en análisis manuales"
+    ]
+  },
+  "dashboard": {
+    "title": "Scientific Validation Dashboard — NR Motor",
+    "total_analyses": 250,
+    "total_signals": 250,
+    "exact_D1": 52,
+    "exact_D3": 28,
+    "exact_D7": 17,
+    "exact_D1_D3": 117,
+    "exact_D1_D7": 194,
+    "methodology_match_rate": 0.944,
+    "fulfillment_by_lottery": {
+      "Quiniela Leidsa": {
+        "n": 33,
+        "match_rate": 0.9393939393939394
+      },
+      "Gana Mas": {
+        "n": 38,
+        "match_rate": 0.9473684210526315
+      },
+      "Quiniela Real": {
+        "n": 32,
+        "match_rate": 0.90625
+      },
+      "Loteria Nacional": {
+        "n": 34,
+        "match_rate": 0.9117647058823529
+      },
+      "New York 2:30": {
+        "n": 32,
+        "match_rate": 1.0
+      },
+      "New York 10:30": {
+        "n": 46,
+        "match_rate": 0.9782608695652174
+      },
+      "Quiniela Loteka": {
+        "n": 35,
+        "match_rate": 0.9142857142857143
+      }
+    },
+    "fulfillment_by_position": {
+      "1": {
+        "n": 248,
+        "match_rate": 0.9475806451612904
+      },
+      "2": {
+        "n": 2,
+        "match_rate": 0.5
+      }
+    },
+    "errors": {
+      "n_failures": 14,
+      "failure_rate": 0.056,
+      "patterns": {
+        "HIST_IN_ALTERNATIVES": 14,
+        "HIST_FUERTE_IN_ALTERNATIVES": 14
+      }
+    },
+    "rule_ranking": [
+      {
+        "id": "R01_FULL_GRAPH_BEFORE_DISCOVERY",
+        "status": "confirmada_por_evidencia",
+        "statement": "Construir grafo completo de todos los observados antes de descubrir candidatos."
+      },
+      {
+        "id": "R02_T1_MOTHER_COMPANIONS",
+        "status": "confirmada_por_evidencia",
+        "statement": "Tabla 1: número observado como código madre → compañeros T1."
+      },
+      {
+        "id": "R03_T2_CONFIRMATION",
+        "status": "confirmada_por_evidencia",
+        "statement": "Tabla 2: confirmador = observado ∈ vecinos T2 del candidato T1."
+      },
+      {
+        "id": "R04_NO_EARLY_GREEDY",
+        "status": "confirmada_por_evidencia",
+        "statement": "Prohibido elegir el primer match T1+confirmación sin comparar alternativas."
+      },
+      {
+        "id": "R05_COMPANION_NEIGHBOR_SEPARATION",
+        "status": "confirmada_por_evidencia",
+        "statement": "COMPAÑERO_T1 ≠ VECINO_T2; no reetiquetar."
+      },
+      {
+        "id": "R06_FUERTE_REQUIRES_T1xT2_STRICT",
+        "status": "confirmada_por_evidencia",
+        "statement": "En perfiles estricto/socio, FUERTE_PRINCIPAL requiere T1 + confirmación T2."
+      },
+      {
+        "id": "R07_DIRECT_T2_SEPARATE",
+        "status": "confirmada_por_evidencia",
+        "statement": "VECINO_T2_DIRECTO se clasifica aparte y no se eleva a fuerte oficial."
+      },
+      {
+        "id": "R08_T2_GROUP_SPECIFICITY",
+        "status": "inferida",
+        "statement": "Entre varios VECINO_T2_DIRECTO, preferir grupos T2 más pequeños."
+      },
+      {
+        "id": "R09_DERIVATION_DEPTH_CAP",
+        "status": "regla_pendiente_de_validacion",
+        "statement": "Derivaciones limitadas a profundidad ≤ 2 con penalización."
+      },
+      {
+        "id": "R10_MULTI_CONFIRMER_BOOST",
+        "status": "inferida",
+        "statement": "Más confirmadores T2 aumentan score (MULTI_CONFIRMATION_SUPPORT)."
+      },
+      {
+        "id": "R11_DEFAULT_FIRST_POSITION",
+        "status": "confirmada_por_evidencia",
+        "statement": "Si no se especifica posición, usar primera."
+      },
+      {
+        "id": "R12_SAME_DAY_CHAIN",
+        "status": "inferida",
+        "statement": "Tras cumplimiento, se puede abrir nuevo análisis el mismo día."
+      },
+      {
+        "id": "R13_PARTIAL_SELECTION_MULTI_FUERTE",
+        "status": "hipotesis",
+        "statement": "Cuando hay varios oficiales el mismo día, el socio elige un subconjunto (p.ej. solo 29)."
+      },
+      {
+        "id": "R14_WEIGHT_PROFILE_SOCIO",
+        "status": "regla_pendiente_de_validacion",
+        "statement": "Pesos del perfil socio reproducen mejor el fuerte histórico oficial."
+      },
+      {
+        "id": "R15_NO_ML_FOR_FUERTE",
+        "status": "confirmada_por_evidencia",
+        "statement": "La decisión del fuerte es determinística; ML solo mide/compara."
+      }
+    ],
+    "most_successful_rules": [
+      {
+        "id": "R01_FULL_GRAPH_BEFORE_DISCOVERY",
+        "statement": "Construir grafo completo de todos los observados antes de descubrir candidatos.",
+        "status": "confirmada_por_evidencia",
+        "evidence": "tests graph_complete_before_discovery; stages ordenados"
+      },
+      {
+        "id": "R02_T1_MOTHER_COMPANIONS",
+        "statement": "Tabla 1: número observado como código madre → compañeros T1.",
+        "status": "confirmada_por_evidencia",
+        "evidence": "fórmulas validadas + reconstrucción M1/M4/M5"
+      },
+      {
+        "id": "R03_T2_CONFIRMATION",
+        "statement": "Tabla 2: confirmador = observado ∈ vecinos T2 del candidato T1.",
+        "status": "confirmada_por_evidencia",
+        "evidence": "strengthen_official geometry; M1/M3/M4/M5"
+      },
+      {
+        "id": "R04_NO_EARLY_GREEDY",
+        "statement": "Prohibido elegir el primer match T1+confirmación sin comparar alternativas.",
+        "status": "confirmada_por_evidencia",
+        "evidence": "orchestrator + tests anti-greedy"
+      },
+      {
+        "id": "R05_COMPANION_NEIGHBOR_SEPARATION",
+        "statement": "COMPAÑERO_T1 ≠ VECINO_T2; no reetiquetar.",
+        "status": "confirmada_por_evidencia",
+        "evidence": "M5 labeling tests; guardrail NO_TABLE_CONFUSION"
+      },
+      {
+        "id": "R06_FUERTE_REQUIRES_T1xT2_STRICT",
+        "statement": "En perfiles estricto/socio, FUERTE_PRINCIPAL requiere T1 + confirmación T2.",
+        "status": "confirmada_por_evidencia",
+        "evidence": "perfil_socio methodology_match_rate=0.944"
+      },
+      {
+        "id": "R07_DIRECT_T2_SEPARATE",
+        "statement": "VECINO_T2_DIRECTO se clasifica aparte y no se eleva a fuerte oficial.",
+        "status": "confirmada_por_evidencia",
+        "evidence": "M2 41+62→75"
+      },
+      {
+        "id": "R11_DEFAULT_FIRST_POSITION",
+        "statement": "Si no se especifica posición, usar primera.",
+        "status": "confirmada_por_evidencia",
+        "evidence": "input_normalizer + tests"
+      },
+      {
+        "id": "R15_NO_ML_FOR_FUERTE",
+        "statement": "La decisión del fuerte es determinística; ML solo mide/compara.",
+        "status": "confirmada_por_evidencia",
+        "evidence": "arquitectura Phase 2 / Fase J"
+      }
+    ],
+    "least_successful_or_pending": [
+      {
+        "id": "R08_T2_GROUP_SPECIFICITY",
+        "statement": "Entre varios VECINO_T2_DIRECTO, preferir grupos T2 más pequeños.",
+        "status": "inferida",
+        "evidence": "calibración ad-hoc para M2; pendiente validación ciega amplia"
+      },
+      {
+        "id": "R09_DERIVATION_DEPTH_CAP",
+        "statement": "Derivaciones limitadas a profundidad ≤ 2 con penalización.",
+        "status": "regla_pendiente_de_validacion",
+        "evidence": "implementada; aporte predictivo no demostrado vs sin_derivaciones"
+      },
+      {
+        "id": "R10_MULTI_CONFIRMER_BOOST",
+        "statement": "Más confirmadores T2 aumentan score (MULTI_CONFIRMATION_SUPPORT).",
+        "status": "inferida",
+        "evidence": "M3 35 tiene 2 confirmadores vs 22 con 1"
+      },
+      {
+        "id": "R12_SAME_DAY_CHAIN",
+        "statement": "Tras cumplimiento, se puede abrir nuevo análisis el mismo día.",
+        "status": "inferida",
+        "evidence": "reconstrucción workflow junio 2026; no es fórmula de fuerte"
+      },
+      {
+        "id": "R13_PARTIAL_SELECTION_MULTI_FUERTE",
+        "statement": "Cuando hay varios oficiales el mismo día, el socio elige un subconjunto (p.ej. solo 29).",
+        "status": "hipotesis",
+        "evidence": "analyst_workflow — pendiente formalizar"
+      },
+      {
+        "id": "R14_WEIGHT_PROFILE_SOCIO",
+        "statement": "Pesos del perfil socio reproducen mejor el fuerte histórico oficial.",
+        "status": "regla_pendiente_de_validacion",
+        "evidence": "se completa tras calibration lab de esta fase"
+      }
+    ],
+    "calibration_ranking": [
+      {
+        "profile": "perfil_conservador",
+        "methodology_match_rate": 0.944,
+        "exact_D1_D7": 194,
+        "exact_D1_D3": 117,
+        "failures": 14
+      },
+      {
+        "profile": "perfil_balanceado",
+        "methodology_match_rate": 0.944,
+        "exact_D1_D7": 194,
+        "exact_D1_D3": 117,
+        "failures": 14
+      },
+      {
+        "profile": "perfil_agresivo",
+        "methodology_match_rate": 0.944,
+        "exact_D1_D7": 194,
+        "exact_D1_D3": 117,
+        "failures": 14
+      },
+      {
+        "profile": "perfil_socio",
+        "methodology_match_rate": 0.944,
+        "exact_D1_D7": 194,
+        "exact_D1_D3": 117,
+        "failures": 14
+      },
+      {
+        "profile": "perfil_experimental",
+        "methodology_match_rate": 0.944,
+        "exact_D1_D7": 194,
+        "exact_D1_D3": 117,
+        "failures": 14
+      }
+    ],
+    "best_profile": "perfil_conservador",
+    "benchmark_table": [
+      {
+        "variant": "motor_actual",
+        "n": 250,
+        "methodology_match_rate": 0.944,
+        "exact_D+1": 52,
+        "exact_D1_D3": 117,
+        "exact_D1_D7": 194,
+        "failures": 14
+      },
+      {
+        "variant": "sin_derivaciones",
+        "n": 250,
+        "methodology_match_rate": 0.944,
+        "exact_D+1": 52,
+        "exact_D1_D3": 117,
+        "exact_D1_D7": 194,
+        "failures": 14
+      },
+      {
+        "variant": "perfil_socio",
+        "n": 250,
+        "methodology_match_rate": 0.944,
+        "exact_D+1": 52,
+        "exact_D1_D3": 117,
+        "exact_D1_D7": 194,
+        "failures": 14
+      },
+      {
+        "variant": "perfil_experimental",
+        "n": 250,
+        "methodology_match_rate": 0.944,
+        "exact_D+1": 52,
+        "exact_D1_D3": 117,
+        "exact_D1_D7": 194,
+        "failures": 14
+      },
+      {
+        "variant": "sin_tabla2",
+        "n": 250,
+        "methodology_match_rate": 0.216,
+        "exact_D+1": 11,
+        "exact_D1_D3": 28,
+        "exact_D1_D7": 47,
+        "failures": 196
+      },
+      {
+        "variant": "solo_tabla1",
+        "n": 250,
+        "methodology_match_rate": 0.216,
+        "exact_D+1": 11,
+        "exact_D1_D3": 28,
+        "exact_D1_D7": 47,
+        "failures": 196
+      }
+    ],
+    "best_variant": "motor_actual",
+    "production_modified": false,
+    "ml_decides_fuerte": false
+  }
+}

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8"/>
+<title>Scientific Validation Dashboard — NR Motor</title>
+<style>
+body{font-family:Georgia,serif;background:#f4f1ea;color:#1c2420;margin:2rem}
+h1{font-size:1.8rem} .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1rem}
+.card{background:#fff;border:1px solid #d5ddd7;padding:1rem;border-radius:6px}
+table{border-collapse:collapse;width:100%;background:#fff} th,td{border:1px solid #ccc;padding:.4rem;font-size:.9rem}
+.muted{opacity:.75;font-size:.9rem}
+</style></head><body>
+<h1>Dashboard — Validación Científica NR</h1>
+<p class="muted">Producción no modificada · Decisión del fuerte determinística (sin ML)</p>
+<div class="grid">
+<div class="card"><strong>Total análisis</strong><div>250</div></div>
+<div class="card"><strong>Exactos D+1</strong><div>52</div></div>
+<div class="card"><strong>Exactos D+3</strong><div>28</div></div>
+<div class="card"><strong>Exactos D+7</strong><div>17</div></div>
+<div class="card"><strong>Match metodológico</strong><div>0.944</div></div>
+<div class="card"><strong>Mejor perfil</strong><div>perfil_conservador</div></div>
+<div class="card"><strong>Errores</strong><div>14</div></div>
+</div>
+<h2>Benchmark de variantes</h2>
+<table><thead><tr><th>Variante</th><th>Match</th><th>D+1</th><th>D1–D3</th><th>D1–D7</th><th>Fallos</th></tr></thead>
+<tbody><tr><td>motor_actual</td><td>0.944</td><td>52</td><td>117</td><td>194</td><td>14</td></tr><tr><td>sin_derivaciones</td><td>0.944</td><td>52</td><td>117</td><td>194</td><td>14</td></tr><tr><td>perfil_socio</td><td>0.944</td><td>52</td><td>117</td><td>194</td><td>14</td></tr><tr><td>perfil_experimental</td><td>0.944</td><td>52</td><td>117</td><td>194</td><td>14</td></tr><tr><td>sin_tabla2</td><td>0.216</td><td>11</td><td>28</td><td>47</td><td>196</td></tr><tr><td>solo_tabla1</td><td>0.216</td><td>11</td><td>28</td><td>47</td><td>196</td></tr></tbody></table>
+<h2>Patrones de error</h2>
+<pre>{
+  "HIST_IN_ALTERNATIVES": 14,
+  "HIST_FUERTE_IN_ALTERNATIVES": 14
+}</pre>
+<h2>Reglas confirmadas</h2>
+<ul><li><code>R01_FULL_GRAPH_BEFORE_DISCOVERY</code> — Construir grafo completo de todos los observados antes de descubrir candidatos.</li><li><code>R02_T1_MOTHER_COMPANIONS</code> — Tabla 1: número observado como código madre → compañeros T1.</li><li><code>R03_T2_CONFIRMATION</code> — Tabla 2: confirmador = observado ∈ vecinos T2 del candidato T1.</li><li><code>R04_NO_EARLY_GREEDY</code> — Prohibido elegir el primer match T1+confirmación sin comparar alternativas.</li><li><code>R05_COMPANION_NEIGHBOR_SEPARATION</code> — COMPAÑERO_T1 ≠ VECINO_T2; no reetiquetar.</li><li><code>R06_FUERTE_REQUIRES_T1xT2_STRICT</code> — En perfiles estricto/socio, FUERTE_PRINCIPAL requiere T1 + confirmación T2.</li><li><code>R07_DIRECT_T2_SEPARATE</code> — VECINO_T2_DIRECTO se clasifica aparte y no se eleva a fuerte oficial.</li><li><code>R11_DEFAULT_FIRST_POSITION</code> — Si no se especifica posición, usar primera.</li><li><code>R15_NO_ML_FOR_FUERTE</code> — La decisión del fuerte es determinística; ML solo mide/compara.</li></ul>
+<h2>Pendientes / hipótesis</h2>
+<ul><li><code>R08_T2_GROUP_SPECIFICITY</code> [inferida] — Entre varios VECINO_T2_DIRECTO, preferir grupos T2 más pequeños.</li><li><code>R09_DERIVATION_DEPTH_CAP</code> [regla_pendiente_de_validacion] — Derivaciones limitadas a profundidad ≤ 2 con penalización.</li><li><code>R10_MULTI_CONFIRMER_BOOST</code> [inferida] — Más confirmadores T2 aumentan score (MULTI_CONFIRMATION_SUPPORT).</li><li><code>R12_SAME_DAY_CHAIN</code> [inferida] — Tras cumplimiento, se puede abrir nuevo análisis el mismo día.</li><li><code>R13_PARTIAL_SELECTION_MULTI_FUERTE</code> [hipotesis] — Cuando hay varios oficiales el mismo día, el socio elige un subconjunto (p.ej. solo 29).</li><li><code>R14_WEIGHT_PROFILE_SOCIO</code> [regla_pendiente_de_validacion] — Pesos del perfil socio reproducen mejor el fuerte histórico oficial.</li></ul>
+</body></html>

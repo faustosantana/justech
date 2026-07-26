@@ -46,6 +46,7 @@ def run_complete_analysis(
     *,
     catalog: TableCatalog | None = None,
     persist: bool = True,
+    include_table2: bool | None = None,
 ) -> CompleteAnalysisResult:
     stages: list[str] = []
     cat = catalog or build_catalog()
@@ -55,12 +56,16 @@ def run_complete_analysis(
     analysis_id = new_id("an")
     observed = unique_observed(req.numbers)
     date_s = req.date.isoformat() if req.date else None
+    use_t2 = True if include_table2 is None else bool(include_table2)
+    if isinstance(request, dict) and "include_table2" in request:
+        use_t2 = bool(request["include_table2"])
 
     # --- FULL GRAPH (no candidate selection) ---
     graph = build_complete_relationship_graph(
         observed,
         catalog=cat,
         derivation_depth=req.derivation_depth,
+        include_table2=use_t2,
         date=date_s,
         position=",".join(req.positions),
     )

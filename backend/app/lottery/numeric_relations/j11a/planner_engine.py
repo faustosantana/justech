@@ -57,6 +57,9 @@ def build_plan(intent: IntentResult, memory: SessionMemory | None = None) -> Pla
     elif intent.intent == "EXPLAIN_CONFIDENCE":
         add("Obtener candidato", "get_candidate_evidence", candidate=intent.candidate)
         add("Explicar confianza analítica (no probabilidad)")
+    elif intent.intent == "INVESTIGATE":
+        add("Cargar artefactos Fase 2", "investigate_phase2")
+        add("Responder con evidencia empírica únicamente")
     elif intent.intent == "FOLLOW_UP_CONTEXT":
         add("Resolver referencia con memoria de sesión")
         add("Consultar motor / store", "get_analysis")

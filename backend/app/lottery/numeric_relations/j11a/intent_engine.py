@@ -37,6 +37,37 @@ def detect_intent(message: str, memory: SessionMemory | None = None) -> IntentRe
     elif any(k in low for k in ("completo", "analítico", "analitico", "análisis completo")):
         level = ExplanationLevel.ANALYTICAL.value
 
+    # Investigator mode (Phase 2 scientific validation)
+    if any(
+        k in low
+        for k in (
+            "modo investigador",
+            "qué regla",
+            "que regla",
+            "regla hizo ganar",
+            "regla falla",
+            "falla más",
+            "falla mas",
+            "errores del",
+            "patrón nuevo",
+            "patron nuevo",
+            "descubriste",
+            "mejor perfil",
+            "segunda mejor",
+            "calibración",
+            "calibracion",
+            "benchmark científico",
+            "benchmark cientifico",
+        )
+    ):
+        return IntentResult(
+            intent="INVESTIGATE",
+            numbers=nums,
+            candidate=nums[0] if nums else None,
+            raw=text,
+            explanation_level=level,
+        )
+
     # Follow-up references
     if any(
         k in low

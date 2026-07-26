@@ -106,6 +106,46 @@ WEIGHT_PROFILES: dict[str, dict[str, float]] = {
     },
 }
 
+# Calibration lab aliases (Phase 2) — still deterministic ranking, not ML.
+WEIGHT_PROFILES["conservador"] = {
+    **WEIGHT_PROFILES[RankProfile.STRICT.value],
+    "DERIVATION_DEPTH_PENALTY": -8.0,
+    "AMBIGUITY_PENALTY": -10.0,
+    "HISTORICAL_EXACT_RATE": 2.0,
+}
+WEIGHT_PROFILES["balanceado"] = dict(WEIGHT_PROFILES[RankProfile.MANUAL_RECONSTRUCTED.value])
+WEIGHT_PROFILES["agresivo"] = {
+    **WEIGHT_PROFILES[RankProfile.BROAD.value],
+    "HISTORICAL_EXACT_RATE": 12.0,
+    "HISTORICAL_D1_D3_RATE": 10.0,
+    "DERIVATION_DEPTH_PENALTY": -1.0,
+    "require_t1": 0.0,
+    "require_t2": 0.0,
+}
+WEIGHT_PROFILES["socio"] = dict(WEIGHT_PROFILES[RankProfile.MANUAL_RECONSTRUCTED.value])
+WEIGHT_PROFILES["perfil_socio"] = WEIGHT_PROFILES["socio"]
+
+
+def resolve_profile(profile: str | None) -> str:
+    if not profile:
+        return RankProfile.MANUAL_RECONSTRUCTED.value
+    p = str(profile).strip().lower()
+    aliases = {
+        "strict": RankProfile.STRICT.value,
+        "estricto": RankProfile.STRICT.value,
+        "conservador": "conservador",
+        "balanceado": "balanceado",
+        "agresivo": "agresivo",
+        "socio": "socio",
+        "perfil_socio": "socio",
+        "manual": RankProfile.MANUAL_RECONSTRUCTED.value,
+        "manual_reconstruido": RankProfile.MANUAL_RECONSTRUCTED.value,
+        "amplio": RankProfile.BROAD.value,
+        "broad": RankProfile.BROAD.value,
+        "experimental": RankProfile.EXPERIMENTAL.value,
+    }
+    return aliases.get(p, p)
+
 
 def _rate(hits: int, total: int) -> float:
     if total <= 0:
@@ -222,6 +262,7 @@ def rank_all_candidates(
     *,
     profile: str = RankProfile.MANUAL_RECONSTRUCTED.value,
 ) -> list[RankedCandidate]:
+    profile = resolve_profile(profile)
     weights = WEIGHT_PROFILES.get(profile) or WEIGHT_PROFILES[RankProfile.MANUAL_RECONSTRUCTED.value]
     catalog = build_catalog()
 
@@ -243,6 +284,9 @@ def rank_all_candidates(
         if profile in {
             RankProfile.STRICT.value,
             RankProfile.MANUAL_RECONSTRUCTED.value,
+            "conservador",
+            "balanceado",
+            "socio",
         }:
             if prov == Classification.VECINO_T2_DIRECTO.value:
                 total -= 50.0 if has_official_shape else -15.0

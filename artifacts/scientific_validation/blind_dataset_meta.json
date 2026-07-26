@@ -1,0 +1,60 @@
+{
+  "seed": 20260726,
+  "source": "/Users/faustosantana/Projects/justech-forensic-audit/artifacts/deep_mathematical_audit/all_activations.csv",
+  "methodology_note": "Blind set built from historical official T1×T2 activations. Manual partner cases excluded from train/val/test; reserved as benchmark.",
+  "excluded_manual_rows": 40,
+  "total_scenarios": 2437,
+  "counts": {
+    "train": 1462,
+    "validation": 487,
+    "test": 488
+  },
+  "date_range": {
+    "min": "2019-07-24",
+    "max": "2026-07-14"
+  },
+  "manual_benchmark_reserved": [
+    {
+      "id": "M1",
+      "numbers": [
+        41,
+        41,
+        70
+      ],
+      "expected": 29
+    },
+    {
+      "id": "M2",
+      "numbers": [
+        41,
+        62
+      ],
+      "expected": 75
+    },
+    {
+      "id": "M3",
+      "numbers": [
+        49,
+        44,
+        70
+      ],
+      "expected": 35
+    },
+    {
+      "id": "M4",
+      "numbers": [
+        35,
+        14
+      ],
+      "expected": 54
+    },
+    {
+      "id": "M5",
+      "numbers": [
+        39,
+        58
+      ],
+      "expected": 94
+    }
+  ]
+}

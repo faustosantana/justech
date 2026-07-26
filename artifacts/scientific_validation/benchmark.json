@@ -1,0 +1,182 @@
+{
+  "blind_benchmark_table": [
+    {
+      "variant": "motor_actual",
+      "n": 250,
+      "methodology_match_rate": 0.944,
+      "exact_D+1": 52,
+      "exact_D1_D3": 117,
+      "exact_D1_D7": 194,
+      "failures": 14
+    },
+    {
+      "variant": "sin_derivaciones",
+      "n": 250,
+      "methodology_match_rate": 0.944,
+      "exact_D+1": 52,
+      "exact_D1_D3": 117,
+      "exact_D1_D7": 194,
+      "failures": 14
+    },
+    {
+      "variant": "perfil_socio",
+      "n": 250,
+      "methodology_match_rate": 0.944,
+      "exact_D+1": 52,
+      "exact_D1_D3": 117,
+      "exact_D1_D7": 194,
+      "failures": 14
+    },
+    {
+      "variant": "perfil_experimental",
+      "n": 250,
+      "methodology_match_rate": 0.944,
+      "exact_D+1": 52,
+      "exact_D1_D3": 117,
+      "exact_D1_D7": 194,
+      "failures": 14
+    },
+    {
+      "variant": "sin_tabla2",
+      "n": 250,
+      "methodology_match_rate": 0.216,
+      "exact_D+1": 11,
+      "exact_D1_D3": 28,
+      "exact_D1_D7": 47,
+      "failures": 196
+    },
+    {
+      "variant": "solo_tabla1",
+      "n": 250,
+      "methodology_match_rate": 0.216,
+      "exact_D+1": 11,
+      "exact_D1_D3": 28,
+      "exact_D1_D7": 47,
+      "failures": 196
+    }
+  ],
+  "best_blind_variant": "motor_actual",
+  "manual_benchmark_final": [
+    {
+      "case": "M1",
+      "variant": "perfil_socio",
+      "expected": 29,
+      "produced": 29,
+      "match": true,
+      "classification": "FUERTE_PRINCIPAL"
+    },
+    {
+      "case": "M1",
+      "variant": "motor_actual",
+      "expected": 29,
+      "produced": 29,
+      "match": true,
+      "classification": "FUERTE_PRINCIPAL"
+    },
+    {
+      "case": "M1",
+      "variant": "sin_derivaciones",
+      "expected": 29,
+      "produced": 29,
+      "match": true,
+      "classification": "FUERTE_PRINCIPAL"
+    },
+    {
+      "case": "M2",
+      "variant": "perfil_socio",
+      "expected": 75,
+      "produced": 75,
+      "match": true,
+      "classification": "VECINO_T2_DIRECTO"
+    },
+    {
+      "case": "M2",
+      "variant": "motor_actual",
+      "expected": 75,
+      "produced": 75,
+      "match": true,
+      "classification": "VECINO_T2_DIRECTO"
+    },
+    {
+      "case": "M2",
+      "variant": "sin_derivaciones",
+      "expected": 75,
+      "produced": 75,
+      "match": true,
+      "classification": "VECINO_T2_DIRECTO"
+    },
+    {
+      "case": "M3",
+      "variant": "perfil_socio",
+      "expected": 35,
+      "produced": 35,
+      "match": true,
+      "classification": "FUERTE_PRINCIPAL"
+    },
+    {
+      "case": "M3",
+      "variant": "motor_actual",
+      "expected": 35,
+      "produced": 35,
+      "match": true,
+      "classification": "FUERTE_PRINCIPAL"
+    },
+    {
+      "case": "M3",
+      "variant": "sin_derivaciones",
+      "expected": 35,
+      "produced": 35,
+      "match": true,
+      "classification": "FUERTE_PRINCIPAL"
+    },
+    {
+      "case": "M4",
+      "variant": "perfil_socio",
+      "expected": 54,
+      "produced": 54,
+      "match": true,
+      "classification": "FUERTE_PRINCIPAL"
+    },
+    {
+      "case": "M4",
+      "variant": "motor_actual",
+      "expected": 54,
+      "produced": 54,
+      "match": true,
+      "classification": "FUERTE_PRINCIPAL"
+    },
+    {
+      "case": "M4",
+      "variant": "sin_derivaciones",
+      "expected": 54,
+      "produced": 54,
+      "match": true,
+      "classification": "FUERTE_PRINCIPAL"
+    },
+    {
+      "case": "M5",
+      "variant": "perfil_socio",
+      "expected": 94,
+      "produced": 94,
+      "match": true,
+      "classification": "FUERTE_PRINCIPAL"
+    },
+    {
+      "case": "M5",
+      "variant": "motor_actual",
+      "expected": 94,
+      "produced": 94,
+      "match": true,
+      "classification": "FUERTE_PRINCIPAL"
+    },
+    {
+      "case": "M5",
+      "variant": "sin_derivaciones",
+      "expected": 94,
+      "produced": 94,
+      "match": true,
+      "classification": "FUERTE_PRINCIPAL"
+    }
+  ],
+  "note": "Casos manuales solo como benchmark final. Mejor variante ciega según match metodológico, no ML."
+}

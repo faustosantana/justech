@@ -121,6 +121,7 @@ def build_complete_relationship_graph(
     *,
     catalog: TableCatalog | None = None,
     derivation_depth: int = 2,
+    include_table2: bool = True,
     date: str | None = None,
     lottery: str | None = None,
     position: str | None = None,
@@ -171,60 +172,60 @@ def build_complete_relationship_graph(
                 position=position,
             )
 
-        # --- Tabla 2 neighbors of observed ---
-        neighbors = list(cat.get_table2_neighbors(o, exclude_self=True))
-        for n in neighbors:
-            graph.add_edge(
-                o,
-                n,
-                EdgeType.T2_NEIGHBOR,
-                table_type="table2",
-                observed_origin=o,
-                depth=0,
-                direct_or_indirect="direct",
-                source_node_type=NodeType.OBSERVED,
-                target_node_type=NodeType.NEIGHBOR_T2,
-                date=date,
-                lottery=lottery,
-                position=position,
-            )
+        if include_table2:
+            # --- Tabla 2 neighbors of observed ---
+            neighbors = list(cat.get_table2_neighbors(o, exclude_self=True))
+            for n in neighbors:
+                graph.add_edge(
+                    o,
+                    n,
+                    EdgeType.T2_NEIGHBOR,
+                    table_type="table2",
+                    observed_origin=o,
+                    depth=0,
+                    direct_or_indirect="direct",
+                    source_node_type=NodeType.OBSERVED,
+                    target_node_type=NodeType.NEIGHBOR_T2,
+                    date=date,
+                    lottery=lottery,
+                    position=position,
+                )
 
-        # --- T2 confirmation edges: observed confirmer → T1 destination ---
-        # For each T1 destination of ANY generator, if this observed is neighbor of dest
-        for gen in observed:
-            for cand in cat.get_table1_companions(gen):
-                t2_of_cand = set(cat.get_table2_neighbors(cand, exclude_self=True))
-                if o in t2_of_cand and o != gen:
-                    graph.add_edge(
-                        o,
-                        cand,
-                        EdgeType.T2_CONFIRMATION,
-                        table_type="table2",
-                        observed_origin=o,
-                        depth=0,
-                        direct_or_indirect="direct",
-                        source_node_type=NodeType.OBSERVED,
-                        target_node_type=NodeType.RELATED_T2,
-                        date=date,
-                        lottery=lottery,
-                        position=position,
-                        confirmed_via_generator=gen,
-                    )
-                    graph.add_edge(
-                        gen,
-                        cand,
-                        EdgeType.CROSS_CONFIRMATION,
-                        table_type="table1+table2",
-                        observed_origin=gen,
-                        depth=0,
-                        direct_or_indirect="direct",
-                        source_node_type=NodeType.OBSERVED,
-                        target_node_type=NodeType.CANDIDATE,
-                        date=date,
-                        lottery=lottery,
-                        position=position,
-                        confirmer=o,
-                    )
+            # --- T2 confirmation edges: observed confirmer → T1 destination ---
+            for gen in observed:
+                for cand in cat.get_table1_companions(gen):
+                    t2_of_cand = set(cat.get_table2_neighbors(cand, exclude_self=True))
+                    if o in t2_of_cand and o != gen:
+                        graph.add_edge(
+                            o,
+                            cand,
+                            EdgeType.T2_CONFIRMATION,
+                            table_type="table2",
+                            observed_origin=o,
+                            depth=0,
+                            direct_or_indirect="direct",
+                            source_node_type=NodeType.OBSERVED,
+                            target_node_type=NodeType.RELATED_T2,
+                            date=date,
+                            lottery=lottery,
+                            position=position,
+                            confirmed_via_generator=gen,
+                        )
+                        graph.add_edge(
+                            gen,
+                            cand,
+                            EdgeType.CROSS_CONFIRMATION,
+                            table_type="table1+table2",
+                            observed_origin=gen,
+                            depth=0,
+                            direct_or_indirect="direct",
+                            source_node_type=NodeType.OBSERVED,
+                            target_node_type=NodeType.CANDIDATE,
+                            date=date,
+                            lottery=lottery,
+                            position=position,
+                            confirmer=o,
+                        )
 
     # Multi-source support markers (still not selecting winners)
     dest_sources: dict[int, set[int]] = {}

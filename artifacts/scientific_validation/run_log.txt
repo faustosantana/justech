@@ -1,0 +1,15 @@
+{
+  "dataset_counts": {
+    "train": 1462,
+    "validation": 487,
+    "test": 488
+  },
+  "historical_match_rate": 0.944,
+  "n_analyses": 250,
+  "best_profile": "perfil_conservador",
+  "best_variant": "motor_actual",
+  "failures": 14,
+  "production_modified": false,
+  "ml_decides_fuerte": false,
+  "artifacts": "/Users/faustosantana/Projects/justech-forensic-audit/artifacts/scientific_validation"
+}

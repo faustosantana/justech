@@ -216,3 +216,103 @@ async def j11a_follow_up(analysis_id: str, body: dict[str, Any] = Body(...)) -> 
 
     update_from_analysis(mem, data)
     return chat(str(body.get("message") or ""), conversation_id=mem.conversation_id, llm=None)
+
+
+@router.get("/scientific/dashboard")
+async def scientific_dashboard() -> dict[str, Any]:
+    from app.lottery.numeric_relations.analysis_engine.scientific_validation.results_store import (
+        get_phase2_results,
+    )
+
+    data = get_phase2_results()
+    if not data:
+        raise HTTPException(status_code=404, detail="phase2 results not found — run validation pipeline")
+    return data.get("dashboard") or data
+
+
+@router.get("/scientific/summary")
+async def scientific_summary() -> dict[str, Any]:
+    from app.lottery.numeric_relations.analysis_engine.scientific_validation.results_store import (
+        get_phase2_results,
+    )
+
+    data = get_phase2_results()
+    if not data:
+        raise HTTPException(status_code=404, detail="phase2 results not found")
+    # omit huge nested structures if present
+    return {k: v for k, v in data.items() if k not in {"historical_rows"}}
+
+
+@router.get("/scientific/rules")
+async def scientific_rules() -> dict[str, Any]:
+    from app.lottery.numeric_relations.analysis_engine.scientific_validation.results_store import (
+        get_phase2_results,
+    )
+
+    data = get_phase2_results()
+    return data.get("rule_inventory") or {}
+
+
+@router.get("/scientific/errors")
+async def scientific_errors() -> dict[str, Any]:
+    from app.lottery.numeric_relations.analysis_engine.scientific_validation.results_store import (
+        get_phase2_results,
+    )
+
+    data = get_phase2_results()
+    return data.get("error_analysis") or {}
+
+
+@router.get("/scientific/patterns")
+async def scientific_patterns() -> dict[str, Any]:
+    from app.lottery.numeric_relations.analysis_engine.scientific_validation.results_store import (
+        get_phase2_results,
+    )
+
+    data = get_phase2_results()
+    return data.get("patterns") or {}
+
+
+@router.get("/scientific/benchmark")
+async def scientific_benchmark() -> dict[str, Any]:
+    from app.lottery.numeric_relations.analysis_engine.scientific_validation.results_store import (
+        get_phase2_results,
+    )
+
+    data = get_phase2_results()
+    return data.get("benchmark") or {}
+
+
+@router.post("/scientific/explain")
+async def scientific_explain(body: dict[str, Any] = Body(...)) -> dict[str, Any]:
+    from app.lottery.numeric_relations.analysis_engine.scientific_validation.explainability import (
+        explain_analysis_decisions,
+    )
+
+    numbers = body.get("numbers") or []
+    if not numbers:
+        raise HTTPException(status_code=400, detail="numbers required")
+    return explain_analysis_decisions(
+        list(numbers), mode=str(body.get("mode") or "socio"), date=body.get("date")
+    )
+
+
+@router.post("/scientific/run")
+async def scientific_run(body: dict[str, Any] = Body(default_factory=dict)) -> dict[str, Any]:
+    """DEV-only: run Phase 2 pipeline (can take minutes)."""
+    from app.lottery.numeric_relations.analysis_engine.scientific_validation.pipeline import (
+        run_phase2_pipeline,
+    )
+
+    limit = body.get("limit", 400)
+    if limit is not None:
+        limit = int(limit)
+    result = run_phase2_pipeline(limit=limit, run_full_benchmark=bool(body.get("benchmark", True)))
+    return {
+        "ok": True,
+        "dataset_counts": (result.get("dataset") or {}).get("counts"),
+        "best_profile": (result.get("calibration") or {}).get("best_methodology_reproduction"),
+        "best_variant": (result.get("benchmark") or {}).get("best_blind_variant"),
+        "methodology_match_rate": (result.get("historical") or {}).get("methodology_match_rate"),
+        "production_modified": False,
+    }

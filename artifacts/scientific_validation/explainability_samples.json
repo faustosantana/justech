@@ -1,0 +1,1095 @@
+{
+  "35_14": {
+    "observed_numbers": [
+      35,
+      14
+    ],
+    "primary_signal": {
+      "number": 54,
+      "classification": "FUERTE_PRINCIPAL",
+      "analytical_confidence": 85.0,
+      "score": 156.0,
+      "reason": "Mayor respaldo estructural tras análisis completo T1×T2.",
+      "table1_sources": [
+        35
+      ],
+      "table2_confirmers": [
+        14
+      ]
+    },
+    "decisions": {
+      "first": {
+        "role": "primero",
+        "number": 54,
+        "classification": "FUERTE_PRINCIPAL",
+        "score": 156.0,
+        "why": "Mayor respaldo estructural tras análisis completo T1×T2.",
+        "evidence_had": {
+          "table1_sources": [
+            35
+          ],
+          "table2_confirmers": [
+            14
+          ],
+          "independent_paths": 3,
+          "cross_table_support": true
+        },
+        "evidence_lacked": [],
+        "components": {
+          "T1_SOURCE_SUPPORT": 1.0,
+          "T2_CONFIRMATION_SUPPORT": 1.0,
+          "CROSS_TABLE_SUPPORT": 1.0,
+          "MULTIPLE_OBSERVED_SUPPORT": 1.0,
+          "INDEPENDENT_PATH_SUPPORT": 3.0,
+          "DIRECT_PATH_SUPPORT": 3.0,
+          "MULTI_CONFIRMATION_SUPPORT": 0.0,
+          "HISTORICAL_EXACT_RATE": 0.0,
+          "HISTORICAL_D1_D3_RATE": 0.0,
+          "HISTORICAL_D1_D7_RATE": 0.0,
+          "FIRST_POSITION_SUPPORT": 0.0,
+          "ANY_POSITION_SUPPORT": 0.0,
+          "RECENT_PATTERN_SUPPORT": 0.0,
+          "CROSS_LOTTERY_SUPPORT": 0.0,
+          "CHAIN_CONTINUITY_SUPPORT": 0.0,
+          "DERIVATION_DEPTH_PENALTY": 0.0,
+          "AMBIGUITY_PENALTY": 0.0,
+          "DUPLICATE_PATH_PENALTY": 0.0
+        },
+        "penalties": []
+      },
+      "second": {
+        "role": "segundo",
+        "number": 6,
+        "classification": "FAMILIA_T1",
+        "score": 12.0,
+        "why": "Solo familia T1; insuficiente para fuerte en perfil actual.",
+        "evidence_had": {
+          "table1_sources": [
+            35
+          ],
+          "table2_confirmers": null,
+          "independent_paths": 1,
+          "cross_table_support": false
+        },
+        "evidence_lacked": [
+          "sin_confirmacion_tabla2",
+          "sin_cruce_t1_t2"
+        ],
+        "components": {
+          "T1_SOURCE_SUPPORT": 1.0,
+          "T2_CONFIRMATION_SUPPORT": 0.0,
+          "CROSS_TABLE_SUPPORT": 0.0,
+          "MULTIPLE_OBSERVED_SUPPORT": 0.0,
+          "INDEPENDENT_PATH_SUPPORT": 1.0,
+          "DIRECT_PATH_SUPPORT": 1.0,
+          "MULTI_CONFIRMATION_SUPPORT": 0.0,
+          "HISTORICAL_EXACT_RATE": 0.0,
+          "HISTORICAL_D1_D3_RATE": 0.0,
+          "HISTORICAL_D1_D7_RATE": 0.0,
+          "FIRST_POSITION_SUPPORT": 0.0,
+          "ANY_POSITION_SUPPORT": 0.0,
+          "RECENT_PATTERN_SUPPORT": 0.0,
+          "CROSS_LOTTERY_SUPPORT": 0.0,
+          "CHAIN_CONTINUITY_SUPPORT": 0.0,
+          "DERIVATION_DEPTH_PENALTY": 0.0,
+          "AMBIGUITY_PENALTY": 0.0,
+          "DUPLICATE_PATH_PENALTY": 0.0
+        },
+        "penalties": []
+      },
+      "discarded": [
+        {
+          "role": "descartado_relativo",
+          "number": 11,
+          "classification": "FAMILIA_T1",
+          "score": 12.0,
+          "why": "Solo familia T1; insuficiente para fuerte en perfil actual.",
+          "evidence_had": {
+            "table1_sources": [
+              35
+            ],
+            "table2_confirmers": null,
+            "independent_paths": 1,
+            "cross_table_support": false
+          },
+          "evidence_lacked": [
+            "sin_confirmacion_tabla2",
+            "sin_cruce_t1_t2"
+          ],
+          "components": {
+            "T1_SOURCE_SUPPORT": 1.0,
+            "T2_CONFIRMATION_SUPPORT": 0.0,
+            "CROSS_TABLE_SUPPORT": 0.0,
+            "MULTIPLE_OBSERVED_SUPPORT": 0.0,
+            "INDEPENDENT_PATH_SUPPORT": 1.0,
+            "DIRECT_PATH_SUPPORT": 1.0,
+            "MULTI_CONFIRMATION_SUPPORT": 0.0,
+            "HISTORICAL_EXACT_RATE": 0.0,
+            "HISTORICAL_D1_D3_RATE": 0.0,
+            "HISTORICAL_D1_D7_RATE": 0.0,
+            "FIRST_POSITION_SUPPORT": 0.0,
+            "ANY_POSITION_SUPPORT": 0.0,
+            "RECENT_PATTERN_SUPPORT": 0.0,
+            "CROSS_LOTTERY_SUPPORT": 0.0,
+            "CHAIN_CONTINUITY_SUPPORT": 0.0,
+            "DERIVATION_DEPTH_PENALTY": 0.0,
+            "AMBIGUITY_PENALTY": 0.0,
+            "DUPLICATE_PATH_PENALTY": 0.0
+          },
+          "penalties": []
+        },
+        {
+          "role": "descartado_relativo",
+          "number": 43,
+          "classification": "FAMILIA_T1",
+          "score": 12.0,
+          "why": "Solo familia T1; insuficiente para fuerte en perfil actual.",
+          "evidence_had": {
+            "table1_sources": [
+              35
+            ],
+            "table2_confirmers": null,
+            "independent_paths": 1,
+            "cross_table_support": false
+          },
+          "evidence_lacked": [
+            "sin_confirmacion_tabla2",
+            "sin_cruce_t1_t2"
+          ],
+          "components": {
+            "T1_SOURCE_SUPPORT": 1.0,
+            "T2_CONFIRMATION_SUPPORT": 0.0,
+            "CROSS_TABLE_SUPPORT": 0.0,
+            "MULTIPLE_OBSERVED_SUPPORT": 0.0,
+            "INDEPENDENT_PATH_SUPPORT": 1.0,
+            "DIRECT_PATH_SUPPORT": 1.0,
+            "MULTI_CONFIRMATION_SUPPORT": 0.0,
+            "HISTORICAL_EXACT_RATE": 0.0,
+            "HISTORICAL_D1_D3_RATE": 0.0,
+            "HISTORICAL_D1_D7_RATE": 0.0,
+            "FIRST_POSITION_SUPPORT": 0.0,
+            "ANY_POSITION_SUPPORT": 0.0,
+            "RECENT_PATTERN_SUPPORT": 0.0,
+            "CROSS_LOTTERY_SUPPORT": 0.0,
+            "CHAIN_CONTINUITY_SUPPORT": 0.0,
+            "DERIVATION_DEPTH_PENALTY": 0.0,
+            "AMBIGUITY_PENALTY": 0.0,
+            "DUPLICATE_PATH_PENALTY": 0.0
+          },
+          "penalties": []
+        },
+        {
+          "role": "descartado_relativo",
+          "number": 86,
+          "classification": "FAMILIA_T1",
+          "score": 12.0,
+          "why": "Solo familia T1; insuficiente para fuerte en perfil actual.",
+          "evidence_had": {
+            "table1_sources": [
+              35
+            ],
+            "table2_confirmers": null,
+            "independent_paths": 1,
+            "cross_table_support": false
+          },
+          "evidence_lacked": [
+            "sin_confirmacion_tabla2",
+            "sin_cruce_t1_t2"
+          ],
+          "components": {
+            "T1_SOURCE_SUPPORT": 1.0,
+            "T2_CONFIRMATION_SUPPORT": 0.0,
+            "CROSS_TABLE_SUPPORT": 0.0,
+            "MULTIPLE_OBSERVED_SUPPORT": 0.0,
+            "INDEPENDENT_PATH_SUPPORT": 1.0,
+            "DIRECT_PATH_SUPPORT": 1.0,
+            "MULTI_CONFIRMATION_SUPPORT": 0.0,
+            "HISTORICAL_EXACT_RATE": 0.0,
+            "HISTORICAL_D1_D3_RATE": 0.0,
+            "HISTORICAL_D1_D7_RATE": 0.0,
+            "FIRST_POSITION_SUPPORT": 0.0,
+            "ANY_POSITION_SUPPORT": 0.0,
+            "RECENT_PATTERN_SUPPORT": 0.0,
+            "CROSS_LOTTERY_SUPPORT": 0.0,
+            "CHAIN_CONTINUITY_SUPPORT": 0.0,
+            "DERIVATION_DEPTH_PENALTY": 0.0,
+            "AMBIGUITY_PENALTY": 0.0,
+            "DUPLICATE_PATH_PENALTY": 0.0
+          },
+          "penalties": []
+        },
+        {
+          "role": "descartado_relativo",
+          "number": 19,
+          "classification": "DERIVACION_RELEVANTE",
+          "score": -50.0,
+          "why": "Derivación relevante; no fuerte principal en perfil estricto.",
+          "evidence_had": {
+            "table1_sources": null,
+            "table2_confirmers": null,
+            "independent_paths": 0,
+            "cross_table_support": false
+          },
+          "evidence_lacked": [
+            "sin_fuente_tabla1",
+            "sin_confirmacion_tabla2",
+            "sin_cruce_t1_t2"
+          ],
+          "components": {
+            "T1_SOURCE_SUPPORT": 0.0,
+            "T2_CONFIRMATION_SUPPORT": 0.0,
+            "CROSS_TABLE_SUPPORT": 0.0,
+            "MULTIPLE_OBSERVED_SUPPORT": 0.0,
+            "INDEPENDENT_PATH_SUPPORT": 0.0,
+            "DIRECT_PATH_SUPPORT": 0.0,
+            "MULTI_CONFIRMATION_SUPPORT": 0.0,
+            "HISTORICAL_EXACT_RATE": 0.0,
+            "HISTORICAL_D1_D3_RATE": 0.0,
+            "HISTORICAL_D1_D7_RATE": 0.0,
+            "FIRST_POSITION_SUPPORT": 0.0,
+            "ANY_POSITION_SUPPORT": 0.0,
+            "RECENT_PATTERN_SUPPORT": 0.0,
+            "CROSS_LOTTERY_SUPPORT": 0.0,
+            "CHAIN_CONTINUITY_SUPPORT": 0.0,
+            "DERIVATION_DEPTH_PENALTY": 1.0,
+            "AMBIGUITY_PENALTY": 0.0,
+            "DUPLICATE_PATH_PENALTY": 0.0
+          },
+          "penalties": [
+            "Penalización por profundidad de derivación=1.0"
+          ]
+        },
+        {
+          "role": "descartado_relativo",
+          "number": 46,
+          "classification": "DERIVACION_RELEVANTE",
+          "score": -50.0,
+          "why": "Derivación relevante; no fuerte principal en perfil estricto.",
+          "evidence_had": {
+            "table1_sources": null,
+            "table2_confirmers": null,
+            "independent_paths": 0,
+            "cross_table_support": false
+          },
+          "evidence_lacked": [
+            "sin_fuente_tabla1",
+            "sin_confirmacion_tabla2",
+            "sin_cruce_t1_t2"
+          ],
+          "components": {
+            "T1_SOURCE_SUPPORT": 0.0,
+            "T2_CONFIRMATION_SUPPORT": 0.0,
+            "CROSS_TABLE_SUPPORT": 0.0,
+            "MULTIPLE_OBSERVED_SUPPORT": 0.0,
+            "INDEPENDENT_PATH_SUPPORT": 0.0,
+            "DIRECT_PATH_SUPPORT": 0.0,
+            "MULTI_CONFIRMATION_SUPPORT": 0.0,
+            "HISTORICAL_EXACT_RATE": 0.0,
+            "HISTORICAL_D1_D3_RATE": 0.0,
+            "HISTORICAL_D1_D7_RATE": 0.0,
+            "FIRST_POSITION_SUPPORT": 0.0,
+            "ANY_POSITION_SUPPORT": 0.0,
+            "RECENT_PATTERN_SUPPORT": 0.0,
+            "CROSS_LOTTERY_SUPPORT": 0.0,
+            "CHAIN_CONTINUITY_SUPPORT": 0.0,
+            "DERIVATION_DEPTH_PENALTY": 1.0,
+            "AMBIGUITY_PENALTY": 0.0,
+            "DUPLICATE_PATH_PENALTY": 0.0
+          },
+          "penalties": [
+            "Penalización por profundidad de derivación=1.0"
+          ]
+        },
+        {
+          "role": "descartado_relativo",
+          "number": 57,
+          "classification": "DERIVACION_RELEVANTE",
+          "score": -50.0,
+          "why": "Derivación relevante; no fuerte principal en perfil estricto.",
+          "evidence_had": {
+            "table1_sources": null,
+            "table2_confirmers": null,
+            "independent_paths": 0,
+            "cross_table_support": false
+          },
+          "evidence_lacked": [
+            "sin_fuente_tabla1",
+            "sin_confirmacion_tabla2",
+            "sin_cruce_t1_t2"
+          ],
+          "components": {
+            "T1_SOURCE_SUPPORT": 0.0,
+            "T2_CONFIRMATION_SUPPORT": 0.0,
+            "CROSS_TABLE_SUPPORT": 0.0,
+            "MULTIPLE_OBSERVED_SUPPORT": 0.0,
+            "INDEPENDENT_PATH_SUPPORT": 0.0,
+            "DIRECT_PATH_SUPPORT": 0.0,
+            "MULTI_CONFIRMATION_SUPPORT": 0.0,
+            "HISTORICAL_EXACT_RATE": 0.0,
+            "HISTORICAL_D1_D3_RATE": 0.0,
+            "HISTORICAL_D1_D7_RATE": 0.0,
+            "FIRST_POSITION_SUPPORT": 0.0,
+            "ANY_POSITION_SUPPORT": 0.0,
+            "RECENT_PATTERN_SUPPORT": 0.0,
+            "CROSS_LOTTERY_SUPPORT": 0.0,
+            "CHAIN_CONTINUITY_SUPPORT": 0.0,
+            "DERIVATION_DEPTH_PENALTY": 1.0,
+            "AMBIGUITY_PENALTY": 0.0,
+            "DUPLICATE_PATH_PENALTY": 0.0
+          },
+          "penalties": [
+            "Penalización por profundidad de derivación=1.0"
+          ]
+        }
+      ],
+      "summary": "Primero 54 por mayor respaldo estructural (FUERTE_PRINCIPAL). Segundo 6."
+    },
+    "evidence_summary": {
+      "table1_sources": [
+        35
+      ],
+      "table2_confirmers": [
+        14
+      ],
+      "independent_paths": 3,
+      "cross_table_support": true,
+      "multi_source_support": true
+    },
+    "graph_complete_before_discovery": true
+  },
+  "39_58": {
+    "observed_numbers": [
+      39,
+      58
+    ],
+    "primary_signal": {
+      "number": 94,
+      "classification": "FUERTE_PRINCIPAL",
+      "analytical_confidence": 85.0,
+      "score": 156.0,
+      "reason": "Mayor respaldo estructural tras análisis completo T1×T2.",
+      "table1_sources": [
+        39
+      ],
+      "table2_confirmers": [
+        58
+      ]
+    },
+    "decisions": {
+      "first": {
+        "role": "primero",
+        "number": 94,
+        "classification": "FUERTE_PRINCIPAL",
+        "score": 156.0,
+        "why": "Mayor respaldo estructural tras análisis completo T1×T2.",
+        "evidence_had": {
+          "table1_sources": [
+            39
+          ],
+          "table2_confirmers": [
+            58
+          ],
+          "independent_paths": 3,
+          "cross_table_support": true
+        },
+        "evidence_lacked": [],
+        "components": {
+          "T1_SOURCE_SUPPORT": 1.0,
+          "T2_CONFIRMATION_SUPPORT": 1.0,
+          "CROSS_TABLE_SUPPORT": 1.0,
+          "MULTIPLE_OBSERVED_SUPPORT": 1.0,
+          "INDEPENDENT_PATH_SUPPORT": 3.0,
+          "DIRECT_PATH_SUPPORT": 3.0,
+          "MULTI_CONFIRMATION_SUPPORT": 0.0,
+          "HISTORICAL_EXACT_RATE": 0.0,
+          "HISTORICAL_D1_D3_RATE": 0.0,
+          "HISTORICAL_D1_D7_RATE": 0.0,
+          "FIRST_POSITION_SUPPORT": 0.0,
+          "ANY_POSITION_SUPPORT": 0.0,
+          "RECENT_PATTERN_SUPPORT": 0.0,
+          "CROSS_LOTTERY_SUPPORT": 0.0,
+          "CHAIN_CONTINUITY_SUPPORT": 0.0,
+          "DERIVATION_DEPTH_PENALTY": 0.0,
+          "AMBIGUITY_PENALTY": 0.0,
+          "DUPLICATE_PATH_PENALTY": 0.0
+        },
+        "penalties": []
+      },
+      "second": {
+        "role": "segundo",
+        "number": 78,
+        "classification": "FAMILIA_T1",
+        "score": 34.0,
+        "why": "Solo familia T1; insuficiente para fuerte en perfil actual.",
+        "evidence_had": {
+          "table1_sources": [
+            39
+          ],
+          "table2_confirmers": null,
+          "independent_paths": 2,
+          "cross_table_support": false
+        },
+        "evidence_lacked": [
+          "sin_confirmacion_tabla2",
+          "sin_cruce_t1_t2"
+        ],
+        "components": {
+          "T1_SOURCE_SUPPORT": 1.0,
+          "T2_CONFIRMATION_SUPPORT": 0.0,
+          "CROSS_TABLE_SUPPORT": 0.0,
+          "MULTIPLE_OBSERVED_SUPPORT": 0.0,
+          "INDEPENDENT_PATH_SUPPORT": 2.0,
+          "DIRECT_PATH_SUPPORT": 2.0,
+          "MULTI_CONFIRMATION_SUPPORT": 0.0,
+          "HISTORICAL_EXACT_RATE": 0.0,
+          "HISTORICAL_D1_D3_RATE": 0.0,
+          "HISTORICAL_D1_D7_RATE": 0.0,
+          "FIRST_POSITION_SUPPORT": 0.0,
+          "ANY_POSITION_SUPPORT": 0.0,
+          "RECENT_PATTERN_SUPPORT": 0.0,
+          "CROSS_LOTTERY_SUPPORT": 0.0,
+          "CHAIN_CONTINUITY_SUPPORT": 0.0,
+          "DERIVATION_DEPTH_PENALTY": 0.0,
+          "AMBIGUITY_PENALTY": 0.0,
+          "DUPLICATE_PATH_PENALTY": 0.0
+        },
+        "penalties": []
+      },
+      "discarded": [
+        {
+          "role": "descartado_relativo",
+          "number": 62,
+          "classification": "FAMILIA_T1",
+          "score": 12.0,
+          "why": "Solo familia T1; insuficiente para fuerte en perfil actual.",
+          "evidence_had": {
+            "table1_sources": [
+              39
+            ],
+            "table2_confirmers": null,
+            "independent_paths": 1,
+            "cross_table_support": false
+          },
+          "evidence_lacked": [
+            "sin_confirmacion_tabla2",
+            "sin_cruce_t1_t2"
+          ],
+          "components": {
+            "T1_SOURCE_SUPPORT": 1.0,
+            "T2_CONFIRMATION_SUPPORT": 0.0,
+            "CROSS_TABLE_SUPPORT": 0.0,
+            "MULTIPLE_OBSERVED_SUPPORT": 0.0,
+            "INDEPENDENT_PATH_SUPPORT": 1.0,
+            "DIRECT_PATH_SUPPORT": 1.0,
+            "MULTI_CONFIRMATION_SUPPORT": 0.0,
+            "HISTORICAL_EXACT_RATE": 0.0,
+            "HISTORICAL_D1_D3_RATE": 0.0,
+            "HISTORICAL_D1_D7_RATE": 0.0,
+            "FIRST_POSITION_SUPPORT": 0.0,
+            "ANY_POSITION_SUPPORT": 0.0,
+            "RECENT_PATTERN_SUPPORT": 0.0,
+            "CROSS_LOTTERY_SUPPORT": 0.0,
+            "CHAIN_CONTINUITY_SUPPORT": 0.0,
+            "DERIVATION_DEPTH_PENALTY": 0.0,
+            "AMBIGUITY_PENALTY": 0.0,
+            "DUPLICATE_PATH_PENALTY": 0.0
+          },
+          "penalties": []
+        },
+        {
+          "role": "descartado_relativo",
+          "number": 9,
+          "classification": "FAMILIA_T1",
+          "score": 2.0,
+          "why": "Solo familia T1; insuficiente para fuerte en perfil actual.",
+          "evidence_had": {
+            "table1_sources": [
+              39
+            ],
+            "table2_confirmers": null,
+            "independent_paths": 1,
+            "cross_table_support": false
+          },
+          "evidence_lacked": [
+            "sin_confirmacion_tabla2",
+            "sin_cruce_t1_t2"
+          ],
+          "components": {
+            "T1_SOURCE_SUPPORT": 1.0,
+            "T2_CONFIRMATION_SUPPORT": 0.0,
+            "CROSS_TABLE_SUPPORT": 0.0,
+            "MULTIPLE_OBSERVED_SUPPORT": 0.0,
+            "INDEPENDENT_PATH_SUPPORT": 1.0,
+            "DIRECT_PATH_SUPPORT": 1.0,
+            "MULTI_CONFIRMATION_SUPPORT": 0.0,
+            "HISTORICAL_EXACT_RATE": 0.0,
+            "HISTORICAL_D1_D3_RATE": 0.0,
+            "HISTORICAL_D1_D7_RATE": 0.0,
+            "FIRST_POSITION_SUPPORT": 0.0,
+            "ANY_POSITION_SUPPORT": 0.0,
+            "RECENT_PATTERN_SUPPORT": 0.0,
+            "CROSS_LOTTERY_SUPPORT": 0.0,
+            "CHAIN_CONTINUITY_SUPPORT": 0.0,
+            "DERIVATION_DEPTH_PENALTY": 2.0,
+            "AMBIGUITY_PENALTY": 0.0,
+            "DUPLICATE_PATH_PENALTY": 0.0
+          },
+          "penalties": [
+            "Penalización por profundidad de derivación=2.0"
+          ]
+        },
+        {
+          "role": "descartado_relativo",
+          "number": 14,
+          "classification": "FAMILIA_T1",
+          "score": 2.0,
+          "why": "Solo familia T1; insuficiente para fuerte en perfil actual.",
+          "evidence_had": {
+            "table1_sources": [
+              39
+            ],
+            "table2_confirmers": null,
+            "independent_paths": 1,
+            "cross_table_support": false
+          },
+          "evidence_lacked": [
+            "sin_confirmacion_tabla2",
+            "sin_cruce_t1_t2"
+          ],
+          "components": {
+            "T1_SOURCE_SUPPORT": 1.0,
+            "T2_CONFIRMATION_SUPPORT": 0.0,
+            "CROSS_TABLE_SUPPORT": 0.0,
+            "MULTIPLE_OBSERVED_SUPPORT": 0.0,
+            "INDEPENDENT_PATH_SUPPORT": 1.0,
+            "DIRECT_PATH_SUPPORT": 1.0,
+            "MULTI_CONFIRMATION_SUPPORT": 0.0,
+            "HISTORICAL_EXACT_RATE": 0.0,
+            "HISTORICAL_D1_D3_RATE": 0.0,
+            "HISTORICAL_D1_D7_RATE": 0.0,
+            "FIRST_POSITION_SUPPORT": 0.0,
+            "ANY_POSITION_SUPPORT": 0.0,
+            "RECENT_PATTERN_SUPPORT": 0.0,
+            "CROSS_LOTTERY_SUPPORT": 0.0,
+            "CHAIN_CONTINUITY_SUPPORT": 0.0,
+            "DERIVATION_DEPTH_PENALTY": 2.0,
+            "AMBIGUITY_PENALTY": 0.0,
+            "DUPLICATE_PATH_PENALTY": 0.0
+          },
+          "penalties": [
+            "Penalización por profundidad de derivación=2.0"
+          ]
+        },
+        {
+          "role": "descartado_relativo",
+          "number": 30,
+          "classification": "FAMILIA_T1",
+          "score": 2.0,
+          "why": "Solo familia T1; insuficiente para fuerte en perfil actual.",
+          "evidence_had": {
+            "table1_sources": [
+              39
+            ],
+            "table2_confirmers": null,
+            "independent_paths": 1,
+            "cross_table_support": false
+          },
+          "evidence_lacked": [
+            "sin_confirmacion_tabla2",
+            "sin_cruce_t1_t2"
+          ],
+          "components": {
+            "T1_SOURCE_SUPPORT": 1.0,
+            "T2_CONFIRMATION_SUPPORT": 0.0,
+            "CROSS_TABLE_SUPPORT": 0.0,
+            "MULTIPLE_OBSERVED_SUPPORT": 0.0,
+            "INDEPENDENT_PATH_SUPPORT": 1.0,
+            "DIRECT_PATH_SUPPORT": 1.0,
+            "MULTI_CONFIRMATION_SUPPORT": 0.0,
+            "HISTORICAL_EXACT_RATE": 0.0,
+            "HISTORICAL_D1_D3_RATE": 0.0,
+            "HISTORICAL_D1_D7_RATE": 0.0,
+            "FIRST_POSITION_SUPPORT": 0.0,
+            "ANY_POSITION_SUPPORT": 0.0,
+            "RECENT_PATTERN_SUPPORT": 0.0,
+            "CROSS_LOTTERY_SUPPORT": 0.0,
+            "CHAIN_CONTINUITY_SUPPORT": 0.0,
+            "DERIVATION_DEPTH_PENALTY": 2.0,
+            "AMBIGUITY_PENALTY": 0.0,
+            "DUPLICATE_PATH_PENALTY": 0.0
+          },
+          "penalties": [
+            "Penalización por profundidad de derivación=2.0"
+          ]
+        },
+        {
+          "role": "descartado_relativo",
+          "number": 41,
+          "classification": "FAMILIA_T1",
+          "score": 2.0,
+          "why": "Solo familia T1; insuficiente para fuerte en perfil actual.",
+          "evidence_had": {
+            "table1_sources": [
+              39
+            ],
+            "table2_confirmers": null,
+            "independent_paths": 1,
+            "cross_table_support": false
+          },
+          "evidence_lacked": [
+            "sin_confirmacion_tabla2",
+            "sin_cruce_t1_t2"
+          ],
+          "components": {
+            "T1_SOURCE_SUPPORT": 1.0,
+            "T2_CONFIRMATION_SUPPORT": 0.0,
+            "CROSS_TABLE_SUPPORT": 0.0,
+            "MULTIPLE_OBSERVED_SUPPORT": 0.0,
+            "INDEPENDENT_PATH_SUPPORT": 1.0,
+            "DIRECT_PATH_SUPPORT": 1.0,
+            "MULTI_CONFIRMATION_SUPPORT": 0.0,
+            "HISTORICAL_EXACT_RATE": 0.0,
+            "HISTORICAL_D1_D3_RATE": 0.0,
+            "HISTORICAL_D1_D7_RATE": 0.0,
+            "FIRST_POSITION_SUPPORT": 0.0,
+            "ANY_POSITION_SUPPORT": 0.0,
+            "RECENT_PATTERN_SUPPORT": 0.0,
+            "CROSS_LOTTERY_SUPPORT": 0.0,
+            "CHAIN_CONTINUITY_SUPPORT": 0.0,
+            "DERIVATION_DEPTH_PENALTY": 2.0,
+            "AMBIGUITY_PENALTY": 0.0,
+            "DUPLICATE_PATH_PENALTY": 0.0
+          },
+          "penalties": [
+            "Penalización por profundidad de derivación=2.0"
+          ]
+        },
+        {
+          "role": "descartado_relativo",
+          "number": 46,
+          "classification": "FAMILIA_T1",
+          "score": 2.0,
+          "why": "Solo familia T1; insuficiente para fuerte en perfil actual.",
+          "evidence_had": {
+            "table1_sources": [
+              39
+            ],
+            "table2_confirmers": null,
+            "independent_paths": 1,
+            "cross_table_support": false
+          },
+          "evidence_lacked": [
+            "sin_confirmacion_tabla2",
+            "sin_cruce_t1_t2"
+          ],
+          "components": {
+            "T1_SOURCE_SUPPORT": 1.0,
+            "T2_CONFIRMATION_SUPPORT": 0.0,
+            "CROSS_TABLE_SUPPORT": 0.0,
+            "MULTIPLE_OBSERVED_SUPPORT": 0.0,
+            "INDEPENDENT_PATH_SUPPORT": 1.0,
+            "DIRECT_PATH_SUPPORT": 1.0,
+            "MULTI_CONFIRMATION_SUPPORT": 0.0,
+            "HISTORICAL_EXACT_RATE": 0.0,
+            "HISTORICAL_D1_D3_RATE": 0.0,
+            "HISTORICAL_D1_D7_RATE": 0.0,
+            "FIRST_POSITION_SUPPORT": 0.0,
+            "ANY_POSITION_SUPPORT": 0.0,
+            "RECENT_PATTERN_SUPPORT": 0.0,
+            "CROSS_LOTTERY_SUPPORT": 0.0,
+            "CHAIN_CONTINUITY_SUPPORT": 0.0,
+            "DERIVATION_DEPTH_PENALTY": 2.0,
+            "AMBIGUITY_PENALTY": 0.0,
+            "DUPLICATE_PATH_PENALTY": 0.0
+          },
+          "penalties": [
+            "Penalización por profundidad de derivación=2.0"
+          ]
+        }
+      ],
+      "summary": "Primero 94 por mayor respaldo estructural (FUERTE_PRINCIPAL). Segundo 78."
+    },
+    "evidence_summary": {
+      "table1_sources": [
+        39
+      ],
+      "table2_confirmers": [
+        58
+      ],
+      "independent_paths": 3,
+      "cross_table_support": true,
+      "multi_source_support": true
+    },
+    "graph_complete_before_discovery": true
+  },
+  "49_44_70": {
+    "observed_numbers": [
+      49,
+      44,
+      70
+    ],
+    "primary_signal": {
+      "number": 35,
+      "classification": "FUERTE_PRINCIPAL",
+      "analytical_confidence": 93.0,
+      "score": 236.0,
+      "reason": "Mayor respaldo estructural tras análisis completo T1×T2.",
+      "table1_sources": [
+        49
+      ],
+      "table2_confirmers": [
+        44,
+        70
+      ]
+    },
+    "decisions": {
+      "first": {
+        "role": "primero",
+        "number": 35,
+        "classification": "FUERTE_PRINCIPAL",
+        "score": 236.0,
+        "why": "Mayor respaldo estructural tras análisis completo T1×T2.",
+        "evidence_had": {
+          "table1_sources": [
+            49
+          ],
+          "table2_confirmers": [
+            44,
+            70
+          ],
+          "independent_paths": 5,
+          "cross_table_support": true
+        },
+        "evidence_lacked": [],
+        "components": {
+          "T1_SOURCE_SUPPORT": 1.0,
+          "T2_CONFIRMATION_SUPPORT": 2.0,
+          "CROSS_TABLE_SUPPORT": 1.0,
+          "MULTIPLE_OBSERVED_SUPPORT": 1.0,
+          "INDEPENDENT_PATH_SUPPORT": 5.0,
+          "DIRECT_PATH_SUPPORT": 5.0,
+          "MULTI_CONFIRMATION_SUPPORT": 1.0,
+          "HISTORICAL_EXACT_RATE": 0.0,
+          "HISTORICAL_D1_D3_RATE": 0.0,
+          "HISTORICAL_D1_D7_RATE": 0.0,
+          "FIRST_POSITION_SUPPORT": 0.0,
+          "ANY_POSITION_SUPPORT": 0.0,
+          "RECENT_PATTERN_SUPPORT": 0.0,
+          "CROSS_LOTTERY_SUPPORT": 0.0,
+          "CHAIN_CONTINUITY_SUPPORT": 0.0,
+          "DERIVATION_DEPTH_PENALTY": 0.0,
+          "AMBIGUITY_PENALTY": 1.0,
+          "DUPLICATE_PATH_PENALTY": 1.0
+        },
+        "penalties": [
+          "Penalización por ambigüedad=1.0",
+          "Penalización por rutas duplicadas=1.0"
+        ]
+      },
+      "second": {
+        "role": "segundo",
+        "number": 22,
+        "classification": "FUERTE_SECUNDARIO",
+        "score": 174.0,
+        "why": "Confirmado T1×T2 pero por debajo del principal en ranking.",
+        "evidence_had": {
+          "table1_sources": [
+            44
+          ],
+          "table2_confirmers": [
+            70
+          ],
+          "independent_paths": 4,
+          "cross_table_support": true
+        },
+        "evidence_lacked": [],
+        "components": {
+          "T1_SOURCE_SUPPORT": 1.0,
+          "T2_CONFIRMATION_SUPPORT": 1.0,
+          "CROSS_TABLE_SUPPORT": 1.0,
+          "MULTIPLE_OBSERVED_SUPPORT": 1.0,
+          "INDEPENDENT_PATH_SUPPORT": 4.0,
+          "DIRECT_PATH_SUPPORT": 4.0,
+          "MULTI_CONFIRMATION_SUPPORT": 0.0,
+          "HISTORICAL_EXACT_RATE": 0.0,
+          "HISTORICAL_D1_D3_RATE": 0.0,
+          "HISTORICAL_D1_D7_RATE": 0.0,
+          "FIRST_POSITION_SUPPORT": 0.0,
+          "ANY_POSITION_SUPPORT": 0.0,
+          "RECENT_PATTERN_SUPPORT": 0.0,
+          "CROSS_LOTTERY_SUPPORT": 0.0,
+          "CHAIN_CONTINUITY_SUPPORT": 0.0,
+          "DERIVATION_DEPTH_PENALTY": 0.0,
+          "AMBIGUITY_PENALTY": 1.0,
+          "DUPLICATE_PATH_PENALTY": 0.0
+        },
+        "penalties": [
+          "Penalización por ambigüedad=1.0"
+        ]
+      },
+      "discarded": [
+        {
+          "role": "descartado_relativo",
+          "number": 59,
+          "classification": "CANDIDATO_PARCIAL",
+          "score": 32.0,
+          "why": "Perfil exige confirmación Tabla 2.",
+          "evidence_had": {
+            "table1_sources": [
+              44
+            ],
+            "table2_confirmers": null,
+            "independent_paths": 1,
+            "cross_table_support": false
+          },
+          "evidence_lacked": [
+            "sin_confirmacion_tabla2",
+            "sin_cruce_t1_t2"
+          ],
+          "components": {
+            "T1_SOURCE_SUPPORT": 1.0,
+            "T2_CONFIRMATION_SUPPORT": 0.0,
+            "CROSS_TABLE_SUPPORT": 0.0,
+            "MULTIPLE_OBSERVED_SUPPORT": 1.0,
+            "INDEPENDENT_PATH_SUPPORT": 1.0,
+            "DIRECT_PATH_SUPPORT": 1.0,
+            "MULTI_CONFIRMATION_SUPPORT": 0.0,
+            "HISTORICAL_EXACT_RATE": 0.0,
+            "HISTORICAL_D1_D3_RATE": 0.0,
+            "HISTORICAL_D1_D7_RATE": 0.0,
+            "FIRST_POSITION_SUPPORT": 0.0,
+            "ANY_POSITION_SUPPORT": 0.0,
+            "RECENT_PATTERN_SUPPORT": 0.0,
+            "CROSS_LOTTERY_SUPPORT": 0.0,
+            "CHAIN_CONTINUITY_SUPPORT": 0.0,
+            "DERIVATION_DEPTH_PENALTY": 2.0,
+            "AMBIGUITY_PENALTY": 0.0,
+            "DUPLICATE_PATH_PENALTY": 0.0
+          },
+          "penalties": [
+            "Penalización por profundidad de derivación=2.0"
+          ]
+        },
+        {
+          "role": "descartado_relativo",
+          "number": 75,
+          "classification": "CANDIDATO_PARCIAL",
+          "score": 32.0,
+          "why": "Perfil exige confirmación Tabla 2.",
+          "evidence_had": {
+            "table1_sources": [
+              44
+            ],
+            "table2_confirmers": null,
+            "independent_paths": 1,
+            "cross_table_support": false
+          },
+          "evidence_lacked": [
+            "sin_confirmacion_tabla2",
+            "sin_cruce_t1_t2"
+          ],
+          "components": {
+            "T1_SOURCE_SUPPORT": 1.0,
+            "T2_CONFIRMATION_SUPPORT": 0.0,
+            "CROSS_TABLE_SUPPORT": 0.0,
+            "MULTIPLE_OBSERVED_SUPPORT": 1.0,
+            "INDEPENDENT_PATH_SUPPORT": 1.0,
+            "DIRECT_PATH_SUPPORT": 1.0,
+            "MULTI_CONFIRMATION_SUPPORT": 0.0,
+            "HISTORICAL_EXACT_RATE": 0.0,
+            "HISTORICAL_D1_D3_RATE": 0.0,
+            "HISTORICAL_D1_D7_RATE": 0.0,
+            "FIRST_POSITION_SUPPORT": 0.0,
+            "ANY_POSITION_SUPPORT": 0.0,
+            "RECENT_PATTERN_SUPPORT": 0.0,
+            "CROSS_LOTTERY_SUPPORT": 0.0,
+            "CHAIN_CONTINUITY_SUPPORT": 0.0,
+            "DERIVATION_DEPTH_PENALTY": 2.0,
+            "AMBIGUITY_PENALTY": 0.0,
+            "DUPLICATE_PATH_PENALTY": 0.0
+          },
+          "penalties": [
+            "Penalización por profundidad de derivación=2.0"
+          ]
+        },
+        {
+          "role": "descartado_relativo",
+          "number": 91,
+          "classification": "CANDIDATO_PARCIAL",
+          "score": 32.0,
+          "why": "Perfil exige confirmación Tabla 2.",
+          "evidence_had": {
+            "table1_sources": [
+              44
+            ],
+            "table2_confirmers": null,
+            "independent_paths": 1,
+            "cross_table_support": false
+          },
+          "evidence_lacked": [
+            "sin_confirmacion_tabla2",
+            "sin_cruce_t1_t2"
+          ],
+          "components": {
+            "T1_SOURCE_SUPPORT": 1.0,
+            "T2_CONFIRMATION_SUPPORT": 0.0,
+            "CROSS_TABLE_SUPPORT": 0.0,
+            "MULTIPLE_OBSERVED_SUPPORT": 1.0,
+            "INDEPENDENT_PATH_SUPPORT": 1.0,
+            "DIRECT_PATH_SUPPORT": 1.0,
+            "MULTI_CONFIRMATION_SUPPORT": 0.0,
+            "HISTORICAL_EXACT_RATE": 0.0,
+            "HISTORICAL_D1_D3_RATE": 0.0,
+            "HISTORICAL_D1_D7_RATE": 0.0,
+            "FIRST_POSITION_SUPPORT": 0.0,
+            "ANY_POSITION_SUPPORT": 0.0,
+            "RECENT_PATTERN_SUPPORT": 0.0,
+            "CROSS_LOTTERY_SUPPORT": 0.0,
+            "CHAIN_CONTINUITY_SUPPORT": 0.0,
+            "DERIVATION_DEPTH_PENALTY": 2.0,
+            "AMBIGUITY_PENALTY": 0.0,
+            "DUPLICATE_PATH_PENALTY": 0.0
+          },
+          "penalties": [
+            "Penalización por profundidad de derivación=2.0"
+          ]
+        },
+        {
+          "role": "descartado_relativo",
+          "number": 40,
+          "classification": "FAMILIA_T1",
+          "score": 12.0,
+          "why": "Solo familia T1; insuficiente para fuerte en perfil actual.",
+          "evidence_had": {
+            "table1_sources": [
+              49
+            ],
+            "table2_confirmers": null,
+            "independent_paths": 1,
+            "cross_table_support": false
+          },
+          "evidence_lacked": [
+            "sin_confirmacion_tabla2",
+            "sin_cruce_t1_t2"
+          ],
+          "components": {
+            "T1_SOURCE_SUPPORT": 1.0,
+            "T2_CONFIRMATION_SUPPORT": 0.0,
+            "CROSS_TABLE_SUPPORT": 0.0,
+            "MULTIPLE_OBSERVED_SUPPORT": 0.0,
+            "INDEPENDENT_PATH_SUPPORT": 1.0,
+            "DIRECT_PATH_SUPPORT": 1.0,
+            "MULTI_CONFIRMATION_SUPPORT": 0.0,
+            "HISTORICAL_EXACT_RATE": 0.0,
+            "HISTORICAL_D1_D3_RATE": 0.0,
+            "HISTORICAL_D1_D7_RATE": 0.0,
+            "FIRST_POSITION_SUPPORT": 0.0,
+            "ANY_POSITION_SUPPORT": 0.0,
+            "RECENT_PATTERN_SUPPORT": 0.0,
+            "CROSS_LOTTERY_SUPPORT": 0.0,
+            "CHAIN_CONTINUITY_SUPPORT": 0.0,
+            "DERIVATION_DEPTH_PENALTY": 0.0,
+            "AMBIGUITY_PENALTY": 0.0,
+            "DUPLICATE_PATH_PENALTY": 0.0
+          },
+          "penalties": []
+        },
+        {
+          "role": "descartado_relativo",
+          "number": 83,
+          "classification": "FAMILIA_T1",
+          "score": 12.0,
+          "why": "Solo familia T1; insuficiente para fuerte en perfil actual.",
+          "evidence_had": {
+            "table1_sources": [
+              49
+            ],
+            "table2_confirmers": null,
+            "independent_paths": 1,
+            "cross_table_support": false
+          },
+          "evidence_lacked": [
+            "sin_confirmacion_tabla2",
+            "sin_cruce_t1_t2"
+          ],
+          "components": {
+            "T1_SOURCE_SUPPORT": 1.0,
+            "T2_CONFIRMATION_SUPPORT": 0.0,
+            "CROSS_TABLE_SUPPORT": 0.0,
+            "MULTIPLE_OBSERVED_SUPPORT": 0.0,
+            "INDEPENDENT_PATH_SUPPORT": 1.0,
+            "DIRECT_PATH_SUPPORT": 1.0,
+            "MULTI_CONFIRMATION_SUPPORT": 0.0,
+            "HISTORICAL_EXACT_RATE": 0.0,
+            "HISTORICAL_D1_D3_RATE": 0.0,
+            "HISTORICAL_D1_D7_RATE": 0.0,
+            "FIRST_POSITION_SUPPORT": 0.0,
+            "ANY_POSITION_SUPPORT": 0.0,
+            "RECENT_PATTERN_SUPPORT": 0.0,
+            "CROSS_LOTTERY_SUPPORT": 0.0,
+            "CHAIN_CONTINUITY_SUPPORT": 0.0,
+            "DERIVATION_DEPTH_PENALTY": 0.0,
+            "AMBIGUITY_PENALTY": 0.0,
+            "DUPLICATE_PATH_PENALTY": 0.0
+          },
+          "penalties": []
+        },
+        {
+          "role": "descartado_relativo",
+          "number": 57,
+          "classification": "DERIVACION_RELEVANTE",
+          "score": -40.0,
+          "why": "Derivación relevante; no fuerte principal en perfil estricto.",
+          "evidence_had": {
+            "table1_sources": null,
+            "table2_confirmers": null,
+            "independent_paths": 0,
+            "cross_table_support": false
+          },
+          "evidence_lacked": [
+            "sin_fuente_tabla1",
+            "sin_confirmacion_tabla2",
+            "sin_cruce_t1_t2"
+          ],
+          "components": {
+            "T1_SOURCE_SUPPORT": 0.0,
+            "T2_CONFIRMATION_SUPPORT": 0.0,
+            "CROSS_TABLE_SUPPORT": 0.0,
+            "MULTIPLE_OBSERVED_SUPPORT": 1.0,
+            "INDEPENDENT_PATH_SUPPORT": 0.0,
+            "DIRECT_PATH_SUPPORT": 0.0,
+            "MULTI_CONFIRMATION_SUPPORT": 0.0,
+            "HISTORICAL_EXACT_RATE": 0.0,
+            "HISTORICAL_D1_D3_RATE": 0.0,
+            "HISTORICAL_D1_D7_RATE": 0.0,
+            "FIRST_POSITION_SUPPORT": 0.0,
+            "ANY_POSITION_SUPPORT": 0.0,
+            "RECENT_PATTERN_SUPPORT": 0.0,
+            "CROSS_LOTTERY_SUPPORT": 0.0,
+            "CHAIN_CONTINUITY_SUPPORT": 0.0,
+            "DERIVATION_DEPTH_PENALTY": 1.0,
+            "AMBIGUITY_PENALTY": 0.0,
+            "DUPLICATE_PATH_PENALTY": 0.0
+          },
+          "penalties": [
+            "Penalización por profundidad de derivación=1.0"
+          ]
+        }
+      ],
+      "summary": "Primero 35 por mayor respaldo estructural (FUERTE_PRINCIPAL). Segundo 22."
+    },
+    "evidence_summary": {
+      "table1_sources": [
+        49
+      ],
+      "table2_confirmers": [
+        44,
+        70
+      ],
+      "independent_paths": 5,
+      "cross_table_support": true,
+      "multi_source_support": true
+    },
+    "graph_complete_before_discovery": true
+  }
+}

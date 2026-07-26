@@ -116,6 +116,27 @@ def chat(
     elif intent.intent == "SHOW_PREDICTIONS":
         tool_results["get_prediction_summary"] = call_tool("get_prediction_summary")
 
+    elif intent.intent == "INVESTIGATE":
+        from app.lottery.numeric_relations.analysis_engine.scientific_validation.investigator import (
+            investigator_answer,
+        )
+
+        inv = investigator_answer(message, numbers=intent.numbers or None)
+        tool_results["investigate_phase2"] = {"tool": "investigate_phase2", "data": inv}
+        response = build_response(
+            intent,
+            memory,
+            tool_results,
+            llm_text=None,
+            explanation_level=memory.explanation_level,
+        )
+        response["message"] = inv.get("message") or response["message"]
+        response["investigator"] = inv
+        response["plan"] = plan.to_dict()
+        response["j11a_version"] = J11A_VERSION
+        response["tool_results_keys"] = list(tool_results.keys())
+        return response
+
     system = (
         "Eres J-11A, copiloto analítico. EL MOTOR CALCULA; tú SOLO explicas. "
         "No inventes relaciones, fechas ni scores. No digas que un número va a salir. "

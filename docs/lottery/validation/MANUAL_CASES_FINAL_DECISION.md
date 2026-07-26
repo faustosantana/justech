@@ -5,7 +5,6 @@
 | Caso | Manual | Oficial (T1×T2) | Clasificación final | Histórico |
 |------|--------|-----------------|---------------------|-----------|
 | C1 | 29 | 29 | **FUERTE OFICIAL** | OK (nota: DB Nacional≠41 ese día; GM=41) |
-| C2 | 75 | �: DB Nacional≠41 ese día; GM=41) |
 | C2 | 75 | ∅ | **DIRECT_T2_NEIGHBOR_SIGNAL** (62→75) | Pattern backtest **RECHAZADO** vs random |
 | C3 | 35 | {22, 35} | **FUERTE OFICIAL** (no singleton) | OK |
 | C4 | 54 | 54 | **FUERTE OFICIAL** | Día+1 Loteka 54 ✓ |

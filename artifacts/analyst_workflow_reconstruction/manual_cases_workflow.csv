@@ -1,0 +1,6 @@
+case_id,observed,manual_fuerte,official,classification,workflow_note
+M1,41|41|70,29,29,FUERTE_OFICIAL_UNICO,21-jun: 41+70 (41 duplicado en libreta) → 29; estado FUERTE_ACTIVO / ESPERA
+M2,41|62,75,,VECINO_T2_DIRECTO,DIRECT_T2 experimental; no cierra por motor oficial
+M3,49|44|70,35,22|35,FUERTE_OFICIAL_ENTRE_VARIOS,Múltiples fuertes; socio eligió 35 (más confirmadores)
+M4,35|14,54,54,FUERTE_OFICIAL_UNICO,23-jun tras cierre de 29: 35+14→54; NUEVO_ANALISIS
+M5,39|58,94,94,FUERTE_OFICIAL_UNICO,Cadena independiente 39+58/84→94

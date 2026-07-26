@@ -1,0 +1,2199 @@
+{
+  "audit_id": "fd73a9ef-7274-4ef2-943e-2eb9eca9697f",
+  "branch": "feature/nr-analyst-workflow-reconstruction",
+  "base_commit": "907f27c",
+  "methodology_version": "nr-historical-relations-j1.0.0",
+  "motor_modified": false,
+  "tables_modified": false,
+  "production_touched": false,
+  "j11a_started": false,
+  "june_21": {
+    "geometry": {
+      "featured_first_numbers": [
+        {
+          "lottery": "Loteria Nacional",
+          "number": 44,
+          "time": "18:16:31",
+          "pos": 1
+        },
+        {
+          "lottery": "Gana Mas",
+          "number": 41,
+          "time": null,
+          "pos": 1
+        },
+        {
+          "lottery": "New York 10:30",
+          "number": 65,
+          "time": null,
+          "pos": 1
+        },
+        {
+          "lottery": "New York 2:30",
+          "number": 39,
+          "time": null,
+          "pos": 1
+        },
+        {
+          "lottery": "Quiniela Leidsa",
+          "number": 70,
+          "time": null,
+          "pos": 1
+        },
+        {
+          "lottery": "Quiniela Loteka",
+          "number": 62,
+          "time": null,
+          "pos": 1
+        },
+        {
+          "lottery": "Quiniela Real",
+          "number": 49,
+          "time": null,
+          "pos": 1
+        }
+      ],
+      "count_41": 1,
+      "has_70": true,
+      "official_from_41_70": [
+        {
+          "fuerte": 29,
+          "origin": 41,
+          "confirmers": [
+            70
+          ],
+          "n_confirmers": 1,
+          "origin_lotteries": [
+            "Gana Mas"
+          ],
+          "confirmer_lotteries": [
+            "Leidsa"
+          ]
+        }
+      ],
+      "note": "Libreta escribe 41+41+70; en FEATURED primeras del 21-jun hay un solo 41 (Gana Más) y 70 (Leidsa). El motor trata números únicos: 41+70→29 igual que 41+41+70."
+    },
+    "flow": {
+      "date": "2026-06-21",
+      "mode": "first_pos",
+      "featured_only": true,
+      "states": [
+        "RESULTADOS_NUEVOS",
+        "EXPLORACION_T1",
+        "CONFIRMACION_T2",
+        "FUERTE_ACTIVO",
+        "FUERTE_ACTIVO"
+      ],
+      "observations": [
+        {
+          "number": 44,
+          "lottery": "Loteria Nacional",
+          "time": "18:16:31",
+          "position": 1,
+          "position_label": "1ro",
+          "source_reference": "224692"
+        },
+        {
+          "number": 41,
+          "lottery": "Gana Mas",
+          "time": null,
+          "position": 1,
+          "position_label": "1ro",
+          "source_reference": "224681"
+        },
+        {
+          "number": 65,
+          "lottery": "New York 10:30",
+          "time": null,
+          "position": 1,
+          "position_label": "1ro",
+          "source_reference": "224704"
+        },
+        {
+          "number": 39,
+          "lottery": "New York 2:30",
+          "time": null,
+          "position": 1,
+          "position_label": "1ro",
+          "source_reference": "224680"
+        },
+        {
+          "number": 70,
+          "lottery": "Quiniela Leidsa",
+          "time": null,
+          "position": 1,
+          "position_label": "1ro",
+          "source_reference": "224686"
+        },
+        {
+          "number": 62,
+          "lottery": "Quiniela Loteka",
+          "time": null,
+          "position": 1,
+          "position_label": "1ro",
+          "source_reference": "224700"
+        },
+        {
+          "number": 49,
+          "lottery": "Quiniela Real",
+          "time": null,
+          "position": 1,
+          "position_label": "1ro",
+          "source_reference": "224676"
+        }
+      ],
+      "combinations": [
+        {
+          "fuerte": 9,
+          "origin": 39,
+          "confirmers": [
+            44,
+            70
+          ],
+          "n_confirmers": 2,
+          "origin_lotteries": [
+            "New York 2:30"
+          ],
+          "confirmer_lotteries": [
+            "Loteria Nacional",
+            "Quiniela Leidsa"
+          ]
+        },
+        {
+          "fuerte": 29,
+          "origin": 41,
+          "confirmers": [
+            44,
+            70
+          ],
+          "n_confirmers": 2,
+          "origin_lotteries": [
+            "Gana Mas"
+          ],
+          "confirmer_lotteries": [
+            "Loteria Nacional",
+            "Quiniela Leidsa"
+          ]
+        },
+        {
+          "fuerte": 35,
+          "origin": 49,
+          "confirmers": [
+            44,
+            70
+          ],
+          "n_confirmers": 2,
+          "origin_lotteries": [
+            "Quiniela Real"
+          ],
+          "confirmer_lotteries": [
+            "Loteria Nacional",
+            "Quiniela Leidsa"
+          ]
+        },
+        {
+          "fuerte": 22,
+          "origin": 44,
+          "confirmers": [
+            70
+          ],
+          "n_confirmers": 1,
+          "origin_lotteries": [
+            "Loteria Nacional"
+          ],
+          "confirmer_lotteries": [
+            "Quiniela Leidsa"
+          ]
+        },
+        {
+          "fuerte": 75,
+          "origin": 44,
+          "confirmers": [
+            62
+          ],
+          "n_confirmers": 1,
+          "origin_lotteries": [
+            "Loteria Nacional"
+          ],
+          "confirmer_lotteries": [
+            "Quiniela Loteka"
+          ]
+        }
+      ],
+      "timeline": [
+        {
+          "after_lottery": "Loteria Nacional",
+          "after_time": "18:16:31",
+          "n_draws": 1,
+          "observed_numbers": [
+            44
+          ],
+          "combinations": [],
+          "has_35_14_54": false,
+          "has_29": false
+        },
+        {
+          "after_lottery": "Gana Mas",
+          "after_time": null,
+          "n_draws": 2,
+          "observed_numbers": [
+            41,
+            44
+          ],
+          "combinations": [
+            {
+              "fuerte": 29,
+              "origin": 41,
+              "confirmers": [
+                44
+              ],
+              "n_confirmers": 1,
+              "origin_lotteries": [
+                "Gana Mas"
+              ],
+              "confirmer_lotteries": [
+                "Loteria Nacional"
+              ]
+            }
+          ],
+          "has_35_14_54": false,
+          "has_29": true
+        },
+        {
+          "after_lottery": "New York 10:30",
+          "after_time": null,
+          "n_draws": 3,
+          "observed_numbers": [
+            41,
+            44,
+            65
+          ],
+          "combinations": [
+            {
+              "fuerte": 29,
+              "origin": 41,
+              "confirmers": [
+                44
+              ],
+              "n_confirmers": 1,
+              "origin_lotteries": [
+                "Gana Mas"
+              ],
+              "confirmer_lotteries": [
+                "Loteria Nacional"
+              ]
+            }
+          ],
+          "has_35_14_54": false,
+          "has_29": true
+        },
+        {
+          "after_lottery": "New York 2:30",
+          "after_time": null,
+          "n_draws": 4,
+          "observed_numbers": [
+            39,
+            41,
+            44,
+            65
+          ],
+          "combinations": [
+            {
+              "fuerte": 9,
+              "origin": 39,
+              "confirmers": [
+                44
+              ],
+              "n_confirmers": 1,
+              "origin_lotteries": [
+                "New York 2:30"
+              ],
+              "confirmer_lotteries": [
+                "Loteria Nacional"
+              ]
+            },
+            {
+              "fuerte": 29,
+              "origin": 41,
+              "confirmers": [
+                44
+              ],
+              "n_confirmers": 1,
+              "origin_lotteries": [
+                "Gana Mas"
+              ],
+              "confirmer_lotteries": [
+                "Loteria Nacional"
+              ]
+            }
+          ],
+          "has_35_14_54": false,
+          "has_29": true
+        },
+        {
+          "after_lottery": "Quiniela Leidsa",
+          "after_time": null,
+          "n_draws": 5,
+          "observed_numbers": [
+            39,
+            41,
+            44,
+            65,
+            70
+          ],
+          "combinations": [
+            {
+              "fuerte": 9,
+              "origin": 39,
+              "confirmers": [
+                44,
+                70
+              ],
+              "n_confirmers": 2,
+              "origin_lotteries": [
+                "New York 2:30"
+              ],
+              "confirmer_lotteries": [
+                "Loteria Nacional",
+                "Quiniela Leidsa"
+              ]
+            },
+            {
+              "fuerte": 29,
+              "origin": 41,
+              "confirmers": [
+                44,
+                70
+              ],
+              "n_confirmers": 2,
+              "origin_lotteries": [
+                "Gana Mas"
+              ],
+              "confirmer_lotteries": [
+                "Loteria Nacional",
+                "Quiniela Leidsa"
+              ]
+            },
+            {
+              "fuerte": 22,
+              "origin": 44,
+              "confirmers": [
+                70
+              ],
+              "n_confirmers": 1,
+              "origin_lotteries": [
+                "Loteria Nacional"
+              ],
+              "confirmer_lotteries": [
+                "Quiniela Leidsa"
+              ]
+            }
+          ],
+          "has_35_14_54": false,
+          "has_29": true
+        },
+        {
+          "after_lottery": "Quiniela Loteka",
+          "after_time": null,
+          "n_draws": 6,
+          "observed_numbers": [
+            39,
+            41,
+            44,
+            62,
+            65,
+            70
+          ],
+          "combinations": [
+            {
+              "fuerte": 9,
+              "origin": 39,
+              "confirmers": [
+                44,
+                70
+              ],
+              "n_confirmers": 2,
+              "origin_lotteries": [
+                "New York 2:30"
+              ],
+              "confirmer_lotteries": [
+                "Loteria Nacional",
+                "Quiniela Leidsa"
+              ]
+            },
+            {
+              "fuerte": 29,
+              "origin": 41,
+              "confirmers": [
+                44,
+                70
+              ],
+              "n_confirmers": 2,
+              "origin_lotteries": [
+                "Gana Mas"
+              ],
+              "confirmer_lotteries": [
+                "Loteria Nacional",
+                "Quiniela Leidsa"
+              ]
+            },
+            {
+              "fuerte": 22,
+              "origin": 44,
+              "confirmers": [
+                70
+              ],
+              "n_confirmers": 1,
+              "origin_lotteries": [
+                "Loteria Nacional"
+              ],
+              "confirmer_lotteries": [
+                "Quiniela Leidsa"
+              ]
+            },
+            {
+              "fuerte": 75,
+              "origin": 44,
+              "confirmers": [
+                62
+              ],
+              "n_confirmers": 1,
+              "origin_lotteries": [
+                "Loteria Nacional"
+              ],
+              "confirmer_lotteries": [
+                "Quiniela Loteka"
+              ]
+            }
+          ],
+          "has_35_14_54": false,
+          "has_29": true
+        },
+        {
+          "after_lottery": "Quiniela Real",
+          "after_time": null,
+          "n_draws": 7,
+          "observed_numbers": [
+            39,
+            41,
+            44,
+            49,
+            62,
+            65,
+            70
+          ],
+          "combinations": [
+            {
+              "fuerte": 9,
+              "origin": 39,
+              "confirmers": [
+                44,
+                70
+              ],
+              "n_confirmers": 2,
+              "origin_lotteries": [
+                "New York 2:30"
+              ],
+              "confirmer_lotteries": [
+                "Loteria Nacional",
+                "Quiniela Leidsa"
+              ]
+            },
+            {
+              "fuerte": 29,
+              "origin": 41,
+              "confirmers": [
+                44,
+                70
+              ],
+              "n_confirmers": 2,
+              "origin_lotteries": [
+                "Gana Mas"
+              ],
+              "confirmer_lotteries": [
+                "Loteria Nacional",
+                "Quiniela Leidsa"
+              ]
+            },
+            {
+              "fuerte": 35,
+              "origin": 49,
+              "confirmers": [
+                44,
+                70
+              ],
+              "n_confirmers": 2,
+              "origin_lotteries": [
+                "Quiniela Real"
+              ],
+              "confirmer_lotteries": [
+                "Loteria Nacional",
+                "Quiniela Leidsa"
+              ]
+            },
+            {
+              "fuerte": 22,
+              "origin": 44,
+              "confirmers": [
+                70
+              ],
+              "n_confirmers": 1,
+              "origin_lotteries": [
+                "Loteria Nacional"
+              ],
+              "confirmer_lotteries": [
+                "Quiniela Leidsa"
+              ]
+            },
+            {
+              "fuerte": 75,
+              "origin": 44,
+              "confirmers": [
+                62
+              ],
+              "n_confirmers": 1,
+              "origin_lotteries": [
+                "Loteria Nacional"
+              ],
+              "confirmer_lotteries": [
+                "Quiniela Loteka"
+              ]
+            }
+          ],
+          "has_35_14_54": false,
+          "has_29": true
+        }
+      ],
+      "pending_before": null,
+      "fulfilled": false,
+      "closed_case": null,
+      "new_pending": {
+        "fuerte": 9,
+        "origin": 39,
+        "confirmers": [
+          44,
+          70
+        ]
+      },
+      "methodology_version": "nr-historical-relations-j1.0.0"
+    },
+    "selection_note": "FEATURED primeras del 21-jun producen VARIOS fuertes oficiales: 9, 29, 35, 22, 75. La libreta solo escribe 41+41+70→29. No escribía todas las combos oficiales; enfocaba el par observado 41+70."
+  },
+  "june_22": {
+    "flow": {
+      "date": "2026-06-22",
+      "mode": "first_pos",
+      "featured_only": true,
+      "states": [
+        "RESULTADOS_NUEVOS",
+        "EXPLORACION_T1",
+        "CONFIRMACION_T2",
+        "ESPERA_DE_CUMPLIMIENTO"
+      ],
+      "observations": [
+        {
+          "number": 74,
+          "lottery": "Loteria Nacional",
+          "time": "21:04:58",
+          "position": 1,
+          "position_label": "1ro",
+          "source_reference": "224744"
+        },
+        {
+          "number": 58,
+          "lottery": "Gana Mas",
+          "time": null,
+          "position": 1,
+          "position_label": "1ro",
+          "source_reference": "224723"
+        },
+        {
+          "number": 71,
+          "lottery": "New York 10:30",
+          "time": null,
+          "position": 1,
+          "position_label": "1ro",
+          "source_reference": "224746"
+        },
+        {
+          "number": 50,
+          "lottery": "New York 2:30",
+          "time": null,
+          "position": 1,
+          "position_label": "1ro",
+          "source_reference": "224722"
+        },
+        {
+          "number": 21,
+          "lottery": "Quiniela Leidsa",
+          "time": null,
+          "position": 1,
+          "position_label": "1ro",
+          "source_reference": "224742"
+        },
+        {
+          "number": 73,
+          "lottery": "Quiniela Loteka",
+          "time": null,
+          "position": 1,
+          "position_label": "1ro",
+          "source_reference": "224738"
+        },
+        {
+          "number": 62,
+          "lottery": "Quiniela Real",
+          "time": null,
+          "position": 1,
+          "position_label": "1ro",
+          "source_reference": "224719"
+        }
+      ],
+      "combinations": [],
+      "timeline": [
+        {
+          "after_lottery": "Loteria Nacional",
+          "after_time": "21:04:58",
+          "n_draws": 1,
+          "observed_numbers": [
+            74
+          ],
+          "combinations": [],
+          "has_35_14_54": false,
+          "has_29": false
+        },
+        {
+          "after_lottery": "Gana Mas",
+          "after_time": null,
+          "n_draws": 2,
+          "observed_numbers": [
+            58,
+            74
+          ],
+          "combinations": [],
+          "has_35_14_54": false,
+          "has_29": false
+        },
+        {
+          "after_lottery": "New York 10:30",
+          "after_time": null,
+          "n_draws": 3,
+          "observed_numbers": [
+            58,
+            71,
+            74
+          ],
+          "combinations": [],
+          "has_35_14_54": false,
+          "has_29": false
+        },
+        {
+          "after_lottery": "New York 2:30",
+          "after_time": null,
+          "n_draws": 4,
+          "observed_numbers": [
+            50,
+            58,
+            71,
+            74
+          ],
+          "combinations": [],
+          "has_35_14_54": false,
+          "has_29": false
+        },
+        {
+          "after_lottery": "Quiniela Leidsa",
+          "after_time": null,
+          "n_draws": 5,
+          "observed_numbers": [
+            21,
+            50,
+            58,
+            71,
+            74
+          ],
+          "combinations": [],
+          "has_35_14_54": false,
+          "has_29": false
+        },
+        {
+          "after_lottery": "Quiniela Loteka",
+          "after_time": null,
+          "n_draws": 6,
+          "observed_numbers": [
+            21,
+            50,
+            58,
+            71,
+            73,
+            74
+          ],
+          "combinations": [],
+          "has_35_14_54": false,
+          "has_29": false
+        },
+        {
+          "after_lottery": "Quiniela Real",
+          "after_time": null,
+          "n_draws": 7,
+          "observed_numbers": [
+            21,
+            50,
+            58,
+            62,
+            71,
+            73,
+            74
+          ],
+          "combinations": [],
+          "has_35_14_54": false,
+          "has_29": false
+        }
+      ],
+      "pending_before": {
+        "fuerte": 29,
+        "activation_date": "2026-06-21"
+      },
+      "fulfilled": false,
+      "closed_case": null,
+      "new_pending": null,
+      "methodology_version": "nr-historical-relations-j1.0.0"
+    },
+    "29_still_pending": true
+  },
+  "june_23": {
+    "flow": {
+      "fulfilled": true,
+      "closed_case": {
+        "fuerte": 29,
+        "activation_date": "2026-06-21",
+        "fulfillment_date": "2026-06-23",
+        "day_offset": 2,
+        "status": "CASO_CUMPLIDO"
+      },
+      "new_pending": {
+        "fuerte": 54,
+        "origin": 35,
+        "confirmers": [
+          14
+        ]
+      },
+      "combinations": [
+        {
+          "fuerte": 54,
+          "origin": 35,
+          "confirmers": [
+            14
+          ],
+          "n_confirmers": 1,
+          "origin_lotteries": [
+            "Loteria Nacional"
+          ],
+          "confirmer_lotteries": [
+            "Quiniela Loteka"
+          ]
+        }
+      ],
+      "states": [
+        "RESULTADOS_NUEVOS",
+        "EXPLORACION_T1",
+        "CONFIRMACION_T2",
+        "FUERTE_ACTIVO",
+        "FUERTE_CUMPLIDO",
+        "CASO_CERRADO",
+        "NUEVO_ANALISIS",
+        "FUERTE_ACTIVO"
+      ],
+      "observations": [
+        {
+          "number": 35,
+          "lottery": "Loteria Nacional",
+          "time": "21:01:42",
+          "position": 1,
+          "position_label": "1ro",
+          "source_reference": "224790"
+        },
+        {
+          "number": 7,
+          "lottery": "Gana Mas",
+          "time": null,
+          "position": 1,
+          "position_label": "1ro",
+          "source_reference": "224766"
+        },
+        {
+          "number": 15,
+          "lottery": "New York 10:30",
+          "time": null,
+          "position": 1,
+          "position_label": "1ro",
+          "source_reference": "224792"
+        },
+        {
+          "number": 84,
+          "lottery": "New York 2:30",
+          "time": null,
+          "position": 1,
+          "position_label": "1ro",
+          "source_reference": "224765"
+        },
+        {
+          "number": 29,
+          "lottery": "Quiniela Leidsa",
+          "time": null,
+          "position": 1,
+          "position_label": "1ro",
+          "source_reference": "224789"
+        },
+        {
+          "number": 14,
+          "lottery": "Quiniela Loteka",
+          "time": null,
+          "position": 1,
+          "position_label": "1ro",
+          "source_reference": "224784"
+        },
+        {
+          "number": 67,
+          "lottery": "Quiniela Real",
+          "time": null,
+          "position": 1,
+          "position_label": "1ro",
+          "source_reference": "224761"
+        }
+      ]
+    },
+    "modalities": {
+      "A_first_pos_featured": {
+        "mode": "first_pos",
+        "featured_only": true,
+        "n_observations": 7,
+        "observed": [
+          7,
+          14,
+          15,
+          29,
+          35,
+          67,
+          84
+        ],
+        "combinations": [
+          {
+            "fuerte": 54,
+            "origin": 35,
+            "confirmers": [
+              14
+            ],
+            "n_confirmers": 1,
+            "origin_lotteries": [
+              "Loteria Nacional"
+            ],
+            "confirmer_lotteries": [
+              "Quiniela Loteka"
+            ]
+          }
+        ],
+        "has_35_14_54": true,
+        "n_fuertes": 1
+      },
+      "B_all_pos_featured": {
+        "mode": "all_pos",
+        "featured_only": true,
+        "n_observations": 20,
+        "observed": [
+          1,
+          7,
+          14,
+          15,
+          16,
+          23,
+          26,
+          29,
+          31,
+          35,
+          42,
+          56,
+          57,
+          59,
+          63,
+          65,
+          67,
+          69,
+          70,
+          84
+        ],
+        "combinations": [
+          {
+            "fuerte": 7,
+            "origin": 42,
+            "confirmers": [
+              29,
+              35,
+              63,
+              70
+            ],
+            "n_confirmers": 4,
+            "origin_lotteries": [
+              "Quiniela Loteka"
+            ],
+            "confirmer_lotteries": [
+              "Loteria Nacional",
+              "New York 2:30",
+              "Quiniela Leidsa"
+            ]
+          },
+          {
+            "fuerte": 11,
+            "origin": 35,
+            "confirmers": [
+              57,
+              69
+            ],
+            "n_confirmers": 2,
+            "origin_lotteries": [
+              "Loteria Nacional"
+            ],
+            "confirmer_lotteries": [
+              "Quiniela Loteka",
+              "Quiniela Real"
+            ]
+          },
+          {
+            "fuerte": 54,
+            "origin": 35,
+            "confirmers": [
+              14
+            ],
+            "n_confirmers": 1,
+            "origin_lotteries": [
+              "Loteria Nacional"
+            ],
+            "confirmer_lotteries": [
+              "Quiniela Loteka"
+            ]
+          },
+          {
+            "fuerte": 71,
+            "origin": 42,
+            "confirmers": [
+              56
+            ],
+            "n_confirmers": 1,
+            "origin_lotteries": [
+              "Quiniela Loteka"
+            ],
+            "confirmer_lotteries": [
+              "New York 10:30"
+            ]
+          },
+          {
+            "fuerte": 88,
+            "origin": 31,
+            "confirmers": [
+              67
+            ],
+            "n_confirmers": 1,
+            "origin_lotteries": [
+              "New York 2:30"
+            ],
+            "confirmer_lotteries": [
+              "Quiniela Real"
+            ]
+          }
+        ],
+        "has_35_14_54": true,
+        "n_fuertes": 5
+      },
+      "C_chrono_first_pos_featured": {
+        "mode": "first_pos",
+        "featured_only": true,
+        "n_observations": 7,
+        "observed": [
+          7,
+          14,
+          15,
+          29,
+          35,
+          67,
+          84
+        ],
+        "combinations": [
+          {
+            "fuerte": 54,
+            "origin": 35,
+            "confirmers": [
+              14
+            ],
+            "n_confirmers": 1,
+            "origin_lotteries": [
+              "Loteria Nacional"
+            ],
+            "confirmer_lotteries": [
+              "Quiniela Loteka"
+            ]
+          }
+        ],
+        "has_35_14_54": true,
+        "n_fuertes": 1
+      },
+      "D_featured_seven_first": {
+        "mode": "first_pos",
+        "featured_only": true,
+        "n_observations": 7,
+        "observed": [
+          7,
+          14,
+          15,
+          29,
+          35,
+          67,
+          84
+        ],
+        "combinations": [
+          {
+            "fuerte": 54,
+            "origin": 35,
+            "confirmers": [
+              14
+            ],
+            "n_confirmers": 1,
+            "origin_lotteries": [
+              "Loteria Nacional"
+            ],
+            "confirmer_lotteries": [
+              "Quiniela Loteka"
+            ]
+          }
+        ],
+        "has_35_14_54": true,
+        "n_fuertes": 1
+      },
+      "E_all_lotteries_first": {
+        "mode": "first_pos",
+        "featured_only": false,
+        "n_observations": 45,
+        "observed": [
+          1,
+          4,
+          7,
+          8,
+          9,
+          11,
+          12,
+          14,
+          15,
+          18,
+          20,
+          24,
+          26,
+          29,
+          30,
+          35,
+          37,
+          38,
+          40,
+          41,
+          43,
+          44,
+          47,
+          48,
+          49,
+          50,
+          56,
+          61,
+          67,
+          70,
+          71,
+          72,
+          80,
+          84,
+          89,
+          93
+        ],
+        "combinations": [
+          {
+            "fuerte": 42,
+            "origin": 37,
+            "confirmers": [
+              7,
+              9,
+              29,
+              35,
+              44,
+              70
+            ],
+            "n_confirmers": 6,
+            "origin_lotteries": [
+              "Florida Dia"
+            ],
+            "confirmer_lotteries": [
+              "Anguila 1:00 PM",
+              "Gana Mas",
+              "King Lottery PM",
+              "La Suerte MD",
+              "Loteria Nacional",
+              "Quiniela Leidsa"
+            ]
+          },
+          {
+            "fuerte": 63,
+            "origin": 38,
+            "confirmers": [
+              7,
+              9,
+              29,
+              35,
+              44,
+              70
+            ],
+            "n_confirmers": 6,
+            "origin_lotteries": [
+              "Anguila 02:00 PM",
+              "La Primera Noche",
+              "Pega 3 Mas"
+            ],
+            "confirmer_lotteries": [
+              "Anguila 1:00 PM",
+              "Gana Mas",
+              "King Lottery PM",
+              "La Suerte MD",
+              "Loteria Nacional",
+              "Quiniela Leidsa"
+            ]
+          },
+          {
+            "fuerte": 22,
+            "origin": 44,
+            "confirmers": [
+              7,
+              9,
+              29,
+              35,
+              70
+            ],
+            "n_confirmers": 5,
+            "origin_lotteries": [
+              "La Suerte MD"
+            ],
+            "confirmer_lotteries": [
+              "Anguila 1:00 PM",
+              "Gana Mas",
+              "King Lottery PM",
+              "Loteria Nacional",
+              "Quiniela Leidsa"
+            ]
+          },
+          {
+            "fuerte": 29,
+            "origin": 41,
+            "confirmers": [
+              7,
+              9,
+              35,
+              44,
+              70
+            ],
+            "n_confirmers": 5,
+            "origin_lotteries": [
+              "Anguila 07:00 PM",
+              "Florida Noche"
+            ],
+            "confirmer_lotteries": [
+              "Anguila 1:00 PM",
+              "Gana Mas",
+              "King Lottery PM",
+              "La Suerte MD",
+              "Loteria Nacional"
+            ]
+          },
+          {
+            "fuerte": 35,
+            "origin": 49,
+            "confirmers": [
+              7,
+              9,
+              29,
+              44,
+              70
+            ],
+            "n_confirmers": 5,
+            "origin_lotteries": [
+              "Haiti Bolet 11:30 AM"
+            ],
+            "confirmer_lotteries": [
+              "Anguila 1:00 PM",
+              "Gana Mas",
+              "King Lottery PM",
+              "La Suerte MD",
+              "Quiniela Leidsa"
+            ]
+          },
+          {
+            "fuerte": 44,
+            "origin": 43,
+            "confirmers": [
+              7,
+              9,
+              29,
+              35,
+              70
+            ],
+            "n_confirmers": 5,
+            "origin_lotteries": [
+              "Quiniela LoteDom"
+            ],
+            "confirmer_lotteries": [
+              "Anguila 1:00 PM",
+              "Gana Mas",
+              "King Lottery PM",
+              "Loteria Nacional",
+              "Quiniela Leidsa"
+            ]
+          },
+          {
+            "fuerte": 12,
+            "origin": 43,
+            "confirmers": [
+              41,
+              56,
+              71,
+              89
+            ],
+            "n_confirmers": 4,
+            "origin_lotteries": [
+              "Quiniela LoteDom"
+            ],
+            "confirmer_lotteries": [
+              "Anguila 07:00 PM",
+              "Anguila 08:00 PM",
+              "Anguila 09:00 AM",
+              "Anguila 6:00 PM",
+              "Florida Noche"
+            ]
+          },
+          {
+            "fuerte": 56,
+            "origin": 40,
+            "confirmers": [
+              12,
+              41,
+              71,
+              89
+            ],
+            "n_confirmers": 4,
+            "origin_lotteries": [
+              "Haiti Bolet 06:30 PM"
+            ],
+            "confirmer_lotteries": [
+              "Anguila 07:00 PM",
+              "Anguila 08:00 PM",
+              "Anguila 09:00 AM",
+              "Florida Noche",
+              "La Primera Tarde",
+              "Loto Pool"
+            ]
+          },
+          {
+            "fuerte": 70,
+            "origin": 44,
+            "confirmers": [
+              7,
+              9,
+              29,
+              35
+            ],
+            "n_confirmers": 4,
+            "origin_lotteries": [
+              "La Suerte MD"
+            ],
+            "confirmer_lotteries": [
+              "Anguila 1:00 PM",
+              "Gana Mas",
+              "Loteria Nacional",
+              "Quiniela Leidsa"
+            ]
+          },
+          {
+            "fuerte": 89,
+            "origin": 48,
+            "confirmers": [
+              12,
+              41,
+              56,
+              71
+            ],
+            "n_confirmers": 4,
+            "origin_lotteries": [
+              "Anguila 08:00 AM",
+              "Mega Millions"
+            ],
+            "confirmer_lotteries": [
+              "Anguila 07:00 PM",
+              "Anguila 08:00 PM",
+              "Anguila 6:00 PM",
+              "Florida Noche",
+              "La Primera Tarde",
+              "Loto Pool"
+            ]
+          },
+          {
+            "fuerte": 59,
+            "origin": 44,
+            "confirmers": [
+              26,
+              72
+            ],
+            "n_confirmers": 2,
+            "origin_lotteries": [
+              "La Suerte MD"
+            ],
+            "confirmer_lotteries": [
+              "Anguila 05:00 PM",
+              "Anguila 10:00 AM"
+            ]
+          },
+          {
+            "fuerte": 4,
+            "origin": 47,
+            "confirmers": [
+              40
+            ],
+            "n_confirmers": 1,
+            "origin_lotteries": [
+              "Haiti Bolet 05:30 PM"
+            ],
+            "confirmer_lotteries": [
+              "Haiti Bolet 06:30 PM"
+            ]
+          },
+          {
+            "fuerte": 5,
+            "origin": 37,
+            "confirmers": [
+              50
+            ],
+            "n_confirmers": 1,
+            "origin_lotteries": [
+              "Florida Dia"
+            ],
+            "confirmer_lotteries": [
+              "La Suerte 6PM"
+            ]
+          },
+          {
+            "fuerte": 8,
+            "origin": 40,
+            "confirmers": [
+              80
+            ],
+            "n_confirmers": 1,
+            "origin_lotteries": [
+              "Haiti Bolet 06:30 PM"
+            ],
+            "confirmer_lotteries": [
+              "El Quemaito Mayor"
+            ]
+          },
+          {
+            "fuerte": 10,
+            "origin": 37,
+            "confirmers": [
+              1
+            ],
+            "n_confirmers": 1,
+            "origin_lotteries": [
+              "Florida Dia"
+            ],
+            "confirmer_lotteries": [
+              "Loto Real",
+              "Mega Chance"
+            ]
+          },
+          {
+            "fuerte": 40,
+            "origin": 49,
+            "confirmers": [
+              4
+            ],
+            "n_confirmers": 1,
+            "origin_lotteries": [
+              "Haiti Bolet 11:30 AM"
+            ],
+            "confirmer_lotteries": [
+              "Haiti Bolet 07:30 PM"
+            ]
+          },
+          {
+            "fuerte": 54,
+            "origin": 35,
+            "confirmers": [
+              14
+            ],
+            "n_confirmers": 1,
+            "origin_lotteries": [
+              "Loteria Nacional"
+            ],
+            "confirmer_lotteries": [
+              "Quiniela Loteka"
+            ]
+          },
+          {
+            "fuerte": 57,
+            "origin": 30,
+            "confirmers": [
+              11
+            ],
+            "n_confirmers": 1,
+            "origin_lotteries": [
+              "King Lottery AM"
+            ],
+            "confirmer_lotteries": [
+              "Super Kino Tv"
+            ]
+          },
+          {
+            "fuerte": 72,
+            "origin": 40,
+            "confirmers": [
+              26
+            ],
+            "n_confirmers": 1,
+            "origin_lotteries": [
+              "Haiti Bolet 06:30 PM"
+            ],
+            "confirmer_lotteries": [
+              "Anguila 10:00 AM"
+            ]
+          },
+          {
+            "fuerte": 79,
+            "origin": 47,
+            "confirmers": [
+              67
+            ],
+            "n_confirmers": 1,
+            "origin_lotteries": [
+              "Haiti Bolet 05:30 PM"
+            ],
+            "confirmer_lotteries": [
+              "Quiniela Real"
+            ]
+          },
+          {
+            "fuerte": 83,
+            "origin": 49,
+            "confirmers": [
+              30
+            ],
+            "n_confirmers": 1,
+            "origin_lotteries": [
+              "Haiti Bolet 11:30 AM"
+            ],
+            "confirmer_lotteries": [
+              "King Lottery AM"
+            ]
+          },
+          {
+            "fuerte": 91,
+            "origin": 44,
+            "confirmers": [
+              11
+            ],
+            "n_confirmers": 1,
+            "origin_lotteries": [
+              "La Suerte MD"
+            ],
+            "confirmer_lotteries": [
+              "Super Kino Tv"
+            ]
+          },
+          {
+            "fuerte": 93,
+            "origin": 41,
+            "confirmers": [
+              48
+            ],
+            "n_confirmers": 1,
+            "origin_lotteries": [
+              "Anguila 07:00 PM",
+              "Florida Noche"
+            ],
+            "confirmer_lotteries": [
+              "Anguila 08:00 AM",
+              "Mega Millions"
+            ]
+          },
+          {
+            "fuerte": 100,
+            "origin": 38,
+            "confirmers": [
+              1
+            ],
+            "n_confirmers": 1,
+            "origin_lotteries": [
+              "Anguila 02:00 PM",
+              "La Primera Noche",
+              "Pega 3 Mas"
+            ],
+            "confirmer_lotteries": [
+              "Loto Real",
+              "Mega Chance"
+            ]
+          }
+        ],
+        "has_35_14_54": true,
+        "n_fuertes": 24
+      },
+      "first_second_featured": {
+        "mode": "first_second",
+        "featured_only": true,
+        "n_observations": 14,
+        "observed": [
+          1,
+          7,
+          14,
+          15,
+          23,
+          29,
+          35,
+          42,
+          56,
+          63,
+          67,
+          69,
+          70,
+          84
+        ],
+        "combinations": [
+          {
+            "fuerte": 7,
+            "origin": 42,
+            "confirmers": [
+              29,
+              35,
+              63,
+              70
+            ],
+            "n_confirmers": 4,
+            "origin_lotteries": [
+              "Quiniela Loteka"
+            ],
+            "confirmer_lotteries": [
+              "Loteria Nacional",
+              "New York 2:30",
+              "Quiniela Leidsa"
+            ]
+          },
+          {
+            "fuerte": 11,
+            "origin": 35,
+            "confirmers": [
+              69
+            ],
+            "n_confirmers": 1,
+            "origin_lotteries": [
+              "Loteria Nacional"
+            ],
+            "confirmer_lotteries": [
+              "Quiniela Real"
+            ]
+          },
+          {
+            "fuerte": 54,
+            "origin": 35,
+            "confirmers": [
+              14
+            ],
+            "n_confirmers": 1,
+            "origin_lotteries": [
+              "Loteria Nacional"
+            ],
+            "confirmer_lotteries": [
+              "Quiniela Loteka"
+            ]
+          },
+          {
+            "fuerte": 71,
+            "origin": 42,
+            "confirmers": [
+              56
+            ],
+            "n_confirmers": 1,
+            "origin_lotteries": [
+              "Quiniela Loteka"
+            ],
+            "confirmer_lotteries": [
+              "New York 10:30"
+            ]
+          }
+        ],
+        "has_35_14_54": true,
+        "n_fuertes": 4
+      }
+    },
+    "hypotheses": {
+      "A_only_official_valid": {
+        "claim": "35+14→54 fue la única combinación oficial válida (FEATURED primeras)",
+        "n_combinations": 1,
+        "combinations": [
+          {
+            "fuerte": 54,
+            "origin": 35,
+            "confirmers": [
+              14
+            ],
+            "n_confirmers": 1,
+            "origin_lotteries": [
+              "Loteria Nacional"
+            ],
+            "confirmer_lotteries": [
+              "Quiniela Loteka"
+            ]
+          }
+        ],
+        "supported": true,
+        "evidence": "Con FEATURED_SEVEN primeras posiciones hay 1 fuerte(s)."
+      },
+      "B_most_confirmers": {
+        "claim": "Fue la de más confirmadores",
+        "supported": true,
+        "evidence": [
+          {
+            "fuerte": 54,
+            "origin": 35,
+            "confirmers": [
+              14
+            ],
+            "n_confirmers": 1,
+            "origin_lotteries": [
+              "Loteria Nacional"
+            ],
+            "confirmer_lotteries": [
+              "Quiniela Loteka"
+            ]
+          }
+        ]
+      },
+      "C_first_chronologically": {
+        "claim": "Fue la primera combinación válida en el día",
+        "first_step_with_combo": "Quiniela Loteka",
+        "first_step_with_35_14_54": "Quiniela Loteka",
+        "supported": true,
+        "evidence": "Primera combo del día tras Quiniela Loteka; 35+14→54 aparece tras Quiniela Loteka."
+      },
+      "D_first_positions": {
+        "claim": "Combinación entre primeras posiciones",
+        "supported": true,
+        "evidence": "35 = Nacional pos1; 14 = Loteka pos1 (DEV confirmado)"
+      },
+      "E_after_closing_29": {
+        "claim": "Seleccionada tras cerrar el fuerte 29",
+        "supported": true,
+        "evidence": {
+          "fuerte": 29,
+          "activation_date": "2026-06-21",
+          "fulfillment_date": "2026-06-23",
+          "day_offset": 2,
+          "status": "CASO_CUMPLIDO"
+        }
+      },
+      "F_one_of_several": {
+        "claim": "Una de varias combinaciones posibles",
+        "supported": false,
+        "all_lotteries_combos": 24,
+        "all_pos_featured": 5
+      },
+      "G_chain_from_29": {
+        "claim": "Parte de cadena iniciada por 29 (29 produce 35/14)",
+        "29_t1_group": [
+          13,
+          29,
+          93
+        ],
+        "35_related_to_29": true,
+        "14_related_to_29": false,
+        "supported": true,
+        "note": "Cadena operativa (cumplimiento→nuevo análisis), no continuidad geométrica 29→35/14."
+      },
+      "H_known_recurrent": {
+        "claim": "Combinación recurrente conocida 35→54←14",
+        "historical_activations": 15,
+        "supported": true,
+        "evidence": "Auditoría dinámica: 15 activaciones históricas 35→54←14"
+      }
+    },
+    "first_position_hypothesis": {
+      "notebook_reproducible_with_featured_first_only": true,
+      "june21_featured_first_combos": [
+        {
+          "fuerte": 9,
+          "origin": 39,
+          "confirmers": [
+            44,
+            70
+          ],
+          "n_confirmers": 2,
+          "origin_lotteries": [
+            "New York 2:30"
+          ],
+          "confirmer_lotteries": [
+            "Loteria Nacional",
+            "Quiniela Leidsa"
+          ]
+        },
+        {
+          "fuerte": 29,
+          "origin": 41,
+          "confirmers": [
+            44,
+            70
+          ],
+          "n_confirmers": 2,
+          "origin_lotteries": [
+            "Gana Mas"
+          ],
+          "confirmer_lotteries": [
+            "Loteria Nacional",
+            "Quiniela Leidsa"
+          ]
+        },
+        {
+          "fuerte": 35,
+          "origin": 49,
+          "confirmers": [
+            44,
+            70
+          ],
+          "n_confirmers": 2,
+          "origin_lotteries": [
+            "Quiniela Real"
+          ],
+          "confirmer_lotteries": [
+            "Loteria Nacional",
+            "Quiniela Leidsa"
+          ]
+        },
+        {
+          "fuerte": 22,
+          "origin": 44,
+          "confirmers": [
+            70
+          ],
+          "n_confirmers": 1,
+          "origin_lotteries": [
+            "Loteria Nacional"
+          ],
+          "confirmer_lotteries": [
+            "Quiniela Leidsa"
+          ]
+        },
+        {
+          "fuerte": 75,
+          "origin": 44,
+          "confirmers": [
+            62
+          ],
+          "n_confirmers": 1,
+          "origin_lotteries": [
+            "Loteria Nacional"
+          ],
+          "confirmer_lotteries": [
+            "Quiniela Loteka"
+          ]
+        }
+      ],
+      "june23_featured_first_combos": [
+        {
+          "fuerte": 54,
+          "origin": 35,
+          "confirmers": [
+            14
+          ],
+          "n_confirmers": 1,
+          "origin_lotteries": [
+            "Loteria Nacional"
+          ],
+          "confirmer_lotteries": [
+            "Quiniela Loteka"
+          ]
+        }
+      ],
+      "june23_all_pos_extra_combos": [
+        {
+          "fuerte": 7,
+          "origin": 42,
+          "confirmers": [
+            29,
+            35,
+            63,
+            70
+          ],
+          "n_confirmers": 4,
+          "origin_lotteries": [
+            "Quiniela Loteka"
+          ],
+          "confirmer_lotteries": [
+            "Loteria Nacional",
+            "New York 2:30",
+            "Quiniela Leidsa"
+          ]
+        },
+        {
+          "fuerte": 11,
+          "origin": 35,
+          "confirmers": [
+            57,
+            69
+          ],
+          "n_confirmers": 2,
+          "origin_lotteries": [
+            "Loteria Nacional"
+          ],
+          "confirmer_lotteries": [
+            "Quiniela Loteka",
+            "Quiniela Real"
+          ]
+        },
+        {
+          "fuerte": 71,
+          "origin": 42,
+          "confirmers": [
+            56
+          ],
+          "n_confirmers": 1,
+          "origin_lotteries": [
+            "Quiniela Loteka"
+          ],
+          "confirmer_lotteries": [
+            "New York 10:30"
+          ]
+        },
+        {
+          "fuerte": 88,
+          "origin": 31,
+          "confirmers": [
+            67
+          ],
+          "n_confirmers": 1,
+          "origin_lotteries": [
+            "New York 2:30"
+          ],
+          "confirmer_lotteries": [
+            "Quiniela Real"
+          ]
+        }
+      ],
+      "june23_all_lotteries_combo_count": 24
+    }
+  },
+  "continuous_chains_summary": {
+    "total_same_day_f1_to_f2": 1489,
+    "unique_f1_fulfill_days": 638,
+    "june_23_29_to_54": [
+      {
+        "f1": 29,
+        "f1_activation": "2026-06-21",
+        "f1_fulfill_date": "2026-06-23",
+        "f1_day_offset": 2,
+        "f1_fulfill_lottery": "Quiniela Leidsa",
+        "f2": 54,
+        "f2_origin": 35,
+        "f2_confirmer": 14,
+        "same_day_new_strong": true
+      }
+    ],
+    "top_f1_f2": [
+      [
+        [
+          44,
+          22
+        ],
+        11
+      ],
+      [
+        [
+          44,
+          70
+        ],
+        10
+      ],
+      [
+        [
+          42,
+          7
+        ],
+        10
+      ],
+      [
+        [
+          42,
+          71
+        ],
+        9
+      ],
+      [
+        [
+          22,
+          29
+        ],
+        8
+      ],
+      [
+        [
+          42,
+          44
+        ],
+        6
+      ],
+      [
+        [
+          42,
+          29
+        ],
+        6
+      ],
+      [
+        [
+          53,
+          42
+        ],
+        5
+      ],
+      [
+        [
+          44,
+          56
+        ],
+        5
+      ],
+      [
+        [
+          29,
+          9
+        ],
+        5
+      ],
+      [
+        [
+          44,
+          91
+        ],
+        5
+      ],
+      [
+        [
+          28,
+          53
+        ],
+        5
+      ],
+      [
+        [
+          35,
+          44
+        ],
+        5
+      ],
+      [
+        [
+          29,
+          90
+        ],
+        5
+      ],
+      [
+        [
+          42,
+          23
+        ],
+        5
+      ],
+      [
+        [
+          9,
+          44
+        ],
+        5
+      ],
+      [
+        [
+          42,
+          92
+        ],
+        4
+      ],
+      [
+        [
+          44,
+          7
+        ],
+        4
+      ],
+      [
+        [
+          35,
+          94
+        ],
+        4
+      ],
+      [
+        [
+          63,
+          22
+        ],
+        4
+      ]
+    ]
+  },
+  "candidate_rules": [
+    {
+      "rule": "R1",
+      "text": "Cuando un fuerte aparece, el caso se cierra",
+      "explains": [
+        "M1→cumplimiento 23-jun",
+        "flow23.closed_case"
+      ],
+      "contradicts": [],
+      "needed_for_notebook": true,
+      "confidence": "ALTA",
+      "status": "CANDIDATA_FORMALIZABLE"
+    },
+    {
+      "rule": "R2",
+      "text": "El día de cumplimiento se analiza nuevamente desde cero",
+      "explains": [
+        "23-jun produce 35+14→54 tras cumplir 29"
+      ],
+      "contradicts": [],
+      "needed_for_notebook": true,
+      "confidence": "ALTA",
+      "status": "CANDIDATA_FORMALIZABLE"
+    },
+    {
+      "rule": "R3",
+      "text": "Solo se escriben combinaciones que generan fuerte oficial",
+      "explains": [
+        "M1",
+        "M4",
+        "M5"
+      ],
+      "contradicts": [
+        "M2 DIRECT_T2",
+        "21-jun: múltiples oficiales y solo se escribió 29"
+      ],
+      "needed_for_notebook": false,
+      "confidence": "MEDIA",
+      "status": "EXPERIMENTAL"
+    },
+    {
+      "rule": "R4",
+      "text": "Se prioriza el fuerte con más confirmadores",
+      "explains": [
+        "M3"
+      ],
+      "contradicts": [
+        "días multi-fuerte con excepciones (auditoría dinámica)"
+      ],
+      "needed_for_notebook": false,
+      "confidence": "MEDIA",
+      "status": "EXPERIMENTAL"
+    },
+    {
+      "rule": "R5",
+      "text": "Se priorizan primeras posiciones",
+      "explains": [
+        "M1 featured primeras",
+        "M4 35 y 14 son primeras"
+      ],
+      "contradicts": [],
+      "needed_for_notebook": true,
+      "confidence": "ALTA",
+      "status": "CANDIDATA_FORMALIZABLE",
+      "evidence_june23": "Libreta reproducible con FEATURED primeras; all_pos añade combos extra no escritas"
+    },
+    {
+      "rule": "R6",
+      "text": "Se procesa en orden cronológico",
+      "explains": [
+        "simulación horaria 23-jun"
+      ],
+      "contradicts": [
+        "muchos draw_time null → orden parcial"
+      ],
+      "needed_for_notebook": false,
+      "confidence": "MEDIA",
+      "status": "EXPERIMENTAL"
+    },
+    {
+      "rule": "R7",
+      "text": "Un número que acaba de cumplir no se reutiliza inmediatamente como fuerte pendiente",
+      "explains": [
+        "29 cumplido no se anota como nuevo fuerte el 23"
+      ],
+      "contradicts": [],
+      "needed_for_notebook": true,
+      "confidence": "ALTA",
+      "status": "CANDIDATA_FORMALIZABLE"
+    },
+    {
+      "rule": "R8",
+      "text": "Se permite que el día de cumplimiento origine otro fuerte",
+      "explains": [
+        "29 cumplido + 54 nuevo"
+      ],
+      "historical_count": 1489,
+      "contradicts": [],
+      "needed_for_notebook": true,
+      "confidence": "ALTA",
+      "status": "CANDIDATA_FORMALIZABLE"
+    },
+    {
+      "rule": "R9",
+      "text": "Se mantienen cadenas activas entre fechas",
+      "explains": [
+        "21→23 espera de 29"
+      ],
+      "contradicts": [],
+      "needed_for_notebook": true,
+      "confidence": "ALTA",
+      "status": "CANDIDATA_FORMALIZABLE"
+    },
+    {
+      "rule": "R10",
+      "text": "DIRECT_T2 se registra por separado",
+      "explains": [
+        "M2"
+      ],
+      "contradicts": [],
+      "needed_for_notebook": true,
+      "confidence": "ALTA",
+      "status": "EXPERIMENTAL_SEPARADO"
+    }
+  ],
+  "best_model": {
+    "name": "CIERRE_POR_CUMPLIMIENTO_MAS_NUEVO_ANALISIS_FEATURED_PRIMERAS",
+    "description": "Mantener fuerte pendiente entre fechas; al aparecer, CASO_CUMPLIDO; el mismo día se reanalizan FEATURED primeras posiciones desde cero; no reutilizar el fuerte cumplido; anotar fuertes oficiales nuevos (aquí 35→54←14). DIRECT_T2 aparte.",
+    "reproduces": [
+      "M1",
+      "M4",
+      "transición 21→23 jun 2026"
+    ]
+  },
+  "answers": {
+    "1_why_41_70_29": "41 como origen T1 genera candidatos {13,29,93}; 70 confirma 29 vía T2. El 21-jun también existían otras combos oficiales (9,35,22,75) con primeras FEATURED; el socio anotó específicamente la cadena centrada en 41+70→29.",
+    "2_when_29": "2026-06-23 Quiniela Leidsa primera posición (DEV)",
+    "3_closed": true,
+    "4_why_35_14": "Única combo oficial FEATURED primeras el 23; 35 origen + 14 confirmador → 54; tras cierre de 29",
+    "5_why_others_discarded": "23-jun: números FEATURED 1ª que no participan en 35→54←14 no forman fuerte oficial (excepto 29, que se clasifica como FUERTE_CUMPLIDO/CASO_CERRADO). 21-jun: otros fuertes oficiales existieron pero no fueron escritos (selección parcial).",
+    "6_only_valid": true,
+    "7_first_positions_only": true,
+    "8_time_order": {
+      "claim": "Fue la primera combinación válida en el día",
+      "first_step_with_combo": "Quiniela Loteka",
+      "first_step_with_35_14_54": "Quiniela Loteka",
+      "supported": true,
+      "evidence": "Primera combo del día tras Quiniela Loteka; 35+14→54 aparece tras Quiniela Loteka."
+    },
+    "9_continuous_chains": true,
+    "10_best_model": "CIERRE_POR_CUMPLIMIENTO_MAS_NUEVO_ANALISIS_FEATURED_PRIMERAS"
+  }
+}

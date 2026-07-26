@@ -1,0 +1,8 @@
+step,after_lottery,after_time,observed,n_combinations,combinations,has_35_14_54
+1,Loteria Nacional,21:01:42,35,0,,False
+2,Gana Mas,,7|35,0,,False
+3,New York 10:30,,7|15|35,0,,False
+4,New York 2:30,,7|15|35|84,0,,False
+5,Quiniela Leidsa,,7|15|29|35|84,0,,False
+6,Quiniela Loteka,,7|14|15|29|35|84,1,35→54←[14],True
+7,Quiniela Real,,7|14|15|29|35|67|84,1,35→54←[14],True

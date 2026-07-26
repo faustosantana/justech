@@ -1,0 +1,11 @@
+rule,text,explains,contradicts,needed_for_notebook,confidence,status
+R1,"Cuando un fuerte aparece, el caso se cierra",M1→cumplimiento 23-jun|flow23.closed_case,,True,ALTA,CANDIDATA_FORMALIZABLE
+R2,El día de cumplimiento se analiza nuevamente desde cero,23-jun produce 35+14→54 tras cumplir 29,,True,ALTA,CANDIDATA_FORMALIZABLE
+R3,Solo se escriben combinaciones que generan fuerte oficial,M1|M4|M5,M2 DIRECT_T2,False,MEDIA,EXPERIMENTAL
+R4,Se prioriza el fuerte con más confirmadores,M3,días multi-fuerte con excepciones (auditoría dinámica),False,MEDIA,EXPERIMENTAL
+R5,Se priorizan primeras posiciones,M1 featured primeras|M4 35 y 14 son primeras,,True,ALTA,CANDIDATA_FORMALIZABLE
+R6,Se procesa en orden cronológico,simulación horaria 23-jun,muchos draw_time null → orden parcial,False,MEDIA,EXPERIMENTAL
+R7,Un número que acaba de cumplir no se reutiliza inmediatamente como fuerte pendiente,29 cumplido no se anota como nuevo fuerte el 23,,True,ALTA,CANDIDATA_FORMALIZABLE
+R8,Se permite que el día de cumplimiento origine otro fuerte,29 cumplido + 54 nuevo,,True,ALTA,CANDIDATA_FORMALIZABLE
+R9,Se mantienen cadenas activas entre fechas,21→23 espera de 29,,True,ALTA,CANDIDATA_FORMALIZABLE
+R10,DIRECT_T2 se registra por separado,M2,,True,ALTA,EXPERIMENTAL_SEPARADO

@@ -1,0 +1,21 @@
+date,lottery,draw_time,number,position,position_label,is_first_position,is_featured,in_first_pos_modality,written_by_analyst,discarded,produced_fuerte,was_confirmer,fulfilled_pending,reasons,candidates,source_reference
+2026-06-23,Loteria Nacional,21:01:42,35,1,1ro,True,True,True,True,False,True,False,False,FUERTE_OFICIAL|PRODUCE_54,6|11|43|54|86,224790
+2026-06-23,Loteria Nacional,21:01:42,63,3,3ro,False,True,False,False,False,False,False,False,NO_EN_MODALIDAD,,224790
+2026-06-23,Gana Mas,,7,1,1ro,True,True,True,False,True,False,False,False,NO_GENERA_CANDIDATO,,224766
+2026-06-23,Gana Mas,,23,2,2do,False,True,False,False,False,False,False,False,NO_EN_MODALIDAD,,224766
+2026-06-23,Gana Mas,,59,3,3ro,False,True,False,False,False,False,False,False,NO_EN_MODALIDAD,,224766
+2026-06-23,New York 10:30,,15,1,1ro,True,True,True,False,True,False,False,False,NO_GENERA_CANDIDATO,,224792
+2026-06-23,New York 10:30,,56,2,2do,False,True,False,False,False,False,False,False,NO_EN_MODALIDAD,,224792
+2026-06-23,New York 10:30,,65,3,3ro,False,True,False,False,False,False,False,False,NO_EN_MODALIDAD,,224792
+2026-06-23,New York 2:30,,84,1,1ro,True,True,True,False,True,False,False,False,NO_GENERA_CANDIDATO,,224765
+2026-06-23,New York 2:30,,70,2,2do,False,True,False,False,False,False,False,False,NO_EN_MODALIDAD,,224765
+2026-06-23,New York 2:30,,31,3,3ro,False,True,False,False,False,False,False,False,NO_EN_MODALIDAD,,224765
+2026-06-23,Quiniela Leidsa,,29,1,1ro,True,True,True,True,False,False,False,True,CASO_CERRADO|FUERTE_CUMPLIDO,15,224789
+2026-06-23,Quiniela Leidsa,,1,2,2do,False,True,False,False,False,False,False,False,NO_EN_MODALIDAD,,224789
+2026-06-23,Quiniela Leidsa,,26,3,3ro,False,True,False,False,False,False,False,False,NO_EN_MODALIDAD,,224789
+2026-06-23,Quiniela Loteka,,14,1,1ro,True,True,True,True,False,False,True,False,CONFIRMADOR,,224784
+2026-06-23,Quiniela Loteka,,42,2,2do,False,True,False,False,False,False,False,False,NO_EN_MODALIDAD,,224784
+2026-06-23,Quiniela Loteka,,57,3,3ro,False,True,False,False,False,False,False,False,NO_EN_MODALIDAD,,224784
+2026-06-23,Quiniela Real,,67,1,1ro,True,True,True,False,True,False,False,False,NO_GENERA_CANDIDATO,,224761
+2026-06-23,Quiniela Real,,69,2,2do,False,True,False,False,False,False,False,False,NO_EN_MODALIDAD,,224761
+2026-06-23,Quiniela Real,,16,3,3ro,False,True,False,False,False,False,False,False,NO_EN_MODALIDAD,,224761

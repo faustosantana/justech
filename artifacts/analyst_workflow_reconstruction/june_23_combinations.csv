@@ -1,0 +1,37 @@
+modality,fuerte,origin,confirmers,n_confirmers,origin_lotteries,confirmer_lotteries
+A_first_pos_featured,54,35,14,1,Loteria Nacional,Quiniela Loteka
+B_all_pos_featured,7,42,29|35|63|70,4,Quiniela Loteka,Loteria Nacional|New York 2:30|Quiniela Leidsa
+B_all_pos_featured,11,35,57|69,2,Loteria Nacional,Quiniela Loteka|Quiniela Real
+B_all_pos_featured,54,35,14,1,Loteria Nacional,Quiniela Loteka
+B_all_pos_featured,71,42,56,1,Quiniela Loteka,New York 10:30
+B_all_pos_featured,88,31,67,1,New York 2:30,Quiniela Real
+C_chrono_first_pos_featured,54,35,14,1,Loteria Nacional,Quiniela Loteka
+D_featured_seven_first,54,35,14,1,Loteria Nacional,Quiniela Loteka
+E_all_lotteries_first,42,37,7|9|29|35|44|70,6,Florida Dia,Anguila 1:00 PM|Gana Mas|King Lottery PM|La Suerte MD|Loteria Nacional|Quiniela Leidsa
+E_all_lotteries_first,63,38,7|9|29|35|44|70,6,Anguila 02:00 PM|La Primera Noche|Pega 3 Mas,Anguila 1:00 PM|Gana Mas|King Lottery PM|La Suerte MD|Loteria Nacional|Quiniela Leidsa
+E_all_lotteries_first,22,44,7|9|29|35|70,5,La Suerte MD,Anguila 1:00 PM|Gana Mas|King Lottery PM|Loteria Nacional|Quiniela Leidsa
+E_all_lotteries_first,29,41,7|9|35|44|70,5,Anguila 07:00 PM|Florida Noche,Anguila 1:00 PM|Gana Mas|King Lottery PM|La Suerte MD|Loteria Nacional
+E_all_lotteries_first,35,49,7|9|29|44|70,5,Haiti Bolet 11:30 AM,Anguila 1:00 PM|Gana Mas|King Lottery PM|La Suerte MD|Quiniela Leidsa
+E_all_lotteries_first,44,43,7|9|29|35|70,5,Quiniela LoteDom,Anguila 1:00 PM|Gana Mas|King Lottery PM|Loteria Nacional|Quiniela Leidsa
+E_all_lotteries_first,12,43,41|56|71|89,4,Quiniela LoteDom,Anguila 07:00 PM|Anguila 08:00 PM|Anguila 09:00 AM|Anguila 6:00 PM|Florida Noche
+E_all_lotteries_first,56,40,12|41|71|89,4,Haiti Bolet 06:30 PM,Anguila 07:00 PM|Anguila 08:00 PM|Anguila 09:00 AM|Florida Noche|La Primera Tarde|Loto Pool
+E_all_lotteries_first,70,44,7|9|29|35,4,La Suerte MD,Anguila 1:00 PM|Gana Mas|Loteria Nacional|Quiniela Leidsa
+E_all_lotteries_first,89,48,12|41|56|71,4,Anguila 08:00 AM|Mega Millions,Anguila 07:00 PM|Anguila 08:00 PM|Anguila 6:00 PM|Florida Noche|La Primera Tarde|Loto Pool
+E_all_lotteries_first,59,44,26|72,2,La Suerte MD,Anguila 05:00 PM|Anguila 10:00 AM
+E_all_lotteries_first,4,47,40,1,Haiti Bolet 05:30 PM,Haiti Bolet 06:30 PM
+E_all_lotteries_first,5,37,50,1,Florida Dia,La Suerte 6PM
+E_all_lotteries_first,8,40,80,1,Haiti Bolet 06:30 PM,El Quemaito Mayor
+E_all_lotteries_first,10,37,1,1,Florida Dia,Loto Real|Mega Chance
+E_all_lotteries_first,40,49,4,1,Haiti Bolet 11:30 AM,Haiti Bolet 07:30 PM
+E_all_lotteries_first,54,35,14,1,Loteria Nacional,Quiniela Loteka
+E_all_lotteries_first,57,30,11,1,King Lottery AM,Super Kino Tv
+E_all_lotteries_first,72,40,26,1,Haiti Bolet 06:30 PM,Anguila 10:00 AM
+E_all_lotteries_first,79,47,67,1,Haiti Bolet 05:30 PM,Quiniela Real
+E_all_lotteries_first,83,49,30,1,Haiti Bolet 11:30 AM,King Lottery AM
+E_all_lotteries_first,91,44,11,1,La Suerte MD,Super Kino Tv
+E_all_lotteries_first,93,41,48,1,Anguila 07:00 PM|Florida Noche,Anguila 08:00 AM|Mega Millions
+E_all_lotteries_first,100,38,1,1,Anguila 02:00 PM|La Primera Noche|Pega 3 Mas,Loto Real|Mega Chance
+first_second_featured,7,42,29|35|63|70,4,Quiniela Loteka,Loteria Nacional|New York 2:30|Quiniela Leidsa
+first_second_featured,11,35,69,1,Loteria Nacional,Quiniela Real
+first_second_featured,54,35,14,1,Loteria Nacional,Quiniela Loteka
+first_second_featured,71,42,56,1,Quiniela Loteka,New York 10:30

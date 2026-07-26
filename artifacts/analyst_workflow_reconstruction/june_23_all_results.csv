@@ -1,0 +1,165 @@
+date,lottery,is_featured,draw_time,number,position,position_label,source_reference,draw_id
+2026-06-23,Loteria Nacional,True,21:01:42,35,1,1ro,224790,1d1862a7-715a-4f63-9724-c77291187154
+2026-06-23,Loteria Nacional,True,21:01:42,0,2,2do,224790,1d1862a7-715a-4f63-9724-c77291187154
+2026-06-23,Loteria Nacional,True,21:01:42,63,3,3ro,224790,1d1862a7-715a-4f63-9724-c77291187154
+2026-06-23,Anguila 02:00 PM,False,,38,1,1ro,224764,2ee629f0-a9c2-436b-955d-ff4d86c450d7
+2026-06-23,Anguila 02:00 PM,False,,51,2,2do,224764,2ee629f0-a9c2-436b-955d-ff4d86c450d7
+2026-06-23,Anguila 02:00 PM,False,,5,3,3ro,224764,2ee629f0-a9c2-436b-955d-ff4d86c450d7
+2026-06-23,Anguila 03:00 PM,False,,24,1,1ro,224767,c58b3ff6-df6e-49f9-a65c-e48444db66dc
+2026-06-23,Anguila 03:00 PM,False,,83,2,2do,224767,c58b3ff6-df6e-49f9-a65c-e48444db66dc
+2026-06-23,Anguila 03:00 PM,False,,4,3,3ro,224767,c58b3ff6-df6e-49f9-a65c-e48444db66dc
+2026-06-23,Anguila 04:00 PM,False,,93,1,1ro,224768,c7571c61-2f00-4e84-8204-5d1714b739df
+2026-06-23,Anguila 04:00 PM,False,,24,2,2do,224768,c7571c61-2f00-4e84-8204-5d1714b739df
+2026-06-23,Anguila 04:00 PM,False,,79,3,3ro,224768,c7571c61-2f00-4e84-8204-5d1714b739df
+2026-06-23,Anguila 05:00 PM,False,,72,1,1ro,224769,ada61b9b-d030-4279-a0c5-acaf3a49f496
+2026-06-23,Anguila 05:00 PM,False,,94,2,2do,224769,ada61b9b-d030-4279-a0c5-acaf3a49f496
+2026-06-23,Anguila 05:00 PM,False,,82,3,3ro,224769,ada61b9b-d030-4279-a0c5-acaf3a49f496
+2026-06-23,Anguila 07:00 PM,False,,41,1,1ro,224777,aa182176-658c-4129-84b2-e45985e0ebec
+2026-06-23,Anguila 07:00 PM,False,,60,2,2do,224777,aa182176-658c-4129-84b2-e45985e0ebec
+2026-06-23,Anguila 07:00 PM,False,,74,3,3ro,224777,aa182176-658c-4129-84b2-e45985e0ebec
+2026-06-23,Anguila 08:00 AM,False,,48,1,1ro,224747,ba2b9856-0ef0-4708-9080-308df30561cc
+2026-06-23,Anguila 08:00 AM,False,,49,2,2do,224747,ba2b9856-0ef0-4708-9080-308df30561cc
+2026-06-23,Anguila 08:00 AM,False,,84,3,3ro,224747,ba2b9856-0ef0-4708-9080-308df30561cc
+2026-06-23,Anguila 08:00 PM,False,,71,1,1ro,224782,2ac3e8a8-19a0-482a-bb78-023c2c3d1b4c
+2026-06-23,Anguila 08:00 PM,False,,87,2,2do,224782,2ac3e8a8-19a0-482a-bb78-023c2c3d1b4c
+2026-06-23,Anguila 08:00 PM,False,,70,3,3ro,224782,2ac3e8a8-19a0-482a-bb78-023c2c3d1b4c
+2026-06-23,Anguila 09:00 AM,False,,89,1,1ro,224748,7e8e881c-2942-47fd-9615-67f65bc193f6
+2026-06-23,Anguila 09:00 AM,False,,90,2,2do,224748,7e8e881c-2942-47fd-9615-67f65bc193f6
+2026-06-23,Anguila 09:00 AM,False,,4,3,3ro,224748,7e8e881c-2942-47fd-9615-67f65bc193f6
+2026-06-23,Anguila 10:00 AM,False,,26,1,1ro,224750,b9e68da5-ed79-4813-834c-2ef885bc3b28
+2026-06-23,Anguila 10:00 AM,False,,60,2,2do,224750,b9e68da5-ed79-4813-834c-2ef885bc3b28
+2026-06-23,Anguila 10:00 AM,False,,21,3,3ro,224750,b9e68da5-ed79-4813-834c-2ef885bc3b28
+2026-06-23,Anguila 11:00 AM,False,,8,1,1ro,224752,bce62a62-e4fd-4379-94da-3b71d44d31f2
+2026-06-23,Anguila 11:00 AM,False,,27,2,2do,224752,bce62a62-e4fd-4379-94da-3b71d44d31f2
+2026-06-23,Anguila 11:00 AM,False,,70,3,3ro,224752,bce62a62-e4fd-4379-94da-3b71d44d31f2
+2026-06-23,Anguila 12:00 PM,False,,84,1,1ro,224758,aeeb2b1a-ab7b-4a97-9b15-ef3bc0c86e0c
+2026-06-23,Anguila 12:00 PM,False,,81,2,2do,224758,aeeb2b1a-ab7b-4a97-9b15-ef3bc0c86e0c
+2026-06-23,Anguila 12:00 PM,False,,83,3,3ro,224758,aeeb2b1a-ab7b-4a97-9b15-ef3bc0c86e0c
+2026-06-23,Anguila 1:00 PM,False,,9,1,1ro,224762,bb44b8ee-4053-444f-8b38-21c7a3fcf1a0
+2026-06-23,Anguila 1:00 PM,False,,39,2,2do,224762,bb44b8ee-4053-444f-8b38-21c7a3fcf1a0
+2026-06-23,Anguila 1:00 PM,False,,6,3,3ro,224762,bb44b8ee-4053-444f-8b38-21c7a3fcf1a0
+2026-06-23,Anguila 6:00 PM,False,,56,1,1ro,224775,2d0b49f2-c70c-4835-8d8f-7324f6e2cf94
+2026-06-23,Anguila 6:00 PM,False,,78,2,2do,224775,2d0b49f2-c70c-4835-8d8f-7324f6e2cf94
+2026-06-23,Anguila 6:00 PM,False,,5,3,3ro,224775,2d0b49f2-c70c-4835-8d8f-7324f6e2cf94
+2026-06-23,Anguila 9:00 PM,False,,18,1,1ro,224788,148e188a-7d80-4777-b063-0b2f484bfa4f
+2026-06-23,Anguila 9:00 PM,False,,50,2,2do,224788,148e188a-7d80-4777-b063-0b2f484bfa4f
+2026-06-23,Anguila 9:00 PM,False,,56,3,3ro,224788,148e188a-7d80-4777-b063-0b2f484bfa4f
+2026-06-23,El Agarra 4,False,,20,1,posición 1,224755,efdf2fdd-3bb7-45a8-988d-3429996f2dbb
+2026-06-23,El Agarra 4,False,,43,2,posición 2,224755,efdf2fdd-3bb7-45a8-988d-3429996f2dbb
+2026-06-23,El Agarra 4,False,,80,3,posición 3,224755,efdf2fdd-3bb7-45a8-988d-3429996f2dbb
+2026-06-23,El Agarra 4,False,,99,4,posición 4,224755,efdf2fdd-3bb7-45a8-988d-3429996f2dbb
+2026-06-23,El Quemaito Mayor,False,,80,1,1ro,224757,054cfe28-59a1-4311-b9b6-535ac782220f
+2026-06-23,Florida Dia,False,,37,1,1ro,224763,88927752-a374-4ea9-8ebf-e76eaa4253e2
+2026-06-23,Florida Dia,False,,91,2,2do,224763,88927752-a374-4ea9-8ebf-e76eaa4253e2
+2026-06-23,Florida Dia,False,,62,3,3ro,224763,88927752-a374-4ea9-8ebf-e76eaa4253e2
+2026-06-23,Florida Noche,False,,41,1,1ro,224791,2b327031-72f5-4041-8f3b-db29c2ac2b01
+2026-06-23,Florida Noche,False,,9,2,2do,224791,2b327031-72f5-4041-8f3b-db29c2ac2b01
+2026-06-23,Florida Noche,False,,23,3,3ro,224791,2b327031-72f5-4041-8f3b-db29c2ac2b01
+2026-06-23,Gana Mas,True,,7,1,1ro,224766,7c7ea7eb-0b6f-475e-9520-2c6ec8701be6
+2026-06-23,Gana Mas,True,,23,2,2do,224766,7c7ea7eb-0b6f-475e-9520-2c6ec8701be6
+2026-06-23,Gana Mas,True,,59,3,3ro,224766,7c7ea7eb-0b6f-475e-9520-2c6ec8701be6
+2026-06-23,Haiti Bolet 05:30 PM,False,,47,1,1ro,224770,315585a3-760c-4e8f-8f45-435fe215d4f2
+2026-06-23,Haiti Bolet 05:30 PM,False,,3,2,2do,224770,315585a3-760c-4e8f-8f45-435fe215d4f2
+2026-06-23,Haiti Bolet 05:30 PM,False,,7,3,3ro,224770,315585a3-760c-4e8f-8f45-435fe215d4f2
+2026-06-23,Haiti Bolet 06:30 PM,False,,40,1,1ro,224776,0b08caaf-5fc4-4a16-9505-42174dcdfb2a
+2026-06-23,Haiti Bolet 06:30 PM,False,,83,2,2do,224776,0b08caaf-5fc4-4a16-9505-42174dcdfb2a
+2026-06-23,Haiti Bolet 06:30 PM,False,,87,3,3ro,224776,0b08caaf-5fc4-4a16-9505-42174dcdfb2a
+2026-06-23,Haiti Bolet 07:30 PM,False,,4,1,1ro,224780,9b37d0dc-9ad4-45ce-bdcc-c88a9f158e42
+2026-06-23,Haiti Bolet 07:30 PM,False,,15,2,2do,224780,9b37d0dc-9ad4-45ce-bdcc-c88a9f158e42
+2026-06-23,Haiti Bolet 07:30 PM,False,,0,3,3ro,224780,9b37d0dc-9ad4-45ce-bdcc-c88a9f158e42
+2026-06-23,Haiti Bolet 10:30 AM,False,,20,1,1ro,224751,7785b96c-e18c-47e0-a251-cc50a0f4d948
+2026-06-23,Haiti Bolet 10:30 AM,False,,95,2,2do,224751,7785b96c-e18c-47e0-a251-cc50a0f4d948
+2026-06-23,Haiti Bolet 10:30 AM,False,,33,3,3ro,224751,7785b96c-e18c-47e0-a251-cc50a0f4d948
+2026-06-23,Haiti Bolet 11:30 AM,False,,49,1,1ro,224753,9e813fb3-4af9-4837-b77d-4b426d8fe034
+2026-06-23,Haiti Bolet 11:30 AM,False,,42,2,2do,224753,9e813fb3-4af9-4837-b77d-4b426d8fe034
+2026-06-23,Haiti Bolet 11:30 AM,False,,84,3,3ro,224753,9e813fb3-4af9-4837-b77d-4b426d8fe034
+2026-06-23,Haiti Bolet 9:30 AM,False,,61,1,1ro,224749,181acb04-3292-4d96-a1b3-1afa349ab1cd
+2026-06-23,Haiti Bolet 9:30 AM,False,,74,2,2do,224749,181acb04-3292-4d96-a1b3-1afa349ab1cd
+2026-06-23,Haiti Bolet 9:30 AM,False,,48,3,3ro,224749,181acb04-3292-4d96-a1b3-1afa349ab1cd
+2026-06-23,King Lottery AM,False,,30,1,1ro,224759,de118cbb-0d95-4c73-aff8-423c3b1bb891
+2026-06-23,King Lottery AM,False,,67,2,2do,224759,de118cbb-0d95-4c73-aff8-423c3b1bb891
+2026-06-23,King Lottery AM,False,,44,3,3ro,224759,de118cbb-0d95-4c73-aff8-423c3b1bb891
+2026-06-23,King Lottery PM,False,,70,1,1ro,224781,be63a14d-dff6-4a0d-a51d-17a4b0f8eb1a
+2026-06-23,King Lottery PM,False,,22,2,2do,224781,be63a14d-dff6-4a0d-a51d-17a4b0f8eb1a
+2026-06-23,King Lottery PM,False,,54,3,3ro,224781,be63a14d-dff6-4a0d-a51d-17a4b0f8eb1a
+2026-06-23,La Primera Noche,False,,38,1,1ro,224779,3a75999d-6ac4-492c-96bf-1c8f3a743789
+2026-06-23,La Primera Noche,False,,23,2,2do,224779,3a75999d-6ac4-492c-96bf-1c8f3a743789
+2026-06-23,La Primera Noche,False,,23,3,3ro,224779,3a75999d-6ac4-492c-96bf-1c8f3a743789
+2026-06-23,La Primera Tarde,False,,12,1,1ro,224756,84cc995d-d064-4b2c-89be-94a6535bc5a4
+2026-06-23,La Primera Tarde,False,,50,2,2do,224756,84cc995d-d064-4b2c-89be-94a6535bc5a4
+2026-06-23,La Primera Tarde,False,,16,3,3ro,224756,84cc995d-d064-4b2c-89be-94a6535bc5a4
+2026-06-23,La Suerte 6PM,False,,50,1,1ro,224774,e310f319-12f6-4d21-afbc-38a9e053bce4
+2026-06-23,La Suerte 6PM,False,,53,2,2do,224774,e310f319-12f6-4d21-afbc-38a9e053bce4
+2026-06-23,La Suerte 6PM,False,,1,3,3ro,224774,e310f319-12f6-4d21-afbc-38a9e053bce4
+2026-06-23,La Suerte MD,False,,44,1,1ro,224760,70be3a7f-6631-4655-b639-d235d6a2f374
+2026-06-23,La Suerte MD,False,,19,2,2do,224760,70be3a7f-6631-4655-b639-d235d6a2f374
+2026-06-23,La Suerte MD,False,,0,3,3ro,224760,70be3a7f-6631-4655-b639-d235d6a2f374
+2026-06-23,Loto 5,False,,8,1,posición 1,224778,c49803b7-4f36-4390-b6a7-9144a6c71398
+2026-06-23,Loto 5,False,,12,2,posición 2,224778,c49803b7-4f36-4390-b6a7-9144a6c71398
+2026-06-23,Loto 5,False,,16,3,posición 3,224778,c49803b7-4f36-4390-b6a7-9144a6c71398
+2026-06-23,Loto 5,False,,18,4,posición 4,224778,c49803b7-4f36-4390-b6a7-9144a6c71398
+2026-06-23,Loto 5,False,,21,5,posición 5,224778,c49803b7-4f36-4390-b6a7-9144a6c71398
+2026-06-23,Loto 5,False,,2,6,Loto,224778,c49803b7-4f36-4390-b6a7-9144a6c71398
+2026-06-23,Loto Pool,False,,12,1,posición 1,224786,984edce7-d4b7-4a1b-a6ab-6c5316fd5cf2
+2026-06-23,Loto Pool,False,,18,2,posición 2,224786,984edce7-d4b7-4a1b-a6ab-6c5316fd5cf2
+2026-06-23,Loto Pool,False,,23,3,posición 3,224786,984edce7-d4b7-4a1b-a6ab-6c5316fd5cf2
+2026-06-23,Loto Pool,False,,29,4,posición 4,224786,984edce7-d4b7-4a1b-a6ab-6c5316fd5cf2
+2026-06-23,Loto Pool,False,,31,5,posición 5,224786,984edce7-d4b7-4a1b-a6ab-6c5316fd5cf2
+2026-06-23,Loto Real,False,,1,1,posición 1,225052,43110eda-e123-41a8-8fa6-9ee32757604c
+2026-06-23,Loto Real,False,,5,2,posición 2,225052,43110eda-e123-41a8-8fa6-9ee32757604c
+2026-06-23,Loto Real,False,,20,3,posición 3,225052,43110eda-e123-41a8-8fa6-9ee32757604c
+2026-06-23,Loto Real,False,,24,4,posición 4,225052,43110eda-e123-41a8-8fa6-9ee32757604c
+2026-06-23,Loto Real,False,,32,5,posición 5,225052,43110eda-e123-41a8-8fa6-9ee32757604c
+2026-06-23,Loto Real,False,,34,6,posición 6,225052,43110eda-e123-41a8-8fa6-9ee32757604c
+2026-06-23,Mega Chance,False,,1,1,posición 1,224783,53683ea3-f1cf-49cc-b14e-4dfec3b92dd3
+2026-06-23,Mega Chance,False,,30,2,posición 2,224783,53683ea3-f1cf-49cc-b14e-4dfec3b92dd3
+2026-06-23,Mega Chance,False,,47,3,posición 3,224783,53683ea3-f1cf-49cc-b14e-4dfec3b92dd3
+2026-06-23,Mega Chance,False,,68,4,posición 4,224783,53683ea3-f1cf-49cc-b14e-4dfec3b92dd3
+2026-06-23,Mega Chance,False,,90,5,posición 5,224783,53683ea3-f1cf-49cc-b14e-4dfec3b92dd3
+2026-06-23,Mega Millions,False,,48,1,posición 1,225054,1019b7e6-3d7b-421f-804d-35786dd9e2b5
+2026-06-23,Mega Millions,False,,51,2,posición 2,225054,1019b7e6-3d7b-421f-804d-35786dd9e2b5
+2026-06-23,Mega Millions,False,,60,3,posición 3,225054,1019b7e6-3d7b-421f-804d-35786dd9e2b5
+2026-06-23,Mega Millions,False,,63,4,posición 4,225054,1019b7e6-3d7b-421f-804d-35786dd9e2b5
+2026-06-23,Mega Millions,False,,66,5,posición 5,225054,1019b7e6-3d7b-421f-804d-35786dd9e2b5
+2026-06-23,Mega Millions,False,,20,6,Mega Ball,225054,1019b7e6-3d7b-421f-804d-35786dd9e2b5
+2026-06-23,New York 10:30,True,,15,1,1ro,224792,fad4c63c-8cd3-4fa3-ab56-c176433cbf3f
+2026-06-23,New York 10:30,True,,56,2,2do,224792,fad4c63c-8cd3-4fa3-ab56-c176433cbf3f
+2026-06-23,New York 10:30,True,,65,3,3ro,224792,fad4c63c-8cd3-4fa3-ab56-c176433cbf3f
+2026-06-23,New York 2:30,True,,84,1,1ro,224765,1d65f1d0-ae0e-4336-8d13-389997dc812b
+2026-06-23,New York 2:30,True,,70,2,2do,224765,1d65f1d0-ae0e-4336-8d13-389997dc812b
+2026-06-23,New York 2:30,True,,31,3,3ro,224765,1d65f1d0-ae0e-4336-8d13-389997dc812b
+2026-06-23,Pega 3 Mas,False,,38,1,1ro,224785,66aa3a73-e621-4a43-bdba-3960d5aa23a8
+2026-06-23,Pega 3 Mas,False,,26,2,2do,224785,66aa3a73-e621-4a43-bdba-3960d5aa23a8
+2026-06-23,Pega 3 Mas,False,,12,3,3ro,224785,66aa3a73-e621-4a43-bdba-3960d5aa23a8
+2026-06-23,Quiniela Leidsa,True,,29,1,1ro,224789,a1c9bcef-cbb5-4c61-a878-c9c8723aa1ad
+2026-06-23,Quiniela Leidsa,True,,1,2,2do,224789,a1c9bcef-cbb5-4c61-a878-c9c8723aa1ad
+2026-06-23,Quiniela Leidsa,True,,26,3,3ro,224789,a1c9bcef-cbb5-4c61-a878-c9c8723aa1ad
+2026-06-23,Quiniela LoteDom,False,,43,1,1ro,224754,0785a942-eeae-4a13-9f06-fdc2b7ba4ef2
+2026-06-23,Quiniela LoteDom,False,,99,2,2do,224754,0785a942-eeae-4a13-9f06-fdc2b7ba4ef2
+2026-06-23,Quiniela LoteDom,False,,20,3,3ro,224754,0785a942-eeae-4a13-9f06-fdc2b7ba4ef2
+2026-06-23,Quiniela Loteka,True,,14,1,1ro,224784,5faf3955-ba7a-4819-b7bc-00e0b4517b68
+2026-06-23,Quiniela Loteka,True,,42,2,2do,224784,5faf3955-ba7a-4819-b7bc-00e0b4517b68
+2026-06-23,Quiniela Loteka,True,,57,3,3ro,224784,5faf3955-ba7a-4819-b7bc-00e0b4517b68
+2026-06-23,Quiniela Real,True,,67,1,1ro,224761,e896a589-9110-428d-a7f1-ffcfaf029b49
+2026-06-23,Quiniela Real,True,,69,2,2do,224761,e896a589-9110-428d-a7f1-ffcfaf029b49
+2026-06-23,Quiniela Real,True,,16,3,3ro,224761,e896a589-9110-428d-a7f1-ffcfaf029b49
+2026-06-23,Super Kino Tv,False,,11,1,posición 1,224787,b4ba0f38-577d-45a3-a87d-945c611918ff
+2026-06-23,Super Kino Tv,False,,13,2,posición 2,224787,b4ba0f38-577d-45a3-a87d-945c611918ff
+2026-06-23,Super Kino Tv,False,,18,3,posición 3,224787,b4ba0f38-577d-45a3-a87d-945c611918ff
+2026-06-23,Super Kino Tv,False,,23,4,posición 4,224787,b4ba0f38-577d-45a3-a87d-945c611918ff
+2026-06-23,Super Kino Tv,False,,24,5,posición 5,224787,b4ba0f38-577d-45a3-a87d-945c611918ff
+2026-06-23,Super Kino Tv,False,,31,6,posición 6,224787,b4ba0f38-577d-45a3-a87d-945c611918ff
+2026-06-23,Super Kino Tv,False,,33,7,posición 7,224787,b4ba0f38-577d-45a3-a87d-945c611918ff
+2026-06-23,Super Kino Tv,False,,39,8,posición 8,224787,b4ba0f38-577d-45a3-a87d-945c611918ff
+2026-06-23,Super Kino Tv,False,,46,9,posición 9,224787,b4ba0f38-577d-45a3-a87d-945c611918ff
+2026-06-23,Super Kino Tv,False,,48,10,posición 10,224787,b4ba0f38-577d-45a3-a87d-945c611918ff
+2026-06-23,Super Kino Tv,False,,51,11,posición 11,224787,b4ba0f38-577d-45a3-a87d-945c611918ff
+2026-06-23,Super Kino Tv,False,,56,12,posición 12,224787,b4ba0f38-577d-45a3-a87d-945c611918ff
+2026-06-23,Super Kino Tv,False,,59,13,posición 13,224787,b4ba0f38-577d-45a3-a87d-945c611918ff
+2026-06-23,Super Kino Tv,False,,60,14,posición 14,224787,b4ba0f38-577d-45a3-a87d-945c611918ff
+2026-06-23,Super Kino Tv,False,,64,15,posición 15,224787,b4ba0f38-577d-45a3-a87d-945c611918ff
+2026-06-23,Super Kino Tv,False,,66,16,posición 16,224787,b4ba0f38-577d-45a3-a87d-945c611918ff
+2026-06-23,Super Kino Tv,False,,68,17,posición 17,224787,b4ba0f38-577d-45a3-a87d-945c611918ff
+2026-06-23,Super Kino Tv,False,,73,18,posición 18,224787,b4ba0f38-577d-45a3-a87d-945c611918ff
+2026-06-23,Super Kino Tv,False,,76,19,posición 19,224787,b4ba0f38-577d-45a3-a87d-945c611918ff
+2026-06-23,Super Kino Tv,False,,79,20,posición 20,224787,b4ba0f38-577d-45a3-a87d-945c611918ff

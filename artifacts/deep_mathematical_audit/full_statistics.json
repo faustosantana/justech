@@ -1,0 +1,7859 @@
+{
+  "audit_id": "8886dedf-b561-4aa7-984f-3b856b89b697",
+  "branch": "feature/nr-deep-mathematical-relations-audit",
+  "phase_commit": "2a19579",
+  "worktree": "/Users/faustosantana/Projects/justech-forensic-audit",
+  "methodology_version": "nr-historical-relations-j1.0.0",
+  "production_forbidden": true,
+  "motor_modified": false,
+  "tables_modified": false,
+  "j11a_started": false,
+  "random_baseline_used": false,
+  "coverage": {
+    "period_from": "2019-07-23",
+    "period_to": "2026-07-16",
+    "calendar_days": 2551,
+    "days_with_featured_draws": 2550,
+    "days_missing": 1,
+    "featured_draws_in_period": 17083,
+    "db_featured_min": "2015-01-02",
+    "db_featured_max": "2026-07-23",
+    "db_draw_count": 91941,
+    "featured_seven": [
+      {
+        "id": "43250709-ee65-476f-91f6-cb8438f49d65",
+        "name": "Gana Mas",
+        "source_id": 12,
+        "is_featured": true
+      },
+      {
+        "id": "0118037f-8f8b-4a82-899c-42cd50b6e194",
+        "name": "Loteria Nacional",
+        "source_id": 4,
+        "is_featured": true
+      },
+      {
+        "id": "1624b6f2-88c6-42b5-a597-bf9c0f98a6b5",
+        "name": "New York 10:30",
+        "source_id": 17,
+        "is_featured": true
+      },
+      {
+        "id": "1c488641-adb6-4790-89e7-879d361da7cc",
+        "name": "New York 2:30",
+        "source_id": 16,
+        "is_featured": true
+      },
+      {
+        "id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+        "name": "Quiniela Leidsa",
+        "source_id": 5,
+        "is_featured": true
+      },
+      {
+        "id": "b9f2c5a2-bc3e-4382-9b6d-3cee16db00fd",
+        "name": "Quiniela Loteka",
+        "source_id": 6,
+        "is_featured": true
+      },
+      {
+        "id": "205c58d2-cfcf-44e6-894d-97358b3d540b",
+        "name": "Quiniela Real",
+        "source_id": 13,
+        "is_featured": true
+      }
+    ],
+    "days_ge2_observed": 2549,
+    "days_with_fuerte": 1333
+  },
+  "totals": {
+    "chain_activations": 2477,
+    "fuerte_activations_unique_per_day": 2222,
+    "distinct_fuertes": 84,
+    "future_appearance_rows": 351227,
+    "days_ge2": 2549,
+    "days_with_fuerte": 1333
+  },
+  "first_hit_stats": {
+    "activations": 2222,
+    "with_exact": 1670,
+    "without_exact": 552,
+    "by_day": {
+      "D+1": 400,
+      "D+2": 335,
+      "D+3": 287,
+      "D+4": 206,
+      "D+5": 175,
+      "D+6": 147,
+      "D+7": 120
+    },
+    "by_day_pct_of_hits": {
+      "D+1": 23.95,
+      "D+2": 20.06,
+      "D+3": 17.19,
+      "D+4": 12.34,
+      "D+5": 10.48,
+      "D+6": 8.8,
+      "D+7": 7.19
+    },
+    "by_day_pct_of_activations": {
+      "D+1": 18.0,
+      "D+2": 15.08,
+      "D+3": 12.92,
+      "D+4": 9.27,
+      "D+5": 7.88,
+      "D+6": 6.62,
+      "D+7": 5.4
+    },
+    "cumulative": {
+      "D+1": {
+        "count": 400,
+        "pct_of_activations": 18.0,
+        "pct_of_hits": 23.95
+      },
+      "D+1–D+2": {
+        "count": 735,
+        "pct_of_activations": 33.08,
+        "pct_of_hits": 44.01
+      },
+      "D+1–D+3": {
+        "count": 1022,
+        "pct_of_activations": 45.99,
+        "pct_of_hits": 61.2
+      },
+      "D+1–D+4": {
+        "count": 1228,
+        "pct_of_activations": 55.27,
+        "pct_of_hits": 73.53
+      },
+      "D+1–D+5": {
+        "count": 1403,
+        "pct_of_activations": 63.14,
+        "pct_of_hits": 84.01
+      },
+      "D+1–D+6": {
+        "count": 1550,
+        "pct_of_activations": 69.76,
+        "pct_of_hits": 92.81
+      },
+      "D+1–D+7": {
+        "count": 1670,
+        "pct_of_activations": 75.16,
+        "pct_of_hits": 100.0
+      }
+    }
+  },
+  "label_summary": [
+    {
+      "label": "SIN_RELACION_DIRECTA_IDENTIFICADA",
+      "count": 105300,
+      "pct_of_label_hits": 22.87
+    },
+    {
+      "label": "RELACION_DE_TERCER_NIVEL",
+      "count": 104696,
+      "pct_of_label_hits": 22.74
+    },
+    {
+      "label": "RELACION_DE_SEGUNDO_NIVEL",
+      "count": 74843,
+      "pct_of_label_hits": 16.26
+    },
+    {
+      "label": "CANDIDATO_ORIGINAL_ALTERNATIVO",
+      "count": 32161,
+      "pct_of_label_hits": 6.99
+    },
+    {
+      "label": "MISMO_GRUPO_T2",
+      "count": 23765,
+      "pct_of_label_hits": 5.16
+    },
+    {
+      "label": "MISMO_CODIGO_T2",
+      "count": 23765,
+      "pct_of_label_hits": 5.16
+    },
+    {
+      "label": "VECINO_DEL_CONFIRMADOR",
+      "count": 20198,
+      "pct_of_label_hits": 4.39
+    },
+    {
+      "label": "MISMO_GRUPO_T1",
+      "count": 16453,
+      "pct_of_label_hits": 3.57
+    },
+    {
+      "label": "MISMO_CODIGO_T1",
+      "count": 16453,
+      "pct_of_label_hits": 3.57
+    },
+    {
+      "label": "COMPANERO_DEL_CONFIRMADOR",
+      "count": 12945,
+      "pct_of_label_hits": 2.81
+    },
+    {
+      "label": "POSICION_T1_CERCANA",
+      "count": 5663,
+      "pct_of_label_hits": 1.23
+    },
+    {
+      "label": "POSICION_T2_ADYACENTE",
+      "count": 5535,
+      "pct_of_label_hits": 1.2
+    },
+    {
+      "label": "POSICION_T1_ADYACENTE",
+      "count": 4715,
+      "pct_of_label_hits": 1.02
+    },
+    {
+      "label": "FUERTE_ALTERNATIVO",
+      "count": 4261,
+      "pct_of_label_hits": 0.93
+    },
+    {
+      "label": "CONFIRMADOR_ORIGINAL",
+      "count": 3567,
+      "pct_of_label_hits": 0.77
+    },
+    {
+      "label": "FUERTE_EXACTO",
+      "count": 3483,
+      "pct_of_label_hits": 0.76
+    },
+    {
+      "label": "POSICION_T1_LEJANA",
+      "count": 2592,
+      "pct_of_label_hits": 0.56
+    }
+  ],
+  "t1_distance_rank": [
+    {
+      "distance": 0,
+      "count": 3483,
+      "pct": 21.17
+    },
+    {
+      "distance": -1,
+      "count": 2521,
+      "pct": 15.32
+    },
+    {
+      "distance": 1,
+      "count": 2194,
+      "pct": 13.33
+    },
+    {
+      "distance": -2,
+      "count": 1932,
+      "pct": 11.74
+    },
+    {
+      "distance": 2,
+      "count": 1649,
+      "pct": 10.02
+    },
+    {
+      "distance": 3,
+      "count": 1098,
+      "pct": 6.67
+    },
+    {
+      "distance": -3,
+      "count": 984,
+      "pct": 5.98
+    },
+    {
+      "distance": 4,
+      "count": 774,
+      "pct": 4.7
+    },
+    {
+      "distance": -4,
+      "count": 619,
+      "pct": 3.76
+    },
+    {
+      "distance": 5,
+      "count": 363,
+      "pct": 2.21
+    },
+    {
+      "distance": 6,
+      "count": 312,
+      "pct": 1.9
+    },
+    {
+      "distance": -5,
+      "count": 229,
+      "pct": 1.39
+    },
+    {
+      "distance": 7,
+      "count": 130,
+      "pct": 0.79
+    },
+    {
+      "distance": -6,
+      "count": 125,
+      "pct": 0.76
+    },
+    {
+      "distance": -7,
+      "count": 40,
+      "pct": 0.24
+    }
+  ],
+  "t2_distance_rank": [
+    {
+      "distance": 0,
+      "count": 3483,
+      "pct": 14.66
+    },
+    {
+      "distance": -1,
+      "count": 2798,
+      "pct": 11.77
+    },
+    {
+      "distance": 1,
+      "count": 2737,
+      "pct": 11.52
+    },
+    {
+      "distance": -2,
+      "count": 2020,
+      "pct": 8.5
+    },
+    {
+      "distance": 2,
+      "count": 1904,
+      "pct": 8.01
+    },
+    {
+      "distance": 3,
+      "count": 1473,
+      "pct": 6.2
+    },
+    {
+      "distance": -3,
+      "count": 1441,
+      "pct": 6.06
+    },
+    {
+      "distance": -4,
+      "count": 1064,
+      "pct": 4.48
+    },
+    {
+      "distance": 4,
+      "count": 1039,
+      "pct": 4.37
+    },
+    {
+      "distance": -5,
+      "count": 941,
+      "pct": 3.96
+    },
+    {
+      "distance": 5,
+      "count": 873,
+      "pct": 3.67
+    },
+    {
+      "distance": -6,
+      "count": 671,
+      "pct": 2.82
+    },
+    {
+      "distance": 6,
+      "count": 657,
+      "pct": 2.76
+    },
+    {
+      "distance": 7,
+      "count": 547,
+      "pct": 2.3
+    },
+    {
+      "distance": -7,
+      "count": 533,
+      "pct": 2.24
+    },
+    {
+      "distance": 8,
+      "count": 400,
+      "pct": 1.68
+    },
+    {
+      "distance": -8,
+      "count": 366,
+      "pct": 1.54
+    },
+    {
+      "distance": -9,
+      "count": 280,
+      "pct": 1.18
+    },
+    {
+      "distance": 9,
+      "count": 248,
+      "pct": 1.04
+    },
+    {
+      "distance": 10,
+      "count": 154,
+      "pct": 0.65
+    },
+    {
+      "distance": -10,
+      "count": 136,
+      "pct": 0.57
+    }
+  ],
+  "confirmation_count": {
+    "2": {
+      "activations": 230,
+      "exact": 166,
+      "exact_pct": 72.17,
+      "median_first_day": 3,
+      "mean_first_day": 3.16
+    },
+    "1": {
+      "activations": 1980,
+      "exact": 1496,
+      "exact_pct": 75.56,
+      "median_first_day": 3,
+      "mean_first_day": 3.2
+    },
+    "3": {
+      "activations": 11,
+      "exact": 7,
+      "exact_pct": 63.64,
+      "median_first_day": 6,
+      "mean_first_day": 4.71
+    },
+    "4+": {
+      "activations": 1,
+      "exact": 1,
+      "exact_pct": 100.0,
+      "median_first_day": 6,
+      "mean_first_day": 6.0
+    }
+  },
+  "yearly": [
+    {
+      "year": "2019",
+      "fuerte_activations": 138,
+      "exact_hits": 109,
+      "exact_pct": 78.99
+    },
+    {
+      "year": "2020",
+      "fuerte_activations": 247,
+      "exact_hits": 178,
+      "exact_pct": 72.06
+    },
+    {
+      "year": "2021",
+      "fuerte_activations": 329,
+      "exact_hits": 235,
+      "exact_pct": 71.43
+    },
+    {
+      "year": "2022",
+      "fuerte_activations": 312,
+      "exact_hits": 235,
+      "exact_pct": 75.32
+    },
+    {
+      "year": "2023",
+      "fuerte_activations": 352,
+      "exact_hits": 270,
+      "exact_pct": 76.7
+    },
+    {
+      "year": "2024",
+      "fuerte_activations": 338,
+      "exact_hits": 261,
+      "exact_pct": 77.22
+    },
+    {
+      "year": "2025",
+      "fuerte_activations": 336,
+      "exact_hits": 252,
+      "exact_pct": 75.0
+    },
+    {
+      "year": "2026",
+      "fuerte_activations": 170,
+      "exact_hits": 130,
+      "exact_pct": 76.47
+    }
+  ],
+  "top_chains": [
+    {
+      "origin": 45,
+      "fuerte": 69,
+      "confirmer": 57,
+      "result": 49,
+      "count": 39,
+      "consistency": "NIVEL_4_REPETICION_ALTA"
+    },
+    {
+      "origin": 40,
+      "fuerte": 72,
+      "confirmer": 26,
+      "result": 6,
+      "count": 39,
+      "consistency": "NIVEL_4_REPETICION_ALTA"
+    },
+    {
+      "origin": 37,
+      "fuerte": 42,
+      "confirmer": 44,
+      "result": 2,
+      "count": 39,
+      "consistency": "NIVEL_4_REPETICION_ALTA"
+    },
+    {
+      "origin": 44,
+      "fuerte": 70,
+      "confirmer": 22,
+      "result": 61,
+      "count": 39,
+      "consistency": "NIVEL_4_REPETICION_ALTA"
+    },
+    {
+      "origin": 44,
+      "fuerte": 70,
+      "confirmer": 22,
+      "result": 22,
+      "count": 39,
+      "consistency": "NIVEL_4_REPETICION_ALTA"
+    },
+    {
+      "origin": 44,
+      "fuerte": 70,
+      "confirmer": 22,
+      "result": 32,
+      "count": 39,
+      "consistency": "NIVEL_4_REPETICION_ALTA"
+    },
+    {
+      "origin": 44,
+      "fuerte": 70,
+      "confirmer": 22,
+      "result": 34,
+      "count": 39,
+      "consistency": "NIVEL_4_REPETICION_ALTA"
+    },
+    {
+      "origin": 52,
+      "fuerte": 65,
+      "confirmer": 37,
+      "result": 49,
+      "count": 38,
+      "consistency": "NIVEL_4_REPETICION_ALTA"
+    },
+    {
+      "origin": 39,
+      "fuerte": 94,
+      "confirmer": 84,
+      "result": 57,
+      "count": 38,
+      "consistency": "NIVEL_4_REPETICION_ALTA"
+    },
+    {
+      "origin": 48,
+      "fuerte": 73,
+      "confirmer": 23,
+      "result": 51,
+      "count": 38,
+      "consistency": "NIVEL_4_REPETICION_ALTA"
+    },
+    {
+      "origin": 44,
+      "fuerte": 70,
+      "confirmer": 22,
+      "result": 86,
+      "count": 38,
+      "consistency": "NIVEL_4_REPETICION_ALTA"
+    },
+    {
+      "origin": 49,
+      "fuerte": 35,
+      "confirmer": 44,
+      "result": 16,
+      "count": 38,
+      "consistency": "NIVEL_4_REPETICION_ALTA"
+    },
+    {
+      "origin": 42,
+      "fuerte": 7,
+      "confirmer": 29,
+      "result": 25,
+      "count": 37,
+      "consistency": "NIVEL_4_REPETICION_ALTA"
+    },
+    {
+      "origin": 38,
+      "fuerte": 20,
+      "confirmer": 2,
+      "result": 61,
+      "count": 37,
+      "consistency": "NIVEL_4_REPETICION_ALTA"
+    },
+    {
+      "origin": 39,
+      "fuerte": 94,
+      "confirmer": 84,
+      "result": 5,
+      "count": 37,
+      "consistency": "NIVEL_4_REPETICION_ALTA"
+    },
+    {
+      "origin": 39,
+      "fuerte": 94,
+      "confirmer": 84,
+      "result": 82,
+      "count": 37,
+      "consistency": "NIVEL_4_REPETICION_ALTA"
+    },
+    {
+      "origin": 40,
+      "fuerte": 19,
+      "confirmer": 86,
+      "result": 78,
+      "count": 37,
+      "consistency": "NIVEL_4_REPETICION_ALTA"
+    },
+    {
+      "origin": 37,
+      "fuerte": 42,
+      "confirmer": 44,
+      "result": 1,
+      "count": 37,
+      "consistency": "NIVEL_4_REPETICION_ALTA"
+    },
+    {
+      "origin": 44,
+      "fuerte": 70,
+      "confirmer": 22,
+      "result": 47,
+      "count": 37,
+      "consistency": "NIVEL_4_REPETICION_ALTA"
+    },
+    {
+      "origin": 44,
+      "fuerte": 70,
+      "confirmer": 22,
+      "result": 93,
+      "count": 37,
+      "consistency": "NIVEL_4_REPETICION_ALTA"
+    },
+    {
+      "origin": 31,
+      "fuerte": 3,
+      "confirmer": 30,
+      "result": 88,
+      "count": 36,
+      "consistency": "NIVEL_4_REPETICION_ALTA"
+    },
+    {
+      "origin": 38,
+      "fuerte": 20,
+      "confirmer": 2,
+      "result": 45,
+      "count": 36,
+      "consistency": "NIVEL_4_REPETICION_ALTA"
+    },
+    {
+      "origin": 39,
+      "fuerte": 94,
+      "confirmer": 84,
+      "result": 20,
+      "count": 36,
+      "consistency": "NIVEL_4_REPETICION_ALTA"
+    },
+    {
+      "origin": 39,
+      "fuerte": 94,
+      "confirmer": 84,
+      "result": 61,
+      "count": 36,
+      "consistency": "NIVEL_4_REPETICION_ALTA"
+    },
+    {
+      "origin": 39,
+      "fuerte": 94,
+      "confirmer": 84,
+      "result": 79,
+      "count": 36,
+      "consistency": "NIVEL_4_REPETICION_ALTA"
+    },
+    {
+      "origin": 44,
+      "fuerte": 70,
+      "confirmer": 22,
+      "result": 11,
+      "count": 36,
+      "consistency": "NIVEL_4_REPETICION_ALTA"
+    },
+    {
+      "origin": 38,
+      "fuerte": 20,
+      "confirmer": 2,
+      "result": 92,
+      "count": 36,
+      "consistency": "NIVEL_4_REPETICION_ALTA"
+    },
+    {
+      "origin": 44,
+      "fuerte": 70,
+      "confirmer": 22,
+      "result": 3,
+      "count": 36,
+      "consistency": "NIVEL_4_REPETICION_ALTA"
+    },
+    {
+      "origin": 43,
+      "fuerte": 44,
+      "confirmer": 29,
+      "result": 6,
+      "count": 35,
+      "consistency": "NIVEL_4_REPETICION_ALTA"
+    },
+    {
+      "origin": 38,
+      "fuerte": 20,
+      "confirmer": 2,
+      "result": 96,
+      "count": 35,
+      "consistency": "NIVEL_4_REPETICION_ALTA"
+    },
+    {
+      "origin": 39,
+      "fuerte": 94,
+      "confirmer": 84,
+      "result": 41,
+      "count": 35,
+      "consistency": "NIVEL_4_REPETICION_ALTA"
+    },
+    {
+      "origin": 39,
+      "fuerte": 94,
+      "confirmer": 84,
+      "result": 64,
+      "count": 35,
+      "consistency": "NIVEL_4_REPETICION_ALTA"
+    },
+    {
+      "origin": 39,
+      "fuerte": 94,
+      "confirmer": 84,
+      "result": 75,
+      "count": 35,
+      "consistency": "NIVEL_4_REPETICION_ALTA"
+    },
+    {
+      "origin": 39,
+      "fuerte": 94,
+      "confirmer": 84,
+      "result": 14,
+      "count": 35,
+      "consistency": "NIVEL_4_REPETICION_ALTA"
+    },
+    {
+      "origin": 39,
+      "fuerte": 94,
+      "confirmer": 84,
+      "result": 97,
+      "count": 35,
+      "consistency": "NIVEL_4_REPETICION_ALTA"
+    },
+    {
+      "origin": 39,
+      "fuerte": 94,
+      "confirmer": 84,
+      "result": 19,
+      "count": 35,
+      "consistency": "NIVEL_4_REPETICION_ALTA"
+    },
+    {
+      "origin": 37,
+      "fuerte": 42,
+      "confirmer": 44,
+      "result": 73,
+      "count": 35,
+      "consistency": "NIVEL_4_REPETICION_ALTA"
+    },
+    {
+      "origin": 39,
+      "fuerte": 94,
+      "confirmer": 84,
+      "result": 89,
+      "count": 35,
+      "consistency": "NIVEL_4_REPETICION_ALTA"
+    },
+    {
+      "origin": 39,
+      "fuerte": 94,
+      "confirmer": 84,
+      "result": 91,
+      "count": 35,
+      "consistency": "NIVEL_4_REPETICION_ALTA"
+    },
+    {
+      "origin": 39,
+      "fuerte": 94,
+      "confirmer": 84,
+      "result": 92,
+      "count": 35,
+      "consistency": "NIVEL_4_REPETICION_ALTA"
+    }
+  ],
+  "top_pairs": [
+    {
+      "origin": 39,
+      "fuerte": 94,
+      "confirmer": 84,
+      "activations": 20,
+      "years": [
+        2019,
+        2020,
+        2021,
+        2022,
+        2023,
+        2024,
+        2026
+      ],
+      "year_span": 7,
+      "consistency": "NIVEL_3_REPETICION_MODERADA",
+      "sample_bucket": "10-24",
+      "top_results": [
+        {
+          "number": 57,
+          "count": 38
+        },
+        {
+          "number": 5,
+          "count": 37
+        },
+        {
+          "number": 82,
+          "count": 37
+        }
+      ],
+      "top_primary": [
+        [
+          "RELACION_DE_TERCER_NIVEL",
+          1064
+        ],
+        [
+          "RELACION_DE_SEGUNDO_NIVEL",
+          664
+        ],
+        [
+          "SIN_RELACION_DIRECTA_IDENTIFICADA",
+          587
+        ]
+      ],
+      "top_days": [
+        [
+          4,
+          416
+        ],
+        [
+          5,
+          415
+        ],
+        [
+          6,
+          415
+        ]
+      ]
+    },
+    {
+      "origin": 44,
+      "fuerte": 70,
+      "confirmer": 22,
+      "activations": 19,
+      "years": [
+        2020,
+        2021,
+        2022,
+        2023,
+        2024,
+        2025,
+        2026
+      ],
+      "year_span": 7,
+      "consistency": "NIVEL_3_REPETICION_MODERADA",
+      "sample_bucket": "10-24",
+      "top_results": [
+        {
+          "number": 61,
+          "count": 39
+        },
+        {
+          "number": 22,
+          "count": 39
+        },
+        {
+          "number": 32,
+          "count": 39
+        }
+      ],
+      "top_primary": [
+        [
+          "RELACION_DE_SEGUNDO_NIVEL",
+          1012
+        ],
+        [
+          "RELACION_DE_TERCER_NIVEL",
+          808
+        ],
+        [
+          "SIN_RELACION_DIRECTA_IDENTIFICADA",
+          431
+        ]
+      ],
+      "top_days": [
+        [
+          4,
+          394
+        ],
+        [
+          6,
+          394
+        ],
+        [
+          5,
+          393
+        ]
+      ]
+    },
+    {
+      "origin": 37,
+      "fuerte": 42,
+      "confirmer": 44,
+      "activations": 17,
+      "years": [
+        2020,
+        2021,
+        2022,
+        2023,
+        2024,
+        2025
+      ],
+      "year_span": 6,
+      "consistency": "NIVEL_3_REPETICION_MODERADA",
+      "sample_bucket": "10-24",
+      "top_results": [
+        {
+          "number": 2,
+          "count": 39
+        },
+        {
+          "number": 1,
+          "count": 37
+        },
+        {
+          "number": 73,
+          "count": 35
+        }
+      ],
+      "top_primary": [
+        [
+          "RELACION_DE_TERCER_NIVEL",
+          725
+        ],
+        [
+          "RELACION_DE_SEGUNDO_NIVEL",
+          615
+        ],
+        [
+          "SIN_RELACION_DIRECTA_IDENTIFICADA",
+          440
+        ]
+      ],
+      "top_days": [
+        [
+          2,
+          345
+        ],
+        [
+          1,
+          341
+        ],
+        [
+          5,
+          338
+        ]
+      ]
+    },
+    {
+      "origin": 37,
+      "fuerte": 10,
+      "confirmer": 1,
+      "activations": 16,
+      "years": [
+        2019,
+        2020,
+        2021,
+        2022,
+        2023,
+        2024,
+        2025
+      ],
+      "year_span": 7,
+      "consistency": "NIVEL_3_REPETICION_MODERADA",
+      "sample_bucket": "10-24",
+      "top_results": [
+        {
+          "number": 42,
+          "count": 34
+        },
+        {
+          "number": 16,
+          "count": 33
+        },
+        {
+          "number": 1,
+          "count": 31
+        }
+      ],
+      "top_primary": [
+        [
+          "SIN_RELACION_DIRECTA_IDENTIFICADA",
+          942
+        ],
+        [
+          "RELACION_DE_TERCER_NIVEL",
+          679
+        ],
+        [
+          "RELACION_DE_SEGUNDO_NIVEL",
+          339
+        ]
+      ],
+      "top_days": [
+        [
+          2,
+          331
+        ],
+        [
+          1,
+          327
+        ],
+        [
+          3,
+          316
+        ]
+      ]
+    },
+    {
+      "origin": 38,
+      "fuerte": 20,
+      "confirmer": 2,
+      "activations": 16,
+      "years": [
+        2019,
+        2020,
+        2021,
+        2022,
+        2023,
+        2024,
+        2025,
+        2026
+      ],
+      "year_span": 8,
+      "consistency": "NIVEL_3_REPETICION_MODERADA",
+      "sample_bucket": "10-24",
+      "top_results": [
+        {
+          "number": 61,
+          "count": 37
+        },
+        {
+          "number": 45,
+          "count": 36
+        },
+        {
+          "number": 92,
+          "count": 36
+        }
+      ],
+      "top_primary": [
+        [
+          "SIN_RELACION_DIRECTA_IDENTIFICADA",
+          848
+        ],
+        [
+          "RELACION_DE_TERCER_NIVEL",
+          845
+        ],
+        [
+          "RELACION_DE_SEGUNDO_NIVEL",
+          308
+        ]
+      ],
+      "top_days": [
+        [
+          1,
+          334
+        ],
+        [
+          5,
+          333
+        ],
+        [
+          2,
+          331
+        ]
+      ]
+    },
+    {
+      "origin": 40,
+      "fuerte": 19,
+      "confirmer": 86,
+      "activations": 16,
+      "years": [
+        2020,
+        2023,
+        2024,
+        2025,
+        2026
+      ],
+      "year_span": 5,
+      "consistency": "NIVEL_3_REPETICION_MODERADA",
+      "sample_bucket": "10-24",
+      "top_results": [
+        {
+          "number": 78,
+          "count": 37
+        },
+        {
+          "number": 21,
+          "count": 34
+        },
+        {
+          "number": 81,
+          "count": 33
+        }
+      ],
+      "top_primary": [
+        [
+          "RELACION_DE_TERCER_NIVEL",
+          759
+        ],
+        [
+          "SIN_RELACION_DIRECTA_IDENTIFICADA",
+          683
+        ],
+        [
+          "RELACION_DE_SEGUNDO_NIVEL",
+          396
+        ]
+      ],
+      "top_days": [
+        [
+          7,
+          331
+        ],
+        [
+          1,
+          324
+        ],
+        [
+          5,
+          322
+        ]
+      ]
+    },
+    {
+      "origin": 42,
+      "fuerte": 7,
+      "confirmer": 29,
+      "activations": 16,
+      "years": [
+        2019,
+        2020,
+        2021,
+        2022,
+        2023,
+        2024
+      ],
+      "year_span": 6,
+      "consistency": "NIVEL_3_REPETICION_MODERADA",
+      "sample_bucket": "10-24",
+      "top_results": [
+        {
+          "number": 25,
+          "count": 37
+        },
+        {
+          "number": 30,
+          "count": 34
+        },
+        {
+          "number": 27,
+          "count": 32
+        }
+      ],
+      "top_primary": [
+        [
+          "RELACION_DE_SEGUNDO_NIVEL",
+          730
+        ],
+        [
+          "RELACION_DE_TERCER_NIVEL",
+          554
+        ],
+        [
+          "SIN_RELACION_DIRECTA_IDENTIFICADA",
+          406
+        ]
+      ],
+      "top_days": [
+        [
+          1,
+          334
+        ],
+        [
+          2,
+          334
+        ],
+        [
+          3,
+          330
+        ]
+      ]
+    },
+    {
+      "origin": 45,
+      "fuerte": 69,
+      "confirmer": 57,
+      "activations": 16,
+      "years": [
+        2019,
+        2020,
+        2021,
+        2022,
+        2023,
+        2024,
+        2025,
+        2026
+      ],
+      "year_span": 8,
+      "consistency": "NIVEL_3_REPETICION_MODERADA",
+      "sample_bucket": "10-24",
+      "top_results": [
+        {
+          "number": 49,
+          "count": 39
+        },
+        {
+          "number": 34,
+          "count": 32
+        },
+        {
+          "number": 42,
+          "count": 32
+        }
+      ],
+      "top_primary": [
+        [
+          "SIN_RELACION_DIRECTA_IDENTIFICADA",
+          1302
+        ],
+        [
+          "RELACION_DE_TERCER_NIVEL",
+          470
+        ],
+        [
+          "RELACION_DE_SEGUNDO_NIVEL",
+          174
+        ]
+      ],
+      "top_days": [
+        [
+          7,
+          324
+        ],
+        [
+          6,
+          321
+        ],
+        [
+          1,
+          319
+        ]
+      ]
+    },
+    {
+      "origin": 26,
+      "fuerte": 27,
+      "confirmer": 76,
+      "activations": 15,
+      "years": [
+        2019,
+        2020,
+        2021,
+        2022,
+        2023,
+        2024,
+        2025
+      ],
+      "year_span": 7,
+      "consistency": "NIVEL_3_REPETICION_MODERADA",
+      "sample_bucket": "10-24",
+      "top_results": [
+        {
+          "number": 46,
+          "count": 32
+        },
+        {
+          "number": 25,
+          "count": 31
+        },
+        {
+          "number": 88,
+          "count": 31
+        }
+      ],
+      "top_primary": [
+        [
+          "SIN_RELACION_DIRECTA_IDENTIFICADA",
+          1076
+        ],
+        [
+          "RELACION_DE_TERCER_NIVEL",
+          595
+        ],
+        [
+          "RELACION_DE_SEGUNDO_NIVEL",
+          179
+        ]
+      ],
+      "top_days": [
+        [
+          1,
+          314
+        ],
+        [
+          2,
+          314
+        ],
+        [
+          4,
+          313
+        ]
+      ]
+    },
+    {
+      "origin": 31,
+      "fuerte": 3,
+      "confirmer": 30,
+      "activations": 15,
+      "years": [
+        2019,
+        2020,
+        2022,
+        2023,
+        2024,
+        2025
+      ],
+      "year_span": 6,
+      "consistency": "NIVEL_3_REPETICION_MODERADA",
+      "sample_bucket": "10-24",
+      "top_results": [
+        {
+          "number": 88,
+          "count": 36
+        },
+        {
+          "number": 85,
+          "count": 31
+        },
+        {
+          "number": 6,
+          "count": 30
+        }
+      ],
+      "top_primary": [
+        [
+          "SIN_RELACION_DIRECTA_IDENTIFICADA",
+          1121
+        ],
+        [
+          "RELACION_DE_TERCER_NIVEL",
+          516
+        ],
+        [
+          "COMPANERO_DEL_CONFIRMADOR",
+          151
+        ]
+      ],
+      "top_days": [
+        [
+          1,
+          310
+        ],
+        [
+          5,
+          309
+        ],
+        [
+          6,
+          309
+        ]
+      ]
+    },
+    {
+      "origin": 35,
+      "fuerte": 54,
+      "confirmer": 14,
+      "activations": 15,
+      "years": [
+        2019,
+        2020,
+        2021,
+        2022,
+        2024,
+        2025,
+        2026
+      ],
+      "year_span": 7,
+      "consistency": "NIVEL_3_REPETICION_MODERADA",
+      "sample_bucket": "10-24",
+      "top_results": [
+        {
+          "number": 5,
+          "count": 34
+        },
+        {
+          "number": 31,
+          "count": 33
+        },
+        {
+          "number": 61,
+          "count": 32
+        }
+      ],
+      "top_primary": [
+        [
+          "SIN_RELACION_DIRECTA_IDENTIFICADA",
+          1053
+        ],
+        [
+          "RELACION_DE_TERCER_NIVEL",
+          622
+        ],
+        [
+          "COMPANERO_DEL_CONFIRMADOR",
+          145
+        ]
+      ],
+      "top_days": [
+        [
+          6,
+          313
+        ],
+        [
+          5,
+          310
+        ],
+        [
+          1,
+          309
+        ]
+      ]
+    },
+    {
+      "origin": 38,
+      "fuerte": 63,
+      "confirmer": 22,
+      "activations": 15,
+      "years": [
+        2019,
+        2021,
+        2022,
+        2023,
+        2024,
+        2025,
+        2026
+      ],
+      "year_span": 7,
+      "consistency": "NIVEL_3_REPETICION_MODERADA",
+      "sample_bucket": "10-24",
+      "top_results": [
+        {
+          "number": 67,
+          "count": 32
+        },
+        {
+          "number": 46,
+          "count": 31
+        },
+        {
+          "number": 3,
+          "count": 30
+        }
+      ],
+      "top_primary": [
+        [
+          "RELACION_DE_SEGUNDO_NIVEL",
+          709
+        ],
+        [
+          "RELACION_DE_TERCER_NIVEL",
+          596
+        ],
+        [
+          "SIN_RELACION_DIRECTA_IDENTIFICADA",
+          395
+        ]
+      ],
+      "top_days": [
+        [
+          2,
+          311
+        ],
+        [
+          1,
+          310
+        ],
+        [
+          3,
+          310
+        ]
+      ]
+    },
+    {
+      "origin": 42,
+      "fuerte": 7,
+      "confirmer": 53,
+      "activations": 15,
+      "years": [
+        2019,
+        2020,
+        2021,
+        2022,
+        2023,
+        2024,
+        2025,
+        2026
+      ],
+      "year_span": 8,
+      "consistency": "NIVEL_3_REPETICION_MODERADA",
+      "sample_bucket": "10-24",
+      "top_results": [
+        {
+          "number": 3,
+          "count": 33
+        },
+        {
+          "number": 79,
+          "count": 33
+        },
+        {
+          "number": 42,
+          "count": 32
+        }
+      ],
+      "top_primary": [
+        [
+          "RELACION_DE_SEGUNDO_NIVEL",
+          701
+        ],
+        [
+          "RELACION_DE_TERCER_NIVEL",
+          553
+        ],
+        [
+          "SIN_RELACION_DIRECTA_IDENTIFICADA",
+          404
+        ]
+      ],
+      "top_days": [
+        [
+          2,
+          312
+        ],
+        [
+          1,
+          311
+        ],
+        [
+          6,
+          311
+        ]
+      ]
+    },
+    {
+      "origin": 43,
+      "fuerte": 44,
+      "confirmer": 29,
+      "activations": 15,
+      "years": [
+        2019,
+        2020,
+        2021,
+        2022,
+        2023,
+        2024,
+        2025,
+        2026
+      ],
+      "year_span": 8,
+      "consistency": "NIVEL_3_REPETICION_MODERADA",
+      "sample_bucket": "10-24",
+      "top_results": [
+        {
+          "number": 6,
+          "count": 35
+        },
+        {
+          "number": 81,
+          "count": 34
+        },
+        {
+          "number": 51,
+          "count": 33
+        }
+      ],
+      "top_primary": [
+        [
+          "RELACION_DE_SEGUNDO_NIVEL",
+          821
+        ],
+        [
+          "RELACION_DE_TERCER_NIVEL",
+          648
+        ],
+        [
+          "SIN_RELACION_DIRECTA_IDENTIFICADA",
+          228
+        ]
+      ],
+      "top_days": [
+        [
+          1,
+          315
+        ],
+        [
+          3,
+          314
+        ],
+        [
+          5,
+          309
+        ]
+      ]
+    },
+    {
+      "origin": 47,
+      "fuerte": 79,
+      "confirmer": 67,
+      "activations": 15,
+      "years": [
+        2019,
+        2020,
+        2021,
+        2022,
+        2023,
+        2024,
+        2025
+      ],
+      "year_span": 7,
+      "consistency": "NIVEL_3_REPETICION_MODERADA",
+      "sample_bucket": "10-24",
+      "top_results": [
+        {
+          "number": 22,
+          "count": 32
+        },
+        {
+          "number": 51,
+          "count": 32
+        },
+        {
+          "number": 55,
+          "count": 30
+        }
+      ],
+      "top_primary": [
+        [
+          "SIN_RELACION_DIRECTA_IDENTIFICADA",
+          1020
+        ],
+        [
+          "RELACION_DE_TERCER_NIVEL",
+          601
+        ],
+        [
+          "RELACION_DE_SEGUNDO_NIVEL",
+          166
+        ]
+      ],
+      "top_days": [
+        [
+          5,
+          314
+        ],
+        [
+          7,
+          311
+        ],
+        [
+          6,
+          310
+        ]
+      ]
+    },
+    {
+      "origin": 33,
+      "fuerte": 87,
+      "confirmer": 23,
+      "activations": 14,
+      "years": [
+        2019,
+        2020,
+        2021,
+        2022,
+        2023,
+        2024,
+        2025,
+        2026
+      ],
+      "year_span": 8,
+      "consistency": "NIVEL_3_REPETICION_MODERADA",
+      "sample_bucket": "10-24",
+      "top_results": [
+        {
+          "number": 70,
+          "count": 33
+        },
+        {
+          "number": 78,
+          "count": 31
+        },
+        {
+          "number": 81,
+          "count": 31
+        }
+      ],
+      "top_primary": [
+        [
+          "SIN_RELACION_DIRECTA_IDENTIFICADA",
+          864
+        ],
+        [
+          "RELACION_DE_TERCER_NIVEL",
+          576
+        ],
+        [
+          "RELACION_DE_SEGUNDO_NIVEL",
+          206
+        ]
+      ],
+      "top_days": [
+        [
+          7,
+          292
+        ],
+        [
+          2,
+          290
+        ],
+        [
+          3,
+          286
+        ]
+      ]
+    },
+    {
+      "origin": 40,
+      "fuerte": 72,
+      "confirmer": 26,
+      "activations": 14,
+      "years": [
+        2019,
+        2020,
+        2021,
+        2023,
+        2024,
+        2025,
+        2026
+      ],
+      "year_span": 7,
+      "consistency": "NIVEL_3_REPETICION_MODERADA",
+      "sample_bucket": "10-24",
+      "top_results": [
+        {
+          "number": 6,
+          "count": 39
+        },
+        {
+          "number": 66,
+          "count": 32
+        },
+        {
+          "number": 48,
+          "count": 31
+        }
+      ],
+      "top_primary": [
+        [
+          "RELACION_DE_TERCER_NIVEL",
+          688
+        ],
+        [
+          "SIN_RELACION_DIRECTA_IDENTIFICADA",
+          665
+        ],
+        [
+          "RELACION_DE_SEGUNDO_NIVEL",
+          282
+        ]
+      ],
+      "top_days": [
+        [
+          1,
+          291
+        ],
+        [
+          3,
+          291
+        ],
+        [
+          2,
+          286
+        ]
+      ]
+    },
+    {
+      "origin": 41,
+      "fuerte": 93,
+      "confirmer": 48,
+      "activations": 14,
+      "years": [
+        2019,
+        2021,
+        2022,
+        2024,
+        2026
+      ],
+      "year_span": 5,
+      "consistency": "NIVEL_3_REPETICION_MODERADA",
+      "sample_bucket": "10-24",
+      "top_results": [
+        {
+          "number": 55,
+          "count": 32
+        },
+        {
+          "number": 51,
+          "count": 31
+        },
+        {
+          "number": 76,
+          "count": 30
+        }
+      ],
+      "top_primary": [
+        [
+          "RELACION_DE_TERCER_NIVEL",
+          779
+        ],
+        [
+          "SIN_RELACION_DIRECTA_IDENTIFICADA",
+          734
+        ],
+        [
+          "RELACION_DE_SEGUNDO_NIVEL",
+          232
+        ]
+      ],
+      "top_days": [
+        [
+          4,
+          293
+        ],
+        [
+          3,
+          290
+        ],
+        [
+          1,
+          289
+        ]
+      ]
+    },
+    {
+      "origin": 43,
+      "fuerte": 44,
+      "confirmer": 9,
+      "activations": 14,
+      "years": [
+        2020,
+        2022,
+        2023,
+        2024,
+        2025
+      ],
+      "year_span": 5,
+      "consistency": "NIVEL_3_REPETICION_MODERADA",
+      "sample_bucket": "10-24",
+      "top_results": [
+        {
+          "number": 96,
+          "count": 33
+        },
+        {
+          "number": 81,
+          "count": 32
+        },
+        {
+          "number": 8,
+          "count": 32
+        }
+      ],
+      "top_primary": [
+        [
+          "RELACION_DE_SEGUNDO_NIVEL",
+          662
+        ],
+        [
+          "RELACION_DE_TERCER_NIVEL",
+          568
+        ],
+        [
+          "SIN_RELACION_DIRECTA_IDENTIFICADA",
+          243
+        ]
+      ],
+      "top_days": [
+        [
+          6,
+          293
+        ],
+        [
+          3,
+          292
+        ],
+        [
+          4,
+          287
+        ]
+      ]
+    },
+    {
+      "origin": 43,
+      "fuerte": 92,
+      "confirmer": 27,
+      "activations": 14,
+      "years": [
+        2019,
+        2020,
+        2021,
+        2022,
+        2023,
+        2024,
+        2025
+      ],
+      "year_span": 7,
+      "consistency": "NIVEL_3_REPETICION_MODERADA",
+      "sample_bucket": "10-24",
+      "top_results": [
+        {
+          "number": 43,
+          "count": 34
+        },
+        {
+          "number": 51,
+          "count": 33
+        },
+        {
+          "number": 92,
+          "count": 31
+        }
+      ],
+      "top_primary": [
+        [
+          "RELACION_DE_TERCER_NIVEL",
+          835
+        ],
+        [
+          "RELACION_DE_SEGUNDO_NIVEL",
+          549
+        ],
+        [
+          "SIN_RELACION_DIRECTA_IDENTIFICADA",
+          293
+        ]
+      ],
+      "top_days": [
+        [
+          2,
+          290
+        ],
+        [
+          5,
+          288
+        ],
+        [
+          4,
+          286
+        ]
+      ]
+    },
+    {
+      "origin": 47,
+      "fuerte": 68,
+      "confirmer": 92,
+      "activations": 14,
+      "years": [
+        2019,
+        2020,
+        2021,
+        2022,
+        2023,
+        2024,
+        2025,
+        2026
+      ],
+      "year_span": 8,
+      "consistency": "NIVEL_3_REPETICION_MODERADA",
+      "sample_bucket": "10-24",
+      "top_results": [
+        {
+          "number": 8,
+          "count": 31
+        },
+        {
+          "number": 55,
+          "count": 29
+        },
+        {
+          "number": 49,
+          "count": 29
+        }
+      ],
+      "top_primary": [
+        [
+          "RELACION_DE_TERCER_NIVEL",
+          717
+        ],
+        [
+          "SIN_RELACION_DIRECTA_IDENTIFICADA",
+          697
+        ],
+        [
+          "RELACION_DE_SEGUNDO_NIVEL",
+          183
+        ]
+      ],
+      "top_days": [
+        [
+          5,
+          291
+        ],
+        [
+          3,
+          290
+        ],
+        [
+          4,
+          289
+        ]
+      ]
+    },
+    {
+      "origin": 48,
+      "fuerte": 73,
+      "confirmer": 23,
+      "activations": 14,
+      "years": [
+        2020,
+        2021,
+        2022,
+        2025,
+        2026
+      ],
+      "year_span": 5,
+      "consistency": "NIVEL_3_REPETICION_MODERADA",
+      "sample_bucket": "10-24",
+      "top_results": [
+        {
+          "number": 51,
+          "count": 38
+        },
+        {
+          "number": 91,
+          "count": 31
+        },
+        {
+          "number": 81,
+          "count": 29
+        }
+      ],
+      "top_primary": [
+        [
+          "SIN_RELACION_DIRECTA_IDENTIFICADA",
+          911
+        ],
+        [
+          "RELACION_DE_TERCER_NIVEL",
+          590
+        ],
+        [
+          "RELACION_DE_SEGUNDO_NIVEL",
+          176
+        ]
+      ],
+      "top_days": [
+        [
+          1,
+          287
+        ],
+        [
+          4,
+          287
+        ],
+        [
+          3,
+          286
+        ]
+      ]
+    },
+    {
+      "origin": 48,
+      "fuerte": 89,
+      "confirmer": 41,
+      "activations": 14,
+      "years": [
+        2019,
+        2021,
+        2022,
+        2024,
+        2026
+      ],
+      "year_span": 5,
+      "consistency": "NIVEL_3_REPETICION_MODERADA",
+      "sample_bucket": "10-24",
+      "top_results": [
+        {
+          "number": 55,
+          "count": 32
+        },
+        {
+          "number": 51,
+          "count": 31
+        },
+        {
+          "number": 76,
+          "count": 30
+        }
+      ],
+      "top_primary": [
+        [
+          "SIN_RELACION_DIRECTA_IDENTIFICADA",
+          645
+        ],
+        [
+          "RELACION_DE_TERCER_NIVEL",
+          591
+        ],
+        [
+          "RELACION_DE_SEGUNDO_NIVEL",
+          374
+        ]
+      ],
+      "top_days": [
+        [
+          4,
+          293
+        ],
+        [
+          3,
+          290
+        ],
+        [
+          1,
+          289
+        ]
+      ]
+    },
+    {
+      "origin": 51,
+      "fuerte": 34,
+      "confirmer": 59,
+      "activations": 14,
+      "years": [
+        2019,
+        2020,
+        2021,
+        2023,
+        2024,
+        2025,
+        2026
+      ],
+      "year_span": 7,
+      "consistency": "NIVEL_3_REPETICION_MODERADA",
+      "sample_bucket": "10-24",
+      "top_results": [
+        {
+          "number": 22,
+          "count": 32
+        },
+        {
+          "number": 27,
+          "count": 29
+        },
+        {
+          "number": 86,
+          "count": 27
+        }
+      ],
+      "top_primary": [
+        [
+          "SIN_RELACION_DIRECTA_IDENTIFICADA",
+          1123
+        ],
+        [
+          "RELACION_DE_TERCER_NIVEL",
+          375
+        ],
+        [
+          "RELACION_DE_SEGUNDO_NIVEL",
+          120
+        ]
+      ],
+      "top_days": [
+        [
+          1,
+          277
+        ],
+        [
+          2,
+          277
+        ],
+        [
+          4,
+          276
+        ]
+      ]
+    },
+    {
+      "origin": 52,
+      "fuerte": 65,
+      "confirmer": 37,
+      "activations": 14,
+      "years": [
+        2019,
+        2020,
+        2021,
+        2022,
+        2023,
+        2025,
+        2026
+      ],
+      "year_span": 7,
+      "consistency": "NIVEL_3_REPETICION_MODERADA",
+      "sample_bucket": "10-24",
+      "top_results": [
+        {
+          "number": 49,
+          "count": 38
+        },
+        {
+          "number": 37,
+          "count": 34
+        },
+        {
+          "number": 5,
+          "count": 32
+        }
+      ],
+      "top_primary": [
+        [
+          "SIN_RELACION_DIRECTA_IDENTIFICADA",
+          1201
+        ],
+        [
+          "RELACION_DE_TERCER_NIVEL",
+          424
+        ],
+        [
+          "CANDIDATO_ORIGINAL_ALTERNATIVO",
+          146
+        ]
+      ],
+      "top_days": [
+        [
+          4,
+          293
+        ],
+        [
+          2,
+          290
+        ],
+        [
+          3,
+          288
+        ]
+      ]
+    },
+    {
+      "origin": 28,
+      "fuerte": 26,
+      "confirmer": 72,
+      "activations": 13,
+      "years": [
+        2019,
+        2020,
+        2021,
+        2022,
+        2023,
+        2024,
+        2025
+      ],
+      "year_span": 7,
+      "consistency": "NIVEL_3_REPETICION_MODERADA",
+      "sample_bucket": "10-24",
+      "top_results": [
+        {
+          "number": 58,
+          "count": 28
+        },
+        {
+          "number": 43,
+          "count": 26
+        },
+        {
+          "number": 80,
+          "count": 26
+        }
+      ],
+      "top_primary": [
+        [
+          "RELACION_DE_TERCER_NIVEL",
+          700
+        ],
+        [
+          "SIN_RELACION_DIRECTA_IDENTIFICADA",
+          611
+        ],
+        [
+          "RELACION_DE_SEGUNDO_NIVEL",
+          250
+        ]
+      ],
+      "top_days": [
+        [
+          4,
+          273
+        ],
+        [
+          3,
+          271
+        ],
+        [
+          2,
+          265
+        ]
+      ]
+    },
+    {
+      "origin": 32,
+      "fuerte": 77,
+      "confirmer": 23,
+      "activations": 13,
+      "years": [
+        2020,
+        2021,
+        2023,
+        2024,
+        2025,
+        2026
+      ],
+      "year_span": 6,
+      "consistency": "NIVEL_3_REPETICION_MODERADA",
+      "sample_bucket": "10-24",
+      "top_results": [
+        {
+          "number": 82,
+          "count": 30
+        },
+        {
+          "number": 79,
+          "count": 29
+        },
+        {
+          "number": 63,
+          "count": 28
+        }
+      ],
+      "top_primary": [
+        [
+          "SIN_RELACION_DIRECTA_IDENTIFICADA",
+          994
+        ],
+        [
+          "RELACION_DE_TERCER_NIVEL",
+          372
+        ],
+        [
+          "RELACION_DE_SEGUNDO_NIVEL",
+          152
+        ]
+      ],
+      "top_days": [
+        [
+          3,
+          273
+        ],
+        [
+          7,
+          272
+        ],
+        [
+          6,
+          270
+        ]
+      ]
+    },
+    {
+      "origin": 32,
+      "fuerte": 77,
+      "confirmer": 28,
+      "activations": 13,
+      "years": [
+        2020,
+        2021,
+        2022,
+        2023,
+        2024,
+        2025,
+        2026
+      ],
+      "year_span": 7,
+      "consistency": "NIVEL_3_REPETICION_MODERADA",
+      "sample_bucket": "10-24",
+      "top_results": [
+        {
+          "number": 66,
+          "count": 27
+        },
+        {
+          "number": 22,
+          "count": 27
+        },
+        {
+          "number": 37,
+          "count": 26
+        }
+      ],
+      "top_primary": [
+        [
+          "SIN_RELACION_DIRECTA_IDENTIFICADA",
+          904
+        ],
+        [
+          "RELACION_DE_TERCER_NIVEL",
+          359
+        ],
+        [
+          "RELACION_DE_SEGUNDO_NIVEL",
+          178
+        ]
+      ],
+      "top_days": [
+        [
+          1,
+          255
+        ],
+        [
+          2,
+          255
+        ],
+        [
+          4,
+          255
+        ]
+      ]
+    },
+    {
+      "origin": 34,
+      "fuerte": 1,
+      "confirmer": 10,
+      "activations": 13,
+      "years": [
+        2019,
+        2020,
+        2021,
+        2022,
+        2023,
+        2024,
+        2025
+      ],
+      "year_span": 7,
+      "consistency": "NIVEL_3_REPETICION_MODERADA",
+      "sample_bucket": "10-24",
+      "top_results": [
+        {
+          "number": 84,
+          "count": 28
+        },
+        {
+          "number": 71,
+          "count": 28
+        },
+        {
+          "number": 99,
+          "count": 27
+        }
+      ],
+      "top_primary": [
+        [
+          "SIN_RELACION_DIRECTA_IDENTIFICADA",
+          1057
+        ],
+        [
+          "RELACION_DE_TERCER_NIVEL",
+          413
+        ],
+        [
+          "RELACION_DE_SEGUNDO_NIVEL",
+          158
+        ]
+      ],
+      "top_days": [
+        [
+          2,
+          272
+        ],
+        [
+          1,
+          270
+        ],
+        [
+          3,
+          270
+        ]
+      ]
+    },
+    {
+      "origin": 37,
+      "fuerte": 42,
+      "confirmer": 9,
+      "activations": 13,
+      "years": [
+        2019,
+        2020,
+        2021,
+        2022,
+        2023,
+        2025,
+        2026
+      ],
+      "year_span": 7,
+      "consistency": "NIVEL_3_REPETICION_MODERADA",
+      "sample_bucket": "10-24",
+      "top_results": [
+        {
+          "number": 21,
+          "count": 31
+        },
+        {
+          "number": 19,
+          "count": 28
+        },
+        {
+          "number": 64,
+          "count": 28
+        }
+      ],
+      "top_primary": [
+        [
+          "RELACION_DE_TERCER_NIVEL",
+          542
+        ],
+        [
+          "RELACION_DE_SEGUNDO_NIVEL",
+          514
+        ],
+        [
+          "SIN_RELACION_DIRECTA_IDENTIFICADA",
+          377
+        ]
+      ],
+      "top_days": [
+        [
+          1,
+          272
+        ],
+        [
+          7,
+          268
+        ],
+        [
+          2,
+          264
+        ]
+      ]
+    },
+    {
+      "origin": 38,
+      "fuerte": 63,
+      "confirmer": 70,
+      "activations": 13,
+      "years": [
+        2019,
+        2020,
+        2021,
+        2022,
+        2024,
+        2025,
+        2026
+      ],
+      "year_span": 7,
+      "consistency": "NIVEL_3_REPETICION_MODERADA",
+      "sample_bucket": "10-24",
+      "top_results": [
+        {
+          "number": 65,
+          "count": 30
+        },
+        {
+          "number": 89,
+          "count": 30
+        },
+        {
+          "number": 91,
+          "count": 29
+        }
+      ],
+      "top_primary": [
+        [
+          "RELACION_DE_SEGUNDO_NIVEL",
+          592
+        ],
+        [
+          "RELACION_DE_TERCER_NIVEL",
+          587
+        ],
+        [
+          "SIN_RELACION_DIRECTA_IDENTIFICADA",
+          297
+        ]
+      ],
+      "top_days": [
+        [
+          3,
+          271
+        ],
+        [
+          7,
+          271
+        ],
+        [
+          1,
+          270
+        ]
+      ]
+    },
+    {
+      "origin": 41,
+      "fuerte": 29,
+      "confirmer": 70,
+      "activations": 13,
+      "years": [
+        2020,
+        2021,
+        2023,
+        2024,
+        2025,
+        2026
+      ],
+      "year_span": 6,
+      "consistency": "NIVEL_3_REPETICION_MODERADA",
+      "sample_bucket": "10-24",
+      "top_results": [
+        {
+          "number": 16,
+          "count": 27
+        },
+        {
+          "number": 42,
+          "count": 26
+        },
+        {
+          "number": 30,
+          "count": 26
+        }
+      ],
+      "top_primary": [
+        [
+          "RELACION_DE_SEGUNDO_NIVEL",
+          589
+        ],
+        [
+          "RELACION_DE_TERCER_NIVEL",
+          522
+        ],
+        [
+          "SIN_RELACION_DIRECTA_IDENTIFICADA",
+          333
+        ]
+      ],
+      "top_days": [
+        [
+          1,
+          271
+        ],
+        [
+          4,
+          262
+        ],
+        [
+          2,
+          259
+        ]
+      ]
+    },
+    {
+      "origin": 42,
+      "fuerte": 71,
+      "confirmer": 56,
+      "activations": 13,
+      "years": [
+        2021,
+        2022,
+        2023,
+        2024,
+        2025
+      ],
+      "year_span": 5,
+      "consistency": "NIVEL_3_REPETICION_MODERADA",
+      "sample_bucket": "10-24",
+      "top_results": [
+        {
+          "number": 90,
+          "count": 30
+        },
+        {
+          "number": 8,
+          "count": 29
+        },
+        {
+          "number": 91,
+          "count": 28
+        }
+      ],
+      "top_primary": [
+        [
+          "RELACION_DE_TERCER_NIVEL",
+          601
+        ],
+        [
+          "RELACION_DE_SEGUNDO_NIVEL",
+          458
+        ],
+        [
+          "SIN_RELACION_DIRECTA_IDENTIFICADA",
+          427
+        ]
+      ],
+      "top_days": [
+        [
+          2,
+          270
+        ],
+        [
+          6,
+          270
+        ],
+        [
+          7,
+          270
+        ]
+      ]
+    },
+    {
+      "origin": 43,
+      "fuerte": 28,
+      "confirmer": 23,
+      "activations": 13,
+      "years": [
+        2020,
+        2021,
+        2023,
+        2025,
+        2026
+      ],
+      "year_span": 5,
+      "consistency": "NIVEL_3_REPETICION_MODERADA",
+      "sample_bucket": "10-24",
+      "top_results": [
+        {
+          "number": 11,
+          "count": 29
+        },
+        {
+          "number": 70,
+          "count": 26
+        },
+        {
+          "number": 9,
+          "count": 26
+        }
+      ],
+      "top_primary": [
+        [
+          "RELACION_DE_TERCER_NIVEL",
+          794
+        ],
+        [
+          "RELACION_DE_SEGUNDO_NIVEL",
+          370
+        ],
+        [
+          "SIN_RELACION_DIRECTA_IDENTIFICADA",
+          288
+        ]
+      ],
+      "top_days": [
+        [
+          4,
+          272
+        ],
+        [
+          6,
+          272
+        ],
+        [
+          7,
+          270
+        ]
+      ]
+    },
+    {
+      "origin": 43,
+      "fuerte": 92,
+      "confirmer": 68,
+      "activations": 13,
+      "years": [
+        2019,
+        2020,
+        2021,
+        2022,
+        2023,
+        2026
+      ],
+      "year_span": 6,
+      "consistency": "NIVEL_3_REPETICION_MODERADA",
+      "sample_bucket": "10-24",
+      "top_results": [
+        {
+          "number": 13,
+          "count": 31
+        },
+        {
+          "number": 91,
+          "count": 30
+        },
+        {
+          "number": 9,
+          "count": 29
+        }
+      ],
+      "top_primary": [
+        [
+          "RELACION_DE_TERCER_NIVEL",
+          804
+        ],
+        [
+          "RELACION_DE_SEGUNDO_NIVEL",
+          440
+        ],
+        [
+          "SIN_RELACION_DIRECTA_IDENTIFICADA",
+          309
+        ]
+      ],
+      "top_days": [
+        [
+          3,
+          271
+        ],
+        [
+          4,
+          271
+        ],
+        [
+          6,
+          269
+        ]
+      ]
+    },
+    {
+      "origin": 44,
+      "fuerte": 22,
+      "confirmer": 7,
+      "activations": 13,
+      "years": [
+        2019,
+        2020,
+        2021,
+        2022,
+        2023,
+        2024
+      ],
+      "year_span": 6,
+      "consistency": "NIVEL_3_REPETICION_MODERADA",
+      "sample_bucket": "10-24",
+      "top_results": [
+        {
+          "number": 11,
+          "count": 28
+        },
+        {
+          "number": 41,
+          "count": 27
+        },
+        {
+          "number": 47,
+          "count": 27
+        }
+      ],
+      "top_primary": [
+        [
+          "RELACION_DE_SEGUNDO_NIVEL",
+          613
+        ],
+        [
+          "RELACION_DE_TERCER_NIVEL",
+          534
+        ],
+        [
+          "SIN_RELACION_DIRECTA_IDENTIFICADA",
+          264
+        ]
+      ],
+      "top_days": [
+        [
+          4,
+          270
+        ],
+        [
+          5,
+          267
+        ],
+        [
+          7,
+          267
+        ]
+      ]
+    },
+    {
+      "origin": 44,
+      "fuerte": 70,
+      "confirmer": 7,
+      "activations": 13,
+      "years": [
+        2019,
+        2020,
+        2021,
+        2022,
+        2023,
+        2024
+      ],
+      "year_span": 6,
+      "consistency": "NIVEL_3_REPETICION_MODERADA",
+      "sample_bucket": "10-24",
+      "top_results": [
+        {
+          "number": 11,
+          "count": 28
+        },
+        {
+          "number": 41,
+          "count": 27
+        },
+        {
+          "number": 47,
+          "count": 27
+        }
+      ],
+      "top_primary": [
+        [
+          "RELACION_DE_SEGUNDO_NIVEL",
+          613
+        ],
+        [
+          "RELACION_DE_TERCER_NIVEL",
+          534
+        ],
+        [
+          "SIN_RELACION_DIRECTA_IDENTIFICADA",
+          264
+        ]
+      ],
+      "top_days": [
+        [
+          4,
+          270
+        ],
+        [
+          5,
+          267
+        ],
+        [
+          7,
+          267
+        ]
+      ]
+    },
+    {
+      "origin": 44,
+      "fuerte": 91,
+      "confirmer": 69,
+      "activations": 13,
+      "years": [
+        2019,
+        2020,
+        2021,
+        2022,
+        2023,
+        2024,
+        2026
+      ],
+      "year_span": 7,
+      "consistency": "NIVEL_3_REPETICION_MODERADA",
+      "sample_bucket": "10-24",
+      "top_results": [
+        {
+          "number": 61,
+          "count": 29
+        },
+        {
+          "number": 76,
+          "count": 28
+        },
+        {
+          "number": 41,
+          "count": 27
+        }
+      ],
+      "top_primary": [
+        [
+          "RELACION_DE_TERCER_NIVEL",
+          621
+        ],
+        [
+          "SIN_RELACION_DIRECTA_IDENTIFICADA",
+          618
+        ],
+        [
+          "RELACION_DE_SEGUNDO_NIVEL",
+          315
+        ]
+      ],
+      "top_days": [
+        [
+          1,
+          271
+        ],
+        [
+          2,
+          266
+        ],
+        [
+          3,
+          265
+        ]
+      ]
+    },
+    {
+      "origin": 45,
+      "fuerte": 80,
+      "confirmer": 8,
+      "activations": 13,
+      "years": [
+        2019,
+        2020,
+        2022,
+        2023,
+        2024,
+        2025
+      ],
+      "year_span": 6,
+      "consistency": "NIVEL_3_REPETICION_MODERADA",
+      "sample_bucket": "10-24",
+      "top_results": [
+        {
+          "number": 17,
+          "count": 32
+        },
+        {
+          "number": 58,
+          "count": 30
+        },
+        {
+          "number": 21,
+          "count": 30
+        }
+      ],
+      "top_primary": [
+        [
+          "SIN_RELACION_DIRECTA_IDENTIFICADA",
+          1226
+        ],
+        [
+          "RELACION_DE_TERCER_NIVEL",
+          317
+        ],
+        [
+          "CANDIDATO_ORIGINAL_ALTERNATIVO",
+          114
+        ]
+      ],
+      "top_days": [
+        [
+          6,
+          272
+        ],
+        [
+          5,
+          270
+        ],
+        [
+          4,
+          269
+        ]
+      ]
+    },
+    {
+      "origin": 46,
+      "fuerte": 74,
+      "confirmer": 31,
+      "activations": 13,
+      "years": [
+        2020,
+        2021,
+        2022,
+        2023,
+        2024,
+        2025,
+        2026
+      ],
+      "year_span": 7,
+      "consistency": "NIVEL_3_REPETICION_MODERADA",
+      "sample_bucket": "10-24",
+      "top_results": [
+        {
+          "number": 97,
+          "count": 33
+        },
+        {
+          "number": 30,
+          "count": 31
+        },
+        {
+          "number": 43,
+          "count": 30
+        }
+      ],
+      "top_primary": [
+        [
+          "RELACION_DE_TERCER_NIVEL",
+          742
+        ],
+        [
+          "SIN_RELACION_DIRECTA_IDENTIFICADA",
+          609
+        ],
+        [
+          "RELACION_DE_SEGUNDO_NIVEL",
+          230
+        ]
+      ],
+      "top_days": [
+        [
+          3,
+          270
+        ],
+        [
+          6,
+          269
+        ],
+        [
+          4,
+          266
+        ]
+      ]
+    }
+  ],
+  "matrices": {
+    "fuerte_x_result_top": [
+      {
+        "fuerte": 42,
+        "result": 61,
+        "count": 192
+      },
+      {
+        "fuerte": 42,
+        "result": 20,
+        "count": 192
+      },
+      {
+        "fuerte": 44,
+        "result": 81,
+        "count": 191
+      },
+      {
+        "fuerte": 42,
+        "result": 2,
+        "count": 188
+      },
+      {
+        "fuerte": 42,
+        "result": 45,
+        "count": 186
+      },
+      {
+        "fuerte": 42,
+        "result": 68,
+        "count": 186
+      },
+      {
+        "fuerte": 44,
+        "result": 21,
+        "count": 186
+      },
+      {
+        "fuerte": 42,
+        "result": 21,
+        "count": 185
+      },
+      {
+        "fuerte": 44,
+        "result": 88,
+        "count": 183
+      },
+      {
+        "fuerte": 53,
+        "result": 91,
+        "count": 182
+      },
+      {
+        "fuerte": 9,
+        "result": 21,
+        "count": 181
+      },
+      {
+        "fuerte": 9,
+        "result": 59,
+        "count": 181
+      },
+      {
+        "fuerte": 42,
+        "result": 7,
+        "count": 180
+      },
+      {
+        "fuerte": 42,
+        "result": 6,
+        "count": 179
+      },
+      {
+        "fuerte": 42,
+        "result": 65,
+        "count": 179
+      },
+      {
+        "fuerte": 63,
+        "result": 29,
+        "count": 179
+      },
+      {
+        "fuerte": 42,
+        "result": 42,
+        "count": 178
+      },
+      {
+        "fuerte": 44,
+        "result": 87,
+        "count": 178
+      },
+      {
+        "fuerte": 44,
+        "result": 8,
+        "count": 178
+      },
+      {
+        "fuerte": 44,
+        "result": 91,
+        "count": 178
+      },
+      {
+        "fuerte": 9,
+        "result": 31,
+        "count": 178
+      },
+      {
+        "fuerte": 70,
+        "result": 11,
+        "count": 177
+      },
+      {
+        "fuerte": 42,
+        "result": 49,
+        "count": 177
+      },
+      {
+        "fuerte": 9,
+        "result": 16,
+        "count": 177
+      },
+      {
+        "fuerte": 42,
+        "result": 81,
+        "count": 176
+      },
+      {
+        "fuerte": 44,
+        "result": 45,
+        "count": 176
+      },
+      {
+        "fuerte": 9,
+        "result": 75,
+        "count": 176
+      },
+      {
+        "fuerte": 42,
+        "result": 16,
+        "count": 175
+      },
+      {
+        "fuerte": 42,
+        "result": 12,
+        "count": 173
+      },
+      {
+        "fuerte": 42,
+        "result": 1,
+        "count": 173
+      },
+      {
+        "fuerte": 42,
+        "result": 8,
+        "count": 173
+      },
+      {
+        "fuerte": 44,
+        "result": 2,
+        "count": 173
+      },
+      {
+        "fuerte": 44,
+        "result": 96,
+        "count": 173
+      },
+      {
+        "fuerte": 42,
+        "result": 86,
+        "count": 172
+      },
+      {
+        "fuerte": 63,
+        "result": 47,
+        "count": 172
+      },
+      {
+        "fuerte": 29,
+        "result": 39,
+        "count": 171
+      },
+      {
+        "fuerte": 9,
+        "result": 20,
+        "count": 171
+      },
+      {
+        "fuerte": 44,
+        "result": 61,
+        "count": 170
+      },
+      {
+        "fuerte": 9,
+        "result": 49,
+        "count": 170
+      },
+      {
+        "fuerte": 7,
+        "result": 84,
+        "count": 169
+      },
+      {
+        "fuerte": 7,
+        "result": 41,
+        "count": 169
+      },
+      {
+        "fuerte": 42,
+        "result": 29,
+        "count": 169
+      },
+      {
+        "fuerte": 42,
+        "result": 25,
+        "count": 169
+      },
+      {
+        "fuerte": 29,
+        "result": 88,
+        "count": 168
+      },
+      {
+        "fuerte": 42,
+        "result": 37,
+        "count": 168
+      },
+      {
+        "fuerte": 42,
+        "result": 5,
+        "count": 168
+      },
+      {
+        "fuerte": 44,
+        "result": 51,
+        "count": 168
+      },
+      {
+        "fuerte": 44,
+        "result": 55,
+        "count": 168
+      },
+      {
+        "fuerte": 44,
+        "result": 11,
+        "count": 168
+      },
+      {
+        "fuerte": 42,
+        "result": 73,
+        "count": 167
+      },
+      {
+        "fuerte": 42,
+        "result": 79,
+        "count": 167
+      },
+      {
+        "fuerte": 42,
+        "result": 87,
+        "count": 167
+      },
+      {
+        "fuerte": 63,
+        "result": 86,
+        "count": 167
+      },
+      {
+        "fuerte": 42,
+        "result": 90,
+        "count": 167
+      },
+      {
+        "fuerte": 53,
+        "result": 90,
+        "count": 166
+      },
+      {
+        "fuerte": 29,
+        "result": 76,
+        "count": 166
+      },
+      {
+        "fuerte": 42,
+        "result": 34,
+        "count": 166
+      },
+      {
+        "fuerte": 63,
+        "result": 42,
+        "count": 166
+      },
+      {
+        "fuerte": 9,
+        "result": 96,
+        "count": 166
+      },
+      {
+        "fuerte": 53,
+        "result": 29,
+        "count": 165
+      },
+      {
+        "fuerte": 42,
+        "result": 76,
+        "count": 165
+      },
+      {
+        "fuerte": 44,
+        "result": 37,
+        "count": 165
+      },
+      {
+        "fuerte": 42,
+        "result": 96,
+        "count": 165
+      },
+      {
+        "fuerte": 9,
+        "result": 13,
+        "count": 165
+      },
+      {
+        "fuerte": 7,
+        "result": 34,
+        "count": 164
+      },
+      {
+        "fuerte": 42,
+        "result": 36,
+        "count": 164
+      },
+      {
+        "fuerte": 42,
+        "result": 63,
+        "count": 164
+      },
+      {
+        "fuerte": 42,
+        "result": 55,
+        "count": 164
+      },
+      {
+        "fuerte": 44,
+        "result": 20,
+        "count": 164
+      },
+      {
+        "fuerte": 63,
+        "result": 67,
+        "count": 164
+      },
+      {
+        "fuerte": 7,
+        "result": 79,
+        "count": 163
+      },
+      {
+        "fuerte": 7,
+        "result": 30,
+        "count": 163
+      },
+      {
+        "fuerte": 90,
+        "result": 42,
+        "count": 163
+      },
+      {
+        "fuerte": 29,
+        "result": 6,
+        "count": 163
+      },
+      {
+        "fuerte": 29,
+        "result": 86,
+        "count": 163
+      },
+      {
+        "fuerte": 42,
+        "result": 57,
+        "count": 163
+      },
+      {
+        "fuerte": 44,
+        "result": 58,
+        "count": 163
+      },
+      {
+        "fuerte": 44,
+        "result": 4,
+        "count": 163
+      },
+      {
+        "fuerte": 42,
+        "result": 83,
+        "count": 163
+      },
+      {
+        "fuerte": 42,
+        "result": 97,
+        "count": 163
+      },
+      {
+        "fuerte": 9,
+        "result": 77,
+        "count": 163
+      },
+      {
+        "fuerte": 9,
+        "result": 41,
+        "count": 163
+      },
+      {
+        "fuerte": 7,
+        "result": 3,
+        "count": 162
+      },
+      {
+        "fuerte": 7,
+        "result": 91,
+        "count": 162
+      },
+      {
+        "fuerte": 29,
+        "result": 30,
+        "count": 162
+      },
+      {
+        "fuerte": 29,
+        "result": 34,
+        "count": 162
+      },
+      {
+        "fuerte": 42,
+        "result": 67,
+        "count": 162
+      },
+      {
+        "fuerte": 29,
+        "result": 97,
+        "count": 162
+      },
+      {
+        "fuerte": 42,
+        "result": 50,
+        "count": 162
+      },
+      {
+        "fuerte": 42,
+        "result": 43,
+        "count": 162
+      },
+      {
+        "fuerte": 9,
+        "result": 91,
+        "count": 162
+      },
+      {
+        "fuerte": 9,
+        "result": 37,
+        "count": 162
+      },
+      {
+        "fuerte": 63,
+        "result": 97,
+        "count": 162
+      },
+      {
+        "fuerte": 63,
+        "result": 75,
+        "count": 162
+      },
+      {
+        "fuerte": 9,
+        "result": 92,
+        "count": 162
+      },
+      {
+        "fuerte": 53,
+        "result": 5,
+        "count": 161
+      },
+      {
+        "fuerte": 29,
+        "result": 61,
+        "count": 161
+      },
+      {
+        "fuerte": 42,
+        "result": 93,
+        "count": 161
+      },
+      {
+        "fuerte": 42,
+        "result": 19,
+        "count": 161
+      },
+      {
+        "fuerte": 42,
+        "result": 64,
+        "count": 161
+      },
+      {
+        "fuerte": 42,
+        "result": 41,
+        "count": 161
+      },
+      {
+        "fuerte": 9,
+        "result": 14,
+        "count": 161
+      },
+      {
+        "fuerte": 63,
+        "result": 58,
+        "count": 161
+      },
+      {
+        "fuerte": 29,
+        "result": 66,
+        "count": 160
+      },
+      {
+        "fuerte": 42,
+        "result": 47,
+        "count": 160
+      },
+      {
+        "fuerte": 42,
+        "result": 70,
+        "count": 160
+      },
+      {
+        "fuerte": 44,
+        "result": 6,
+        "count": 160
+      },
+      {
+        "fuerte": 44,
+        "result": 10,
+        "count": 160
+      },
+      {
+        "fuerte": 44,
+        "result": 82,
+        "count": 160
+      },
+      {
+        "fuerte": 44,
+        "result": 86,
+        "count": 160
+      },
+      {
+        "fuerte": 44,
+        "result": 49,
+        "count": 160
+      },
+      {
+        "fuerte": 42,
+        "result": 59,
+        "count": 160
+      },
+      {
+        "fuerte": 63,
+        "result": 21,
+        "count": 160
+      },
+      {
+        "fuerte": 63,
+        "result": 81,
+        "count": 160
+      },
+      {
+        "fuerte": 63,
+        "result": 8,
+        "count": 160
+      },
+      {
+        "fuerte": 42,
+        "result": 11,
+        "count": 159
+      },
+      {
+        "fuerte": 9,
+        "result": 32,
+        "count": 159
+      },
+      {
+        "fuerte": 9,
+        "result": 52,
+        "count": 159
+      },
+      {
+        "fuerte": 7,
+        "result": 11,
+        "count": 158
+      },
+      {
+        "fuerte": 53,
+        "result": 86,
+        "count": 158
+      },
+      {
+        "fuerte": 29,
+        "result": 79,
+        "count": 158
+      },
+      {
+        "fuerte": 29,
+        "result": 41,
+        "count": 158
+      },
+      {
+        "fuerte": 70,
+        "result": 84,
+        "count": 158
+      },
+      {
+        "fuerte": 29,
+        "result": 62,
+        "count": 158
+      },
+      {
+        "fuerte": 44,
+        "result": 9,
+        "count": 158
+      },
+      {
+        "fuerte": 9,
+        "result": 45,
+        "count": 158
+      },
+      {
+        "fuerte": 63,
+        "result": 70,
+        "count": 158
+      },
+      {
+        "fuerte": 63,
+        "result": 78,
+        "count": 158
+      },
+      {
+        "fuerte": 63,
+        "result": 89,
+        "count": 158
+      },
+      {
+        "fuerte": 63,
+        "result": 45,
+        "count": 158
+      },
+      {
+        "fuerte": 7,
+        "result": 97,
+        "count": 157
+      },
+      {
+        "fuerte": 90,
+        "result": 97,
+        "count": 157
+      },
+      {
+        "fuerte": 42,
+        "result": 17,
+        "count": 157
+      },
+      {
+        "fuerte": 42,
+        "result": 58,
+        "count": 157
+      },
+      {
+        "fuerte": 22,
+        "result": 11,
+        "count": 157
+      },
+      {
+        "fuerte": 70,
+        "result": 76,
+        "count": 157
+      },
+      {
+        "fuerte": 44,
+        "result": 95,
+        "count": 157
+      },
+      {
+        "fuerte": 44,
+        "result": 64,
+        "count": 157
+      },
+      {
+        "fuerte": 44,
+        "result": 57,
+        "count": 157
+      },
+      {
+        "fuerte": 9,
+        "result": 10,
+        "count": 157
+      },
+      {
+        "fuerte": 9,
+        "result": 43,
+        "count": 157
+      },
+      {
+        "fuerte": 63,
+        "result": 79,
+        "count": 157
+      },
+      {
+        "fuerte": 29,
+        "result": 63,
+        "count": 156
+      },
+      {
+        "fuerte": 42,
+        "result": 78,
+        "count": 156
+      },
+      {
+        "fuerte": 53,
+        "result": 82,
+        "count": 156
+      },
+      {
+        "fuerte": 9,
+        "result": 47,
+        "count": 156
+      },
+      {
+        "fuerte": 9,
+        "result": 81,
+        "count": 156
+      },
+      {
+        "fuerte": 63,
+        "result": 2,
+        "count": 156
+      },
+      {
+        "fuerte": 63,
+        "result": 88,
+        "count": 156
+      },
+      {
+        "fuerte": 7,
+        "result": 88,
+        "count": 155
+      },
+      {
+        "fuerte": 90,
+        "result": 61,
+        "count": 155
+      },
+      {
+        "fuerte": 29,
+        "result": 11,
+        "count": 155
+      },
+      {
+        "fuerte": 29,
+        "result": 42,
+        "count": 155
+      },
+      {
+        "fuerte": 42,
+        "result": 89,
+        "count": 155
+      },
+      {
+        "fuerte": 70,
+        "result": 8,
+        "count": 155
+      },
+      {
+        "fuerte": 70,
+        "result": 47,
+        "count": 155
+      },
+      {
+        "fuerte": 44,
+        "result": 39,
+        "count": 155
+      },
+      {
+        "fuerte": 9,
+        "result": 93,
+        "count": 155
+      },
+      {
+        "fuerte": 63,
+        "result": 37,
+        "count": 155
+      },
+      {
+        "fuerte": 63,
+        "result": 26,
+        "count": 155
+      },
+      {
+        "fuerte": 63,
+        "result": 65,
+        "count": 155
+      },
+      {
+        "fuerte": 70,
+        "result": 81,
+        "count": 155
+      },
+      {
+        "fuerte": 70,
+        "result": 86,
+        "count": 155
+      },
+      {
+        "fuerte": 7,
+        "result": 90,
+        "count": 154
+      },
+      {
+        "fuerte": 53,
+        "result": 42,
+        "count": 154
+      },
+      {
+        "fuerte": 42,
+        "result": 75,
+        "count": 154
+      },
+      {
+        "fuerte": 42,
+        "result": 32,
+        "count": 154
+      },
+      {
+        "fuerte": 42,
+        "result": 53,
+        "count": 154
+      },
+      {
+        "fuerte": 70,
+        "result": 49,
+        "count": 154
+      },
+      {
+        "fuerte": 42,
+        "result": 62,
+        "count": 154
+      },
+      {
+        "fuerte": 9,
+        "result": 95,
+        "count": 154
+      },
+      {
+        "fuerte": 7,
+        "result": 8,
+        "count": 154
+      },
+      {
+        "fuerte": 63,
+        "result": 23,
+        "count": 154
+      },
+      {
+        "fuerte": 9,
+        "result": 50,
+        "count": 154
+      },
+      {
+        "fuerte": 9,
+        "result": 82,
+        "count": 154
+      },
+      {
+        "fuerte": 7,
+        "result": 10,
+        "count": 153
+      },
+      {
+        "fuerte": 70,
+        "result": 32,
+        "count": 153
+      },
+      {
+        "fuerte": 70,
+        "result": 41,
+        "count": 153
+      },
+      {
+        "fuerte": 44,
+        "result": 41,
+        "count": 153
+      },
+      {
+        "fuerte": 44,
+        "result": 42,
+        "count": 153
+      },
+      {
+        "fuerte": 42,
+        "result": 82,
+        "count": 153
+      },
+      {
+        "fuerte": 53,
+        "result": 81,
+        "count": 153
+      },
+      {
+        "fuerte": 44,
+        "result": 7,
+        "count": 153
+      },
+      {
+        "fuerte": 9,
+        "result": 78,
+        "count": 153
+      },
+      {
+        "fuerte": 9,
+        "result": 60,
+        "count": 153
+      },
+      {
+        "fuerte": 7,
+        "result": 37,
+        "count": 152
+      },
+      {
+        "fuerte": 7,
+        "result": 25,
+        "count": 152
+      },
+      {
+        "fuerte": 53,
+        "result": 61,
+        "count": 152
+      },
+      {
+        "fuerte": 42,
+        "result": 85,
+        "count": 152
+      },
+      {
+        "fuerte": 70,
+        "result": 1,
+        "count": 152
+      },
+      {
+        "fuerte": 29,
+        "result": 99,
+        "count": 152
+      },
+      {
+        "fuerte": 53,
+        "result": 68,
+        "count": 152
+      },
+      {
+        "fuerte": 9,
+        "result": 53,
+        "count": 152
+      },
+      {
+        "fuerte": 63,
+        "result": 49,
+        "count": 152
+      },
+      {
+        "fuerte": 44,
+        "result": 90,
+        "count": 152
+      },
+      {
+        "fuerte": 9,
+        "result": 26,
+        "count": 152
+      },
+      {
+        "fuerte": 70,
+        "result": 70,
+        "count": 152
+      },
+      {
+        "fuerte": 90,
+        "result": 75,
+        "count": 151
+      },
+      {
+        "fuerte": 53,
+        "result": 87,
+        "count": 151
+      },
+      {
+        "fuerte": 53,
+        "result": 63,
+        "count": 151
+      }
+    ],
+    "t1_pos_fuerte_x_appeared": {
+      "rows": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "cols": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "counts": {
+        "1": {
+          "1": 1031,
+          "2": 981,
+          "3": 730,
+          "4": 562,
+          "5": 515,
+          "6": 322,
+          "7": 299,
+          "8": 130
+        },
+        "2": {
+          "1": 598,
+          "2": 638,
+          "3": 447,
+          "4": 264,
+          "5": 202,
+          "6": 126,
+          "7": 18,
+          "8": 13
+        },
+        "3": {
+          "1": 860,
+          "2": 854,
+          "3": 804,
+          "4": 454,
+          "5": 496,
+          "6": 218,
+          "7": 87,
+          "8": 23
+        },
+        "4": {
+          "1": 437,
+          "2": 468,
+          "3": 452,
+          "4": 442,
+          "5": 231,
+          "6": 120,
+          "7": 83,
+          "8": 46
+        },
+        "5": {
+          "1": 345,
+          "2": 339,
+          "3": 366,
+          "4": 358,
+          "5": 323,
+          "6": 71,
+          "7": 33,
+          "8": 33
+        },
+        "6": {
+          "1": 124,
+          "2": 152,
+          "3": 118,
+          "4": 128,
+          "5": 145,
+          "6": 131,
+          "7": 10,
+          "8": 6
+        },
+        "7": {
+          "1": 73,
+          "2": 66,
+          "3": 64,
+          "4": 58,
+          "5": 63,
+          "6": 74,
+          "7": 69,
+          "8": 0
+        },
+        "8": {
+          "1": 40,
+          "2": 52,
+          "3": 39,
+          "4": 58,
+          "5": 32,
+          "6": 47,
+          "7": 40,
+          "8": 45
+        }
+      },
+      "row_totals": {
+        "1": 4570,
+        "2": 2306,
+        "3": 3796,
+        "4": 2279,
+        "5": 1868,
+        "6": 814,
+        "7": 467,
+        "8": 353
+      },
+      "col_totals": {
+        "1": 3508,
+        "2": 3550,
+        "3": 3020,
+        "4": 2324,
+        "5": 2007,
+        "6": 1109,
+        "7": 639,
+        "8": 296
+      },
+      "total": 16453,
+      "row_pct": {
+        "1": {
+          "1": 22.56,
+          "2": 21.47,
+          "3": 15.97,
+          "4": 12.3,
+          "5": 11.27,
+          "6": 7.05,
+          "7": 6.54,
+          "8": 2.84
+        },
+        "2": {
+          "1": 25.93,
+          "2": 27.67,
+          "3": 19.38,
+          "4": 11.45,
+          "5": 8.76,
+          "6": 5.46,
+          "7": 0.78,
+          "8": 0.56
+        },
+        "3": {
+          "1": 22.66,
+          "2": 22.5,
+          "3": 21.18,
+          "4": 11.96,
+          "5": 13.07,
+          "6": 5.74,
+          "7": 2.29,
+          "8": 0.61
+        },
+        "4": {
+          "1": 19.18,
+          "2": 20.54,
+          "3": 19.83,
+          "4": 19.39,
+          "5": 10.14,
+          "6": 5.27,
+          "7": 3.64,
+          "8": 2.02
+        },
+        "5": {
+          "1": 18.47,
+          "2": 18.15,
+          "3": 19.59,
+          "4": 19.16,
+          "5": 17.29,
+          "6": 3.8,
+          "7": 1.77,
+          "8": 1.77
+        },
+        "6": {
+          "1": 15.23,
+          "2": 18.67,
+          "3": 14.5,
+          "4": 15.72,
+          "5": 17.81,
+          "6": 16.09,
+          "7": 1.23,
+          "8": 0.74
+        },
+        "7": {
+          "1": 15.63,
+          "2": 14.13,
+          "3": 13.7,
+          "4": 12.42,
+          "5": 13.49,
+          "6": 15.85,
+          "7": 14.78,
+          "8": 0.0
+        },
+        "8": {
+          "1": 11.33,
+          "2": 14.73,
+          "3": 11.05,
+          "4": 16.43,
+          "5": 9.07,
+          "6": 13.31,
+          "7": 11.33,
+          "8": 12.75
+        }
+      },
+      "col_pct": {
+        "1": {
+          "1": 29.39,
+          "2": 27.63,
+          "3": 24.17,
+          "4": 24.18,
+          "5": 25.66,
+          "6": 29.04,
+          "7": 46.79,
+          "8": 43.92
+        },
+        "2": {
+          "1": 17.05,
+          "2": 17.97,
+          "3": 14.8,
+          "4": 11.36,
+          "5": 10.06,
+          "6": 11.36,
+          "7": 2.82,
+          "8": 4.39
+        },
+        "3": {
+          "1": 24.52,
+          "2": 24.06,
+          "3": 26.62,
+          "4": 19.54,
+          "5": 24.71,
+          "6": 19.66,
+          "7": 13.62,
+          "8": 7.77
+        },
+        "4": {
+          "1": 12.46,
+          "2": 13.18,
+          "3": 14.97,
+          "4": 19.02,
+          "5": 11.51,
+          "6": 10.82,
+          "7": 12.99,
+          "8": 15.54
+        },
+        "5": {
+          "1": 9.83,
+          "2": 9.55,
+          "3": 12.12,
+          "4": 15.4,
+          "5": 16.09,
+          "6": 6.4,
+          "7": 5.16,
+          "8": 11.15
+        },
+        "6": {
+          "1": 3.53,
+          "2": 4.28,
+          "3": 3.91,
+          "4": 5.51,
+          "5": 7.22,
+          "6": 11.81,
+          "7": 1.56,
+          "8": 2.03
+        },
+        "7": {
+          "1": 2.08,
+          "2": 1.86,
+          "3": 2.12,
+          "4": 2.5,
+          "5": 3.14,
+          "6": 6.67,
+          "7": 10.8,
+          "8": 0.0
+        },
+        "8": {
+          "1": 1.14,
+          "2": 1.46,
+          "3": 1.29,
+          "4": 2.5,
+          "5": 1.59,
+          "6": 4.24,
+          "7": 6.26,
+          "8": 15.2
+        }
+      }
+    },
+    "t1_dist": {
+      "-7": 40,
+      "-6": 125,
+      "-5": 229,
+      "-4": 619,
+      "-3": 984,
+      "-2": 1932,
+      "-1": 2521,
+      "0": 3483,
+      "1": 2194,
+      "2": 1649,
+      "3": 1098,
+      "4": 774,
+      "5": 363,
+      "6": 312,
+      "7": 130
+    },
+    "t2_dist": {
+      "-10": 136,
+      "-9": 280,
+      "-8": 366,
+      "-7": 533,
+      "-6": 671,
+      "-5": 941,
+      "-4": 1064,
+      "-3": 1441,
+      "-2": 2020,
+      "-1": 2798,
+      "0": 3483,
+      "1": 2737,
+      "2": 1904,
+      "3": 1473,
+      "4": 1039,
+      "5": 873,
+      "6": 657,
+      "7": 547,
+      "8": 400,
+      "9": 248,
+      "10": 154
+    },
+    "origin_x_fuerte_top": [
+      {
+        "origin": 37,
+        "fuerte": 42,
+        "count": 109
+      },
+      {
+        "origin": 43,
+        "fuerte": 44,
+        "count": 102
+      },
+      {
+        "origin": 39,
+        "fuerte": 9,
+        "count": 101
+      },
+      {
+        "origin": 41,
+        "fuerte": 29,
+        "count": 98
+      },
+      {
+        "origin": 38,
+        "fuerte": 63,
+        "count": 97
+      },
+      {
+        "origin": 42,
+        "fuerte": 7,
+        "count": 94
+      },
+      {
+        "origin": 28,
+        "fuerte": 53,
+        "count": 93
+      },
+      {
+        "origin": 44,
+        "fuerte": 70,
+        "count": 93
+      },
+      {
+        "origin": 46,
+        "fuerte": 90,
+        "count": 87
+      },
+      {
+        "origin": 44,
+        "fuerte": 22,
+        "count": 84
+      },
+      {
+        "origin": 49,
+        "fuerte": 35,
+        "count": 80
+      },
+      {
+        "origin": 42,
+        "fuerte": 71,
+        "count": 46
+      },
+      {
+        "origin": 32,
+        "fuerte": 77,
+        "count": 43
+      },
+      {
+        "origin": 43,
+        "fuerte": 28,
+        "count": 42
+      },
+      {
+        "origin": 40,
+        "fuerte": 56,
+        "count": 40
+      },
+      {
+        "origin": 33,
+        "fuerte": 87,
+        "count": 40
+      },
+      {
+        "origin": 42,
+        "fuerte": 23,
+        "count": 39
+      },
+      {
+        "origin": 48,
+        "fuerte": 73,
+        "count": 39
+      },
+      {
+        "origin": 48,
+        "fuerte": 89,
+        "count": 38
+      },
+      {
+        "origin": 26,
+        "fuerte": 27,
+        "count": 37
+      },
+      {
+        "origin": 43,
+        "fuerte": 92,
+        "count": 35
+      },
+      {
+        "origin": 40,
+        "fuerte": 72,
+        "count": 34
+      },
+      {
+        "origin": 47,
+        "fuerte": 68,
+        "count": 34
+      },
+      {
+        "origin": 45,
+        "fuerte": 69,
+        "count": 33
+      },
+      {
+        "origin": 28,
+        "fuerte": 26,
+        "count": 32
+      },
+      {
+        "origin": 39,
+        "fuerte": 94,
+        "count": 32
+      },
+      {
+        "origin": 39,
+        "fuerte": 41,
+        "count": 32
+      },
+      {
+        "origin": 30,
+        "fuerte": 57,
+        "count": 31
+      },
+      {
+        "origin": 34,
+        "fuerte": 76,
+        "count": 30
+      },
+      {
+        "origin": 44,
+        "fuerte": 59,
+        "count": 30
+      },
+      {
+        "origin": 51,
+        "fuerte": 34,
+        "count": 29
+      },
+      {
+        "origin": 44,
+        "fuerte": 91,
+        "count": 27
+      },
+      {
+        "origin": 43,
+        "fuerte": 12,
+        "count": 25
+      },
+      {
+        "origin": 52,
+        "fuerte": 65,
+        "count": 25
+      },
+      {
+        "origin": 47,
+        "fuerte": 79,
+        "count": 25
+      },
+      {
+        "origin": 36,
+        "fuerte": 48,
+        "count": 24
+      },
+      {
+        "origin": 41,
+        "fuerte": 93,
+        "count": 23
+      },
+      {
+        "origin": 49,
+        "fuerte": 83,
+        "count": 23
+      },
+      {
+        "origin": 31,
+        "fuerte": 3,
+        "count": 22
+      },
+      {
+        "origin": 35,
+        "fuerte": 11,
+        "count": 21
+      },
+      {
+        "origin": 39,
+        "fuerte": 30,
+        "count": 21
+      },
+      {
+        "origin": 33,
+        "fuerte": 82,
+        "count": 21
+      },
+      {
+        "origin": 36,
+        "fuerte": 85,
+        "count": 20
+      },
+      {
+        "origin": 40,
+        "fuerte": 19,
+        "count": 19
+      },
+      {
+        "origin": 39,
+        "fuerte": 46,
+        "count": 19
+      },
+      {
+        "origin": 38,
+        "fuerte": 52,
+        "count": 18
+      },
+      {
+        "origin": 40,
+        "fuerte": 67,
+        "count": 17
+      },
+      {
+        "origin": 46,
+        "fuerte": 58,
+        "count": 17
+      },
+      {
+        "origin": 37,
+        "fuerte": 10,
+        "count": 16
+      },
+      {
+        "origin": 47,
+        "fuerte": 84,
+        "count": 16
+      },
+      {
+        "origin": 38,
+        "fuerte": 20,
+        "count": 16
+      },
+      {
+        "origin": 35,
+        "fuerte": 54,
+        "count": 15
+      },
+      {
+        "origin": 43,
+        "fuerte": 81,
+        "count": 15
+      },
+      {
+        "origin": 35,
+        "fuerte": 86,
+        "count": 14
+      },
+      {
+        "origin": 38,
+        "fuerte": 100,
+        "count": 14
+      },
+      {
+        "origin": 45,
+        "fuerte": 80,
+        "count": 13
+      },
+      {
+        "origin": 34,
+        "fuerte": 1,
+        "count": 13
+      },
+      {
+        "origin": 46,
+        "fuerte": 74,
+        "count": 13
+      },
+      {
+        "origin": 31,
+        "fuerte": 88,
+        "count": 12
+      },
+      {
+        "origin": 42,
+        "fuerte": 50,
+        "count": 11
+      },
+      {
+        "origin": 39,
+        "fuerte": 14,
+        "count": 11
+      },
+      {
+        "origin": 36,
+        "fuerte": 32,
+        "count": 11
+      },
+      {
+        "origin": 52,
+        "fuerte": 97,
+        "count": 11
+      },
+      {
+        "origin": 40,
+        "fuerte": 8,
+        "count": 10
+      },
+      {
+        "origin": 38,
+        "fuerte": 31,
+        "count": 10
+      },
+      {
+        "origin": 44,
+        "fuerte": 75,
+        "count": 10
+      },
+      {
+        "origin": 46,
+        "fuerte": 37,
+        "count": 10
+      },
+      {
+        "origin": 43,
+        "fuerte": 60,
+        "count": 9
+      },
+      {
+        "origin": 30,
+        "fuerte": 25,
+        "count": 9
+      },
+      {
+        "origin": 41,
+        "fuerte": 13,
+        "count": 9
+      },
+      {
+        "origin": 40,
+        "fuerte": 51,
+        "count": 9
+      },
+      {
+        "origin": 50,
+        "fuerte": 45,
+        "count": 8
+      },
+      {
+        "origin": 27,
+        "fuerte": 16,
+        "count": 7
+      },
+      {
+        "origin": 39,
+        "fuerte": 62,
+        "count": 7
+      },
+      {
+        "origin": 35,
+        "fuerte": 6,
+        "count": 7
+      },
+      {
+        "origin": 28,
+        "fuerte": 21,
+        "count": 7
+      },
+      {
+        "origin": 37,
+        "fuerte": 5,
+        "count": 6
+      },
+      {
+        "origin": 54,
+        "fuerte": 96,
+        "count": 6
+      },
+      {
+        "origin": 49,
+        "fuerte": 40,
+        "count": 6
+      },
+      {
+        "origin": 29,
+        "fuerte": 15,
+        "count": 6
+      },
+      {
+        "origin": 34,
+        "fuerte": 17,
+        "count": 5
+      },
+      {
+        "origin": 33,
+        "fuerte": 2,
+        "count": 5
+      },
+      {
+        "origin": 47,
+        "fuerte": 4,
+        "count": 5
+      },
+      {
+        "origin": 33,
+        "fuerte": 39,
+        "count": 4
+      }
+    ],
+    "confirmer_x_fuerte_top": [
+      {
+        "confirmer": 84,
+        "fuerte": 94,
+        "count": 20
+      },
+      {
+        "confirmer": 22,
+        "fuerte": 70,
+        "count": 19
+      },
+      {
+        "confirmer": 44,
+        "fuerte": 42,
+        "count": 17
+      },
+      {
+        "confirmer": 1,
+        "fuerte": 10,
+        "count": 16
+      },
+      {
+        "confirmer": 57,
+        "fuerte": 69,
+        "count": 16
+      },
+      {
+        "confirmer": 29,
+        "fuerte": 7,
+        "count": 16
+      },
+      {
+        "confirmer": 2,
+        "fuerte": 20,
+        "count": 16
+      },
+      {
+        "confirmer": 86,
+        "fuerte": 19,
+        "count": 16
+      },
+      {
+        "confirmer": 22,
+        "fuerte": 63,
+        "count": 15
+      },
+      {
+        "confirmer": 30,
+        "fuerte": 3,
+        "count": 15
+      },
+      {
+        "confirmer": 76,
+        "fuerte": 27,
+        "count": 15
+      },
+      {
+        "confirmer": 29,
+        "fuerte": 44,
+        "count": 15
+      },
+      {
+        "confirmer": 67,
+        "fuerte": 79,
+        "count": 15
+      },
+      {
+        "confirmer": 53,
+        "fuerte": 7,
+        "count": 15
+      },
+      {
+        "confirmer": 14,
+        "fuerte": 54,
+        "count": 15
+      },
+      {
+        "confirmer": 41,
+        "fuerte": 89,
+        "count": 14
+      },
+      {
+        "confirmer": 48,
+        "fuerte": 93,
+        "count": 14
+      },
+      {
+        "confirmer": 92,
+        "fuerte": 68,
+        "count": 14
+      },
+      {
+        "confirmer": 37,
+        "fuerte": 65,
+        "count": 14
+      },
+      {
+        "confirmer": 59,
+        "fuerte": 34,
+        "count": 14
+      },
+      {
+        "confirmer": 23,
+        "fuerte": 87,
+        "count": 14
+      },
+      {
+        "confirmer": 26,
+        "fuerte": 72,
+        "count": 14
+      },
+      {
+        "confirmer": 27,
+        "fuerte": 92,
+        "count": 14
+      },
+      {
+        "confirmer": 23,
+        "fuerte": 73,
+        "count": 14
+      },
+      {
+        "confirmer": 9,
+        "fuerte": 44,
+        "count": 14
+      },
+      {
+        "confirmer": 9,
+        "fuerte": 42,
+        "count": 13
+      },
+      {
+        "confirmer": 76,
+        "fuerte": 68,
+        "count": 13
+      },
+      {
+        "confirmer": 7,
+        "fuerte": 22,
+        "count": 13
+      },
+      {
+        "confirmer": 7,
+        "fuerte": 70,
+        "count": 13
+      },
+      {
+        "confirmer": 8,
+        "fuerte": 80,
+        "count": 13
+      },
+      {
+        "confirmer": 68,
+        "fuerte": 92,
+        "count": 13
+      },
+      {
+        "confirmer": 70,
+        "fuerte": 63,
+        "count": 13
+      },
+      {
+        "confirmer": 69,
+        "fuerte": 91,
+        "count": 13
+      },
+      {
+        "confirmer": 72,
+        "fuerte": 26,
+        "count": 13
+      },
+      {
+        "confirmer": 10,
+        "fuerte": 1,
+        "count": 13
+      },
+      {
+        "confirmer": 23,
+        "fuerte": 77,
+        "count": 13
+      },
+      {
+        "confirmer": 70,
+        "fuerte": 29,
+        "count": 13
+      },
+      {
+        "confirmer": 28,
+        "fuerte": 77,
+        "count": 13
+      },
+      {
+        "confirmer": 23,
+        "fuerte": 28,
+        "count": 13
+      },
+      {
+        "confirmer": 44,
+        "fuerte": 35,
+        "count": 13
+      },
+      {
+        "confirmer": 31,
+        "fuerte": 74,
+        "count": 13
+      },
+      {
+        "confirmer": 56,
+        "fuerte": 71,
+        "count": 13
+      },
+      {
+        "confirmer": 70,
+        "fuerte": 7,
+        "count": 12
+      },
+      {
+        "confirmer": 89,
+        "fuerte": 71,
+        "count": 12
+      },
+      {
+        "confirmer": 34,
+        "fuerte": 72,
+        "count": 12
+      },
+      {
+        "confirmer": 29,
+        "fuerte": 53,
+        "count": 12
+      },
+      {
+        "confirmer": 9,
+        "fuerte": 29,
+        "count": 12
+      },
+      {
+        "confirmer": 85,
+        "fuerte": 52,
+        "count": 12
+      },
+      {
+        "confirmer": 22,
+        "fuerte": 42,
+        "count": 12
+      },
+      {
+        "confirmer": 91,
+        "fuerte": 57,
+        "count": 12
+      },
+      {
+        "confirmer": 22,
+        "fuerte": 53,
+        "count": 12
+      },
+      {
+        "confirmer": 58,
+        "fuerte": 94,
+        "count": 12
+      },
+      {
+        "confirmer": 68,
+        "fuerte": 27,
+        "count": 12
+      },
+      {
+        "confirmer": 93,
+        "fuerte": 48,
+        "count": 12
+      },
+      {
+        "confirmer": 97,
+        "fuerte": 48,
+        "count": 12
+      },
+      {
+        "confirmer": 3,
+        "fuerte": 30,
+        "count": 12
+      },
+      {
+        "confirmer": 65,
+        "fuerte": 82,
+        "count": 12
+      },
+      {
+        "confirmer": 63,
+        "fuerte": 7,
+        "count": 12
+      },
+      {
+        "confirmer": 30,
+        "fuerte": 83,
+        "count": 12
+      },
+      {
+        "confirmer": 90,
+        "fuerte": 42,
+        "count": 12
+      },
+      {
+        "confirmer": 7,
+        "fuerte": 35,
+        "count": 12
+      },
+      {
+        "confirmer": 42,
+        "fuerte": 29,
+        "count": 12
+      },
+      {
+        "confirmer": 41,
+        "fuerte": 71,
+        "count": 12
+      },
+      {
+        "confirmer": 63,
+        "fuerte": 9,
+        "count": 12
+      },
+      {
+        "confirmer": 53,
+        "fuerte": 42,
+        "count": 12
+      },
+      {
+        "confirmer": 5,
+        "fuerte": 50,
+        "count": 11
+      },
+      {
+        "confirmer": 73,
+        "fuerte": 23,
+        "count": 11
+      },
+      {
+        "confirmer": 52,
+        "fuerte": 85,
+        "count": 11
+      },
+      {
+        "confirmer": 42,
+        "fuerte": 90,
+        "count": 11
+      },
+      {
+        "confirmer": 3,
+        "fuerte": 83,
+        "count": 11
+      },
+      {
+        "confirmer": 68,
+        "fuerte": 76,
+        "count": 11
+      },
+      {
+        "confirmer": 70,
+        "fuerte": 9,
+        "count": 11
+      },
+      {
+        "confirmer": 71,
+        "fuerte": 56,
+        "count": 11
+      },
+      {
+        "confirmer": 71,
+        "fuerte": 89,
+        "count": 11
+      },
+      {
+        "confirmer": 87,
+        "fuerte": 28,
+        "count": 11
+      },
+      {
+        "confirmer": 63,
+        "fuerte": 29,
+        "count": 11
+      },
+      {
+        "confirmer": 69,
+        "fuerte": 57,
+        "count": 11
+      },
+      {
+        "confirmer": 77,
+        "fuerte": 23,
+        "count": 11
+      },
+      {
+        "confirmer": 35,
+        "fuerte": 44,
+        "count": 11
+      },
+      {
+        "confirmer": 44,
+        "fuerte": 9,
+        "count": 11
+      },
+      {
+        "confirmer": 90,
+        "fuerte": 53,
+        "count": 11
+      },
+      {
+        "confirmer": 34,
+        "fuerte": 59,
+        "count": 11
+      },
+      {
+        "confirmer": 90,
+        "fuerte": 22,
+        "count": 11
+      },
+      {
+        "confirmer": 90,
+        "fuerte": 70,
+        "count": 11
+      },
+      {
+        "confirmer": 70,
+        "fuerte": 90,
+        "count": 11
+      },
+      {
+        "confirmer": 90,
+        "fuerte": 9,
+        "count": 11
+      },
+      {
+        "confirmer": 54,
+        "fuerte": 14,
+        "count": 11
+      },
+      {
+        "confirmer": 82,
+        "fuerte": 65,
+        "count": 11
+      },
+      {
+        "confirmer": 28,
+        "fuerte": 73,
+        "count": 11
+      },
+      {
+        "confirmer": 92,
+        "fuerte": 76,
+        "count": 11
+      },
+      {
+        "confirmer": 42,
+        "fuerte": 9,
+        "count": 11
+      },
+      {
+        "confirmer": 45,
+        "fuerte": 32,
+        "count": 11
+      },
+      {
+        "confirmer": 44,
+        "fuerte": 53,
+        "count": 11
+      },
+      {
+        "confirmer": 90,
+        "fuerte": 29,
+        "count": 11
+      },
+      {
+        "confirmer": 29,
+        "fuerte": 22,
+        "count": 11
+      },
+      {
+        "confirmer": 29,
+        "fuerte": 70,
+        "count": 11
+      },
+      {
+        "confirmer": 89,
+        "fuerte": 56,
+        "count": 10
+      },
+      {
+        "confirmer": 22,
+        "fuerte": 29,
+        "count": 10
+      },
+      {
+        "confirmer": 35,
+        "fuerte": 53,
+        "count": 10
+      },
+      {
+        "confirmer": 28,
+        "fuerte": 87,
+        "count": 10
+      }
+    ],
+    "day_x_relation": {
+      "rows": [
+        "D+1",
+        "D+2",
+        "D+3",
+        "D+4",
+        "D+5",
+        "D+6",
+        "D+7"
+      ],
+      "cols": [
+        "CANDIDATO_ORIGINAL_ALTERNATIVO",
+        "COMPANERO_DEL_CONFIRMADOR",
+        "CONFIRMADOR_ORIGINAL",
+        "FUERTE_ALTERNATIVO",
+        "FUERTE_EXACTO",
+        "MISMO_CODIGO_T1",
+        "MISMO_CODIGO_T2",
+        "MISMO_GRUPO_T1",
+        "MISMO_GRUPO_T2",
+        "POSICION_T1_ADYACENTE",
+        "POSICION_T1_CERCANA",
+        "POSICION_T1_LEJANA",
+        "POSICION_T2_ADYACENTE",
+        "RELACION_DE_SEGUNDO_NIVEL",
+        "RELACION_DE_TERCER_NIVEL",
+        "SIN_RELACION_DIRECTA_IDENTIFICADA",
+        "VECINO_DEL_CONFIRMADOR"
+      ],
+      "counts": {
+        "D+1": {
+          "CANDIDATO_ORIGINAL_ALTERNATIVO": 4630,
+          "COMPANERO_DEL_CONFIRMADOR": 1868,
+          "CONFIRMADOR_ORIGINAL": 536,
+          "FUERTE_ALTERNATIVO": 609,
+          "FUERTE_EXACTO": 487,
+          "MISMO_CODIGO_T1": 2330,
+          "MISMO_CODIGO_T2": 3307,
+          "MISMO_GRUPO_T1": 2330,
+          "MISMO_GRUPO_T2": 3307,
+          "POSICION_T1_ADYACENTE": 686,
+          "POSICION_T1_CERCANA": 804,
+          "POSICION_T1_LEJANA": 353,
+          "POSICION_T2_ADYACENTE": 816,
+          "RELACION_DE_SEGUNDO_NIVEL": 10609,
+          "RELACION_DE_TERCER_NIVEL": 15280,
+          "SIN_RELACION_DIRECTA_IDENTIFICADA": 15147,
+          "VECINO_DEL_CONFIRMADOR": 2771
+        },
+        "D+2": {
+          "CANDIDATO_ORIGINAL_ALTERNATIVO": 4577,
+          "COMPANERO_DEL_CONFIRMADOR": 1882,
+          "CONFIRMADOR_ORIGINAL": 521,
+          "FUERTE_ALTERNATIVO": 655,
+          "FUERTE_EXACTO": 516,
+          "MISMO_CODIGO_T1": 2378,
+          "MISMO_CODIGO_T2": 3329,
+          "MISMO_GRUPO_T1": 2378,
+          "MISMO_GRUPO_T2": 3329,
+          "POSICION_T1_ADYACENTE": 670,
+          "POSICION_T1_CERCANA": 836,
+          "POSICION_T1_LEJANA": 356,
+          "POSICION_T2_ADYACENTE": 819,
+          "RELACION_DE_SEGUNDO_NIVEL": 10760,
+          "RELACION_DE_TERCER_NIVEL": 14969,
+          "SIN_RELACION_DIRECTA_IDENTIFICADA": 15084,
+          "VECINO_DEL_CONFIRMADOR": 2808
+        },
+        "D+3": {
+          "CANDIDATO_ORIGINAL_ALTERNATIVO": 4686,
+          "COMPANERO_DEL_CONFIRMADOR": 1841,
+          "CONFIRMADOR_ORIGINAL": 520,
+          "FUERTE_ALTERNATIVO": 649,
+          "FUERTE_EXACTO": 522,
+          "MISMO_CODIGO_T1": 2451,
+          "MISMO_CODIGO_T2": 3525,
+          "MISMO_GRUPO_T1": 2451,
+          "MISMO_GRUPO_T2": 3525,
+          "POSICION_T1_ADYACENTE": 713,
+          "POSICION_T1_CERCANA": 831,
+          "POSICION_T1_LEJANA": 385,
+          "POSICION_T2_ADYACENTE": 763,
+          "RELACION_DE_SEGUNDO_NIVEL": 10598,
+          "RELACION_DE_TERCER_NIVEL": 14837,
+          "SIN_RELACION_DIRECTA_IDENTIFICADA": 15024,
+          "VECINO_DEL_CONFIRMADOR": 3005
+        },
+        "D+4": {
+          "CANDIDATO_ORIGINAL_ALTERNATIVO": 4541,
+          "COMPANERO_DEL_CONFIRMADOR": 1854,
+          "CONFIRMADOR_ORIGINAL": 503,
+          "FUERTE_ALTERNATIVO": 563,
+          "FUERTE_EXACTO": 487,
+          "MISMO_CODIGO_T1": 2322,
+          "MISMO_CODIGO_T2": 3482,
+          "MISMO_GRUPO_T1": 2322,
+          "MISMO_GRUPO_T2": 3482,
+          "POSICION_T1_ADYACENTE": 642,
+          "POSICION_T1_CERCANA": 789,
+          "POSICION_T1_LEJANA": 404,
+          "POSICION_T2_ADYACENTE": 847,
+          "RELACION_DE_SEGUNDO_NIVEL": 10662,
+          "RELACION_DE_TERCER_NIVEL": 14875,
+          "SIN_RELACION_DIRECTA_IDENTIFICADA": 14957,
+          "VECINO_DEL_CONFIRMADOR": 2979
+        },
+        "D+5": {
+          "CANDIDATO_ORIGINAL_ALTERNATIVO": 4728,
+          "COMPANERO_DEL_CONFIRMADOR": 1808,
+          "CONFIRMADOR_ORIGINAL": 442,
+          "FUERTE_ALTERNATIVO": 595,
+          "FUERTE_EXACTO": 473,
+          "MISMO_CODIGO_T1": 2329,
+          "MISMO_CODIGO_T2": 3271,
+          "MISMO_GRUPO_T1": 2329,
+          "MISMO_GRUPO_T2": 3271,
+          "POSICION_T1_ADYACENTE": 698,
+          "POSICION_T1_CERCANA": 792,
+          "POSICION_T1_LEJANA": 366,
+          "POSICION_T2_ADYACENTE": 747,
+          "RELACION_DE_SEGUNDO_NIVEL": 10734,
+          "RELACION_DE_TERCER_NIVEL": 14816,
+          "SIN_RELACION_DIRECTA_IDENTIFICADA": 15058,
+          "VECINO_DEL_CONFIRMADOR": 2829
+        },
+        "D+6": {
+          "CANDIDATO_ORIGINAL_ALTERNATIVO": 4443,
+          "COMPANERO_DEL_CONFIRMADOR": 1828,
+          "CONFIRMADOR_ORIGINAL": 529,
+          "FUERTE_ALTERNATIVO": 596,
+          "FUERTE_EXACTO": 507,
+          "MISMO_CODIGO_T1": 2347,
+          "MISMO_CODIGO_T2": 3459,
+          "MISMO_GRUPO_T1": 2347,
+          "MISMO_GRUPO_T2": 3459,
+          "POSICION_T1_ADYACENTE": 648,
+          "POSICION_T1_CERCANA": 816,
+          "POSICION_T1_LEJANA": 376,
+          "POSICION_T2_ADYACENTE": 747,
+          "RELACION_DE_SEGUNDO_NIVEL": 10878,
+          "RELACION_DE_TERCER_NIVEL": 14962,
+          "SIN_RELACION_DIRECTA_IDENTIFICADA": 14875,
+          "VECINO_DEL_CONFIRMADOR": 2930
+        },
+        "D+7": {
+          "CANDIDATO_ORIGINAL_ALTERNATIVO": 4556,
+          "COMPANERO_DEL_CONFIRMADOR": 1864,
+          "CONFIRMADOR_ORIGINAL": 516,
+          "FUERTE_ALTERNATIVO": 594,
+          "FUERTE_EXACTO": 491,
+          "MISMO_CODIGO_T1": 2296,
+          "MISMO_CODIGO_T2": 3392,
+          "MISMO_GRUPO_T1": 2296,
+          "MISMO_GRUPO_T2": 3392,
+          "POSICION_T1_ADYACENTE": 658,
+          "POSICION_T1_CERCANA": 795,
+          "POSICION_T1_LEJANA": 352,
+          "POSICION_T2_ADYACENTE": 796,
+          "RELACION_DE_SEGUNDO_NIVEL": 10602,
+          "RELACION_DE_TERCER_NIVEL": 14957,
+          "SIN_RELACION_DIRECTA_IDENTIFICADA": 15155,
+          "VECINO_DEL_CONFIRMADOR": 2876
+        }
+      },
+      "row_totals": {
+        "D+1": 65870,
+        "D+2": 65867,
+        "D+3": 66326,
+        "D+4": 65711,
+        "D+5": 65286,
+        "D+6": 65747,
+        "D+7": 65588
+      },
+      "col_totals": {
+        "CANDIDATO_ORIGINAL_ALTERNATIVO": 32161,
+        "COMPANERO_DEL_CONFIRMADOR": 12945,
+        "CONFIRMADOR_ORIGINAL": 3567,
+        "FUERTE_ALTERNATIVO": 4261,
+        "FUERTE_EXACTO": 3483,
+        "MISMO_CODIGO_T1": 16453,
+        "MISMO_CODIGO_T2": 23765,
+        "MISMO_GRUPO_T1": 16453,
+        "MISMO_GRUPO_T2": 23765,
+        "POSICION_T1_ADYACENTE": 4715,
+        "POSICION_T1_CERCANA": 5663,
+        "POSICION_T1_LEJANA": 2592,
+        "POSICION_T2_ADYACENTE": 5535,
+        "RELACION_DE_SEGUNDO_NIVEL": 74843,
+        "RELACION_DE_TERCER_NIVEL": 104696,
+        "SIN_RELACION_DIRECTA_IDENTIFICADA": 105300,
+        "VECINO_DEL_CONFIRMADOR": 20198
+      },
+      "total": 460395,
+      "row_pct": {
+        "D+1": {
+          "CANDIDATO_ORIGINAL_ALTERNATIVO": 7.03,
+          "COMPANERO_DEL_CONFIRMADOR": 2.84,
+          "CONFIRMADOR_ORIGINAL": 0.81,
+          "FUERTE_ALTERNATIVO": 0.92,
+          "FUERTE_EXACTO": 0.74,
+          "MISMO_CODIGO_T1": 3.54,
+          "MISMO_CODIGO_T2": 5.02,
+          "MISMO_GRUPO_T1": 3.54,
+          "MISMO_GRUPO_T2": 5.02,
+          "POSICION_T1_ADYACENTE": 1.04,
+          "POSICION_T1_CERCANA": 1.22,
+          "POSICION_T1_LEJANA": 0.54,
+          "POSICION_T2_ADYACENTE": 1.24,
+          "RELACION_DE_SEGUNDO_NIVEL": 16.11,
+          "RELACION_DE_TERCER_NIVEL": 23.2,
+          "SIN_RELACION_DIRECTA_IDENTIFICADA": 23.0,
+          "VECINO_DEL_CONFIRMADOR": 4.21
+        },
+        "D+2": {
+          "CANDIDATO_ORIGINAL_ALTERNATIVO": 6.95,
+          "COMPANERO_DEL_CONFIRMADOR": 2.86,
+          "CONFIRMADOR_ORIGINAL": 0.79,
+          "FUERTE_ALTERNATIVO": 0.99,
+          "FUERTE_EXACTO": 0.78,
+          "MISMO_CODIGO_T1": 3.61,
+          "MISMO_CODIGO_T2": 5.05,
+          "MISMO_GRUPO_T1": 3.61,
+          "MISMO_GRUPO_T2": 5.05,
+          "POSICION_T1_ADYACENTE": 1.02,
+          "POSICION_T1_CERCANA": 1.27,
+          "POSICION_T1_LEJANA": 0.54,
+          "POSICION_T2_ADYACENTE": 1.24,
+          "RELACION_DE_SEGUNDO_NIVEL": 16.34,
+          "RELACION_DE_TERCER_NIVEL": 22.73,
+          "SIN_RELACION_DIRECTA_IDENTIFICADA": 22.9,
+          "VECINO_DEL_CONFIRMADOR": 4.26
+        },
+        "D+3": {
+          "CANDIDATO_ORIGINAL_ALTERNATIVO": 7.07,
+          "COMPANERO_DEL_CONFIRMADOR": 2.78,
+          "CONFIRMADOR_ORIGINAL": 0.78,
+          "FUERTE_ALTERNATIVO": 0.98,
+          "FUERTE_EXACTO": 0.79,
+          "MISMO_CODIGO_T1": 3.7,
+          "MISMO_CODIGO_T2": 5.31,
+          "MISMO_GRUPO_T1": 3.7,
+          "MISMO_GRUPO_T2": 5.31,
+          "POSICION_T1_ADYACENTE": 1.07,
+          "POSICION_T1_CERCANA": 1.25,
+          "POSICION_T1_LEJANA": 0.58,
+          "POSICION_T2_ADYACENTE": 1.15,
+          "RELACION_DE_SEGUNDO_NIVEL": 15.98,
+          "RELACION_DE_TERCER_NIVEL": 22.37,
+          "SIN_RELACION_DIRECTA_IDENTIFICADA": 22.65,
+          "VECINO_DEL_CONFIRMADOR": 4.53
+        },
+        "D+4": {
+          "CANDIDATO_ORIGINAL_ALTERNATIVO": 6.91,
+          "COMPANERO_DEL_CONFIRMADOR": 2.82,
+          "CONFIRMADOR_ORIGINAL": 0.77,
+          "FUERTE_ALTERNATIVO": 0.86,
+          "FUERTE_EXACTO": 0.74,
+          "MISMO_CODIGO_T1": 3.53,
+          "MISMO_CODIGO_T2": 5.3,
+          "MISMO_GRUPO_T1": 3.53,
+          "MISMO_GRUPO_T2": 5.3,
+          "POSICION_T1_ADYACENTE": 0.98,
+          "POSICION_T1_CERCANA": 1.2,
+          "POSICION_T1_LEJANA": 0.61,
+          "POSICION_T2_ADYACENTE": 1.29,
+          "RELACION_DE_SEGUNDO_NIVEL": 16.23,
+          "RELACION_DE_TERCER_NIVEL": 22.64,
+          "SIN_RELACION_DIRECTA_IDENTIFICADA": 22.76,
+          "VECINO_DEL_CONFIRMADOR": 4.53
+        },
+        "D+5": {
+          "CANDIDATO_ORIGINAL_ALTERNATIVO": 7.24,
+          "COMPANERO_DEL_CONFIRMADOR": 2.77,
+          "CONFIRMADOR_ORIGINAL": 0.68,
+          "FUERTE_ALTERNATIVO": 0.91,
+          "FUERTE_EXACTO": 0.72,
+          "MISMO_CODIGO_T1": 3.57,
+          "MISMO_CODIGO_T2": 5.01,
+          "MISMO_GRUPO_T1": 3.57,
+          "MISMO_GRUPO_T2": 5.01,
+          "POSICION_T1_ADYACENTE": 1.07,
+          "POSICION_T1_CERCANA": 1.21,
+          "POSICION_T1_LEJANA": 0.56,
+          "POSICION_T2_ADYACENTE": 1.14,
+          "RELACION_DE_SEGUNDO_NIVEL": 16.44,
+          "RELACION_DE_TERCER_NIVEL": 22.69,
+          "SIN_RELACION_DIRECTA_IDENTIFICADA": 23.06,
+          "VECINO_DEL_CONFIRMADOR": 4.33
+        },
+        "D+6": {
+          "CANDIDATO_ORIGINAL_ALTERNATIVO": 6.76,
+          "COMPANERO_DEL_CONFIRMADOR": 2.78,
+          "CONFIRMADOR_ORIGINAL": 0.8,
+          "FUERTE_ALTERNATIVO": 0.91,
+          "FUERTE_EXACTO": 0.77,
+          "MISMO_CODIGO_T1": 3.57,
+          "MISMO_CODIGO_T2": 5.26,
+          "MISMO_GRUPO_T1": 3.57,
+          "MISMO_GRUPO_T2": 5.26,
+          "POSICION_T1_ADYACENTE": 0.99,
+          "POSICION_T1_CERCANA": 1.24,
+          "POSICION_T1_LEJANA": 0.57,
+          "POSICION_T2_ADYACENTE": 1.14,
+          "RELACION_DE_SEGUNDO_NIVEL": 16.55,
+          "RELACION_DE_TERCER_NIVEL": 22.76,
+          "SIN_RELACION_DIRECTA_IDENTIFICADA": 22.62,
+          "VECINO_DEL_CONFIRMADOR": 4.46
+        },
+        "D+7": {
+          "CANDIDATO_ORIGINAL_ALTERNATIVO": 6.95,
+          "COMPANERO_DEL_CONFIRMADOR": 2.84,
+          "CONFIRMADOR_ORIGINAL": 0.79,
+          "FUERTE_ALTERNATIVO": 0.91,
+          "FUERTE_EXACTO": 0.75,
+          "MISMO_CODIGO_T1": 3.5,
+          "MISMO_CODIGO_T2": 5.17,
+          "MISMO_GRUPO_T1": 3.5,
+          "MISMO_GRUPO_T2": 5.17,
+          "POSICION_T1_ADYACENTE": 1.0,
+          "POSICION_T1_CERCANA": 1.21,
+          "POSICION_T1_LEJANA": 0.54,
+          "POSICION_T2_ADYACENTE": 1.21,
+          "RELACION_DE_SEGUNDO_NIVEL": 16.16,
+          "RELACION_DE_TERCER_NIVEL": 22.8,
+          "SIN_RELACION_DIRECTA_IDENTIFICADA": 23.11,
+          "VECINO_DEL_CONFIRMADOR": 4.38
+        }
+      },
+      "col_pct": {
+        "D+1": {
+          "CANDIDATO_ORIGINAL_ALTERNATIVO": 14.4,
+          "COMPANERO_DEL_CONFIRMADOR": 14.43,
+          "CONFIRMADOR_ORIGINAL": 15.03,
+          "FUERTE_ALTERNATIVO": 14.29,
+          "FUERTE_EXACTO": 13.98,
+          "MISMO_CODIGO_T1": 14.16,
+          "MISMO_CODIGO_T2": 13.92,
+          "MISMO_GRUPO_T1": 14.16,
+          "MISMO_GRUPO_T2": 13.92,
+          "POSICION_T1_ADYACENTE": 14.55,
+          "POSICION_T1_CERCANA": 14.2,
+          "POSICION_T1_LEJANA": 13.62,
+          "POSICION_T2_ADYACENTE": 14.74,
+          "RELACION_DE_SEGUNDO_NIVEL": 14.18,
+          "RELACION_DE_TERCER_NIVEL": 14.59,
+          "SIN_RELACION_DIRECTA_IDENTIFICADA": 14.38,
+          "VECINO_DEL_CONFIRMADOR": 13.72
+        },
+        "D+2": {
+          "CANDIDATO_ORIGINAL_ALTERNATIVO": 14.23,
+          "COMPANERO_DEL_CONFIRMADOR": 14.54,
+          "CONFIRMADOR_ORIGINAL": 14.61,
+          "FUERTE_ALTERNATIVO": 15.37,
+          "FUERTE_EXACTO": 14.81,
+          "MISMO_CODIGO_T1": 14.45,
+          "MISMO_CODIGO_T2": 14.01,
+          "MISMO_GRUPO_T1": 14.45,
+          "MISMO_GRUPO_T2": 14.01,
+          "POSICION_T1_ADYACENTE": 14.21,
+          "POSICION_T1_CERCANA": 14.76,
+          "POSICION_T1_LEJANA": 13.73,
+          "POSICION_T2_ADYACENTE": 14.8,
+          "RELACION_DE_SEGUNDO_NIVEL": 14.38,
+          "RELACION_DE_TERCER_NIVEL": 14.3,
+          "SIN_RELACION_DIRECTA_IDENTIFICADA": 14.32,
+          "VECINO_DEL_CONFIRMADOR": 13.9
+        },
+        "D+3": {
+          "CANDIDATO_ORIGINAL_ALTERNATIVO": 14.57,
+          "COMPANERO_DEL_CONFIRMADOR": 14.22,
+          "CONFIRMADOR_ORIGINAL": 14.58,
+          "FUERTE_ALTERNATIVO": 15.23,
+          "FUERTE_EXACTO": 14.99,
+          "MISMO_CODIGO_T1": 14.9,
+          "MISMO_CODIGO_T2": 14.83,
+          "MISMO_GRUPO_T1": 14.9,
+          "MISMO_GRUPO_T2": 14.83,
+          "POSICION_T1_ADYACENTE": 15.12,
+          "POSICION_T1_CERCANA": 14.67,
+          "POSICION_T1_LEJANA": 14.85,
+          "POSICION_T2_ADYACENTE": 13.79,
+          "RELACION_DE_SEGUNDO_NIVEL": 14.16,
+          "RELACION_DE_TERCER_NIVEL": 14.17,
+          "SIN_RELACION_DIRECTA_IDENTIFICADA": 14.27,
+          "VECINO_DEL_CONFIRMADOR": 14.88
+        },
+        "D+4": {
+          "CANDIDATO_ORIGINAL_ALTERNATIVO": 14.12,
+          "COMPANERO_DEL_CONFIRMADOR": 14.32,
+          "CONFIRMADOR_ORIGINAL": 14.1,
+          "FUERTE_ALTERNATIVO": 13.21,
+          "FUERTE_EXACTO": 13.98,
+          "MISMO_CODIGO_T1": 14.11,
+          "MISMO_CODIGO_T2": 14.65,
+          "MISMO_GRUPO_T1": 14.11,
+          "MISMO_GRUPO_T2": 14.65,
+          "POSICION_T1_ADYACENTE": 13.62,
+          "POSICION_T1_CERCANA": 13.93,
+          "POSICION_T1_LEJANA": 15.59,
+          "POSICION_T2_ADYACENTE": 15.3,
+          "RELACION_DE_SEGUNDO_NIVEL": 14.25,
+          "RELACION_DE_TERCER_NIVEL": 14.21,
+          "SIN_RELACION_DIRECTA_IDENTIFICADA": 14.2,
+          "VECINO_DEL_CONFIRMADOR": 14.75
+        },
+        "D+5": {
+          "CANDIDATO_ORIGINAL_ALTERNATIVO": 14.7,
+          "COMPANERO_DEL_CONFIRMADOR": 13.97,
+          "CONFIRMADOR_ORIGINAL": 12.39,
+          "FUERTE_ALTERNATIVO": 13.96,
+          "FUERTE_EXACTO": 13.58,
+          "MISMO_CODIGO_T1": 14.16,
+          "MISMO_CODIGO_T2": 13.76,
+          "MISMO_GRUPO_T1": 14.16,
+          "MISMO_GRUPO_T2": 13.76,
+          "POSICION_T1_ADYACENTE": 14.8,
+          "POSICION_T1_CERCANA": 13.99,
+          "POSICION_T1_LEJANA": 14.12,
+          "POSICION_T2_ADYACENTE": 13.5,
+          "RELACION_DE_SEGUNDO_NIVEL": 14.34,
+          "RELACION_DE_TERCER_NIVEL": 14.15,
+          "SIN_RELACION_DIRECTA_IDENTIFICADA": 14.3,
+          "VECINO_DEL_CONFIRMADOR": 14.01
+        },
+        "D+6": {
+          "CANDIDATO_ORIGINAL_ALTERNATIVO": 13.81,
+          "COMPANERO_DEL_CONFIRMADOR": 14.12,
+          "CONFIRMADOR_ORIGINAL": 14.83,
+          "FUERTE_ALTERNATIVO": 13.99,
+          "FUERTE_EXACTO": 14.56,
+          "MISMO_CODIGO_T1": 14.26,
+          "MISMO_CODIGO_T2": 14.56,
+          "MISMO_GRUPO_T1": 14.26,
+          "MISMO_GRUPO_T2": 14.56,
+          "POSICION_T1_ADYACENTE": 13.74,
+          "POSICION_T1_CERCANA": 14.41,
+          "POSICION_T1_LEJANA": 14.51,
+          "POSICION_T2_ADYACENTE": 13.5,
+          "RELACION_DE_SEGUNDO_NIVEL": 14.53,
+          "RELACION_DE_TERCER_NIVEL": 14.29,
+          "SIN_RELACION_DIRECTA_IDENTIFICADA": 14.13,
+          "VECINO_DEL_CONFIRMADOR": 14.51
+        },
+        "D+7": {
+          "CANDIDATO_ORIGINAL_ALTERNATIVO": 14.17,
+          "COMPANERO_DEL_CONFIRMADOR": 14.4,
+          "CONFIRMADOR_ORIGINAL": 14.47,
+          "FUERTE_ALTERNATIVO": 13.94,
+          "FUERTE_EXACTO": 14.1,
+          "MISMO_CODIGO_T1": 13.95,
+          "MISMO_CODIGO_T2": 14.27,
+          "MISMO_GRUPO_T1": 13.95,
+          "MISMO_GRUPO_T2": 14.27,
+          "POSICION_T1_ADYACENTE": 13.96,
+          "POSICION_T1_CERCANA": 14.04,
+          "POSICION_T1_LEJANA": 13.58,
+          "POSICION_T2_ADYACENTE": 14.38,
+          "RELACION_DE_SEGUNDO_NIVEL": 14.17,
+          "RELACION_DE_TERCER_NIVEL": 14.29,
+          "SIN_RELACION_DIRECTA_IDENTIFICADA": 14.39,
+          "VECINO_DEL_CONFIRMADOR": 14.24
+        }
+      }
+    },
+    "year_x_relation": {
+      "rows": [
+        "2019",
+        "2020",
+        "2021",
+        "2022",
+        "2023",
+        "2024",
+        "2025",
+        "2026"
+      ],
+      "cols": [
+        "CANDIDATO_ORIGINAL_ALTERNATIVO",
+        "COMPANERO_DEL_CONFIRMADOR",
+        "CONFIRMADOR_ORIGINAL",
+        "FUERTE_ALTERNATIVO",
+        "FUERTE_EXACTO",
+        "MISMO_CODIGO_T1",
+        "MISMO_CODIGO_T2",
+        "MISMO_GRUPO_T1",
+        "MISMO_GRUPO_T2",
+        "POSICION_T1_ADYACENTE",
+        "POSICION_T1_CERCANA",
+        "POSICION_T1_LEJANA",
+        "POSICION_T2_ADYACENTE",
+        "RELACION_DE_SEGUNDO_NIVEL",
+        "RELACION_DE_TERCER_NIVEL",
+        "SIN_RELACION_DIRECTA_IDENTIFICADA",
+        "VECINO_DEL_CONFIRMADOR"
+      ],
+      "counts": {
+        "2019": {
+          "CANDIDATO_ORIGINAL_ALTERNATIVO": 1809,
+          "COMPANERO_DEL_CONFIRMADOR": 745,
+          "CONFIRMADOR_ORIGINAL": 210,
+          "FUERTE_ALTERNATIVO": 175,
+          "FUERTE_EXACTO": 226,
+          "MISMO_CODIGO_T1": 994,
+          "MISMO_CODIGO_T2": 1200,
+          "MISMO_GRUPO_T1": 994,
+          "MISMO_GRUPO_T2": 1200,
+          "POSICION_T1_ADYACENTE": 282,
+          "POSICION_T1_CERCANA": 333,
+          "POSICION_T1_LEJANA": 153,
+          "POSICION_T2_ADYACENTE": 318,
+          "RELACION_DE_SEGUNDO_NIVEL": 4209,
+          "RELACION_DE_TERCER_NIVEL": 6275,
+          "SIN_RELACION_DIRECTA_IDENTIFICADA": 7411,
+          "VECINO_DEL_CONFIRMADOR": 990
+        },
+        "2020": {
+          "CANDIDATO_ORIGINAL_ALTERNATIVO": 3416,
+          "COMPANERO_DEL_CONFIRMADOR": 1256,
+          "CONFIRMADOR_ORIGINAL": 374,
+          "FUERTE_ALTERNATIVO": 362,
+          "FUERTE_EXACTO": 351,
+          "MISMO_CODIGO_T1": 1740,
+          "MISMO_CODIGO_T2": 2261,
+          "MISMO_GRUPO_T1": 1740,
+          "MISMO_GRUPO_T2": 2261,
+          "POSICION_T1_ADYACENTE": 488,
+          "POSICION_T1_CERCANA": 616,
+          "POSICION_T1_LEJANA": 285,
+          "POSICION_T2_ADYACENTE": 561,
+          "RELACION_DE_SEGUNDO_NIVEL": 7255,
+          "RELACION_DE_TERCER_NIVEL": 10903,
+          "SIN_RELACION_DIRECTA_IDENTIFICADA": 10898,
+          "VECINO_DEL_CONFIRMADOR": 1887
+        },
+        "2021": {
+          "CANDIDATO_ORIGINAL_ALTERNATIVO": 5027,
+          "COMPANERO_DEL_CONFIRMADOR": 1908,
+          "CONFIRMADOR_ORIGINAL": 529,
+          "FUERTE_ALTERNATIVO": 725,
+          "FUERTE_EXACTO": 483,
+          "MISMO_CODIGO_T1": 2518,
+          "MISMO_CODIGO_T2": 3617,
+          "MISMO_GRUPO_T1": 2518,
+          "MISMO_GRUPO_T2": 3617,
+          "POSICION_T1_ADYACENTE": 727,
+          "POSICION_T1_CERCANA": 871,
+          "POSICION_T1_LEJANA": 437,
+          "POSICION_T2_ADYACENTE": 818,
+          "RELACION_DE_SEGUNDO_NIVEL": 11663,
+          "RELACION_DE_TERCER_NIVEL": 15861,
+          "SIN_RELACION_DIRECTA_IDENTIFICADA": 14728,
+          "VECINO_DEL_CONFIRMADOR": 3088
+        },
+        "2022": {
+          "CANDIDATO_ORIGINAL_ALTERNATIVO": 4829,
+          "COMPANERO_DEL_CONFIRMADOR": 2024,
+          "CONFIRMADOR_ORIGINAL": 516,
+          "FUERTE_ALTERNATIVO": 645,
+          "FUERTE_EXACTO": 504,
+          "MISMO_CODIGO_T1": 2341,
+          "MISMO_CODIGO_T2": 3681,
+          "MISMO_GRUPO_T1": 2341,
+          "MISMO_GRUPO_T2": 3681,
+          "POSICION_T1_ADYACENTE": 684,
+          "POSICION_T1_CERCANA": 818,
+          "POSICION_T1_LEJANA": 335,
+          "POSICION_T2_ADYACENTE": 812,
+          "RELACION_DE_SEGUNDO_NIVEL": 11581,
+          "RELACION_DE_TERCER_NIVEL": 15631,
+          "SIN_RELACION_DIRECTA_IDENTIFICADA": 14693,
+          "VECINO_DEL_CONFIRMADOR": 3165
+        },
+        "2023": {
+          "CANDIDATO_ORIGINAL_ALTERNATIVO": 4877,
+          "COMPANERO_DEL_CONFIRMADOR": 2122,
+          "CONFIRMADOR_ORIGINAL": 545,
+          "FUERTE_ALTERNATIVO": 627,
+          "FUERTE_EXACTO": 573,
+          "MISMO_CODIGO_T1": 2682,
+          "MISMO_CODIGO_T2": 3681,
+          "MISMO_GRUPO_T1": 2682,
+          "MISMO_GRUPO_T2": 3681,
+          "POSICION_T1_ADYACENTE": 777,
+          "POSICION_T1_CERCANA": 878,
+          "POSICION_T1_LEJANA": 454,
+          "POSICION_T2_ADYACENTE": 839,
+          "RELACION_DE_SEGUNDO_NIVEL": 12042,
+          "RELACION_DE_TERCER_NIVEL": 16348,
+          "SIN_RELACION_DIRECTA_IDENTIFICADA": 16516,
+          "VECINO_DEL_CONFIRMADOR": 3136
+        },
+        "2024": {
+          "CANDIDATO_ORIGINAL_ALTERNATIVO": 4948,
+          "COMPANERO_DEL_CONFIRMADOR": 1888,
+          "CONFIRMADOR_ORIGINAL": 558,
+          "FUERTE_ALTERNATIVO": 753,
+          "FUERTE_EXACTO": 567,
+          "MISMO_CODIGO_T1": 2464,
+          "MISMO_CODIGO_T2": 3871,
+          "MISMO_GRUPO_T1": 2464,
+          "MISMO_GRUPO_T2": 3871,
+          "POSICION_T1_ADYACENTE": 669,
+          "POSICION_T1_CERCANA": 828,
+          "POSICION_T1_LEJANA": 400,
+          "POSICION_T2_ADYACENTE": 849,
+          "RELACION_DE_SEGUNDO_NIVEL": 11475,
+          "RELACION_DE_TERCER_NIVEL": 15726,
+          "SIN_RELACION_DIRECTA_IDENTIFICADA": 17240,
+          "VECINO_DEL_CONFIRMADOR": 3313
+        },
+        "2025": {
+          "CANDIDATO_ORIGINAL_ALTERNATIVO": 4849,
+          "COMPANERO_DEL_CONFIRMADOR": 1962,
+          "CONFIRMADOR_ORIGINAL": 529,
+          "FUERTE_ALTERNATIVO": 716,
+          "FUERTE_EXACTO": 533,
+          "MISMO_CODIGO_T1": 2488,
+          "MISMO_CODIGO_T2": 3716,
+          "MISMO_GRUPO_T1": 2488,
+          "MISMO_GRUPO_T2": 3716,
+          "POSICION_T1_ADYACENTE": 719,
+          "POSICION_T1_CERCANA": 910,
+          "POSICION_T1_LEJANA": 326,
+          "POSICION_T2_ADYACENTE": 869,
+          "RELACION_DE_SEGUNDO_NIVEL": 11113,
+          "RELACION_DE_TERCER_NIVEL": 15944,
+          "SIN_RELACION_DIRECTA_IDENTIFICADA": 15639,
+          "VECINO_DEL_CONFIRMADOR": 3187
+        },
+        "2026": {
+          "CANDIDATO_ORIGINAL_ALTERNATIVO": 2406,
+          "COMPANERO_DEL_CONFIRMADOR": 1040,
+          "CONFIRMADOR_ORIGINAL": 306,
+          "FUERTE_ALTERNATIVO": 258,
+          "FUERTE_EXACTO": 246,
+          "MISMO_CODIGO_T1": 1226,
+          "MISMO_CODIGO_T2": 1738,
+          "MISMO_GRUPO_T1": 1226,
+          "MISMO_GRUPO_T2": 1738,
+          "POSICION_T1_ADYACENTE": 369,
+          "POSICION_T1_CERCANA": 409,
+          "POSICION_T1_LEJANA": 202,
+          "POSICION_T2_ADYACENTE": 469,
+          "RELACION_DE_SEGUNDO_NIVEL": 5505,
+          "RELACION_DE_TERCER_NIVEL": 8008,
+          "SIN_RELACION_DIRECTA_IDENTIFICADA": 8175,
+          "VECINO_DEL_CONFIRMADOR": 1432
+        }
+      },
+      "row_totals": {
+        "2019": 27524,
+        "2020": 46654,
+        "2021": 69135,
+        "2022": 68281,
+        "2023": 72460,
+        "2024": 71884,
+        "2025": 69704,
+        "2026": 34753
+      },
+      "col_totals": {
+        "CANDIDATO_ORIGINAL_ALTERNATIVO": 32161,
+        "COMPANERO_DEL_CONFIRMADOR": 12945,
+        "CONFIRMADOR_ORIGINAL": 3567,
+        "FUERTE_ALTERNATIVO": 4261,
+        "FUERTE_EXACTO": 3483,
+        "MISMO_CODIGO_T1": 16453,
+        "MISMO_CODIGO_T2": 23765,
+        "MISMO_GRUPO_T1": 16453,
+        "MISMO_GRUPO_T2": 23765,
+        "POSICION_T1_ADYACENTE": 4715,
+        "POSICION_T1_CERCANA": 5663,
+        "POSICION_T1_LEJANA": 2592,
+        "POSICION_T2_ADYACENTE": 5535,
+        "RELACION_DE_SEGUNDO_NIVEL": 74843,
+        "RELACION_DE_TERCER_NIVEL": 104696,
+        "SIN_RELACION_DIRECTA_IDENTIFICADA": 105300,
+        "VECINO_DEL_CONFIRMADOR": 20198
+      },
+      "total": 460395,
+      "row_pct": {
+        "2019": {
+          "CANDIDATO_ORIGINAL_ALTERNATIVO": 6.57,
+          "COMPANERO_DEL_CONFIRMADOR": 2.71,
+          "CONFIRMADOR_ORIGINAL": 0.76,
+          "FUERTE_ALTERNATIVO": 0.64,
+          "FUERTE_EXACTO": 0.82,
+          "MISMO_CODIGO_T1": 3.61,
+          "MISMO_CODIGO_T2": 4.36,
+          "MISMO_GRUPO_T1": 3.61,
+          "MISMO_GRUPO_T2": 4.36,
+          "POSICION_T1_ADYACENTE": 1.02,
+          "POSICION_T1_CERCANA": 1.21,
+          "POSICION_T1_LEJANA": 0.56,
+          "POSICION_T2_ADYACENTE": 1.16,
+          "RELACION_DE_SEGUNDO_NIVEL": 15.29,
+          "RELACION_DE_TERCER_NIVEL": 22.8,
+          "SIN_RELACION_DIRECTA_IDENTIFICADA": 26.93,
+          "VECINO_DEL_CONFIRMADOR": 3.6
+        },
+        "2020": {
+          "CANDIDATO_ORIGINAL_ALTERNATIVO": 7.32,
+          "COMPANERO_DEL_CONFIRMADOR": 2.69,
+          "CONFIRMADOR_ORIGINAL": 0.8,
+          "FUERTE_ALTERNATIVO": 0.78,
+          "FUERTE_EXACTO": 0.75,
+          "MISMO_CODIGO_T1": 3.73,
+          "MISMO_CODIGO_T2": 4.85,
+          "MISMO_GRUPO_T1": 3.73,
+          "MISMO_GRUPO_T2": 4.85,
+          "POSICION_T1_ADYACENTE": 1.05,
+          "POSICION_T1_CERCANA": 1.32,
+          "POSICION_T1_LEJANA": 0.61,
+          "POSICION_T2_ADYACENTE": 1.2,
+          "RELACION_DE_SEGUNDO_NIVEL": 15.55,
+          "RELACION_DE_TERCER_NIVEL": 23.37,
+          "SIN_RELACION_DIRECTA_IDENTIFICADA": 23.36,
+          "VECINO_DEL_CONFIRMADOR": 4.04
+        },
+        "2021": {
+          "CANDIDATO_ORIGINAL_ALTERNATIVO": 7.27,
+          "COMPANERO_DEL_CONFIRMADOR": 2.76,
+          "CONFIRMADOR_ORIGINAL": 0.77,
+          "FUERTE_ALTERNATIVO": 1.05,
+          "FUERTE_EXACTO": 0.7,
+          "MISMO_CODIGO_T1": 3.64,
+          "MISMO_CODIGO_T2": 5.23,
+          "MISMO_GRUPO_T1": 3.64,
+          "MISMO_GRUPO_T2": 5.23,
+          "POSICION_T1_ADYACENTE": 1.05,
+          "POSICION_T1_CERCANA": 1.26,
+          "POSICION_T1_LEJANA": 0.63,
+          "POSICION_T2_ADYACENTE": 1.18,
+          "RELACION_DE_SEGUNDO_NIVEL": 16.87,
+          "RELACION_DE_TERCER_NIVEL": 22.94,
+          "SIN_RELACION_DIRECTA_IDENTIFICADA": 21.3,
+          "VECINO_DEL_CONFIRMADOR": 4.47
+        },
+        "2022": {
+          "CANDIDATO_ORIGINAL_ALTERNATIVO": 7.07,
+          "COMPANERO_DEL_CONFIRMADOR": 2.96,
+          "CONFIRMADOR_ORIGINAL": 0.76,
+          "FUERTE_ALTERNATIVO": 0.94,
+          "FUERTE_EXACTO": 0.74,
+          "MISMO_CODIGO_T1": 3.43,
+          "MISMO_CODIGO_T2": 5.39,
+          "MISMO_GRUPO_T1": 3.43,
+          "MISMO_GRUPO_T2": 5.39,
+          "POSICION_T1_ADYACENTE": 1.0,
+          "POSICION_T1_CERCANA": 1.2,
+          "POSICION_T1_LEJANA": 0.49,
+          "POSICION_T2_ADYACENTE": 1.19,
+          "RELACION_DE_SEGUNDO_NIVEL": 16.96,
+          "RELACION_DE_TERCER_NIVEL": 22.89,
+          "SIN_RELACION_DIRECTA_IDENTIFICADA": 21.52,
+          "VECINO_DEL_CONFIRMADOR": 4.64
+        },
+        "2023": {
+          "CANDIDATO_ORIGINAL_ALTERNATIVO": 6.73,
+          "COMPANERO_DEL_CONFIRMADOR": 2.93,
+          "CONFIRMADOR_ORIGINAL": 0.75,
+          "FUERTE_ALTERNATIVO": 0.87,
+          "FUERTE_EXACTO": 0.79,
+          "MISMO_CODIGO_T1": 3.7,
+          "MISMO_CODIGO_T2": 5.08,
+          "MISMO_GRUPO_T1": 3.7,
+          "MISMO_GRUPO_T2": 5.08,
+          "POSICION_T1_ADYACENTE": 1.07,
+          "POSICION_T1_CERCANA": 1.21,
+          "POSICION_T1_LEJANA": 0.63,
+          "POSICION_T2_ADYACENTE": 1.16,
+          "RELACION_DE_SEGUNDO_NIVEL": 16.62,
+          "RELACION_DE_TERCER_NIVEL": 22.56,
+          "SIN_RELACION_DIRECTA_IDENTIFICADA": 22.79,
+          "VECINO_DEL_CONFIRMADOR": 4.33
+        },
+        "2024": {
+          "CANDIDATO_ORIGINAL_ALTERNATIVO": 6.88,
+          "COMPANERO_DEL_CONFIRMADOR": 2.63,
+          "CONFIRMADOR_ORIGINAL": 0.78,
+          "FUERTE_ALTERNATIVO": 1.05,
+          "FUERTE_EXACTO": 0.79,
+          "MISMO_CODIGO_T1": 3.43,
+          "MISMO_CODIGO_T2": 5.39,
+          "MISMO_GRUPO_T1": 3.43,
+          "MISMO_GRUPO_T2": 5.39,
+          "POSICION_T1_ADYACENTE": 0.93,
+          "POSICION_T1_CERCANA": 1.15,
+          "POSICION_T1_LEJANA": 0.56,
+          "POSICION_T2_ADYACENTE": 1.18,
+          "RELACION_DE_SEGUNDO_NIVEL": 15.96,
+          "RELACION_DE_TERCER_NIVEL": 21.88,
+          "SIN_RELACION_DIRECTA_IDENTIFICADA": 23.98,
+          "VECINO_DEL_CONFIRMADOR": 4.61
+        },
+        "2025": {
+          "CANDIDATO_ORIGINAL_ALTERNATIVO": 6.96,
+          "COMPANERO_DEL_CONFIRMADOR": 2.81,
+          "CONFIRMADOR_ORIGINAL": 0.76,
+          "FUERTE_ALTERNATIVO": 1.03,
+          "FUERTE_EXACTO": 0.76,
+          "MISMO_CODIGO_T1": 3.57,
+          "MISMO_CODIGO_T2": 5.33,
+          "MISMO_GRUPO_T1": 3.57,
+          "MISMO_GRUPO_T2": 5.33,
+          "POSICION_T1_ADYACENTE": 1.03,
+          "POSICION_T1_CERCANA": 1.31,
+          "POSICION_T1_LEJANA": 0.47,
+          "POSICION_T2_ADYACENTE": 1.25,
+          "RELACION_DE_SEGUNDO_NIVEL": 15.94,
+          "RELACION_DE_TERCER_NIVEL": 22.87,
+          "SIN_RELACION_DIRECTA_IDENTIFICADA": 22.44,
+          "VECINO_DEL_CONFIRMADOR": 4.57
+        },
+        "2026": {
+          "CANDIDATO_ORIGINAL_ALTERNATIVO": 6.92,
+          "COMPANERO_DEL_CONFIRMADOR": 2.99,
+          "CONFIRMADOR_ORIGINAL": 0.88,
+          "FUERTE_ALTERNATIVO": 0.74,
+          "FUERTE_EXACTO": 0.71,
+          "MISMO_CODIGO_T1": 3.53,
+          "MISMO_CODIGO_T2": 5.0,
+          "MISMO_GRUPO_T1": 3.53,
+          "MISMO_GRUPO_T2": 5.0,
+          "POSICION_T1_ADYACENTE": 1.06,
+          "POSICION_T1_CERCANA": 1.18,
+          "POSICION_T1_LEJANA": 0.58,
+          "POSICION_T2_ADYACENTE": 1.35,
+          "RELACION_DE_SEGUNDO_NIVEL": 15.84,
+          "RELACION_DE_TERCER_NIVEL": 23.04,
+          "SIN_RELACION_DIRECTA_IDENTIFICADA": 23.52,
+          "VECINO_DEL_CONFIRMADOR": 4.12
+        }
+      },
+      "col_pct": {
+        "2019": {
+          "CANDIDATO_ORIGINAL_ALTERNATIVO": 5.62,
+          "COMPANERO_DEL_CONFIRMADOR": 5.76,
+          "CONFIRMADOR_ORIGINAL": 5.89,
+          "FUERTE_ALTERNATIVO": 4.11,
+          "FUERTE_EXACTO": 6.49,
+          "MISMO_CODIGO_T1": 6.04,
+          "MISMO_CODIGO_T2": 5.05,
+          "MISMO_GRUPO_T1": 6.04,
+          "MISMO_GRUPO_T2": 5.05,
+          "POSICION_T1_ADYACENTE": 5.98,
+          "POSICION_T1_CERCANA": 5.88,
+          "POSICION_T1_LEJANA": 5.9,
+          "POSICION_T2_ADYACENTE": 5.75,
+          "RELACION_DE_SEGUNDO_NIVEL": 5.62,
+          "RELACION_DE_TERCER_NIVEL": 5.99,
+          "SIN_RELACION_DIRECTA_IDENTIFICADA": 7.04,
+          "VECINO_DEL_CONFIRMADOR": 4.9
+        },
+        "2020": {
+          "CANDIDATO_ORIGINAL_ALTERNATIVO": 10.62,
+          "COMPANERO_DEL_CONFIRMADOR": 9.7,
+          "CONFIRMADOR_ORIGINAL": 10.49,
+          "FUERTE_ALTERNATIVO": 8.5,
+          "FUERTE_EXACTO": 10.08,
+          "MISMO_CODIGO_T1": 10.58,
+          "MISMO_CODIGO_T2": 9.51,
+          "MISMO_GRUPO_T1": 10.58,
+          "MISMO_GRUPO_T2": 9.51,
+          "POSICION_T1_ADYACENTE": 10.35,
+          "POSICION_T1_CERCANA": 10.88,
+          "POSICION_T1_LEJANA": 11.0,
+          "POSICION_T2_ADYACENTE": 10.14,
+          "RELACION_DE_SEGUNDO_NIVEL": 9.69,
+          "RELACION_DE_TERCER_NIVEL": 10.41,
+          "SIN_RELACION_DIRECTA_IDENTIFICADA": 10.35,
+          "VECINO_DEL_CONFIRMADOR": 9.34
+        },
+        "2021": {
+          "CANDIDATO_ORIGINAL_ALTERNATIVO": 15.63,
+          "COMPANERO_DEL_CONFIRMADOR": 14.74,
+          "CONFIRMADOR_ORIGINAL": 14.83,
+          "FUERTE_ALTERNATIVO": 17.01,
+          "FUERTE_EXACTO": 13.87,
+          "MISMO_CODIGO_T1": 15.3,
+          "MISMO_CODIGO_T2": 15.22,
+          "MISMO_GRUPO_T1": 15.3,
+          "MISMO_GRUPO_T2": 15.22,
+          "POSICION_T1_ADYACENTE": 15.42,
+          "POSICION_T1_CERCANA": 15.38,
+          "POSICION_T1_LEJANA": 16.86,
+          "POSICION_T2_ADYACENTE": 14.78,
+          "RELACION_DE_SEGUNDO_NIVEL": 15.58,
+          "RELACION_DE_TERCER_NIVEL": 15.15,
+          "SIN_RELACION_DIRECTA_IDENTIFICADA": 13.99,
+          "VECINO_DEL_CONFIRMADOR": 15.29
+        },
+        "2022": {
+          "CANDIDATO_ORIGINAL_ALTERNATIVO": 15.02,
+          "COMPANERO_DEL_CONFIRMADOR": 15.64,
+          "CONFIRMADOR_ORIGINAL": 14.47,
+          "FUERTE_ALTERNATIVO": 15.14,
+          "FUERTE_EXACTO": 14.47,
+          "MISMO_CODIGO_T1": 14.23,
+          "MISMO_CODIGO_T2": 15.49,
+          "MISMO_GRUPO_T1": 14.23,
+          "MISMO_GRUPO_T2": 15.49,
+          "POSICION_T1_ADYACENTE": 14.51,
+          "POSICION_T1_CERCANA": 14.44,
+          "POSICION_T1_LEJANA": 12.92,
+          "POSICION_T2_ADYACENTE": 14.67,
+          "RELACION_DE_SEGUNDO_NIVEL": 15.47,
+          "RELACION_DE_TERCER_NIVEL": 14.93,
+          "SIN_RELACION_DIRECTA_IDENTIFICADA": 13.95,
+          "VECINO_DEL_CONFIRMADOR": 15.67
+        },
+        "2023": {
+          "CANDIDATO_ORIGINAL_ALTERNATIVO": 15.16,
+          "COMPANERO_DEL_CONFIRMADOR": 16.39,
+          "CONFIRMADOR_ORIGINAL": 15.28,
+          "FUERTE_ALTERNATIVO": 14.71,
+          "FUERTE_EXACTO": 16.45,
+          "MISMO_CODIGO_T1": 16.3,
+          "MISMO_CODIGO_T2": 15.49,
+          "MISMO_GRUPO_T1": 16.3,
+          "MISMO_GRUPO_T2": 15.49,
+          "POSICION_T1_ADYACENTE": 16.48,
+          "POSICION_T1_CERCANA": 15.5,
+          "POSICION_T1_LEJANA": 17.52,
+          "POSICION_T2_ADYACENTE": 15.16,
+          "RELACION_DE_SEGUNDO_NIVEL": 16.09,
+          "RELACION_DE_TERCER_NIVEL": 15.61,
+          "SIN_RELACION_DIRECTA_IDENTIFICADA": 15.68,
+          "VECINO_DEL_CONFIRMADOR": 15.53
+        },
+        "2024": {
+          "CANDIDATO_ORIGINAL_ALTERNATIVO": 15.39,
+          "COMPANERO_DEL_CONFIRMADOR": 14.58,
+          "CONFIRMADOR_ORIGINAL": 15.64,
+          "FUERTE_ALTERNATIVO": 17.67,
+          "FUERTE_EXACTO": 16.28,
+          "MISMO_CODIGO_T1": 14.98,
+          "MISMO_CODIGO_T2": 16.29,
+          "MISMO_GRUPO_T1": 14.98,
+          "MISMO_GRUPO_T2": 16.29,
+          "POSICION_T1_ADYACENTE": 14.19,
+          "POSICION_T1_CERCANA": 14.62,
+          "POSICION_T1_LEJANA": 15.43,
+          "POSICION_T2_ADYACENTE": 15.34,
+          "RELACION_DE_SEGUNDO_NIVEL": 15.33,
+          "RELACION_DE_TERCER_NIVEL": 15.02,
+          "SIN_RELACION_DIRECTA_IDENTIFICADA": 16.37,
+          "VECINO_DEL_CONFIRMADOR": 16.4
+        },
+        "2025": {
+          "CANDIDATO_ORIGINAL_ALTERNATIVO": 15.08,
+          "COMPANERO_DEL_CONFIRMADOR": 15.16,
+          "CONFIRMADOR_ORIGINAL": 14.83,
+          "FUERTE_ALTERNATIVO": 16.8,
+          "FUERTE_EXACTO": 15.3,
+          "MISMO_CODIGO_T1": 15.12,
+          "MISMO_CODIGO_T2": 15.64,
+          "MISMO_GRUPO_T1": 15.12,
+          "MISMO_GRUPO_T2": 15.64,
+          "POSICION_T1_ADYACENTE": 15.25,
+          "POSICION_T1_CERCANA": 16.07,
+          "POSICION_T1_LEJANA": 12.58,
+          "POSICION_T2_ADYACENTE": 15.7,
+          "RELACION_DE_SEGUNDO_NIVEL": 14.85,
+          "RELACION_DE_TERCER_NIVEL": 15.23,
+          "SIN_RELACION_DIRECTA_IDENTIFICADA": 14.85,
+          "VECINO_DEL_CONFIRMADOR": 15.78
+        },
+        "2026": {
+          "CANDIDATO_ORIGINAL_ALTERNATIVO": 7.48,
+          "COMPANERO_DEL_CONFIRMADOR": 8.03,
+          "CONFIRMADOR_ORIGINAL": 8.58,
+          "FUERTE_ALTERNATIVO": 6.05,
+          "FUERTE_EXACTO": 7.06,
+          "MISMO_CODIGO_T1": 7.45,
+          "MISMO_CODIGO_T2": 7.31,
+          "MISMO_GRUPO_T1": 7.45,
+          "MISMO_GRUPO_T2": 7.31,
+          "POSICION_T1_ADYACENTE": 7.83,
+          "POSICION_T1_CERCANA": 7.22,
+          "POSICION_T1_LEJANA": 7.79,
+          "POSICION_T2_ADYACENTE": 8.47,
+          "RELACION_DE_SEGUNDO_NIVEL": 7.36,
+          "RELACION_DE_TERCER_NIVEL": 7.65,
+          "SIN_RELACION_DIRECTA_IDENTIFICADA": 7.76,
+          "VECINO_DEL_CONFIRMADOR": 7.09
+        }
+      }
+    },
+    "origin_pos_x_result_pos": {
+      "rows": [
+        1,
+        2,
+        3
+      ],
+      "cols": [
+        1,
+        2,
+        3
+      ],
+      "counts": {
+        "1": {
+          "1": 116068,
+          "2": 116229,
+          "3": 116151
+        },
+        "2": {
+          "1": 787,
+          "2": 781,
+          "3": 782
+        },
+        "3": {
+          "1": 144,
+          "2": 144,
+          "3": 141
+        }
+      },
+      "row_totals": {
+        "1": 348448,
+        "2": 2350,
+        "3": 429
+      },
+      "col_totals": {
+        "1": 116999,
+        "2": 117154,
+        "3": 117074
+      },
+      "total": 351227,
+      "row_pct": {
+        "1": {
+          "1": 33.31,
+          "2": 33.36,
+          "3": 33.33
+        },
+        "2": {
+          "1": 33.49,
+          "2": 33.23,
+          "3": 33.28
+        },
+        "3": {
+          "1": 33.57,
+          "2": 33.57,
+          "3": 32.87
+        }
+      },
+      "col_pct": {
+        "1": {
+          "1": 99.2,
+          "2": 99.21,
+          "3": 99.21
+        },
+        "2": {
+          "1": 0.67,
+          "2": 0.67,
+          "3": 0.67
+        },
+        "3": {
+          "1": 0.12,
+          "2": 0.12,
+          "3": 0.12
+        }
+      }
+    },
+    "lottery_origin_x_result": [
+      {
+        "origin_lottery": "New York 10:30",
+        "result_lottery": "New York 2:30",
+        "count": 7834
+      },
+      {
+        "origin_lottery": "New York 10:30",
+        "result_lottery": "New York 10:30",
+        "count": 7820
+      },
+      {
+        "origin_lottery": "New York 10:30",
+        "result_lottery": "Quiniela Real",
+        "count": 7789
+      },
+      {
+        "origin_lottery": "New York 10:30",
+        "result_lottery": "Quiniela Loteka",
+        "count": 7674
+      },
+      {
+        "origin_lottery": "New York 10:30",
+        "result_lottery": "Quiniela Leidsa",
+        "count": 7661
+      },
+      {
+        "origin_lottery": "Quiniela Leidsa",
+        "result_lottery": "New York 2:30",
+        "count": 7514
+      },
+      {
+        "origin_lottery": "Quiniela Leidsa",
+        "result_lottery": "New York 10:30",
+        "count": 7496
+      },
+      {
+        "origin_lottery": "New York 10:30",
+        "result_lottery": "Loteria Nacional",
+        "count": 7486
+      },
+      {
+        "origin_lottery": "Quiniela Leidsa",
+        "result_lottery": "Quiniela Real",
+        "count": 7469
+      },
+      {
+        "origin_lottery": "New York 2:30",
+        "result_lottery": "New York 2:30",
+        "count": 7456
+      },
+      {
+        "origin_lottery": "New York 2:30",
+        "result_lottery": "New York 10:30",
+        "count": 7450
+      },
+      {
+        "origin_lottery": "New York 10:30",
+        "result_lottery": "Gana Mas",
+        "count": 7419
+      },
+      {
+        "origin_lottery": "Quiniela Leidsa",
+        "result_lottery": "Quiniela Leidsa",
+        "count": 7348
+      },
+      {
+        "origin_lottery": "Quiniela Leidsa",
+        "result_lottery": "Quiniela Loteka",
+        "count": 7347
+      },
+      {
+        "origin_lottery": "New York 2:30",
+        "result_lottery": "Quiniela Real",
+        "count": 7320
+      },
+      {
+        "origin_lottery": "Gana Mas",
+        "result_lottery": "New York 2:30",
+        "count": 7280
+      },
+      {
+        "origin_lottery": "Gana Mas",
+        "result_lottery": "Quiniela Real",
+        "count": 7278
+      },
+      {
+        "origin_lottery": "Loteria Nacional",
+        "result_lottery": "New York 2:30",
+        "count": 7261
+      },
+      {
+        "origin_lottery": "New York 2:30",
+        "result_lottery": "Quiniela Loteka",
+        "count": 7238
+      },
+      {
+        "origin_lottery": "Loteria Nacional",
+        "result_lottery": "New York 10:30",
+        "count": 7238
+      },
+      {
+        "origin_lottery": "New York 2:30",
+        "result_lottery": "Quiniela Leidsa",
+        "count": 7228
+      },
+      {
+        "origin_lottery": "Gana Mas",
+        "result_lottery": "New York 10:30",
+        "count": 7215
+      },
+      {
+        "origin_lottery": "Loteria Nacional",
+        "result_lottery": "Quiniela Real",
+        "count": 7205
+      },
+      {
+        "origin_lottery": "Quiniela Leidsa",
+        "result_lottery": "Loteria Nacional",
+        "count": 7203
+      },
+      {
+        "origin_lottery": "Loteria Nacional",
+        "result_lottery": "Quiniela Loteka",
+        "count": 7129
+      },
+      {
+        "origin_lottery": "Gana Mas",
+        "result_lottery": "Quiniela Loteka",
+        "count": 7128
+      },
+      {
+        "origin_lottery": "Loteria Nacional",
+        "result_lottery": "Quiniela Leidsa",
+        "count": 7124
+      },
+      {
+        "origin_lottery": "Quiniela Loteka",
+        "result_lottery": "New York 2:30",
+        "count": 7110
+      },
+      {
+        "origin_lottery": "New York 2:30",
+        "result_lottery": "Loteria Nacional",
+        "count": 7097
+      },
+      {
+        "origin_lottery": "Quiniela Leidsa",
+        "result_lottery": "Gana Mas",
+        "count": 7093
+      },
+      {
+        "origin_lottery": "Gana Mas",
+        "result_lottery": "Quiniela Leidsa",
+        "count": 7072
+      },
+      {
+        "origin_lottery": "Quiniela Loteka",
+        "result_lottery": "New York 10:30",
+        "count": 7069
+      },
+      {
+        "origin_lottery": "New York 2:30",
+        "result_lottery": "Gana Mas",
+        "count": 7043
+      },
+      {
+        "origin_lottery": "Quiniela Loteka",
+        "result_lottery": "Quiniela Real",
+        "count": 7035
+      },
+      {
+        "origin_lottery": "Gana Mas",
+        "result_lottery": "Loteria Nacional",
+        "count": 7019
+      },
+      {
+        "origin_lottery": "Gana Mas",
+        "result_lottery": "Gana Mas",
+        "count": 6980
+      },
+      {
+        "origin_lottery": "Loteria Nacional",
+        "result_lottery": "Loteria Nacional",
+        "count": 6961
+      },
+      {
+        "origin_lottery": "Loteria Nacional",
+        "result_lottery": "Gana Mas",
+        "count": 6932
+      },
+      {
+        "origin_lottery": "Quiniela Loteka",
+        "result_lottery": "Quiniela Loteka",
+        "count": 6923
+      },
+      {
+        "origin_lottery": "Quiniela Loteka",
+        "result_lottery": "Quiniela Leidsa",
+        "count": 6910
+      },
+      {
+        "origin_lottery": "Quiniela Real",
+        "result_lottery": "Quiniela Real",
+        "count": 6835
+      },
+      {
+        "origin_lottery": "Quiniela Real",
+        "result_lottery": "New York 2:30",
+        "count": 6822
+      },
+      {
+        "origin_lottery": "Quiniela Real",
+        "result_lottery": "New York 10:30",
+        "count": 6817
+      },
+      {
+        "origin_lottery": "Quiniela Loteka",
+        "result_lottery": "Loteria Nacional",
+        "count": 6812
+      },
+      {
+        "origin_lottery": "Quiniela Loteka",
+        "result_lottery": "Gana Mas",
+        "count": 6700
+      },
+      {
+        "origin_lottery": "Quiniela Real",
+        "result_lottery": "Quiniela Loteka",
+        "count": 6686
+      },
+      {
+        "origin_lottery": "Quiniela Real",
+        "result_lottery": "Quiniela Leidsa",
+        "count": 6666
+      },
+      {
+        "origin_lottery": "Quiniela Real",
+        "result_lottery": "Loteria Nacional",
+        "count": 6570
+      },
+      {
+        "origin_lottery": "Quiniela Real",
+        "result_lottery": "Gana Mas",
+        "count": 6465
+      }
+    ],
+    "lottery_triples_top": [
+      {
+        "origin_lottery": "Gana Mas",
+        "confirmer_lottery": "Loteria Nacional",
+        "result_lottery": "Quiniela Real",
+        "count": 1492
+      },
+      {
+        "origin_lottery": "New York 10:30",
+        "confirmer_lottery": "New York 2:30",
+        "result_lottery": "New York 2:30",
+        "count": 1491
+      },
+      {
+        "origin_lottery": "Gana Mas",
+        "confirmer_lottery": "Loteria Nacional",
+        "result_lottery": "New York 2:30",
+        "count": 1486
+      },
+      {
+        "origin_lottery": "New York 10:30",
+        "confirmer_lottery": "New York 2:30",
+        "result_lottery": "New York 10:30",
+        "count": 1484
+      },
+      {
+        "origin_lottery": "New York 10:30",
+        "confirmer_lottery": "Quiniela Leidsa",
+        "result_lottery": "Quiniela Real",
+        "count": 1475
+      },
+      {
+        "origin_lottery": "Gana Mas",
+        "confirmer_lottery": "Loteria Nacional",
+        "result_lottery": "Quiniela Loteka",
+        "count": 1472
+      },
+      {
+        "origin_lottery": "New York 10:30",
+        "confirmer_lottery": "Quiniela Leidsa",
+        "result_lottery": "New York 2:30",
+        "count": 1467
+      },
+      {
+        "origin_lottery": "New York 10:30",
+        "confirmer_lottery": "New York 2:30",
+        "result_lottery": "Quiniela Real",
+        "count": 1465
+      },
+      {
+        "origin_lottery": "Gana Mas",
+        "confirmer_lottery": "Loteria Nacional",
+        "result_lottery": "New York 10:30",
+        "count": 1464
+      },
+      {
+        "origin_lottery": "New York 10:30",
+        "confirmer_lottery": "New York 2:30",
+        "result_lottery": "Quiniela Leidsa",
+        "count": 1459
+      },
+      {
+        "origin_lottery": "New York 10:30",
+        "confirmer_lottery": "New York 2:30",
+        "result_lottery": "Quiniela Loteka",
+        "count": 1457
+      },
+      {
+        "origin_lottery": "New York 10:30",
+        "confirmer_lottery": "Quiniela Leidsa",
+        "result_lottery": "New York 10:30",
+        "count": 1455
+      },
+      {
+        "origin_lottery": "Gana Mas",
+        "confirmer_lottery": "Loteria Nacional",
+        "result_lottery": "Quiniela Leidsa",
+        "count": 1455
+      },
+      {
+        "origin_lottery": "Loteria Nacional",
+        "confirmer_lottery": "Quiniela Loteka",
+        "result_lottery": "New York 2:30",
+        "count": 1454
+      },
+      {
+        "origin_lottery": "Loteria Nacional",
+        "confirmer_lottery": "Quiniela Loteka",
+        "result_lottery": "New York 10:30",
+        "count": 1450
+      },
+      {
+        "origin_lottery": "Gana Mas",
+        "confirmer_lottery": "Loteria Nacional",
+        "result_lottery": "Loteria Nacional",
+        "count": 1445
+      },
+      {
+        "origin_lottery": "New York 10:30",
+        "confirmer_lottery": "Quiniela Leidsa",
+        "result_lottery": "Quiniela Leidsa",
+        "count": 1444
+      },
+      {
+        "origin_lottery": "New York 10:30",
+        "confirmer_lottery": "Quiniela Leidsa",
+        "result_lottery": "Quiniela Loteka",
+        "count": 1443
+      },
+      {
+        "origin_lottery": "New York 2:30",
+        "confirmer_lottery": "Quiniela Loteka",
+        "result_lottery": "New York 2:30",
+        "count": 1437
+      },
+      {
+        "origin_lottery": "Loteria Nacional",
+        "confirmer_lottery": "Quiniela Loteka",
+        "result_lottery": "Quiniela Real",
+        "count": 1436
+      },
+      {
+        "origin_lottery": "New York 2:30",
+        "confirmer_lottery": "Quiniela Loteka",
+        "result_lottery": "New York 10:30",
+        "count": 1434
+      },
+      {
+        "origin_lottery": "New York 2:30",
+        "confirmer_lottery": "Quiniela Loteka",
+        "result_lottery": "Quiniela Real",
+        "count": 1433
+      },
+      {
+        "origin_lottery": "New York 10:30",
+        "confirmer_lottery": "New York 2:30",
+        "result_lottery": "Loteria Nacional",
+        "count": 1429
+      },
+      {
+        "origin_lottery": "New York 10:30",
+        "confirmer_lottery": "Quiniela Leidsa",
+        "result_lottery": "Gana Mas",
+        "count": 1425
+      },
+      {
+        "origin_lottery": "Gana Mas",
+        "confirmer_lottery": "Loteria Nacional",
+        "result_lottery": "Gana Mas",
+        "count": 1423
+      },
+      {
+        "origin_lottery": "New York 2:30",
+        "confirmer_lottery": "Quiniela Loteka",
+        "result_lottery": "Quiniela Loteka",
+        "count": 1411
+      },
+      {
+        "origin_lottery": "Loteria Nacional",
+        "confirmer_lottery": "Quiniela Loteka",
+        "result_lottery": "Quiniela Leidsa",
+        "count": 1407
+      },
+      {
+        "origin_lottery": "New York 2:30",
+        "confirmer_lottery": "Quiniela Loteka",
+        "result_lottery": "Quiniela Leidsa",
+        "count": 1403
+      },
+      {
+        "origin_lottery": "Loteria Nacional",
+        "confirmer_lottery": "Quiniela Loteka",
+        "result_lottery": "Quiniela Loteka",
+        "count": 1400
+      },
+      {
+        "origin_lottery": "New York 10:30",
+        "confirmer_lottery": "New York 2:30",
+        "result_lottery": "Gana Mas",
+        "count": 1399
+      },
+      {
+        "origin_lottery": "New York 10:30",
+        "confirmer_lottery": "Quiniela Leidsa",
+        "result_lottery": "Loteria Nacional",
+        "count": 1397
+      },
+      {
+        "origin_lottery": "Loteria Nacional",
+        "confirmer_lottery": "Quiniela Loteka",
+        "result_lottery": "Loteria Nacional",
+        "count": 1395
+      },
+      {
+        "origin_lottery": "Quiniela Leidsa",
+        "confirmer_lottery": "New York 10:30",
+        "result_lottery": "New York 2:30",
+        "count": 1382
+      },
+      {
+        "origin_lottery": "Quiniela Leidsa",
+        "confirmer_lottery": "New York 10:30",
+        "result_lottery": "New York 10:30",
+        "count": 1381
+      },
+      {
+        "origin_lottery": "Loteria Nacional",
+        "confirmer_lottery": "Quiniela Loteka",
+        "result_lottery": "Gana Mas",
+        "count": 1380
+      },
+      {
+        "origin_lottery": "New York 10:30",
+        "confirmer_lottery": "Quiniela Real",
+        "result_lottery": "Quiniela Real",
+        "count": 1370
+      },
+      {
+        "origin_lottery": "New York 10:30",
+        "confirmer_lottery": "Quiniela Real",
+        "result_lottery": "New York 10:30",
+        "count": 1369
+      },
+      {
+        "origin_lottery": "New York 2:30",
+        "confirmer_lottery": "Quiniela Loteka",
+        "result_lottery": "Loteria Nacional",
+        "count": 1367
+      },
+      {
+        "origin_lottery": "Quiniela Leidsa",
+        "confirmer_lottery": "New York 10:30",
+        "result_lottery": "Quiniela Real",
+        "count": 1366
+      },
+      {
+        "origin_lottery": "New York 10:30",
+        "confirmer_lottery": "Quiniela Real",
+        "result_lottery": "New York 2:30",
+        "count": 1361
+      }
+    ]
+  },
+  "answers_preview": {
+    "chain_activations": 2477,
+    "fuerte_activations": 2222,
+    "distinct_fuertes": 84,
+    "exact_by_day": {
+      "D+1": 400,
+      "D+2": 335,
+      "D+3": 287,
+      "D+4": 206,
+      "D+5": 175,
+      "D+6": 147,
+      "D+7": 120
+    },
+    "cumulative": {
+      "D+1": {
+        "count": 400,
+        "pct_of_activations": 18.0,
+        "pct_of_hits": 23.95
+      },
+      "D+1–D+2": {
+        "count": 735,
+        "pct_of_activations": 33.08,
+        "pct_of_hits": 44.01
+      },
+      "D+1–D+3": {
+        "count": 1022,
+        "pct_of_activations": 45.99,
+        "pct_of_hits": 61.2
+      },
+      "D+1–D+4": {
+        "count": 1228,
+        "pct_of_activations": 55.27,
+        "pct_of_hits": 73.53
+      },
+      "D+1–D+5": {
+        "count": 1403,
+        "pct_of_activations": 63.14,
+        "pct_of_hits": 84.01
+      },
+      "D+1–D+6": {
+        "count": 1550,
+        "pct_of_activations": 69.76,
+        "pct_of_hits": 92.81
+      },
+      "D+1–D+7": {
+        "count": 1670,
+        "pct_of_activations": 75.16,
+        "pct_of_hits": 100.0
+      }
+    },
+    "top_t1_dist": [
+      {
+        "distance": 0,
+        "count": 3483,
+        "pct": 21.17
+      },
+      {
+        "distance": -1,
+        "count": 2521,
+        "pct": 15.32
+      },
+      {
+        "distance": 1,
+        "count": 2194,
+        "pct": 13.33
+      },
+      {
+        "distance": -2,
+        "count": 1932,
+        "pct": 11.74
+      },
+      {
+        "distance": 2,
+        "count": 1649,
+        "pct": 10.02
+      },
+      {
+        "distance": 3,
+        "count": 1098,
+        "pct": 6.67
+      },
+      {
+        "distance": -3,
+        "count": 984,
+        "pct": 5.98
+      },
+      {
+        "distance": 4,
+        "count": 774,
+        "pct": 4.7
+      }
+    ],
+    "top_t2_dist": [
+      {
+        "distance": 0,
+        "count": 3483,
+        "pct": 14.66
+      },
+      {
+        "distance": -1,
+        "count": 2798,
+        "pct": 11.77
+      },
+      {
+        "distance": 1,
+        "count": 2737,
+        "pct": 11.52
+      },
+      {
+        "distance": -2,
+        "count": 2020,
+        "pct": 8.5
+      },
+      {
+        "distance": 2,
+        "count": 1904,
+        "pct": 8.01
+      },
+      {
+        "distance": 3,
+        "count": 1473,
+        "pct": 6.2
+      },
+      {
+        "distance": -3,
+        "count": 1441,
+        "pct": 6.06
+      },
+      {
+        "distance": -4,
+        "count": 1064,
+        "pct": 4.48
+      }
+    ],
+    "top_label": [
+      {
+        "label": "SIN_RELACION_DIRECTA_IDENTIFICADA",
+        "count": 105300,
+        "pct_of_label_hits": 22.87
+      },
+      {
+        "label": "RELACION_DE_TERCER_NIVEL",
+        "count": 104696,
+        "pct_of_label_hits": 22.74
+      },
+      {
+        "label": "RELACION_DE_SEGUNDO_NIVEL",
+        "count": 74843,
+        "pct_of_label_hits": 16.26
+      },
+      {
+        "label": "CANDIDATO_ORIGINAL_ALTERNATIVO",
+        "count": 32161,
+        "pct_of_label_hits": 6.99
+      },
+      {
+        "label": "MISMO_GRUPO_T2",
+        "count": 23765,
+        "pct_of_label_hits": 5.16
+      },
+      {
+        "label": "MISMO_CODIGO_T2",
+        "count": 23765,
+        "pct_of_label_hits": 5.16
+      },
+      {
+        "label": "VECINO_DEL_CONFIRMADOR",
+        "count": 20198,
+        "pct_of_label_hits": 4.39
+      },
+      {
+        "label": "MISMO_GRUPO_T1",
+        "count": 16453,
+        "pct_of_label_hits": 3.57
+      },
+      {
+        "label": "MISMO_CODIGO_T1",
+        "count": 16453,
+        "pct_of_label_hits": 3.57
+      },
+      {
+        "label": "COMPANERO_DEL_CONFIRMADOR",
+        "count": 12945,
+        "pct_of_label_hits": 2.81
+      }
+    ],
+    "top_lottery_triple": [
+      {
+        "origin_lottery": "Gana Mas",
+        "confirmer_lottery": "Loteria Nacional",
+        "result_lottery": "Quiniela Real",
+        "count": 1492
+      },
+      {
+        "origin_lottery": "New York 10:30",
+        "confirmer_lottery": "New York 2:30",
+        "result_lottery": "New York 2:30",
+        "count": 1491
+      },
+      {
+        "origin_lottery": "Gana Mas",
+        "confirmer_lottery": "Loteria Nacional",
+        "result_lottery": "New York 2:30",
+        "count": 1486
+      },
+      {
+        "origin_lottery": "New York 10:30",
+        "confirmer_lottery": "New York 2:30",
+        "result_lottery": "New York 10:30",
+        "count": 1484
+      },
+      {
+        "origin_lottery": "New York 10:30",
+        "confirmer_lottery": "Quiniela Leidsa",
+        "result_lottery": "Quiniela Real",
+        "count": 1475
+      },
+      {
+        "origin_lottery": "Gana Mas",
+        "confirmer_lottery": "Loteria Nacional",
+        "result_lottery": "Quiniela Loteka",
+        "count": 1472
+      },
+      {
+        "origin_lottery": "New York 10:30",
+        "confirmer_lottery": "Quiniela Leidsa",
+        "result_lottery": "New York 2:30",
+        "count": 1467
+      },
+      {
+        "origin_lottery": "New York 10:30",
+        "confirmer_lottery": "New York 2:30",
+        "result_lottery": "Quiniela Real",
+        "count": 1465
+      },
+      {
+        "origin_lottery": "Gana Mas",
+        "confirmer_lottery": "Loteria Nacional",
+        "result_lottery": "New York 10:30",
+        "count": 1464
+      },
+      {
+        "origin_lottery": "New York 10:30",
+        "confirmer_lottery": "New York 2:30",
+        "result_lottery": "Quiniela Leidsa",
+        "count": 1459
+      }
+    ],
+    "top_pair": [
+      {
+        "origin": 39,
+        "fuerte": 94,
+        "confirmer": 84,
+        "activations": 20,
+        "years": [
+          2019,
+          2020,
+          2021,
+          2022,
+          2023,
+          2024,
+          2026
+        ],
+        "year_span": 7,
+        "consistency": "NIVEL_3_REPETICION_MODERADA",
+        "sample_bucket": "10-24",
+        "top_results": [
+          {
+            "number": 57,
+            "count": 38
+          },
+          {
+            "number": 5,
+            "count": 37
+          },
+          {
+            "number": 82,
+            "count": 37
+          }
+        ],
+        "top_primary": [
+          [
+            "RELACION_DE_TERCER_NIVEL",
+            1064
+          ],
+          [
+            "RELACION_DE_SEGUNDO_NIVEL",
+            664
+          ],
+          [
+            "SIN_RELACION_DIRECTA_IDENTIFICADA",
+            587
+          ]
+        ],
+        "top_days": [
+          [
+            4,
+            416
+          ],
+          [
+            5,
+            415
+          ],
+          [
+            6,
+            415
+          ]
+        ]
+      },
+      {
+        "origin": 44,
+        "fuerte": 70,
+        "confirmer": 22,
+        "activations": 19,
+        "years": [
+          2020,
+          2021,
+          2022,
+          2023,
+          2024,
+          2025,
+          2026
+        ],
+        "year_span": 7,
+        "consistency": "NIVEL_3_REPETICION_MODERADA",
+        "sample_bucket": "10-24",
+        "top_results": [
+          {
+            "number": 61,
+            "count": 39
+          },
+          {
+            "number": 22,
+            "count": 39
+          },
+          {
+            "number": 32,
+            "count": 39
+          }
+        ],
+        "top_primary": [
+          [
+            "RELACION_DE_SEGUNDO_NIVEL",
+            1012
+          ],
+          [
+            "RELACION_DE_TERCER_NIVEL",
+            808
+          ],
+          [
+            "SIN_RELACION_DIRECTA_IDENTIFICADA",
+            431
+          ]
+        ],
+        "top_days": [
+          [
+            4,
+            394
+          ],
+          [
+            6,
+            394
+          ],
+          [
+            5,
+            393
+          ]
+        ]
+      },
+      {
+        "origin": 37,
+        "fuerte": 42,
+        "confirmer": 44,
+        "activations": 17,
+        "years": [
+          2020,
+          2021,
+          2022,
+          2023,
+          2024,
+          2025
+        ],
+        "year_span": 6,
+        "consistency": "NIVEL_3_REPETICION_MODERADA",
+        "sample_bucket": "10-24",
+        "top_results": [
+          {
+            "number": 2,
+            "count": 39
+          },
+          {
+            "number": 1,
+            "count": 37
+          },
+          {
+            "number": 73,
+            "count": 35
+          }
+        ],
+        "top_primary": [
+          [
+            "RELACION_DE_TERCER_NIVEL",
+            725
+          ],
+          [
+            "RELACION_DE_SEGUNDO_NIVEL",
+            615
+          ],
+          [
+            "SIN_RELACION_DIRECTA_IDENTIFICADA",
+            440
+          ]
+        ],
+        "top_days": [
+          [
+            2,
+            345
+          ],
+          [
+            1,
+            341
+          ],
+          [
+            5,
+            338
+          ]
+        ]
+      },
+      {
+        "origin": 37,
+        "fuerte": 10,
+        "confirmer": 1,
+        "activations": 16,
+        "years": [
+          2019,
+          2020,
+          2021,
+          2022,
+          2023,
+          2024,
+          2025
+        ],
+        "year_span": 7,
+        "consistency": "NIVEL_3_REPETICION_MODERADA",
+        "sample_bucket": "10-24",
+        "top_results": [
+          {
+            "number": 42,
+            "count": 34
+          },
+          {
+            "number": 16,
+            "count": 33
+          },
+          {
+            "number": 1,
+            "count": 31
+          }
+        ],
+        "top_primary": [
+          [
+            "SIN_RELACION_DIRECTA_IDENTIFICADA",
+            942
+          ],
+          [
+            "RELACION_DE_TERCER_NIVEL",
+            679
+          ],
+          [
+            "RELACION_DE_SEGUNDO_NIVEL",
+            339
+          ]
+        ],
+        "top_days": [
+          [
+            2,
+            331
+          ],
+          [
+            1,
+            327
+          ],
+          [
+            3,
+            316
+          ]
+        ]
+      },
+      {
+        "origin": 38,
+        "fuerte": 20,
+        "confirmer": 2,
+        "activations": 16,
+        "years": [
+          2019,
+          2020,
+          2021,
+          2022,
+          2023,
+          2024,
+          2025,
+          2026
+        ],
+        "year_span": 8,
+        "consistency": "NIVEL_3_REPETICION_MODERADA",
+        "sample_bucket": "10-24",
+        "top_results": [
+          {
+            "number": 61,
+            "count": 37
+          },
+          {
+            "number": 45,
+            "count": 36
+          },
+          {
+            "number": 92,
+            "count": 36
+          }
+        ],
+        "top_primary": [
+          [
+            "SIN_RELACION_DIRECTA_IDENTIFICADA",
+            848
+          ],
+          [
+            "RELACION_DE_TERCER_NIVEL",
+            845
+          ],
+          [
+            "RELACION_DE_SEGUNDO_NIVEL",
+            308
+          ]
+        ],
+        "top_days": [
+          [
+            1,
+            334
+          ],
+          [
+            5,
+            333
+          ],
+          [
+            2,
+            331
+          ]
+        ]
+      },
+      {
+        "origin": 40,
+        "fuerte": 19,
+        "confirmer": 86,
+        "activations": 16,
+        "years": [
+          2020,
+          2023,
+          2024,
+          2025,
+          2026
+        ],
+        "year_span": 5,
+        "consistency": "NIVEL_3_REPETICION_MODERADA",
+        "sample_bucket": "10-24",
+        "top_results": [
+          {
+            "number": 78,
+            "count": 37
+          },
+          {
+            "number": 21,
+            "count": 34
+          },
+          {
+            "number": 81,
+            "count": 33
+          }
+        ],
+        "top_primary": [
+          [
+            "RELACION_DE_TERCER_NIVEL",
+            759
+          ],
+          [
+            "SIN_RELACION_DIRECTA_IDENTIFICADA",
+            683
+          ],
+          [
+            "RELACION_DE_SEGUNDO_NIVEL",
+            396
+          ]
+        ],
+        "top_days": [
+          [
+            7,
+            331
+          ],
+          [
+            1,
+            324
+          ],
+          [
+            5,
+            322
+          ]
+        ]
+      },
+      {
+        "origin": 42,
+        "fuerte": 7,
+        "confirmer": 29,
+        "activations": 16,
+        "years": [
+          2019,
+          2020,
+          2021,
+          2022,
+          2023,
+          2024
+        ],
+        "year_span": 6,
+        "consistency": "NIVEL_3_REPETICION_MODERADA",
+        "sample_bucket": "10-24",
+        "top_results": [
+          {
+            "number": 25,
+            "count": 37
+          },
+          {
+            "number": 30,
+            "count": 34
+          },
+          {
+            "number": 27,
+            "count": 32
+          }
+        ],
+        "top_primary": [
+          [
+            "RELACION_DE_SEGUNDO_NIVEL",
+            730
+          ],
+          [
+            "RELACION_DE_TERCER_NIVEL",
+            554
+          ],
+          [
+            "SIN_RELACION_DIRECTA_IDENTIFICADA",
+            406
+          ]
+        ],
+        "top_days": [
+          [
+            1,
+            334
+          ],
+          [
+            2,
+            334
+          ],
+          [
+            3,
+            330
+          ]
+        ]
+      },
+      {
+        "origin": 45,
+        "fuerte": 69,
+        "confirmer": 57,
+        "activations": 16,
+        "years": [
+          2019,
+          2020,
+          2021,
+          2022,
+          2023,
+          2024,
+          2025,
+          2026
+        ],
+        "year_span": 8,
+        "consistency": "NIVEL_3_REPETICION_MODERADA",
+        "sample_bucket": "10-24",
+        "top_results": [
+          {
+            "number": 49,
+            "count": 39
+          },
+          {
+            "number": 34,
+            "count": 32
+          },
+          {
+            "number": 42,
+            "count": 32
+          }
+        ],
+        "top_primary": [
+          [
+            "SIN_RELACION_DIRECTA_IDENTIFICADA",
+            1302
+          ],
+          [
+            "RELACION_DE_TERCER_NIVEL",
+            470
+          ],
+          [
+            "RELACION_DE_SEGUNDO_NIVEL",
+            174
+          ]
+        ],
+        "top_days": [
+          [
+            7,
+            324
+          ],
+          [
+            6,
+            321
+          ],
+          [
+            1,
+            319
+          ]
+        ]
+      },
+      {
+        "origin": 26,
+        "fuerte": 27,
+        "confirmer": 76,
+        "activations": 15,
+        "years": [
+          2019,
+          2020,
+          2021,
+          2022,
+          2023,
+          2024,
+          2025
+        ],
+        "year_span": 7,
+        "consistency": "NIVEL_3_REPETICION_MODERADA",
+        "sample_bucket": "10-24",
+        "top_results": [
+          {
+            "number": 46,
+            "count": 32
+          },
+          {
+            "number": 25,
+            "count": 31
+          },
+          {
+            "number": 88,
+            "count": 31
+          }
+        ],
+        "top_primary": [
+          [
+            "SIN_RELACION_DIRECTA_IDENTIFICADA",
+            1076
+          ],
+          [
+            "RELACION_DE_TERCER_NIVEL",
+            595
+          ],
+          [
+            "RELACION_DE_SEGUNDO_NIVEL",
+            179
+          ]
+        ],
+        "top_days": [
+          [
+            1,
+            314
+          ],
+          [
+            2,
+            314
+          ],
+          [
+            4,
+            313
+          ]
+        ]
+      },
+      {
+        "origin": 31,
+        "fuerte": 3,
+        "confirmer": 30,
+        "activations": 15,
+        "years": [
+          2019,
+          2020,
+          2022,
+          2023,
+          2024,
+          2025
+        ],
+        "year_span": 6,
+        "consistency": "NIVEL_3_REPETICION_MODERADA",
+        "sample_bucket": "10-24",
+        "top_results": [
+          {
+            "number": 88,
+            "count": 36
+          },
+          {
+            "number": 85,
+            "count": 31
+          },
+          {
+            "number": 6,
+            "count": 30
+          }
+        ],
+        "top_primary": [
+          [
+            "SIN_RELACION_DIRECTA_IDENTIFICADA",
+            1121
+          ],
+          [
+            "RELACION_DE_TERCER_NIVEL",
+            516
+          ],
+          [
+            "COMPANERO_DEL_CONFIRMADOR",
+            151
+          ]
+        ],
+        "top_days": [
+          [
+            1,
+            310
+          ],
+          [
+            5,
+            309
+          ],
+          [
+            6,
+            309
+          ]
+        ]
+      }
+    ]
+  }
+}

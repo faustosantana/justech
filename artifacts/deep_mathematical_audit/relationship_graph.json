@@ -1,0 +1,4606 @@
+{
+  "nodes": [
+    {
+      "id": 1,
+      "t1_code": 34,
+      "t2_code": 5,
+      "times_fuerte": 13
+    },
+    {
+      "id": 2,
+      "t1_code": 33,
+      "t2_code": 7,
+      "times_fuerte": 5
+    },
+    {
+      "id": 3,
+      "t1_code": 31,
+      "t2_code": 65,
+      "times_fuerte": 22
+    },
+    {
+      "id": 4,
+      "t1_code": 47,
+      "t2_code": 8,
+      "times_fuerte": 5
+    },
+    {
+      "id": 5,
+      "t1_code": 37,
+      "t2_code": 10,
+      "times_fuerte": 6
+    },
+    {
+      "id": 6,
+      "t1_code": 35,
+      "t2_code": 32,
+      "times_fuerte": 7
+    },
+    {
+      "id": 7,
+      "t1_code": 42,
+      "t2_code": 55,
+      "times_fuerte": 79
+    },
+    {
+      "id": 8,
+      "t1_code": 40,
+      "t2_code": 13,
+      "times_fuerte": 10
+    },
+    {
+      "id": 9,
+      "t1_code": 39,
+      "t2_code": 55,
+      "times_fuerte": 81
+    },
+    {
+      "id": 10,
+      "t1_code": 37,
+      "t2_code": 5,
+      "times_fuerte": 16
+    },
+    {
+      "id": 11,
+      "t1_code": 35,
+      "t2_code": 47,
+      "times_fuerte": 20
+    },
+    {
+      "id": 12,
+      "t1_code": 43,
+      "t2_code": 57,
+      "times_fuerte": 24
+    },
+    {
+      "id": 13,
+      "t1_code": 41,
+      "t2_code": 59,
+      "times_fuerte": 9
+    },
+    {
+      "id": 14,
+      "t1_code": 39,
+      "t2_code": 58,
+      "times_fuerte": 11
+    },
+    {
+      "id": 15,
+      "t1_code": 29,
+      "t2_code": 39,
+      "times_fuerte": 6
+    },
+    {
+      "id": 16,
+      "t1_code": 27,
+      "t2_code": 20,
+      "times_fuerte": 7
+    },
+    {
+      "id": 17,
+      "t1_code": 34,
+      "t2_code": 59,
+      "times_fuerte": 5
+    },
+    {
+      "id": 18,
+      "t1_code": 42,
+      "t2_code": 84,
+      "times_fuerte": 0
+    },
+    {
+      "id": 19,
+      "t1_code": 40,
+      "t2_code": 43,
+      "times_fuerte": 19
+    },
+    {
+      "id": 20,
+      "t1_code": 38,
+      "t2_code": 7,
+      "times_fuerte": 16
+    },
+    {
+      "id": 21,
+      "t1_code": 28,
+      "t2_code": 56,
+      "times_fuerte": 7
+    },
+    {
+      "id": 22,
+      "t1_code": 44,
+      "t2_code": 55,
+      "times_fuerte": 75
+    },
+    {
+      "id": 23,
+      "t1_code": 42,
+      "t2_code": 51,
+      "times_fuerte": 37
+    },
+    {
+      "id": 24,
+      "t1_code": 31,
+      "t2_code": 40,
+      "times_fuerte": 0
+    },
+    {
+      "id": 25,
+      "t1_code": 30,
+      "t2_code": 20,
+      "times_fuerte": 9
+    },
+    {
+      "id": 26,
+      "t1_code": 28,
+      "t2_code": 52,
+      "times_fuerte": 31
+    },
+    {
+      "id": 27,
+      "t1_code": 26,
+      "t2_code": 53,
+      "times_fuerte": 36
+    },
+    {
+      "id": 28,
+      "t1_code": 43,
+      "t2_code": 51,
+      "times_fuerte": 41
+    },
+    {
+      "id": 29,
+      "t1_code": 41,
+      "t2_code": 55,
+      "times_fuerte": 79
+    },
+    {
+      "id": 30,
+      "t1_code": 39,
+      "t2_code": 65,
+      "times_fuerte": 21
+    },
+    {
+      "id": 31,
+      "t1_code": 38,
+      "t2_code": 66,
+      "times_fuerte": 10
+    },
+    {
+      "id": 32,
+      "t1_code": 36,
+      "t2_code": 19,
+      "times_fuerte": 11
+    },
+    {
+      "id": 33,
+      "t1_code": 34,
+      "t2_code": 85,
+      "times_fuerte": 0
+    },
+    {
+      "id": 34,
+      "t1_code": 51,
+      "t2_code": 52,
+      "times_fuerte": 27
+    },
+    {
+      "id": 35,
+      "t1_code": 49,
+      "t2_code": 55,
+      "times_fuerte": 66
+    },
+    {
+      "id": 36,
+      "t1_code": 47,
+      "t2_code": 87,
+      "times_fuerte": 0
+    },
+    {
+      "id": 37,
+      "t1_code": 46,
+      "t2_code": 60,
+      "times_fuerte": 10
+    },
+    {
+      "id": 38,
+      "t1_code": 26,
+      "t2_code": 44,
+      "times_fuerte": 0
+    },
+    {
+      "id": 39,
+      "t1_code": 33,
+      "t2_code": 35,
+      "times_fuerte": 4
+    },
+    {
+      "id": 40,
+      "t1_code": 49,
+      "t2_code": 8,
+      "times_fuerte": 6
+    },
+    {
+      "id": 41,
+      "t1_code": 39,
+      "t2_code": 57,
+      "times_fuerte": 31
+    },
+    {
+      "id": 42,
+      "t1_code": 37,
+      "t2_code": 55,
+      "times_fuerte": 85
+    },
+    {
+      "id": 43,
+      "t1_code": 35,
+      "t2_code": 42,
+      "times_fuerte": 0
+    },
+    {
+      "id": 44,
+      "t1_code": 43,
+      "t2_code": 55,
+      "times_fuerte": 81
+    },
+    {
+      "id": 45,
+      "t1_code": 50,
+      "t2_code": 19,
+      "times_fuerte": 8
+    },
+    {
+      "id": 46,
+      "t1_code": 39,
+      "t2_code": 43,
+      "times_fuerte": 19
+    },
+    {
+      "id": 47,
+      "t1_code": 38,
+      "t2_code": 63,
+      "times_fuerte": 0
+    },
+    {
+      "id": 48,
+      "t1_code": 36,
+      "t2_code": 61,
+      "times_fuerte": 23
+    },
+    {
+      "id": 49,
+      "t1_code": 34,
+      "t2_code": 72,
+      "times_fuerte": 0
+    },
+    {
+      "id": 50,
+      "t1_code": 42,
+      "t2_code": 10,
+      "times_fuerte": 11
+    },
+    {
+      "id": 51,
+      "t1_code": 40,
+      "t2_code": 56,
+      "times_fuerte": 9
+    },
+    {
+      "id": 52,
+      "t1_code": 38,
+      "t2_code": 48,
+      "times_fuerte": 18
+    },
+    {
+      "id": 53,
+      "t1_code": 28,
+      "t2_code": 55,
+      "times_fuerte": 72
+    },
+    {
+      "id": 54,
+      "t1_code": 35,
+      "t2_code": 58,
+      "times_fuerte": 15
+    },
+    {
+      "id": 55,
+      "t1_code": 42,
+      "t2_code": 49,
+      "times_fuerte": 0
+    },
+    {
+      "id": 56,
+      "t1_code": 40,
+      "t2_code": 57,
+      "times_fuerte": 38
+    },
+    {
+      "id": 57,
+      "t1_code": 30,
+      "t2_code": 47,
+      "times_fuerte": 29
+    },
+    {
+      "id": 58,
+      "t1_code": 46,
+      "t2_code": 50,
+      "times_fuerte": 16
+    },
+    {
+      "id": 59,
+      "t1_code": 44,
+      "t2_code": 52,
+      "times_fuerte": 28
+    },
+    {
+      "id": 60,
+      "t1_code": 43,
+      "t2_code": 32,
+      "times_fuerte": 9
+    },
+    {
+      "id": 61,
+      "t1_code": 5,
+      "t2_code": 2,
+      "times_fuerte": 0
+    },
+    {
+      "id": 62,
+      "t1_code": 39,
+      "t2_code": 64,
+      "times_fuerte": 7
+    },
+    {
+      "id": 63,
+      "t1_code": 38,
+      "t2_code": 55,
+      "times_fuerte": 75
+    },
+    {
+      "id": 64,
+      "t1_code": 36,
+      "t2_code": 23,
+      "times_fuerte": 0
+    },
+    {
+      "id": 65,
+      "t1_code": 52,
+      "t2_code": 60,
+      "times_fuerte": 24
+    },
+    {
+      "id": 66,
+      "t1_code": 42,
+      "t2_code": 69,
+      "times_fuerte": 0
+    },
+    {
+      "id": 67,
+      "t1_code": 40,
+      "t2_code": 54,
+      "times_fuerte": 16
+    },
+    {
+      "id": 68,
+      "t1_code": 47,
+      "t2_code": 53,
+      "times_fuerte": 31
+    },
+    {
+      "id": 69,
+      "t1_code": 45,
+      "t2_code": 47,
+      "times_fuerte": 32
+    },
+    {
+      "id": 70,
+      "t1_code": 44,
+      "t2_code": 55,
+      "times_fuerte": 76
+    },
+    {
+      "id": 71,
+      "t1_code": 42,
+      "t2_code": 57,
+      "times_fuerte": 43
+    },
+    {
+      "id": 72,
+      "t1_code": 40,
+      "t2_code": 52,
+      "times_fuerte": 30
+    },
+    {
+      "id": 73,
+      "t1_code": 48,
+      "t2_code": 51,
+      "times_fuerte": 35
+    },
+    {
+      "id": 74,
+      "t1_code": 46,
+      "t2_code": 66,
+      "times_fuerte": 13
+    },
+    {
+      "id": 75,
+      "t1_code": 44,
+      "t2_code": 64,
+      "times_fuerte": 10
+    },
+    {
+      "id": 76,
+      "t1_code": 34,
+      "t2_code": 53,
+      "times_fuerte": 29
+    },
+    {
+      "id": 77,
+      "t1_code": 32,
+      "t2_code": 51,
+      "times_fuerte": 41
+    },
+    {
+      "id": 78,
+      "t1_code": 39,
+      "t2_code": 35,
+      "times_fuerte": 0
+    },
+    {
+      "id": 79,
+      "t1_code": 47,
+      "t2_code": 54,
+      "times_fuerte": 24
+    },
+    {
+      "id": 80,
+      "t1_code": 45,
+      "t2_code": 13,
+      "times_fuerte": 13
+    },
+    {
+      "id": 81,
+      "t1_code": 43,
+      "t2_code": 48,
+      "times_fuerte": 15
+    },
+    {
+      "id": 82,
+      "t1_code": 33,
+      "t2_code": 60,
+      "times_fuerte": 20
+    },
+    {
+      "id": 83,
+      "t1_code": 49,
+      "t2_code": 65,
+      "times_fuerte": 23
+    },
+    {
+      "id": 84,
+      "t1_code": 47,
+      "t2_code": 50,
+      "times_fuerte": 16
+    },
+    {
+      "id": 85,
+      "t1_code": 36,
+      "t2_code": 48,
+      "times_fuerte": 20
+    },
+    {
+      "id": 86,
+      "t1_code": 35,
+      "t2_code": 43,
+      "times_fuerte": 14
+    },
+    {
+      "id": 87,
+      "t1_code": 33,
+      "t2_code": 51,
+      "times_fuerte": 38
+    },
+    {
+      "id": 88,
+      "t1_code": 31,
+      "t2_code": 54,
+      "times_fuerte": 12
+    },
+    {
+      "id": 89,
+      "t1_code": 48,
+      "t2_code": 57,
+      "times_fuerte": 33
+    },
+    {
+      "id": 90,
+      "t1_code": 46,
+      "t2_code": 55,
+      "times_fuerte": 65
+    },
+    {
+      "id": 91,
+      "t1_code": 44,
+      "t2_code": 47,
+      "times_fuerte": 27
+    },
+    {
+      "id": 92,
+      "t1_code": 43,
+      "t2_code": 53,
+      "times_fuerte": 32
+    },
+    {
+      "id": 93,
+      "t1_code": 41,
+      "t2_code": 61,
+      "times_fuerte": 22
+    },
+    {
+      "id": 94,
+      "t1_code": 39,
+      "t2_code": 50,
+      "times_fuerte": 32
+    },
+    {
+      "id": 95,
+      "t1_code": 56,
+      "t2_code": 36,
+      "times_fuerte": 0
+    },
+    {
+      "id": 96,
+      "t1_code": 54,
+      "t2_code": 39,
+      "times_fuerte": 6
+    },
+    {
+      "id": 97,
+      "t1_code": 52,
+      "t2_code": 61,
+      "times_fuerte": 11
+    },
+    {
+      "id": 98,
+      "t1_code": 51,
+      "t2_code": 67,
+      "times_fuerte": 0
+    },
+    {
+      "id": 99,
+      "t1_code": 31,
+      "t2_code": 28,
+      "times_fuerte": 0
+    },
+    {
+      "id": 100,
+      "t1_code": 38,
+      "t2_code": 5,
+      "times_fuerte": 14
+    }
+  ],
+  "edges": [
+    {
+      "type": "fuerte_result",
+      "from": 42,
+      "to": 61,
+      "count": 192,
+      "mean_day": 3.84,
+      "top_lottery": "Quiniela Loteka"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 42,
+      "to": 20,
+      "count": 192,
+      "mean_day": 4.07,
+      "top_lottery": "Quiniela Leidsa"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 44,
+      "to": 81,
+      "count": 191,
+      "mean_day": 3.86,
+      "top_lottery": "Gana Mas"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 42,
+      "to": 2,
+      "count": 188,
+      "mean_day": 3.94,
+      "top_lottery": "Quiniela Loteka"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 42,
+      "to": 45,
+      "count": 186,
+      "mean_day": 4.05,
+      "top_lottery": "Gana Mas"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 42,
+      "to": 68,
+      "count": 186,
+      "mean_day": 4.0,
+      "top_lottery": "New York 2:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 44,
+      "to": 21,
+      "count": 186,
+      "mean_day": 4.02,
+      "top_lottery": "Quiniela Loteka"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 42,
+      "to": 21,
+      "count": 185,
+      "mean_day": 3.96,
+      "top_lottery": "Quiniela Leidsa"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 44,
+      "to": 88,
+      "count": 183,
+      "mean_day": 3.72,
+      "top_lottery": "Quiniela Real"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 53,
+      "to": 91,
+      "count": 182,
+      "mean_day": 3.99,
+      "top_lottery": "Quiniela Leidsa"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 9,
+      "to": 21,
+      "count": 181,
+      "mean_day": 3.88,
+      "top_lottery": "New York 2:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 9,
+      "to": 59,
+      "count": 181,
+      "mean_day": 3.87,
+      "top_lottery": "New York 10:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 42,
+      "to": 7,
+      "count": 180,
+      "mean_day": 4.01,
+      "top_lottery": "Quiniela Leidsa"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 42,
+      "to": 6,
+      "count": 179,
+      "mean_day": 4.15,
+      "top_lottery": "New York 10:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 42,
+      "to": 65,
+      "count": 179,
+      "mean_day": 4.09,
+      "top_lottery": "Gana Mas"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 63,
+      "to": 29,
+      "count": 179,
+      "mean_day": 4.11,
+      "top_lottery": "Quiniela Loteka"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 42,
+      "to": 42,
+      "count": 178,
+      "mean_day": 4.29,
+      "top_lottery": "New York 2:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 44,
+      "to": 87,
+      "count": 178,
+      "mean_day": 4.3,
+      "top_lottery": "New York 10:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 44,
+      "to": 8,
+      "count": 178,
+      "mean_day": 3.98,
+      "top_lottery": "Quiniela Loteka"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 44,
+      "to": 91,
+      "count": 178,
+      "mean_day": 3.87,
+      "top_lottery": "Quiniela Loteka"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 9,
+      "to": 31,
+      "count": 178,
+      "mean_day": 4.19,
+      "top_lottery": "Quiniela Real"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 70,
+      "to": 11,
+      "count": 177,
+      "mean_day": 3.87,
+      "top_lottery": "Loteria Nacional"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 42,
+      "to": 49,
+      "count": 177,
+      "mean_day": 4.39,
+      "top_lottery": "Quiniela Real"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 9,
+      "to": 16,
+      "count": 177,
+      "mean_day": 4.15,
+      "top_lottery": "New York 2:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 42,
+      "to": 81,
+      "count": 176,
+      "mean_day": 3.98,
+      "top_lottery": "Loteria Nacional"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 44,
+      "to": 45,
+      "count": 176,
+      "mean_day": 4.1,
+      "top_lottery": "Quiniela Real"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 9,
+      "to": 75,
+      "count": 176,
+      "mean_day": 3.96,
+      "top_lottery": "Quiniela Real"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 42,
+      "to": 16,
+      "count": 175,
+      "mean_day": 4.23,
+      "top_lottery": "Gana Mas"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 42,
+      "to": 12,
+      "count": 173,
+      "mean_day": 4.21,
+      "top_lottery": "New York 2:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 42,
+      "to": 1,
+      "count": 173,
+      "mean_day": 4.14,
+      "top_lottery": "New York 10:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 42,
+      "to": 8,
+      "count": 173,
+      "mean_day": 3.79,
+      "top_lottery": "Quiniela Loteka"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 44,
+      "to": 2,
+      "count": 173,
+      "mean_day": 4.29,
+      "top_lottery": "New York 10:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 44,
+      "to": 96,
+      "count": 173,
+      "mean_day": 4.34,
+      "top_lottery": "Loteria Nacional"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 42,
+      "to": 86,
+      "count": 172,
+      "mean_day": 3.96,
+      "top_lottery": "New York 10:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 63,
+      "to": 47,
+      "count": 172,
+      "mean_day": 4.0,
+      "top_lottery": "New York 2:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 29,
+      "to": 39,
+      "count": 171,
+      "mean_day": 3.83,
+      "top_lottery": "Quiniela Leidsa"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 9,
+      "to": 20,
+      "count": 171,
+      "mean_day": 4.11,
+      "top_lottery": "Gana Mas"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 44,
+      "to": 61,
+      "count": 170,
+      "mean_day": 3.89,
+      "top_lottery": "Loteria Nacional"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 9,
+      "to": 49,
+      "count": 170,
+      "mean_day": 4.11,
+      "top_lottery": "Quiniela Loteka"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 7,
+      "to": 84,
+      "count": 169,
+      "mean_day": 3.96,
+      "top_lottery": "Loteria Nacional"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 7,
+      "to": 41,
+      "count": 169,
+      "mean_day": 4.25,
+      "top_lottery": "Gana Mas"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 42,
+      "to": 29,
+      "count": 169,
+      "mean_day": 3.9,
+      "top_lottery": "Quiniela Loteka"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 42,
+      "to": 25,
+      "count": 169,
+      "mean_day": 3.71,
+      "top_lottery": "Gana Mas"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 29,
+      "to": 88,
+      "count": 168,
+      "mean_day": 3.65,
+      "top_lottery": "New York 10:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 42,
+      "to": 37,
+      "count": 168,
+      "mean_day": 4.05,
+      "top_lottery": "Gana Mas"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 42,
+      "to": 5,
+      "count": 168,
+      "mean_day": 4.12,
+      "top_lottery": "New York 10:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 44,
+      "to": 51,
+      "count": 168,
+      "mean_day": 3.76,
+      "top_lottery": "Quiniela Loteka"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 44,
+      "to": 55,
+      "count": 168,
+      "mean_day": 3.99,
+      "top_lottery": "New York 2:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 44,
+      "to": 11,
+      "count": 168,
+      "mean_day": 4.03,
+      "top_lottery": "Loteria Nacional"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 42,
+      "to": 73,
+      "count": 167,
+      "mean_day": 4.04,
+      "top_lottery": "New York 2:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 42,
+      "to": 79,
+      "count": 167,
+      "mean_day": 3.77,
+      "top_lottery": "New York 2:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 42,
+      "to": 87,
+      "count": 167,
+      "mean_day": 4.08,
+      "top_lottery": "Loteria Nacional"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 63,
+      "to": 86,
+      "count": 167,
+      "mean_day": 3.93,
+      "top_lottery": "New York 2:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 42,
+      "to": 90,
+      "count": 167,
+      "mean_day": 3.93,
+      "top_lottery": "Loteria Nacional"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 53,
+      "to": 90,
+      "count": 166,
+      "mean_day": 3.9,
+      "top_lottery": "Quiniela Real"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 29,
+      "to": 76,
+      "count": 166,
+      "mean_day": 4.14,
+      "top_lottery": "Quiniela Leidsa"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 42,
+      "to": 34,
+      "count": 166,
+      "mean_day": 4.17,
+      "top_lottery": "Gana Mas"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 63,
+      "to": 42,
+      "count": 166,
+      "mean_day": 3.96,
+      "top_lottery": "New York 10:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 9,
+      "to": 96,
+      "count": 166,
+      "mean_day": 3.87,
+      "top_lottery": "Quiniela Loteka"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 53,
+      "to": 29,
+      "count": 165,
+      "mean_day": 3.96,
+      "top_lottery": "Gana Mas"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 42,
+      "to": 76,
+      "count": 165,
+      "mean_day": 3.84,
+      "top_lottery": "New York 10:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 44,
+      "to": 37,
+      "count": 165,
+      "mean_day": 3.82,
+      "top_lottery": "Quiniela Leidsa"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 42,
+      "to": 96,
+      "count": 165,
+      "mean_day": 4.12,
+      "top_lottery": "Gana Mas"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 9,
+      "to": 13,
+      "count": 165,
+      "mean_day": 3.95,
+      "top_lottery": "Loteria Nacional"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 7,
+      "to": 34,
+      "count": 164,
+      "mean_day": 4.0,
+      "top_lottery": "Quiniela Real"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 42,
+      "to": 36,
+      "count": 164,
+      "mean_day": 4.05,
+      "top_lottery": "New York 2:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 42,
+      "to": 63,
+      "count": 164,
+      "mean_day": 4.32,
+      "top_lottery": "New York 2:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 42,
+      "to": 55,
+      "count": 164,
+      "mean_day": 4.07,
+      "top_lottery": "New York 2:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 44,
+      "to": 20,
+      "count": 164,
+      "mean_day": 3.88,
+      "top_lottery": "Quiniela Leidsa"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 63,
+      "to": 67,
+      "count": 164,
+      "mean_day": 4.13,
+      "top_lottery": "Quiniela Leidsa"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 7,
+      "to": 79,
+      "count": 163,
+      "mean_day": 4.15,
+      "top_lottery": "New York 10:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 7,
+      "to": 30,
+      "count": 163,
+      "mean_day": 3.99,
+      "top_lottery": "Loteria Nacional"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 90,
+      "to": 42,
+      "count": 163,
+      "mean_day": 4.0,
+      "top_lottery": "Loteria Nacional"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 29,
+      "to": 6,
+      "count": 163,
+      "mean_day": 3.99,
+      "top_lottery": "Quiniela Loteka"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 29,
+      "to": 86,
+      "count": 163,
+      "mean_day": 3.97,
+      "top_lottery": "Quiniela Real"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 42,
+      "to": 57,
+      "count": 163,
+      "mean_day": 4.17,
+      "top_lottery": "New York 2:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 44,
+      "to": 58,
+      "count": 163,
+      "mean_day": 3.96,
+      "top_lottery": "Gana Mas"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 44,
+      "to": 4,
+      "count": 163,
+      "mean_day": 4.07,
+      "top_lottery": "Quiniela Real"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 42,
+      "to": 83,
+      "count": 163,
+      "mean_day": 3.73,
+      "top_lottery": "Loteria Nacional"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 42,
+      "to": 97,
+      "count": 163,
+      "mean_day": 4.25,
+      "top_lottery": "New York 10:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 9,
+      "to": 77,
+      "count": 163,
+      "mean_day": 3.91,
+      "top_lottery": "New York 10:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 9,
+      "to": 41,
+      "count": 163,
+      "mean_day": 3.94,
+      "top_lottery": "Gana Mas"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 7,
+      "to": 3,
+      "count": 162,
+      "mean_day": 3.83,
+      "top_lottery": "Quiniela Loteka"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 7,
+      "to": 91,
+      "count": 162,
+      "mean_day": 3.97,
+      "top_lottery": "Quiniela Leidsa"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 29,
+      "to": 30,
+      "count": 162,
+      "mean_day": 4.16,
+      "top_lottery": "New York 2:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 29,
+      "to": 34,
+      "count": 162,
+      "mean_day": 3.9,
+      "top_lottery": "Quiniela Loteka"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 42,
+      "to": 67,
+      "count": 162,
+      "mean_day": 4.27,
+      "top_lottery": "Quiniela Leidsa"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 29,
+      "to": 97,
+      "count": 162,
+      "mean_day": 3.75,
+      "top_lottery": "Quiniela Real"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 42,
+      "to": 50,
+      "count": 162,
+      "mean_day": 4.02,
+      "top_lottery": "Quiniela Loteka"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 42,
+      "to": 43,
+      "count": 162,
+      "mean_day": 4.06,
+      "top_lottery": "New York 10:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 9,
+      "to": 91,
+      "count": 162,
+      "mean_day": 3.82,
+      "top_lottery": "New York 2:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 9,
+      "to": 37,
+      "count": 162,
+      "mean_day": 4.08,
+      "top_lottery": "Gana Mas"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 63,
+      "to": 97,
+      "count": 162,
+      "mean_day": 4.04,
+      "top_lottery": "Quiniela Leidsa"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 63,
+      "to": 75,
+      "count": 162,
+      "mean_day": 4.17,
+      "top_lottery": "Gana Mas"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 9,
+      "to": 92,
+      "count": 162,
+      "mean_day": 3.55,
+      "top_lottery": "Loteria Nacional"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 53,
+      "to": 5,
+      "count": 161,
+      "mean_day": 4.36,
+      "top_lottery": "Loteria Nacional"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 29,
+      "to": 61,
+      "count": 161,
+      "mean_day": 4.27,
+      "top_lottery": "Quiniela Loteka"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 42,
+      "to": 93,
+      "count": 161,
+      "mean_day": 3.63,
+      "top_lottery": "Quiniela Real"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 42,
+      "to": 19,
+      "count": 161,
+      "mean_day": 4.0,
+      "top_lottery": "Quiniela Loteka"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 42,
+      "to": 64,
+      "count": 161,
+      "mean_day": 3.98,
+      "top_lottery": "Quiniela Real"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 42,
+      "to": 41,
+      "count": 161,
+      "mean_day": 3.79,
+      "top_lottery": "Gana Mas"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 9,
+      "to": 14,
+      "count": 161,
+      "mean_day": 3.69,
+      "top_lottery": "Gana Mas"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 63,
+      "to": 58,
+      "count": 161,
+      "mean_day": 4.12,
+      "top_lottery": "New York 10:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 29,
+      "to": 66,
+      "count": 160,
+      "mean_day": 3.83,
+      "top_lottery": "Quiniela Real"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 42,
+      "to": 47,
+      "count": 160,
+      "mean_day": 3.54,
+      "top_lottery": "Loteria Nacional"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 42,
+      "to": 70,
+      "count": 160,
+      "mean_day": 4.06,
+      "top_lottery": "New York 2:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 44,
+      "to": 6,
+      "count": 160,
+      "mean_day": 3.99,
+      "top_lottery": "Quiniela Real"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 44,
+      "to": 10,
+      "count": 160,
+      "mean_day": 3.81,
+      "top_lottery": "Quiniela Leidsa"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 44,
+      "to": 82,
+      "count": 160,
+      "mean_day": 3.56,
+      "top_lottery": "Quiniela Real"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 44,
+      "to": 86,
+      "count": 160,
+      "mean_day": 4.27,
+      "top_lottery": "New York 2:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 44,
+      "to": 49,
+      "count": 160,
+      "mean_day": 4.09,
+      "top_lottery": "Loteria Nacional"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 42,
+      "to": 59,
+      "count": 160,
+      "mean_day": 3.98,
+      "top_lottery": "Gana Mas"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 63,
+      "to": 21,
+      "count": 160,
+      "mean_day": 3.92,
+      "top_lottery": "Quiniela Leidsa"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 63,
+      "to": 81,
+      "count": 160,
+      "mean_day": 4.18,
+      "top_lottery": "Quiniela Loteka"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 63,
+      "to": 8,
+      "count": 160,
+      "mean_day": 3.83,
+      "top_lottery": "Quiniela Real"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 42,
+      "to": 11,
+      "count": 159,
+      "mean_day": 3.97,
+      "top_lottery": "Loteria Nacional"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 9,
+      "to": 32,
+      "count": 159,
+      "mean_day": 4.4,
+      "top_lottery": "New York 10:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 9,
+      "to": 52,
+      "count": 159,
+      "mean_day": 3.68,
+      "top_lottery": "Quiniela Leidsa"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 7,
+      "to": 11,
+      "count": 158,
+      "mean_day": 4.03,
+      "top_lottery": "Loteria Nacional"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 53,
+      "to": 86,
+      "count": 158,
+      "mean_day": 3.97,
+      "top_lottery": "Loteria Nacional"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 29,
+      "to": 79,
+      "count": 158,
+      "mean_day": 3.97,
+      "top_lottery": "Gana Mas"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 29,
+      "to": 41,
+      "count": 158,
+      "mean_day": 4.01,
+      "top_lottery": "Gana Mas"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 70,
+      "to": 84,
+      "count": 158,
+      "mean_day": 3.92,
+      "top_lottery": "Loteria Nacional"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 29,
+      "to": 62,
+      "count": 158,
+      "mean_day": 4.04,
+      "top_lottery": "New York 2:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 44,
+      "to": 9,
+      "count": 158,
+      "mean_day": 4.25,
+      "top_lottery": "New York 10:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 9,
+      "to": 45,
+      "count": 158,
+      "mean_day": 3.89,
+      "top_lottery": "Quiniela Real"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 63,
+      "to": 70,
+      "count": 158,
+      "mean_day": 3.76,
+      "top_lottery": "New York 2:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 63,
+      "to": 78,
+      "count": 158,
+      "mean_day": 4.08,
+      "top_lottery": "Quiniela Leidsa"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 63,
+      "to": 89,
+      "count": 158,
+      "mean_day": 3.9,
+      "top_lottery": "Gana Mas"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 63,
+      "to": 45,
+      "count": 158,
+      "mean_day": 4.0,
+      "top_lottery": "Quiniela Real"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 7,
+      "to": 97,
+      "count": 157,
+      "mean_day": 4.08,
+      "top_lottery": "Quiniela Loteka"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 90,
+      "to": 97,
+      "count": 157,
+      "mean_day": 4.22,
+      "top_lottery": "Quiniela Real"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 42,
+      "to": 17,
+      "count": 157,
+      "mean_day": 3.69,
+      "top_lottery": "Quiniela Real"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 42,
+      "to": 58,
+      "count": 157,
+      "mean_day": 4.03,
+      "top_lottery": "Quiniela Loteka"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 22,
+      "to": 11,
+      "count": 157,
+      "mean_day": 3.86,
+      "top_lottery": "Loteria Nacional"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 70,
+      "to": 76,
+      "count": 157,
+      "mean_day": 4.16,
+      "top_lottery": "Quiniela Real"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 44,
+      "to": 95,
+      "count": 157,
+      "mean_day": 4.03,
+      "top_lottery": "Quiniela Leidsa"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 44,
+      "to": 64,
+      "count": 157,
+      "mean_day": 4.11,
+      "top_lottery": "New York 10:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 44,
+      "to": 57,
+      "count": 157,
+      "mean_day": 4.1,
+      "top_lottery": "Loteria Nacional"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 9,
+      "to": 10,
+      "count": 157,
+      "mean_day": 3.99,
+      "top_lottery": "Quiniela Real"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 9,
+      "to": 43,
+      "count": 157,
+      "mean_day": 4.02,
+      "top_lottery": "Quiniela Real"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 63,
+      "to": 79,
+      "count": 157,
+      "mean_day": 4.2,
+      "top_lottery": "New York 2:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 29,
+      "to": 63,
+      "count": 156,
+      "mean_day": 4.24,
+      "top_lottery": "Quiniela Loteka"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 42,
+      "to": 78,
+      "count": 156,
+      "mean_day": 3.95,
+      "top_lottery": "Quiniela Loteka"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 53,
+      "to": 82,
+      "count": 156,
+      "mean_day": 3.91,
+      "top_lottery": "New York 10:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 9,
+      "to": 47,
+      "count": 156,
+      "mean_day": 3.68,
+      "top_lottery": "Quiniela Leidsa"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 9,
+      "to": 81,
+      "count": 156,
+      "mean_day": 4.06,
+      "top_lottery": "Quiniela Real"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 63,
+      "to": 2,
+      "count": 156,
+      "mean_day": 4.11,
+      "top_lottery": "New York 2:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 63,
+      "to": 88,
+      "count": 156,
+      "mean_day": 3.81,
+      "top_lottery": "New York 10:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 7,
+      "to": 88,
+      "count": 155,
+      "mean_day": 3.96,
+      "top_lottery": "New York 10:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 90,
+      "to": 61,
+      "count": 155,
+      "mean_day": 3.73,
+      "top_lottery": "Gana Mas"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 29,
+      "to": 11,
+      "count": 155,
+      "mean_day": 3.94,
+      "top_lottery": "New York 10:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 29,
+      "to": 42,
+      "count": 155,
+      "mean_day": 4.48,
+      "top_lottery": "Gana Mas"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 42,
+      "to": 89,
+      "count": 155,
+      "mean_day": 4.26,
+      "top_lottery": "Quiniela Loteka"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 70,
+      "to": 8,
+      "count": 155,
+      "mean_day": 3.94,
+      "top_lottery": "Quiniela Leidsa"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 70,
+      "to": 47,
+      "count": 155,
+      "mean_day": 4.07,
+      "top_lottery": "Loteria Nacional"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 44,
+      "to": 39,
+      "count": 155,
+      "mean_day": 4.29,
+      "top_lottery": "New York 2:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 9,
+      "to": 93,
+      "count": 155,
+      "mean_day": 4.22,
+      "top_lottery": "New York 2:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 63,
+      "to": 37,
+      "count": 155,
+      "mean_day": 3.85,
+      "top_lottery": "Gana Mas"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 63,
+      "to": 26,
+      "count": 155,
+      "mean_day": 3.73,
+      "top_lottery": "Quiniela Leidsa"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 63,
+      "to": 65,
+      "count": 155,
+      "mean_day": 4.26,
+      "top_lottery": "Quiniela Leidsa"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 70,
+      "to": 81,
+      "count": 155,
+      "mean_day": 3.64,
+      "top_lottery": "Loteria Nacional"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 70,
+      "to": 86,
+      "count": 155,
+      "mean_day": 4.0,
+      "top_lottery": "New York 10:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 7,
+      "to": 90,
+      "count": 154,
+      "mean_day": 4.08,
+      "top_lottery": "Gana Mas"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 53,
+      "to": 42,
+      "count": 154,
+      "mean_day": 3.96,
+      "top_lottery": "New York 10:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 42,
+      "to": 75,
+      "count": 154,
+      "mean_day": 3.55,
+      "top_lottery": "Quiniela Loteka"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 42,
+      "to": 32,
+      "count": 154,
+      "mean_day": 3.92,
+      "top_lottery": "New York 10:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 42,
+      "to": 53,
+      "count": 154,
+      "mean_day": 3.76,
+      "top_lottery": "Quiniela Loteka"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 70,
+      "to": 49,
+      "count": 154,
+      "mean_day": 4.18,
+      "top_lottery": "Quiniela Real"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 42,
+      "to": 62,
+      "count": 154,
+      "mean_day": 3.57,
+      "top_lottery": "Loteria Nacional"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 9,
+      "to": 95,
+      "count": 154,
+      "mean_day": 3.9,
+      "top_lottery": "Quiniela Leidsa"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 7,
+      "to": 8,
+      "count": 154,
+      "mean_day": 3.92,
+      "top_lottery": "Quiniela Leidsa"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 63,
+      "to": 23,
+      "count": 154,
+      "mean_day": 4.11,
+      "top_lottery": "Quiniela Loteka"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 9,
+      "to": 50,
+      "count": 154,
+      "mean_day": 4.04,
+      "top_lottery": "New York 2:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 9,
+      "to": 82,
+      "count": 154,
+      "mean_day": 4.12,
+      "top_lottery": "New York 10:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 7,
+      "to": 10,
+      "count": 153,
+      "mean_day": 3.95,
+      "top_lottery": "New York 10:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 70,
+      "to": 32,
+      "count": 153,
+      "mean_day": 3.99,
+      "top_lottery": "Loteria Nacional"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 70,
+      "to": 41,
+      "count": 153,
+      "mean_day": 4.59,
+      "top_lottery": "Loteria Nacional"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 44,
+      "to": 41,
+      "count": 153,
+      "mean_day": 4.2,
+      "top_lottery": "Quiniela Leidsa"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 44,
+      "to": 42,
+      "count": 153,
+      "mean_day": 4.05,
+      "top_lottery": "New York 2:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 42,
+      "to": 82,
+      "count": 153,
+      "mean_day": 4.16,
+      "top_lottery": "Quiniela Loteka"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 53,
+      "to": 81,
+      "count": 153,
+      "mean_day": 4.05,
+      "top_lottery": "Quiniela Real"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 44,
+      "to": 7,
+      "count": 153,
+      "mean_day": 4.15,
+      "top_lottery": "Quiniela Real"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 9,
+      "to": 78,
+      "count": 153,
+      "mean_day": 4.09,
+      "top_lottery": "Quiniela Leidsa"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 9,
+      "to": 60,
+      "count": 153,
+      "mean_day": 3.93,
+      "top_lottery": "Quiniela Loteka"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 7,
+      "to": 37,
+      "count": 152,
+      "mean_day": 3.99,
+      "top_lottery": "New York 2:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 7,
+      "to": 25,
+      "count": 152,
+      "mean_day": 3.97,
+      "top_lottery": "Quiniela Leidsa"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 53,
+      "to": 61,
+      "count": 152,
+      "mean_day": 4.11,
+      "top_lottery": "Gana Mas"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 42,
+      "to": 85,
+      "count": 152,
+      "mean_day": 3.89,
+      "top_lottery": "Quiniela Leidsa"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 70,
+      "to": 1,
+      "count": 152,
+      "mean_day": 4.45,
+      "top_lottery": "New York 10:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 29,
+      "to": 99,
+      "count": 152,
+      "mean_day": 3.74,
+      "top_lottery": "Quiniela Leidsa"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 53,
+      "to": 68,
+      "count": 152,
+      "mean_day": 4.24,
+      "top_lottery": "New York 10:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 9,
+      "to": 53,
+      "count": 152,
+      "mean_day": 4.11,
+      "top_lottery": "Quiniela Leidsa"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 63,
+      "to": 49,
+      "count": 152,
+      "mean_day": 4.55,
+      "top_lottery": "New York 10:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 44,
+      "to": 90,
+      "count": 152,
+      "mean_day": 4.21,
+      "top_lottery": "Loteria Nacional"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 9,
+      "to": 26,
+      "count": 152,
+      "mean_day": 4.18,
+      "top_lottery": "New York 2:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 70,
+      "to": 70,
+      "count": 152,
+      "mean_day": 3.84,
+      "top_lottery": "Quiniela Loteka"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 90,
+      "to": 75,
+      "count": 151,
+      "mean_day": 4.23,
+      "top_lottery": "Loteria Nacional"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 53,
+      "to": 87,
+      "count": 151,
+      "mean_day": 3.97,
+      "top_lottery": "New York 2:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 53,
+      "to": 63,
+      "count": 151,
+      "mean_day": 4.13,
+      "top_lottery": "New York 2:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 53,
+      "to": 8,
+      "count": 151,
+      "mean_day": 3.87,
+      "top_lottery": "Quiniela Leidsa"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 53,
+      "to": 64,
+      "count": 151,
+      "mean_day": 4.24,
+      "top_lottery": "Quiniela Real"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 42,
+      "to": 48,
+      "count": 151,
+      "mean_day": 4.22,
+      "top_lottery": "Gana Mas"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 42,
+      "to": 31,
+      "count": 151,
+      "mean_day": 4.22,
+      "top_lottery": "Quiniela Real"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 70,
+      "to": 93,
+      "count": 151,
+      "mean_day": 3.82,
+      "top_lottery": "Loteria Nacional"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 70,
+      "to": 42,
+      "count": 151,
+      "mean_day": 4.09,
+      "top_lottery": "New York 2:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 42,
+      "to": 74,
+      "count": 151,
+      "mean_day": 3.95,
+      "top_lottery": "Loteria Nacional"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 44,
+      "to": 43,
+      "count": 151,
+      "mean_day": 4.23,
+      "top_lottery": "Quiniela Loteka"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 44,
+      "to": 66,
+      "count": 151,
+      "mean_day": 4.09,
+      "top_lottery": "New York 2:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 9,
+      "to": 44,
+      "count": 151,
+      "mean_day": 4.23,
+      "top_lottery": "Quiniela Real"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 9,
+      "to": 56,
+      "count": 151,
+      "mean_day": 4.22,
+      "top_lottery": "Quiniela Real"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 9,
+      "to": 97,
+      "count": 151,
+      "mean_day": 3.83,
+      "top_lottery": "Quiniela Leidsa"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 63,
+      "to": 56,
+      "count": 151,
+      "mean_day": 4.14,
+      "top_lottery": "Gana Mas"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 9,
+      "to": 22,
+      "count": 151,
+      "mean_day": 4.03,
+      "top_lottery": "Quiniela Loteka"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 53,
+      "to": 75,
+      "count": 150,
+      "mean_day": 3.9,
+      "top_lottery": "New York 10:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 53,
+      "to": 41,
+      "count": 150,
+      "mean_day": 4.25,
+      "top_lottery": "New York 10:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 29,
+      "to": 14,
+      "count": 150,
+      "mean_day": 4.39,
+      "top_lottery": "Loteria Nacional"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 29,
+      "to": 64,
+      "count": 150,
+      "mean_day": 4.14,
+      "top_lottery": "Gana Mas"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 42,
+      "to": 44,
+      "count": 150,
+      "mean_day": 4.08,
+      "top_lottery": "Quiniela Leidsa"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 42,
+      "to": 26,
+      "count": 150,
+      "mean_day": 4.09,
+      "top_lottery": "Quiniela Real"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 29,
+      "to": 78,
+      "count": 150,
+      "mean_day": 4.01,
+      "top_lottery": "Quiniela Loteka"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 44,
+      "to": 89,
+      "count": 150,
+      "mean_day": 3.87,
+      "top_lottery": "Quiniela Loteka"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 44,
+      "to": 36,
+      "count": 150,
+      "mean_day": 3.89,
+      "top_lottery": "Gana Mas"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 44,
+      "to": 76,
+      "count": 150,
+      "mean_day": 4.52,
+      "top_lottery": "Quiniela Leidsa"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 44,
+      "to": 83,
+      "count": 150,
+      "mean_day": 4.01,
+      "top_lottery": "Quiniela Leidsa"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 44,
+      "to": 32,
+      "count": 150,
+      "mean_day": 4.1,
+      "top_lottery": "New York 10:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 42,
+      "to": 40,
+      "count": 150,
+      "mean_day": 3.78,
+      "top_lottery": "Gana Mas"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 42,
+      "to": 60,
+      "count": 150,
+      "mean_day": 4.03,
+      "top_lottery": "Gana Mas"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 9,
+      "to": 42,
+      "count": 150,
+      "mean_day": 4.03,
+      "top_lottery": "New York 10:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 9,
+      "to": 5,
+      "count": 150,
+      "mean_day": 4.19,
+      "top_lottery": "Quiniela Real"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 9,
+      "to": 79,
+      "count": 150,
+      "mean_day": 4.22,
+      "top_lottery": "New York 10:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 63,
+      "to": 18,
+      "count": 150,
+      "mean_day": 3.95,
+      "top_lottery": "Quiniela Real"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 63,
+      "to": 20,
+      "count": 150,
+      "mean_day": 4.03,
+      "top_lottery": "Quiniela Leidsa"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 7,
+      "to": 31,
+      "count": 149,
+      "mean_day": 4.09,
+      "top_lottery": "Quiniela Loteka"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 7,
+      "to": 17,
+      "count": 149,
+      "mean_day": 3.71,
+      "top_lottery": "New York 10:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 90,
+      "to": 79,
+      "count": 149,
+      "mean_day": 4.11,
+      "top_lottery": "New York 10:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 53,
+      "to": 9,
+      "count": 149,
+      "mean_day": 3.89,
+      "top_lottery": "Quiniela Leidsa"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 53,
+      "to": 88,
+      "count": 149,
+      "mean_day": 4.23,
+      "top_lottery": "Quiniela Leidsa"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 29,
+      "to": 36,
+      "count": 149,
+      "mean_day": 4.04,
+      "top_lottery": "Quiniela Real"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 29,
+      "to": 80,
+      "count": 149,
+      "mean_day": 4.03,
+      "top_lottery": "Gana Mas"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 29,
+      "to": 38,
+      "count": 149,
+      "mean_day": 4.39,
+      "top_lottery": "Gana Mas"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 29,
+      "to": 67,
+      "count": 149,
+      "mean_day": 3.7,
+      "top_lottery": "Quiniela Real"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 42,
+      "to": 14,
+      "count": 149,
+      "mean_day": 3.92,
+      "top_lottery": "New York 2:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 42,
+      "to": 33,
+      "count": 149,
+      "mean_day": 3.85,
+      "top_lottery": "Quiniela Real"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 44,
+      "to": 85,
+      "count": 149,
+      "mean_day": 4.05,
+      "top_lottery": "Quiniela Leidsa"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 9,
+      "to": 19,
+      "count": 149,
+      "mean_day": 3.93,
+      "top_lottery": "Quiniela Loteka"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 9,
+      "to": 8,
+      "count": 149,
+      "mean_day": 4.11,
+      "top_lottery": "Quiniela Loteka"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 9,
+      "to": 9,
+      "count": 149,
+      "mean_day": 3.81,
+      "top_lottery": "New York 2:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 63,
+      "to": 96,
+      "count": 149,
+      "mean_day": 4.11,
+      "top_lottery": "Quiniela Real"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 70,
+      "to": 90,
+      "count": 149,
+      "mean_day": 4.34,
+      "top_lottery": "Loteria Nacional"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 70,
+      "to": 51,
+      "count": 149,
+      "mean_day": 3.94,
+      "top_lottery": "New York 2:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 70,
+      "to": 3,
+      "count": 149,
+      "mean_day": 3.78,
+      "top_lottery": "Quiniela Loteka"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 29,
+      "to": 47,
+      "count": 148,
+      "mean_day": 4.0,
+      "top_lottery": "New York 2:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 42,
+      "to": 10,
+      "count": 148,
+      "mean_day": 3.98,
+      "top_lottery": "Quiniela Leidsa"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 22,
+      "to": 84,
+      "count": 148,
+      "mean_day": 3.87,
+      "top_lottery": "Loteria Nacional"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 29,
+      "to": 82,
+      "count": 148,
+      "mean_day": 3.93,
+      "top_lottery": "Gana Mas"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 44,
+      "to": 1,
+      "count": 148,
+      "mean_day": 3.87,
+      "top_lottery": "New York 2:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 44,
+      "to": 40,
+      "count": 148,
+      "mean_day": 4.14,
+      "top_lottery": "Quiniela Loteka"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 44,
+      "to": 59,
+      "count": 148,
+      "mean_day": 3.81,
+      "top_lottery": "Quiniela Real"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 53,
+      "to": 39,
+      "count": 148,
+      "mean_day": 4.52,
+      "top_lottery": "Quiniela Leidsa"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 63,
+      "to": 64,
+      "count": 148,
+      "mean_day": 3.63,
+      "top_lottery": "Loteria Nacional"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 63,
+      "to": 12,
+      "count": 148,
+      "mean_day": 4.09,
+      "top_lottery": "Gana Mas"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 44,
+      "to": 23,
+      "count": 148,
+      "mean_day": 3.64,
+      "top_lottery": "Quiniela Loteka"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 7,
+      "to": 7,
+      "count": 147,
+      "mean_day": 3.89,
+      "top_lottery": "New York 2:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 53,
+      "to": 21,
+      "count": 147,
+      "mean_day": 3.72,
+      "top_lottery": "Gana Mas"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 53,
+      "to": 19,
+      "count": 147,
+      "mean_day": 3.84,
+      "top_lottery": "Quiniela Real"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 29,
+      "to": 54,
+      "count": 147,
+      "mean_day": 3.91,
+      "top_lottery": "New York 2:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 29,
+      "to": 3,
+      "count": 147,
+      "mean_day": 3.59,
+      "top_lottery": "Loteria Nacional"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 42,
+      "to": 54,
+      "count": 147,
+      "mean_day": 4.31,
+      "top_lottery": "Quiniela Leidsa"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 42,
+      "to": 84,
+      "count": 147,
+      "mean_day": 3.86,
+      "top_lottery": "New York 2:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 22,
+      "to": 47,
+      "count": 147,
+      "mean_day": 4.18,
+      "top_lottery": "Quiniela Real"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 70,
+      "to": 30,
+      "count": 147,
+      "mean_day": 3.84,
+      "top_lottery": "New York 10:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 70,
+      "to": 40,
+      "count": 147,
+      "mean_day": 4.14,
+      "top_lottery": "New York 2:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 70,
+      "to": 34,
+      "count": 147,
+      "mean_day": 3.91,
+      "top_lottery": "New York 10:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 70,
+      "to": 26,
+      "count": 147,
+      "mean_day": 4.16,
+      "top_lottery": "Quiniela Real"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 29,
+      "to": 23,
+      "count": 147,
+      "mean_day": 3.97,
+      "top_lottery": "Gana Mas"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 44,
+      "to": 68,
+      "count": 147,
+      "mean_day": 3.84,
+      "top_lottery": "Gana Mas"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 44,
+      "to": 26,
+      "count": 147,
+      "mean_day": 3.78,
+      "top_lottery": "New York 2:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 44,
+      "to": 47,
+      "count": 147,
+      "mean_day": 3.93,
+      "top_lottery": "New York 10:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 44,
+      "to": 28,
+      "count": 147,
+      "mean_day": 4.17,
+      "top_lottery": "Quiniela Leidsa"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 44,
+      "to": 65,
+      "count": 147,
+      "mean_day": 4.31,
+      "top_lottery": "Quiniela Real"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 53,
+      "to": 24,
+      "count": 147,
+      "mean_day": 3.87,
+      "top_lottery": "Quiniela Real"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 53,
+      "to": 43,
+      "count": 147,
+      "mean_day": 4.12,
+      "top_lottery": "Quiniela Loteka"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 9,
+      "to": 63,
+      "count": 147,
+      "mean_day": 3.93,
+      "top_lottery": "New York 2:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 9,
+      "to": 74,
+      "count": 147,
+      "mean_day": 3.83,
+      "top_lottery": "Quiniela Leidsa"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 63,
+      "to": 66,
+      "count": 147,
+      "mean_day": 3.7,
+      "top_lottery": "New York 2:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 63,
+      "to": 24,
+      "count": 147,
+      "mean_day": 3.61,
+      "top_lottery": "Loteria Nacional"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 63,
+      "to": 13,
+      "count": 147,
+      "mean_day": 4.16,
+      "top_lottery": "New York 2:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 63,
+      "to": 3,
+      "count": 147,
+      "mean_day": 3.93,
+      "top_lottery": "Quiniela Leidsa"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 35,
+      "to": 16,
+      "count": 147,
+      "mean_day": 3.86,
+      "top_lottery": "New York 2:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 22,
+      "to": 70,
+      "count": 147,
+      "mean_day": 3.84,
+      "top_lottery": "Quiniela Loteka"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 7,
+      "to": 71,
+      "count": 146,
+      "mean_day": 3.98,
+      "top_lottery": "Loteria Nacional"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 7,
+      "to": 12,
+      "count": 146,
+      "mean_day": 4.32,
+      "top_lottery": "Quiniela Loteka"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 90,
+      "to": 41,
+      "count": 146,
+      "mean_day": 4.1,
+      "top_lottery": "Quiniela Real"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 53,
+      "to": 45,
+      "count": 146,
+      "mean_day": 4.02,
+      "top_lottery": "New York 10:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 29,
+      "to": 73,
+      "count": 146,
+      "mean_day": 3.87,
+      "top_lottery": "New York 2:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 29,
+      "to": 1,
+      "count": 146,
+      "mean_day": 3.95,
+      "top_lottery": "Quiniela Real"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 29,
+      "to": 77,
+      "count": 146,
+      "mean_day": 3.89,
+      "top_lottery": "Quiniela Leidsa"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 42,
+      "to": 98,
+      "count": 146,
+      "mean_day": 3.82,
+      "top_lottery": "Quiniela Leidsa"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 42,
+      "to": 15,
+      "count": 146,
+      "mean_day": 3.89,
+      "top_lottery": "New York 10:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 42,
+      "to": 39,
+      "count": 146,
+      "mean_day": 4.21,
+      "top_lottery": "New York 2:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 70,
+      "to": 87,
+      "count": 146,
+      "mean_day": 3.88,
+      "top_lottery": "New York 2:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 29,
+      "to": 49,
+      "count": 146,
+      "mean_day": 3.86,
+      "top_lottery": "Loteria Nacional"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 29,
+      "to": 20,
+      "count": 146,
+      "mean_day": 4.14,
+      "top_lottery": "Quiniela Leidsa"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 44,
+      "to": 70,
+      "count": 146,
+      "mean_day": 4.61,
+      "top_lottery": "New York 10:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 42,
+      "to": 95,
+      "count": 146,
+      "mean_day": 4.01,
+      "top_lottery": "Loteria Nacional"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 53,
+      "to": 71,
+      "count": 146,
+      "mean_day": 4.14,
+      "top_lottery": "Loteria Nacional"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 44,
+      "to": 73,
+      "count": 146,
+      "mean_day": 4.08,
+      "top_lottery": "Quiniela Leidsa"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 9,
+      "to": 36,
+      "count": 146,
+      "mean_day": 3.92,
+      "top_lottery": "Gana Mas"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 63,
+      "to": 14,
+      "count": 146,
+      "mean_day": 3.9,
+      "top_lottery": "Gana Mas"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 63,
+      "to": 61,
+      "count": 146,
+      "mean_day": 4.25,
+      "top_lottery": "Quiniela Real"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 63,
+      "to": 5,
+      "count": 146,
+      "mean_day": 4.12,
+      "top_lottery": "Quiniela Leidsa"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 63,
+      "to": 98,
+      "count": 146,
+      "mean_day": 3.63,
+      "top_lottery": "New York 10:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 63,
+      "to": 16,
+      "count": 146,
+      "mean_day": 3.97,
+      "top_lottery": "Quiniela Real"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 7,
+      "to": 98,
+      "count": 145,
+      "mean_day": 4.12,
+      "top_lottery": "Quiniela Leidsa"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 53,
+      "to": 58,
+      "count": 145,
+      "mean_day": 4.12,
+      "top_lottery": "Gana Mas"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 53,
+      "to": 2,
+      "count": 145,
+      "mean_day": 3.76,
+      "top_lottery": "New York 2:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 42,
+      "to": 13,
+      "count": 145,
+      "mean_day": 3.6,
+      "top_lottery": "Quiniela Leidsa"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 42,
+      "to": 28,
+      "count": 145,
+      "mean_day": 3.81,
+      "top_lottery": "Quiniela Loteka"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 42,
+      "to": 52,
+      "count": 145,
+      "mean_day": 3.79,
+      "top_lottery": "Quiniela Real"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 42,
+      "to": 9,
+      "count": 145,
+      "mean_day": 4.09,
+      "top_lottery": "New York 10:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 42,
+      "to": 22,
+      "count": 145,
+      "mean_day": 4.1,
+      "top_lottery": "Quiniela Leidsa"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 22,
+      "to": 76,
+      "count": 145,
+      "mean_day": 4.06,
+      "top_lottery": "Quiniela Real"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 70,
+      "to": 5,
+      "count": 145,
+      "mean_day": 3.91,
+      "top_lottery": "New York 10:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 70,
+      "to": 22,
+      "count": 145,
+      "mean_day": 3.99,
+      "top_lottery": "Gana Mas"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 90,
+      "to": 26,
+      "count": 145,
+      "mean_day": 3.81,
+      "top_lottery": "Gana Mas"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 44,
+      "to": 16,
+      "count": 145,
+      "mean_day": 4.08,
+      "top_lottery": "Quiniela Loteka"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 9,
+      "to": 70,
+      "count": 145,
+      "mean_day": 3.96,
+      "top_lottery": "New York 2:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 63,
+      "to": 35,
+      "count": 145,
+      "mean_day": 3.99,
+      "top_lottery": "Quiniela Real"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 63,
+      "to": 41,
+      "count": 145,
+      "mean_day": 4.13,
+      "top_lottery": "Gana Mas"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 70,
+      "to": 89,
+      "count": 145,
+      "mean_day": 3.92,
+      "top_lottery": "Gana Mas"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 7,
+      "to": 42,
+      "count": 144,
+      "mean_day": 4.1,
+      "top_lottery": "New York 10:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 7,
+      "to": 56,
+      "count": 144,
+      "mean_day": 4.24,
+      "top_lottery": "Quiniela Leidsa"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 7,
+      "to": 1,
+      "count": 144,
+      "mean_day": 4.27,
+      "top_lottery": "Quiniela Leidsa"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 90,
+      "to": 24,
+      "count": 144,
+      "mean_day": 3.89,
+      "top_lottery": "Quiniela Loteka"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 90,
+      "to": 20,
+      "count": 144,
+      "mean_day": 3.92,
+      "top_lottery": "Quiniela Leidsa"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 53,
+      "to": 22,
+      "count": 144,
+      "mean_day": 3.69,
+      "top_lottery": "Quiniela Loteka"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 53,
+      "to": 79,
+      "count": 144,
+      "mean_day": 3.66,
+      "top_lottery": "New York 2:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 42,
+      "to": 80,
+      "count": 144,
+      "mean_day": 3.98,
+      "top_lottery": "Gana Mas"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 42,
+      "to": 66,
+      "count": 144,
+      "mean_day": 4.21,
+      "top_lottery": "New York 10:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 29,
+      "to": 60,
+      "count": 144,
+      "mean_day": 4.01,
+      "top_lottery": "New York 2:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 90,
+      "to": 9,
+      "count": 144,
+      "mean_day": 4.06,
+      "top_lottery": "Quiniela Loteka"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 44,
+      "to": 5,
+      "count": 144,
+      "mean_day": 4.18,
+      "top_lottery": "New York 10:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 44,
+      "to": 50,
+      "count": 144,
+      "mean_day": 3.82,
+      "top_lottery": "New York 2:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 44,
+      "to": 48,
+      "count": 144,
+      "mean_day": 3.93,
+      "top_lottery": "Quiniela Real"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 9,
+      "to": 7,
+      "count": 144,
+      "mean_day": 3.84,
+      "top_lottery": "Gana Mas"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 9,
+      "to": 84,
+      "count": 144,
+      "mean_day": 4.18,
+      "top_lottery": "Loteria Nacional"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 7,
+      "to": 24,
+      "count": 144,
+      "mean_day": 3.82,
+      "top_lottery": "Gana Mas"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 63,
+      "to": 22,
+      "count": 144,
+      "mean_day": 3.54,
+      "top_lottery": "Quiniela Real"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 63,
+      "to": 1,
+      "count": 144,
+      "mean_day": 3.75,
+      "top_lottery": "Quiniela Loteka"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 63,
+      "to": 9,
+      "count": 144,
+      "mean_day": 4.51,
+      "top_lottery": "Quiniela Leidsa"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 7,
+      "to": 73,
+      "count": 143,
+      "mean_day": 4.25,
+      "top_lottery": "New York 2:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 7,
+      "to": 28,
+      "count": 143,
+      "mean_day": 3.98,
+      "top_lottery": "New York 2:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 7,
+      "to": 67,
+      "count": 143,
+      "mean_day": 3.93,
+      "top_lottery": "Quiniela Real"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 7,
+      "to": 54,
+      "count": 143,
+      "mean_day": 3.64,
+      "top_lottery": "New York 2:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 7,
+      "to": 78,
+      "count": 143,
+      "mean_day": 3.89,
+      "top_lottery": "Quiniela Loteka"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 7,
+      "to": 21,
+      "count": 143,
+      "mean_day": 4.01,
+      "top_lottery": "Gana Mas"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 7,
+      "to": 2,
+      "count": 143,
+      "mean_day": 4.01,
+      "top_lottery": "New York 10:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 90,
+      "to": 59,
+      "count": 143,
+      "mean_day": 3.87,
+      "top_lottery": "Loteria Nacional"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 90,
+      "to": 85,
+      "count": 143,
+      "mean_day": 4.32,
+      "top_lottery": "Gana Mas"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 53,
+      "to": 92,
+      "count": 143,
+      "mean_day": 3.71,
+      "top_lottery": "Gana Mas"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 53,
+      "to": 74,
+      "count": 143,
+      "mean_day": 3.99,
+      "top_lottery": "New York 2:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 29,
+      "to": 48,
+      "count": 143,
+      "mean_day": 4.19,
+      "top_lottery": "Quiniela Leidsa"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 29,
+      "to": 4,
+      "count": 143,
+      "mean_day": 3.9,
+      "top_lottery": "Quiniela Real"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 29,
+      "to": 37,
+      "count": 143,
+      "mean_day": 4.01,
+      "top_lottery": "New York 10:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 29,
+      "to": 7,
+      "count": 143,
+      "mean_day": 3.87,
+      "top_lottery": "Quiniela Real"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 29,
+      "to": 55,
+      "count": 143,
+      "mean_day": 3.86,
+      "top_lottery": "New York 2:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 42,
+      "to": 51,
+      "count": 143,
+      "mean_day": 3.3,
+      "top_lottery": "Quiniela Real"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 42,
+      "to": 88,
+      "count": 143,
+      "mean_day": 4.02,
+      "top_lottery": "New York 2:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 22,
+      "to": 1,
+      "count": 143,
+      "mean_day": 4.36,
+      "top_lottery": "New York 10:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 22,
+      "to": 49,
+      "count": 143,
+      "mean_day": 4.2,
+      "top_lottery": "Quiniela Real"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 70,
+      "to": 46,
+      "count": 143,
+      "mean_day": 4.2,
+      "top_lottery": "New York 10:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 70,
+      "to": 61,
+      "count": 143,
+      "mean_day": 3.9,
+      "top_lottery": "Loteria Nacional"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 29,
+      "to": 95,
+      "count": 143,
+      "mean_day": 3.89,
+      "top_lottery": "Loteria Nacional"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 90,
+      "to": 70,
+      "count": 143,
+      "mean_day": 3.85,
+      "top_lottery": "Quiniela Loteka"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 9,
+      "to": 68,
+      "count": 143,
+      "mean_day": 4.03,
+      "top_lottery": "Quiniela Loteka"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 9,
+      "to": 30,
+      "count": 143,
+      "mean_day": 4.01,
+      "top_lottery": "New York 10:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 63,
+      "to": 59,
+      "count": 143,
+      "mean_day": 4.04,
+      "top_lottery": "Loteria Nacional"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 63,
+      "to": 50,
+      "count": 143,
+      "mean_day": 4.2,
+      "top_lottery": "Quiniela Loteka"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 7,
+      "to": 60,
+      "count": 142,
+      "mean_day": 4.16,
+      "top_lottery": "Loteria Nacional"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 53,
+      "to": 10,
+      "count": 142,
+      "mean_day": 3.96,
+      "top_lottery": "Quiniela Leidsa"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 53,
+      "to": 55,
+      "count": 142,
+      "mean_day": 4.08,
+      "top_lottery": "Quiniela Leidsa"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 53,
+      "to": 54,
+      "count": 142,
+      "mean_day": 3.91,
+      "top_lottery": "Quiniela Loteka"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 70,
+      "to": 45,
+      "count": 142,
+      "mean_day": 3.82,
+      "top_lottery": "Quiniela Loteka"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 44,
+      "to": 14,
+      "count": 142,
+      "mean_day": 3.7,
+      "top_lottery": "Loteria Nacional"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 42,
+      "to": 91,
+      "count": 142,
+      "mean_day": 4.01,
+      "top_lottery": "New York 10:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 53,
+      "to": 99,
+      "count": 142,
+      "mean_day": 4.0,
+      "top_lottery": "New York 2:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 9,
+      "to": 88,
+      "count": 142,
+      "mean_day": 3.92,
+      "top_lottery": "New York 10:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 9,
+      "to": 61,
+      "count": 142,
+      "mean_day": 4.11,
+      "top_lottery": "Quiniela Leidsa"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 9,
+      "to": 46,
+      "count": 142,
+      "mean_day": 3.86,
+      "top_lottery": "Loteria Nacional"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 9,
+      "to": 3,
+      "count": 142,
+      "mean_day": 3.73,
+      "top_lottery": "Loteria Nacional"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 63,
+      "to": 44,
+      "count": 142,
+      "mean_day": 3.84,
+      "top_lottery": "Gana Mas"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 63,
+      "to": 87,
+      "count": 142,
+      "mean_day": 4.14,
+      "top_lottery": "New York 2:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 63,
+      "to": 46,
+      "count": 142,
+      "mean_day": 3.86,
+      "top_lottery": "New York 10:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 63,
+      "to": 90,
+      "count": 142,
+      "mean_day": 3.9,
+      "top_lottery": "Loteria Nacional"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 29,
+      "to": 59,
+      "count": 142,
+      "mean_day": 3.71,
+      "top_lottery": "New York 10:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 70,
+      "to": 31,
+      "count": 142,
+      "mean_day": 3.89,
+      "top_lottery": "Quiniela Leidsa"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 70,
+      "to": 88,
+      "count": 142,
+      "mean_day": 3.89,
+      "top_lottery": "New York 2:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 90,
+      "to": 40,
+      "count": 141,
+      "mean_day": 4.3,
+      "top_lottery": "Gana Mas"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 53,
+      "to": 97,
+      "count": 141,
+      "mean_day": 3.96,
+      "top_lottery": "Quiniela Loteka"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 53,
+      "to": 46,
+      "count": 141,
+      "mean_day": 4.02,
+      "top_lottery": "Loteria Nacional"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 29,
+      "to": 98,
+      "count": 141,
+      "mean_day": 4.03,
+      "top_lottery": "Quiniela Loteka"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 29,
+      "to": 26,
+      "count": 141,
+      "mean_day": 3.94,
+      "top_lottery": "Quiniela Real"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 70,
+      "to": 91,
+      "count": 141,
+      "mean_day": 3.82,
+      "top_lottery": "Quiniela Loteka"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 70,
+      "to": 69,
+      "count": 141,
+      "mean_day": 4.33,
+      "top_lottery": "Quiniela Loteka"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 70,
+      "to": 21,
+      "count": 141,
+      "mean_day": 4.1,
+      "top_lottery": "Quiniela Loteka"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 44,
+      "to": 98,
+      "count": 141,
+      "mean_day": 4.09,
+      "top_lottery": "Gana Mas"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 53,
+      "to": 26,
+      "count": 141,
+      "mean_day": 3.81,
+      "top_lottery": "Quiniela Real"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 9,
+      "to": 62,
+      "count": 141,
+      "mean_day": 3.83,
+      "top_lottery": "Loteria Nacional"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 63,
+      "to": 43,
+      "count": 141,
+      "mean_day": 3.99,
+      "top_lottery": "New York 10:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 63,
+      "to": 52,
+      "count": 141,
+      "mean_day": 4.11,
+      "top_lottery": "Quiniela Leidsa"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 9,
+      "to": 39,
+      "count": 141,
+      "mean_day": 3.72,
+      "top_lottery": "Gana Mas"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 7,
+      "to": 39,
+      "count": 140,
+      "mean_day": 4.37,
+      "top_lottery": "Loteria Nacional"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 90,
+      "to": 21,
+      "count": 140,
+      "mean_day": 3.73,
+      "top_lottery": "New York 2:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 90,
+      "to": 82,
+      "count": 140,
+      "mean_day": 4.3,
+      "top_lottery": "Quiniela Real"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 53,
+      "to": 93,
+      "count": 140,
+      "mean_day": 3.86,
+      "top_lottery": "Quiniela Real"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 29,
+      "to": 89,
+      "count": 140,
+      "mean_day": 4.19,
+      "top_lottery": "Quiniela Real"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 29,
+      "to": 58,
+      "count": 140,
+      "mean_day": 3.81,
+      "top_lottery": "Quiniela Loteka"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 29,
+      "to": 53,
+      "count": 140,
+      "mean_day": 4.04,
+      "top_lottery": "Quiniela Real"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 29,
+      "to": 24,
+      "count": 140,
+      "mean_day": 3.88,
+      "top_lottery": "New York 10:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 42,
+      "to": 56,
+      "count": 140,
+      "mean_day": 3.98,
+      "top_lottery": "Quiniela Loteka"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 42,
+      "to": 3,
+      "count": 140,
+      "mean_day": 3.98,
+      "top_lottery": "New York 10:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 22,
+      "to": 21,
+      "count": 140,
+      "mean_day": 4.21,
+      "top_lottery": "Quiniela Loteka"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 29,
+      "to": 40,
+      "count": 140,
+      "mean_day": 4.15,
+      "top_lottery": "Quiniela Leidsa"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 44,
+      "to": 3,
+      "count": 140,
+      "mean_day": 4.36,
+      "top_lottery": "New York 10:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 44,
+      "to": 25,
+      "count": 140,
+      "mean_day": 3.88,
+      "top_lottery": "Quiniela Leidsa"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 7,
+      "to": 26,
+      "count": 140,
+      "mean_day": 3.94,
+      "top_lottery": "Quiniela Real"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 29,
+      "to": 90,
+      "count": 140,
+      "mean_day": 3.99,
+      "top_lottery": "New York 2:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 35,
+      "to": 59,
+      "count": 140,
+      "mean_day": 4.1,
+      "top_lottery": "Quiniela Loteka"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 42,
+      "to": 23,
+      "count": 140,
+      "mean_day": 4.21,
+      "top_lottery": "Quiniela Leidsa"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 22,
+      "to": 81,
+      "count": 140,
+      "mean_day": 3.61,
+      "top_lottery": "Loteria Nacional"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 70,
+      "to": 50,
+      "count": 140,
+      "mean_day": 4.28,
+      "top_lottery": "New York 2:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 7,
+      "to": 69,
+      "count": 139,
+      "mean_day": 3.98,
+      "top_lottery": "New York 2:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 7,
+      "to": 99,
+      "count": 139,
+      "mean_day": 3.91,
+      "top_lottery": "Quiniela Leidsa"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 90,
+      "to": 49,
+      "count": 139,
+      "mean_day": 3.78,
+      "top_lottery": "New York 2:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 90,
+      "to": 38,
+      "count": 139,
+      "mean_day": 4.23,
+      "top_lottery": "Quiniela Leidsa"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 29,
+      "to": 45,
+      "count": 139,
+      "mean_day": 3.93,
+      "top_lottery": "Quiniela Real"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 70,
+      "to": 57,
+      "count": 139,
+      "mean_day": 3.99,
+      "top_lottery": "Loteria Nacional"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 70,
+      "to": 55,
+      "count": 139,
+      "mean_day": 4.01,
+      "top_lottery": "Gana Mas"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 70,
+      "to": 68,
+      "count": 139,
+      "mean_day": 4.26,
+      "top_lottery": "Gana Mas"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 44,
+      "to": 13,
+      "count": 139,
+      "mean_day": 4.19,
+      "top_lottery": "Loteria Nacional"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 44,
+      "to": 97,
+      "count": 139,
+      "mean_day": 4.04,
+      "top_lottery": "Quiniela Leidsa"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 53,
+      "to": 78,
+      "count": 139,
+      "mean_day": 3.9,
+      "top_lottery": "Quiniela Leidsa"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 9,
+      "to": 99,
+      "count": 139,
+      "mean_day": 4.01,
+      "top_lottery": "Quiniela Leidsa"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 9,
+      "to": 64,
+      "count": 139,
+      "mean_day": 3.79,
+      "top_lottery": "Quiniela Loteka"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 9,
+      "to": 12,
+      "count": 139,
+      "mean_day": 4.22,
+      "top_lottery": "New York 2:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 9,
+      "to": 1,
+      "count": 139,
+      "mean_day": 4.15,
+      "top_lottery": "Quiniela Leidsa"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 7,
+      "to": 20,
+      "count": 139,
+      "mean_day": 3.52,
+      "top_lottery": "Gana Mas"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 63,
+      "to": 48,
+      "count": 139,
+      "mean_day": 3.86,
+      "top_lottery": "New York 2:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 63,
+      "to": 55,
+      "count": 139,
+      "mean_day": 4.0,
+      "top_lottery": "Loteria Nacional"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 63,
+      "to": 25,
+      "count": 139,
+      "mean_day": 4.3,
+      "top_lottery": "Quiniela Leidsa"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 7,
+      "to": 89,
+      "count": 138,
+      "mean_day": 3.9,
+      "top_lottery": "Gana Mas"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 7,
+      "to": 75,
+      "count": 138,
+      "mean_day": 4.01,
+      "top_lottery": "Quiniela Real"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 7,
+      "to": 46,
+      "count": 138,
+      "mean_day": 3.88,
+      "top_lottery": "New York 2:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 90,
+      "to": 39,
+      "count": 138,
+      "mean_day": 3.9,
+      "top_lottery": "Quiniela Loteka"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 90,
+      "to": 84,
+      "count": 138,
+      "mean_day": 4.03,
+      "top_lottery": "New York 2:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 53,
+      "to": 25,
+      "count": 138,
+      "mean_day": 3.96,
+      "top_lottery": "Quiniela Loteka"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 29,
+      "to": 12,
+      "count": 138,
+      "mean_day": 4.04,
+      "top_lottery": "Quiniela Loteka"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 29,
+      "to": 75,
+      "count": 138,
+      "mean_day": 4.04,
+      "top_lottery": "Quiniela Real"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 22,
+      "to": 8,
+      "count": 138,
+      "mean_day": 3.95,
+      "top_lottery": "Quiniela Leidsa"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 44,
+      "to": 78,
+      "count": 138,
+      "mean_day": 4.09,
+      "top_lottery": "Quiniela Leidsa"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 44,
+      "to": 30,
+      "count": 138,
+      "mean_day": 3.84,
+      "top_lottery": "New York 2:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 9,
+      "to": 38,
+      "count": 138,
+      "mean_day": 4.02,
+      "top_lottery": "New York 10:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 9,
+      "to": 67,
+      "count": 138,
+      "mean_day": 3.87,
+      "top_lottery": "Quiniela Loteka"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 9,
+      "to": 51,
+      "count": 138,
+      "mean_day": 3.89,
+      "top_lottery": "Quiniela Leidsa"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 9,
+      "to": 55,
+      "count": 138,
+      "mean_day": 4.14,
+      "top_lottery": "Gana Mas"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 7,
+      "to": 38,
+      "count": 138,
+      "mean_day": 4.05,
+      "top_lottery": "New York 10:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 63,
+      "to": 54,
+      "count": 138,
+      "mean_day": 4.01,
+      "top_lottery": "Quiniela Real"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 63,
+      "to": 34,
+      "count": 138,
+      "mean_day": 4.04,
+      "top_lottery": "Gana Mas"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 35,
+      "to": 81,
+      "count": 138,
+      "mean_day": 4.41,
+      "top_lottery": "New York 10:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 35,
+      "to": 70,
+      "count": 138,
+      "mean_day": 3.63,
+      "top_lottery": "New York 10:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 35,
+      "to": 88,
+      "count": 138,
+      "mean_day": 3.78,
+      "top_lottery": "New York 2:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 9,
+      "to": 54,
+      "count": 138,
+      "mean_day": 4.12,
+      "top_lottery": "Gana Mas"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 70,
+      "to": 10,
+      "count": 138,
+      "mean_day": 3.79,
+      "top_lottery": "Quiniela Leidsa"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 7,
+      "to": 45,
+      "count": 137,
+      "mean_day": 3.75,
+      "top_lottery": "Quiniela Real"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 7,
+      "to": 61,
+      "count": 137,
+      "mean_day": 4.27,
+      "top_lottery": "New York 10:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 90,
+      "to": 74,
+      "count": 137,
+      "mean_day": 3.96,
+      "top_lottery": "Quiniela Real"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 90,
+      "to": 3,
+      "count": 137,
+      "mean_day": 3.8,
+      "top_lottery": "Quiniela Leidsa"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 53,
+      "to": 16,
+      "count": 137,
+      "mean_day": 4.2,
+      "top_lottery": "New York 2:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 53,
+      "to": 96,
+      "count": 137,
+      "mean_day": 3.72,
+      "top_lottery": "Quiniela Real"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 29,
+      "to": 51,
+      "count": 137,
+      "mean_day": 3.78,
+      "top_lottery": "Quiniela Leidsa"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 29,
+      "to": 84,
+      "count": 137,
+      "mean_day": 3.96,
+      "top_lottery": "New York 2:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 29,
+      "to": 16,
+      "count": 137,
+      "mean_day": 4.18,
+      "top_lottery": "New York 2:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 29,
+      "to": 81,
+      "count": 137,
+      "mean_day": 3.91,
+      "top_lottery": "Quiniela Loteka"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 22,
+      "to": 5,
+      "count": 137,
+      "mean_day": 3.73,
+      "top_lottery": "New York 10:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 22,
+      "to": 42,
+      "count": 137,
+      "mean_day": 4.23,
+      "top_lottery": "New York 2:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 70,
+      "to": 82,
+      "count": 137,
+      "mean_day": 3.85,
+      "top_lottery": "Loteria Nacional"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 70,
+      "to": 27,
+      "count": 137,
+      "mean_day": 4.28,
+      "top_lottery": "Quiniela Loteka"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 70,
+      "to": 36,
+      "count": 137,
+      "mean_day": 3.74,
+      "top_lottery": "Quiniela Real"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 44,
+      "to": 79,
+      "count": 137,
+      "mean_day": 4.05,
+      "top_lottery": "New York 10:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 42,
+      "to": 99,
+      "count": 137,
+      "mean_day": 4.23,
+      "top_lottery": "Quiniela Loteka"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 44,
+      "to": 27,
+      "count": 137,
+      "mean_day": 4.3,
+      "top_lottery": "Quiniela Real"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 9,
+      "to": 57,
+      "count": 137,
+      "mean_day": 3.95,
+      "top_lottery": "New York 2:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 9,
+      "to": 66,
+      "count": 137,
+      "mean_day": 3.74,
+      "top_lottery": "Loteria Nacional"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 63,
+      "to": 30,
+      "count": 137,
+      "mean_day": 4.04,
+      "top_lottery": "New York 2:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 63,
+      "to": 83,
+      "count": 137,
+      "mean_day": 4.12,
+      "top_lottery": "Quiniela Real"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 35,
+      "to": 12,
+      "count": 137,
+      "mean_day": 3.92,
+      "top_lottery": "Quiniela Leidsa"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 22,
+      "to": 86,
+      "count": 137,
+      "mean_day": 4.0,
+      "top_lottery": "New York 10:30"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 7,
+      "to": 49,
+      "count": 136,
+      "mean_day": 4.1,
+      "top_lottery": "Quiniela Real"
+    },
+    {
+      "type": "fuerte_result",
+      "from": 7,
+      "to": 14,
+      "count": 136,
+      "mean_day": 3.85,
+      "top_lottery": "Loteria Nacional"
+    }
+  ]
+}

@@ -1,4 +1,5 @@
 import {
+  Activity,
   BarChart3,
   Bell,
   Bookmark,
@@ -374,6 +375,16 @@ export const MODULE_REGISTRY: ModuleDefinition[] = [
         legacyHref: "/lottery",
         group: "Inicio",
         shortDescription: "Home del Control Center y las siete loterías activas",
+      },
+      {
+        id: "ia-dashboard",
+        label: "Dashboard IA",
+        icon: Activity,
+        contentKey: "lottery:ia-dashboard",
+        views: ["list"],
+        legacyHref: "/lottery/ia",
+        group: "Inicio",
+        shortDescription: "Estado del Motor v1.0, resultados, piloto y rendimiento",
       },
       {
         id: "catalogo",

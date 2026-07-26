@@ -2162,6 +2162,12 @@ export const apiClient = {
   triggerLotteryResultadosSync: () =>
     request<Record<string, unknown>>("/lottery/resultados/sync/trigger", { method: "POST" }, true),
 
+  getLotteryIaDashboard: () =>
+    request<Record<string, unknown>>("/lottery/ia/dashboard", {}, true),
+
+  getLotteryIaMotorFreeze: () =>
+    request<Record<string, unknown>>("/lottery/ia/motor-freeze", {}, true),
+
   getLotteryAdminSyncRuns: () =>
     request<{ items: unknown[]; total: number }>("/lottery/admin/sync/runs", {}, true),
 

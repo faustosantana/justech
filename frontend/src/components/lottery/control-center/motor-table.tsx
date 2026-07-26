@@ -9,8 +9,6 @@ import { Input } from "@/components/ui/input";
 
 import type { MotorTableRow, TableKind } from "./motor-types";
 
-type SortKey = "number" | "code";
-
 type Props = {
   rows: MotorTableRow[];
   table: TableKind;
@@ -30,11 +28,7 @@ export function MotorNumberTable({
 }: Props) {
   const [qNumber, setQNumber] = useState("");
   const [qCode, setQCode] = useState("");
-  const [sortKey, setSortKey] = useState<SortKey>("number");
-  const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
-  const [page, setPage] = useState(0);
   const [showTech, setShowTech] = useState(false);
-  const pageSize = 25;
 
   const companionLabel = table === "table1" ? "Compañeros" : "Confirmadores";
   const analyzeHref = (n: number) =>
@@ -46,24 +40,10 @@ export function MotorNumberTable({
     const c = qCode.trim();
     if (n) list = list.filter((r) => String(r.number).includes(n));
     if (c) list = list.filter((r) => String(r.code ?? "").includes(c));
-    list.sort((a, b) => {
-      const av = Number(a[sortKey] ?? 0);
-      const bv = Number(b[sortKey] ?? 0);
-      return sortDir === "asc" ? av - bv : bv - av;
-    });
+    // Phase 5.2 UX: always sort by Código ascending; show all (up to 100) — no pagination
+    list.sort((a, b) => Number(a.code ?? 0) - Number(b.code ?? 0));
     return list;
-  }, [rows, qNumber, qCode, sortKey, sortDir]);
-
-  const pageCount = Math.max(1, Math.ceil(filtered.length / pageSize));
-  const pageRows = filtered.slice(page * pageSize, page * pageSize + pageSize);
-
-  const toggleSort = (key: SortKey) => {
-    if (sortKey === key) setSortDir((d) => (d === "asc" ? "desc" : "asc"));
-    else {
-      setSortKey(key);
-      setSortDir("asc");
-    }
-  };
+  }, [rows, qNumber, qCode]);
 
   return (
     <Card>
@@ -104,23 +84,17 @@ export function MotorNumberTable({
           <Input
             placeholder="Buscar número"
             value={qNumber}
-            onChange={(e) => {
-              setQNumber(e.target.value);
-              setPage(0);
-            }}
+            onChange={(e) => setQNumber(e.target.value)}
             className="max-w-[160px]"
           />
           <Input
             placeholder="Buscar código"
             value={qCode}
-            onChange={(e) => {
-              setQCode(e.target.value);
-              setPage(0);
-            }}
+            onChange={(e) => setQCode(e.target.value)}
             className="max-w-[160px]"
           />
           <span className="self-center text-xs text-muted-foreground">
-            {filtered.length} filas · pág. {page + 1}/{pageCount}
+            {filtered.length} registros · ordenados por Código · sin paginación
           </span>
         </div>
       </CardHeader>
@@ -128,28 +102,20 @@ export function MotorNumberTable({
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b text-left">
-              <th className="cursor-pointer py-2 pr-3" onClick={() => toggleSort("number")}>
-                Número
-              </th>
-              <th className="cursor-pointer py-2 pr-3" onClick={() => toggleSort("code")}>
-                Código
-              </th>
+              <th className="py-2 pr-3">Código</th>
               <th className="py-2 pr-3">{companionLabel}</th>
-              <th className="py-2 pr-3">Cantidad</th>
               <th className="py-2">Acción</th>
             </tr>
           </thead>
           <tbody>
-            {pageRows.map((r) => {
+            {filtered.map((r) => {
               const companions = r.group_numbers || [];
               return (
                 <tr key={`${table}-${r.number}`} className="border-b border-border/40 align-top">
-                  <td className="py-1.5 pr-3 font-medium tabular-nums text-lg">{r.number}</td>
                   <td className="py-1.5 pr-3 font-semibold tabular-nums">{r.code}</td>
                   <td className="py-1.5 pr-3 text-xs text-muted-foreground">
                     {companions.join(", ") || "—"}
                   </td>
-                  <td className="py-1.5 pr-3 tabular-nums">{companions.length}</td>
                   <td className="py-1.5">
                     <div className="flex flex-col gap-1 sm:flex-row">
                       <Button type="button" size="sm" className="min-h-11" asChild>
@@ -175,7 +141,7 @@ export function MotorNumberTable({
           <div className="mt-4 rounded border p-3 text-xs" role="region" aria-label="Cálculo técnico">
             <p className="mb-2 font-medium">Cálculo técnico (no forma parte de la vista principal)</p>
             <ul className="space-y-1 font-mono">
-              {pageRows.slice(0, 8).map((r) => (
+              {filtered.slice(0, 8).map((r) => (
                 <li key={`tech-${r.number}`}>
                   {r.number}: {r.formula} → {r.visible_value} · dígitos={r.digits_without_point} ·
                   cant={r.digit_count}
@@ -184,20 +150,6 @@ export function MotorNumberTable({
             </ul>
           </div>
         ) : null}
-        <div className="mt-3 flex gap-2">
-          <Button type="button" size="sm" variant="outline" disabled={page <= 0} onClick={() => setPage((p) => p - 1)}>
-            Anterior
-          </Button>
-          <Button
-            type="button"
-            size="sm"
-            variant="outline"
-            disabled={page >= pageCount - 1}
-            onClick={() => setPage((p) => p + 1)}
-          >
-            Siguiente
-          </Button>
-        </div>
       </CardContent>
     </Card>
   );
@@ -218,7 +170,7 @@ export function MotorNumberDetail({
     <Card className="border-primary/40">
       <CardHeader className="flex flex-row items-start justify-between gap-2">
         <div>
-          <CardTitle className="text-base">Número {row.number}</CardTitle>
+          <CardTitle className="text-base">Código {row.code}</CardTitle>
           <p className="text-xs text-muted-foreground">
             {table === "table1"
               ? "Compañeros identificados por Tabla 1"
@@ -231,14 +183,14 @@ export function MotorNumberDetail({
       </CardHeader>
       <CardContent className="space-y-2 text-sm">
         <div>
+          <span className="font-medium">Número de referencia:</span> {row.number}
+        </div>
+        <div>
           <span className="font-medium">Código:</span> {row.code}
         </div>
         <div>
           <span className="font-medium">{table === "table1" ? "Compañeros:" : "Confirmadores:"}</span>{" "}
           {companions.join(", ") || "—"}
-        </div>
-        <div>
-          <span className="font-medium">Cantidad:</span> {companions.length}
         </div>
         <details className="rounded border p-2 text-xs">
           <summary className="cursor-pointer font-medium">Ver cálculo</summary>

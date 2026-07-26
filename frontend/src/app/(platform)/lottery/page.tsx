@@ -199,6 +199,9 @@ export default function LotteryPage() {
             <RefreshCw className={`mr-1.5 h-3.5 w-3.5 ${loading ? "animate-spin" : ""}`} />
             Actualizar
           </Button>
+          <Button size="sm" asChild>
+            <Link href="/lottery/ia">Dashboard Lottery IA</Link>
+          </Button>
         </div>
       </div>
 

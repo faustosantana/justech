@@ -2142,6 +2142,26 @@ export const apiClient = {
   getLotteryObservability: () =>
     request<Record<string, unknown>>("/lottery/observability", {}, true),
 
+  getLotteryResultados: (params: Record<string, string> = {}) =>
+    request<{ items: unknown[]; total: number; filters?: Record<string, unknown> }>(
+      `/lottery/resultados${buildQuery(params)}`,
+      {},
+      true,
+    ),
+
+  getLotteryResultadosSyncStatus: () =>
+    request<Record<string, unknown>>("/lottery/resultados/sync-status", {}, true),
+
+  getLotteryResultadosPending: (date?: string) =>
+    request<Record<string, unknown>>(
+      `/lottery/resultados/pending${date ? buildQuery({ date }) : ""}`,
+      {},
+      true,
+    ),
+
+  triggerLotteryResultadosSync: () =>
+    request<Record<string, unknown>>("/lottery/resultados/sync/trigger", { method: "POST" }, true),
+
   getLotteryAdminSyncRuns: () =>
     request<{ items: unknown[]; total: number }>("/lottery/admin/sync/runs", {}, true),
 

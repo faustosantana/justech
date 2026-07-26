@@ -158,6 +158,13 @@ def chat(
                 "resultados pendientes",
                 "predicción de hoy",
                 "prediccion de hoy",
+                "última actualización",
+                "ultima actualizacion",
+                "cuántos sorteos",
+                "cuantos sorteos",
+                "resultados de ayer",
+                "loterías faltan",
+                "loterias faltan",
             )
         ):
             extra: dict = {
@@ -175,6 +182,46 @@ def chat(
             )
 
             store = get_prospective_store()
+            # Phase 5.1 Resultados (read-only LotteryResultService)
+            if any(
+                k in low
+                for k in (
+                    "actualización",
+                    "actualizacion",
+                    "sorteos",
+                    "resultados de ayer",
+                    "loterías faltan",
+                    "loterias faltan",
+                    "resultados pendientes",
+                )
+            ):
+                from app.services.lottery_result_service import get_results_status_sync
+
+                status = get_results_status_sync()
+                extra["results_status"] = status
+                if "actualiz" in low:
+                    inv["message"] = (
+                        f"Última actualización de resultados: {status.get('last_update')}. "
+                        f"Estado={status.get('state')}. Sorteos={status.get('draws_count')}. "
+                        f"Próxima={status.get('next_update')}."
+                    )
+                elif "faltan" in low or "resultados pendientes" in low:
+                    inv["message"] = (
+                        f"Estado sync={status.get('state')}; "
+                        f"última fecha en base={status.get('last_draw_date')}. "
+                        "Pendientes: GET /lottery/resultados/pending"
+                    )
+                elif "sorteos" in low:
+                    inv["message"] = (
+                        f"Base oficial: {status.get('draws_count')} sorteos, "
+                        f"{status.get('lotteries_count')} loterías "
+                        f"(featured={status.get('featured_lotteries_count')})."
+                    )
+                elif "ayer" in low:
+                    inv["message"] = (
+                        "Resultados de ayer vía GET /lottery/resultados?date=<ayer>. "
+                        f"Última fecha disponible={status.get('last_draw_date')}."
+                    )
             if any(
                 k in low
                 for k in (
@@ -191,7 +238,7 @@ def chat(
                     "source order",
                     "perfil",
                 )
-            ):
+            ) and "results_status" not in extra:
                 extra["prospective"] = store.metrics()
                 locked = [
                     p.to_dict()

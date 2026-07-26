@@ -81,6 +81,14 @@ def detect_intent(message: str, memory: SessionMemory | None = None) -> IntentRe
             "errores de integridad",
             "integridad",
             "perfil socio",
+            "última actualización",
+            "ultima actualizacion",
+            "resultados pendientes",
+            "cuántos sorteos",
+            "cuantos sorteos",
+            "resultados de ayer",
+            "loterías faltan",
+            "loterias faltan",
         )
     ):
         return IntentResult(

@@ -1,0 +1,20 @@
+{
+  "reused": [
+    "jaios.lottery_draws",
+    "jaios.lottery_draw_numbers",
+    "ElBoletoApiAdapter",
+    "LotterySyncWriter",
+    "LotterySchedulerService",
+    "LotteryRepository",
+    "LotteryQueryService"
+  ],
+  "created": [
+    "LotteryResultService",
+    "/lottery/resultados",
+    "UI /lottery/resultados",
+    "results_access bridge"
+  ],
+  "second_scraper": false,
+  "second_database": false,
+  "production_modified": false
+}

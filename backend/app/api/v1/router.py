@@ -24,6 +24,7 @@ from app.api.v1 import (
     lottery_nr_historical,
     lottery_numeric_relations,
     lottery_predictions,
+    lottery_resultados,
     llm,
     m365,
     m365_operative,
@@ -70,6 +71,7 @@ api_router.include_router(knowledge.router)
 api_router.include_router(licitador.router)
 api_router.include_router(prices.router)
 api_router.include_router(lottery.router)
+api_router.include_router(lottery_resultados.router)
 api_router.include_router(lottery_ai_admin.router)
 api_router.include_router(lottery_numeric_relations.router)
 api_router.include_router(lottery_nr_historical.router)

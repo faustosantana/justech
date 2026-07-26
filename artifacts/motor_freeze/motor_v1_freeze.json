@@ -11,12 +11,12 @@
   "engine_version": "complete-analysis-engine-j1.0.0",
   "table1_version": "nr-historical-relations-j1.0.0",
   "table2_version": "nr-historical-relations-j1.0.0",
-  "engine_commit": "6964df5",
+  "engine_commit": "47ff9cd",
   "release_tag": "lottery-ia-motor-v1.0",
   "read_only": true,
   "ui_editable": false,
   "silent_changes_forbidden": true,
   "production_modified": false,
   "notes": "Motor v1.0 congelado (Lottery IA). Cambios requieren nueva engine_version, tag y cohorte de métricas.",
-  "written_at": "2026-07-26T20:08:55.033759+00:00"
+  "written_at": "2026-07-26T20:09:02.212274+00:00"
 }

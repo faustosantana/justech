@@ -1,0 +1,276 @@
+[
+  {
+    "id": "M1",
+    "inputs": [
+      41,
+      41,
+      70
+    ],
+    "expected": 29,
+    "produced": 29,
+    "classification": "FUERTE_PRINCIPAL",
+    "match": true,
+    "ranked": [
+      {
+        "n": 29,
+        "cls": "FUERTE_PRINCIPAL",
+        "score": 156.0,
+        "confidence": 85.0
+      },
+      {
+        "n": 13,
+        "cls": "FAMILIA_T1",
+        "score": 12.0,
+        "confidence": 50.0
+      },
+      {
+        "n": 93,
+        "cls": "FAMILIA_T1",
+        "score": 12.0,
+        "confidence": 50.0
+      },
+      {
+        "n": 17,
+        "cls": "DERIVACION_RELEVANTE",
+        "score": -50.0,
+        "confidence": 35.0
+      },
+      {
+        "n": 48,
+        "cls": "DERIVACION_RELEVANTE",
+        "score": -50.0,
+        "confidence": 35.0
+      }
+    ],
+    "evidence_summary": {
+      "table1_sources": [
+        41
+      ],
+      "table2_confirmers": [
+        70
+      ],
+      "independent_paths": 3,
+      "cross_table_support": true,
+      "multi_source_support": true
+    },
+    "graph_complete_before_discovery": true
+  },
+  {
+    "id": "M2",
+    "inputs": [
+      41,
+      62
+    ],
+    "expected": 75,
+    "produced": 75,
+    "classification": "VECINO_T2_DIRECTO",
+    "match": true,
+    "ranked": [
+      {
+        "n": 75,
+        "cls": "VECINO_T2_DIRECTO",
+        "score": 97.0,
+        "confidence": 48.2
+      },
+      {
+        "n": 12,
+        "cls": "VECINO_T2_DIRECTO",
+        "score": 61.0,
+        "confidence": 45.0
+      },
+      {
+        "n": 56,
+        "cls": "VECINO_T2_DIRECTO",
+        "score": 61.0,
+        "confidence": 45.0
+      },
+      {
+        "n": 71,
+        "cls": "VECINO_T2_DIRECTO",
+        "score": 61.0,
+        "confidence": 45.0
+      },
+      {
+        "n": 89,
+        "cls": "VECINO_T2_DIRECTO",
+        "score": 51.0,
+        "confidence": 41.0
+      }
+    ],
+    "evidence_summary": {
+      "table1_sources": [],
+      "table2_confirmers": [],
+      "independent_paths": 1,
+      "cross_table_support": false,
+      "multi_source_support": true
+    },
+    "graph_complete_before_discovery": true
+  },
+  {
+    "id": "M3",
+    "inputs": [
+      49,
+      44,
+      70
+    ],
+    "expected": 35,
+    "produced": 35,
+    "classification": "FUERTE_PRINCIPAL",
+    "match": true,
+    "ranked": [
+      {
+        "n": 35,
+        "cls": "FUERTE_PRINCIPAL",
+        "score": 236.0,
+        "confidence": 93.0
+      },
+      {
+        "n": 22,
+        "cls": "FUERTE_SECUNDARIO",
+        "score": 174.0,
+        "confidence": 76.0
+      },
+      {
+        "n": 59,
+        "cls": "CANDIDATO_PARCIAL",
+        "score": 32.0,
+        "confidence": 48.0
+      },
+      {
+        "n": 75,
+        "cls": "CANDIDATO_PARCIAL",
+        "score": 32.0,
+        "confidence": 48.0
+      },
+      {
+        "n": 91,
+        "cls": "CANDIDATO_PARCIAL",
+        "score": 32.0,
+        "confidence": 48.0
+      }
+    ],
+    "evidence_summary": {
+      "table1_sources": [
+        49
+      ],
+      "table2_confirmers": [
+        44,
+        70
+      ],
+      "independent_paths": 5,
+      "cross_table_support": true,
+      "multi_source_support": true
+    },
+    "graph_complete_before_discovery": true
+  },
+  {
+    "id": "M4",
+    "inputs": [
+      35,
+      14
+    ],
+    "expected": 54,
+    "produced": 54,
+    "classification": "FUERTE_PRINCIPAL",
+    "match": true,
+    "ranked": [
+      {
+        "n": 54,
+        "cls": "FUERTE_PRINCIPAL",
+        "score": 156.0,
+        "confidence": 85.0
+      },
+      {
+        "n": 6,
+        "cls": "FAMILIA_T1",
+        "score": 12.0,
+        "confidence": 50.0
+      },
+      {
+        "n": 11,
+        "cls": "FAMILIA_T1",
+        "score": 12.0,
+        "confidence": 50.0
+      },
+      {
+        "n": 43,
+        "cls": "FAMILIA_T1",
+        "score": 12.0,
+        "confidence": 50.0
+      },
+      {
+        "n": 86,
+        "cls": "FAMILIA_T1",
+        "score": 12.0,
+        "confidence": 50.0
+      }
+    ],
+    "evidence_summary": {
+      "table1_sources": [
+        35
+      ],
+      "table2_confirmers": [
+        14
+      ],
+      "independent_paths": 3,
+      "cross_table_support": true,
+      "multi_source_support": true
+    },
+    "graph_complete_before_discovery": true
+  },
+  {
+    "id": "M5",
+    "inputs": [
+      39,
+      58
+    ],
+    "expected": 94,
+    "produced": 94,
+    "classification": "FUERTE_PRINCIPAL",
+    "match": true,
+    "ranked": [
+      {
+        "n": 94,
+        "cls": "FUERTE_PRINCIPAL",
+        "score": 156.0,
+        "confidence": 85.0
+      },
+      {
+        "n": 78,
+        "cls": "FAMILIA_T1",
+        "score": 34.0,
+        "confidence": 50.0
+      },
+      {
+        "n": 62,
+        "cls": "FAMILIA_T1",
+        "score": 12.0,
+        "confidence": 50.0
+      },
+      {
+        "n": 9,
+        "cls": "FAMILIA_T1",
+        "score": 2.0,
+        "confidence": 46.0
+      },
+      {
+        "n": 14,
+        "cls": "FAMILIA_T1",
+        "score": 2.0,
+        "confidence": 46.0
+      }
+    ],
+    "evidence_summary": {
+      "table1_sources": [
+        39
+      ],
+      "table2_confirmers": [
+        58
+      ],
+      "independent_paths": 3,
+      "cross_table_support": true,
+      "multi_source_support": true
+    },
+    "graph_complete_before_discovery": true
+  }
+]

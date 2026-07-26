@@ -1,0 +1,268 @@
+{
+  "backtest_id": "bt_1998d30f65bd",
+  "engine_version": "complete-analysis-engine-j1.0.0",
+  "profile": "manual_reconstruido",
+  "total_analyses": 5,
+  "total_candidates": 168,
+  "total_strong_signals": 5,
+  "single_winner_rate": 0.6,
+  "multi_candidate_rate": 1.0,
+  "ambiguity_rate": 0.2,
+  "average_candidates_per_analysis": 33.6,
+  "exact_hits_d1": 0,
+  "exact_hits_d2": 0,
+  "exact_hits_d3": 0,
+  "exact_hits_d4": 0,
+  "exact_hits_d5": 0,
+  "exact_hits_d6": 0,
+  "exact_hits_d7": 0,
+  "exact_hits_d1_d3": 0,
+  "exact_hits_d1_d7": 0,
+  "first_position_hits": 0,
+  "any_position_hits": 0,
+  "t1_family_hits": 0,
+  "t2_neighbor_hits": 0,
+  "misses": 0,
+  "median_days_to_exact": null,
+  "average_days_to_exact": null,
+  "year_distribution": {
+    "2026": 5
+  },
+  "lottery_distribution": {},
+  "limitations": [
+    "Las tasas de cumplimiento en ventana D+1..D+7 pueden saturarse por cobertura del universo 1..100.",
+    "No afirmar ventaja predictiva sin baseline y tamaño muestral adecuado.",
+    "Separar cumplimiento exacto de familia T1 / vecino T2."
+  ],
+  "reconstructions": [
+    {
+      "inputs": [
+        41,
+        41,
+        70
+      ],
+      "primary": {
+        "number": 29,
+        "classification": "FUERTE_PRINCIPAL",
+        "analytical_confidence": 85.0,
+        "score": 156.0,
+        "reason": "Mayor respaldo estructural tras análisis completo T1×T2.",
+        "table1_sources": [
+          41
+        ],
+        "table2_confirmers": [
+          70
+        ]
+      },
+      "ranked": [
+        {
+          "n": 29,
+          "cls": "FUERTE_PRINCIPAL",
+          "score": 156.0
+        },
+        {
+          "n": 13,
+          "cls": "FAMILIA_T1",
+          "score": 12.0
+        },
+        {
+          "n": 93,
+          "cls": "FAMILIA_T1",
+          "score": 12.0
+        },
+        {
+          "n": 17,
+          "cls": "DERIVACION_RELEVANTE",
+          "score": -50.0
+        },
+        {
+          "n": 48,
+          "cls": "DERIVACION_RELEVANTE",
+          "score": -50.0
+        }
+      ]
+    },
+    {
+      "inputs": [
+        41,
+        62
+      ],
+      "primary": {
+        "number": 75,
+        "classification": "VECINO_T2_DIRECTO",
+        "analytical_confidence": 48.2,
+        "score": 97.0,
+        "reason": "Clasificado como VECINO_T2_DIRECTO: no se eleva a fuerte oficial.",
+        "table1_sources": [],
+        "table2_confirmers": []
+      },
+      "ranked": [
+        {
+          "n": 75,
+          "cls": "VECINO_T2_DIRECTO",
+          "score": 97.0
+        },
+        {
+          "n": 12,
+          "cls": "VECINO_T2_DIRECTO",
+          "score": 61.0
+        },
+        {
+          "n": 56,
+          "cls": "VECINO_T2_DIRECTO",
+          "score": 61.0
+        },
+        {
+          "n": 71,
+          "cls": "VECINO_T2_DIRECTO",
+          "score": 61.0
+        },
+        {
+          "n": 89,
+          "cls": "VECINO_T2_DIRECTO",
+          "score": 51.0
+        }
+      ]
+    },
+    {
+      "inputs": [
+        49,
+        44,
+        70
+      ],
+      "primary": {
+        "number": 35,
+        "classification": "FUERTE_PRINCIPAL",
+        "analytical_confidence": 93.0,
+        "score": 236.0,
+        "reason": "Mayor respaldo estructural tras análisis completo T1×T2.",
+        "table1_sources": [
+          49
+        ],
+        "table2_confirmers": [
+          44,
+          70
+        ]
+      },
+      "ranked": [
+        {
+          "n": 35,
+          "cls": "FUERTE_PRINCIPAL",
+          "score": 236.0
+        },
+        {
+          "n": 22,
+          "cls": "FUERTE_SECUNDARIO",
+          "score": 174.0
+        },
+        {
+          "n": 59,
+          "cls": "CANDIDATO_PARCIAL",
+          "score": 32.0
+        },
+        {
+          "n": 75,
+          "cls": "CANDIDATO_PARCIAL",
+          "score": 32.0
+        },
+        {
+          "n": 91,
+          "cls": "CANDIDATO_PARCIAL",
+          "score": 32.0
+        }
+      ]
+    },
+    {
+      "inputs": [
+        35,
+        14
+      ],
+      "primary": {
+        "number": 54,
+        "classification": "FUERTE_PRINCIPAL",
+        "analytical_confidence": 85.0,
+        "score": 156.0,
+        "reason": "Mayor respaldo estructural tras análisis completo T1×T2.",
+        "table1_sources": [
+          35
+        ],
+        "table2_confirmers": [
+          14
+        ]
+      },
+      "ranked": [
+        {
+          "n": 54,
+          "cls": "FUERTE_PRINCIPAL",
+          "score": 156.0
+        },
+        {
+          "n": 6,
+          "cls": "FAMILIA_T1",
+          "score": 12.0
+        },
+        {
+          "n": 11,
+          "cls": "FAMILIA_T1",
+          "score": 12.0
+        },
+        {
+          "n": 43,
+          "cls": "FAMILIA_T1",
+          "score": 12.0
+        },
+        {
+          "n": 86,
+          "cls": "FAMILIA_T1",
+          "score": 12.0
+        }
+      ]
+    },
+    {
+      "inputs": [
+        39,
+        58
+      ],
+      "primary": {
+        "number": 94,
+        "classification": "FUERTE_PRINCIPAL",
+        "analytical_confidence": 85.0,
+        "score": 156.0,
+        "reason": "Mayor respaldo estructural tras análisis completo T1×T2.",
+        "table1_sources": [
+          39
+        ],
+        "table2_confirmers": [
+          58
+        ]
+      },
+      "ranked": [
+        {
+          "n": 94,
+          "cls": "FUERTE_PRINCIPAL",
+          "score": 156.0
+        },
+        {
+          "n": 78,
+          "cls": "FAMILIA_T1",
+          "score": 34.0
+        },
+        {
+          "n": 62,
+          "cls": "FAMILIA_T1",
+          "score": 12.0
+        },
+        {
+          "n": 9,
+          "cls": "FAMILIA_T1",
+          "score": 2.0
+        },
+        {
+          "n": 14,
+          "cls": "FAMILIA_T1",
+          "score": 2.0
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,218 @@
+"""API — Complete Analysis Engine + J-11A (DEV). Does not touch Production deploy paths."""
+
+from __future__ import annotations
+
+from datetime import date
+from typing import Any
+
+from fastapi import APIRouter, Body, Depends, HTTPException
+
+from app.lottery.numeric_relations.analysis_engine.backtest_engine import (
+    manual_case_scenarios,
+    run_backtest,
+)
+from app.lottery.numeric_relations.analysis_engine.complete_analysis_service import (
+    run_complete_analysis,
+)
+from app.lottery.numeric_relations.analysis_engine.signal_tracker import get_signal_store
+from app.lottery.numeric_relations.j11a.conversation_engine import chat, plan_only
+from app.lottery.numeric_relations.j11a.memory_engine import get_or_create_session
+
+router = APIRouter(
+    tags=["Complete Analysis Engine + J-11A"],
+)
+
+
+def _optional_huawei_llm():
+    """Reuse existing Huawei/JAIOS credentials via LLMRouter — never duplicate secrets."""
+    try:
+        from app.lottery.ai.runtime import runtime_snapshot
+
+        snap = runtime_snapshot()
+        if not (snap.get("huawei_modelarts") or {}).get("credentials_present"):
+            return None
+        # Synthesis is optional; Conversation Engine always has deterministic fallback.
+        # We do not open DB sessions from this thin adapter; callers that need LLM
+        # prose should wire lottery_chat_service / LLMRouter with an existing session.
+        return None
+    except Exception:
+        return None
+
+
+@router.post("/analysis/run")
+async def analysis_run(body: dict[str, Any] = Body(...)) -> dict[str, Any]:
+    try:
+        result = run_complete_analysis(body, persist=True)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e)) from e
+    return result.to_dict()
+
+
+@router.get("/analysis/{analysis_id}")
+async def analysis_get(analysis_id: str) -> dict[str, Any]:
+    store = get_signal_store()
+    data = store.analyses.get(analysis_id)
+    if not data:
+        raise HTTPException(status_code=404, detail="analysis not found")
+    return data
+
+
+@router.get("/analysis/{analysis_id}/graph")
+async def analysis_graph(analysis_id: str) -> dict[str, Any]:
+    data = await analysis_get(analysis_id)
+    return data.get("graph") or {}
+
+
+@router.get("/analysis/{analysis_id}/candidates")
+async def analysis_candidates(analysis_id: str) -> dict[str, Any]:
+    data = await analysis_get(analysis_id)
+    return {"ranked_candidates": data.get("ranked_candidates") or []}
+
+
+@router.get("/analysis/{analysis_id}/evidence")
+async def analysis_evidence(analysis_id: str) -> dict[str, Any]:
+    data = await analysis_get(analysis_id)
+    return {
+        "evidence_summary": data.get("evidence_summary"),
+        "ranked_candidates": data.get("ranked_candidates"),
+    }
+
+
+@router.get("/analysis/{analysis_id}/derivations")
+async def analysis_derivations(analysis_id: str) -> dict[str, Any]:
+    data = await analysis_get(analysis_id)
+    return {"derivations": data.get("derivations") or []}
+
+
+@router.get("/signals/active")
+async def signals_active() -> dict[str, Any]:
+    store = get_signal_store()
+    return {"signals": [s.to_dict() for s in store.active_signals()]}
+
+
+@router.get("/signals/history")
+async def signals_history() -> dict[str, Any]:
+    store = get_signal_store()
+    return {"signals": [s.to_dict() for s in store.history_signals()]}
+
+
+@router.get("/signals/{signal_id}")
+async def signals_get(signal_id: str) -> dict[str, Any]:
+    store = get_signal_store()
+    sig = store.get_signal(signal_id)
+    if not sig:
+        raise HTTPException(status_code=404, detail="signal not found")
+    return sig.to_dict()
+
+
+@router.post("/signals/{signal_id}/evaluate")
+async def signals_evaluate(signal_id: str, body: dict[str, Any] = Body(...)) -> dict[str, Any]:
+    store = get_signal_store()
+    try:
+        d = body.get("date") or body.get("draw_date")
+        if isinstance(d, str):
+            d = date.fromisoformat(d[:10])
+        sig = store.evaluate_signal(
+            signal_id,
+            draw_date=d,
+            drawn_numbers=list(body.get("numbers") or body.get("drawn_numbers") or []),
+            lottery=body.get("lottery"),
+            position=body.get("position"),
+        )
+    except KeyError as e:
+        raise HTTPException(status_code=404, detail="signal not found") from e
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e)) from e
+    return sig.to_dict()
+
+
+@router.post("/backtest/run")
+async def backtest_run(body: dict[str, Any] = Body(default_factory=dict)) -> dict[str, Any]:
+    scenarios = body.get("scenarios") or manual_case_scenarios()
+    profile = body.get("profile") or "manual_reconstruido"
+    result = run_backtest(scenarios, profile=profile)
+    store = get_signal_store()
+    store.analyses[result["backtest_id"]] = result
+    return result
+
+
+@router.get("/backtest/{backtest_id}")
+async def backtest_get(backtest_id: str) -> dict[str, Any]:
+    store = get_signal_store()
+    data = store.analyses.get(backtest_id)
+    if not data:
+        raise HTTPException(status_code=404, detail="backtest not found")
+    return data
+
+
+@router.post("/j11a/chat")
+async def j11a_chat(body: dict[str, Any] = Body(...)) -> dict[str, Any]:
+    use_llm = bool(body.get("use_llm", False))
+    llm = _optional_huawei_llm() if use_llm else None
+    return chat(
+        str(body.get("message") or ""),
+        conversation_id=body.get("conversation_id"),
+        llm=llm,
+        date=body.get("date"),
+        mode=body.get("mode"),
+    )
+
+
+@router.post("/j11a/plan")
+async def j11a_plan(body: dict[str, Any] = Body(...)) -> dict[str, Any]:
+    return plan_only(str(body.get("message") or ""), body.get("conversation_id"))
+
+
+@router.post("/j11a/analyze")
+async def j11a_analyze(body: dict[str, Any] = Body(...)) -> dict[str, Any]:
+    numbers = body.get("numbers") or []
+    msg = f"Analiza {' y '.join(str(n) for n in numbers)}"
+    return chat(
+        msg,
+        conversation_id=body.get("conversation_id"),
+        llm=None,
+        date=body.get("date"),
+        mode=body.get("mode"),
+    )
+
+
+@router.get("/j11a/conversations/{conversation_id}")
+async def j11a_conversation(conversation_id: str) -> dict[str, Any]:
+    mem = get_or_create_session(conversation_id)
+    return mem.to_dict()
+
+
+@router.get("/j11a/conversations/{conversation_id}/context")
+async def j11a_context(conversation_id: str) -> dict[str, Any]:
+    mem = get_or_create_session(conversation_id)
+    return {
+        "conversation_id": mem.conversation_id,
+        "analysis_id": mem.analysis_id,
+        "observed_numbers": mem.observed_numbers,
+        "primary_signal": mem.primary_signal,
+        "alternatives": mem.alternatives,
+        "explanation_level": mem.explanation_level,
+    }
+
+
+@router.get("/j11a/analyses/{analysis_id}/explanation")
+async def j11a_explanation(analysis_id: str) -> dict[str, Any]:
+    store = get_signal_store()
+    data = store.analyses.get(analysis_id)
+    if not data:
+        raise HTTPException(status_code=404, detail="analysis not found")
+    return data.get("explanation") or {}
+
+
+@router.post("/j11a/analyses/{analysis_id}/follow-up")
+async def j11a_follow_up(analysis_id: str, body: dict[str, Any] = Body(...)) -> dict[str, Any]:
+    store = get_signal_store()
+    data = store.analyses.get(analysis_id)
+    if not data:
+        raise HTTPException(status_code=404, detail="analysis not found")
+    conv = body.get("conversation_id")
+    mem = get_or_create_session(conv)
+    from app.lottery.numeric_relations.j11a.memory_engine import update_from_analysis
+
+    update_from_analysis(mem, data)
+    return chat(str(body.get("message") or ""), conversation_id=mem.conversation_id, llm=None)

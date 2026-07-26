@@ -1,0 +1,2786 @@
+[
+  {
+    "id": "HIST-001",
+    "label": "C1_manual_subset",
+    "date": "2026-06-21",
+    "methodology_version": "nr-historical-relations-j1.0.0",
+    "look_ahead_blocked": true,
+    "known_manual_fuerte": 29,
+    "manual_used_only_for_final_compare": true,
+    "observations": [
+      {
+        "lottery_id": "43250709-ee65-476f-91f6-cb8438f49d65",
+        "lottery_name": "Gana Mas",
+        "draw_id": "d6732010-5902-4533-a13c-2fb016cf6856",
+        "draw_date": "2026-06-21",
+        "draw_time": null,
+        "position": 1,
+        "position_label": "1ro",
+        "number": 41,
+        "source_reference": "224681",
+        "table1_code_mother": 41,
+        "table1_companions": [
+          13,
+          29,
+          93
+        ],
+        "table2_neighbors": [
+          12,
+          56,
+          71,
+          89
+        ]
+      },
+      {
+        "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+        "lottery_name": "Quiniela Leidsa",
+        "draw_id": "a8a12588-b47e-4779-9ff5-67d54b8404c5",
+        "draw_date": "2026-06-21",
+        "draw_time": null,
+        "position": 1,
+        "position_label": "1ro",
+        "number": 70,
+        "source_reference": "224686",
+        "table1_code_mother": 70,
+        "table1_companions": [],
+        "table2_neighbors": [
+          7,
+          9,
+          22,
+          29,
+          35,
+          42,
+          44,
+          53,
+          63,
+          90
+        ]
+      }
+    ],
+    "official_strengthened": [
+      {
+        "candidate": 29,
+        "generator_observed": 41,
+        "generator_lottery": "Gana Mas",
+        "confirmers": [
+          70
+        ],
+        "confirmer_lotteries": [
+          "Quiniela Leidsa"
+        ],
+        "confirmation_level": 1,
+        "table1_companions_of_generator": [
+          13,
+          29,
+          93
+        ],
+        "table2_group_of_candidate": [
+          7,
+          9,
+          22,
+          29,
+          35,
+          42,
+          44,
+          53,
+          63,
+          70,
+          90
+        ],
+        "confirmer_never_strengthened": true
+      }
+    ],
+    "fuerte_oficial": 29,
+    "resultado_unico": true,
+    "otros_candidatos": [],
+    "direct_t2_neighbor_signals": [
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 41,
+        "lottery": "Gana Mas",
+        "direct_t2_neighbor": 12,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 41,
+        "lottery": "Gana Mas",
+        "direct_t2_neighbor": 56,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 41,
+        "lottery": "Gana Mas",
+        "direct_t2_neighbor": 71,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 41,
+        "lottery": "Gana Mas",
+        "direct_t2_neighbor": 89,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 70,
+        "lottery": "Quiniela Leidsa",
+        "direct_t2_neighbor": 7,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 70,
+        "lottery": "Quiniela Leidsa",
+        "direct_t2_neighbor": 9,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 70,
+        "lottery": "Quiniela Leidsa",
+        "direct_t2_neighbor": 22,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 70,
+        "lottery": "Quiniela Leidsa",
+        "direct_t2_neighbor": 35,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 70,
+        "lottery": "Quiniela Leidsa",
+        "direct_t2_neighbor": 42,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 70,
+        "lottery": "Quiniela Leidsa",
+        "direct_t2_neighbor": 44,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 70,
+        "lottery": "Quiniela Leidsa",
+        "direct_t2_neighbor": 53,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 70,
+        "lottery": "Quiniela Leidsa",
+        "direct_t2_neighbor": 63,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 70,
+        "lottery": "Quiniela Leidsa",
+        "direct_t2_neighbor": 90,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      }
+    ],
+    "windows": {
+      "next_chronological_draw": {
+        "hit": false,
+        "first_appearance": null
+      },
+      "same_day_other_draws": {
+        "hit": false,
+        "first_appearance": null
+      },
+      "next_calendar_day": {
+        "hit": false,
+        "first_appearance": null
+      },
+      "next_7_featured_draws": {
+        "hit": false,
+        "first_appearance": null
+      }
+    },
+    "verdict": "FALLO",
+    "explanation": "41 (Gana Mas) genera candidato T1 29; confirmado por [70] vía Tabla2 (Quiniela Leidsa). No apareció en ninguna ventana declarada. Veredicto: FALLO.",
+    "modifies_motor": false
+  },
+  {
+    "id": "HIST-002",
+    "label": "C3_manual_subset",
+    "date": "2026-06-21",
+    "methodology_version": "nr-historical-relations-j1.0.0",
+    "look_ahead_blocked": true,
+    "known_manual_fuerte": 35,
+    "manual_used_only_for_final_compare": true,
+    "observations": [
+      {
+        "lottery_id": "205c58d2-cfcf-44e6-894d-97358b3d540b",
+        "lottery_name": "Quiniela Real",
+        "draw_id": "08526f84-7229-415a-822f-ddc032c5da71",
+        "draw_date": "2026-06-21",
+        "draw_time": null,
+        "position": 1,
+        "position_label": "1ro",
+        "number": 49,
+        "source_reference": "224676",
+        "table1_code_mother": 49,
+        "table1_companions": [
+          35,
+          40,
+          83
+        ],
+        "table2_neighbors": []
+      },
+      {
+        "lottery_id": "0118037f-8f8b-4a82-899c-42cd50b6e194",
+        "lottery_name": "Loteria Nacional",
+        "draw_id": "901c62d2-5868-4915-b6bd-3902516f518c",
+        "draw_date": "2026-06-21",
+        "draw_time": null,
+        "position": 1,
+        "position_label": "1ro",
+        "number": 44,
+        "source_reference": "224692",
+        "table1_code_mother": 44,
+        "table1_companions": [
+          22,
+          59,
+          70,
+          75,
+          91
+        ],
+        "table2_neighbors": [
+          7,
+          9,
+          22,
+          29,
+          35,
+          42,
+          53,
+          63,
+          70,
+          90
+        ]
+      },
+      {
+        "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+        "lottery_name": "Quiniela Leidsa",
+        "draw_id": "a8a12588-b47e-4779-9ff5-67d54b8404c5",
+        "draw_date": "2026-06-21",
+        "draw_time": null,
+        "position": 1,
+        "position_label": "1ro",
+        "number": 70,
+        "source_reference": "224686",
+        "table1_code_mother": 70,
+        "table1_companions": [],
+        "table2_neighbors": [
+          7,
+          9,
+          22,
+          29,
+          35,
+          42,
+          44,
+          53,
+          63,
+          90
+        ]
+      }
+    ],
+    "official_strengthened": [
+      {
+        "candidate": 35,
+        "generator_observed": 49,
+        "generator_lottery": "Quiniela Real",
+        "confirmers": [
+          44,
+          70
+        ],
+        "confirmer_lotteries": [
+          "Loteria Nacional",
+          "Quiniela Leidsa"
+        ],
+        "confirmation_level": 2,
+        "table1_companions_of_generator": [
+          35,
+          40,
+          83
+        ],
+        "table2_group_of_candidate": [
+          7,
+          9,
+          22,
+          29,
+          35,
+          42,
+          44,
+          53,
+          63,
+          70,
+          90
+        ],
+        "confirmer_never_strengthened": true
+      },
+      {
+        "candidate": 22,
+        "generator_observed": 44,
+        "generator_lottery": "Loteria Nacional",
+        "confirmers": [
+          70
+        ],
+        "confirmer_lotteries": [
+          "Quiniela Leidsa"
+        ],
+        "confirmation_level": 1,
+        "table1_companions_of_generator": [
+          22,
+          59,
+          70,
+          75,
+          91
+        ],
+        "table2_group_of_candidate": [
+          7,
+          9,
+          22,
+          29,
+          35,
+          42,
+          44,
+          53,
+          63,
+          70,
+          90
+        ],
+        "confirmer_never_strengthened": true
+      }
+    ],
+    "fuerte_oficial": [
+      35,
+      22
+    ],
+    "resultado_unico": false,
+    "otros_candidatos": [
+      22
+    ],
+    "direct_t2_neighbor_signals": [
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 44,
+        "lottery": "Loteria Nacional",
+        "direct_t2_neighbor": 7,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 44,
+        "lottery": "Loteria Nacional",
+        "direct_t2_neighbor": 9,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 44,
+        "lottery": "Loteria Nacional",
+        "direct_t2_neighbor": 29,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 44,
+        "lottery": "Loteria Nacional",
+        "direct_t2_neighbor": 42,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 44,
+        "lottery": "Loteria Nacional",
+        "direct_t2_neighbor": 53,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 44,
+        "lottery": "Loteria Nacional",
+        "direct_t2_neighbor": 63,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 44,
+        "lottery": "Loteria Nacional",
+        "direct_t2_neighbor": 70,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 44,
+        "lottery": "Loteria Nacional",
+        "direct_t2_neighbor": 90,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 70,
+        "lottery": "Quiniela Leidsa",
+        "direct_t2_neighbor": 7,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 70,
+        "lottery": "Quiniela Leidsa",
+        "direct_t2_neighbor": 9,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 70,
+        "lottery": "Quiniela Leidsa",
+        "direct_t2_neighbor": 29,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 70,
+        "lottery": "Quiniela Leidsa",
+        "direct_t2_neighbor": 42,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 70,
+        "lottery": "Quiniela Leidsa",
+        "direct_t2_neighbor": 44,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 70,
+        "lottery": "Quiniela Leidsa",
+        "direct_t2_neighbor": 53,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 70,
+        "lottery": "Quiniela Leidsa",
+        "direct_t2_neighbor": 63,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 70,
+        "lottery": "Quiniela Leidsa",
+        "direct_t2_neighbor": 90,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      }
+    ],
+    "windows": {
+      "next_chronological_draw": {
+        "hit": false,
+        "first_appearance": null
+      },
+      "same_day_other_draws": {
+        "hit": false,
+        "first_appearance": null
+      },
+      "next_calendar_day": {
+        "hit": false,
+        "first_appearance": null
+      },
+      "next_7_featured_draws": {
+        "hit": false,
+        "first_appearance": null
+      }
+    },
+    "verdict": "FALLO",
+    "explanation": "49 (Quiniela Real) genera candidato T1 35; confirmado por [44, 70] vía Tabla2 (Loteria Nacional, Quiniela Leidsa). 44 (Loteria Nacional) genera candidato T1 22; confirmado por [70] vía Tabla2 (Quiniela Leidsa). No apareció en ninguna ventana declarada. Veredicto: FALLO.",
+    "modifies_motor": false
+  },
+  {
+    "id": "HIST-003",
+    "label": "C4_manual_subset",
+    "date": "2026-06-23",
+    "methodology_version": "nr-historical-relations-j1.0.0",
+    "look_ahead_blocked": true,
+    "known_manual_fuerte": 54,
+    "manual_used_only_for_final_compare": true,
+    "observations": [
+      {
+        "lottery_id": "0118037f-8f8b-4a82-899c-42cd50b6e194",
+        "lottery_name": "Loteria Nacional",
+        "draw_id": "1d1862a7-715a-4f63-9724-c77291187154",
+        "draw_date": "2026-06-23",
+        "draw_time": null,
+        "position": 1,
+        "position_label": "1ro",
+        "number": 35,
+        "source_reference": "224790",
+        "table1_code_mother": 35,
+        "table1_companions": [
+          6,
+          11,
+          43,
+          54,
+          86
+        ],
+        "table2_neighbors": [
+          7,
+          9,
+          22,
+          29,
+          42,
+          44,
+          53,
+          63,
+          70,
+          90
+        ]
+      },
+      {
+        "lottery_id": "b9f2c5a2-bc3e-4382-9b6d-3cee16db00fd",
+        "lottery_name": "Quiniela Loteka",
+        "draw_id": "5faf3955-ba7a-4819-b7bc-00e0b4517b68",
+        "draw_date": "2026-06-23",
+        "draw_time": null,
+        "position": 1,
+        "position_label": "1ro",
+        "number": 14,
+        "source_reference": "224784",
+        "table1_code_mother": 14,
+        "table1_companions": [],
+        "table2_neighbors": [
+          54
+        ]
+      }
+    ],
+    "official_strengthened": [
+      {
+        "candidate": 54,
+        "generator_observed": 35,
+        "generator_lottery": "Loteria Nacional",
+        "confirmers": [
+          14
+        ],
+        "confirmer_lotteries": [
+          "Quiniela Loteka"
+        ],
+        "confirmation_level": 1,
+        "table1_companions_of_generator": [
+          6,
+          11,
+          43,
+          54,
+          86
+        ],
+        "table2_group_of_candidate": [
+          14,
+          54
+        ],
+        "confirmer_never_strengthened": true
+      }
+    ],
+    "fuerte_oficial": 54,
+    "resultado_unico": true,
+    "otros_candidatos": [],
+    "direct_t2_neighbor_signals": [
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 35,
+        "lottery": "Loteria Nacional",
+        "direct_t2_neighbor": 7,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 35,
+        "lottery": "Loteria Nacional",
+        "direct_t2_neighbor": 9,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 35,
+        "lottery": "Loteria Nacional",
+        "direct_t2_neighbor": 22,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 35,
+        "lottery": "Loteria Nacional",
+        "direct_t2_neighbor": 29,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 35,
+        "lottery": "Loteria Nacional",
+        "direct_t2_neighbor": 42,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 35,
+        "lottery": "Loteria Nacional",
+        "direct_t2_neighbor": 44,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 35,
+        "lottery": "Loteria Nacional",
+        "direct_t2_neighbor": 53,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 35,
+        "lottery": "Loteria Nacional",
+        "direct_t2_neighbor": 63,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 35,
+        "lottery": "Loteria Nacional",
+        "direct_t2_neighbor": 70,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 35,
+        "lottery": "Loteria Nacional",
+        "direct_t2_neighbor": 90,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      }
+    ],
+    "windows": {
+      "next_chronological_draw": {
+        "hit": false,
+        "first_appearance": null
+      },
+      "same_day_other_draws": {
+        "hit": false,
+        "first_appearance": null
+      },
+      "next_calendar_day": {
+        "hit": true,
+        "first_appearance": {
+          "date": "2026-06-24",
+          "lottery_name": "Quiniela Loteka",
+          "lottery_id": "b9f2c5a2-bc3e-4382-9b6d-3cee16db00fd",
+          "draw_id": "444811ef-a3a7-441a-a7a4-385fa151c345",
+          "source_reference": "224826",
+          "draw_time": null,
+          "position": 1,
+          "position_label": "1ro",
+          "number": 54
+        }
+      },
+      "next_7_featured_draws": {
+        "hit": true,
+        "first_appearance": {
+          "date": "2026-06-24",
+          "lottery_name": "Quiniela Loteka",
+          "lottery_id": "b9f2c5a2-bc3e-4382-9b6d-3cee16db00fd",
+          "draw_id": "444811ef-a3a7-441a-a7a4-385fa151c345",
+          "source_reference": "224826",
+          "draw_time": null,
+          "position": 1,
+          "position_label": "1ro",
+          "number": 54
+        }
+      }
+    },
+    "verdict": "ACIERTO_EXACTO",
+    "explanation": "35 (Loteria Nacional) genera candidato T1 54; confirmado por [14] vía Tabla2 (Quiniela Loteka). Aparición posterior: 2026-06-24 Quiniela Loteka pos 1 = 54 (ref 224826). Veredicto: ACIERTO_EXACTO.",
+    "modifies_motor": false
+  },
+  {
+    "id": "HIST-004",
+    "label": "C5_manual_subset",
+    "date": "2026-07-22",
+    "methodology_version": "nr-historical-relations-j1.0.0",
+    "look_ahead_blocked": true,
+    "known_manual_fuerte": 54,
+    "manual_used_only_for_final_compare": true,
+    "observations": [
+      {
+        "lottery_id": "1c488641-adb6-4790-89e7-879d361da7cc",
+        "lottery_name": "New York 2:30",
+        "draw_id": "69f3cf8d-490a-4be2-ac7e-67ec4dc148c5",
+        "draw_date": "2026-07-22",
+        "draw_time": null,
+        "position": 1,
+        "position_label": "1ro",
+        "number": 35,
+        "source_reference": "226039",
+        "table1_code_mother": 35,
+        "table1_companions": [
+          6,
+          11,
+          43,
+          54,
+          86
+        ],
+        "table2_neighbors": [
+          7,
+          9,
+          22,
+          29,
+          42,
+          44,
+          53,
+          63,
+          70,
+          90
+        ]
+      },
+      {
+        "lottery_id": "0118037f-8f8b-4a82-899c-42cd50b6e194",
+        "lottery_name": "Loteria Nacional",
+        "draw_id": "3aa518e2-a381-45b7-8c5e-7e19825dc8d5",
+        "draw_date": "2026-07-22",
+        "draw_time": null,
+        "position": 1,
+        "position_label": "1ro",
+        "number": 14,
+        "source_reference": "226060",
+        "table1_code_mother": 14,
+        "table1_companions": [],
+        "table2_neighbors": [
+          54
+        ]
+      }
+    ],
+    "official_strengthened": [
+      {
+        "candidate": 54,
+        "generator_observed": 35,
+        "generator_lottery": "New York 2:30",
+        "confirmers": [
+          14
+        ],
+        "confirmer_lotteries": [
+          "Loteria Nacional"
+        ],
+        "confirmation_level": 1,
+        "table1_companions_of_generator": [
+          6,
+          11,
+          43,
+          54,
+          86
+        ],
+        "table2_group_of_candidate": [
+          14,
+          54
+        ],
+        "confirmer_never_strengthened": true
+      }
+    ],
+    "fuerte_oficial": 54,
+    "resultado_unico": true,
+    "otros_candidatos": [],
+    "direct_t2_neighbor_signals": [
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 35,
+        "lottery": "New York 2:30",
+        "direct_t2_neighbor": 7,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 35,
+        "lottery": "New York 2:30",
+        "direct_t2_neighbor": 9,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 35,
+        "lottery": "New York 2:30",
+        "direct_t2_neighbor": 22,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 35,
+        "lottery": "New York 2:30",
+        "direct_t2_neighbor": 29,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 35,
+        "lottery": "New York 2:30",
+        "direct_t2_neighbor": 42,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 35,
+        "lottery": "New York 2:30",
+        "direct_t2_neighbor": 44,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 35,
+        "lottery": "New York 2:30",
+        "direct_t2_neighbor": 53,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 35,
+        "lottery": "New York 2:30",
+        "direct_t2_neighbor": 63,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 35,
+        "lottery": "New York 2:30",
+        "direct_t2_neighbor": 70,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 35,
+        "lottery": "New York 2:30",
+        "direct_t2_neighbor": 90,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      }
+    ],
+    "windows": {
+      "next_chronological_draw": {
+        "hit": false,
+        "first_appearance": null
+      },
+      "same_day_other_draws": {
+        "hit": false,
+        "first_appearance": null
+      },
+      "next_calendar_day": {
+        "hit": true,
+        "first_appearance": {
+          "date": "2026-07-23",
+          "lottery_name": "Gana Mas",
+          "lottery_id": "43250709-ee65-476f-91f6-cb8438f49d65",
+          "draw_id": "f18eb0a7-eadb-4979-9352-e2b547dd388c",
+          "source_reference": "226103",
+          "draw_time": null,
+          "position": 1,
+          "position_label": "1ro",
+          "number": 54
+        }
+      },
+      "next_7_featured_draws": {
+        "hit": true,
+        "first_appearance": {
+          "date": "2026-07-23",
+          "lottery_name": "Gana Mas",
+          "lottery_id": "43250709-ee65-476f-91f6-cb8438f49d65",
+          "draw_id": "f18eb0a7-eadb-4979-9352-e2b547dd388c",
+          "source_reference": "226103",
+          "draw_time": null,
+          "position": 1,
+          "position_label": "1ro",
+          "number": 54
+        }
+      }
+    },
+    "verdict": "ACIERTO_EXACTO",
+    "explanation": "35 (New York 2:30) genera candidato T1 54; confirmado por [14] vía Tabla2 (Loteria Nacional). Aparición posterior: 2026-07-23 Gana Mas pos 1 = 54 (ref 226103). Veredicto: ACIERTO_EXACTO.",
+    "modifies_motor": false
+  },
+  {
+    "id": "HIST-005",
+    "label": "full_day_first_positions",
+    "date": "2017-12-27",
+    "methodology_version": "nr-historical-relations-j1.0.0",
+    "look_ahead_blocked": true,
+    "known_manual_fuerte": null,
+    "manual_used_only_for_final_compare": true,
+    "observations": [
+      {
+        "lottery_id": "43250709-ee65-476f-91f6-cb8438f49d65",
+        "lottery_name": "Gana Mas",
+        "draw_id": "d9c552aa-c2fd-4bf3-afe5-7673cec6534d",
+        "draw_date": "2017-12-27",
+        "draw_time": null,
+        "position": 1,
+        "position_label": "1ro",
+        "number": 92,
+        "source_reference": "163669",
+        "table1_code_mother": 92,
+        "table1_companions": [],
+        "table2_neighbors": [
+          27,
+          68,
+          76
+        ]
+      },
+      {
+        "lottery_id": "0118037f-8f8b-4a82-899c-42cd50b6e194",
+        "lottery_name": "Loteria Nacional",
+        "draw_id": "8954ce14-ae0d-4864-90b7-7e3e13243c7b",
+        "draw_date": "2017-12-27",
+        "draw_time": null,
+        "position": 1,
+        "position_label": "1ro",
+        "number": 39,
+        "source_reference": "109771",
+        "table1_code_mother": 39,
+        "table1_companions": [
+          9,
+          14,
+          30,
+          41,
+          46,
+          62,
+          78,
+          94
+        ],
+        "table2_neighbors": [
+          78
+        ]
+      },
+      {
+        "lottery_id": "1624b6f2-88c6-42b5-a597-bf9c0f98a6b5",
+        "lottery_name": "New York 10:30",
+        "draw_id": "5f53c0a9-dddd-4084-bf8e-d2f06df7b6d8",
+        "draw_date": "2017-12-27",
+        "draw_time": null,
+        "position": 3,
+        "position_label": "3ro",
+        "number": 2,
+        "source_reference": "50667",
+        "table1_code_mother": 2,
+        "table1_companions": [],
+        "table2_neighbors": [
+          20
+        ]
+      },
+      {
+        "lottery_id": "1c488641-adb6-4790-89e7-879d361da7cc",
+        "lottery_name": "New York 2:30",
+        "draw_id": "bee6e47c-f3d9-407c-972f-9344b3c33bd7",
+        "draw_date": "2017-12-27",
+        "draw_time": null,
+        "position": 1,
+        "position_label": "1ro",
+        "number": 94,
+        "source_reference": "48204",
+        "table1_code_mother": 94,
+        "table1_companions": [],
+        "table2_neighbors": [
+          58,
+          84
+        ]
+      },
+      {
+        "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+        "lottery_name": "Quiniela Leidsa",
+        "draw_id": "d35d3f67-9777-414e-8ec9-a1642c0983d4",
+        "draw_date": "2017-12-27",
+        "draw_time": null,
+        "position": 1,
+        "position_label": "1ro",
+        "number": 53,
+        "source_reference": "117301",
+        "table1_code_mother": 53,
+        "table1_companions": [],
+        "table2_neighbors": [
+          7,
+          9,
+          22,
+          29,
+          35,
+          42,
+          44,
+          63,
+          70,
+          90
+        ]
+      },
+      {
+        "lottery_id": "b9f2c5a2-bc3e-4382-9b6d-3cee16db00fd",
+        "lottery_name": "Quiniela Loteka",
+        "draw_id": "213a1a99-17c3-4fb2-b7a0-ee8e72b1d884",
+        "draw_date": "2017-12-27",
+        "draw_time": null,
+        "position": 1,
+        "position_label": "1ro",
+        "number": 14,
+        "source_reference": "1864",
+        "table1_code_mother": 14,
+        "table1_companions": [],
+        "table2_neighbors": [
+          54
+        ]
+      },
+      {
+        "lottery_id": "205c58d2-cfcf-44e6-894d-97358b3d540b",
+        "lottery_name": "Quiniela Real",
+        "draw_id": "994ad367-9c95-4c31-a540-d3dec2cf5406",
+        "draw_date": "2017-12-27",
+        "draw_time": null,
+        "position": 1,
+        "position_label": "1ro",
+        "number": 75,
+        "source_reference": "36619",
+        "table1_code_mother": 75,
+        "table1_companions": [],
+        "table2_neighbors": [
+          62
+        ]
+      }
+    ],
+    "official_strengthened": [
+      {
+        "candidate": 9,
+        "generator_observed": 39,
+        "generator_lottery": "Loteria Nacional",
+        "confirmers": [
+          53
+        ],
+        "confirmer_lotteries": [
+          "Quiniela Leidsa"
+        ],
+        "confirmation_level": 1,
+        "table1_companions_of_generator": [
+          9,
+          14,
+          30,
+          41,
+          46,
+          62,
+          78,
+          94
+        ],
+        "table2_group_of_candidate": [
+          7,
+          9,
+          22,
+          29,
+          35,
+          42,
+          44,
+          53,
+          63,
+          70,
+          90
+        ],
+        "confirmer_never_strengthened": true
+      },
+      {
+        "candidate": 62,
+        "generator_observed": 39,
+        "generator_lottery": "Loteria Nacional",
+        "confirmers": [
+          75
+        ],
+        "confirmer_lotteries": [
+          "Quiniela Real"
+        ],
+        "confirmation_level": 1,
+        "table1_companions_of_generator": [
+          9,
+          14,
+          30,
+          41,
+          46,
+          62,
+          78,
+          94
+        ],
+        "table2_group_of_candidate": [
+          62,
+          75
+        ],
+        "confirmer_never_strengthened": true
+      }
+    ],
+    "fuerte_oficial": [
+      9,
+      62
+    ],
+    "resultado_unico": false,
+    "otros_candidatos": [
+      62
+    ],
+    "direct_t2_neighbor_signals": [
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 92,
+        "lottery": "Gana Mas",
+        "direct_t2_neighbor": 27,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 92,
+        "lottery": "Gana Mas",
+        "direct_t2_neighbor": 68,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 92,
+        "lottery": "Gana Mas",
+        "direct_t2_neighbor": 76,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 39,
+        "lottery": "Loteria Nacional",
+        "direct_t2_neighbor": 78,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 2,
+        "lottery": "New York 10:30",
+        "direct_t2_neighbor": 20,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 94,
+        "lottery": "New York 2:30",
+        "direct_t2_neighbor": 58,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 94,
+        "lottery": "New York 2:30",
+        "direct_t2_neighbor": 84,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 53,
+        "lottery": "Quiniela Leidsa",
+        "direct_t2_neighbor": 7,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 53,
+        "lottery": "Quiniela Leidsa",
+        "direct_t2_neighbor": 22,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 53,
+        "lottery": "Quiniela Leidsa",
+        "direct_t2_neighbor": 29,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 53,
+        "lottery": "Quiniela Leidsa",
+        "direct_t2_neighbor": 35,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 53,
+        "lottery": "Quiniela Leidsa",
+        "direct_t2_neighbor": 42,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 53,
+        "lottery": "Quiniela Leidsa",
+        "direct_t2_neighbor": 44,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 53,
+        "lottery": "Quiniela Leidsa",
+        "direct_t2_neighbor": 63,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 53,
+        "lottery": "Quiniela Leidsa",
+        "direct_t2_neighbor": 70,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 53,
+        "lottery": "Quiniela Leidsa",
+        "direct_t2_neighbor": 90,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 14,
+        "lottery": "Quiniela Loteka",
+        "direct_t2_neighbor": 54,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      }
+    ],
+    "windows": {
+      "next_chronological_draw": {
+        "hit": false,
+        "first_appearance": null
+      },
+      "same_day_other_draws": {
+        "hit": false,
+        "first_appearance": null
+      },
+      "next_calendar_day": {
+        "hit": true,
+        "first_appearance": {
+          "date": "2017-12-28",
+          "lottery_name": "Quiniela Loteka",
+          "lottery_id": "b9f2c5a2-bc3e-4382-9b6d-3cee16db00fd",
+          "draw_id": "bf156c89-e27a-4608-ab9f-ae1affee31bb",
+          "source_reference": "1863",
+          "draw_time": null,
+          "position": 2,
+          "position_label": "2do",
+          "number": 62
+        }
+      },
+      "next_7_featured_draws": {
+        "hit": true,
+        "first_appearance": {
+          "date": "2017-12-28",
+          "lottery_name": "Quiniela Loteka",
+          "lottery_id": "b9f2c5a2-bc3e-4382-9b6d-3cee16db00fd",
+          "draw_id": "bf156c89-e27a-4608-ab9f-ae1affee31bb",
+          "source_reference": "1863",
+          "draw_time": null,
+          "position": 2,
+          "position_label": "2do",
+          "number": 62
+        }
+      }
+    },
+    "verdict": "ACIERTO_NO_UNICO",
+    "explanation": "39 (Loteria Nacional) genera candidato T1 9; confirmado por [53] vía Tabla2 (Quiniela Leidsa). 39 (Loteria Nacional) genera candidato T1 62; confirmado por [75] vía Tabla2 (Quiniela Real). Aparición posterior: 2017-12-28 Quiniela Loteka pos 2 = 62 (ref 1863). Veredicto: ACIERTO_NO_UNICO.",
+    "modifies_motor": false
+  },
+  {
+    "id": "HIST-006",
+    "label": "full_day_first_positions",
+    "date": "2024-08-20",
+    "methodology_version": "nr-historical-relations-j1.0.0",
+    "look_ahead_blocked": true,
+    "known_manual_fuerte": null,
+    "manual_used_only_for_final_compare": true,
+    "observations": [
+      {
+        "lottery_id": "43250709-ee65-476f-91f6-cb8438f49d65",
+        "lottery_name": "Gana Mas",
+        "draw_id": "24003345-12b8-4039-94f5-46529c1870f8",
+        "draw_date": "2024-08-20",
+        "draw_time": null,
+        "position": 1,
+        "position_label": "1ro",
+        "number": 47,
+        "source_reference": "179765",
+        "table1_code_mother": 47,
+        "table1_companions": [
+          4,
+          36,
+          68,
+          79,
+          84
+        ],
+        "table2_neighbors": []
+      },
+      {
+        "lottery_id": "0118037f-8f8b-4a82-899c-42cd50b6e194",
+        "lottery_name": "Loteria Nacional",
+        "draw_id": "5471e48a-c90e-4dcb-b449-758718d30349",
+        "draw_date": "2024-08-20",
+        "draw_time": null,
+        "position": 1,
+        "position_label": "1ro",
+        "number": 23,
+        "source_reference": "179772",
+        "table1_code_mother": 23,
+        "table1_companions": [],
+        "table2_neighbors": [
+          28,
+          73,
+          77,
+          87
+        ]
+      },
+      {
+        "lottery_id": "1624b6f2-88c6-42b5-a597-bf9c0f98a6b5",
+        "lottery_name": "New York 10:30",
+        "draw_id": "ac1c53b6-cc1d-4a4f-8c05-05f3990ff25d",
+        "draw_date": "2024-08-20",
+        "draw_time": null,
+        "position": 1,
+        "position_label": "1ro",
+        "number": 16,
+        "source_reference": "179779",
+        "table1_code_mother": 16,
+        "table1_companions": [],
+        "table2_neighbors": [
+          25
+        ]
+      },
+      {
+        "lottery_id": "1c488641-adb6-4790-89e7-879d361da7cc",
+        "lottery_name": "New York 2:30",
+        "draw_id": "75d5014d-46bd-4df1-8a1a-c1d6ce5f25dd",
+        "draw_date": "2024-08-20",
+        "draw_time": null,
+        "position": 1,
+        "position_label": "1ro",
+        "number": 10,
+        "source_reference": "179764",
+        "table1_code_mother": 10,
+        "table1_companions": [],
+        "table2_neighbors": [
+          1,
+          100
+        ]
+      },
+      {
+        "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+        "lottery_name": "Quiniela Leidsa",
+        "draw_id": "5e490750-5002-4fcd-9601-49f5a49b9ea8",
+        "draw_date": "2024-08-20",
+        "draw_time": null,
+        "position": 1,
+        "position_label": "1ro",
+        "number": 28,
+        "source_reference": "179773",
+        "table1_code_mother": 28,
+        "table1_companions": [
+          21,
+          26,
+          53
+        ],
+        "table2_neighbors": [
+          23,
+          73,
+          77,
+          87
+        ]
+      },
+      {
+        "lottery_id": "b9f2c5a2-bc3e-4382-9b6d-3cee16db00fd",
+        "lottery_name": "Quiniela Loteka",
+        "draw_id": "a45ab40b-781a-4876-9f43-6a2f88ce02e9",
+        "draw_date": "2024-08-20",
+        "draw_time": null,
+        "position": 1,
+        "position_label": "1ro",
+        "number": 78,
+        "source_reference": "179770",
+        "table1_code_mother": 78,
+        "table1_companions": [],
+        "table2_neighbors": [
+          39
+        ]
+      },
+      {
+        "lottery_id": "205c58d2-cfcf-44e6-894d-97358b3d540b",
+        "lottery_name": "Quiniela Real",
+        "draw_id": "b717ab9d-2dc8-45c8-bf22-2c3d00dfd69a",
+        "draw_date": "2024-08-20",
+        "draw_time": null,
+        "position": 1,
+        "position_label": "1ro",
+        "number": 92,
+        "source_reference": "179762",
+        "table1_code_mother": 92,
+        "table1_companions": [],
+        "table2_neighbors": [
+          27,
+          68,
+          76
+        ]
+      }
+    ],
+    "official_strengthened": [
+      {
+        "candidate": 68,
+        "generator_observed": 47,
+        "generator_lottery": "Gana Mas",
+        "confirmers": [
+          92
+        ],
+        "confirmer_lotteries": [
+          "Quiniela Real"
+        ],
+        "confirmation_level": 1,
+        "table1_companions_of_generator": [
+          4,
+          36,
+          68,
+          79,
+          84
+        ],
+        "table2_group_of_candidate": [
+          27,
+          68,
+          76,
+          92
+        ],
+        "confirmer_never_strengthened": true
+      }
+    ],
+    "fuerte_oficial": 68,
+    "resultado_unico": true,
+    "otros_candidatos": [],
+    "direct_t2_neighbor_signals": [
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 23,
+        "lottery": "Loteria Nacional",
+        "direct_t2_neighbor": 28,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 23,
+        "lottery": "Loteria Nacional",
+        "direct_t2_neighbor": 73,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 23,
+        "lottery": "Loteria Nacional",
+        "direct_t2_neighbor": 77,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 23,
+        "lottery": "Loteria Nacional",
+        "direct_t2_neighbor": 87,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 16,
+        "lottery": "New York 10:30",
+        "direct_t2_neighbor": 25,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 10,
+        "lottery": "New York 2:30",
+        "direct_t2_neighbor": 1,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 10,
+        "lottery": "New York 2:30",
+        "direct_t2_neighbor": 100,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 28,
+        "lottery": "Quiniela Leidsa",
+        "direct_t2_neighbor": 23,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 28,
+        "lottery": "Quiniela Leidsa",
+        "direct_t2_neighbor": 73,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 28,
+        "lottery": "Quiniela Leidsa",
+        "direct_t2_neighbor": 77,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 28,
+        "lottery": "Quiniela Leidsa",
+        "direct_t2_neighbor": 87,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 78,
+        "lottery": "Quiniela Loteka",
+        "direct_t2_neighbor": 39,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 92,
+        "lottery": "Quiniela Real",
+        "direct_t2_neighbor": 27,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 92,
+        "lottery": "Quiniela Real",
+        "direct_t2_neighbor": 76,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      }
+    ],
+    "windows": {
+      "next_chronological_draw": {
+        "hit": false,
+        "first_appearance": null
+      },
+      "same_day_other_draws": {
+        "hit": false,
+        "first_appearance": null
+      },
+      "next_calendar_day": {
+        "hit": true,
+        "first_appearance": {
+          "date": "2024-08-21",
+          "lottery_name": "Quiniela Loteka",
+          "lottery_id": "b9f2c5a2-bc3e-4382-9b6d-3cee16db00fd",
+          "draw_id": "d3d53160-01f5-44ca-b0eb-a93a6c63ea94",
+          "source_reference": "179797",
+          "draw_time": null,
+          "position": 2,
+          "position_label": "2do",
+          "number": 68
+        }
+      },
+      "next_7_featured_draws": {
+        "hit": true,
+        "first_appearance": {
+          "date": "2024-08-21",
+          "lottery_name": "Quiniela Loteka",
+          "lottery_id": "b9f2c5a2-bc3e-4382-9b6d-3cee16db00fd",
+          "draw_id": "d3d53160-01f5-44ca-b0eb-a93a6c63ea94",
+          "source_reference": "179797",
+          "draw_time": null,
+          "position": 2,
+          "position_label": "2do",
+          "number": 68
+        }
+      }
+    },
+    "verdict": "ACIERTO_EXACTO",
+    "explanation": "47 (Gana Mas) genera candidato T1 68; confirmado por [92] vía Tabla2 (Quiniela Real). Aparición posterior: 2024-08-21 Quiniela Loteka pos 2 = 68 (ref 179797). Veredicto: ACIERTO_EXACTO.",
+    "modifies_motor": false
+  },
+  {
+    "id": "HIST-007",
+    "label": "full_day_first_positions",
+    "date": "2023-05-24",
+    "methodology_version": "nr-historical-relations-j1.0.0",
+    "look_ahead_blocked": true,
+    "known_manual_fuerte": null,
+    "manual_used_only_for_final_compare": true,
+    "observations": [
+      {
+        "lottery_id": "43250709-ee65-476f-91f6-cb8438f49d65",
+        "lottery_name": "Gana Mas",
+        "draw_id": "fd31a749-aece-45d9-bcb7-324ed6d1321f",
+        "draw_date": "2023-05-24",
+        "draw_time": null,
+        "position": 1,
+        "position_label": "1ro",
+        "number": 47,
+        "source_reference": "161915",
+        "table1_code_mother": 47,
+        "table1_companions": [
+          4,
+          36,
+          68,
+          79,
+          84
+        ],
+        "table2_neighbors": []
+      },
+      {
+        "lottery_id": "0118037f-8f8b-4a82-899c-42cd50b6e194",
+        "lottery_name": "Loteria Nacional",
+        "draw_id": "c736bb6b-15f0-4a19-b2e2-01809e24d7da",
+        "draw_date": "2023-05-24",
+        "draw_time": null,
+        "position": 1,
+        "position_label": "1ro",
+        "number": 23,
+        "source_reference": "107955",
+        "table1_code_mother": 23,
+        "table1_companions": [],
+        "table2_neighbors": [
+          28,
+          73,
+          77,
+          87
+        ]
+      },
+      {
+        "lottery_id": "1624b6f2-88c6-42b5-a597-bf9c0f98a6b5",
+        "lottery_name": "New York 10:30",
+        "draw_id": "4d5edff3-27fa-4ab8-a500-9c3736d2faaf",
+        "draw_date": "2023-05-24",
+        "draw_time": null,
+        "position": 1,
+        "position_label": "1ro",
+        "number": 20,
+        "source_reference": "48693",
+        "table1_code_mother": 20,
+        "table1_companions": [],
+        "table2_neighbors": [
+          2
+        ]
+      },
+      {
+        "lottery_id": "1c488641-adb6-4790-89e7-879d361da7cc",
+        "lottery_name": "New York 2:30",
+        "draw_id": "132109fd-36e9-4dea-9346-86ae333c3c88",
+        "draw_date": "2023-05-24",
+        "draw_time": null,
+        "position": 1,
+        "position_label": "1ro",
+        "number": 95,
+        "source_reference": "46230",
+        "table1_code_mother": 95,
+        "table1_companions": [],
+        "table2_neighbors": []
+      },
+      {
+        "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+        "lottery_name": "Quiniela Leidsa",
+        "draw_id": "d69ec254-9d25-443c-a187-9e7be3c718b4",
+        "draw_date": "2023-05-24",
+        "draw_time": null,
+        "position": 1,
+        "position_label": "1ro",
+        "number": 61,
+        "source_reference": "115440",
+        "table1_code_mother": 61,
+        "table1_companions": [],
+        "table2_neighbors": []
+      },
+      {
+        "lottery_id": "b9f2c5a2-bc3e-4382-9b6d-3cee16db00fd",
+        "lottery_name": "Quiniela Loteka",
+        "draw_id": "dd74f2f7-df5e-4e05-a001-84b09c67e6ac",
+        "draw_date": "2023-05-24",
+        "draw_time": null,
+        "position": 1,
+        "position_label": "1ro",
+        "number": 76,
+        "source_reference": "34683",
+        "table1_code_mother": 76,
+        "table1_companions": [],
+        "table2_neighbors": [
+          27,
+          68,
+          92
+        ]
+      },
+      {
+        "lottery_id": "205c58d2-cfcf-44e6-894d-97358b3d540b",
+        "lottery_name": "Quiniela Real",
+        "draw_id": "4449f0a7-b2b1-45cd-b1da-8da78517e095",
+        "draw_date": "2023-05-24",
+        "draw_time": null,
+        "position": 1,
+        "position_label": "1ro",
+        "number": 33,
+        "source_reference": "34730",
+        "table1_code_mother": 33,
+        "table1_companions": [
+          2,
+          39,
+          82,
+          87
+        ],
+        "table2_neighbors": []
+      }
+    ],
+    "official_strengthened": [
+      {
+        "candidate": 2,
+        "generator_observed": 33,
+        "generator_lottery": "Quiniela Real",
+        "confirmers": [
+          20
+        ],
+        "confirmer_lotteries": [
+          "New York 10:30"
+        ],
+        "confirmation_level": 1,
+        "table1_companions_of_generator": [
+          2,
+          39,
+          82,
+          87
+        ],
+        "table2_group_of_candidate": [
+          2,
+          20
+        ],
+        "confirmer_never_strengthened": true
+      },
+      {
+        "candidate": 68,
+        "generator_observed": 47,
+        "generator_lottery": "Gana Mas",
+        "confirmers": [
+          76
+        ],
+        "confirmer_lotteries": [
+          "Quiniela Loteka"
+        ],
+        "confirmation_level": 1,
+        "table1_companions_of_generator": [
+          4,
+          36,
+          68,
+          79,
+          84
+        ],
+        "table2_group_of_candidate": [
+          27,
+          68,
+          76,
+          92
+        ],
+        "confirmer_never_strengthened": true
+      },
+      {
+        "candidate": 87,
+        "generator_observed": 33,
+        "generator_lottery": "Quiniela Real",
+        "confirmers": [
+          23
+        ],
+        "confirmer_lotteries": [
+          "Loteria Nacional"
+        ],
+        "confirmation_level": 1,
+        "table1_companions_of_generator": [
+          2,
+          39,
+          82,
+          87
+        ],
+        "table2_group_of_candidate": [
+          23,
+          28,
+          73,
+          77,
+          87
+        ],
+        "confirmer_never_strengthened": true
+      }
+    ],
+    "fuerte_oficial": [
+      2,
+      68,
+      87
+    ],
+    "resultado_unico": false,
+    "otros_candidatos": [
+      68,
+      87
+    ],
+    "direct_t2_neighbor_signals": [
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 23,
+        "lottery": "Loteria Nacional",
+        "direct_t2_neighbor": 28,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 23,
+        "lottery": "Loteria Nacional",
+        "direct_t2_neighbor": 73,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 23,
+        "lottery": "Loteria Nacional",
+        "direct_t2_neighbor": 77,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 76,
+        "lottery": "Quiniela Loteka",
+        "direct_t2_neighbor": 27,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 76,
+        "lottery": "Quiniela Loteka",
+        "direct_t2_neighbor": 92,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      }
+    ],
+    "windows": {
+      "next_chronological_draw": {
+        "hit": false,
+        "first_appearance": null
+      },
+      "same_day_other_draws": {
+        "hit": false,
+        "first_appearance": null
+      },
+      "next_calendar_day": {
+        "hit": true,
+        "first_appearance": {
+          "date": "2023-05-25",
+          "lottery_name": "Quiniela Leidsa",
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "draw_id": "24ad7a7e-9ad6-408b-97a4-f6b2625d6972",
+          "source_reference": "115439",
+          "draw_time": null,
+          "position": 1,
+          "position_label": "1ro",
+          "number": 68
+        }
+      },
+      "next_7_featured_draws": {
+        "hit": true,
+        "first_appearance": {
+          "date": "2023-05-25",
+          "lottery_name": "Quiniela Leidsa",
+          "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+          "draw_id": "24ad7a7e-9ad6-408b-97a4-f6b2625d6972",
+          "source_reference": "115439",
+          "draw_time": null,
+          "position": 1,
+          "position_label": "1ro",
+          "number": 68
+        }
+      }
+    },
+    "verdict": "ACIERTO_NO_UNICO",
+    "explanation": "33 (Quiniela Real) genera candidato T1 2; confirmado por [20] vía Tabla2 (New York 10:30). 47 (Gana Mas) genera candidato T1 68; confirmado por [76] vía Tabla2 (Quiniela Loteka). 33 (Quiniela Real) genera candidato T1 87; confirmado por [23] vía Tabla2 (Loteria Nacional). Aparición posterior: 2023-05-25 Quiniela Leidsa pos 1 = 68 (ref 115439). Veredicto: ACIERTO_NO_UNICO.",
+    "modifies_motor": false
+  },
+  {
+    "id": "HIST-008",
+    "label": "full_day_first_positions",
+    "date": "2017-09-30",
+    "methodology_version": "nr-historical-relations-j1.0.0",
+    "look_ahead_blocked": true,
+    "known_manual_fuerte": null,
+    "manual_used_only_for_final_compare": true,
+    "observations": [
+      {
+        "lottery_id": "43250709-ee65-476f-91f6-cb8438f49d65",
+        "lottery_name": "Gana Mas",
+        "draw_id": "3680aa80-c597-466e-9a5c-2a225d185eec",
+        "draw_date": "2017-09-30",
+        "draw_time": null,
+        "position": 1,
+        "position_label": "1ro",
+        "number": 52,
+        "source_reference": "163749",
+        "table1_code_mother": 52,
+        "table1_companions": [
+          65,
+          97
+        ],
+        "table2_neighbors": [
+          81,
+          85
+        ]
+      },
+      {
+        "lottery_id": "0118037f-8f8b-4a82-899c-42cd50b6e194",
+        "lottery_name": "Loteria Nacional",
+        "draw_id": "54b49eeb-4b7d-4615-9ac6-bee1a7f13155",
+        "draw_date": "2017-09-30",
+        "draw_time": null,
+        "position": 1,
+        "position_label": "1ro",
+        "number": 38,
+        "source_reference": "109857",
+        "table1_code_mother": 38,
+        "table1_companions": [
+          20,
+          31,
+          47,
+          52,
+          63,
+          100
+        ],
+        "table2_neighbors": []
+      },
+      {
+        "lottery_id": "1624b6f2-88c6-42b5-a597-bf9c0f98a6b5",
+        "lottery_name": "New York 10:30",
+        "draw_id": "03c99498-8237-48eb-aef0-5374b0dcd49a",
+        "draw_date": "2017-09-30",
+        "draw_time": null,
+        "position": 1,
+        "position_label": "1ro",
+        "number": 16,
+        "source_reference": "50755",
+        "table1_code_mother": 16,
+        "table1_companions": [],
+        "table2_neighbors": [
+          25
+        ]
+      },
+      {
+        "lottery_id": "1c488641-adb6-4790-89e7-879d361da7cc",
+        "lottery_name": "New York 2:30",
+        "draw_id": "917bfc28-c863-44e5-a51d-228edacd3d8e",
+        "draw_date": "2017-09-30",
+        "draw_time": null,
+        "position": 1,
+        "position_label": "1ro",
+        "number": 60,
+        "source_reference": "48292",
+        "table1_code_mother": 60,
+        "table1_companions": [],
+        "table2_neighbors": [
+          6
+        ]
+      },
+      {
+        "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+        "lottery_name": "Quiniela Leidsa",
+        "draw_id": "ccf7942a-13d3-44eb-8ebc-c823b83f59ec",
+        "draw_date": "2017-09-30",
+        "draw_time": null,
+        "position": 1,
+        "position_label": "1ro",
+        "number": 90,
+        "source_reference": "117387",
+        "table1_code_mother": 90,
+        "table1_companions": [],
+        "table2_neighbors": [
+          7,
+          9,
+          22,
+          29,
+          35,
+          42,
+          44,
+          53,
+          63,
+          70
+        ]
+      },
+      {
+        "lottery_id": "b9f2c5a2-bc3e-4382-9b6d-3cee16db00fd",
+        "lottery_name": "Quiniela Loteka",
+        "draw_id": "f9325118-6d51-4d4a-96be-669797321ea5",
+        "draw_date": "2017-09-30",
+        "draw_time": null,
+        "position": 1,
+        "position_label": "1ro",
+        "number": 4,
+        "source_reference": "1951",
+        "table1_code_mother": 4,
+        "table1_companions": [],
+        "table2_neighbors": [
+          40
+        ]
+      },
+      {
+        "lottery_id": "205c58d2-cfcf-44e6-894d-97358b3d540b",
+        "lottery_name": "Quiniela Real",
+        "draw_id": "c826a7e8-c840-4dcc-b4a7-b8be5435e9f3",
+        "draw_date": "2017-09-30",
+        "draw_time": null,
+        "position": 1,
+        "position_label": "1ro",
+        "number": 77,
+        "source_reference": "36707",
+        "table1_code_mother": 77,
+        "table1_companions": [],
+        "table2_neighbors": [
+          23,
+          28,
+          73,
+          87
+        ]
+      }
+    ],
+    "official_strengthened": [
+      {
+        "candidate": 63,
+        "generator_observed": 38,
+        "generator_lottery": "Loteria Nacional",
+        "confirmers": [
+          90
+        ],
+        "confirmer_lotteries": [
+          "Quiniela Leidsa"
+        ],
+        "confirmation_level": 1,
+        "table1_companions_of_generator": [
+          20,
+          31,
+          47,
+          52,
+          63,
+          100
+        ],
+        "table2_group_of_candidate": [
+          7,
+          9,
+          22,
+          29,
+          35,
+          42,
+          44,
+          53,
+          63,
+          70,
+          90
+        ],
+        "confirmer_never_strengthened": true
+      }
+    ],
+    "fuerte_oficial": 63,
+    "resultado_unico": true,
+    "otros_candidatos": [],
+    "direct_t2_neighbor_signals": [
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 52,
+        "lottery": "Gana Mas",
+        "direct_t2_neighbor": 81,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 52,
+        "lottery": "Gana Mas",
+        "direct_t2_neighbor": 85,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 16,
+        "lottery": "New York 10:30",
+        "direct_t2_neighbor": 25,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 60,
+        "lottery": "New York 2:30",
+        "direct_t2_neighbor": 6,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 90,
+        "lottery": "Quiniela Leidsa",
+        "direct_t2_neighbor": 7,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 90,
+        "lottery": "Quiniela Leidsa",
+        "direct_t2_neighbor": 9,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 90,
+        "lottery": "Quiniela Leidsa",
+        "direct_t2_neighbor": 22,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 90,
+        "lottery": "Quiniela Leidsa",
+        "direct_t2_neighbor": 29,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 90,
+        "lottery": "Quiniela Leidsa",
+        "direct_t2_neighbor": 35,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 90,
+        "lottery": "Quiniela Leidsa",
+        "direct_t2_neighbor": 42,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 90,
+        "lottery": "Quiniela Leidsa",
+        "direct_t2_neighbor": 44,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 90,
+        "lottery": "Quiniela Leidsa",
+        "direct_t2_neighbor": 53,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 90,
+        "lottery": "Quiniela Leidsa",
+        "direct_t2_neighbor": 70,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 4,
+        "lottery": "Quiniela Loteka",
+        "direct_t2_neighbor": 40,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 77,
+        "lottery": "Quiniela Real",
+        "direct_t2_neighbor": 23,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 77,
+        "lottery": "Quiniela Real",
+        "direct_t2_neighbor": 28,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 77,
+        "lottery": "Quiniela Real",
+        "direct_t2_neighbor": 73,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 77,
+        "lottery": "Quiniela Real",
+        "direct_t2_neighbor": 87,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      }
+    ],
+    "windows": {
+      "next_chronological_draw": {
+        "hit": false,
+        "first_appearance": null
+      },
+      "same_day_other_draws": {
+        "hit": false,
+        "first_appearance": null
+      },
+      "next_calendar_day": {
+        "hit": false,
+        "first_appearance": null
+      },
+      "next_7_featured_draws": {
+        "hit": false,
+        "first_appearance": null
+      }
+    },
+    "verdict": "FALLO",
+    "explanation": "38 (Loteria Nacional) genera candidato T1 63; confirmado por [90] vía Tabla2 (Quiniela Leidsa). No apareció en ninguna ventana declarada. Veredicto: FALLO.",
+    "modifies_motor": false
+  },
+  {
+    "id": "HIST-009",
+    "label": "full_day_first_positions",
+    "date": "2020-04-28",
+    "methodology_version": "nr-historical-relations-j1.0.0",
+    "look_ahead_blocked": true,
+    "known_manual_fuerte": null,
+    "manual_used_only_for_final_compare": true,
+    "observations": [
+      {
+        "lottery_id": "1624b6f2-88c6-42b5-a597-bf9c0f98a6b5",
+        "lottery_name": "New York 10:30",
+        "draw_id": "97fc1f4c-4054-4ae0-8a9e-2efcbd65f3ab",
+        "draw_date": "2020-04-28",
+        "draw_time": null,
+        "position": 2,
+        "position_label": "2do",
+        "number": 99,
+        "source_reference": "49814",
+        "table1_code_mother": 99,
+        "table1_companions": [],
+        "table2_neighbors": []
+      },
+      {
+        "lottery_id": "1c488641-adb6-4790-89e7-879d361da7cc",
+        "lottery_name": "New York 2:30",
+        "draw_id": "41702635-31ea-44da-9399-d4f5983ed568",
+        "draw_date": "2020-04-28",
+        "draw_time": null,
+        "position": 1,
+        "position_label": "1ro",
+        "number": 49,
+        "source_reference": "47351",
+        "table1_code_mother": 49,
+        "table1_companions": [
+          35,
+          40,
+          83
+        ],
+        "table2_neighbors": []
+      }
+    ],
+    "official_strengthened": [],
+    "fuerte_oficial": null,
+    "resultado_unico": false,
+    "otros_candidatos": [],
+    "direct_t2_neighbor_signals": [],
+    "windows": {
+      "next_chronological_draw": {
+        "hit": false,
+        "first_appearance": null
+      },
+      "same_day_other_draws": {
+        "hit": false,
+        "first_appearance": null
+      },
+      "next_calendar_day": {
+        "hit": false,
+        "first_appearance": null
+      },
+      "next_7_featured_draws": {
+        "hit": false,
+        "first_appearance": null
+      }
+    },
+    "verdict": "SIN_CONFIRMACION",
+    "explanation": "Sin confirmación oficial: ningún compañero T1 fue confirmado por otro observado.",
+    "modifies_motor": false
+  },
+  {
+    "id": "HIST-010",
+    "label": "full_day_first_positions",
+    "date": "2023-04-14",
+    "methodology_version": "nr-historical-relations-j1.0.0",
+    "look_ahead_blocked": true,
+    "known_manual_fuerte": null,
+    "manual_used_only_for_final_compare": true,
+    "observations": [
+      {
+        "lottery_id": "43250709-ee65-476f-91f6-cb8438f49d65",
+        "lottery_name": "Gana Mas",
+        "draw_id": "27d5db09-5bb9-4d4d-8a26-f27386cf5146",
+        "draw_date": "2023-04-14",
+        "draw_time": null,
+        "position": 1,
+        "position_label": "1ro",
+        "number": 24,
+        "source_reference": "161954",
+        "table1_code_mother": 24,
+        "table1_companions": [],
+        "table2_neighbors": []
+      },
+      {
+        "lottery_id": "0118037f-8f8b-4a82-899c-42cd50b6e194",
+        "lottery_name": "Loteria Nacional",
+        "draw_id": "c7979e33-4a1a-4fbd-a216-54edeb985b6a",
+        "draw_date": "2023-04-14",
+        "draw_time": null,
+        "position": 1,
+        "position_label": "1ro",
+        "number": 52,
+        "source_reference": "107995",
+        "table1_code_mother": 52,
+        "table1_companions": [
+          65,
+          97
+        ],
+        "table2_neighbors": [
+          81,
+          85
+        ]
+      },
+      {
+        "lottery_id": "1624b6f2-88c6-42b5-a597-bf9c0f98a6b5",
+        "lottery_name": "New York 10:30",
+        "draw_id": "b7b48f95-7b6a-4688-9105-544d52d33723",
+        "draw_date": "2023-04-14",
+        "draw_time": null,
+        "position": 1,
+        "position_label": "1ro",
+        "number": 34,
+        "source_reference": "48733",
+        "table1_code_mother": 34,
+        "table1_companions": [
+          1,
+          17,
+          33,
+          49,
+          76
+        ],
+        "table2_neighbors": [
+          26,
+          59,
+          72
+        ]
+      },
+      {
+        "lottery_id": "1c488641-adb6-4790-89e7-879d361da7cc",
+        "lottery_name": "New York 2:30",
+        "draw_id": "0412a071-1408-42a8-95cb-30dcd33271dc",
+        "draw_date": "2023-04-14",
+        "draw_time": null,
+        "position": 1,
+        "position_label": "1ro",
+        "number": 86,
+        "source_reference": "46270",
+        "table1_code_mother": 86,
+        "table1_companions": [],
+        "table2_neighbors": [
+          19,
+          46
+        ]
+      },
+      {
+        "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+        "lottery_name": "Quiniela Leidsa",
+        "draw_id": "098358c8-9ee6-4136-8228-ed74900b7912",
+        "draw_date": "2023-04-14",
+        "draw_time": null,
+        "position": 1,
+        "position_label": "1ro",
+        "number": 15,
+        "source_reference": "115480",
+        "table1_code_mother": 15,
+        "table1_companions": [],
+        "table2_neighbors": [
+          96
+        ]
+      },
+      {
+        "lottery_id": "b9f2c5a2-bc3e-4382-9b6d-3cee16db00fd",
+        "lottery_name": "Quiniela Loteka",
+        "draw_id": "9da6d135-bc19-49ec-93ef-3137e73864f5",
+        "draw_date": "2023-04-14",
+        "draw_time": null,
+        "position": 1,
+        "position_label": "1ro",
+        "number": 45,
+        "source_reference": "29",
+        "table1_code_mother": 45,
+        "table1_companions": [
+          69,
+          80
+        ],
+        "table2_neighbors": [
+          32
+        ]
+      },
+      {
+        "lottery_id": "205c58d2-cfcf-44e6-894d-97358b3d540b",
+        "lottery_name": "Quiniela Real",
+        "draw_id": "b32c2e89-f3ec-4eeb-8841-411b0467d765",
+        "draw_date": "2023-04-14",
+        "draw_time": null,
+        "position": 1,
+        "position_label": "1ro",
+        "number": 87,
+        "source_reference": "34770",
+        "table1_code_mother": 87,
+        "table1_companions": [],
+        "table2_neighbors": [
+          23,
+          28,
+          73,
+          77
+        ]
+      }
+    ],
+    "official_strengthened": [],
+    "fuerte_oficial": null,
+    "resultado_unico": false,
+    "otros_candidatos": [],
+    "direct_t2_neighbor_signals": [
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 52,
+        "lottery": "Loteria Nacional",
+        "direct_t2_neighbor": 81,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 52,
+        "lottery": "Loteria Nacional",
+        "direct_t2_neighbor": 85,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 34,
+        "lottery": "New York 10:30",
+        "direct_t2_neighbor": 26,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 34,
+        "lottery": "New York 10:30",
+        "direct_t2_neighbor": 59,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 34,
+        "lottery": "New York 10:30",
+        "direct_t2_neighbor": 72,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 86,
+        "lottery": "New York 2:30",
+        "direct_t2_neighbor": 19,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 86,
+        "lottery": "New York 2:30",
+        "direct_t2_neighbor": 46,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 15,
+        "lottery": "Quiniela Leidsa",
+        "direct_t2_neighbor": 96,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 45,
+        "lottery": "Quiniela Loteka",
+        "direct_t2_neighbor": 32,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 87,
+        "lottery": "Quiniela Real",
+        "direct_t2_neighbor": 23,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 87,
+        "lottery": "Quiniela Real",
+        "direct_t2_neighbor": 28,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 87,
+        "lottery": "Quiniela Real",
+        "direct_t2_neighbor": 73,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 87,
+        "lottery": "Quiniela Real",
+        "direct_t2_neighbor": 77,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      }
+    ],
+    "windows": {
+      "next_chronological_draw": {
+        "hit": false,
+        "first_appearance": null
+      },
+      "same_day_other_draws": {
+        "hit": false,
+        "first_appearance": null
+      },
+      "next_calendar_day": {
+        "hit": false,
+        "first_appearance": null
+      },
+      "next_7_featured_draws": {
+        "hit": false,
+        "first_appearance": null
+      }
+    },
+    "verdict": "DIRECT_T2_RECHAZADO",
+    "explanation": "No hay candidato T1 confirmado. Señal T2 directa rechazada (52→81). No es fuerte oficial.",
+    "modifies_motor": false
+  },
+  {
+    "id": "HIST-011",
+    "label": "C2_direct_t2_rejected",
+    "date": "2026-06-21",
+    "methodology_version": "nr-historical-relations-j1.0.0",
+    "look_ahead_blocked": true,
+    "known_manual_fuerte": 75,
+    "manual_used_only_for_final_compare": true,
+    "observations": [
+      {
+        "lottery_id": "43250709-ee65-476f-91f6-cb8438f49d65",
+        "lottery_name": "Gana Mas",
+        "draw_id": "d6732010-5902-4533-a13c-2fb016cf6856",
+        "draw_date": "2026-06-21",
+        "draw_time": null,
+        "position": 1,
+        "position_label": "1ro",
+        "number": 41,
+        "source_reference": "224681",
+        "table1_code_mother": 41,
+        "table1_companions": [
+          13,
+          29,
+          93
+        ],
+        "table2_neighbors": [
+          12,
+          56,
+          71,
+          89
+        ]
+      },
+      {
+        "lottery_id": "b9f2c5a2-bc3e-4382-9b6d-3cee16db00fd",
+        "lottery_name": "Quiniela Loteka",
+        "draw_id": "fb1e9073-070f-4cf1-a487-56c6aa9e478e",
+        "draw_date": "2026-06-21",
+        "draw_time": null,
+        "position": 1,
+        "position_label": "1ro",
+        "number": 62,
+        "source_reference": "224700",
+        "table1_code_mother": 62,
+        "table1_companions": [],
+        "table2_neighbors": [
+          75
+        ]
+      }
+    ],
+    "official_strengthened": [],
+    "fuerte_oficial": null,
+    "resultado_unico": false,
+    "otros_candidatos": [],
+    "direct_t2_neighbor_signals": [
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 41,
+        "lottery": "Gana Mas",
+        "direct_t2_neighbor": 12,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 41,
+        "lottery": "Gana Mas",
+        "direct_t2_neighbor": 56,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 41,
+        "lottery": "Gana Mas",
+        "direct_t2_neighbor": 71,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 41,
+        "lottery": "Gana Mas",
+        "direct_t2_neighbor": 89,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      },
+      {
+        "classification": "DIRECT_T2_NEIGHBOR_SIGNAL",
+        "observed": 62,
+        "lottery": "Quiniela Loteka",
+        "direct_t2_neighbor": 75,
+        "is_official_fuerte": false,
+        "rejected_as_predictive_rule": true
+      }
+    ],
+    "windows": {
+      "next_chronological_draw": {
+        "hit": false,
+        "first_appearance": null
+      },
+      "same_day_other_draws": {
+        "hit": false,
+        "first_appearance": null
+      },
+      "next_calendar_day": {
+        "hit": false,
+        "first_appearance": null
+      },
+      "next_7_featured_draws": {
+        "hit": false,
+        "first_appearance": null
+      }
+    },
+    "verdict": "DIRECT_T2_RECHAZADO",
+    "explanation": "Manual 75 no es fuerte oficial. 62→75 es DIRECT_T2_NEIGHBOR_SIGNAL rechazada. No hay candidato T1 confirmado. Señal T2 directa rechazada (41→12). No es fuerte oficial.",
+    "modifies_motor": false
+  }
+]

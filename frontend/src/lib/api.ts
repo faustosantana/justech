@@ -2830,6 +2830,35 @@ export const apiClient = {
       body: JSON.stringify(body),
     }, true),
 
+  postLotteryNumericRelationsHistoricalAudit: (body: Record<string, unknown> = {}) =>
+    request<Record<string, unknown>>("/lottery/admin/numeric-relations/historical-audit", {
+      method: "POST",
+      body: JSON.stringify(body),
+    }, true),
+
+  getLotteryNumericRelationsHistoricalAudit: (auditId: string) =>
+    request<Record<string, unknown>>(
+      `/lottery/admin/numeric-relations/historical-audit/${encodeURIComponent(auditId)}`,
+      undefined,
+      true,
+    ),
+
+  getLotteryNumericRelationsHistoricalAuditCases: (
+    auditId: string,
+    params?: { page?: number; page_size?: number; verdict?: string },
+  ) => {
+    const q = new URLSearchParams();
+    if (params?.page) q.set("page", String(params.page));
+    if (params?.page_size) q.set("page_size", String(params.page_size));
+    if (params?.verdict) q.set("verdict", params.verdict);
+    const qs = q.toString();
+    return request<Record<string, unknown>>(
+      `/lottery/admin/numeric-relations/historical-audit/${encodeURIComponent(auditId)}/cases${qs ? `?${qs}` : ""}`,
+      undefined,
+      true,
+    );
+  },
+
   postLotteryNrHistoryConditions: (body: Record<string, unknown>) =>
     request<Record<string, unknown>>("/lottery/admin/numeric-relations/history/conditions/search", {
       method: "POST",

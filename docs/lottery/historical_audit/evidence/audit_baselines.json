@@ -1,0 +1,75 @@
+{
+  "window": "next_calendar_day",
+  "definition": "Hit iff prediction_set ∩ next_calendar_day FEATURED_SEVEN numbers ≠ ∅. Denominator = cases with ≥1 official fuerte AND at least one next-day featured draw. Candidates never selected using future draws (look-ahead blocked for selection).",
+  "official_t1_x_t2": {
+    "hits": 536,
+    "denominator": 2072,
+    "hit_rate": 0.258687,
+    "wilson_ci_95": [
+      0.24029,
+      0.277978
+    ],
+    "cases_with_fuerte_total": 2073,
+    "cases_excluded_no_next_day_draws": 1
+  },
+  "random_one_number": {
+    "hits": 381,
+    "denominator": 2072,
+    "hit_rate": 0.18388,
+    "wilson_ci_95": [
+      0.16779,
+      0.201141
+    ],
+    "cases_with_fuerte_total": 2073,
+    "cases_excluded_no_next_day_draws": 1
+  },
+  "random_same_k": {
+    "hits": 551,
+    "denominator": 2072,
+    "hit_rate": 0.265927,
+    "wilson_ci_95": [
+      0.247348,
+      0.285372
+    ],
+    "cases_with_fuerte_total": 2073,
+    "cases_excluded_no_next_day_draws": 1
+  },
+  "t1_companions_no_confirmation": {
+    "hits": 380,
+    "denominator": 2072,
+    "hit_rate": 0.183398,
+    "wilson_ci_95": [
+      0.167325,
+      0.200642
+    ],
+    "cases_with_fuerte_total": 2073,
+    "cases_excluded_no_next_day_draws": 1
+  },
+  "direct_t2_neighbors_rejected_rule": {
+    "hits": 745,
+    "denominator": 2072,
+    "hit_rate": 0.359556,
+    "wilson_ci_95": [
+      0.339171,
+      0.380461
+    ],
+    "cases_with_fuerte_total": 2073,
+    "cases_excluded_no_next_day_draws": 1
+  },
+  "base_frequency_empirical_mean_coverage": {
+    "mean_next_day_unique_numbers_over_100": 0.180048,
+    "expected_hit_rate_random_one": 0.180048,
+    "avg_k_official": 1.6406,
+    "expected_hit_rate_random_same_k": 0.277963,
+    "numerator_definition": "mean(|unique next-day numbers|)/100 over eligible cases",
+    "denominator": 2072
+  },
+  "lift_official_vs_random_one": 1.4068,
+  "lift_official_vs_random_same_k": 0.9728,
+  "lift_official_vs_t1_unconfirmed": 1.4105,
+  "lift_official_vs_direct_t2": 0.7195,
+  "lift_official_vs_base_frequency_random_one": 1.4368,
+  "absolute_diff_vs_random_same_k": -0.00724,
+  "seed": 20260726,
+  "bias_note": "Prior biased baseline that scored random against official first_appearance only is retired; this version uses the full next-day number universe."
+}

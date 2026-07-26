@@ -297,3 +297,146 @@ async def numeric_relations_validation_lab(
         return result
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@router.post("/historical-audit")
+async def numeric_relations_historical_audit(
+    user: CurrentUser,
+    _: TenantCtx,
+    __: Annotated[None, require_ai_admin(*_PERMS)],
+    body: dict[str, Any] = Body(default={}),
+) -> dict[str, Any]:
+    """Historical Manual Logic Audit — read-only, reproducible, no motor/table writes."""
+    from datetime import date as date_cls
+
+    from app.lottery.numeric_relations.historical_audit_runner import (
+        DEFAULT_DEV_DSN,
+        load_precomputed_into_store,
+        run_historical_audit,
+    )
+    from app.lottery.numeric_relations.historical_manual_audit import SEED_DEFAULT
+
+    use_precomputed = bool(body.get("use_precomputed", True))
+    if use_precomputed and not body.get("force_rerun"):
+        pre = load_precomputed_into_store()
+        if pre:
+            return {
+                "audit_id": pre["audit_id"],
+                "trace_id": pre["trace_id"],
+                "status": pre["status"],
+                "progress": pre.get("progress"),
+                "summary": pre.get("summary"),
+                "source": "precomputed_evidence",
+                "requested_by": str(user.id),
+                "disclaimer": "Auditoría histórica; no es garantía predictiva.",
+            }
+
+    date_from = body.get("date_from")
+    date_to = body.get("date_to")
+    seed = int(body.get("seed") or SEED_DEFAULT)
+    try:
+        payload = await run_historical_audit(
+            dsn=str(body.get("dsn") or DEFAULT_DEV_DSN),
+            seed=seed,
+            write_files=bool(body.get("write_files", False)),
+            date_from=date_cls.fromisoformat(str(date_from)) if date_from else None,
+            date_to=date_cls.fromisoformat(str(date_to)) if date_to else None,
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except RuntimeError as exc:
+        raise HTTPException(status_code=409, detail=str(exc)) from exc
+
+    return {
+        "audit_id": payload["audit_id"],
+        "trace_id": payload["trace_id"],
+        "status": payload["status"],
+        "progress": payload.get("progress"),
+        "summary": payload.get("summary"),
+        "source": "live_dev_readonly",
+        "requested_by": str(user.id),
+        "disclaimer": "Auditoría histórica; no es garantía predictiva.",
+    }
+
+
+@router.get("/historical-audit/{audit_id}")
+async def numeric_relations_historical_audit_get(
+    audit_id: str,
+    user: CurrentUser,
+    _: TenantCtx,
+    __: Annotated[None, require_ai_admin(*_PERMS)],
+) -> dict[str, Any]:
+    from app.lottery.numeric_relations.historical_audit_runner import (
+        get_audit,
+        load_precomputed_into_store,
+    )
+
+    row = get_audit(audit_id)
+    if not row:
+        pre = load_precomputed_into_store()
+        if pre and pre["audit_id"] == audit_id:
+            row = pre
+    if not row:
+        raise HTTPException(status_code=404, detail="audit_id not found")
+    return {
+        "audit_id": row["audit_id"],
+        "trace_id": row.get("trace_id"),
+        "status": row.get("status"),
+        "progress": row.get("progress"),
+        "summary": row.get("summary"),
+        "production_forbidden": True,
+        "requested_by": str(user.id),
+    }
+
+
+@router.get("/historical-audit/{audit_id}/cases")
+async def numeric_relations_historical_audit_cases(
+    audit_id: str,
+    user: CurrentUser,
+    _: TenantCtx,
+    __: Annotated[None, require_ai_admin(*_PERMS)],
+    page: int = Query(1, ge=1),
+    page_size: int = Query(20, ge=1, le=100),
+    verdict: str | None = Query(None),
+) -> dict[str, Any]:
+    from app.lottery.numeric_relations.historical_audit_runner import (
+        get_audit,
+        load_precomputed_into_store,
+    )
+
+    row = get_audit(audit_id)
+    if not row:
+        pre = load_precomputed_into_store()
+        if pre and pre["audit_id"] == audit_id:
+            row = pre
+    if not row:
+        raise HTTPException(status_code=404, detail="audit_id not found")
+    cases = list(row.get("cases") or [])
+    if verdict:
+        cases = [c for c in cases if c.get("verdict") == verdict]
+    total = len(cases)
+    start = (page - 1) * page_size
+    chunk = cases[start : start + page_size]
+    return {
+        "audit_id": audit_id,
+        "page": page,
+        "page_size": page_size,
+        "total": total,
+        "cases": chunk,
+        "requested_by": str(user.id),
+    }
+
+
+@router.post("/historical-audit/{audit_id}/cancel")
+async def numeric_relations_historical_audit_cancel(
+    audit_id: str,
+    user: CurrentUser,
+    _: TenantCtx,
+    __: Annotated[None, require_ai_admin(*_PERMS)],
+) -> dict[str, Any]:
+    from app.lottery.numeric_relations.historical_audit_runner import cancel_audit
+
+    ok = cancel_audit(audit_id)
+    if not ok:
+        raise HTTPException(status_code=404, detail="audit_id not found")
+    return {"audit_id": audit_id, "status": "cancelled", "requested_by": str(user.id)}

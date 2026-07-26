@@ -1,0 +1,53 @@
+{
+  "total_cases": 4214,
+  "cases_with_fuerte": 2073,
+  "cases_multi_fuerte": 875,
+  "cases_sin_fuerte": 2141,
+  "cases_direct_t2_rechazado": 2140,
+  "avg_candidates_per_case": 0.8071,
+  "windows": {
+    "next_chronological_draw": {
+      "hits": 105,
+      "denominator_cases_with_fuerte": 2073,
+      "precision": 0.050651,
+      "wilson_ci_95": [
+        0.042015,
+        0.06095
+      ]
+    },
+    "same_day_other_draws": {
+      "hits": 0,
+      "denominator_cases_with_fuerte": 2073,
+      "precision": 0.0,
+      "wilson_ci_95": [
+        -0.0,
+        0.00185
+      ]
+    },
+    "next_calendar_day": {
+      "hits": 536,
+      "denominator_cases_with_fuerte": 2073,
+      "precision": 0.258562,
+      "wilson_ci_95": [
+        0.240173,
+        0.277845
+      ]
+    },
+    "next_7_featured_draws": {
+      "hits": 557,
+      "denominator_cases_with_fuerte": 2073,
+      "precision": 0.268693,
+      "wilson_ci_95": [
+        0.250051,
+        0.28819
+      ]
+    }
+  },
+  "verdict_counts": {
+    "DIRECT_T2_RECHAZADO": 2140,
+    "FALLO": 1516,
+    "ACIERTO_NO_UNICO": 352,
+    "ACIERTO_EXACTO": 205,
+    "SIN_CONFIRMACION": 1
+  }
+}

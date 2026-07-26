@@ -437,6 +437,17 @@ export const MODULE_REGISTRY: ModuleDefinition[] = [
         shortDescription: "Auditoría explicativa T1×T2 vs casos manuales (no modifica el motor)",
       },
       {
+        id: "historical-audit",
+        label: "Historical Audit",
+        icon: FileSearch,
+        contentKey: "lottery:historical-audit",
+        views: ["list"],
+        legacyHref: "/lottery/admin/control-center/motor/historical-audit",
+        group: "Análisis",
+        roles: ["owner", "admin", "superadmin"],
+        shortDescription: "Auditoría histórica de la lógica manual T1×T2 (solo lectura; no predictiva)",
+      },
+      {
         id: "tabla1",
         label: "Tabla 1",
         icon: BarChart3,

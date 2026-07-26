@@ -1,0 +1,233 @@
+{
+  "audit_id": "d6f14900-4a7e-4911-9530-8b03d5c570fe",
+  "trace_id": "d6f14900-4a7e-4911-9530-8b03d5c570fe",
+  "methodology_version": "nr-historical-relations-j1.0.0",
+  "production_forbidden": true,
+  "motor_modified": false,
+  "tables_modified": false,
+  "draw_count_all": 91941,
+  "featured_seven": 7,
+  "featured_draws_loaded": 27230,
+  "dates_analyzed": 4214,
+  "population_cases": 4214,
+  "generator_pair_upper_bound": 153600,
+  "total_t1_companion_slots_scanned": 27668,
+  "total_official_strengthened_instances": 3401,
+  "seed": 20260726,
+  "selection": {
+    "seed": 20260726,
+    "selection_criterion": "Anchors C1/C3/C4/C5 fixed; then seeded shuffle fill by quota (5 hits / 3 fails / 1 multi / 1 none / 1 DIRECT_T2); remainder chronological. No success-based reordering after windows.",
+    "quotas_achieved": {
+      "hits": 5,
+      "fails": 3,
+      "multi": 3,
+      "sin_fuerte": 2,
+      "direct_t2": 1,
+      "total": 11
+    },
+    "c2_forced_include": true
+  },
+  "population_metrics": {
+    "total_cases": 4214,
+    "cases_with_fuerte": 2073,
+    "cases_multi_fuerte": 875,
+    "cases_sin_fuerte": 2141,
+    "cases_direct_t2_rechazado": 2140,
+    "avg_candidates_per_case": 0.8071,
+    "windows": {
+      "next_chronological_draw": {
+        "hits": 105,
+        "denominator_cases_with_fuerte": 2073,
+        "precision": 0.050651,
+        "wilson_ci_95": [
+          0.042015,
+          0.06095
+        ]
+      },
+      "same_day_other_draws": {
+        "hits": 0,
+        "denominator_cases_with_fuerte": 2073,
+        "precision": 0.0,
+        "wilson_ci_95": [
+          -0.0,
+          0.00185
+        ]
+      },
+      "next_calendar_day": {
+        "hits": 536,
+        "denominator_cases_with_fuerte": 2073,
+        "precision": 0.258562,
+        "wilson_ci_95": [
+          0.240173,
+          0.277845
+        ]
+      },
+      "next_7_featured_draws": {
+        "hits": 557,
+        "denominator_cases_with_fuerte": 2073,
+        "precision": 0.268693,
+        "wilson_ci_95": [
+          0.250051,
+          0.28819
+        ]
+      }
+    },
+    "verdict_counts": {
+      "DIRECT_T2_RECHAZADO": 2140,
+      "FALLO": 1516,
+      "ACIERTO_NO_UNICO": 352,
+      "ACIERTO_EXACTO": 205,
+      "SIN_CONFIRMACION": 1
+    }
+  },
+  "sample_metrics": {
+    "total_cases": 11,
+    "cases_with_fuerte": 8,
+    "cases_multi_fuerte": 3,
+    "cases_sin_fuerte": 3,
+    "cases_direct_t2_rechazado": 2,
+    "avg_candidates_per_case": 1.0909,
+    "windows": {
+      "next_chronological_draw": {
+        "hits": 0,
+        "denominator_cases_with_fuerte": 8,
+        "precision": 0.0,
+        "wilson_ci_95": [
+          0.0,
+          0.324416
+        ]
+      },
+      "same_day_other_draws": {
+        "hits": 0,
+        "denominator_cases_with_fuerte": 8,
+        "precision": 0.0,
+        "wilson_ci_95": [
+          0.0,
+          0.324416
+        ]
+      },
+      "next_calendar_day": {
+        "hits": 5,
+        "denominator_cases_with_fuerte": 8,
+        "precision": 0.625,
+        "wilson_ci_95": [
+          0.305738,
+          0.863158
+        ]
+      },
+      "next_7_featured_draws": {
+        "hits": 5,
+        "denominator_cases_with_fuerte": 8,
+        "precision": 0.625,
+        "wilson_ci_95": [
+          0.305738,
+          0.863158
+        ]
+      }
+    },
+    "verdict_counts": {
+      "FALLO": 3,
+      "ACIERTO_EXACTO": 3,
+      "ACIERTO_NO_UNICO": 2,
+      "SIN_CONFIRMACION": 1,
+      "DIRECT_T2_RECHAZADO": 2
+    }
+  },
+  "random_baselines": {
+    "window": "next_calendar_day",
+    "definition": "Hit iff prediction_set ∩ next_calendar_day FEATURED_SEVEN numbers ≠ ∅. Denominator = cases with ≥1 official fuerte AND at least one next-day featured draw. Candidates never selected using future draws (look-ahead blocked for selection).",
+    "official_t1_x_t2": {
+      "hits": 536,
+      "denominator": 2072,
+      "hit_rate": 0.258687,
+      "wilson_ci_95": [
+        0.24029,
+        0.277978
+      ],
+      "cases_with_fuerte_total": 2073,
+      "cases_excluded_no_next_day_draws": 1
+    },
+    "random_one_number": {
+      "hits": 381,
+      "denominator": 2072,
+      "hit_rate": 0.18388,
+      "wilson_ci_95": [
+        0.16779,
+        0.201141
+      ],
+      "cases_with_fuerte_total": 2073,
+      "cases_excluded_no_next_day_draws": 1
+    },
+    "random_same_k": {
+      "hits": 551,
+      "denominator": 2072,
+      "hit_rate": 0.265927,
+      "wilson_ci_95": [
+        0.247348,
+        0.285372
+      ],
+      "cases_with_fuerte_total": 2073,
+      "cases_excluded_no_next_day_draws": 1
+    },
+    "t1_companions_no_confirmation": {
+      "hits": 380,
+      "denominator": 2072,
+      "hit_rate": 0.183398,
+      "wilson_ci_95": [
+        0.167325,
+        0.200642
+      ],
+      "cases_with_fuerte_total": 2073,
+      "cases_excluded_no_next_day_draws": 1
+    },
+    "direct_t2_neighbors_rejected_rule": {
+      "hits": 745,
+      "denominator": 2072,
+      "hit_rate": 0.359556,
+      "wilson_ci_95": [
+        0.339171,
+        0.380461
+      ],
+      "cases_with_fuerte_total": 2073,
+      "cases_excluded_no_next_day_draws": 1
+    },
+    "base_frequency_empirical_mean_coverage": {
+      "mean_next_day_unique_numbers_over_100": 0.180048,
+      "expected_hit_rate_random_one": 0.180048,
+      "avg_k_official": 1.6406,
+      "expected_hit_rate_random_same_k": 0.277963,
+      "numerator_definition": "mean(|unique next-day numbers|)/100 over eligible cases",
+      "denominator": 2072
+    },
+    "lift_official_vs_random_one": 1.4068,
+    "lift_official_vs_random_same_k": 0.9728,
+    "lift_official_vs_t1_unconfirmed": 1.4105,
+    "lift_official_vs_direct_t2": 0.7195,
+    "lift_official_vs_base_frequency_random_one": 1.4368,
+    "absolute_diff_vs_random_same_k": -0.00724,
+    "seed": 20260726,
+    "bias_note": "Prior biased baseline that scored random against official first_appearance only is retired; this version uses the full next-day number universe."
+  },
+  "windows": [
+    "next_chronological_draw",
+    "same_day_other_draws",
+    "next_calendar_day",
+    "next_7_featured_draws"
+  ],
+  "sample_case_ids": [
+    "HIST-001",
+    "HIST-002",
+    "HIST-003",
+    "HIST-004",
+    "HIST-005",
+    "HIST-006",
+    "HIST-007",
+    "HIST-008",
+    "HIST-009",
+    "HIST-010",
+    "HIST-011"
+  ],
+  "logic_verdict": "D_RECHAZADA",
+  "j11a_gate": "NO_GO_PARA_J11A",
+  "same_day_note": "For full_day_first_positions unit, same_day_other_draws is structurally empty (all featured draws that day are case inputs)."
+}

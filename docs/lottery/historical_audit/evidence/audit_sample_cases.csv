@@ -1,0 +1,12 @@
+id,date,label,verdict,fuerte_oficial,resultado_unico,n_obs,next_chrono,same_day,next_day,next_7,known_manual_fuerte
+HIST-001,2026-06-21,C1_manual_subset,FALLO,29,True,2,False,False,False,False,29
+HIST-002,2026-06-21,C3_manual_subset,FALLO,"[35, 22]",False,3,False,False,False,False,35
+HIST-003,2026-06-23,C4_manual_subset,ACIERTO_EXACTO,54,True,2,False,False,True,True,54
+HIST-004,2026-07-22,C5_manual_subset,ACIERTO_EXACTO,54,True,2,False,False,True,True,54
+HIST-005,2017-12-27,full_day_first_positions,ACIERTO_NO_UNICO,"[9, 62]",False,7,False,False,True,True,
+HIST-006,2024-08-20,full_day_first_positions,ACIERTO_EXACTO,68,True,7,False,False,True,True,
+HIST-007,2023-05-24,full_day_first_positions,ACIERTO_NO_UNICO,"[2, 68, 87]",False,7,False,False,True,True,
+HIST-008,2017-09-30,full_day_first_positions,FALLO,63,True,7,False,False,False,False,
+HIST-009,2020-04-28,full_day_first_positions,SIN_CONFIRMACION,null,False,2,False,False,False,False,
+HIST-010,2023-04-14,full_day_first_positions,DIRECT_T2_RECHAZADO,null,False,7,False,False,False,False,
+HIST-011,2026-06-21,C2_direct_t2_rejected,DIRECT_T2_RECHAZADO,null,False,2,False,False,False,False,75

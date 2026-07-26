@@ -95,9 +95,12 @@ export default function LotteryIaDashboardPage() {
             <CardContent className="space-y-1 text-sm">
               <Row k="Versión" v={`v${String(m.version ?? '—')}`} />
               <Row k="Perfil activo" v={String(m.perfil_activo ?? '—')} />
-              <Row k="Tiebreak" v={String(m.tiebreak_activo ?? '—')} />
-              <Row k="Congelado" v={String(m.fecha_congelamiento ?? '—')} />
+              <Row k="Tiebreak" v={String((data?.freeze as Record<string, unknown> | undefined)?.tiebreak ?? m.tiebreak_activo ?? '—')} />
+              <Row k="Política" v={String((data?.freeze as Record<string, unknown> | undefined)?.tiebreak_policy ?? 'EMPATE_MULTI_FUERTE')} />
+              <Row k="Estado congelado" v={String(m.estado ?? '—')} />
+              <Row k="Fecha freeze" v={String(m.fecha_congelamiento ?? '—')} />
               <Row k="Commit" v={String(m.commit ?? '—')} />
+              <Row k="Tag" v={String((data?.freeze as Record<string, unknown> | undefined)?.release_tag ?? 'lottery-ia-motor-v1.0')} />
               <p className="pt-2 text-xs text-muted-foreground">Solo lectura — no editable en UI.</p>
             </CardContent>
           </Card>

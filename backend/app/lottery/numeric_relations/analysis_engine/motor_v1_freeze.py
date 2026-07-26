@@ -23,8 +23,11 @@ from app.lottery.numeric_relations.analysis_engine.prospective.freeze import (
 MOTOR_PRODUCT_VERSION = "1.0"
 MOTOR_FREEZE_STATUS = "FROZEN"
 MOTOR_FREEZE_DATE = "2026-07-26"
-MOTOR_ACTIVE_PROFILE = OPERATIONAL_RANKING_PROFILE
+MOTOR_ACTIVE_PROFILE = OPERATIONAL_RANKING_PROFILE  # socio
+MOTOR_TIEBREAK_RULE = FROZEN_TIEBREAK_RULE  # TIEBREAK_PROFILE_SOCIO_V1
+MOTOR_TIEBREAK_POLICY = "EMPATE_MULTI_FUERTE"
 MOTOR_ACTIVE_TIEBREAK = OPERATIONAL_TIEBREAK_POLICY
+MOTOR_RELEASE_TAG = "lottery-ia-motor-v1.0"
 
 
 def motor_v1_freeze_manifest() -> dict[str, Any]:
@@ -36,19 +39,22 @@ def motor_v1_freeze_manifest() -> dict[str, Any]:
         "freeze_date": MOTOR_FREEZE_DATE,
         "frozen_at_display": MOTOR_FREEZE_DATE,
         "active_profile": MOTOR_ACTIVE_PROFILE,
+        "tiebreak": MOTOR_TIEBREAK_RULE,
+        "tiebreak_policy": MOTOR_TIEBREAK_POLICY,
         "active_tiebreak": MOTOR_ACTIVE_TIEBREAK,
         "tiebreak_rule_id": FROZEN_TIEBREAK_RULE,
         "engine_version": FROZEN_ENGINE_VERSION,
         "table1_version": FROZEN_TABLE_VERSION,
         "table2_version": FROZEN_TABLE_VERSION,
         "engine_commit": commit,
+        "release_tag": MOTOR_RELEASE_TAG,
         "read_only": True,
         "ui_editable": False,
         "silent_changes_forbidden": True,
         "production_modified": False,
         "notes": (
-            "Motor v1.0 congelado para piloto DEV/UAT. "
-            "Cambios requieren nueva engine_version y cohorte de métricas."
+            "Motor v1.0 congelado (Lottery IA). "
+            "Cambios requieren nueva engine_version, tag y cohorte de métricas."
         ),
     }
 

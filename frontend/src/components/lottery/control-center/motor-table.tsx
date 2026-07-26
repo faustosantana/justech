@@ -18,6 +18,46 @@ type Props = {
   allowTechnical?: boolean;
 };
 
+type GroupedRow = {
+  code: number;
+  companions: number[];
+  /** Representative source row (for detail / analyze; number kept internally). */
+  source: MotorTableRow;
+  matchingNumbers: number[];
+};
+
+function groupByCode(rows: MotorTableRow[]): GroupedRow[] {
+  const map = new Map<number, { companions: Set<number>; sources: MotorTableRow[]; numbers: number[] }>();
+  for (const r of rows) {
+    const code = Number(r.code ?? 0);
+    let bucket = map.get(code);
+    if (!bucket) {
+      bucket = { companions: new Set<number>(), sources: [], numbers: [] };
+      map.set(code, bucket);
+    }
+    bucket.sources.push(r);
+    bucket.numbers.push(r.number);
+    for (const n of r.group_numbers || []) {
+      bucket.companions.add(Number(n));
+    }
+  }
+  return [...map.entries()]
+    .map(([code, bucket]) => {
+      const companions = [...bucket.companions].sort((a, b) => a - b);
+      // Prefer a source whose number is in the companion set; else first by number
+      const sortedSources = [...bucket.sources].sort((a, b) => a.number - b.number);
+      const source =
+        sortedSources.find((s) => companions.includes(s.number)) || sortedSources[0];
+      return {
+        code,
+        companions,
+        source,
+        matchingNumbers: [...bucket.numbers].sort((a, b) => a - b),
+      };
+    })
+    .sort((a, b) => a.code - b.code);
+}
+
 export function MotorNumberTable({
   rows,
   table,
@@ -34,15 +74,19 @@ export function MotorNumberTable({
   const analyzeHref = (n: number) =>
     `/lottery/admin/control-center/motor/historial-numero?number=${n}&auto=1&featured=1`;
 
-  const filtered = useMemo(() => {
+  const grouped = useMemo(() => {
     let list = [...rows];
     const n = qNumber.trim();
     const c = qCode.trim();
-    if (n) list = list.filter((r) => String(r.number).includes(n));
+    if (n) {
+      list = list.filter(
+        (r) =>
+          String(r.number).includes(n) ||
+          (r.group_numbers || []).some((g) => String(g).includes(n)),
+      );
+    }
     if (c) list = list.filter((r) => String(r.code ?? "").includes(c));
-    // Phase 5.2 UX: always sort by Código ascending; show all (up to 100) — no pagination
-    list.sort((a, b) => Number(a.code ?? 0) - Number(b.code ?? 0));
-    return list;
+    return groupByCode(list);
   }, [rows, qNumber, qCode]);
 
   return (
@@ -94,7 +138,7 @@ export function MotorNumberTable({
             className="max-w-[160px]"
           />
           <span className="self-center text-xs text-muted-foreground">
-            {filtered.length} registros · ordenados por Código · sin paginación
+            {grouped.length} códigos · agrupados · ordenados · sin paginación
           </span>
         </div>
       </CardHeader>
@@ -108,43 +152,46 @@ export function MotorNumberTable({
             </tr>
           </thead>
           <tbody>
-            {filtered.map((r) => {
-              const companions = r.group_numbers || [];
-              return (
-                <tr key={`${table}-${r.number}`} className="border-b border-border/40 align-top">
-                  <td className="py-1.5 pr-3 font-semibold tabular-nums">{r.code}</td>
-                  <td className="py-1.5 pr-3 text-xs text-muted-foreground">
-                    {companions.join(", ") || "—"}
-                  </td>
-                  <td className="py-1.5">
-                    <div className="flex flex-col gap-1 sm:flex-row">
-                      <Button type="button" size="sm" className="min-h-11" asChild>
-                        <Link href={analyzeHref(r.number)}>Analizar</Link>
-                      </Button>
-                      <Button
-                        type="button"
-                        size="sm"
-                        variant="outline"
-                        className="min-h-11"
-                        onClick={() => onDetail(r)}
-                      >
-                        Ver detalle
-                      </Button>
-                    </div>
-                  </td>
-                </tr>
-              );
-            })}
+            {grouped.map((g) => (
+              <tr key={`${table}-code-${g.code}`} className="border-b border-border/40 align-top">
+                <td className="py-1.5 pr-3 font-semibold tabular-nums">{g.code}</td>
+                <td className="py-1.5 pr-3 text-xs text-muted-foreground">
+                  {g.companions.join(", ") || "—"}
+                </td>
+                <td className="py-1.5">
+                  <div className="flex flex-col gap-1 sm:flex-row">
+                    <Button type="button" size="sm" className="min-h-11" asChild>
+                      <Link href={analyzeHref(g.source.number)}>Analizar</Link>
+                    </Button>
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant="outline"
+                      className="min-h-11"
+                      onClick={() =>
+                        onDetail({
+                          ...g.source,
+                          code: g.code,
+                          group_numbers: g.companions,
+                        })
+                      }
+                    >
+                      Ver detalle
+                    </Button>
+                  </div>
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
         {showTech && allowTechnical ? (
           <div className="mt-4 rounded border p-3 text-xs" role="region" aria-label="Cálculo técnico">
             <p className="mb-2 font-medium">Cálculo técnico (no forma parte de la vista principal)</p>
             <ul className="space-y-1 font-mono">
-              {filtered.slice(0, 8).map((r) => (
-                <li key={`tech-${r.number}`}>
-                  {r.number}: {r.formula} → {r.visible_value} · dígitos={r.digits_without_point} ·
-                  cant={r.digit_count}
+              {grouped.slice(0, 8).map((g) => (
+                <li key={`tech-${g.code}`}>
+                  código {g.code}: números={g.matchingNumbers.join(",")} · ref={g.source.number} ·{" "}
+                  {g.source.formula} → {g.source.visible_value}
                 </li>
               ))}
             </ul>
@@ -165,7 +212,7 @@ export function MotorNumberDetail({
   table?: TableKind;
 }) {
   if (!row) return null;
-  const companions = row.group_numbers || [];
+  const companions = [...(row.group_numbers || [])].sort((a, b) => a - b);
   return (
     <Card className="border-primary/40">
       <CardHeader className="flex flex-row items-start justify-between gap-2">

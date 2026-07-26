@@ -57,8 +57,10 @@ def test_motor_v1_freeze_manifest_read_only():
     assert m["read_only"] is True
     assert m["ui_editable"] is False
     assert m["production_modified"] is False
-    assert m["active_profile"]
-    assert m["active_tiebreak"]
+    assert m["active_profile"] == "socio"
+    assert m["tiebreak"] == "TIEBREAK_PROFILE_SOCIO_V1"
+    assert m["tiebreak_policy"] == "EMPATE_MULTI_FUERTE"
+    assert m["release_tag"] == "lottery-ia-motor-v1.0"
     assert "engine_commit" in m
 
 
@@ -144,7 +146,8 @@ def test_motor_table_ux_no_numero_cantidad_columns():
     assert 'placeholder="Buscar número"' in src
     assert 'placeholder="Buscar código"' in src
     assert "sin paginación" in src
-    assert "ordenados por Código" in src
+    assert "groupByCode" in src
+    assert "agrupados" in src
     # Visible table headers must not include Número / Cantidad columns
     assert "<th className=\"py-2 pr-3\">Código</th>" in src
     assert ">Número<" not in src

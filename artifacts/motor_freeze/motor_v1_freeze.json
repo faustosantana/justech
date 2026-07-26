@@ -4,16 +4,19 @@
   "freeze_date": "2026-07-26",
   "frozen_at_display": "2026-07-26",
   "active_profile": "socio",
+  "tiebreak": "TIEBREAK_PROFILE_SOCIO_V1",
+  "tiebreak_policy": "EMPATE_MULTI_FUERTE",
   "active_tiebreak": "TIEBREAK_PROFILE_SOCIO_V1+EMPATE_MULTI_FUERTE",
   "tiebreak_rule_id": "TIEBREAK_PROFILE_SOCIO_V1",
   "engine_version": "complete-analysis-engine-j1.0.0",
   "table1_version": "nr-historical-relations-j1.0.0",
   "table2_version": "nr-historical-relations-j1.0.0",
-  "engine_commit": "6bfb2e8",
+  "engine_commit": "6964df5",
+  "release_tag": "lottery-ia-motor-v1.0",
   "read_only": true,
   "ui_editable": false,
   "silent_changes_forbidden": true,
   "production_modified": false,
-  "notes": "Motor v1.0 congelado para piloto DEV/UAT. Cambios requieren nueva engine_version y cohorte de métricas.",
-  "written_at": "2026-07-26T19:30:37.498023+00:00"
+  "notes": "Motor v1.0 congelado (Lottery IA). Cambios requieren nueva engine_version, tag y cohorte de métricas.",
+  "written_at": "2026-07-26T20:08:55.033759+00:00"
 }

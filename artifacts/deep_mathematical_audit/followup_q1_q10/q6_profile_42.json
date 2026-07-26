@@ -1,0 +1,119 @@
+{
+  "number": 42,
+  "t1_code": 37,
+  "t1_group_ordered": [
+    5,
+    10,
+    42
+  ],
+  "t1_pos": 3,
+  "numbers_by_distance": {
+    "-2": 5,
+    "-1": 10,
+    "0": 42
+  },
+  "t2_code": 55,
+  "t2_group": [
+    7,
+    9,
+    22,
+    29,
+    35,
+    42,
+    44,
+    53,
+    63,
+    70,
+    90
+  ],
+  "times_fuerte_unique_day": 85,
+  "exact_hits": 69,
+  "exact_first_day": {
+    "2": 12,
+    "4": 8,
+    "1": 16,
+    "3": 15,
+    "6": 9,
+    "5": 7,
+    "7": 2
+  },
+  "top_origins": [
+    [
+      37,
+      109
+    ]
+  ],
+  "top_confirmers": [
+    [
+      44,
+      17
+    ],
+    [
+      9,
+      13
+    ],
+    [
+      22,
+      12
+    ],
+    [
+      90,
+      12
+    ],
+    [
+      53,
+      12
+    ],
+    [
+      35,
+      9
+    ],
+    [
+      7,
+      9
+    ],
+    [
+      70,
+      9
+    ],
+    [
+      29,
+      8
+    ],
+    [
+      63,
+      8
+    ]
+  ],
+  "times_as_origin_chains": 190,
+  "times_as_confirmer_chains": 84,
+  "t1_family_appearance_counts_when_fuerte": [
+    [
+      42,
+      143
+    ],
+    [
+      5,
+      129
+    ],
+    [
+      10,
+      116
+    ]
+  ],
+  "t1_dist_counts_when_fuerte_all_apps": {
+    "0": 143,
+    "-1": 116,
+    "-2": 129
+  },
+  "years_as_fuerte": [
+    2019,
+    2020,
+    2021,
+    2022,
+    2023,
+    2024,
+    2025,
+    2026
+  ]
+}

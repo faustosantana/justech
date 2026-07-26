@@ -1,0 +1,5 @@
+t1_distance,opportunities,hits_any_D1_7,rate_pct,first_at_D+1,first_at_D+1_pct_of_opp,first_at_D+1_pct_of_hits,first_at_D+2,first_at_D+2_pct_of_opp,first_at_D+2_pct_of_hits,first_at_D+3,first_at_D+3_pct_of_opp,first_at_D+3_pct_of_hits,first_within_D1_D3,first_within_D1_D3_pct_of_opp
+-1,1545,1198,77.54,291,18.83,24.29,229,14.82,19.12,206,13.33,17.2,726,46.99
+1,1506,1104,73.31,271,17.99,24.55,221,14.67,20.02,203,13.48,18.39,695,46.15
+-2,1150,872,75.83,222,19.3,25.46,175,15.22,20.07,141,12.26,16.17,538,46.78
+2,1011,777,76.85,190,18.79,24.45,147,14.54,18.92,133,13.16,17.12,470,46.49

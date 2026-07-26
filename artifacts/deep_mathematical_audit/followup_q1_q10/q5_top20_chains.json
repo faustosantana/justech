@@ -1,0 +1,938 @@
+[
+  {
+    "chain": "45→69←57→49",
+    "origin": 45,
+    "fuerte": 69,
+    "confirmer": 57,
+    "result": 49,
+    "activations": 16,
+    "appearance_rows": 39,
+    "years": [
+      2019,
+      2020,
+      2021,
+      2022,
+      2023,
+      2024,
+      2025,
+      2026
+    ],
+    "year_span": 8,
+    "days": {
+      "1": 4,
+      "3": 8,
+      "5": 3,
+      "7": 5,
+      "4": 6,
+      "2": 6,
+      "6": 7
+    },
+    "t1_dist_of_result": {},
+    "draw_positions": {
+      "1": 16,
+      "3": 10,
+      "2": 13
+    },
+    "lotteries": {
+      "Quiniela Real": 10,
+      "Loteria Nacional": 8,
+      "New York 10:30": 7,
+      "New York 2:30": 5,
+      "Quiniela Leidsa": 4
+    },
+    "exception_dates_no_result": [
+      "2022-03-25"
+    ],
+    "exception_count": 1,
+    "consistency_csv": "NIVEL_4_REPETICION_ALTA"
+  },
+  {
+    "chain": "40→72←26→6",
+    "origin": 40,
+    "fuerte": 72,
+    "confirmer": 26,
+    "result": 6,
+    "activations": 14,
+    "appearance_rows": 39,
+    "years": [
+      2019,
+      2020,
+      2021,
+      2023,
+      2024,
+      2025,
+      2026
+    ],
+    "year_span": 7,
+    "days": {
+      "7": 10,
+      "2": 9,
+      "3": 5,
+      "1": 3,
+      "6": 7,
+      "5": 3,
+      "4": 2
+    },
+    "t1_dist_of_result": {},
+    "draw_positions": {
+      "3": 14,
+      "2": 11,
+      "1": 14
+    },
+    "lotteries": {
+      "Quiniela Leidsa": 10,
+      "New York 10:30": 8,
+      "Gana Mas": 6,
+      "New York 2:30": 5,
+      "Loteria Nacional": 4
+    },
+    "exception_dates_no_result": [],
+    "exception_count": 0,
+    "consistency_csv": "NIVEL_4_REPETICION_ALTA"
+  },
+  {
+    "chain": "37→42←44→2",
+    "origin": 37,
+    "fuerte": 42,
+    "confirmer": 44,
+    "result": 2,
+    "activations": 17,
+    "appearance_rows": 39,
+    "years": [
+      2020,
+      2021,
+      2022,
+      2023,
+      2024,
+      2025
+    ],
+    "year_span": 6,
+    "days": {
+      "4": 4,
+      "1": 7,
+      "5": 9,
+      "7": 5,
+      "3": 3,
+      "2": 3,
+      "6": 8
+    },
+    "t1_dist_of_result": {},
+    "draw_positions": {
+      "3": 11,
+      "1": 17,
+      "2": 11
+    },
+    "lotteries": {
+      "Quiniela Loteka": 11,
+      "Quiniela Real": 8,
+      "New York 2:30": 7,
+      "Gana Mas": 7,
+      "Quiniela Leidsa": 3
+    },
+    "exception_dates_no_result": [
+      "2024-02-03",
+      "2025-03-16"
+    ],
+    "exception_count": 2,
+    "consistency_csv": "NIVEL_4_REPETICION_ALTA"
+  },
+  {
+    "chain": "44→70←22→61",
+    "origin": 44,
+    "fuerte": 70,
+    "confirmer": 22,
+    "result": 61,
+    "activations": 19,
+    "appearance_rows": 39,
+    "years": [
+      2020,
+      2021,
+      2022,
+      2023,
+      2024,
+      2025,
+      2026
+    ],
+    "year_span": 7,
+    "days": {
+      "1": 3,
+      "5": 7,
+      "7": 8,
+      "2": 8,
+      "3": 6,
+      "6": 4,
+      "4": 3
+    },
+    "t1_dist_of_result": {},
+    "draw_positions": {
+      "2": 17,
+      "1": 11,
+      "3": 11
+    },
+    "lotteries": {
+      "Loteria Nacional": 10,
+      "New York 2:30": 8,
+      "Quiniela Leidsa": 8,
+      "Quiniela Loteka": 5,
+      "New York 10:30": 3
+    },
+    "exception_dates_no_result": [
+      "2021-11-11",
+      "2023-07-16",
+      "2025-03-02"
+    ],
+    "exception_count": 3,
+    "consistency_csv": "NIVEL_4_REPETICION_ALTA"
+  },
+  {
+    "chain": "44→70←22→22",
+    "origin": 44,
+    "fuerte": 70,
+    "confirmer": 22,
+    "result": 22,
+    "activations": 19,
+    "appearance_rows": 39,
+    "years": [
+      2020,
+      2021,
+      2022,
+      2023,
+      2024,
+      2025,
+      2026
+    ],
+    "year_span": 7,
+    "days": {
+      "1": 8,
+      "7": 5,
+      "5": 5,
+      "6": 8,
+      "3": 2,
+      "4": 7,
+      "2": 4
+    },
+    "t1_dist_of_result": {
+      "-2": 39
+    },
+    "draw_positions": {
+      "3": 16,
+      "1": 8,
+      "2": 15
+    },
+    "lotteries": {
+      "Gana Mas": 10,
+      "Loteria Nacional": 7,
+      "Quiniela Real": 6,
+      "Quiniela Leidsa": 5,
+      "New York 10:30": 5
+    },
+    "exception_dates_no_result": [
+      "2022-03-01",
+      "2025-03-02"
+    ],
+    "exception_count": 2,
+    "consistency_csv": "NIVEL_4_REPETICION_ALTA"
+  },
+  {
+    "chain": "44→70←22→32",
+    "origin": 44,
+    "fuerte": 70,
+    "confirmer": 22,
+    "result": 32,
+    "activations": 19,
+    "appearance_rows": 39,
+    "years": [
+      2020,
+      2021,
+      2022,
+      2023,
+      2024,
+      2025,
+      2026
+    ],
+    "year_span": 7,
+    "days": {
+      "2": 4,
+      "3": 8,
+      "5": 6,
+      "7": 6,
+      "1": 6,
+      "6": 3,
+      "4": 6
+    },
+    "t1_dist_of_result": {},
+    "draw_positions": {
+      "2": 14,
+      "1": 16,
+      "3": 9
+    },
+    "lotteries": {
+      "Gana Mas": 10,
+      "New York 2:30": 7,
+      "New York 10:30": 6,
+      "Loteria Nacional": 6,
+      "Quiniela Loteka": 5
+    },
+    "exception_dates_no_result": [
+      "2021-03-14"
+    ],
+    "exception_count": 1,
+    "consistency_csv": "NIVEL_4_REPETICION_ALTA"
+  },
+  {
+    "chain": "44→70←22→34",
+    "origin": 44,
+    "fuerte": 70,
+    "confirmer": 22,
+    "result": 34,
+    "activations": 19,
+    "appearance_rows": 39,
+    "years": [
+      2020,
+      2021,
+      2022,
+      2023,
+      2024,
+      2025,
+      2026
+    ],
+    "year_span": 7,
+    "days": {
+      "3": 9,
+      "4": 6,
+      "5": 3,
+      "1": 8,
+      "7": 6,
+      "6": 5,
+      "2": 2
+    },
+    "t1_dist_of_result": {},
+    "draw_positions": {
+      "1": 9,
+      "3": 18,
+      "2": 12
+    },
+    "lotteries": {
+      "Quiniela Loteka": 8,
+      "New York 2:30": 7,
+      "Quiniela Real": 6,
+      "New York 10:30": 6,
+      "Gana Mas": 5
+    },
+    "exception_dates_no_result": [
+      "2022-03-11",
+      "2024-01-07"
+    ],
+    "exception_count": 2,
+    "consistency_csv": "NIVEL_4_REPETICION_ALTA"
+  },
+  {
+    "chain": "52→65←37→49",
+    "origin": 52,
+    "fuerte": 65,
+    "confirmer": 37,
+    "result": 49,
+    "activations": 14,
+    "appearance_rows": 38,
+    "years": [
+      2019,
+      2020,
+      2021,
+      2022,
+      2023,
+      2025,
+      2026
+    ],
+    "year_span": 7,
+    "days": {
+      "1": 4,
+      "2": 5,
+      "6": 7,
+      "4": 5,
+      "7": 8,
+      "5": 5,
+      "3": 4
+    },
+    "t1_dist_of_result": {},
+    "draw_positions": {
+      "2": 10,
+      "3": 13,
+      "1": 15
+    },
+    "lotteries": {
+      "Loteria Nacional": 7,
+      "Gana Mas": 7,
+      "Quiniela Leidsa": 6,
+      "Quiniela Real": 5,
+      "Quiniela Loteka": 5
+    },
+    "exception_dates_no_result": [],
+    "exception_count": 0,
+    "consistency_csv": "NIVEL_4_REPETICION_ALTA"
+  },
+  {
+    "chain": "39→94←84→57",
+    "origin": 39,
+    "fuerte": 94,
+    "confirmer": 84,
+    "result": 57,
+    "activations": 20,
+    "appearance_rows": 38,
+    "years": [
+      2019,
+      2020,
+      2021,
+      2022,
+      2023,
+      2024,
+      2026
+    ],
+    "year_span": 7,
+    "days": {
+      "6": 5,
+      "3": 6,
+      "5": 6,
+      "7": 4,
+      "4": 10,
+      "1": 4,
+      "2": 3
+    },
+    "t1_dist_of_result": {},
+    "draw_positions": {
+      "1": 20,
+      "2": 6,
+      "3": 12
+    },
+    "lotteries": {
+      "Quiniela Real": 8,
+      "New York 10:30": 8,
+      "Loteria Nacional": 6,
+      "Quiniela Loteka": 5,
+      "Gana Mas": 4
+    },
+    "exception_dates_no_result": [
+      "2020-07-07",
+      "2024-11-18"
+    ],
+    "exception_count": 2,
+    "consistency_csv": "NIVEL_4_REPETICION_ALTA"
+  },
+  {
+    "chain": "48→73←23→51",
+    "origin": 48,
+    "fuerte": 73,
+    "confirmer": 23,
+    "result": 51,
+    "activations": 14,
+    "appearance_rows": 38,
+    "years": [
+      2020,
+      2021,
+      2022,
+      2025,
+      2026
+    ],
+    "year_span": 5,
+    "days": {
+      "4": 4,
+      "1": 7,
+      "5": 5,
+      "6": 5,
+      "7": 4,
+      "2": 4,
+      "3": 9
+    },
+    "t1_dist_of_result": {},
+    "draw_positions": {
+      "3": 10,
+      "1": 14,
+      "2": 14
+    },
+    "lotteries": {
+      "Quiniela Loteka": 9,
+      "Gana Mas": 8,
+      "Quiniela Real": 5,
+      "New York 2:30": 5,
+      "Loteria Nacional": 5
+    },
+    "exception_dates_no_result": [
+      "2020-01-05",
+      "2020-01-08",
+      "2025-03-22"
+    ],
+    "exception_count": 3,
+    "consistency_csv": "NIVEL_4_REPETICION_ALTA"
+  },
+  {
+    "chain": "44→70←22→86",
+    "origin": 44,
+    "fuerte": 70,
+    "confirmer": 22,
+    "result": 86,
+    "activations": 19,
+    "appearance_rows": 38,
+    "years": [
+      2020,
+      2021,
+      2022,
+      2023,
+      2024,
+      2025,
+      2026
+    ],
+    "year_span": 7,
+    "days": {
+      "4": 8,
+      "2": 6,
+      "3": 7,
+      "1": 4,
+      "7": 5,
+      "5": 6,
+      "6": 2
+    },
+    "t1_dist_of_result": {},
+    "draw_positions": {
+      "1": 11,
+      "3": 19,
+      "2": 8
+    },
+    "lotteries": {
+      "New York 10:30": 9,
+      "Quiniela Leidsa": 7,
+      "New York 2:30": 6,
+      "Quiniela Real": 6,
+      "Loteria Nacional": 6
+    },
+    "exception_dates_no_result": [
+      "2024-01-07",
+      "2024-02-03"
+    ],
+    "exception_count": 2,
+    "consistency_csv": "NIVEL_4_REPETICION_ALTA"
+  },
+  {
+    "chain": "49→35←44→16",
+    "origin": 49,
+    "fuerte": 35,
+    "confirmer": 44,
+    "result": 16,
+    "activations": 13,
+    "appearance_rows": 38,
+    "years": [
+      2020,
+      2021,
+      2022,
+      2023,
+      2025,
+      2026
+    ],
+    "year_span": 6,
+    "days": {
+      "1": 7,
+      "3": 5,
+      "2": 6,
+      "4": 3,
+      "6": 4,
+      "7": 7,
+      "5": 6
+    },
+    "t1_dist_of_result": {},
+    "draw_positions": {
+      "2": 11,
+      "3": 15,
+      "1": 12
+    },
+    "lotteries": {
+      "New York 2:30": 7,
+      "Quiniela Loteka": 6,
+      "Loteria Nacional": 6,
+      "Quiniela Real": 6,
+      "Gana Mas": 5
+    },
+    "exception_dates_no_result": [
+      "2020-07-29",
+      "2022-06-16"
+    ],
+    "exception_count": 2,
+    "consistency_csv": "NIVEL_4_REPETICION_ALTA"
+  },
+  {
+    "chain": "42→7←29→25",
+    "origin": 42,
+    "fuerte": 7,
+    "confirmer": 29,
+    "result": 25,
+    "activations": 16,
+    "appearance_rows": 37,
+    "years": [
+      2019,
+      2020,
+      2021,
+      2022,
+      2023,
+      2024
+    ],
+    "year_span": 6,
+    "days": {
+      "3": 5,
+      "5": 4,
+      "1": 4,
+      "2": 6,
+      "7": 8,
+      "4": 7,
+      "6": 3
+    },
+    "t1_dist_of_result": {},
+    "draw_positions": {
+      "3": 16,
+      "1": 13,
+      "2": 8
+    },
+    "lotteries": {
+      "Quiniela Leidsa": 7,
+      "Quiniela Real": 7,
+      "New York 2:30": 6,
+      "Gana Mas": 5,
+      "Loteria Nacional": 5
+    },
+    "exception_dates_no_result": [
+      "2022-01-12",
+      "2023-12-19"
+    ],
+    "exception_count": 2,
+    "consistency_csv": "NIVEL_4_REPETICION_ALTA"
+  },
+  {
+    "chain": "38→20←2→61",
+    "origin": 38,
+    "fuerte": 20,
+    "confirmer": 2,
+    "result": 61,
+    "activations": 16,
+    "appearance_rows": 37,
+    "years": [
+      2019,
+      2020,
+      2021,
+      2022,
+      2023,
+      2024,
+      2025,
+      2026
+    ],
+    "year_span": 8,
+    "days": {
+      "1": 6,
+      "3": 5,
+      "2": 8,
+      "7": 8,
+      "6": 4,
+      "5": 2,
+      "4": 4
+    },
+    "t1_dist_of_result": {},
+    "draw_positions": {
+      "1": 12,
+      "2": 9,
+      "3": 16
+    },
+    "lotteries": {
+      "New York 10:30": 8,
+      "Quiniela Leidsa": 7,
+      "Gana Mas": 6,
+      "Quiniela Loteka": 5,
+      "Loteria Nacional": 4
+    },
+    "exception_dates_no_result": [
+      "2023-12-28",
+      "2024-10-24",
+      "2026-01-11"
+    ],
+    "exception_count": 3,
+    "consistency_csv": "NIVEL_4_REPETICION_ALTA"
+  },
+  {
+    "chain": "39→94←84→5",
+    "origin": 39,
+    "fuerte": 94,
+    "confirmer": 84,
+    "result": 5,
+    "activations": 20,
+    "appearance_rows": 37,
+    "years": [
+      2019,
+      2020,
+      2021,
+      2022,
+      2023,
+      2024,
+      2026
+    ],
+    "year_span": 7,
+    "days": {
+      "1": 4,
+      "7": 9,
+      "2": 4,
+      "5": 5,
+      "6": 8,
+      "3": 4,
+      "4": 3
+    },
+    "t1_dist_of_result": {},
+    "draw_positions": {
+      "3": 9,
+      "1": 14,
+      "2": 14
+    },
+    "lotteries": {
+      "Quiniela Leidsa": 9,
+      "Quiniela Real": 8,
+      "New York 2:30": 5,
+      "New York 10:30": 5,
+      "Quiniela Loteka": 4
+    },
+    "exception_dates_no_result": [
+      "2021-10-18",
+      "2023-11-16",
+      "2026-03-23"
+    ],
+    "exception_count": 3,
+    "consistency_csv": "NIVEL_4_REPETICION_ALTA"
+  },
+  {
+    "chain": "39→94←84→82",
+    "origin": 39,
+    "fuerte": 94,
+    "confirmer": 84,
+    "result": 82,
+    "activations": 20,
+    "appearance_rows": 37,
+    "years": [
+      2019,
+      2020,
+      2021,
+      2022,
+      2023,
+      2024,
+      2026
+    ],
+    "year_span": 7,
+    "days": {
+      "4": 5,
+      "1": 5,
+      "2": 7,
+      "5": 6,
+      "6": 6,
+      "3": 4,
+      "7": 4
+    },
+    "t1_dist_of_result": {},
+    "draw_positions": {
+      "2": 16,
+      "3": 11,
+      "1": 10
+    },
+    "lotteries": {
+      "New York 10:30": 9,
+      "Quiniela Leidsa": 6,
+      "Quiniela Loteka": 6,
+      "Gana Mas": 6,
+      "New York 2:30": 5
+    },
+    "exception_dates_no_result": [
+      "2020-06-09"
+    ],
+    "exception_count": 1,
+    "consistency_csv": "NIVEL_4_REPETICION_ALTA"
+  },
+  {
+    "chain": "40→19←86→78",
+    "origin": 40,
+    "fuerte": 19,
+    "confirmer": 86,
+    "result": 78,
+    "activations": 16,
+    "appearance_rows": 37,
+    "years": [
+      2020,
+      2023,
+      2024,
+      2025,
+      2026
+    ],
+    "year_span": 5,
+    "days": {
+      "1": 4,
+      "2": 4,
+      "4": 7,
+      "3": 5,
+      "6": 6,
+      "7": 7,
+      "5": 4
+    },
+    "t1_dist_of_result": {},
+    "draw_positions": {
+      "1": 10,
+      "3": 8,
+      "2": 19
+    },
+    "lotteries": {
+      "Quiniela Loteka": 9,
+      "New York 2:30": 7,
+      "Gana Mas": 6,
+      "Quiniela Leidsa": 6,
+      "New York 10:30": 3
+    },
+    "exception_dates_no_result": [
+      "2020-10-01",
+      "2025-05-27",
+      "2025-07-25"
+    ],
+    "exception_count": 3,
+    "consistency_csv": "NIVEL_4_REPETICION_ALTA"
+  },
+  {
+    "chain": "37→42←44→1",
+    "origin": 37,
+    "fuerte": 42,
+    "confirmer": 44,
+    "result": 1,
+    "activations": 17,
+    "appearance_rows": 37,
+    "years": [
+      2020,
+      2021,
+      2022,
+      2023,
+      2024,
+      2025
+    ],
+    "year_span": 6,
+    "days": {
+      "4": 7,
+      "5": 6,
+      "1": 4,
+      "3": 1,
+      "6": 10,
+      "2": 6,
+      "7": 3
+    },
+    "t1_dist_of_result": {},
+    "draw_positions": {
+      "3": 16,
+      "2": 10,
+      "1": 11
+    },
+    "lotteries": {
+      "New York 10:30": 9,
+      "Quiniela Loteka": 7,
+      "Quiniela Leidsa": 6,
+      "Quiniela Real": 5,
+      "New York 2:30": 5
+    },
+    "exception_dates_no_result": [
+      "2020-03-16",
+      "2021-11-09",
+      "2022-08-30"
+    ],
+    "exception_count": 3,
+    "consistency_csv": "NIVEL_4_REPETICION_ALTA"
+  },
+  {
+    "chain": "44→70←22→47",
+    "origin": 44,
+    "fuerte": 70,
+    "confirmer": 22,
+    "result": 47,
+    "activations": 19,
+    "appearance_rows": 37,
+    "years": [
+      2020,
+      2021,
+      2022,
+      2023,
+      2024,
+      2025,
+      2026
+    ],
+    "year_span": 7,
+    "days": {
+      "1": 7,
+      "3": 6,
+      "7": 5,
+      "6": 6,
+      "2": 5,
+      "5": 5,
+      "4": 3
+    },
+    "t1_dist_of_result": {},
+    "draw_positions": {
+      "3": 16,
+      "1": 14,
+      "2": 7
+    },
+    "lotteries": {
+      "Loteria Nacional": 9,
+      "New York 2:30": 6,
+      "Gana Mas": 6,
+      "Quiniela Loteka": 5,
+      "Quiniela Leidsa": 4
+    },
+    "exception_dates_no_result": [
+      "2021-03-14",
+      "2022-03-27",
+      "2024-06-17",
+      "2025-01-04",
+      "2025-03-02"
+    ],
+    "exception_count": 5,
+    "consistency_csv": "NIVEL_4_REPETICION_ALTA"
+  },
+  {
+    "chain": "44→70←22→93",
+    "origin": 44,
+    "fuerte": 70,
+    "confirmer": 22,
+    "result": 93,
+    "activations": 19,
+    "appearance_rows": 37,
+    "years": [
+      2020,
+      2021,
+      2022,
+      2023,
+      2024,
+      2025,
+      2026
+    ],
+    "year_span": 7,
+    "days": {
+      "1": 7,
+      "7": 6,
+      "3": 6,
+      "5": 5,
+      "6": 7,
+      "4": 4,
+      "2": 2
+    },
+    "t1_dist_of_result": {},
+    "draw_positions": {
+      "2": 12,
+      "3": 15,
+      "1": 10
+    },
+    "lotteries": {
+      "Quiniela Real": 8,
+      "Quiniela Loteka": 8,
+      "Gana Mas": 7,
+      "Quiniela Leidsa": 5,
+      "Loteria Nacional": 5
+    },
+    "exception_dates_no_result": [
+      "2020-08-07",
+      "2021-03-14"
+    ],
+    "exception_count": 2,
+    "consistency_csv": "NIVEL_4_REPETICION_ALTA"
+  }
+]

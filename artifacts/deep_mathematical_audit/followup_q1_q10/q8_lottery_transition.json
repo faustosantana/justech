@@ -1,0 +1,146 @@
+{
+  "transition": "Gana Mas → Loteria Nacional → Quiniela Real",
+  "appearance_rows": 1492,
+  "activations_origin_confirmer_pair": 72,
+  "unique_days_activations": 65,
+  "by_year": {
+    "2019": 42,
+    "2020": 102,
+    "2021": 227,
+    "2022": 124,
+    "2023": 392,
+    "2024": 252,
+    "2025": 230,
+    "2026": 123
+  },
+  "by_day": {
+    "1": 214,
+    "2": 216,
+    "3": 216,
+    "4": 213,
+    "5": 211,
+    "6": 212,
+    "7": 210
+  },
+  "by_primary_top": [
+    [
+      "RELACION_DE_TERCER_NIVEL",
+      440
+    ],
+    [
+      "SIN_RELACION_DIRECTA_IDENTIFICADA",
+      385
+    ],
+    [
+      "RELACION_DE_SEGUNDO_NIVEL",
+      331
+    ],
+    [
+      "MISMO_GRUPO_T2",
+      111
+    ],
+    [
+      "CANDIDATO_ORIGINAL_ALTERNATIVO",
+      89
+    ],
+    [
+      "MISMO_GRUPO_T1",
+      65
+    ],
+    [
+      "COMPANERO_DEL_CONFIRMADOR",
+      54
+    ],
+    [
+      "FUERTE_EXACTO",
+      17
+    ]
+  ],
+  "top_fuertes": [
+    [
+      "70",
+      187
+    ],
+    [
+      "22",
+      146
+    ],
+    [
+      "42",
+      143
+    ],
+    [
+      "9",
+      84
+    ],
+    [
+      "7",
+      84
+    ],
+    [
+      "29",
+      83
+    ],
+    [
+      "63",
+      63
+    ],
+    [
+      "77",
+      62
+    ],
+    [
+      "48",
+      42
+    ],
+    [
+      "44",
+      42
+    ]
+  ],
+  "top_results": [
+    [
+      "89",
+      27
+    ],
+    [
+      "79",
+      27
+    ],
+    [
+      "49",
+      26
+    ],
+    [
+      "97",
+      26
+    ],
+    [
+      "29",
+      25
+    ],
+    [
+      "59",
+      25
+    ],
+    [
+      "95",
+      22
+    ],
+    [
+      "71",
+      21
+    ],
+    [
+      "34",
+      21
+    ],
+    [
+      "62",
+      21
+    ]
+  ],
+  "exact_label_rows": 17,
+  "mismo_grupo_t1_rows": 82,
+  "note": "Cuenta filas de aparición (cadena×resultado). La transición mide lotería del origen, del confirmador y del resultado posterior."
+}

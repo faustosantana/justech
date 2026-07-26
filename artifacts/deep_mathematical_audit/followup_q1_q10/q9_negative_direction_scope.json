@@ -1,0 +1,290 @@
+{
+  "distance": -1,
+  "total_opportunities": 1545,
+  "total_hits": 1198,
+  "overall_rate_pct": 77.54,
+  "years_with_opportunity": [
+    2019,
+    2020,
+    2021,
+    2022,
+    2023,
+    2024,
+    2025,
+    2026
+  ],
+  "years_with_at_least_one_hit": [
+    2019,
+    2020,
+    2021,
+    2022,
+    2023,
+    2024,
+    2025,
+    2026
+  ],
+  "hits_all_years": true,
+  "by_year": {
+    "2019": {
+      "opp": 99,
+      "hits": 80,
+      "rate_pct": 80.81
+    },
+    "2020": {
+      "opp": 171,
+      "hits": 120,
+      "rate_pct": 70.18
+    },
+    "2021": {
+      "opp": 213,
+      "hits": 160,
+      "rate_pct": 75.12
+    },
+    "2022": {
+      "opp": 221,
+      "hits": 170,
+      "rate_pct": 76.92
+    },
+    "2023": {
+      "opp": 241,
+      "hits": 197,
+      "rate_pct": 81.74
+    },
+    "2024": {
+      "opp": 220,
+      "hits": 163,
+      "rate_pct": 74.09
+    },
+    "2025": {
+      "opp": 247,
+      "hits": 203,
+      "rate_pct": 82.19
+    },
+    "2026": {
+      "opp": 133,
+      "hits": 105,
+      "rate_pct": 78.95
+    }
+  },
+  "t1_codes_with_opportunity": 21,
+  "t1_codes_with_hit": 21,
+  "hits_all_codes_with_opp": true,
+  "fuertes_with_opportunity": 56,
+  "fuertes_with_hit": 56,
+  "hits_all_fuertes_with_opp": true,
+  "fuertes_with_opp_but_zero_hits": [],
+  "top_fuertes_by_hits": [
+    {
+      "fuerte": 42,
+      "opportunities": 85,
+      "hits": 64,
+      "rate_pct": 75.29
+    },
+    {
+      "fuerte": 44,
+      "opportunities": 81,
+      "hits": 59,
+      "rate_pct": 72.84
+    },
+    {
+      "fuerte": 53,
+      "opportunities": 72,
+      "hits": 57,
+      "rate_pct": 79.17
+    },
+    {
+      "fuerte": 63,
+      "opportunities": 75,
+      "hits": 56,
+      "rate_pct": 74.67
+    },
+    {
+      "fuerte": 70,
+      "opportunities": 76,
+      "hits": 55,
+      "rate_pct": 72.37
+    },
+    {
+      "fuerte": 90,
+      "opportunities": 65,
+      "hits": 53,
+      "rate_pct": 81.54
+    },
+    {
+      "fuerte": 29,
+      "opportunities": 79,
+      "hits": 53,
+      "rate_pct": 67.09
+    },
+    {
+      "fuerte": 71,
+      "opportunities": 43,
+      "hits": 39,
+      "rate_pct": 90.7
+    },
+    {
+      "fuerte": 28,
+      "opportunities": 41,
+      "hits": 32,
+      "rate_pct": 78.05
+    },
+    {
+      "fuerte": 92,
+      "opportunities": 32,
+      "hits": 29,
+      "rate_pct": 90.62
+    },
+    {
+      "fuerte": 87,
+      "opportunities": 38,
+      "hits": 29,
+      "rate_pct": 76.32
+    },
+    {
+      "fuerte": 26,
+      "opportunities": 31,
+      "hits": 28,
+      "rate_pct": 90.32
+    },
+    {
+      "fuerte": 23,
+      "opportunities": 37,
+      "hits": 28,
+      "rate_pct": 75.68
+    },
+    {
+      "fuerte": 56,
+      "opportunities": 38,
+      "hits": 28,
+      "rate_pct": 73.68
+    },
+    {
+      "fuerte": 41,
+      "opportunities": 31,
+      "hits": 26,
+      "rate_pct": 83.87
+    },
+    {
+      "fuerte": 76,
+      "opportunities": 29,
+      "hits": 25,
+      "rate_pct": 86.21
+    },
+    {
+      "fuerte": 89,
+      "opportunities": 33,
+      "hits": 25,
+      "rate_pct": 75.76
+    },
+    {
+      "fuerte": 68,
+      "opportunities": 31,
+      "hits": 24,
+      "rate_pct": 77.42
+    },
+    {
+      "fuerte": 57,
+      "opportunities": 29,
+      "hits": 23,
+      "rate_pct": 79.31
+    },
+    {
+      "fuerte": 91,
+      "opportunities": 27,
+      "hits": 22,
+      "rate_pct": 81.48
+    }
+  ],
+  "bottom_fuertes_with_opp": [
+    {
+      "fuerte": 74,
+      "opportunities": 13,
+      "hits": 7,
+      "rate_pct": 53.85
+    },
+    {
+      "fuerte": 58,
+      "opportunities": 16,
+      "hits": 10,
+      "rate_pct": 62.5
+    },
+    {
+      "fuerte": 67,
+      "opportunities": 16,
+      "hits": 10,
+      "rate_pct": 62.5
+    },
+    {
+      "fuerte": 85,
+      "opportunities": 20,
+      "hits": 13,
+      "rate_pct": 65.0
+    },
+    {
+      "fuerte": 51,
+      "opportunities": 9,
+      "hits": 6,
+      "rate_pct": 66.67
+    },
+    {
+      "fuerte": 29,
+      "opportunities": 79,
+      "hits": 53,
+      "rate_pct": 67.09
+    },
+    {
+      "fuerte": 84,
+      "opportunities": 16,
+      "hits": 11,
+      "rate_pct": 68.75
+    },
+    {
+      "fuerte": 94,
+      "opportunities": 32,
+      "hits": 22,
+      "rate_pct": 68.75
+    },
+    {
+      "fuerte": 31,
+      "opportunities": 10,
+      "hits": 7,
+      "rate_pct": 70.0
+    },
+    {
+      "fuerte": 82,
+      "opportunities": 20,
+      "hits": 14,
+      "rate_pct": 70.0
+    },
+    {
+      "fuerte": 100,
+      "opportunities": 14,
+      "hits": 10,
+      "rate_pct": 71.43
+    },
+    {
+      "fuerte": 30,
+      "opportunities": 21,
+      "hits": 15,
+      "rate_pct": 71.43
+    },
+    {
+      "fuerte": 52,
+      "opportunities": 18,
+      "hits": 13,
+      "rate_pct": 72.22
+    },
+    {
+      "fuerte": 70,
+      "opportunities": 76,
+      "hits": 55,
+      "rate_pct": 72.37
+    },
+    {
+      "fuerte": 44,
+      "opportunities": 81,
+      "hits": 59,
+      "rate_pct": 72.84
+    }
+  ]
+}

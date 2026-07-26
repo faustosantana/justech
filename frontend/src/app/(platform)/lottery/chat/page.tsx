@@ -236,7 +236,7 @@ export default function LotteryChatPage() {
   };
 
   return (
-    <AppShell title="Lottery IA" description="Analista conversacional de resultados históricos">
+    <AppShell title="Chat inteligente" description="Asistente de Lottery IA con datos reales del sistema">
       <div className="mb-3 flex flex-wrap items-center justify-between gap-2 text-sm">
         <div className="flex flex-wrap gap-2">
           <Link className="text-primary underline-offset-2 hover:underline" href="/lottery">
@@ -296,7 +296,7 @@ export default function LotteryChatPage() {
           <div className="flex-1 space-y-3 overflow-auto rounded-md border p-3">
             {messages.length === 0 && (
               <p className="text-sm text-muted-foreground">
-                Pregunta en lenguaje natural. Lottery IA conserva el contexto y solo pide lo que falta.
+                Pregunta en lenguaje natural. El Chat inteligente conserva el contexto y solo pide lo que falta.
               </p>
             )}
             {messages.map((m) => (
@@ -307,7 +307,7 @@ export default function LotteryChatPage() {
                 }`}
               >
                 <p className="mb-1 text-[10px] uppercase tracking-wide text-muted-foreground">
-                  {m.role === "user" ? "Tú" : "Lottery IA"}
+                  {m.role === "user" ? "Tú" : "Chat inteligente"}
                 </p>
                 {m.role === "assistant" ? (
                   <SimpleMarkdown text={m.content} />

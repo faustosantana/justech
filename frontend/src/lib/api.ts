@@ -226,8 +226,18 @@ async function request<T>(
             : typeof detailRaw === "object" && detailRaw !== null
               ? (detailRaw as { message?: string }).message ?? "Error de validación"
               : undefined;
+      const pathHint = path || "";
+      const lotteryFriendly =
+        pathHint.includes("/lottery/")
+          ? response.status === 404
+            ? "No se encontró información para esta consulta."
+            : response.status === 408 || response.status === 504
+              ? "La consulta está tardando más de lo esperado. Intente nuevamente."
+              : "No fue posible consultar los resultados. Intente nuevamente."
+          : null;
       const fallbackMessage =
-        response.status === 500
+        lotteryFriendly ||
+        (response.status === 500
           ? "El servidor no pudo completar la operación. Intente de nuevo en unos momentos."
           : response.status === 503
             ? "El servicio no está disponible temporalmente. Intente más tarde."

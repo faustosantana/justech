@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 
+import { LotteryNumberLink } from "@/components/lottery/lottery-number-link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -155,13 +156,19 @@ export function MotorNumberTable({
             {grouped.map((g) => (
               <tr key={`${table}-code-${g.code}`} className="border-b border-border/40 align-top">
                 <td className="py-1.5 pr-3 font-semibold tabular-nums">{g.code}</td>
-                <td className="py-1.5 pr-3 text-xs text-muted-foreground">
-                  {g.companions.join(", ") || "—"}
+                <td className="py-1.5 pr-3">
+                  <div className="flex flex-wrap gap-1.5">
+                    {g.companions.length
+                      ? g.companions.map((n) => (
+                          <LotteryNumberLink key={`${g.code}-${n}`} number={n} size="sm" />
+                        ))
+                      : "—"}
+                  </div>
                 </td>
                 <td className="py-1.5">
                   <div className="flex flex-col gap-1 sm:flex-row">
-                    <Button type="button" size="sm" className="min-h-11" asChild>
-                      <Link href={analyzeHref(g.source.number)}>Analizar</Link>
+                    <Button type="button" size="sm" className="min-h-11 bg-blue-600 hover:bg-blue-700" asChild>
+                      <Link href={`/lottery/analizar?number=${g.source.number}&auto=1`}>Analizar</Link>
                     </Button>
                     <Button
                       type="button"

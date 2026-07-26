@@ -24,7 +24,7 @@ class RateLimitExceeded(HTTPException):
             detail=detail,
             headers={
                 "Retry-After": str(retry_after),
-                "X-RateLimit-Limit": str(settings.lottery_nr_rate_limit_per_minute),
+                "X-RateLimit-Limit": str(getattr(settings, "lottery_nr_rate_limit_per_minute", 90)),
                 "X-RateLimit-Remaining": "0",
             },
         )
@@ -74,7 +74,7 @@ def enforce_nr_rate_limit(
     limit = int(
         limit_per_minute
         if limit_per_minute is not None
-        else settings.lottery_nr_rate_limit_per_minute
+        else getattr(settings, "lottery_nr_rate_limit_per_minute", 90)
     )
     if limit <= 0:
         return
@@ -96,7 +96,9 @@ def validate_date_range(
     *,
     max_days: int | None = None,
 ) -> None:
-    max_days = int(max_days if max_days is not None else settings.lottery_nr_max_range_days)
+    max_days = int(
+        max_days if max_days is not None else getattr(settings, "lottery_nr_max_range_days", 15000)
+    )
     if date_from and date_to and date_from > date_to:
         raise HTTPException(
             status_code=400,
@@ -132,7 +134,7 @@ def validate_date_range(
 
 
 def validate_lottery_id_count(ids: list[Any], *, field: str = "lottery_ids") -> None:
-    max_n = int(settings.lottery_nr_max_lotteries_per_request)
+    max_n = int(getattr(settings, "lottery_nr_max_lotteries_per_request", 7))
     uniq = {str(x) for x in ids if x is not None}
     if len(uniq) > max_n:
         raise HTTPException(
@@ -147,7 +149,7 @@ def validate_lottery_id_count(ids: list[Any], *, field: str = "lottery_ids") -> 
 def validate_numbers_list(numbers: list[int] | None, *, field: str = "numbers") -> None:
     if not numbers:
         return
-    max_n = int(settings.lottery_nr_max_numbers_list)
+    max_n = int(getattr(settings, "lottery_nr_max_numbers_list", 20))
     if len(numbers) > max_n:
         raise HTTPException(
             status_code=400,
@@ -162,8 +164,8 @@ def validate_numbers_list(numbers: list[int] | None, *, field: str = "numbers") 
 
 
 def validate_page_size(page_size: int | None) -> int:
-    max_ps = int(settings.lottery_nr_max_page_size)
-    default = int(settings.lottery_nr_default_page_size)
+    max_ps = int(getattr(settings, "lottery_nr_max_page_size", 100))
+    default = int(getattr(settings, "lottery_nr_default_page_size", 20))
     ps = default if page_size is None else int(page_size)
     if ps < 1:
         raise HTTPException(status_code=400, detail="page_size debe ser ≥ 1.")

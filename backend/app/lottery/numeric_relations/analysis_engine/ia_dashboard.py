@@ -46,21 +46,21 @@ async def build_ia_dashboard(db: AsyncSession) -> dict[str, Any]:
     latest = await results_svc.get_latest_n_dates(1, featured_only=True)
     last_row = latest[0] if latest else None
 
-    store = get_prospective_store()
-    preds = [p.to_dict() for p in store.list()]
+    # Pilot persistence is DEV/UAT-only; never crash Dashboard in Production.
+    preds: list[dict[str, Any]] = []
+    try:
+        store = get_prospective_store()
+        preds = [p.to_dict() for p in store.list()]
+    except Exception:
+        preds = []
+
     locked = sum(1 for p in preds if p.get("status") in {"LOCKED", "AWAITING_RESULTS"})
     evaluated = sum(1 for p in preds if p.get("status") == "EVALUATED")
     draft = sum(1 for p in preds if p.get("status") in {"DRAFT", "READY_TO_LOCK"})
 
     # Match last draw against evaluated predictions (best-effort, no recalculation)
     last_eval: dict[str, Any] | None = None
-    if last_row:
-        drawn = {
-            str(last_row.get("primera") or ""),
-            str(last_row.get("segunda") or ""),
-            str(last_row.get("tercera") or ""),
-        }
-        drawn.discard("")
+    if last_row and preds:
         for p in preds:
             if p.get("status") != "EVALUATED":
                 continue
@@ -80,7 +80,6 @@ async def build_ia_dashboard(db: AsyncSession) -> dict[str, Any]:
             }
             break
         if last_eval is None:
-            # pending prediction for that date?
             for p in preds:
                 if p.get("status") in {"LOCKED", "AWAITING_RESULTS"}:
                     if (p.get("target_date") or p.get("analysis_date")) == last_row.get("date"):
@@ -95,6 +94,7 @@ async def build_ia_dashboard(db: AsyncSession) -> dict[str, Any]:
                         break
 
     freeze = motor_v1_freeze_manifest()
+    ultima_fecha = sync.get("last_draw_date") or (last_row or {}).get("date")
     return {
         "motor": {
             "estado": freeze["status"],
@@ -116,15 +116,16 @@ async def build_ia_dashboard(db: AsyncSession) -> dict[str, Any]:
             "featured_loterias": sync.get("featured_lotteries_count"),
             "pendientes_sincronizar": pending.get("pending_count"),
             "pendientes_detalle": pending.get("missing") or [],
-            "ultima_fecha": sync.get("last_draw_date"),
+            "ultima_fecha": ultima_fecha,
             "estado_sync": sync.get("state"),
         },
         "piloto": {
             "locked": locked,
             "evaluadas": evaluated,
-            "pendientes": draft + locked,  # awaiting action / evaluation
+            "pendientes": draft + locked,
             "draft": draft,
             "total": len(preds),
+            "disponible": bool(preds) or locked or evaluated or draft,
         },
         "rendimiento": _load_performance(),
         "ultimo_sorteo": {
@@ -143,5 +144,5 @@ async def build_ia_dashboard(db: AsyncSession) -> dict[str, Any]:
         },
         "freeze": freeze,
         "production_modified": False,
-        "generated_for": "DEV/UAT Lottery IA Dashboard",
+        "generated_for": "Lottery IA Dashboard",
     }

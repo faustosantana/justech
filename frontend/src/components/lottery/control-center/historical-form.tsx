@@ -26,10 +26,19 @@ export type HistoryFormState = {
   horizon: string;
 };
 
+function todayIso(): string {
+  const d = new Date();
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
+}
+
 export const DEFAULT_HISTORY_FORM: HistoryFormState = {
   observed: "",
   dateFrom: "2015-01-01",
-  dateTo: "",
+  // Always default to "today" — never a fixed year cap (e.g. 2023).
+  dateTo: todayIso(),
   primaryIds: [],
   confirmingIds: [],
   followUpIds: [],

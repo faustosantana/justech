@@ -1,355 +1,234 @@
-"use client";
+'use client'
 
-import { useCallback, useEffect, useMemo, useState } from "react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useCallback, useEffect, useState } from 'react'
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import {
-  Activity,
-  ArrowRight,
-  GitCompare,
+  CalendarDays,
   MessageSquare,
-  Network,
-  RefreshCw,
   Search,
   Sparkles,
   Table2,
-} from "lucide-react";
+  ShieldCheck,
+} from 'lucide-react'
 
-import { AppShell } from "@/components/layout/app-shell";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
-import { MetricCard } from "@/components/ui/metric-card";
-import { ApiError, apiClient } from "@/lib/api";
-import { getAccessToken, getUserRole } from "@/lib/auth";
-import { lotteryDisplayName } from "@/lib/lottery-display-names";
-import {
-  canAccessLotteryAdmin,
-  canAccessLotteryModule,
-  healthStatusLabel,
-  type LotteryCatalogCard,
-  type LotteryDashboardV3,
-} from "@/lib/lottery";
+import { AppShell } from '@/components/layout/app-shell'
+import { LotteryNumberLink } from '@/components/lottery/lottery-number-link'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { ApiError, apiClient } from '@/lib/api'
+import { getAccessToken, getUserRole } from '@/lib/auth'
+import { canAccessLotteryAdmin, canAccessLotteryModule, DISCLAIMER } from '@/lib/lottery'
 
-const TOOLS = [
-  {
-    href: "/lottery/admin/control-center/motor/historial-numero",
-    label: "Historial del Número",
-    desc: "Expediente de apariciones, confirmaciones y seguimiento",
-    icon: Search,
-  },
-  {
-    href: "/lottery/admin/control-center/motor/comparador",
-    label: "Comparador",
-    desc: "Compare candidatos, confirmadores y loterías",
-    icon: GitCompare,
-  },
-  {
-    href: "/lottery/admin/control-center/motor/table1",
-    label: "Tabla 1",
-    desc: "Compañeros del motor matemático",
-    icon: Table2,
-  },
-  {
-    href: "/lottery/admin/control-center/motor/table2",
-    label: "Tabla 2",
-    desc: "Confirmadores del motor matemático",
-    icon: Table2,
-  },
-  {
-    href: "/lottery/admin/control-center/motor/agrupaciones",
-    label: "Agrupaciones",
-    desc: "Grupos T1 y T2 en una sola vista",
-    icon: Network,
-  },
-  {
-    href: "/lottery/admin/control-center/motor/relaciones",
-    label: "Relaciones",
-    desc: "Mapa número → compañero → confirmador",
-    icon: Sparkles,
-  },
-] as const;
+type Dash = {
+  motor?: Record<string, unknown>
+  resultados?: Record<string, unknown>
+  ultimo_sorteo?: Record<string, unknown>
+  piloto?: Record<string, unknown>
+}
 
-function formatDate(value?: string | null): string {
-  if (!value) return "—";
+function fmtDate(v: unknown): string {
+  if (!v) return '—'
   try {
-    return new Date(value).toLocaleDateString("es-DO", { dateStyle: "medium" });
+    return new Date(String(v)).toLocaleDateString('es-DO', { dateStyle: 'medium' })
   } catch {
-    return value;
+    return String(v)
   }
 }
 
-function expedienteHref(number: string, lotteryIds: string[]) {
-  const n = String(number).replace(/\D/g, "");
-  if (!n) return "/lottery/admin/control-center/motor/historial-numero";
-  const params = new URLSearchParams({ number: n, auto: "1", featured: "1" });
-  if (lotteryIds.length) params.set("lottery_ids", lotteryIds.join(","));
-  return `/lottery/admin/control-center/motor/historial-numero?${params.toString()}`;
-}
-
-function ActiveLotteryCard({
-  card,
-  lotteryIds,
-}: {
-  card: LotteryCatalogCard;
-  lotteryIds: string[];
-}) {
-  const title = lotteryDisplayName(card.id, card.commercial_name || card.name);
-  return (
-    <Card className="border-primary/20 bg-gradient-to-b from-primary/5 to-transparent">
-      <CardHeader className="pb-2">
-        <CardTitle className="flex items-start justify-between gap-2 text-base">
-          <span>{title}</span>
-          <Badge variant={card.is_sync_enabled ? "success" : "muted"}>
-            {card.is_sync_enabled ? "Sync auto" : "Análisis"}
-          </Badge>
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-3 text-sm">
-        <p className="text-muted-foreground">
-          Último sorteo: <span className="text-foreground">{formatDate(card.last_draw_date)}</span>
-        </p>
-        {card.last_numbers.length > 0 ? (
-          <p className="font-mono text-lg tracking-wide">{card.last_numbers.join(" · ")}</p>
-        ) : (
-          <p className="text-muted-foreground">Sin resultado reciente</p>
-        )}
-        <p className="text-xs text-muted-foreground">
-          {card.draw_count.toLocaleString()} sorteos · {healthStatusLabel(card.health_status)}
-        </p>
-        <Button asChild size="sm" className="w-full">
-          <Link href={expedienteHref(card.last_numbers[0] || "50", lotteryIds)}>
-            Abrir expediente
-            <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
-          </Link>
-        </Button>
-      </CardContent>
-    </Card>
-  );
-}
-
-export default function LotteryPage() {
-  const router = useRouter();
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [dash, setDash] = useState<LotteryDashboardV3 | null>(null);
-  const [quickNumber, setQuickNumber] = useState("");
-  const [isAdmin, setIsAdmin] = useState(false);
+export default function LotteryHomePage() {
+  const router = useRouter()
+  const [data, setData] = useState<Dash | null>(null)
+  const [error, setError] = useState<string | null>(null)
+  const [busy, setBusy] = useState(true)
+  const isAdmin = canAccessLotteryAdmin(getUserRole())
 
   const load = useCallback(async () => {
     if (!getAccessToken()) {
-      router.replace("/login?session=expired");
-      return;
+      router.replace('/login?session=expired')
+      return
     }
     if (!canAccessLotteryModule(getUserRole())) {
-      setError("Sin permiso para Lottery IA Control Center");
-      setLoading(false);
-      return;
+      setError('Sin permiso para Lottery IA.')
+      setBusy(false)
+      return
     }
-    setLoading(true);
-    setError(null);
+    setBusy(true)
     try {
-      const access = await apiClient.getPlatformAccess().catch(() => null);
-      setIsAdmin(canAccessLotteryAdmin(getUserRole(), access?.permissions ?? []));
-      const data = await apiClient.getLotteryDashboardV3();
-      setDash(data);
+      const dash = (await apiClient.getLotteryIaDashboard()) as Dash
+      setData(dash)
+      setError(null)
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : "No se pudo cargar Lottery IA Control Center");
+      setError(
+        err instanceof ApiError
+          ? err.message
+          : 'No fue posible consultar los resultados. Intente nuevamente.',
+      )
     } finally {
-      setLoading(false);
+      setBusy(false)
     }
-  }, [router]);
+  }, [router])
 
   useEffect(() => {
-    void load();
-    const t = window.setInterval(() => void load(), 60_000);
-    return () => window.clearInterval(t);
-  }, [load]);
+    void load()
+  }, [load])
 
-  const seven = useMemo(() => dash?.featured ?? [], [dash]);
-  const lotteryIds = useMemo(() => seven.map((c) => c.id), [seven]);
-
-  const openQuick = () => {
-    const n = quickNumber.replace(/\D/g, "");
-    if (!n) return;
-    router.push(expedienteHref(n, lotteryIds));
-  };
+  const r = data?.resultados || {}
+  const last = data?.ultimo_sorteo || {}
+  const resultado = (last.resultado || {}) as Record<string, unknown>
+  const syncOk = String(r.estado_sync || '').toLowerCase() !== 'error'
+  const pending = Number(r.pendientes_sincronizar || 0)
 
   return (
-    <AppShell
-      title="Lottery IA Control Center"
-      description="Una sola plataforma de inteligencia sobre las siete loterías activas."
-    >
-      <div className="mb-6 rounded-2xl border border-primary/25 bg-gradient-to-br from-primary/10 via-background to-background p-5 md:p-7">
-        <div className="flex flex-wrap items-start justify-between gap-3">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">
-              JAIOS · Lottery IA
-            </p>
-            <h1 className="mt-1 text-2xl font-semibold tracking-tight md:text-3xl">
-              Lottery IA Control Center
-            </h1>
-            <p className="mt-2 max-w-2xl text-sm text-muted-foreground md:text-base">
-              Historial, comparador, tablas y relaciones en un solo menú. Análisis exclusivo sobre
-              las siete loterías activas; el inventario histórico permanece en archivo.
-            </p>
+    <AppShell>
+      <div className="mx-auto max-w-6xl space-y-6 p-6">
+        <div className="rounded-2xl bg-gradient-to-br from-blue-700 via-blue-600 to-sky-500 px-6 py-8 text-white shadow-md">
+          <p className="text-sm font-medium text-blue-100">Lottery IA</p>
+          <h1 className="mt-1 text-3xl font-semibold tracking-tight">Inicio</h1>
+          <p className="mt-2 max-w-2xl text-sm text-blue-50">
+            Consulte resultados, analice números y revise recomendaciones del motor protegido.
+          </p>
+          <p className="mt-3 text-xs text-blue-100/90">{DISCLAIMER}</p>
+          <div className="mt-5 flex flex-wrap gap-2">
+            <Button asChild className="bg-white text-blue-700 hover:bg-blue-50">
+              <Link href="/lottery/analizar">Analizar número</Link>
+            </Button>
+            <Button asChild variant="outline" className="border-white/40 bg-white/10 text-white hover:bg-white/20">
+              <Link href="/lottery/resultados">Ver resultados de hoy</Link>
+            </Button>
+            <Button asChild variant="outline" className="border-white/40 bg-white/10 text-white hover:bg-white/20">
+              <Link href="/lottery/chat">Abrir Chat inteligente</Link>
+            </Button>
           </div>
-          <Button variant="outline" size="sm" onClick={() => void load()} disabled={loading}>
-            <RefreshCw className={`mr-1.5 h-3.5 w-3.5 ${loading ? "animate-spin" : ""}`} />
-            Actualizar
-          </Button>
-          <Button size="sm" asChild>
-            <Link href="/lottery/ia">Dashboard Lottery IA</Link>
-          </Button>
         </div>
-      </div>
 
-      {error ? <p className="mb-4 text-sm text-destructive">{error}</p> : null}
-
-      {dash ? (
-        <div className="mb-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          <MetricCard label="Loterías activas" value={String(dash.lotteries_active)} tone="primary" />
-          <MetricCard label="Visibles" value={String(dash.lotteries_visible)} tone="primary" />
-          <MetricCard label="Esperados hoy" value={String(dash.expected_today ?? 0)} tone="muted" />
-          <MetricCard label="Pendientes visibles" value={String(dash.pending_visible ?? 0)} tone="muted" />
-        </div>
-      ) : null}
-
-      <section className="mb-8">
-        <h2 className="mb-3 text-lg font-semibold">Herramientas de inteligencia</h2>
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {TOOLS.map((tool) => {
-            const Icon = tool.icon;
-            return (
-              <Link
-                key={tool.href}
-                href={tool.href}
-                className="rounded-xl border bg-card p-4 transition hover:border-primary/40 hover:bg-muted/40"
-              >
-                <div className="mb-2 flex items-center gap-2 font-medium">
-                  <Icon className="h-4 w-4 text-primary" />
-                  {tool.label}
-                </div>
-                <p className="text-sm text-muted-foreground">{tool.desc}</p>
-              </Link>
-            );
-          })}
-        </div>
-      </section>
-
-      <section className="mb-8">
-        <div className="mb-3 flex items-end justify-between gap-2">
-          <div>
-            <h2 className="text-lg font-semibold">Las siete loterías activas</h2>
-            <p className="text-sm text-muted-foreground">Universo exclusivo de análisis.</p>
-          </div>
-          <Button asChild variant="outline" size="sm">
-            <Link href="/lottery/lotteries">Ver catálogo</Link>
-          </Button>
-        </div>
-        {loading && !dash ? (
-          <p className="text-sm text-muted-foreground">Cargando…</p>
-        ) : (
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {seven.map((card) => (
-              <ActiveLotteryCard key={card.id} card={card} lotteryIds={lotteryIds} />
-            ))}
+        {error && (
+          <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+            {error}
+            <Button size="sm" variant="outline" className="ml-3" onClick={() => void load()}>
+              Reintentar
+            </Button>
           </div>
         )}
-        {!loading && seven.length !== 7 ? (
-          <p className="mt-2 text-sm text-amber-700 dark:text-amber-300">
-            Se esperaban 7 loterías destacadas; hay {seven.length}. Revise Administración → Catálogo
-            admin.
-          </p>
-        ) : null}
-      </section>
 
-      <section className="mb-8">
-        <Card className="border-primary/30">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-base">
-              <Search className="h-4 w-4" />
-              Análisis rápido de número
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="flex flex-wrap items-end gap-2">
-            <div className="space-y-1">
-              <label className="text-xs text-muted-foreground" htmlFor="quick-n">
-                Número (1–100)
-              </label>
-              <Input
-                id="quick-n"
-                inputMode="numeric"
-                placeholder="ej. 50"
-                value={quickNumber}
-                onChange={(e) => setQuickNumber(e.target.value)}
-                className="w-32"
-              />
-            </div>
-            <Button onClick={openQuick}>Abrir expediente</Button>
-            <Button asChild variant="outline">
-              <Link href="/lottery/chat">
-                <MessageSquare className="mr-1.5 h-4 w-4" />
-                Copiloto
-              </Link>
-            </Button>
-          </CardContent>
-        </Card>
-      </section>
+        {busy && !data && <p className="text-sm text-slate-500">Cargando información…</p>}
 
-      <section className="mb-8">
-        <h2 className="mb-3 text-lg font-semibold">Resultados recientes</h2>
-        <div className="grid gap-2">
-          {(dash?.latest_results || []).slice(0, 7).map((row, idx) => (
-            <div
-              key={`${row.slug}-${idx}`}
-              className="flex flex-wrap items-center justify-between gap-2 rounded-lg border px-3 py-2 text-sm"
-            >
-              <div>
-                <span className="font-medium">
-                  {lotteryDisplayName(undefined, row.lottery)}
-                </span>
-                <span className="ml-2 text-muted-foreground">{row.date || "—"}</span>
+        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+          <Card className="border-blue-100">
+            <CardHeader className="pb-2">
+              <CardTitle className="flex items-center gap-2 text-base text-blue-900">
+                <ShieldCheck className="h-4 w-4" /> Estado
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-1 text-sm">
+              <p>
+                <span className="text-slate-500">Sistema:</span>{' '}
+                <span className="font-medium text-emerald-700">Operativo</span>
+              </p>
+              <p>
+                <span className="text-slate-500">Resultados:</span>{' '}
+                <span className="font-medium">{syncOk ? 'Actualizados' : 'Revisar sync'}</span>
+              </p>
+              <p>
+                <span className="text-slate-500">Última actualización:</span>{' '}
+                <span className="font-medium">{fmtDate(r.ultima_actualizacion || r.ultima_fecha)}</span>
+              </p>
+              {pending > 0 && (
+                <p className="text-amber-700">La sincronización todavía no ha terminado ({pending} pendientes).</p>
+              )}
+            </CardContent>
+          </Card>
+
+          <Card className="border-blue-100 md:col-span-2">
+            <CardHeader className="pb-2">
+              <CardTitle className="flex items-center gap-2 text-base text-blue-900">
+                <CalendarDays className="h-4 w-4" /> Resultados recientes
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-2 text-sm">
+              <p>
+                <span className="text-slate-500">Lotería:</span>{' '}
+                <span className="font-medium">{String(last.loteria || '—')}</span>
+              </p>
+              <p>
+                <span className="text-slate-500">Fecha:</span>{' '}
+                <span className="font-medium">{fmtDate(last.fecha)}</span>
+              </p>
+              <div className="flex flex-wrap items-center gap-2 pt-1">
+                {resultado.primera ? (
+                  <>
+                    <LotteryNumberLink number={String(resultado.primera)} />
+                    <LotteryNumberLink number={String(resultado.segunda || '')} />
+                    <LotteryNumberLink number={String(resultado.tercera || '')} />
+                  </>
+                ) : (
+                  <span className="text-slate-500">No hay resultados para este período.</span>
+                )}
               </div>
-              <span className="font-mono">{(row.numbers || []).join(" · ") || "—"}</span>
-            </div>
-          ))}
-          {!loading && !(dash?.latest_results || []).length ? (
-            <p className="text-sm text-muted-foreground">Sin resultados recientes de las siete activas.</p>
-          ) : null}
-        </div>
-      </section>
+              <p className="text-xs text-slate-500">
+                Total sorteos: {String(r.total_sorteos ?? '—')} · Último disponible: {fmtDate(r.ultima_fecha)}
+              </p>
+            </CardContent>
+          </Card>
 
-      {isAdmin ? (
-        <section className="rounded-xl border border-dashed p-4">
-          <div className="flex flex-wrap items-center justify-between gap-2">
-            <div>
-              <p className="flex items-center gap-2 text-sm font-medium">
-                <Activity className="h-4 w-4" />
-                Administración
-              </p>
-              <p className="text-xs text-muted-foreground">
-                Sync, archivo histórico y Prompt Studio (fuera de la experiencia ordinaria).
-              </p>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              <Button asChild size="sm" variant="outline">
-                <Link href="/lottery/admin/sync">Sync</Link>
-              </Button>
-              <Button asChild size="sm" variant="outline">
-                <Link href="/lottery/admin/lotteries">Catálogo admin</Link>
-              </Button>
-              <Button asChild size="sm" variant="outline">
-                <Link href="/lottery/admin/lotteries/archivo-historico">Archivo</Link>
-              </Button>
-              <Button asChild size="sm" variant="outline">
-                <Link href="/lottery/admin/control-center/prompt-studio">Prompt Studio</Link>
-              </Button>
-            </div>
+          <Card className="border-blue-100">
+            <CardHeader className="pb-2">
+              <CardTitle className="flex items-center gap-2 text-base text-blue-900">
+                <Sparkles className="h-4 w-4" /> Recomendación
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-2 text-sm">
+              {Array.isArray(last.prediccion) && last.prediccion.length ? (
+                <>
+                  <p className="text-xs uppercase text-amber-700">Número fuerte / alternativas</p>
+                  <div className="flex flex-wrap gap-2">
+                    {(last.prediccion as unknown[]).map((n, i) => (
+                      <LotteryNumberLink
+                        key={`${n}-${i}`}
+                        number={String(n)}
+                        size={i === 0 ? 'lg' : 'sm'}
+                        className={i === 0 ? undefined : 'bg-amber-500 hover:bg-amber-600'}
+                      />
+                    ))}
+                  </div>
+                  <p className="text-slate-600">
+                    Estado: {String(last.estado || 'Resultado pendiente')}
+                  </p>
+                </>
+              ) : (
+                <p className="text-slate-600">Sin recomendación destacada todavía. Analice un número para comenzar.</p>
+              )}
+            </CardContent>
+          </Card>
+        </div>
+
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          {[
+            { href: '/lottery/analizar', label: 'Analizar número', icon: Search },
+            { href: '/lottery/resultados', label: 'Resultados e histórico', icon: CalendarDays },
+            { href: '/lottery/patrones', label: 'Patrones y tablas', icon: Table2 },
+            { href: '/lottery/chat', label: 'Chat inteligente', icon: MessageSquare },
+          ].map((item) => (
+            <Link key={item.href} href={item.href}>
+              <Card className="border-blue-100 transition hover:border-blue-300 hover:shadow-sm">
+                <CardContent className="flex items-center gap-3 py-5">
+                  <item.icon className="h-5 w-5 text-blue-600" />
+                  <span className="font-medium text-slate-900">{item.label}</span>
+                </CardContent>
+              </Card>
+            </Link>
+          ))}
+        </div>
+
+        {isAdmin && (
+          <div className="rounded-xl border border-blue-100 bg-blue-50/60 px-4 py-3 text-sm text-blue-900">
+            Acceso administrativo disponible.{' '}
+            <Link href="/lottery/administracion" className="font-semibold underline">
+              Abrir Administración
+            </Link>
           </div>
-        </section>
-      ) : null}
+        )}
+      </div>
     </AppShell>
-  );
+  )
 }

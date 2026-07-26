@@ -147,6 +147,17 @@ def chat(
                 "predicciones bloqueadas",
                 "predicción bloqueada",
                 "prediccion bloqueada",
+                "prospectiv",
+                "hash",
+                "multi-fuerte",
+                "multi fuerte",
+                "integridad",
+                "d+1",
+                "source order",
+                "perfil socio",
+                "resultados pendientes",
+                "predicción de hoy",
+                "prediccion de hoy",
             )
         ):
             extra: dict = {
@@ -159,18 +170,80 @@ def chat(
                 errp = Path("artifacts/tiebreak/error_cases.json")
                 if errp.exists():
                     extra["error_cases_n"] = len(json.loads(errp.read_text(encoding="utf-8")))
-            if "bloquead" in low:
-                from app.lottery.numeric_relations.analysis_engine.prospective_validation import (
-                    get_prospective_store,
-                )
+            from app.lottery.numeric_relations.analysis_engine.prospective_validation import (
+                get_prospective_store,
+            )
 
-                extra["prospective"] = get_prospective_store().metrics()
-                extra["locked"] = [
+            store = get_prospective_store()
+            if any(
+                k in low
+                for k in (
+                    "bloquead",
+                    "prospectiv",
+                    "hash",
+                    "multi",
+                    "integridad",
+                    "d+1",
+                    "pendiente",
+                    "hoy",
+                    "métric",
+                    "metric",
+                    "source order",
+                    "perfil",
+                )
+            ):
+                extra["prospective"] = store.metrics()
+                locked = [
                     p.to_dict()
-                    for p in get_prospective_store().list()
-                    if p.status in {"LOCKED", "EVALUATED"}
+                    for p in store.list()
+                    if p.status in {"LOCKED", "AWAITING_RESULTS", "EVALUATED"}
                 ]
-            if "desempate" in low or "regla" in low:
+                extra["locked"] = locked
+                # J-11A never modifies locked predictions
+                if "modificar" in low or "cambiar" in low or "editar" in low:
+                    inv["message"] = (
+                        "J-11A no puede modificar predicciones LOCKED. "
+                        "Consulte auditoría y cree una nueva predicción si hace falta."
+                    )
+                elif "hash" in low:
+                    hashes = [p.get("prediction_hash") for p in locked if p.get("prediction_hash")]
+                    inv["message"] = f"Hashes de predicciones bloqueadas/evaluadas: {hashes}"
+                elif "integridad" in low:
+                    errs = extra["prospective"].get("total_integrity_errors")
+                    inv["message"] = f"Errores de integridad en piloto: {errs}"
+                elif "d+1" in low or "exactos" in low:
+                    m = extra["prospective"]
+                    inv["message"] = (
+                        f"Exactos D+1 primary={m.get('primary_exact_d1')} "
+                        f"multi={m.get('multi_strong_exact_d1')} "
+                        f"(métricas persistidas; sin recalcular)."
+                    )
+                elif "source order" in low or "compara" in low:
+                    inv["message"] = (
+                        "Perfil operativo: socio + TIEBREAK_PROFILE_SOCIO_V1 + EMPATE_MULTI_FUERTE. "
+                        "Source order es sombra y no altera la señal bloqueada. "
+                        f"Comparación: {[{'id': p.prediction_id, 'shadow': bool(p.shadow_profiles)} for p in store.list()[-5:]]}"
+                    )
+                elif "multi" in low:
+                    today_multi = [
+                        {"id": p.prediction_id, "multi": p.multi_strong_candidates}
+                        for p in store.list()
+                        if p.multi_strong_candidates
+                    ]
+                    inv["message"] = f"Multi-fuertes registrados: {today_multi}"
+                elif "pendiente" in low:
+                    pending = [p.prediction_id for p in store.list() if p.status in {"LOCKED", "AWAITING_RESULTS"}]
+                    inv["message"] = f"Predicciones pendientes de evaluación: {pending}"
+                elif "bloquead" in low or "hoy" in low or "prospectiv" in low:
+                    inv["message"] = (
+                        f"Predicciones prospectivas (persistidas): {extra.get('prospective')}. "
+                        "Una predicción LOCKED no se puede modificar ni recalcular."
+                    )
+                else:
+                    inv["message"] = (
+                        f"Métricas del piloto prospectivo: {extra.get('prospective')}"
+                    )
+            if "desempate" in low or ("regla" in low and "desempate" in low):
                 inv["message"] = (
                     f"Regla de desempate operativa: {SELECTED_RULE_ID} "
                     f"(umbral práctico={DEFAULT_PRACTICAL_THRESHOLD}). "
@@ -184,11 +257,6 @@ def chat(
                     f"Los 14 errores Phase-2 están auditados. "
                     f"Baseline top1={((o14.get('baseline') or {}).get('top1_rate'))}, "
                     f"socio+multi top2={((o14.get('socio_multi') or {}).get('top2_rate'))}."
-                )
-            if "bloquead" in low:
-                inv["message"] = (
-                    f"Predicciones prospectivas: {extra.get('prospective')}. "
-                    "Una predicción LOCKED no se puede modificar."
                 )
             inv["tiebreak"] = extra
             tool_results["investigate_phase2"] = {"tool": "investigate_phase2", "data": inv}

@@ -1,0 +1,1919 @@
+{
+  "prediction_id": "pros_91dd432a8cd9",
+  "status": "EVALUATED",
+  "created_at": "2026-07-26T17:29:58.191300+00:00",
+  "input_data": {
+    "numbers": [
+      35,
+      14
+    ],
+    "date": "2026-07-26",
+    "mode": "socio",
+    "raw": {
+      "numbers": [
+        35,
+        14
+      ],
+      "date": "2026-07-26",
+      "mode": null,
+      "lotteries": null,
+      "positions": null,
+      "target_date": null
+    }
+  },
+  "candidates": [
+    {
+      "number": 54,
+      "classification": "FUERTE_PRINCIPAL",
+      "classification_reason": "Mayor respaldo estructural tras análisis completo T1×T2.",
+      "total_score": 156.0,
+      "components": {
+        "T1_SOURCE_SUPPORT": 1.0,
+        "T2_CONFIRMATION_SUPPORT": 1.0,
+        "CROSS_TABLE_SUPPORT": 1.0,
+        "MULTIPLE_OBSERVED_SUPPORT": 1.0,
+        "INDEPENDENT_PATH_SUPPORT": 3.0,
+        "DIRECT_PATH_SUPPORT": 3.0,
+        "MULTI_CONFIRMATION_SUPPORT": 0.0,
+        "HISTORICAL_EXACT_RATE": 0.0,
+        "HISTORICAL_D1_D3_RATE": 0.0,
+        "HISTORICAL_D1_D7_RATE": 0.0,
+        "FIRST_POSITION_SUPPORT": 0.0,
+        "ANY_POSITION_SUPPORT": 0.0,
+        "RECENT_PATTERN_SUPPORT": 0.0,
+        "CROSS_LOTTERY_SUPPORT": 0.0,
+        "CHAIN_CONTINUITY_SUPPORT": 0.0,
+        "DERIVATION_DEPTH_PENALTY": 0.0,
+        "AMBIGUITY_PENALTY": 0.0,
+        "DUPLICATE_PATH_PENALTY": 0.0
+      },
+      "analytical_confidence": 85.0,
+      "evidence": {
+        "candidate_number": 54,
+        "supporting_observed_numbers": [
+          14,
+          35
+        ],
+        "table1_sources": [
+          35
+        ],
+        "table2_sources": [
+          14
+        ],
+        "table1_companions": [
+          54
+        ],
+        "table2_neighbors": [
+          14
+        ],
+        "direct_confirmers": [
+          14
+        ],
+        "indirect_confirmers": [],
+        "derivation_paths": [],
+        "independent_path_count": 3,
+        "total_path_count": 7,
+        "direct_path_count": 3,
+        "cross_table_support": true,
+        "multi_source_support": true,
+        "same_source_repetitions": 0,
+        "historical_activations": 0,
+        "historical_exact_hits": 0,
+        "historical_first_position_hits": 0,
+        "historical_any_position_hits": 0,
+        "historical_t1_family_hits": 0,
+        "historical_t2_neighbor_hits": 0,
+        "median_days_to_exact": null,
+        "average_days_to_exact": null,
+        "d1_hits": 0,
+        "d2_hits": 0,
+        "d3_hits": 0,
+        "d4_hits": 0,
+        "d5_hits": 0,
+        "d6_hits": 0,
+        "d7_hits": 0,
+        "lottery_distribution": {},
+        "position_distribution": {},
+        "year_distribution": {},
+        "recent_equivalent_cases": [],
+        "exceptions": [],
+        "ambiguity_score": 0.0,
+        "path_fingerprints": [
+          "35|54|T1_MOTHER_RELATION|0",
+          "35|54|T1_COMPANION|0",
+          "14|54|T2_NEIGHBOR|0",
+          "14|54|T2_CONFIRMATION|0",
+          "35|54|CROSS_CONFIRMATION|0",
+          "35|54|MULTI_SOURCE_SUPPORT|0",
+          "14|54|MULTI_SOURCE_SUPPORT|0"
+        ]
+      },
+      "positive_evidence": [
+        "Relación Tabla 1 desde entrada(s) observada(s) más confirmación Tabla 2",
+        "Al menos dos rutas independientes",
+        "Apoyo cruzado Tabla 1 + Tabla 2"
+      ],
+      "penalties": [],
+      "rank": 1,
+      "gap_to_next": 144.0
+    },
+    {
+      "number": 6,
+      "classification": "FAMILIA_T1",
+      "classification_reason": "Solo familia T1; insuficiente para fuerte en perfil actual.",
+      "total_score": 12.0,
+      "components": {
+        "T1_SOURCE_SUPPORT": 1.0,
+        "T2_CONFIRMATION_SUPPORT": 0.0,
+        "CROSS_TABLE_SUPPORT": 0.0,
+        "MULTIPLE_OBSERVED_SUPPORT": 0.0,
+        "INDEPENDENT_PATH_SUPPORT": 1.0,
+        "DIRECT_PATH_SUPPORT": 1.0,
+        "MULTI_CONFIRMATION_SUPPORT": 0.0,
+        "HISTORICAL_EXACT_RATE": 0.0,
+        "HISTORICAL_D1_D3_RATE": 0.0,
+        "HISTORICAL_D1_D7_RATE": 0.0,
+        "FIRST_POSITION_SUPPORT": 0.0,
+        "ANY_POSITION_SUPPORT": 0.0,
+        "RECENT_PATTERN_SUPPORT": 0.0,
+        "CROSS_LOTTERY_SUPPORT": 0.0,
+        "CHAIN_CONTINUITY_SUPPORT": 0.0,
+        "DERIVATION_DEPTH_PENALTY": 0.0,
+        "AMBIGUITY_PENALTY": 0.0,
+        "DUPLICATE_PATH_PENALTY": 0.0
+      },
+      "analytical_confidence": 50.0,
+      "evidence": {
+        "candidate_number": 6,
+        "supporting_observed_numbers": [
+          35
+        ],
+        "table1_sources": [
+          35
+        ],
+        "table2_sources": [],
+        "table1_companions": [
+          6
+        ],
+        "table2_neighbors": [
+          60
+        ],
+        "direct_confirmers": [],
+        "indirect_confirmers": [],
+        "derivation_paths": [],
+        "independent_path_count": 1,
+        "total_path_count": 2,
+        "direct_path_count": 1,
+        "cross_table_support": false,
+        "multi_source_support": false,
+        "same_source_repetitions": 0,
+        "historical_activations": 0,
+        "historical_exact_hits": 0,
+        "historical_first_position_hits": 0,
+        "historical_any_position_hits": 0,
+        "historical_t1_family_hits": 0,
+        "historical_t2_neighbor_hits": 0,
+        "median_days_to_exact": null,
+        "average_days_to_exact": null,
+        "d1_hits": 0,
+        "d2_hits": 0,
+        "d3_hits": 0,
+        "d4_hits": 0,
+        "d5_hits": 0,
+        "d6_hits": 0,
+        "d7_hits": 0,
+        "lottery_distribution": {},
+        "position_distribution": {},
+        "year_distribution": {},
+        "recent_equivalent_cases": [],
+        "exceptions": [],
+        "ambiguity_score": 0.0,
+        "path_fingerprints": [
+          "35|6|T1_MOTHER_RELATION|0",
+          "35|6|T1_COMPANION|0"
+        ]
+      },
+      "positive_evidence": [
+        "Aparece como compañero/destino de Tabla 1 sin confirmación T2"
+      ],
+      "penalties": [],
+      "rank": 2,
+      "gap_to_next": 0.0
+    },
+    {
+      "number": 11,
+      "classification": "FAMILIA_T1",
+      "classification_reason": "Solo familia T1; insuficiente para fuerte en perfil actual.",
+      "total_score": 12.0,
+      "components": {
+        "T1_SOURCE_SUPPORT": 1.0,
+        "T2_CONFIRMATION_SUPPORT": 0.0,
+        "CROSS_TABLE_SUPPORT": 0.0,
+        "MULTIPLE_OBSERVED_SUPPORT": 0.0,
+        "INDEPENDENT_PATH_SUPPORT": 1.0,
+        "DIRECT_PATH_SUPPORT": 1.0,
+        "MULTI_CONFIRMATION_SUPPORT": 0.0,
+        "HISTORICAL_EXACT_RATE": 0.0,
+        "HISTORICAL_D1_D3_RATE": 0.0,
+        "HISTORICAL_D1_D7_RATE": 0.0,
+        "FIRST_POSITION_SUPPORT": 0.0,
+        "ANY_POSITION_SUPPORT": 0.0,
+        "RECENT_PATTERN_SUPPORT": 0.0,
+        "CROSS_LOTTERY_SUPPORT": 0.0,
+        "CHAIN_CONTINUITY_SUPPORT": 0.0,
+        "DERIVATION_DEPTH_PENALTY": 0.0,
+        "AMBIGUITY_PENALTY": 0.0,
+        "DUPLICATE_PATH_PENALTY": 0.0
+      },
+      "analytical_confidence": 50.0,
+      "evidence": {
+        "candidate_number": 11,
+        "supporting_observed_numbers": [
+          35
+        ],
+        "table1_sources": [
+          35
+        ],
+        "table2_sources": [],
+        "table1_companions": [
+          11
+        ],
+        "table2_neighbors": [
+          57,
+          69,
+          91
+        ],
+        "direct_confirmers": [],
+        "indirect_confirmers": [],
+        "derivation_paths": [],
+        "independent_path_count": 1,
+        "total_path_count": 2,
+        "direct_path_count": 1,
+        "cross_table_support": false,
+        "multi_source_support": false,
+        "same_source_repetitions": 0,
+        "historical_activations": 0,
+        "historical_exact_hits": 0,
+        "historical_first_position_hits": 0,
+        "historical_any_position_hits": 0,
+        "historical_t1_family_hits": 0,
+        "historical_t2_neighbor_hits": 0,
+        "median_days_to_exact": null,
+        "average_days_to_exact": null,
+        "d1_hits": 0,
+        "d2_hits": 0,
+        "d3_hits": 0,
+        "d4_hits": 0,
+        "d5_hits": 0,
+        "d6_hits": 0,
+        "d7_hits": 0,
+        "lottery_distribution": {},
+        "position_distribution": {},
+        "year_distribution": {},
+        "recent_equivalent_cases": [],
+        "exceptions": [],
+        "ambiguity_score": 0.0,
+        "path_fingerprints": [
+          "35|11|T1_MOTHER_RELATION|0",
+          "35|11|T1_COMPANION|0"
+        ]
+      },
+      "positive_evidence": [
+        "Aparece como compañero/destino de Tabla 1 sin confirmación T2"
+      ],
+      "penalties": [],
+      "rank": 3,
+      "gap_to_next": 0.0
+    },
+    {
+      "number": 43,
+      "classification": "FAMILIA_T1",
+      "classification_reason": "Solo familia T1; insuficiente para fuerte en perfil actual.",
+      "total_score": 12.0,
+      "components": {
+        "T1_SOURCE_SUPPORT": 1.0,
+        "T2_CONFIRMATION_SUPPORT": 0.0,
+        "CROSS_TABLE_SUPPORT": 0.0,
+        "MULTIPLE_OBSERVED_SUPPORT": 0.0,
+        "INDEPENDENT_PATH_SUPPORT": 1.0,
+        "DIRECT_PATH_SUPPORT": 1.0,
+        "MULTI_CONFIRMATION_SUPPORT": 0.0,
+        "HISTORICAL_EXACT_RATE": 0.0,
+        "HISTORICAL_D1_D3_RATE": 0.0,
+        "HISTORICAL_D1_D7_RATE": 0.0,
+        "FIRST_POSITION_SUPPORT": 0.0,
+        "ANY_POSITION_SUPPORT": 0.0,
+        "RECENT_PATTERN_SUPPORT": 0.0,
+        "CROSS_LOTTERY_SUPPORT": 0.0,
+        "CHAIN_CONTINUITY_SUPPORT": 0.0,
+        "DERIVATION_DEPTH_PENALTY": 0.0,
+        "AMBIGUITY_PENALTY": 0.0,
+        "DUPLICATE_PATH_PENALTY": 0.0
+      },
+      "analytical_confidence": 50.0,
+      "evidence": {
+        "candidate_number": 43,
+        "supporting_observed_numbers": [
+          35
+        ],
+        "table1_sources": [
+          35
+        ],
+        "table2_sources": [],
+        "table1_companions": [
+          43
+        ],
+        "table2_neighbors": [],
+        "direct_confirmers": [],
+        "indirect_confirmers": [],
+        "derivation_paths": [],
+        "independent_path_count": 1,
+        "total_path_count": 2,
+        "direct_path_count": 1,
+        "cross_table_support": false,
+        "multi_source_support": false,
+        "same_source_repetitions": 0,
+        "historical_activations": 0,
+        "historical_exact_hits": 0,
+        "historical_first_position_hits": 0,
+        "historical_any_position_hits": 0,
+        "historical_t1_family_hits": 0,
+        "historical_t2_neighbor_hits": 0,
+        "median_days_to_exact": null,
+        "average_days_to_exact": null,
+        "d1_hits": 0,
+        "d2_hits": 0,
+        "d3_hits": 0,
+        "d4_hits": 0,
+        "d5_hits": 0,
+        "d6_hits": 0,
+        "d7_hits": 0,
+        "lottery_distribution": {},
+        "position_distribution": {},
+        "year_distribution": {},
+        "recent_equivalent_cases": [],
+        "exceptions": [],
+        "ambiguity_score": 0.0,
+        "path_fingerprints": [
+          "35|43|T1_MOTHER_RELATION|0",
+          "35|43|T1_COMPANION|0"
+        ]
+      },
+      "positive_evidence": [
+        "Aparece como compañero/destino de Tabla 1 sin confirmación T2"
+      ],
+      "penalties": [],
+      "rank": 4,
+      "gap_to_next": 0.0
+    },
+    {
+      "number": 86,
+      "classification": "FAMILIA_T1",
+      "classification_reason": "Solo familia T1; insuficiente para fuerte en perfil actual.",
+      "total_score": 12.0,
+      "components": {
+        "T1_SOURCE_SUPPORT": 1.0,
+        "T2_CONFIRMATION_SUPPORT": 0.0,
+        "CROSS_TABLE_SUPPORT": 0.0,
+        "MULTIPLE_OBSERVED_SUPPORT": 0.0,
+        "INDEPENDENT_PATH_SUPPORT": 1.0,
+        "DIRECT_PATH_SUPPORT": 1.0,
+        "MULTI_CONFIRMATION_SUPPORT": 0.0,
+        "HISTORICAL_EXACT_RATE": 0.0,
+        "HISTORICAL_D1_D3_RATE": 0.0,
+        "HISTORICAL_D1_D7_RATE": 0.0,
+        "FIRST_POSITION_SUPPORT": 0.0,
+        "ANY_POSITION_SUPPORT": 0.0,
+        "RECENT_PATTERN_SUPPORT": 0.0,
+        "CROSS_LOTTERY_SUPPORT": 0.0,
+        "CHAIN_CONTINUITY_SUPPORT": 0.0,
+        "DERIVATION_DEPTH_PENALTY": 0.0,
+        "AMBIGUITY_PENALTY": 0.0,
+        "DUPLICATE_PATH_PENALTY": 0.0
+      },
+      "analytical_confidence": 50.0,
+      "evidence": {
+        "candidate_number": 86,
+        "supporting_observed_numbers": [
+          35
+        ],
+        "table1_sources": [
+          35
+        ],
+        "table2_sources": [],
+        "table1_companions": [
+          86
+        ],
+        "table2_neighbors": [
+          19,
+          46
+        ],
+        "direct_confirmers": [],
+        "indirect_confirmers": [],
+        "derivation_paths": [],
+        "independent_path_count": 1,
+        "total_path_count": 2,
+        "direct_path_count": 1,
+        "cross_table_support": false,
+        "multi_source_support": false,
+        "same_source_repetitions": 0,
+        "historical_activations": 0,
+        "historical_exact_hits": 0,
+        "historical_first_position_hits": 0,
+        "historical_any_position_hits": 0,
+        "historical_t1_family_hits": 0,
+        "historical_t2_neighbor_hits": 0,
+        "median_days_to_exact": null,
+        "average_days_to_exact": null,
+        "d1_hits": 0,
+        "d2_hits": 0,
+        "d3_hits": 0,
+        "d4_hits": 0,
+        "d5_hits": 0,
+        "d6_hits": 0,
+        "d7_hits": 0,
+        "lottery_distribution": {},
+        "position_distribution": {},
+        "year_distribution": {},
+        "recent_equivalent_cases": [],
+        "exceptions": [],
+        "ambiguity_score": 0.0,
+        "path_fingerprints": [
+          "35|86|T1_MOTHER_RELATION|0",
+          "35|86|T1_COMPANION|0"
+        ]
+      },
+      "positive_evidence": [
+        "Aparece como compañero/destino de Tabla 1 sin confirmación T2"
+      ],
+      "penalties": [],
+      "rank": 5,
+      "gap_to_next": 62.0
+    },
+    {
+      "number": 19,
+      "classification": "DERIVACION_RELEVANTE",
+      "classification_reason": "Derivación relevante; no fuerte principal en perfil estricto.",
+      "total_score": -50.0,
+      "components": {
+        "T1_SOURCE_SUPPORT": 0.0,
+        "T2_CONFIRMATION_SUPPORT": 0.0,
+        "CROSS_TABLE_SUPPORT": 0.0,
+        "MULTIPLE_OBSERVED_SUPPORT": 0.0,
+        "INDEPENDENT_PATH_SUPPORT": 0.0,
+        "DIRECT_PATH_SUPPORT": 0.0,
+        "MULTI_CONFIRMATION_SUPPORT": 0.0,
+        "HISTORICAL_EXACT_RATE": 0.0,
+        "HISTORICAL_D1_D3_RATE": 0.0,
+        "HISTORICAL_D1_D7_RATE": 0.0,
+        "FIRST_POSITION_SUPPORT": 0.0,
+        "ANY_POSITION_SUPPORT": 0.0,
+        "RECENT_PATTERN_SUPPORT": 0.0,
+        "CROSS_LOTTERY_SUPPORT": 0.0,
+        "CHAIN_CONTINUITY_SUPPORT": 0.0,
+        "DERIVATION_DEPTH_PENALTY": 1.0,
+        "AMBIGUITY_PENALTY": 0.0,
+        "DUPLICATE_PATH_PENALTY": 0.0
+      },
+      "analytical_confidence": 35.0,
+      "evidence": {
+        "candidate_number": 19,
+        "supporting_observed_numbers": [
+          35
+        ],
+        "table1_sources": [],
+        "table2_sources": [],
+        "table1_companions": [],
+        "table2_neighbors": [
+          46,
+          86
+        ],
+        "direct_confirmers": [],
+        "indirect_confirmers": [
+          35
+        ],
+        "derivation_paths": [
+          {
+            "path_id": "der_e9677336ace3",
+            "route": [
+              35,
+              86,
+              19
+            ],
+            "observed_origin": 35,
+            "tables_used": [
+              "table1",
+              "table2"
+            ],
+            "relation_types": [
+              "T1_MOTHER_RELATION",
+              "T2_NEIGHBOR"
+            ],
+            "depth": 1,
+            "destination": 19,
+            "hops": 2,
+            "independent": true,
+            "reuses_nodes": false,
+            "forms_cycle": false,
+            "historical_support": false
+          }
+        ],
+        "independent_path_count": 0,
+        "total_path_count": 1,
+        "direct_path_count": 0,
+        "cross_table_support": false,
+        "multi_source_support": false,
+        "same_source_repetitions": 0,
+        "historical_activations": 0,
+        "historical_exact_hits": 0,
+        "historical_first_position_hits": 0,
+        "historical_any_position_hits": 0,
+        "historical_t1_family_hits": 0,
+        "historical_t2_neighbor_hits": 0,
+        "median_days_to_exact": null,
+        "average_days_to_exact": null,
+        "d1_hits": 0,
+        "d2_hits": 0,
+        "d3_hits": 0,
+        "d4_hits": 0,
+        "d5_hits": 0,
+        "d6_hits": 0,
+        "d7_hits": 0,
+        "lottery_distribution": {},
+        "position_distribution": {},
+        "year_distribution": {},
+        "recent_equivalent_cases": [],
+        "exceptions": [],
+        "ambiguity_score": 0.0,
+        "path_fingerprints": [
+          "35|19|DERIVATION_LEVEL_1|1"
+        ]
+      },
+      "positive_evidence": [
+        "Destino alcanzado solo por derivación"
+      ],
+      "penalties": [
+        "Penalización por profundidad de derivación=1.0"
+      ],
+      "rank": 6,
+      "gap_to_next": 0.0
+    },
+    {
+      "number": 46,
+      "classification": "DERIVACION_RELEVANTE",
+      "classification_reason": "Derivación relevante; no fuerte principal en perfil estricto.",
+      "total_score": -50.0,
+      "components": {
+        "T1_SOURCE_SUPPORT": 0.0,
+        "T2_CONFIRMATION_SUPPORT": 0.0,
+        "CROSS_TABLE_SUPPORT": 0.0,
+        "MULTIPLE_OBSERVED_SUPPORT": 0.0,
+        "INDEPENDENT_PATH_SUPPORT": 0.0,
+        "DIRECT_PATH_SUPPORT": 0.0,
+        "MULTI_CONFIRMATION_SUPPORT": 0.0,
+        "HISTORICAL_EXACT_RATE": 0.0,
+        "HISTORICAL_D1_D3_RATE": 0.0,
+        "HISTORICAL_D1_D7_RATE": 0.0,
+        "FIRST_POSITION_SUPPORT": 0.0,
+        "ANY_POSITION_SUPPORT": 0.0,
+        "RECENT_PATTERN_SUPPORT": 0.0,
+        "CROSS_LOTTERY_SUPPORT": 0.0,
+        "CHAIN_CONTINUITY_SUPPORT": 0.0,
+        "DERIVATION_DEPTH_PENALTY": 1.0,
+        "AMBIGUITY_PENALTY": 0.0,
+        "DUPLICATE_PATH_PENALTY": 0.0
+      },
+      "analytical_confidence": 35.0,
+      "evidence": {
+        "candidate_number": 46,
+        "supporting_observed_numbers": [
+          35
+        ],
+        "table1_sources": [],
+        "table2_sources": [],
+        "table1_companions": [],
+        "table2_neighbors": [
+          19,
+          86
+        ],
+        "direct_confirmers": [],
+        "indirect_confirmers": [
+          35
+        ],
+        "derivation_paths": [
+          {
+            "path_id": "der_40d8ce97b776",
+            "route": [
+              35,
+              86,
+              46
+            ],
+            "observed_origin": 35,
+            "tables_used": [
+              "table1",
+              "table2"
+            ],
+            "relation_types": [
+              "T1_MOTHER_RELATION",
+              "T2_NEIGHBOR"
+            ],
+            "depth": 1,
+            "destination": 46,
+            "hops": 2,
+            "independent": true,
+            "reuses_nodes": false,
+            "forms_cycle": false,
+            "historical_support": false
+          }
+        ],
+        "independent_path_count": 0,
+        "total_path_count": 1,
+        "direct_path_count": 0,
+        "cross_table_support": false,
+        "multi_source_support": false,
+        "same_source_repetitions": 0,
+        "historical_activations": 0,
+        "historical_exact_hits": 0,
+        "historical_first_position_hits": 0,
+        "historical_any_position_hits": 0,
+        "historical_t1_family_hits": 0,
+        "historical_t2_neighbor_hits": 0,
+        "median_days_to_exact": null,
+        "average_days_to_exact": null,
+        "d1_hits": 0,
+        "d2_hits": 0,
+        "d3_hits": 0,
+        "d4_hits": 0,
+        "d5_hits": 0,
+        "d6_hits": 0,
+        "d7_hits": 0,
+        "lottery_distribution": {},
+        "position_distribution": {},
+        "year_distribution": {},
+        "recent_equivalent_cases": [],
+        "exceptions": [],
+        "ambiguity_score": 0.0,
+        "path_fingerprints": [
+          "35|46|DERIVATION_LEVEL_1|1"
+        ]
+      },
+      "positive_evidence": [
+        "Destino alcanzado solo por derivación"
+      ],
+      "penalties": [
+        "Penalización por profundidad de derivación=1.0"
+      ],
+      "rank": 7,
+      "gap_to_next": 0.0
+    },
+    {
+      "number": 57,
+      "classification": "DERIVACION_RELEVANTE",
+      "classification_reason": "Derivación relevante; no fuerte principal en perfil estricto.",
+      "total_score": -50.0,
+      "components": {
+        "T1_SOURCE_SUPPORT": 0.0,
+        "T2_CONFIRMATION_SUPPORT": 0.0,
+        "CROSS_TABLE_SUPPORT": 0.0,
+        "MULTIPLE_OBSERVED_SUPPORT": 0.0,
+        "INDEPENDENT_PATH_SUPPORT": 0.0,
+        "DIRECT_PATH_SUPPORT": 0.0,
+        "MULTI_CONFIRMATION_SUPPORT": 0.0,
+        "HISTORICAL_EXACT_RATE": 0.0,
+        "HISTORICAL_D1_D3_RATE": 0.0,
+        "HISTORICAL_D1_D7_RATE": 0.0,
+        "FIRST_POSITION_SUPPORT": 0.0,
+        "ANY_POSITION_SUPPORT": 0.0,
+        "RECENT_PATTERN_SUPPORT": 0.0,
+        "CROSS_LOTTERY_SUPPORT": 0.0,
+        "CHAIN_CONTINUITY_SUPPORT": 0.0,
+        "DERIVATION_DEPTH_PENALTY": 1.0,
+        "AMBIGUITY_PENALTY": 0.0,
+        "DUPLICATE_PATH_PENALTY": 0.0
+      },
+      "analytical_confidence": 35.0,
+      "evidence": {
+        "candidate_number": 57,
+        "supporting_observed_numbers": [
+          35
+        ],
+        "table1_sources": [],
+        "table2_sources": [],
+        "table1_companions": [],
+        "table2_neighbors": [
+          11,
+          69,
+          91
+        ],
+        "direct_confirmers": [],
+        "indirect_confirmers": [
+          35
+        ],
+        "derivation_paths": [
+          {
+            "path_id": "der_5e3b407a0773",
+            "route": [
+              35,
+              11,
+              57
+            ],
+            "observed_origin": 35,
+            "tables_used": [
+              "table1",
+              "table2"
+            ],
+            "relation_types": [
+              "T1_MOTHER_RELATION",
+              "T2_NEIGHBOR"
+            ],
+            "depth": 1,
+            "destination": 57,
+            "hops": 2,
+            "independent": true,
+            "reuses_nodes": false,
+            "forms_cycle": false,
+            "historical_support": false
+          }
+        ],
+        "independent_path_count": 0,
+        "total_path_count": 1,
+        "direct_path_count": 0,
+        "cross_table_support": false,
+        "multi_source_support": false,
+        "same_source_repetitions": 0,
+        "historical_activations": 0,
+        "historical_exact_hits": 0,
+        "historical_first_position_hits": 0,
+        "historical_any_position_hits": 0,
+        "historical_t1_family_hits": 0,
+        "historical_t2_neighbor_hits": 0,
+        "median_days_to_exact": null,
+        "average_days_to_exact": null,
+        "d1_hits": 0,
+        "d2_hits": 0,
+        "d3_hits": 0,
+        "d4_hits": 0,
+        "d5_hits": 0,
+        "d6_hits": 0,
+        "d7_hits": 0,
+        "lottery_distribution": {},
+        "position_distribution": {},
+        "year_distribution": {},
+        "recent_equivalent_cases": [],
+        "exceptions": [],
+        "ambiguity_score": 0.0,
+        "path_fingerprints": [
+          "35|57|DERIVATION_LEVEL_1|1"
+        ]
+      },
+      "positive_evidence": [
+        "Destino alcanzado solo por derivación"
+      ],
+      "penalties": [
+        "Penalización por profundidad de derivación=1.0"
+      ],
+      "rank": 8,
+      "gap_to_next": 0.0
+    },
+    {
+      "number": 60,
+      "classification": "DERIVACION_RELEVANTE",
+      "classification_reason": "Derivación relevante; no fuerte principal en perfil estricto.",
+      "total_score": -50.0,
+      "components": {
+        "T1_SOURCE_SUPPORT": 0.0,
+        "T2_CONFIRMATION_SUPPORT": 0.0,
+        "CROSS_TABLE_SUPPORT": 0.0,
+        "MULTIPLE_OBSERVED_SUPPORT": 0.0,
+        "INDEPENDENT_PATH_SUPPORT": 0.0,
+        "DIRECT_PATH_SUPPORT": 0.0,
+        "MULTI_CONFIRMATION_SUPPORT": 0.0,
+        "HISTORICAL_EXACT_RATE": 0.0,
+        "HISTORICAL_D1_D3_RATE": 0.0,
+        "HISTORICAL_D1_D7_RATE": 0.0,
+        "FIRST_POSITION_SUPPORT": 0.0,
+        "ANY_POSITION_SUPPORT": 0.0,
+        "RECENT_PATTERN_SUPPORT": 0.0,
+        "CROSS_LOTTERY_SUPPORT": 0.0,
+        "CHAIN_CONTINUITY_SUPPORT": 0.0,
+        "DERIVATION_DEPTH_PENALTY": 1.0,
+        "AMBIGUITY_PENALTY": 0.0,
+        "DUPLICATE_PATH_PENALTY": 0.0
+      },
+      "analytical_confidence": 35.0,
+      "evidence": {
+        "candidate_number": 60,
+        "supporting_observed_numbers": [
+          35
+        ],
+        "table1_sources": [],
+        "table2_sources": [],
+        "table1_companions": [],
+        "table2_neighbors": [
+          6
+        ],
+        "direct_confirmers": [],
+        "indirect_confirmers": [
+          35
+        ],
+        "derivation_paths": [
+          {
+            "path_id": "der_b02f942e237f",
+            "route": [
+              35,
+              6,
+              60
+            ],
+            "observed_origin": 35,
+            "tables_used": [
+              "table1",
+              "table2"
+            ],
+            "relation_types": [
+              "T1_MOTHER_RELATION",
+              "T2_NEIGHBOR"
+            ],
+            "depth": 1,
+            "destination": 60,
+            "hops": 2,
+            "independent": true,
+            "reuses_nodes": false,
+            "forms_cycle": false,
+            "historical_support": false
+          }
+        ],
+        "independent_path_count": 0,
+        "total_path_count": 1,
+        "direct_path_count": 0,
+        "cross_table_support": false,
+        "multi_source_support": false,
+        "same_source_repetitions": 0,
+        "historical_activations": 0,
+        "historical_exact_hits": 0,
+        "historical_first_position_hits": 0,
+        "historical_any_position_hits": 0,
+        "historical_t1_family_hits": 0,
+        "historical_t2_neighbor_hits": 0,
+        "median_days_to_exact": null,
+        "average_days_to_exact": null,
+        "d1_hits": 0,
+        "d2_hits": 0,
+        "d3_hits": 0,
+        "d4_hits": 0,
+        "d5_hits": 0,
+        "d6_hits": 0,
+        "d7_hits": 0,
+        "lottery_distribution": {},
+        "position_distribution": {},
+        "year_distribution": {},
+        "recent_equivalent_cases": [],
+        "exceptions": [],
+        "ambiguity_score": 0.0,
+        "path_fingerprints": [
+          "35|60|DERIVATION_LEVEL_1|1"
+        ]
+      },
+      "positive_evidence": [
+        "Destino alcanzado solo por derivación"
+      ],
+      "penalties": [
+        "Penalización por profundidad de derivación=1.0"
+      ],
+      "rank": 9,
+      "gap_to_next": 0.0
+    },
+    {
+      "number": 69,
+      "classification": "DERIVACION_RELEVANTE",
+      "classification_reason": "Derivación relevante; no fuerte principal en perfil estricto.",
+      "total_score": -50.0,
+      "components": {
+        "T1_SOURCE_SUPPORT": 0.0,
+        "T2_CONFIRMATION_SUPPORT": 0.0,
+        "CROSS_TABLE_SUPPORT": 0.0,
+        "MULTIPLE_OBSERVED_SUPPORT": 0.0,
+        "INDEPENDENT_PATH_SUPPORT": 0.0,
+        "DIRECT_PATH_SUPPORT": 0.0,
+        "MULTI_CONFIRMATION_SUPPORT": 0.0,
+        "HISTORICAL_EXACT_RATE": 0.0,
+        "HISTORICAL_D1_D3_RATE": 0.0,
+        "HISTORICAL_D1_D7_RATE": 0.0,
+        "FIRST_POSITION_SUPPORT": 0.0,
+        "ANY_POSITION_SUPPORT": 0.0,
+        "RECENT_PATTERN_SUPPORT": 0.0,
+        "CROSS_LOTTERY_SUPPORT": 0.0,
+        "CHAIN_CONTINUITY_SUPPORT": 0.0,
+        "DERIVATION_DEPTH_PENALTY": 1.0,
+        "AMBIGUITY_PENALTY": 0.0,
+        "DUPLICATE_PATH_PENALTY": 0.0
+      },
+      "analytical_confidence": 35.0,
+      "evidence": {
+        "candidate_number": 69,
+        "supporting_observed_numbers": [
+          35
+        ],
+        "table1_sources": [],
+        "table2_sources": [],
+        "table1_companions": [],
+        "table2_neighbors": [
+          11,
+          57,
+          91
+        ],
+        "direct_confirmers": [],
+        "indirect_confirmers": [
+          35
+        ],
+        "derivation_paths": [
+          {
+            "path_id": "der_ca3ce6405334",
+            "route": [
+              35,
+              11,
+              69
+            ],
+            "observed_origin": 35,
+            "tables_used": [
+              "table1",
+              "table2"
+            ],
+            "relation_types": [
+              "T1_MOTHER_RELATION",
+              "T2_NEIGHBOR"
+            ],
+            "depth": 1,
+            "destination": 69,
+            "hops": 2,
+            "independent": true,
+            "reuses_nodes": false,
+            "forms_cycle": false,
+            "historical_support": false
+          }
+        ],
+        "independent_path_count": 0,
+        "total_path_count": 1,
+        "direct_path_count": 0,
+        "cross_table_support": false,
+        "multi_source_support": false,
+        "same_source_repetitions": 0,
+        "historical_activations": 0,
+        "historical_exact_hits": 0,
+        "historical_first_position_hits": 0,
+        "historical_any_position_hits": 0,
+        "historical_t1_family_hits": 0,
+        "historical_t2_neighbor_hits": 0,
+        "median_days_to_exact": null,
+        "average_days_to_exact": null,
+        "d1_hits": 0,
+        "d2_hits": 0,
+        "d3_hits": 0,
+        "d4_hits": 0,
+        "d5_hits": 0,
+        "d6_hits": 0,
+        "d7_hits": 0,
+        "lottery_distribution": {},
+        "position_distribution": {},
+        "year_distribution": {},
+        "recent_equivalent_cases": [],
+        "exceptions": [],
+        "ambiguity_score": 0.0,
+        "path_fingerprints": [
+          "35|69|DERIVATION_LEVEL_1|1"
+        ]
+      },
+      "positive_evidence": [
+        "Destino alcanzado solo por derivación"
+      ],
+      "penalties": [
+        "Penalización por profundidad de derivación=1.0"
+      ],
+      "rank": 10,
+      "gap_to_next": 0.0
+    }
+  ],
+  "ranking": [
+    {
+      "number": 54,
+      "rank": 1,
+      "classification": "FUERTE_PRINCIPAL",
+      "score": 156.0
+    },
+    {
+      "number": 6,
+      "rank": 2,
+      "classification": "FAMILIA_T1",
+      "score": 12.0
+    },
+    {
+      "number": 11,
+      "rank": 3,
+      "classification": "FAMILIA_T1",
+      "score": 12.0
+    },
+    {
+      "number": 43,
+      "rank": 4,
+      "classification": "FAMILIA_T1",
+      "score": 12.0
+    },
+    {
+      "number": 86,
+      "rank": 5,
+      "classification": "FAMILIA_T1",
+      "score": 12.0
+    },
+    {
+      "number": 19,
+      "rank": 6,
+      "classification": "DERIVACION_RELEVANTE",
+      "score": -50.0
+    },
+    {
+      "number": 46,
+      "rank": 7,
+      "classification": "DERIVACION_RELEVANTE",
+      "score": -50.0
+    },
+    {
+      "number": 57,
+      "rank": 8,
+      "classification": "DERIVACION_RELEVANTE",
+      "score": -50.0
+    },
+    {
+      "number": 60,
+      "rank": 9,
+      "classification": "DERIVACION_RELEVANTE",
+      "score": -50.0
+    },
+    {
+      "number": 69,
+      "rank": 10,
+      "classification": "DERIVACION_RELEVANTE",
+      "score": -50.0
+    }
+  ],
+  "tiebreak": {
+    "enabled": true,
+    "practical_threshold": 0.0,
+    "decisions": [
+      {
+        "number": 54,
+        "original_rank": 1,
+        "final_rank": 1,
+        "score_before": 156.0,
+        "score_after": 156.0,
+        "tiebreak_triggered": false,
+        "tiebreak_rule": null,
+        "tiebreak_evidence": {
+          "tie_kind": "none"
+        },
+        "candidates_compared": [
+          54
+        ],
+        "decision_margin": 0.0,
+        "tie_status": "none",
+        "unresolved_tie": false,
+        "shared_rank": null,
+        "classification": "FUERTE_PRINCIPAL",
+        "engine_version": "tiebreak-engine-j1.0.0"
+      },
+      {
+        "number": 6,
+        "original_rank": 2,
+        "final_rank": 2,
+        "score_before": 12.0,
+        "score_after": 12.0,
+        "tiebreak_triggered": false,
+        "tiebreak_rule": null,
+        "tiebreak_evidence": {
+          "tie_kind": "none"
+        },
+        "candidates_compared": [
+          54
+        ],
+        "decision_margin": 0.0,
+        "tie_status": "none",
+        "unresolved_tie": false,
+        "shared_rank": null,
+        "classification": "FAMILIA_T1",
+        "engine_version": "tiebreak-engine-j1.0.0"
+      },
+      {
+        "number": 11,
+        "original_rank": 3,
+        "final_rank": 3,
+        "score_before": 12.0,
+        "score_after": 12.0,
+        "tiebreak_triggered": false,
+        "tiebreak_rule": null,
+        "tiebreak_evidence": {
+          "tie_kind": "none"
+        },
+        "candidates_compared": [
+          54
+        ],
+        "decision_margin": 0.0,
+        "tie_status": "none",
+        "unresolved_tie": false,
+        "shared_rank": null,
+        "classification": "FAMILIA_T1",
+        "engine_version": "tiebreak-engine-j1.0.0"
+      },
+      {
+        "number": 43,
+        "original_rank": 4,
+        "final_rank": 4,
+        "score_before": 12.0,
+        "score_after": 12.0,
+        "tiebreak_triggered": false,
+        "tiebreak_rule": null,
+        "tiebreak_evidence": {
+          "tie_kind": "none"
+        },
+        "candidates_compared": [
+          54
+        ],
+        "decision_margin": 0.0,
+        "tie_status": "none",
+        "unresolved_tie": false,
+        "shared_rank": null,
+        "classification": "FAMILIA_T1",
+        "engine_version": "tiebreak-engine-j1.0.0"
+      },
+      {
+        "number": 86,
+        "original_rank": 5,
+        "final_rank": 5,
+        "score_before": 12.0,
+        "score_after": 12.0,
+        "tiebreak_triggered": false,
+        "tiebreak_rule": null,
+        "tiebreak_evidence": {
+          "tie_kind": "none"
+        },
+        "candidates_compared": [
+          54
+        ],
+        "decision_margin": 0.0,
+        "tie_status": "none",
+        "unresolved_tie": false,
+        "shared_rank": null,
+        "classification": "FAMILIA_T1",
+        "engine_version": "tiebreak-engine-j1.0.0"
+      },
+      {
+        "number": 19,
+        "original_rank": 6,
+        "final_rank": 6,
+        "score_before": -50.0,
+        "score_after": -50.0,
+        "tiebreak_triggered": false,
+        "tiebreak_rule": null,
+        "tiebreak_evidence": {
+          "tie_kind": "none"
+        },
+        "candidates_compared": [
+          54
+        ],
+        "decision_margin": 0.0,
+        "tie_status": "none",
+        "unresolved_tie": false,
+        "shared_rank": null,
+        "classification": "DERIVACION_RELEVANTE",
+        "engine_version": "tiebreak-engine-j1.0.0"
+      },
+      {
+        "number": 46,
+        "original_rank": 7,
+        "final_rank": 7,
+        "score_before": -50.0,
+        "score_after": -50.0,
+        "tiebreak_triggered": false,
+        "tiebreak_rule": null,
+        "tiebreak_evidence": {
+          "tie_kind": "none"
+        },
+        "candidates_compared": [
+          54
+        ],
+        "decision_margin": 0.0,
+        "tie_status": "none",
+        "unresolved_tie": false,
+        "shared_rank": null,
+        "classification": "DERIVACION_RELEVANTE",
+        "engine_version": "tiebreak-engine-j1.0.0"
+      },
+      {
+        "number": 57,
+        "original_rank": 8,
+        "final_rank": 8,
+        "score_before": -50.0,
+        "score_after": -50.0,
+        "tiebreak_triggered": false,
+        "tiebreak_rule": null,
+        "tiebreak_evidence": {
+          "tie_kind": "none"
+        },
+        "candidates_compared": [
+          54
+        ],
+        "decision_margin": 0.0,
+        "tie_status": "none",
+        "unresolved_tie": false,
+        "shared_rank": null,
+        "classification": "DERIVACION_RELEVANTE",
+        "engine_version": "tiebreak-engine-j1.0.0"
+      },
+      {
+        "number": 60,
+        "original_rank": 9,
+        "final_rank": 9,
+        "score_before": -50.0,
+        "score_after": -50.0,
+        "tiebreak_triggered": false,
+        "tiebreak_rule": null,
+        "tiebreak_evidence": {
+          "tie_kind": "none"
+        },
+        "candidates_compared": [
+          54
+        ],
+        "decision_margin": 0.0,
+        "tie_status": "none",
+        "unresolved_tie": false,
+        "shared_rank": null,
+        "classification": "DERIVACION_RELEVANTE",
+        "engine_version": "tiebreak-engine-j1.0.0"
+      },
+      {
+        "number": 69,
+        "original_rank": 10,
+        "final_rank": 10,
+        "score_before": -50.0,
+        "score_after": -50.0,
+        "tiebreak_triggered": false,
+        "tiebreak_rule": null,
+        "tiebreak_evidence": {
+          "tie_kind": "none"
+        },
+        "candidates_compared": [
+          54
+        ],
+        "decision_margin": 0.0,
+        "tie_status": "none",
+        "unresolved_tie": false,
+        "shared_rank": null,
+        "classification": "DERIVACION_RELEVANTE",
+        "engine_version": "tiebreak-engine-j1.0.0"
+      },
+      {
+        "number": 91,
+        "original_rank": 11,
+        "final_rank": 11,
+        "score_before": -50.0,
+        "score_after": -50.0,
+        "tiebreak_triggered": false,
+        "tiebreak_rule": null,
+        "tiebreak_evidence": {
+          "tie_kind": "none"
+        },
+        "candidates_compared": [
+          54
+        ],
+        "decision_margin": 0.0,
+        "tie_status": "none",
+        "unresolved_tie": false,
+        "shared_rank": null,
+        "classification": "DERIVACION_RELEVANTE",
+        "engine_version": "tiebreak-engine-j1.0.0"
+      },
+      {
+        "number": 37,
+        "original_rank": 12,
+        "final_rank": 12,
+        "score_before": -55.0,
+        "score_after": -55.0,
+        "tiebreak_triggered": false,
+        "tiebreak_rule": null,
+        "tiebreak_evidence": {
+          "tie_kind": "none"
+        },
+        "candidates_compared": [
+          54
+        ],
+        "decision_margin": 0.0,
+        "tie_status": "none",
+        "unresolved_tie": false,
+        "shared_rank": null,
+        "classification": "DERIVACION_RELEVANTE",
+        "engine_version": "tiebreak-engine-j1.0.0"
+      },
+      {
+        "number": 58,
+        "original_rank": 13,
+        "final_rank": 13,
+        "score_before": -55.0,
+        "score_after": -55.0,
+        "tiebreak_triggered": false,
+        "tiebreak_rule": null,
+        "tiebreak_evidence": {
+          "tie_kind": "none"
+        },
+        "candidates_compared": [
+          54
+        ],
+        "decision_margin": 0.0,
+        "tie_status": "none",
+        "unresolved_tie": false,
+        "shared_rank": null,
+        "classification": "DERIVACION_RELEVANTE",
+        "engine_version": "tiebreak-engine-j1.0.0"
+      },
+      {
+        "number": 74,
+        "original_rank": 14,
+        "final_rank": 14,
+        "score_before": -55.0,
+        "score_after": -55.0,
+        "tiebreak_triggered": false,
+        "tiebreak_rule": null,
+        "tiebreak_evidence": {
+          "tie_kind": "none"
+        },
+        "candidates_compared": [
+          54
+        ],
+        "decision_margin": 0.0,
+        "tie_status": "none",
+        "unresolved_tie": false,
+        "shared_rank": null,
+        "classification": "DERIVACION_RELEVANTE",
+        "engine_version": "tiebreak-engine-j1.0.0"
+      },
+      {
+        "number": 7,
+        "original_rank": 15,
+        "final_rank": 15,
+        "score_before": -17.090909090909093,
+        "score_after": -17.090909090909093,
+        "tiebreak_triggered": false,
+        "tiebreak_rule": null,
+        "tiebreak_evidence": {
+          "tie_kind": "none"
+        },
+        "candidates_compared": [
+          54
+        ],
+        "decision_margin": 0.0,
+        "tie_status": "none",
+        "unresolved_tie": false,
+        "shared_rank": null,
+        "classification": "VECINO_T2_DIRECTO",
+        "engine_version": "tiebreak-engine-j1.0.0"
+      },
+      {
+        "number": 9,
+        "original_rank": 16,
+        "final_rank": 16,
+        "score_before": -17.090909090909093,
+        "score_after": -17.090909090909093,
+        "tiebreak_triggered": false,
+        "tiebreak_rule": null,
+        "tiebreak_evidence": {
+          "tie_kind": "none"
+        },
+        "candidates_compared": [
+          54
+        ],
+        "decision_margin": 0.0,
+        "tie_status": "none",
+        "unresolved_tie": false,
+        "shared_rank": null,
+        "classification": "VECINO_T2_DIRECTO",
+        "engine_version": "tiebreak-engine-j1.0.0"
+      },
+      {
+        "number": 22,
+        "original_rank": 17,
+        "final_rank": 17,
+        "score_before": -17.090909090909093,
+        "score_after": -17.090909090909093,
+        "tiebreak_triggered": false,
+        "tiebreak_rule": null,
+        "tiebreak_evidence": {
+          "tie_kind": "none"
+        },
+        "candidates_compared": [
+          54
+        ],
+        "decision_margin": 0.0,
+        "tie_status": "none",
+        "unresolved_tie": false,
+        "shared_rank": null,
+        "classification": "VECINO_T2_DIRECTO",
+        "engine_version": "tiebreak-engine-j1.0.0"
+      },
+      {
+        "number": 29,
+        "original_rank": 18,
+        "final_rank": 18,
+        "score_before": -17.090909090909093,
+        "score_after": -17.090909090909093,
+        "tiebreak_triggered": false,
+        "tiebreak_rule": null,
+        "tiebreak_evidence": {
+          "tie_kind": "none"
+        },
+        "candidates_compared": [
+          54
+        ],
+        "decision_margin": 0.0,
+        "tie_status": "none",
+        "unresolved_tie": false,
+        "shared_rank": null,
+        "classification": "VECINO_T2_DIRECTO",
+        "engine_version": "tiebreak-engine-j1.0.0"
+      },
+      {
+        "number": 42,
+        "original_rank": 19,
+        "final_rank": 19,
+        "score_before": -17.090909090909093,
+        "score_after": -17.090909090909093,
+        "tiebreak_triggered": false,
+        "tiebreak_rule": null,
+        "tiebreak_evidence": {
+          "tie_kind": "none"
+        },
+        "candidates_compared": [
+          54
+        ],
+        "decision_margin": 0.0,
+        "tie_status": "none",
+        "unresolved_tie": false,
+        "shared_rank": null,
+        "classification": "VECINO_T2_DIRECTO",
+        "engine_version": "tiebreak-engine-j1.0.0"
+      },
+      {
+        "number": 44,
+        "original_rank": 20,
+        "final_rank": 20,
+        "score_before": -17.090909090909093,
+        "score_after": -17.090909090909093,
+        "tiebreak_triggered": false,
+        "tiebreak_rule": null,
+        "tiebreak_evidence": {
+          "tie_kind": "none"
+        },
+        "candidates_compared": [
+          54
+        ],
+        "decision_margin": 0.0,
+        "tie_status": "none",
+        "unresolved_tie": false,
+        "shared_rank": null,
+        "classification": "VECINO_T2_DIRECTO",
+        "engine_version": "tiebreak-engine-j1.0.0"
+      },
+      {
+        "number": 53,
+        "original_rank": 21,
+        "final_rank": 21,
+        "score_before": -17.090909090909093,
+        "score_after": -17.090909090909093,
+        "tiebreak_triggered": false,
+        "tiebreak_rule": null,
+        "tiebreak_evidence": {
+          "tie_kind": "none"
+        },
+        "candidates_compared": [
+          54
+        ],
+        "decision_margin": 0.0,
+        "tie_status": "none",
+        "unresolved_tie": false,
+        "shared_rank": null,
+        "classification": "VECINO_T2_DIRECTO",
+        "engine_version": "tiebreak-engine-j1.0.0"
+      },
+      {
+        "number": 63,
+        "original_rank": 22,
+        "final_rank": 22,
+        "score_before": -17.090909090909093,
+        "score_after": -17.090909090909093,
+        "tiebreak_triggered": false,
+        "tiebreak_rule": null,
+        "tiebreak_evidence": {
+          "tie_kind": "none"
+        },
+        "candidates_compared": [
+          54
+        ],
+        "decision_margin": 0.0,
+        "tie_status": "none",
+        "unresolved_tie": false,
+        "shared_rank": null,
+        "classification": "VECINO_T2_DIRECTO",
+        "engine_version": "tiebreak-engine-j1.0.0"
+      },
+      {
+        "number": 70,
+        "original_rank": 23,
+        "final_rank": 23,
+        "score_before": -17.090909090909093,
+        "score_after": -17.090909090909093,
+        "tiebreak_triggered": false,
+        "tiebreak_rule": null,
+        "tiebreak_evidence": {
+          "tie_kind": "none"
+        },
+        "candidates_compared": [
+          54
+        ],
+        "decision_margin": 0.0,
+        "tie_status": "none",
+        "unresolved_tie": false,
+        "shared_rank": null,
+        "classification": "VECINO_T2_DIRECTO",
+        "engine_version": "tiebreak-engine-j1.0.0"
+      },
+      {
+        "number": 90,
+        "original_rank": 24,
+        "final_rank": 24,
+        "score_before": -27.090909090909093,
+        "score_after": -27.090909090909093,
+        "tiebreak_triggered": false,
+        "tiebreak_rule": null,
+        "tiebreak_evidence": {
+          "tie_kind": "none"
+        },
+        "candidates_compared": [
+          54
+        ],
+        "decision_margin": 0.0,
+        "tie_status": "none",
+        "unresolved_tie": false,
+        "shared_rank": null,
+        "classification": "VECINO_T2_DIRECTO",
+        "engine_version": "tiebreak-engine-j1.0.0"
+      }
+    ],
+    "unresolved_multi": false,
+    "multi_fuerte_numbers": []
+  },
+  "engine_version": "complete-analysis-engine-j1.0.0",
+  "prediction_hash": "cce25ae5ad293893f7c9464ebd37f532a46b5c820bb885366c39b8aa26a20fef",
+  "locked_at": "2026-07-26T17:29:58.195799+00:00",
+  "evaluated_at": "2026-07-26T17:29:58.202509+00:00",
+  "future_result": {
+    "numbers": [
+      54
+    ],
+    "date": "2026-07-27",
+    "lottery": "sample",
+    "position": "first"
+  },
+  "evaluation": {
+    "hit_class": "EXACT_PRIMARY_HIT",
+    "hit_primary_exact": true,
+    "hit_multi_fuerte": false,
+    "hit_top2_exact": true,
+    "hit_top3_exact": true,
+    "is_exact_hit": true,
+    "is_t1_family_only": false,
+    "is_t2_neighbor_only": false,
+    "drawn_numbers": [
+      54
+    ],
+    "relative_day": 1,
+    "d_plus": {
+      "D+1": [
+        {
+          "date": "2026-07-27",
+          "lottery": "sample",
+          "position": "first",
+          "numbers": [
+            54
+          ],
+          "relative_day": 1,
+          "hit_class": "EXACT_PRIMARY_HIT"
+        }
+      ],
+      "D+2": [],
+      "D+3": [],
+      "D+4": [],
+      "D+5": [],
+      "D+6": [],
+      "D+7": []
+    },
+    "first_appearance": {
+      "date": "2026-07-27",
+      "lottery": "sample",
+      "position": "first",
+      "numbers": [
+        54
+      ],
+      "relative_day": 1,
+      "hit_class": "EXACT_PRIMARY_HIT"
+    },
+    "case_closed": true,
+    "evaluated_at": "2026-07-26T17:29:58.202509+00:00",
+    "integrity_ok": true
+  },
+  "table1_version": "nr-historical-relations-j1.0.0",
+  "table2_version": "nr-historical-relations-j1.0.0",
+  "ranking_profile": "socio",
+  "tiebreak_profile": "TIEBREAK_PROFILE_SOCIO_V1",
+  "multi_strong_candidates": [],
+  "primary_signal": {
+    "number": 54,
+    "classification": "FUERTE_PRINCIPAL",
+    "analytical_confidence": 85.0,
+    "score": 156.0,
+    "reason": "Mayor respaldo estructural tras análisis completo T1×T2.",
+    "table1_sources": [
+      35
+    ],
+    "table2_confirmers": [
+      14
+    ],
+    "multi_fuerte_peers": []
+  },
+  "canonical_payload": {
+    "inputs": {
+      "numbers": [
+        35,
+        14
+      ],
+      "date": "2026-07-26",
+      "mode": "socio",
+      "raw": {
+        "numbers": [
+          35,
+          14
+        ],
+        "date": "2026-07-26",
+        "mode": null,
+        "lotteries": null,
+        "positions": null,
+        "target_date": null
+      }
+    },
+    "target_date": "2026-07-26",
+    "lotteries": [],
+    "positions": [
+      "first"
+    ],
+    "candidates": [
+      {
+        "number": 54,
+        "classification": "FUERTE_PRINCIPAL"
+      },
+      {
+        "number": 6,
+        "classification": "FAMILIA_T1"
+      },
+      {
+        "number": 11,
+        "classification": "FAMILIA_T1"
+      },
+      {
+        "number": 43,
+        "classification": "FAMILIA_T1"
+      },
+      {
+        "number": 86,
+        "classification": "FAMILIA_T1"
+      },
+      {
+        "number": 19,
+        "classification": "DERIVACION_RELEVANTE"
+      },
+      {
+        "number": 46,
+        "classification": "DERIVACION_RELEVANTE"
+      },
+      {
+        "number": 57,
+        "classification": "DERIVACION_RELEVANTE"
+      },
+      {
+        "number": 60,
+        "classification": "DERIVACION_RELEVANTE"
+      },
+      {
+        "number": 69,
+        "classification": "DERIVACION_RELEVANTE"
+      }
+    ],
+    "ranking": [
+      {
+        "number": 54,
+        "rank": 1,
+        "classification": "FUERTE_PRINCIPAL",
+        "score": 156.0
+      },
+      {
+        "number": 6,
+        "rank": 2,
+        "classification": "FAMILIA_T1",
+        "score": 12.0
+      },
+      {
+        "number": 11,
+        "rank": 3,
+        "classification": "FAMILIA_T1",
+        "score": 12.0
+      },
+      {
+        "number": 43,
+        "rank": 4,
+        "classification": "FAMILIA_T1",
+        "score": 12.0
+      },
+      {
+        "number": 86,
+        "rank": 5,
+        "classification": "FAMILIA_T1",
+        "score": 12.0
+      },
+      {
+        "number": 19,
+        "rank": 6,
+        "classification": "DERIVACION_RELEVANTE",
+        "score": -50.0
+      },
+      {
+        "number": 46,
+        "rank": 7,
+        "classification": "DERIVACION_RELEVANTE",
+        "score": -50.0
+      },
+      {
+        "number": 57,
+        "rank": 8,
+        "classification": "DERIVACION_RELEVANTE",
+        "score": -50.0
+      },
+      {
+        "number": 60,
+        "rank": 9,
+        "classification": "DERIVACION_RELEVANTE",
+        "score": -50.0
+      },
+      {
+        "number": 69,
+        "rank": 10,
+        "classification": "DERIVACION_RELEVANTE",
+        "score": -50.0
+      }
+    ],
+    "scores": [
+      {
+        "number": 54,
+        "score": 156.0
+      },
+      {
+        "number": 6,
+        "score": 12.0
+      },
+      {
+        "number": 11,
+        "score": 12.0
+      },
+      {
+        "number": 43,
+        "score": 12.0
+      },
+      {
+        "number": 86,
+        "score": 12.0
+      },
+      {
+        "number": 19,
+        "score": -50.0
+      },
+      {
+        "number": 46,
+        "score": -50.0
+      },
+      {
+        "number": 57,
+        "score": -50.0
+      },
+      {
+        "number": 60,
+        "score": -50.0
+      },
+      {
+        "number": 69,
+        "score": -50.0
+      }
+    ],
+    "classifications": [
+      {
+        "number": 54,
+        "classification": "FUERTE_PRINCIPAL"
+      },
+      {
+        "number": 6,
+        "classification": "FAMILIA_T1"
+      },
+      {
+        "number": 11,
+        "classification": "FAMILIA_T1"
+      },
+      {
+        "number": 43,
+        "classification": "FAMILIA_T1"
+      },
+      {
+        "number": 86,
+        "classification": "FAMILIA_T1"
+      },
+      {
+        "number": 19,
+        "classification": "DERIVACION_RELEVANTE"
+      },
+      {
+        "number": 46,
+        "classification": "DERIVACION_RELEVANTE"
+      },
+      {
+        "number": 57,
+        "classification": "DERIVACION_RELEVANTE"
+      },
+      {
+        "number": 60,
+        "classification": "DERIVACION_RELEVANTE"
+      },
+      {
+        "number": 69,
+        "classification": "DERIVACION_RELEVANTE"
+      }
+    ],
+    "tiebreak_rule": "TIEBREAK_PROFILE_SOCIO_V1+EMPATE_MULTI_FUERTE",
+    "engine_version": "complete-analysis-engine-j1.0.0",
+    "table1_version": "nr-historical-relations-j1.0.0",
+    "table2_version": "nr-historical-relations-j1.0.0",
+    "locked_at": "2026-07-26T17:29:58.195799+00:00",
+    "engine_commit": "3ec6e1f"
+  },
+  "locked_by": "phase4-bootstrap",
+  "engine_commit": "3ec6e1f",
+  "integrity_ok": true,
+  "analysis_date": "2026-07-26",
+  "target_date": "2026-07-26",
+  "shadow_profiles": {
+    "baseline_no_tiebreak": {
+      "primary": 54,
+      "classification": "FUERTE_PRINCIPAL",
+      "multi": [],
+      "top": [
+        54,
+        6,
+        11
+      ]
+    },
+    "TIEBREAK_SOURCE_ORDER": {
+      "primary": 54,
+      "top": [
+        54,
+        6,
+        11
+      ],
+      "classifications": [
+        "FUERTE_PRINCIPAL",
+        "FAMILIA_T1",
+        "FAMILIA_T1"
+      ]
+    },
+    "no_derivations": {
+      "primary": 54,
+      "classification": "FUERTE_PRINCIPAL",
+      "multi": [],
+      "top": [
+        54,
+        6,
+        11
+      ]
+    },
+    "experimental": {
+      "primary": 54,
+      "classification": "FUERTE_PRINCIPAL",
+      "multi": [],
+      "top": [
+        54,
+        6,
+        11
+      ]
+    },
+    "note": "Shadow profiles do not modify the operational locked prediction."
+  },
+  "evaluation_status": "EXACT_PRIMARY_HIT"
+}

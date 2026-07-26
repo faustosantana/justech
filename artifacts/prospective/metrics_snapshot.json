@@ -1,0 +1,54 @@
+{
+  "total_predictions": 1,
+  "total_locked": 1,
+  "total_evaluated": 1,
+  "total_expired": 0,
+  "total_integrity_errors": 0,
+  "primary_exact_d1": 1,
+  "primary_exact_d3": 0,
+  "primary_exact_d7": 0,
+  "multi_strong_exact_d1": 0,
+  "multi_strong_exact_d3": 0,
+  "multi_strong_exact_d7": 0,
+  "top2_exact_d1": 1,
+  "top2_exact_d3": 0,
+  "top2_exact_d7": 0,
+  "top3_exact_d1": 1,
+  "top3_exact_d3": 0,
+  "top3_exact_d7": 0,
+  "t1_family_hits": 0,
+  "t2_neighbor_hits": 0,
+  "no_hits": 0,
+  "average_candidates": 10,
+  "multi_strong_rate": 0.0,
+  "primary_rate": 1.0,
+  "evaluation_completion_rate": 1.0,
+  "median_days_to_exact": 1,
+  "average_days_to_exact": 1,
+  "results_by_lottery": {
+    "sample": 1
+  },
+  "results_by_position": {
+    "first": 1
+  },
+  "results_by_week": {
+    "2026-07": 1
+  },
+  "results_by_engine_version": {
+    "complete-analysis-engine-j1.0.0": 1
+  },
+  "results_by_profile": {
+    "socio": 1
+  },
+  "results_by_tiebreak_rule": {
+    "TIEBREAK_PROFILE_SOCIO_V1": 1
+  },
+  "hit_primary_rate": 1.0,
+  "sample_insufficient": true,
+  "production_modified": false,
+  "total": 1,
+  "draft": 0,
+  "locked": 0,
+  "evaluated": 1,
+  "locked_or_evaluated": 1
+}

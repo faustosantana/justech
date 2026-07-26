@@ -204,6 +204,8 @@ class Settings(BaseSettings):
 
     # Resultados de Loterías / Lotería IA (official JAIOS module; sync/scheduler off by default)
     lottery_module_enabled: bool = False
+    lottery_prospective_persist_enabled: bool = True  # DEV/UAT SQLite/PG; blocked in production
+    lottery_prospective_scheduler_enabled: bool = False
     lottery_sync_enabled: bool = False
     lottery_sync_write_enabled: bool = False
     lottery_sync_days_back: int = 3

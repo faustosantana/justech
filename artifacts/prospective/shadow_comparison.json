@@ -1,0 +1,66 @@
+{
+  "operational": {
+    "primary": {
+      "number": 54,
+      "classification": "FUERTE_PRINCIPAL",
+      "analytical_confidence": 85.0,
+      "score": 156.0,
+      "reason": "Mayor respaldo estructural tras análisis completo T1×T2.",
+      "table1_sources": [
+        35
+      ],
+      "table2_confirmers": [
+        14
+      ],
+      "multi_fuerte_peers": []
+    },
+    "multi": []
+  },
+  "shadow": {
+    "baseline_no_tiebreak": {
+      "primary": 54,
+      "classification": "FUERTE_PRINCIPAL",
+      "multi": [],
+      "top": [
+        54,
+        6,
+        11
+      ]
+    },
+    "TIEBREAK_SOURCE_ORDER": {
+      "primary": 54,
+      "top": [
+        54,
+        6,
+        11
+      ],
+      "classifications": [
+        "FUERTE_PRINCIPAL",
+        "FAMILIA_T1",
+        "FAMILIA_T1"
+      ]
+    },
+    "no_derivations": {
+      "primary": 54,
+      "classification": "FUERTE_PRINCIPAL",
+      "multi": [],
+      "top": [
+        54,
+        6,
+        11
+      ]
+    },
+    "experimental": {
+      "primary": 54,
+      "classification": "FUERTE_PRINCIPAL",
+      "multi": [],
+      "top": [
+        54,
+        6,
+        11
+      ]
+    },
+    "note": "Shadow profiles do not modify the operational locked prediction."
+  },
+  "note": "Shadow does not modify operational lock"
+}

@@ -66,6 +66,21 @@ def detect_intent(message: str, memory: SessionMemory | None = None) -> IntentRe
             "prediccion bloqueada",
             "predicciones bloqueadas",
             "motor anterior",
+            "análisis prospectivo",
+            "analisis prospectivo",
+            "predicción de hoy",
+            "prediccion de hoy",
+            "hash de la predicción",
+            "hash de la prediccion",
+            "multi-fuertes de hoy",
+            "multi fuertes de hoy",
+            "resultados pendientes",
+            "exactos",
+            "d+1",
+            "source order",
+            "errores de integridad",
+            "integridad",
+            "perfil socio",
         )
     ):
         return IntentResult(

@@ -1,0 +1,24 @@
+{
+  "postgres_migration": "062_lottery_prospective_pilot",
+  "schema": "jaios",
+  "tables": [
+    "lottery_pilot_configurations",
+    "lottery_prospective_runs",
+    "lottery_prospective_audit_logs",
+    "lottery_pilot_daily_snapshots"
+  ],
+  "dev_uat_sqlite": "artifacts/prospective/pilot_dev_uat.sqlite",
+  "production_writes": false,
+  "freeze": {
+    "engine_version": "complete-analysis-engine-j1.0.0",
+    "table1_version": "nr-historical-relations-j1.0.0",
+    "table2_version": "nr-historical-relations-j1.0.0",
+    "tiebreak_engine_version": "tiebreak-engine-j1.0.0",
+    "tiebreak_rule": "TIEBREAK_PROFILE_SOCIO_V1",
+    "ranking_profile": "socio",
+    "tiebreak_policy": "TIEBREAK_PROFILE_SOCIO_V1+EMPATE_MULTI_FUERTE",
+    "engine_commit": "3ec6e1f",
+    "silent_changes_forbidden": true,
+    "production_modified": false
+  }
+}

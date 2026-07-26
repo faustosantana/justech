@@ -1,0 +1,41 @@
+{
+  "id": "pilot_0c6d57505fdf",
+  "pilot_name": "DEV/UAT Prospective Pilot",
+  "start_date": "2026-07-26",
+  "end_date": null,
+  "status": "DRAFT",
+  "lotteries": [],
+  "positions": [
+    "first"
+  ],
+  "input_mode": "generator_first",
+  "analysis_time": null,
+  "lock_deadline": null,
+  "evaluation_window": "D+1_D+7",
+  "ranking_profile": "socio",
+  "tiebreak_profile": "TIEBREAK_PROFILE_SOCIO_V1",
+  "derivation_depth": 0,
+  "auto_run": true,
+  "auto_lock": true,
+  "auto_evaluate": true,
+  "minimum_samples": 100,
+  "responsible_user": null,
+  "environment": "DEV/UAT",
+  "payload": {
+    "tiebreak_policy": "TIEBREAK_PROFILE_SOCIO_V1+EMPATE_MULTI_FUERTE",
+    "freeze": {
+      "engine_version": "complete-analysis-engine-j1.0.0",
+      "table1_version": "nr-historical-relations-j1.0.0",
+      "table2_version": "nr-historical-relations-j1.0.0",
+      "tiebreak_engine_version": "tiebreak-engine-j1.0.0",
+      "tiebreak_rule": "TIEBREAK_PROFILE_SOCIO_V1",
+      "ranking_profile": "socio",
+      "tiebreak_policy": "TIEBREAK_PROFILE_SOCIO_V1+EMPATE_MULTI_FUERTE",
+      "engine_commit": "3ec6e1f",
+      "silent_changes_forbidden": true,
+      "production_modified": false
+    }
+  },
+  "created_at": "2026-07-26T17:29:58.069430+00:00",
+  "updated_at": "2026-07-26T17:29:58.069430+00:00"
+}

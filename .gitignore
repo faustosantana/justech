@@ -61,3 +61,5 @@ credentials.json
 docs/lottery/numeric_relations_artifacts/**/backups/*.dump
 **/._*
 backend/.venv-prej11a/
+pilot_dev_uat.sqlite
+artifacts/prospective/*.sqlite

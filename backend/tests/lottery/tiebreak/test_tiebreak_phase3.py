@@ -201,10 +201,14 @@ def test_locked_prediction_has_hash():
 
 
 def test_prospective_evaluation_uses_future_result():
+    from datetime import date, timedelta
+
     store = get_prospective_store()
-    pred = store.create({"numbers": [35, 14], "date": "2026-06-23"})
+    today = date.today().isoformat()
+    pred = store.create({"numbers": [35, 14], "date": today})
     store.lock(pred.prediction_id)
-    ev = store.evaluate(pred.prediction_id, {"numbers": [54], "date": "2026-06-24"})
+    future = (date.today() + timedelta(days=1)).isoformat()
+    ev = store.evaluate(pred.prediction_id, {"numbers": [54], "date": future})
     assert ev.status == "EVALUATED"
     assert ev.evaluation is not None
 

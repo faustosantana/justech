@@ -81,6 +81,12 @@ from app.models.lottery import (
     LotteryUserFavorite,
     LotteryUserPreferences,
 )
+from app.models.lottery_prospective import (
+    LotteryPilotConfiguration,
+    LotteryPilotDailySnapshot,
+    LotteryProspectiveAuditLog,
+    LotteryProspectiveRun,
+)
 
 __all__ = [
     "ApiKey",

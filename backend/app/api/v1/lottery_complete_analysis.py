@@ -359,17 +359,55 @@ async def prospective_create(body: dict[str, Any] = Body(...)) -> dict[str, Any]
     return pred.to_dict()
 
 
-@router.post("/prospective-validation/predictions/{prediction_id}/lock")
-async def prospective_lock(prediction_id: str) -> dict[str, Any]:
+@router.get("/prospective-validation/predictions")
+async def prospective_list() -> dict[str, Any]:
+    from app.lottery.numeric_relations.analysis_engine.prospective_validation import (
+        get_prospective_store,
+    )
+
+    return {"predictions": [p.to_dict() for p in get_prospective_store().list()]}
+
+
+@router.get("/prospective-validation/predictions/{prediction_id}")
+async def prospective_get(prediction_id: str) -> dict[str, Any]:
+    from app.lottery.numeric_relations.analysis_engine.prospective_validation import (
+        get_prospective_store,
+    )
+
+    pred = get_prospective_store().get(prediction_id)
+    if not pred:
+        raise HTTPException(status_code=404, detail="prediction not found")
+    return pred.to_dict()
+
+
+@router.post("/prospective-validation/predictions/{prediction_id}/prepare-lock")
+async def prospective_prepare_lock(prediction_id: str) -> dict[str, Any]:
     from app.lottery.numeric_relations.analysis_engine.prospective_validation import (
         get_prospective_store,
     )
 
     store = get_prospective_store()
-    if prediction_id not in store.predictions:
+    if not store.get(prediction_id):
         raise HTTPException(status_code=404, detail="prediction not found")
     try:
-        return store.lock(prediction_id).to_dict()
+        return store.prepare_lock(prediction_id).to_dict()
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e)) from e
+
+
+@router.post("/prospective-validation/predictions/{prediction_id}/lock")
+async def prospective_lock(prediction_id: str, body: dict[str, Any] | None = Body(None)) -> dict[str, Any]:
+    from app.lottery.numeric_relations.analysis_engine.prospective_validation import (
+        get_prospective_store,
+    )
+
+    store = get_prospective_store()
+    if not store.get(prediction_id):
+        raise HTTPException(status_code=404, detail="prediction not found")
+    try:
+        return store.lock(
+            prediction_id, locked_by=(body or {}).get("locked_by")
+        ).to_dict()
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e)) from e
 
@@ -383,7 +421,7 @@ async def prospective_evaluate(
     )
 
     store = get_prospective_store()
-    if prediction_id not in store.predictions:
+    if not store.get(prediction_id):
         raise HTTPException(status_code=404, detail="prediction not found")
     try:
         return store.evaluate(prediction_id, body).to_dict()
@@ -391,13 +429,75 @@ async def prospective_evaluate(
         raise HTTPException(status_code=400, detail=str(e)) from e
 
 
-@router.get("/prospective-validation/predictions")
-async def prospective_list() -> dict[str, Any]:
+@router.post("/prospective-validation/predictions/{prediction_id}/cancel")
+async def prospective_cancel(
+    prediction_id: str, body: dict[str, Any] | None = Body(None)
+) -> dict[str, Any]:
     from app.lottery.numeric_relations.analysis_engine.prospective_validation import (
         get_prospective_store,
     )
 
-    return {"predictions": [p.to_dict() for p in get_prospective_store().list()]}
+    store = get_prospective_store()
+    if not store.get(prediction_id):
+        raise HTTPException(status_code=404, detail="prediction not found")
+    try:
+        return store.cancel(prediction_id, (body or {}).get("reason")).to_dict()
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e)) from e
+
+
+@router.get("/prospective-validation/predictions/{prediction_id}/integrity")
+async def prospective_integrity(prediction_id: str) -> dict[str, Any]:
+    from app.lottery.numeric_relations.analysis_engine.prospective_validation import (
+        get_prospective_store,
+    )
+
+    store = get_prospective_store()
+    if not store.get(prediction_id):
+        raise HTTPException(status_code=404, detail="prediction not found")
+    return store.check_integrity(prediction_id)
+
+
+@router.get("/prospective-validation/predictions/{prediction_id}/audit-log")
+async def prospective_audit_log(prediction_id: str) -> dict[str, Any]:
+    from app.lottery.numeric_relations.analysis_engine.prospective_validation import (
+        get_prospective_store,
+    )
+
+    store = get_prospective_store()
+    if not store.get(prediction_id):
+        raise HTTPException(status_code=404, detail="prediction not found")
+    return {"audit_log": store.audit_log(prediction_id)}
+
+
+@router.post("/prospective-validation/run-daily")
+async def prospective_run_daily(body: dict[str, Any] | None = Body(None)) -> dict[str, Any]:
+    from app.lottery.numeric_relations.analysis_engine.prospective.scheduler import run_daily
+
+    body = body or {}
+    try:
+        return run_daily(
+            numbers=body.get("numbers"),
+            analysis_date=body.get("analysis_date"),
+            target_date=body.get("target_date"),
+            lotteries=body.get("lotteries"),
+            positions=body.get("positions"),
+            auto_lock=bool(body.get("auto_lock", True)),
+            created_by=body.get("created_by") or "api",
+            pilot_id=body.get("pilot_id"),
+        )
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e)) from e
+
+
+@router.post("/prospective-validation/evaluate-pending")
+async def prospective_evaluate_pending(body: dict[str, Any] | None = Body(None)) -> dict[str, Any]:
+    from app.lottery.numeric_relations.analysis_engine.prospective.scheduler import (
+        evaluate_pending,
+    )
+
+    body = body or {}
+    return evaluate_pending(results=body.get("results") or [])
 
 
 @router.get("/prospective-validation/metrics")
@@ -407,4 +507,113 @@ async def prospective_metrics() -> dict[str, Any]:
     )
 
     return get_prospective_store().metrics()
+
+
+@router.get("/prospective-validation/comparison")
+async def prospective_comparison() -> dict[str, Any]:
+    from app.lottery.numeric_relations.analysis_engine.prospective_validation import (
+        get_prospective_store,
+    )
+
+    preds = get_prospective_store().list()
+    return {
+        "operational_policy": "perfil_socio + TIEBREAK_PROFILE_SOCIO_V1 + EMPATE_MULTI_FUERTE",
+        "shadow_samples": [
+            {
+                "prediction_id": p.prediction_id,
+                "operational_primary": (p.primary_signal or {}).get("number"),
+                "operational_multi": p.multi_strong_candidates,
+                "shadow": p.shadow_profiles,
+            }
+            for p in preds[-20:]
+        ],
+        "production_modified": False,
+    }
+
+
+@router.get("/prospective-validation/daily-snapshots")
+async def prospective_daily_snapshots() -> dict[str, Any]:
+    from app.lottery.numeric_relations.analysis_engine.prospective_validation import (
+        get_prospective_store,
+    )
+
+    return {"snapshots": get_prospective_store().list_snapshots()}
+
+
+@router.post("/pilot/configurations")
+async def pilot_create(body: dict[str, Any] = Body(...)) -> dict[str, Any]:
+    from app.lottery.numeric_relations.analysis_engine.prospective_validation import (
+        get_prospective_store,
+    )
+
+    return get_prospective_store().create_pilot(body)
+
+
+@router.get("/pilot/configurations")
+async def pilot_list() -> dict[str, Any]:
+    from app.lottery.numeric_relations.analysis_engine.prospective_validation import (
+        get_prospective_store,
+    )
+
+    return {"configurations": get_prospective_store().list_pilots()}
+
+
+@router.get("/pilot/configurations/{pilot_id}")
+async def pilot_get(pilot_id: str) -> dict[str, Any]:
+    from app.lottery.numeric_relations.analysis_engine.prospective_validation import (
+        get_prospective_store,
+    )
+
+    p = get_prospective_store().get_pilot(pilot_id)
+    if not p:
+        raise HTTPException(status_code=404, detail="pilot not found")
+    return p
+
+
+@router.patch("/pilot/configurations/{pilot_id}")
+async def pilot_patch(pilot_id: str, body: dict[str, Any] = Body(...)) -> dict[str, Any]:
+    from app.lottery.numeric_relations.analysis_engine.prospective_validation import (
+        get_prospective_store,
+    )
+
+    try:
+        return get_prospective_store().patch_pilot(pilot_id, body)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e)) from e
+
+
+@router.post("/pilot/configurations/{pilot_id}/activate")
+async def pilot_activate(pilot_id: str) -> dict[str, Any]:
+    from app.lottery.numeric_relations.analysis_engine.prospective_validation import (
+        get_prospective_store,
+    )
+
+    try:
+        return get_prospective_store().set_pilot_status(pilot_id, "ACTIVE")
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e)) from e
+
+
+@router.post("/pilot/configurations/{pilot_id}/pause")
+async def pilot_pause(pilot_id: str) -> dict[str, Any]:
+    from app.lottery.numeric_relations.analysis_engine.prospective_validation import (
+        get_prospective_store,
+    )
+
+    try:
+        return get_prospective_store().set_pilot_status(pilot_id, "PAUSED")
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e)) from e
+
+
+@router.post("/pilot/configurations/{pilot_id}/complete")
+async def pilot_complete(pilot_id: str) -> dict[str, Any]:
+    from app.lottery.numeric_relations.analysis_engine.prospective_validation import (
+        get_prospective_store,
+    )
+
+    try:
+        return get_prospective_store().set_pilot_status(pilot_id, "COMPLETED")
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e)) from e
 

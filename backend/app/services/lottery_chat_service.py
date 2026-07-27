@@ -699,6 +699,43 @@ class LotteryChatService:
                 "compare_with": (state.active_filters or {}).get("compare_with"),
             }
             prior_research = bool(state.current_research)
+            # Fase D — observational discovery over research evidence (does not touch RE/Planner/Brain)
+            if isinstance(research_meta, dict) and research_meta.get("evidence_package"):
+                try:
+                    from app.lottery.ai.analyst.discovery_engine import (
+                        DiscoveryRequest,
+                        get_discovery_engine,
+                    )
+
+                    disc = get_discovery_engine().discover(
+                        DiscoveryRequest(
+                            kind="auto_discovery",
+                            context={
+                                "evidence_package": research_meta.get("evidence_package"),
+                                "tools_used": research_meta.get("evidence_package", {}).get("tools_used")
+                                or research_meta.get("steps_completed"),
+                                "period": (research_meta.get("evidence_package") or {}).get("period"),
+                                "investigation_id": research_meta.get("trace_id"),
+                                "confirmation_stats": research_meta.get("confirmation_stats") or {},
+                                "lottery_counts": research_meta.get("lottery_counts") or {},
+                                "year_counts": research_meta.get("year_counts") or {},
+                                "position_counts": research_meta.get("position_counts") or {},
+                                "charts": research_meta.get("charts") or facts_for_fmt.get("charts") or [],
+                            },
+                        )
+                    )
+                    if disc.status == "ok":
+                        research_meta = {
+                            **research_meta,
+                            "discovery": {
+                                "finding_count": (disc.payload or {}).get("finding_count"),
+                                "findings": (disc.payload or {}).get("findings") or [],
+                                "discarded_count": (disc.payload or {}).get("discarded_count"),
+                                "message": (disc.payload or {}).get("message"),
+                            },
+                        }
+                except Exception:  # noqa: BLE001 — discovery must not break chat
+                    pass
             final_text = format_analyst_response(
                 guardrails.sanitize_llm_text(final_text or template),
                 facts=facts_for_fmt,

@@ -65,6 +65,18 @@ Solo presentación. **No modifica** Research Engine, Planner ni Conversation Bra
 - Modos: `short` | `full` | `report` | `delta` (seguimiento sin repetir informe)
 - Comparaciones con Similitudes / Diferencias / Conclusiones
 
+## Fase D — Discovery Engine (v2.2.0)
+
+Hallazgos **observacionales** automáticos sobre evidencia histórica.
+
+- Tipos: frecuencia, secuencias, repeticiones, confirmaciones, cambios año/lotería/posición, equivalentes, únicos
+- Niveles: Muy Alto / Alto / Medio / Bajo / Insuficiente
+- Validador descarta evidencia débil o lenguaje predictivo
+- Historial en `discovery_store` (no escribe sorteos ni ranking)
+- API: `POST /lottery/ia/discovery/run`, `GET /lottery/ia/discovery/history`
+
+**No modifica** Research Engine, Planner ni Conversation Brain.
+
 ## Validaciones
 
 - Motor: `35+14 → 54`, `39+58 → 94`

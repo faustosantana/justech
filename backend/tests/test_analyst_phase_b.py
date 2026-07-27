@@ -142,7 +142,8 @@ def test_research_cache_dedupes():
 
 def test_discovery_engine_still_disabled():
     disc = get_discovery_engine()
-    assert disc.ENABLED is False
+    assert disc.ENABLED is True
+    assert disc.VERSION == "2.2.0" or getattr(disc, "VERSION", None)
 
 
 def test_planner_prefers_research_engine():

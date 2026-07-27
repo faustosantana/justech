@@ -81,20 +81,20 @@ def test_research_trace_records_full_audit():
 
 
 def test_research_engine_stub_not_enabled():
-    from app.lottery.ai.analyst.discovery_engine import DiscoveryEngineStub, get_discovery_engine
+    from app.lottery.ai.analyst.discovery_engine import DiscoveryEngine, DiscoveryRequest, get_discovery_engine
     from app.lottery.ai.analyst.research_engine import ResearchEngine, get_research_engine
 
     eng = get_research_engine()
     assert isinstance(eng, ResearchEngine)
     assert eng.ENABLED is True
     disc = get_discovery_engine()
-    assert isinstance(disc, DiscoveryEngineStub)
-    assert disc.ENABLED is False
-    from app.lottery.ai.analyst.discovery_engine import DiscoveryRequest
+    assert isinstance(disc, DiscoveryEngine)
+    assert disc.ENABLED is True
+    # Hypotheses are not published as predictions
+    prep = disc.discover(DiscoveryRequest(kind="hypothesis"))
+    assert prep.status == "rejected"
+    assert prep.payload.get("findings") == []
 
-    assert disc.can_discover(DiscoveryRequest(kind="auto_discovery")) is False
-    prep = disc.discover(DiscoveryRequest(kind="auto_discovery"))
-    assert prep.status == "not_implemented"
 
 
 def test_long_conversation_context_chain():

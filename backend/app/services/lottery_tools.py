@@ -1238,7 +1238,20 @@ class LotteryToolExecutor:
                         except Exception:
                             continue
                     if confirmed:
-                        best = max(confirmed, key=lambda x: x[0])
+                        def _score(item: tuple[str, str]) -> tuple[int, str]:
+                            name = _norm(item[1])
+                            prio = 0
+                            if "nacional" in name:
+                                prio = 4
+                            elif "leidsa" in name:
+                                prio = 3
+                            elif "loteka" in name:
+                                prio = 2
+                            elif "real" in name:
+                                prio = 1
+                            return (prio, item[0])
+
+                        best = max(confirmed, key=_score)
                     else:
                         def _rank(item: tuple[str, str]) -> tuple[int, str]:
                             name = _norm(item[1])
@@ -1259,58 +1272,11 @@ class LotteryToolExecutor:
             except Exception:
                 pass
 
-        # If confirmer provided without date, locate a featured day containing both.
-        if confirmer_i and not date_s:
-            try:
-                from datetime import date as date_cls
-                from datetime import timedelta
-
-                from app.lottery.numeric_relations.catalog import build_catalog
-                from app.lottery.numeric_relations.analysis_engine.same_day_context import (
-                    build_same_day_context,
-                    find_same_day_cross_confirmations,
-                )
-                from app.services.lottery_result_service import LotteryResultService
-
-                svc_res = LotteryResultService(self.db)
-                cat = build_catalog()
-                today = date_cls.today()
-                fallback_day = None
-                for delta in range(0, 180):
-                    day = today - timedelta(days=delta)
-                    rows = await svc_res.get_by_date(day, featured_only=True)
-                    if not rows:
-                        continue
-                    ctx_day = build_same_day_context(
-                        rows,
-                        draw_date=day.isoformat(),
-                        positions=["first"],
-                        exclude_numbers=[],
-                    )
-                    nums = {int(x) for x in (ctx_day.confirmer_numbers or [])}
-                    for a in ctx_day.appearances or []:
-                        try:
-                            nums.add(int(a.number))
-                        except Exception:
-                            pass
-                    if observed not in nums or confirmer_i not in nums:
-                        continue
-                    if fallback_day is None:
-                        fallback_day = day.isoformat()
-                    crosses = find_same_day_cross_confirmations(
-                        seed_numbers=[observed],
-                        confirmer_numbers=[confirmer_i],
-                        catalog=cat,
-                        day_context=ctx_day,
-                        date_s=day.isoformat(),
-                    )
-                    if crosses:
-                        date_s = day.isoformat()
-                        break
-                if not date_s:
-                    date_s = fallback_day
-            except Exception:
-                pass
+        # Explicit confirmer without user date: ignore auto-resolved calendar days.
+        # Validated path is numbers=[observed] + same_day_confirmers=[confirmer].
+        user_date = params.get("date") or params.get("analysis_date")
+        if confirmer_i and not user_date:
+            date_s = None
 
         period = str(params.get("historical_period") or "all")
         include_hist = bool(params.get("include_historical", True))
@@ -1376,6 +1342,9 @@ class LotteryToolExecutor:
                 payload_req["same_day_confirmers"] = merged
             except Exception:
                 pass
+        elif confirmer_i:
+            # Confirmer-only path (no calendar day): keep list as provided.
+            payload_req["same_day_confirmers"] = [confirmer_i]
 
         result = run_complete_analysis(payload_req, persist=False)
         data = result.to_dict()

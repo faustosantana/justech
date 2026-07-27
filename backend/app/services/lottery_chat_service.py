@@ -289,6 +289,35 @@ class LotteryChatService:
                 }
         brain = ConversationBrain(state)
         state = brain.apply_resolution(understanding=understanding, resolution=resolution)
+        # Correction / subject switch: force factual replay — never leave a menu
+        if resolution.get("replay_last_intent") and (
+            resolution.get("numbers") or state.active_numbers
+        ):
+            understanding.needs_clarification = False
+            understanding.missing_slots = []
+            understanding.clarification_question = None
+            if not understanding.numbers:
+                understanding.numbers = list(
+                    resolution.get("numbers") or state.active_numbers or []
+                )[:1]
+            understanding.intent = "last_occurrence"  # type: ignore[assignment]
+            from app.services.lottery_ai_contracts import LotteryToolName as _LTN
+            from app.lottery.ai.nlp_stability import DEFAULT_ALL_HISTORY_LOTTERIES as _DEF
+
+            n = understanding.numbers[0]
+            understanding.tool = _LTN.GET_NUMBER_OCCURRENCES.value
+            understanding.params = {
+                **dict(understanding.params or {}),
+                "number": n,
+                "numbers": [n],
+                "lotteries": list(_DEF),
+                "mode": "last_n",
+                "limit": 1,
+                "page_size": 1,
+                "order": "desc",
+                "all_historical": True,
+                "run_tools": True,
+            }
         if resolution.get("inherit_active_number") and state.active_numbers:
             if not understanding.numbers:
                 understanding.numbers = list(state.active_numbers)
@@ -297,6 +326,42 @@ class LotteryChatService:
                 if not understanding.missing_slots and understanding.tool:
                     understanding.needs_clarification = False
                     understanding.clarification_question = None
+        # Deictic last_n / previous occurrences: never ask for number when subject is known
+        from app.lottery.ai.turn_policy import (
+            is_other_occurrences_request,
+            is_previous_occurrences_request,
+        )
+
+        if (
+            (is_previous_occurrences_request(content) or is_other_occurrences_request(content))
+            and state.active_numbers
+        ):
+            understanding.needs_clarification = False
+            understanding.missing_slots = []
+            understanding.clarification_question = None
+            understanding.numbers = list(state.active_numbers[:1])
+            understanding.intent = "last_occurrence"  # type: ignore[assignment]
+            from app.services.lottery_ai_contracts import LotteryToolName as _LTN2
+            from app.lottery.ai.nlp_stability import DEFAULT_ALL_HISTORY_LOTTERIES as _DEF2
+
+            lim = int(resolution.get("result_limit") or resolution.get("limit") or 2)
+            prior = int(resolution.get("page_offset") or resolution.get("offset") or 0)
+            if prior <= 0:
+                prior = int((state.last_analysis or {}).get("limit") or 0)
+            n = understanding.numbers[0]
+            understanding.tool = _LTN2.GET_NUMBER_OCCURRENCES.value
+            understanding.params = {
+                "number": n,
+                "numbers": [n],
+                "lotteries": list(_DEF2),
+                "mode": "last_n",
+                "limit": lim + prior,
+                "page_size": lim + prior,
+                "page_offset": prior,
+                "result_limit": lim,
+                "order": "desc",
+                "run_tools": True,
+            }
         # Preserve compound numbers after brain
         if understanding.numbers and len(understanding.numbers) >= 2:
             state.active_numbers = list(understanding.numbers)[:8]

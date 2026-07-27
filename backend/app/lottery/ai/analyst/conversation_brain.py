@@ -123,22 +123,30 @@ class ConversationBrain:
                 or ("specific_position" if resolution.get("position") else st.position_scope)
             )
 
-        if resolution.get("compare_with"):
-            filters["compare_with"] = str(resolution["compare_with"])
-            # Keep active as subject; store rival for comparison follow-ups
-            rival = str(resolution["compare_with"])
-            if rival not in (st.active_numbers or []):
-                st.current_alternatives = list(
-                    dict.fromkeys([int(rival) if rival.isdigit() else rival, *st.current_alternatives])  # type: ignore[list-item]
-                )
-                # normalize alternatives to int when possible
-                alts: list[int] = []
-                for a in st.current_alternatives:
-                    try:
-                        alts.append(int(a))
-                    except (TypeError, ValueError):
-                        continue
-                st.current_alternatives = alts[:8]
+        if resolution.get("compare_with") or (
+            resolution.get("follow_up_kind") == "compare" and len(st.active_numbers or []) >= 2
+        ):
+            filters["compare_active"] = True
+            if resolution.get("compare_with"):
+                filters["compare_with"] = str(resolution["compare_with"])
+                rival = str(resolution["compare_with"])
+                if rival not in (st.active_numbers or []):
+                    st.active_numbers = list(dict.fromkeys([*(st.active_numbers or []), rival]))[:2]
+                try:
+                    riv_i = int(rival) if rival.isdigit() else None
+                except (TypeError, ValueError):
+                    riv_i = None
+                if riv_i is not None:
+                    st.current_alternatives = list(
+                        dict.fromkeys([riv_i, *[int(a) for a in st.current_alternatives if str(a).isdigit()]])
+                    )[:8]
+        elif len(st.active_numbers or []) >= 2 and resolution.get("follow_up_kind") in {
+            None,
+            "compare",
+        }:
+            # Two subjects named in a compare turn
+            if resolution.get("numbers") and len(resolution.get("numbers") or []) >= 2:
+                filters["compare_active"] = True
 
         # Pair memory
         if len(st.active_numbers) >= 2:

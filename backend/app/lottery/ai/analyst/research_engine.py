@@ -157,8 +157,11 @@ class ResearchEngine:
             "compare_b_lotteries",
             "last_n_occurrences",
             "last_occurrence",
+            "last_occurrence_all_lotteries",
+            "recent_occurrences",
             "same_day_coincidence",
             "frequency",
+            "frequency_across_lotteries",
         }
     )
 

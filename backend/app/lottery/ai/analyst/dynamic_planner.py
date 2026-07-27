@@ -355,16 +355,38 @@ class DynamicResearchPlanner:
                         )
                     )
                 else:
+                    # Prefer last_n merge across default lotteries (robust to alias gaps
+                    # in compare-across). One shared code path with last_n_occurrences.
                     all_lots = list(lotteries) or list(DEFAULT_ALL_HISTORY_LOTTERIES)
+                    steps.append(
+                        PlanStep(
+                            tool=LotteryToolName.GET_NUMBER_OCCURRENCES.value,
+                            params={
+                                "number": observed,
+                                "lotteries": list(DEFAULT_ALL_HISTORY_LOTTERIES)[:8]
+                                if not lotteries
+                                else all_lots[:8],
+                                "limit": 1,
+                                "page_size": 1,
+                                "order": "desc",
+                                "mode": "last_n",
+                                **({"position": pos_i} if pos_i else {}),
+                            },
+                            purpose="last_occurrence_all_lotteries",
+                        )
+                    )
+                    # Keep compare-across as secondary evidence for counts per lottery
                     steps.append(
                         PlanStep(
                             tool=LotteryToolName.COMPARE_NUMBER_ACROSS_LOTTERIES.value,
                             params={
                                 "number": observed,
-                                "lotteries": all_lots[:8],
+                                "lotteries": list(DEFAULT_ALL_HISTORY_LOTTERIES)[:8]
+                                if not lotteries
+                                else all_lots[:8],
                                 **({"position": pos_i} if pos_i else {}),
                             },
-                            purpose="last_occurrence_all_lotteries",
+                            purpose="frequency_across_lotteries",
                         )
                     )
                 meta["subjects"] = [observed]

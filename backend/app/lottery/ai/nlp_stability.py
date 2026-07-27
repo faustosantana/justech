@@ -84,6 +84,7 @@ _DATE = re.compile(
     r"\b("
     r"cuando\s+(sali[oó]|fue|apareci[oó])|"
     r"ultima\s+vez|ultima\s+aparicion|fecha\s+de\s+(la\s+)?ultima|"
+    r"cual\s+fue\s+la\s+ultima|la\s+ultima(\s+vez)?|"
     r"hace\s+cuanto.*(sali|apareci)|en\s+que\s+fecha"
     r")\b",
     re.I,
@@ -217,20 +218,18 @@ DEFAULT_ALL_HISTORY_LOTTERIES = (
 )
 
 GREETING_REPLY = (
-    "¡Hola! Soy el Analista IA de Lottery. "
-    "Puedo consultar históricos, contar apariciones, comparar números y analizar casos. "
-    "¿Qué te gustaría investigar?"
+    "Hola, estoy muy bien. ¿Qué te gustaría investigar hoy?"
 )
 
 GENERAL_CHAT_REPLY = (
-    "De acuerdo. Cuando quieras, dime un número, una lotería o una comparación "
-    "y lo consulto en el histórico verificado."
+    "De acuerdo. Cuando quieras, dime qué número, comparación o caso "
+    "quieres que investigue en el histórico."
 )
 
 HELP_REPLY = (
-    "Puedo ayudarte con: conteos históricos, últimas fechas, posiciones, "
-    "comparaciones, análisis completo de un número y seguimiento de investigaciones. "
-    "Ejemplo: «¿Cuántas veces salió el 54?»"
+    "Puedo investigar históricos, conteos, últimas fechas, posiciones, "
+    "comparaciones y análisis completos. "
+    "Ejemplo: «¿Cuántas veces salió el 54?» — investigo de inmediato."
 )
 
 

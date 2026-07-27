@@ -235,45 +235,31 @@ def understand(raw: str, state: ConversationState) -> tuple[UnderstandingResult,
 
     ctx = _ctx_from_state(working)
     intent = resolve_intent(text, ctx)
+    # Fase X.1 — Default Research Policy (clarify → investigate when possible)
+    from app.lottery.ai.research_policy import apply_to_understanding, rewrite_resolved_clarify
+
+    num_hint = _extract_number(text) or (working.active_numbers[0] if working.active_numbers else None)
+    intent = rewrite_resolved_clarify(
+        intent,
+        has_number=bool(num_hint or (intent.params or {}).get("number")),
+        active_number=str(num_hint) if num_hint else None,
+    )
     result = _map_resolved(intent, working, text)
+    result = apply_to_understanding(result, working)
 
-    # Improve last_occurrence clarify when number known
-    if result.intent == "last_occurrence" and result.needs_clarification:
-        number = (result.numbers[0] if result.numbers else None) or (
-            working.active_numbers[0] if working.active_numbers else None
-        )
-        if number and "lottery" in result.missing_slots:
-            result.clarification_question = smart_clarify(
-                intent="last_occurrence", number=number, missing=["lottery"]
-            )
-            working.pending_intent = "last_occurrence"
-            working.pending_slots = ["lottery"]
-            working.pending_params = {"number": number}
-            working.active_numbers = [number]
-            working.clarification_question = result.clarification_question
-            result.confidence = max(result.confidence, 0.85)
-
-    # Frequency / hot without lottery or period
-    if result.intent in {"frequency", "hot_numbers", "cold_numbers", "overdue_numbers"}:
-        missing = list(result.missing_slots)
-        if not result.lotteries and not working.active_lotteries and working.scope != "all":
-            if "lottery" not in missing:
-                missing.append("lottery")
-        if result.draw_count is None and working.draw_count_context is None and "draw_count" not in missing:
-            if result.intent == "frequency":
-                missing.append("period")
-        if missing and not result.params.get("lottery"):
-            result.needs_clarification = True
-            result.missing_slots = missing
-            result.clarification_question = smart_clarify(
-                intent=result.intent,
-                lottery=None,
-                missing=missing,
-            )
-            working.pending_intent = result.intent
-            working.pending_slots = missing
-            working.pending_params = dict(result.params)
-            working.clarification_question = result.clarification_question
+    # Fase X.1 — do NOT re-introduce lottery clarifies for last_occurrence / frequency
+    if result.needs_clarification:
+        result.missing_slots = [
+            s for s in (result.missing_slots or []) if s in {"number", "compare_with", "query"}
+        ]
+        if not result.missing_slots and result.tool:
+            result.needs_clarification = False
+            result.clarification_question = None
+        elif result.missing_slots == ["number"]:
+            if "última" in (text or "").lower() or "ultima" in (text or "").lower() or "cuándo" in (text or "").lower():
+                result.clarification_question = "¿La última vez de cuál número?"
+            else:
+                result.clarification_question = result.clarification_question or "¿De qué número?"
 
     return result, working
 
@@ -1003,8 +989,31 @@ def _map_resolved(
         # last occurrence never needs date
         if intent_name == "last_occurrence" and "date" in missing:
             missing = [m for m in missing if m != "date"]
+        # Fase X.1 — never force lottery missing when number is known
+        if numbers or state.active_numbers:
+            missing = [m for m in missing if m not in {"lottery", "date", "period", "draw_count", "position", "position_scope"}]
         if not missing and intent_name == "last_occurrence" and not lots and not state.active_lotteries:
-            missing = ["lottery"]
+            # Investigate all history instead of clarifying lottery
+            from app.lottery.ai.research_policy import default_lotteries
+
+            return UnderstandingResult(
+                intent="last_occurrence",
+                lotteries=default_lotteries(),
+                numbers=numbers or list(state.active_numbers),
+                missing_slots=[],
+                needs_clarification=False,
+                confidence=0.9,
+                source="rules",
+                scope="all",
+                tool=LotteryToolName.COMPARE_LOTTERIES.value,
+                params={
+                    "number": (numbers or state.active_numbers or [None])[0],
+                    "lotteries": default_lotteries(),
+                    "mode": "number_compare",
+                    "all_historical": True,
+                    "nlp_policy": "2.3.2",
+                },
+            )
         if not missing:
             # Clarifier had nothing real to ask — try post-occurrence again
             refs = resolve_references(text, state)

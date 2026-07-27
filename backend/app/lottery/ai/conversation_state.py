@@ -231,50 +231,16 @@ def smart_clarify(
     missing: list[str] | None = None,
     known_lotteries: list[str] | None = None,
 ) -> str:
-    """Natural clarification — only ask for missing slots; preserve known context."""
+    """Natural clarification — ONLY material blockers (Fase X.1)."""
     missing = missing or []
-    known = known_lotteries or ([] if not lottery else [lottery])
-    if intent == "last_occurrence" and number and "lottery" in missing:
-        return (
-            f"¿En cuál lotería quieres que busque la última aparición del {number}? "
-            "Puedo revisarlo en una específica o compararlo entre todas las loterías disponibles."
-        )
-    if intent == "post_occurrence_window" and known and "unit" in missing:
-        joined = " y ".join(known[:3])
-        return (
-            f"¿Quieres que revise los días calendario posteriores o los sorteos siguientes "
-            f"en {joined}?"
-        )
-    if intent == "number_history" and number and "lottery" in missing:
-        return (
-            f"¿En cuál lotería quieres el historial del {number}? "
-            "También puedo compararlo entre varias."
-        )
-    if intent in {"frequency", "hot_numbers", "cold_numbers", "overdue_numbers"}:
-        bits = []
-        if "lottery" in missing:
-            bits.append("¿en alguna lotería específica o en todas?")
-        if "period" in missing or "draw_count" in missing:
-            bits.append("¿prefieres los últimos 30 sorteos, el último año o todo el historial?")
-        if bits:
-            return " ".join(["Para ese análisis necesito un poco más de detalle.", *bits])
-    if intent == "compare_numbers" and number and "lottery" in missing:
-        return (
-            f"¿Entre qué loterías quieres comparar el {number}? "
-            "Puedo usar las que ya mencionaste o todas las sincronizadas."
-        )
-    # Never ask for both lottery+date if we already know lotteries from context
-    if "lottery" in missing and "date" in missing and not known:
-        return "¿Qué lotería y qué fecha exacta quieres consultar?"
-    if "lottery" in missing:
-        return "¿En cuál lotería quieres que lo consulte?"
-    if "date" in missing and known:
-        return (
-            f"Usaré la última aparición registrada en {', '.join(known[:3])} como fecha base "
-            "si ya la consultamos; si quieres otra fecha, indícala."
-        )
-    if "date" in missing:
-        return "¿Qué fecha exacta quieres consultar?"
-    if "number" in missing:
-        return "¿Qué número quieres analizar?"
-    return "¿Puedes precisar un poco más la consulta?"
+    # Never ask lottery/date/position as form fields
+    material = [m for m in missing if m in {"number", "compare_with", "query"}]
+    if not material:
+        return "¿Qué te gustaría investigar en el histórico?"
+    if "number" in material:
+        if intent in {"last_occurrence", "DATE"} or "última" in intent:
+            return "¿La última vez de cuál número?"
+        return "¿De qué número?"
+    if "compare_with" in material:
+        return "¿Con qué número lo comparo?"
+    return "¿Qué te gustaría investigar?"

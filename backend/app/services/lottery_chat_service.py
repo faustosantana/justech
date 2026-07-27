@@ -351,11 +351,50 @@ class LotteryChatService:
         model_requested = get_active_prompt().recommended_model
         fallback_used = False
         fallback_reason: str | None = None
+
+        refuse_msg = None
+        # Fase X.1 — apply Default Research Policy before routing clarify vs tool
+        from app.lottery.ai.research_policy import apply_to_understanding, filter_material_slots
+
+        understanding = apply_to_understanding(understanding, state)
+        material_pre = filter_material_slots(understanding.missing_slots)
+        if understanding.needs_clarification and not material_pre:
+            understanding.needs_clarification = False
+            understanding.missing_slots = []
+            understanding.clarification_question = None
+        if (
+            not understanding.needs_clarification
+            and not understanding.tool
+            and (understanding.numbers or state.active_numbers)
+            and understanding.intent
+            not in {
+                "greeting",
+                "general_chat",
+                "help",
+                "out_of_domain",
+                "restricted_technical",
+                "prediction_request",
+            }
+        ):
+            from app.services.lottery_ai_contracts import LotteryToolName
+            from app.lottery.ai.research_policy import default_lotteries
+
+            n = (understanding.numbers or state.active_numbers)[0]
+            understanding.tool = LotteryToolName.COMPARE_LOTTERIES.value
+            understanding.params = {
+                **dict(understanding.params or {}),
+                "number": n,
+                "lotteries": default_lotteries(),
+                "mode": "number_compare",
+                "all_historical": True,
+                "nlp_policy": "2.3.2",
+            }
+            understanding.scope = "all"
+
         intent_kind = "clarify" if understanding.needs_clarification else "tool"
         tool_name: str | None = understanding.tool
         params = dict(understanding.params or {})
 
-        refuse_msg = None
         if understanding.intent in {
             "out_of_domain",
             "restricted_technical",
@@ -375,39 +414,68 @@ class LotteryChatService:
             }
         elif understanding.needs_clarification or not understanding.tool:
             intent_kind = "clarify"
+            material = filter_material_slots(understanding.missing_slots)
             template = (
                 understanding.clarification_question
                 or "¿Puedes precisar un poco más la consulta?"
             )
-            if brain.should_skip_number_clarify() and re.search(
+            if material == ["number"] or (
+                "number" in material and "lottery" not in material and "date" not in material
+            ):
+                if re.search(r"ultima|última|cu[aá]ndo", content or "", re.I):
+                    template = "¿La última vez de cuál número?"
+                else:
+                    template = "¿De qué número?"
+            elif brain.should_skip_number_clarify() and re.search(
                 r"qu[eé]\s+n[uú]mero", template or "", re.I
             ):
-                template = (
-                    f"Sigo con el {state.active_numbers[0]}. "
-                    "¿Quieres filtrar por lotería, posición o período?"
-                )
-            structured = {
-                "type": "lottery_ambiguity",
-                "warnings": [{"code": "CLARIFY", "message": template}],
-                "missing_slots": understanding.missing_slots,
-                "intent": understanding.intent,
-                "numbers": understanding.numbers,
-                "lotteries": understanding.lotteries,
-            }
-            if understanding.numbers:
-                state.active_numbers = list(understanding.numbers)
-            if understanding.lotteries:
-                state.active_lotteries = list(understanding.lotteries)
-            state.last_intent = str(understanding.intent)
-            state.pending_slots = list(understanding.missing_slots)
-            if understanding.intent and understanding.missing_slots:
-                state.pending_intent = str(understanding.intent)
-                state.pending_params = {
-                    **params,
-                    **({"number": understanding.numbers[0]} if understanding.numbers else {}),
+                # Have active number — investigate instead of asking filters
+                understanding.needs_clarification = False
+                understanding.missing_slots = []
+                from app.services.lottery_ai_contracts import LotteryToolName
+                from app.lottery.ai.research_policy import default_lotteries
+
+                n = state.active_numbers[0]
+                understanding.tool = LotteryToolName.COMPARE_LOTTERIES.value
+                understanding.params = {
+                    "number": n,
+                    "lotteries": default_lotteries(),
+                    "mode": "number_compare",
+                    "all_historical": True,
+                    "nlp_policy": "2.3.2",
                 }
-            state.clarification_question = template
+                intent_kind = "tool"
+                tool_name = understanding.tool
+                params = dict(understanding.params)
+            if intent_kind == "clarify":
+                structured = {
+                    "type": "lottery_ambiguity",
+                    "warnings": [{"code": "CLARIFY", "message": template}],
+                    "missing_slots": material,
+                    "intent": understanding.intent,
+                    "numbers": understanding.numbers,
+                    "lotteries": understanding.lotteries,
+                }
+                if understanding.numbers:
+                    state.active_numbers = list(understanding.numbers)
+                if understanding.lotteries:
+                    state.active_lotteries = list(understanding.lotteries)
+                state.last_intent = str(understanding.intent)
+                state.pending_slots = list(material)
+                if understanding.intent and material:
+                    state.pending_intent = str(understanding.intent)
+                    state.pending_params = {
+                        **params,
+                        **({"number": understanding.numbers[0]} if understanding.numbers else {}),
+                    }
+                state.clarification_question = template
+            if intent_kind == "tool":
+                # fall into tool execution path below via duplicated executor — use goto-style
+                pass
         else:
+            pass  # tool path continues below
+
+        if intent_kind == "tool" and understanding.tool and not refuse_msg:
             executor = LotteryToolExecutor(
                 self.db,
                 tenant_id=self.tenant_id,

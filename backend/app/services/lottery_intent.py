@@ -261,6 +261,64 @@ def resolve_intent(message: str, ctx: LotterySessionContext) -> ResolvedIntent:
             },
         )
 
+    # Fase X.1 — material-only clarifies / investigate defaults (before form-biased branches)
+    _last_ask = bool(
+        re.search(
+            r"ultima|cu[aá]ndo\s+(fue\s+)?la\s+[uú]ltima|cual\s+fue\s+la\s+ultima|"
+            r"la\s+ultima(\s+vez)?",
+            text,
+            re.I,
+        )
+    )
+    if _last_ask and nlp.intent in {"DATE", "FOLLOW_UP", "UNKNOWN", "GENERAL_CHAT"}:
+        number = (nlp.entities.get("numbers") or [None])[0] or (
+            ctx.last_numbers[0] if ctx.last_numbers else None
+        )
+        if not number:
+            return ResolvedIntent(
+                kind="clarify",
+                clarify_message="¿La última vez de cuál número?",
+                structured_type="lottery_ambiguity",
+                params={"pending_slots": ["number"], "nlp_intent": "DATE", "nlp_policy": "2.3.2"},
+            )
+        return ResolvedIntent(
+            kind="tool",
+            tool=LotteryToolName.COMPARE_LOTTERIES,
+            params={
+                "number": number,
+                "lotteries": list(DEFAULT_ALL_HISTORY_LOTTERIES),
+                "mode": "number_compare",
+                "all_historical": True,
+                "nlp_intent": "DATE",
+                "nlp_policy": "2.3.2",
+            },
+            structured_type="lottery_comparison",
+        )
+
+    if nlp.intent == "COMPARE" or re.search(r"compara(lo|la|me|r)?\s+con", text, re.I):
+        nums = list(nlp.entities.get("numbers") or [])
+        if not nums:
+            m = re.search(r"\b(\d{1,2})\b", raw)
+            if m:
+                nums = [m.group(1).zfill(2)]
+        if len(nums) >= 1 and (ctx.last_numbers or len(nums) >= 2):
+            a = ctx.last_numbers[0] if ctx.last_numbers and len(nums) == 1 else nums[0]
+            b = nums[-1]
+            return ResolvedIntent(
+                kind="tool",
+                tool=LotteryToolName.COMPARE_LOTTERIES,
+                params={
+                    "number": a,
+                    "compare_with": b,
+                    "lotteries": list(DEFAULT_ALL_HISTORY_LOTTERIES),
+                    "mode": "number_compare",
+                    "all_historical": True,
+                    "nlp_intent": "COMPARE",
+                    "nlp_policy": "2.3.2",
+                },
+                structured_type="lottery_comparison",
+            )
+
     if INJECTION_RE.search(raw) or INJECTION_RE.search(text):
         return ResolvedIntent(
             kind="injection_refused",
@@ -874,13 +932,9 @@ def resolve_intent(message: str, ctx: LotterySessionContext) -> ResolvedIntent:
                 structured_type="lottery_ambiguity",
                 params={"pending_slots": ["number"], "nlp_intent": "COUNT"},
             )
-        if needs_ask and re.search(r"posici[oó]n|primera|segunda|cualquier", text, re.I):
-            return ResolvedIntent(
-                kind="clarify",
-                clarify_message="¿Cuento apariciones en primera posición o en cualquier posición?",
-                structured_type="lottery_ambiguity",
-                params={"number": number, "pending_slots": ["position_scope"]},
-            )
+        # Fase X.1 — never ask position; default any when ambiguous
+        if needs_ask:
+            pos_filter, scope_used = None, "any_position"
         lot = _extract_lottery(text)
         if lot:
             return ResolvedIntent(
@@ -928,13 +982,12 @@ def resolve_intent(message: str, ctx: LotterySessionContext) -> ResolvedIntent:
     )
     if compound and compound.get("queries"):
         if compound.get("needs_clarification"):
-            return ResolvedIntent(
-                kind="clarify",
-                clarify_message=compound.get("clarification_question")
-                or "¿Primera posición o cualquier posición?",
-                structured_type="lottery_ambiguity",
-                params={"pending_slots": ["position_scope"], "compound": compound},
-            )
+            # Fase X.1 — never block on position; continue with any_position
+            compound["needs_clarification"] = False
+            compound["position_scope"] = compound.get("position_scope") or "any_position"
+            for q in compound.get("queries") or []:
+                q["position_scope"] = q.get("position_scope") or "any_position"
+                q["position"] = q.get("position")
         if compound.get("intent") == "multi_last_occurrence" and len(compound["queries"]) >= 2:
             return ResolvedIntent(
                 kind="tool",
@@ -949,19 +1002,21 @@ def resolve_intent(message: str, ctx: LotterySessionContext) -> ResolvedIntent:
         if compound.get("intent") == "last_occurrence" and compound["queries"]:
             q0 = compound["queries"][0]
             lots = list(q0.get("lotteries") or [])
-            if q0.get("lotteries_scope") == "defaults_or_clarify" and not lots:
+            if q0.get("lotteries_scope") in {"defaults_or_clarify", "all"} and not lots:
+                # Fase X.1 — investigate all history; never ask lottery
                 return ResolvedIntent(
-                    kind="clarify",
-                    clarify_message=(
-                        f"¿En cuál lotería quieres la última aparición del {q0.get('number')}? "
-                        "Puedo revisarlo en una específica o en todas las disponibles."
-                    ),
-                    structured_type="lottery_ambiguity",
+                    kind="tool",
+                    tool=LotteryToolName.COMPARE_LOTTERIES,
                     params={
                         "number": q0.get("number"),
+                        "lotteries": list(DEFAULT_ALL_HISTORY_LOTTERIES),
                         "position": q0.get("position"),
-                        "pending_slots": ["lottery"],
+                        "position_scope": q0.get("position_scope") or "any_position",
+                        "mode": "number_compare",
+                        "all_historical": True,
+                        "nlp_policy": "2.3.2",
                     },
+                    structured_type="lottery_comparison",
                 )
             return ResolvedIntent(
                 kind="tool",
@@ -980,28 +1035,30 @@ def resolve_intent(message: str, ctx: LotterySessionContext) -> ResolvedIntent:
         pos_filter, scope_used, needs_ask = resolve_effective_position(
             raw, pref_scope=pref_scope, pref_primary=pref_primary
         )
+        # Fase X.1 — never block on position; default any
         if needs_ask:
-            return ResolvedIntent(
-                kind="clarify",
-                clarify_message="¿Busco en primera posición o en cualquier posición?",
-                structured_type="lottery_ambiguity",
-                params={"number": number, "pending_slots": ["position_scope"]},
-            )
+            pos_filter, scope_used = None, "any_position"
         if not number:
             return ResolvedIntent(
                 kind="clarify",
-                clarify_message="¿De qué número quieres la última aparición? También indica la lotería.",
+                clarify_message="¿La última vez de cuál número?",
                 structured_type="lottery_ambiguity",
+                params={"pending_slots": ["number"]},
             )
         if not lottery:
             return ResolvedIntent(
-                kind="clarify",
-                clarify_message=(
-                    f"¿En cuál lotería quieres que busque la última aparición del {number}? "
-                    "Puedo revisarlo en una específica o compararlo entre todas las loterías disponibles."
-                ),
-                structured_type="lottery_ambiguity",
-                params={"number": number, "position": pos_filter, "pending_slots": ["lottery"]},
+                kind="tool",
+                tool=LotteryToolName.COMPARE_LOTTERIES,
+                params={
+                    "number": number,
+                    "lotteries": list(DEFAULT_ALL_HISTORY_LOTTERIES),
+                    "position": pos_filter,
+                    "position_scope": scope_used or "any_position",
+                    "mode": "number_compare",
+                    "all_historical": True,
+                    "nlp_policy": "2.3.2",
+                },
+                structured_type="lottery_comparison",
             )
         return ResolvedIntent(
             kind="tool",
@@ -1267,18 +1324,22 @@ def resolve_intent(message: str, ctx: LotterySessionContext) -> ResolvedIntent:
         if not number:
             return ResolvedIntent(
                 kind="clarify",
-                clarify_message="¿De qué número quieres la última aparición? También indica la lotería.",
+                clarify_message="¿La última vez de cuál número?",
                 structured_type="lottery_ambiguity",
+                params={"pending_slots": ["number"]},
             )
         if not lottery:
             return ResolvedIntent(
-                kind="clarify",
-                clarify_message=(
-                    f"¿En cuál lotería quieres que busque la última aparición del {number}? "
-                    "Puedo revisarlo en una específica o compararlo entre todas las loterías disponibles."
-                ),
-                structured_type="lottery_ambiguity",
-                params={"number": number, "pending_slots": ["lottery"]},
+                kind="tool",
+                tool=LotteryToolName.COMPARE_LOTTERIES,
+                params={
+                    "number": number,
+                    "lotteries": list(DEFAULT_ALL_HISTORY_LOTTERIES),
+                    "mode": "number_compare",
+                    "all_historical": True,
+                    "nlp_policy": "2.3.2",
+                },
+                structured_type="lottery_comparison",
             )
         return ResolvedIntent(
             kind="tool",
@@ -1294,11 +1355,30 @@ def resolve_intent(message: str, ctx: LotterySessionContext) -> ResolvedIntent:
         text,
     ):
         if not lottery or not ctx_date:
-            return ResolvedIntent(
-                kind="clarify",
-                clarify_message="Necesito la lotería y la fecha base para los días siguientes.",
-                structured_type="lottery_ambiguity",
-            )
+            # Fase X.1 — if we have date context or active number, don't demand both
+            if ctx_date and (lottery or ctx.last_lottery):
+                lottery = lottery or ctx.last_lottery
+            elif number := (_extract_number(raw) or (ctx.last_numbers[0] if ctx.last_numbers else None)):
+                return ResolvedIntent(
+                    kind="tool",
+                    tool=LotteryToolName.COMPARE_LOTTERIES,
+                    params={
+                        "number": number,
+                        "lotteries": list(DEFAULT_ALL_HISTORY_LOTTERIES),
+                        "mode": "number_compare",
+                        "all_historical": True,
+                        "follow_up": "after",
+                        "nlp_policy": "2.3.2",
+                    },
+                    structured_type="lottery_comparison",
+                )
+            else:
+                return ResolvedIntent(
+                    kind="clarify",
+                    clarify_message="¿Después de cuál número o fecha base?",
+                    structured_type="lottery_ambiguity",
+                    params={"pending_slots": ["number"]},
+                )
         days = _extract_int(text, "dias", "días", default=ctx.last_days or 7) or 7
         return ResolvedIntent(
             kind="tool",
@@ -1565,9 +1645,9 @@ def resolve_intent(message: str, ctx: LotterySessionContext) -> ResolvedIntent:
     return ResolvedIntent(
         kind="clarify",
         clarify_message=(
-            "Puedo consultar resultados históricos: fecha exacta, última aparición, "
-            "días o sorteos siguientes/anteriores, repeticiones y comparaciones. "
-            "¿Qué deseas consultar?"
+            "Puedo investigar históricos, conteos, últimas apariciones, "
+            "comparaciones y análisis completos. ¿Qué te gustaría investigar?"
         ),
         structured_type="lottery_ambiguity",
+        params={"pending_slots": ["query"], "nlp_policy": "2.3.2"},
     )

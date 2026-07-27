@@ -193,7 +193,7 @@ def parse_compound_last_occurrence(
             q["lotteries"] = [lottery]
             q["lotteries_scope"] = "named"
         else:
-            q["lotteries_scope"] = "defaults_or_clarify"
+            q["lotteries_scope"] = "all"
         return {
             "intent": "last_occurrence",
             "queries": [q],
@@ -223,7 +223,7 @@ def parse_compound_last_occurrence(
             q["lotteries"] = [lottery]
             mentioned.append(lottery)
         else:
-            q["lotteries_scope"] = "defaults_or_clarify"
+            q["lotteries_scope"] = "all"
             q["lotteries"] = []
         queries.append(q)
 

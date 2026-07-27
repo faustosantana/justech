@@ -1136,51 +1136,122 @@ class LotteryToolExecutor:
                 for lot_name in ordered:
                     if not lot_name:
                         continue
-                    # Prefer core product names when ranking candidates
                     try:
                         res = await q.by_number(
                             str(lot_name),
                             str(observed).zfill(2),
                             page=1,
-                            page_size=1,
+                            page_size=12,
                             order="desc",
                         )
                         items = getattr(res, "items", None) or getattr(res, "occurrences", None) or []
                         if not items:
-                            # try without zfill
                             res = await q.by_number(
                                 str(lot_name),
                                 str(observed),
                                 page=1,
-                                page_size=1,
+                                page_size=12,
                                 order="desc",
                             )
                             items = getattr(res, "items", None) or getattr(res, "occurrences", None) or []
-                        if not items:
-                            continue
-                        first = items[0]
-                        d = getattr(first, "draw_date", None) or (
-                            first.get("draw_date") if isinstance(first, dict) else None
-                        )
-                        if not d:
-                            continue
-                        candidates.append((str(d)[:10], str(lot_name)))
+                        for first in items:
+                            d = getattr(first, "draw_date", None) or (
+                                first.get("draw_date") if isinstance(first, dict) else None
+                            )
+                            if not d:
+                                continue
+                            candidates.append((str(d)[:10], str(lot_name)))
                     except Exception:
                         continue
-                if candidates:
-                    # Prefer Nacional/Leidsa/Loteka family over other featured names
-                    def _rank(item: tuple[str, str]) -> tuple[int, str]:
-                        name = _norm(item[1])
-                        prio = 0
-                        if "nacional" in name:
-                            prio = 3
-                        elif "leidsa" in name:
-                            prio = 2
-                        elif "loteka" in name:
-                            prio = 1
-                        return (prio, item[0])
+                # Also harvest recent featured calendar days containing the number
+                try:
+                    from datetime import date as date_cls
+                    from datetime import timedelta
 
-                    best = max(candidates, key=_rank)
+                    svc_scan = LotteryResultService(self.db)
+                    today = date_cls.today()
+                    for delta in range(0, 90):
+                        day = today - timedelta(days=delta)
+                        rows = await svc_scan.get_by_date(day, featured_only=True)
+                        if not rows:
+                            continue
+                        for row in rows:
+                            if not isinstance(row, dict):
+                                continue
+                            lot_name = str(row.get("lottery") or row.get("lottery_name") or "")
+                            vals = []
+                            for key in ("primera", "first", "n1", "numbers"):
+                                val = row.get(key)
+                                if val is None:
+                                    continue
+                                if isinstance(val, (list, tuple)):
+                                    vals.extend(val)
+                                else:
+                                    vals.append(val)
+                            for n in vals:
+                                try:
+                                    if int(str(n).lstrip("0") or "0") == int(observed):
+                                        candidates.append((day.isoformat(), lot_name or "featured"))
+                                        break
+                                except Exception:
+                                    pass
+                except Exception:
+                    pass
+                if candidates:
+                    # Prefer a day with same-day T1×T2 confirmation when available.
+                    from datetime import date as date_cls
+
+                    from app.lottery.numeric_relations.catalog import build_catalog
+                    from app.lottery.numeric_relations.analysis_engine.same_day_context import (
+                        build_same_day_context,
+                        find_same_day_cross_confirmations,
+                    )
+
+                    cat = build_catalog()
+                    svc_res = LotteryResultService(self.db)
+                    confirmed: list[tuple[str, str]] = []
+                    uniq_dates = sorted({c[0] for c in candidates}, reverse=True)[:15]
+                    for iso in uniq_dates:
+                        try:
+                            rows = await svc_res.get_by_date(
+                                date_cls.fromisoformat(iso),
+                                featured_only=True,
+                            )
+                            if not rows:
+                                continue
+                            ctx_day = build_same_day_context(
+                                rows,
+                                draw_date=iso,
+                                positions=["first"],
+                                exclude_numbers=[observed],
+                            )
+                            crosses = find_same_day_cross_confirmations(
+                                seed_numbers=[observed],
+                                confirmer_numbers=list(ctx_day.confirmer_numbers or []),
+                                catalog=cat,
+                                day_context=ctx_day,
+                                date_s=iso,
+                            )
+                            if crosses:
+                                lot = next((l for d, l in candidates if d == iso), candidates[0][1])
+                                confirmed.append((iso, lot))
+                        except Exception:
+                            continue
+                    if confirmed:
+                        best = max(confirmed, key=lambda x: x[0])
+                    else:
+                        def _rank(item: tuple[str, str]) -> tuple[int, str]:
+                            name = _norm(item[1])
+                            prio = 0
+                            if "nacional" in name:
+                                prio = 3
+                            elif "leidsa" in name:
+                                prio = 2
+                            elif "loteka" in name:
+                                prio = 1
+                            return (prio, item[0])
+
+                        best = max(candidates, key=_rank)
                 if best:
                     date_s = best[0]
                     if not lottery_hint:
@@ -1194,13 +1265,17 @@ class LotteryToolExecutor:
                 from datetime import date as date_cls
                 from datetime import timedelta
 
+                from app.lottery.numeric_relations.catalog import build_catalog
                 from app.lottery.numeric_relations.analysis_engine.same_day_context import (
                     build_same_day_context,
+                    find_same_day_cross_confirmations,
                 )
                 from app.services.lottery_result_service import LotteryResultService
 
                 svc_res = LotteryResultService(self.db)
+                cat = build_catalog()
                 today = date_cls.today()
+                fallback_day = None
                 for delta in range(0, 180):
                     day = today - timedelta(days=delta)
                     rows = await svc_res.get_by_date(day, featured_only=True)
@@ -1213,22 +1288,27 @@ class LotteryToolExecutor:
                         exclude_numbers=[],
                     )
                     nums = {int(x) for x in (ctx_day.confirmer_numbers or [])}
-                    for row in rows or []:
-                        if not isinstance(row, dict):
-                            continue
-                        for key in ("primera", "first", "numbers", "n1"):
-                            val = row.get(key)
-                            if val is None:
-                                continue
-                            vals = val if isinstance(val, (list, tuple)) else [val]
-                            for n in vals:
-                                try:
-                                    nums.add(int(str(n).lstrip("0") or "0"))
-                                except Exception:
-                                    pass
-                    if observed in nums and confirmer_i in nums:
+                    for a in ctx_day.appearances or []:
+                        try:
+                            nums.add(int(a.number))
+                        except Exception:
+                            pass
+                    if observed not in nums or confirmer_i not in nums:
+                        continue
+                    if fallback_day is None:
+                        fallback_day = day.isoformat()
+                    crosses = find_same_day_cross_confirmations(
+                        seed_numbers=[observed],
+                        confirmer_numbers=[confirmer_i],
+                        catalog=cat,
+                        day_context=ctx_day,
+                        date_s=day.isoformat(),
+                    )
+                    if crosses:
                         date_s = day.isoformat()
                         break
+                if not date_s:
+                    date_s = fallback_day
             except Exception:
                 pass
 

@@ -199,14 +199,22 @@ export default function LotteryChatPage() {
   useEffect(() => {
     const q = search.get("q") || "";
     const n = search.get("number") || "";
+    const lottery = search.get("lottery") || "";
+    const date = search.get("date") || "";
+    const highlight = search.get("highlight") || "";
+    const withN = search.get("with") || "";
     if (q) setInput(q);
-    if (n) {
-      setSuggestions([
-        `Analiza el ${n}.`,
-        `Explícame el análisis completo del ${n}.`,
-        `Muéstrame el comportamiento histórico del ${n}.`,
-      ]);
-    }
+    const contextual = [
+      n ? `Analiza el ${n}.` : null,
+      n && highlight ? `¿Por qué el ${highlight}?` : null,
+      n && withN ? `Analiza el ${n} con el ${withN}.` : null,
+      n ? `Muéstrame el comportamiento histórico del ${n}.` : null,
+      highlight ? `¿Por qué no el 07?` : null,
+      lottery && date && n
+        ? `Usa el contexto del ${n} en ${lottery} (${date}); no inventes relaciones.`
+        : null,
+    ].filter(Boolean) as string[];
+    if (contextual.length) setSuggestions(contextual);
   }, [search]);
 
   const ensureAuth = useCallback(() => {

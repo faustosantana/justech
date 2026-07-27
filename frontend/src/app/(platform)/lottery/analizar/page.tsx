@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 
 import { AppShell } from '@/components/layout/app-shell'
+import { LotteryIntelligentReport } from '@/components/lottery/lottery-intelligent-report'
 import { LotteryNumberLink } from '@/components/lottery/lottery-number-link'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -19,6 +20,7 @@ import {
   supportLevel,
   supportTone,
 } from '@/lib/lottery-analysis-present'
+import type { IntelligentAnalysisReport } from '@/lib/lottery-intelligent-report'
 import { canAccessLotteryAdmin, canAccessLotteryModule, DISCLAIMER } from '@/lib/lottery'
 
 type SameDayCross = {
@@ -126,6 +128,7 @@ type Analysis = {
     nodes?: { id?: string; number?: number; role?: string }[]
     edges?: { source?: number; target?: number; relation?: string; type?: string }[]
   }
+  intelligent_report?: IntelligentAnalysisReport | null
 }
 
 function dayChipClass(role: 'observed' | 'confirmer' | 'companion' | 'plain'): string {
@@ -192,6 +195,8 @@ export default function LotteryAnalizarPage() {
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [data, setData] = useState<Analysis | null>(null)
+  const [showLegacyView, setShowLegacyView] = useState(false)
+  const [showFullDetails, setShowFullDetails] = useState(false)
   const [t1, setT1] = useState<{ code: number | null; members: number[] }>({
     code: null,
     members: [],
@@ -333,7 +338,17 @@ export default function LotteryAnalizarPage() {
           throw new ApiError(res.status, 'ANALYZE_FAILED', detail)
         }
         const json = (await res.json()) as Analysis
+        if (json.intelligent_report) {
+          if (!json.intelligent_report.origin_lottery && (ctxLottery || undefined)) {
+            json.intelligent_report.origin_lottery = ctxLottery
+          }
+          if (!json.intelligent_report.analysis_date && dateForRun) {
+            json.intelligent_report.analysis_date = dateForRun
+          }
+        }
         setData(json)
+        setShowLegacyView(false)
+        setShowFullDetails(false)
         await Promise.all([loadTables(n), loadHistory(n), loadDrawContext()])
       } catch (err) {
         setData(null)
@@ -448,13 +463,34 @@ export default function LotteryAnalizarPage() {
   const chatHref = useMemo(() => {
     const n = observed || number
     const params = new URLSearchParams()
-    params.set('q', `Explícame el análisis completo del ${n}.`)
+    const primaryN = data?.intelligent_report?.primary_candidate ?? primary?.number
+    params.set(
+      'q',
+      primaryN != null
+        ? `Explícame por qué el ${primaryN} es el resultado principal del ${n}.`
+        : `Explícame el análisis completo del ${n}.`,
+    )
     if (n) params.set('number', String(n))
     if (ctxLottery) params.set('lottery', ctxLottery)
-    if (ctxDate) params.set('date', ctxDate)
-    if (primary?.number) params.set('highlight', String(primary.number))
+    if (ctxDate || analysisDate) params.set('date', ctxDate || analysisDate)
+    if (primaryN) params.set('highlight', String(primaryN))
+    const conf =
+      data?.intelligent_report?.confirmer?.number ??
+      (companion ? Number(companion) : undefined)
+    if (conf != null && Number.isFinite(conf)) params.set('with', String(conf))
     return `/lottery/chat?${params.toString()}`
-  }, [observed, number, ctxLottery, ctxDate, primary?.number])
+  }, [
+    observed,
+    number,
+    ctxLottery,
+    ctxDate,
+    analysisDate,
+    primary?.number,
+    data?.intelligent_report,
+    companion,
+  ])
+
+  const report = data?.intelligent_report || null
 
   const patternHref = useMemo(() => {
     const n = observed || number
@@ -561,6 +597,41 @@ export default function LotteryAnalizarPage() {
 
         {data && observed ? (
           <div className="space-y-4">
+            {!showLegacyView && report && (
+              <LotteryIntelligentReport
+                report={report}
+                relationsHref={
+                  observed
+                    ? `/lottery/analizar?number=${observed}&auto=0`
+                    : undefined
+                }
+              />
+            )}
+
+            <div className="flex flex-wrap gap-2">
+              {!showLegacyView && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setShowFullDetails((v) => !v)}
+                >
+                  {showFullDetails ? 'Ocultar detalles completos' : 'Ver detalles completos'}
+                </Button>
+              )}
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => {
+                  setShowLegacyView((v) => !v)
+                  if (!showLegacyView) setShowFullDetails(true)
+                }}
+              >
+                {showLegacyView ? 'Usar informe inteligente' : 'Vista anterior'}
+              </Button>
+            </div>
+
+            {(showLegacyView || showFullDetails || !report) && (
+            <>
             <Card className="border-blue-100">
               <CardHeader>
                 <CardTitle className="text-base text-blue-900">Número analizado</CardTitle>
@@ -1249,6 +1320,8 @@ export default function LotteryAnalizarPage() {
                 )}
               </CardContent>
             </Card>
+            </>
+            )}
 
             <div className="flex flex-wrap gap-2">
               {ctxDate && (
@@ -1283,11 +1356,11 @@ export default function LotteryAnalizarPage() {
                 <Link href={patternHref}>Consultar comportamiento histórico</Link>
               </Button>
               <Button className="bg-blue-600 hover:bg-blue-700" asChild>
-                <Link href={chatHref}>Explicar con Chat inteligente</Link>
+                <Link href={chatHref}>Preguntar sobre este análisis</Link>
               </Button>
             </div>
 
-            {isAdmin && (
+            {isAdmin && (showLegacyView || showFullDetails) && (
               <details className="rounded-lg border border-slate-200 bg-white p-4 text-sm">
                 <summary className="cursor-pointer font-medium text-slate-800">
                   Detalle técnico del análisis (solo administración)

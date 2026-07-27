@@ -135,7 +135,34 @@ async def analysis_run(
         result = run_complete_analysis(payload, persist=True)
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e)) from e
-    return result.to_dict()
+    data = result.to_dict()
+    try:
+        from app.lottery.numeric_relations.analysis_engine.intelligent_report import (
+            assemble_intelligent_analysis_report,
+        )
+
+        origin_lottery = payload.get("lottery") or payload.get("origin_lottery")
+        origin_position = None
+        positions = payload.get("positions") or []
+        if positions:
+            origin_position = positions[0]
+        manual_conf = None
+        confs = payload.get("same_day_confirmers") or []
+        if confs:
+            try:
+                manual_conf = int(confs[0])
+            except (TypeError, ValueError):
+                manual_conf = None
+        data["intelligent_report"] = assemble_intelligent_analysis_report(
+            data,
+            origin_lottery=str(origin_lottery) if origin_lottery else None,
+            origin_position=str(origin_position) if origin_position else None,
+            manual_confirmer=manual_conf,
+        )
+    except Exception:
+        # Never fail the analysis because the presenter failed
+        data["intelligent_report"] = None
+    return data
 
 
 @router.post("/analysis/historical")

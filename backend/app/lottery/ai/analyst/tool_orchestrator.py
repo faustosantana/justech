@@ -237,6 +237,27 @@ class ToolOrchestrator:
                 templates.append(
                     f"La última aparición registrada es {summary.get('last_occurrence_date')}."
                 )
+            elif summary.get("semantics") == "last_n_occurrences":
+                items = summary.get("items") or []
+                num = summary.get("number") or params.get("number")
+                if items:
+                    lines = []
+                    for i, row in enumerate(items[: int(summary.get("limit") or 10)], 1):
+                        pos = row.get("position")
+                        from app.lottery.ai.turn_policy import position_label_es
+
+                        pos_s = position_label_es(pos) if pos not in (None, "", "all") else "posición no indicada"
+                        lines.append(
+                            f"{i}. {row.get('date') or '—'} — {row.get('lottery') or '—'} — {pos_s}."
+                        )
+                    templates.append(
+                        f"Las {len(items)} apariciones más recientes del {num} fueron:\n"
+                        + "\n".join(lines)
+                    )
+                else:
+                    templates.append(
+                        f"No encontré apariciones del {num} dentro del alcance solicitado."
+                    )
             elif step.purpose:
                 templates.append(f"Consulté {step.purpose.replace('_', ' ')} con datos históricos.")
 
@@ -254,7 +275,7 @@ class ToolOrchestrator:
             elif summary.get("number") and (
                 summary.get("last_occurrence_date")
                 or summary.get("semantics")
-                in {"last_occurrence", "compare_across_lotteries"}
+                in {"last_occurrence", "compare_across_lotteries", "last_n_occurrences"}
             ):
                 # Bind conversation subject to THIS turn's tool result (not stale pair)
                 num = str(summary["number"]).zfill(2) if str(summary["number"]).isdigit() else str(
@@ -263,17 +284,19 @@ class ToolOrchestrator:
                 working_state.active_numbers = [num]
                 working_state.active_pair = []
                 working_state.active_relation = None
-                if summary.get("lottery"):
-                    working_state.active_lotteries = [str(summary["lottery"])]
-                if summary.get("last_occurrence_date"):
-                    working_state.active_date = str(summary["last_occurrence_date"])[:10]
+                # Result lottery/position are NOT filters (rule: found ≠ active filter)
                 working_state.last_analysis = {
                     "observed": num,
                     "lottery": summary.get("lottery"),
                     "date": summary.get("last_occurrence_date"),
                     "position": summary.get("position"),
                     "total": summary.get("total") or summary.get("count"),
+                    "limit": summary.get("limit"),
+                    "items": summary.get("items"),
                 }
+                working_state.last_intent = str(
+                    summary.get("semantics") or working_state.last_intent or "last_occurrence"
+                )
         evidence_pkg = EvidenceEngine.assemble(
             kind=plan.question_kind or plan.rationale or "research",
             tool_trace=tool_trace,
@@ -288,11 +311,13 @@ class ToolOrchestrator:
         )
 
         lead = " ".join(templates[:2]).strip() if templates else (
-            "Consulté las herramientas autorizadas y organicé la evidencia disponible."
+            "Consulté el histórico autorizado y organicé la evidencia disponible."
             if evidence_bundle
-            else "No encontré suficiente evidencia con las herramientas disponibles."
+            else "No pude completar la consulta en este momento."
         )
-        template = lead
+        from app.lottery.ai.turn_policy import scrub_internal_jargon
+
+        template = scrub_internal_jargon(lead)
 
         duration_ms = int((time.monotonic() - t0) * 1000)
         if structured is None and evidence_bundle:
@@ -334,9 +359,19 @@ class ToolOrchestrator:
                 params.setdefault("observed_number", int(state.active_numbers[0]))
             except (TypeError, ValueError):
                 params.setdefault("observed_number", state.active_numbers[0])
-        if not params.get("lottery") and state.active_lotteries:
+        # Critical: found lottery from a previous result is NOT an active filter.
+        # Only fill lottery when the step did not already declare multi-lottery / last_n.
+        mode = str(params.get("mode") or step.purpose or "")
+        if (
+            not params.get("lottery")
+            and not params.get("lotteries")
+            and mode not in {"last_n", "last_n_occurrences", "last_occurrence_all_lotteries"}
+            and "across" not in mode
+            and state.active_lotteries
+            and (state.active_filters or {}).get("lottery_explicit")
+        ):
             params.setdefault("lottery", state.active_lotteries[0])
-        if not params.get("date") and state.active_date:
+        if not params.get("date") and state.active_date and mode not in {"last_n", "last_n_occurrences"}:
             params.setdefault("date", state.active_date)
         if not params.get("base_date") and state.date_context:
             params.setdefault("base_date", state.date_context)

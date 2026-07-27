@@ -47,6 +47,7 @@ class ConversationBrain:
                         "last_occurrence",
                         "first_occurrence",
                         "frequency",
+                        "last_n_occurrences",
                     } or resolution.get("inherit_active_number") is False:
                         st.active_relation = None
                         st.last_analysis = {}
@@ -60,15 +61,24 @@ class ConversationBrain:
             st.active_lotteries = list(
                 dict.fromkeys([*lots, *[x for x in st.active_lotteries if x not in lots]])
             )
+            if resolution.get("lottery_explicit") or resolution.get("lottery_filter"):
+                filters["lottery_explicit"] = True
+                filters["lottery"] = lots[0]
 
         if resolution.get("year_filter") is not None:
             filters["year"] = int(resolution["year_filter"])
 
-        if resolution.get("position_scope"):
-            st.active_position = str(resolution["position_scope"])
-            st.last_position_scope = str(resolution["position_scope"])
-            st.position_scope = str(resolution["position_scope"])
-            filters["position"] = str(resolution["position_scope"])
+        if resolution.get("position_scope") is not None:
+            from app.lottery.ai.turn_policy import canonicalize_position_scope, position_label_es
+
+            canon = canonicalize_position_scope(resolution["position_scope"])
+            st.active_position = str(canon) if canon is not None else str(resolution["position_scope"])
+            st.last_position_scope = st.active_position
+            st.position_scope = st.active_position
+            filters["position"] = st.active_position
+            if resolution.get("position_explicit"):
+                filters["position_explicit"] = True
+            filters["position_label"] = position_label_es(canon)
 
         # Fase X.2 — compound relation memory
         if resolution.get("active_relation") or resolution.get("relation") == "same_day":

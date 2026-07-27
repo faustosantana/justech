@@ -16,15 +16,27 @@ class IntentResolver:
     _YEAR = re.compile(r"\b(20\d{2})\b")
     _THIS_YEAR = re.compile(r"\b(este\s+a[nñ]o|el\s+a[nñ]o\s+actual)\b", re.I)
     _ONLY_FIRST = re.compile(
-        r"\b(solo|solamente|únicamente|unicamente)?\s*(primera|1(ra)?|primera\s+posici[oó]n)\b",
+        r"\b((solo|solamente|únicamente|unicamente)\s+)?(primera\s+posici[oó]n|1ra\s+posici[oó]n|"
+        r"posici[oó]n\s*(1|primera)|en\s+primera(\s+posici[oó]n)?)\b",
         re.I,
     )
     _ONLY_SECOND = re.compile(
-        r"\b(solo|solamente|ahora)?\s*(segunda|2(da)?|segunda\s+posici[oó]n)\b",
+        r"\b((solo|solamente|ahora)\s+)?(segunda\s+posici[oó]n|2da\s+posici[oó]n|"
+        r"posici[oó]n\s*(2|segunda)|en\s+segunda(\s+posici[oó]n)?)\b",
         re.I,
     )
     _ONLY_THIRD = re.compile(
-        r"\b(solo|solamente|ahora)?\s*(tercera|3(ra)?|tercera\s+posici[oó]n)\b",
+        r"\b((solo|solamente|ahora)\s+)?(tercera\s+posici[oó]n|3ra\s+posici[oó]n|"
+        r"posici[oó]n\s*(3|tercera)|en\s+tercera(\s+posici[oó]n)?)\b",
+        re.I,
+    )
+    _LAST_N = re.compile(
+        r"\b(y\s+)?(las?\s+)?([uú]ltimas?|anteriores?)\s+"
+        r"(\d{1,2}|una|un|dos|tres|cuatro|cinco|seis|siete|ocho|nueve|diez|quince|veinte)"
+        r"(\s+(veces|apariciones|sorteos|fechas))?\b|"
+        r"\b(dame\s+)?(las?\s+)?(\d{1,2}|tres|cinco|diez)\s+anteriores?\b|"
+        r"\b(\d{1,2}|una|un|dos|tres|cuatro|cinco|seis|siete|ocho|nueve|diez)\s+"
+        r"([uú]ltimas?|anteriores?)\b",
         re.I,
     )
     _ANY_POS = re.compile(
@@ -67,7 +79,8 @@ class IntentResolver:
     )
     _LAST_TIME = re.compile(
         r"\b(la\s+[uú]ltima(\s+vez)?|[uú]ltima\s+(vez|aparici[oó]n)|"
-        r"cu[aá]l\s+fue\s+la\s+[uú]ltima|cu[aá]ndo\s+sali[oó]\s+[uú]ltima)\b",
+        r"cu[aá]l\s+fue\s+la\s+[uú]ltima|cu[aá]ndo\s+sali[oó](\s+por\s+[uú]ltima\s+vez)?|"
+        r"cu[aá]ndo\s+sali[oó])\b",
         re.I,
     )
     _FIRST_TIME = re.compile(
@@ -112,6 +125,14 @@ class IntentResolver:
 
     @classmethod
     def resolve(cls, text: str, state: ConversationState) -> dict[str, Any]:
+        from app.lottery.ai.turn_policy import (
+            canonicalize_position_scope,
+            classify_turn_type,
+            extract_occurrence_limit,
+            extract_subject_numbers,
+            strip_quantity_spans,
+        )
+
         base = resolve_references(text, state)
         out: dict[str, Any] = {
             **base,
@@ -126,9 +147,27 @@ class IntentResolver:
             "return_to_number": None,
             "deictic": False,
             "resolved_refs": [],
+            "limit": None,
+            "turn_type": None,
+            "lottery_explicit": False,
+            "position_explicit": False,
         }
 
         raw = text or ""
+        cleaned_for_numbers = strip_quantity_spans(raw)
+        out["turn_type"] = classify_turn_type(
+            raw, has_active_subject=bool(state.active_numbers)
+        )
+
+        # Limits: «últimas 3 veces» — before position / number parsing
+        lim = extract_occurrence_limit(raw)
+        if lim:
+            out["limit"] = lim
+            out["follow_up_kind"] = "last_n_occurrences"
+            out["resolved_refs"].append(f"limit:{lim}")
+            if state.active_numbers and not extract_subject_numbers(raw):
+                out["numbers"] = list(state.active_numbers)
+                out["inherit_active_number"] = True
 
         # Year / period filters
         if cls._THIS_YEAR.search(raw):
@@ -142,25 +181,28 @@ class IntentResolver:
                 out["year_filter"] = int(ym.group(1))
                 out["resolved_refs"].append(f"year:{ym.group(1)}")
 
-        # Positions
-        if cls._ONLY_SECOND.search(raw):
-            out["position_scope"] = "second_position"
-            out["follow_up_kind"] = out.get("follow_up_kind") or "positions"
-            out["resolved_refs"].append("second_position")
-        elif cls._ONLY_THIRD.search(raw):
-            out["position_scope"] = "third_position"
-            out["follow_up_kind"] = out.get("follow_up_kind") or "positions"
-            out["resolved_refs"].append("third_position")
-        elif cls._ONLY_FIRST.search(raw) and re.search(
-            r"\b(solo|solamente|primera\s+posici|ahora\s+primera)\b", raw, re.I
-        ):
-            out["position_scope"] = "first_position"
-            out["resolved_refs"].append("first_position")
-        elif cls._ANY_POS.search(raw) or cls._WHICH_POSITIONS.search(raw):
-            out["position_scope"] = "any_position"
-            if cls._WHICH_POSITIONS.search(raw):
-                out["follow_up_kind"] = "positions"
-            out["resolved_refs"].append("any_position")
+        # Positions — never bare digits (that clashes with «últimas 3»)
+        if out.get("follow_up_kind") != "last_n_occurrences":
+            if cls._ONLY_SECOND.search(raw):
+                out["position_scope"] = canonicalize_position_scope("second_position")
+                out["follow_up_kind"] = out.get("follow_up_kind") or "positions"
+                out["position_explicit"] = True
+                out["resolved_refs"].append("second_position")
+            elif cls._ONLY_THIRD.search(raw):
+                out["position_scope"] = canonicalize_position_scope("third_position")
+                out["follow_up_kind"] = out.get("follow_up_kind") or "positions"
+                out["position_explicit"] = True
+                out["resolved_refs"].append("third_position")
+            elif cls._ONLY_FIRST.search(raw):
+                out["position_scope"] = canonicalize_position_scope("first_position")
+                out["position_explicit"] = True
+                out["resolved_refs"].append("first_position")
+            elif cls._ANY_POS.search(raw) or cls._WHICH_POSITIONS.search(raw):
+                out["position_scope"] = "all"
+                out["position_explicit"] = True
+                if cls._WHICH_POSITIONS.search(raw):
+                    out["follow_up_kind"] = "positions"
+                out["resolved_refs"].append("any_position")
 
         # Lottery-only filters
         if cls._THERE_ONLY.search(raw) and state.active_lotteries:
@@ -174,6 +216,7 @@ class IntentResolver:
                 if guessed:
                     out["lottery_filter"] = guessed[0]
                     out["lotteries"] = guessed[:1]
+                    out["lottery_explicit"] = True
                     out["resolved_refs"].append(f"lottery:{guessed[0]}")
 
         # Return to a previous number
@@ -234,7 +277,7 @@ class IntentResolver:
                 out["inherit_active_number"] = True
             out["resolved_refs"].append("which_lotteries")
 
-        if cls._LAST_TIME.search(raw):
+        if cls._LAST_TIME.search(raw) and out.get("follow_up_kind") != "last_n_occurrences":
             out["follow_up_kind"] = "last_occurrence"
             if state.active_numbers and not out.get("numbers"):
                 out["numbers"] = list(state.active_numbers)
@@ -289,15 +332,26 @@ class IntentResolver:
         # Bare follow-ups with no number → inherit ONLY with explicit reference (Fase X)
         from app.lottery.ai.nlp_stability import is_complete_standalone, is_explicit_follow_up
 
-        num = _extract_number(raw)
-        if is_complete_standalone(raw):
+        # Subject numbers from message (never quantity digits)
+        msg_nums = extract_subject_numbers(raw)
+        if msg_nums:
+            out["numbers"] = msg_nums
+            out["inherit_active_number"] = False
+            out["resolved_refs"].append("message_numbers")
+
+        num = _extract_number(cleaned_for_numbers)
+        if is_complete_standalone(raw) and out.get("follow_up_kind") != "last_n_occurrences":
             out["inherit_active_number"] = False
             out["resolved_refs"].append("standalone_no_inherit")
         elif (
-            not num
+            not msg_nums
+            and not num
             and not out.get("numbers")
             and state.active_numbers
-            and is_explicit_follow_up(raw)
+            and (
+                is_explicit_follow_up(raw)
+                or out.get("follow_up_kind") == "last_n_occurrences"
+            )
         ):
             low = _norm(raw)
             if any(
@@ -333,7 +387,7 @@ class IntentResolver:
                     "pareja",
                     "vuelve",
                 )
-            ):
+            ) or out.get("follow_up_kind") == "last_n_occurrences":
                 out["numbers"] = list(state.active_numbers)
                 out["inherit_active_number"] = True
                 out["resolved_refs"].append("inherit_active_explicit")

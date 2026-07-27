@@ -133,17 +133,19 @@ def _extract_lotteries(text: str) -> list[str]:
 
 
 def _extract_number(text: str) -> str | None:
-    # Avoid treating "últimos 30 sorteos" / "7 días" as a ball number.
+    # Avoid treating "últimos 30 sorteos" / "7 días" / "últimas 3 veces" as a ball number.
     cleaned = re.sub(
-        r"[uú]ltimos?\s+\d+\s+(sorteos?|dias|días)|"
-        r"\b\d+\s+(sorteos?|dias|días)\s+siguientes|"
-        r"siguientes?\s+\d+\s+(sorteos?|dias|días)|"
+        r"[uú]ltimos?\s+\d+\s+(sorteos?|dias|días|veces|apariciones)|"
+        r"[uú]ltimas?\s+\d+\s+(sorteos?|dias|días|veces|apariciones)|"
+        r"\b\d+\s+(sorteos?|dias|días|veces|apariciones)\b|"
+        r"\b\d+\s+anteriores?\b|"
+        r"\b(anteriores?)\s+\d+\b|"
         r"\b\d+\s+sorteos?\b|\b\d+\s+dias\b|\b\d+\s+días\b",
         " ",
         text,
         flags=re.I,
     )
-    m = re.search(r"(?:el|n[uú]mero|numero)\s+(\d{1,3})\b", cleaned, re.I)
+    m = re.search(r"(?:el|n[uú]mero|numero|del)\s+(\d{1,3})\b", cleaned, re.I)
     if m:
         return m.group(1).zfill(2) if len(m.group(1)) <= 2 else m.group(1)
     m = re.search(r"\b(\d{2})\b", cleaned)

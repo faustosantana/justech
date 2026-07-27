@@ -300,6 +300,106 @@ class LotteryToolExecutor:
                     "numbers": nums,
                     "position_scope": params.get("position_scope") or "any_position",
                 }
+
+            # last_n across one or many lotteries (v2.4.3)
+            if params.get("mode") == "last_n" or (
+                params.get("limit") and (params.get("lotteries") or not params.get("lottery"))
+            ):
+                from app.lottery.ai.nlp_stability import DEFAULT_ALL_HISTORY_LOTTERIES
+
+                number = str(params["number"])
+                limit = max(1, min(int(params.get("limit") or params.get("page_size") or 3), 50))
+                lots = [str(x) for x in (params.get("lotteries") or [])]
+                if params.get("lottery") and not lots:
+                    lots = [str(params["lottery"])]
+                if not lots:
+                    lots = list(DEFAULT_ALL_HISTORY_LOTTERIES)
+                pos = params.get("position")
+                if pos is not None:
+                    try:
+                        pos = int(pos)
+                    except (TypeError, ValueError):
+                        pos = None
+                merged: list[dict[str, Any]] = []
+                for lot_name in lots[:8]:
+                    try:
+                        res = await self.query.by_number(
+                            lot_name,
+                            number,
+                            page=1,
+                            page_size=limit,
+                            order="desc",
+                            position=pos,
+                            from_date=params.get("from_date"),
+                            to_date=params.get("to_date"),
+                        )
+                        items = list(
+                            getattr(res, "occurrences", None)
+                            or getattr(res, "items", None)
+                            or []
+                        )
+                        for it in items:
+                            d = getattr(it, "draw_date", None) or (
+                                it.get("draw_date") if isinstance(it, dict) else None
+                            )
+                            iso = None
+                            if d is not None:
+                                iso = d.isoformat() if hasattr(d, "isoformat") else str(d)[:10]
+                            pos_l = getattr(it, "position_label", None) or getattr(
+                                it, "position", None
+                            )
+                            if isinstance(it, dict):
+                                pos_l = it.get("position_label") or it.get("position")
+                            draw_id = getattr(it, "draw_id", None) or (
+                                it.get("draw_id") if isinstance(it, dict) else None
+                            )
+                            merged.append(
+                                {
+                                    "number": number,
+                                    "date": iso,
+                                    "lottery": lot_name,
+                                    "position": pos_l,
+                                    "draw_id": str(draw_id) if draw_id else None,
+                                    "result_value": number,
+                                }
+                            )
+                    except Exception:  # noqa: BLE001 — partial ok across lotteries
+                        continue
+                merged.sort(key=lambda r: r.get("date") or "", reverse=True)
+                # Deduplicate same draw_id / same date+lottery+position
+                seen: set[str] = set()
+                unique: list[dict[str, Any]] = []
+                for row in merged:
+                    key = (
+                        row.get("draw_id")
+                        or f"{row.get('date')}|{row.get('lottery')}|{row.get('position')}"
+                    )
+                    if key in seen:
+                        continue
+                    seen.add(str(key))
+                    unique.append(row)
+                top = unique[:limit]
+                best = top[0] if top else None
+                return {
+                    "number": number,
+                    "limit": limit,
+                    "items": top,
+                    "occurrences": top,
+                    "total": len(top),
+                    "metric": "last_n_occurrences",
+                }, len(top), {
+                    "semantics": "last_n_occurrences",
+                    "number": number,
+                    "limit": limit,
+                    "count": len(top),
+                    "total": len(top),
+                    "last_occurrence_date": (best or {}).get("date"),
+                    "lottery": (best or {}).get("lottery"),
+                    "position": (best or {}).get("position"),
+                    "found": bool(top),
+                    "items": top,
+                }
+
             res = await self.query.by_number(
                 params["lottery"],
                 str(params["number"]),
@@ -309,8 +409,15 @@ class LotteryToolExecutor:
                 number_type=params.get("number_type"),
                 page=int(params.get("page", 1)),
                 page_size=int(params.get("page_size", 50)),
+                order=str(params.get("order") or "asc"),
             )
-            return res, res.pagination.total, {"numbers": [str(params["number"])]}
+            return res, res.pagination.total, {
+                "numbers": [str(params["number"])],
+                "number": str(params["number"]),
+                "lottery": str(params["lottery"]),
+                "total": int(getattr(res.pagination, "total", 0) or 0),
+                "count": int(getattr(res.pagination, "total", 0) or 0),
+            }
 
         if tool == LotteryToolName.CALCULATE_FREQUENCIES:
             res = await self.query.frequencies(

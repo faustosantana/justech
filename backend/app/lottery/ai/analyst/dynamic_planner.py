@@ -300,6 +300,47 @@ class DynamicResearchPlanner:
                     [lottery] if lottery_explicit and lottery else list(lotteries or DEFAULT_ALL_HISTORY_LOTTERIES)[:8]
                 )
 
+        elif kind == "last_n_occurrences":
+            if observed:
+                from app.lottery.ai.nlp_stability import DEFAULT_ALL_HISTORY_LOTTERIES
+
+                limit = int(p.get("limit") or 3)
+                limit = max(1, min(limit, 50))
+                pos = p.get("position_scope")
+                pos_i = None
+                if isinstance(pos, int):
+                    pos_i = pos
+                elif str(pos) in {"1", "2", "3"}:
+                    pos_i = int(pos)
+                all_lots = (
+                    [lottery]
+                    if lottery_explicit and lottery
+                    else (list(lotteries) or list(DEFAULT_ALL_HISTORY_LOTTERIES))
+                )
+                steps.append(
+                    PlanStep(
+                        tool=LotteryToolName.GET_NUMBER_OCCURRENCES.value,
+                        params={
+                            "number": observed,
+                            "lotteries": all_lots[:8],
+                            "limit": limit,
+                            "page_size": limit,
+                            "order": "desc",
+                            "mode": "last_n",
+                            **({"position": pos_i} if pos_i else {}),
+                            **(
+                                {"lottery": lottery}
+                                if lottery_explicit and lottery
+                                else {}
+                            ),
+                        },
+                        purpose="last_n_occurrences",
+                    )
+                )
+                meta["subjects"] = [observed]
+                meta["limit"] = limit
+                meta["lotteries"] = all_lots[:8]
+
         elif kind == "frequency_behavior":
             if observed and lottery:
                 steps.append(

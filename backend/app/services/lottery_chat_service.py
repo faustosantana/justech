@@ -1229,8 +1229,32 @@ class LotteryChatService:
 
         public_structured = self._public_structured(structured if isinstance(structured, dict) else None)
         from app.lottery.ai.same_day_coincidence import analyzing_label
+        from app.lottery.ai.turn_policy import filters_label_es, position_label_es
 
         nums_ctx = list(state.active_numbers or [])
+        # Explicit filters only — never show found result lottery/position as scope
+        explicit_lots = None
+        if (state.active_filters or {}).get("lottery_explicit") and state.active_lotteries:
+            explicit_lots = list(state.active_lotteries[:4])
+        pos_scope = state.position_scope or state.last_position_scope
+        if not (state.active_filters or {}).get("position_explicit"):
+            # Prefer any_position / all when position was only a result
+            if pos_scope in {
+                "first_position",
+                "second_position",
+                "third_position",
+                "1",
+                "2",
+                "3",
+                1,
+                2,
+                3,
+            } and state.last_intent in {
+                "last_occurrence",
+                "last_n_occurrences",
+                "compare_across_lotteries",
+            }:
+                pos_scope = "all"
         active_context = {
             "number": (nums_ctx[0] if nums_ctx else None),
             "numbers": nums_ctx[:8],
@@ -1238,23 +1262,23 @@ class LotteryChatService:
                 nums_ctx, relation=state.active_relation
             ),
             "relation": state.active_relation,
-            "position_scope": state.position_scope or state.last_position_scope or state.active_position,
+            "position_scope": position_label_es(pos_scope),
             "preferred_position": state.preferred_position or 1,
-            "filters_label": (
-                "Todas las loterías · "
-                + (
-                    "Todas las posiciones"
-                    if (state.position_scope or "any_position") == "any_position"
-                    else f"Posición {state.position_scope}"
-                )
-                + " · Histórico completo"
+            "filters_label": filters_label_es(
+                lottery_scope=explicit_lots or "all",
+                position_scope=pos_scope,
             ),
-            "date": state.active_date
-            or (str(state.date_context)[:10] if state.date_context else None)
-            or ((state.last_analysis or {}).get("date")),
-            "lottery": (state.active_lotteries[0] if state.active_lotteries else None)
-            or ((state.last_analysis or {}).get("lottery")),
-            "position": state.active_position or state.position_scope,
+            # Date/lottery below are last RESULT metadata, not investigation filters
+            "date": None,
+            "lottery": None,
+            "position": None,
+            "last_result_date": (state.last_analysis or {}).get("date"),
+            "last_result_lottery": (state.last_analysis or {}).get("lottery"),
+            "last_result_position": position_label_es(
+                (state.last_analysis or {}).get("position")
+            )
+            if (state.last_analysis or {}).get("position") is not None
+            else None,
             "primary_candidate": state.current_primary_candidate
             or ((state.last_analysis or {}).get("primary")),
             "alternatives": list(state.current_alternatives or [])[:4],

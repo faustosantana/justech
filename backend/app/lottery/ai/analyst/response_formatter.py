@@ -104,12 +104,16 @@ def format_analyst_response(
             question=question,
             mode=mode,
         )
-    return self_verify_response(
-        out,
-        question=question,
-        facts=facts,
-        research=research,
-        conversation_context=ctx,
+    from app.lottery.ai.turn_policy import scrub_internal_jargon
+
+    return scrub_internal_jargon(
+        self_verify_response(
+            out,
+            question=question,
+            facts=facts,
+            research=research,
+            conversation_context=ctx,
+        )
     )
 
 

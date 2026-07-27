@@ -41,6 +41,7 @@ RESEARCH_KINDS = (
     "temporal_before",
     "temporal_windows",
     "last_times",
+    "last_n_occurrences",
     "frequency_behavior",
     "coincidences_only",
     "confirmations_only",
@@ -116,7 +117,15 @@ class QuestionClassifier:
     )
     _LAST_TIMES = re.compile(
         r"(ultimas?\s+veces|qu[eé]\s+ocurri[oó]\s+las\s+[uú]ltimas|"
-        r"las\s+[uú]ltimas\s+veces|recientes)",
+        r"las\s+[uú]ltimas\s+veces|(?<!\d\s)recientes(?!\s+\d)|"
+        r"cu[aá]ndo\s+sali[oó]|cuando\s+sali[oó])",
+        re.I,
+    )
+    _LAST_N = re.compile(
+        r"\b(y\s+)?(las?\s+)?([uú]ltimas?|anteriores?)\s+"
+        r"(\d{1,2}|una|un|dos|tres|cuatro|cinco|seis|siete|ocho|nueve|diez|quince|veinte)"
+        r"(\s+(veces|apariciones|sorteos))?\b|"
+        r"\b(dame\s+)?(las?\s+)?(\d{1,2}|tres|cinco|diez)\s+anteriores?\b",
         re.I,
     )
     _TEMPORAL_AFTER = re.compile(
@@ -232,6 +241,29 @@ class QuestionClassifier:
             return ResearchQuestion("temporal_before", params, raw_message=raw)
         if cls._TEMPORAL_AFTER.search(raw) and re.search(r"d\s*\+", raw, re.I):
             return ResearchQuestion("temporal_windows", params, raw_message=raw)
+        # last N follow-up before generic last_times
+        if (
+            cls._LAST_N.search(raw)
+            or resolution.get("follow_up_kind") == "last_n_occurrences"
+            or resolution.get("limit")
+        ):
+            from app.lottery.ai.turn_policy import extract_occurrence_limit
+
+            lim = resolution.get("limit") or extract_occurrence_limit(raw) or 3
+            last_n_params = dict(params)
+            last_n_params["limit"] = int(lim)
+            last_n_params["lotteries"] = named_lots[:4]
+            last_n_params["lottery_explicit"] = bool(
+                named_lots or resolution.get("lottery_filter")
+            )
+            last_n_params["position_explicit"] = bool(resolution.get("position_explicit"))
+            if nums:
+                last_n_params["numbers"] = nums[:1] if len(nums) == 1 else nums
+                last_n_params["active_pair"] = []
+                last_n_params["use_active_pair"] = False
+            elif state.active_numbers:
+                last_n_params["numbers"] = list(state.active_numbers[:1])
+            return ResearchQuestion("last_n_occurrences", last_n_params, raw_message=raw)
         if cls._LAST_TIMES.search(raw) or resolution.get("follow_up_kind") == "last_occurrence":
             # Pair / "qué pasó las últimas veces que salieron A y B" → posterior behavior,
             # not a single-number last-occurrence lookup.
@@ -287,18 +319,23 @@ class QuestionClassifier:
         state: ConversationState,
         resolution: dict[str, Any],
     ) -> list[str]:
-        found = [str(n).zfill(2) if len(str(n)) <= 2 else str(n) for n in cls._NUM.findall(raw)]
-        # Drop years mistaken as numbers (20xx already filtered by \d{1,2})
+        from app.lottery.ai.turn_policy import extract_subject_numbers, strip_quantity_spans
+
+        found = extract_subject_numbers(raw)
         if resolution.get("numbers"):
-            found = [str(n).zfill(2) if str(n).isdigit() and len(str(n)) <= 2 else str(n)
-                     for n in resolution["numbers"]] + found
+            found = [
+                str(n).zfill(2) if str(n).isdigit() and len(str(n)) <= 2 else str(n)
+                for n in resolution["numbers"]
+            ] + [n for n in found if n not in {
+                str(x).zfill(2) if str(x).isdigit() and len(str(x)) <= 2 else str(x)
+                for x in resolution["numbers"]
+            }]
         if not found and state.active_numbers:
             found = list(state.active_numbers)
         if not found and getattr(state, "active_pair", None):
             found = list(state.active_pair)
-        # unique preserve order
         out: list[str] = []
         for n in found:
-            if n not in out and not (n.isdigit() and int(n) > 99):
-                out.append(n)
+            if n not in out and not (str(n).isdigit() and int(n) > 99):
+                out.append(str(n).zfill(2) if str(n).isdigit() and len(str(n)) <= 2 else str(n))
         return out[:6]

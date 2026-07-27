@@ -25,6 +25,7 @@ from app.lottery.ai.analyst import (
     format_analyst_response,
     load_analyst_config_from_payload,
 )
+from app.lottery.ai.analyst.research_trace import ResearchTrace
 from app.lottery.ai.conversation_state import ConversationState, UnderstandingResult
 from app.lottery.ai.planner import build_plan
 from app.lottery.ai.prompts.lottery_assistant_system_v1 import (
@@ -230,6 +231,22 @@ class LotteryChatService:
         state = brain.remember_research(research_plan.to_summary())
         guardrails = AnalystGuardrails()
         research_meta = research_plan.to_summary() if research_plan.is_research else None
+        research_trace = ResearchTrace(
+            intent=str(understanding.intent or resolution.get("follow_up_kind") or ""),
+            context_used=brain.context_snapshot() if hasattr(brain, "context_snapshot") else {},
+            filters_applied=dict(state.active_filters or {}),
+            investigating=bool(research_plan.is_research),
+            research_mode=research_plan.mode,
+            analysis_depth=analyst_cfg.analysis_depth,
+            config_snapshot={
+                "max_tools": analyst_cfg.effective_max_tools(),
+                "max_steps": analyst_cfg.effective_max_steps(),
+                "max_tokens": analyst_cfg.max_tokens,
+                "timeout_seconds": analyst_cfg.timeout_seconds,
+                "research_mode": analyst_cfg.research_mode,
+                "analysis_depth": analyst_cfg.analysis_depth,
+            },
+        )
 
         plan = build_plan(understanding)
         tool_trace: list[dict[str, Any]] = []
@@ -318,9 +335,10 @@ class LotteryChatService:
                     tool_trace,
                     ctx,
                     state,
-                ) = await ToolOrchestrator(executor, analyst_cfg, guardrails).run(
-                    research_plan, ctx=ctx, state=state
-                )
+                    research_trace,
+                ) = await ToolOrchestrator(
+                    executor, analyst_cfg, guardrails, trace=research_trace
+                ).run(research_plan, ctx=ctx, state=state)
                 intent_kind = "tool"
                 tool_name = tool_trace[-1].get("tool") if tool_trace else understanding.tool
                 state.last_plan = [s.purpose or s.tool for s in research_plan.steps]
@@ -664,6 +682,7 @@ class LotteryChatService:
                 context={**ctx.to_store(), "conversation_v4": state.to_store()},
                 recent_messages=recent_msgs,
                 mode="tool",
+                max_tokens=analyst_cfg.max_tokens,
             )
             if synthesis_fallback:
                 fallback_used = True
@@ -706,6 +725,7 @@ class LotteryChatService:
                     context={**ctx.to_store(), "conversation_v4": state.to_store()},
                     recent_messages=recent_msgs,
                     mode="clarify",
+                    max_tokens=min(analyst_cfg.max_tokens, 600),
                 )
                 if synthesis_fallback:
                     fallback_used = True
@@ -718,6 +738,12 @@ class LotteryChatService:
         # Strip accidental duplicated disclaimer from synthesizer
         if final_text.count(DISCLAIMER) > 1:
             final_text = final_text.replace(DISCLAIMER, "", final_text.count(DISCLAIMER) - 1).rstrip()
+
+        research_trace.finish(response=final_text)
+        try:
+            state = ConversationBrain(state).remember_trace(research_trace.to_dict())
+        except Exception:  # noqa: BLE001
+            pass
 
         latency_ms = int((time.perf_counter() - t0) * 1000)
         runtime_trace = {
@@ -736,6 +762,19 @@ class LotteryChatService:
             ),
             "intent": understanding.intent,
             "prompt_version": get_active_prompt().version,
+            "research_trace": research_trace.to_dict() if self._expose_diagnostics() else {
+                "trace_id": research_trace.trace_id,
+                "investigating": research_trace.investigating,
+                "duration_ms": research_trace.duration_ms,
+            },
+            "analyst_config": {
+                "max_tools": analyst_cfg.effective_max_tools(),
+                "max_steps": analyst_cfg.effective_max_steps(),
+                "max_tokens": analyst_cfg.max_tokens,
+                "timeout_seconds": analyst_cfg.timeout_seconds,
+                "research_mode": analyst_cfg.research_mode,
+                "analysis_depth": analyst_cfg.analysis_depth,
+            },
         }
         state.provider_trace = runtime_trace
         try:
@@ -860,6 +899,11 @@ class LotteryChatService:
             "synthesis_fallback": synthesis_fallback,
             "latency_ms": latency_ms,
             "research": research_meta,
+            "research_trace": research_trace.to_dict() if self._expose_diagnostics() else {
+                "trace_id": research_trace.trace_id,
+                "investigating": research_trace.investigating,
+                "duration_ms": research_trace.duration_ms,
+            },
             "runtime_trace": runtime_trace,
         }
 
@@ -1964,10 +2008,13 @@ class LotteryChatService:
         context: dict[str, Any],
         recent_messages: list[dict[str, str]] | None = None,
         mode: str = "tool",
+        max_tokens: int = 1200,
     ) -> tuple[str, bool, str | None, str | None]:
         """Síntesis: LLMRouter → Hermes/ModelArts → plantilla natural (sin mensajes internos)."""
         if not settings.assistant_synthesis_enabled:
             return template, True, None, "local_template"
+
+        token_budget = max(200, min(int(max_tokens or 1200), 4000))
 
         # Strip bulky internals from context for the model
         ctx_public = {
@@ -2049,7 +2096,7 @@ class LotteryChatService:
                         messages=messages,
                         provider=provider,
                         temperature=0.2,
-                        max_tokens=700,
+                        max_tokens=token_budget,
                     ),
                     tenant_id=self.tenant_id,
                 )
@@ -2063,7 +2110,9 @@ class LotteryChatService:
                 await asyncio.sleep(0.35 * (attempt + 1))
 
         # 2) Hermes / ModelArts (credenciales ya usadas por JAIOS)
-        hermes_text, hermes_model = await self._synthesize_via_hermes(messages)
+        hermes_text, hermes_model = await self._synthesize_via_hermes(
+            messages, max_tokens=token_budget
+        )
         if hermes_text:
             return hermes_text, False, hermes_model, "huawei_modelarts"
 
@@ -2072,7 +2121,7 @@ class LotteryChatService:
         return template, True, None, "local_template"
 
     async def _synthesize_via_hermes(
-        self, messages: list[LLMMessage]
+        self, messages: list[LLMMessage], *, max_tokens: int = 1200
     ) -> tuple[str | None, str | None]:
         url = (getattr(settings, "hermes_model_api_url", None) or "").strip()
         key = (getattr(settings, "hermes_model_api_key", None) or "").strip()
@@ -2083,6 +2132,7 @@ class LotteryChatService:
             or getattr(settings, "hermes_model", None)
             or "DeepSeek-V3.2"
         )
+        token_budget = max(200, min(int(max_tokens or 1200), 4000))
         try:
             import httpx
 
@@ -2098,7 +2148,7 @@ class LotteryChatService:
                             "model": model,
                             "messages": [m.model_dump() for m in messages],
                             "temperature": 0.2,
-                            "max_tokens": 700,
+                            "max_tokens": token_budget,
                         },
                     )
                     if resp.status_code >= 500:

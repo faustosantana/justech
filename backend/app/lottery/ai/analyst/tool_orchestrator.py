@@ -8,6 +8,7 @@ from typing import Any
 from app.lottery.ai.analyst.config import AnalystRuntimeConfig
 from app.lottery.ai.analyst.guardrails import AnalystGuardrails
 from app.lottery.ai.analyst.research_planner import ResearchPlan
+from app.lottery.ai.analyst.research_trace import ResearchTrace
 from app.lottery.ai.conversation_state import ConversationState
 from app.lottery.ai.planner import PlanStep
 from app.services.lottery_ai_contracts import LotteryToolName
@@ -23,10 +24,12 @@ class ToolOrchestrator:
         executor: LotteryToolExecutor,
         config: AnalystRuntimeConfig,
         guardrails: AnalystGuardrails | None = None,
+        trace: ResearchTrace | None = None,
     ):
         self.executor = executor
         self.config = config
         self.guardrails = guardrails or AnalystGuardrails()
+        self.trace = trace
 
     async def run(
         self,
@@ -34,15 +37,39 @@ class ToolOrchestrator:
         *,
         ctx: LotterySessionContext,
         state: ConversationState,
-    ) -> tuple[dict[str, Any] | None, str, list[dict[str, Any]], LotterySessionContext, ConversationState]:
+    ) -> tuple[
+        dict[str, Any] | None,
+        str,
+        list[dict[str, Any]],
+        LotterySessionContext,
+        ConversationState,
+        ResearchTrace | None,
+    ]:
         tool_trace: list[dict[str, Any]] = []
         templates: list[str] = []
         structured: dict[str, Any] | None = None
         evidence_bundle: list[dict[str, Any]] = []
         working_ctx = ctx
         working_state = state
+        trace = self.trace or ResearchTrace(
+            investigating=bool(plan.is_research),
+            research_mode=plan.mode,
+            analysis_depth=self.config.analysis_depth,
+        )
+        trace.investigating = bool(plan.is_research)
+        trace.research_mode = plan.mode
+        trace.analysis_depth = self.config.analysis_depth
+        trace.config_snapshot = {
+            "max_tools": self.config.effective_max_tools(),
+            "max_steps": self.config.effective_max_steps(),
+            "timeout_seconds": self.config.timeout_seconds,
+            "max_tokens": self.config.max_tokens,
+            "research_mode": self.config.research_mode,
+            "analysis_depth": self.config.analysis_depth,
+        }
 
-        steps = plan.steps[: self.config.max_tools_per_research]
+        limit = min(self.config.effective_max_tools(), self.config.effective_max_steps())
+        steps = plan.steps[:limit]
         t0 = time.monotonic()
 
         for step in steps:
@@ -54,6 +81,7 @@ class ToolOrchestrator:
                         "purpose": step.purpose,
                     }
                 )
+                trace.mark_step(tool=step.tool, purpose=step.purpose, status="timeout_skipped")
                 break
 
             if not self.guardrails.allow_tool(step.tool):
@@ -64,6 +92,7 @@ class ToolOrchestrator:
                         "purpose": step.purpose,
                     }
                 )
+                trace.mark_step(tool=step.tool, purpose=step.purpose, status="blocked_by_guardrail")
                 continue
 
             try:
@@ -76,6 +105,7 @@ class ToolOrchestrator:
                         "purpose": step.purpose,
                     }
                 )
+                trace.mark_step(tool=step.tool, purpose=step.purpose, status="unknown_tool")
                 continue
 
             params = self._normalize_params(step, working_state)
@@ -94,6 +124,13 @@ class ToolOrchestrator:
                     "purpose": step.purpose,
                 }
             )
+            trace.mark_step(
+                tool=result.tool,
+                purpose=step.purpose,
+                status=result.status,
+                duration_ms=result.duration_ms,
+                summary=result.summary_for_context if result.status == "success" else None,
+            )
 
             if result.status != "success":
                 continue
@@ -104,7 +141,6 @@ class ToolOrchestrator:
                 params=params,
                 result_summary=result.summary_for_context,
             )
-            # Keep last successful structured payload as primary
             data = result.data if isinstance(result.data, dict) else {"payload": result.data}
             safe_data = self.guardrails.sanitize_tool_payload(data)
             evidence_bundle.append(
@@ -119,11 +155,12 @@ class ToolOrchestrator:
                 "data": safe_data,
                 "research": {
                     "mode": plan.mode,
+                    "status": plan.user_visible_status or "Estoy investigando…",
+                    "investigating": True,
                     "steps_completed": [
                         t.get("purpose") for t in tool_trace if t.get("status") == "success"
                     ],
                     "evidence": evidence_bundle[-6:],
-                    "status": plan.user_visible_status,
                 },
             }
             summary = result.summary_for_context or {}
@@ -146,7 +183,6 @@ class ToolOrchestrator:
             elif step.purpose:
                 templates.append(f"Consulté {step.purpose.replace('_', ' ')} con datos del motor.")
 
-            # Memory updates for analysis tools
             if step.tool == LotteryToolName.RUN_COMPLETE_ANALYSIS.value:
                 summary = result.summary_for_context or {}
                 if summary.get("primary") is not None:
@@ -168,7 +204,11 @@ class ToolOrchestrator:
         if not template:
             template = "No encontré suficiente evidencia con las herramientas disponibles."
 
-        return structured, template, tool_trace, working_ctx, working_state
+        if structured and isinstance(structured.get("research"), dict):
+            structured["research"]["trace_id"] = trace.trace_id
+            structured["research"]["duration_ms"] = int((time.monotonic() - t0) * 1000)
+
+        return structured, template, tool_trace, working_ctx, working_state, trace
 
     def _normalize_params(self, step: PlanStep, state: ConversationState) -> dict[str, Any]:
         params = dict(step.params or {})

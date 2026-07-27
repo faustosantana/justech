@@ -83,13 +83,24 @@ class ResearchPlanner:
             cls._PAIR_HISTORY.search(message or "")
         )
         follow = resolution.get("follow_up_kind")
-        if follow in {"d_plus_1", "d_plus_3", "d_plus_7", "after", "lotteries", "positions"}:
+        if follow in {
+            "d_plus_1",
+            "d_plus_3",
+            "d_plus_7",
+            "after",
+            "before",
+            "lotteries",
+            "positions",
+            "compare",
+            "first_occurrence",
+            "last_occurrence",
+        }:
             wants_deep = True
 
-        # Auto mode: deep only when markers / multi-number / historical tools
-        if mode == "quick":
+        # Mode + depth from Admin runtime
+        if mode == "quick" or config.analysis_depth == "light":
             is_research = False
-        elif mode == "deep":
+        elif mode == "deep" or config.analysis_depth == "deep":
             is_research = True
         else:
             is_research = wants_deep or len(understanding.numbers or state.active_numbers or []) >= 2
@@ -98,13 +109,13 @@ class ResearchPlanner:
             return ResearchPlan(
                 mode="quick",
                 is_research=False,
-                steps=list(base.steps)[: config.max_tools_per_research],
+                steps=list(base.steps)[: config.effective_max_tools()],
                 rationale=base.rationale or "single_query",
             )
 
         steps = cls._build_deep_steps(understanding, state, resolution, base)
-        # Bound
-        steps = steps[: config.max_research_steps][: config.max_tools_per_research]
+        # Bound by admin runtime config
+        steps = steps[: config.effective_max_steps()][: config.effective_max_tools()]
         return ResearchPlan(
             mode="deep",
             is_research=True,
@@ -141,17 +152,28 @@ class ResearchPlanner:
         steps: list[PlanStep] = []
 
         # 1) Occurrences / last time for active number
+        follow = resolution.get("follow_up_kind")
         if observed and (
-            resolution.get("follow_up_kind") in {"lotteries", "last_occurrence", "positions"}
+            follow
+            in {
+                "lotteries",
+                "last_occurrence",
+                "first_occurrence",
+                "positions",
+                "compare",
+            }
             or understanding.tool
             in {
                 LotteryToolName.GET_NUMBER_OCCURRENCES.value,
                 LotteryToolName.GET_LAST_OCCURRENCE.value,
                 LotteryToolName.GET_POSITION_DISTRIBUTION.value,
                 LotteryToolName.COMPARE_NUMBER_ACROSS_LOTTERIES.value,
+                LotteryToolName.CALCULATE_FREQUENCIES.value,
+                LotteryToolName.GET_COINCIDENCES.value,
+                LotteryToolName.COMPARE_NUMBER_PERIODS.value,
             }
         ):
-            if resolution.get("follow_up_kind") == "lotteries" or understanding.scope == "all":
+            if follow == "lotteries" or understanding.scope == "all":
                 steps.append(
                     PlanStep(
                         tool=LotteryToolName.COMPARE_NUMBER_ACROSS_LOTTERIES.value,
@@ -159,7 +181,7 @@ class ResearchPlanner:
                         purpose="occurrences_by_lottery",
                     )
                 )
-            elif resolution.get("follow_up_kind") == "positions":
+            elif follow == "positions":
                 steps.append(
                     PlanStep(
                         tool=LotteryToolName.GET_POSITION_DISTRIBUTION.value,
@@ -171,6 +193,52 @@ class ResearchPlanner:
                         purpose="position_distribution",
                     )
                 )
+            elif follow == "last_occurrence":
+                steps.append(
+                    PlanStep(
+                        tool=LotteryToolName.GET_LAST_OCCURRENCE.value,
+                        params={"number": observed, "lottery": lottery},
+                        purpose="last_occurrence",
+                    )
+                )
+            elif follow == "first_occurrence":
+                steps.append(
+                    PlanStep(
+                        tool=LotteryToolName.GET_NUMBER_OCCURRENCES.value,
+                        params={
+                            "number": observed,
+                            "lottery": lottery,
+                            "occurrence_mode": "all",
+                            "order": "asc",
+                        },
+                        purpose="first_occurrence",
+                    )
+                )
+            elif follow == "compare" or resolution.get("compare_with"):
+                rival = resolution.get("compare_with") or (
+                    str(state.current_alternatives[0]) if state.current_alternatives else None
+                )
+                steps.append(
+                    PlanStep(
+                        tool=LotteryToolName.COMPARE_NUMBER_ACROSS_LOTTERIES.value,
+                        params={
+                            "number": observed,
+                            "lotteries": list(state.active_lotteries or [])[:8],
+                        },
+                        purpose="compare_subject_lotteries",
+                    )
+                )
+                if rival:
+                    steps.append(
+                        PlanStep(
+                            tool=LotteryToolName.COMPARE_NUMBER_ACROSS_LOTTERIES.value,
+                            params={
+                                "number": rival,
+                                "lotteries": list(state.active_lotteries or [])[:8],
+                            },
+                            purpose="compare_rival_lotteries",
+                        )
+                    )
             else:
                 steps.append(
                     PlanStep(
@@ -181,6 +249,52 @@ class ResearchPlanner:
                             **({"year": year} if year else {}),
                         },
                         purpose="number_occurrences",
+                    )
+                )
+
+        # Frequency / period / coincidences when historical depth requested
+        if observed and (
+            re.search(r"frecuen|periodo|coinciden|secuencia", str(understanding.intent or ""), re.I)
+            or understanding.tool
+            in {
+                LotteryToolName.CALCULATE_FREQUENCIES.value,
+                LotteryToolName.COMPARE_NUMBER_PERIODS.value,
+                LotteryToolName.GET_COINCIDENCES.value,
+            }
+        ):
+            if lottery:
+                steps.append(
+                    PlanStep(
+                        tool=LotteryToolName.CALCULATE_FREQUENCIES.value,
+                        params={
+                            "lottery": lottery,
+                            "number": observed,
+                            **({"year": year} if year else {}),
+                        },
+                        purpose="frequency",
+                    )
+                )
+                steps.append(
+                    PlanStep(
+                        tool=LotteryToolName.COMPARE_NUMBER_PERIODS.value,
+                        params={
+                            "lottery": lottery,
+                            "number": observed,
+                            "period_a": "current_year",
+                            "period_b": "previous_year",
+                        },
+                        purpose="period_comparison",
+                    )
+                )
+            if len(state.active_lotteries or []) >= 2:
+                steps.append(
+                    PlanStep(
+                        tool=LotteryToolName.GET_COINCIDENCES.value,
+                        params={
+                            "lotteries": list(state.active_lotteries)[:4],
+                            "number": observed,
+                        },
+                        purpose="cross_lottery_coincidences",
                     )
                 )
 
@@ -217,11 +331,12 @@ class ResearchPlanner:
         if observed and (
             confirmer
             or primary is not None
-            or resolution.get("follow_up_kind", "").startswith("d_plus")
+            or str(follow or "").startswith("d_plus")
             or understanding.tool
             in {
                 LotteryToolName.HISTORICAL_RELATION_CONDITIONS.value,
                 LotteryToolName.CANDIDATE_RESPONSE_SUMMARY.value,
+                LotteryToolName.CONFIRMER_COMBINATIONS.value,
             }
         ):
             cand = primary
@@ -251,9 +366,17 @@ class ResearchPlanner:
                         purpose="d1_d3_d7_summary",
                     )
                 )
+            if confirmer is not None:
+                steps.append(
+                    PlanStep(
+                        tool=LotteryToolName.CONFIRMER_COMBINATIONS.value,
+                        params=hist_params,
+                        purpose="cross_confirmations",
+                    )
+                )
 
-        # 4) After-window follow-up
-        if resolution.get("follow_up_kind") == "after" and observed:
+        # 4) After / before windows
+        if follow == "after" and observed:
             steps.append(
                 PlanStep(
                     tool=LotteryToolName.GET_FOLLOWING_DAYS.value,
@@ -264,6 +387,19 @@ class ResearchPlanner:
                         "base_date": state.active_date or state.date_context,
                     },
                     purpose="what_happened_after",
+                )
+            )
+        if follow == "before" and observed:
+            steps.append(
+                PlanStep(
+                    tool=LotteryToolName.GET_PREVIOUS_DAYS.value,
+                    params={
+                        "number": observed,
+                        "lottery": lottery,
+                        "days": state.calendar_window or 7,
+                        "base_date": state.active_date or state.date_context,
+                    },
+                    purpose="what_happened_before",
                 )
             )
 

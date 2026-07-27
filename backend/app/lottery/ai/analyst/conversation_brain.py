@@ -1,4 +1,4 @@
-"""Conversation Brain — structured conversational memory updates (Fase A)."""
+"""Conversation Brain — structured conversational memory updates (Fase A.1)."""
 
 from __future__ import annotations
 
@@ -20,31 +20,63 @@ class ConversationBrain:
         resolution: dict[str, Any],
     ) -> ConversationState:
         st = self.state.model_copy(deep=True)
+        filters = dict(st.active_filters or {})
+
+        # Return / focus switch
+        if resolution.get("return_to_number"):
+            n = str(resolution["return_to_number"])
+            st.active_numbers = [n]
+            st = self._push_focus(st, n)
 
         nums = list(resolution.get("numbers") or understanding.numbers or [])
         if nums:
-            st.active_numbers = [str(n).zfill(2) if str(n).isdigit() and len(str(n)) <= 2 else str(n) for n in nums]
+            normed = [
+                str(n).zfill(2) if str(n).isdigit() and len(str(n)) <= 2 else str(n)
+                for n in nums
+            ]
+            st.active_numbers = normed
+            for n in normed:
+                st = self._push_focus(st, n)
 
         lots = list(resolution.get("lotteries") or understanding.lotteries or [])
         if resolution.get("lottery_filter"):
             lots = [str(resolution["lottery_filter"])]
+            filters["lottery"] = lots[0]
         if lots:
-            st.active_lotteries = list(dict.fromkeys([*lots, *[x for x in st.active_lotteries if x not in lots]]))
+            st.active_lotteries = list(
+                dict.fromkeys([*lots, *[x for x in st.active_lotteries if x not in lots]])
+            )
 
         if resolution.get("year_filter") is not None:
-            filters = dict(getattr(st, "active_filters", None) or {})
             filters["year"] = int(resolution["year_filter"])
-            st.active_filters = filters  # type: ignore[attr-defined]
 
         if resolution.get("position_scope"):
             st.active_position = str(resolution["position_scope"])
             st.last_position_scope = str(resolution["position_scope"])
+            filters["position"] = str(resolution["position_scope"])
+
+        if resolution.get("compare_with"):
+            filters["compare_with"] = str(resolution["compare_with"])
+            # Keep active as subject; store rival for comparison follow-ups
+            rival = str(resolution["compare_with"])
+            if rival not in (st.active_numbers or []):
+                st.current_alternatives = list(
+                    dict.fromkeys([int(rival) if rival.isdigit() else rival, *st.current_alternatives])  # type: ignore[list-item]
+                )
+                # normalize alternatives to int when possible
+                alts: list[int] = []
+                for a in st.current_alternatives:
+                    try:
+                        alts.append(int(a))
+                    except (TypeError, ValueError):
+                        continue
+                st.current_alternatives = alts[:8]
 
         # Pair memory
         if len(st.active_numbers) >= 2:
-            st.active_pair = [st.active_numbers[0], st.active_numbers[1]]  # type: ignore[attr-defined]
-        elif resolution.get("use_active_pair") and getattr(st, "active_pair", None):
-            st.active_numbers = list(st.active_pair)  # type: ignore[attr-defined]
+            st.active_pair = [st.active_numbers[0], st.active_numbers[1]]
+        elif resolution.get("use_active_pair") and st.active_pair:
+            st.active_numbers = list(st.active_pair)
 
         if understanding.query_date:
             st.active_date = understanding.query_date.isoformat()
@@ -53,35 +85,54 @@ class ConversationBrain:
         if understanding.intent:
             st.last_intent = str(understanding.intent)
 
-        # Recent memory (short rolling notes — not full transcript)
+        st.active_filters = filters
+
         note = self._compact_note(understanding, resolution)
-        recent = list(getattr(st, "recent_memory", None) or [])
+        recent = list(st.recent_memory or [])
         if note:
-            recent = [*recent[-7:], note]
-        st.recent_memory = recent  # type: ignore[attr-defined]
+            recent = [*recent[-11:], note]
+        st.recent_memory = recent
 
         self.state = st
         return st
 
     def remember_research(self, plan_summary: dict[str, Any]) -> ConversationState:
         st = self.state.model_copy(deep=True)
-        st.current_research = dict(plan_summary or {})  # type: ignore[attr-defined]
+        st.current_research = dict(plan_summary or {})
+        self.state = st
+        return st
+
+    def remember_trace(self, trace: dict[str, Any]) -> ConversationState:
+        st = self.state.model_copy(deep=True)
+        research = dict(st.current_research or {})
+        research["last_trace"] = {
+            "intent": trace.get("intent"),
+            "tools": trace.get("tools_used"),
+            "steps": trace.get("steps_executed"),
+            "duration_ms": trace.get("duration_ms"),
+            "filters": trace.get("filters"),
+        }
+        st.current_research = research
         self.state = st
         return st
 
     def remember_analysis(self, summary: dict[str, Any]) -> ConversationState:
         st = self.state.model_copy(deep=True)
         if summary.get("observed") is not None:
-            st.active_numbers = [str(summary["observed"]).zfill(2)]
+            obs = str(summary["observed"]).zfill(2)
+            st.active_numbers = [obs]
+            st = self._push_focus(st, obs)
         if summary.get("confirmer") is not None:
-            st.active_pair = [  # type: ignore[attr-defined]
+            st.active_pair = [
                 str(summary.get("observed") or (st.active_numbers[0] if st.active_numbers else "")),
                 str(summary["confirmer"]),
             ]
         if summary.get("primary") is not None:
             st.current_primary_candidate = int(summary["primary"])
         if summary.get("alternatives"):
-            st.current_alternatives = [int(x) for x in summary["alternatives"] if x is not None][:8]
+            st.current_alternatives = [
+                int(x) for x in summary["alternatives"] if x is not None
+            ][:8]
         if summary.get("date"):
             st.active_date = str(summary["date"])[:10]
         st.last_analysis = {
@@ -92,7 +143,6 @@ class ConversationBrain:
             "date": summary.get("date"),
             "lottery": summary.get("lottery"),
         }
-        # Update rolling summary (compact — not full chat dump)
         bits = []
         if summary.get("observed") is not None:
             bits.append(f"observado {summary['observed']}")
@@ -108,8 +158,34 @@ class ConversationBrain:
     def should_skip_number_clarify(self) -> bool:
         return bool(self.state.active_numbers or self.state.current_primary_candidate)
 
+    def context_snapshot(self) -> dict[str, Any]:
+        st = self.state
+        return {
+            "active_numbers": list(st.active_numbers or []),
+            "active_pair": list(st.active_pair or []),
+            "active_lotteries": list(st.active_lotteries or []),
+            "active_filters": dict(st.active_filters or {}),
+            "active_position": st.active_position or st.last_position_scope,
+            "active_date": st.active_date,
+            "primary": st.current_primary_candidate,
+            "alternatives": list(st.current_alternatives or []),
+            "focus_stack": list(getattr(st, "focus_stack", None) or []),
+            "summary": st.conversation_summary,
+        }
+
     @staticmethod
-    def _compact_note(understanding: UnderstandingResult, resolution: dict[str, Any]) -> str | None:
+    def _push_focus(st: ConversationState, number: str) -> ConversationState:
+        stack = list(getattr(st, "focus_stack", None) or [])
+        n = str(number)
+        if not stack or stack[-1] != n:
+            stack.append(n)
+        st.focus_stack = stack[-12:]
+        return st
+
+    @staticmethod
+    def _compact_note(
+        understanding: UnderstandingResult, resolution: dict[str, Any]
+    ) -> str | None:
         parts: list[str] = []
         if understanding.intent:
             parts.append(str(understanding.intent))
@@ -120,4 +196,10 @@ class ConversationBrain:
             parts.append("fu=" + str(resolution["follow_up_kind"]))
         if resolution.get("year_filter"):
             parts.append(f"year={resolution['year_filter']}")
+        if resolution.get("compare_with"):
+            parts.append(f"vs={resolution['compare_with']}")
+        if resolution.get("lottery_filter"):
+            parts.append(f"lot={resolution['lottery_filter']}")
+        if resolution.get("resolved_refs"):
+            parts.append("refs=" + ",".join(str(x) for x in resolution["resolved_refs"][:6]))
         return " | ".join(parts) if parts else None

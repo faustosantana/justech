@@ -1271,6 +1271,18 @@ class LotteryAiAdminService:
         research = merged.setdefault("research", dict(DEFAULT_AGENT_PAYLOAD.get("research") or {}))
         if "research_mode" in payload:
             research["mode"] = payload["research_mode"]
+        if "investigation_mode" in payload:
+            inv = str(payload["investigation_mode"]).lower()
+            if inv in {"investigation", "investigacion", "deep"}:
+                research["mode"] = "deep"
+            elif inv in {"quick", "auto"}:
+                research["mode"] = inv
+        if "max_tools" in payload and "max_tools_per_research" not in payload:
+            research["max_tools_per_research"] = int(payload["max_tools"])
+            merged["max_tools_per_query"] = int(payload["max_tools"])
+        if "max_steps" in payload and "max_research_steps" not in payload:
+            research["max_research_steps"] = int(payload["max_steps"])
+            merged["max_planner_steps"] = int(payload["max_steps"])
         if "max_tools_per_research" in payload:
             research["max_tools_per_research"] = int(payload["max_tools_per_research"])
             merged["max_tools_per_query"] = int(payload["max_tools_per_research"])
@@ -1282,8 +1294,12 @@ class LotteryAiAdminService:
         if "max_tokens" in payload:
             models["max_tokens"] = payload["max_tokens"]
             research["max_tokens"] = payload["max_tokens"]
+        if "timeout" in payload and "timeout_seconds" not in payload:
+            research["timeout_seconds"] = int(payload["timeout"])
+            merged["timeout_seconds"] = int(payload["timeout"])
         if "timeout_seconds" in payload:
             research["timeout_seconds"] = payload["timeout_seconds"]
+            merged["timeout_seconds"] = payload["timeout_seconds"]
         if "primary_model" in payload:
             models["primary_model"] = payload["primary_model"]
         if draft:

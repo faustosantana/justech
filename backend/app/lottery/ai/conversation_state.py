@@ -108,6 +108,7 @@ class ConversationState(BaseModel):
     current_research: dict[str, Any] = Field(default_factory=dict)
     recent_memory: list[str] = Field(default_factory=list)
     research_mode: Optional[str] = None
+    focus_stack: list[str] = Field(default_factory=list)
 
     def to_store(self) -> dict[str, Any]:
         return self.model_dump(mode="json")

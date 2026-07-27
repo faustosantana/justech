@@ -142,6 +142,39 @@ def understand(raw: str, state: ConversationState) -> tuple[UnderstandingResult,
     working = state.model_copy(deep=True)
 
     domain = classify_domain(text)
+    if domain.classification in {"greeting", "general_chat"}:
+        # Fase X: never consume pending clarifications on greetings/chat
+        working.pending_slots = []
+        working.pending_intent = None
+        working.clarification_question = None
+        intent_name = "greeting" if domain.classification == "greeting" else "general_chat"
+        from app.lottery.ai.nlp_stability import GENERAL_CHAT_REPLY, GREETING_REPLY, HELP_REPLY, classify_nlp
+
+        nlp = classify_nlp(text, has_active_context=False)
+        reply = nlp.conversational_reply or (
+            GREETING_REPLY if intent_name == "greeting" else GENERAL_CHAT_REPLY
+        )
+        if nlp.intent == "HELP":
+            intent_name = "help"
+            reply = HELP_REPLY
+        return (
+            UnderstandingResult(
+                intent=intent_name,  # type: ignore[arg-type]
+                confidence=domain.confidence,
+                source="domain",
+                domain_class=domain.classification,
+                needs_clarification=False,
+                missing_slots=[],
+                tool=None,
+                params={
+                    "conversational_reply": reply,
+                    "run_tools": False,
+                    "nlp_intent": nlp.intent,
+                    "decision_log": list(nlp.decision_log),
+                },
+            ),
+            working,
+        )
     if domain.classification in {
         "out_of_domain",
         "restricted_technical",
@@ -872,6 +905,33 @@ def _map_resolved(
         lots = _extract_lotteries(text)
 
     intent_name = "unsupported"
+    if intent.kind == "chat":
+        nlp_intent = str((intent.params or {}).get("nlp_intent") or intent.structured_type or "general_chat")
+        mapped = {
+            "greeting": "greeting",
+            "general_chat": "general_chat",
+            "help": "help",
+            "GREETING": "greeting",
+            "GENERAL_CHAT": "general_chat",
+            "HELP": "help",
+        }.get(nlp_intent, "general_chat")
+        return UnderstandingResult(
+            intent=mapped,  # type: ignore[arg-type]
+            lotteries=[],
+            numbers=[],
+            missing_slots=[],
+            needs_clarification=False,
+            clarification_question=None,
+            confidence=0.99,
+            source="rules",
+            params={
+                **dict(intent.params or {}),
+                "conversational_reply": intent.clarify_message,
+                "run_tools": False,
+                "nlp_intent": nlp_intent,
+            },
+            tool=None,
+        )
     if intent.kind == "clarify":
         pending = list(intent.params.get("pending_slots") or [])
         # Motor de Relaciones Numéricas — conservar mensaje y slots explícitos

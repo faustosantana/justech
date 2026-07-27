@@ -124,6 +124,9 @@ LAST_OCC_TRIGGER_RE = re.compile(
 
 def is_last_occurrence_question(text: str) -> bool:
     t = _norm(text)
+    # Fase X: count questions are not last-occurrence
+    if re.search(r"cuantas?\s+veces|cuantas?\s+apariciones", t):
+        return False
     if re.search(r"frecuencia|mas frecuentes|analiza(r)?\s+los\s+ultimos", t):
         # Explicit frequency wins only if no clear "cuándo salió"
         if not re.search(r"cuando\s+sali|ultima\s+vez|donde\s+sali", t):

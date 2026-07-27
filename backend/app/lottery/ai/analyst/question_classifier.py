@@ -140,7 +140,11 @@ class QuestionClassifier:
     )
     _FREQUENCY = re.compile(r"\b(frecuencia|frecuencias|cu[aá]ntas?\s+veces)\b", re.I)
     _OPEN = re.compile(
-        r"(investiga|analiza\s+en\s+profundidad|comportamiento\s+hist|"
+        r"(investiga|analiza(\s+\w+){0,4}\s+(el\s+)?\d|"
+        r"analiza\s+(en\s+profundidad|completa(mente)?|el\s+comportamiento)|"
+        r"haz(me)?\s+un\s+(estudio|an[aá]lisis)|estudia(r)?\s+(el\s+)?\d|"
+        r"investiga(r)?\s+(el\s+)?(grupo\s+(del\s+)?)?\d|"
+        r"comportamiento\s+hist|"
         r"qu[eé]\s+suele|buscar\s+comportamientos)",
         re.I,
     )
@@ -233,10 +237,11 @@ class QuestionClassifier:
             return ResearchQuestion("related_numbers", params, raw_message=raw)
         if cls._BEST_GROUP.search(raw):
             return ResearchQuestion("best_historical_group", params, raw_message=raw)
-        if cls._FREQUENCY.search(raw):
-            return ResearchQuestion("frequency_behavior", params, raw_message=raw)
+        # ANALYZE / open investigation BEFORE frequency (Fase X)
         if cls._OPEN.search(raw) and (nums or state.active_numbers or state.active_pair):
             return ResearchQuestion("open_investigation", params, raw_message=raw)
+        if cls._FREQUENCY.search(raw):
+            return ResearchQuestion("frequency_behavior", params, raw_message=raw)
         # Lottery-only filter in chain
         if re.search(r"\b(solamente|solo|ahora)\s+(nacional|loteka|leidsa|real)\b", raw, re.I) and (
             nums or state.active_numbers

@@ -16,6 +16,8 @@ DomainClass = Literal[
     "prediction_request",
     "harmful_or_illegal",
     "ambiguous",
+    "greeting",
+    "general_chat",
 ]
 
 
@@ -105,6 +107,15 @@ def classify_domain(text: str) -> DomainDecision:
     raw = (text or "").strip()
     if not raw:
         return DomainDecision(classification="ambiguous", confidence=0.5)
+
+    # Fase X — greetings / short chat never look like lottery tools
+    from app.lottery.ai.nlp_stability import classify_nlp
+
+    nlp = classify_nlp(raw, has_active_context=False)
+    if nlp.intent == "GREETING":
+        return DomainDecision(classification="greeting", confidence=0.99)
+    if nlp.intent in {"GENERAL_CHAT", "HELP"}:
+        return DomainDecision(classification="general_chat", confidence=0.97)
 
     if re.search(r"system\s*prompt|prompt\s+del\s+sistema|instrucciones\s+internas", raw, re.I):
         return DomainDecision(

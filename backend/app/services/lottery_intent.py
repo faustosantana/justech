@@ -235,6 +235,32 @@ def resolve_intent(message: str, ctx: LotterySessionContext) -> ResolvedIntent:
     raw = message.strip()
     text = _norm(raw)
 
+    # Fase X — NLP stability gate (current message priority; no tools on greeting/chat)
+    from app.lottery.ai.nlp_stability import (
+        DEFAULT_ALL_HISTORY_LOTTERIES,
+        classify_nlp,
+    )
+
+    has_ctx = bool(
+        (ctx.last_numbers or [])
+        or getattr(ctx, "current_primary_candidate", None)
+        or (getattr(ctx, "last_analysis", None) or {})
+        or ctx.last_lottery
+    )
+    nlp = classify_nlp(raw, has_active_context=has_ctx)
+    if nlp.intent in {"GREETING", "GENERAL_CHAT", "HELP"} and not nlp.run_tools:
+        return ResolvedIntent(
+            kind="chat",
+            clarify_message=nlp.conversational_reply,
+            refuse_message=None,
+            structured_type=nlp.intent.lower(),
+            params={
+                "nlp_intent": nlp.intent,
+                "nlp": nlp.to_dict(),
+                "decision_log": list(nlp.decision_log),
+            },
+        )
+
     if INJECTION_RE.search(raw) or INJECTION_RE.search(text):
         return ResolvedIntent(
             kind="injection_refused",
@@ -326,6 +352,11 @@ def resolve_intent(message: str, ctx: LotterySessionContext) -> ResolvedIntent:
         )
 
     # Follow-ups over complete-analysis memory (no re-ask when context exists).
+    # Fase X: current-message COUNT/ANALYZE with explicit number never inherits memory.
+    _skip_memory_hijack = bool(
+        (nlp.intent == "COUNT" and (nlp.entities.get("numbers") or []))
+        or (nlp.intent == "ANALYZE" and (nlp.entities.get("numbers") or []))
+    )
     store = ctx.to_store() if hasattr(ctx, "to_store") else {}
     last_ca = dict(getattr(ctx, "last_analysis", None) or {})
     if not last_ca and isinstance(store, dict):
@@ -349,7 +380,7 @@ def resolve_intent(message: str, ctx: LotterySessionContext) -> ResolvedIntent:
     except (TypeError, ValueError, IndexError):
         observed_mem = None
 
-    if primary_cand and re.search(
+    if (not _skip_memory_hijack) and primary_cand and re.search(
         r"por\s*qu[eé]\s+no|porqu[eé]\s+no|y\s+no\s+el|frente\s+al?|compar(a|alo|arlo)\s+con",
         text,
         re.I,
@@ -372,7 +403,7 @@ def resolve_intent(message: str, ctx: LotterySessionContext) -> ResolvedIntent:
                 structured_type="lottery_complete_analysis",
             )
 
-    if (primary_cand or observed_mem) and re.search(
+    if (not _skip_memory_hijack) and (primary_cand or observed_mem) and re.search(
         r"hist[oó]rico|casos\s+equivalentes|cu[aá]ntas\s+veces|d\+7|d\+3|d\+1|"
         r"comport[oó]|evidencia\s+hist|últimos\s+casos|ultimos\s+casos",
         text,
@@ -393,7 +424,7 @@ def resolve_intent(message: str, ctx: LotterySessionContext) -> ResolvedIntent:
             structured_type="lottery_complete_analysis",
         )
 
-    if (primary_cand or observed_mem) and re.search(
+    if (not _skip_memory_hijack) and (primary_cand or observed_mem) and re.search(
         r"m[aá]s\s+sencillo|expl[ií]ca(me)?\s+(eso|eso\s+m[aá]s)|"
         r"en\s+simple|res[uú]me(lo|me)|cu[aá]l\s+fue\s+el\s+resultado|"
         r"por\s*qu[eé]\s+el\s+\d+|explicar\s+tabla\s*1|explicar\s+tabla\s*2",
@@ -447,12 +478,16 @@ def resolve_intent(message: str, ctx: LotterySessionContext) -> ResolvedIntent:
     )
     _analiza_observed = bool(
         re.search(
-            r"analiz(a|ar|ame|emos)\s+(el\s+)?\d+|analiz(a|ar)\s+el\s+n[uú]mero|"
-            r"analiz(a|ar|ame)\s+ese\s+n[uú]mero",
+            r"analiz(a|ar|ame|emos)(\s+\w+){0,4}\s+(el\s+)?\d{1,2}|"
+            r"analiz(a|ar)\s+el\s+n[uú]mero|"
+            r"analiz(a|ar|ame)\s+ese\s+n[uú]mero|"
+            r"haz(me)?\s+un\s+(estudio|an[aá]lisis)(\s+completo)?\s+(del?\s+)?\d{1,2}|"
+            r"estudia(r)?\s+(el\s+)?\d{1,2}|"
+            r"investiga(r)?\s+(el\s+)?(grupo\s+(del\s+)?)?\d{1,2}",
             text,
             re.I,
         )
-    )
+    ) or (nlp.intent == "ANALYZE" and bool(nlp.entities.get("numbers")))
     if not (_nr_signals or _analiza_observed) and (
         PREDICTION_RE.search(raw) or PREDICTION_RE.search(text)
     ):
@@ -641,14 +676,15 @@ def resolve_intent(message: str, ctx: LotterySessionContext) -> ResolvedIntent:
             structured_type="lottery_comparison",
         )
 
-    # "analiza el N" genérico ya se enruta al Motor NR arriba (clarify lotería / K).
-
+    # "analiza el N" genérico ya se enruta al Motor NR arriba.
+    # Lottery-summary ONLY when asking about a lottery (not a number analysis).
     if re.search(
-        r"analiz(a|ar).*(completa|completa(mente)?|resumen)|"
+        r"(analiz(a|ar).*(completa|completa(mente)?|resumen)|"
         r"haz(me)?\s+un\s+an[aá]lisis|dame\s+lo\s+m[aá]s\s+importante|"
-        r"analiz(a|ala)\s+(la\s+)?(real|leidsa|loteka|nacional)",
+        r"analiz(a|ala)\s+(la\s+)?(real|leidsa|loteka|nacional))"
+        r"(?!.*\b\d{1,2}\b)",
         text,
-    ):
+    ) and not _analiza_observed and nlp.intent != "ANALYZE":
         lottery = _extract_lottery(text) or ctx.last_lottery
         if not lottery:
             return ResolvedIntent(
@@ -814,6 +850,67 @@ def resolve_intent(message: str, ctx: LotterySessionContext) -> ResolvedIntent:
     lottery = mentioned[0] if mentioned else ctx.last_lottery
     parsed_date = _parse_spanish_date(raw)  # do not inherit ctx date for unrelated number queries
     ctx_date = parsed_date or ctx.base_date
+
+    # Fase X — COUNT with explicit number BEFORE last-occurrence compound (avoids false lottery clarify)
+    if nlp.intent == "COUNT" or re.search(
+        r"cu[aá]ntas?\s+veces|cuantas?\s+veces|cu[aá]ntas?\s+apariciones", text
+    ):
+        from app.lottery.ai.compound_occurrence import resolve_effective_position as _rep
+
+        number = _extract_number(raw)
+        if not number and nlp.entities.get("numbers"):
+            number = str(nlp.entities["numbers"][0])
+        if not number and nlp.inherit_context and ctx.last_numbers:
+            number = ctx.last_numbers[0]
+        pos_filter, scope_used, needs_ask = _rep(
+            raw,
+            pref_scope=getattr(ctx, "default_number_position_scope", None),
+            pref_primary=int(getattr(ctx, "default_primary_position", None) or 1),
+        )
+        if not number:
+            return ResolvedIntent(
+                kind="clarify",
+                clarify_message="¿Qué número quieres contar?",
+                structured_type="lottery_ambiguity",
+                params={"pending_slots": ["number"], "nlp_intent": "COUNT"},
+            )
+        if needs_ask and re.search(r"posici[oó]n|primera|segunda|cualquier", text, re.I):
+            return ResolvedIntent(
+                kind="clarify",
+                clarify_message="¿Cuento apariciones en primera posición o en cualquier posición?",
+                structured_type="lottery_ambiguity",
+                params={"number": number, "pending_slots": ["position_scope"]},
+            )
+        lot = _extract_lottery(text)
+        if lot:
+            return ResolvedIntent(
+                kind="tool",
+                tool=LotteryToolName.GET_NUMBER_OCCURRENCES,
+                params={
+                    "lottery": lot,
+                    "number": number,
+                    "page": 1,
+                    "page_size": 50,
+                    "position": pos_filter,
+                    "position_scope": scope_used,
+                    "nlp_intent": "COUNT",
+                },
+                structured_type="lottery_result",
+            )
+        return ResolvedIntent(
+            kind="tool",
+            tool=LotteryToolName.COMPARE_LOTTERIES,
+            params={
+                "number": number,
+                "lotteries": list(DEFAULT_ALL_HISTORY_LOTTERIES),
+                "position": pos_filter,
+                "position_scope": scope_used,
+                "mode": "number_compare",
+                "all_historical": True,
+                "nlp_intent": "COUNT",
+            },
+            structured_type="lottery_comparison",
+        )
 
     # --- P1: compound / last-occurrence with default first position ---
     from app.lottery.ai.compound_occurrence import (
@@ -1097,16 +1194,22 @@ def resolve_intent(message: str, ctx: LotterySessionContext) -> ResolvedIntent:
         )
 
     # count occurrences: "cuántas veces salió el 01" — default first position
+    # Fase X: with number present, use full historical scope (no lottery/date clarify).
     if re.search(r"cu[aá]ntas?\s+veces|cuantas?\s+veces|cu[aá]ntas?\s+apariciones", text):
         from app.lottery.ai.compound_occurrence import resolve_effective_position
 
-        number = _extract_number(raw) or (ctx.last_numbers[0] if ctx.last_numbers else None)
+        number = _extract_number(raw) or (
+            None if nlp.intent == "COUNT" and nlp.entities.get("numbers")
+            else (ctx.last_numbers[0] if ctx.last_numbers and nlp.inherit_context else None)
+        )
+        if not number and nlp.entities.get("numbers"):
+            number = str(nlp.entities["numbers"][0])
         pos_filter, scope_used, needs_ask = resolve_effective_position(
             raw,
             pref_scope=getattr(ctx, "default_number_position_scope", None),
             pref_primary=int(getattr(ctx, "default_primary_position", None) or 1),
         )
-        if needs_ask:
+        if needs_ask and not number:
             return ResolvedIntent(
                 kind="clarify",
                 clarify_message="¿Cuento apariciones en primera posición o en cualquier posición?",
@@ -1116,31 +1219,42 @@ def resolve_intent(message: str, ctx: LotterySessionContext) -> ResolvedIntent:
         if not number:
             return ResolvedIntent(
                 kind="clarify",
-                clarify_message="¿Qué número quieres contar? También indica la lotería si aún no la mencionaste.",
+                clarify_message="¿Qué número quieres contar?",
                 structured_type="lottery_ambiguity",
+                params={"pending_slots": ["number"], "nlp_intent": "COUNT"},
             )
-        if not lottery:
+        lottery = _extract_lottery(text) or (
+            ctx.last_lottery if nlp.inherit_context and not nlp.entities.get("numbers") else None
+        )
+        if lottery:
             return ResolvedIntent(
-                kind="clarify",
-                clarify_message=(
-                    f"¿En cuál lotería quieres contar las apariciones del {number}? "
-                    "Puedo revisarlo en una específica o en todas las disponibles."
-                ),
-                structured_type="lottery_ambiguity",
-                params={"number": number, "position": pos_filter, "pending_slots": ["lottery"]},
+                kind="tool",
+                tool=LotteryToolName.GET_NUMBER_OCCURRENCES,
+                params={
+                    "lottery": lottery,
+                    "number": number,
+                    "page": 1,
+                    "page_size": 50,
+                    "position": pos_filter,
+                    "position_scope": scope_used,
+                    "nlp_intent": "COUNT",
+                },
+                structured_type="lottery_result",
             )
+        # Full history across featured lotteries — never ask lottery/date
         return ResolvedIntent(
             kind="tool",
-            tool=LotteryToolName.GET_NUMBER_OCCURRENCES,
+            tool=LotteryToolName.COMPARE_LOTTERIES,
             params={
-                "lottery": lottery,
                 "number": number,
-                "page": 1,
-                "page_size": 50,
+                "lotteries": list(DEFAULT_ALL_HISTORY_LOTTERIES),
                 "position": pos_filter,
                 "position_scope": scope_used,
+                "mode": "number_compare",
+                "all_historical": True,
+                "nlp_intent": "COUNT",
             },
-            structured_type="lottery_result",
+            structured_type="lottery_comparison",
         )
 
     # last occurrence (legacy explicit phrases — also covered earlier)

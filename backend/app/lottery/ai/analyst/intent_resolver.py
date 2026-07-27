@@ -66,12 +66,12 @@ class IntentResolver:
         re.I,
     )
     _LAST_TIME = re.compile(
-        r"\b(la\s+[uú]ltima(\s+vez)?|[uú]ltima\s+aparici[oó]n|"
+        r"\b(la\s+[uú]ltima(\s+vez)?|[uú]ltima\s+(vez|aparici[oó]n)|"
         r"cu[aá]l\s+fue\s+la\s+[uú]ltima|cu[aá]ndo\s+sali[oó]\s+[uú]ltima)\b",
         re.I,
     )
     _FIRST_TIME = re.compile(
-        r"\b(la\s+primera(\s+vez)?|primera\s+aparici[oó]n|"
+        r"\b(la\s+primera(\s+vez)?|primera\s+(vez|aparici[oó]n)|"
         r"cu[aá]l\s+fue\s+la\s+primera)\b",
         re.I,
     )
@@ -286,9 +286,19 @@ class IntentResolver:
             ):
                 out["lotteries"] = list(state.active_lotteries)
 
-        # Bare follow-ups with no number → inherit active number
+        # Bare follow-ups with no number → inherit ONLY with explicit reference (Fase X)
+        from app.lottery.ai.nlp_stability import is_complete_standalone, is_explicit_follow_up
+
         num = _extract_number(raw)
-        if not num and not out.get("numbers") and state.active_numbers:
+        if is_complete_standalone(raw):
+            out["inherit_active_number"] = False
+            out["resolved_refs"].append("standalone_no_inherit")
+        elif (
+            not num
+            and not out.get("numbers")
+            and state.active_numbers
+            and is_explicit_follow_up(raw)
+        ):
             low = _norm(raw)
             if any(
                 k in low
@@ -326,6 +336,6 @@ class IntentResolver:
             ):
                 out["numbers"] = list(state.active_numbers)
                 out["inherit_active_number"] = True
-                out["resolved_refs"].append("inherit_active")
+                out["resolved_refs"].append("inherit_active_explicit")
 
         return out

@@ -147,8 +147,14 @@ class LotteryChatService:
         return session
 
     async def clear_context(self, session_id: uuid.UUID) -> LotterySessionContext:
+        """Fase X — full conversational reset; keep message history only."""
         session = await self.get_session(session_id)
-        session.context = {"conversation_v4": ConversationState().to_store()}
+        fresh = ConversationState()
+        session.context = {
+            "conversation_v4": fresh.to_store(),
+            "nlp_reset": True,
+            "reset_reason": "clear_context",
+        }
         await self.db.flush()
         return LotterySessionContext()
 
@@ -208,6 +214,46 @@ class LotteryChatService:
 
         understanding, state = understand(content, state)
 
+        # Fase X — "nueva conversación" phrase resets filters/pending (history kept)
+        if re.search(r"^\s*nueva\s+conversaci[oó]n\s*$", content or "", re.I):
+            state = ConversationState(
+                default_number_position_scope=state.default_number_position_scope,
+                default_primary_position=state.default_primary_position,
+            )
+            final_text = (
+                "Listo. Empezamos una conversación nueva. "
+                "Conservo el historial de mensajes, pero reinicié filtros, "
+                "aclaraciones e investigación activa."
+            )
+            session.context = {
+                **(session.context or {}),
+                "conversation_v4": state.to_store(),
+            }
+            asst = LotteryChatMessage(
+                session_id=session.id,
+                role="assistant",
+                content=final_text,
+                tool_name="chat_reset",
+                tool_payload={"nlp_intent": "GENERAL_CHAT", "reset": True},
+            )
+            self.db.add(asst)
+            await self.db.flush()
+            return {
+                "message": {
+                    "id": str(asst.id),
+                    "role": "assistant",
+                    "content": final_text,
+                    "structured_content": None,
+                    "tool_trace": [],
+                    "created_at": asst.created_at.isoformat() if asst.created_at else None,
+                },
+                "user_message_id": str(user_msg.id),
+                "context": session.context,
+                "active_context": {},
+                "suggestions": self._suggestions(ctx, "chat", state=state),
+                "intent": "general_chat",
+            }
+
         # Fase A — Intent Resolver + Conversation Brain
         resolution = IntentResolver.resolve(content, state)
         brain = ConversationBrain(state)
@@ -221,6 +267,48 @@ class LotteryChatService:
                     understanding.needs_clarification = False
                     understanding.clarification_question = None
         analyst_cfg = await self._analyst_runtime_config()
+
+        # Fase X — conversational intents never open research/tools
+        if understanding.intent in {"greeting", "general_chat", "help"} or (
+            (understanding.params or {}).get("run_tools") is False
+        ):
+            reply = (
+                (understanding.params or {}).get("conversational_reply")
+                or understanding.clarification_question
+                or "¿En qué puedo ayudarte con el histórico de loterías?"
+            )
+            session.context = {
+                **(session.context or {}),
+                "conversation_v4": state.to_store(),
+            }
+            asst = LotteryChatMessage(
+                session_id=session.id,
+                role="assistant",
+                content=reply,
+                tool_name="chat",
+                tool_payload={
+                    "nlp_intent": (understanding.params or {}).get("nlp_intent"),
+                    "decision_log": (understanding.params or {}).get("decision_log"),
+                },
+            )
+            self.db.add(asst)
+            await self.db.flush()
+            return {
+                "message": {
+                    "id": str(asst.id),
+                    "role": "assistant",
+                    "content": reply,
+                    "structured_content": None,
+                    "tool_trace": [],
+                    "created_at": asst.created_at.isoformat() if asst.created_at else None,
+                },
+                "user_message_id": str(user_msg.id),
+                "context": session.context,
+                "active_context": {},
+                "suggestions": self._suggestions(ctx, "chat", state=state),
+                "intent": understanding.intent,
+            }
+
         research_plan = ResearchPlanner.plan(
             message=content,
             understanding=understanding,

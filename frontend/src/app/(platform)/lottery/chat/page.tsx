@@ -589,7 +589,7 @@ export default function LotteryChatPage() {
               ))}
               {loading && (
                 <p className="animate-pulse text-xs text-muted-foreground">
-                  Estoy investigando…
+                  Pensando…
                 </p>
               )}
               <div ref={bottomRef} />

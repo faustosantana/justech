@@ -325,11 +325,109 @@ def resolve_intent(message: str, ctx: LotterySessionContext) -> ResolvedIntent:
             structured_type=st,
         )
 
-    # Motor de Relaciones Numéricas (antes del "analiza el N" genérico).
-    # Incluye "Analiza el N en Leidsa y Loteka" sin K explícito → clarify occurrence_limit
-    # (nunca caer al catch-all de "fecha exacta").
-    # También acepta "predicción del N" / "predice compañeros" como señal histórica NR
-    # (no es promesa de acierto; el motor calcula, Huawei interpreta).
+    # Follow-ups over complete-analysis memory (no re-ask when context exists).
+    store = ctx.to_store() if hasattr(ctx, "to_store") else {}
+    last_ca = dict(getattr(ctx, "last_analysis", None) or {})
+    if not last_ca and isinstance(store, dict):
+        v4 = store.get("conversation_v4") if isinstance(store.get("conversation_v4"), dict) else {}
+        last_ca = dict(v4.get("last_analysis") or {})
+    primary_cand = None
+    try:
+        primary_cand = int(
+            (last_ca or {}).get("primary")
+            or getattr(ctx, "current_primary_candidate", None)
+            or 0
+        ) or None
+    except (TypeError, ValueError):
+        primary_cand = None
+    observed_mem = None
+    try:
+        observed_mem = int(
+            (last_ca or {}).get("observed")
+            or (ctx.last_numbers[0] if ctx.last_numbers else 0)
+        ) or None
+    except (TypeError, ValueError, IndexError):
+        observed_mem = None
+
+    if primary_cand and re.search(
+        r"por\s*qu[eé]\s+no|porqu[eé]\s+no|y\s+no\s+el|frente\s+al?|compar(a|alo|arlo)\s+con",
+        text,
+        re.I,
+    ):
+        rival = _extract_number(raw)
+        if rival or primary_cand:
+            return ResolvedIntent(
+                kind="tool",
+                tool=LotteryToolName.RUN_COMPLETE_ANALYSIS,
+                params={
+                    "observed_number": observed_mem or primary_cand,
+                    "number": str(observed_mem or primary_cand),
+                    "confirmer": (last_ca or {}).get("confirmer"),
+                    "date": (last_ca or {}).get("date") or store.get("base_date"),
+                    "lottery": (last_ca or {}).get("lottery") or ctx.last_lottery,
+                    "compare_with": int(rival) if rival else 7,
+                    "include_historical": True,
+                    "follow_up": "compare_rival",
+                },
+                structured_type="lottery_complete_analysis",
+            )
+
+    if (primary_cand or observed_mem) and re.search(
+        r"hist[oó]rico|casos\s+equivalentes|cu[aá]ntas\s+veces|d\+7|d\+3|d\+1|"
+        r"comport[oó]|evidencia\s+hist|últimos\s+casos|ultimos\s+casos",
+        text,
+        re.I,
+    ):
+        return ResolvedIntent(
+            kind="tool",
+            tool=LotteryToolName.RUN_COMPLETE_ANALYSIS,
+            params={
+                "observed_number": observed_mem or primary_cand,
+                "number": str(observed_mem or primary_cand),
+                "confirmer": (last_ca or {}).get("confirmer"),
+                "date": (last_ca or {}).get("date") or store.get("base_date"),
+                "lottery": (last_ca or {}).get("lottery") or ctx.last_lottery,
+                "include_historical": True,
+                "follow_up": "historical",
+            },
+            structured_type="lottery_complete_analysis",
+        )
+
+    if (primary_cand or observed_mem) and re.search(
+        r"m[aá]s\s+sencillo|expl[ií]ca(me)?\s+(eso|eso\s+m[aá]s)|"
+        r"en\s+simple|res[uú]me(lo|me)|cu[aá]l\s+fue\s+el\s+resultado|"
+        r"por\s*qu[eé]\s+el\s+\d+|explicar\s+tabla\s*1|explicar\s+tabla\s*2",
+        text,
+        re.I,
+    ):
+        return ResolvedIntent(
+            kind="tool",
+            tool=LotteryToolName.RUN_COMPLETE_ANALYSIS,
+            params={
+                "observed_number": observed_mem or primary_cand,
+                "number": str(observed_mem or primary_cand),
+                "confirmer": (last_ca or {}).get("confirmer"),
+                "date": (last_ca or {}).get("date") or store.get("base_date"),
+                "lottery": (last_ca or {}).get("lottery") or ctx.last_lottery,
+                "include_historical": True,
+                "follow_up": "explain_simple",
+            },
+            structured_type="lottery_complete_analysis",
+        )
+
+    # Motor de Relaciones Numéricas / Análisis completo.
+    # "Analiza el N" → análisis completo (Tabla 1/2 + mismo día + histórico).
+    # Solo exige occurrence_limit cuando el usuario pide explícitamente ocurrencias/veces.
+    _nr_occurrence_mode = bool(
+        re.search(
+            r"([uú]ltimas?\s+\d+\s+veces?)|"
+            r"(todas\s+(las\s+)?(ocurrencias|veces|apariciones))|"
+            r"(veces?\s+que\s+sali)|"
+            r"(muestr(a|ame)\s+todas\s+las\s+ocurrencias)",
+            text,
+            re.I,
+        )
+    )
     _nr_signals = bool(
         re.search(
             r"compa[nñ]eros?|"
@@ -342,10 +440,6 @@ def resolve_intent(message: str, ctx: LotterySessionContext) -> ResolvedIntent:
             r"predice\s+(los\s+)?(compa|n[uú]meros?)|"
             r"n[uú]meros?\s+m[aá]s\s+fuertes|"
             r"despu[eé]s\s+de\s+salir\s+(el\s+)?\d+|"
-            r"analiz(a|ar|ame|emos).{0,80}([uú]ltimas?\s+\d+\s+veces?|veces?\s+que\s+sali|"
-            r"todas\s+(las\s+)?(ocurrencias|veces|apariciones))|"
-            r"busc(a|ar).{0,40}([uú]ltimas?\s+\d+\s+veces?|veces?\s+que\s+sali)|"
-            r"muestr(a|ame)\s+todas\s+las\s+ocurrencias|"
             r"cuando\s+sale\s+el\s+\d+",
             text,
             re.I,
@@ -353,7 +447,8 @@ def resolve_intent(message: str, ctx: LotterySessionContext) -> ResolvedIntent:
     )
     _analiza_observed = bool(
         re.search(
-            r"analiz(a|ar|ame|emos)\s+(el\s+)?\d+|analiz(a|ar)\s+el\s+n[uú]mero",
+            r"analiz(a|ar|ame|emos)\s+(el\s+)?\d+|analiz(a|ar)\s+el\s+n[uú]mero|"
+            r"analiz(a|ar|ame)\s+ese\s+n[uú]mero",
             text,
             re.I,
         )
@@ -375,8 +470,10 @@ def resolve_intent(message: str, ctx: LotterySessionContext) -> ResolvedIntent:
 
     if _nr_signals or _analiza_observed:
         number = _extract_number(raw) or (ctx.last_numbers[0] if ctx.last_numbers else None)
+        # "ese número" → memoria
+        if not number and re.search(r"ese\s+n[uú]mero|el\s+mismo", text, re.I):
+            number = ctx.last_numbers[0] if ctx.last_numbers else None
         lotteries = _extract_lotteries(text)
-        # "en todas las loterías (seleccionadas)" → contexto de sesión, sin inventar.
         if re.search(
             r"todas\s+las\s+loter[ií]as(\s+seleccionadas)?|"
             r"todas\s+las\s+seleccionadas",
@@ -398,12 +495,9 @@ def resolve_intent(message: str, ctx: LotterySessionContext) -> ResolvedIntent:
         if not number:
             return ResolvedIntent(
                 kind="clarify",
-                clarify_message=(
-                    "¿Qué número observado (1–100) quieres analizar con el "
-                    "Motor de Relaciones Numéricas?"
-                ),
+                clarify_message="¿Qué número quieres que analice?",
                 structured_type="lottery_ambiguity",
-                params={"pending_slots": ["number", "lottery", "occurrence_limit"]},
+                params={"pending_slots": ["number"]},
             )
         try:
             n_int = int(str(number).lstrip("0") or "0")
@@ -412,40 +506,66 @@ def resolve_intent(message: str, ctx: LotterySessionContext) -> ResolvedIntent:
         if n_int < 1 or n_int > 100:
             return ResolvedIntent(
                 kind="clarify",
-                clarify_message="El número observado debe estar entre 1 y 100.",
+                clarify_message="El número debe estar entre 1 y 100.",
                 structured_type="lottery_ambiguity",
                 params={"pending_slots": ["number"]},
             )
-        if not lotteries:
+        # Confirmador opcional: "con 14" / segundo número
+        confirmer = None
+        m_con = re.search(r"\bcon\s+(el\s+)?(\d{1,3})\b", text, re.I)
+        if m_con:
+            try:
+                confirmer = int(m_con.group(2))
+            except ValueError:
+                confirmer = None
+        nums_all = re.findall(r"\b(\d{1,3})\b", text)
+        if confirmer is None and len(nums_all) >= 2:
+            try:
+                a, b = int(nums_all[0]), int(nums_all[1])
+                if a == n_int and 1 <= b <= 100:
+                    confirmer = b
+            except ValueError:
+                pass
+        # Fecha del contexto o mencionada
+        date_s = store.get("base_date") if isinstance(store, dict) else None
+        if hasattr(ctx, "base_date") and ctx.base_date:
+            date_s = ctx.base_date
+
+        # Análisis completo por defecto (conversacional) — sin preguntar lotería/K.
+        if _analiza_observed and not _nr_occurrence_mode:
             return ResolvedIntent(
-                kind="clarify",
-                clarify_message=(
-                    f"Para analizar el {n_int} con relaciones numéricas, "
-                    "¿en qué lotería o loterías? (ej. Leidsa, Loteka). "
-                    "No invento loterías."
-                ),
-                structured_type="lottery_ambiguity",
+                kind="tool",
+                tool=LotteryToolName.RUN_COMPLETE_ANALYSIS,
                 params={
-                    "number": str(n_int),
                     "observed_number": n_int,
-                    "pending_slots": ["lottery", "occurrence_limit"],
+                    "number": str(n_int),
+                    "confirmer": confirmer,
+                    "date": date_s,
+                    "lottery": lotteries[0] if lotteries else ctx.last_lottery,
+                    "include_historical": True,
+                    "historical_period": "all",
                 },
+                structured_type="lottery_complete_analysis",
             )
+
+        # Modo ocurrencias NR: defaults sensatos (10 + lotería de contexto o featured).
+        if not lotteries:
+            lotteries = [ctx.last_lottery] if ctx.last_lottery else []
         if not limit_params:
+            limit_params = {"occurrence_limit_mode": "last_k", "occurrence_limit_k": 10}
+        if not lotteries:
+            # Sin lotería: usar análisis completo en vez de wizard.
             return ResolvedIntent(
-                kind="clarify",
-                clarify_message=(
-                    f"¿Cuántas últimas ocurrencias del {n_int} uso en "
-                    f"{', '.join(lotteries)}? Elige explícitamente: 5, 10, 20 o todas. "
-                    "No hay un valor por defecto oculto."
-                ),
-                structured_type="lottery_ambiguity",
+                kind="tool",
+                tool=LotteryToolName.RUN_COMPLETE_ANALYSIS,
                 params={
-                    "number": str(n_int),
                     "observed_number": n_int,
-                    "lotteries": lotteries,
-                    "pending_slots": ["occurrence_limit"],
+                    "number": str(n_int),
+                    "confirmer": confirmer,
+                    "date": date_s,
+                    "include_historical": True,
                 },
+                structured_type="lottery_complete_analysis",
             )
         params: dict[str, Any] = {
             "observed_number": n_int,

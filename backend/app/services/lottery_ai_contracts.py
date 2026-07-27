@@ -53,6 +53,7 @@ class LotteryToolName(str, Enum):
     GET_LATEST_AVAILABLE_DATE = "lottery_get_latest_available_date"
     EXPLAIN_ANALYSIS_METHOD = "lottery_explain_analysis_method"
     ANALYZE_NUMERIC_RELATIONS = "lottery_analyze_numeric_relations"
+    RUN_COMPLETE_ANALYSIS = "lottery_run_complete_analysis"
     HISTORICAL_RELATION_CONDITIONS = "lottery_historical_relation_conditions"
     CANDIDATE_RESPONSE_SUMMARY = "lottery_candidate_response_summary"
     CONFIRMER_COMBINATIONS = "lottery_confirmer_combinations"
@@ -105,6 +106,7 @@ TOOL_PERMISSIONS: dict[LotteryToolName, tuple[str, ...]] = {
     LotteryToolName.GET_LATEST_AVAILABLE_DATE: ("lottery.access", "lottery.search"),
     LotteryToolName.EXPLAIN_ANALYSIS_METHOD: ("lottery.access", "lottery.statistics"),
     LotteryToolName.ANALYZE_NUMERIC_RELATIONS: ("lottery.statistics", "lottery.search"),
+    LotteryToolName.RUN_COMPLETE_ANALYSIS: ("lottery.statistics", "lottery.search", "lottery.chat"),
     LotteryToolName.HISTORICAL_RELATION_CONDITIONS: ("lottery.statistics", "lottery.search"),
     LotteryToolName.CANDIDATE_RESPONSE_SUMMARY: ("lottery.statistics", "lottery.search"),
     LotteryToolName.CONFIRMER_COMBINATIONS: ("lottery.statistics", "lottery.search"),
@@ -249,6 +251,14 @@ LOTTERY_TOOL_CATALOG: list[LotteryToolContract] = [
             "No predice ni recomienda apuestas."
         ),
         permissions=TOOL_PERMISSIONS[LotteryToolName.ANALYZE_NUMERIC_RELATIONS],
+    ),
+    LotteryToolContract(
+        name=LotteryToolName.RUN_COMPLETE_ANALYSIS,
+        description=(
+            "Análisis completo determinístico: Tabla 1, Tabla 2, cruce del mismo día "
+            "y evidencia histórica equivalente. No recalcula fórmulas ni inventa datos."
+        ),
+        permissions=TOOL_PERMISSIONS[LotteryToolName.RUN_COMPLETE_ANALYSIS],
     ),
     LotteryToolContract(
         name=LotteryToolName.HISTORICAL_RELATION_CONDITIONS,

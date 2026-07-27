@@ -340,19 +340,79 @@ class LotteryAiAdminService:
                 checksum=_checksum(p.body),
                 published_at=datetime.now(timezone.utc) if p.status == "active" else None,
             )
-            # Keep v2 active in DB seed
-            if p.version == "v2":
+            # Prefer conversational v4 as active seed; keep older as archived/draft.
+            if p.version == "v4":
                 row.status = "active"
                 row.published_at = datetime.now(timezone.utc)
             elif p.version == "v3":
                 row.status = "draft"
+            elif p.version == "v2":
+                row.status = "archived"
             else:
                 row.status = "archived"
             self.db.add(row)
             existing_versions.add(p.version)
 
+        # Ensure v4 exists even if registry was updated after initial seed.
+        v4_code = prompt_mod._REGISTRY.get("v4")
+        if v4_code and "v4" not in existing_versions:
+            self.db.add(
+                LotteryAiPromptVersion(
+                    id=uuid.uuid4(),
+                    tenant_id=None,
+                    name=v4_code.name,
+                    version="v4",
+                    status="active",
+                    description=v4_code.description,
+                    body=v4_code.body,
+                    blocks={"identidad": (v4_code.body or "")[:800]},
+                    changelog=v4_code.changelog,
+                    recommended_model=v4_code.recommended_model,
+                    temperature=v4_code.temperature,
+                    max_tokens=v4_code.max_tokens,
+                    variables=v4_code.variables,
+                    tags=["system", "seed", "v4"],
+                    checksum=_checksum(v4_code.body),
+                    published_at=datetime.now(timezone.utc),
+                )
+            )
+            existing_versions.add("v4")
+
+        # Promote conversational v4: archive prior active rows and activate v4 body.
+        if v4_code:
+            rows = (
+                await self.db.execute(select(LotteryAiPromptVersion))
+            ).scalars().all()
+            v4_row = next((r for r in rows if r.version == "v4"), None)
+            if v4_row:
+                for r in rows:
+                    if r.version != "v4" and r.status == "active":
+                        r.status = "archived"
+                v4_row.status = "active"
+                v4_row.body = v4_code.body
+                v4_row.checksum = _checksum(v4_code.body)
+                v4_row.description = v4_code.description
+                v4_row.changelog = v4_code.changelog
+                v4_row.temperature = v4_code.temperature
+                v4_row.max_tokens = v4_code.max_tokens
+                v4_row.variables = v4_code.variables
+                v4_row.published_at = v4_row.published_at or datetime.now(timezone.utc)
+                v4_row.updated_at = datetime.now(timezone.utc)
+                prompt_mod.set_active_from_db(
+                    name=v4_row.name,
+                    version=v4_row.version,
+                    status="active",
+                    description=v4_row.description or "",
+                    body=v4_row.body or "",
+                    recommended_model=v4_row.recommended_model or "DeepSeek-V3.2",
+                    temperature=float(v4_row.temperature or 0.25),
+                    max_tokens=int(v4_row.max_tokens or 900),
+                    changelog=v4_row.changelog or "",
+                    variables=list(v4_row.variables or []),
+                )
+
         # Hotfix active v2 body from code registry when position/compound rules missing
-        # (keeps version=v2 and status=active; no publish/republish).
+        # (legacy; only if v2 somehow remains the sole active row).
         v2_code = prompt_mod._REGISTRY.get("v2")
         if v2_code and "POSICIÓN PREDETERMINADA" in (v2_code.body or ""):
             v2_row = (

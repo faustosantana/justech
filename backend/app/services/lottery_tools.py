@@ -880,6 +880,9 @@ class LotteryToolExecutor:
         if tool == LotteryToolName.ANALYZE_NUMERIC_RELATIONS:
             return await self._analyze_numeric_relations(params)
 
+        if tool == LotteryToolName.RUN_COMPLETE_ANALYSIS:
+            return await self._run_complete_analysis(params)
+
         if tool in {
             LotteryToolName.HISTORICAL_RELATION_CONDITIONS,
             LotteryToolName.CANDIDATE_RESPONSE_SUMMARY,
@@ -1019,6 +1022,265 @@ class LotteryToolExecutor:
                 ),
             },
         )
+
+    async def _run_complete_analysis(
+        self, params: dict[str, Any]
+    ) -> tuple[Any, int | None, dict[str, Any]]:
+        """Complete Analysis Engine + historical evidence (explanatory layer)."""
+        from app.lottery.numeric_relations.active_scope import get_active_analysis_lotteries
+        from app.lottery.numeric_relations.analysis_engine.complete_analysis_service import (
+            run_complete_analysis,
+        )
+        from app.lottery.numeric_relations.analysis_engine.historical_relation_evidence import (
+            flat_rows_from_draw_refs,
+        )
+        from app.lottery.numeric_relations.historical.db_universe import load_universe_from_db
+
+        raw_n = params.get("observed_number", params.get("number"))
+        try:
+            observed = int(str(raw_n).lstrip("0") or "0")
+        except (TypeError, ValueError) as exc:
+            raise LotteryQueryError(
+                "NUMBER_INVALID", "El número debe estar entre 1 y 100"
+            ) from exc
+        if observed < 1 or observed > 100:
+            raise LotteryQueryError("NUMBER_INVALID", "El número debe estar entre 1 y 100")
+
+        confirmer = params.get("confirmer") or params.get("same_day_confirmer")
+        confirmer_i = None
+        if confirmer is not None:
+            try:
+                confirmer_i = int(str(confirmer).lstrip("0") or "0")
+            except (TypeError, ValueError):
+                confirmer_i = None
+            if confirmer_i is not None and not (1 <= confirmer_i <= 100):
+                confirmer_i = None
+
+        draw_date = params.get("date") or params.get("analysis_date")
+        date_s = str(draw_date)[:10] if draw_date else None
+        lottery_hint = params.get("lottery")
+        # If the user did not pass a date, resolve last occurrence so same-day
+        # confirmation can run (without asking for a form field).
+        if not date_s:
+            try:
+                from app.services.lottery_query_service import LotteryQueryService
+
+                q = LotteryQueryService(self.db)
+                lots_try = [lottery_hint] if lottery_hint else []
+                if not lots_try:
+                    active = await get_active_analysis_lotteries(self.db)
+                    lots_try = [x.name for x in active[:12]]
+                best = None
+                for lot_name in lots_try:
+                    if not lot_name:
+                        continue
+                    try:
+                        res = await q.by_number(
+                            str(lot_name),
+                            str(observed).zfill(2),
+                            page=1,
+                            page_size=1,
+                            order="desc",
+                        )
+                        items = getattr(res, "items", None) or getattr(res, "occurrences", None) or []
+                        if not items:
+                            continue
+                        first = items[0]
+                        d = getattr(first, "draw_date", None) or (
+                            first.get("draw_date") if isinstance(first, dict) else None
+                        )
+                        if not d:
+                            continue
+                        iso = str(d)[:10]
+                        if best is None or iso > best[0]:
+                            best = (iso, str(lot_name))
+                    except Exception:
+                        continue
+                if best:
+                    date_s = best[0]
+                    if not lottery_hint:
+                        lottery_hint = best[1]
+            except Exception:
+                pass
+
+        period = str(params.get("historical_period") or "all")
+        include_hist = bool(params.get("include_historical", True))
+
+        hist_rows: list[dict[str, Any]] = []
+        if include_hist:
+            try:
+                lots = await get_active_analysis_lotteries(self.db)
+                ids = [x.id for x in lots]
+                if ids:
+                    universe, _ = await load_universe_from_db(
+                        self.db,
+                        lottery_ids=ids,
+                        date_from=None,
+                        date_to=None,
+                        max_draws=80000,
+                    )
+                    hist_rows = flat_rows_from_draw_refs(list(universe._all))
+            except Exception:
+                hist_rows = []
+
+        payload_req: dict[str, Any] = {
+            "numbers": [observed],
+            "same_day_confirmers": [confirmer_i] if confirmer_i else [],
+            "mode": "socio",
+            "derivation_depth": 0,
+            "create_signals": False,
+            "explanation_level": "analitico",
+            "date": date_s,
+            "historical_period": period,
+            "include_historical": include_hist,
+        }
+        if hist_rows:
+            payload_req["historical_draws"] = hist_rows
+
+        if date_s:
+            try:
+                from datetime import date as date_cls
+
+                from app.lottery.numeric_relations.analysis_engine.same_day_context import (
+                    build_same_day_context,
+                )
+                from app.services.lottery_result_service import LotteryResultService
+
+                rows = await LotteryResultService(self.db).get_by_date(
+                    date_cls.fromisoformat(date_s), featured_only=True
+                )
+                ctx = build_same_day_context(
+                    rows,
+                    draw_date=date_s,
+                    positions=["first"],
+                    exclude_numbers=[observed],
+                )
+                payload_req["same_day_context"] = ctx.to_dict()
+                merged = list(payload_req.get("same_day_confirmers") or [])
+                seen = {observed}
+                for n in merged + list(ctx.confirmer_numbers):
+                    v = int(n)
+                    if v in seen:
+                        continue
+                    seen.add(v)
+                    merged.append(v)
+                payload_req["same_day_confirmers"] = merged
+            except Exception:
+                pass
+
+        result = run_complete_analysis(payload_req, persist=False)
+        data = result.to_dict()
+        primary = data.get("primary_signal") or {}
+        hist = data.get("historical_evidence") or {}
+        narr = (data.get("explanation") or {}) if isinstance(data.get("explanation"), dict) else {}
+        hist_narr = hist.get("narrative") or {}
+        metrics = hist.get("metrics") or {}
+
+        user_facing = {
+            "type": "lottery_complete_analysis",
+            "observed_number": observed,
+            "confirmer": confirmer_i,
+            "date": date_s,
+            "lottery": lottery_hint or params.get("lottery"),
+            "primary": {
+                "number": primary.get("number"),
+                "reason": primary.get("reason")
+                or hist_narr.get("conclusion")
+                or narr.get("summary"),
+            },
+            "alternatives": [
+                {"number": a.get("number")}
+                for a in (data.get("alternatives") or [])[:6]
+                if a.get("number") is not None
+            ],
+            "table1_sources": primary.get("table1_sources") or [],
+            "table2_confirmers": primary.get("table2_confirmers") or [],
+            "same_day_cross": [
+                {
+                    "origen": c.get("observed_x"),
+                    "companero": c.get("companion_c"),
+                    "confirmador": c.get("confirmer_y"),
+                    "loteria_origen": c.get("lottery_x"),
+                    "loteria_confirmador": c.get("lottery_y"),
+                }
+                for c in (data.get("same_day_cross") or [])[:8]
+            ],
+            "historical": {
+                "periodo": hist.get("period_label"),
+                "casos_equivalentes": metrics.get("exact_cases"),
+                "aciertos_exactos": metrics.get("exact_hits"),
+                "familia_tabla_1": metrics.get("t1_family_hits"),
+                "vecinos_tabla_2": metrics.get("t2_neighbor_hits"),
+                "d1": metrics.get("d1_hits"),
+                "d3": metrics.get("d3_hits"),
+                "d7": metrics.get("d7_hits"),
+                "resumen": hist_narr.get("historical_behavior")
+                or metrics.get("evidence_quantity_message"),
+            },
+            "comparison": hist.get("comparison") or hist_narr.get("comparison"),
+            "conclusion": hist_narr.get("conclusion") or narr.get("conclusion") or narr.get("summary"),
+            "warning": hist_narr.get("warning")
+            or "El histórico describe comportamientos anteriores y no garantiza repetición.",
+            "disclaimer": (
+                "Análisis estructural del motor determinístico. "
+                "No es predicción ni recomendación de apuestas."
+            ),
+        }
+        # Follow-up: compare primary vs rival without inventing engine scores.
+        rival = params.get("compare_with")
+        follow = params.get("follow_up")
+        if rival is not None:
+            try:
+                rival_i = int(str(rival).lstrip("0") or "0")
+            except (TypeError, ValueError):
+                rival_i = None
+            primary_n = (user_facing.get("primary") or {}).get("number")
+            if rival_i and primary_n is not None and int(rival_i) != int(primary_n):
+                alts = {int(a.get("number")) for a in user_facing.get("alternatives") or [] if a.get("number") is not None}
+                t1 = user_facing.get("table1_sources") or []
+                t2 = user_facing.get("table2_confirmers") or []
+                same = user_facing.get("same_day_cross") or []
+                why_primary = []
+                if t1:
+                    why_primary.append("tiene respaldo de Tabla 1")
+                if t2 or same:
+                    why_primary.append("tiene confirmación de Tabla 2 / cruce del mismo día")
+                why_primary.append("es el candidato principal del motor")
+                rival_bits = []
+                if rival_i in alts:
+                    rival_bits.append("aparece solo como alternativa")
+                else:
+                    rival_bits.append("no es el candidato principal")
+                if not t1:
+                    rival_bits.append("sin el mismo peso de Tabla 1 que el principal")
+                user_facing["rival_comparison"] = {
+                    "primary": int(primary_n),
+                    "rival": rival_i,
+                    "texto": (
+                        f"El {primary_n} supera al {rival_i} porque "
+                        + ", ".join(why_primary)
+                        + f". El {rival_i} "
+                        + " y ".join(rival_bits)
+                        + "."
+                    ),
+                }
+                if follow == "compare_rival":
+                    user_facing["conclusion"] = user_facing["rival_comparison"]["texto"]
+        if follow == "historical" and (user_facing.get("historical") or {}).get("resumen"):
+            user_facing["conclusion"] = user_facing["historical"]["resumen"]
+
+        return (
+            user_facing,
+            1 if primary.get("number") is not None else 0,
+            {
+                "semantics": "complete_analysis",
+                "observed_number": observed,
+                "primary": primary.get("number"),
+                "exact_historical_cases": metrics.get("exact_cases"),
+                "exact_hits": metrics.get("exact_hits"),
+            },
+        )
+
 
     async def _compare_number_periods(self, params: dict[str, Any]) -> tuple[Any, int | None, dict[str, Any]]:
         from datetime import timedelta

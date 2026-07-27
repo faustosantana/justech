@@ -13,6 +13,10 @@ class ChatSessionCreate(BaseModel):
     title: str | None = None
 
 
+class ChatSessionRename(BaseModel):
+    title: str = Field(min_length=1, max_length=120)
+
+
 class ChatSessionResponse(BaseModel):
     id: UUID
     title: str | None
@@ -49,6 +53,7 @@ class ChatSendResponse(BaseModel):
     message: dict[str, Any]
     user_message_id: str
     context: dict[str, Any]
+    active_context: dict[str, Any] | None = None
     suggestions: list[str] = Field(default_factory=list)
     synthesis_fallback: bool = False
     latency_ms: int = 0

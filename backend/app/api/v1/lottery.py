@@ -38,6 +38,7 @@ from app.schemas.lottery_chat import (
     ChatSendResponse,
     ChatSessionCreate,
     ChatSessionListResponse,
+    ChatSessionRename,
     ChatSessionResponse,
     SavedQueryListResponse,
     SavedQueryRename,
@@ -516,6 +517,20 @@ async def delete_chat_session(
     await svc.delete_session(session_id)
     await db.commit()
     return {"ok": True}
+
+
+@router.patch("/chat/sessions/{session_id}", response_model=ChatSessionResponse)
+async def rename_chat_session(
+    session_id: UUID,
+    body: ChatSessionRename,
+    db: DbSession,
+    user: CurrentUser,
+    _: Annotated[None, require_lottery_permission("lottery.chat")],
+) -> ChatSessionResponse:
+    svc = _make_chat(db, user)
+    session = await svc.rename_session(session_id, body.title)
+    await db.commit()
+    return _session_resp(session)
 
 
 @router.post("/chat/sessions/{session_id}/clear-context", response_model=ChatSessionResponse)

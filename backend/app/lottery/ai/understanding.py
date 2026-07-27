@@ -47,6 +47,9 @@ def _ctx_from_state(state: ConversationState) -> LotterySessionContext:
         last_to_date=(state.range_context or {}).get("to") if state.range_context else None,
         default_number_position_scope=state.default_number_position_scope or "first_position",
         default_primary_position=int(state.default_primary_position or 1),
+        last_analysis=dict(state.last_analysis or {}),
+        conversation_summary=state.conversation_summary,
+        current_primary_candidate=state.current_primary_candidate,
     )
 
 

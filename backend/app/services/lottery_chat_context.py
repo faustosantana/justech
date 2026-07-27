@@ -28,15 +28,36 @@ class LotterySessionContext(BaseModel):
     saved_query_id: str | None = None
     default_number_position_scope: str = "first_position"
     default_primary_position: int = 1
+    # Complete-analysis memory for conversational follow-ups
+    last_analysis: dict[str, Any] = Field(default_factory=dict)
+    conversation_summary: str | None = None
+    current_primary_candidate: int | None = None
 
     def to_store(self) -> dict[str, Any]:
-        return self.model_dump(mode="json")
+        data = self.model_dump(mode="json")
+        # Expose nested shape expected by intent follow-ups
+        data["conversation_v4"] = {
+            "last_analysis": self.last_analysis or {},
+            "conversation_summary": self.conversation_summary,
+            "current_primary_candidate": self.current_primary_candidate,
+        }
+        return data
 
     @classmethod
     def from_store(cls, data: dict[str, Any] | None) -> LotterySessionContext:
         if not data:
             return cls()
-        return cls.model_validate(data)
+        mapped = dict(data)
+        v4 = mapped.get("conversation_v4") if isinstance(mapped.get("conversation_v4"), dict) else {}
+        if not mapped.get("last_analysis") and isinstance(v4, dict):
+            mapped["last_analysis"] = v4.get("last_analysis") or {}
+        if mapped.get("conversation_summary") is None and isinstance(v4, dict):
+            mapped["conversation_summary"] = v4.get("conversation_summary")
+        if mapped.get("current_primary_candidate") is None and isinstance(v4, dict):
+            mapped["current_primary_candidate"] = v4.get("current_primary_candidate")
+        # Drop nested keys pydantic may reject if extra=forbid — model allows? default ignore? 
+        # BaseModel default is ignore extra in pydantic v2 with model_config
+        return cls.model_validate(mapped)
 
 
 def merge_context_after_tool(
@@ -69,6 +90,18 @@ def merge_context_after_tool(
         data["last_draw_count"] = params["count"]
     if params.get("number"):
         data["last_numbers"] = [str(params["number"])]
+    if params.get("observed_number") is not None:
+        data["last_numbers"] = [str(params["observed_number"])]
+    if result_summary and result_summary.get("primary") is not None:
+        data["current_primary_candidate"] = result_summary.get("primary")
+        data["last_analysis"] = {
+            "type": "complete_analysis",
+            "observed": result_summary.get("observed_number") or params.get("observed_number"),
+            "primary": result_summary.get("primary"),
+            "date": params.get("date"),
+            "lottery": params.get("lottery"),
+            "confirmer": params.get("confirmer"),
+        }
     if params.get("number_type"):
         data["last_number_type"] = params["number_type"]
     if params.get("position") is not None:

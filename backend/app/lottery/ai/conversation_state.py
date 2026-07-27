@@ -95,6 +95,12 @@ class ConversationState(BaseModel):
     last_analysis: dict[str, Any] = Field(default_factory=dict)
     last_user_reference: Optional[str] = None
     provider_trace: dict[str, Any] = Field(default_factory=dict)
+    conversation_summary: Optional[str] = None
+    active_date: Optional[str] = None
+    active_position: Optional[str] = None
+    current_primary_candidate: Optional[int] = None
+    current_alternatives: list[int] = Field(default_factory=list)
+    historical_summary: Optional[str] = None
 
     def to_store(self) -> dict[str, Any]:
         return self.model_dump(mode="json")

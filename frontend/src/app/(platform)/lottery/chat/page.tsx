@@ -1,6 +1,14 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+  type ReactNode,
+} from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 
@@ -8,7 +16,6 @@ import { LotteryStructuredRenderer } from "@/components/lottery/lottery-structur
 import { AppShell } from "@/components/layout/app-shell";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { ApiError, apiClient } from "@/lib/api";
 import { getAccessToken, getUserRole } from "@/lib/auth";
 import {
@@ -25,20 +32,18 @@ type UiMessage = {
   content: string;
   structured?: LotteryChatSendResponse["message"]["structured_content"];
   tool_trace?: LotteryChatSendResponse["message"]["tool_trace"];
-  analysis_params?: Record<string, unknown> | null;
 };
 
+type ActiveContext = NonNullable<LotteryChatSendResponse["active_context"]>;
+
 const STARTERS = [
-  "¿Cómo se comportó históricamente 35 + 14?",
-  "¿Por qué 54 tiene más fuerza que 07?",
-  "¿Cuántas veces salió 54 después de esa relación?",
-  "Muéstrame los últimos casos equivalentes.",
+  "Analiza el 35.",
+  "¿Cuáles son los resultados de hoy?",
+  "Ver loterías activas",
 ];
 
-const isAdminRole = (role: string | null | undefined) =>
-  Boolean(role && ["superadmin", "admin", "tenant_admin"].includes(role));
+const NEAR_BOTTOM_PX = 80;
 
-/** Lightweight markdown: bold, italics, lists, line breaks — no raw HTML. */
 function SimpleMarkdown({ text }: { text: string }) {
   const blocks = useMemo(() => text.split(/\n{2,}/), [text]);
   return (
@@ -106,36 +111,102 @@ function renderInline(line: string): ReactNode[] {
   return parts;
 }
 
+function formatSessionMeta(s: LotteryChatSession): string {
+  const ctx = s.context || {};
+  const v4 = (ctx.conversation_v4 as Record<string, unknown>) || {};
+  const la = (v4.last_analysis as Record<string, unknown>) || {};
+  const num = la.observed ?? (Array.isArray(ctx.last_numbers) ? ctx.last_numbers[0] : null);
+  const when = s.last_message_at || s.updated_at || s.created_at;
+  const dateBit = when
+    ? new Date(when).toLocaleDateString("es-DO", { day: "2-digit", month: "short" })
+    : "";
+  return [num != null ? `Nº ${num}` : null, dateBit].filter(Boolean).join(" · ");
+}
+
+function AnalysisCard({ structured }: { structured: UiMessage["structured"] }) {
+  if (!structured || structured.type !== "lottery_complete_analysis") return null;
+  const raw = structured.data;
+  const data = (raw && typeof raw === "object" ? raw : {}) as Record<string, unknown>;
+  const primary = (data.primary as { number?: number; reason?: string } | undefined) || {};
+  const hist = (data.historical as Record<string, unknown> | undefined) || {};
+  const why: string[] = [];
+  const t1 = (data.table1_sources as unknown[]) || [];
+  const t2 = (data.table2_confirmers as unknown[]) || [];
+  const same = (data.same_day_cross as Record<string, unknown>[]) || [];
+  if (t1.length) why.push(`Tabla 1 relaciona ${data.observed_number} con ${primary.number}.`);
+  if (t2.length) why.push(`Tabla 2 confirma ${primary.number} mediante ${t2.join(", ")}.`);
+  if (same[0]) {
+    why.push(
+      `Cruce del mismo día: ${same[0].origen} → ${same[0].companero} (confirmador ${same[0].confirmador}).`,
+    );
+  }
+  if (hist.casos_equivalentes != null) {
+    why.push(
+      `Histórico: ${hist.casos_equivalentes} casos equivalentes, ${hist.aciertos_exactos ?? "—"} aciertos exactos.`,
+    );
+  }
+  const rival = data.rival_comparison as { texto?: string } | undefined;
+  return (
+    <div className="mt-2 rounded-md border bg-background/70 p-3 text-xs text-muted-foreground">
+      <p>
+        <span className="font-medium text-foreground">Número analizado:</span>{" "}
+        {String(data.observed_number ?? "—")}
+      </p>
+      <p className="mt-1">
+        <span className="font-medium text-foreground">Resultado principal:</span>{" "}
+        {primary.number != null ? String(primary.number) : "—"}
+      </p>
+      {why.length > 0 && (
+        <div className="mt-2">
+          <p className="font-medium text-foreground">Por qué:</p>
+          <ul className="mt-1 list-disc space-y-0.5 pl-4">
+            {why.map((w) => (
+              <li key={w}>{w}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+      {rival?.texto && (
+        <p className="mt-2">
+          <span className="font-medium text-foreground">Comparación:</span> {rival.texto}
+        </p>
+      )}
+    </div>
+  );
+}
+
 export default function LotteryChatPage() {
   const router = useRouter();
   const search = useSearchParams();
-  const role = getUserRole();
-  const showTools = false; // diagnósticos solo con Modo desarrollador (admin AI); off por defecto
   const [sessions, setSessions] = useState<LotteryChatSession[]>([]);
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [messages, setMessages] = useState<UiMessage[]>([]);
   const [suggestions, setSuggestions] = useState<string[]>(STARTERS);
+  const [activeContext, setActiveContext] = useState<ActiveContext | null>(null);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [paramsOpen, setParamsOpen] = useState<Record<string, boolean>>({});
+  const [showJump, setShowJump] = useState(false);
+  const [stickToBottom, setStickToBottom] = useState(true);
+  const [renamingId, setRenamingId] = useState<string | null>(null);
+  const [renameValue, setRenameValue] = useState("");
+
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const bottomRef = useRef<HTMLDivElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const pendingScrollRef = useRef(false);
 
   useEffect(() => {
     const q = search.get("q") || "";
     const n = search.get("number") || "";
-    const lottery = search.get("lottery") || "";
-    const date = search.get("date") || "";
-    const highlight = search.get("highlight") || "";
     if (q) setInput(q);
-    const contextual = [
-      n ? `Explícame el análisis completo del ${n}.` : null,
-      n && highlight ? `Explícame por qué el sistema relaciona ${n} con ${highlight}.` : null,
-      n ? `Muéstrame el comportamiento histórico del ${n}.` : null,
-      lottery && date && n
-        ? `Usa el contexto ya calculado del ${n} en ${lottery} (${date}); no inventes relaciones.`
-        : null,
-    ].filter(Boolean) as string[];
-    if (contextual.length) setSuggestions(contextual);
+    if (n) {
+      setSuggestions([
+        `Analiza el ${n}.`,
+        `Explícame el análisis completo del ${n}.`,
+        `Muéstrame el comportamiento histórico del ${n}.`,
+      ]);
+    }
   }, [search]);
 
   const ensureAuth = useCallback(() => {
@@ -153,7 +224,28 @@ export default function LotteryChatPage() {
   const refreshSessions = useCallback(async () => {
     const res = await apiClient.listLotteryChatSessions();
     setSessions(res.items);
+    return res.items;
   }, []);
+
+  const applyContextFromSession = (s: LotteryChatSession | undefined) => {
+    if (!s) {
+      setActiveContext(null);
+      return;
+    }
+    const ctx = s.context || {};
+    const v4 = (ctx.conversation_v4 as Record<string, unknown>) || {};
+    const la = (v4.last_analysis as Record<string, unknown>) || {};
+    const nums = (v4.active_numbers as string[]) || (ctx.last_numbers as string[]) || [];
+    setActiveContext({
+      number: (la.observed as string | number) ?? nums[0] ?? null,
+      date: (la.date as string) || (v4.active_date as string) || null,
+      lottery: (la.lottery as string) || (ctx.last_lottery as string) || null,
+      primary_candidate:
+        (la.primary as number) ?? (v4.current_primary_candidate as number) ?? null,
+      alternatives: (v4.current_alternatives as number[]) || [],
+      summary: (v4.conversation_summary as string) || null,
+    });
+  };
 
   const loadMessages = useCallback(async (id: string) => {
     const res = await apiClient.listLotteryChatMessages(id);
@@ -164,9 +256,10 @@ export default function LotteryChatPage() {
         content: m.content,
         structured: (m.tool_payload?.structured_content as UiMessage["structured"]) || null,
         tool_trace: (m.tool_payload?.tool_trace as UiMessage["tool_trace"]) || [],
-        analysis_params: (m.tool_payload?.analysis_params as UiMessage["analysis_params"]) || null,
       })),
     );
+    pendingScrollRef.current = true;
+    setStickToBottom(true);
   }, []);
 
   const startSession = useCallback(async () => {
@@ -178,7 +271,9 @@ export default function LotteryChatPage() {
       setSessionId(s.id);
       setMessages([]);
       setSuggestions(STARTERS);
+      setActiveContext(null);
       await refreshSessions();
+      pendingScrollRef.current = true;
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "No se pudo crear la sesión");
     } finally {
@@ -190,38 +285,70 @@ export default function LotteryChatPage() {
     if (!ensureAuth()) return;
     void (async () => {
       try {
-        await refreshSessions();
+        const items = await refreshSessions();
+        if (items.length && !sessionId) {
+          const last = items[0];
+          setSessionId(last.id);
+          applyContextFromSession(last);
+          await loadMessages(last.id);
+        }
       } catch {
         /* ignore initial */
       }
     })();
-  }, [ensureAuth, refreshSessions]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- restore once on mount
+  }, [ensureAuth, refreshSessions, loadMessages]);
 
-  const copyText = async (text: string) => {
-    try {
-      await navigator.clipboard.writeText(text);
-    } catch {
-      /* ignore */
-    }
+  const scrollToBottom = useCallback((behavior: ScrollBehavior = "smooth") => {
+    const el = scrollRef.current;
+    if (!el) return;
+    el.scrollTo({ top: el.scrollHeight, behavior });
+    bottomRef.current?.scrollIntoView({ block: "end", behavior });
+    setShowJump(false);
+    setStickToBottom(true);
+  }, []);
+
+  useLayoutEffect(() => {
+    if (!stickToBottom && !pendingScrollRef.current) return;
+    const el = scrollRef.current;
+    if (!el) return;
+    el.scrollTop = el.scrollHeight;
+    pendingScrollRef.current = false;
+    setShowJump(false);
+  }, [messages, loading, stickToBottom]);
+
+  const onScrollPane = () => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const dist = el.scrollHeight - el.scrollTop - el.clientHeight;
+    const near = dist <= NEAR_BOTTOM_PX;
+    setStickToBottom(near);
+    setShowJump(!near && messages.length > 0);
   };
 
   const send = async (text: string) => {
-    if (!text.trim()) return;
+    const trimmed = text.trim();
+    if (!trimmed || loading) return;
     if (!ensureAuth()) return;
     setLoading(true);
     setError(null);
+    setStickToBottom(true);
+    pendingScrollRef.current = true;
+    const draft = trimmed;
     try {
       let sid = sessionId;
       if (!sid) {
-        const s = await apiClient.createLotteryChatSession(text.slice(0, 60));
+        const s = await apiClient.createLotteryChatSession(draft.slice(0, 60));
         sid = s.id;
         setSessionId(sid);
         await refreshSessions();
       }
-      setMessages((prev) => [...prev, { id: `u-${Date.now()}`, role: "user", content: text }]);
+      setMessages((prev) => [...prev, { id: `u-${Date.now()}`, role: "user", content: draft }]);
       setInput("");
-      const res = await apiClient.sendLotteryChatMessage(sid, text);
+      if (textareaRef.current) textareaRef.current.style.height = "auto";
+      const res = await apiClient.sendLotteryChatMessage(sid, draft);
       setSuggestions(res.suggestions?.length ? res.suggestions : STARTERS);
+      if (res.active_context) setActiveContext(res.active_context);
       setMessages((prev) => [
         ...prev,
         {
@@ -230,14 +357,11 @@ export default function LotteryChatPage() {
           content: res.message.content,
           structured: res.message.structured_content,
           tool_trace: res.message.tool_trace,
-          analysis_params:
-            (res.message as { analysis_params?: Record<string, unknown> }).analysis_params ||
-            (res.message.structured_content as { query?: Record<string, unknown> } | null)?.query ||
-            null,
         },
       ]);
       await refreshSessions();
     } catch (err) {
+      setInput(draft);
       setError(err instanceof ApiError ? err.message : "Error al enviar mensaje");
     } finally {
       setLoading(false);
@@ -247,15 +371,63 @@ export default function LotteryChatPage() {
   const onSelectSession = async (id: string) => {
     setSessionId(id);
     setError(null);
+    setStickToBottom(true);
+    pendingScrollRef.current = true;
     try {
+      const s = sessions.find((x) => x.id === id) || (await apiClient.getLotteryChatSession(id));
+      applyContextFromSession(s);
       await loadMessages(id);
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "No se pudo cargar el historial");
     }
   };
 
+  const clearContext = async () => {
+    if (!sessionId) return;
+    await apiClient.clearLotteryChatContext(sessionId);
+    setActiveContext(null);
+    setSuggestions(STARTERS);
+    await refreshSessions();
+  };
+
+  const deleteSession = async (id: string) => {
+    if (!window.confirm("¿Eliminar esta conversación?")) return;
+    await apiClient.deleteLotteryChatSession(id);
+    if (sessionId === id) {
+      setSessionId(null);
+      setMessages([]);
+      setActiveContext(null);
+    }
+    await refreshSessions();
+  };
+
+  const saveRename = async (id: string) => {
+    const title = renameValue.trim();
+    if (!title) {
+      setRenamingId(null);
+      return;
+    }
+    await apiClient.renameLotteryChatSession(id, title);
+    setRenamingId(null);
+    await refreshSessions();
+  };
+
+  const contextLabel = useMemo(() => {
+    if (!activeContext?.number && !activeContext?.primary_candidate) return null;
+    const dateBit = activeContext.date
+      ? new Date(`${String(activeContext.date).slice(0, 10)}T12:00:00`).toLocaleDateString(
+          "es-DO",
+          { day: "numeric", month: "short", year: "numeric" },
+        )
+      : null;
+    return {
+      analyzing: [activeContext.number, dateBit, activeContext.lottery].filter(Boolean).join(" · "),
+      primary: activeContext.primary_candidate,
+    };
+  }, [activeContext]);
+
   return (
-    <AppShell title="Chat inteligente" description="Asistente de Lottery IA con datos reales del sistema">
+    <AppShell title="Chat inteligente" description="Asistente conversacional de Lottery IA">
       <div className="mb-3 flex flex-wrap items-center justify-between gap-2 text-sm">
         <div className="flex flex-wrap gap-2">
           <Link className="text-primary underline-offset-2 hover:underline" href="/lottery">
@@ -264,196 +436,252 @@ export default function LotteryChatPage() {
           <Link className="text-primary underline-offset-2 hover:underline" href="/lottery/search">
             Consulta
           </Link>
+          <Link className="text-primary underline-offset-2 hover:underline" href="/lottery/analyze">
+            Analizar
+          </Link>
         </div>
         <p className="max-w-xl text-[11px] text-muted-foreground">{DISCLAIMER}</p>
       </div>
 
-      {/* pb keeps floating JAIOS Assistant from covering the composer */}
-      <div className="grid gap-4 pb-24 lg:grid-cols-[240px_1fr]">
-        <Card>
-          <CardContent className="space-y-2 py-4">
+      <div className="grid gap-4 pb-6 lg:grid-cols-[260px_1fr]">
+        <Card className="h-[min(72vh,720px)] overflow-hidden">
+          <CardContent className="flex h-full flex-col gap-2 py-4">
             <Button className="w-full" onClick={() => void startSession()} disabled={loading}>
               Nueva conversación
             </Button>
-            {sessionId && (
-              <Button
-                className="w-full"
-                variant="outline"
-                onClick={async () => {
-                  if (!sessionId) return;
-                  await apiClient.clearLotteryChatContext(sessionId);
-                  setSuggestions(STARTERS);
-                }}
-              >
-                Limpiar contexto
-              </Button>
-            )}
-            <div className="max-h-[50vh] space-y-1 overflow-auto pt-2">
+            <div className="min-h-0 flex-1 space-y-1 overflow-y-auto pt-1">
               {sessions.map((s) => (
-                <button
+                <div
                   key={s.id}
-                  type="button"
-                  className={`block w-full truncate rounded px-2 py-1.5 text-left text-xs hover:bg-muted ${
+                  className={`rounded px-2 py-1.5 text-left text-xs hover:bg-muted ${
                     sessionId === s.id ? "bg-muted font-medium" : ""
                   }`}
-                  onClick={() => void onSelectSession(s.id)}
                 >
-                  {s.title || "Sin título"}
-                </button>
+                  {renamingId === s.id ? (
+                    <form
+                      className="flex gap-1"
+                      onSubmit={(e) => {
+                        e.preventDefault();
+                        void saveRename(s.id);
+                      }}
+                    >
+                      <input
+                        className="min-w-0 flex-1 rounded border bg-background px-1 py-0.5"
+                        value={renameValue}
+                        onChange={(e) => setRenameValue(e.target.value)}
+                        autoFocus
+                      />
+                      <button type="submit" className="text-[10px] text-primary">
+                        OK
+                      </button>
+                    </form>
+                  ) : (
+                    <>
+                      <button
+                        type="button"
+                        className="block w-full truncate text-left"
+                        onClick={() => void onSelectSession(s.id)}
+                      >
+                        {s.title || "Sin título"}
+                      </button>
+                      <p className="truncate text-[10px] text-muted-foreground">
+                        {formatSessionMeta(s)}
+                      </p>
+                      <div className="mt-0.5 flex gap-2 text-[10px]">
+                        <button
+                          type="button"
+                          className="text-muted-foreground hover:text-foreground"
+                          onClick={() => {
+                            setRenamingId(s.id);
+                            setRenameValue(s.title || "");
+                          }}
+                        >
+                          Renombrar
+                        </button>
+                        <button
+                          type="button"
+                          className="text-muted-foreground hover:text-destructive"
+                          onClick={() => void deleteSession(s.id)}
+                        >
+                          Eliminar
+                        </button>
+                      </div>
+                    </>
+                  )}
+                </div>
               ))}
             </div>
           </CardContent>
         </Card>
 
-        <div className="flex min-h-[60vh] flex-col gap-3">
-          {error && (
-            <Card className="border-destructive/40">
-              <CardContent className="py-3 text-sm text-destructive">{error}</CardContent>
-            </Card>
-          )}
-
-          <div className="flex-1 space-y-3 overflow-auto rounded-md border p-3">
-            {messages.length === 0 && (
-              <p className="text-sm text-muted-foreground">
-                Pregunta en lenguaje natural. El Chat inteligente conserva el contexto y solo pide lo que falta.
-              </p>
-            )}
-            {messages.map((m) => (
-              <div
-                key={m.id}
-                className={`rounded-md p-3 text-sm ${
-                  m.role === "user" ? "ml-8 bg-primary/10" : "mr-4 bg-muted/40"
-                }`}
-              >
-                <p className="mb-1 text-[10px] uppercase tracking-wide text-muted-foreground">
-                  {m.role === "user" ? "Tú" : "Chat inteligente"}
+        <div className="flex h-[min(72vh,720px)] flex-col overflow-hidden rounded-md border bg-background">
+          {contextLabel && (
+            <div className="flex flex-wrap items-center justify-between gap-2 border-b bg-muted/30 px-3 py-2 text-xs">
+              <div className="space-y-0.5 text-muted-foreground">
+                <p>
+                  <span className="font-medium text-foreground">Analizando:</span>{" "}
+                  {contextLabel.analyzing || "—"}
                 </p>
-                {m.role === "assistant" ? (
-                  <SimpleMarkdown text={m.content} />
-                ) : (
-                  <p className="whitespace-pre-wrap">{m.content}</p>
-                )}
-                {m.role === "assistant" && (
-                  <div className="mt-3 space-y-2">
-                    <LotteryStructuredRenderer structured={m.structured} />
-                    {m.analysis_params && (
-                      <div className="rounded border bg-background/60 text-xs">
-                        <button
-                          type="button"
-                          className="w-full px-2 py-1 text-left text-muted-foreground hover:bg-muted/50"
-                          onClick={() =>
-                            setParamsOpen((prev) => ({ ...prev, [m.id]: !prev[m.id] }))
-                          }
-                        >
-                          Parámetros del análisis {paramsOpen[m.id] ? "▾" : "▸"}
-                        </button>
-                        {paramsOpen[m.id] && (
-                          <ul className="space-y-1 px-3 pb-2 text-[11px] text-muted-foreground">
-                            {Object.entries(m.analysis_params)
-                              .filter(([k]) => !/uuid|source_id|sql|token|password|host|slug/i.test(k))
-                              .slice(0, 12)
-                              .map(([k, v]) => (
-                                <li key={k}>
-                                  <span className="font-medium text-foreground">{k}</span>:{" "}
-                                  {typeof v === "string" || typeof v === "number" || typeof v === "boolean"
-                                    ? String(v)
-                                    : Array.isArray(v)
-                                      ? v.slice(0, 8).map(String).join(", ")
-                                      : "—"}
-                                </li>
-                              ))}
-                          </ul>
-                        )}
-                      </div>
-                    )}
-                    {showTools && m.tool_trace && m.tool_trace.length > 0 && (
-                      <p className="text-[10px] text-muted-foreground">
-                        Tools:{" "}
-                        {m.tool_trace
-                          .map((t) => `${t.tool} (${t.status}, ${t.duration_ms}ms)`)
-                          .join(" · ")}
-                      </p>
-                    )}
-                    <div className="flex flex-wrap gap-2">
-                      <Button size="sm" variant="ghost" onClick={() => void copyText(m.content)}>
-                        Copiar
-                      </Button>
-                    </div>
-                  </div>
+                {contextLabel.primary != null && (
+                  <p>
+                    <span className="font-medium text-foreground">Candidato actual:</span>{" "}
+                    {contextLabel.primary}
+                  </p>
                 )}
               </div>
-            ))}
-            {loading && (
-              <p className="animate-pulse text-xs text-muted-foreground">Analizando datos…</p>
+              <Button size="sm" variant="ghost" disabled={!sessionId || loading} onClick={() => void clearContext()}>
+                Limpiar contexto
+              </Button>
+            </div>
+          )}
+
+          {error && (
+            <div className="border-b border-destructive/30 bg-destructive/5 px-3 py-2 text-sm text-destructive">
+              {error}
+            </div>
+          )}
+
+          <div className="relative min-h-0 flex-1">
+            <div
+              ref={scrollRef}
+              onScroll={onScrollPane}
+              className="absolute inset-0 overflow-y-auto px-3 py-3"
+            >
+              {messages.length === 0 && (
+                <p className="text-sm text-muted-foreground">
+                  Pregunta en lenguaje natural. Conservo el contexto y solo pido lo imprescindible.
+                </p>
+              )}
+              {messages.map((m) => (
+                <div
+                  key={m.id}
+                  className={`mb-3 rounded-md p-3 text-sm ${
+                    m.role === "user" ? "ml-8 bg-primary/10" : "mr-4 bg-muted/40"
+                  }`}
+                >
+                  <p className="mb-1 text-[10px] uppercase tracking-wide text-muted-foreground">
+                    {m.role === "user" ? "Tú" : "Chat inteligente"}
+                  </p>
+                  {m.role === "assistant" ? (
+                    <SimpleMarkdown text={m.content} />
+                  ) : (
+                    <p className="whitespace-pre-wrap">{m.content}</p>
+                  )}
+                  {m.role === "assistant" && (
+                    <>
+                      <AnalysisCard structured={m.structured} />
+                      {m.structured && m.structured.type !== "lottery_complete_analysis" && (
+                        <div className="mt-2">
+                          <LotteryStructuredRenderer structured={m.structured} />
+                        </div>
+                      )}
+                    </>
+                  )}
+                </div>
+              ))}
+              {loading && (
+                <p className="animate-pulse text-xs text-muted-foreground">Analizando…</p>
+              )}
+              <div ref={bottomRef} />
+            </div>
+
+            {showJump && (
+              <button
+                type="button"
+                className="absolute bottom-3 left-1/2 z-10 -translate-x-1/2 rounded-full border bg-background px-3 py-1.5 text-xs shadow-sm"
+                onClick={() => scrollToBottom("smooth")}
+              >
+                Ir al mensaje más reciente
+              </button>
             )}
           </div>
 
-          <div className="flex flex-wrap gap-2">
-            {suggestions.map((s) => (
-              <Button
-                key={s}
-                size="sm"
-                variant="outline"
+          <div className="shrink-0 space-y-2 border-t bg-background px-3 py-2">
+            <div className="flex flex-wrap gap-2">
+              {suggestions.map((s) => (
+                <Button
+                  key={s}
+                  size="sm"
+                  variant="outline"
+                  disabled={loading}
+                  onClick={() => void send(s)}
+                >
+                  {s}
+                </Button>
+              ))}
+            </div>
+            <form
+              className="flex items-end gap-2"
+              onSubmit={(e) => {
+                e.preventDefault();
+                void send(input);
+              }}
+            >
+              <textarea
+                ref={textareaRef}
+                value={input}
+                rows={1}
                 disabled={loading}
-                onClick={() => void send(s)}
-              >
-                {s}
-              </Button>
-            ))}
-          </div>
-
-          <form
-            className="flex gap-2"
-            onSubmit={(e) => {
-              e.preventDefault();
-              void send(input);
-            }}
-          >
-            <Input
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              placeholder="Escribe tu consulta histórica…"
-              disabled={loading}
-            />
-            <Button type="submit" disabled={loading || !input.trim()}>
-              Enviar
-            </Button>
-            {sessionId && (
-              <Button
-                type="button"
-                variant="secondary"
-                disabled={loading}
-                onClick={async () => {
-                  setLoading(true);
-                  try {
-                    const res = await apiClient.retryLotteryChatMessage(sessionId);
-                    setMessages((prev) => {
-                      const withoutLastAssistant =
-                        prev.length && prev[prev.length - 1].role === "assistant"
-                          ? prev.slice(0, -1)
-                          : prev;
-                      return [
-                        ...withoutLastAssistant,
-                        {
-                          id: res.message.id,
-                          role: "assistant",
-                          content: res.message.content,
-                          structured: res.message.structured_content,
-                          tool_trace: res.message.tool_trace,
-                        },
-                      ];
-                    });
-                  } catch (err) {
-                    setError(err instanceof ApiError ? err.message : "Retry falló");
-                  } finally {
-                    setLoading(false);
+                placeholder="Escribe tu consulta…"
+                className="max-h-32 min-h-[40px] flex-1 resize-none rounded-md border bg-background px-3 py-2 text-sm outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                onChange={(e) => {
+                  setInput(e.target.value);
+                  const el = e.target;
+                  el.style.height = "auto";
+                  el.style.height = `${Math.min(el.scrollHeight, 128)}px`;
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && !e.shiftKey) {
+                    e.preventDefault();
+                    void send(input);
                   }
                 }}
-              >
-                Reintentar
+              />
+              <Button type="submit" disabled={loading || !input.trim()}>
+                Enviar
               </Button>
-            )}
-          </form>
+              {sessionId && error && (
+                <Button
+                  type="button"
+                  variant="secondary"
+                  disabled={loading}
+                  onClick={async () => {
+                    setLoading(true);
+                    setError(null);
+                    try {
+                      const res = await apiClient.retryLotteryChatMessage(sessionId);
+                      setStickToBottom(true);
+                      pendingScrollRef.current = true;
+                      setMessages((prev) => {
+                        const withoutLastAssistant =
+                          prev.length && prev[prev.length - 1].role === "assistant"
+                            ? prev.slice(0, -1)
+                            : prev;
+                        return [
+                          ...withoutLastAssistant,
+                          {
+                            id: res.message.id,
+                            role: "assistant",
+                            content: res.message.content,
+                            structured: res.message.structured_content,
+                            tool_trace: res.message.tool_trace,
+                          },
+                        ];
+                      });
+                      if (res.active_context) setActiveContext(res.active_context);
+                      setSuggestions(res.suggestions?.length ? res.suggestions : STARTERS);
+                    } catch (err) {
+                      setError(err instanceof ApiError ? err.message : "Retry falló");
+                    } finally {
+                      setLoading(false);
+                    }
+                  }}
+                >
+                  Reintentar
+                </Button>
+              )}
+            </form>
+          </div>
         </div>
       </div>
     </AppShell>

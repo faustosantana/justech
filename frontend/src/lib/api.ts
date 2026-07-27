@@ -2061,6 +2061,12 @@ export const apiClient = {
   deleteLotteryChatSession: (sessionId: string) =>
     request<{ ok: boolean }>(`/lottery/chat/sessions/${sessionId}`, { method: "DELETE" }, true),
 
+  renameLotteryChatSession: (sessionId: string, title: string) =>
+    request<LotteryChatSession>(`/lottery/chat/sessions/${sessionId}`, {
+      method: "PATCH",
+      body: JSON.stringify({ title }),
+    }, true),
+
   clearLotteryChatContext: (sessionId: string) =>
     request<LotteryChatSession>(`/lottery/chat/sessions/${sessionId}/clear-context`, {
       method: "POST",

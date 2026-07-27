@@ -144,6 +144,15 @@ export interface LotteryChatSendResponse {
   };
   user_message_id: string;
   context: Record<string, unknown>;
+  active_context?: {
+    number?: string | number | null;
+    date?: string | null;
+    lottery?: string | null;
+    position?: string | null;
+    primary_candidate?: number | null;
+    alternatives?: number[];
+    summary?: string | null;
+  } | null;
   suggestions: string[];
   synthesis_fallback: boolean;
   latency_ms: number;

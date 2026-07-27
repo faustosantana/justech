@@ -129,6 +129,12 @@ class LotteryChatService:
         await self.db.delete(session)
         await self.db.flush()
 
+    async def rename_session(self, session_id: uuid.UUID, title: str) -> LotteryChatSession:
+        session = await self.get_session(session_id)
+        session.title = (title or "").strip()[:120] or session.title
+        await self.db.flush()
+        return session
+
     async def clear_context(self, session_id: uuid.UUID) -> LotterySessionContext:
         session = await self.get_session(session_id)
         session.context = {"conversation_v4": ConversationState().to_store()}
@@ -439,9 +445,13 @@ class LotteryChatService:
                     tool_enum,
                     exec_params,
                     structured_type=(
-                        "lottery_numeric_relations"
-                        if understanding.intent == "numeric_relations"
-                        else "lottery_result"
+                        "lottery_complete_analysis"
+                        if understanding.tool == "lottery_run_complete_analysis"
+                        else (
+                            "lottery_numeric_relations"
+                            if understanding.intent == "numeric_relations"
+                            else "lottery_result"
+                        )
                     ),
                     session_context=ctx.to_store(),
                 )
@@ -493,6 +503,56 @@ class LotteryChatService:
                         state.draw_count_context = int(
                             exec_params.get("window_draws") or exec_params.get("count")
                         )
+                    # Complete analysis memory for conversational follow-ups
+                    if result.tool == "lottery_run_complete_analysis" and isinstance(
+                        structured, dict
+                    ):
+                        data = structured.get("data") if isinstance(structured.get("data"), dict) else structured
+                        primary_n = None
+                        if isinstance(data.get("primary"), dict):
+                            primary_n = data["primary"].get("number")
+                        elif structured.get("primary"):
+                            primary_n = (structured.get("primary") or {}).get("number")
+                        # Prefer nested payload from tool
+                        payload = data if data.get("observed_number") is not None else structured
+                        if payload.get("type") == "lottery_result" and isinstance(
+                            payload.get("data"), dict
+                        ):
+                            payload = payload["data"]
+                        obs = payload.get("observed_number") or exec_params.get("observed_number")
+                        primary_n = primary_n or (payload.get("primary") or {}).get("number")
+                        state.current_primary_candidate = (
+                            int(primary_n) if primary_n is not None else None
+                        )
+                        alts = [
+                            int(a.get("number"))
+                            for a in (payload.get("alternatives") or [])
+                            if isinstance(a, dict) and a.get("number") is not None
+                        ]
+                        state.current_alternatives = alts[:6]
+                        state.last_analysis = {
+                            "type": "complete_analysis",
+                            "observed": obs,
+                            "primary": primary_n,
+                            "confirmer": payload.get("confirmer") or exec_params.get("confirmer"),
+                            "date": payload.get("date") or exec_params.get("date"),
+                            "lottery": payload.get("lottery") or exec_params.get("lottery"),
+                            "historical_summary": (payload.get("historical") or {}).get("resumen"),
+                        }
+                        state.historical_summary = (payload.get("historical") or {}).get("resumen")
+                        state.active_date = str(payload.get("date") or "")[:10] or state.active_date
+                        if obs is not None:
+                            state.active_numbers = [str(obs)]
+                        # Short rolling summary
+                        bits = [f"Analizado {obs}"]
+                        if primary_n is not None:
+                            bits.append(f"candidato {primary_n}")
+                        if payload.get("date"):
+                            bits.append(f"fecha {payload.get('date')}")
+                        prev = (state.conversation_summary or "").strip()
+                        state.conversation_summary = (
+                            (prev + " · " if prev else "") + "; ".join(bits)
+                        )[-500:]
                     # Mirror sticky fields from merged legacy context
                     if ctx.base_date:
                         state.date_context = ctx.base_date
@@ -523,26 +583,49 @@ class LotteryChatService:
                 params = exec_params
                 tool_name = result.tool
 
-        # LLM synthesis only for successful tool results
+        # LLM synthesis: tool facts OR soft rewrite of clarifications
         final_text = template
         synthesis_fallback = False
         model_name = None
-        if (
-            intent_kind == "tool"
-            and structured
-            and structured.get("type")
-            not in ("lottery_error", "lottery_ambiguity", "lottery_no_results")
+        recent_msgs = await self._recent_dialogue(session_id, limit=12)
+        if intent_kind == "tool" and structured and structured.get("type") not in (
+            "lottery_error",
+            "lottery_no_results",
         ):
             final_text, synthesis_fallback, model_name, provider_used = await self._synthesize(
                 question=content,
                 template=template,
                 facts=structured,
                 context={**ctx.to_store(), "conversation_v4": state.to_store()},
+                recent_messages=recent_msgs,
+                mode="tool",
             )
             if synthesis_fallback:
                 fallback_used = True
                 fallback_reason = "synthesis_unavailable_or_failed"
                 provider_used = provider_used or "local_template"
+        elif intent_kind == "clarify":
+            # Humanize clarify; never invent tool facts
+            final_text, synthesis_fallback, model_name, provider_used = await self._synthesize(
+                question=content,
+                template=template,
+                facts={
+                    "type": "lottery_ambiguity",
+                    "clarify": template,
+                    "missing_slots": understanding.missing_slots,
+                    "known_numbers": state.active_numbers or understanding.numbers,
+                    "known_lotteries": state.active_lotteries or understanding.lotteries,
+                    "primary_candidate": state.current_primary_candidate,
+                },
+                context={**ctx.to_store(), "conversation_v4": state.to_store()},
+                recent_messages=recent_msgs,
+                mode="clarify",
+            )
+            if synthesis_fallback:
+                fallback_used = True
+                fallback_reason = "clarify_local_template"
+                provider_used = provider_used or "local_template"
+                final_text = template
 
         if APPEND_DISCLAIMER_TO_BODY and DISCLAIMER not in final_text and intent_kind != "refuse":
             final_text = f"{final_text.rstrip()}\n\n{DISCLAIMER}"
@@ -602,7 +685,37 @@ class LotteryChatService:
                 "last_draw_count": state.draw_count_context or ctx.last_draw_count,
             }
         )
+        # Keep sticky LotterySessionContext aligned with ConversationState for suggestions/API.
+        ctx = LotterySessionContext(
+            last_lottery=state.active_lotteries[0] if state.active_lotteries else ctx.last_lottery,
+            compared_lotteries=list(state.active_lotteries[1:] if len(state.active_lotteries) > 1 else ctx.compared_lotteries),
+            base_date=state.date_context or ctx.base_date,
+            last_draw_count=state.draw_count_context or ctx.last_draw_count,
+            last_days=state.calendar_window or ctx.last_days,
+            last_numbers=list(state.active_numbers or ctx.last_numbers or []),
+            last_tool=state.last_tool or ctx.last_tool,
+            last_query_semantics=state.last_intent or ctx.last_query_semantics,
+            default_number_position_scope=state.default_number_position_scope,
+            default_primary_position=state.default_primary_position,
+            last_analysis=dict(state.last_analysis or {}),
+            conversation_summary=state.conversation_summary,
+            current_primary_candidate=state.current_primary_candidate,
+        )
+
         public_structured = self._public_structured(structured if isinstance(structured, dict) else None)
+        active_context = {
+            "number": (state.active_numbers[0] if state.active_numbers else None),
+            "date": state.active_date
+            or (str(state.date_context)[:10] if state.date_context else None)
+            or ((state.last_analysis or {}).get("date")),
+            "lottery": (state.active_lotteries[0] if state.active_lotteries else None)
+            or ((state.last_analysis or {}).get("lottery")),
+            "position": state.active_position,
+            "primary_candidate": state.current_primary_candidate
+            or ((state.last_analysis or {}).get("primary")),
+            "alternatives": list(state.current_alternatives or [])[:4],
+            "summary": state.conversation_summary,
+        }
         assistant_payload = _jsonable(
             {
                 "structured_content": public_structured,
@@ -656,7 +769,8 @@ class LotteryChatService:
             },
             "user_message_id": str(user_msg.id),
             "context": merged_context,
-            "suggestions": self._suggestions(ctx, intent_kind),
+            "active_context": active_context,
+            "suggestions": self._suggestions(ctx, intent_kind, state=state),
             "synthesis_fallback": synthesis_fallback,
             "latency_ms": latency_ms,
             "runtime_trace": runtime_trace,
@@ -1562,6 +1676,56 @@ class LotteryChatService:
 
             return format_numeric_relations_reply(data)
 
+        if tool == "lottery_run_complete_analysis" and isinstance(data, dict):
+            primary = (data.get("primary") or {}).get("number")
+            obs = data.get("observed_number")
+            hist = data.get("historical") or {}
+            parts = []
+            rival = data.get("rival_comparison") or {}
+            if rival.get("texto"):
+                parts.append(str(rival["texto"]))
+            elif primary is not None:
+                parts.append(
+                    f"Para el {obs}, el resultado principal es el {primary}."
+                )
+            if data.get("conclusion") and (
+                not rival.get("texto") or str(data.get("conclusion")) != str(rival.get("texto"))
+            ):
+                # Avoid duplicating the same rival sentence
+                conc = str(data["conclusion"])
+                if not parts or conc not in parts[0]:
+                    parts.append(conc)
+            t1 = data.get("table1_sources") or []
+            t2 = data.get("table2_confirmers") or []
+            same = data.get("same_day_cross") or []
+            if t1 or t2 or same:
+                bits = []
+                if t1:
+                    bits.append(f"Tabla 1 relaciona {obs} con {primary}" if primary is not None else f"Tabla 1: {', '.join(str(x) for x in t1)}")
+                if t2:
+                    bits.append(f"Tabla 2 confirma vía {', '.join(str(x) for x in t2)}")
+                if same:
+                    s0 = same[0]
+                    bits.append(
+                        f"Cruce del mismo día: {s0.get('origen')} → {s0.get('companero')} "
+                        f"confirmado por {s0.get('confirmador')} "
+                        f"({s0.get('loteria_origen')} / {s0.get('loteria_confirmador')})"
+                    )
+                parts.append("Evidencia: " + "; ".join(bits) + ".")
+            if hist.get("resumen"):
+                parts.append(str(hist["resumen"]))
+            elif hist.get("casos_equivalentes") is not None:
+                parts.append(
+                    f"Histórico: {hist.get('casos_equivalentes')} casos equivalentes, "
+                    f"{hist.get('aciertos_exactos')} aciertos exactos "
+                    f"(D+1={hist.get('d1')}, D+3={hist.get('d3')}, D+7={hist.get('d7')})."
+                )
+            if data.get("comparison") and not rival.get("texto"):
+                parts.append(str(data["comparison"]))
+            if data.get("warning"):
+                parts.append(str(data["warning"]))
+            return " ".join(parts) if parts else "Análisis completo disponible."
+
         if tool == "lottery_get_expected_vs_received" and isinstance(data, dict):
             return (
                 f"Hoy ({data.get('local_today')}): esperadas {data.get('expected_sync_enabled')} "
@@ -1673,6 +1837,21 @@ class LotteryChatService:
 
         return "Consulta histórica completada con los datos disponibles en JAIOS."
 
+    async def _recent_dialogue(
+        self, session_id: uuid.UUID, *, limit: int = 12
+    ) -> list[dict[str, str]]:
+        # Take the newest N messages (list_messages is ASC + offset from start).
+        _, total = await self.list_messages(session_id, limit=1, offset=0)
+        offset = max(0, int(total or 0) - limit)
+        rows, _ = await self.list_messages(session_id, limit=limit, offset=offset)
+        out: list[dict[str, str]] = []
+        for m in rows:
+            role = "user" if m.role == "user" else "assistant"
+            content = (m.content or "").strip()
+            if content:
+                out.append({"role": role, "content": content[:800]})
+        return out
+
     async def _synthesize(
         self,
         *,
@@ -1680,29 +1859,70 @@ class LotteryChatService:
         template: str,
         facts: dict[str, Any],
         context: dict[str, Any],
+        recent_messages: list[dict[str, str]] | None = None,
+        mode: str = "tool",
     ) -> tuple[str, bool, str | None, str | None]:
         """Síntesis: LLMRouter → Hermes/ModelArts → plantilla natural (sin mensajes internos)."""
         if not settings.assistant_synthesis_enabled:
             return template, True, None, "local_template"
 
-        payload = {
-            "pregunta": question,
-            "plantilla": template,
-            "hechos": facts,
-            "contexto": context,
+        # Strip bulky internals from context for the model
+        ctx_public = {
+            k: context.get(k)
+            for k in (
+                "last_lottery",
+                "last_numbers",
+                "base_date",
+                "conversation_summary",
+                "current_primary_candidate",
+            )
+            if context.get(k) is not None
         }
-        user_content = (
-            "Redacta la respuesta final en español claro usando SOLO estos hechos. "
-            "Responde primero la pregunta con cifras concretas. "
-            "No inventes números. No predigas ni recomiendes apuestas. "
-            "No menciones tools, JSON, errores internos ni 'redacción no disponible'. "
-            "No repitas el aviso legal si ya está implícito en el pie de la UI.\n"
-            "Si los hechos incluyen motor de relaciones numéricas: no inventes compañeros, "
-            "códigos, vecinos, puntuaciones ni coincidencias; si occurrences_used=0 o ranking "
-            "vacío, dilo explícitamente y no completes con datos inventados. "
-            "Aclara que es señal histórica del método, no certeza.\n"
-            f"{json.dumps(payload, ensure_ascii=False, default=str)[:6000]}"
-        )
+        v4 = context.get("conversation_v4") if isinstance(context.get("conversation_v4"), dict) else {}
+        if v4:
+            ctx_public["active_numbers"] = v4.get("active_numbers")
+            ctx_public["active_lotteries"] = v4.get("active_lotteries")
+            ctx_public["primary"] = v4.get("current_primary_candidate")
+            ctx_public["summary"] = v4.get("conversation_summary")
+            la = v4.get("last_analysis") or {}
+            if la:
+                ctx_public["last_analysis"] = {
+                    "observed": la.get("observed"),
+                    "primary": la.get("primary"),
+                    "confirmer": la.get("confirmer"),
+                    "date": la.get("date"),
+                }
+
+        dialogue = recent_messages or []
+        payload = {
+            "pregunta_actual": question,
+            "plantilla_hechos": template,
+            "hechos": facts,
+            "memoria": ctx_public,
+            "dialogo_reciente": dialogue[-8:],
+            "modo": mode,
+        }
+        if mode == "clarify":
+            user_content = (
+                "Reescribe la aclaración en español natural y breve. "
+                "Haz UNA sola pregunta clara. No inventes datos. "
+                "Si la memoria ya tiene el número/fecha/lotería, NO los vuelvas a pedir. "
+                "No uses tono de formulario ni listes opciones innecesarias.\n"
+                f"{json.dumps(payload, ensure_ascii=False, default=str)[:5000]}"
+            )
+        else:
+            user_content = (
+                "Eres el analista conversacional de Lottery IA. "
+                "Responde en español claro y natural, empezando por la conclusión. "
+                "Usa SOLO los hechos y el diálogo reciente. "
+                "Mantén continuidad: no preguntes lo ya respondido. "
+                "No inventes números, relaciones ni porcentajes. "
+                "No menciones JSON, tools, códigos internos ni nombres técnicos "
+                "(traduce FUERTE_T1_T2_MISMO_DIA a lenguaje humano). "
+                "No predice ni recomienda apuestas. "
+                "Si hay comparación o histórico en los hechos, inclúyelos de forma breve.\n"
+                f"{json.dumps(payload, ensure_ascii=False, default=str)[:6500]}"
+            )
         messages = [
             LLMMessage(role="system", content=get_system_prompt_text()),
             LLMMessage(role="user", content=user_content),
@@ -1819,28 +2039,61 @@ class LotteryChatService:
             lines.append(line)
         return "\n".join(lines).strip()
 
-    def _suggestions(self, ctx: LotterySessionContext, kind: str) -> list[str]:
+    def _suggestions(
+        self,
+        ctx: LotterySessionContext,
+        kind: str,
+        *,
+        state: ConversationState | None = None,
+    ) -> list[str]:
         out: list[str] = []
         if kind == "clarify":
-            out = [
-                "En la Real.",
-                "En Leidsa.",
-                "En todas las loterías.",
-                "Últimos 30 sorteos.",
-            ]
+            missing = list((state.pending_slots if state else None) or [])
+            if "number" in missing:
+                return ["Analiza el 35.", "Analiza el 39."]
+            if "lottery" in missing:
+                return ["En la Real.", "En Leidsa.", "En todas las loterías."]
+            return ["Últimos 30 sorteos.", "En todas las loterías."]
+
+        la = dict((state.last_analysis if state else None) or ctx.last_analysis or {})
+        obs = la.get("observed") or (ctx.last_numbers[0] if ctx.last_numbers else None)
+        primary = la.get("primary") or (
+            state.current_primary_candidate if state else None
+        ) or ctx.current_primary_candidate
+        alts = list(
+            (state.current_alternatives if state else None)
+            or []
+        )
+        date_s = la.get("date") or (
+            str(state.active_date) if state and state.active_date else None
+        ) or (str(ctx.base_date) if ctx.base_date else None)
+
+        if primary is not None and obs is not None:
+            rival = next((a for a in alts if int(a) != int(primary)), None)
+            if rival is None and int(primary) != 7:
+                rival = 7
+            if rival is not None:
+                out.append(f"Comparar {primary} con {rival}")
+            out.append("Ver casos históricos")
+            out.append("Explicar Tabla 1")
+            if date_s:
+                out.append(f"Ver resultados del {date_s}")
+            out.append(f"¿Por qué el {primary}?")
             return out[:6]
+
         if ctx.base_date and ctx.last_lottery:
             out.append("Ver siete días siguientes.")
             out.append("Ver siete sorteos siguientes.")
-            out.append("Buscar repeticiones.")
-            out.append("Comparar con Nacional Noche.")
             if ctx.last_numbers:
-                out.append(f"¿Y en Leidsa?")
-                out.append("Compáralas.")
-            out.append('Guardar consulta como "Real marzo 2022".')
-        elif ctx.last_numbers:
-            out = ["¿Y en Leidsa?", "Compáralas.", "¿Cuántas veces ha salido?"]
-        return out[:6]
+                out.append(f"Analiza el {ctx.last_numbers[0]}.")
+            return out[:6]
+        if ctx.last_numbers:
+            return [
+                f"Analiza el {ctx.last_numbers[0]}.",
+                "¿Cuántas veces ha salido?",
+                "Ver últimos resultados",
+            ]
+        return ["Analiza el 35.", "¿Cuáles son los resultados de hoy?", "Ver loterías activas."]
 
     async def _enforce_session_limit(self) -> None:
         count = await self.db.scalar(

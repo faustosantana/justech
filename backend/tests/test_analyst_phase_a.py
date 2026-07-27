@@ -108,6 +108,8 @@ def test_response_formatter_sections():
         facts={"primary": 54, "observed": 35, "confirmer": 14},
         research={"steps_completed": ["complete_analysis_t1_t2"]},
     )
-    assert "Conclusión" in text
+    assert "Resumen Ejecutivo" in text
+    assert "HECHOS" in text
+    assert "ANÁLISIS" in text
     assert "Limitaciones" in text
     assert "54" in text

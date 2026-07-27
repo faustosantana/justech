@@ -13,7 +13,13 @@ from app.lottery.ai.analyst.question_classifier import QuestionClassifier, Resea
 from app.lottery.ai.analyst.research_engine import ResearchEngine, get_research_engine
 from app.lottery.ai.analyst.research_planner import ResearchPlan, ResearchPlanner
 from app.lottery.ai.analyst.research_trace import ResearchTrace
-from app.lottery.ai.analyst.response_formatter import format_analyst_response, format_research_response
+from app.lottery.ai.analyst.response_formatter import (
+    format_analyst_response,
+    format_research_response,
+    render_bar,
+    render_ranking_bars,
+    select_response_mode,
+)
 from app.lottery.ai.analyst.tool_orchestrator import ToolOrchestrator
 
 __all__ = [
@@ -33,6 +39,9 @@ __all__ = [
     "ToolOrchestrator",
     "format_analyst_response",
     "format_research_response",
+    "render_bar",
+    "render_ranking_bars",
+    "select_response_mode",
     "get_discovery_engine",
     "get_research_engine",
     "load_analyst_config_from_payload",

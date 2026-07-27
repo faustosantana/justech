@@ -128,7 +128,8 @@ def test_evidence_confidence_qualitative():
     assert "Resumen Ejecutivo" in text
     assert "Evidencias" in text
     assert "Limitaciones" in text
-    assert "Sugerencias" in text
+    assert "HECHOS" in text or "Hallazgos Principales" in text
+    assert "Sugerencias" in text or "Próximas investigaciones" in text
 
 
 def test_research_cache_dedupes():

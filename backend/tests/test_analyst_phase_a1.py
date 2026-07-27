@@ -224,5 +224,5 @@ def test_response_formatter_and_brain_skip_clarify():
         facts={"primary": 54, "observed": 35, "confirmer": 14},
         research={"steps_completed": ["complete_analysis_t1_t2", "d1_d3_d7_summary"]},
     )
-    assert "Conclusión" in text
+    assert "Resumen Ejecutivo" in text
     assert "54" in text

@@ -55,6 +55,16 @@ equivalentes → comparaciones.
 Resumen Ejecutivo → Resultado → Evidencias → Comparaciones → Cronología →
 Conclusión → Limitaciones → Sugerencias relacionadas.
 
+## Fase C — Analyst Experience (v2.1.0)
+
+Solo presentación. **No modifica** Research Engine, Planner ni Conversation Brain.
+
+- Estructura: Resumen Ejecutivo → Hallazgos → HECHOS → ANÁLISIS → OBSERVACIONES → Evidencias → Limitaciones → Próximas investigaciones
+- Separación estricta hechos / análisis / observaciones / limitaciones
+- ASCII bars (`render_bar` / `render_ranking_bars`)
+- Modos: `short` | `full` | `report` | `delta` (seguimiento sin repetir informe)
+- Comparaciones con Similitudes / Diferencias / Conclusiones
+
 ## Validaciones
 
 - Motor: `35+14 → 54`, `39+58 → 94`

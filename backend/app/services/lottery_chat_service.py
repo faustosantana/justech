@@ -690,14 +690,25 @@ class LotteryChatService:
                 provider_used = provider_used or "local_template"
             facts_for_fmt = {
                 "primary": state.current_primary_candidate,
-                "observed": (state.last_analysis or {}).get("observed"),
+                "observed": (state.last_analysis or {}).get("observed")
+                or (state.active_numbers[0] if state.active_numbers else None),
                 "confirmer": (state.last_analysis or {}).get("confirmer"),
                 "historical": (state.last_analysis or {}).get("historical_summary"),
+                "lottery": (state.active_lotteries[0] if state.active_lotteries else None),
+                "year": (state.active_filters or {}).get("year"),
+                "compare_with": (state.active_filters or {}).get("compare_with"),
             }
+            prior_research = bool(state.current_research)
             final_text = format_analyst_response(
                 guardrails.sanitize_llm_text(final_text or template),
                 facts=facts_for_fmt,
                 research=research_meta if isinstance(research_meta, dict) else None,
+                question=content,
+                conversation_context={
+                    "has_prior_research": prior_research,
+                    "active_numbers": list(state.active_numbers or []),
+                    "focus_stack": list(getattr(state, "focus_stack", None) or []),
+                },
             )
         elif intent_kind == "clarify":
             missing = list(understanding.missing_slots or state.pending_slots or [])

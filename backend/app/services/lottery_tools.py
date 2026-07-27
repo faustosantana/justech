@@ -1064,14 +1064,59 @@ class LotteryToolExecutor:
         if not date_s:
             try:
                 from app.services.lottery_query_service import LotteryQueryService
+                from app.services.lottery_result_service import LotteryResultService
 
                 q = LotteryQueryService(self.db)
-                lots_try = [lottery_hint] if lottery_hint else []
-                if not lots_try:
-                    active = await get_active_analysis_lotteries(self.db)
-                    lots_try = [x.name for x in active[:12]]
+                lots_try: list[str] = []
+                if lottery_hint:
+                    lots_try = [str(lottery_hint)]
+                else:
+                    # Prefer featured/sync product lotteries so same-day context
+                    # matches the Analizar board (not obscure catalog entries).
+                    try:
+                        featured = await LotteryResultService(self.db).list_featured_lotteries()
+                        lots_try = [str(x.get("name")) for x in (featured or []) if x.get("name")]
+                    except Exception:
+                        lots_try = []
+                    if not lots_try:
+                        active = await get_active_analysis_lotteries(self.db)
+                        # Prefer known product names first
+                        preferred = (
+                            "Lotería Nacional",
+                            "Nacional Noche",
+                            "Leidsa",
+                            "Loteka",
+                            "Quiniela Loteka",
+                            "Quiniela Leidsa",
+                        )
+                        by_name = {x.name: x.name for x in active}
+                        lots_try = [n for n in preferred if n in by_name]
+                        if not lots_try:
+                            lots_try = [x.name for x in active[:8]]
                 best = None
-                for lot_name in lots_try:
+                preferred = (
+                    "Lotería Nacional",
+                    "Nacional Noche",
+                    "Leidsa",
+                    "Loteka",
+                    "Quiniela Loteka",
+                    "Quiniela Leidsa",
+                    "Real",
+                    "La Primera",
+                )
+                # Prefer product order: first preferred lottery with a hit wins
+                # (avoids picking an unrelated featured lottery with a newer date).
+                ordered = []
+                seen_lots: set[str] = set()
+                for n in preferred:
+                    if n in lots_try and n not in seen_lots:
+                        ordered.append(n)
+                        seen_lots.add(n)
+                for n in lots_try:
+                    if n not in seen_lots:
+                        ordered.append(n)
+                        seen_lots.add(n)
+                for lot_name in ordered:
                     if not lot_name:
                         continue
                     try:
@@ -1092,8 +1137,8 @@ class LotteryToolExecutor:
                         if not d:
                             continue
                         iso = str(d)[:10]
-                        if best is None or iso > best[0]:
-                            best = (iso, str(lot_name))
+                        best = (iso, str(lot_name))
+                        break
                     except Exception:
                         continue
                 if best:

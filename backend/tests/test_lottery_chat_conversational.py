@@ -19,7 +19,20 @@ def test_analiza_el_35_runs_complete_analysis_without_wizard():
 def test_ese_numero_sin_contexto_pregunta():
     r = resolve_intent("Analiza ese número", LotterySessionContext())
     assert r.kind == "clarify"
-    assert "número" in (r.clarify_message or "").lower()
+    assert "número" in (r.clarify_message or "").lower() or "numero" in (r.clarify_message or "").lower()
+
+
+def test_understanding_preserves_number_clarify():
+    from app.lottery.ai.conversation_state import ConversationState
+    from app.lottery.ai.understanding import understand
+
+    result, _ = understand("Analiza ese número", ConversationState())
+    assert result.needs_clarification is True
+    assert "number" in (result.missing_slots or [])
+    assert "loter" not in (result.clarification_question or "").lower()
+    assert "número" in (result.clarification_question or "").lower() or "numero" in (
+        result.clarification_question or ""
+    ).lower()
 
 
 def test_ese_numero_con_memoria_no_pregunta():

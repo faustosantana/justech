@@ -921,12 +921,18 @@ def _map_resolved(
             intent_name = "hot_numbers"
         missing = []
         msg = (intent.clarify_message or "").lower()
-        if "loter" in msg and not (lots or state.active_lotteries):
+        pending = list(intent.params.get("pending_slots") or [])
+        if pending:
+            missing = list(pending)
+        if "loter" in msg and "lottery" not in missing and not (lots or state.active_lotteries):
             missing.append("lottery")
-        if "fecha" in msg and not (state.last_occurrences or state.date_context):
+        if "fecha" in msg and "date" not in missing and not (state.last_occurrences or state.date_context):
             missing.append("date")
-        if "n[uú]mero" in msg or "numero" in msg:
+        if re.search(r"n[uú]mero", msg) and "number" not in missing:
             missing.append("number")
+        # Prefer explicit pending_slots from intent router
+        if pending:
+            missing = list(dict.fromkeys([*pending, *[m for m in missing if m not in pending]]))
         # Fix over-asking: if number already known, drop number from missing
         if numbers and "number" in missing:
             missing = [m for m in missing if m != "number"]
@@ -945,21 +951,26 @@ def _map_resolved(
             post = _detect_post_occurrence(text, state, refs)
             if post:
                 return post[0]
-        q = smart_clarify(
-            intent=intent_name,
-            number=numbers[0] if numbers else None,
-            missing=missing or ["lottery"],
-            known_lotteries=lots or list(state.active_lotteries),
-        )
+        # Keep router clarify text when pending slots are explicit (e.g. missing number).
+        if pending and intent.clarify_message:
+            q = intent.clarify_message
+        else:
+            q = smart_clarify(
+                intent=intent_name,
+                number=numbers[0] if numbers else None,
+                missing=missing or ["lottery"],
+                known_lotteries=lots or list(state.active_lotteries),
+            )
         return UnderstandingResult(
-            intent=intent_name,
+            intent=intent_name if intent_name != "unsupported" else "clarification_response",
             lotteries=lots or list(state.active_lotteries),
             numbers=numbers,
-            missing_slots=missing or ["lottery"],
+            missing_slots=missing or pending or ["lottery"],
             needs_clarification=True,
             clarification_question=q,
-            confidence=0.75,
+            confidence=0.9 if pending else 0.75,
             source="rules",
+            params=dict(intent.params or {}),
         )
 
     if intent.kind in {"prediction_refused", "injection_refused", "refuse"}:

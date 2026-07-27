@@ -605,27 +605,37 @@ class LotteryChatService:
                 fallback_reason = "synthesis_unavailable_or_failed"
                 provider_used = provider_used or "local_template"
         elif intent_kind == "clarify":
-            # Humanize clarify; never invent tool facts
-            final_text, synthesis_fallback, model_name, provider_used = await self._synthesize(
-                question=content,
-                template=template,
-                facts={
-                    "type": "lottery_ambiguity",
-                    "clarify": template,
-                    "missing_slots": understanding.missing_slots,
-                    "known_numbers": state.active_numbers or understanding.numbers,
-                    "known_lotteries": state.active_lotteries or understanding.lotteries,
-                    "primary_candidate": state.current_primary_candidate,
-                },
-                context={**ctx.to_store(), "conversation_v4": state.to_store()},
-                recent_messages=recent_msgs,
-                mode="clarify",
-            )
-            if synthesis_fallback:
-                fallback_used = True
-                fallback_reason = "clarify_local_template"
-                provider_used = provider_used or "local_template"
+            missing = list(understanding.missing_slots or state.pending_slots or [])
+            # Never let the LLM rewrite a pure "missing number" ask into lottery/form noise.
+            if missing == ["number"] or (
+                "number" in missing and "lottery" not in missing and "date" not in missing
+            ):
                 final_text = template
+                provider_used = "local_template"
+                synthesis_fallback = True
+                fallback_used = True
+                fallback_reason = "clarify_number_slot_locked"
+            else:
+                final_text, synthesis_fallback, model_name, provider_used = await self._synthesize(
+                    question=content,
+                    template=template,
+                    facts={
+                        "type": "lottery_ambiguity",
+                        "clarify": template,
+                        "missing_slots": understanding.missing_slots,
+                        "known_numbers": state.active_numbers or understanding.numbers,
+                        "known_lotteries": state.active_lotteries or understanding.lotteries,
+                        "primary_candidate": state.current_primary_candidate,
+                    },
+                    context={**ctx.to_store(), "conversation_v4": state.to_store()},
+                    recent_messages=recent_msgs,
+                    mode="clarify",
+                )
+                if synthesis_fallback:
+                    fallback_used = True
+                    fallback_reason = "clarify_local_template"
+                    provider_used = provider_used or "local_template"
+                    final_text = template
 
         if APPEND_DISCLAIMER_TO_BODY and DISCLAIMER not in final_text and intent_kind != "refuse":
             final_text = f"{final_text.rstrip()}\n\n{DISCLAIMER}"

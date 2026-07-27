@@ -5,7 +5,7 @@ from __future__ import annotations
 from app.services.lottery_ai_contracts import LotteryToolName
 from app.services.lottery_chat_context import LotterySessionContext
 from app.services.lottery_intent import resolve_intent
-from app.lottery.ai.prompts.lottery_assistant_system_v1 import get_active_prompt
+from app.lottery.ai.prompts.lottery_assistant_system_v1 import get_active_prompt, get_motor_prompt
 
 
 def test_analiza_el_35_runs_complete_analysis_without_wizard():
@@ -86,11 +86,14 @@ def test_analiza_39_con_58():
 
 
 def test_system_prompt_maestro_v5_active_in_code_registry():
+    assert get_motor_prompt().version == "v5"
+    motor = get_motor_prompt()
+    assert "PROMPT MAESTRO OFICIAL" in motor.body or "única fuente de verdad" in motor.body.lower()
     p = get_active_prompt()
-    assert p.version == "v5"
+    assert p.version == "v6"
     body = p.body.lower()
     assert "analista ia" in body
-    assert "única fuente de verdad" in body or "unica fuente de verdad" in body
-    assert "nunca sustituyes el motor" in body or "nunca sustituyas el motor" in body
+    assert "no eres el motor matemático" in body
+    assert "nunca inventas datos históricos" in body or "nunca inventes datos" in body
     assert "tabla 1" in body
-    assert "observación del analista" in body or "observacion del analista" in body
+    assert "todas las posiciones" in body

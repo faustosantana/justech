@@ -449,20 +449,81 @@ def clear_db_active_prompt() -> None:
     _DB_ACTIVE = None
 
 
+def get_motor_prompt() -> PromptVersion:
+    """Prompt Maestro v5 del motor — cuerpo inmutable desde el registro de código."""
+    return _REGISTRY["v5"]
+
+
 def get_active_prompt() -> PromptVersion:
-    if _DB_ACTIVE and _DB_ACTIVE.body:
+    """Prompt activo del Analista (V6). El motor sigue en get_motor_prompt() → v5."""
+    from app.lottery.ai.prompts.lottery_analyst_system_v6 import get_analyst_prompt
+
+    ap = get_analyst_prompt()
+    if _DB_ACTIVE and _DB_ACTIVE.body and str(_DB_ACTIVE.version).lower() in {
+        "v6",
+        "analyst_v6",
+        "lottery_analyst_system_v6",
+    }:
         return _DB_ACTIVE
-    for item in _REGISTRY.values():
-        if item.status == "active":
-            return item
-    return _REGISTRY["v1"]
+    # Prefer analyst V6 (code or DB analyst cache)
+    return PromptVersion(
+        name=ap.name,
+        version=ap.version,
+        status=ap.status,
+        description=ap.description,
+        body=ap.body,
+        recommended_model=ap.recommended_model,
+        temperature=ap.temperature,
+        max_tokens=ap.max_tokens,
+        changelog=ap.changelog,
+        variables=list(ap.variables or []),
+    )
 
 
 def list_prompt_versions() -> list[dict[str, Any]]:
+    from app.lottery.ai.prompts.lottery_analyst_system_v6 import (
+        ANALYST_V6,
+        get_analyst_prompt,
+    )
+
     items = list(_REGISTRY.values())
-    if _DB_ACTIVE:
-        # Surface DB active at front without mutating seed registry statuses incorrectly
-        items = [_DB_ACTIVE, *[p for p in items if p.version != _DB_ACTIVE.version]]
+    # Ensure motor v5 shows as motor-reference even if chat active is v6
+    for p in items:
+        if p.version == "v5":
+            p.status = "motor"
+    analyst = get_analyst_prompt()
+    analyst_pv = PromptVersion(
+        name=analyst.name,
+        version=analyst.version,
+        status="active",
+        description=analyst.description,
+        body=analyst.body,
+        recommended_model=analyst.recommended_model,
+        temperature=analyst.temperature,
+        max_tokens=analyst.max_tokens,
+        changelog=analyst.changelog,
+        variables=list(analyst.variables or []),
+    )
+    # Surface active analyst first, then registry (v5 as motor)
+    front = [analyst_pv]
+    if _DB_ACTIVE and _DB_ACTIVE.version != analyst.version:
+        front = [_DB_ACTIVE, *front]
+    rest = [p for p in items if p.version not in {analyst.version, "v6"}]
+    # Always include frozen ANALYST_V6 seed metadata if not already
+    if not any(p.version == "v6" for p in front + rest):
+        rest.insert(0, PromptVersion(
+            name=ANALYST_V6.name,
+            version=ANALYST_V6.version,
+            status=ANALYST_V6.status,
+            description=ANALYST_V6.description,
+            body=ANALYST_V6.body,
+            recommended_model=ANALYST_V6.recommended_model,
+            temperature=ANALYST_V6.temperature,
+            max_tokens=ANALYST_V6.max_tokens,
+            changelog=ANALYST_V6.changelog,
+            variables=list(ANALYST_V6.variables or []),
+        ))
+    ordered = [*front, *rest]
     return [
         {
             "name": p.name,
@@ -475,14 +536,47 @@ def list_prompt_versions() -> list[dict[str, Any]]:
             "changelog": p.changelog,
             "updated_at": p.updated_at,
             "variables": p.variables,
+            "role": "motor" if p.version == "v5" else "analyst",
             "source": "db" if _DB_ACTIVE and p is _DB_ACTIVE else "code",
         }
-        for p in items
+        for p in ordered
     ]
 
 
 def activate_prompt_version(version: str) -> PromptVersion:
-    """Legacy in-process activate (dev/tests). Prefer Admin Center DB publish in prod."""
+    """Legacy in-process activate (dev/tests). Prefer Admin Center DB publish in prod.
+
+    Activating v6 does NOT mutate the v5 motor body.
+    """
+    if version == "v6":
+        from app.lottery.ai.prompts.lottery_analyst_system_v6 import (
+            ANALYST_V6,
+            clear_db_analyst_prompt,
+            set_analyst_from_db,
+        )
+
+        clear_db_analyst_prompt()
+        clear_db_active_prompt()
+        set_analyst_from_db(
+            name=ANALYST_V6.name,
+            version=ANALYST_V6.version,
+            status="active",
+            description=ANALYST_V6.description,
+            body=ANALYST_V6.body,
+            recommended_model=ANALYST_V6.recommended_model,
+            temperature=ANALYST_V6.temperature,
+            max_tokens=ANALYST_V6.max_tokens,
+            changelog=ANALYST_V6.changelog,
+            variables=list(ANALYST_V6.variables or []),
+        )
+        # Keep motor v5 status marker
+        for p in _REGISTRY.values():
+            if p.version == "v5":
+                p.status = "motor"
+            elif p.version != "v5":
+                p.status = "retired"
+        return get_active_prompt()
+
     if version not in _REGISTRY:
         raise KeyError(version)
     for p in _REGISTRY.values():
@@ -492,10 +586,17 @@ def activate_prompt_version(version: str) -> PromptVersion:
 
 
 def get_system_prompt_text() -> str:
-    return get_active_prompt().body
+    """Texto de sistema del Analista (V6)."""
+    from app.lottery.ai.prompts.lottery_analyst_system_v6 import get_analyst_system_prompt_text
+
+    return get_analyst_system_prompt_text()
 
 
 def get_prompt_body(version: str) -> str:
+    if version in {"v6", "analyst_v6", "LOTTERY_ANALYST_SYSTEM_V6"}:
+        from app.lottery.ai.prompts.lottery_analyst_system_v6 import get_analyst_system_prompt_text
+
+        return get_analyst_system_prompt_text()
     if _DB_ACTIVE and _DB_ACTIVE.version == version:
         return _DB_ACTIVE.body
     return _REGISTRY[version].body

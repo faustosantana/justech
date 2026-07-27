@@ -13,7 +13,7 @@ from app.lottery.ai.analyst.response_formatter import (
     render_ranking_bars,
     select_response_mode,
 )
-from app.lottery.ai.prompts.lottery_assistant_system_v1 import get_active_prompt
+from app.lottery.ai.prompts.lottery_assistant_system_v1 import get_active_prompt, get_motor_prompt
 from app.lottery.numeric_relations.analysis_engine.complete_analysis_service import (
     run_complete_analysis,
 )
@@ -35,8 +35,9 @@ def test_motor_intact_phase_c():
 
 
 def test_prompt_maestro_intact_phase_c():
+    assert get_motor_prompt().version == "v5"
     p = get_active_prompt()
-    assert p.version == "v5"
+    assert p.version == "v6"
 
 
 def test_ascii_bars():

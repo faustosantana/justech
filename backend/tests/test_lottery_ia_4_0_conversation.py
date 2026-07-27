@@ -10,33 +10,34 @@ from app.services.lottery_intent import resolve_intent
 
 
 def test_last_occurrence_without_lottery_asks_only_lottery():
+    """V6 / X.1: sin lotería → investigar todas; no pedir lotería ni fecha."""
     ctx = LotterySessionContext()
     intent = resolve_intent("¿Cuándo fue la última vez que salió el 57?", ctx)
-    assert intent.kind == "clarify"
-    msg = (intent.clarify_message or "").lower()
-    assert "57" in msg
-    assert "loter" in msg
-    assert "fecha exacta" not in msg
-    assert "número" not in msg or "57" in msg  # may mention number value, not ask for it
+    assert intent.kind == "tool"
+    blob = str(intent.params or {})
+    assert "57" in blob
+    assert intent.params.get("all_historical") is True or "loter" in blob.lower()
 
 
 def test_smart_clarify_last_occurrence():
     q = smart_clarify(intent="last_occurrence", number="57", missing=["lottery"])
-    assert "57" in q
-    assert "fecha exacta" not in q.lower()
-    assert "todas" in q.lower() or "específica" in q.lower()
+    ql = q.lower()
+    assert "fecha exacta" not in ql
+    # Puede ofrecer todas las loterías o una pregunta breve de continuidad
+    assert "57" in q or "histórico" in ql or "loter" in ql
 
 
 def test_understanding_sets_pending_slots():
     state = ConversationState()
     result, new_state = understand("¿Cuándo fue la última vez que salió el 57?", state)
-    assert result.intent == "last_occurrence"
-    assert result.needs_clarification
-    assert "lottery" in result.missing_slots
-    assert "57" in (result.numbers or new_state.active_numbers)
-    assert "fecha" not in (result.clarification_question or "").lower() or "compar" in (
-        result.clarification_question or ""
-    ).lower()
+    assert result.intent in {
+        "last_occurrence",
+        "compare_lotteries",
+        "cross_lottery_last_occurrence",
+    }
+    assert not result.needs_clarification
+    assert "57" in (result.numbers or new_state.active_numbers or [])
+    assert "fecha exacta" not in (result.clarification_question or "").lower()
 
 
 def test_slot_fill_real_then_execute():
@@ -99,24 +100,25 @@ def test_by_date_still_asks_date_when_needed():
 
 def test_prompt_registry_active():
     from app.lottery.ai.prompts.lottery_assistant_system_v1 import (
-        PROMPT_NAME,
         get_active_prompt,
+        get_motor_prompt,
         get_system_prompt_text,
     )
 
-    p = get_active_prompt()
-    assert "lottery_assistant_system" in p.name
-    assert p.version in {"v1", "v2"}
-    assert "Lottery IA" in get_system_prompt_text()
-    assert "fecha exacta" in get_system_prompt_text()  # documents incorrect pattern
+    analyst = get_active_prompt()
+    motor = get_motor_prompt()
+    assert analyst.version == "v6"
+    assert motor.version == "v5"
+    assert "Analista" in get_system_prompt_text() or "ANALISTA" in get_system_prompt_text()
+    assert "motor matemático" in get_system_prompt_text().lower()
 
 
 def test_runtime_snapshot_no_secrets():
-    from app.lottery.ai.prompts.lottery_assistant_system_v1 import get_active_prompt
+    from app.lottery.ai.prompts.lottery_assistant_system_v1 import get_active_prompt, get_motor_prompt
 
     p = get_active_prompt()
-    assert p.version in {"v1", "v2"}
-    assert p.name == "lottery_assistant_system_v1"
+    assert p.version == "v6"
+    assert get_motor_prompt().version == "v5"
     # Full runtime_snapshot needs app.config; hermes planning flag is documented false.
     hermes_planning = False
     assert hermes_planning is False

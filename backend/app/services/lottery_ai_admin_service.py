@@ -398,9 +398,13 @@ class LotteryAiAdminService:
             v5_row = next((r for r in rows if r.version == "v5"), None)
             if v5_row:
                 for r in rows:
-                    if r.version != "v5" and r.status == "active":
-                        r.status = "archived"
-                v5_row.status = "active"
+                    if r.version != "v5" and r.status == "active" and r.version != "v6":
+                        # Leave v6 handling to analyst seed below
+                        if "analyst" not in (str(r.name or "").lower()) and "V6" not in (
+                            str(r.name or "")
+                        ):
+                            r.status = "archived"
+                v5_row.status = "motor"
                 v5_row.body = v5_code.body
                 v5_row.checksum = _checksum(v5_code.body)
                 v5_row.description = v5_code.description
@@ -408,21 +412,104 @@ class LotteryAiAdminService:
                 v5_row.temperature = v5_code.temperature
                 v5_row.max_tokens = v5_code.max_tokens
                 v5_row.variables = v5_code.variables
+                tags = list(v5_row.tags or []) if isinstance(v5_row.tags, list) else []
+                for t in ("system", "seed", "v5", "maestro", "motor"):
+                    if t not in tags:
+                        tags.append(t)
+                v5_row.tags = tags
                 v5_row.published_at = v5_row.published_at or datetime.now(timezone.utc)
                 v5_row.updated_at = datetime.now(timezone.utc)
-                prompt_mod.set_active_from_db(
-                    name=v5_row.name,
-                    version=v5_row.version,
-                    status="active",
-                    description=v5_row.description or "",
-                    body=v5_row.body or "",
-                    recommended_model=v5_row.recommended_model or "DeepSeek-V3.2",
-                    temperature=float(v5_row.temperature or 0.25),
-                    max_tokens=int(v5_row.max_tokens or 1200),
-                    changelog=v5_row.changelog or "",
-                    variables=list(v5_row.variables or []),
-                )
             await self.db.flush()
+
+        # Fase Prompt V6 — Analista IA humano (no modifica cuerpo v5)
+        from app.lottery.ai.prompts import lottery_analyst_system_v6 as analyst_v6
+
+        v6_code = analyst_v6.ANALYST_V6
+        v6_row = (
+            await self.db.execute(
+                select(LotteryAiPromptVersion).where(LotteryAiPromptVersion.version == "v6")
+            )
+        ).scalar_one_or_none()
+        if not v6_row:
+            v6_row = LotteryAiPromptVersion(
+                id=uuid.uuid4(),
+                tenant_id=None,
+                name=v6_code.name,
+                version="v6",
+                status="active",
+                description=v6_code.description,
+                body=v6_code.body,
+                blocks={"identidad": (v6_code.body or "")[:800]},
+                changelog=v6_code.changelog,
+                recommended_model=v6_code.recommended_model,
+                temperature=v6_code.temperature,
+                max_tokens=v6_code.max_tokens,
+                variables=v6_code.variables,
+                tags=["system", "seed", "v6", "analyst", "human"],
+                checksum=_checksum(v6_code.body),
+                published_at=datetime.now(timezone.utc),
+                author_user_id=self.user_id,
+                display_name="Analista IA humano V6",
+                change_reason="Activación inicial LOTTERY_ANALYST_SYSTEM_V6",
+            )
+            self.db.add(v6_row)
+            await self.db.flush()
+        else:
+            # Sync body from code only when checksum matches seed path (no silent prod edit:
+            # if DB body differs from code and status is active, keep DB and record note —
+            # force sync from code on seed to guarantee platform default).
+            v6_row.body = v6_code.body
+            v6_row.checksum = _checksum(v6_code.body)
+            v6_row.name = v6_code.name
+            v6_row.description = v6_code.description
+            v6_row.changelog = v6_code.changelog
+            v6_row.temperature = v6_code.temperature
+            v6_row.max_tokens = v6_code.max_tokens
+            v6_row.variables = v6_code.variables
+            v6_row.status = "active"
+            v6_row.published_at = v6_row.published_at or datetime.now(timezone.utc)
+            v6_row.updated_at = datetime.now(timezone.utc)
+            tags = list(v6_row.tags or []) if isinstance(v6_row.tags, list) else []
+            for t in ("system", "seed", "v6", "analyst", "human"):
+                if t not in tags:
+                    tags.append(t)
+            v6_row.tags = tags
+
+        # Only one chat-active analyst prompt
+        rows = (await self.db.execute(select(LotteryAiPromptVersion))).scalars().all()
+        for r in rows:
+            if r.version == "v6":
+                r.status = "active"
+            elif r.version == "v5":
+                r.status = "motor"
+            elif r.status == "active":
+                r.status = "archived"
+        await self.db.flush()
+
+        analyst_v6.set_analyst_from_db(
+            name=v6_row.name,
+            version=v6_row.version,
+            status="active",
+            description=v6_row.description or "",
+            body=v6_row.body or "",
+            recommended_model=v6_row.recommended_model or "DeepSeek-V3.2",
+            temperature=float(v6_row.temperature or 0.25),
+            max_tokens=int(v6_row.max_tokens or 1400),
+            changelog=v6_row.changelog or "",
+            variables=list(v6_row.variables or []),
+        )
+        prompt_mod.set_active_from_db(
+            name=v6_row.name,
+            version=v6_row.version,
+            status="active",
+            description=v6_row.description or "",
+            body=v6_row.body or "",
+            recommended_model=v6_row.recommended_model or "DeepSeek-V3.2",
+            temperature=float(v6_row.temperature or 0.25),
+            max_tokens=int(v6_row.max_tokens or 1400),
+            changelog=v6_row.changelog or "",
+            variables=list(v6_row.variables or []),
+        )
 
         # Hotfix active v2 body from code registry when position/compound rules missing
         # (legacy; only if v2 somehow remains the sole active row).
@@ -620,19 +707,51 @@ class LotteryAiAdminService:
                 .order_by(LotteryAiPromptVersion.updated_at.desc().nullslast())
             )
         ).scalars().first()
-        if row:
-            prompt_mod.set_active_from_db(
+        if not row:
+            return
+        prompt_mod.set_active_from_db(
+            name=row.name,
+            version=row.version,
+            status=row.status,
+            description=row.description or "",
+            body=row.body,
+            recommended_model=row.recommended_model or "DeepSeek-V3.2",
+            temperature=float(row.temperature or 0.2),
+            max_tokens=int(row.max_tokens or 1200),
+            changelog=row.changelog or "",
+            variables=list(row.variables or []),
+        )
+        # Keep Analista V6 cache in sync when chat-active is analyst
+        ver = str(row.version or "").lower()
+        name_l = str(row.name or "").lower()
+        if ver in {"v6", "analyst_v6"} or "analyst" in name_l or "v6" in name_l:
+            from app.lottery.ai.prompts import lottery_analyst_system_v6 as analyst_v6
+
+            analyst_v6.set_analyst_from_db(
                 name=row.name,
                 version=row.version,
-                status=row.status,
+                status="active",
                 description=row.description or "",
-                body=row.body,
+                body=row.body or "",
                 recommended_model=row.recommended_model or "DeepSeek-V3.2",
-                temperature=float(row.temperature or 0.2),
-                max_tokens=int(row.max_tokens or 1200),
+                temperature=float(row.temperature or 0.25),
+                max_tokens=int(row.max_tokens or 1400),
                 changelog=row.changelog or "",
                 variables=list(row.variables or []),
             )
+        # Freeze motor v5 body from code (never silently replace Maestro)
+        v5_code = prompt_mod._REGISTRY.get("v5")
+        v5_row = (
+            await self.db.execute(
+                select(LotteryAiPromptVersion).where(LotteryAiPromptVersion.version == "v5")
+            )
+        ).scalar_one_or_none()
+        if v5_code and v5_row:
+            if (v5_row.body or "") != (v5_code.body or ""):
+                v5_row.body = v5_code.body
+                v5_row.checksum = _checksum(v5_code.body)
+            v5_row.status = "motor"
+
 
     async def get_active_config(self) -> LotteryAiConfigVersion | None:
         return (
@@ -981,6 +1100,12 @@ class LotteryAiAdminService:
             raise KeyError("prompt_not_found")
         if row.status not in {"draft", "validated", "approved"}:
             raise ValueError("solo_borrador_editable")
+        if str(row.version or "").lower() == "v5" or (
+            "maestro" in str(row.name or "").lower() and "v5" in str(row.version or "").lower()
+        ):
+            raise ValueError(
+                "prompt_maestro_v5_inmutable: cree un borrador nuevo; no edite el cuerpo del motor"
+            )
         before = _prompt_dict(row)
 
         # Secret scan on any textual payload
@@ -1095,11 +1220,22 @@ class LotteryAiAdminService:
                 select(LotteryAiPromptVersion).where(LotteryAiPromptVersion.status == "active")
             )
         ).scalar_one_or_none()
-        if prev:
+        if prev and prev.id != row.id:
             prev.status = "replaced"
             row.previous_version_id = prev.id
+        # Never demote Prompt Maestro v5 motor body via analyst publish
+        v5_row = (
+            await self.db.execute(
+                select(LotteryAiPromptVersion).where(LotteryAiPromptVersion.version == "v5")
+            )
+        ).scalar_one_or_none()
+        if v5_row and v5_row.id != row.id:
+            v5_row.status = "motor"
         row.status = "active"
         row.published_at = datetime.now(timezone.utc)
+        row.author_user_id = row.author_user_id or self.user_id
+        if not row.checksum and row.body:
+            row.checksum = _checksum(row.body)
         await self._audit(
             "prompt_publish",
             entity_type="prompt",

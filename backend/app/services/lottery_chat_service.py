@@ -28,9 +28,9 @@ from app.lottery.ai.analyst import (
 from app.lottery.ai.analyst.research_trace import ResearchTrace
 from app.lottery.ai.conversation_state import ConversationState, UnderstandingResult
 from app.lottery.ai.planner import build_plan
+from app.lottery.ai.prompts.lottery_analyst_system_v6 import build_analyst_llm_messages
 from app.lottery.ai.prompts.lottery_assistant_system_v1 import (
     get_active_prompt,
-    get_system_prompt_text,
 )
 from app.lottery.ai.runtime import record_runtime_trace
 from app.lottery.ai.understanding import understand
@@ -2496,40 +2496,18 @@ class LotteryChatService:
                     "date": la.get("date"),
                 }
 
-        dialogue = recent_messages or []
-        payload = {
-            "pregunta_actual": question,
-            "plantilla_hechos": template,
-            "hechos": facts,
-            "memoria": ctx_public,
-            "dialogo_reciente": dialogue[-8:],
-            "modo": mode,
-        }
-        if mode == "clarify":
-            user_content = (
-                "Reescribe la aclaración en español natural y breve. "
-                "Haz UNA sola pregunta clara. No inventes datos. "
-                "Si la memoria ya tiene el número/fecha/lotería, NO los vuelvas a pedir. "
-                "No uses tono de formulario ni listes opciones innecesarias.\n"
-                f"{json.dumps(payload, ensure_ascii=False, default=str)[:5000]}"
-            )
-        else:
-            user_content = (
-                "Eres el Analista IA de Lottery IA. "
-                "Responde en español claro y natural, empezando por la conclusión. "
-                "Usa SOLO los hechos y el diálogo reciente. "
-                "Mantén continuidad: no preguntes lo ya respondido. "
-                "No inventes números, relaciones ni porcentajes. "
-                "No menciones JSON, tools, códigos internos ni nombres técnicos "
-                "(traduce FUERTE_T1_T2_MISMO_DIA a lenguaje humano). "
-                "No predice ni recomienda apuestas. "
-                "Si hay comparación o histórico en los hechos, inclúyelos de forma breve. "
-                "Tabla 1 tiene prioridad; Tabla 2 confirma.\n"
-                f"{json.dumps(payload, ensure_ascii=False, default=str)[:6500]}"
-            )
+        # Orden oficial V6: guardrails → Analista → contexto → intención → tools → instrucción → usuario
+        raw_messages = build_analyst_llm_messages(
+            question=question,
+            template=template,
+            facts=facts,
+            context=ctx_public,
+            intent=mode,
+            mode=mode,
+            recent_messages=recent_messages,
+        )
         messages = [
-            LLMMessage(role="system", content=get_system_prompt_text()),
-            LLMMessage(role="user", content=user_content),
+            LLMMessage(role=m["role"], content=m["content"]) for m in raw_messages
         ]
 
         # 1) LLMRouter con reintentos

@@ -8,7 +8,7 @@ from app.lottery.ai.analyst.response_formatter import (
     select_response_mode,
 )
 from app.lottery.ai.conversation_state import ConversationState, UnderstandingResult
-from app.lottery.ai.prompts.lottery_assistant_system_v1 import get_active_prompt
+from app.lottery.ai.prompts.lottery_assistant_system_v1 import get_active_prompt, get_motor_prompt
 from app.lottery.ai.same_day_coincidence import (
     analyzing_label,
     coincidence_suggestions,
@@ -47,7 +47,8 @@ def test_engines_intact_phase_x2():
         get_research_engine,
     )
 
-    assert get_active_prompt().version == "v5"
+    assert get_motor_prompt().version == "v5"
+    assert get_active_prompt().version == "v6"
     assert get_research_engine().VERSION == "2.0"
     assert get_discovery_engine().ENABLED is True
     assert get_knowledge_engine().version == "2.3.0"

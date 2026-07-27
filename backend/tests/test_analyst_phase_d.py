@@ -9,7 +9,7 @@ from app.lottery.ai.analyst.discovery_engine import (
     get_discovery_engine,
 )
 from app.lottery.ai.analyst.discovery_store import get_discovery_store
-from app.lottery.ai.prompts.lottery_assistant_system_v1 import get_active_prompt
+from app.lottery.ai.prompts.lottery_assistant_system_v1 import get_active_prompt, get_motor_prompt
 from app.lottery.numeric_relations.analysis_engine.complete_analysis_service import (
     run_complete_analysis,
 )
@@ -33,8 +33,9 @@ def test_motor_intact_phase_d():
 def test_prompt_and_research_engine_intact_phase_d():
     from app.lottery.ai.analyst import get_research_engine
 
+    assert get_motor_prompt().version == "v5"
     p = get_active_prompt()
-    assert p.version == "v5"
+    assert p.version == "v6"
     re = get_research_engine()
     assert re.ENABLED is True
     assert re.VERSION == "2.0"

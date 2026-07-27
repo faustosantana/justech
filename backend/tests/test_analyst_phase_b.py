@@ -19,7 +19,7 @@ from app.lottery.ai.analyst.question_classifier import ResearchQuestion
 from app.lottery.ai.analyst.research_cache import ResearchCache
 from app.lottery.ai.analyst.temporal_analysis import temporal_after_steps
 from app.lottery.ai.conversation_state import ConversationState, UnderstandingResult
-from app.lottery.ai.prompts.lottery_assistant_system_v1 import get_active_prompt
+from app.lottery.ai.prompts.lottery_assistant_system_v1 import get_active_prompt, get_motor_prompt
 from app.lottery.numeric_relations.analysis_engine.complete_analysis_service import (
     run_complete_analysis,
 )
@@ -41,9 +41,12 @@ def test_motor_intact_phase_b():
 
 
 def test_prompt_maestro_intact_phase_b():
+    motor = get_motor_prompt()
+    assert motor.version == "v5"
+    assert "PROMPT MAESTRO OFICIAL" in motor.body
     p = get_active_prompt()
-    assert p.version == "v5"
-    assert "PROMPT MAESTRO OFICIAL" in p.body
+    assert p.version == "v6"
+    assert "ANALISTA IA" in p.body.upper()
 
 
 def test_research_engine_enabled_and_plans_after_54():

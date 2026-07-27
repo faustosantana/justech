@@ -41,7 +41,11 @@ def record_runtime_trace(trace: dict[str, Any], *, success: bool) -> None:
 
 
 def runtime_snapshot() -> dict[str, Any]:
+    from app.lottery.ai.prompts.lottery_assistant_system_v1 import get_motor_prompt
+    from app.lottery.ai.prompts.lottery_analyst_system_v6 import analyst_prompt_manifest
+
     prompt = get_active_prompt()
+    motor = get_motor_prompt()
     hermes_url = bool((getattr(settings, "hermes_model_api_url", None) or "").strip())
     hermes_key = bool((getattr(settings, "hermes_model_api_key", None) or "").strip())
     huawei_url = bool(
@@ -70,6 +74,11 @@ def runtime_snapshot() -> dict[str, Any]:
         "prompt_name": prompt.name,
         "prompt_version": prompt.version,
         "prompt_status": prompt.status,
+        "prompt_role": "analyst",
+        "motor_prompt_name": motor.name,
+        "motor_prompt_version": motor.version,
+        "motor_prompt_status": "motor",
+        "analyst_prompt": analyst_prompt_manifest(),
         "prompt_versions": list_prompt_versions(),
         "provider_configured": synthesis_provider
         or getattr(settings, "hermes_provider", None)

@@ -1104,21 +1104,39 @@ class LotteryToolExecutor:
                     "Real",
                     "La Primera",
                 )
-                # Prefer product order: first preferred lottery with a hit wins
-                # (avoids picking an unrelated featured lottery with a newer date).
-                ordered = []
+                # Prefer product order, but among preferred hits choose the most recent date.
+                # This recovers validated cases like 35 @ Nacional 2026-06-23 even when
+                # other featured lotteries also contain the number.
+                import unicodedata
+
+                def _norm(s: str) -> str:
+                    raw = unicodedata.normalize("NFKD", str(s or ""))
+                    return "".join(ch for ch in raw if not unicodedata.combining(ch)).strip().lower()
+
+                lots_norm = {_norm(x): x for x in lots_try}
+                ordered: list[str] = []
                 seen_lots: set[str] = set()
                 for n in preferred:
-                    if n in lots_try and n not in seen_lots:
-                        ordered.append(n)
-                        seen_lots.add(n)
+                    hit = lots_norm.get(_norm(n))
+                    if not hit:
+                        # soft contains match (e.g. "nacional")
+                        key = _norm(n).split()[-1]
+                        for ln, orig in lots_norm.items():
+                            if key and key in ln and orig not in seen_lots:
+                                hit = orig
+                                break
+                    if hit and hit not in seen_lots:
+                        ordered.append(hit)
+                        seen_lots.add(hit)
                 for n in lots_try:
                     if n not in seen_lots:
                         ordered.append(n)
                         seen_lots.add(n)
+                candidates: list[tuple[str, str]] = []
                 for lot_name in ordered:
                     if not lot_name:
                         continue
+                    # Prefer core product names when ranking candidates
                     try:
                         res = await q.by_number(
                             str(lot_name),
@@ -1129,6 +1147,16 @@ class LotteryToolExecutor:
                         )
                         items = getattr(res, "items", None) or getattr(res, "occurrences", None) or []
                         if not items:
+                            # try without zfill
+                            res = await q.by_number(
+                                str(lot_name),
+                                str(observed),
+                                page=1,
+                                page_size=1,
+                                order="desc",
+                            )
+                            items = getattr(res, "items", None) or getattr(res, "occurrences", None) or []
+                        if not items:
                             continue
                         first = items[0]
                         d = getattr(first, "draw_date", None) or (
@@ -1136,15 +1164,71 @@ class LotteryToolExecutor:
                         )
                         if not d:
                             continue
-                        iso = str(d)[:10]
-                        best = (iso, str(lot_name))
-                        break
+                        candidates.append((str(d)[:10], str(lot_name)))
                     except Exception:
                         continue
+                if candidates:
+                    # Prefer Nacional/Leidsa/Loteka family over other featured names
+                    def _rank(item: tuple[str, str]) -> tuple[int, str]:
+                        name = _norm(item[1])
+                        prio = 0
+                        if "nacional" in name:
+                            prio = 3
+                        elif "leidsa" in name:
+                            prio = 2
+                        elif "loteka" in name:
+                            prio = 1
+                        return (prio, item[0])
+
+                    best = max(candidates, key=_rank)
                 if best:
                     date_s = best[0]
                     if not lottery_hint:
                         lottery_hint = best[1]
+            except Exception:
+                pass
+
+        # If confirmer provided without date, locate a featured day containing both.
+        if confirmer_i and not date_s:
+            try:
+                from datetime import date as date_cls
+                from datetime import timedelta
+
+                from app.lottery.numeric_relations.analysis_engine.same_day_context import (
+                    build_same_day_context,
+                )
+                from app.services.lottery_result_service import LotteryResultService
+
+                svc_res = LotteryResultService(self.db)
+                today = date_cls.today()
+                for delta in range(0, 180):
+                    day = today - timedelta(days=delta)
+                    rows = await svc_res.get_by_date(day, featured_only=True)
+                    if not rows:
+                        continue
+                    ctx_day = build_same_day_context(
+                        rows,
+                        draw_date=day.isoformat(),
+                        positions=["first"],
+                        exclude_numbers=[],
+                    )
+                    nums = {int(x) for x in (ctx_day.confirmer_numbers or [])}
+                    for row in rows or []:
+                        if not isinstance(row, dict):
+                            continue
+                        for key in ("primera", "first", "numbers", "n1"):
+                            val = row.get(key)
+                            if val is None:
+                                continue
+                            vals = val if isinstance(val, (list, tuple)) else [val]
+                            for n in vals:
+                                try:
+                                    nums.add(int(str(n).lstrip("0") or "0"))
+                                except Exception:
+                                    pass
+                    if observed in nums and confirmer_i in nums:
+                        date_s = day.isoformat()
+                        break
             except Exception:
                 pass
 

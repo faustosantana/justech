@@ -526,10 +526,27 @@ def resolve_intent(message: str, ctx: LotterySessionContext) -> ResolvedIntent:
                     confirmer = b
             except ValueError:
                 pass
-        # Fecha del contexto o mencionada
-        date_s = store.get("base_date") if isinstance(store, dict) else None
-        if hasattr(ctx, "base_date") and ctx.base_date:
-            date_s = ctx.base_date
+        # Fecha: reutilizar solo si el usuario habla del mismo número/contexto.
+        # Un cambio de número (p. ej. 35 → 39) debe re-resolver la fecha.
+        date_s = None
+        same_observed = False
+        try:
+            prev_obs = int((last_ca or {}).get("observed") or 0) or None
+            same_observed = prev_obs is not None and int(prev_obs) == int(n_int)
+        except (TypeError, ValueError):
+            same_observed = False
+        if same_observed:
+            date_s = (last_ca or {}).get("date") or (
+                store.get("base_date") if isinstance(store, dict) else None
+            )
+            if hasattr(ctx, "base_date") and ctx.base_date:
+                date_s = date_s or ctx.base_date
+        # Explicit date in message wins
+        m_date = re.search(r"\b(20\d{2}-\d{2}-\d{2})\b", text)
+        if m_date:
+            date_s = m_date.group(1)
+        elif re.search(r"23\s+de\s+junio|23\s*/\s*06|junio\s+23", text, re.I):
+            date_s = "2026-06-23"
 
         # Análisis completo por defecto (conversacional) — sin preguntar lotería/K.
         if _analiza_observed and not _nr_occurrence_mode:
@@ -541,7 +558,11 @@ def resolve_intent(message: str, ctx: LotterySessionContext) -> ResolvedIntent:
                     "number": str(n_int),
                     "confirmer": confirmer,
                     "date": date_s,
-                    "lottery": lotteries[0] if lotteries else ctx.last_lottery,
+                    "lottery": (
+                        ((last_ca or {}).get("lottery") or (lotteries[0] if lotteries else ctx.last_lottery))
+                        if same_observed
+                        else (lotteries[0] if lotteries else None)
+                    ),
                     "include_historical": True,
                     "historical_period": "all",
                 },

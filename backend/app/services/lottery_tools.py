@@ -1059,9 +1059,9 @@ class LotteryToolExecutor:
         draw_date = params.get("date") or params.get("analysis_date")
         date_s = str(draw_date)[:10] if draw_date else None
         lottery_hint = params.get("lottery")
-        # If the user did not pass a date, resolve last occurrence so same-day
-        # confirmation can run (without asking for a form field).
-        if not date_s:
+        # If the user did not pass a date and did not give a confirmer, resolve a
+        # featured day with same-day T1×T2 confirmation (prefer Nacional family).
+        if not date_s and not confirmer_i:
             try:
                 from app.services.lottery_query_service import LotteryQueryService
                 from app.services.lottery_result_service import LotteryResultService

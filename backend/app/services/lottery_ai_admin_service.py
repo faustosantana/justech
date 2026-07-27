@@ -607,9 +607,11 @@ class LotteryAiAdminService:
     async def _refresh_prompt_cache(self) -> None:
         row = (
             await self.db.execute(
-                select(LotteryAiPromptVersion).where(LotteryAiPromptVersion.status == "active")
+                select(LotteryAiPromptVersion)
+                .where(LotteryAiPromptVersion.status == "active")
+                .order_by(LotteryAiPromptVersion.updated_at.desc().nullslast())
             )
-        ).scalar_one_or_none()
+        ).scalars().first()
         if row:
             prompt_mod.set_active_from_db(
                 name=row.name,

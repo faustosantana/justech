@@ -380,6 +380,8 @@ class LotteryAiAdminService:
             )
             existing_versions.add("v5")
 
+        await self.db.flush()
+
         # Promote Prompt Maestro v5: archive prior active rows and activate v5 body.
         if v5_code:
             rows = (
@@ -412,6 +414,7 @@ class LotteryAiAdminService:
                     changelog=v5_row.changelog or "",
                     variables=list(v5_row.variables or []),
                 )
+            await self.db.flush()
 
         # Hotfix active v2 body from code registry when position/compound rules missing
         # (legacy; only if v2 somehow remains the sole active row).

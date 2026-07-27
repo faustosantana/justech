@@ -42,6 +42,9 @@ from app.lottery.numeric_relations.analysis_engine.same_day_context import (
     find_same_day_cross_confirmations,
     same_day_context_from_dict,
 )
+from app.lottery.numeric_relations.analysis_engine.historical_relation_evidence import (
+    analyze_historical_relations,
+)
 from app.lottery.numeric_relations.analysis_engine.signal_tracker import get_signal_store
 from app.lottery.numeric_relations.analysis_engine.tiebreak_engine import (
     DEFAULT_PRACTICAL_THRESHOLD,
@@ -307,11 +310,119 @@ def run_complete_analysis(
             "Los pesos del ranking son configurables y deben validarse con backtest.",
             "Empates estructurales no resueltos se reportan como EMPATE_MULTI_FUERTE.",
             "El cruce del mismo día usa las posiciones configuradas (por defecto primera).",
+            "El histórico describe comportamientos anteriores; no altera la prioridad de Tabla 1.",
         ],
         tiebreak=tiebreak_payload,
         same_day_context=day_context_payload,
         same_day_cross=[e.to_dict() for e in same_day_cross],
     )
+
+    # Historical evidence layer (explanatory only — does not change ranking / T1 priority).
+    historical_evidence = None
+    hist_rows = None
+    if raw and isinstance(raw.get("historical_draws"), list):
+        hist_rows = raw.get("historical_draws")
+    if hist_rows and primary is not None and seed_numbers:
+        try:
+            origin_x = int(seed_numbers[0])
+            confirmer_y = None
+            if confirmer_numbers:
+                confirmer_y = int(confirmer_numbers[0])
+            elif len(seed_numbers) > 1:
+                confirmer_y = int(seed_numbers[1])
+            elif primary.evidence.direct_confirmers:
+                confirmer_y = int(primary.evidence.direct_confirmers[0])
+            # Rival: strongest non-T1 neighbor if present (e.g. 07), else first alternative
+            rival_meta = None
+            for c in ranked:
+                if c.number == primary.number:
+                    continue
+                if c.classification == "VECINO_T2_DIRECTO" or (
+                    not c.evidence.table1_sources and c.evidence.direct_confirmers
+                ):
+                    rival_meta = {
+                        "number": c.number,
+                        "table1_sources": c.evidence.table1_sources,
+                        "table2_confirmers": c.evidence.direct_confirmers,
+                        "same_day_cross_support": c.evidence.same_day_cross_support,
+                        "independent_routes": c.evidence.independent_path_count,
+                    }
+                    break
+            if rival_meta is None and alternatives:
+                a0 = next((c for c in ranked if c.number == alternatives[0]["number"]), None)
+                if a0 is not None:
+                    rival_meta = {
+                        "number": a0.number,
+                        "table1_sources": a0.evidence.table1_sources,
+                        "table2_confirmers": a0.evidence.direct_confirmers,
+                        "same_day_cross_support": a0.evidence.same_day_cross_support,
+                        "independent_routes": a0.evidence.independent_path_count,
+                    }
+            lots = []
+            positions_meta = []
+            for cross in same_day_cross:
+                if cross.companion_c == primary.number:
+                    if cross.lottery_x:
+                        lots.append(cross.lottery_x)
+                    if cross.lottery_y:
+                        lots.append(cross.lottery_y)
+                    if cross.position_x:
+                        positions_meta.append(cross.position_x)
+                    if cross.position_y:
+                        positions_meta.append(cross.position_y)
+            historical_evidence = analyze_historical_relations(
+                hist_rows,
+                origin_x=origin_x,
+                confirmer_y=confirmer_y,
+                candidate_c=primary.number,
+                alternatives=[a["number"] for a in alternatives[:8]],
+                catalog=cat,
+                period=(raw or {}).get("historical_period") or "all",
+                positions=None,  # all positions by default
+                primary_meta={
+                    "table1_sources": primary.evidence.table1_sources,
+                    "table2_confirmers": primary.evidence.direct_confirmers,
+                    "same_day_cross_support": primary.evidence.same_day_cross_support,
+                    "lotteries": lots,
+                    "positions": positions_meta,
+                    "independent_routes": primary.evidence.independent_path_count,
+                },
+                rival_meta=rival_meta,
+            )
+            stages.append("historical_evidence_built")
+            result.stages_completed = stages
+            result.historical_evidence = historical_evidence
+            # Enrich explanation with historical narrative (no ranking change).
+            narr = historical_evidence.get("narrative") or {}
+            if isinstance(explanation, dict):
+                explanation = {
+                    **explanation,
+                    "historical": narr,
+                    "conclusion": narr.get("conclusion") or explanation.get("conclusion"),
+                    "evidence_current": narr.get("evidence_current"),
+                    "historical_behavior": narr.get("historical_behavior"),
+                    "comparison": narr.get("comparison"),
+                    "warning": narr.get("warning"),
+                    "summary": " ".join(
+                        p
+                        for p in [
+                            narr.get("conclusion"),
+                            narr.get("historical_behavior"),
+                            narr.get("comparison"),
+                            narr.get("warning"),
+                        ]
+                        if p
+                    )
+                    or explanation.get("summary"),
+                }
+                result.explanation = explanation
+        except Exception:
+            # Historical layer must never break structural analysis.
+            result.historical_evidence = {
+                "error": "historical_layer_unavailable",
+                "ranking_unchanged": True,
+                "table1_priority": True,
+            }
 
     if persist:
         store = get_signal_store()

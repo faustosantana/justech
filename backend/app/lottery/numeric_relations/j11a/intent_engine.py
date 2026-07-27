@@ -139,6 +139,29 @@ def detect_intent(message: str, memory: SessionMemory | None = None) -> IntentRe
                 raw=text,
                 explanation_level=level,
             )
+        if any(
+            k in low
+            for k in (
+                "histórico",
+                "historico",
+                "equivalente",
+                "cuántas veces",
+                "cuantas veces",
+                "comportó",
+                "comporto",
+                "confirmadores",
+                "d+1",
+                "d+3",
+                "d+7",
+            )
+        ):
+            return IntentResult(
+                intent="EXPLAIN_HISTORICAL_RELATION",
+                numbers=nums or list(mem.observed_numbers),
+                candidate=cand,
+                raw=text,
+                explanation_level=level,
+            )
         if "por qué" in low or "porque" in low or "quedo fuerte" in low or "quedó fuerte" in low:
             return IntentResult(
                 intent="EXPLAIN_CANDIDATE",
@@ -214,6 +237,17 @@ def detect_intent(message: str, memory: SessionMemory | None = None) -> IntentRe
 
     if any(k in low for k in ("por qué", "porque", "explica", "explicame", "explícame")):
         cand = nums[0] if nums else (int(mem.primary_signal["number"]) if mem.primary_signal else None)
+        if any(
+            k in low
+            for k in ("histórico", "historico", "más fuerza", "mas fuerza", "supera", "frente a")
+        ):
+            return IntentResult(
+                intent="EXPLAIN_HISTORICAL_RELATION",
+                numbers=nums or list(mem.observed_numbers),
+                candidate=cand,
+                raw=text,
+                explanation_level=level,
+            )
         return IntentResult(
             intent="EXPLAIN_CANDIDATE",
             numbers=list(mem.observed_numbers),
@@ -222,6 +256,26 @@ def detect_intent(message: str, memory: SessionMemory | None = None) -> IntentRe
             explanation_level=level,
             needs_clarification=cand is None,
             clarification_prompt="¿Qué candidato quieres que explique?",
+        )
+
+    if any(
+        k in low
+        for k in (
+            "comportó históricamente",
+            "comporto historicamente",
+            "casos equivalentes",
+            "cuántas veces salió",
+            "cuantas veces salio",
+            "evidencia histórica",
+            "evidencia historica",
+        )
+    ):
+        return IntentResult(
+            intent="EXPLAIN_HISTORICAL_RELATION",
+            numbers=nums or list(mem.observed_numbers),
+            candidate=nums[0] if nums else (int(mem.primary_signal["number"]) if mem.primary_signal else None),
+            raw=text,
+            explanation_level=level,
         )
 
     # Default: if message is mostly numbers, run analysis

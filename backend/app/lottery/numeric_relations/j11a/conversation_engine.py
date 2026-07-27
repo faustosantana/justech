@@ -106,6 +106,15 @@ def chat(
             tool_results["get_historical_appearance"] = call_tool(
                 "get_historical_appearance", candidate=cand
             )
+        tool_results["get_historical_relation_evidence"] = call_tool(
+            "get_historical_relation_evidence", analysis_id=memory.analysis_id
+        )
+
+    elif intent.intent == "EXPLAIN_HISTORICAL_RELATION":
+        tool_results["get_analysis"] = call_tool("get_analysis", analysis_id=memory.analysis_id)
+        tool_results["get_historical_relation_evidence"] = call_tool(
+            "get_historical_relation_evidence", analysis_id=memory.analysis_id
+        )
 
     elif intent.intent == "RUN_BACKTEST":
         tool_results["run_backtest"] = call_tool("run_backtest")

@@ -27,14 +27,23 @@ def deterministic_reply(
         if not primary:
             return "El motor completó el análisis pero no halló un candidato con evidencia suficiente."
         obs = ", ".join(str(n) for n in data.get("observed_numbers") or [])
-        return (
+        base = (
             f"Análisis completo de [{obs}]. "
-            f"FUERTE / señal principal: {primary.get('number')} "
+            f"Señal principal: {primary.get('number')} "
             f"({primary.get('classification')}), "
             f"respaldo estructural {primary.get('analytical_confidence')}/100. "
             "Selección realizada después del cruce total de relaciones. "
             "PREDICCIÓN EXPERIMENTAL BASADA EN RELACIONES."
         )
+        hist = data.get("historical_evidence") or {}
+        narr = hist.get("narrative") or {}
+        if narr.get("historical_behavior"):
+            base += (
+                f" Histórico ({hist.get('period_label') or 'Todo el histórico'}): "
+                f"{narr.get('historical_behavior')} "
+                f"{narr.get('warning') or ''}"
+            )
+        return base
 
     if intent.intent in {"EXPLAIN_CANDIDATE", "FOLLOW_UP_CONTEXT"}:
         data = memory.last_result or tool_results.get("get_analysis", {}).get("data")
@@ -88,16 +97,38 @@ def deterministic_reply(
             "No es probabilidad de que el número salga."
         )
 
-    if intent.intent == "CHECK_HISTORICAL_APPEARANCE":
+    if intent.intent in {"CHECK_HISTORICAL_APPEARANCE", "EXPLAIN_HISTORICAL_RELATION"}:
+        rel = tool_results.get("get_historical_relation_evidence", {}).get("data") or {}
+        narr = rel.get("narrative") or {}
+        if narr.get("historical_behavior") or rel.get("exact_cases") is not None:
+            parts = [
+                narr.get("conclusion"),
+                narr.get("evidence_current"),
+                narr.get("historical_behavior"),
+                narr.get("comparison"),
+                (
+                    f"Período: {rel.get('period')}. "
+                    f"Casos exactos: {rel.get('exact_cases')}. "
+                    f"Aciertos exactos: {rel.get('exact_hits')}. "
+                    f"Familia Tabla 1: {rel.get('t1_family_hits')}. "
+                    f"Vecinos Tabla 2: {rel.get('t2_neighbor_hits')}. "
+                    f"D+1/D+3/D+7: {rel.get('d1_hits')}/{rel.get('d3_hits')}/{rel.get('d7_hits')}."
+                ),
+                narr.get("warning")
+                or "El histórico describe comportamientos anteriores y no garantiza repetición.",
+                "Nota: acierto exacto es distinto del respaldo ampliado (familia T1 + vecinos T2).",
+            ]
+            return " ".join(p for p in parts if p)
         data = tool_results.get("get_historical_appearance", {}).get("data") or {}
-        if not data.get("first_appearance_date"):
+        if data.get("first_appearance_date"):
             return (
-                "No encontré evidencia suficiente en el motor para afirmar esa fecha histórica."
+                f"Primera aparición registrada: {data['first_appearance_date']} "
+                f"(D+{data.get('relative_day')}) en {data.get('first_lottery')} "
+                f"posición {data.get('first_position')}."
             )
         return (
-            f"Primera aparición registrada: {data['first_appearance_date']} "
-            f"(D+{data.get('relative_day')}) en {data.get('first_lottery')} "
-            f"posición {data.get('first_position')}."
+            "No encontré evidencia histórica suficiente en el motor para esa relación. "
+            "Ejecute primero el análisis completo con histórico."
         )
 
     if intent.intent == "SHOW_ACTIVE_SIGNALS":

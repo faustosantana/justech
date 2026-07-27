@@ -47,7 +47,11 @@ def build_plan(intent: IntentResult, memory: SessionMemory | None = None) -> Pla
         add("Listar señales cumplidas", "get_fulfilled_signals")
     elif intent.intent == "CHECK_HISTORICAL_APPEARANCE":
         add("Identificar caso", "get_signal_status", candidate=intent.candidate)
-        add("Consultar histórico", "get_historical_appearance", candidate=intent.candidate)
+        add("Consultar histórico de apariciones", "get_historical_appearance", candidate=intent.candidate)
+        add("Consultar evidencia histórica de relación", "get_historical_relation_evidence")
+    elif intent.intent == "EXPLAIN_HISTORICAL_RELATION":
+        add("Obtener análisis", "get_analysis")
+        add("Consultar evidencia histórica", "get_historical_relation_evidence")
     elif intent.intent == "RUN_BACKTEST":
         add("Ejecutar backtest", "run_backtest")
     elif intent.intent == "SHOW_CHAIN":

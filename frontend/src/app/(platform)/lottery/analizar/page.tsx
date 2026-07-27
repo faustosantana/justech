@@ -68,6 +68,10 @@ type Analysis = {
     relation_direct?: string
     confirmation_external?: string
     conclusion?: string
+    evidence_current?: string
+    historical_behavior?: string
+    comparison?: string
+    warning?: string
   }
   observed_numbers?: number[]
   derivations?: { path?: number[]; via?: string; numbers?: number[] }[]
@@ -82,6 +86,42 @@ type Analysis = {
     }[]
   } | null
   same_day_cross?: SameDayCross[]
+  historical_evidence?: {
+    period_label?: string
+    date_from?: string | null
+    date_to?: string | null
+    level1_count?: number
+    level2_count?: number
+    level3_count?: number
+    metrics?: {
+      exact_cases?: number
+      exact_hits?: number
+      t1_family_hits?: number
+      t2_neighbor_hits?: number
+      d1_hits?: number
+      d3_hits?: number
+      d7_hits?: number
+      evidence_quantity?: string
+      evidence_quantity_message?: string
+      recent_cases?: {
+        date?: string
+        observed?: number[]
+        candidate?: number
+        result?: string
+        window?: string
+      }[]
+    }
+    evidence_card?: Record<string, unknown>
+    rival_card?: Record<string, unknown> | null
+    comparison?: string
+    narrative?: {
+      conclusion?: string
+      evidence_current?: string
+      historical_behavior?: string
+      comparison?: string
+      warning?: string
+    }
+  } | null
   graph?: {
     nodes?: { id?: string; number?: number; role?: string }[]
     edges?: { source?: number; target?: number; relation?: string; type?: string }[]
@@ -147,6 +187,7 @@ export default function LotteryAnalizarPage() {
   const ctxDate = search.get('date') || ''
   const ctxPosition = search.get('position') || ''
   const [analysisDate, setAnalysisDate] = useState(ctxDate)
+  const [histPeriod, setHistPeriod] = useState('all')
 
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -277,6 +318,8 @@ export default function LotteryAnalizarPage() {
             date: dateForRun,
             lottery: ctxLottery || undefined,
             positions: ['first'],
+            historical_period: histPeriod,
+            include_historical: true,
           }),
         })
         if (!res.ok) {
@@ -310,6 +353,7 @@ export default function LotteryAnalizarPage() {
       ctxDate,
       ctxLottery,
       analysisDate,
+      histPeriod,
       loadTables,
       loadHistory,
       loadDrawContext,
@@ -471,6 +515,22 @@ export default function LotteryAnalizarPage() {
                 className="w-40"
                 disabled={busy}
               />
+            </div>
+            <div>
+              <label className="mb-1 block text-xs font-medium text-slate-600">
+                Período histórico
+              </label>
+              <select
+                className="h-10 rounded-md border border-slate-200 bg-white px-2 text-sm"
+                value={histPeriod}
+                disabled={busy}
+                onChange={(e) => setHistPeriod(e.target.value)}
+              >
+                <option value="all">Todo el histórico</option>
+                <option value="5y">Últimos 5 años</option>
+                <option value="3y">Últimos 3 años</option>
+                <option value="1y">Último año</option>
+              </select>
             </div>
             <Button className="bg-blue-600 hover:bg-blue-700" disabled={busy} onClick={() => void run()}>
               {busy ? 'Analizando información…' : 'Analizar'}
@@ -765,6 +825,213 @@ export default function LotteryAnalizarPage() {
                 )}
               </CardContent>
             </Card>
+
+            {data.historical_evidence && (
+              <>
+                <Card className="border-indigo-100">
+                  <CardHeader>
+                    <CardTitle className="text-base text-blue-900">Evidencias actuales</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-2 text-sm text-slate-700">
+                    {(() => {
+                      const card = data.historical_evidence?.evidence_card || {}
+                      return (
+                        <ul className="grid gap-2 sm:grid-cols-2">
+                          <li>
+                            Tabla 1:{' '}
+                            <span className="font-medium">
+                              {card.table1_support ? 'sí' : 'no'}
+                            </span>
+                          </li>
+                          <li>
+                            Tabla 2:{' '}
+                            <span className="font-medium">
+                              {card.table2_support ? 'sí' : 'no'}
+                            </span>
+                          </li>
+                          <li>
+                            Cruce del mismo día:{' '}
+                            <span className="font-medium">
+                              {card.same_day_cross_support ? 'sí' : 'no'}
+                            </span>
+                          </li>
+                          <li>
+                            Loterías involucradas:{' '}
+                            <span className="font-medium">
+                              {Number(card.independent_lotteries) || 0}
+                            </span>
+                          </li>
+                          <li>
+                            Rutas independientes:{' '}
+                            <span className="font-medium">
+                              {Number(card.independent_routes) || 0}
+                            </span>
+                          </li>
+                        </ul>
+                      )
+                    })()}
+                    {data.explanation?.evidence_current && (
+                      <p className="pt-1 text-slate-600">{data.explanation.evidence_current}</p>
+                    )}
+                  </CardContent>
+                </Card>
+
+                <Card className="border-indigo-100">
+                  <CardHeader>
+                    <CardTitle className="text-base text-blue-900">
+                      Comportamiento histórico
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-3 text-sm">
+                    <p className="text-xs text-slate-500">
+                      {data.historical_evidence.period_label || 'Todo el histórico'}
+                      {data.historical_evidence.date_from
+                        ? ` · ${data.historical_evidence.date_from} → ${data.historical_evidence.date_to}`
+                        : data.historical_evidence.date_to
+                          ? ` · hasta ${data.historical_evidence.date_to}`
+                          : ''}
+                    </p>
+                    {(() => {
+                      const m = data.historical_evidence?.metrics || {}
+                      const tiles = [
+                        { label: 'Casos equivalentes', value: m.exact_cases },
+                        { label: 'Aciertos exactos', value: m.exact_hits },
+                        { label: 'Familia Tabla 1', value: m.t1_family_hits },
+                        { label: 'Vecinos Tabla 2', value: m.t2_neighbor_hits },
+                        { label: 'D+1', value: m.d1_hits },
+                        { label: 'D+3', value: m.d3_hits },
+                        { label: 'D+7', value: m.d7_hits },
+                      ]
+                      return (
+                        <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+                          {tiles.map((t) => (
+                            <div
+                              key={t.label}
+                              className="rounded-xl border border-indigo-50 bg-indigo-50/40 px-3 py-2"
+                            >
+                              <p className="text-[10px] uppercase tracking-wide text-slate-500">
+                                {t.label}
+                              </p>
+                              <p className="text-lg font-semibold text-slate-900">
+                                {t.value ?? 0}
+                              </p>
+                            </div>
+                          ))}
+                        </div>
+                      )
+                    })()}
+                    <p className="text-slate-700">
+                      {data.historical_evidence.narrative?.historical_behavior ||
+                        data.historical_evidence.metrics?.evidence_quantity_message}
+                    </p>
+                    {(data.historical_evidence.level2_count || 0) > 0 && (
+                      <p className="text-xs text-slate-500">
+                        Ruta ampliada (otros confirmadores):{' '}
+                        {data.historical_evidence.level2_count} casos · Evidencia estructural
+                        (nivel 3): {data.historical_evidence.level3_count || 0}
+                      </p>
+                    )}
+                  </CardContent>
+                </Card>
+
+                {(data.historical_evidence.metrics?.recent_cases || []).length > 0 && (
+                  <Card className="border-indigo-100">
+                    <CardHeader>
+                      <CardTitle className="text-base text-blue-900">Casos recientes</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="overflow-x-auto rounded-lg border border-indigo-50">
+                        <table className="min-w-full text-left text-sm">
+                          <thead className="bg-indigo-50 text-xs uppercase text-blue-900">
+                            <tr>
+                              <th className="px-3 py-2">Fecha</th>
+                              <th className="px-3 py-2">Números observados</th>
+                              <th className="px-3 py-2">Candidato</th>
+                              <th className="px-3 py-2">Resultado posterior</th>
+                              <th className="px-3 py-2">Ventana</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {(data.historical_evidence.metrics?.recent_cases || [])
+                              .slice(0, 10)
+                              .map((c, i) => (
+                                <tr key={`${c.date}-${i}`} className="border-t border-indigo-50">
+                                  <td className="px-3 py-2">{c.date}</td>
+                                  <td className="px-3 py-2">
+                                    {(c.observed || []).map((n) => pad2(n)).join(' · ')}
+                                  </td>
+                                  <td className="px-3 py-2">{pad2(c.candidate)}</td>
+                                  <td className="px-3 py-2">{c.result}</td>
+                                  <td className="px-3 py-2">{c.window || '—'}</td>
+                                </tr>
+                              ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
+
+                {data.historical_evidence.rival_card && (
+                  <Card className="border-amber-100">
+                    <CardHeader>
+                      <CardTitle className="text-base text-blue-900">Comparación</CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-3 text-sm text-slate-700">
+                      <div className="grid gap-3 md:grid-cols-2">
+                        {[
+                          data.historical_evidence.evidence_card,
+                          data.historical_evidence.rival_card,
+                        ].map((card) => {
+                          if (!card) return null
+                          return (
+                            <div
+                              key={String(card.candidate_number)}
+                              className="rounded-xl border border-slate-100 bg-slate-50/60 p-3"
+                            >
+                              <p className="mb-2 text-lg font-semibold text-slate-900">
+                                {pad2(card.candidate_number as number)}
+                              </p>
+                              <ul className="space-y-1 text-xs">
+                                <li>
+                                  Respaldo Tabla 1: {card.table1_support ? 'sí' : 'no'}
+                                </li>
+                                <li>
+                                  Confirmación Tabla 2: {card.table2_support ? 'sí' : 'no'}
+                                </li>
+                                <li>
+                                  Confirmación en otra lotería:{' '}
+                                  {card.same_day_cross_support ? 'sí' : 'no'}
+                                </li>
+                                <li>
+                                  Evidencias independientes:{' '}
+                                  {Number(card.independent_routes) || 0}
+                                </li>
+                                <li>
+                                  Casos históricos equivalentes:{' '}
+                                  {Number(card.exact_historical_cases) || 0}
+                                </li>
+                                <li>
+                                  Aciertos exactos D+1 a D+7: {Number(card.d7_hits) || 0}
+                                </li>
+                              </ul>
+                            </div>
+                          )
+                        })}
+                      </div>
+                      <p>
+                        {data.historical_evidence.comparison ||
+                          data.historical_evidence.narrative?.comparison}
+                      </p>
+                      <p className="text-xs text-amber-800">
+                        {data.historical_evidence.narrative?.warning ||
+                          'El histórico describe comportamientos anteriores y no garantiza que el resultado vuelva a repetirse.'}
+                      </p>
+                    </CardContent>
+                  </Card>
+                )}
+              </>
+            )}
 
             {dayLotteries.length > 0 && (
               <Card className="border-blue-100">

@@ -307,6 +307,7 @@ class CompleteAnalysisResult:
     tiebreak: dict[str, Any] | None = None
     same_day_context: dict[str, Any] | None = None
     same_day_cross: list[dict[str, Any]] = field(default_factory=list)
+    historical_evidence: dict[str, Any] | None = None
     created_at: str = field(default_factory=lambda: datetime.utcnow().isoformat() + "Z")
 
     def to_dict(self) -> dict[str, Any]:

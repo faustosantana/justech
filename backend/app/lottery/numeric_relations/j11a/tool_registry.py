@@ -135,6 +135,41 @@ def get_signal_status(signal_id: str | None = None, candidate: int | None = None
     return _wrap("get_signal_status", None)
 
 
+def get_historical_relation_evidence(analysis_id: str | None = None) -> dict[str, Any]:
+    payload = get_analysis(analysis_id)["data"] or {}
+    hist = payload.get("historical_evidence")
+    if not hist:
+        return _wrap(
+            "get_historical_relation_evidence",
+            {
+                "message": "No hay evidencia histórica adjunta a este análisis.",
+                "hint": "Ejecute el análisis completo con histórico habilitado.",
+            },
+        )
+    narr = hist.get("narrative") or {}
+    metrics = hist.get("metrics") or {}
+    return _wrap(
+        "get_historical_relation_evidence",
+        {
+            "period": hist.get("period_label"),
+            "date_from": hist.get("date_from"),
+            "date_to": hist.get("date_to"),
+            "exact_cases": metrics.get("exact_cases"),
+            "exact_hits": metrics.get("exact_hits"),
+            "t1_family_hits": metrics.get("t1_family_hits"),
+            "t2_neighbor_hits": metrics.get("t2_neighbor_hits"),
+            "d1_hits": metrics.get("d1_hits"),
+            "d3_hits": metrics.get("d3_hits"),
+            "d7_hits": metrics.get("d7_hits"),
+            "evidence_quantity": metrics.get("evidence_quantity"),
+            "comparison": hist.get("comparison") or narr.get("comparison"),
+            "narrative": narr,
+            "table1_priority": True,
+            "note": "Exacto ≠ respaldo ampliado (familia T1 + vecinos T2).",
+        },
+    )
+
+
 def get_historical_appearance(candidate: int) -> dict[str, Any]:
     """Only reports appearances already stored on signals — never invents dates."""
     store = get_signal_store()
@@ -213,6 +248,7 @@ TOOL_REGISTRY: dict[str, Callable[..., dict[str, Any]]] = {
     "get_fulfilled_signals": get_fulfilled_signals,
     "get_signal_status": get_signal_status,
     "get_historical_appearance": get_historical_appearance,
+    "get_historical_relation_evidence": get_historical_relation_evidence,
     "get_historical_profile": get_historical_profile,
     "compare_candidates": compare_candidates,
     "compare_historical_cases": compare_historical_cases,

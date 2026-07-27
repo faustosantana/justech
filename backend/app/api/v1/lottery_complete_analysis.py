@@ -18,7 +18,14 @@ from app.lottery.numeric_relations.analysis_engine.complete_analysis_service imp
 from app.lottery.numeric_relations.analysis_engine.same_day_context import (
     build_same_day_context,
 )
+from app.lottery.numeric_relations.analysis_engine.historical_relation_evidence import (
+    analyze_historical_relations,
+    flat_rows_from_draw_refs,
+    resolve_period_bounds,
+)
 from app.lottery.numeric_relations.analysis_engine.signal_tracker import get_signal_store
+from app.lottery.numeric_relations.active_scope import get_active_analysis_lotteries
+from app.lottery.numeric_relations.historical.db_universe import load_universe_from_db
 from app.lottery.numeric_relations.j11a.conversation_engine import chat, plan_only
 from app.lottery.numeric_relations.j11a.memory_engine import get_or_create_session
 from app.services.lottery_result_service import LotteryResultService
@@ -36,12 +43,30 @@ def _optional_huawei_llm():
         snap = runtime_snapshot()
         if not (snap.get("huawei_modelarts") or {}).get("credentials_present"):
             return None
-        # Synthesis is optional; Conversation Engine always has deterministic fallback.
-        # We do not open DB sessions from this thin adapter; callers that need LLM
-        # prose should wire lottery_chat_service / LLMRouter with an existing session.
         return None
     except Exception:
         return None
+
+
+async def _load_featured_historical_rows(
+    db: Any,
+    *,
+    period: str | None = "all",
+) -> list[dict[str, Any]]:
+    """Load featured-lottery draws for historical evidence (full history by default)."""
+    lots = await get_active_analysis_lotteries(db)
+    ids = [x.id for x in lots]
+    if not ids:
+        return []
+    from_d, to_d, _label = resolve_period_bounds(period)
+    universe, _names = await load_universe_from_db(
+        db,
+        lottery_ids=ids,
+        date_from=from_d,
+        date_to=to_d,
+        max_draws=80000,
+    )
+    return flat_rows_from_draw_refs(list(universe._all))
 
 
 @router.post("/analysis/run")
@@ -49,7 +74,7 @@ async def analysis_run(
     db: DbSession,
     body: dict[str, Any] = Body(...),
 ) -> dict[str, Any]:
-    """Run complete analysis; auto-load same-day featured draws when date is present."""
+    """Run complete analysis; auto-load same-day + historical featured draws."""
     payload = dict(body)
     raw_date = payload.get("date")
     draw_date = None
@@ -96,12 +121,54 @@ async def analysis_run(
         except Exception:
             pass
 
+    # Historical draws for evidence layer (optional skip via include_historical=false)
+    if payload.get("include_historical", True) and "historical_draws" not in payload:
+        try:
+            payload["historical_draws"] = await _load_featured_historical_rows(
+                db, period=str(payload.get("historical_period") or "all")
+            )
+            payload["historical_period"] = payload.get("historical_period") or "all"
+        except Exception:
+            payload["historical_draws"] = []
+
     try:
         result = run_complete_analysis(payload, persist=True)
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e)) from e
     return result.to_dict()
 
+
+@router.post("/analysis/historical")
+async def analysis_historical(
+    db: DbSession,
+    body: dict[str, Any] = Body(...),
+) -> dict[str, Any]:
+    """Recompute historical evidence for an origin/confirmer/candidate (period selector)."""
+    try:
+        origin_x = int(body.get("origin_x") or body.get("number") or (body.get("numbers") or [0])[0])
+        confirmer_y = body.get("confirmer_y") or body.get("with")
+        if confirmer_y is not None:
+            confirmer_y = int(confirmer_y)
+        candidate_c = int(body.get("candidate_c") or body.get("candidate") or 0)
+        if not candidate_c:
+            raise ValueError("candidate_c required")
+        rows = await _load_featured_historical_rows(
+            db, period=str(body.get("historical_period") or body.get("period") or "all")
+        )
+        return analyze_historical_relations(
+            rows,
+            origin_x=origin_x,
+            confirmer_y=confirmer_y,
+            candidate_c=candidate_c,
+            alternatives=list(body.get("alternatives") or []),
+            period=str(body.get("historical_period") or body.get("period") or "all"),
+            primary_meta=body.get("primary_meta") or {},
+            rival_meta=body.get("rival_meta"),
+        )
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e)) from e
+    except Exception as e:
+        raise HTTPException(status_code=500, detail="historical_unavailable") from e
 
 @router.get("/analysis/{analysis_id}")
 async def analysis_get(analysis_id: str) -> dict[str, Any]:

@@ -29,10 +29,10 @@ type UiMessage = {
 };
 
 const STARTERS = [
-  "¿Cuándo fue la última vez que salió el 57?",
-  "Dame los números más frecuentes.",
-  "¿Qué salió en Real el 15 de marzo de 2022?",
-  "¿Hay resultados pendientes hoy?",
+  "¿Cómo se comportó históricamente 35 + 14?",
+  "¿Por qué 54 tiene más fuerza que 07?",
+  "¿Cuántas veces salió 54 después de esa relación?",
+  "Muéstrame los últimos casos equivalentes.",
 ];
 
 const isAdminRole = (role: string | null | undefined) =>

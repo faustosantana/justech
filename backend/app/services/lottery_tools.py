@@ -279,6 +279,27 @@ class LotteryToolExecutor:
             return res, res.pagination.total, {"semantics": "range"}
 
         if tool == LotteryToolName.GET_NUMBER_OCCURRENCES:
+            # Fase X.2 — same-day coincidence of 2+ numbers (all positions by default)
+            if params.get("relation") == "same_day" or (
+                isinstance(params.get("numbers"), list) and len(params.get("numbers") or []) >= 2
+                and params.get("active_relation") == "same_day"
+            ):
+                nums = [str(x) for x in (params.get("numbers") or [])]
+                if len(nums) < 2 and params.get("number") and params.get("compare_with"):
+                    nums = [str(params["number"]), str(params["compare_with"])]
+                data = await self.query.same_day_number_coincidences(
+                    nums,
+                    lotteries=params.get("lotteries"),
+                    position=params.get("position"),
+                    from_date=params.get("from_date"),
+                    to_date=params.get("to_date"),
+                    limit_dates=int(params.get("limit") or 200),
+                )
+                return data, int(data.get("total") or 0), {
+                    "semantics": "same_day_coincidence",
+                    "numbers": nums,
+                    "position_scope": params.get("position_scope") or "any_position",
+                }
             res = await self.query.by_number(
                 params["lottery"],
                 str(params["number"]),

@@ -779,3 +779,104 @@ class LotteryQueryService:
             to_date=to_date,
             data=data,
         )
+
+    async def same_day_number_coincidences(
+        self,
+        numbers: list[str],
+        *,
+        lotteries: list[str] | None = None,
+        position: int | None = None,
+        from_date: date | None = None,
+        to_date: date | None = None,
+        limit_dates: int = 200,
+        also_all_positions_totals: bool = True,
+    ) -> dict[str, Any]:
+        """
+        Dates where all numbers appear the same calendar day (any lottery by default).
+        Position filter is optional; when set, only that position counts.
+        """
+        nums = []
+        for n in numbers:
+            s = str(n).strip()
+            if not s:
+                continue
+            nums.append(s.zfill(2) if len(s) <= 2 and s.isdigit() else s)
+        nums = list(dict.fromkeys(nums))
+        if len(nums) < 2:
+            raise LotteryQueryError("VALIDATION", "Se requieren al menos 2 números")
+
+        lottery_ids: list[Any] | None = None
+        resolved_names: list[str] = []
+        if lotteries:
+            resolved = []
+            for name in lotteries:
+                try:
+                    resolved.append(await self.resolver.resolve_or_raise(str(name)))
+                except Exception:  # noqa: BLE001
+                    continue
+            lottery_ids = [r.id for r in resolved]
+            resolved_names = [r.name for r in resolved]
+
+        rows = await self.repo.same_day_number_coincidences(
+            nums,
+            lottery_ids=lottery_ids,
+            position=position,
+            from_date=from_date,
+            to_date=to_date,
+            limit_dates=limit_dates,
+        )
+        by_date: dict[date, list[dict[str, Any]]] = defaultdict(list)
+        seen_key: set[tuple[Any, ...]] = set()
+        for ddate, num, lot_name, pos, pos_label in rows:
+            key = (ddate, num, lot_name, pos)
+            if key in seen_key:
+                continue
+            seen_key.add(key)
+            by_date[ddate].append(
+                {
+                    "number": str(num).zfill(2) if len(str(num)) <= 2 else str(num),
+                    "lottery": lot_name,
+                    "position": int(pos) if pos is not None else None,
+                    "position_label": pos_label or (str(pos) if pos is not None else None),
+                }
+            )
+
+        items = []
+        for ddate in sorted(by_date.keys(), reverse=True):
+            appearances = by_date[ddate]
+            # Ensure all numbers present (guard)
+            present = {a["number"] for a in appearances}
+            if not set(nums).issubset(present):
+                continue
+            items.append({"date": str(ddate), "appearances": appearances})
+
+        total_all = None
+        if also_all_positions_totals and position is not None:
+            rows_all = await self.repo.same_day_number_coincidences(
+                nums,
+                lottery_ids=lottery_ids,
+                position=None,
+                from_date=from_date,
+                to_date=to_date,
+                limit_dates=limit_dates,
+            )
+            dates_all = {r[0] for r in rows_all}
+            # Re-check containment per date
+            tmp: dict[date, set[str]] = defaultdict(set)
+            for ddate, num, *_rest in rows_all:
+                tmp[ddate].add(str(num).zfill(2) if len(str(num)) <= 2 else str(num))
+            total_all = sum(1 for d, s in tmp.items() if set(nums).issubset(s))
+
+        return {
+            "relation": "same_day",
+            "numbers": nums,
+            "position_filter": position,
+            "preferred_position": 1,
+            "all_lotteries": not bool(lottery_ids),
+            "lotteries": resolved_names,
+            "total": len(items),
+            "total_all_positions": total_all,
+            "items": items,
+            "from_date": str(from_date) if from_date else None,
+            "to_date": str(to_date) if to_date else None,
+        }

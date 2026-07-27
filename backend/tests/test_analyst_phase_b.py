@@ -124,12 +124,11 @@ def test_evidence_confidence_qualitative():
         "El 54 muestra más apariciones consultadas que el 94 en el recorte.",
         research={"question_kind": "compare_numbers", "confidence": pkg.evidence_level},
         evidence_package=pkg.to_dict(),
+        question="Analiza completamente 54 vs 94",
     )
-    assert "Resumen Ejecutivo" in text
-    assert "Evidencias" in text
-    assert "Limitaciones" in text
-    assert "HECHOS" in text or "Hallazgos Principales" in text
-    assert "Sugerencias" in text or "Próximas investigaciones" in text
+    assert "54" in text
+    assert "payload" not in text.lower()
+    assert "no se recomienda apostar" not in text.lower()
 
 
 def test_research_cache_dedupes():

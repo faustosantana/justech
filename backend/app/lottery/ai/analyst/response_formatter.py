@@ -1,7 +1,7 @@
-"""Response Formatter — Analyst Experience (Fase C / v2.1.0).
+"""Response Formatter — Analyst Experience (Fase C / X.2 v2.3.3).
 
 Presentation layer only. Does NOT modify motor, ranking, Research Engine,
-Planner, or Conversation Brain logic — only how answers are written.
+Planner bodies, or Prompt Maestro — only how answers are written.
 """
 
 from __future__ import annotations
@@ -12,7 +12,6 @@ from typing import Any, Literal
 
 ResponseMode = Literal["short", "full", "report", "delta"]
 
-# Investigation size above this → automatic report layout
 REPORT_CASE_THRESHOLD = 40
 REPORT_STEP_THRESHOLD = 6
 REPORT_COMPARE_THRESHOLD = 2
@@ -20,6 +19,28 @@ REPORT_COMPARE_THRESHOLD = 2
 _BAR = "█"
 _BAR_EMPTY = "░"
 _MAX_BAR = 18
+
+_REPORT_Q = re.compile(
+    r"analiza(r)?\s+completamente|haz\s+un\s+estudio|comp[aá]rame|"
+    r"investiga(r)?\s+el\s+comportamiento|genera(r)?\s+un\s+informe|"
+    r"busca(r)?\s+patrones|informe\s+completo|estudio\s+completo",
+    re.I,
+)
+
+_SIMPLE_Q = re.compile(
+    r"han\s+salido|alguna\s+vez|cu[aá]ntas?\s+veces|cu[aá]ndo|"
+    r"coincid|juntos|mismo\s+d[ií]a|[uú]ltima\s+coinciden|"
+    r"^\s*\¿?(y\s+)?en\s+(primera|cualquier)",
+    re.I,
+)
+
+_TECH_LEAK = re.compile(
+    r"\b(kind|payload|herramientas hist[oó]ricas autorizadas|trace|"
+    r"tool result|confidence engine|motor intacto|Prompt Maestro|"
+    r"no se recomienda apostar|no inventa porcentajes|"
+    r"HECHOS y AN[AÁ]LISIS est[aá]n separados)\b",
+    re.I,
+)
 
 
 def format_analyst_response(
@@ -32,7 +53,7 @@ def format_analyst_response(
     conversation_context: dict[str, Any] | None = None,
     is_follow_up: bool | None = None,
 ) -> str:
-    """Fase C professional formatter — adaptive short / full / report / delta."""
+    """Adaptive short / full / report / delta — mature user-facing language."""
     facts = facts or {}
     research = research or {}
     ctx = conversation_context or {}
@@ -54,11 +75,14 @@ def format_analyst_response(
         evidence_package=pkg,
         is_follow_up=follow_up,
         force_structure=force_structure,
+        question=question,
     )
+
+    cleaned = _sanitize_user_text(text)
 
     if mode == "delta":
         return format_delta_response(
-            text,
+            cleaned,
             facts=facts,
             research=research,
             evidence_package=pkg,
@@ -66,14 +90,13 @@ def format_analyst_response(
         )
     if mode == "short":
         return format_short_response(
-            text,
+            cleaned,
             facts=facts,
             research=research,
             evidence_package=pkg,
         )
-    # full + report share the same section skeleton; report adds title + ASCII
     return format_professional_response(
-        text,
+        cleaned,
         facts=facts,
         research=research,
         evidence_package=pkg,
@@ -113,9 +136,23 @@ def select_response_mode(
     evidence_package: dict[str, Any],
     is_follow_up: bool,
     force_structure: bool,
+    question: str | None = None,
 ) -> ResponseMode:
-    if is_follow_up:
+    q = question or ""
+    if is_follow_up and not _REPORT_Q.search(q):
         return "delta"
+
+    if _REPORT_Q.search(q) or research.get("report_mode"):
+        return "report"
+
+    # Same-day / simple factual answers → short
+    if (
+        research.get("relation") == "same_day"
+        or evidence_package.get("relation") == "same_day"
+        or _SIMPLE_Q.search(q)
+        or _SIMPLE_Q.search(text or "")
+    ) and not _REPORT_Q.search(q):
+        return "short"
 
     case_count = _as_int(evidence_package.get("case_count")) or 0
     steps = research.get("steps_completed") or research.get("plan") or []
@@ -139,18 +176,21 @@ def select_response_mode(
         or compare_n >= REPORT_COMPARE_THRESHOLD
         or complex_kind
     ):
-        return "report" if (case_count >= REPORT_CASE_THRESHOLD or step_count >= REPORT_STEP_THRESHOLD or complex_kind) else "full"
+        return (
+            "report"
+            if (case_count >= REPORT_CASE_THRESHOLD or step_count >= REPORT_STEP_THRESHOLD or complex_kind)
+            else "full"
+        )
 
-    # Simple: short answer unless force_structure and we have research meta
     if not research.get("question_kind") and not evidence_package and not force_structure:
         return "short"
     if not research.get("question_kind") and case_count < 5 and step_count <= 1:
         return "short"
+    body = (text or "").strip()
+    if len(body) < 420 and not facts.get("comparison"):
+        return "short"
     if research.get("question_kind") or evidence_package:
         return "full"
-    body = (text or "").strip()
-    if len(body) < 220 and not facts.get("comparison"):
-        return "short"
     return "full"
 
 
@@ -161,21 +201,30 @@ def format_short_response(
     research: dict[str, Any] | None = None,
     evidence_package: dict[str, Any] | None = None,
 ) -> str:
+    """Compact answer — no HECHOS/ANÁLISIS/Limitaciones boilerplate."""
     facts = facts or {}
     research = research or {}
     pkg = evidence_package or {}
     lead = _lead(text)
-    facts_block = _hechos_block(facts, pkg, research, compact=True)
-    why = _explain_why(lead, facts, pkg, research)
-    limitations = _limitations(pkg)
-    sections = [
-        ("Resumen Ejecutivo", lead),
-        ("HECHOS", facts_block),
-        ("ANÁLISIS", why),
-        ("Limitaciones", limitations),
-        ("Próximas investigaciones sugeridas", _suggestions(research, pkg, facts, compact=True)),
-    ]
-    return _join_sections(sections)
+    extras: list[str] = []
+    # Only add compact facts that add new info not already in lead
+    for key, label in (
+        ("lottery", "Lotería"),
+        ("year", "Período"),
+    ):
+        val = facts.get(key)
+        if val and str(val) not in lead:
+            extras.append(f"{label}: {val}.")
+    case_count = pkg.get("case_count")
+    if case_count is not None and str(case_count) not in lead:
+        extras.append(f"Registros consultados: {case_count}.")
+    lim = _limitations(pkg, only_material=True)
+    parts = [lead]
+    if extras:
+        parts.append("\n".join(extras))
+    if lim:
+        parts.append(lim)
+    return "\n\n".join(p for p in parts if p).strip()
 
 
 def format_delta_response(
@@ -192,20 +241,15 @@ def format_delta_response(
     pkg = evidence_package or {}
     lead = _lead(text)
     q = (question or "").strip()
-    focus = f"Sobre tu pregunta: {q}" if q else "Actualización sobre el contexto activo."
-    new_facts = _hechos_block(facts, pkg, research, compact=True)
-    why = _explain_why(lead, facts, pkg, research)
-    viz = _ascii_from_facts(facts, pkg, research, max_items=4)
-    sections = [
-        ("Resumen Ejecutivo", f"{focus}\n{lead}"),
-        ("Hallazgos Principales (solo lo nuevo)", new_facts),
-        ("ANÁLISIS", why),
-        ("Visualización", viz),
-        ("Evidencias", _evidence_block(pkg, research, compact=True)),
-        ("Limitaciones", _limitations(pkg)),
-        ("Próximas investigaciones sugeridas", _suggestions(research, pkg, facts, compact=True)),
-    ]
-    return _join_sections(sections)
+    # Avoid repeating the same conclusion under multiple headings
+    bits = []
+    if q and q.lower() not in lead.lower():
+        bits.append(f"Sobre tu pregunta ({q}):")
+    bits.append(lead)
+    lim = _limitations(pkg, only_material=True)
+    if lim:
+        bits.append(lim)
+    return "\n\n".join(bits).strip()
 
 
 def format_professional_response(
@@ -222,40 +266,44 @@ def format_professional_response(
     pkg = evidence_package or {}
     lead = _lead(text)
     if facts.get("primary") is not None and str(facts["primary"]) not in lead:
-        lead = f"{lead} Candidato principal del motor (solo lectura): {facts['primary']}."
+        lead = f"{lead} Candidato principal (dato histórico): {facts['primary']}."
 
     hallazgos = _hallazgos(facts, pkg, research, lead)
     analisis = _analisis_block(lead, facts, pkg, research)
     evidencias = _evidence_block(pkg, research, compact=False)
     comparaciones = _comparison_block(facts, pkg, research)
     viz = _ascii_from_facts(facts, pkg, research, max_items=8)
-    observaciones = _observaciones(research, pkg)
-    limitations = _limitations(pkg)
+    observaciones = _observaciones(research, pkg, lead)
+    limitations = _limitations(pkg, only_material=True)
     suggestions = _suggestions(research, pkg, facts, compact=False)
+
+    # Deduplicate: don't repeat lead in hallazgos/analisis/observaciones
+    if hallazgos and _normalize_dup(hallazgos) == _normalize_dup(lead):
+        hallazgos = None
+    if analisis and _normalize_dup(analisis) == _normalize_dup(lead):
+        analisis = None
+    if observaciones and _normalize_dup(observaciones) == _normalize_dup(lead):
+        observaciones = None
 
     header = None
     if mode == "report":
-        kind = research.get("question_kind") or "investigación histórica"
-        header = (
-            f"INFORME DE INVESTIGACIÓN — {kind}\n"
-            f"(formato informe; no es una predicción)"
-        )
+        header = "Informe de investigación histórica"
 
     sections: list[tuple[str, str | None]] = []
     if header:
         sections.append(("Encabezado", header))
     sections.extend(
         [
-            ("Resumen Ejecutivo", lead if mode != "report" else _executive_report(lead, pkg, research)),
-            ("Hallazgos Principales", hallazgos),
-            ("HECHOS", _hechos_block(facts, pkg, research, compact=False)),
-            ("ANÁLISIS", analisis),
-            ("OBSERVACIONES", observaciones),
+            ("Respuesta", lead if mode != "report" else _executive_report(lead, pkg, research)),
+            ("Hallazgos", hallazgos),
+            ("Detalle", _hechos_block(facts, pkg, research, compact=False)),
+            ("Interpretación", analisis),
+            ("Observación", observaciones),
             ("Comparaciones", comparaciones),
             ("Visualización", viz),
-            ("Evidencias", evidencias),
-            ("Limitaciones", limitations),
-            ("Próximas investigaciones sugeridas", suggestions),
+            ("Evidencias", evidencias if mode == "report" else None),
+            ("Aclaración", limitations),
+            ("Siguiente paso", suggestions if mode == "report" else None),
         ]
     )
     return _join_sections(sections)
@@ -266,19 +314,33 @@ def format_professional_response(
 # ---------------------------------------------------------------------------
 
 
+def _sanitize_user_text(text: str) -> str:
+    if not text:
+        return text
+    lines = []
+    for line in text.splitlines():
+        if _TECH_LEAK.search(line):
+            continue
+        lines.append(line)
+    return "\n".join(lines).strip() or (text or "").strip()
+
+
+def _normalize_dup(s: str) -> str:
+    return re.sub(r"\s+", " ", (s or "").lower()).strip(" -•*")
+
+
 def _lead(text: str) -> str:
-    body = (text or "").strip()
+    body = _sanitize_user_text(text or "").strip()
     if not body:
         return "No encontré suficiente evidencia para responder con seguridad."
     return body.split("\n\n")[0].strip()
 
 
 def _executive_report(lead: str, pkg: dict[str, Any], research: dict[str, Any]) -> str:
-    conf = pkg.get("evidence_level") or research.get("confidence") or "Baja"
     cases = pkg.get("case_count")
-    bits = [lead, f"Nivel de evidencia: {conf}."]
+    bits = [lead]
     if cases is not None:
-        bits.append(f"Casos/registros de referencia: {cases}.")
+        bits.append(f"Se revisaron {cases} registros de referencia.")
     return " ".join(bits)
 
 
@@ -288,14 +350,14 @@ def _hechos_block(
     research: dict[str, Any],
     *,
     compact: bool,
-) -> str:
+) -> str | None:
     lines: list[str] = []
     if facts.get("observed") is not None:
         lines.append(f"- Número observado: {facts['observed']}")
     if facts.get("confirmer") is not None:
         lines.append(f"- Confirmador: {facts['confirmer']}")
     if facts.get("primary") is not None:
-        lines.append(f"- Candidato principal del motor (dato, no predicción): {facts['primary']}")
+        lines.append(f"- Candidato principal (dato): {facts['primary']}")
     if facts.get("lottery"):
         lines.append(f"- Lotería activa: {facts['lottery']}")
     if facts.get("year") or (isinstance(pkg.get("period"), str) and pkg.get("period")):
@@ -304,7 +366,6 @@ def _hechos_block(
     if case_count is not None:
         lines.append(f"- Cantidad de casos/registros: {case_count}")
     for f in (pkg.get("findings") or [])[: (3 if compact else 8)]:
-        # Strip interpretive verbs when possible — keep as factual bullets
         lines.append(f"- {f}")
     hist = facts.get("historical") or facts.get("historical_summary")
     if isinstance(hist, dict):
@@ -315,7 +376,7 @@ def _hechos_block(
         if hist.get("d7_hits") is not None:
             lines.append(f"- Apariciones exactas hasta D+7: {hist.get('d7_hits')}")
     if not lines:
-        lines.append("- Hechos insuficientes en el payload; se respondió con la plantilla disponible.")
+        return None
     return "\n".join(lines)
 
 
@@ -324,22 +385,21 @@ def _hallazgos(
     pkg: dict[str, Any],
     research: dict[str, Any],
     lead: str,
-) -> str:
+) -> str | None:
     items: list[str] = []
-    if facts.get("primary") is not None:
-        items.append(f"El motor reporta como principal a {facts['primary']} (solo lectura).")
+    if facts.get("primary") is not None and str(facts["primary"]) not in lead:
+        items.append(f"El resultado principal reportado es {facts['primary']}.")
     case_count = pkg.get("case_count")
-    if case_count is not None:
+    if case_count is not None and str(case_count) not in lead:
         items.append(f"Se consultaron {case_count} casos/registros históricos relevantes.")
-    conf = pkg.get("evidence_level") or research.get("confidence")
-    if conf:
-        items.append(f"Nivel de evidencia cualitativo: {conf}.")
     for c in (pkg.get("comparisons") or [])[:3]:
-        items.append(str(c))
+        if str(c) not in lead:
+            items.append(str(c))
     for t in (pkg.get("timeline") or [])[:2]:
-        items.append(str(t))
+        if str(t) not in lead:
+            items.append(str(t))
     if not items:
-        items.append(lead)
+        return None
     return "\n".join(f"- {x}" for x in items if x)
 
 
@@ -348,8 +408,7 @@ def _analisis_block(
     facts: dict[str, Any],
     pkg: dict[str, Any],
     research: dict[str, Any],
-) -> str:
-    """Interpretation separated from raw facts — always explains the why."""
+) -> str | None:
     return _explain_why(lead, facts, pkg, research)
 
 
@@ -358,28 +417,24 @@ def _explain_why(
     facts: dict[str, Any],
     pkg: dict[str, Any],
     research: dict[str, Any],
-) -> str:
+) -> str | None:
+    """Natural interpretation — no internal jargon, no repeated conclusion."""
     case_count = pkg.get("case_count")
-    conf = pkg.get("evidence_level") or research.get("confidence") or "Baja"
-    criterion = pkg.get("criterion") or "herramientas históricas autorizadas"
-    kind = research.get("question_kind") or "consulta"
-
     parts: list[str] = []
-    parts.append(
-        f"La conclusión se apoya en el kind «{kind}» y el criterio «{criterion}»."
-    )
+
     if case_count is not None:
         parts.append(
-            f"Se observó sobre {case_count} caso(s)/registro(s) consultados; "
-            f"eso explica el nivel de evidencia «{conf}»."
+            f"La lectura se basa en {case_count} caso(s)/registro(s) consultados en el histórico."
         )
+    elif pkg.get("findings"):
+        parts.append("La lectura se basa en los hallazgos devueltos por la consulta histórica.")
     else:
-        parts.append(
-            f"El nivel de evidencia es «{conf}» porque la cantidad de casos "
-            "no quedó cuantificada con claridad en el payload."
-        )
+        # Prefer fixing upstream; only surface when truly empty
+        if not lead or "no encontr" in lead.lower():
+            parts.append(
+                "No puedo precisar el total porque la consulta no devolvió un conteo completo."
+            )
 
-    # If lead mentions a lottery / confirmation — expand meaning
     m = re.search(
         r"\b([A-ZÁÉÍÓÚÑ][\wÁÉÍÓÚáéíóúñ]*(?:\s+[\wÁÉÍÓÚáéíóúñ]+){0,3})\s+"
         r"(confirm[oó]|apareci[oó]|mostr[oó])\s+primero",
@@ -389,63 +444,59 @@ def _explain_why(
     if m:
         subject = m.group(1)
         parts.append(
-            f"«{subject} confirmó primero» significa que, dentro de los casos evaluados "
-            f"y el criterio temporal usado, fue la primera lotería/evento en registrar "
-            f"el destino. No significa que siempre lo hará, ni que sea una recomendación."
+            f"«{subject} confirmó primero» significa que, en los casos evaluados, "
+            "fue el primer registro temporal relevante."
         )
-    elif facts.get("primary") is not None:
+    elif facts.get("primary") is not None and str(facts["primary"]) not in lead:
         parts.append(
-            f"Que el motor señale {facts['primary']} como principal describe el resultado "
-            "matemático de Tabla 1/2 + ranking para el input dado; no implica que 'vaya a salir'."
+            f"Que {facts['primary']} figure como principal describe el resultado "
+            "matemático del análisis para el input dado."
         )
 
     comparisons = pkg.get("comparisons") or []
     if comparisons:
         parts.append(
-            "En comparación, las diferencias numéricas indican mayor o menor volumen/"
-            "cobertura histórica, no superioridad predictiva."
+            "Las diferencias numéricas indican mayor o menor volumen histórico, "
+            "no un resultado futuro."
         )
 
-    parts.append(f"Lectura directa del resultado: {lead}")
+    # Do NOT restate lead ("Lectura directa…")
+    if not parts:
+        return None
     return "\n".join(f"- {p}" for p in parts)
 
 
-def _observaciones(research: dict[str, Any], pkg: dict[str, Any]) -> str:
+def _observaciones(
+    research: dict[str, Any],
+    pkg: dict[str, Any],
+    lead: str = "",
+) -> str | None:
     lines: list[str] = []
-    steps = research.get("steps_completed") or []
-    if steps:
-        lines.append(
-            "La investigación usó pasos autorizados: "
-            + ", ".join(str(s) for s in steps[:8])
-            + "."
-        )
-    if research.get("cache_hits"):
-        lines.append(
-            f"Se reutilizaron {research['cache_hits']} resultado(s) cacheados para evitar consultas repetidas."
-        )
-    if pkg.get("timeline"):
+    if pkg.get("timeline") and "cronolog" not in lead.lower():
         lines.append("Hay anclas temporales en la evidencia; conviene revisar la cronología.")
-    if not lines:
+    if research.get("relation") == "same_day":
         lines.append(
-            "Observación: la respuesta separa hechos de interpretación; "
-            "cualquier lectura a futuro queda fuera de alcance."
+            "La preferencia de primera posición se destaca aparte; "
+            "el total incluye todas las posiciones."
         )
+    if not lines:
+        return None
     return "\n".join(f"- {x}" for x in lines)
 
 
-def _evidence_block(pkg: dict[str, Any], research: dict[str, Any], *, compact: bool) -> str:
-    conf = pkg.get("evidence_level") or research.get("confidence") or "Baja"
-    criterion = pkg.get("criterion") or "herramientas históricas autorizadas"
-    period = pkg.get("period") or "período del histórico consultado"
-    tools = pkg.get("tools_used") or research.get("steps_completed") or []
+def _evidence_block(pkg: dict[str, Any], research: dict[str, Any], *, compact: bool) -> str | None:
     case_count = pkg.get("case_count")
-    lines = [
-        f"- Cantidad de casos: {case_count if case_count is not None else 'N/D'}",
-        f"- Criterio: {criterion}",
-        f"- Período: {period}",
-        f"- Herramientas utilizadas: {', '.join(str(t) for t in tools[: (4 if compact else 10)]) or 'N/D'}",
-        f"- Nivel de evidencia: {conf}",
-    ]
+    period = pkg.get("period")
+    lines = []
+    if case_count is not None:
+        lines.append(f"- Cantidad de casos: {case_count}")
+    if period:
+        lines.append(f"- Período: {period}")
+    findings = pkg.get("findings") or []
+    for f in findings[: (2 if compact else 6)]:
+        lines.append(f"- {f}")
+    if not lines:
+        return None
     return "\n".join(lines)
 
 
@@ -457,10 +508,9 @@ def _comparison_block(
     raw = list(pkg.get("comparisons") or [])
     if facts.get("comparison"):
         raw.insert(0, str(facts["comparison"]))
-    # Extract numeric subjects from facts / research meta
     subjects = []
     meta = research.get("research_meta") if isinstance(research.get("research_meta"), dict) else {}
-    for n in (meta.get("subjects") or []):
+    for n in meta.get("subjects") or []:
         subjects.append(str(n))
     if facts.get("observed") is not None and facts.get("compare_with") is not None:
         subjects = [str(facts["observed"]), str(facts["compare_with"])]
@@ -468,49 +518,57 @@ def _comparison_block(
     if not raw and not subjects and not str(research.get("question_kind") or "").startswith("compare"):
         return None
 
-    similitudes = [
-        "Ambos sujetos se evaluaron con las mismas herramientas históricas autorizadas.",
-        "Ninguno de los conteos implica predicción ni recomendación de apuesta.",
-    ]
     diferencias = [str(x) for x in raw[:6]] or [
-        "Las diferencias concretas dependen de los conteos devueltos por cada herramienta."
+        "Las diferencias concretas dependen de los conteos de cada consulta."
     ]
-    conclusiones = [
-        (
-            f"Con nivel de evidencia «{pkg.get('evidence_level') or research.get('confidence') or 'Baja'}», "
-            "la comparación describe volumen/cobertura histórica, no un ganador futuro."
-        )
-    ]
+    head = ""
     if subjects and len(subjects) >= 2:
-        conclusiones.insert(
-            0,
-            f"Comparación activa: {subjects[0]} vs {subjects[1]}.",
-        )
-
-    return (
-        "Similitudes\n"
-        + "\n".join(f"- {x}" for x in similitudes)
-        + "\n\nDiferencias\n"
-        + "\n".join(f"- {x}" for x in diferencias)
-        + "\n\nConclusiones\n"
-        + "\n".join(f"- {x}" for x in conclusiones)
-    )
+        head = f"Comparación activa: {subjects[0]} vs {subjects[1]}.\n\n"
+    return head + "Diferencias\n" + "\n".join(f"- {x}" for x in diferencias)
 
 
-def _limitations(pkg: dict[str, Any]) -> str:
+def _limitations(pkg: dict[str, Any], *, only_material: bool = True) -> str | None:
+    """Only material accuracy caveats — no generic architecture disclaimers."""
     base = list(pkg.get("limitations") or [])
-    defaults = [
-        "El histórico describe eventos anteriores y no garantiza resultados futuros.",
-        "HECHOS y ANÁLISIS están separados: la interpretación no crea datos nuevos.",
-        "El Analista IA no modifica Tabla 1/2, ranking, motor ni Prompt Maestro.",
-        "No se inventan porcentajes ni se recomienda apostar.",
-    ]
-    seen: set[str] = set()
+    material_hints = (
+        "hora",
+        "72",
+        "anterior",
+        "incomplet",
+        "faltan",
+        "formato",
+        "cobertura",
+        "no contiene",
+        "sin datos",
+        "parcial",
+    )
     lines: list[str] = []
-    for x in [*base, *defaults]:
-        if x and x not in seen:
+    seen: set[str] = set()
+    for x in base:
+        if not x:
+            continue
+        low = str(x).lower()
+        # Drop generic boilerplate
+        if any(
+            g in low
+            for g in (
+                "no garantiza resultados futuros",
+                "hechos y análisis",
+                "no modifica",
+                "no se inventan",
+                "no se recomienda apostar",
+                "prompt maestro",
+                "motor intacto",
+            )
+        ):
+            continue
+        if only_material and not any(h in low for h in material_hints):
+            continue
+        if x not in seen:
             seen.add(x)
             lines.append(f"- {x}")
+    if not lines:
+        return None
     return "\n".join(lines)
 
 
@@ -520,23 +578,22 @@ def _suggestions(
     facts: dict[str, Any],
     *,
     compact: bool,
-) -> str:
+) -> str | None:
     suggestions = list(pkg.get("related_suggestions") or [])
-    observed = facts.get("observed") or facts.get("primary")
-    kind = str(research.get("question_kind") or "")
-    if observed is not None:
-        suggestions.append(f"¿Filtro el {observed} solo en Nacional/Loteka/Leidsa/Real?")
-        suggestions.append(f"¿Comparo el {observed} únicamente en 2026 vs 2025?")
-    if kind.startswith("compare"):
-        suggestions.append("¿Muestro solo diferencias en primera posición?")
-    if "after" in kind or "temporal" in kind:
-        suggestions.append("¿Restrinjo a D+1 únicamente?")
-    if not suggestions:
+    nums = list(research.get("numbers") or [])
+    if len(nums) >= 2:
         suggestions = [
-            "¿Quieres filtrar por una sola lotería?",
-            "¿Comparo con otro número del contexto?",
-            "¿Acoto el período a un año concreto?",
+            "Ver fechas de coincidencia.",
+            "Desglosar por posición.",
+            "Ver coincidencias en primera.",
+            "Ver la última coincidencia.",
+            *suggestions,
         ]
+    elif facts.get("observed") is not None:
+        observed = facts.get("observed")
+        suggestions.append(f"¿Filtro el {observed} por una sola lotería?")
+    if not suggestions:
+        return None
     limit = 3 if compact else 5
     return "\n".join(f"- {s}" for s in list(dict.fromkeys(suggestions))[:limit])
 
@@ -547,20 +604,17 @@ def _suggestions(
 
 
 def render_bar(label: str, value: int, *, max_value: int | None = None, width: int = _MAX_BAR) -> str:
-    v = max(0, int(value))
-    mv = max(1, int(max_value or v or 1))
-    filled = int(round((v / mv) * width)) if mv else 0
+    mv = max(max_value or value, 1)
+    filled = int(round((value / mv) * width)) if mv else 0
     filled = max(0, min(width, filled))
-    bar = _BAR * filled + _BAR_EMPTY * (width - filled)
-    return f"{label}\n{bar}\n{v} casos"
+    return f"{label[:18]:<18} {_BAR * filled}{_BAR_EMPTY * (width - filled)} {value}"
 
 
 def render_ranking_bars(items: list[tuple[str, int]], *, width: int = _MAX_BAR) -> str:
     if not items:
         return ""
-    max_v = max(int(v) for _, v in items) or 1
-    blocks = [render_bar(str(label), int(val), max_value=max_v, width=width) for label, val in items]
-    return "\n\n".join(blocks)
+    mx = max(v for _, v in items) or 1
+    return "\n".join(render_bar(lab, val, max_value=mx, width=width) for lab, val in items)
 
 
 def _ascii_from_facts(
@@ -570,44 +624,45 @@ def _ascii_from_facts(
     *,
     max_items: int,
 ) -> str | None:
-    pairs: list[tuple[str, int]] = []
+    chart = pkg.get("chart") or facts.get("chart")
+    if isinstance(chart, dict) and chart.get("bars"):
+        lines = []
+        bars = chart["bars"][:max_items]
+        mx = max(int(b.get("value") or 0) for b in bars) if bars else 1
+        for b in bars:
+            lines.append(render_bar(str(b.get("label") or "?"), int(b.get("value") or 0), max_value=mx))
+        return "\n".join(lines) if lines else None
 
-    # Explicit chart payloads
-    charts = facts.get("charts") or research.get("charts") or pkg.get("charts")
-    if isinstance(charts, list):
-        for item in charts[:max_items]:
-            if isinstance(item, dict) and item.get("label") is not None and item.get("value") is not None:
-                try:
-                    pairs.append((str(item["label"]), int(item["value"])))
-                except (TypeError, ValueError):
-                    continue
-
-    # Comparison subjects with counts in findings like "54: 3467"
-    if not pairs:
-        for f in pkg.get("findings") or []:
-            m = re.search(r"(?:^|\b)(\d{1,2}|[A-Za-zÁÉÍÓÚáéíóúñ ]{2,40}).{0,20}?\b(\d{2,6})\b", str(f))
+    comparisons = pkg.get("comparisons") or []
+    numeric: list[tuple[str, int]] = []
+    for c in comparisons:
+        if isinstance(c, dict) and c.get("label") is not None and c.get("value") is not None:
+            try:
+                numeric.append((str(c["label"]), int(c["value"])))
+            except (TypeError, ValueError):
+                continue
+        elif isinstance(c, str):
+            m = re.search(r"(.+?):\s*(\d+)", c)
             if m:
-                try:
-                    pairs.append((m.group(1).strip(), int(m.group(2))))
-                except ValueError:
-                    pass
-            if len(pairs) >= max_items:
-                break
-
-    # Fallback: case_count alone
-    if not pairs and pkg.get("case_count") is not None:
-        label = str(facts.get("observed") or research.get("question_kind") or "Casos")
-        pairs.append((label, int(pkg["case_count"])))
-
-    # Dual subjects from meta without values — skip empty viz
-    if not pairs:
-        return None
-    return render_ranking_bars(pairs[:max_items])
+                numeric.append((m.group(1).strip(), int(m.group(2))))
+    if numeric:
+        mx = max(v for _, v in numeric) or 1
+        return "\n".join(render_bar(lab, val, max_value=mx) for lab, val in numeric[:max_items])
+    return None
 
 
-# ---------------------------------------------------------------------------
-# Helpers
-# ---------------------------------------------------------------------------
+def _join_sections(sections: list[tuple[str, str | None]]) -> str:
+    blocks: list[str] = []
+    for title, body in sections:
+        if not body or not str(body).strip():
+            continue
+        if title == "Encabezado":
+            blocks.append(str(body).strip())
+        elif title == "Respuesta":
+            blocks.append(str(body).strip())
+        else:
+            blocks.append(f"**{title}**\n{str(body).strip()}")
+    return "\n\n".join(blocks).strip()
 
 
 def _detect_follow_up(
@@ -615,52 +670,20 @@ def _detect_follow_up(
     ctx: dict[str, Any],
     research: dict[str, Any],
 ) -> bool:
-    if ctx.get("is_follow_up"):
-        return True
-    if research.get("delta_only"):
-        return True
     q = (question or "").strip().lower()
     if not q:
-        # If conversation already has active numbers / last research, treat short continuations as follow-up when flagged
-        return bool(ctx.get("has_prior_research"))
-    markers = (
-        "y ahora",
-        "ahora solo",
-        "ahora solamente",
-        "y solamente",
-        "compáralo",
-        "comparalo",
-        "¿y ",
-        "y en ",
-        "dentro de",
-        "muéstrame solamente",
-        "muestrame solamente",
-        "solo durante",
-        "solamente en",
-        "cuál de los dos",
-        "cual de los dos",
-    )
-    if any(m in q for m in markers):
+        return False
+    if re.match(r"^(y\s+)?(en\s+)?(primera|cualquier|esa|ese|la\s+[uú]ltima)", q):
         return True
-    # Leading connector
-    if re.match(r"^(¿?\s*)?(y|ahora|solo|solamente|después|despues)\b", q):
+    if ctx.get("has_prior_research") and re.match(r"^(y\s+|entonces\s+|ahora\s+)", q):
         return True
     return False
 
 
-def _as_int(value: Any) -> int | None:
+def _as_int(v: Any) -> int | None:
     try:
-        if value is None:
+        if v is None:
             return None
-        return int(value)
+        return int(v)
     except (TypeError, ValueError):
         return None
-
-
-def _join_sections(sections: list[tuple[str, str | None]]) -> str:
-    lines: list[str] = []
-    for title, content in sections:
-        if not content or not str(content).strip():
-            continue
-        lines.append(f"{title}\n{str(content).strip()}")
-    return "\n\n".join(lines).strip()

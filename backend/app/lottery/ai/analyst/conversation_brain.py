@@ -53,7 +53,22 @@ class ConversationBrain:
         if resolution.get("position_scope"):
             st.active_position = str(resolution["position_scope"])
             st.last_position_scope = str(resolution["position_scope"])
+            st.position_scope = str(resolution["position_scope"])
             filters["position"] = str(resolution["position_scope"])
+
+        # Fase X.2 — compound relation memory
+        if resolution.get("active_relation") or resolution.get("relation") == "same_day":
+            st.active_relation = str(
+                resolution.get("active_relation") or resolution.get("relation") or "same_day"
+            )
+            filters["relation"] = st.active_relation
+        if resolution.get("preferred_position") is not None:
+            st.preferred_position = int(resolution["preferred_position"])
+        if resolution.get("position") is not None or resolution.get("position_scope") == "any_position":
+            st.position_scope = str(
+                resolution.get("position_scope")
+                or ("specific_position" if resolution.get("position") else st.position_scope)
+            )
 
         if resolution.get("compare_with"):
             filters["compare_with"] = str(resolution["compare_with"])
@@ -75,6 +90,10 @@ class ConversationBrain:
         # Pair memory
         if len(st.active_numbers) >= 2:
             st.active_pair = [st.active_numbers[0], st.active_numbers[1]]
+            if resolution.get("relation") == "same_day" or resolution.get("active_relation") == "same_day":
+                st.active_relation = "same_day"
+                st.position_scope = st.position_scope or resolution.get("position_scope") or "any_position"
+                st.preferred_position = int(resolution.get("preferred_position") or 1)
         elif resolution.get("use_active_pair") and st.active_pair:
             st.active_numbers = list(st.active_pair)
 
@@ -118,7 +137,18 @@ class ConversationBrain:
 
     def remember_analysis(self, summary: dict[str, Any]) -> ConversationState:
         st = self.state.model_copy(deep=True)
-        if summary.get("observed") is not None:
+        # Fase X.2 — never collapse a compound active pair to a single observed number
+        if summary.get("numbers") and isinstance(summary["numbers"], list) and len(summary["numbers"]) >= 2:
+            st.active_numbers = [
+                str(n).zfill(2) if str(n).isdigit() and len(str(n)) <= 2 else str(n)
+                for n in summary["numbers"]
+            ][:8]
+            st.active_pair = list(st.active_numbers[:2])
+            for n in st.active_numbers:
+                st = self._push_focus(st, n)
+        elif summary.get("observed") is not None and not (
+            st.active_relation == "same_day" and len(st.active_numbers or []) >= 2
+        ):
             obs = str(summary["observed"]).zfill(2)
             st.active_numbers = [obs]
             st = self._push_focus(st, obs)
@@ -127,6 +157,16 @@ class ConversationBrain:
                 str(summary.get("observed") or (st.active_numbers[0] if st.active_numbers else "")),
                 str(summary["confirmer"]),
             ]
+            if st.active_relation != "same_day":
+                # Keep both in active_numbers when confirmer present
+                pair = [str(x).zfill(2) if str(x).isdigit() else str(x) for x in st.active_pair if x]
+                if len(pair) >= 2:
+                    st.active_numbers = pair
+        if summary.get("active_relation"):
+            st.active_relation = str(summary["active_relation"])
+        if summary.get("position_scope"):
+            st.position_scope = str(summary["position_scope"])
+            st.last_position_scope = st.position_scope
         if summary.get("primary") is not None:
             st.current_primary_candidate = int(summary["primary"])
         if summary.get("alternatives"):

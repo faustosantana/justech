@@ -45,7 +45,7 @@ def _ctx_from_state(state: ConversationState) -> LotterySessionContext:
         last_query_semantics=state.last_intent,
         last_from_date=(state.range_context or {}).get("from") if state.range_context else None,
         last_to_date=(state.range_context or {}).get("to") if state.range_context else None,
-        default_number_position_scope=state.default_number_position_scope or "first_position",
+        default_number_position_scope=state.default_number_position_scope or "any_position",
         default_primary_position=int(state.default_primary_position or 1),
         last_analysis=dict(state.last_analysis or {}),
         conversation_summary=state.conversation_summary,
@@ -366,8 +366,59 @@ def _detect_follow_up(text: str, state: ConversationState) -> tuple[Understandin
 
     from app.lottery.ai.compound_occurrence import (
         follow_up_any_position,
+        follow_up_first_position,
         follow_up_replace_numbers,
     )
+    from app.lottery.ai.same_day_coincidence import (
+        is_last_coincidence_follow_up,
+        is_report_mode_question,
+    )
+
+    # Fase X.2 — same-day follow-ups keep the compound pair
+    if (
+        state.active_relation == "same_day" or (state.active_pair and len(state.active_pair) >= 2)
+    ) and (
+        follow_up_any_position(text)
+        or follow_up_first_position(text)
+        or is_last_coincidence_follow_up(text)
+    ):
+        nums = list(state.active_numbers or state.active_pair or [])
+        if len(nums) >= 2:
+            pos = None
+            scope = "any_position"
+            if follow_up_first_position(text):
+                pos = 1
+                scope = "first_position"
+            working.active_numbers = nums[:8]
+            working.active_pair = nums[:2]
+            working.active_relation = "same_day"
+            working.position_scope = scope
+            working.last_position_scope = scope
+            working.preferred_position = int(state.preferred_position or 1)
+            return (
+                UnderstandingResult(
+                    intent="cross_lottery_matches",
+                    lotteries=list(state.active_lotteries),
+                    numbers=nums[:8],
+                    scope="multiple",
+                    tool=LotteryToolName.GET_NUMBER_OCCURRENCES.value,
+                    params={
+                        "numbers": nums[:8],
+                        "relation": "same_day",
+                        "active_relation": "same_day",
+                        "position": pos,
+                        "position_scope": scope,
+                        "preferred_position": working.preferred_position,
+                        "want_last_only": is_last_coincidence_follow_up(text),
+                        "report_mode": is_report_mode_question(text),
+                        "intent": "same_day_coincidence",
+                        "all_historical": True,
+                    },
+                    confidence=0.96,
+                    source="follow_up",
+                ),
+                working,
+            )
 
     # "¿Y en cualquier posición?" — keep multi_queries / numbers / lotteries, widen position
     if follow_up_any_position(text) and (
@@ -376,6 +427,7 @@ def _detect_follow_up(text: str, state: ConversationState) -> tuple[Understandin
             "last_occurrence",
             "cross_lottery_last_occurrence",
             "occurrence_in_other_lotteries",
+            "cross_lottery_matches",
         }
     ):
         queries = []
@@ -878,15 +930,40 @@ def _map_resolved(
     elif intent.params.get("lotteries"):
         lots = [str(x) for x in intent.params["lotteries"]]
     numbers = []
-    if intent.params.get("number"):
+    if isinstance(intent.params.get("numbers"), list) and intent.params.get("numbers"):
+        numbers = [str(x).zfill(2) if str(x).isdigit() and len(str(x)) <= 2 else str(x) for x in intent.params["numbers"]]
+    elif intent.params.get("number"):
         numbers = [str(intent.params["number"])]
+        if intent.params.get("compare_with"):
+            numbers.append(str(intent.params["compare_with"]))
+        if intent.params.get("confirmer") is not None:
+            numbers.append(str(intent.params["confirmer"]))
     elif intent.params.get("observed_number") is not None:
         numbers = [str(intent.params["observed_number"])]
-    # Also extract from text for clarify paths
+        if intent.params.get("confirmer") is not None:
+            numbers.append(str(intent.params["confirmer"]))
+    # multi_queries compound
+    if (not numbers or len(numbers) < 2) and isinstance(intent.params.get("multi_queries"), list):
+        mq_nums = [
+            str(q.get("number")).zfill(2)
+            for q in intent.params["multi_queries"]
+            if isinstance(q, dict) and q.get("number")
+        ]
+        if mq_nums:
+            numbers = list(dict.fromkeys([*numbers, *mq_nums]))
+    # Also extract from text for clarify / compound paths
     if not numbers:
         n = _extract_number(text)
         if n:
             numbers = [n]
+    if len(numbers) < 2:
+        # Pull all el N tokens when compound wording
+        from app.lottery.ai.same_day_coincidence import extract_all_numbers
+
+        more = extract_all_numbers(text)
+        if len(more) > len(numbers):
+            numbers = more
+    numbers = list(dict.fromkeys(numbers))
     if not lots:
         lots = _extract_lotteries(text)
 
@@ -1087,7 +1164,10 @@ def _map_resolved(
         intent_name = "cold_numbers"
 
     params = dict(intent.params or {})
-    if params.get("intent") == "multi_last_occurrence" or (
+    if params.get("intent") == "same_day_coincidence" or params.get("relation") == "same_day":
+        intent_name = "cross_lottery_matches"
+        params.setdefault("active_relation", "same_day")
+    elif params.get("intent") == "multi_last_occurrence" or (
         isinstance(params.get("multi_queries"), list) and len(params.get("multi_queries") or []) >= 2
     ):
         intent_name = "multi_last_occurrence"

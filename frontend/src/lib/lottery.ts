@@ -146,6 +146,12 @@ export interface LotteryChatSendResponse {
   context: Record<string, unknown>;
   active_context?: {
     number?: string | number | null;
+    numbers?: Array<string | number> | null;
+    analyzing?: string | null;
+    relation?: string | null;
+    position_scope?: string | null;
+    preferred_position?: number | null;
+    filters_label?: string | null;
     date?: string | null;
     lottery?: string | null;
     position?: string | null;

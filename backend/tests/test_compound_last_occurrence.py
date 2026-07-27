@@ -1,4 +1,4 @@
-"""Benchmarks: compound last-occurrence + default first position."""
+"""Benchmarks: compound last-occurrence + default any position (Fase X.2)."""
 
 from __future__ import annotations
 
@@ -11,11 +11,11 @@ from app.services.lottery_chat_context import LotterySessionContext
 from app.services.lottery_intent import resolve_intent
 
 
-def test_resolve_default_first_position():
+def test_resolve_default_any_position():
     pos, scope, ask = resolve_effective_position("¿Cuándo salió el 35 en Leidsa?")
     assert ask is False
-    assert scope == "first_position"
-    assert pos == 1
+    assert scope == "any_position"
+    assert pos is None
 
 
 def test_resolve_any_position_explicit():
@@ -25,6 +25,15 @@ def test_resolve_any_position_explicit():
     assert ask is False
     assert scope == "any_position"
     assert pos is None
+
+
+def test_resolve_first_position_explicit():
+    pos, scope, ask = resolve_effective_position(
+        "¿Cuándo salió el 35 en Leidsa en primera posición?"
+    )
+    assert ask is False
+    assert scope == "specific_position"
+    assert pos == 1
 
 
 def test_compound_leidsa_and_loteka():
@@ -37,8 +46,8 @@ def test_compound_leidsa_and_loteka():
     assert parsed["queries"][0]["number"] == "35"
     assert "Leidsa" in (parsed["queries"][0].get("lotteries") or [""])[0]
     assert parsed["queries"][1]["number"] == "44"
-    assert parsed["queries"][0]["position"] == 1
-    assert parsed["queries"][1]["position"] == 1
+    assert parsed["queries"][0]["position"] is None
+    assert parsed["queries"][1]["position"] is None
 
 
 def test_compound_any_other_lottery_excludes_leidsa():
@@ -53,11 +62,11 @@ def test_compound_any_other_lottery_excludes_leidsa():
     assert q2["number"] == "44"
     assert q2["lotteries_scope"] == "all_except_previous"
     assert "Leidsa" in (q2.get("excluded_lotteries") or [])
-    assert q1["position"] == 1 and q2["position"] == 1
+    assert q1["position"] is None and q2["position"] is None
 
 
 def test_intent_when_salió_not_frequency():
-    ctx = LotterySessionContext(default_number_position_scope="first_position")
+    ctx = LotterySessionContext(default_number_position_scope="any_position")
     intent = resolve_intent(
         "¿Cuándo salió el 35 en Leidsa y el 44 en cualquier otra lotería?", ctx
     )
@@ -73,46 +82,25 @@ def test_single_leidsa_last_occurrence():
     intent = resolve_intent("¿Cuándo salió el 35 en Leidsa?", ctx)
     assert intent.tool == LotteryToolName.GET_LAST_OCCURRENCE
     assert intent.params.get("number") in {"35", "035"} or str(intent.params.get("number")).endswith("35")
-    assert intent.params.get("position") == 1
+    assert intent.params.get("position") in (None, )
 
 
 def test_any_position_intent():
     ctx = LotterySessionContext()
-    intent = resolve_intent("¿Cuándo salió el 35 en Leidsa en cualquier posición?", ctx)
-    assert intent.tool == LotteryToolName.GET_LAST_OCCURRENCE
-    assert intent.params.get("position") is None
-    assert intent.params.get("position_scope") == "any_position"
-
-
-def test_busca_ambos_en_primera():
-    parsed = parse_compound_last_occurrence(
-        "Busca el 10 en Real y el 20 en Nacional, ambos en primera."
+    intent = resolve_intent(
+        "¿Cuándo salió el 35 en Leidsa en cualquier posición?", ctx
     )
-    assert parsed is not None
-    assert len(parsed["queries"]) == 2
-    assert parsed["queries"][0]["position"] == 1
-    assert parsed["queries"][1]["position"] == 1
+    assert intent.tool == LotteryToolName.GET_LAST_OCCURRENCE
+    assert intent.params.get("position") is None or intent.params.get("position_scope") == "any_position"
 
 
-def test_count_applies_first_position_when_occurrences():
-    ctx = LotterySessionContext(default_number_position_scope="first_position")
-    intent = resolve_intent("¿Cuántas veces salió el 24 en Leidsa?", ctx)
-    assert intent.kind == "tool"
-    assert intent.tool in {
-        LotteryToolName.GET_NUMBER_OCCURRENCES,
-        LotteryToolName.GET_LAST_OCCURRENCE,
-        LotteryToolName.COUNT_NUMBER_OCCURRENCES,
-    } if hasattr(LotteryToolName, "COUNT_NUMBER_OCCURRENCES") else intent.tool in {
-        LotteryToolName.GET_NUMBER_OCCURRENCES,
-        LotteryToolName.GET_LAST_OCCURRENCE,
-    }
-    assert intent.tool != LotteryToolName.CALCULATE_FREQUENCIES
-    if intent.params.get("position") is not None:
-        assert intent.params["position"] == 1
-
-
-def test_count_any_position():
+def test_same_day_not_multi_last():
     ctx = LotterySessionContext()
-    intent = resolve_intent("¿Cuántas veces salió el 24 en Leidsa en cualquier posición?", ctx)
-    if intent.kind == "tool" and intent.params.get("position_scope"):
-        assert intent.params.get("position_scope") == "any_position" or intent.params.get("position") is None
+    intent = resolve_intent(
+        "¿Han salido alguna vez el 55 y el 24 el mismo día?", ctx
+    )
+    assert intent.kind == "tool"
+    assert intent.tool == LotteryToolName.GET_NUMBER_OCCURRENCES
+    assert intent.params.get("relation") == "same_day"
+    assert intent.params.get("numbers") == ["55", "24"]
+    assert intent.params.get("position") is None

@@ -26,7 +26,7 @@ class LotterySessionContext(BaseModel):
     last_query_semantics: str | None = None
     pending_ambiguity: dict[str, Any] | None = None
     saved_query_id: str | None = None
-    default_number_position_scope: str = "first_position"
+    default_number_position_scope: str = "any_position"
     default_primary_position: int = 1
     # Complete-analysis memory for conversational follow-ups
     last_analysis: dict[str, Any] = Field(default_factory=dict)

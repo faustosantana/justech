@@ -271,6 +271,31 @@ def resolve_intent(message: str, ctx: LotterySessionContext) -> ResolvedIntent:
         )
     )
     if _last_ask and nlp.intent in {"DATE", "FOLLOW_UP", "UNKNOWN", "GENERAL_CHAT"}:
+        # Fase X.2 — "última coincidencia" keeps compound same-day pair
+        if re.search(r"coinciden", text, re.I) and (
+            len(ctx.last_numbers or []) >= 2
+            or len(nlp.entities.get("numbers") or []) >= 2
+        ):
+            nums = list(nlp.entities.get("numbers") or []) or list(ctx.last_numbers or [])
+            nums = [str(n).zfill(2) if str(n).isdigit() and len(str(n)) <= 2 else str(n) for n in nums][:8]
+            return ResolvedIntent(
+                kind="tool",
+                tool=LotteryToolName.GET_NUMBER_OCCURRENCES,
+                params={
+                    "numbers": nums,
+                    "relation": "same_day",
+                    "active_relation": "same_day",
+                    "position_scope": "any_position",
+                    "position": None,
+                    "preferred_position": 1,
+                    "want_last_only": True,
+                    "all_historical": True,
+                    "intent": "same_day_coincidence",
+                    "nlp_intent": "DATE",
+                    "nlp_policy": "2.3.3",
+                },
+                structured_type="lottery_same_day_coincidence",
+            )
         number = (nlp.entities.get("numbers") or [None])[0] or (
             ctx.last_numbers[0] if ctx.last_numbers else None
         )
@@ -974,9 +999,71 @@ def resolve_intent(message: str, ctx: LotterySessionContext) -> ResolvedIntent:
         parse_compound_last_occurrence,
         resolve_effective_position,
     )
+    from app.lottery.ai.same_day_coincidence import (
+        is_first_position_follow_up,
+        is_last_coincidence_follow_up,
+        is_same_day_coincidence_question,
+        parse_same_day_coincidence,
+    )
+    from app.lottery.ai.compound_occurrence import follow_up_any_position
 
     pref_scope = getattr(ctx, "default_number_position_scope", None) or DEFAULT_POSITION_SCOPE
     pref_primary = int(getattr(ctx, "default_primary_position", None) or DEFAULT_PRIMARY_POSITION)
+
+    # Fase X.2 — same-day coincidence BEFORE multi last-occurrence
+    active_nums = list(ctx.last_numbers or [])
+    same_day = None
+    if is_same_day_coincidence_question(raw) or (
+        (is_last_coincidence_follow_up(raw) or is_first_position_follow_up(raw) or follow_up_any_position(raw))
+        and len(active_nums) >= 2
+    ):
+        same_day = parse_same_day_coincidence(
+            raw, active_numbers=active_nums, pref_scope="any_position"
+        )
+        if same_day is None and len(active_nums) >= 2 and (
+            is_last_coincidence_follow_up(raw)
+            or is_first_position_follow_up(raw)
+            or follow_up_any_position(raw)
+        ):
+            same_day = {
+                "intent": "same_day_coincidence",
+                "active_numbers": active_nums[:8],
+                "numbers": active_nums[:8],
+                "active_relation": "same_day",
+                "position_scope": "any_position",
+                "position": None,
+                "preferred_position": 1,
+                "want_last_only": is_last_coincidence_follow_up(raw),
+                "report_mode": False,
+                "relation": "same_day",
+            }
+            if is_first_position_follow_up(raw):
+                same_day["position"] = 1
+                same_day["position_scope"] = "first_position"
+            elif follow_up_any_position(raw):
+                same_day["position"] = None
+                same_day["position_scope"] = "any_position"
+    if same_day and same_day.get("numbers"):
+        return ResolvedIntent(
+            kind="tool",
+            tool=LotteryToolName.GET_NUMBER_OCCURRENCES,
+            params={
+                "numbers": list(same_day["numbers"]),
+                "relation": "same_day",
+                "active_relation": "same_day",
+                "position_scope": same_day.get("position_scope") or "any_position",
+                "position": same_day.get("position"),
+                "preferred_position": int(same_day.get("preferred_position") or 1),
+                "want_last_only": bool(same_day.get("want_last_only")),
+                "report_mode": bool(same_day.get("report_mode")),
+                "all_historical": True,
+                "lotteries": list(DEFAULT_ALL_HISTORY_LOTTERIES),
+                "intent": "same_day_coincidence",
+                "nlp_policy": "2.3.3",
+            },
+            structured_type="lottery_same_day_coincidence",
+        )
+
     compound = parse_compound_last_occurrence(
         raw, pref_scope=pref_scope, pref_primary=pref_primary
     )

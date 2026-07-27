@@ -421,7 +421,14 @@ export default function LotteryChatPage() {
   };
 
   const contextLabel = useMemo(() => {
-    if (!activeContext?.number && !activeContext?.primary_candidate) return null;
+    if (!activeContext?.number && !activeContext?.numbers?.length && !activeContext?.primary_candidate && !activeContext?.analyzing) {
+      return null;
+    }
+    const nums = (activeContext.numbers as string[] | undefined) || [];
+    const analyzing =
+      (activeContext.analyzing as string | undefined) ||
+      (nums.length >= 2 ? nums.slice(0, 4).join(" + ") : activeContext.number) ||
+      "—";
     const dateBit = activeContext.date
       ? new Date(`${String(activeContext.date).slice(0, 10)}T12:00:00`).toLocaleDateString(
           "es-DO",
@@ -429,7 +436,8 @@ export default function LotteryChatPage() {
         )
       : null;
     return {
-      analyzing: [activeContext.number, dateBit, activeContext.lottery].filter(Boolean).join(" · "),
+      analyzing: [analyzing, dateBit].filter(Boolean).join(" · "),
+      filters: (activeContext.filters_label as string | undefined) || null,
       primary: activeContext.primary_candidate,
     };
   }, [activeContext]);
@@ -524,15 +532,22 @@ export default function LotteryChatPage() {
 
         <div className="flex h-[min(72vh,720px)] flex-col overflow-hidden rounded-md border bg-background">
           {contextLabel && (
-            <div className="flex flex-wrap items-center justify-between gap-2 border-b bg-muted/30 px-3 py-2 text-xs">
+            <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border/60 bg-muted/20 px-3 py-1.5 text-[11px]">
               <div className="space-y-0.5 text-muted-foreground">
                 <p>
-                  <span className="font-medium text-foreground">Analizando:</span>{" "}
+                  <span className="font-medium text-foreground/80">
+                    {String(contextLabel.analyzing || "").includes("coincid")
+                      ? "Investigación:"
+                      : "Analizando:"}
+                  </span>{" "}
                   {contextLabel.analyzing || "—"}
                 </p>
+                {contextLabel.filters && (
+                  <p className="text-[10px] text-muted-foreground/80">{contextLabel.filters}</p>
+                )}
                 {contextLabel.primary != null && (
                   <p>
-                    <span className="font-medium text-foreground">Candidato actual:</span>{" "}
+                    <span className="font-medium text-foreground/80">Candidato actual:</span>{" "}
                     {contextLabel.primary}
                   </p>
                 )}
@@ -544,7 +559,7 @@ export default function LotteryChatPage() {
           )}
 
           {error && (
-            <div className="border-b border-destructive/30 bg-destructive/5 px-3 py-2 text-sm text-destructive">
+            <div className="mx-3 mt-2 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800 dark:border-red-900/40 dark:bg-red-950/40 dark:text-red-200">
               {error}
             </div>
           )}
@@ -563,34 +578,44 @@ export default function LotteryChatPage() {
               {messages.map((m) => (
                 <div
                   key={m.id}
-                  className={`mb-3 rounded-md p-3 text-sm ${
-                    m.role === "user" ? "ml-8 bg-primary/10" : "mr-4 bg-muted/40"
-                  }`}
+                  className={`mb-3 flex ${m.role === "user" ? "justify-end" : "justify-start"}`}
                 >
-                  <p className="mb-1 text-[10px] uppercase tracking-wide text-muted-foreground">
-                    {m.role === "user" ? "Tú" : "Chat inteligente"}
-                  </p>
-                  {m.role === "assistant" ? (
-                    <SimpleMarkdown text={m.content} />
-                  ) : (
-                    <p className="whitespace-pre-wrap">{m.content}</p>
-                  )}
                   {m.role === "assistant" && (
-                    <>
-                      <AnalysisCard structured={m.structured} />
-                      {m.structured && m.structured.type !== "lottery_complete_analysis" && (
-                        <div className="mt-2">
-                          <LotteryStructuredRenderer structured={m.structured} />
-                        </div>
-                      )}
-                    </>
+                    <div
+                      className="mr-2 mt-1 flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-border/70 bg-muted text-[10px] font-semibold text-muted-foreground"
+                      aria-hidden
+                    >
+                      IA
+                    </div>
                   )}
+                  <div
+                    className={`max-w-[min(100%,520px)] rounded-2xl px-3.5 py-2.5 text-sm shadow-sm ${
+                      m.role === "user"
+                        ? "bg-primary text-primary-foreground"
+                        : "border border-border/60 bg-card text-foreground"
+                    }`}
+                  >
+                    {m.role === "user" ? (
+                      <p className="whitespace-pre-wrap leading-relaxed">{m.content}</p>
+                    ) : (
+                      <div className="space-y-2">
+                        <SimpleMarkdown text={m.content} />
+                        <AnalysisCard structured={m.structured} />
+                        {m.structured && m.structured.type !== "lottery_complete_analysis" && (
+                          <div className="mt-2">
+                            <LotteryStructuredRenderer structured={m.structured} />
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
                 </div>
               ))}
               {loading && (
-                <p className="animate-pulse text-xs text-muted-foreground">
-                  Pensando…
-                </p>
+                <div className="mb-3 flex items-center gap-2 text-xs text-muted-foreground">
+                  <span className="inline-flex h-1.5 w-1.5 animate-pulse rounded-full bg-primary" />
+                  <span className="animate-pulse">Analizando el histórico…</span>
+                </div>
               )}
               <div ref={bottomRef} />
             </div>

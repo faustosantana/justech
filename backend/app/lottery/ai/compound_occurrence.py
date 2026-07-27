@@ -9,8 +9,11 @@ from typing import Any, Literal
 
 PositionScope = Literal["first_position", "any_position", "specific_position", "ask_each_time"]
 
-DEFAULT_POSITION_SCOPE: PositionScope = "first_position"
+# Fase X.2 — if user does not limit position, search ALL positions.
+# preferred_position (1) is highlight-only, never an exclusive filter.
+DEFAULT_POSITION_SCOPE: PositionScope = "any_position"
 DEFAULT_PRIMARY_POSITION = 1
+PREFERRED_POSITION = 1
 
 POSITION_LABELS = {
     1: "Primera posición",
@@ -51,7 +54,8 @@ def extract_position_scope(text: str) -> tuple[PositionScope, int | None]:
     m = re.search(r"\b(en\s+)?(tercer[oa]|3r[oa]|3\s*ra|posicion\s*3)\b", t)
     if m:
         return "specific_position", 3
-    return "first_position", DEFAULT_PRIMARY_POSITION
+    # Fase X.2 — silent default is all positions (not first-only)
+    return "any_position", None
 
 
 def resolve_effective_position(
@@ -63,6 +67,8 @@ def resolve_effective_position(
     """
     Returns (position_filter, scope_used, needs_ask).
     position_filter None => any position.
+    Preferred first position is never applied as an exclusive filter unless
+    the user (or explicit pref_scope=first_position) asks for it.
     """
     explicit_scope, explicit_pos = extract_position_scope(text)
     if explicit_scope == "any_position":
@@ -77,8 +83,9 @@ def resolve_effective_position(
         return None, "any_position", False
     if scope == "specific_position":
         return int(pref_primary or DEFAULT_PRIMARY_POSITION), "specific_position", False
-    # first_position default
-    return int(pref_primary or DEFAULT_PRIMARY_POSITION), "first_position", False
+    if scope == "first_position":
+        return int(pref_primary or DEFAULT_PRIMARY_POSITION), "first_position", False
+    return None, "any_position", False
 
 
 _LOTTERY_HINTS = [
@@ -127,6 +134,12 @@ def is_last_occurrence_question(text: str) -> bool:
     # Fase X: count questions are not last-occurrence
     if re.search(r"cuantas?\s+veces|cuantas?\s+apariciones", t):
         return False
+    # Fase X.2 — same-day coincidence is not last-occurrence-per-number
+    if re.search(
+        r"mismo\s+dia|misma\s+fecha|coincid|juntos|alguna\s+vez.*(y\s+el|ambos)",
+        t,
+    ):
+        return False
     if re.search(r"frecuencia|mas frecuentes|analiza(r)?\s+los\s+ultimos", t):
         # Explicit frequency wins only if no clear "cuándo salió"
         if not re.search(r"cuando\s+sali|ultima\s+vez|donde\s+sali", t):
@@ -146,6 +159,15 @@ def parse_compound_last_occurrence(
     Example:
       ¿Cuándo salió el 35 en Leidsa y el 44 en cualquier otra lotería?
     """
+    # Same-day co-occurrence belongs to same_day_coincidence policy (X.2)
+    if re.search(
+        r"mismo\s+d[ií]a|misma\s+fecha|coincid|juntos|"
+        r"han\s+salido\s+alguna\s+vez|alguna\s+vez\s+el\s+\d",
+        text or "",
+        re.I,
+    ) and not re.search(r"\ben\s+\w+.+\by\s+el\s+\d.+\ben\s+\w+", text or "", re.I):
+        return None
+
     if not is_last_occurrence_question(text) and not re.search(
         r"\bel\s+\d{1,2}\b.+\by\s+el\s+\d{1,2}\b", text, re.I
     ):
@@ -247,6 +269,19 @@ def follow_up_any_position(text: str) -> bool:
             r"^(y\s+)?ahora\s+en\s+cualquier(\s+posicion)?|"
             r"sin\s+importar\s+(la\s+)?posicion|"
             r"cualquier\s+posicion\??$",
+            t,
+        )
+    )
+
+
+def follow_up_first_position(text: str) -> bool:
+    t = _norm(text).strip(" ¿?¡!.")
+    return bool(
+        re.search(
+            r"^(y\s+)?(en\s+)?primera(\s+posicion)?|"
+            r"^(y\s+)?solo\s+en\s+primera|"
+            r"^(y\s+)?ahora\s+en\s+primera|"
+            r"^(y\s+)?en\s+primera\s+posicion\??$",
             t,
         )
     )

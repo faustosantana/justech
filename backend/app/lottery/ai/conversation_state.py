@@ -87,10 +87,10 @@ class ConversationState(BaseModel):
     scope: Literal["single", "multiple", "all", "unknown"] = "unknown"
     # Derived tool results — critical for follow-ups
     last_occurrences: dict[str, OccurrenceMemory] = Field(default_factory=dict)
-    # Position preference (tenant/user) — default first position for Justech
+    # Position preference — Fase X.2: default all positions; first is preferred highlight only
     default_number_position_scope: Literal[
         "first_position", "any_position", "specific_position", "ask_each_time"
-    ] = "first_position"
+    ] = "any_position"
     default_primary_position: int = 1
     last_multi_queries: list[dict[str, Any]] = Field(default_factory=list)
     last_position_scope: Optional[str] = None
@@ -112,6 +112,10 @@ class ConversationState(BaseModel):
     recent_memory: list[str] = Field(default_factory=list)
     research_mode: Optional[str] = None
     focus_stack: list[str] = Field(default_factory=list)
+    # Fase X.2 — compound relation memory
+    active_relation: Optional[str] = None  # e.g. same_day
+    preferred_position: int = 1
+    position_scope: Optional[str] = None  # any_position | first_position | ...
 
     def to_store(self) -> dict[str, Any]:
         return self.model_dump(mode="json")

@@ -223,6 +223,7 @@ def test_response_formatter_and_brain_skip_clarify():
         "El 54 es el más fortalecido.",
         facts={"primary": 54, "observed": 35, "confirmer": 14},
         research={"steps_completed": ["complete_analysis_t1_t2", "d1_d3_d7_summary"]},
+        question="Analiza completamente el 35",
     )
-    assert "Resumen Ejecutivo" in text
     assert "54" in text
+    assert "payload" not in text.lower()

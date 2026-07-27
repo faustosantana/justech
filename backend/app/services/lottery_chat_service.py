@@ -256,6 +256,23 @@ class LotteryChatService:
 
         # Fase A — Intent Resolver + Conversation Brain
         resolution = IntentResolver.resolve(content, state)
+        # Merge same-day / compound slots into resolution for Brain memory
+        up = dict(understanding.params or {})
+        if up.get("relation") == "same_day" or up.get("intent") == "same_day_coincidence":
+            resolution = {
+                **resolution,
+                "numbers": list(understanding.numbers or up.get("numbers") or resolution.get("numbers") or []),
+                "active_relation": "same_day",
+                "relation": "same_day",
+                "position_scope": up.get("position_scope") or resolution.get("position_scope") or "any_position",
+                "preferred_position": int(up.get("preferred_position") or 1),
+                "position": up.get("position"),
+            }
+        elif understanding.numbers and len(understanding.numbers) >= 2:
+            resolution = {
+                **resolution,
+                "numbers": list(understanding.numbers),
+            }
         brain = ConversationBrain(state)
         state = brain.apply_resolution(understanding=understanding, resolution=resolution)
         if resolution.get("inherit_active_number") and state.active_numbers:
@@ -266,6 +283,18 @@ class LotteryChatService:
                 if not understanding.missing_slots and understanding.tool:
                     understanding.needs_clarification = False
                     understanding.clarification_question = None
+        # Preserve compound numbers after brain
+        if understanding.numbers and len(understanding.numbers) >= 2:
+            state.active_numbers = list(understanding.numbers)[:8]
+            state.active_pair = list(state.active_numbers[:2])
+        if (understanding.params or {}).get("relation") == "same_day":
+            state.active_relation = "same_day"
+            state.position_scope = str(
+                (understanding.params or {}).get("position_scope") or state.position_scope or "any_position"
+            )
+            state.preferred_position = int(
+                (understanding.params or {}).get("preferred_position") or state.preferred_position or 1
+            )
         analyst_cfg = await self._analyst_runtime_config()
 
         # Fase X — conversational intents never open research/tools
@@ -379,17 +408,44 @@ class LotteryChatService:
             from app.services.lottery_ai_contracts import LotteryToolName
             from app.lottery.ai.research_policy import default_lotteries
 
-            n = (understanding.numbers or state.active_numbers)[0]
-            understanding.tool = LotteryToolName.COMPARE_LOTTERIES.value
-            understanding.params = {
-                **dict(understanding.params or {}),
-                "number": n,
-                "lotteries": default_lotteries(),
-                "mode": "number_compare",
-                "all_historical": True,
-                "nlp_policy": "2.3.2",
-            }
-            understanding.scope = "all"
+            # Fase X.2 — keep compound same-day investigations intact
+            if (
+                state.active_relation == "same_day"
+                or (understanding.params or {}).get("relation") == "same_day"
+                or len(understanding.numbers or state.active_numbers or []) >= 2
+            ) and (
+                "mismo" in content.lower()
+                or "coincid" in content.lower()
+                or "juntos" in content.lower()
+                or state.active_relation == "same_day"
+            ):
+                nums = list(understanding.numbers or state.active_numbers or [])[:8]
+                understanding.tool = LotteryToolName.GET_NUMBER_OCCURRENCES.value
+                understanding.params = {
+                    **dict(understanding.params or {}),
+                    "numbers": nums,
+                    "relation": "same_day",
+                    "active_relation": "same_day",
+                    "position_scope": state.position_scope or "any_position",
+                    "position": None if (state.position_scope or "any_position") == "any_position" else 1,
+                    "preferred_position": state.preferred_position or 1,
+                    "all_historical": True,
+                    "intent": "same_day_coincidence",
+                    "nlp_policy": "2.3.3",
+                }
+                understanding.scope = "all"
+            else:
+                n = (understanding.numbers or state.active_numbers)[0]
+                understanding.tool = LotteryToolName.COMPARE_LOTTERIES.value
+                understanding.params = {
+                    **dict(understanding.params or {}),
+                    "number": n,
+                    "lotteries": default_lotteries(),
+                    "mode": "number_compare",
+                    "all_historical": True,
+                    "nlp_policy": "2.3.2",
+                }
+                understanding.scope = "all"
 
         intent_kind = "clarify" if understanding.needs_clarification else "tool"
         tool_name: str | None = understanding.tool
@@ -713,7 +769,42 @@ class LotteryChatService:
                         if lot not in state.active_lotteries:
                             state.active_lotteries = [lot, *[x for x in state.active_lotteries if x != lot]]
                     if exec_params.get("number"):
-                        state.active_numbers = [str(exec_params["number"])]
+                        # Fase X.2 — do not collapse compound same-day pairs
+                        if (
+                            exec_params.get("relation") == "same_day"
+                            or exec_params.get("active_relation") == "same_day"
+                        ) and isinstance(exec_params.get("numbers"), list):
+                            state.active_numbers = [
+                                str(n).zfill(2) if str(n).isdigit() and len(str(n)) <= 2 else str(n)
+                                for n in exec_params["numbers"]
+                            ][:8]
+                            state.active_pair = list(state.active_numbers[:2])
+                            state.active_relation = "same_day"
+                            state.position_scope = str(
+                                exec_params.get("position_scope") or "any_position"
+                            )
+                            state.preferred_position = int(
+                                exec_params.get("preferred_position") or 1
+                            )
+                        else:
+                            state.active_numbers = [str(exec_params["number"])]
+                    elif (
+                        isinstance(exec_params.get("numbers"), list)
+                        and len(exec_params.get("numbers") or []) >= 2
+                    ):
+                        state.active_numbers = [
+                            str(n).zfill(2) if str(n).isdigit() and len(str(n)) <= 2 else str(n)
+                            for n in exec_params["numbers"]
+                        ][:8]
+                        state.active_pair = list(state.active_numbers[:2])
+                        if exec_params.get("relation") == "same_day":
+                            state.active_relation = "same_day"
+                            state.position_scope = str(
+                                exec_params.get("position_scope") or "any_position"
+                            )
+                            state.preferred_position = int(
+                                exec_params.get("preferred_position") or 1
+                            )
                     if exec_params.get("date") or exec_params.get("base_date"):
                         d = exec_params.get("date") or exec_params.get("base_date")
                         state.date_context = d
@@ -780,7 +871,10 @@ class LotteryChatService:
                         state.active_date = (
                             str(payload.get("date") or "")[:10] or None
                         )
-                        if obs is not None:
+                        if obs is not None and not (
+                            state.active_relation == "same_day"
+                            and len(state.active_numbers or []) >= 2
+                        ):
                             state.active_numbers = [str(obs)]
                         # Short rolling summary
                         bits = [f"Analizado {obs}"]
@@ -788,6 +882,12 @@ class LotteryChatService:
                             bits.append(f"candidato {primary_n}")
                         if payload.get("date"):
                             bits.append(f"fecha {payload.get('date')}")
+                        # Keep confirmer in active pair when present
+                        conf = payload.get("confirmer") or exec_params.get("confirmer")
+                        if obs is not None and conf is not None:
+                            state.active_pair = [str(obs).zfill(2), str(conf).zfill(2)]
+                            if len(state.active_numbers or []) < 2:
+                                state.active_numbers = list(state.active_pair)
                         prev = (state.conversation_summary or "").strip()
                         state.conversation_summary = (
                             (prev + " · " if prev else "") + "; ".join(bits)
@@ -1074,14 +1174,33 @@ class LotteryChatService:
         )
 
         public_structured = self._public_structured(structured if isinstance(structured, dict) else None)
+        from app.lottery.ai.same_day_coincidence import analyzing_label
+
+        nums_ctx = list(state.active_numbers or [])
         active_context = {
-            "number": (state.active_numbers[0] if state.active_numbers else None),
+            "number": (nums_ctx[0] if nums_ctx else None),
+            "numbers": nums_ctx[:8],
+            "analyzing": analyzing_label(
+                nums_ctx, relation=state.active_relation
+            ),
+            "relation": state.active_relation,
+            "position_scope": state.position_scope or state.last_position_scope or state.active_position,
+            "preferred_position": state.preferred_position or 1,
+            "filters_label": (
+                "Todas las loterías · "
+                + (
+                    "Todas las posiciones"
+                    if (state.position_scope or "any_position") == "any_position"
+                    else f"Posición {state.position_scope}"
+                )
+                + " · Histórico completo"
+            ),
             "date": state.active_date
             or (str(state.date_context)[:10] if state.date_context else None)
             or ((state.last_analysis or {}).get("date")),
             "lottery": (state.active_lotteries[0] if state.active_lotteries else None)
             or ((state.last_analysis or {}).get("lottery")),
-            "position": state.active_position,
+            "position": state.active_position or state.position_scope,
             "primary_candidate": state.current_primary_candidate
             or ((state.last_analysis or {}).get("primary")),
             "alternatives": list(state.current_alternatives or [])[:4],
@@ -2074,6 +2193,31 @@ class LotteryChatService:
 
             return format_numeric_relations_reply(data)
 
+        if (
+            tool == "lottery_get_number_occurrences"
+            and isinstance(data, dict)
+            and (data.get("relation") == "same_day" or params.get("relation") == "same_day")
+        ):
+            from app.lottery.ai.same_day_coincidence import (
+                format_coincidence_narrative,
+                summarize_coincidences,
+            )
+
+            nums = list(data.get("numbers") or params.get("numbers") or [])
+            summary = summarize_coincidences(
+                data,
+                numbers=nums,
+                preferred_position=int(params.get("preferred_position") or 1),
+                position_filter=params.get("position"),
+            )
+            if data.get("total_all_positions") is not None:
+                summary["total_all_positions"] = data.get("total_all_positions")
+            return format_coincidence_narrative(
+                summary,
+                report_mode=bool(params.get("report_mode")),
+                want_last_only=bool(params.get("want_last_only")),
+            )
+
         if tool == "lottery_run_complete_analysis" and isinstance(data, dict):
             primary = (data.get("primary") or {}).get("number")
             obs = data.get("observed_number")
@@ -2476,6 +2620,17 @@ class LotteryChatService:
                 return ["En la Real.", "En Leidsa.", "En todas las loterías."]
             return ["Últimos 30 sorteos.", "En todas las loterías."]
 
+        # Fase X.2 — contextual suggestions for active same-day pair
+        if state and (
+            state.active_relation == "same_day"
+            or (len(state.active_numbers or []) >= 2 and state.active_pair)
+        ):
+            from app.lottery.ai.same_day_coincidence import coincidence_suggestions
+
+            nums = list(state.active_numbers or state.active_pair or [])
+            if len(nums) >= 2:
+                return coincidence_suggestions(nums)[:6]
+
         la = dict((state.last_analysis if state else None) or ctx.last_analysis or {})
         obs = la.get("observed") or (ctx.last_numbers[0] if ctx.last_numbers else None)
         primary = la.get("primary") or (
@@ -2509,6 +2664,10 @@ class LotteryChatService:
                 out.append(f"Analiza el {ctx.last_numbers[0]}.")
             return out[:6]
         if ctx.last_numbers:
+            if len(ctx.last_numbers) >= 2:
+                from app.lottery.ai.same_day_coincidence import coincidence_suggestions
+
+                return coincidence_suggestions(list(ctx.last_numbers))[:6]
             return [
                 f"Analiza el {ctx.last_numbers[0]}.",
                 "¿Cuántas veces ha salido?",

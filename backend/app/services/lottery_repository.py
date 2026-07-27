@@ -376,3 +376,76 @@ class LotteryRepository:
             .where(and_(*filters))
         )
         return list((await self.db.execute(q)).all())
+
+    async def same_day_number_coincidences(
+        self,
+        numbers: list[str],
+        *,
+        lottery_ids: list[uuid.UUID] | None = None,
+        position: int | None = None,
+        from_date: date | None = None,
+        to_date: date | None = None,
+        limit_dates: int = 200,
+    ) -> list[tuple[date, str, str, int, str | None]]:
+        """
+        Rows of (draw_date, number_value, lottery_name, position, position_label)
+        for dates where ALL requested numbers appear at least once (any lottery
+        unless lottery_ids is set). Caller aggregates by date.
+        """
+        from app.models.lottery import LotteryLottery
+
+        nums = [str(n).zfill(2) if len(str(n)) <= 2 else str(n) for n in numbers]
+        if len(nums) < 2:
+            return []
+
+        filters = [LotteryDrawNumber.number_value.in_(nums)]
+        if lottery_ids:
+            filters.append(LotteryDraw.lottery_id.in_(lottery_ids))
+        if position is not None:
+            filters.append(LotteryDrawNumber.position == int(position))
+        if from_date:
+            filters.append(LotteryDraw.draw_date >= from_date)
+        if to_date:
+            filters.append(LotteryDraw.draw_date <= to_date)
+
+        # Dates that contain every number (across all matching draws that day)
+        date_counts = (
+            select(
+                LotteryDraw.draw_date.label("dd"),
+                func.count(func.distinct(LotteryDrawNumber.number_value)).label("nuniq"),
+            )
+            .join(LotteryDrawNumber, LotteryDrawNumber.draw_id == LotteryDraw.id)
+            .where(and_(*filters))
+            .group_by(LotteryDraw.draw_date)
+            .having(func.count(func.distinct(LotteryDrawNumber.number_value)) >= len(set(nums)))
+            .order_by(desc(LotteryDraw.draw_date))
+            .limit(limit_dates)
+        )
+        date_rows = list((await self.db.execute(date_counts)).all())
+        if not date_rows:
+            return []
+        dates = [r.dd for r in date_rows]
+
+        detail_filters = [
+            LotteryDrawNumber.number_value.in_(nums),
+            LotteryDraw.draw_date.in_(dates),
+        ]
+        if lottery_ids:
+            detail_filters.append(LotteryDraw.lottery_id.in_(lottery_ids))
+        if position is not None:
+            detail_filters.append(LotteryDrawNumber.position == int(position))
+
+        detail_q = (
+            select(
+                LotteryDraw.draw_date,
+                LotteryDrawNumber.number_value,
+                LotteryLottery.name,
+                LotteryDrawNumber.position,
+                LotteryDrawNumber.position_label,
+            )
+            .join(LotteryDrawNumber, LotteryDrawNumber.draw_id == LotteryDraw.id)
+            .join(LotteryLottery, LotteryLottery.id == LotteryDraw.lottery_id)
+            .where(and_(*detail_filters))
+            .order_by(desc(LotteryDraw.draw_date), asc(LotteryDrawNumber.number_value))
+        )
+        return list((await self.db.execute(detail_q)).all())

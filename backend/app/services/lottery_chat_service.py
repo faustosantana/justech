@@ -540,7 +540,9 @@ class LotteryChatService:
                             "historical_summary": (payload.get("historical") or {}).get("resumen"),
                         }
                         state.historical_summary = (payload.get("historical") or {}).get("resumen")
-                        state.active_date = str(payload.get("date") or "")[:10] or state.active_date
+                        state.active_date = (
+                            str(payload.get("date") or "")[:10] or None
+                        )
                         if obs is not None:
                             state.active_numbers = [str(obs)]
                         # Short rolling summary

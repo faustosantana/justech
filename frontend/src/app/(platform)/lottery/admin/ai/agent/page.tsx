@@ -12,6 +12,9 @@ import { ApiError, apiClient } from "@/lib/api";
 type FormState = {
   understanding_mode: string;
   analysis_depth: string;
+  research_mode: string;
+  max_tools_per_research: number;
+  max_research_steps: number;
   max_insights: number;
   max_lotteries: number;
   timeout_seconds: number;
@@ -36,6 +39,9 @@ export default function LotteryAIAgentPage() {
   const [form, setForm] = useState<FormState>({
     understanding_mode: "hybrid",
     analysis_depth: "standard",
+    research_mode: "auto",
+    max_tools_per_research: 6,
+    max_research_steps: 8,
     max_insights: 6,
     max_lotteries: 7,
     timeout_seconds: 45,
@@ -59,6 +65,21 @@ export default function LotteryAIAgentPage() {
     setForm({
       understanding_mode: String(payload.understanding_mode ?? data.understanding_mode ?? "hybrid"),
       analysis_depth: String(payload.analysis_depth ?? data.analysis_depth ?? "standard"),
+      research_mode: String(
+        (payload.research as { mode?: string } | undefined)?.mode ??
+          data.research_mode ??
+          "auto",
+      ),
+      max_tools_per_research: Number(
+        (payload.research as { max_tools_per_research?: number } | undefined)?.max_tools_per_research ??
+          data.max_tools_per_research ??
+          6,
+      ),
+      max_research_steps: Number(
+        (payload.research as { max_research_steps?: number } | undefined)?.max_research_steps ??
+          data.max_research_steps ??
+          8,
+      ),
       max_insights: Number(payload.max_insights ?? 6),
       max_lotteries: Number(payload.max_lotteries ?? 7),
       timeout_seconds: Number(payload.timeout_seconds ?? 45),
@@ -148,8 +169,10 @@ export default function LotteryAIAgentPage() {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-lg font-semibold">Agente</h2>
-          <p className="text-sm text-muted-foreground">Campos A/B editables — seguridad (E) bloqueada</p>
+          <h2 className="text-lg font-semibold">Analista IA</h2>
+          <p className="text-sm text-muted-foreground">
+            Investigación conversacional — campos A/B editables; seguridad (E) bloqueada
+          </p>
         </div>
         <Button variant="outline" size="sm" onClick={() => void load()} disabled={loading || busy}>
           Actualizar
@@ -248,8 +271,22 @@ export default function LotteryAIAgentPage() {
                   <option value="light">Ligera</option>
                 </select>
               </label>
+              <label className="space-y-1 text-sm">
+                <span className="text-xs text-muted-foreground">Modo investigación (A)</span>
+                <select
+                  className="w-full rounded border border-border bg-background px-2 py-1.5"
+                  value={form.research_mode}
+                  onChange={(e) => setForm((f) => ({ ...f, research_mode: e.target.value }))}
+                >
+                  <option value="auto">Automático</option>
+                  <option value="quick">Rápida</option>
+                  <option value="deep">Profunda</option>
+                </select>
+              </label>
               {(
                 [
+                  ["max_tools_per_research", "Máx. tools investigación (A)"],
+                  ["max_research_steps", "Máx. pasos investigación (A)"],
                   ["max_insights", "Máx. insights (A)"],
                   ["max_lotteries", "Máx. loterías (A)"],
                   ["timeout_seconds", "Timeout s (A)"],

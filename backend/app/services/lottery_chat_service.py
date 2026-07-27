@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import asyncio
 import json
+import re
 import time
 import uuid
 from datetime import datetime, timezone
@@ -15,6 +16,15 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.config import settings
 from app.core.exceptions import forbidden, not_found
 from app.llm.router import LLMRouter
+from app.lottery.ai.analyst import (
+    AnalystGuardrails,
+    ConversationBrain,
+    IntentResolver,
+    ResearchPlanner,
+    ToolOrchestrator,
+    format_analyst_response,
+    load_analyst_config_from_payload,
+)
 from app.lottery.ai.conversation_state import ConversationState, UnderstandingResult
 from app.lottery.ai.planner import build_plan
 from app.lottery.ai.prompts.lottery_assistant_system_v1 import (
@@ -196,6 +206,31 @@ class LotteryChatService:
         ctx.default_primary_position = state.default_primary_position
 
         understanding, state = understand(content, state)
+
+        # Fase A — Intent Resolver + Conversation Brain
+        resolution = IntentResolver.resolve(content, state)
+        brain = ConversationBrain(state)
+        state = brain.apply_resolution(understanding=understanding, resolution=resolution)
+        if resolution.get("inherit_active_number") and state.active_numbers:
+            if not understanding.numbers:
+                understanding.numbers = list(state.active_numbers)
+            if understanding.needs_clarification and "number" in (understanding.missing_slots or []):
+                understanding.missing_slots = [s for s in understanding.missing_slots if s != "number"]
+                if not understanding.missing_slots and understanding.tool:
+                    understanding.needs_clarification = False
+                    understanding.clarification_question = None
+        analyst_cfg = await self._analyst_runtime_config()
+        research_plan = ResearchPlanner.plan(
+            message=content,
+            understanding=understanding,
+            state=state,
+            config=analyst_cfg,
+            resolution=resolution,
+        )
+        state = brain.remember_research(research_plan.to_summary())
+        guardrails = AnalystGuardrails()
+        research_meta = research_plan.to_summary() if research_plan.is_research else None
+
         plan = build_plan(understanding)
         tool_trace: list[dict[str, Any]] = []
         structured: dict[str, Any] | None = None
@@ -239,6 +274,13 @@ class LotteryChatService:
                 understanding.clarification_question
                 or "¿Puedes precisar un poco más la consulta?"
             )
+            if brain.should_skip_number_clarify() and re.search(
+                r"qu[eé]\s+n[uú]mero", template or "", re.I
+            ):
+                template = (
+                    f"Sigo con el {state.active_numbers[0]}. "
+                    "¿Quieres filtrar por lotería, posición o período?"
+                )
             structured = {
                 "type": "lottery_ambiguity",
                 "warnings": [{"code": "CLARIFY", "message": template}],
@@ -268,9 +310,29 @@ class LotteryChatService:
                 role=self.role,
                 is_superadmin=self.is_superadmin,
             )
+            phase_a_handled = False
+            if research_plan.is_research and research_plan.steps:
+                (
+                    structured,
+                    template,
+                    tool_trace,
+                    ctx,
+                    state,
+                ) = await ToolOrchestrator(executor, analyst_cfg, guardrails).run(
+                    research_plan, ctx=ctx, state=state
+                )
+                intent_kind = "tool"
+                tool_name = tool_trace[-1].get("tool") if tool_trace else understanding.tool
+                state.last_plan = [s.purpose or s.tool for s in research_plan.steps]
+                state.last_intent = str(understanding.intent)
+                state.pending_slots = []
+                state.pending_intent = None
+                if structured and isinstance(structured.get("research"), dict):
+                    research_meta = structured.get("research")
+                phase_a_handled = True
             # Multi-tool / specialized plans
             multi_qs = (understanding.params or {}).get("multi_queries")
-            if (
+            if (not phase_a_handled) and (
                 understanding.intent == "multi_last_occurrence"
                 or (isinstance(multi_qs, list) and len(multi_qs) >= 1
                     and (understanding.params or {}).get("intent") == "multi_last_occurrence")
@@ -301,8 +363,9 @@ class LotteryChatService:
                 state.pending_slots = []
                 state.pending_intent = None
                 state.last_tool = tool_name
-            elif understanding.intent == "post_occurrence_window" or understanding.tool == (
-                "lottery_analyze_post_occurrence_window"
+            elif (not phase_a_handled) and (
+                understanding.intent == "post_occurrence_window"
+                or understanding.tool == "lottery_analyze_post_occurrence_window"
             ):
                 structured, template, tool_trace = await self._execute_post_occurrence_window(
                     executor, understanding, ctx
@@ -324,7 +387,7 @@ class LotteryChatService:
                     "type": "post_occurrence_window",
                     "params": dict(understanding.params or {}),
                 }
-            elif (
+            elif (not phase_a_handled) and (
                 understanding.tool == "lottery_compare_last_occurrence_all"
                 or (understanding.scope == "all" and understanding.intent == "last_occurrence")
                 or (
@@ -438,7 +501,7 @@ class LotteryChatService:
                         "type": "post_occurrence_window",
                         "params": dict(chained.params or {}),
                     }
-            else:
+            elif not phase_a_handled:
                 tool_enum = self._tool_enum(understanding.tool)
                 exec_params = self._normalize_tool_params(understanding.tool, params, state)
                 result = await executor.execute(
@@ -606,6 +669,17 @@ class LotteryChatService:
                 fallback_used = True
                 fallback_reason = "synthesis_unavailable_or_failed"
                 provider_used = provider_used or "local_template"
+            facts_for_fmt = {
+                "primary": state.current_primary_candidate,
+                "observed": (state.last_analysis or {}).get("observed"),
+                "confirmer": (state.last_analysis or {}).get("confirmer"),
+                "historical": (state.last_analysis or {}).get("historical_summary"),
+            }
+            final_text = format_analyst_response(
+                guardrails.sanitize_llm_text(final_text or template),
+                facts=facts_for_fmt,
+                research=research_meta if isinstance(research_meta, dict) else None,
+            )
         elif intent_kind == "clarify":
             missing = list(understanding.missing_slots or state.pending_slots or [])
             # Never let the LLM rewrite a pure "missing number" ask into lottery/form noise.
@@ -785,6 +859,7 @@ class LotteryChatService:
             "suggestions": self._suggestions(ctx, intent_kind, state=state),
             "synthesis_fallback": synthesis_fallback,
             "latency_ms": latency_ms,
+            "research": research_meta,
             "runtime_trace": runtime_trace,
         }
 
@@ -1863,6 +1938,22 @@ class LotteryChatService:
             if content:
                 out.append({"role": role, "content": content[:800]})
         return out
+
+    async def _analyst_runtime_config(self):
+        """Load Analista IA research config from Admin agent payload (safe defaults)."""
+        try:
+            from app.services.lottery_ai_admin_service import LotteryAiAdminService
+
+            svc = LotteryAiAdminService(
+                self.db, tenant_id=self.tenant_id, user_id=self.user_id
+            )
+            await svc.ensure_seeded()
+            cfg = await svc.get_active_config()
+            payload = (cfg.payload if cfg else None) or {}
+            return load_analyst_config_from_payload(payload)
+        except Exception:  # noqa: BLE001
+            return load_analyst_config_from_payload(None)
+
 
     async def _synthesize(
         self,

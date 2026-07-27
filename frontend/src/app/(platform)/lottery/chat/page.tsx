@@ -588,7 +588,9 @@ export default function LotteryChatPage() {
                 </div>
               ))}
               {loading && (
-                <p className="animate-pulse text-xs text-muted-foreground">Analizando…</p>
+                <p className="animate-pulse text-xs text-muted-foreground">
+                  Estoy investigando…
+                </p>
               )}
               <div ref={bottomRef} />
             </div>

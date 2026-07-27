@@ -67,6 +67,14 @@ DEFAULT_AGENT_PAYLOAD: dict[str, Any] = {
     "fallback_enabled": True,
     "proactive_analysis": True,
     "analysis_depth": "standard",
+    "research": {
+        "mode": "auto",  # quick | deep | auto
+        "max_tools_per_research": 6,
+        "max_research_steps": 8,
+        "max_tokens": 1200,
+        "timeout_seconds": 45,
+        "investigating_message": "Estoy investigando…",
+    },
     "analysis_scope": "default_lotteries",
     "auto_compare_default_lotteries": True,
     "max_lotteries": 7,
@@ -1176,10 +1184,18 @@ class LotteryAiAdminService:
             "max_tokens": models.get("max_tokens"),
             "understanding_mode": payload.get("understanding_mode"),
             "analysis_depth": payload.get("analysis_depth"),
+            "research_mode": ((payload.get("research") or {}).get("mode") or "auto"),
+            "max_tools_per_research": ((payload.get("research") or {}).get("max_tools_per_research")
+                                       or payload.get("max_tools_per_query")),
+            "max_research_steps": ((payload.get("research") or {}).get("max_research_steps")
+                                   or payload.get("max_planner_steps")),
             "hermes_as_orchestrator": bool(payload.get("hermes_as_orchestrator")),
             "classification": {
                 "understanding_mode": "A",
                 "analysis_depth": "A",
+                "research_mode": "A",
+                "max_tools_per_research": "A",
+                "max_research_steps": "A",
                 "models": "B",
                 "safety": "E",
                 "hermes_as_orchestrator": "E",
@@ -1190,6 +1206,9 @@ class LotteryAiAdminService:
             "editable_fields": [
                 {"key": "understanding_mode", "label": "Modo de comprensión", "class": "A"},
                 {"key": "analysis_depth", "label": "Profundidad de análisis", "class": "A"},
+                {"key": "research_mode", "label": "Modo de investigación", "class": "A"},
+                {"key": "max_tools_per_research", "label": "Máx. herramientas por investigación", "class": "A"},
+                {"key": "max_research_steps", "label": "Máx. pasos de investigación", "class": "A"},
                 {"key": "max_insights", "label": "Máximo de insights", "class": "A"},
                 {"key": "max_lotteries", "label": "Máximo de loterías", "class": "A"},
                 {"key": "timeout_seconds", "label": "Timeout (s)", "class": "A"},
@@ -1248,10 +1267,23 @@ class LotteryAiAdminService:
         ):
             if flat_key in payload:
                 merged[flat_key] = payload[flat_key]
+        # Research settings (Fase A)
+        research = merged.setdefault("research", dict(DEFAULT_AGENT_PAYLOAD.get("research") or {}))
+        if "research_mode" in payload:
+            research["mode"] = payload["research_mode"]
+        if "max_tools_per_research" in payload:
+            research["max_tools_per_research"] = int(payload["max_tools_per_research"])
+            merged["max_tools_per_query"] = int(payload["max_tools_per_research"])
+        if "max_research_steps" in payload:
+            research["max_research_steps"] = int(payload["max_research_steps"])
+            merged["max_planner_steps"] = int(payload["max_research_steps"])
         if "temperature" in payload:
             models["temperature"] = payload["temperature"]
         if "max_tokens" in payload:
             models["max_tokens"] = payload["max_tokens"]
+            research["max_tokens"] = payload["max_tokens"]
+        if "timeout_seconds" in payload:
+            research["timeout_seconds"] = payload["timeout_seconds"]
         if "primary_model" in payload:
             models["primary_model"] = payload["primary_model"]
         if draft:

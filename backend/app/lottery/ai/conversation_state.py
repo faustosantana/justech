@@ -101,6 +101,13 @@ class ConversationState(BaseModel):
     current_primary_candidate: Optional[int] = None
     current_alternatives: list[int] = Field(default_factory=list)
     historical_summary: Optional[str] = None
+    # Fase A — Conversation Brain extensions (additive; ignore if absent in legacy sessions)
+    active_pair: list[str] = Field(default_factory=list)
+    active_filters: dict[str, Any] = Field(default_factory=dict)
+    open_hypotheses: list[str] = Field(default_factory=list)
+    current_research: dict[str, Any] = Field(default_factory=dict)
+    recent_memory: list[str] = Field(default_factory=list)
+    research_mode: Optional[str] = None
 
     def to_store(self) -> dict[str, Any]:
         return self.model_dump(mode="json")

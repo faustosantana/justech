@@ -21,8 +21,13 @@ def _sample_35_14_54() -> dict:
             "reason": "technical should not leak",
         },
         "alternatives": [
-            {"number": 7, "classification": "VECINO_T2_DIRECTO"},
+            {"number": 6, "classification": "FAMILIA_T1"},
             {"number": 11, "classification": "ALTERNATIVA"},
+        ],
+        "ranked_candidates": [
+            {"number": 54, "classification": "FUERTE_T1_T2_MISMO_DIA"},
+            {"number": 6, "classification": "FAMILIA_T1"},
+            {"number": 7, "classification": "VECINO_T2_DIRECTO"},
         ],
         "same_day_cross": [
             {
@@ -38,7 +43,10 @@ def _sample_35_14_54() -> dict:
         "historical_evidence": {
             "period_label": "Todo el histórico",
             "metrics": {
-                "exact_cases": 120,
+                # Engine may report equivalents as evaluable when exact_cases=0 (level-2).
+                "exact_cases": 0,
+                "evaluable_cases": 120,
+                "structural_cases": 120,
                 "exact_hits": 96,
                 "t1_family_hits": 24,
                 "t2_neighbor_hits": 0,
@@ -120,6 +128,10 @@ def test_report_35_14_54_primary_and_metrics():
 
 def test_report_does_not_change_when_ranking_fields_present():
     raw = _sample_35_14_54()
+    raw["alternatives"] = [
+        {"number": 7, "classification": "VECINO_T2_DIRECTO"},
+        {"number": 11, "classification": "ALTERNATIVA"},
+    ]
     raw["ranked_candidates"] = [
         {"number": 54, "total_score": 999},
         {"number": 7, "total_score": 1},
@@ -127,3 +139,5 @@ def test_report_does_not_change_when_ranking_fields_present():
     report = assemble_intelligent_analysis_report(raw, origin_lottery="Lotería Nacional")
     assert report["primary_candidate"] == 54
     assert report["alternatives"][0] == 7
+    assert "120 casos" in (report["comparison_explanation"] or "")
+    assert any(s["title"] == "Revisión histórica" for s in report["reasoning_timeline"])

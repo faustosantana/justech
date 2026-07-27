@@ -221,7 +221,16 @@ def assemble_intelligent_analysis_report(
     narrative = (hist.get("narrative") or {}) if hist and not hist_error else {}
     explanation = analysis.get("explanation") if isinstance(analysis.get("explanation"), dict) else {}
 
-    exact_cases = int(metrics.get("exact_cases") or card.get("exact_historical_cases") or 0)
+    # Prefer explicit exact cases; historical layer may store equivalents as
+    # evaluable/structural when similarity is amplified (level-2). Presentation only.
+    exact_cases = int(
+        metrics.get("exact_cases")
+        or card.get("exact_historical_cases")
+        or metrics.get("evaluable_cases")
+        or metrics.get("structural_cases")
+        or card.get("structural_historical_cases")
+        or 0
+    )
     exact_hits = int(metrics.get("exact_hits") or card.get("exact_hits") or 0)
     t1_family = int(metrics.get("t1_family_hits") or card.get("t1_family_hits") or 0)
     t2_neighbors = int(metrics.get("t2_neighbor_hits") or card.get("t2_neighbor_hits") or 0)
@@ -235,19 +244,48 @@ def assemble_intelligent_analysis_report(
         or (1 if t1_sources else 0) + (1 if t2_confirmers else 0)
     )
 
-    # Participating lotteries (human names only)
+    def _norm_lot(name: str) -> str:
+        return (
+            str(name)
+            .strip()
+            .replace("á", "a")
+            .replace("é", "e")
+            .replace("í", "i")
+            .replace("ó", "o")
+            .replace("ú", "u")
+            .lower()
+        )
+
+    # Participating lotteries: origin + same-day cross parties only (not all draws that day)
     lots: list[str] = []
-    if origin_lottery:
-        lots.append(str(origin_lottery))
+    lots_norm: set[str] = set()
+
+    def _add_lot(v: Any) -> None:
+        if not v:
+            return
+        s = str(v).strip()
+        key = _norm_lot(s)
+        if not key or key in lots_norm:
+            return
+        lots_norm.add(key)
+        lots.append(s)
+
+    _add_lot(origin_lottery)
     for c in crosses:
-        for key in ("lottery_x", "lottery_y"):
-            v = c.get(key)
-            if v and str(v) not in lots:
-                lots.append(str(v))
+        _add_lot(c.get("lottery_x"))
+        _add_lot(c.get("lottery_y"))
     ctx = analysis.get("same_day_context") if isinstance(analysis.get("same_day_context"), dict) else {}
+    # Include confirmer lottery from context appearances only when it matches confirmer numbers
+    confirmer_nums = {int(x) for x in t2_confirmers}
     for a in ctx.get("appearances") or []:
-        if isinstance(a, dict) and a.get("lottery") and str(a["lottery"]) not in lots:
-            lots.append(str(a["lottery"]))
+        if not isinstance(a, dict):
+            continue
+        try:
+            n = int(a.get("number"))
+        except (TypeError, ValueError):
+            continue
+        if n in confirmer_nums or (observed is not None and n == observed):
+            _add_lot(a.get("lottery"))
 
     level_key, level_label = _evidence_level(
         has_t1=bool(t1_sources),
@@ -346,39 +384,29 @@ def assemble_intelligent_analysis_report(
             "No se realizó cruce entre loterías porque el análisis no tiene una fecha asociada."
         )
 
-    # Alternatives comparison (preserve engine order)
-    alts_raw = list(analysis.get("alternatives") or [])
-    comparisons: list[dict[str, Any]] = []
-    if primary_n is not None:
-        comparisons.append(
-            _comparison_row(
-                number=primary_n,
-                table1=bool(t1_sources),
-                table2=bool(t2_confirmers),
-                same_day=same_day_flag,
-                exact_cases=exact_cases if exact_cases else None,
-                level_label=level_label,
-            )
-        )
-    for alt in alts_raw[:4]:
-        if not isinstance(alt, dict) or alt.get("number") is None:
-            continue
-        an = int(alt["number"])
-        if primary_n is not None and an == primary_n:
-            continue
-        cls = str(alt.get("classification") or "")
-        alt_t1 = "FUERTE" in cls or "PRINCIPAL" in cls
-        alt_t2 = "T2" in cls or "VECINO" in cls
-        if "VECINO_T2" in cls or cls.startswith("VECINO"):
-            alt_t1 = False
-            alt_t2 = True
+    def _flags_from_classification(cls: str) -> tuple[bool, bool]:
+        c = str(cls or "")
+        if "VECINO_T2" in c or c.startswith("VECINO"):
+            return False, True
+        t1 = "FUERTE" in c or "PRINCIPAL" in c or "FAMILIA_T1" in c or "T1" in c
+        t2 = "T2" in c or "VECINO" in c
+        if "FUERTE_T1_T2" in c:
+            return True, True
+        return t1, t2
+
+    def _append_comparison(an: int, cls: str = "", *, force_cases: int | None = None) -> None:
+        if any(row["number"] == an for row in comparisons):
+            return
+        alt_t1, alt_t2 = _flags_from_classification(cls)
         alt_same = False
-        alt_cases = None
+        alt_cases = force_cases
         if rival_card and int(rival_card.get("candidate_number") or 0) == an:
             alt_t1 = bool(rival_card.get("table1_support"))
             alt_t2 = bool(rival_card.get("table2_support"))
             alt_same = bool(rival_card.get("same_day_cross_support"))
-            alt_cases = rival_card.get("exact_historical_cases")
+            alt_cases = rival_card.get("exact_historical_cases") or rival_card.get(
+                "structural_historical_cases"
+            )
         alt_level = _evidence_level(
             has_t1=alt_t1,
             has_t2=alt_t2,
@@ -398,10 +426,58 @@ def assemble_intelligent_analysis_report(
             )
         )
 
-    comparison_text = narrative.get("comparison") or explanation.get("comparison")
-    if not comparison_text and primary_n is not None and len(comparisons) >= 2:
-        rival = comparisons[1]
-        if comparisons[0]["table1_support"] and not rival["table1_support"]:
+    # Alternatives comparison (preserve engine order; explain existing rank only)
+    alts_raw = list(analysis.get("alternatives") or [])
+    ranked_raw = list(analysis.get("ranked_candidates") or [])
+    comparisons: list[dict[str, Any]] = []
+    if primary_n is not None:
+        comparisons.append(
+            _comparison_row(
+                number=primary_n,
+                table1=bool(t1_sources),
+                table2=bool(t2_confirmers),
+                same_day=same_day_flag,
+                exact_cases=exact_cases if exact_cases else None,
+                level_label=level_label,
+            )
+        )
+    for alt in alts_raw[:3]:
+        if not isinstance(alt, dict) or alt.get("number") is None:
+            continue
+        an = int(alt["number"])
+        if primary_n is not None and an == primary_n:
+            continue
+        _append_comparison(an, str(alt.get("classification") or ""))
+
+    # Include first Tabla-2-only rival from ranking when present (e.g. 07) for contrast
+    for cand in ranked_raw[:25]:
+        if not isinstance(cand, dict) or cand.get("number") is None:
+            continue
+        an = int(cand["number"])
+        if primary_n is not None and an == primary_n:
+            continue
+        cls = str(cand.get("classification") or "")
+        t1, t2 = _flags_from_classification(cls)
+        if t2 and not t1:
+            _append_comparison(an, cls)
+            break
+
+    # Prefer deterministic comparison text aligned with shown rows (no % / rates)
+    comparison_text = None
+    raw_cmp = narrative.get("comparison") or explanation.get("comparison")
+    if isinstance(raw_cmp, str) and "%" not in raw_cmp and "probabilidad" not in raw_cmp.lower():
+        comparison_text = raw_cmp
+    if primary_n is not None and len(comparisons) >= 2:
+        # Prefer a T2-only contrast row when available (matches UAT 54 vs 07)
+        rival = next(
+            (
+                row
+                for row in comparisons[1:]
+                if row.get("table2_support") and not row.get("table1_support")
+            ),
+            comparisons[1],
+        )
+        if comparisons[0]["table1_support"]:
             comparison_text = (
                 f"El {primary_n} supera al {rival['number']} porque posee respaldo de Tabla 1"
                 + (", confirmación de Tabla 2" if comparisons[0]["table2_support"] else "")

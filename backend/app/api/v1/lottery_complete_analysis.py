@@ -76,7 +76,8 @@ async def analysis_run(
 ) -> dict[str, Any]:
     """Run complete analysis; auto-load same-day + historical featured draws."""
     payload = dict(body)
-    raw_date = payload.get("date")
+    # Accept both `date` (FE) and `analysis_date` without changing ranking contracts.
+    raw_date = payload.get("date") or payload.get("analysis_date")
     draw_date = None
     if isinstance(raw_date, str) and raw_date.strip():
         try:

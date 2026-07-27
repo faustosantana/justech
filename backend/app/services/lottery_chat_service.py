@@ -1924,7 +1924,7 @@ class LotteryChatService:
             )
         else:
             user_content = (
-                "Eres el analista conversacional de Lottery IA. "
+                "Eres el Analista IA de Lottery IA. "
                 "Responde en español claro y natural, empezando por la conclusión. "
                 "Usa SOLO los hechos y el diálogo reciente. "
                 "Mantén continuidad: no preguntes lo ya respondido. "
@@ -1932,7 +1932,8 @@ class LotteryChatService:
                 "No menciones JSON, tools, códigos internos ni nombres técnicos "
                 "(traduce FUERTE_T1_T2_MISMO_DIA a lenguaje humano). "
                 "No predice ni recomienda apuestas. "
-                "Si hay comparación o histórico en los hechos, inclúyelos de forma breve.\n"
+                "Si hay comparación o histórico en los hechos, inclúyelos de forma breve. "
+                "Tabla 1 tiene prioridad; Tabla 2 confirma.\n"
                 f"{json.dumps(payload, ensure_ascii=False, default=str)[:6500]}"
             )
         messages = [

@@ -340,10 +340,12 @@ class LotteryAiAdminService:
                 checksum=_checksum(p.body),
                 published_at=datetime.now(timezone.utc) if p.status == "active" else None,
             )
-            # Prefer conversational v4 as active seed; keep older as archived/draft.
-            if p.version == "v4":
+            # Prefer Analista IA Prompt Maestro v5 as active seed; keep older as archived/draft.
+            if p.version == "v5":
                 row.status = "active"
                 row.published_at = datetime.now(timezone.utc)
+            elif p.version == "v4":
+                row.status = "archived"
             elif p.version == "v3":
                 row.status = "draft"
             elif p.version == "v2":
@@ -353,62 +355,62 @@ class LotteryAiAdminService:
             self.db.add(row)
             existing_versions.add(p.version)
 
-        # Ensure v4 exists even if registry was updated after initial seed.
-        v4_code = prompt_mod._REGISTRY.get("v4")
-        if v4_code and "v4" not in existing_versions:
+        # Ensure v5 exists even if registry was updated after initial seed.
+        v5_code = prompt_mod._REGISTRY.get("v5")
+        if v5_code and "v5" not in existing_versions:
             self.db.add(
                 LotteryAiPromptVersion(
                     id=uuid.uuid4(),
                     tenant_id=None,
-                    name=v4_code.name,
-                    version="v4",
+                    name=v5_code.name,
+                    version="v5",
                     status="active",
-                    description=v4_code.description,
-                    body=v4_code.body,
-                    blocks={"identidad": (v4_code.body or "")[:800]},
-                    changelog=v4_code.changelog,
-                    recommended_model=v4_code.recommended_model,
-                    temperature=v4_code.temperature,
-                    max_tokens=v4_code.max_tokens,
-                    variables=v4_code.variables,
-                    tags=["system", "seed", "v4"],
-                    checksum=_checksum(v4_code.body),
+                    description=v5_code.description,
+                    body=v5_code.body,
+                    blocks={"identidad": (v5_code.body or "")[:800]},
+                    changelog=v5_code.changelog,
+                    recommended_model=v5_code.recommended_model,
+                    temperature=v5_code.temperature,
+                    max_tokens=v5_code.max_tokens,
+                    variables=v5_code.variables,
+                    tags=["system", "seed", "v5", "maestro"],
+                    checksum=_checksum(v5_code.body),
                     published_at=datetime.now(timezone.utc),
                 )
             )
-            existing_versions.add("v4")
+            existing_versions.add("v5")
 
-        # Promote conversational v4: archive prior active rows and activate v4 body.
-        if v4_code:
+        # Promote Prompt Maestro v5: archive prior active rows and activate v5 body.
+        if v5_code:
             rows = (
                 await self.db.execute(select(LotteryAiPromptVersion))
             ).scalars().all()
-            v4_row = next((r for r in rows if r.version == "v4"), None)
-            if v4_row:
+            v5_row = next((r for r in rows if r.version == "v5"), None)
+            if v5_row:
                 for r in rows:
-                    if r.version != "v4" and r.status == "active":
+                    if r.version != "v5" and r.status == "active":
                         r.status = "archived"
-                v4_row.status = "active"
-                v4_row.body = v4_code.body
-                v4_row.checksum = _checksum(v4_code.body)
-                v4_row.description = v4_code.description
-                v4_row.changelog = v4_code.changelog
-                v4_row.temperature = v4_code.temperature
-                v4_row.max_tokens = v4_code.max_tokens
-                v4_row.variables = v4_code.variables
-                v4_row.published_at = v4_row.published_at or datetime.now(timezone.utc)
-                v4_row.updated_at = datetime.now(timezone.utc)
+                v5_row.status = "active"
+                v5_row.body = v5_code.body
+                v5_row.checksum = _checksum(v5_code.body)
+                v5_row.description = v5_code.description
+                v5_row.changelog = v5_code.changelog
+                v5_row.temperature = v5_code.temperature
+                v5_row.max_tokens = v5_code.max_tokens
+                v5_row.variables = v5_code.variables
+                v5_row.published_at = v5_row.published_at or datetime.now(timezone.utc)
+                v5_row.updated_at = datetime.now(timezone.utc)
                 prompt_mod.set_active_from_db(
-                    name=v4_row.name,
-                    version=v4_row.version,
+                    name=v5_row.name,
+                    version=v5_row.version,
                     status="active",
-                    description=v4_row.description or "",
-                    body=v4_row.body or "",
-                    recommended_model=v4_row.recommended_model or "DeepSeek-V3.2",
-                    temperature=float(v4_row.temperature or 0.25),
-                    max_tokens=int(v4_row.max_tokens or 900),
-                    changelog=v4_row.changelog or "",
-                    variables=list(v4_row.variables or []),
+                    description=v5_row.description or "",
+                    body=v5_row.body or "",
+                    recommended_model=v5_row.recommended_model or "DeepSeek-V3.2",
+                    temperature=float(v5_row.temperature or 0.25),
+                    max_tokens=int(v5_row.max_tokens or 1200),
+                    changelog=v5_row.changelog or "",
+                    variables=list(v5_row.variables or []),
                 )
 
         # Hotfix active v2 body from code registry when position/compound rules missing

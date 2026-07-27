@@ -85,7 +85,12 @@ def test_analiza_39_con_58():
     assert int(r.params["confirmer"]) == 58
 
 
-def test_system_prompt_v4_active_in_code_registry():
+def test_system_prompt_maestro_v5_active_in_code_registry():
     p = get_active_prompt()
-    assert p.version == "v4"
-    assert "analista conversacional" in p.body.lower()
+    assert p.version == "v5"
+    body = p.body.lower()
+    assert "analista ia" in body
+    assert "única fuente de verdad" in body or "unica fuente de verdad" in body
+    assert "nunca sustituyes el motor" in body or "nunca sustituyas el motor" in body
+    assert "tabla 1" in body
+    assert "observación del analista" in body or "observacion del analista" in body

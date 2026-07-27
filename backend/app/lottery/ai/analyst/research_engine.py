@@ -148,10 +148,28 @@ class ResearchEngine:
             research_meta=meta,
         )
 
-    @staticmethod
-    def _bound(steps: list[PlanStep], *, max_tools: int, max_steps: int) -> list[PlanStep]:
-        limit = min(max_tools, max_steps)
-        return list(steps)[: max(1, limit)]
+    # Prefer primary answer metrics over satellite windows when truncating.
+    _BOUND_PRIORITY_PURPOSES = frozenset(
+        {
+            "compare_a_occurrences",
+            "compare_b_occurrences",
+            "compare_a_lotteries",
+            "compare_b_lotteries",
+            "last_n_occurrences",
+            "last_occurrence",
+            "same_day_coincidence",
+            "frequency",
+        }
+    )
+
+    @classmethod
+    def _bound(cls, steps: list[PlanStep], *, max_tools: int, max_steps: int) -> list[PlanStep]:
+        limit = max(1, min(max_tools, max_steps))
+        if len(steps) <= limit:
+            return list(steps)
+        primary = [s for s in steps if str(s.purpose or "") in cls._BOUND_PRIORITY_PURPOSES]
+        satellite = [s for s in steps if str(s.purpose or "") not in cls._BOUND_PRIORITY_PURPOSES]
+        return (primary + satellite)[:limit]
 
 
 def get_research_engine() -> ResearchEngine:

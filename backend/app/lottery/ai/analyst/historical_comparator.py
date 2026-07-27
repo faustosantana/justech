@@ -19,61 +19,65 @@ def compare_numbers_steps(
     lottery: str | None = None,
     year: int | None = None,
 ) -> list[PlanStep]:
+    """Primary metrics first so ResearchEngine._bound truncation keeps both subjects."""
     lots = list(lotteries or [])[:6]
+    year_kw = {"year": year} if year else {}
     steps: list[PlanStep] = []
+
+    # 1–2. Occurrences for both subjects (survive truncation)
     for n, tag in ((a, "a"), (b, "b")):
         steps.append(
             PlanStep(
                 tool=LotteryToolName.GET_NUMBER_OCCURRENCES.value,
-                params={"number": n, "lottery": lottery, **({"year": year} if year else {})},
+                params={"number": n, "lottery": lottery, **year_kw},
                 purpose=f"compare_{tag}_occurrences",
             )
         )
-        steps.append(
-            PlanStep(
-                tool=LotteryToolName.GET_POSITION_DISTRIBUTION.value,
-                params={"number": n, "lottery": lottery, **({"year": year} if year else {})},
-                purpose=f"compare_{tag}_positions",
-            )
-        )
-        if lottery:
-            steps.append(
-                PlanStep(
-                    tool=LotteryToolName.CALCULATE_FREQUENCIES.value,
-                    params={"lottery": lottery, "number": n, **({"year": year} if year else {})},
-                    purpose=f"compare_{tag}_frequency",
-                )
-            )
-        if lots:
+
+    # 3–4. Cross-lottery compare when lotteries provided
+    if lots:
+        for n, tag in ((a, "a"), (b, "b")):
             steps.append(
                 PlanStep(
                     tool=LotteryToolName.COMPARE_NUMBER_ACROSS_LOTTERIES.value,
-                    params={"number": n, "lotteries": lots},
+                    params={"number": n, "lotteries": lots, **year_kw},
                     purpose=f"compare_{tag}_lotteries",
                 )
             )
+
+    # 5. Position distribution a/b
+    for n, tag in ((a, "a"), (b, "b")):
         steps.append(
             PlanStep(
-                tool=LotteryToolName.GET_FOLLOWING_DAYS.value,
-                params={"number": n, "lottery": lottery, "days": 1},
-                purpose=f"compare_{tag}_d1",
+                tool=LotteryToolName.GET_POSITION_DISTRIBUTION.value,
+                params={"number": n, "lottery": lottery, **year_kw},
+                purpose=f"compare_{tag}_positions",
             )
         )
-        steps.append(
-            PlanStep(
-                tool=LotteryToolName.GET_FOLLOWING_DAYS.value,
-                params={"number": n, "lottery": lottery, "days": 3},
-                purpose=f"compare_{tag}_d3",
+
+    # 6. Frequencies a/b when a lottery is set
+    if lottery:
+        for n, tag in ((a, "a"), (b, "b")):
+            steps.append(
+                PlanStep(
+                    tool=LotteryToolName.CALCULATE_FREQUENCIES.value,
+                    params={"lottery": lottery, "number": n, **year_kw},
+                    purpose=f"compare_{tag}_frequency",
+                )
             )
-        )
-        steps.append(
-            PlanStep(
-                tool=LotteryToolName.GET_FOLLOWING_DAYS.value,
-                params={"number": n, "lottery": lottery, "days": 7},
-                purpose=f"compare_{tag}_d7",
+
+    # 7. Optional D+1/D+3/D+7 windows last (satellite; may be truncated)
+    for n, tag in ((a, "a"), (b, "b")):
+        for days in (1, 3, 7):
+            steps.append(
+                PlanStep(
+                    tool=LotteryToolName.GET_FOLLOWING_DAYS.value,
+                    params={"number": n, "lottery": lottery, "days": days},
+                    purpose=f"compare_{tag}_d{days}",
+                )
             )
-        )
-    # Cross historical pattern compare when both look numeric
+
+    # 8. Cross historical pattern compare last
     hist: dict[str, Any] = {}
     if str(a).isdigit():
         hist["origin_x"] = int(a)

@@ -171,28 +171,80 @@ class QuestionClassifier:
         resolution = resolution or {}
         raw = message or ""
         nums = cls._extract_numbers(raw, state, resolution)
+        # Drop quantity digits mistaken as subjects
+        from app.lottery.ai.turn_policy import (
+            asks_all_lotteries,
+            asks_all_positions,
+            exclude_limit_from_subjects,
+            extract_occurrence_limit,
+            extract_other_occurrence_limit,
+            is_correction_or_meta_request,
+            is_most_recent_request,
+            is_other_occurrences_request,
+            is_previous_occurrences_request,
+        )
+
+        lim_pre = resolution.get("limit") or extract_occurrence_limit(raw)
+        nums = exclude_limit_from_subjects(nums, lim_pre)
         # Lotteries named in this turn only — do not sticky-fill for last_times below
         named_lots = list(resolution.get("lotteries") or [])
+        inherit_lot = False
+        if not named_lots and (state.active_filters or {}).get("lottery_explicit"):
+            named_lots = list(state.active_lotteries or [])[:4]
+            inherit_lot = bool(named_lots)
+        if asks_all_lotteries(raw):
+            named_lots = []
+            inherit_lot = False
         lots = named_lots or list(state.active_lotteries or [])
         years = [int(y) for y in cls._YEAR.findall(raw)]
         windows = sorted({int(x) for x in cls._D_WIN.findall(raw)}) or [1, 3, 7]
+        pos_scope = resolution.get("position_scope")
+        if asks_all_positions(raw):
+            pos_scope = "all"
+        elif pos_scope is None:
+            pos_scope = state.active_position or state.last_position_scope
         params: dict[str, Any] = {
             "numbers": nums,
             "lotteries": lots[:4],
             "years": years,
             "windows": windows,
             "year_filter": resolution.get("year_filter") or (state.active_filters or {}).get("year"),
-            "position_scope": resolution.get("position_scope")
-            or state.active_position
-            or state.last_position_scope,
+            "position_scope": pos_scope,
             "compare_with": resolution.get("compare_with"),
             "follow_up_kind": resolution.get("follow_up_kind"),
             "active_pair": list(getattr(state, "active_pair", None) or [])[:2],
             "use_active_pair": bool(resolution.get("use_active_pair")),
-            "lottery_explicit": bool(named_lots or resolution.get("lottery_filter")),
+            "lottery_explicit": bool(
+                named_lots or resolution.get("lottery_filter") or inherit_lot
+            )
+            and not asks_all_lotteries(raw),
             "lottery_filter": resolution.get("lottery_filter"),
+            "position_explicit": bool(
+                resolution.get("position_explicit")
+                or (state.active_filters or {}).get("position_explicit")
+            )
+            and not asks_all_positions(raw),
             "primary": state.current_primary_candidate,
+            "offset": resolution.get("offset"),
+            "replay_last_intent": resolution.get("replay_last_intent"),
         }
+
+        # Same-day coincidence — before compare / complete-analysis paths
+        from app.lottery.ai.same_day_coincidence import is_same_day_coincidence_question
+
+        if is_same_day_coincidence_question(raw) or (
+            resolution.get("active_relation") == "same_day"
+            and resolution.get("follow_up_kind") in {None, "lotteries", "positions", "filtered"}
+            and len(nums) >= 2
+        ):
+            sd = dict(params)
+            sd["relation"] = "same_day"
+            sd["active_relation"] = "same_day"
+            sd["numbers"] = nums[:2] if len(nums) >= 2 else list(
+                getattr(state, "active_pair", None) or state.active_numbers or []
+            )[:2]
+            sd["use_active_pair"] = True
+            return ResearchQuestion("coincidences_only", sd, raw_message=raw)
 
         if cls._CONFIRM_FIRST.search(raw):
             return ResearchQuestion("which_lottery_confirms_first", params, raw_message=raw)
@@ -210,6 +262,10 @@ class QuestionClassifier:
             return ResearchQuestion("compare_lotteries", params, raw_message=raw)
         if cls._COMPARE_NUM.search(raw) or (
             resolution.get("follow_up_kind") == "compare" and (nums or resolution.get("compare_with"))
+        ) or re.search(
+            r"comp[aá]ra(me|r|lo|la)?\s+(el\s+)?\d{1,2}\s+(con|y|vs|versus)\s+(el\s+)?\d{1,2}",
+            raw,
+            re.I,
         ):
             if resolution.get("compare_with") and nums:
                 params["numbers"] = list(dict.fromkeys([*nums[:1], str(resolution["compare_with"])]))
@@ -218,7 +274,28 @@ class QuestionClassifier:
                     state.active_numbers[0],
                     str(resolution["compare_with"]),
                 ]
+            elif len(nums) >= 2:
+                params["numbers"] = nums[:2]
+            elif len(state.active_numbers or []) >= 2 and resolution.get("follow_up_kind") == "compare":
+                params["numbers"] = list(state.active_numbers[:2])
             return ResearchQuestion("compare_numbers", params, raw_message=raw)
+
+        # Year / position refinements while compare is active
+        if (
+            state.last_intent in {"compare_numbers", "compare"}
+            or (state.active_filters or {}).get("compare_active")
+        ) and (
+            resolution.get("year_filter")
+            or asks_all_positions(raw)
+            or resolution.get("position_explicit")
+            or re.search(r"\bsolo\s+en\s+20\d{2}\b|\ben\s+20\d{2}\b", raw, re.I)
+            or re.search(r"primera\s+posici|m[aá]s\s+recientemente", raw, re.I)
+        ):
+            cmp_nums = list(state.active_numbers[:2]) if len(state.active_numbers or []) >= 2 else nums
+            if len(cmp_nums) >= 2:
+                params["numbers"] = cmp_nums[:2]
+                return ResearchQuestion("compare_numbers", params, raw_message=raw)
+
         if cls._EQUIV_ONLY.search(raw):
             return ResearchQuestion("equivalents_only", params, raw_message=raw)
         if cls._CONFIRMATIONS.search(raw):
@@ -234,36 +311,90 @@ class QuestionClassifier:
         if cls._AFTER.search(raw) or (
             resolution.get("follow_up_kind") == "after" and (nums or state.active_numbers)
         ):
+            # Prefer temporal after windows over open investigation
             return ResearchQuestion("what_usually_happens_after", params, raw_message=raw)
-        if resolution.get("follow_up_kind") == "before" or (
-            cls._TEMPORAL_BEFORE.search(raw) and not cls._AFTER.search(raw)
-        ):
-            return ResearchQuestion("temporal_before", params, raw_message=raw)
-        if cls._TEMPORAL_AFTER.search(raw) and re.search(r"d\s*\+", raw, re.I):
-            return ResearchQuestion("temporal_windows", params, raw_message=raw)
-        # last N follow-up before generic last_times
+
+        # last N / previous N / other N — BEFORE temporal_before (which matches «anteriores»)
         if (
             cls._LAST_N.search(raw)
             or resolution.get("follow_up_kind") == "last_n_occurrences"
             or resolution.get("limit")
+            or is_previous_occurrences_request(raw)
+            or is_other_occurrences_request(raw)
         ):
-            from app.lottery.ai.turn_policy import extract_occurrence_limit
-
-            lim = resolution.get("limit") or extract_occurrence_limit(raw) or 3
+            lim = (
+                resolution.get("limit")
+                or extract_occurrence_limit(raw)
+                or extract_other_occurrence_limit(raw)
+                or 3
+            )
             last_n_params = dict(params)
             last_n_params["limit"] = int(lim)
-            last_n_params["lotteries"] = named_lots[:4]
-            last_n_params["lottery_explicit"] = bool(
-                named_lots or resolution.get("lottery_filter")
+            # Inherit explicit lottery unless user cleared it
+            if named_lots:
+                last_n_params["lotteries"] = named_lots[:4]
+                last_n_params["lottery_explicit"] = True
+            elif inherit_lot and not asks_all_lotteries(raw):
+                last_n_params["lotteries"] = list(state.active_lotteries or [])[:4]
+                last_n_params["lottery_explicit"] = True
+            else:
+                last_n_params["lotteries"] = []
+                last_n_params["lottery_explicit"] = False
+            if asks_all_positions(raw):
+                last_n_params["position_scope"] = "all"
+                last_n_params["position_explicit"] = True
+            elif resolution.get("position_explicit") or (
+                state.active_filters or {}
+            ).get("position_explicit"):
+                last_n_params["position_explicit"] = True
+                last_n_params["position_scope"] = pos_scope
+            if is_previous_occurrences_request(raw) or is_other_occurrences_request(raw):
+                prior = int((state.last_analysis or {}).get("limit") or 0)
+                last_n_params["offset"] = prior if prior > 0 else int(
+                    resolution.get("offset") or 0
+                )
+                # Fetch prior+N then caller/tool slices; request enough rows
+                last_n_params["limit"] = int(lim) + max(prior, 0)
+                last_n_params["page_offset"] = prior
+                last_n_params["result_limit"] = int(lim)
+            subject = exclude_limit_from_subjects(
+                nums[:1] if nums else list(state.active_numbers[:1]),
+                int(lim),
             )
-            last_n_params["position_explicit"] = bool(resolution.get("position_explicit"))
-            if nums:
-                last_n_params["numbers"] = nums[:1] if len(nums) == 1 else nums
+            if subject:
+                last_n_params["numbers"] = subject[:1]
                 last_n_params["active_pair"] = []
                 last_n_params["use_active_pair"] = False
             elif state.active_numbers:
                 last_n_params["numbers"] = list(state.active_numbers[:1])
             return ResearchQuestion("last_n_occurrences", last_n_params, raw_message=raw)
+
+        # temporal_before only for calendar D− windows, not «anteriores a esas»
+        if resolution.get("follow_up_kind") == "before" or (
+            cls._TEMPORAL_BEFORE.search(raw)
+            and not cls._AFTER.search(raw)
+            and not is_previous_occurrences_request(raw)
+            and not cls._LAST_N.search(raw)
+        ):
+            return ResearchQuestion("temporal_before", params, raw_message=raw)
+        if cls._TEMPORAL_AFTER.search(raw) and re.search(r"d\s*\+", raw, re.I):
+            return ResearchQuestion("temporal_windows", params, raw_message=raw)
+
+        # Correction / meta: replay last factual intent with new subject
+        if is_correction_or_meta_request(raw) and (nums or state.active_numbers):
+            if nums:
+                params["numbers"] = nums[:1]
+            replay = state.last_intent or "last_times"
+            if replay in {"last_n_occurrences", "last_occurrence", "last_times", None, ""}:
+                return ResearchQuestion("last_times", params, raw_message=raw)
+            if replay == "compare_numbers" and len(state.active_numbers or []) >= 2:
+                params["numbers"] = list(state.active_numbers[:2])
+                return ResearchQuestion("compare_numbers", params, raw_message=raw)
+            return ResearchQuestion("last_times", params, raw_message=raw)
+
+        if is_most_recent_request(raw) and (nums or state.active_numbers):
+            return ResearchQuestion("last_times", params, raw_message=raw)
+
         if cls._LAST_TIMES.search(raw) or resolution.get("follow_up_kind") == "last_occurrence":
             # Pair / "qué pasó las últimas veces que salieron A y B" → posterior behavior,
             # not a single-number last-occurrence lookup.
@@ -271,18 +402,27 @@ class QuestionClassifier:
                 r"(qu[eé]\s+pas|salieron|pareja|comportamiento|casos?)",
                 raw,
                 re.I,
-            ):
+            ) and not is_same_day_coincidence_question(raw):
                 return ResearchQuestion(
                     "what_usually_happens_after", params, raw_message=raw
                 )
             # Last-occurrence must not inherit sticky pair / sticky lottery as subject
             last_params = dict(params)
-            last_params["lotteries"] = named_lots[:4]
-            last_params["lottery_explicit"] = bool(
-                named_lots or resolution.get("lottery_filter")
-            )
+            if named_lots or inherit_lot:
+                last_params["lotteries"] = (named_lots or list(state.active_lotteries or []))[:4]
+                last_params["lottery_explicit"] = True
+            else:
+                last_params["lotteries"] = named_lots[:4]
+                last_params["lottery_explicit"] = bool(
+                    named_lots or resolution.get("lottery_filter")
+                )
+            if asks_all_lotteries(raw):
+                last_params["lotteries"] = []
+                last_params["lottery_explicit"] = False
             if nums:
-                last_params["numbers"] = nums[:1] if len(nums) == 1 else nums
+                last_params["numbers"] = exclude_limit_from_subjects(
+                    nums[:1] if len(nums) == 1 else nums, lim_pre
+                )
                 last_params["active_pair"] = []
                 last_params["use_active_pair"] = False
             return ResearchQuestion("last_times", last_params, raw_message=raw)
@@ -290,16 +430,34 @@ class QuestionClassifier:
             return ResearchQuestion("related_numbers", params, raw_message=raw)
         if cls._BEST_GROUP.search(raw):
             return ResearchQuestion("best_historical_group", params, raw_message=raw)
-        # ANALYZE / open investigation BEFORE frequency (Fase X)
-        if cls._OPEN.search(raw) and (nums or state.active_numbers or state.active_pair):
-            return ResearchQuestion("open_investigation", params, raw_message=raw)
+        # Frequency before open investigation when asking «cuántas veces»
         if cls._FREQUENCY.search(raw):
             return ResearchQuestion("frequency_behavior", params, raw_message=raw)
+        # ANALYZE / open investigation
+        if cls._OPEN.search(raw) and (nums or state.active_numbers or state.active_pair):
+            # Soft «análisis más profundo» with active subject → deepen last_times/frequency
+            if is_correction_or_meta_request(raw) and state.active_numbers:
+                return ResearchQuestion("frequency_behavior", params, raw_message=raw)
+            return ResearchQuestion("open_investigation", params, raw_message=raw)
         # Lottery-only filter in chain
         if re.search(r"\b(solamente|solo|ahora)\s+(nacional|loteka|leidsa|real)\b", raw, re.I) and (
             nums or state.active_numbers
         ):
             return ResearchQuestion("filtered_follow_up", params, raw_message=raw)
+        if asks_all_lotteries(raw) and (nums or state.active_numbers):
+            params["lottery_explicit"] = False
+            params["lotteries"] = []
+            if state.last_intent == "last_n_occurrences":
+                params["limit"] = int((state.last_analysis or {}).get("limit") or 3)
+                return ResearchQuestion("last_n_occurrences", params, raw_message=raw)
+            return ResearchQuestion("last_times", params, raw_message=raw)
+        if asks_all_positions(raw) and (nums or state.active_numbers):
+            params["position_scope"] = "all"
+            params["position_explicit"] = True
+            if state.last_intent == "last_n_occurrences" or (state.last_analysis or {}).get("limit"):
+                params["limit"] = int((state.last_analysis or {}).get("limit") or 3)
+                return ResearchQuestion("last_n_occurrences", params, raw_message=raw)
+            return ResearchQuestion("last_times", params, raw_message=raw)
         # Chained filters still research-worthy
         if resolution.get("follow_up_kind") in {
             "lotteries",

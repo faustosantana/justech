@@ -210,9 +210,21 @@ class LotteryToolExecutor:
             return res, res.total, {"source_reference": ref, "numbers": nums, "semantics": "by_date"}
 
         if tool == LotteryToolName.GET_FOLLOWING_DAYS:
+            lot = params.get("lottery")
+            if not lot:
+                raise LotteryQueryError(
+                    "VALIDATION",
+                    "Indica la lotería para consultar los días siguientes.",
+                )
+            base = params.get("date") or params.get("base_date")
+            if not base:
+                raise LotteryQueryError(
+                    "DATE_REQUIRED",
+                    "Indica la fecha base (date o base_date) para los días siguientes.",
+                )
             res = await self.query.following_days(
-                params["lottery"],
-                params["date"] if isinstance(params["date"], date) else date.fromisoformat(str(params["date"])),
+                lot,
+                base if isinstance(base, date) else date.fromisoformat(str(base)),
                 int(params.get("days", 7)),
                 include_base_date=bool(params.get("include_base_date", False)),
                 game=params.get("game"),
@@ -238,9 +250,21 @@ class LotteryToolExecutor:
             return res, res.total, {"semantics": "next_n_draws"}
 
         if tool == LotteryToolName.GET_PREVIOUS_DAYS:
+            lot = params.get("lottery")
+            if not lot:
+                raise LotteryQueryError(
+                    "VALIDATION",
+                    "Indica la lotería para consultar los días anteriores.",
+                )
+            base = params.get("date") or params.get("base_date")
+            if not base:
+                raise LotteryQueryError(
+                    "DATE_REQUIRED",
+                    "Indica la fecha base (date o base_date) para los días anteriores.",
+                )
             res = await self.query.previous_days(
-                params["lottery"],
-                params["date"] if isinstance(params["date"], date) else date.fromisoformat(str(params["date"])),
+                lot,
+                base if isinstance(base, date) else date.fromisoformat(str(base)),
                 int(params.get("days", 7)),
                 include_base_date=bool(params.get("include_base_date", False)),
                 game=params.get("game"),
@@ -289,16 +313,33 @@ class LotteryToolExecutor:
                     nums = [str(params["number"]), str(params["compare_with"])]
                 data = await self.query.same_day_number_coincidences(
                     nums,
-                    lotteries=params.get("lotteries"),
+                    lotteries=params.get("lotteries")
+                    or ([params["lottery"]] if params.get("lottery") else None),
                     position=params.get("position"),
                     from_date=params.get("from_date"),
                     to_date=params.get("to_date"),
                     limit_dates=int(params.get("limit") or 200),
                 )
-                return data, int(data.get("total") or 0), {
+                last_date = None
+                items = data.get("dates") or data.get("items") or data.get("coincidences") or []
+                if isinstance(items, list) and items:
+                    first = items[0]
+                    if isinstance(first, dict):
+                        last_date = first.get("date") or first.get("draw_date")
+                    else:
+                        last_date = str(first)[:10]
+                elif data.get("last_date"):
+                    last_date = data.get("last_date")
+                total = int(data.get("total") or data.get("count") or len(items) or 0)
+                return data, total, {
                     "semantics": "same_day_coincidence",
                     "numbers": nums,
                     "position_scope": params.get("position_scope") or "any_position",
+                    "count": total,
+                    "total": total,
+                    "last_occurrence_date": last_date,
+                    "found": total > 0,
+                    "lottery": params.get("lottery"),
                 }
 
             # last_n across one or many lotteries (v2.4.3)
@@ -378,26 +419,30 @@ class LotteryToolExecutor:
                         continue
                     seen.add(str(key))
                     unique.append(row)
-                top = unique[:limit]
-                best = top[0] if top else None
+                page_offset = max(0, int(params.get("page_offset") or params.get("offset") or 0))
+                result_limit = int(params.get("result_limit") or limit)
+                result_limit = max(1, min(result_limit, 50))
+                sliced = unique[page_offset : page_offset + result_limit]
+                best = sliced[0] if sliced else None
                 return {
                     "number": number,
-                    "limit": limit,
-                    "items": top,
-                    "occurrences": top,
-                    "total": len(top),
+                    "limit": result_limit,
+                    "offset": page_offset,
+                    "items": sliced,
+                    "occurrences": sliced,
+                    "total": len(sliced),
                     "metric": "last_n_occurrences",
-                }, len(top), {
+                }, len(sliced), {
                     "semantics": "last_n_occurrences",
                     "number": number,
-                    "limit": limit,
-                    "count": len(top),
-                    "total": len(top),
+                    "limit": result_limit,
+                    "count": len(sliced),
+                    "total": len(sliced),
                     "last_occurrence_date": (best or {}).get("date"),
                     "lottery": (best or {}).get("lottery"),
                     "position": (best or {}).get("position"),
-                    "found": bool(top),
-                    "items": top,
+                    "found": bool(sliced),
+                    "items": sliced,
                 }
 
             res = await self.query.by_number(
@@ -820,16 +865,51 @@ class LotteryToolExecutor:
             lots = [str(x) for x in (params.get("lotteries") or [])][:8]
             if not lots:
                 raise LotteryQueryError("VALIDATION", "Se requieren loterías")
+            pos_filter = params.get("position")
+            if pos_filter is not None:
+                try:
+                    pos_filter = int(pos_filter)
+                except (TypeError, ValueError):
+                    pos_filter = None
+            if pos_filter not in (1, 2, 3):
+                pos_filter = None
+
+            def _pos_matches(label: Any, wanted: int) -> bool:
+                if label is None:
+                    return False
+                if isinstance(label, int):
+                    return label == wanted
+                s = str(label).strip().lower()
+                if s.isdigit():
+                    return int(s) == wanted
+                mapping = {
+                    1: ("1", "primera", "first", "pos1", "position_1"),
+                    2: ("2", "segunda", "second", "pos2", "position_2"),
+                    3: ("3", "tercera", "third", "pos3", "position_3"),
+                }
+                return any(tok in s for tok in mapping.get(wanted, ()))
+
             rows = []
             for lot in lots:
                 try:
-                    res = await self.query.by_number(lot, number, page=1, page_size=1, order="desc")
-                    items = getattr(res, "occurrences", None) or []
+                    res = await self.query.by_number(
+                        lot,
+                        number,
+                        page=1,
+                        page_size=20 if pos_filter else 1,
+                        order="desc",
+                        position=pos_filter,
+                    )
+                    items = list(getattr(res, "occurrences", None) or [])
                     last = None
                     pos = None
-                    if items:
-                        last = items[0].draw_date
-                        pos = items[0].position_label or items[0].position
+                    for it in items:
+                        cand_pos = getattr(it, "position_label", None) or getattr(it, "position", None)
+                        if pos_filter is not None and not _pos_matches(cand_pos, pos_filter):
+                            continue
+                        last = getattr(it, "draw_date", None)
+                        pos = cand_pos
+                        break
                     total = getattr(getattr(res, "pagination", None), "total", None) or getattr(res, "total", 0)
                     rows.append(
                         {
@@ -853,7 +933,16 @@ class LotteryToolExecutor:
                         }
                     )
             rows_sorted = sorted(rows, key=lambda r: r.get("last_date") or "", reverse=True)
-            best = next((r for r in rows_sorted if r.get("last_date")), None)
+            # Best last_date only among rows that match the position filter (when set)
+            if pos_filter is not None:
+                candidates = [
+                    r
+                    for r in rows_sorted
+                    if r.get("last_date") and _pos_matches(r.get("position"), pos_filter)
+                ]
+            else:
+                candidates = [r for r in rows_sorted if r.get("last_date")]
+            best = candidates[0] if candidates else None
             total_occ = sum(int(r.get("occurrences") or 0) for r in rows_sorted)
             return {
                 "number": number,
@@ -869,6 +958,7 @@ class LotteryToolExecutor:
                 "total": total_occ,
                 "count": total_occ,
                 "found": bool(best and best.get("last_date")),
+                **({"position_filter": pos_filter} if pos_filter is not None else {}),
             }
 
         if tool == LotteryToolName.GET_POSITION_DISTRIBUTION:

@@ -123,8 +123,8 @@ class LotteryResolver:
 
         key = normalize_query(raw)
 
-        # Nacional Día / ambiguos pendientes
-        if key in UNRESOLVED_AMBIGUOUS_ALIASES or key in {"nacional dia", "nacional día", "nacional"}:
+        # Nacional Día — ambiguo. Bare «nacional» resolves via CONFIRMED_PRIORITY (Lotería Nacional).
+        if key in UNRESOLVED_AMBIGUOUS_ALIASES or key in {"nacional dia", "nacional día"}:
             candidates = [
                 LotteryCandidate(source_id=c["source_id"], name=c["name"], confidence=c["confidence"])
                 for c in AMBIGUOUS_NACIONAL_DIA_CANDIDATES
@@ -268,10 +268,10 @@ class LotteryResolver:
 
 # Compat helpers used by Fase 1/2
 def is_ambiguous_nacional_dia(alias: str) -> bool:
-    return normalize_query(alias) in UNRESOLVED_AMBIGUOUS_ALIASES or normalize_query(alias) in {
+    key = normalize_query(alias)
+    return key in UNRESOLVED_AMBIGUOUS_ALIASES or key in {
         "nacional dia",
         "nacional día",
-        "nacional",
     }
 
 

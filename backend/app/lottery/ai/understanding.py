@@ -965,17 +965,29 @@ def _resume_pending(state: ConversationState) -> tuple[UnderstandingResult, Conv
     working.pending_slots = []
     working.clarification_question = None
 
-    if intent == "last_occurrence" and number and (lottery or lots or state.scope == "all"):
-        if state.scope == "all" or len(lots) > 1:
+    if intent == "last_occurrence" and number:
+        from app.lottery.ai.nlp_stability import DEFAULT_ALL_HISTORY_LOTTERIES
+        from app.services.lottery_ai_contracts import LotteryToolName as _LT
+
+        if not lottery and not lots:
+            lots = list(DEFAULT_ALL_HISTORY_LOTTERIES)
+            working.scope = "all"
+            working.active_lotteries = list(lots)
+        if state.scope == "all" or len(lots) > 1 or not lottery:
             return (
                 UnderstandingResult(
                     intent="last_occurrence",
                     numbers=[number],
-                    lotteries=lots,
-                    scope="all" if state.scope == "all" else "multiple",
-                    tool="lottery_compare_last_occurrence_all",
-                    params={"number": number, "lotteries": lots, "scope": state.scope},
-                    plan=["list_lotteries", "last_occurrence_each", "sort_by_date", "summarize"],
+                    lotteries=lots or list(DEFAULT_ALL_HISTORY_LOTTERIES),
+                    scope="all",
+                    tool=_LT.COMPARE_NUMBER_ACROSS_LOTTERIES.value,
+                    params={
+                        "number": number,
+                        "lotteries": lots or list(DEFAULT_ALL_HISTORY_LOTTERIES),
+                        "scope": "all",
+                        "all_historical": True,
+                    },
+                    plan=["last_occurrence_each", "sort_by_date", "summarize"],
                     confidence=0.9,
                     source="follow_up",
                 ),
@@ -1124,13 +1136,18 @@ def _map_resolved(
         if n:
             numbers = [n]
     if len(numbers) < 2:
-        # Pull all el N tokens when compound wording
+        # Prefer subject extraction that never treats «últimas N» as a ball
+        from app.lottery.ai.turn_policy import extract_subject_numbers
         from app.lottery.ai.same_day_coincidence import extract_all_numbers
 
-        more = extract_all_numbers(text)
+        more = extract_subject_numbers(text) or extract_all_numbers(text)
         if len(more) > len(numbers):
             numbers = more
     numbers = list(dict.fromkeys(numbers))
+    # If a limit was expressed, drop that digit from subjects
+    from app.lottery.ai.turn_policy import exclude_limit_from_subjects, extract_occurrence_limit
+
+    numbers = exclude_limit_from_subjects(numbers, extract_occurrence_limit(text))
     if not lots:
         lots = _extract_lotteries(text)
 

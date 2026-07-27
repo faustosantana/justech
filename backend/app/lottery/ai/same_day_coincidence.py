@@ -56,29 +56,31 @@ _FIRST_POS_FOLLOW = re.compile(
 
 
 def extract_all_numbers(text: str) -> list[str]:
-    """Extract ball numbers from text (1–2 digits), de-duplicated, order preserved."""
-    cleaned = re.sub(
-        r"[uú]ltimos?\s+\d+\s+(sorteos?|dias|días)|"
-        r"\b\d+\s+(sorteos?|dias|días)\b|"
-        r"\b20\d{2}\b",
-        " ",
-        text or "",
-        flags=re.I,
-    )
-    found = re.findall(r"(?:el|n[uú]mero|numero)\s+(\d{1,2})\b", cleaned, re.I)
+    """Extract ball numbers from text — never quantity N from «últimas N»."""
+    from app.lottery.ai.turn_policy import extract_subject_numbers, strip_quantity_spans
+
+    subjects = extract_subject_numbers(text)
+    if len(subjects) >= 2:
+        return subjects[:8]
+    cleaned = strip_quantity_spans(text or "")
+    cleaned = re.sub(r"\b20\d{2}\b", " ", cleaned)
+    found = re.findall(r"(?:el|n[uú]mero|numero|del)\s+(\d{1,2})\b", cleaned, re.I)
     if len(found) < 2:
-        found = re.findall(r"\b(\d{1,2})\b", cleaned)
+        # Only two-digit bare tokens to avoid quantity leftovers
+        found = re.findall(r"\b(\d{2})\b", cleaned)
     out: list[str] = []
     for n in found:
         nn = str(n).zfill(2)
         if nn not in out and 0 <= int(nn) <= 99:
             out.append(nn)
-    return out[:8]
+    return (subjects + [x for x in out if x not in subjects])[:8]
 
 
 def is_same_day_coincidence_question(text: str) -> bool:
     t = _norm(text)
     nums = extract_all_numbers(text)
+    if _SAME_DAY.search(text or "") and len(nums) >= 2:
+        return True
     if len(nums) < 2 and "coinciden" not in t and "juntos" not in t:
         return False
     if _SAME_DAY.search(text or ""):
@@ -86,10 +88,13 @@ def is_same_day_coincidence_question(text: str) -> bool:
     # "han salido alguna vez el 55 y el 24" without explicit "mismo día"
     # still implies co-occurrence when two numbers + "alguna vez" / "juntos"
     if len(nums) >= 2 and re.search(
-        r"alguna\s+vez|han\s+salido|salieron|juntos|coincid", t
+        r"alguna\s+vez|han\s+salido|salieron|juntos|coincid|mismo\s+d", t
     ):
         # Exclude clear last-occurrence-per-lottery compounds ("en Leidsa y el 44 en Loteka")
         if re.search(r"\ben\s+\w+.+\by\s+el\s+\d.+\ben\s+\w+", t):
+            return False
+        # Exclude pure compare ("compara el 54 con el 94")
+        if re.search(r"\bcomp[aá]ra", t):
             return False
         return True
     return False

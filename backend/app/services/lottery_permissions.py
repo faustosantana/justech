@@ -71,6 +71,7 @@ CONFIRMED_PRIORITY_SOURCE_IDS = {
     "quiniela loteka": 6,
     "leidsa": 5,
     "quiniela leidsa": 5,
+    "nacional": 4,
     "nacional noche": 4,
     "loteria nacional": 4,
     "lotería nacional": 4,
@@ -80,8 +81,8 @@ CONFIRMED_PRIORITY_SOURCE_IDS = {
 }
 
 # Aliases que NO deben resolverse silenciosamente.
+# Bare «Nacional» = Lotería Nacional (source 4). Only «Nacional Día» stays ambiguous.
 UNRESOLVED_AMBIGUOUS_ALIASES = frozenset({
     "nacional dia",
     "nacional día",
-    "nacional",
 })

@@ -297,6 +297,12 @@ def format_short_response(
                 extras.append(f"Registros consultados: {case_count}.")
         except (TypeError, ValueError):
             pass
+    occ = _occurrence_list_block(facts, research, pkg, lead)
+    if occ:
+        extras.append(occ)
+    cmp_block = _compare_counts_block(facts, research, pkg, lead)
+    if cmp_block:
+        extras.append(cmp_block)
     lim = _limitations(pkg, only_material=True)
     parts = [lead]
     if extras:
@@ -452,6 +458,7 @@ def _hechos_block(
         if n is not None and not (n == 0 and has_date):
             lines.append(f"- Cantidad de casos/registros: {n}")
     for f in (pkg.get("findings") or [])[: (3 if compact else 8)]:
+        # Never leak raw snake_case purpose tokens
         lines.append(f"- {f}")
     hist = facts.get("historical") or facts.get("historical_summary")
     if isinstance(hist, dict):
@@ -461,6 +468,12 @@ def _hechos_block(
             lines.append(f"- Casos evaluables: {hist.get('evaluable_cases')}")
         if hist.get("d7_hits") is not None:
             lines.append(f"- Apariciones exactas hasta D+7: {hist.get('d7_hits')}")
+    occ = _occurrence_list_block(facts, research, pkg, "")
+    if occ:
+        lines.append(occ)
+    cmp_block = _compare_counts_block(facts, research, pkg, "")
+    if cmp_block:
+        lines.append(cmp_block)
     if not lines:
         return None
     return "\n".join(lines)
@@ -601,16 +614,149 @@ def _comparison_block(
     if facts.get("observed") is not None and facts.get("compare_with") is not None:
         subjects = [str(facts["observed"]), str(facts["compare_with"])]
 
-    if not raw and not subjects and not str(research.get("question_kind") or "").startswith("compare"):
+    counts_line = _compare_counts_block(facts, research, pkg, "")
+    if not raw and not subjects and not counts_line and not str(
+        research.get("question_kind") or ""
+    ).startswith("compare"):
         return None
 
     diferencias = [str(x) for x in raw[:6]] or [
         "Las diferencias concretas dependen de los conteos de cada consulta."
     ]
+    if counts_line and counts_line not in diferencias:
+        diferencias.insert(0, counts_line)
     head = ""
     if subjects and len(subjects) >= 2:
         head = f"Comparación activa: {subjects[0]} vs {subjects[1]}.\n\n"
     return head + "Diferencias\n" + "\n".join(f"- {x}" for x in diferencias)
+
+
+def _extract_occurrence_items(
+    facts: dict[str, Any],
+    research: dict[str, Any],
+    pkg: dict[str, Any],
+) -> list[dict[str, Any]]:
+    """Pull real occurrence rows only — never invent."""
+    candidates: list[Any] = []
+    for src in (
+        facts.get("items"),
+        facts.get("occurrences"),
+        research.get("items"),
+        (research.get("structured") or {}).get("items") if isinstance(research.get("structured"), dict) else None,
+    ):
+        if isinstance(src, list) and src:
+            candidates = src
+            break
+    if not candidates:
+        for ev in research.get("evidence") or []:
+            if not isinstance(ev, dict):
+                continue
+            summary = ev.get("summary") if isinstance(ev.get("summary"), dict) else {}
+            if summary.get("semantics") == "last_n_occurrences" or str(
+                research.get("question_kind") or ""
+            ) == "last_n_occurrences":
+                items = summary.get("items") or summary.get("occurrences")
+                if isinstance(items, list) and items:
+                    candidates = items
+                    break
+    if not candidates and str(research.get("question_kind") or "") == "last_n_occurrences":
+        # Timeline entries from evidence engine are already formatted strings — skip
+        pass
+    out: list[dict[str, Any]] = []
+    for row in candidates:
+        if isinstance(row, dict) and (row.get("date") or row.get("draw_date") or row.get("lottery")):
+            out.append(row)
+    return out
+
+
+def _occurrence_list_block(
+    facts: dict[str, Any],
+    research: dict[str, Any],
+    pkg: dict[str, Any],
+    lead: str,
+) -> str | None:
+    kind = str(research.get("question_kind") or "")
+    items = _extract_occurrence_items(facts, research, pkg)
+    # Also accept timeline rows shaped "date — lottery — position"
+    if not items and (
+        kind == "last_n_occurrences"
+        or facts.get("items")
+        or any(
+            isinstance(ev, dict)
+            and isinstance(ev.get("summary"), dict)
+            and ev["summary"].get("semantics") == "last_n_occurrences"
+            for ev in (research.get("evidence") or [])
+        )
+    ):
+        # Prefer structured items; fall back to timeline strings already humanized
+        tl = [str(t) for t in (pkg.get("timeline") or []) if "—" in str(t)]
+        if tl and not any(t in lead for t in tl[:1]):
+            return "Apariciones:\n" + "\n".join(f"- {t}" for t in tl[:12])
+        return None
+    if not items:
+        return None
+    # Skip if lead already lists them
+    sample = str(items[0].get("date") or items[0].get("draw_date") or "")
+    if sample and sample in (lead or ""):
+        return None
+    from app.lottery.ai.turn_policy import position_label_es
+
+    lines = []
+    for i, row in enumerate(items[:12], 1):
+        d = row.get("date") or row.get("draw_date") or "—"
+        lot = row.get("lottery") or "—"
+        pos = row.get("position")
+        pos_s = (
+            position_label_es(pos) if pos not in (None, "", "all") else "posición no indicada"
+        )
+        lines.append(f"{i}. {d} — {lot} — {pos_s}")
+    return "Apariciones:\n" + "\n".join(lines)
+
+
+def _compare_counts_block(
+    facts: dict[str, Any],
+    research: dict[str, Any],
+    pkg: dict[str, Any],
+    lead: str,
+) -> str | None:
+    """Present both compare_a and compare_b counts when both exist — never invent."""
+    if not str(research.get("question_kind") or "").startswith("compare"):
+        # Still allow if findings clearly carry both labels
+        pass
+    count_a: int | None = None
+    count_b: int | None = None
+    label_a = "primer número"
+    label_b = "segundo número"
+    # From structured evidence summaries
+    for ev in research.get("evidence") or []:
+        if not isinstance(ev, dict):
+            continue
+        purpose = str(ev.get("purpose") or "")
+        summary = ev.get("summary") if isinstance(ev.get("summary"), dict) else {}
+        cnt = summary.get("count")
+        if cnt is None:
+            cnt = summary.get("total")
+        if not isinstance(cnt, int):
+            continue
+        if purpose == "compare_a_occurrences":
+            count_a = cnt
+            if summary.get("number") is not None:
+                label_a = str(summary["number"])
+        elif purpose == "compare_b_occurrences":
+            count_b = cnt
+            if summary.get("number") is not None:
+                label_b = str(summary["number"])
+    # From facts keys if present
+    if count_a is None and isinstance(facts.get("compare_a_count"), int):
+        count_a = facts["compare_a_count"]
+    if count_b is None and isinstance(facts.get("compare_b_count"), int):
+        count_b = facts["compare_b_count"]
+    if count_a is None or count_b is None:
+        return None
+    line = f"{label_a}: {count_a} apariciones; {label_b}: {count_b} apariciones."
+    if line in (lead or ""):
+        return None
+    return line
 
 
 def _limitations(pkg: dict[str, Any], *, only_material: bool = True) -> str | None:

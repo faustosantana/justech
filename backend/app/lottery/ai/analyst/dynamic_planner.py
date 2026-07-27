@@ -40,6 +40,9 @@ class DynamicResearchPlanner:
         message_nums = [
             str(n) for n in (p.get("numbers") or []) if n is not None and str(n).strip() != ""
         ]
+        from app.lottery.ai.turn_policy import exclude_limit_from_subjects
+
+        message_nums = exclude_limit_from_subjects(message_nums, p.get("limit"))
         pair = list(p.get("active_pair") or getattr(state, "active_pair", None) or [])
         use_pair = bool(p.get("use_active_pair"))
         if message_nums:
@@ -54,11 +57,28 @@ class DynamicResearchPlanner:
 
         lottery_explicit = bool(p.get("lottery_explicit") or p.get("lottery_filter"))
         lotteries = list(p.get("lotteries") or [])
+        # Inherit explicit lottery filter from conversation state on follow-ups
+        if not lotteries and lottery_explicit and state.active_lotteries:
+            lotteries = list(state.active_lotteries)[:4]
+        if (
+            not lotteries
+            and not lottery_explicit
+            and question.kind not in {"last_times", "last_n_occurrences"}
+            and (state.active_filters or {}).get("lottery_explicit")
+        ):
+            lotteries = list(state.active_lotteries or [])[:4]
+            lottery_explicit = bool(lotteries)
         if not lotteries and not lottery_explicit and question.kind != "last_times":
             lotteries = list(state.active_lotteries or [])
         lottery = (lotteries[0] if lotteries else None) or (
-            state.active_lotteries[0] if state.active_lotteries and question.kind != "last_times" else None
+            state.active_lotteries[0]
+            if state.active_lotteries
+            and question.kind not in {"last_times"}
+            and lottery_explicit
+            else None
         )
+        if lottery_explicit and lotteries:
+            lottery = lotteries[0]
         year = p.get("year_filter")
         windows = list(p.get("windows") or [1, 3, 7])
         primary = p.get("primary") or state.current_primary_candidate
@@ -67,6 +87,16 @@ class DynamicResearchPlanner:
         # Never invent a confirmer from a stale pair when the user named a single number
         if confirmer is None and use_pair and not message_nums and len(pair) >= 2:
             confirmer = str(pair[1])
+        # Position from explicit scope
+        pos_scope = p.get("position_scope")
+        pos_i = None
+        if p.get("position_explicit") or (state.active_filters or {}).get("position_explicit"):
+            if isinstance(pos_scope, int) and pos_scope in (1, 2, 3):
+                pos_i = pos_scope
+            elif str(pos_scope) in {"1", "2", "3"}:
+                pos_i = int(pos_scope)
+            elif str(pos_scope) in {"first_position", "primera", "1"}:
+                pos_i = 1
         base_date = state.active_date or (
             str(state.date_context)[:10] if state.date_context else None
         )
@@ -78,6 +108,7 @@ class DynamicResearchPlanner:
             "lotteries": lotteries[:8],
             "lottery_explicit": lottery_explicit,
             "message_numbers": message_nums[:4],
+            "position": pos_i,
         }
 
         steps: list[PlanStep] = []
@@ -208,7 +239,35 @@ class DynamicResearchPlanner:
                 )
 
         elif kind == "coincidences_only":
-            if len(lotteries) >= 2:
+            # Same-day pair coincidence (preferred) or multi-lottery coincidences
+            if p.get("relation") == "same_day" or p.get("active_relation") == "same_day" or (
+                observed and confirmer
+            ):
+                a = observed
+                b = confirmer
+                if a and b:
+                    steps.append(
+                        PlanStep(
+                            tool=LotteryToolName.GET_NUMBER_OCCURRENCES.value,
+                            params={
+                                "numbers": [a, b],
+                                "relation": "same_day",
+                                "active_relation": "same_day",
+                                **({"lottery": lottery} if lottery_explicit and lottery else {}),
+                                **(
+                                    {"lotteries": lotteries[:4]}
+                                    if lottery_explicit and lotteries
+                                    else {}
+                                ),
+                                **({"position": pos_i} if pos_i else {}),
+                                "limit": int(p.get("limit") or 200),
+                            },
+                            purpose="same_day_coincidence",
+                        )
+                    )
+                    meta["relation"] = "same_day"
+                    meta["subjects"] = [a, b]
+            elif len(lotteries) >= 2:
                 steps.append(
                     PlanStep(
                         tool=LotteryToolName.GET_COINCIDENCES.value,
@@ -271,7 +330,11 @@ class DynamicResearchPlanner:
                     steps.append(
                         PlanStep(
                             tool=LotteryToolName.GET_LAST_OCCURRENCE.value,
-                            params={"number": observed, "lottery": lottery},
+                            params={
+                                "number": observed,
+                                "lottery": lottery,
+                                **({"position": pos_i} if pos_i else {}),
+                            },
                             purpose="last_occurrence",
                         )
                     )
@@ -281,7 +344,12 @@ class DynamicResearchPlanner:
                             params={
                                 "number": observed,
                                 "lottery": lottery,
+                                "mode": "last_n",
+                                "limit": 1,
+                                "page_size": 1,
+                                "order": "desc",
                                 **({"year": year} if year else {}),
+                                **({"position": pos_i} if pos_i else {}),
                             },
                             purpose="recent_occurrences",
                         )
@@ -291,7 +359,11 @@ class DynamicResearchPlanner:
                     steps.append(
                         PlanStep(
                             tool=LotteryToolName.COMPARE_NUMBER_ACROSS_LOTTERIES.value,
-                            params={"number": observed, "lotteries": all_lots[:8]},
+                            params={
+                                "number": observed,
+                                "lotteries": all_lots[:8],
+                                **({"position": pos_i} if pos_i else {}),
+                            },
                             purpose="last_occurrence_all_lotteries",
                         )
                     )
@@ -306,17 +378,26 @@ class DynamicResearchPlanner:
 
                 limit = int(p.get("limit") or 3)
                 limit = max(1, min(limit, 50))
+                result_limit = int(p.get("result_limit") or limit)
+                page_offset = int(p.get("page_offset") or p.get("offset") or 0)
                 pos = p.get("position_scope")
-                pos_i = None
-                if isinstance(pos, int):
-                    pos_i = pos
-                elif str(pos) in {"1", "2", "3"}:
-                    pos_i = int(pos)
+                pos_n = pos_i
+                if pos_n is None:
+                    if isinstance(pos, int):
+                        pos_n = pos
+                    elif str(pos) in {"1", "2", "3"}:
+                        pos_n = int(pos)
                 all_lots = (
                     [lottery]
                     if lottery_explicit and lottery
-                    else (list(lotteries) or list(DEFAULT_ALL_HISTORY_LOTTERIES))
+                    else (
+                        list(lotteries)
+                        if lottery_explicit and lotteries
+                        else list(DEFAULT_ALL_HISTORY_LOTTERIES)
+                    )
                 )
+                if lottery_explicit and lotteries:
+                    all_lots = list(lotteries)[:8]
                 steps.append(
                     PlanStep(
                         tool=LotteryToolName.GET_NUMBER_OCCURRENCES.value,
@@ -327,7 +408,9 @@ class DynamicResearchPlanner:
                             "page_size": limit,
                             "order": "desc",
                             "mode": "last_n",
-                            **({"position": pos_i} if pos_i else {}),
+                            "page_offset": page_offset,
+                            "result_limit": result_limit,
+                            **({"position": pos_n} if pos_n else {}),
                             **(
                                 {"lottery": lottery}
                                 if lottery_explicit and lottery
@@ -338,10 +421,12 @@ class DynamicResearchPlanner:
                     )
                 )
                 meta["subjects"] = [observed]
-                meta["limit"] = limit
+                meta["limit"] = result_limit
                 meta["lotteries"] = all_lots[:8]
 
         elif kind == "frequency_behavior":
+            from app.lottery.ai.nlp_stability import DEFAULT_ALL_HISTORY_LOTTERIES
+
             if observed and lottery:
                 steps.append(
                     PlanStep(
@@ -350,6 +435,7 @@ class DynamicResearchPlanner:
                             "lottery": lottery,
                             "number": observed,
                             **({"year": year} if year else {}),
+                            **({"position": pos_i} if pos_i else {}),
                         },
                         purpose="frequency",
                     )
@@ -359,10 +445,29 @@ class DynamicResearchPlanner:
                 steps.append(
                     PlanStep(
                         tool=LotteryToolName.COMPARE_NUMBER_ACROSS_LOTTERIES.value,
-                        params={"number": observed, "lotteries": lotteries[:8]},
+                        params={
+                            "number": observed,
+                            "lotteries": (lotteries or list(DEFAULT_ALL_HISTORY_LOTTERIES))[:8],
+                            **({"position": pos_i} if pos_i else {}),
+                        },
                         purpose="frequency_across_lotteries",
                     )
                 )
+                if lottery_explicit and lottery:
+                    steps.append(
+                        PlanStep(
+                            tool=LotteryToolName.GET_NUMBER_OCCURRENCES.value,
+                            params={
+                                "number": observed,
+                                "lottery": lottery,
+                                "mode": "last_n",
+                                "limit": 50,
+                                **({"year": year} if year else {}),
+                                **({"position": pos_i} if pos_i else {}),
+                            },
+                            purpose="frequency",
+                        )
+                    )
 
         elif kind == "filtered_follow_up":
             follow = p.get("follow_up_kind")

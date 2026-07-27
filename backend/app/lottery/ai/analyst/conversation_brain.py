@@ -57,7 +57,23 @@ class ConversationBrain:
         if resolution.get("lottery_filter"):
             lots = [str(resolution["lottery_filter"])]
             filters["lottery"] = lots[0]
-        if lots:
+        from app.lottery.ai.turn_policy import asks_all_lotteries, asks_all_positions
+
+        # Clear lottery filter when user asks for all lotteries
+        raw_msg = str(
+            resolution.get("raw_message")
+            or ((understanding.params or {}).get("raw_message") if understanding.params else None)
+            or ""
+        )
+        if asks_all_lotteries(raw_msg) or (
+            resolution.get("lottery_explicit") is False and resolution.get("clear_lottery")
+        ):
+            filters.pop("lottery_explicit", None)
+            filters.pop("lottery", None)
+            # Keep subject; drop sticky lottery list for "all" scope
+            if asks_all_lotteries(raw_msg):
+                st.active_lotteries = []
+        elif lots:
             st.active_lotteries = list(
                 dict.fromkeys([*lots, *[x for x in st.active_lotteries if x not in lots]])
             )
@@ -68,7 +84,20 @@ class ConversationBrain:
         if resolution.get("year_filter") is not None:
             filters["year"] = int(resolution["year_filter"])
 
-        if resolution.get("position_scope") is not None:
+        if asks_all_positions(raw_msg) or resolution.get("position_scope") in {
+            "all",
+            "any",
+            "any_position",
+        }:
+            from app.lottery.ai.turn_policy import position_label_es
+
+            st.active_position = "all"
+            st.last_position_scope = "all"
+            st.position_scope = "all"
+            filters["position"] = "all"
+            filters["position_explicit"] = True
+            filters["position_label"] = position_label_es("all")
+        elif resolution.get("position_scope") is not None:
             from app.lottery.ai.turn_policy import canonicalize_position_scope, position_label_es
 
             canon = canonicalize_position_scope(resolution["position_scope"])

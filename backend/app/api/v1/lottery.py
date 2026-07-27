@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import logging
 from datetime import date
 from typing import Annotated, Literal
 from uuid import UUID
@@ -85,6 +86,7 @@ from app.services.lottery_share_service import LotteryShareService, view_shared_
 from app.services.lottery_sync_service import LotterySyncService
 
 router = APIRouter(prefix="/lottery", tags=["Lottery"])
+logger = logging.getLogger(__name__)
 
 
 def require_lottery_permission(*permissions: str):
@@ -583,9 +585,33 @@ async def send_chat_message(
     _: Annotated[None, require_lottery_permission("lottery.chat")],
 ) -> ChatSendResponse:
     svc = _make_chat(db, user)
-    result = await svc.send_message(session_id, body.content)
-    await db.commit()
-    return ChatSendResponse(**result)
+    try:
+        result = await svc.send_message(session_id, body.content)
+        await db.commit()
+        return ChatSendResponse(**result)
+    except Exception as exc:  # noqa: BLE001 — never leak 500 to chat UI
+        await db.rollback()
+        logger.exception("lottery_chat_send_failed session=%s err=%s", session_id, exc)
+        # Soft-fail payload matching ChatSendResponse shape
+        return ChatSendResponse(
+            message={
+                "id": str(session_id),
+                "role": "assistant",
+                "content": (
+                    "No pude completar la consulta con los datos disponibles. "
+                    "¿Puedes reformular la pregunta o precisar el número?"
+                ),
+                "structured_content": None,
+                "tool_trace": [],
+                "created_at": None,
+            },
+            user_message_id="",
+            context={},
+            active_context={},
+            suggestions=[],
+            synthesis_fallback=True,
+            latency_ms=0,
+        )
 
 
 @router.get("/admin/ai/runtime")

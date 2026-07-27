@@ -351,9 +351,41 @@ class ResearchPlanner:
                     )
                 )
 
-        # 2) Complete analysis when pair / analyze intent
-        if understanding.tool == LotteryToolName.RUN_COMPLETE_ANALYSIS.value:
-            ca_params = dict(understanding.params or {})
+        # 2) Same-day coincidence → GET_NUMBER_OCCURRENCES (never complete_analysis)
+        #    Complete analysis only when explicit RUN_COMPLETE_ANALYSIS / analyze-completely
+        #    and the question is NOT same_day.
+        uparams = understanding.params or {}
+        is_same_day = (
+            str(uparams.get("relation") or uparams.get("active_relation") or "").lower()
+            == "same_day"
+            or "same_day" in str(understanding.intent or "").lower()
+            or "same_day" in str(understanding.tool or "").lower()
+            or uparams.get("intent") == "same_day_coincidence"
+            or str(state.active_relation or "").lower() == "same_day"
+        )
+        if is_same_day and observed and confirmer:
+            occ_params: dict[str, Any] = {
+                "numbers": [observed, confirmer],
+                "relation": "same_day",
+            }
+            if uparams.get("position") is not None:
+                occ_params["position"] = uparams.get("position")
+            elif state.active_position not in (None, "", "all"):
+                occ_params["position"] = state.active_position
+            lots = uparams.get("lotteries") or list(state.active_lotteries or [])
+            if lots:
+                occ_params["lotteries"] = list(lots)[:8]
+            if uparams.get("lottery") or lottery:
+                occ_params["lottery"] = uparams.get("lottery") or lottery
+            steps.append(
+                PlanStep(
+                    tool=LotteryToolName.GET_NUMBER_OCCURRENCES.value,
+                    params=occ_params,
+                    purpose="same_day_coincidence",
+                )
+            )
+        elif understanding.tool == LotteryToolName.RUN_COMPLETE_ANALYSIS.value:
+            ca_params = dict(uparams)
             if not ca_params and base.steps:
                 ca_params = dict(base.steps[0].params or {})
             steps.append(
@@ -373,7 +405,7 @@ class ResearchPlanner:
                         else observed,
                         "confirmer": int(confirmer) if str(confirmer).isdigit() else confirmer,
                         "lottery": lottery,
-                        "date": state.active_date or understanding.params.get("date"),
+                        "date": state.active_date or uparams.get("date"),
                         "include_historical": True,
                     },
                     purpose="complete_analysis_t1_t2",

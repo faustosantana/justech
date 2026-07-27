@@ -155,12 +155,27 @@ class IntentResolver:
 
         raw = text or ""
         cleaned_for_numbers = strip_quantity_spans(raw)
+        out["raw_message"] = raw
         out["turn_type"] = classify_turn_type(
             raw, has_active_subject=bool(state.active_numbers)
         )
 
         # Limits: «últimas 3 veces» — before position / number parsing
+        from app.lottery.ai.turn_policy import (
+            asks_all_lotteries,
+            asks_all_positions,
+            extract_other_occurrence_limit,
+            is_correction_or_meta_request,
+            is_most_recent_request,
+            is_other_occurrences_request,
+            is_previous_occurrences_request,
+        )
+
         lim = extract_occurrence_limit(raw)
+        if not lim and is_previous_occurrences_request(raw):
+            lim = extract_occurrence_limit(raw) or 2
+        if not lim and is_other_occurrences_request(raw):
+            lim = extract_other_occurrence_limit(raw)
         if lim:
             out["limit"] = lim
             out["follow_up_kind"] = "last_n_occurrences"
@@ -168,6 +183,11 @@ class IntentResolver:
             if state.active_numbers and not extract_subject_numbers(raw):
                 out["numbers"] = list(state.active_numbers)
                 out["inherit_active_number"] = True
+            if is_previous_occurrences_request(raw) or is_other_occurrences_request(raw):
+                prior = int((state.last_analysis or {}).get("limit") or 0)
+                out["offset"] = prior
+                out["page_offset"] = prior
+                out["result_limit"] = lim
 
         # Year / period filters
         if cls._THIS_YEAR.search(raw):
@@ -391,5 +411,41 @@ class IntentResolver:
                 out["numbers"] = list(state.active_numbers)
                 out["inherit_active_number"] = True
                 out["resolved_refs"].append("inherit_active_explicit")
+
+        # Correction: «me refiero al 97» — new subject, replay last factual intent
+        if is_correction_or_meta_request(raw):
+            out["turn_type"] = "correction"
+            out["replay_last_intent"] = True
+            if msg_nums:
+                out["numbers"] = msg_nums[:1]
+                out["active_pair"] = []
+                out["use_active_pair"] = False
+                out["follow_up_kind"] = out.get("follow_up_kind") or (
+                    "last_occurrence"
+                    if (state.last_intent or "").startswith("last")
+                    else "last_occurrence"
+                )
+            elif state.active_numbers:
+                out["numbers"] = list(state.active_numbers[:1])
+                out["inherit_active_number"] = True
+                out["use_last_analysis"] = True
+            out["resolved_refs"].append("correction_or_meta")
+
+        if asks_all_lotteries(raw):
+            out["lottery_explicit"] = False
+            out["clear_lottery"] = True
+            out["lotteries"] = []
+            out["lottery_filter"] = None
+            out["resolved_refs"].append("all_lotteries")
+        if asks_all_positions(raw):
+            out["position_scope"] = "all"
+            out["position_explicit"] = True
+            out["resolved_refs"].append("all_positions")
+        if is_most_recent_request(raw) and (out.get("numbers") or state.active_numbers):
+            out["follow_up_kind"] = "last_occurrence"
+            if not out.get("numbers") and state.active_numbers:
+                out["numbers"] = list(state.active_numbers[:1])
+                out["inherit_active_number"] = True
+            out["resolved_refs"].append("most_recent")
 
         return out

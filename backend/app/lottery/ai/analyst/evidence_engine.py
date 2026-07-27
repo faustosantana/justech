@@ -9,6 +9,8 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any, Literal
 
+from app.lottery.ai.turn_policy import position_label_es, purpose_label_es
+
 
 ConfidenceLevel = Literal["Alta", "Media", "Baja"]
 
@@ -71,12 +73,14 @@ class EvidenceEngine:
 
         for item in evidence_bundle:
             summary = item.get("summary") if isinstance(item.get("summary"), dict) else {}
+            purpose = str(item.get("purpose") or "")
+            purpose_label = purpose_label_es(purpose) if purpose else purpose_label_es(str(item.get("tool") or ""))
             raw.append({"purpose": item.get("purpose"), "tool": item.get("tool"), "keys": list(summary.keys())[:12]})
             cnt = cls._extract_count(summary)
             if cnt is not None:
                 case_count = max(case_count or 0, cnt)
                 findings.append(
-                    f"{item.get('purpose') or item.get('tool')}: {cnt} casos/registros consultados."
+                    f"{purpose_label}: {cnt} casos/registros consultados."
                 )
             if summary.get("last_occurrence_date"):
                 has_occurrence_date = True
@@ -95,11 +99,46 @@ class EvidenceEngine:
                 findings.append(
                     f"Motor (solo lectura): candidato principal reportado {summary.get('primary')}."
                 )
-            purpose = str(item.get("purpose") or "")
             if purpose.startswith("compare_"):
                 comparisons.append(
-                    f"Comparación ejecutada: {purpose.replace('_', ' ')}."
+                    f"Comparación ejecutada: {purpose_label}."
                 )
+
+            semantics = str(summary.get("semantics") or "")
+            # last_n timeline: date — lottery — position (never invent)
+            if semantics == "last_n_occurrences":
+                items = summary.get("items") or summary.get("occurrences") or []
+                limit = int(summary.get("limit") or 10)
+                if isinstance(items, list):
+                    for row in items[: max(1, min(limit, 20))]:
+                        if not isinstance(row, dict):
+                            continue
+                        d = row.get("date") or row.get("draw_date") or "—"
+                        lot = row.get("lottery") or "—"
+                        pos = row.get("position")
+                        pos_s = (
+                            position_label_es(pos)
+                            if pos not in (None, "", "all")
+                            else "posición no indicada"
+                        )
+                        timeline.append(f"{d} — {lot} — {pos_s}")
+
+            # same-day coincidence: total + last date with human labels
+            if semantics == "same_day_coincidence":
+                total = summary.get("total")
+                if total is None:
+                    total = summary.get("count")
+                last = summary.get("last_occurrence_date") or summary.get("last_date")
+                label = purpose_label_es("same_day_coincidence")
+                if total is not None:
+                    findings.append(f"{label}: {total} coincidencia(s) encontrada(s).")
+                    try:
+                        case_count = max(case_count or 0, int(total))
+                    except (TypeError, ValueError):
+                        pass
+                if last:
+                    findings.append(f"Última {label}: {last}.")
+                    has_occurrence_date = True
 
         # Never report 0 records when a last-occurrence date exists
         if has_occurrence_date and (case_count is None or case_count == 0):
@@ -136,7 +175,7 @@ class EvidenceEngine:
             evidence_level=confidence,
             findings=findings[:12],
             comparisons=comparisons[:8],
-            timeline=timeline[:8],
+            timeline=timeline[:12],
             limitations=[
                 "El histórico describe eventos anteriores y no garantiza resultados futuros.",
                 "El Research Engine no modifica Tabla 1/2, ranking ni Prompt Maestro.",

@@ -224,19 +224,29 @@ class ToolOrchestrator:
             summary = result.summary_for_context or {}
             primary = summary.get("primary")
             observed = summary.get("observed_number") or params.get("observed_number")
+            from app.lottery.ai.turn_policy import position_label_es, purpose_label_es
+
             if primary is not None:
                 templates.append(
                     f"El número más fortalecido reportado por el motor es {primary}."
                     + (f" Observado: {observed}." if observed is not None else "")
                 )
-            elif summary.get("count") is not None:
-                templates.append(
-                    f"Encontré {summary.get('count')} apariciones para el número consultado."
-                )
-            elif summary.get("last_occurrence_date"):
-                templates.append(
-                    f"La última aparición registrada es {summary.get('last_occurrence_date')}."
-                )
+            elif summary.get("semantics") == "same_day_coincidence":
+                total = summary.get("total")
+                if total is None:
+                    total = summary.get("count")
+                last = summary.get("last_occurrence_date") or summary.get("last_date")
+                nums = summary.get("numbers") or params.get("numbers") or []
+                pair = " y ".join(str(n) for n in nums[:2]) if nums else "los números consultados"
+                if total is not None and int(total) > 0:
+                    bit = f"Encontré {total} coincidencia(s) el mismo día para {pair}."
+                    if last:
+                        bit += f" La más reciente fue el {last}."
+                    templates.append(bit)
+                else:
+                    templates.append(
+                        f"No encontré coincidencias el mismo día para {pair} en el alcance consultado."
+                    )
             elif summary.get("semantics") == "last_n_occurrences":
                 items = summary.get("items") or []
                 num = summary.get("number") or params.get("number")
@@ -244,9 +254,11 @@ class ToolOrchestrator:
                     lines = []
                     for i, row in enumerate(items[: int(summary.get("limit") or 10)], 1):
                         pos = row.get("position")
-                        from app.lottery.ai.turn_policy import position_label_es
-
-                        pos_s = position_label_es(pos) if pos not in (None, "", "all") else "posición no indicada"
+                        pos_s = (
+                            position_label_es(pos)
+                            if pos not in (None, "", "all")
+                            else "posición no indicada"
+                        )
                         lines.append(
                             f"{i}. {row.get('date') or '—'} — {row.get('lottery') or '—'} — {pos_s}."
                         )
@@ -258,8 +270,19 @@ class ToolOrchestrator:
                     templates.append(
                         f"No encontré apariciones del {num} dentro del alcance solicitado."
                     )
+            elif summary.get("count") is not None:
+                label = purpose_label_es(step.purpose)
+                templates.append(
+                    f"Encontré {summary.get('count')} registros en {label}."
+                )
+            elif summary.get("last_occurrence_date"):
+                templates.append(
+                    f"La última aparición registrada es {summary.get('last_occurrence_date')}."
+                )
             elif step.purpose:
-                templates.append(f"Consulté {step.purpose.replace('_', ' ')} con datos históricos.")
+                templates.append(
+                    f"Consulté {purpose_label_es(step.purpose)} con datos históricos."
+                )
 
             if step.tool == LotteryToolName.RUN_COMPLETE_ANALYSIS.value:
                 summary = result.summary_for_context or {}
@@ -351,6 +374,8 @@ class ToolOrchestrator:
 
     def _normalize_params(self, step: PlanStep, state: ConversationState) -> dict[str, Any]:
         params = dict(step.params or {})
+        tool = str(step.tool or "")
+        purpose = str(step.purpose or "")
         # Fill from memory when omitted
         if not params.get("number") and state.active_numbers:
             params.setdefault("number", state.active_numbers[0])
@@ -359,9 +384,18 @@ class ToolOrchestrator:
                 params.setdefault("observed_number", int(state.active_numbers[0]))
             except (TypeError, ValueError):
                 params.setdefault("observed_number", state.active_numbers[0])
+        # Map base_date → date when date missing
+        if not params.get("date") and params.get("base_date"):
+            params["date"] = params["base_date"]
         # Critical: found lottery from a previous result is NOT an active filter.
         # Only fill lottery when the step did not already declare multi-lottery / last_n.
-        mode = str(params.get("mode") or step.purpose or "")
+        mode = str(params.get("mode") or purpose)
+        following_or_previous = tool in {
+            LotteryToolName.GET_FOLLOWING_DAYS.value,
+            LotteryToolName.GET_PREVIOUS_DAYS.value,
+            LotteryToolName.GET_FOLLOWING_DRAWS.value,
+            LotteryToolName.GET_PREVIOUS_DRAWS.value,
+        }
         if (
             not params.get("lottery")
             and not params.get("lotteries")
@@ -371,13 +405,43 @@ class ToolOrchestrator:
             and (state.active_filters or {}).get("lottery_explicit")
         ):
             params.setdefault("lottery", state.active_lotteries[0])
+        # Following/previous days: recover lottery from last analysis when missing
+        if following_or_previous and not params.get("lottery"):
+            la = state.last_analysis or {}
+            if isinstance(la, dict):
+                if la.get("lottery"):
+                    params["lottery"] = la["lottery"]
+                else:
+                    items = la.get("items")
+                    if isinstance(items, list) and items:
+                        first = items[0]
+                        if isinstance(first, dict) and first.get("lottery"):
+                            params["lottery"] = first["lottery"]
         if not params.get("date") and state.active_date and mode not in {"last_n", "last_n_occurrences"}:
             params.setdefault("date", state.active_date)
         if not params.get("base_date") and state.date_context:
             params.setdefault("base_date", state.date_context)
+        if not params.get("date") and params.get("base_date"):
+            params["date"] = params["base_date"]
         year = (state.active_filters or {}).get("year")
         if year and "year" not in params and "from_date" not in params:
             params["year"] = year
+        # last_times / compare path: pass explicit position from state
+        if (
+            params.get("position") is None
+            and (state.active_filters or {}).get("position_explicit")
+            and state.active_position not in (None, "", "all")
+        ):
+            if purpose.startswith("compare_") or purpose in {
+                "last_n_occurrences",
+                "last_occurrence",
+                "last_occurrence_all_lotteries",
+                "compare_across_lotteries",
+            }:
+                try:
+                    params["position"] = int(state.active_position)
+                except (TypeError, ValueError):
+                    params["position"] = state.active_position
         # Drop None values that confuse tools
         return {k: v for k, v in params.items() if v is not None}
 

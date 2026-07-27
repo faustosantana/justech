@@ -269,10 +269,24 @@ class LotteryChatService:
                 "position": up.get("position"),
             }
         elif understanding.numbers and len(understanding.numbers) >= 2:
-            resolution = {
-                **resolution,
-                "numbers": list(understanding.numbers),
-            }
+            from app.lottery.ai.turn_policy import (
+                exclude_limit_from_subjects,
+                extract_occurrence_limit,
+            )
+
+            cleaned_nums = exclude_limit_from_subjects(
+                list(understanding.numbers), extract_occurrence_limit(content)
+            )
+            if len(cleaned_nums) >= 2:
+                resolution = {
+                    **resolution,
+                    "numbers": cleaned_nums,
+                }
+            elif cleaned_nums:
+                resolution = {
+                    **resolution,
+                    "numbers": cleaned_nums[:1],
+                }
         brain = ConversationBrain(state)
         state = brain.apply_resolution(understanding=understanding, resolution=resolution)
         if resolution.get("inherit_active_number") and state.active_numbers:

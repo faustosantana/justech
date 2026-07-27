@@ -1,66 +1,158 @@
-"""Research Engine — architecture stub for future automatic discovery (Fase A.1).
+"""Research Engine profesional — Investigación Inteligente (Fase B v2.0).
 
-NOT implemented yet. This module only declares the future contract so planners
-and docs can reference stable extension points without changing the motor.
+Builds strategies before answering. Executes via existing Lottery Tools only.
+Never invents data. Never mutates motor / ranking / Prompt Maestro.
 """
 
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Any, Protocol
+from typing import Any
+
+from app.lottery.ai.analyst.config import AnalystRuntimeConfig
+from app.lottery.ai.analyst.dynamic_planner import DynamicResearchPlanner
+from app.lottery.ai.analyst.question_classifier import (
+    RESEARCH_KINDS,
+    QuestionClassifier,
+    ResearchQuestion,
+)
+from app.lottery.ai.analyst.research_planner import ResearchPlan
+from app.lottery.ai.conversation_state import ConversationState, UnderstandingResult
+from app.lottery.ai.planner import PlanStep, build_plan
 
 
 @dataclass
-class ResearchQuestion:
-    """Future high-level research question (discovery layer — not active)."""
+class ResearchAuditRecord:
+    question: str
+    kind: str | None
+    plan_steps: list[str] = field(default_factory=list)
+    tools: list[str] = field(default_factory=list)
+    duration_ms: int | None = None
+    tokens: int | None = None
+    result_preview: str | None = None
+    errors: list[str] = field(default_factory=list)
+    confidence: str | None = None
 
-    kind: str
-    # Examples of future kinds (reserved):
-    # - what_usually_happens_after
-    # - which_lottery_confirms_first
-    # - which_confirms_most
-    # - most_frequent_pattern
-    # - best_historical_group
-    params: dict[str, Any] = field(default_factory=dict)
-    requires_discovery: bool = True
-
-
-class ResearchEngine(Protocol):
-    """Future protocol — do not call from production chat yet."""
-
-    def can_handle(self, question: ResearchQuestion) -> bool: ...
-
-    def prepare(self, question: ResearchQuestion, context: dict[str, Any]) -> dict[str, Any]: ...
-
-
-class ResearchEngineStub:
-    """Placeholder. Automatic discovery is intentionally disabled."""
-
-    ENABLED = False
-    SUPPORTED_KINDS = (
-        "what_usually_happens_after",
-        "which_lottery_confirms_first",
-        "which_confirms_most",
-        "most_frequent_pattern",
-        "best_historical_group",
-    )
-
-    def can_handle(self, question: ResearchQuestion) -> bool:
-        return False
-
-    def prepare(self, question: ResearchQuestion, context: dict[str, Any]) -> dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
-            "status": "not_implemented",
-            "enabled": False,
-            "kind": question.kind,
-            "message": (
-                "Research Engine preparado arquitectónicamente. "
-                "El descubrimiento automático aún no está activo."
-            ),
-            "supported_kinds": list(self.SUPPORTED_KINDS),
-            "context_keys": list((context or {}).keys())[:20],
+            "question": self.question,
+            "kind": self.kind,
+            "plan": self.plan_steps,
+            "tools": self.tools,
+            "duration_ms": self.duration_ms,
+            "tokens": self.tokens,
+            "result_preview": self.result_preview,
+            "errors": self.errors,
+            "confidence": self.confidence,
         }
 
 
-def get_research_engine() -> ResearchEngineStub:
-    return ResearchEngineStub()
+class ResearchEngine:
+    """True investigation engine on top of Fase A architecture."""
+
+    ENABLED = True
+    VERSION = "2.0"
+    SUPPORTED_KINDS = RESEARCH_KINDS
+
+    def can_handle(self, question: ResearchQuestion) -> bool:
+        if not self.ENABLED:
+            return False
+        if question.requires_discovery:
+            return False
+        return question.kind in self.SUPPORTED_KINDS
+
+    def prepare(self, question: ResearchQuestion, context: dict[str, Any]) -> dict[str, Any]:
+        """Strategy preview (no tool execution)."""
+        state = ConversationState()
+        if isinstance(context, dict):
+            if context.get("active_numbers"):
+                state.active_numbers = list(context["active_numbers"])
+            if context.get("active_lotteries"):
+                state.active_lotteries = list(context["active_lotteries"])
+            if context.get("active_pair"):
+                state.active_pair = list(context["active_pair"])
+            if context.get("current_primary_candidate") is not None:
+                try:
+                    state.current_primary_candidate = int(context["current_primary_candidate"])
+                except (TypeError, ValueError):
+                    pass
+        steps, meta = DynamicResearchPlanner.build(question, state, max_steps=40)
+        return {
+            "status": "planned",
+            "enabled": True,
+            "version": self.VERSION,
+            "kind": question.kind,
+            "step_count": len(steps),
+            "steps": [s.purpose or s.tool for s in steps],
+            "meta": meta,
+            "message": "Estrategia de investigación lista. Ejecutar vía Tool Orchestrator.",
+        }
+
+    def classify(
+        self,
+        message: str,
+        state: ConversationState,
+        resolution: dict[str, Any] | None = None,
+    ) -> ResearchQuestion | None:
+        return QuestionClassifier.classify(message, state, resolution)
+
+    def build_plan(
+        self,
+        *,
+        message: str,
+        understanding: UnderstandingResult,
+        state: ConversationState,
+        config: AnalystRuntimeConfig,
+        resolution: dict[str, Any] | None = None,
+    ) -> ResearchPlan | None:
+        """Return a dynamic ResearchPlan when the message is an open investigation."""
+        if not self.ENABLED:
+            return None
+        if understanding.needs_clarification and not (
+            resolution and resolution.get("inherit_active_number")
+        ):
+            # Still allow research if we can inherit context
+            if not (state.active_numbers or state.active_pair):
+                return None
+
+        question = self.classify(message, state, resolution)
+        if question is None or not self.can_handle(question):
+            return None
+
+        # Force research for classified open questions unless admin is quick/light
+        if config.research_mode == "quick" or config.analysis_depth == "light":
+            return None
+
+        max_steps = config.effective_max_steps()
+        max_tools = config.effective_max_tools()
+        steps, meta = DynamicResearchPlanner.build(
+            question, state, max_steps=max(max_steps, max_tools)
+        )
+        # If dynamic plan empty, fall back to single understanding tool
+        if not steps and understanding.tool:
+            base = build_plan(understanding)
+            steps = list(base.steps)
+
+        steps = self._bound(steps, max_tools=max_tools, max_steps=max_steps)
+        if not steps:
+            return None
+
+        return ResearchPlan(
+            mode="deep",
+            is_research=True,
+            steps=steps,
+            rationale=f"research_engine:{question.kind}",
+            investigating_message=config.investigating_message,
+            user_visible_status=config.investigating_message,
+            question_kind=question.kind,
+            research_meta=meta,
+        )
+
+    @staticmethod
+    def _bound(steps: list[PlanStep], *, max_tools: int, max_steps: int) -> list[PlanStep]:
+        limit = min(max_tools, max_steps)
+        return list(steps)[: max(1, limit)]
+
+
+def get_research_engine() -> ResearchEngine:
+    return ResearchEngine()

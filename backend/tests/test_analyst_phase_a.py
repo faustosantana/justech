@@ -83,7 +83,13 @@ def test_research_planner_builds_deep_plan_for_pair_history():
     )
     assert plan.is_research is True
     assert plan.user_visible_status
-    assert any(s.tool == "lottery_run_complete_analysis" for s in plan.steps)
+    tools = {s.tool for s in plan.steps}
+    assert (
+        "lottery_run_complete_analysis" in tools
+        or "lottery_get_number_occurrences" in tools
+        or "lottery_historical_relation_conditions" in tools
+        or "lottery_get_following_days" in tools
+    )
 
 
 def test_guardrails_block_non_lottery_tools_and_sanitize():

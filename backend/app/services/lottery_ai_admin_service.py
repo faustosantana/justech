@@ -69,10 +69,10 @@ DEFAULT_AGENT_PAYLOAD: dict[str, Any] = {
     "analysis_depth": "standard",
     "research": {
         "mode": "auto",  # quick | deep | auto
-        "max_tools_per_research": 6,
-        "max_research_steps": 8,
-        "max_tokens": 1200,
-        "timeout_seconds": 45,
+        "max_tools_per_research": 12,
+        "max_research_steps": 24,
+        "max_tokens": 1400,
+        "timeout_seconds": 90,
         "investigating_message": "Estoy investigando…",
     },
     "analysis_scope": "default_lotteries",

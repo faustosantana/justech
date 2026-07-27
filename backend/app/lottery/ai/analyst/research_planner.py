@@ -20,6 +20,8 @@ class ResearchPlan:
     rationale: str = ""
     investigating_message: str = "Estoy investigando…"
     user_visible_status: str | None = None
+    question_kind: str | None = None
+    research_meta: dict[str, Any] = field(default_factory=dict)
 
     def to_summary(self) -> dict[str, Any]:
         return {
@@ -28,11 +30,17 @@ class ResearchPlan:
             "rationale": self.rationale,
             "steps": [s.purpose or s.tool for s in self.steps],
             "step_count": len(self.steps),
+            "question_kind": self.question_kind,
+            "research_meta": self.research_meta,
         }
 
 
 class ResearchPlanner:
-    """Build an internal research plan before answering."""
+    """Build an internal research plan before answering.
+
+    Fase B: prefers ResearchEngine dynamic plans for open investigations,
+    then falls back to Fase A heuristic deep steps.
+    """
 
     _PAIR_HISTORY = re.compile(
         r"(ultimas?\s+veces|qu[eé]\s+pas[oó].{0,40}salieron|"
@@ -60,18 +68,35 @@ class ResearchPlanner:
         resolution: dict[str, Any] | None = None,
     ) -> ResearchPlan:
         resolution = resolution or {}
-        base = build_plan(understanding)
-        mode = config.research_mode
 
-        # Clarifications / refuses → no research
+        # Clarifications / refuses → no research (unless engine can inherit)
+        if understanding.params.get("refuse_message") or understanding.intent in {
+            "out_of_domain",
+            "restricted_technical",
+            "prediction_request",
+            "harmful_or_illegal",
+        }:
+            return ResearchPlan(mode="none", is_research=False, steps=[], rationale="refuse_or_clarify")
+
+        # Fase B — dynamic Research Engine first
+        try:
+            from app.lottery.ai.analyst.research_engine import get_research_engine
+
+            engine_plan = get_research_engine().build_plan(
+                message=message,
+                understanding=understanding,
+                state=state,
+                config=config,
+                resolution=resolution,
+            )
+            if engine_plan is not None:
+                return engine_plan
+        except Exception:  # noqa: BLE001 — never break chat on planner errors
+            pass
+
+        base = build_plan(understanding)
+
         if understanding.needs_clarification or not understanding.tool:
-            if understanding.params.get("refuse_message") or understanding.intent in {
-                "out_of_domain",
-                "restricted_technical",
-                "prediction_request",
-                "harmful_or_illegal",
-            }:
-                return ResearchPlan(mode="none", is_research=False, steps=[], rationale="refuse_or_clarify")
             return ResearchPlan(
                 mode="none",
                 is_research=False,
@@ -98,6 +123,7 @@ class ResearchPlanner:
             wants_deep = True
 
         # Mode + depth from Admin runtime
+        mode = config.research_mode
         if mode == "quick" or config.analysis_depth == "light":
             is_research = False
         elif mode == "deep" or config.analysis_depth == "deep":

@@ -904,6 +904,27 @@ class LotteryChatService:
                 "investigating": research_trace.investigating,
                 "duration_ms": research_trace.duration_ms,
             },
+            "research_audit": (
+                {
+                    "question": content,
+                    "kind": (research_meta or {}).get("question_kind") if isinstance(research_meta, dict) else None,
+                    "plan": (research_meta or {}).get("plan") if isinstance(research_meta, dict) else None,
+                    "tools": [t.get("tool") for t in tool_trace if isinstance(t, dict)],
+                    "duration_ms": latency_ms,
+                    "confidence": (
+                        (research_meta or {}).get("confidence")
+                        if isinstance(research_meta, dict)
+                        else None
+                    ),
+                    "errors": [
+                        t.get("error_code") or t.get("status")
+                        for t in tool_trace
+                        if isinstance(t, dict) and t.get("status") not in {"success", "skipped_duplicate"}
+                    ],
+                }
+                if research_meta
+                else None
+            ),
             "runtime_trace": runtime_trace,
         }
 

@@ -1,95 +1,63 @@
-# Analista IA — Fase A / A.1
+# Analista IA + Research Engine — Fase A / A.1 / B
 
-Capa conversacional profesional sobre el motor Lottery IA.
+Capa conversacional e investigación inteligente sobre el motor Lottery IA.
 **No modifica** Tabla 1, Tabla 2, Ranking, tiebreak, histórico matemático,
 Hermes/Huawei, Prompt Maestro Oficial v5 ni otros módulos JAIOS.
 
-## Arquitectura
+## Arquitectura (Fase B)
 
 ```
-Usuario → Understanding → IntentResolver → ConversationBrain
-        → ResearchPlanner → ToolOrchestrator → LotteryToolExecutor (histórico)
-        → ResponseFormatter → Síntesis (tokens desde Admin)
-        → ResearchTrace
+Usuario
+  → Understanding + IntentResolver + ConversationBrain
+  → QuestionClassifier
+  → ResearchEngine (planes dinámicos)
+  → DynamicResearchPlanner
+  → ToolOrchestrator (+ cache / dedupe)
+  → LotteryToolExecutor (histórico existente)
+  → EvidenceEngine + Confidence (Alta/Media/Baja)
+  → format_research_response
+  → ResearchTrace / research_audit
 ```
 
-El **Research Engine** (`research_engine.py`) está preparado como stub
-(`ENABLED = False`) para descubrimiento automático futuro. No está activo.
+Discovery Engine (`discovery_engine.py`) permanece **deshabilitado**
+(`ENABLED=False`) para una fase futura.
 
-## Planner (`ResearchPlanner`)
+## Research Engine v2.0
 
-- Modos: `quick` | `deep` | `auto` (desde Admin `research.mode` / `investigation_mode`)
-- Profundidad: `light` | `standard` | `deep` (`analysis_depth`)
-- Plan multi-paso reutiliza `LotteryToolName` existentes:
-  ocurrencias, posiciones, loterías, frecuencias, coincidencias,
-  comparación de períodos, D+1/D+3/D+7, casos equivalentes,
-  confirmaciones cruzadas, ventanas before/after.
-- Límites efectivos: `effective_max_tools()` / `effective_max_steps()`.
+- Clasifica preguntas abiertas (`what_usually_happens_after`, comparaciones,
+  case search, temporal, confirmaciones, etc.).
+- Construye estrategia **antes** de responder.
+- Ejecuta multi-tool / multi-etapa acotado por Admin (`max_tools`, `max_steps`,
+  `timeout`, `analysis_depth`, `investigation_mode`).
+- Nunca inventa datos ni muta el motor.
 
-## Conversation Brain
+## Planner dinámico
 
-Memoria conversacional estructurada:
+`DynamicResearchPlanner` compone pasos en runtime (sin flujos fijos únicos):
+ocurrencias → posiciones → frecuencias → D+1/3/7/15/30 → confirmaciones →
+equivalentes → comparaciones.
 
-- `active_numbers`, `active_pair`, `active_lotteries`, `active_filters`
-- `focus_stack` (retorno a números previos)
-- `current_primary_candidate`, `current_alternatives`
-- `current_research` + último trace compacto
-- No re-pregunta slots ya conocidos
+## Módulos
 
-## Intent Resolver
+| Módulo | Rol |
+|--------|-----|
+| `question_classifier` | Detecta kind de investigación |
+| `dynamic_planner` | Plan multi-paso |
+| `temporal_analysis` | Antes/después / D+N / períodos |
+| `case_search` | Equivalentes / similares / parciales |
+| `historical_comparator` | 54 vs 94, loterías, posiciones, años |
+| `evidence_engine` | Evidencia + confianza cualitativa |
+| `research_cache` | Reuso / dedupe de tools |
+| `discovery_engine` | Stub futuro |
 
-Resuelve referencias naturales sin perder contexto:
+## Respuesta profesional
 
-`ese`, `esa`, `esas veces`, `el anterior`, `el otro`, `aquellos`, `allí`,
-`después`, `antes`, `solamente ahí`, `ese grupo`, `esa pareja`,
-`compáralo con el otro`, `última vez`, `primera vez`, filtros de lotería/posición/año.
+Resumen Ejecutivo → Resultado → Evidencias → Comparaciones → Cronología →
+Conclusión → Limitaciones → Sugerencias relacionadas.
 
-## Tool Orchestrator
-
-Ejecuta solo herramientas autorizadas vía `LotteryToolExecutor`.
-Respeta timeout, max_tools, max_steps y guardrails.
-Nunca inventa datos ni muta ranking/motor.
-
-## Modo Investigación
-
-Cuando el plan es `deep` / multi-paso:
-
-1. UI muestra **«Estoy investigando…»**
-2. Se ejecuta el plan completo
-3. Se responde solo al terminar (con evidencia + conclusión)
-
-## Trace (`ResearchTrace`)
-
-Cada turno registra:
-
-- intención detectada
-- contexto utilizado
-- filtros aplicados
-- herramientas y pasos
-- evidencia encontrada
-- duración
-- snapshot de config Admin
-- preview de respuesta
-
-Expuesto en `runtime_trace.research_trace` (detalle completo con diagnostics).
-
-## Configuración Admin → Runtime
-
-| Parámetro | Runtime |
-|-----------|---------|
-| `max_tools` / `max_tools_per_research` | límite de tools |
-| `max_steps` / `max_research_steps` | límite de pasos |
-| `max_tokens` | síntesis LLM / Hermes |
-| `timeout` / `timeout_seconds` | corte de investigación |
-| `analysis_depth` | light/standard/deep |
-| `investigation_mode` / `research.mode` | quick/deep/auto |
-
-No deben existir knobs Admin ignorados por el chat.
-
-## Validaciones obligatorias
+## Validaciones
 
 - Motor: `35+14 → 54`, `39+58 → 94`
-- Ranking / Tabla 1 / Tabla 2 intactos
-- Prompt Maestro v5 activo e intacto
-- Alembic producción: **061** (no aplicar 062)
+- Prompt Maestro v5 intacto
+- Alembic producción: **061**
 - Deploy selectivo Lottery únicamente

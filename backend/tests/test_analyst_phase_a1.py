@@ -5,7 +5,7 @@ from __future__ import annotations
 from app.lottery.ai.analyst import (
     ConversationBrain,
     IntentResolver,
-    ResearchEngineStub,
+    ResearchEngine,
     ResearchPlanner,
     ResearchTrace,
     format_analyst_response,
@@ -81,15 +81,20 @@ def test_research_trace_records_full_audit():
 
 
 def test_research_engine_stub_not_enabled():
-    from app.lottery.ai.analyst.research_engine import ResearchQuestion
+    from app.lottery.ai.analyst.discovery_engine import DiscoveryEngineStub, get_discovery_engine
+    from app.lottery.ai.analyst.research_engine import ResearchEngine, get_research_engine
 
     eng = get_research_engine()
-    assert isinstance(eng, ResearchEngineStub)
-    assert eng.ENABLED is False
-    q = ResearchQuestion(kind="what_usually_happens_after")
-    assert eng.can_handle(q) is False
-    prep = eng.prepare(q, {"active_numbers": ["54"]})
-    assert prep["status"] == "not_implemented"
+    assert isinstance(eng, ResearchEngine)
+    assert eng.ENABLED is True
+    disc = get_discovery_engine()
+    assert isinstance(disc, DiscoveryEngineStub)
+    assert disc.ENABLED is False
+    from app.lottery.ai.analyst.discovery_engine import DiscoveryRequest
+
+    assert disc.can_discover(DiscoveryRequest(kind="auto_discovery")) is False
+    prep = disc.discover(DiscoveryRequest(kind="auto_discovery"))
+    assert prep.status == "not_implemented"
 
 
 def test_long_conversation_context_chain():

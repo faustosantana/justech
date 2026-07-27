@@ -12,10 +12,10 @@ AnalysisDepth = Literal["light", "standard", "deep"]
 
 @dataclass
 class AnalystRuntimeConfig:
-    max_tools_per_research: int = 6
-    max_research_steps: int = 8
-    max_tokens: int = 1200
-    timeout_seconds: int = 45
+    max_tools_per_research: int = 12
+    max_research_steps: int = 24
+    max_tokens: int = 1400
+    timeout_seconds: int = 90
     research_mode: ResearchMode = "auto"
     analysis_depth: AnalysisDepth = "standard"
     investigating_message: str = "Estoy investigando…"
@@ -65,33 +65,33 @@ def load_analyst_config_from_payload(payload: dict[str, Any] | None) -> AnalystR
         research.get("max_tools_per_research")
         or raw.get("max_tools")
         or raw.get("max_tools_per_query")
-        or 6
+        or 12
     )
     max_steps = int(
         research.get("max_research_steps")
         or raw.get("max_steps")
         or raw.get("max_planner_steps")
-        or 8
+        or 24
     )
     max_tokens = int(
         research.get("max_tokens")
         or models.get("max_tokens")
         or raw.get("max_tokens")
-        or 1200
+        or 1400
     )
     timeout = int(
         research.get("timeout_seconds")
         or models.get("timeout_seconds")
         or raw.get("timeout_seconds")
         or raw.get("timeout")
-        or 45
+        or 90
     )
 
     return AnalystRuntimeConfig(
-        max_tools_per_research=max(1, min(max_tools, 12)),
-        max_research_steps=max(1, min(max_steps, 16)),
+        max_tools_per_research=max(1, min(max_tools, 40)),
+        max_research_steps=max(1, min(max_steps, 60)),
         max_tokens=max(200, min(max_tokens, 4000)),
-        timeout_seconds=max(10, min(timeout, 120)),
+        timeout_seconds=max(10, min(timeout, 180)),
         research_mode=mode,  # type: ignore[arg-type]
         analysis_depth=depth,  # type: ignore[arg-type]
         investigating_message=str(

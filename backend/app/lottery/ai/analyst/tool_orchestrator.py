@@ -6,7 +6,9 @@ import time
 from typing import Any
 
 from app.lottery.ai.analyst.config import AnalystRuntimeConfig
+from app.lottery.ai.analyst.evidence_engine import EvidenceEngine
 from app.lottery.ai.analyst.guardrails import AnalystGuardrails
+from app.lottery.ai.analyst.research_cache import get_research_cache
 from app.lottery.ai.analyst.research_planner import ResearchPlan
 from app.lottery.ai.analyst.research_trace import ResearchTrace
 from app.lottery.ai.conversation_state import ConversationState
@@ -30,6 +32,7 @@ class ToolOrchestrator:
         self.config = config
         self.guardrails = guardrails or AnalystGuardrails()
         self.trace = trace
+        self.cache = get_research_cache()
 
     async def run(
         self,
@@ -51,6 +54,8 @@ class ToolOrchestrator:
         evidence_bundle: list[dict[str, Any]] = []
         working_ctx = ctx
         working_state = state
+        seen_keys: set[str] = set()
+        cache_hits = 0
         trace = self.trace or ResearchTrace(
             investigating=bool(plan.is_research),
             research_mode=plan.mode,
@@ -59,6 +64,8 @@ class ToolOrchestrator:
         trace.investigating = bool(plan.is_research)
         trace.research_mode = plan.mode
         trace.analysis_depth = self.config.analysis_depth
+        if plan.question_kind:
+            trace.intent = plan.question_kind
         trace.config_snapshot = {
             "max_tools": self.config.effective_max_tools(),
             "max_steps": self.config.effective_max_steps(),
@@ -66,6 +73,7 @@ class ToolOrchestrator:
             "max_tokens": self.config.max_tokens,
             "research_mode": self.config.research_mode,
             "analysis_depth": self.config.analysis_depth,
+            "question_kind": plan.question_kind,
         }
 
         limit = min(self.config.effective_max_tools(), self.config.effective_max_steps())
@@ -73,12 +81,15 @@ class ToolOrchestrator:
         t0 = time.monotonic()
 
         for step in steps:
+            step_started = time.monotonic()
             if (time.monotonic() - t0) > self.config.timeout_seconds:
                 tool_trace.append(
                     {
                         "tool": step.tool,
                         "status": "timeout_skipped",
                         "purpose": step.purpose,
+                        "started_at": step_started,
+                        "ended_at": time.monotonic(),
                     }
                 )
                 trace.mark_step(tool=step.tool, purpose=step.purpose, status="timeout_skipped")
@@ -109,30 +120,74 @@ class ToolOrchestrator:
                 continue
 
             params = self._normalize_params(step, working_state)
-            result = await self.executor.execute(
-                tool_enum,
-                params,
-                structured_type=self._structured_type(step.tool),
-                session_context=working_ctx.to_store(),
-            )
-            tool_trace.append(
-                {
-                    "tool": result.tool,
-                    "status": result.status,
-                    "duration_ms": result.duration_ms,
-                    "error_code": result.error_code,
-                    "purpose": step.purpose,
-                }
-            )
-            trace.mark_step(
-                tool=result.tool,
-                purpose=step.purpose,
-                status=result.status,
-                duration_ms=result.duration_ms,
-                summary=result.summary_for_context if result.status == "success" else None,
-            )
+            # Skip duplicate identical steps within the same investigation
+            dedupe_key = self.cache.make_key(step.tool, params)
+            if dedupe_key in seen_keys:
+                tool_trace.append(
+                    {
+                        "tool": step.tool,
+                        "status": "skipped_duplicate",
+                        "purpose": step.purpose,
+                        "cached": True,
+                    }
+                )
+                trace.mark_step(tool=step.tool, purpose=step.purpose, status="skipped_duplicate")
+                continue
+            seen_keys.add(dedupe_key)
 
-            if result.status != "success":
+            cached = self.cache.get(step.tool, params)
+            if cached is not None:
+                result = cached
+                cache_hits += 1
+                duration_ms = int((time.monotonic() - step_started) * 1000)
+                tool_trace.append(
+                    {
+                        "tool": getattr(result, "tool", step.tool),
+                        "status": getattr(result, "status", "success"),
+                        "duration_ms": duration_ms,
+                        "purpose": step.purpose,
+                        "cached": True,
+                        "started_at": step_started,
+                        "ended_at": time.monotonic(),
+                    }
+                )
+                trace.mark_step(
+                    tool=step.tool,
+                    purpose=step.purpose,
+                    status="success",
+                    duration_ms=duration_ms,
+                    summary=getattr(result, "summary_for_context", None),
+                )
+            else:
+                result = await self.executor.execute(
+                    tool_enum,
+                    params,
+                    structured_type=self._structured_type(step.tool),
+                    session_context=working_ctx.to_store(),
+                )
+                if result.status == "success":
+                    self.cache.set(step.tool, params, result)
+                tool_trace.append(
+                    {
+                        "tool": result.tool,
+                        "status": result.status,
+                        "duration_ms": result.duration_ms,
+                        "error_code": result.error_code,
+                        "purpose": step.purpose,
+                        "cached": False,
+                        "started_at": step_started,
+                        "ended_at": time.monotonic(),
+                    }
+                )
+                trace.mark_step(
+                    tool=result.tool,
+                    purpose=step.purpose,
+                    status=result.status,
+                    duration_ms=result.duration_ms,
+                    summary=result.summary_for_context if result.status == "success" else None,
+                )
+
+            if getattr(result, "status", None) != "success":
                 continue
 
             working_ctx = merge_context_after_tool(
@@ -157,10 +212,13 @@ class ToolOrchestrator:
                     "mode": plan.mode,
                     "status": plan.user_visible_status or "Estoy investigando…",
                     "investigating": True,
+                    "question_kind": plan.question_kind,
                     "steps_completed": [
-                        t.get("purpose") for t in tool_trace if t.get("status") == "success"
+                        t.get("purpose")
+                        for t in tool_trace
+                        if t.get("status") in {"success", "skipped_duplicate"} or t.get("cached")
                     ],
-                    "evidence": evidence_bundle[-6:],
+                    "evidence": evidence_bundle[-8:],
                 },
             }
             summary = result.summary_for_context or {}
@@ -168,20 +226,19 @@ class ToolOrchestrator:
             observed = summary.get("observed_number") or params.get("observed_number")
             if primary is not None:
                 templates.append(
-                    f"Conclusión: el número más fortalecido es {primary}."
+                    f"El número más fortalecido reportado por el motor es {primary}."
                     + (f" Observado: {observed}." if observed is not None else "")
                 )
             elif summary.get("count") is not None:
                 templates.append(
-                    f"Conclusión: encontré {summary.get('count')} apariciones "
-                    f"para el número consultado."
+                    f"Encontré {summary.get('count')} apariciones para el número consultado."
                 )
             elif summary.get("last_occurrence_date"):
                 templates.append(
-                    f"Conclusión: la última aparición registrada es {summary.get('last_occurrence_date')}."
+                    f"La última aparición registrada es {summary.get('last_occurrence_date')}."
                 )
             elif step.purpose:
-                templates.append(f"Consulté {step.purpose.replace('_', ' ')} con datos del motor.")
+                templates.append(f"Consulté {step.purpose.replace('_', ' ')} con datos históricos.")
 
             if step.tool == LotteryToolName.RUN_COMPLETE_ANALYSIS.value:
                 summary = result.summary_for_context or {}
@@ -195,18 +252,53 @@ class ToolOrchestrator:
                         str(params["confirmer"]).zfill(2),
                     ]
 
-        template = "\n\n".join(t for t in templates if t).strip()
-        if not template and evidence_bundle:
-            template = (
-                "Conclusión: consulté las herramientas autorizadas y organicé la evidencia disponible. "
-                "Si falta algún dato, indícalo y continúo la investigación."
-            )
-        if not template:
-            template = "No encontré suficiente evidencia con las herramientas disponibles."
+        evidence_pkg = EvidenceEngine.assemble(
+            kind=plan.question_kind or plan.rationale or "research",
+            tool_trace=tool_trace,
+            evidence_bundle=evidence_bundle,
+            context={
+                "numbers": list(working_state.active_numbers or []),
+                "year_filter": (working_state.active_filters or {}).get("year"),
+                "active_date": working_state.active_date,
+                **(plan.research_meta or {}),
+            },
+            case_criteria=(plan.research_meta or {}).get("case_criteria"),
+        )
 
-        if structured and isinstance(structured.get("research"), dict):
-            structured["research"]["trace_id"] = trace.trace_id
-            structured["research"]["duration_ms"] = int((time.monotonic() - t0) * 1000)
+        lead = " ".join(templates[:2]).strip() if templates else (
+            "Consulté las herramientas autorizadas y organicé la evidencia disponible."
+            if evidence_bundle
+            else "No encontré suficiente evidencia con las herramientas disponibles."
+        )
+        template = lead
+
+        duration_ms = int((time.monotonic() - t0) * 1000)
+        if structured is None and evidence_bundle:
+            structured = {
+                "type": "lottery_research",
+                "data": {"evidence": evidence_bundle[-8:]},
+            }
+        if structured is not None:
+            research_block = dict(structured.get("research") or {})
+            research_block.update(
+                {
+                    "mode": plan.mode,
+                    "status": "completed",
+                    "investigating": False,
+                    "question_kind": plan.question_kind,
+                    "trace_id": trace.trace_id,
+                    "duration_ms": duration_ms,
+                    "cache_hits": cache_hits,
+                    "evidence_package": evidence_pkg.to_dict(),
+                    "confidence": evidence_pkg.evidence_level,
+                    "steps_completed": [
+                        t.get("purpose") for t in tool_trace if t.get("status") == "success"
+                    ],
+                    "evidence": evidence_bundle[-8:],
+                    "plan": [s.purpose or s.tool for s in plan.steps],
+                }
+            )
+            structured["research"] = research_block
 
         return structured, template, tool_trace, working_ctx, working_state, trace
 
@@ -229,7 +321,8 @@ class ToolOrchestrator:
         year = (state.active_filters or {}).get("year")
         if year and "year" not in params and "from_date" not in params:
             params["year"] = year
-        return params
+        # Drop None values that confuse tools
+        return {k: v for k, v in params.items() if v is not None}
 
     @staticmethod
     def _structured_type(tool: str) -> str:

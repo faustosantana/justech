@@ -77,6 +77,21 @@ Hallazgos **observacionales** automáticos sobre evidencia histórica.
 
 **No modifica** Research Engine, Planner ni Conversation Brain.
 
+## Fase E — Knowledge Engine (v2.3.0)
+
+Repositorio de **investigaciones verificadas** (no ML / no aprendizaje automático).
+
+- Guarda solo investigaciones terminadas, con evidencia suficiente, no descartadas y sin errores
+- Nunca conclusiones solas: exige evidencia + cuerpo/resumen
+- Versionado: motor, histórico, Prompt Maestro, Research Engine, Discovery
+- Búsqueda: número, pareja, grupo, Tabla 1/2, lotería, posición, año, período, keyword, tags
+- Relaciones automáticas, citas, favoritos/fijar/archivar, colecciones
+- Obsolescencia visible si cambia la versión del histórico
+- Export: arquitectura lista (PDF/MD/Word/Excel/JSON); generación aún no implementada
+- API: `/lottery/ia/knowledge/*`
+
+**No modifica** Motor, Research Engine, Discovery Engine, Conversation Brain ni Planner.
+
 ## Validaciones
 
 - Motor: `35+14 → 54`, `39+58 → 94`

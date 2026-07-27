@@ -736,6 +736,48 @@ class LotteryChatService:
                         }
                 except Exception:  # noqa: BLE001 — discovery must not break chat
                     pass
+            # Fase E — Knowledge Engine: optional auto-save of verified research (never mutates RE/DE)
+            if isinstance(research_meta, dict) and research_meta.get("evidence_package"):
+                try:
+                    from app.lottery.ai.analyst.knowledge_engine import get_knowledge_engine
+
+                    ep = research_meta.get("evidence_package") or {}
+                    evidences = ep.get("evidences") or ep.get("items") or []
+                    if not evidences and ep:
+                        evidences = [{"evidence_package": ep, "tools_used": ep.get("tools_used") or []}]
+                    if evidences and not research_meta.get("discarded") and not research_meta.get("has_errors"):
+                        kn = get_knowledge_engine().save_from_research_payload(
+                            {
+                                "title": (content or "")[:120],
+                                "original_question": content,
+                                "executive_summary": (final_text or "")[:800],
+                                "full_investigation": final_text or "",
+                                "evidences": evidences,
+                                "tools_used": ep.get("tools_used")
+                                or research_meta.get("steps_completed")
+                                or [],
+                                "evidence_level": research_meta.get("evidence_level") or ep.get("evidence_level"),
+                                "confidence": research_meta.get("confidence") or ep.get("confidence"),
+                                "finished_ok": True,
+                                "discarded": False,
+                                "has_errors": False,
+                                "period": ep.get("period"),
+                                "historical_version": research_meta.get("historical_version")
+                                or ep.get("historical_version"),
+                            }
+                        )
+                        if kn.get("saved"):
+                            research_meta = {
+                                **research_meta,
+                                "knowledge": {
+                                    "id": (kn.get("investigation") or {}).get("id"),
+                                    "saved": True,
+                                    "obsolete": (kn.get("investigation") or {}).get("obsolete"),
+                                    "obsolescence_notice": kn.get("obsolescence_notice"),
+                                },
+                            }
+                except Exception:  # noqa: BLE001 — knowledge must not break chat
+                    pass
             final_text = format_analyst_response(
                 guardrails.sanitize_llm_text(final_text or template),
                 facts=facts_for_fmt,

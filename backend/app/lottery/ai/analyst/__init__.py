@@ -1,4 +1,4 @@
-"""Fase A / A.1 / B — Analista IA + Research Engine (capa sobre el motor).
+"""Fase A / A.1 / B / C / D / E — Analista IA + Research + Discovery + Knowledge.
 
 No modifica Tabla 1/2, ranking, tiebreak, histórico matemático ni Prompt Maestro v5.
 """
@@ -18,6 +18,13 @@ from app.lottery.ai.analyst.discovery_store import get_discovery_store
 from app.lottery.ai.analyst.evidence_engine import EvidenceEngine, EvidencePackage
 from app.lottery.ai.analyst.guardrails import AnalystGuardrails
 from app.lottery.ai.analyst.intent_resolver import IntentResolver
+from app.lottery.ai.analyst.knowledge_engine import (
+    KnowledgeEngine,
+    KnowledgeSaveRequest,
+    KnowledgeSearchQuery,
+    get_knowledge_engine,
+)
+from app.lottery.ai.analyst.knowledge_store import KnowledgeRecord, get_knowledge_store
 from app.lottery.ai.analyst.question_classifier import QuestionClassifier, ResearchQuestion
 from app.lottery.ai.analyst.research_engine import ResearchEngine, get_research_engine
 from app.lottery.ai.analyst.research_planner import ResearchPlan, ResearchPlanner
@@ -44,6 +51,10 @@ __all__ = [
     "EvidencePackage",
     "FindingValidator",
     "IntentResolver",
+    "KnowledgeEngine",
+    "KnowledgeRecord",
+    "KnowledgeSaveRequest",
+    "KnowledgeSearchQuery",
     "QuestionClassifier",
     "ResearchEngine",
     "ResearchPlan",
@@ -55,6 +66,8 @@ __all__ = [
     "format_research_response",
     "get_discovery_engine",
     "get_discovery_store",
+    "get_knowledge_engine",
+    "get_knowledge_store",
     "render_bar",
     "render_ranking_bars",
     "select_response_mode",

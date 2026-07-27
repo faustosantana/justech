@@ -46,14 +46,15 @@ NLP_INTENTS: tuple[str, ...] = (
     "UNKNOWN",
 )
 
-NLP_STABILITY_VERSION = "2.3.1"
+NLP_STABILITY_VERSION = "2.4.0"
 
 _GREETING = re.compile(
     r"^\s*("
-    r"hola|hola+|"
+    r"(hola|hey|hi|hello|saludos|buenass?)"
+    r"([\s,]+(que\s+tal|como\s+estas|como\s+esta|como\s+te\s+va|todo\s+bien))?"
+    r"|"
     r"buenos\s+dias|buenas\s+tardes|buenas\s+noches|buen\s+dia|"
-    r"que\s+tal|como\s+estas|como\s+esta|como\s+te\s+va|"
-    r"saludos|hey|hi|hello|buenass?"
+    r"que\s+tal|como\s+estas|como\s+esta|como\s+te\s+va"
     r")[\s!?.¡¿]*$",
     re.I,
 )
@@ -348,7 +349,9 @@ def classify_nlp(
     log.append(f"entities={{{','.join(k for k,v in entities.items() if v)}}}")
 
     # 1. Greeting — never tools
-    if _GREETING.match(norm) or _GREETING.match(raw):
+    if _GREETING.match(norm) or _GREETING.match(raw) or _GREETING.match(
+        re.sub(r"[¿¡]", "", norm)
+    ) or _GREETING.match(re.sub(r"[¿¡]", "", _norm(raw))):
         log.append("rule=GREETING")
         return NlpDecision(
             intent="GREETING",

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import re
+import unicodedata
 from datetime import date
 from typing import Any
 
@@ -203,7 +204,13 @@ def understand(raw: str, state: ConversationState) -> tuple[UnderstandingResult,
         if working.scope == "unknown":
             working.scope = "multiple" if len(working.active_lotteries) > 1 else "single"
     if refs.get("numbers"):
-        working.active_numbers = list(refs["numbers"])
+        # Fase Final — "Compáralo con el N" must not collapse an active compound pair
+        if re.search(r"comp[aá]ral[oa]|compar[aá](lo|la|me)?\s+con|compara(lo|la|me)?\s+con", text, re.I) and (
+            working.active_relation == "same_day" or len(working.active_numbers or []) >= 2
+        ):
+            pass
+        else:
+            working.active_numbers = list(refs["numbers"])
     if refs.get("post_window"):
         pw = refs["post_window"]
         if pw["unit"] == "days":
@@ -370,11 +377,170 @@ def _detect_follow_up(text: str, state: ConversationState) -> tuple[Understandin
         follow_up_replace_numbers,
     )
     from app.lottery.ai.same_day_coincidence import (
+        build_same_day_follow_up_params,
+        is_after_coincidences_follow_up,
         is_last_coincidence_follow_up,
+        is_lottery_only_follow_up,
         is_report_mode_question,
+        is_return_to_pair,
     )
 
-    # Fase X.2 — same-day follow-ups keep the compound pair
+    # Fase Final 2.4.0 — same-day continuity (lottery / position / after / return)
+    same_day_active = state.active_relation == "same_day" or (
+        state.active_pair and len(state.active_pair) >= 2 and state.active_relation == "same_day"
+    ) or (
+        len(state.active_numbers or []) >= 2 and state.active_relation == "same_day"
+    )
+    if same_day_active or (
+        len(state.active_numbers or state.active_pair or []) >= 2
+        and (
+            follow_up_any_position(text)
+            or follow_up_first_position(text)
+            or is_last_coincidence_follow_up(text)
+            or is_lottery_only_follow_up(text)
+            or is_after_coincidences_follow_up(text)
+            or is_return_to_pair(text)
+        )
+    ):
+        nums = list(state.active_numbers or state.active_pair or [])
+        returned = is_return_to_pair(text)
+        if returned:
+            nums = returned
+        if len(nums) >= 2 and (
+            same_day_active
+            or follow_up_any_position(text)
+            or follow_up_first_position(text)
+            or is_last_coincidence_follow_up(text)
+            or is_lottery_only_follow_up(text)
+            or is_after_coincidences_follow_up(text)
+            or returned
+        ):
+            last_date = None
+            la = state.last_analysis or {}
+            if la.get("last_coincidence_date"):
+                last_date = str(la["last_coincidence_date"])[:10]
+            elif state.active_date:
+                last_date = str(state.active_date)[:10]
+            params = build_same_day_follow_up_params(
+                text,
+                active_numbers=nums,
+                active_lotteries=list(state.active_lotteries or []),
+                position_scope=state.position_scope or state.last_position_scope,
+                preferred_position=int(state.preferred_position or 1),
+                last_coincidence_date=last_date,
+            )
+            if params:
+                lots = list(params.get("lotteries") or state.active_lotteries or [])
+                working.active_numbers = list(params["numbers"])[:8]
+                working.active_pair = list(working.active_numbers[:2])
+                working.active_relation = "same_day"
+                working.position_scope = str(params.get("position_scope") or "any_position")
+                working.last_position_scope = working.position_scope
+                working.preferred_position = int(params.get("preferred_position") or 1)
+                if lots:
+                    working.active_lotteries = lots[:8]
+                if params.get("after_coincidences"):
+                    # Use following-days around last coincidence date
+                    tool = LotteryToolName.GET_FOLLOWING_DAYS.value
+                    params = {
+                        **params,
+                        "count": 7,
+                        "lottery": lots[0] if lots else None,
+                        "lotteries": lots[:4] if lots else None,
+                    }
+                    if not params.get("date") and last_date:
+                        params["date"] = last_date
+                        params["base_date"] = last_date
+                else:
+                    tool = LotteryToolName.GET_NUMBER_OCCURRENCES.value
+                return (
+                    UnderstandingResult(
+                        intent="cross_lottery_matches",
+                        lotteries=lots,
+                        numbers=list(params["numbers"]),
+                        scope="multiple",
+                        tool=tool,
+                        params=params,
+                        confidence=0.97,
+                        source="follow_up",
+                    ),
+                    working,
+                )
+
+    # "Compáralo con el N" — keep active investigation, add rival
+    cmp = re.search(
+        r"comp[aá]ral[oa]\s+con\s+(el\s+)?(?P<num>\d{1,2})\b|"
+        r"compar[aá](lo|la|me)?\s+con\s+(el\s+)?(?P<num3>\d{1,2})\b|"
+        r"compara(lo|la|me)?\s+con\s+(el\s+)?(?P<num4>\d{1,2})\b|"
+        r"y\s+el\s+(?P<num2>\d{1,2})\s*\??\s*$",
+        text,
+        re.I,
+    )
+    if not cmp:
+        tcmp = unicodedata.normalize("NFKD", text.lower())
+        tcmp = "".join(c for c in tcmp if not unicodedata.combining(c))
+        cmp = re.search(
+            r"compara(lo|la|me)?\s+con\s+(el\s+)?(?P<num>\d{1,2})\b",
+            tcmp,
+            re.I,
+        )
+    if cmp and (state.active_numbers or state.current_primary_candidate is not None):
+        rival = (
+            cmp.groupdict().get("num")
+            or cmp.groupdict().get("num2")
+            or cmp.groupdict().get("num3")
+            or cmp.groupdict().get("num4")
+        )
+        if rival:
+            subject = (
+                state.active_numbers[0]
+                if state.active_numbers
+                else str(state.current_primary_candidate).zfill(2)
+            )
+            working.current_alternatives = list(
+                dict.fromkeys(
+                    [
+                        int(rival),
+                        *[
+                            int(x)
+                            for x in (state.current_alternatives or [])
+                            if str(x).isdigit()
+                        ],
+                    ]
+                )
+            )[:8]
+            # Preserve compound pair / relation
+            if state.active_relation == "same_day" and len(state.active_numbers or []) >= 2:
+                working.active_numbers = list(state.active_numbers)
+                working.active_pair = list(state.active_pair or state.active_numbers[:2])
+                working.active_relation = "same_day"
+            return (
+                UnderstandingResult(
+                    intent="compare_numbers",
+                    lotteries=list(state.active_lotteries),
+                    numbers=[subject, str(rival).zfill(2)],
+                    scope="multiple",
+                    tool=LotteryToolName.COMPARE_LOTTERIES.value,
+                    params={
+                        "number": subject,
+                        "compare_with": str(rival).zfill(2),
+                        "lotteries": list(state.active_lotteries)
+                        if state.active_lotteries
+                        else __import__(
+                            "app.lottery.ai.research_policy", fromlist=["default_lotteries"]
+                        ).default_lotteries(),
+                        "mode": "number_compare",
+                        "all_historical": True,
+                        "preserve_relation": state.active_relation,
+                        "active_numbers": list(state.active_numbers or [subject]),
+                    },
+                    confidence=0.94,
+                    source="follow_up",
+                ),
+                working,
+            )
+
+    # legacy same-day first/any/last (kept as safety net)
     if (
         state.active_relation == "same_day" or (state.active_pair and len(state.active_pair) >= 2)
     ) and (
@@ -413,6 +579,7 @@ def _detect_follow_up(text: str, state: ConversationState) -> tuple[Understandin
                         "report_mode": is_report_mode_question(text),
                         "intent": "same_day_coincidence",
                         "all_historical": True,
+                        "lotteries": list(state.active_lotteries or []) or None,
                     },
                     confidence=0.96,
                     source="follow_up",

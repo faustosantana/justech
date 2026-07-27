@@ -805,6 +805,39 @@ class LotteryChatService:
                             state.preferred_position = int(
                                 exec_params.get("preferred_position") or 1
                             )
+                    # Fase Final — remember coincidence anchors for continuity
+                    if (
+                        exec_params.get("relation") == "same_day"
+                        or exec_params.get("active_relation") == "same_day"
+                    ) and isinstance(result.data, dict):
+                        items = list(result.data.get("items") or [])
+                        last_item = items[0] if items else None
+                        last_date = None
+                        if isinstance(last_item, dict):
+                            last_date = str(last_item.get("date") or "")[:10] or None
+                        if last_date:
+                            state.active_date = last_date
+                        if exec_params.get("lottery") or exec_params.get("lotteries"):
+                            lots = list(exec_params.get("lotteries") or [])
+                            if exec_params.get("lottery"):
+                                lots = [str(exec_params["lottery"]), *[x for x in lots if x != exec_params["lottery"]]]
+                            state.active_lotteries = lots[:8]
+                        state.last_analysis = {
+                            **dict(state.last_analysis or {}),
+                            "type": "same_day_coincidence",
+                            "numbers": list(state.active_numbers or []),
+                            "last_coincidence_date": last_date,
+                            "total": result.data.get("total"),
+                            "relation": "same_day",
+                            "position_scope": state.position_scope,
+                            "lottery": (state.active_lotteries[0] if state.active_lotteries else None),
+                        }
+                        state.conversation_summary = (
+                            f"Investigación activa: coincidencias same_day de "
+                            f"{' + '.join(state.active_numbers[:2])}"
+                            + (f" · última {last_date}" if last_date else "")
+                            + "."
+                        )[:500]
                     if exec_params.get("date") or exec_params.get("base_date"):
                         d = exec_params.get("date") or exec_params.get("base_date")
                         state.date_context = d
@@ -1042,6 +1075,7 @@ class LotteryChatService:
                 conversation_context={
                     "has_prior_research": prior_research,
                     "active_numbers": list(state.active_numbers or []),
+                    "active_relation": state.active_relation,
                     "focus_stack": list(getattr(state, "focus_stack", None) or []),
                 },
             )
@@ -2212,6 +2246,14 @@ class LotteryChatService:
             )
             if data.get("total_all_positions") is not None:
                 summary["total_all_positions"] = data.get("total_all_positions")
+            # Persist coincidence anchor for "qué pasó después" continuity (caller may read via params side-channel)
+            if summary.get("last") and isinstance(summary["last"], dict):
+                params["_last_coincidence_date"] = str(
+                    summary["last"].get("date") or summary["last"].get("draw_date") or ""
+                )[:10]
+                params["_coincidence_total"] = int(summary.get("total") or 0)
+                params["_coincidence_first_related"] = int(summary.get("first_related") or 0)
+                params["_coincidence_other_only"] = int(summary.get("other_only") or 0)
             return format_coincidence_narrative(
                 summary,
                 report_mode=bool(params.get("report_mode")),

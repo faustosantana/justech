@@ -267,6 +267,8 @@ def follow_up_any_position(text: str) -> bool:
         re.search(
             r"^(y\s+)?en\s+cualquier\s+posicion|"
             r"^(y\s+)?ahora\s+en\s+cualquier(\s+posicion)?|"
+            r"^(ahora\s+)?vuelve\s+a\s+todas(\s+las\s+posiciones)?|"
+            r"^(ahora\s+)?(en\s+)?todas\s+las\s+posiciones|"
             r"sin\s+importar\s+(la\s+)?posicion|"
             r"cualquier\s+posicion\??$",
             t,

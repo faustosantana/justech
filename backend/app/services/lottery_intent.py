@@ -261,6 +261,69 @@ def resolve_intent(message: str, ctx: LotterySessionContext) -> ResolvedIntent:
             },
         )
 
+    # Fase Final 2.4.0 — same-day continuity before form-biased branches
+    from app.lottery.ai.same_day_coincidence import (
+        build_same_day_follow_up_params,
+        is_after_coincidences_follow_up,
+        is_first_position_follow_up,
+        is_last_coincidence_follow_up,
+        is_lottery_only_follow_up,
+        is_return_to_pair,
+    )
+    from app.lottery.ai.compound_occurrence import follow_up_any_position, follow_up_first_position
+
+    if len(ctx.last_numbers or []) >= 2 and (
+        is_lottery_only_follow_up(raw)
+        or follow_up_any_position(raw)
+        or follow_up_first_position(raw)
+        or is_first_position_follow_up(raw)
+        or is_last_coincidence_follow_up(raw)
+        or is_after_coincidences_follow_up(raw)
+        or is_return_to_pair(raw)
+    ):
+        params = build_same_day_follow_up_params(
+            raw,
+            active_numbers=list(ctx.last_numbers),
+            active_lotteries=list(
+                filter(
+                    None,
+                    [ctx.last_lottery, *(ctx.compared_lotteries or [])],
+                )
+            ),
+            position_scope=getattr(ctx, "default_number_position_scope", None) or "any_position",
+            preferred_position=int(getattr(ctx, "default_primary_position", None) or 1),
+            last_coincidence_date=(
+                str((ctx.last_analysis or {}).get("last_coincidence_date") or ctx.base_date or "")[:10]
+                or None
+            ),
+        )
+        if params:
+            if params.get("after_coincidences"):
+                return ResolvedIntent(
+                    kind="tool",
+                    tool=LotteryToolName.GET_FOLLOWING_DAYS,
+                    params={
+                        **params,
+                        "count": 7,
+                        "lottery": params.get("lottery")
+                        or ctx.last_lottery
+                        or (params.get("lotteries") or [None])[0],
+                        "date": params.get("date")
+                        or str((ctx.last_analysis or {}).get("last_coincidence_date") or ctx.base_date or "")[
+                            :10
+                        ]
+                        or None,
+                        "nlp_policy": "2.4.0",
+                    },
+                    structured_type="lottery_result",
+                )
+            return ResolvedIntent(
+                kind="tool",
+                tool=LotteryToolName.GET_NUMBER_OCCURRENCES,
+                params={**params, "nlp_policy": "2.4.0"},
+                structured_type="lottery_same_day_coincidence",
+            )
+
     # Fase X.1 — material-only clarifies / investigate defaults (before form-biased branches)
     _last_ask = bool(
         re.search(

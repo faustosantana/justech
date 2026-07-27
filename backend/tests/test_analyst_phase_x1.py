@@ -105,7 +105,7 @@ def test_last_with_context_investigates():
 
 def test_policy_manifest():
     m = policy_manifest()
-    assert m["version"] == "2.3.2"
+    assert m["version"] in {"2.3.2", "2.4.0"}
     assert m["rules_changed_count"] >= 10
     assert "lottery" in m["non_material_slots"]
     assert "date" in m["non_material_slots"]

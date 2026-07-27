@@ -81,28 +81,98 @@ def format_analyst_response(
     cleaned = _sanitize_user_text(text)
 
     if mode == "delta":
-        return format_delta_response(
+        out = format_delta_response(
             cleaned,
             facts=facts,
             research=research,
             evidence_package=pkg,
             question=question,
         )
-    if mode == "short":
-        return format_short_response(
+    elif mode == "short":
+        out = format_short_response(
             cleaned,
             facts=facts,
             research=research,
             evidence_package=pkg,
         )
-    return format_professional_response(
-        cleaned,
+    else:
+        out = format_professional_response(
+            cleaned,
+            facts=facts,
+            research=research,
+            evidence_package=pkg,
+            question=question,
+            mode=mode,
+        )
+    return self_verify_response(
+        out,
+        question=question,
         facts=facts,
         research=research,
-        evidence_package=pkg,
-        question=question,
-        mode=mode,
+        conversation_context=ctx,
     )
+
+
+def self_verify_response(
+    text: str,
+    *,
+    question: str | None = None,
+    facts: dict[str, Any] | None = None,
+    research: dict[str, Any] | None = None,
+    conversation_context: dict[str, Any] | None = None,
+) -> str:
+    """Internal checklist before sending — never exposes reasoning to the user."""
+    facts = facts or {}
+    research = research or {}
+    ctx = conversation_context or {}
+    body = _sanitize_user_text(text or "")
+    q = (question or "").lower()
+
+    # Strip remaining jargon / vague filler
+    vague = re.compile(
+        r"(?i)^\s*(-?\s*)?(se encontr[oó] evidencia|el an[aá]lisis indica|"
+        r"seg[uú]n las herramientas|podr[ií]a existir una tendencia)\s*\.?\s*$",
+    )
+    lines = [ln for ln in body.splitlines() if not vague.match(ln)]
+    body = "\n".join(lines).strip() or body
+
+    # If question asks same-day / both numbers, ensure both appear when we have them
+    nums = list(ctx.get("active_numbers") or research.get("numbers") or [])
+    if len(nums) >= 2 and re.search(r"mismo\s+d[ií]a|coincid|juntos", q):
+        missing = [n for n in nums[:2] if str(n) not in body]
+        if missing and "no encontr" not in body.lower():
+            body = f"{body}\n\nNúmeros considerados: {' y '.join(str(n) for n in nums[:2])}."
+
+    # Never claim absolute zero if research says there were other-position hits
+    if re.search(r"no (encontr|hay|existe).{0,40}coinciden", body, re.I):
+        other = (research.get("evidence_package") or {}).get("other_only") or facts.get(
+            "other_only"
+        )
+        total = (research.get("evidence_package") or {}).get("case_count") or facts.get("total")
+        if other and int(other) > 0:
+            body = (
+                f"No hubo coincidencia en primera posición, pero sí en {other} fecha(s) "
+                "al considerar otras posiciones.\n\n" + body
+            )
+        elif total and int(total) > 0 and "otras posiciones" not in body.lower():
+            body = re.sub(
+                r"(?i)no (encontr[eé]|hay|existe).{0,60}coinciden[^\n.]*\.?",
+                f"Hay {total} coincidencia(s) en el alcance consultado.",
+                body,
+                count=1,
+            )
+
+    # Drop duplicated consecutive paragraphs
+    paras = [p.strip() for p in re.split(r"\n{2,}", body) if p.strip()]
+    dedup: list[str] = []
+    seen: set[str] = set()
+    for p in paras:
+        key = re.sub(r"\s+", " ", p.lower())
+        if key in seen:
+            continue
+        seen.add(key)
+        dedup.append(p)
+    return "\n\n".join(dedup).strip()
 
 
 def format_research_response(

@@ -14,7 +14,7 @@ from typing import Any
 
 from app.lottery.ai.nlp_stability import DEFAULT_ALL_HISTORY_LOTTERIES
 
-RESEARCH_POLICY_VERSION = "2.3.2"
+RESEARCH_POLICY_VERSION = "2.4.0"
 
 # Slots that MUST NOT block research by default (form bias eliminated).
 NON_MATERIAL_SLOTS = frozenset(
@@ -59,6 +59,10 @@ GENERAL_CHAT_REPLY_V232 = (
     "De acuerdo. Cuando quieras, dime qué número, comparación o caso "
     "quieres que investigue en el histórico."
 )
+
+# Fase Final aliases
+GREETING_REPLY = GREETING_REPLY_V232
+GENERAL_CHAT_REPLY = GENERAL_CHAT_REPLY_V232
 
 
 def default_lotteries() -> list[str]:

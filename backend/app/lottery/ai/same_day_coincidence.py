@@ -16,7 +16,7 @@ from app.lottery.ai.compound_occurrence import (
     resolve_effective_position,
 )
 
-SAME_DAY_POLICY_VERSION = "2.3.3"
+SAME_DAY_POLICY_VERSION = "2.4.0"
 
 PositionFilter = int | None  # None => all positions
 
@@ -106,6 +106,147 @@ def is_last_coincidence_follow_up(text: str) -> bool:
 def is_first_position_follow_up(text: str) -> bool:
     t = _norm(text).strip(" ¿?¡!.")
     return bool(_FIRST_POS_FOLLOW.match(t) or re.search(r"^(y\s+)?en\s+primera\s+posicion", t))
+
+
+_LOTTERY_FOLLOW = re.compile(
+    r"^\s*(y\s+)?(ahora\s+)?(solo\s+)?(en\s+)?"
+    r"(nacional(\s+(noche|dia|día))?|leidsa|loteka|real|gana\s*m[aá]s|"
+    r"cash4life|new\s+york(\s+(noche|dia|día))?|lotedom|anguila)\b",
+    re.I,
+)
+
+_AFTER_COINC = re.compile(
+    r"qu[eé]\s+pas[oó]\s+despu[eé]s|despu[eé]s\s+de\s+(esas|las)\s+coinciden|"
+    r"qu[eé]\s+sali[oó]\s+despu[eé]s|eventos?\s+posteriores|"
+    r"despu[eé]s\s+de\s+(esa|la)\s+coinciden",
+    re.I,
+)
+
+_RETURN_PAIR = re.compile(
+    r"vuelve\s+al?\s+(\d{1,2})\s+y\s+(al?\s+)?(\d{1,2})|"
+    r"regresa\s+al?\s+(\d{1,2})\s+y|"
+    r"ahora\s+(el\s+)?(\d{1,2})\s+y\s+(el\s+)?(\d{1,2})",
+    re.I,
+)
+
+
+def is_lottery_only_follow_up(text: str) -> bool:
+    t = (text or "").strip()
+    t_clean = re.sub(r"^[¿¡\?\s]+", "", t)
+    t_clean = re.sub(r"[¿¡]", "", t_clean)
+    matched = bool(_LOTTERY_FOLLOW.search(t_clean) or _LOTTERY_FOLLOW.search(t))
+    if not matched:
+        # "y en Nacional" / "en Leidsa" short follow-ups
+        if not re.search(
+            r"^\s*(y\s+)?(ahora\s+)?(solo\s+)?en\s+\w+",
+            t_clean,
+            re.I,
+        ):
+            return False
+        if not extract_follow_up_lottery(t):
+            return False
+    # Must not introduce a new number focus
+    nums = extract_all_numbers(t)
+    return len(nums) == 0
+
+
+def extract_follow_up_lottery(text: str) -> str | None:
+    from app.services.lottery_intent import _extract_lotteries
+
+    lots = _extract_lotteries(text or "")
+    return lots[0] if lots else None
+
+
+def is_after_coincidences_follow_up(text: str) -> bool:
+    return bool(_AFTER_COINC.search(text or ""))
+
+
+def is_return_to_pair(text: str) -> list[str] | None:
+    m = _RETURN_PAIR.search(text or "")
+    if not m:
+        return None
+    groups = [g for g in m.groups() if g and str(g).isdigit()]
+    if len(groups) >= 2:
+        return [str(groups[0]).zfill(2), str(groups[1]).zfill(2)]
+    return None
+
+
+def build_same_day_follow_up_params(
+    text: str,
+    *,
+    active_numbers: list[str],
+    active_lotteries: list[str] | None = None,
+    position_scope: str | None = None,
+    preferred_position: int = 1,
+    last_coincidence_date: str | None = None,
+) -> dict[str, Any] | None:
+    """Continuity params for an active same_day investigation (Fase Final 2.4.0)."""
+    nums = list(active_numbers or [])[:8]
+    if len(nums) < 2:
+        return None
+
+    from app.lottery.ai.compound_occurrence import (
+        follow_up_any_position,
+        follow_up_first_position,
+    )
+
+    lots = list(active_lotteries or [])
+    pos = None if (position_scope or "any_position") == "any_position" else 1
+    scope = position_scope or "any_position"
+    want_last = False
+    after = False
+    report = is_report_mode_question(text)
+
+    if follow_up_first_position(text) or is_first_position_follow_up(text):
+        pos = 1
+        scope = "first_position"
+    elif follow_up_any_position(text):
+        pos = None
+        scope = "any_position"
+    elif is_lottery_only_follow_up(text):
+        lot = extract_follow_up_lottery(text)
+        if lot:
+            lots = [lot]
+    elif is_last_coincidence_follow_up(text):
+        want_last = True
+    elif is_after_coincidences_follow_up(text):
+        after = True
+    else:
+        returned = is_return_to_pair(text)
+        if returned:
+            nums = returned
+        elif not (
+            is_same_day_coincidence_question(text)
+            or follow_up_any_position(text)
+            or follow_up_first_position(text)
+        ):
+            # Not a same-day continuity utterance
+            if not is_lottery_only_follow_up(text):
+                return None
+
+    params: dict[str, Any] = {
+        "numbers": nums,
+        "relation": "same_day",
+        "active_relation": "same_day",
+        "position": pos,
+        "position_scope": scope,
+        "preferred_position": preferred_position,
+        "want_last_only": want_last,
+        "report_mode": report,
+        "intent": "same_day_coincidence",
+        "all_historical": True,
+        "policy": SAME_DAY_POLICY_VERSION,
+    }
+    if lots:
+        params["lotteries"] = lots[:8]
+        params["lottery"] = lots[0]
+    if after:
+        params["follow_up_kind"] = "after_coincidences"
+        params["after_coincidences"] = True
+        if last_coincidence_date:
+            params["base_date"] = str(last_coincidence_date)[:10]
+            params["date"] = str(last_coincidence_date)[:10]
+    return params
 
 
 def parse_same_day_coincidence(
@@ -356,16 +497,24 @@ def _brief_observation(summary: dict[str, Any]) -> str:
     first_related = int(summary.get("first_related") or 0)
     if total == 0:
         return ""
+    if total <= 4:
+        return (
+            f"Observación: con solo {total} caso(s) la muestra es pequeña; "
+            "describe lo ocurrido en el histórico, no una regla general."
+        )
     if first_related == total:
-        return "Observación: en todos los casos hubo presencia en primera posición."
+        return (
+            "Interpretación: en todos los casos hubo presencia en primera posición; "
+            "eso destaca la preferencia del usuario, sin ocultar el total."
+        )
     if first_related == 0:
         return (
-            "Observación: la coincidencia existe, pero no en primera posición; "
-            "la preferencia de primera no excluye el resto del histórico."
+            "Interpretación: la coincidencia existe fuera de primera posición; "
+            "concluir que 'no hubo coincidencia' sería incorrecto."
         )
     return (
-        "Observación: conviene mirar el total general y, por separado, "
-        "el recorte de primera posición."
+        "Interpretación: conviene mirar el total general y, por separado, "
+        "el recorte de primera posición para no confundir preferencia con alcance."
     )
 
 

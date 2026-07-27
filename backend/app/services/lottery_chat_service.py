@@ -983,10 +983,30 @@ class LotteryChatService:
                 or (state.active_numbers[0] if state.active_numbers else None),
                 "confirmer": (state.last_analysis or {}).get("confirmer"),
                 "historical": (state.last_analysis or {}).get("historical_summary"),
-                "lottery": (state.active_lotteries[0] if state.active_lotteries else None),
+                "lottery": (state.last_analysis or {}).get("lottery")
+                or (state.active_lotteries[0] if state.active_lotteries else None),
                 "year": (state.active_filters or {}).get("year"),
                 "compare_with": (state.active_filters or {}).get("compare_with"),
+                "last_occurrence_date": (state.last_analysis or {}).get("date"),
+                "total": (state.last_analysis or {}).get("total"),
             }
+            # Prefer THIS turn's tool summaries over any leftover analysis memory
+            if isinstance(research_meta, dict):
+                for ev in (research_meta.get("evidence") or [])[::-1]:
+                    sm = ev.get("summary") if isinstance(ev, dict) else None
+                    if not isinstance(sm, dict):
+                        continue
+                    if sm.get("number") is not None:
+                        facts_for_fmt["observed"] = sm.get("number")
+                    if sm.get("lottery") and (
+                        sm.get("last_occurrence_date") or sm.get("semantics") == "last_occurrence"
+                    ):
+                        facts_for_fmt["lottery"] = sm.get("lottery")
+                    if sm.get("last_occurrence_date"):
+                        facts_for_fmt["last_occurrence_date"] = sm.get("last_occurrence_date")
+                    if sm.get("total") is not None or sm.get("count") is not None:
+                        facts_for_fmt["total"] = sm.get("total") if sm.get("total") is not None else sm.get("count")
+                    break
             prior_research = bool(state.current_research)
             # Fase D — observational discovery over research evidence (does not touch RE/Planner/Brain)
             if isinstance(research_meta, dict) and research_meta.get("evidence_package"):

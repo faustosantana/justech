@@ -161,16 +161,31 @@ class ResearchPlanner:
     ) -> list[PlanStep]:
         nums = list(understanding.numbers or state.active_numbers or resolution.get("numbers") or [])
         nums = [str(n) for n in nums if n is not None]
+        # Prefer numbers explicitly resolved from this message
+        if resolution.get("numbers"):
+            nums = [str(n) for n in resolution["numbers"] if n is not None]
         observed = nums[0] if nums else None
         confirmer = nums[1] if len(nums) > 1 else None
-        if not confirmer and state.active_pair and len(state.active_pair) >= 2:
+        # Do not attach a stale pair confirmer for last-occurrence / single-number asks
+        follow = resolution.get("follow_up_kind")
+        if (
+            not confirmer
+            and resolution.get("use_active_pair")
+            and state.active_pair
+            and len(state.active_pair) >= 2
+            and follow not in {"last_occurrence", "first_occurrence"}
+        ):
             confirmer = str(state.active_pair[1])
             if not observed:
                 observed = str(state.active_pair[0])
         lottery = (
             (understanding.lotteries[0] if understanding.lotteries else None)
-            or (state.active_lotteries[0] if state.active_lotteries else None)
-            or resolution.get("lottery_filter")
+            or (resolution.get("lottery_filter"))
+            or (
+                state.active_lotteries[0]
+                if state.active_lotteries and follow not in {"last_occurrence", "first_occurrence"}
+                else None
+            )
         )
         year = resolution.get("year_filter") or (state.active_filters or {}).get("year")
         primary = state.current_primary_candidate
@@ -178,7 +193,6 @@ class ResearchPlanner:
         steps: list[PlanStep] = []
 
         # 1) Occurrences / last time for active number
-        follow = resolution.get("follow_up_kind")
         if observed and (
             follow
             in {
@@ -199,7 +213,20 @@ class ResearchPlanner:
                 LotteryToolName.COMPARE_NUMBER_PERIODS.value,
             }
         ):
-            if follow == "lotteries" or understanding.scope == "all":
+            if follow == "last_occurrence" and not lottery:
+                from app.lottery.ai.nlp_stability import DEFAULT_ALL_HISTORY_LOTTERIES
+
+                steps.append(
+                    PlanStep(
+                        tool=LotteryToolName.COMPARE_NUMBER_ACROSS_LOTTERIES.value,
+                        params={
+                            "number": observed,
+                            "lotteries": list(DEFAULT_ALL_HISTORY_LOTTERIES)[:8],
+                        },
+                        purpose="last_occurrence_all_lotteries",
+                    )
+                )
+            elif follow == "lotteries" or understanding.scope == "all":
                 steps.append(
                     PlanStep(
                         tool=LotteryToolName.COMPARE_NUMBER_ACROSS_LOTTERIES.value,

@@ -175,6 +175,8 @@ _STANDALONE_COMPLETE = re.compile(
     r"cuantas?\s+veces.*\b\d{1,2}\b|"
     r"analiz(a|ar).*?\b\d{1,2}\b|"
     r"cuando\s+sali[oó]\s+(el\s+)?\d{1,2}|"
+    r"cuando\s+sali[oó]\s+por\s+ultima\s+vez\s+(el\s+)?\d{1,2}|"
+    r"ultima\s+vez\s+(que\s+sali[oó]\s+)?(el\s+)?\d{1,2}|"
     r"investiga(r)?.*?\b\d{1,2}\b|"
     r"estudia(r)?.*?\b\d{1,2}\b|"
     r"compara(me|r)?.*\b\d{1,2}\b.*\b\d{1,2}\b"

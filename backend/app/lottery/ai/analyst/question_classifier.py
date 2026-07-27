@@ -162,11 +162,9 @@ class QuestionClassifier:
         resolution = resolution or {}
         raw = message or ""
         nums = cls._extract_numbers(raw, state, resolution)
-        lots = list(
-            resolution.get("lotteries")
-            or state.active_lotteries
-            or []
-        )
+        # Lotteries named in this turn only — do not sticky-fill for last_times below
+        named_lots = list(resolution.get("lotteries") or [])
+        lots = named_lots or list(state.active_lotteries or [])
         years = [int(y) for y in cls._YEAR.findall(raw)]
         windows = sorted({int(x) for x in cls._D_WIN.findall(raw)}) or [1, 3, 7]
         params: dict[str, Any] = {
@@ -181,6 +179,9 @@ class QuestionClassifier:
             "compare_with": resolution.get("compare_with"),
             "follow_up_kind": resolution.get("follow_up_kind"),
             "active_pair": list(getattr(state, "active_pair", None) or [])[:2],
+            "use_active_pair": bool(resolution.get("use_active_pair")),
+            "lottery_explicit": bool(named_lots or resolution.get("lottery_filter")),
+            "lottery_filter": resolution.get("lottery_filter"),
             "primary": state.current_primary_candidate,
         }
 
@@ -232,7 +233,27 @@ class QuestionClassifier:
         if cls._TEMPORAL_AFTER.search(raw) and re.search(r"d\s*\+", raw, re.I):
             return ResearchQuestion("temporal_windows", params, raw_message=raw)
         if cls._LAST_TIMES.search(raw) or resolution.get("follow_up_kind") == "last_occurrence":
-            return ResearchQuestion("last_times", params, raw_message=raw)
+            # Pair / "qué pasó las últimas veces que salieron A y B" → posterior behavior,
+            # not a single-number last-occurrence lookup.
+            if len(nums) >= 2 and re.search(
+                r"(qu[eé]\s+pas|salieron|pareja|comportamiento|casos?)",
+                raw,
+                re.I,
+            ):
+                return ResearchQuestion(
+                    "what_usually_happens_after", params, raw_message=raw
+                )
+            # Last-occurrence must not inherit sticky pair / sticky lottery as subject
+            last_params = dict(params)
+            last_params["lotteries"] = named_lots[:4]
+            last_params["lottery_explicit"] = bool(
+                named_lots or resolution.get("lottery_filter")
+            )
+            if nums:
+                last_params["numbers"] = nums[:1] if len(nums) == 1 else nums
+                last_params["active_pair"] = []
+                last_params["use_active_pair"] = False
+            return ResearchQuestion("last_times", last_params, raw_message=raw)
         if cls._RELATED.search(raw):
             return ResearchQuestion("related_numbers", params, raw_message=raw)
         if cls._BEST_GROUP.search(raw):

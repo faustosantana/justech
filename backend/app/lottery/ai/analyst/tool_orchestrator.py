@@ -251,7 +251,29 @@ class ToolOrchestrator:
                         str(params.get("observed_number") or "").zfill(2),
                         str(params["confirmer"]).zfill(2),
                     ]
-
+            elif summary.get("number") and (
+                summary.get("last_occurrence_date")
+                or summary.get("semantics")
+                in {"last_occurrence", "compare_across_lotteries"}
+            ):
+                # Bind conversation subject to THIS turn's tool result (not stale pair)
+                num = str(summary["number"]).zfill(2) if str(summary["number"]).isdigit() else str(
+                    summary["number"]
+                )
+                working_state.active_numbers = [num]
+                working_state.active_pair = []
+                working_state.active_relation = None
+                if summary.get("lottery"):
+                    working_state.active_lotteries = [str(summary["lottery"])]
+                if summary.get("last_occurrence_date"):
+                    working_state.active_date = str(summary["last_occurrence_date"])[:10]
+                working_state.last_analysis = {
+                    "observed": num,
+                    "lottery": summary.get("lottery"),
+                    "date": summary.get("last_occurrence_date"),
+                    "position": summary.get("position"),
+                    "total": summary.get("total") or summary.get("count"),
+                }
         evidence_pkg = EvidenceEngine.assemble(
             kind=plan.question_kind or plan.rationale or "research",
             tool_trace=tool_trace,

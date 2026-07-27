@@ -225,6 +225,7 @@ def select_response_mode(
         return "short"
 
     case_count = _as_int(evidence_package.get("case_count")) or 0
+    # Missing/unknown counts do not force report mode
     steps = research.get("steps_completed") or research.get("plan") or []
     step_count = len(steps) if isinstance(steps, list) else 0
     comparisons = evidence_package.get("comparisons") or []
@@ -287,7 +288,11 @@ def format_short_response(
             extras.append(f"{label}: {val}.")
     case_count = pkg.get("case_count")
     if case_count is not None and str(case_count) not in lead:
-        extras.append(f"Registros consultados: {case_count}.")
+        try:
+            if int(case_count) > 0 or not pkg.get("timeline"):
+                extras.append(f"Registros consultados: {case_count}.")
+        except (TypeError, ValueError):
+            pass
     lim = _limitations(pkg, only_material=True)
     parts = [lead]
     if extras:
@@ -433,8 +438,15 @@ def _hechos_block(
     if facts.get("year") or (isinstance(pkg.get("period"), str) and pkg.get("period")):
         lines.append(f"- Período: {facts.get('year') or pkg.get('period')}")
     case_count = pkg.get("case_count")
+    has_date = bool(pkg.get("timeline") or facts.get("last_occurrence_date"))
     if case_count is not None:
-        lines.append(f"- Cantidad de casos/registros: {case_count}")
+        try:
+            n = int(case_count)
+        except (TypeError, ValueError):
+            n = None
+        # Invariant: never show registros=0 when a last-occurrence date exists
+        if n is not None and not (n == 0 and has_date):
+            lines.append(f"- Cantidad de casos/registros: {n}")
     for f in (pkg.get("findings") or [])[: (3 if compact else 8)]:
         lines.append(f"- {f}")
     hist = facts.get("historical") or facts.get("historical_summary")

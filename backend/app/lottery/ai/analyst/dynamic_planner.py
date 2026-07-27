@@ -36,17 +36,37 @@ class DynamicResearchPlanner:
         max_steps: int = 24,
     ) -> tuple[list[PlanStep], dict[str, Any]]:
         p = dict(question.params or {})
-        nums = [str(n) for n in (p.get("numbers") or state.active_numbers or [])]
+        # Message / resolution numbers take absolute priority over sticky pair memory.
+        message_nums = [
+            str(n) for n in (p.get("numbers") or []) if n is not None and str(n).strip() != ""
+        ]
         pair = list(p.get("active_pair") or getattr(state, "active_pair", None) or [])
-        if len(nums) < 2 and len(pair) >= 2:
+        use_pair = bool(p.get("use_active_pair"))
+        if message_nums:
+            nums = message_nums
+        elif use_pair and len(pair) >= 2:
             nums = [str(pair[0]), str(pair[1])]
-        lottery = (p.get("lotteries") or state.active_lotteries or [None])[0]
-        lotteries = list(p.get("lotteries") or state.active_lotteries or [])
+        else:
+            nums = [str(n) for n in (state.active_numbers or []) if n is not None]
+            # Only expand empty/single inherited memory to pair when explicitly requested
+            if use_pair and len(nums) < 2 and len(pair) >= 2:
+                nums = [str(pair[0]), str(pair[1])]
+
+        lottery_explicit = bool(p.get("lottery_explicit") or p.get("lottery_filter"))
+        lotteries = list(p.get("lotteries") or [])
+        if not lotteries and not lottery_explicit and question.kind != "last_times":
+            lotteries = list(state.active_lotteries or [])
+        lottery = (lotteries[0] if lotteries else None) or (
+            state.active_lotteries[0] if state.active_lotteries and question.kind != "last_times" else None
+        )
         year = p.get("year_filter")
         windows = list(p.get("windows") or [1, 3, 7])
         primary = p.get("primary") or state.current_primary_candidate
         observed = nums[0] if nums else None
-        confirmer = nums[1] if len(nums) > 1 else (pair[1] if len(pair) >= 2 else None)
+        confirmer = nums[1] if len(nums) > 1 else None
+        # Never invent a confirmer from a stale pair when the user named a single number
+        if confirmer is None and use_pair and not message_nums and len(pair) >= 2:
+            confirmer = str(pair[1])
         base_date = state.active_date or (
             str(state.date_context)[:10] if state.date_context else None
         )
@@ -55,7 +75,9 @@ class DynamicResearchPlanner:
             "kind": kind,
             "case_criteria": [],
             "subjects": nums[:4],
-            "lotteries": lotteries[:4],
+            "lotteries": lotteries[:8],
+            "lottery_explicit": lottery_explicit,
+            "message_numbers": message_nums[:4],
         }
 
         steps: list[PlanStep] = []
@@ -240,49 +262,42 @@ class DynamicResearchPlanner:
                 )
 
         elif kind == "last_times":
+            # Pure last-occurrence: subject = asked number only.
+            # Do NOT run complete analysis or temporal windows from stale pair/date.
             if observed:
-                if confirmer:
+                from app.lottery.ai.nlp_stability import DEFAULT_ALL_HISTORY_LOTTERIES
+
+                if lottery_explicit and lottery:
                     steps.append(
                         PlanStep(
-                            tool=LotteryToolName.RUN_COMPLETE_ANALYSIS.value,
-                            params={
-                                "observed_number": int(observed)
-                                if str(observed).isdigit()
-                                else observed,
-                                "confirmer": int(confirmer)
-                                if str(confirmer).isdigit()
-                                else confirmer,
-                                "lottery": lottery,
-                                "include_historical": True,
-                            },
-                            purpose="complete_analysis_t1_t2",
+                            tool=LotteryToolName.GET_LAST_OCCURRENCE.value,
+                            params={"number": observed, "lottery": lottery},
+                            purpose="last_occurrence",
                         )
                     )
-                steps.append(
-                    PlanStep(
-                        tool=LotteryToolName.GET_LAST_OCCURRENCE.value,
-                        params={"number": observed, "lottery": lottery},
-                        purpose="last_occurrence",
+                    steps.append(
+                        PlanStep(
+                            tool=LotteryToolName.GET_NUMBER_OCCURRENCES.value,
+                            params={
+                                "number": observed,
+                                "lottery": lottery,
+                                **({"year": year} if year else {}),
+                            },
+                            purpose="recent_occurrences",
+                        )
                     )
-                )
-                steps.append(
-                    PlanStep(
-                        tool=LotteryToolName.GET_NUMBER_OCCURRENCES.value,
-                        params={
-                            "number": observed,
-                            "lottery": lottery,
-                            **({"year": year} if year else {}),
-                        },
-                        purpose="recent_occurrences",
+                else:
+                    all_lots = list(lotteries) or list(DEFAULT_ALL_HISTORY_LOTTERIES)
+                    steps.append(
+                        PlanStep(
+                            tool=LotteryToolName.COMPARE_NUMBER_ACROSS_LOTTERIES.value,
+                            params={"number": observed, "lotteries": all_lots[:8]},
+                            purpose="last_occurrence_all_lotteries",
+                        )
                     )
-                )
-                steps.extend(
-                    temporal_after_steps(
-                        number=observed,
-                        lottery=lottery,
-                        base_date=base_date,
-                        windows=[1, 3, 7],
-                    )
+                meta["subjects"] = [observed]
+                meta["lotteries"] = (
+                    [lottery] if lottery_explicit and lottery else list(lotteries or DEFAULT_ALL_HISTORY_LOTTERIES)[:8]
                 )
 
         elif kind == "frequency_behavior":

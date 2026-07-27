@@ -534,6 +534,9 @@ class LotteryToolExecutor:
                 "lottery": lottery,
                 "number": number,
                 "position": position,
+                "total": int(getattr(res, "total", 0) or 0),
+                "count": int(getattr(res, "total", 0) or (1 if iso else 0)),
+                "found": bool(iso),
             }
 
         if tool == LotteryToolName.GET_INTERVAL_STATISTICS:
@@ -743,12 +746,23 @@ class LotteryToolExecutor:
                         }
                     )
             rows_sorted = sorted(rows, key=lambda r: r.get("last_date") or "", reverse=True)
+            best = next((r for r in rows_sorted if r.get("last_date")), None)
+            total_occ = sum(int(r.get("occurrences") or 0) for r in rows_sorted)
             return {
                 "number": number,
                 "rows": rows_sorted,
                 "metric": "last_occurrence_and_count_across_lotteries",
                 "limitations": ["Máximo 8 loterías por turno", "Análisis histórico, no predicción"],
-            }, len(rows_sorted), {"semantics": "compare_across_lotteries"}
+            }, len(rows_sorted), {
+                "semantics": "compare_across_lotteries",
+                "number": number,
+                "last_occurrence_date": (best or {}).get("last_date"),
+                "lottery": (best or {}).get("lottery"),
+                "position": (best or {}).get("position"),
+                "total": total_occ,
+                "count": total_occ,
+                "found": bool(best and best.get("last_date")),
+            }
 
         if tool == LotteryToolName.GET_POSITION_DISTRIBUTION:
             from app.lottery.analytics import LotteryAnalyticsEngine

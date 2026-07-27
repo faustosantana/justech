@@ -15,7 +15,7 @@ ConfidenceLevel = Literal["Alta", "Media", "Baja"]
 
 @dataclass
 class EvidencePackage:
-    case_count: int = 0
+    case_count: int | None = None
     criterion: str = ""
     period: str | None = None
     tools_used: list[str] = field(default_factory=list)
@@ -62,26 +62,35 @@ class EvidenceEngine:
             for t in tool_trace
             if t.get("status") == "success" and t.get("tool")
         ]
-        case_count = 0
+        case_count: int | None = None
         findings: list[str] = []
         comparisons: list[str] = []
         timeline: list[str] = []
         raw: list[dict[str, Any]] = []
+        has_occurrence_date = False
 
         for item in evidence_bundle:
             summary = item.get("summary") if isinstance(item.get("summary"), dict) else {}
             raw.append({"purpose": item.get("purpose"), "tool": item.get("tool"), "keys": list(summary.keys())[:12]})
             cnt = cls._extract_count(summary)
             if cnt is not None:
-                case_count = max(case_count, cnt)
+                case_count = max(case_count or 0, cnt)
                 findings.append(
                     f"{item.get('purpose') or item.get('tool')}: {cnt} casos/registros consultados."
                 )
             if summary.get("last_occurrence_date"):
+                has_occurrence_date = True
                 timeline.append(
                     f"Última ancla: {summary.get('last_occurrence_date')} "
                     f"({summary.get('lottery') or 'lotería consultada'})."
                 )
+                # Consistency: a real date cannot coexist with an unknown/zero count display
+                if case_count is None:
+                    case_count = max(1, int(summary.get("count") or summary.get("total") or 1))
+                elif case_count == 0 and summary.get("found") is not False:
+                    case_count = max(1, int(summary.get("count") or summary.get("total") or 1))
+            if summary.get("number") is not None:
+                findings.append(f"Número consultado: {summary.get('number')}.")
             if summary.get("primary") is not None:
                 findings.append(
                     f"Motor (solo lectura): candidato principal reportado {summary.get('primary')}."
@@ -91,6 +100,13 @@ class EvidenceEngine:
                 comparisons.append(
                     f"Comparación ejecutada: {purpose.replace('_', ' ')}."
                 )
+
+        # Never report 0 records when a last-occurrence date exists
+        if has_occurrence_date and (case_count is None or case_count == 0):
+            case_count = 1
+        # Unknown count stays None (formatter omits the line) instead of fake 0
+        if case_count == 0 and not has_occurrence_date and not findings:
+            case_count = None
 
         criterion_bits = [c.get("criterion") for c in (case_criteria or []) if c.get("criterion")]
         criterion = "; ".join(criterion_bits) if criterion_bits else cls._default_criterion(kind)
@@ -106,7 +122,7 @@ class EvidenceEngine:
         consistency = sum(1 for t in tool_trace if t.get("status") == "success")
         failures = sum(1 for t in tool_trace if t.get("status") not in {"success", None})
         confidence = cls.score_confidence(
-            case_count=case_count,
+            case_count=case_count or 0,
             successful_tools=consistency,
             failed_tools=failures,
             findings=len(findings),

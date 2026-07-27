@@ -37,6 +37,20 @@ class ConversationBrain:
             st.active_numbers = normed
             for n in normed:
                 st = self._push_focus(st, n)
+            # Explicit subject(s) in this turn replace stale pair memory unless pair is requested
+            if not resolution.get("use_active_pair"):
+                if len(normed) >= 2:
+                    st.active_pair = list(normed[:2])
+                else:
+                    st.active_pair = []
+                    if resolution.get("follow_up_kind") in {
+                        "last_occurrence",
+                        "first_occurrence",
+                        "frequency",
+                    } or resolution.get("inherit_active_number") is False:
+                        st.active_relation = None
+                        st.last_analysis = {}
+                        st.current_primary_candidate = None
 
         lots = list(resolution.get("lotteries") or understanding.lotteries or [])
         if resolution.get("lottery_filter"):

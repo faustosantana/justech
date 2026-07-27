@@ -401,11 +401,17 @@ def assemble_intelligent_analysis_report(
         alt_same = False
         alt_cases = force_cases
         if rival_card and int(rival_card.get("candidate_number") or 0) == an:
-            alt_t1 = bool(rival_card.get("table1_support"))
-            alt_t2 = bool(rival_card.get("table2_support"))
+            # Prefer structural flags from classification when rival card is sparse
+            alt_t1 = bool(rival_card.get("table1_support")) or alt_t1
+            alt_t2 = bool(rival_card.get("table2_support")) or alt_t2
             alt_same = bool(rival_card.get("same_day_cross_support"))
-            alt_cases = rival_card.get("exact_historical_cases") or rival_card.get(
-                "structural_historical_cases"
+            alt_cases = (
+                force_cases
+                if force_cases is not None
+                else (
+                    rival_card.get("exact_historical_cases")
+                    or rival_card.get("structural_historical_cases")
+                )
             )
         alt_level = _evidence_level(
             has_t1=alt_t1,

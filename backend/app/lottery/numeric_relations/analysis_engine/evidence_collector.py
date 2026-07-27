@@ -76,6 +76,14 @@ def collect_all_evidence(
             if origin not in ev.direct_confirmers:
                 ev.direct_confirmers.append(origin)
             ev.direct_path_count += 1
+        elif e.relation_type == EdgeType.SAME_DAY_CROSS_LOTTERY_CONFIRMATION.value and e.depth == 0:
+            if origin not in ev.table2_sources:
+                ev.table2_sources.append(origin)
+            if origin not in ev.direct_confirmers:
+                ev.direct_confirmers.append(origin)
+            ev.same_day_cross_count += 1
+            ev.same_day_cross_support = True
+            ev.direct_path_count += 1
         elif e.relation_type == EdgeType.T2_NEIGHBOR.value and e.depth == 0:
             if origin not in ev.table2_sources:
                 ev.table2_sources.append(origin)
@@ -110,6 +118,7 @@ def collect_all_evidence(
             if depth_s == "0" and rel in {
                 EdgeType.T1_MOTHER_RELATION.value,
                 EdgeType.T2_CONFIRMATION.value,
+                EdgeType.SAME_DAY_CROSS_LOTTERY_CONFIRMATION.value,
             }:
                 families.add(f"{origin_s}:{rel}")
         # Also count direct T2 neighbor paths from distinct origins when no T1

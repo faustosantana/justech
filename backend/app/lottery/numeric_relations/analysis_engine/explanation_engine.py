@@ -4,6 +4,10 @@ from __future__ import annotations
 
 from typing import Any
 
+from app.lottery.numeric_relations.analysis_engine.same_day_context import (
+    SameDayCrossConfirmation,
+    explain_same_day_cross,
+)
 from app.lottery.numeric_relations.analysis_engine.schemas import (
     ExplanationLevel,
     RankedCandidate,
@@ -15,9 +19,14 @@ def explain_analysis(
     observed: list[int],
     ranked: list[RankedCandidate],
     level: str = ExplanationLevel.ANALYTICAL.value,
+    same_day_cross: list[dict[str, Any]] | None = None,
 ) -> dict[str, Any]:
     primary = next(
-        (c for c in ranked if c.classification == "FUERTE_PRINCIPAL"),
+        (
+            c
+            for c in ranked
+            if c.classification in {"FUERTE_PRINCIPAL", "FUERTE_T1_T2_MISMO_DIA"}
+        ),
         ranked[0] if ranked else None,
     )
     if primary is None:
@@ -27,11 +36,59 @@ def explain_analysis(
             "disclaimer": "CONFIANZA ANALÍTICA / RESPALDO ESTRUCTURAL — no es probabilidad de ganar.",
         }
 
-    obs_txt = " y ".join(str(n) for n in observed)
-    executive = (
-        f"El {primary.number} obtuvo el mayor respaldo estructural después de cruzar "
-        f"todas las relaciones de {obs_txt}. No fue elegido antes de completar el análisis."
+    crosses = list(same_day_cross or [])
+    primary_cross = next(
+        (c for c in crosses if int(c.get("companion_c") or 0) == primary.number),
+        crosses[0] if crosses else None,
     )
+
+    if primary_cross:
+        try:
+            ev = SameDayCrossConfirmation(**{
+                k: primary_cross[k]
+                for k in SameDayCrossConfirmation.__dataclass_fields__
+                if k in primary_cross
+            })
+            executive = explain_same_day_cross(ev)
+        except Exception:
+            executive = (
+                f"El {primary_cross.get('observed_x')} relaciona al {primary.number} mediante Tabla 1. "
+                f"El {primary_cross.get('confirmer_y')} confirma al {primary.number} mediante Tabla 2 "
+                f"el mismo día. El {primary.number} queda fortalecido."
+            )
+        relation_direct = (
+            f"El {primary_cross.get('observed_x')} comparte Tabla 1 con {primary.number}."
+        )
+        confirmation_external = (
+            f"El {primary_cross.get('confirmer_y')} apareció en otra lotería ese mismo día "
+            f"y confirma al {primary.number} en Tabla 2."
+        )
+        conclusion = (
+            f"El {primary.number} recibe respaldo independiente de ambas tablas."
+        )
+    else:
+        obs_txt = " y ".join(str(n) for n in observed)
+        t1 = primary.evidence.table1_sources
+        t2 = primary.evidence.direct_confirmers
+        if t1 and t2:
+            relation_direct = (
+                f"El {t1[0]} relaciona al {primary.number} mediante Tabla 1."
+            )
+            confirmation_external = (
+                f"El {t2[0]} confirma al {primary.number} mediante Tabla 2."
+            )
+            conclusion = (
+                f"El {primary.number} recibe respaldo independiente de ambas tablas."
+            )
+            executive = f"{relation_direct} {confirmation_external} {conclusion}"
+        else:
+            executive = (
+                f"El {primary.number} obtuvo el mayor respaldo estructural después de cruzar "
+                f"todas las relaciones de {obs_txt}. No fue elegido antes de completar el análisis."
+            )
+            relation_direct = executive
+            confirmation_external = ""
+            conclusion = executive
 
     analytical = {
         "primary": primary.number,
@@ -53,6 +110,10 @@ def explain_analysis(
         ],
         "reason": primary.classification_reason,
         "selection_timing": "after_full_analysis",
+        "relation_direct": relation_direct,
+        "confirmation_external": confirmation_external,
+        "conclusion": conclusion,
+        "same_day_cross": crosses,
     }
 
     technical = {
@@ -76,6 +137,9 @@ def explain_analysis(
     return {
         "level": level,
         "summary": executive,
+        "relation_direct": relation_direct,
+        "confirmation_external": confirmation_external,
+        "conclusion": conclusion,
         "body": body,
         "disclaimer": (
             "Este número obtuvo el mayor respaldo estructural del análisis. "

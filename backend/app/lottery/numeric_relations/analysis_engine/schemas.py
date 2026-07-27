@@ -41,6 +41,7 @@ class EdgeType(str, Enum):
     INDEPENDENT_PATH = "INDEPENDENT_PATH"
     HISTORICAL_FULFILLMENT = "HISTORICAL_FULFILLMENT"
     SAME_DAY_CHAIN = "SAME_DAY_CHAIN"
+    SAME_DAY_CROSS_LOTTERY_CONFIRMATION = "SAME_DAY_CROSS_LOTTERY_CONFIRMATION"
     NEXT_DAY_CHAIN = "NEXT_DAY_CHAIN"
     CASE_CLOSED = "CASE_CLOSED"
     NEW_ANALYSIS_STARTED = "NEW_ANALYSIS_STARTED"
@@ -49,6 +50,7 @@ class EdgeType(str, Enum):
 class Classification(str, Enum):
     FUERTE_PRINCIPAL = "FUERTE_PRINCIPAL"
     FUERTE_SECUNDARIO = "FUERTE_SECUNDARIO"
+    FUERTE_T1_T2_MISMO_DIA = "FUERTE_T1_T2_MISMO_DIA"
     CANDIDATO_CONFIRMADO = "CANDIDATO_CONFIRMADO"
     CANDIDATO_PARCIAL = "CANDIDATO_PARCIAL"
     DERIVACION_RELEVANTE = "DERIVACION_RELEVANTE"
@@ -154,6 +156,8 @@ class CandidateEvidence:
     direct_path_count: int = 0
     cross_table_support: bool = False
     multi_source_support: bool = False
+    same_day_cross_support: bool = False
+    same_day_cross_count: int = 0
     same_source_repetitions: int = 0
     historical_activations: int = 0
     historical_exact_hits: int = 0
@@ -199,6 +203,7 @@ class ScoreComponents:
     RECENT_PATTERN_SUPPORT: float = 0.0
     CROSS_LOTTERY_SUPPORT: float = 0.0
     CHAIN_CONTINUITY_SUPPORT: float = 0.0
+    SAME_DAY_CROSS_LOTTERY_SUPPORT: float = 0.0
     DERIVATION_DEPTH_PENALTY: float = 0.0
     AMBIGUITY_PENALTY: float = 0.0
     DUPLICATE_PATH_PENALTY: float = 0.0
@@ -240,6 +245,8 @@ class AnalysisRequest:
     input_mode: str = InputMode.MANUAL.value
     create_signals: bool = True
     explanation_level: str = ExplanationLevel.ANALYTICAL.value
+    # Same-day confirmers (other lotteries / optional "with" field). Empty = legacy mode.
+    same_day_confirmers: list[int] = field(default_factory=list)
 
 
 @dataclass
@@ -298,6 +305,8 @@ class CompleteAnalysisResult:
     experimental: bool = True
     limitations: list[str] = field(default_factory=list)
     tiebreak: dict[str, Any] | None = None
+    same_day_context: dict[str, Any] | None = None
+    same_day_cross: list[dict[str, Any]] = field(default_factory=list)
     created_at: str = field(default_factory=lambda: datetime.utcnow().isoformat() + "Z")
 
     def to_dict(self) -> dict[str, Any]:

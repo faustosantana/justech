@@ -3,10 +3,11 @@
 from __future__ import annotations
 
 from datetime import date
-from typing import Any
+from typing import Annotated, Any
 
 from fastapi import APIRouter, Body, Depends, HTTPException
 
+from app.api.deps import DbSession
 from app.lottery.numeric_relations.analysis_engine.backtest_engine import (
     manual_case_scenarios,
     run_backtest,
@@ -14,9 +15,13 @@ from app.lottery.numeric_relations.analysis_engine.backtest_engine import (
 from app.lottery.numeric_relations.analysis_engine.complete_analysis_service import (
     run_complete_analysis,
 )
+from app.lottery.numeric_relations.analysis_engine.same_day_context import (
+    build_same_day_context,
+)
 from app.lottery.numeric_relations.analysis_engine.signal_tracker import get_signal_store
 from app.lottery.numeric_relations.j11a.conversation_engine import chat, plan_only
 from app.lottery.numeric_relations.j11a.memory_engine import get_or_create_session
+from app.services.lottery_result_service import LotteryResultService
 
 router = APIRouter(
     tags=["Complete Analysis Engine + J-11A"],
@@ -40,9 +45,59 @@ def _optional_huawei_llm():
 
 
 @router.post("/analysis/run")
-async def analysis_run(body: dict[str, Any] = Body(...)) -> dict[str, Any]:
+async def analysis_run(
+    db: DbSession,
+    body: dict[str, Any] = Body(...),
+) -> dict[str, Any]:
+    """Run complete analysis; auto-load same-day featured draws when date is present."""
+    payload = dict(body)
+    raw_date = payload.get("date")
+    draw_date = None
+    if isinstance(raw_date, str) and raw_date.strip():
+        try:
+            draw_date = date.fromisoformat(raw_date.strip()[:10])
+        except ValueError:
+            draw_date = None
+    elif isinstance(raw_date, date):
+        draw_date = raw_date
+
+    if draw_date is not None:
+        try:
+            rows = await LotteryResultService(db).get_by_date(
+                draw_date, featured_only=True
+            )
+            seeds = list(payload.get("numbers") or payload.get("observed_numbers") or [])
+            seed_ints: list[int] = []
+            for n in seeds:
+                try:
+                    seed_ints.append(int(n))
+                except (TypeError, ValueError):
+                    continue
+            ctx = build_same_day_context(
+                rows,
+                draw_date=draw_date,
+                positions=payload.get("positions") or ["first"],
+                exclude_numbers=seed_ints[:1] if seed_ints else None,
+            )
+            payload["same_day_context"] = ctx.to_dict()
+            existing = list(payload.get("same_day_confirmers") or [])
+            merged: list[int] = []
+            seen = set(seed_ints)
+            for n in existing + ctx.confirmer_numbers:
+                try:
+                    v = int(n)
+                except (TypeError, ValueError):
+                    continue
+                if v in seen:
+                    continue
+                seen.add(v)
+                merged.append(v)
+            payload["same_day_confirmers"] = merged
+        except Exception:
+            pass
+
     try:
-        result = run_complete_analysis(body, persist=True)
+        result = run_complete_analysis(payload, persist=True)
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e)) from e
     return result.to_dict()

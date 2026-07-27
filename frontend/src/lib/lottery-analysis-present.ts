@@ -2,7 +2,11 @@
 
 export type SupportLevel = "Bajo" | "Medio" | "Alto";
 
-const OFFICIAL_STRONG = new Set(["FUERTE_PRINCIPAL", "EMPATE_MULTI_FUERTE"]);
+const OFFICIAL_STRONG = new Set([
+  "FUERTE_PRINCIPAL",
+  "EMPATE_MULTI_FUERTE",
+  "FUERTE_T1_T2_MISMO_DIA",
+]);
 
 export function isOfficialStrong(classification?: string | null): boolean {
   return OFFICIAL_STRONG.has(String(classification || ""));
@@ -10,6 +14,7 @@ export function isOfficialStrong(classification?: string | null): boolean {
 
 export function signalHeadline(classification?: string | null): string {
   const c = String(classification || "");
+  if (c === "FUERTE_T1_T2_MISMO_DIA") return "Fuerte confirmado por cruce del mismo día";
   if (c === "FUERTE_PRINCIPAL") return "Recomendación principal";
   if (c === "EMPATE_MULTI_FUERTE") return "Recomendaciones en empate";
   if (c === "VECINO_T2_DIRECTO") return "Relación destacada";
@@ -91,7 +96,12 @@ export function buildCrossNarrative(opts: {
 
   if (opts.primary != null) {
     const official = isOfficialStrong(opts.classification);
-    if (official) {
+    const sameDay = String(opts.classification || "") === "FUERTE_T1_T2_MISMO_DIA";
+    if (sameDay) {
+      parts.push(
+        `El ${opts.primary} queda fortalecido por cruce del mismo día entre Tabla 1 y Tabla 2.`,
+      );
+    } else if (official) {
       parts.push(
         `El ${opts.primary} obtuvo el mayor respaldo estructural y cumple la condición de fuerte oficial.`,
       );

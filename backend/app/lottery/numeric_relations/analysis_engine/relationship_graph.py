@@ -125,21 +125,54 @@ def build_complete_relationship_graph(
     date: str | None = None,
     lottery: str | None = None,
     position: str | None = None,
+    confirmer_numbers: list[int] | None = None,
+    same_day_meta: dict[int, dict[str, Any]] | None = None,
 ) -> RelationshipGraph:
     """
     Build the FULL relationship graph for ALL observed numbers.
 
     Does NOT select candidates. Candidate discovery must run only after
     ``graph.complete`` is True.
+
+    When ``confirmer_numbers`` is provided (same-day / explicit confirmer mode):
+      - Tabla 1 companions are generated only from ``observed_numbers`` (seeds)
+      - Tabla 2 neighbors come from seeds ∪ confirmers
+      - T2 confirmations only from confirmers toward T1 companions of seeds
+      - SAME_DAY_CROSS_LOTTERY_CONFIRMATION edges are recorded for audit
+
+    When ``confirmer_numbers`` is None (legacy): every observed number acts as
+    both generator and confirmer — preserves 35+14→54, 39+58→94, etc.
     """
     cat = catalog or build_catalog()
     graph = RelationshipGraph()
-    observed = unique_observed(observed_numbers)
-    graph.observed_numbers = list(observed)
+    seeds = unique_observed(observed_numbers)
+    confirmers = (
+        [c for c in unique_observed(confirmer_numbers or []) if c not in seeds]
+        if confirmer_numbers is not None
+        else []
+    )
+    same_day_mode = confirmer_numbers is not None
+    # Legacy: all observed are generators and mutual confirmers
+    t1_generators = list(seeds)
+    if same_day_mode:
+        confirmer_pool = list(confirmers)
+        inputs = unique_observed(seeds + confirmers)
+    else:
+        confirmer_pool = list(seeds)
+        inputs = list(seeds)
 
-    for o in observed:
-        graph.ensure_node(o, NodeType.OBSERVED, role="observed")
+    graph.observed_numbers = list(inputs)
+    meta_by_num = same_day_meta or {}
 
+    for o in inputs:
+        graph.ensure_node(
+            o,
+            NodeType.OBSERVED,
+            role="seed" if o in seeds else "same_day_confirmer",
+            **(meta_by_num.get(o) or {}),
+        )
+
+    for o in t1_generators:
         # --- Tabla 1 mother relations (o as mother code) ---
         companions = list(cat.get_table1_companions(o))
         for c in companions:
@@ -154,8 +187,8 @@ def build_complete_relationship_graph(
                 source_node_type=NodeType.OBSERVED,
                 target_node_type=NodeType.RELATED_T1,
                 date=date,
-                lottery=lottery,
-                position=position,
+                lottery=(meta_by_num.get(o) or {}).get("lottery") or lottery,
+                position=(meta_by_num.get(o) or {}).get("position") or position,
             )
             graph.add_edge(
                 o,
@@ -168,12 +201,13 @@ def build_complete_relationship_graph(
                 source_node_type=NodeType.OBSERVED,
                 target_node_type=NodeType.COMPANION_T1,
                 date=date,
-                lottery=lottery,
-                position=position,
+                lottery=(meta_by_num.get(o) or {}).get("lottery") or lottery,
+                position=(meta_by_num.get(o) or {}).get("position") or position,
             )
 
-        if include_table2:
-            # --- Tabla 2 neighbors of observed ---
+    if include_table2:
+        # --- Tabla 2 neighbors of every input (seeds + confirmers) ---
+        for o in inputs:
             neighbors = list(cat.get_table2_neighbors(o, exclude_self=True))
             for n in neighbors:
                 graph.add_edge(
@@ -187,44 +221,75 @@ def build_complete_relationship_graph(
                     source_node_type=NodeType.OBSERVED,
                     target_node_type=NodeType.NEIGHBOR_T2,
                     date=date,
-                    lottery=lottery,
-                    position=position,
+                    lottery=(meta_by_num.get(o) or {}).get("lottery") or lottery,
+                    position=(meta_by_num.get(o) or {}).get("position") or position,
                 )
 
-            # --- T2 confirmation edges: observed confirmer → T1 destination ---
-            for gen in observed:
-                for cand in cat.get_table1_companions(gen):
-                    t2_of_cand = set(cat.get_table2_neighbors(cand, exclude_self=True))
-                    if o in t2_of_cand and o != gen:
+        # --- T2 confirmation: confirmer → T1 destination of a seed generator ---
+        for gen in t1_generators:
+            for cand in cat.get_table1_companions(gen):
+                t2_of_cand = set(cat.get_table2_neighbors(cand, exclude_self=True))
+                for o in confirmer_pool:
+                    if o not in t2_of_cand or o == gen:
+                        continue
+                    o_meta = meta_by_num.get(o) or {}
+                    gen_meta = meta_by_num.get(gen) or {}
+                    graph.add_edge(
+                        o,
+                        cand,
+                        EdgeType.T2_CONFIRMATION,
+                        table_type="table2",
+                        observed_origin=o,
+                        depth=0,
+                        direct_or_indirect="direct",
+                        source_node_type=NodeType.OBSERVED,
+                        target_node_type=NodeType.RELATED_T2,
+                        date=date,
+                        lottery=o_meta.get("lottery") or lottery,
+                        position=o_meta.get("position") or position,
+                        confirmed_via_generator=gen,
+                    )
+                    graph.add_edge(
+                        gen,
+                        cand,
+                        EdgeType.CROSS_CONFIRMATION,
+                        table_type="table1+table2",
+                        observed_origin=gen,
+                        depth=0,
+                        direct_or_indirect="direct",
+                        source_node_type=NodeType.OBSERVED,
+                        target_node_type=NodeType.CANDIDATE,
+                        date=date,
+                        lottery=gen_meta.get("lottery") or lottery,
+                        position=gen_meta.get("position") or position,
+                        confirmer=o,
+                    )
+                    if same_day_mode:
+                        # Explicit same-day cross-lottery confirmation evidence
                         graph.add_edge(
                             o,
                             cand,
-                            EdgeType.T2_CONFIRMATION,
-                            table_type="table2",
-                            observed_origin=o,
-                            depth=0,
-                            direct_or_indirect="direct",
-                            source_node_type=NodeType.OBSERVED,
-                            target_node_type=NodeType.RELATED_T2,
-                            date=date,
-                            lottery=lottery,
-                            position=position,
-                            confirmed_via_generator=gen,
-                        )
-                        graph.add_edge(
-                            gen,
-                            cand,
-                            EdgeType.CROSS_CONFIRMATION,
+                            EdgeType.SAME_DAY_CROSS_LOTTERY_CONFIRMATION,
                             table_type="table1+table2",
-                            observed_origin=gen,
+                            observed_origin=o,
                             depth=0,
                             direct_or_indirect="direct",
                             source_node_type=NodeType.OBSERVED,
                             target_node_type=NodeType.CANDIDATE,
                             date=date,
-                            lottery=lottery,
-                            position=position,
+                            lottery=o_meta.get("lottery") or lottery,
+                            position=o_meta.get("position") or position,
+                            seed=gen,
+                            companion=cand,
                             confirmer=o,
+                            evidence_code="SAME_DAY_CROSS_LOTTERY_CONFIRMATION",
+                            lottery_seed=gen_meta.get("lottery"),
+                            lottery_confirmer=o_meta.get("lottery"),
+                            distinct_lotteries=bool(
+                                gen_meta.get("lottery")
+                                and o_meta.get("lottery")
+                                and gen_meta.get("lottery") != o_meta.get("lottery")
+                            ),
                         )
 
     # Multi-source support markers (still not selecting winners)
@@ -234,6 +299,7 @@ def build_complete_relationship_graph(
             EdgeType.T1_MOTHER_RELATION.value,
             EdgeType.T2_CONFIRMATION.value,
             EdgeType.T2_NEIGHBOR.value,
+            EdgeType.SAME_DAY_CROSS_LOTTERY_CONFIRMATION.value,
         }:
             tgt = int(e.target.split(":")[1])
             if e.observed_origin is not None:

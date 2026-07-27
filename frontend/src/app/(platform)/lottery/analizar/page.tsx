@@ -21,6 +21,27 @@ import {
 } from '@/lib/lottery-analysis-present'
 import { canAccessLotteryAdmin, canAccessLotteryModule, DISCLAIMER } from '@/lib/lottery'
 
+type SameDayCross = {
+  observed_x?: number
+  companion_c?: number
+  confirmer_y?: number
+  date?: string
+  lottery_x?: string | null
+  lottery_y?: string | null
+  position_x?: string | null
+  position_y?: string | null
+  table1_route?: string
+  table2_route?: string
+}
+
+type DayLotteryRow = {
+  lottery?: string
+  primera?: string | number | null
+  segunda?: string | number | null
+  tercera?: string | number | null
+  draw_id?: string | null
+}
+
 type Analysis = {
   primary_signal?: {
     number?: number
@@ -28,6 +49,9 @@ type Analysis = {
     classification?: string
     analytical_confidence?: number
     score?: number
+    table1_sources?: number[]
+    table2_confirmers?: number[]
+    same_day_cross_support?: boolean
   } | null
   alternatives?: { number: number; classification?: string; score?: number }[]
   multi_strong_candidates?: number[]
@@ -38,13 +62,37 @@ type Analysis = {
     total_score?: number
     analytical_confidence?: number
   }[]
-  explanation?: { summary?: string; body?: Record<string, unknown> }
+  explanation?: {
+    summary?: string
+    body?: Record<string, unknown>
+    relation_direct?: string
+    confirmation_external?: string
+    conclusion?: string
+  }
   observed_numbers?: number[]
   derivations?: { path?: number[]; via?: string; numbers?: number[] }[]
+  same_day_context?: {
+    date?: string
+    confirmer_numbers?: number[]
+    by_lottery?: Record<string, DayLotteryRow>
+    appearances?: {
+      number?: number
+      lottery?: string
+      position?: string
+    }[]
+  } | null
+  same_day_cross?: SameDayCross[]
   graph?: {
     nodes?: { id?: string; number?: number; role?: string }[]
     edges?: { source?: number; target?: number; relation?: string; type?: string }[]
   }
+}
+
+function dayChipClass(role: 'observed' | 'confirmer' | 'companion' | 'plain'): string {
+  if (role === 'observed') return 'bg-blue-600 hover:bg-blue-700 ring-2 ring-offset-2 ring-blue-300'
+  if (role === 'confirmer') return 'bg-emerald-600 hover:bg-emerald-700 ring-2 ring-offset-2 ring-emerald-300'
+  if (role === 'companion') return 'bg-orange-500 hover:bg-orange-600 ring-2 ring-offset-2 ring-orange-300'
+  return 'bg-slate-400 hover:bg-slate-500'
 }
 
 type HistRow = {
@@ -98,6 +146,7 @@ export default function LotteryAnalizarPage() {
   const ctxLottery = search.get('lottery') || ''
   const ctxDate = search.get('date') || ''
   const ctxPosition = search.get('position') || ''
+  const [analysisDate, setAnalysisDate] = useState(ctxDate)
 
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -204,11 +253,11 @@ export default function LotteryAnalizarPage() {
         setError('Sin permiso para Lottery IA.')
         return
       }
-      const numbers = w ? [n, Number(w)] : [n]
       if (w && (!Number.isInteger(Number(w)) || Number(w) < 1 || Number(w) > 100)) {
-        setError('El segundo número debe estar entre 1 y 100.')
+        setError('El número confirmador debe estar entre 1 y 100.')
         return
       }
+      const dateForRun = (analysisDate || ctxDate || '').trim() || undefined
       setBusy(true)
       setError(null)
       try {
@@ -219,13 +268,15 @@ export default function LotteryAnalizarPage() {
             Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({
-            numbers,
+            numbers: [n],
+            same_day_confirmers: w ? [Number(w)] : undefined,
             mode: 'socio',
             derivation_depth: 0,
             create_signals: false,
             explanation_level: 'analitico',
-            date: ctxDate || undefined,
-            positions: ctxPosition ? [ctxPosition] : undefined,
+            date: dateForRun,
+            lottery: ctxLottery || undefined,
+            positions: ['first'],
           }),
         })
         if (!res.ok) {
@@ -252,7 +303,17 @@ export default function LotteryAnalizarPage() {
         setBusy(false)
       }
     },
-    [number, companion, router, ctxDate, ctxPosition, loadTables, loadHistory, loadDrawContext],
+    [
+      number,
+      companion,
+      router,
+      ctxDate,
+      ctxLottery,
+      analysisDate,
+      loadTables,
+      loadHistory,
+      loadDrawContext,
+    ],
   )
 
   useEffect(() => {
@@ -299,16 +360,46 @@ export default function LotteryAnalizarPage() {
     })
   }, [observed, data, t1Companions, t1.code, t2Neighbors, t2.code, primary, classification, alts])
 
-  const analyzeNumber = (n: number) => {
+  const analyzeNumber = (n: number, opts?: { date?: string; lottery?: string; position?: string }) => {
     if (observed) setPrevStack((s) => [...s, String(observed)])
     setNumber(String(n))
     setCompanion('')
+    const d = opts?.date || analysisDate || ctxDate
+    if (d) setAnalysisDate(d)
     const params = new URLSearchParams()
     params.set('number', String(n))
     params.set('auto', '1')
+    if (d) params.set('date', d)
+    if (opts?.lottery || ctxLottery) params.set('lottery', opts?.lottery || ctxLottery)
+    if (opts?.position || ctxPosition) params.set('position', opts?.position || ctxPosition)
     router.push(`/lottery/analizar?${params.toString()}`)
     void run(String(n), '')
   }
+
+  const confirmerSet = useMemo(() => {
+    const fromCross = (data?.same_day_cross || []).map((c) => Number(c.confirmer_y))
+    const fromPrimary = data?.primary_signal?.table2_confirmers || []
+    return new Set([...fromCross, ...fromPrimary].filter((x) => Number.isFinite(x)))
+  }, [data])
+
+  const companionSet = useMemo(() => {
+    const fromCross = (data?.same_day_cross || []).map((c) => Number(c.companion_c))
+    if (primary?.number != null) fromCross.push(primary.number)
+    return new Set(fromCross.filter((x) => Number.isFinite(x)))
+  }, [data, primary?.number])
+
+  const dayRole = (n: number): 'observed' | 'confirmer' | 'companion' | 'plain' => {
+    if (n === observed) return 'observed'
+    if (confirmerSet.has(n)) return 'confirmer'
+    if (companionSet.has(n)) return 'companion'
+    return 'plain'
+  }
+
+  const dayLotteries = useMemo(() => {
+    const by = data?.same_day_context?.by_lottery
+    if (!by) return [] as DayLotteryRow[]
+    return Object.values(by)
+  }, [data])
 
   const chatHref = useMemo(() => {
     const n = observed || number
@@ -353,8 +444,10 @@ export default function LotteryAnalizarPage() {
                 disabled={busy}
               />
             </div>
-            <div>
-              <label className="mb-1 block text-xs font-medium text-slate-600">Con (opcional)</label>
+            <div className="min-w-[12rem] flex-1">
+              <label className="mb-1 block text-xs font-medium text-slate-600">
+                Número confirmador del mismo día (opcional)
+              </label>
               <Input
                 value={companion}
                 onChange={(e) => setCompanion(e.target.value)}
@@ -363,10 +456,37 @@ export default function LotteryAnalizarPage() {
                 disabled={busy}
                 placeholder="ej. 14"
               />
+              <p className="mt-1 max-w-sm text-[11px] leading-snug text-slate-500">
+                Use este campo para indicar otro número que salió el mismo día y comprobar si
+                fortalece a un compañero de Tabla 1.
+              </p>
+            </div>
+            <div>
+              <label className="mb-1 block text-xs font-medium text-slate-600">Fecha</label>
+              <Input
+                id="analysis-date-input"
+                type="date"
+                value={analysisDate}
+                onChange={(e) => setAnalysisDate(e.target.value)}
+                className="w-40"
+                disabled={busy}
+              />
             </div>
             <Button className="bg-blue-600 hover:bg-blue-700" disabled={busy} onClick={() => void run()}>
               {busy ? 'Analizando información…' : 'Analizar'}
             </Button>
+            {!analysisDate && !ctxDate && (
+              <Button
+                variant="outline"
+                disabled={busy || !number}
+                onClick={() => {
+                  const el = document.getElementById('analysis-date-input')
+                  el?.focus()
+                }}
+              >
+                Analizar con resultados de una fecha
+              </Button>
+            )}
             <Button variant="outline" asChild>
               <Link href="/lottery">Volver al inicio</Link>
             </Button>
@@ -580,11 +700,188 @@ export default function LotteryAnalizarPage() {
 
             <Card className="border-blue-100">
               <CardHeader>
+                <CardTitle className="text-base text-blue-900">Cruce del mismo día</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4 text-sm text-slate-700">
+                {!analysisDate && !ctxDate && !data?.same_day_context ? (
+                  <p className="text-slate-600">
+                    No hay contexto diario. Elija una fecha o use el número confirmador del mismo
+                    día para cruzar loterías.
+                  </p>
+                ) : (data?.same_day_cross || []).length === 0 ? (
+                  <p className="text-slate-600">
+                    No se encontraron confirmaciones entre otras loterías de esta fecha.
+                  </p>
+                ) : (
+                  (data?.same_day_cross || []).map((c, idx) => (
+                    <div
+                      key={`${c.companion_c}-${c.confirmer_y}-${idx}`}
+                      className="rounded-xl border border-emerald-100 bg-emerald-50/40 p-4"
+                    >
+                      <div className="flex flex-wrap items-center gap-3">
+                        <div className="text-center">
+                          <p className="text-[10px] uppercase text-slate-500">Origen</p>
+                          <span className="mt-1 inline-flex min-h-10 min-w-10 items-center justify-center rounded-full bg-blue-600 text-sm font-bold text-white">
+                            {pad2(c.observed_x)}
+                          </span>
+                        </div>
+                        <span className="text-slate-400">→ Tabla 1 →</span>
+                        <div className="text-center">
+                          <p className="text-[10px] uppercase text-slate-500">Compañero</p>
+                          <span className="mt-1 inline-flex min-h-10 min-w-10 items-center justify-center rounded-full bg-orange-500 text-sm font-bold text-white">
+                            {pad2(c.companion_c)}
+                          </span>
+                        </div>
+                        <span className="text-slate-400">← Tabla 2 ←</span>
+                        <div className="text-center">
+                          <p className="text-[10px] uppercase text-slate-500">Confirmador</p>
+                          <span className="mt-1 inline-flex min-h-10 min-w-10 items-center justify-center rounded-full bg-emerald-600 text-sm font-bold text-white">
+                            {pad2(c.confirmer_y)}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="mt-3 space-y-1 text-xs text-slate-600">
+                        <p>
+                          Confirmación de Tabla 2:{' '}
+                          <span className="font-medium text-slate-900">
+                            {pad2(c.confirmer_y)} → {pad2(c.companion_c)}
+                          </span>
+                        </p>
+                        <p>
+                          Loterías:{' '}
+                          <span className="font-medium text-slate-900">
+                            {c.lottery_x || '—'} · {c.lottery_y || '—'}
+                          </span>
+                        </p>
+                        <p>
+                          Resultado:{' '}
+                          <span className="font-semibold text-emerald-800">
+                            {pad2(c.companion_c)} fortalecido
+                          </span>
+                        </p>
+                      </div>
+                    </div>
+                  ))
+                )}
+              </CardContent>
+            </Card>
+
+            {dayLotteries.length > 0 && (
+              <Card className="border-blue-100">
+                <CardHeader>
+                  <CardTitle className="text-base text-blue-900">
+                    Resultados revisados del día
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <div className="flex flex-wrap gap-3 text-[11px] text-slate-500">
+                    <span className="inline-flex items-center gap-1">
+                      <span className="h-2.5 w-2.5 rounded-full bg-blue-600" /> Observado
+                    </span>
+                    <span className="inline-flex items-center gap-1">
+                      <span className="h-2.5 w-2.5 rounded-full bg-emerald-600" /> Confirmador
+                    </span>
+                    <span className="inline-flex items-center gap-1">
+                      <span className="h-2.5 w-2.5 rounded-full bg-orange-500" /> Compañero
+                      fortalecido
+                    </span>
+                    <span className="inline-flex items-center gap-1">
+                      <span className="h-2.5 w-2.5 rounded-full bg-slate-400" /> Sin relación
+                      directa
+                    </span>
+                  </div>
+                  <div className="overflow-x-auto rounded-lg border border-blue-100">
+                    <table className="min-w-full text-left text-sm">
+                      <thead className="bg-blue-50 text-xs uppercase text-blue-900">
+                        <tr>
+                          <th className="px-3 py-2">Lotería</th>
+                          <th className="px-3 py-2">Primera</th>
+                          <th className="px-3 py-2">Segunda</th>
+                          <th className="px-3 py-2">Tercera</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {dayLotteries.map((row) => {
+                          const lot = row.lottery || '—'
+                          const dateS =
+                            data?.same_day_context?.date || analysisDate || ctxDate
+                          return (
+                            <tr key={lot} className="border-t border-blue-50">
+                              <td className="px-3 py-2 font-medium text-slate-800">{lot}</td>
+                              {(['primera', 'segunda', 'tercera'] as const).map((pos) => {
+                                const raw = row[pos]
+                                const num = Number(String(raw ?? '').replace(/\D/g, ''))
+                                if (!Number.isInteger(num) || num < 1 || num > 100) {
+                                  return (
+                                    <td key={pos} className="px-3 py-2 text-slate-400">
+                                      —
+                                    </td>
+                                  )
+                                }
+                                const role = dayRole(num)
+                                return (
+                                  <td key={pos} className="px-3 py-2">
+                                    <button
+                                      type="button"
+                                      onClick={() =>
+                                        analyzeNumber(num, {
+                                          date: dateS,
+                                          lottery: lot,
+                                          position: pos,
+                                        })
+                                      }
+                                    >
+                                      <span
+                                        className={`inline-flex min-h-8 min-w-8 items-center justify-center rounded-full text-xs font-bold text-white ${dayChipClass(role)}`}
+                                      >
+                                        {pad2(num)}
+                                      </span>
+                                    </button>
+                                  </td>
+                                )
+                              })}
+                            </tr>
+                          )
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            <Card className="border-blue-100">
+              <CardHeader>
                 <CardTitle className="text-base text-blue-900">Cruce de relaciones</CardTitle>
               </CardHeader>
-              <CardContent className="text-sm leading-relaxed text-slate-700">
-                {narrative ||
-                  'El motor no encontró un cruce suficiente entre Tabla 1 y Tabla 2 para este número.'}
+              <CardContent className="space-y-2 text-sm leading-relaxed text-slate-700">
+                {data.explanation?.relation_direct ||
+                data.explanation?.confirmation_external ||
+                data.explanation?.conclusion ? (
+                  <>
+                    {data.explanation.relation_direct && (
+                      <p>
+                        <span className="font-medium text-slate-900">Relación directa:</span>{' '}
+                        {data.explanation.relation_direct}
+                      </p>
+                    )}
+                    {data.explanation.confirmation_external && (
+                      <p>
+                        <span className="font-medium text-slate-900">Confirmación externa:</span>{' '}
+                        {data.explanation.confirmation_external}
+                      </p>
+                    )}
+                    {data.explanation.conclusion && (
+                      <p>
+                        <span className="font-medium text-slate-900">Conclusión:</span>{' '}
+                        {data.explanation.conclusion}
+                      </p>
+                    )}
+                  </>
+                ) : (
+                  narrative ||
+                  'El motor no encontró un cruce suficiente entre Tabla 1 y Tabla 2 para este número.'
+                )}
               </CardContent>
             </Card>
 

@@ -38,6 +38,10 @@ from app.lottery.numeric_relations.analysis_engine.schemas import (
     CompleteAnalysisResult,
     new_id,
 )
+from app.lottery.numeric_relations.analysis_engine.same_day_context import (
+    find_same_day_cross_confirmations,
+    same_day_context_from_dict,
+)
 from app.lottery.numeric_relations.analysis_engine.signal_tracker import get_signal_store
 from app.lottery.numeric_relations.analysis_engine.tiebreak_engine import (
     DEFAULT_PRACTICAL_THRESHOLD,
@@ -56,11 +60,61 @@ def run_complete_analysis(
 ) -> CompleteAnalysisResult:
     stages: list[str] = []
     cat = catalog or build_catalog()
+    raw = request if isinstance(request, dict) else None
     req = normalize_request(request)
     stages.append("normalized")
 
     analysis_id = new_id("an")
-    observed = unique_observed(req.numbers)
+    # Seeds: primary observed number(s). Explicit confirmers from same_day_confirmers
+    # or, in legacy multi-number requests without day context, all numbers stay mutual.
+    seed_numbers = unique_observed(req.numbers)
+    explicit_confirmers = unique_observed(list(req.same_day_confirmers or []))
+    day_context_payload = None
+    if raw and isinstance(raw.get("same_day_context"), dict):
+        day_context_payload = raw.get("same_day_context")
+    if raw and raw.get("day_context") and not day_context_payload:
+        day_context_payload = raw.get("day_context")
+
+    confirmer_numbers: list[int] | None = None
+    same_day_meta: dict[int, dict[str, Any]] = {}
+    if explicit_confirmers or day_context_payload:
+        # Same-day / confirmer mode: seeds generate T1; confirmers only confirm via T2.
+        confirmer_numbers = [
+            n for n in explicit_confirmers if n not in seed_numbers
+        ]
+        if day_context_payload:
+            # Metadata for UI/audit from all appearances; confirmers stay position-filtered.
+            for app in day_context_payload.get("appearances") or []:
+                try:
+                    n = int(app.get("number"))
+                except (TypeError, ValueError):
+                    continue
+                same_day_meta[n] = {
+                    "lottery": app.get("lottery"),
+                    "position": app.get("position"),
+                    "draw_id": app.get("draw_id"),
+                }
+            for n in day_context_payload.get("confirmer_numbers") or []:
+                try:
+                    v = int(n)
+                except (TypeError, ValueError):
+                    continue
+                if v not in seed_numbers and v not in confirmer_numbers:
+                    confirmer_numbers.append(v)
+        # Also treat numbers[1:] as confirmers when day mode is active (manual "with").
+        if len(seed_numbers) > 1 and confirmer_numbers is not None:
+            primary = seed_numbers[0]
+            rest = seed_numbers[1:]
+            seed_numbers = [primary]
+            for n in rest:
+                if n not in confirmer_numbers:
+                    confirmer_numbers.append(n)
+
+    observed = unique_observed(
+        seed_numbers + (confirmer_numbers or [])
+        if confirmer_numbers is not None
+        else seed_numbers
+    )
     date_s = req.date.isoformat() if req.date else None
     use_t2 = True if include_table2 is None else bool(include_table2)
     if isinstance(request, dict) and "include_table2" in request:
@@ -68,14 +122,26 @@ def run_complete_analysis(
 
     # --- FULL GRAPH (no candidate selection) ---
     graph = build_complete_relationship_graph(
-        observed,
+        seed_numbers if confirmer_numbers is not None else observed,
         catalog=cat,
         derivation_depth=req.derivation_depth,
         include_table2=use_t2,
         date=date_s,
         position=",".join(req.positions),
+        confirmer_numbers=confirmer_numbers,
+        same_day_meta=same_day_meta or None,
     )
     stages.append("graph_built")
+
+    same_day_cross = find_same_day_cross_confirmations(
+        seed_numbers,
+        confirmer_numbers or [],
+        catalog=cat,
+        day_context=same_day_context_from_dict(day_context_payload),
+        date_s=date_s,
+    )
+    if same_day_cross:
+        stages.append("same_day_cross_detected")
 
     derivations = apply_derivations(
         graph, catalog=cat, max_depth=req.derivation_depth
@@ -109,7 +175,7 @@ def run_complete_analysis(
     if enable_tiebreak:
         ranked, decisions = apply_selected_tiebreak(
             ranked,
-            observed_numbers=list(observed),  # first-seen order (= generator-first if provided)
+            observed_numbers=list(seed_numbers),
             practical_threshold=practical_tie_threshold,
             enable=True,
         )
@@ -118,12 +184,15 @@ def run_complete_analysis(
 
     for c in ranked:
         c.analytical_confidence = compute_analytical_confidence(
-            c, ranked=ranked, observed_count=len(observed)
+            c, ranked=ranked, observed_count=len(seed_numbers)
         )
     stages.append("confidence_assigned")
 
     explanation = explain_analysis(
-        observed=observed, ranked=ranked, level=req.explanation_level
+        observed=seed_numbers,
+        ranked=ranked,
+        level=req.explanation_level,
+        same_day_cross=[e.to_dict() for e in same_day_cross],
     )
     stages.append("explanation_built")
 
@@ -132,7 +201,7 @@ def run_complete_analysis(
         signals = create_experimental_signals(
             ranked,
             analysis_id=analysis_id,
-            observed_numbers=observed,
+            observed_numbers=seed_numbers,
             analysis_date=req.date,
             lotteries=req.lotteries,
             positions=req.positions,
@@ -144,7 +213,11 @@ def run_complete_analysis(
     # Multi-fuerte unresolved: surface first EMPATE as primary payload, keep peers in alternatives
     multi = [c for c in ranked if c.classification == "EMPATE_MULTI_FUERTE"]
     primary = next(
-        (c for c in ranked if c.classification == "FUERTE_PRINCIPAL"),
+        (
+            c
+            for c in ranked
+            if c.classification in {"FUERTE_PRINCIPAL", "FUERTE_T1_T2_MISMO_DIA"}
+        ),
         None,
     )
     if primary is None and multi:
@@ -172,6 +245,7 @@ def run_complete_analysis(
             "reason": primary.classification_reason,
             "table1_sources": primary.evidence.table1_sources,
             "table2_confirmers": primary.evidence.direct_confirmers,
+            "same_day_cross_support": primary.evidence.same_day_cross_support,
             "multi_fuerte_peers": [c.number for c in multi] if multi else [],
         }
 
@@ -194,6 +268,7 @@ def run_complete_analysis(
             "independent_paths": primary.evidence.independent_path_count,
             "cross_table_support": primary.evidence.cross_table_support,
             "multi_source_support": primary.evidence.multi_source_support,
+            "same_day_cross_support": primary.evidence.same_day_cross_support,
         }
 
     tiebreak_payload = {
@@ -208,7 +283,7 @@ def run_complete_analysis(
         analysis_id=analysis_id,
         engine_version=ENGINE_VERSION,
         table_version=TABLE_VERSION,
-        observed_numbers=observed,
+        observed_numbers=seed_numbers,
         analysis_date=date_s,
         positions=list(req.positions),
         mode=req.mode,
@@ -231,8 +306,11 @@ def run_complete_analysis(
             "No se recomienda apostar con base en este análisis.",
             "Los pesos del ranking son configurables y deben validarse con backtest.",
             "Empates estructurales no resueltos se reportan como EMPATE_MULTI_FUERTE.",
+            "El cruce del mismo día usa las posiciones configuradas (por defecto primera).",
         ],
         tiebreak=tiebreak_payload,
+        same_day_context=day_context_payload,
+        same_day_cross=[e.to_dict() for e in same_day_cross],
     )
 
     if persist:

@@ -95,6 +95,9 @@ def normalize_request(raw: AnalysisRequest | dict[str, Any]) -> AnalysisRequest:
             input_mode=str(raw.get("input_mode") or InputMode.MANUAL.value),
             create_signals=bool(raw.get("create_signals", True)),
             explanation_level=str(raw.get("explanation_level") or "analitico"),
+            same_day_confirmers=list(
+                raw.get("same_day_confirmers") or raw.get("day_confirmers") or []
+            ),
         )
 
     if not req.numbers:
@@ -115,6 +118,9 @@ def normalize_request(raw: AnalysisRequest | dict[str, Any]) -> AnalysisRequest:
         input_mode=req.input_mode or InputMode.MANUAL.value,
         create_signals=bool(req.create_signals),
         explanation_level=req.explanation_level,
+        same_day_confirmers=[
+            normalize_number(n) for n in (req.same_day_confirmers or [])
+        ],
     )
 
 

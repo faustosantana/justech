@@ -32,6 +32,7 @@ WEIGHT_PROFILES: dict[str, dict[str, float]] = {
         "RECENT_PATTERN_SUPPORT": 1.0,
         "CROSS_LOTTERY_SUPPORT": 1.0,
         "CHAIN_CONTINUITY_SUPPORT": 1.0,
+        "SAME_DAY_CROSS_LOTTERY_SUPPORT": 0.0,
         "DERIVATION_DEPTH_PENALTY": -4.0,
         "AMBIGUITY_PENALTY": -6.0,
         "DUPLICATE_PATH_PENALTY": -3.0,
@@ -54,6 +55,9 @@ WEIGHT_PROFILES: dict[str, dict[str, float]] = {
         "RECENT_PATTERN_SUPPORT": 1.0,
         "CROSS_LOTTERY_SUPPORT": 1.0,
         "CHAIN_CONTINUITY_SUPPORT": 1.0,
+        # Same-day T1×T2 cross-lottery confirmation (socio central rule).
+        # Must outrank a plain VECINO_T2_DIRECTO (~+15) without global recalibration.
+        "SAME_DAY_CROSS_LOTTERY_SUPPORT": 28.0,
         "DERIVATION_DEPTH_PENALTY": -5.0,
         "AMBIGUITY_PENALTY": -4.0,
         "DUPLICATE_PATH_PENALTY": -2.0,
@@ -76,6 +80,7 @@ WEIGHT_PROFILES: dict[str, dict[str, float]] = {
         "RECENT_PATTERN_SUPPORT": 3.0,
         "CROSS_LOTTERY_SUPPORT": 2.0,
         "CHAIN_CONTINUITY_SUPPORT": 2.0,
+        "SAME_DAY_CROSS_LOTTERY_SUPPORT": 0.0,
         "DERIVATION_DEPTH_PENALTY": -2.0,
         "AMBIGUITY_PENALTY": -2.0,
         "DUPLICATE_PATH_PENALTY": -1.0,
@@ -98,6 +103,7 @@ WEIGHT_PROFILES: dict[str, dict[str, float]] = {
         "RECENT_PATTERN_SUPPORT": 4.0,
         "CROSS_LOTTERY_SUPPORT": 3.0,
         "CHAIN_CONTINUITY_SUPPORT": 3.0,
+        "SAME_DAY_CROSS_LOTTERY_SUPPORT": 0.0,
         "DERIVATION_DEPTH_PENALTY": -3.0,
         "AMBIGUITY_PENALTY": -3.0,
         "DUPLICATE_PATH_PENALTY": -2.0,
@@ -124,6 +130,8 @@ WEIGHT_PROFILES["agresivo"] = {
 }
 WEIGHT_PROFILES["socio"] = dict(WEIGHT_PROFILES[RankProfile.MANUAL_RECONSTRUCTED.value])
 WEIGHT_PROFILES["perfil_socio"] = WEIGHT_PROFILES["socio"]
+WEIGHT_PROFILES["socio"]["SAME_DAY_CROSS_LOTTERY_SUPPORT"] = 28.0
+WEIGHT_PROFILES["balanceado"]["SAME_DAY_CROSS_LOTTERY_SUPPORT"] = 28.0
 
 
 def resolve_profile(profile: str | None) -> str:
@@ -191,6 +199,8 @@ def compute_components(ev: CandidateEvidence, *, catalog=None) -> ScoreComponent
         RECENT_PATTERN_SUPPORT=float(len(ev.recent_equivalent_cases)),
         CROSS_LOTTERY_SUPPORT=float(max(0, len(ev.lottery_distribution) - 1)),
         CHAIN_CONTINUITY_SUPPORT=0.0,
+        SAME_DAY_CROSS_LOTTERY_SUPPORT=float(ev.same_day_cross_count)
+        + (1.0 if ev.same_day_cross_support else 0.0),
         DERIVATION_DEPTH_PENALTY=float(min_der_depth),
         AMBIGUITY_PENALTY=float(ev.ambiguity_score),
         DUPLICATE_PATH_PENALTY=float(ev.same_source_repetitions),
@@ -245,9 +255,19 @@ def _finalize_classification(
 
     if has_t1 and has_t2:
         if rank == 1:
+            if components.SAME_DAY_CROSS_LOTTERY_SUPPORT > 0:
+                return (
+                    Classification.FUERTE_T1_T2_MISMO_DIA.value,
+                    "Fuerte confirmado por cruce del mismo día (Tabla 1 + Tabla 2 entre loterías).",
+                )
             return (
                 Classification.FUERTE_PRINCIPAL.value,
                 "Mayor respaldo estructural tras análisis completo T1×T2.",
+            )
+        if components.SAME_DAY_CROSS_LOTTERY_SUPPORT > 0:
+            return (
+                Classification.FUERTE_SECUNDARIO.value,
+                "Confirmado por cruce del mismo día, por debajo del principal en ranking.",
             )
         return (
             Classification.FUERTE_SECUNDARIO.value,

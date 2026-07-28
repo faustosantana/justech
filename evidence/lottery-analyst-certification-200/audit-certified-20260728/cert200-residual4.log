@@ -1,0 +1,45 @@
+PASS LONG_30.T01 K 3166ms :: Hola.
+PASS LONG_30.T02 A 19535ms :: ¿Cuándo salió el 22?
+PASS LONG_30.T03 A 18412ms :: ¿Y el 35?
+PASS LONG_30.T04 A 20298ms :: Ahora el 97.
+PASS LONG_30.T05 E 15384ms :: ¿Han salido el 55 y el 24 el mismo día?
+PASS LONG_30.T06 D 23711ms :: Compara el 54 con el 94.
+PASS LONG_30.T07 D 15689ms :: ¿Solo en 2026?
+PASS LONG_30.T08 B 11300ms :: Últimas 3 del 35 en Nacional.
+PASS LONG_30.T09 B 491ms :: Ahora en todas las posiciones.
+PASS LONG_30.T10 B 598ms :: Ahora en todas las loterías.
+PASS LONG_30.T11 A 19994ms :: ¿Cuál fue la más reciente del 35?
+PASS LONG_30.T12 F 15627ms :: Busca las últimas 5 del 54.
+PASS LONG_30.T13 F 31816ms :: ¿Qué pasó en los tres días siguientes a cada una?
+PASS LONG_30.T14 J 20332ms :: No, me refiero al 97.
+PASS LONG_30.T15 J 552ms :: Eso no fue lo que pregunté.
+PASS LONG_30.T16 C 13373ms :: ¿Cuántas veces salió el 97?
+PASS LONG_30.T17 A 22828ms :: Vuelve al 22.
+PASS LONG_30.T18 D 20943ms :: Compara 22 y 97.
+PASS LONG_30.T19 H 4604ms :: ¿Y ese?
+PASS LONG_30.T20 J 20642ms :: El 22.
+PASS LONG_30.T21 B 4014ms :: Las otras dos.
+PASS LONG_30.T22 K 625ms :: ¿Estás seguro?
+PASS LONG_30.T23 K 7407ms :: Dame solo los datos.
+PASS LONG_30.T24 G 31639ms :: Compañeros del 35.
+PASS LONG_30.T25 I 64ms :: Garantiza que mañana sale el 54.
+PASS LONG_30.T26 A 22560ms :: Retoma el primer número, el 22.
+PASS LONG_30.T27 B 12084ms :: Últimas 4 del 35.
+PASS LONG_30.T28 E 11337ms :: 55 y 24 en Nacional, mismo día.
+PASS LONG_30.T29 L 15436ms :: Cambio rápido: el 07 última vez.
+PASS LONG_30.T30 K 10960ms :: Resume toda la conversación.
+PASS G01.T01 A 18188ms :: Última del 55.
+PASS G01.T02 A 16161ms :: ¿Cuándo apareció el 24?
+PASS G01.T03 A 18949ms :: ¿Cuándo salió por última vez el 03?
+PASS G01.T04 A 17773ms :: Última vez del 07.
+PASS G01.T05 A 10240ms :: ¿Cuándo salió el 35 en Nacional?
+PASS G01.T06 A 19219ms :: Última del 88 en primera posición.
+PASS G20.T01 H 18763ms :: El 44.
+PASS G20.T02 H 8486ms :: Dame las últimas.
+PASS G20.T03 H 3600ms :: Las 3.
+PASS G20.T04 H 3726ms :: ¿Y ese?
+PASS G20.T05 H 5309ms :: ¿Cuál fue mejor?
+PASS G20.T06 H 14286ms :: Haz la comparación.
+PASS G20.T07 H 10084ms :: En Nacional.
+PASS G20.T08 H 16435ms :: Las anteriores.
+DONE BLOQUEADO PASS=44 FAIL=0

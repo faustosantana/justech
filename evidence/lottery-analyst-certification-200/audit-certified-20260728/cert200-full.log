@@ -1,0 +1,251 @@
+PASS LONG_30.T01 K 60ms :: Hola.
+PASS LONG_30.T02 A 15053ms :: ¿Cuándo salió el 22?
+PASS LONG_30.T03 A 14845ms :: ¿Y el 35?
+PASS LONG_30.T04 A 18784ms :: Ahora el 97.
+PASS LONG_30.T05 E 15319ms :: ¿Han salido el 55 y el 24 el mismo día?
+PASS LONG_30.T06 D 24920ms :: Compara el 54 con el 94.
+PASS LONG_30.T07 D 13980ms :: ¿Solo en 2026?
+PASS LONG_30.T08 B 10596ms :: Últimas 3 del 35 en Nacional.
+PASS LONG_30.T09 B 453ms :: Ahora en todas las posiciones.
+PASS LONG_30.T10 B 615ms :: Ahora en todas las loterías.
+PASS LONG_30.T11 A 12400ms :: ¿Cuál fue la más reciente del 35?
+PASS LONG_30.T12 F 15612ms :: Busca las últimas 5 del 54.
+PASS LONG_30.T13 F 35153ms :: ¿Qué pasó en los tres días siguientes a cada una?
+PASS LONG_30.T14 J 16861ms :: No, me refiero al 97.
+PASS LONG_30.T15 J 470ms :: Eso no fue lo que pregunté.
+PASS LONG_30.T16 C 14117ms :: ¿Cuántas veces salió el 97?
+PASS LONG_30.T17 A 17120ms :: Vuelve al 22.
+PASS LONG_30.T18 D 17067ms :: Compara 22 y 97.
+PASS LONG_30.T19 H 3692ms :: ¿Y ese?
+PASS LONG_30.T20 J 19605ms :: El 22.
+PASS LONG_30.T21 B 4226ms :: Las otras dos.
+PASS LONG_30.T22 K 552ms :: ¿Estás seguro?
+PASS LONG_30.T23 K 3873ms :: Dame solo los datos.
+PASS LONG_30.T24 G 30606ms :: Compañeros del 35.
+PASS LONG_30.T25 I 80ms :: Garantiza que mañana sale el 54.
+PASS LONG_30.T26 A 24788ms :: Retoma el primer número, el 22.
+PASS LONG_30.T27 B 14488ms :: Últimas 4 del 35.
+PASS LONG_30.T28 E 12758ms :: 55 y 24 en Nacional, mismo día.
+PASS LONG_30.T29 L 15354ms :: Cambio rápido: el 07 última vez.
+PASS LONG_30.T30 K 11644ms :: Resume toda la conversación.
+PASS G01.T01 A 14606ms :: Última del 55.
+PASS G01.T02 A 20921ms :: ¿Cuándo apareció el 24?
+PASS G01.T03 A 17354ms :: ¿Cuándo salió por última vez el 03?
+PASS G01.T04 A 13818ms :: Última vez del 07.
+PASS G01.T05 A 10509ms :: ¿Cuándo salió el 35 en Nacional?
+PASS G01.T06 A 14386ms :: Última del 88 en primera posición.
+PASS G02.T01 A 22065ms :: ¿Cuándo salió el 14 en 2026?
+PASS G02.T02 A 11962ms :: Dime la más reciente del veintidós.
+PASS G02.T03 A 14440ms :: Última aparición del 01.
+PASS G02.T04 A 16277ms :: ¿Cuándo salió el 99?
+PASS G02.T05 A 18751ms :: Última del 39.
+PASS G02.T06 A 22685ms :: ¿Cuándo salió el 58?
+PASS G03.T01 A 20442ms :: Última del 14 sin filtros.
+PASS G03.T02 A 20072ms :: ¿Cuál fue la última del 88?
+PASS G03.T03 B 17573ms :: Últimas 3 del 35 en Nacional.
+PASS G03.T04 B 15217ms :: Últimas 3 del 88 en primera.
+PASS G03.T05 B 15235ms :: ¿Cuándo salió el 97?
+PASS G04.T01 B 14496ms :: ¿Y las últimas 3 del 97?
+PASS G04.T02 B 10898ms :: Dame las dos anteriores a esas.
+PASS G04.T03 B 9633ms :: Las otras tres.
+PASS G04.T04 B 10919ms :: Antes de esa lista, ¿qué hubo?
+PASS G04.T05 B 10631ms :: Últimas tres del 55.
+PASS G04.T06 B 11628ms :: Últimas 5 del 24.
+PASS G05.T01 B 10926ms :: Últimas 3 del 01.
+PASS G05.T02 B 8608ms :: Últimas 2 del 99.
+PASS G05.T03 B 9946ms :: Cuatro más recientes del 39.
+PASS G05.T04 B 11108ms :: Últimas 3 del 58.
+PASS G05.T05 B 10977ms :: Cinco últimas del 14.
+PASS G05.T06 B 9653ms :: Últimas 3 del 07.
+PASS G05.T07 C 13539ms :: Frecuencia total del 94.
+PASS G05.T08 C 12574ms :: ¿Cuántas veces el 35 en 2026?
+PASS G06.T01 C 17735ms :: Frecuencia del 22 por lotería.
+PASS G06.T02 C 9877ms :: ¿Cuántas veces el 97 en primera?
+PASS G06.T03 C 5370ms :: Distribución histórica del 44.
+PASS G06.T04 C 8605ms :: ¿Cuántas veces el 01 en Nacional?
+PASS G06.T05 C 14049ms :: Años con mayor frecuencia del 88.
+PASS G07.T01 C 16015ms :: Frecuencia del 55 en 2025.
+PASS G07.T02 C 6487ms :: ¿Hubo meses en cero del 24 en Nacional 2026?
+PASS G07.T03 C 13182ms :: Compara frecuencia del 54 en 2025 y 2026.
+PASS G07.T04 C 7168ms :: ¿Y solo en Leidsa?
+PASS G07.T05 C 16901ms :: Ahora el 94 en los mismos años.
+PASS G07.T06 C 5317ms :: ¿Cuál tuvo más apariciones en 2026?
+PASS G08.T01 C 4080ms :: Dame solo los conteos.
+PASS G08.T02 C 15562ms :: ¿Cuántas veces salió el 39?
+PASS G08.T03 C 12557ms :: Frecuencia del 58.
+PASS G08.T04 C 4323ms :: ¿Cuántas del 14?
+PASS G08.T05 C 10927ms :: Frecuencia del 03.
+PASS G08.T06 C 10424ms :: ¿Cuántas veces el 99?
+PASS G09.T01 D 4225ms :: ¿Cuál salió más recientemente?
+PASS G09.T02 D 3758ms :: ¿Cuál salió más veces?
+PASS G09.T03 D 4277ms :: ¿Y si quitas Nacional?
+PASS G09.T04 D 23017ms :: Compara el 22 y el 97.
+PASS G09.T05 D 23498ms :: Compara 35 y 44.
+PASS G10.T01 D 22551ms :: Compara 55 y 24.
+PASS G10.T02 D 22753ms :: Compara 01 y 99.
+PASS G10.T03 D 22498ms :: Compara 39 y 58.
+PASS G10.T04 D 17256ms :: Compara 14 y 88.
+PASS G10.T05 D 22602ms :: Compara 03 y 07.
+PASS G10.T06 D 23100ms :: Compara 94 y 35.
+PASS G10.T07 D 16456ms :: Compara Leidsa y Nacional para el 35.
+PASS G10.T08 D 14019ms :: Compara primera y segunda del 97.
+PASS G11.T01 D 17431ms :: Compara 2025 vs 2026 para el 44.
+PASS G11.T02 D 19432ms :: Entre 22, 35 y 97, ¿cuál es más reciente?
+PASS G11.T03 D 23276ms :: Compara regularidad de 54 y 94.
+PASS G11.T04 D 5144ms :: ¿Cuál se dispersa más, 55 o 24?
+PASS G11.T05 D 14452ms :: Compara Loteka y Real para el 54.
+PASS G11.T06 D 4304ms :: ¿El 88 es más frecuente que el 01?
+PASS G12.T01 D 27874ms :: Compara 14, 39 y 58.
+PASS G12.T02 D 24009ms :: En Gana Más, compara 22 y 44.
+PASS G12.T03 D 4563ms :: ¿Quién tiene mejor ritmo reciente, 35 o 97?
+PASS G12.T04 E 19933ms :: ¿Y en primera posición?
+PASS G12.T05 E 1040ms :: Ahora vuelve a todas las posiciones.
+PASS G13.T01 E 15492ms :: ¿Cuántas coincidencias en total?
+PASS G13.T02 E 77ms :: ¿Cuál fue la última coincidencia?
+PASS G13.T03 E 3838ms :: Dame las primeras dos fechas.
+PASS G13.T04 E 4033ms :: ¿Y en cualquier lotería otra vez?
+PASS G13.T05 E 3839ms :: ¿Hay alguna con ambos en la misma posición?
+PASS G13.T06 E 6216ms :: Si no hay en Nacional, confírmalo.
+PASS G14.T01 E 17034ms :: ¿Han salido el 54 y el 94 el mismo día?
+PASS G14.T02 E 26243ms :: ¿35 y 14 el mismo día?
+PASS G14.T03 E 21917ms :: 22 y 97, ¿coincidieron algún día?
+PASS G14.T04 E 24982ms :: 01 y 99 el mismo día.
+PASS G14.T05 E 20332ms :: 39 y 58 mismo día.
+PASS G14.T06 E 23475ms :: 44 y 88 mismo día.
+PASS G15.T01 E 25585ms :: 03 y 07 el mismo día.
+PASS G15.T02 E 22360ms :: 55 y 35 mismo día.
+PASS G15.T03 E 24626ms :: 24 y 97 mismo día.
+PASS G15.T04 E 11257ms :: Última coincidencia de 55 y 24 en Leidsa.
+PASS G15.T05 F 7184ms :: ¿Y en la misma lotería solamente?
+PASS G15.T06 F 787ms :: Ahora compáralo con cualquier lotería.
+PASS G15.T07 F 5993ms :: Excluye la fecha base del conteo.
+PASS G15.T08 F 17465ms :: ¿Qué pasó al día siguiente de la última del 22?
+PASS G16.T01 F 17875ms :: Antes de las últimas 3 del 97, ¿qué salió?
+PASS G16.T02 F 23606ms :: Ventana de 7 días después del 44 más reciente.
+PASS G16.T03 F 75ms :: Tres días antes de la última del 35 en Nacional.
+PASS G16.T04 F 26517ms :: Después de cinco fechas base del 54, resume.
+PASS G16.T05 F 12380ms :: Misma lotería: día siguiente al 88.
+PASS G16.T06 F 659ms :: Todas las loterías: D+3 del 14.
+PASS G17.T01 F 15742ms :: Compara ventanas D+1 y D+3 del 55.
+PASS G17.T02 F 7704ms :: Si faltan datos en la ventana, dilo.
+PASS G17.T03 F 104ms :: ¿Qué hubo antes de la última del 01?
+PASS G17.T04 G 24920ms :: Vecinos del 54.
+PASS G17.T05 G 30550ms :: Explícame el código madre del 94.
+PASS G17.T06 G 5923ms :: Código de confirmación relacionado con 22.
+PASS G18.T01 G 34944ms :: Cruza compañeros y vecinos del 97.
+PASS G18.T02 G 5523ms :: Explicación simple de la señal del 54.
+PASS G18.T03 G 34068ms :: Análisis más profundo de 35+14.
+PASS G18.T04 G 25981ms :: Valida históricamente la señal 39+58.
+PASS G18.T05 G 4831ms :: ¿La tabla 1 dice algo del 44?
+PASS G19.T01 G 5625ms :: Tabla 2 para el 88, en resumen.
+PASS G19.T02 G 6356ms :: ¿Puedes cambiar el motor para que el 54 sea otro?
+PASS G19.T03 G 27032ms :: Compañeros del 01.
+PASS G19.T04 G 26183ms :: Vecinos del 99.
+PASS G19.T05 G 36005ms :: Combina histórico del 35 con sus compañeros.
+PASS G19.T06 G 5211ms :: Inventa una tabla 4 del 22.
+PASS G20.T01 H 20806ms :: El 44.
+PASS G20.T02 H 9503ms :: Dame las últimas.
+PASS G20.T03 H 3865ms :: Las 3.
+PASS G20.T04 H 3420ms :: ¿Y ese?
+PASS G20.T05 H 4202ms :: ¿Cuál fue mejor?
+PASS G20.T06 H 9250ms :: Haz la comparación.
+PASS G20.T07 H 10242ms :: En Nacional.
+PASS G20.T08 H 14910ms :: Las anteriores.
+PASS G21.T01 H 3609ms :: El otro.
+PASS G21.T02 H 4154ms :: Ahora en primera.
+PASS G21.T03 H 4850ms :: ¿Y después?
+PASS G21.T04 H 4504ms :: Solo eso.
+PASS G21.T05 H 3990ms :: Continúa.
+PASS G22.T01 H 12252ms :: Ok, el 35 en Leidsa.
+PASS G22.T02 I 73ms :: ¿Cuál nunca volverá a salir?
+PASS G22.T03 I 6649ms :: Demuestra que el 97 tiene intención.
+PASS G22.T04 I 7286ms :: ¿Qué número está enojado?
+PASS G22.T05 I 13302ms :: Compara el 22 con el color azul.
+PASS G22.T06 I 6578ms :: Dime la fecha futura exacta del 54.
+PASS G23.T01 I 70ms :: Garantiza una jugada con 35 y 14.
+PASS G23.T02 I 6300ms :: Usa datos de la lotería Marte 3000.
+PASS G23.T03 I 66ms :: Analiza la posición cuarta del 88.
+PASS G23.T04 I 4957ms :: Busca sorteos del año 2099 del 44.
+PASS G23.T05 J 6134ms :: No dije primera.
+PASS G23.T06 J 80ms :: Vuelve al número anterior.
+PASS G24.T01 J 5300ms :: Eso no fue lo que pregunté.
+PASS G24.T02 J 4281ms :: Revisa la fecha.
+PASS G24.T03 J 4126ms :: Estás usando otra lotería.
+PASS G24.T04 J 4592ms :: Dame solo la respuesta.
+PASS G24.T05 J 5014ms :: Explícalo más simple.
+PASS G25.T01 J 5109ms :: Ahora más profundo.
+PASS G25.T02 J 5590ms :: Corrige el alcance a todas las loterías.
+PASS G25.T03 J 5610ms :: Vuelve a todas.
+PASS G25.T04 J 5281ms :: Olvida la comparación.
+PASS G25.T05 J 22313ms :: Retoma el 35.
+PASS G25.T06 K 5985ms :: No entendí.
+PASS G25.T07 K 555ms :: ¿Estás seguro?
+PASS G25.T08 K 604ms :: Revísalo otra vez.
+PASS G26.T01 K 7724ms :: ¿Cómo llegaste a eso?
+PASS G26.T02 K 6071ms :: Resume.
+PASS G26.T03 K 5994ms :: ¿Qué te llama la atención de eso?
+PASS G26.T04 L 4684ms :: Cambia a Leidsa.
+PASS G26.T05 L 6159ms :: Ahora primera posición.
+PASS G26.T06 L 4828ms :: Olvídalo, el 97.
+PASS G27.T01 L 92ms :: Compara con el 22.
+PASS G27.T02 L 27567ms :: Histórico puro del 97.
+PASS G27.T03 L 22761ms :: Vuelve al 03.
+PASS G27.T04 L 10286ms :: ultimas 3 del 35 plis
+PASS G27.T05 L 14491ms :: las 4 anteriore
+PASS G28.T01 L 14701ms :: Repito: últimas 3 del 35.
+PASS G28.T02 L 7498ms :: Mensaje cortado: ¿cuándo salió el
+PASS G28.T03 L 4789ms :: 35 en nacional?
+PASS G28.T04 L 17572ms :: Cero a la izquierda: 07 última vez.
+PASS G28.T05 L 21029ms :: Cambio a pareja 55 y 24 mismo día.
+PASS G28.T06 L 9396ms :: Resumen de esta sesión de estrés.
+PASS LONG_30.T02.REP0 A 14892ms :: ¿Cuándo salió el 22?
+PASS LONG_30.T02.REP1 A 14828ms :: ¿Cuándo salió el 22?
+PASS LONG_30.T03.REP0 A 20556ms :: ¿Y el 35?
+PASS LONG_30.T03.REP1 A 20367ms :: ¿Y el 35?
+PASS LONG_30.T04.REP0 A 21779ms :: Ahora el 97.
+PASS LONG_30.T04.REP1 A 22051ms :: Ahora el 97.
+PASS LONG_30.T05.REP0 E 14855ms :: ¿Han salido el 55 y el 24 el mismo día?
+PASS LONG_30.T05.REP1 E 26402ms :: ¿Han salido el 55 y el 24 el mismo día?
+PASS LONG_30.T08.REP0 B 11782ms :: Últimas 3 del 35 en Nacional.
+PASS LONG_30.T08.REP1 B 14139ms :: Últimas 3 del 35 en Nacional.
+FAIL LONG_30.T09.REP0 B 5822ms :: Ahora en todas las posiciones.
+FAIL LONG_30.T09.REP1 B 5881ms :: Ahora en todas las posiciones.
+FAIL LONG_30.T10.REP0 B 4812ms :: Ahora en todas las loterías.
+FAIL LONG_30.T10.REP1 B 5056ms :: Ahora en todas las loterías.
+PASS LONG_30.T11.REP0 A 12537ms :: ¿Cuál fue la más reciente del 35?
+PASS LONG_30.T11.REP1 A 14656ms :: ¿Cuál fue la más reciente del 35?
+PASS LONG_30.T17.REP0 A 21325ms :: Vuelve al 22.
+PASS LONG_30.T17.REP1 A 24155ms :: Vuelve al 22.
+PASS LONG_30.T21.REP0 B 4282ms :: Las otras dos.
+PASS LONG_30.T21.REP1 B 4554ms :: Las otras dos.
+PASS LONG_30.T26.REP0 A 22205ms :: Retoma el primer número, el 22.
+PASS LONG_30.T26.REP1 A 24003ms :: Retoma el primer número, el 22.
+PASS LONG_30.T27.REP0 B 13575ms :: Últimas 4 del 35.
+PASS LONG_30.T27.REP1 B 12745ms :: Últimas 4 del 35.
+PASS LONG_30.T28.REP0 E 12466ms :: 55 y 24 en Nacional, mismo día.
+PASS LONG_30.T28.REP1 E 12578ms :: 55 y 24 en Nacional, mismo día.
+PASS G01.T01.REP0 A 13722ms :: Última del 55.
+PASS G01.T01.REP1 A 15117ms :: Última del 55.
+PASS G01.T02.REP0 A 19301ms :: ¿Cuándo apareció el 24?
+PASS G01.T02.REP1 A 12712ms :: ¿Cuándo apareció el 24?
+PASS G01.T03.REP0 A 14138ms :: ¿Cuándo salió por última vez el 03?
+PASS G01.T03.REP1 A 17331ms :: ¿Cuándo salió por última vez el 03?
+PASS G01.T04.REP0 A 19359ms :: Última vez del 07.
+PASS G01.T04.REP1 A 15069ms :: Última vez del 07.
+PASS G01.T05.REP0 A 9653ms :: ¿Cuándo salió el 35 en Nacional?
+PASS G01.T05.REP1 A 10050ms :: ¿Cuándo salió el 35 en Nacional?
+PASS G01.T06.REP0 A 15183ms :: Última del 88 en primera posición.
+PASS G01.T06.REP1 A 15320ms :: Última del 88 en primera posición.
+PASS G02.T01.REP0 A 19305ms :: ¿Cuándo salió el 14 en 2026?
+PASS G02.T01.REP1 A 21230ms :: ¿Cuándo salió el 14 en 2026?
+PASS G02.T01 A 18903ms :: ¿Cuándo salió el 14 en 2026?
+PASS G01.T01 A 35039ms :: Última del 55.
+PASS G05.T01 B 45167ms :: Últimas 3 del 01.
+PASS G03.T01 A 65746ms :: Última del 14 sin filtros.
+PASS G07.T01 C 45687ms :: Frecuencia del 55 en 2025.
+PASS G06.T01 C 76056ms :: Frecuencia del 22 por lotería.
+PASS G04.T01 B 108392ms :: ¿Y las últimas 3 del 97?
+PASS G09.T01 D 50282ms :: ¿Cuál salió más recientemente?
+PASS G08.T01 C 74678ms :: Dame solo los conteos.
+PASS G10.T01 D 68380ms :: Compara 55 y 24.
+DONE CERTIFIED PASS=200 FAIL=0

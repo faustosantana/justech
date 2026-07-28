@@ -1318,6 +1318,11 @@ class LotteryChatService:
                                 fallback_used = True
                                 fallback_reason = rr.rejection_reason or "reasoning_fallback"
                             reasoning_telemetry = rr.to_telemetry()
+                            if isinstance(research_meta, dict):
+                                research_meta["analyst_reasoning_preserve"] = True
+                                research_meta["relation"] = (
+                                    research_meta.get("relation") or pkg.relation or "same_day"
+                                )
                         else:
                             # Skip Huawei — factual template is the answer
                             final_text = template

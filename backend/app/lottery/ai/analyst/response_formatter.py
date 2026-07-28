@@ -68,6 +68,22 @@ def format_analyst_response(
         if is_follow_up is not None
         else _detect_follow_up(question, ctx, research)
     )
+
+    # Analyst Reasoning Layer outputs are already structured; do not collapse to short lead.
+    if research.get("analyst_reasoning_preserve"):
+        cleaned = _sanitize_user_text(text)
+        from app.lottery.ai.turn_policy import scrub_internal_jargon
+
+        return scrub_internal_jargon(
+            self_verify_response(
+                cleaned,
+                question=question,
+                facts=facts,
+                research=research,
+                conversation_context=ctx,
+            )
+        )
+
     mode = select_response_mode(
         text=text,
         facts=facts,
@@ -219,13 +235,30 @@ def select_response_mode(
     if _REPORT_Q.search(q) or research.get("report_mode"):
         return "report"
 
-    # Same-day / simple factual answers → short
+    # Same-day / simple factual answers → short,
+    # but keep multi-paragraph Analyst Reasoning interpretive answers intact.
     if (
         research.get("relation") == "same_day"
         or evidence_package.get("relation") == "same_day"
         or _SIMPLE_Q.search(q)
         or _SIMPLE_Q.search(text or "")
     ) and not _REPORT_Q.search(q):
+        body = (text or "").strip()
+        paras = [p for p in re.split(r"\n{2,}", body) if p.strip()]
+        interpretive = bool(
+            len(paras) >= 2
+            and (
+                len(body) >= 220
+                or re.search(
+                    r"misma\s+loter|eso\s+no\s+significa|hist[oó]rica\s+y\s+descriptiva|"
+                    r"alcance\s+oficial|siguiente\s+an[aá]lisis",
+                    body,
+                    re.I,
+                )
+            )
+        )
+        if interpretive or research.get("analyst_reasoning_preserve"):
+            return "full"
         return "short"
 
     case_count = _as_int(evidence_package.get("case_count")) or 0

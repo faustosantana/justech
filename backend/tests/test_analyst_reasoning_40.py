@@ -110,6 +110,26 @@ def test_factual_guard_rejects_count_and_external():
     assert g.rejection_reason
 
 
+def test_factual_guard_rejects_invented_date_count():
+    pkg = EvidencePackage(
+        question="q",
+        subjects=["35", "14"],
+        dates=["2026-07-20"],
+        counts={"total": 120},
+        official_lotteries=list(OFFICIAL_LOTTERY_SCOPE),
+        factual_answer="120",
+        relation="same_day",
+    )
+    invented = (
+        "Los números 35 y 14 coincidieron el mismo día en 20 fechas distintas "
+        "dentro de las 7 loterías. Registros consultados: 120."
+    )
+    g = FactualGuard.validate(invented, pkg)
+    assert g.passed is False
+    assert "count_mismatch" in (g.rejection_reason or "")
+
+
+
 def test_factual_guard_accepts_good_analysis():
     pkg = EvidencePackage(
         question="q",
@@ -157,8 +177,23 @@ async def test_reasoning_layer_guard_fallback():
     )
     assert rr.fallback_used is True
     assert rr.guard_passed is False
-    assert rr.text == "SAFE FACTUAL 120"
+    assert "120" in rr.text
     assert rr.rejection_reason
+    # Rich same_day fallback when relation+total present
+    pkg2 = EvidencePackage(
+        question="explica",
+        subjects=["35", "14"],
+        relation="same_day",
+        counts={"total": 120},
+        factual_answer="SAFE FACTUAL 120",
+    )
+    rr2 = await layer.run(
+        package=pkg2, mode="interpret_pattern", factual_fallback="SAFE FACTUAL 120"
+    )
+    assert rr2.fallback_used is True
+    assert "misma lotería" in rr2.text.lower() or "misma loteria" in rr2.text.lower()
+    assert "120" in rr2.text
+
 
 
 @pytest.mark.asyncio

@@ -45,6 +45,30 @@ class EvidencePackage(BaseModel):
         raw = json.dumps(payload, sort_keys=True, ensure_ascii=False, default=str)
         return hashlib.sha256(raw.encode("utf-8")).hexdigest()[:16]
 
+    def safe_interpretive_text(self, *, base_factual: str | None = None) -> str:
+        """Deterministic rich fallback when Huawei is skipped/rejected."""
+        total = self.counts.get("total")
+        subjects = [str(s).lstrip("0") or "0" for s in self.subjects if str(s).strip()]
+        pair = " y ".join(subjects[:2]) if len(subjects) >= 2 else (subjects[0] if subjects else "los números")
+        factual = (base_factual or self.factual_answer or "").strip()
+        if self.relation == "same_day" and total is not None:
+            try:
+                t = int(total)
+            except (TypeError, ValueError):
+                t = total
+            body = (
+                f"Dentro de las 7 loterías habilitadas, el {pair} han aparecido "
+                f"en la misma fecha {t} veces.\n\n"
+                "Eso no significa necesariamente que salieran en la misma lotería: "
+                "la coincidencia se cuenta cuando ambos aparecen en sorteos del mismo "
+                "día calendario dentro del alcance oficial.\n\n"
+                "La cifra es histórica y descriptiva. Para entender mejor la relación, "
+                "conviene revisar en cuáles loterías se repite más y cuáles fueron las "
+                "coincidencias más recientes."
+            )
+            return body
+        return factual or "No hay evidencia suficiente para ampliar la interpretación."
+
     def to_llm_payload(self) -> dict[str, Any]:
         """Compact payload for the model — no internals beyond verified fields."""
         return {

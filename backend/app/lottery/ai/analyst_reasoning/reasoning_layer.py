@@ -73,7 +73,11 @@ class AnalystReasoningLayer:
         max_tokens: int = 1200,
     ) -> ReasoningResult:
         ehash = package.evidence_hash()
+        rich_fallback = package.safe_interpretive_text(base_factual=factual_fallback)
+
         if not should_invoke_reasoning(mode):
+            # Skip: keep short template for attribute asks; use rich text only for
+            # modes that would have analyzed (handled above). Pure skip stays factual.
             return ReasoningResult(
                 text=factual_fallback,
                 used_reasoning=False,
@@ -87,7 +91,7 @@ class AnalystReasoningLayer:
 
         if self.huawei_caller is None:
             return ReasoningResult(
-                text=factual_fallback,
+                text=rich_fallback,
                 used_reasoning=False,
                 mode=mode,
                 provider_used="local_template",
@@ -103,7 +107,7 @@ class AnalystReasoningLayer:
 
         if not text:
             return ReasoningResult(
-                text=factual_fallback,
+                text=rich_fallback,
                 used_reasoning=False,
                 mode=mode,
                 provider_used="local_template",
@@ -119,7 +123,7 @@ class AnalystReasoningLayer:
         guard: GuardResult = FactualGuard.validate(text, package)
         if not guard.passed:
             return ReasoningResult(
-                text=factual_fallback,
+                text=rich_fallback,
                 used_reasoning=True,
                 mode=mode,
                 provider_used="huawei_modelarts",

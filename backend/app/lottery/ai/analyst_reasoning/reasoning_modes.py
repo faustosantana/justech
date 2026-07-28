@@ -49,7 +49,7 @@ _LIMIT = re.compile(
     re.I,
 )
 _PURE_FACT = re.compile(
-    r"^\s*("
+    r"^\s*[¿¡]?\s*("
     r"cu[aá]ntas?\s+veces|"
     r"cu[aá]ndo(\s+fue|\s+sali[oó])?|"
     r"[uú]ltima(\s+vez)?|"
@@ -107,16 +107,23 @@ class ReasoningModeSelector:
         if turn == "attribute_of_last_event" and not _EXPLAIN.search(raw):
             return "skip"
 
-        # Same-day coincidence investigation: interpret (value over bare rewrite)
-        if relation == "same_day" and not attr:
-            if len(raw.strip()) >= 20:
-                return "interpret_pattern"
-
-        # Very short bare count/date asks without analysis verbs
-        if len(raw.strip()) < 48 and _PURE_FACT.match(raw.strip()):
+        # Bare count/date/position asks → skip Huawei (no interpretive value),
+        # except same_day coincidence where "misma fecha ≠ misma lotería" needs analysis.
+        if (
+            _PURE_FACT.match(raw.strip())
+            and not _EXPLAIN.search(raw)
+            and relation != "same_day"
+        ):
             return "skip"
 
-        if turn in {"new_investigation", "contextual_follow_up"} and len(raw) > 55:
+        # Same-day coincidence: interpret (value over bare rewrite)
+        if relation == "same_day" and not attr:
+            if len(raw.strip()) >= 20 or _EXPLAIN.search(raw):
+                return "interpret_pattern"
+
+        if turn in {"new_investigation", "contextual_follow_up"} and (
+            _EXPLAIN.search(raw) or len(raw.strip()) > 80
+        ):
             return "interpret_pattern"
 
         return "skip"

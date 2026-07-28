@@ -68,7 +68,7 @@ class FactualGuard:
                 # No dates in package → claiming ISO dates is invention
                 violations.append(f"invented_date:{d}")
 
-        # Counts: if total known, model must not state a different total nearby
+        # Counts: canonical total must not be contradicted by alternate totals
         total = package.counts.get("total")
         if total is not None:
             try:
@@ -76,13 +76,30 @@ class FactualGuard:
             except (TypeError, ValueError):
                 t = None
             if t is not None:
+                count_pat = re.compile(
+                    r"\b(\d{1,5})\s+("
+                    r"ocasiones|veces|coincidencias|apariciones|"
+                    r"fechas(\s+distintas)?|registros(\s+de\s+ocurrencias)?|"
+                    r"d[ií]as(\s+distintos)?|sorteos"
+                    r")\b",
+                    re.I,
+                )
+                for m in count_pat.finditer(raw):
+                    claimed = int(m.group(1))
+                    # Allow scope "7 loterías" and trivial 1–3 in prose lists
+                    if claimed in {7, 1, 2, 3}:
+                        continue
+                    if claimed != t:
+                        violations.append(f"count_mismatch:{claimed}!={t}")
+                # Explicit "total / coincidieron en N" without unit word
                 for m in re.finditer(
-                    r"\b(\d{1,5})\s+(ocasiones|veces|coincidencias|apariciones)\b",
+                    r"\b(?:total|coincid(?:ieron|en|e))\s+(?:en\s+)?(\d{1,5})\b",
                     raw,
                     re.I,
                 ):
-                    if int(m.group(1)) != t:
-                        violations.append(f"count_mismatch:{m.group(1)}!={t}")
+                    claimed = int(m.group(1))
+                    if claimed not in {7, 1, 2, 3, t}:
+                        violations.append(f"count_mismatch:{claimed}!={t}")
 
         # Subjects: strip ISO dates, clock times, and NY draw labels first
         scrubbed = _ISO_DATE.sub(" ", raw)

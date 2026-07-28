@@ -11,7 +11,7 @@ from typing import Any
 from app.lottery.ai.analyst_reasoning.evidence_package import EvidencePackage
 from app.lottery.ai.analyst_reasoning.reasoning_modes import MODE_INSTRUCTIONS, ReasoningMode
 
-REASONING_PROMPT_VERSION = "analyst-reasoning-v1.0"
+REASONING_PROMPT_VERSION = "analyst-reasoning-v1.1"
 
 
 def build_reasoning_messages(
@@ -41,6 +41,9 @@ REGLAS ABSOLUTAS:
 11. No menciones otros números de bolas distintos a subjects del Evidence Package
     (salvo el total/conteo verificado o la cifra 7 del alcance oficial).
 12. Si citas fechas, usa solo las de dates/occurrences del Evidence Package.
+13. El conteo canónico es counts.total. Úsalo como cifra principal de coincidencias/
+    apariciones. No inventes un total alterno (p. ej. «N fechas distintas» distinto
+    de counts.total). Si solo hay un total verificado, dilo una vez con claridad.
 
 MODO ACTIVO: {mode}
 INSTRUCCIÓN DEL MODO: {mode_help}

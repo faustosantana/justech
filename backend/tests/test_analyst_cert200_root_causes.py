@@ -135,24 +135,41 @@ def test_r5_subject_switch_clears_sticky_lottery():
         active_filters={"lottery_explicit": True, "lottery": "Nacional"},
     )
     brain = ConversationBrain(st)
+    # DEFAULT-like lottery list from understand() must not re-trap sticky Nacional
     understanding = UnderstandingResult(
-        intent="same_day_coincidence",
-        numbers=["55", "24"],
-        lotteries=[],
+        intent="last_occurrence",
+        numbers=["07"],
+        lotteries=["Nacional", "Leidsa", "Loteka", "Real", "Gana Más"],
         confidence=0.9,
         source="rules",
     )
     resolution = {
-        "numbers": ["55", "24"],
-        "raw_message": "Cambio a pareja 55 y 24 mismo día.",
+        "numbers": ["07"],
+        "raw_message": "Cambio rápido: el 07 última vez.",
         "follow_up_kind": "last_occurrence",
         "inherit_active_number": False,
         "lottery_explicit": False,
+        "clear_lottery": True,
     }
     out = brain.apply_resolution(understanding=understanding, resolution=resolution)
-    assert out.active_numbers[:2] == ["55", "24"]
+    assert out.active_numbers == ["07"]
     assert not (out.active_filters or {}).get("lottery_explicit")
+    assert "lottery" not in (out.active_filters or {})
     assert out.active_lotteries == []
+
+
+def test_r4_antes_de_esa_lista_is_last_n_not_temporal_before():
+    st = ConversationState(active_numbers=["97"], last_intent="last_n_occurrences", last_analysis={"limit": 3})
+    q = QuestionClassifier.classify("Antes de esa lista, ¿qué hubo?", st, {"numbers": ["97"]})
+    assert q is not None
+    assert q.kind == "last_n_occurrences"
+    assert q.params.get("numbers") == ["97"]
+
+
+def test_r4_haz_la_comparacion_without_pair_is_not_research():
+    st = ConversationState(active_numbers=["44"])
+    q = QuestionClassifier.classify("Haz la comparación.", st, {"numbers": ["44"]})
+    assert q is None
 
 
 # ---------------------------------------------------------------------------

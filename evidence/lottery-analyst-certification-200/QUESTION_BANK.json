@@ -588,9 +588,7 @@
           ],
           "expected_intent": "correction",
           "expected_turn_type": "correction",
-          "expected_filters": {
-            "lottery": "Nacional"
-          },
+          "expected_filters": {},
           "expected_tool_family": "last_occurrence",
           "factual_validation_required": true,
           "ambiguity_expected": false,

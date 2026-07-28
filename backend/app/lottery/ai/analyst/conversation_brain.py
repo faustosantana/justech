@@ -86,6 +86,13 @@ class ConversationBrain:
                 filters.pop("lottery_explicit", None)
                 filters.pop("lottery", None)
                 st.active_lotteries = []
+                # Keep st.active_filters in sync — otherwise the lots-merge branch below
+                # still sees the stale lottery_explicit flag and re-traps the turn.
+                st.active_filters = {
+                    k: v
+                    for k, v in (st.active_filters or {}).items()
+                    if k not in {"lottery_explicit", "lottery"}
+                }
                 resolution = {**resolution, "clear_lottery": True, "lottery_explicit": False}
 
         lots = list(resolution.get("lotteries") or understanding.lotteries or [])
@@ -100,9 +107,12 @@ class ConversationBrain:
         ):
             filters.pop("lottery_explicit", None)
             filters.pop("lottery", None)
-            # Keep subject; drop sticky lottery list for "all" scope
-            if asks_all_lotteries(raw_msg):
-                st.active_lotteries = []
+            st.active_lotteries = []
+            st.active_filters = {
+                k: v
+                for k, v in (st.active_filters or {}).items()
+                if k not in {"lottery_explicit", "lottery"}
+            }
         elif lots:
             # Explicit lottery this turn replaces sticky scope (B.2: Nacional only).
             # Do not merge prior DEFAULT lotteries into an explicit filter.

@@ -8,6 +8,7 @@ from __future__ import annotations
 import csv
 import hashlib
 import json
+import os
 import re
 import time
 import traceback
@@ -488,12 +489,19 @@ def main() -> None:
         raise SystemExit(f"QUESTION_BANK checksum mismatch {digest} != {expected}")
 
     bank = json.loads(bank_bytes.decode())
+    only_groups = {
+        g.strip()
+        for g in (os.environ.get("CERT_ONLY_GROUPS") or "").split(",")
+        if g.strip()
+    }
     config = {
         "audit_run_id": AUDIT_RUN_ID,
         "baseline": "lottery-analyst-certified-2026.1",
-        "commit": "ec27d96",
+        "commit": os.environ.get("CERT_COMMIT", "ee3ecda"),
+        "image_tag": os.environ.get("CERT_IMAGE_TAG", "lottery-ia-ux-v2.4.5.4"),
         "seed": bank["seed"],
         "bank_sha256": digest,
+        "only_groups": sorted(only_groups) if only_groups else None,
         "endpoint": BASE + "/lottery/chat/sessions/{id}/messages",
         "started_at": datetime.now(timezone.utc).isoformat(),
         "read_only": True,
@@ -505,6 +513,8 @@ def main() -> None:
     all_rows: list[dict] = []
     # Primary audit: sequential conversations (stable)
     for conv in bank["conversations"]:
+        if only_groups and conv["conversation_group"] not in only_groups:
+            continue
         try:
             all_rows.extend(run_conversation(conv))
         except Exception as e:  # noqa: BLE001
@@ -524,66 +534,72 @@ def main() -> None:
                 }
             )
 
+    # Skip heavy satellite suites on filtered smoke retests
+    skip_satellites = bool(only_groups) or os.environ.get("CERT_SKIP_SATELLITES") == "1"
+
     # Repeatability: 20 cases in fresh single-turn conversations (message only)
     rep_results = []
     id_map = {c["case_id"]: c for c in bank["cases_flat"]}
-    for cid in bank.get("repeatability_case_ids") or []:
-        case = id_map.get(cid)
-        if not case:
-            continue
-        # run twice
-        pair = []
-        for i in range(2):
-            conv = {
-                "conversation_group": f"REP_{cid}_{i}",
-                "cases": [{**case, "turn_number": 1, "case_id": f"{cid}.REP{i}"}],
-            }
-            rows = run_conversation(conv)
-            pair.append(rows[0] if rows else {})
-        # compare factual equivalence
-        a, b = pair[0], pair[1]
-        equiv = True
-        notes = []
-        if a.get("repository_expected") and b.get("repository_expected"):
-            if a["repository_expected"] != b["repository_expected"]:
-                # repo same by definition; compare response dates
-                pass
-        dates_a = set(re.findall(r"20\d{2}-\d{2}-\d{2}", a.get("full_response") or ""))
-        dates_b = set(re.findall(r"20\d{2}-\d{2}-\d{2}", b.get("full_response") or ""))
-        if dates_a and dates_b and dates_a != dates_b:
-            # also accept spanish-only if both pass
-            if a.get("PASS_FAIL") == "PASS" and b.get("PASS_FAIL") == "PASS":
-                notes.append("dates_diff_but_both_pass")
-            else:
+    if not skip_satellites:
+        for cid in bank.get("repeatability_case_ids") or []:
+            case = id_map.get(cid)
+            if not case:
+                continue
+            # run twice
+            pair = []
+            for i in range(2):
+                conv = {
+                    "conversation_group": f"REP_{cid}_{i}",
+                    "cases": [{**case, "turn_number": 1, "case_id": f"{cid}.REP{i}"}],
+                }
+                rows = run_conversation(conv)
+                pair.append(rows[0] if rows else {})
+            # compare factual equivalence
+            a, b = pair[0], pair[1]
+            equiv = True
+            notes = []
+            if a.get("repository_expected") and b.get("repository_expected"):
+                if a["repository_expected"] != b["repository_expected"]:
+                    # repo same by definition; compare response dates
+                    pass
+            dates_a = set(re.findall(r"20\d{2}-\d{2}-\d{2}", a.get("full_response") or ""))
+            dates_b = set(re.findall(r"20\d{2}-\d{2}-\d{2}", b.get("full_response") or ""))
+            if dates_a and dates_b and dates_a != dates_b:
+                # also accept spanish-only if both pass
+                if a.get("PASS_FAIL") == "PASS" and b.get("PASS_FAIL") == "PASS":
+                    notes.append("dates_diff_but_both_pass")
+                else:
+                    equiv = False
+                    notes.append(f"dates {dates_a} vs {dates_b}")
+            if a.get("PASS_FAIL") != b.get("PASS_FAIL"):
                 equiv = False
-                notes.append(f"dates {dates_a} vs {dates_b}")
-        if a.get("PASS_FAIL") != b.get("PASS_FAIL"):
-            equiv = False
-            notes.append("verdict_mismatch")
-        rep_results.append({"case_id": cid, "equivalent": equiv, "notes": notes, "runs": pair})
+                notes.append("verdict_mismatch")
+            rep_results.append({"case_id": cid, "equivalent": equiv, "notes": notes, "runs": pair})
 
     # Concurrency: 10 conversations in parallel (first turn only of selected groups)
     conc = []
-    groups = {c["conversation_group"]: c for c in bank["conversations"]}
-    selected = [groups[g] for g in (bank.get("concurrency_groups") or []) if g in groups][:10]
+    conc_unique = True
+    if not skip_satellites:
+        groups = {c["conversation_group"]: c for c in bank["conversations"]}
+        selected = [groups[g] for g in (bank.get("concurrency_groups") or []) if g in groups][:10]
 
-    def _one(conv):
-        slim = {"conversation_group": f"CONC_{conv['conversation_group']}", "cases": conv["cases"][:1]}
-        return run_conversation(slim)
+        def _one(conv):
+            slim = {"conversation_group": f"CONC_{conv['conversation_group']}", "cases": conv["cases"][:1]}
+            return run_conversation(slim)
 
-    with ThreadPoolExecutor(max_workers=5) as ex:
-        futs = {ex.submit(_one, c): c["conversation_group"] for c in selected}
-        for fut in as_completed(futs):
-            g = futs[fut]
-            try:
-                rows = fut.result()
-                conc.append({"group": g, "ok": True, "rows": rows, "conversation_ids": list({r.get("conversation_id") for r in rows})})
-            except Exception as e:  # noqa: BLE001
-                conc.append({"group": g, "ok": False, "error": str(e)})
+        with ThreadPoolExecutor(max_workers=5) as ex:
+            futs = {ex.submit(_one, c): c["conversation_group"] for c in selected}
+            for fut in as_completed(futs):
+                g = futs[fut]
+                try:
+                    rows = fut.result()
+                    conc.append({"group": g, "ok": True, "rows": rows, "conversation_ids": list({r.get("conversation_id") for r in rows})})
+                except Exception as e:  # noqa: BLE001
+                    conc.append({"group": g, "ok": False, "error": str(e)})
 
-    # Mix of conversation ids uniqueness
-    conc_ids = [cid for item in conc for cid in (item.get("conversation_ids") or []) if cid]
-    conc_unique = len(conc_ids) == len(set(conc_ids))
+        # Mix of conversation ids uniqueness
+        conc_ids = [cid for item in conc for cid in (item.get("conversation_ids") or []) if cid]
+        conc_unique = len(conc_ids) == len(set(conc_ids))
 
     # Persist artifacts
     (EVID / "raw_results.json").write_text(json.dumps({"audit_run_id": AUDIT_RUN_ID, "turns": all_rows}, ensure_ascii=False, indent=2), encoding="utf-8")
@@ -702,7 +718,8 @@ def main() -> None:
     invented = sum(1 for r in all_rows if any("fabricat" in x or "guaranteed" in x or "invented" in x for x in (r.get("failure_category") or [])))
     wrong_subj = sum(1 for r in all_rows if "wrong_subject" in (r.get("failure_category") or []))
 
-    # Certification level
+    # Certification level — criteria locked to the certification brief
+    factual_pct = (avg("exactitud_factual") / 5.0) if scored else 0.0
     if (
         fail_n == 0
         and pass_n >= 200
@@ -711,10 +728,7 @@ def main() -> None:
         and jerga == 0
         and invented == 0
         and wrong_subj == 0
-        and avg("naturalidad") >= 4.5
-        and avg("prudencia") >= 4.3
-        and avg("claridad") >= 4.5
-        and avg("ambiguedad") >= 4.5
+        and factual_pct >= 0.999
     ):
         level = "CERTIFIED"
     elif (

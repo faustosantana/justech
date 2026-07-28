@@ -56,6 +56,7 @@ _PREDICTION = re.compile(
     r"\b("
     r"va\s+a\s+salir|saldr[aá]|predic\w*|apostar|apuesta|qu[eé]\s+juego|"
     r"n[uú]mero\s+ganador|seguro\s+que\s+sale|garantiz\w*|"
+    r"nunca\s+volver[aá]|nunca\s+saldr[aá]|fecha\s+futura|"
     r"recomendaci[oó]n\s+de\s+apuesta|recomi[eé]ndame\s+(una\s+)?apuesta|"
     r"qu[eé]\s+n[uú]mero\s+jugo|conviene\s+jugar"
     r")\b",

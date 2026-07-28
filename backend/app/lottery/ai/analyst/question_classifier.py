@@ -246,6 +246,10 @@ class QuestionClassifier:
         # Same-day coincidence — before compare / complete-analysis paths
         from app.lottery.ai.same_day_coincidence import is_same_day_coincidence_question
 
+        # Bare «Haz la comparación.» without two concrete subjects → not research
+        if re.search(r"^\s*haz\s+la\s+comparaci[oó]n\.?\s*$", raw, re.I) and len(nums) < 2:
+            return None
+
         if is_same_day_coincidence_question(raw) or (
             resolution.get("active_relation") == "same_day"
             and resolution.get("follow_up_kind") in {None, "lotteries", "positions", "filtered"}
@@ -392,11 +396,32 @@ class QuestionClassifier:
             return ResearchQuestion("last_n_occurrences", last_n_params, raw_message=raw)
 
         # temporal_before only for calendar D− windows, not «anteriores a esas»
+        # nor «antes de esa lista» (previous occurrences of the active last_n page)
+        if re.search(r"antes\s+de\s+esa\s+lista|antes\s+de\s+esa\s+consulta", raw, re.I) and (
+            nums or state.active_numbers
+        ):
+            last_n_params = dict(params)
+            last_n_params["limit"] = int(
+                resolution.get("limit")
+                or (state.last_analysis or {}).get("limit")
+                or lim_pre
+                or 3
+            )
+            last_n_params["offset"] = int(
+                resolution.get("offset")
+                or (state.last_analysis or {}).get("offset")
+                or last_n_params["limit"]
+            )
+            if state.active_numbers and not last_n_params.get("numbers"):
+                last_n_params["numbers"] = list(state.active_numbers[:1])
+            return ResearchQuestion("last_n_occurrences", last_n_params, raw_message=raw)
+
         if resolution.get("follow_up_kind") == "before" or (
             cls._TEMPORAL_BEFORE.search(raw)
             and not cls._AFTER.search(raw)
             and not is_previous_occurrences_request(raw)
             and not cls._LAST_N.search(raw)
+            and not re.search(r"antes\s+de\s+esa\s+lista", raw, re.I)
         ):
             return ResearchQuestion("temporal_before", params, raw_message=raw)
         if cls._TEMPORAL_AFTER.search(raw) and re.search(r"d\s*\+", raw, re.I):

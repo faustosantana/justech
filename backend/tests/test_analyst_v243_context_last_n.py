@@ -120,7 +120,7 @@ def test_explicit_nacional_is_inherited():
 
 def test_position_labels_never_internal():
     assert "third_position" not in position_label_es("third_position")
-    assert "tercera" in position_label_es("third_position")
+    assert "3ra" in position_label_es("third_position")
     label = filters_label_es(lottery_scope="all", position_scope="all")
     assert "third_position" not in label
     assert "Todas las loterías" in label

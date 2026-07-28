@@ -314,6 +314,7 @@ class DynamicResearchPlanner:
                 a = observed
                 b = confirmer
                 if a and b:
+                    lim = int(p.get("limit") or (3 if p.get("list_mode") else 200))
                     steps.append(
                         PlanStep(
                             tool=LotteryToolName.GET_NUMBER_OCCURRENCES.value,
@@ -321,6 +322,8 @@ class DynamicResearchPlanner:
                                 "numbers": [a, b],
                                 "relation": "same_day",
                                 "active_relation": "same_day",
+                                "list_mode": bool(p.get("list_mode")),
+                                "limit": lim,
                                 **({"lottery": lottery} if lottery_explicit and lottery else {}),
                                 **(
                                     {"lotteries": lotteries[:4]}
@@ -328,13 +331,15 @@ class DynamicResearchPlanner:
                                     else {}
                                 ),
                                 **({"position": pos_i} if pos_i else {}),
-                                "limit": int(p.get("limit") or 200),
                             },
                             purpose="same_day_coincidence",
                         )
                     )
                     meta["relation"] = "same_day"
                     meta["subjects"] = [a, b]
+                    if p.get("list_mode"):
+                        meta["list_mode"] = True
+                        meta["limit"] = lim
             elif len(lotteries) >= 2:
                 steps.append(
                     PlanStep(

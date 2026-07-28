@@ -47,6 +47,24 @@ _LAST_COINCIDENCE = re.compile(
     re.I,
 )
 
+# Demonstrative / list follow-ups that inherit the prior coincidence EVENT
+# («esas últimas 3 veces», «esas fechas», «muéstrame las anteriores», «¿cuáles fueron?»).
+_EVENT_LIST_FOLLOW = re.compile(
+    r"("
+    r"esas?\s+([uú]ltimas?\s+)?(\d{1,2}\s+)?(veces|fechas|apariciones|coinciden)|"
+    r"aquellas?\s+([uú]ltimas?\s+)?(\d{1,2}\s+)?(veces|fechas|apariciones)|"
+    r"cu[aá]les\s+fueron(\s+esas?)?|"
+    r"(mué?strame|dame|lista|enumera)\s+(las?\s+)?(anteriores|fechas|coinciden)|"
+    r"las?\s+anteriores|"
+    r"ambos|"
+    r"los\s+dos|"
+    r"esa\s+coinciden|"
+    r"esas?\s+(\d{1,2}|tres|cinco|diez)\b|"
+    r"[uú]ltimas?\s+(\d{1,2}|tres|cinco)\s+veces"
+    r")",
+    re.I,
+)
+
 _FIRST_POS_FOLLOW = re.compile(
     r"^(y\s+)?(en\s+)?primera(\s+posici[oó]n)?|"
     r"^(y\s+)?solo\s+en\s+primera|"
@@ -106,6 +124,11 @@ def is_report_mode_question(text: str) -> bool:
 
 def is_last_coincidence_follow_up(text: str) -> bool:
     return bool(_LAST_COINCIDENCE.search(text or ""))
+
+
+def is_event_list_follow_up(text: str) -> bool:
+    """True when the utterance points at prior coincidence dates/times/list."""
+    return bool(_EVENT_LIST_FOLLOW.search(text or ""))
 
 
 def is_first_position_follow_up(text: str) -> bool:
@@ -201,6 +224,8 @@ def build_same_day_follow_up_params(
     want_last = False
     after = False
     report = is_report_mode_question(text)
+    list_mode = False
+    list_limit: int | None = None
 
     if follow_up_first_position(text) or is_first_position_follow_up(text):
         pos = 1
@@ -216,6 +241,12 @@ def build_same_day_follow_up_params(
         want_last = True
     elif is_after_coincidences_follow_up(text):
         after = True
+    elif is_event_list_follow_up(text):
+        # «esas últimas 3 veces» / «esas fechas» → list prior coincidence EVENT
+        list_mode = True
+        from app.lottery.ai.turn_policy import extract_occurrence_limit
+
+        list_limit = extract_occurrence_limit(text) or 3
     else:
         returned = is_return_to_pair(text)
         if returned:
@@ -238,10 +269,14 @@ def build_same_day_follow_up_params(
         "preferred_position": preferred_position,
         "want_last_only": want_last,
         "report_mode": report,
+        "list_mode": list_mode,
         "intent": "same_day_coincidence",
         "all_historical": True,
+        "use_active_pair": True,
         "policy": SAME_DAY_POLICY_VERSION,
     }
+    if list_limit is not None:
+        params["limit"] = int(list_limit)
     if lots:
         params["lotteries"] = lots[:8]
         params["lottery"] = lots[0]
@@ -391,13 +426,65 @@ def summarize_coincidences(
     }
 
 
+def format_coincidence_list(
+    summary: dict[str, Any],
+    *,
+    limit: int | None = None,
+) -> str:
+    """List coincidence events with per-number concrete positions (never filter scope)."""
+    from app.lottery.ai.turn_policy import position_label_es
+
+    nums = [str(n) for n in (summary.get("numbers") or [])][:2]
+    items = list(summary.get("items") or summary.get("dates") or [])
+    lim = max(1, min(int(limit or summary.get("limit") or 3), 20))
+    rows = items[:lim]
+    if not rows:
+        label = " y ".join(nums) if nums else "los números"
+        return f"No encontré fechas de coincidencia listables para {label}."
+
+    lines = [f"Las {len(rows)} coincidencias más recientes fueron:"]
+    for i, it in enumerate(rows, 1):
+        if not isinstance(it, dict):
+            lines.append(f"{i}. {str(it)[:10]}")
+            continue
+        date_s = str(it.get("date") or it.get("draw_date") or "—")[:10]
+        lot = str(it.get("lottery") or "—")
+        entries = list(it.get("appearances") or it.get("entries") or [])
+        if entries:
+            parts = []
+            for e in entries[:4]:
+                n = str(e.get("number") or "?")
+                pos_raw = e.get("position_label") or e.get("position")
+                pos_s = position_label_es(pos_raw)
+                e_lot = e.get("lottery")
+                if e_lot and str(e_lot) != lot:
+                    parts.append(f"{n} en {pos_s} ({e_lot})")
+                else:
+                    parts.append(f"{n} en {pos_s}")
+            detail = "; ".join(parts)
+            lines.append(f"{i}. {date_s} — {lot} — {detail}.")
+        elif len(nums) >= 2:
+            # Fallback when payload lacks per-ball positions
+            lines.append(
+                f"{i}. {date_s} — {lot} — {nums[0]} y {nums[1]} (posiciones no detalladas)."
+            )
+        else:
+            lines.append(f"{i}. {date_s} — {lot}.")
+    return "\n".join(lines)
+
+
 def format_coincidence_narrative(
     summary: dict[str, Any],
     *,
     report_mode: bool = False,
     want_last_only: bool = False,
+    list_mode: bool = False,
+    limit: int | None = None,
 ) -> str:
     """User-facing natural language — no internal jargon."""
+    if list_mode:
+        return format_coincidence_list(summary, limit=limit)
+
     nums = summary.get("numbers") or []
     label = " y ".join(str(n) for n in nums[:4]) if nums else "los números"
     total = int(summary.get("total") or 0)
@@ -410,8 +497,8 @@ def format_coincidence_narrative(
         if not last or total == 0:
             return (
                 f"No encontré coincidencias de {label} en una misma fecha "
-                "dentro del histórico disponible, considerando todas las loterías "
-                "y todas las posiciones."
+                "dentro del histórico disponible, buscando en todas las loterías "
+                "y en todas las posiciones."
                 if summary.get("searched_all_positions")
                 else (
                     f"No encontré coincidencias de {label} en la posición solicitada "
@@ -422,7 +509,7 @@ def format_coincidence_narrative(
 
     if total == 0:
         scope = (
-            "todas las loterías y todas las posiciones"
+            "todas las loterías (buscando en todas las posiciones)"
             if summary.get("searched_all_positions")
             else "el alcance de posición indicado"
         )
@@ -434,39 +521,39 @@ def format_coincidence_narrative(
     # Filtered to first only but we still know other totals if provided
     if pos_filter == 1:
         lines = [
-            f"En primera posición, {label} coincidieron el mismo día en "
+            f"En 1ra posición, {label} coincidieron el mismo día en "
             f"{first_related} ocasión(es)."
         ]
         if other_only or (summary.get("total_all_positions") is not None):
             all_t = summary.get("total_all_positions")
             if all_t and int(all_t) > first_related:
                 lines.append(
-                    f"Si se consideran todas las posiciones, hay {all_t} fechas "
+                    f"Si se busca en todas las posiciones, hay {all_t} fechas "
                     f"con coincidencia; {int(all_t) - first_related} ocurrieron "
-                    "fuera de primera posición."
+                    "fuera de 1ra posición."
                 )
         if last:
             lines.append(_format_last_block(label, last))
         lines.append(_brief_observation(summary))
         return "\n\n".join(x for x in lines if x).strip()
 
-    # Default: all positions, highlight first
+    # Default: all positions as search scope (once), then concrete last event
     lines = [
         f"Sí. {label} coincidieron el mismo día en {total} ocasión(es) "
-        "considerando todas las posiciones."
+        "(buscando en todas las posiciones)."
     ]
     lines.append(
-        "En primera posición:\n"
-        f"- {first_related} caso(s) con al menos uno de los números en primera "
-        f"(ambos en primera: {int(summary.get('both_first') or 0)})."
+        "En 1ra posición:\n"
+        f"- {first_related} caso(s) con al menos uno de los números en 1ra "
+        f"(ambos en 1ra: {int(summary.get('both_first') or 0)})."
     )
     lines.append(f"En otras posiciones:\n- {other_only} caso(s).")
 
     if first_related == 0 and other_only > 0:
         lines.insert(
             1,
-            f"No aparecieron juntos en primera posición, pero sí coincidieron "
-            f"en {total} fechas al considerar todas las posiciones.",
+            f"No aparecieron juntos en 1ra posición, pero sí coincidieron "
+            f"en {total} fechas al buscar en todas las posiciones.",
         )
 
     if last:
@@ -474,8 +561,8 @@ def format_coincidence_narrative(
 
     if report_mode:
         lines.append(
-            "Observación: el desglose separa la preferencia de primera posición "
-            "del total real; ninguna coincidencia fuera de primera queda oculta."
+            "Observación: el desglose separa la preferencia de 1ra posición "
+            "del total real; ninguna coincidencia fuera de 1ra queda oculta."
         )
     else:
         lines.append(_brief_observation(summary))
@@ -484,14 +571,18 @@ def format_coincidence_narrative(
 
 
 def _format_last_block(label: str, last: dict[str, Any]) -> str:
+    from app.lottery.ai.turn_policy import position_label_es
+
     date_s = str(last.get("date") or last.get("draw_date") or "—")
     entries = list(last.get("appearances") or last.get("entries") or [])
-    bits = [f"La coincidencia más reciente fue el {date_s}:"]
+    lot = last.get("lottery") or ""
+    bits = [f"La coincidencia más reciente fue el {date_s}" + (f" en {lot}" if lot else "") + ":"]
     for e in entries[:6]:
         num = e.get("number")
-        lot = e.get("lottery") or "lotería"
-        pos = e.get("position_label") or e.get("position") or "?"
-        bits.append(f"- {num} en {lot}, posición {pos}.")
+        e_lot = e.get("lottery") or lot or "lotería"
+        pos_raw = e.get("position_label") or e.get("position")
+        pos = position_label_es(pos_raw)
+        bits.append(f"- {num} en {e_lot}, {pos}.")
     if not entries:
         bits.append(f"- Detalle de apariciones no disponible para {label}.")
     return "\n".join(bits)

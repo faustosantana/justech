@@ -185,6 +185,34 @@ def test_r4_ahora_todas_posiciones_continues_last_n_not_same_day():
     assert q.kind == "last_n_occurrences"
     assert q.params.get("numbers") == ["35"]
     assert q.params.get("position_scope") == "all"
+    assert int(q.params.get("limit") or 0) == 3
+    assert res.get("inherit_active_number") is True
+
+
+def test_r4_filter_only_all_positions_preserves_last_analysis_limit():
+    """Regression: understand() echoes the active ball; Brain must not wipe last_n limit."""
+    from app.lottery.ai.analyst.conversation_brain import ConversationBrain
+    from app.lottery.ai.understanding import understand
+
+    st = ConversationState(
+        active_numbers=["35"],
+        last_intent="compare_lotteries",  # wrongly sticky intent from soft NLP
+        last_analysis={
+            "limit": 3,
+            "observed": "35",
+            "items": [{"number": "35"}, {"number": "35"}, {"number": "35"}],
+        },
+    )
+    msg = "Ahora en todas las posiciones."
+    u, st = understand(msg, st)
+    res = IntentResolver.resolve(msg, st)
+    st2 = ConversationBrain(st).apply_resolution(understanding=u, resolution=res)
+    assert int((st2.last_analysis or {}).get("limit") or 0) == 3
+    assert len((st2.last_analysis or {}).get("items") or []) == 3
+    q = QuestionClassifier.classify(msg, st2, res)
+    assert q is not None
+    assert q.kind == "last_n_occurrences"
+    assert int(q.params.get("limit") or 0) == 3
 
 
 def test_r4_bare_compare_understanding_clarifies():

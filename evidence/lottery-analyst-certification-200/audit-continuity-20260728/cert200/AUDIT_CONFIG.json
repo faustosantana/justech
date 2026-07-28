@@ -1,0 +1,12 @@
+{
+  "audit_run_id": "cert200-20260728T174031Z-d0cb56bb",
+  "baseline": "lottery-analyst-certified-2026.1",
+  "commit": "ee3ecda",
+  "image_tag": "lottery-ia-ux-v2.4.5.4",
+  "seed": 20260727,
+  "bank_sha256": "6d056978809140eee4af23299cbd0c78a8bae9537fbbbcd62ad50bd18c6d7931",
+  "only_groups": null,
+  "endpoint": "http://127.0.0.1:8000/api/v1/lottery/chat/sessions/{id}/messages",
+  "started_at": "2026-07-28T17:40:31.783642+00:00",
+  "read_only": true
+}

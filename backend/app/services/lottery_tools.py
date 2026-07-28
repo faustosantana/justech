@@ -340,6 +340,11 @@ class LotteryToolExecutor:
                     "last_occurrence_date": last_date,
                     "found": total > 0,
                     "lottery": params.get("lottery"),
+                    "items": items[: max(1, min(int(params.get("limit") or 20), 50))]
+                    if isinstance(items, list)
+                    else [],
+                    "limit": int(params.get("limit") or 0) or None,
+                    "list_mode": bool(params.get("list_mode")),
                 }
 
             # last_n across one or many lotteries (v2.4.3)

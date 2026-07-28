@@ -232,21 +232,67 @@ class ToolOrchestrator:
                     + (f" Observado: {observed}." if observed is not None else "")
                 )
             elif summary.get("semantics") == "same_day_coincidence":
-                total = summary.get("total")
-                if total is None:
-                    total = summary.get("count")
-                last = summary.get("last_occurrence_date") or summary.get("last_date")
+                from app.lottery.ai.same_day_coincidence import (
+                    format_coincidence_list,
+                    format_coincidence_narrative,
+                    summarize_coincidences,
+                )
+
                 nums = summary.get("numbers") or params.get("numbers") or []
-                pair = " y ".join(str(n) for n in nums[:2]) if nums else "los números consultados"
-                if total is not None and int(total) > 0:
-                    bit = f"Encontré {total} coincidencia(s) el mismo día para {pair}."
-                    if last:
-                        bit += f" La más reciente fue el {last}."
-                    templates.append(bit)
-                else:
-                    templates.append(
-                        f"No encontré coincidencias el mismo día para {pair} en el alcance consultado."
+                payload = result.data if isinstance(getattr(result, "data", None), dict) else {}
+                items = []
+                if isinstance(payload, dict):
+                    items = (
+                        payload.get("dates")
+                        or payload.get("items")
+                        or payload.get("coincidences")
+                        or []
                     )
+                if not items:
+                    items = list(summary.get("items") or [])
+                summ = summarize_coincidences(
+                    {"items": items, "total": summary.get("total") or summary.get("count")},
+                    numbers=[str(n) for n in nums[:2]],
+                    preferred_position=int(params.get("preferred_position") or 1),
+                    position_filter=params.get("position"),
+                )
+                list_mode = bool(params.get("list_mode") or summary.get("list_mode"))
+                lim = params.get("limit") or summary.get("limit")
+                if list_mode:
+                    templates.append(
+                        format_coincidence_list(
+                            {**summ, "items": items, "limit": lim},
+                            limit=lim,
+                        )
+                    )
+                else:
+                    bit = format_coincidence_narrative(
+                        summ,
+                        report_mode=bool(params.get("report_mode")),
+                        want_last_only=bool(params.get("want_last_only")),
+                    )
+                    if bit:
+                        templates.append(bit)
+                    else:
+                        total = summary.get("total")
+                        if total is None:
+                            total = summary.get("count")
+                        last = summary.get("last_occurrence_date") or summary.get("last_date")
+                        pair = (
+                            " y ".join(str(n) for n in nums[:2])
+                            if nums
+                            else "los números consultados"
+                        )
+                        if total is not None and int(total) > 0:
+                            bit2 = f"Encontré {total} coincidencia(s) el mismo día para {pair}."
+                            if last:
+                                bit2 += f" La más reciente fue el {last}."
+                            templates.append(bit2)
+                        else:
+                            templates.append(
+                                f"No encontré coincidencias el mismo día para {pair} "
+                                "en el alcance consultado."
+                            )
             elif summary.get("semantics") == "last_n_occurrences":
                 items = summary.get("items") or []
                 num = summary.get("number") or params.get("number")

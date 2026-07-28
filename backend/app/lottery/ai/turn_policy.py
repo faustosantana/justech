@@ -463,39 +463,96 @@ def classify_turn_type(text: str, *, has_active_subject: bool = False) -> TurnTy
 
 
 def canonicalize_position_scope(value: Any) -> int | str | None:
-    """Map internal aliases → 1|2|3|'all'|None."""
+    """Map internal aliases → 1|2|3|'all'|None.
+
+    Result-row labels like «1ro» / «1ra» / «2da» must resolve to 1|2|3 —
+    never fall through to «todas las posiciones».
+    """
     if value is None:
         return None
     if isinstance(value, int):
         return value if value in (1, 2, 3) else None
     s = str(value).strip().lower()
-    if s in {"all", "any", "any_position", "todas", "todas las posiciones"}:
+    # Strip accents for ordinal matching
+    s_ascii = "".join(
+        c for c in unicodedata.normalize("NFKD", s) if not unicodedata.combining(c)
+    )
+    if s_ascii in {"all", "any", "any_position", "todas", "todas las posiciones"}:
         return POS_ALL
-    if s in {"1", "first", "first_position", "primera", "primera posicion", "primera posición"}:
+    if s_ascii in {
+        "1",
+        "first",
+        "first_position",
+        "primera",
+        "primera posicion",
+        "1ro",
+        "1ra",
+        "1ero",
+        "1era",
+        "primero",
+        "primera",
+    } or re.search(r"\b(1\s*r[oa]|1\s*er[oa]?|posicion\s*1|1ra?\s*posicion)\b", s_ascii):
         return POS_1
-    if s in {"2", "second", "second_position", "segunda", "segunda posicion", "segunda posición"}:
+    if s_ascii in {
+        "2",
+        "second",
+        "second_position",
+        "segunda",
+        "segunda posicion",
+        "2do",
+        "2da",
+        "segundo",
+        "segunda",
+    } or re.search(r"\b(2\s*d[oa]|posicion\s*2|2da?\s*posicion)\b", s_ascii):
         return POS_2
-    if s in {"3", "third", "third_position", "tercera", "tercera posicion", "tercera posición"}:
+    if s_ascii in {
+        "3",
+        "third",
+        "third_position",
+        "tercera",
+        "tercera posicion",
+        "3ro",
+        "3ra",
+        "tercero",
+        "tercera",
+    } or re.search(r"\b(3\s*r[oa]|posicion\s*3|3ra?\s*posicion)\b", s_ascii):
         return POS_3
-    if s.startswith("position_"):
+    if s_ascii.startswith("position_"):
         try:
-            return int(s.split("_")[-1])
+            n = int(s_ascii.split("_")[-1])
+            return n if n in (1, 2, 3) else None
         except ValueError:
             return None
+    # Bare digit in longer label: «posición 1»
+    m = re.search(r"\b([123])\b", s_ascii)
+    if m and ("posicion" in s_ascii or "pos" in s_ascii):
+        return int(m.group(1))
     return None
 
 
-def position_label_es(value: Any) -> str:
+def position_label_es(value: Any, *, as_filter_scope: bool = False) -> str:
+    """Human position label.
+
+    - Result rows: concrete «1ra/2da/3ra posición»; unknown → «posición no indicada».
+    - Filter scopes: explicit «all» → «todas las posiciones»; bare None may mean
+      unscoped search only when as_filter_scope=True.
+    """
+    if value is None or value == "":
+        return "todas las posiciones" if as_filter_scope else "posición no indicada"
     c = canonicalize_position_scope(value)
-    if c == POS_ALL or c is None:
+    if c == POS_ALL:
         return "todas las posiciones"
     if c == 1:
-        return "primera posición"
+        return "1ra posición"
     if c == 2:
-        return "segunda posición"
+        return "2da posición"
     if c == 3:
-        return "tercera posición"
-    return "todas las posiciones"
+        return "3ra posición"
+    # Unrecognized concrete token — never invent filter-scope wording
+    raw = str(value).strip()
+    if raw and raw.lower() not in {"all", "any", "any_position"}:
+        return raw
+    return "posición no indicada"
 
 
 def filters_label_es(
@@ -514,7 +571,7 @@ def filters_label_es(
         lot = "Todas las loterías"
     else:
         lot = str(lottery_scope)
-    pos = position_label_es(position_scope)
+    pos = position_label_es(position_scope, as_filter_scope=True)
     per = period or "Histórico completo"
     return f"{lot} · {pos} · {per}"
 

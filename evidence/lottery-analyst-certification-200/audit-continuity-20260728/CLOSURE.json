@@ -1,0 +1,16 @@
+{
+  "verdict": "LISTO_PARA_BETA",
+  "manual30": {
+    "pass": 30,
+    "fail": 0,
+    "total": 30,
+    "certification_level": "PASS"
+  },
+  "cert200": {
+    "audit_run_id": "cert200-20260728T174031Z-d0cb56bb",
+    "pass": 200,
+    "fail": 0,
+    "certification_level": "CERTIFIED"
+  },
+  "image": "jaios-app-backend:lottery-ia-ux-v2.4.5.5-cont"
+}

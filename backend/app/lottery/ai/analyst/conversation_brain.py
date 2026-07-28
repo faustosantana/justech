@@ -54,22 +54,36 @@ class ConversationBrain:
                     st.active_pair = []
                     # E.2: after/before windows need last_analysis.items anchors —
                     # never wipe them just because inherit_active_number is False.
+                    # Filter-only refine («todas las posiciones/loterías») with the SAME
+                    # subject must keep limit/items so last_n continuity is preserved.
+                    from app.lottery.ai.turn_policy import (
+                        asks_all_lotteries,
+                        asks_all_positions,
+                    )
+
                     follow = resolution.get("follow_up_kind")
+                    filter_only_refine = asks_all_positions(raw_msg) or asks_all_lotteries(
+                        raw_msg
+                    )
                     preserve_analysis = follow in {
                         "after",
                         "before",
                         "d_plus_1",
                         "d_plus_3",
                         "d_plus_7",
-                    }
+                    } or (filter_only_refine and not subject_changed)
                     if preserve_analysis:
                         pass
-                    elif follow in {
-                        "last_occurrence",
-                        "first_occurrence",
-                        "frequency",
-                        "last_n_occurrences",
-                    } or resolution.get("inherit_active_number") is False:
+                    elif subject_changed and (
+                        follow
+                        in {
+                            "last_occurrence",
+                            "first_occurrence",
+                            "frequency",
+                            "last_n_occurrences",
+                        }
+                        or resolution.get("inherit_active_number") is False
+                    ):
                         st.active_relation = None
                         st.last_analysis = {}
                         st.current_primary_candidate = None
@@ -78,6 +92,29 @@ class ConversationBrain:
                         filters.pop("relation", None)
                         filters.pop("compare_active", None)
                         filters.pop("compare_with", None)
+                        st.active_filters = {
+                            k: v
+                            for k, v in (st.active_filters or {}).items()
+                            if k not in {"relation", "compare_active", "compare_with"}
+                        }
+                    elif (
+                        not subject_changed
+                        and len(normed) == 1
+                        and not resolution.get("use_active_pair")
+                        and not filter_only_refine
+                        and follow
+                        in {
+                            "last_occurrence",
+                            "first_occurrence",
+                            "frequency",
+                            "last_n_occurrences",
+                        }
+                    ):
+                        # Same ball, new factual ask: drop sticky same_day/compare only.
+                        filters.pop("relation", None)
+                        filters.pop("compare_active", None)
+                        filters.pop("compare_with", None)
+                        st.active_relation = None
                         st.active_filters = {
                             k: v
                             for k, v in (st.active_filters or {}).items()
@@ -262,7 +299,19 @@ class ConversationBrain:
             st.date_context = understanding.query_date
 
         if understanding.intent:
-            st.last_intent = str(understanding.intent)
+            soft = str(understanding.intent) in {
+                "clarification_response",
+                "greeting",
+                "general_chat",
+                "help",
+            }
+            # Filter-only refine must not replace sticky last_n with soft clarify intent.
+            if not (
+                soft
+                and (asks_all_positions(raw_msg) or asks_all_lotteries(raw_msg))
+                and st.last_intent
+            ):
+                st.last_intent = str(understanding.intent)
 
         st.active_filters = filters
 

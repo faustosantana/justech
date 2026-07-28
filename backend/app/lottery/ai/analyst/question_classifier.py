@@ -258,11 +258,56 @@ class QuestionClassifier:
         # Same-day coincidence — before compare / complete-analysis paths
         # Filter-only «todas las posiciones/loterías» continues the active last_n /
         # last_times subject — never sticky same_day from an earlier pair.
-        from app.lottery.ai.same_day_coincidence import is_same_day_coincidence_question
+        from app.lottery.ai.same_day_coincidence import (
+            build_same_day_follow_up_params,
+            is_event_list_follow_up,
+            is_same_day_coincidence_question,
+        )
 
         # Bare «Haz la comparación.» without two concrete subjects → not research
         if re.search(r"^\s*haz\s+la\s+comparaci[oó]n\.?\s*$", raw, re.I) and len(nums) < 2:
             return None
+
+        same_day_active = (
+            str(state.active_relation or "").lower() == "same_day"
+            or (state.active_filters or {}).get("relation") == "same_day"
+            or str(state.last_intent or "") in {"coincidences_only", "same_day_coincidence"}
+            or (
+                len(list(getattr(state, "active_pair", None) or state.active_numbers or [])) >= 2
+                and str((state.last_analysis or {}).get("type") or "").lower()
+                in {"same_day", "same_day_coincidence"}
+            )
+        )
+        pair_nums = list(
+            getattr(state, "active_pair", None)
+            or (
+                state.active_numbers
+                if len(state.active_numbers or []) >= 2
+                else []
+            )
+            or []
+        )[:2]
+        if len(nums) >= 2:
+            pair_nums = nums[:2]
+
+        # Continuity: «esas últimas 3 veces» after a coincidence → list the EVENT
+        if same_day_active and len(pair_nums) >= 2 and (
+            is_event_list_follow_up(raw)
+            or build_same_day_follow_up_params(raw, active_numbers=pair_nums)
+        ):
+            sd_fu = build_same_day_follow_up_params(raw, active_numbers=pair_nums) or {}
+            sd = dict(params)
+            sd.update({k: v for k, v in sd_fu.items() if v is not None})
+            sd["relation"] = "same_day"
+            sd["active_relation"] = "same_day"
+            sd["numbers"] = list(sd.get("numbers") or pair_nums)[:2]
+            sd["use_active_pair"] = True
+            sd["list_mode"] = bool(sd_fu.get("list_mode") or is_event_list_follow_up(raw))
+            if resolution.get("limit") and not sd.get("limit"):
+                sd["limit"] = int(resolution["limit"])
+            elif sd.get("list_mode") and not sd.get("limit"):
+                sd["limit"] = int(resolution.get("limit") or lim_pre or 3)
+            return ResearchQuestion("coincidences_only", sd, raw_message=raw)
 
         filter_only_refine = asks_all_positions(raw) or asks_all_lotteries(raw)
         if (
@@ -409,6 +454,20 @@ class QuestionClassifier:
                 nums[:1] if nums else list(state.active_numbers[:1]),
                 int(lim),
             )
+            # Never collapse an active same_day pair into a single last_n subject.
+            same_day_sticky = (
+                str(state.active_relation or "").lower() == "same_day"
+                or (state.active_filters or {}).get("relation") == "same_day"
+            )
+            pair = list(getattr(state, "active_pair", None) or [])[:2]
+            if same_day_sticky and len(pair) >= 2 and len(nums) < 2:
+                last_n_params["numbers"] = pair[:2]
+                last_n_params["relation"] = "same_day"
+                last_n_params["active_relation"] = "same_day"
+                last_n_params["use_active_pair"] = True
+                last_n_params["list_mode"] = True
+                last_n_params["limit"] = int(lim)
+                return ResearchQuestion("coincidences_only", last_n_params, raw_message=raw)
             if subject:
                 last_n_params["numbers"] = subject[:1]
                 last_n_params["active_pair"] = []

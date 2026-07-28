@@ -541,10 +541,21 @@ class IntentResolver:
             out["lotteries"] = []
             out["lottery_filter"] = None
             out["resolved_refs"].append("all_lotteries")
+            if state.active_numbers and not out.get("numbers"):
+                out["numbers"] = list(state.active_numbers)
+                out["inherit_active_number"] = True
+            elif state.active_numbers:
+                out["inherit_active_number"] = True
         if asks_all_positions(raw):
             out["position_scope"] = "all"
             out["position_explicit"] = True
             out["resolved_refs"].append("all_positions")
+            # Filter-only refine: keep the active subject + prior last_n quantity.
+            if state.active_numbers and not out.get("numbers"):
+                out["numbers"] = list(state.active_numbers)
+                out["inherit_active_number"] = True
+            elif state.active_numbers:
+                out["inherit_active_number"] = True
         if is_most_recent_request(raw) and (out.get("numbers") or state.active_numbers):
             out["follow_up_kind"] = "last_occurrence"
             if not out.get("numbers") and state.active_numbers:

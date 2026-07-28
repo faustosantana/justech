@@ -710,7 +710,13 @@ class LotteryChatService:
                 intent_kind = "tool"
                 tool_name = tool_trace[-1].get("tool") if tool_trace else understanding.tool
                 state.last_plan = [s.purpose or s.tool for s in research_plan.steps]
-                state.last_intent = str(understanding.intent)
+                # Prefer research kind over soft understanding.intent (e.g. compare_lotteries
+                # / clarification_response must not erase last_n_occurrences continuity).
+                state.last_intent = str(
+                    research_plan.question_kind
+                    or getattr(state, "last_intent", None)
+                    or understanding.intent
+                )
                 state.pending_slots = []
                 state.pending_intent = None
                 if structured and isinstance(structured.get("research"), dict):
@@ -2513,6 +2519,8 @@ class LotteryChatService:
                 summary,
                 report_mode=bool(params.get("report_mode")),
                 want_last_only=bool(params.get("want_last_only")),
+                list_mode=bool(params.get("list_mode")),
+                limit=params.get("limit"),
             )
 
         if tool == "lottery_run_complete_analysis" and isinstance(data, dict):

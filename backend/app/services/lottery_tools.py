@@ -311,10 +311,32 @@ class LotteryToolExecutor:
                 nums = [str(x) for x in (params.get("numbers") or [])]
                 if len(nums) < 2 and params.get("number") and params.get("compare_with"):
                     nums = [str(params["number"]), str(params["compare_with"])]
+                from app.lottery.ai.official_lottery_scope import (
+                    external_lottery_message,
+                    reject_non_official,
+                    resolve_query_lotteries,
+                )
+
+                raw_lots = params.get("lotteries") or (
+                    [params["lottery"]] if params.get("lottery") else None
+                )
+                rejected = reject_non_official(raw_lots or [])
+                if raw_lots and rejected and not resolve_query_lotteries(
+                    raw_lots, allow_empty_as_official=False
+                ):
+                    msg = external_lottery_message(rejected[0])
+                    return {"error": msg, "rejected_lotteries": rejected}, 0, {
+                        "semantics": "same_day_coincidence",
+                        "numbers": nums,
+                        "found": False,
+                        "count": 0,
+                        "total": 0,
+                        "error": msg,
+                    }
+                scoped_lots = resolve_query_lotteries(raw_lots)
                 data = await self.query.same_day_number_coincidences(
                     nums,
-                    lotteries=params.get("lotteries")
-                    or ([params["lottery"]] if params.get("lottery") else None),
+                    lotteries=scoped_lots,
                     position=params.get("position"),
                     from_date=params.get("from_date"),
                     to_date=params.get("to_date"),
@@ -351,7 +373,7 @@ class LotteryToolExecutor:
             if params.get("mode") == "last_n" or (
                 params.get("limit") and (params.get("lotteries") or not params.get("lottery"))
             ):
-                from app.lottery.ai.nlp_stability import DEFAULT_ALL_HISTORY_LOTTERIES
+                from app.lottery.ai.official_lottery_scope import official_lottery_names
 
                 number = str(params["number"])
                 limit = max(1, min(int(params.get("limit") or params.get("page_size") or 3), 50))
@@ -359,7 +381,10 @@ class LotteryToolExecutor:
                 if params.get("lottery") and not lots:
                     lots = [str(params["lottery"])]
                 if not lots:
-                    lots = list(DEFAULT_ALL_HISTORY_LOTTERIES)
+                    lots = official_lottery_names()
+                from app.lottery.ai.official_lottery_scope import resolve_query_lotteries
+
+                lots = resolve_query_lotteries(lots)
                 pos = params.get("position")
                 if pos is not None:
                     try:

@@ -210,14 +210,9 @@ _LOTTERY_NAMES = [
     (re.compile(r"\bflorida\b", re.I), "Florida"),
 ]
 
-DEFAULT_ALL_HISTORY_LOTTERIES = (
-    "Nacional",
-    "Nacional Día",
-    "Nacional Noche",
-    "Leidsa",
-    "Loteka",
-    "Real",
-    "Gana Más",
+# Backward-compatible alias — single source of truth is OFFICIAL_LOTTERY_SCOPE.
+from app.lottery.ai.official_lottery_scope import (  # noqa: E402
+    OFFICIAL_LOTTERY_SCOPE as DEFAULT_ALL_HISTORY_LOTTERIES,
 )
 
 GREETING_REPLY = (

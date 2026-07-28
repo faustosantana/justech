@@ -75,7 +75,7 @@ def test_a2_params_lotteries_slice4_must_not_drive_unscoped_plan():
     """A.2 smoking gun: params.lotteries[:4] dropped Gana Más while
     lottery_explicit=False; planner must ignore that sticky truncation.
     """
-    sticky4 = list(DEFAULT_ALL_HISTORY_LOTTERIES)[:4]
+    sticky4 = ["Nacional", "New York 10:30", "New York 2:30", "Leidsa"]
     assert "Gana Más" not in sticky4
     st = ConversationState(active_lotteries=list(DEFAULT_ALL_HISTORY_LOTTERIES))
     from app.lottery.ai.analyst.question_classifier import ResearchQuestion

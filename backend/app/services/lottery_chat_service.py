@@ -3099,8 +3099,8 @@ class LotteryChatService:
             if "number" in missing:
                 return ["Analiza el 35.", "Analiza el 39."]
             if "lottery" in missing:
-                return ["En la Real.", "En Leidsa.", "En todas las loterías."]
-            return ["Últimos 30 sorteos.", "En todas las loterías."]
+                return ["En la Real.", "En Leidsa.", "En las 7 loterías habilitadas."]
+            return ["Últimos 30 sorteos.", "En las 7 loterías habilitadas."]
 
         # Fase X.2 — contextual suggestions for active same-day pair
         if state and (

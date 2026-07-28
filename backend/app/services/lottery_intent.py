@@ -71,11 +71,11 @@ LOTTERY_HINTS = [
     (r"quiniela\s+leidsa|leidsa", "Leidsa"),
     (r"gana\s*m[aá]s|ganamas", "Gana Más"),
     # Nacional: noche/día primero; "nacional" genérico al final (resolver afina).
-    (r"nacional\s+noche|loter[ií]a\s+nacional\s+noche", "Nacional Noche"),
-    (r"nacional\s+d[ií]a|loter[ií]a\s+nacional\s+d[ií]a", "Nacional Día"),
+    (r"nacional\s+noche|loter[ií]a\s+nacional\s+noche", "Nacional"),
+    (r"nacional\s+d[ií]a|loter[ií]a\s+nacional\s+d[ií]a", "New York 2:30"),
     (r"loter[ií]a\s+nacional|\bnacional\b", "Nacional"),
-    (r"new\s+york\s+noche|\bny\s+noche\b", "New York Noche"),
-    (r"new\s+york\s+d[ií]a|\bny\s+d[ií]a\b|new\s+york\s*2:?30", "New York Día"),
+    (r"new\s+york\s+10:?30|\bny\s+10:?30\b|new\s+york\s+noche|\bny\s+noche\b", "New York 10:30"),
+    (r"new\s+york\s+2:?30|\bny\s+2:?30\b|new\s+york\s+d[ií]a|\bny\s+d[ií]a\b", "New York 2:30"),
 ]
 
 DEFAULT_COMPARE_TRIPLE = ["Real", "Nacional Noche", "Leidsa"]
@@ -120,6 +120,8 @@ def _extract_lottery(text: str) -> str | None:
 
 
 def _extract_lotteries(text: str) -> list[str]:
+    from app.lottery.ai.official_lottery_scope import canonicalize_lottery_name
+
     hits: list[tuple[int, str]] = []
     for pattern, name in LOTTERY_HINTS:
         for m in re.finditer(pattern, text, re.I):
@@ -127,9 +129,33 @@ def _extract_lotteries(text: str) -> list[str]:
     hits.sort(key=lambda x: x[0])
     out: list[str] = []
     for _, name in hits:
-        if name not in out:
-            out.append(name)
+        canon = canonicalize_lottery_name(name)
+        if canon and canon not in out:
+            out.append(canon)
     return out
+
+
+def _extract_non_official_lottery(text: str) -> str | None:
+    """Detect explicit external lottery mentions for a clear rejection message."""
+    from app.lottery.ai.official_lottery_scope import is_official_lottery
+
+    for pattern, name in LOTTERY_HINTS:
+        if is_official_lottery(name):
+            continue
+        if re.search(pattern, text or "", re.I):
+            return name
+    # Common external brands in the global catalog (not in LOTTERY_HINTS)
+    external = [
+        (r"\bhaiti\s*bolet\b|\bhait[ií]\b", "Haiti Bolet"),
+        (r"\bking\s*lottery\b", "King Lottery"),
+        (r"\banguila\b", "Anguila"),
+        (r"\bcash\s*4\s*life|cash4life\b", "Cash4Life"),
+        (r"\bflorida\b", "Florida"),
+    ]
+    for pattern, name in external:
+        if re.search(pattern, text or "", re.I):
+            return name
+    return None
 
 
 def _extract_number(text: str) -> str | None:
@@ -261,6 +287,18 @@ def resolve_intent(message: str, ctx: LotterySessionContext) -> ResolvedIntent:
                 "nlp": nlp.to_dict(),
                 "decision_log": list(nlp.decision_log),
             },
+        )
+
+    # Official scope gate — reject explicit external lotteries before tooling
+    from app.lottery.ai.official_lottery_scope import external_lottery_message
+
+    external = _extract_non_official_lottery(raw)
+    if external:
+        return ResolvedIntent(
+            kind="refuse",
+            refuse_message=external_lottery_message(external),
+            structured_type="out_of_scope_lottery",
+            params={"rejected_lottery": external, "official_scope": True},
         )
 
     # Fase Final 2.4.0 — same-day continuity before form-biased branches

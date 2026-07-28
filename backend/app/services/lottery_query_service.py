@@ -792,9 +792,15 @@ class LotteryQueryService:
         also_all_positions_totals: bool = True,
     ) -> dict[str, Any]:
         """
-        Dates where all numbers appear the same calendar day (any lottery by default).
+        Dates where all numbers appear the same calendar day.
+        Default scope is OFFICIAL_LOTTERY_SCOPE (never the full DB catalog).
         Position filter is optional; when set, only that position counts.
         """
+        from app.lottery.ai.official_lottery_scope import (
+            reject_non_official,
+            resolve_query_lotteries,
+        )
+
         nums = []
         for n in numbers:
             s = str(n).strip()
@@ -805,17 +811,46 @@ class LotteryQueryService:
         if len(nums) < 2:
             raise LotteryQueryError("VALIDATION", "Se requieren al menos 2 números")
 
-        lottery_ids: list[Any] | None = None
+        requested = [str(x).strip() for x in (lotteries or []) if str(x).strip()]
+        rejected = reject_non_official(requested)
+        if requested and rejected and not resolve_query_lotteries(requested, allow_empty_as_official=False):
+            raise LotteryQueryError(
+                "VALIDATION",
+                (
+                    f"«{rejected[0]}» no forma parte de las loterías habilitadas. "
+                    "Usa Gana Más, Lotería Nacional, New York 10:30, New York 2:30, "
+                    "Leidsa, Loteka o Real."
+                ),
+            )
+
+        scope_names = resolve_query_lotteries(requested or None)
+        lottery_ids: list[Any] = []
         resolved_names: list[str] = []
-        if lotteries:
-            resolved = []
-            for name in lotteries:
-                try:
-                    resolved.append(await self.resolver.resolve_or_raise(str(name)))
-                except Exception:  # noqa: BLE001
-                    continue
-            lottery_ids = [r.id for r in resolved]
-            resolved_names = [r.name for r in resolved]
+        for name in scope_names:
+            try:
+                resolved = await self.resolver.resolve_or_raise(str(name))
+            except Exception:  # noqa: BLE001
+                continue
+            lottery_ids.append(resolved.id)
+            resolved_names.append(resolved.name)
+# Also dedupe lottery_ids when aliases collapse (e.g. Nacional)
+        # Preserve order of first resolution.
+        seen_ids: set[Any] = set()
+        uniq_ids: list[Any] = []
+        uniq_names: list[str] = []
+        for lid, lname in zip(lottery_ids, resolved_names):
+            if lid in seen_ids:
+                continue
+            seen_ids.add(lid)
+            uniq_ids.append(lid)
+            uniq_names.append(lname)
+        lottery_ids = uniq_ids
+        resolved_names = uniq_names
+        if not lottery_ids:
+            raise LotteryQueryError(
+                "VALIDATION",
+                "No se pudo resolver el alcance de loterías habilitadas.",
+            )
 
         rows = await self.repo.same_day_number_coincidences(
             nums,
@@ -872,7 +907,9 @@ class LotteryQueryService:
             "numbers": nums,
             "position_filter": position,
             "preferred_position": 1,
-            "all_lotteries": not bool(lottery_ids),
+            # "all_lotteries" means full official product scope, not the global DB catalog.
+            "all_lotteries": not bool(requested),
+            "official_scope": True,
             "lotteries": resolved_names,
             "total": len(items),
             "total_all_positions": total_all,

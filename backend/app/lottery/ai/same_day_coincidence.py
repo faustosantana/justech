@@ -533,9 +533,11 @@ def format_coincidence_narrative(
 
     if want_last_only:
         if not last or total == 0:
+            from app.lottery.ai.official_lottery_scope import scope_label_es
+
             return (
                 f"No encontré coincidencias de {label} en una misma fecha "
-                "dentro del histórico disponible, buscando en todas las loterías "
+                f"dentro del histórico disponible, buscando en {scope_label_es()} "
                 "y en todas las posiciones."
                 if summary.get("searched_all_positions")
                 else (
@@ -546,8 +548,10 @@ def format_coincidence_narrative(
         return _format_last_block(label, last) + _brief_observation(summary)
 
     if total == 0:
+        from app.lottery.ai.official_lottery_scope import scope_label_es
+
         scope = (
-            "todas las loterías (buscando en todas las posiciones)"
+            f"{scope_label_es()} (buscando en todas las posiciones)"
             if summary.get("searched_all_positions")
             else "el alcance de posición indicado"
         )

@@ -214,7 +214,14 @@ class HermesDecisionEngine:
         last_event: dict[str, Any],
         evidence: dict[str, Any],
     ) -> bool:
+        from app.lottery.ai.official_lottery_scope import evidence_uses_non_official_lotteries
+
         if not attr:
+            return False
+        # Never reuse evidence polluted with out-of-scope lotteries
+        if evidence_uses_non_official_lotteries(last_event) or evidence_uses_non_official_lotteries(
+            evidence
+        ):
             return False
         if attr == "lotteries":
             lots = last_event.get("lotteries") or evidence.get("lotteries")

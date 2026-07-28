@@ -314,7 +314,18 @@ class DynamicResearchPlanner:
                 a = observed
                 b = confirmer
                 if a and b:
+                    from app.lottery.ai.official_lottery_scope import (
+                        official_lottery_names,
+                        resolve_query_lotteries,
+                    )
+
                     lim = int(p.get("limit") or (3 if p.get("list_mode") else 200))
+                    if lottery_explicit and (lottery or lotteries):
+                        scoped = resolve_query_lotteries(
+                            ([lottery] if lottery else []) + list(lotteries or [])
+                        )
+                    else:
+                        scoped = official_lottery_names()
                     steps.append(
                         PlanStep(
                             tool=LotteryToolName.GET_NUMBER_OCCURRENCES.value,
@@ -324,12 +335,7 @@ class DynamicResearchPlanner:
                                 "active_relation": "same_day",
                                 "list_mode": bool(p.get("list_mode")),
                                 "limit": lim,
-                                **({"lottery": lottery} if lottery_explicit and lottery else {}),
-                                **(
-                                    {"lotteries": lotteries[:4]}
-                                    if lottery_explicit and lotteries
-                                    else {}
-                                ),
+                                "lotteries": scoped,
                                 **({"position": pos_i} if pos_i else {}),
                             },
                             purpose="same_day_coincidence",

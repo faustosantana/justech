@@ -11,6 +11,14 @@ from app.lottery.ai.active_investigation.session import (
 )
 
 
+def _is_official_or_empty(name: str | None) -> bool:
+    from app.lottery.ai.official_lottery_scope import is_official_lottery
+
+    if not name or not str(name).strip():
+        return True
+    return is_official_lottery(str(name))
+
+
 class SessionExpirationManager:
     """Load/expire/renew active investigation without relying on LLM memory."""
 
@@ -32,6 +40,8 @@ class SessionExpirationManager:
 
     def apply_on_turn_start(self, state: Any) -> tuple[Any, ActiveInvestigationSession | None, dict[str, Any]]:
         """Expire silently-stale investigations; do not reuse without a fresh topic."""
+        from app.lottery.ai.official_lottery_scope import evidence_uses_non_official_lotteries
+
         meta: dict[str, Any] = {"ttl_seconds": self.ttl_seconds}
         inv = self.load_from_state(state)
         if inv is None:
@@ -47,6 +57,18 @@ class SessionExpirationManager:
                 filters.pop("relation", None)
                 state.active_filters = filters
             meta["status"] = "expired_cleared"
+            meta["expired_investigation_id"] = inv.investigation_id
+            return state, None, meta
+        # Invalidate pre-hotfix / global-catalog evidence so answers are recalculated
+        if evidence_uses_non_official_lotteries(dict(inv.evidence or {})) or evidence_uses_non_official_lotteries(
+            dict(inv.last_event or {})
+        ) or any(not _is_official_or_empty(x) for x in (inv.lotteries or [])):
+            inv.mark_expired()
+            state.active_investigation = {}
+            if str(getattr(state, "active_relation", "") or "") == "same_day":
+                # Keep subjects sticky but force research with official scope
+                pass
+            meta["status"] = "invalidated_out_of_scope"
             meta["expired_investigation_id"] = inv.investigation_id
             return state, None, meta
         meta["status"] = "active"

@@ -14,18 +14,27 @@ class EvidenceAggregator:
         if not isinstance(last, dict):
             last = {}
         appearances = list(last.get("appearances") or last.get("entries") or [])
+        # Drop any leftover out-of-scope lottery rows (pre-hotfix / global pollution)
+        from app.lottery.ai.official_lottery_scope import is_official_lottery
+
+        appearances = [
+            e
+            for e in appearances
+            if isinstance(e, dict)
+            and (not e.get("lottery") or is_official_lottery(str(e.get("lottery"))))
+        ]
         lotteries: list[str] = []
         positions: list[str] = []
         for e in appearances:
             if not isinstance(e, dict):
                 continue
             lot = e.get("lottery") or last.get("lottery")
-            if lot and str(lot) not in lotteries:
+            if lot and is_official_lottery(str(lot)) and str(lot) not in lotteries:
                 lotteries.append(str(lot))
             pos = e.get("position_label") or e.get("position")
             if pos is not None and str(pos) not in positions:
                 positions.append(str(pos))
-        if last.get("lottery") and str(last["lottery"]) not in lotteries:
+        if last.get("lottery") and is_official_lottery(str(last["lottery"])) and str(last["lottery"]) not in lotteries:
             lotteries.insert(0, str(last["lottery"]))
         return {
             "type": "same_day_coincidence",
@@ -36,6 +45,7 @@ class EvidenceAggregator:
             "lotteries": lotteries,
             "positions": positions,
             "summary_text": None,
+            "official_scope": True,
         }
 
     @staticmethod

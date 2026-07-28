@@ -443,6 +443,9 @@ class LotteryChatService:
             )
             if reused:
                 evidence_reused = True
+                from app.lottery.ai.official_lottery_scope import replace_global_lottery_phrasing
+
+                reused = replace_global_lottery_phrasing(reused)
                 active_inv.last_answer = reused
                 active_inv.last_user_question = content
                 inv_mgr.ttl.renew(active_inv)
@@ -1539,6 +1542,10 @@ class LotteryChatService:
         # Strip accidental duplicated disclaimer from synthesizer
         if final_text.count(DISCLAIMER) > 1:
             final_text = final_text.replace(DISCLAIMER, "", final_text.count(DISCLAIMER) - 1).rstrip()
+
+        from app.lottery.ai.official_lottery_scope import replace_global_lottery_phrasing
+
+        final_text = replace_global_lottery_phrasing(self._sanitize_user_facing(final_text or ""))
 
         research_trace.finish(response=final_text)
         try:
@@ -3079,12 +3086,14 @@ class LotteryChatService:
     def _sanitize_user_facing(cls, text: str) -> str:
         if not text:
             return text
+        from app.lottery.ai.official_lottery_scope import replace_global_lottery_phrasing
+
         lines = []
         for line in text.splitlines():
             if cls._looks_internal(line):
                 continue
             lines.append(line)
-        return "\n".join(lines).strip()
+        return replace_global_lottery_phrasing("\n".join(lines).strip())
 
     def _suggestions(
         self,

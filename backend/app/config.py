@@ -48,6 +48,8 @@ class Settings(BaseSettings):
     assistant_synthesis_enabled: bool = True
     assistant_synthesis_provider: str = ""
     assistant_persist_conversations: bool = True
+    # Analyst 2.1 — Huawei analyzes Evidence Package (does not choose tools / invent facts)
+    lottery_analyst_reasoning_enabled: bool = True
 
     n8n_webhook_url: str = "http://localhost:5678"
     n8n_api_key: str = ""

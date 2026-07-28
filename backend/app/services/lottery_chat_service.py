@@ -569,6 +569,7 @@ class LotteryChatService:
         synthesis_fallback = False
         model_name: str | None = None
         provider_used: str | None = None
+        reasoning_telemetry: dict[str, Any] | None = None
         provider_requested = (
             getattr(settings, "assistant_synthesis_provider", None)
             or getattr(settings, "hermes_default_provider", None)
@@ -1236,10 +1237,11 @@ class LotteryChatService:
                 params = exec_params
                 tool_name = result.tool
 
-        # LLM synthesis: tool facts OR soft rewrite of clarifications
+        # LLM synthesis / Analyst Reasoning 2.1: tool facts OR soft rewrite of clarifications
         final_text = template
         synthesis_fallback = False
         model_name = None
+        reasoning_telemetry: dict[str, Any] | None = None
         recent_msgs = await self._recent_dialogue(session_id, limit=12)
         from app.lottery.ai.turn_policy import ConversationPolicy
 
@@ -1259,19 +1261,97 @@ class LotteryChatService:
                 if isinstance(state.active_filters, dict):
                     state.active_filters.pop("meta_continuity", None)
             else:
-                final_text, synthesis_fallback, model_name, provider_used = await self._synthesize(
-                    question=content,
-                    template=template,
-                    facts=structured,
-                    context={**ctx.to_store(), "conversation_v4": state.to_store()},
-                    recent_messages=recent_msgs,
-                    mode="tool",
-                    max_tokens=analyst_cfg.max_tokens,
-                )
-                if synthesis_fallback:
-                    fallback_used = True
-                    fallback_reason = "synthesis_unavailable_or_failed"
-                    provider_used = provider_used or "local_template"
+                used_reasoning_path = False
+                if getattr(settings, "lottery_analyst_reasoning_enabled", True):
+                    try:
+                        from app.lottery.ai.analyst_reasoning import (
+                            AnalystReasoningLayer,
+                            EvidencePackageBuilder,
+                            ReasoningModeSelector,
+                            should_invoke_reasoning,
+                        )
+                        from app.services.lottery_ai_contracts import LLMMessage
+
+                        pkg = EvidencePackageBuilder.build(
+                            question=content,
+                            factual_answer=template or "",
+                            structured=structured if isinstance(structured, dict) else {},
+                            state=state,
+                            hermes_decision=hermes_decision,
+                            research_meta=research_meta if isinstance(research_meta, dict) else {},
+                        )
+                        mode = (
+                            getattr(hermes_decision, "reasoning_mode", None)
+                            or ReasoningModeSelector.select(
+                                content,
+                                hermes_decision=hermes_decision,
+                                relation=pkg.relation or state.active_relation,
+                                has_evidence=True,
+                            )
+                        )
+                        hermes_decision.reasoning_mode = mode
+
+                        async def _reasoning_huawei(
+                            messages: list[dict[str, str]], max_tokens: int
+                        ) -> tuple[str | None, str | None, dict[str, Any]]:
+                            llm_msgs = [
+                                LLMMessage(role=m["role"], content=m["content"]) for m in messages
+                            ]
+                            text, model = await self._synthesize_via_hermes(
+                                llm_msgs, max_tokens=max_tokens
+                            )
+                            return text, model, {}
+
+                        if should_invoke_reasoning(mode):
+                            layer = AnalystReasoningLayer(huawei_caller=_reasoning_huawei)
+                            rr = await layer.run(
+                                package=pkg,
+                                mode=mode,  # type: ignore[arg-type]
+                                factual_fallback=template or "",
+                                max_tokens=min(analyst_cfg.max_tokens, 1400),
+                            )
+                            used_reasoning_path = True
+                            final_text = rr.text
+                            model_name = rr.model_used
+                            provider_used = rr.provider_used
+                            synthesis_fallback = rr.fallback_used or not rr.used_reasoning
+                            if rr.fallback_used:
+                                fallback_used = True
+                                fallback_reason = rr.rejection_reason or "reasoning_fallback"
+                            reasoning_telemetry = rr.to_telemetry()
+                        else:
+                            # Skip Huawei — factual template is the answer
+                            final_text = template
+                            synthesis_fallback = True
+                            provider_used = "local_template"
+                            fallback_used = True
+                            fallback_reason = f"reasoning_skip:{mode}"
+                            reasoning_telemetry = {
+                                "reasoning_mode": mode,
+                                "provider_used": "local_template",
+                                "used_reasoning": False,
+                                "guard_passed": True,
+                                "evidence_hash": pkg.evidence_hash(),
+                            }
+                            used_reasoning_path = True
+                    except Exception:  # noqa: BLE001
+                        used_reasoning_path = False
+                        reasoning_telemetry = {"error": "reasoning_layer_exception"}
+
+                if not used_reasoning_path:
+                    final_text, synthesis_fallback, model_name, provider_used = await self._synthesize(
+                        question=content,
+                        template=template,
+                        facts=structured,
+                        context={**ctx.to_store(), "conversation_v4": state.to_store()},
+                        recent_messages=recent_msgs,
+                        mode="tool",
+                        max_tokens=analyst_cfg.max_tokens,
+                    )
+                    if synthesis_fallback:
+                        fallback_used = True
+                        fallback_reason = "synthesis_unavailable_or_failed"
+                        provider_used = provider_used or "local_template"
                 # A.7: never drop last_n ISO dates that the factual template already lists
                 data_items = list(((structured or {}).get("data") or {}).get("items") or [])
                 if data_items and template:
@@ -1288,6 +1368,13 @@ class LotteryChatService:
                         fallback_used = True
                         fallback_reason = "preserve_last_n_dates"
                         provider_used = "local_template"
+                        if reasoning_telemetry is not None:
+                            reasoning_telemetry = {
+                                **reasoning_telemetry,
+                                "guard_passed": False,
+                                "rejection_reason": "preserve_last_n_dates",
+                                "fallback_used": True,
+                            }
             facts_for_fmt = {
                 "primary": state.current_primary_candidate,
                 "observed": (state.last_analysis or {}).get("observed")
@@ -1564,6 +1651,7 @@ class LotteryChatService:
             investigation_id=(active_inv.investigation_id if active_inv else None),
             evidence_reused=bool(evidence_reused),
             tools_used=[t.get("tool") for t in tool_trace if isinstance(t, dict)],
+            reasoning_telemetry=reasoning_telemetry,
         )
         runtime_trace = {
             "provider_requested": provider_requested,

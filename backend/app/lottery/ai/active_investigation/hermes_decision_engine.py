@@ -44,6 +44,8 @@ class HermesDecision(BaseModel):
     reason_code: str | None = None
     ambiguous: bool = False
     user_query: str | None = None
+    # Analyst 2.1 — reasoning mode for Huawei (Hermes selects; never invents facts)
+    reasoning_mode: str | None = None
 
     def to_trace(self) -> dict[str, Any]:
         """Safe summary for diagnostics — no chain-of-thought."""
@@ -60,6 +62,7 @@ class HermesDecision(BaseModel):
             "confidence": self.confidence,
             "reason_code": self.reason_code,
             "ambiguous": self.ambiguous,
+            "reasoning_mode": self.reasoning_mode,
         }
 
 
@@ -68,6 +71,36 @@ class HermesDecisionEngine:
 
     @classmethod
     def decide(
+        cls,
+        message: str,
+        *,
+        state: Any,
+        investigation: ActiveInvestigationSession | None,
+        resolution: dict[str, Any] | None = None,
+    ) -> HermesDecision:
+        decision = cls._decide_core(
+            message, state=state, investigation=investigation, resolution=resolution
+        )
+        from app.lottery.ai.analyst_reasoning.reasoning_modes import ReasoningModeSelector
+
+        has_ev = bool(
+            investigation
+            and (
+                getattr(investigation, "evidence", None)
+                or getattr(investigation, "last_event", None)
+            )
+        )
+        decision.reasoning_mode = ReasoningModeSelector.select(
+            message,
+            hermes_decision=decision,
+            relation=decision.inherited_relation
+            or getattr(state, "active_relation", None),
+            has_evidence=has_ev or decision.requires_research,
+        )
+        return decision
+
+    @classmethod
+    def _decide_core(
         cls,
         message: str,
         *,

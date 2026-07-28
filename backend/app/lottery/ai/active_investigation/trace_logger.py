@@ -21,6 +21,7 @@ class ConversationTraceLogger:
         investigation_id: str | None = None,
         evidence_reused: bool = False,
         tools_used: list[str] | None = None,
+        reasoning_telemetry: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
         out: dict[str, Any] = {
             "provider_used": provider_used,
@@ -36,4 +37,6 @@ class ConversationTraceLogger:
         if decision is not None:
             out["hermes_decision"] = decision.to_trace()
             out["hermes_decision_id"] = decision.hermes_decision_id
+        if reasoning_telemetry:
+            out["analyst_reasoning"] = reasoning_telemetry
         return {k: v for k, v in out.items() if v is not None and v != {} and v != []}

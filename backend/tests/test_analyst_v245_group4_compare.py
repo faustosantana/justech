@@ -103,3 +103,33 @@ def test_compare_numbers_steps_year_and_position_aligned():
             assert s.params.get("to_date") == "2026-12-31"
             if "last" in (s.purpose or "") or "lotteries" in (s.purpose or ""):
                 assert s.params.get("position") == 1
+
+
+def test_d2_research_engine_plan_survives_query_clarify_slot():
+    """understand may mark material slot 'query'; Research Engine still plans compare."""
+    from app.lottery.ai.analyst.config import AnalystRuntimeConfig
+    from app.lottery.ai.analyst.research_planner import ResearchPlanner
+    from app.lottery.ai.conversation_state import UnderstandingResult
+
+    st = _compare_state()
+    q = "¿Y solo en 2026?"
+    res = IntentResolver.resolve(q, st)
+    und = UnderstandingResult(
+        intent="clarification_response",
+        needs_clarification=True,
+        missing_slots=["query"],
+        numbers=["54", "94"],
+        tool=None,
+    )
+    plan = ResearchPlanner.plan(
+        message=q,
+        understanding=und,
+        state=st,
+        config=AnalystRuntimeConfig(),
+        resolution=res,
+    )
+    assert plan.is_research is True
+    assert plan.steps
+    assert any(
+        s.purpose and s.purpose.startswith("compare_") for s in plan.steps
+    )

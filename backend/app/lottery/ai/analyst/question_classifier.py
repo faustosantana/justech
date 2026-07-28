@@ -341,7 +341,12 @@ class QuestionClassifier:
                 last_n_params["lotteries"] = named_lots[:4]
                 last_n_params["lottery_explicit"] = True
             elif inherit_lot and not asks_all_lotteries(raw):
-                last_n_params["lotteries"] = list(state.active_lotteries or [])[:4]
+                # Prefer the explicit single lottery filter (B.2), not a sticky multi list
+                single = (state.active_filters or {}).get("lottery")
+                if single:
+                    last_n_params["lotteries"] = [str(single)]
+                else:
+                    last_n_params["lotteries"] = list(state.active_lotteries or [])[:4]
                 last_n_params["lottery_explicit"] = True
             else:
                 last_n_params["lotteries"] = []

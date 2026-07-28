@@ -43,7 +43,19 @@ class ConversationBrain:
                     st.active_pair = list(normed[:2])
                 else:
                     st.active_pair = []
-                    if resolution.get("follow_up_kind") in {
+                    # E.2: after/before windows need last_analysis.items anchors —
+                    # never wipe them just because inherit_active_number is False.
+                    follow = resolution.get("follow_up_kind")
+                    preserve_analysis = follow in {
+                        "after",
+                        "before",
+                        "d_plus_1",
+                        "d_plus_3",
+                        "d_plus_7",
+                    }
+                    if preserve_analysis:
+                        pass
+                    elif follow in {
                         "last_occurrence",
                         "first_occurrence",
                         "frequency",
@@ -74,18 +86,20 @@ class ConversationBrain:
             if asks_all_lotteries(raw_msg):
                 st.active_lotteries = []
         elif lots:
-            st.active_lotteries = list(
-                dict.fromkeys([*lots, *[x for x in st.active_lotteries if x not in lots]])
-            )
-            # Inheritance: lottery named/filtered this turn stays scoped for follow-ups
-            # (B.2). resolve_references may fill lotteries without lottery_explicit.
+            # Explicit lottery this turn replaces sticky scope (B.2: Nacional only).
+            # Do not merge prior DEFAULT lotteries into an explicit filter.
             if (
                 resolution.get("lottery_explicit")
                 or resolution.get("lottery_filter")
                 or resolution.get("lotteries")
             ):
+                st.active_lotteries = list(dict.fromkeys(lots))
                 filters["lottery_explicit"] = True
                 filters["lottery"] = lots[0]
+            else:
+                st.active_lotteries = list(
+                    dict.fromkeys([*lots, *[x for x in st.active_lotteries if x not in lots]])
+                )
 
         if resolution.get("year_filter") is not None:
             filters["year"] = int(resolution["year_filter"])

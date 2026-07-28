@@ -470,6 +470,18 @@ class LotteryChatService:
             understanding.needs_clarification = False
             understanding.missing_slots = []
             understanding.clarification_question = None
+        # D.2/E.2: Research Engine plan must win over soft clarify (even material "query")
+        if research_plan.is_research and research_plan.steps:
+            understanding.needs_clarification = False
+            understanding.missing_slots = []
+            understanding.clarification_question = None
+            if not understanding.tool:
+                understanding.tool = research_plan.steps[0].tool
+                understanding.params = {
+                    **dict(understanding.params or {}),
+                    "run_tools": True,
+                    "research_kind": research_plan.question_kind,
+                }
         if (
             not understanding.needs_clarification
             and not understanding.tool
@@ -484,7 +496,7 @@ class LotteryChatService:
                 "prediction_request",
             }
         ):
-            from app.services.lottery_ai_contracts import LotteryToolName
+            from app.lottery.ai.nlp_stability import DEFAULT_ALL_HISTORY_LOTTERIES
             from app.lottery.ai.research_policy import default_lotteries
 
             # Fase X.2 — keep compound same-day investigations intact
@@ -557,6 +569,13 @@ class LotteryChatService:
                 "type": "lottery_error",
                 "warnings": [{"code": "REFUSE", "message": template}],
             }
+        elif research_plan.is_research and research_plan.steps:
+            # Safety: never soft-clarify when a factual research plan exists (D.2/E.2)
+            intent_kind = "tool"
+            if not understanding.tool:
+                understanding.tool = research_plan.steps[0].tool
+            tool_name = understanding.tool
+            params = dict(understanding.params or {})
         elif understanding.needs_clarification or not understanding.tool:
             intent_kind = "clarify"
             material = filter_material_slots(understanding.missing_slots)
@@ -577,7 +596,6 @@ class LotteryChatService:
                 # Have active number — investigate last occurrence instead of asking filters
                 understanding.needs_clarification = False
                 understanding.missing_slots = []
-                from app.services.lottery_ai_contracts import LotteryToolName
                 from app.lottery.ai.nlp_stability import DEFAULT_ALL_HISTORY_LOTTERIES
 
                 n = state.active_numbers[0]
@@ -724,7 +742,11 @@ class LotteryChatService:
                 }
             elif (not phase_a_handled) and (
                 understanding.tool == "lottery_compare_last_occurrence_all"
-                or (understanding.scope == "all" and understanding.intent == "last_occurrence")
+                or (
+                    understanding.scope == "all"
+                    and understanding.intent == "last_occurrence"
+                    and (understanding.params or {}).get("mode") != "last_n"
+                )
                 or (
                     understanding.intent == "compare_numbers"
                     and understanding.numbers
@@ -732,6 +754,7 @@ class LotteryChatService:
                 or (
                     understanding.intent == "last_occurrence"
                     and len(understanding.lotteries or []) > 1
+                    and (understanding.params or {}).get("mode") != "last_n"
                 )
             ):
                 # Prefer dedicated across-lotteries tool when lotteries known

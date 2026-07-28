@@ -45,12 +45,13 @@ def test_b2_last_n_inherits_nacional_after_brain():
         lotteries=res1.get("lotteries") or ["Nacional"],
     )
     st = ConversationBrain(st).apply_resolution(understanding=und, resolution=res1)
+    assert st.active_lotteries == ["Nacional"]
     res2 = IntentResolver.resolve(Q_B2, st)
     q = QuestionClassifier.classify(Q_B2, st, res2)
     assert q is not None
     assert q.kind == "last_n_occurrences"
     assert q.params.get("lottery_explicit") is True
-    assert "Nacional" in (q.params.get("lotteries") or [])
+    assert q.params.get("lotteries") == ["Nacional"]
     steps, meta = DynamicResearchPlanner.build(q, st)
     assert meta.get("lottery_explicit") is True or q.params.get("lottery_explicit")
     primary = next(s for s in steps if s.purpose == "last_n_occurrences")

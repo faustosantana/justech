@@ -66,3 +66,24 @@ def test_e2_planner_uses_only_obtained_anchor_dates():
 def test_temporal_after_does_not_invent_dates_without_anchors():
     steps = temporal_after_steps(number="54", lottery=None, base_date=None, windows=[3])
     assert steps == []
+
+
+def test_e2_brain_preserves_last_analysis_items_on_after_followup():
+    """inherit_active_number=False must not wipe anchors needed by after-window."""
+    from app.lottery.ai.analyst.conversation_brain import ConversationBrain
+    from app.lottery.ai.conversation_state import UnderstandingResult
+
+    st = _state()
+    res = IntentResolver.resolve(Q_E2, st)
+    assert res.get("follow_up_kind") == "after"
+    assert res.get("inherit_active_number") is False
+    und = UnderstandingResult(
+        intent="clarification_response",
+        needs_clarification=True,
+        missing_slots=["query"],
+        numbers=["54"],
+    )
+    st2 = ConversationBrain(st).apply_resolution(understanding=und, resolution=res)
+    assert (st2.last_analysis or {}).get("items")
+    assert len(st2.last_analysis["items"]) == len(ITEMS)
+

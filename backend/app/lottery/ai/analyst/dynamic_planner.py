@@ -127,6 +127,27 @@ class DynamicResearchPlanner:
                     for it in items:
                         if isinstance(it, dict) and (it.get("date") or it.get("draw_date")):
                             anchors.append(it)
+                # Recover anchors from last tool evidence if last_analysis lost items
+                if not anchors:
+                    for tr in list(getattr(state, "last_tool_results", None) or [])[::-1]:
+                        if not isinstance(tr, dict):
+                            continue
+                        sm = tr.get("summary") if isinstance(tr.get("summary"), dict) else tr
+                        candidates = list(sm.get("items") or []) or list(sm.get("rows") or [])
+                        for it in candidates:
+                            if not isinstance(it, dict):
+                                continue
+                            d = it.get("date") or it.get("draw_date") or it.get("last_date")
+                            if d:
+                                anchors.append(
+                                    {
+                                        **it,
+                                        "date": d,
+                                        "lottery": it.get("lottery") or it.get("lottery_name"),
+                                    }
+                                )
+                        if anchors:
+                            break
                 if not anchors and (base_date or (isinstance(la, dict) and la.get("date"))):
                     anchors.append(
                         {

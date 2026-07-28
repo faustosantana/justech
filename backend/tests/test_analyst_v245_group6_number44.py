@@ -54,3 +54,16 @@ def test_f1_f2_understand_chain_fills_number_and_resumes():
     assert result.tool == LotteryToolName.GET_NUMBER_OCCURRENCES.value
     assert result.params.get("mode") == "last_n"
     assert result.needs_clarification is False
+
+
+def test_f2_send_message_does_not_shadow_lottery_tool_name_import():
+    """Local `import LotteryToolName` inside send_message caused UnboundLocalError (F.2)."""
+    import inspect
+
+    from app.services.lottery_chat_service import LotteryChatService
+
+    src = inspect.getsource(LotteryChatService.send_message)
+    assert "from app.services.lottery_ai_contracts import LotteryToolName\n" not in src
+    # Aliased local imports are OK; bare name must resolve to module-level import
+    assert "LotteryToolName.COMPARE_NUMBER_ACROSS_LOTTERIES" in src
+

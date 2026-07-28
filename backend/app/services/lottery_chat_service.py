@@ -619,6 +619,16 @@ class LotteryChatService:
         from app.lottery.ai.research_policy import apply_to_understanding, filter_material_slots
 
         understanding = apply_to_understanding(understanding, state)
+        if incomplete_number_ask:
+            understanding.needs_clarification = True
+            understanding.missing_slots = ["number"]
+            understanding.clarification_question = (
+                "El mensaje quedó incompleto. ¿A qué número te refieres?"
+            )
+            understanding.tool = None
+            understanding.numbers = []
+            understanding.params = dict(understanding.params or {})
+            understanding.params.pop("run_tools", None)
         material_pre = filter_material_slots(understanding.missing_slots)
         bare_compare_lock = bool(
             re.search(r"^\s*haz\s+la\s+comparaci[oó]n\.?\s*$", content or "", re.I)
@@ -627,13 +637,20 @@ class LotteryChatService:
             understanding.needs_clarification
             and not material_pre
             and not bare_compare_lock
+            and not incomplete_number_ask
             and "compare_target" not in (understanding.missing_slots or [])
         ):
             understanding.needs_clarification = False
             understanding.missing_slots = []
             understanding.clarification_question = None
         # D.2/E.2: Research Engine plan must win over soft clarify (even material "query")
-        if research_plan.is_research and research_plan.steps and not bare_compare_lock:
+        # except locked clarifies (bare compare / truncated number ask).
+        if (
+            research_plan.is_research
+            and research_plan.steps
+            and not bare_compare_lock
+            and not incomplete_number_ask
+        ):
             understanding.needs_clarification = False
             understanding.missing_slots = []
             understanding.clarification_question = None
@@ -739,7 +756,7 @@ class LotteryChatService:
                 "type": "lottery_error",
                 "warnings": [{"code": "REFUSE", "message": template}],
             }
-        elif research_plan.is_research and research_plan.steps:
+        elif research_plan.is_research and research_plan.steps and not incomplete_number_ask and not bare_compare_lock:
             # Safety: never soft-clarify when a factual research plan exists (D.2/E.2)
             intent_kind = "tool"
             if not understanding.tool:
@@ -760,8 +777,10 @@ class LotteryChatService:
                     template = "¿La última vez de cuál número?"
                 else:
                     template = "¿De qué número?"
-            elif brain.should_skip_number_clarify() and re.search(
-                r"qu[eé]\s+n[uú]mero", template or "", re.I
+            elif (
+                not incomplete_number_ask
+                and brain.should_skip_number_clarify()
+                and re.search(r"qu[eé]\s+n[uú]mero", template or "", re.I)
             ):
                 # Have active number — investigate last occurrence instead of asking filters
                 understanding.needs_clarification = False

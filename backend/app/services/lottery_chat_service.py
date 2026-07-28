@@ -1241,7 +1241,6 @@ class LotteryChatService:
         final_text = template
         synthesis_fallback = False
         model_name = None
-        reasoning_telemetry: dict[str, Any] | None = None
         recent_msgs = await self._recent_dialogue(session_id, limit=12)
         from app.lottery.ai.turn_policy import ConversationPolicy
 

@@ -1,0 +1,61 @@
+{
+  "baseline_name": "LOTTERY_ANALYST_CERTIFIED_2026_1",
+  "version": "lottery-ia-ux-v2.4.5.4-certified",
+  "product_release": "2026.1",
+  "status": "CERTIFIED",
+  "frozen": true,
+  "date_utc": "2026-07-28T16:11:24Z",
+  "released_at_utc": "2026-07-28T16:20:00Z",
+  "git": {
+    "commit": "9b440c3b51b9684bf48e6f31bbc23226b2994b6e",
+    "commit_short": "9b440c3",
+    "tag": "lottery-ia-ux-v2.4.5.4-certified",
+    "annotated_tag_object": "6685f083c2e8bfb3f4818341f2f27a3dff8d87dd",
+    "branch_at_release": "feature/nr-complete-analysis-prediction-engine",
+    "functional_fix_commit": "0d3ecb8d47744fcca4158795e7a5caeffb7afdaa",
+    "prior_blocked_baseline_commit": "ec27d96ecba3267a9879861b6355cbe642f2f41e",
+    "certified_runtime_commit": "8061e0f458419d994bff8abd3700de4c10aa5b80"
+  },
+  "docker": {
+    "backend_image": "jaios-app-backend:lottery-ia-ux-v2.4.5.4-de",
+    "backend_image_aliases": [
+      "jaios-app-backend:lottery-ia-ux-v2.4.5.4",
+      "jaios-app-backend:lottery-analyst-certified-2026.1"
+    ],
+    "backend_image_id": "sha256:a6204913747cc2472f2dfec4cd125b95f73fe1fd55439d6d1255c9342780af24",
+    "host": "jaios.justech.do"
+  },
+  "certification": {
+    "audit_run_id": "cert200-20260728T151731Z-40ca7b78",
+    "pass": 200,
+    "fail": 0,
+    "certification_level": "CERTIFIED",
+    "exactitud_factual_mean": 5.0,
+    "contradicciones": 0,
+    "jerga_interna": 0,
+    "http_500": 0,
+    "datos_inventados": 0,
+    "sujetos_incorrectos": 0,
+    "repeatability_equivalent": 20,
+    "repeatability_total": 20,
+    "concurrency_unique_ids": true,
+    "evidence_dir": "evidence/lottery-analyst-certification-200/audit-certified-20260728"
+  },
+  "question_bank": {
+    "path": "evidence/lottery-analyst-certification-200/QUESTION_BANK.json",
+    "sha256": "6d056978809140eee4af23299cbd0c78a8bae9537fbbbcd62ad50bd18c6d7931",
+    "seed": 20260727
+  },
+  "constraints": {
+    "prompt_maestro_unchanged": true,
+    "hermes_unchanged": true,
+    "mathematical_motor_unchanged": true,
+    "evaluator_criteria_unchanged": true,
+    "bank_and_seed_locked": true
+  },
+  "restore": {
+    "git_checkout": "git checkout lottery-ia-ux-v2.4.5.4-certified",
+    "verify_script": "RELEASE_PACKAGE/verify_restore.sh",
+    "docker_run_image": "jaios-app-backend:lottery-ia-ux-v2.4.5.4-de"
+  }
+}

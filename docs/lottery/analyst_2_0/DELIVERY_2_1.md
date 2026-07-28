@@ -1,10 +1,11 @@
 # Lottery Analyst 2.1 — Entrega DEV (Analyst Reasoning Layer)
 
-**Fecha:** 2026-07-28  
+**Fecha:** 2026-07-28 / 2026-07-29  
 **Branch:** `feature/nr-complete-analysis-prediction-engine`  
+**Commit tip:** `0c192b7`  
 **Tag DEV:** `lottery-analyst-2.1.0-reasoning-dev`  
 **Imagen DEV:** `jaios-app-backend:lottery-analyst-2.1.0-reasoning-dev`  
-**Producción:** no promovida (Beta 2.0 / official-scope hotfix permanece en worker / prod pin previo)
+**Producción:** **no promovida** (Beta 2.0 / official-scope hotfix sigue fuera de este pin)
 
 ---
 
@@ -33,32 +34,33 @@ Huawei **no** elige tools, **no** decide SQL, **no** altera evidencia. Hermes se
 
 ## Cuándo Huawei sí aporta
 
-- Explicar / analizar / por qué / qué significa / qué observas
-- Comparar frecuencias o pares
-- Interpretar coincidencia same-day (misma fecha ≠ misma lotería)
-- Resumir investigación / sesión
-- Clarificar limitaciones / rechazar predicción garantizada
+- Explicar / analizar / por qué / qué significa / qué observas  
+- Comparar frecuencias o pares  
+- Interpretar coincidencia same-day (misma fecha ≠ misma lotería)  
+- Resumir investigación / sesión  
+- Clarificar limitaciones / rechazar predicción garantizada  
 
 ## Cuándo no debe llamarse
 
-- “¿Cuál fue la fecha?” / “¿En qué posición?” / “¿En cuáles loterías?”
-- “¿Cuántas veces?” como attribute follow-up (`attr=count`)
-- Reuse factual corto sin verbos de análisis
+- “¿Cuál fue la fecha?” / “¿En qué posición?” / “¿En cuáles loterías?”  
+- “¿Cuántas veces?” como attribute follow-up (`attr=count`)  
+- Reuse factual corto sin verbos de análisis  
+- Mensajes truncados incompletos → clarify (sin research)
 
-**Banco ANALYST_REASONING_40:** ~70% invoke / ~30% skip (orientativo del diseño de modos).
+**ANALYST_REASONING_40:** 32/40 invoke (80%) / 8 skip (20%) — diseño de modos del banco.
 
 ---
 
-## Suites (obligatorias)
+## Suites obligatorias
 
-| Suite | Resultado | Notas |
-|-------|-----------|--------|
-| ANALYST_REASONING_40 | **47/47** unit (40 modos + guards) | Offline + DEV |
-| Official Scope | **18+ PASS** (pack 65 con reasoning) | DEV |
-| Agent50 | **50/0** | Offline |
-| Manual30 | **30/0** | DEV API |
-| Cert200 | *(en corrida / ver cierre abajo)* | DEV API, banco/semilla intactos |
-| A/B 20 | **B_ACCEPT** (18 B / 0 A / 1 tie; 0 regressions exactitud) | Offline |
+| Suite | Resultado |
+|-------|-----------|
+| ANALYST_REASONING_40 | **47/47** unit |
+| Official Scope | **PASS** (pack 65 con reasoning) |
+| Agent50 | **50/0** |
+| Manual30 | **30/0** |
+| Cert200 | **200/0 CERTIFIED** (`cert200-20260728T233306Z-4f4e5d11`) |
+| A/B 20 | **B_ACCEPT** (18 B / 0 A / 1 tie; 0 regressions de exactitud) |
 
 ---
 
@@ -66,30 +68,41 @@ Huawei **no** elige tools, **no** decide SQL, **no** altera evidencia. Hermes se
 
 | Turno | Resultado |
 |-------|-----------|
-| ¿Cuántas veces coincidieron el 35 y el 14? | Conteos **120**; si Huawei inventa total alterno → Guard rechaza → fallback interpretativo con “misma lotería” |
+| ¿Cuántas veces coincidieron el 35 y el 14? | **120**; si Huawei inventa total → Guard rechaza → fallback interpretativo (misma fecha ≠ misma lotería) |
 | ¿En cuáles loterías? | `evidence_reuse` / sin Huawei |
 | Explícame la coincidencia… | Huawei `explain_evidence`, guard OK, 120 + interpretación |
+| Mensaje cortado: ¿cuándo salió el | Clarify: «¿La última vez de cuál número?» |
 
 ---
 
 ## Telemetría (`agent_trace.analyst_reasoning`)
 
-`reasoning_mode`, `provider_used`, `model_used`, `evidence_hash`, `prompt_version` (`analyst-reasoning-v1.1`), `latency_ms`, `input_tokens`, `output_tokens`, `guard_passed`, `rejection_reason`, `fallback_used`.
+`reasoning_mode`, `provider_used`, `model_used`, `evidence_hash`, `prompt_version` (`analyst-reasoning-v1.1`), `latency_ms`, tokens (a menudo `null` en ModelArts), `guard_passed`, `rejection_reason`, `fallback_used`.
+
+**Observado:** latencia Huawei ~19–24 s; rechazos típicos `count_mismatch` cuando el modelo inventa totales alternos — fallback seguro conserva exactitud y la narrativa interpretativa.
 
 No se registra chain-of-thought.
 
-**Observado en smoke:** latencia Huawei ~19–24 s; tokens a menudo `null` desde ModelArts; rechazos típicos `count_mismatch` cuando el modelo inventa totales alternos (p. ej. 40≠120) — fallback seguro conserva exactitud.
+---
+
+## Costo / latencia (DEV smoke)
+
+- Turnos attribute / reuse: <1–4 s, sin Huawei  
+- Turnos reasoning: ~20–25 s Huawei + SQL previo  
+- Objetivo cumplido: menos llamadas inútiles; más valor cuando se llama; Guard evita invención
 
 ---
 
 ## Restricciones respetadas
 
-- Motor matemático, histórico, OFFICIAL_LOTTERY_SCOPE (7), Prompt Maestro v6, Cert200/semilla/evaluadores: sin cambio de contrato
-- Hermes DecisionEngine conservado (+ `reasoning_mode`)
-- Sin auto-deploy a producción
+- Motor matemático, histórico, OFFICIAL_LOTTERY_SCOPE (7), Prompt Maestro v6, Cert200/semilla/evaluadores: sin cambio de contrato  
+- Hermes DecisionEngine conservado (+ `reasoning_mode`)  
+- Sin auto-deploy a producción  
 
 ---
 
 ## Veredicto
 
-Ver sección final tras Cert200.
+# LISTO PARA BETA 2.1
+
+Condición: imagen/tag DEV anteriores; **promoción a prod requiere paso manual explícito** (no automático).

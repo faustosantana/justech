@@ -1119,6 +1119,22 @@ class LotteryChatService:
                     fallback_used = True
                     fallback_reason = "synthesis_unavailable_or_failed"
                     provider_used = provider_used or "local_template"
+                # A.7: never drop last_n ISO dates that the factual template already lists
+                data_items = list(((structured or {}).get("data") or {}).get("items") or [])
+                if data_items and template:
+                    need = [
+                        str(it.get("date") or "")[:10]
+                        for it in data_items
+                        if it.get("date")
+                    ]
+                    in_tmpl = sum(1 for d in need if d and d in (template or ""))
+                    in_final = sum(1 for d in need if d and d in (final_text or ""))
+                    if in_tmpl >= 2 and in_final < min(2, in_tmpl):
+                        final_text = template
+                        synthesis_fallback = True
+                        fallback_used = True
+                        fallback_reason = "preserve_last_n_dates"
+                        provider_used = "local_template"
             facts_for_fmt = {
                 "primary": state.current_primary_candidate,
                 "observed": (state.last_analysis or {}).get("observed")

@@ -31,6 +31,29 @@ Primera pérdida de alcance: planner `coincidences_only` no inyectaba `lotteries
 | Histórico global (~50) | **1893** |
 | 7 loterías oficiales | **120** |
 
+Chat post-hotfix: «120 ocasiones»; follow-up solo Quiniela Loteka / Lotería Nacional; sin Haiti/King/Anguila.
+
+## Suites
+
+| Suite | Resultado |
+|-------|-----------|
+| OFFICIAL_LOTTERY_SCOPE (unit) | 18/18 PASS |
+| Agent50 | 50/0 |
+| Manual30 | 30/0 |
+| Cert200 | 200/0 |
+
+## Despliegue
+
+- Commit: `4c983f4` (+ `7be8a9d`)
+- Tag: `lottery-analyst-official-scope-hotfix-2026.1.2`
+- Imagen: `jaios-app-backend:lottery-analyst-official-scope-hotfix-2026.1.2` (`sha256:ef9afa7f6464…`)
+- Backup: `/opt/jaios/backups/lottery-official-scope-hotfix-20260728T210354Z/`
+- Rollback image: `jaios-app-backend:pre-official-scope-hotfix-20260728T210354Z` / `lottery-analyst-2.0.0-beta`
+
+## Veredicto
+
+**LISTO PARA PRODUCCIÓN** (hotfix beta activo en jaios.justech.do).
+
 ## Archivos tocados
 
 - `official_lottery_scope.py` (nuevo SSOT)

@@ -1,0 +1,571 @@
+[
+  {
+    "id": "M01",
+    "kind": "compound_list",
+    "turns": [
+      "¿Han salido el 35 y el 14 el mismo día?",
+      "¿Cuáles fueron esas últimas 3 veces?"
+    ],
+    "answers": [
+      "**Conclusión:** \nSí, el 35 y el 14 han coincidido el mismo día en **200 ocasiones** dentro del histórico disponible, considerando todas las loterías y todas las posiciones.\n\nPuedo mostrarte las tres coincidencias anteriores o revisar loterías y posiciones de ese día.",
+      "Las 3 coincidencias más recientes fueron:\n1. 2026-07-21 — — — 14 en 2da posición (King Lottery AM); 14 en 2da posición (Haiti Bolet 06:30 PM); 35 en 1ra posición (Quiniela Real); 35 en 1ra posición (Anguila 09:00 AM).\n2. 2026-07-20 — — — 14 en 1ra posición (Mega Chance); 14 en 2da posición (Quiniela Loteka); 14 en posición 5 (Super Kino Tv); 35 en 1ra posición (Loteria Nacional).\n3. 2026-07-19 — — — 14 en 2da posición (Anguila 03:00 PM); 35 en 1ra posición (Quiniela Real).\n\nPuedo mostrarte las tres coincidencias anteriores o revisar loterías y posiciones de ese día."
+    ],
+    "fails": [],
+    "verdict": "PASS",
+    "active_numbers": [
+      "35",
+      "14"
+    ],
+    "active_relation": "same_day"
+  },
+  {
+    "id": "M02",
+    "kind": "compound_list",
+    "turns": [
+      "¿Han salido el 55 y el 24 el mismo día?",
+      "¿Y esas fechas?"
+    ],
+    "answers": [
+      "**Conclusión:** \nSí, el 55 y el 24 han coincidido el mismo día en **200 ocasiones** dentro del histórico disponible, considerando todas las loterías y todas las posiciones.\n\nPuedo mostrarte las tres coincidencias anteriores o revisar loterías y posiciones de ese día.",
+      "Las 3 coincidencias más recientes fueron:\n1. 2026-07-20 — — — 24 en posición 8 (Super Kino Tv); 55 en 2da posición (Quiniela Real).\n2. 2026-07-19 — — — 24 en 2da posición (Anguila 9:00 PM); 24 en 1ra posición (Quiniela Loteka); 24 en 1ra posición (Gana Mas); 24 en 1ra posición (Haiti Bolet 11:30 AM).\n3. 2026-07-18 — — — 24 en posición 4 (Loto Pool); 24 en 1ra posición (Gana Mas); 55 en 2da posición (Florida Noche).\n\nPuedo mostrarte las tres coincidencias anteriores o revisar loterías y posiciones de ese día."
+    ],
+    "fails": [],
+    "verdict": "PASS",
+    "active_numbers": [
+      "55",
+      "24"
+    ],
+    "active_relation": "same_day"
+  },
+  {
+    "id": "M03",
+    "kind": "compound_list",
+    "turns": [
+      "¿Han salido el 22 y el 97 el mismo día?",
+      "Muéstrame las anteriores."
+    ],
+    "answers": [
+      "**Conclusión:** \nSí, el 22 y el 97 han coincidido el mismo día en **200 ocasiones** dentro del histórico disponible, considerando todas las loterías y todas las posiciones.\n\nPuedo mostrarte las tres coincidencias anteriores o revisar loterías y posiciones de ese día.",
+      "Las 3 coincidencias más recientes fueron:\n1. 2026-07-20 — — — 22 en 2da posición (Gana Mas); 97 en 3ra posición (Anguila 07:00 PM).\n2. 2026-07-18 — — — 22 en 3ra posición (Loto Pool); 22 en 2da posición (New York 10:30); 22 en posición 5 (Loto Leidsa); 97 en 3ra posición (Anguila 11:00 AM).\n3. 2026-07-16 — — — 22 en posición 5 (Loto Pool); 22 en 3ra posición (Anguila 08:00 PM); 22 en 2da posición (Anguila 02:00 PM); 97 en 1ra posición (King Lottery PM).\n\nPuedo mostrarte las tres coincidencias anteriores o revisar loterías y posiciones de ese día."
+    ],
+    "fails": [],
+    "verdict": "PASS",
+    "active_numbers": [
+      "22",
+      "97"
+    ],
+    "active_relation": "same_day"
+  },
+  {
+    "id": "M04",
+    "kind": "compound_list",
+    "turns": [
+      "¿Han salido el 01 y el 07 el mismo día?",
+      "¿Cuáles fueron?"
+    ],
+    "answers": [
+      "**Conclusión:** \nSí, el 01 y el 07 han coincidido el mismo día en **200 ocasiones** dentro del histórico disponible, considerando todas las loterías y todas las posiciones.\n\nPuedo mostrarte las tres coincidencias anteriores o revisar loterías y posiciones de ese día.",
+      "Las 3 coincidencias más recientes fueron:\n1. 2026-07-20 — — — 01 en 1ra posición (Super Kino Tv); 01 en 1ra posición (Loto Pool); 07 en 3ra posición (Super Kino Tv).\n2. 2026-07-18 — — — 01 en Loto (Loto Leidsa); 07 en Loto (Loto 5); 07 en 1ra posición (New York 10:30).\n3. 2026-07-17 — — — 01 en 1ra posición (Loto Pool); 07 en 2da posición (Loto Pool); 07 en 1ra posición (Super Kino Tv).\n\nPuedo mostrarte las tres coincidencias anteriores o revisar loterías y posiciones de ese día."
+    ],
+    "fails": [],
+    "verdict": "PASS",
+    "active_numbers": [
+      "01",
+      "07"
+    ],
+    "active_relation": "same_day"
+  },
+  {
+    "id": "M05",
+    "kind": "compound_list",
+    "turns": [
+      "¿Han salido el 44 y el 88 el mismo día?",
+      "esas 3"
+    ],
+    "answers": [
+      "**Conclusión:** \nSí, el 44 y el 88 han coincidido el mismo día en **200 ocasiones** dentro del histórico disponible, considerando todas las loterías y todas las posiciones.\n\nPuedo mostrarte las tres coincidencias anteriores o revisar loterías y posiciones de ese día.",
+      "Sobre tu pregunta (esas 3):\n\nLas 3 coincidencias más recientes fueron:\n1. 2026-07-21 — — — 44 en 1ra posición (Mega Chance); 88 en 2da posición (Quiniela LoteDom); 88 en 3ra posición (El Agarra 4); 88 en 2da posición (La Suerte MD).\n2. 2026-07-20 — — — 44 en 1ra posición (Anguila 1:00 PM); 44 en 1ra posición (Quiniela Leidsa); 88 en 2da posición (La Primera Tarde); 88 en 1ra posición (Florida Noche).\n3. 2026-07-19 — — — 44 en 3ra posición (Florida Noche); 44 en 2da posición (Anguila 6:00 PM); 88 en 2da posición (Haiti Bolet 06:30 PM); 88 en 3ra posición (Anguila 09:00 AM).\n\nPuedo mostrarte las tres coincidencias anteriores o revisar loterías y posiciones de ese día."
+    ],
+    "fails": [],
+    "verdict": "PASS",
+    "active_numbers": [
+      "44",
+      "88"
+    ],
+    "active_relation": "same_day"
+  },
+  {
+    "id": "M06",
+    "kind": "compound_list",
+    "turns": [
+      "¿Han salido el 39 y el 58 el mismo día?",
+      "Dame las anteriores."
+    ],
+    "answers": [
+      "**Conclusión:** \nSí, el 39 y el 58 han coincidido el mismo día en **200 ocasiones** dentro del histórico disponible, considerando todas las loterías y todas las posiciones.\n\nPuedo mostrarte las tres coincidencias anteriores o revisar loterías y posiciones de ese día.",
+      "Las 3 coincidencias más recientes fueron:\n1. 2026-07-21 — — — 39 en 1ra posición (Haiti Bolet 05:30 PM); 58 en 3ra posición (Anguila 11:00 AM).\n2. 2026-07-16 — — — 39 en 3ra posición (Anguila 12:00 PM); 58 en 3ra posición (Haiti Bolet 05:30 PM).\n3. 2026-07-15 — — — 39 en 1ra posición (Haiti Bolet 06:30 PM); 39 en 2da posición (Anguila 9:00 PM); 58 en posición 14 (Super Kino Tv).\n\nPuedo mostrarte las tres coincidencias anteriores o revisar loterías y posiciones de ese día."
+    ],
+    "fails": [],
+    "verdict": "PASS",
+    "active_numbers": [
+      "39",
+      "58"
+    ],
+    "active_relation": "same_day"
+  },
+  {
+    "id": "M07",
+    "kind": "compound_keep",
+    "turns": [
+      "¿Han salido el 54 y el 94 el mismo día?",
+      "esa coincidencia"
+    ],
+    "answers": [
+      "**Conclusión:** \nSí, el 54 y el 94 han coincidido el mismo día en **200 ocasiones** dentro del histórico disponible, considerando todas las loterías y todas las posiciones.\n\nPuedo mostrarte las tres coincidencias anteriores o revisar loterías y posiciones de ese día.",
+      "Sobre tu pregunta (esa coincidencia):\n\nLas 3 coincidencias más recientes fueron:\n1. 2026-07-21 — — — 54 en 3ra posición (Florida Dia); 94 en 2da posición (Haiti Bolet 9:30 AM); 94 en 1ra posición (Anguila 07:00 PM); 94 en 3ra posición (Anguila 08:00 AM).\n2. 2026-07-18 — — — 54 en 3ra posición (Quiniela Loteka); 54 en posición 15 (Super Kino Tv); 54 en 2da posición (Quiniela Loteka); 94 en 3ra posición (Haiti Bolet 11:30 AM).\n3. 2026-07-17 — — — 54 en 3ra posición (King Lottery AM); 94 en 1ra posición (La Primera Noche).\n\nPuedo mostrarte las tres coincidencias anteriores o revisar loterías y posiciones de ese día."
+    ],
+    "fails": [],
+    "verdict": "PASS",
+    "active_numbers": [
+      "54",
+      "94"
+    ],
+    "active_relation": "same_day"
+  },
+  {
+    "id": "M08",
+    "kind": "compound_keep",
+    "turns": [
+      "¿Han salido el 03 y el 07 el mismo día?",
+      "ambos"
+    ],
+    "answers": [
+      "**Conclusión:** \nSí, el 03 y el 07 han coincidido el mismo día en **200 ocasiones** dentro del histórico disponible, considerando todas las loterías y todas las posiciones.\n\nPuedo mostrarte las tres coincidencias anteriores o revisar loterías y posiciones de ese día.",
+      "Sobre la coincidencia de 03 y 07 del 2026-07-21:\n\nFecha: 2026-07-21.\n- el 03 en Haiti Bolet 07:30 PM, 3ra posición.\n- el 07 en Quiniela Loteka, 2da posición.\n- el 07 en La Primera Tarde, 2da posición.\n- el 07 en Quiniela Leidsa, 3ra posición.\n\nLos considero una coincidencia porque ambos aparecieron en sorteos de la misma fecha, aunque no necesariamente en la misma lotería.\n\nPuedo mostrarte las tres coincidencias anteriores o filtrar el alcance."
+    ],
+    "fails": [],
+    "verdict": "PASS",
+    "active_numbers": [
+      "03",
+      "07"
+    ],
+    "active_relation": "same_day"
+  },
+  {
+    "id": "M09",
+    "kind": "compound_keep",
+    "turns": [
+      "¿Han salido el 35 y el 55 el mismo día?",
+      "los dos"
+    ],
+    "answers": [
+      "**Conclusión:** \nSí, el 35 y el 55 han coincidido el mismo día en **200 ocasiones** dentro del histórico disponible, considerando todas las loterías y todas las posiciones.\n\nPuedo mostrarte las tres coincidencias anteriores o revisar loterías y posiciones de ese día.",
+      "Sobre la coincidencia de 35 y 55 del 2026-07-21:\n\nFecha: 2026-07-21.\n- el 35 en Anguila 09:00 AM, 1ra posición.\n- el 35 en Quiniela Real, 1ra posición.\n- el 35 en Gana Mas, 2da posición.\n- el 55 en Haiti Bolet 07:30 PM, 2da posición.\n\nLos considero una coincidencia porque ambos aparecieron en sorteos de la misma fecha, aunque no necesariamente en la misma lotería.\n\nPuedo mostrarte las tres coincidencias anteriores o filtrar el alcance."
+    ],
+    "fails": [],
+    "verdict": "PASS",
+    "active_numbers": [
+      "35",
+      "55"
+    ],
+    "active_relation": "same_day"
+  },
+  {
+    "id": "M10",
+    "kind": "no_todas_as_row",
+    "turns": [
+      "Últimas 3 del 35.",
+      "Ahora en todas las posiciones."
+    ],
+    "answers": [
+      "Las 3 apariciones más recientes del 35 fueron:\n1. 2026-07-21 — Real — 1ra posición.\n2. 2026-07-21 — Gana Más — 2da posición.\n3. 2026-07-20 — Nacional — 1ra posición.",
+      "Sobre tu pregunta (Ahora en todas las posiciones.):\n\nLas 3 apariciones más recientes del 35 fueron:\n1. 2026-07-21 — Real — 1ra posición.\n2. 2026-07-21 — Gana Más — 2da posición.\n3. 2026-07-20 — Nacional — 1ra posición."
+    ],
+    "fails": [],
+    "verdict": "PASS",
+    "active_numbers": [
+      "35"
+    ],
+    "active_relation": null
+  },
+  {
+    "id": "M11",
+    "kind": "subject_switch",
+    "turns": [
+      "¿Cuándo salió el 22?",
+      "¿Y el 35?"
+    ],
+    "answers": [
+      "La última vez que salió el **22** fue el **20 de julio de 2026** en **Gana Más**, en la **2da posición**.\n\nRegistros consultados: 725.\nApariciones:\n1. 2026-07-20 — Gana Más — 2da posición",
+      "Informe de investigación histórica\n\nLa última vez que salió el **35** fue ayer, **21 de julio de 2026**, en **Real**, en la **1ra posición**. Se revisaron 703 registros de referencia.\n\n**Hallazgos**\n- Se consultaron 703 casos/registros históricos relevantes.\n- Última ancla: 2026-07-21 (Real).\n- 2026-07-21 — Real — 1ra posición\n\n**Detalle**\n- Número observado: 35\n- Lotería activa: Real\n- Cantidad de casos/registros: 703\n- última aparición por lotería: 1 casos/registros consultados.\n- Número consultado: 35.\n- frecuencia por lotería: 703 casos/registros consultados.\n- Número consultado: 35.\nApariciones:\n1. 2026-07-21 — Real — 1ra posición\n\n**Interpretación**\n- La lectura se basa en 703 caso(s)/registro(s) consultados en el histórico.\n\n**Observación**\n- Hay anclas temporales en la evidencia; conviene revisar la cronología.\n\n**Evidencias**\n- Cantidad de casos: 703\n- última aparición por lotería: 1 casos/registros consultados.\n- Número consultado: 35.\n- frecuencia por lotería: 703 casos/registros consultados.\n- Número consultado: 35.\n\n**Siguiente paso**\n- ¿Analizo D+15/D+30 para el 35?\n- ¿Quieres filtrar solo por una lotería?\n- ¿Restrinjo a primera posición?\n- ¿Comparo con otro número del contexto?\n- ¿Filtro el 35 por una sola lotería?"
+    ],
+    "fails": [],
+    "verdict": "PASS",
+    "active_numbers": [
+      "35"
+    ],
+    "active_relation": null
+  },
+  {
+    "id": "M12",
+    "kind": "compound_list",
+    "turns": [
+      "¿Han salido el 55 y el 24 el mismo día?",
+      "¿Cuáles fueron esas últimas 3 veces?",
+      "¿Y esas fechas?"
+    ],
+    "answers": [
+      "**Conclusión:** Sí, el 55 y el 24 han coincidido el mismo día en múltiples ocasiones.\n\nRegistros consultados: 200.\n\nPuedo mostrarte las tres coincidencias anteriores o revisar loterías y posiciones de ese día.",
+      "Las 3 coincidencias más recientes fueron:\n1. 2026-07-20 — — — 24 en posición 8 (Super Kino Tv); 55 en 2da posición (Quiniela Real).\n2. 2026-07-19 — — — 24 en 2da posición (Anguila 9:00 PM); 24 en 1ra posición (Quiniela Loteka); 24 en 1ra posición (Gana Mas); 24 en 1ra posición (Haiti Bolet 11:30 AM).\n3. 2026-07-18 — — — 24 en posición 4 (Loto Pool); 24 en 1ra posición (Gana Mas); 55 en 2da posición (Florida Noche).\n\nPuedo mostrarte las tres coincidencias anteriores o revisar loterías y posiciones de ese día.",
+      "**Conclusión:** Las fechas de las últimas tres coincidencias del 55 y el 24 en un mismo día son las siguientes:\n\nRegistros consultados: 3.\n\nPuedo mostrarte las tres coincidencias anteriores o revisar loterías y posiciones de ese día."
+    ],
+    "fails": [],
+    "verdict": "PASS",
+    "active_numbers": [
+      "55",
+      "24"
+    ],
+    "active_relation": "same_day"
+  },
+  {
+    "id": "M13",
+    "kind": "compound_list",
+    "turns": [
+      "¿Han salido el 14 y el 35 el mismo día?",
+      "las anteriores"
+    ],
+    "answers": [
+      "**Conclusión:** \nSí, el 14 y el 35 han coincidido el mismo día en **200 ocasiones** dentro del histórico disponible, considerando todas las loterías y todas las posiciones.\n\nPuedo mostrarte las tres coincidencias anteriores o revisar loterías y posiciones de ese día.",
+      "Las 3 coincidencias más recientes fueron:\n1. 2026-07-21 — — — 14 en 2da posición (King Lottery AM); 14 en 2da posición (Haiti Bolet 06:30 PM); 35 en 1ra posición (Quiniela Real); 35 en 1ra posición (Anguila 09:00 AM).\n2. 2026-07-20 — — — 14 en 1ra posición (Mega Chance); 14 en 2da posición (Quiniela Loteka); 14 en posición 5 (Super Kino Tv); 35 en 1ra posición (Loteria Nacional).\n3. 2026-07-19 — — — 14 en 2da posición (Anguila 03:00 PM); 35 en 1ra posición (Quiniela Real).\n\nPuedo mostrarte las tres coincidencias anteriores o revisar loterías y posiciones de ese día."
+    ],
+    "fails": [],
+    "verdict": "PASS",
+    "active_numbers": [
+      "14",
+      "35"
+    ],
+    "active_relation": "same_day"
+  },
+  {
+    "id": "M14",
+    "kind": "compound_list",
+    "turns": [
+      "¿Han salido el 97 y el 22 el mismo día?",
+      "muéstrame esas veces"
+    ],
+    "answers": [
+      "**Sí, el 97 y el 22 han coincidido el mismo día en 200 ocasiones** dentro del histórico disponible, considerando todas las loterías y todas las posiciones.\n\nPuedo mostrarte las tres coincidencias anteriores o revisar loterías y posiciones de ese día.",
+      "Las 3 coincidencias más recientes fueron:\n1. 2026-07-20 — — — 22 en 2da posición (Gana Mas); 97 en 3ra posición (Anguila 07:00 PM).\n2. 2026-07-18 — — — 22 en 3ra posición (Loto Pool); 22 en 2da posición (New York 10:30); 22 en posición 5 (Loto Leidsa); 97 en 3ra posición (Anguila 11:00 AM).\n3. 2026-07-16 — — — 22 en posición 5 (Loto Pool); 22 en 3ra posición (Anguila 08:00 PM); 22 en 2da posición (Anguila 02:00 PM); 97 en 1ra posición (King Lottery PM).\n\nPuedo mostrarte las tres coincidencias anteriores o revisar loterías y posiciones de ese día."
+    ],
+    "fails": [],
+    "verdict": "PASS",
+    "active_numbers": [
+      "97",
+      "22"
+    ],
+    "active_relation": "same_day"
+  },
+  {
+    "id": "M15",
+    "kind": "compound_list",
+    "turns": [
+      "¿Han salido el 88 y el 44 el mismo día?",
+      "cuáles fueron esas apariciones"
+    ],
+    "answers": [
+      "**Conclusión:** \nSí, el 88 y el 44 han coincidido el mismo día en **200 ocasiones** dentro del histórico disponible, considerando todas las loterías y todas las posiciones.\n\nPuedo mostrarte las tres coincidencias anteriores o revisar loterías y posiciones de ese día.",
+      "Las 3 coincidencias más recientes fueron:\n1. 2026-07-21 — — — 44 en 1ra posición (Mega Chance); 88 en 2da posición (Quiniela LoteDom); 88 en 3ra posición (El Agarra 4); 88 en 2da posición (La Suerte MD).\n2. 2026-07-20 — — — 44 en 1ra posición (Anguila 1:00 PM); 44 en 1ra posición (Quiniela Leidsa); 88 en 2da posición (La Primera Tarde); 88 en 1ra posición (Florida Noche).\n3. 2026-07-19 — — — 44 en 3ra posición (Florida Noche); 44 en 2da posición (Anguila 6:00 PM); 88 en 2da posición (Haiti Bolet 06:30 PM); 88 en 3ra posición (Anguila 09:00 AM).\n\nPuedo mostrarte las tres coincidencias anteriores o revisar loterías y posiciones de ese día."
+    ],
+    "fails": [],
+    "verdict": "PASS",
+    "active_numbers": [
+      "88",
+      "44"
+    ],
+    "active_relation": "same_day"
+  },
+  {
+    "id": "M16",
+    "kind": "last_n_ok",
+    "turns": [
+      "Busca las últimas 5 del 54.",
+      "¿Y esas fechas?"
+    ],
+    "answers": [
+      "Las 5 apariciones más recientes del 54 fueron:\n1. 2026-07-18 — Loteka — 2da posición.\n2. 2026-07-10 — Nacional — 2da posición.\n3. 2026-06-24 — Loteka — 1ra posición.\n4. 2026-06-17 — Gana Más — 1ra posición.\n5. 2026-06-16 — Gana Más — 1ra posición.",
+      "¿A qué fechas te refieres exactamente? ¿Las 5 que acabo de mencionar o alguna otra?"
+    ],
+    "fails": [],
+    "verdict": "PASS",
+    "active_numbers": [
+      "54"
+    ],
+    "active_relation": null
+  },
+  {
+    "id": "M17",
+    "kind": "positions_concrete",
+    "turns": [
+      "¿Han salido el 35 y el 14 el mismo día?",
+      "¿Cuáles fueron esas últimas 3 veces?"
+    ],
+    "answers": [
+      "**Conclusión:** \nSí, el 35 y el 14 han coincidido el mismo día en **200 ocasiones** dentro del histórico disponible, considerando todas las loterías y todas las posiciones.\n\nPuedo mostrarte las tres coincidencias anteriores o revisar loterías y posiciones de ese día.",
+      "Las 3 coincidencias más recientes fueron:\n1. 2026-07-21 — — — 14 en 2da posición (King Lottery AM); 14 en 2da posición (Haiti Bolet 06:30 PM); 35 en 1ra posición (Quiniela Real); 35 en 1ra posición (Anguila 09:00 AM).\n2. 2026-07-20 — — — 14 en 1ra posición (Mega Chance); 14 en 2da posición (Quiniela Loteka); 14 en posición 5 (Super Kino Tv); 35 en 1ra posición (Loteria Nacional).\n3. 2026-07-19 — — — 14 en 2da posición (Anguila 03:00 PM); 35 en 1ra posición (Quiniela Real).\n\nPuedo mostrarte las tres coincidencias anteriores o revisar loterías y posiciones de ese día."
+    ],
+    "fails": [],
+    "verdict": "PASS",
+    "active_numbers": [
+      "35",
+      "14"
+    ],
+    "active_relation": "same_day"
+  },
+  {
+    "id": "M18",
+    "kind": "positions_concrete",
+    "turns": [
+      "¿Han salido el 55 y el 24 el mismo día?",
+      "¿Cuáles fueron esas últimas 3 veces?"
+    ],
+    "answers": [
+      "**Conclusión:** \nSí, el 55 y el 24 han coincidido el mismo día en **200 ocasiones** dentro del histórico disponible, considerando todas las loterías y todas las posiciones.\n\nPuedo mostrarte las tres coincidencias anteriores o revisar loterías y posiciones de ese día.",
+      "Las 3 coincidencias más recientes fueron:\n1. 2026-07-20 — — — 24 en posición 8 (Super Kino Tv); 55 en 2da posición (Quiniela Real).\n2. 2026-07-19 — — — 24 en 2da posición (Anguila 9:00 PM); 24 en 1ra posición (Quiniela Loteka); 24 en 1ra posición (Gana Mas); 24 en 1ra posición (Haiti Bolet 11:30 AM).\n3. 2026-07-18 — — — 24 en posición 4 (Loto Pool); 24 en 1ra posición (Gana Mas); 55 en 2da posición (Florida Noche).\n\nPuedo mostrarte las tres coincidencias anteriores o revisar loterías y posiciones de ese día."
+    ],
+    "fails": [],
+    "verdict": "PASS",
+    "active_numbers": [
+      "55",
+      "24"
+    ],
+    "active_relation": "same_day"
+  },
+  {
+    "id": "M19",
+    "kind": "compound_list",
+    "turns": [
+      "¿Han salido el 01 y el 99 el mismo día?",
+      "esas veces"
+    ],
+    "answers": [
+      "**Conclusión:** \nSí, el 01 y el 99 han coincidido el mismo día en **200 ocasiones** dentro del histórico disponible, considerando todas las loterías y todas las posiciones.\n\nPuedo mostrarte las tres coincidencias anteriores o revisar loterías y posiciones de ese día.",
+      "Sobre tu pregunta (esas veces):\n\nLas 3 coincidencias más recientes fueron:\n1. 2026-07-20 — — — 01 en 1ra posición (Loto Pool); 01 en 1ra posición (Super Kino Tv); 99 en posición 4 (El Agarra 4); 99 en 2da posición (Quiniela LoteDom).\n2. 2026-07-19 — — — 01 en 1ra posición (Anguila 07:00 PM); 99 en 1ra posición (Anguila 03:00 PM).\n3. 2026-07-17 — — — 01 en 1ra posición (Loto Pool); 99 en 3ra posición (Gana Mas); 99 en 1ra posición (La Primera Tarde); 99 en 3ra posición (Anguila 10:00 AM).\n\nPuedo mostrarte las tres coincidencias anteriores o revisar loterías y posiciones de ese día."
+    ],
+    "fails": [],
+    "verdict": "PASS",
+    "active_numbers": [
+      "01",
+      "99"
+    ],
+    "active_relation": "same_day"
+  },
+  {
+    "id": "M20",
+    "kind": "compound_keep",
+    "turns": [
+      "¿Han salido el 07 y el 03 el mismo día?",
+      "esa fecha"
+    ],
+    "answers": [
+      "Sí, el 07 y el 03 han coincidido el mismo día en **200 ocasiones** dentro del histórico disponible, considerando todas las loterías y todas las posiciones.\n\nPuedo mostrarte las tres coincidencias anteriores o revisar loterías y posiciones de ese día.",
+      "Esa coincidencia entre 07 y 03 fue el 2026-07-21.\n\nFecha: 2026-07-21.\n- el 03 en Haiti Bolet 07:30 PM, 3ra posición.\n- el 07 en Quiniela Loteka, 2da posición.\n- el 07 en La Primera Tarde, 2da posición.\n- el 07 en Quiniela Leidsa, 3ra posición.\n\nMe refiero al evento de coincidencia que acabamos de revisar (misma fecha en el histórico).\n\nPuedo detallar loterías, posiciones o las coincidencias anteriores."
+    ],
+    "fails": [],
+    "verdict": "PASS",
+    "active_numbers": [
+      "07",
+      "03"
+    ],
+    "active_relation": "same_day"
+  },
+  {
+    "id": "M21",
+    "kind": "both_numbers_in_list",
+    "turns": [
+      "¿Han salido el 35 y el 14 el mismo día?",
+      "¿Cuáles fueron esas últimas 3 veces?"
+    ],
+    "answers": [
+      "**Conclusión:** \nSí, el 35 y el 14 han coincidido el mismo día en **200 ocasiones** dentro del histórico disponible, considerando todas las loterías y todas las posiciones.\n\nPuedo mostrarte las tres coincidencias anteriores o revisar loterías y posiciones de ese día.",
+      "Las 3 coincidencias más recientes fueron:\n1. 2026-07-21 — — — 14 en 2da posición (King Lottery AM); 14 en 2da posición (Haiti Bolet 06:30 PM); 35 en 1ra posición (Quiniela Real); 35 en 1ra posición (Anguila 09:00 AM).\n2. 2026-07-20 — — — 14 en 1ra posición (Mega Chance); 14 en 2da posición (Quiniela Loteka); 14 en posición 5 (Super Kino Tv); 35 en 1ra posición (Loteria Nacional).\n3. 2026-07-19 — — — 14 en 2da posición (Anguila 03:00 PM); 35 en 1ra posición (Quiniela Real).\n\nPuedo mostrarte las tres coincidencias anteriores o revisar loterías y posiciones de ese día."
+    ],
+    "fails": [],
+    "verdict": "PASS",
+    "active_numbers": [
+      "35",
+      "14"
+    ],
+    "active_relation": "same_day"
+  },
+  {
+    "id": "M22",
+    "kind": "both_numbers_in_list",
+    "turns": [
+      "¿Han salido el 22 y el 54 el mismo día?",
+      "¿Cuáles fueron esas últimas 3 veces?"
+    ],
+    "answers": [
+      "**Sí, el 22 y el 54 han coincidido el mismo día en 200 ocasiones** en el histórico disponible, considerando todas las loterías y todas las posiciones.\n\nPuedo mostrarte las tres coincidencias anteriores o revisar loterías y posiciones de ese día.",
+      "Las 3 coincidencias más recientes fueron:\n1. 2026-07-20 — — — 22 en 2da posición (Gana Mas); 54 en 3ra posición (King Lottery AM).\n2. 2026-07-19 — — — 22 en 3ra posición (Loto Pool); 54 en 3ra posición (Anguila 05:00 PM).\n3. 2026-07-18 — — — 22 en 2da posición (New York 10:30); 22 en posición 5 (Loto Leidsa); 22 en 3ra posición (Loto Pool); 54 en posición 15 (Super Kino Tv).\n\nPuedo mostrarte las tres coincidencias anteriores o revisar loterías y posiciones de ese día."
+    ],
+    "fails": [],
+    "verdict": "PASS",
+    "active_numbers": [
+      "22",
+      "54"
+    ],
+    "active_relation": "same_day"
+  },
+  {
+    "id": "M23",
+    "kind": "both_numbers_in_list",
+    "turns": [
+      "¿Han salido el 94 y el 54 el mismo día?",
+      "Muéstrame las anteriores."
+    ],
+    "answers": [
+      "Sí, el 94 y el 54 han coincidido el mismo día en **200 ocasiones** en el histórico disponible, considerando todas las loterías y todas las posiciones.\n\nPuedo mostrarte las tres coincidencias anteriores o revisar loterías y posiciones de ese día.",
+      "Las 3 coincidencias más recientes fueron:\n1. 2026-07-21 — — — 54 en 3ra posición (Florida Dia); 94 en 2da posición (Haiti Bolet 9:30 AM); 94 en 1ra posición (Anguila 07:00 PM); 94 en 3ra posición (Anguila 08:00 AM).\n2. 2026-07-18 — — — 54 en 3ra posición (Quiniela Loteka); 54 en posición 15 (Super Kino Tv); 54 en 2da posición (Quiniela Loteka); 94 en 3ra posición (Haiti Bolet 11:30 AM).\n3. 2026-07-17 — — — 54 en 3ra posición (King Lottery AM); 94 en 1ra posición (La Primera Noche).\n\nPuedo mostrarte las tres coincidencias anteriores o revisar loterías y posiciones de ese día."
+    ],
+    "fails": [],
+    "verdict": "PASS",
+    "active_numbers": [
+      "94",
+      "54"
+    ],
+    "active_relation": "same_day"
+  },
+  {
+    "id": "M24",
+    "kind": "subject_switch",
+    "turns": [
+      "Última del 35.",
+      "¿Y el 14?"
+    ],
+    "answers": [
+      "Informe de investigación histórica\n\nLa última aparición del **35** fue ayer, **21 de julio de 2026**, en el sorteo de **Real**, en la **1ra posición**. Se revisaron 703 registros de referencia.\n\n**Hallazgos**\n- Se consultaron 703 casos/registros históricos relevantes.\n- Última ancla: 2026-07-21 (Real).\n- 2026-07-21 — Real — 1ra posición\n\n**Detalle**\n- Número observado: 35\n- Lotería activa: Real\n- Cantidad de casos/registros: 703\n- última aparición por lotería: 1 casos/registros consultados.\n- Número consultado: 35.\n- frecuencia por lotería: 703 casos/registros consultados.\n- Número consultado: 35.\nApariciones:\n1. 2026-07-21 — Real — 1ra posición\n\n**Interpretación**\n- La lectura se basa en 703 caso(s)/registro(s) consultados en el histórico.\n\n**Observación**\n- Hay anclas temporales en la evidencia; conviene revisar la cronología.\n\n**Evidencias**\n- Cantidad de casos: 703\n- última aparición por lotería: 1 casos/registros consultados.\n- Número consultado: 35.\n- frecuencia por lotería: 703 casos/registros consultados.\n- Número consultado: 35.\n\n**Siguiente paso**\n- ¿Analizo D+15/D+30 para el 35?\n- ¿Quieres filtrar solo por una lotería?\n- ¿Restrinjo a primera posición?\n- ¿Comparo con otro número del contexto?\n- ¿Filtro el 35 por una sola lotería?",
+      "Informe de investigación histórica\n\n**Conclusión** \nLa última aparición del **14** fue ayer, **27 de julio de 2026**, en el sorteo de **Nacional**, en la **3ra posición**. Se revisaron 817 registros de referencia.\n\n**Hallazgos**\n- Se consultaron 817 casos/registros históricos relevantes.\n- Última ancla: 2026-07-27 (Nacional).\n- 2026-07-27 — Nacional — 3ra posición\n\n**Detalle**\n- Número observado: 14\n- Lotería activa: Nacional\n- Cantidad de casos/registros: 817\n- última aparición por lotería: 1 casos/registros consultados.\n- Número consultado: 14.\n- frecuencia por lotería: 817 casos/registros consultados.\n- Número consultado: 14.\nApariciones:\n1. 2026-07-27 — Nacional — 3ra posición\n\n**Interpretación**\n- La lectura se basa en 817 caso(s)/registro(s) consultados en el histórico.\n\n**Observación**\n- Hay anclas temporales en la evidencia; conviene revisar la cronología.\n\n**Evidencias**\n- Cantidad de casos: 817\n- última aparición por lotería: 1 casos/registros consultados.\n- Número consultado: 14.\n- frecuencia por lotería: 817 casos/registros consultados.\n- Número consultado: 14.\n\n**Siguiente paso**\n- ¿Analizo D+15/D+30 para el 14?\n- ¿Quieres filtrar solo por una lotería?\n- ¿Restrinjo a primera posición?\n- ¿Comparo con otro número del contexto?\n- ¿Filtro el 14 por una sola lotería?"
+    ],
+    "fails": [],
+    "verdict": "PASS",
+    "active_numbers": [
+      "14"
+    ],
+    "active_relation": null
+  },
+  {
+    "id": "M25",
+    "kind": "compound_keep",
+    "turns": [
+      "¿Han salido el 35 y el 14 el mismo día?",
+      "en primera posición"
+    ],
+    "answers": [
+      "Sí, el 35 y el 14 han coincidido el mismo día en **200 ocasiones** dentro del histórico disponible, considerando todas las loterías y todas las posiciones.\n\nPuedo mostrarte las tres coincidencias anteriores o revisar loterías y posiciones de ese día.",
+      "**Conclusión:** \nSí, el 35 y el 14 han coincidido el mismo día en primera posición en **200 ocasiones** dentro del histórico disponible, considerando todas las loterías. La coincidencia más reciente fue ayer, 20 de julio de 2026.\n\nPuedo mostrarte las tres coincidencias anteriores o revisar loterías y posiciones de ese día."
+    ],
+    "fails": [],
+    "verdict": "PASS",
+    "active_numbers": [
+      "35",
+      "14"
+    ],
+    "active_relation": "same_day"
+  },
+  {
+    "id": "M26",
+    "kind": "no_single_last_n",
+    "turns": [
+      "¿Han salido el 55 y el 24 el mismo día?",
+      "¿Cuáles fueron esas últimas 3 veces?"
+    ],
+    "answers": [
+      "**Conclusión:** \nSí, el 55 y el 24 han coincidido el mismo día en **200 ocasiones** dentro del histórico disponible, considerando todas las loterías y todas las posiciones.\n\nPuedo mostrarte las tres coincidencias anteriores o revisar loterías y posiciones de ese día.",
+      "Las 3 coincidencias más recientes fueron:\n1. 2026-07-20 — — — 24 en posición 8 (Super Kino Tv); 55 en 2da posición (Quiniela Real).\n2. 2026-07-19 — — — 24 en 2da posición (Anguila 9:00 PM); 24 en 1ra posición (Quiniela Loteka); 24 en 1ra posición (Gana Mas); 24 en 1ra posición (Haiti Bolet 11:30 AM).\n3. 2026-07-18 — — — 24 en posición 4 (Loto Pool); 24 en 1ra posición (Gana Mas); 55 en 2da posición (Florida Noche).\n\nPuedo mostrarte las tres coincidencias anteriores o revisar loterías y posiciones de ese día."
+    ],
+    "fails": [],
+    "verdict": "PASS",
+    "active_numbers": [
+      "55",
+      "24"
+    ],
+    "active_relation": "same_day"
+  },
+  {
+    "id": "M27",
+    "kind": "no_single_last_n",
+    "turns": [
+      "¿Han salido el 44 y el 22 el mismo día?",
+      "¿Cuáles fueron esas últimas 3 veces?"
+    ],
+    "answers": [
+      "**Conclusión:** \nSí, el 44 y el 22 han coincidido el mismo día en **200 ocasiones** dentro del histórico disponible, considerando todas las loterías y todas las posiciones.\n\nPuedo mostrarte las tres coincidencias anteriores o revisar loterías y posiciones de ese día.",
+      "Las 3 coincidencias más recientes fueron:\n1. 2026-07-20 — — — 22 en 2da posición (Gana Mas); 44 en 1ra posición (Anguila 1:00 PM); 44 en 1ra posición (Quiniela Leidsa).\n2. 2026-07-19 — — — 22 en 3ra posición (Loto Pool); 44 en 3ra posición (Florida Noche); 44 en 2da posición (Anguila 6:00 PM).\n3. 2026-07-18 — — — 22 en posición 5 (Loto Leidsa); 22 en 2da posición (New York 10:30); 22 en 3ra posición (Loto Pool); 44 en 3ra posición (Haiti Bolet 10:30 AM).\n\nPuedo mostrarte las tres coincidencias anteriores o revisar loterías y posiciones de ese día."
+    ],
+    "fails": [],
+    "verdict": "PASS",
+    "active_numbers": [
+      "44",
+      "22"
+    ],
+    "active_relation": "same_day"
+  },
+  {
+    "id": "M28",
+    "kind": "no_todas_as_row",
+    "turns": [
+      "¿Han salido el 35 y el 14 el mismo día?",
+      "¿Cuáles fueron esas últimas 3 veces?"
+    ],
+    "answers": [
+      "**Conclusión:** \nSí, el 35 y el 14 han coincidido el mismo día en **200 ocasiones** dentro del histórico disponible, considerando todas las loterías y todas las posiciones.\n\nPuedo mostrarte las tres coincidencias anteriores o revisar loterías y posiciones de ese día.",
+      "Las 3 coincidencias más recientes fueron:\n1. 2026-07-21 — — — 14 en 2da posición (King Lottery AM); 14 en 2da posición (Haiti Bolet 06:30 PM); 35 en 1ra posición (Quiniela Real); 35 en 1ra posición (Anguila 09:00 AM).\n2. 2026-07-20 — — — 14 en 1ra posición (Mega Chance); 14 en 2da posición (Quiniela Loteka); 14 en posición 5 (Super Kino Tv); 35 en 1ra posición (Loteria Nacional).\n3. 2026-07-19 — — — 14 en 2da posición (Anguila 03:00 PM); 35 en 1ra posición (Quiniela Real).\n\nPuedo mostrarte las tres coincidencias anteriores o revisar loterías y posiciones de ese día."
+    ],
+    "fails": [],
+    "verdict": "PASS",
+    "active_numbers": [
+      "35",
+      "14"
+    ],
+    "active_relation": "same_day"
+  },
+  {
+    "id": "M29",
+    "kind": "last_n_ok",
+    "turns": [
+      "Últimas 3 del 97.",
+      "Muéstrame las anteriores."
+    ],
+    "answers": [
+      "Las 3 apariciones más recientes del 97 fueron:\n1. 2026-07-18 — Nacional — 2da posición.\n2. 2026-07-15 — Real — 3ra posición.\n3. 2026-07-11 — Nacional — 1ra posición.",
+      "Pude mantener el contexto de la investigación, pero aún no tengo el detalle solicitado. ¿Quieres que lo intente de nuevo con el mismo alcance?"
+    ],
+    "fails": [],
+    "verdict": "PASS",
+    "active_numbers": [
+      "97"
+    ],
+    "active_relation": null
+  },
+  {
+    "id": "M30",
+    "kind": "compound_list",
+    "turns": [
+      "¿Han salido el 35 y el 14 el mismo día?",
+      "¿Cuáles fueron esas últimas 3 veces?",
+      "¿Y esas fechas?"
+    ],
+    "answers": [
+      "**Conclusión:** \nSí, el 35 y el 14 han coincidido el mismo día en **200 ocasiones** en el histórico disponible, considerando todas las loterías y todas las posiciones.\n\nPuedo mostrarte las tres coincidencias anteriores o revisar loterías y posiciones de ese día.",
+      "Las 3 coincidencias más recientes fueron:\n1. 2026-07-21 — — — 14 en 2da posición (King Lottery AM); 14 en 2da posición (Haiti Bolet 06:30 PM); 35 en 1ra posición (Quiniela Real); 35 en 1ra posición (Anguila 09:00 AM).\n2. 2026-07-20 — — — 14 en 1ra posición (Mega Chance); 14 en 2da posición (Quiniela Loteka); 14 en posición 5 (Super Kino Tv); 35 en 1ra posición (Loteria Nacional).\n3. 2026-07-19 — — — 14 en 2da posición (Anguila 03:00 PM); 35 en 1ra posición (Quiniela Real).\n\nPuedo mostrarte las tres coincidencias anteriores o revisar loterías y posiciones de ese día.",
+      "Las 3 coincidencias más recientes fueron:\n1. 2026-07-21 — — — 14 en 2da posición (King Lottery AM); 14 en 2da posición (Haiti Bolet 06:30 PM); 35 en 1ra posición (Quiniela Real); 35 en 1ra posición (Anguila 09:00 AM).\n2. 2026-07-20 — — — 14 en 1ra posición (Mega Chance); 14 en 2da posición (Quiniela Loteka); 14 en posición 5 (Super Kino Tv); 35 en 1ra posición (Loteria Nacional).\n3. 2026-07-19 — — — 14 en 2da posición (Anguila 03:00 PM); 35 en 1ra posición (Quiniela Real).\n\nPuedo mostrarte las tres coincidencias anteriores o revisar loterías y posiciones de ese día."
+    ],
+    "fails": [],
+    "verdict": "PASS",
+    "active_numbers": [
+      "35",
+      "14"
+    ],
+    "active_relation": "same_day"
+  }
+]

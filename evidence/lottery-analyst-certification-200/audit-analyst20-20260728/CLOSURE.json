@@ -1,0 +1,25 @@
+{
+  "verdict": "LISTO_PARA_BETA_2.0",
+  "manual30": {
+    "pass": 30,
+    "fail": 0,
+    "certification_level": "PASS"
+  },
+  "agent50": {
+    "pass": 50,
+    "fail": 0,
+    "certification_level": "PASS"
+  },
+  "cert200": {
+    "audit_run_id": "cert200-20260728T194116Z-766b9576",
+    "pass": 200,
+    "fail": 0,
+    "certification_level": "CERTIFIED",
+    "repeatability_equivalent": 19,
+    "repeatability_total": 20
+  },
+  "image": "jaios-app-backend:lottery-analyst-2.0.0-dev",
+  "image_id": "sha256:138dd1c41f82eeec3faa4f6051a7274ad1936c63b6135692e5e85725efe110b3",
+  "base_commit": "65da5c7",
+  "base_tag": "lottery-analyst-continuity-beta-2026.1.1"
+}

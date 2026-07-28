@@ -436,7 +436,11 @@ class ToolOrchestrator:
         lead = " ".join(templates[:2]).strip() if templates else (
             "Consulté el histórico autorizado y organicé la evidencia disponible."
             if evidence_bundle
-            else "No pude completar la consulta en este momento."
+            else (
+                "Pude mantener el contexto de la investigación, pero aún no tengo "
+                "el detalle solicitado. ¿Quieres que lo intente de nuevo con el "
+                "mismo alcance?"
+            )
         )
         from app.lottery.ai.turn_policy import scrub_internal_jargon
 

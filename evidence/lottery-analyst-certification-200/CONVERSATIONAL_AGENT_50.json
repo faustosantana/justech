@@ -1,0 +1,88 @@
+{
+  "suite": "CONVERSATIONAL_AGENT_50",
+  "version": "2.0.0",
+  "seed": 20260728,
+  "description": "50 turns — active investigation continuity, demonstratives, TTL, natural answers",
+  "conversations": [
+    {
+      "id": "A_same_day_78_02",
+      "turns": [
+        {"id": "A1", "user": "¿Cuándo fue la última vez que salió el 78 y el 02 el mismo día?", "expect": {"kind": "coincidences_only", "subjects": ["78", "02"], "relation": "same_day"}},
+        {"id": "A2", "user": "¿En cuáles loterías salió?", "expect": {"attr": "lotteries", "subjects": ["78", "02"], "reuse_or_coincidence": true, "no_generic_fail": true}},
+        {"id": "A3", "user": "¿Y en qué posiciones?", "expect": {"attr": "positions", "subjects": ["78", "02"], "no_generic_fail": true}},
+        {"id": "A4", "user": "¿Cuándo fue eso?", "expect": {"attr": "date", "subjects": ["78", "02"]}},
+        {"id": "A5", "user": "¿Cuáles fueron las 3 coincidencias anteriores?", "expect": {"kind": "coincidences_only", "subjects": ["78", "02"], "list_mode": true}},
+        {"id": "A6", "user": "¿Y después?", "expect": {"subjects": ["78", "02"], "relation": "same_day"}},
+        {"id": "A7", "user": "¿Y en Nacional?", "expect": {"subjects": ["78", "02"], "relation": "same_day"}},
+        {"id": "A8", "user": "Ahora solo en segunda.", "expect": {"subjects": ["78", "02"], "relation": "same_day"}},
+        {"id": "A9", "user": "Explícame por qué.", "expect": {"attr": "explain", "subjects": ["78", "02"], "no_jargon": true}},
+        {"id": "A10", "user": "Dame más detalles.", "expect": {"attr": "details", "subjects": ["78", "02"]}}
+      ]
+    },
+    {
+      "id": "B_single_35",
+      "turns": [
+        {"id": "B1", "user": "¿Y el 35?", "expect": {"subjects_contains": ["35"]}},
+        {"id": "B2", "user": "¿Cuándo salió?", "expect": {"subjects_contains": ["35"]}},
+        {"id": "B3", "user": "¿Dónde?", "expect": {"subjects_contains": ["35"]}},
+        {"id": "B4", "user": "¿En primera?", "expect": {"subjects_contains": ["35"]}},
+        {"id": "B5", "user": "Las tres anteriores.", "expect": {"subjects_contains": ["35"], "kind_in": ["last_n_occurrences", "coincidences_only", "last_times"]}}
+      ]
+    },
+    {
+      "id": "C_compare",
+      "turns": [
+        {"id": "C1", "user": "Compara 22 y 38.", "expect": {"subjects": ["22", "38"]}},
+        {"id": "C2", "user": "¿Cuál salió más recientemente?", "expect": {"subjects_min": 1}},
+        {"id": "C3", "user": "¿Y en Nacional?", "expect": {"subjects_min": 1}},
+        {"id": "C4", "user": "Explícame por qué.", "expect": {"no_jargon": true}}
+      ]
+    },
+    {
+      "id": "D_demonstratives",
+      "turns": [
+        {"id": "D1", "user": "¿Han salido el 55 y el 24 el mismo día?", "expect": {"kind": "coincidences_only", "subjects": ["55", "24"]}},
+        {"id": "D2", "user": "esa fecha", "expect": {"subjects": ["55", "24"], "relation": "same_day"}},
+        {"id": "D3", "user": "esas veces", "expect": {"subjects": ["55", "24"], "relation": "same_day"}},
+        {"id": "D4", "user": "ambos", "expect": {"subjects": ["55", "24"]}},
+        {"id": "D5", "user": "los dos", "expect": {"subjects": ["55", "24"]}},
+        {"id": "D6", "user": "la anterior", "expect": {"subjects": ["55", "24"]}},
+        {"id": "D7", "user": "ese resultado", "expect": {"subjects": ["55", "24"]}},
+        {"id": "D8", "user": "¿Cuántas veces ha pasado?", "expect": {"subjects": ["55", "24"], "attr": "count"}}
+      ]
+    },
+    {
+      "id": "E_topic_ttl",
+      "turns": [
+        {"id": "E1", "user": "¿Han salido el 78 y el 02 el mismo día?", "expect": {"subjects": ["78", "02"], "relation": "same_day"}},
+        {"id": "E2", "user": "¿En cuáles loterías?", "expect": {"subjects": ["78", "02"]}},
+        {"id": "E3", "user": "¿Y el 35?", "expect": {"topic_switch_or_subject": "35"}},
+        {"id": "E4", "user": "Vuelve al 78 y al 02.", "expect": {"subjects": ["78", "02"]}},
+        {"id": "E5", "user": "nueva conversación", "expect": {"reset": true}},
+        {"id": "E6", "user": "ttl_expire_probe", "expect": {"ttl": "expire_clears_same_day"}},
+        {"id": "E7", "user": "ttl_active_9min_probe", "expect": {"ttl": "active_at_9min"}},
+        {"id": "E8", "user": "ttl_renew_probe", "expect": {"ttl": "renew"}}
+      ]
+    },
+    {
+      "id": "F_partial_and_natural",
+      "turns": [
+        {"id": "F1", "user": "¿Han salido el 14 y el 88 el mismo día?", "expect": {"subjects": ["14", "88"], "relation": "same_day"}},
+        {"id": "F2", "user": "¿En cuáles loterías?", "expect": {"no_generic_fail": true, "subjects": ["14", "88"]}},
+        {"id": "F3", "user": "¿Y las posiciones?", "expect": {"no_generic_fail": true, "subjects": ["14", "88"]}},
+        {"id": "F4", "user": "¿Dónde ocurrió?", "expect": {"subjects": ["14", "88"]}},
+        {"id": "F5", "user": "¿En qué orden salieron?", "expect": {"subjects": ["14", "88"]}},
+        {"id": "F6", "user": "¿Qué significa eso?", "expect": {"no_jargon": true}},
+        {"id": "F7", "user": "¿Y el otro número?", "expect": {"subjects_min": 1}},
+        {"id": "F8", "user": "partial_failure_probe", "expect": {"partial_ok": true}},
+        {"id": "F9", "user": "Muéstrame las anteriores.", "expect": {"subjects": ["14", "88"]}},
+        {"id": "F10", "user": "¿Cuáles fueron?", "expect": {"subjects": ["14", "88"]}},
+        {"id": "F11", "user": "Compáralo con la coincidencia anterior.", "expect": {"subjects": ["14", "88"]}},
+        {"id": "F12", "user": "¿Los dos salieron en primera?", "expect": {"subjects": ["14", "88"]}},
+        {"id": "F13", "user": "¿Qué pasó luego?", "expect": {"subjects": ["14", "88"]}},
+        {"id": "F14", "user": "esa coincidencia", "expect": {"subjects": ["14", "88"]}},
+        {"id": "F15", "user": "¿Por qué dices eso?", "expect": {"no_jargon": true}}
+      ]
+    }
+  ]
+}

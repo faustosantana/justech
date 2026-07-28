@@ -118,6 +118,8 @@ class ConversationState(BaseModel):
     position_scope: Optional[str] = None  # any_position | first_position | ...
     # v2.4.5 — meta continuity (H.5–H.9): prefer factual template over LLM rewrite
     force_local_template: bool = False
+    # Analyst 2.0 — structured Active Investigation Session (10 min TTL)
+    active_investigation: dict[str, Any] = Field(default_factory=dict)
 
     def to_store(self) -> dict[str, Any]:
         return self.model_dump(mode="json")
@@ -154,7 +156,10 @@ class ConversationState(BaseModel):
             pass
         if lottery not in self.active_lotteries:
             self.active_lotteries.append(lottery)
-        if number and (not self.active_numbers or self.active_numbers[0] != str(number)):
+        # Never collapse a sticky same-day / active investigation pair to one ball.
+        if str(self.active_relation or "").lower() == "same_day" and len(self.active_numbers or []) >= 2:
+            pass
+        elif number and (not self.active_numbers or self.active_numbers[0] != str(number)):
             self.active_numbers = [str(number)]
 
     @classmethod

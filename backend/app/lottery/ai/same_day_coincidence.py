@@ -60,7 +60,28 @@ _EVENT_LIST_FOLLOW = re.compile(
     r"los\s+dos|"
     r"esa\s+coinciden|"
     r"esas?\s+(\d{1,2}|tres|cinco|diez)\b|"
-    r"[uú]ltimas?\s+(\d{1,2}|tres|cinco)\s+veces"
+    r"[uú]ltimas?\s+(\d{1,2}|tres|cinco)\s+veces|"
+    r"las?\s+(\d{1,2}|tres|cinco)\s+coinciden"
+    r")",
+    re.I,
+)
+
+# Attribute follow-ups on the active coincidence EVENT (lotteries / positions / date)
+_EVENT_ATTR_FOLLOW = re.compile(
+    r"("
+    r"(en\s+)?(cu[aá]les?|qu[eé])\s+loter[ií]as?|"
+    r"(en\s+)?(qu[eé]|cu[aá]les?)\s+posiciones?|"
+    r"y\s+las?\s+posiciones?|"
+    r"en\s+qu[eé]\s+loter|"
+    r"en\s+qu[eé]\s+posiciones?|"
+    r"d[oó]nde\s+(ocurri[oó]|sali[oó]|fue)|"
+    r"cu[aá]ndo\s+fue(\s+eso)?|"
+    r"esa\s+fecha|"
+    r"en\s+qu[eé]\s+orden|"
+    r"m[aá]s\s+detalles|"
+    r"expl[ií]came(\s+mejor)?|"
+    r"por\s+qu[eé]\s+dices|"
+    r"qu[eé]\s+significa"
     r")",
     re.I,
 )
@@ -129,6 +150,11 @@ def is_last_coincidence_follow_up(text: str) -> bool:
 def is_event_list_follow_up(text: str) -> bool:
     """True when the utterance points at prior coincidence dates/times/list."""
     return bool(_EVENT_LIST_FOLLOW.search(text or ""))
+
+
+def is_event_attribute_follow_up(text: str) -> bool:
+    """True when asking lotteries/positions/date of the prior coincidence event."""
+    return bool(_EVENT_ATTR_FOLLOW.search(text or ""))
 
 
 def is_first_position_follow_up(text: str) -> bool:
@@ -247,6 +273,9 @@ def build_same_day_follow_up_params(
         from app.lottery.ai.turn_policy import extract_occurrence_limit
 
         list_limit = extract_occurrence_limit(text) or 3
+    elif is_event_attribute_follow_up(text):
+        # «¿En cuáles loterías?» / «¿Y en qué posiciones?» → keep EVENT, prefer last
+        want_last = True
     else:
         returned = is_return_to_pair(text)
         if returned:
@@ -286,6 +315,15 @@ def build_same_day_follow_up_params(
         if last_coincidence_date:
             params["base_date"] = str(last_coincidence_date)[:10]
             params["date"] = str(last_coincidence_date)[:10]
+    if is_event_attribute_follow_up(text):
+        from app.lottery.ai.active_investigation.contextual_follow_up import (
+            ContextualFollowUpResolver,
+        )
+
+        attr = ContextualFollowUpResolver.detect_attribute(text)
+        if attr:
+            params["requested_attribute"] = attr
+            params["follow_up_kind"] = attr
     return params
 
 

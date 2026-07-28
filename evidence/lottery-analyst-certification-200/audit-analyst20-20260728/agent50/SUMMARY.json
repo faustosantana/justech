@@ -1,0 +1,8 @@
+{
+  "suite": "CONVERSATIONAL_AGENT_50",
+  "pass": 50,
+  "fail": 0,
+  "total": 50,
+  "turn_count": 50,
+  "certification_level": "PASS"
+}

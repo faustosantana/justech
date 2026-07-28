@@ -391,6 +391,104 @@ class LotteryChatService:
             state.preferred_position = int(
                 (understanding.params or {}).get("preferred_position") or state.preferred_position or 1
             )
+
+        # Analyst 2.0 — Active Investigation Session + Hermes decision (structured)
+        from app.lottery.ai.active_investigation import (
+            ConversationTraceLogger,
+            HermesDecisionEngine,
+            InvestigationStateManager,
+            NaturalResponseGenerator,
+            SessionExpirationManager,
+        )
+        from app.lottery.ai.active_investigation.session import ActiveInvestigationSession
+
+        inv_mgr = InvestigationStateManager()
+        state, _prior_inv, _ttl_meta = SessionExpirationManager().apply_on_turn_start(state)
+        hermes_decision = HermesDecisionEngine.decide(
+            content,
+            state=state,
+            investigation=ActiveInvestigationSession.from_store(state.active_investigation),
+            resolution=resolution,
+        )
+        # Bind relation for contextual same-day follow-ups before planning
+        if hermes_decision.inherited_relation == "same_day" or hermes_decision.inherited_metric == "same_day":
+            resolution = {
+                **resolution,
+                "active_relation": "same_day",
+                "relation": "same_day",
+                "numbers": list(
+                    hermes_decision.inherited_subjects
+                    or resolution.get("numbers")
+                    or state.active_numbers
+                    or []
+                )[:8],
+                "use_active_pair": True,
+            }
+            if hermes_decision.requested_attribute and not resolution.get("follow_up_kind"):
+                resolution["follow_up_kind"] = hermes_decision.requested_attribute
+        active_inv = inv_mgr.begin_or_continue(
+            state,
+            decision=hermes_decision,
+            message=content,
+            conversation_id=str(session.id),
+        )
+        evidence_reused = False
+        if (
+            hermes_decision.reuse_evidence
+            and active_inv is not None
+            and not active_inv.is_expired()
+        ):
+            reused = NaturalResponseGenerator.answer_attribute_from_evidence(
+                hermes_decision, active_inv
+            )
+            if reused:
+                evidence_reused = True
+                active_inv.last_answer = reused
+                active_inv.last_user_question = content
+                inv_mgr.ttl.renew(active_inv)
+                state.active_investigation = active_inv.to_store()
+                latency_ms = (time.perf_counter() - t0) * 1000.0
+                agent_trace = ConversationTraceLogger.build(
+                    decision=hermes_decision,
+                    provider_used="evidence_reuse",
+                    model_used=None,
+                    latency_ms=latency_ms,
+                    fallback_reason=None,
+                    investigation_id=active_inv.investigation_id,
+                    evidence_reused=True,
+                )
+                session.context = {
+                    **(session.context or {}),
+                    "conversation_v4": state.to_store(),
+                    "agent_trace": agent_trace,
+                }
+                asst = LotteryChatMessage(
+                    session_id=session.id,
+                    role="assistant",
+                    content=reused,
+                    tool_name="active_investigation",
+                    tool_payload={"hermes_decision": hermes_decision.to_trace(), "evidence_reused": True},
+                )
+                self.db.add(asst)
+                await self.db.flush()
+                return {
+                    "message": {
+                        "id": str(asst.id),
+                        "role": "assistant",
+                        "content": reused,
+                        "structured_content": None,
+                        "tool_trace": [],
+                        "created_at": asst.created_at.isoformat() if asst.created_at else None,
+                    },
+                    "user_message_id": str(user_msg.id),
+                    "context": session.context,
+                    "active_context": {"investigation_id": active_inv.investigation_id},
+                    "suggestions": self._suggestions(ctx, "chat", state=state),
+                    "intent": "active_investigation",
+                    "runtime_trace": agent_trace,
+                    "hermes_decision": hermes_decision.to_trace(),
+                }
+
         analyst_cfg = await self._analyst_runtime_config()
 
         # Fase X — conversational intents never open research/tools
@@ -1309,6 +1407,92 @@ class LotteryChatService:
                     "focus_stack": list(getattr(state, "focus_stack", None) or []),
                 },
             )
+            # Analyst 2.0 — persist investigation evidence + attribute answers
+            try:
+                from app.lottery.ai.same_day_coincidence import summarize_coincidences
+
+                sd_summary = None
+                if isinstance(structured, dict):
+                    data = structured.get("data") or {}
+                    payload = data if isinstance(data, dict) else {}
+                    if payload.get("relation") == "same_day" or payload.get("semantics") == "same_day_coincidence":
+                        sd_summary = summarize_coincidences(
+                            payload,
+                            numbers=list(payload.get("numbers") or state.active_numbers or [])[:2],
+                            preferred_position=int(state.preferred_position or 1),
+                            position_filter=None,
+                        )
+                    elif payload.get("items") and len(state.active_numbers or []) >= 2 and (
+                        state.active_relation == "same_day"
+                        or hermes_decision.inherited_relation == "same_day"
+                    ):
+                        sd_summary = summarize_coincidences(
+                            payload,
+                            numbers=list(state.active_numbers or [])[:2],
+                            preferred_position=int(state.preferred_position or 1),
+                            position_filter=None,
+                        )
+                if sd_summary is None and isinstance(research_meta, dict):
+                    for ev in research_meta.get("evidence") or []:
+                        sm = ev.get("summary") if isinstance(ev, dict) else None
+                        if isinstance(sm, dict) and (
+                            sm.get("relation") == "same_day"
+                            or sm.get("semantics") == "same_day_coincidence"
+                            or (sm.get("items") and state.active_relation == "same_day")
+                        ):
+                            sd_summary = sm if sm.get("last") or sm.get("items") else summarize_coincidences(
+                                sm,
+                                numbers=list(sm.get("numbers") or state.active_numbers or [])[:2],
+                                preferred_position=int(state.preferred_position or 1),
+                                position_filter=None,
+                            )
+                            break
+                if sd_summary is not None or (
+                    active_inv is not None and (state.active_relation == "same_day" or hermes_decision.inherited_relation == "same_day")
+                ):
+                    inv_mgr.update_after_research(
+                        state,
+                        investigation=active_inv,
+                        summary=sd_summary if isinstance(sd_summary, dict) else {
+                            "numbers": list(state.active_numbers or [])[:2],
+                            "relation": "same_day",
+                            "total": (state.last_analysis or {}).get("total"),
+                            "items": (state.last_analysis or {}).get("items") or [],
+                            "last": (state.last_analysis or {}).get("last") or {},
+                        },
+                        template=final_text,
+                        tools=[t.get("tool") for t in (tool_trace or []) if isinstance(t, dict)],
+                        intent=str(
+                            (research_plan.question_kind if research_plan.is_research else None)
+                            or understanding.intent
+                            or ""
+                        ),
+                    )
+                    active_inv = ActiveInvestigationSession.from_store(state.active_investigation)
+                if (
+                    hermes_decision.requested_attribute
+                    in {"lotteries", "positions", "date", "order", "explain", "details"}
+                    and active_inv is not None
+                ):
+                    attr_ans = NaturalResponseGenerator.answer_attribute_from_evidence(
+                        hermes_decision, active_inv
+                    )
+                    if attr_ans:
+                        final_text = attr_ans
+                    else:
+                        final_text = NaturalResponseGenerator.enhance_factual_template(
+                            final_text,
+                            investigation=active_inv,
+                            next_step="Puedo detallar loterías, posiciones o las coincidencias anteriores.",
+                        )
+                elif active_inv is not None and active_inv.relation == "same_day":
+                    final_text = NaturalResponseGenerator.enhance_factual_template(
+                        final_text,
+                        investigation=active_inv,
+                        next_step="Puedo mostrarte las tres coincidencias anteriores o revisar loterías y posiciones de ese día.",
+                    )
+            except Exception:  # noqa: BLE001 — investigation layer must not break chat
+                pass
         elif intent_kind == "clarify":
             missing = list(understanding.missing_slots or state.pending_slots or [])
             # Never let the LLM rewrite a pure "missing number" ask into lottery/form noise.
@@ -1363,6 +1547,17 @@ class LotteryChatService:
             pass
 
         latency_ms = int((time.perf_counter() - t0) * 1000)
+        agent_trace = ConversationTraceLogger.build(
+            decision=hermes_decision,
+            provider_used=provider_used or ("local_template" if synthesis_fallback or intent_kind != "tool" else None),
+            model_used=model_name,
+            prompt_version=get_active_prompt().version,
+            latency_ms=float(latency_ms),
+            fallback_reason=fallback_reason,
+            investigation_id=(active_inv.investigation_id if active_inv else None),
+            evidence_reused=bool(evidence_reused),
+            tools_used=[t.get("tool") for t in tool_trace if isinstance(t, dict)],
+        )
         runtime_trace = {
             "provider_requested": provider_requested,
             "provider_used": provider_used or ("local_template" if synthesis_fallback or intent_kind != "tool" else None),
@@ -1392,6 +1587,9 @@ class LotteryChatService:
                 "research_mode": analyst_cfg.research_mode,
                 "analysis_depth": analyst_cfg.analysis_depth,
             },
+            "hermes_decision_id": hermes_decision.hermes_decision_id,
+            "hermes_decision": hermes_decision.to_trace(),
+            "agent_trace": agent_trace,
         }
         state.provider_trace = runtime_trace
         try:
@@ -1425,6 +1623,7 @@ class LotteryChatService:
                 "last_numbers": state.active_numbers or ctx.last_numbers,
                 "last_query_semantics": state.last_intent or ctx.last_query_semantics,
                 "last_draw_count": state.draw_count_context or ctx.last_draw_count,
+                "agent_trace": agent_trace,
             }
         )
         # Keep sticky LotterySessionContext aligned with ConversationState for suggestions/API.

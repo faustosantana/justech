@@ -1,0 +1,352 @@
+[
+  {
+    "id": "A1",
+    "conversation": "A_same_day_78_02",
+    "user": "¿Cuándo fue la última vez que salió el 78 y el 02 el mismo día?",
+    "fails": [],
+    "verdict": "PASS"
+  },
+  {
+    "id": "A2",
+    "conversation": "A_same_day_78_02",
+    "user": "¿En cuáles loterías salió?",
+    "fails": [],
+    "verdict": "PASS"
+  },
+  {
+    "id": "A3",
+    "conversation": "A_same_day_78_02",
+    "user": "¿Y en qué posiciones?",
+    "fails": [],
+    "verdict": "PASS"
+  },
+  {
+    "id": "A4",
+    "conversation": "A_same_day_78_02",
+    "user": "¿Cuándo fue eso?",
+    "fails": [],
+    "verdict": "PASS"
+  },
+  {
+    "id": "A5",
+    "conversation": "A_same_day_78_02",
+    "user": "¿Cuáles fueron las 3 coincidencias anteriores?",
+    "fails": [],
+    "verdict": "PASS"
+  },
+  {
+    "id": "A6",
+    "conversation": "A_same_day_78_02",
+    "user": "¿Y después?",
+    "fails": [],
+    "verdict": "PASS"
+  },
+  {
+    "id": "A7",
+    "conversation": "A_same_day_78_02",
+    "user": "¿Y en Nacional?",
+    "fails": [],
+    "verdict": "PASS"
+  },
+  {
+    "id": "A8",
+    "conversation": "A_same_day_78_02",
+    "user": "Ahora solo en segunda.",
+    "fails": [],
+    "verdict": "PASS"
+  },
+  {
+    "id": "A9",
+    "conversation": "A_same_day_78_02",
+    "user": "Explícame por qué.",
+    "fails": [],
+    "verdict": "PASS"
+  },
+  {
+    "id": "A10",
+    "conversation": "A_same_day_78_02",
+    "user": "Dame más detalles.",
+    "fails": [],
+    "verdict": "PASS"
+  },
+  {
+    "id": "B1",
+    "conversation": "B_single_35",
+    "user": "¿Y el 35?",
+    "fails": [],
+    "verdict": "PASS"
+  },
+  {
+    "id": "B2",
+    "conversation": "B_single_35",
+    "user": "¿Cuándo salió?",
+    "fails": [],
+    "verdict": "PASS"
+  },
+  {
+    "id": "B3",
+    "conversation": "B_single_35",
+    "user": "¿Dónde?",
+    "fails": [],
+    "verdict": "PASS"
+  },
+  {
+    "id": "B4",
+    "conversation": "B_single_35",
+    "user": "¿En primera?",
+    "fails": [],
+    "verdict": "PASS"
+  },
+  {
+    "id": "B5",
+    "conversation": "B_single_35",
+    "user": "Las tres anteriores.",
+    "fails": [],
+    "verdict": "PASS"
+  },
+  {
+    "id": "C1",
+    "conversation": "C_compare",
+    "user": "Compara 22 y 38.",
+    "fails": [],
+    "verdict": "PASS"
+  },
+  {
+    "id": "C2",
+    "conversation": "C_compare",
+    "user": "¿Cuál salió más recientemente?",
+    "fails": [],
+    "verdict": "PASS"
+  },
+  {
+    "id": "C3",
+    "conversation": "C_compare",
+    "user": "¿Y en Nacional?",
+    "fails": [],
+    "verdict": "PASS"
+  },
+  {
+    "id": "C4",
+    "conversation": "C_compare",
+    "user": "Explícame por qué.",
+    "fails": [],
+    "verdict": "PASS"
+  },
+  {
+    "id": "D1",
+    "conversation": "D_demonstratives",
+    "user": "¿Han salido el 55 y el 24 el mismo día?",
+    "fails": [],
+    "verdict": "PASS"
+  },
+  {
+    "id": "D2",
+    "conversation": "D_demonstratives",
+    "user": "esa fecha",
+    "fails": [],
+    "verdict": "PASS"
+  },
+  {
+    "id": "D3",
+    "conversation": "D_demonstratives",
+    "user": "esas veces",
+    "fails": [],
+    "verdict": "PASS"
+  },
+  {
+    "id": "D4",
+    "conversation": "D_demonstratives",
+    "user": "ambos",
+    "fails": [],
+    "verdict": "PASS"
+  },
+  {
+    "id": "D5",
+    "conversation": "D_demonstratives",
+    "user": "los dos",
+    "fails": [],
+    "verdict": "PASS"
+  },
+  {
+    "id": "D6",
+    "conversation": "D_demonstratives",
+    "user": "la anterior",
+    "fails": [],
+    "verdict": "PASS"
+  },
+  {
+    "id": "D7",
+    "conversation": "D_demonstratives",
+    "user": "ese resultado",
+    "fails": [],
+    "verdict": "PASS"
+  },
+  {
+    "id": "D8",
+    "conversation": "D_demonstratives",
+    "user": "¿Cuántas veces ha pasado?",
+    "fails": [],
+    "verdict": "PASS"
+  },
+  {
+    "id": "E1",
+    "conversation": "E_topic_ttl",
+    "user": "¿Han salido el 78 y el 02 el mismo día?",
+    "fails": [],
+    "verdict": "PASS"
+  },
+  {
+    "id": "E2",
+    "conversation": "E_topic_ttl",
+    "user": "¿En cuáles loterías?",
+    "fails": [],
+    "verdict": "PASS"
+  },
+  {
+    "id": "E3",
+    "conversation": "E_topic_ttl",
+    "user": "¿Y el 35?",
+    "fails": [],
+    "verdict": "PASS"
+  },
+  {
+    "id": "E4",
+    "conversation": "E_topic_ttl",
+    "user": "Vuelve al 78 y al 02.",
+    "fails": [],
+    "verdict": "PASS"
+  },
+  {
+    "id": "E5",
+    "conversation": "E_topic_ttl",
+    "user": "nueva conversación",
+    "fails": [],
+    "verdict": "PASS"
+  },
+  {
+    "id": "E6",
+    "conversation": "E_topic_ttl",
+    "user": "ttl_expire_probe",
+    "fails": [],
+    "verdict": "PASS"
+  },
+  {
+    "id": "E7",
+    "conversation": "E_topic_ttl",
+    "user": "ttl_active_9min_probe",
+    "fails": [],
+    "verdict": "PASS"
+  },
+  {
+    "id": "E8",
+    "conversation": "E_topic_ttl",
+    "user": "ttl_renew_probe",
+    "fails": [],
+    "verdict": "PASS"
+  },
+  {
+    "id": "F1",
+    "conversation": "F_partial_and_natural",
+    "user": "¿Han salido el 14 y el 88 el mismo día?",
+    "fails": [],
+    "verdict": "PASS"
+  },
+  {
+    "id": "F2",
+    "conversation": "F_partial_and_natural",
+    "user": "¿En cuáles loterías?",
+    "fails": [],
+    "verdict": "PASS"
+  },
+  {
+    "id": "F3",
+    "conversation": "F_partial_and_natural",
+    "user": "¿Y las posiciones?",
+    "fails": [],
+    "verdict": "PASS"
+  },
+  {
+    "id": "F4",
+    "conversation": "F_partial_and_natural",
+    "user": "¿Dónde ocurrió?",
+    "fails": [],
+    "verdict": "PASS"
+  },
+  {
+    "id": "F5",
+    "conversation": "F_partial_and_natural",
+    "user": "¿En qué orden salieron?",
+    "fails": [],
+    "verdict": "PASS"
+  },
+  {
+    "id": "F6",
+    "conversation": "F_partial_and_natural",
+    "user": "¿Qué significa eso?",
+    "fails": [],
+    "verdict": "PASS"
+  },
+  {
+    "id": "F7",
+    "conversation": "F_partial_and_natural",
+    "user": "¿Y el otro número?",
+    "fails": [],
+    "verdict": "PASS"
+  },
+  {
+    "id": "F8",
+    "conversation": "F_partial_and_natural",
+    "user": "partial_failure_probe",
+    "fails": [],
+    "verdict": "PASS"
+  },
+  {
+    "id": "F9",
+    "conversation": "F_partial_and_natural",
+    "user": "Muéstrame las anteriores.",
+    "fails": [],
+    "verdict": "PASS"
+  },
+  {
+    "id": "F10",
+    "conversation": "F_partial_and_natural",
+    "user": "¿Cuáles fueron?",
+    "fails": [],
+    "verdict": "PASS"
+  },
+  {
+    "id": "F11",
+    "conversation": "F_partial_and_natural",
+    "user": "Compáralo con la coincidencia anterior.",
+    "fails": [],
+    "verdict": "PASS"
+  },
+  {
+    "id": "F12",
+    "conversation": "F_partial_and_natural",
+    "user": "¿Los dos salieron en primera?",
+    "fails": [],
+    "verdict": "PASS"
+  },
+  {
+    "id": "F13",
+    "conversation": "F_partial_and_natural",
+    "user": "¿Qué pasó luego?",
+    "fails": [],
+    "verdict": "PASS"
+  },
+  {
+    "id": "F14",
+    "conversation": "F_partial_and_natural",
+    "user": "esa coincidencia",
+    "fails": [],
+    "verdict": "PASS"
+  },
+  {
+    "id": "F15",
+    "conversation": "F_partial_and_natural",
+    "user": "¿Por qué dices eso?",
+    "fails": [],
+    "verdict": "PASS"
+  }
+]

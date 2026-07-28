@@ -260,6 +260,7 @@ class QuestionClassifier:
         # last_times subject — never sticky same_day from an earlier pair.
         from app.lottery.ai.same_day_coincidence import (
             build_same_day_follow_up_params,
+            is_event_attribute_follow_up,
             is_event_list_follow_up,
             is_same_day_coincidence_question,
         )
@@ -290,9 +291,11 @@ class QuestionClassifier:
         if len(nums) >= 2:
             pair_nums = nums[:2]
 
-        # Continuity: «esas últimas 3 veces» after a coincidence → list the EVENT
+        # Continuity: list/attribute follow-ups after a coincidence → keep the EVENT
         if same_day_active and len(pair_nums) >= 2 and (
             is_event_list_follow_up(raw)
+            or is_event_attribute_follow_up(raw)
+            or resolution.get("follow_up_kind") in {"lotteries", "positions"}
             or build_same_day_follow_up_params(raw, active_numbers=pair_nums)
         ):
             sd_fu = build_same_day_follow_up_params(raw, active_numbers=pair_nums) or {}
@@ -303,6 +306,16 @@ class QuestionClassifier:
             sd["numbers"] = list(sd.get("numbers") or pair_nums)[:2]
             sd["use_active_pair"] = True
             sd["list_mode"] = bool(sd_fu.get("list_mode") or is_event_list_follow_up(raw))
+            if is_event_attribute_follow_up(raw) or resolution.get("follow_up_kind") in {
+                "lotteries",
+                "positions",
+            }:
+                sd["want_last_only"] = True
+                sd["requested_attribute"] = (
+                    sd.get("requested_attribute")
+                    or resolution.get("follow_up_kind")
+                    or ("lotteries" if "loter" in raw.lower() else "positions")
+                )
             if resolution.get("limit") and not sd.get("limit"):
                 sd["limit"] = int(resolution["limit"])
             elif sd.get("list_mode") and not sd.get("limit"):
@@ -315,19 +328,24 @@ class QuestionClassifier:
             and (
                 is_same_day_coincidence_question(raw)
                 or (
-                    resolution.get("active_relation") == "same_day"
+                    (
+                        resolution.get("active_relation") == "same_day"
+                        or same_day_active
+                    )
                     and resolution.get("follow_up_kind")
                     in {None, "lotteries", "positions", "filtered"}
-                    and len(nums) >= 2
+                    and (len(nums) >= 2 or len(pair_nums) >= 2)
                 )
             )
         ):
             sd = dict(params)
             sd["relation"] = "same_day"
             sd["active_relation"] = "same_day"
-            sd["numbers"] = nums[:2] if len(nums) >= 2 else list(
-                getattr(state, "active_pair", None) or state.active_numbers or []
-            )[:2]
+            sd["numbers"] = (
+                nums[:2]
+                if len(nums) >= 2
+                else list(pair_nums or getattr(state, "active_pair", None) or state.active_numbers or [])[:2]
+            )
             sd["use_active_pair"] = True
             return ResearchQuestion("coincidences_only", sd, raw_message=raw)
 

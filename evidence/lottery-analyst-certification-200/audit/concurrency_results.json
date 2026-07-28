@@ -1,0 +1,1428 @@
+{
+  "unique_conversation_ids": true,
+  "items": [
+    {
+      "group": "G03",
+      "ok": true,
+      "rows": [
+        {
+          "audit_run_id": "cert200-20260728T104943Z-d9f41fa3",
+          "case_id": "G03.T01",
+          "conversation_id": "bfc51a21-ab1a-44b5-9a2a-ed557c17e9a3",
+          "conversation_group": "CONC_G03",
+          "turn_number": 1,
+          "category": "A",
+          "request_id": "204fa2b5-a299-439e-935c-b05dce32ea7b",
+          "timestamp": "2026-07-28T11:37:32.200839+00:00",
+          "user_message": "Última del 14 sin filtros.",
+          "full_response": "**Conclusión:** \nLa última aparición del número 14 en el histórico disponible ocurrió el **19 de marzo de 2025** en el sorteo **Loteka**, en la **posición 2**.\n\nLotería: Nacional.",
+          "structured_response": null,
+          "context_before": {},
+          "context_after": {
+            "active_numbers": [
+              "14"
+            ],
+            "active_lotteries": [
+              "Nacional",
+              "Nacional Día",
+              "Nacional Noche",
+              "Leidsa",
+              "Loteka",
+              "Real",
+              "Gana Más"
+            ],
+            "active_filters": {}
+          },
+          "research": null,
+          "tool_trace": null,
+          "repository_expected": {
+            "kind": "last_occurrence",
+            "number": "14",
+            "rows": [
+              {
+                "draw_date": "2026-07-27",
+                "lottery": "Loteria Nacional",
+                "position": 3
+              }
+            ]
+          },
+          "latency_ms": 24858,
+          "http_status": 200,
+          "exception": null,
+          "PASS_FAIL": "FAIL",
+          "failure_category": [
+            "wrong_or_missing_date"
+          ],
+          "evaluator_notes": [
+            "expected {'draw_date': '2026-07-27', 'lottery': 'Loteria Nacional', 'position': 3}"
+          ],
+          "scores": {
+            "comprension": 2.5,
+            "exactitud_factual": 0.0,
+            "continuidad": 5.0,
+            "intencion": 2.0,
+            "entidades": 4.5,
+            "herramientas": 4.3,
+            "filtros": 4.3,
+            "coherencia": 2.0,
+            "naturalidad": 3.5,
+            "claridad": 3.5,
+            "utilidad": 2.0,
+            "prudencia": 4.4,
+            "ambiguedad": 4.7,
+            "recuperacion": 4.3,
+            "sin_jerga": 5.0
+          },
+          "mean_score": 3.466666666666667,
+          "expected_intent": "last_occurrence",
+          "expected_subjects": [
+            "14"
+          ],
+          "ambiguity_expected": false,
+          "factual_validation_required": true
+        }
+      ],
+      "conversation_ids": [
+        "bfc51a21-ab1a-44b5-9a2a-ed557c17e9a3"
+      ]
+    },
+    {
+      "group": "G05",
+      "ok": true,
+      "rows": [
+        {
+          "audit_run_id": "cert200-20260728T104943Z-d9f41fa3",
+          "case_id": "G05.T01",
+          "conversation_id": "5763db27-1a94-40ca-a545-576f458e3b13",
+          "conversation_group": "CONC_G05",
+          "turn_number": 1,
+          "category": "B",
+          "request_id": "58ba213e-23c8-4378-8794-cdbb3bcff3d0",
+          "timestamp": "2026-07-28T11:37:48.695334+00:00",
+          "user_message": "Últimas 3 del 01.",
+          "full_response": "Las 3 apariciones más recientes del 01 fueron:\n1. 2026-07-15 — Gana Más — todas las posiciones.\n2. 2026-07-14 — Leidsa — todas las posiciones.\n3. 2026-07-11 — Nacional — todas las posiciones.",
+          "structured_response": null,
+          "context_before": {},
+          "context_after": {
+            "active_numbers": [
+              "01"
+            ],
+            "active_lotteries": [
+              "Nacional",
+              "Nacional Día",
+              "Nacional Noche",
+              "Leidsa",
+              "Loteka",
+              "Real",
+              "Gana Más"
+            ],
+            "active_filters": {}
+          },
+          "research": {
+            "mode": "deep",
+            "status": "completed",
+            "investigating": false,
+            "question_kind": "last_n_occurrences",
+            "steps_completed": [
+              "last_n_occurrences"
+            ],
+            "evidence": [
+              {
+                "purpose": "last_n_occurrences",
+                "tool": "lottery_get_number_occurrences",
+                "summary": {
+                  "semantics": "last_n_occurrences",
+                  "number": "01",
+                  "limit": 3,
+                  "count": 3,
+                  "total": 3,
+                  "last_occurrence_date": "2026-07-15",
+                  "lottery": "Gana Más",
+                  "position": "1ro",
+                  "found": true,
+                  "items": [
+                    {
+                      "number": "01",
+                      "date": "2026-07-15",
+                      "lottery": "Gana Más",
+                      "position": "1ro",
+                      "draw_id": "1c40c27f-cef0-468f-85f7-1e5f88a06555",
+                      "result_value": "01"
+                    },
+                    {
+                      "number": "01",
+                      "date": "2026-07-14",
+                      "lottery": "Leidsa",
+                      "position": "1ro",
+                      "draw_id": "7eb439c7-62b7-4c43-9fe3-46230c46be24",
+                      "result_value": "01"
+                    },
+                    {
+                      "number": "01",
+                      "date": "2026-07-11",
+                      "lottery": "Nacional",
+                      "position": "3ro",
+                      "draw_id": "447d0769-0166-4a5e-8725-f81bbd28b8ba",
+                      "result_value": "01"
+                    }
+                  ]
+                }
+              }
+            ],
+            "trace_id": "e03b8ad2-7c28-49b9-b7bd-1153270affa3",
+            "duration_ms": 107,
+            "cache_hits": 0,
+            "evidence_package": {
+              "case_count": 3,
+              "criterion": "investigación 'last_n_occurrences' sobre herramientas históricas autorizadas",
+              "period": null,
+              "tools_used": [
+                "lottery_get_number_occurrences"
+              ],
+              "evidence_level": "Baja",
+              "confidence": "Baja",
+              "findings": [
+                "últimas apariciones: 3 casos/registros consultados.",
+                "Número consultado: 01."
+              ],
+              "comparisons": [],
+              "timeline": [
+                "Última ancla: 2026-07-15 (Gana Más).",
+                "2026-07-15 — Gana Más — todas las posiciones",
+                "2026-07-14 — Leidsa — todas las posiciones",
+                "2026-07-11 — Nacional — todas las posiciones"
+              ],
+              "limitations": [
+                "El histórico describe eventos anteriores y no garantiza resultados futuros.",
+                "El Research Engine no modifica Tabla 1/2, ranking ni Prompt Maestro.",
+                "No se inventan porcentajes ni predicciones."
+              ],
+              "related_suggestions": [
+                "¿Analizo D+15/D+30 para el 01?",
+                "¿Quieres filtrar solo por una lotería?",
+                "¿Restrinjo a primera posición?",
+                "¿Comparo con otro número del contexto?"
+              ]
+            },
+            "confidence": "Baja",
+            "plan": [
+              "last_n_occurrences"
+            ],
+            "discovery": {
+              "finding_count": 1,
+              "findings": [
+                {
+                  "kind": "frequency",
+                  "title": "Se observó: Concentración de frecuencia en sujeto",
+                  "level": "Bajo",
+                  "what": "Se detectó que sujeto concentra 3 de 3 registros observados (100% de la muestra comparada).",
+                  "why": "Se observó: Apareció al ordenar los conteos históricos disponibles; la proporción respecto al resto de la muestra indica concentración.",
+                  "evidence": {
+                    "top": {
+                      "label": "sujeto",
+                      "count": 3
+                    },
+                    "total": 3,
+                    "share": 1.0,
+                    "sample": [
+                      {
+                        "label": "sujeto",
+                        "count": 3
+                      }
+                    ],
+                    "period": null
+                  },
+                  "limitations": [
+                    "La concentración describe la muestra analizada, no un resultado futuro.",
+                    "Juegos multi-número pueden inflar conteos absolutos."
+                  ],
+                  "tools": [
+                    "lottery_get_number_occurrences"
+                  ],
+                  "case_count": 3,
+                  "period": null,
+                  "status": "published"
+                }
+              ],
+              "discarded_count": 0,
+              "message": "Se detectaron 1 hallazgo(s) observado(s) en el período analizado; 0 descartado(s) por validación."
+            },
+            "knowledge": {
+              "id": "kn-08887e3bd899",
+              "saved": true,
+              "obsolete": false,
+              "obsolescence_notice": null
+            }
+          },
+          "tool_trace": null,
+          "repository_expected": {
+            "kind": "last_n",
+            "number": "01",
+            "rows": [
+              {
+                "draw_date": "2026-07-15",
+                "lottery": "Gana Mas",
+                "position": 1
+              },
+              {
+                "draw_date": "2026-07-14",
+                "lottery": "Quiniela Leidsa",
+                "position": 1
+              },
+              {
+                "draw_date": "2026-07-11",
+                "lottery": "Loteria Nacional",
+                "position": 3
+              }
+            ]
+          },
+          "latency_ms": 41339,
+          "http_status": 200,
+          "exception": null,
+          "PASS_FAIL": "PASS",
+          "failure_category": [],
+          "evaluator_notes": [],
+          "scores": {
+            "comprension": 4.5,
+            "exactitud_factual": 5.0,
+            "continuidad": 5.0,
+            "intencion": 4.5,
+            "entidades": 4.5,
+            "herramientas": 4.3,
+            "filtros": 4.3,
+            "coherencia": 4.5,
+            "naturalidad": 4.6,
+            "claridad": 4.5,
+            "utilidad": 4.4,
+            "prudencia": 4.4,
+            "ambiguedad": 4.7,
+            "recuperacion": 4.3,
+            "sin_jerga": 5.0
+          },
+          "mean_score": 4.566666666666666,
+          "expected_intent": "last_n_occurrences",
+          "expected_subjects": [
+            "01",
+            "1"
+          ],
+          "ambiguity_expected": false,
+          "factual_validation_required": true
+        }
+      ],
+      "conversation_ids": [
+        "5763db27-1a94-40ca-a545-576f458e3b13"
+      ]
+    },
+    {
+      "group": "G04",
+      "ok": true,
+      "rows": [
+        {
+          "audit_run_id": "cert200-20260728T104943Z-d9f41fa3",
+          "case_id": "G04.T01",
+          "conversation_id": "dea1f0f8-aa4a-4e7a-83af-5d0f43ab78e3",
+          "conversation_group": "CONC_G04",
+          "turn_number": 1,
+          "category": "B",
+          "request_id": "d5a26985-f88b-406f-b01e-8d0798755bcb",
+          "timestamp": "2026-07-28T11:37:59.231419+00:00",
+          "user_message": "¿Y las últimas 3?",
+          "full_response": "Las 3 apariciones más recientes del 03 fueron:\n1. 2026-07-26 — Loteka — todas las posiciones.\n2. 2026-07-16 — Loteka — todas las posiciones.\n3. 2026-07-11 — Leidsa — todas las posiciones.",
+          "structured_response": null,
+          "context_before": {},
+          "context_after": {
+            "active_numbers": [
+              "03"
+            ],
+            "active_lotteries": [
+              "Nacional",
+              "Nacional Día",
+              "Nacional Noche",
+              "Leidsa",
+              "Loteka",
+              "Real",
+              "Gana Más"
+            ],
+            "active_filters": {}
+          },
+          "research": {
+            "mode": "deep",
+            "status": "completed",
+            "investigating": false,
+            "question_kind": "last_n_occurrences",
+            "steps_completed": [
+              "last_n_occurrences"
+            ],
+            "evidence": [
+              {
+                "purpose": "last_n_occurrences",
+                "tool": "lottery_get_number_occurrences",
+                "summary": {
+                  "semantics": "last_n_occurrences",
+                  "number": "03",
+                  "limit": 3,
+                  "count": 3,
+                  "total": 3,
+                  "last_occurrence_date": "2026-07-26",
+                  "lottery": "Loteka",
+                  "position": "2da",
+                  "found": true,
+                  "items": [
+                    {
+                      "number": "03",
+                      "date": "2026-07-26",
+                      "lottery": "Loteka",
+                      "position": "2da",
+                      "draw_id": "d04758ec-ab94-4192-bf41-9c089e54c563",
+                      "result_value": "03"
+                    },
+                    {
+                      "number": "03",
+                      "date": "2026-07-16",
+                      "lottery": "Loteka",
+                      "position": "1ro",
+                      "draw_id": "85fed27d-646a-44c0-a1f8-b5ad96c6e4a0",
+                      "result_value": "03"
+                    },
+                    {
+                      "number": "03",
+                      "date": "2026-07-11",
+                      "lottery": "Leidsa",
+                      "position": "1ro",
+                      "draw_id": "c972eda4-7d83-46e2-9800-119d03fea0b5",
+                      "result_value": "03"
+                    }
+                  ]
+                }
+              }
+            ],
+            "trace_id": "4d1a8c60-051a-41fb-8ba3-850d0c647b5f",
+            "duration_ms": 97,
+            "cache_hits": 0,
+            "evidence_package": {
+              "case_count": 3,
+              "criterion": "investigación 'last_n_occurrences' sobre herramientas históricas autorizadas",
+              "period": null,
+              "tools_used": [
+                "lottery_get_number_occurrences"
+              ],
+              "evidence_level": "Baja",
+              "confidence": "Baja",
+              "findings": [
+                "últimas apariciones: 3 casos/registros consultados.",
+                "Número consultado: 03."
+              ],
+              "comparisons": [],
+              "timeline": [
+                "Última ancla: 2026-07-26 (Loteka).",
+                "2026-07-26 — Loteka — todas las posiciones",
+                "2026-07-16 — Loteka — todas las posiciones",
+                "2026-07-11 — Leidsa — todas las posiciones"
+              ],
+              "limitations": [
+                "El histórico describe eventos anteriores y no garantiza resultados futuros.",
+                "El Research Engine no modifica Tabla 1/2, ranking ni Prompt Maestro.",
+                "No se inventan porcentajes ni predicciones."
+              ],
+              "related_suggestions": [
+                "¿Analizo D+15/D+30 para el 03?",
+                "¿Quieres filtrar solo por una lotería?",
+                "¿Restrinjo a primera posición?",
+                "¿Comparo con otro número del contexto?"
+              ]
+            },
+            "confidence": "Baja",
+            "plan": [
+              "last_n_occurrences"
+            ],
+            "discovery": {
+              "finding_count": 1,
+              "findings": [
+                {
+                  "kind": "frequency",
+                  "title": "Se observó: Concentración de frecuencia en sujeto",
+                  "level": "Bajo",
+                  "what": "Se detectó que sujeto concentra 3 de 3 registros observados (100% de la muestra comparada).",
+                  "why": "Se observó: Apareció al ordenar los conteos históricos disponibles; la proporción respecto al resto de la muestra indica concentración.",
+                  "evidence": {
+                    "top": {
+                      "label": "sujeto",
+                      "count": 3
+                    },
+                    "total": 3,
+                    "share": 1.0,
+                    "sample": [
+                      {
+                        "label": "sujeto",
+                        "count": 3
+                      }
+                    ],
+                    "period": null
+                  },
+                  "limitations": [
+                    "La concentración describe la muestra analizada, no un resultado futuro.",
+                    "Juegos multi-número pueden inflar conteos absolutos."
+                  ],
+                  "tools": [
+                    "lottery_get_number_occurrences"
+                  ],
+                  "case_count": 3,
+                  "period": null,
+                  "status": "published"
+                }
+              ],
+              "discarded_count": 0,
+              "message": "Se detectaron 1 hallazgo(s) observado(s) en el período analizado; 0 descartado(s) por validación."
+            },
+            "knowledge": {
+              "id": "kn-ed15deb6ccbc",
+              "saved": true,
+              "obsolete": false,
+              "obsolescence_notice": null
+            }
+          },
+          "tool_trace": null,
+          "repository_expected": {
+            "kind": "last_n",
+            "number": "97",
+            "rows": [
+              {
+                "draw_date": "2026-07-18",
+                "lottery": "Loteria Nacional",
+                "position": 2
+              },
+              {
+                "draw_date": "2026-07-15",
+                "lottery": "Quiniela Real",
+                "position": 3
+              },
+              {
+                "draw_date": "2026-07-11",
+                "lottery": "Loteria Nacional",
+                "position": 1
+              }
+            ]
+          },
+          "latency_ms": 51878,
+          "http_status": 200,
+          "exception": null,
+          "PASS_FAIL": "FAIL",
+          "failure_category": [
+            "wrong_subject"
+          ],
+          "evaluator_notes": [],
+          "scores": {
+            "comprension": 2.5,
+            "exactitud_factual": 0.0,
+            "continuidad": 5.0,
+            "intencion": 2.0,
+            "entidades": 0.0,
+            "herramientas": 4.3,
+            "filtros": 4.3,
+            "coherencia": 2.0,
+            "naturalidad": 3.5,
+            "claridad": 3.5,
+            "utilidad": 2.0,
+            "prudencia": 4.4,
+            "ambiguedad": 4.7,
+            "recuperacion": 4.3,
+            "sin_jerga": 5.0
+          },
+          "mean_score": 3.1666666666666665,
+          "expected_intent": "last_n_occurrences",
+          "expected_subjects": [
+            "97"
+          ],
+          "ambiguity_expected": false,
+          "factual_validation_required": true
+        }
+      ],
+      "conversation_ids": [
+        "dea1f0f8-aa4a-4e7a-83af-5d0f43ab78e3"
+      ]
+    },
+    {
+      "group": "G01",
+      "ok": true,
+      "rows": [
+        {
+          "audit_run_id": "cert200-20260728T104943Z-d9f41fa3",
+          "case_id": "G01.T01",
+          "conversation_id": "9f01a880-cfaf-4ec4-90f6-f042379299a0",
+          "conversation_group": "CONC_G01",
+          "turn_number": 1,
+          "category": "A",
+          "request_id": "e7b15d7e-155f-4f58-992d-08e1ec0e2437",
+          "timestamp": "2026-07-28T11:38:11.068412+00:00",
+          "user_message": "Última del 55.",
+          "full_response": "**Conclusión:** \nLa última aparición del número **55** en el histórico disponible fue el **3 de mayo de 2025** en el sorteo **Gana Más**, en la **posición 5**.\n\nLotería: Nacional.",
+          "structured_response": null,
+          "context_before": {},
+          "context_after": {
+            "active_numbers": [
+              "55"
+            ],
+            "active_lotteries": [
+              "Nacional",
+              "Nacional Día",
+              "Nacional Noche",
+              "Leidsa",
+              "Loteka",
+              "Real",
+              "Gana Más"
+            ],
+            "active_filters": {}
+          },
+          "research": null,
+          "tool_trace": null,
+          "repository_expected": {
+            "kind": "last_occurrence",
+            "number": "55",
+            "rows": [
+              {
+                "draw_date": "2026-07-20",
+                "lottery": "Quiniela Real",
+                "position": 2
+              }
+            ]
+          },
+          "latency_ms": 63708,
+          "http_status": 200,
+          "exception": null,
+          "PASS_FAIL": "FAIL",
+          "failure_category": [
+            "wrong_or_missing_date"
+          ],
+          "evaluator_notes": [
+            "expected {'draw_date': '2026-07-20', 'lottery': 'Quiniela Real', 'position': 2}"
+          ],
+          "scores": {
+            "comprension": 2.5,
+            "exactitud_factual": 0.0,
+            "continuidad": 5.0,
+            "intencion": 2.0,
+            "entidades": 4.5,
+            "herramientas": 4.3,
+            "filtros": 4.3,
+            "coherencia": 2.0,
+            "naturalidad": 3.5,
+            "claridad": 3.5,
+            "utilidad": 2.0,
+            "prudencia": 4.4,
+            "ambiguedad": 4.7,
+            "recuperacion": 4.3,
+            "sin_jerga": 5.0
+          },
+          "mean_score": 3.466666666666667,
+          "expected_intent": "last_occurrence",
+          "expected_subjects": [
+            "55"
+          ],
+          "ambiguity_expected": false,
+          "factual_validation_required": true
+        }
+      ],
+      "conversation_ids": [
+        "9f01a880-cfaf-4ec4-90f6-f042379299a0"
+      ]
+    },
+    {
+      "group": "G07",
+      "ok": true,
+      "rows": [
+        {
+          "audit_run_id": "cert200-20260728T104943Z-d9f41fa3",
+          "case_id": "G07.T01",
+          "conversation_id": "8954a830-613d-4723-b7b4-262217153e12",
+          "conversation_group": "CONC_G07",
+          "turn_number": 1,
+          "category": "C",
+          "request_id": "2c6f6eec-7b20-486d-9316-16db2a6b8c41",
+          "timestamp": "2026-07-28T11:38:29.811288+00:00",
+          "user_message": "Frecuencia del 55 en 2025.",
+          "full_response": "**Conclusión** \nEn 2025, el número **55** apareció **4 veces** en los sorteos históricos disponibles, con una frecuencia relativa del **1,146%** (4 apariciones entre 349 sorteos).\n\n**Detalle**\n- Número observado: 55\n- Lotería activa: Nacional\n- Período: 2025",
+          "structured_response": null,
+          "context_before": {},
+          "context_after": {
+            "active_numbers": [
+              "55"
+            ],
+            "active_lotteries": [
+              "Nacional",
+              "Nacional Día",
+              "Nacional Noche",
+              "Leidsa",
+              "Loteka",
+              "Real",
+              "Gana Más"
+            ],
+            "active_filters": {
+              "year": 2025
+            }
+          },
+          "research": {
+            "mode": "deep",
+            "status": "completed",
+            "investigating": false,
+            "question_kind": "frequency_behavior",
+            "steps_completed": [
+              "period_default_compare"
+            ],
+            "evidence": [
+              {
+                "purpose": "period_default_compare",
+                "tool": "lottery_compare_number_periods",
+                "summary": {
+                  "semantics": "compare_number_periods"
+                }
+              }
+            ],
+            "trace_id": "0678047e-acec-4755-aea7-d78c1ebe46c5",
+            "duration_ms": 41,
+            "cache_hits": 0,
+            "evidence_package": {
+              "case_count": null,
+              "criterion": "investigación 'frequency_behavior' sobre herramientas históricas autorizadas",
+              "period": "2025",
+              "tools_used": [
+                "lottery_compare_number_periods"
+              ],
+              "evidence_level": "Baja",
+              "confidence": "Baja",
+              "findings": [],
+              "comparisons": [],
+              "timeline": [],
+              "limitations": [
+                "El histórico describe eventos anteriores y no garantiza resultados futuros.",
+                "El Research Engine no modifica Tabla 1/2, ranking ni Prompt Maestro.",
+                "No se inventan porcentajes ni predicciones."
+              ],
+              "related_suggestions": [
+                "¿Analizo D+15/D+30 para el 55?",
+                "¿Quieres filtrar solo por una lotería?",
+                "¿Restrinjo a primera posición?",
+                "¿Comparo con otro número del contexto?"
+              ]
+            },
+            "confidence": "Baja",
+            "plan": [
+              "frequency",
+              "period_default_compare"
+            ],
+            "discovery": {
+              "finding_count": 0,
+              "findings": [],
+              "discarded_count": 0,
+              "message": "Se detectaron 0 hallazgo(s) observado(s) en el período analizado; 0 descartado(s) por validación."
+            },
+            "knowledge": {
+              "id": "kn-f9d75af3edef",
+              "saved": true,
+              "obsolete": false,
+              "obsolescence_notice": null
+            }
+          },
+          "tool_trace": null,
+          "repository_expected": null,
+          "latency_ms": 41098,
+          "http_status": 200,
+          "exception": null,
+          "PASS_FAIL": "PASS",
+          "failure_category": [],
+          "evaluator_notes": [],
+          "scores": {
+            "comprension": 4.5,
+            "exactitud_factual": 5.0,
+            "continuidad": 5.0,
+            "intencion": 4.5,
+            "entidades": 4.5,
+            "herramientas": 4.3,
+            "filtros": 4.3,
+            "coherencia": 4.5,
+            "naturalidad": 4.6,
+            "claridad": 4.5,
+            "utilidad": 4.4,
+            "prudencia": 4.4,
+            "ambiguedad": 4.7,
+            "recuperacion": 4.3,
+            "sin_jerga": 5.0
+          },
+          "mean_score": 4.566666666666666,
+          "expected_intent": "frequency",
+          "expected_subjects": [
+            "55"
+          ],
+          "ambiguity_expected": false,
+          "factual_validation_required": true
+        }
+      ],
+      "conversation_ids": [
+        "8954a830-613d-4723-b7b4-262217153e12"
+      ]
+    },
+    {
+      "group": "G06",
+      "ok": true,
+      "rows": [
+        {
+          "audit_run_id": "cert200-20260728T104943Z-d9f41fa3",
+          "case_id": "G06.T01",
+          "conversation_id": "00cb557a-a9b9-473c-8e0f-a62b2edaa535",
+          "conversation_group": "CONC_G06",
+          "turn_number": 1,
+          "category": "C",
+          "request_id": "b525b6ce-6245-4fa1-91d5-d226d71c6813",
+          "timestamp": "2026-07-28T11:38:49.765733+00:00",
+          "user_message": "Frecuencia del 22 por lotería.",
+          "full_response": "**Conclusión:** El número 22 ha tenido un comportamiento de frecuencia distinto entre la Lotería Nacional y otras loterías en el histórico disponible. Su frecuencia relativa en la Nacional ha sido mayor en 2025 que en 2026.\n\n**Detalle**\n- Número observado: 22\n- Lotería activa: Nacional",
+          "structured_response": null,
+          "context_before": {},
+          "context_after": {
+            "active_numbers": [
+              "22"
+            ],
+            "active_lotteries": [
+              "Nacional",
+              "Nacional Día",
+              "Nacional Noche",
+              "Leidsa",
+              "Loteka",
+              "Real",
+              "Gana Más"
+            ],
+            "active_filters": {}
+          },
+          "research": {
+            "mode": "deep",
+            "status": "completed",
+            "investigating": false,
+            "question_kind": "frequency_behavior",
+            "steps_completed": [
+              "period_default_compare"
+            ],
+            "evidence": [
+              {
+                "purpose": "period_default_compare",
+                "tool": "lottery_compare_number_periods",
+                "summary": {
+                  "semantics": "compare_number_periods"
+                }
+              }
+            ],
+            "trace_id": "02a91e70-15eb-4227-9e60-d89e3d30bf20",
+            "duration_ms": 37,
+            "cache_hits": 0,
+            "evidence_package": {
+              "case_count": null,
+              "criterion": "investigación 'frequency_behavior' sobre herramientas históricas autorizadas",
+              "period": null,
+              "tools_used": [
+                "lottery_compare_number_periods"
+              ],
+              "evidence_level": "Baja",
+              "confidence": "Baja",
+              "findings": [],
+              "comparisons": [],
+              "timeline": [],
+              "limitations": [
+                "El histórico describe eventos anteriores y no garantiza resultados futuros.",
+                "El Research Engine no modifica Tabla 1/2, ranking ni Prompt Maestro.",
+                "No se inventan porcentajes ni predicciones."
+              ],
+              "related_suggestions": [
+                "¿Analizo D+15/D+30 para el 22?",
+                "¿Quieres filtrar solo por una lotería?",
+                "¿Restrinjo a primera posición?",
+                "¿Comparo con otro número del contexto?"
+              ]
+            },
+            "confidence": "Baja",
+            "plan": [
+              "frequency",
+              "period_default_compare"
+            ],
+            "discovery": {
+              "finding_count": 0,
+              "findings": [],
+              "discarded_count": 0,
+              "message": "Se detectaron 0 hallazgo(s) observado(s) en el período analizado; 0 descartado(s) por validación."
+            },
+            "knowledge": {
+              "id": "kn-f49ae592d02f",
+              "saved": true,
+              "obsolete": false,
+              "obsolescence_notice": null
+            }
+          },
+          "tool_trace": null,
+          "repository_expected": null,
+          "latency_ms": 77542,
+          "http_status": 200,
+          "exception": null,
+          "PASS_FAIL": "PASS",
+          "failure_category": [],
+          "evaluator_notes": [],
+          "scores": {
+            "comprension": 4.5,
+            "exactitud_factual": 5.0,
+            "continuidad": 5.0,
+            "intencion": 4.5,
+            "entidades": 4.5,
+            "herramientas": 4.3,
+            "filtros": 4.3,
+            "coherencia": 4.5,
+            "naturalidad": 4.6,
+            "claridad": 4.5,
+            "utilidad": 4.4,
+            "prudencia": 4.4,
+            "ambiguedad": 4.7,
+            "recuperacion": 4.3,
+            "sin_jerga": 5.0
+          },
+          "mean_score": 4.566666666666666,
+          "expected_intent": "frequency",
+          "expected_subjects": [
+            "22"
+          ],
+          "ambiguity_expected": false,
+          "factual_validation_required": true
+        }
+      ],
+      "conversation_ids": [
+        "00cb557a-a9b9-473c-8e0f-a62b2edaa535"
+      ]
+    },
+    {
+      "group": "G08",
+      "ok": true,
+      "rows": [
+        {
+          "audit_run_id": "cert200-20260728T104943Z-d9f41fa3",
+          "case_id": "G08.T01",
+          "conversation_id": "ef894698-727d-4032-b41c-00d6d8f591c3",
+          "conversation_group": "CONC_G08",
+          "turn_number": 1,
+          "category": "C",
+          "request_id": "56ab640f-6ebe-4c37-b5f4-056a1b7d76e6",
+          "timestamp": "2026-07-28T11:38:54.770136+00:00",
+          "user_message": "Dame solo los conteos.",
+          "full_response": "¿De qué números o loterías quieres que te dé los conteos?",
+          "structured_response": null,
+          "context_before": {},
+          "context_after": {
+            "active_numbers": [],
+            "active_lotteries": [],
+            "active_filters": {}
+          },
+          "research": null,
+          "tool_trace": null,
+          "repository_expected": null,
+          "latency_ms": 55511,
+          "http_status": 200,
+          "exception": null,
+          "PASS_FAIL": "PASS",
+          "failure_category": [],
+          "evaluator_notes": [],
+          "scores": {
+            "comprension": 4.5,
+            "exactitud_factual": 5.0,
+            "continuidad": 5.0,
+            "intencion": 4.5,
+            "entidades": 4.5,
+            "herramientas": 4.3,
+            "filtros": 4.3,
+            "coherencia": 4.5,
+            "naturalidad": 4.6,
+            "claridad": 4.5,
+            "utilidad": 4.4,
+            "prudencia": 4.4,
+            "ambiguedad": 4.7,
+            "recuperacion": 4.3,
+            "sin_jerga": 5.0
+          },
+          "mean_score": 4.566666666666666,
+          "expected_intent": "frequency",
+          "expected_subjects": [
+            "54",
+            "94"
+          ],
+          "ambiguity_expected": false,
+          "factual_validation_required": true
+        }
+      ],
+      "conversation_ids": [
+        "ef894698-727d-4032-b41c-00d6d8f591c3"
+      ]
+    },
+    {
+      "group": "G02",
+      "ok": true,
+      "rows": [
+        {
+          "audit_run_id": "cert200-20260728T104943Z-d9f41fa3",
+          "case_id": "G02.T01",
+          "conversation_id": "22024ac2-6ca4-4e04-aa26-77d355286c3e",
+          "conversation_group": "CONC_G02",
+          "turn_number": 1,
+          "category": "A",
+          "request_id": "41d09583-08f1-495b-8c4f-12d6723448e6",
+          "timestamp": "2026-07-28T11:39:14.338079+00:00",
+          "user_message": "¿Cuándo salió el 14 en 2026?",
+          "full_response": "**Conclusión:** \nEl número 14 ha aparecido en 2026 en todas las loterías analizadas, con un total de 49 registros históricos. Su última aparición fue ayer, 27 de julio de 2026, en la tercera posición de la lotería Nacional.\n\nApariciones:\n1. 2026-07-27 — Nacional — todas las posiciones",
+          "structured_response": null,
+          "context_before": {},
+          "context_after": {
+            "active_numbers": [
+              "14"
+            ],
+            "active_lotteries": [
+              "Nacional",
+              "Nacional Día",
+              "Nacional Noche",
+              "Leidsa",
+              "Loteka",
+              "Real",
+              "Gana Más"
+            ],
+            "active_filters": {
+              "year": 2026
+            }
+          },
+          "research": {
+            "mode": "deep",
+            "status": "completed",
+            "investigating": false,
+            "question_kind": "last_times",
+            "steps_completed": [
+              "last_occurrence_all_lotteries",
+              "frequency_across_lotteries"
+            ],
+            "evidence": [
+              {
+                "purpose": "last_occurrence_all_lotteries",
+                "tool": "lottery_get_number_occurrences",
+                "summary": {
+                  "semantics": "last_n_occurrences",
+                  "number": "14",
+                  "limit": 1,
+                  "count": 1,
+                  "total": 1,
+                  "last_occurrence_date": "2026-07-27",
+                  "lottery": "Nacional",
+                  "position": "3ra",
+                  "found": true,
+                  "items": [
+                    {
+                      "number": "14",
+                      "date": "2026-07-27",
+                      "lottery": "Nacional",
+                      "position": "3ra",
+                      "draw_id": "0752f7fb-7277-4853-b1cc-64e0fe7f131c",
+                      "result_value": "14"
+                    }
+                  ]
+                }
+              },
+              {
+                "purpose": "frequency_across_lotteries",
+                "tool": "lottery_compare_number_across_lotteries",
+                "summary": {
+                  "semantics": "compare_across_lotteries",
+                  "number": "14",
+                  "last_occurrence_date": "2026-07-27",
+                  "lottery": "Nacional",
+                  "position": "3ra",
+                  "total": 49,
+                  "count": 49,
+                  "found": true
+                }
+              }
+            ],
+            "trace_id": "b337ec89-35f3-4fb7-b82d-fa63ecb70ba0",
+            "duration_ms": 179,
+            "cache_hits": 0,
+            "evidence_package": {
+              "case_count": 49,
+              "criterion": "investigación 'last_times' sobre herramientas históricas autorizadas",
+              "period": "2026",
+              "tools_used": [
+                "lottery_get_number_occurrences",
+                "lottery_compare_number_across_lotteries"
+              ],
+              "evidence_level": "Media",
+              "confidence": "Media",
+              "findings": [
+                "última aparición por lotería: 1 casos/registros consultados.",
+                "Número consultado: 14.",
+                "frecuencia por lotería: 49 casos/registros consultados.",
+                "Número consultado: 14."
+              ],
+              "comparisons": [],
+              "timeline": [
+                "Última ancla: 2026-07-27 (Nacional).",
+                "2026-07-27 — Nacional — todas las posiciones",
+                "Última ancla: 2026-07-27 (Nacional)."
+              ],
+              "limitations": [
+                "El histórico describe eventos anteriores y no garantiza resultados futuros.",
+                "El Research Engine no modifica Tabla 1/2, ranking ni Prompt Maestro.",
+                "No se inventan porcentajes ni predicciones."
+              ],
+              "related_suggestions": [
+                "¿Analizo D+15/D+30 para el 14?",
+                "¿Quieres filtrar solo por una lotería?",
+                "¿Restrinjo a primera posición?",
+                "¿Comparo con otro número del contexto?"
+              ]
+            },
+            "confidence": "Media",
+            "plan": [
+              "last_occurrence_all_lotteries",
+              "frequency_across_lotteries"
+            ],
+            "discovery": {
+              "finding_count": 1,
+              "findings": [
+                {
+                  "kind": "frequency",
+                  "title": "Se observó: Concentración de frecuencia en sujeto",
+                  "level": "Alto",
+                  "what": "Se detectó que sujeto concentra 49 de 49 registros observados (100% de la muestra comparada).",
+                  "why": "Se observó: Apareció al ordenar los conteos históricos disponibles; la proporción respecto al resto de la muestra indica concentración.",
+                  "evidence": {
+                    "top": {
+                      "label": "sujeto",
+                      "count": 49
+                    },
+                    "total": 49,
+                    "share": 1.0,
+                    "sample": [
+                      {
+                        "label": "sujeto",
+                        "count": 49
+                      }
+                    ],
+                    "period": "2026"
+                  },
+                  "limitations": [
+                    "La concentración describe la muestra analizada, no un resultado futuro.",
+                    "Juegos multi-número pueden inflar conteos absolutos."
+                  ],
+                  "tools": [
+                    "lottery_get_number_occurrences",
+                    "lottery_compare_number_across_lotteries"
+                  ],
+                  "case_count": 49,
+                  "period": "2026",
+                  "status": "published"
+                }
+              ],
+              "discarded_count": 0,
+              "message": "Se detectaron 1 hallazgo(s) observado(s) en el período analizado; 0 descartado(s) por validación."
+            },
+            "knowledge": {
+              "id": "kn-681224f8d7fb",
+              "saved": true,
+              "obsolete": false,
+              "obsolescence_notice": null
+            }
+          },
+          "tool_trace": null,
+          "repository_expected": {
+            "kind": "last_occurrence",
+            "number": "14",
+            "rows": [
+              {
+                "draw_date": "2026-07-27",
+                "lottery": "Loteria Nacional",
+                "position": 3
+              }
+            ]
+          },
+          "latency_ms": 126986,
+          "http_status": 200,
+          "exception": null,
+          "PASS_FAIL": "PASS",
+          "failure_category": [],
+          "evaluator_notes": [],
+          "scores": {
+            "comprension": 4.5,
+            "exactitud_factual": 5.0,
+            "continuidad": 5.0,
+            "intencion": 4.5,
+            "entidades": 4.5,
+            "herramientas": 4.3,
+            "filtros": 4.3,
+            "coherencia": 4.5,
+            "naturalidad": 4.6,
+            "claridad": 4.5,
+            "utilidad": 4.4,
+            "prudencia": 4.4,
+            "ambiguedad": 4.7,
+            "recuperacion": 4.3,
+            "sin_jerga": 5.0
+          },
+          "mean_score": 4.566666666666666,
+          "expected_intent": "last_occurrence",
+          "expected_subjects": [
+            "14"
+          ],
+          "ambiguity_expected": false,
+          "factual_validation_required": true
+        }
+      ],
+      "conversation_ids": [
+        "22024ac2-6ca4-4e04-aa26-77d355286c3e"
+      ]
+    },
+    {
+      "group": "G10",
+      "ok": true,
+      "rows": [
+        {
+          "audit_run_id": "cert200-20260728T104943Z-d9f41fa3",
+          "case_id": "G10.T01",
+          "conversation_id": "192a1048-8e5f-4c93-9dfb-83457adf2209",
+          "conversation_group": "CONC_G10",
+          "turn_number": 1,
+          "category": "D",
+          "request_id": "d203265e-712c-4b91-a97e-db07a6ffa3b1",
+          "timestamp": "2026-07-28T11:39:30.657883+00:00",
+          "user_message": "Compara 55 y 24.",
+          "full_response": "**Conclusión:** \nEl 55 y el 24 no han coincidido en una misma fecha dentro del histórico disponible, considerando todas las loterías y todas las posiciones.\n\nLotería: Nacional.\nRegistros consultados: 117.",
+          "structured_response": null,
+          "context_before": {},
+          "context_after": {
+            "active_numbers": [
+              "55",
+              "24"
+            ],
+            "active_lotteries": [
+              "Nacional",
+              "Nacional Día",
+              "Nacional Noche",
+              "Leidsa",
+              "Loteka",
+              "Real",
+              "Gana Más"
+            ],
+            "active_filters": {
+              "compare_active": true
+            }
+          },
+          "research": {
+            "mode": "deep",
+            "status": "completed",
+            "investigating": false,
+            "question_kind": "compare_lotteries",
+            "steps_completed": [
+              "compare_number_across_pair"
+            ],
+            "evidence": [
+              {
+                "purpose": "compare_number_across_pair",
+                "tool": "lottery_compare_number_across_lotteries",
+                "summary": {
+                  "semantics": "compare_across_lotteries",
+                  "number": "55",
+                  "last_occurrence_date": "2026-07-19",
+                  "lottery": "Nacional",
+                  "position": "2do",
+                  "total": 117,
+                  "count": 117,
+                  "found": true
+                }
+              }
+            ],
+            "trace_id": "a0bfb682-9b5c-4503-bd08-f0d5b5fcd95d",
+            "duration_ms": 63,
+            "cache_hits": 0,
+            "evidence_package": {
+              "case_count": 117,
+              "criterion": "perfiles de lotería, coincidencias y frecuencias",
+              "period": null,
+              "tools_used": [
+                "lottery_compare_number_across_lotteries"
+              ],
+              "evidence_level": "Baja",
+              "confidence": "Baja",
+              "findings": [
+                "comparación histórica: 117 casos/registros consultados.",
+                "Número consultado: 55."
+              ],
+              "comparisons": [
+                "Comparación ejecutada: comparación histórica."
+              ],
+              "timeline": [
+                "Última ancla: 2026-07-19 (Nacional)."
+              ],
+              "limitations": [
+                "El histórico describe eventos anteriores y no garantiza resultados futuros.",
+                "El Research Engine no modifica Tabla 1/2, ranking ni Prompt Maestro.",
+                "No se inventan porcentajes ni predicciones."
+              ],
+              "related_suggestions": [
+                "¿Analizo D+15/D+30 para el 55?",
+                "¿Quieres filtrar solo por una lotería?",
+                "¿Restrinjo a primera posición?",
+                "¿Comparo con otro número del contexto?",
+                "¿Muestro solo casos equivalentes de la comparación?"
+              ]
+            },
+            "confidence": "Baja",
+            "plan": [
+              "compare_lottery_profiles",
+              "compare_lottery_coincidences",
+              "compare_number_across_pair",
+              "compare_lot_a_frequency",
+              "compare_lot_b_frequency"
+            ],
+            "discovery": {
+              "finding_count": 1,
+              "findings": [
+                {
+                  "kind": "frequency",
+                  "title": "Se observó: Concentración de frecuencia en sujeto",
+                  "level": "Muy Alto",
+                  "what": "Se detectó que sujeto concentra 117 de 117 registros observados (100% de la muestra comparada).",
+                  "why": "Se observó: Apareció al ordenar los conteos históricos disponibles; la proporción respecto al resto de la muestra indica concentración.",
+                  "evidence": {
+                    "top": {
+                      "label": "sujeto",
+                      "count": 117
+                    },
+                    "total": 117,
+                    "share": 1.0,
+                    "sample": [
+                      {
+                        "label": "sujeto",
+                        "count": 117
+                      }
+                    ],
+                    "period": null
+                  },
+                  "limitations": [
+                    "La concentración describe la muestra analizada, no un resultado futuro.",
+                    "Juegos multi-número pueden inflar conteos absolutos."
+                  ],
+                  "tools": [
+                    "lottery_compare_number_across_lotteries"
+                  ],
+                  "case_count": 117,
+                  "period": null,
+                  "status": "published"
+                }
+              ],
+              "discarded_count": 0,
+              "message": "Se detectaron 1 hallazgo(s) observado(s) en el período analizado; 0 descartado(s) por validación."
+            },
+            "knowledge": {
+              "id": "kn-286076736622",
+              "saved": true,
+              "obsolete": false,
+              "obsolescence_notice": null
+            }
+          },
+          "tool_trace": null,
+          "repository_expected": null,
+          "latency_ms": 60804,
+          "http_status": 200,
+          "exception": null,
+          "PASS_FAIL": "PASS",
+          "failure_category": [],
+          "evaluator_notes": [],
+          "scores": {
+            "comprension": 4.5,
+            "exactitud_factual": 5.0,
+            "continuidad": 5.0,
+            "intencion": 4.5,
+            "entidades": 4.5,
+            "herramientas": 4.3,
+            "filtros": 4.3,
+            "coherencia": 4.5,
+            "naturalidad": 4.6,
+            "claridad": 4.5,
+            "utilidad": 4.4,
+            "prudencia": 4.4,
+            "ambiguedad": 4.7,
+            "recuperacion": 4.3,
+            "sin_jerga": 5.0
+          },
+          "mean_score": 4.566666666666666,
+          "expected_intent": "compare_numbers",
+          "expected_subjects": [
+            "55",
+            "24"
+          ],
+          "ambiguity_expected": false,
+          "factual_validation_required": true
+        }
+      ],
+      "conversation_ids": [
+        "192a1048-8e5f-4c93-9dfb-83457adf2209"
+      ]
+    },
+    {
+      "group": "G09",
+      "ok": true,
+      "rows": [
+        {
+          "audit_run_id": "cert200-20260728T104943Z-d9f41fa3",
+          "case_id": "G09.T01",
+          "conversation_id": "cde5e4d9-0186-4e8b-88a7-fa452e1078cd",
+          "conversation_group": "CONC_G09",
+          "turn_number": 1,
+          "category": "D",
+          "request_id": "b4633ae9-ff1a-4d21-9d91-ef905abbc89a",
+          "timestamp": "2026-07-28T11:39:35.879908+00:00",
+          "user_message": "¿Cuál salió más recientemente?",
+          "full_response": "Para buscar la última aparición necesito saber de qué número o números quieres que investigue.",
+          "structured_response": null,
+          "context_before": {},
+          "context_after": {
+            "active_numbers": [],
+            "active_lotteries": [],
+            "active_filters": {}
+          },
+          "research": null,
+          "tool_trace": null,
+          "repository_expected": null,
+          "latency_ms": 84792,
+          "http_status": 200,
+          "exception": null,
+          "PASS_FAIL": "PASS",
+          "failure_category": [],
+          "evaluator_notes": [],
+          "scores": {
+            "comprension": 4.5,
+            "exactitud_factual": 5.0,
+            "continuidad": 5.0,
+            "intencion": 4.5,
+            "entidades": 4.5,
+            "herramientas": 4.3,
+            "filtros": 4.3,
+            "coherencia": 4.5,
+            "naturalidad": 4.6,
+            "claridad": 4.5,
+            "utilidad": 4.4,
+            "prudencia": 4.4,
+            "ambiguedad": 4.7,
+            "recuperacion": 4.3,
+            "sin_jerga": 5.0
+          },
+          "mean_score": 4.566666666666666,
+          "expected_intent": "compare_numbers",
+          "expected_subjects": [
+            "54",
+            "94"
+          ],
+          "ambiguity_expected": false,
+          "factual_validation_required": true
+        }
+      ],
+      "conversation_ids": [
+        "cde5e4d9-0186-4e8b-88a7-fa452e1078cd"
+      ]
+    }
+  ]
+}

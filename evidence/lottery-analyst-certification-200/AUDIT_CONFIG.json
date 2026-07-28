@@ -1,0 +1,14 @@
+{
+  "mode": "read_only_production_certification",
+  "baseline_tag": "lottery-analyst-certified-2026.1",
+  "version_tag": "lottery-ia-ux-v2.4.5.3",
+  "commit": "ec27d96ecba3267a9879861b6355cbe642f2f41e",
+  "seed": 20260727,
+  "question_bank": "QUESTION_BANK.json",
+  "question_bank_sha256": "b982c83bbcefa039a6e23dcb1ce3d3442b3d89067384639694c2cd61ab65b232",
+  "endpoint_sessions": "POST /api/v1/lottery/chat/sessions",
+  "endpoint_messages": "POST /api/v1/lottery/chat/sessions/{id}/messages",
+  "no_code_changes": true,
+  "no_deploy": true,
+  "no_prompt_changes": true
+}

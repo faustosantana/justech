@@ -60,9 +60,13 @@ _LAST_N = re.compile(
     r"(\s+(veces|apariciones|sorteos|fechas))?\b",
     re.I,
 )
+# Word quantities may use singular/plural («tres últimas» / «una anterior»).
+# Digit quantities MUST be plural («3 últimas», «7 anteriores») so that
+# «el 07 última vez» is last_occurrence of 07 — never limit=7.
 _LAST_N_WORD_FIRST = re.compile(
-    r"\b(?P<n>una|un|dos|tres|cuatro|cinco|seis|siete|ocho|nueve|diez|quince|veinte|"
-    r"\d{1,2})\s+([uú]ltimas?|anteriores?)\b",
+    r"\b(?P<n>una|un|dos|tres|cuatro|cinco|seis|siete|ocho|nueve|diez|quince|veinte)"
+    r"\s+([uú]ltimas?|anteriores?)\b|"
+    r"\b(?P<n2>\d{1,2})\s+([uú]ltimas|anteriores)\b",
     re.I,
 )
 _PREVIOUS_N = re.compile(
@@ -260,12 +264,16 @@ def asks_all_positions(text: str) -> bool:
 
 
 def exclude_limit_from_subjects(subjects: list[str], limit: int | None) -> list[str]:
-    """Drop quantity digits that were mistaken for ball numbers."""
+    """Drop quantity digits that were mistaken for ball numbers.
+
+    If the only extracted digit was the limit itself (e.g. «últimas 3» → 03),
+    return [] — never restore the limit as a subject.
+    """
     if not subjects or limit is None:
         return list(subjects)
     lim = str(int(limit))
     lim_z = lim.zfill(2)
-    filtered = [
+    return [
         s
         for s in subjects
         if not (
@@ -273,7 +281,48 @@ def exclude_limit_from_subjects(subjects: list[str], limit: int | None) -> list[
             and (str(int(s)) == lim or str(s).zfill(2) == lim_z)
         )
     ]
-    return filtered if filtered else list(subjects)
+
+
+_SPANISH_BALL_WORDS: dict[str, str] = {
+    "cero": "00",
+    "uno": "01",
+    "una": "01",
+    "dos": "02",
+    "tres": "03",
+    "cuatro": "04",
+    "cinco": "05",
+    "seis": "06",
+    "siete": "07",
+    "ocho": "08",
+    "nueve": "09",
+    "diez": "10",
+    "once": "11",
+    "doce": "12",
+    "trece": "13",
+    "catorce": "14",
+    "quince": "15",
+    "dieciseis": "16",
+    "dieciséis": "16",
+    "diecisiete": "17",
+    "dieciocho": "18",
+    "diecinueve": "19",
+    "veinte": "20",
+    "veintiuno": "21",
+    "veintiún": "21",
+    "veintiun": "21",
+    "veintidos": "22",
+    "veintidós": "22",
+    "veintitres": "23",
+    "veintitrés": "23",
+    "veinticuatro": "24",
+    "veinticinco": "25",
+    "veintiseis": "26",
+    "veintiséis": "26",
+    "veintisiete": "27",
+    "veintiocho": "28",
+    "veintinueve": "29",
+    "treinta": "30",
+}
 
 
 def extract_subject_numbers(text: str, *, active: list[str] | None = None) -> list[str]:
@@ -290,6 +339,15 @@ def extract_subject_numbers(text: str, *, active: list[str] | None = None) -> li
             n = m.group(1)
             if n not in found:
                 found.append(n)
+    # Spanish number words as ball subjects («veintidós», «catorce»)
+    if not found:
+        low = (cleaned or "").lower()
+        # Prefer longer tokens first (veintidós before dos)
+        for word, ball in sorted(_SPANISH_BALL_WORDS.items(), key=lambda kv: -len(kv[0])):
+            if re.search(rf"\b{re.escape(word)}\b", low):
+                if ball not in found:
+                    found.append(ball)
+                break
     # Single digit only with explicit el/número cue already handled; avoid bare 1–9
     lim = extract_occurrence_limit(text or "")
     found = exclude_limit_from_subjects(found, lim)
@@ -348,7 +406,8 @@ def extract_occurrence_limit(text: str) -> int | None:
         m = rx.search(raw)
         if not m:
             continue
-        tok = m.groupdict().get("n") or m.groupdict().get("n2") or ""
+        gd = m.groupdict()
+        tok = gd.get("n") or gd.get("n2") or ""
         n = parse_limit_token(tok)
         if n:
             return n

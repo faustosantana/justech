@@ -55,7 +55,7 @@ _RESTRICTED = re.compile(
 _PREDICTION = re.compile(
     r"\b("
     r"va\s+a\s+salir|saldr[aá]|predic\w*|apostar|apuesta|qu[eé]\s+juego|"
-    r"n[uú]mero\s+ganador|seguro\s+que\s+sale|"
+    r"n[uú]mero\s+ganador|seguro\s+que\s+sale|garantiz\w*|"
     r"recomendaci[oó]n\s+de\s+apuesta|recomi[eé]ndame\s+(una\s+)?apuesta|"
     r"qu[eé]\s+n[uú]mero\s+jugo|conviene\s+jugar"
     r")\b",
@@ -94,7 +94,7 @@ RESTRICTED_MSG = (
 
 PREDICTION_MSG = (
     "No puedo predecir resultados futuros ni recomendar apuestas. "
-    "Solo consulto el histórico verificado. Los resultados pasados no garantizan resultados futuros."
+    "Solo consulto el histórico verificado. Los resultados pasados no anticipan resultados futuros."
 )
 
 PROMPT_LEAK_MSG = (

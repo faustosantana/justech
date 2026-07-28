@@ -1,0 +1,106 @@
+{
+  "motor": {
+    "35_14_primary": 54,
+    "35_14_ok": true,
+    "39_58_primary": 94,
+    "39_58_ok": true
+  },
+  "db": {
+    "default_lotteries": [
+      "Nacional",
+      "Nacional Día",
+      "Nacional Noche",
+      "Leidsa",
+      "Loteka",
+      "Real",
+      "Gana Más"
+    ],
+    "alembic": "061_lottery_ia_control_center",
+    "draws": 91949,
+    "draw_numbers": 388842,
+    "lotteries": 50,
+    "last_22": [
+      {
+        "draw_date": "2026-07-20",
+        "lottery": "Gana Mas",
+        "position": 2
+      }
+    ],
+    "last3_97": [
+      {
+        "draw_date": "2026-07-18",
+        "lottery": "Loteria Nacional",
+        "position": 2
+      },
+      {
+        "draw_date": "2026-07-15",
+        "lottery": "Quiniela Real",
+        "position": 3
+      },
+      {
+        "draw_date": "2026-07-11",
+        "lottery": "Loteria Nacional",
+        "position": 1
+      }
+    ],
+    "last_44": [
+      {
+        "draw_date": "2026-07-20",
+        "lottery": "Quiniela Leidsa",
+        "position": 1
+      }
+    ],
+    "last3_35_nacional_pos1": [
+      {
+        "draw_date": "2026-07-20",
+        "lottery": "Loteria Nacional",
+        "position": 1
+      },
+      {
+        "draw_date": "2026-06-23",
+        "lottery": "Loteria Nacional",
+        "position": 1
+      },
+      {
+        "draw_date": "2026-03-21",
+        "lottery": "Loteria Nacional",
+        "position": 1
+      }
+    ],
+    "same_day_55_24_core_days": 75,
+    "count_54_core": 573,
+    "count_94_core": 599
+  },
+  "checksums": {
+    "/app/app/lottery/ai/prompts/lottery_assistant_system_v1.py": {
+      "sha256": "f5cfbd34ae3a6445201f91d54499242d01db89f67ebaf8002532dc492c9dbcb0",
+      "bytes": 23782
+    },
+    "/app/app/lottery/ai/prompts/lottery_analyst_system_v6.py": {
+      "sha256": "24ed6032372152bc332e662c5b18a3e5ba79b0019be0d3a8746023605dfd8aaf",
+      "bytes": 19143
+    },
+    "/app/app/services/lottery_chat_service.py": {
+      "sha256": "d293835999509980f2d3c9a628260b1a1448c874708d92abb93d51934b6f7b43",
+      "bytes": 142183
+    },
+    "/app/app/lottery/ai/analyst/conversation_brain.py": {
+      "sha256": "1e76c3796fb934e422a8c93476b51bd2905999364dc6fadcaee389acf2f910fa",
+      "bytes": 15654
+    },
+    "/app/app/lottery/ai/analyst/question_classifier.py": {
+      "sha256": "cac0ccd3d8db6956919cadde2de27f784fccf455fe2197f6c0adf57e896f96df",
+      "bytes": 24958
+    },
+    "/app/app/lottery/numeric_relations/analysis_engine/motor_v1_freeze.py": {
+      "sha256": "98532d718e1d3278b02425ad6e0be7c17f6766c36c2aead60b18515a50659c3b",
+      "bytes": 2507
+    }
+  },
+  "prompts": {
+    "active_prompt_name": "LOTTERY_ANALYST_SYSTEM_V6",
+    "recommended_model": "DeepSeek-V3.2",
+    "v6_file_exists": true,
+    "v5_file_exists": true
+  }
+}

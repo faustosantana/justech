@@ -1,0 +1,73 @@
+{
+  "baseline_name": "LOTTERY_ANALYST_CERTIFIED_2026_1",
+  "certified_tag": "lottery-analyst-certified-2026.1",
+  "version_tag": "lottery-ia-ux-v2.4.5.3",
+  "commit": "ec27d96ecba3267a9879861b6355cbe642f2f41e",
+  "commit_short": "ec27d96",
+  "frozen_at_utc": "2026-07-28T03:16:00Z",
+  "environment": "production",
+  "host": "jaios.justech.do",
+  "docker": {
+    "backend_image": "jaios-app-backend:lottery-ia-ux-v2.4.5.3",
+    "backend_image_id": "sha256:68f2db99229a81359706298c5792fba72aa2d7dce7e6ab23ac276b4353468ce8",
+    "frontend_image": "jaios-app-frontend:lottery-ia-ux-v2.4.5.3",
+    "containers": {
+      "backend": "healthy",
+      "frontend": "up",
+      "gateway": "up",
+      "postgres": "healthy",
+      "redis": "healthy (PONG)",
+      "hermes": "healthy (HTTP 200 /health on :8000)"
+    }
+  },
+  "database": {
+    "alembic_revision": "061_lottery_ia_control_center",
+    "backup_path": "/var/jaios/backups/LOTTERY_ANALYST_CERTIFIED_2026_1_20260728_031519.dump",
+    "backup_sha256": "94fcc63befcba347d843563cab54e377fc2404230e86fcf4abb4ed459d4182c3",
+    "backup_size": "38M"
+  },
+  "prompts": {
+    "active": "LOTTERY_ANALYST_SYSTEM_V6",
+    "recommended_model": "DeepSeek-V3.2",
+    "prompt_maestro_v5_file": "backend/app/lottery/ai/prompts/lottery_assistant_system_v1.py",
+    "analyst_v6_file": "backend/app/lottery/ai/prompts/lottery_analyst_system_v6.py",
+    "v5_intact": true,
+    "v6_intact": true
+  },
+  "motor": {
+    "35_14_primary": 54,
+    "39_58_primary": 94,
+    "freeze_artifact": "artifacts/motor_freeze/motor_v1_freeze.json",
+    "intact": true
+  },
+  "prior_audit_44": {
+    "artifact": "evidence/lottery-analyst-conversation-audit-20260727/raw_results_v2452.json",
+    "report": "evidence/lottery-analyst-conversation-audit-20260727/INFORME_REAUDITORIA_V245.md",
+    "result": "44 PASS / 0 FAIL",
+    "jerga": 0
+  },
+  "pre_freeze_regressions": {
+    "motor_ok": true,
+    "last_22_ok": true,
+    "last3_97_ok": true,
+    "nacional_inherit_ok": true,
+    "last_44_ok": true,
+    "correction_97_ok": true,
+    "same_day_55_24_ok": true,
+    "compare_54_94_ok": true,
+    "blocked": false,
+    "rescored_at_utc": "2026-07-28T10:50:00Z"
+  },
+  "critical_checksums_file": "freeze/critical_checksums.json",
+  "evidence_root": "evidence/lottery-analyst-certification-200/",
+  "server_evidence_root": "/var/jaios/lottery-certification/2026.1/",
+  "rollback": {
+    "image_retag": "jaios-app-backend:lottery-ia-ux-v2.4.5.3",
+    "git_tag": "lottery-analyst-certified-2026.1",
+    "compose": "BASE_IMAGE + selective deploy script with tag lottery-ia-ux-v2.4.5.3",
+    "db_restore": "pg_restore -U jaios -d jaios /var/jaios/backups/LOTTERY_ANALYST_CERTIFIED_2026_1_20260728_031519.dump"
+  },
+  "immutable": true,
+  "notes": "Freeze performed before extended 200-turn certification audit. No code changes during subsequent audit.",
+  "freeze_status": "FROZEN_CONFIRMED"
+}

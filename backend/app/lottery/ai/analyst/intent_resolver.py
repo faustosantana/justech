@@ -35,8 +35,9 @@ class IntentResolver:
         r"(\d{1,2}|una|un|dos|tres|cuatro|cinco|seis|siete|ocho|nueve|diez|quince|veinte)"
         r"(\s+(veces|apariciones|sorteos|fechas))?\b|"
         r"\b(dame\s+)?(las?\s+)?(\d{1,2}|tres|cinco|diez)\s+anteriores?\b|"
-        r"\b(\d{1,2}|una|un|dos|tres|cuatro|cinco|seis|siete|ocho|nueve|diez)\s+"
-        r"([uú]ltimas?|anteriores?)\b",
+        r"\b(una|un|dos|tres|cuatro|cinco|seis|siete|ocho|nueve|diez)\s+"
+        r"([uú]ltimas?|anteriores?)\b|"
+        r"\b(\d{1,2})\s+([uú]ltimas|anteriores)\b",
         re.I,
     )
     _ANY_POS = re.compile(
@@ -78,9 +79,16 @@ class IntentResolver:
         re.I,
     )
     _LAST_TIME = re.compile(
-        r"\b(la\s+[uú]ltima(\s+vez)?|[uú]ltima\s+(vez|aparici[oó]n)|"
-        r"cu[aá]l\s+fue\s+la\s+[uú]ltima|cu[aá]ndo\s+sali[oó](\s+por\s+[uú]ltima\s+vez)?|"
-        r"cu[aá]ndo\s+sali[oó])\b",
+        r"\b("
+        r"la\s+[uú]ltima(\s+vez)?|"
+        r"[uú]ltima\s+(vez|aparici[oó]n)|"
+        r"[uú]ltima\s+del?\b|"
+        r"[uú]ltimas?\s+del?\b|"
+        r"cu[aá]l\s+fue\s+la\s+[uú]ltima|"
+        r"cu[aá]ndo\s+sali[oó](\s+por\s+[uú]ltima\s+vez)?|"
+        r"cu[aá]ndo\s+sali[oó]|"
+        r"cu[aá]ndo\s+apareci[oó]"
+        r")\b",
         re.I,
     )
     _FIRST_TIME = re.compile(
@@ -118,10 +126,30 @@ class IntentResolver:
         re.I,
     )
     _RETURN_TO = re.compile(
-        r"\b(vuelve\s+al?\s+(?P<num>\d{1,2})|regresa\s+al?\s+(?P<num2>\d{1,2})|"
-        r"ahora\s+(el\s+)?(?P<num3>\d{1,2})\b(?!\s*(loter|posic)))",
+        r"\b("
+        r"vuelve\s+al?\s+(?P<num>\d{1,2})|"
+        r"regresa\s+al?\s+(?P<num2>\d{1,2})|"
+        r"retoma\s+(el\s+)?((primer|segundo|tercer)\s+n[uú]mero,?\s+(el\s+)?)?(?P<num4>\d{1,2})|"
+        r"ahora\s+(el\s+)?(?P<num3>\d{1,2})\b(?!\s*(loter|posic))"
+        r")",
         re.I,
     )
+    _SUBJECT_STATEMENT = re.compile(
+        r"^\s*(ok[,.]?\s+|perfecto[,.]?\s+)?"
+        r"(el\s+|n[uú]mero\s+)?(?P<num>\d{1,2})"
+        r"(\s+en\s+(?P<lot>nacional|leidsa|loteka|real|gana\s*m[aá]s))?"
+        r"\s*[.]?\s*$",
+        re.I,
+    )
+    _Y_EL_SWITCH = re.compile(
+        r"^\s*[¿?]?\s*y\s+el\s+(?P<num>\d{1,2})\s*[?.!]?\s*$",
+        re.I,
+    )
+    _LOTTERY_ONLY = re.compile(
+        r"^\s*(en\s+)?(?P<lot>nacional|leidsa|loteka|real|gana\s*m[aá]s)\s*[.]?\s*$",
+        re.I,
+    )
+    _SIN_FILTROS = re.compile(r"\bsin\s+filtros?\b", re.I)
     _FOCUS_PRIMARY = re.compile(
         r"\b(ese\s+candidato|el\s+principal|el\s+fortalecido|"
         r"ese\s+n[uú]mero|el\s+mismo)\b",
@@ -244,14 +272,68 @@ class IntentResolver:
                     out["lottery_explicit"] = True
                     out["resolved_refs"].append(f"lottery:{guessed[0]}")
 
-        # Return to a previous number
+        # Return to a previous number → resume last_occurrence research
         ret = cls._RETURN_TO.search(raw)
         if ret:
-            n = ret.group("num") or ret.group("num2") or ret.group("num3")
+            n = ret.group("num") or ret.group("num2") or ret.group("num3") or ret.group("num4")
             if n:
                 out["return_to_number"] = str(n).zfill(2) if len(n) <= 2 else n
                 out["numbers"] = [out["return_to_number"]]
+                out["follow_up_kind"] = out.get("follow_up_kind") or "last_occurrence"
+                out["inherit_active_number"] = False
                 out["resolved_refs"].append(f"return:{out['return_to_number']}")
+
+        # «¿Y el 35?» subject switch → last_occurrence (not compare / complete)
+        ysw = cls._Y_EL_SWITCH.search(raw)
+        if ysw:
+            n = ysw.group("num")
+            out["numbers"] = [str(n).zfill(2)]
+            out["follow_up_kind"] = "last_occurrence"
+            out["inherit_active_number"] = False
+            out["clear_compare"] = True
+            out["resolved_refs"].append(f"y_el_switch:{out['numbers'][0]}")
+
+        # Bare subject statement «El 44.» / «Ok, el 35 en Leidsa.»
+        subj_stmt = cls._SUBJECT_STATEMENT.search(raw)
+        if subj_stmt and out.get("follow_up_kind") not in {
+            "last_n_occurrences",
+            "compare",
+            "after",
+            "before",
+        }:
+            n = subj_stmt.group("num")
+            out["numbers"] = [str(n).zfill(2)]
+            out["follow_up_kind"] = out.get("follow_up_kind") or "last_occurrence"
+            out["inherit_active_number"] = False
+            lot = subj_stmt.group("lot")
+            if lot:
+                guessed = _extract_lotteries(lot) or _extract_lotteries(raw)
+                if guessed:
+                    out["lottery_filter"] = guessed[0]
+                    out["lotteries"] = guessed[:1]
+                    out["lottery_explicit"] = True
+            out["resolved_refs"].append(f"subject_statement:{out['numbers'][0]}")
+
+        # Lottery-only refine «En Nacional.» with active subject → filter + last_occurrence
+        lot_only = cls._LOTTERY_ONLY.search(raw)
+        if lot_only and (state.active_numbers or out.get("numbers")):
+            guessed = _extract_lotteries(lot_only.group("lot") or raw) or _extract_lotteries(raw)
+            if guessed:
+                out["lottery_filter"] = guessed[0]
+                out["lotteries"] = guessed[:1]
+                out["lottery_explicit"] = True
+                out["follow_up_kind"] = out.get("follow_up_kind") or "last_occurrence"
+                if not out.get("numbers") and state.active_numbers:
+                    out["numbers"] = list(state.active_numbers[:1])
+                    out["inherit_active_number"] = True
+                out["resolved_refs"].append(f"lottery_only:{guessed[0]}")
+
+        if cls._SIN_FILTROS.search(raw):
+            out["lottery_explicit"] = False
+            out["clear_lottery"] = True
+            out["lotteries"] = []
+            out["lottery_filter"] = None
+            out["resolved_refs"].append("sin_filtros")
 
         # Compare with other / explicit number
         cmp = cls._COMPARE_OTHER.search(raw)

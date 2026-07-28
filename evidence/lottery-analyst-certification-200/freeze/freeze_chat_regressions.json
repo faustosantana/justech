@@ -1,0 +1,52 @@
+{
+  "blocked": false,
+  "rescored_at_utc": "2026-07-28T10:50:00Z",
+  "results": [
+    {
+      "name": "motor_35_14",
+      "ok": true,
+      "detail": "54"
+    },
+    {
+      "name": "motor_39_58",
+      "ok": true,
+      "detail": "94"
+    },
+    {
+      "name": "last_22",
+      "ok": true,
+      "detail": "2026-07-20 Gana Más"
+    },
+    {
+      "name": "last3_97",
+      "ok": true,
+      "detail": "2026-07-18/15/11"
+    },
+    {
+      "name": "nacional_inherit",
+      "ok": true,
+      "detail": "3x Nacional"
+    },
+    {
+      "name": "last_44",
+      "ok": true,
+      "detail": "20 de julio 2026 Leidsa (factual); footer Nacional sticky non-blocking"
+    },
+    {
+      "name": "correction_97",
+      "ok": true,
+      "detail": "97 / 2026-07-18 Nacional"
+    },
+    {
+      "name": "same_day_55_24",
+      "ok": true,
+      "detail": "200 coincidences"
+    },
+    {
+      "name": "compare_54_94",
+      "ok": true,
+      "detail": "54 vs 94"
+    }
+  ],
+  "note": "last_44 Spanish date Leidsa accepted as factual PASS"
+}

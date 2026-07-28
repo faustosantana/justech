@@ -1,0 +1,251 @@
+{
+  "audit_run_id": "cert200-20260728T104943Z-d9f41fa3",
+  "finished_at": "2026-07-28T11:39:35.940604+00:00",
+  "pass": 175,
+  "fail": 25,
+  "total_turns_recorded": 200,
+  "global_mean": 4.4165,
+  "exactitud_factual_mean": 4.375,
+  "continuidad_mean": 5.0,
+  "naturalidad_mean": 4.4624999999999995,
+  "interpretacion_mean": 4.378,
+  "claridad_mean": 4.375,
+  "ambiguedad_mean": 4.667000000000001,
+  "contradicciones": 0,
+  "jerga_interna": 0,
+  "http_500": 0,
+  "datos_inventados": 1,
+  "sujetos_incorrectos": 6,
+  "factual_fails": 25,
+  "repeatability_equivalent": 18,
+  "repeatability_total": 20,
+  "concurrency_unique_ids": true,
+  "certification_level": "BLOQUEADO",
+  "fails": [
+    {
+      "case_id": "LONG_30.T03",
+      "category": "A",
+      "failures": [
+        "wrong_or_missing_date"
+      ],
+      "message": "¿Y el 35?",
+      "preview": "**Conclusión:** \nLa última aparición del **35** fue el **20 de julio de 2026** en **Nacional** (1ª posición).\n\nLotería: Gana Más."
+    },
+    {
+      "case_id": "LONG_30.T09",
+      "category": "B",
+      "failures": [
+        "wrong_subject"
+      ],
+      "message": "Ahora en todas las posiciones.",
+      "preview": "Sobre tu pregunta (Ahora en todas las posiciones.):\n\n**Conclusión:** \nSí, el **35** ha aparecido en todas las posiciones (no solo en primera) dentro del histórico disponible. Se registran **3 apariciones** en total, todas en la lotería Naci"
+    },
+    {
+      "case_id": "LONG_30.T10",
+      "category": "B",
+      "failures": [
+        "wrong_subject"
+      ],
+      "message": "Ahora en todas las loterías.",
+      "preview": "Sobre tu pregunta (Ahora en todas las loterías.):\n\n**Conclusión:** \nSí, el **35** ha aparecido en todas las loterías del histórico disponible. Se registran **43 apariciones** en total, distribuidas en 6 loterías distintas, todas en el año 2"
+    },
+    {
+      "case_id": "LONG_30.T17",
+      "category": "A",
+      "failures": [
+        "wrong_or_missing_date"
+      ],
+      "message": "Vuelve al 22.",
+      "preview": "Perfecto. ¿Qué quieres investigar sobre el **22**?"
+    },
+    {
+      "case_id": "LONG_30.T20",
+      "category": "J",
+      "failures": [
+        "wrong_or_missing_date"
+      ],
+      "message": "El 22.",
+      "preview": "Perfecto. ¿Qué quieres investigar sobre el **22**?"
+    },
+    {
+      "case_id": "LONG_30.T22",
+      "category": "K",
+      "failures": [
+        "wrong_or_missing_date"
+      ],
+      "message": "¿Estás seguro?",
+      "preview": "Encontré 1 registros en última aparición. Las 1 apariciones más recientes del 22 fueron:\n1. 2026-06-04 — Nacional — todas las posiciones."
+    },
+    {
+      "case_id": "LONG_30.T25",
+      "category": "I",
+      "failures": [
+        "guaranteed_or_fabricated"
+      ],
+      "message": "Garantiza que mañana sale el 54.",
+      "preview": "No puedo garantizar resultados futuros. Los sorteos de lotería son aleatorios y no hay forma de predecir o asegurar qué número saldrá.\n\nSi quieres investigar el comportamiento histórico del **54** —como su frecuencia, última aparición o con"
+    },
+    {
+      "case_id": "LONG_30.T26",
+      "category": "A",
+      "failures": [
+        "wrong_or_missing_date"
+      ],
+      "message": "Retoma el primer número, el 22.",
+      "preview": "Perfecto, retomamos el **22**.\n\n¿Qué aspecto de su comportamiento histórico te gustaría analizar? Por ejemplo:\n- Frecuencia total o por lotería.\n- Última vez que salió.\n- Números con los que ha coincidido.\n- Análisis por posición.\n- Compara"
+    },
+    {
+      "case_id": "LONG_30.T29",
+      "category": "L",
+      "failures": [
+        "wrong_or_missing_date"
+      ],
+      "message": "Cambio rápido: el 07 última vez.",
+      "preview": "Las 7 apariciones más recientes del 07 fueron:\n1. 2026-07-22 — Nacional — todas las posiciones.\n2. 2026-07-05 — Nacional — todas las posiciones.\n3. 2026-06-27 — Nacional — todas las posiciones.\n4. 2026-06-06 — Nacional — todas las posicione"
+    },
+    {
+      "case_id": "G01.T01",
+      "category": "A",
+      "failures": [
+        "wrong_or_missing_date"
+      ],
+      "message": "Última del 55.",
+      "preview": "**Conclusión:** La última aparición del número 55 fue el **25 de marzo de 2025** en el sorteo **Nacional (Noche)**, en la **posición 3**."
+    },
+    {
+      "case_id": "G01.T02",
+      "category": "A",
+      "failures": [
+        "wrong_or_missing_date"
+      ],
+      "message": "¿Cuándo apareció el 24?",
+      "preview": "**Conclusión:** La última aparición del número 24 fue el **25 de marzo de 2025** en el sorteo **Nacional (Noche)**, en la **posición 2**."
+    },
+    {
+      "case_id": "G01.T06",
+      "category": "A",
+      "failures": [
+        "wrong_or_missing_date"
+      ],
+      "message": "Última del 88 en primera posición.",
+      "preview": "**Conclusión:** La última aparición del número 88 en la **primera posición** fue el **14 de julio de 2026** en el sorteo **Loteka**.\n\n**Hallazgos**\n- Se consultaron 726 registros históricos.\n- Última aparición en primera posición: 2026-07-1"
+    },
+    {
+      "case_id": "G02.T02",
+      "category": "A",
+      "failures": [
+        "wrong_or_missing_date"
+      ],
+      "message": "Dime la más reciente del veintidós.",
+      "preview": "**Conclusión:** \nLa aparición más reciente del **22** en el histórico disponible fue el **27 de julio de 2026** en la **3ra posición** de la **Nacional** (también en Nacional Noche ese mismo día).\n\nRegistros consultados: 49.\nApariciones:\n1."
+    },
+    {
+      "case_id": "G02.T05",
+      "category": "A",
+      "failures": [
+        "wrong_or_missing_date"
+      ],
+      "message": "Última del 39.",
+      "preview": "**Conclusión:** \nLa última aparición del **39** en el histórico disponible fue el **17 de julio de 2026** en la **3ra posición** de **Gana Más**.\n\nLotería: Nacional."
+    },
+    {
+      "case_id": "G03.T01",
+      "category": "A",
+      "failures": [
+        "wrong_or_missing_date"
+      ],
+      "message": "Última del 14 sin filtros.",
+      "preview": "**Conclusión:** \nLa última aparición del número 14 en el histórico disponible fue el **9 de abril de 2025** en el sorteo **Loteka**, en la **posición 2**.\n\nLotería: Nacional."
+    },
+    {
+      "case_id": "G04.T01",
+      "category": "B",
+      "failures": [
+        "wrong_subject"
+      ],
+      "message": "¿Y las últimas 3?",
+      "preview": "Las 3 apariciones más recientes del 03 fueron:\n1. 2026-07-26 — Loteka — todas las posiciones.\n2. 2026-07-16 — Loteka — todas las posiciones.\n3. 2026-07-11 — Leidsa — todas las posiciones."
+    },
+    {
+      "case_id": "G04.T02",
+      "category": "B",
+      "failures": [
+        "wrong_subject"
+      ],
+      "message": "Dame las dos anteriores a esas.",
+      "preview": "Las dos apariciones anteriores a las tres que mencionaste (2026-07-26, 2026-07-16 y 2026-07-11) son:\n\nLotería: Leidsa.\nApariciones:\n1. 2026-04-04 — Leidsa — todas las posiciones"
+    },
+    {
+      "case_id": "G04.T03",
+      "category": "B",
+      "failures": [
+        "wrong_subject"
+      ],
+      "message": "Las otras tres.",
+      "preview": "Las otras tres apariciones anteriores a las que ya mencionaste (2026-04-04 en Leidsa) son:\n\n**Hallazgos**\n- Se consultaron 1 casos/registros históricos relevantes.\n- Última ancla: 2026-04-16 (Nacional).\n- 2026-04-16 — Nacional — todas las p"
+    },
+    {
+      "case_id": "G04.T04",
+      "category": "B",
+      "failures": [
+        "wrong_subject"
+      ],
+      "message": "Antes de esa lista, ¿qué hubo?",
+      "preview": "No pude completar la consulta en este momento."
+    },
+    {
+      "case_id": "G20.T01",
+      "category": "H",
+      "failures": [
+        "wrong_or_missing_date"
+      ],
+      "message": "El 44.",
+      "preview": "Entiendo que quieres investigar el número 44. ¿Qué aspecto del 44 te gustaría analizar? Por ejemplo:\n\n- ¿Cuántas veces ha salido en total?\n- ¿Cuál fue su última aparición?\n- ¿En qué loterías ha salido más?\n- ¿O prefieres un análisis complet"
+    },
+    {
+      "case_id": "G20.T07",
+      "category": "H",
+      "failures": [
+        "wrong_or_missing_date"
+      ],
+      "message": "En Nacional.",
+      "preview": "Perfecto. Entonces quieres investigar el número **44** en la lotería **Nacional**.\n\n¿Qué aspecto específico del 44 en Nacional te gustaría analizar? Por ejemplo:\n- ¿Su frecuencia total de apariciones?\n- ¿Sus últimas salidas?\n- ¿Con qué otro"
+    },
+    {
+      "case_id": "G21.T02",
+      "category": "H",
+      "failures": [
+        "wrong_or_missing_date"
+      ],
+      "message": "Ahora en primera.",
+      "preview": "¿De qué número o relación quieres que investigue en primera posición?"
+    },
+    {
+      "case_id": "G22.T01",
+      "category": "H",
+      "failures": [
+        "wrong_or_missing_date"
+      ],
+      "message": "Ok, el 35 en Leidsa.",
+      "preview": "Perfecto. Ya tengo el número y la lotería.\n\n¿Qué quieres saber específicamente sobre el 35 en Leidsa? Por ejemplo:\n- ¿Cuántas veces ha salido?\n- ¿Cuál fue su última aparición?\n- ¿En qué posiciones suele salir?\n- ¿O quieres analizar algo más"
+    },
+    {
+      "case_id": "G25.T05",
+      "category": "J",
+      "failures": [
+        "wrong_or_missing_date"
+      ],
+      "message": "Retoma el 35.",
+      "preview": "**Conclusión:** El número 35 ha aparecido **1 vez** en todo el histórico disponible, considerando todas las loterías y todas las posiciones.\n\nLotería: Nacional."
+    },
+    {
+      "case_id": "G28.T05",
+      "category": "L",
+      "failures": [
+        "false_negative_same_day"
+      ],
+      "message": "Cambio a pareja 55 y 24 mismo día.",
+      "preview": "**Conclusión:** \nNo encontré coincidencias del **55** y el **24** en una misma fecha dentro del histórico disponible de **Loteria Nacional**, considerando todas las posiciones.\n\nRegistros consultados: 0."
+    }
+  ]
+}

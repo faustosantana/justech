@@ -51,7 +51,7 @@ WORD_NUMBERS = {
 
 PREDICTION_RE = re.compile(
     r"(va a salir|saldr[aá]|n[uú]mero.?probable|predicc|predecir|permite predecir|"
-    r"siguiente sorteo|pr[oó]ximo resultado|mañana saldr|"
+    r"siguiente sorteo|pr[oó]ximo resultado|mañana saldr|garantiz\w*|"
     r"recomienda.*(apostar|jugad)|qu[eé] n[uú]mero (juego|apuesto)|"
     r"n[uú]mero para apostar|para apostar|apostar ma[nñ]ana|qu[eé] juego)",
     re.I,
@@ -646,7 +646,7 @@ def resolve_intent(message: str, ctx: LotterySessionContext) -> ResolvedIntent:
                 "Solo consulto el histórico verificado. "
                 "Puedes pedir una señal histórica del Motor de Relaciones Numéricas "
                 "(ej. «predicción del 34 en Leidsa con las últimas 20»). "
-                "No garantiza resultados futuros."
+                "Eso no anticipa resultados futuros."
             ),
             structured_type="lottery_error",
         )

@@ -120,14 +120,20 @@ class QuestionClassifier:
     _LAST_TIMES = re.compile(
         r"(ultimas?\s+veces|qu[eé]\s+ocurri[oó]\s+las\s+[uú]ltimas|"
         r"las\s+[uú]ltimas\s+veces|(?<!\d\s)recientes(?!\s+\d)|"
-        r"cu[aá]ndo\s+sali[oó]|cuando\s+sali[oó])",
+        r"cu[aá]ndo\s+sali[oó]|cuando\s+sali[oó]|"
+        r"cu[aá]ndo\s+apareci[oó]|cuando\s+apareci[oó]|"
+        r"[uú]ltima\s+del?\b|[uú]ltimas?\s+del?\b|"
+        r"[uú]ltima\s+vez|[uú]ltima\s+aparici[oó]n)",
         re.I,
     )
     _LAST_N = re.compile(
         r"\b(y\s+)?(las?\s+)?([uú]ltimas?|anteriores?)\s+"
         r"(\d{1,2}|una|un|dos|tres|cuatro|cinco|seis|siete|ocho|nueve|diez|quince|veinte)"
         r"(\s+(veces|apariciones|sorteos))?\b|"
-        r"\b(dame\s+)?(las?\s+)?(\d{1,2}|tres|cinco|diez)\s+anteriores?\b",
+        r"\b(dame\s+)?(las?\s+)?(\d{1,2}|tres|cinco|diez)\s+anteriores?\b|"
+        r"\b(una|un|dos|tres|cuatro|cinco|seis|siete|ocho|nueve|diez)\s+"
+        r"([uú]ltimas?|anteriores?)\b|"
+        r"\b(\d{1,2})\s+([uú]ltimas|anteriores)\b",
         re.I,
     )
     _TEMPORAL_AFTER = re.compile(
@@ -487,6 +493,26 @@ class QuestionClassifier:
             "first_occurrence",
         } and (nums or state.active_numbers):
             return ResearchQuestion("filtered_follow_up", params, raw_message=raw)
+
+        # Subject resume / bare statement / return_to without other intent
+        # → default last_times research (never soft menu when the ball is known).
+        if (
+            resolution.get("follow_up_kind") == "last_occurrence"
+            or resolution.get("return_to_number")
+            or resolution.get("clear_compare")
+        ) and (nums or state.active_numbers or resolution.get("numbers")):
+            last_params = cls._last_times_lottery_params(
+                params,
+                named_lots=named_lots,
+                inherit_lot=inherit_lot,
+                resolution=resolution,
+                raw=raw,
+                state=state,
+                nums=nums or list(resolution.get("numbers") or state.active_numbers or [])[:1],
+                lim_pre=lim_pre,
+            )
+            return ResearchQuestion("last_times", last_params, raw_message=raw)
+
         return None
 
     @classmethod

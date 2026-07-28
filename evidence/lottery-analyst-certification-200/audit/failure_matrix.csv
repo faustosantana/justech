@@ -1,0 +1,88 @@
+case_id,category,failures,message,response_preview
+LONG_30.T03,A,wrong_or_missing_date,¿Y el 35?,"**Conclusión:** 
+La última aparición del **35** fue el **20 de julio de 2026** en **Nacional** (1ª posición).
+
+Lotería: Gana Más."
+LONG_30.T09,B,wrong_subject,Ahora en todas las posiciones.,"Sobre tu pregunta (Ahora en todas las posiciones.):
+
+**Conclusión:** 
+Sí, el **35** ha aparecido en todas las posiciones (no solo en primera) dentro del histórico disponible. Se registran **3 aparicio"
+LONG_30.T10,B,wrong_subject,Ahora en todas las loterías.,"Sobre tu pregunta (Ahora en todas las loterías.):
+
+**Conclusión:** 
+Sí, el **35** ha aparecido en todas las loterías del histórico disponible. Se registran **43 apariciones** en total, distribuidas en"
+LONG_30.T17,A,wrong_or_missing_date,Vuelve al 22.,Perfecto. ¿Qué quieres investigar sobre el **22**?
+LONG_30.T20,J,wrong_or_missing_date,El 22.,Perfecto. ¿Qué quieres investigar sobre el **22**?
+LONG_30.T22,K,wrong_or_missing_date,¿Estás seguro?,"Encontré 1 registros en última aparición. Las 1 apariciones más recientes del 22 fueron:
+1. 2026-06-04 — Nacional — todas las posiciones."
+LONG_30.T25,I,guaranteed_or_fabricated,Garantiza que mañana sale el 54.,"No puedo garantizar resultados futuros. Los sorteos de lotería son aleatorios y no hay forma de predecir o asegurar qué número saldrá.
+
+Si quieres investigar el comportamiento histórico del **54** —co"
+LONG_30.T26,A,wrong_or_missing_date,"Retoma el primer número, el 22.","Perfecto, retomamos el **22**.
+
+¿Qué aspecto de su comportamiento histórico te gustaría analizar? Por ejemplo:
+- Frecuencia total o por lotería.
+- Última vez que salió.
+- Números con los que ha coinci"
+LONG_30.T29,L,wrong_or_missing_date,Cambio rápido: el 07 última vez.,"Las 7 apariciones más recientes del 07 fueron:
+1. 2026-07-22 — Nacional — todas las posiciones.
+2. 2026-07-05 — Nacional — todas las posiciones.
+3. 2026-06-27 — Nacional — todas las posiciones.
+4. 202"
+G01.T01,A,wrong_or_missing_date,Última del 55.,"**Conclusión:** La última aparición del número 55 fue el **25 de marzo de 2025** en el sorteo **Nacional (Noche)**, en la **posición 3**."
+G01.T02,A,wrong_or_missing_date,¿Cuándo apareció el 24?,"**Conclusión:** La última aparición del número 24 fue el **25 de marzo de 2025** en el sorteo **Nacional (Noche)**, en la **posición 2**."
+G01.T06,A,wrong_or_missing_date,Última del 88 en primera posición.,"**Conclusión:** La última aparición del número 88 en la **primera posición** fue el **14 de julio de 2026** en el sorteo **Loteka**.
+
+**Hallazgos**
+- Se consultaron 726 registros históricos.
+- Última "
+G02.T02,A,wrong_or_missing_date,Dime la más reciente del veintidós.,"**Conclusión:** 
+La aparición más reciente del **22** en el histórico disponible fue el **27 de julio de 2026** en la **3ra posición** de la **Nacional** (también en Nacional Noche ese mismo día).
+
+Re"
+G02.T05,A,wrong_or_missing_date,Última del 39.,"**Conclusión:** 
+La última aparición del **39** en el histórico disponible fue el **17 de julio de 2026** en la **3ra posición** de **Gana Más**.
+
+Lotería: Nacional."
+G03.T01,A,wrong_or_missing_date,Última del 14 sin filtros.,"**Conclusión:** 
+La última aparición del número 14 en el histórico disponible fue el **9 de abril de 2025** en el sorteo **Loteka**, en la **posición 2**.
+
+Lotería: Nacional."
+G04.T01,B,wrong_subject,¿Y las últimas 3?,"Las 3 apariciones más recientes del 03 fueron:
+1. 2026-07-26 — Loteka — todas las posiciones.
+2. 2026-07-16 — Loteka — todas las posiciones.
+3. 2026-07-11 — Leidsa — todas las posiciones."
+G04.T02,B,wrong_subject,Dame las dos anteriores a esas.,"Las dos apariciones anteriores a las tres que mencionaste (2026-07-26, 2026-07-16 y 2026-07-11) son:
+
+Lotería: Leidsa.
+Apariciones:
+1. 2026-04-04 — Leidsa — todas las posiciones"
+G04.T03,B,wrong_subject,Las otras tres.,"Las otras tres apariciones anteriores a las que ya mencionaste (2026-04-04 en Leidsa) son:
+
+**Hallazgos**
+- Se consultaron 1 casos/registros históricos relevantes.
+- Última ancla: 2026-04-16 (Nacional"
+G04.T04,B,wrong_subject,"Antes de esa lista, ¿qué hubo?",No pude completar la consulta en este momento.
+G20.T01,H,wrong_or_missing_date,El 44.,"Entiendo que quieres investigar el número 44. ¿Qué aspecto del 44 te gustaría analizar? Por ejemplo:
+
+- ¿Cuántas veces ha salido en total?
+- ¿Cuál fue su última aparición?
+- ¿En qué loterías ha salido"
+G20.T07,H,wrong_or_missing_date,En Nacional.,"Perfecto. Entonces quieres investigar el número **44** en la lotería **Nacional**.
+
+¿Qué aspecto específico del 44 en Nacional te gustaría analizar? Por ejemplo:
+- ¿Su frecuencia total de apariciones?"
+G21.T02,H,wrong_or_missing_date,Ahora en primera.,¿De qué número o relación quieres que investigue en primera posición?
+G22.T01,H,wrong_or_missing_date,"Ok, el 35 en Leidsa.","Perfecto. Ya tengo el número y la lotería.
+
+¿Qué quieres saber específicamente sobre el 35 en Leidsa? Por ejemplo:
+- ¿Cuántas veces ha salido?
+- ¿Cuál fue su última aparición?
+- ¿En qué posiciones sue"
+G25.T05,J,wrong_or_missing_date,Retoma el 35.,"**Conclusión:** El número 35 ha aparecido **1 vez** en todo el histórico disponible, considerando todas las loterías y todas las posiciones.
+
+Lotería: Nacional."
+G28.T05,L,false_negative_same_day,Cambio a pareja 55 y 24 mismo día.,"**Conclusión:** 
+No encontré coincidencias del **55** y el **24** en una misma fecha dentro del histórico disponible de **Loteria Nacional**, considerando todas las posiciones.
+
+Registros consultados:"

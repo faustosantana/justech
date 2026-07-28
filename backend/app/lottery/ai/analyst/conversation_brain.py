@@ -21,6 +21,11 @@ class ConversationBrain:
     ) -> ConversationState:
         st = self.state.model_copy(deep=True)
         filters = dict(st.active_filters or {})
+        raw_msg = str(
+            resolution.get("raw_message")
+            or ((understanding.params or {}).get("raw_message") if understanding.params else None)
+            or ""
+        )
 
         # Return / focus switch
         if resolution.get("return_to_number"):
@@ -34,6 +39,8 @@ class ConversationBrain:
                 str(n).zfill(2) if str(n).isdigit() and len(str(n)) <= 2 else str(n)
                 for n in nums
             ]
+            prev_nums = [str(x).zfill(2) if str(x).isdigit() else str(x) for x in (st.active_numbers or [])]
+            subject_changed = bool(normed) and normed != prev_nums
             st.active_numbers = normed
             for n in normed:
                 st = self._push_focus(st, n)
@@ -65,6 +72,22 @@ class ConversationBrain:
                         st.last_analysis = {}
                         st.current_primary_candidate = None
 
+            # Subject / pair switch without naming a lottery → drop sticky lottery_explicit
+            # so unscoped last_occurrence / same_day are not trapped in Nacional.
+            from app.services.lottery_intent import _extract_lotteries
+
+            named_now = _extract_lotteries(raw_msg) if raw_msg else []
+            if (
+                subject_changed
+                and not resolution.get("lottery_explicit")
+                and not resolution.get("lottery_filter")
+                and not named_now
+            ):
+                filters.pop("lottery_explicit", None)
+                filters.pop("lottery", None)
+                st.active_lotteries = []
+                resolution = {**resolution, "clear_lottery": True, "lottery_explicit": False}
+
         lots = list(resolution.get("lotteries") or understanding.lotteries or [])
         if resolution.get("lottery_filter"):
             lots = [str(resolution["lottery_filter"])]
@@ -72,11 +95,6 @@ class ConversationBrain:
         from app.lottery.ai.turn_policy import asks_all_lotteries, asks_all_positions
 
         # Clear lottery filter when user asks for all lotteries
-        raw_msg = str(
-            resolution.get("raw_message")
-            or ((understanding.params or {}).get("raw_message") if understanding.params else None)
-            or ""
-        )
         if asks_all_lotteries(raw_msg) or (
             resolution.get("lottery_explicit") is False and resolution.get("clear_lottery")
         ):

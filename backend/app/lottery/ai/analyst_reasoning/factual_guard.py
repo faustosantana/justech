@@ -19,12 +19,15 @@ _EXTERNAL = re.compile(
     re.I,
 )
 _GUARANTEED = re.compile(
-    r"\b("
-    r"seguro\s+que\s+(va\s+a\s+)?sal|"
-    r"garantizad[oa]|sin\s+duda\s+saldr[aá]|"
-    r"mañana\s+sale|el\s+pr[oó]ximo\s+sorteo\s+(ser[aá]|trae)|"
-    r"predigo\s+que|va\s+a\s+salir\s+el\s+\d{1,2}"
-    r")\b",
+    r"("
+    r"(?<!\bno\s)(?<!\bno\ses\s)seguro\s+que\s+(va\s+a\s+)?sal|"
+    r"garantizad[oa]\s+(que\s+)?(sal|ganar|ganar[aá])|"
+    r"sin\s+duda\s+saldr[aá]|"
+    r"mañana\s+sale\s+el|"
+    r"el\s+pr[oó]ximo\s+sorteo\s+(ser[aá]|trae)\s+el|"
+    r"\bpredigo\s+que\b|"
+    r"\bva\s+a\s+salir\s+el\s+\d{1,2}\b"
+    r")",
     re.I,
 )
 _ISO_DATE = re.compile(r"\b(20\d{2}-\d{2}-\d{2})\b")

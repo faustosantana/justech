@@ -83,6 +83,18 @@ class HermesDecisionEngine:
         )
         from app.lottery.ai.analyst_reasoning.reasoning_modes import ReasoningModeSelector
 
+        res = resolution or {}
+        # Prefer relation already bound on decision / resolution / sticky state
+        rel = (
+            decision.inherited_relation
+            or res.get("relation")
+            or res.get("active_relation")
+            or getattr(state, "active_relation", None)
+        )
+        if rel and not decision.inherited_relation:
+            decision.inherited_relation = str(rel)
+            decision.inherited_metric = decision.inherited_metric or str(rel)
+
         has_ev = bool(
             investigation
             and (
@@ -93,8 +105,7 @@ class HermesDecisionEngine:
         decision.reasoning_mode = ReasoningModeSelector.select(
             message,
             hermes_decision=decision,
-            relation=decision.inherited_relation
-            or getattr(state, "active_relation", None),
+            relation=decision.inherited_relation,
             has_evidence=has_ev or decision.requires_research,
         )
         return decision

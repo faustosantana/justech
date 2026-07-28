@@ -1269,7 +1269,7 @@ class LotteryChatService:
                             ReasoningModeSelector,
                             should_invoke_reasoning,
                         )
-                        from app.services.lottery_ai_contracts import LLMMessage
+                        from app.schemas.llm import LLMMessage
 
                         pkg = EvidencePackageBuilder.build(
                             question=content,
@@ -1279,14 +1279,14 @@ class LotteryChatService:
                             hermes_decision=hermes_decision,
                             research_meta=research_meta if isinstance(research_meta, dict) else {},
                         )
-                        mode = (
-                            getattr(hermes_decision, "reasoning_mode", None)
-                            or ReasoningModeSelector.select(
-                                content,
-                                hermes_decision=hermes_decision,
-                                relation=pkg.relation or state.active_relation,
-                                has_evidence=True,
-                            )
+                        # Re-select with verified package relation (post-research truth)
+                        mode = ReasoningModeSelector.select(
+                            content,
+                            hermes_decision=hermes_decision,
+                            relation=pkg.relation
+                            or getattr(hermes_decision, "inherited_relation", None)
+                            or state.active_relation,
+                            has_evidence=True,
                         )
                         hermes_decision.reasoning_mode = mode
 
@@ -1333,9 +1333,13 @@ class LotteryChatService:
                                 "evidence_hash": pkg.evidence_hash(),
                             }
                             used_reasoning_path = True
-                    except Exception:  # noqa: BLE001
+                    except Exception as exc:  # noqa: BLE001
                         used_reasoning_path = False
-                        reasoning_telemetry = {"error": "reasoning_layer_exception"}
+                        reasoning_telemetry = {
+                            "error": "reasoning_layer_exception",
+                            "rejection_reason": type(exc).__name__,
+                            "detail": str(exc)[:240],
+                        }
 
                 if not used_reasoning_path:
                     final_text, synthesis_fallback, model_name, provider_used = await self._synthesize(

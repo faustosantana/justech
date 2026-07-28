@@ -96,6 +96,12 @@ class ConversationBrain:
                 st.active_lotteries = list(dict.fromkeys(lots))
                 filters["lottery_explicit"] = True
                 filters["lottery"] = lots[0]
+            elif filters.get("lottery_explicit") or (st.active_filters or {}).get(
+                "lottery_explicit"
+            ):
+                # Unscoped understand() often injects DEFAULT_ALL_HISTORY lotteries.
+                # Never widen an already-explicit lottery filter with that list.
+                pass
             else:
                 st.active_lotteries = list(
                     dict.fromkeys([*lots, *[x for x in st.active_lotteries if x not in lots]])

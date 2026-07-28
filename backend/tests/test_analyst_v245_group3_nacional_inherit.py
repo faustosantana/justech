@@ -37,6 +37,8 @@ def test_b1_brain_persists_lottery_explicit_from_named_lotteries():
 
 
 def test_b2_last_n_inherits_nacional_after_brain():
+    from app.lottery.ai.understanding import understand
+
     st = ConversationState()
     res1 = IntentResolver.resolve(Q_B1, st)
     und = UnderstandingResult(
@@ -46,7 +48,12 @@ def test_b2_last_n_inherits_nacional_after_brain():
     )
     st = ConversationBrain(st).apply_resolution(understanding=und, resolution=res1)
     assert st.active_lotteries == ["Nacional"]
+    # Prod B.2: understand() injects DEFAULT lotteries on «últimas 3»
+    und2, st = understand(Q_B2, st)
     res2 = IntentResolver.resolve(Q_B2, st)
+    st = ConversationBrain(st).apply_resolution(understanding=und2, resolution=res2)
+    assert st.active_lotteries == ["Nacional"]
+    assert (st.active_filters or {}).get("lottery") == "Nacional"
     q = QuestionClassifier.classify(Q_B2, st, res2)
     assert q is not None
     assert q.kind == "last_n_occurrences"
@@ -56,4 +63,5 @@ def test_b2_last_n_inherits_nacional_after_brain():
     assert meta.get("lottery_explicit") is True or q.params.get("lottery_explicit")
     primary = next(s for s in steps if s.purpose == "last_n_occurrences")
     lots = primary.params.get("lotteries") or []
-    assert lots == ["Nacional"] or primary.params.get("lottery") == "Nacional"
+    assert lots == ["Nacional"]
+    assert primary.params.get("lottery") == "Nacional"

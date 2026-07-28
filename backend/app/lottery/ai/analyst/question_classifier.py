@@ -192,7 +192,12 @@ class QuestionClassifier:
         named_lots = list(resolution.get("lotteries") or [])
         inherit_lot = False
         if not named_lots and (state.active_filters or {}).get("lottery_explicit"):
-            named_lots = list(state.active_lotteries or [])[:4]
+            # B.2: inherit the explicit filter lottery, never a polluted multi sticky list
+            single = (state.active_filters or {}).get("lottery")
+            if single:
+                named_lots = [str(single)]
+            else:
+                named_lots = list(state.active_lotteries or [])[:4]
             inherit_lot = bool(named_lots)
         if asks_all_lotteries(raw):
             named_lots = []

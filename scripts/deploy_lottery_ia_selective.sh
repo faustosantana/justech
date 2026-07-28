@@ -129,6 +129,10 @@ COPY overlay/backend/app/services/lottery_chat_service.py /app/app/services/lott
 COPY overlay/backend/app/services/lottery_chat_context.py /app/app/services/lottery_chat_context.py
 COPY overlay/backend/app/services/lottery_intent.py /app/app/services/lottery_intent.py
 COPY overlay/backend/app/services/lottery_tools.py /app/app/services/lottery_tools.py
+COPY overlay/backend/app/services/lottery_query_service.py /app/app/services/lottery_query_service.py
+COPY overlay/backend/app/services/lottery_repository.py /app/app/services/lottery_repository.py
+COPY overlay/backend/app/services/lottery_aliases.py /app/app/services/lottery_aliases.py
+COPY overlay/backend/app/services/lottery_permissions.py /app/app/services/lottery_permissions.py
 COPY overlay/backend/app/services/lottery_ai_contracts.py /app/app/services/lottery_ai_contracts.py
 COPY overlay/backend/app/models/lottery_prospective.py /app/app/models/lottery_prospective.py
 COPY overlay/backend/alembic/versions/062_lottery_prospective_pilot.py /app/alembic/versions/062_lottery_prospective_pilot.py

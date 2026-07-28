@@ -116,6 +116,8 @@ class ConversationState(BaseModel):
     active_relation: Optional[str] = None  # e.g. same_day
     preferred_position: int = 1
     position_scope: Optional[str] = None  # any_position | first_position | ...
+    # v2.4.5 — meta continuity (H.5–H.9): prefer factual template over LLM rewrite
+    force_local_template: bool = False
 
     def to_store(self) -> dict[str, Any]:
         return self.model_dump(mode="json")

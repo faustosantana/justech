@@ -179,6 +179,74 @@ def is_correction_or_meta_request(text: str) -> bool:
     return bool(_CORRECTION.search(text or ""))
 
 
+class ConversationPolicy:
+    """Continuity rules for meta / correction turns (H.5–H.9).
+
+    Does not touch the LLM. Pins the active subject and prefers factual
+    local templates so synthesis cannot reopen prior subjects (22 vs 97).
+    """
+
+    @staticmethod
+    def is_meta_continuity(text: str) -> bool:
+        """Meta follow-up without naming a new ball number."""
+        raw = text or ""
+        if not is_correction_or_meta_request(raw):
+            return False
+        return not bool(extract_subject_numbers(raw))
+
+    @staticmethod
+    def is_subject_correction(text: str) -> bool:
+        raw = text or ""
+        return bool(is_correction_or_meta_request(raw) and extract_subject_numbers(raw))
+
+    @staticmethod
+    def active_subject(state: Any) -> str | None:
+        nums = list(getattr(state, "active_numbers", None) or [])
+        if nums:
+            return str(nums[0])
+        stack = list(getattr(state, "focus_stack", None) or [])
+        return str(stack[-1]) if stack else None
+
+    @classmethod
+    def pin_active_subject(cls, state: Any) -> Any:
+        """Keep only the current subject in focus — drop prior balls from stack."""
+        subj = cls.active_subject(state)
+        if not subj:
+            return state
+        state.active_numbers = [subj]
+        state.focus_stack = [subj]
+        state.active_pair = []
+        state.force_local_template = True
+        state.conversation_summary = f"Sujeto activo: {subj}."
+        filters = dict(getattr(state, "active_filters", None) or {})
+        filters["meta_continuity"] = True
+        state.active_filters = filters
+        return state
+
+    @classmethod
+    def apply_correction_subject(cls, state: Any, number: str) -> Any:
+        n = str(number).zfill(2) if str(number).isdigit() else str(number)
+        state.active_numbers = [n]
+        state.focus_stack = [n]
+        state.active_pair = []
+        state.force_local_template = False
+        state.conversation_summary = f"Sujeto activo: {n}."
+        filters = dict(getattr(state, "active_filters", None) or {})
+        filters.pop("meta_continuity", None)
+        state.active_filters = filters
+        return state
+
+    @staticmethod
+    def should_force_local_template(state: Any, text: str | None = None) -> bool:
+        if bool(getattr(state, "force_local_template", False)):
+            return True
+        if (getattr(state, "active_filters", None) or {}).get("meta_continuity"):
+            return True
+        if text and ConversationPolicy.is_meta_continuity(text):
+            return True
+        return False
+
+
 def is_most_recent_request(text: str) -> bool:
     return bool(_MOST_RECENT.search(text or ""))
 

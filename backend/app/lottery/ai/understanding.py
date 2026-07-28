@@ -965,7 +965,7 @@ def _resume_pending(state: ConversationState) -> tuple[UnderstandingResult, Conv
     working.pending_slots = []
     working.clarification_question = None
 
-    if intent == "last_occurrence" and number:
+    if intent in {"last_occurrence", "clarification_response", "last_times"} and number:
         from app.lottery.ai.nlp_stability import DEFAULT_ALL_HISTORY_LOTTERIES
         from app.services.lottery_ai_contracts import LotteryToolName as _LT
 
@@ -973,21 +973,27 @@ def _resume_pending(state: ConversationState) -> tuple[UnderstandingResult, Conv
             lots = list(DEFAULT_ALL_HISTORY_LOTTERIES)
             working.scope = "all"
             working.active_lotteries = list(lots)
-        if state.scope == "all" or len(lots) > 1 or not lottery:
+        scope_lots = lots or list(DEFAULT_ALL_HISTORY_LOTTERIES)
+        if state.scope == "all" or len(scope_lots) > 1 or not lottery or intent == "clarification_response":
             return (
                 UnderstandingResult(
                     intent="last_occurrence",
                     numbers=[number],
-                    lotteries=lots or list(DEFAULT_ALL_HISTORY_LOTTERIES),
+                    lotteries=scope_lots,
                     scope="all",
-                    tool=_LT.COMPARE_NUMBER_ACROSS_LOTTERIES.value,
+                    tool=_LT.GET_NUMBER_OCCURRENCES.value,
                     params={
                         "number": number,
-                        "lotteries": lots or list(DEFAULT_ALL_HISTORY_LOTTERIES),
+                        "numbers": [number],
+                        "lotteries": scope_lots,
+                        "mode": "last_n",
+                        "limit": 1,
+                        "page_size": 1,
+                        "order": "desc",
                         "scope": "all",
                         "all_historical": True,
                     },
-                    plan=["last_occurrence_each", "sort_by_date", "summarize"],
+                    plan=["last_n_occurrences"],
                     confidence=0.9,
                     source="follow_up",
                 ),

@@ -77,7 +77,13 @@ class ConversationBrain:
             st.active_lotteries = list(
                 dict.fromkeys([*lots, *[x for x in st.active_lotteries if x not in lots]])
             )
-            if resolution.get("lottery_explicit") or resolution.get("lottery_filter"):
+            # Inheritance: lottery named/filtered this turn stays scoped for follow-ups
+            # (B.2). resolve_references may fill lotteries without lottery_explicit.
+            if (
+                resolution.get("lottery_explicit")
+                or resolution.get("lottery_filter")
+                or resolution.get("lotteries")
+            ):
                 filters["lottery_explicit"] = True
                 filters["lottery"] = lots[0]
 
@@ -166,6 +172,22 @@ class ConversationBrain:
             st.last_intent = str(understanding.intent)
 
         st.active_filters = filters
+
+        # H.5–H.9: pin active subject on meta/correction (ConversationPolicy)
+        from app.lottery.ai.turn_policy import ConversationPolicy, extract_subject_numbers
+
+        if ConversationPolicy.is_subject_correction(raw_msg) or (
+            "correction_or_meta" in (resolution.get("resolved_refs") or [])
+            and extract_subject_numbers(raw_msg)
+        ):
+            subj = (extract_subject_numbers(raw_msg) or st.active_numbers or [None])[0]
+            if subj:
+                st = ConversationPolicy.apply_correction_subject(st, str(subj))
+        elif ConversationPolicy.is_meta_continuity(raw_msg) or (
+            "correction_or_meta" in (resolution.get("resolved_refs") or [])
+            and not extract_subject_numbers(raw_msg)
+        ):
+            st = ConversationPolicy.pin_active_subject(st)
 
         note = self._compact_note(understanding, resolution)
         recent = list(st.recent_memory or [])

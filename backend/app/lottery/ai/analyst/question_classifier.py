@@ -58,7 +58,9 @@ class QuestionClassifier:
     _AFTER = re.compile(
         r"(qu[eé]\s+suele\s+pasar\s+despu[eé]s|qu[eé]\s+pasa\s+despu[eé]s|"
         r"despu[eé]s\s+de\s+(esta\s+)?(combinaci[oó]n|pareja|n[uú]mero)|"
-        r"qu[eé]\s+ocurri[oó]\s+despu[eé]s|comportamiento\s+posterior)",
+        r"qu[eé]\s+ocurri[oó]\s+despu[eé]s|comportamiento\s+posterior|"
+        r"d[ií]as?\s+siguientes|siguientes\s+a\s+cada|"
+        r"qu[eé]\s+pas[oó]\s+en\s+los\s+.+\s+siguientes)",
         re.I,
     )
     _CONFIRM_FIRST = re.compile(
@@ -227,6 +229,7 @@ class QuestionClassifier:
             "primary": state.current_primary_candidate,
             "offset": resolution.get("offset"),
             "replay_last_intent": resolution.get("replay_last_intent"),
+            "windows": list(resolution.get("windows") or windows),
         }
 
         # Same-day coincidence — before compare / complete-analysis paths
@@ -289,11 +292,14 @@ class QuestionClassifier:
             or asks_all_positions(raw)
             or resolution.get("position_explicit")
             or re.search(r"\bsolo\s+en\s+20\d{2}\b|\ben\s+20\d{2}\b", raw, re.I)
-            or re.search(r"primera\s+posici|m[aá]s\s+recientemente", raw, re.I)
+            or re.search(r"primera\s+posici|m[aá]s\s+recientemente|cu[aá]l\s+de\s+los\s+dos", raw, re.I)
         ):
             cmp_nums = list(state.active_numbers[:2]) if len(state.active_numbers or []) >= 2 else nums
+            if len(cmp_nums) < 2 and len(state.active_pair or []) >= 2:
+                cmp_nums = list(state.active_pair[:2])
             if len(cmp_nums) >= 2:
                 params["numbers"] = cmp_nums[:2]
+                params["use_active_pair"] = True
                 return ResearchQuestion("compare_numbers", params, raw_message=raw)
 
         if cls._EQUIV_ONLY.search(raw):
@@ -393,7 +399,19 @@ class QuestionClassifier:
             return ResearchQuestion("last_times", params, raw_message=raw)
 
         if is_most_recent_request(raw) and (nums or state.active_numbers):
-            return ResearchQuestion("last_times", params, raw_message=raw)
+            # Same lottery-scope rule as _LAST_TIMES: sticky active_lotteries must not
+            # become an implicit 4-lottery filter when the user did not name one.
+            last_params = cls._last_times_lottery_params(
+                params,
+                named_lots=named_lots,
+                inherit_lot=inherit_lot,
+                resolution=resolution,
+                raw=raw,
+                state=state,
+                nums=nums,
+                lim_pre=lim_pre,
+            )
+            return ResearchQuestion("last_times", last_params, raw_message=raw)
 
         if cls._LAST_TIMES.search(raw) or resolution.get("follow_up_kind") == "last_occurrence":
             # Pair / "qué pasó las últimas veces que salieron A y B" → posterior behavior,
@@ -406,25 +424,16 @@ class QuestionClassifier:
                 return ResearchQuestion(
                     "what_usually_happens_after", params, raw_message=raw
                 )
-            # Last-occurrence must not inherit sticky pair / sticky lottery as subject
-            last_params = dict(params)
-            if named_lots or inherit_lot:
-                last_params["lotteries"] = (named_lots or list(state.active_lotteries or []))[:4]
-                last_params["lottery_explicit"] = True
-            else:
-                last_params["lotteries"] = named_lots[:4]
-                last_params["lottery_explicit"] = bool(
-                    named_lots or resolution.get("lottery_filter")
-                )
-            if asks_all_lotteries(raw):
-                last_params["lotteries"] = []
-                last_params["lottery_explicit"] = False
-            if nums:
-                last_params["numbers"] = exclude_limit_from_subjects(
-                    nums[:1] if len(nums) == 1 else nums, lim_pre
-                )
-                last_params["active_pair"] = []
-                last_params["use_active_pair"] = False
+            last_params = cls._last_times_lottery_params(
+                params,
+                named_lots=named_lots,
+                inherit_lot=inherit_lot,
+                resolution=resolution,
+                raw=raw,
+                state=state,
+                nums=nums,
+                lim_pre=lim_pre,
+            )
             return ResearchQuestion("last_times", last_params, raw_message=raw)
         if cls._RELATED.search(raw):
             return ResearchQuestion("related_numbers", params, raw_message=raw)
@@ -469,6 +478,43 @@ class QuestionClassifier:
         } and (nums or state.active_numbers):
             return ResearchQuestion("filtered_follow_up", params, raw_message=raw)
         return None
+
+    @classmethod
+    def _last_times_lottery_params(
+        cls,
+        params: dict[str, Any],
+        *,
+        named_lots: list[str],
+        inherit_lot: bool,
+        resolution: dict[str, Any],
+        raw: str,
+        state: ConversationState,
+        nums: list[str],
+        lim_pre: Any,
+    ) -> dict[str, Any]:
+        """Build last_times params without sticky multi-lottery truncation."""
+        from app.lottery.ai.turn_policy import asks_all_lotteries, exclude_limit_from_subjects
+
+        last_params = dict(params)
+        if named_lots or inherit_lot:
+            last_params["lotteries"] = (named_lots or list(state.active_lotteries or []))[:4]
+            last_params["lottery_explicit"] = True
+        else:
+            # Unscoped: empty list → planner uses DEFAULT_ALL_HISTORY_LOTTERIES
+            last_params["lotteries"] = []
+            last_params["lottery_explicit"] = bool(
+                named_lots or resolution.get("lottery_filter")
+            )
+        if asks_all_lotteries(raw):
+            last_params["lotteries"] = []
+            last_params["lottery_explicit"] = False
+        if nums:
+            last_params["numbers"] = exclude_limit_from_subjects(
+                nums[:1] if len(nums) == 1 else nums, lim_pre
+            )
+            last_params["active_pair"] = []
+            last_params["use_active_pair"] = False
+        return last_params
 
     @classmethod
     def _extract_numbers(

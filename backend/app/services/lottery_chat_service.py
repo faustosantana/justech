@@ -515,15 +515,25 @@ class LotteryChatService:
                 understanding.scope = "all"
             else:
                 n = (understanding.numbers or state.active_numbers)[0]
-                understanding.tool = LotteryToolName.COMPARE_LOTTERIES.value
+                from app.lottery.ai.nlp_stability import DEFAULT_ALL_HISTORY_LOTTERIES
+
+                # F.2: bare number after «¿cuándo salió?» must be last_n across defaults,
+                # never compare_lotteries (which ordered asc and could surface obscure lots).
+                understanding.tool = LotteryToolName.GET_NUMBER_OCCURRENCES.value
                 understanding.params = {
                     **dict(understanding.params or {}),
                     "number": n,
-                    "lotteries": default_lotteries(),
-                    "mode": "number_compare",
+                    "numbers": [n],
+                    "lotteries": list(DEFAULT_ALL_HISTORY_LOTTERIES),
+                    "mode": "last_n",
+                    "limit": 1,
+                    "page_size": 1,
+                    "order": "desc",
                     "all_historical": True,
-                    "nlp_policy": "2.3.2",
+                    "intent": "last_occurrence",
+                    "nlp_policy": "2.4.5",
                 }
+                understanding.intent = "last_occurrence"
                 understanding.scope = "all"
 
         intent_kind = "clarify" if understanding.needs_clarification else "tool"
@@ -564,21 +574,27 @@ class LotteryChatService:
             elif brain.should_skip_number_clarify() and re.search(
                 r"qu[eé]\s+n[uú]mero", template or "", re.I
             ):
-                # Have active number — investigate instead of asking filters
+                # Have active number — investigate last occurrence instead of asking filters
                 understanding.needs_clarification = False
                 understanding.missing_slots = []
                 from app.services.lottery_ai_contracts import LotteryToolName
-                from app.lottery.ai.research_policy import default_lotteries
+                from app.lottery.ai.nlp_stability import DEFAULT_ALL_HISTORY_LOTTERIES
 
                 n = state.active_numbers[0]
-                understanding.tool = LotteryToolName.COMPARE_LOTTERIES.value
+                understanding.tool = LotteryToolName.GET_NUMBER_OCCURRENCES.value
                 understanding.params = {
                     "number": n,
-                    "lotteries": default_lotteries(),
-                    "mode": "number_compare",
+                    "numbers": [n],
+                    "lotteries": list(DEFAULT_ALL_HISTORY_LOTTERIES),
+                    "mode": "last_n",
+                    "limit": 1,
+                    "page_size": 1,
+                    "order": "desc",
                     "all_historical": True,
-                    "nlp_policy": "2.3.2",
+                    "intent": "last_occurrence",
+                    "nlp_policy": "2.4.5",
                 }
+                understanding.intent = "last_occurrence"
                 intent_kind = "tool"
                 tool_name = understanding.tool
                 params = dict(understanding.params)
@@ -595,10 +611,20 @@ class LotteryChatService:
                     state.active_numbers = list(understanding.numbers)
                 if understanding.lotteries:
                     state.active_lotteries = list(understanding.lotteries)
-                state.last_intent = str(understanding.intent)
+                # Persist last_occurrence so «El 44.» resumes the correct tool path (F.2)
+                if material == ["number"] and re.search(
+                    r"ultima|última|cu[aá]ndo\s+sali", content or "", re.I
+                ):
+                    state.last_intent = "last_occurrence"
+                    state.pending_intent = "last_occurrence"
+                else:
+                    state.last_intent = str(understanding.intent)
+                    state.pending_intent = str(understanding.intent)
                 state.pending_slots = list(material)
                 if understanding.intent and material:
-                    state.pending_intent = str(understanding.intent)
+                    # Keep last_occurrence pending when clarifying the number for «cuándo salió»
+                    if state.pending_intent != "last_occurrence":
+                        state.pending_intent = str(understanding.intent)
                     state.pending_params = {
                         **params,
                         **({"number": understanding.numbers[0]} if understanding.numbers else {}),
@@ -1039,23 +1065,37 @@ class LotteryChatService:
         synthesis_fallback = False
         model_name = None
         recent_msgs = await self._recent_dialogue(session_id, limit=12)
+        from app.lottery.ai.turn_policy import ConversationPolicy
+
+        force_template = ConversationPolicy.should_force_local_template(state, content)
         if intent_kind == "tool" and structured and structured.get("type") not in (
             "lottery_error",
             "lottery_no_results",
         ):
-            final_text, synthesis_fallback, model_name, provider_used = await self._synthesize(
-                question=content,
-                template=template,
-                facts=structured,
-                context={**ctx.to_store(), "conversation_v4": state.to_store()},
-                recent_messages=recent_msgs,
-                mode="tool",
-                max_tokens=analyst_cfg.max_tokens,
-            )
-            if synthesis_fallback:
+            if force_template:
+                # H.5–H.9: factual template only — do not let LLM reopen prior subjects
+                final_text = template
+                synthesis_fallback = True
+                provider_used = "local_template"
                 fallback_used = True
-                fallback_reason = "synthesis_unavailable_or_failed"
-                provider_used = provider_used or "local_template"
+                fallback_reason = "meta_continuity_local_template"
+                state.force_local_template = False
+                if isinstance(state.active_filters, dict):
+                    state.active_filters.pop("meta_continuity", None)
+            else:
+                final_text, synthesis_fallback, model_name, provider_used = await self._synthesize(
+                    question=content,
+                    template=template,
+                    facts=structured,
+                    context={**ctx.to_store(), "conversation_v4": state.to_store()},
+                    recent_messages=recent_msgs,
+                    mode="tool",
+                    max_tokens=analyst_cfg.max_tokens,
+                )
+                if synthesis_fallback:
+                    fallback_used = True
+                    fallback_reason = "synthesis_unavailable_or_failed"
+                    provider_used = provider_used or "local_template"
             facts_for_fmt = {
                 "primary": state.current_primary_candidate,
                 "observed": (state.last_analysis or {}).get("observed")

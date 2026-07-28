@@ -206,8 +206,12 @@ def test_planner_same_day_uses_occurrences_not_complete():
 def test_compare_steps_both_subjects_first():
     steps = compare_numbers_steps(a="54", b="94", lotteries=["Nacional", "Real"])
     purposes = [s.purpose for s in steps[:4]]
-    assert "compare_a_occurrences" in purposes
-    assert "compare_b_occurrences" in purposes
+    assert "compare_a_last" in purposes or "compare_a_occurrences" in purposes
+    assert "compare_b_last" in purposes or "compare_b_occurrences" in purposes
+    assert any("compare_a_lotteries" == p for p in purposes) or any(
+        s.purpose == "compare_a_lotteries" for s in steps
+    )
+    assert any(s.purpose == "compare_b_lotteries" for s in steps)
 
 
 def test_planner_last_times_passes_position():

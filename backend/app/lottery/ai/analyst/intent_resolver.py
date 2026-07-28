@@ -89,8 +89,13 @@ class IntentResolver:
         re.I,
     )
     _AFTER = re.compile(
-        r"\b(qu[eé]\s+pas[oó]\s+despu[eé]s|qu[eé]\s+ocurri[oó]\s+(luego|despu[eé]s)|"
-        r"despu[eé]s\s+de\s+eso|y\s+despu[eé]s|\bdespu[eé]s\b)\b",
+        r"\b("
+        r"qu[eé]\s+pas[oó]\s+despu[eé]s|qu[eé]\s+ocurri[oó]\s+(luego|despu[eé]s)|"
+        r"despu[eé]s\s+de\s+eso|y\s+despu[eé]s|\bdespu[eé]s\b|"
+        r"d[ií]as?\s+siguientes|siguientes\s+a\s+cada|"
+        r"(los\s+)?(tres|3|\d{1,2})\s+d[ií]as?\s+siguientes|"
+        r"qu[eé]\s+pas[oó]\s+en\s+los\s+.+\s+siguientes"
+        r")\b",
         re.I,
     )
     _BEFORE = re.compile(
@@ -316,6 +321,23 @@ class IntentResolver:
             if state.active_numbers and not out.get("numbers"):
                 out["numbers"] = list(state.active_numbers)
                 out["inherit_active_number"] = True
+            # «tres días siguientes» / «3 días siguientes» → window 3
+            wm = re.search(
+                r"\b(los\s+)?(?P<n>\d{1,2}|tres|dos|uno|una|cinco|siete)\s+d[ií]as?\s+siguientes\b",
+                raw,
+                re.I,
+            )
+            if wm:
+                word = str(wm.group("n")).lower()
+                word_map = {
+                    "uno": 1,
+                    "una": 1,
+                    "dos": 2,
+                    "tres": 3,
+                    "cinco": 5,
+                    "siete": 7,
+                }
+                out["windows"] = [word_map.get(word, int(word) if word.isdigit() else 3)]
             out["resolved_refs"].append("after")
 
         if cls._BEFORE.search(raw) and out.get("follow_up_kind") != "after":

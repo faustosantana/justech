@@ -68,12 +68,16 @@ class DynamicResearchPlanner:
         ):
             lotteries = list(state.active_lotteries or [])[:4]
             lottery_explicit = bool(lotteries)
-        if not lotteries and not lottery_explicit and question.kind != "last_times":
+        if not lotteries and not lottery_explicit and question.kind not in {
+            "last_times",
+            "last_n_occurrences",
+            "compare_numbers",
+        }:
             lotteries = list(state.active_lotteries or [])
         lottery = (lotteries[0] if lotteries else None) or (
             state.active_lotteries[0]
             if state.active_lotteries
-            and question.kind not in {"last_times"}
+            and question.kind not in {"last_times", "compare_numbers"}
             and lottery_explicit
             else None
         )
@@ -115,25 +119,52 @@ class DynamicResearchPlanner:
 
         if kind in {"what_usually_happens_after", "temporal_after", "temporal_windows", "open_investigation"}:
             if observed:
+                # Prefer dates already obtained in last_n / last_analysis (E.2)
+                la = state.last_analysis or {}
+                items = la.get("items") if isinstance(la, dict) else None
+                anchors: list[dict[str, Any]] = []
+                if isinstance(items, list):
+                    for it in items:
+                        if isinstance(it, dict) and (it.get("date") or it.get("draw_date")):
+                            anchors.append(it)
+                if not anchors and (base_date or (isinstance(la, dict) and la.get("date"))):
+                    anchors.append(
+                        {
+                            "date": base_date or la.get("date"),
+                            "lottery": lottery
+                            or (la.get("lottery") if isinstance(la, dict) else None),
+                        }
+                    )
+                after_windows = list(p.get("windows") or windows or [1, 3, 7])
                 steps.extend(
                     temporal_after_steps(
                         number=observed,
-                        lottery=lottery,
-                        base_date=base_date,
-                        windows=windows if kind == "temporal_windows" else [1, 3, 7],
+                        lottery=lottery
+                        or (la.get("lottery") if isinstance(la, dict) else None),
+                        base_date=base_date
+                        or (la.get("date") if isinstance(la, dict) else None),
+                        windows=after_windows,
                         year=year,
+                        anchors=anchors,
                     )
                 )
-                steps.extend(
-                    case_search_steps(
-                        observed=observed,
-                        confirmer=confirmer,
-                        candidate=int(primary) if primary is not None else None,
-                        lottery=lottery,
-                        mode="all",
+                if kind == "open_investigation":
+                    steps.extend(
+                        case_search_steps(
+                            observed=observed,
+                            confirmer=confirmer,
+                            candidate=int(primary) if primary is not None else None,
+                            lottery=lottery,
+                            mode="all",
+                        )
                     )
-                )
-                meta["case_criteria"] = describe_case_criteria("all")
+                    meta["case_criteria"] = describe_case_criteria("all")
+                meta["anchors"] = [
+                    {"date": a.get("date") or a.get("draw_date"), "lottery": a.get("lottery")}
+                    for a in anchors
+                    if isinstance(a, dict)
+                ]
+                meta["windows"] = after_windows
 
         elif kind == "temporal_before":
             if observed:
@@ -144,15 +175,31 @@ class DynamicResearchPlanner:
                 )
 
         elif kind == "compare_numbers":
+            from app.lottery.ai.nlp_stability import DEFAULT_ALL_HISTORY_LOTTERIES
+
             a = nums[0] if nums else None
             b = nums[1] if len(nums) > 1 else None
             if a and b:
+                scope_lots = (
+                    list(lotteries)[:8]
+                    if lottery_explicit and lotteries
+                    else list(DEFAULT_ALL_HISTORY_LOTTERIES)[:8]
+                )
+                scope_lottery = lottery if lottery_explicit and lottery else None
                 steps.extend(
                     compare_numbers_steps(
-                        a=a, b=b, lotteries=lotteries, lottery=lottery, year=year
+                        a=a,
+                        b=b,
+                        lotteries=scope_lots,
+                        lottery=scope_lottery,
+                        year=year,
+                        position=pos_i,
                     )
                 )
+                meta["lotteries"] = [scope_lottery] if scope_lottery else scope_lots
+                meta["lottery_explicit"] = bool(lottery_explicit and scope_lottery)
             meta["dimension"] = "numbers"
+            meta["subjects"] = [x for x in (a, b) if x]
 
         elif kind == "compare_lotteries":
             if len(lotteries) >= 2:
@@ -355,17 +402,20 @@ class DynamicResearchPlanner:
                         )
                     )
                 else:
-                    # Prefer last_n merge across default lotteries (robust to alias gaps
-                    # in compare-across). One shared code path with last_n_occurrences.
-                    all_lots = list(lotteries) or list(DEFAULT_ALL_HISTORY_LOTTERIES)
+                    # Unscoped last occurrence: ALWAYS full default history scope.
+                    # Sticky/truncated lotteries in params must not shrink the scan when
+                    # lottery_explicit is False (A.2/H.1: missing Gana Más → wrong date).
+                    scope_lots = (
+                        list(lotteries)[:8]
+                        if lottery_explicit and lotteries
+                        else list(DEFAULT_ALL_HISTORY_LOTTERIES)[:8]
+                    )
                     steps.append(
                         PlanStep(
                             tool=LotteryToolName.GET_NUMBER_OCCURRENCES.value,
                             params={
                                 "number": observed,
-                                "lotteries": list(DEFAULT_ALL_HISTORY_LOTTERIES)[:8]
-                                if not lotteries
-                                else all_lots[:8],
+                                "lotteries": scope_lots,
                                 "limit": 1,
                                 "page_size": 1,
                                 "order": "desc",
@@ -381,9 +431,7 @@ class DynamicResearchPlanner:
                             tool=LotteryToolName.COMPARE_NUMBER_ACROSS_LOTTERIES.value,
                             params={
                                 "number": observed,
-                                "lotteries": list(DEFAULT_ALL_HISTORY_LOTTERIES)[:8]
-                                if not lotteries
-                                else all_lots[:8],
+                                "lotteries": scope_lots,
                                 **({"position": pos_i} if pos_i else {}),
                             },
                             purpose="frequency_across_lotteries",
@@ -391,7 +439,13 @@ class DynamicResearchPlanner:
                     )
                 meta["subjects"] = [observed]
                 meta["lotteries"] = (
-                    [lottery] if lottery_explicit and lottery else list(lotteries or DEFAULT_ALL_HISTORY_LOTTERIES)[:8]
+                    [lottery]
+                    if lottery_explicit and lottery
+                    else (
+                        list(lotteries)[:8]
+                        if lottery_explicit and lotteries
+                        else list(DEFAULT_ALL_HISTORY_LOTTERIES)[:8]
+                    )
                 )
 
         elif kind == "last_n_occurrences":
@@ -410,22 +464,20 @@ class DynamicResearchPlanner:
                     elif str(pos) in {"1", "2", "3"}:
                         pos_n = int(pos)
                 all_lots = (
-                    [lottery]
-                    if lottery_explicit and lottery
+                    list(lotteries)[:8]
+                    if lottery_explicit and lotteries
                     else (
-                        list(lotteries)
-                        if lottery_explicit and lotteries
-                        else list(DEFAULT_ALL_HISTORY_LOTTERIES)
+                        [lottery]
+                        if lottery_explicit and lottery
+                        else list(DEFAULT_ALL_HISTORY_LOTTERIES)[:8]
                     )
                 )
-                if lottery_explicit and lotteries:
-                    all_lots = list(lotteries)[:8]
                 steps.append(
                     PlanStep(
                         tool=LotteryToolName.GET_NUMBER_OCCURRENCES.value,
                         params={
                             "number": observed,
-                            "lotteries": all_lots[:8],
+                            "lotteries": all_lots,
                             "limit": limit,
                             "page_size": limit,
                             "order": "desc",
@@ -444,7 +496,7 @@ class DynamicResearchPlanner:
                 )
                 meta["subjects"] = [observed]
                 meta["limit"] = result_limit
-                meta["lotteries"] = all_lots[:8]
+                meta["lotteries"] = all_lots
 
         elif kind == "frequency_behavior":
             from app.lottery.ai.nlp_stability import DEFAULT_ALL_HISTORY_LOTTERIES

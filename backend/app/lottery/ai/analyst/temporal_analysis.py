@@ -26,34 +26,52 @@ def temporal_after_steps(
     base_date: str | None = None,
     windows: list[int] | None = None,
     year: int | None = None,
+    anchors: list[dict[str, Any]] | None = None,
 ) -> list[PlanStep]:
-    steps: list[PlanStep] = [
-        PlanStep(
-            tool=LotteryToolName.GET_NUMBER_OCCURRENCES.value,
-            params={
-                "number": number,
-                "lottery": lottery,
-                **({"year": year} if year else {}),
-            },
-            purpose="timeline_occurrences",
-        ),
-        PlanStep(
-            tool=LotteryToolName.GET_LAST_OCCURRENCE.value,
-            params={"number": number, "lottery": lottery},
-            purpose="last_occurrence_anchor",
-        ),
-    ]
-    for w in normalize_windows(windows):
+    """Build following-days steps from known occurrence anchors only.
+
+    Never invents base dates — uses last_analysis items / explicit base_date.
+    """
+    wins = normalize_windows(windows)
+    # «tres días siguientes» → single window of 3 calendar days
+    if windows and len(windows) == 1:
+        wins = normalize_windows(windows)
+
+    steps: list[PlanStep] = []
+    anchor_rows: list[dict[str, Any]] = []
+    for row in anchors or []:
+        if not isinstance(row, dict):
+            continue
+        d = row.get("date") or row.get("draw_date") or row.get("base_date")
+        if not d:
+            continue
+        lot = row.get("lottery") or lottery
+        if not lot:
+            continue
+        anchor_rows.append({"date": str(d)[:10], "lottery": str(lot)})
+
+    if not anchor_rows and base_date and lottery:
+        anchor_rows = [{"date": str(base_date)[:10], "lottery": str(lottery)}]
+
+    if not anchor_rows:
+        # Cannot invent dates — return empty so orchestrator can soft-fail clearly
+        return steps
+
+    # Preserve occurrence order (already newest-first from last_n)
+    day_span = max(wins) if wins else 3
+    for i, anc in enumerate(anchor_rows[:10]):
         steps.append(
             PlanStep(
                 tool=LotteryToolName.GET_FOLLOWING_DAYS.value,
                 params={
                     "number": number,
-                    "lottery": lottery,
-                    "days": w,
-                    "base_date": base_date,
+                    "lottery": anc["lottery"],
+                    "days": day_span,
+                    "base_date": anc["date"],
+                    "date": anc["date"],
+                    "anchor_index": i + 1,
                 },
-                purpose=f"d_plus_{w}",
+                purpose=f"after_window_{i + 1}",
             )
         )
     return steps

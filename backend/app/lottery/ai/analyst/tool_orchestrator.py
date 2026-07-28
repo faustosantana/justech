@@ -300,26 +300,65 @@ class ToolOrchestrator:
                 or summary.get("semantics")
                 in {"last_occurrence", "compare_across_lotteries", "last_n_occurrences"}
             ):
-                # Bind conversation subject to THIS turn's tool result (not stale pair)
-                num = str(summary["number"]).zfill(2) if str(summary["number"]).isdigit() else str(
-                    summary["number"]
+                purpose = str(step.purpose or "")
+                compare_turn = (
+                    plan.question_kind == "compare_numbers"
+                    or purpose.startswith("compare_")
+                    or (working_state.active_filters or {}).get("compare_active")
                 )
-                working_state.active_numbers = [num]
-                working_state.active_pair = []
-                working_state.active_relation = None
-                # Result lottery/position are NOT filters (rule: found ≠ active filter)
-                working_state.last_analysis = {
-                    "observed": num,
-                    "lottery": summary.get("lottery"),
-                    "date": summary.get("last_occurrence_date"),
-                    "position": summary.get("position"),
-                    "total": summary.get("total") or summary.get("count"),
-                    "limit": summary.get("limit"),
-                    "items": summary.get("items"),
-                }
-                working_state.last_intent = str(
-                    summary.get("semantics") or working_state.last_intent or "last_occurrence"
-                )
+                subjects = [
+                    str(x).zfill(2) if str(x).isdigit() else str(x)
+                    for x in (
+                        (plan.research_meta or {}).get("subjects")
+                        or working_state.active_pair
+                        or working_state.active_numbers
+                        or []
+                    )
+                    if x is not None
+                ]
+                if compare_turn and len(subjects) >= 2:
+                    # D.2–D.4: never collapse 54/94 to the last tool's single number
+                    working_state.active_numbers = subjects[:2]
+                    working_state.active_pair = subjects[:2]
+                    filters = dict(working_state.active_filters or {})
+                    filters["compare_active"] = True
+                    working_state.active_filters = filters
+                    working_state.last_intent = "compare_numbers"
+                    working_state.last_analysis = {
+                        "observed": subjects[0],
+                        "compare_with": subjects[1],
+                        "numbers": subjects[:2],
+                        "lottery": summary.get("lottery"),
+                        "date": summary.get("last_occurrence_date"),
+                        "position": summary.get("position"),
+                        "total": summary.get("total") or summary.get("count"),
+                        "type": "compare_numbers",
+                    }
+                else:
+                    # Bind conversation subject to THIS turn's tool result (not stale pair)
+                    num = (
+                        str(summary["number"]).zfill(2)
+                        if str(summary["number"]).isdigit()
+                        else str(summary["number"])
+                    )
+                    working_state.active_numbers = [num]
+                    working_state.active_pair = []
+                    working_state.active_relation = None
+                    # Result lottery/position are NOT filters (rule: found ≠ active filter)
+                    working_state.last_analysis = {
+                        "observed": num,
+                        "lottery": summary.get("lottery"),
+                        "date": summary.get("last_occurrence_date"),
+                        "position": summary.get("position"),
+                        "total": summary.get("total") or summary.get("count"),
+                        "limit": summary.get("limit"),
+                        "items": summary.get("items"),
+                    }
+                    working_state.last_intent = str(
+                        summary.get("semantics")
+                        or working_state.last_intent
+                        or "last_occurrence"
+                    )
         evidence_pkg = EvidenceEngine.assemble(
             kind=plan.question_kind or plan.rationale or "research",
             tool_trace=tool_trace,

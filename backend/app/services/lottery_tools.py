@@ -874,6 +874,17 @@ class LotteryToolExecutor:
             if pos_filter not in (1, 2, 3):
                 pos_filter = None
 
+            from_date = params.get("from_date")
+            to_date = params.get("to_date")
+            if params.get("year") and not (from_date and to_date):
+                y = int(params["year"])
+                from_date = f"{y}-01-01"
+                to_date = f"{y}-12-31"
+            if isinstance(from_date, str):
+                from_date = date.fromisoformat(from_date[:10])
+            if isinstance(to_date, str):
+                to_date = date.fromisoformat(to_date[:10])
+
             def _pos_matches(label: Any, wanted: int) -> bool:
                 if label is None:
                     return False
@@ -899,6 +910,8 @@ class LotteryToolExecutor:
                         page_size=20 if pos_filter else 1,
                         order="desc",
                         position=pos_filter,
+                        from_date=from_date,
+                        to_date=to_date,
                     )
                     items = list(getattr(res, "occurrences", None) or [])
                     last = None

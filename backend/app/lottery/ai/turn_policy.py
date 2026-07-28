@@ -248,6 +248,10 @@ class ConversationPolicy:
             return True
         if text and ConversationPolicy.is_meta_continuity(text):
             return True
+        # D: filter-only refinements must stay on the factual template — LLM
+        # otherwise reopens prior same_day subjects from dialogue history.
+        if text and (asks_all_positions(text) or asks_all_lotteries(text)):
+            return True
         return False
 
 

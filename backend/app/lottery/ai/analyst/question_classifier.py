@@ -256,16 +256,26 @@ class QuestionClassifier:
         }
 
         # Same-day coincidence — before compare / complete-analysis paths
+        # Filter-only «todas las posiciones/loterías» continues the active last_n /
+        # last_times subject — never sticky same_day from an earlier pair.
         from app.lottery.ai.same_day_coincidence import is_same_day_coincidence_question
 
         # Bare «Haz la comparación.» without two concrete subjects → not research
         if re.search(r"^\s*haz\s+la\s+comparaci[oó]n\.?\s*$", raw, re.I) and len(nums) < 2:
             return None
 
-        if is_same_day_coincidence_question(raw) or (
-            resolution.get("active_relation") == "same_day"
-            and resolution.get("follow_up_kind") in {None, "lotteries", "positions", "filtered"}
-            and len(nums) >= 2
+        filter_only_refine = asks_all_positions(raw) or asks_all_lotteries(raw)
+        if (
+            not filter_only_refine
+            and (
+                is_same_day_coincidence_question(raw)
+                or (
+                    resolution.get("active_relation") == "same_day"
+                    and resolution.get("follow_up_kind")
+                    in {None, "lotteries", "positions", "filtered"}
+                    and len(nums) >= 2
+                )
+            )
         ):
             sd = dict(params)
             sd["relation"] = "same_day"
@@ -509,15 +519,31 @@ class QuestionClassifier:
         if asks_all_lotteries(raw) and (nums or state.active_numbers):
             params["lottery_explicit"] = False
             params["lotteries"] = []
-            if state.last_intent == "last_n_occurrences":
-                params["limit"] = int((state.last_analysis or {}).get("limit") or 3)
+            # Prefer last_n continuity when the active ball came from a last_n turn
+            # (limit may live in last_analysis even if last_intent was overwritten).
+            prior_lim = (state.last_analysis or {}).get("limit")
+            if (
+                state.last_intent == "last_n_occurrences"
+                or prior_lim
+                or (state.last_analysis or {}).get("items")
+            ):
+                params["limit"] = int(prior_lim or (state.last_analysis or {}).get("limit") or 3)
+                if not params.get("numbers") and state.active_numbers:
+                    params["numbers"] = list(state.active_numbers[:1])
                 return ResearchQuestion("last_n_occurrences", params, raw_message=raw)
             return ResearchQuestion("last_times", params, raw_message=raw)
         if asks_all_positions(raw) and (nums or state.active_numbers):
             params["position_scope"] = "all"
             params["position_explicit"] = True
-            if state.last_intent == "last_n_occurrences" or (state.last_analysis or {}).get("limit"):
-                params["limit"] = int((state.last_analysis or {}).get("limit") or 3)
+            prior_lim = (state.last_analysis or {}).get("limit")
+            if (
+                state.last_intent == "last_n_occurrences"
+                or prior_lim
+                or (state.last_analysis or {}).get("items")
+            ):
+                params["limit"] = int(prior_lim or 3)
+                if not params.get("numbers") and state.active_numbers:
+                    params["numbers"] = list(state.active_numbers[:1])
                 return ResearchQuestion("last_n_occurrences", params, raw_message=raw)
             return ResearchQuestion("last_times", params, raw_message=raw)
         # Chained filters still research-worthy

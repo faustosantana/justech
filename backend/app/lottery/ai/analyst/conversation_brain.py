@@ -73,6 +73,16 @@ class ConversationBrain:
                         st.active_relation = None
                         st.last_analysis = {}
                         st.current_primary_candidate = None
+                        # D: single-subject factual turn must drop sticky same_day/compare
+                        # so later «Ahora en todas las posiciones» cannot rehash 55/24.
+                        filters.pop("relation", None)
+                        filters.pop("compare_active", None)
+                        filters.pop("compare_with", None)
+                        st.active_filters = {
+                            k: v
+                            for k, v in (st.active_filters or {}).items()
+                            if k not in {"relation", "compare_active", "compare_with"}
+                        }
 
             # Subject / pair switch without naming a lottery → drop sticky lottery_explicit
             # so unscoped last_occurrence / same_day are not trapped in Nacional.
@@ -181,6 +191,11 @@ class ConversationBrain:
             filters["position"] = "all"
             filters["position_explicit"] = True
             filters["position_label"] = position_label_es("all")
+            # Filter-only refine on a single active ball: never keep sticky same_day.
+            if len(st.active_numbers or []) == 1 and not resolution.get("active_relation"):
+                filters.pop("relation", None)
+                filters.pop("compare_active", None)
+                st.active_relation = None
         elif resolution.get("position_scope") is not None:
             from app.lottery.ai.turn_policy import canonicalize_position_scope, position_label_es
 

@@ -786,8 +786,30 @@ def _detect_follow_up(text: str, state: ConversationState) -> tuple[Understandin
             working,
         )
 
+    # Bare «Haz la comparación.» — always clarify (D). Never invent a cross-lottery
+    # compare from a single active ball + sticky lottery list.
+    if re.search(r"^\s*haz\s+la\s+comparaci[oó]n\.?\s*$", text or "", re.I):
+        q = (
+            "¿Qué quieres comparar? Indica dos números, o el criterio "
+            "(frecuencia, última aparición, loterías)."
+        )
+        working.clarification_question = q
+        working.pending_slots = ["compare_target"]
+        return (
+            UnderstandingResult(
+                intent="clarify",
+                numbers=list(state.active_numbers or []),
+                needs_clarification=True,
+                missing_slots=["compare_target"],
+                clarification_question=q,
+                confidence=0.9,
+                source="follow_up",
+            ),
+            working,
+        )
+
     # "compáralas" / "comparalas" / "compara las dos" / "compárame eso"
-    if re.search(r"comp[aá]ralas|compara(r)?\s+las|comparaci[oó]n|comp[aá]rame\s+(eso|eso)|comp[aá]rame\s+eso", low) and state.active_numbers:
+    if re.search(r"comp[aá]ralas|compara(r)?\s+las|comp[aá]rame\s+(eso|eso)|comp[aá]rame\s+eso", low) and state.active_numbers:
         lots = list(state.active_lotteries)
         if len(lots) >= 2 or state.scope == "all":
             return (

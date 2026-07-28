@@ -304,8 +304,14 @@ class ToolOrchestrator:
                 compare_turn = (
                     plan.question_kind == "compare_numbers"
                     or purpose.startswith("compare_")
-                    or (working_state.active_filters or {}).get("compare_active")
-                )
+                ) and not str(plan.question_kind or "").startswith("last_")
+                # Sticky compare_active alone must not hijack last_n / last_times.
+                if (
+                    not compare_turn
+                    and (working_state.active_filters or {}).get("compare_active")
+                    and plan.question_kind == "compare_numbers"
+                ):
+                    compare_turn = True
                 subjects = [
                     str(x).zfill(2) if str(x).isdigit() else str(x)
                     for x in (
@@ -344,6 +350,12 @@ class ToolOrchestrator:
                     working_state.active_numbers = [num]
                     working_state.active_pair = []
                     working_state.active_relation = None
+                    # Drop sticky same_day/compare so filter refinements stay on this ball.
+                    filters = dict(working_state.active_filters or {})
+                    filters.pop("relation", None)
+                    filters.pop("compare_active", None)
+                    filters.pop("compare_with", None)
+                    working_state.active_filters = filters
                     # Result lottery/position are NOT filters (rule: found ≠ active filter)
                     working_state.last_analysis = {
                         "observed": num,
@@ -351,11 +363,14 @@ class ToolOrchestrator:
                         "date": summary.get("last_occurrence_date"),
                         "position": summary.get("position"),
                         "total": summary.get("total") or summary.get("count"),
-                        "limit": summary.get("limit"),
+                        "limit": summary.get("limit")
+                        or (plan.research_meta or {}).get("limit")
+                        or (step.params or {}).get("limit"),
                         "items": summary.get("items"),
                     }
                     working_state.last_intent = str(
-                        summary.get("semantics")
+                        plan.question_kind
+                        or summary.get("semantics")
                         or working_state.last_intent
                         or "last_occurrence"
                     )

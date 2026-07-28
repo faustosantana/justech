@@ -214,6 +214,23 @@ class LotteryChatService:
 
         understanding, state = understand(content, state)
 
+        # D: bare «Haz la comparación.» must clarify — never tool/research invent dates.
+        bare_compare_early = bool(
+            re.search(r"^\s*haz\s+la\s+comparaci[oó]n\.?\s*$", content or "", re.I)
+        )
+        if bare_compare_early and len(understanding.numbers or state.active_numbers or []) < 2:
+            q = (
+                understanding.clarification_question
+                or "¿Qué quieres comparar? Indica dos números, o el criterio "
+                "(frecuencia, última aparición, loterías)."
+            )
+            understanding.needs_clarification = True
+            understanding.missing_slots = ["compare_target"]
+            understanding.clarification_question = q
+            understanding.tool = None
+            understanding.params = dict(understanding.params or {})
+            understanding.params.pop("run_tools", None)
+
         # Fase X — "nueva conversación" phrase resets filters/pending (history kept)
         if re.search(r"^\s*nueva\s+conversaci[oó]n\s*$", content or "", re.I):
             state = ConversationState(
@@ -466,12 +483,20 @@ class LotteryChatService:
 
         understanding = apply_to_understanding(understanding, state)
         material_pre = filter_material_slots(understanding.missing_slots)
-        if understanding.needs_clarification and not material_pre:
+        bare_compare_lock = bool(
+            re.search(r"^\s*haz\s+la\s+comparaci[oó]n\.?\s*$", content or "", re.I)
+        )
+        if (
+            understanding.needs_clarification
+            and not material_pre
+            and not bare_compare_lock
+            and "compare_target" not in (understanding.missing_slots or [])
+        ):
             understanding.needs_clarification = False
             understanding.missing_slots = []
             understanding.clarification_question = None
         # D.2/E.2: Research Engine plan must win over soft clarify (even material "query")
-        if research_plan.is_research and research_plan.steps:
+        if research_plan.is_research and research_plan.steps and not bare_compare_lock:
             understanding.needs_clarification = False
             understanding.missing_slots = []
             understanding.clarification_question = None
@@ -1064,9 +1089,22 @@ class LotteryChatService:
                     # Mirror sticky fields from merged legacy context
                     if ctx.base_date:
                         state.date_context = ctx.base_date
-                    if ctx.last_lottery and ctx.last_lottery not in state.active_lotteries:
+                    # E: never re-stick last_lottery after an unscoped / clear_lottery turn
+                    from app.lottery.ai.turn_policy import asks_all_lotteries as _asks_all_lots
+
+                    if (
+                        ctx.last_lottery
+                        and ctx.last_lottery not in state.active_lotteries
+                        and not resolution.get("clear_lottery")
+                        and not _asks_all_lots(content)
+                        and (state.active_filters or {}).get("lottery_explicit")
+                    ):
                         state.active_lotteries = [ctx.last_lottery, *state.active_lotteries]
-                    state.last_intent = str(understanding.intent)
+                    # Prefer research kind over soft understanding.intent (D continuity)
+                    state.last_intent = str(
+                        (research_plan.question_kind if research_plan.is_research else None)
+                        or understanding.intent
+                    )
                     state.last_tool = result.tool
                     state.last_plan = [s.purpose or s.tool for s in plan.steps]
                     state.pending_slots = []
@@ -1274,13 +1312,14 @@ class LotteryChatService:
             )
             if missing == ["number"] or (
                 "number" in missing and "lottery" not in missing and "date" not in missing
-            ) or bare_compare_ask:
+            ) or bare_compare_ask or "compare_target" in missing:
                 final_text = template
                 provider_used = "local_template"
                 synthesis_fallback = True
                 fallback_used = True
                 fallback_reason = (
-                    "clarify_bare_compare_locked" if bare_compare_ask else "clarify_number_slot_locked"
+                    "clarify_bare_compare_locked" if bare_compare_ask or "compare_target" in missing
+                    else "clarify_number_slot_locked"
                 )
             else:
                 final_text, synthesis_fallback, model_name, provider_used = await self._synthesize(

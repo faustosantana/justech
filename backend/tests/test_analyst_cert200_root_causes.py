@@ -172,6 +172,61 @@ def test_r4_haz_la_comparacion_without_pair_is_not_research():
     assert q is None
 
 
+def test_r4_ahora_todas_posiciones_continues_last_n_not_same_day():
+    st = ConversationState(
+        active_numbers=["35"],
+        last_intent="last_n_occurrences",
+        last_analysis={"limit": 3, "observed": "35", "items": [{"number": "35"}]},
+        active_filters={"relation": "same_day", "compare_active": True, "lottery": "Nacional", "lottery_explicit": True},
+    )
+    res = IntentResolver.resolve("Ahora en todas las posiciones.", st)
+    q = QuestionClassifier.classify("Ahora en todas las posiciones.", st, res)
+    assert q is not None
+    assert q.kind == "last_n_occurrences"
+    assert q.params.get("numbers") == ["35"]
+    assert q.params.get("position_scope") == "all"
+
+
+def test_r4_bare_compare_understanding_clarifies():
+    from app.lottery.ai.understanding import understand
+
+    st = ConversationState(
+        active_numbers=["44"],
+        active_lotteries=["Nacional", "Leidsa", "Loteka"],
+        scope="all",
+    )
+    u, _ = understand("Haz la comparación.", st)
+    assert u.needs_clarification is True
+    assert u.tool is None
+    assert "compar" in (u.clarification_question or "").lower() or "compar" in (u.clarification_question or "")
+
+
+def test_r5_single_subject_last_n_clears_sticky_same_day_filters():
+    st = ConversationState(
+        active_numbers=["55", "24"],
+        active_relation="same_day",
+        active_filters={"relation": "same_day", "compare_active": True, "lottery_explicit": True, "lottery": "Nacional"},
+    )
+    brain = ConversationBrain(st)
+    understanding = UnderstandingResult(intent="last_n_occurrences", numbers=["35"])
+    out = brain.apply_resolution(
+        understanding=understanding,
+        resolution={
+            "numbers": ["35"],
+            "follow_up_kind": "last_n_occurrences",
+            "limit": 3,
+            "lottery_explicit": True,
+            "lotteries": ["Nacional"],
+            "lottery_filter": "Nacional",
+            "inherit_active_number": False,
+        },
+    )
+    assert out.active_numbers == ["35"]
+    assert out.active_relation is None
+    assert "relation" not in (out.active_filters or {})
+    assert "compare_active" not in (out.active_filters or {})
+
+
 # ---------------------------------------------------------------------------
 # R6 — refuse wording must not contain «garantiz*» (cert evaluator)
 # ---------------------------------------------------------------------------

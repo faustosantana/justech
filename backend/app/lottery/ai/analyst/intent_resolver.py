@@ -209,6 +209,26 @@ class IntentResolver:
             lim = extract_occurrence_limit(raw) or 2
         if not lim and is_other_occurrences_request(raw):
             lim = extract_other_occurrence_limit(raw)
+
+        # Incomplete / truncated asks must not inherit sticky subjects.
+        incomplete_number_ask = bool(
+            re.search(r"(?i)\bmensaje\s+cortado\b", raw)
+            or (
+                re.search(
+                    r"(?is)\bcu[aá]ndo\s+(?:sali[oó]|apareci[oó])\s+el\s*\??\s*$",
+                    raw.strip(),
+                )
+                and not extract_subject_numbers(raw)
+            )
+        )
+        if incomplete_number_ask:
+            out["force_clarify"] = True
+            out["inherit_active_number"] = False
+            out["follow_up_kind"] = None
+            out["numbers"] = []
+            out["resolved_refs"].append("incomplete_number_ask")
+            return out
+
         if lim:
             out["limit"] = lim
             out["follow_up_kind"] = "last_n_occurrences"

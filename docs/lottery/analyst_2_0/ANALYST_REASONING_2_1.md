@@ -41,10 +41,13 @@ Usuario → Intent/Hermes(+reasoning_mode) → Planner → SQL
 
 ## Suites
 
-- `ANALYST_REASONING_40` (offline): ver pytest `test_analyst_reasoning_40.py`
-- Official Scope: 18+ tests
-- Agent50 / Manual30 / Cert200: correr en DEV antes de beta
+- `ANALYST_REASONING_40` (offline): **47 passed** (`test_analyst_reasoning_40.py`)
+- Official Scope: PASS (pack con reasoning)
+- Agent50: **50/0**
+- Manual30: **30/0** (DEV)
+- Cert200: ver `DELIVERY_2_1.md`
+- A/B 20: **B_ACCEPT** (18 B / 0 A / 1 tie; 0 regressions de exactitud)
 
 ## Veredicto
 
-Pendiente de corrida DEV completa → ver `DELIVERY_2_1.md` tras deploy DEV.
+Ver `DELIVERY_2_1.md` (DEV first; sin auto-promoción a prod).

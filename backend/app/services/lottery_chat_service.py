@@ -231,6 +231,28 @@ class LotteryChatService:
             understanding.params = dict(understanding.params or {})
             understanding.params.pop("run_tools", None)
 
+        # Truncated / incomplete number ask (Cert G28.T02): never inherit sticky ball.
+        incomplete_number_ask = bool(
+            re.search(r"(?i)\bmensaje\s+cortado\b", content or "")
+            or (
+                re.search(
+                    r"(?is)\bcu[aá]ndo\s+(?:sali[oó]|apareci[oó])\s+el\s*\??\s*$",
+                    (content or "").strip(),
+                )
+                and not re.search(r"\b\d{1,2}\b", content or "")
+            )
+        )
+        if incomplete_number_ask:
+            understanding.needs_clarification = True
+            understanding.missing_slots = ["number"]
+            understanding.clarification_question = (
+                "El mensaje quedó incompleto. ¿A qué número te refieres?"
+            )
+            understanding.tool = None
+            understanding.numbers = []
+            understanding.params = dict(understanding.params or {})
+            understanding.params.pop("run_tools", None)
+
         # Fase X — "nueva conversación" phrase resets filters/pending (history kept)
         if re.search(r"^\s*nueva\s+conversaci[oó]n\s*$", content or "", re.I):
             state = ConversationState(
@@ -343,6 +365,19 @@ class LotteryChatService:
                 if not understanding.missing_slots and understanding.tool:
                     understanding.needs_clarification = False
                     understanding.clarification_question = None
+        # Re-assert clarify for truncated asks (sticky inherit must not invent the ball).
+        if incomplete_number_ask:
+            understanding.needs_clarification = True
+            understanding.missing_slots = ["number"]
+            understanding.clarification_question = (
+                "El mensaje quedó incompleto. ¿A qué número te refieres?"
+            )
+            understanding.tool = None
+            understanding.numbers = []
+            understanding.params = dict(understanding.params or {})
+            understanding.params.pop("run_tools", None)
+            resolution["inherit_active_number"] = False
+            resolution["follow_up_kind"] = None
         # Deictic last_n / previous occurrences: never ask for number when subject is known
         from app.lottery.ai.turn_policy import (
             is_other_occurrences_request,

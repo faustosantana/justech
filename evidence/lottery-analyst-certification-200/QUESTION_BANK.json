@@ -4077,11 +4077,13 @@
             "44"
           ],
           "expected_intent": "ambiguous",
-          "expected_turn_type": "clarify",
-          "expected_filters": {},
-          "expected_tool_family": null,
-          "factual_validation_required": false,
-          "ambiguity_expected": true,
+          "expected_turn_type": "factual",
+          "expected_filters": {
+            "limit": 3
+          },
+          "expected_tool_family": "last_n",
+          "factual_validation_required": true,
+          "ambiguity_expected": false,
           "automatic_fail_conditions": [
             "wrong_subject",
             "invented_date",

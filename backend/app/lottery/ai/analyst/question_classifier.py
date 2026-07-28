@@ -197,7 +197,19 @@ class QuestionClassifier:
         # Lotteries named in this turn only — do not sticky-fill for last_times below
         named_lots = list(resolution.get("lotteries") or [])
         inherit_lot = False
-        if not named_lots and (state.active_filters or {}).get("lottery_explicit"):
+        # Unscoped last_occurrence after subject switch: never inherit sticky lottery
+        force_unscoped = bool(resolution.get("clear_lottery")) or (
+            resolution.get("lottery_explicit") is False
+            and resolution.get("follow_up_kind")
+            in {"last_occurrence", "first_occurrence", "last_n_occurrences"}
+            and not resolution.get("lottery_filter")
+            and not named_lots
+        )
+        if (
+            not force_unscoped
+            and not named_lots
+            and (state.active_filters or {}).get("lottery_explicit")
+        ):
             # B.2: inherit the explicit filter lottery, never a polluted multi sticky list
             single = (state.active_filters or {}).get("lottery")
             if single:
@@ -205,10 +217,10 @@ class QuestionClassifier:
             else:
                 named_lots = list(state.active_lotteries or [])[:4]
             inherit_lot = bool(named_lots)
-        if asks_all_lotteries(raw):
+        if asks_all_lotteries(raw) or force_unscoped:
             named_lots = []
             inherit_lot = False
-        lots = named_lots or list(state.active_lotteries or [])
+        lots = named_lots or ([] if force_unscoped else list(state.active_lotteries or []))
         years = [int(y) for y in cls._YEAR.findall(raw)]
         windows = sorted({int(x) for x in cls._D_WIN.findall(raw)}) or [1, 3, 7]
         pos_scope = resolution.get("position_scope")

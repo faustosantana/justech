@@ -33,6 +33,8 @@ class ConversationBrain:
             st.active_numbers = [n]
             st = self._push_focus(st, n)
 
+        from app.services.lottery_intent import _extract_lotteries
+
         nums = list(resolution.get("numbers") or understanding.numbers or [])
         if nums:
             normed = [
@@ -74,8 +76,6 @@ class ConversationBrain:
 
             # Subject / pair switch without naming a lottery → drop sticky lottery_explicit
             # so unscoped last_occurrence / same_day are not trapped in Nacional.
-            from app.services.lottery_intent import _extract_lotteries
-
             named_now = _extract_lotteries(raw_msg) if raw_msg else []
             if (
                 subject_changed
@@ -93,7 +93,36 @@ class ConversationBrain:
                     for k, v in (st.active_filters or {}).items()
                     if k not in {"lottery_explicit", "lottery"}
                 }
-                resolution = {**resolution, "clear_lottery": True, "lottery_explicit": False}
+                resolution["clear_lottery"] = True
+                resolution["lottery_explicit"] = False
+                resolution["lotteries"] = []
+                resolution.pop("lottery_filter", None)
+
+        # Unscoped last_occurrence / first_occurrence / last_n with a subject and no
+        # lottery named in the message must never keep a sticky lottery_explicit.
+        follow = resolution.get("follow_up_kind")
+        if (
+            follow in {"last_occurrence", "first_occurrence", "last_n_occurrences"}
+            and not resolution.get("lottery_explicit")
+            and not resolution.get("lottery_filter")
+            and not _extract_lotteries(raw_msg or "")
+        ):
+            filters.pop("lottery_explicit", None)
+            filters.pop("lottery", None)
+            st.active_lotteries = []
+            st.active_filters = {
+                k: v
+                for k, v in (st.active_filters or {}).items()
+                if k not in {"lottery_explicit", "lottery"}
+            }
+            resolution["clear_lottery"] = True
+            resolution["lottery_explicit"] = False
+            resolution["lotteries"] = []
+            # Drop sticky lottery list injected by understand() into this turn
+            try:
+                understanding.lotteries = []
+            except Exception:  # noqa: BLE001
+                pass
 
         lots = list(resolution.get("lotteries") or understanding.lotteries or [])
         if resolution.get("lottery_filter"):
@@ -113,6 +142,7 @@ class ConversationBrain:
                 for k, v in (st.active_filters or {}).items()
                 if k not in {"lottery_explicit", "lottery"}
             }
+            lots = []
         elif lots:
             # Explicit lottery this turn replaces sticky scope (B.2: Nacional only).
             # Do not merge prior DEFAULT lotteries into an explicit filter.

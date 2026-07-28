@@ -17,7 +17,7 @@ Read-only production certification of Lottery Analyst conversational UX against 
 | Bank path | `evidence/lottery-analyst-certification-200/QUESTION_BANK.json` |
 | Bank SHA-256 | `6d056978809140eee4af23299cbd0c78a8bae9537fbbbcd62ad50bd18c6d7931` |
 | Runtime image | `jaios-app-backend:lottery-ia-ux-v2.4.5.4-de` (`sha256:a6204913747c…`) |
-| Git commit | `9b440c3b51b9684bf48e6f31bbc23226b2994b6e` |
+| Git commit | `8061e0f458419d994bff8abd3700de4c10aa5b80` |
 
 ## 2. Gate criteria (unchanged)
 

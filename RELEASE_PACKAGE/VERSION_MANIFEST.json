@@ -7,14 +7,15 @@
   "date_utc": "2026-07-28T16:11:24Z",
   "released_at_utc": "2026-07-28T16:20:00Z",
   "git": {
-    "commit": "9b440c3b51b9684bf48e6f31bbc23226b2994b6e",
-    "commit_short": "9b440c3",
+    "commit": "8061e0f458419d994bff8abd3700de4c10aa5b80",
+    "commit_short": "8061e0f",
     "tag": "lottery-ia-ux-v2.4.5.4-certified",
-    "annotated_tag_object": "6685f083c2e8bfb3f4818341f2f27a3dff8d87dd",
     "branch_at_release": "feature/nr-complete-analysis-prediction-engine",
     "functional_fix_commit": "0d3ecb8d47744fcca4158795e7a5caeffb7afdaa",
     "prior_blocked_baseline_commit": "ec27d96ecba3267a9879861b6355cbe642f2f41e",
-    "certified_runtime_commit": "8061e0f458419d994bff8abd3700de4c10aa5b80"
+    "certified_runtime_commit": "8061e0f458419d994bff8abd3700de4c10aa5b80",
+    "release_tag": "lottery-ia-ux-v2.4.5.4-certified",
+    "note": "git.commit is the CERTIFIED runtime/evidence tip (8061e0f). Checkout tag lottery-ia-ux-v2.4.5.4-certified for full RELEASE_PACKAGE."
   },
   "docker": {
     "backend_image": "jaios-app-backend:lottery-ia-ux-v2.4.5.4-de",

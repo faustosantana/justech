@@ -7,7 +7,7 @@ Exact restore of the CERTIFIED conversational baseline.
 | Field | Value |
 |-------|-------|
 | Tag | `lottery-ia-ux-v2.4.5.4-certified` |
-| Commit | `9b440c3b51b9684bf48e6f31bbc23226b2994b6e` |
+| Commit | `8061e0f458419d994bff8abd3700de4c10aa5b80` |
 | Image | `jaios-app-backend:lottery-ia-ux-v2.4.5.4-de` |
 | Image ID | `sha256:a6204913747cc2472f2dfec4cd125b95f73fe1fd55439d6d1255c9342780af24` |
 | Seed | `20260727` |

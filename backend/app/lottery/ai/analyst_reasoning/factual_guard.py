@@ -73,7 +73,6 @@ class FactualGuard:
             except (TypeError, ValueError):
                 t = None
             if t is not None:
-                # Flag "N ocasiones/veces/coincidencias" where N != total
                 for m in re.finditer(
                     r"\b(\d{1,5})\s+(ocasiones|veces|coincidencias|apariciones)\b",
                     raw,
@@ -82,30 +81,35 @@ class FactualGuard:
                     if int(m.group(1)) != t:
                         violations.append(f"count_mismatch:{m.group(1)}!={t}")
 
-        # Subjects: if package has subjects, don't introduce many new ball numbers
+        # Subjects: strip ISO dates first so day/month fragments are not treated as balls
+        scrubbed = _ISO_DATE.sub(" ", raw)
+        scrubbed = re.sub(r"\b20\d{2}\b", " ", scrubbed)  # years
+        scrubbed = re.sub(r"\b([1-9]|1[0-2])\s+loter", " loter", scrubbed, flags=re.I)
         allowed_nums = {str(int(s)) for s in package.subjects if str(s).isdigit()}
         allowed_nums |= {s.zfill(2) for s in package.subjects if str(s).isdigit()}
+        # Allow position-like and scope count
+        soft_ok = {
+            "01", "1", "02", "2", "03", "3", "04", "4", "05", "5", "06", "6", "07", "7",
+            "08", "8", "09", "9", "10", "11", "12",
+        }
+        if total is not None:
+            try:
+                soft_ok.add(str(int(total)))
+                soft_ok.add(str(int(total)).zfill(2))
+            except (TypeError, ValueError):
+                pass
         if allowed_nums:
-            claimed = set()
-            for m in _NUMBER.finditer(raw):
+            claimed: set[str] = set()
+            for m in _NUMBER.finditer(scrubbed):
                 n = m.group(1)
-                # skip years already caught; skip totals
-                if len(n) == 4:
-                    continue
                 claimed.add(n.zfill(2))
                 claimed.add(str(int(n)))
-            # Allow official scope count "7"
-            claimed.discard("07")
-            claimed.discard("7")
-            if total is not None:
-                claimed.discard(str(int(total)))
-                claimed.discard(str(int(total)).zfill(2))
-            extras = claimed - allowed_nums - {str(int(x)) for x in allowed_nums if x.isdigit()}
-            # Soft: only fail if many extras (avoid false positives on positions 1,2,3)
-            soft_ok = {"01", "1", "02", "2", "03", "3", "04", "4"}
+            extras = claimed - allowed_nums - {str(int(x)) for x in allowed_nums if str(x).isdigit()}
             hard_extras = extras - soft_ok
-            if len(hard_extras) >= 3:
-                violations.append(f"extra_subjects:{sorted(hard_extras)[:6]}")
+            # Only fail on clearly alien 2-digit balls (13–99) not in subjects
+            alien = {x for x in hard_extras if x.isdigit() and 13 <= int(x) <= 99}
+            if len(alien) >= 2:
+                violations.append(f"extra_subjects:{sorted(alien)[:6]}")
 
         # Lottery names: if a known official DB name pattern appears that's not official → already external
         # Soft check: "Quiniela X" / "Loteria X" must be official if present

@@ -1204,6 +1204,30 @@ async def delete_export(
     return {"ok": True}
 
 
+@router.get("/workspace/exports/{storage_name}/download")
+async def download_workspace_export(
+    storage_name: str,
+    user: CurrentUser,
+    _: Annotated[None, require_lottery_permission("lottery.chat")],
+):
+    """Download Investigation Workspace XLSX (MVP)."""
+    from fastapi.responses import Response
+
+    from app.core.content_disposition import build_content_disposition
+    from app.lottery.ai.investigation_workspace.handler import resolve_export_file
+
+    path = resolve_export_file(storage_name)
+    if path is None:
+        raise HTTPException(status_code=404, detail="Export not found")
+    # Prefer friendly name if encoded in adjacent meta — fallback to storage name
+    filename = path.name.replace("ws_", "workspace-", 1)
+    return Response(
+        content=path.read_bytes(),
+        media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        headers={"Content-Disposition": build_content_disposition("attachment", filename)},
+    )
+
+
 @router.get("/me/home")
 async def lottery_client_home_hint(
     user: CurrentUser,

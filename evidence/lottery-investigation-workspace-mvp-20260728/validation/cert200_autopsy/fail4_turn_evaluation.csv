@@ -1,0 +1,5 @@
+case_id,category,PASS_FAIL,mean_score,exactitud,continuidad,naturalidad,claridad,ambiguedad,prudencia,http,latency_ms,failures
+LONG_30.T09,B,FAIL,3.167,0.0,5.0,3.5,3.5,4.7,4.4,200,2021,wrong_subject
+LONG_30.T10,B,FAIL,3.167,0.0,5.0,3.5,3.5,4.7,4.4,200,53,wrong_subject
+G03.T03,B,FAIL,3.167,0.0,5.0,3.5,3.5,4.7,4.4,200,31,wrong_subject
+G20.T07,H,FAIL,3.167,0.0,5.0,3.5,3.5,4.7,4.4,200,32,wrong_subject|wrong_or_missing_date

@@ -1,0 +1,65 @@
+{
+  "rerun_at": "2026-07-29T01:33:55.800059+00:00",
+  "turns": [
+    {
+      "turn": 1,
+      "user": "¿Cuántas veces coincidieron el 35 y el 14 el mismo día?",
+      "sql_total": 122
+    },
+    {
+      "turn": 2,
+      "user": "Muéstrame esos resultados",
+      "action": "show_results",
+      "row_count": 122,
+      "structured_type": "investigation_workspace_table",
+      "download_url": null,
+      "filename": null
+    },
+    {
+      "turn": 3,
+      "user": "Filtra solo Loteka",
+      "action": "filter_results",
+      "row_count": 28,
+      "structured_type": "investigation_workspace_table",
+      "download_url": null,
+      "filename": null
+    },
+    {
+      "turn": 4,
+      "user": "Ordénalos por fecha",
+      "action": "sort_results",
+      "row_count": 28,
+      "structured_type": "investigation_workspace_table",
+      "download_url": null,
+      "filename": null
+    },
+    {
+      "turn": 5,
+      "user": "Exporta a Excel",
+      "action": "export_results",
+      "row_count": 28,
+      "structured_type": "investigation_workspace_export",
+      "download_url": "/api/v1/lottery/workspace/exports/ws_f4239d47813c4ebd_c885b09fc5.xlsx/download",
+      "filename": "workspace-35-14-f4239d47.xlsx"
+    }
+  ],
+  "sql_total": 122,
+  "excel": {
+    "filename": "workspace-35-14-f4239d47.xlsx",
+    "storage_name": "ws_f4239d47813c4ebd_c885b09fc5.xlsx",
+    "row_count": 28,
+    "download_url": "/api/v1/lottery/workspace/exports/ws_f4239d47813c4ebd_c885b09fc5.xlsx/download",
+    "path": "/Users/faustosantana/Projects/justech-forensic-audit/evidence/lottery-investigation-workspace-mvp-20260728/MVP_EXPORT_35_14_Loteka_RERUN.xlsx",
+    "sheet_rows": 28
+  },
+  "checks": {
+    "sql_total": 122,
+    "show_rows": 122,
+    "sql_eq_show": true,
+    "export_row_count": 28,
+    "excel_sheet_rows": 28,
+    "export_eq_filtered": true,
+    "baseline_dev_documented": 122,
+    "sql_matches_baseline_dev": true
+  }
+}

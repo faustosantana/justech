@@ -120,6 +120,9 @@ class ConversationState(BaseModel):
     force_local_template: bool = False
     # Analyst 2.0 — structured Active Investigation Session (10 min TTL)
     active_investigation: dict[str, Any] = Field(default_factory=dict)
+    # Investigation Workspace 1.0 — operable assets
+    workspace_assets: dict[str, Any] = Field(default_factory=dict)
+    active_asset_id: str | None = None
 
     def to_store(self) -> dict[str, Any]:
         return self.model_dump(mode="json")

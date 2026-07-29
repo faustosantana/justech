@@ -1,0 +1,705 @@
+{
+  "started_at": "2026-07-29T01:26:01.383103+00:00",
+  "turns": [
+    {
+      "turn": 1,
+      "user": "¿Cuántas veces coincidieron el 35 y el 14 el mismo día?",
+      "kind": "research_count",
+      "total": 122,
+      "items_returned": 122,
+      "answer_summary": "Total same-day coincidences (official scope): 122",
+      "hermes": null,
+      "provider": "sql_research"
+    },
+    {
+      "turn": 2,
+      "user": "Muéstrame esos resultados",
+      "hermes": {
+        "hermes_decision_id": "710301904cc1",
+        "turn_type": "asset_action",
+        "refers_to": null,
+        "requested_attribute": "show_results",
+        "inherited_subjects": [
+          "35",
+          "14"
+        ],
+        "inherited_metric": "same_day",
+        "inherited_relation": "same_day",
+        "requires_research": false,
+        "reuse_evidence": false,
+        "confidence": "high",
+        "reason_code": "show_results",
+        "ambiguous": false,
+        "reasoning_mode": "skip",
+        "workspace_action": {
+          "turn_type": "asset_action",
+          "action": "show_results",
+          "asset_id": null,
+          "filters": {
+            "lottery": null,
+            "date_from": null,
+            "date_to": null,
+            "position": null,
+            "number": null,
+            "same_lottery": null,
+            "same_position": null,
+            "limit": null
+          },
+          "sort": null,
+          "pagination": null,
+          "export_format": null,
+          "requires_sql": false,
+          "requires_asset_load": true,
+          "requires_huawei": false,
+          "confidence": "high",
+          "reason_code": "show_results"
+        }
+      },
+      "action": "show_results",
+      "row_count": 122,
+      "filters": {},
+      "sort": {
+        "field": "fecha",
+        "direction": "desc"
+      },
+      "pagination": {
+        "page": 1,
+        "page_size": 20,
+        "total_pages": 7
+      },
+      "structured_type": "investigation_workspace_table",
+      "download_url": null,
+      "filename": null,
+      "storage_name": null,
+      "table_preview_rows": [
+        {
+          "fecha": "2026-07-23",
+          "loteria": "New York 10:30",
+          "loteria_a": "New York 10:30",
+          "loteria_b": "Quiniela Leidsa",
+          "numero_a": "35",
+          "posicion_a": "1ra posición",
+          "posicion_a_num": 1,
+          "numero_b": "14",
+          "posicion_b": "2da posición",
+          "posicion_b_num": 2,
+          "tipo_coincidencia": "misma_fecha"
+        },
+        {
+          "fecha": "2026-07-22",
+          "loteria": "New York 2:30",
+          "loteria_a": "New York 2:30",
+          "loteria_b": "Quiniela Leidsa",
+          "numero_a": "35",
+          "posicion_a": "1ra posición",
+          "posicion_a_num": 1,
+          "numero_b": "14",
+          "posicion_b": "2da posición",
+          "posicion_b_num": 2,
+          "tipo_coincidencia": "misma_fecha"
+        },
+        {
+          "fecha": "2026-07-20",
+          "loteria": "Loteria Nacional",
+          "loteria_a": "Loteria Nacional",
+          "loteria_b": "Quiniela Loteka",
+          "numero_a": "35",
+          "posicion_a": "1ra posición",
+          "posicion_a_num": 1,
+          "numero_b": "14",
+          "posicion_b": "2da posición",
+          "posicion_b_num": 2,
+          "tipo_coincidencia": "misma_fecha"
+        },
+        {
+          "fecha": "2026-06-23",
+          "loteria": "Loteria Nacional",
+          "loteria_a": "Loteria Nacional",
+          "loteria_b": "Quiniela Loteka",
+          "numero_a": "35",
+          "posicion_a": "1ra posición",
+          "posicion_a_num": 1,
+          "numero_b": "14",
+          "posicion_b": "1ra posición",
+          "posicion_b_num": 1,
+          "tipo_coincidencia": "misma_fecha"
+        },
+        {
+          "fecha": "2026-05-29",
+          "loteria": "Quiniela Loteka",
+          "loteria_a": "Quiniela Loteka",
+          "loteria_b": "New York 2:30",
+          "numero_a": "35",
+          "posicion_a": "3ra posición",
+          "posicion_a_num": 3,
+          "numero_b": "14",
+          "posicion_b": "2da posición",
+          "posicion_b_num": 2,
+          "tipo_coincidencia": "misma_fecha"
+        },
+        {
+          "fecha": "2026-04-17",
+          "loteria": "Quiniela Real",
+          "loteria_a": "Quiniela Real",
+          "loteria_b": "Quiniela Loteka",
+          "numero_a": "35",
+          "posicion_a": "3ra posición",
+          "posicion_a_num": 3,
+          "numero_b": "14",
+          "posicion_b": "2da posición",
+          "posicion_b_num": 2,
+          "tipo_coincidencia": "misma_fecha"
+        },
+        {
+          "fecha": "2026-03-07",
+          "loteria": "Quiniela Loteka",
+          "loteria_a": "Quiniela Loteka",
+          "loteria_b": "Quiniela Loteka",
+          "numero_a": "35",
+          "posicion_a": "2da posición",
+          "posicion_a_num": 2,
+          "numero_b": "14",
+          "posicion_b": "3ra posición",
+          "posicion_b_num": 3,
+          "tipo_coincidencia": "misma_loteria"
+        },
+        {
+          "fecha": "2026-03-06",
+          "loteria": "New York 2:30",
+          "loteria_a": "New York 2:30",
+          "loteria_b": "Quiniela Real",
+          "numero_a": "35",
+          "posicion_a": "2da posición",
+          "posicion_a_num": 2,
+          "numero_b": "14",
+          "posicion_b": "3ra posición",
+          "posicion_b_num": 3,
+          "tipo_coincidencia": "misma_fecha"
+        }
+      ],
+      "answer": "Tabla de coincidencias same-day (35 y 14): 122 fila(s).\nOrden: fecha desc.\n\n| fecha | loteria | numero_a | posicion_a | numero_b | posicion_b | tipo_coincidencia |\n| --- | --- | --- | --- | --- | --- | --- |\n| 2026-07-23 | New York 10:30 | 35 | 1ra posición | 14 | 2da posición | misma_fecha |\n| 2026-07-22 | New York 2:30 | 35 | 1ra posición | 14 | 2da posición | misma_fecha |\n| 2026-07-20 | Loteria Nacional | 35 | 1ra posición | 14 | 2da posición | misma_fecha |\n| 2026-06-23 | Loteria Nacional | 35 | 1ra posición | 14 | 1ra posición | misma_fecha |\n| 2026-05-29 | Quiniela Loteka | 35 | 3ra posición | 14 | 2da posición | misma_fecha |\n| 2026-04-17 | Quiniela Real | 35 | 3ra posición | 14 | 2da posición | misma_fecha |\n| 2026-03-07 | Quiniela Loteka | 35 | 2da posición | 14 | 3ra posición | misma_loteria |\n| 2026-03-06 | New York 2:30 | 35 | 2da posición | 14 | 3ra posición | misma_fecha |\n| 2026-02-02 | Loteria Nacional | 35 | 1ra posición | 14 | 2da posición | misma_fecha |\n| 2026-01-23 | New York 10:30 | 35 | 3ra posición | 14 | 3ra posición | misma_fecha |\n| 2025-12-14 | New York 2:30 | 35 | 1ra posición | 14 | 1ra posición | misma_fecha |\n| 2025-10-27 | Quiniela Leidsa | 35 | 1ra posición | 14 | 2da posición | misma_fecha |\n| 2025-10-20 | Quiniela Real | 35 | 2da posición | 14 | 2da posición | misma_fecha |\n| 2025-08-22 | Gana Mas | 35 | 1ra posición | 14 | 1ra posición | misma_fecha |\n| 2025-08-15 | Quiniela Leidsa | 35 | 3ra posición | 14 | 1ra posición | misma_fecha |\n| 2025-08-08 | Quiniela Real | 35 | 3ra posición | 14 | 1ra posición | misma_fecha |\n| 2025-08-04 | Gana Mas | 35 | 2da posición | 14 | 1ra posición | misma_loteria |\n| 2025-06-27 | Quiniela Real | 35 | 1ra posición | 14 | 3ra posición | misma_fecha |\n| 2025-05-18 | Quiniela Leidsa | 35 | 3ra posición | 14 | 1ra posición | misma_fecha |\n| 2025-04-20 | Quiniela Loteka | 35 | 3ra posición | 14 | 3ra posición | misma_fecha |\n\nControles: Ver tabla · Filtrar · Ordenar · Exportar Excel · Ver resumen · Ver más",
+      "provider": "investigation_workspace"
+    },
+    {
+      "turn": 3,
+      "user": "Filtra solo Loteka",
+      "hermes": {
+        "hermes_decision_id": "92946198ea6d",
+        "turn_type": "asset_action",
+        "refers_to": null,
+        "requested_attribute": "filter_results",
+        "inherited_subjects": [
+          "35",
+          "14"
+        ],
+        "inherited_metric": "same_day",
+        "inherited_relation": "same_day",
+        "requires_research": false,
+        "reuse_evidence": false,
+        "confidence": "high",
+        "reason_code": "filter_lottery",
+        "ambiguous": false,
+        "reasoning_mode": "skip",
+        "workspace_action": {
+          "turn_type": "asset_action",
+          "action": "filter_results",
+          "asset_id": null,
+          "filters": {
+            "lottery": "Loteka",
+            "date_from": null,
+            "date_to": null,
+            "position": null,
+            "number": null,
+            "same_lottery": null,
+            "same_position": null,
+            "limit": null
+          },
+          "sort": null,
+          "pagination": null,
+          "export_format": null,
+          "requires_sql": false,
+          "requires_asset_load": true,
+          "requires_huawei": false,
+          "confidence": "high",
+          "reason_code": "filter_lottery"
+        }
+      },
+      "action": "filter_results",
+      "row_count": 28,
+      "filters": {
+        "lottery": "Loteka"
+      },
+      "sort": {
+        "field": "fecha",
+        "direction": "desc"
+      },
+      "pagination": {
+        "page": 1,
+        "page_size": 20,
+        "total_pages": 2
+      },
+      "structured_type": "investigation_workspace_table",
+      "download_url": null,
+      "filename": null,
+      "storage_name": null,
+      "table_preview_rows": [
+        {
+          "fecha": "2026-07-20",
+          "loteria": "Loteria Nacional",
+          "loteria_a": "Loteria Nacional",
+          "loteria_b": "Quiniela Loteka",
+          "numero_a": "35",
+          "posicion_a": "1ra posición",
+          "posicion_a_num": 1,
+          "numero_b": "14",
+          "posicion_b": "2da posición",
+          "posicion_b_num": 2,
+          "tipo_coincidencia": "misma_fecha"
+        },
+        {
+          "fecha": "2026-06-23",
+          "loteria": "Loteria Nacional",
+          "loteria_a": "Loteria Nacional",
+          "loteria_b": "Quiniela Loteka",
+          "numero_a": "35",
+          "posicion_a": "1ra posición",
+          "posicion_a_num": 1,
+          "numero_b": "14",
+          "posicion_b": "1ra posición",
+          "posicion_b_num": 1,
+          "tipo_coincidencia": "misma_fecha"
+        },
+        {
+          "fecha": "2026-05-29",
+          "loteria": "Quiniela Loteka",
+          "loteria_a": "Quiniela Loteka",
+          "loteria_b": "New York 2:30",
+          "numero_a": "35",
+          "posicion_a": "3ra posición",
+          "posicion_a_num": 3,
+          "numero_b": "14",
+          "posicion_b": "2da posición",
+          "posicion_b_num": 2,
+          "tipo_coincidencia": "misma_fecha"
+        },
+        {
+          "fecha": "2026-04-17",
+          "loteria": "Quiniela Real",
+          "loteria_a": "Quiniela Real",
+          "loteria_b": "Quiniela Loteka",
+          "numero_a": "35",
+          "posicion_a": "3ra posición",
+          "posicion_a_num": 3,
+          "numero_b": "14",
+          "posicion_b": "2da posición",
+          "posicion_b_num": 2,
+          "tipo_coincidencia": "misma_fecha"
+        },
+        {
+          "fecha": "2026-03-07",
+          "loteria": "Quiniela Loteka",
+          "loteria_a": "Quiniela Loteka",
+          "loteria_b": "Quiniela Loteka",
+          "numero_a": "35",
+          "posicion_a": "2da posición",
+          "posicion_a_num": 2,
+          "numero_b": "14",
+          "posicion_b": "3ra posición",
+          "posicion_b_num": 3,
+          "tipo_coincidencia": "misma_loteria"
+        },
+        {
+          "fecha": "2025-10-20",
+          "loteria": "Quiniela Real",
+          "loteria_a": "Quiniela Real",
+          "loteria_b": "Quiniela Loteka",
+          "numero_a": "35",
+          "posicion_a": "2da posición",
+          "posicion_a_num": 2,
+          "numero_b": "14",
+          "posicion_b": "2da posición",
+          "posicion_b_num": 2,
+          "tipo_coincidencia": "misma_fecha"
+        },
+        {
+          "fecha": "2025-04-20",
+          "loteria": "Quiniela Loteka",
+          "loteria_a": "Quiniela Loteka",
+          "loteria_b": "Quiniela Leidsa",
+          "numero_a": "35",
+          "posicion_a": "3ra posición",
+          "posicion_a_num": 3,
+          "numero_b": "14",
+          "posicion_b": "3ra posición",
+          "posicion_b_num": 3,
+          "tipo_coincidencia": "misma_fecha"
+        },
+        {
+          "fecha": "2025-03-17",
+          "loteria": "Loteria Nacional",
+          "loteria_a": "Loteria Nacional",
+          "loteria_b": "Quiniela Loteka",
+          "numero_a": "35",
+          "posicion_a": "2da posición",
+          "posicion_a_num": 2,
+          "numero_b": "14",
+          "posicion_b": "3ra posición",
+          "posicion_b_num": 3,
+          "tipo_coincidencia": "misma_fecha"
+        }
+      ],
+      "answer": "Filtré la tabla a «Loteka»: 28 fila(s).\nFiltros activos: {'lottery': 'Loteka'}.\nOrden: fecha desc.\n\n| fecha | loteria | numero_a | posicion_a | numero_b | posicion_b | tipo_coincidencia |\n| --- | --- | --- | --- | --- | --- | --- |\n| 2026-07-20 | Loteria Nacional | 35 | 1ra posición | 14 | 2da posición | misma_fecha |\n| 2026-06-23 | Loteria Nacional | 35 | 1ra posición | 14 | 1ra posición | misma_fecha |\n| 2026-05-29 | Quiniela Loteka | 35 | 3ra posición | 14 | 2da posición | misma_fecha |\n| 2026-04-17 | Quiniela Real | 35 | 3ra posición | 14 | 2da posición | misma_fecha |\n| 2026-03-07 | Quiniela Loteka | 35 | 2da posición | 14 | 3ra posición | misma_loteria |\n| 2025-10-20 | Quiniela Real | 35 | 2da posición | 14 | 2da posición | misma_fecha |\n| 2025-04-20 | Quiniela Loteka | 35 | 3ra posición | 14 | 3ra posición | misma_fecha |\n| 2025-03-17 | Loteria Nacional | 35 | 2da posición | 14 | 3ra posición | misma_fecha |\n| 2024-01-23 | Quiniela Loteka | 35 | 2da posición | 14 | 1ra posición | misma_fecha |\n| 2024-01-21 | Quiniela Loteka | 35 | 1ra posición | 14 | 1ra posición | misma_fecha |\n| 2021-07-11 | Loteria Nacional | 35 | 2da posición | 14 | 3ra posición | misma_fecha |\n| 2020-10-22 | Quiniela Loteka | 35 | 2da posición | 14 | 1ra posición | misma_loteria |\n| 2020-03-17 | Quiniela Leidsa | 35 | 2da posición | 14 | 2da posición | misma_fecha |\n| 2019-07-05 | Quiniela Loteka | 35 | 3ra posición | 14 | 3ra posición | misma_fecha |\n| 2019-05-19 | New York 2:30 | 35 | 3ra posición | 14 | 2da posición | misma_fecha |\n| 2019-04-23 | Quiniela Loteka | 35 | 3ra posición | 14 | 1ra posición | misma_fecha |\n| 2019-03-31 | Quiniela Loteka | 35 | 3ra posición | 14 | 1ra posición | misma_fecha |\n| 2018-10-10 | New York 10:30 | 35 | 2da posición | 14 | 2da posición | misma_fecha |\n| 2018-08-21 | Quiniela Loteka | 35 | 1ra posición | 14 | 2da posición | misma_loteria |\n| 2018-07-26 | Quiniela Loteka | 35 | 3ra posición | 14 | 2da posición | misma_fecha |\n\nControles: Ver tabla · Filtrar · Ordenar · Exportar Excel · Ver resumen · Ver más",
+      "provider": "investigation_workspace"
+    },
+    {
+      "turn": 4,
+      "user": "Ordénalos por fecha",
+      "hermes": {
+        "hermes_decision_id": "86203e273787",
+        "turn_type": "asset_action",
+        "refers_to": null,
+        "requested_attribute": "sort_results",
+        "inherited_subjects": [
+          "35",
+          "14"
+        ],
+        "inherited_metric": "same_day",
+        "inherited_relation": "same_day",
+        "requires_research": false,
+        "reuse_evidence": false,
+        "confidence": "high",
+        "reason_code": "sort_results",
+        "ambiguous": false,
+        "reasoning_mode": "skip",
+        "workspace_action": {
+          "turn_type": "asset_action",
+          "action": "sort_results",
+          "asset_id": null,
+          "filters": {
+            "lottery": null,
+            "date_from": null,
+            "date_to": null,
+            "position": null,
+            "number": null,
+            "same_lottery": null,
+            "same_position": null,
+            "limit": null
+          },
+          "sort": {
+            "field": "fecha",
+            "direction": "desc"
+          },
+          "pagination": null,
+          "export_format": null,
+          "requires_sql": false,
+          "requires_asset_load": true,
+          "requires_huawei": false,
+          "confidence": "high",
+          "reason_code": "sort_results"
+        }
+      },
+      "action": "sort_results",
+      "row_count": 28,
+      "filters": {
+        "lottery": "Loteka"
+      },
+      "sort": {
+        "field": "fecha",
+        "direction": "desc"
+      },
+      "pagination": {
+        "page": 1,
+        "page_size": 20,
+        "total_pages": 2
+      },
+      "structured_type": "investigation_workspace_table",
+      "download_url": null,
+      "filename": null,
+      "storage_name": null,
+      "table_preview_rows": [
+        {
+          "fecha": "2026-07-20",
+          "loteria": "Loteria Nacional",
+          "loteria_a": "Loteria Nacional",
+          "loteria_b": "Quiniela Loteka",
+          "numero_a": "35",
+          "posicion_a": "1ra posición",
+          "posicion_a_num": 1,
+          "numero_b": "14",
+          "posicion_b": "2da posición",
+          "posicion_b_num": 2,
+          "tipo_coincidencia": "misma_fecha"
+        },
+        {
+          "fecha": "2026-06-23",
+          "loteria": "Loteria Nacional",
+          "loteria_a": "Loteria Nacional",
+          "loteria_b": "Quiniela Loteka",
+          "numero_a": "35",
+          "posicion_a": "1ra posición",
+          "posicion_a_num": 1,
+          "numero_b": "14",
+          "posicion_b": "1ra posición",
+          "posicion_b_num": 1,
+          "tipo_coincidencia": "misma_fecha"
+        },
+        {
+          "fecha": "2026-05-29",
+          "loteria": "Quiniela Loteka",
+          "loteria_a": "Quiniela Loteka",
+          "loteria_b": "New York 2:30",
+          "numero_a": "35",
+          "posicion_a": "3ra posición",
+          "posicion_a_num": 3,
+          "numero_b": "14",
+          "posicion_b": "2da posición",
+          "posicion_b_num": 2,
+          "tipo_coincidencia": "misma_fecha"
+        },
+        {
+          "fecha": "2026-04-17",
+          "loteria": "Quiniela Real",
+          "loteria_a": "Quiniela Real",
+          "loteria_b": "Quiniela Loteka",
+          "numero_a": "35",
+          "posicion_a": "3ra posición",
+          "posicion_a_num": 3,
+          "numero_b": "14",
+          "posicion_b": "2da posición",
+          "posicion_b_num": 2,
+          "tipo_coincidencia": "misma_fecha"
+        },
+        {
+          "fecha": "2026-03-07",
+          "loteria": "Quiniela Loteka",
+          "loteria_a": "Quiniela Loteka",
+          "loteria_b": "Quiniela Loteka",
+          "numero_a": "35",
+          "posicion_a": "2da posición",
+          "posicion_a_num": 2,
+          "numero_b": "14",
+          "posicion_b": "3ra posición",
+          "posicion_b_num": 3,
+          "tipo_coincidencia": "misma_loteria"
+        },
+        {
+          "fecha": "2025-10-20",
+          "loteria": "Quiniela Real",
+          "loteria_a": "Quiniela Real",
+          "loteria_b": "Quiniela Loteka",
+          "numero_a": "35",
+          "posicion_a": "2da posición",
+          "posicion_a_num": 2,
+          "numero_b": "14",
+          "posicion_b": "2da posición",
+          "posicion_b_num": 2,
+          "tipo_coincidencia": "misma_fecha"
+        },
+        {
+          "fecha": "2025-04-20",
+          "loteria": "Quiniela Loteka",
+          "loteria_a": "Quiniela Loteka",
+          "loteria_b": "Quiniela Leidsa",
+          "numero_a": "35",
+          "posicion_a": "3ra posición",
+          "posicion_a_num": 3,
+          "numero_b": "14",
+          "posicion_b": "3ra posición",
+          "posicion_b_num": 3,
+          "tipo_coincidencia": "misma_fecha"
+        },
+        {
+          "fecha": "2025-03-17",
+          "loteria": "Loteria Nacional",
+          "loteria_a": "Loteria Nacional",
+          "loteria_b": "Quiniela Loteka",
+          "numero_a": "35",
+          "posicion_a": "2da posición",
+          "posicion_a_num": 2,
+          "numero_b": "14",
+          "posicion_b": "3ra posición",
+          "posicion_b_num": 3,
+          "tipo_coincidencia": "misma_fecha"
+        }
+      ],
+      "answer": "Ordené por fecha (desc). 28 fila(s).\nFiltros activos: {'lottery': 'Loteka'}.\nOrden: fecha desc.\n\n| fecha | loteria | numero_a | posicion_a | numero_b | posicion_b | tipo_coincidencia |\n| --- | --- | --- | --- | --- | --- | --- |\n| 2026-07-20 | Loteria Nacional | 35 | 1ra posición | 14 | 2da posición | misma_fecha |\n| 2026-06-23 | Loteria Nacional | 35 | 1ra posición | 14 | 1ra posición | misma_fecha |\n| 2026-05-29 | Quiniela Loteka | 35 | 3ra posición | 14 | 2da posición | misma_fecha |\n| 2026-04-17 | Quiniela Real | 35 | 3ra posición | 14 | 2da posición | misma_fecha |\n| 2026-03-07 | Quiniela Loteka | 35 | 2da posición | 14 | 3ra posición | misma_loteria |\n| 2025-10-20 | Quiniela Real | 35 | 2da posición | 14 | 2da posición | misma_fecha |\n| 2025-04-20 | Quiniela Loteka | 35 | 3ra posición | 14 | 3ra posición | misma_fecha |\n| 2025-03-17 | Loteria Nacional | 35 | 2da posición | 14 | 3ra posición | misma_fecha |\n| 2024-01-23 | Quiniela Loteka | 35 | 2da posición | 14 | 1ra posición | misma_fecha |\n| 2024-01-21 | Quiniela Loteka | 35 | 1ra posición | 14 | 1ra posición | misma_fecha |\n| 2021-07-11 | Loteria Nacional | 35 | 2da posición | 14 | 3ra posición | misma_fecha |\n| 2020-10-22 | Quiniela Loteka | 35 | 2da posición | 14 | 1ra posición | misma_loteria |\n| 2020-03-17 | Quiniela Leidsa | 35 | 2da posición | 14 | 2da posición | misma_fecha |\n| 2019-07-05 | Quiniela Loteka | 35 | 3ra posición | 14 | 3ra posición | misma_fecha |\n| 2019-05-19 | New York 2:30 | 35 | 3ra posición | 14 | 2da posición | misma_fecha |\n| 2019-04-23 | Quiniela Loteka | 35 | 3ra posición | 14 | 1ra posición | misma_fecha |\n| 2019-03-31 | Quiniela Loteka | 35 | 3ra posición | 14 | 1ra posición | misma_fecha |\n| 2018-10-10 | New York 10:30 | 35 | 2da posición | 14 | 2da posición | misma_fecha |\n| 2018-08-21 | Quiniela Loteka | 35 | 1ra posición | 14 | 2da posición | misma_loteria |\n| 2018-07-26 | Quiniela Loteka | 35 | 3ra posición | 14 | 2da posición | misma_fecha |\n\nControles: Ver tabla · Filtrar · Ordenar · Exportar Excel · Ver resumen · Ver más",
+      "provider": "investigation_workspace"
+    },
+    {
+      "turn": 5,
+      "user": "Exporta a Excel",
+      "hermes": {
+        "hermes_decision_id": "cb9e8af321d3",
+        "turn_type": "asset_action",
+        "refers_to": null,
+        "requested_attribute": "export_results",
+        "inherited_subjects": [
+          "35",
+          "14"
+        ],
+        "inherited_metric": "same_day",
+        "inherited_relation": "same_day",
+        "requires_research": false,
+        "reuse_evidence": false,
+        "confidence": "high",
+        "reason_code": "export_xlsx",
+        "ambiguous": false,
+        "reasoning_mode": "skip",
+        "workspace_action": {
+          "turn_type": "asset_action",
+          "action": "export_results",
+          "asset_id": null,
+          "filters": {
+            "lottery": null,
+            "date_from": null,
+            "date_to": null,
+            "position": null,
+            "number": null,
+            "same_lottery": null,
+            "same_position": null,
+            "limit": null
+          },
+          "sort": null,
+          "pagination": null,
+          "export_format": "xlsx",
+          "requires_sql": false,
+          "requires_asset_load": true,
+          "requires_huawei": false,
+          "confidence": "high",
+          "reason_code": "export_xlsx"
+        }
+      },
+      "action": "export_results",
+      "row_count": 28,
+      "filters": {
+        "lottery": "Loteka"
+      },
+      "sort": {
+        "field": "fecha",
+        "direction": "desc"
+      },
+      "pagination": {
+        "page": 1,
+        "page_size": 20,
+        "total_pages": 2
+      },
+      "structured_type": "investigation_workspace_export",
+      "download_url": "/api/v1/lottery/workspace/exports/ws_4a09a51084ad42a8_c35048e483.xlsx/download",
+      "filename": "workspace-35-14-4a09a510.xlsx",
+      "storage_name": "ws_4a09a51084ad42a8_c35048e483.xlsx",
+      "table_preview_rows": [
+        {
+          "fecha": "2026-07-20",
+          "loteria": "Loteria Nacional",
+          "loteria_a": "Loteria Nacional",
+          "loteria_b": "Quiniela Loteka",
+          "numero_a": "35",
+          "posicion_a": "1ra posición",
+          "posicion_a_num": 1,
+          "numero_b": "14",
+          "posicion_b": "2da posición",
+          "posicion_b_num": 2,
+          "tipo_coincidencia": "misma_fecha"
+        },
+        {
+          "fecha": "2026-06-23",
+          "loteria": "Loteria Nacional",
+          "loteria_a": "Loteria Nacional",
+          "loteria_b": "Quiniela Loteka",
+          "numero_a": "35",
+          "posicion_a": "1ra posición",
+          "posicion_a_num": 1,
+          "numero_b": "14",
+          "posicion_b": "1ra posición",
+          "posicion_b_num": 1,
+          "tipo_coincidencia": "misma_fecha"
+        },
+        {
+          "fecha": "2026-05-29",
+          "loteria": "Quiniela Loteka",
+          "loteria_a": "Quiniela Loteka",
+          "loteria_b": "New York 2:30",
+          "numero_a": "35",
+          "posicion_a": "3ra posición",
+          "posicion_a_num": 3,
+          "numero_b": "14",
+          "posicion_b": "2da posición",
+          "posicion_b_num": 2,
+          "tipo_coincidencia": "misma_fecha"
+        },
+        {
+          "fecha": "2026-04-17",
+          "loteria": "Quiniela Real",
+          "loteria_a": "Quiniela Real",
+          "loteria_b": "Quiniela Loteka",
+          "numero_a": "35",
+          "posicion_a": "3ra posición",
+          "posicion_a_num": 3,
+          "numero_b": "14",
+          "posicion_b": "2da posición",
+          "posicion_b_num": 2,
+          "tipo_coincidencia": "misma_fecha"
+        },
+        {
+          "fecha": "2026-03-07",
+          "loteria": "Quiniela Loteka",
+          "loteria_a": "Quiniela Loteka",
+          "loteria_b": "Quiniela Loteka",
+          "numero_a": "35",
+          "posicion_a": "2da posición",
+          "posicion_a_num": 2,
+          "numero_b": "14",
+          "posicion_b": "3ra posición",
+          "posicion_b_num": 3,
+          "tipo_coincidencia": "misma_loteria"
+        },
+        {
+          "fecha": "2025-10-20",
+          "loteria": "Quiniela Real",
+          "loteria_a": "Quiniela Real",
+          "loteria_b": "Quiniela Loteka",
+          "numero_a": "35",
+          "posicion_a": "2da posición",
+          "posicion_a_num": 2,
+          "numero_b": "14",
+          "posicion_b": "2da posición",
+          "posicion_b_num": 2,
+          "tipo_coincidencia": "misma_fecha"
+        },
+        {
+          "fecha": "2025-04-20",
+          "loteria": "Quiniela Loteka",
+          "loteria_a": "Quiniela Loteka",
+          "loteria_b": "Quiniela Leidsa",
+          "numero_a": "35",
+          "posicion_a": "3ra posición",
+          "posicion_a_num": 3,
+          "numero_b": "14",
+          "posicion_b": "3ra posición",
+          "posicion_b_num": 3,
+          "tipo_coincidencia": "misma_fecha"
+        },
+        {
+          "fecha": "2025-03-17",
+          "loteria": "Loteria Nacional",
+          "loteria_a": "Loteria Nacional",
+          "loteria_b": "Quiniela Loteka",
+          "numero_a": "35",
+          "posicion_a": "2da posición",
+          "posicion_a_num": 2,
+          "numero_b": "14",
+          "posicion_b": "3ra posición",
+          "posicion_b_num": 3,
+          "tipo_coincidencia": "misma_fecha"
+        }
+      ],
+      "answer": "Exportación lista: **workspace-35-14-4a09a510.xlsx** (28 fila(s)).\n\nFiltros: {'lottery': 'Loteka'}.\nOrden: {'field': 'fecha', 'direction': 'desc'}.\n\nDescarga: /api/v1/lottery/workspace/exports/ws_4a09a51084ad42a8_c35048e483.xlsx/download",
+      "provider": "investigation_workspace"
+    }
+  ],
+  "db": "jaios_lottery_dev@5433",
+  "finished_at": "2026-07-29T01:26:04.460631+00:00",
+  "exports_dir": "/Users/faustosantana/Projects/justech-forensic-audit/evidence/lottery-investigation-workspace-mvp-20260728/exports",
+  "excel_copy": "/Users/faustosantana/Projects/justech-forensic-audit/evidence/lottery-investigation-workspace-mvp-20260728/MVP_EXPORT_35_14_Loteka.xlsx",
+  "excel_bytes": 6888
+}

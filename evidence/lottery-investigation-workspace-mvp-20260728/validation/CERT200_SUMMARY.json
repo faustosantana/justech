@@ -1,0 +1,63 @@
+{
+  "audit_run_id": "cert200-20260729T022419Z-a42b3a17",
+  "finished_at": "2026-07-29T02:49:54.773738+00:00",
+  "pass": 196,
+  "fail": 4,
+  "total_turns_recorded": 200,
+  "global_mean": 4.5371999999999995,
+  "exactitud_factual_mean": 4.9,
+  "continuidad_mean": 5.0,
+  "naturalidad_mean": 4.577999999999999,
+  "interpretacion_mean": 4.4,
+  "claridad_mean": 4.48,
+  "ambiguedad_mean": 4.678,
+  "contradicciones": 0,
+  "jerga_interna": 0,
+  "http_500": 0,
+  "datos_inventados": 0,
+  "sujetos_incorrectos": 4,
+  "factual_fails": 4,
+  "repeatability_equivalent": 19,
+  "repeatability_total": 20,
+  "concurrency_unique_ids": true,
+  "certification_level": "BLOQUEADO",
+  "fails": [
+    {
+      "case_id": "LONG_30.T09",
+      "category": "B",
+      "failures": [
+        "wrong_subject"
+      ],
+      "message": "Ahora en todas las posiciones.",
+      "preview": "Sobre tu pregunta (Ahora en todas las posiciones.):\n\nSí. 54 y 94 coincidieron el mismo día en 2 ocasión(es) (buscando en todas las posiciones).\n\nPuedo mostrarte las tres coincidencias anteriores o revisar loterías y posiciones de ese día."
+    },
+    {
+      "case_id": "LONG_30.T10",
+      "category": "B",
+      "failures": [
+        "wrong_subject"
+      ],
+      "message": "Ahora en todas las loterías.",
+      "preview": "Filtré la tabla: 126 fila(s).\nOrden: fecha desc.\n\n| fecha | loteria | numero_a | posicion_a | numero_b | posicion_b | tipo_coincidencia |\n| --- | --- | --- | --- | --- | --- | --- |\n| 2026-06-28 | New York 10:30 | 54 | 1ra posición | 94 | 2"
+    },
+    {
+      "case_id": "G03.T03",
+      "category": "B",
+      "failures": [
+        "wrong_subject"
+      ],
+      "message": "Últimas 3 del 35 en Nacional.",
+      "preview": "No pude operar la tabla de investigación con los datos disponibles. (ValueError)"
+    },
+    {
+      "case_id": "G20.T07",
+      "category": "H",
+      "failures": [
+        "wrong_subject",
+        "wrong_or_missing_date"
+      ],
+      "message": "En Nacional.",
+      "preview": "No pude operar la tabla de investigación con los datos disponibles. (ValueError)"
+    }
+  ]
+}

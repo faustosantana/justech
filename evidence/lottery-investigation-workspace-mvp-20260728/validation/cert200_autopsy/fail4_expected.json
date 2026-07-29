@@ -1,0 +1,76 @@
+{
+  "LONG_30.T09": {
+    "kind": "last_n",
+    "number": "35",
+    "rows": [
+      {
+        "draw_date": "2026-07-21",
+        "lottery": "Gana Mas",
+        "position": 2
+      },
+      {
+        "draw_date": "2026-07-21",
+        "lottery": "Quiniela Real",
+        "position": 1
+      },
+      {
+        "draw_date": "2026-07-20",
+        "lottery": "Loteria Nacional",
+        "position": 1
+      }
+    ]
+  },
+  "LONG_30.T10": {
+    "kind": "last_n",
+    "number": "35",
+    "rows": [
+      {
+        "draw_date": "2026-07-21",
+        "lottery": "Quiniela Real",
+        "position": 1
+      },
+      {
+        "draw_date": "2026-07-21",
+        "lottery": "Gana Mas",
+        "position": 2
+      },
+      {
+        "draw_date": "2026-07-20",
+        "lottery": "Loteria Nacional",
+        "position": 1
+      }
+    ]
+  },
+  "G03.T03": {
+    "kind": "last_n",
+    "number": "35",
+    "rows": [
+      {
+        "draw_date": "2026-07-20",
+        "lottery": "Loteria Nacional",
+        "position": 1
+      },
+      {
+        "draw_date": "2026-06-23",
+        "lottery": "Loteria Nacional",
+        "position": 1
+      },
+      {
+        "draw_date": "2026-05-27",
+        "lottery": "Loteria Nacional",
+        "position": 3
+      }
+    ]
+  },
+  "G20.T07": {
+    "kind": "last_occurrence",
+    "number": "44",
+    "rows": [
+      {
+        "draw_date": "2026-07-15",
+        "lottery": "Loteria Nacional",
+        "position": 1
+      }
+    ]
+  }
+}

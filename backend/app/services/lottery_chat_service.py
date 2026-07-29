@@ -467,6 +467,20 @@ class LotteryChatService:
             message=content,
             conversation_id=str(session.id),
         )
+
+        # Investigation Workspace 1.0 — operable table acts (no Huawei / no research)
+        if hermes_decision.turn_type == "asset_action" and hermes_decision.workspace_action:
+            return await self._handle_workspace_asset_action(
+                session=session,
+                user_msg=user_msg,
+                content=content,
+                state=state,
+                ctx=ctx,
+                hermes_decision=hermes_decision,
+                active_inv=active_inv,
+                t0=t0,
+            )
+
         evidence_reused = False
         if (
             hermes_decision.reuse_evidence
@@ -1942,6 +1956,118 @@ class LotteryChatService:
                 else None
             ),
             "runtime_trace": runtime_trace,
+        }
+
+    async def _handle_workspace_asset_action(
+        self,
+        *,
+        session: LotteryChatSession,
+        user_msg: LotteryChatMessage,
+        content: str,
+        state: ConversationState,
+        ctx: LotterySessionContext,
+        hermes_decision: Any,
+        active_inv: Any,
+        t0: float,
+    ) -> dict[str, Any]:
+        """Investigation Workspace MVP: show/filter/sort/export without Huawei."""
+        from app.lottery.ai.active_investigation import ConversationTraceLogger
+        from app.lottery.ai.investigation_workspace.handler import execute_workspace_action
+        from app.lottery.ai.investigation_workspace.schemas import WorkspaceActionDecision
+        from app.services.lottery_query_service import LotteryQueryService
+
+        raw_act = hermes_decision.workspace_action or {}
+        try:
+            decision = WorkspaceActionDecision.model_validate(raw_act)
+        except Exception:  # noqa: BLE001
+            decision = WorkspaceActionDecision(
+                action="show_results",
+                reason_code="workspace_fallback_show",
+            )
+
+        query = LotteryQueryService(self.db)
+        try:
+            result = await execute_workspace_action(
+                state,
+                decision,
+                query_service=query,
+                investigation=active_inv,
+                conversation_id=str(session.id),
+            )
+        except Exception as exc:  # noqa: BLE001
+            result = {
+                "content": (
+                    "No pude operar la tabla de investigación con los datos disponibles. "
+                    f"({type(exc).__name__})"
+                ),
+                "structured_content": None,
+                "tool_payload": {
+                    "workspace_action": decision.to_trace(),
+                    "ok": False,
+                    "error": str(exc)[:200],
+                },
+            }
+
+        if active_inv is not None:
+            active_inv.last_answer = result.get("content")
+            active_inv.last_user_question = content
+            state.active_investigation = active_inv.to_store()
+
+        latency_ms = (time.perf_counter() - t0) * 1000.0
+        agent_trace = ConversationTraceLogger.build(
+            decision=hermes_decision,
+            provider_used="investigation_workspace",
+            model_used=None,
+            latency_ms=latency_ms,
+            fallback_reason=None,
+            investigation_id=getattr(active_inv, "investigation_id", None) if active_inv else None,
+            evidence_reused=False,
+        )
+        structured = result.get("structured_content")
+        public_structured = self._public_structured(
+            structured if isinstance(structured, dict) else None
+        )
+        session.context = {
+            **(session.context or {}),
+            "conversation_v4": state.to_store(),
+            "agent_trace": agent_trace,
+            "workspace_last_action": decision.to_trace(),
+        }
+        asst = LotteryChatMessage(
+            session_id=session.id,
+            role="assistant",
+            content=result.get("content") or "",
+            tool_name="investigation_workspace",
+            tool_payload={
+                **(result.get("tool_payload") or {}),
+                "hermes_decision": hermes_decision.to_trace(),
+                "structured_content": public_structured,
+            },
+        )
+        self.db.add(asst)
+        await self.db.flush()
+        return {
+            "message": {
+                "id": str(asst.id),
+                "role": "assistant",
+                "content": result.get("content") or "",
+                "structured_content": public_structured,
+                "tool_trace": [],
+                "created_at": asst.created_at.isoformat() if asst.created_at else None,
+            },
+            "user_message_id": str(user_msg.id),
+            "context": session.context,
+            "active_context": {
+                "investigation_id": getattr(active_inv, "investigation_id", None) if active_inv else None,
+                "asset_id": state.active_asset_id,
+                "relation": state.active_relation,
+                "numbers": list(state.active_numbers or [])[:8],
+            },
+            "suggestions": self._suggestions(ctx, "chat", state=state),
+            "intent": "investigation_workspace",
+            "runtime_trace": agent_trace,
+            "hermes_decision": hermes_decision.to_trace(),
+            "latency_ms": int(latency_ms),
         }
 
     async def retry_last(self, session_id: uuid.UUID) -> dict[str, Any]:

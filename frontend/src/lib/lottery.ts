@@ -137,6 +137,11 @@ export interface LotteryChatSendResponse {
       type?: string;
       tool?: string;
       data?: unknown;
+      asset?: Record<string, unknown>;
+      download_url?: string;
+      filename?: string;
+      storage_name?: string;
+      row_count?: number;
       warnings?: { code: string; message: string }[];
       disclaimer?: string;
     } | null;

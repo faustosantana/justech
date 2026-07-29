@@ -256,5 +256,78 @@ export function LotteryStructuredRenderer({ structured }: { structured?: Structu
     );
   }
 
+  if (type === "investigation_workspace_table" || type === "investigation_workspace_export") {
+    const asset = (structured.asset || data.asset || {}) as Record<string, unknown>;
+    const columns = (asset.columns as string[] | undefined) || [];
+    const pageRows = (asset.rows as Array<Record<string, unknown>> | undefined) || [];
+    const pagination = (asset.pagination as Record<string, unknown> | undefined) || {};
+    const downloadUrl =
+      (structured.download_url as string | undefined) ||
+      (asset.download_url as string | undefined) ||
+      (data.download_url as string | undefined);
+    const filename =
+      (structured.filename as string | undefined) ||
+      (asset.export_filename as string | undefined) ||
+      "export.xlsx";
+    const rowCount = Number(asset.row_count ?? structured.row_count ?? pageRows.length);
+    return (
+      <Card>
+        <CardHeader className="pb-2">
+          <CardTitle className="text-sm">
+            {type === "investigation_workspace_export"
+              ? "Exportación Excel"
+              : String(asset.title || "Tabla de investigación")}
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-3">
+          <p className="text-xs text-muted-foreground">
+            {rowCount} fila(s)
+            {pagination.page != null
+              ? ` · página ${String(pagination.page)}/${String(pagination.total_pages ?? "?")}`
+              : ""}
+            {asset.filters && Object.keys(asset.filters as object).length
+              ? ` · filtros ${JSON.stringify(asset.filters)}`
+              : ""}
+          </p>
+          {type === "investigation_workspace_table" && columns.length > 0 ? (
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm" data-testid="workspace-result-table">
+                <thead>
+                  <tr className="text-left text-muted-foreground">
+                    {columns.map((c) => (
+                      <th key={c} className="py-1 pr-2">
+                        {c}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {pageRows.map((r, i) => (
+                    <tr key={i} className="border-t">
+                      {columns.map((c) => (
+                        <td key={c} className="py-1 pr-2 font-mono text-xs">
+                          {String(r[c] ?? "")}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : null}
+          {downloadUrl ? (
+            <a
+              className="inline-flex text-sm font-medium text-primary underline"
+              href={downloadUrl}
+              data-testid="workspace-excel-download"
+            >
+              Descargar {filename}
+            </a>
+          ) : null}
+        </CardContent>
+      </Card>
+    );
+  }
+
   return null;
 }

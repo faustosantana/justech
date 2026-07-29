@@ -25,6 +25,7 @@ TurnType = Literal[
     "clarify",
     "meta",
     "reuse_evidence",
+    "asset_action",
 ]
 
 
@@ -46,6 +47,8 @@ class HermesDecision(BaseModel):
     user_query: str | None = None
     # Analyst 2.1 — reasoning mode for Huawei (Hermes selects; never invents facts)
     reasoning_mode: str | None = None
+    # Investigation Workspace 1.0 — operable table acts (show/filter/sort/export)
+    workspace_action: dict[str, Any] | None = None
 
     def to_trace(self) -> dict[str, Any]:
         """Safe summary for diagnostics — no chain-of-thought."""
@@ -63,6 +66,7 @@ class HermesDecision(BaseModel):
             "reason_code": self.reason_code,
             "ambiguous": self.ambiguous,
             "reasoning_mode": self.reasoning_mode,
+            "workspace_action": self.workspace_action,
         }
 
 
@@ -94,6 +98,11 @@ class HermesDecisionEngine:
         if rel and not decision.inherited_relation:
             decision.inherited_relation = str(rel)
             decision.inherited_metric = decision.inherited_metric or str(rel)
+
+        if decision.turn_type == "asset_action":
+            decision.reasoning_mode = "skip"
+            decision.requires_research = False
+            return decision
 
         has_ev = bool(
             investigation
@@ -162,6 +171,35 @@ class HermesDecisionEngine:
             or getattr(state, "active_relation", None)
             or (state.active_filters or {}).get("relation")
         )
+
+        # Investigation Workspace 1.0 — only unequivocal asset ops (never investigation alone)
+        from app.lottery.ai.investigation_workspace.speech_acts import (
+            WorkspaceSpeechActDetector,
+        )
+        from app.lottery.ai.investigation_workspace.store import get_active_asset
+
+        asset = get_active_asset(state)
+        has_asset = asset is not None and not asset.is_expired()
+        can_materialize = inv_active or (
+            getattr(state, "active_relation", None) == "same_day" and len(active_pair) >= 2
+        )
+        ws = WorkspaceSpeechActDetector.detect(
+            raw,
+            has_active_asset=has_asset,
+            has_active_investigation=can_materialize,
+        )
+        if ws is not None:
+            decision.turn_type = "asset_action"
+            decision.requires_research = False
+            decision.reuse_evidence = False
+            decision.confidence = "high"
+            decision.reason_code = ws.reason_code
+            decision.inherited_subjects = active_pair[:8]
+            decision.inherited_relation = relation or "same_day"
+            decision.inherited_metric = relation or "same_day"
+            decision.workspace_action = ws.to_trace()
+            decision.requested_attribute = ws.action
+            return decision
 
         # Clear subject switch away from active pair
         if (

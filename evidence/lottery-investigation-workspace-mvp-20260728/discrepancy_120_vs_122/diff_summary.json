@@ -1,0 +1,257 @@
+{
+  "classification_hint": null,
+  "dev_meta": {
+    "max_draw_date_official": "2026-07-23",
+    "min_draw_date_official": "2015-01-02",
+    "max_draw_created_at_official": "2026-07-26 03:40:41.644205+00",
+    "max_draw_updated_at_official": "2026-07-26 03:40:41.644205+00",
+    "max_draw_date_all": "2026-07-23",
+    "max_created_at_all": "2026-07-26 03:40:41.644205+00",
+    "now_db": "2026-07-29 01:31:04.59709+00",
+    "timezone": "UTC",
+    "draws_official": "27230",
+    "draw_numbers_official": "81690",
+    "draws_all": "91941",
+    "draw_numbers_all": "388818",
+    "lotteries_total": "50",
+    "coinc_count": 122
+  },
+  "prod_meta": {
+    "max_draw_date_official": "2026-07-27",
+    "min_draw_date_official": "2015-01-02",
+    "max_draw_created_at_official": "2026-07-28 01:04:47.056531+00",
+    "max_draw_updated_at_official": "2026-07-28 01:04:47.056531+00",
+    "max_draw_date_all": "2026-07-27",
+    "max_created_at_all": "2026-07-28 01:04:47.056531+00",
+    "now_db": "2026-07-29 01:31:38.841319+00",
+    "timezone": "UTC",
+    "draws_official": "27238",
+    "draw_numbers_official": "81714",
+    "draws_all": "91949",
+    "draw_numbers_all": "388842",
+    "lotteries_total": "50",
+    "coinc_count": 120
+  },
+  "coinc_count": {
+    "dev": 122,
+    "prod": 120
+  },
+  "only_dev_dates": [
+    "2026-07-23",
+    "2026-07-22"
+  ],
+  "only_prod_dates": [],
+  "intersection_count": 120,
+  "lottery_id_match": true,
+  "per_lottery": [
+    {
+      "name": "Gana Mas",
+      "dev": {
+        "name": "Gana Mas",
+        "id": "43250709-ee65-476f-91f6-cb8438f49d65",
+        "source_id": 12,
+        "draws": 3859,
+        "max_draw_date": "2026-07-23",
+        "max_created_at": "2026-07-26 03:40:23.402725+00"
+      },
+      "prod": {
+        "name": "Gana Mas",
+        "id": "43250709-ee65-476f-91f6-cb8438f49d65",
+        "source_id": 12,
+        "draws": 3857,
+        "max_draw_date": "2026-07-21",
+        "max_created_at": "2026-07-22 13:39:16.699574+00"
+      },
+      "delta_draws": 2
+    },
+    {
+      "name": "Loteria Nacional",
+      "dev": {
+        "name": "Loteria Nacional",
+        "id": "0118037f-8f8b-4a82-899c-42cd50b6e194",
+        "source_id": 4,
+        "draws": 3980,
+        "max_draw_date": "2026-07-23",
+        "max_created_at": "2026-07-26 03:40:05.572318+00"
+      },
+      "prod": {
+        "name": "Loteria Nacional",
+        "id": "0118037f-8f8b-4a82-899c-42cd50b6e194",
+        "source_id": 4,
+        "draws": 3985,
+        "max_draw_date": "2026-07-27",
+        "max_created_at": "2026-07-28 00:59:14.799558+00"
+      },
+      "delta_draws": -5
+    },
+    {
+      "name": "New York 10:30",
+      "dev": {
+        "name": "New York 10:30",
+        "id": "1624b6f2-88c6-42b5-a597-bf9c0f98a6b5",
+        "source_id": 17,
+        "draws": 3561,
+        "max_draw_date": "2026-07-23",
+        "max_created_at": "2026-07-26 03:40:41.644205+00"
+      },
+      "prod": {
+        "name": "New York 10:30",
+        "id": "1624b6f2-88c6-42b5-a597-bf9c0f98a6b5",
+        "source_id": 17,
+        "draws": 3560,
+        "max_draw_date": "2026-07-21",
+        "max_created_at": "2026-07-22 14:58:10.373128+00"
+      },
+      "delta_draws": 1
+    },
+    {
+      "name": "New York 2:30",
+      "dev": {
+        "name": "New York 2:30",
+        "id": "1c488641-adb6-4790-89e7-879d361da7cc",
+        "source_id": 16,
+        "draws": 3575,
+        "max_draw_date": "2026-07-23",
+        "max_created_at": "2026-07-26 03:40:35.609521+00"
+      },
+      "prod": {
+        "name": "New York 2:30",
+        "id": "1c488641-adb6-4790-89e7-879d361da7cc",
+        "source_id": 16,
+        "draws": 3573,
+        "max_draw_date": "2026-07-21",
+        "max_created_at": "2026-07-22 13:39:19.340705+00"
+      },
+      "delta_draws": 2
+    },
+    {
+      "name": "Quiniela Leidsa",
+      "dev": {
+        "name": "Quiniela Leidsa",
+        "id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+        "source_id": 5,
+        "draws": 4052,
+        "max_draw_date": "2026-07-23",
+        "max_created_at": "2026-07-26 03:40:11.711378+00"
+      },
+      "prod": {
+        "name": "Quiniela Leidsa",
+        "id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+        "source_id": 5,
+        "draws": 4057,
+        "max_draw_date": "2026-07-27",
+        "max_created_at": "2026-07-28 01:04:47.056531+00"
+      },
+      "delta_draws": -5
+    },
+    {
+      "name": "Quiniela Loteka",
+      "dev": {
+        "name": "Quiniela Loteka",
+        "id": "b9f2c5a2-bc3e-4382-9b6d-3cee16db00fd",
+        "source_id": 6,
+        "draws": 4083,
+        "max_draw_date": "2026-07-23",
+        "max_created_at": "2026-07-26 03:40:17.559222+00"
+      },
+      "prod": {
+        "name": "Quiniela Loteka",
+        "id": "b9f2c5a2-bc3e-4382-9b6d-3cee16db00fd",
+        "source_id": 6,
+        "draws": 4088,
+        "max_draw_date": "2026-07-27",
+        "max_created_at": "2026-07-28 00:08:19.913635+00"
+      },
+      "delta_draws": -5
+    },
+    {
+      "name": "Quiniela Real",
+      "dev": {
+        "name": "Quiniela Real",
+        "id": "205c58d2-cfcf-44e6-894d-97358b3d540b",
+        "source_id": 13,
+        "draws": 4120,
+        "max_draw_date": "2026-07-23",
+        "max_created_at": "2026-07-26 03:40:29.668001+00"
+      },
+      "prod": {
+        "name": "Quiniela Real",
+        "id": "205c58d2-cfcf-44e6-894d-97358b3d540b",
+        "source_id": 13,
+        "draws": 4118,
+        "max_draw_date": "2026-07-21",
+        "max_created_at": "2026-07-22 13:39:17.782025+00"
+      },
+      "delta_draws": 2
+    }
+  ],
+  "only_dev_detail": [
+    {
+      "date": "2026-07-23",
+      "number": "14",
+      "lottery": "Quiniela Leidsa",
+      "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+      "draw_id": "507c1ca9-47c6-45ba-8140-5dc84225d13c",
+      "draw_number_id": "909e8213-dea4-445c-8069-4eb0cb4a27d4",
+      "position": "2",
+      "draw_created_at": "2026-07-26 03:40:11.711378+00"
+    },
+    {
+      "date": "2026-07-23",
+      "number": "35",
+      "lottery": "New York 10:30",
+      "lottery_id": "1624b6f2-88c6-42b5-a597-bf9c0f98a6b5",
+      "draw_id": "b80fabf2-85de-4366-8ade-f8c6de401dd1",
+      "draw_number_id": "1c7a166d-a7f7-4d38-affe-d75ace31e3d9",
+      "position": "1",
+      "draw_created_at": "2026-07-26 03:40:41.644205+00"
+    },
+    {
+      "date": "2026-07-22",
+      "number": "14",
+      "lottery": "Loteria Nacional",
+      "lottery_id": "0118037f-8f8b-4a82-899c-42cd50b6e194",
+      "draw_id": "3aa518e2-a381-45b7-8c5e-7e19825dc8d5",
+      "draw_number_id": "adfc905b-7a4c-411b-a213-8bb9c6f236c4",
+      "position": "1",
+      "draw_created_at": "2026-07-26 03:40:02.59562+00"
+    },
+    {
+      "date": "2026-07-22",
+      "number": "14",
+      "lottery": "Quiniela Leidsa",
+      "lottery_id": "523875dc-c7f4-4883-b0f6-b440397e3aeb",
+      "draw_id": "6fff8fd6-35ba-4ad2-9a52-ef8c4b1d976c",
+      "draw_number_id": "a7a1ed13-c8cc-4937-8ec5-2ef3625ba1e2",
+      "position": "2",
+      "draw_created_at": "2026-07-26 03:40:08.525742+00"
+    },
+    {
+      "date": "2026-07-22",
+      "number": "35",
+      "lottery": "New York 2:30",
+      "lottery_id": "1c488641-adb6-4790-89e7-879d361da7cc",
+      "draw_id": "69f3cf8d-490a-4be2-ac7e-67ec4dc148c5",
+      "draw_number_id": "ae765922-4259-47b5-bd30-fc11a50aad17",
+      "position": "1",
+      "draw_created_at": "2026-07-26 03:40:32.605864+00"
+    }
+  ],
+  "aliases_equal": true,
+  "dup_dn": {
+    "dev": [],
+    "prod": []
+  },
+  "dup_draw": {
+    "dev": [
+      "2026-01-25|Quiniela Loteka|2|ca93967b-0123-49f5-a03b-1ddbd3946ef5,39cc602c-2e6a-4e98-9b13-386709b5e6e6",
+      "2026-01-20|New York 2:30|2|c75b331f-3f05-4312-87de-43b38f4a3771,b086cc3f-a4c0-4f2a-a6f8-1b69a597f6ad"
+    ],
+    "prod": [
+      "2026-01-25|Quiniela Loteka|2|ca93967b-0123-49f5-a03b-1ddbd3946ef5,39cc602c-2e6a-4e98-9b13-386709b5e6e6",
+      "2026-01-20|New York 2:30|2|b086cc3f-a4c0-4f2a-a6f8-1b69a597f6ad,c75b331f-3f05-4312-87de-43b38f4a3771"
+    ]
+  },
+  "draw_columns_dev": "id,lottery_id,draw_date,draw_time,game_name,source_reference,source_url,content_hash,raw_payload,scraped_at,created_at,updated_at",
+  "draw_columns_prod": "id,lottery_id,draw_date,draw_time,game_name,source_reference,source_url,content_hash,raw_payload,scraped_at,created_at,updated_at"
+}

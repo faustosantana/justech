@@ -1,0 +1,14 @@
+case_id,category,failures,message,response_preview
+LONG_30.T09,B,wrong_subject,Ahora en todas las posiciones.,"Sobre tu pregunta (Ahora en todas las posiciones.):
+
+Sí. 54 y 94 coincidieron el mismo día en 2 ocasión(es) (buscando en todas las posiciones).
+
+Puedo mostrarte las tres coincidencias anteriores o rev"
+LONG_30.T10,B,wrong_subject,Ahora en todas las loterías.,"Filtré la tabla: 126 fila(s).
+Orden: fecha desc.
+
+| fecha | loteria | numero_a | posicion_a | numero_b | posicion_b | tipo_coincidencia |
+| --- | --- | --- | --- | --- | --- | --- |
+| 2026-06-28 | New"
+G03.T03,B,wrong_subject,Últimas 3 del 35 en Nacional.,No pude operar la tabla de investigación con los datos disponibles. (ValueError)
+G20.T07,H,wrong_subject|wrong_or_missing_date,En Nacional.,No pude operar la tabla de investigación con los datos disponibles. (ValueError)

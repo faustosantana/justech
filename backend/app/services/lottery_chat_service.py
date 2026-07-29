@@ -1812,33 +1812,6 @@ class LotteryChatService:
                         ),
                     )
                     active_inv = ActiveInvestigationSession.from_store(state.active_investigation)
-                    # Conversational Routing 3.0: materialize operable asset after Path A
-                    # same-day research so follow-ups become Path B (asset ops), not narrative.
-                    try:
-                        from app.lottery.ai.investigation_workspace.handler import (
-                            ensure_same_day_asset,
-                        )
-                        from app.lottery.ai.investigation_workspace.store import get_active_asset
-                        from app.services.lottery_query_service import LotteryQueryService
-
-                        if (
-                            active_inv is not None
-                            and active_inv.relation == "same_day"
-                            and len(list(active_inv.subjects or state.active_numbers or [])[:2]) >= 2
-                            and (
-                                get_active_asset(state) is None
-                                or get_active_asset(state).is_expired()
-                                or not get_active_asset(state).source_rows
-                            )
-                        ):
-                            await ensure_same_day_asset(
-                                state,
-                                query_service=LotteryQueryService(self.db),
-                                investigation=active_inv,
-                                conversation_id=str(session.id),
-                            )
-                    except Exception:  # noqa: BLE001
-                        pass
                 if (
                     hermes_decision.requested_attribute
                     in {"lotteries", "positions", "date", "order", "explain", "details"}

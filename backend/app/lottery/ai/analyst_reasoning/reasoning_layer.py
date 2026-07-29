@@ -55,6 +55,8 @@ class ReasoningResult:
             "rejection_reason": self.rejection_reason,
             "fallback_used": self.fallback_used,
             "used_reasoning": self.used_reasoning,
+            **({"prompt_runtime": self.telemetry.get("prompt_runtime")} if self.telemetry.get("prompt_runtime") else {}),
+            **({"violations": self.telemetry.get("violations")} if self.telemetry.get("violations") else {}),
         }
 
 

@@ -1,0 +1,39 @@
+{
+  "provider": "huawei_modelarts",
+  "latency_ms": 55931,
+  "visible_preview": "Dentro de las 7 loterías habilitadas, el 50 y 90 han aparecido en la misma fecha 134 veces.\n\nEso no significa necesariamente que salieran en la misma lotería: la coincidencia se cuenta cuando ambos aparecen en sorteos del mismo día calendario dentro del alcance oficial.\n\nLa cifra es histórica y descriptiva. Para entender mejor la relación, conviene revisar en cuáles loterías se repite más y cuáles",
+  "analyst_reasoning": {
+    "reasoning_mode": "interpret_pattern",
+    "provider_used": "huawei_modelarts",
+    "latency_ms": 20943.068300373852,
+    "guard_passed": false,
+    "fallback_used": true,
+    "prompt_version": "analyst-reasoning-v1.1"
+  },
+  "prompt_runtime": {
+    "prompt_runtime_mode": "shadow",
+    "prompt_source": "legacy",
+    "fallback_used": false,
+    "legacy_prompt_used": true,
+    "compiled_prompt_hash": null,
+    "prompt_version_id": null,
+    "shadow_prepared": true
+  },
+  "shadow": {
+    "studio_latency_ms": 32556.323574855924,
+    "studio_guard_passed": false,
+    "studio_guard_reason": "extra_subjects:['51', '60', '83']",
+    "studio_prompt_hash": "e3389d1de28bdf78a4979a17c5d2ab7673e4d04607f280f02dc357ffddaf00a5",
+    "same_evidence_package": true,
+    "studio_model": "deepseek-v3.2"
+  },
+  "studio_preview": "**Respuesta directa**  \nSí, los números **50** y **90** han coincidido el mismo día en **134 ocasiones** dentro del histórico analizado de las 7 loterías habilitadas del sistema.  \n\n---\n\n### 📊 **Evidencia resumida**  \n- **Total de coincidencias same‑day:** 134  \n- **Coincidencias con al menos uno en 1ª posición:** 83 (incluyen 7 casos donde ambos salieron en 1ª posición)  \n- **Coincidencias en otr",
+  "expected_hash": "e3389d1de28bdf78a4979a17c5d2ab7673e4d04607f280f02dc357ffddaf00a5",
+  "legacy_system_marker": "Analyst Reasoning Layer de Lottery Analyst 2.1",
+  "forensic": {
+    "enabled": true,
+    "correlation_id": "lottery-chat-18076396577544008d0a556b6ce2a29a",
+    "artifact_dir": "/artifacts/forensics/lottery-chat-18076396577544008d0a556b6ce2a29a",
+    "event_count": 6
+  }
+}

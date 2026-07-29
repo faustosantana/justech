@@ -1419,16 +1419,18 @@ class LotteryAiAdminService:
                 "warnings": validation.get("warnings") or [],
             }
         }
+        await self.db.flush()
+        await self.db.refresh(row)
+        after = _prompt_dict(row)
         await self._audit(
             "prompt_publish_immutable",
             entity_type="prompt",
             entity_id=str(row.id),
             before=before,
-            after=_prompt_dict(row),
+            after=after,
             version_label=row.version,
         )
-        await self.db.flush()
-        return {"prompt": _prompt_dict(row), "activated": False, "published": True}
+        return {"prompt": after, "activated": False, "published": True}
 
     async def activate_prompt_dev(self, prompt_id: uuid.UUID, *, reason: str | None = None) -> dict[str, Any]:
         """Activate a published/approved Reasoning Studio version (DEV intent). Does not touch PROD."""
@@ -1452,22 +1454,24 @@ class LotteryAiAdminService:
         row.status = "active"
         row.published_at = datetime.now(timezone.utc)
         row.change_reason = reason or row.change_reason or "activate_dev"
+        await self.db.flush()
+        await self.db.refresh(row)
+        after = _prompt_dict(row)
         await self._audit(
             "prompt_activate_dev",
             entity_type="prompt",
             entity_id=str(row.id),
             before={"previous_checksum": before_hash},
-            after=_prompt_dict(row),
+            after=after,
             version_label=row.version,
         )
-        await self.db.flush()
         try:
             from app.lottery.ai.prompt_runtime.selector import PromptRuntimeSelector
 
             PromptRuntimeSelector.invalidate_cache()
         except Exception:  # noqa: BLE001
             pass
-        return {"prompt": _prompt_dict(row), "activated": True, "cache_invalidated": True}
+        return {"prompt": after, "activated": True, "cache_invalidated": True}
 
     async def prompt_runtime_status(self) -> dict[str, Any]:
         from app.config import settings

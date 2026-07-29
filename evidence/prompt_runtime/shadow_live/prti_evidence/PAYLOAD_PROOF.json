@@ -1,0 +1,15 @@
+{
+  "session_id": "79cd4830-c204-4bac-ae99-44001ad38a21",
+  "user_visible_answer_preview": "Dentro de las 7 loterías habilitadas, el 50 y 90 han aparecido en la misma fecha 134 veces.\n\nEso no significa necesariamente que salieran en la misma lotería: la coincidencia se cuenta cuando ambos aparecen en sorteos del mismo día calendario dentro del alcance oficial.\n\nLa cifra es histórica y descriptiva. Para entender mejor la relación, conviene revisar en cuáles loterías se repite más y cuáles fueron las coincidencias más recientes.\n\nPuedo mostrarte las tres coincidencias anteriores o revisa",
+  "provider_used": "huawei_modelarts",
+  "prompt_runtime_found": false,
+  "prompt_runtime": null,
+  "shadow_comparison_keys": [],
+  "shadow_comparison": null,
+  "expected_hash": "e3389d1de28bdf78a4979a17c5d2ab7673e4d04607f280f02dc357ffddaf00a5",
+  "compiled_chars": 50477,
+  "notes": [
+    "User-facing path must remain legacy in shadow mode.",
+    "Studio comparison only when SHADOW_LLM=true and turn is Huawei-eligible."
+  ]
+}

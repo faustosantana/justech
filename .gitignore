@@ -63,3 +63,27 @@ docs/lottery/numeric_relations_artifacts/**/backups/*.dump
 backend/.venv-prej11a/
 pilot_dev_uat.sqlite
 artifacts/prospective/*.sqlite
+
+# Lottery evidence / audit run artifacts (massive / ephemeral — keep summary .md reports)
+evidence/**/raw_results*.json
+evidence/**/repeatability_results.json
+evidence/**/concurrency_results.json
+evidence/**/latency_report.csv
+evidence/**/turn_evaluation.csv
+evidence/**/failure_matrix.csv
+evidence/**/repository_expected_results.json
+evidence/**/conversation_transcripts.md
+evidence/**/compact_timeline.json
+evidence/**/raw_timeline.json
+evidence/**/prod-*/**
+evidence/**/backup/**
+evidence/**/backups/**
+evidence/**/*.dump
+evidence/**/*.sql
+evidence/**/repro_*.py
+evidence/**/probe_*.py
+evidence/**/score_*.py
+/tmp/
+**/lottery-cert-200/
+**/hermes_intelligence_audit.json
+**/beta21_smoke.json

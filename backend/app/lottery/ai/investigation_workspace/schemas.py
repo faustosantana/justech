@@ -13,6 +13,7 @@ ASSET_TTL_SECONDS = 600
 AssetType = Literal["result_table", "summary", "comparison", "timeline", "export_file"]
 WorkspaceAction = Literal[
     "show_results",
+    "show_dates",
     "filter_results",
     "sort_results",
     "export_results",

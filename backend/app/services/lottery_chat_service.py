@@ -318,6 +318,108 @@ class LotteryChatService:
             },
         )
 
+        # Conversational Routing 3.0 — social_chitchat early exit BEFORE Hermes /
+        # subject inheritance / research / analytical formatter.
+        social_route = (understanding.params or {}).get("routing_intent") == "social_chitchat"
+        if social_route or understanding.intent in {"greeting", "general_chat", "help"}:
+            from app.lottery.ai.conversational_router.social_chitchat import (
+                detect_social_chitchat,
+            )
+
+            social_hit = detect_social_chitchat(content)
+            if social_hit is not None or social_route or (
+                understanding.intent in {"greeting", "general_chat", "help"}
+                and (understanding.params or {}).get("run_tools") is False
+            ):
+                reply = (
+                    (social_hit.reply if social_hit else None)
+                    or (understanding.params or {}).get("conversational_reply")
+                    or understanding.clarification_question
+                    or "¿En qué puedo ayudarte con el histórico de loterías?"
+                )
+                reason = (
+                    (social_hit.reason_code if social_hit else None)
+                    or (understanding.params or {}).get("routing_reason_code")
+                    or "SOCIAL_CHITCHAT_MATCH"
+                )
+                forensic.event(
+                    "social_chitchat_early_exit",
+                    component="LotteryChatService",
+                    file="lottery_chat_service.py",
+                    function="send_message",
+                    output={
+                        "intent": "social_chitchat",
+                        "understanding_intent": understanding.intent,
+                        "reason_code": reason,
+                        "inherited_subjects": [],
+                        "provider_used": "social_template",
+                        "format_analyst_response.called": False,
+                        "workspace.called": False,
+                        "sql.called": False,
+                        "huawei_called": False,
+                        "sticky_numbers_preserved": list(state.active_numbers or []),
+                        "reply": reply,
+                    },
+                )
+                forensic.write_named(
+                    "api_response.prepared",
+                    {
+                        "content": reply,
+                        "intent": "social_chitchat",
+                        "huawei_called": False,
+                        "path": "social_chitchat_early_exit",
+                        "inherited_subjects": [],
+                        "provider_used": "social_template",
+                        "format_analyst_response.called": False,
+                    },
+                )
+                forensic.write_named("frontend_response.received", {"content": reply})
+                forensic.write_named("frontend_message.rendered", reply, as_text=True)
+                forensic.finalize_summary(
+                    notes=[
+                        "Turn exited at social_chitchat — no Hermes research, SQL, "
+                        "workspace, or format_analyst_response.",
+                        f"Sticky numbers preserved (not injected): {list(state.active_numbers or [])}",
+                    ]
+                )
+                session.context = {
+                    **(session.context or {}),
+                    "conversation_v4": state.to_store(),
+                }
+                asst = LotteryChatMessage(
+                    session_id=session.id,
+                    role="assistant",
+                    content=reply,
+                    tool_name="chat",
+                    tool_payload={
+                        "nlp_intent": (understanding.params or {}).get("nlp_intent"),
+                        "decision_log": (understanding.params or {}).get("decision_log"),
+                        "routing_intent": "social_chitchat",
+                        "reason_code": reason,
+                        "inherited_subjects": [],
+                        "provider_used": "social_template",
+                    },
+                )
+                self.db.add(asst)
+                await self.db.flush()
+                return {
+                    "message": {
+                        "id": str(asst.id),
+                        "role": "assistant",
+                        "content": reply,
+                        "structured_content": None,
+                        "tool_trace": [],
+                        "created_at": asst.created_at.isoformat() if asst.created_at else None,
+                    },
+                    "user_message_id": str(user_msg.id),
+                    "context": session.context,
+                    "active_context": {},
+                    "suggestions": self._suggestions(ctx, "chat", state=state),
+                    "intent": "social_chitchat",
+                    "provider_used": "social_template",
+                    "routing_reason_code": reason,
+                }
+
         # D: bare «Haz la comparación.» must clarify — never tool/research invent dates.
         bare_compare_early = bool(
             re.search(r"^\s*haz\s+la\s+comparaci[oó]n\.?\s*$", content or "", re.I)
@@ -1343,6 +1445,50 @@ class LotteryChatService:
                             + (f" · última {last_date}" if last_date else "")
                             + "."
                         )[:500]
+                        # Conversational Routing 3.0 — controlled InvestigationAsset
+                        # materialization after successful same-day research (rows only).
+                        if items:
+                            try:
+                                from app.lottery.ai.investigation_workspace.materialize import (
+                                    materialize_same_day_table,
+                                )
+                                from app.lottery.ai.investigation_workspace.store import (
+                                    save_asset,
+                                )
+
+                                asset = materialize_same_day_table(
+                                    items=items,
+                                    subjects=list(state.active_numbers or [])[:2],
+                                    total=result.data.get("total"),
+                                    investigation_id=(
+                                        (state.active_investigation or {}).get("investigation_id")
+                                        if isinstance(state.active_investigation, dict)
+                                        else None
+                                    ),
+                                    conversation_id=str(session.id),
+                                )
+                                if asset.row_count > 0:
+                                    save_asset(state, asset)
+                                    forensic.event(
+                                        "investigation_asset.materialized",
+                                        component="LotteryChatService",
+                                        file="lottery_chat_service.py",
+                                        function="send_message",
+                                        output={
+                                            "asset_id": asset.asset_id,
+                                            "row_count": asset.row_count,
+                                            "subjects": list(asset.subjects),
+                                            "relation": asset.relation,
+                                        },
+                                    )
+                            except Exception as exc:  # noqa: BLE001
+                                forensic.event(
+                                    "investigation_asset.materialize_failed",
+                                    component="LotteryChatService",
+                                    file="lottery_chat_service.py",
+                                    function="send_message",
+                                    output={"error": type(exc).__name__, "detail": str(exc)[:200]},
+                                )
                     if exec_params.get("date") or exec_params.get("base_date"):
                         d = exec_params.get("date") or exec_params.get("base_date")
                         state.date_context = d

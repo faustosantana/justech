@@ -1,0 +1,140 @@
+{
+  "status": "PASS",
+  "note": "In-process forensic assertions (code path). Live DEV correlation IDs require redeploy.",
+  "turns": [
+    {
+      "correlation_id": "lottery-chat-9cdc9de325594bf28adb626e2ef22361",
+      "user_message": "Todo bien, ¿y tú?",
+      "intent": "social_chitchat",
+      "understanding_intent": "general_chat",
+      "reason_code": "SOCIAL_CHITCHAT_MATCH",
+      "inherited_subjects": [],
+      "hermes_inherited_subjects": [],
+      "hermes_turn_type": "social_chitchat",
+      "provider_used": "social_template",
+      "format_analyst_response.called": false,
+      "workspace.called": false,
+      "sql.called": false,
+      "default_research.called": false,
+      "workspace_action": null,
+      "asset_id": "93931e3d7e274c4f",
+      "reply_preview": "Todo bien también. ¿Qué deseas investigar ahora?",
+      "reply_mentions_subjects": false,
+      "sticky_preserved": [
+        "50",
+        "90"
+      ],
+      "assertions": {
+        "intent_social": true,
+        "inherited_empty": true,
+        "no_formatter": true,
+        "no_workspace": true,
+        "no_sql": true,
+        "no_subject_leak": true
+      },
+      "pass": true
+    },
+    {
+      "correlation_id": "lottery-chat-654245e82c4f444db407d2cf7570e3ae",
+      "user_message": "Muéstrame las fechas",
+      "intent": "workspace_action",
+      "understanding_intent": "cross_lottery_matches",
+      "reason_code": "show_dates",
+      "inherited_subjects": [
+        "50",
+        "90"
+      ],
+      "hermes_inherited_subjects": [
+        "50",
+        "90"
+      ],
+      "hermes_turn_type": "asset_action",
+      "provider_used": "workspace",
+      "format_analyst_response.called": false,
+      "workspace.called": true,
+      "sql.called": null,
+      "default_research.called": false,
+      "workspace_action": "show_dates",
+      "asset_id": "93931e3d7e274c4f",
+      "reply_preview": "",
+      "reply_mentions_subjects": false,
+      "sticky_preserved": [
+        "50",
+        "90"
+      ],
+      "assertions": {
+        "intent_workspace": true,
+        "action_show_dates": true,
+        "no_default_research": true
+      },
+      "pass": true
+    },
+    {
+      "correlation_id": "lottery-chat-44260e3121114358b6bcf66fe448a1ab",
+      "user_message": "Gracias",
+      "intent": "social_chitchat",
+      "understanding_intent": "general_chat",
+      "reason_code": "SOCIAL_CHITCHAT_MATCH",
+      "inherited_subjects": [],
+      "hermes_inherited_subjects": [],
+      "hermes_turn_type": "social_chitchat",
+      "provider_used": "social_template",
+      "format_analyst_response.called": false,
+      "workspace.called": false,
+      "sql.called": false,
+      "default_research.called": false,
+      "workspace_action": null,
+      "asset_id": "93931e3d7e274c4f",
+      "reply_preview": "Con gusto.",
+      "reply_mentions_subjects": false,
+      "sticky_preserved": [
+        "50",
+        "90"
+      ],
+      "assertions": {
+        "intent_social": true,
+        "inherited_empty": true,
+        "no_formatter": true,
+        "no_workspace": true,
+        "no_sql": true,
+        "no_subject_leak": true
+      },
+      "pass": true
+    },
+    {
+      "correlation_id": "lottery-chat-566b17dc0e5347d3a8057abce3fb2c20",
+      "user_message": "Excelente",
+      "intent": "social_chitchat",
+      "understanding_intent": "general_chat",
+      "reason_code": "SOCIAL_CHITCHAT_MATCH",
+      "inherited_subjects": [],
+      "hermes_inherited_subjects": [],
+      "hermes_turn_type": "social_chitchat",
+      "provider_used": "social_template",
+      "format_analyst_response.called": false,
+      "workspace.called": false,
+      "sql.called": false,
+      "default_research.called": false,
+      "workspace_action": null,
+      "asset_id": "93931e3d7e274c4f",
+      "reply_preview": "Excelente.",
+      "reply_mentions_subjects": false,
+      "sticky_preserved": [
+        "50",
+        "90"
+      ],
+      "assertions": {
+        "intent_social": true,
+        "inherited_empty": true,
+        "no_formatter": true,
+        "no_workspace": true,
+        "no_sql": true,
+        "no_subject_leak": true
+      },
+      "pass": true
+    }
+  ],
+  "prompt_studio_modified": false,
+  "huawei_modified": false,
+  "production_touched": false
+}

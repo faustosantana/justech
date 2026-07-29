@@ -142,6 +142,45 @@ def understand(raw: str, state: ConversationState) -> tuple[UnderstandingResult,
     text = (raw or "").strip()
     working = state.model_copy(deep=True)
 
+    # Conversational Routing 3.0 — social_chitchat before clarification / inheritance
+    from app.lottery.ai.conversational_router.social_chitchat import detect_social_chitchat
+
+    social = detect_social_chitchat(text)
+    if social is not None:
+        working.pending_slots = []
+        working.pending_intent = None
+        working.clarification_question = None
+        # Keep Phase X contract: how-are-you / hola → greeting; acks → general_chat
+        soft = re.sub(r"\s+", " ", (text or "").lower())
+        if social.subtype == "greeting" or (
+            social.subtype == "wellbeing"
+            and re.search(r"c[oó]mo\s+est[aá]s|qu[eé]\s+tal|c[oó]mo\s+te\s+va", soft)
+            and not re.search(r"todo\s+bien", soft)
+        ):
+            intent_name = "greeting"
+        else:
+            intent_name = "general_chat"
+        return (
+            UnderstandingResult(
+                intent=intent_name,  # type: ignore[arg-type]
+                confidence=0.99,
+                source="domain",
+                domain_class="general_chat" if intent_name == "general_chat" else "greeting",
+                needs_clarification=False,
+                missing_slots=[],
+                tool=None,
+                params={
+                    "conversational_reply": social.reply,
+                    "run_tools": False,
+                    "nlp_intent": "GENERAL_CHAT" if intent_name == "general_chat" else "GREETING",
+                    "decision_log": [f"reason={social.reason_code}", f"subtype={social.subtype}"],
+                    "routing_reason_code": social.reason_code,
+                    "routing_intent": "social_chitchat",
+                },
+            ),
+            working,
+        )
+
     domain = classify_domain(text)
     if domain.classification in {"greeting", "general_chat"}:
         # Fase X: never consume pending clarifications on greetings/chat

@@ -1,0 +1,74 @@
+{
+  "suite": "conversational_routing_3_cases_1_7",
+  "passed": 13,
+  "failed": 0,
+  "total": 13,
+  "status": "PASS",
+  "results": [
+    {
+      "name": "C1:Hola",
+      "pass": true,
+      "detail": "path=social_chitchat reply='Hola. ¿Qué deseas investigar hoy?'"
+    },
+    {
+      "name": "C1:Todo bien, ¿y tú?",
+      "pass": true,
+      "detail": "path=social_chitchat reply='Todo bien también. ¿Qué deseas investigar ahora?'"
+    },
+    {
+      "name": "C2:Hola",
+      "pass": true,
+      "detail": "path=social_chitchat hermes=social_chitchat reply='Hola. ¿Qué deseas investigar hoy?'"
+    },
+    {
+      "name": "C2:Todo bien, ¿y tú?",
+      "pass": true,
+      "detail": "path=social_chitchat hermes=social_chitchat reply='Todo bien también. ¿Qué deseas investigar ahora?'"
+    },
+    {
+      "name": "C3:Gracias",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "C3:Muéstrame las fechas",
+      "pass": true,
+      "detail": "path=workspace_action action=show_dates hermes=asset_action"
+    },
+    {
+      "name": "C4:Muéstrame las fechas.",
+      "pass": true,
+      "detail": "path=workspace_action got=show_dates expect=show_dates"
+    },
+    {
+      "name": "C4:Desglosa por posición.",
+      "pass": true,
+      "detail": "path=workspace_action got=sort_results expect=sort_results"
+    },
+    {
+      "name": "C4:Solo Gana Más.",
+      "pass": true,
+      "detail": "path=workspace_action got=filter_results expect=filter_results"
+    },
+    {
+      "name": "C4:Ordénalo desde la más reciente.",
+      "pass": true,
+      "detail": "path=workspace_action got=sort_results expect=sort_results"
+    },
+    {
+      "name": "C5:Ahora analiza el 35",
+      "pass": true,
+      "detail": "path=explicit_new_investigation hermes=topic_switch subjects=['35']"
+    },
+    {
+      "name": "C6:Gana Más pending",
+      "pass": true,
+      "detail": "path=analytical_clarification reason=PENDING_CLARIFICATION_MATCH"
+    },
+    {
+      "name": "C7:Excelente",
+      "pass": true,
+      "detail": "path=social_chitchat reason=SOCIAL_CHITCHAT_MATCH"
+    }
+  ]
+}

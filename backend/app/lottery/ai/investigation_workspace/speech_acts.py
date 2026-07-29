@@ -16,12 +16,37 @@ from app.lottery.ai.official_lottery_scope import canonicalize_lottery_name
 _SHOW = re.compile(
     r"("
     r"mu[eé]stra(me)?\s+(esos?\s+)?resultados|"
+    r"mu[eé]stra(me)?\s+(las\s+)?fechas(\s+de\s+coinciden\w*)?|"
+    r"mostrar(me)?\s+(esos?\s+)?(resultados|coincidencias|todas|fechas)|"
     r"ens[eé][nñ]a(me)?\s+(la\s+)?tabla|"
     r"[aá]bre(lo|la)?(\s+(la\s+)?tabla|\s+esos?\s+resultados)?|"
     r"ver\s+(la\s+)?tabla|"
+    r"ver\s+(las\s+)?(fechas|coincidencias|resultados)(\s+de\s+coinciden\w*)?|"
     r"dame\s+(la\s+)?tabla|"
-    r"lista(me)?\s+(las\s+)?(coincidencias|filas|resultados)|"
-    r"crea(r)?\s+(una\s+)?tabla"
+    r"dame\s+(las\s+)?fechas|"
+    r"lista(me)?\s+(las\s+)?(coincidencias|filas|resultados|fechas)|"
+    r"crea(r)?\s+(una\s+)?tabla|"
+    r"mostrar\s+todas|"
+    r"ver\s+coincidencias|"
+    r"mostrar\s+resultados"
+    r")",
+    re.I,
+)
+_SHOW_DATES = re.compile(
+    r"("
+    r"mu[eé]stra(me)?\s+(las\s+)?fechas|"
+    r"ver\s+(las\s+)?fechas|"
+    r"mostrar(me)?\s+(las\s+)?fechas|"
+    r"dame\s+(las\s+)?fechas|"
+    r"lista(me)?\s+(las\s+)?fechas"
+    r")",
+    re.I,
+)
+# Position breakdown / group view → sort by position columns (table transform).
+_BREAKDOWN = re.compile(
+    r"("
+    r"desglos(ar|a|e)?(\s+por\s+posici\w*)?|"
+    r"agrup(ar|a|e)?\s+por\s+posici\w*"
     r")",
     re.I,
 )
@@ -37,25 +62,27 @@ _REMOVE_FILTER = re.compile(
 )
 _SORT = re.compile(
     r"("
-    r"ord[eé]na(los|las|r)?|"
-    r"m[aá]s\s+recientes\s+primero|"
-    r"m[aá]s\s+antigu[oa]s\s+primero|"
-    r"por\s+fecha"
+    r"ord[eé]na(los|las|lo|la|r)?|"
+    r"m[aá]s\s+recientes?(\s+primero)?|"
+    r"desde\s+la\s+m[aá]s\s+reciente|"
+    r"m[aá]s\s+antigu[oa]s?\s+primero|"
+    r"por\s+fecha|"
+    r"por\s+frecuencia"
     r")",
     re.I,
 )
 _EXPORT = re.compile(
     r"("
-    r"exporta(r)?(\s+a)?(\s+excel|\s+xlsx)?|"
+    r"exporta(r)?(\s+a)?(\s+excel|\s+xlsx|\s+csv)?|"
     r"desc[aá]rga(lo|la)?|"
-    r"genera(r)?\s+(el\s+)?excel|"
-    r"excel"
+    r"genera(r)?\s+(el\s+)?(excel|csv)|"
+    r"\bexcel\b|\bcsv\b"
     r")",
     re.I,
 )
 _PAGE = re.compile(
     r"("
-    r"(dame|muestra(me)?)\s+(los\s+)?(pr[oó]ximos|siguientes)\s+(\d{1,3})|"
+    r"(dame|muestra(me)?|mostrar(me)?|ver)\s+(los\s+|las\s+)?(pr[oó]ximos|siguientes|primer[oa]s?)\s+(\d{1,3})|"
     r"p[aá]gina\s+(\d{1,3})|"
     r"ver\s+m[aá]s"
     r")",
@@ -112,7 +139,7 @@ def _extract_lottery(text: str) -> str | None:
 
 def _is_explicit_boot(raw: str) -> bool:
     """Show/export/page boot phrases that may materialize without an existing asset."""
-    if _SHOW.search(raw) or _EXPORT.search(raw):
+    if _SHOW.search(raw) or _SHOW_DATES.search(raw) or _EXPORT.search(raw) or _BREAKDOWN.search(raw):
         return True
     if _PAGE.search(raw):
         return True
@@ -183,10 +210,26 @@ class WorkspaceSpeechActDetector:
                     pagination=AssetPagination(page=max(1, n), page_size=20),
                     reason_code="paginate_page",
                 )
+            if re.search(r"primer", raw, re.I):
+                return WorkspaceActionDecision(
+                    action="paginate_results",
+                    pagination=AssetPagination(page=1, page_size=max(1, min(n, 100))),
+                    reason_code="paginate_first_n",
+                )
             return WorkspaceActionDecision(
                 action="paginate_results",
                 pagination=AssetPagination(page=1, page_size=max(1, min(n, 100))),
                 reason_code="paginate_next",
+            )
+
+        if _BREAKDOWN.search(raw):
+            if not has_active_asset and not explicit_boot:
+                return None
+            return WorkspaceActionDecision(
+                action="sort_results",
+                sort=AssetSort(field="posicion_a_num", direction="asc"),
+                requires_asset_load=True,
+                reason_code="breakdown_by_position",
             )
 
         if _SORT.search(raw):
@@ -198,7 +241,9 @@ class WorkspaceSpeechActDetector:
             if re.search(r"recient", raw, re.I):
                 direction = "desc"
             field = "fecha"
-            if re.search(r"loter", raw, re.I):
+            if re.search(r"frecuen", raw, re.I):
+                field = "fecha"  # frequency not a column; keep chronological table
+            elif re.search(r"loter", raw, re.I):
                 field = "loteria"
             elif re.search(r"posici", raw, re.I):
                 field = "posicion_a_num"
@@ -257,7 +302,14 @@ class WorkspaceSpeechActDetector:
                         reason_code="filter_lottery_bare",
                     )
 
-        if _SHOW.search(raw):
+        if _SHOW.search(raw) or _SHOW_DATES.search(raw):
+            if _SHOW_DATES.search(raw):
+                return WorkspaceActionDecision(
+                    action="show_dates",
+                    requires_asset_load=True,
+                    requires_huawei=False,
+                    reason_code="show_dates",
+                )
             return WorkspaceActionDecision(
                 action="show_results",
                 requires_asset_load=True,

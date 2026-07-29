@@ -26,6 +26,7 @@ TurnType = Literal[
     "meta",
     "reuse_evidence",
     "asset_action",
+    "social_chitchat",
 ]
 
 
@@ -172,7 +173,35 @@ class HermesDecisionEngine:
             or (state.active_filters or {}).get("relation")
         )
 
-        # Investigation Workspace 1.0 — only unequivocal asset ops (never investigation alone)
+        # Conversational Routing 3.0 — Path A (research) vs Path B (asset op)
+        from app.lottery.ai.conversational_router import ConversationalRouter
+
+        route = ConversationalRouter.route_path_ab(
+            raw, state=state, investigation=investigation if inv_active else None
+        )
+        if route.path == "social_chitchat":
+            decision.turn_type = "social_chitchat"
+            decision.requires_research = False
+            decision.reuse_evidence = False
+            decision.confidence = "high"
+            decision.reason_code = route.reason_code or "SOCIAL_CHITCHAT_MATCH"
+            decision.inherited_subjects = []
+            return decision
+        if route.path == "asset_operation" and route.workspace_action is not None:
+            ws = route.workspace_action
+            decision.turn_type = "asset_action"
+            decision.requires_research = False
+            decision.reuse_evidence = False
+            decision.confidence = "high"
+            decision.reason_code = route.reason_code or ws.reason_code
+            decision.inherited_subjects = active_pair[:8]
+            decision.inherited_relation = relation or "same_day"
+            decision.inherited_metric = relation or "same_day"
+            decision.workspace_action = ws.to_trace()
+            decision.requested_attribute = ws.action
+            return decision
+
+        # Investigation Workspace 1.0 — legacy detector (boot without materializable inv)
         from app.lottery.ai.investigation_workspace.speech_acts import (
             WorkspaceSpeechActDetector,
         )
@@ -180,13 +209,10 @@ class HermesDecisionEngine:
 
         asset = get_active_asset(state)
         has_asset = asset is not None and not asset.is_expired()
-        can_materialize = inv_active or (
-            getattr(state, "active_relation", None) == "same_day" and len(active_pair) >= 2
-        )
         ws = WorkspaceSpeechActDetector.detect(
             raw,
             has_active_asset=has_asset,
-            has_active_investigation=can_materialize,
+            has_active_investigation=False,
         )
         if ws is not None:
             decision.turn_type = "asset_action"

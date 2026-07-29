@@ -376,7 +376,22 @@ def classify_nlp(
             conversational_reply=HELP_REPLY,
         )
 
-    # 3. General chat / thanks / short ack
+    # 3. General chat / thanks / short ack (+ Conversational Routing 3.0 social)
+    from app.lottery.ai.conversational_router.social_chitchat import detect_social_chitchat
+
+    social = detect_social_chitchat(raw)
+    if social is not None:
+        log.append(f"rule=SOCIAL_CHITCHAT:{social.subtype}")
+        nlp_intent = "GREETING" if social.subtype == "greeting" else "GENERAL_CHAT"
+        return NlpDecision(
+            intent=nlp_intent,
+            entities=entities,
+            confidence=0.99,
+            decision_log=log,
+            run_tools=False,
+            conversational_reply=social.reply,
+        )
+
     if _GENERAL_CHAT.match(norm) or _GENERAL_CHAT.match(raw):
         log.append("rule=GENERAL_CHAT")
         return NlpDecision(

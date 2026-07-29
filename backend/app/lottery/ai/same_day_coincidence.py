@@ -657,18 +657,19 @@ def _brief_observation(summary: dict[str, Any]) -> str:
 
 
 def coincidence_suggestions(numbers: list[str]) -> list[str]:
+    """Suggestions aligned with Conversational Routing 3.0 Path B acts."""
     if len(numbers) < 2:
         return [
+            "Muéstrame esos resultados.",
             "Ver fechas de coincidencia.",
             "Desglosar por posición.",
-            "Ver la última coincidencia.",
         ]
     a, b = numbers[0], numbers[1]
     return [
+        "Muéstrame esos resultados.",
         "Ver fechas de coincidencia.",
         "Desglosar por posición.",
-        "Ver coincidencias en primera.",
-        "Ver la última coincidencia.",
+        "Exportar Excel.",
         f"Analizar qué pasó después de {a} + {b}.",
     ]
 

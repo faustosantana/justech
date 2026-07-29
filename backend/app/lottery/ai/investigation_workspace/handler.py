@@ -75,7 +75,14 @@ async def execute_workspace_action(
     action = decision.action
     asset = get_active_asset(state)
 
-    if action in {"show_results", "filter_results", "sort_results", "export_results", "paginate_results"}:
+    if action in {
+        "show_results",
+        "show_dates",
+        "filter_results",
+        "sort_results",
+        "export_results",
+        "paginate_results",
+    }:
         if asset is None or asset.is_expired() or not asset.source_rows:
             asset = await ensure_same_day_asset(
                 state,
@@ -124,7 +131,13 @@ async def execute_workspace_action(
 
     if action == "paginate_results":
         pag = decision.pagination or AssetPagination()
-        if decision.reason_code == "paginate_next":
+        if decision.reason_code == "paginate_first_n":
+            asset.pagination.page_size = max(1, min(int(pag.page_size or 20), 100))
+            asset.pagination.page = 1
+            from app.lottery.ai.investigation_workspace.operations import recompute_view
+
+            asset = recompute_view(asset)
+        elif decision.reason_code == "paginate_next":
             # advance page or enlarge page_size when "próximos N"
             if pag.page_size and pag.page_size != asset.pagination.page_size:
                 asset.pagination.page_size = pag.page_size
@@ -178,11 +191,17 @@ async def execute_workspace_action(
         )
         return _table_result(asset, decision, intro=intro)
 
-    # show_results / open_asset default
-    intro = (
-        f"Tabla de coincidencias same-day ({' y '.join(asset.subjects)}): "
-        f"{asset.row_count} fila(s)."
-    )
+    # show_dates / show_results / open_asset default
+    if action == "show_dates":
+        intro = (
+            f"Fechas de coincidencia same-day ({' y '.join(asset.subjects)}): "
+            f"{asset.row_count} fila(s)."
+        )
+    else:
+        intro = (
+            f"Tabla de coincidencias same-day ({' y '.join(asset.subjects)}): "
+            f"{asset.row_count} fila(s)."
+        )
     return _table_result(asset, decision, intro=intro)
 
 

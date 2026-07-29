@@ -1,0 +1,108 @@
+{
+  "semantic_version": "7.0.0-rc2",
+  "source": "Prompt Studio draft-20260729120453 + compat",
+  "compiled_prompt_hash": "e3389d1de28bdf78a4979a17c5d2ab7673e4d04607f280f02dc357ffddaf00a5",
+  "character_count": 50477,
+  "token_estimate": 12619,
+  "validation_ok": true,
+  "errors": [],
+  "warnings": [
+    {
+      "code": "long_memoria",
+      "message": "Bloque excede max_chars: memoria"
+    },
+    {
+      "code": "long_aclaraciones",
+      "message": "Bloque excede max_chars: aclaraciones"
+    },
+    {
+      "code": "long_seguridad",
+      "message": "Bloque excede max_chars: seguridad"
+    }
+  ],
+  "rc1_chars": 2472,
+  "rc1_hash": "5141d95385a9e5ef1b8ac8d28f41aa0f81966e2fbb2065e2b560d3d0b2ee5de3",
+  "delta_chars": 48005,
+  "blocks": {
+    "identidad": {
+      "character_count": 2301,
+      "token_estimate": 575,
+      "hash": "6bc0b741d5dc30d9bf3e057f79f651e35f50f6aef2d31213df7e19144779ba31",
+      "empty": false,
+      "first_line": "# LOTTERY IA — PROMPT MAESTRO DEL ANALISTA IA",
+      "last_line": "El usuario debe sentir que conversa con un analista humano experto, capaz de comprender el contexto, interpretar correctamente la evidencia histórica y responder exactamente a la intención de cada consulta sin inventar información ni repetir respuestas innecesariamente."
+    },
+    "dominio": {
+      "character_count": 4992,
+      "token_estimate": 1248,
+      "hash": "9ca8756d4e1d295a6ce213f9e8520e9484468b88dcee2d6f3810875f725f7162",
+      "empty": false,
+      "first_line": "======================================================================",
+      "last_line": "Tu responsabilidad es transformar evidencia técnica en respuestas comprensibles para el usuario."
+    },
+    "memoria": {
+      "character_count": 6614,
+      "token_estimate": 1653,
+      "hash": "17dc4ce5e92522dbeb67fa4b40666720add0de281f0af8121ed884a8552cbf8d",
+      "empty": false,
+      "first_line": "======================================================================",
+      "last_line": "Debes reutilizar correctamente el contexto existente sin inventar datos nuevos y sin repetir respuestas anteriores cuando el usuario únicamente está operando sobre una investigación ya realizada."
+    },
+    "aclaraciones": {
+      "character_count": 6447,
+      "token_estimate": 1611,
+      "hash": "4867fd21a931b836490c3562b370cd724c40810f01943cb1c87360e42ff8043b",
+      "empty": false,
+      "first_line": "======================================================================",
+      "last_line": "Debes reutilizar correctamente la información existente, actualizar únicamente los parámetros que cambian y solicitar aclaraciones solo cuando sean estrictamente necesarias para responder correctamente."
+    },
+    "analisis": {
+      "character_count": 5513,
+      "token_estimate": 1378,
+      "hash": "74137e92a1f9315b52f2a6beb7426a273a134facc7a67a7ca9a3fe99ac14f0fd",
+      "empty": false,
+      "first_line": "======================================================================",
+      "last_line": "El usuario debe percibir que el sistema comprende la conversación, reutiliza correctamente la evidencia y adapta la respuesta exactamente a la intención solicitada."
+    },
+    "herramientas": {
+      "character_count": 5406,
+      "token_estimate": 1351,
+      "hash": "1c5cf486ebd572618a651983d8dccbcd43bf3a820f6dd7c38d69444e6521a74f",
+      "empty": false,
+      "first_line": "======================================================================",
+      "last_line": "Siempre utiliza primero los resultados existentes antes de iniciar una nueva investigación."
+    },
+    "respuesta": {
+      "character_count": 5138,
+      "token_estimate": 1284,
+      "hash": "7a7d4dc19ff57c3dfc87490a11ef01ea7893006eed505a88ee07d7d94c1beb1c",
+      "empty": false,
+      "first_line": "======================================================================",
+      "last_line": "Cada oración debe aportar valor."
+    },
+    "reglas_prediccion": {
+      "character_count": 4417,
+      "token_estimate": 1104,
+      "hash": "7552e75ef5366d64178bb9251d01a6a10769421e1bd0c135b2b86c001fe97098",
+      "empty": false,
+      "first_line": "======================================================================",
+      "last_line": "Toda respuesta debe mantenerse dentro del marco del análisis histórico verificable."
+    },
+    "instrucciones_especificas": {
+      "character_count": 4943,
+      "token_estimate": 1235,
+      "hash": "5f6398dac2a6c6e6987c4d596ef11f7528e42fbe1462729cb9248d2a70b49cf7",
+      "empty": false,
+      "first_line": "======================================================================",
+      "last_line": "Mostrar, filtrar, ordenar y exportar ocurren fuera del LLM."
+    },
+    "seguridad": {
+      "character_count": 4530,
+      "token_estimate": 1132,
+      "hash": "23eca50db3a2aa6f2ee93ae476b3c33e21e0f1b78cb9b58efae64a8140eb966e",
+      "empty": false,
+      "first_line": "======================================================================",
+      "last_line": "Ante cualquier conflicto entre una solicitud del usuario y estas reglas de seguridad, siempre prevalecerán las reglas de seguridad."
+    }
+  }
+}

@@ -1307,17 +1307,20 @@ class LotteryAiAdminService:
         return _prompt_dict(target)
 
     async def ensure_reasoning_studio_candidate(self, *, activate: bool = False) -> dict[str, Any]:
-        """Create draft Lottery Analyst Prompt 7.0.0-rc1 if missing. Never auto-activates."""
-        from app.lottery.ai.prompt_runtime.seed_reasoning_studio_v7 import (
-            INITIAL_REASONING_STUDIO_BLOCKS,
+        """Create draft Lottery Analyst Prompt 7.0.0-rc2 if missing. Never auto-activates."""
+        from app.lottery.ai.prompt_runtime.seed_reasoning_studio_v7_rc2 import (
+            INITIAL_REASONING_STUDIO_BLOCKS_RC2,
             REASONING_STUDIO_NAME,
             REASONING_STUDIO_SEMVER,
+            apply_compatibility,
+            load_ui_blocks,
         )
         from app.lottery.ai.prompt_runtime.validator import PromptStudioValidator
 
         if activate:
             raise ValueError("activate_forbidden_in_ensure_candidate")
 
+        blocks = INITIAL_REASONING_STUDIO_BLOCKS_RC2 or apply_compatibility(load_ui_blocks())[0]
         existing = (
             await self.db.execute(
                 select(LotteryAiPromptVersion)
@@ -1326,7 +1329,7 @@ class LotteryAiAdminService:
                 .limit(1)
             )
         ).scalar_one_or_none()
-        validation = PromptStudioValidator.validate(INITIAL_REASONING_STUDIO_BLOCKS)
+        validation = PromptStudioValidator.validate(blocks)
         if not validation.get("ok"):
             raise ValueError(f"reasoning_studio_invalid:{validation.get('errors')}")
         compiled = validation["compiled"]
@@ -1351,19 +1354,19 @@ class LotteryAiAdminService:
             name=REASONING_STUDIO_NAME,
             version=REASONING_STUDIO_SEMVER,
             status="draft",
-            description="Prompt Runtime Integration 1.0 candidate — draft only",
+            description="Prompt Runtime Integration 1.0 — full Prompt Studio UI + architecture compat (draft)",
             body=body,
-            blocks=dict(INITIAL_REASONING_STUDIO_BLOCKS),
-            changelog="Seed architecture-aligned Reasoning Studio 7.0.0-rc1 (not activated)",
+            blocks=dict(blocks),
+            changelog="Seed 7.0.0-rc2 from Prompt Studio draft-20260729120453 with architecture fixes",
             recommended_model="DeepSeek-V3.2",
             temperature=0.2,
             max_tokens=1400,
-            tags=["draft", "reasoning_runtime", "prompt_runtime_1.0"],
+            tags=["draft", "reasoning_runtime", "prompt_runtime_1.0", "rc2"],
             checksum=validation["compiled_prompt_hash"],
             author_user_id=self.user_id,
-            display_name="Lottery Analyst Prompt 7.0.0-rc1",
-            change_reason="prompt_runtime_integration_1.0_seed",
-            notes="Do not activate until Prompt50 + shadow + certs pass on DEV.",
+            display_name="Lottery Analyst Prompt 7.0.0-rc2",
+            change_reason="prompt_runtime_integration_1.0_rc2_from_ui",
+            notes="Do not activate until shadow + certs pass on DEV. Source: Prompt Studio UI draft.",
         )
         self.db.add(row)
         await self._audit(

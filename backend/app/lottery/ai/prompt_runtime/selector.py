@@ -42,7 +42,10 @@ class PromptRuntimeSelection:
             "fallback_used": self.fallback_used,
             "legacy_prompt_used": self.legacy_prompt_used,
             "prompt_runtime_fallback": self.fallback_used,
-            **self.meta,
+            "shadow_prepared": bool(self.shadow_system_prompt),
+            "shadow_system_prompt": self.shadow_system_prompt,
+            "shadow_meta": dict(self.shadow_meta or {}),
+            **{k: v for k, v in self.meta.items() if k != "shadow_system_prompt"},
         }
 
 

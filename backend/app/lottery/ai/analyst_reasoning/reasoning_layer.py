@@ -109,7 +109,7 @@ class AnalystReasoningLayer:
             load_studio=load_studio,
         )
         # Strip internal metadata key before Huawei
-        runtime_meta = {}
+        runtime_meta: dict[str, Any] = {}
         clean_messages: list[dict[str, str]] = []
         for m in messages:
             item = {"role": m["role"], "content": m["content"]}
@@ -119,6 +119,51 @@ class AnalystReasoningLayer:
         t0 = time.perf_counter()
         text, model, usage = await self.huawei_caller(clean_messages, max_tokens)
         latency = (time.perf_counter() - t0) * 1000.0
+
+        shadow_cmp: dict[str, Any] | None = None
+        try:
+            from app.config import settings
+
+            shadow_sys = runtime_meta.get("shadow_system_prompt")
+            if (
+                bool(getattr(settings, "lottery_analyst_prompt_shadow_llm", False))
+                and runtime_meta.get("prompt_runtime_mode") == "shadow"
+                and isinstance(shadow_sys, str)
+                and shadow_sys.strip()
+            ):
+                shadow_messages = [
+                    {"role": "system", "content": shadow_sys},
+                    {"role": "user", "content": clean_messages[1]["content"]},
+                ]
+                st0 = time.perf_counter()
+                s_text, s_model, s_usage = await self.huawei_caller(shadow_messages, max_tokens)
+                s_lat = (time.perf_counter() - st0) * 1000.0
+                s_guard = FactualGuard.validate(s_text or "", package) if s_text else None
+                shadow_cmp = {
+                    "studio_raw": (s_text or "")[:8000],
+                    "studio_model": s_model,
+                    "studio_latency_ms": s_lat,
+                    "studio_input_tokens": (s_usage or {}).get("input_tokens"),
+                    "studio_output_tokens": (s_usage or {}).get("output_tokens"),
+                    "studio_guard_passed": bool(s_guard.passed) if s_guard else False,
+                    "studio_guard_reason": (s_guard.rejection_reason if s_guard else "empty"),
+                    "studio_prompt_hash": (runtime_meta.get("shadow_meta") or {}).get(
+                        "compiled_prompt_hash"
+                    )
+                    or runtime_meta.get("compiled_prompt_hash"),
+                    "same_evidence_package": True,
+                }
+        except Exception as exc:  # noqa: BLE001
+            shadow_cmp = {"error": str(exc)[:300]}
+
+        # Never expose shadow prompt in user-facing telemetry persistence beyond forensics
+        runtime_meta_public = {
+            k: v
+            for k, v in runtime_meta.items()
+            if k not in {"shadow_system_prompt"}
+        }
+        if shadow_cmp is not None:
+            runtime_meta_public["shadow_comparison"] = shadow_cmp
 
         if not text:
             return ReasoningResult(
@@ -133,7 +178,7 @@ class AnalystReasoningLayer:
                 evidence_hash=ehash,
                 input_tokens=(usage or {}).get("input_tokens"),
                 output_tokens=(usage or {}).get("output_tokens"),
-                telemetry={"prompt_runtime": runtime_meta},
+                telemetry={"prompt_runtime": runtime_meta_public},
             )
 
         guard: GuardResult = FactualGuard.validate(text, package)
@@ -151,7 +196,7 @@ class AnalystReasoningLayer:
                 evidence_hash=ehash,
                 input_tokens=(usage or {}).get("input_tokens"),
                 output_tokens=(usage or {}).get("output_tokens"),
-                telemetry={"violations": guard.violations, "prompt_runtime": runtime_meta},
+                telemetry={"violations": guard.violations, "prompt_runtime": runtime_meta_public},
             )
 
         return ReasoningResult(
@@ -166,7 +211,7 @@ class AnalystReasoningLayer:
             input_tokens=(usage or {}).get("input_tokens"),
             output_tokens=(usage or {}).get("output_tokens"),
             prompt_version=str(
-                runtime_meta.get("prompt_semantic_version") or REASONING_PROMPT_VERSION
+                runtime_meta_public.get("prompt_semantic_version") or REASONING_PROMPT_VERSION
             ),
-            telemetry={"prompt_runtime": runtime_meta},
+            telemetry={"prompt_runtime": runtime_meta_public},
         )

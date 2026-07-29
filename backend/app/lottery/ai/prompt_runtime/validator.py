@@ -12,7 +12,12 @@ from app.lottery.ai.prompt_studio import PROMPT_STUDIO_BLOCKS, scan_secrets
 _ARCH_FALSE_CLAIMS: list[tuple[str, re.Pattern[str]]] = [
     (
         "llm_executes_sql",
-        re.compile(r"(?i)(ejecut\w+\s+sql|acceso\s+directo\s+a\s+(la\s+)?base|corr\w+\s+consultas\s+sql)"),
+        # Affirmative claims only — ignore "No … ejecutar SQL" / "re-ejecutar SQL" prohibitions.
+        re.compile(
+            r"(?i)(?<!no\s)(?<!no\svolver\sa\s)(?<!nunca\s)(?<!re-)"
+            r"(ejecut\w+\s+sql|acceso\s+directo\s+a\s+(la\s+)?base|"
+            r"corr\w+\s+consultas\s+sql)"
+        ),
     ),
     (
         "llm_controls_hermes",

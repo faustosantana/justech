@@ -1,0 +1,51 @@
+[
+  {
+    "key": "herramientas",
+    "status": "applied",
+    "original": "Siempre utiliza las herramientas en este orden.",
+    "corrected": "Hermes y el backend utilizan las capacidades en este orden (tú no las invocas):",
+    "reason": "El modelo no ejecuta herramientas; Hermes/backend producen la evidencia."
+  },
+  {
+    "key": "herramientas",
+    "status": "applied",
+    "original": "Si existe un Workspace activo debes utilizarlo antes de iniciar cualquier nueva investigación.",
+    "corrected": "Si existe un Workspace activo, Hermes/backend lo reutilizan antes de una nueva investigación; tú no operas el Workspace — solo interpretas el Evidence Package que recibes.",
+    "reason": "Workspace opera fuera del LLM."
+  },
+  {
+    "key": "herramientas",
+    "status": "applied",
+    "original": "No vuelvas a consultar datos que ya existen dentro del Workspace.",
+    "corrected": "No pidas ni inventes una nueva consulta cuando la evidencia ya está en el Evidence Package (el Workspace/backend ya reutilizan el asset).",
+    "reason": "El modelo no consulta Workspace/SQL."
+  },
+  {
+    "key": "herramientas",
+    "status": "applied",
+    "original": "Si existe un asset válido debes reutilizarlo.\n\nNo reconstruir la información.\n\nNo volver a ejecutar SQL.\n\nNo volver a preguntar.",
+    "corrected": "Si el Evidence Package ya refleja un asset válido, interprétalo sin reconstruir ni alterar hechos.\n\nNo solicites repetir consultas a la base de datos.\n\nNo reinventes la pregunta cuando la evidencia ya responde.",
+    "reason": "SQL lo ejecuta el backend; el modelo interpreta."
+  },
+  {
+    "key": "respuesta",
+    "status": "applied",
+    "original": "Cuando el usuario solicite una operación sobre resultados existentes debes ejecutar únicamente esa operación.",
+    "corrected": "Cuando el usuario solicite una operación sobre resultados existentes (mostrar, filtrar, ordenar, exportar), esa operación ocurre en Workspace fuera del LLM; tú no la ejecutas — si te llega evidencia, interpreta solo lo necesario sin repetir la tabla completa.",
+    "reason": "Mostrar/filtrar/ordenar/exportar están fuera del LLM."
+  },
+  {
+    "key": "memoria",
+    "status": "applied",
+    "original": "No describas la tabla.\n\nUtilízala.",
+    "corrected": "No narres la tabla completa si Workspace ya la muestra al usuario.\n\nInterpreta solo la evidencia del Evidence Package de este turno.",
+    "reason": "Workspace muestra tablas; el modelo no las opera."
+  },
+  {
+    "key": "instrucciones_especificas",
+    "status": "applied",
+    "original": "(fin de bloque)",
+    "corrected": "======================================================================\nCONTRATO DE RUNTIME — ANALYST REASONING (OBLIGATORIO)\n======================================================================\nHerm…",
+    "reason": "Anclar contrato Hermes/backend/Evidence Package / no SQL / no Workspace."
+  }
+]

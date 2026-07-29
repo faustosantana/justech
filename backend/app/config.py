@@ -246,6 +246,15 @@ class Settings(BaseSettings):
     lottery_forensic_trace_include_prompts: bool = True
     lottery_forensic_trace_include_provider_raw: bool = True
     lottery_forensic_trace_dir: str = ""  # empty → <repo>/artifacts/forensics
+    # Prompt Runtime Integration 1.0 — default legacy (Analyst Reasoning 2.1)
+    # Modes: legacy | studio | shadow | ab_test
+    lottery_analyst_prompt_runtime_mode: str = "legacy"
+    lottery_analyst_prompt_studio_enabled: bool = False
+    lottery_analyst_prompt_studio_version_id: str = ""
+    lottery_analyst_prompt_ab_percent: int = 0
+    lottery_prompt_cache_ttl_seconds: int = 300
+    # Shadow LLM double-call (costly); metadata-only shadow when false
+    lottery_analyst_prompt_shadow_llm: bool = False
     lottery_export_max_rows_csv: int = 100000
     lottery_export_max_rows_xlsx: int = 50000
     lottery_export_max_rows_pdf: int = 5000

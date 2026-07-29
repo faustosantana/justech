@@ -1246,6 +1246,12 @@ class LotteryAiAdminService:
         )
         await self.db.flush()
         await self._refresh_prompt_cache()
+        try:
+            from app.lottery.ai.prompt_runtime.selector import PromptRuntimeSelector
+
+            PromptRuntimeSelector.invalidate_cache()
+        except Exception:  # noqa: BLE001
+            pass
         return _prompt_dict(row)
 
     async def rollback_prompt(self, prompt_id: uuid.UUID) -> dict[str, Any]:
@@ -1292,7 +1298,210 @@ class LotteryAiAdminService:
         )
         await self.db.flush()
         await self._refresh_prompt_cache()
+        try:
+            from app.lottery.ai.prompt_runtime.selector import PromptRuntimeSelector
+
+            PromptRuntimeSelector.invalidate_cache()
+        except Exception:  # noqa: BLE001
+            pass
         return _prompt_dict(target)
+
+    async def ensure_reasoning_studio_candidate(self, *, activate: bool = False) -> dict[str, Any]:
+        """Create draft Lottery Analyst Prompt 7.0.0-rc1 if missing. Never auto-activates."""
+        from app.lottery.ai.prompt_runtime.seed_reasoning_studio_v7 import (
+            INITIAL_REASONING_STUDIO_BLOCKS,
+            REASONING_STUDIO_NAME,
+            REASONING_STUDIO_SEMVER,
+        )
+        from app.lottery.ai.prompt_runtime.validator import PromptStudioValidator
+
+        if activate:
+            raise ValueError("activate_forbidden_in_ensure_candidate")
+
+        existing = (
+            await self.db.execute(
+                select(LotteryAiPromptVersion)
+                .where(LotteryAiPromptVersion.name == REASONING_STUDIO_NAME)
+                .where(LotteryAiPromptVersion.version == REASONING_STUDIO_SEMVER)
+                .limit(1)
+            )
+        ).scalar_one_or_none()
+        validation = PromptStudioValidator.validate(INITIAL_REASONING_STUDIO_BLOCKS)
+        if not validation.get("ok"):
+            raise ValueError(f"reasoning_studio_invalid:{validation.get('errors')}")
+        compiled = validation["compiled"]
+        if existing:
+            return {
+                "created": False,
+                "prompt": _prompt_dict(existing),
+                "validation": {
+                    "ok": True,
+                    "compiled_prompt_hash": validation["compiled_prompt_hash"],
+                    "chars": validation["chars"],
+                    "tokens_estimated": validation["tokens_estimated"],
+                    "warnings": validation.get("warnings") or [],
+                },
+                "activated": False,
+            }
+
+        body = compiled["body"]
+        row = LotteryAiPromptVersion(
+            id=uuid.uuid4(),
+            tenant_id=self.tenant_id,
+            name=REASONING_STUDIO_NAME,
+            version=REASONING_STUDIO_SEMVER,
+            status="draft",
+            description="Prompt Runtime Integration 1.0 candidate — draft only",
+            body=body,
+            blocks=dict(INITIAL_REASONING_STUDIO_BLOCKS),
+            changelog="Seed architecture-aligned Reasoning Studio 7.0.0-rc1 (not activated)",
+            recommended_model="DeepSeek-V3.2",
+            temperature=0.2,
+            max_tokens=1400,
+            tags=["draft", "reasoning_runtime", "prompt_runtime_1.0"],
+            checksum=validation["compiled_prompt_hash"],
+            author_user_id=self.user_id,
+            display_name="Lottery Analyst Prompt 7.0.0-rc1",
+            change_reason="prompt_runtime_integration_1.0_seed",
+            notes="Do not activate until Prompt50 + shadow + certs pass on DEV.",
+        )
+        self.db.add(row)
+        await self._audit(
+            "prompt_create_draft",
+            entity_type="prompt",
+            entity_id=str(row.id),
+            after=_prompt_dict(row),
+            version_label=row.version,
+        )
+        await self.db.flush()
+        return {
+            "created": True,
+            "prompt": _prompt_dict(row),
+            "validation": {
+                "ok": True,
+                "compiled_prompt_hash": validation["compiled_prompt_hash"],
+                "chars": validation["chars"],
+                "tokens_estimated": validation["tokens_estimated"],
+                "warnings": validation.get("warnings") or [],
+            },
+            "activated": False,
+        }
+
+    async def publish_prompt_immutable(self, prompt_id: uuid.UUID) -> dict[str, Any]:
+        """Mark draft/approved as published (immutable) without activating runtime."""
+        from app.lottery.ai.prompt_runtime.validator import PromptStudioValidator
+
+        row = await self.db.get(LotteryAiPromptVersion, prompt_id)
+        if not row:
+            raise KeyError("prompt_not_found")
+        if row.status == "active":
+            raise ValueError("already_active_use_rollback_or_new_draft")
+        if row.status in {"archived", "rejected"}:
+            raise ValueError("cannot_publish_archived_or_rejected")
+        blocks = row.blocks if isinstance(row.blocks, dict) else {}
+        validation = PromptStudioValidator.validate(blocks)
+        if not validation.get("ok"):
+            raise ValueError(f"validation_failed:{validation.get('errors')}")
+        before = {"status": row.status, "checksum": row.checksum}
+        row.body = validation["compiled"]["body"]
+        row.checksum = validation["compiled_prompt_hash"]
+        row.status = "published"
+        row.published_at = datetime.now(timezone.utc)
+        row.gates_snapshot = {
+            "validation": {
+                "ok": True,
+                "chars": validation["chars"],
+                "tokens_estimated": validation["tokens_estimated"],
+                "compiled_prompt_hash": validation["compiled_prompt_hash"],
+                "warnings": validation.get("warnings") or [],
+            }
+        }
+        await self._audit(
+            "prompt_publish_immutable",
+            entity_type="prompt",
+            entity_id=str(row.id),
+            before=before,
+            after=_prompt_dict(row),
+            version_label=row.version,
+        )
+        await self.db.flush()
+        return {"prompt": _prompt_dict(row), "activated": False, "published": True}
+
+    async def activate_prompt_dev(self, prompt_id: uuid.UUID, *, reason: str | None = None) -> dict[str, Any]:
+        """Activate a published/approved Reasoning Studio version (DEV intent). Does not touch PROD."""
+        row = await self.db.get(LotteryAiPromptVersion, prompt_id)
+        if not row:
+            raise KeyError("prompt_not_found")
+        if row.status not in {"published", "approved", "replaced", "validated"}:
+            raise ValueError("activate_requires_published_or_approved")
+        # Demote only peers with same name (keep Prompt Maestro active untouched)
+        peers = (
+            await self.db.execute(
+                select(LotteryAiPromptVersion)
+                .where(LotteryAiPromptVersion.name == row.name)
+                .where(LotteryAiPromptVersion.status == "active")
+            )
+        ).scalars().all()
+        before_hash = None
+        for p in peers:
+            before_hash = p.checksum
+            p.status = "replaced"
+        row.status = "active"
+        row.published_at = datetime.now(timezone.utc)
+        row.change_reason = reason or row.change_reason or "activate_dev"
+        await self._audit(
+            "prompt_activate_dev",
+            entity_type="prompt",
+            entity_id=str(row.id),
+            before={"previous_checksum": before_hash},
+            after=_prompt_dict(row),
+            version_label=row.version,
+        )
+        await self.db.flush()
+        try:
+            from app.lottery.ai.prompt_runtime.selector import PromptRuntimeSelector
+
+            PromptRuntimeSelector.invalidate_cache()
+        except Exception:  # noqa: BLE001
+            pass
+        return {"prompt": _prompt_dict(row), "activated": True, "cache_invalidated": True}
+
+    async def prompt_runtime_status(self) -> dict[str, Any]:
+        from app.config import settings
+        from app.lottery.ai.prompt_runtime.seed_reasoning_studio_v7 import REASONING_STUDIO_NAME
+        from app.lottery.ai.prompt_runtime.selector import PromptRuntimeSelector
+
+        drafts = (
+            await self.db.execute(
+                select(LotteryAiPromptVersion)
+                .where(LotteryAiPromptVersion.name == REASONING_STUDIO_NAME)
+                .where(LotteryAiPromptVersion.status.in_(["draft", "validated", "approved", "published"]))
+                .order_by(LotteryAiPromptVersion.updated_at.desc())
+                .limit(5)
+            )
+        ).scalars().all()
+        active = (
+            await self.db.execute(
+                select(LotteryAiPromptVersion)
+                .where(LotteryAiPromptVersion.name == REASONING_STUDIO_NAME)
+                .where(LotteryAiPromptVersion.status == "active")
+                .limit(1)
+            )
+        ).scalar_one_or_none()
+        return {
+            "runtime_mode": PromptRuntimeSelector.configured_mode(),
+            "studio_enabled": PromptRuntimeSelector.studio_enabled(),
+            "ab_percent": int(getattr(settings, "lottery_analyst_prompt_ab_percent", 0) or 0),
+            "pinned_version_id": str(getattr(settings, "lottery_analyst_prompt_studio_version_id", "") or "")
+            or None,
+            "cache_ttl_seconds": int(getattr(settings, "lottery_prompt_cache_ttl_seconds", 300) or 300),
+            "shadow_llm": bool(getattr(settings, "lottery_analyst_prompt_shadow_llm", False)),
+            "forensic_trace_enabled": bool(getattr(settings, "lottery_forensic_trace_enabled", False)),
+            "drafts": [_prompt_dict(r) for r in drafts],
+            "active": _prompt_dict(active) if active else None,
+            "activate_prod_available": False,
+            "legacy_default": True,
+        }
 
     # ---- agent / config versions ----
     async def get_agent(self) -> dict[str, Any]:

@@ -71,6 +71,8 @@ class AnalystReasoningLayer:
         mode: ReasoningMode,
         factual_fallback: str,
         max_tokens: int = 1200,
+        conversation_id: str | None = None,
+        load_studio: Callable[[], dict[str, Any] | None] | None = None,
     ) -> ReasoningResult:
         ehash = package.evidence_hash()
         rich_fallback = package.safe_interpretive_text(base_factual=factual_fallback)
@@ -100,9 +102,22 @@ class AnalystReasoningLayer:
                 evidence_hash=ehash,
             )
 
-        messages = build_reasoning_messages(package=package, mode=mode)
+        messages = build_reasoning_messages(
+            package=package,
+            mode=mode,
+            conversation_id=conversation_id,
+            load_studio=load_studio,
+        )
+        # Strip internal metadata key before Huawei
+        runtime_meta = {}
+        clean_messages: list[dict[str, str]] = []
+        for m in messages:
+            item = {"role": m["role"], "content": m["content"]}
+            if m.get("role") == "system" and isinstance(m.get("_prompt_runtime"), dict):
+                runtime_meta = dict(m["_prompt_runtime"])  # type: ignore[index]
+            clean_messages.append(item)
         t0 = time.perf_counter()
-        text, model, usage = await self.huawei_caller(messages, max_tokens)
+        text, model, usage = await self.huawei_caller(clean_messages, max_tokens)
         latency = (time.perf_counter() - t0) * 1000.0
 
         if not text:
@@ -118,6 +133,7 @@ class AnalystReasoningLayer:
                 evidence_hash=ehash,
                 input_tokens=(usage or {}).get("input_tokens"),
                 output_tokens=(usage or {}).get("output_tokens"),
+                telemetry={"prompt_runtime": runtime_meta},
             )
 
         guard: GuardResult = FactualGuard.validate(text, package)
@@ -135,7 +151,7 @@ class AnalystReasoningLayer:
                 evidence_hash=ehash,
                 input_tokens=(usage or {}).get("input_tokens"),
                 output_tokens=(usage or {}).get("output_tokens"),
-                telemetry={"violations": guard.violations},
+                telemetry={"violations": guard.violations, "prompt_runtime": runtime_meta},
             )
 
         return ReasoningResult(
@@ -149,4 +165,8 @@ class AnalystReasoningLayer:
             evidence_hash=ehash,
             input_tokens=(usage or {}).get("input_tokens"),
             output_tokens=(usage or {}).get("output_tokens"),
+            prompt_version=str(
+                runtime_meta.get("prompt_semantic_version") or REASONING_PROMPT_VERSION
+            ),
+            telemetry={"prompt_runtime": runtime_meta},
         )

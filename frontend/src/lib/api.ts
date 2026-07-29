@@ -3164,6 +3164,29 @@ export const apiClient = {
       true,
     ),
 
+  postLotteryAIPromptPublishImmutable: (id: string) =>
+    request<Record<string, unknown>>(
+      `/lottery/admin/ai/prompts/${encodeURIComponent(id)}/publish-immutable`,
+      { method: "POST", body: "{}" },
+      true,
+    ),
+
+  postLotteryAIPromptActivateDev: (id: string, body?: Record<string, unknown>) =>
+    request<Record<string, unknown>>(
+      `/lottery/admin/ai/prompts/${encodeURIComponent(id)}/activate-dev`,
+      { method: "POST", body: JSON.stringify(body || {}) },
+      true,
+    ),
+
+  getLotteryPromptRuntimeStatus: () =>
+    request<Record<string, unknown>>("/lottery/admin/ai/prompt-runtime/status", {}, true),
+
+  postLotteryPromptRuntimeSeedCandidate: () =>
+    request<Record<string, unknown>>("/lottery/admin/ai/prompt-runtime/seed-candidate", {
+      method: "POST",
+      body: "{}",
+    }, true),
+
   postLotteryAIPromptRollback: (id: string) =>
     request<Record<string, unknown>>(
       `/lottery/admin/ai/prompts/${encodeURIComponent(id)}/rollback`,

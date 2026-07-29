@@ -1,0 +1,19 @@
+{
+  "suite": "SHADOW_PROMPT_RUNTIME",
+  "status": "not_executed",
+  "reason": "Requires DEV deploy of feature branch with LOTTERY_ANALYST_PROMPT_RUNTIME_MODE=shadow and STUDIO_ENABLED=true after activating a published candidate. Double LLM calls only if LOTTERY_ANALYST_PROMPT_SHADOW_LLM=true.",
+  "planned_min_cases": 200,
+  "metrics": [
+    "legacy_response",
+    "studio_response",
+    "factual_score",
+    "semantic_similarity",
+    "length",
+    "latency",
+    "token_usage",
+    "guard_result",
+    "preferred_response",
+    "reason"
+  ],
+  "comparisons": []
+}

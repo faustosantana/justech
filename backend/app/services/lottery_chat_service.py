@@ -1839,12 +1839,28 @@ class LotteryChatService:
                             return text, model, {}
 
                         if should_invoke_reasoning(mode):
+                            studio_row: dict[str, Any] | None = None
+                            if getattr(settings, "lottery_analyst_prompt_studio_enabled", False):
+                                try:
+                                    from app.lottery.ai.prompt_runtime.db_loader import (
+                                        load_active_reasoning_studio_async,
+                                    )
+
+                                    studio_row = await load_active_reasoning_studio_async(self.db)
+                                except Exception:  # noqa: BLE001
+                                    studio_row = None
+
+                            def _load_studio() -> dict[str, Any] | None:
+                                return studio_row
+
                             layer = AnalystReasoningLayer(huawei_caller=_reasoning_huawei)
                             rr = await layer.run(
                                 package=pkg,
                                 mode=mode,  # type: ignore[arg-type]
                                 factual_fallback=template or "",
                                 max_tokens=min(analyst_cfg.max_tokens, 1400),
+                                conversation_id=str(getattr(session, "id", None) or ""),
+                                load_studio=_load_studio if studio_row is not None else None,
                             )
                             used_reasoning_path = True
                             final_text = rr.text

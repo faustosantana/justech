@@ -369,6 +369,66 @@ async def ai_prompt_rollback(
         _map_err(e)
 
 
+@router.get("/prompt-runtime/status")
+async def prompt_runtime_status(
+    db: DbSession,
+    user: CurrentUser,
+    tenant: TenantCtx,
+    _: Annotated[None, require_ai_admin("lottery_admin_prompts", "lottery_admin_ai", "lottery.admin")],
+) -> dict:
+    return await _svc(db, user).prompt_runtime_status()
+
+
+@router.post("/prompt-runtime/seed-candidate")
+async def prompt_runtime_seed_candidate(
+    db: DbSession,
+    user: CurrentUser,
+    tenant: TenantCtx,
+    _: Annotated[None, require_ai_admin("lottery_admin_prompts", "lottery_admin_ai", "lottery.admin")],
+) -> dict:
+    try:
+        data = await _svc(db, user).ensure_reasoning_studio_candidate(activate=False)
+        await db.commit()
+        return data
+    except Exception as e:
+        _map_err(e)
+
+
+@router.post("/prompts/{prompt_id}/publish-immutable")
+async def ai_prompt_publish_immutable(
+    prompt_id: UUID,
+    db: DbSession,
+    user: CurrentUser,
+    tenant: TenantCtx,
+    _: Annotated[None, require_ai_admin("lottery_admin_prompts", "lottery_admin_ai", "lottery.admin")],
+) -> dict:
+    """Publicar sin activar (draft → published). Guardar ≠ publicar ≠ activar."""
+    try:
+        data = await _svc(db, user).publish_prompt_immutable(prompt_id)
+        await db.commit()
+        return data
+    except Exception as e:
+        _map_err(e)
+
+
+@router.post("/prompts/{prompt_id}/activate-dev")
+async def ai_prompt_activate_dev(
+    prompt_id: UUID,
+    db: DbSession,
+    user: CurrentUser,
+    tenant: TenantCtx,
+    _: Annotated[None, require_ai_admin("lottery_admin_prompts", "lottery_admin_ai", "lottery.admin")],
+    body: dict[str, Any] = Body(default_factory=dict),
+) -> dict:
+    """Activar en runtime DEV (no hay botón Activar en Producción en esta fase)."""
+    try:
+        data = await _svc(db, user).activate_prompt_dev(prompt_id, reason=body.get("reason"))
+        await db.commit()
+        return data
+    except Exception as e:
+        _map_err(e)
+
+
 @router.get("/models")
 async def ai_models(
     db: DbSession,

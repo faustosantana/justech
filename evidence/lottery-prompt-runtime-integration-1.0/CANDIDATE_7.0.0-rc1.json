@@ -1,0 +1,19 @@
+{
+  "candidate": {
+    "name": "Lottery Analyst Prompt 7.0.0-rc1",
+    "semantic_version": "7.0.0-rc1",
+    "status": "draft_candidate_not_activated",
+    "compiled_prompt_hash": "5141d95385a9e5ef1b8ac8d28f41aa0f81966e2fbb2065e2b560d3d0b2ee5de3",
+    "character_count": 2472,
+    "token_estimate": 618,
+    "validation_ok": true,
+    "warnings": []
+  },
+  "legacy_prompt_version": "analyst-reasoning-v1.1",
+  "legacy_system_chars": 1530,
+  "legacy_system_hash": "f49256fe1df11e2cbbeaecde58a3f8520c6e651dd68f6c73d3ea54b590b81e70",
+  "comparison_notes": [
+    "Studio candidate is architecture-aligned (Hermes decides; no SQL/tools by LLM).",
+    "Default runtime remains legacy until flags + activation + certs."
+  ]
+}

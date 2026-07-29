@@ -37,6 +37,12 @@ def get_active_asset(state: Any) -> InvestigationAsset | None:
     return None
 
 
+def clear_assets(state: Any) -> None:
+    """Drop operable tables when starting an explicit new investigation."""
+    state.workspace_assets = {}
+    state.active_asset_id = None
+
+
 def save_asset(state: Any, asset: InvestigationAsset) -> InvestigationAsset:
     asset.touch()
     assets = get_assets_map(state)

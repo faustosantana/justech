@@ -109,8 +109,8 @@ _PREVIOUS_TO_THOSE = re.compile(
     re.I,
 )
 _OTHER_N = re.compile(
-    r"\b(las?\s+)?otras?\s+(?P<n>\d{1,2}|tres|cuatro|cinco|diez)\b|"
-    r"\b(?P<n2>\d{1,2}|tres|cuatro|cinco)\s+m[aá]s\b",
+    r"\b(las?\s+)?otras?\s+(?P<n>\d{1,2}|dos|tres|cuatro|cinco|seis|siete|ocho|nueve|diez)\b|"
+    r"\b(?P<n2>\d{1,2}|dos|tres|cuatro|cinco|seis|siete|ocho|nueve|diez)\s+m[aá]s\b",
     re.I,
 )
 _CORRECTION = re.compile(

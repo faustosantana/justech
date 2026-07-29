@@ -1,10 +1,11 @@
 """Conversational Router 3.0 — high-priority intent routing.
 
-Mandatory order (never invert):
+Mandatory order (never invert, except pending elevation):
 1. social_chitchat
-2. workspace_action
-3. explicit_new_investigation
-4. analytical_clarification
+2. analytical_clarification — ONLY when pending_clarification is active
+   (elevated so slot fills like «50 y 90» / «Gana Más» are not Path A)
+3. workspace_action
+4. explicit_new_investigation
 5. contextual_follow_up
 6. default_research
 """
@@ -120,7 +121,18 @@ class ConversationalRouter:
                 inherited_subjects=[],
             )
 
-        # 2) workspace_action — operable asset / materializable same-day
+        # 2) analytical_clarification — only with explicit pending_clarification
+        #    (before new-investigation so «50 y 90» fills slots instead of Path A)
+        if has_pending and cls._looks_like_slot_fill(raw):
+            return ConversationalRoute(
+                path="analytical_clarification",
+                reason_code="PENDING_CLARIFICATION_MATCH",
+                can_materialize=can_materialize,
+                has_active_asset=has_asset,
+                inherited_subjects=list(active_pair[:8]),
+            )
+
+        # 3) workspace_action — operable asset / materializable same-day
         if can_materialize:
             if not cls._is_new_investigation(raw, active_pair=active_pair, inv_active=inv_active):
                 ws = WorkspaceSpeechActDetector.detect(
@@ -138,7 +150,7 @@ class ConversationalRouter:
                         inherited_subjects=list(active_pair[:8]),
                     )
 
-        # 3) explicit_new_investigation
+        # 4) explicit_new_investigation
         if cls._is_new_investigation(raw, active_pair=active_pair, inv_active=inv_active):
             return ConversationalRoute(
                 path="explicit_new_investigation",
@@ -146,16 +158,6 @@ class ConversationalRouter:
                 can_materialize=can_materialize,
                 has_active_asset=has_asset,
                 inherited_subjects=extract_subject_numbers(raw)[:8] or list(active_pair[:8]),
-            )
-
-        # 4) analytical_clarification — only with explicit pending_clarification
-        if has_pending and cls._looks_like_slot_fill(raw):
-            return ConversationalRoute(
-                path="analytical_clarification",
-                reason_code="PENDING_CLARIFICATION_MATCH",
-                can_materialize=can_materialize,
-                has_active_asset=has_asset,
-                inherited_subjects=list(active_pair[:8]),
             )
 
         # 5) contextual_follow_up (analytical continuity — not social)
@@ -215,6 +217,8 @@ class ConversationalRouter:
     @classmethod
     def _looks_like_slot_fill(cls, raw: str) -> bool:
         """User supplies a requested param (lottery / number), not social ack."""
+        import re
+
         from app.lottery.ai.official_lottery_scope import canonicalize_lottery_name
 
         text = (raw or "").strip()
@@ -226,7 +230,8 @@ class ConversationalRouter:
         if nums:
             return True
         # lottery name fill: "Gana Más", "Loteka", "Solo Gana Más"
-        if canonicalize_lottery_name(text) or re_lottery_token(text):
+        soft = re.sub(r"^\s*solo\s+", "", text, flags=re.I).strip()
+        if canonicalize_lottery_name(soft) or canonicalize_lottery_name(text) or re_lottery_token(text):
             return True
         return False
 
@@ -253,10 +258,6 @@ class ConversationalRouter:
         )
 
         if re.search(r"^\s*nueva\s+conversaci[oó]n\s*$", raw or "", re.I):
-            return True
-        if _FACTUAL_BLOCK.search(raw):
-            return True
-        if _bare_en_lottery(raw):
             return True
 
         msg_nums = extract_subject_numbers(raw)
@@ -291,6 +292,19 @@ class ConversationalRouter:
                 return False
             # "Ahora analiza el 35" / topic switch
             return True
+
+        # Analyze/investiga with a named subject (even without prior inv)
+        if len(msg_nums) == 1 and re.search(
+            r"\b(analiz|investiga|estudi|camb(iar|iemos)|olvid|hablemos)\b",
+            raw or "",
+            re.I,
+        ):
+            return True
+
+        # Factual refine / bare lottery — not EXPLICIT_NEW (workspace already blocked
+        # by _FACTUAL_BLOCK / _bare_en_lottery in the speech-act detector).
+        if _FACTUAL_BLOCK.search(raw) or _bare_en_lottery(raw):
+            return False
 
         return False
 

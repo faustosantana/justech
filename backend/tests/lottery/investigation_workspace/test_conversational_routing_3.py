@@ -105,7 +105,7 @@ def test_router_priority_social_before_workspace():
 def test_router_path_a_new_pair():
     state, inv = _inv_state()
     r = ConversationalRouter.route(
-        "Han salido juntos el 50 y el 90", state=state, investigation=inv
+        "Han salido juntos el 11 y el 22", state=state, investigation=inv
     )
     assert r.path == "explicit_new_investigation"
 

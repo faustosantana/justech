@@ -1,0 +1,32 @@
+{
+  "directed_3_after_fix": [
+    {
+      "case_id": "LONG_30.T21",
+      "eval_pass": true,
+      "eval_fails": [],
+      "answer_preview": "Las 2 apariciones m\u00e1s recientes del 22 fueron:\n1. 2026-07-23 \u2014 New York 2:30 \u2014 3ra posici\u00f3n.\n2. 2026-07-20 \u2014 Gana M\u00e1s \u2014 2da posici\u00f3n.",
+      "active_numbers": [
+        "22"
+      ]
+    },
+    {
+      "case_id": "LONG_30.T29",
+      "eval_pass": true,
+      "eval_fails": [],
+      "answer_preview": "Las 1 apariciones m\u00e1s recientes del 07 fueron:\n1. 2026-07-23 \u2014 Leidsa \u2014 3ra posici\u00f3n. Encontr\u00e9 37 registros en frecuencia por loter\u00eda.",
+      "active_numbers": [
+        "07"
+      ]
+    },
+    {
+      "case_id": "G01.T04",
+      "eval_pass": true,
+      "eval_fails": [],
+      "answer_preview": "Informe de investigaci\u00f3n hist\u00f3rica\n\nLas 1 apariciones m\u00e1s recientes del 07 fueron:\n1. 2026-07-23 \u2014 Leidsa \u2014 3ra posici\u00f3n. Encontr\u00e9 805 registros en frecuencia p",
+      "active_numbers": [
+        "07"
+      ]
+    }
+  ],
+  "result": "3/3 PASS"
+}

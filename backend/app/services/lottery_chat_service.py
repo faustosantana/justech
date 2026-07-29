@@ -318,6 +318,74 @@ class LotteryChatService:
             },
         )
 
+        # Domain refuses (prediction / OOD / harmful) — exit BEFORE Hermes topic-switch
+        # can rewrite «Garantiza… el 54» into last_occurrence research (Cert LONG_30.T25).
+        if understanding.intent in {
+            "out_of_domain",
+            "restricted_technical",
+            "prediction_request",
+            "harmful_or_illegal",
+            "unsupported",
+        }:
+            refuse = (
+                (understanding.params or {}).get("refuse_message")
+                or understanding.clarification_question
+                or (understanding.params or {}).get("message")
+                or "No puedo ayudar con esa solicitud."
+            )
+            refuse = re.sub(
+                r"\bnunca\s+volver[aá](\s+a\s+salir)?\b",
+                "dejar de aparecer",
+                refuse,
+                flags=re.I,
+            )
+            refuse = re.sub(r"\bgarantiz\w*\b", "anticipan", refuse, flags=re.I)
+            forensic.event(
+                "domain_refuse_early_exit",
+                component="LotteryChatService",
+                file="lottery_chat_service.py",
+                function="send_message",
+                output={
+                    "intent": understanding.intent,
+                    "huawei_called": False,
+                    "reply": refuse,
+                },
+            )
+            session.context = {
+                **(session.context or {}),
+                "conversation_v4": state.to_store(),
+            }
+            asst = LotteryChatMessage(
+                session_id=session.id,
+                role="assistant",
+                content=refuse,
+                tool_name="refuse",
+                tool_payload={"intent": understanding.intent, "domain_refuse": True},
+            )
+            self.db.add(asst)
+            await self.db.flush()
+            out = {
+                "message": {
+                    "id": str(asst.id),
+                    "role": "assistant",
+                    "content": refuse,
+                    "structured_content": {
+                        "type": "lottery_error",
+                        "warnings": [{"code": "REFUSE", "message": refuse}],
+                    },
+                    "tool_trace": [],
+                    "created_at": asst.created_at.isoformat() if asst.created_at else None,
+                },
+                "user_message_id": str(user_msg.id),
+                "context": session.context,
+                "active_context": {},
+                "suggestions": self._suggestions(ctx, "chat", state=state),
+                "intent": understanding.intent,
+            }
+            if forensic.enabled:
+                out["forensic"] = forensic.package_meta()
+            return out
+
         # Conversational Routing 3.0 — social_chitchat early exit BEFORE Hermes /
         # subject inheritance / research / analytical formatter.
         social_route = (understanding.params or {}).get("routing_intent") == "social_chitchat"
@@ -705,6 +773,93 @@ class LotteryChatService:
             message=content,
             conversation_id=str(session.id),
         )
+
+        # Explicit topic switch / new single subject — force factual research, drop soft path.
+        # Do NOT rewrite an explicit last_n ask («Últimas 3 del 35») into last_occurrence limit=1.
+        if (
+            hermes_decision.turn_type in {"topic_switch", "new_investigation"}
+            and hermes_decision.reason_code == "EXPLICIT_NEW_RESEARCH"
+            and hermes_decision.inherited_subjects
+        ):
+            from app.services.lottery_ai_contracts import LotteryToolName as _LTN_SW
+            from app.lottery.ai.nlp_stability import DEFAULT_ALL_HISTORY_LOTTERIES as _DEF_SW
+            from app.lottery.ai.turn_policy import extract_occurrence_limit as _eol_sw
+
+            n = str(hermes_decision.inherited_subjects[0])
+            understanding.needs_clarification = False
+            understanding.missing_slots = []
+            understanding.clarification_question = None
+            understanding.numbers = [n]
+            last_n_limit = _eol_sw(content) or (
+                resolution.get("limit")
+                if resolution.get("follow_up_kind") == "last_n_occurrences"
+                else None
+            )
+            if last_n_limit or resolution.get("follow_up_kind") == "last_n_occurrences":
+                lim = int(last_n_limit or resolution.get("limit") or 3)
+                understanding.intent = "last_n_occurrences"  # type: ignore[assignment]
+                understanding.tool = _LTN_SW.GET_NUMBER_OCCURRENCES.value
+                understanding.params = {
+                    **dict(understanding.params or {}),
+                    "number": n,
+                    "numbers": [n],
+                    "lotteries": list(
+                        understanding.lotteries
+                        or (understanding.params or {}).get("lotteries")
+                        or _DEF_SW
+                    ),
+                    "mode": "last_n",
+                    "limit": lim,
+                    "page_size": lim,
+                    "order": "desc",
+                    "run_tools": True,
+                    "routing_intent": "explicit_new_investigation",
+                    "routing_reason_code": "EXPLICIT_NEW_RESEARCH",
+                }
+                resolution = {
+                    **resolution,
+                    "numbers": [n],
+                    "follow_up_kind": "last_n_occurrences",
+                    "limit": lim,
+                    "relation": None,
+                    "active_relation": None,
+                }
+            else:
+                understanding.intent = "last_occurrence"  # type: ignore[assignment]
+                understanding.tool = _LTN_SW.GET_NUMBER_OCCURRENCES.value
+                understanding.params = {
+                    **dict(understanding.params or {}),
+                    "number": n,
+                    "numbers": [n],
+                    "lotteries": list(_DEF_SW),
+                    "mode": "last_n",
+                    "limit": 1,
+                    "page_size": 1,
+                    "order": "desc",
+                    "run_tools": True,
+                    "routing_intent": "explicit_new_investigation",
+                    "routing_reason_code": "EXPLICIT_NEW_RESEARCH",
+                }
+                resolution = {
+                    **resolution,
+                    "numbers": [n],
+                    "follow_up_kind": "last_occurrence",
+                    "relation": None,
+                    "active_relation": None,
+                }
+            forensic.event(
+                "explicit_new_investigation",
+                component="LotteryChatService",
+                file="lottery_chat_service.py",
+                function="send_message",
+                output={
+                    "subjects": [n],
+                    "inherited_subjects": [],
+                    "cleared_asset": True,
+                    "reason_code": "EXPLICIT_NEW_RESEARCH",
+                    "follow_up_kind": resolution.get("follow_up_kind"),
+                },
+            )
 
         # Investigation Workspace 1.0 — operable table acts (no Huawei / no research)
         if hermes_decision.turn_type == "asset_action" and hermes_decision.workspace_action:

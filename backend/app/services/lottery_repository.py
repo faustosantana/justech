@@ -12,6 +12,29 @@ from sqlalchemy.orm import selectinload
 from app.models.lottery import LotteryDraw, LotteryDrawNumber
 
 
+def number_value_match_forms(number: str) -> list[str]:
+    """Match both padded and unpadded ball forms stored in number_value.
+
+    Historical rows are inconsistent (e.g. Leidsa ``7`` vs NY ``07``). Exact
+    equality on the conversational subject ``07`` skips newer unpadded rows and
+    returns a stale last-occurrence (Cert200 LONG_30.T29 / G01.T04).
+    """
+    raw = str(number or "").strip()
+    if not raw:
+        return []
+    forms: list[str] = [raw]
+    if raw.isdigit() and len(raw) <= 2:
+        forms.append(str(int(raw)))
+        forms.append(str(int(raw)).zfill(2))
+    seen: set[str] = set()
+    out: list[str] = []
+    for v in forms:
+        if v not in seen:
+            seen.add(v)
+            out.append(v)
+    return out
+
+
 class LotteryRepository:
     def __init__(self, db: AsyncSession):
         self.db = db
@@ -60,7 +83,9 @@ class LotteryRepository:
         if number is not None or position is not None:
             base = base.join(LotteryDrawNumber, LotteryDrawNumber.draw_id == LotteryDraw.id)
             if number is not None:
-                base = base.where(LotteryDrawNumber.number_value == number)
+                base = base.where(
+                    LotteryDrawNumber.number_value.in_(number_value_match_forms(number))
+                )
             if position is not None:
                 base = base.where(LotteryDrawNumber.position == position)
             base = base.distinct()
@@ -155,7 +180,7 @@ class LotteryRepository:
     ) -> tuple[list[tuple[LotteryDraw, LotteryDrawNumber]], int]:
         filters = [
             LotteryDraw.lottery_id == lottery_id,
-            LotteryDrawNumber.number_value == number,
+            LotteryDrawNumber.number_value.in_(number_value_match_forms(number)),
         ]
         if from_date:
             filters.append(LotteryDraw.draw_date >= from_date)
@@ -332,7 +357,7 @@ class LotteryRepository:
     ) -> list[tuple[LotteryDraw, LotteryDrawNumber]]:
         filters = [
             LotteryDraw.lottery_id == lottery_id,
-            LotteryDrawNumber.number_value == number,
+            LotteryDrawNumber.number_value.in_(number_value_match_forms(number)),
             LotteryDraw.draw_date > after_date,
         ]
         if position is not None:

@@ -11,19 +11,47 @@ from app.lottery.ai.investigation_workspace.schemas import (
     AssetSort,
     InvestigationAsset,
 )
-from app.lottery.ai.official_lottery_scope import is_official_lottery
+from app.lottery.ai.official_lottery_scope import (
+    canonicalize_lottery_name,
+    is_official_lottery,
+)
+
+
+def lottery_canonical_key(name: str | None) -> str | None:
+    """Stable key for filter comparisons (accent/case/alias insensitive)."""
+    canon = canonicalize_lottery_name(name)
+    if not canon:
+        raw = (name or "").strip()
+        if not raw:
+            return None
+        # Fallback: NFKD fold without requiring official membership
+        import unicodedata
+
+        nfkd = unicodedata.normalize("NFKD", raw.lower())
+        bare = "".join(c for c in nfkd if not unicodedata.combining(c))
+        return re.sub(r"\s+", " ", bare).strip() or None
+    import unicodedata
+
+    nfkd = unicodedata.normalize("NFKD", canon.lower())
+    bare = "".join(c for c in nfkd if not unicodedata.combining(c))
+    return re.sub(r"\s+", " ", bare).strip() or None
 
 
 def _lot_match(row_lot: str, wanted: str) -> bool:
+    """Match lottery labels by canonical key, not fragile display strings."""
     if not wanted:
         return True
-    a = re.sub(r"\s+", " ", (row_lot or "").lower()).strip()
-    b = re.sub(r"\s+", " ", (wanted or "").lower()).strip()
+    key_row = lottery_canonical_key(row_lot)
+    key_want = lottery_canonical_key(wanted)
+    if key_row and key_want and key_row == key_want:
+        return True
+    # Substring fallback for partial labels already canonicalized
+    a = key_row or ""
+    b = key_want or ""
     if not a or not b:
         return False
     if b in a or a in b:
         return True
-    # Quiniela Loteka ↔ Loteka
     return b.replace("quiniela ", "") in a or a.replace("quiniela ", "") in b
 
 

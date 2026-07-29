@@ -27,7 +27,10 @@ class InvestigationStateManager:
     ) -> ActiveInvestigationSession | None:
         state, inv, _meta = self.ttl.apply_on_turn_start(state)
         if decision.turn_type == "topic_switch" or (
-            decision.turn_type == "new_investigation" and decision.reason_code == "explicit_pair_or_topic"
+            decision.turn_type == "new_investigation" and decision.reason_code in {
+                "explicit_pair_or_topic",
+                "EXPLICIT_NEW_RESEARCH",
+            }
         ):
             inv = ActiveInvestigationSession(
                 conversation_id=conversation_id,
@@ -38,6 +41,25 @@ class InvestigationStateManager:
                 last_user_question=message,
             )
             state.active_investigation = inv.to_store()
+            # Explicit new topic: replace sticky subjects and drop prior operable asset
+            state.active_numbers = list(decision.inherited_subjects or [])[:8]
+            state.active_pair = (
+                list(state.active_numbers[:2]) if len(state.active_numbers) >= 2 else []
+            )
+            if decision.inherited_relation:
+                state.active_relation = decision.inherited_relation
+            else:
+                state.active_relation = None
+                filters = dict(state.active_filters or {})
+                filters.pop("relation", None)
+                state.active_filters = filters
+            try:
+                from app.lottery.ai.investigation_workspace.store import clear_assets
+
+                clear_assets(state)
+            except Exception:  # noqa: BLE001
+                state.workspace_assets = {}
+                state.active_asset_id = None
             return inv
 
         if inv is None and decision.inherited_subjects:

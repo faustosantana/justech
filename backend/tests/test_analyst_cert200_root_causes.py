@@ -40,6 +40,17 @@ def test_r1_el_07_ultima_vez_is_last_occurrence_not_limit_7():
     assert q.params.get("numbers") == ["07"]
 
 
+def test_r1_number_value_match_forms_includes_unpadded_07():
+    """DB stores mixed '7'/'07'; last-occurrence must match both forms."""
+    from app.services.lottery_repository import number_value_match_forms
+
+    forms = number_value_match_forms("07")
+    assert "07" in forms and "7" in forms
+    assert number_value_match_forms("7") == number_value_match_forms("07") or set(
+        number_value_match_forms("7")
+    ) == {"7", "07"}
+
+
 # ---------------------------------------------------------------------------
 # R2 — Spanish number words as subjects
 # ---------------------------------------------------------------------------

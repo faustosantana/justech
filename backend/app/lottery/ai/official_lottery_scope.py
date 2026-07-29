@@ -38,9 +38,11 @@ OFFICIAL_LOTTERY_SCOPE_VERSION = "1.1.0"
 
 # Aliases → canonical scope name (keys via _norm)
 _ALIAS_TO_CANONICAL: dict[str, str] = {
-    # Gana Más
+    # Gana Más (all accent/spacing variants fold via _norm)
     "gana mas": "Gana Más",
     "ganamas": "Gana Más",
+    "gana-mas": "Gana Más",
+    "gana_mas": "Gana Más",
     # Nacional / Lotería Nacional
     "nacional": "Nacional",
     "loteria nacional": "Nacional",
@@ -74,8 +76,10 @@ _ALIAS_TO_CANONICAL: dict[str, str] = {
 def _norm(text: str) -> str:
     nfkd = unicodedata.normalize("NFKD", (text or "").lower().strip())
     bare = "".join(c for c in nfkd if not unicodedata.combining(c))
-    bare = bare.replace(".", " ").replace(":", " ")
-    return re.sub(r"\s+", " ", bare).strip()
+    bare = bare.replace(".", " ").replace(":", " ").replace("_", " ").replace("-", " ")
+    bare = re.sub(r"\s+", " ", bare).strip()
+    # Collapse spaceless ganamas already covered; also strip spaces for compact alias lookup
+    return bare
 
 
 def official_lottery_names() -> list[str]:
@@ -110,6 +114,9 @@ def canonicalize_lottery_name(name: str | None) -> str | None:
     key = _norm(raw)
     if key in _ALIAS_TO_CANONICAL:
         return _ALIAS_TO_CANONICAL[key]
+    compact = key.replace(" ", "")
+    if compact in _ALIAS_TO_CANONICAL:
+        return _ALIAS_TO_CANONICAL[compact]
     for canon in OFFICIAL_LOTTERY_SCOPE:
         if _norm(canon) == key:
             return canon

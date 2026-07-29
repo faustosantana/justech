@@ -83,7 +83,34 @@ def _apply_pending_fill(text: str, state: ConversationState) -> ConversationStat
         filled = True
         updated.scope = "multiple" if len(updated.active_lotteries) > 1 else "single"
 
-    if number:
+    pair_filled = False
+    # Pair fill for same-day clarification («50 y 90»)
+    if {"number_a", "number_b"} & set(state.pending_slots or []):
+        from app.lottery.ai.turn_policy import extract_subject_numbers
+
+        pair = extract_subject_numbers(text)
+        if len(pair) >= 2:
+            updated.active_numbers = list(pair)[:2]
+            updated.active_pair = list(pair)[:2]
+            updated.pending_slots = [
+                s for s in updated.pending_slots if s not in {"number_a", "number_b", "number"}
+            ]
+            filled = True
+            pair_filled = True
+        elif len(pair) == 1 and "number_a" in updated.pending_slots:
+            updated.pending_params = {**(updated.pending_params or {}), "number_a": pair[0]}
+            updated.pending_slots = [s for s in updated.pending_slots if s != "number_a"]
+            filled = True
+        elif len(pair) == 1 and "number_b" in updated.pending_slots:
+            a = str((updated.pending_params or {}).get("number_a") or "")
+            if a:
+                updated.active_numbers = [a, pair[0]]
+                updated.active_pair = [a, pair[0]]
+                pair_filled = True
+            updated.pending_slots = [s for s in updated.pending_slots if s != "number_b"]
+            filled = True
+
+    if number and not pair_filled:
         updated.active_numbers = [number]
         if "number" in updated.pending_slots:
             updated.pending_slots = [s for s in updated.pending_slots if s != "number"]
@@ -181,6 +208,45 @@ def understand(raw: str, state: ConversationState) -> tuple[UnderstandingResult,
             working,
         )
 
+    # Coincidence / compare ask without subjects → pending analytical clarification
+    from app.lottery.ai.turn_policy import extract_subject_numbers as _extract_subjects_early
+
+    early_nums = _extract_subjects_early(text)
+    if (
+        re.search(
+            r"(analiz|investiga|busca|compar).{0,48}coincid|coincidencias(\s+entre)?\s*$|"
+            r"^\s*analiz(a|ar)\s+coincidencias\s*$",
+            text,
+            re.I,
+        )
+        and len(early_nums) < 2
+        and not (working.pending_intent and working.pending_slots)
+    ):
+        working.pending_intent = "same_day_coincidence"
+        working.pending_slots = ["number_a", "number_b"]
+        working.clarification_question = "¿Qué números deseas comparar?"
+        return (
+            UnderstandingResult(
+                intent="clarification_response",
+                confidence=0.95,
+                source="rules",
+                needs_clarification=True,
+                missing_slots=["number_a", "number_b"],
+                clarification_question=working.clarification_question,
+                tool=None,
+                params={
+                    "run_tools": False,
+                    "routing_intent": "analytical_clarification",
+                    "routing_reason_code": "PENDING_CLARIFICATION_ASK",
+                    "pending_clarification": {
+                        "type": "subjects",
+                        "required_slots": ["number_a", "number_b"],
+                    },
+                },
+            ),
+            working,
+        )
+
     domain = classify_domain(text)
     if domain.classification in {"greeting", "general_chat"}:
         # Fase X: never consume pending clarifications on greetings/chat
@@ -220,17 +286,22 @@ def understand(raw: str, state: ConversationState) -> tuple[UnderstandingResult,
         "restricted_technical",
         "prediction_request",
         "harmful_or_illegal",
-    } and not (working.pending_intent and working.pending_slots and len(text.split()) <= 8):
-        return (
-            UnderstandingResult(
-                intent=domain.classification,
-                confidence=domain.confidence,
-                source="domain",
-                domain_class=domain.classification,
-                params={"refuse_message": domain.refuse_message},
-            ),
-            working,
-        )
+    }:
+        # Prediction / OOD / harmful must always refuse — never lose to pending
+        # clarification slot-fill heuristics (Cert LONG_30.T25).
+        if domain.classification == "prediction_request" or not (
+            working.pending_intent and working.pending_slots and len(text.split()) <= 8
+        ):
+            return (
+                UnderstandingResult(
+                    intent=domain.classification,
+                    confidence=domain.confidence,
+                    source="domain",
+                    domain_class=domain.classification,
+                    params={"refuse_message": domain.refuse_message},
+                ),
+                working,
+            )
 
     refs = resolve_references(text, working)
     if refs.get("last_user_reference"):
@@ -1025,6 +1096,31 @@ def _resume_pending(state: ConversationState) -> tuple[UnderstandingResult, Conv
     working.pending_intent = None
     working.pending_slots = []
     working.clarification_question = None
+
+    if intent == "same_day_coincidence" and len(working.active_numbers or []) >= 2:
+        nums = list(working.active_numbers)[:2]
+        working.active_pair = list(nums)
+        working.active_relation = "same_day"
+        return (
+            UnderstandingResult(
+                intent="cross_lottery_matches",
+                numbers=nums,
+                confidence=0.95,
+                source="follow_up",
+                tool=None,
+                params={
+                    "numbers": nums,
+                    "relation": "same_day",
+                    "active_relation": "same_day",
+                    "intent": "same_day_coincidence",
+                    "run_tools": True,
+                    "routing_intent": "analytical_clarification",
+                    "routing_reason_code": "PENDING_CLARIFICATION_MATCH",
+                },
+                plan=["same_day_coincidence"],
+            ),
+            working,
+        )
 
     if intent in {"last_occurrence", "clarification_response", "last_times"} and number:
         from app.lottery.ai.nlp_stability import DEFAULT_ALL_HISTORY_LOTTERIES

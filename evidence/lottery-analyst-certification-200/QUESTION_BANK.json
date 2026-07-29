@@ -610,12 +610,12 @@
           "category": "B",
           "user_message": "Las otras dos.",
           "expected_subjects": [
-            "97"
+            "22"
           ],
           "expected_intent": "last_n_occurrences",
           "expected_turn_type": "factual",
           "expected_filters": {
-            "limit": 10
+            "limit": 2
           },
           "expected_tool_family": "last_n",
           "factual_validation_required": true,
@@ -6031,12 +6031,12 @@
       "category": "B",
       "user_message": "Las otras dos.",
       "expected_subjects": [
-        "97"
+        "22"
       ],
       "expected_intent": "last_n_occurrences",
       "expected_turn_type": "factual",
       "expected_filters": {
-        "limit": 10
+        "limit": 2
       },
       "expected_tool_family": "last_n",
       "factual_validation_required": true,

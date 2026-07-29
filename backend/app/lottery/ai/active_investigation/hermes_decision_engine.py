@@ -6,6 +6,7 @@ decision before research/tools run. Chain-of-thought is never exposed.
 
 from __future__ import annotations
 
+import re
 from typing import Any, Literal
 from uuid import uuid4
 
@@ -89,16 +90,30 @@ class HermesDecisionEngine:
         from app.lottery.ai.analyst_reasoning.reasoning_modes import ReasoningModeSelector
 
         res = resolution or {}
-        # Prefer relation already bound on decision / resolution / sticky state
-        rel = (
-            decision.inherited_relation
-            or res.get("relation")
-            or res.get("active_relation")
-            or getattr(state, "active_relation", None)
-        )
-        if rel and not decision.inherited_relation:
-            decision.inherited_relation = str(rel)
-            decision.inherited_metric = decision.inherited_metric or str(rel)
+        # Prefer relation already bound on decision / resolution / sticky state.
+        # Never rebind sticky same_day onto an explicit topic switch — that
+        # contaminates «Últimas 3 del 35» / «¿Y el 35?» after a coincidence turn.
+        _clear_sticky_relation = decision.turn_type in {
+            "topic_switch",
+            "new_investigation",
+        } and decision.reason_code in {
+            "EXPLICIT_NEW_RESEARCH",
+            "explicit_pair_or_topic",
+            "explicit_reset",
+        }
+        if not _clear_sticky_relation:
+            rel = (
+                decision.inherited_relation
+                or res.get("relation")
+                or res.get("active_relation")
+                or getattr(state, "active_relation", None)
+            )
+            if rel and not decision.inherited_relation:
+                decision.inherited_relation = str(rel)
+                decision.inherited_metric = decision.inherited_metric or str(rel)
+        else:
+            decision.inherited_relation = None
+            decision.inherited_metric = None
 
         if decision.turn_type == "asset_action":
             decision.reasoning_mode = "skip"
@@ -149,14 +164,24 @@ class HermesDecisionEngine:
 
         if ConversationPolicy.is_meta_continuity(raw) or is_correction_or_meta_request(raw):
             decision.turn_type = "meta"
-            decision.requires_research = False
-            decision.inherited_subjects = list(
+            active_subj = list(
                 getattr(investigation, "subjects", None)
                 or getattr(state, "active_numbers", None)
                 or []
             )[:8]
+            decision.inherited_subjects = active_subj
+            # Cert LONG_30.T22 «¿Estás seguro?» expects factual replay of the
+            # active last_occurrence — not a soft meta exit without research.
+            has_factual_sticky = bool(active_subj) and bool(
+                getattr(state, "last_intent", None)
+                or getattr(state, "last_analysis", None)
+            )
+            decision.requires_research = has_factual_sticky
+            decision.reuse_evidence = False
             decision.confidence = "high"
-            decision.reason_code = "meta_continuity"
+            decision.reason_code = (
+                "meta_replay_last_intent" if has_factual_sticky else "meta_continuity"
+            )
             return decision
 
         msg_nums = extract_subject_numbers(raw)
@@ -227,7 +252,7 @@ class HermesDecisionEngine:
             decision.requested_attribute = ws.action
             return decision
 
-        # Clear subject switch away from active pair
+        # Clear subject switch away from active pair → explicit new investigation
         if (
             inv_active
             and len(msg_nums) == 1
@@ -237,9 +262,28 @@ class HermesDecisionEngine:
         ):
             decision.turn_type = "topic_switch"
             decision.inherited_subjects = msg_nums[:1]
+            decision.inherited_relation = None
+            decision.inherited_metric = None
             decision.requires_research = True
+            decision.reuse_evidence = False
             decision.confidence = "high"
-            decision.reason_code = "new_single_subject"
+            decision.reason_code = "EXPLICIT_NEW_RESEARCH"
+            return decision
+
+        # Explicit analyze/investiga phrases with a single subject (even without prior inv)
+        if len(msg_nums) == 1 and re.search(
+            r"\b(analiz|investiga|estudi|camb(iar|iemos)|olvid|hablemos|ahora\s+(analiza|el))\b",
+            raw,
+            re.I,
+        ):
+            decision.turn_type = "topic_switch" if inv_active else "new_investigation"
+            decision.inherited_subjects = msg_nums[:1]
+            decision.inherited_relation = None
+            decision.inherited_metric = None
+            decision.requires_research = True
+            decision.reuse_evidence = False
+            decision.confidence = "high"
+            decision.reason_code = "EXPLICIT_NEW_RESEARCH"
             return decision
 
         # Two new numbers → new/continue investigation

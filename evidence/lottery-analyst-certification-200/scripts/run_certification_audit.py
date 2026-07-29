@@ -155,9 +155,21 @@ def repo_last(number: str, limit: int = 1, lottery: str | None = None, position:
     elif lot_key in {"gana mas", "gana más", "ganamas"}:
         lot = " AND (l.normalized_name IN ('gana mas') OR l.name ILIKE '%gana%mas%')"
     else:
+        # Official Analyst scope (7 lotteries) — must match DEFAULT_ALL_HISTORY_LOTTERIES.
+        # Prior 5-lottery DR-only filter caused false wrong_or_missing_date when New York
+        # held the true latest occurrence (Cert LONG_30.T02/T03/T11).
         lot = """ AND (
-            l.name IN ('Gana Mas','Loteria Nacional','Quiniela Leidsa','Quiniela Loteka','Quiniela Real')
-            OR l.normalized_name IN ('gana mas','loteria nacional','leidsa','loteka','quiniela real','quiniela leidsa','quiniela loteka')
+            l.name IN (
+                'Gana Mas','Gana Más','Loteria Nacional','Nacional',
+                'Quiniela Leidsa','Leidsa','Quiniela Loteka','Loteka',
+                'Quiniela Real','Real','New York 10:30','New York 2:30'
+            )
+            OR l.normalized_name IN (
+                'gana mas','loteria nacional','leidsa','loteka','quiniela real',
+                'quiniela leidsa','quiniela loteka','new york 10:30','new york 2:30',
+                'nacional'
+            )
+            OR l.name ILIKE 'new york%'
         )"""
     pos = f" AND dn.position = {int(position)}" if position is not None else ""
     sql = f"""
@@ -200,8 +212,17 @@ def repo_same_day_count(a: str, b: str, lottery: str | None = None) -> int:
         lot = " AND (l.normalized_name = 'loteria nacional' OR l.name ILIKE '%nacional%')"
     else:
         lot = """ AND (
-            l.name IN ('Gana Mas','Loteria Nacional','Quiniela Leidsa','Quiniela Loteka','Quiniela Real')
-            OR l.normalized_name IN ('gana mas','loteria nacional','leidsa','loteka','quiniela real','quiniela leidsa','quiniela loteka')
+            l.name IN (
+                'Gana Mas','Gana Más','Loteria Nacional','Nacional',
+                'Quiniela Leidsa','Leidsa','Quiniela Loteka','Loteka',
+                'Quiniela Real','Real','New York 10:30','New York 2:30'
+            )
+            OR l.normalized_name IN (
+                'gana mas','loteria nacional','leidsa','loteka','quiniela real',
+                'quiniela leidsa','quiniela loteka','new york 10:30','new york 2:30',
+                'nacional'
+            )
+            OR l.name ILIKE 'new york%'
         )"""
     sql = f"""
     WITH hits AS (

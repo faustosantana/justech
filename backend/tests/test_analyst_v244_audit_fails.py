@@ -114,6 +114,23 @@ def test_f3_otras_tres_is_last_n_not_position():
     assert q.params.get("result_limit") == 3 or q.params.get("limit") >= 3
 
 
+def test_f3_otras_dos_is_last_n_of_active_subject():
+    """LONG_30.T21 — after «El 22.», «Las otras dos.» = 2 more of active 22."""
+    from app.lottery.ai.turn_policy import (
+        extract_other_occurrence_limit,
+        is_other_occurrences_request,
+    )
+
+    assert is_other_occurrences_request("Las otras dos.")
+    assert extract_other_occurrence_limit("Las otras dos.") == 2
+    st = ConversationState(active_numbers=["22"], active_pair=["22", "97"], last_intent="clarification_response")
+    q = QuestionClassifier.classify("Las otras dos.", st, {})
+    assert q is not None
+    assert q.kind == "last_n_occurrences"
+    assert q.params["numbers"] == ["22"]
+    assert q.params.get("result_limit") == 2 or q.params.get("limit") == 2
+
+
 def test_c1_same_day_not_complete_analysis():
     assert is_same_day_coincidence_question("¿Han salido el 55 y el 24 el mismo día?")
     q = QuestionClassifier.classify(

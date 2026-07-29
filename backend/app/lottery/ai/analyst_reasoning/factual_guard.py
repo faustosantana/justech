@@ -160,8 +160,36 @@ class FactualGuard:
                 violations.append(f"non_official_lottery:{name}")
 
         if violations:
-            return GuardResult(False, raw, violations[0], violations)
-        return GuardResult(True, raw, None, [])
+            result = GuardResult(False, raw, violations[0], violations)
+        else:
+            result = GuardResult(True, raw, None, [])
+        try:
+            from app.lottery.ai.forensics import ForensicTraceService, get_correlation_id
+
+            tr = ForensicTraceService(get_correlation_id())
+            if tr.enabled:
+                tr.record_transform(
+                    "factual_guard.output",
+                    component="FactualGuard",
+                    file="factual_guard.py",
+                    function="validate",
+                    input=raw,
+                    output=result.text if result.passed else f"[REJECTED:{result.rejection_reason}]",
+                )
+                tr.event(
+                    "factual_guard.output",
+                    component="FactualGuard",
+                    file="factual_guard.py",
+                    function="validate",
+                    extra={
+                        "passed": result.passed,
+                        "rejection_reason": result.rejection_reason,
+                        "violations": list(result.violations or [])[:20],
+                    },
+                )
+        except Exception:  # noqa: BLE001 — forensics must never break guard
+            pass
+        return result
 
     @staticmethod
     def _partial_official(name: str) -> bool:

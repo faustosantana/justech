@@ -1,0 +1,24 @@
+"""Correlation id context for forensic traces."""
+
+from __future__ import annotations
+
+from contextvars import ContextVar, Token
+from uuid import uuid4
+
+_correlation_id: ContextVar[str | None] = ContextVar("lottery_forensic_correlation_id", default=None)
+
+
+def new_correlation_id() -> str:
+    return f"lottery-chat-{uuid4().hex}"
+
+
+def get_correlation_id() -> str | None:
+    return _correlation_id.get()
+
+
+def set_correlation_id(value: str) -> Token:
+    return _correlation_id.set(value)
+
+
+def reset_correlation_id(token: Token) -> None:
+    _correlation_id.reset(token)

@@ -87,3 +87,6 @@ evidence/**/score_*.py
 **/lottery-cert-200/
 **/hermes_intelligence_audit.json
 **/beta21_smoke.json
+
+# Forensic audit packages (may contain prompts)
+artifacts/forensics/

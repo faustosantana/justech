@@ -177,10 +177,75 @@ class LotteryChatService:
         return list(q.scalars().all()), int(total or 0)
 
     async def send_message(self, session_id: uuid.UUID, content: str) -> dict[str, Any]:
+        from app.lottery.ai.forensics import ForensicTraceService, get_correlation_id
+
         session = await self.get_session(session_id)
         raw_ctx = session.context or {}
         ctx = LotterySessionContext.from_store(raw_ctx)
         state = ConversationState.from_store(raw_ctx.get("conversation_v4") or raw_ctx)
+
+        forensic = ForensicTraceService(get_correlation_id())
+        forensic.event(
+            "request.incoming",
+            component="LotteryChatService",
+            file="lottery_chat_service.py",
+            function="send_message",
+            input={
+                "session_id": str(session_id),
+                "user_message": content,
+                "correlation_id": forensic.correlation_id,
+            },
+        )
+        forensic.write_named(
+            "request.incoming",
+            {
+                "session_id": str(session_id),
+                "user_message": content,
+                "correlation_id": forensic.correlation_id,
+            },
+        )
+        forensic.event(
+            "conversation.state.before",
+            component="ConversationState",
+            file="conversation_state.py",
+            function="from_store",
+            output={
+                "active_numbers": list(state.active_numbers or []),
+                "active_pair": list(state.active_pair or []),
+                "active_relation": state.active_relation,
+                "active_lotteries": list(state.active_lotteries or []),
+                "preferred_position": state.preferred_position,
+                "active_investigation": bool(state.active_investigation),
+                "workspace_asset_ids": list((state.workspace_assets or {}).keys())
+                if isinstance(getattr(state, "workspace_assets", None), dict)
+                else [],
+                "last_analysis_keys": list((state.last_analysis or {}).keys())
+                if isinstance(state.last_analysis, dict)
+                else [],
+            },
+        )
+        forensic.write_named(
+            "conversation.state.before",
+            {
+                "conversation_id": str(session_id),
+                "active_numbers": list(state.active_numbers or []),
+                "active_pair": list(state.active_pair or []),
+                "active_relation": state.active_relation,
+                "active_lotteries": list(state.active_lotteries or []),
+                "preferred_position": state.preferred_position,
+                "active_investigation": state.active_investigation,
+                "workspace_assets_meta": {
+                    k: {
+                        "subjects": (v or {}).get("subjects"),
+                        "relation": (v or {}).get("relation"),
+                        "row_count": (v or {}).get("row_count"),
+                    }
+                    for k, v in (state.workspace_assets or {}).items()
+                }
+                if isinstance(getattr(state, "workspace_assets", None), dict)
+                else {},
+            },
+        )
 
         user_msg = LotteryChatMessage(
             session_id=session.id,
@@ -213,6 +278,45 @@ class LotteryChatService:
         ctx.default_primary_position = state.default_primary_position
 
         understanding, state = understand(content, state)
+        forensic.event(
+            "intent.classification",
+            component="understand",
+            file="understanding.py",
+            function="understand",
+            input={"user_message": content},
+            output={
+                "classified_intent": understanding.intent,
+                "tool": understanding.tool,
+                "numbers": list(understanding.numbers or []),
+                "lotteries": list(understanding.lotteries or []),
+                "needs_clarification": understanding.needs_clarification,
+                "nlp_intent": (understanding.params or {}).get("nlp_intent"),
+                "run_tools": (understanding.params or {}).get("run_tools"),
+                "classified_as_follow_up": bool(
+                    (understanding.params or {}).get("follow_up")
+                    or getattr(understanding, "is_follow_up", False)
+                ),
+            },
+        )
+        forensic.write_named(
+            "intent.classification",
+            {
+                "user_message": content,
+                "classified_intent": understanding.intent,
+                "confidence": (understanding.params or {}).get("confidence"),
+                "classified_as_follow_up": bool(
+                    (understanding.params or {}).get("follow_up")
+                ),
+                "workspace_action": None,
+                "new_investigation": understanding.intent
+                not in {"greeting", "general_chat", "help"},
+                "reason_codes": list(
+                    (understanding.params or {}).get("decision_log") or []
+                )[:20],
+                "numbers": list(understanding.numbers or []),
+                "tool": understanding.tool,
+            },
+        )
 
         # D: bare «Haz la comparación.» must clarify — never tool/research invent dates.
         bare_compare_early = bool(
@@ -445,6 +549,38 @@ class LotteryChatService:
             investigation=ActiveInvestigationSession.from_store(state.active_investigation),
             resolution=resolution,
         )
+        forensic.event(
+            "hermes.decision",
+            component="HermesDecisionEngine",
+            file="hermes_decision_engine.py",
+            function="decide",
+            input={"user_message": content},
+            output=hermes_decision.to_trace(),
+        )
+        # Update intent classification artifact with Hermes route
+        if forensic.enabled:
+            forensic.write_named(
+                "intent.classification",
+                {
+                    "user_message": content,
+                    "classified_intent": understanding.intent,
+                    "hermes_turn_type": hermes_decision.turn_type,
+                    "hermes_reason_code": hermes_decision.reason_code,
+                    "requires_research": hermes_decision.requires_research,
+                    "workspace_action": hermes_decision.workspace_action,
+                    "inherited_subjects": list(hermes_decision.inherited_subjects or []),
+                    "classified_as_follow_up": hermes_decision.turn_type
+                    in {
+                        "contextual_follow_up",
+                        "attribute_of_last_event",
+                        "filter_refine",
+                        "asset_action",
+                    },
+                    "new_investigation": hermes_decision.turn_type
+                    in {"new_investigation", "topic_switch"},
+                    "reason_codes": [hermes_decision.reason_code],
+                },
+            )
         # Bind relation for contextual same-day follow-ups before planning
         if hermes_decision.inherited_relation == "same_day" or hermes_decision.inherited_metric == "same_day":
             resolution = {
@@ -552,6 +688,35 @@ class LotteryChatService:
                 or understanding.clarification_question
                 or "¿En qué puedo ayudarte con el histórico de loterías?"
             )
+            forensic.event(
+                "greeting_early_exit",
+                component="LotteryChatService",
+                file="lottery_chat_service.py",
+                function="send_message",
+                output={
+                    "intent": understanding.intent,
+                    "reply": reply,
+                    "huawei_called": False,
+                    "sticky_numbers_at_exit": list(state.active_numbers or []),
+                },
+            )
+            forensic.write_named(
+                "api_response.prepared",
+                {
+                    "content": reply,
+                    "intent": understanding.intent,
+                    "huawei_called": False,
+                    "path": "greeting_early_exit",
+                },
+            )
+            forensic.write_named("frontend_response.received", {"content": reply})
+            forensic.write_named("frontend_message.rendered", reply, as_text=True)
+            forensic.finalize_summary(
+                notes=[
+                    "Turn exited at greeting/general_chat — Huawei was not called.",
+                    f"Sticky numbers still in state: {list(state.active_numbers or [])}",
+                ]
+            )
             session.context = {
                 **(session.context or {}),
                 "conversation_v4": state.to_store(),
@@ -568,7 +733,7 @@ class LotteryChatService:
             )
             self.db.add(asst)
             await self.db.flush()
-            return {
+            out = {
                 "message": {
                     "id": str(asst.id),
                     "role": "assistant",
@@ -583,6 +748,9 @@ class LotteryChatService:
                 "suggestions": self._suggestions(ctx, "chat", state=state),
                 "intent": understanding.intent,
             }
+            if forensic.enabled:
+                out["forensic"] = forensic.package_meta()
+            return out
 
         research_plan = ResearchPlanner.plan(
             message=content,
@@ -1561,8 +1729,9 @@ class LotteryChatService:
                             }
                 except Exception:  # noqa: BLE001 — knowledge must not break chat
                     pass
+            _fmt_in = guardrails.sanitize_llm_text(final_text or template)
             final_text = format_analyst_response(
-                guardrails.sanitize_llm_text(final_text or template),
+                _fmt_in,
                 facts=facts_for_fmt,
                 research=research_meta if isinstance(research_meta, dict) else None,
                 question=content,
@@ -1572,6 +1741,14 @@ class LotteryChatService:
                     "active_relation": state.active_relation,
                     "focus_stack": list(getattr(state, "focus_stack", None) or []),
                 },
+            )
+            forensic.record_transform(
+                "response_formatter.output",
+                component="format_analyst_response",
+                file="response_formatter.py",
+                function="format_analyst_response",
+                input=_fmt_in,
+                output=final_text,
             )
             # Analyst 2.0 — persist investigation evidence + attribute answers
             try:
@@ -1635,6 +1812,33 @@ class LotteryChatService:
                         ),
                     )
                     active_inv = ActiveInvestigationSession.from_store(state.active_investigation)
+                    # Conversational Routing 3.0: materialize operable asset after Path A
+                    # same-day research so follow-ups become Path B (asset ops), not narrative.
+                    try:
+                        from app.lottery.ai.investigation_workspace.handler import (
+                            ensure_same_day_asset,
+                        )
+                        from app.lottery.ai.investigation_workspace.store import get_active_asset
+                        from app.services.lottery_query_service import LotteryQueryService
+
+                        if (
+                            active_inv is not None
+                            and active_inv.relation == "same_day"
+                            and len(list(active_inv.subjects or state.active_numbers or [])[:2]) >= 2
+                            and (
+                                get_active_asset(state) is None
+                                or get_active_asset(state).is_expired()
+                                or not get_active_asset(state).source_rows
+                            )
+                        ):
+                            await ensure_same_day_asset(
+                                state,
+                                query_service=LotteryQueryService(self.db),
+                                investigation=active_inv,
+                                conversation_id=str(session.id),
+                            )
+                    except Exception:  # noqa: BLE001
+                        pass
                 if (
                     hermes_decision.requested_attribute
                     in {"lotteries", "positions", "date", "order", "explain", "details"}
@@ -1912,6 +2116,45 @@ class LotteryChatService:
             session.title = content.strip()[:80]
         await self.db.flush()
 
+        if forensic.enabled:
+            forensic.write_named(
+                "api_response.prepared",
+                {
+                    "content": final_text,
+                    "structured_type": (public_structured or {}).get("type")
+                    if isinstance(public_structured, dict)
+                    else None,
+                    "intent": intent_kind,
+                    "provider_used": provider_used,
+                    "synthesis_fallback": synthesis_fallback,
+                    "hermes_decision": hermes_decision.to_trace() if hermes_decision else None,
+                    "active_numbers": list(state.active_numbers or []),
+                },
+            )
+            forensic.write_named(
+                "frontend_response.received",
+                {"content": final_text, "structured_content": public_structured},
+            )
+            forensic.write_named("frontend_message.rendered", final_text, as_text=True)
+            forensic.event(
+                "conversation.state.after",
+                component="ConversationState",
+                file="conversation_state.py",
+                function="to_store",
+                output={
+                    "active_numbers": list(state.active_numbers or []),
+                    "active_relation": state.active_relation,
+                    "active_asset_id": getattr(state, "active_asset_id", None),
+                },
+            )
+            forensic.finalize_summary(
+                notes=[
+                    f"provider_used={provider_used}",
+                    f"synthesis_fallback={synthesis_fallback}",
+                    f"intent={intent_kind}",
+                ]
+            )
+
         return {
             "message": {
                 "id": str(assistant_msg.id),
@@ -1956,6 +2199,7 @@ class LotteryChatService:
                 else None
             ),
             "runtime_trace": runtime_trace,
+            "forensic": forensic.package_meta() if forensic.enabled else None,
         }
 
     async def _handle_workspace_asset_action(
@@ -3299,6 +3543,8 @@ class LotteryChatService:
     async def _synthesize_via_hermes(
         self, messages: list[LLMMessage], *, max_tokens: int = 1200
     ) -> tuple[str | None, str | None]:
+        from app.lottery.ai.forensics import ForensicTraceService, get_correlation_id
+
         url = (getattr(settings, "hermes_model_api_url", None) or "").strip()
         key = (getattr(settings, "hermes_model_api_key", None) or "").strip()
         if not url or not key or not getattr(settings, "hermes_enabled", True):
@@ -3309,33 +3555,150 @@ class LotteryChatService:
             or "DeepSeek-V3.2"
         )
         token_budget = max(200, min(int(max_tokens or 1200), 4000))
+        msg_payload = [m.model_dump() for m in messages]
+        request_json = {
+            "model": model,
+            "messages": msg_payload,
+            "temperature": 0.2,
+            "max_tokens": token_budget,
+        }
+        forensic = ForensicTraceService(get_correlation_id())
+        if forensic.enabled:
+            system_parts = [m["content"] for m in msg_payload if m.get("role") == "system"]
+            user_parts = [m["content"] for m in msg_payload if m.get("role") == "user"]
+            compiled = "\n\n".join(system_parts)
+            forensic.write_named("prompt.compiled", compiled, as_text=True)
+            forensic.event(
+                "prompt.compiled",
+                component="_synthesize_via_hermes",
+                file="lottery_chat_service.py",
+                function="_synthesize_via_hermes",
+                output={
+                    "compiled_prompt_hash": forensic.hash_text(compiled),
+                    "compiled_length": len(compiled),
+                    "system_message_count": len(system_parts),
+                    "user_message_count": len(user_parts),
+                    "empty_system": not bool(compiled.strip()),
+                    "prompt_source_note": (
+                        "Live chat uses V6 / reasoning_prompt builders — "
+                        "NOT Prompt Studio compile_prompt_from_blocks"
+                    ),
+                },
+            )
+            if forensic.include_prompts:
+                forensic.write_named(
+                    "llm.request.prepared",
+                    {
+                        "correlation_id": forensic.correlation_id,
+                        "provider": "huawei",
+                        "model": model,
+                        "endpoint_alias": "hermes_model_api_url",
+                        "temperature": 0.2,
+                        "max_tokens": token_budget,
+                        "stream": False,
+                        "messages": msg_payload,
+                        "prompt_source": {
+                            "compiled_prompt_hash": forensic.hash_text(compiled),
+                            "compiled_at": None,
+                            "blocks_included_note": "runtime V6/reasoning — not Prompt Studio blocks",
+                        },
+                    },
+                )
+                forensic.event(
+                    "llm.request.prepared",
+                    component="_synthesize_via_hermes",
+                    file="lottery_chat_service.py",
+                    function="_synthesize_via_hermes",
+                    output={
+                        "provider": "huawei",
+                        "model": model,
+                        "message_roles": [m.get("role") for m in msg_payload],
+                        "compiled_prompt_hash": forensic.hash_text(compiled),
+                    },
+                )
         try:
             import httpx
+            import time as _time
 
             async with httpx.AsyncClient(timeout=45.0) as client:
                 for attempt in range(2):
+                    t_req = _time.perf_counter()
                     resp = await client.post(
                         url,
                         headers={
                             "Authorization": f"Bearer {key}",
                             "Content-Type": "application/json",
                         },
-                        json={
-                            "model": model,
-                            "messages": [m.model_dump() for m in messages],
-                            "temperature": 0.2,
-                            "max_tokens": token_budget,
-                        },
+                        json=request_json,
                     )
+                    latency_ms = round((_time.perf_counter() - t_req) * 1000, 2)
                     if resp.status_code >= 500:
                         await asyncio.sleep(0.4 * (attempt + 1))
                         continue
                     resp.raise_for_status()
                     data = resp.json()
-                    content = (
+                    raw_content = (
                         ((data.get("choices") or [{}])[0].get("message") or {}).get("content") or ""
-                    ).strip()
-                    content = self._sanitize_user_facing(content)
+                    )
+                    if forensic.enabled and forensic.include_raw:
+                        safe_headers = {
+                            k: v
+                            for k, v in dict(resp.headers).items()
+                            if k.lower()
+                            not in {
+                                "authorization",
+                                "set-cookie",
+                                "cookie",
+                                "x-api-key",
+                            }
+                        }
+                        forensic.write_named(
+                            "llm.response.raw",
+                            {
+                                "correlation_id": forensic.correlation_id,
+                                "provider": "huawei",
+                                "model": str(data.get("model") or model),
+                                "http_status": resp.status_code,
+                                "response_headers_safe": safe_headers,
+                                "raw_body": data,
+                                "latency_ms": latency_ms,
+                            },
+                        )
+                        forensic.write_named(
+                            "llm.response.extracted",
+                            raw_content,
+                            as_text=True,
+                        )
+                        forensic.event(
+                            "llm.response.raw",
+                            component="_synthesize_via_hermes",
+                            file="lottery_chat_service.py",
+                            function="_synthesize_via_hermes",
+                            output={
+                                "http_status": resp.status_code,
+                                "finish_reason": ((data.get("choices") or [{}])[0].get("finish_reason")),
+                                "usage": data.get("usage"),
+                                "latency_ms": latency_ms,
+                                "raw_content_length": len(raw_content),
+                            },
+                        )
+                    content = self._sanitize_user_facing(raw_content.strip())
+                    if forensic.enabled:
+                        forensic.record_transform(
+                            "provider_adapter.output",
+                            component="_sanitize_user_facing",
+                            file="lottery_chat_service.py",
+                            function="_sanitize_user_facing",
+                            input=raw_content,
+                            output=content,
+                        )
+                    # Also persist full prompt text (system) for PIEZA 1 when include_prompts
+                    if forensic.enabled and forensic.include_prompts and system_parts:
+                        forensic.write_named(
+                            "prompt.compiled",
+                            "\n\n".join(system_parts),
+                            as_text=True,
+                        )
                     if len(content) >= 20 and not self._looks_internal(content):
                         return content, str(data.get("model") or model)
                     break

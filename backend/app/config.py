@@ -239,6 +239,13 @@ class Settings(BaseSettings):
     lottery_chat_timeout_seconds: int = 60
     lottery_chat_max_sessions_per_user: int = 100
     lottery_chat_max_result_rows: int = 500
+    # Forensic audit (opt-in; MUST stay false in production by default)
+    lottery_forensic_trace_enabled: bool = False
+    lottery_forensic_trace_store: str = "file"  # file|database
+    lottery_forensic_trace_retention_days: int = 7
+    lottery_forensic_trace_include_prompts: bool = True
+    lottery_forensic_trace_include_provider_raw: bool = True
+    lottery_forensic_trace_dir: str = ""  # empty → <repo>/artifacts/forensics
     lottery_export_max_rows_csv: int = 100000
     lottery_export_max_rows_xlsx: int = 50000
     lottery_export_max_rows_pdf: int = 5000

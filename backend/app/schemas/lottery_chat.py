@@ -59,6 +59,8 @@ class ChatSendResponse(BaseModel):
     latency_ms: int = 0
     runtime_trace: dict[str, Any] | None = None
     research: dict[str, Any] | None = None
+    # Present only when LOTTERY_FORENSIC_TRACE_ENABLED=true (not shown in normal UI)
+    forensic: dict[str, Any] | None = None
 
 
 class SavedQueryResponse(BaseModel):

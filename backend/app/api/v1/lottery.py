@@ -584,34 +584,53 @@ async def send_chat_message(
     user: CurrentUser,
     _: Annotated[None, require_lottery_permission("lottery.chat")],
 ) -> ChatSendResponse:
-    svc = _make_chat(db, user)
+    from app.lottery.ai.forensics import (
+        ForensicTraceService,
+        new_correlation_id,
+        reset_correlation_id,
+        set_correlation_id,
+    )
+
+    cid = new_correlation_id()
+    cid_token = set_correlation_id(cid)
     try:
-        result = await svc.send_message(session_id, body.content)
-        await db.commit()
-        return ChatSendResponse(**result)
-    except Exception as exc:  # noqa: BLE001 — never leak 500 to chat UI
-        await db.rollback()
-        logger.exception("lottery_chat_send_failed session=%s err=%s", session_id, exc)
-        # Soft-fail payload matching ChatSendResponse shape
-        return ChatSendResponse(
-            message={
-                "id": str(session_id),
-                "role": "assistant",
-                "content": (
-                    "No pude completar la consulta con los datos disponibles. "
-                    "¿Puedes reformular la pregunta o precisar el número?"
-                ),
-                "structured_content": None,
-                "tool_trace": [],
-                "created_at": None,
-            },
-            user_message_id="",
-            context={},
-            active_context={},
-            suggestions=[],
-            synthesis_fallback=True,
-            latency_ms=0,
-        )
+        svc = _make_chat(db, user)
+        try:
+            result = await svc.send_message(session_id, body.content)
+            await db.commit()
+            if ForensicTraceService.enabled_globally():
+                forensic = dict(result.get("forensic") or {})
+                forensic.setdefault("correlation_id", cid)
+                result["forensic"] = forensic
+            return ChatSendResponse(**result)
+        except Exception as exc:  # noqa: BLE001 — never leak 500 to chat UI
+            await db.rollback()
+            logger.exception("lottery_chat_send_failed session=%s err=%s", session_id, exc)
+            # Soft-fail payload matching ChatSendResponse shape
+            soft: dict = {
+                "message": {
+                    "id": str(session_id),
+                    "role": "assistant",
+                    "content": (
+                        "No pude completar la consulta con los datos disponibles. "
+                        "¿Puedes reformular la pregunta o precisar el número?"
+                    ),
+                    "structured_content": None,
+                    "tool_trace": [],
+                    "created_at": None,
+                },
+                "user_message_id": "",
+                "context": {},
+                "active_context": {},
+                "suggestions": [],
+                "synthesis_fallback": True,
+                "latency_ms": 0,
+            }
+            if ForensicTraceService.enabled_globally():
+                soft["forensic"] = {"correlation_id": cid, "error": type(exc).__name__}
+            return ChatSendResponse(**soft)
+    finally:
+        reset_correlation_id(cid_token)
 
 
 @router.get("/admin/ai/runtime")

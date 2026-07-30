@@ -1,0 +1,23 @@
+{
+  "suite": "SUBJECT_FAILURES",
+  "source": "PAYLOAD_PROOF + Prompt50 shadow (rc2)",
+  "root_cause": {
+    "primary": "A_studio_raw",
+    "secondary": "B_guard_global_digit_scrape",
+    "summary": "Studio inventó estadísticas secundarias (51, 60, 83) fuera de subjects [50,90]. El guard previo trataba dígitos 32–99 como subjects potenciales (alien) cuando había ≥3, mezclando conteos con bolas."
+  },
+  "cases": [
+    {
+      "case_id": "PROOF_50_90",
+      "user": "¿Han coincidido el 50 y el 90 el mismo día?",
+      "expected_subjects": ["50", "90"],
+      "detected_extras": ["51", "60", "83"],
+      "where_appeared": "A",
+      "where_label": "Studio RAW",
+      "studio_guard_reason": "extra_subjects:['51', '60', '83']",
+      "legacy_guard": "also_failed_count_mismatch_then_template",
+      "notes": "Studio preview citó 134 (correcto) y luego inventó 83/51/60 como desgloses no solicitados."
+    }
+  ],
+  "prompt50_note": "Harness inicial no persistió shadow_comparison por telemetría; el caso forense de prueba es la evidencia primaria de extra_subjects."
+}

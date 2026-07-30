@@ -7,6 +7,7 @@ import unicodedata
 from dataclasses import dataclass, field
 from typing import Any
 
+from app.lottery.ai.analyst_reasoning.allowed_subjects import AllowedSubjectSet
 from app.lottery.ai.analyst_reasoning.evidence_package import EvidencePackage
 from app.lottery.ai.official_lottery_scope import is_official_lottery
 
@@ -33,6 +34,33 @@ _GUARANTEED = re.compile(
 _ISO_DATE = re.compile(r"\b(20\d{2}-\d{2}-\d{2})\b")
 _NUMBER = re.compile(r"(?<!\d)(\d{1,2})(?!\d)")
 
+# Contexts where a 1–2 digit number is NOT a subject ball
+_NON_SUBJECT_CONTEXT = re.compile(
+    r"("
+    r"\d{1,2}\s*(?::|h)\s*\d{2}"  # times
+    r"|\b20\d{2}-\d{2}-\d{2}\b"
+    r"|\b20\d{2}\b"  # years
+    r"|\b(?:tabla|table|top|últim[oa]s?|ultim[oa]s?|primer[oa]s?|próxim[oa]s?|proxim[oa]s?)\s+\d{1,2}\b"
+    r"|\b\d{1,2}\s*(?:ª|º|°)?\s*posici[oó]n"
+    r"|\bposici[oó]n(?:es)?\s+\d{1,2}\b"
+    r"|\b\d{1,2}\s*(?:ª|º|°)\b"
+    r"|\b\d{1,5}\s+(?:ocasiones|veces|coincidencias|apariciones|fechas|registros|d[ií]as|sorteos|loter[ií]as)\b"
+    r"|\b(?:total|coincid(?:ieron|en|e)|conteo|cantidad)\s+(?:de\s+)?(?:en\s+)?\d{1,5}\b"
+    r"|\blas?\s+otras?\s+\d{1,2}\b"
+    r"|\b\d{1,2}\s+de\s+(?:enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre)\b"
+    r")",
+    re.I,
+)
+
+_SUBJECT_EXPLICIT = re.compile(
+    r"\b(?:"
+    r"(?:el|los|la|las|n[uú]mero|numero|bola|cifra)\s+(\d{1,2})"
+    r"|(\d{1,2})\s+y\s+(\d{1,2})"
+    r"|(?<![$\d])(\d{1,2})(?=\s+y\s+(?:el\s+)?\d{1,2})"
+    r")\b",
+    re.I,
+)
+
 
 @dataclass
 class GuardResult:
@@ -51,24 +79,21 @@ class FactualGuard:
 
         violations: list[str] = []
 
-        # External lotteries
         if _EXTERNAL.search(raw):
             violations.append("external_lottery")
 
-        # Guaranteed prediction language
         if _GUARANTEED.search(raw):
             violations.append("guaranteed_prediction")
 
-        # Dates must be in evidence (if any date claimed)
+        # --- date_guard ---
         allowed_dates = set(package.dates)
         for d in _ISO_DATE.findall(raw):
             if allowed_dates and d not in allowed_dates:
                 violations.append(f"unknown_date:{d}")
             elif not allowed_dates:
-                # No dates in package → claiming ISO dates is invention
                 violations.append(f"invented_date:{d}")
 
-        # Counts: canonical total must not be contradicted by alternate totals
+        # --- count_guard ---
         total = package.counts.get("total")
         if total is not None:
             try:
@@ -79,19 +104,39 @@ class FactualGuard:
                 count_pat = re.compile(
                     r"\b(\d{1,5})\s+("
                     r"ocasiones|veces|coincidencias|apariciones|"
-                    r"fechas(\s+distintas)?|registros(\s+de\s+ocurrencias)?|"
-                    r"d[ií]as(\s+distintos)?|sorteos"
+                    r"fechas(\s+[a-záéíóú]+)?|registros(\s+de\s+ocurrencias)?|"
+                    r"d[ií]as(\s+[a-záéíóú]+)?|sorteos"
                     r")\b",
                     re.I,
                 )
                 for m in count_pat.finditer(raw):
                     claimed = int(m.group(1))
-                    # Allow scope "7 loterías" and trivial 1–3 in prose lists
                     if claimed in {7, 1, 2, 3}:
                         continue
                     if claimed != t:
+                        # Allow explicit sample-size wording (not a coincidence total)
+                        span = raw[max(0, m.start() - 32) : m.end() + 24]
+                        if re.search(
+                            r"(?:\bla\s+muestra\s+de|\bmuestra\s+truncad|\bsample(?:\s+size)?(?:\s+of)?)\s*\d{1,5}\b",
+                            span,
+                            re.I,
+                        ):
+                            continue
+                        # Also: "muestra de 40 fechas es truncada"
+                        if re.search(r"\bmuestra\s+de\s+\d{1,5}\s+fechas\b", span, re.I) and re.search(
+                            r"truncad|sample", span, re.I
+                        ):
+                            continue
                         violations.append(f"count_mismatch:{claimed}!={t}")
-                # Explicit "total / coincidieron en N" without unit word
+                # Invented partials: "en 10 de esas ocasiones/días"
+                for m in re.finditer(
+                    r"\b(?:en\s+)?(\d{1,5})\s+de\s+(?:esas|esos|ellos|ellas)\b",
+                    raw,
+                    re.I,
+                ):
+                    claimed = int(m.group(1))
+                    if claimed not in {7, 1, 2, 3, t}:
+                        violations.append(f"count_mismatch:{claimed}!={t}")
                 for m in re.finditer(
                     r"\b(?:total|coincid(?:ieron|en|e))\s+(?:en\s+)?(\d{1,5})\b",
                     raw,
@@ -100,56 +145,24 @@ class FactualGuard:
                     claimed = int(m.group(1))
                     if claimed not in {7, 1, 2, 3, t}:
                         violations.append(f"count_mismatch:{claimed}!={t}")
+                # Sample-size confusion: model reports len(dates) as if it were the total
+                sample_n = min(40, len(package.dates or []))
+                if sample_n and sample_n != t:
+                    for m in re.finditer(
+                        rf"\b{sample_n}\s+(?:fechas|ocasiones|coincidencias|apariciones|registros|d[ií]as)\b",
+                        raw,
+                        re.I,
+                    ):
+                        span = raw[max(0, m.start() - 24) : m.end() + 24]
+                        if re.search(r"\bmuestra\b|\bsample\b|\btruncad", span, re.I):
+                            continue
+                        violations.append(f"count_mismatch:{sample_n}!={t}")
+                        break
 
-        # Subjects: strip ISO dates, clock times, and NY draw labels first
-        scrubbed = _ISO_DATE.sub(" ", raw)
-        scrubbed = re.sub(r"\b20\d{2}\b", " ", scrubbed)  # years
-        scrubbed = re.sub(
-            r"\bNew\s+York\s+\d{1,2}\s*[:.]\s*\d{2}\b", " NewYork ", scrubbed, flags=re.I
-        )
-        scrubbed = re.sub(r"\b\d{1,2}\s*[:.]\s*\d{2}\b", " ", scrubbed)  # times
-        scrubbed = re.sub(
-            r"\b\d{1,2}\s+de\s+(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre)\b",
-            " ",
-            scrubbed,
-            flags=re.I,
-        )
-        scrubbed = re.sub(r"\b([1-9]|1[0-2])\s+loter", " loter", scrubbed, flags=re.I)
-        allowed_nums = {str(int(s)) for s in package.subjects if str(s).isdigit()}
-        allowed_nums |= {s.zfill(2) for s in package.subjects if str(s).isdigit()}
-        # Allow position-like, months, and scope count
-        soft_ok = {str(i) for i in range(0, 32)} | {str(i).zfill(2) for i in range(0, 32)}
-        if total is not None:
-            try:
-                soft_ok.add(str(int(total)))
-                soft_ok.add(str(int(total)).zfill(2))
-            except (TypeError, ValueError):
-                pass
-        if allowed_nums:
-            claimed: set[str] = set()
-            for m in _NUMBER.finditer(scrubbed):
-                n = m.group(1)
-                claimed.add(n.zfill(2))
-                claimed.add(str(int(n)))
-            extras = claimed - allowed_nums - {str(int(x)) for x in allowed_nums if str(x).isdigit()}
-            hard_extras = extras - soft_ok
-            # Alien balls 32–99 claimed as if they were subjects
-            alien = {x for x in hard_extras if x.isdigit() and 32 <= int(x) <= 99}
-            # Explicit "el NN" / "número NN" outside allowed subjects
-            explicit_alien = []
-            for m in re.finditer(
-                r"\b(?:el|n[uú]mero|numero)\s+(\d{1,2})\b", scrubbed, re.I
-            ):
-                n = m.group(1).zfill(2)
-                if n not in {x.zfill(2) for x in allowed_nums} and int(n) >= 13:
-                    explicit_alien.append(n)
-            if len(set(explicit_alien)) >= 2 or len(alien) >= 3:
-                violations.append(
-                    f"extra_subjects:{sorted(set(explicit_alien) | alien)[:6]}"
-                )
+        # --- subject_guard (linguistic, not global digit scrape) ---
+        violations.extend(cls._subject_guard(raw, package))
 
-        # Lottery names: if a known official DB name pattern appears that's not official → already external
-        # Soft check: "Quiniela X" / "Loteria X" must be official if present
+        # --- lottery_guard ---
         for m in re.finditer(
             r"\b(Quiniela\s+\w+|Loteria\s+\w+|Gana\s+M[aá]s|New\s+York\s+[\d:]+)\b",
             raw,
@@ -187,9 +200,63 @@ class FactualGuard:
                         "violations": list(result.violations or [])[:20],
                     },
                 )
-        except Exception:  # noqa: BLE001 — forensics must never break guard
+        except Exception:  # noqa: BLE001
             pass
         return result
+
+    @classmethod
+    def _subject_guard(cls, raw: str, package: EvidencePackage) -> list[str]:
+        allowed = AllowedSubjectSet.from_evidence_package(package)
+        if not allowed.canonical:
+            return []
+
+        # Mask non-subject numeric contexts before extracting candidate subjects
+        scrubbed = _NON_SUBJECT_CONTEXT.sub(" ", raw)
+        scrubbed = _ISO_DATE.sub(" ", scrubbed)
+        scrubbed = re.sub(r"\bNew\s+York\s+\d{1,2}\s*[:.]\s*\d{2}\b", " NewYork ", scrubbed, flags=re.I)
+        # Ordinals / position labels: 1ro, 2do, 3ro, 4to, 5º…
+        scrubbed = re.sub(
+            r"\b\d{1,2}\s*(?:ro|do|to|mo|vo|no|º|°|ª)\b",
+            " ",
+            scrubbed,
+            flags=re.I,
+        )
+        scrubbed = re.sub(r"\b(?:1ro|2do|3ro|4to|5to|6to|7mo|8vo|9no|10mo)\b", " ", scrubbed, flags=re.I)
+        # Day-month fragments like 23/07 or 08-07-2026
+        scrubbed = re.sub(r"\b\d{1,2}[/-]\d{1,2}(?:[/-]\d{2,4})?\b", " ", scrubbed)
+
+        claimed: set[str] = set()
+        # Explicit subject mentions
+        for m in re.finditer(
+            r"\b(?:el|los|la|las|n[uú]mero|numero|bola)\s+(\d{1,2})\b",
+            scrubbed,
+            re.I,
+        ):
+            claimed.add(str(int(m.group(1))))
+        # Pair patterns "50 y 90"
+        for m in re.finditer(r"\b(\d{1,2})\s+y\s+(?:el\s+)?(\d{1,2})\b", scrubbed, re.I):
+            claimed.add(str(int(m.group(1))))
+            claimed.add(str(int(m.group(2))))
+        # Bold/markdown emphasis often used for subjects: **50**
+        for m in re.finditer(r"\*\*(\d{1,2})\*\*", scrubbed):
+            claimed.add(str(int(m.group(1))))
+
+        extras = sorted(n for n in claimed if not allowed.contains(n))
+        if extras:
+            return [f"extra_subjects:{extras[:8]}"]
+
+        # Also catch invented related balls presented as lists of "números" / "vecinos" / "compañeros"
+        invent_pat = re.compile(
+            r"(?:vecinos?|compa[nñ]eros?|relacionad[oa]s?|candidatos?|n[uú]meros?\s+fuertes?)"
+            r"[^.\n]{0,80}?(\d{1,2}(?:\s*,\s*\d{1,2}){1,6})",
+            re.I,
+        )
+        for m in invent_pat.finditer(raw):
+            nums = [str(int(x)) for x in re.findall(r"\d{1,2}", m.group(1))]
+            bad = [n for n in nums if not allowed.contains(n)]
+            if bad:
+                return [f"extra_subjects:{bad[:8]}"]
+        return []
 
     @staticmethod
     def _partial_official(name: str) -> bool:

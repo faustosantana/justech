@@ -39,6 +39,8 @@ class EvidencePackage(BaseModel):
     forbidden_claims: list[str] = Field(default_factory=list)
     factual_answer: str = ""
     package_version: str = "2.1.0"
+    # Optional derived contract for Studio / guard (legacy may ignore)
+    response_contract: dict[str, Any] = Field(default_factory=dict)
 
     def evidence_hash(self) -> str:
         payload = self.model_dump(mode="json")
@@ -71,6 +73,29 @@ class EvidencePackage(BaseModel):
 
     def to_llm_payload(self) -> dict[str, Any]:
         """Compact payload for the model — no internals beyond verified fields."""
+        from app.lottery.ai.analyst_reasoning.allowed_subjects import AllowedSubjectSet
+
+        allowed = AllowedSubjectSet.from_evidence_package(self)
+        contract = dict(self.response_contract or {})
+        if not contract.get("allowed_subjects"):
+            contract["allowed_subjects"] = allowed.to_contract_list()
+        contract.setdefault("allow_related_subjects", False)
+        contract.setdefault("allowed_lotteries", list(self.official_lotteries))
+        total = self.counts.get("total") if isinstance(self.counts, dict) else None
+        if total is not None:
+            contract["canonical_count"] = total
+        # Send only a few date anchors to the LLM — long date lists cause "N fechas" hallucinations.
+        date_anchors = list(self.dates[:5])
+        sample_n = len(date_anchors)
+        contract["dates_are_sample"] = True
+        contract["sample_date_count"] = sample_n
+        contract["allowed_dates"] = date_anchors
+        contract["sample_note"] = (
+            "dates/occurrences/source_rows are a truncated SAMPLE; "
+            "never report sample length as the total — use counts.total / canonical_count only."
+        )
+        if self.resolved_intent and "requested_operation" not in contract:
+            contract["requested_operation"] = self.resolved_intent
         return {
             "question": self.question,
             "resolved_intent": self.resolved_intent,
@@ -79,17 +104,22 @@ class EvidencePackage(BaseModel):
             "scope": self.scope,
             "official_lotteries": self.official_lotteries,
             "scope_label": scope_label_es(),
-            "dates": self.dates[:40],
+            "dates": date_anchors,
             "positions": self.positions[:24],
             "counts": self.counts,
-            "occurrences": self.occurrences[:20],
+            "occurrences": self.occurrences[:8],
             "comparison_data": self.comparison_data,
             "deterministic_relations": self.deterministic_relations,
-            "source_rows": self.source_rows[:20],
+            "source_rows": self.source_rows[:8],
             "limitations": self.limitations,
             "known_facts": self.known_facts,
-            "forbidden_claims": self.forbidden_claims,
+            "forbidden_claims": self.forbidden_claims
+            + [
+                "Usar el tamaño de dates/occurrences como si fuera counts.total.",
+                "Decir '40 fechas' u otro tamaño de muestra como conteo de coincidencias.",
+            ],
             "factual_answer": self.factual_answer,
+            "response_contract": contract,
         }
 
 
@@ -129,6 +159,7 @@ class EvidencePackageBuilder:
         forbidden = [
             "Inventar fechas no listadas en dates/occurrences.",
             "Inventar o alterar conteos (counts).",
+            "Inventar desgloses (p. ej. ambos en primera posición N veces) no presentes en counts.",
             "Afirmar predicciones garantizadas del próximo sorteo.",
             "Incluir loterías fuera de official_lotteries.",
             "Cambiar los subjects de la pregunta.",
@@ -140,11 +171,34 @@ class EvidencePackageBuilder:
                 "Coincidencia same-day = ambos números aparecen en sorteos del mismo "
                 f"día calendario dentro de {scope_label_es()}; no exige la misma lotería."
             )
+        if counts.get("total") is not None:
+            known.append(
+                f"Único conteo canónico verificable en este paquete: counts.total={counts.get('total')}. "
+                "No hay desglose por posición/primera posición en el paquete; no lo inventes."
+            )
 
         intent = None
         if hermes_decision is not None:
             intent = getattr(hermes_decision, "turn_type", None)
         intent = intent or structured.get("type") or data.get("semantics")
+
+        from app.lottery.ai.analyst_reasoning.allowed_subjects import AllowedSubjectSet
+
+        allowed = AllowedSubjectSet.from_values(subjects)
+        total_count = counts.get("total") if isinstance(counts, dict) else None
+        response_contract = {
+            "allowed_subjects": allowed.to_contract_list(),
+            "allowed_lotteries": list(official_lottery_names()),
+            "allowed_dates": list(dates[:40]),
+            "allow_related_subjects": False,
+            "requested_operation": str(intent) if intent else (str(relation) if relation else "analysis"),
+            "canonical_count": total_count,
+            "dates_are_sample": True,
+            "sample_date_count": min(40, len(dates)),
+            "sample_note": (
+                "dates/occurrences are a truncated SAMPLE; use counts.total as the only coincidence total."
+            ),
+        }
 
         return EvidencePackage(
             question=question or "",
@@ -171,6 +225,7 @@ class EvidencePackageBuilder:
             known_facts=known,
             forbidden_claims=forbidden,
             factual_answer=(factual_answer or "")[:4000],
+            response_contract=response_contract,
         )
 
     @staticmethod

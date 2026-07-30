@@ -1,0 +1,47 @@
+{
+  "identidad": {
+    "chars": 211,
+    "tokens_est": 53
+  },
+  "dominio": {
+    "chars": 257,
+    "tokens_est": 64
+  },
+  "memoria": {
+    "chars": 276,
+    "tokens_est": 69
+  },
+  "aclaraciones": {
+    "chars": 141,
+    "tokens_est": 35
+  },
+  "analisis": {
+    "chars": 320,
+    "tokens_est": 80
+  },
+  "herramientas": {
+    "chars": 212,
+    "tokens_est": 53
+  },
+  "respuesta": {
+    "chars": 507,
+    "tokens_est": 127
+  },
+  "reglas_prediccion": {
+    "chars": 158,
+    "tokens_est": 40
+  },
+  "instrucciones_especificas": {
+    "chars": 756,
+    "tokens_est": 189
+  },
+  "seguridad": {
+    "chars": 170,
+    "tokens_est": 42
+  },
+  "_total": {
+    "chars": 3184,
+    "tokens_est": 796,
+    "hash": "721dc1060214b08f604dcfa27aa2b67b86c7474f42cf0c5f232712e46c770e2a"
+  }
+}

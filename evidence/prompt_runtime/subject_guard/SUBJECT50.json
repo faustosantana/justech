@@ -1,0 +1,656 @@
+{
+  "suite": "SUBJECT50",
+  "version": "1.1",
+  "cases": [
+    {
+      "id": "S01",
+      "group": "pair",
+      "user": "¿Han coincidido el 07 y el 18 el mismo día?",
+      "expect": {
+        "subjects": [
+          "07",
+          "18"
+        ],
+        "extra_subjects": 0,
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S02",
+      "group": "pair",
+      "user": "¿Han coincidido el 22 y el 03 el mismo día?",
+      "expect": {
+        "subjects": [
+          "22",
+          "03"
+        ],
+        "extra_subjects": 0,
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S03",
+      "group": "pair",
+      "user": "¿Han coincidido el 35 y el 77 el mismo día?",
+      "expect": {
+        "subjects": [
+          "35",
+          "77"
+        ],
+        "extra_subjects": 0,
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S04",
+      "group": "pair",
+      "user": "¿Han coincidido el 50 y el 14 el mismo día?",
+      "expect": {
+        "subjects": [
+          "50",
+          "14"
+        ],
+        "extra_subjects": 0,
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S05",
+      "group": "pair",
+      "user": "¿Han coincidido el 54 y el 38 el mismo día?",
+      "expect": {
+        "subjects": [
+          "54",
+          "38"
+        ],
+        "extra_subjects": 0,
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S06",
+      "group": "pair",
+      "user": "¿Han coincidido el 90 y el 78 el mismo día?",
+      "expect": {
+        "subjects": [
+          "90",
+          "78"
+        ],
+        "extra_subjects": 0,
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S07",
+      "group": "pair",
+      "user": "¿Han coincidido el 12 y el 02 el mismo día?",
+      "expect": {
+        "subjects": [
+          "12",
+          "02"
+        ],
+        "extra_subjects": 0,
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S08",
+      "group": "pair",
+      "user": "¿Han coincidido el 18 y el 11 el mismo día?",
+      "expect": {
+        "subjects": [
+          "18",
+          "11"
+        ],
+        "extra_subjects": 0,
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S09",
+      "group": "pair",
+      "user": "¿Han coincidido el 03 y el 25 el mismo día?",
+      "expect": {
+        "subjects": [
+          "03",
+          "25"
+        ],
+        "extra_subjects": 0,
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S10",
+      "group": "pair",
+      "user": "¿Han coincidido el 77 y el 41 el mismo día?",
+      "expect": {
+        "subjects": [
+          "77",
+          "41"
+        ],
+        "extra_subjects": 0,
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S11",
+      "group": "pair",
+      "user": "¿Han coincidido el 14 y el 63 el mismo día?",
+      "expect": {
+        "subjects": [
+          "14",
+          "63"
+        ],
+        "extra_subjects": 0,
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S12",
+      "group": "pair",
+      "user": "¿Han coincidido el 38 y el 08 el mismo día?",
+      "expect": {
+        "subjects": [
+          "38",
+          "08"
+        ],
+        "extra_subjects": 0,
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S13",
+      "group": "pair",
+      "user": "¿Han coincidido el 78 y el 19 el mismo día?",
+      "expect": {
+        "subjects": [
+          "78",
+          "19"
+        ],
+        "extra_subjects": 0,
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S14",
+      "group": "pair",
+      "user": "¿Han coincidido el 02 y el 07 el mismo día?",
+      "expect": {
+        "subjects": [
+          "02",
+          "07"
+        ],
+        "extra_subjects": 0,
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S15",
+      "group": "pair",
+      "user": "¿Han coincidido el 11 y el 22 el mismo día?",
+      "expect": {
+        "subjects": [
+          "11",
+          "22"
+        ],
+        "extra_subjects": 0,
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S16",
+      "group": "pair",
+      "user": "¿Han coincidido el 25 y el 35 el mismo día?",
+      "expect": {
+        "subjects": [
+          "25",
+          "35"
+        ],
+        "extra_subjects": 0,
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S17",
+      "group": "pair",
+      "user": "¿Han coincidido el 41 y el 50 el mismo día?",
+      "expect": {
+        "subjects": [
+          "41",
+          "50"
+        ],
+        "extra_subjects": 0,
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S18",
+      "group": "pair",
+      "user": "¿Han coincidido el 63 y el 54 el mismo día?",
+      "expect": {
+        "subjects": [
+          "63",
+          "54"
+        ],
+        "extra_subjects": 0,
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S19",
+      "group": "pair",
+      "user": "¿Han coincidido el 08 y el 90 el mismo día?",
+      "expect": {
+        "subjects": [
+          "08",
+          "90"
+        ],
+        "extra_subjects": 0,
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S20",
+      "group": "pair",
+      "user": "¿Han coincidido el 19 y el 12 el mismo día?",
+      "expect": {
+        "subjects": [
+          "19",
+          "12"
+        ],
+        "extra_subjects": 0,
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S21",
+      "group": "pair",
+      "user": "¿Han coincidido el 07 y el 18 el mismo día?",
+      "expect": {
+        "subjects": [
+          "07",
+          "18"
+        ],
+        "extra_subjects": 0,
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S22",
+      "group": "pair",
+      "user": "¿Han coincidido el 22 y el 03 el mismo día?",
+      "expect": {
+        "subjects": [
+          "22",
+          "03"
+        ],
+        "extra_subjects": 0,
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S23",
+      "group": "pair",
+      "user": "¿Han coincidido el 35 y el 77 el mismo día?",
+      "expect": {
+        "subjects": [
+          "35",
+          "77"
+        ],
+        "extra_subjects": 0,
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S24",
+      "group": "pair",
+      "user": "¿Han coincidido el 50 y el 14 el mismo día?",
+      "expect": {
+        "subjects": [
+          "50",
+          "14"
+        ],
+        "extra_subjects": 0,
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S25",
+      "group": "pair",
+      "user": "¿Han coincidido el 54 y el 38 el mismo día?",
+      "expect": {
+        "subjects": [
+          "54",
+          "38"
+        ],
+        "extra_subjects": 0,
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S26",
+      "group": "pair",
+      "user": "¿Han coincidido el 90 y el 78 el mismo día?",
+      "expect": {
+        "subjects": [
+          "90",
+          "78"
+        ],
+        "extra_subjects": 0,
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S27",
+      "group": "pair",
+      "user": "¿Han coincidido el 12 y el 02 el mismo día?",
+      "expect": {
+        "subjects": [
+          "12",
+          "02"
+        ],
+        "extra_subjects": 0,
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S28",
+      "group": "pair",
+      "user": "¿Han coincidido el 18 y el 11 el mismo día?",
+      "expect": {
+        "subjects": [
+          "18",
+          "11"
+        ],
+        "extra_subjects": 0,
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S29",
+      "group": "pair",
+      "user": "¿Han coincidido el 03 y el 25 el mismo día?",
+      "expect": {
+        "subjects": [
+          "03",
+          "25"
+        ],
+        "extra_subjects": 0,
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S30",
+      "group": "pair",
+      "user": "¿Han coincidido el 77 y el 41 el mismo día?",
+      "expect": {
+        "subjects": [
+          "77",
+          "41"
+        ],
+        "extra_subjects": 0,
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S31",
+      "group": "pair",
+      "user": "¿Han coincidido el 14 y el 63 el mismo día?",
+      "expect": {
+        "subjects": [
+          "14",
+          "63"
+        ],
+        "extra_subjects": 0,
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S32",
+      "group": "pair",
+      "user": "¿Han coincidido el 38 y el 08 el mismo día?",
+      "expect": {
+        "subjects": [
+          "38",
+          "08"
+        ],
+        "extra_subjects": 0,
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S33",
+      "group": "pair",
+      "user": "¿Han coincidido el 78 y el 19 el mismo día?",
+      "expect": {
+        "subjects": [
+          "78",
+          "19"
+        ],
+        "extra_subjects": 0,
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S34",
+      "group": "pair",
+      "user": "¿Han coincidido el 02 y el 07 el mismo día?",
+      "expect": {
+        "subjects": [
+          "02",
+          "07"
+        ],
+        "extra_subjects": 0,
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S35",
+      "group": "pair",
+      "user": "¿Han coincidido el 11 y el 22 el mismo día?",
+      "expect": {
+        "subjects": [
+          "11",
+          "22"
+        ],
+        "extra_subjects": 0,
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S36",
+      "group": "pair",
+      "user": "¿Han coincidido el 25 y el 35 el mismo día?",
+      "expect": {
+        "subjects": [
+          "25",
+          "35"
+        ],
+        "extra_subjects": 0,
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S37",
+      "group": "pair",
+      "user": "¿Han coincidido el 41 y el 50 el mismo día?",
+      "expect": {
+        "subjects": [
+          "41",
+          "50"
+        ],
+        "extra_subjects": 0,
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S38",
+      "group": "pair",
+      "user": "¿Han coincidido el 63 y el 54 el mismo día?",
+      "expect": {
+        "subjects": [
+          "63",
+          "54"
+        ],
+        "extra_subjects": 0,
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S39",
+      "group": "pair",
+      "user": "¿Han coincidido el 08 y el 90 el mismo día?",
+      "expect": {
+        "subjects": [
+          "08",
+          "90"
+        ],
+        "extra_subjects": 0,
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S40",
+      "group": "pair",
+      "user": "¿Han coincidido el 19 y el 12 el mismo día?",
+      "expect": {
+        "subjects": [
+          "19",
+          "12"
+        ],
+        "extra_subjects": 0,
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S41",
+      "group": "pair",
+      "user": "¿Han coincidido el 07 y el 18 el mismo día?",
+      "expect": {
+        "subjects": [
+          "07",
+          "18"
+        ],
+        "extra_subjects": 0,
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S42",
+      "group": "pair",
+      "user": "¿Han coincidido el 22 y el 03 el mismo día?",
+      "expect": {
+        "subjects": [
+          "22",
+          "03"
+        ],
+        "extra_subjects": 0,
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S43",
+      "group": "pair",
+      "user": "¿Han coincidido el 35 y el 77 el mismo día?",
+      "expect": {
+        "subjects": [
+          "35",
+          "77"
+        ],
+        "extra_subjects": 0,
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S44",
+      "group": "pair",
+      "user": "¿Han coincidido el 50 y el 14 el mismo día?",
+      "expect": {
+        "subjects": [
+          "50",
+          "14"
+        ],
+        "extra_subjects": 0,
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S45",
+      "group": "pair",
+      "user": "¿Han coincidido el 54 y el 38 el mismo día?",
+      "expect": {
+        "subjects": [
+          "54",
+          "38"
+        ],
+        "extra_subjects": 0,
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S46",
+      "group": "pair",
+      "user": "¿Han coincidido el 90 y el 78 el mismo día?",
+      "expect": {
+        "subjects": [
+          "90",
+          "78"
+        ],
+        "extra_subjects": 0,
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S47",
+      "group": "pair",
+      "user": "¿Han coincidido el 12 y el 02 el mismo día?",
+      "expect": {
+        "subjects": [
+          "12",
+          "02"
+        ],
+        "extra_subjects": 0,
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S48",
+      "group": "pair",
+      "user": "¿Han coincidido el 18 y el 11 el mismo día?",
+      "expect": {
+        "subjects": [
+          "18",
+          "11"
+        ],
+        "extra_subjects": 0,
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S49",
+      "group": "pair",
+      "user": "¿Han coincidido el 03 y el 25 el mismo día?",
+      "expect": {
+        "subjects": [
+          "03",
+          "25"
+        ],
+        "extra_subjects": 0,
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S50",
+      "group": "pair",
+      "user": "¿Han coincidido el 77 y el 41 el mismo día?",
+      "expect": {
+        "subjects": [
+          "77",
+          "41"
+        ],
+        "extra_subjects": 0,
+        "huawei_eligible": true
+      }
+    }
+  ]
+}

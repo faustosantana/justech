@@ -1,0 +1,2018 @@
+{
+  "suite": "ROUTING200",
+  "version": "1.0",
+  "purpose": "Verify Studio does not intervene on non-Huawei routes",
+  "n": 200,
+  "cases": [
+    {
+      "id": "R001",
+      "category": "social",
+      "user": "Hola",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R002",
+      "category": "social",
+      "user": "Buenos días",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R003",
+      "category": "social",
+      "user": "Gracias",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R004",
+      "category": "social",
+      "user": "Ok",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R005",
+      "category": "social",
+      "user": "Perfecto",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R006",
+      "category": "social",
+      "user": "Entendido",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R007",
+      "category": "social",
+      "user": "Dale",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R008",
+      "category": "social",
+      "user": "Listo",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R009",
+      "category": "social",
+      "user": "Sí",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R010",
+      "category": "social",
+      "user": "No",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R011",
+      "category": "workspace_table",
+      "user": "página 1 de la tabla",
+      "setup": [
+        "¿Han coincidido el 07 y el 38 el mismo día?"
+      ],
+      "expect": {
+        "huawei": false,
+        "workspace": true
+      }
+    },
+    {
+      "id": "R012",
+      "category": "workspace_table",
+      "user": "muéstrame la tabla",
+      "setup": [
+        "¿Han coincidido el 07 y el 38 el mismo día?"
+      ],
+      "expect": {
+        "huawei": false,
+        "workspace": true
+      }
+    },
+    {
+      "id": "R013",
+      "category": "workspace_table",
+      "user": "página 1 de la tabla",
+      "setup": [
+        "¿Han coincidido el 07 y el 38 el mismo día?"
+      ],
+      "expect": {
+        "huawei": false,
+        "workspace": true
+      }
+    },
+    {
+      "id": "R014",
+      "category": "workspace_table",
+      "user": "muéstrame la tabla",
+      "setup": [
+        "¿Han coincidido el 07 y el 38 el mismo día?"
+      ],
+      "expect": {
+        "huawei": false,
+        "workspace": true
+      }
+    },
+    {
+      "id": "R015",
+      "category": "workspace_table",
+      "user": "página 1 de la tabla",
+      "setup": [
+        "¿Han coincidido el 07 y el 38 el mismo día?"
+      ],
+      "expect": {
+        "huawei": false,
+        "workspace": true
+      }
+    },
+    {
+      "id": "R016",
+      "category": "workspace_table",
+      "user": "muéstrame la tabla",
+      "setup": [
+        "¿Han coincidido el 07 y el 38 el mismo día?"
+      ],
+      "expect": {
+        "huawei": false,
+        "workspace": true
+      }
+    },
+    {
+      "id": "R017",
+      "category": "workspace_table",
+      "user": "página 1 de la tabla",
+      "setup": [
+        "¿Han coincidido el 07 y el 38 el mismo día?"
+      ],
+      "expect": {
+        "huawei": false,
+        "workspace": true
+      }
+    },
+    {
+      "id": "R018",
+      "category": "workspace_table",
+      "user": "muéstrame la tabla",
+      "setup": [
+        "¿Han coincidido el 07 y el 38 el mismo día?"
+      ],
+      "expect": {
+        "huawei": false,
+        "workspace": true
+      }
+    },
+    {
+      "id": "R019",
+      "category": "workspace_table",
+      "user": "página 1 de la tabla",
+      "setup": [
+        "¿Han coincidido el 07 y el 38 el mismo día?"
+      ],
+      "expect": {
+        "huawei": false,
+        "workspace": true
+      }
+    },
+    {
+      "id": "R020",
+      "category": "workspace_table",
+      "user": "muéstrame la tabla",
+      "setup": [
+        "¿Han coincidido el 07 y el 38 el mismo día?"
+      ],
+      "expect": {
+        "huawei": false,
+        "workspace": true
+      }
+    },
+    {
+      "id": "R021",
+      "category": "workspace_table",
+      "user": "página 1 de la tabla",
+      "setup": [
+        "¿Han coincidido el 07 y el 38 el mismo día?"
+      ],
+      "expect": {
+        "huawei": false,
+        "workspace": true
+      }
+    },
+    {
+      "id": "R022",
+      "category": "workspace_table",
+      "user": "muéstrame la tabla",
+      "setup": [
+        "¿Han coincidido el 07 y el 38 el mismo día?"
+      ],
+      "expect": {
+        "huawei": false,
+        "workspace": true
+      }
+    },
+    {
+      "id": "R023",
+      "category": "workspace_table",
+      "user": "página 1 de la tabla",
+      "setup": [
+        "¿Han coincidido el 07 y el 38 el mismo día?"
+      ],
+      "expect": {
+        "huawei": false,
+        "workspace": true
+      }
+    },
+    {
+      "id": "R024",
+      "category": "workspace_table",
+      "user": "muéstrame la tabla",
+      "setup": [
+        "¿Han coincidido el 07 y el 38 el mismo día?"
+      ],
+      "expect": {
+        "huawei": false,
+        "workspace": true
+      }
+    },
+    {
+      "id": "R025",
+      "category": "workspace_table",
+      "user": "página 1 de la tabla",
+      "setup": [
+        "¿Han coincidido el 07 y el 38 el mismo día?"
+      ],
+      "expect": {
+        "huawei": false,
+        "workspace": true
+      }
+    },
+    {
+      "id": "R026",
+      "category": "workspace_table",
+      "user": "muéstrame la tabla",
+      "setup": [
+        "¿Han coincidido el 07 y el 38 el mismo día?"
+      ],
+      "expect": {
+        "huawei": false,
+        "workspace": true
+      }
+    },
+    {
+      "id": "R027",
+      "category": "workspace_table",
+      "user": "página 1 de la tabla",
+      "setup": [
+        "¿Han coincidido el 07 y el 38 el mismo día?"
+      ],
+      "expect": {
+        "huawei": false,
+        "workspace": true
+      }
+    },
+    {
+      "id": "R028",
+      "category": "workspace_table",
+      "user": "muéstrame la tabla",
+      "setup": [
+        "¿Han coincidido el 07 y el 38 el mismo día?"
+      ],
+      "expect": {
+        "huawei": false,
+        "workspace": true
+      }
+    },
+    {
+      "id": "R029",
+      "category": "workspace_table",
+      "user": "página 1 de la tabla",
+      "setup": [
+        "¿Han coincidido el 07 y el 38 el mismo día?"
+      ],
+      "expect": {
+        "huawei": false,
+        "workspace": true
+      }
+    },
+    {
+      "id": "R030",
+      "category": "workspace_table",
+      "user": "muéstrame la tabla",
+      "setup": [
+        "¿Han coincidido el 07 y el 38 el mismo día?"
+      ],
+      "expect": {
+        "huawei": false,
+        "workspace": true
+      }
+    },
+    {
+      "id": "R031",
+      "category": "workspace_table",
+      "user": "página 1 de la tabla",
+      "setup": [
+        "¿Han coincidido el 07 y el 38 el mismo día?"
+      ],
+      "expect": {
+        "huawei": false,
+        "workspace": true
+      }
+    },
+    {
+      "id": "R032",
+      "category": "workspace_table",
+      "user": "muéstrame la tabla",
+      "setup": [
+        "¿Han coincidido el 07 y el 38 el mismo día?"
+      ],
+      "expect": {
+        "huawei": false,
+        "workspace": true
+      }
+    },
+    {
+      "id": "R033",
+      "category": "workspace_table",
+      "user": "página 1 de la tabla",
+      "setup": [
+        "¿Han coincidido el 07 y el 38 el mismo día?"
+      ],
+      "expect": {
+        "huawei": false,
+        "workspace": true
+      }
+    },
+    {
+      "id": "R034",
+      "category": "workspace_table",
+      "user": "muéstrame la tabla",
+      "setup": [
+        "¿Han coincidido el 07 y el 38 el mismo día?"
+      ],
+      "expect": {
+        "huawei": false,
+        "workspace": true
+      }
+    },
+    {
+      "id": "R035",
+      "category": "workspace_table",
+      "user": "página 1 de la tabla",
+      "setup": [
+        "¿Han coincidido el 07 y el 38 el mismo día?"
+      ],
+      "expect": {
+        "huawei": false,
+        "workspace": true
+      }
+    },
+    {
+      "id": "R036",
+      "category": "workspace_table",
+      "user": "muéstrame la tabla",
+      "setup": [
+        "¿Han coincidido el 07 y el 38 el mismo día?"
+      ],
+      "expect": {
+        "huawei": false,
+        "workspace": true
+      }
+    },
+    {
+      "id": "R037",
+      "category": "workspace_table",
+      "user": "página 1 de la tabla",
+      "setup": [
+        "¿Han coincidido el 07 y el 38 el mismo día?"
+      ],
+      "expect": {
+        "huawei": false,
+        "workspace": true
+      }
+    },
+    {
+      "id": "R038",
+      "category": "workspace_table",
+      "user": "muéstrame la tabla",
+      "setup": [
+        "¿Han coincidido el 07 y el 38 el mismo día?"
+      ],
+      "expect": {
+        "huawei": false,
+        "workspace": true
+      }
+    },
+    {
+      "id": "R039",
+      "category": "workspace_table",
+      "user": "página 1 de la tabla",
+      "setup": [
+        "¿Han coincidido el 07 y el 38 el mismo día?"
+      ],
+      "expect": {
+        "huawei": false,
+        "workspace": true
+      }
+    },
+    {
+      "id": "R040",
+      "category": "workspace_table",
+      "user": "muéstrame la tabla",
+      "setup": [
+        "¿Han coincidido el 07 y el 38 el mismo día?"
+      ],
+      "expect": {
+        "huawei": false,
+        "workspace": true
+      }
+    },
+    {
+      "id": "R041",
+      "category": "workspace_table",
+      "user": "página 1 de la tabla",
+      "setup": [
+        "¿Han coincidido el 07 y el 38 el mismo día?"
+      ],
+      "expect": {
+        "huawei": false,
+        "workspace": true
+      }
+    },
+    {
+      "id": "R042",
+      "category": "workspace_table",
+      "user": "muéstrame la tabla",
+      "setup": [
+        "¿Han coincidido el 07 y el 38 el mismo día?"
+      ],
+      "expect": {
+        "huawei": false,
+        "workspace": true
+      }
+    },
+    {
+      "id": "R043",
+      "category": "workspace_table",
+      "user": "página 1 de la tabla",
+      "setup": [
+        "¿Han coincidido el 07 y el 38 el mismo día?"
+      ],
+      "expect": {
+        "huawei": false,
+        "workspace": true
+      }
+    },
+    {
+      "id": "R044",
+      "category": "workspace_table",
+      "user": "muéstrame la tabla",
+      "setup": [
+        "¿Han coincidido el 07 y el 38 el mismo día?"
+      ],
+      "expect": {
+        "huawei": false,
+        "workspace": true
+      }
+    },
+    {
+      "id": "R045",
+      "category": "workspace_table",
+      "user": "página 1 de la tabla",
+      "setup": [
+        "¿Han coincidido el 07 y el 38 el mismo día?"
+      ],
+      "expect": {
+        "huawei": false,
+        "workspace": true
+      }
+    },
+    {
+      "id": "R046",
+      "category": "workspace_table",
+      "user": "muéstrame la tabla",
+      "setup": [
+        "¿Han coincidido el 07 y el 38 el mismo día?"
+      ],
+      "expect": {
+        "huawei": false,
+        "workspace": true
+      }
+    },
+    {
+      "id": "R047",
+      "category": "workspace_table",
+      "user": "página 1 de la tabla",
+      "setup": [
+        "¿Han coincidido el 07 y el 38 el mismo día?"
+      ],
+      "expect": {
+        "huawei": false,
+        "workspace": true
+      }
+    },
+    {
+      "id": "R048",
+      "category": "workspace_table",
+      "user": "muéstrame la tabla",
+      "setup": [
+        "¿Han coincidido el 07 y el 38 el mismo día?"
+      ],
+      "expect": {
+        "huawei": false,
+        "workspace": true
+      }
+    },
+    {
+      "id": "R049",
+      "category": "workspace_table",
+      "user": "página 1 de la tabla",
+      "setup": [
+        "¿Han coincidido el 07 y el 38 el mismo día?"
+      ],
+      "expect": {
+        "huawei": false,
+        "workspace": true
+      }
+    },
+    {
+      "id": "R050",
+      "category": "workspace_table",
+      "user": "muéstrame la tabla",
+      "setup": [
+        "¿Han coincidido el 07 y el 38 el mismo día?"
+      ],
+      "expect": {
+        "huawei": false,
+        "workspace": true
+      }
+    },
+    {
+      "id": "R051",
+      "category": "workspace_table",
+      "user": "página 1 de la tabla",
+      "setup": [
+        "¿Han coincidido el 07 y el 38 el mismo día?"
+      ],
+      "expect": {
+        "huawei": false,
+        "workspace": true
+      }
+    },
+    {
+      "id": "R052",
+      "category": "workspace_table",
+      "user": "muéstrame la tabla",
+      "setup": [
+        "¿Han coincidido el 07 y el 38 el mismo día?"
+      ],
+      "expect": {
+        "huawei": false,
+        "workspace": true
+      }
+    },
+    {
+      "id": "R053",
+      "category": "workspace_table",
+      "user": "página 1 de la tabla",
+      "setup": [
+        "¿Han coincidido el 07 y el 38 el mismo día?"
+      ],
+      "expect": {
+        "huawei": false,
+        "workspace": true
+      }
+    },
+    {
+      "id": "R054",
+      "category": "workspace_table",
+      "user": "muéstrame la tabla",
+      "setup": [
+        "¿Han coincidido el 07 y el 38 el mismo día?"
+      ],
+      "expect": {
+        "huawei": false,
+        "workspace": true
+      }
+    },
+    {
+      "id": "R055",
+      "category": "workspace_table",
+      "user": "página 1 de la tabla",
+      "setup": [
+        "¿Han coincidido el 07 y el 38 el mismo día?"
+      ],
+      "expect": {
+        "huawei": false,
+        "workspace": true
+      }
+    },
+    {
+      "id": "R056",
+      "category": "workspace_table",
+      "user": "muéstrame la tabla",
+      "setup": [
+        "¿Han coincidido el 07 y el 38 el mismo día?"
+      ],
+      "expect": {
+        "huawei": false,
+        "workspace": true
+      }
+    },
+    {
+      "id": "R057",
+      "category": "workspace_table",
+      "user": "página 1 de la tabla",
+      "setup": [
+        "¿Han coincidido el 07 y el 38 el mismo día?"
+      ],
+      "expect": {
+        "huawei": false,
+        "workspace": true
+      }
+    },
+    {
+      "id": "R058",
+      "category": "workspace_table",
+      "user": "muéstrame la tabla",
+      "setup": [
+        "¿Han coincidido el 07 y el 38 el mismo día?"
+      ],
+      "expect": {
+        "huawei": false,
+        "workspace": true
+      }
+    },
+    {
+      "id": "R059",
+      "category": "workspace_table",
+      "user": "página 1 de la tabla",
+      "setup": [
+        "¿Han coincidido el 07 y el 38 el mismo día?"
+      ],
+      "expect": {
+        "huawei": false,
+        "workspace": true
+      }
+    },
+    {
+      "id": "R060",
+      "category": "workspace_table",
+      "user": "muéstrame la tabla",
+      "setup": [
+        "¿Han coincidido el 07 y el 38 el mismo día?"
+      ],
+      "expect": {
+        "huawei": false,
+        "workspace": true
+      }
+    },
+    {
+      "id": "R061",
+      "category": "export",
+      "user": "exporta a excel",
+      "setup": [
+        "¿Han coincidido el 12 y el 50 el mismo día?"
+      ],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R062",
+      "category": "export",
+      "user": "descargar csv",
+      "setup": [
+        "¿Han coincidido el 12 y el 50 el mismo día?"
+      ],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R063",
+      "category": "export",
+      "user": "exporta a excel",
+      "setup": [
+        "¿Han coincidido el 12 y el 50 el mismo día?"
+      ],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R064",
+      "category": "export",
+      "user": "descargar csv",
+      "setup": [
+        "¿Han coincidido el 12 y el 50 el mismo día?"
+      ],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R065",
+      "category": "export",
+      "user": "exporta a excel",
+      "setup": [
+        "¿Han coincidido el 12 y el 50 el mismo día?"
+      ],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R066",
+      "category": "export",
+      "user": "descargar csv",
+      "setup": [
+        "¿Han coincidido el 12 y el 50 el mismo día?"
+      ],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R067",
+      "category": "export",
+      "user": "exporta a excel",
+      "setup": [
+        "¿Han coincidido el 12 y el 50 el mismo día?"
+      ],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R068",
+      "category": "export",
+      "user": "descargar csv",
+      "setup": [
+        "¿Han coincidido el 12 y el 50 el mismo día?"
+      ],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R069",
+      "category": "export",
+      "user": "exporta a excel",
+      "setup": [
+        "¿Han coincidido el 12 y el 50 el mismo día?"
+      ],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R070",
+      "category": "export",
+      "user": "descargar csv",
+      "setup": [
+        "¿Han coincidido el 12 y el 50 el mismo día?"
+      ],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R071",
+      "category": "export",
+      "user": "exporta a excel",
+      "setup": [
+        "¿Han coincidido el 12 y el 50 el mismo día?"
+      ],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R072",
+      "category": "export",
+      "user": "descargar csv",
+      "setup": [
+        "¿Han coincidido el 12 y el 50 el mismo día?"
+      ],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R073",
+      "category": "export",
+      "user": "exporta a excel",
+      "setup": [
+        "¿Han coincidido el 12 y el 50 el mismo día?"
+      ],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R074",
+      "category": "export",
+      "user": "descargar csv",
+      "setup": [
+        "¿Han coincidido el 12 y el 50 el mismo día?"
+      ],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R075",
+      "category": "export",
+      "user": "exporta a excel",
+      "setup": [
+        "¿Han coincidido el 12 y el 50 el mismo día?"
+      ],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R076",
+      "category": "export",
+      "user": "descargar csv",
+      "setup": [
+        "¿Han coincidido el 12 y el 50 el mismo día?"
+      ],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R077",
+      "category": "export",
+      "user": "exporta a excel",
+      "setup": [
+        "¿Han coincidido el 12 y el 50 el mismo día?"
+      ],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R078",
+      "category": "export",
+      "user": "descargar csv",
+      "setup": [
+        "¿Han coincidido el 12 y el 50 el mismo día?"
+      ],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R079",
+      "category": "export",
+      "user": "exporta a excel",
+      "setup": [
+        "¿Han coincidido el 12 y el 50 el mismo día?"
+      ],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R080",
+      "category": "export",
+      "user": "descargar csv",
+      "setup": [
+        "¿Han coincidido el 12 y el 50 el mismo día?"
+      ],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R081",
+      "category": "attribute_local",
+      "user": "¿Cuántas veces?",
+      "setup": [
+        "¿Han coincidido el 14 y el 54 el mismo día? Interpreta."
+      ],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R082",
+      "category": "attribute_local",
+      "user": "¿Cuándo fue?",
+      "setup": [
+        "¿Han coincidido el 14 y el 54 el mismo día? Interpreta."
+      ],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R083",
+      "category": "attribute_local",
+      "user": "¿Última vez?",
+      "setup": [
+        "¿Han coincidido el 14 y el 54 el mismo día? Interpreta."
+      ],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R084",
+      "category": "attribute_local",
+      "user": "¿En qué posición?",
+      "setup": [
+        "¿Han coincidido el 14 y el 54 el mismo día? Interpreta."
+      ],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R085",
+      "category": "attribute_local",
+      "user": "¿En qué lotería?",
+      "setup": [
+        "¿Han coincidido el 14 y el 54 el mismo día? Interpreta."
+      ],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R086",
+      "category": "attribute_local",
+      "user": "¿Cuáles fueron esas fechas?",
+      "setup": [
+        "¿Han coincidido el 14 y el 54 el mismo día? Interpreta."
+      ],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R087",
+      "category": "attribute_local",
+      "user": "las tres anteriores",
+      "setup": [
+        "¿Han coincidido el 14 y el 54 el mismo día? Interpreta."
+      ],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R088",
+      "category": "attribute_local",
+      "user": "¿Cuándo salió?",
+      "setup": [
+        "¿Han coincidido el 14 y el 54 el mismo día? Interpreta."
+      ],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R089",
+      "category": "attribute_local",
+      "user": "última",
+      "setup": [
+        "¿Han coincidido el 14 y el 54 el mismo día? Interpreta."
+      ],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R090",
+      "category": "attribute_local",
+      "user": "¿Cuántas?",
+      "setup": [
+        "¿Han coincidido el 14 y el 54 el mismo día? Interpreta."
+      ],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R091",
+      "category": "social_pad",
+      "user": "gracias",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R092",
+      "category": "social_pad",
+      "user": "ok",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R093",
+      "category": "social_pad",
+      "user": "gracias",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R094",
+      "category": "social_pad",
+      "user": "ok",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R095",
+      "category": "social_pad",
+      "user": "gracias",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R096",
+      "category": "social_pad",
+      "user": "ok",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R097",
+      "category": "social_pad",
+      "user": "gracias",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R098",
+      "category": "social_pad",
+      "user": "ok",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R099",
+      "category": "social_pad",
+      "user": "gracias",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R100",
+      "category": "social_pad",
+      "user": "ok",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R101",
+      "category": "social_pad",
+      "user": "gracias",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R102",
+      "category": "social_pad",
+      "user": "ok",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R103",
+      "category": "social_pad",
+      "user": "gracias",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R104",
+      "category": "social_pad",
+      "user": "ok",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R105",
+      "category": "social_pad",
+      "user": "gracias",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R106",
+      "category": "social_pad",
+      "user": "ok",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R107",
+      "category": "social_pad",
+      "user": "gracias",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R108",
+      "category": "social_pad",
+      "user": "ok",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R109",
+      "category": "social_pad",
+      "user": "gracias",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R110",
+      "category": "social_pad",
+      "user": "ok",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R111",
+      "category": "social_pad",
+      "user": "gracias",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R112",
+      "category": "social_pad",
+      "user": "ok",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R113",
+      "category": "social_pad",
+      "user": "gracias",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R114",
+      "category": "social_pad",
+      "user": "ok",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R115",
+      "category": "social_pad",
+      "user": "gracias",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R116",
+      "category": "social_pad",
+      "user": "ok",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R117",
+      "category": "social_pad",
+      "user": "gracias",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R118",
+      "category": "social_pad",
+      "user": "ok",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R119",
+      "category": "social_pad",
+      "user": "gracias",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R120",
+      "category": "social_pad",
+      "user": "ok",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R121",
+      "category": "social_pad",
+      "user": "gracias",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R122",
+      "category": "social_pad",
+      "user": "ok",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R123",
+      "category": "social_pad",
+      "user": "gracias",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R124",
+      "category": "social_pad",
+      "user": "ok",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R125",
+      "category": "social_pad",
+      "user": "gracias",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R126",
+      "category": "social_pad",
+      "user": "ok",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R127",
+      "category": "social_pad",
+      "user": "gracias",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R128",
+      "category": "social_pad",
+      "user": "ok",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R129",
+      "category": "social_pad",
+      "user": "gracias",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R130",
+      "category": "social_pad",
+      "user": "ok",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R131",
+      "category": "social_pad",
+      "user": "gracias",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R132",
+      "category": "social_pad",
+      "user": "ok",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R133",
+      "category": "social_pad",
+      "user": "gracias",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R134",
+      "category": "social_pad",
+      "user": "ok",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R135",
+      "category": "social_pad",
+      "user": "gracias",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R136",
+      "category": "social_pad",
+      "user": "ok",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R137",
+      "category": "social_pad",
+      "user": "gracias",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R138",
+      "category": "social_pad",
+      "user": "ok",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R139",
+      "category": "social_pad",
+      "user": "gracias",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R140",
+      "category": "social_pad",
+      "user": "ok",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R141",
+      "category": "social_pad",
+      "user": "gracias",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R142",
+      "category": "social_pad",
+      "user": "ok",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R143",
+      "category": "social_pad",
+      "user": "gracias",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R144",
+      "category": "social_pad",
+      "user": "ok",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R145",
+      "category": "social_pad",
+      "user": "gracias",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R146",
+      "category": "social_pad",
+      "user": "ok",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R147",
+      "category": "social_pad",
+      "user": "gracias",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R148",
+      "category": "social_pad",
+      "user": "ok",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R149",
+      "category": "social_pad",
+      "user": "gracias",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R150",
+      "category": "social_pad",
+      "user": "ok",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R151",
+      "category": "social_pad",
+      "user": "gracias",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R152",
+      "category": "social_pad",
+      "user": "ok",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R153",
+      "category": "social_pad",
+      "user": "gracias",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R154",
+      "category": "social_pad",
+      "user": "ok",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R155",
+      "category": "social_pad",
+      "user": "gracias",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R156",
+      "category": "social_pad",
+      "user": "ok",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R157",
+      "category": "social_pad",
+      "user": "gracias",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R158",
+      "category": "social_pad",
+      "user": "ok",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R159",
+      "category": "social_pad",
+      "user": "gracias",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R160",
+      "category": "social_pad",
+      "user": "ok",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R161",
+      "category": "social_pad",
+      "user": "gracias",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R162",
+      "category": "social_pad",
+      "user": "ok",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R163",
+      "category": "social_pad",
+      "user": "gracias",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R164",
+      "category": "social_pad",
+      "user": "ok",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R165",
+      "category": "social_pad",
+      "user": "gracias",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R166",
+      "category": "social_pad",
+      "user": "ok",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R167",
+      "category": "social_pad",
+      "user": "gracias",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R168",
+      "category": "social_pad",
+      "user": "ok",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R169",
+      "category": "social_pad",
+      "user": "gracias",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R170",
+      "category": "social_pad",
+      "user": "ok",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R171",
+      "category": "social_pad",
+      "user": "gracias",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R172",
+      "category": "social_pad",
+      "user": "ok",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R173",
+      "category": "social_pad",
+      "user": "gracias",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R174",
+      "category": "social_pad",
+      "user": "ok",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R175",
+      "category": "social_pad",
+      "user": "gracias",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R176",
+      "category": "social_pad",
+      "user": "ok",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R177",
+      "category": "social_pad",
+      "user": "gracias",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R178",
+      "category": "social_pad",
+      "user": "ok",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R179",
+      "category": "social_pad",
+      "user": "gracias",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R180",
+      "category": "social_pad",
+      "user": "ok",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R181",
+      "category": "social_pad",
+      "user": "gracias",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R182",
+      "category": "social_pad",
+      "user": "ok",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R183",
+      "category": "social_pad",
+      "user": "gracias",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R184",
+      "category": "social_pad",
+      "user": "ok",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R185",
+      "category": "social_pad",
+      "user": "gracias",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R186",
+      "category": "social_pad",
+      "user": "ok",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R187",
+      "category": "social_pad",
+      "user": "gracias",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R188",
+      "category": "social_pad",
+      "user": "ok",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R189",
+      "category": "social_pad",
+      "user": "gracias",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R190",
+      "category": "social_pad",
+      "user": "ok",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R191",
+      "category": "social_pad",
+      "user": "gracias",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R192",
+      "category": "social_pad",
+      "user": "ok",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R193",
+      "category": "social_pad",
+      "user": "gracias",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R194",
+      "category": "social_pad",
+      "user": "ok",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R195",
+      "category": "social_pad",
+      "user": "gracias",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R196",
+      "category": "social_pad",
+      "user": "ok",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R197",
+      "category": "social_pad",
+      "user": "gracias",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R198",
+      "category": "social_pad",
+      "user": "ok",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R199",
+      "category": "social_pad",
+      "user": "gracias",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    },
+    {
+      "id": "R200",
+      "category": "social_pad",
+      "user": "ok",
+      "setup": [],
+      "expect": {
+        "huawei": false
+      }
+    }
+  ]
+}

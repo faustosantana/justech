@@ -60,13 +60,31 @@ def decode_token(token: str) -> dict[str, Any]:
 
 
 def verify_access_token(token: str) -> dict[str, Any] | None:
+    payload, _reason = classify_access_token(token)
+    return payload
+
+
+def classify_access_token(token: str) -> tuple[dict[str, Any] | None, str | None]:
+    """Return (payload, reject_reason). reject_reason is None when token is valid.
+
+    Used for DEV auth telemetry; does not change acceptance rules vs verify_access_token.
+    """
+    if not (token or "").strip():
+        return None, "token_missing"
     try:
         payload = decode_token(token)
         if payload.get("type") != TOKEN_TYPE_ACCESS:
-            return None
-        return payload
-    except JWTError:
-        return None
+            return None, "token_malformed"
+        if not payload.get("sub"):
+            return None, "subject_missing"
+        return payload, None
+    except JWTError as exc:
+        msg = str(exc).lower()
+        if "expired" in msg:
+            return None, "token_expired"
+        if "signature" in msg or "key" in msg:
+            return None, "signature_invalid"
+        return None, "token_malformed"
 
 
 def generate_api_key() -> tuple[str, str, str]:

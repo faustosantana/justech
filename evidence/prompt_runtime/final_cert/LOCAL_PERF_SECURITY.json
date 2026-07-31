@@ -1,0 +1,14 @@
+{
+  "compile_ms_once": 0.469,
+  "compile_p50": 0.091,
+  "compile_p95": 0.148,
+  "compile_p99": 0.148,
+  "cache_lookup_ms": 0.002,
+  "cache_hit": true,
+  "hash": "41c64a0fc7c303222c2b492e82a0ea51cec6c16139bc2f0cde9ec9e9da642ff9",
+  "hash_match": true,
+  "chars": 4055,
+  "tokens_est": 1014,
+  "security_leaks": [],
+  "security_pass": true
+}

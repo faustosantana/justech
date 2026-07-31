@@ -1,0 +1,129 @@
+{
+  "suite": "SHADOW10_ELIGIBLE",
+  "version": "2.0",
+  "frozen_prompt": "7.0.0-rc3.4",
+  "expected_hash": "41c64a0fc7c303222c2b492e82a0ea51cec6c16139bc2f0cde9ec9e9da642ff9",
+  "n": 10,
+  "cases": [
+    {
+      "id": "E0001",
+      "category": "interp_coincidence",
+      "user": "¿Han coincidido el 07 y el 38 el mismo día? Interpreta qué significa esa coincidencia same-day. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0002",
+      "category": "interp_coincidence",
+      "user": "¿Han coincidido el 12 y el 50 el mismo día? Interpreta qué significa esa coincidencia same-day. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0003",
+      "category": "interp_coincidence",
+      "user": "¿Han coincidido el 14 y el 54 el mismo día? Interpreta qué significa esa coincidencia same-day. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0004",
+      "category": "interp_coincidence",
+      "user": "¿Han coincidido el 18 y el 63 el mismo día? Interpreta qué significa esa coincidencia same-day. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0005",
+      "category": "interp_coincidence",
+      "user": "¿Han coincidido el 22 y el 77 el mismo día? Interpreta qué significa esa coincidencia same-day. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0006",
+      "category": "interp_coincidence",
+      "user": "¿Han coincidido el 11 y el 25 el mismo día? Interpreta qué significa esa coincidencia same-day. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0007",
+      "category": "interp_coincidence",
+      "user": "¿Han coincidido el 35 y el 02 el mismo día? Interpreta qué significa esa coincidencia same-day. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0008",
+      "category": "interp_coincidence",
+      "user": "¿Han coincidido el 38 y el 03 el mismo día? Interpreta qué significa esa coincidencia same-day. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0009",
+      "category": "interp_coincidence",
+      "user": "¿Han coincidido el 50 y el 90 el mismo día? Interpreta qué significa esa coincidencia same-day. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0010",
+      "category": "interp_coincidence",
+      "user": "¿Han coincidido el 63 y el 19 el mismo día? Interpreta qué significa esa coincidencia same-day. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    }
+  ]
+}

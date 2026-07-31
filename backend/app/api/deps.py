@@ -1,19 +1,23 @@
 import uuid
-from typing import Annotated
+from collections.abc import Callable
+from typing import Annotated, Literal
 
 from fastapi import Depends, Request
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import selectinload
 
 from app.core.admin_permissions import can_mutate_admin, can_view_admin
+from app.core.auth_trace import record_auth_reject
 from app.core.exceptions import forbidden, unauthorized
-from app.core.security import verify_access_token
+from app.core.permissions import PermissionContext, build_permission_context, evaluate_permission_requirement
+from app.core.security import classify_access_token, verify_access_token
 from app.core.tenant import get_current_role, parse_tenant_header, require_tenant_context, set_tenant_context
 from app.db.session import get_db
 from app.models.tenant import TenantMembership
 from app.models.user import User
+
+PermissionAction = Literal["view", "mutate", "manage"]
 
 security = HTTPBearer(auto_error=False)
 
@@ -21,23 +25,58 @@ DbSession = Annotated[AsyncSession, Depends(get_db)]
 
 
 async def get_current_user_optional(
+    request: Request,
     db: DbSession,
     credentials: HTTPAuthorizationCredentials | None = Depends(security),
 ) -> User | None:
     if not credentials:
+        request.state.auth_reject_reason = "token_missing"
+        request.state.auth_token_present = False
         return None
-    payload = verify_access_token(credentials.credentials)
+    payload, reason = classify_access_token(credentials.credentials)
     if not payload:
+        request.state.auth_reject_reason = reason or "token_malformed"
+        request.state.auth_token_present = True
         return None
-    user_id = uuid.UUID(payload["sub"])
-    result = await db.execute(select(User).where(User.id == user_id, User.is_active.is_(True)))
-    return result.scalar_one_or_none()
+    try:
+        user_id = uuid.UUID(payload["sub"])
+    except (ValueError, TypeError, KeyError):
+        request.state.auth_reject_reason = "subject_missing"
+        request.state.auth_token_present = True
+        return None
+    result = await db.execute(select(User).where(User.id == user_id))
+    user = result.scalar_one_or_none()
+    if user is None:
+        request.state.auth_reject_reason = "user_not_found"
+        request.state.auth_subject = str(user_id)
+        request.state.auth_token_present = True
+        return None
+    if not user.is_active:
+        request.state.auth_reject_reason = "user_inactive"
+        request.state.auth_subject = str(user_id)
+        request.state.auth_token_present = True
+        return None
+    request.state.auth_reject_reason = None
+    request.state.auth_subject = str(user_id)
+    request.state.auth_token_present = True
+    return user
 
 
 async def get_current_user(
+    request: Request,
     user: Annotated[User | None, Depends(get_current_user_optional)],
 ) -> User:
     if not user:
+        reason = getattr(request.state, "auth_reject_reason", None) or "unknown_auth_error"
+        record_auth_reject(
+            reason=reason,
+            path=getattr(request.url, "path", None),
+            correlation_id=request.headers.get("X-Correlation-Id")
+            or request.headers.get("X-Request-Id"),
+            token_present=bool(getattr(request.state, "auth_token_present", False)),
+            subject=getattr(request.state, "auth_subject", None),
+            user_lookup=reason if reason in {"user_not_found", "user_inactive"} else None,
+        )
         raise unauthorized()
     return user
 
@@ -109,3 +148,53 @@ async def require_admin_mutator(
 CurrentUser = Annotated[User, Depends(get_current_user)]
 AdminViewer = Annotated[User, Depends(require_admin_viewer)]
 AdminMutator = Annotated[User, Depends(require_admin_mutator)]
+
+
+def RequirePermission(
+    *permissions: str,
+    module: str | None = None,
+    action: PermissionAction = "view",
+    require_all: bool = True,
+    company_param: str | None = None,
+) -> Callable:
+    """Factory de dependencia FastAPI para permisos por acción, módulo y (futuro) empresa.
+
+    - 401: sin usuario autenticado (via ``get_current_user``).
+    - 403: usuario autenticado sin permiso suficiente.
+    """
+
+    async def _require_permission(
+        request: Request,
+        user: Annotated[User, Depends(get_current_user)],
+        db: DbSession,
+        _: TenantCtx,
+    ) -> PermissionContext:
+        company_key: str | None = None
+        if company_param:
+            raw = request.path_params.get(company_param) or request.query_params.get(company_param)
+            if raw is not None:
+                company_key = str(raw)
+
+        ctx = await build_permission_context(db, user)
+        allowed, _reason, message = await evaluate_permission_requirement(
+            db,
+            ctx,
+            permissions=permissions,
+            module=module,
+            action=action,
+            require_all=require_all,
+            company_key=company_key,
+        )
+        if not allowed:
+            raise forbidden(message)
+        return ctx
+
+    return _require_permission
+
+
+# Alias tipados para PR-1.3b (opt-in por router; no aplicados globalmente)
+RequireViewDgcp = Annotated[PermissionContext, Depends(RequirePermission("view_dgcp"))]
+RequireViewOdoo = Annotated[PermissionContext, Depends(RequirePermission("view_odoo"))]
+RequireViewM365 = Annotated[PermissionContext, Depends(RequirePermission("view_m365"))]
+RequireViewPrices = Annotated[PermissionContext, Depends(RequirePermission(module="prices"))]
+RequireViewSuppliers = Annotated[PermissionContext, Depends(RequirePermission(module="suppliers"))]

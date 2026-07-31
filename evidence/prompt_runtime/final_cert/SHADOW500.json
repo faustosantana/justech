@@ -1,0 +1,4756 @@
+{
+  "suite": "SHADOW500",
+  "version": "1.1",
+  "frozen_prompt": "7.0.0-rc3.4",
+  "expected_hash": "41c64a0fc7c303222c2b492e82a0ea51cec6c16139bc2f0cde9ec9e9da642ff9",
+  "cases": [
+    {
+      "id": "S5001",
+      "group": "pair",
+      "user": "¿Han coincidido el 07 y el 38 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5002",
+      "group": "pair_long",
+      "user": "Dentro de las 7 loterías oficiales, ¿cuántas veces coincidieron el 12 y el 50 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5003",
+      "group": "compare",
+      "user": "Compara históricamente el 14 y el 54: ¿quién aparece más en coincidencias same-day con el otro?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5004",
+      "group": "limitations",
+      "user": "¿Qué significa el total de coincidencias same-day del 18 y el 63? Incluye limitaciones.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5005",
+      "group": "interp",
+      "user": "¿Qué significa ese resultado? No inventes desgloses.",
+      "setup": [
+        "¿Han coincidido el 22 y el 77 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5006",
+      "group": "topic_switch",
+      "user": "Cambia de tema: ¿han coincidido el 11 y el 25 el mismo día?",
+      "setup": [
+        "¿Han coincidido el 25 y el 78 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5007",
+      "group": "freq_pair",
+      "user": "¿El 35 y el 02 han coincidido más de 50 veces el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5008",
+      "group": "recent_pair",
+      "user": "¿Cuál fue la coincidencia más reciente del 38 y el 03 el mismo día, según la evidencia?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5009",
+      "group": "pair",
+      "user": "¿Han coincidido el 50 y el 08 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5010",
+      "group": "pair_long",
+      "user": "Dentro de las 7 loterías oficiales, ¿cuántas veces coincidieron el 54 y el 11 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5011",
+      "group": "compare",
+      "user": "Compara históricamente el 63 y el 19: ¿quién aparece más en coincidencias same-day con el otro?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5012",
+      "group": "limitations",
+      "user": "¿Qué significa el total de coincidencias same-day del 77 y el 41? Incluye limitaciones.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5013",
+      "group": "interp",
+      "user": "¿Qué significa ese resultado? No inventes desgloses.",
+      "setup": [
+        "¿Han coincidido el 78 y el 90 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5014",
+      "group": "topic_switch",
+      "user": "Cambia de tema: ¿han coincidido el 22 y el 02 el mismo día?",
+      "setup": [
+        "¿Han coincidido el 02 y el 07 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5015",
+      "group": "freq_pair",
+      "user": "¿El 03 y el 12 han coincidido más de 50 veces el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5016",
+      "group": "recent_pair",
+      "user": "¿Cuál fue la coincidencia más reciente del 08 y el 14 el mismo día, según la evidencia?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5017",
+      "group": "pair",
+      "user": "¿Han coincidido el 11 y el 18 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5018",
+      "group": "pair_long",
+      "user": "Dentro de las 7 loterías oficiales, ¿cuántas veces coincidieron el 19 y el 22 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5019",
+      "group": "compare",
+      "user": "Compara históricamente el 41 y el 25: ¿quién aparece más en coincidencias same-day con el otro?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5020",
+      "group": "limitations",
+      "user": "¿Qué significa el total de coincidencias same-day del 90 y el 35? Incluye limitaciones.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5021",
+      "group": "interp",
+      "user": "¿Qué significa ese resultado? No inventes desgloses.",
+      "setup": [
+        "¿Han coincidido el 07 y el 38 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5022",
+      "group": "topic_switch",
+      "user": "Cambia de tema: ¿han coincidido el 78 y el 12 el mismo día?",
+      "setup": [
+        "¿Han coincidido el 12 y el 50 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5023",
+      "group": "freq_pair",
+      "user": "¿El 14 y el 54 han coincidido más de 50 veces el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5024",
+      "group": "recent_pair",
+      "user": "¿Cuál fue la coincidencia más reciente del 18 y el 63 el mismo día, según la evidencia?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5025",
+      "group": "pair",
+      "user": "¿Han coincidido el 22 y el 77 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5026",
+      "group": "pair_long",
+      "user": "Dentro de las 7 loterías oficiales, ¿cuántas veces coincidieron el 25 y el 78 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5027",
+      "group": "compare",
+      "user": "Compara históricamente el 35 y el 02: ¿quién aparece más en coincidencias same-day con el otro?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5028",
+      "group": "limitations",
+      "user": "¿Qué significa el total de coincidencias same-day del 38 y el 03? Incluye limitaciones.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5029",
+      "group": "interp",
+      "user": "¿Qué significa ese resultado? No inventes desgloses.",
+      "setup": [
+        "¿Han coincidido el 50 y el 08 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5030",
+      "group": "topic_switch",
+      "user": "Cambia de tema: ¿han coincidido el 07 y el 54 el mismo día?",
+      "setup": [
+        "¿Han coincidido el 54 y el 11 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5031",
+      "group": "freq_pair",
+      "user": "¿El 63 y el 19 han coincidido más de 50 veces el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5032",
+      "group": "recent_pair",
+      "user": "¿Cuál fue la coincidencia más reciente del 77 y el 41 el mismo día, según la evidencia?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5033",
+      "group": "pair",
+      "user": "¿Han coincidido el 78 y el 90 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5034",
+      "group": "pair_long",
+      "user": "Dentro de las 7 loterías oficiales, ¿cuántas veces coincidieron el 02 y el 07 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5035",
+      "group": "compare",
+      "user": "Compara históricamente el 03 y el 12: ¿quién aparece más en coincidencias same-day con el otro?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5036",
+      "group": "limitations",
+      "user": "¿Qué significa el total de coincidencias same-day del 08 y el 14? Incluye limitaciones.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5037",
+      "group": "interp",
+      "user": "¿Qué significa ese resultado? No inventes desgloses.",
+      "setup": [
+        "¿Han coincidido el 11 y el 18 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5038",
+      "group": "topic_switch",
+      "user": "Cambia de tema: ¿han coincidido el 50 y el 19 el mismo día?",
+      "setup": [
+        "¿Han coincidido el 19 y el 22 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5039",
+      "group": "freq_pair",
+      "user": "¿El 41 y el 25 han coincidido más de 50 veces el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5040",
+      "group": "recent_pair",
+      "user": "¿Cuál fue la coincidencia más reciente del 90 y el 35 el mismo día, según la evidencia?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5041",
+      "group": "pair",
+      "user": "¿Han coincidido el 07 y el 38 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5042",
+      "group": "pair_long",
+      "user": "Dentro de las 7 loterías oficiales, ¿cuántas veces coincidieron el 12 y el 50 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5043",
+      "group": "compare",
+      "user": "Compara históricamente el 14 y el 54: ¿quién aparece más en coincidencias same-day con el otro?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5044",
+      "group": "limitations",
+      "user": "¿Qué significa el total de coincidencias same-day del 18 y el 63? Incluye limitaciones.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5045",
+      "group": "interp",
+      "user": "¿Qué significa ese resultado? No inventes desgloses.",
+      "setup": [
+        "¿Han coincidido el 22 y el 77 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5046",
+      "group": "topic_switch",
+      "user": "Cambia de tema: ¿han coincidido el 11 y el 25 el mismo día?",
+      "setup": [
+        "¿Han coincidido el 25 y el 78 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5047",
+      "group": "freq_pair",
+      "user": "¿El 35 y el 02 han coincidido más de 50 veces el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5048",
+      "group": "recent_pair",
+      "user": "¿Cuál fue la coincidencia más reciente del 38 y el 03 el mismo día, según la evidencia?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5049",
+      "group": "pair",
+      "user": "¿Han coincidido el 50 y el 08 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5050",
+      "group": "pair_long",
+      "user": "Dentro de las 7 loterías oficiales, ¿cuántas veces coincidieron el 54 y el 11 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5051",
+      "group": "compare",
+      "user": "Compara históricamente el 63 y el 19: ¿quién aparece más en coincidencias same-day con el otro?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5052",
+      "group": "limitations",
+      "user": "¿Qué significa el total de coincidencias same-day del 77 y el 41? Incluye limitaciones.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5053",
+      "group": "interp",
+      "user": "¿Qué significa ese resultado? No inventes desgloses.",
+      "setup": [
+        "¿Han coincidido el 78 y el 90 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5054",
+      "group": "topic_switch",
+      "user": "Cambia de tema: ¿han coincidido el 22 y el 02 el mismo día?",
+      "setup": [
+        "¿Han coincidido el 02 y el 07 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5055",
+      "group": "freq_pair",
+      "user": "¿El 03 y el 12 han coincidido más de 50 veces el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5056",
+      "group": "recent_pair",
+      "user": "¿Cuál fue la coincidencia más reciente del 08 y el 14 el mismo día, según la evidencia?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5057",
+      "group": "pair",
+      "user": "¿Han coincidido el 11 y el 18 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5058",
+      "group": "pair_long",
+      "user": "Dentro de las 7 loterías oficiales, ¿cuántas veces coincidieron el 19 y el 22 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5059",
+      "group": "compare",
+      "user": "Compara históricamente el 41 y el 25: ¿quién aparece más en coincidencias same-day con el otro?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5060",
+      "group": "limitations",
+      "user": "¿Qué significa el total de coincidencias same-day del 90 y el 35? Incluye limitaciones.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5061",
+      "group": "interp",
+      "user": "¿Qué significa ese resultado? No inventes desgloses.",
+      "setup": [
+        "¿Han coincidido el 07 y el 38 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5062",
+      "group": "topic_switch",
+      "user": "Cambia de tema: ¿han coincidido el 78 y el 12 el mismo día?",
+      "setup": [
+        "¿Han coincidido el 12 y el 50 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5063",
+      "group": "freq_pair",
+      "user": "¿El 14 y el 54 han coincidido más de 50 veces el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5064",
+      "group": "recent_pair",
+      "user": "¿Cuál fue la coincidencia más reciente del 18 y el 63 el mismo día, según la evidencia?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5065",
+      "group": "pair",
+      "user": "¿Han coincidido el 22 y el 77 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5066",
+      "group": "pair_long",
+      "user": "Dentro de las 7 loterías oficiales, ¿cuántas veces coincidieron el 25 y el 78 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5067",
+      "group": "compare",
+      "user": "Compara históricamente el 35 y el 02: ¿quién aparece más en coincidencias same-day con el otro?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5068",
+      "group": "limitations",
+      "user": "¿Qué significa el total de coincidencias same-day del 38 y el 03? Incluye limitaciones.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5069",
+      "group": "interp",
+      "user": "¿Qué significa ese resultado? No inventes desgloses.",
+      "setup": [
+        "¿Han coincidido el 50 y el 08 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5070",
+      "group": "topic_switch",
+      "user": "Cambia de tema: ¿han coincidido el 07 y el 54 el mismo día?",
+      "setup": [
+        "¿Han coincidido el 54 y el 11 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5071",
+      "group": "freq_pair",
+      "user": "¿El 63 y el 19 han coincidido más de 50 veces el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5072",
+      "group": "recent_pair",
+      "user": "¿Cuál fue la coincidencia más reciente del 77 y el 41 el mismo día, según la evidencia?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5073",
+      "group": "pair",
+      "user": "¿Han coincidido el 78 y el 90 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5074",
+      "group": "pair_long",
+      "user": "Dentro de las 7 loterías oficiales, ¿cuántas veces coincidieron el 02 y el 07 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5075",
+      "group": "compare",
+      "user": "Compara históricamente el 03 y el 12: ¿quién aparece más en coincidencias same-day con el otro?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5076",
+      "group": "limitations",
+      "user": "¿Qué significa el total de coincidencias same-day del 08 y el 14? Incluye limitaciones.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5077",
+      "group": "interp",
+      "user": "¿Qué significa ese resultado? No inventes desgloses.",
+      "setup": [
+        "¿Han coincidido el 11 y el 18 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5078",
+      "group": "topic_switch",
+      "user": "Cambia de tema: ¿han coincidido el 50 y el 19 el mismo día?",
+      "setup": [
+        "¿Han coincidido el 19 y el 22 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5079",
+      "group": "freq_pair",
+      "user": "¿El 41 y el 25 han coincidido más de 50 veces el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5080",
+      "group": "recent_pair",
+      "user": "¿Cuál fue la coincidencia más reciente del 90 y el 35 el mismo día, según la evidencia?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5081",
+      "group": "pair",
+      "user": "¿Han coincidido el 07 y el 38 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5082",
+      "group": "pair_long",
+      "user": "Dentro de las 7 loterías oficiales, ¿cuántas veces coincidieron el 12 y el 50 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5083",
+      "group": "compare",
+      "user": "Compara históricamente el 14 y el 54: ¿quién aparece más en coincidencias same-day con el otro?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5084",
+      "group": "limitations",
+      "user": "¿Qué significa el total de coincidencias same-day del 18 y el 63? Incluye limitaciones.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5085",
+      "group": "interp",
+      "user": "¿Qué significa ese resultado? No inventes desgloses.",
+      "setup": [
+        "¿Han coincidido el 22 y el 77 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5086",
+      "group": "topic_switch",
+      "user": "Cambia de tema: ¿han coincidido el 11 y el 25 el mismo día?",
+      "setup": [
+        "¿Han coincidido el 25 y el 78 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5087",
+      "group": "freq_pair",
+      "user": "¿El 35 y el 02 han coincidido más de 50 veces el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5088",
+      "group": "recent_pair",
+      "user": "¿Cuál fue la coincidencia más reciente del 38 y el 03 el mismo día, según la evidencia?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5089",
+      "group": "pair",
+      "user": "¿Han coincidido el 50 y el 08 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5090",
+      "group": "pair_long",
+      "user": "Dentro de las 7 loterías oficiales, ¿cuántas veces coincidieron el 54 y el 11 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5091",
+      "group": "compare",
+      "user": "Compara históricamente el 63 y el 19: ¿quién aparece más en coincidencias same-day con el otro?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5092",
+      "group": "limitations",
+      "user": "¿Qué significa el total de coincidencias same-day del 77 y el 41? Incluye limitaciones.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5093",
+      "group": "interp",
+      "user": "¿Qué significa ese resultado? No inventes desgloses.",
+      "setup": [
+        "¿Han coincidido el 78 y el 90 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5094",
+      "group": "topic_switch",
+      "user": "Cambia de tema: ¿han coincidido el 22 y el 02 el mismo día?",
+      "setup": [
+        "¿Han coincidido el 02 y el 07 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5095",
+      "group": "freq_pair",
+      "user": "¿El 03 y el 12 han coincidido más de 50 veces el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5096",
+      "group": "recent_pair",
+      "user": "¿Cuál fue la coincidencia más reciente del 08 y el 14 el mismo día, según la evidencia?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5097",
+      "group": "pair",
+      "user": "¿Han coincidido el 11 y el 18 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5098",
+      "group": "pair_long",
+      "user": "Dentro de las 7 loterías oficiales, ¿cuántas veces coincidieron el 19 y el 22 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5099",
+      "group": "compare",
+      "user": "Compara históricamente el 41 y el 25: ¿quién aparece más en coincidencias same-day con el otro?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5100",
+      "group": "limitations",
+      "user": "¿Qué significa el total de coincidencias same-day del 90 y el 35? Incluye limitaciones.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5101",
+      "group": "interp",
+      "user": "¿Qué significa ese resultado? No inventes desgloses.",
+      "setup": [
+        "¿Han coincidido el 07 y el 38 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5102",
+      "group": "topic_switch",
+      "user": "Cambia de tema: ¿han coincidido el 78 y el 12 el mismo día?",
+      "setup": [
+        "¿Han coincidido el 12 y el 50 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5103",
+      "group": "freq_pair",
+      "user": "¿El 14 y el 54 han coincidido más de 50 veces el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5104",
+      "group": "recent_pair",
+      "user": "¿Cuál fue la coincidencia más reciente del 18 y el 63 el mismo día, según la evidencia?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5105",
+      "group": "pair",
+      "user": "¿Han coincidido el 22 y el 77 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5106",
+      "group": "pair_long",
+      "user": "Dentro de las 7 loterías oficiales, ¿cuántas veces coincidieron el 25 y el 78 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5107",
+      "group": "compare",
+      "user": "Compara históricamente el 35 y el 02: ¿quién aparece más en coincidencias same-day con el otro?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5108",
+      "group": "limitations",
+      "user": "¿Qué significa el total de coincidencias same-day del 38 y el 03? Incluye limitaciones.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5109",
+      "group": "interp",
+      "user": "¿Qué significa ese resultado? No inventes desgloses.",
+      "setup": [
+        "¿Han coincidido el 50 y el 08 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5110",
+      "group": "topic_switch",
+      "user": "Cambia de tema: ¿han coincidido el 07 y el 54 el mismo día?",
+      "setup": [
+        "¿Han coincidido el 54 y el 11 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5111",
+      "group": "freq_pair",
+      "user": "¿El 63 y el 19 han coincidido más de 50 veces el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5112",
+      "group": "recent_pair",
+      "user": "¿Cuál fue la coincidencia más reciente del 77 y el 41 el mismo día, según la evidencia?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5113",
+      "group": "pair",
+      "user": "¿Han coincidido el 78 y el 90 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5114",
+      "group": "pair_long",
+      "user": "Dentro de las 7 loterías oficiales, ¿cuántas veces coincidieron el 02 y el 07 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5115",
+      "group": "compare",
+      "user": "Compara históricamente el 03 y el 12: ¿quién aparece más en coincidencias same-day con el otro?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5116",
+      "group": "limitations",
+      "user": "¿Qué significa el total de coincidencias same-day del 08 y el 14? Incluye limitaciones.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5117",
+      "group": "interp",
+      "user": "¿Qué significa ese resultado? No inventes desgloses.",
+      "setup": [
+        "¿Han coincidido el 11 y el 18 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5118",
+      "group": "topic_switch",
+      "user": "Cambia de tema: ¿han coincidido el 50 y el 19 el mismo día?",
+      "setup": [
+        "¿Han coincidido el 19 y el 22 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5119",
+      "group": "freq_pair",
+      "user": "¿El 41 y el 25 han coincidido más de 50 veces el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5120",
+      "group": "recent_pair",
+      "user": "¿Cuál fue la coincidencia más reciente del 90 y el 35 el mismo día, según la evidencia?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5121",
+      "group": "pair",
+      "user": "¿Han coincidido el 07 y el 38 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5122",
+      "group": "pair_long",
+      "user": "Dentro de las 7 loterías oficiales, ¿cuántas veces coincidieron el 12 y el 50 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5123",
+      "group": "compare",
+      "user": "Compara históricamente el 14 y el 54: ¿quién aparece más en coincidencias same-day con el otro?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5124",
+      "group": "limitations",
+      "user": "¿Qué significa el total de coincidencias same-day del 18 y el 63? Incluye limitaciones.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5125",
+      "group": "interp",
+      "user": "¿Qué significa ese resultado? No inventes desgloses.",
+      "setup": [
+        "¿Han coincidido el 22 y el 77 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5126",
+      "group": "topic_switch",
+      "user": "Cambia de tema: ¿han coincidido el 11 y el 25 el mismo día?",
+      "setup": [
+        "¿Han coincidido el 25 y el 78 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5127",
+      "group": "freq_pair",
+      "user": "¿El 35 y el 02 han coincidido más de 50 veces el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5128",
+      "group": "recent_pair",
+      "user": "¿Cuál fue la coincidencia más reciente del 38 y el 03 el mismo día, según la evidencia?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5129",
+      "group": "pair",
+      "user": "¿Han coincidido el 50 y el 08 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5130",
+      "group": "pair_long",
+      "user": "Dentro de las 7 loterías oficiales, ¿cuántas veces coincidieron el 54 y el 11 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5131",
+      "group": "compare",
+      "user": "Compara históricamente el 63 y el 19: ¿quién aparece más en coincidencias same-day con el otro?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5132",
+      "group": "limitations",
+      "user": "¿Qué significa el total de coincidencias same-day del 77 y el 41? Incluye limitaciones.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5133",
+      "group": "interp",
+      "user": "¿Qué significa ese resultado? No inventes desgloses.",
+      "setup": [
+        "¿Han coincidido el 78 y el 90 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5134",
+      "group": "topic_switch",
+      "user": "Cambia de tema: ¿han coincidido el 22 y el 02 el mismo día?",
+      "setup": [
+        "¿Han coincidido el 02 y el 07 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5135",
+      "group": "freq_pair",
+      "user": "¿El 03 y el 12 han coincidido más de 50 veces el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5136",
+      "group": "recent_pair",
+      "user": "¿Cuál fue la coincidencia más reciente del 08 y el 14 el mismo día, según la evidencia?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5137",
+      "group": "pair",
+      "user": "¿Han coincidido el 11 y el 18 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5138",
+      "group": "pair_long",
+      "user": "Dentro de las 7 loterías oficiales, ¿cuántas veces coincidieron el 19 y el 22 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5139",
+      "group": "compare",
+      "user": "Compara históricamente el 41 y el 25: ¿quién aparece más en coincidencias same-day con el otro?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5140",
+      "group": "limitations",
+      "user": "¿Qué significa el total de coincidencias same-day del 90 y el 35? Incluye limitaciones.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5141",
+      "group": "interp",
+      "user": "¿Qué significa ese resultado? No inventes desgloses.",
+      "setup": [
+        "¿Han coincidido el 07 y el 38 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5142",
+      "group": "topic_switch",
+      "user": "Cambia de tema: ¿han coincidido el 78 y el 12 el mismo día?",
+      "setup": [
+        "¿Han coincidido el 12 y el 50 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5143",
+      "group": "freq_pair",
+      "user": "¿El 14 y el 54 han coincidido más de 50 veces el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5144",
+      "group": "recent_pair",
+      "user": "¿Cuál fue la coincidencia más reciente del 18 y el 63 el mismo día, según la evidencia?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5145",
+      "group": "pair",
+      "user": "¿Han coincidido el 22 y el 77 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5146",
+      "group": "pair_long",
+      "user": "Dentro de las 7 loterías oficiales, ¿cuántas veces coincidieron el 25 y el 78 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5147",
+      "group": "compare",
+      "user": "Compara históricamente el 35 y el 02: ¿quién aparece más en coincidencias same-day con el otro?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5148",
+      "group": "limitations",
+      "user": "¿Qué significa el total de coincidencias same-day del 38 y el 03? Incluye limitaciones.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5149",
+      "group": "interp",
+      "user": "¿Qué significa ese resultado? No inventes desgloses.",
+      "setup": [
+        "¿Han coincidido el 50 y el 08 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5150",
+      "group": "topic_switch",
+      "user": "Cambia de tema: ¿han coincidido el 07 y el 54 el mismo día?",
+      "setup": [
+        "¿Han coincidido el 54 y el 11 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5151",
+      "group": "freq_pair",
+      "user": "¿El 63 y el 19 han coincidido más de 50 veces el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5152",
+      "group": "recent_pair",
+      "user": "¿Cuál fue la coincidencia más reciente del 77 y el 41 el mismo día, según la evidencia?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5153",
+      "group": "pair",
+      "user": "¿Han coincidido el 78 y el 90 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5154",
+      "group": "pair_long",
+      "user": "Dentro de las 7 loterías oficiales, ¿cuántas veces coincidieron el 02 y el 07 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5155",
+      "group": "compare",
+      "user": "Compara históricamente el 03 y el 12: ¿quién aparece más en coincidencias same-day con el otro?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5156",
+      "group": "limitations",
+      "user": "¿Qué significa el total de coincidencias same-day del 08 y el 14? Incluye limitaciones.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5157",
+      "group": "interp",
+      "user": "¿Qué significa ese resultado? No inventes desgloses.",
+      "setup": [
+        "¿Han coincidido el 11 y el 18 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5158",
+      "group": "topic_switch",
+      "user": "Cambia de tema: ¿han coincidido el 50 y el 19 el mismo día?",
+      "setup": [
+        "¿Han coincidido el 19 y el 22 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5159",
+      "group": "freq_pair",
+      "user": "¿El 41 y el 25 han coincidido más de 50 veces el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5160",
+      "group": "recent_pair",
+      "user": "¿Cuál fue la coincidencia más reciente del 90 y el 35 el mismo día, según la evidencia?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5161",
+      "group": "pair",
+      "user": "¿Han coincidido el 07 y el 38 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5162",
+      "group": "pair_long",
+      "user": "Dentro de las 7 loterías oficiales, ¿cuántas veces coincidieron el 12 y el 50 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5163",
+      "group": "compare",
+      "user": "Compara históricamente el 14 y el 54: ¿quién aparece más en coincidencias same-day con el otro?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5164",
+      "group": "limitations",
+      "user": "¿Qué significa el total de coincidencias same-day del 18 y el 63? Incluye limitaciones.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5165",
+      "group": "interp",
+      "user": "¿Qué significa ese resultado? No inventes desgloses.",
+      "setup": [
+        "¿Han coincidido el 22 y el 77 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5166",
+      "group": "topic_switch",
+      "user": "Cambia de tema: ¿han coincidido el 11 y el 25 el mismo día?",
+      "setup": [
+        "¿Han coincidido el 25 y el 78 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5167",
+      "group": "freq_pair",
+      "user": "¿El 35 y el 02 han coincidido más de 50 veces el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5168",
+      "group": "recent_pair",
+      "user": "¿Cuál fue la coincidencia más reciente del 38 y el 03 el mismo día, según la evidencia?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5169",
+      "group": "pair",
+      "user": "¿Han coincidido el 50 y el 08 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5170",
+      "group": "pair_long",
+      "user": "Dentro de las 7 loterías oficiales, ¿cuántas veces coincidieron el 54 y el 11 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5171",
+      "group": "compare",
+      "user": "Compara históricamente el 63 y el 19: ¿quién aparece más en coincidencias same-day con el otro?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5172",
+      "group": "limitations",
+      "user": "¿Qué significa el total de coincidencias same-day del 77 y el 41? Incluye limitaciones.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5173",
+      "group": "interp",
+      "user": "¿Qué significa ese resultado? No inventes desgloses.",
+      "setup": [
+        "¿Han coincidido el 78 y el 90 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5174",
+      "group": "topic_switch",
+      "user": "Cambia de tema: ¿han coincidido el 22 y el 02 el mismo día?",
+      "setup": [
+        "¿Han coincidido el 02 y el 07 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5175",
+      "group": "freq_pair",
+      "user": "¿El 03 y el 12 han coincidido más de 50 veces el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5176",
+      "group": "recent_pair",
+      "user": "¿Cuál fue la coincidencia más reciente del 08 y el 14 el mismo día, según la evidencia?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5177",
+      "group": "pair",
+      "user": "¿Han coincidido el 11 y el 18 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5178",
+      "group": "pair_long",
+      "user": "Dentro de las 7 loterías oficiales, ¿cuántas veces coincidieron el 19 y el 22 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5179",
+      "group": "compare",
+      "user": "Compara históricamente el 41 y el 25: ¿quién aparece más en coincidencias same-day con el otro?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5180",
+      "group": "limitations",
+      "user": "¿Qué significa el total de coincidencias same-day del 90 y el 35? Incluye limitaciones.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5181",
+      "group": "interp",
+      "user": "¿Qué significa ese resultado? No inventes desgloses.",
+      "setup": [
+        "¿Han coincidido el 07 y el 38 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5182",
+      "group": "topic_switch",
+      "user": "Cambia de tema: ¿han coincidido el 78 y el 12 el mismo día?",
+      "setup": [
+        "¿Han coincidido el 12 y el 50 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5183",
+      "group": "freq_pair",
+      "user": "¿El 14 y el 54 han coincidido más de 50 veces el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5184",
+      "group": "recent_pair",
+      "user": "¿Cuál fue la coincidencia más reciente del 18 y el 63 el mismo día, según la evidencia?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5185",
+      "group": "pair",
+      "user": "¿Han coincidido el 22 y el 77 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5186",
+      "group": "pair_long",
+      "user": "Dentro de las 7 loterías oficiales, ¿cuántas veces coincidieron el 25 y el 78 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5187",
+      "group": "compare",
+      "user": "Compara históricamente el 35 y el 02: ¿quién aparece más en coincidencias same-day con el otro?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5188",
+      "group": "limitations",
+      "user": "¿Qué significa el total de coincidencias same-day del 38 y el 03? Incluye limitaciones.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5189",
+      "group": "interp",
+      "user": "¿Qué significa ese resultado? No inventes desgloses.",
+      "setup": [
+        "¿Han coincidido el 50 y el 08 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5190",
+      "group": "topic_switch",
+      "user": "Cambia de tema: ¿han coincidido el 07 y el 54 el mismo día?",
+      "setup": [
+        "¿Han coincidido el 54 y el 11 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5191",
+      "group": "freq_pair",
+      "user": "¿El 63 y el 19 han coincidido más de 50 veces el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5192",
+      "group": "recent_pair",
+      "user": "¿Cuál fue la coincidencia más reciente del 77 y el 41 el mismo día, según la evidencia?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5193",
+      "group": "pair",
+      "user": "¿Han coincidido el 78 y el 90 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5194",
+      "group": "pair_long",
+      "user": "Dentro de las 7 loterías oficiales, ¿cuántas veces coincidieron el 02 y el 07 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5195",
+      "group": "compare",
+      "user": "Compara históricamente el 03 y el 12: ¿quién aparece más en coincidencias same-day con el otro?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5196",
+      "group": "limitations",
+      "user": "¿Qué significa el total de coincidencias same-day del 08 y el 14? Incluye limitaciones.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5197",
+      "group": "interp",
+      "user": "¿Qué significa ese resultado? No inventes desgloses.",
+      "setup": [
+        "¿Han coincidido el 11 y el 18 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5198",
+      "group": "topic_switch",
+      "user": "Cambia de tema: ¿han coincidido el 50 y el 19 el mismo día?",
+      "setup": [
+        "¿Han coincidido el 19 y el 22 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5199",
+      "group": "freq_pair",
+      "user": "¿El 41 y el 25 han coincidido más de 50 veces el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5200",
+      "group": "recent_pair",
+      "user": "¿Cuál fue la coincidencia más reciente del 90 y el 35 el mismo día, según la evidencia?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5201",
+      "group": "pair",
+      "user": "¿Han coincidido el 07 y el 38 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5202",
+      "group": "pair_long",
+      "user": "Dentro de las 7 loterías oficiales, ¿cuántas veces coincidieron el 12 y el 50 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5203",
+      "group": "compare",
+      "user": "Compara históricamente el 14 y el 54: ¿quién aparece más en coincidencias same-day con el otro?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5204",
+      "group": "limitations",
+      "user": "¿Qué significa el total de coincidencias same-day del 18 y el 63? Incluye limitaciones.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5205",
+      "group": "interp",
+      "user": "¿Qué significa ese resultado? No inventes desgloses.",
+      "setup": [
+        "¿Han coincidido el 22 y el 77 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5206",
+      "group": "topic_switch",
+      "user": "Cambia de tema: ¿han coincidido el 11 y el 25 el mismo día?",
+      "setup": [
+        "¿Han coincidido el 25 y el 78 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5207",
+      "group": "freq_pair",
+      "user": "¿El 35 y el 02 han coincidido más de 50 veces el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5208",
+      "group": "recent_pair",
+      "user": "¿Cuál fue la coincidencia más reciente del 38 y el 03 el mismo día, según la evidencia?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5209",
+      "group": "pair",
+      "user": "¿Han coincidido el 50 y el 08 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5210",
+      "group": "pair_long",
+      "user": "Dentro de las 7 loterías oficiales, ¿cuántas veces coincidieron el 54 y el 11 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5211",
+      "group": "compare",
+      "user": "Compara históricamente el 63 y el 19: ¿quién aparece más en coincidencias same-day con el otro?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5212",
+      "group": "limitations",
+      "user": "¿Qué significa el total de coincidencias same-day del 77 y el 41? Incluye limitaciones.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5213",
+      "group": "interp",
+      "user": "¿Qué significa ese resultado? No inventes desgloses.",
+      "setup": [
+        "¿Han coincidido el 78 y el 90 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5214",
+      "group": "topic_switch",
+      "user": "Cambia de tema: ¿han coincidido el 22 y el 02 el mismo día?",
+      "setup": [
+        "¿Han coincidido el 02 y el 07 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5215",
+      "group": "freq_pair",
+      "user": "¿El 03 y el 12 han coincidido más de 50 veces el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5216",
+      "group": "recent_pair",
+      "user": "¿Cuál fue la coincidencia más reciente del 08 y el 14 el mismo día, según la evidencia?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5217",
+      "group": "pair",
+      "user": "¿Han coincidido el 11 y el 18 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5218",
+      "group": "pair_long",
+      "user": "Dentro de las 7 loterías oficiales, ¿cuántas veces coincidieron el 19 y el 22 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5219",
+      "group": "compare",
+      "user": "Compara históricamente el 41 y el 25: ¿quién aparece más en coincidencias same-day con el otro?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5220",
+      "group": "limitations",
+      "user": "¿Qué significa el total de coincidencias same-day del 90 y el 35? Incluye limitaciones.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5221",
+      "group": "interp",
+      "user": "¿Qué significa ese resultado? No inventes desgloses.",
+      "setup": [
+        "¿Han coincidido el 07 y el 38 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5222",
+      "group": "topic_switch",
+      "user": "Cambia de tema: ¿han coincidido el 78 y el 12 el mismo día?",
+      "setup": [
+        "¿Han coincidido el 12 y el 50 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5223",
+      "group": "freq_pair",
+      "user": "¿El 14 y el 54 han coincidido más de 50 veces el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5224",
+      "group": "recent_pair",
+      "user": "¿Cuál fue la coincidencia más reciente del 18 y el 63 el mismo día, según la evidencia?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5225",
+      "group": "pair",
+      "user": "¿Han coincidido el 22 y el 77 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5226",
+      "group": "pair_long",
+      "user": "Dentro de las 7 loterías oficiales, ¿cuántas veces coincidieron el 25 y el 78 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5227",
+      "group": "compare",
+      "user": "Compara históricamente el 35 y el 02: ¿quién aparece más en coincidencias same-day con el otro?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5228",
+      "group": "limitations",
+      "user": "¿Qué significa el total de coincidencias same-day del 38 y el 03? Incluye limitaciones.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5229",
+      "group": "interp",
+      "user": "¿Qué significa ese resultado? No inventes desgloses.",
+      "setup": [
+        "¿Han coincidido el 50 y el 08 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5230",
+      "group": "topic_switch",
+      "user": "Cambia de tema: ¿han coincidido el 07 y el 54 el mismo día?",
+      "setup": [
+        "¿Han coincidido el 54 y el 11 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5231",
+      "group": "freq_pair",
+      "user": "¿El 63 y el 19 han coincidido más de 50 veces el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5232",
+      "group": "recent_pair",
+      "user": "¿Cuál fue la coincidencia más reciente del 77 y el 41 el mismo día, según la evidencia?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5233",
+      "group": "pair",
+      "user": "¿Han coincidido el 78 y el 90 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5234",
+      "group": "pair_long",
+      "user": "Dentro de las 7 loterías oficiales, ¿cuántas veces coincidieron el 02 y el 07 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5235",
+      "group": "compare",
+      "user": "Compara históricamente el 03 y el 12: ¿quién aparece más en coincidencias same-day con el otro?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5236",
+      "group": "limitations",
+      "user": "¿Qué significa el total de coincidencias same-day del 08 y el 14? Incluye limitaciones.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5237",
+      "group": "interp",
+      "user": "¿Qué significa ese resultado? No inventes desgloses.",
+      "setup": [
+        "¿Han coincidido el 11 y el 18 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5238",
+      "group": "topic_switch",
+      "user": "Cambia de tema: ¿han coincidido el 50 y el 19 el mismo día?",
+      "setup": [
+        "¿Han coincidido el 19 y el 22 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5239",
+      "group": "freq_pair",
+      "user": "¿El 41 y el 25 han coincidido más de 50 veces el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5240",
+      "group": "recent_pair",
+      "user": "¿Cuál fue la coincidencia más reciente del 90 y el 35 el mismo día, según la evidencia?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5241",
+      "group": "pair",
+      "user": "¿Han coincidido el 07 y el 38 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5242",
+      "group": "pair_long",
+      "user": "Dentro de las 7 loterías oficiales, ¿cuántas veces coincidieron el 12 y el 50 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5243",
+      "group": "compare",
+      "user": "Compara históricamente el 14 y el 54: ¿quién aparece más en coincidencias same-day con el otro?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5244",
+      "group": "limitations",
+      "user": "¿Qué significa el total de coincidencias same-day del 18 y el 63? Incluye limitaciones.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5245",
+      "group": "interp",
+      "user": "¿Qué significa ese resultado? No inventes desgloses.",
+      "setup": [
+        "¿Han coincidido el 22 y el 77 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5246",
+      "group": "topic_switch",
+      "user": "Cambia de tema: ¿han coincidido el 11 y el 25 el mismo día?",
+      "setup": [
+        "¿Han coincidido el 25 y el 78 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5247",
+      "group": "freq_pair",
+      "user": "¿El 35 y el 02 han coincidido más de 50 veces el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5248",
+      "group": "recent_pair",
+      "user": "¿Cuál fue la coincidencia más reciente del 38 y el 03 el mismo día, según la evidencia?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5249",
+      "group": "pair",
+      "user": "¿Han coincidido el 50 y el 08 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5250",
+      "group": "pair_long",
+      "user": "Dentro de las 7 loterías oficiales, ¿cuántas veces coincidieron el 54 y el 11 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5251",
+      "group": "compare",
+      "user": "Compara históricamente el 63 y el 19: ¿quién aparece más en coincidencias same-day con el otro?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5252",
+      "group": "limitations",
+      "user": "¿Qué significa el total de coincidencias same-day del 77 y el 41? Incluye limitaciones.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5253",
+      "group": "interp",
+      "user": "¿Qué significa ese resultado? No inventes desgloses.",
+      "setup": [
+        "¿Han coincidido el 78 y el 90 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5254",
+      "group": "topic_switch",
+      "user": "Cambia de tema: ¿han coincidido el 22 y el 02 el mismo día?",
+      "setup": [
+        "¿Han coincidido el 02 y el 07 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5255",
+      "group": "freq_pair",
+      "user": "¿El 03 y el 12 han coincidido más de 50 veces el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5256",
+      "group": "recent_pair",
+      "user": "¿Cuál fue la coincidencia más reciente del 08 y el 14 el mismo día, según la evidencia?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5257",
+      "group": "pair",
+      "user": "¿Han coincidido el 11 y el 18 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5258",
+      "group": "pair_long",
+      "user": "Dentro de las 7 loterías oficiales, ¿cuántas veces coincidieron el 19 y el 22 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5259",
+      "group": "compare",
+      "user": "Compara históricamente el 41 y el 25: ¿quién aparece más en coincidencias same-day con el otro?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5260",
+      "group": "limitations",
+      "user": "¿Qué significa el total de coincidencias same-day del 90 y el 35? Incluye limitaciones.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5261",
+      "group": "interp",
+      "user": "¿Qué significa ese resultado? No inventes desgloses.",
+      "setup": [
+        "¿Han coincidido el 07 y el 38 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5262",
+      "group": "topic_switch",
+      "user": "Cambia de tema: ¿han coincidido el 78 y el 12 el mismo día?",
+      "setup": [
+        "¿Han coincidido el 12 y el 50 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5263",
+      "group": "freq_pair",
+      "user": "¿El 14 y el 54 han coincidido más de 50 veces el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5264",
+      "group": "recent_pair",
+      "user": "¿Cuál fue la coincidencia más reciente del 18 y el 63 el mismo día, según la evidencia?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5265",
+      "group": "pair",
+      "user": "¿Han coincidido el 22 y el 77 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5266",
+      "group": "pair_long",
+      "user": "Dentro de las 7 loterías oficiales, ¿cuántas veces coincidieron el 25 y el 78 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5267",
+      "group": "compare",
+      "user": "Compara históricamente el 35 y el 02: ¿quién aparece más en coincidencias same-day con el otro?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5268",
+      "group": "limitations",
+      "user": "¿Qué significa el total de coincidencias same-day del 38 y el 03? Incluye limitaciones.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5269",
+      "group": "interp",
+      "user": "¿Qué significa ese resultado? No inventes desgloses.",
+      "setup": [
+        "¿Han coincidido el 50 y el 08 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5270",
+      "group": "topic_switch",
+      "user": "Cambia de tema: ¿han coincidido el 07 y el 54 el mismo día?",
+      "setup": [
+        "¿Han coincidido el 54 y el 11 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5271",
+      "group": "freq_pair",
+      "user": "¿El 63 y el 19 han coincidido más de 50 veces el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5272",
+      "group": "recent_pair",
+      "user": "¿Cuál fue la coincidencia más reciente del 77 y el 41 el mismo día, según la evidencia?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5273",
+      "group": "pair",
+      "user": "¿Han coincidido el 78 y el 90 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5274",
+      "group": "pair_long",
+      "user": "Dentro de las 7 loterías oficiales, ¿cuántas veces coincidieron el 02 y el 07 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5275",
+      "group": "compare",
+      "user": "Compara históricamente el 03 y el 12: ¿quién aparece más en coincidencias same-day con el otro?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5276",
+      "group": "limitations",
+      "user": "¿Qué significa el total de coincidencias same-day del 08 y el 14? Incluye limitaciones.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5277",
+      "group": "interp",
+      "user": "¿Qué significa ese resultado? No inventes desgloses.",
+      "setup": [
+        "¿Han coincidido el 11 y el 18 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5278",
+      "group": "topic_switch",
+      "user": "Cambia de tema: ¿han coincidido el 50 y el 19 el mismo día?",
+      "setup": [
+        "¿Han coincidido el 19 y el 22 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5279",
+      "group": "freq_pair",
+      "user": "¿El 41 y el 25 han coincidido más de 50 veces el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5280",
+      "group": "recent_pair",
+      "user": "¿Cuál fue la coincidencia más reciente del 90 y el 35 el mismo día, según la evidencia?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5281",
+      "group": "pair",
+      "user": "¿Han coincidido el 07 y el 38 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5282",
+      "group": "pair_long",
+      "user": "Dentro de las 7 loterías oficiales, ¿cuántas veces coincidieron el 12 y el 50 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5283",
+      "group": "compare",
+      "user": "Compara históricamente el 14 y el 54: ¿quién aparece más en coincidencias same-day con el otro?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5284",
+      "group": "limitations",
+      "user": "¿Qué significa el total de coincidencias same-day del 18 y el 63? Incluye limitaciones.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5285",
+      "group": "interp",
+      "user": "¿Qué significa ese resultado? No inventes desgloses.",
+      "setup": [
+        "¿Han coincidido el 22 y el 77 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5286",
+      "group": "topic_switch",
+      "user": "Cambia de tema: ¿han coincidido el 11 y el 25 el mismo día?",
+      "setup": [
+        "¿Han coincidido el 25 y el 78 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5287",
+      "group": "freq_pair",
+      "user": "¿El 35 y el 02 han coincidido más de 50 veces el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5288",
+      "group": "recent_pair",
+      "user": "¿Cuál fue la coincidencia más reciente del 38 y el 03 el mismo día, según la evidencia?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5289",
+      "group": "pair",
+      "user": "¿Han coincidido el 50 y el 08 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5290",
+      "group": "pair_long",
+      "user": "Dentro de las 7 loterías oficiales, ¿cuántas veces coincidieron el 54 y el 11 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5291",
+      "group": "compare",
+      "user": "Compara históricamente el 63 y el 19: ¿quién aparece más en coincidencias same-day con el otro?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5292",
+      "group": "limitations",
+      "user": "¿Qué significa el total de coincidencias same-day del 77 y el 41? Incluye limitaciones.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5293",
+      "group": "interp",
+      "user": "¿Qué significa ese resultado? No inventes desgloses.",
+      "setup": [
+        "¿Han coincidido el 78 y el 90 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5294",
+      "group": "topic_switch",
+      "user": "Cambia de tema: ¿han coincidido el 22 y el 02 el mismo día?",
+      "setup": [
+        "¿Han coincidido el 02 y el 07 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5295",
+      "group": "freq_pair",
+      "user": "¿El 03 y el 12 han coincidido más de 50 veces el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5296",
+      "group": "recent_pair",
+      "user": "¿Cuál fue la coincidencia más reciente del 08 y el 14 el mismo día, según la evidencia?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5297",
+      "group": "pair",
+      "user": "¿Han coincidido el 11 y el 18 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5298",
+      "group": "pair_long",
+      "user": "Dentro de las 7 loterías oficiales, ¿cuántas veces coincidieron el 19 y el 22 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5299",
+      "group": "compare",
+      "user": "Compara históricamente el 41 y el 25: ¿quién aparece más en coincidencias same-day con el otro?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5300",
+      "group": "limitations",
+      "user": "¿Qué significa el total de coincidencias same-day del 90 y el 35? Incluye limitaciones.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5301",
+      "group": "interp",
+      "user": "¿Qué significa ese resultado? No inventes desgloses.",
+      "setup": [
+        "¿Han coincidido el 07 y el 38 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5302",
+      "group": "topic_switch",
+      "user": "Cambia de tema: ¿han coincidido el 78 y el 12 el mismo día?",
+      "setup": [
+        "¿Han coincidido el 12 y el 50 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5303",
+      "group": "freq_pair",
+      "user": "¿El 14 y el 54 han coincidido más de 50 veces el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5304",
+      "group": "recent_pair",
+      "user": "¿Cuál fue la coincidencia más reciente del 18 y el 63 el mismo día, según la evidencia?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5305",
+      "group": "pair",
+      "user": "¿Han coincidido el 22 y el 77 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5306",
+      "group": "pair_long",
+      "user": "Dentro de las 7 loterías oficiales, ¿cuántas veces coincidieron el 25 y el 78 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5307",
+      "group": "compare",
+      "user": "Compara históricamente el 35 y el 02: ¿quién aparece más en coincidencias same-day con el otro?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5308",
+      "group": "limitations",
+      "user": "¿Qué significa el total de coincidencias same-day del 38 y el 03? Incluye limitaciones.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5309",
+      "group": "interp",
+      "user": "¿Qué significa ese resultado? No inventes desgloses.",
+      "setup": [
+        "¿Han coincidido el 50 y el 08 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5310",
+      "group": "topic_switch",
+      "user": "Cambia de tema: ¿han coincidido el 07 y el 54 el mismo día?",
+      "setup": [
+        "¿Han coincidido el 54 y el 11 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5311",
+      "group": "freq_pair",
+      "user": "¿El 63 y el 19 han coincidido más de 50 veces el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5312",
+      "group": "recent_pair",
+      "user": "¿Cuál fue la coincidencia más reciente del 77 y el 41 el mismo día, según la evidencia?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5313",
+      "group": "pair",
+      "user": "¿Han coincidido el 78 y el 90 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5314",
+      "group": "pair_long",
+      "user": "Dentro de las 7 loterías oficiales, ¿cuántas veces coincidieron el 02 y el 07 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5315",
+      "group": "compare",
+      "user": "Compara históricamente el 03 y el 12: ¿quién aparece más en coincidencias same-day con el otro?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5316",
+      "group": "limitations",
+      "user": "¿Qué significa el total de coincidencias same-day del 08 y el 14? Incluye limitaciones.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5317",
+      "group": "interp",
+      "user": "¿Qué significa ese resultado? No inventes desgloses.",
+      "setup": [
+        "¿Han coincidido el 11 y el 18 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5318",
+      "group": "topic_switch",
+      "user": "Cambia de tema: ¿han coincidido el 50 y el 19 el mismo día?",
+      "setup": [
+        "¿Han coincidido el 19 y el 22 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5319",
+      "group": "freq_pair",
+      "user": "¿El 41 y el 25 han coincidido más de 50 veces el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5320",
+      "group": "recent_pair",
+      "user": "¿Cuál fue la coincidencia más reciente del 90 y el 35 el mismo día, según la evidencia?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5321",
+      "group": "pair",
+      "user": "¿Han coincidido el 07 y el 38 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5322",
+      "group": "pair_long",
+      "user": "Dentro de las 7 loterías oficiales, ¿cuántas veces coincidieron el 12 y el 50 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5323",
+      "group": "compare",
+      "user": "Compara históricamente el 14 y el 54: ¿quién aparece más en coincidencias same-day con el otro?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5324",
+      "group": "limitations",
+      "user": "¿Qué significa el total de coincidencias same-day del 18 y el 63? Incluye limitaciones.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5325",
+      "group": "interp",
+      "user": "¿Qué significa ese resultado? No inventes desgloses.",
+      "setup": [
+        "¿Han coincidido el 22 y el 77 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5326",
+      "group": "topic_switch",
+      "user": "Cambia de tema: ¿han coincidido el 11 y el 25 el mismo día?",
+      "setup": [
+        "¿Han coincidido el 25 y el 78 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5327",
+      "group": "freq_pair",
+      "user": "¿El 35 y el 02 han coincidido más de 50 veces el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5328",
+      "group": "recent_pair",
+      "user": "¿Cuál fue la coincidencia más reciente del 38 y el 03 el mismo día, según la evidencia?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5329",
+      "group": "pair",
+      "user": "¿Han coincidido el 50 y el 08 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5330",
+      "group": "pair_long",
+      "user": "Dentro de las 7 loterías oficiales, ¿cuántas veces coincidieron el 54 y el 11 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5331",
+      "group": "compare",
+      "user": "Compara históricamente el 63 y el 19: ¿quién aparece más en coincidencias same-day con el otro?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5332",
+      "group": "limitations",
+      "user": "¿Qué significa el total de coincidencias same-day del 77 y el 41? Incluye limitaciones.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5333",
+      "group": "interp",
+      "user": "¿Qué significa ese resultado? No inventes desgloses.",
+      "setup": [
+        "¿Han coincidido el 78 y el 90 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5334",
+      "group": "topic_switch",
+      "user": "Cambia de tema: ¿han coincidido el 22 y el 02 el mismo día?",
+      "setup": [
+        "¿Han coincidido el 02 y el 07 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5335",
+      "group": "freq_pair",
+      "user": "¿El 03 y el 12 han coincidido más de 50 veces el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5336",
+      "group": "recent_pair",
+      "user": "¿Cuál fue la coincidencia más reciente del 08 y el 14 el mismo día, según la evidencia?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5337",
+      "group": "pair",
+      "user": "¿Han coincidido el 11 y el 18 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5338",
+      "group": "pair_long",
+      "user": "Dentro de las 7 loterías oficiales, ¿cuántas veces coincidieron el 19 y el 22 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5339",
+      "group": "compare",
+      "user": "Compara históricamente el 41 y el 25: ¿quién aparece más en coincidencias same-day con el otro?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5340",
+      "group": "limitations",
+      "user": "¿Qué significa el total de coincidencias same-day del 90 y el 35? Incluye limitaciones.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5341",
+      "group": "interp",
+      "user": "¿Qué significa ese resultado? No inventes desgloses.",
+      "setup": [
+        "¿Han coincidido el 07 y el 38 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5342",
+      "group": "topic_switch",
+      "user": "Cambia de tema: ¿han coincidido el 78 y el 12 el mismo día?",
+      "setup": [
+        "¿Han coincidido el 12 y el 50 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5343",
+      "group": "freq_pair",
+      "user": "¿El 14 y el 54 han coincidido más de 50 veces el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5344",
+      "group": "recent_pair",
+      "user": "¿Cuál fue la coincidencia más reciente del 18 y el 63 el mismo día, según la evidencia?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5345",
+      "group": "pair",
+      "user": "¿Han coincidido el 22 y el 77 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5346",
+      "group": "pair_long",
+      "user": "Dentro de las 7 loterías oficiales, ¿cuántas veces coincidieron el 25 y el 78 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5347",
+      "group": "compare",
+      "user": "Compara históricamente el 35 y el 02: ¿quién aparece más en coincidencias same-day con el otro?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5348",
+      "group": "limitations",
+      "user": "¿Qué significa el total de coincidencias same-day del 38 y el 03? Incluye limitaciones.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5349",
+      "group": "interp",
+      "user": "¿Qué significa ese resultado? No inventes desgloses.",
+      "setup": [
+        "¿Han coincidido el 50 y el 08 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5350",
+      "group": "topic_switch",
+      "user": "Cambia de tema: ¿han coincidido el 07 y el 54 el mismo día?",
+      "setup": [
+        "¿Han coincidido el 54 y el 11 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5351",
+      "group": "freq_pair",
+      "user": "¿El 63 y el 19 han coincidido más de 50 veces el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5352",
+      "group": "recent_pair",
+      "user": "¿Cuál fue la coincidencia más reciente del 77 y el 41 el mismo día, según la evidencia?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5353",
+      "group": "pair",
+      "user": "¿Han coincidido el 78 y el 90 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5354",
+      "group": "pair_long",
+      "user": "Dentro de las 7 loterías oficiales, ¿cuántas veces coincidieron el 02 y el 07 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5355",
+      "group": "compare",
+      "user": "Compara históricamente el 03 y el 12: ¿quién aparece más en coincidencias same-day con el otro?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5356",
+      "group": "limitations",
+      "user": "¿Qué significa el total de coincidencias same-day del 08 y el 14? Incluye limitaciones.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5357",
+      "group": "interp",
+      "user": "¿Qué significa ese resultado? No inventes desgloses.",
+      "setup": [
+        "¿Han coincidido el 11 y el 18 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5358",
+      "group": "topic_switch",
+      "user": "Cambia de tema: ¿han coincidido el 50 y el 19 el mismo día?",
+      "setup": [
+        "¿Han coincidido el 19 y el 22 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5359",
+      "group": "freq_pair",
+      "user": "¿El 41 y el 25 han coincidido más de 50 veces el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5360",
+      "group": "recent_pair",
+      "user": "¿Cuál fue la coincidencia más reciente del 90 y el 35 el mismo día, según la evidencia?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5361",
+      "group": "pair",
+      "user": "¿Han coincidido el 07 y el 38 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5362",
+      "group": "pair_long",
+      "user": "Dentro de las 7 loterías oficiales, ¿cuántas veces coincidieron el 12 y el 50 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5363",
+      "group": "compare",
+      "user": "Compara históricamente el 14 y el 54: ¿quién aparece más en coincidencias same-day con el otro?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5364",
+      "group": "limitations",
+      "user": "¿Qué significa el total de coincidencias same-day del 18 y el 63? Incluye limitaciones.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5365",
+      "group": "interp",
+      "user": "¿Qué significa ese resultado? No inventes desgloses.",
+      "setup": [
+        "¿Han coincidido el 22 y el 77 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5366",
+      "group": "topic_switch",
+      "user": "Cambia de tema: ¿han coincidido el 11 y el 25 el mismo día?",
+      "setup": [
+        "¿Han coincidido el 25 y el 78 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5367",
+      "group": "freq_pair",
+      "user": "¿El 35 y el 02 han coincidido más de 50 veces el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5368",
+      "group": "recent_pair",
+      "user": "¿Cuál fue la coincidencia más reciente del 38 y el 03 el mismo día, según la evidencia?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5369",
+      "group": "pair",
+      "user": "¿Han coincidido el 50 y el 08 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5370",
+      "group": "pair_long",
+      "user": "Dentro de las 7 loterías oficiales, ¿cuántas veces coincidieron el 54 y el 11 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5371",
+      "group": "compare",
+      "user": "Compara históricamente el 63 y el 19: ¿quién aparece más en coincidencias same-day con el otro?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5372",
+      "group": "limitations",
+      "user": "¿Qué significa el total de coincidencias same-day del 77 y el 41? Incluye limitaciones.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5373",
+      "group": "interp",
+      "user": "¿Qué significa ese resultado? No inventes desgloses.",
+      "setup": [
+        "¿Han coincidido el 78 y el 90 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5374",
+      "group": "topic_switch",
+      "user": "Cambia de tema: ¿han coincidido el 22 y el 02 el mismo día?",
+      "setup": [
+        "¿Han coincidido el 02 y el 07 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5375",
+      "group": "freq_pair",
+      "user": "¿El 03 y el 12 han coincidido más de 50 veces el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5376",
+      "group": "recent_pair",
+      "user": "¿Cuál fue la coincidencia más reciente del 08 y el 14 el mismo día, según la evidencia?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5377",
+      "group": "pair",
+      "user": "¿Han coincidido el 11 y el 18 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5378",
+      "group": "pair_long",
+      "user": "Dentro de las 7 loterías oficiales, ¿cuántas veces coincidieron el 19 y el 22 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5379",
+      "group": "compare",
+      "user": "Compara históricamente el 41 y el 25: ¿quién aparece más en coincidencias same-day con el otro?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5380",
+      "group": "limitations",
+      "user": "¿Qué significa el total de coincidencias same-day del 90 y el 35? Incluye limitaciones.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5381",
+      "group": "interp",
+      "user": "¿Qué significa ese resultado? No inventes desgloses.",
+      "setup": [
+        "¿Han coincidido el 07 y el 38 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5382",
+      "group": "topic_switch",
+      "user": "Cambia de tema: ¿han coincidido el 78 y el 12 el mismo día?",
+      "setup": [
+        "¿Han coincidido el 12 y el 50 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5383",
+      "group": "freq_pair",
+      "user": "¿El 14 y el 54 han coincidido más de 50 veces el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5384",
+      "group": "recent_pair",
+      "user": "¿Cuál fue la coincidencia más reciente del 18 y el 63 el mismo día, según la evidencia?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5385",
+      "group": "pair",
+      "user": "¿Han coincidido el 22 y el 77 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5386",
+      "group": "pair_long",
+      "user": "Dentro de las 7 loterías oficiales, ¿cuántas veces coincidieron el 25 y el 78 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5387",
+      "group": "compare",
+      "user": "Compara históricamente el 35 y el 02: ¿quién aparece más en coincidencias same-day con el otro?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5388",
+      "group": "limitations",
+      "user": "¿Qué significa el total de coincidencias same-day del 38 y el 03? Incluye limitaciones.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5389",
+      "group": "interp",
+      "user": "¿Qué significa ese resultado? No inventes desgloses.",
+      "setup": [
+        "¿Han coincidido el 50 y el 08 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5390",
+      "group": "topic_switch",
+      "user": "Cambia de tema: ¿han coincidido el 07 y el 54 el mismo día?",
+      "setup": [
+        "¿Han coincidido el 54 y el 11 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5391",
+      "group": "freq_pair",
+      "user": "¿El 63 y el 19 han coincidido más de 50 veces el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5392",
+      "group": "recent_pair",
+      "user": "¿Cuál fue la coincidencia más reciente del 77 y el 41 el mismo día, según la evidencia?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5393",
+      "group": "pair",
+      "user": "¿Han coincidido el 78 y el 90 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5394",
+      "group": "pair_long",
+      "user": "Dentro de las 7 loterías oficiales, ¿cuántas veces coincidieron el 02 y el 07 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5395",
+      "group": "compare",
+      "user": "Compara históricamente el 03 y el 12: ¿quién aparece más en coincidencias same-day con el otro?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5396",
+      "group": "limitations",
+      "user": "¿Qué significa el total de coincidencias same-day del 08 y el 14? Incluye limitaciones.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5397",
+      "group": "interp",
+      "user": "¿Qué significa ese resultado? No inventes desgloses.",
+      "setup": [
+        "¿Han coincidido el 11 y el 18 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5398",
+      "group": "topic_switch",
+      "user": "Cambia de tema: ¿han coincidido el 50 y el 19 el mismo día?",
+      "setup": [
+        "¿Han coincidido el 19 y el 22 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5399",
+      "group": "freq_pair",
+      "user": "¿El 41 y el 25 han coincidido más de 50 veces el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5400",
+      "group": "recent_pair",
+      "user": "¿Cuál fue la coincidencia más reciente del 90 y el 35 el mismo día, según la evidencia?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5401",
+      "group": "pair",
+      "user": "¿Han coincidido el 07 y el 38 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5402",
+      "group": "pair_long",
+      "user": "Dentro de las 7 loterías oficiales, ¿cuántas veces coincidieron el 12 y el 50 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5403",
+      "group": "compare",
+      "user": "Compara históricamente el 14 y el 54: ¿quién aparece más en coincidencias same-day con el otro?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5404",
+      "group": "limitations",
+      "user": "¿Qué significa el total de coincidencias same-day del 18 y el 63? Incluye limitaciones.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5405",
+      "group": "interp",
+      "user": "¿Qué significa ese resultado? No inventes desgloses.",
+      "setup": [
+        "¿Han coincidido el 22 y el 77 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5406",
+      "group": "topic_switch",
+      "user": "Cambia de tema: ¿han coincidido el 11 y el 25 el mismo día?",
+      "setup": [
+        "¿Han coincidido el 25 y el 78 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5407",
+      "group": "freq_pair",
+      "user": "¿El 35 y el 02 han coincidido más de 50 veces el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5408",
+      "group": "recent_pair",
+      "user": "¿Cuál fue la coincidencia más reciente del 38 y el 03 el mismo día, según la evidencia?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5409",
+      "group": "pair",
+      "user": "¿Han coincidido el 50 y el 08 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5410",
+      "group": "pair_long",
+      "user": "Dentro de las 7 loterías oficiales, ¿cuántas veces coincidieron el 54 y el 11 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5411",
+      "group": "compare",
+      "user": "Compara históricamente el 63 y el 19: ¿quién aparece más en coincidencias same-day con el otro?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5412",
+      "group": "limitations",
+      "user": "¿Qué significa el total de coincidencias same-day del 77 y el 41? Incluye limitaciones.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5413",
+      "group": "interp",
+      "user": "¿Qué significa ese resultado? No inventes desgloses.",
+      "setup": [
+        "¿Han coincidido el 78 y el 90 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5414",
+      "group": "topic_switch",
+      "user": "Cambia de tema: ¿han coincidido el 22 y el 02 el mismo día?",
+      "setup": [
+        "¿Han coincidido el 02 y el 07 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5415",
+      "group": "freq_pair",
+      "user": "¿El 03 y el 12 han coincidido más de 50 veces el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5416",
+      "group": "recent_pair",
+      "user": "¿Cuál fue la coincidencia más reciente del 08 y el 14 el mismo día, según la evidencia?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5417",
+      "group": "pair",
+      "user": "¿Han coincidido el 11 y el 18 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5418",
+      "group": "pair_long",
+      "user": "Dentro de las 7 loterías oficiales, ¿cuántas veces coincidieron el 19 y el 22 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5419",
+      "group": "compare",
+      "user": "Compara históricamente el 41 y el 25: ¿quién aparece más en coincidencias same-day con el otro?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5420",
+      "group": "limitations",
+      "user": "¿Qué significa el total de coincidencias same-day del 90 y el 35? Incluye limitaciones.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5421",
+      "group": "interp",
+      "user": "¿Qué significa ese resultado? No inventes desgloses.",
+      "setup": [
+        "¿Han coincidido el 07 y el 38 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5422",
+      "group": "topic_switch",
+      "user": "Cambia de tema: ¿han coincidido el 78 y el 12 el mismo día?",
+      "setup": [
+        "¿Han coincidido el 12 y el 50 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5423",
+      "group": "freq_pair",
+      "user": "¿El 14 y el 54 han coincidido más de 50 veces el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5424",
+      "group": "recent_pair",
+      "user": "¿Cuál fue la coincidencia más reciente del 18 y el 63 el mismo día, según la evidencia?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5425",
+      "group": "pair",
+      "user": "¿Han coincidido el 22 y el 77 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5426",
+      "group": "pair_long",
+      "user": "Dentro de las 7 loterías oficiales, ¿cuántas veces coincidieron el 25 y el 78 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5427",
+      "group": "compare",
+      "user": "Compara históricamente el 35 y el 02: ¿quién aparece más en coincidencias same-day con el otro?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5428",
+      "group": "limitations",
+      "user": "¿Qué significa el total de coincidencias same-day del 38 y el 03? Incluye limitaciones.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5429",
+      "group": "interp",
+      "user": "¿Qué significa ese resultado? No inventes desgloses.",
+      "setup": [
+        "¿Han coincidido el 50 y el 08 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5430",
+      "group": "topic_switch",
+      "user": "Cambia de tema: ¿han coincidido el 07 y el 54 el mismo día?",
+      "setup": [
+        "¿Han coincidido el 54 y el 11 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5431",
+      "group": "freq_pair",
+      "user": "¿El 63 y el 19 han coincidido más de 50 veces el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5432",
+      "group": "recent_pair",
+      "user": "¿Cuál fue la coincidencia más reciente del 77 y el 41 el mismo día, según la evidencia?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5433",
+      "group": "pair",
+      "user": "¿Han coincidido el 78 y el 90 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5434",
+      "group": "pair_long",
+      "user": "Dentro de las 7 loterías oficiales, ¿cuántas veces coincidieron el 02 y el 07 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5435",
+      "group": "compare",
+      "user": "Compara históricamente el 03 y el 12: ¿quién aparece más en coincidencias same-day con el otro?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5436",
+      "group": "limitations",
+      "user": "¿Qué significa el total de coincidencias same-day del 08 y el 14? Incluye limitaciones.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5437",
+      "group": "interp",
+      "user": "¿Qué significa ese resultado? No inventes desgloses.",
+      "setup": [
+        "¿Han coincidido el 11 y el 18 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5438",
+      "group": "topic_switch",
+      "user": "Cambia de tema: ¿han coincidido el 50 y el 19 el mismo día?",
+      "setup": [
+        "¿Han coincidido el 19 y el 22 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5439",
+      "group": "freq_pair",
+      "user": "¿El 41 y el 25 han coincidido más de 50 veces el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5440",
+      "group": "recent_pair",
+      "user": "¿Cuál fue la coincidencia más reciente del 90 y el 35 el mismo día, según la evidencia?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5441",
+      "group": "pair",
+      "user": "¿Han coincidido el 07 y el 38 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5442",
+      "group": "pair_long",
+      "user": "Dentro de las 7 loterías oficiales, ¿cuántas veces coincidieron el 12 y el 50 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5443",
+      "group": "compare",
+      "user": "Compara históricamente el 14 y el 54: ¿quién aparece más en coincidencias same-day con el otro?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5444",
+      "group": "limitations",
+      "user": "¿Qué significa el total de coincidencias same-day del 18 y el 63? Incluye limitaciones.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5445",
+      "group": "interp",
+      "user": "¿Qué significa ese resultado? No inventes desgloses.",
+      "setup": [
+        "¿Han coincidido el 22 y el 77 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5446",
+      "group": "topic_switch",
+      "user": "Cambia de tema: ¿han coincidido el 11 y el 25 el mismo día?",
+      "setup": [
+        "¿Han coincidido el 25 y el 78 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5447",
+      "group": "freq_pair",
+      "user": "¿El 35 y el 02 han coincidido más de 50 veces el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5448",
+      "group": "recent_pair",
+      "user": "¿Cuál fue la coincidencia más reciente del 38 y el 03 el mismo día, según la evidencia?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5449",
+      "group": "pair",
+      "user": "¿Han coincidido el 50 y el 08 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5450",
+      "group": "pair_long",
+      "user": "Dentro de las 7 loterías oficiales, ¿cuántas veces coincidieron el 54 y el 11 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5451",
+      "group": "compare",
+      "user": "Compara históricamente el 63 y el 19: ¿quién aparece más en coincidencias same-day con el otro?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5452",
+      "group": "limitations",
+      "user": "¿Qué significa el total de coincidencias same-day del 77 y el 41? Incluye limitaciones.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5453",
+      "group": "interp",
+      "user": "¿Qué significa ese resultado? No inventes desgloses.",
+      "setup": [
+        "¿Han coincidido el 78 y el 90 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5454",
+      "group": "topic_switch",
+      "user": "Cambia de tema: ¿han coincidido el 22 y el 02 el mismo día?",
+      "setup": [
+        "¿Han coincidido el 02 y el 07 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5455",
+      "group": "freq_pair",
+      "user": "¿El 03 y el 12 han coincidido más de 50 veces el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5456",
+      "group": "recent_pair",
+      "user": "¿Cuál fue la coincidencia más reciente del 08 y el 14 el mismo día, según la evidencia?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5457",
+      "group": "pair",
+      "user": "¿Han coincidido el 11 y el 18 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5458",
+      "group": "pair_long",
+      "user": "Dentro de las 7 loterías oficiales, ¿cuántas veces coincidieron el 19 y el 22 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5459",
+      "group": "compare",
+      "user": "Compara históricamente el 41 y el 25: ¿quién aparece más en coincidencias same-day con el otro?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5460",
+      "group": "limitations",
+      "user": "¿Qué significa el total de coincidencias same-day del 90 y el 35? Incluye limitaciones.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5461",
+      "group": "interp",
+      "user": "¿Qué significa ese resultado? No inventes desgloses.",
+      "setup": [
+        "¿Han coincidido el 07 y el 38 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5462",
+      "group": "topic_switch",
+      "user": "Cambia de tema: ¿han coincidido el 78 y el 12 el mismo día?",
+      "setup": [
+        "¿Han coincidido el 12 y el 50 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5463",
+      "group": "freq_pair",
+      "user": "¿El 14 y el 54 han coincidido más de 50 veces el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5464",
+      "group": "recent_pair",
+      "user": "¿Cuál fue la coincidencia más reciente del 18 y el 63 el mismo día, según la evidencia?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5465",
+      "group": "pair",
+      "user": "¿Han coincidido el 22 y el 77 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5466",
+      "group": "pair_long",
+      "user": "Dentro de las 7 loterías oficiales, ¿cuántas veces coincidieron el 25 y el 78 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5467",
+      "group": "compare",
+      "user": "Compara históricamente el 35 y el 02: ¿quién aparece más en coincidencias same-day con el otro?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5468",
+      "group": "limitations",
+      "user": "¿Qué significa el total de coincidencias same-day del 38 y el 03? Incluye limitaciones.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5469",
+      "group": "interp",
+      "user": "¿Qué significa ese resultado? No inventes desgloses.",
+      "setup": [
+        "¿Han coincidido el 50 y el 08 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5470",
+      "group": "topic_switch",
+      "user": "Cambia de tema: ¿han coincidido el 07 y el 54 el mismo día?",
+      "setup": [
+        "¿Han coincidido el 54 y el 11 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5471",
+      "group": "freq_pair",
+      "user": "¿El 63 y el 19 han coincidido más de 50 veces el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5472",
+      "group": "recent_pair",
+      "user": "¿Cuál fue la coincidencia más reciente del 77 y el 41 el mismo día, según la evidencia?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5473",
+      "group": "pair",
+      "user": "¿Han coincidido el 78 y el 90 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5474",
+      "group": "pair_long",
+      "user": "Dentro de las 7 loterías oficiales, ¿cuántas veces coincidieron el 02 y el 07 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5475",
+      "group": "compare",
+      "user": "Compara históricamente el 03 y el 12: ¿quién aparece más en coincidencias same-day con el otro?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5476",
+      "group": "limitations",
+      "user": "¿Qué significa el total de coincidencias same-day del 08 y el 14? Incluye limitaciones.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5477",
+      "group": "interp",
+      "user": "¿Qué significa ese resultado? No inventes desgloses.",
+      "setup": [
+        "¿Han coincidido el 11 y el 18 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5478",
+      "group": "topic_switch",
+      "user": "Cambia de tema: ¿han coincidido el 50 y el 19 el mismo día?",
+      "setup": [
+        "¿Han coincidido el 19 y el 22 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5479",
+      "group": "freq_pair",
+      "user": "¿El 41 y el 25 han coincidido más de 50 veces el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5480",
+      "group": "recent_pair",
+      "user": "¿Cuál fue la coincidencia más reciente del 90 y el 35 el mismo día, según la evidencia?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5481",
+      "group": "pair",
+      "user": "¿Han coincidido el 07 y el 38 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5482",
+      "group": "pair_long",
+      "user": "Dentro de las 7 loterías oficiales, ¿cuántas veces coincidieron el 12 y el 50 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5483",
+      "group": "compare",
+      "user": "Compara históricamente el 14 y el 54: ¿quién aparece más en coincidencias same-day con el otro?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5484",
+      "group": "limitations",
+      "user": "¿Qué significa el total de coincidencias same-day del 18 y el 63? Incluye limitaciones.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5485",
+      "group": "interp",
+      "user": "¿Qué significa ese resultado? No inventes desgloses.",
+      "setup": [
+        "¿Han coincidido el 22 y el 77 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5486",
+      "group": "topic_switch",
+      "user": "Cambia de tema: ¿han coincidido el 11 y el 25 el mismo día?",
+      "setup": [
+        "¿Han coincidido el 25 y el 78 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5487",
+      "group": "freq_pair",
+      "user": "¿El 35 y el 02 han coincidido más de 50 veces el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5488",
+      "group": "recent_pair",
+      "user": "¿Cuál fue la coincidencia más reciente del 38 y el 03 el mismo día, según la evidencia?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5489",
+      "group": "pair",
+      "user": "¿Han coincidido el 50 y el 08 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5490",
+      "group": "pair_long",
+      "user": "Dentro de las 7 loterías oficiales, ¿cuántas veces coincidieron el 54 y el 11 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5491",
+      "group": "compare",
+      "user": "Compara históricamente el 63 y el 19: ¿quién aparece más en coincidencias same-day con el otro?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5492",
+      "group": "limitations",
+      "user": "¿Qué significa el total de coincidencias same-day del 77 y el 41? Incluye limitaciones.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5493",
+      "group": "interp",
+      "user": "¿Qué significa ese resultado? No inventes desgloses.",
+      "setup": [
+        "¿Han coincidido el 78 y el 90 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5494",
+      "group": "topic_switch",
+      "user": "Cambia de tema: ¿han coincidido el 22 y el 02 el mismo día?",
+      "setup": [
+        "¿Han coincidido el 02 y el 07 el mismo día?"
+      ],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5495",
+      "group": "freq_pair",
+      "user": "¿El 03 y el 12 han coincidido más de 50 veces el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5496",
+      "group": "recent_pair",
+      "user": "¿Cuál fue la coincidencia más reciente del 08 y el 14 el mismo día, según la evidencia?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5497",
+      "group": "pair",
+      "user": "¿Han coincidido el 11 y el 18 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5498",
+      "group": "pair_long",
+      "user": "Dentro de las 7 loterías oficiales, ¿cuántas veces coincidieron el 19 y el 22 el mismo día?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5499",
+      "group": "compare",
+      "user": "Compara históricamente el 41 y el 25: ¿quién aparece más en coincidencias same-day con el otro?",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    },
+    {
+      "id": "S5500",
+      "group": "limitations",
+      "user": "¿Qué significa el total de coincidencias same-day del 90 y el 35? Incluye limitaciones.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true
+      }
+    }
+  ]
+}

@@ -185,7 +185,7 @@ class FactualGuard:
                     ):
                         span = raw[max(0, m.start() - 24) : m.end() + 40]
                         if re.search(
-                            r"\bmuestra\s+(?:de\s+)?\d{1,5}\s+fechas\b|"
+                            r"\bla\s+muestra\s+de\s+\d{1,5}\s+fechas\b|"
                             r"\bsample\b|\btruncad|"
                             r"\d{1,5}\s+fechas\s+(?:de\s+)?ejemplo|"
                             r"fechas\s+de\s+ejemplo|"

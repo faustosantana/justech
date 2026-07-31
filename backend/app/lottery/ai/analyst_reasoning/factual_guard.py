@@ -130,12 +130,14 @@ class FactualGuard:
                         ):
                             continue
                         # "solo 5 fechas de ejemplo" / "5 fechas de ejemplo" — sample, not total
+                        # Do NOT treat bare "muestra"/"evidencia muestra N fechas" as sample-size OK.
                         if re.search(
                             r"(?:"
                             r"solo\s+\d{1,5}\s+fechas|"
                             r"\d{1,5}\s+fechas\s+(?:de\s+)?ejemplo|"
                             r"fechas\s+de\s+ejemplo|"
-                            r"\bejemplo\b|\bmuestra\b|\bsample\b|\btruncad"
+                            r"\bla\s+muestra\s+de\s+\d{1,5}\s+fechas\b|"
+                            r"\bsample\b|\btruncad"
                             r")",
                             span,
                             re.I,
@@ -183,9 +185,11 @@ class FactualGuard:
                     ):
                         span = raw[max(0, m.start() - 24) : m.end() + 40]
                         if re.search(
-                            r"\bmuestra\b|\bsample\b|\btruncad|\bejemplo\b|"
-                            r"solo\s+\d{1,5}\s+fechas|"
-                            r"fechas\s+de\s+ejemplo",
+                            r"\bmuestra\s+(?:de\s+)?\d{1,5}\s+fechas\b|"
+                            r"\bsample\b|\btruncad|"
+                            r"\d{1,5}\s+fechas\s+(?:de\s+)?ejemplo|"
+                            r"fechas\s+de\s+ejemplo|"
+                            r"solo\s+\d{1,5}\s+fechas",
                             span,
                             re.I,
                         ):

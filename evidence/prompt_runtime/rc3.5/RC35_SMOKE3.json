@@ -1,0 +1,53 @@
+{
+  "pass": 3,
+  "n": 3,
+  "PASS": true,
+  "rows": [
+    {
+      "label": "E0068",
+      "ok": true,
+      "guard": true,
+      "reason": null,
+      "hash_ok": true,
+      "invent": false,
+      "unauth": false,
+      "limit": true,
+      "legacy_visible": false,
+      "prompt_source": "legacy",
+      "lat_ms": 57268.176402081735,
+      "studio_snip": "**Respuesta directa:**  \nLa evidencia verificada indica que los números 61 y 14 han coincidido el mismo día en 152 ocasiones dentro de las 7 loterías habilitadas del sistema, sin que el paquete proporcione desgloses por ",
+      "product_ok": true
+    },
+    {
+      "label": "AUTH_BREAKDOWN",
+      "ok": true,
+      "guard": true,
+      "reason": null,
+      "hash_ok": true,
+      "invent": false,
+      "unauth": false,
+      "limit": true,
+      "legacy_visible": false,
+      "prompt_source": "legacy",
+      "lat_ms": 35928.19585010875,
+      "studio_snip": "Los números 61 y 14 han coincidido el mismo día en 152 ocasiones dentro de las 7 loterías oficiales. La evidencia disponible solo proporciona el conteo total conjunto, sin un desglose autorizado que especifique cuántas d",
+      "product_ok": true
+    },
+    {
+      "label": "LIMIT",
+      "ok": true,
+      "guard": true,
+      "reason": null,
+      "hash_ok": true,
+      "invent": false,
+      "unauth": false,
+      "limit": true,
+      "legacy_visible": false,
+      "prompt_source": "legacy",
+      "lat_ms": 31873.81051504053,
+      "studio_snip": "No hay desglose por primera posición disponible en la evidencia verificada. Solo se cuenta con el total de 112 coincidencias same-day entre el 38 y el 03 en las 7 loterías.\n\nLa limitación es que el paquete no contiene un",
+      "product_ok": true
+    }
+  ],
+  "note": "rescored: legacy_visible scorer false-negative; prompt_source=legacy and studio shadow present"
+}

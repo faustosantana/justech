@@ -1,0 +1,20 @@
+{
+  "version": "7.0.0-rc3.5",
+  "compiled_prompt_hash": "f9cb83c80271de345fb3b50a08cc9a76b31c66666d2dcb55517bbb7059d21149",
+  "chars": 5083,
+  "tokens_estimated": 1270,
+  "blocks": [
+    "identidad",
+    "dominio",
+    "memoria",
+    "aclaraciones",
+    "analisis",
+    "herramientas",
+    "respuesta",
+    "reglas_prediccion",
+    "instrucciones_especificas",
+    "seguridad"
+  ],
+  "parent": "7.0.0-rc3.4",
+  "parent_hash": "41c64a0fc7c303222c2b492e82a0ea51cec6c16139bc2f0cde9ec9e9da642ff9"
+}

@@ -1388,6 +1388,89 @@ class LotteryAiAdminService:
             "activated": False,
         }
 
+    async def ensure_reasoning_studio_rc35_candidate(self, *, activate: bool = False) -> dict[str, Any]:
+        """Create draft Lottery Analyst Prompt 7.0.0-rc3.5 if missing. Never auto-activates."""
+        from app.lottery.ai.prompt_runtime.seed_reasoning_studio_v7_rc3 import REASONING_STUDIO_NAME
+        from app.lottery.ai.prompt_runtime.seed_reasoning_studio_v7_rc35 import (
+            REASONING_STUDIO_SEMVER_RC35,
+            build_rc35_blocks,
+        )
+        from app.lottery.ai.prompt_runtime.validator import PromptStudioValidator
+
+        if activate:
+            raise ValueError("activate_forbidden_in_ensure_candidate")
+
+        blocks = build_rc35_blocks()
+        existing = (
+            await self.db.execute(
+                select(LotteryAiPromptVersion)
+                .where(LotteryAiPromptVersion.name == REASONING_STUDIO_NAME)
+                .where(LotteryAiPromptVersion.version == REASONING_STUDIO_SEMVER_RC35)
+                .limit(1)
+            )
+        ).scalar_one_or_none()
+        validation = PromptStudioValidator.validate(blocks)
+        if not validation.get("ok"):
+            raise ValueError(f"reasoning_studio_invalid:{validation.get('errors')}")
+        if existing:
+            return {
+                "created": False,
+                "prompt": _prompt_dict(existing),
+                "validation": {
+                    "ok": True,
+                    "compiled_prompt_hash": validation["compiled_prompt_hash"],
+                    "chars": validation["chars"],
+                    "tokens_estimated": validation["tokens_estimated"],
+                    "warnings": validation.get("warnings") or [],
+                },
+                "activated": False,
+            }
+
+        row = LotteryAiPromptVersion(
+            id=uuid.uuid4(),
+            tenant_id=self.tenant_id,
+            name=REASONING_STUDIO_NAME,
+            version=REASONING_STUDIO_SEMVER_RC35,
+            status="draft",
+            description="Prompt Runtime 1.0 — dimension contract / no unauthorized breakdowns (rc3.5)",
+            body=validation["compiled"]["body"],
+            blocks=dict(blocks),
+            changelog=(
+                "rc3.5: when only total is authorized, forbid inferred position/subject "
+                "subtotals; require allowed_counts / allowed_dimensions discipline"
+            ),
+            recommended_model="DeepSeek-V3.2",
+            temperature=0.05,
+            max_tokens=320,
+            tags=["draft", "reasoning_runtime", "prompt_runtime_1.0", "rc3", "rc3.5"],
+            checksum=validation["compiled_prompt_hash"],
+            author_user_id=self.user_id,
+            display_name="Lottery Analyst Prompt 7.0.0-rc3.5",
+            change_reason="prompt_runtime_e0068_unauthorized_breakdown_rc35",
+            notes="Activate only after directed E0068/Compare/Breakdown validation on DEV shadow.",
+        )
+        self.db.add(row)
+        await self._audit(
+            "prompt_create_draft",
+            entity_type="prompt",
+            entity_id=str(row.id),
+            after=_prompt_dict(row),
+            version_label=row.version,
+        )
+        await self.db.flush()
+        return {
+            "created": True,
+            "prompt": _prompt_dict(row),
+            "validation": {
+                "ok": True,
+                "compiled_prompt_hash": validation["compiled_prompt_hash"],
+                "chars": validation["chars"],
+                "tokens_estimated": validation["tokens_estimated"],
+                "warnings": validation.get("warnings") or [],
+            },
+            "activated": False,
+        }
+
     async def publish_prompt_immutable(self, prompt_id: uuid.UUID) -> dict[str, Any]:
         """Mark draft/approved as published (immutable) without activating runtime."""
         from app.lottery.ai.prompt_runtime.validator import PromptStudioValidator

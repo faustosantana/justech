@@ -394,6 +394,22 @@ async def prompt_runtime_seed_candidate(
         _map_err(e)
 
 
+@router.post("/prompt-runtime/seed-rc35-candidate")
+async def prompt_runtime_seed_rc35_candidate(
+    db: DbSession,
+    user: CurrentUser,
+    tenant: TenantCtx,
+    _: Annotated[None, require_ai_admin("lottery_admin_prompts", "lottery_admin_ai", "lottery.admin")],
+) -> dict:
+    """Create draft Lottery Analyst Prompt 7.0.0-rc3.5 (never auto-activates)."""
+    try:
+        data = await _svc(db, user).ensure_reasoning_studio_rc35_candidate(activate=False)
+        await db.commit()
+        return data
+    except Exception as e:
+        _map_err(e)
+
+
 @router.post("/prompts/{prompt_id}/publish-immutable")
 async def ai_prompt_publish_immutable(
     prompt_id: UUID,
